@@ -134,11 +134,52 @@ describe("Octagon HQ V2", () => {
     expect(screen.getByRole("link", { name: "View Amanda Nunes profile" })).toBeInTheDocument();
   });
 
+  it("renders the hybrid fighter profile without photo overlays or raw model mechanics", async () => {
+    renderRoute("/fighters/jon-jones");
+
+    expect(await screen.findByRole("heading", { name: "Jon Jones" })).toBeInTheDocument();
+    const photoCard = screen.getByLabelText("Jon Jones profile photo");
+    expect(photoCard).toHaveTextContent("");
+    expect(screen.getByLabelText("99 overall rating")).toBeInTheDocument();
+    expect(screen.getByText("22-1, 1 NC UFC")).toBeInTheDocument();
+    expect(screen.getByText("LHW / HW")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Share Jon Jones profile" })).toBeInTheDocument();
+
+    const actions = within(screen.getByRole("navigation", { name: "Jon Jones profile actions" }));
+    expect(actions.getByRole("link", { name: "Compare" })).toHaveAttribute(
+      "href",
+      "/intelligence?mode=compare&fighter=jon-jones",
+    );
+    expect(actions.getByRole("link", { name: "Ask Why" })).toHaveAttribute("href", "#why-ranked-here");
+    expect(actions.getByRole("link", { name: /Watch (Signature Fight|Moment)/ })).toHaveAttribute(
+      "target",
+      "_blank",
+    );
+
+    expect(screen.getByText("UFC Title-Fight Wins")).toBeInTheDocument();
+    expect(screen.getByText("Top-5 Wins")).toBeInTheDocument();
+    expect(screen.getByText("Prime UFC Record")).toBeInTheDocument();
+    expect(screen.getByText("Active Elite Years")).toBeInTheDocument();
+
+    const championship = screen.getByRole("button", { name: /Championship Resume/ });
+    expect(championship).toHaveTextContent("99");
+    fireEvent.click(championship);
+    expect(screen.getByRole("heading", { name: "Championship Resume: 99 rating" })).toBeInTheDocument();
+    expect(screen.getByText("Adjusted title wins")).toBeInTheDocument();
+
+    expect(screen.queryByText("KEY JUDGMENT CALLS")).not.toBeInTheDocument();
+    expect(screen.queryByText("Era depth")).not.toBeInTheDocument();
+    expect(screen.queryByText(/division multiplier/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Model 101/i)).not.toBeInTheDocument();
+    expect(screen.getByText(/He cannot rank higher/i)).toBeInTheDocument();
+    expect(screen.queryByText(/fighters above Jon Jones/i)).not.toBeInTheDocument();
+  });
+
   it("supports direct profiles outside the former ten-fighter scaffold", async () => {
     renderRoute("/fighters/matt-hughes");
 
     expect(await screen.findByRole("heading", { name: "Matt Hughes" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Category breakdown" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "How the résumé wins" })).toBeInTheDocument();
     expect(screen.getByText("WHY NOT RANKED HIGHER?")).toBeInTheDocument();
   });
 

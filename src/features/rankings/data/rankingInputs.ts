@@ -16,6 +16,7 @@ const finiteNumber = z.number().finite();
 const presentationSchema = z
   .object({
     slug: z.string().min(1),
+    nickname: z.string().min(1).nullable(),
     primaryDivision: z.string().nullable(),
     secondaryDivision: z.string().nullable(),
     divisionLabel: z.string().min(1),
@@ -28,6 +29,7 @@ const presentationSchema = z
     photoUrl: z.string().nullable(),
     thumbUrl: z.string().nullable(),
     watchUrl: z.string().url(),
+    signatureFightUrl: z.string().url().nullable(),
   })
   .strict();
 

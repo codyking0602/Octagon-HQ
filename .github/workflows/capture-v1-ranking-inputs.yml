@@ -9,6 +9,7 @@ on:
       - scripts/capture-v1-ranking-inputs.mjs
       - scripts/add-v1-ranking-controls.mjs
       - scripts/add-v1-watch-moments.mjs
+      - scripts/add-v1-profile-metadata.mjs
 
 permissions:
   contents: write
@@ -67,6 +68,12 @@ jobs:
             --v1-dir .tmp/v1 \
             --input "${INPUT_PATH}"
 
+      - name: Add pinned V1 profile metadata
+        run: |
+          node scripts/add-v1-profile-metadata.mjs \
+            --v1-dir .tmp/v1 \
+            --input "${INPUT_PATH}"
+
       - name: Normalize generated input data
         run: |
           node --input-type=module <<'NODE'
@@ -96,6 +103,8 @@ jobs:
             if (fighter.facts.fights.some((fight) => !fight.division)) throw new Error(`${fighter.fighter} has a fight without division evidence.`);
             if (!fighter.judgments.championship || !fighter.judgments.opponentQuality || !fighter.judgments.apex) throw new Error(`${fighter.fighter} is missing judgment inputs.`);
             if (!fighter.presentation.watchUrl) throw new Error(`${fighter.fighter} is missing a Watch Moment URL.`);
+            if (!Object.prototype.hasOwnProperty.call(fighter.presentation, 'nickname')) throw new Error(`${fighter.fighter} is missing nickname metadata.`);
+            if (!Object.prototype.hasOwnProperty.call(fighter.presentation, 'signatureFightUrl')) throw new Error(`${fighter.fighter} is missing signature-fight metadata.`);
             for (const forbidden of ['rank', 'ovr', 'totalScore', 'rawScore', 'championshipScore', 'primeDominanceScore']) {
               if (Object.prototype.hasOwnProperty.call(fighter, forbidden)) throw new Error(`Generated input row stores forbidden calculated field ${forbidden}.`);
             }
