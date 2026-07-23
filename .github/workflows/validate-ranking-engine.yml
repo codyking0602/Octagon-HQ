@@ -1,0 +1,42 @@
+name: Validate ranking engine
+
+on:
+  push:
+    branches:
+      - "agent/**"
+    paths:
+      - .github/workflows/validate-ranking-engine.yml
+      - src/features/rankings/engine/**
+      - package.json
+      - tsconfig.json
+      - vite.config.ts
+      - vitest.setup.ts
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-ranking-engine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
