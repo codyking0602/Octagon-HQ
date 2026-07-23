@@ -2,5 +2,62 @@
 > octagon-hq@0.1.0 typecheck
 > tsc --noEmit
 
-src/features/rankings/engine/eraWindow.ts(19,29): error TS2339: Property 'distance' does not exist on type 'never'.
-src/features/rankings/engine/eraWindow.ts(19,62): error TS2339: Property 'date' does not exist on type 'never'.
+
+> octagon-hq@0.1.0 test
+> vitest run
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.10 [39m[90m/home/runner/work/Octagon-HQ/Octagon-HQ[39m
+
+ [32m✓[39m src/features/rankings/engine/parityFixture.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m src/features/rankings/engine/categoryCalculators.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+ [32m✓[39m src/features/rankings/engine/rankingEngine.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 40[2mms[22m[39m
+ [31m❯[39m src/features/rankings/rankingModel.test.ts [2m([22m[2m4 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 23[2mms[22m[39m
+     [32m✓[39m loads exactly 80 typed input fighters without calculated ownership fields[32m 7[2mms[22m[39m
+[31m     [31m×[31m recalculates every V1 category, modifier, total, rank, OVR, and visible stat[39m[32m 12[2mms[22m[39m
+     [32m✓[39m preserves the exact men's and women's production boards[32m 2[2mms[22m[39m
+     [32m✓[39m retains the locked loss-context exceptions from canonical facts[32m 1[2mms[22m[39m
+ [32m✓[39m src/app/App.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 2154[2mms[22m[39m
+     [33m[2m✓[22m[39m opens on Home without temporary or restricted product copy [33m 534[2mms[22m[39m
+     [33m[2m✓[22m[39m renders all calculated men's and women's ranking boards [33m 983[2mms[22m[39m
+     [33m[2m✓[22m[39m supports direct profiles outside the former ten-fighter scaffold [33m 325[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps unfinished destinations isolated [33m 310[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m src/features/rankings/rankingModel.test.ts[2m > [22mcomplete calculation-backed ranking model[2m > [22mrecalculates every V1 category, modifier, total, rank, OVR, and visible stat
+[31m[1mAssertionError[22m: Jon Jones visible stats: expected { ufcRecord: '22-1, 1 NC', …(10) } to deeply equal { ufcRecord: '22-1, 1 NC', …(10) }[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[33m@@ -1,8 +1,8 @@[39m
+[2m  {[22m
+[2m    "activeEliteYears": 10.51,[22m
+[32m-   "adjustedTitleWins": 14.54,[39m
+[31m+   "adjustedTitleWins": 15.8,[39m
+[2m    "finishRatePct": 54.55,[22m
+[2m    "primeRecord": "16-0, 1 NC",[22m
+[2m    "rankedWins": 19,[22m
+[2m    "roundsWonPct": 86.67,[22m
+[2m    "throughPrimeUfcFights": 21,[22m
+
+[36m [2m❯[22m src/features/rankings/rankingModel.test.ts:[2m57:74[22m[39m
+    [90m 55|[39m       [34mexpect[39m(row[33m.[39mrank[33m,[39m [32m`[39m[36m${[39mrow[33m.[39mfighter[36m}[39m[32m rank`[39m)[33m.[39m[34mtoBe[39m(expected[33m![39m[33m.[39mrank)[33m;[39m
+    [90m 56|[39m       [34mexpect[39m(row[33m.[39movr[33m,[39m [32m`[39m[36m${[39mrow[33m.[39mfighter[36m}[39m[32m OVR`[39m)[33m.[39m[34mtoBe[39m(expected[33m![39m[33m.[39movr)[33m;[39m
+    [90m 57|[39m       expect(row.metadata?.visibleStats, `${row.fighter} visible stats…
+    [90m   |[39m                                                                          [31m^[39m
+    [90m 58|[39m         expected[33m![39m[33m.[39mvisibleStats[33m,[39m
+    [90m 59|[39m       )[33m;[39m
+[90m [2m❯[22m src/features/rankings/rankingModel.test.ts:[2m46:38[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m4 passed[39m[22m[90m (5)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m23 passed[39m[22m[90m (24)[39m
+[2m   Start at [22m 09:33:03
+[2m   Duration [22m 5.97s[2m (transform 1.71s, setup 530ms, import 2.81s, tests 2.26s, environment 4.99s)[22m
+
+
+::error file=/home/runner/work/Octagon-HQ/Octagon-HQ/src/features/rankings/rankingModel.test.ts,title=src/features/rankings/rankingModel.test.ts > complete calculation-backed ranking model > recalculates every V1 category%2C modifier%2C total%2C rank%2C OVR%2C and visible stat,line=57,column=74::AssertionError: Jon Jones visible stats: expected { ufcRecord: '22-1, 1 NC', …(10) } to deeply equal { ufcRecord: '22-1, 1 NC', …(10) }%0A%0A- Expected%0A+ Received%0A%0A@@ -1,8 +1,8 @@%0A  {%0A    "activeEliteYears": 10.51,%0A-   "adjustedTitleWins": 14.54,%0A+   "adjustedTitleWins": 15.8,%0A    "finishRatePct": 54.55,%0A    "primeRecord": "16-0, 1 NC",%0A    "rankedWins": 19,%0A    "roundsWonPct": 86.67,%0A    "throughPrimeUfcFights": 21,%0A%0A ❯ src/features/rankings/rankingModel.test.ts:57:74%0A ❯ src/features/rankings/rankingModel.test.ts:46:38%0A%0A
