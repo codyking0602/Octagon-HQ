@@ -150,7 +150,7 @@ export const rankingInputDatasetSchema = z
     filters: z
       .object({
         eras: z.array(rankingEraSchema).length(8),
-        eraMembership: z.record(eraMembershipSchema),
+        eraMembership: z.record(z.string(), eraMembershipSchema),
       })
       .strict(),
     fighters: z.array(rankingInputFighterSchema).length(80),
