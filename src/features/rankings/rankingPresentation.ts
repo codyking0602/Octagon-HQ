@@ -1,5 +1,6 @@
 import { canonicalRankingInputs } from "./data/rankingInputs";
 
+// Profile-only links and labels stay in pinned presentation metadata, never in the score model.
 const presentationBySlug = new Map(
   canonicalRankingInputs.fighters.map((fighter) => [fighter.presentation.slug, fighter.presentation]),
 );
