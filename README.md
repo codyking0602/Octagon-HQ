@@ -8,6 +8,9 @@ Before starting work in a new conversation, read:
 
 - [`docs/HANDOFF.md`](docs/HANDOFF.md) — exact current status, deployment, temporary dependencies, completed work, next safe action, and a copy-paste new-chat prompt.
 - [`docs/product-blueprint.md`](docs/product-blueprint.md) — stable product principles, ownership rules, and migration order.
+- [`docs/RANKINGS-MIGRATION.md`](docs/RANKINGS-MIGRATION.md) — critical correction that the current V2 Rankings page is static disposable scaffolding, plus the required scoring-parity and visual-parity migration plan.
+
+Do not add fighters or polish the current V2 Rankings rows until the real V1 calculation pipeline and approved Rankings presentation have been audited and the replacement plan is approved.
 
 ## Local development
 
