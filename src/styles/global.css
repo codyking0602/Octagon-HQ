@@ -66,6 +66,15 @@ img { max-width: 100%; }
 .board-preview__row b { font-size: 20px; }
 
 .rankings-heading { padding-bottom: 0; }
+.ranking-board-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); }
+.ranking-board-tabs button { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 42px; border: 0; border-radius: calc(var(--radius-md) - 4px); background: transparent; color: var(--text-secondary); font-weight: 900; cursor: pointer; }
+.ranking-board-tabs button span { display: grid; place-items: center; min-width: 24px; height: 20px; padding: 0 6px; border-radius: 999px; background: var(--surface-soft); color: var(--text-muted); font-size: 10px; }
+.ranking-board-tabs button.is-active { background: var(--ufc-red); color: white; }
+.ranking-board-tabs button.is-active span { background: rgba(0, 0, 0, .25); color: white; }
+.ranking-kpis { display: grid; grid-template-columns: .75fr 1.5fr .75fr; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--border); gap: 1px; }
+.ranking-kpis div { display: grid; align-content: center; gap: 4px; min-width: 0; min-height: 76px; padding: 12px; background: var(--surface); text-align: center; }
+.ranking-kpis strong { overflow: hidden; font-size: 17px; line-height: 1.1; text-overflow: ellipsis; white-space: nowrap; }
+.ranking-kpis span { color: var(--text-muted); font-size: 9px; font-weight: 850; letter-spacing: .06em; text-transform: uppercase; }
 .ranking-search input { width: 100%; min-height: 48px; padding: 0 16px; border: 1px solid var(--border); border-radius: var(--radius-md); outline: 0; background: var(--surface); color: var(--text-primary); }
 .ranking-search input:focus { border-color: rgba(229, 9, 20, .8); box-shadow: 0 0 0 3px rgba(229, 9, 20, .12); }
 .ranking-list { overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
@@ -76,7 +85,7 @@ img { max-width: 100%; }
 .ranking-row__photo { width: 52px; height: 52px; }
 .ranking-row__identity { display: grid; gap: 4px; min-width: 0; }
 .ranking-row__identity strong { overflow: hidden; font-size: 16px; text-overflow: ellipsis; white-space: nowrap; }
-.ranking-row__identity span { color: var(--text-muted); font-size: 11px; font-weight: 750; }
+.ranking-row__identity span { overflow: hidden; color: var(--text-muted); font-size: 11px; font-weight: 750; text-overflow: ellipsis; white-space: nowrap; }
 .ranking-row__ovr { display: grid; justify-items: center; line-height: 1; }
 .ranking-row__ovr strong { font-size: 21px; }
 .ranking-row__ovr span { margin-top: 3px; color: var(--ufc-red-strong); font-size: 8px; font-weight: 950; letter-spacing: .09em; }
