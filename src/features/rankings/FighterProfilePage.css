@@ -1,0 +1,139 @@
+.fighter-profile-page {
+  display: grid;
+  gap: 1rem;
+}
+
+.fighter-toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.fighter-toolbar a,
+.fighter-toolbar button,
+.profile-actions a {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  border-radius: 999px;
+  padding: 0.7rem 1rem;
+  text-decoration: none;
+  font: inherit;
+}
+
+.fighter-photo-card {
+  overflow: hidden;
+  border-radius: 28px;
+  background: #07090d;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.fighter-photo-card img {
+  display: block;
+  width: 100%;
+  height: min(72vh, 620px);
+  object-fit: cover;
+  object-position: top center;
+}
+
+.fighter-identity {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.fighter-identity h1 {
+  margin: 0;
+  font-size: clamp(2.4rem, 10vw, 5rem);
+}
+
+.fighter-nickname {
+  color: #d7b56d;
+  font-weight: 700;
+}
+
+.identity-meta,
+.resume-grid,
+.category-profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.identity-meta span,
+.resume-stat,
+.category-card {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.85rem;
+}
+
+.identity-meta small,
+.resume-stat small,
+.category-card small {
+  display: block;
+  color: rgba(255, 255, 255, 0.62);
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+}
+
+.identity-meta strong,
+.resume-stat strong,
+.category-card strong {
+  font-size: 1.2rem;
+}
+
+.profile-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.profile-actions a {
+  text-align: center;
+  font-weight: 800;
+}
+
+.profile-actions a:last-child {
+  background: #d8ad52;
+  color: #171105;
+}
+
+.category-card {
+  text-align: left;
+  color: inherit;
+  font: inherit;
+}
+
+.category-card.is-open {
+  border-color: #d8ad52;
+  background: rgba(216, 173, 82, 0.1);
+}
+
+.category-card__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.category-detail {
+  grid-column: 1 / -1;
+}
+
+.profile-copy-card p {
+  line-height: 1.6;
+}
+
+@media (max-width: 680px) {
+  .profile-actions,
+  .resume-grid,
+  .category-profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .fighter-photo-card img {
+    height: 62vh;
+  }
+}

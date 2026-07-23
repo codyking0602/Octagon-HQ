@@ -1,115 +1,118 @@
+import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { FighterPhoto } from "./FighterPhoto";
-import { categoryRating, getFighter } from "./rankingModel";
+import { categoryBoard, rankingCategoryOptions, type CategoryGender, type RankingCategory } from "./rankingControls";
+import { abbreviateDivisionLabel, categoryDisplayRating, categorySupportCopy } from "./rankingDisplay";
+import { getFighter, type RankingFighter } from "./rankingModel";
+import { nicknameFor, signatureFightFor, watchMomentFor } from "./rankingPresentation";
+import "./FighterProfilePage.css";
 
-const categories = [
-  { key: "championship", label: "Championship", maximum: 30 },
-  { key: "opponentQuality", label: "Opponent quality", maximum: 30 },
-  { key: "primeDominance", label: "Prime dominance", maximum: 30 },
-  { key: "longevity", label: "Longevity", maximum: 30 },
-] as const;
+type ProfileCategory = RankingCategory;
+
+const categoryProof: Record<ProfileCategory, (fighter: RankingFighter) => string> = {
+  championship: (fighter) => `${fighter.visibleStats.titleFightWins} UFC title-fight wins`,
+  opponentQuality: (fighter) => `${fighter.visibleStats.topFiveWins} Top-5 wins`,
+  primeDominance: (fighter) => `${fighter.visibleStats.primeRecord} prime UFC record`,
+  longevity: (fighter) => `${fighter.visibleStats.activeEliteYears.toFixed(1)} active elite years`,
+  apexPeak: () => "Signature peak performances carry elite separation",
+  penalty: (fighter) => fighter.penalty === 0 ? "No counted UFC loss damage" : "Loss context is already reflected",
+};
+
+function boardGender(fighter: RankingFighter): CategoryGender {
+  return fighter.board === "women" ? "women" : "men";
+}
+
+function categoryRank(fighter: RankingFighter, category: ProfileCategory) {
+  return categoryBoard(boardGender(fighter), category).findIndex((row) => row.slug === fighter.slug) + 1;
+}
+
+function whyNotHigherCopy(fighter: RankingFighter) {
+  if (fighter.rank !== 1) return fighter.whyNotHigher;
+  if (fighter.slug === "jon-jones") {
+    return "He cannot rank higher. The argument against a runaway #1 case is based on close fights, inactivity, heavyweight sample size, and outside-the-cage controversy—not a stronger UFC résumé above him.";
+  }
+  return "This fighter already owns the top slot on this board, so the limiting case is about whether the lead is narrow rather than whether a stronger résumé sits above them.";
+}
 
 export default function FighterProfilePage() {
   const { slug } = useParams();
   const fighter = getFighter(slug);
+  const [openCategory, setOpenCategory] = useState<ProfileCategory | null>(null);
+
+  const actionUrl = useMemo(() => (fighter ? signatureFightFor(fighter.slug) ?? watchMomentFor(fighter.slug) : "#"), [fighter]);
 
   if (!fighter) {
     return (
       <div className="page">
         <section className="surface-card empty-state">
           <h1>Fighter not found</h1>
-          <Link className="primary-action" to="/rankings">Back to rankings</Link>
+          <Link className="primary-action" to="/rankings">Back to Rankings</Link>
         </section>
       </div>
     );
   }
 
+  const stats = fighter.visibleStats;
+  const nickname = nicknameFor(fighter.slug);
+  const profileCategories = rankingCategoryOptions.map((category) => category.value);
+
   return (
     <div className="page fighter-profile-page">
-      <Link className="back-link" to="/rankings">‹ Rankings</Link>
+      <nav className="fighter-toolbar" aria-label="Fighter profile controls">
+        <Link to="/rankings">‹ Back to Rankings</Link>
+        <button type="button" onClick={() => void navigator.share?.({ title: fighter.name, url: window.location.href })}>Share</button>
+      </nav>
 
-      <section className="fighter-hero">
-        <div className="fighter-hero__copy">
-          <p className="eyebrow">#{fighter.rank} UFC ALL-TIME</p>
-          <h1>{fighter.name}</h1>
-          <p>{fighter.oneLiner}</p>
-          <div className="fighter-hero__meta">
-            <span>{fighter.visibleStats.ufcRecord} UFC</span>
-            <span>{fighter.division}</span>
-            <span>Model {fighter.rawScore.toFixed(2)}</span>
-          </div>
+      <section className="fighter-photo-card" aria-label={`${fighter.name} clean fighter photo`}>
+        <FighterPhoto name={fighter.name} src={fighter.profileUrl} className="fighter-profile-photo" />
+      </section>
+
+      <section className="surface-card fighter-identity">
+        <p className="eyebrow">#{fighter.rank} UFC All-Time</p>
+        <h1>{fighter.name}</h1>
+        {nickname ? <p className="fighter-nickname">“{nickname}”</p> : null}
+        <p>{fighter.oneLiner}</p>
+        <div className="identity-meta">
+          <span><small>OVR</small><strong>{fighter.ovr}</strong></span>
+          <span><small>UFC record</small><strong>{stats.ufcRecord}</strong></span>
+          <span><small>Division</small><strong>{abbreviateDivisionLabel(fighter.division)}</strong></span>
+          <span><small>Résumé</small><strong>{fighter.resumeTag}</strong></span>
         </div>
-        <div className="fighter-hero__visual">
-          <FighterPhoto name={fighter.name} src={fighter.profileUrl} className="fighter-hero__photo" />
-          <span className="fighter-hero__ovr"><strong>{fighter.ovr}</strong><small>OVR</small></span>
+      </section>
+
+      <section className="profile-actions" aria-label="Profile actions">
+        <Link to={`/intelligence?compare=${fighter.slug}`}>Compare</Link>
+        <a href="#why-ranked-here">Ask Why</a>
+        <a href={actionUrl} target="_blank" rel="noopener noreferrer">{signatureFightFor(fighter.slug) ? "Watch Signature Fight" : "Watch Moment"}</a>
+      </section>
+
+      <section className="surface-card" aria-labelledby="resume-title">
+        <p className="eyebrow">Résumé Snapshot</p>
+        <h2 id="resume-title">Calculated visible résumé</h2>
+        <div className="resume-grid">
+          <span className="resume-stat"><small>UFC record</small><strong>{stats.ufcRecord}</strong></span>
+          <span className="resume-stat"><small>UFC title-fight wins</small><strong>{stats.titleFightWins}</strong></span>
+          <span className="resume-stat"><small>Top-5 wins</small><strong>{stats.topFiveWins}</strong></span>
+          <span className="resume-stat"><small>Prime UFC record</small><strong>{stats.primeRecord}</strong></span>
+          <span className="resume-stat"><small>Rounds won</small><strong>{Math.round(stats.roundsWonPct)}%</strong></span>
+          <span className="resume-stat"><small>Active elite years</small><strong>{stats.activeEliteYears.toFixed(1)}</strong></span>
         </div>
       </section>
 
       <section className="surface-card" aria-labelledby="category-title">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">SCORECARD</p>
-            <h2 id="category-title">Category breakdown</h2>
-          </div>
-        </div>
-        <div className="category-list">
-          {categories.map((category) => {
-            const raw = fighter[category.key];
-            const rating = categoryRating(raw, category.maximum);
-            return (
-              <div className="category-row" key={category.key}>
-                <div><span>{category.label}</span><strong>{rating}</strong></div>
-                <div className="category-meter"><span style={{ width: `${rating}%` }} /></div>
-              </div>
-            );
+        <p className="eyebrow">Category Scorecard</p><h2 id="category-title">Category breakdown</h2>
+        <div className="category-profile-grid">
+          {profileCategories.map((category) => {
+            const option = rankingCategoryOptions.find((row) => row.value === category)!;
+            const isOpen = openCategory === category;
+            return <button type="button" key={category} className={`category-card${isOpen ? " is-open" : ""}`} aria-expanded={isOpen} onClick={() => setOpenCategory(isOpen ? null : category)}><span className="category-card__top"><span><small>{option.label}</small><strong>{categoryDisplayRating(boardGender(fighter), category, fighter)}</strong></span><span>#{categoryRank(fighter, category)}</span></span><p>{categoryProof[category](fighter)}</p>{isOpen ? <span className="category-detail"><strong>What it means:</strong> {option.description} <strong>Why here:</strong> {categoryProof[category](fighter)}. Supporting facts: {stats.ufcRecord} UFC, {stats.primeRecord} prime.</span> : null}</button>;
           })}
-          <div className="penalty-row"><span>Peak Apex</span><strong>+{fighter.apexPeak.toFixed(2)}</strong></div>
-          <div className="penalty-row"><span>Loss context</span><strong>{fighter.penalty.toFixed(2)}</strong></div>
-          <div className="penalty-row"><span>Era depth</span><strong>{fighter.eraDepth.toFixed(2)}</strong></div>
         </div>
       </section>
 
-      <section className="surface-card profile-copy-card">
-        <p className="eyebrow">RESUME SNAPSHOT</p>
-        <h2>{fighter.resumeTag}</h2>
-        <p>
-          {fighter.visibleStats.titleFightWins} UFC title-fight wins · {fighter.visibleStats.topFiveWins} top-five wins · {fighter.visibleStats.finishRatePct.toFixed(1)}% finish rate · {fighter.visibleStats.activeEliteYears.toFixed(1)} active elite years
-        </p>
-      </section>
-
-      <section className="surface-card profile-copy-card">
-        <p className="eyebrow">DIVISION STRENGTH</p>
-        <h2>Era and division context</h2>
-        <p>{fighter.divisionStrength}</p>
-      </section>
-
-      <section className="surface-card profile-copy-card">
-        <p className="eyebrow">KEY JUDGMENT CALLS</p>
-        <h2>What the model decided</h2>
-        {fighter.judgmentCalls.length ? (
-          <ul>{fighter.judgmentCalls.map((call) => <li key={call}>{call}</li>)}</ul>
-        ) : (
-          <p>The position follows directly from the approved UFC-only facts and category inputs.</p>
-        )}
-      </section>
-
-      <section className="surface-card profile-copy-card">
-        <p className="eyebrow">WHY RANKED HERE</p>
-        <h2>Why #{fighter.rank}</h2>
-        <p>{fighter.whyRankedHere}</p>
-      </section>
-
-      <section className="surface-card profile-copy-card profile-copy-card--penalty">
-        <p className="eyebrow">WHY NOT RANKED HIGHER?</p>
-        <h2>The limiting case</h2>
-        <p>{fighter.whyNotHigher}</p>
-      </section>
-
-      <section className="surface-card profile-copy-card">
-        <p className="eyebrow">FINAL TAKEAWAY</p>
-        <h2>The UFC-only case</h2>
-        <p>{fighter.finalTakeaway}</p>
-      </section>
+      <section id="why-ranked-here" className="surface-card profile-copy-card"><p className="eyebrow">Why Ranked Here</p><h2>Why #{fighter.rank}</h2><p>{fighter.whyRankedHere}</p></section>
+      <section className="surface-card profile-copy-card"><p className="eyebrow">WHY NOT RANKED HIGHER?</p><h2>The limiting case</h2><p>{whyNotHigherCopy(fighter)}</p></section>
+      <section className="surface-card profile-copy-card"><p className="eyebrow">Final Takeaway</p><h2>The UFC-only case</h2><p>{fighter.finalTakeaway}</p></section>
     </div>
   );
 }
