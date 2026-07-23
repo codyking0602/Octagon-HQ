@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import { FighterPhoto } from "../rankings/FighterPhoto";
+import { menAllTime } from "../rankings/rankingData";
 
 const hqStats = [
   { label: "Daily streak", value: "—" },
@@ -22,7 +24,6 @@ export default function HomePage() {
             <p className="eyebrow">PERSONALIZED</p>
             <h2 id="your-hq-title">Your HQ</h2>
           </div>
-          <span className="status-pill">V2</span>
         </div>
 
         <div className="hq-card__grid">
@@ -34,15 +35,27 @@ export default function HomePage() {
           ))}
         </div>
 
-        <Link className="primary-action" to="/rankings">
-          Explore the rankings
-        </Link>
+        <Link className="primary-action" to="/rankings">Explore the rankings</Link>
       </section>
 
-      <section className="surface-card build-card">
-        <p className="eyebrow">FOUNDATION ACTIVE</p>
-        <h2>Built to stay fast</h2>
-        <p>Each destination now loads independently. War Room remains completely invisible unless access is granted.</p>
+      <section className="surface-card board-preview" aria-labelledby="board-preview-title">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">TOP OF THE BOARD</p>
+            <h2 id="board-preview-title">UFC all-time</h2>
+          </div>
+          <Link className="text-link" to="/rankings">View all</Link>
+        </div>
+        <div className="board-preview__list">
+          {menAllTime.slice(0, 3).map((fighter) => (
+            <Link className="board-preview__row" to={`/fighters/${fighter.slug}`} key={fighter.slug}>
+              <span className="board-preview__rank">{fighter.rank}</span>
+              <FighterPhoto name={fighter.name} src={fighter.thumbUrl} />
+              <span><strong>{fighter.name}</strong><small>{fighter.division}</small></span>
+              <b>{fighter.ovr}</b>
+            </Link>
+          ))}
+        </div>
       </section>
     </div>
   );
