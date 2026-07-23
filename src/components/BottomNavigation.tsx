@@ -2,10 +2,10 @@ import { NavLink } from "react-router-dom";
 
 const destinations = [
   { to: "/", label: "Home", end: true },
-  { to: "/rankings", label: "Rankings" },
-  { to: "/play", label: "Play" },
-  { to: "/picks", label: "Picks" },
-  { to: "/intelligence", label: "Intelligence" },
+  { to: "/rankings", label: "Rankings", end: false },
+  { to: "/play", label: "Play", end: false },
+  { to: "/picks", label: "Picks", end: false },
+  { to: "/intelligence", label: "Intelligence", end: false },
 ] as const;
 
 export function BottomNavigation() {
