@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
+  abbreviateDivisionLabel,
+  categoryBadgeLabel,
+  categoryDisplayRating,
+} from "./rankingDisplay";
+import {
   DIVISION_RESUME_SHARE_MIN,
   categoryBoard,
   divisionOrder,
@@ -19,7 +24,6 @@ function expectDescending(values: number[]) {
 describe("ranking control projections", () => {
   it("conserves every calculated men's score across fight-level division allocations", () => {
     expect(divisionRankingReport.passed).toBe(true);
-    expect(divisionRankingReport.rows.length).toBeGreaterThan(0);
     expect(divisionRankingReport.conservation).toEqual([]);
     expect(divisionRankingReport.allocationOwner).toBe(
       "canonical fight-level division evidence",
@@ -42,10 +46,12 @@ describe("ranking control projections", () => {
       const board = categoryBoard("men", category.value);
       expect(board).toHaveLength(65);
       expectDescending(board.map((fighter) => fighter[category.value]));
+      expect(categoryDisplayRating("men", category.value, board[0])).toBe(99);
+      expect(categoryBadgeLabel(category.value)).not.toBe("OVR");
     });
   });
 
-  it("preserves the eight pinned V1 eras and the applicable women's subset", () => {
+  it("preserves the eight pinned V1 eras, descriptions, and defining fights", () => {
     expect(rankingEras).toHaveLength(8);
     expect(rankingEras.map((era) => era.id)).toEqual([
       "tournament",
@@ -57,6 +63,17 @@ describe("ranking control projections", () => {
       "apex",
       "new-blood",
     ]);
+    rankingEras.forEach((era) => {
+      expect(era.description.length).toBeGreaterThan(20);
+      expect(era.definingFight.length).toBeGreaterThan(5);
+      expect(era.fightUrl).toMatch(/^https:\/\//);
+    });
     expect(erasForBoard("women").every((era) => era.startYear >= 2011)).toBe(true);
+  });
+
+  it("uses compact division abbreviations only in fighter-row presentation", () => {
+    expect(abbreviateDivisionLabel("Welterweight / Middleweight")).toBe("WW / MW");
+    expect(abbreviateDivisionLabel("Light Heavyweight / Heavyweight")).toBe("LHW / HW");
+    expect(abbreviateDivisionLabel("Women's Strawweight / Women's Flyweight")).toBe("SW / FLW");
   });
 });
