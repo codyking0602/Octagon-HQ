@@ -74,6 +74,15 @@ interface CalculationMetadata {
   visibleStats: RankingVisibleStats;
 }
 
+export interface ProfileEvidence {
+  championshipRecord: string;
+  bestUfcWins: string;
+  eliteWindow: string;
+  apexPerformances: { opponent: string; summary: string }[];
+  primeLosses: string;
+  postPrimeLosses: number;
+}
+
 export interface RankingFighter {
   fighter: string;
   name: string;
@@ -103,6 +112,7 @@ export interface RankingFighter {
   eraDepth: number;
   visibleStats: RankingVisibleStats;
   traces: CalculationMetadata["traces"];
+  profileEvidence: ProfileEvidence;
 }
 
 function countDispositions(fights: readonly CanonicalFight[]): DispositionCounts {
@@ -221,6 +231,69 @@ function deriveVisibleStats(
   };
 }
 
+function formatChampionshipRecord(input: RankingInputFighter) {
+  const counts = input.facts.fights.reduce<DispositionCounts>((totals, fight) => {
+    const rule = CHAMPIONSHIP_TYPES[fight.championshipType] ?? CHAMPIONSHIP_TYPES.none;
+    if (!rule.officialTitleFight || fight.championshipEligible === false) return totals;
+    if (fight.officialResult === "win") totals.wins += 1;
+    else if (fight.officialResult === "loss") totals.losses += 1;
+    else if (fight.officialResult === "draw") totals.draws += 1;
+    else if (fight.officialResult === "no-contest") totals.noContests += 1;
+    return totals;
+  }, { wins: 0, losses: 0, draws: 0, noContests: 0, technicalExceptions: 0 });
+  return formatRecord(counts, false);
+}
+
+function compactOpponentList(opponents: string[]) {
+  if (!opponents.length) return "None";
+  const counts = new Map<string, number>();
+  opponents.forEach((opponent) => counts.set(opponent, (counts.get(opponent) ?? 0) + 1));
+  return [...counts.entries()]
+    .map(([opponent, count]) => count > 1 ? `${opponent} ×${count}` : opponent)
+    .join(", ");
+}
+
+function methodLabel(method: string) {
+  if (method === "ko-tko") return "TKO/KO";
+  if (method === "submission") return "submission";
+  if (method === "decision") return "decision";
+  if (method === "doctor-stoppage") return "doctor stoppage";
+  return method.replace(/-/g, " ");
+}
+
+function buildProfileEvidence(input: RankingInputFighter): ProfileEvidence {
+  const prime = canonicalPrimeFights(input);
+  const primeIds = new Set(prime.fights.map((fight) => fight.id));
+  const eliteTiers = new Set(["champion-level", "top-five"]);
+  const bestUfcWins = input.facts.fights
+    .filter((fight) => fight.scoringDisposition === "count-win" && eliteTiers.has(fight.qualityTier))
+    .slice(0, 4)
+    .map((fight) => fight.opponent);
+  const firstPrime = prime.fights[0];
+  const lastPrime = prime.fights.at(-1)!;
+  const apexPerformances = input.judgments.apex.performances.map((performance) => {
+    const fight = input.facts.fights.find((candidate) => candidate.id === performance.fightId);
+    if (!fight) return { opponent: "UFC opponent", summary: "Signature UFC performance" };
+    const result = fight.officialResult === "win" ? "Won" : fight.officialResult === "loss" ? "Lost" : "Result";
+    const stakes = fight.championshipType === "none" ? "" : " in a UFC title fight";
+    return { opponent: fight.opponent, summary: `${result} by ${methodLabel(fight.methodCategory)}${stakes}` };
+  });
+  const primeLosses = prime.fights
+    .filter((fight) => fight.scoringDisposition === "count-loss" && fight.lossClassification?.competitive !== false)
+    .map((fight) => fight.opponent);
+  const postPrimeLosses = input.facts.fights
+    .filter((fight) => !primeIds.has(fight.id) && fight.scoringDisposition === "count-loss" && fight.lossClassification?.competitive !== false)
+    .length;
+  return {
+    championshipRecord: formatChampionshipRecord(input),
+    bestUfcWins: compactOpponentList(bestUfcWins),
+    eliteWindow: `${firstPrime.opponent} ${firstPrime.date.slice(0, 4)} → ${lastPrime.opponent} ${lastPrime.date.slice(0, 4)}`,
+    apexPerformances,
+    primeLosses: compactOpponentList(primeLosses),
+    postPrimeLosses,
+  };
+}
+
 function resolveAsset(path: string | null, slug: string, kind: "thumb" | "profile") {
   if (!path) return fighterAsset(slug, kind);
   if (/^https?:\/\//i.test(path)) return path;
@@ -316,6 +389,7 @@ function appRow(
     eraDepth: row.modifiers.eraDepth,
     visibleStats: metadata.visibleStats,
     traces: metadata.traces,
+    profileEvidence: buildProfileEvidence(metadata.input),
   };
 }
 

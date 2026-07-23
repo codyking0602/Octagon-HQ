@@ -3,6 +3,10 @@ import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import { afterEach, describe, expect, it } from "vitest";
 import { AppProviders } from "./providers";
 import { appRoutes } from "./router";
+import { categoryBoard } from "../features/rankings/rankingControls";
+import { categoryDisplayRating } from "../features/rankings/rankingDisplay";
+import { getFighter } from "../features/rankings/rankingModel";
+import { profileCategoryRows } from "../features/rankings/profilePresentation";
 
 afterEach(cleanup);
 
@@ -153,7 +157,7 @@ import { categoryBarFillPercent, tierForRating } from "../features/rankings/prof
 describe("V1-style fighter profile restoration", () => {
   it("puts only the OVR badge over the photo and summary content below it", async () => {
     renderRoute("/fighters/jon-jones");
-    expect(await screen.findByRole("heading", { name: "Jon Jones" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Jon “Bones” Jones" })).toBeInTheDocument();
     const photo = screen.getByLabelText("Jon Jones photo");
     expect(within(photo).getByTestId("photo-ovr-badge")).toHaveTextContent("OVR");
     expect(within(photo).queryByText("Jon Jones")).not.toBeInTheDocument();
@@ -162,8 +166,7 @@ describe("V1-style fighter profile restoration", () => {
     const summary = screen.getByLabelText("Fighter summary");
     expect(summary).toHaveTextContent("#1 UFC All-Time");
     expect(summary).toHaveTextContent("LHW / HW");
-    expect(summary).toHaveTextContent("Jon Jones");
-    expect(summary).toHaveTextContent("Bones");
+    expect(summary).toHaveTextContent("Jon “Bones” Jones");
     expect(summary).not.toHaveTextContent("OVR");
     expect(summary).not.toHaveTextContent("Model");
   });
@@ -182,10 +185,9 @@ describe("V1-style fighter profile restoration", () => {
   it("renders five V1 category cards with fixed tier thresholds and separated bar math", async () => {
     renderRoute("/fighters/matt-hughes");
     expect(await screen.findByRole("heading", { name: "Matt Hughes" })).toBeInTheDocument();
-    ["Title Reign", "Quality Wins", "Prime Dominance", "Elite Longevity", "Loss Context"].forEach((label) => {
+    ["Championship Resume", "Quality Wins", "Prime Dominance", "Elite Longevity", "Peak Apex", "Loss Context"].forEach((label) => {
       expect(screen.getByRole("button", { name: new RegExp(label) })).toBeInTheDocument();
     });
-    expect(screen.queryByRole("button", { name: /Peak Apex/ })).not.toBeInTheDocument();
     expect(tierForRating(97)).toBe("Legendary");
     expect(tierForRating(90)).toBe("Elite");
     expect(tierForRating(85)).toBe("Great");
@@ -193,22 +195,25 @@ describe("V1-style fighter profile restoration", () => {
     expect(tierForRating(79)).toBe("Average");
     expect(categoryBarFillPercent(33, 65)).toBe(55);
     expect(categoryBarFillPercent(49, 65)).toBeLessThan(40);
+    expect(screen.queryByText("PCTL")).not.toBeInTheDocument();
+    expect(screen.getAllByText("Rating").length).toBeGreaterThan(0);
+    expect(screen.queryByRole("button", { name: /49Rating#10/ })).not.toBeInTheDocument();
   });
 
   it("expands only one category explanation at a time", async () => {
     renderRoute("/fighters/jon-jones");
-    expect(await screen.findByRole("heading", { name: "Jon Jones" })).toBeInTheDocument();
-    expect(screen.getByTestId("category-expanded")).toHaveTextContent("Title Reign");
+    expect(await screen.findByRole("heading", { name: "Jon “Bones” Jones" })).toBeInTheDocument();
+    expect(screen.getByTestId("category-expanded")).toHaveTextContent("Championship Resume");
     fireEvent.click(screen.getByRole("button", { name: /Quality Wins/ }));
     expect(screen.getByTestId("category-expanded")).toHaveTextContent("Quality Wins");
-    expect(screen.getByTestId("category-expanded")).not.toHaveTextContent("Title Reign ·");
+    expect(screen.getByTestId("category-expanded")).not.toHaveTextContent("Championship Resume ·");
   });
 
   it("renders V1 why cards and omits hidden legacy/raw mechanics", async () => {
     renderRoute("/fighters/jon-jones");
     expect(await screen.findByRole("heading", { name: "Why Ranked Here" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Why Not Lower?" })).toBeInTheDocument();
-    ["Key Judgment Calls", "Final Takeaway", "Title Context", "Quality Wins table", "Round Control table", "Era and Division Context", "raw model score", "division multiplier", "Peak Apex"].forEach((copy) => {
+    ["Key Judgment Calls", "Final Takeaway", "Title Context", "Quality Wins table", "Round Control table", "Era and Division Context", "raw model score", "division multiplier", "Peak Apex bonus"].forEach((copy) => {
       expect(screen.queryByText(copy, { exact: false })).not.toBeInTheDocument();
     });
 
@@ -222,6 +227,43 @@ describe("V1-style fighter profile restoration", () => {
     expect(screen.getByRole("link", { name: "Watch Signature Fight" })).toHaveAttribute("target", "_blank");
     expect(screen.getByRole("button", { name: "Compare" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Ask Why" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Share" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Share" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Share Matt Hughes profile" })).toBeInTheDocument();
+  });
+});
+
+
+describe("profile category polish", () => {
+  it("uses the category leaderboard owner for profile ratings and ranks", () => {
+    const fighter = getFighter("matt-hughes")!;
+    const row = profileCategoryRows(fighter).find((category) => category.key === "primeDominance")!;
+    const board = categoryBoard("men", "primeDominance");
+    expect(row.rank).toBe(board.findIndex((candidate) => candidate.slug === fighter.slug) + 1);
+    expect(row.rating).toBe(categoryDisplayRating("men", "primeDominance", fighter));
+    expect(row.rank).toBe(10);
+    expect(row.rating).toBeGreaterThanOrEqual(90);
+    expect(row.tier).toBe("Elite");
+  });
+
+  it("renders approved tile counts and special inline nicknames", async () => {
+    renderRoute("/fighters/israel-adesanya");
+    expect(await screen.findByRole("heading", { name: "Israel “The Last Stylebender” Adesanya" })).toBeInTheDocument();
+
+    const expectedCounts = [
+      ["Championship Resume", 2],
+      ["Quality Wins", 2],
+      ["Prime Dominance", 4],
+      ["Elite Longevity", 2],
+      ["Peak Apex", 2],
+      ["Loss Context", 2],
+    ] as const;
+
+    for (const [label, count] of expectedCounts) {
+      fireEvent.click(screen.getByRole("button", { name: new RegExp(label) }));
+      expect(within(screen.getByTestId("category-expanded")).getAllByTestId("evidence-tile")).toHaveLength(count);
+    }
+
+    renderRoute("/fighters/charles-oliveira");
+    expect(await screen.findByRole("heading", { name: "Charles “Do Bronx” Oliveira" })).toBeInTheDocument();
   });
 });

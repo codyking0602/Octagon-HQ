@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { FighterPhoto } from "./FighterPhoto";
 import { getFighter } from "./rankingModel";
 import { watchMomentFor } from "./rankingPresentation";
-import { profileCategoryRows, profileNickname } from "./profilePresentation";
+import { profileCategoryRows, profileDisplayName } from "./profilePresentation";
 
 function shareProfile(name: string, slug: string) {
   const path = `/fighters/${slug}`;
@@ -34,7 +34,7 @@ export default function FighterProfilePage() {
     );
   }
 
-  const nickname = profileNickname(fighter);
+  const displayName = profileDisplayName(fighter);
   const active = categories.find((category) => category.key === activeCategory) ?? categories[0];
   const whyNotHeading = fighter.rank === 1 ? "Why Not Lower?" : "Why Not Ranked Higher?";
   const whyNotCopy = fighter.rank === 1
@@ -45,7 +45,6 @@ export default function FighterProfilePage() {
     <div className="page fighter-profile-page v1-profile">
       <div className="profile-toolbar">
         <Link className="back-link" to="/rankings">‹ Back to Rankings</Link>
-        <button className="profile-icon-button" type="button" onClick={() => shareProfile(fighter.name, fighter.slug)} aria-label={`Share ${fighter.name} profile`}>↗</button>
       </div>
 
       <section className="profile-photo-card" aria-label={`${fighter.name} photo`}> 
@@ -58,8 +57,10 @@ export default function FighterProfilePage() {
           <span>#{fighter.rank} UFC All-Time</span>
           <span>{fighter.division}</span>
         </div>
-        <h1>{fighter.name}</h1>
-        {nickname ? <p className="profile-nickname">“{nickname}”</p> : null}
+        <button className="profile-share-button" type="button" onClick={() => shareProfile(fighter.name, fighter.slug)} aria-label={`Share ${fighter.name} profile`}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0 5 5m-5-5-5 5"/><path d="M5 12v7h14v-7"/></svg>
+        </button>
+        <h1>{displayName}</h1>
         <p>{fighter.oneLiner}</p>
       </section>
 
@@ -67,7 +68,6 @@ export default function FighterProfilePage() {
         <button type="button" onClick={() => navigate("/compare")}>Compare</button>
         <button type="button" onClick={() => whyRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}>Ask Why</button>
         <a href={watchMomentFor(fighter.slug)} target="_blank" rel="noreferrer">Watch Signature Fight</a>
-        <button type="button" onClick={() => shareProfile(fighter.name, fighter.slug)}>Share</button>
       </section>
 
       <section className="surface-card resume-snapshot" aria-labelledby="resume-title">
@@ -91,8 +91,8 @@ export default function FighterProfilePage() {
         <div className="profile-category-grid">
           {categories.map((category) => <button className={`profile-category-card tier-${category.tier.toLowerCase()} ${active.key === category.key ? "is-active" : ""}`} key={category.key} type="button" onClick={() => setActiveCategory(category.key)}>
             <span className="profile-category-card__name">{category.label}</span>
-            <span className="profile-category-card__rating"><strong>{category.rating}</strong><small>PCTL</small></span>
-            <span className="profile-category-card__rank">#{category.rank} category rank</span>
+            <span className="profile-category-card__rating"><strong>{category.rating}</strong><small>Rating</small></span>
+            <span className="profile-category-card__rank">#{category.rank} in category</span>
             <span className="profile-category-card__description">{category.description}</span>
             <span className="profile-category-card__tier">{category.tier}</span>
             <span className="profile-category-card__meter" aria-label={`${category.label} bar ${category.barFillPercent}%`}><span style={{ width: `${category.barFillPercent}%` }} /></span>
@@ -100,10 +100,10 @@ export default function FighterProfilePage() {
         </div>
         <div className="category-expanded" data-testid="category-expanded">
           <div><span className={`profile-category-card__tier tier-${active.tier.toLowerCase()}`}>{active.tier}</span><strong>#{active.rank} category rank</strong></div>
-          <h3>{active.label} · {active.rating} PCTL</h3>
+          <h3>{active.label} · {active.rating} Rating</h3>
           <h4>What it means</h4>
           <p>{active.whatItMeans}</p>
-          <div className="evidence-grid">{active.evidence.map(([label, value]) => <div key={label}><strong>{value}</strong><span>{label}</span></div>)}</div>
+          <div className="evidence-grid">{active.evidence.map(([label, value]) => <div data-testid="evidence-tile" key={label}><strong>{value}</strong><span>{label}</span></div>)}</div>
         </div>
       </section>
 

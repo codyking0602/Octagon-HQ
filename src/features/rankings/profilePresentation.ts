@@ -1,65 +1,69 @@
-import { allTime, categoryRating, type RankingFighter } from "./rankingModel";
+import { categoryBoard, type CategoryGender, type RankingCategory } from "./rankingControls";
+import { categoryDisplayRating } from "./rankingDisplay";
+import type { RankingFighter } from "./rankingModel";
 
-export type ProfileCategoryKey = "championship" | "opponentQuality" | "primeDominance" | "longevity" | "penalty";
+export type ProfileCategoryKey = RankingCategory;
 
 export const profileCategories = [
   {
     key: "championship",
-    label: "Title Reign",
-    description: "UFC title-level résumé: championship wins, defenses, two-division value, and sustained title control.",
-    whatItMeans: "How much championship weight this fighter built inside the UFC.",
+    label: "Championship Resume",
+    description: "UFC championship wins, title-fight success, and sustained control at the top.",
+    whatItMeans: "Measures sustained UFC championship accomplishment through title-fight wins, championship record, reign strength, and repeated control at the top.",
   },
   {
     key: "opponentQuality",
     label: "Quality Wins",
-    description: "Elite UFC wins, top-five victories, ranked depth, and prime-opponent value.",
-    whatItMeans: "How strong the wins were, with the most credit reserved for elite UFC opposition.",
+    description: "Elite UFC wins, top-five victories, opponent timing, and divisional strength.",
+    whatItMeans: "Rewards elite UFC wins based on opponent level, timing, divisional strength, and whether the opponent was still near their prime.",
   },
   {
     key: "primeDominance",
     label: "Prime Dominance",
-    description: "Prime winning, round control, finishes, and separation while the fighter was at their best.",
-    whatItMeans: "How dominant the fighter looked during the approved UFC prime window.",
+    description: "Prime winning, round control, finishes, separation, and durability.",
+    whatItMeans: "Measures how thoroughly the fighter controlled UFC opponents during the approved prime window through winning, rounds, finishes, and durability.",
   },
   {
     key: "longevity",
     label: "Elite Longevity",
-    description: "How long the fighter stayed elite across UFC years, title relevance, and high-level results.",
-    whatItMeans: "How much high-end UFC value the fighter sustained over time.",
+    description: "How long the fighter repeatedly proved elite UFC status.",
+    whatItMeans: "Measures how long the fighter repeatedly proved elite UFC status, rather than simply counting calendar years on the roster.",
+  },
+  {
+    key: "apexPeak",
+    label: "Peak Apex",
+    description: "The fighter’s strongest two-performance UFC stretch.",
+    whatItMeans: "Grades the fighter’s strongest two-performance UFC stretch using opponent quality, stakes, separation, proof, and championship-level aura.",
   },
   {
     key: "penalty",
     label: "Loss Context",
-    description: "How clean or damaging the UFC loss ledger is after opponent, timing, and finish context.",
-    whatItMeans: "Whether losses meaningfully limit the résumé, especially during prime or title-level windows.",
+    description: "How much competitive UFC losses damage the résumé after context.",
+    whatItMeans: "Measures how much competitive UFC losses damage the résumé after accounting for career timing, opponent quality, finishes, and division changes.",
   },
 ] as const;
 
 export type ProfileCategory = (typeof profileCategories)[number];
 
-const categoryMaximums: Record<ProfileCategoryKey, number> = {
-  championship: 30,
-  opponentQuality: 30,
-  primeDominance: 30,
-  longevity: 30,
-  penalty: 20,
+const profileDisplayNameBySlug: Record<string, string> = {
+  "jon-jones": "Jon “Bones” Jones",
+  "georges-st-pierre": "Georges “Rush” St-Pierre",
+  "demetrious-johnson": "Demetrious “Mighty Mouse” Johnson",
+  "anderson-silva": "Anderson “The Spider” Silva",
+  "khabib-nurmagomedov": "Khabib “The Eagle” Nurmagomedov",
+  "daniel-cormier": "Daniel “DC” Cormier",
+  "amanda-nunes": "Amanda “The Lioness” Nunes",
+  "valentina-shevchenko": "Valentina “Bullet” Shevchenko",
+  "israel-adesanya": "Israel “The Last Stylebender” Adesanya",
+  "charles-oliveira": "Charles “Do Bronx” Oliveira",
+  "chan-sung-jung": "“The Korean Zombie” Chan Sung Jung",
+  "mauricio-rua": "Maurício “Shogun” Rua",
+  "brandon-moreno": "Brandon “The Assassin Baby” Moreno",
+  "anthony-pettis": "Anthony “Showtime” Pettis",
 };
 
-const nicknameBySlug: Record<string, string> = {
-  "jon-jones": "Bones",
-  "georges-st-pierre": "Rush",
-  "demetrious-johnson": "Mighty Mouse",
-  "anderson-silva": "The Spider",
-  "khabib-nurmagomedov": "The Eagle",
-  "daniel-cormier": "DC",
-  "amanda-nunes": "The Lioness",
-  "valentina-shevchenko": "Bullet",
-  "brandon-moreno": "The Assassin Baby",
-  "anthony-pettis": "Showtime",
-};
-
-export function profileNickname(fighter: RankingFighter) {
-  return nicknameBySlug[fighter.slug] ?? null;
+export function profileDisplayName(fighter: RankingFighter) {
+  return profileDisplayNameBySlug[fighter.slug] ?? fighter.name;
 }
 
 export function tierForRating(rating: number) {
@@ -70,24 +74,24 @@ export function tierForRating(rating: number) {
   return "Average";
 }
 
-export function categoryBarFillPercent(rank: number, boardSize: number) {
-  const relativePosition = boardSize <= 1 ? 1 : 1 - (rank - 1) / (boardSize - 1);
-  return Math.max(10, Math.min(100, Math.round((10 + relativePosition * 90) * 10) / 10));
+export function relativeStanding(rank: number, boardSize: number) {
+  return boardSize <= 1 ? 1 : 1 - (rank - 1) / (boardSize - 1);
 }
 
-function categoryValue(fighter: RankingFighter, key: ProfileCategoryKey) {
-  if (key === "penalty") return Math.max(0, 20 + fighter.penalty);
-  return fighter[key];
+export function categoryBarFillPercent(rank: number, boardSize: number) {
+  return Math.max(10, Math.min(100, Math.round((10 + relativeStanding(rank, boardSize) * 90) * 10) / 10));
+}
+
+function genderForFighter(fighter: RankingFighter): CategoryGender {
+  return fighter.board === "women" ? "women" : "men";
 }
 
 export function profileCategoryRows(fighter: RankingFighter) {
+  const gender = genderForFighter(fighter);
   return profileCategories.map((category) => {
-    const board = allTime
-      .map((row) => ({ slug: row.slug, value: categoryValue(row, category.key) }))
-      .sort((a, b) => b.value - a.value);
+    const board = categoryBoard(gender, category.key);
     const rank = board.findIndex((row) => row.slug === fighter.slug) + 1;
-    const value = categoryValue(fighter, category.key);
-    const rating = categoryRating(value, categoryMaximums[category.key]);
+    const rating = categoryDisplayRating(gender, category.key, fighter);
     return {
       ...category,
       rating,
@@ -104,32 +108,42 @@ function fmtPct(value: number) {
   return `${value.toFixed(1)}%`;
 }
 
+function times(value: number) {
+  return value === 1 ? "1 time" : `${value} times`;
+}
+
 function evidenceForCategory(fighter: RankingFighter, key: ProfileCategoryKey) {
+  const stats = fighter.visibleStats;
+  const evidence = fighter.profileEvidence;
   switch (key) {
     case "championship":
       return [
-        ["Title-fight wins", String(fighter.visibleStats.titleFightWins)],
-        ["Adjusted title credit", fighter.visibleStats.adjustedTitleWins.toFixed(1)],
+        ["UFC Title-Fight Wins", String(stats.titleFightWins)],
+        ["Championship Record", evidence.championshipRecord],
       ];
     case "opponentQuality":
       return [
-        ["Top-5 wins", String(fighter.visibleStats.topFiveWins)],
-        ["Ranked wins", String(fighter.visibleStats.rankedWins)],
+        ["Top-5 Wins", String(stats.topFiveWins)],
+        ["Best UFC Wins", evidence.bestUfcWins],
       ];
     case "primeDominance":
       return [
-        ["Prime UFC record", fighter.visibleStats.primeRecord],
-        ["Rounds won", fmtPct(fighter.visibleStats.roundsWonPct)],
+        ["Prime UFC Record", stats.primeRecord],
+        ["Rounds Won", fmtPct(stats.roundsWonPct)],
+        ["Finish Rate", fmtPct(stats.finishRatePct)],
+        ["Finished During Prime", times(stats.timesFinishedPrime)],
       ];
     case "longevity":
       return [
-        ["Active elite years", fighter.visibleStats.activeEliteYears.toFixed(1)],
-        ["UFC record", fighter.visibleStats.ufcRecord],
+        ["Active Elite Years", stats.activeEliteYears.toFixed(1)],
+        ["Elite Window", evidence.eliteWindow],
       ];
+    case "apexPeak":
+      return evidence.apexPerformances.slice(0, 2).map((performance) => [performance.opponent, performance.summary]);
     case "penalty":
       return [
-        ["Prime finishes suffered", String(fighter.visibleStats.timesFinishedPrime)],
-        ["Prime sample", `${fighter.visibleStats.throughPrimeUfcFights} fights`],
+        ["Prime Losses", evidence.primeLosses],
+        ["Post-Prime Losses", String(evidence.postPrimeLosses)],
       ];
   }
 }

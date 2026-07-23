@@ -195,3 +195,23 @@ img { max-width: 100%; }
 .evidence-grid strong { font-size: 16px; }
 .evidence-grid span { color: var(--text-muted); font-size: 10px; font-weight: 850; text-transform: uppercase; }
 @media (min-width: 680px) { .profile-photo-card, .profile-photo-card__image { min-height: 520px; } .profile-actions { grid-template-columns: repeat(4, minmax(0, 1fr)); } .profile-category-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+.profile-toolbar { justify-content: flex-start; }
+.profile-summary { position: relative; padding-right: 54px; }
+.profile-share-button { position: absolute; top: 0; right: 0; display: grid; place-items: center; width: 46px; height: 46px; border: 1px solid var(--border-strong, #3a3a3a); border-radius: 13px; background: var(--surface); color: #fff; cursor: pointer; }
+.profile-share-button svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2.15; stroke-linecap: round; stroke-linejoin: round; }
+.profile-category-card { color: var(--text-primary); }
+.profile-category-card__name, .profile-category-card__rating strong { color: var(--text-primary); }
+.profile-category-card__rating small, .profile-category-card__rank { color: #b8b8b8; }
+.profile-category-card__description { color: #d0d0d0; }
+.profile-category-card__tier { background: #242424; color: #f4f4f4; }
+.profile-category-card.is-active { border-color: rgba(229,9,20,.85); }
+.profile-category-card__meter span { background: var(--tier-color); }
+.profile-category-card.tier-legendary, .profile-category-card__tier.tier-legendary { --tier-color: #f7b731; }
+.profile-category-card.tier-elite, .profile-category-card__tier.tier-elite { --tier-color: #2ecc71; }
+.profile-category-card.tier-great, .profile-category-card__tier.tier-great { --tier-color: #a66cff; }
+.profile-category-card.tier-good, .profile-category-card__tier.tier-good { --tier-color: #4aa3ff; }
+.profile-category-card.tier-average, .profile-category-card__tier.tier-average { --tier-color: #f39c12; }
+.profile-category-card__tier.tier-legendary, .profile-category-card__tier.tier-elite, .profile-category-card__tier.tier-great, .profile-category-card__tier.tier-good, .profile-category-card__tier.tier-average { color: #f4f4f4; }
+.profile-category-card__tier.tier-legendary + strong, .profile-category-card__tier.tier-elite + strong, .profile-category-card__tier.tier-great + strong, .profile-category-card__tier.tier-good + strong, .profile-category-card__tier.tier-average + strong { color: var(--text-secondary); }
+@media (min-width: 680px) { .profile-category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

@@ -1,6 +1,5 @@
 import {
   categoryBoard,
-  rankingCategoryValue,
   type CategoryGender,
   type RankingCategory,
 } from "./rankingControls";
@@ -50,13 +49,9 @@ export function categoryDisplayRating(
   fighter: RankingFighter,
 ) {
   const board = categoryBoard(gender, category);
-  const values = board.map((row) => rankingCategoryValue(row, category));
-  const best = values[0] ?? 0;
-  const worst = values.at(-1) ?? best;
-  const value = rankingCategoryValue(fighter, category);
-  if (Math.abs(best - worst) < 0.0001) return 99;
-  const normalized = Math.max(0, Math.min(1, (value - worst) / (best - worst)));
-  return Math.round(70 + normalized * 29);
+  const rank = board.findIndex((row) => row.slug === fighter.slug) + 1;
+  const relativeStanding = board.length <= 1 ? 1 : 1 - (rank - 1) / (board.length - 1);
+  return Math.max(55, Math.min(99, Math.round(55 + relativeStanding * 44)));
 }
 
 export function categorySupportCopy(fighter: RankingFighter, category: RankingCategory) {
