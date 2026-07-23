@@ -95,7 +95,7 @@ export default function RankingsPage() {
     if (view === "division") {
       return {
         title: "Division Rankings",
-        description: "UFC-only divisional resume from the calculated GOAT model.",
+        description: "The UFC's all-time divisional leaderboards.",
         summaryLabel: `${divisionLabel(selectedDivision)} ranking summary`,
       };
     }
