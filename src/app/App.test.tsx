@@ -5,9 +5,10 @@ import { AppProviders } from "./providers";
 import { appRoutes } from "./router";
 import { categoryBoard } from "../features/rankings/rankingControls";
 import { categoryDisplayRating } from "../features/rankings/rankingDisplay";
-import { getFighter } from "../features/rankings/rankingModel";
-import { profileCategoryRows } from "../features/rankings/profilePresentation";
-import { profileCopy } from "../features/rankings/FighterProfilePage";
+import { allTime, getFighter } from "../features/rankings/rankingModel";
+import { categoryBarFillPercent, profileCategories, profileCategoryRows, profileDisplayName, tierForRating } from "../features/rankings/profilePresentation";
+import { profileCopy, whyNotProfileCopy } from "../features/rankings/FighterProfilePage";
+import { resolveProfileWatchAction } from "../features/rankings/rankingPresentation";
 
 afterEach(cleanup);
 
@@ -153,7 +154,6 @@ describe("Octagon HQ V2", () => {
   });
 });
 
-import { categoryBarFillPercent, tierForRating } from "../features/rankings/profilePresentation";
 
 describe("V1-style fighter profile restoration", () => {
   it("puts only the OVR badge over the photo and summary content below it", async () => {
@@ -261,7 +261,7 @@ describe("V1-style fighter profile restoration", () => {
   it("keeps profile actions and route lazy loading intact", async () => {
     renderRoute("/fighters/matt-hughes");
     expect(await screen.findByRole("heading", { name: "Matt Hughes" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Watch Signature Fight" })).toHaveAttribute("target", "_blank");
+    expect(screen.getByRole("link", { name: "Watch Moment" })).toHaveAttribute("target", "_blank");
     expect(screen.getByRole("button", { name: "Compare" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Ask Why" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Share" })).toBeInTheDocument();
@@ -272,7 +272,8 @@ describe("V1-style fighter profile restoration", () => {
 
 describe("profile category polish", () => {
   it("resolves stale hardcoded rank copy from the current rank", () => {
-    expect(profileCopy("Usman ranks #10 because the resume travels.", 9)).toBe("Usman ranks #9 because the resume travels.");
+    expect(profileCopy("Usman ranks #10 because the resume travels.", 9)).toBe("Usman ranks here because the resume travels.");
+    expect(profileCopy("Usman ranks #{rank} because he has 5 title wins in 2021.", 9)).toBe("Usman ranks #9 because he has 5 title wins in 2021.");
   });
 
   it("uses the category leaderboard owner for profile ratings and ranks", () => {
@@ -322,16 +323,22 @@ describe("profile category polish", () => {
 
 describe("profile category and loss audits", () => {
   it("validates category ownership for every profile category and ranked fighter", () => {
-    for (const slug of ["jon-jones", "georges-st-pierre", "kamaru-usman", "alexander-volkanovski", "anderson-silva", "brock-lesnar"]) {
-      const fighter = getFighter(slug)!;
-      for (const row of profileCategoryRows(fighter)) {
+    for (const fighter of allTime) {
+      const rows = profileCategoryRows(fighter);
+      expect(rows).toHaveLength(profileCategories.length);
+      for (const row of rows) {
         const gender = fighter.board === "women" ? "women" : "men";
         const board = categoryBoard(gender, row.key);
+        expect(board.map((candidate) => candidate.slug)).toContain(fighter.slug);
         expect(row.rank).toBeGreaterThan(0);
         expect(row.rank).toBe(board.findIndex((candidate) => candidate.slug === fighter.slug) + 1);
         expect(row.rating).toBe(categoryDisplayRating(gender, row.key, fighter));
         expect(row.tier).toBe(tierForRating(row.rating));
         expect(row.barFillPercent).toBe(categoryBarFillPercent(row.rank, board.length));
+        expect(row.rating).toBeGreaterThanOrEqual(55);
+        expect(row.rating).toBeLessThanOrEqual(99);
+        expect(row.barFillPercent).toBeGreaterThanOrEqual(10);
+        expect(row.barFillPercent).toBeLessThanOrEqual(100);
         expect(Number.isNaN(row.rating)).toBe(false);
         expect(Number.isNaN(row.barFillPercent)).toBe(false);
       }
@@ -374,5 +381,100 @@ describe("profile category and loss audits", () => {
     const firstLedgerTopFiveWin = "Derek Brunson";
     expect(bestWins.split(", ")[0]).not.toBe(firstLedgerTopFiveWin);
     expect(bestWins).toContain("Robert Whittaker");
+  });
+});
+
+function compactNames(names: string[]) {
+  if (!names.length) return "None";
+  const counts = new Map<string, number>();
+  names.forEach((name) => counts.set(name, (counts.get(name) ?? 0) + 1));
+  return [...counts.entries()].map(([name, count]) => count > 1 ? `${name} ×${count}` : name).join(", ");
+}
+
+describe("all-fighter profile coverage", () => {
+  it("validates loss-context public evidence for every fighter from penalty traces", () => {
+    for (const fighter of allTime) {
+      const primeEvents = fighter.traces.penalty.events.filter((event) => event.phase === "prime" && event.penaltyEligible && !event.technicalException);
+      const postPrimeEvents = fighter.traces.penalty.events.filter((event) => event.phase === "post-prime" && event.penaltyEligible && !event.technicalException);
+      const prePrimeEvents = fighter.traces.penalty.events.filter((event) => event.phase === "pre-prime");
+      expect(fighter.profileEvidence.primeLosses).toBe(compactNames(primeEvents.map((event) => event.upwardDivision ? `${event.opponent} — upward division` : event.opponent)));
+      expect(fighter.profileEvidence.postPrimeLosses).toBe(postPrimeEvents.length);
+      for (const event of prePrimeEvents) {
+        const alsoPrime = primeEvents.some((prime) => prime.opponent === event.opponent);
+        if (!alsoPrime) expect(fighter.profileEvidence.primeLosses).not.toContain(event.opponent);
+      }
+    }
+  });
+
+  it("validates nickname audit coverage for every current fighter", async () => {
+    const audit = await import("../../docs/profile-nickname-audit.md?raw");
+    const rows = audit.default.split("\n").filter((line: string) => line.startsWith("| ") && !line.includes("---") && !line.includes("Fighter slug"));
+    expect(rows).toHaveLength(allTime.length);
+    const seen = new Set<string>();
+    for (const row of rows) {
+      const [, slug, display] = row.split("|").map((part: string) => part.trim());
+      expect(seen.has(slug)).toBe(false);
+      seen.add(slug);
+      const fighter = getFighter(slug)!;
+      expect(fighter).toBeTruthy();
+      expect(profileDisplayName(fighter)).toBe(display);
+    }
+    expect([...seen].sort()).toEqual(allTime.map((fighter) => fighter.slug).sort());
+  });
+
+  it("validates streak invariants for every fighter", () => {
+    for (const fighter of allTime) {
+      const wins = fighter.visibleStats.ufcRecord.split("-")[0];
+      expect(Number.isInteger(fighter.longestUfcWinStreak)).toBe(true);
+      expect(fighter.longestUfcWinStreak).toBeGreaterThanOrEqual(0);
+      expect(fighter.longestUfcWinStreak).toBeLessThanOrEqual(Number(wins));
+    }
+  });
+
+  it("renders every current fighter profile without invalid public output", async () => {
+    for (const fighter of allTime) {
+      cleanup();
+      renderRoute(`/fighters/${fighter.slug}`);
+      expect(await screen.findByRole("heading", { name: profileDisplayName(fighter) })).toBeInTheDocument();
+      expect(screen.getByLabelText(`${fighter.name} photo`)).toHaveTextContent("OVR");
+      const resume = screen.getByRole("heading", { name: "Resume Snapshot" }).closest("section")!;
+      ["UFC Record", "Longest UFC Win Streak", "UFC Title-Fight Wins", "Top-5 Wins", "Finish Rate", "Prime UFC Record", "Rounds Won", "Active Elite Years"].forEach((label) => expect(within(resume).getByText(label)).toBeInTheDocument());
+      profileCategories.forEach((category) => expect(screen.getByRole("button", { name: new RegExp(category.label) })).toBeInTheDocument());
+      expect(screen.getByTestId("category-expanded")).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: "Why Ranked Here" })).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: fighter.rank === 1 ? "Why Not Lower?" : "Why Not Ranked Higher?" })).toBeInTheDocument();
+      expect(document.body).not.toHaveTextContent(/NaN|undefined|\[object Object\]|#0/);
+      expect(screen.getByRole("button", { name: "Share" })).toBeInTheDocument();
+      const watchAction = resolveProfileWatchAction(fighter.slug);
+      if (watchAction) expect(screen.getByRole("link", { name: watchAction.label })).toHaveAttribute("href", watchAction.url);
+      else expect(screen.queryByRole("link", { name: /Watch/ })).not.toBeInTheDocument();
+      within(screen.getByTestId("category-expanded")).getAllByTestId("evidence-tile").forEach((tile) => expect(tile).not.toHaveTextContent(/^\s*$/));
+    }
+  }, 30000);
+});
+
+describe("final profile correctness pass", () => {
+  it("uses fighter-specific #1 why-not copy", () => {
+    expect(whyNotProfileCopy({ rank: 1, slug: "jon-jones" })).toContain("heavyweight sample size");
+    const amanda = getFighter("amanda-nunes")!;
+    expect(whyNotProfileCopy({ ...amanda, rank: 1 })).not.toContain("heavyweight sample size");
+    expect(whyNotProfileCopy({ rank: 1, slug: "future-one" })).toBe("They cannot rank higher on this board. The debate is whether the gap over the fighters below is large enough, not whether a stronger UFC resume currently sits above them.");
+  });
+
+  it("has no unresolved stale rank phrases after profile copy rendering", () => {
+    const stale = /\b(ranks|ranked) #\d+\b|\bsits (?:at )?#\d+\b|\bthe #\d+ fighter\b|\bcurrently #\d+\b|\bat #\d+\b|\bnumber \d+\b|\bNo\. \d+\b/i;
+    for (const fighter of allTime) {
+      [fighter.oneLiner, fighter.whyRankedHere, fighter.whyNotHigher].forEach((copy) => {
+        expect(profileCopy(copy, fighter.rank), `${fighter.slug}: ${copy}`).not.toMatch(stale);
+      });
+    }
+    expect(profileCopy("Ranked #{rank} with 7 title wins in 2020", 4)).toBe("Ranked #4 with 7 title wins in 2020");
+  });
+
+  it("resolves honest watch destinations for every fighter", () => {
+    const actions = allTime.map((fighter) => resolveProfileWatchAction(fighter.slug));
+    expect(actions.filter((action) => action?.source === "signature")).toHaveLength(0);
+    expect(actions.filter((action) => action?.source === "watch-moment")).toHaveLength(allTime.length);
+    expect(actions.filter((action) => action === null)).toHaveLength(0);
   });
 });

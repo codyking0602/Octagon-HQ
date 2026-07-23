@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { FighterPhoto } from "./FighterPhoto";
 import { getFighter } from "./rankingModel";
-import { watchMomentFor } from "./rankingPresentation";
+import { resolveProfileWatchAction } from "./rankingPresentation";
 import { profileCategoryRows, profileDisplayName } from "./profilePresentation";
 
 export function shareProfile(name: string, slug: string) {
@@ -15,11 +15,33 @@ export function shareProfile(name: string, slug: string) {
   if (typeof navigator !== "undefined" && navigator.clipboard) void navigator.clipboard.writeText(url);
 }
 
+export function normalizeResumeCopy(copy: string) {
+  return copy.replace(/r\u00e9sum\u00e9/gi, "resume");
+}
+
 export function profileCopy(copy: string, rank: number) {
-  return copy
-    .replace(/\{rank\}/g, String(rank))
-    .replace(/ranks #\d+/gi, `ranks #${rank}`)
-    .replace(/r.sum./gi, "resume");
+  const token = "__PROFILE_RANK__";
+  return normalizeResumeCopy(copy)
+    .replace(/#\{rank\}/g, token)
+    .replace(/\{rank\}/g, token)
+    .replace(/\branks #\d+ because\b/gi, "ranks here because")
+    .replace(/\branked #\d+ because\b/gi, "ranked here because")
+    .replace(/\bsits at #\d+\b/gi, "sits here")
+    .replace(/\bsits #\d+\b/gi, "sits here")
+    .replace(/\bthe #\d+ fighter\b/gi, "this fighter")
+    .replace(/\bcurrently #\d+\b/gi, "currently here")
+    .replace(/\bat #\d+\b/gi, "here")
+    .replace(/\bnumber \d+\b/gi, "this spot")
+    .replace(/\bNo\. \d+\b/g, "this spot")
+    .replace(new RegExp(token, "g"), `#${rank}`);
+}
+
+export function whyNotProfileCopy(fighter: { rank: number; slug: string; whyNotHigher?: string }) {
+  if (fighter.rank !== 1) return fighter.whyNotHigher ?? "";
+  if (fighter.slug === "jon-jones") {
+    return "He cannot rank higher. The argument against a runaway #1 case is based on close fights, inactivity, heavyweight sample size, and outside-the-cage controversy—not a stronger UFC resume above him.";
+  }
+  return fighter.whyNotHigher || "They cannot rank higher on this board. The debate is whether the gap over the fighters below is large enough, not whether a stronger UFC resume currently sits above them.";
 }
 
 export default function FighterProfilePage() {
@@ -43,10 +65,9 @@ export default function FighterProfilePage() {
 
   const displayName = profileDisplayName(fighter);
   const active = categories.find((category) => category.key === activeCategory) ?? categories[0];
+  const watchAction = resolveProfileWatchAction(fighter.slug);
   const whyNotHeading = fighter.rank === 1 ? "Why Not Lower?" : "Why Not Ranked Higher?";
-  const whyNotCopy = fighter.rank === 1
-    ? "He cannot rank higher. The argument against a runaway #1 case is based on close fights, inactivity, heavyweight sample size, and outside-the-cage controversy—not a stronger UFC resume above him."
-    : fighter.whyNotHigher;
+  const whyNotCopy = whyNotProfileCopy(fighter);
 
   return (
     <div className="page fighter-profile-page v1-profile">
@@ -71,7 +92,7 @@ export default function FighterProfilePage() {
       <section className="profile-actions" aria-label="Profile actions">
         <button type="button" onClick={() => navigate("/compare")}>Compare</button>
         <button type="button" onClick={() => whyRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}>Ask Why</button>
-        <a href={watchMomentFor(fighter.slug)} target="_blank" rel="noreferrer">Watch Signature Fight</a>
+        {watchAction ? <a href={watchAction.url} target="_blank" rel="noreferrer">{watchAction.label}</a> : null}
         <button type="button" onClick={() => shareProfile(fighter.name, fighter.slug)}><svg className="profile-action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0 5 5m-5-5-5 5"/><path d="M5 12v7h14v-7"/></svg>Share</button>
       </section>
 
