@@ -75,7 +75,6 @@ async function startServer() {
       response.end(String(error?.message || error));
     }
   });
-
   await new Promise((resolvePromise, rejectPromise) => {
     server.once("error", rejectPromise);
     server.listen(0, "127.0.0.1", resolvePromise);
@@ -281,10 +280,15 @@ function eraDepthInputFor(window, fighter) {
   const approvedAdjustment = finiteOrNull(
     resolution?.approvedAdjustment ?? (depthIndex === null ? trace?.canonicalAdjustment : null),
   );
-  if (depthIndex === null && approvedAdjustment === null) {
-    throw new Error(`Missing era-depth input for ${fighter}.`);
-  }
+  if (depthIndex === null && approvedAdjustment === null) throw new Error(`Missing era-depth input for ${fighter}.`);
   return { fighter, depthIndex, approvedAdjustment };
+}
+
+function eraLedgerFor(api, fighter) {
+  const direct = api?.entryFor?.(fighter);
+  if (direct) return direct;
+  const matchedName = api?.names?.().find((candidate) => normalizedName(candidate) === normalizedName(fighter));
+  return matchedName ? api.entryFor(matchedName) : null;
 }
 
 function inputRow(window, projectionRow) {
@@ -293,7 +297,7 @@ function inputRow(window, projectionRow) {
   const judgments = window.UFC_CANONICAL_SCORING_JUDGMENTS;
   const eraApi = window.UFC_FIGHTER_ERA_LEDGERS;
   const record = facts?.get?.(fighter);
-  const era = eraApi?.entryFor?.(fighter);
+  const era = eraLedgerFor(eraApi, fighter);
   const championship = judgments?.entryFor?.("championship", fighter);
   const opponentQuality = judgments?.entryFor?.("opponentQuality", fighter);
   const apex = judgments?.entryFor?.("apex", fighter);
