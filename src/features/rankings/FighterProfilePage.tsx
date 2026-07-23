@@ -1,12 +1,12 @@
 import { Link, useParams } from "react-router-dom";
 import { FighterPhoto } from "./FighterPhoto";
-import { categoryRating, getFighter } from "./rankingData";
+import { categoryRating, getFighter } from "./rankingModel";
 
 const categories = [
   { key: "championship", label: "Championship", maximum: 30 },
-  { key: "opponentQuality", label: "Opponent quality", maximum: 25 },
+  { key: "opponentQuality", label: "Opponent quality", maximum: 30 },
   { key: "primeDominance", label: "Prime dominance", maximum: 30 },
-  { key: "longevity", label: "Longevity", maximum: 15 },
+  { key: "longevity", label: "Longevity", maximum: 30 },
 ] as const;
 
 export default function FighterProfilePage() {
@@ -34,8 +34,9 @@ export default function FighterProfilePage() {
           <h1>{fighter.name}</h1>
           <p>{fighter.oneLiner}</p>
           <div className="fighter-hero__meta">
+            <span>{fighter.visibleStats.ufcRecord} UFC</span>
             <span>{fighter.division}</span>
-            <span>Raw model {fighter.rawScore.toFixed(2)}</span>
+            <span>Model {fighter.rawScore.toFixed(2)}</span>
           </div>
         </div>
         <div className="fighter-hero__visual">
@@ -62,8 +63,18 @@ export default function FighterProfilePage() {
               </div>
             );
           })}
-          <div className="penalty-row"><span>Loss penalty</span><strong>{fighter.penalty.toFixed(2)}</strong></div>
+          <div className="penalty-row"><span>Peak Apex</span><strong>+{fighter.apexPeak.toFixed(2)}</strong></div>
+          <div className="penalty-row"><span>Loss context</span><strong>{fighter.penalty.toFixed(2)}</strong></div>
+          <div className="penalty-row"><span>Era depth</span><strong>{fighter.eraDepth.toFixed(2)}</strong></div>
         </div>
+      </section>
+
+      <section className="surface-card profile-copy-card">
+        <p className="eyebrow">RESUME SNAPSHOT</p>
+        <h2>{fighter.resumeTag}</h2>
+        <p>
+          {fighter.visibleStats.titleFightWins} UFC title-fight wins · {fighter.visibleStats.topFiveWins} top-five wins · {fighter.visibleStats.finishRatePct.toFixed(1)}% finish rate · {fighter.visibleStats.activeEliteYears.toFixed(1)} active elite years
+        </p>
       </section>
 
       <section className="surface-card profile-copy-card">
@@ -75,7 +86,11 @@ export default function FighterProfilePage() {
       <section className="surface-card profile-copy-card">
         <p className="eyebrow">KEY JUDGMENT CALLS</p>
         <h2>What the model decided</h2>
-        <ul>{fighter.judgmentCalls.map((call) => <li key={call}>{call}</li>)}</ul>
+        {fighter.judgmentCalls.length ? (
+          <ul>{fighter.judgmentCalls.map((call) => <li key={call}>{call}</li>)}</ul>
+        ) : (
+          <p>The position follows directly from the approved UFC-only facts and category inputs.</p>
+        )}
       </section>
 
       <section className="surface-card profile-copy-card">
@@ -88,6 +103,12 @@ export default function FighterProfilePage() {
         <p className="eyebrow">WHY NOT RANKED HIGHER?</p>
         <h2>The limiting case</h2>
         <p>{fighter.whyNotHigher}</p>
+      </section>
+
+      <section className="surface-card profile-copy-card">
+        <p className="eyebrow">FINAL TAKEAWAY</p>
+        <h2>The UFC-only case</h2>
+        <p>{fighter.finalTakeaway}</p>
       </section>
     </div>
   );
