@@ -6,11 +6,9 @@ import {
   categoryBadgeLabel,
   categoryDisplayRating,
   categorySupportCopy,
-  divisionRoleLabel,
   shortEraName,
 } from "./rankingDisplay";
 import {
-  DIVISION_RESUME_SHARE_MIN,
   categoryBoard,
   divisionLabel,
   divisionOrder,
@@ -34,8 +32,8 @@ interface PresentedRankingRow {
   displayRank: number;
   meta: string;
   detail?: string;
-  score: string | number;
-  scoreLabel: string;
+  score?: string | number;
+  scoreLabel?: string;
 }
 
 const categoryPillLabels: Record<RankingCategory, string> = {
@@ -121,9 +119,6 @@ export default function RankingsPage() {
         fighter: row.fighter,
         displayRank: row.rank,
         meta: `${row.stats.ufcRecord} UFC · #${row.fighter.rank} P4P`,
-        detail: divisionRoleLabel(row.role),
-        score: `${Math.round(row.resumeSharePct)}%`,
-        scoreLabel: "RESUME",
       }));
     }
 
@@ -227,7 +222,9 @@ export default function RankingsPage() {
               >
                 <option value="all">All eras</option>
                 {eraOptions.map((era) => (
-                  <option value={era.id} key={era.id}>{shortEraName(era.name)}</option>
+                  <option value={era.id} key={era.id}>
+                    {shortEraName(era.name)} · {era.years}
+                  </option>
                 ))}
               </select>
               <span aria-hidden="true">⌄</span>
@@ -262,26 +259,18 @@ export default function RankingsPage() {
       ) : null}
 
       {view === "division" ? (
-        <>
-          <section className="ranking-pill-grid ranking-pill-grid--divisions" aria-label="Choose division">
-            {divisionOrder.map((division) => (
-              <button
-                type="button"
-                key={division}
-                className={selectedDivision === division ? "is-active" : ""}
-                onClick={() => updateParameter("division", division)}
-              >
-                {divisionLabel(division)}
-              </button>
-            ))}
-          </section>
-          <section className="ranking-selection-card" aria-label={heading.summaryLabel}>
-            <strong>{divisionLabel(selectedDivision)} · Men</strong>
-            <p>
-              Fighters need a UFC win and at least {DIVISION_RESUME_SHARE_MIN}% of their calculated UFC resume in this division.
-            </p>
-          </section>
-        </>
+        <section className="ranking-pill-grid ranking-pill-grid--divisions" aria-label="Choose division">
+          {divisionOrder.map((division) => (
+            <button
+              type="button"
+              key={division}
+              className={selectedDivision === division ? "is-active" : ""}
+              onClick={() => updateParameter("division", division)}
+            >
+              {divisionLabel(division)}
+            </button>
+          ))}
+        </section>
       ) : null}
 
       {view === "category" ? (
@@ -334,9 +323,17 @@ export default function RankingsPage() {
             rel="noopener noreferrer"
             aria-label={`Watch defining fight: ${selectedEraData.definingFight}`}
           >
-            <span>Defining fight</span>
-            <strong>{selectedEraData.definingFight}</strong>
-            {selectedEraData.fightNote ? <small>{selectedEraData.fightNote}</small> : null}
+            <span className="ranking-era-card__fight-copy">
+              <span className="ranking-era-card__fight-label">Defining fight</span>
+              <strong>{selectedEraData.definingFight}</strong>
+              {selectedEraData.fightNote ? <small>{selectedEraData.fightNote}</small> : null}
+            </span>
+            <span className="ranking-era-card__watch-cta">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M9 7.6v8.8L16 12 9 7.6Z" />
+              </svg>
+              Watch fight
+            </span>
           </a>
         </section>
       ) : null}
@@ -344,7 +341,7 @@ export default function RankingsPage() {
       <section className="ranking-list" aria-label={`${heading.title} list`}>
         {filteredRows.map((row) => (
           <article
-            className={`ranking-row${row.detail ? " ranking-row--contextual" : ""}`}
+            className={`ranking-row${row.detail ? " ranking-row--contextual" : ""}${row.score === undefined ? " ranking-row--no-score" : ""}`}
             data-rank={row.displayRank}
             key={`${view}-${selectedDivision}-${selectedCategory}-${categoryGender}-${row.fighter.slug}`}
           >
@@ -364,10 +361,12 @@ export default function RankingsPage() {
                 <span className="ranking-row__meta">{row.meta}</span>
                 {row.detail ? <span className="ranking-row__detail">{row.detail}</span> : null}
               </span>
-              <span className="ranking-row__ovr">
-                <strong>{row.score}</strong>
-                <span>{row.scoreLabel}</span>
-              </span>
+              {row.score !== undefined ? (
+                <span className="ranking-row__ovr">
+                  <strong>{row.score}</strong>
+                  <span>{row.scoreLabel}</span>
+                </span>
+              ) : null}
             </Link>
             <a
               className="ranking-row__watch"
