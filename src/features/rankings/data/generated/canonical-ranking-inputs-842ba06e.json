@@ -76014,7 +76014,11 @@
         "years": "1993–1997",
         "startYear": 1993,
         "endYear": 1997,
-        "description": "Style-vs-style tournaments before modern divisions and rules."
+        "description": "Style-vs-style tournaments before modern divisions and rules.",
+        "definingFight": "Royce Gracie vs. Gerard Gordeau",
+        "alternateFight": "Mark Coleman vs. Dan Severn",
+        "fightUrl": "https://youtu.be/b_n9H55RhKg?is=CcNknp2D5N3CkJxA",
+        "fightNote": null
       },
       {
         "id": "survival",
@@ -76022,7 +76026,11 @@
         "years": "1998–2000",
         "startYear": 1998,
         "endYear": 2000,
-        "description": "The UFC nearly disappears while early champions keep the promotion alive."
+        "description": "The UFC nearly disappears while early champions keep the promotion alive.",
+        "definingFight": "Frank Shamrock vs. Tito Ortiz",
+        "alternateFight": "Tito Ortiz vs. Wanderlei Silva",
+        "fightUrl": "https://youtu.be/3tKYGjvWMTY?is=hLdHwEKvf36TYi7X",
+        "fightNote": null
       },
       {
         "id": "zuffa-rebuild",
@@ -76030,7 +76038,11 @@
         "years": "2001–2004",
         "startYear": 2001,
         "endYear": 2004,
-        "description": "New ownership, unified rules, and the foundation of the modern UFC."
+        "description": "New ownership, unified rules, and the foundation of the modern UFC.",
+        "definingFight": "Tito Ortiz vs. Ken Shamrock II",
+        "alternateFight": "Randy Couture vs. Tito Ortiz",
+        "fightUrl": "https://youtu.be/3tKYGjvWMTY?is=hLdHwEKvf36TYi7X",
+        "fightNote": "Their second fight."
       },
       {
         "id": "tuf-boom",
@@ -76038,7 +76050,11 @@
         "years": "2005–2010",
         "startYear": 2005,
         "endYear": 2010,
-        "description": "The Ultimate Fighter, cable television, and the UFC breaking into the mainstream."
+        "description": "The Ultimate Fighter, cable television, and the UFC breaking into the mainstream.",
+        "definingFight": "Forrest Griffin vs. Stephan Bonnar",
+        "alternateFight": "Brock Lesnar vs. Frank Mir II",
+        "fightUrl": "https://youtu.be/dkECRNJCgOc?is=_Wt4b9HhVfFQn7ez",
+        "fightNote": null
       },
       {
         "id": "golden-age",
@@ -76046,7 +76062,11 @@
         "years": "2011–2015",
         "startYear": 2011,
         "endYear": 2015,
-        "description": "A deep champion class, lighter divisions, women’s MMA, and global expansion."
+        "description": "A deep champion class, lighter divisions, women’s MMA, and global expansion.",
+        "definingFight": "Jon Jones vs. Alexander Gustafsson I",
+        "alternateFight": "Ronda Rousey vs. Holly Holm",
+        "fightUrl": "https://youtu.be/ILOnZDCbmKM?is=9VZZHcKNEWc0hA_A",
+        "fightNote": null
       },
       {
         "id": "superstar",
@@ -76054,7 +76074,11 @@
         "years": "2016–2019",
         "startYear": 2016,
         "endYear": 2019,
-        "description": "The McGregor effect, champ-champs, and individual stars becoming global attractions."
+        "description": "The McGregor effect, champ-champs, and individual stars becoming global attractions.",
+        "definingFight": "Khabib Nurmagomedov vs. Conor McGregor",
+        "alternateFight": "Conor McGregor vs. Eddie Alvarez",
+        "fightUrl": "https://youtu.be/JuBBIJ7adjM?is=VF-Vb3p2369S6mS0",
+        "fightNote": null
       },
       {
         "id": "apex",
@@ -76062,7 +76086,11 @@
         "years": "2020–2022",
         "startYear": 2020,
         "endYear": 2022,
-        "description": "Pandemic cards, the UFC Apex, Fight Island, and rapid contender turnover."
+        "description": "Pandemic cards, the UFC Apex, Fight Island, and rapid contender turnover.",
+        "definingFight": "Justin Gaethje vs. Tony Ferguson",
+        "alternateFight": "Alexander Volkanovski vs. Max Holloway II",
+        "fightUrl": "https://youtu.be/dGWDT3iyrdw?is=xdh91NP21wU2zaMi",
+        "fightNote": null
       },
       {
         "id": "new-blood",
@@ -76070,7 +76098,11 @@
         "years": "2023–Present",
         "startYear": 2023,
         "endYear": null,
-        "description": "A new championship generation powered by an increasingly global talent pool."
+        "description": "A new championship generation powered by an increasingly global talent pool.",
+        "definingFight": "Islam Makhachev vs. Alexander Volkanovski I",
+        "alternateFight": "Ilia Topuria vs. Alexander Volkanovski",
+        "fightUrl": "https://youtu.be/xJFbXIGMKws?is=WR4znRmIe88fhYWj",
+        "fightNote": null
       }
     ],
     "eraMembership": {
