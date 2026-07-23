@@ -13,6 +13,7 @@ function renderRoute(path: string) {
       <RouterProvider router={router} />
     </AppProviders>,
   );
+  return router;
 }
 
 describe("Octagon HQ V2", () => {
@@ -26,7 +27,7 @@ describe("Octagon HQ V2", () => {
     expect(screen.queryByText("War Room")).not.toBeInTheDocument();
   });
 
-  it("renders uniform calculated boards with isolated Watch Moment actions", async () => {
+  it("renders the compact calculated P4P board with isolated Watch Moment actions", async () => {
     renderRoute("/rankings");
 
     expect(await screen.findByRole("heading", { name: "UFC All-Time P4P" })).toBeInTheDocument();
@@ -40,7 +41,6 @@ describe("Octagon HQ V2", () => {
     const jonProfile = screen.getByRole("link", { name: "View Jon Jones profile" });
     expect(jonProfile).toHaveAttribute("href", "/fighters/jon-jones");
     expect(jonProfile).toHaveTextContent("22-1, 1 NC · LHW / HW");
-    expect(jonProfile).not.toHaveTextContent("UFC");
     expect(screen.getByRole("link", { name: "View Matt Hughes profile" })).toBeInTheDocument();
 
     const watchMoment = screen.getByRole("link", {
@@ -51,12 +51,70 @@ describe("Octagon HQ V2", () => {
       "https://youtube.com/shorts/yG-D2r6HVp4?is=fstX4Wc_rvCITSw0",
     );
     expect(watchMoment).toHaveAttribute("target", "_blank");
+  });
+
+  it("switches among Women, Divisions, and Categories without changing route ownership", async () => {
+    const router = renderRoute("/rankings");
+    await screen.findByRole("heading", { name: "UFC All-Time P4P" });
 
     fireEvent.change(screen.getByLabelText("Ranking board"), { target: { value: "women" } });
     expect(screen.getByRole("heading", { name: "UFC Women's All-Time" })).toBeInTheDocument();
-    expect(screen.getByText("The definitive women's rankings.")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "View Amanda Nunes profile" })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "View Jon Jones profile" })).not.toBeInTheDocument();
+    expect(router.state.location.search).toBe("?view=women");
+
+    fireEvent.change(screen.getByLabelText("Ranking board"), { target: { value: "division" } });
+    expect(screen.getByRole("heading", { name: "Heavyweight Rankings" })).toBeInTheDocument();
+    expect(screen.getByText(/at least 10% of their calculated UFC resume/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "View Stipe Miocic profile" })).toBeInTheDocument();
+    expect(router.state.location.search).toBe("?view=division&division=Heavyweight");
+
+    fireEvent.change(screen.getByLabelText("Ranking board"), { target: { value: "category" } });
+    expect(screen.getByRole("heading", { name: "Championship Resume Leaders" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "View Jon Jones profile" })).toBeInTheDocument();
+    expect(router.state.location.search).toBe("?view=category&category=championship&gender=men");
+
+    fireEvent.click(screen.getByRole("button", { name: "Women" }));
+    expect(screen.getByRole("link", { name: "View Amanda Nunes profile" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "View Jon Jones profile" })).not.toBeInTheDocument();
+  });
+
+  it("filters by the pinned V1 eras while preserving all-time ranks", async () => {
+    renderRoute("/rankings");
+    await screen.findByRole("heading", { name: "UFC All-Time P4P" });
+
+    fireEvent.change(screen.getByLabelText("Ranking era"), {
+      target: { value: "golden-age" },
+    });
+
+    expect(screen.getByText(/Showing fighters assigned to Golden Age/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "View Jon Jones profile" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "View Khabib Nurmagomedov profile" })).not.toBeInTheDocument();
+  });
+
+  it("searches the active board and conditionally clears optional filters", async () => {
+    renderRoute("/rankings");
+    await screen.findByRole("heading", { name: "UFC All-Time P4P" });
+
+    const search = screen.getByPlaceholderText("Search fighters");
+    fireEvent.change(search, { target: { value: "Matt Hughes" } });
+    expect(screen.getByLabelText("P4P ranking summary")).toHaveTextContent("1");
+    expect(screen.getByRole("link", { name: "View Matt Hughes profile" })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Clear" }));
+    expect(search).toHaveValue("");
+    expect(screen.getByLabelText("P4P ranking summary")).toHaveTextContent("65");
+    expect(screen.queryByRole("button", { name: "Clear" })).not.toBeInTheDocument();
+  });
+
+  it("supports direct contextual ranking URLs", async () => {
+    renderRoute("/rankings?view=category&category=opponentQuality&gender=women");
+
+    expect(
+      await screen.findByRole("heading", { name: "Opponent Quality Wins Leaders" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Women" })).toHaveClass("is-active");
+    expect(screen.getByRole("link", { name: "View Amanda Nunes profile" })).toBeInTheDocument();
   });
 
   it("supports direct profiles outside the former ten-fighter scaffold", async () => {
