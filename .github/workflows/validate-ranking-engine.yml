@@ -7,10 +7,10 @@ on:
     paths:
       - .github/workflows/validate-ranking-engine.yml
       - scripts/capture-v1-ranking-inputs.mjs
-      - src/features/rankings/engine/**
-      - src/features/rankings/data/**
-      - src/features/rankings/RankingsPage.tsx
-      - src/features/rankings/FighterProfilePage.tsx
+      - src/features/rankings/**
+      - src/features/home/HomePage.tsx
+      - src/app/App.test.tsx
+      - src/styles/global.css
       - package.json
       - tsconfig.json
       - vite.config.ts
@@ -65,7 +65,6 @@ jobs:
             --output "${INPUT_PATH}" >"${CAPTURE_LOG}" 2>&1
           code=$?
           cat "${CAPTURE_LOG}"
-          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
           exit "$code"
 
       - name: Report capture diagnostics
@@ -148,7 +147,9 @@ jobs:
 
   validate-ranking-engine:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
+    env:
+      VALIDATION_LOG: .tmp/ranking-validation.log
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -161,14 +162,36 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Typecheck
-        run: npm run typecheck
+      - name: Validate exact head
+        id: validation
+        continue-on-error: true
+        run: |
+          mkdir -p .tmp
+          set +e
+          { npm run typecheck && npm test && npm run build; } >"${VALIDATION_LOG}" 2>&1
+          code=$?
+          cat "${VALIDATION_LOG}"
+          exit "$code"
 
-      - name: Test
-        run: npm test
-
-      - name: Build
-        run: npm run build
+      - name: Report validation diagnostics
+        if: steps.validation.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          node --input-type=module <<'NODE' > .tmp/validation-comment.json
+          import { readFile } from 'node:fs/promises';
+          const log = (await readFile(process.env.VALIDATION_LOG, 'utf8')).slice(-60000);
+          process.stdout.write(JSON.stringify({ body: `### Ranking validation failed\n\n\`\`\`text\n${log}\n\`\`\`` }));
+          NODE
+          curl --fail-with-body \
+            --request POST \
+            --header "Accept: application/vnd.github+json" \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            --header "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$REPOSITORY/issues/14/comments" \
+            --data-binary @.tmp/validation-comment.json
+          exit 1
 
       - name: Publish exact-head status
         if: always()
@@ -176,14 +199,14 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           REPOSITORY: ${{ github.repository }}
           COMMIT_SHA: ${{ github.sha }}
-          JOB_STATUS: ${{ job.status }}
+          VALIDATION_OUTCOME: ${{ steps.validation.outcome }}
         run: |
-          if [ "$JOB_STATUS" = "success" ]; then
+          if [ "$VALIDATION_OUTCOME" = "success" ]; then
             state="success"
             description="Typecheck, tests, and build passed"
           else
             state="failure"
-            description="Ranking engine validation failed"
+            description="Ranking validation failed"
           fi
           curl --fail-with-body \
             --request POST \
