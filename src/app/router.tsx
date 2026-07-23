@@ -3,6 +3,8 @@ import { createBrowserRouter, Navigate, type RouteObject } from "react-router-do
 import { AppShell } from "./AppShell";
 
 const HomePage = lazy(() => import("../features/home/HomePage"));
+const RankingsPage = lazy(() => import("../features/rankings/RankingsPage"));
+const FighterProfilePage = lazy(() => import("../features/rankings/FighterProfilePage"));
 const PlaceholderPage = lazy(() => import("../features/placeholders/PlaceholderPage"));
 
 export const appRoutes: RouteObject[] = [
@@ -11,7 +13,8 @@ export const appRoutes: RouteObject[] = [
     element: <AppShell />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: "rankings", element: <PlaceholderPage title="Rankings" eyebrow="UFC ALL-TIME" /> },
+      { path: "rankings", element: <RankingsPage /> },
+      { path: "fighters/:slug", element: <FighterProfilePage /> },
       { path: "play", element: <PlaceholderPage title="Play" eyebrow="GAMES & CHALLENGES" /> },
       { path: "picks", element: <PlaceholderPage title="Picks" eyebrow="EVENT PICKS" /> },
       { path: "intelligence", element: <PlaceholderPage title="Intelligence" eyebrow="SETTLE THE DEBATE" /> },
