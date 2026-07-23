@@ -19,6 +19,7 @@ function expectDescending(values: number[]) {
 describe("ranking control projections", () => {
   it("conserves every calculated men's score across fight-level division allocations", () => {
     expect(divisionRankingReport.passed).toBe(true);
+    expect(divisionRankingReport.rows.length).toBeGreaterThan(0);
     expect(divisionRankingReport.conservation).toEqual([]);
     expect(divisionRankingReport.allocationOwner).toBe(
       "canonical fight-level division evidence",
