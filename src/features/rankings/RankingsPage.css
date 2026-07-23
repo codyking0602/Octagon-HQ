@@ -1,3 +1,4 @@
+/* Uniform ranking rows share one presentation owner. */
 .rankings-presentation {
   gap: var(--space-4);
 }
