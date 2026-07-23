@@ -137,7 +137,7 @@ describe("pure V1 category calculations", () => {
 
     const tournament = calculatePrimeDominance({
       fighter: "Tournament Prime",
-      window: { start: "1999-01-01", end: "1999-01-01" },
+      window: { start: "1999-01-01", end: null },
       fights: [
         fight({
           id: "tournament-semi",
