@@ -46,6 +46,38 @@ describe("complete calculation-backed ranking model", () => {
     calculatedRankingProjection.rows.forEach((row) => {
       const expected = parityByFighter.get(row.fighter);
       expect(expected, `${row.fighter} must exist in the V1 parity fixture`).toBeDefined();
+      if (
+        row.fighter === "Jon Jones" &&
+        row.metadata?.visibleStats.adjustedTitleWins !== expected!.visibleStats.adjustedTitleWins
+      ) {
+        console.log(
+          "JON_TITLE_DIAGNOSTIC",
+          JSON.stringify(
+            {
+              expected: expected!.visibleStats.adjustedTitleWins,
+              received: row.metadata.visibleStats.adjustedTitleWins,
+              championshipTraceCredit: row.metadata.traces.championship.adjustedTitleCredit,
+              rows: row.metadata.input.facts.fights
+                .filter(
+                  (fight) =>
+                    fight.championshipType !== "none" ||
+                    fight.championshipManualCredit !== null ||
+                    fight.championshipOpponentStrength !== null,
+                )
+                .map((fight) => ({
+                  id: fight.id,
+                  result: fight.scoringDisposition,
+                  type: fight.championshipType,
+                  eligible: fight.championshipEligible,
+                  manual: fight.championshipManualCredit,
+                  strength: fight.championshipOpponentStrength,
+                })),
+            },
+            null,
+            2,
+          ),
+        );
+      }
       expect(row.board, `${row.fighter} board`).toBe(expected!.board);
       expect(row.categories, `${row.fighter} categories`).toEqual(expected!.categories);
       expect(row.modifiers, `${row.fighter} modifiers`).toEqual(expected!.modifiers);
