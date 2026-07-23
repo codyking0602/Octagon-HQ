@@ -32,13 +32,15 @@ describe("Octagon HQ V2", () => {
     expect(await screen.findByRole("heading", { name: "UFC All-Time P4P" })).toBeInTheDocument();
     expect(screen.getByText("The definitive pound-for-pound rankings.")).toBeInTheDocument();
     expect(screen.queryByText(/UFC-only/i)).not.toBeInTheDocument();
-    expect(screen.getByText("65")).toBeInTheDocument();
-    expect(screen.getByText("fighters", { exact: true })).toBeInTheDocument();
-    expect(screen.getByText("22-1, 1 NC · LHW / HW")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "View Jon Jones profile" })).toHaveAttribute(
-      "href",
-      "/fighters/jon-jones",
-    );
+
+    const summary = screen.getByLabelText("P4P ranking summary");
+    expect(summary).toHaveTextContent("65");
+    expect(summary).toHaveTextContent("fighters");
+
+    const jonProfile = screen.getByRole("link", { name: "View Jon Jones profile" });
+    expect(jonProfile).toHaveAttribute("href", "/fighters/jon-jones");
+    expect(jonProfile).toHaveTextContent("22-1, 1 NC · LHW / HW");
+    expect(jonProfile).not.toHaveTextContent("UFC");
     expect(screen.getByRole("link", { name: "View Matt Hughes profile" })).toBeInTheDocument();
 
     const watchMoment = screen.getByRole("link", {
