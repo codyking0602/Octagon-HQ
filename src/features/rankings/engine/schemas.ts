@@ -36,6 +36,7 @@ export const canonicalFightSchema = z
     id: z.string().min(1),
     date: isoDateSchema,
     opponent: z.string().min(1),
+    division: z.string().min(1).nullable(),
     officialResult: officialResultSchema,
     scoringDisposition: scoringDispositionSchema,
     methodCategory: z.string().min(1),
