@@ -33,7 +33,7 @@ The output fixture is test-only. The live app calculates from the typed input da
 2. `engine/categoryCalculators.ts` calculates Championship, Opponent Quality, Prime Dominance, Longevity, Peak Apex, Loss Context, and Era Depth.
 3. `engine/rankingEngine.ts` calculates weighted totals, modifiers, tie breakers, ranks, and OVRs.
 4. `rankingModel.ts` derives the app-facing boards, visible stats, presentation values, and profile lookup.
-5. Rankings, Home, and fighter profiles consume `rankingModel.ts` only.
+5. Rankings, Home, and fighter profiles consume `rankingModel.ts` only for ranking values.
 
 Ranks and OVRs must never be manually entered into presentation records.
 
@@ -53,32 +53,43 @@ Automated tests verify all 80 fighters for:
 
 Any future difference requires an isolated, documented, Cody-approved scoring change.
 
-## Remaining visual-parity gate
+## Approved Rankings presentation
 
-The current V2 page is calculation-correct and displays all 80 fighters, but the final approved UFC/2K-style presentation remains to be built.
+The leaderboard uses one continuous compact hierarchy for every fighter.
 
 Locked UI decisions:
 
-- preserve Overall, Women, Divisions, and Categories navigation;
-- retain search and era filtering on Overall/Women;
-- retain the KPI strip for now;
-- retain six row chips: Championship, Opponent Quality, Prime Dominance, Longevity, Peak Apex, and Loss Context;
+- every fighter row uses the same size and information hierarchy;
+- rows prioritize rank, real fighter photo, name, UFC record, division, and OVR;
+- the row itself opens the canonical fighter profile route;
+- a separate circular play action opens that fighter's pinned YouTube Watch Moment;
+- leaderboard rows do not show taglines, full `Watch Moment` pills, or six category chips;
+- category scores and explanation belong in fighter profile and context surfaces;
+- retain the compact KPI strip and search;
+- retain Overall and Women now, with Divisions, Categories, and era filtering as focused follow-up interactions;
 - keep `/fighters/:slug` as the canonical profile URL;
 - use a routed right-side profile drawer on desktop and a full-screen profile on mobile;
-- do not invent rank-movement presentation during parity work.
+- do not invent rank-movement presentation until movement data exists.
 
-The UI must consume only `rankingModel.ts` and must not add fallback calculations or frozen output data.
+The UI must consume only the calculated ranking model for ranks, records, OVRs, and ordering. Watch Moment URLs are pinned presentation metadata and must not create a second ranking projection.
 
 ## Remaining implementation sequence
 
-### Slice D — approved Rankings UI
+### Slice D1 — compact Rankings hierarchy
 
-- reproduce the approved V1 information hierarchy and UFC/2K density with clean V2 components;
-- add Divisions and Categories interactions;
-- add the six category chips to rows;
-- add era filtering;
-- preserve the KPI strip and search;
+- use the approved Rankings title hierarchy and compact board selector;
+- retain the KPI strip and search;
+- use uniform dense leaderboard rows;
+- preserve row-to-profile navigation;
+- add one isolated circular Watch Moment action per fighter;
+- capture and validate all 80 Watch Moment URLs from the pinned V1 reference;
 - phone-test the exact production build.
+
+### Slice D2 — remaining Rankings interactions
+
+- add Divisions and Categories interactions without changing score ownership;
+- add era filtering on Overall and Women;
+- keep the same compact row system and shared semantic design tokens.
 
 ### Slice E — profile presentation and Compare
 
@@ -94,7 +105,8 @@ The UI must consume only `rankingModel.ts` and must not add fallback calculation
 - Do not manually enter rank, OVR, total, or category scores in UI data.
 - Do not copy V1's global ordered-script architecture.
 - Do not build a second calculation or readiness path.
+- Do not restore leaderboard taglines, full Watch Moment pills, or category-chip walls without Cody explicitly changing the approved compact-row direction.
 
 ## New-chat instruction
 
-Read `docs/HANDOFF.md`, `docs/product-blueprint.md`, `docs/RANKINGS-MIGRATION.md`, and `docs/rankings-parity-contract.md`, then inspect current `main`. The next ranking milestone is visual parity on top of the completed calculation model—not another engine rewrite and not adding fighters to a static array.
+Read `docs/HANDOFF.md`, `docs/product-blueprint.md`, `docs/RANKINGS-MIGRATION.md`, and `docs/rankings-parity-contract.md`, then inspect current `main`. The complete 80-fighter calculation migration is finished. Continue the approved compact Rankings presentation on top of `rankingModel.ts`; do not rewrite the engine, recreate static ranking arrays, or change scoring without Cody's approval.

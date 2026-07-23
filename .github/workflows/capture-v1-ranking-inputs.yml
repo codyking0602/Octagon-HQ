@@ -7,6 +7,7 @@ on:
     paths:
       - .github/workflows/capture-v1-ranking-inputs.yml
       - scripts/capture-v1-ranking-inputs.mjs
+      - scripts/add-v1-watch-moments.mjs
 
 permissions:
   contents: write
@@ -53,6 +54,12 @@ jobs:
             --v1-commit 842ba06ea09c4f40723226f4c4dfd35041cb3314 \
             --output "${INPUT_PATH}"
 
+      - name: Add pinned V1 Watch Moment links
+        run: |
+          node scripts/add-v1-watch-moments.mjs \
+            --v1-dir .tmp/v1 \
+            --input "${INPUT_PATH}"
+
       - name: Normalize generated input data
         run: |
           node --input-type=module <<'NODE'
@@ -78,6 +85,7 @@ jobs:
           for (const fighter of data.fighters) {
             if (!fighter.facts.fights.length) throw new Error(`${fighter.fighter} has no canonical fights.`);
             if (!fighter.judgments.championship || !fighter.judgments.opponentQuality || !fighter.judgments.apex) throw new Error(`${fighter.fighter} is missing judgment inputs.`);
+            if (!fighter.presentation.watchUrl) throw new Error(`${fighter.fighter} is missing a Watch Moment URL.`);
             for (const forbidden of ['rank', 'ovr', 'totalScore', 'rawScore', 'championshipScore', 'primeDominanceScore']) {
               if (Object.prototype.hasOwnProperty.call(fighter, forbidden)) throw new Error(`Generated input row stores forbidden calculated field ${forbidden}.`);
             }

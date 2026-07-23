@@ -27,6 +27,7 @@ const presentationSchema = z
     keyJudgmentCalls: z.array(z.string().min(1)),
     photoUrl: z.string().nullable(),
     thumbUrl: z.string().nullable(),
+    watchUrl: z.string().url(),
   })
   .strict();
 
