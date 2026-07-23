@@ -140,20 +140,6 @@ function canonicalPrimeFights(input: RankingInputFighter) {
   return { fights: fights.slice(start, end + 1), start, end };
 }
 
-function championshipCredit(fight: CanonicalFight) {
-  if (
-    fight.championshipManualCredit !== undefined &&
-    fight.championshipManualCredit !== null
-  ) {
-    return Number(fight.championshipManualCredit) || 0;
-  }
-  if (fight.scoringDisposition !== "count-win" || fight.championshipEligible === false) {
-    return 0;
-  }
-  const rule = CHAMPIONSHIP_TYPES[fight.championshipType] ?? CHAMPIONSHIP_TYPES.none;
-  return rule.baseCredit * Number(fight.championshipOpponentStrength || 0);
-}
-
 function activeEliteYears(input: RankingInputFighter, primeFights: readonly CanonicalFight[]) {
   const dates = primeFights.map((fight) => Date.parse(`${fight.date}T00:00:00Z`));
   if (!dates.length) return 0;
@@ -170,7 +156,10 @@ function activeEliteYears(input: RankingInputFighter, primeFights: readonly Cano
   return round2(days / 365.25);
 }
 
-function deriveVisibleStats(input: RankingInputFighter): RankingVisibleStats {
+function deriveVisibleStats(
+  input: RankingInputFighter,
+  adjustedTitleWins: number,
+): RankingVisibleStats {
   const fights = input.facts.fights;
   const official = fights.reduce<DispositionCounts>(
     (counts, fight) => {
@@ -212,16 +201,13 @@ function deriveVisibleStats(input: RankingInputFighter): RankingVisibleStats {
       fight.scoringDisposition === "count-win"
     );
   }).length;
-  const adjustedTitleWins = round2(
-    fights.reduce((total, fight) => total + championshipCredit(fight), 0),
-  );
   const qualityWins = fights.filter((fight) => fight.scoringDisposition === "count-win");
   const throughPrime = countDispositions(fights.slice(0, prime.end + 1));
 
   return {
     ufcRecord: formatRecord(official),
     titleFightWins,
-    adjustedTitleWins,
+    adjustedTitleWins: round2(adjustedTitleWins),
     topFiveWins: qualityWins.filter((fight) => TOP_FIVE_TIERS.has(fight.qualityTier)).length,
     rankedWins: qualityWins.filter((fight) => RANKED_TIERS.has(fight.qualityTier)).length,
     finishRatePct: scored.wins ? round2((finishWins / scored.wins) * 100) : 0,
@@ -288,7 +274,7 @@ const calculationSeeds = canonicalRankingInputs.fighters.map((input) => {
   const metadata: CalculationMetadata = {
     input,
     traces: { championship, opponentQuality, primeDominance, longevity, apex, penalty, eraDepth },
-    visibleStats: deriveVisibleStats(input),
+    visibleStats: deriveVisibleStats(input, championship.adjustedTitleCredit),
   };
   return { fighter: input.fighter, board: input.board, categories, modifiers, metadata };
 });
