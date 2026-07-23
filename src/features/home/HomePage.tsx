@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FighterPhoto } from "../rankings/FighterPhoto";
-import { menAllTime } from "../rankings/rankingData";
+import { menAllTime } from "../rankings/rankingModel";
 
 const hqStats = [
   { label: "Daily streak", value: "—" },
@@ -44,14 +44,14 @@ export default function HomePage() {
             <p className="eyebrow">TOP OF THE BOARD</p>
             <h2 id="board-preview-title">UFC all-time</h2>
           </div>
-          <Link className="text-link" to="/rankings">View all</Link>
+          <Link className="text-link" to="/rankings">View all 80</Link>
         </div>
         <div className="board-preview__list">
           {menAllTime.slice(0, 3).map((fighter) => (
             <Link className="board-preview__row" to={`/fighters/${fighter.slug}`} key={fighter.slug}>
               <span className="board-preview__rank">{fighter.rank}</span>
               <FighterPhoto name={fighter.name} src={fighter.thumbUrl} />
-              <span><strong>{fighter.name}</strong><small>{fighter.division}</small></span>
+              <span><strong>{fighter.name}</strong><small>{fighter.visibleStats.ufcRecord} UFC · {fighter.division}</small></span>
               <b>{fighter.ovr}</b>
             </Link>
           ))}

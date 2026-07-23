@@ -1,28 +1,65 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { FighterPhoto } from "./FighterPhoto";
-import { menAllTime } from "./rankingData";
+import { menAllTime, womenAllTime } from "./rankingModel";
+
+const boards = {
+  men: { label: "Overall", fighters: menAllTime },
+  women: { label: "Women", fighters: womenAllTime },
+} as const;
+
+type BoardKey = keyof typeof boards;
 
 export default function RankingsPage() {
+  const [board, setBoard] = useState<BoardKey>("men");
   const [query, setQuery] = useState("");
+  const selected = boards[board];
   const filtered = useMemo(() => {
     const normalized = query.trim().toLowerCase();
-    if (!normalized) return menAllTime;
-    return menAllTime.filter((fighter) =>
+    if (!normalized) return selected.fighters;
+    return selected.fighters.filter((fighter) =>
       `${fighter.name} ${fighter.division}`.toLowerCase().includes(normalized),
     );
-  }, [query]);
+  }, [query, selected]);
+  const averageOvr = Math.round(
+    selected.fighters.reduce((sum, fighter) => sum + fighter.ovr, 0) /
+      selected.fighters.length,
+  );
 
   return (
     <div className="page rankings-page">
       <section className="page-heading rankings-heading">
         <p className="eyebrow">UFC ALL-TIME</p>
         <h1>Greatest UFC fighters</h1>
-        <p>UFC-only résumé rankings built for serious debate and quick comparison.</p>
+        <p>All 80 fighters are recalculated from the complete UFC-only facts model.</p>
+      </section>
+
+      <div className="ranking-board-tabs" role="group" aria-label="Ranking board">
+        {(Object.keys(boards) as BoardKey[]).map((key) => (
+          <button
+            className={board === key ? "is-active" : ""}
+            key={key}
+            type="button"
+            aria-pressed={board === key}
+            onClick={() => {
+              setBoard(key);
+              setQuery("");
+            }}
+          >
+            {boards[key].label}
+            <span>{boards[key].fighters.length}</span>
+          </button>
+        ))}
+      </div>
+
+      <section className="ranking-kpis" aria-label={`${selected.label} ranking summary`}>
+        <div><strong>{selected.fighters.length}</strong><span>Fighters</span></div>
+        <div><strong>{selected.fighters[0].name}</strong><span>Current #1</span></div>
+        <div><strong>{averageOvr}</strong><span>Average OVR</span></div>
       </section>
 
       <label className="ranking-search">
-        <span className="sr-only">Search rankings</span>
+        <span className="sr-only">Search {selected.label} rankings</span>
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
@@ -31,14 +68,14 @@ export default function RankingsPage() {
         />
       </label>
 
-      <section className="ranking-list" aria-label="UFC all-time rankings">
+      <section className="ranking-list" aria-label={`${selected.label} UFC all-time rankings`}>
         {filtered.map((fighter) => (
           <Link className="ranking-row" to={`/fighters/${fighter.slug}`} key={fighter.slug}>
             <span className="ranking-row__rank">{fighter.rank}</span>
             <FighterPhoto name={fighter.name} src={fighter.thumbUrl} className="ranking-row__photo" />
             <span className="ranking-row__identity">
               <strong>{fighter.name}</strong>
-              <span>{fighter.division}</span>
+              <span>{fighter.visibleStats.ufcRecord} UFC · {fighter.division}</span>
             </span>
             <span className="ranking-row__ovr">
               <strong>{fighter.ovr}</strong>

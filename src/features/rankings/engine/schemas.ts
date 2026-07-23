@@ -41,6 +41,9 @@ export const canonicalFightSchema = z
     methodCategory: z.string().min(1),
     qualityTier: z.string().min(1),
     championshipType: z.string().min(1),
+    championshipEligible: z.boolean().optional(),
+    championshipOpponentStrength: finiteNumber.nullable().optional(),
+    championshipManualCredit: finiteNumber.nullable().optional(),
     rounds: auditedRoundsSchema,
     lossClassification: lossClassificationSchema.optional(),
   })
@@ -65,7 +68,7 @@ export const championshipInputSchema = z
         .passthrough(),
     ),
   })
-  .strict();
+  .passthrough();
 
 export const opponentQualityInputSchema = z
   .object({
@@ -82,7 +85,7 @@ export const opponentQualityInputSchema = z
         .passthrough(),
     ),
   })
-  .strict();
+  .passthrough();
 
 export const apexInputSchema = z
   .object({
@@ -107,7 +110,7 @@ export const apexInputSchema = z
       .strict(),
     notes: z.string().nullable().optional(),
   })
-  .strict();
+  .passthrough();
 
 export const primeDominanceInputSchema = z
   .object({

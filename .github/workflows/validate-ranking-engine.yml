@@ -6,7 +6,10 @@ on:
       - "agent/**"
     paths:
       - .github/workflows/validate-ranking-engine.yml
-      - src/features/rankings/engine/**
+      - src/features/rankings/**
+      - src/features/home/HomePage.tsx
+      - src/app/App.test.tsx
+      - src/styles/global.css
       - package.json
       - tsconfig.json
       - vite.config.ts
@@ -20,7 +23,7 @@ permissions:
 jobs:
   validate-ranking-engine:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -55,7 +58,7 @@ jobs:
             description="Typecheck, tests, and build passed"
           else
             state="failure"
-            description="Ranking engine validation failed"
+            description="Ranking validation failed"
           fi
           curl --fail-with-body \
             --request POST \

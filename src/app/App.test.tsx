@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import { afterEach, describe, expect, it } from "vitest";
 import { AppProviders } from "./providers";
@@ -26,18 +26,24 @@ describe("Octagon HQ V2", () => {
     expect(screen.queryByText("War Room")).not.toBeInTheDocument();
   });
 
-  it("renders the real rankings board through its own route", async () => {
+  it("renders all calculated men's and women's ranking boards", async () => {
     renderRoute("/rankings");
 
     expect(await screen.findByRole("heading", { name: "Greatest UFC fighters" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Jon Jones/i })).toHaveAttribute("href", "/fighters/jon-jones");
-    expect(screen.getByRole("link", { name: /Kamaru Usman/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Matt Hughes/i })).toBeInTheDocument();
+    expect(screen.getByText("65", { selector: ".ranking-board-tabs span" })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /Women/ }));
+    expect(screen.getByRole("link", { name: /Amanda Nunes/i })).toBeInTheDocument();
+    expect(screen.getByText("15", { selector: ".ranking-board-tabs span" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /Jon Jones/i })).not.toBeInTheDocument();
   });
 
-  it("supports direct fighter profile routes", async () => {
-    renderRoute("/fighters/jon-jones");
+  it("supports direct profiles outside the former ten-fighter scaffold", async () => {
+    renderRoute("/fighters/matt-hughes");
 
-    expect(await screen.findByRole("heading", { name: "Jon Jones" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Matt Hughes" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Category breakdown" })).toBeInTheDocument();
     expect(screen.getByText("WHY NOT RANKED HIGHER?")).toBeInTheDocument();
   });
