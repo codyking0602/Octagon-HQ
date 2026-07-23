@@ -2,7 +2,7 @@
 
 _Last updated: 2026-07-23_
 
-This is the authoritative cold-start handoff for continuing Octagon HQ V2 in a new ChatGPT/Codex conversation. Read this file before making changes.
+This is the authoritative cold-start handoff for continuing Octagon HQ V2 in a new ChatGPT/Codex conversation. Read this file before making changes, then inspect the current `main` head because documentation-only commits may follow the last product-behavior commit listed below.
 
 ## Repositories and live apps
 
@@ -18,7 +18,7 @@ This is the authoritative cold-start handoff for continuing Octagon HQ V2 in a n
 
 - Repository: `codyking0602/Octagon-HQ`
 - Production branch: `main`
-- Exact main commit at this handoff: `8db0c27b8344b80bc46cfd81b4d8c8517c8b1e8b`
+- Last product-behavior commit at this handoff: `8db0c27b8344b80bc46cfd81b4d8c8517c8b1e8b` (`Migrate real branding and first rankings slice`). Inspect current `main` before editing because later commits may be documentation-only.
 - Last confirmed working Cloudflare URL before the Worker rename: `https://octagon-hq.bcking06.workers.dev`
 - `wrangler.jsonc` now names the Worker `app`, so the expected next deployed URL is `https://app.bcking06.workers.dev`; confirm it in Cloudflare before treating it as verified.
 - Desired free URL after the manual Cloudflare account-subdomain change: `https://app.octagonhq.workers.dev`
@@ -223,10 +223,11 @@ Do not use V1's old safe branches, temporary workflows, fallback paths, duplicat
 - PR #2 — Configure Cloudflare Workers deployment.
 - PR #3 — Remove conflicting Pages redirect and fix Workers deployment loop.
 - PR #4 — Migrate real branding and first Rankings slice.
+- PR #6 — Add the authoritative new-chat handoff.
 
 ## Exact next safe actions
 
-1. Confirm Cloudflare successfully deployed main commit `8db0c27b8344b80bc46cfd81b4d8c8517c8b1e8b` and verify whether `https://app.bcking06.workers.dev` is live.
+1. Confirm Cloudflare successfully deployed the product-behavior commit `8db0c27b8344b80bc46cfd81b4d8c8517c8b1e8b` and verify whether `https://app.bcking06.workers.dev` is live.
 2. On phone, verify Home, Rankings, search, a fighter profile, direct refresh on `/rankings`, and direct refresh on `/fighters/jon-jones`.
 3. Change the Cloudflare account subdomain to `octagonhq` if it will not disrupt another Worker.
 4. Copy the real logo into V2 and remove the remote V1 logo dependency.
@@ -238,4 +239,4 @@ Do not use V1's old safe branches, temporary workflows, fallback paths, duplicat
 
 Copy this into a new conversation:
 
-> Continue the Octagon HQ V2 rebuild. Repository: `codyking0602/Octagon-HQ`; current production `main` at handoff: `8db0c27b8344b80bc46cfd81b4d8c8517c8b1e8b`. First read `docs/HANDOFF.md` and `docs/product-blueprint.md`, then inspect current main before proposing or making changes. V1 at `codyking0602/ufc-goat-rankings` remains live and maintenance-only; use it only as the visual/behavior/data source, never copy its runtime architecture. Use the connected GitHub tools. One owner, one purpose, small vertical slice, focused tests, exact PR head green, then merge. Do not add a service worker, duplicate initialization, fallback identity/routing paths, or global script-order architecture. Start by confirming the Cloudflare deployment and the exact next safe action in the handoff.
+> Continue the Octagon HQ V2 rebuild. Repository: `codyking0602/Octagon-HQ`. First read `docs/HANDOFF.md` and `docs/product-blueprint.md`, then inspect the current `main` head before proposing or making changes. The last product-behavior commit recorded in the handoff is `8db0c27b8344b80bc46cfd81b4d8c8517c8b1e8b`; later commits may be documentation-only. V1 at `codyking0602/ufc-goat-rankings` remains live and maintenance-only; use it only as the visual/behavior/data source, never copy its runtime architecture. Use the connected GitHub tools. One owner, one purpose, small vertical slice, focused tests, exact PR head green, then merge. Do not add a service worker, duplicate initialization, fallback identity/routing paths, or global script-order architecture. Start by confirming the Cloudflare deployment and the exact next safe action in the handoff.
