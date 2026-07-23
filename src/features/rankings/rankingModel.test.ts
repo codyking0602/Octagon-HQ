@@ -71,6 +71,7 @@ describe("complete calculation-backed ranking model", () => {
     expect(womenAllTime).toHaveLength(15);
     expect(allTime).toHaveLength(80);
     expect(menAllTime[0]).toMatchObject({ fighter: "Jon Jones", rank: 1, ovr: 99 });
+    expect(womenAllTime[0].fighter).toBe(v1ProductionRankingParityFixture.boards.women[0]);
   });
 
   it("retains the locked loss-context exceptions from canonical facts", () => {
