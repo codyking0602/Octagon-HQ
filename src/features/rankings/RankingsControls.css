@@ -1,0 +1,407 @@
+.rankings-presentation .rankings-intro {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.ranking-view-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  background: var(--surface);
+}
+
+.ranking-view-tabs button {
+  min-width: 0;
+  min-height: 40px;
+  padding: 0 7px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.ranking-view-tabs button.is-active {
+  border-color: rgba(240, 23, 23, .58);
+  background: rgba(210, 10, 10, .16);
+  color: var(--text-primary);
+}
+
+.ranking-filter-stack {
+  display: grid;
+  gap: 9px;
+  padding: 11px;
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  background: var(--surface);
+}
+
+.ranking-era-control {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+}
+
+.ranking-era-control > span:first-child {
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.ranking-select-shell {
+  position: relative;
+  display: block;
+  min-width: 0;
+}
+
+.ranking-select-shell select {
+  width: 100%;
+  min-height: 43px;
+  appearance: none;
+  overflow: hidden;
+  padding: 0 36px 0 13px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  outline: 0;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 850;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.ranking-select-shell select:focus-visible {
+  border-color: rgba(240, 23, 23, .82);
+  box-shadow: 0 0 0 3px rgba(240, 23, 23, .13);
+}
+
+.ranking-select-shell > span {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  color: var(--text-secondary);
+  font-size: 16px;
+  line-height: 1;
+  pointer-events: none;
+  transform: translateY(-58%);
+}
+
+.ranking-search-line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 7px;
+}
+
+.ranking-search--compact {
+  min-width: 0;
+}
+
+.rankings-presentation .ranking-search--compact input {
+  min-height: 44px;
+  border-radius: 12px;
+  background: var(--surface-raised);
+}
+
+.ranking-search-count {
+  display: grid;
+  place-items: center;
+  min-width: 43px;
+  min-height: 43px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 950;
+}
+
+.ranking-clear-icon {
+  display: grid;
+  place-items: center;
+  width: 43px;
+  height: 43px;
+  padding: 0;
+  border: 1px solid rgba(240, 23, 23, .62);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.ranking-clear-icon:hover,
+.ranking-clear-icon:focus-visible {
+  border-color: var(--ufc-red-strong);
+  background: rgba(210, 10, 10, .16);
+  outline: 0;
+}
+
+.ranking-pill-grid,
+.ranking-gender-pills {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.ranking-pill-grid button,
+.ranking-gender-pills button {
+  min-height: 45px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-primary);
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1.15;
+  cursor: pointer;
+}
+
+.ranking-pill-grid button.is-active,
+.ranking-gender-pills button.is-active {
+  border-color: var(--ufc-red-strong);
+  background: var(--ufc-red);
+  color: #fff;
+}
+
+.ranking-selection-card,
+.ranking-era-card {
+  border: 1px solid rgba(240, 23, 23, .36);
+  border-radius: 17px;
+  background: var(--surface);
+}
+
+.ranking-selection-card {
+  display: grid;
+  gap: 5px;
+  padding: 12px 14px;
+}
+
+.ranking-selection-card > strong {
+  color: var(--text-primary);
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+.ranking-selection-card > p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.ranking-era-card {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
+.ranking-era-card > div {
+  display: grid;
+  gap: 5px;
+}
+
+.ranking-era-card > div > span,
+.ranking-era-card__fight-label {
+  color: var(--ufc-red-strong);
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+.ranking-era-card > div > strong {
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+.ranking-era-card p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.ranking-era-card > a {
+  display: grid;
+  gap: 10px;
+  padding: 11px 12px;
+  border: 1px solid rgba(240, 23, 23, .58);
+  border-radius: 13px;
+  background: var(--surface-raised);
+  color: inherit;
+  text-decoration: none;
+}
+
+.ranking-era-card__fight-copy {
+  display: grid;
+  gap: 4px;
+}
+
+.ranking-era-card__fight-copy > strong {
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.ranking-era-card__fight-copy > small {
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.ranking-era-card__watch-cta {
+  display: inline-flex;
+  justify-self: start;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 11px;
+  border-radius: 999px;
+  background: var(--ufc-red);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.ranking-era-card__watch-cta svg {
+  width: 15px;
+  height: 15px;
+  fill: currentColor;
+}
+
+.ranking-era-card > a:hover,
+.ranking-era-card > a:focus-visible {
+  border-color: var(--ufc-red-strong);
+  background: rgba(210, 10, 10, .12);
+  outline: 0;
+}
+
+.rankings-presentation .ranking-row--contextual,
+.rankings-presentation .ranking-row--contextual .ranking-row__profile {
+  min-height: 86px;
+}
+
+.rankings-presentation .ranking-row__profile {
+  grid-template-columns: 30px 54px minmax(0, 1fr) 54px;
+}
+
+.rankings-presentation .ranking-row--no-score .ranking-row__profile {
+  grid-template-columns: 30px 54px minmax(0, 1fr);
+}
+
+.rankings-presentation .ranking-row__identity {
+  gap: 3px;
+}
+
+.rankings-presentation .ranking-row__identity .ranking-row__meta,
+.rankings-presentation .ranking-row__identity .ranking-row__detail {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rankings-presentation .ranking-row__identity .ranking-row__meta {
+  color: var(--text-muted);
+  font-size: 10.5px;
+}
+
+.rankings-presentation .ranking-row__identity .ranking-row__detail {
+  color: var(--text-secondary);
+  font-size: 9.5px;
+}
+
+.rankings-presentation .ranking-row__ovr strong {
+  font-size: 20px;
+}
+
+.rankings-presentation .ranking-row__ovr span {
+  font-size: 7px;
+  white-space: nowrap;
+}
+
+@media (min-width: 620px) {
+  .ranking-era-card {
+    grid-template-columns: minmax(0, 1fr) minmax(210px, .55fr);
+    align-items: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .ranking-view-tabs button {
+    min-height: 38px;
+    padding-inline: 3px;
+    font-size: 10px;
+  }
+
+  .ranking-filter-stack {
+    padding: 10px;
+  }
+
+  .ranking-era-control {
+    gap: 9px;
+  }
+
+  .ranking-pill-grid button,
+  .ranking-gender-pills button {
+    min-height: 43px;
+    padding-inline: 7px;
+    font-size: 10.5px;
+  }
+
+  .rankings-presentation .ranking-row__profile {
+    grid-template-columns: 27px 50px minmax(0, 1fr) 50px;
+  }
+
+  .rankings-presentation .ranking-row--no-score .ranking-row__profile {
+    grid-template-columns: 27px 50px minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 370px) {
+  .ranking-view-tabs button {
+    font-size: 9px;
+  }
+
+  .ranking-pill-grid button,
+  .ranking-gender-pills button {
+    font-size: 10px;
+  }
+
+  .ranking-select-shell select {
+    font-size: 11px;
+  }
+
+  .rankings-presentation .ranking-row__profile {
+    grid-template-columns: 24px 46px minmax(0, 1fr) 47px;
+  }
+
+  .rankings-presentation .ranking-row--no-score .ranking-row__profile {
+    grid-template-columns: 24px 46px minmax(0, 1fr);
+  }
+
+  .rankings-presentation .ranking-row__identity .ranking-row__meta {
+    font-size: 9.5px;
+  }
+
+  .rankings-presentation .ranking-row__identity .ranking-row__detail {
+    font-size: 9px;
+  }
+}

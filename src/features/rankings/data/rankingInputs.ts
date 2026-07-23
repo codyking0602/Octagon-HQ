@@ -59,6 +59,28 @@ const sharedEraSchema = z
   })
   .strict();
 
+const rankingEraSchema = z
+  .object({
+    id: z.string().min(1),
+    name: z.string().min(1),
+    years: z.string().min(1),
+    startYear: z.number().int(),
+    endYear: z.number().int().nullable(),
+    description: z.string().min(1),
+    definingFight: z.string().min(1),
+    alternateFight: z.string().min(1).nullable(),
+    fightUrl: z.string().url(),
+    fightNote: z.string().min(1).nullable(),
+  })
+  .strict();
+
+const eraMembershipSchema = z
+  .object({
+    primary: z.string().min(1),
+    secondary: z.string().min(1).nullable(),
+  })
+  .strict();
+
 const rankingInputFighterSchema = z
   .object({
     fighter: z.string().min(1),
@@ -129,6 +151,12 @@ export const rankingInputDatasetSchema = z
         women: z.literal(15),
       })
       .strict(),
+    filters: z
+      .object({
+        eras: z.array(rankingEraSchema).length(8),
+        eraMembership: z.record(z.string(), eraMembershipSchema),
+      })
+      .strict(),
     fighters: z.array(rankingInputFighterSchema).length(80),
   })
   .strict()
@@ -146,6 +174,23 @@ export const rankingInputDatasetSchema = z
     if (men !== dataset.counts.men || women !== dataset.counts.women) {
       context.addIssue({ code: "custom", message: "Ranking input board counts do not reconcile." });
     }
+
+    const eraIds = new Set(dataset.filters.eras.map((era) => era.id));
+    const memberships = Object.entries(dataset.filters.eraMembership);
+    if (memberships.length !== dataset.counts.fighters) {
+      context.addIssue({ code: "custom", message: "Era membership must cover all ranked fighters." });
+    }
+    memberships.forEach(([fighter, membership]) => {
+      if (!names.has(fighter)) {
+        context.addIssue({ code: "custom", message: `Era membership contains unknown fighter ${fighter}.` });
+      }
+      if (!eraIds.has(membership.primary) || (membership.secondary && !eraIds.has(membership.secondary))) {
+        context.addIssue({ code: "custom", message: `Era membership is invalid for ${fighter}.` });
+      }
+      if (membership.primary === membership.secondary) {
+        context.addIssue({ code: "custom", message: `Era membership repeats for ${fighter}.` });
+      }
+    });
   });
 
 const generatedInput: unknown = generatedInputJson;
@@ -155,3 +200,4 @@ export const canonicalRankingInputs = rankingInputDatasetSchema.parse(generatedI
 export type RankingInputDataset = z.infer<typeof rankingInputDatasetSchema>;
 export type RankingInputFighter = RankingInputDataset["fighters"][number];
 export type RankingPresentation = z.infer<typeof presentationSchema>;
+export type RankingEra = RankingInputDataset["filters"]["eras"][number];
