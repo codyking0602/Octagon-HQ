@@ -2,6 +2,14 @@ import { useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { FighterPhoto } from "./FighterPhoto";
 import {
+  abbreviateDivisionLabel,
+  categoryBadgeLabel,
+  categoryDisplayRating,
+  categorySupportCopy,
+  divisionRoleLabel,
+  shortEraName,
+} from "./rankingDisplay";
+import {
   DIVISION_RESUME_SHARE_MIN,
   categoryBoard,
   divisionLabel,
@@ -25,9 +33,19 @@ interface PresentedRankingRow {
   fighter: RankingFighter;
   displayRank: number;
   meta: string;
+  detail?: string;
   score: string | number;
-  scoreLabel: "OVR" | "DIV";
+  scoreLabel: string;
 }
+
+const categoryPillLabels: Record<RankingCategory, string> = {
+  championship: "Championship",
+  opponentQuality: "Opponent Quality",
+  primeDominance: "Prime Dominance",
+  longevity: "Elite Longevity",
+  apexPeak: "Peak Apex",
+  penalty: "Loss Context",
+};
 
 function validView(value: string | null): RankingView {
   return rankingViewOptions.some((option) => option.value === value)
@@ -62,9 +80,11 @@ export default function RankingsPage() {
   const eraOptions = erasForBoard(eraBoard);
   const requestedEra = searchParams.get("era");
   const selectedEra = eraOptions.some((era) => era.id === requestedEra) ? requestedEra : null;
+  const selectedEraData = eraOptions.find((era) => era.id === selectedEra) ?? null;
   const categoryCopy = rankingCategoryOptions.find(
     (category) => category.value === selectedCategory,
   )!;
+  const searchableBoard = view === "p4p" || view === "women";
 
   const heading = useMemo(() => {
     if (view === "women") {
@@ -76,15 +96,15 @@ export default function RankingsPage() {
     }
     if (view === "division") {
       return {
-        title: `${divisionLabel(selectedDivision)} Rankings`,
-        description: "UFC-only divisional resume, allocated from the same calculated GOAT model.",
+        title: "Division Rankings",
+        description: "UFC-only divisional resume from the calculated GOAT model.",
         summaryLabel: `${divisionLabel(selectedDivision)} ranking summary`,
       };
     }
     if (view === "category") {
       return {
-        title: `${categoryCopy.label} Leaders`,
-        description: categoryCopy.description,
+        title: "Category Leaders",
+        description: "See who leads each scoring category.",
         summaryLabel: `${categoryCopy.label} ranking summary`,
       };
     }
@@ -93,16 +113,17 @@ export default function RankingsPage() {
       description: "The definitive pound-for-pound rankings.",
       summaryLabel: "P4P ranking summary",
     };
-  }, [categoryCopy, selectedDivision, view]);
+  }, [categoryCopy.label, selectedDivision, view]);
 
   const unsearchedRows = useMemo<PresentedRankingRow[]>(() => {
     if (view === "division") {
       return qualifiedDivisionBoard(selectedDivision).map((row) => ({
         fighter: row.fighter,
         displayRank: row.rank,
-        meta: `${row.stats.ufcRecord} · ${Math.round(row.resumeSharePct)}% resume · Overall #${row.fighter.rank}`,
-        score: row.divisionScore.toFixed(1),
-        scoreLabel: "DIV",
+        meta: `${row.stats.ufcRecord} UFC · #${row.fighter.rank} P4P`,
+        detail: divisionRoleLabel(row.role),
+        score: `${Math.round(row.resumeSharePct)}%`,
+        scoreLabel: "RESUME",
       }));
     }
 
@@ -110,9 +131,10 @@ export default function RankingsPage() {
       return categoryBoard(categoryGender, selectedCategory).map((fighter, index) => ({
         fighter,
         displayRank: index + 1,
-        meta: `Overall #${fighter.rank} · ${fighter.visibleStats.ufcRecord} · ${fighter.division}`,
-        score: fighter.ovr,
-        scoreLabel: "OVR",
+        meta: `#${fighter.rank} P4P · ${fighter.visibleStats.ufcRecord} UFC · ${abbreviateDivisionLabel(fighter.division)}`,
+        detail: categorySupportCopy(fighter, selectedCategory),
+        score: categoryDisplayRating(categoryGender, selectedCategory, fighter),
+        scoreLabel: categoryBadgeLabel(selectedCategory),
       }));
     }
 
@@ -122,13 +144,14 @@ export default function RankingsPage() {
       .map((fighter) => ({
         fighter,
         displayRank: fighter.rank,
-        meta: `${fighter.visibleStats.ufcRecord} · ${fighter.division}`,
+        meta: `${fighter.visibleStats.ufcRecord} UFC · ${abbreviateDivisionLabel(fighter.division)}`,
         score: fighter.ovr,
         scoreLabel: "OVR",
       }));
   }, [categoryGender, selectedCategory, selectedDivision, selectedEra, view]);
 
   const filteredRows = useMemo(() => {
+    if (!searchableBoard) return unsearchedRows;
     const normalized = query.trim().toLowerCase();
     if (!normalized) return unsearchedRows;
     return unsearchedRows.filter((row) =>
@@ -136,12 +159,8 @@ export default function RankingsPage() {
         .toLowerCase()
         .includes(normalized),
     );
-  }, [query, unsearchedRows]);
+  }, [query, searchableBoard, unsearchedRows]);
 
-  const countLabel =
-    filteredRows.length === unsearchedRows.length
-      ? "fighters"
-      : `of ${unsearchedRows.length} fighters`;
   const canClear = Boolean(query.trim() || selectedEra);
 
   function changeView(nextView: RankingView) {
@@ -180,25 +199,23 @@ export default function RankingsPage() {
         </div>
       </section>
 
-      <section className="ranking-controls" aria-label="Ranking controls">
-        <label className="ranking-control ranking-control--board">
-          <span>Board</span>
-          <span className="ranking-select-shell">
-            <select
-              aria-label="Ranking board"
-              value={view}
-              onChange={(event) => changeView(event.target.value as RankingView)}
-            >
-              {rankingViewOptions.map((option) => (
-                <option value={option.value} key={option.value}>{option.label}</option>
-              ))}
-            </select>
-            <span aria-hidden="true">⌄</span>
-          </span>
-        </label>
+      <nav className="ranking-view-tabs" aria-label="Ranking boards">
+        {rankingViewOptions.map((option) => (
+          <button
+            type="button"
+            key={option.value}
+            className={view === option.value ? "is-active" : ""}
+            aria-current={view === option.value ? "page" : undefined}
+            onClick={() => changeView(option.value)}
+          >
+            {option.label}
+          </button>
+        ))}
+      </nav>
 
-        {(view === "p4p" || view === "women") ? (
-          <label className="ranking-control ranking-control--context">
+      {searchableBoard ? (
+        <section className="ranking-filter-stack" aria-label="Ranking filters">
+          <label className="ranking-era-control">
             <span>Era</span>
             <span className="ranking-select-shell">
               <select
@@ -210,106 +227,126 @@ export default function RankingsPage() {
               >
                 <option value="all">All eras</option>
                 {eraOptions.map((era) => (
-                  <option value={era.id} key={era.id}>{era.name} · {era.years}</option>
+                  <option value={era.id} key={era.id}>{shortEraName(era.name)}</option>
                 ))}
               </select>
               <span aria-hidden="true">⌄</span>
             </span>
           </label>
-        ) : null}
 
-        {view === "division" ? (
-          <label className="ranking-control ranking-control--context">
-            <span>Division</span>
-            <span className="ranking-select-shell">
-              <select
-                aria-label="Ranking division"
-                value={selectedDivision}
-                onChange={(event) => updateParameter("division", event.target.value)}
-              >
-                {divisionOrder.map((division) => (
-                  <option value={division} key={division}>{divisionLabel(division)}</option>
-                ))}
-              </select>
-              <span aria-hidden="true">⌄</span>
-            </span>
-          </label>
-        ) : null}
-
-        {view === "category" ? (
-          <>
-            <label className="ranking-control ranking-control--context ranking-control--category">
-              <span>Category</span>
-              <span className="ranking-select-shell">
-                <select
-                  aria-label="Ranking category"
-                  value={selectedCategory}
-                  onChange={(event) => updateParameter("category", event.target.value)}
-                >
-                  {rankingCategoryOptions.map((category) => (
-                    <option value={category.value} key={category.value}>{category.label}</option>
-                  ))}
-                </select>
-                <span aria-hidden="true">⌄</span>
-              </span>
+          <div className="ranking-search-line" aria-label={heading.summaryLabel}>
+            <label className="ranking-search ranking-search--compact">
+              <span className="sr-only">Search {heading.title}</span>
+              <input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                type="search"
+                placeholder={`Search ${unsearchedRows.length} fighters`}
+              />
             </label>
-            <div className="ranking-control ranking-control--gender">
-              <span>Board</span>
-              <div className="ranking-gender-toggle" role="group" aria-label="Category leaderboard">
-                <button
-                  type="button"
-                  className={categoryGender === "men" ? "is-active" : ""}
-                  onClick={() => updateParameter("gender", "men")}
-                >Men</button>
-                <button
-                  type="button"
-                  className={categoryGender === "women" ? "is-active" : ""}
-                  onClick={() => updateParameter("gender", "women")}
-                >Women</button>
-              </div>
-            </div>
-          </>
-        ) : null}
-
-        <label className="ranking-search ranking-search--controls">
-          <span className="sr-only">Search {heading.title}</span>
-          <input
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            type="search"
-            placeholder="Search fighters"
-          />
-        </label>
-
-        <div className="ranking-toolbar" aria-label={heading.summaryLabel}>
-          <span className="ranking-count">
-            <strong>{filteredRows.length}</strong>
-            <span>{countLabel}</span>
-          </span>
-          {canClear ? (
-            <button className="ranking-clear" type="button" onClick={clearOptionalFilters}>
-              Clear
-            </button>
-          ) : null}
-        </div>
-      </section>
+            <span className="ranking-search-count" aria-label={`${filteredRows.length} fighters shown`}>
+              {filteredRows.length}
+            </span>
+            {canClear ? (
+              <button
+                className="ranking-clear-icon"
+                type="button"
+                onClick={clearOptionalFilters}
+                aria-label="Clear ranking filters"
+              >
+                ×
+              </button>
+            ) : null}
+          </div>
+        </section>
+      ) : null}
 
       {view === "division" ? (
-        <p className="ranking-context-note">
-          Fighters need a UFC win in the division and at least {DIVISION_RESUME_SHARE_MIN}% of their calculated UFC resume there.
-        </p>
-      ) : selectedEra ? (
-        <p className="ranking-context-note">
-          Showing fighters assigned to {eraOptions.find((era) => era.id === selectedEra)?.name} while preserving their all-time rank.
-        </p>
+        <>
+          <section className="ranking-pill-grid ranking-pill-grid--divisions" aria-label="Choose division">
+            {divisionOrder.map((division) => (
+              <button
+                type="button"
+                key={division}
+                className={selectedDivision === division ? "is-active" : ""}
+                onClick={() => updateParameter("division", division)}
+              >
+                {divisionLabel(division)}
+              </button>
+            ))}
+          </section>
+          <section className="ranking-selection-card" aria-label={heading.summaryLabel}>
+            <strong>{divisionLabel(selectedDivision)} · Men</strong>
+            <p>
+              Fighters need a UFC win and at least {DIVISION_RESUME_SHARE_MIN}% of their calculated UFC resume in this division.
+            </p>
+          </section>
+        </>
+      ) : null}
+
+      {view === "category" ? (
+        <>
+          <section className="ranking-pill-grid ranking-pill-grid--categories" aria-label="Choose category">
+            {rankingCategoryOptions.map((category) => (
+              <button
+                type="button"
+                key={category.value}
+                className={selectedCategory === category.value ? "is-active" : ""}
+                onClick={() => updateParameter("category", category.value)}
+              >
+                {categoryPillLabels[category.value]}
+              </button>
+            ))}
+          </section>
+          <div className="ranking-gender-pills" role="group" aria-label="Category leaderboard">
+            <button
+              type="button"
+              className={categoryGender === "men" ? "is-active" : ""}
+              onClick={() => updateParameter("gender", "men")}
+            >
+              Men
+            </button>
+            <button
+              type="button"
+              className={categoryGender === "women" ? "is-active" : ""}
+              onClick={() => updateParameter("gender", "women")}
+            >
+              Women
+            </button>
+          </div>
+          <section className="ranking-selection-card" aria-label={heading.summaryLabel}>
+            <strong>{categoryCopy.label} · {categoryGender === "women" ? "Women" : "Men"}</strong>
+            <p>{categoryCopy.description}</p>
+          </section>
+        </>
+      ) : null}
+
+      {selectedEraData ? (
+        <section className="ranking-era-card" aria-label={`${selectedEraData.name} context`}>
+          <div>
+            <span>Era</span>
+            <strong>{selectedEraData.name} · {selectedEraData.years}</strong>
+            <p>{selectedEraData.description}</p>
+          </div>
+          <a
+            href={selectedEraData.fightUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Watch defining fight: ${selectedEraData.definingFight}`}
+          >
+            <span>Defining fight</span>
+            <strong>{selectedEraData.definingFight}</strong>
+            {selectedEraData.fightNote ? <small>{selectedEraData.fightNote}</small> : null}
+          </a>
+        </section>
       ) : null}
 
       <section className="ranking-list" aria-label={`${heading.title} list`}>
         {filteredRows.map((row) => (
           <article
-            className="ranking-row"
+            className={`ranking-row${row.detail ? " ranking-row--contextual" : ""}`}
             data-rank={row.displayRank}
-            key={`${view}-${row.fighter.slug}`}
+            key={`${view}-${selectedDivision}-${selectedCategory}-${categoryGender}-${row.fighter.slug}`}
           >
             <Link
               className="ranking-row__profile"
@@ -324,7 +361,8 @@ export default function RankingsPage() {
               />
               <span className="ranking-row__identity">
                 <strong>{row.fighter.name}</strong>
-                <span>{row.meta}</span>
+                <span className="ranking-row__meta">{row.meta}</span>
+                {row.detail ? <span className="ranking-row__detail">{row.detail}</span> : null}
               </span>
               <span className="ranking-row__ovr">
                 <strong>{row.score}</strong>
