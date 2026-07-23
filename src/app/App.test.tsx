@@ -97,8 +97,9 @@ describe("Octagon HQ V2", () => {
     });
 
     expect(eraSelect).toHaveDisplayValue("Golden Age · 2011–2015");
-    expect(screen.getByText("Golden Age · 2011–2015")).toBeInTheDocument();
-    expect(screen.getByText(/deep champion class, lighter divisions/i)).toBeInTheDocument();
+    const eraCard = screen.getByLabelText("Golden Age context");
+    expect(within(eraCard).getByText("Golden Age · 2011–2015")).toBeInTheDocument();
+    expect(within(eraCard).getByText(/deep champion class, lighter divisions/i)).toBeInTheDocument();
     const definingFight = screen.getByRole("link", {
       name: "Watch defining fight: Jon Jones vs. Alexander Gustafsson I",
     });
