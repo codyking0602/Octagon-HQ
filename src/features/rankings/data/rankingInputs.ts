@@ -67,6 +67,10 @@ const rankingEraSchema = z
     startYear: z.number().int(),
     endYear: z.number().int().nullable(),
     description: z.string().min(1),
+    definingFight: z.string().min(1),
+    alternateFight: z.string().min(1).nullable(),
+    fightUrl: z.string().url(),
+    fightNote: z.string().min(1).nullable(),
   })
   .strict();
 
