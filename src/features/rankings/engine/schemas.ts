@@ -41,6 +41,9 @@ export const canonicalFightSchema = z
     methodCategory: z.string().min(1),
     qualityTier: z.string().min(1),
     championshipType: z.string().min(1),
+    championshipEligible: z.boolean().optional(),
+    championshipOpponentStrength: finiteNumber.nullable().optional(),
+    championshipManualCredit: finiteNumber.nullable().optional(),
     rounds: auditedRoundsSchema,
     lossClassification: lossClassificationSchema.optional(),
   })
