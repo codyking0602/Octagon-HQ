@@ -213,6 +213,10 @@ try {
     startYear: Number(era.startYear),
     endYear: era.endYear === null || era.endYear === undefined ? null : Number(era.endYear),
     description: String(era.description),
+    definingFight: String(era.definingFight),
+    alternateFight: era.alternateFight ? String(era.alternateFight) : null,
+    fightUrl: String(era.fightUrl),
+    fightNote: era.fightNote ? String(era.fightNote) : null,
   }));
   if (eras.length !== 8) throw new Error(`Expected 8 V1 eras; received ${eras.length}.`);
 
