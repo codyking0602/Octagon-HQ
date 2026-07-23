@@ -26,18 +26,29 @@ describe("Octagon HQ V2", () => {
     expect(screen.queryByText("War Room")).not.toBeInTheDocument();
   });
 
-  it("renders all calculated men's and women's ranking boards", async () => {
+  it("renders uniform calculated boards with isolated Watch Moment actions", async () => {
     renderRoute("/rankings");
 
-    expect(await screen.findByRole("heading", { name: "Greatest UFC fighters" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Jon Jones/i })).toHaveAttribute("href", "/fighters/jon-jones");
-    expect(screen.getByRole("link", { name: /Matt Hughes/i })).toBeInTheDocument();
-    expect(screen.getByText("65", { selector: ".ranking-board-tabs span" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "UFC All-Time P4P" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "View Jon Jones profile" })).toHaveAttribute(
+      "href",
+      "/fighters/jon-jones",
+    );
+    expect(screen.getByRole("link", { name: "View Matt Hughes profile" })).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: /Women/ }));
-    expect(screen.getByRole("link", { name: /Amanda Nunes/i })).toBeInTheDocument();
-    expect(screen.getByText("15", { selector: ".ranking-board-tabs span" })).toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: /Jon Jones/i })).not.toBeInTheDocument();
+    const watchMoment = screen.getByRole("link", {
+      name: "Watch Jon Jones moment on YouTube",
+    });
+    expect(watchMoment).toHaveAttribute(
+      "href",
+      "https://youtube.com/shorts/yG-D2r6HVp4?is=fstX4Wc_rvCITSw0",
+    );
+    expect(watchMoment).toHaveAttribute("target", "_blank");
+
+    fireEvent.change(screen.getByLabelText("Ranking board"), { target: { value: "women" } });
+    expect(screen.getByRole("heading", { name: "UFC Women's All-Time" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "View Amanda Nunes profile" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "View Jon Jones profile" })).not.toBeInTheDocument();
   });
 
   it("supports direct profiles outside the former ten-fighter scaffold", async () => {
