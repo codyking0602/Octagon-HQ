@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import { afterEach, describe, expect, it } from "vitest";
 import { AppProviders } from "./providers";
@@ -27,7 +27,7 @@ describe("Octagon HQ V2", () => {
     expect(screen.queryByText("War Room")).not.toBeInTheDocument();
   });
 
-  it("renders the compact calculated P4P board with isolated Watch Moment actions", async () => {
+  it("renders the compact calculated P4P board with abbreviated divisions", async () => {
     renderRoute("/rankings");
 
     expect(await screen.findByRole("heading", { name: "UFC All-Time P4P" })).toBeInTheDocument();
@@ -36,11 +36,10 @@ describe("Octagon HQ V2", () => {
 
     const summary = screen.getByLabelText("P4P ranking summary");
     expect(summary).toHaveTextContent("65");
-    expect(summary).toHaveTextContent("fighters");
 
     const jonProfile = screen.getByRole("link", { name: "View Jon Jones profile" });
     expect(jonProfile).toHaveAttribute("href", "/fighters/jon-jones");
-    expect(jonProfile).toHaveTextContent("22-1, 1 NC · LHW / HW");
+    expect(jonProfile).toHaveTextContent("22-1, 1 NC UFC · LHW / HW");
     expect(screen.getByRole("link", { name: "View Matt Hughes profile" })).toBeInTheDocument();
 
     const watchMoment = screen.getByRole("link", {
@@ -53,33 +52,41 @@ describe("Octagon HQ V2", () => {
     expect(watchMoment).toHaveAttribute("target", "_blank");
   });
 
-  it("switches among Women, Divisions, and Categories without changing route ownership", async () => {
+  it("switches among Women, Divisions, and Categories with direct ranking tabs", async () => {
     const router = renderRoute("/rankings");
     await screen.findByRole("heading", { name: "UFC All-Time P4P" });
+    const tabs = within(screen.getByRole("navigation", { name: "Ranking boards" }));
 
-    fireEvent.change(screen.getByLabelText("Ranking board"), { target: { value: "women" } });
+    fireEvent.click(tabs.getByRole("button", { name: "Women" }));
     expect(screen.getByRole("heading", { name: "UFC Women's All-Time" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "View Amanda Nunes profile" })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "View Jon Jones profile" })).not.toBeInTheDocument();
     expect(router.state.location.search).toBe("?view=women");
 
-    fireEvent.change(screen.getByLabelText("Ranking board"), { target: { value: "division" } });
-    expect(screen.getByRole("heading", { name: "Heavyweight Rankings" })).toBeInTheDocument();
+    fireEvent.click(tabs.getByRole("button", { name: "Divisions" }));
+    expect(screen.getByRole("heading", { name: "Division Rankings" })).toBeInTheDocument();
     expect(screen.getByText(/at least 10% of their calculated UFC resume/i)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "View Stipe Miocic profile" })).toBeInTheDocument();
+    const stipe = screen.getByRole("link", { name: "View Stipe Miocic profile" });
+    expect(stipe).toHaveTextContent("100%");
+    expect(stipe).toHaveTextContent("RESUME");
+    expect(screen.queryByRole("searchbox")).not.toBeInTheDocument();
     expect(router.state.location.search).toBe("?view=division&division=Heavyweight");
 
-    fireEvent.change(screen.getByLabelText("Ranking board"), { target: { value: "category" } });
-    expect(screen.getByRole("heading", { name: "Championship Resume Leaders" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "View Jon Jones profile" })).toBeInTheDocument();
+    fireEvent.click(tabs.getByRole("button", { name: "Categories" }));
+    expect(screen.getByRole("heading", { name: "Category Leaders" })).toBeInTheDocument();
+    const jon = screen.getByRole("link", { name: "View Jon Jones profile" });
+    expect(jon).toHaveTextContent("CHAMP");
+    expect(jon).not.toHaveTextContent("OVR");
+    expect(screen.queryByRole("searchbox")).not.toBeInTheDocument();
     expect(router.state.location.search).toBe("?view=category&category=championship&gender=men");
 
-    fireEvent.click(screen.getByRole("button", { name: "Women" }));
+    const categoryGender = within(screen.getByRole("group", { name: "Category leaderboard" }));
+    fireEvent.click(categoryGender.getByRole("button", { name: "Women" }));
     expect(screen.getByRole("link", { name: "View Amanda Nunes profile" })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "View Jon Jones profile" })).not.toBeInTheDocument();
   });
 
-  it("filters by the pinned V1 eras while preserving all-time ranks", async () => {
+  it("restores V1 era descriptions and defining fights without truncated selector copy", async () => {
     renderRoute("/rankings");
     await screen.findByRole("heading", { name: "UFC All-Time P4P" });
 
@@ -87,33 +94,37 @@ describe("Octagon HQ V2", () => {
       target: { value: "golden-age" },
     });
 
-    expect(screen.getByText(/Showing fighters assigned to Golden Age/i)).toBeInTheDocument();
+    expect(screen.getByText("Golden Age · 2011–2015")).toBeInTheDocument();
+    expect(screen.getByText(/deep champion class, lighter divisions/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Watch defining fight: Jon Jones vs. Alexander Gustafsson I" }),
+    ).toHaveAttribute("target", "_blank");
     expect(screen.getByRole("link", { name: "View Jon Jones profile" })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "View Khabib Nurmagomedov profile" })).not.toBeInTheDocument();
   });
 
-  it("searches the active board and conditionally clears optional filters", async () => {
+  it("keeps P4P and Women filters to an era row and a compact search row", async () => {
     renderRoute("/rankings");
     await screen.findByRole("heading", { name: "UFC All-Time P4P" });
 
-    const search = screen.getByPlaceholderText("Search fighters");
+    const search = screen.getByPlaceholderText("Search 65 fighters");
     fireEvent.change(search, { target: { value: "Matt Hughes" } });
     expect(screen.getByLabelText("P4P ranking summary")).toHaveTextContent("1");
     expect(screen.getByRole("link", { name: "View Matt Hughes profile" })).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "Clear" }));
+    fireEvent.click(screen.getByRole("button", { name: "Clear ranking filters" }));
     expect(search).toHaveValue("");
     expect(screen.getByLabelText("P4P ranking summary")).toHaveTextContent("65");
-    expect(screen.queryByRole("button", { name: "Clear" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Clear ranking filters" })).not.toBeInTheDocument();
   });
 
   it("supports direct contextual ranking URLs", async () => {
     renderRoute("/rankings?view=category&category=opponentQuality&gender=women");
 
-    expect(
-      await screen.findByRole("heading", { name: "Opponent Quality Wins Leaders" }),
-    ).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Women" })).toHaveClass("is-active");
+    expect(await screen.findByRole("heading", { name: "Category Leaders" })).toBeInTheDocument();
+    expect(screen.getByText("Opponent Quality Wins · Women")).toBeInTheDocument();
+    const categoryGender = within(screen.getByRole("group", { name: "Category leaderboard" }));
+    expect(categoryGender.getByRole("button", { name: "Women" })).toHaveClass("is-active");
     expect(screen.getByRole("link", { name: "View Amanda Nunes profile" })).toBeInTheDocument();
   });
 
