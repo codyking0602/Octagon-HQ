@@ -9,6 +9,13 @@ on:
       - .github/workflows/capture-v1-ranking-parity.yml
       - docs/rankings-parity-contract.md
       - scripts/capture-v1-ranking-parity.mjs
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/capture-v1-ranking-parity.yml
+      - docs/rankings-parity-contract.md
+      - scripts/capture-v1-ranking-parity.mjs
 
 permissions:
   contents: write
@@ -18,11 +25,14 @@ jobs:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      TARGET_BRANCH: ${{ github.head_ref || github.ref_name }}
     steps:
-      - name: Check out V2 branch
+      - name: Check out V2 branch head
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -79,4 +89,4 @@ jobs:
             exit 0
           fi
           git commit -m "Add V1 production ranking parity fixture"
-          git push origin HEAD:${GITHUB_REF_NAME}
+          git push origin HEAD:${TARGET_BRANCH}
