@@ -1,172 +1,100 @@
-# Octagon HQ V2 — Rankings Migration Correction
+# Octagon HQ V2 — Rankings Migration
 
 _Last updated: 2026-07-23_
 
-This document corrects an important misunderstanding about the current V2 Rankings implementation and defines the next milestone.
+## Current status
 
-## Current truth
+The calculation migration is complete.
 
-The current V2 Rankings feature is **not** the production ranking engine and must not be treated as approved.
+V2 now has:
 
-`src/features/rankings/rankingData.ts` is a manually written static top-10 array. It hard-codes each fighter's:
+- the complete 80-fighter typed input dataset;
+- pure TypeScript ownership of all seven categories/modifiers;
+- calculated weighted totals, tie breakers, ranks, and fixed-anchor OVRs;
+- calculated visible stats and profile values;
+- exact output parity with pinned V1 production for all 65 men and 15 women;
+- one app-facing calculated projection in `src/features/rankings/rankingModel.ts`;
+- no hand-written ranking, score, or OVR array.
 
-- rank;
-- OVR;
-- raw score;
-- category values;
-- penalty;
-- profile copy.
+The former `src/features/rankings/rankingData.ts` scaffold has been deleted and must not be recreated.
 
-`src/features/rankings/RankingsPage.tsx` only searches and renders that array. It does not run Cody's scoring calculations, automatically reorder fighters, or update OVR when ranking inputs change.
+## Pinned reference
 
-The current V2 Rankings layout is also a newly created generic row list. It is not a faithful migration of the approved V1 Rankings tab.
+- V1 repository: `codyking0602/ufc-goat-rankings`
+- Pinned production commit: `842ba06ea09c4f40723226f4c4dfd35041cb3314`
+- Output oracle: `src/features/rankings/engine/__fixtures__/v1-production-output-842ba06e.json`
+- Input dataset: `src/features/rankings/data/generated/canonical-ranking-inputs-842ba06e.json`
 
-The current implementation proved only that V2 can support:
+The output fixture is test-only. The live app calculates from the typed input dataset.
 
-- a lazy-loaded Rankings route;
-- clean fighter-profile URLs;
-- searchable fighter rows;
-- fighter image fallbacks;
-- direct-route refreshes.
+## Calculation ownership
 
-Treat the ranking order, OVR values, profile values, and visual presentation as **disposable scaffolding** until the real migration is complete.
+1. `data/rankingInputs.ts` validates the complete canonical dataset.
+2. `engine/categoryCalculators.ts` calculates Championship, Opponent Quality, Prime Dominance, Longevity, Peak Apex, Loss Context, and Era Depth.
+3. `engine/rankingEngine.ts` calculates weighted totals, modifiers, tie breakers, ranks, and OVRs.
+4. `rankingModel.ts` derives the app-facing boards, visible stats, presentation values, and profile lookup.
+5. Rankings, Home, and fighter profiles consume `rankingModel.ts` only.
 
-## Immediate stop rule
+Ranks and OVRs must never be manually entered into presentation records.
 
-Do not add another fighter to V2 Rankings and do not polish the current ranking rows before completing the engine and visual-parity work below.
+## Completed parity gate
 
-## V1 calculation source of truth
+Automated tests verify all 80 fighters for:
 
-The legacy production app remains the calculation reference during migration. Inspect the current files on V1 `main`, especially:
+- exact fighter set;
+- exact men's and women's order;
+- exact category values;
+- exact apex, penalty, and era-depth modifiers;
+- exact weighted contributions and totals;
+- exact tie-break tuples;
+- exact rank and OVR;
+- exact visible stats;
+- locked loss-context exceptions, including Jones/Hamill and Volkanovski/Islam.
 
-- `assets/data/canonical-fighter-facts.js` — canonical UFC fight and fighter facts;
-- `assets/data/category-calculators.js` — approved category calculations and traces;
-- `assets/data/ranking-pipeline.js` — single owner of weighted totals, rank assignment, OVR, visible stats, and the app-facing ranking projection;
-- `assets/data/ranking-data.js` — profile/display payload consumed by the production projection;
-- `assets/data/display-overrides.js` — presentation copy and photo paths only;
-- Compare profile and ledger files;
-- `assets/fighters/` — real fighter photos.
+Any future difference requires an isolated, documented, Cody-approved scoring change.
 
-Confirm exact paths on current V1 `main` before editing because file ownership may have changed.
+## Remaining visual-parity gate
 
-## Locked calculation behavior to migrate
+The current V2 page is calculation-correct and displays all 80 fighters, but the final approved UFC/2K-style presentation remains to be built.
 
-V2 must use typed equivalents of the real calculation pipeline rather than copied final outputs:
+Locked UI decisions:
 
-1. Canonical UFC-only fighter facts.
-2. Championship calculation.
-3. Opponent Quality calculation.
-4. Prime Dominance calculation.
-5. Longevity calculation.
-6. Apex/peak adjustment where currently approved.
-7. Locked loss-penalty rules.
-8. Era/division-depth adjustment.
-9. Weighted total calculation.
-10. Deterministic rank assignment and tie breakers.
-11. Fixed-anchor OVR curve with Jon Jones as the 99 benchmark.
-12. Visible profile stats derived from the same canonical facts.
+- preserve Overall, Women, Divisions, and Categories navigation;
+- retain search and era filtering on Overall/Women;
+- retain the KPI strip for now;
+- retain six row chips: Championship, Opponent Quality, Prime Dominance, Longevity, Peak Apex, and Loss Context;
+- keep `/fighters/:slug` as the canonical profile URL;
+- use a routed right-side profile drawer on desktop and a full-screen profile on mobile;
+- do not invent rank-movement presentation during parity work.
 
-Ranks and OVR values must never be manually entered into fighter presentation rows.
+The UI must consume only `rankingModel.ts` and must not add fallback calculations or frozen output data.
 
-## Required fluid behavior
-
-After migration, changing an approved fight fact or judgment input must flow through one calculation owner and automatically update:
-
-- category values;
-- modifiers and penalties;
-- total score;
-- rank order;
-- OVR;
-- visible leaderboard stats;
-- fighter profile values;
-- Compare Mode inputs that consume ranking data.
-
-Automatic outside-world fight-result ingestion is a later feature. The requirement here is that once canonical inputs change, the ranking output recalculates without manual rank assignment.
-
-## Parity gate
-
-Before the V2 engine is approved, add an automated parity fixture or export from current V1 and compare V2 output for all migrated fighters.
-
-At minimum verify:
-
-- same fighter set;
-- same men's and women's order;
-- same category values;
-- same apex, penalty, and era-depth adjustments;
-- same total scores;
-- same rank tie breakers;
-- same OVR values;
-- same visible stats.
-
-A difference is allowed only when it is documented, explained to Cody, and explicitly approved as an intentional V2 scoring change.
-
-Do not make a fresh independent interpretation of Cody's scoring rules during migration.
-
-## Visual-parity gate
-
-Before rebuilding the Rankings page, inspect the current approved V1 Rankings experience and discuss it with Cody.
-
-Default requirement:
-
-> V2 should preserve the approved V1 Rankings information hierarchy, interaction model, and UFC/2K feel while implementing it with clean V2 components and architecture.
-
-Do not independently redesign the tab. Identify with screenshots or a concise screen inventory:
-
-- leaderboard header and controls;
-- men's/women's and division navigation;
-- fighter-row structure;
-- OVR presentation;
-- movement or status treatments;
-- search/filter behavior;
-- profile-entry behavior;
-- spacing, typography, card treatment, and mobile density;
-- anything Cody wants intentionally changed.
-
-Get Cody's approval on the target before replacing the current scaffold.
-
-## Recommended implementation sequence
-
-### Slice A — audit and contract
-
-- Inspect the exact current V1 ranking pipeline and every required input owner.
-- Record the current production output in a stable parity fixture.
-- Inventory the approved V1 Rankings screen.
-- Discuss visual differences and intended improvements with Cody.
-- Produce a narrow implementation plan before coding the engine.
-
-### Slice B — typed calculation core
-
-- Migrate canonical schemas and pure calculation functions.
-- Keep calculations independent of React and browser globals.
-- Add unit tests for locked loss penalties, weights, tie breakers, division context, and OVR anchors.
-- Demonstrate parity on a small representative fighter set.
-
-### Slice C — full parity projection
-
-- Migrate all required fighter inputs.
-- Produce the full calculated men's and women's boards.
-- Pass the full V1/V2 parity gate.
-- Expose one typed ranking projection for all V2 consumers.
+## Remaining implementation sequence
 
 ### Slice D — approved Rankings UI
 
-- Replace the disposable page with the approved V1-parity design.
-- Consume only the calculated projection.
-- Add route, search, filter, and visual regression/snapshot coverage where useful.
-- Phone-test before merging.
+- reproduce the approved V1 information hierarchy and UFC/2K density with clean V2 components;
+- add Divisions and Categories interactions;
+- add the six category chips to rows;
+- add era filtering;
+- preserve the KPI strip and search;
+- phone-test the exact production build.
 
-### Slice E — profiles and Compare
+### Slice E — profile presentation and Compare
 
-- Migrate fighter profile presentation in small batches.
-- Ensure profile and Compare data consume the same calculated projection.
-- Copy real fighter photos into V2 with each migrated batch.
+- implement the approved routed desktop drawer/mobile full-screen behavior;
+- migrate richer profile presentation in small batches while preserving the common calculated projection;
+- migrate Compare without duplicating score ownership;
+- copy real fighter photos into V2 in controlled batches.
+
+## Stop rules
+
+- Do not recreate `rankingData.ts`.
+- Do not manually reorder fighters.
+- Do not manually enter rank, OVR, total, or category scores in UI data.
+- Do not copy V1's global ordered-script architecture.
+- Do not build a second calculation or readiness path.
 
 ## New-chat instruction
 
-A new conversation should begin by reading:
-
-1. `docs/HANDOFF.md`
-2. `docs/product-blueprint.md`
-3. `docs/RANKINGS-MIGRATION.md`
-
-Then inspect current V2 and V1 `main` before proposing changes. The first action is an audit and discussion, not adding fighters or styling the existing scaffold.
+Read `docs/HANDOFF.md`, `docs/product-blueprint.md`, `docs/RANKINGS-MIGRATION.md`, and `docs/rankings-parity-contract.md`, then inspect current `main`. The next ranking milestone is visual parity on top of the completed calculation model—not another engine rewrite and not adding fighters to a static array.
