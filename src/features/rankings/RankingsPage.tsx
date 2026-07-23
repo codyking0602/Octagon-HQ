@@ -2,10 +2,22 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { FighterPhoto } from "./FighterPhoto";
 import { menAllTime, womenAllTime } from "./rankingModel";
+import { watchMomentFor } from "./rankingPresentation";
+import "./RankingsPage.css";
 
 const boards = {
-  men: { label: "Overall", fighters: menAllTime },
-  women: { label: "Women", fighters: womenAllTime },
+  men: {
+    label: "P4P",
+    title: "UFC All-Time P4P",
+    description: "The definitive UFC-only pound-for-pound rankings.",
+    fighters: menAllTime,
+  },
+  women: {
+    label: "Women",
+    title: "UFC Women's All-Time",
+    description: "The definitive UFC-only women's rankings.",
+    fighters: womenAllTime,
+  },
 } as const;
 
 type BoardKey = keyof typeof boards;
@@ -27,30 +39,31 @@ export default function RankingsPage() {
   );
 
   return (
-    <div className="page rankings-page">
-      <section className="page-heading rankings-heading">
-        <p className="eyebrow">UFC ALL-TIME</p>
-        <h1>Greatest UFC fighters</h1>
-        <p>All 80 fighters are recalculated from the complete UFC-only facts model.</p>
-      </section>
+    <div className="page rankings-page rankings-presentation">
+      <section className="rankings-intro">
+        <div className="rankings-intro__copy">
+          <p className="eyebrow">Rankings</p>
+          <h1>{selected.title}</h1>
+          <p>{selected.description}</p>
+        </div>
 
-      <div className="ranking-board-tabs" role="group" aria-label="Ranking board">
-        {(Object.keys(boards) as BoardKey[]).map((key) => (
-          <button
-            className={board === key ? "is-active" : ""}
-            key={key}
-            type="button"
-            aria-pressed={board === key}
-            onClick={() => {
-              setBoard(key);
+        <label className="ranking-board-select">
+          <span className="sr-only">Ranking board</span>
+          <select
+            aria-label="Ranking board"
+            value={board}
+            onChange={(event) => {
+              setBoard(event.target.value as BoardKey);
               setQuery("");
             }}
           >
-            {boards[key].label}
-            <span>{boards[key].fighters.length}</span>
-          </button>
-        ))}
-      </div>
+            {(Object.keys(boards) as BoardKey[]).map((key) => (
+              <option value={key} key={key}>{boards[key].label}</option>
+            ))}
+          </select>
+          <span className="ranking-board-select__chevron" aria-hidden="true">⌄</span>
+        </label>
+      </section>
 
       <section className="ranking-kpis" aria-label={`${selected.label} ranking summary`}>
         <div><strong>{selected.fighters.length}</strong><span>Fighters</span></div>
@@ -64,25 +77,46 @@ export default function RankingsPage() {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           type="search"
-          placeholder="Search fighter or division"
+          placeholder="Search fighters"
         />
       </label>
 
       <section className="ranking-list" aria-label={`${selected.label} UFC all-time rankings`}>
         {filtered.map((fighter) => (
-          <Link className="ranking-row" to={`/fighters/${fighter.slug}`} key={fighter.slug}>
-            <span className="ranking-row__rank">{fighter.rank}</span>
-            <FighterPhoto name={fighter.name} src={fighter.thumbUrl} className="ranking-row__photo" />
-            <span className="ranking-row__identity">
-              <strong>{fighter.name}</strong>
-              <span>{fighter.visibleStats.ufcRecord} UFC · {fighter.division}</span>
-            </span>
-            <span className="ranking-row__ovr">
-              <strong>{fighter.ovr}</strong>
-              <span>OVR</span>
-            </span>
-            <span className="ranking-row__chevron" aria-hidden="true">›</span>
-          </Link>
+          <article className="ranking-row" data-rank={fighter.rank} key={fighter.slug}>
+            <Link
+              className="ranking-row__profile"
+              to={`/fighters/${fighter.slug}`}
+              aria-label={`View ${fighter.name} profile`}
+            >
+              <span className="ranking-row__rank">{fighter.rank}</span>
+              <FighterPhoto
+                name={fighter.name}
+                src={fighter.thumbUrl}
+                className="ranking-row__photo"
+              />
+              <span className="ranking-row__identity">
+                <strong>{fighter.name}</strong>
+                <span>{fighter.visibleStats.ufcRecord} UFC · {fighter.division}</span>
+              </span>
+              <span className="ranking-row__ovr">
+                <strong>{fighter.ovr}</strong>
+                <span>OVR</span>
+              </span>
+            </Link>
+            <a
+              className="ranking-row__watch"
+              href={watchMomentFor(fighter.slug)}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Watch ${fighter.name} moment on YouTube`}
+              title={`Watch ${fighter.name} moment`}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M9 7.6v8.8L16 12 9 7.6Z" />
+              </svg>
+            </a>
+          </article>
         ))}
       </section>
 
