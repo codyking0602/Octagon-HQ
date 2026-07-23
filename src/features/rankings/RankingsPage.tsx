@@ -104,7 +104,6 @@ export default function RankingsPage() {
                 <strong>{fighter.ovr}</strong>
                 <span>OVR</span>
               </span>
-              <span className="ranking-row__profile-chevron" aria-hidden="true">›</span>
             </Link>
             <a
               className="ranking-row__watch"
