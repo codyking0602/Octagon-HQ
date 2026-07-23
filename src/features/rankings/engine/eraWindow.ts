@@ -10,13 +10,18 @@ function nearestDate(
   if (exact) return exact.date;
 
   const target = Date.parse(`${targetDate}T00:00:00Z`);
-  let nearest: { date: string; distance: number } | null = null;
-  fights.forEach((fight) => {
-    const distance = Math.abs(Date.parse(`${fight.date}T00:00:00Z`) - target);
-    if (!nearest || distance < nearest.distance) nearest = { date: fight.date, distance };
-  });
+  let nearestDateValue: string | null = null;
+  let nearestDistance = Number.POSITIVE_INFINITY;
 
-  return nearest && nearest.distance <= ONE_DAY_MS ? nearest.date : null;
+  for (const fight of fights) {
+    const distance = Math.abs(Date.parse(`${fight.date}T00:00:00Z`) - target);
+    if (distance < nearestDistance) {
+      nearestDateValue = fight.date;
+      nearestDistance = distance;
+    }
+  }
+
+  return nearestDistance <= ONE_DAY_MS ? nearestDateValue : null;
 }
 
 export function resolveEraWindow(
