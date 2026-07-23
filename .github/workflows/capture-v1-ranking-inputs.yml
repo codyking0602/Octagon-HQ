@@ -1,13 +1,6 @@
 name: Capture V1 ranking inputs
 
 on:
-  workflow_dispatch:
-  push:
-    branches:
-      - agent/full-ranking-facts-migration
-    paths:
-      - .github/workflows/capture-v1-ranking-inputs.yml
-      - scripts/capture-v1-ranking-inputs.mjs
   pull_request:
     branches:
       - main
@@ -19,7 +12,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: capture-v1-ranking-inputs-${{ github.event.pull_request.number || github.ref }}
+  group: capture-v1-ranking-inputs-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
@@ -28,14 +21,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      TARGET_BRANCH: ${{ github.head_ref || github.ref_name }}
+      TARGET_BRANCH: ${{ github.head_ref }}
       INPUT_PATH: src/features/rankings/data/generated/canonical-ranking-inputs-842ba06e.json
     steps:
       - name: Check out V2 branch head
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Set up Node
         uses: actions/setup-node@v4
