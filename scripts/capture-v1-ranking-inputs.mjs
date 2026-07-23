@@ -61,7 +61,6 @@ async function startServer() {
         response.end(captureHtml);
         return;
       }
-
       const filePath = safePathname(request.url || "/");
       const fileStat = await stat(filePath);
       if (!fileStat.isFile()) throw new Error(`Not a file: ${filePath}`);
@@ -81,7 +80,6 @@ async function startServer() {
     server.once("error", rejectPromise);
     server.listen(0, "127.0.0.1", resolvePromise);
   });
-
   const address = server.address();
   if (!address || typeof address === "string") throw new Error("Could not resolve capture server port.");
   return { server, origin: `http://127.0.0.1:${address.port}` };
@@ -103,11 +101,7 @@ function installBrowserStubs(window) {
   window.alert = () => {};
   window.requestAnimationFrame ||= (callback) => window.setTimeout(() => callback(Date.now()), 0);
   window.cancelAnimationFrame ||= (id) => window.clearTimeout(id);
-  window.ResizeObserver ||= class {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  };
+  window.ResizeObserver ||= class { observe() {} unobserve() {} disconnect() {} };
   window.IntersectionObserver ||= class {
     observe() {}
     unobserve() {}
@@ -135,9 +129,7 @@ async function waitForProjection(window, errors) {
   throw new Error(`Timed out waiting for V1 production ranking readiness.\n${errors.join("\n")}`);
 }
 
-function clone(value) {
-  return value === undefined ? undefined : JSON.parse(JSON.stringify(value));
-}
+const clone = (value) => value === undefined ? undefined : JSON.parse(JSON.stringify(value));
 
 function finiteNumber(value, label) {
   const number = Number(value);
@@ -185,22 +177,16 @@ function assetSlug(...paths) {
 
 function normalizeJudgmentCalls(value) {
   if (!Array.isArray(value)) return [];
-  return value
-    .map((entry) => {
-      if (Array.isArray(entry)) {
-        const title = String(entry[0] || "").trim();
-        const detail = String(entry[1] || "").trim();
-        return [title, detail].filter(Boolean).join(": ");
-      }
-      if (typeof entry === "string") return entry.trim();
-      if (entry && typeof entry === "object") {
-        const title = String(entry.title || entry.label || "").trim();
-        const detail = String(entry.detail || entry.text || entry.note || "").trim();
-        return [title, detail].filter(Boolean).join(": ");
-      }
-      return "";
-    })
-    .filter(Boolean);
+  return value.map((entry) => {
+    if (Array.isArray(entry)) return entry.map((part) => String(part || "").trim()).filter(Boolean).join(": ");
+    if (typeof entry === "string") return entry.trim();
+    if (entry && typeof entry === "object") {
+      const title = String(entry.title || entry.label || "").trim();
+      const detail = String(entry.detail || entry.text || entry.note || "").trim();
+      return [title, detail].filter(Boolean).join(": ");
+    }
+    return "";
+  }).filter(Boolean);
 }
 
 function mapFight(fight) {
@@ -265,7 +251,6 @@ function presentationFor(window, row, record) {
     override.whyNotHigher,
     `The fighters above ${row.fighter} currently have stronger combined UFC-only category and modifier totals.`,
   );
-
   return {
     slug,
     primaryDivision,
@@ -293,8 +278,12 @@ function eraDepthInputFor(window, fighter) {
   const source = direct || resolution?.sourceRow || null;
   const trace = window.UFC_CATEGORY_CALCULATORS?.entryFor?.(fighter)?.traces?.eraDepth || null;
   const depthIndex = finiteOrNull(source?.depthIndex ?? trace?.depthIndex);
-  const approvedAdjustment = finiteOrNull(resolution?.approvedAdjustment);
-  if (depthIndex === null) throw new Error(`Missing era-depth input for ${fighter}.`);
+  const approvedAdjustment = finiteOrNull(
+    resolution?.approvedAdjustment ?? (depthIndex === null ? trace?.canonicalAdjustment : null),
+  );
+  if (depthIndex === null && approvedAdjustment === null) {
+    throw new Error(`Missing era-depth input for ${fighter}.`);
+  }
   return { fighter, depthIndex, approvedAdjustment };
 }
 
@@ -308,7 +297,6 @@ function inputRow(window, projectionRow) {
   const championship = judgments?.entryFor?.("championship", fighter);
   const opponentQuality = judgments?.entryFor?.("opponentQuality", fighter);
   const apex = judgments?.entryFor?.("apex", fighter);
-
   if (!record) throw new Error(`Missing canonical fighter facts for ${fighter}.`);
   if (!era?.window || !era?.longevity) throw new Error(`Missing shared fighter era ledger for ${fighter}.`);
   if (!championship || !opponentQuality || !apex) throw new Error(`Missing scoring judgment inputs for ${fighter}.`);
@@ -330,10 +318,7 @@ function inputRow(window, projectionRow) {
       fights: (record.fights || []).map(mapFight),
     },
     era: {
-      window: {
-        start: String(era.window.start || ""),
-        end: era.window.end || null,
-      },
+      window: { start: String(era.window.start || ""), end: era.window.end || null },
       statusMultiplier: finiteNumber(era.longevity.statusMultiplier || 1, `${fighter} status multiplier`),
       divisionMultiplier: finiteNumber(era.longevity.divisionMultiplier || 1, `${fighter} division multiplier`),
     },
@@ -362,7 +347,6 @@ try {
     runScripts: "dangerously",
     virtualConsole,
   });
-
   const projection = await waitForProjection(dom.window, errors);
   if (projection.rows?.length !== EXPECTED_FIGHTERS) {
     throw new Error(`Expected ${EXPECTED_FIGHTERS} calculated fighters; received ${projection.rows?.length || 0}.`);
@@ -370,9 +354,9 @@ try {
   if (projection.categoryAudit?.passed !== true) throw new Error("V1 production category audit did not pass.");
 
   const fighters = [...projection.men, ...projection.women].map((row) => inputRow(dom.window, row));
-  const slugs = new Set(fighters.map((row) => row.presentation.slug));
-  if (slugs.size !== fighters.length) throw new Error("Captured presentation slugs are not unique.");
-
+  if (new Set(fighters.map((row) => row.presentation.slug)).size !== fighters.length) {
+    throw new Error("Captured presentation slugs are not unique.");
+  }
   const dataset = {
     schemaVersion: 1,
     capturedAt: new Date().toISOString(),
@@ -393,7 +377,6 @@ try {
     },
     fighters,
   };
-
   await mkdir(resolve(outputPath, ".."), { recursive: true });
   await writeFile(outputPath, `${JSON.stringify(dataset, null, 2)}\n`, "utf8");
   console.log(`Captured ${fighters.length} complete V1 ranking input rows to ${outputPath}.`);
