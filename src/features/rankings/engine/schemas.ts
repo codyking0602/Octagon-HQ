@@ -68,7 +68,7 @@ export const championshipInputSchema = z
         .passthrough(),
     ),
   })
-  .strict();
+  .passthrough();
 
 export const opponentQualityInputSchema = z
   .object({
@@ -85,7 +85,7 @@ export const opponentQualityInputSchema = z
         .passthrough(),
     ),
   })
-  .strict();
+  .passthrough();
 
 export const apexInputSchema = z
   .object({
@@ -110,7 +110,7 @@ export const apexInputSchema = z
       .strict(),
     notes: z.string().nullable().optional(),
   })
-  .strict();
+  .passthrough();
 
 export const primeDominanceInputSchema = z
   .object({
