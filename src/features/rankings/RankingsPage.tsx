@@ -9,13 +9,13 @@ const boards = {
   men: {
     label: "P4P",
     title: "UFC All-Time P4P",
-    description: "The definitive UFC-only pound-for-pound rankings.",
+    description: "The definitive pound-for-pound rankings.",
     fighters: menAllTime,
   },
   women: {
     label: "Women",
     title: "UFC Women's All-Time",
-    description: "The definitive UFC-only women's rankings.",
+    description: "The definitive women's rankings.",
     fighters: womenAllTime,
   },
 } as const;
@@ -33,10 +33,10 @@ export default function RankingsPage() {
       `${fighter.name} ${fighter.division}`.toLowerCase().includes(normalized),
     );
   }, [query, selected]);
-  const averageOvr = Math.round(
-    selected.fighters.reduce((sum, fighter) => sum + fighter.ovr, 0) /
-      selected.fighters.length,
-  );
+  const countLabel =
+    filtered.length === selected.fighters.length
+      ? "fighters"
+      : `of ${selected.fighters.length} fighters`;
 
   return (
     <div className="page rankings-page rankings-presentation">
@@ -65,11 +65,12 @@ export default function RankingsPage() {
         </label>
       </section>
 
-      <section className="ranking-kpis" aria-label={`${selected.label} ranking summary`}>
-        <div><strong>{selected.fighters.length}</strong><span>Fighters</span></div>
-        <div><strong>{selected.fighters[0].name}</strong><span>Current #1</span></div>
-        <div><strong>{averageOvr}</strong><span>Average OVR</span></div>
-      </section>
+      <div className="ranking-toolbar" aria-label={`${selected.label} ranking summary`}>
+        <span className="ranking-count">
+          <strong>{filtered.length}</strong>
+          <span>{countLabel}</span>
+        </span>
+      </div>
 
       <label className="ranking-search">
         <span className="sr-only">Search {selected.label} rankings</span>
@@ -97,12 +98,13 @@ export default function RankingsPage() {
               />
               <span className="ranking-row__identity">
                 <strong>{fighter.name}</strong>
-                <span>{fighter.visibleStats.ufcRecord} UFC · {fighter.division}</span>
+                <span>{fighter.visibleStats.ufcRecord} · {fighter.division}</span>
               </span>
               <span className="ranking-row__ovr">
                 <strong>{fighter.ovr}</strong>
                 <span>OVR</span>
               </span>
+              <span className="ranking-row__profile-chevron" aria-hidden="true">›</span>
             </Link>
             <a
               className="ranking-row__watch"
