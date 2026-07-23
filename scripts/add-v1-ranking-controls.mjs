@@ -129,6 +129,52 @@ async function waitForControls(window, errors) {
   throw new Error(`Timed out waiting for V1 ranking controls.\n${errors.join("\n")}`);
 }
 
+function normalizedName(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[’‘`´]/g, "'")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+function deriveEraMembership(fighter, eras, modelAsOfDate) {
+  const fights = fighter.facts.fights;
+  const startFight = fights.find((fight) => fight.id === fighter.facts.primeWindow.startFightId);
+  const endFight = fighter.facts.primeWindow.open
+    ? fights.at(-1)
+    : fights.find((fight) => fight.id === fighter.facts.primeWindow.endFightId);
+  if (!startFight || !endFight) throw new Error(`Cannot derive era membership for ${fighter.fighter}.`);
+
+  const start = Date.parse(`${startFight.date}T00:00:00Z`);
+  const endDate = fighter.facts.primeWindow.open ? modelAsOfDate : endFight.date;
+  const end = Date.parse(`${endDate}T23:59:59Z`);
+  const ranked = eras
+    .map((era, index) => {
+      const eraStart = Date.UTC(era.startYear, 0, 1);
+      const eraEnd = era.endYear === null
+        ? Date.parse(`${modelAsOfDate}T23:59:59Z`)
+        : Date.UTC(era.endYear, 11, 31, 23, 59, 59);
+      const overlap = Math.max(0, Math.min(end, eraEnd) - Math.max(start, eraStart));
+      return { era, overlap, index };
+    })
+    .filter((entry) => entry.overlap > 0)
+    .sort(
+      (left, right) =>
+        right.overlap - left.overlap ||
+        right.era.startYear - left.era.startYear ||
+        left.index - right.index,
+    );
+
+  if (!ranked.length) throw new Error(`No era overlaps the prime window for ${fighter.fighter}.`);
+  return {
+    primary: ranked[0].era.id,
+    secondary: ranked[1]?.era.id ?? null,
+  };
+}
+
 const errors = [];
 const virtualConsole = new VirtualConsole();
 virtualConsole.on("jsdomError", (error) => errors.push(`[jsdom] ${error.message}`));
@@ -168,24 +214,45 @@ try {
     endYear: era.endYear === null || era.endYear === undefined ? null : Number(era.endYear),
     description: String(era.description),
   }));
-  const eraMembership = Object.fromEntries(
+  if (eras.length !== 8) throw new Error(`Expected 8 V1 eras; received ${eras.length}.`);
+
+  const curatedByName = new Map(
     Object.entries(filters.curatedMembership).map(([fighter, membership]) => [
-      fighter,
-      {
-        primary: String(membership.primary),
-        secondary: membership.secondary ? String(membership.secondary) : null,
-      },
+      normalizedName(fighter),
+      membership,
     ]),
   );
+  const derivedFighters = [];
+  const eraMembership = Object.fromEntries(
+    dataset.fighters.map((fighter) => {
+      const curated = curatedByName.get(normalizedName(fighter.fighter));
+      if (curated) {
+        return [
+          fighter.fighter,
+          {
+            primary: String(curated.primary),
+            secondary: curated.secondary ? String(curated.secondary) : null,
+          },
+        ];
+      }
+      derivedFighters.push(fighter.fighter);
+      return [
+        fighter.fighter,
+        deriveEraMembership(fighter, eras, dataset.source.modelAsOfDate),
+      ];
+    }),
+  );
 
-  if (eras.length !== 8) throw new Error(`Expected 8 V1 eras; received ${eras.length}.`);
   if (Object.keys(eraMembership).length !== dataset.counts.fighters) {
-    throw new Error("V1 era membership does not cover the complete ranking field.");
+    throw new Error("Era membership does not cover the complete ranking field.");
   }
 
   dataset.filters = { eras, eraMembership };
   await writeFile(inputPath, `${JSON.stringify(dataset, null, 2)}\n`, "utf8");
-  console.log(`Added fight divisions and ${eras.length} eras for ${dataset.fighters.length} fighters.`);
+  console.log(
+    `Added fight divisions and ${eras.length} eras for ${dataset.fighters.length} fighters. ` +
+      `Derived missing memberships for: ${derivedFighters.join(", ") || "none"}.`,
+  );
 } finally {
   dom?.window.close();
   await new Promise((resolvePromise) => server.close(resolvePromise));
