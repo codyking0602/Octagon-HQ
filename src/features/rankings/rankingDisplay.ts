@@ -76,8 +76,8 @@ export function categorySupportCopy(fighter: RankingFighter, category: RankingCa
 
 export function divisionRoleLabel(role: "primary" | "secondary" | "crossover") {
   if (role === "primary") return "Primary UFC division";
-  if (role === "secondary") return "Second-division résumé";
-  return "Crossover UFC résumé";
+  if (role === "secondary") return "Second-division resume";
+  return "Crossover UFC resume";
 }
 
 export function shortEraName(name: string) {

@@ -5,7 +5,7 @@ import { getFighter } from "./rankingModel";
 import { watchMomentFor } from "./rankingPresentation";
 import { profileCategoryRows, profileDisplayName } from "./profilePresentation";
 
-function shareProfile(name: string, slug: string) {
+export function shareProfile(name: string, slug: string) {
   const path = `/fighters/${slug}`;
   const url = typeof window === "undefined" ? path : new URL(path, window.location.origin).toString();
   if (typeof navigator !== "undefined" && navigator.share) {
@@ -13,6 +13,13 @@ function shareProfile(name: string, slug: string) {
     return;
   }
   if (typeof navigator !== "undefined" && navigator.clipboard) void navigator.clipboard.writeText(url);
+}
+
+export function profileCopy(copy: string, rank: number) {
+  return copy
+    .replace(/\{rank\}/g, String(rank))
+    .replace(/ranks #\d+/gi, `ranks #${rank}`)
+    .replace(/r.sum./gi, "resume");
 }
 
 export default function FighterProfilePage() {
@@ -38,7 +45,7 @@ export default function FighterProfilePage() {
   const active = categories.find((category) => category.key === activeCategory) ?? categories[0];
   const whyNotHeading = fighter.rank === 1 ? "Why Not Lower?" : "Why Not Ranked Higher?";
   const whyNotCopy = fighter.rank === 1
-    ? "He cannot rank higher. The argument against a runaway #1 case is based on close fights, inactivity, heavyweight sample size, and outside-the-cage controversy—not a stronger UFC résumé above him."
+    ? "He cannot rank higher. The argument against a runaway #1 case is based on close fights, inactivity, heavyweight sample size, and outside-the-cage controversy—not a stronger UFC resume above him."
     : fighter.whyNotHigher;
 
   return (
@@ -57,25 +64,23 @@ export default function FighterProfilePage() {
           <span>#{fighter.rank} UFC All-Time</span>
           <span>{fighter.division}</span>
         </div>
-        <button className="profile-share-button" type="button" onClick={() => shareProfile(fighter.name, fighter.slug)} aria-label={`Share ${fighter.name} profile`}>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0 5 5m-5-5-5 5"/><path d="M5 12v7h14v-7"/></svg>
-        </button>
         <h1>{displayName}</h1>
-        <p>{fighter.oneLiner}</p>
+        <p>{profileCopy(fighter.oneLiner, fighter.rank)}</p>
       </section>
 
       <section className="profile-actions" aria-label="Profile actions">
         <button type="button" onClick={() => navigate("/compare")}>Compare</button>
         <button type="button" onClick={() => whyRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}>Ask Why</button>
         <a href={watchMomentFor(fighter.slug)} target="_blank" rel="noreferrer">Watch Signature Fight</a>
+        <button type="button" onClick={() => shareProfile(fighter.name, fighter.slug)}><svg className="profile-action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0 5 5m-5-5-5 5"/><path d="M5 12v7h14v-7"/></svg>Share</button>
       </section>
 
       <section className="surface-card resume-snapshot" aria-labelledby="resume-title">
-        <h2 id="resume-title">Résumé Snapshot</h2>
+        <h2 id="resume-title">Resume Snapshot</h2>
         <div className="resume-grid">
           {[
             [fighter.visibleStats.ufcRecord, "UFC Record"],
-            [`#${fighter.rank}`, "UFC All-Time Rank"],
+            [fighter.longestUfcWinStreak, "Longest UFC Win Streak"],
             [fighter.visibleStats.titleFightWins, "UFC Title-Fight Wins"],
             [fighter.visibleStats.topFiveWins, "Top-5 Wins"],
             [`${fighter.visibleStats.finishRatePct.toFixed(1)}%`, "Finish Rate"],
@@ -109,12 +114,12 @@ export default function FighterProfilePage() {
 
       <section className="surface-card profile-copy-card" ref={whyRef} aria-labelledby="why-ranked-here">
         <h2 id="why-ranked-here">Why Ranked Here</h2>
-        <p>{fighter.whyRankedHere}</p>
+        <p>{profileCopy(fighter.whyRankedHere, fighter.rank)}</p>
       </section>
 
       <section className="surface-card profile-copy-card profile-copy-card--penalty">
         <h2>{whyNotHeading}</h2>
-        <p>{whyNotCopy}</p>
+        <p>{profileCopy(whyNotCopy, fighter.rank)}</p>
       </section>
     </div>
   );
