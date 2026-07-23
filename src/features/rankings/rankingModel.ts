@@ -9,6 +9,7 @@ import {
   calculateOpponentQuality,
   calculatePrimeDominance,
 } from "./engine/categoryCalculators";
+import { resolveEraWindow } from "./engine/eraWindow";
 import { round2 } from "./engine/math";
 import {
   buildRankingProjection,
@@ -188,7 +189,6 @@ function deriveVisibleStats(input: RankingInputFighter): RankingVisibleStats {
   ).length;
   const prime = canonicalPrimeFights(input);
   const primeCounts = countDispositions(prime.fights);
-  const primeScored = primeCounts.wins + primeCounts.losses + primeCounts.draws;
   const timesFinishedPrime = prime.fights.filter(
     (fight) =>
       fight.scoringDisposition === "count-loss" && FINISH_METHODS.has(fight.methodCategory),
@@ -250,17 +250,18 @@ function divisionStrengthCopy(input: RankingInputFighter, eraDepth: number) {
 const contract = v1ProductionRankingParityFixture.contract;
 
 const calculationSeeds = canonicalRankingInputs.fighters.map((input) => {
+  const eraWindow = resolveEraWindow(input.facts.fights, input.era.window);
   const championship = calculateChampionship(input.judgments.championship);
   const opponentQuality = calculateOpponentQuality(input.judgments.opponentQuality);
   const primeDominance = calculatePrimeDominance({
     fighter: input.fighter,
     fights: input.facts.fights,
-    window: input.era.window,
+    window: eraWindow,
   });
   const longevity = calculateLongevity({
     fighter: input.fighter,
     fights: input.facts.fights,
-    window: input.era.window,
+    window: eraWindow,
     modelAsOfDate: canonicalRankingInputs.source.modelAsOfDate,
     statusMultiplier: input.era.statusMultiplier,
     divisionMultiplier: input.era.divisionMultiplier,
@@ -269,7 +270,7 @@ const calculationSeeds = canonicalRankingInputs.fighters.map((input) => {
   const penalty = calculateLossContext({
     fighter: input.fighter,
     fights: input.facts.fights,
-    window: input.era.window,
+    window: eraWindow,
     divisionMultiplier: input.era.divisionMultiplier,
   });
   const eraDepth = calculateEraDepth(input.eraDepth);
