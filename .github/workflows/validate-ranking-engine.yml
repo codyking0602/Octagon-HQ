@@ -28,6 +28,7 @@ jobs:
     timeout-minutes: 15
     env:
       INPUT_PATH: src/features/rankings/data/generated/canonical-ranking-inputs-842ba06e.json
+      CAPTURE_LOG: .tmp/ranking-input-capture.log
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -45,19 +46,40 @@ jobs:
       - name: Check out pinned V1 production source
         run: |
           rm -rf .tmp/v1
+          mkdir -p .tmp
           git clone --filter=blob:none --no-checkout https://github.com/codyking0602/ufc-goat-rankings.git .tmp/v1
           git -C .tmp/v1 fetch --depth 1 origin 842ba06ea09c4f40723226f4c4dfd35041cb3314
           git -C .tmp/v1 checkout --detach FETCH_HEAD
           test "$(git -C .tmp/v1 rev-parse HEAD)" = "842ba06ea09c4f40723226f4c4dfd35041cb3314"
 
       - name: Capture canonical V1 inputs
+        id: capture
+        continue-on-error: true
         run: |
+          set +e
           node scripts/capture-v1-ranking-inputs.mjs \
             --v1-dir .tmp/v1 \
             --v1-commit 842ba06ea09c4f40723226f4c4dfd35041cb3314 \
-            --output "${INPUT_PATH}"
+            --output "${INPUT_PATH}" >"${CAPTURE_LOG}" 2>&1
+          code=$?
+          cat "${CAPTURE_LOG}"
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          exit "$code"
+
+      - name: Commit capture diagnostics
+        if: steps.capture.outcome == 'failure'
+        run: |
+          mkdir -p docs
+          cp "${CAPTURE_LOG}" docs/ranking-input-capture.log
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add docs/ranking-input-capture.log
+          git commit -m "Record ranking input capture failure" || true
+          git push origin HEAD:${GITHUB_REF_NAME}
+          exit 1
 
       - name: Normalize and validate generated inputs
+        if: steps.capture.outcome == 'success'
         run: |
           node --input-type=module <<'NODE'
           import { readFile, writeFile } from 'node:fs/promises';
@@ -79,9 +101,11 @@ jobs:
           NODE
 
       - name: Commit generated input dataset
+        if: steps.capture.outcome == 'success'
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git rm -f docs/ranking-input-capture.log 2>/dev/null || true
           git add "${INPUT_PATH}"
           if git diff --cached --quiet; then
             echo "Canonical input dataset is unchanged."
