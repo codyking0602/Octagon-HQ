@@ -65,10 +65,11 @@ describe("Octagon HQ V2", () => {
 
     fireEvent.click(tabs.getByRole("button", { name: "Divisions" }));
     expect(screen.getByRole("heading", { name: "Division Rankings" })).toBeInTheDocument();
-    expect(screen.getByText(/at least 10% of their calculated UFC resume/i)).toBeInTheDocument();
+    expect(screen.queryByText(/at least 10% of their calculated UFC resume/i)).not.toBeInTheDocument();
     const stipe = screen.getByRole("link", { name: "View Stipe Miocic profile" });
-    expect(stipe).toHaveTextContent("100%");
-    expect(stipe).toHaveTextContent("RESUME");
+    expect(stipe).toHaveTextContent("14-5 UFC · #11 P4P");
+    expect(stipe).not.toHaveTextContent("RESUME");
+    expect(stipe).not.toHaveTextContent("100%");
     expect(screen.queryByRole("searchbox")).not.toBeInTheDocument();
     expect(router.state.location.search).toBe("?view=division&division=Heavyweight");
 
@@ -86,19 +87,23 @@ describe("Octagon HQ V2", () => {
     expect(screen.queryByRole("link", { name: "View Jon Jones profile" })).not.toBeInTheDocument();
   });
 
-  it("restores V1 era descriptions and defining fights without truncated selector copy", async () => {
+  it("restores V1 era descriptions and makes defining fights obviously actionable", async () => {
     renderRoute("/rankings");
     await screen.findByRole("heading", { name: "UFC All-Time P4P" });
 
-    fireEvent.change(screen.getByLabelText("Ranking era"), {
+    const eraSelect = screen.getByLabelText("Ranking era");
+    fireEvent.change(eraSelect, {
       target: { value: "golden-age" },
     });
 
+    expect(eraSelect).toHaveDisplayValue("Golden Age · 2011–2015");
     expect(screen.getByText("Golden Age · 2011–2015")).toBeInTheDocument();
     expect(screen.getByText(/deep champion class, lighter divisions/i)).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", { name: "Watch defining fight: Jon Jones vs. Alexander Gustafsson I" }),
-    ).toHaveAttribute("target", "_blank");
+    const definingFight = screen.getByRole("link", {
+      name: "Watch defining fight: Jon Jones vs. Alexander Gustafsson I",
+    });
+    expect(definingFight).toHaveAttribute("target", "_blank");
+    expect(definingFight).toHaveTextContent("Watch fight");
     expect(screen.getByRole("link", { name: "View Jon Jones profile" })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "View Khabib Nurmagomedov profile" })).not.toBeInTheDocument();
   });
