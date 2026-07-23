@@ -6,7 +6,11 @@ on:
       - "agent/**"
     paths:
       - .github/workflows/validate-ranking-engine.yml
+      - scripts/capture-v1-ranking-inputs.mjs
       - src/features/rankings/engine/**
+      - src/features/rankings/data/**
+      - src/features/rankings/RankingsPage.tsx
+      - src/features/rankings/FighterProfilePage.tsx
       - package.json
       - tsconfig.json
       - vite.config.ts
@@ -14,10 +18,101 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   statuses: write
 
 jobs:
+  capture-v1-inputs:
+    if: github.ref_name == 'agent/full-ranking-facts-migration' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      INPUT_PATH: src/features/rankings/data/generated/canonical-ranking-inputs-842ba06e.json
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Check out pinned V1 production source
+        run: |
+          rm -rf .tmp/v1
+          git clone --filter=blob:none --no-checkout https://github.com/codyking0602/ufc-goat-rankings.git .tmp/v1
+          git -C .tmp/v1 fetch --depth 1 origin 842ba06ea09c4f40723226f4c4dfd35041cb3314
+          git -C .tmp/v1 checkout --detach FETCH_HEAD
+          test "$(git -C .tmp/v1 rev-parse HEAD)" = "842ba06ea09c4f40723226f4c4dfd35041cb3314"
+
+      - name: Capture canonical V1 inputs
+        run: |
+          node scripts/capture-v1-ranking-inputs.mjs \
+            --v1-dir .tmp/v1 \
+            --v1-commit 842ba06ea09c4f40723226f4c4dfd35041cb3314 \
+            --output "${INPUT_PATH}"
+
+      - name: Normalize and validate generated inputs
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile, writeFile } from 'node:fs/promises';
+          const path = process.env.INPUT_PATH;
+          const data = JSON.parse(await readFile(path, 'utf8'));
+          delete data.capturedAt;
+          if (data.source.commit !== '842ba06ea09c4f40723226f4c4dfd35041cb3314') throw new Error('Unexpected V1 source commit.');
+          if (data.counts.fighters !== 80 || data.fighters.length !== 80) throw new Error('Input dataset must contain exactly 80 fighters.');
+          if (data.counts.men !== 65 || data.counts.women !== 15) throw new Error('Input board counts do not reconcile.');
+          const names = new Set(data.fighters.map((row) => row.fighter));
+          const slugs = new Set(data.fighters.map((row) => row.presentation.slug));
+          if (names.size !== 80 || slugs.size !== 80) throw new Error('Input dataset contains duplicate fighters or slugs.');
+          for (const fighter of data.fighters) {
+            if (!fighter.facts.fights.length) throw new Error(`${fighter.fighter} has no canonical fights.`);
+            if (!fighter.judgments.championship || !fighter.judgments.opponentQuality || !fighter.judgments.apex) throw new Error(`${fighter.fighter} is missing judgment inputs.`);
+          }
+          await writeFile(path, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
+          console.log(`Validated ${data.fighters.length} calculation-input fighters.`);
+          NODE
+
+      - name: Commit generated input dataset
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add "${INPUT_PATH}"
+          if git diff --cached --quiet; then
+            echo "Canonical input dataset is unchanged."
+            exit 0
+          fi
+          git commit -m "Add complete canonical ranking inputs"
+          git push origin HEAD:${GITHUB_REF_NAME}
+
+      - name: Publish input-capture status
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          COMMIT_SHA: ${{ github.sha }}
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          if [ "$JOB_STATUS" = "success" ]; then
+            state="success"
+            description="80 canonical ranking inputs captured"
+          else
+            state="failure"
+            description="Canonical ranking input capture failed"
+          fi
+          curl --fail-with-body \
+            --request POST \
+            --header "Accept: application/vnd.github+json" \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            --header "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$REPOSITORY/statuses/$COMMIT_SHA" \
+            --data "{\"state\":\"$state\",\"context\":\"ranking-inputs/capture\",\"description\":\"$description\"}"
+
   validate-ranking-engine:
     runs-on: ubuntu-latest
     timeout-minutes: 10
