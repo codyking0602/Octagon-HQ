@@ -19,6 +19,8 @@ on:
 
 permissions:
   contents: write
+  issues: write
+  pull-requests: write
   statuses: write
 
 jobs:
@@ -66,16 +68,24 @@ jobs:
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
           exit "$code"
 
-      - name: Commit capture diagnostics
+      - name: Report capture diagnostics
         if: steps.capture.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
         run: |
-          mkdir -p docs
-          cp "${CAPTURE_LOG}" docs/ranking-input-capture.log
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add docs/ranking-input-capture.log
-          git commit -m "Record ranking input capture failure" || true
-          git push origin HEAD:${GITHUB_REF_NAME}
+          node --input-type=module <<'NODE' > .tmp/capture-comment.json
+          import { readFile } from 'node:fs/promises';
+          const log = (await readFile(process.env.CAPTURE_LOG, 'utf8')).slice(-60000);
+          process.stdout.write(JSON.stringify({ body: `### Ranking input capture failed\n\n\`\`\`text\n${log}\n\`\`\`` }));
+          NODE
+          curl --fail-with-body \
+            --request POST \
+            --header "Accept: application/vnd.github+json" \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            --header "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$REPOSITORY/issues/14/comments" \
+            --data-binary @.tmp/capture-comment.json
           exit 1
 
       - name: Normalize and validate generated inputs
@@ -105,7 +115,6 @@ jobs:
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git rm -f docs/ranking-input-capture.log 2>/dev/null || true
           git add "${INPUT_PATH}"
           if git diff --cached --quiet; then
             echo "Canonical input dataset is unchanged."
