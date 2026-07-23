@@ -30,6 +30,11 @@ describe("Octagon HQ V2", () => {
     renderRoute("/rankings");
 
     expect(await screen.findByRole("heading", { name: "UFC All-Time P4P" })).toBeInTheDocument();
+    expect(screen.getByText("The definitive pound-for-pound rankings.")).toBeInTheDocument();
+    expect(screen.queryByText(/UFC-only/i)).not.toBeInTheDocument();
+    expect(screen.getByText("65")).toBeInTheDocument();
+    expect(screen.getByText("fighters", { exact: true })).toBeInTheDocument();
+    expect(screen.getByText("22-1, 1 NC · LHW / HW")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "View Jon Jones profile" })).toHaveAttribute(
       "href",
       "/fighters/jon-jones",
@@ -47,6 +52,7 @@ describe("Octagon HQ V2", () => {
 
     fireEvent.change(screen.getByLabelText("Ranking board"), { target: { value: "women" } });
     expect(screen.getByRole("heading", { name: "UFC Women's All-Time" })).toBeInTheDocument();
+    expect(screen.getByText("The definitive women's rankings.")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "View Amanda Nunes profile" })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "View Jon Jones profile" })).not.toBeInTheDocument();
   });
