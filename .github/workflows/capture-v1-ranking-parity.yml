@@ -37,16 +37,16 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22.12.0
-          cache: npm
+          node-version-file: .nvmrc
 
       - name: Install V2 dependencies
-        run: npm ci
+        run: npm install
 
       - name: Check out pinned V1 production source
         run: |
           rm -rf .tmp/v1
           git clone --filter=blob:none --no-checkout https://github.com/codyking0602/ufc-goat-rankings.git .tmp/v1
+          git -C .tmp/v1 fetch --depth 1 origin 842ba06ea09ee5f338962220dabceeef62d53f0 || true
           git -C .tmp/v1 fetch --depth 1 origin 842ba06ea09c4f40723226f4c4dfd35041cb3314
           git -C .tmp/v1 checkout --detach FETCH_HEAD
           test "$(git -C .tmp/v1 rev-parse HEAD)" = "842ba06ea09c4f40723226f4c4dfd35041cb3314"
