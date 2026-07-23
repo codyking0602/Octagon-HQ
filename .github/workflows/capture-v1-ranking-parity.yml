@@ -1,0 +1,106 @@
+name: Capture V1 ranking parity
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - agent/rankings-parity-contract
+    paths:
+      - .github/workflows/capture-v1-ranking-parity.yml
+      - docs/rankings-parity-contract.md
+      - scripts/capture-v1-ranking-parity.mjs
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/capture-v1-ranking-parity.yml
+      - docs/rankings-parity-contract.md
+      - scripts/capture-v1-ranking-parity.mjs
+
+permissions:
+  contents: write
+
+concurrency:
+  group: capture-v1-ranking-parity-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  capture:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TARGET_BRANCH: ${{ github.head_ref || github.ref_name }}
+      FIXTURE_PATH: src/features/rankings/engine/__fixtures__/v1-production-output-842ba06e.json
+    steps:
+      - name: Check out V2 branch head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install V2 dependencies
+        run: npm install
+
+      - name: Check out pinned V1 production source
+        run: |
+          rm -rf .tmp/v1
+          git clone --filter=blob:none --no-checkout https://github.com/codyking0602/ufc-goat-rankings.git .tmp/v1
+          git -C .tmp/v1 fetch --depth 1 origin 842ba06ea09c4f40723226f4c4dfd35041cb3314
+          git -C .tmp/v1 checkout --detach FETCH_HEAD
+          test "$(git -C .tmp/v1 rev-parse HEAD)" = "842ba06ea09c4f40723226f4c4dfd35041cb3314"
+
+      - name: Capture calculated V1 production output
+        run: |
+          node scripts/capture-v1-ranking-parity.mjs \
+            --v1-dir .tmp/v1 \
+            --v1-commit 842ba06ea09c4f40723226f4c4dfd35041cb3314 \
+            --output "${FIXTURE_PATH}"
+
+      - name: Normalize fixture for deterministic commits
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile, writeFile } from 'node:fs/promises';
+          const path = process.env.FIXTURE_PATH;
+          const fixture = JSON.parse(await readFile(path, 'utf8'));
+          delete fixture.capturedAt;
+          await writeFile(path, `${JSON.stringify(fixture, null, 2)}\n`, 'utf8');
+          NODE
+
+      - name: Validate captured fixture
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          const path = process.env.FIXTURE_PATH;
+          const fixture = JSON.parse(await readFile(path, 'utf8'));
+          if (fixture.source.commit !== '842ba06ea09c4f40723226f4c4dfd35041cb3314') throw new Error('Unexpected V1 source commit.');
+          if (fixture.counts.fighters !== 80 || fixture.fighters.length !== 80) throw new Error('Parity fixture must contain exactly 80 fighters.');
+          if (fixture.boards.men.length + fixture.boards.women.length !== 80) throw new Error('Board counts do not reconcile.');
+          if (fixture.boards.men[0] !== 'Jon Jones') throw new Error('Men’s production leader is not Jon Jones.');
+          const unique = new Set(fixture.fighters.map((row) => row.fighter));
+          if (unique.size !== 80) throw new Error('Parity fixture contains duplicate fighters.');
+          console.log(`Validated ${fixture.fighters.length} captured fighters.`);
+          NODE
+
+      - name: Validate V2 worktree
+        run: |
+          npm run typecheck
+          npm test
+          npm run build
+
+      - name: Commit generated fixture
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add "${FIXTURE_PATH}"
+          if git diff --cached --quiet; then
+            echo "Fixture is unchanged."
+            exit 0
+          fi
+          git commit -m "Add V1 production ranking parity fixture"
+          git push origin HEAD:${TARGET_BRANCH}
