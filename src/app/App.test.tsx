@@ -138,12 +138,90 @@ describe("Octagon HQ V2", () => {
     renderRoute("/fighters/matt-hughes");
 
     expect(await screen.findByRole("heading", { name: "Matt Hughes" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Category breakdown" })).toBeInTheDocument();
-    expect(screen.getByText("WHY NOT RANKED HIGHER?")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Category Breakdown" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Why Not Ranked Higher?" })).toBeInTheDocument();
   });
 
   it("keeps unfinished destinations isolated", async () => {
     renderRoute("/play");
     expect(await screen.findByRole("heading", { name: "Play" })).toBeInTheDocument();
+  });
+});
+
+import { categoryBarFillPercent, tierForRating } from "../features/rankings/profilePresentation";
+
+describe("V1-style fighter profile restoration", () => {
+  it("puts only the OVR badge over the photo and summary content below it", async () => {
+    renderRoute("/fighters/jon-jones");
+    expect(await screen.findByRole("heading", { name: "Jon Jones" })).toBeInTheDocument();
+    const photo = screen.getByLabelText("Jon Jones photo");
+    expect(within(photo).getByTestId("photo-ovr-badge")).toHaveTextContent("OVR");
+    expect(within(photo).queryByText("Jon Jones")).not.toBeInTheDocument();
+    expect(within(photo).queryByText("#1 UFC All-Time")).not.toBeInTheDocument();
+
+    const summary = screen.getByLabelText("Fighter summary");
+    expect(summary).toHaveTextContent("#1 UFC All-Time");
+    expect(summary).toHaveTextContent("LHW / HW");
+    expect(summary).toHaveTextContent("Jon Jones");
+    expect(summary).toHaveTextContent("Bones");
+    expect(summary).not.toHaveTextContent("OVR");
+    expect(summary).not.toHaveTextContent("Model");
+  });
+
+  it("renders the exact compact résumé snapshot values from calculated fields", async () => {
+    renderRoute("/fighters/jon-jones");
+    const resume = await screen.findByRole("heading", { name: "Résumé Snapshot" });
+    const card = resume.closest("section")!;
+    ["UFC Record", "UFC All-Time Rank", "UFC Title-Fight Wins", "Top-5 Wins", "Finish Rate", "Prime UFC Record", "Rounds Won", "Active Elite Years"].forEach((label) => {
+      expect(within(card).getByText(label)).toBeInTheDocument();
+    });
+    expect(within(card).getByText("22-1, 1 NC")).toBeInTheDocument();
+    expect(within(card).getByText("#1")).toBeInTheDocument();
+  });
+
+  it("renders five V1 category cards with fixed tier thresholds and separated bar math", async () => {
+    renderRoute("/fighters/matt-hughes");
+    expect(await screen.findByRole("heading", { name: "Matt Hughes" })).toBeInTheDocument();
+    ["Title Reign", "Quality Wins", "Prime Dominance", "Elite Longevity", "Loss Context"].forEach((label) => {
+      expect(screen.getByRole("button", { name: new RegExp(label) })).toBeInTheDocument();
+    });
+    expect(screen.queryByRole("button", { name: /Peak Apex/ })).not.toBeInTheDocument();
+    expect(tierForRating(97)).toBe("Legendary");
+    expect(tierForRating(90)).toBe("Elite");
+    expect(tierForRating(85)).toBe("Great");
+    expect(tierForRating(80)).toBe("Good");
+    expect(tierForRating(79)).toBe("Average");
+    expect(categoryBarFillPercent(33, 65)).toBe(55);
+    expect(categoryBarFillPercent(49, 65)).toBeLessThan(40);
+  });
+
+  it("expands only one category explanation at a time", async () => {
+    renderRoute("/fighters/jon-jones");
+    expect(await screen.findByRole("heading", { name: "Jon Jones" })).toBeInTheDocument();
+    expect(screen.getByTestId("category-expanded")).toHaveTextContent("Title Reign");
+    fireEvent.click(screen.getByRole("button", { name: /Quality Wins/ }));
+    expect(screen.getByTestId("category-expanded")).toHaveTextContent("Quality Wins");
+    expect(screen.getByTestId("category-expanded")).not.toHaveTextContent("Title Reign ·");
+  });
+
+  it("renders V1 why cards and omits hidden legacy/raw mechanics", async () => {
+    renderRoute("/fighters/jon-jones");
+    expect(await screen.findByRole("heading", { name: "Why Ranked Here" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Why Not Lower?" })).toBeInTheDocument();
+    ["Key Judgment Calls", "Final Takeaway", "Title Context", "Quality Wins table", "Round Control table", "Era and Division Context", "raw model score", "division multiplier", "Peak Apex"].forEach((copy) => {
+      expect(screen.queryByText(copy, { exact: false })).not.toBeInTheDocument();
+    });
+
+    renderRoute("/fighters/matt-hughes");
+    expect(await screen.findByRole("heading", { name: "Why Not Ranked Higher?" })).toBeInTheDocument();
+  });
+
+  it("keeps profile actions and route lazy loading intact", async () => {
+    renderRoute("/fighters/matt-hughes");
+    expect(await screen.findByRole("heading", { name: "Matt Hughes" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Watch Signature Fight" })).toHaveAttribute("target", "_blank");
+    expect(screen.getByRole("button", { name: "Compare" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Ask Why" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Share" })).toBeInTheDocument();
   });
 });
