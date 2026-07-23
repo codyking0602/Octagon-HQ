@@ -1,8 +1,10 @@
-import { render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import { createMemoryRouter, RouterProvider } from "react-router-dom";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import { AppProviders } from "./providers";
 import { appRoutes } from "./router";
+
+afterEach(cleanup);
 
 function renderRoute(path: string) {
   const router = createMemoryRouter(appRoutes, { initialEntries: [path] });
