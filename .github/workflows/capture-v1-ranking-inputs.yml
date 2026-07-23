@@ -7,6 +7,7 @@ on:
     paths:
       - .github/workflows/capture-v1-ranking-inputs.yml
       - scripts/capture-v1-ranking-inputs.mjs
+      - scripts/add-v1-ranking-controls.mjs
       - scripts/add-v1-watch-moments.mjs
 
 permissions:
@@ -54,6 +55,12 @@ jobs:
             --v1-commit 842ba06ea09c4f40723226f4c4dfd35041cb3314 \
             --output "${INPUT_PATH}"
 
+      - name: Add pinned V1 ranking controls
+        run: |
+          node scripts/add-v1-ranking-controls.mjs \
+            --v1-dir .tmp/v1 \
+            --input "${INPUT_PATH}"
+
       - name: Add pinned V1 Watch Moment links
         run: |
           node scripts/add-v1-watch-moments.mjs \
@@ -79,18 +86,21 @@ jobs:
           if (data.source.commit !== '842ba06ea09c4f40723226f4c4dfd35041cb3314') throw new Error('Unexpected V1 source commit.');
           if (data.counts.fighters !== 80 || data.fighters.length !== 80) throw new Error('Input dataset must contain exactly 80 fighters.');
           if (data.counts.men !== 65 || data.counts.women !== 15) throw new Error('Input board counts do not reconcile.');
+          if (data.filters?.eras?.length !== 8) throw new Error('Ranking filters must contain the eight pinned V1 eras.');
+          if (Object.keys(data.filters?.eraMembership || {}).length !== 80) throw new Error('Era membership must cover all fighters.');
           const names = new Set(data.fighters.map((row) => row.fighter));
           const slugs = new Set(data.fighters.map((row) => row.presentation.slug));
           if (names.size !== 80 || slugs.size !== 80) throw new Error('Input dataset contains duplicate fighters or slugs.');
           for (const fighter of data.fighters) {
             if (!fighter.facts.fights.length) throw new Error(`${fighter.fighter} has no canonical fights.`);
+            if (fighter.facts.fights.some((fight) => !fight.division)) throw new Error(`${fighter.fighter} has a fight without division evidence.`);
             if (!fighter.judgments.championship || !fighter.judgments.opponentQuality || !fighter.judgments.apex) throw new Error(`${fighter.fighter} is missing judgment inputs.`);
             if (!fighter.presentation.watchUrl) throw new Error(`${fighter.fighter} is missing a Watch Moment URL.`);
             for (const forbidden of ['rank', 'ovr', 'totalScore', 'rawScore', 'championshipScore', 'primeDominanceScore']) {
               if (Object.prototype.hasOwnProperty.call(fighter, forbidden)) throw new Error(`Generated input row stores forbidden calculated field ${forbidden}.`);
             }
           }
-          console.log(`Validated ${data.fighters.length} calculation-input fighters.`);
+          console.log(`Validated ${data.fighters.length} calculation-input fighters with controls metadata.`);
           NODE
 
       - name: Commit generated input dataset
