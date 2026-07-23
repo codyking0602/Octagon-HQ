@@ -31,6 +31,7 @@ jobs:
     timeout-minutes: 15
     env:
       TARGET_BRANCH: ${{ github.head_ref || github.ref_name }}
+      FIXTURE_PATH: src/features/rankings/engine/__fixtures__/v1-production-output-842ba06e.json
     steps:
       - name: Check out V2 branch head
         uses: actions/checkout@v4
@@ -59,13 +60,23 @@ jobs:
           node scripts/capture-v1-ranking-parity.mjs \
             --v1-dir .tmp/v1 \
             --v1-commit 842ba06ea09c4f40723226f4c4dfd35041cb3314 \
-            --output src/features/rankings/engine/__fixtures__/v1-production-output-842ba06e.json
+            --output "${FIXTURE_PATH}"
+
+      - name: Normalize fixture for deterministic commits
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile, writeFile } from 'node:fs/promises';
+          const path = process.env.FIXTURE_PATH;
+          const fixture = JSON.parse(await readFile(path, 'utf8'));
+          delete fixture.capturedAt;
+          await writeFile(path, `${JSON.stringify(fixture, null, 2)}\n`, 'utf8');
+          NODE
 
       - name: Validate captured fixture
         run: |
           node --input-type=module <<'NODE'
           import { readFile } from 'node:fs/promises';
-          const path = 'src/features/rankings/engine/__fixtures__/v1-production-output-842ba06e.json';
+          const path = process.env.FIXTURE_PATH;
           const fixture = JSON.parse(await readFile(path, 'utf8'));
           if (fixture.source.commit !== '842ba06ea09c4f40723226f4c4dfd35041cb3314') throw new Error('Unexpected V1 source commit.');
           if (fixture.counts.fighters !== 80 || fixture.fighters.length !== 80) throw new Error('Parity fixture must contain exactly 80 fighters.');
@@ -86,7 +97,7 @@ jobs:
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add src/features/rankings/engine/__fixtures__/v1-production-output-842ba06e.json
+          git add "${FIXTURE_PATH}"
           if git diff --cached --quiet; then
             echo "Fixture is unchanged."
             exit 0
