@@ -43,9 +43,14 @@ describe("V2 Octagon Verdict exporter", () => {
     expect(lightHeavyweight?.divisionScore).toBeGreaterThan(heavyweight?.divisionScore ?? 0);
   });
 
-  it("derives real ranked-fighter head-to-head ledgers from canonical fight facts", () => {
+  it("derives one canonical bout per fighter pair and date", () => {
     expect(exported.matchups.length).toBeGreaterThan(0);
     expect(new Set(exported.matchups.map((matchup) => matchup.pairKey)).size).toBe(exported.matchups.length);
+
+    for (const matchup of exported.matchups) {
+      const dates = matchup.headToHead.fightLedger.map((fight) => fight.date);
+      expect(new Set(dates).size, matchup.pairKey).toBe(dates.length);
+    }
 
     const gspHughes = exported.matchups.find((matchup) =>
       matchup.fighters.includes("Georges St-Pierre") && matchup.fighters.includes("Matt Hughes"),
@@ -61,6 +66,7 @@ describe("V2 Octagon Verdict exporter", () => {
       matchup.fighters.includes("Anderson Silva") && matchup.fighters.includes("Chris Weidman"),
     )!;
     expect(silvaWeidman).toBeTruthy();
+    expect(silvaWeidman.headToHead.fights).toBe(2);
     expect(silvaWeidman.headToHead.seriesWinner).toBe("Chris Weidman");
     expect(silvaWeidman.verdictWinner).toBe("Anderson Silva");
     expect(silvaWeidman.headToHead.contextOnly).toBe(true);
