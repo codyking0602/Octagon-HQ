@@ -52,6 +52,18 @@ interface PlayChallengesContextValue {
   viewResults: (code: string) => void;
 }
 
+interface StoredFindLeaderBoard {
+  leaderId: string;
+  candidates: Array<{ id: string; name: string }>;
+}
+
+interface StoredFindLeaderResult {
+  score: number | null;
+  perfect: boolean;
+  fatalId: string | null;
+  eliminatedIds: string[];
+}
+
 const PlayChallengesContext = createContext<PlayChallengesContextValue | null>(null);
 
 function challengeLabAvailable() {
@@ -67,7 +79,7 @@ async function shareDraft(draft: ChallengeComposerDraft) {
   try {
     if (navigator.share) {
       await navigator.share({ title: draft.shareTitle, text: draft.shareText, url: draft.shareUrl });
-      return "CHALLENGE READY TO SEND";
+      return "CHALLENGE SHARED";
     }
     await navigator.clipboard.writeText(payload);
     return "CHALLENGE LINK COPIED";
@@ -86,6 +98,94 @@ function profileById(id: string | null) {
   return CHALLENGE_TEST_PROFILES.find((profile) => profile.id === id) ?? null;
 }
 
+function jsonRecord(value: ChallengeJson): { [key: string]: ChallengeJson } | null {
+  return value && !Array.isArray(value) && typeof value === "object" ? value : null;
+}
+
+function stringList(value: ChallengeJson) {
+  return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
+}
+
+function storedFindLeaderBoard(setup: ChallengeJson): StoredFindLeaderBoard | null {
+  const setupRecord = jsonRecord(setup);
+  const boardRecord = jsonRecord(setupRecord?.board ?? null);
+  const candidateRows = boardRecord?.candidates;
+  if (!boardRecord || typeof boardRecord.leaderId !== "string" || !Array.isArray(candidateRows)) return null;
+
+  const candidates = candidateRows.flatMap((candidate) => {
+    const row = jsonRecord(candidate);
+    return row && typeof row.id === "string" && typeof row.name === "string"
+      ? [{ id: row.id, name: row.name }]
+      : [];
+  });
+
+  return candidates.length
+    ? { leaderId: boardRecord.leaderId, candidates }
+    : null;
+}
+
+function storedFindLeaderResult(result: ChallengeJson): StoredFindLeaderResult {
+  const row = jsonRecord(result);
+  return {
+    score: resultScore(result),
+    perfect: row?.perfect === true,
+    fatalId: typeof row?.fatalId === "string" ? row.fatalId : null,
+    eliminatedIds: stringList(row?.eliminated ?? null),
+  };
+}
+
+function fighterName(board: StoredFindLeaderBoard, fighterId: string | null) {
+  return board.candidates.find((fighter) => fighter.id === fighterId)?.name ?? "Unknown fighter";
+}
+
+function FindLeaderChoicePath({
+  role,
+  profileName,
+  result,
+  board,
+}: {
+  role: string;
+  profileName: string;
+  result: ChallengeJson;
+  board: StoredFindLeaderBoard;
+}) {
+  const path = storedFindLeaderResult(result);
+  const leaderName = fighterName(board, board.leaderId);
+
+  return (
+    <article className="challenge-results-dialog__path">
+      <header>
+        <span><small>{role}</small><strong>{profileName}</strong></span>
+        <b>{path.score === null ? "DONE" : `${path.score}/10`}</b>
+      </header>
+      {path.eliminatedIds.length ? (
+        <>
+          <div className="challenge-results-dialog__path-label">ELIMINATION ORDER</div>
+          <ol>
+            {path.eliminatedIds.map((fighterId, index) => {
+              const fatal = fighterId === path.fatalId;
+              return (
+                <li className={fatal ? "is-fatal" : ""} key={`${fighterId}-${index}`}>
+                  <span>{index + 1}</span>
+                  <strong>{fighterName(board, fighterId)}</strong>
+                  <em>{fatal ? "LEADER" : "SAFE"}</em>
+                </li>
+              );
+            })}
+          </ol>
+          <p>{path.perfect
+            ? `Left ${leaderName} standing after nine safe eliminations.`
+            : path.fatalId
+              ? `The run ended when ${fighterName(board, path.fatalId)} was eliminated in Round ${path.score ?? "—"}.`
+              : `Finished with ${leaderName} as the group leader.`}</p>
+        </>
+      ) : (
+        <p>Detailed choice history is unavailable for this older challenge result.</p>
+      )}
+    </article>
+  );
+}
+
 function ComposerDialog({
   draft,
   activeProfile,
@@ -101,7 +201,7 @@ function ComposerDialog({
   const [recipientId, setRecipientId] = useState(recipients[0]?.id ?? "");
   const [status, setStatus] = useState("");
 
-  async function copyLink() {
+  async function shareExternally() {
     setStatus(await shareDraft(draft));
   }
 
@@ -114,7 +214,7 @@ function ComposerDialog({
           <div>
             <p className="eyebrow">GAME CHALLENGE</p>
             <h2 id="challenge-dialog-title">Challenge Someone</h2>
-            <p>They receive this exact setup. Your result stays hidden until they finish.</p>
+            <p>Send to an Octagon HQ profile or use your phone’s share sheet to text the exact challenge.</p>
           </div>
           <button type="button" className="challenge-dialog__close" aria-label="Close challenge dialog" onClick={onClose}>×</button>
         </header>
@@ -144,8 +244,8 @@ function ComposerDialog({
         </p>
         <p className="challenge-dialog__status" role="status">{status}</p>
         <footer>
-          <button type="button" onClick={() => void copyLink()}>COPY SHARE LINK</button>
-          <button type="button" className="primary-action" disabled={!recipientId} onClick={() => onSend(recipientId)}>SEND CHALLENGE</button>
+          <button type="button" onClick={() => void shareExternally()}>TEXT / SHARE LINK</button>
+          <button type="button" className="primary-action" disabled={!recipientId} onClick={() => onSend(recipientId)}>SEND TO PROFILE</button>
         </footer>
       </section>
     </div>
@@ -173,6 +273,9 @@ function ResultsDialog({
     : (creatorScore ?? -1) > (responderScore ?? -1)
       ? `${creator?.displayName ?? "Sender"} wins`
       : `${responder?.displayName ?? "Responder"} wins`;
+  const findLeaderBoard = challenge.gameId === "find-leader"
+    ? storedFindLeaderBoard(challenge.setup)
+    : null;
 
   return (
     <div className="challenge-overlay" role="presentation" onMouseDown={(event) => {
@@ -205,6 +308,22 @@ function ResultsDialog({
             <b>{responderScore === null ? "DONE" : `${responderScore}/10`}</b>
           </article>
         </div>
+        {findLeaderBoard && challenge.responderResult ? (
+          <div className="challenge-results-dialog__paths">
+            <FindLeaderChoicePath
+              role="SENDER PATH"
+              profileName={creator?.displayName ?? "Sender"}
+              result={challenge.creatorResult}
+              board={findLeaderBoard}
+            />
+            <FindLeaderChoicePath
+              role="RESPONDER PATH"
+              profileName={responder?.displayName ?? "Responder"}
+              result={challenge.responderResult}
+              board={findLeaderBoard}
+            />
+          </div>
+        ) : null}
         <button type="button" className="primary-action challenge-results-dialog__close" onClick={onClose}>CLOSE</button>
       </section>
     </div>
@@ -248,7 +367,7 @@ export function ChallengeProvider({ children }: PropsWithChildren) {
   async function beginChallenge(draft: ChallengeComposerDraft) {
     if (!enabled || !activeProfile) return shareDraft(draft);
     setComposer(draft);
-    return "CHOOSE A PROFILE OR COPY THE LINK";
+    return "CHOOSE A PROFILE OR TEXT THE LINK";
   }
 
   function sendChallenge(recipientId: string) {
