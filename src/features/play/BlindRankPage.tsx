@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { FighterPhoto } from "../rankings/FighterPhoto";
 import {
   blindRankChallengeUrl,
@@ -12,7 +13,6 @@ import {
   saveBlindRankPack,
   saveBlindRankReveal,
 } from "./blindRankEngine";
-import { shareGameChallenge } from "./challengeShare";
 import { GameResultActions } from "./GameResultActions";
 import type { BlindRankPackId, PlayFighter } from "./playFighterPool";
 
@@ -35,20 +35,53 @@ function compactDivision(fighter: PlayFighter) {
   return fighter.divisions.map((division) => abbreviations[division] ?? division).join(" / ");
 }
 
+function setupString(value: unknown, key: string) {
+  if (!value || Array.isArray(value) || typeof value !== "object") return "";
+  const setup = value as Record<string, unknown>;
+  return typeof setup[key] === "string" ? setup[key] : "";
+}
+
+function setupIds(value: unknown) {
+  if (!value || Array.isArray(value) || typeof value !== "object") return [];
+  const setup = value as Record<string, unknown>;
+  return Array.isArray(setup.lineupIds)
+    ? setup.lineupIds.filter((id): id is string => typeof id === "string")
+    : [];
+}
+
 export default function BlindRankPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const {
+    activeProfile,
+    profiles,
+    beginChallenge,
+    getChallenge,
+    markOpened,
+    submitResult,
+  } = usePlayChallenges();
+  const profileChallengeCode = searchParams.get("profileChallenge")?.toUpperCase() ?? "";
+  const profileChallenge = profileChallengeCode ? getChallenge(profileChallengeCode) : null;
+  const profilePackValue = profileChallenge?.gameId === "blind-rank" ? setupString(profileChallenge.setup, "packId") : "";
+  const profilePack = packIsValid(profilePackValue) ? profilePackValue : null;
   const queryPack = searchParams.get("pack");
-  const initialPack = packIsValid(queryPack) ? queryPack : loadBlindRankPack();
+  const initialPack = profilePack ?? (packIsValid(queryPack) ? queryPack : loadBlindRankPack());
+  const profileLineup = useMemo(
+    () => profileChallenge?.gameId === "blind-rank"
+      ? resolveBlindRankChallenge(initialPack, setupIds(profileChallenge.setup))
+      : null,
+    [initialPack, profileChallenge],
+  );
   const sharedLineup = useMemo(() => {
     const ids = (searchParams.get("lineup") ?? "").split(",").map((value) => value.trim()).filter(Boolean);
     return resolveBlindRankChallenge(initialPack, ids);
   }, [initialPack, searchParams]);
-  const shared = Boolean(sharedLineup);
+  const challengeLineup = profileLineup ?? sharedLineup;
+  const shared = Boolean(challengeLineup);
   const initialSeed = useMemo(() => createBlindRankSeed(), []);
   const initialLineup = useMemo(
-    () => sharedLineup ?? createBlindRankLineup(initialPack, initialSeed, loadBlindRankHistory(initialPack)).fighters,
-    [initialPack, initialSeed, sharedLineup],
+    () => challengeLineup ?? createBlindRankLineup(initialPack, initialSeed, loadBlindRankHistory(initialPack)).fighters,
+    [challengeLineup, initialPack, initialSeed],
   );
 
   const [packId, setPackId] = useState<BlindRankPackId>(initialPack);
@@ -59,6 +92,19 @@ export default function BlindRankPage() {
   const pack = blindRankPacks.find((item) => item.id === packId)!;
   const complete = currentIndex >= 5;
   const current = lineup[currentIndex];
+  const challengeCreator = profileChallenge
+    ? profiles.find((profile) => profile.id === profileChallenge.creatorId)
+    : null;
+
+  useEffect(() => {
+    if (
+      profileChallenge
+      && !profileChallenge.openedAt
+      && activeProfile?.id === profileChallenge.recipientId
+    ) {
+      markOpened(profileChallenge.code);
+    }
+  }, [activeProfile?.id, markOpened, profileChallenge]);
 
   function resetPlacements() {
     setPlacements(Array(5).fill(null));
@@ -86,21 +132,47 @@ export default function BlindRankPage() {
     next[slotIndex] = current;
     setPlacements(next);
     if (!shared) saveBlindRankReveal(packId, current.id, lineup);
-    setCurrentIndex((index) => index + 1);
+    const nextIndex = currentIndex + 1;
+    setCurrentIndex(nextIndex);
+    if (
+      nextIndex === 5
+      && profileChallenge
+      && !profileChallenge.completedAt
+      && activeProfile?.id === profileChallenge.recipientId
+    ) {
+      submitResult(profileChallenge.code, {
+        placements: next.map((fighter) => fighter?.id ?? ""),
+      });
+    }
   }
 
   async function challengeSomeone() {
+    const rankedIds = placements.flatMap((fighter) => fighter ? [fighter.id] : []);
+    if (rankedIds.length !== 5) return;
     setChallengeStatus("");
-    const status = await shareGameChallenge({
-      title: "Blind Rank 5 Challenge",
-      text: `I challenged you to rank the same five UFC fighters in ${pack.name}. Every slot locks before the next reveal.`,
-      url: blindRankChallengeUrl(packId, lineup),
+    const status = await beginChallenge({
+      gameId: "blind-rank",
+      gameVersion: "blind-rank-v2-20260724",
+      gameTitle: "Blind Rank 5",
+      summary: `Rank the same five UFC fighters in ${pack.name}.`,
+      setup: { packId, lineupIds: lineup.map((fighter) => fighter.id) },
+      creatorResult: { placements: rankedIds },
+      shareTitle: "Blind Rank 5 Challenge",
+      shareText: `I challenged you to rank the same five UFC fighters in ${pack.name}. Every slot locks before the next reveal.`,
+      shareUrl: blindRankChallengeUrl(packId, lineup),
     });
     setChallengeStatus(status);
   }
 
   return (
     <div className="page blind-rank-page">
+      {challengeCreator ? (
+        <section className="challenge-game-banner">
+          <span>PROFILE CHALLENGE</span>
+          <strong>{challengeCreator.displayName} sent these exact five fighters.</strong>
+          <small>Your locked order stays private until you finish, then both rankings unlock in Challenge Center.</small>
+        </section>
+      ) : null}
       <section className="blind-rank-intro">
         <div>
           <p className="eyebrow">{shared ? "FRIEND CHALLENGE" : "BLIND RANK 5"}</p>
