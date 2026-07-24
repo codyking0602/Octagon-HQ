@@ -24,19 +24,19 @@ export const playGames: readonly PlayGameDefinition[] = [
     id: "wavelength",
     icon: "≈",
     title: "Wavelength",
-    description: "Make four guesses. Each new UFC clue adjusts to your last answer.",
+    description: "Find a hidden 1–100 rating through four adaptive UFC clues. Each clue reacts to your last guess.",
   },
   {
     id: "blind-resume",
     icon: "?",
     title: "Blind Resume",
-    description: "Choose the stronger UFC-only career five times without seeing either fighter’s name.",
+    description: "Choose the stronger UFC career five times without seeing either fighter’s name.",
   },
   {
     id: "blind-rank",
     icon: "1–5",
     title: "Blind Rank 5",
-    description: "Place five UFC fighters one at a time. Every slot locks before the next reveal.",
+    description: "Rank five mystery UFC fighters from 1–5. Once you place a fighter, that slot is locked.",
   },
   {
     id: "keep-cut",
