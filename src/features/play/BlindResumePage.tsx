@@ -203,7 +203,7 @@ export default function BlindResumePage() {
         <section className="blind-resume-reveal-grid">
           {[currentResult.pair.fighterA, currentResult.pair.fighterB].map((fighter, index) => (
             <article className={`${fighter.id === currentResult.winnerId ? "is-winner" : ""}${fighter.id === currentResult.pickedId ? " is-picked" : ""}`} key={fighter.id}>
-              <FighterPhoto className="blind-resume-reveal-photo" name={fighter.name} src={fighter.thumbUrl} />
+              <FighterPhoto className="blind-resume-reveal-photo" name={fighter.name} src={fighter.profileUrl || fighter.thumbUrl} />
               <span>FIGHTER {index === 0 ? "A" : "B"}</span>
               <strong>{fighter.name}</strong>
               <small>{rankCopy(currentResult.pair, fighter.id)}</small>
