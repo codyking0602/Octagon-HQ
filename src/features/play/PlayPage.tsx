@@ -256,6 +256,10 @@ export default function PlayPage() {
     if (board) navigate("/play/find-leader");
   }
 
+  function openWavelength() {
+    navigate("/play/wavelength");
+  }
+
   function finishSwipe(clientX: number) {
     if (touchStartX.current === null) return;
     const distance = clientX - touchStartX.current;
@@ -317,21 +321,27 @@ export default function PlayPage() {
           <p>Quick games, blind tests, and rankings built to argue about.</p>
         </header>
         <div className="play-games__grid">
-          {playGames.map((game) => game.id === "find-leader" ? (
-            <button className="play-game-card is-live" type="button" key={game.id} onClick={openFindLeader}>
-              <span className="play-game-card__icon">{game.icon}</span>
-              <span className="play-game-card__status">PLAY NOW</span>
-              <strong>{game.title}</strong>
-              <small>{game.description}</small>
-              <em>OPEN GAME →</em>
-            </button>
-          ) : (
-            <article className="play-game-card" key={game.id}>
-              <span className="play-game-card__icon">{game.icon}</span>
-              <strong>{game.title}</strong>
-              <small>{game.description}</small>
-            </article>
-          ))}
+          {playGames.map((game) => {
+            const isFindLeader = game.id === "find-leader";
+            const isWavelength = game.id === "wavelength";
+            const isLive = isFindLeader || isWavelength;
+            const open = isFindLeader ? openFindLeader : isWavelength ? openWavelength : undefined;
+            return isLive ? (
+              <button className="play-game-card is-live" type="button" key={game.id} onClick={open}>
+                <span className="play-game-card__icon">{game.icon}</span>
+                <span className="play-game-card__status">PLAY NOW</span>
+                <strong>{game.title}</strong>
+                <small>{game.description}</small>
+                <em>OPEN GAME →</em>
+              </button>
+            ) : (
+              <article className="play-game-card" key={game.id}>
+                <span className="play-game-card__icon">{game.icon}</span>
+                <strong>{game.title}</strong>
+                <small>{game.description}</small>
+              </article>
+            );
+          })}
         </div>
       </section>
     </div>
