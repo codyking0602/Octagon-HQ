@@ -140,3 +140,15 @@ export function resultScore(result: ChallengeJson): number | null {
   const value = result.score;
   return typeof value === "number" && Number.isFinite(value) ? value : null;
 }
+
+export function challengeScoreSuffix(gameId: PlayGameId) {
+  if (gameId === "wavelength") return "/100";
+  if (gameId === "blind-resume") return "/5";
+  if (gameId === "find-leader") return "/10";
+  return "";
+}
+
+export function challengeScoreLabel(gameId: PlayGameId, result: ChallengeJson) {
+  const score = resultScore(result);
+  return score === null ? "DONE" : `${score}${challengeScoreSuffix(gameId)}`;
+}
