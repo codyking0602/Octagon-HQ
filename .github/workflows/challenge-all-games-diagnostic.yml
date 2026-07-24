@@ -18,11 +18,11 @@ jobs:
     steps:
       - name: Clone exact branch head
         run: git clone --quiet --depth 1 --branch feature/play-challenge-center https://github.com/codyking0602/Octagon-HQ.git repo
-      - name: Run test suite
+      - name: Run focused all-game challenge tests
         working-directory: repo
         run: |
           npm install --silent
-          npm test -- --reporter=verbose > /tmp/all-games.log 2>&1 || {
-            tail -n 100 /tmp/all-games.log
+          npm test -- src/features/challenges/allGamesChallenge.test.tsx --reporter=verbose > /tmp/all-games.log 2>&1 || {
+            tail -n 80 /tmp/all-games.log
             exit 1
           }
