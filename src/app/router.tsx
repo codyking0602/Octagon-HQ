@@ -19,6 +19,7 @@ export const appRoutes: RouteObject[] = [
       { path: "fighters/:slug", element: <FighterProfilePage /> },
       { path: "intelligence", element: <IntelligencePage /> },
       { path: "play", element: <PlayPage /> },
+      { path: "play/find-leader", element: <PlayPage /> },
       { path: "picks", element: <PlaceholderPage title="Picks" eyebrow="EVENT PICKS" /> },
       { path: "*", element: <Navigate to="/" replace /> },
     ],
