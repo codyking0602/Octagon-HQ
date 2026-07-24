@@ -109,7 +109,7 @@ describe("Play Challenge Center flow", () => {
     fireEvent.click(screen.getByRole("button", { name: "RESULTS" }));
     expect(screen.getByRole("dialog", { name: "Find the Leader" })).toBeTruthy();
     expect(screen.getByText("Tie game")).toBeTruthy();
-    expect(screen.getAllByText("1/10")).toHaveLength(2);
+    expect(screen.getAllByText("1/10")).toHaveLength(4);
     expect(screen.getAllByText("ELIMINATION ORDER")).toHaveLength(2);
     expect(screen.getAllByText("LEADER")).toHaveLength(2);
     expect(screen.getAllByText(leader.name).length).toBeGreaterThanOrEqual(2);
