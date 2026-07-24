@@ -43,7 +43,12 @@ export default function WavelengthPage() {
 
   function completeProfileChallenge(result: WavelengthChallengeResult) {
     if (!profileChallenge || activeProfile?.id !== profileChallenge.recipientId) return;
-    submitResult(profileChallenge.code, result);
+    submitResult(profileChallenge.code, {
+      score: result.score,
+      finalGuess: result.finalGuess,
+      target: result.target,
+      guesses: result.guesses,
+    });
   }
 
   return (
