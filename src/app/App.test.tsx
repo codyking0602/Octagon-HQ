@@ -261,7 +261,7 @@ describe("V1-style fighter profile restoration", () => {
   it("keeps profile actions and route lazy loading intact", async () => {
     renderRoute("/fighters/matt-hughes");
     expect(await screen.findByRole("heading", { name: "Matt Hughes" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Watch Moment" })).toHaveAttribute("target", "_blank");
+    expect(screen.getByRole("link", { name: "Watch Signature Fight" })).toHaveAttribute("target", "_blank");
     expect(screen.getByRole("button", { name: "Compare" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Ask Why" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Share" })).toBeInTheDocument();
@@ -473,8 +473,8 @@ describe("final profile correctness pass", () => {
 
   it("resolves honest watch destinations for every fighter", () => {
     const actions = allTime.map((fighter) => resolveProfileWatchAction(fighter.slug));
-    expect(actions.filter((action) => action?.source === "signature")).toHaveLength(0);
-    expect(actions.filter((action) => action?.source === "watch-moment")).toHaveLength(allTime.length);
+    expect(actions.filter((action) => action?.source === "signature")).toHaveLength(allTime.length);
+    expect(actions.filter((action) => action?.source === "watch-moment")).toHaveLength(0);
     expect(actions.filter((action) => action === null)).toHaveLength(0);
   });
 });
