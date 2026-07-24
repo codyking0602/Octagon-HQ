@@ -11,7 +11,7 @@ import {
   createBlindResumeSeed,
   type BlindResumePair,
 } from "./blindResumeEngine";
-import { shareGameChallenge } from "./shareGameChallenge";
+import { shareGameChallenge } from "./challengeShare";
 
 interface RoundResult {
   pair: BlindResumePair;
