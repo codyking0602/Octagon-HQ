@@ -22,7 +22,7 @@ jobs:
           node-version-file: .nvmrc
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --silent
 
       - name: Typecheck
         run: npm run typecheck
