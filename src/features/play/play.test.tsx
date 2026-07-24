@@ -23,7 +23,7 @@ function renderPlay(path = "/play") {
 }
 
 describe("Play registry", () => {
-  it("preserves the approved six-game order", () => {
+  it("preserves the approved six-game order and explanatory descriptions", () => {
     expect(playGames.map((game) => game.id)).toEqual([
       "find-leader",
       "wavelength",
@@ -32,6 +32,10 @@ describe("Play registry", () => {
       "keep-cut",
       "better-than",
     ]);
+    expect(playGames.find((game) => game.id === "wavelength")?.description).toContain("hidden 1–100 rating");
+    expect(playGames.find((game) => game.id === "blind-resume")?.description).toContain("UFC career");
+    expect(playGames.find((game) => game.id === "blind-resume")?.description).not.toContain("UFC-only career");
+    expect(playGames.find((game) => game.id === "blind-rank")?.description).toContain("slot is locked");
   });
 
   it("renders all six games and opens the routed ten-fighter daily board", () => {
@@ -54,10 +58,17 @@ describe("Play registry", () => {
     expect(container.textContent).toContain("Find the LeaderLeaderboard");
   });
 
-  it("deep-links directly into the daily game", () => {
-    const { container } = renderPlay("/play/find-leader");
-    expect(container.querySelectorAll(".find-card")).toHaveLength(10);
-    expect(container.textContent).toContain("TODAY’S CHALLENGE");
+  it("deep-links to an exact dated board and shows the standard result actions", () => {
+    const day = "2026-07-24";
+    const board = dailyFindLeaderBoard(day)!;
+    const leaderIndex = board.candidates.findIndex((fighter) => fighter.id === board.leaderId);
+    const { container } = renderPlay(`/play/find-leader?day=${day}`);
+    const fighterCards = container.querySelectorAll<HTMLButtonElement>(".find-card");
+    expect(fighterCards).toHaveLength(10);
+    fireEvent.click(fighterCards[leaderIndex]);
+
+    const actionLabels = [...container.querySelectorAll(".find-result-actions button")].map((button) => button.textContent);
+    expect(actionLabels).toEqual(["CHALLENGE SOMEONE", "REPLAY", "ALL GAMES"]);
   });
 });
 
