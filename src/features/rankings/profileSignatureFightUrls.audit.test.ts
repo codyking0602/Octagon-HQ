@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, it } from "vitest";
 import { allTime } from "./rankingModel";
 import { profileSignatureFightUrls } from "./profileSignatureFightUrls";
 
@@ -90,7 +90,6 @@ interface AuditResult {
   url: string;
   status: number;
   title: string | null;
-  author: string | null;
   matchesFighter: boolean;
   error: string | null;
 }
@@ -100,19 +99,17 @@ async function auditOne(slug: string, url: string): Promise<AuditResult> {
   try {
     const response = await fetch(endpoint, { signal: AbortSignal.timeout(15_000) });
     if (!response.ok) {
-      return { slug, url, status: response.status, title: null, author: null, matchesFighter: false, error: `HTTP ${response.status}` };
+      return { slug, url, status: response.status, title: null, matchesFighter: false, error: `HTTP ${response.status}` };
     }
-    const metadata = (await response.json()) as { title?: string; author_name?: string };
+    const metadata = (await response.json()) as { title?: string };
     const title = metadata.title ?? null;
     const normalizedTitle = title?.toLocaleLowerCase("en-US") ?? "";
-    const tokens = requiredTitleTokens[slug] ?? [];
     return {
       slug,
       url,
       status: response.status,
       title,
-      author: metadata.author_name ?? null,
-      matchesFighter: tokens.some((token) => normalizedTitle.includes(token)),
+      matchesFighter: (requiredTitleTokens[slug] ?? []).some((token) => normalizedTitle.includes(token)),
       error: null,
     };
   } catch (error) {
@@ -121,7 +118,6 @@ async function auditOne(slug: string, url: string): Promise<AuditResult> {
       url,
       status: 0,
       title: null,
-      author: null,
       matchesFighter: false,
       error: error instanceof Error ? error.message : String(error),
     };
@@ -142,31 +138,24 @@ async function mapWithConcurrency<T, R>(items: readonly T[], limit: number, work
 }
 
 describe("live Signature Fight URL audit", () => {
-  it("points every ranked fighter to an available video whose title names that fighter", async () => {
+  it.only("identifies unavailable, mismatched, and duplicate assignments", async () => {
     const rows = allTime.map((fighter) => ({
       slug: fighter.slug,
       url: profileSignatureFightUrls[fighter.slug as keyof typeof profileSignatureFightUrls],
     }));
     const results = await mapWithConcurrency(rows, 8, ({ slug, url }) => auditOne(slug, url));
-
-    for (const result of results) {
-      console.log(`[signature-audit] ${result.slug} | ${result.status} | ${result.title ?? result.error ?? "NO TITLE"} | ${result.url}`);
-    }
-
     const duplicateAssignments = Object.entries(
       rows.reduce<Record<string, string[]>>((byUrl, row) => {
         (byUrl[row.url] ??= []).push(row.slug);
         return byUrl;
       }, {}),
     ).filter(([, slugs]) => slugs.length > 1);
-    const failures = results.filter((result) => result.status !== 200 || !result.matchesFighter);
+    const failures = results
+      .filter((result) => result.status !== 200 || !result.matchesFighter)
+      .map(({ slug, status, title, error, url }) => ({ slug, status, title, error, url }));
 
-    console.log(`[signature-audit-summary] failures=${failures.length} duplicates=${duplicateAssignments.length}`);
-    duplicateAssignments.forEach(([url, slugs]) => console.log(`[signature-audit-duplicate] ${slugs.join(", ")} | ${url}`));
-
-    expect({
-      failures: failures.map(({ slug, status, title, error, url }) => ({ slug, status, title, error, url })),
-      duplicateAssignments,
-    }).toEqual({ failures: [], duplicateAssignments: [] });
+    if (failures.length || duplicateAssignments.length) {
+      throw new Error(`SIGNATURE_AUDIT=${JSON.stringify({ failures, duplicateAssignments })}`);
+    }
   }, 180_000);
 });
