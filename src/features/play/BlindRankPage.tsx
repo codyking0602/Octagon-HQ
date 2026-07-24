@@ -4,7 +4,6 @@ import { FighterPhoto } from "../rankings/FighterPhoto";
 import {
   blindRankChallengeUrl,
   blindRankPacks,
-  blindRankRating,
   createBlindRankLineup,
   createBlindRankSeed,
   loadBlindRankHistory,
@@ -13,8 +12,8 @@ import {
   saveBlindRankPack,
   saveBlindRankReveal,
 } from "./blindRankEngine";
-import type { BlindRankPackId, PlayFighter } from "./playFighterPool";
-import { shareGameChallenge } from "./shareGameChallenge";
+import { blindRankRating, type BlindRankPackId, type PlayFighter } from "./playFighterPool";
+import { shareGameChallenge } from "./challengeShare";
 
 function packIsValid(value: string | null): value is BlindRankPackId {
   return blindRankPacks.some((pack) => pack.id === value);
@@ -52,7 +51,6 @@ export default function BlindRankPage() {
   );
 
   const [packId, setPackId] = useState<BlindRankPackId>(initialPack);
-  const [seed, setSeed] = useState(initialSeed);
   const [lineup, setLineup] = useState<PlayFighter[]>(initialLineup);
   const [placements, setPlacements] = useState<Array<PlayFighter | null>>(Array(5).fill(null));
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -73,7 +71,6 @@ export default function BlindRankPage() {
     const next = createBlindRankLineup(nextPack, nextSeed, loadBlindRankHistory(nextPack));
     saveBlindRankPack(nextPack);
     setPackId(nextPack);
-    setSeed(nextSeed);
     setLineup(next.fighters);
     resetPlacements();
   }
