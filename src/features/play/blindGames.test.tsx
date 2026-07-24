@@ -42,7 +42,6 @@ describe("Blind Resume engine", () => {
     const fighterIds = first.pairs.flatMap((pair) => [pair.fighterA.id, pair.fighterB.id]);
     expect(new Set(fighterIds).size).toBe(BLIND_RESUME_ROUNDS * 2);
     expect(first.pairs.every((pair) => pair.fighterA.gender === pair.fighterB.gender)).toBe(true);
-    expect(first.pairs.filter((pair) => pair.gender === "women")).toHaveLength(expect.any(Number));
     expect(first.pairs.filter((pair) => pair.gender === "women").length).toBeLessThanOrEqual(1);
   });
 
