@@ -58,7 +58,7 @@ describe("Play registry", () => {
     expect(container.textContent).toContain("Find the LeaderLeaderboard");
   });
 
-  it("deep-links to an exact dated board and shows the standard result actions", () => {
+  it("deep-links to an exact dated board and shows the shared result actions", () => {
     const day = "2026-07-24";
     const board = dailyFindLeaderBoard(day)!;
     const leaderIndex = board.candidates.findIndex((fighter) => fighter.id === board.leaderId);
@@ -67,7 +67,7 @@ describe("Play registry", () => {
     expect(fighterCards).toHaveLength(10);
     fireEvent.click(fighterCards[leaderIndex]);
 
-    const actionLabels = [...container.querySelectorAll(".find-result-actions button")].map((button) => button.textContent);
+    const actionLabels = [...container.querySelectorAll(".game-result-actions button")].map((button) => button.textContent);
     expect(actionLabels).toEqual(["CHALLENGE SOMEONE", "REPLAY", "ALL GAMES"]);
   });
 });
