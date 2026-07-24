@@ -27,8 +27,6 @@ function timeAgo(value: string) {
 function rowCopy(challenge: PlayChallenge, profileId: string) {
   const direction = challengeDirection(challenge, profileId);
   const status = challengeStatus(challenge, profileId);
-  const counterpart = challengeCounterpart(challenge, profileId);
-  const name = counterpart?.displayName ?? "Octagon HQ profile";
 
   if (direction === "sent") {
     if (status === "completed") return { eyebrow: "COMPLETED WITH", detail: `Both finished ${timeAgo(challenge.completedAt ?? challenge.createdAt)}`, action: "RESULTS" };
@@ -41,16 +39,27 @@ function rowCopy(challenge: PlayChallenge, profileId: string) {
   return { eyebrow: "NEW FROM", detail: `Sent ${timeAgo(challenge.createdAt)}`, action: "PLAY" };
 }
 
-function challengeRoute(challenge: PlayChallenge) {
+function setupString(challenge: PlayChallenge, key: string) {
+  const setup = challenge.setup;
+  if (!setup || Array.isArray(setup) || typeof setup !== "object") return "";
+  const value = setup[key];
+  return typeof value === "string" ? value : "";
+}
+
+export function challengeRoute(challenge: PlayChallenge) {
   if (challenge.gameId === "find-leader") {
-    const setup = challenge.setup;
-    const day = setup && !Array.isArray(setup) && typeof setup === "object" && typeof setup.day === "string"
-      ? setup.day
-      : "";
     const params = new URLSearchParams({ challenge: challenge.code });
+    const day = setupString(challenge, "day");
     if (day) params.set("day", day);
     return `/play/find-leader?${params.toString()}`;
   }
+
+  const params = new URLSearchParams({ profileChallenge: challenge.code });
+  if (challenge.gameId === "wavelength") return `/play/wavelength?${params.toString()}`;
+  if (challenge.gameId === "blind-resume") return `/play/blind-resume?${params.toString()}`;
+  if (challenge.gameId === "blind-rank") return `/play/blind-rank?${params.toString()}`;
+  if (challenge.gameId === "keep-cut") return `/play/keep-cut?${params.toString()}`;
+  if (challenge.gameId === "better-than") return `/play/better-than?${params.toString()}`;
   return "/play";
 }
 
@@ -157,7 +166,7 @@ export function ChallengeCenter() {
         </div>
       ) : (
         <div className="challenge-center__empty">
-          No challenges here yet. Finish Find the Leader and send the exact board to the other preview profile.
+          No challenges here yet. Finish a Play game and send the exact setup to the other preview profile.
         </div>
       )}
     </section>
