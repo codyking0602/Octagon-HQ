@@ -10,6 +10,8 @@ import { challengeCounterpart, usePlayChallenges } from "./ChallengeProvider";
 
 export type ChallengeCenterFilter = "all" | "received" | "sent";
 
+const COLLAPSED_ROW_LIMIT = 3;
+
 function timeAgo(value: string) {
   const then = new Date(value).getTime();
   if (!Number.isFinite(then)) return "";
@@ -30,7 +32,7 @@ function rowCopy(challenge: PlayChallenge, profileId: string) {
 
   if (direction === "sent") {
     if (status === "completed") return { eyebrow: "COMPLETED WITH", detail: `Both finished ${timeAgo(challenge.completedAt ?? challenge.createdAt)}`, action: "RESULTS" };
-    if (status === "opened") return { eyebrow: "OPENED BY", detail: "They opened it · waiting on their result", action: "WAITING" };
+    if (status === "opened") return { eyebrow: "OPENED BY", detail: "They opened it · waiting on their result", action: "OPENED" };
     return { eyebrow: "SENT TO", detail: `Waiting for them to open · ${timeAgo(challenge.createdAt)}`, action: "WAITING" };
   }
 
@@ -70,6 +72,7 @@ export function ChallengeCenter() {
     viewResults,
   } = usePlayChallenges();
   const [filter, setFilter] = useState<ChallengeCenterFilter>("all");
+  const [expanded, setExpanded] = useState(false);
 
   const counts = useMemo(() => ({
     all: challenges.length,
@@ -81,6 +84,7 @@ export function ChallengeCenter() {
     if (!activeProfile || filter === "all") return true;
     return challengeDirection(row, activeProfile.id) === filter;
   });
+  const visibleRows = expanded ? rows : rows.slice(0, COLLAPSED_ROW_LIMIT);
 
   if (!enabled || !activeProfile) return null;
 
@@ -89,29 +93,34 @@ export function ChallengeCenter() {
     navigate(challengeRoute(challenge));
   }
 
+  function chooseFilter(value: ChallengeCenterFilter) {
+    setFilter(value);
+    setExpanded(false);
+  }
+
   return (
     <section className="challenge-center surface-card" data-play-challenge-center>
       <header className="challenge-center__header">
         <div>
           <p className="eyebrow">CHALLENGE CENTER</p>
           <h2>Your matchups</h2>
-          <p>Results unlock only after both profiles finish the exact same challenge.</p>
         </div>
-        <label>
-          <span>PREVIEWING AS</span>
+        <label className="challenge-center__preview-mode">
+          <span>PREVIEW MODE</span>
           <select
             aria-label="PREVIEWING AS"
             value={activeProfile.id}
-            onChange={(event) => setActiveProfile(event.target.value)}
+            onChange={(event) => {
+              setActiveProfile(event.target.value);
+              setExpanded(false);
+            }}
           >
             {profiles.map((profile) => <option value={profile.id} key={profile.id}>{profile.displayName}</option>)}
           </select>
         </label>
       </header>
 
-      <div className="challenge-center__lab-note">
-        Preview identity lab · switch profiles to test Sent, Received, and shared results before real profiles connect.
-      </div>
+      <p className="challenge-center__hint">Results unlock after both profiles finish the exact same challenge.</p>
 
       <div className="challenge-center__filters" role="tablist" aria-label="Challenge filters">
         {(["all", "received", "sent"] as const).map((value) => (
@@ -121,7 +130,7 @@ export function ChallengeCenter() {
             aria-selected={filter === value}
             className={filter === value ? "is-active" : ""}
             key={value}
-            onClick={() => setFilter(value)}
+            onClick={() => chooseFilter(value)}
           >
             {value.toUpperCase()} {counts[value]}
           </button>
@@ -129,34 +138,41 @@ export function ChallengeCenter() {
       </div>
 
       {rows.length ? (
-        <div className="challenge-center__list">
-          {rows.map((challenge) => {
-            const direction = challengeDirection(challenge, activeProfile.id);
-            const status = challengeStatus(challenge, activeProfile.id);
-            const counterpart = challengeCounterpart(challenge, activeProfile.id, profiles);
-            const copy = rowCopy(challenge, activeProfile.id);
-            const canPlay = direction === "received" && status !== "completed";
-            const canView = status === "completed";
+        <>
+          <div className="challenge-center__list">
+            {visibleRows.map((challenge) => {
+              const direction = challengeDirection(challenge, activeProfile.id);
+              const status = challengeStatus(challenge, activeProfile.id);
+              const counterpart = challengeCounterpart(challenge, activeProfile.id, profiles);
+              const copy = rowCopy(challenge, activeProfile.id);
+              const canPlay = direction === "received" && status !== "completed";
+              const canView = status === "completed";
 
-            return (
-              <article className={`challenge-center__row${statusClass(status)}`} key={challenge.code}>
-                <i className="challenge-center__avatar">{counterpart?.initials ?? "HQ"}</i>
-                <div>
-                  <span>{copy.eyebrow}</span>
-                  <strong>{counterpart?.displayName ?? "Octagon HQ profile"} · {challenge.gameTitle}</strong>
-                  <small>{copy.detail}</small>
-                </div>
-                {canView ? (
-                  <button type="button" className="results" onClick={() => viewResults(challenge.code)}>RESULTS</button>
-                ) : canPlay ? (
-                  <button type="button" onClick={() => openChallenge(challenge)}>PLAY</button>
-                ) : (
-                  <button type="button" disabled>{copy.action}</button>
-                )}
-              </article>
-            );
-          })}
-        </div>
+              return (
+                <article className={`challenge-center__row${statusClass(status)}`} key={challenge.code}>
+                  <i className="challenge-center__avatar">{counterpart?.initials ?? "HQ"}</i>
+                  <div className="challenge-center__row-copy">
+                    <span>{copy.eyebrow}</span>
+                    <strong>{counterpart?.displayName ?? "Octagon HQ profile"} · {challenge.gameTitle}</strong>
+                    <small>{copy.detail}</small>
+                  </div>
+                  {canView ? (
+                    <button type="button" className="results" onClick={() => viewResults(challenge.code)}>RESULTS</button>
+                  ) : canPlay ? (
+                    <button type="button" onClick={() => openChallenge(challenge)}>PLAY</button>
+                  ) : (
+                    <span className={`challenge-center__status is-${status}`}>{copy.action}</span>
+                  )}
+                </article>
+              );
+            })}
+          </div>
+          {rows.length > COLLAPSED_ROW_LIMIT ? (
+            <button className="challenge-center__view-all" type="button" onClick={() => setExpanded((value) => !value)}>
+              {expanded ? "SHOW RECENT CHALLENGES" : `VIEW ALL ${rows.length} CHALLENGES`} →
+            </button>
+          ) : null}
+        </>
       ) : (
         <div className="challenge-center__empty">
           No challenges here yet. Finish Find the Leader and send the exact board to the other preview profile.
