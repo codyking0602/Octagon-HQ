@@ -1,0 +1,28 @@
+name: All Games Challenge Diagnostic
+
+on:
+  pull_request:
+    paths:
+      - "src/features/challenges/**"
+      - "src/features/play/**"
+      - "src/styles/challenge-*.css"
+      - ".github/workflows/challenge-all-games-diagnostic.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Clone exact branch head
+        run: git clone --quiet --depth 1 --branch feature/play-challenge-center https://github.com/codyking0602/Octagon-HQ.git repo
+      - name: Run test suite
+        working-directory: repo
+        run: |
+          npm install --silent
+          npm test -- --reporter=verbose > /tmp/all-games.log 2>&1 || {
+            tail -n 100 /tmp/all-games.log
+            exit 1
+          }
