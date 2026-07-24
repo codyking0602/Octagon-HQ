@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { FighterPhoto } from "../rankings/FighterPhoto";
 import {
   centralDay,
@@ -22,6 +23,18 @@ interface FindLeaderResult {
   eliminated: string[];
 }
 
+const DIVISION_ABBREVIATIONS: Record<string, string> = {
+  Strawweight: "SW",
+  Flyweight: "FLW",
+  Bantamweight: "BW",
+  Featherweight: "FW",
+  Lightweight: "LW",
+  Welterweight: "WW",
+  Middleweight: "MW",
+  "Light Heavyweight": "LHW",
+  Heavyweight: "HW",
+};
+
 function dateLabel(day: string, includeWeekday = true) {
   return new Intl.DateTimeFormat("en-US", {
     timeZone: "America/Chicago",
@@ -29,6 +42,26 @@ function dateLabel(day: string, includeWeekday = true) {
     month: "short",
     day: "numeric",
   }).format(new Date(`${day}T12:00:00Z`));
+}
+
+function compactDivision(value: string) {
+  return value
+    .split("/")
+    .map((division) => division.trim())
+    .filter(Boolean)
+    .map((division) => DIVISION_ABBREVIATIONS[division] ?? division)
+    .join(" / ");
+}
+
+function resultStatLabel(board: FindLeaderBoard) {
+  return /KO\/TKO/i.test(board.statLabel) ? "KO/TKO WINS" : board.shortLabel;
+}
+
+function objectiveCopy(board: FindLeaderBoard) {
+  const label = board.statLabel.replace(/^all-time\s+/i, "");
+  if (/percentage/i.test(label)) return `Leave the fighter with the highest ${label} among this group.`;
+  if (/span|streak/i.test(label)) return `Leave the fighter with the longest ${label} among this group.`;
+  return `Leave the fighter with the most ${label} among this group.`;
 }
 
 function DailyHistory({ rows, today }: { rows: FindLeaderHistoryRow[]; today: string }) {
@@ -41,7 +74,7 @@ function DailyHistory({ rows, today }: { rows: FindLeaderHistoryRow[]; today: st
           <p className="eyebrow">DAILY HISTORY</p>
           <strong>Find the Leader streak</strong>
         </div>
-        <span>{stats.current}-day current · {stats.best}-day best</span>
+        <span><b>{stats.current}</b>-day current · <b>{stats.best}</b>-day best</span>
       </summary>
       <div className="find-history__body">
         <div className="find-history__metrics">
@@ -91,6 +124,7 @@ function FindLeaderGame({
   const [result, setResult] = useState<FindLeaderResult | null>(null);
   const eliminatedSet = new Set(eliminated);
   const remaining = board.candidates.filter((fighter) => !eliminatedSet.has(fighter.id));
+  const statLabel = resultStatLabel(board);
 
   function finish(score: number, fatalId: string | null, nextEliminated: string[]) {
     const next = { score, perfect: score === 10, fatalId, eliminated: nextEliminated };
@@ -119,6 +153,13 @@ function FindLeaderGame({
   if (result) {
     const leader = board.candidates.find((fighter) => fighter.id === board.leaderId)!;
     const sorted = [...board.candidates].sort((left, right) => right.value - left.value || left.name.localeCompare(right.name));
+    const valueCounts = sorted.reduce<Map<number, number>>((counts, fighter) => {
+      counts.set(fighter.value, (counts.get(fighter.value) ?? 0) + 1);
+      return counts;
+    }, new Map());
+    let currentRank = 0;
+    let previousValue: number | null = null;
+
     return (
       <div className="find-game page">
         <section className={`find-result-hero ${result.perfect ? "is-perfect" : ""}`}>
@@ -129,7 +170,7 @@ function FindLeaderGame({
           </div>
           <article>
             <CandidatePhoto fighter={leader} className="find-result-hero__photo" />
-            <span><small>GROUP LEADER</small><strong>{leader.name}</strong><b>{leader.value} {board.shortLabel}</b></span>
+            <span><small>GROUP LEADER</small><strong>{leader.name}</strong><b>{leader.value} {statLabel}</b></span>
           </article>
         </section>
 
@@ -140,14 +181,18 @@ function FindLeaderGame({
           </header>
           <div className="find-reveal__grid">
             {sorted.map((fighter, index) => {
+              if (fighter.value !== previousValue) currentRank = index + 1;
+              previousValue = fighter.value;
+              const tied = (valueCounts.get(fighter.value) ?? 0) > 1;
+              const rankLabel = tied ? `T-${currentRank}` : `#${currentRank}`;
               const fatal = result.fatalId === fighter.id;
               const leaderCard = fighter.id === board.leaderId;
               return (
                 <article className={`find-reveal__row${fatal ? " is-fatal" : ""}${leaderCard ? " is-leader" : ""}`} key={fighter.id}>
-                  <b>#{index + 1}</b>
+                  <b>{rankLabel}</b>
                   <CandidatePhoto fighter={fighter} className="find-reveal__photo" />
                   <span><strong>{fighter.name}</strong><small>{fighter.division}</small></span>
-                  <em>{fighter.value}<small>{board.shortLabel}</small></em>
+                  <em>{fighter.value}<small>{statLabel}</small></em>
                 </article>
               );
             })}
@@ -163,12 +208,11 @@ function FindLeaderGame({
 
   return (
     <div className="find-game page">
-      <button className="back-link find-back" type="button" onClick={onExit}>← Play Hub</button>
       <section className="find-game__hero">
         <div>
           <p className="eyebrow">TODAY’S CHALLENGE</p>
           <h1>{board.question}</h1>
-          <p>{board.context}</p>
+          <p>{objectiveCopy(board)}</p>
         </div>
         <aside>
           <div><span>ROUND</span><strong>{eliminated.length + 1}</strong></div>
@@ -183,7 +227,7 @@ function FindLeaderGame({
             <button className={`find-card${safe ? " is-safe" : ""}`} disabled={safe} type="button" key={fighter.id} onClick={() => eliminate(fighter.id)}>
               <span className="find-card__number">{index + 1}</span>
               <CandidatePhoto fighter={fighter} className="find-card__photo" />
-              <span className="find-card__name"><strong>{fighter.name}</strong><small>{fighter.division}</small></span>
+              <span className="find-card__name"><strong>{fighter.name}</strong><small>{compactDivision(fighter.division)}</small></span>
               <em>{safe ? `SAFE · ${fighter.value}` : "ELIMINATE"}</em>
             </button>
           );
@@ -194,19 +238,34 @@ function FindLeaderGame({
 }
 
 export default function PlayPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const today = useMemo(() => centralDay(), []);
   const board = useMemo(() => dailyFindLeaderBoard(today), [today]);
-  const [screen, setScreen] = useState<"hub" | "find-leader">("hub");
   const [carousel, setCarousel] = useState<0 | 1>(0);
+  const touchStartX = useRef<number | null>(null);
   const [history, setHistory] = useState<FindLeaderHistoryRow[]>(() => loadFindLeaderHistory());
   const todayRow = history.find((row) => row.day === today);
+  const isFindLeaderGame = location.pathname === "/play/find-leader";
 
   function complete(score: number) {
     setHistory(recordFindLeaderAttempt(today, score));
   }
 
-  if (screen === "find-leader" && board) {
-    return <FindLeaderGame board={board} onExit={() => setScreen("hub")} onComplete={complete} />;
+  function openFindLeader() {
+    if (board) navigate("/play/find-leader");
+  }
+
+  function finishSwipe(clientX: number) {
+    if (touchStartX.current === null) return;
+    const distance = clientX - touchStartX.current;
+    touchStartX.current = null;
+    if (distance <= -45) setCarousel(1);
+    if (distance >= 45) setCarousel(0);
+  }
+
+  if (isFindLeaderGame && board) {
+    return <FindLeaderGame board={board} onExit={() => navigate("/play")} onComplete={complete} />;
   }
 
   return (
@@ -217,9 +276,13 @@ export default function PlayPage() {
         <p>Daily challenges, blind debates, and UFC rankings built to argue about.</p>
       </section>
 
-      <section className="play-daily">
+      <section
+        className="play-daily"
+        onTouchStart={(event) => { touchStartX.current = event.touches[0]?.clientX ?? null; }}
+        onTouchEnd={(event) => finishSwipe(event.changedTouches[0]?.clientX ?? 0)}
+      >
         {carousel === 0 && board ? (
-          <button className="play-daily__challenge" type="button" onClick={() => setScreen("find-leader")}>
+          <button className="play-daily__challenge" type="button" onClick={openFindLeader}>
             <div className="play-daily__topline"><span>TODAY’S CHALLENGE</span><b>{dateLabel(today).toUpperCase()}</b></div>
             <h2>FIND THE LEADER</h2>
             <p>Eliminate nine fighters without removing today’s verified stat leader.</p>
@@ -255,7 +318,7 @@ export default function PlayPage() {
         </header>
         <div className="play-games__grid">
           {playGames.map((game) => game.id === "find-leader" ? (
-            <button className="play-game-card" type="button" key={game.id} onClick={() => board && setScreen("find-leader")}>
+            <button className="play-game-card is-live" type="button" key={game.id} onClick={openFindLeader}>
               <span className="play-game-card__icon">{game.icon}</span>
               <span className="play-game-card__status">PLAY NOW</span>
               <strong>{game.title}</strong>
