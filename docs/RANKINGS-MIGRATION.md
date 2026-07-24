@@ -109,20 +109,20 @@ The package includes:
 
 Reciprocal direct-fight records are reconciled by fighter pair and date. Head-to-head results are context only and never override the higher calculated total score. Generated files remain ignored outputs and may not become an editable second source.
 
-## Remaining Rankings-adjacent work
+## Rankings-adjacent status
 
-### Desktop profile behavior
+### Local fighter assets — complete
+
+- the real app icon and all 80 ranked fighters' thumbnail/profile WebPs are owned in `public/assets/`;
+- the calculated fighter model resolves only local `/assets/fighters/` paths;
+- automated tests require exactly 160 valid WebP files and reject external fighter-photo URLs;
+- V1 is no longer a runtime image host for V2.
+
+### Desktop profile behavior — later enhancement
 
 - add the routed right-side profile drawer on desktop while preserving `/fighters/:slug`;
 - keep the current full-screen route on mobile;
 - do not create a second profile data owner.
-
-### Local fighter assets
-
-- copy real fighter photos into V2 in controlled batches;
-- preserve source photographs;
-- crop, resize, recenter, lightly sharpen, and convert only;
-- remove the temporary V1 asset-host dependency before V1 retirement.
 
 ## Stop rules
 
@@ -136,4 +136,4 @@ Reciprocal direct-fight records are reconciled by fighter pair and date. Head-to
 
 ## New-chat instruction
 
-Read `docs/HANDOFF.md`, `docs/product-blueprint.md`, `docs/RANKINGS-MIGRATION.md`, `docs/rankings-parity-contract.md`, `docs/intelligence-verdict-flow.md`, and `docs/octagon-verdict-export.md`, then inspect current `main`. The complete 80-fighter calculation migration, compact Rankings presentation, fighter profiles, audited video links, Intelligence handoffs, and native V2 Octagon Verdict exporter are finished. Compare and Ask Why are prompt handoffs into Octagon Verdict, not an in-app comparison engine. Do not rewrite the engine, recreate static ranking arrays, duplicate comparison/export calculations, commit generated export files as source, or change scoring without Cody's approval. The next Rankings-adjacent milestones are the routed desktop profile drawer and local fighter-photo ownership.
+Read `docs/HANDOFF.md`, `docs/product-blueprint.md`, `docs/RANKINGS-MIGRATION.md`, `docs/rankings-parity-contract.md`, `docs/intelligence-verdict-flow.md`, and `docs/octagon-verdict-export.md`, then inspect current `main`. The complete 80-fighter calculation migration, compact Rankings presentation, fighter profiles, audited video links, Intelligence handoffs, native V2 Octagon Verdict exporter, and local fighter-asset migration are finished. Compare and Ask Why are prompt handoffs into Octagon Verdict, not an in-app comparison engine. Do not rewrite the engine, recreate static ranking arrays, duplicate comparison/export calculations, commit generated export files as source, or change scoring without Cody's approval. The desktop profile drawer remains a later Rankings enhancement; the next product milestone is Home personalization and onboarding.

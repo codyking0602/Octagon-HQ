@@ -19,7 +19,6 @@ import {
 import { v1ProductionRankingParityFixture } from "./engine/parityFixture";
 import type { CanonicalFight, RankingBoard } from "./engine/schemas";
 
-const LEGACY_APP_ROOT = "https://codyking0602.github.io/ufc-goat-rankings/";
 const FINISH_METHODS = new Set(["ko-tko", "submission", "doctor-stoppage"]);
 const TOP_FIVE_TIERS = new Set(["champion-level", "top-five"]);
 const RANKED_TIERS = new Set(["champion-level", "top-five", "top-ten", "ranked"]);
@@ -315,10 +314,12 @@ function buildProfileEvidence(input: RankingInputFighter, penaltyTrace: Calculat
   };
 }
 
-function resolveAsset(path: string | null, slug: string, kind: "thumb" | "profile") {
-  if (!path) return fighterAsset(slug, kind);
-  if (/^https?:\/\//i.test(path)) return path;
-  return `${LEGACY_APP_ROOT}${path.replace(/^\/+/, "")}`;
+function resolveAsset(assetPath: string | null, slug: string, kind: "thumb" | "profile") {
+  if (!assetPath) return fighterAsset(slug, kind);
+  if (/^https?:\/\//i.test(assetPath)) {
+    throw new Error(`External fighter asset URL is not allowed for ${slug}.`);
+  }
+  return `/${assetPath.replace(/^\/+/, "")}`;
 }
 
 function divisionStrengthCopy(input: RankingInputFighter, eraDepth: number) {
