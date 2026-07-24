@@ -101,7 +101,11 @@ export function ChallengeCenter() {
         </div>
         <label>
           <span>PREVIEWING AS</span>
-          <select value={activeProfile.id} onChange={(event) => setActiveProfile(event.target.value)}>
+          <select
+            aria-label="PREVIEWING AS"
+            value={activeProfile.id}
+            onChange={(event) => setActiveProfile(event.target.value)}
+          >
             {profiles.map((profile) => <option value={profile.id} key={profile.id}>{profile.displayName}</option>)}
           </select>
         </label>
