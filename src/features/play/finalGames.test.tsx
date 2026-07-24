@@ -143,7 +143,7 @@ describe("Final Play game presentation", () => {
     expect(photo?.style.objectPosition).toBe("center");
   });
 
-  it("locks eight Keep Cut decisions and finishes with the shared result actions", () => {
+  it("locks eight Keep Cut decisions, shows result actions, and replays the exact shared lineup", () => {
     const lineup = createKeepCutLineup("ufc-careers", "render-keep-cut");
     const query = lineup.fighters.map((fighter) => fighter.id).join(",");
     const { container } = renderAt(<KeepCutPage />, `/play/keep-cut?pack=ufc-careers&lineup=${query}`);
@@ -154,8 +154,11 @@ describe("Final Play game presentation", () => {
       fireEvent.click(container.querySelector<HTMLButtonElement>(".keep-cut-current__actions .cut")!);
     }
     expect(container.textContent).toContain("YOUR KEEP/CUT CARD");
-    const actions = [...container.querySelectorAll(".game-result-actions button")].map((button) => button.textContent);
-    expect(actions).toEqual(["CHALLENGE SOMEONE", "REPLAY", "ALL GAMES"]);
+    const actionButtons = [...container.querySelectorAll<HTMLButtonElement>(".game-result-actions button")];
+    expect(actionButtons.map((button) => button.textContent)).toEqual(["CHALLENGE SOMEONE", "REPLAY", "ALL GAMES"]);
+    fireEvent.click(actionButtons.find((button) => button.textContent === "REPLAY")!);
+    expect(container.querySelector<HTMLImageElement>(".keep-cut-current__photo")?.getAttribute("src"))
+      .toBe(lineup.fighters[0]?.thumbUrl);
   });
 
   it("keeps the original Better Than list hidden until the counterclaim locks", () => {
