@@ -1,0 +1,75 @@
+{
+  "generatedAt": "2026-07-12T20:24:11.203Z",
+  "fighters": [
+    {
+      "name": "Tabatha Ricci",
+      "file": "assets/fighters/tabatha-ricci-thumb.webp",
+      "source": "UFC",
+      "sourceUrl": "https://ufc.com/images/2026-04/RICCI_TABATHA_04-04.png",
+      "status": "imported"
+    },
+    {
+      "name": "Fatima Kline",
+      "file": "assets/fighters/fatima-kline-thumb.webp",
+      "source": "UFC",
+      "sourceUrl": "https://ufc.com/images/2025-11/KLINE_FATIMA_11-15.png",
+      "status": "imported"
+    },
+    {
+      "name": "Tommy McMillen",
+      "file": "assets/fighters/tommy-mcmillen-thumb.webp",
+      "source": "UFC",
+      "sourceUrl": "https://ufc.com/images/2026-04/MCMILLEN_TOMMY_04-04.png",
+      "status": "imported"
+    },
+    {
+      "name": "Alberto Montes",
+      "file": "assets/fighters/alberto-montes-thumb.webp",
+      "source": "UFC",
+      "sourceUrl": "https://ufc.com/images/2026-03/MONTES_ALBERTO_03-07.png",
+      "status": "imported"
+    },
+    {
+      "name": "Chase Hooper",
+      "file": "assets/fighters/chase-hooper-thumb.webp",
+      "source": "UFC",
+      "sourceUrl": "https://ufc.com/images/2026-03/HOOPER_CHASE_03-28.png",
+      "status": "imported"
+    },
+    {
+      "name": "Mitch Ramirez",
+      "file": "assets/fighters/mitch-ramirez-thumb.webp",
+      "source": "UFC",
+      "sourceUrl": "https://ufc.com/images/2025-07/RAMIREZ_MITCH_07-12.png",
+      "status": "imported"
+    },
+    {
+      "name": "Jared Cannonier",
+      "file": "assets/fighters/jared-cannonier-thumb.webp",
+      "source": "UFC",
+      "sourceUrl": "https://ufc.com/images/2025-08/CANNONIER_JARED_08-16.png",
+      "status": "imported"
+    },
+    {
+      "name": "Christian Leroy Duncan",
+      "file": "assets/fighters/christian-leroy-duncan-thumb.webp",
+      "source": "UFC",
+      "sourceUrl": "https://ufc.com/images/2026-03/DUNCAN_CHRISTIAN_LEROY_03-21.png",
+      "status": "imported"
+    },
+    {
+      "name": "Brad Tavares",
+      "file": "assets/fighters/brad-tavares-thumb.webp",
+      "source": "UFC",
+      "sourceUrl": "https://ufc.com/images/2026-03/TAVARES_BRAD_03-14.png",
+      "status": "imported"
+    },
+    {
+      "name": "Marc-André Barriault",
+      "file": "assets/fighters/marc-andre-barriault-thumb.webp",
+      "source": "UFC",
+      "sourceUrl": "https://ufc.com/images/2026-02/BARRIAULT_MARC-ANDRE_02-07.png",
+      "status": "imported"
+    }
+  ]
+}
