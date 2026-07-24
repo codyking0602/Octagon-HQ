@@ -101,30 +101,13 @@ const playOnlyFighters: readonly PlayFighter[] = [
   },
 ] as const;
 
-const ERA_BUCKETS = [
-  { start: 1993, end: 1999, label: "1993–1999" },
-  { start: 2000, end: 2004, label: "2000–2004" },
-  { start: 2005, end: 2009, label: "2005–2009" },
-  { start: 2010, end: 2014, label: "2010–2014" },
-  { start: 2015, end: 2019, label: "2015–2019" },
-  { start: 2020, end: 2099, label: "2020s" },
-] as const;
-
-const fightDatesByName = new Map(
-  canonicalRankingInputs.fighters.map((input) => [input.fighter, input.facts.fights.map((fight) => fight.date)]),
+const eraNameById = new Map(
+  canonicalRankingInputs.filters.eras.map((era) => [era.id, era.name]),
 );
 
 function mainEraFor(name: string) {
-  const dates = fightDatesByName.get(name) ?? [];
-  const counts = ERA_BUCKETS.map((bucket) => ({
-    ...bucket,
-    count: dates.filter((date) => {
-      const year = Number(date.slice(0, 4));
-      return year >= bucket.start && year <= bucket.end;
-    }).length,
-  }));
-  const winner = counts.sort((left, right) => right.count - left.count || right.start - left.start)[0];
-  return winner?.count ? winner.label : "—";
+  const membership = canonicalRankingInputs.filters.eraMembership[name];
+  return membership ? eraNameById.get(membership.primary) ?? "—" : "—";
 }
 
 function clamp(value: number) {
