@@ -14,16 +14,17 @@ export interface ChallengeStorage {
   setItem(key: string, value: string): void;
 }
 
+function isStoredChallenge(value: unknown): value is PlayChallenge {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const row = value as Record<string, unknown>;
+  return typeof row.code === "string"
+    && typeof row.creatorId === "string"
+    && typeof row.recipientId === "string"
+    && typeof row.gameId === "string";
+}
+
 function validRows(value: unknown): PlayChallenge[] {
-  if (!Array.isArray(value)) return [];
-  return value.filter((row): row is PlayChallenge => Boolean(
-    row
-      && typeof row === "object"
-      && typeof row.code === "string"
-      && typeof row.creatorId === "string"
-      && typeof row.recipientId === "string"
-      && typeof row.gameId === "string",
-  ));
+  return Array.isArray(value) ? value.filter(isStoredChallenge) : [];
 }
 
 export function loadChallenges(storage: ChallengeStorage): PlayChallenge[] {
