@@ -132,11 +132,15 @@ export default function KeepCutPage() {
     }
   }, [activeProfile?.id, markOpened, profileChallenge]);
 
-  function startNew(packId: KeepCutPackId = lineup.packId) {
-    setLineup(generatedLineup(packId));
+  function resetDecisions() {
     setDecisions([]);
     setShareStatus("");
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function startNew(packId: KeepCutPackId = lineup.packId) {
+    setLineup(generatedLineup(packId));
+    resetDecisions();
   }
 
   function decide(choice: KeepCutChoice) {
@@ -206,7 +210,7 @@ export default function KeepCutPage() {
           </div>
           <GameResultActions
             onChallenge={() => void challengeSomeone()}
-            onReplay={() => startNew()}
+            onReplay={isChallenge ? resetDecisions : () => startNew()}
             onAllGames={() => navigate("/play")}
             status={shareStatus}
           />
