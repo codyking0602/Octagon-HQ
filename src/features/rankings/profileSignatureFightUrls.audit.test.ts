@@ -12,7 +12,7 @@ const specialTitleTokens: Readonly<Record<string, readonly string[]>> = {
   "alexander-volkanovski": ["alexandervolkanovski", "volkanovski", "александрволкановски"],
   "daniel-cormier": ["danielcormier", "cormier", "dc"],
   "francis-ngannou": ["francisngannou", "ngannou", "фрэнсиснганну"],
-  "cain-velasquez": ["cainvelasquez", "velasquez", "кейневеласкес"],
+  "cain-velasquez": ["cainvelasquez", "velasquez", "кейнвеласкес"],
   "aljamain-sterling": ["aljamainsterling", "sterling", "алджэмейнстерлинг"],
   "junior-dos-santos": ["juniordossantos", "dossantos", "джуниордоссантос"],
   "bj-penn": ["bjpenn", "penn", "ufc1007"],
