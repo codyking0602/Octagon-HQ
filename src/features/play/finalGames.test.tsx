@@ -126,16 +126,21 @@ describe("Final Play game presentation", () => {
     expect(container.querySelectorAll(".play-games__grid button.play-game-card")).toHaveLength(6);
   });
 
-  it("shows the full square thumbnail inside the larger Keep Cut reveal slot", () => {
+  it("matches the Blind Rank square thumbnail treatment in Keep Cut", () => {
     const lineup = createKeepCutLineup("ufc-careers", "thumbnail-proof");
     const query = lineup.fighters.map((fighter) => fighter.id).join(",");
     const { container } = renderAt(<KeepCutPage />, `/play/keep-cut?pack=ufc-careers&lineup=${query}`);
+    const card = container.querySelector<HTMLElement>(".keep-cut-current");
     const photo = container.querySelector<HTMLImageElement>(".keep-cut-current__photo");
     expect(container.querySelector(".keep-cut-game-card .keep-cut-current")).toBeTruthy();
     expect(container.querySelector(".keep-cut-new-lineup")).toBeTruthy();
     expect(photo?.getAttribute("src")).toBe(lineup.fighters[0]?.thumbUrl);
+    expect(card?.style.gridTemplateColumns).toBe("96px minmax(0, 1fr)");
+    expect(photo?.style.width).toBe("96px");
+    expect(photo?.style.height).toBe("96px");
     expect(photo?.style.aspectRatio).toBe("1 / 1");
-    expect(photo?.style.objectFit).toBe("contain");
+    expect(photo?.style.objectFit).toBe("cover");
+    expect(photo?.style.objectPosition).toBe("center");
   });
 
   it("locks eight Keep Cut decisions and finishes with the shared result actions", () => {
