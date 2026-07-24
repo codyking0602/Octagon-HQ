@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { RouterProvider } from "react-router-dom";
+import { useIdentity } from "../features/identity/IdentityProvider";
 import { AppProviders } from "./providers";
 import { appRouter } from "./router";
 import { BootScreen } from "./BootScreen";
@@ -14,14 +15,15 @@ async function waitForFirstPaint(): Promise<void> {
   });
 }
 
-export function App() {
-  const [ready, setReady] = useState(false);
+function AppRuntime() {
+  const identity = useIdentity();
+  const [paintReady, setPaintReady] = useState(false);
 
   useEffect(() => {
     let active = true;
 
     void waitForFirstPaint().finally(() => {
-      if (active) setReady(true);
+      if (active) setPaintReady(true);
     });
 
     return () => {
@@ -29,9 +31,15 @@ export function App() {
     };
   }, []);
 
+  return !paintReady || !identity.ready
+    ? <BootScreen />
+    : <RouterProvider router={appRouter} />;
+}
+
+export function App() {
   return (
     <AppProviders>
-      {!ready ? <BootScreen /> : <RouterProvider router={appRouter} />}
+      <AppRuntime />
     </AppProviders>
   );
 }
