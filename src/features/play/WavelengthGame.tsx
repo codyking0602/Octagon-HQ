@@ -1,12 +1,17 @@
 import { useMemo, useState } from "react";
+import { shareGameChallenge } from "./challengeShare";
 import {
   clampWavelength,
-  createWavelengthRound,
-  nextWavelengthClue,
   wavelengthDistanceCopy,
   wavelengthScore,
   type WavelengthRound,
 } from "./wavelengthEngine";
+import {
+  createChallengeWavelengthRound,
+  createWavelengthSeed,
+  nextChallengeWavelengthClue,
+  wavelengthChallengeUrl,
+} from "./wavelengthChallenge";
 
 const LAST_TARGET_KEY = "octagon-hq:wavelength-last-target:v2";
 
@@ -19,43 +24,43 @@ function rememberTarget(target: number) {
   if (typeof window !== "undefined") window.localStorage.setItem(LAST_TARGET_KEY, String(target));
 }
 
-function shareText(round: WavelengthRound, guesses: readonly number[]) {
-  const finalGuess = guesses[3];
-  const score = wavelengthScore(finalGuess, round.target);
-  return [
-    "WAVELENGTH · UFC EDITION",
-    `Score: ${score}/100`,
-    `Target: ${round.target} · Final guess: ${finalGuess}`,
-    `Path: ${guesses.join(" → ")}`,
-    "",
-    "Can you find the hidden number?",
-    `${window.location.origin}/play/wavelength`,
-  ].join("\n");
+function freshSeed() {
+  const previous = previousTarget();
+  for (let attempt = 0; attempt < 6; attempt += 1) {
+    const seed = createWavelengthSeed();
+    if (createChallengeWavelengthRound(seed).target !== previous) return seed;
+  }
+  return createWavelengthSeed();
 }
 
-export default function WavelengthGame({ onExit }: { onExit: () => void }) {
+export default function WavelengthGame({
+  challengeSeed,
+  onExit,
+}: {
+  challengeSeed?: string;
+  onExit: () => void;
+}) {
+  const initialSeed = useMemo(() => challengeSeed ?? freshSeed(), [challengeSeed]);
   const initialRound = useMemo(() => {
-    const round = createWavelengthRound(previousTarget());
+    const round = createChallengeWavelengthRound(initialSeed);
     rememberTarget(round.target);
     return round;
-  }, []);
-  const [round, setRound] = useState(initialRound);
+  }, [initialSeed]);
+  const [round, setRound] = useState<WavelengthRound>(initialRound);
   const [clueIndex, setClueIndex] = useState(0);
   const [guess, setGuess] = useState(50);
   const [guesses, setGuesses] = useState<number[]>([]);
   const [complete, setComplete] = useState(false);
-  const [shareStatus, setShareStatus] = useState("");
+  const [challengeStatus, setChallengeStatus] = useState("");
   const clue = round.clues[clueIndex];
 
-  function newRound() {
-    const next = createWavelengthRound(round.target);
-    rememberTarget(next.target);
-    setRound(next);
+  function replay() {
+    setRound(createChallengeWavelengthRound(initialSeed));
     setClueIndex(0);
     setGuess(50);
     setGuesses([]);
     setComplete(false);
-    setShareStatus("");
+    setChallengeStatus("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -69,30 +74,19 @@ export default function WavelengthGame({ onExit }: { onExit: () => void }) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
-    const nextClue = nextWavelengthClue(round, locked, clueIndex + 1);
+    const nextClue = nextChallengeWavelengthClue(round, locked, clueIndex + 1, initialSeed, guesses);
     setRound((current) => ({ ...current, clues: [...current.clues, nextClue] }));
     setClueIndex((current) => current + 1);
   }
 
-  async function share() {
-    const text = shareText(round, guesses);
-    setShareStatus("");
-    try {
-      if (navigator.share) {
-        await navigator.share({ title: "My UFC Wavelength Score", text });
-        return;
-      }
-      await navigator.clipboard.writeText(text);
-      setShareStatus("SCORE COPIED");
-    } catch (error) {
-      if (error instanceof DOMException && error.name === "AbortError") return;
-      try {
-        await navigator.clipboard.writeText(text);
-        setShareStatus("SCORE COPIED");
-      } catch {
-        setShareStatus("SHARE FAILED");
-      }
-    }
+  async function challengeSomeone() {
+    setChallengeStatus("");
+    const status = await shareGameChallenge({
+      title: "Wavelength Challenge",
+      text: "I challenged you to find the same hidden UFC rating in four adaptive clues. Can you beat my final score?",
+      url: wavelengthChallengeUrl(initialSeed),
+    });
+    setChallengeStatus(status);
   }
 
   if (complete) {
@@ -133,11 +127,11 @@ export default function WavelengthGame({ onExit }: { onExit: () => void }) {
             </article>
           ))}
           <div className="wavelength-result-actions">
-            <button className="primary-action" type="button" onClick={newRound}>PLAY ANOTHER</button>
-            <button className="find-secondary-action" type="button" onClick={share}>SHARE SCORE</button>
+            <button className="primary-action" type="button" onClick={challengeSomeone}>CHALLENGE SOMEONE</button>
+            <button className="find-secondary-action" type="button" onClick={replay}>REPLAY</button>
             <button className="find-secondary-action" type="button" onClick={onExit}>ALL GAMES</button>
           </div>
-          <p className="wavelength-share-status" role="status">{shareStatus}</p>
+          <p className="wavelength-share-status" role="status">{challengeStatus}</p>
         </section>
       </div>
     );
