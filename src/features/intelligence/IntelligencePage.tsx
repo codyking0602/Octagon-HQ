@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { allTime, getFighter } from "../rankings/rankingModel";
 import {
   OCTAGON_VERDICT_URL,
@@ -132,6 +132,10 @@ function WhyContext({ fighterSlug, copiedFromSource }: { fighterSlug: string; co
   );
 }
 
+function validReturnPath(value: string | null) {
+  return value && /^\/play(?:\/|$)/.test(value) ? value : "";
+}
+
 export default function IntelligencePage() {
   const [searchParams] = useSearchParams();
   const location = useLocation();
@@ -140,15 +144,18 @@ export default function IntelligencePage() {
   const mode = searchParams.get("mode");
   const fighterSlug = searchParams.get("fighter") || "";
   const opponentSlug = searchParams.get("opponent") || "";
+  const returnTo = validReturnPath(searchParams.get("returnTo"));
+  const returnLabel = searchParams.get("returnLabel") || "Back to game";
   const copiedFromSource = Boolean((location.state as { copied?: boolean } | null)?.copied);
   const visiblePrompts = useMemo(() => starterPrompts.slice(0, showAll ? starterPrompts.length : 4), [showAll]);
+  const returnLink = returnTo ? <Link className="intelligence-return-link" to={returnTo}>← {returnLabel}</Link> : null;
 
   if (mode === "why" && fighterSlug) {
-    return <div className="page intelligence-page intelligence-page--context"><WhyContext fighterSlug={fighterSlug} copiedFromSource={copiedFromSource} /></div>;
+    return <div className="page intelligence-page intelligence-page--context">{returnLink}<WhyContext fighterSlug={fighterSlug} copiedFromSource={copiedFromSource} /></div>;
   }
 
   if (mode === "compare" && fighterSlug) {
-    return <div className="page intelligence-page intelligence-page--context"><MatchupBuilder initialFighterSlug={fighterSlug} initialOpponentSlug={opponentSlug} expanded /></div>;
+    return <div className="page intelligence-page intelligence-page--context">{returnLink}<MatchupBuilder initialFighterSlug={fighterSlug} initialOpponentSlug={opponentSlug} expanded /></div>;
   }
 
   async function copyStarter(prompt: string) {
