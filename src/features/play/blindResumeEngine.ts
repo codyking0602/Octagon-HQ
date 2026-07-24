@@ -152,6 +152,7 @@ export function blindResumeStats(pair: BlindResumePair): BlindResumeStat[] {
     { label: "UFC title-fight wins", valueA: formatNumber(a.titleFightWins), valueB: formatNumber(b.titleFightWins) },
     { label: "Top-5 wins", valueA: formatNumber(a.topFiveWins), valueB: formatNumber(b.topFiveWins) },
     { label: "Prime UFC record", valueA: a.primeRecord, valueB: b.primeRecord },
+    { label: "Main UFC era", valueA: pair.fighterA.mainEra, valueB: pair.fighterB.mainEra },
     { label: "Apex rating", valueA: String(apexRating(pair.fighterA)), valueB: String(apexRating(pair.fighterB)) },
     { label: "Rounds won", valueA: `${formatNumber(a.roundsWonPct, 1)}%`, valueB: `${formatNumber(b.roundsWonPct, 1)}%` },
     { label: "Finish rate", valueA: `${formatNumber(a.finishRatePct, 1)}%`, valueB: `${formatNumber(b.finishRatePct, 1)}%` },
