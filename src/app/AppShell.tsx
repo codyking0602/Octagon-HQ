@@ -4,17 +4,23 @@ import { BrandMark } from "../components/BrandMark";
 import { BottomNavigation } from "../components/BottomNavigation";
 import { RouteLoading } from "../components/RouteLoading";
 
+const PLAY_GAME_TITLES: Record<string, string> = {
+  "/play/find-leader": "Find the Leader",
+  "/play/wavelength": "Wavelength",
+};
+
 export function AppShell() {
   const location = useLocation();
-  const isFindLeaderGame = location.pathname === "/play/find-leader";
+  const gameTitle = PLAY_GAME_TITLES[location.pathname];
+  const isPlayGame = Boolean(gameTitle);
 
   return (
-    <div className={`app-shell${isFindLeaderGame ? " app-shell--game" : ""}`}>
-      {isFindLeaderGame ? (
+    <div className={`app-shell${isPlayGame ? " app-shell--game" : ""}`}>
+      {isPlayGame ? (
         <header className="app-header app-header--game">
           <Link className="game-header__back" to="/play" aria-label="Return to Play Hub">
             <span aria-hidden="true">←</span>
-            <span><small>PLAY HUB</small><strong>Find the Leader</strong></span>
+            <span><small>PLAY HUB</small><strong>{gameTitle}</strong></span>
           </Link>
         </header>
       ) : (
@@ -34,7 +40,7 @@ export function AppShell() {
         </header>
       )}
 
-      <main className={`app-content${isFindLeaderGame ? " app-content--game" : ""}`}>
+      <main className={`app-content${isPlayGame ? " app-content--game" : ""}`}>
         <Suspense fallback={<RouteLoading />}>
           <Outlet />
         </Suspense>
