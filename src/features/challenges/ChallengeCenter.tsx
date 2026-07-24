@@ -27,8 +27,6 @@ function timeAgo(value: string) {
 function rowCopy(challenge: PlayChallenge, profileId: string) {
   const direction = challengeDirection(challenge, profileId);
   const status = challengeStatus(challenge, profileId);
-  const counterpart = challengeCounterpart(challenge, profileId);
-  const name = counterpart?.displayName ?? "Octagon HQ profile";
 
   if (direction === "sent") {
     if (status === "completed") return { eyebrow: "COMPLETED WITH", detail: `Both finished ${timeAgo(challenge.completedAt ?? challenge.createdAt)}`, action: "RESULTS" };
