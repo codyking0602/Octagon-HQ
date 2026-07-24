@@ -15,7 +15,7 @@ import {
   recordFindLeaderAttempt,
   type FindLeaderHistoryRow,
 } from "./findLeaderStorage";
-import { playGames } from "./playRegistry";
+import { playGames, type PlayGameId } from "./playRegistry";
 
 interface FindLeaderResult {
   score: number;
@@ -23,6 +23,13 @@ interface FindLeaderResult {
   fatalId: string | null;
   eliminated: string[];
 }
+
+const LIVE_GAME_ROUTES: Partial<Record<PlayGameId, string>> = {
+  "find-leader": "/play/find-leader",
+  wavelength: "/play/wavelength",
+  "blind-resume": "/play/blind-resume",
+  "blind-rank": "/play/blind-rank",
+};
 
 const DIVISION_ABBREVIATIONS: Record<string, string> = {
   Strawweight: "SW",
@@ -281,10 +288,6 @@ export default function PlayPage() {
     if (todayBoard) navigate("/play/find-leader");
   }
 
-  function openWavelength() {
-    navigate("/play/wavelength");
-  }
-
   function finishSwipe(clientX: number) {
     if (touchStartX.current === null) return;
     const distance = clientX - touchStartX.current;
@@ -347,12 +350,14 @@ export default function PlayPage() {
         </header>
         <div className="play-games__grid">
           {playGames.map((game) => {
-            const isFindLeader = game.id === "find-leader";
-            const isWavelength = game.id === "wavelength";
-            const isLive = isFindLeader || isWavelength;
-            const open = isFindLeader ? openFindLeader : isWavelength ? openWavelength : undefined;
-            return isLive ? (
-              <button className="play-game-card is-live" type="button" key={game.id} onClick={open}>
+            const route = LIVE_GAME_ROUTES[game.id];
+            return route ? (
+              <button
+                className="play-game-card is-live"
+                type="button"
+                key={game.id}
+                onClick={() => game.id === "find-leader" ? openFindLeader() : navigate(route)}
+              >
                 <span className="play-game-card__icon">{game.icon}</span>
                 <span className="play-game-card__status">PLAY NOW</span>
                 <strong>{game.title}</strong>
