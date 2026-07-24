@@ -1,0 +1,121 @@
+.challenge-comparison {
+  display: grid;
+  gap: 9px;
+  padding: 11px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #0b0b0d;
+}
+
+.challenge-comparison__headline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.challenge-comparison__headline span {
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .1em;
+}
+
+.challenge-comparison__headline strong {
+  color: var(--ufc-red-strong);
+  font-size: 22px;
+}
+
+.challenge-comparison__rankings {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.challenge-comparison__rankings > section,
+.challenge-comparison__list {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: var(--surface);
+}
+
+.challenge-comparison__rankings > section > header,
+.challenge-comparison__list > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 9px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.challenge-comparison__rankings > section > div {
+  display: grid;
+  grid-template-columns: 25px minmax(0, 1fr);
+  gap: 6px;
+  align-items: center;
+  padding: 7px 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.challenge-comparison__rankings > section > div:last-child {
+  border-bottom: 0;
+}
+
+.challenge-comparison__rankings b {
+  color: var(--ufc-red-strong);
+  font-size: 10px;
+}
+
+.challenge-comparison__rankings span {
+  overflow: hidden;
+  font-size: 9px;
+  font-weight: 850;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.challenge-comparison__groups {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.challenge-comparison__list > div {
+  display: grid;
+}
+
+.challenge-comparison__list > div > span,
+.challenge-comparison__list > p {
+  margin: 0;
+  padding: 7px 8px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 9px;
+  line-height: 1.25;
+}
+
+.challenge-comparison__list > div > span:last-child {
+  border-bottom: 0;
+}
+
+.challenge-comparison__list > p {
+  border-bottom: 0;
+  color: var(--text-muted);
+}
+
+@media (max-width: 620px) {
+  .challenge-comparison__groups {
+    grid-template-columns: 1fr;
+  }
+
+  .challenge-comparison__rankings {
+    gap: 6px;
+  }
+}
