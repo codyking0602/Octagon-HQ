@@ -7,6 +7,7 @@ const RankingsPage = lazy(() => import("../features/rankings/RankingsPage"));
 const FighterProfilePage = lazy(() => import("../features/rankings/FighterProfilePage"));
 const IntelligencePage = lazy(() => import("../features/intelligence/IntelligencePage"));
 const PlayPage = lazy(() => import("../features/play/PlayPage"));
+const FindLeaderChallengeRoute = lazy(() => import("../features/challenges/FindLeaderChallengeRoute"));
 const WavelengthPage = lazy(() => import("../features/play/WavelengthPage"));
 const BlindResumePage = lazy(() => import("../features/play/BlindResumePage"));
 const BlindRankPage = lazy(() => import("../features/play/BlindRankPage"));
@@ -24,7 +25,7 @@ export const appRoutes: RouteObject[] = [
       { path: "fighters/:slug", element: <FighterProfilePage /> },
       { path: "intelligence", element: <IntelligencePage /> },
       { path: "play", element: <PlayPage /> },
-      { path: "play/find-leader", element: <PlayPage /> },
+      { path: "play/find-leader", element: <FindLeaderChallengeRoute /> },
       { path: "play/wavelength", element: <WavelengthPage /> },
       { path: "play/blind-resume", element: <BlindResumePage /> },
       { path: "play/blind-rank", element: <BlindRankPage /> },
