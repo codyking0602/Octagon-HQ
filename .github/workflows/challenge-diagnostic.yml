@@ -22,6 +22,6 @@ jobs:
         run: |
           npm install --silent
           npm test -- src/features/challenges/challengeFlow.test.tsx --reporter=verbose > /tmp/challenge-test.log 2>&1 || {
-            tail -n 100 /tmp/challenge-test.log
+            tail -n 35 /tmp/challenge-test.log
             exit 1
           }
