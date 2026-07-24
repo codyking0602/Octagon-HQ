@@ -1,9 +1,9 @@
 name: One-time local fighter asset migration
 
 on:
-  push:
+  pull_request:
     branches:
-      - codex/localize-fighter-assets
+      - main
     paths:
       - ".github/workflows/migrate-local-fighter-assets.yml"
 
@@ -12,6 +12,7 @@ permissions:
 
 jobs:
   migrate:
+    if: github.head_ref == 'codex/localize-fighter-assets'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
