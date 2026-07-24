@@ -83,30 +83,32 @@ export const BETTER_THAN_DIVISIONS = [
 export const DEFAULT_BETTER_THAN_TARGET = "charles-oliveira";
 export const BETTER_THAN_MAX_CLAIM = 15;
 
-export function betterThanLens(lensId: BetterThanLensId) {
-  return BETTER_THAN_LENSES.find((lens) => lens.id === lensId) ?? BETTER_THAN_LENSES[0];
+export function betterThanLens(lensId: BetterThanLensId): BetterThanLens {
+  return BETTER_THAN_LENSES.find((lens) => lens.id === lensId) ?? BETTER_THAN_LENSES[0]!;
 }
 
 export function betterThanPoolOptions(target: PlayFighter): readonly BetterThanPool[] {
-  return [
+  const pools: BetterThanPool[] = [
     { id: "all", label: `Full ${rankedPlayFighters.length}-fighter pool`, phrase: "from the full UFC pool" },
     { id: "men", label: "Men's pool", phrase: "from the men's pool" },
     { id: "women", label: "Women's pool", phrase: "from the women's pool" },
     { id: "same-division", label: "Same division as target", phrase: "from the same UFC division pool" },
     { id: "205-plus", label: "205+ divisions", phrase: "among fighters who competed at Light Heavyweight or Heavyweight" },
     { id: "170-below", label: "170 lb divisions and below", phrase: "among fighters who competed at Welterweight or below" },
-    ...BETTER_THAN_DIVISIONS.map((division) => ({
-      id: `division:${division}` as BetterThanPoolId,
+    ...BETTER_THAN_DIVISIONS.map((division): BetterThanPool => ({
+      id: `division:${division}`,
       label: division,
       phrase: `among fighters who competed at ${division}`,
     })),
-  ].map((pool) => pool.id === "same-division"
+  ];
+  return pools.map((pool): BetterThanPool => pool.id === "same-division"
     ? { ...pool, label: `Same division as ${target.name}` }
     : pool);
 }
 
-export function betterThanPool(target: PlayFighter, poolId: BetterThanPoolId) {
-  return betterThanPoolOptions(target).find((pool) => pool.id === poolId) ?? betterThanPoolOptions(target)[0];
+export function betterThanPool(target: PlayFighter, poolId: BetterThanPoolId): BetterThanPool {
+  const options = betterThanPoolOptions(target);
+  return options.find((pool) => pool.id === poolId) ?? options[0]!;
 }
 
 function matchesPool(fighter: PlayFighter, target: PlayFighter, poolId: BetterThanPoolId) {
