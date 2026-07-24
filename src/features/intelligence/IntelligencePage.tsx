@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { allTime, getFighter } from "../rankings/rankingModel";
 import {
   OCTAGON_VERDICT_URL,
@@ -11,12 +11,13 @@ import {
 
 interface MatchupBuilderProps {
   initialFighterSlug?: string;
+  initialOpponentSlug?: string;
   expanded?: boolean;
 }
 
-function MatchupBuilder({ initialFighterSlug, expanded = false }: MatchupBuilderProps) {
+function MatchupBuilder({ initialFighterSlug, initialOpponentSlug, expanded = false }: MatchupBuilderProps) {
   const firstDefault = initialFighterSlug || allTime[0]?.slug || "";
-  const secondDefault = initialFighterSlug ? "" : allTime[1]?.slug || "";
+  const secondDefault = initialOpponentSlug || (initialFighterSlug ? "" : allTime[1]?.slug || "");
   const [firstSlug, setFirstSlug] = useState(firstDefault);
   const [secondSlug, setSecondSlug] = useState(secondDefault);
   const [status, setStatus] = useState("");
@@ -29,8 +30,8 @@ function MatchupBuilder({ initialFighterSlug, expanded = false }: MatchupBuilder
   }, [firstDefault, secondDefault]);
 
   useEffect(() => {
-    if (expanded && initialFighterSlug) secondSelectRef.current?.focus();
-  }, [expanded, initialFighterSlug]);
+    if (expanded && initialFighterSlug && !initialOpponentSlug) secondSelectRef.current?.focus();
+  }, [expanded, initialFighterSlug, initialOpponentSlug]);
 
   const first = getFighter(firstSlug);
   const second = getFighter(secondSlug);
@@ -79,9 +80,14 @@ function MatchupBuilder({ initialFighterSlug, expanded = false }: MatchupBuilder
   );
 
   if (expanded) {
+    const contextCopy = first && second
+      ? `${first.name} vs. ${second.name} is ready.`
+      : first
+        ? `${first.name} is ready. Choose an opponent.`
+        : "Choose two fighters.";
     return (
       <section className="surface-card intelligence-matchup-card intelligence-matchup-card--open" aria-labelledby="matchup-title">
-        <div className="section-heading"><div><p className="eyebrow">FROM FIGHTER PROFILE</p><h1 id="matchup-title">Compare fighters</h1><p>{first ? `${first.name} is ready. Choose an opponent.` : "Choose two fighters."}</p></div></div>
+        <div className="section-heading"><div><p className="eyebrow">FROM UFC GAME</p><h1 id="matchup-title">Compare fighters</h1><p>{contextCopy}</p></div></div>
         {content}
       </section>
     );
@@ -126,6 +132,10 @@ function WhyContext({ fighterSlug, copiedFromSource }: { fighterSlug: string; co
   );
 }
 
+function validReturnPath(value: string | null) {
+  return value && /^\/play(?:\/|$)/.test(value) ? value : "";
+}
+
 export default function IntelligencePage() {
   const [searchParams] = useSearchParams();
   const location = useLocation();
@@ -133,15 +143,19 @@ export default function IntelligencePage() {
   const [promptStatus, setPromptStatus] = useState("");
   const mode = searchParams.get("mode");
   const fighterSlug = searchParams.get("fighter") || "";
+  const opponentSlug = searchParams.get("opponent") || "";
+  const returnTo = validReturnPath(searchParams.get("returnTo"));
+  const returnLabel = searchParams.get("returnLabel") || "Back to game";
   const copiedFromSource = Boolean((location.state as { copied?: boolean } | null)?.copied);
   const visiblePrompts = useMemo(() => starterPrompts.slice(0, showAll ? starterPrompts.length : 4), [showAll]);
+  const returnLink = returnTo ? <Link className="intelligence-return-link" to={returnTo}>← {returnLabel}</Link> : null;
 
   if (mode === "why" && fighterSlug) {
-    return <div className="page intelligence-page intelligence-page--context"><WhyContext fighterSlug={fighterSlug} copiedFromSource={copiedFromSource} /></div>;
+    return <div className="page intelligence-page intelligence-page--context">{returnLink}<WhyContext fighterSlug={fighterSlug} copiedFromSource={copiedFromSource} /></div>;
   }
 
   if (mode === "compare" && fighterSlug) {
-    return <div className="page intelligence-page intelligence-page--context"><MatchupBuilder initialFighterSlug={fighterSlug} expanded /></div>;
+    return <div className="page intelligence-page intelligence-page--context">{returnLink}<MatchupBuilder initialFighterSlug={fighterSlug} initialOpponentSlug={opponentSlug} expanded /></div>;
   }
 
   async function copyStarter(prompt: string) {

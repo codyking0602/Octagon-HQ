@@ -4,6 +4,10 @@ import { App } from "./app/App";
 import "./styles/tokens.css";
 import "./styles/global.css";
 import "./styles/intelligence.css";
+import "./styles/play.css";
+import "./styles/wavelength.css";
+import "./styles/game-results.css";
+import "./styles/blind-games.css";
 
 const root = document.getElementById("root");
 
