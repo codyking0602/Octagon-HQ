@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - fix/correct-production-profile-origin
     paths:
       - ".github/workflows/deploy-supabase.yml"
       - "supabase/**"
