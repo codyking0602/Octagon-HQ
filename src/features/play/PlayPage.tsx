@@ -82,7 +82,8 @@ function validChallengeDay(value: string | null) {
 
 function challengeSetupDay(value: unknown) {
   if (!value || Array.isArray(value) || typeof value !== "object") return null;
-  return validChallengeDay(typeof value.day === "string" ? value.day : null);
+  const setup = value as Record<string, unknown>;
+  return validChallengeDay(typeof setup.day === "string" ? setup.day : null);
 }
 
 function DailyHistory({ rows, today }: { rows: FindLeaderHistoryRow[]; today: string }) {
