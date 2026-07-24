@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -10,7 +11,7 @@ import { centralDay, dailyFindLeaderBoard } from "../play/findLeaderEngine";
 
 const PROFILE_STORAGE_KEY = "octagon-hq:challenge-profile:v1";
 
-function renderWithChallenges(element: React.ReactNode, path: string) {
+function renderWithChallenges(element: ReactNode, path: string) {
   return render(
     <ChallengeProvider>
       <MemoryRouter initialEntries={[path]}>{element}</MemoryRouter>
@@ -78,7 +79,7 @@ describe("Play Challenge Center flow", () => {
     expect(screen.getByText(/Shane · Find the Leader/)).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "RESULTS" }));
     expect(screen.getByRole("dialog", { name: "Find the Leader" })).toBeTruthy();
-    expect(screen.getByText("Cody wins").textContent === "Cody wins" || screen.getByText("Tie game").textContent === "Tie game").toBe(true);
+    expect(screen.getByText("Tie game")).toBeTruthy();
     expect(screen.getAllByText("1/10")).toHaveLength(2);
   });
 
