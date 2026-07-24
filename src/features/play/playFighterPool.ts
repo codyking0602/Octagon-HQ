@@ -1,3 +1,4 @@
+import { canonicalRankingInputs } from "../rankings/data/rankingInputs";
 import { allTime, type RankingFighter } from "../rankings/rankingModel";
 
 export type PlayGender = "men" | "women";
@@ -16,6 +17,7 @@ export interface PlayFighter {
   name: string;
   gender: PlayGender;
   divisions: string[];
+  mainEra: string;
   thumbUrl: string;
   profileUrl: string;
   model: RankingFighter | null;
@@ -80,6 +82,7 @@ const playOnlyFighters: readonly PlayFighter[] = [
     name: "CM Punk",
     gender: "men",
     divisions: ["Welterweight"],
+    mainEra: "2015–2019",
     thumbUrl: "/assets/fighters/cm-punk-thumb.webp",
     profileUrl: "",
     model: null,
@@ -90,12 +93,39 @@ const playOnlyFighters: readonly PlayFighter[] = [
     name: "Kimbo Slice",
     gender: "men",
     divisions: ["Heavyweight"],
+    mainEra: "2005–2009",
     thumbUrl: "/assets/fighters/kimbo-slice-thumb.webp",
     profileUrl: "",
     model: null,
     ratings: { career: 25, striking: 45, grappling: 20 },
   },
 ] as const;
+
+const ERA_BUCKETS = [
+  { start: 1993, end: 1999, label: "1993–1999" },
+  { start: 2000, end: 2004, label: "2000–2004" },
+  { start: 2005, end: 2009, label: "2005–2009" },
+  { start: 2010, end: 2014, label: "2010–2014" },
+  { start: 2015, end: 2019, label: "2015–2019" },
+  { start: 2020, end: 2099, label: "2020s" },
+] as const;
+
+const fightDatesByName = new Map(
+  canonicalRankingInputs.fighters.map((input) => [input.fighter, input.facts.fights.map((fight) => fight.date)]),
+);
+
+function mainEraFor(name: string) {
+  const dates = fightDatesByName.get(name) ?? [];
+  const counts = ERA_BUCKETS.map((bucket) => ({
+    ...bucket,
+    count: dates.filter((date) => {
+      const year = Number(date.slice(0, 4));
+      return year >= bucket.start && year <= bucket.end;
+    }).length,
+  }));
+  const winner = counts.sort((left, right) => right.count - left.count || right.start - left.start)[0];
+  return winner?.count ? winner.label : "—";
+}
 
 function clamp(value: number) {
   return Math.max(0, Math.min(100, Math.round(value)));
@@ -140,6 +170,7 @@ export const rankedPlayFighters: readonly RankedPlayFighter[] = allTime.map((fig
   name: fighter.name,
   gender: fighter.board,
   divisions: divisionsFor(fighter),
+  mainEra: mainEraFor(fighter.name),
   thumbUrl: fighter.thumbUrl,
   profileUrl: fighter.profileUrl,
   model: fighter,
