@@ -24,21 +24,21 @@
 .wavelength-path__step b { display: inline-flex; align-items: center; justify-content: center; min-width: 34px; padding: 5px 8px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); font-size: 11px; }
 .wavelength-path__step em { color: var(--text-muted); font-style: normal; }
 .wavelength-rules { margin: 0; color: var(--text-muted); font-size: 10px; line-height: 1.45; text-align: center; }
-.wavelength-result-hero { display: grid; place-items: center; gap: 7px; min-height: 210px; padding: 20px; border: 1px solid rgba(47,191,98,.65); border-radius: 20px; background: radial-gradient(circle at 50% 0, rgba(47,191,98,.14), transparent 50%), var(--surface); text-align: center; }
+.wavelength-result-hero { display: grid; place-items: center; gap: 5px; min-height: 178px; padding: 16px; border: 1px solid rgba(47,191,98,.65); border-radius: 20px; background: radial-gradient(circle at 50% 0, rgba(47,191,98,.14), transparent 50%), var(--surface); text-align: center; }
 .wavelength-result-hero .eyebrow { color: #70dd96; }
-.wavelength-result-hero strong { font-size: 76px; line-height: .85; letter-spacing: -.08em; }
+.wavelength-result-hero strong { font-size: 72px; line-height: .82; letter-spacing: -.08em; }
 .wavelength-result-hero span { color: var(--text-secondary); font-size: 12px; font-weight: 850; }
 .wavelength-result-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
-.wavelength-result-metrics div { display: grid; gap: 5px; place-items: center; min-height: 86px; padding: 12px; border: 1px solid var(--border); border-radius: 15px; background: var(--surface); }
+.wavelength-result-metrics div { display: grid; gap: 5px; place-items: center; min-height: 82px; padding: 11px; border: 1px solid var(--border); border-radius: 15px; background: var(--surface); }
 .wavelength-result-metrics span { color: var(--text-muted); font-size: 8px; font-weight: 950; letter-spacing: .1em; }
 .wavelength-result-metrics strong { font-size: 27px; }
-.wavelength-reveal { gap: 10px; padding: 16px; }
-.wavelength-reveal__row { display: grid; grid-template-columns: 38px minmax(0,1fr) 42px; align-items: center; gap: 10px; padding: 9px; border: 1px solid var(--border); border-radius: 13px; background: #0b0b0d; }
-.wavelength-reveal__row > b { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: var(--surface-raised); color: var(--ufc-red-strong); font-size: 11px; }
-.wavelength-reveal__row > span { display: grid; gap: 3px; min-width: 0; }
-.wavelength-reveal__row small { color: var(--text-muted); font-size: 8px; font-weight: 900; letter-spacing: .08em; }
-.wavelength-reveal__row strong { font-size: 12px; line-height: 1.25; }
-.wavelength-reveal__row > em { font-size: 20px; font-style: normal; font-weight: 950; text-align: right; }
+.wavelength-reveal { gap: 8px; padding: 15px; }
+.wavelength-reveal__row { display: grid; grid-template-columns: 34px minmax(0,1fr) 38px; align-items: center; gap: 8px; padding: 7px 8px; border: 1px solid var(--border); border-radius: 12px; background: #0b0b0d; }
+.wavelength-reveal__row > b { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 9px; background: var(--surface-raised); color: var(--ufc-red-strong); font-size: 10px; }
+.wavelength-reveal__row > span { display: grid; gap: 2px; min-width: 0; }
+.wavelength-reveal__row small { color: var(--text-muted); font-size: 7px; font-weight: 900; letter-spacing: .08em; }
+.wavelength-reveal__row strong { font-size: 11px; line-height: 1.2; }
+.wavelength-reveal__row > em { font-size: 19px; font-style: normal; font-weight: 950; text-align: right; }
 .wavelength-result-actions { display: grid; gap: 8px; margin-top: 4px; }
 .wavelength-result-actions button { border: 0; cursor: pointer; }
 .wavelength-share-status { min-height: 14px; margin: 0; color: var(--text-muted); font-size: 9px; text-align: center; }
@@ -51,5 +51,6 @@
   .wavelength-clue { min-height: 200px; padding: 16px; }
   .wavelength-clue h1 { font-size: 27px; }
   .wavelength-guess-panel > div:first-child strong { font-size: 46px; }
-  .wavelength-result-hero strong { font-size: 68px; }
+  .wavelength-result-hero { min-height: 166px; }
+  .wavelength-result-hero strong { font-size: 64px; }
 }
