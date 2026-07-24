@@ -9,6 +9,15 @@ on:
       - "src/features/rankings/**"
       - "package.json"
       - ".github/workflows/export-octagon-verdict.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "scripts/export-octagon-verdict.mjs"
+      - "src/features/intelligence/octagonVerdictExport.ts"
+      - "src/features/rankings/**"
+      - "package.json"
+      - ".github/workflows/export-octagon-verdict.yml"
   workflow_dispatch:
 
 permissions:
