@@ -1,4 +1,5 @@
-create extension if not exists pgcrypto;
+create schema if not exists extensions;
+create extension if not exists pgcrypto with schema extensions;
 
 create schema if not exists private;
 revoke all on schema private from public, anon, authenticated;
@@ -99,7 +100,11 @@ begin
   returning * into v_profile;
 
   insert into private.profile_pin_credentials (profile_id, internal_email, pin_hash)
-  values (p_profile_id, lower(trim(p_internal_email)), crypt(p_pin, gen_salt('bf', 12)));
+  values (
+    p_profile_id,
+    lower(trim(p_internal_email)),
+    extensions.crypt(p_pin, extensions.gen_salt('bf', 12))
+  );
 
   return v_profile;
 end;
@@ -149,7 +154,7 @@ begin
     v_failed_attempts := 0;
   end if;
 
-  if p_pin !~ '^\d{4}$' or v_pin_hash <> crypt(p_pin, v_pin_hash) then
+  if p_pin !~ '^\d{4}$' or v_pin_hash <> extensions.crypt(p_pin, v_pin_hash) then
     v_failed_attempts := v_failed_attempts + 1;
     update private.profile_pin_credentials
     set failed_attempts = v_failed_attempts,
