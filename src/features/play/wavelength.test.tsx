@@ -1,0 +1,60 @@
+import { fireEvent, render, screen } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import WavelengthGame from "./WavelengthGame";
+import {
+  createWavelengthRound,
+  desiredWavelengthCorrection,
+  nextWavelengthClue,
+  wavelengthClues,
+  wavelengthScore,
+  wavelengthTargets,
+} from "./wavelengthEngine";
+
+describe("Wavelength engine", () => {
+  it("preserves the complete V1 target and expanded clue banks", () => {
+    expect(wavelengthTargets).toHaveLength(22);
+    expect(wavelengthClues).toHaveLength(96);
+    expect(new Set(wavelengthClues.map((clue) => clue.id)).size).toBe(96);
+    expect(Math.min(...wavelengthClues.map((clue) => clue.rating))).toBe(2);
+    expect(Math.max(...wavelengthClues.map((clue) => clue.rating))).toBe(99);
+  });
+
+  it("avoids the previous target and adjusts later clues toward the hidden number", () => {
+    const random = vi.fn(() => 0);
+    const round = createWavelengthRound(18, random);
+    expect(round.target).not.toBe(18);
+    expect(round.clues).toHaveLength(1);
+
+    const highTarget = { target: 91, clues: [wavelengthClues.find((clue) => clue.rating === 89)!] };
+    const next = nextWavelengthClue(highTarget, 40, 1, () => 0);
+    expect(next.rating).toBeGreaterThan(40);
+    expect(next.id).not.toBe(highTarget.clues[0].id);
+  });
+
+  it("scores only distance from the final guess", () => {
+    expect(wavelengthScore(75, 75)).toBe(100);
+    expect(wavelengthScore(68, 75)).toBe(93);
+    expect(desiredWavelengthCorrection(80, 40, 2, () => 0)).toBeGreaterThan(80);
+  });
+});
+
+describe("Wavelength game", () => {
+  beforeEach(() => window.localStorage.clear());
+
+  it("locks four guesses and reveals the final score and all four clues", () => {
+    render(<WavelengthGame onExit={() => undefined} />);
+    expect(screen.getByText("CLUE 1 OF 4")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "LOCK GUESS & REVEAL NEXT CLUE" }));
+    expect(screen.getByText("CLUE 2 OF 4")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "LOCK GUESS & REVEAL NEXT CLUE" }));
+    expect(screen.getByText("CLUE 3 OF 4")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "LOCK GUESS & REVEAL NEXT CLUE" }));
+    expect(screen.getByText("CLUE 4 OF 4")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "LOCK FINAL GUESS" }));
+
+    expect(screen.getByText("FINAL SCORE")).toBeInTheDocument();
+    expect(screen.getByText("HIDDEN NUMBER")).toBeInTheDocument();
+    expect(document.querySelectorAll(".wavelength-reveal__row")).toHaveLength(4);
+  });
+});
