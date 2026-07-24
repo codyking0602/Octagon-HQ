@@ -4,15 +4,13 @@
   width: 100%;
 }
 
-.game-result-actions,
-.find-result-actions {
+.game-result-actions {
   display: grid;
   gap: 8px;
   width: 100%;
 }
 
-.game-result-actions button,
-.find-result-actions button {
+.game-result-actions button {
   width: 100%;
   min-height: 48px;
 }
