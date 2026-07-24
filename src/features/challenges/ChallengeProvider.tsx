@@ -10,7 +10,6 @@ import {
   CHALLENGE_TEST_PROFILES,
   canViewChallengeResults,
   challengeCounterpartId,
-  resultScore,
   type ChallengeJson,
   type ChallengeProfile,
   type PlayChallenge,
@@ -19,10 +18,16 @@ import {
   addChallenge,
   challengesForProfile,
   completeChallengeRow,
+  dismissChallengeRow,
   loadChallenges,
   openChallengeRow,
   saveChallenges,
 } from "./challengeRepository";
+import {
+  ChallengeResultDetails,
+  challengeResultScoreLabel,
+  challengeResultVerdict,
+} from "./ChallengeResultDetails";
 import type { PlayGameId } from "../play/playRegistry";
 
 const PROFILE_STORAGE_KEY = "octagon-hq:challenge-profile:v1";
@@ -49,19 +54,8 @@ interface PlayChallengesContextValue {
   getChallenge: (code: string) => PlayChallenge | null;
   markOpened: (code: string) => void;
   submitResult: (code: string, result: ChallengeJson) => void;
+  dismissChallenge: (code: string) => void;
   viewResults: (code: string) => void;
-}
-
-interface StoredFindLeaderBoard {
-  leaderId: string;
-  candidates: Array<{ id: string; name: string }>;
-}
-
-interface StoredFindLeaderResult {
-  score: number | null;
-  perfect: boolean;
-  fatalId: string | null;
-  eliminatedIds: string[];
 }
 
 const PlayChallengesContext = createContext<PlayChallengesContextValue | null>(null);
@@ -96,94 +90,6 @@ async function shareDraft(draft: ChallengeComposerDraft) {
 
 function profileById(id: string | null) {
   return CHALLENGE_TEST_PROFILES.find((profile) => profile.id === id) ?? null;
-}
-
-function jsonRecord(value: ChallengeJson): { [key: string]: ChallengeJson } | null {
-  return value && !Array.isArray(value) && typeof value === "object" ? value : null;
-}
-
-function stringList(value: ChallengeJson) {
-  return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
-}
-
-function storedFindLeaderBoard(setup: ChallengeJson): StoredFindLeaderBoard | null {
-  const setupRecord = jsonRecord(setup);
-  const boardRecord = jsonRecord(setupRecord?.board ?? null);
-  const candidateRows = boardRecord?.candidates;
-  if (!boardRecord || typeof boardRecord.leaderId !== "string" || !Array.isArray(candidateRows)) return null;
-
-  const candidates = candidateRows.flatMap((candidate) => {
-    const row = jsonRecord(candidate);
-    return row && typeof row.id === "string" && typeof row.name === "string"
-      ? [{ id: row.id, name: row.name }]
-      : [];
-  });
-
-  return candidates.length
-    ? { leaderId: boardRecord.leaderId, candidates }
-    : null;
-}
-
-function storedFindLeaderResult(result: ChallengeJson): StoredFindLeaderResult {
-  const row = jsonRecord(result);
-  return {
-    score: resultScore(result),
-    perfect: row?.perfect === true,
-    fatalId: typeof row?.fatalId === "string" ? row.fatalId : null,
-    eliminatedIds: stringList(row?.eliminated ?? null),
-  };
-}
-
-function fighterName(board: StoredFindLeaderBoard, fighterId: string | null) {
-  return board.candidates.find((fighter) => fighter.id === fighterId)?.name ?? "Unknown fighter";
-}
-
-function FindLeaderChoicePath({
-  role,
-  profileName,
-  result,
-  board,
-}: {
-  role: string;
-  profileName: string;
-  result: ChallengeJson;
-  board: StoredFindLeaderBoard;
-}) {
-  const path = storedFindLeaderResult(result);
-  const leaderName = fighterName(board, board.leaderId);
-
-  return (
-    <article className="challenge-results-dialog__path">
-      <header>
-        <span><small>{role}</small><strong>{profileName}</strong></span>
-        <b>{path.score === null ? "DONE" : `${path.score}/10`}</b>
-      </header>
-      {path.eliminatedIds.length ? (
-        <>
-          <div className="challenge-results-dialog__path-label">ELIMINATION ORDER</div>
-          <ol>
-            {path.eliminatedIds.map((fighterId, index) => {
-              const fatal = fighterId === path.fatalId;
-              return (
-                <li className={fatal ? "is-fatal" : ""} key={`${fighterId}-${index}`}>
-                  <span>{index + 1}</span>
-                  <strong>{fighterName(board, fighterId)}</strong>
-                  <em>{fatal ? "LEADER" : "SAFE"}</em>
-                </li>
-              );
-            })}
-          </ol>
-          <p>{path.perfect
-            ? `Left ${leaderName} standing after nine safe eliminations.`
-            : path.fatalId
-              ? `The run ended when ${fighterName(board, path.fatalId)} was eliminated in Round ${path.score ?? "—"}.`
-              : `Finished with ${leaderName} as the group leader.`}</p>
-        </>
-      ) : (
-        <p>Detailed choice history is unavailable for this older challenge result.</p>
-      )}
-    </article>
-  );
 }
 
 function ComposerDialog({
@@ -263,19 +169,12 @@ function ResultsDialog({
   activeProfileId: string;
   onClose: () => void;
 }) {
-  if (!canViewChallengeResults(challenge, activeProfileId)) return null;
+  if (!canViewChallengeResults(challenge, activeProfileId) || !challenge.responderResult) return null;
   const creator = profiles.find((profile) => profile.id === challenge.creatorId);
   const responder = profiles.find((profile) => profile.id === challenge.recipientId);
-  const creatorScore = resultScore(challenge.creatorResult);
-  const responderScore = resultScore(challenge.responderResult);
-  const verdict = creatorScore === responderScore
-    ? "Tie game"
-    : (creatorScore ?? -1) > (responderScore ?? -1)
-      ? `${creator?.displayName ?? "Sender"} wins`
-      : `${responder?.displayName ?? "Responder"} wins`;
-  const findLeaderBoard = challenge.gameId === "find-leader"
-    ? storedFindLeaderBoard(challenge.setup)
-    : null;
+  const creatorName = creator?.displayName ?? "Sender";
+  const responderName = responder?.displayName ?? "Responder";
+  const verdict = challengeResultVerdict(challenge, creatorName, responderName);
 
   return (
     <div className="challenge-overlay" role="presentation" onMouseDown={(event) => {
@@ -298,32 +197,17 @@ function ResultsDialog({
         <div className="challenge-results-dialog__scoreboard">
           <article>
             <small>SENDER</small>
-            <strong>{creator?.displayName ?? "Sender"}</strong>
-            <b>{creatorScore === null ? "DONE" : `${creatorScore}/10`}</b>
+            <strong>{creatorName}</strong>
+            <b>{challengeResultScoreLabel(challenge, challenge.creatorResult)}</b>
           </article>
           <em>VS</em>
           <article>
             <small>RESPONDER</small>
-            <strong>{responder?.displayName ?? "Responder"}</strong>
-            <b>{responderScore === null ? "DONE" : `${responderScore}/10`}</b>
+            <strong>{responderName}</strong>
+            <b>{challengeResultScoreLabel(challenge, challenge.responderResult)}</b>
           </article>
         </div>
-        {findLeaderBoard && challenge.responderResult ? (
-          <div className="challenge-results-dialog__paths">
-            <FindLeaderChoicePath
-              role="SENDER PATH"
-              profileName={creator?.displayName ?? "Sender"}
-              result={challenge.creatorResult}
-              board={findLeaderBoard}
-            />
-            <FindLeaderChoicePath
-              role="RESPONDER PATH"
-              profileName={responder?.displayName ?? "Responder"}
-              result={challenge.responderResult}
-              board={findLeaderBoard}
-            />
-          </div>
-        ) : null}
+        <ChallengeResultDetails challenge={challenge} creatorName={creatorName} responderName={responderName} />
         <button type="button" className="primary-action challenge-results-dialog__close" onClick={onClose}>CLOSE</button>
       </section>
     </div>
@@ -379,6 +263,7 @@ export function ChallengeProvider({ children }: PropsWithChildren) {
       summary: composer.summary,
       creatorId: activeProfile.id,
       recipientId,
+      playUrl: composer.shareUrl,
       setup: composer.setup,
       creatorResult: composer.creatorResult,
     });
@@ -398,6 +283,12 @@ export function ChallengeProvider({ children }: PropsWithChildren) {
   function submitResult(code: string, result: ChallengeJson) {
     if (!activeProfile) return;
     persist(completeChallengeRow(rows, code, activeProfile.id, result));
+  }
+
+  function dismissChallengeByCode(code: string) {
+    if (!activeProfile) return;
+    persist(dismissChallengeRow(rows, code, activeProfile.id));
+    if (resultCode === code) setResultCode(null);
   }
 
   function viewResults(code: string) {
@@ -424,6 +315,7 @@ export function ChallengeProvider({ children }: PropsWithChildren) {
     getChallenge,
     markOpened,
     submitResult,
+    dismissChallenge: dismissChallengeByCode,
     viewResults,
   };
 
