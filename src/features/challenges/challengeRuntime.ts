@@ -25,14 +25,16 @@ export function challengePlayRoute(challenge: PlayChallenge) {
   if (challenge.playUrl) {
     try {
       const url = new URL(challenge.playUrl, typeof window === "undefined" ? "https://octagon.invalid" : window.location.origin);
-      url.searchParams.set("match", challenge.code);
+      url.searchParams.set(challenge.gameId === "find-leader" ? "challenge" : "match", challenge.code);
       return `${url.pathname}${url.search}${url.hash}`;
     } catch {
       // Fall back to the canonical route below.
     }
   }
 
-  const params = new URLSearchParams({ match: challenge.code });
+  const params = new URLSearchParams({
+    [challenge.gameId === "find-leader" ? "challenge" : "match"]: challenge.code,
+  });
   return `${PLAY_ROUTE_BY_GAME[challenge.gameId]}?${params.toString()}`;
 }
 
