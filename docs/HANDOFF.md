@@ -2,7 +2,7 @@
 
 _Last updated: 2026-07-24_
 
-This is the authoritative cold-start handoff for continuing Octagon HQ V2. Read this file, `docs/product-blueprint.md`, `docs/RANKINGS-MIGRATION.md`, `docs/rankings-parity-contract.md`, and `docs/intelligence-verdict-flow.md`, then inspect current `main` before editing.
+This is the authoritative cold-start handoff for continuing Octagon HQ V2. Read this file, `docs/product-blueprint.md`, `docs/RANKINGS-MIGRATION.md`, `docs/rankings-parity-contract.md`, `docs/intelligence-verdict-flow.md`, and `docs/octagon-verdict-export.md`, then inspect current `main` before editing.
 
 ## Repositories and live apps
 
@@ -106,6 +106,16 @@ Locked behavior:
 - Ordinary matchup prompts stay short. Octagon Verdict's own instructions own verdict-first structure, counterarguments, and better-fighter versus better-UFC-resume framing.
 - Do not build a second in-app comparison calculation path.
 
+### V2 export ownership
+
+- `src/features/intelligence/octagonVerdictExport.ts` packages the existing calculated V2 owners; it does not recalculate rankings.
+- `scripts/export-octagon-verdict.mjs` owns the local `npm run export:verdict` command.
+- `.github/workflows/export-octagon-verdict.yml` builds, validates, and uploads the package for relevant pull requests, relevant changes on `main`, and manual runs.
+- The package contains the master JSON feed, compact index, 80 fighter files, calculated division boards, derived direct-matchup files, and `octagon-verdict-knowledge.md` for manual Custom GPT upload.
+- Direct UFC matchups are derived from canonical fight facts and reconciled by fighter pair and date. Head-to-head results are context only and never override the higher calculated total score.
+- `artifacts/` is ignored. Generated packages are outputs, not a second editable source.
+- V1 no longer owns the Octagon Verdict export pipeline.
+
 ## Temporary V1 asset dependency
 
 V2 still reads real fighter images from the V1 GitHub Pages asset host when presentation metadata provides V1 paths. Before V1 is retired:
@@ -125,7 +135,7 @@ V2 still reads real fighter images from the V1 GitHub Pages asset host when pres
 - Future auth: exactly one session/identity provider.
 - `src/styles/tokens.css`: one semantic design-token source.
 - No global script-order architecture.
-- No duplicate initialization, fallback, recovery, ranking, or comparison owner.
+- No duplicate initialization, fallback, recovery, ranking, comparison, or export owner.
 - Build in small vertical slices with focused tests.
 - Add fighters in small batches only after the current 80-fighter source and update workflow are explicitly extended.
 
@@ -152,13 +162,13 @@ V2 still reads real fighter images from the V1 GitHub Pages asset host when pres
 - Direct calculated fighter profiles for all 80 fighters.
 - Full approved profile presentation and audited Signature Fight destinations.
 - Final Intelligence/Octagon Verdict gateway, profile Compare handoff, and Ask Why handoff.
+- Native V2 Octagon Verdict JSON/Markdown exporter and reproducible artifact workflow.
 - Disposable static ranking source deleted.
 
 ### Not complete
 
 - Routed desktop profile drawer.
 - Local V2 ownership of all fighter image files.
-- V2-owned Octagon Verdict knowledge-pack/export workflow.
 - Real Home personalization, onboarding, favorite fighter, Top 10/profile-photo reminders, and persistence.
 - Play games, Challenge Center, Picks, event recaps, authentication, profiles, permission-aware War Room, mentions, notifications, and final sharing/installability cutover.
 
@@ -172,15 +182,17 @@ Every production slice:
 4. Add focused tests.
 5. Require the exact PR head to pass `npm run typecheck`, `npm test`, and `npm run build`.
 6. Merge only after green.
-7. Confirm Cloudflare production deployment.
-8. Phone-test the exact live build.
+7. Confirm Cloudflare production deployment when the app bundle changes.
+8. Phone-test the exact live build when the user-facing app changes.
+
+Exporter changes additionally require a successful `Export Octagon Verdict V2 Package` workflow and inspection of the generated artifact.
 
 ## Next safe action
 
-Move the Octagon Verdict knowledge-pack/export owner from V1 to V2. Generate it directly from `rankingModel.ts`, canonical ranking inputs, profile presentation data, and real direct-fight ledgers without browser-global scraping or duplicate score ownership. Preserve the zero-cost manual Custom GPT upload workflow.
+Finish the routed desktop profile drawer and local V2 ownership of all real fighter images. Preserve the current mobile full-screen profile and canonical `/fighters/:slug` route.
 
-After that, finish the routed desktop profile drawer and local V2 fighter-photo ownership before starting Home personalization.
+After those two remaining Rankings-adjacent migrations, begin real Home personalization and onboarding.
 
 ## New-chat starter prompt
 
-> Continue the Octagon HQ V2 rebuild from current `main` in `codyking0602/Octagon-HQ`. First read `docs/HANDOFF.md`, `docs/product-blueprint.md`, `docs/RANKINGS-MIGRATION.md`, `docs/rankings-parity-contract.md`, and `docs/intelligence-verdict-flow.md`, then inspect current `main`. The complete 80-fighter calculation migration, compact Rankings controls, full fighter profiles, audited Signature Fight links, and final Intelligence/Octagon Verdict handoff are complete. Compare and Ask Why are prompt handoffs into Intelligence—not a standalone in-app comparison engine. Do not recreate static ranking ownership, duplicate comparison calculations, or V1's global runtime architecture. The next safe milestone is a V2-owned Octagon Verdict knowledge-pack/export workflow built directly from canonical V2 data with exact-head green validation.
+> Continue the Octagon HQ V2 rebuild from current `main` in `codyking0602/Octagon-HQ`. First read `docs/HANDOFF.md`, `docs/product-blueprint.md`, `docs/RANKINGS-MIGRATION.md`, `docs/rankings-parity-contract.md`, `docs/intelligence-verdict-flow.md`, and `docs/octagon-verdict-export.md`, then inspect current `main`. The complete 80-fighter calculation migration, compact Rankings controls, full fighter profiles, audited Signature Fight links, final Intelligence handoff, and native V2 Octagon Verdict exporter are complete. Compare and Ask Why are prompt handoffs into Intelligence—not a standalone in-app comparison engine. Do not recreate static ranking ownership, duplicate comparison calculations, generated export data as source, or V1's global runtime architecture. The next safe milestones are the routed desktop profile drawer and local V2 ownership of real fighter photos, followed by Home personalization.

@@ -4,7 +4,7 @@ _Last updated: 2026-07-24_
 
 ## Current status
 
-The calculation migration and approved mobile Rankings/profile presentation are complete.
+The calculation migration, approved mobile Rankings/profile presentation, Intelligence handoff, and Octagon Verdict export migration are complete.
 
 V2 now has:
 
@@ -20,6 +20,7 @@ V2 now has:
 - direct full-screen mobile fighter profiles for all 80 fighters;
 - audited Watch Moment and Signature Fight destinations;
 - final Compare and Ask Why handoffs into Intelligence/Octagon Verdict;
+- a native V2 JSON/Markdown knowledge exporter and artifact workflow;
 - no hand-written ranking, score, or OVR array.
 
 The former `src/features/rankings/rankingData.ts` scaffold has been deleted and must not be recreated.
@@ -39,9 +40,9 @@ The output fixture is test-only. The live app calculates from the typed input da
 2. `engine/categoryCalculators.ts` calculates Championship, Opponent Quality, Prime Dominance, Longevity, Peak Apex, Loss Context, and Era Depth.
 3. `engine/rankingEngine.ts` calculates weighted totals, modifiers, tie breakers, ranks, and OVRs.
 4. `rankingModel.ts` derives the app-facing boards, visible stats, presentation values, and profile lookup.
-5. Rankings, Home, fighter profiles, and Intelligence prompts consume `rankingModel.ts` only for ranking values.
+5. Rankings, Home, fighter profiles, Intelligence prompts, and the Octagon Verdict exporter consume these owners without recalculating or freezing rankings elsewhere.
 
-Ranks and OVRs must never be manually entered into presentation records.
+Ranks and OVRs must never be manually entered into presentation or export records.
 
 ## Completed parity gate
 
@@ -88,6 +89,26 @@ The UI must consume only the calculated ranking model for ranks, records, OVRs, 
 - Octagon Verdict's instructions own verdict-first writing, the losing fighter's real counterargument, why the winner still wins, and better-fighter versus better-UFC-resume framing.
 - Do not build a second comparison engine or duplicate score ownership.
 
+## Octagon Verdict synchronization
+
+V2 now owns the complete export workflow:
+
+- `src/features/intelligence/octagonVerdictExport.ts` packages calculated V2 data;
+- `scripts/export-octagon-verdict.mjs` generates the package with `npm run export:verdict`;
+- `.github/workflows/export-octagon-verdict.yml` validates and uploads the package on relevant pull requests, relevant changes to `main`, and manual dispatch;
+- `docs/octagon-verdict-export.md` documents generation and the manual Custom GPT upload step.
+
+The package includes:
+
+- the master JSON feed;
+- a compact retrieval index;
+- one JSON file for each of the 80 ranked fighters;
+- calculated division boards;
+- direct-matchup JSON derived from canonical ranked-fighter UFC fight facts;
+- one upload-ready Markdown knowledge document.
+
+Reciprocal direct-fight records are reconciled by fighter pair and date. Head-to-head results are context only and never override the higher calculated total score. Generated files remain ignored outputs and may not become an editable second source.
+
 ## Remaining Rankings-adjacent work
 
 ### Desktop profile behavior
@@ -103,22 +124,16 @@ The UI must consume only the calculated ranking model for ranks, records, OVRs, 
 - crop, resize, recenter, lightly sharpen, and convert only;
 - remove the temporary V1 asset-host dependency before V1 retirement.
 
-### Octagon Verdict synchronization
-
-- move the knowledge-pack/export workflow from V1 to V2;
-- generate directly from `rankingModel.ts`, canonical inputs, profile presentation data, and real direct-fight ledgers;
-- preserve the zero-cost manual Custom GPT upload workflow;
-- do not scrape browser globals or copy frozen ranking outputs into a second source.
-
 ## Stop rules
 
 - Do not recreate `rankingData.ts`.
 - Do not manually reorder fighters.
-- Do not manually enter rank, OVR, total, or category scores in UI data.
+- Do not manually enter rank, OVR, total, or category scores in UI or export data.
 - Do not copy V1's global ordered-script architecture.
-- Do not build a second calculation, readiness, profile, or comparison path.
+- Do not build a second calculation, readiness, profile, comparison, or export path.
+- Do not commit generated Octagon Verdict artifacts as authoritative source data.
 - Do not restore leaderboard taglines, full Watch Moment pills, or category-chip walls without Cody explicitly changing the approved compact-row direction.
 
 ## New-chat instruction
 
-Read `docs/HANDOFF.md`, `docs/product-blueprint.md`, `docs/RANKINGS-MIGRATION.md`, `docs/rankings-parity-contract.md`, and `docs/intelligence-verdict-flow.md`, then inspect current `main`. The complete 80-fighter calculation migration, compact Rankings presentation, fighter profiles, audited video links, and Intelligence handoffs are finished. Compare and Ask Why are prompt handoffs into Octagon Verdict, not an in-app comparison engine. Do not rewrite the engine, recreate static ranking arrays, duplicate comparison calculations, or change scoring without Cody's approval. The next Rankings-adjacent milestone is the V2-owned Octagon Verdict knowledge-pack/export workflow, followed by the desktop profile drawer and local fighter-photo ownership.
+Read `docs/HANDOFF.md`, `docs/product-blueprint.md`, `docs/RANKINGS-MIGRATION.md`, `docs/rankings-parity-contract.md`, `docs/intelligence-verdict-flow.md`, and `docs/octagon-verdict-export.md`, then inspect current `main`. The complete 80-fighter calculation migration, compact Rankings presentation, fighter profiles, audited video links, Intelligence handoffs, and native V2 Octagon Verdict exporter are finished. Compare and Ask Why are prompt handoffs into Octagon Verdict, not an in-app comparison engine. Do not rewrite the engine, recreate static ranking arrays, duplicate comparison/export calculations, commit generated export files as source, or change scoring without Cody's approval. The next Rankings-adjacent milestones are the routed desktop profile drawer and local fighter-photo ownership.
