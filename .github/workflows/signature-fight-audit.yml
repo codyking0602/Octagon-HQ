@@ -1,0 +1,43 @@
+name: Signature Fight Audit
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit live Signature Fight URLs
+        id: audit
+        continue-on-error: true
+        env:
+          SIGNATURE_FIGHT_AUDIT: "1"
+        run: npx vitest run src/features/rankings/profileSignatureFightUrls.audit.test.ts
+
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: signature-fight-audit
+          path: signature-fight-audit.json
+          if-no-files-found: error
+
+      - name: Preserve audit result
+        if: steps.audit.outcome == 'failure'
+        run: exit 1
