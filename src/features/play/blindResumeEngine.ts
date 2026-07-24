@@ -1,11 +1,11 @@
-import { playFighters, type PlayFighter, type PlayGender } from "./playFighterPool";
+import { rankedPlayFighters, type PlayGender, type RankedPlayFighter } from "./playFighterPool";
 
 export const BLIND_RESUME_ROUNDS = 5;
 
 export interface BlindResumePair {
   id: string;
-  fighterA: PlayFighter;
-  fighterB: PlayFighter;
+  fighterA: RankedPlayFighter;
+  fighterB: RankedPlayFighter;
   gender: PlayGender;
   scoreGap: number;
   band: "close" | "stretch" | "wildcard";
@@ -70,15 +70,6 @@ function inBand(gap: number, band: BlindResumePair["band"]) {
   return limits.min === 0 ? gap <= limits.max : gap > limits.min && gap <= limits.max;
 }
 
-function shuffle<T>(rows: readonly T[], random: () => number) {
-  const copy = [...rows];
-  for (let index = copy.length - 1; index > 0; index -= 1) {
-    const swap = Math.floor(random() * (index + 1));
-    [copy[index], copy[swap]] = [copy[swap], copy[index]];
-  }
-  return copy;
-}
-
 function pickGender(round: number, womenUsed: boolean, random: () => number): PlayGender {
   if (womenUsed) return "men";
   if (round === BLIND_RESUME_ROUNDS - 1 && random() < 0.35) return "women";
@@ -99,7 +90,7 @@ export function createBlindResumeRounds(seed: string): BlindResumeRoundSet {
 
   for (let round = 0; round < BLIND_RESUME_ROUNDS; round += 1) {
     const gender = pickGender(round, womenUsed, random);
-    const pool = playFighters.filter((fighter) => fighter.gender === gender);
+    const pool = rankedPlayFighters.filter((fighter) => fighter.gender === gender);
     const band = chooseBand(random);
     const available = pool.filter((fighter) => !usedNames.has(fighter.id));
     const anchors = available.length >= 2 ? available : pool;
@@ -118,7 +109,7 @@ export function createBlindResumeRounds(seed: string): BlindResumeRoundSet {
       const fit = 1 / (1 + Math.abs(gap - bandTarget[band].target));
       return fit / Math.pow(1 + (appearances.get(fighter.id) ?? 0), 2);
     }, random);
-    const ordered = random() < 0.5 ? [anchor, opponent] : [opponent, anchor];
+    const [fighterA, fighterB] = random() < 0.5 ? [anchor, opponent] : [opponent, anchor];
     const pairKey = [anchor.id, opponent.id].sort().join("|");
     usedPairs.add(pairKey);
     usedNames.add(anchor.id);
@@ -128,8 +119,8 @@ export function createBlindResumeRounds(seed: string): BlindResumeRoundSet {
     womenUsed ||= gender === "women";
     pairs.push({
       id: `round-${round + 1}-${pairKey}`,
-      fighterA: ordered[0],
-      fighterB: ordered[1],
+      fighterA,
+      fighterB,
       gender,
       scoreGap: Math.abs(anchor.model.rawScore - opponent.model.rawScore),
       band,
@@ -150,7 +141,7 @@ function formatNumber(value: number, digits = 0) {
   return value.toFixed(digits).replace(/\.0$/, "");
 }
 
-function apexRating(fighter: PlayFighter) {
+function apexRating(fighter: RankedPlayFighter) {
   return Math.max(55, Math.min(99, Math.round(55 + (fighter.model.apexPeak / 6) * 44)));
 }
 
