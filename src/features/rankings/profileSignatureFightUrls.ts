@@ -76,7 +76,7 @@ export const profileSignatureFightUrls = {
   "rose-namajunas": "https://youtu.be/G2vSZhl6BFY?is=IYpvomkm6ZdY8fYg",
   "ronda-rousey": "https://youtu.be/tbKIVH8nY60?is=y5-Dat4Qb7IjqLe_",
   "jessica-andrade": "https://youtu.be/nQIBZ2fjrMQ?is=_o9fLH0odv_P1miD",
-  "cris-cyborg": "https://youtu.be/iLZwZX39FXU",
+  "cris-cyborg": "https://youtu.be/CLWQ06V2TOw",
   "carla-esparza": "https://youtu.be/jJeZ2wZv0YQ?is=QOK9v0B_kfqvZgqd",
   "alexa-grasso": "https://youtu.be/P0U_W35_cJw?is=mRmw6BHCQGDfTygx",
   "kayla-harrison": "https://youtu.be/UUMlLth-4uQ?is=ZmRXsN5bIzaY1_rq",
