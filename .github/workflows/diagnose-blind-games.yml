@@ -3,9 +3,7 @@ name: Diagnose Blind Games
 on:
   pull_request:
     paths:
-      - "src/features/play/**"
-      - "src/features/intelligence/**"
-      - "src/styles/**"
+      - "src/**"
       - ".github/workflows/diagnose-blind-games.yml"
 
 permissions:
@@ -20,12 +18,12 @@ jobs:
         with:
           node-version-file: .nvmrc
       - run: npm install
-      - name: Run Blind game tests
+      - name: Run full test report
         continue-on-error: true
-        run: npm test -- src/features/play/blindGames.test.tsx --reporter=json --outputFile=blind-games-results.json
+        run: npm test -- --reporter=json --outputFile=test-results.json
       - name: Upload result
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: blind-games-results
-          path: blind-games-results.json
+          name: test-results
+          path: test-results.json
