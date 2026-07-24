@@ -1,0 +1,4 @@
+project_id = "octagon-hq"
+
+[functions.pin-auth]
+verify_jwt = false
