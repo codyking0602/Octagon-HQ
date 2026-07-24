@@ -122,6 +122,15 @@ function findLeaderChallengeSetup(board: FindLeaderBoard): ChallengeJson {
   return JSON.parse(JSON.stringify({ day: board.day, board })) as ChallengeJson;
 }
 
+function findLeaderChallengeResult(result: FindLeaderResult): ChallengeJson {
+  return {
+    score: result.score,
+    perfect: result.perfect,
+    fatalId: result.fatalId,
+    eliminated: [...result.eliminated],
+  };
+}
+
 function DailyHistory({ rows, today }: { rows: FindLeaderHistoryRow[]; today: string }) {
   const stats = findLeaderStreaks(rows, today);
   const rowByDay = new Map(rows.map((row) => [row.day, row]));
@@ -177,7 +186,7 @@ function FindLeaderGame({
 }: {
   board: FindLeaderBoard;
   onExit: () => void;
-  onComplete: (score: number) => void;
+  onComplete: (result: FindLeaderResult) => void;
   challengeFrom?: string;
 }) {
   const { beginChallenge } = usePlayChallenges();
@@ -191,7 +200,7 @@ function FindLeaderGame({
   function finish(score: number, fatalId: string | null, nextEliminated: string[]) {
     const next = { score, perfect: score === 10, fatalId, eliminated: nextEliminated };
     setResult(next);
-    onComplete(score);
+    onComplete(next);
   }
 
   function eliminate(id: string) {
@@ -225,7 +234,7 @@ function FindLeaderGame({
       gameTitle: "Find the Leader",
       summary: board.question,
       setup: findLeaderChallengeSetup(board),
-      creatorResult: { score: result.score, perfect: result.perfect },
+      creatorResult: findLeaderChallengeResult(result),
       shareTitle: "Find the Leader Challenge",
       shareText: `I challenged you to the same Find the Leader board: ${board.question} Can you beat my score?`,
       shareUrl: url.toString(),
@@ -360,12 +369,12 @@ export default function PlayPage() {
     ? profiles.find((profile) => profile.id === profileChallenge.creatorId)
     : null;
 
-  function complete(score: number) {
+  function complete(result: FindLeaderResult) {
     if (profileChallenge && activeProfile?.id === profileChallenge.recipientId) {
-      submitResult(profileChallenge.code, { score });
+      submitResult(profileChallenge.code, findLeaderChallengeResult(result));
       return;
     }
-    setHistory(recordFindLeaderAttempt(gameDay, score));
+    setHistory(recordFindLeaderAttempt(gameDay, result.score));
   }
 
   function openFindLeader() {
