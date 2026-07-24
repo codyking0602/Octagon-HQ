@@ -1,13 +1,25 @@
+.game-result-actions-wrap {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+}
+
+.game-result-actions {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+}
+
+.game-result-actions button {
+  width: 100%;
+  min-height: 48px;
+}
+
+.game-action-status,
 .find-challenge-status {
   min-height: 14px;
   margin: 0;
   color: var(--text-muted);
   font-size: 9px;
   text-align: center;
-}
-
-@media (min-width: 680px) {
-  .find-result-actions {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
 }
