@@ -10,6 +10,7 @@ import {
   CHALLENGE_TEST_PROFILES,
   canViewChallengeResults,
   challengeCounterpartId,
+  challengeScoreLabel,
   resultScore,
   type ChallengeJson,
   type ChallengeProfile,
@@ -168,11 +169,13 @@ function ResultsDialog({
   const responder = profiles.find((profile) => profile.id === challenge.recipientId);
   const creatorScore = resultScore(challenge.creatorResult);
   const responderScore = resultScore(challenge.responderResult);
-  const verdict = creatorScore === responderScore
-    ? "Tie game"
-    : (creatorScore ?? -1) > (responderScore ?? -1)
-      ? `${creator?.displayName ?? "Sender"} wins`
-      : `${responder?.displayName ?? "Responder"} wins`;
+  const verdict = creatorScore === null || responderScore === null
+    ? "Matchup complete"
+    : creatorScore === responderScore
+      ? "Tie game"
+      : creatorScore > responderScore
+        ? `${creator?.displayName ?? "Sender"} wins`
+        : `${responder?.displayName ?? "Responder"} wins`;
 
   return (
     <div className="challenge-overlay" role="presentation" onMouseDown={(event) => {
@@ -196,13 +199,13 @@ function ResultsDialog({
           <article>
             <small>SENDER</small>
             <strong>{creator?.displayName ?? "Sender"}</strong>
-            <b>{creatorScore === null ? "DONE" : `${creatorScore}/10`}</b>
+            <b>{challengeScoreLabel(challenge.gameId, challenge.creatorResult)}</b>
           </article>
           <em>VS</em>
           <article>
             <small>RESPONDER</small>
             <strong>{responder?.displayName ?? "Responder"}</strong>
-            <b>{responderScore === null ? "DONE" : `${responderScore}/10`}</b>
+            <b>{challengeScoreLabel(challenge.gameId, challenge.responderResult)}</b>
           </article>
         </div>
         <button type="button" className="primary-action challenge-results-dialog__close" onClick={onClose}>CLOSE</button>
