@@ -12,7 +12,7 @@ import {
   saveBlindRankPack,
   saveBlindRankReveal,
 } from "./blindRankEngine";
-import { blindRankRating, type BlindRankPackId, type PlayFighter } from "./playFighterPool";
+import type { BlindRankPackId, PlayFighter } from "./playFighterPool";
 import { shareGameChallenge } from "./challengeShare";
 
 function packIsValid(value: string | null): value is BlindRankPackId {
@@ -144,7 +144,6 @@ export default function BlindRankPage() {
                   <b>#{index + 1}</b>
                   <FighterPhoto className="blind-rank-result__photo" name={fighter.name} src={fighter.thumbUrl} />
                   <span><strong>{fighter.name}</strong><small>{compactDivision(fighter)}</small></span>
-                  <em>{blindRankRating(fighter, packId)}</em>
                 </article>
               ) : null)}
             </div>
