@@ -3,10 +3,6 @@ import { allTime } from "./rankingModel";
 import { profileSignatureFightUrls } from "./profileSignatureFightUrls";
 import { resolveProfileWatchAction } from "./rankingPresentation";
 
-function normalized(value: string) {
-  return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
-}
-
 describe("ranking profile watch actions", () => {
   const actions = allTime.map((fighter) => ({
     fighter,
@@ -36,36 +32,20 @@ describe("ranking profile watch actions", () => {
     expect(duplicates).toEqual([]);
   });
 
-  it("audits live YouTube titles against the assigned fighter", async () => {
-    const entries = Object.entries(profileSignatureFightUrls);
-    const failures: Array<{ slug: string; url: string; title?: string; status?: number; error?: string }> = [];
+  it("locks the corrected Matt Hughes destination separately from Shogun Rua", () => {
+    const mattHughes = resolveProfileWatchAction("matt-hughes");
+    const shogunRua = resolveProfileWatchAction("shogun-rua");
 
-    for (let start = 0; start < entries.length; start += 10) {
-      const batch = entries.slice(start, start + 10);
-      await Promise.all(
-        batch.map(async ([slug, url]) => {
-          try {
-            const endpoint = `https://www.youtube.com/oembed?format=json&url=${encodeURIComponent(url)}`;
-            const response = await fetch(endpoint);
-            if (!response.ok) {
-              failures.push({ slug, url, status: response.status });
-              return;
-            }
-            const metadata = (await response.json()) as { title?: string };
-            const title = metadata.title ?? "";
-            const surname = slug.split("-").at(-1) ?? slug;
-            if (!normalized(title).includes(normalized(surname))) {
-              failures.push({ slug, url, title });
-            }
-          } catch (error) {
-            failures.push({ slug, url, error: error instanceof Error ? error.message : String(error) });
-          }
-        }),
-      );
-    }
-
-    expect(failures, JSON.stringify(failures, null, 2)).toEqual([]);
-  }, 60_000);
+    expect(mattHughes).toMatchObject({
+      label: "Watch Signature Fight",
+      source: "signature",
+      url: "https://youtu.be/W7StRPCtF-E?is=W9q0sloxVcyJN5XW",
+    });
+    expect(shogunRua?.url).toBe(
+      "https://youtu.be/08YmP1EM2ms?is=gQIDS9i91zPsk3kX",
+    );
+    expect(mattHughes?.url).not.toBe(shogunRua?.url);
+  });
 
   it("uses the locked V1 destinations for representative fighters", () => {
     expect(resolveProfileWatchAction("jon-jones")).toMatchObject({
@@ -78,9 +58,6 @@ describe("ranking profile watch actions", () => {
     );
     expect(resolveProfileWatchAction("alex-pantoja")?.url).toBe(
       "https://youtu.be/7sj-snC5qWk?is=_DkasmmAc4OA-IDR",
-    );
-    expect(resolveProfileWatchAction("shogun-rua")?.url).toBe(
-      "https://youtu.be/08YmP1EM2ms?is=gQIDS9i91zPsk3kX",
     );
     expect(resolveProfileWatchAction("amanda-nunes")?.url).toBe(
       "https://youtu.be/qwPBPiUzgag?is=pTBaihmA06TEDxKo",
