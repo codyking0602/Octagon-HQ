@@ -199,13 +199,13 @@ export default function KeepCutPage() {
         {current ? (
           <section
             className="keep-cut-current"
-            style={{ gridTemplateColumns: "minmax(132px, 176px) minmax(0, 1fr)" }}
+            style={{ gridTemplateColumns: "96px minmax(0, 1fr)" }}
           >
             <FighterPhoto
               name={current.name}
               src={current.thumbUrl}
               className="keep-cut-current__photo"
-              style={{ aspectRatio: "1 / 1", objectFit: "contain", objectPosition: "center" }}
+              style={{ width: "96px", height: "96px", aspectRatio: "1 / 1", objectFit: "cover", objectPosition: "center" }}
             />
             <div>
               <span>REVEAL {decisions.length + 1} OF 8</span>
