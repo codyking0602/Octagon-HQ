@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { shareGameChallenge } from "./challengeShare";
+import { GameResultActions } from "./GameResultActions";
 import {
   clampWavelength,
   wavelengthDistanceCopy,
@@ -126,12 +127,12 @@ export default function WavelengthGame({
               <em>{item.rating}</em>
             </article>
           ))}
-          <div className="wavelength-result-actions">
-            <button className="primary-action" type="button" onClick={challengeSomeone}>CHALLENGE SOMEONE</button>
-            <button className="find-secondary-action" type="button" onClick={replay}>REPLAY</button>
-            <button className="find-secondary-action" type="button" onClick={onExit}>ALL GAMES</button>
-          </div>
-          <p className="wavelength-share-status" role="status">{challengeStatus}</p>
+          <GameResultActions
+            onChallenge={() => void challengeSomeone()}
+            onReplay={replay}
+            onAllGames={onExit}
+            status={challengeStatus}
+          />
         </section>
       </div>
     );
