@@ -1,0 +1,58 @@
+name: Export Octagon Verdict V2 Package
+
+on:
+  pull_request:
+    paths:
+      - "scripts/export-octagon-verdict.mjs"
+      - "src/features/intelligence/octagonVerdictExport.ts"
+      - "src/features/intelligence/octagonVerdictExport.test.ts"
+      - "src/features/rankings/**"
+      - "package.json"
+      - ".github/workflows/export-octagon-verdict.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build V2 Octagon Verdict package
+        run: npm run export:verdict
+
+      - name: Validate generated package
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const root = 'artifacts/octagon-verdict';
+          const feed = JSON.parse(fs.readFileSync(`${root}/octagon-verdict-data.json`, 'utf8'));
+          const index = JSON.parse(fs.readFileSync(`${root}/index.json`, 'utf8'));
+          if (feed.source !== 'octagon-hq-v2-calculated-typescript') throw new Error('Unexpected export source.');
+          if (feed.fighterCount !== 80 || index.fighterCount !== 80) throw new Error('Exporter did not produce all 80 fighters.');
+          if (!Array.isArray(feed.directFightMatchups) || feed.directFightMatchups.length === 0) throw new Error('Direct matchup export is empty.');
+          if (!fs.existsSync(`${root}/octagon-verdict-knowledge.md`)) throw new Error('Knowledge document is missing.');
+          if (fs.readdirSync(`${root}/fighters`).length !== 80) throw new Error('Individual fighter files do not reconcile.');
+          if (fs.readdirSync(`${root}/matchups`).length !== feed.directFightMatchups.length) throw new Error('Individual matchup files do not reconcile.');
+          console.log(`Validated ${feed.fighterCount} fighters and ${feed.directFightMatchups.length} direct matchups.`);
+          NODE
+
+      - name: Upload Octagon Verdict package
+        uses: actions/upload-artifact@v4
+        with:
+          name: octagon-verdict-v2-package
+          path: artifacts/octagon-verdict/
+          if-no-files-found: error
