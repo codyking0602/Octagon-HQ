@@ -70,10 +70,12 @@ export default function FighterProfilePage() {
   const whyNotCopy = whyNotProfileCopy(fighter);
 
   function openComparison() {
+    if (!fighter) return;
     navigate(`/intelligence?mode=compare&fighter=${fighter.slug}`);
   }
 
   async function askWhy() {
+    if (!fighter) return;
     const copied = await copyText(whyPromptFor(fighter));
     navigate(`/intelligence?mode=why&fighter=${fighter.slug}`, { state: { copied } });
   }
