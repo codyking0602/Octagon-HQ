@@ -1,5 +1,6 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { copyText, whyPromptFor } from "../intelligence/intelligence";
 import { FighterPhoto } from "./FighterPhoto";
 import { getFighter } from "./rankingModel";
 import { resolveProfileWatchAction } from "./rankingPresentation";
@@ -47,7 +48,6 @@ export function whyNotProfileCopy(fighter: { rank: number; slug: string; whyNotH
 export default function FighterProfilePage() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const whyRef = useRef<HTMLElement | null>(null);
   const fighter = getFighter(slug);
   const [activeCategory, setActiveCategory] = useState<string | null>("championship");
   const categories = useMemo(() => (fighter ? profileCategoryRows(fighter) : []), [fighter]);
@@ -69,13 +69,24 @@ export default function FighterProfilePage() {
   const whyNotHeading = fighter.rank === 1 ? "Why Not Lower?" : "Why Not Ranked Higher?";
   const whyNotCopy = whyNotProfileCopy(fighter);
 
+  function openComparison() {
+    if (!fighter) return;
+    navigate(`/intelligence?mode=compare&fighter=${fighter.slug}`);
+  }
+
+  async function askWhy() {
+    if (!fighter) return;
+    const copied = await copyText(whyPromptFor(fighter));
+    navigate(`/intelligence?mode=why&fighter=${fighter.slug}`, { state: { copied } });
+  }
+
   return (
     <div className="page fighter-profile-page v1-profile">
       <div className="profile-toolbar">
         <Link className="back-link" to="/rankings">‹ Back to Rankings</Link>
       </div>
 
-      <section className="profile-photo-card" aria-label={`${fighter.name} photo`}> 
+      <section className="profile-photo-card" aria-label={`${fighter.name} photo`}>
         <FighterPhoto name={fighter.name} src={fighter.profileUrl} className="profile-photo-card__image" />
         <span className="profile-photo-card__ovr" data-testid="photo-ovr-badge"><strong>{fighter.ovr}</strong><small>OVR</small></span>
       </section>
@@ -90,9 +101,9 @@ export default function FighterProfilePage() {
       </section>
 
       <section className="profile-actions" aria-label="Profile actions">
-        <button type="button" onClick={() => navigate("/compare")}>Compare</button>
-        <button type="button" onClick={() => whyRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}>Ask Why</button>
-        {watchAction ? <a href={watchAction.url} target="_blank" rel="noreferrer">{watchAction.label}</a> : null}
+        <button type="button" onClick={openComparison}>Compare</button>
+        <button type="button" onClick={() => void askWhy()}>Ask Why</button>
+        {watchAction ? <a href={watchAction.url} target="_blank" rel="noreferrer" aria-label={watchAction.label}>Watch Fight</a> : null}
         <button type="button" onClick={() => shareProfile(fighter.name, fighter.slug)}><svg className="profile-action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0 5 5m-5-5-5 5"/><path d="M5 12v7h14v-7"/></svg>Share</button>
       </section>
 
@@ -133,7 +144,7 @@ export default function FighterProfilePage() {
         </div>
       </section>
 
-      <section className="surface-card profile-copy-card" ref={whyRef} aria-labelledby="why-ranked-here">
+      <section className="surface-card profile-copy-card" aria-labelledby="why-ranked-here">
         <h2 id="why-ranked-here">Why Ranked Here</h2>
         <p>{profileCopy(fighter.whyRankedHere, fighter.rank)}</p>
       </section>

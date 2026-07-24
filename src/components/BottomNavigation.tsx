@@ -5,7 +5,6 @@ const destinations = [
   { to: "/rankings", label: "Rankings", end: false },
   { to: "/play", label: "Play", end: false },
   { to: "/picks", label: "Picks", end: false },
-  { to: "/intelligence", label: "Intelligence", end: false },
 ] as const;
 
 export function BottomNavigation() {
