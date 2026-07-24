@@ -2,6 +2,10 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import WavelengthGame from "./WavelengthGame";
 import {
+  createChallengeWavelengthRound,
+  nextChallengeWavelengthClue,
+} from "./wavelengthChallenge";
+import {
   createWavelengthRound,
   desiredWavelengthCorrection,
   nextWavelengthClue,
@@ -36,13 +40,24 @@ describe("Wavelength engine", () => {
     expect(wavelengthScore(68, 75)).toBe(93);
     expect(desiredWavelengthCorrection(80, 40, 2, () => 0)).toBeGreaterThan(80);
   });
+
+  it("recreates the same challenge and the same adaptive clue for an identical guess path", () => {
+    const seed = "same-wavelength-challenge";
+    const first = createChallengeWavelengthRound(seed);
+    const second = createChallengeWavelengthRound(seed);
+    expect(second).toEqual(first);
+
+    const firstNext = nextChallengeWavelengthClue(first, 50, 1, seed, []);
+    const secondNext = nextChallengeWavelengthClue(second, 50, 1, seed, []);
+    expect(secondNext).toEqual(firstNext);
+  });
 });
 
 describe("Wavelength game", () => {
   beforeEach(() => window.localStorage.clear());
 
-  it("locks four guesses and reveals the final score and all four clues", () => {
-    render(<WavelengthGame onExit={() => undefined} />);
+  it("locks four guesses and reveals the standard challenge, replay, and all-games actions", () => {
+    render(<WavelengthGame challengeSeed="rendered-challenge" onExit={() => undefined} />);
     expect(screen.getByText("CLUE 1 OF 4")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "LOCK GUESS & REVEAL NEXT CLUE" }));
@@ -56,5 +71,8 @@ describe("Wavelength game", () => {
     expect(screen.getByText("FINAL SCORE")).toBeInTheDocument();
     expect(screen.getByText("HIDDEN NUMBER")).toBeInTheDocument();
     expect(document.querySelectorAll(".wavelength-reveal__row")).toHaveLength(4);
+    expect(screen.getByRole("button", { name: "CHALLENGE SOMEONE" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "REPLAY" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "ALL GAMES" })).toBeInTheDocument();
   });
 });
