@@ -1,11 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { brand, fighterAsset } from "../../config/brand";
 import { allTime } from "./rankingModel";
 
-const publicRoot = fileURLToPath(new URL("../../../public/", import.meta.url));
+const publicRoot = path.resolve(process.cwd(), "public");
 const fighterDirectory = path.join(publicRoot, "assets", "fighters");
 
 function fileHeader(filePath: string, length: number) {
