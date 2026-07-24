@@ -7,6 +7,7 @@ import {
   type PlayChallenge,
 } from "./challengeModel";
 import { challengeCounterpart, usePlayChallenges } from "./ChallengeProvider";
+import { challengePlayRoute } from "./challengeRuntime";
 
 export type ChallengeCenterFilter = "all" | "received" | "sent";
 
@@ -32,6 +33,7 @@ function rowCopy(challenge: PlayChallenge, profileId: string) {
 
   if (direction === "sent") {
     if (status === "completed") return { eyebrow: "COMPLETED WITH", detail: `Both finished ${timeAgo(challenge.completedAt ?? challenge.createdAt)}`, action: "RESULTS" };
+    if (status === "declined") return { eyebrow: "DECLINED BY", detail: "They passed on this challenge", action: "DECLINED" };
     if (status === "opened") return { eyebrow: "OPENED BY", detail: "They opened it · waiting on their result", action: "OPENED" };
     return { eyebrow: "SENT TO", detail: `Waiting for them to open · ${timeAgo(challenge.createdAt)}`, action: "WAITING" };
   }
@@ -41,21 +43,9 @@ function rowCopy(challenge: PlayChallenge, profileId: string) {
   return { eyebrow: "NEW FROM", detail: `Sent ${timeAgo(challenge.createdAt)}`, action: "PLAY" };
 }
 
-function challengeRoute(challenge: PlayChallenge) {
-  if (challenge.gameId === "find-leader") {
-    const setup = challenge.setup;
-    const day = setup && !Array.isArray(setup) && typeof setup === "object" && typeof setup.day === "string"
-      ? setup.day
-      : "";
-    const params = new URLSearchParams({ challenge: challenge.code });
-    if (day) params.set("day", day);
-    return `/play/find-leader?${params.toString()}`;
-  }
-  return "/play";
-}
-
 function statusClass(status: ChallengeStatus) {
   if (status === "completed") return " is-completed";
+  if (status === "declined") return " is-declined";
   if (status === "new") return " is-new";
   return "";
 }
@@ -69,6 +59,7 @@ export function ChallengeCenter() {
     challenges,
     setActiveProfile,
     markOpened,
+    dismissChallenge,
     viewResults,
   } = usePlayChallenges();
   const [filter, setFilter] = useState<ChallengeCenterFilter>("all");
@@ -90,7 +81,7 @@ export function ChallengeCenter() {
 
   function openChallenge(challenge: PlayChallenge) {
     markOpened(challenge.code);
-    navigate(challengeRoute(challenge));
+    navigate(challengePlayRoute(challenge));
   }
 
   function chooseFilter(value: ChallengeCenterFilter) {
@@ -145,8 +136,9 @@ export function ChallengeCenter() {
               const status = challengeStatus(challenge, activeProfile.id);
               const counterpart = challengeCounterpart(challenge, activeProfile.id, profiles);
               const copy = rowCopy(challenge, activeProfile.id);
-              const canPlay = direction === "received" && status !== "completed";
+              const canPlay = direction === "received" && status !== "completed" && status !== "declined";
               const canView = status === "completed";
+              const dismissLabel = direction === "received" && !canView ? "IGNORE" : "REMOVE";
 
               return (
                 <article className={`challenge-center__row${statusClass(status)}`} key={challenge.code}>
@@ -156,13 +148,23 @@ export function ChallengeCenter() {
                     <strong>{counterpart?.displayName ?? "Octagon HQ profile"} · {challenge.gameTitle}</strong>
                     <small>{copy.detail}</small>
                   </div>
-                  {canView ? (
-                    <button type="button" className="results" onClick={() => viewResults(challenge.code)}>RESULTS</button>
-                  ) : canPlay ? (
-                    <button type="button" onClick={() => openChallenge(challenge)}>PLAY</button>
-                  ) : (
-                    <span className={`challenge-center__status is-${status}`}>{copy.action}</span>
-                  )}
+                  <div className="challenge-center__row-actions">
+                    {canView ? (
+                      <button type="button" className="results" onClick={() => viewResults(challenge.code)}>RESULTS</button>
+                    ) : canPlay ? (
+                      <button type="button" onClick={() => openChallenge(challenge)}>PLAY</button>
+                    ) : (
+                      <span className={`challenge-center__status is-${status}`}>{copy.action}</span>
+                    )}
+                    <button
+                      type="button"
+                      className="challenge-center__dismiss"
+                      aria-label={`${dismissLabel} ${counterpart?.displayName ?? "challenge"} ${challenge.gameTitle}`}
+                      onClick={() => dismissChallenge(challenge.code)}
+                    >
+                      {dismissLabel}
+                    </button>
+                  </div>
                 </article>
               );
             })}
@@ -175,7 +177,7 @@ export function ChallengeCenter() {
         </>
       ) : (
         <div className="challenge-center__empty">
-          No challenges here yet. Finish Find the Leader and send the exact board to the other preview profile.
+          No challenges here yet. Finish a game and send the exact setup to another profile.
         </div>
       )}
     </section>
