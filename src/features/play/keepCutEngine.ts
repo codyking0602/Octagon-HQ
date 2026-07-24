@@ -91,6 +91,7 @@ const TIER_ORDER: readonly KeepCutTierId[] = ["elite", "great", "good", "average
 const HISTORY_KEY = "octagon-hq:keep-cut-history:v2";
 const HISTORY_LIMIT = 4;
 const GENERATION_ATTEMPTS = 14;
+const TWO_BAD_LINEUP_RATE = 0.16;
 
 const undisputedChampions = new Set([
   "Jon Jones", "Georges St-Pierre", "Demetrious Johnson", "Anderson Silva", "Khabib Nurmagomedov",
@@ -154,7 +155,7 @@ function shuffle<T>(rows: readonly T[], random: () => number) {
 }
 
 function packFor(packId: KeepCutPackId) {
-  return KEEP_CUT_PACKS.find((pack) => pack.id === packId) ?? KEEP_CUT_PACKS[0];
+  return KEEP_CUT_PACKS.find((pack) => pack.id === packId) ?? KEEP_CUT_PACKS[0]!;
 }
 
 function hasDivision(fighter: PlayFighter, division: string) {
@@ -261,13 +262,18 @@ function weightedTier(role: KeepCutRole, random: () => number) {
 function pickCandidate(
   rows: readonly { fighter: PlayFighter; tier: KeepCutTierId }[],
   target: KeepCutTierId,
-  role: KeepCutRole,
   used: Set<string>,
-  badUsed: boolean,
+  badCount: number,
+  badLimit: number,
+  allowBad: boolean,
   recentPressure: Map<string, number>,
   random: () => number,
 ) {
-  const eligible = rows.filter((row) => !used.has(row.fighter.id) && (!badUsed || row.tier !== "bad") && (role.allowBad || row.tier !== "bad"));
+  const eligible = rows.filter((row) => {
+    if (used.has(row.fighter.id)) return false;
+    if (row.tier !== "bad") return true;
+    return allowBad && badCount < badLimit;
+  });
   const targetIndex = TIER_ORDER.indexOf(target);
   const ordered = [...eligible].sort((left, right) => {
     const leftDistance = Math.abs(TIER_ORDER.indexOf(left.tier) - targetIndex);
@@ -294,22 +300,31 @@ function historyPressure(history: KeepCutHistory) {
   return pressure;
 }
 
-function attemptLineup(packId: KeepCutPackId, seed: string, history: KeepCutHistory, attempt: number) {
+function attemptLineup(
+  packId: KeepCutPackId,
+  seed: string,
+  history: KeepCutHistory,
+  twoBadRequested: boolean,
+  attempt: number,
+) {
   const random = mulberry32(hashSeed(`keep-cut|${packId}|${seed}|${attempt}`));
   const rows = keepCutPool(packId).map((fighter) => ({ fighter, tier: keepCutTier(keepCutRating(packId, fighter)) }));
+  const badLimit = twoBadRequested && rows.filter((row) => row.tier === "bad").length >= 2 ? 2 : 1;
   const pressure = historyPressure(history);
   const used = new Set<string>();
   const assignments: KeepCutAssignment[] = [];
   const fighters: PlayFighter[] = [];
-  let badUsed = false;
+  let badCount = 0;
 
   for (const role of KEEP_CUT_ROLES) {
-    const targetTier = weightedTier(role, random);
-    const picked = pickCandidate(rows, targetTier, role, used, badUsed, pressure, random);
+    const forcedBad = badLimit === 2 && (role.id === "trap-two" || role.id === "wildcard");
+    const targetTier = forcedBad ? "bad" : weightedTier(role, random);
+    const allowBad = role.allowBad || (badLimit === 2 && role.id === "trap-two");
+    const picked = pickCandidate(rows, targetTier, used, badCount, badLimit, allowBad, pressure, random);
     if (!picked) return null;
     fighters.push(picked.fighter);
     used.add(picked.fighter.id);
-    badUsed = badUsed || picked.tier === "bad";
+    if (picked.tier === "bad") badCount += 1;
     assignments.push({ roleId: role.id, targetTier, actualTier: picked.tier, fighterId: picked.fighter.id });
   }
 
@@ -330,10 +345,12 @@ export function createKeepCutLineup(
   seed: string,
   history: KeepCutHistory = { lineups: [], shapes: [] },
 ): KeepCutLineup {
+  const surpriseRandom = mulberry32(hashSeed(`keep-cut-two-bad|${packId}|${seed}`));
+  const twoBadRequested = surpriseRandom() < TWO_BAD_LINEUP_RATE;
   let best: ReturnType<typeof attemptLineup> = null;
   let bestPenalty = Number.POSITIVE_INFINITY;
   for (let attempt = 0; attempt < GENERATION_ATTEMPTS; attempt += 1) {
-    const candidate = attemptLineup(packId, seed, history, attempt);
+    const candidate = attemptLineup(packId, seed, history, twoBadRequested, attempt);
     if (!candidate) continue;
     const penalty = candidate.recentOverlap * 10 + (candidate.repeatedShape ? 5 : 0);
     if (penalty < bestPenalty) {
