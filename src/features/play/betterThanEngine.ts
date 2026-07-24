@@ -56,16 +56,16 @@ export interface BetterThanComparison {
 
 export const BETTER_THAN_LENSES: readonly BetterThanLens[] = [
   { id: "overall", label: "Overall fighter", phrase: "overall" },
-  { id: "striking", label: "Striking", phrase: "at striking" },
-  { id: "boxing", label: "Boxing", phrase: "at boxing" },
-  { id: "kickboxing", label: "Kickboxing", phrase: "at kickboxing" },
-  { id: "wrestling", label: "Wrestling", phrase: "at wrestling" },
-  { id: "grappling", label: "Grappling", phrase: "at grappling" },
-  { id: "submissions", label: "Submissions", phrase: "at submissions" },
-  { id: "cardio", label: "Cardio", phrase: "at cardio" },
-  { id: "durability", label: "Durability", phrase: "at durability" },
-  { id: "power", label: "Power", phrase: "at power" },
-  { id: "ufc-resume", label: "UFC-only resume", phrase: "by UFC-only resume" },
+  { id: "striking", label: "Striking", phrase: "striking" },
+  { id: "boxing", label: "Boxing", phrase: "boxing" },
+  { id: "kickboxing", label: "Kickboxing", phrase: "kickboxing" },
+  { id: "wrestling", label: "Wrestling", phrase: "wrestling" },
+  { id: "grappling", label: "Grappling", phrase: "grappling" },
+  { id: "submissions", label: "Submissions", phrase: "submissions" },
+  { id: "cardio", label: "Cardio", phrase: "cardio" },
+  { id: "durability", label: "Durability", phrase: "durability" },
+  { id: "power", label: "Power", phrase: "power" },
+  { id: "ufc-resume", label: "UFC-only resume", phrase: "UFC-only resume" },
 ] as const;
 
 export const BETTER_THAN_DIVISIONS = [
@@ -89,16 +89,16 @@ export function betterThanLens(lensId: BetterThanLensId): BetterThanLens {
 
 export function betterThanPoolOptions(target: PlayFighter): readonly BetterThanPool[] {
   const pools: BetterThanPool[] = [
-    { id: "all", label: `Full ${rankedPlayFighters.length}-fighter pool`, phrase: "from the full UFC pool" },
-    { id: "men", label: "Men's pool", phrase: "from the men's pool" },
-    { id: "women", label: "Women's pool", phrase: "from the women's pool" },
-    { id: "same-division", label: "Same division as target", phrase: "from the same UFC division pool" },
-    { id: "205-plus", label: "205+ divisions", phrase: "among fighters who competed at Light Heavyweight or Heavyweight" },
-    { id: "170-below", label: "170 lb divisions and below", phrase: "among fighters who competed at Welterweight or below" },
+    { id: "all", label: `Full ${rankedPlayFighters.length}-fighter pool`, phrase: "UFC fighter" },
+    { id: "men", label: "Men's pool", phrase: "male UFC fighter" },
+    { id: "women", label: "Women's pool", phrase: "female UFC fighter" },
+    { id: "same-division", label: "Same division as target", phrase: `UFC fighter from ${target.name}'s division pool` },
+    { id: "205-plus", label: "205+ divisions", phrase: "UFC light heavyweight or heavyweight fighter" },
+    { id: "170-below", label: "170 lb divisions and below", phrase: "UFC fighter from welterweight or below" },
     ...BETTER_THAN_DIVISIONS.map((division): BetterThanPool => ({
       id: `division:${division}`,
       label: division,
-      phrase: `among fighters who competed at ${division}`,
+      phrase: `UFC ${division.toLowerCase()}`,
     })),
   ];
   return pools.map((pool): BetterThanPool => pool.id === "same-division"
@@ -145,6 +145,60 @@ export function betterThanMaxClaim(targetId: string, poolId: BetterThanPoolId) {
   return Math.max(1, Math.min(BETTER_THAN_MAX_CLAIM, betterThanEligible(targetId, poolId).length));
 }
 
+function pluralizePool(pool: BetterThanPool, count: number) {
+  if (count === 1) return pool.phrase;
+  if (pool.id === "205-plus") return "UFC light heavyweight or heavyweight fighters";
+  if (pool.id === "170-below") return "UFC fighters from welterweight or below";
+  if (pool.id === "same-division") return `${pool.phrase}s`;
+  return `${pool.phrase}s`;
+}
+
+function comparisonClause(lens: BetterThanLens, target: PlayFighter, count: number) {
+  const singular = count === 1;
+  switch (lens.id) {
+    case "overall":
+      return singular
+        ? `who is a better overall fighter than ${target.name}`
+        : `who are better overall fighters than ${target.name}`;
+    case "striking":
+      return singular
+        ? `who is a better striker than ${target.name}`
+        : `who are better strikers than ${target.name}`;
+    case "boxing":
+      return singular
+        ? `who is a better boxer than ${target.name}`
+        : `who are better boxers than ${target.name}`;
+    case "kickboxing":
+      return singular
+        ? `who is a better kickboxer than ${target.name}`
+        : `who are better kickboxers than ${target.name}`;
+    case "wrestling":
+      return singular
+        ? `who is a better wrestler than ${target.name}`
+        : `who are better wrestlers than ${target.name}`;
+    case "grappling":
+      return singular
+        ? `who is a better grappler than ${target.name}`
+        : `who are better grapplers than ${target.name}`;
+    case "submissions":
+      return singular
+        ? `who is a better submission artist than ${target.name}`
+        : `who are better submission artists than ${target.name}`;
+    case "cardio":
+      return `who ${singular ? "has" : "have"} better cardio than ${target.name}`;
+    case "durability":
+      return `who ${singular ? "is" : "are"} more durable than ${target.name}`;
+    case "power":
+      return `who ${singular ? "has" : "have"} more power than ${target.name}`;
+    case "ufc-resume":
+      return singular
+        ? `who has a better UFC-only résumé than ${target.name}`
+        : `who have better UFC-only résumés than ${target.name}`;
+    default:
+      return `who ${singular ? "is" : "are"} better than ${target.name}`;
+  }
+}
+
 export function betterThanStatement(
   target: PlayFighter,
   lens: BetterThanLens,
@@ -152,7 +206,7 @@ export function betterThanStatement(
   count: number,
   subject = "I",
 ) {
-  return `${subject} can name ${count} fighter${count === 1 ? "" : "s"} better than ${target.name} ${lens.phrase} ${pool.phrase}.`;
+  return `${subject} can name ${count} ${pluralizePool(pool, count)} ${comparisonClause(lens, target, count)}.`;
 }
 
 export function betterThanChallengeUrl(challenge: BetterThanChallenge) {
