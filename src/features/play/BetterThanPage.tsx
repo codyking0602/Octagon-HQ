@@ -1,5 +1,8 @@
 import { useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
+import { usePlayChallenges } from "../challenges/ChallengeProvider";
+import type { ChallengeJson } from "../challenges/challengeModel";
 import { FighterPhoto } from "../rankings/FighterPhoto";
 import {
   BETTER_THAN_LENSES,
@@ -17,9 +20,25 @@ import {
   type BetterThanLensId,
   type BetterThanPoolId,
 } from "./betterThanEngine";
-import { shareGameChallenge } from "./challengeShare";
 import { GameResultActions } from "./GameResultActions";
 import { getPlayFighter, rankedPlayFighters, type PlayFighter } from "./playFighterPool";
+
+function record(value: ChallengeJson | undefined): { [key: string]: ChallengeJson } | null {
+  return value && !Array.isArray(value) && typeof value === "object" ? value : null;
+}
+
+function selectionIds(value: ChallengeJson | undefined) {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((item) => {
+    if (typeof item === "string") return [item];
+    const row = record(item);
+    return row && typeof row.id === "string" ? [row.id] : [];
+  });
+}
+
+function asJson(value: unknown): ChallengeJson {
+  return JSON.parse(JSON.stringify(value)) as ChallengeJson;
+}
 
 function FighterRow({
   fighter,
@@ -64,13 +83,25 @@ function ResultList({ title, fighters }: { title: string; fighters: readonly Pla
 export default function BetterThanPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const incoming = resolveBetterThanChallenge({
+  const { beginChallenge } = usePlayChallenges();
+  const profileMatch = useProfileChallengeMatch("better-than");
+  const profileSetup = record(profileMatch.challenge?.setup);
+  const profileCreatorResult = record(profileMatch.challenge?.creatorResult);
+  const profileIncoming = profileMatch.challenge ? resolveBetterThanChallenge({
+    targetId: typeof profileSetup?.targetId === "string" ? profileSetup.targetId : null,
+    lensId: typeof profileSetup?.lensId === "string" ? profileSetup.lensId : null,
+    poolId: typeof profileSetup?.poolId === "string" ? profileSetup.poolId : null,
+    claimCount: typeof profileCreatorResult?.claimCount === "number" ? String(profileCreatorResult.claimCount) : null,
+    selectionIds: selectionIds(profileCreatorResult?.selections).join(","),
+  }) : null;
+  const externalIncoming = resolveBetterThanChallenge({
     targetId: searchParams.get("target"),
     lensId: searchParams.get("lens"),
     poolId: searchParams.get("pool"),
     claimCount: searchParams.get("count"),
     selectionIds: searchParams.get("selections"),
   });
+  const incoming = profileIncoming ?? externalIncoming;
 
   const defaultTarget = getPlayFighter(DEFAULT_BETTER_THAN_TARGET) ?? rankedPlayFighters[0]!;
   const [targetId, setTargetId] = useState(incoming?.target.id ?? defaultTarget.id);
@@ -143,13 +174,40 @@ export default function BetterThanPage() {
     return { target, lens, pool, claimCount, selections: selectedFighters };
   }
 
+  function lockClaim() {
+    if (!ready) return;
+    if (profileMatch.isRecipient) {
+      profileMatch.submitResult(asJson({
+        claimCount,
+        selections: selectedFighters.map((fighter) => ({ id: fighter.id, name: fighter.name })),
+      }));
+    }
+    setLocked(true);
+  }
+
   async function challengeSomeone() {
     if (!ready) return;
     setShareStatus("");
-    const status = await shareGameChallenge({
-      title: "UFC Better Than Challenge",
-      text: `I made this claim: ${betterThanStatement(target, lens, pool, claimCount)} Build your counterclaim before my list is revealed.`,
-      url: betterThanChallengeUrl(currentChallenge()),
+    const status = await beginChallenge({
+      gameId: "better-than",
+      gameVersion: "better-than-v2",
+      gameTitle: "Better Than…",
+      summary: betterThanStatement(target, lens, pool, claimCount),
+      setup: asJson({
+        targetId: target.id,
+        targetName: target.name,
+        lensId: lens.id,
+        lensLabel: lens.label,
+        poolId: pool.id,
+        poolLabel: pool.label,
+      }),
+      creatorResult: asJson({
+        claimCount,
+        selections: selectedFighters.map((fighter) => ({ id: fighter.id, name: fighter.name })),
+      }),
+      shareTitle: "UFC Better Than Challenge",
+      shareText: `I made this claim: ${betterThanStatement(target, lens, pool, claimCount)} Build your counterclaim before my list is revealed.`,
+      shareUrl: betterThanChallengeUrl(currentChallenge()),
     });
     setShareStatus(status);
   }
@@ -167,6 +225,13 @@ export default function BetterThanPage() {
 
     return (
       <div className="page better-than-page">
+        {profileMatch.creator ? (
+          <section className="challenge-game-banner">
+            <span>PROFILE CHALLENGE</span>
+            <strong>{profileMatch.creator.displayName} sent this exact claim.</strong>
+            <small>Both exact lists are now available in Challenge Center.</small>
+          </section>
+        ) : null}
         <section className="better-than-result-hero">
           <p className="eyebrow">{comparison ? "CLAIMS REVEALED" : "CLAIM LOCKED"}</p>
           <h1>{comparison ? `${comparison.shared.length} SHARED NAMES · ${comparison.overlapPct}% OVERLAP` : statement}</h1>
@@ -208,6 +273,13 @@ export default function BetterThanPage() {
 
   return (
     <div className="page better-than-page">
+      {profileMatch.creator ? (
+        <section className="challenge-game-banner">
+          <span>PROFILE CHALLENGE</span>
+          <strong>{profileMatch.creator.displayName} sent this exact claim.</strong>
+          <small>Their list stays hidden until you lock your own.</small>
+        </section>
+      ) : null}
       <section className="better-than-builder">
         <header className="better-than-builder__header">
           <div>
@@ -244,7 +316,7 @@ export default function BetterThanPage() {
         className={`better-than-lock${ready ? " is-ready" : ""}`}
         type="button"
         disabled={!ready}
-        onClick={() => setLocked(true)}
+        onClick={lockClaim}
       >
         {ready ? "LOCK MY CLAIM" : `SELECT ${claimCount - selected.size} MORE`}
       </button>
