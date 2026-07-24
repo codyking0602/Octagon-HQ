@@ -1,7 +1,8 @@
 import { useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { ChallengeCenter } from "../challenges/ChallengeCenter";
+import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { FighterPhoto } from "../rankings/FighterPhoto";
-import { shareGameChallenge } from "./challengeShare";
 import {
   centralDay,
   dailyFindLeaderBoard,
@@ -79,6 +80,11 @@ function validChallengeDay(value: string | null) {
   return value && /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : null;
 }
 
+function challengeSetupDay(value: unknown) {
+  if (!value || Array.isArray(value) || typeof value !== "object") return null;
+  return validChallengeDay(typeof value.day === "string" ? value.day : null);
+}
+
 function DailyHistory({ rows, today }: { rows: FindLeaderHistoryRow[]; today: string }) {
   const stats = findLeaderStreaks(rows, today);
   const rowByDay = new Map(rows.map((row) => [row.day, row]));
@@ -130,11 +136,14 @@ function FindLeaderGame({
   board,
   onExit,
   onComplete,
+  challengeFrom = "",
 }: {
   board: FindLeaderBoard;
   onExit: () => void;
   onComplete: (score: number) => void;
+  challengeFrom?: string;
 }) {
+  const { beginChallenge } = usePlayChallenges();
   const [eliminated, setEliminated] = useState<string[]>([]);
   const [result, setResult] = useState<FindLeaderResult | null>(null);
   const [challengeStatus, setChallengeStatus] = useState("");
@@ -169,13 +178,20 @@ function FindLeaderGame({
   }
 
   async function challengeSomeone() {
+    if (!result) return;
     setChallengeStatus("");
     const url = new URL("/play/find-leader", window.location.origin);
     url.searchParams.set("day", board.day);
-    const status = await shareGameChallenge({
-      title: "Find the Leader Challenge",
-      text: `I challenged you to the same Find the Leader board: ${board.question} Can you beat my score?`,
-      url: url.toString(),
+    const status = await beginChallenge({
+      gameId: "find-leader",
+      gameVersion: board.version,
+      gameTitle: "Find the Leader",
+      summary: board.question,
+      setup: { day: board.day, question: board.question },
+      creatorResult: { score: result.score, perfect: result.perfect },
+      shareTitle: "Find the Leader Challenge",
+      shareText: `I challenged you to the same Find the Leader board: ${board.question} Can you beat my score?`,
+      shareUrl: url.toString(),
     });
     setChallengeStatus(status);
   }
@@ -192,6 +208,13 @@ function FindLeaderGame({
 
     return (
       <div className="find-game page">
+        {challengeFrom ? (
+          <section className="challenge-game-banner">
+            <span>PROFILE CHALLENGE</span>
+            <strong>{challengeFrom} sent this exact board.</strong>
+            <small>Your result is saved to Challenge Center. Both results unlock after completion.</small>
+          </section>
+        ) : null}
         <section className={`find-result-hero ${result.perfect ? "is-perfect" : ""}`}>
           <div>
             <p className="eyebrow">{result.perfect ? "PERFECT RUN" : "RUN ENDED"}</p>
@@ -240,9 +263,16 @@ function FindLeaderGame({
 
   return (
     <div className="find-game page">
+      {challengeFrom ? (
+        <section className="challenge-game-banner">
+          <span>PROFILE CHALLENGE</span>
+          <strong>{challengeFrom} sent this exact board.</strong>
+          <small>Finish to unlock both results in Challenge Center.</small>
+        </section>
+      ) : null}
       <section className="find-game__hero">
         <div>
-          <p className="eyebrow">TODAY’S CHALLENGE</p>
+          <p className="eyebrow">{challengeFrom ? "PROFILE CHALLENGE" : "TODAY’S CHALLENGE"}</p>
           <h1>{board.question}</h1>
           <p>{objectiveCopy(board)}</p>
         </div>
@@ -272,18 +302,30 @@ function FindLeaderGame({
 export default function PlayPage() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { activeProfile, profiles, getChallenge, submitResult } = usePlayChallenges();
   const today = useMemo(() => centralDay(), []);
   const isFindLeaderGame = location.pathname === "/play/find-leader";
-  const challengeDay = validChallengeDay(new URLSearchParams(location.search).get("day"));
-  const gameDay = isFindLeaderGame && challengeDay ? challengeDay : today;
+  const searchParams = new URLSearchParams(location.search);
+  const challengeCode = searchParams.get("challenge")?.toUpperCase() ?? "";
+  const profileChallenge = challengeCode ? getChallenge(challengeCode) : null;
+  const challengeDay = validChallengeDay(searchParams.get("day"));
+  const profileChallengeDay = challengeSetupDay(profileChallenge?.setup);
+  const gameDay = isFindLeaderGame ? profileChallengeDay ?? challengeDay ?? today : today;
   const todayBoard = useMemo(() => dailyFindLeaderBoard(today), [today]);
   const gameBoard = useMemo(() => dailyFindLeaderBoard(gameDay), [gameDay]);
   const [carousel, setCarousel] = useState<0 | 1>(0);
   const touchStartX = useRef<number | null>(null);
   const [history, setHistory] = useState<FindLeaderHistoryRow[]>(() => loadFindLeaderHistory());
   const todayRow = history.find((row) => row.day === today);
+  const challengeCreator = profileChallenge
+    ? profiles.find((profile) => profile.id === profileChallenge.creatorId)
+    : null;
 
   function complete(score: number) {
+    if (profileChallenge && activeProfile?.id === profileChallenge.recipientId) {
+      submitResult(profileChallenge.code, { score });
+      return;
+    }
     setHistory(recordFindLeaderAttempt(gameDay, score));
   }
 
@@ -300,7 +342,14 @@ export default function PlayPage() {
   }
 
   if (isFindLeaderGame && gameBoard) {
-    return <FindLeaderGame board={gameBoard} onExit={() => navigate("/play")} onComplete={complete} />;
+    return (
+      <FindLeaderGame
+        board={gameBoard}
+        onExit={() => navigate("/play")}
+        onComplete={complete}
+        challengeFrom={challengeCreator?.displayName}
+      />
+    );
   }
 
   return (
@@ -344,6 +393,7 @@ export default function PlayPage() {
       </section>
 
       <DailyHistory rows={history} today={today} />
+      <ChallengeCenter />
 
       <section className="play-games">
         <header>
