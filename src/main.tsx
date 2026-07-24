@@ -6,6 +6,7 @@ import "./styles/global.css";
 import "./styles/intelligence.css";
 import "./styles/play.css";
 import "./styles/wavelength.css";
+import "./styles/game-results.css";
 
 const root = document.getElementById("root");
 
