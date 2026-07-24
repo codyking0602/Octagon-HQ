@@ -16,6 +16,7 @@ import {
   createBlindRankLineup,
   resolveBlindRankChallenge,
 } from "./blindRankEngine";
+import { getPlayFighter } from "./playFighterPool";
 
 function renderBlindResume(path = "/play/blind-resume") {
   return render(
@@ -72,6 +73,14 @@ describe("Blind Resume engine", () => {
     const winner = blindResumeWinner(pair);
     expect(winner.model.rank).toBe(Math.min(pair.fighterA.model.rank, pair.fighterB.model.rank));
   });
+
+  it("keeps distinct profile and thumbnail assets for varied portrait crops", () => {
+    for (const slug of ["rose-namajunas", "joanna-jedrzejczyk", "robbie-lawler", "rashad-evans"]) {
+      const fighter = getPlayFighter(slug);
+      expect(fighter?.profileUrl).toBe(`/assets/fighters/${slug}.webp`);
+      expect(fighter?.thumbUrl).toBe(`/assets/fighters/${slug}-thumb.webp`);
+    }
+  });
 });
 
 describe("Blind Resume presentation", () => {
@@ -81,10 +90,18 @@ describe("Blind Resume presentation", () => {
   });
 
   it("reveals the fighters, verdict, and Intelligence handoff after a pick", () => {
-    const { container } = renderBlindResume("/play/blind-resume?challenge=render-proof");
+    const seed = "render-proof";
+    const pair = createBlindResumeRounds(seed).pairs[0];
+    const { container } = renderBlindResume(`/play/blind-resume?challenge=${seed}`);
     expect(container.querySelectorAll(".blind-resume-stats > div")).toHaveLength(8);
     fireEvent.click(container.querySelector<HTMLButtonElement>(".blind-resume-picks button")!);
     expect(container.querySelectorAll(".blind-resume-reveal-grid article")).toHaveLength(2);
+    expect([...container.querySelectorAll<HTMLImageElement>(".blind-resume-reveal-photo")].map((photo) => photo.getAttribute("src"))).toEqual([
+      pair.fighterA.profileUrl || pair.fighterA.thumbUrl,
+      pair.fighterB.profileUrl || pair.fighterB.thumbUrl,
+    ]);
+    expect(container.textContent).toContain(pair.fighterA.name);
+    expect(container.textContent).toContain(pair.fighterB.name);
     expect(container.textContent).toContain("TAKE MATCHUP TO INTELLIGENCE");
     expect(container.textContent).toMatch(/NEXT ROUND|SEE FINAL SCORE/);
   });
@@ -99,14 +116,19 @@ describe("Blind Resume presentation", () => {
     expect(container.querySelector(".blind-resume-verdict h1")?.textContent).toBe(verdict);
   });
 
-  it("finishes after exactly five picks and shows a compact five-round recap with standard actions", () => {
-    const { container } = renderBlindResume("/play/blind-resume?challenge=five-round-proof");
+  it("finishes after exactly five picks and keeps thumbnails in the compact recap", () => {
+    const seed = "five-round-proof";
+    const roundSet = createBlindResumeRounds(seed);
+    const { container } = renderBlindResume(`/play/blind-resume?challenge=${seed}`);
     for (let round = 0; round < BLIND_RESUME_ROUNDS; round += 1) {
       fireEvent.click(container.querySelector<HTMLButtonElement>(".blind-resume-picks button")!);
       fireEvent.click(container.querySelector<HTMLButtonElement>(".primary-action")!);
     }
     expect(container.textContent).toContain("FIVE-ROUND RESULTS");
     expect(container.querySelectorAll(".blind-resume-recap__round")).toHaveLength(5);
+    expect([...container.querySelectorAll<HTMLImageElement>(".blind-resume-recap__photo")].map((photo) => photo.getAttribute("src"))).toEqual(
+      roundSet.pairs.flatMap((pair) => [pair.fighterA.thumbUrl, pair.fighterB.thumbUrl]),
+    );
     const actions = [...container.querySelectorAll(".game-result-actions button")].map((button) => button.textContent);
     expect(actions).toEqual(["CHALLENGE SOMEONE", "REPLAY", "ALL GAMES"]);
   });
