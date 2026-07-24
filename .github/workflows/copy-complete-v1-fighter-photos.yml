@@ -1,0 +1,48 @@
+name: One-time copy complete V1 fighter photos
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/copy-complete-v1-fighter-photos.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  copy:
+    if: github.head_ref == 'codex/localize-fighter-assets'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out V2 branch
+        uses: actions/checkout@v4
+        with:
+          ref: codex/localize-fighter-assets
+          fetch-depth: 0
+
+      - name: Copy complete pinned V1 fighter-photo directory
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --filter=blob:none --no-checkout https://github.com/codyking0602/ufc-goat-rankings.git /tmp/ufc-goat-rankings
+          git -C /tmp/ufc-goat-rankings fetch --depth=1 origin 842ba06ea09c4f40723226f4c4dfd35041cb3314
+          git -C /tmp/ufc-goat-rankings checkout 842ba06ea09c4f40723226f4c4dfd35041cb3314
+          mkdir -p public/assets/fighters
+          rsync -a /tmp/ufc-goat-rankings/assets/fighters/ public/assets/fighters/
+
+      - name: Commit copied photos
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/assets/fighters
+          if git diff --cached --quiet; then
+            echo "No additional fighter photos were found."
+            exit 1
+          fi
+          echo "Total fighter files after copy: $(find public/assets/fighters -maxdepth 1 -type f | wc -l)"
+          git commit -m "Copy remaining V1 fighter photos"
+          git push origin HEAD:codex/localize-fighter-assets
