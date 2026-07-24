@@ -96,6 +96,42 @@ jobs:
           done
           exit "$missing"
 
+      - name: Verify deployed migration and PIN function
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if ! supabase migration list --linked | grep -Fq "202607240001"; then
+            echo "::error title=Profile migration not deployed::The V2 profile/PIN migration is not recorded on the linked project."
+            exit 1
+          fi
+
+          if ! supabase functions list --project-ref "$SUPABASE_PROJECT_ID" | grep -Fq "pin-auth"; then
+            echo "::error title=PIN function not deployed::The pin-auth Edge Function is not deployed to the V2 project."
+            exit 1
+          fi
+
+          endpoint="https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/pin-auth"
+          status=$(curl --silent --show-error \
+            --output "$RUNNER_TEMP/pin-auth-response.json" \
+            --write-out "%{http_code}" \
+            --request POST \
+            --header "Content-Type: application/json" \
+            --data '{}' \
+            "$endpoint")
+
+          if [ "$status" != "400" ]; then
+            echo "::error title=PIN function live check failed::Expected HTTP 400 from the deployed validation path, received $status."
+            cat "$RUNNER_TEMP/pin-auth-response.json"
+            exit 1
+          fi
+
+          if ! grep -Fq "Enter a name and a 4-digit PIN." "$RUNNER_TEMP/pin-auth-response.json"; then
+            echo "::error title=PIN function contract mismatch::The deployed function did not return the expected validation response."
+            cat "$RUNNER_TEMP/pin-auth-response.json"
+            exit 1
+          fi
+
       - name: Record verification boundary
         shell: bash
         run: |
@@ -105,5 +141,7 @@ jobs:
             echo "- Supabase access token/project pairing: accepted"
             echo "- Database password and migration connection: accepted"
             echo "- Required Edge Function secret names: present"
+            echo "- Profile/PIN migration: deployed"
+            echo "- pin-auth Edge Function: deployed and responding with the expected contract"
             echo "- Cloudflare VITE values: cannot be read by GitHub and must be verified through a Cloudflare preview build"
           } >> "$GITHUB_STEP_SUMMARY"
