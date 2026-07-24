@@ -7,6 +7,8 @@ import { RouteLoading } from "../components/RouteLoading";
 const PLAY_GAME_TITLES: Record<string, string> = {
   "/play/find-leader": "Find the Leader",
   "/play/wavelength": "Wavelength",
+  "/play/blind-resume": "Blind Resume",
+  "/play/blind-rank": "Blind Rank 5",
 };
 
 export function AppShell() {
