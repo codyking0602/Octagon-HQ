@@ -1,6 +1,7 @@
 import { fireEvent, render } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import IntelligencePage from "../intelligence/IntelligencePage";
 import BlindRankPage from "./BlindRankPage";
 import BlindResumePage from "./BlindResumePage";
 import {
@@ -20,6 +21,17 @@ function renderBlindResume(path = "/play/blind-resume") {
   return render(
     <MemoryRouter initialEntries={[path]}>
       <BlindResumePage />
+    </MemoryRouter>,
+  );
+}
+
+function renderBlindResumeWithIntelligence(path = "/play/blind-resume") {
+  return render(
+    <MemoryRouter initialEntries={[path]}>
+      <Routes>
+        <Route path="/play/blind-resume" element={<BlindResumePage />} />
+        <Route path="/intelligence" element={<IntelligencePage />} />
+      </Routes>
     </MemoryRouter>,
   );
 }
@@ -45,12 +57,13 @@ describe("Blind Resume engine", () => {
     expect(first.pairs.filter((pair) => pair.gender === "women").length).toBeLessThanOrEqual(1);
   });
 
-  it("uses the seven approved hidden resume stats and the official board winner", () => {
+  it("uses the eight approved hidden resume stats including main UFC era", () => {
     const pair = createBlindResumeRounds("stat-proof").pairs[0];
     expect(blindResumeStats(pair).map((stat) => stat.label)).toEqual([
       "UFC title-fight wins",
       "Top-5 wins",
       "Prime UFC record",
+      "Main UFC era",
       "Apex rating",
       "Rounds won",
       "Finish rate",
@@ -63,25 +76,37 @@ describe("Blind Resume engine", () => {
 
 describe("Blind Resume presentation", () => {
   beforeEach(() => {
+    window.sessionStorage.clear();
     Object.defineProperty(window, "scrollTo", { value: vi.fn(), writable: true });
   });
 
   it("reveals the fighters, verdict, and Intelligence handoff after a pick", () => {
     const { container } = renderBlindResume("/play/blind-resume?challenge=render-proof");
-    expect(container.querySelectorAll(".blind-resume-stats > div")).toHaveLength(7);
+    expect(container.querySelectorAll(".blind-resume-stats > div")).toHaveLength(8);
     fireEvent.click(container.querySelector<HTMLButtonElement>(".blind-resume-picks button")!);
     expect(container.querySelectorAll(".blind-resume-reveal-grid article")).toHaveLength(2);
     expect(container.textContent).toContain("TAKE MATCHUP TO INTELLIGENCE");
     expect(container.textContent).toMatch(/NEXT ROUND|SEE FINAL SCORE/);
   });
 
-  it("finishes after exactly five picks and shows the standard result actions", () => {
+  it("returns from Intelligence to the unchanged revealed matchup", () => {
+    const { container, getByText } = renderBlindResumeWithIntelligence("/play/blind-resume?run=return-proof");
+    fireEvent.click(container.querySelector<HTMLButtonElement>(".blind-resume-picks button")!);
+    const verdict = container.querySelector(".blind-resume-verdict h1")?.textContent;
+    fireEvent.click(getByText("TAKE MATCHUP TO INTELLIGENCE"));
+    expect(getByText("← Back to Blind Resume")).toBeTruthy();
+    fireEvent.click(getByText("← Back to Blind Resume"));
+    expect(container.querySelector(".blind-resume-verdict h1")?.textContent).toBe(verdict);
+  });
+
+  it("finishes after exactly five picks and shows a compact five-round recap with standard actions", () => {
     const { container } = renderBlindResume("/play/blind-resume?challenge=five-round-proof");
     for (let round = 0; round < BLIND_RESUME_ROUNDS; round += 1) {
       fireEvent.click(container.querySelector<HTMLButtonElement>(".blind-resume-picks button")!);
       fireEvent.click(container.querySelector<HTMLButtonElement>(".primary-action")!);
     }
     expect(container.textContent).toContain("FIVE-ROUND RESULTS");
+    expect(container.querySelectorAll(".blind-resume-recap__round")).toHaveLength(5);
     const actions = [...container.querySelectorAll(".game-result-actions button")].map((button) => button.textContent);
     expect(actions).toEqual(["CHALLENGE SOMEONE", "REPLAY", "ALL GAMES"]);
   });
@@ -97,7 +122,7 @@ describe("Blind Rank engine", () => {
     expect(BLIND_RANK_ROLES.find((role) => role.id === "wildcard")?.weights.bad).toBe(0.1);
   });
 
-  it("builds deterministic five-fighter lineups with no duplicates and at most one Bad fighter", () => {
+  it("builds random-feeling deterministic five-fighter lineups with no duplicates and at most one Bad fighter", () => {
     for (const pack of blindRankPacks) {
       const first = createBlindRankLineup(pack.id, `lineup-${pack.id}`);
       const second = createBlindRankLineup(pack.id, `lineup-${pack.id}`);
@@ -129,18 +154,21 @@ describe("Blind Rank presentation", () => {
     Object.defineProperty(window, "scrollTo", { value: vi.fn(), writable: true });
   });
 
-  it("locks one fighter into each chosen slot and finishes after five placements", () => {
+  it("uses the thumbnail, locks five placements, then removes the duplicate slot strip", () => {
     const { container } = renderBlindRank();
+    const currentPhoto = container.querySelector<HTMLImageElement>(".blind-rank-current__photo");
+    expect(currentPhoto?.getAttribute("src")).toContain("-thumb.webp");
     expect(container.querySelectorAll(".blind-rank-slot")).toHaveLength(5);
 
-    for (let placement = 0; placement < 5; placement += 1) {
+    for (let placement = 0; placement < 4; placement += 1) {
       const openSlot = container.querySelector<HTMLButtonElement>(".blind-rank-slot:not(.is-filled)");
-      expect(openSlot).not.toBeNull();
       fireEvent.click(openSlot!);
       expect(container.querySelectorAll(".blind-rank-slot.is-filled")).toHaveLength(placement + 1);
     }
+    fireEvent.click(container.querySelector<HTMLButtonElement>(".blind-rank-slot:not(.is-filled)")!);
 
     expect(container.textContent).toContain("YOUR FINAL RANKING");
+    expect(container.querySelectorAll(".blind-rank-slot")).toHaveLength(0);
     expect(container.querySelectorAll(".blind-rank-results article")).toHaveLength(5);
     const actions = [...container.querySelectorAll(".game-result-actions button")].map((button) => button.textContent);
     expect(actions).toEqual(["CHALLENGE SOMEONE", "REPLAY", "ALL GAMES"]);
