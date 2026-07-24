@@ -32,7 +32,11 @@ export default function WavelengthPage() {
     : null;
 
   useEffect(() => {
-    if (profileChallenge && activeProfile?.id === profileChallenge.recipientId) {
+    if (
+      profileChallenge
+      && !profileChallenge.openedAt
+      && activeProfile?.id === profileChallenge.recipientId
+    ) {
       markOpened(profileChallenge.code);
     }
   }, [activeProfile?.id, markOpened, profileChallenge]);
