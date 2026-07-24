@@ -7,6 +7,7 @@ const RankingsPage = lazy(() => import("../features/rankings/RankingsPage"));
 const FighterProfilePage = lazy(() => import("../features/rankings/FighterProfilePage"));
 const IntelligencePage = lazy(() => import("../features/intelligence/IntelligencePage"));
 const PlayPage = lazy(() => import("../features/play/PlayPage"));
+const WavelengthPage = lazy(() => import("../features/play/WavelengthPage"));
 const PlaceholderPage = lazy(() => import("../features/placeholders/PlaceholderPage"));
 
 export const appRoutes: RouteObject[] = [
@@ -20,6 +21,7 @@ export const appRoutes: RouteObject[] = [
       { path: "intelligence", element: <IntelligencePage /> },
       { path: "play", element: <PlayPage /> },
       { path: "play/find-leader", element: <PlayPage /> },
+      { path: "play/wavelength", element: <WavelengthPage /> },
       { path: "picks", element: <PlaceholderPage title="Picks" eyebrow="EVENT PICKS" /> },
       { path: "*", element: <Navigate to="/" replace /> },
     ],
