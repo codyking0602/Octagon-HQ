@@ -15,9 +15,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-      - run: npm install --silent
-      - run: npm test -- src/features/challenges/challengeFlow.test.tsx --reporter=verbose
+      - name: Clone exact branch head
+        run: git clone --quiet --depth 1 --branch feature/play-challenge-center https://github.com/codyking0602/Octagon-HQ.git repo
+      - name: Run focused test
+        working-directory: repo
+        run: |
+          npm install --silent
+          npm test -- src/features/challenges/challengeFlow.test.tsx --reporter=verbose > /tmp/challenge-test.log 2>&1 || {
+            tail -n 100 /tmp/challenge-test.log
+            exit 1
+          }
