@@ -72,7 +72,10 @@ export default function BetterThanPage() {
   const eligible = useMemo(() => betterThanEligible(target.id, pool.id), [target.id, pool.id]);
   const maxClaim = betterThanMaxClaim(target.id, pool.id);
   const byId = useMemo(() => new Map(eligible.map((fighter) => [fighter.id, fighter])), [eligible]);
-  const selectedFighters = [...selected].map((id) => byId.get(id)).filter((fighter): fighter is PlayFighter => Boolean(fighter));
+  const selectedFighters = [...selected].flatMap((id) => {
+    const fighter = byId.get(id);
+    return fighter ? [fighter] : [];
+  });
   const filtered = eligible.filter((fighter) => `${fighter.name} ${fighter.divisions.join(" ")}`.toLowerCase().includes(query.trim().toLowerCase()));
   const challengeMode = Boolean(incoming);
   const ready = selected.size === claimCount;
