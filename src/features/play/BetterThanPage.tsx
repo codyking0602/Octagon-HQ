@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { FighterPhoto } from "../rankings/FighterPhoto";
 import {
   BETTER_THAN_LENSES,
@@ -17,7 +18,6 @@ import {
   type BetterThanLensId,
   type BetterThanPoolId,
 } from "./betterThanEngine";
-import { shareGameChallenge } from "./challengeShare";
 import { GameResultActions } from "./GameResultActions";
 import { getPlayFighter, rankedPlayFighters, type PlayFighter } from "./playFighterPool";
 
@@ -61,16 +61,56 @@ function ResultList({ title, fighters }: { title: string; fighters: readonly Pla
   );
 }
 
+function recordString(value: unknown, key: string) {
+  if (!value || Array.isArray(value) || typeof value !== "object") return "";
+  const record = value as Record<string, unknown>;
+  return typeof record[key] === "string" ? record[key] : "";
+}
+
+function recordNumber(value: unknown, key: string) {
+  if (!value || Array.isArray(value) || typeof value !== "object") return "";
+  const record = value as Record<string, unknown>;
+  const field = record[key];
+  return typeof field === "number" && Number.isFinite(field) ? String(field) : "";
+}
+
+function recordIds(value: unknown, key: string) {
+  if (!value || Array.isArray(value) || typeof value !== "object") return [];
+  const record = value as Record<string, unknown>;
+  const field = record[key];
+  return Array.isArray(field) ? field.filter((id): id is string => typeof id === "string") : [];
+}
+
 export default function BetterThanPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const incoming = resolveBetterThanChallenge({
+  const {
+    activeProfile,
+    profiles,
+    beginChallenge,
+    getChallenge,
+    markOpened,
+    submitResult,
+  } = usePlayChallenges();
+  const profileChallengeCode = searchParams.get("profileChallenge")?.toUpperCase() ?? "";
+  const profileChallenge = profileChallengeCode ? getChallenge(profileChallengeCode) : null;
+  const profileIncoming = profileChallenge?.gameId === "better-than"
+    ? resolveBetterThanChallenge({
+        targetId: recordString(profileChallenge.setup, "targetId"),
+        lensId: recordString(profileChallenge.setup, "lensId"),
+        poolId: recordString(profileChallenge.setup, "poolId"),
+        claimCount: recordNumber(profileChallenge.setup, "claimCount"),
+        selectionIds: recordIds(profileChallenge.creatorResult, "selectionIds").join(","),
+      })
+    : null;
+  const linkIncoming = resolveBetterThanChallenge({
     targetId: searchParams.get("target"),
     lensId: searchParams.get("lens"),
     poolId: searchParams.get("pool"),
     claimCount: searchParams.get("count"),
     selectionIds: searchParams.get("selections"),
   });
+  const incoming = profileIncoming ?? linkIncoming;
 
   const defaultTarget = getPlayFighter(DEFAULT_BETTER_THAN_TARGET) ?? rankedPlayFighters[0]!;
   const [targetId, setTargetId] = useState(incoming?.target.id ?? defaultTarget.id);
@@ -95,6 +135,19 @@ export default function BetterThanPage() {
   const filtered = eligible.filter((fighter) => `${fighter.name} ${fighter.divisions.join(" ")}`.toLowerCase().includes(query.trim().toLowerCase()));
   const challengeMode = Boolean(incoming);
   const ready = selected.size === claimCount;
+  const challengeCreator = profileChallenge
+    ? profiles.find((profile) => profile.id === profileChallenge.creatorId)
+    : null;
+
+  useEffect(() => {
+    if (
+      profileChallenge
+      && !profileChallenge.openedAt
+      && activeProfile?.id === profileChallenge.recipientId
+    ) {
+      markOpened(profileChallenge.code);
+    }
+  }, [activeProfile?.id, markOpened, profileChallenge]);
 
   function resetSelections(nextCount = claimCount) {
     setSelected(new Set());
@@ -143,13 +196,38 @@ export default function BetterThanPage() {
     return { target, lens, pool, claimCount, selections: selectedFighters };
   }
 
+  function lockClaim() {
+    if (!ready) return;
+    setLocked(true);
+    if (
+      profileChallenge
+      && !profileChallenge.completedAt
+      && activeProfile?.id === profileChallenge.recipientId
+    ) {
+      submitResult(profileChallenge.code, {
+        claimCount,
+        selectionIds: selectedFighters.map((fighter) => fighter.id),
+      });
+    }
+  }
+
   async function challengeSomeone() {
     if (!ready) return;
     setShareStatus("");
-    const status = await shareGameChallenge({
-      title: "UFC Better Than Challenge",
-      text: `I made this claim: ${betterThanStatement(target, lens, pool, claimCount)} Build your counterclaim before my list is revealed.`,
-      url: betterThanChallengeUrl(currentChallenge()),
+    const statement = betterThanStatement(target, lens, pool, claimCount);
+    const status = await beginChallenge({
+      gameId: "better-than",
+      gameVersion: "better-than-v2-20260724",
+      gameTitle: "Better Than…",
+      summary: statement,
+      setup: { targetId: target.id, lensId: lens.id, poolId: pool.id, claimCount },
+      creatorResult: {
+        claimCount,
+        selectionIds: selectedFighters.map((fighter) => fighter.id),
+      },
+      shareTitle: "UFC Better Than Challenge",
+      shareText: `I made this claim: ${statement} Build your counterclaim before my list is revealed.`,
+      shareUrl: betterThanChallengeUrl(currentChallenge()),
     });
     setShareStatus(status);
   }
@@ -167,6 +245,13 @@ export default function BetterThanPage() {
 
     return (
       <div className="page better-than-page">
+        {challengeCreator ? (
+          <section className="challenge-game-banner">
+            <span>PROFILE CHALLENGE</span>
+            <strong>{challengeCreator.displayName} sent this exact claim.</strong>
+            <small>Both lists are now available in Challenge Center.</small>
+          </section>
+        ) : null}
         <section className="better-than-result-hero">
           <p className="eyebrow">{comparison ? "CLAIMS REVEALED" : "CLAIM LOCKED"}</p>
           <h1>{comparison ? `${comparison.shared.length} SHARED NAMES · ${comparison.overlapPct}% OVERLAP` : statement}</h1>
@@ -208,6 +293,13 @@ export default function BetterThanPage() {
 
   return (
     <div className="page better-than-page">
+      {challengeCreator ? (
+        <section className="challenge-game-banner">
+          <span>PROFILE CHALLENGE</span>
+          <strong>{challengeCreator.displayName} sent this exact claim.</strong>
+          <small>Their exact list stays hidden until you lock yours.</small>
+        </section>
+      ) : null}
       <section className="better-than-builder">
         <header className="better-than-builder__header">
           <div>
@@ -244,7 +336,7 @@ export default function BetterThanPage() {
         className={`better-than-lock${ready ? " is-ready" : ""}`}
         type="button"
         disabled={!ready}
-        onClick={() => setLocked(true)}
+        onClick={lockClaim}
       >
         {ready ? "LOCK MY CLAIM" : `SELECT ${claimCount - selected.size} MORE`}
       </button>
