@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 
 type FighterPhotoProps = {
   name: string;
   src: string;
   className?: string;
+  style?: CSSProperties;
 };
 
-export function FighterPhoto({ name, src, className = "" }: FighterPhotoProps) {
+export function FighterPhoto({ name, src, className = "", style }: FighterPhotoProps) {
   const [failed, setFailed] = useState(false);
   const initials = name
     .split(" ")
@@ -15,7 +16,7 @@ export function FighterPhoto({ name, src, className = "" }: FighterPhotoProps) {
     .slice(0, 2);
 
   if (failed) {
-    return <span className={`fighter-photo fighter-photo--fallback ${className}`}>{initials}</span>;
+    return <span className={`fighter-photo fighter-photo--fallback ${className}`} style={style}>{initials}</span>;
   }
 
   return (
@@ -25,6 +26,7 @@ export function FighterPhoto({ name, src, className = "" }: FighterPhotoProps) {
       alt=""
       loading="lazy"
       decoding="async"
+      style={style}
       onError={() => setFailed(true)}
     />
   );
