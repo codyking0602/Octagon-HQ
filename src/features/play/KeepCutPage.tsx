@@ -1,7 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { FighterPhoto } from "../rankings/FighterPhoto";
-import { shareGameChallenge } from "./challengeShare";
 import { GameResultActions } from "./GameResultActions";
 import {
   KEEP_CUT_PACKS,
@@ -40,6 +40,20 @@ function challengeLineup(packId: KeepCutPackId, fighters: PlayFighter[]): KeepCu
   };
 }
 
+function setupString(value: unknown, key: string) {
+  if (!value || Array.isArray(value) || typeof value !== "object") return "";
+  const setup = value as Record<string, unknown>;
+  return typeof setup[key] === "string" ? setup[key] : "";
+}
+
+function setupIds(value: unknown) {
+  if (!value || Array.isArray(value) || typeof value !== "object") return [];
+  const setup = value as Record<string, unknown>;
+  return Array.isArray(setup.lineupIds)
+    ? setup.lineupIds.filter((id): id is string => typeof id === "string")
+    : [];
+}
+
 function FighterTile({ fighter, compact = false }: { fighter: PlayFighter; compact?: boolean }) {
   return (
     <article className={`keep-cut-fighter${compact ? " keep-cut-fighter--compact" : ""}`}>
@@ -70,9 +84,23 @@ function DecisionTray({ title, fighters }: { title: KeepCutChoice; fighters: Pla
 export default function KeepCutPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const requestedPack = searchParams.get("pack");
+  const {
+    activeProfile,
+    profiles,
+    beginChallenge,
+    getChallenge,
+    markOpened,
+    submitResult,
+  } = usePlayChallenges();
+  const profileChallengeCode = searchParams.get("profileChallenge")?.toUpperCase() ?? "";
+  const profileChallenge = profileChallengeCode ? getChallenge(profileChallengeCode) : null;
+  const profilePackValue = profileChallenge?.gameId === "keep-cut" ? setupString(profileChallenge.setup, "packId") : "";
+  const requestedPack = profilePackValue || searchParams.get("pack");
   const initialPack = validPack(requestedPack) ? requestedPack : "ufc-careers";
-  const challengeIds = (searchParams.get("lineup") ?? "").split(",").map((id) => id.trim()).filter(Boolean);
+  const profileIds = profileChallenge?.gameId === "keep-cut" ? setupIds(profileChallenge.setup) : [];
+  const challengeIds = profileIds.length
+    ? profileIds
+    : (searchParams.get("lineup") ?? "").split(",").map((id) => id.trim()).filter(Boolean);
   const resolvedChallenge = resolveKeepCutChallenge(initialPack, challengeIds);
   const [lineup, setLineup] = useState<KeepCutLineup>(() =>
     resolvedChallenge ? challengeLineup(initialPack, resolvedChallenge) : generatedLineup(initialPack),
@@ -90,6 +118,19 @@ export default function KeepCutPage() {
     group,
     rows: KEEP_CUT_PACKS.filter((row) => row.group === group),
   })), []);
+  const challengeCreator = profileChallenge
+    ? profiles.find((profile) => profile.id === profileChallenge.creatorId)
+    : null;
+
+  useEffect(() => {
+    if (
+      profileChallenge
+      && !profileChallenge.openedAt
+      && activeProfile?.id === profileChallenge.recipientId
+    ) {
+      markOpened(profileChallenge.code);
+    }
+  }, [activeProfile?.id, markOpened, profileChallenge]);
 
   function startNew(packId: KeepCutPackId = lineup.packId) {
     setLineup(generatedLineup(packId));
@@ -102,15 +143,39 @@ export default function KeepCutPage() {
     if (!current || complete) return;
     if (choice === "keep" && kept.length >= 4) return;
     if (choice === "cut" && cut.length >= 4) return;
-    setDecisions((rows) => [...rows, choice]);
+    const next = [...decisions, choice];
+    setDecisions(next);
+    if (
+      next.length === 8
+      && profileChallenge
+      && !profileChallenge.completedAt
+      && activeProfile?.id === profileChallenge.recipientId
+    ) {
+      submitResult(profileChallenge.code, {
+        decisions: lineup.fighters.map((fighter, index) => ({ fighterId: fighter.id, choice: next[index] ?? "cut" })),
+        keptIds: lineup.fighters.filter((_fighter, index) => next[index] === "keep").map((fighter) => fighter.id),
+        cutIds: lineup.fighters.filter((_fighter, index) => next[index] === "cut").map((fighter) => fighter.id),
+      });
+    }
   }
 
   async function challengeSomeone() {
+    if (!complete) return;
     setShareStatus("");
-    const status = await shareGameChallenge({
-      title: "UFC Keep 4, Cut 4 Challenge",
-      text: `Keep four and cut four from my exact ${pack.name} lineup. Every decision locks.`,
-      url: keepCutChallengeUrl(lineup.packId, lineup.fighters),
+    const status = await beginChallenge({
+      gameId: "keep-cut",
+      gameVersion: "keep-cut-v2-20260724",
+      gameTitle: "Keep 4, Cut 4",
+      summary: `Keep four and cut four from the same ${pack.name} lineup.`,
+      setup: { packId: lineup.packId, lineupIds: lineup.fighters.map((fighter) => fighter.id) },
+      creatorResult: {
+        decisions: lineup.fighters.map((fighter, index) => ({ fighterId: fighter.id, choice: decisions[index] ?? "cut" })),
+        keptIds: kept.map((fighter) => fighter.id),
+        cutIds: cut.map((fighter) => fighter.id),
+      },
+      shareTitle: "UFC Keep 4, Cut 4 Challenge",
+      shareText: `Keep four and cut four from my exact ${pack.name} lineup. Every decision locks.`,
+      shareUrl: keepCutChallengeUrl(lineup.packId, lineup.fighters),
     });
     setShareStatus(status);
   }
@@ -118,6 +183,13 @@ export default function KeepCutPage() {
   if (complete) {
     return (
       <div className="page keep-cut-page">
+        {challengeCreator ? (
+          <section className="challenge-game-banner">
+            <span>PROFILE CHALLENGE</span>
+            <strong>{challengeCreator.displayName} sent this exact eight-fighter lineup.</strong>
+            <small>Both Keep/Cut cards are now available in Challenge Center.</small>
+          </section>
+        ) : null}
         <section className="keep-cut-result-hero">
           <p className="eyebrow">EIGHT CALLS LOCKED</p>
           <h1>YOUR KEEP/CUT CARD</h1>
@@ -153,6 +225,13 @@ export default function KeepCutPage() {
 
   return (
     <div className="page keep-cut-page">
+      {challengeCreator ? (
+        <section className="challenge-game-banner">
+          <span>PROFILE CHALLENGE</span>
+          <strong>{challengeCreator.displayName} sent this exact eight-fighter lineup.</strong>
+          <small>Your decisions stay private until all eight calls are locked.</small>
+        </section>
+      ) : null}
       <section className="keep-cut-intro">
         <div className="keep-cut-intro__copy">
           <p className="eyebrow">{isChallenge ? "FRIEND CHALLENGE" : "KEEP 4 · CUT 4"}</p>
