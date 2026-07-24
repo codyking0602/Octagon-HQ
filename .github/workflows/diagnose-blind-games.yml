@@ -18,8 +18,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
-      - run: npm ci
+          node-version-file: .nvmrc
+      - run: npm install
       - name: Run Blind game tests
         continue-on-error: true
         run: npm test -- src/features/play/blindGames.test.tsx --reporter=json --outputFile=blind-games-results.json
