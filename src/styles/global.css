@@ -56,6 +56,12 @@ img { max-width: 100%; }
 
 .fighter-photo { display: grid; place-items: center; overflow: hidden; flex: 0 0 auto; width: 48px; height: 48px; border-radius: 13px; object-fit: cover; object-position: center top; background: var(--surface-soft); color: var(--text-secondary); font-weight: 900; }
 .fighter-photo--fallback { border: 1px solid var(--border); }
+.blind-resume .fighter-card--reveal .fighter-photo,
+.blind-resume .fighter-card--result .fighter-photo {
+  object-fit: cover;
+  object-position: center 18%;
+  transform: scale(.88);
+}
 .board-preview__list { display: grid; }
 .board-preview__row { display: grid; grid-template-columns: 22px 48px minmax(0, 1fr) auto; align-items: center; gap: 12px; min-height: 70px; border-top: 1px solid var(--border); text-decoration: none; }
 .board-preview__row:first-child { border-top: 0; }
