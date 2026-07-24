@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState, type PropsWithChildren } from "react";
 import { ChallengeProvider } from "../features/challenges/ChallengeProvider";
+import { IdentityProvider } from "../features/identity/IdentityProvider";
 
 export function AppProviders({ children }: PropsWithChildren) {
   const [queryClient] = useState(
@@ -18,7 +19,9 @@ export function AppProviders({ children }: PropsWithChildren) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ChallengeProvider>{children}</ChallengeProvider>
+      <IdentityProvider>
+        <ChallengeProvider>{children}</ChallengeProvider>
+      </IdentityProvider>
     </QueryClientProvider>
   );
 }

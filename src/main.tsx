@@ -4,6 +4,7 @@ import { App } from "./app/App";
 import "./styles/tokens.css";
 import "./styles/global.css";
 import "./styles/intelligence.css";
+import "./styles/identity.css";
 import "./styles/play.css";
 import "./styles/wavelength.css";
 import "./styles/game-results.css";
