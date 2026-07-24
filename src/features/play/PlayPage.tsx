@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FighterPhoto } from "../rankings/FighterPhoto";
+import { shareGameChallenge } from "./challengeShare";
 import {
   centralDay,
   dailyFindLeaderBoard,
@@ -64,6 +65,10 @@ function objectiveCopy(board: FindLeaderBoard) {
   return `Leave the fighter with the most ${label} among this group.`;
 }
 
+function validChallengeDay(value: string | null) {
+  return value && /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : null;
+}
+
 function DailyHistory({ rows, today }: { rows: FindLeaderHistoryRow[]; today: string }) {
   const stats = findLeaderStreaks(rows, today);
   const rowByDay = new Map(rows.map((row) => [row.day, row]));
@@ -122,6 +127,7 @@ function FindLeaderGame({
 }) {
   const [eliminated, setEliminated] = useState<string[]>([]);
   const [result, setResult] = useState<FindLeaderResult | null>(null);
+  const [challengeStatus, setChallengeStatus] = useState("");
   const eliminatedSet = new Set(eliminated);
   const remaining = board.candidates.filter((fighter) => !eliminatedSet.has(fighter.id));
   const statLabel = resultStatLabel(board);
@@ -148,6 +154,20 @@ function FindLeaderGame({
   function replay() {
     setEliminated([]);
     setResult(null);
+    setChallengeStatus("");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  async function challengeSomeone() {
+    setChallengeStatus("");
+    const url = new URL("/play/find-leader", window.location.origin);
+    url.searchParams.set("day", board.day);
+    const status = await shareGameChallenge({
+      title: "Find the Leader Challenge",
+      text: `I challenged you to the same Find the Leader board: ${board.question} Can you beat my score?`,
+      url: url.toString(),
+    });
+    setChallengeStatus(status);
   }
 
   if (result) {
@@ -198,9 +218,11 @@ function FindLeaderGame({
             })}
           </div>
           <div className="find-result-actions">
-            <button className="primary-action" type="button" onClick={replay}>REPLAY TODAY’S BOARD</button>
+            <button className="primary-action" type="button" onClick={challengeSomeone}>CHALLENGE SOMEONE</button>
+            <button className="find-secondary-action" type="button" onClick={replay}>REPLAY</button>
             <button className="find-secondary-action" type="button" onClick={onExit}>ALL GAMES</button>
           </div>
+          <p className="find-challenge-status" role="status">{challengeStatus}</p>
         </section>
       </div>
     );
@@ -241,19 +263,22 @@ export default function PlayPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const today = useMemo(() => centralDay(), []);
-  const board = useMemo(() => dailyFindLeaderBoard(today), [today]);
+  const isFindLeaderGame = location.pathname === "/play/find-leader";
+  const challengeDay = validChallengeDay(new URLSearchParams(location.search).get("day"));
+  const gameDay = isFindLeaderGame && challengeDay ? challengeDay : today;
+  const todayBoard = useMemo(() => dailyFindLeaderBoard(today), [today]);
+  const gameBoard = useMemo(() => dailyFindLeaderBoard(gameDay), [gameDay]);
   const [carousel, setCarousel] = useState<0 | 1>(0);
   const touchStartX = useRef<number | null>(null);
   const [history, setHistory] = useState<FindLeaderHistoryRow[]>(() => loadFindLeaderHistory());
   const todayRow = history.find((row) => row.day === today);
-  const isFindLeaderGame = location.pathname === "/play/find-leader";
 
   function complete(score: number) {
-    setHistory(recordFindLeaderAttempt(today, score));
+    setHistory(recordFindLeaderAttempt(gameDay, score));
   }
 
   function openFindLeader() {
-    if (board) navigate("/play/find-leader");
+    if (todayBoard) navigate("/play/find-leader");
   }
 
   function openWavelength() {
@@ -268,8 +293,8 @@ export default function PlayPage() {
     if (distance >= 45) setCarousel(0);
   }
 
-  if (isFindLeaderGame && board) {
-    return <FindLeaderGame board={board} onExit={() => navigate("/play")} onComplete={complete} />;
+  if (isFindLeaderGame && gameBoard) {
+    return <FindLeaderGame board={gameBoard} onExit={() => navigate("/play")} onComplete={complete} />;
   }
 
   return (
@@ -285,12 +310,12 @@ export default function PlayPage() {
         onTouchStart={(event) => { touchStartX.current = event.touches[0]?.clientX ?? null; }}
         onTouchEnd={(event) => finishSwipe(event.changedTouches[0]?.clientX ?? 0)}
       >
-        {carousel === 0 && board ? (
+        {carousel === 0 && todayBoard ? (
           <button className="play-daily__challenge" type="button" onClick={openFindLeader}>
             <div className="play-daily__topline"><span>TODAY’S CHALLENGE</span><b>{dateLabel(today).toUpperCase()}</b></div>
             <h2>FIND THE LEADER</h2>
             <p>Eliminate nine fighters without removing today’s verified stat leader.</p>
-            <div className="play-daily__category"><span>TODAY’S CATEGORY</span><strong>{board.statLabel}</strong></div>
+            <div className="play-daily__category"><span>TODAY’S CATEGORY</span><strong>{todayBoard.statLabel}</strong></div>
             <div className="play-daily__graphic"><b>10</b><span>→</span><b>1</b><small>LEAVE THE LEADER</small></div>
             <em>TAP TO PLAY · SWIPE FOR LEADERBOARD →</em>
           </button>
