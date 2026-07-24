@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ChallengeCenter } from "./ChallengeCenter";
 import { ChallengeProvider } from "./ChallengeProvider";
 import FindLeaderChallengeRoute from "./FindLeaderChallengeRoute";
@@ -27,14 +27,19 @@ function leaderButton(container: HTMLElement, leaderName: string) {
 describe("Play Challenge Center flow", () => {
   beforeEach(() => {
     window.localStorage.clear();
+    Object.defineProperty(navigator, "share", {
+      configurable: true,
+      value: vi.fn().mockResolvedValue(undefined),
+    });
   });
 
   afterEach(() => {
     cleanup();
     window.localStorage.clear();
+    vi.restoreAllMocks();
   });
 
-  it("sends one exact Find the Leader board, hides results, then unlocks both results after the recipient finishes", () => {
+  it("supports text sharing, freezes the board, and reveals both exact choice paths after completion", async () => {
     const day = centralDay();
     const board = dailyFindLeaderBoard(day)!;
     const leader = board.candidates.find((fighter) => fighter.id === board.leaderId)!;
@@ -44,14 +49,23 @@ describe("Play Challenge Center flow", () => {
     fireEvent.click(screen.getByRole("button", { name: "CHALLENGE SOMEONE" }));
 
     expect(screen.getByRole("dialog", { name: "Challenge Someone" })).toBeTruthy();
-    expect(screen.getByText("They receive this exact setup. Your result stays hidden until they finish.")).toBeTruthy();
-    fireEvent.click(screen.getByRole("button", { name: "SEND CHALLENGE" }));
+    expect(screen.getByText("Send to an Octagon HQ profile or use your phone’s share sheet to text the exact challenge.")).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("button", { name: "TEXT / SHARE LINK" }));
+    await waitFor(() => expect(navigator.share).toHaveBeenCalledTimes(1));
+
+    fireEvent.click(screen.getByRole("button", { name: "SEND TO PROFILE" }));
 
     const sent = loadChallenges(window.localStorage);
     expect(sent).toHaveLength(1);
     expect(sent[0]?.creatorId).toBe("cody-preview");
     expect(sent[0]?.recipientId).toBe("shane-preview");
-    expect(sent[0]?.creatorResult).toEqual({ score: 1, perfect: false });
+    expect(sent[0]?.creatorResult).toEqual({
+      score: 1,
+      perfect: false,
+      fatalId: leader.id,
+      eliminated: [leader.id],
+    });
     expect(sent[0]?.responderResult).toBeNull();
     expect(sent[0]?.completedAt).toBeNull();
 
@@ -79,7 +93,12 @@ describe("Play Challenge Center flow", () => {
 
     fireEvent.click(leaderButton(recipientView.container, leader.name)!);
     const completed = loadChallenges(window.localStorage);
-    expect(completed[0]?.responderResult).toEqual({ score: 1 });
+    expect(completed[0]?.responderResult).toEqual({
+      score: 1,
+      perfect: false,
+      fatalId: leader.id,
+      eliminated: [leader.id],
+    });
     expect(completed[0]?.completedAt).not.toBeNull();
 
     recipientView.unmount();
@@ -91,6 +110,9 @@ describe("Play Challenge Center flow", () => {
     expect(screen.getByRole("dialog", { name: "Find the Leader" })).toBeTruthy();
     expect(screen.getByText("Tie game")).toBeTruthy();
     expect(screen.getAllByText("1/10")).toHaveLength(2);
+    expect(screen.getAllByText("ELIMINATION ORDER")).toHaveLength(2);
+    expect(screen.getAllByText("LEADER")).toHaveLength(2);
+    expect(screen.getAllByText(leader.name).length).toBeGreaterThanOrEqual(2);
   });
 
   it("shows the shared All, Received, and Sent views for the active preview profile", () => {
@@ -116,6 +138,7 @@ describe("Play Challenge Center flow", () => {
     expect(screen.getByRole("tab", { name: "ALL 1" })).toBeTruthy();
     expect(screen.getByRole("tab", { name: "RECEIVED 0" })).toBeTruthy();
     expect(screen.getByRole("tab", { name: "SENT 1" })).toBeTruthy();
+    expect(screen.getByText("WAITING")).toBeTruthy();
 
     fireEvent.change(screen.getByLabelText("PREVIEWING AS"), { target: { value: "shane-preview" } });
     expect(screen.getByRole("tab", { name: "RECEIVED 1" })).toBeTruthy();
