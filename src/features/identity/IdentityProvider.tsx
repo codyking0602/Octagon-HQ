@@ -2,7 +2,6 @@ import {
   createContext,
   useContext,
   useEffect,
-  useMemo,
   useState,
   type PropsWithChildren,
 } from "react";
@@ -37,9 +36,8 @@ export function IdentityProvider({
   children,
   gateway: suppliedGateway,
 }: PropsWithChildren<{ gateway?: IdentityGateway | null }>) {
-  const [gateway] = useState<IdentityGateway | null>(() => suppliedGateway === undefined
-    ? createIdentityGateway()
-    : suppliedGateway);
+  const initialGateway = suppliedGateway === undefined ? createIdentityGateway() : suppliedGateway;
+  const [gateway] = useState<IdentityGateway | null>(initialGateway);
   const [status, setStatus] = useState<IdentityStatus>(() => gateway ? "loading" : "unconfigured");
   const [profile, setProfile] = useState<IdentityProfile | null>(null);
   const [busy, setBusy] = useState(false);
@@ -119,7 +117,11 @@ export function IdentityProvider({
     setBusy(true);
     setError("");
     try {
-      await gateway[action](parsed.data.displayName, parsed.data.pin);
+      if (action === "signIn") {
+        await gateway.signIn(parsed.data.displayName, parsed.data.pin);
+      } else {
+        await gateway.createProfile(parsed.data.displayName, parsed.data.pin);
+      }
       const session = await gateway.getSession();
       if (!session) throw new Error("The profile was not signed in.");
       const nextProfile = await gateway.loadProfile(session.userId);
@@ -152,7 +154,7 @@ export function IdentityProvider({
     }
   }
 
-  const value = useMemo<IdentityContextValue>(() => ({
+  const value: IdentityContextValue = {
     status,
     ready: status !== "loading",
     profile,
@@ -168,7 +170,7 @@ export function IdentityProvider({
     signIn: (displayName, pin) => authenticate("signIn", displayName, pin),
     createProfile: (displayName, pin) => authenticate("createProfile", displayName, pin),
     signOut,
-  }), [busy, dialogOpen, error, profile, status]);
+  };
 
   return <IdentityContext.Provider value={value}>{children}</IdentityContext.Provider>;
 }
