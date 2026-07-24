@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { shareGameChallenge } from "./challengeShare";
+import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { GameResultActions } from "./GameResultActions";
 import {
   clampWavelength,
@@ -15,6 +15,13 @@ import {
 } from "./wavelengthChallenge";
 
 const LAST_TARGET_KEY = "octagon-hq:wavelength-last-target:v2";
+
+export interface WavelengthChallengeResult {
+  score: number;
+  finalGuess: number;
+  target: number;
+  guesses: number[];
+}
 
 function previousTarget() {
   if (typeof window === "undefined") return 0;
@@ -36,11 +43,16 @@ function freshSeed() {
 
 export default function WavelengthGame({
   challengeSeed,
+  challengeFrom = "",
+  onChallengeComplete,
   onExit,
 }: {
   challengeSeed?: string;
+  challengeFrom?: string;
+  onChallengeComplete?: (result: WavelengthChallengeResult) => void;
   onExit: () => void;
 }) {
+  const { beginChallenge } = usePlayChallenges();
   const initialSeed = useMemo(() => challengeSeed ?? freshSeed(), [challengeSeed]);
   const initialRound = useMemo(() => {
     const round = createChallengeWavelengthRound(initialSeed);
@@ -71,7 +83,14 @@ export default function WavelengthGame({
     const nextGuesses = [...guesses, locked];
     setGuesses(nextGuesses);
     if (clueIndex === 3) {
+      const result = {
+        score: wavelengthScore(locked, round.target),
+        finalGuess: locked,
+        target: round.target,
+        guesses: nextGuesses,
+      };
       setComplete(true);
+      onChallengeComplete?.(result);
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
@@ -81,21 +100,38 @@ export default function WavelengthGame({
   }
 
   async function challengeSomeone() {
+    if (!complete) return;
+    const finalGuess = guesses[3];
+    if (typeof finalGuess !== "number") return;
+    const score = wavelengthScore(finalGuess, round.target);
     setChallengeStatus("");
-    const status = await shareGameChallenge({
-      title: "Wavelength Challenge",
-      text: "I challenged you to find the same hidden UFC rating in four adaptive clues. Can you beat my final score?",
-      url: wavelengthChallengeUrl(initialSeed),
+    const status = await beginChallenge({
+      gameId: "wavelength",
+      gameVersion: "wavelength-v2-20260724",
+      gameTitle: "Wavelength",
+      summary: "Find the same hidden UFC rating in four adaptive clues.",
+      setup: { seed: initialSeed },
+      creatorResult: { score, finalGuess, target: round.target, guesses },
+      shareTitle: "Wavelength Challenge",
+      shareText: "I challenged you to find the same hidden UFC rating in four adaptive clues. Can you beat my final score?",
+      shareUrl: wavelengthChallengeUrl(initialSeed),
     });
     setChallengeStatus(status);
   }
 
   if (complete) {
-    const finalGuess = guesses[3];
+    const finalGuess = guesses[3] ?? 50;
     const distance = Math.abs(finalGuess - round.target);
     const score = wavelengthScore(finalGuess, round.target);
     return (
       <div className="wavelength-page page">
+        {challengeFrom ? (
+          <section className="challenge-game-banner">
+            <span>PROFILE CHALLENGE</span>
+            <strong>{challengeFrom} sent this exact hidden number.</strong>
+            <small>Your score is saved. Both results are now available in Challenge Center.</small>
+          </section>
+        ) : null}
         <section className="wavelength-result-hero">
           <p className="eyebrow">FINAL SCORE</p>
           <strong>{score}</strong>
@@ -140,6 +176,13 @@ export default function WavelengthGame({
 
   return (
     <div className="wavelength-page page">
+      {challengeFrom ? (
+        <section className="challenge-game-banner">
+          <span>PROFILE CHALLENGE</span>
+          <strong>{challengeFrom} sent this exact hidden number.</strong>
+          <small>Finish all four clues to unlock both results in Challenge Center.</small>
+        </section>
+      ) : null}
       <section className="wavelength-topline">
         <span>FIND THE HIDDEN NUMBER</span>
         <b>CLUE {clueIndex + 1} OF 4</b>
