@@ -3,7 +3,7 @@ name: Validate V2
 on:
   pull_request:
   push:
-    branches: [main, play-challenge-center]
+    branches: [main]
 
 permissions:
   contents: read
