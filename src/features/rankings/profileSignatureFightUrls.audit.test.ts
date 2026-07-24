@@ -6,8 +6,20 @@ import { profileSignatureFightUrls } from "./profileSignatureFightUrls";
 const describeAudit = process.env.SIGNATURE_FIGHT_AUDIT === "1" ? describe : describe.skip;
 
 const specialTitleTokens: Readonly<Record<string, readonly string[]>> = {
+  "jon-jones": ["jonjones", "jones", "джонджонс"],
   "demetrious-johnson": ["demetriousjohnson", "mightymouse"],
+  "islam-makhachev": ["islammakhachev", "makhachev", "исламмахачев"],
+  "alexander-volkanovski": ["alexandervolkanovski", "volkanovski", "александрволкановски"],
   "daniel-cormier": ["danielcormier", "cormier", "dc"],
+  "francis-ngannou": ["francisngannou", "ngannou", "фрэнсиснганну"],
+  "cain-velasquez": ["cainvelasquez", "velasquez", "кейневеласкес"],
+  "aljamain-sterling": ["aljamainsterling", "sterling", "алджэмейнстерлинг"],
+  "junior-dos-santos": ["juniordossantos", "dossantos", "джуниордоссантос"],
+  "bj-penn": ["bjpenn", "penn", "ufc1007"],
+  "fabricio-werdum": ["fabriciowerdum", "werdum", "вердум"],
+  "henry-cejudo": ["henrycejudo", "cejudo", "генрисехудо"],
+  "petr-yan": ["petryan", "yan", "петрян"],
+  "sean-strickland": ["seanstrickland", "strickland", "шонстрикланд"],
   "quinton-jackson": ["quintonjackson", "rampage"],
   "shogun-rua": ["shogun", "rua"],
 };
@@ -17,7 +29,7 @@ function normalize(value: string): string {
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLocaleLowerCase("en-US")
-    .replace(/[^a-z0-9]/g, "");
+    .replace(/[^\p{L}\p{N}]/gu, "");
 }
 
 function expectedTokens(slug: string): readonly string[] {
