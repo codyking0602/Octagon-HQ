@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ChallengeCenter } from "../challenges/ChallengeCenter";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
+import type { ChallengeJson } from "../challenges/challengeModel";
 import { FighterPhoto } from "../rankings/FighterPhoto";
 import {
   centralDay,
@@ -80,10 +81,45 @@ function validChallengeDay(value: string | null) {
   return value && /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : null;
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && !Array.isArray(value) && typeof value === "object";
+}
+
 function challengeSetupDay(value: unknown) {
-  if (!value || Array.isArray(value) || typeof value !== "object") return null;
-  const setup = value as Record<string, unknown>;
-  return validChallengeDay(typeof setup.day === "string" ? setup.day : null);
+  if (!isRecord(value)) return null;
+  return validChallengeDay(typeof value.day === "string" ? value.day : null);
+}
+
+function challengeSetupBoard(value: unknown): FindLeaderBoard | null {
+  if (!isRecord(value) || !isRecord(value.board)) return null;
+  const board = value.board;
+  if (
+    typeof board.version !== "string"
+    || typeof board.day !== "string"
+    || typeof board.definitionId !== "string"
+    || typeof board.question !== "string"
+    || typeof board.context !== "string"
+    || typeof board.statLabel !== "string"
+    || typeof board.shortLabel !== "string"
+    || typeof board.family !== "string"
+    || typeof board.leaderId !== "string"
+    || typeof board.leaderValue !== "number"
+    || !Array.isArray(board.candidates)
+    || board.candidates.length !== 10
+  ) return null;
+
+  const candidatesAreValid = board.candidates.every((candidate) => isRecord(candidate)
+    && typeof candidate.id === "string"
+    && typeof candidate.name === "string"
+    && typeof candidate.value === "number"
+    && typeof candidate.division === "string"
+    && typeof candidate.thumbUrl === "string");
+
+  return candidatesAreValid ? board as unknown as FindLeaderBoard : null;
+}
+
+function findLeaderChallengeSetup(board: FindLeaderBoard): ChallengeJson {
+  return JSON.parse(JSON.stringify({ day: board.day, board })) as ChallengeJson;
 }
 
 function DailyHistory({ rows, today }: { rows: FindLeaderHistoryRow[]; today: string }) {
@@ -188,7 +224,7 @@ function FindLeaderGame({
       gameVersion: board.version,
       gameTitle: "Find the Leader",
       summary: board.question,
-      setup: { day: board.day, question: board.question },
+      setup: findLeaderChallengeSetup(board),
       creatorResult: { score: result.score, perfect: result.perfect },
       shareTitle: "Find the Leader Challenge",
       shareText: `I challenged you to the same Find the Leader board: ${board.question} Can you beat my score?`,
@@ -310,10 +346,12 @@ export default function PlayPage() {
   const challengeCode = searchParams.get("challenge")?.toUpperCase() ?? "";
   const profileChallenge = challengeCode ? getChallenge(challengeCode) : null;
   const challengeDay = validChallengeDay(searchParams.get("day"));
-  const profileChallengeDay = challengeSetupDay(profileChallenge?.setup);
+  const storedChallengeBoard = challengeSetupBoard(profileChallenge?.setup);
+  const profileChallengeDay = storedChallengeBoard?.day ?? challengeSetupDay(profileChallenge?.setup);
   const gameDay = isFindLeaderGame ? profileChallengeDay ?? challengeDay ?? today : today;
   const todayBoard = useMemo(() => dailyFindLeaderBoard(today), [today]);
-  const gameBoard = useMemo(() => dailyFindLeaderBoard(gameDay), [gameDay]);
+  const generatedGameBoard = useMemo(() => dailyFindLeaderBoard(gameDay), [gameDay]);
+  const gameBoard = storedChallengeBoard ?? generatedGameBoard;
   const [carousel, setCarousel] = useState<0 | 1>(0);
   const touchStartX = useRef<number | null>(null);
   const [history, setHistory] = useState<FindLeaderHistoryRow[]>(() => loadFindLeaderHistory());
