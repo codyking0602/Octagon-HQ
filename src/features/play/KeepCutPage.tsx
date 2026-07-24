@@ -205,7 +205,7 @@ export default function KeepCutPage() {
               name={current.name}
               src={current.thumbUrl}
               className="keep-cut-current__photo"
-              style={{ aspectRatio: "4 / 3", objectFit: "cover", objectPosition: "center" }}
+              style={{ aspectRatio: "1 / 1", objectFit: "contain", objectPosition: "center" }}
             />
             <div>
               <span>REVEAL {decisions.length + 1} OF 8</span>
