@@ -54,6 +54,15 @@ describe("Play Challenge Center flow", () => {
     expect(sent[0]?.responderResult).toBeNull();
     expect(sent[0]?.completedAt).toBeNull();
 
+    const storedSetup = sent[0]?.setup as unknown as {
+      day: string;
+      board: { leaderId: string; candidates: Array<{ id: string }> };
+    };
+    expect(storedSetup.day).toBe(board.day);
+    expect(storedSetup.board.leaderId).toBe(board.leaderId);
+    expect(storedSetup.board.candidates.map((fighter) => fighter.id))
+      .toEqual(board.candidates.map((fighter) => fighter.id));
+
     creatorView.unmount();
     window.localStorage.setItem(PROFILE_STORAGE_KEY, "shane-preview");
 
