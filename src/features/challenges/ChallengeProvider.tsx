@@ -53,7 +53,20 @@ interface PlayChallengesContextValue {
   viewResults: (code: string) => void;
 }
 
-const PlayChallengesContext = createContext<PlayChallengesContextValue | null>(null);
+const INACTIVE_CHALLENGES: PlayChallengesContextValue = {
+  enabled: false,
+  profiles: [],
+  activeProfile: null,
+  challenges: [],
+  setActiveProfile: () => undefined,
+  beginChallenge: async () => "",
+  getChallenge: () => null,
+  markOpened: () => undefined,
+  submitResult: () => undefined,
+  viewResults: () => undefined,
+};
+
+const PlayChallengesContext = createContext<PlayChallengesContextValue>(INACTIVE_CHALLENGES);
 
 function challengeLabAvailable() {
   if (typeof window === "undefined") return false;
@@ -335,9 +348,7 @@ export function ChallengeProvider({ children }: PropsWithChildren) {
 }
 
 export function usePlayChallenges() {
-  const value = useContext(PlayChallengesContext);
-  if (!value) throw new Error("usePlayChallenges must be used inside ChallengeProvider");
-  return value;
+  return useContext(PlayChallengesContext);
 }
 
 export function challengeCounterpart(
