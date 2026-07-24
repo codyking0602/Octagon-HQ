@@ -80,7 +80,7 @@ export default function KeepCutPage() {
   const [decisions, setDecisions] = useState<KeepCutChoice[]>([]);
   const [shareStatus, setShareStatus] = useState("");
 
-  const pack = KEEP_CUT_PACKS.find((row) => row.id === lineup.packId) ?? KEEP_CUT_PACKS[0];
+  const pack = KEEP_CUT_PACKS.find((row) => row.id === lineup.packId) ?? KEEP_CUT_PACKS[0]!;
   const complete = decisions.length === 8;
   const kept = lineup.fighters.filter((_fighter, index) => decisions[index] === "keep");
   const cut = lineup.fighters.filter((_fighter, index) => decisions[index] === "cut");
@@ -154,52 +154,68 @@ export default function KeepCutPage() {
   return (
     <div className="page keep-cut-page">
       <section className="keep-cut-intro">
-        <div>
+        <div className="keep-cut-intro__copy">
           <p className="eyebrow">{isChallenge ? "FRIEND CHALLENGE" : "KEEP 4 · CUT 4"}</p>
           <h1>{pack.prompt}</h1>
           <p>{pack.description} You will not see who comes next.</p>
         </div>
-        <label>
-          <span>CATEGORY</span>
-          <select
-            value={lineup.packId}
-            onChange={(event) => startNew(event.target.value as KeepCutPackId)}
+        <div className="keep-cut-intro__controls">
+          <label>
+            <span>CATEGORY</span>
+            <select
+              value={lineup.packId}
+              onChange={(event) => startNew(event.target.value as KeepCutPackId)}
+              disabled={isChallenge}
+            >
+              {groupedPacks.map(({ group, rows }) => (
+                <optgroup label={group} key={group}>
+                  {rows.map((row) => <option value={row.id} key={row.id}>{row.name}</option>)}
+                </optgroup>
+              ))}
+            </select>
+          </label>
+          <button
+            className="keep-cut-new-lineup"
+            type="button"
             disabled={isChallenge}
+            onClick={() => startNew()}
           >
-            {groupedPacks.map(({ group, rows }) => (
-              <optgroup label={group} key={group}>
-                {rows.map((row) => <option value={row.id} key={row.id}>{row.name}</option>)}
-              </optgroup>
-            ))}
-          </select>
-        </label>
+            {isChallenge ? "SHARED LINEUP" : "NEW LINEUP"}
+          </button>
+        </div>
       </section>
 
-      <section className="keep-cut-progress">
-        <strong>FIGHTER {decisions.length + 1} OF 8</strong>
-        <span>{pack.group} · {pack.name}</span>
-      </section>
+      <section className="keep-cut-game-card">
+        <header className="keep-cut-progress">
+          <strong>FIGHTER {decisions.length + 1} OF 8</strong>
+          <span>{pack.group} · {pack.name}</span>
+        </header>
 
-      <div className="keep-cut-board">
-        <DecisionTray title="keep" fighters={kept} />
-        <DecisionTray title="cut" fighters={cut} />
-      </div>
+        <div className="keep-cut-board">
+          <DecisionTray title="keep" fighters={kept} />
+          <DecisionTray title="cut" fighters={cut} />
+        </div>
 
-      {current ? (
-        <section className="keep-cut-current">
-          <FighterPhoto name={current.name} src={current.thumbUrl} className="keep-cut-current__photo" />
-          <div>
-            <span>REVEAL {decisions.length + 1} OF 8</span>
-            <h2>{current.name}</h2>
-            <p>{current.divisions.join(" / ")} · {current.mainEra}</p>
-            <small className={keepFull || cutFull ? "is-forced" : ""}>{forced}</small>
-            <div className="keep-cut-current__actions">
-              <button type="button" className="keep" disabled={keepFull} onClick={() => decide("keep")}>KEEP</button>
-              <button type="button" className="cut" disabled={cutFull} onClick={() => decide("cut")}>CUT</button>
+        {current ? (
+          <section className="keep-cut-current">
+            <FighterPhoto
+              name={current.name}
+              src={current.profileUrl || current.thumbUrl}
+              className="keep-cut-current__photo"
+            />
+            <div>
+              <span>REVEAL {decisions.length + 1} OF 8</span>
+              <h2>{current.name}</h2>
+              <p>{current.divisions.join(" / ")} · {current.mainEra}</p>
+              <small className={keepFull || cutFull ? "is-forced" : ""}>{forced}</small>
+              <div className="keep-cut-current__actions">
+                <button type="button" className="keep" disabled={keepFull} onClick={() => decide("keep")}>KEEP</button>
+                <button type="button" className="cut" disabled={cutFull} onClick={() => decide("cut")}>CUT</button>
+              </div>
             </div>
-          </div>
-        </section>
-      ) : null}
+          </section>
+        ) : null}
+      </section>
     </div>
   );
 }
