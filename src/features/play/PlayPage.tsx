@@ -15,6 +15,7 @@ import {
   recordFindLeaderAttempt,
   type FindLeaderHistoryRow,
 } from "./findLeaderStorage";
+import { GameResultActions } from "./GameResultActions";
 import { playGames, type PlayGameId } from "./playRegistry";
 
 interface FindLeaderResult {
@@ -224,12 +225,12 @@ function FindLeaderGame({
               );
             })}
           </div>
-          <div className="find-result-actions">
-            <button className="primary-action" type="button" onClick={challengeSomeone}>CHALLENGE SOMEONE</button>
-            <button className="find-secondary-action" type="button" onClick={replay}>REPLAY</button>
-            <button className="find-secondary-action" type="button" onClick={onExit}>ALL GAMES</button>
-          </div>
-          <p className="find-challenge-status" role="status">{challengeStatus}</p>
+          <GameResultActions
+            onChallenge={() => void challengeSomeone()}
+            onReplay={replay}
+            onAllGames={onExit}
+            status={challengeStatus}
+          />
         </section>
       </div>
     );
@@ -303,7 +304,7 @@ export default function PlayPage() {
   return (
     <div className="page play-page">
       <section className="page-heading">
-        <p className="eyebrow">GAMES & CHALLENGES</p>
+        <p className="eyebrow">GAMES &amp; CHALLENGES</p>
         <h1>Play</h1>
         <p>Daily challenges, blind debates, and UFC rankings built to argue about.</p>
       </section>
@@ -352,12 +353,7 @@ export default function PlayPage() {
           {playGames.map((game) => {
             const route = LIVE_GAME_ROUTES[game.id];
             return route ? (
-              <button
-                className="play-game-card is-live"
-                type="button"
-                key={game.id}
-                onClick={() => game.id === "find-leader" ? openFindLeader() : navigate(route)}
-              >
+              <button className="play-game-card" type="button" key={game.id} onClick={() => navigate(route)}>
                 <span className="play-game-card__icon">{game.icon}</span>
                 <span className="play-game-card__status">PLAY NOW</span>
                 <strong>{game.title}</strong>
