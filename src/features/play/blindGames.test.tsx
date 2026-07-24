@@ -1,6 +1,7 @@
 import { fireEvent, render, within } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { ChallengeProvider } from "../challenges/ChallengeProvider";
 import IntelligencePage from "../intelligence/IntelligencePage";
 import { canonicalRankingInputs } from "../rankings/data/rankingInputs";
 import BlindRankPage from "./BlindRankPage";
@@ -21,28 +22,34 @@ import { getPlayFighter, rankedPlayFighters } from "./playFighterPool";
 
 function renderBlindResume(path = "/play/blind-resume") {
   return render(
-    <MemoryRouter initialEntries={[path]}>
-      <BlindResumePage />
-    </MemoryRouter>,
+    <ChallengeProvider>
+      <MemoryRouter initialEntries={[path]}>
+        <BlindResumePage />
+      </MemoryRouter>
+    </ChallengeProvider>,
   );
 }
 
 function renderBlindResumeWithIntelligence(path = "/play/blind-resume") {
   return render(
-    <MemoryRouter initialEntries={[path]}>
-      <Routes>
-        <Route path="/play/blind-resume" element={<BlindResumePage />} />
-        <Route path="/intelligence" element={<IntelligencePage />} />
-      </Routes>
-    </MemoryRouter>,
+    <ChallengeProvider>
+      <MemoryRouter initialEntries={[path]}>
+        <Routes>
+          <Route path="/play/blind-resume" element={<BlindResumePage />} />
+          <Route path="/intelligence" element={<IntelligencePage />} />
+        </Routes>
+      </MemoryRouter>
+    </ChallengeProvider>,
   );
 }
 
 function renderBlindRank(path = "/play/blind-rank") {
   return render(
-    <MemoryRouter initialEntries={[path]}>
-      <BlindRankPage />
-    </MemoryRouter>,
+    <ChallengeProvider>
+      <MemoryRouter initialEntries={[path]}>
+        <BlindRankPage />
+      </MemoryRouter>
+    </ChallengeProvider>,
   );
 }
 

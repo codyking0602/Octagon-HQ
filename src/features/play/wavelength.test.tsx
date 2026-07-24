@@ -1,5 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { ChallengeProvider } from "../challenges/ChallengeProvider";
 import WavelengthGame from "./WavelengthGame";
 import {
   createChallengeWavelengthRound,
@@ -13,6 +15,16 @@ import {
   wavelengthScore,
   wavelengthTargets,
 } from "./wavelengthEngine";
+
+function renderWavelength() {
+  return render(
+    <ChallengeProvider>
+      <MemoryRouter initialEntries={["/play/wavelength?challenge=rendered-challenge"]}>
+        <WavelengthGame challengeSeed="rendered-challenge" onExit={() => undefined} />
+      </MemoryRouter>
+    </ChallengeProvider>,
+  );
+}
 
 describe("Wavelength engine", () => {
   it("preserves the complete V1 target and expanded clue banks", () => {
@@ -57,7 +69,7 @@ describe("Wavelength game", () => {
   beforeEach(() => window.localStorage.clear());
 
   it("locks four guesses and reveals the standard challenge, replay, and all-games actions", () => {
-    render(<WavelengthGame challengeSeed="rendered-challenge" onExit={() => undefined} />);
+    renderWavelength();
     expect(screen.getByText("CLUE 1 OF 4")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "LOCK GUESS & REVEAL NEXT CLUE" }));

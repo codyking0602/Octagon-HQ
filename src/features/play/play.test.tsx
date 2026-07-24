@@ -1,6 +1,7 @@
 import { fireEvent, render } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it } from "vitest";
+import { ChallengeProvider } from "../challenges/ChallengeProvider";
 import PlayPage from "./PlayPage";
 import {
   dailyFindLeaderBoard,
@@ -16,13 +17,17 @@ import { playGames } from "./playRegistry";
 
 function renderPlay(path = "/play") {
   return render(
-    <MemoryRouter initialEntries={[path]}>
-      <PlayPage />
-    </MemoryRouter>,
+    <ChallengeProvider>
+      <MemoryRouter initialEntries={[path]}>
+        <PlayPage />
+      </MemoryRouter>
+    </ChallengeProvider>,
   );
 }
 
 describe("Play registry", () => {
+  beforeEach(() => window.localStorage.clear());
+
   it("preserves the approved six-game order and explanatory descriptions", () => {
     expect(playGames.map((game) => game.id)).toEqual([
       "find-leader",

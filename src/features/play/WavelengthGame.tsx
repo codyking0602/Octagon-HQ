@@ -1,10 +1,13 @@
 import { useMemo, useState } from "react";
-import { shareGameChallenge } from "./challengeShare";
+import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
+import { usePlayChallenges } from "../challenges/ChallengeProvider";
+import type { ChallengeJson } from "../challenges/challengeModel";
 import { GameResultActions } from "./GameResultActions";
 import {
   clampWavelength,
   wavelengthDistanceCopy,
   wavelengthScore,
+  type WavelengthClue,
   type WavelengthRound,
 } from "./wavelengthEngine";
 import {
@@ -34,6 +37,36 @@ function freshSeed() {
   return createWavelengthSeed();
 }
 
+function record(value: ChallengeJson | undefined): { [key: string]: ChallengeJson } | null {
+  return value && !Array.isArray(value) && typeof value === "object" ? value : null;
+}
+
+function storedClue(value: ChallengeJson | undefined): WavelengthClue | null {
+  const row = record(value);
+  return row
+    && typeof row.id === "string"
+    && typeof row.category === "string"
+    && typeof row.text === "string"
+    && typeof row.rating === "number"
+    ? { id: row.id, category: row.category, text: row.text, rating: row.rating }
+    : null;
+}
+
+function storedRound(value: ChallengeJson | undefined): WavelengthRound | null {
+  const row = record(value);
+  const clues = Array.isArray(row?.clues) ? row.clues.flatMap((item) => {
+    const clue = storedClue(item);
+    return clue ? [clue] : [];
+  }) : [];
+  return row && typeof row.target === "number" && clues.length
+    ? { target: row.target, clues }
+    : null;
+}
+
+function asJson(value: unknown): ChallengeJson {
+  return JSON.parse(JSON.stringify(value)) as ChallengeJson;
+}
+
 export default function WavelengthGame({
   challengeSeed,
   onExit,
@@ -41,12 +74,17 @@ export default function WavelengthGame({
   challengeSeed?: string;
   onExit: () => void;
 }) {
-  const initialSeed = useMemo(() => challengeSeed ?? freshSeed(), [challengeSeed]);
+  const { beginChallenge } = usePlayChallenges();
+  const profileMatch = useProfileChallengeMatch("wavelength");
+  const profileSetup = record(profileMatch.challenge?.setup);
+  const profileSeed = typeof profileSetup?.seed === "string" ? profileSetup.seed : undefined;
+  const profileRound = storedRound(profileSetup?.round);
+  const initialSeed = useMemo(() => profileSeed ?? challengeSeed ?? freshSeed(), [challengeSeed, profileSeed]);
   const initialRound = useMemo(() => {
-    const round = createChallengeWavelengthRound(initialSeed);
-    rememberTarget(round.target);
-    return round;
-  }, [initialSeed]);
+    const nextRound = profileRound ?? createChallengeWavelengthRound(initialSeed);
+    rememberTarget(nextRound.target);
+    return nextRound;
+  }, [initialSeed, profileRound]);
   const [round, setRound] = useState<WavelengthRound>(initialRound);
   const [clueIndex, setClueIndex] = useState(0);
   const [guess, setGuess] = useState(50);
@@ -56,7 +94,7 @@ export default function WavelengthGame({
   const clue = round.clues[clueIndex];
 
   function replay() {
-    setRound(createChallengeWavelengthRound(initialSeed));
+    setRound(profileRound ?? createChallengeWavelengthRound(initialSeed));
     setClueIndex(0);
     setGuess(50);
     setGuesses([]);
@@ -71,6 +109,13 @@ export default function WavelengthGame({
     const nextGuesses = [...guesses, locked];
     setGuesses(nextGuesses);
     if (clueIndex === 3) {
+      const score = wavelengthScore(locked, round.target);
+      profileMatch.submitResult(asJson({
+        score,
+        guesses: nextGuesses,
+        finalGuess: locked,
+        distance: Math.abs(locked - round.target),
+      }));
       setComplete(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
@@ -81,11 +126,25 @@ export default function WavelengthGame({
   }
 
   async function challengeSomeone() {
+    if (!complete) return;
+    const finalGuess = guesses[3];
+    const score = wavelengthScore(finalGuess, round.target);
     setChallengeStatus("");
-    const status = await shareGameChallenge({
-      title: "Wavelength Challenge",
-      text: "I challenged you to find the same hidden UFC rating in four adaptive clues. Can you beat my final score?",
-      url: wavelengthChallengeUrl(initialSeed),
+    const status = await beginChallenge({
+      gameId: "wavelength",
+      gameVersion: "wavelength-v2",
+      gameTitle: "Wavelength",
+      summary: `Find hidden rating ${round.target} through four adaptive clues`,
+      setup: asJson({ seed: initialSeed, round: initialRound, target: round.target }),
+      creatorResult: asJson({
+        score,
+        guesses,
+        finalGuess,
+        distance: Math.abs(finalGuess - round.target),
+      }),
+      shareTitle: "Wavelength Challenge",
+      shareText: "I challenged you to find the same hidden UFC rating in four adaptive clues. Can you beat my final score?",
+      shareUrl: wavelengthChallengeUrl(initialSeed),
     });
     setChallengeStatus(status);
   }
@@ -96,6 +155,13 @@ export default function WavelengthGame({
     const score = wavelengthScore(finalGuess, round.target);
     return (
       <div className="wavelength-page page">
+        {profileMatch.creator ? (
+          <section className="challenge-game-banner">
+            <span>PROFILE CHALLENGE</span>
+            <strong>{profileMatch.creator.displayName} sent this hidden target.</strong>
+            <small>Your full four-guess path is saved for the shared results.</small>
+          </section>
+        ) : null}
         <section className="wavelength-result-hero">
           <p className="eyebrow">FINAL SCORE</p>
           <strong>{score}</strong>
@@ -140,6 +206,13 @@ export default function WavelengthGame({
 
   return (
     <div className="wavelength-page page">
+      {profileMatch.creator ? (
+        <section className="challenge-game-banner">
+          <span>PROFILE CHALLENGE</span>
+          <strong>{profileMatch.creator.displayName} sent this hidden target.</strong>
+          <small>Your adaptive clues react only to your own guesses.</small>
+        </section>
+      ) : null}
       <section className="wavelength-topline">
         <span>FIND THE HIDDEN NUMBER</span>
         <b>CLUE {clueIndex + 1} OF 4</b>

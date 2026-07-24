@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { fireEvent, render } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { ChallengeProvider } from "../challenges/ChallengeProvider";
 import BetterThanPage from "./BetterThanPage";
 import KeepCutPage from "./KeepCutPage";
 import PlayPage from "./PlayPage";
@@ -25,7 +26,11 @@ import {
 import { getPlayFighter } from "./playFighterPool";
 
 function renderAt(element: ReactNode, path: string) {
-  return render(<MemoryRouter initialEntries={[path]}>{element}</MemoryRouter>);
+  return render(
+    <ChallengeProvider>
+      <MemoryRouter initialEntries={[path]}>{element}</MemoryRouter>
+    </ChallengeProvider>,
+  );
 }
 
 function badCount(packId: (typeof KEEP_CUT_PACKS)[number]["id"], seed: string) {
