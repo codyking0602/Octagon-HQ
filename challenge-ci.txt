@@ -1,4 +1,4 @@
-HEAD=aaf297a20463abc9a61c7a9a74a1ab5bab60f6df
+HEAD=8b2c7682cefab83728b7d7539195cf61c83cd7fb
 == TYPECHECK ==
 
 > octagon-hq@0.1.0 typecheck
@@ -13,37 +13,42 @@ TYPECHECK_EXIT=0
 
 [1m[30m[46m RUN [49m[39m[22m [36mv4.1.10 [39m[90m/home/runner/work/Octagon-HQ/Octagon-HQ[39m
 
- [32m✓[39m src/features/rankings/engine/categoryCalculators.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 21[2mms[22m[39m
- [32m✓[39m src/features/play/blindGames.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[32m 173[2mms[22m[39m
- [32m✓[39m src/features/play/finalGames.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 440[2mms[22m[39m
- [32m✓[39m src/features/intelligence/intelligence.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 919[2mms[22m[39m
-     [33m[2m✓[22m[39m opens Compare directly with the profile fighter selected and the opponent control focused [33m 457[2mms[22m[39m
- [32m✓[39m src/features/play/play.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 1263[2mms[22m[39m
-     [33m[2m✓[22m[39m keeps a broad playable bank and avoids immediate daily repeats [33m 538[2mms[22m[39m
- [32m✓[39m src/features/rankings/rankingModel.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 20[2mms[22m[39m
- [32m✓[39m src/features/intelligence/octagonVerdictExport.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 9[2mms[22m[39m
- [32m✓[39m src/features/rankings/engine/parityFixture.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 25[2mms[22m[39m
- [32m✓[39m src/features/rankings/engine/rankingEngine.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+ [32m✓[39m src/features/rankings/engine/categoryCalculators.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+ [32m✓[39m src/features/play/blindGames.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[32m 235[2mms[22m[39m
+ [32m✓[39m src/features/play/finalGames.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 805[2mms[22m[39m
+     [33m[2m✓[22m[39m shows all six Play Hub cards as live buttons [33m 320[2mms[22m[39m
+ [32m✓[39m src/features/intelligence/intelligence.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 1247[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps Intelligence in the header and out of primary navigation [33m 329[2mms[22m[39m
+     [33m[2m✓[22m[39m opens Compare directly with the profile fighter selected and the opponent control focused [33m 581[2mms[22m[39m
+ [32m✓[39m src/features/play/play.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 1636[2mms[22m[39m
+     [33m[2m✓[22m[39m renders all six games and opens the routed ten-fighter daily board [33m 426[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps a broad playable bank and avoids immediate daily repeats [33m 608[2mms[22m[39m
+ [32m✓[39m src/features/rankings/rankingModel.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+ [32m✓[39m src/features/intelligence/octagonVerdictExport.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m src/features/rankings/engine/parityFixture.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32m✓[39m src/features/rankings/engine/rankingEngine.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 34[2mms[22m[39m
 Not implemented: Window's scrollTo() method
- [32m✓[39m src/features/play/wavelength.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 265[2mms[22m[39m
- [32m✓[39m src/features/challenges/challengeModel.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 5[2mms[22m[39m
- [32m✓[39m src/features/rankings/rankingPresentation.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 10[2mms[22m[39m
- [32m✓[39m src/features/rankings/fighterAssets.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 21[2mms[22m[39m
- [32m✓[39m src/features/rankings/rankingControls.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 11[2mms[22m[39m
- [32m✓[39m src/app/App.test.tsx [2m([22m[2m30 tests[22m[2m)[22m[33m 9543[2mms[22m[39m
-     [33m[2m✓[22m[39m opens on Home without temporary or restricted product copy [33m 485[2mms[22m[39m
-     [33m[2m✓[22m[39m renders the compact calculated P4P board with abbreviated divisions [33m 1040[2mms[22m[39m
-     [33m[2m✓[22m[39m switches among Women, Divisions, and Categories with direct ranking tabs [33m 769[2mms[22m[39m
-     [33m[2m✓[22m[39m restores V1 era descriptions and makes defining fights obviously actionable [33m 325[2mms[22m[39m
-     [33m[2m✓[22m[39m keeps P4P and Women filters to an era row and a compact search row [33m 326[2mms[22m[39m
-     [33m[2m✓[22m[39m supports direct profiles outside the former ten-fighter scaffold [33m 325[2mms[22m[39m
-     [33m[2m✓[22m[39m keeps unfinished destinations isolated [33m 314[2mms[22m[39m
-     [33m[2m✓[22m[39m renders every current fighter profile without invalid public output [33m 4816[2mms[22m[39m
+ [32m✓[39m src/features/play/wavelength.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 342[2mms[22m[39m
+     [33m[2m✓[22m[39m locks four guesses and reveals the standard challenge, replay, and all-games actions [33m 330[2mms[22m[39m
+ [32m✓[39m src/features/challenges/challengeModel.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/features/rankings/rankingPresentation.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32m✓[39m src/features/rankings/fighterAssets.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 46[2mms[22m[39m
+ [32m✓[39m src/features/rankings/rankingControls.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m src/app/App.test.tsx [2m([22m[2m30 tests[22m[2m)[22m[33m 13382[2mms[22m[39m
+     [33m[2m✓[22m[39m opens on Home without temporary or restricted product copy [33m 529[2mms[22m[39m
+     [33m[2m✓[22m[39m renders the compact calculated P4P board with abbreviated divisions [33m 1406[2mms[22m[39m
+     [33m[2m✓[22m[39m switches among Women, Divisions, and Categories with direct ranking tabs [33m 1140[2mms[22m[39m
+     [33m[2m✓[22m[39m restores V1 era descriptions and makes defining fights obviously actionable [33m 442[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps P4P and Women filters to an era row and a compact search row [33m 360[2mms[22m[39m
+     [33m[2m✓[22m[39m supports direct profiles outside the former ten-fighter scaffold [33m 332[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps unfinished destinations isolated [33m 327[2mms[22m[39m
+     [33m[2m✓[22m[39m renders approved tile counts and special inline nicknames [33m 330[2mms[22m[39m
+     [33m[2m✓[22m[39m renders every current fighter profile without invalid public output [33m 7483[2mms[22m[39m
 
 [2m Test Files [22m [1m[32m15 passed[39m[22m[90m (15)[39m
 [2m      Tests [22m [1m[32m112 passed[39m[22m[90m (112)[39m
-[2m   Start at [22m 19:55:25
-[2m   Duration [22m 11.66s[2m (transform 1.95s, setup 1.01s, import 6.37s, tests 12.76s, environment 10.02s)[22m
+[2m   Start at [22m 19:56:24
+[2m   Duration [22m 16.47s[2m (transform 2.65s, setup 1.53s, import 8.93s, tests 17.88s, environment 14.58s)[22m
 
 TEST_EXIT=0
 == BUILD ==
@@ -55,30 +60,29 @@ TEST_EXIT=0
 [2Ktransforming...✓ 215 modules transformed.
 rendering chunks...
 computing gzip size...
-dist/index.html                                 1.39 kB │ gzip:   0.67 kB
+dist/index.html                                 1.39 kB │ gzip:   0.66 kB
 dist/assets/RankingsPage-CnfPNevC.css          11.70 kB │ gzip:   2.24 kB
 dist/assets/index-C4_ahMa8.css                 73.71 kB │ gzip:  12.37 kB
-dist/assets/challengeShare-WwjhLMr4.js          0.45 kB │ gzip:   0.29 kB │ map:     1.20 kB
-dist/assets/FighterPhoto-Cap8HvH0.js            0.49 kB │ gzip:   0.34 kB │ map:     1.35 kB
-dist/assets/GameResultActions-lyR8n4Hr.js       0.69 kB │ gzip:   0.35 kB │ map:     1.43 kB
-dist/assets/PlaceholderPage-AEmeZ7uc.js         0.81 kB │ gzip:   0.44 kB │ map:     1.50 kB
+dist/assets/FighterPhoto-B3Iex7px.js            0.49 kB │ gzip:   0.34 kB │ map:     1.35 kB
+dist/assets/GameResultActions-md10p9LK.js       0.69 kB │ gzip:   0.35 kB │ map:     1.43 kB
+dist/assets/PlaceholderPage-BnN08EwS.js         0.81 kB │ gzip:   0.44 kB │ map:     1.50 kB
 dist/assets/intelligence-U93Tm2pG.js            1.64 kB │ gzip:   0.94 kB │ map:     3.45 kB
-dist/assets/HomePage-CO_l5P5L.js                2.18 kB │ gzip:   0.83 kB │ map:     4.53 kB
-dist/assets/playFighterPool-DobOeqEU.js         5.02 kB │ gzip:   2.26 kB │ map:    12.88 kB
-dist/assets/IntelligencePage-kEqpEOk-.js        6.85 kB │ gzip:   2.09 kB │ map:    15.67 kB
-dist/assets/RankingsPage-CdPE08Pf.js            8.08 kB │ gzip:   2.61 kB │ map:    29.21 kB
-dist/assets/BlindRankPage-BgHYhOX4.js          10.87 kB │ gzip:   4.13 kB │ map:    34.81 kB
-dist/assets/BlindResumePage-M_FTt_G2.js        12.37 kB │ gzip:   4.37 kB │ map:    37.47 kB
-dist/assets/BetterThanPage-D8etlCTQ.js         13.18 kB │ gzip:   4.14 kB │ map:    37.49 kB
-dist/assets/FighterProfilePage-Cb_geMFK.js     13.50 kB │ gzip:   5.19 kB │ map:    27.15 kB
-dist/assets/KeepCutPage-BT6G40xE.js            16.01 kB │ gzip:   6.05 kB │ map:    45.20 kB
-dist/assets/WavelengthPage-CQHyVWb-.js         16.04 kB │ gzip:   5.59 kB │ map:    39.82 kB
-dist/assets/rankingDisplay-Cpdu8Gx8.js         16.18 kB │ gzip:   7.04 kB │ map:    45.27 kB
-dist/assets/PlayPage-CuWkn0IH.js               33.12 kB │ gzip:   9.62 kB │ map:    84.55 kB
-dist/assets/index-BKP0468u.js                 326.07 kB │ gzip: 102.87 kB │ map: 1,511.98 kB
-dist/assets/rankingModel-BokipT7e.js        2,022.98 kB │ gzip: 226.12 kB │ map: 4,169.39 kB
+dist/assets/HomePage-DtuJpRMu.js                2.18 kB │ gzip:   0.83 kB │ map:     4.53 kB
+dist/assets/playFighterPool-CNobux0f.js         5.02 kB │ gzip:   2.26 kB │ map:    12.88 kB
+dist/assets/IntelligencePage-D17YwvJx.js        6.85 kB │ gzip:   2.10 kB │ map:    15.67 kB
+dist/assets/RankingsPage-9jkHh19w.js            8.08 kB │ gzip:   2.61 kB │ map:    29.21 kB
+dist/assets/BlindRankPage-CD9inesv.js          10.87 kB │ gzip:   4.13 kB │ map:    34.81 kB
+dist/assets/BlindResumePage-B6SeIiQN.js        12.37 kB │ gzip:   4.37 kB │ map:    37.47 kB
+dist/assets/FighterProfilePage-DfFBH10n.js     13.50 kB │ gzip:   5.19 kB │ map:    27.15 kB
+dist/assets/BetterThanPage-C-hXW0sc.js         13.52 kB │ gzip:   4.26 kB │ map:    38.59 kB
+dist/assets/WavelengthPage-FDgJBB-2.js         16.04 kB │ gzip:   5.59 kB │ map:    39.82 kB
+dist/assets/rankingDisplay-CMm4L9bI.js         16.18 kB │ gzip:   7.04 kB │ map:    45.27 kB
+dist/assets/KeepCutPage-CX_vzmxQ.js            17.87 kB │ gzip:   6.63 kB │ map:    50.67 kB
+dist/assets/PlayPage-BK32NWl3.js               33.12 kB │ gzip:   9.63 kB │ map:    84.55 kB
+dist/assets/index-mjYLs8YC.js                 326.03 kB │ gzip: 102.85 kB │ map: 1,511.98 kB
+dist/assets/rankingModel-C86RIKYJ.js        2,022.98 kB │ gzip: 226.12 kB │ map: 4,169.39 kB
 
-[32m✓ built in 611ms[39m
+[32m✓ built in 654ms[39m
 [33m[plugin builtin:vite-reporter] 
 (!) Some chunks are larger than 500 kB after minification. Consider:
 - Using dynamic import() to code-split the application
