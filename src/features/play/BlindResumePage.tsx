@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FighterPhoto } from "../rankings/FighterPhoto";
 import {
@@ -11,9 +11,17 @@ import {
   createBlindResumeSeed,
   type BlindResumePair,
 } from "./blindResumeEngine";
+import {
+  clearBlindResumeSession,
+  loadBlindResumeSession,
+  saveBlindResumeSession,
+  type StoredBlindResumeResult,
+} from "./blindResumeSession";
 import { shareGameChallenge } from "./challengeShare";
+import { GameResultActions } from "./GameResultActions";
 
 interface RoundResult {
+  roundIndex: number;
   pair: BlindResumePair;
   pickedId: string;
   winnerId: string;
@@ -25,23 +33,76 @@ function rankCopy(pair: BlindResumePair, fighterId: string) {
   return `${fighter.gender === "women" ? "Women’s" : "Men’s"} UFC GOAT #${fighter.model.rank}`;
 }
 
+function compactRankCopy(pair: BlindResumePair, fighterId: string) {
+  const fighter = pair.fighterA.id === fighterId ? pair.fighterA : pair.fighterB;
+  return `GOAT #${fighter.model.rank}`;
+}
+
+function hydrateResult(stored: StoredBlindResumeResult, pairs: readonly BlindResumePair[]): RoundResult | null {
+  const pair = pairs[stored.roundIndex];
+  if (!pair) return null;
+  return { ...stored, pair };
+}
+
+function storeResult(result: RoundResult): StoredBlindResumeResult {
+  return {
+    roundIndex: result.roundIndex,
+    pickedId: result.pickedId,
+    winnerId: result.winnerId,
+    correct: result.correct,
+  };
+}
+
 export default function BlindResumePage() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const initialSeed = useMemo(() => searchParams.get("challenge") || createBlindResumeSeed(), [searchParams]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const generatedSeed = useRef(createBlindResumeSeed());
+  const challengeSeed = searchParams.get("challenge") || "";
+  const runSeed = searchParams.get("run") || "";
+  const initialSeed = challengeSeed || runSeed || generatedSeed.current;
+  const sessionId = `${challengeSeed ? "challenge" : "run"}:${initialSeed}`;
+  const returnPath = `/play/blind-resume?${challengeSeed ? `challenge=${encodeURIComponent(initialSeed)}` : `run=${encodeURIComponent(initialSeed)}`}`;
   const roundSet = useMemo(() => createBlindResumeRounds(initialSeed), [initialSeed]);
-  const [roundIndex, setRoundIndex] = useState(0);
-  const [results, setResults] = useState<RoundResult[]>([]);
-  const [currentResult, setCurrentResult] = useState<RoundResult | null>(null);
+  const restored = useMemo(() => loadBlindResumeSession(sessionId), [sessionId]);
+  const restoredResults = useMemo(
+    () => (restored?.results ?? []).map((result) => hydrateResult(result, roundSet.pairs)).filter((result): result is RoundResult => Boolean(result)),
+    [restored, roundSet.pairs],
+  );
+  const restoredCurrent = useMemo(
+    () => restored?.currentResult ? hydrateResult(restored.currentResult, roundSet.pairs) : null,
+    [restored, roundSet.pairs],
+  );
+
+  const [roundIndex, setRoundIndex] = useState(restored?.roundIndex ?? 0);
+  const [results, setResults] = useState<RoundResult[]>(restoredResults);
+  const [currentResult, setCurrentResult] = useState<RoundResult | null>(restoredCurrent);
   const [challengeStatus, setChallengeStatus] = useState("");
   const complete = results.length === BLIND_RESUME_ROUNDS;
   const score = results.filter((result) => result.correct).length;
   const pair = roundSet.pairs[roundIndex];
 
+  useEffect(() => {
+    if (!challengeSeed && !runSeed) setSearchParams({ run: initialSeed }, { replace: true });
+  }, [challengeSeed, initialSeed, runSeed, setSearchParams]);
+
+  useEffect(() => {
+    saveBlindResumeSession(sessionId, {
+      roundIndex,
+      results: results.map(storeResult),
+      currentResult: currentResult ? storeResult(currentResult) : null,
+    });
+  }, [currentResult, results, roundIndex, sessionId]);
+
   function pick(fighterId: string) {
-    if (currentResult || complete) return;
+    if (currentResult || complete || !pair) return;
     const winner = blindResumeWinner(pair);
-    setCurrentResult({ pair, pickedId: fighterId, winnerId: winner.id, correct: fighterId === winner.id });
+    setCurrentResult({
+      roundIndex,
+      pair,
+      pickedId: fighterId,
+      winnerId: winner.id,
+      correct: fighterId === winner.id,
+    });
   }
 
   function nextRound() {
@@ -54,6 +115,7 @@ export default function BlindResumePage() {
   }
 
   function replay() {
+    clearBlindResumeSession(sessionId);
     setRoundIndex(0);
     setResults([]);
     setCurrentResult(null);
@@ -72,7 +134,19 @@ export default function BlindResumePage() {
   }
 
   function openIntelligence(result: RoundResult) {
-    navigate(`/intelligence?mode=compare&fighter=${result.pair.fighterA.id}&opponent=${result.pair.fighterB.id}`);
+    saveBlindResumeSession(sessionId, {
+      roundIndex,
+      results: results.map(storeResult),
+      currentResult: storeResult(result),
+    });
+    const params = new URLSearchParams({
+      mode: "compare",
+      fighter: result.pair.fighterA.id,
+      opponent: result.pair.fighterB.id,
+      returnTo: returnPath,
+      returnLabel: "Back to Blind Resume",
+    });
+    navigate(`/intelligence?${params.toString()}`);
   }
 
   if (complete) {
@@ -84,40 +158,38 @@ export default function BlindResumePage() {
         return rightGap - leftGap;
       })[0];
     return (
-      <div className="page blind-resume-page">
+      <div className="page blind-resume-page blind-resume-page--final">
         <section className="blind-resume-final">
-          <p className="eyebrow">FIVE-ROUND RESULTS</p>
-          <strong>{score}/{BLIND_RESUME_ROUNDS}</strong>
-          <h1>{blindResumeTier(score)}</h1>
-          <p>{biggestMiss ? `Biggest miss: you took ${biggestMiss.pair.fighterA.id === biggestMiss.pickedId ? biggestMiss.pair.fighterA.name : biggestMiss.pair.fighterB.name} over ${biggestMiss.pair.fighterA.id === biggestMiss.winnerId ? biggestMiss.pair.fighterA.name : biggestMiss.pair.fighterB.name}.` : "Perfect card. You matched the model on every close call."}</p>
+          <div><p className="eyebrow">FIVE-ROUND RESULTS</p><strong>{score}/{BLIND_RESUME_ROUNDS}</strong><h1>{blindResumeTier(score)}</h1></div>
+          <p>{biggestMiss ? `Biggest miss: ${biggestMiss.pair.fighterA.id === biggestMiss.pickedId ? biggestMiss.pair.fighterA.name : biggestMiss.pair.fighterB.name} over ${biggestMiss.pair.fighterA.id === biggestMiss.winnerId ? biggestMiss.pair.fighterA.name : biggestMiss.pair.fighterB.name}.` : "Perfect card. You matched the model on every close call."}</p>
         </section>
-        <section className="blind-resume-recap">
+        <section className="blind-resume-recap" aria-label="Five-round Blind Resume recap">
           {results.map((result, index) => (
             <article className="blind-resume-recap__round" key={result.pair.id}>
-              <header><span>ROUND {index + 1}</span><b className={result.correct ? "is-correct" : "is-miss"}>{result.correct ? "CORRECT" : "MISS"}</b></header>
+              <header><span>R{index + 1}</span><b className={result.correct ? "is-correct" : "is-miss"}>{result.correct ? "CORRECT" : "MISS"}</b></header>
               <div>
                 {[result.pair.fighterA, result.pair.fighterB].map((fighter) => (
                   <section className={fighter.id === result.winnerId ? "is-winner" : ""} key={fighter.id}>
                     <FighterPhoto className="blind-resume-recap__photo" name={fighter.name} src={fighter.thumbUrl} />
-                    <span><strong>{fighter.name}</strong><small>{rankCopy(result.pair, fighter.id)}</small></span>
-                    <em>{fighter.id === result.winnerId ? "MODEL WINNER" : fighter.id === result.pickedId ? "YOUR PICK" : ""}</em>
+                    <span><strong>{fighter.name}</strong><small>{compactRankCopy(result.pair, fighter.id)}</small></span>
+                    <em>{fighter.id === result.winnerId ? "WINNER" : fighter.id === result.pickedId ? "PICK" : ""}</em>
                   </section>
                 ))}
               </div>
             </article>
           ))}
         </section>
-        <div className="game-result-actions">
-          <button className="primary-action" type="button" onClick={challengeSomeone}>CHALLENGE SOMEONE</button>
-          <button className="find-secondary-action" type="button" onClick={replay}>REPLAY</button>
-          <button className="find-secondary-action" type="button" onClick={() => navigate("/play")}>ALL GAMES</button>
-        </div>
-        <p className="game-action-status" role="status">{challengeStatus}</p>
+        <GameResultActions
+          onChallenge={() => void challengeSomeone()}
+          onReplay={replay}
+          onAllGames={() => navigate("/play")}
+          status={challengeStatus}
+        />
       </div>
     );
   }
 
-  const stats = blindResumeStats(pair);
+  const stats = pair ? blindResumeStats(pair) : [];
   if (currentResult) {
     const winner = currentResult.pair.fighterA.id === currentResult.winnerId ? currentResult.pair.fighterA : currentResult.pair.fighterB;
     const loser = currentResult.pair.fighterA.id === currentResult.winnerId ? currentResult.pair.fighterB : currentResult.pair.fighterA;
@@ -158,8 +230,8 @@ export default function BlindResumePage() {
         </div>
         <p className="blind-resume-apex-note">Apex rating measures the fighter’s best one-night or short-stretch UFC peak.</p>
         <div className="blind-resume-picks">
-          <button type="button" onClick={() => pick(pair.fighterA.id)}>PICK A</button>
-          <button type="button" onClick={() => pick(pair.fighterB.id)}>PICK B</button>
+          <button type="button" onClick={() => pair && pick(pair.fighterA.id)}>PICK A</button>
+          <button type="button" onClick={() => pair && pick(pair.fighterB.id)}>PICK B</button>
         </div>
       </section>
     </div>
