@@ -18,12 +18,16 @@ export interface PlayFighter {
   divisions: string[];
   thumbUrl: string;
   profileUrl: string;
-  model: RankingFighter;
+  model: RankingFighter | null;
   ratings: {
     career: number;
     striking: number;
     grappling: number;
   };
+}
+
+export interface RankedPlayFighter extends PlayFighter {
+  model: RankingFighter;
 }
 
 const strikingAnchors: Record<string, number> = {
@@ -70,8 +74,45 @@ const grapplingAnchors: Record<string, number> = {
   "Carla Esparza": 86, "Kayla Harrison": 96, "Mackenzie Dern": 95,
 };
 
+const playOnlyFighters: readonly PlayFighter[] = [
+  {
+    id: "cm-punk",
+    name: "CM Punk",
+    gender: "men",
+    divisions: ["Welterweight"],
+    thumbUrl: "/assets/fighters/cm-punk-thumb.webp",
+    profileUrl: "",
+    model: null,
+    ratings: { career: 5, striking: 5, grappling: 8 },
+  },
+  {
+    id: "kimbo-slice",
+    name: "Kimbo Slice",
+    gender: "men",
+    divisions: ["Heavyweight"],
+    thumbUrl: "/assets/fighters/kimbo-slice-thumb.webp",
+    profileUrl: "",
+    model: null,
+    ratings: { career: 25, striking: 45, grappling: 20 },
+  },
+] as const;
+
 function clamp(value: number) {
   return Math.max(0, Math.min(100, Math.round(value)));
+}
+
+function normalizedName(value: string) {
+  return value
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[’‘`]/g, "'")
+    .toLowerCase();
+}
+
+function anchoredRating(anchors: Record<string, number>, name: string) {
+  const target = normalizedName(name);
+  const match = Object.entries(anchors).find(([anchor]) => normalizedName(anchor) === target);
+  return match?.[1];
 }
 
 function derivedStriking(fighter: RankingFighter) {
@@ -94,7 +135,7 @@ function divisionsFor(fighter: RankingFighter) {
     .filter(Boolean);
 }
 
-export const playFighters: readonly PlayFighter[] = allTime.map((fighter) => ({
+export const rankedPlayFighters: readonly RankedPlayFighter[] = allTime.map((fighter) => ({
   id: fighter.slug,
   name: fighter.name,
   gender: fighter.board,
@@ -104,10 +145,17 @@ export const playFighters: readonly PlayFighter[] = allTime.map((fighter) => ({
   model: fighter,
   ratings: {
     career: fighter.ovr,
-    striking: strikingAnchors[fighter.name] ?? derivedStriking(fighter),
-    grappling: grapplingAnchors[fighter.name] ?? derivedGrappling(fighter),
+    striking: anchoredRating(strikingAnchors, fighter.name) ?? derivedStriking(fighter),
+    grappling: anchoredRating(grapplingAnchors, fighter.name) ?? derivedGrappling(fighter),
   },
 }));
+
+const rankedIds = new Set(rankedPlayFighters.map((fighter) => fighter.id));
+
+export const playFighters: readonly PlayFighter[] = [
+  ...rankedPlayFighters,
+  ...playOnlyFighters.filter((fighter) => !rankedIds.has(fighter.id)),
+];
 
 const byId = new Map(playFighters.map((fighter) => [fighter.id, fighter]));
 
