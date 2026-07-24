@@ -24,6 +24,7 @@ import {
   openChallengeRow,
   saveChallenges,
 } from "./challengeRepository";
+import { ChallengeResultDetails } from "./ChallengeResultDetails";
 import type { PlayGameId } from "../play/playRegistry";
 
 const PROFILE_STORAGE_KEY = "octagon-hq:challenge-profile:v1";
@@ -221,6 +222,7 @@ function ResultsDialog({
             <b>{challengeScoreLabel(challenge.gameId, challenge.responderResult)}</b>
           </article>
         </div>
+        <ChallengeResultDetails challenge={challenge} />
         <button type="button" className="primary-action challenge-results-dialog__close" onClick={onClose}>CLOSE</button>
       </section>
     </div>
