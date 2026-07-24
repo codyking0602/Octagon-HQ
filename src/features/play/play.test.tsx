@@ -1,4 +1,5 @@
 import { fireEvent, render } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it } from "vitest";
 import PlayPage from "./PlayPage";
 import {
@@ -13,6 +14,14 @@ import {
 } from "./findLeaderStorage";
 import { playGames } from "./playRegistry";
 
+function renderPlay(path = "/play") {
+  return render(
+    <MemoryRouter initialEntries={[path]}>
+      <PlayPage />
+    </MemoryRouter>,
+  );
+}
+
 describe("Play registry", () => {
   it("preserves the approved six-game order", () => {
     expect(playGames.map((game) => game.id)).toEqual([
@@ -25,8 +34,8 @@ describe("Play registry", () => {
     ]);
   });
 
-  it("renders all six games and opens the ten-fighter daily board", () => {
-    const { container } = render(<PlayPage />);
+  it("renders all six games and opens the routed ten-fighter daily board", () => {
+    const { container } = renderPlay();
     const titles = [...container.querySelectorAll(".play-game-card > strong")].map((node) => node.textContent);
     expect(titles).toEqual(playGames.map((game) => game.title));
 
@@ -34,6 +43,21 @@ describe("Play registry", () => {
     expect(daily).not.toBeNull();
     fireEvent.click(daily!);
     expect(container.querySelectorAll(".find-card")).toHaveLength(10);
+  });
+
+  it("supports a real horizontal swipe between the daily challenge and leaderboard", () => {
+    const { container } = renderPlay();
+    const carousel = container.querySelector<HTMLElement>(".play-daily");
+    expect(carousel).not.toBeNull();
+    fireEvent.touchStart(carousel!, { touches: [{ clientX: 280 }] });
+    fireEvent.touchEnd(carousel!, { changedTouches: [{ clientX: 120 }] });
+    expect(container.textContent).toContain("Find the LeaderLeaderboard");
+  });
+
+  it("deep-links directly into the daily game", () => {
+    const { container } = renderPlay("/play/find-leader");
+    expect(container.querySelectorAll(".find-card")).toHaveLength(10);
+    expect(container.textContent).toContain("TODAY’S CHALLENGE");
   });
 });
 
