@@ -135,9 +135,13 @@ describe("Final Play game presentation", () => {
   it("locks eight Keep Cut decisions and finishes with the shared result actions", () => {
     const lineup = createKeepCutLineup("ufc-careers", "render-keep-cut");
     const query = lineup.fighters.map((fighter) => fighter.id).join(",");
-    const { container, getByRole } = renderAt(<KeepCutPage />, `/play/keep-cut?pack=ufc-careers&lineup=${query}`);
-    for (let index = 0; index < 4; index += 1) fireEvent.click(getByRole("button", { name: "KEEP" }));
-    for (let index = 0; index < 4; index += 1) fireEvent.click(getByRole("button", { name: "CUT" }));
+    const { container } = renderAt(<KeepCutPage />, `/play/keep-cut?pack=ufc-careers&lineup=${query}`);
+    for (let index = 0; index < 4; index += 1) {
+      fireEvent.click(container.querySelector<HTMLButtonElement>(".keep-cut-current__actions .keep")!);
+    }
+    for (let index = 0; index < 4; index += 1) {
+      fireEvent.click(container.querySelector<HTMLButtonElement>(".keep-cut-current__actions .cut")!);
+    }
     expect(container.textContent).toContain("YOUR KEEP/CUT CARD");
     const actions = [...container.querySelectorAll(".game-result-actions button")].map((button) => button.textContent);
     expect(actions).toEqual(["CHALLENGE SOMEONE", "REPLAY", "ALL GAMES"]);
