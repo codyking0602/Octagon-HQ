@@ -1,4 +1,4 @@
-import { fireEvent, render } from "@testing-library/react";
+import { fireEvent, render, within } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import IntelligencePage from "../intelligence/IntelligencePage";
@@ -90,12 +90,12 @@ describe("Blind Resume presentation", () => {
   });
 
   it("returns from Intelligence to the unchanged revealed matchup", () => {
-    const { container, getByText } = renderBlindResumeWithIntelligence("/play/blind-resume?run=return-proof");
+    const { container } = renderBlindResumeWithIntelligence("/play/blind-resume?run=return-proof");
+    const view = within(container);
     fireEvent.click(container.querySelector<HTMLButtonElement>(".blind-resume-picks button")!);
     const verdict = container.querySelector(".blind-resume-verdict h1")?.textContent;
-    fireEvent.click(getByText("TAKE MATCHUP TO INTELLIGENCE"));
-    expect(getByText("← Back to Blind Resume")).toBeTruthy();
-    fireEvent.click(getByText("← Back to Blind Resume"));
+    fireEvent.click(view.getByText("TAKE MATCHUP TO INTELLIGENCE"));
+    fireEvent.click(view.getByText("← Back to Blind Resume"));
     expect(container.querySelector(".blind-resume-verdict h1")?.textContent).toBe(verdict);
   });
 
