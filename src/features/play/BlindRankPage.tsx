@@ -12,8 +12,9 @@ import {
   saveBlindRankPack,
   saveBlindRankReveal,
 } from "./blindRankEngine";
-import type { BlindRankPackId, PlayFighter } from "./playFighterPool";
 import { shareGameChallenge } from "./challengeShare";
+import { GameResultActions } from "./GameResultActions";
+import type { BlindRankPackId, PlayFighter } from "./playFighterPool";
 
 function packIsValid(value: string | null): value is BlindRankPackId {
   return blindRankPacks.some((pack) => pack.id === value);
@@ -119,44 +120,46 @@ export default function BlindRankPage() {
         ) : <span className="blind-rank-shared-pack">{pack.name}</span>}
       </section>
 
-      <section className="blind-rank-game">
-        <header><strong>{complete ? "COMPLETE" : `LOCKED ${currentIndex} OF 5`}</strong><span>{pack.name}</span></header>
-        <div className="blind-rank-slots" aria-label="Blind Rank locked slots">
-          {placements.map((fighter, index) => fighter ? (
-            <button className="blind-rank-slot is-filled" type="button" disabled key={index}>
-              <b>{index + 1}</b>
-              <FighterPhoto className="blind-rank-slot__photo" name={fighter.name} src={fighter.thumbUrl} />
-              <strong>{fighter.name}</strong>
-            </button>
-          ) : (
-            <button className="blind-rank-slot" type="button" disabled={complete} key={index} onClick={() => placeCurrent(index)}>
-              <b>{index + 1}</b><span>PLACE HERE</span>
-            </button>
-          ))}
-        </div>
+      <section className={`blind-rank-game${complete ? " is-complete" : ""}`}>
+        <header><strong>{complete ? "COMPLETE" : `LOCKED ${currentIndex} OF 5`}</strong>{!complete ? <span>{pack.name}</span> : null}</header>
+        {!complete ? (
+          <div className="blind-rank-slots" aria-label="Blind Rank locked slots">
+            {placements.map((fighter, index) => fighter ? (
+              <button className="blind-rank-slot is-filled" type="button" disabled key={index}>
+                <b>{index + 1}</b>
+                <FighterPhoto className="blind-rank-slot__photo" name={fighter.name} src={fighter.thumbUrl} />
+                <strong>{fighter.name}</strong>
+              </button>
+            ) : (
+              <button className="blind-rank-slot" type="button" disabled={complete} key={index} onClick={() => placeCurrent(index)}>
+                <b>{index + 1}</b><span>PLACE HERE</span>
+              </button>
+            ))}
+          </div>
+        ) : null}
 
         {complete ? (
           <div className="blind-rank-finish">
             <p className="eyebrow">YOUR FINAL RANKING</p>
             <div className="blind-rank-results">
               {placements.map((fighter, index) => fighter ? (
-                <article key={fighter.id} style={{ gridTemplateColumns: "38px 48px minmax(0, 1fr)" }}>
+                <article key={fighter.id}>
                   <b>#{index + 1}</b>
                   <FighterPhoto className="blind-rank-result__photo" name={fighter.name} src={fighter.thumbUrl} />
                   <span><strong>{fighter.name}</strong><small>{compactDivision(fighter)}</small></span>
                 </article>
               ) : null)}
             </div>
-            <div className="game-result-actions">
-              <button className="primary-action" type="button" onClick={challengeSomeone}>CHALLENGE SOMEONE</button>
-              <button className="find-secondary-action" type="button" onClick={resetPlacements}>REPLAY</button>
-              <button className="find-secondary-action" type="button" onClick={() => navigate("/play")}>ALL GAMES</button>
-            </div>
-            <p className="game-action-status" role="status">{challengeStatus}</p>
+            <GameResultActions
+              onChallenge={() => void challengeSomeone()}
+              onReplay={resetPlacements}
+              onAllGames={() => navigate("/play")}
+              status={challengeStatus}
+            />
           </div>
         ) : current ? (
           <article className="blind-rank-current">
-            <FighterPhoto className="blind-rank-current__photo" name={current.name} src={current.profileUrl || current.thumbUrl} />
+            <FighterPhoto className="blind-rank-current__photo" name={current.name} src={current.thumbUrl} />
             <div>
               <p className="eyebrow">FIGHTER {currentIndex + 1} OF 5</p>
               <h2>{current.name}</h2>
