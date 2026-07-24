@@ -47,6 +47,15 @@ describe("ranking profile watch actions", () => {
     expect(mattHughes?.url).not.toBe(shogunRua?.url);
   });
 
+  it("locks the audited BJ Penn and Cris Cyborg replacements", () => {
+    expect(resolveProfileWatchAction("bj-penn")?.url).toBe(
+      "https://www.youtube.com/watch?v=ENLeaM4XvKk",
+    );
+    expect(resolveProfileWatchAction("cris-cyborg")?.url).toBe(
+      "https://www.youtube.com/watch?v=cQN5Jd6WBms",
+    );
+  });
+
   it("uses the locked V1 destinations for representative fighters", () => {
     expect(resolveProfileWatchAction("jon-jones")).toMatchObject({
       label: "Watch Signature Fight",
