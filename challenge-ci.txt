@@ -1,0 +1,184 @@
+HEAD=e3ff701d256d14113f23ac87e4db520d1f4f2eed
+== TYPECHECK ==
+
+> octagon-hq@0.1.0 typecheck
+> tsc --noEmit
+
+src/features/play/WavelengthPage.tsx(46,41): error TS2345: Argument of type 'WavelengthChallengeResult' is not assignable to parameter of type 'ChallengeJson'.
+  Type 'WavelengthChallengeResult' is not assignable to type '{ [key: string]: ChallengeJson; }'.
+    Index signature for type 'string' is missing in type 'WavelengthChallengeResult'.
+TYPECHECK_EXIT=1
+== TEST ==
+
+> octagon-hq@0.1.0 test
+> vitest run
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.10 [39m[90m/home/runner/work/Octagon-HQ/Octagon-HQ[39m
+
+ [32m✓[39m src/features/rankings/engine/categoryCalculators.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 39[2mms[22m[39m
+ [31m❯[39m src/features/play/blindGames.test.tsx [2m([22m[2m12 tests[22m[2m | [22m[31m3 failed[39m[2m)[22m[32m 155[2mms[22m[39m
+     [32m✓[39m builds five deterministic, unique, same-gender matchups from one challenge seed[32m 9[2mms[22m[39m
+     [32m✓[39m uses the eight approved hidden resume stats including main UFC era[32m 1[2mms[22m[39m
+     [32m✓[39m uses the exact canonical ranking era name for every ranked Play fighter[32m 5[2mms[22m[39m
+     [32m✓[39m keeps distinct profile and thumbnail assets for varied portrait crops[32m 1[2mms[22m[39m
+[31m     [31m×[31m reveals the fighters, verdict, and Intelligence handoff after a pick[39m[32m 25[2mms[22m[39m
+[31m     [31m×[31m returns from Intelligence to the unchanged revealed matchup[39m[32m 6[2mms[22m[39m
+[31m     [31m×[31m finishes after exactly five picks and keeps thumbnails in the compact recap[39m[32m 3[2mms[22m[39m
+     [32m✓[39m keeps the five weighted V1 lineup roles and ten-percent Bad wildcard target[32m 0[2mms[22m[39m
+     [32m✓[39m builds random-feeling deterministic five-fighter lineups with no duplicates and at most one Bad fighter[32m 9[2mms[22m[39m
+     [32m✓[39m protects the recent reveal window and preserves exact shared lineups[32m 1[2mms[22m[39m
+     [32m✓[39m uses the thumbnail, locks five placements, then removes the duplicate slot strip[32m 85[2mms[22m[39m
+     [32m✓[39m opens an exact five-fighter friend challenge[32m 8[2mms[22m[39m
+ [31m❯[39m src/features/play/finalGames.test.tsx [2m([22m[2m12 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 516[2mms[22m[39m
+     [32m✓[39m preserves the fourteen category packs and eight weighted lineup roles[32m 3[2mms[22m[39m
+     [32m✓[39m builds deterministic unique eight-fighter lineups with no more than two Bad fighters[32m 14[2mms[22m[39m
+     [32m✓[39m occasionally creates a deliberate two-Bad surprise when the pool supports it[32m 35[2mms[22m[39m
+     [32m✓[39m resolves the exact shared pack and lineup[32m 1[2mms[22m[39m
+     [32m✓[39m uses named UFC eras for the two play-only wildcard fighters[32m 0[2mms[22m[39m
+     [32m✓[39m preserves all eleven debate lenses and exact frozen challenge claims[32m 1[2mms[22m[39m
+     [32m✓[39m writes natural debate copy for division-specific claims[32m 1[2mms[22m[39m
+     [32m✓[39m compares shared and split names without creating an official verdict[32m 1[2mms[22m[39m
+[31m     [31m×[31m shows all six Play Hub cards as live buttons[39m[32m 40[2mms[22m[39m
+     [32m✓[39m matches the Blind Rank square thumbnail treatment in Keep Cut[32m 63[2mms[22m[39m
+     [32m✓[39m locks eight Keep Cut decisions and finishes with the shared result actions[32m 98[2mms[22m[39m
+     [32m✓[39m keeps the original Better Than list hidden until the counterclaim locks[32m 254[2mms[22m[39m
+ [32m✓[39m src/features/intelligence/intelligence.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 1256[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps Intelligence in the header and out of primary navigation [33m 323[2mms[22m[39m
+     [33m[2m✓[22m[39m opens Compare directly with the profile fighter selected and the opponent control focused [33m 584[2mms[22m[39m
+ [31m❯[39m src/features/play/play.test.tsx [2m([22m[2m8 tests[22m[2m | [22m[31m3 failed[39m[2m)[22m[33m 1381[2mms[22m[39m
+     [32m✓[39m preserves the approved six-game order and explanatory descriptions[32m 2[2mms[22m[39m
+[31m     [31m×[31m renders all six games and opens the routed ten-fighter daily board[39m[32m 25[2mms[22m[39m
+[31m     [31m×[31m supports a real horizontal swipe between the daily challenge and leaderboard[39m[32m 3[2mms[22m[39m
+[31m     [31m×[31m deep-links to an exact dated board and shows the shared result actions[39m[32m 125[2mms[22m[39m
+     [32m✓[39m owns fifty varied UFC-only question definitions[32m 2[2mms[22m[39m
+     [32m✓[39m builds one deterministic ten-fighter daily board with a unique group leader[32m 285[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps a broad playable bank and avoids immediate daily repeats [33m 934[2mms[22m[39m
+     [32m✓[39m locks the first completed attempt as official while preserving replay best[32m 2[2mms[22m[39m
+ [32m✓[39m src/features/rankings/rankingModel.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 60[2mms[22m[39m
+ [32m✓[39m src/features/intelligence/octagonVerdictExport.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/features/rankings/engine/parityFixture.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m src/features/rankings/engine/rankingEngine.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 28[2mms[22m[39m
+ [31m❯[39m src/features/play/wavelength.test.tsx [2m([22m[2m5 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 29[2mms[22m[39m
+     [32m✓[39m preserves the complete V1 target and expanded clue banks[32m 3[2mms[22m[39m
+     [32m✓[39m avoids the previous target and adjusts later clues toward the hidden number[32m 2[2mms[22m[39m
+     [32m✓[39m scores only distance from the final guess[32m 0[2mms[22m[39m
+     [32m✓[39m recreates the same challenge and the same adaptive clue for an identical guess path[32m 1[2mms[22m[39m
+[31m     [31m×[31m locks four guesses and reveals the standard challenge, replay, and all-games actions[39m[32m 20[2mms[22m[39m
+ [32m✓[39m src/features/challenges/challengeModel.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/features/rankings/rankingPresentation.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m src/features/rankings/fighterAssets.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 56[2mms[22m[39m
+ [32m✓[39m src/features/rankings/rankingControls.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m src/app/App.test.tsx [2m([22m[2m30 tests[22m[2m)[22m[33m 14130[2mms[22m[39m
+     [33m[2m✓[22m[39m opens on Home without temporary or restricted product copy [33m 591[2mms[22m[39m
+     [33m[2m✓[22m[39m renders the compact calculated P4P board with abbreviated divisions [33m 1479[2mms[22m[39m
+     [33m[2m✓[22m[39m switches among Women, Divisions, and Categories with direct ranking tabs [33m 1534[2mms[22m[39m
+     [33m[2m✓[22m[39m restores V1 era descriptions and makes defining fights obviously actionable [33m 485[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps P4P and Women filters to an era row and a compact search row [33m 334[2mms[22m[39m
+     [33m[2m✓[22m[39m supports direct profiles outside the former ten-fighter scaffold [33m 343[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps unfinished destinations isolated [33m 332[2mms[22m[39m
+     [33m[2m✓[22m[39m renders approved tile counts and special inline nicknames [33m 366[2mms[22m[39m
+     [33m[2m✓[22m[39m renders every current fighter profile without invalid public output [33m 7611[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 8 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m src/features/play/blindGames.test.tsx[2m > [22mBlind Resume presentation[2m > [22mreveals the fighters, verdict, and Intelligence handoff after a pick
+[41m[1m FAIL [22m[49m src/features/play/blindGames.test.tsx[2m > [22mBlind Resume presentation[2m > [22mreturns from Intelligence to the unchanged revealed matchup
+[41m[1m FAIL [22m[49m src/features/play/blindGames.test.tsx[2m > [22mBlind Resume presentation[2m > [22mfinishes after exactly five picks and keeps thumbnails in the compact recap
+[31m[1mError[22m: usePlayChallenges must be used inside ChallengeProvider[39m
+[36m [2m❯[22m usePlayChallenges src/features/challenges/ChallengeProvider.tsx:[2m339:21[22m[39m
+    [90m337|[39m [35mexport[39m [35mfunction[39m [34musePlayChallenges[39m() {
+    [90m338|[39m   [35mconst[39m value [33m=[39m [34museContext[39m([33mPlayChallengesContext[39m)[33m;[39m
+    [90m339|[39m   if (!value) throw new Error("usePlayChallenges must be used inside C…
+    [90m   |[39m                     [31m^[39m
+    [90m340|[39m   [35mreturn[39m value[33m;[39m
+    [90m341|[39m }
+[90m [2m❯[22m BlindResumePage src/features/play/BlindResumePage.tsx:[2m72:7[22m[39m
+[90m [2m❯[22m Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:[2m25904:20[22m[39m
+[90m [2m❯[22m renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:[2m7662:22[22m[39m
+[90m [2m❯[22m updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:[2m10166:19[22m[39m
+[90m [2m❯[22m beginWork node_modules/react-dom/cjs/react-dom-client.development.js:[2m11778:18[22m[39m
+[90m [2m❯[22m runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:[2m874:13[22m[39m
+[90m [2m❯[22m performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:[2m17641:22[22m[39m
+[90m [2m❯[22m workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:[2m17469:41[22m[39m
+[90m [2m❯[22m renderRootSync node_modules/react-dom/cjs/react-dom-client.development.js:[2m17450:11[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/features/play/finalGames.test.tsx[2m > [22mFinal Play game presentation[2m > [22mshows all six Play Hub cards as live buttons
+[41m[1m FAIL [22m[49m src/features/play/play.test.tsx[2m > [22mPlay registry[2m > [22mrenders all six games and opens the routed ten-fighter daily board
+[41m[1m FAIL [22m[49m src/features/play/play.test.tsx[2m > [22mPlay registry[2m > [22msupports a real horizontal swipe between the daily challenge and leaderboard
+[41m[1m FAIL [22m[49m src/features/play/play.test.tsx[2m > [22mPlay registry[2m > [22mdeep-links to an exact dated board and shows the shared result actions
+[31m[1mError[22m: usePlayChallenges must be used inside ChallengeProvider[39m
+[36m [2m❯[22m usePlayChallenges src/features/challenges/ChallengeProvider.tsx:[2m339:21[22m[39m
+    [90m337|[39m [35mexport[39m [35mfunction[39m [34musePlayChallenges[39m() {
+    [90m338|[39m   [35mconst[39m value [33m=[39m [34museContext[39m([33mPlayChallengesContext[39m)[33m;[39m
+    [90m339|[39m   if (!value) throw new Error("usePlayChallenges must be used inside C…
+    [90m   |[39m                     [31m^[39m
+    [90m340|[39m   [35mreturn[39m value[33m;[39m
+    [90m341|[39m }
+[90m [2m❯[22m PlayPage src/features/play/PlayPage.tsx:[2m306:67[22m[39m
+[90m [2m❯[22m Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:[2m25904:20[22m[39m
+[90m [2m❯[22m renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:[2m7662:22[22m[39m
+[90m [2m❯[22m updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:[2m10166:19[22m[39m
+[90m [2m❯[22m beginWork node_modules/react-dom/cjs/react-dom-client.development.js:[2m11778:18[22m[39m
+[90m [2m❯[22m runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:[2m874:13[22m[39m
+[90m [2m❯[22m performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:[2m17641:22[22m[39m
+[90m [2m❯[22m workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:[2m17469:41[22m[39m
+[90m [2m❯[22m renderRootSync node_modules/react-dom/cjs/react-dom-client.development.js:[2m17450:11[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/features/play/wavelength.test.tsx[2m > [22mWavelength game[2m > [22mlocks four guesses and reveals the standard challenge, replay, and all-games actions
+[31m[1mError[22m: usePlayChallenges must be used inside ChallengeProvider[39m
+[36m [2m❯[22m usePlayChallenges src/features/challenges/ChallengeProvider.tsx:[2m339:21[22m[39m
+    [90m337|[39m [35mexport[39m [35mfunction[39m [34musePlayChallenges[39m() {
+    [90m338|[39m   [35mconst[39m value [33m=[39m [34museContext[39m([33mPlayChallengesContext[39m)[33m;[39m
+    [90m339|[39m   if (!value) throw new Error("usePlayChallenges must be used inside C…
+    [90m   |[39m                     [31m^[39m
+    [90m340|[39m   [35mreturn[39m value[33m;[39m
+    [90m341|[39m }
+[90m [2m❯[22m WavelengthGame src/features/play/WavelengthGame.tsx:[2m55:30[22m[39m
+[90m [2m❯[22m Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:[2m25904:20[22m[39m
+[90m [2m❯[22m renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:[2m7662:22[22m[39m
+[90m [2m❯[22m updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:[2m10166:19[22m[39m
+[90m [2m❯[22m beginWork node_modules/react-dom/cjs/react-dom-client.development.js:[2m11778:18[22m[39m
+[90m [2m❯[22m runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:[2m874:13[22m[39m
+[90m [2m❯[22m performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:[2m17641:22[22m[39m
+[90m [2m❯[22m workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:[2m17469:41[22m[39m
+[90m [2m❯[22m renderRootSync node_modules/react-dom/cjs/react-dom-client.development.js:[2m17450:11[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m4 failed[39m[22m[2m | [22m[1m[32m11 passed[39m[22m[90m (15)[39m
+[2m      Tests [22m [1m[31m8 failed[39m[22m[2m | [22m[1m[32m104 passed[39m[22m[90m (112)[39m
+[2m   Start at [22m 19:50:13
+[2m   Duration [22m 17.43s[2m (transform 2.05s, setup 1.44s, import 9.81s, tests 17.72s, environment 15.18s)[22m
+
+
+::error file=/home/runner/work/Octagon-HQ/Octagon-HQ/src/features/challenges/ChallengeProvider.tsx,title=src/features/play/blindGames.test.tsx > Blind Resume presentation > reveals the fighters%2C verdict%2C and Intelligence handoff after a pick,line=339,column=21::Error: usePlayChallenges must be used inside ChallengeProvider%0A ❯ usePlayChallenges src/features/challenges/ChallengeProvider.tsx:339:21%0A ❯ BlindResumePage src/features/play/BlindResumePage.tsx:72:7%0A ❯ Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:25904:20%0A ❯ renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:7662:22%0A ❯ updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10166:19%0A ❯ beginWork node_modules/react-dom/cjs/react-dom-client.development.js:11778:18%0A ❯ runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:874:13%0A ❯ performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:17641:22%0A ❯ workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:17469:41%0A ❯ renderRootSync node_modules/react-dom/cjs/react-dom-client.development.js:17450:11%0A%0A
+
+::error file=/home/runner/work/Octagon-HQ/Octagon-HQ/src/features/challenges/ChallengeProvider.tsx,title=src/features/play/blindGames.test.tsx > Blind Resume presentation > returns from Intelligence to the unchanged revealed matchup,line=339,column=21::Error: usePlayChallenges must be used inside ChallengeProvider%0A ❯ usePlayChallenges src/features/challenges/ChallengeProvider.tsx:339:21%0A ❯ BlindResumePage src/features/play/BlindResumePage.tsx:72:7%0A ❯ Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:25904:20%0A ❯ renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:7662:22%0A ❯ updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10166:19%0A ❯ beginWork node_modules/react-dom/cjs/react-dom-client.development.js:11778:18%0A ❯ runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:874:13%0A ❯ performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:17641:22%0A ❯ workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:17469:41%0A ❯ renderRootSync node_modules/react-dom/cjs/react-dom-client.development.js:17450:11%0A%0A
+
+::error file=/home/runner/work/Octagon-HQ/Octagon-HQ/src/features/challenges/ChallengeProvider.tsx,title=src/features/play/blindGames.test.tsx > Blind Resume presentation > finishes after exactly five picks and keeps thumbnails in the compact recap,line=339,column=21::Error: usePlayChallenges must be used inside ChallengeProvider%0A ❯ usePlayChallenges src/features/challenges/ChallengeProvider.tsx:339:21%0A ❯ BlindResumePage src/features/play/BlindResumePage.tsx:72:7%0A ❯ Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:25904:20%0A ❯ renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:7662:22%0A ❯ updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10166:19%0A ❯ beginWork node_modules/react-dom/cjs/react-dom-client.development.js:11778:18%0A ❯ runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:874:13%0A ❯ performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:17641:22%0A ❯ workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:17469:41%0A ❯ renderRootSync node_modules/react-dom/cjs/react-dom-client.development.js:17450:11%0A%0A
+
+::error file=/home/runner/work/Octagon-HQ/Octagon-HQ/src/features/challenges/ChallengeProvider.tsx,title=src/features/play/finalGames.test.tsx > Final Play game presentation > shows all six Play Hub cards as live buttons,line=339,column=21::Error: usePlayChallenges must be used inside ChallengeProvider%0A ❯ usePlayChallenges src/features/challenges/ChallengeProvider.tsx:339:21%0A ❯ PlayPage src/features/play/PlayPage.tsx:306:67%0A ❯ Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:25904:20%0A ❯ renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:7662:22%0A ❯ updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10166:19%0A ❯ beginWork node_modules/react-dom/cjs/react-dom-client.development.js:11778:18%0A ❯ runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:874:13%0A ❯ performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:17641:22%0A ❯ workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:17469:41%0A ❯ renderRootSync node_modules/react-dom/cjs/react-dom-client.development.js:17450:11%0A%0A
+
+::error file=/home/runner/work/Octagon-HQ/Octagon-HQ/src/features/challenges/ChallengeProvider.tsx,title=src/features/play/play.test.tsx > Play registry > renders all six games and opens the routed ten-fighter daily board,line=339,column=21::Error: usePlayChallenges must be used inside ChallengeProvider%0A ❯ usePlayChallenges src/features/challenges/ChallengeProvider.tsx:339:21%0A ❯ PlayPage src/features/play/PlayPage.tsx:306:67%0A ❯ Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:25904:20%0A ❯ renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:7662:22%0A ❯ updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10166:19%0A ❯ beginWork node_modules/react-dom/cjs/react-dom-client.development.js:11778:18%0A ❯ runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:874:13%0A ❯ performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:17641:22%0A ❯ workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:17469:41%0A ❯ renderRootSync node_modules/react-dom/cjs/react-dom-client.development.js:17450:11%0A%0A
+
+::error file=/home/runner/work/Octagon-HQ/Octagon-HQ/src/features/challenges/ChallengeProvider.tsx,title=src/features/play/play.test.tsx > Play registry > supports a real horizontal swipe between the daily challenge and leaderboard,line=339,column=21::Error: usePlayChallenges must be used inside ChallengeProvider%0A ❯ usePlayChallenges src/features/challenges/ChallengeProvider.tsx:339:21%0A ❯ PlayPage src/features/play/PlayPage.tsx:306:67%0A ❯ Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:25904:20%0A ❯ renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:7662:22%0A ❯ updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10166:19%0A ❯ beginWork node_modules/react-dom/cjs/react-dom-client.development.js:11778:18%0A ❯ runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:874:13%0A ❯ performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:17641:22%0A ❯ workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:17469:41%0A ❯ renderRootSync node_modules/react-dom/cjs/react-dom-client.development.js:17450:11%0A%0A
+
+::error file=/home/runner/work/Octagon-HQ/Octagon-HQ/src/features/challenges/ChallengeProvider.tsx,title=src/features/play/play.test.tsx > Play registry > deep-links to an exact dated board and shows the shared result actions,line=339,column=21::Error: usePlayChallenges must be used inside ChallengeProvider%0A ❯ usePlayChallenges src/features/challenges/ChallengeProvider.tsx:339:21%0A ❯ PlayPage src/features/play/PlayPage.tsx:306:67%0A ❯ Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:25904:20%0A ❯ renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:7662:22%0A ❯ updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10166:19%0A ❯ beginWork node_modules/react-dom/cjs/react-dom-client.development.js:11778:18%0A ❯ runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:874:13%0A ❯ performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:17641:22%0A ❯ workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:17469:41%0A ❯ renderRootSync node_modules/react-dom/cjs/react-dom-client.development.js:17450:11%0A%0A
+
+::error file=/home/runner/work/Octagon-HQ/Octagon-HQ/src/features/challenges/ChallengeProvider.tsx,title=src/features/play/wavelength.test.tsx > Wavelength game > locks four guesses and reveals the standard challenge%2C replay%2C and all-games actions,line=339,column=21::Error: usePlayChallenges must be used inside ChallengeProvider%0A ❯ usePlayChallenges src/features/challenges/ChallengeProvider.tsx:339:21%0A ❯ WavelengthGame src/features/play/WavelengthGame.tsx:55:30%0A ❯ Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:25904:20%0A ❯ renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:7662:22%0A ❯ updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10166:19%0A ❯ beginWork node_modules/react-dom/cjs/react-dom-client.development.js:11778:18%0A ❯ runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:874:13%0A ❯ performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:17641:22%0A ❯ workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:17469:41%0A ❯ renderRootSync node_modules/react-dom/cjs/react-dom-client.development.js:17450:11%0A%0A
+TEST_EXIT=1
+== BUILD ==
+
+> octagon-hq@0.1.0 build
+> tsc --noEmit && vite build
+
+src/features/play/WavelengthPage.tsx(46,41): error TS2345: Argument of type 'WavelengthChallengeResult' is not assignable to parameter of type 'ChallengeJson'.
+  Type 'WavelengthChallengeResult' is not assignable to type '{ [key: string]: ChallengeJson; }'.
+    Index signature for type 'string' is missing in type 'WavelengthChallengeResult'.
+BUILD_EXIT=1
