@@ -28,6 +28,7 @@ const presentationSchema = z
     photoUrl: z.string().nullable(),
     thumbUrl: z.string().nullable(),
     watchUrl: z.string().url(),
+    signatureFightUrl: z.string().url().optional(),
   })
   .strict();
 
