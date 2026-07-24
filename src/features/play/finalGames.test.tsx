@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { fireEvent, render } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -20,7 +21,7 @@ import {
 } from "./keepCutEngine";
 import { getPlayFighter } from "./playFighterPool";
 
-function renderAt(element: React.ReactNode, path: string) {
+function renderAt(element: ReactNode, path: string) {
   return render(<MemoryRouter initialEntries={[path]}>{element}</MemoryRouter>);
 }
 
@@ -38,8 +39,8 @@ describe("Keep 4, Cut 4 engine", () => {
       expect(first.fighters.map((fighter) => fighter.id)).toEqual(second.fighters.map((fighter) => fighter.id));
       expect(first.fighters).toHaveLength(8);
       expect(new Set(first.fighters.map((fighter) => fighter.id)).size).toBe(8);
-      expect(first.fighters.filter((fighter) => keepCutTier(keepCutRating(pack.id, fighter)) === "bad")).toHaveLength(first.fighters.filter((fighter) => keepCutTier(keepCutRating(pack.id, fighter)) === "bad").length);
-      expect(first.fighters.filter((fighter) => keepCutTier(keepCutRating(pack.id, fighter)) === "bad").length).toBeLessThanOrEqual(1);
+      const badFighters = first.fighters.filter((fighter) => keepCutTier(keepCutRating(pack.id, fighter)) === "bad");
+      expect(badFighters.length).toBeLessThanOrEqual(1);
     }
   });
 
