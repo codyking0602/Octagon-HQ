@@ -140,7 +140,7 @@ export default function BlindRankPage() {
             <p className="eyebrow">YOUR FINAL RANKING</p>
             <div className="blind-rank-results">
               {placements.map((fighter, index) => fighter ? (
-                <article key={fighter.id}>
+                <article key={fighter.id} style={{ gridTemplateColumns: "38px 48px minmax(0, 1fr)" }}>
                   <b>#{index + 1}</b>
                   <FighterPhoto className="blind-rank-result__photo" name={fighter.name} src={fighter.thumbUrl} />
                   <span><strong>{fighter.name}</strong><small>{compactDivision(fighter)}</small></span>
