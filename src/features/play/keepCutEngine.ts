@@ -206,7 +206,8 @@ function whatIfRating(fighter: PlayFighter) {
 }
 
 function cultRating(fighter: PlayFighter) {
-  return clamp(18 + Math.max(0, 88 - fighter.ratings.career) * 0.35 + Math.max(0, actionRating(fighter) - 70) * 0.65);
+  const derived = 18 + Math.max(0, 88 - fighter.ratings.career) * 0.35 + Math.max(0, actionRating(fighter) - 70) * 0.65;
+  return clamp(fighter.model ? Math.max(35, derived) : derived);
 }
 
 export function keepCutRating(packId: KeepCutPackId, fighter: PlayFighter) {
