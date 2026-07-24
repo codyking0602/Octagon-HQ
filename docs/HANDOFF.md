@@ -1,8 +1,8 @@
 # Octagon HQ V2 — Current Handoff
 
-_Last updated: 2026-07-23_
+_Last updated: 2026-07-24_
 
-This is the authoritative cold-start handoff for continuing Octagon HQ V2. Read this file, `docs/product-blueprint.md`, `docs/RANKINGS-MIGRATION.md`, and `docs/rankings-parity-contract.md`, then inspect current `main` before editing.
+This is the authoritative cold-start handoff for continuing Octagon HQ V2. Read this file, `docs/product-blueprint.md`, `docs/RANKINGS-MIGRATION.md`, `docs/rankings-parity-contract.md`, and `docs/intelligence-verdict-flow.md`, then inspect current `main` before editing.
 
 ## Repositories and live apps
 
@@ -25,7 +25,7 @@ This is the authoritative cold-start handoff for continuing Octagon HQ V2. Read 
 
 The disposable ten-fighter ranking scaffold has been removed.
 
-V2 now contains the complete 80-fighter UFC-only ranking model:
+V2 contains the complete 80-fighter UFC-only ranking model:
 
 - 65-fighter Overall board;
 - 15-fighter Women board;
@@ -77,20 +77,34 @@ The model—not a hand-written list—produces the current men's top ten:
 
 Do not reorder fighters manually. Change approved facts or judgment inputs, then let the model recalculate.
 
-## Approved Rankings product target
+## Rankings and fighter-profile product status
 
-The calculation migration is complete. The next Rankings milestone is visual and interaction parity with the approved V1 UFC/2K-style product.
+The calculation migration and the approved mobile Rankings/profile presentation are complete.
 
 Locked decisions:
 
-1. `/fighters/:slug` is the canonical profile route. Desktop may use a routed right-side drawer; mobile uses a full-screen profile.
-2. Retain the six visible score chips on leaderboard rows: Championship, Opponent Quality, Prime Dominance, Longevity, Peak Apex, and Loss Context.
-3. Retain the KPI strip for now: fighter count, current number one, and average OVR.
-4. Preserve Overall, Women, Divisions, and Categories navigation.
-5. Preserve search and era filtering on Overall/Women.
-6. Do not invent rank-movement presentation during parity work.
+1. `/fighters/:slug` is the canonical profile route. Mobile uses a full-screen profile; a routed desktop right-side drawer remains a later enhancement.
+2. Leaderboard rows remain compact and uniform: rank, real fighter photo, name, UFC record, division, OVR, and one isolated Watch Moment action.
+3. Category ratings and explanations belong in fighter profiles and Category boards, not a six-chip wall on every leaderboard row.
+4. Preserve P4P, Women, Divisions, Categories, search, and curated era filtering.
+5. Do not invent rank-movement presentation until real movement data exists.
+6. Fighter profiles preserve Compare, Ask Why, Watch Fight, Share, Resume Snapshot, six category cards, Why Ranked Here, and Why Not Ranked Higher/Lower.
+7. All 80 Signature Fight destinations are direct, audited public YouTube links; UFC Fight Pass search links are excluded.
 
-The current V2 board is calculation-correct and displays all 80 fighters, but it is not yet the final approved visual migration.
+## Intelligence and Octagon Verdict
+
+Intelligence is a zero-cost handoff to the user's Octagon Verdict GPT, not an in-app AI or statistical Compare engine.
+
+Locked behavior:
+
+- Primary navigation is Home, Rankings, Play, and Picks until permission-aware War Room exists.
+- Intelligence is opened from the persistent top question-mark / Ask Octagon Verdict control.
+- Unauthorized users must not see a fake, disabled, or discoverable War Room destination.
+- Fighter-profile Compare opens Intelligence with the source fighter selected and the opponent control focused.
+- Fighter-profile Ask Why copies a current calculated-rank question and opens a visible FROM FIGHTER PROFILE context card.
+- Copy & Open Verdict is the primary action; visible prompt text and a separate copy control remain as fallbacks.
+- Ordinary matchup prompts stay short. Octagon Verdict's own instructions own verdict-first structure, counterarguments, and better-fighter versus better-UFC-resume framing.
+- Do not build a second in-app comparison calculation path.
 
 ## Temporary V1 asset dependency
 
@@ -111,7 +125,7 @@ V2 still reads real fighter images from the V1 GitHub Pages asset host when pres
 - Future auth: exactly one session/identity provider.
 - `src/styles/tokens.css`: one semantic design-token source.
 - No global script-order architecture.
-- No duplicate initialization, fallback, or recovery owner.
+- No duplicate initialization, fallback, recovery, ranking, or comparison owner.
 - Build in small vertical slices with focused tests.
 - Add fighters in small batches only after the current 80-fighter source and update workflow are explicitly extended.
 
@@ -132,22 +146,21 @@ V2 still reads real fighter images from the V1 GitHub Pages asset host when pres
 - Branded boot experience and route-level lazy loading.
 - Cloudflare Workers static-asset deployment with clean SPA routes.
 - Home foundation and calculated top-three preview.
-- Complete 80-fighter ranking input dataset.
-- Pure calculation engine.
+- Complete 80-fighter ranking input dataset and pure calculation engine.
 - Exact category, modifier, total, rank, OVR, visible-stat, and board-order parity with pinned V1 production.
-- Overall and Women boards showing all 80 fighters.
-- Search across the selected board.
-- Direct calculated fighter profiles for every migrated fighter.
+- Compact P4P and Women boards, Divisions, Categories, search, and curated era filtering.
+- Direct calculated fighter profiles for all 80 fighters.
+- Full approved profile presentation and audited Signature Fight destinations.
+- Final Intelligence/Octagon Verdict gateway, profile Compare handoff, and Ask Why handoff.
 - Disposable static ranking source deleted.
 
 ### Not complete
 
-- Final V1-parity Rankings visual density and six-chip row treatment.
-- Divisions and Categories board interactions.
-- Desktop routed profile drawer.
+- Routed desktop profile drawer.
 - Local V2 ownership of all fighter image files.
-- Compare migration.
-- Play, Picks, Intelligence, authentication, persistence, onboarding, challenges, War Room, sharing, and notifications.
+- V2-owned Octagon Verdict knowledge-pack/export workflow.
+- Real Home personalization, onboarding, favorite fighter, Top 10/profile-photo reminders, and persistence.
+- Play games, Challenge Center, Picks, event recaps, authentication, profiles, permission-aware War Room, mentions, notifications, and final sharing/installability cutover.
 
 ## Validation standard
 
@@ -164,8 +177,10 @@ Every production slice:
 
 ## Next safe action
 
-Build the V1-parity Rankings presentation on top of `rankingModel.ts` without changing calculation ownership. Preserve the approved six chips, KPI strip, board navigation, search/filter behavior, and routed profile strategy. Do not reintroduce `rankingData.ts`, frozen output arrays, or duplicate calculation paths.
+Move the Octagon Verdict knowledge-pack/export owner from V1 to V2. Generate it directly from `rankingModel.ts`, canonical ranking inputs, profile presentation data, and real direct-fight ledgers without browser-global scraping or duplicate score ownership. Preserve the zero-cost manual Custom GPT upload workflow.
+
+After that, finish the routed desktop profile drawer and local V2 fighter-photo ownership before starting Home personalization.
 
 ## New-chat starter prompt
 
-> Continue the Octagon HQ V2 rebuild from current `main` in `codyking0602/Octagon-HQ`. First read `docs/HANDOFF.md`, `docs/product-blueprint.md`, `docs/RANKINGS-MIGRATION.md`, and `docs/rankings-parity-contract.md`. The complete 80-fighter calculation-from-facts migration is finished: `rankingModel.ts` is the app-facing source, all categories/totals/ranks/OVRs are calculated, and the old `rankingData.ts` scaffold is deleted. Do not recreate static ranking ownership or copy V1's global runtime architecture. The next ranking milestone is the approved V1-parity UFC/2K-style presentation, built in a small tested slice with exact-head green validation.
+> Continue the Octagon HQ V2 rebuild from current `main` in `codyking0602/Octagon-HQ`. First read `docs/HANDOFF.md`, `docs/product-blueprint.md`, `docs/RANKINGS-MIGRATION.md`, `docs/rankings-parity-contract.md`, and `docs/intelligence-verdict-flow.md`, then inspect current `main`. The complete 80-fighter calculation migration, compact Rankings controls, full fighter profiles, audited Signature Fight links, and final Intelligence/Octagon Verdict handoff are complete. Compare and Ask Why are prompt handoffs into Intelligence—not a standalone in-app comparison engine. Do not recreate static ranking ownership, duplicate comparison calculations, or V1's global runtime architecture. The next safe milestone is a V2-owned Octagon Verdict knowledge-pack/export workflow built directly from canonical V2 data with exact-head green validation.
