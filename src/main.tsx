@@ -5,6 +5,7 @@ import "./styles/tokens.css";
 import "./styles/global.css";
 import "./styles/intelligence.css";
 import "./styles/play.css";
+import "./styles/wavelength.css";
 
 const root = document.getElementById("root");
 
