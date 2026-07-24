@@ -10,16 +10,18 @@ const exported = buildOctagonVerdictExport({
   divisionReport: divisionRankingReport,
   generatedAt: "2026-07-24T00:00:00.000Z",
 });
+const feed = exported.feed as any;
+const fighters = exported.fighters as any[];
 
 describe("V2 Octagon Verdict exporter", () => {
   it("exports the complete calculated fighter set without creating a second ranking owner", () => {
-    expect(exported.feed.source).toBe("octagon-hq-v2-calculated-typescript");
-    expect(exported.feed.fighterCount).toBe(80);
-    expect(exported.fighters.filter((fighter) => fighter.group === "men")).toHaveLength(65);
-    expect(exported.fighters.filter((fighter) => fighter.group === "women")).toHaveLength(15);
-    expect(new Set(exported.fighters.map((fighter) => fighter.slug))).toHaveLength(80);
+    expect(feed.source).toBe("octagon-hq-v2-calculated-typescript");
+    expect(feed.fighterCount).toBe(80);
+    expect(fighters.filter((fighter) => fighter.group === "men")).toHaveLength(65);
+    expect(fighters.filter((fighter) => fighter.group === "women")).toHaveLength(15);
+    expect(new Set(fighters.map((fighter) => fighter.slug)).size).toBe(80);
 
-    const jon = exported.fighters.find((fighter) => fighter.slug === "jon-jones")!;
+    const jon = fighters.find((fighter) => fighter.slug === "jon-jones")!;
     expect(jon.rank).toBe(1);
     expect(jon.appOvr).toBe(99);
     expect(jon.totalScore).toBe(allTime.find((fighter) => fighter.slug === "jon-jones")!.rawScore);
@@ -30,12 +32,12 @@ describe("V2 Octagon Verdict exporter", () => {
   });
 
   it("exports calculated division boards and fighter division entries", () => {
-    expect(exported.feed.divisionBoards.Heavyweight?.[0]?.fighter).toBe("Stipe Miocic");
-    expect(exported.feed.divisionBoards["Light Heavyweight"]?.[0]?.fighter).toBe("Jon Jones");
+    expect(feed.divisionBoards.Heavyweight?.[0]?.fighter).toBe("Stipe Miocic");
+    expect(feed.divisionBoards["Light Heavyweight"]?.[0]?.fighter).toBe("Jon Jones");
 
-    const jon = exported.fighters.find((fighter) => fighter.slug === "jon-jones")!;
-    const heavyweight = jon.divisionBoards.find((row) => row.division === "Heavyweight");
-    const lightHeavyweight = jon.divisionBoards.find((row) => row.division === "Light Heavyweight");
+    const jon = fighters.find((fighter) => fighter.slug === "jon-jones")!;
+    const heavyweight = jon.divisionBoards.find((row: any) => row.division === "Heavyweight");
+    const lightHeavyweight = jon.divisionBoards.find((row: any) => row.division === "Light Heavyweight");
     expect(heavyweight).toBeTruthy();
     expect(lightHeavyweight).toBeTruthy();
     expect(lightHeavyweight?.divisionScore).toBeGreaterThan(heavyweight?.divisionScore ?? 0);
