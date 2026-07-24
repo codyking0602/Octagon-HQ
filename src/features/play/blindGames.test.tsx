@@ -2,6 +2,7 @@ import { fireEvent, render, within } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import IntelligencePage from "../intelligence/IntelligencePage";
+import { canonicalRankingInputs } from "../rankings/data/rankingInputs";
 import BlindRankPage from "./BlindRankPage";
 import BlindResumePage from "./BlindResumePage";
 import {
@@ -16,7 +17,7 @@ import {
   createBlindRankLineup,
   resolveBlindRankChallenge,
 } from "./blindRankEngine";
-import { getPlayFighter } from "./playFighterPool";
+import { getPlayFighter, rankedPlayFighters } from "./playFighterPool";
 
 function renderBlindResume(path = "/play/blind-resume") {
   return render(
@@ -72,6 +73,18 @@ describe("Blind Resume engine", () => {
     ]);
     const winner = blindResumeWinner(pair);
     expect(winner.model.rank).toBe(Math.min(pair.fighterA.model.rank, pair.fighterB.model.rank));
+  });
+
+  it("uses the exact canonical ranking era name for every ranked Play fighter", () => {
+    const eraNameById = new Map(
+      canonicalRankingInputs.filters.eras.map((era) => [era.id, era.name]),
+    );
+
+    for (const fighter of rankedPlayFighters) {
+      const membership = canonicalRankingInputs.filters.eraMembership[fighter.name];
+      expect(membership).toBeDefined();
+      expect(fighter.mainEra).toBe(eraNameById.get(membership!.primary));
+    }
   });
 
   it("keeps distinct profile and thumbnail assets for varied portrait crops", () => {
