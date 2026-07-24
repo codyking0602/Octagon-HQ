@@ -1,4 +1,6 @@
+import { fireEvent, render } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
+import PlayPage from "./PlayPage";
 import {
   dailyFindLeaderBoard,
   findLeaderAudit,
@@ -21,6 +23,17 @@ describe("Play registry", () => {
       "keep-cut",
       "better-than",
     ]);
+  });
+
+  it("renders all six games and opens the ten-fighter daily board", () => {
+    const { container } = render(<PlayPage />);
+    const titles = [...container.querySelectorAll(".play-game-card > strong")].map((node) => node.textContent);
+    expect(titles).toEqual(playGames.map((game) => game.title));
+
+    const daily = container.querySelector<HTMLButtonElement>(".play-daily__challenge");
+    expect(daily).not.toBeNull();
+    fireEvent.click(daily!);
+    expect(container.querySelectorAll(".find-card")).toHaveLength(10);
   });
 });
 
