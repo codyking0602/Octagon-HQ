@@ -30,6 +30,8 @@ const LIVE_GAME_ROUTES: Partial<Record<PlayGameId, string>> = {
   wavelength: "/play/wavelength",
   "blind-resume": "/play/blind-resume",
   "blind-rank": "/play/blind-rank",
+  "keep-cut": "/play/keep-cut",
+  "better-than": "/play/better-than",
 };
 
 const DIVISION_ABBREVIATIONS: Record<string, string> = {

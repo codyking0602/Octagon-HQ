@@ -9,6 +9,8 @@ const PLAY_GAME_TITLES: Record<string, string> = {
   "/play/wavelength": "Wavelength",
   "/play/blind-resume": "Blind Resume",
   "/play/blind-rank": "Blind Rank 5",
+  "/play/keep-cut": "Keep 4, Cut 4",
+  "/play/better-than": "Better Than…",
 };
 
 export function AppShell() {
