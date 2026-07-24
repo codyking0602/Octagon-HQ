@@ -1,5 +1,6 @@
 import {
   createPlayChallenge,
+  dismissChallenge,
   markChallengeOpened,
   submitChallengeResult,
   type ChallengeJson,
@@ -14,7 +15,7 @@ export interface ChallengeStorage {
   setItem(key: string, value: string): void;
 }
 
-function isStoredChallenge(value: unknown): value is PlayChallenge {
+function isStoredChallenge(value: unknown): value is Record<string, unknown> {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const row = value as Record<string, unknown>;
   return typeof row.code === "string"
@@ -23,8 +24,21 @@ function isStoredChallenge(value: unknown): value is PlayChallenge {
     && typeof row.gameId === "string";
 }
 
+function normalizeStoredChallenge(value: Record<string, unknown>): PlayChallenge {
+  return {
+    ...(value as unknown as PlayChallenge),
+    playUrl: typeof value.playUrl === "string" ? value.playUrl : "",
+    declinedAt: typeof value.declinedAt === "string" ? value.declinedAt : null,
+    hiddenFor: Array.isArray(value.hiddenFor)
+      ? value.hiddenFor.filter((profileId): profileId is string => typeof profileId === "string")
+      : [],
+  };
+}
+
 function validRows(value: unknown): PlayChallenge[] {
-  return Array.isArray(value) ? value.filter(isStoredChallenge) : [];
+  return Array.isArray(value)
+    ? value.filter(isStoredChallenge).map(normalizeStoredChallenge)
+    : [];
 }
 
 export function loadChallenges(storage: ChallengeStorage): PlayChallenge[] {
@@ -67,8 +81,19 @@ export function completeChallengeRow(
   return rows.map((row) => row.code === code ? submitChallengeResult(row, profileId, result, now) : row);
 }
 
+export function dismissChallengeRow(
+  rows: readonly PlayChallenge[],
+  code: string,
+  profileId: string,
+  now = new Date(),
+): PlayChallenge[] {
+  return rows
+    .map((row) => row.code === code ? dismissChallenge(row, profileId, now) : row)
+    .filter((row) => !(row.hiddenFor.includes(row.creatorId) && row.hiddenFor.includes(row.recipientId)));
+}
+
 export function challengesForProfile(rows: readonly PlayChallenge[], profileId: string) {
   return rows
-    .filter((row) => row.creatorId === profileId || row.recipientId === profileId)
+    .filter((row) => (row.creatorId === profileId || row.recipientId === profileId) && !row.hiddenFor.includes(profileId))
     .sort((left, right) => right.createdAt.localeCompare(left.createdAt));
 }
