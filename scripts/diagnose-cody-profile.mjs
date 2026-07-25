@@ -57,9 +57,10 @@ if (!user?.id || !user?.email) throw new Error("CODY Auth user is incomplete.");
 
 console.log("CODY profile row: present");
 console.log(`CODY credential row: ${state?.credential_exists ? "present" : "missing"}`);
-console.log("CODY Auth user: present");
-console.log(`CODY email confirmed: ${Boolean(user.email_confirmed_at)}`);
-console.log(`CODY banned: ${Boolean(user.banned_until && new Date(user.banned_until) > new Date())}`);
+console.log(`CODY Auth user: ${state?.auth_user_exists ? "present" : "missing"}`);
+console.log(`CODY credential email matches Auth user: ${Boolean(state?.internal_email_matches_auth)}`);
+console.log(`CODY email confirmed: ${Boolean(state?.email_confirmed)}`);
+console.log(`CODY banned: ${Boolean(state?.banned)}`);
 console.log(`CODY failed attempts: ${Number(state?.failed_attempts ?? 0)}`);
 console.log(`CODY currently locked: ${Boolean(state?.locked)}`);
 
@@ -69,7 +70,8 @@ const tokenResult = await request(`${base}/auth/v1/admin/generate_link`, {
   body: JSON.stringify({ type: "magiclink", email: user.email }),
 });
 
-if (!tokenResult.response.ok || !tokenResult.body?.properties?.hashed_token) {
+const tokenHash = tokenResult.body?.properties?.hashed_token ?? tokenResult.body?.hashed_token;
+if (!tokenResult.response.ok || !tokenHash) {
   const code = tokenResult.body?.code ?? tokenResult.body?.error_code ?? "unknown";
   const message = String(
     tokenResult.body?.msg
