@@ -1,0 +1,32 @@
+name: Verify Restored PIN Authentication
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/verify-restored-pin-auth.yml"
+      - "scripts/verify-restored-pin-auth.mjs"
+      - "supabase/functions/pin-auth/**"
+      - "supabase/migrations/**"
+
+permissions:
+  contents: read
+
+jobs:
+  verify-restored-pin-auth:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Verify production PIN login and session
+        run: node scripts/verify-restored-pin-auth.mjs
