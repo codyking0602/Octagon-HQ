@@ -27,7 +27,8 @@ jobs:
           state_file="$RUNNER_TEMP/cody-pin-state.json"
           profile_file="$RUNNER_TEMP/cody-profile.json"
           user_file="$RUNNER_TEMP/cody-auth-user.json"
-          trap 'rm -f "$keys_file" "$state_file" "$profile_file" "$user_file"' EXIT
+          token_file="$RUNNER_TEMP/cody-session-token.json"
+          trap 'rm -f "$keys_file" "$state_file" "$profile_file" "$user_file" "$token_file"' EXIT
 
           curl --fail --silent --show-error \
             --header "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
@@ -74,18 +75,47 @@ jobs:
             "$base/auth/v1/admin/users/$profile_id" \
             --output "$user_file"
 
-          node - "$state_file" "$user_file" <<'NODE'
+          internal_email=$(node - "$user_file" <<'NODE'
+          const fs = require('fs');
+          const user = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+          if (!user?.id || !user?.email) process.exit(1);
+          process.stdout.write(user.email);
+          NODE
+          )
+
+          token_status=$(curl --silent --show-error \
+            --output "$token_file" \
+            --write-out "%{http_code}" \
+            --request POST \
+            --header "Authorization: Bearer $secret_key" \
+            --header "apikey: $secret_key" \
+            --header "Content-Type: application/json" \
+            --data "$(node -e 'process.stdout.write(JSON.stringify({type:"magiclink",email:process.argv[1]}))' "$internal_email")" \
+            "$base/auth/v1/admin/generate_link")
+
+          node - "$state_file" "$user_file" "$token_file" "$token_status" <<'NODE'
           const fs = require('fs');
           const rows = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
           const user = JSON.parse(fs.readFileSync(process.argv[3], 'utf8'));
+          const tokenBody = JSON.parse(fs.readFileSync(process.argv[4], 'utf8'));
+          const tokenStatus = Number(process.argv[5]);
           const state = Array.isArray(rows) ? rows[0] : null;
           if (!state?.profile_exists) throw new Error('CODY profile row is missing.');
           if (!state?.credential_exists) throw new Error('CODY PIN credential row is missing.');
           if (!user?.id) throw new Error('CODY Auth user is missing.');
-          console.log(`CODY profile row: present`);
-          console.log(`CODY credential row: present`);
-          console.log(`CODY Auth user: present`);
+          console.log('CODY profile row: present');
+          console.log('CODY credential row: present');
+          console.log('CODY Auth user: present');
+          console.log(`CODY email confirmed: ${Boolean(user.email_confirmed_at)}`);
+          console.log(`CODY banned: ${Boolean(user.banned_until && new Date(user.banned_until) > new Date())}`);
           console.log(`CODY failed attempts: ${Number(state.failed_attempts ?? 0)}`);
           console.log(`CODY currently locked: ${Boolean(state.locked)}`);
           console.log(`CODY retry after seconds: ${Number(state.retry_after_seconds ?? 0)}`);
+          if (tokenStatus !== 200 || !tokenBody?.properties?.hashed_token) {
+            const safeCode = tokenBody?.code ?? tokenBody?.error_code ?? 'unknown';
+            const safeMessage = String(tokenBody?.msg ?? tokenBody?.message ?? tokenBody?.error_description ?? 'unknown error')
+              .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, '[redacted-email]');
+            throw new Error(`CODY session-token generation failed: HTTP ${tokenStatus}, code ${safeCode}, message ${safeMessage}`);
+          }
+          console.log('CODY session-token generation: available');
           NODE
