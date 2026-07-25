@@ -1,0 +1,68 @@
+name: Verify Live PIN Authentication
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/verify-pin-auth-live.yml"
+      - "scripts/verify-pin-auth-live.mjs"
+      - "supabase/functions/pin-auth/**"
+      - "supabase/migrations/**"
+
+permissions:
+  contents: read
+
+jobs:
+  verify-live-login:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+      OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install WebKit browser harness
+        run: |
+          npm install --no-save --ignore-scripts playwright@1.56.1
+          npx playwright install --with-deps webkit
+
+      - name: Verify successful login through the production browser UI
+        id: browser-login
+        continue-on-error: true
+        env:
+          PUBLIC_CONFIG_PATH: ${{ runner.temp }}/octagon-public-config.env
+        run: node scripts/verify-pin-auth-live.mjs > "$RUNNER_TEMP/pin-browser.log" 2>&1
+
+      - name: Upload concise browser diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pin-browser-diagnostics
+          path: ${{ runner.temp }}/pin-browser.log
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload verified public browser config
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: octagon-public-browser-config
+          path: ${{ runner.temp }}/octagon-public-config.env
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Enforce browser login result
+        if: always()
+        env:
+          BROWSER_LOGIN_OUTCOME: ${{ steps.browser-login.outcome }}
+        run: |
+          cat "$RUNNER_TEMP/pin-browser.log"
+          test "$BROWSER_LOGIN_OUTCOME" = "success"

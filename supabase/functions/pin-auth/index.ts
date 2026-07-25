@@ -85,12 +85,26 @@ Deno.serve(async (request) => {
     if (error) return response({ message: "Profile login is unavailable." }, 503);
 
     const match = Array.isArray(data) ? data[0] : null;
-    if (!match?.internal_email) {
+    if (match?.auth_result === "locked") {
+      return response({ message: "Too many attempts. Try again in a few minutes." }, 423);
+    }
+
+    let internalEmail = typeof match?.internal_email === "string"
+      ? match.internal_email
+      : "";
+
+    if (!internalEmail && match?.auth_result === "ok" && typeof match?.profile_id === "string") {
+      const { data: authUserData, error: authUserError } = await admin.auth.admin.getUserById(match.profile_id);
+      if (authUserError) return response({ message: "Profile login is unavailable." }, 503);
+      internalEmail = authUserData.user?.email ?? "";
+    }
+
+    if (!internalEmail) {
       return response({ message: "That name and PIN did not match." }, 401);
     }
 
     try {
-      return response({ tokenHash: await issueSessionToken(match.internal_email) });
+      return response({ tokenHash: await issueSessionToken(internalEmail) });
     } catch {
       return response({ message: "Profile login is unavailable." }, 503);
     }
