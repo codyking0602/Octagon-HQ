@@ -1,0 +1,66 @@
+name: Verify Cloudflare Preview
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/verify-cloudflare-preview.yml"
+      - "package.json"
+      - "package-lock.json"
+      - "public/**"
+      - "scripts/build-supabase-proxy.mjs"
+      - "src/**"
+      - "vite.config.*"
+      - "wrangler.jsonc"
+
+permissions:
+  contents: read
+
+jobs:
+  verify-preview:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Verify same-origin Supabase proxy on branch preview
+        shell: bash
+        env:
+          HEAD_BRANCH: ${{ github.head_ref }}
+        run: |
+          set -euo pipefail
+          branch_slug=$(printf '%s' "$HEAD_BRANCH" \
+            | tr '[:upper:]' '[:lower:]' \
+            | sed -E 's#[^a-z0-9]+#-#g; s/^-+//; s/-+$//')
+          preview_origin="https://${branch_slug}-octagon.hq-app.workers.dev"
+          proxy_probe="${preview_origin}/api/supabase/octagon-proxy-check/functions/v1/pin-auth"
+
+          verified=0
+          for attempt in $(seq 1 24); do
+            headers="$RUNNER_TEMP/octagon-preview-headers.txt"
+            body="$RUNNER_TEMP/octagon-preview-body.txt"
+            status=$(curl --silent --show-error \
+              --dump-header "$headers" \
+              --output "$body" \
+              --write-out "%{http_code}" \
+              --request POST \
+              --header "Content-Type: application/json" \
+              --data '{}' \
+              "$proxy_probe" || true)
+
+            if grep -Fiq "x-octagon-supabase-proxy: 1" "$headers"; then
+              verified=1
+              echo "Same-origin proxy reached on ${preview_origin} with HTTP ${status}."
+              break
+            fi
+
+            if [ "$attempt" -lt 24 ]; then
+              echo "Waiting for the exact branch preview proxy (attempt ${attempt} of 24)..."
+              sleep 10
+            fi
+          done
+
+          if [ "$verified" -ne 1 ]; then
+            echo "::error title=Cloudflare preview proxy unavailable::${preview_origin} never served the same-origin Supabase proxy marker."
+            cat "$RUNNER_TEMP/octagon-preview-headers.txt" || true
+            cat "$RUNNER_TEMP/octagon-preview-body.txt" || true
+            exit 1
+          fi
