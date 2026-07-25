@@ -3,6 +3,7 @@ import { fireEvent, render } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ChallengeProvider } from "../challenges/ChallengeProvider";
+import { IdentityProvider } from "../identity/IdentityProvider";
 import BetterThanPage from "./BetterThanPage";
 import KeepCutPage from "./KeepCutPage";
 import PlayPage from "./PlayPage";
@@ -27,9 +28,11 @@ import { getPlayFighter } from "./playFighterPool";
 
 function renderAt(element: ReactNode, path: string) {
   return render(
-    <ChallengeProvider>
-      <MemoryRouter initialEntries={[path]}>{element}</MemoryRouter>
-    </ChallengeProvider>,
+    <IdentityProvider gateway={null}>
+      <ChallengeProvider repository={null}>
+        <MemoryRouter initialEntries={[path]}>{element}</MemoryRouter>
+      </ChallengeProvider>
+    </IdentityProvider>,
   );
 }
 

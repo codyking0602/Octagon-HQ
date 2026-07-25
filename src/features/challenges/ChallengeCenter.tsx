@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useIdentity } from "../identity/IdentityProvider";
 import {
   challengeDirection,
   challengeStatus,
@@ -52,12 +53,16 @@ function statusClass(status: ChallengeStatus) {
 
 export function ChallengeCenter() {
   const navigate = useNavigate();
+  const identity = useIdentity();
   const {
+    configured,
     enabled,
+    loading,
+    error,
     profiles,
     activeProfile,
     challenges,
-    setActiveProfile,
+    refresh,
     markOpened,
     dismissChallenge,
     viewResults,
@@ -77,10 +82,22 @@ export function ChallengeCenter() {
   });
   const visibleRows = expanded ? rows : rows.slice(0, COLLAPSED_ROW_LIMIT);
 
-  if (!enabled || !activeProfile) return null;
+  if (!configured) return null;
+
+  if (!enabled || !activeProfile) {
+    return (
+      <section className="challenge-center surface-card" data-play-challenge-center>
+        <header className="challenge-center__header">
+          <div><p className="eyebrow">CHALLENGE CENTER</p><h2>Play against friends</h2></div>
+        </header>
+        <p className="challenge-center__hint">Sign in to send and receive the same locked UFC games across devices.</p>
+        <button className="primary-action challenge-center__sign-in" type="button" onClick={identity.openDialog}>SIGN IN TO CHALLENGE</button>
+      </section>
+    );
+  }
 
   function openChallenge(challenge: PlayChallenge) {
-    markOpened(challenge.code);
+    void markOpened(challenge.code);
     navigate(challengePlayRoute(challenge));
   }
 
@@ -94,24 +111,15 @@ export function ChallengeCenter() {
       <header className="challenge-center__header">
         <div>
           <p className="eyebrow">CHALLENGE CENTER</p>
-          <h2>Your matchups</h2>
+          <h2>{activeProfile.displayName}'s matchups</h2>
         </div>
-        <label className="challenge-center__preview-mode">
-          <span>PREVIEW MODE</span>
-          <select
-            aria-label="PREVIEWING AS"
-            value={activeProfile.id}
-            onChange={(event) => {
-              setActiveProfile(event.target.value);
-              setExpanded(false);
-            }}
-          >
-            {profiles.map((profile) => <option value={profile.id} key={profile.id}>{profile.displayName}</option>)}
-          </select>
-        </label>
+        <button className="challenge-center__refresh" type="button" disabled={loading} onClick={() => void refresh()}>
+          {loading ? "SYNCING…" : "REFRESH"}
+        </button>
       </header>
 
-      <p className="challenge-center__hint">Results unlock after both profiles finish the exact same challenge.</p>
+      <p className="challenge-center__hint">Results unlock only after both profiles finish the exact same challenge.</p>
+      {error ? <p className="challenge-center__error" role="status">{error}</p> : null}
 
       <div className="challenge-center__filters" role="tablist" aria-label="Challenge filters">
         {(["all", "received", "sent"] as const).map((value) => (
@@ -160,7 +168,7 @@ export function ChallengeCenter() {
                       type="button"
                       className="challenge-center__dismiss"
                       aria-label={`${dismissLabel} ${counterpart?.displayName ?? "challenge"} ${challenge.gameTitle}`}
-                      onClick={() => dismissChallenge(challenge.code)}
+                      onClick={() => void dismissChallenge(challenge.code)}
                     >
                       {dismissLabel}
                     </button>
@@ -177,7 +185,7 @@ export function ChallengeCenter() {
         </>
       ) : (
         <div className="challenge-center__empty">
-          No challenges here yet. Finish a game and send the exact setup to another profile.
+          {loading ? "Syncing profile challenges…" : "No challenges yet. Finish a game and send the exact setup to another profile."}
         </div>
       )}
     </section>

@@ -2,20 +2,63 @@ import type { ReactNode } from "react";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { IdentityProvider } from "../identity/IdentityProvider";
+import type { IdentityGateway } from "../identity/identityGateway";
+import PlayPage from "../play/PlayPage";
+import { centralDay, dailyFindLeaderBoard } from "../play/findLeaderEngine";
 import { ChallengeCenter } from "./ChallengeCenter";
 import { ChallengeProvider } from "./ChallengeProvider";
 import FindLeaderChallengeRoute from "./FindLeaderChallengeRoute";
-import { CHALLENGE_STORAGE_KEY, loadChallenges } from "./challengeRepository";
-import PlayPage from "../play/PlayPage";
-import { centralDay, dailyFindLeaderBoard } from "../play/findLeaderEngine";
+import type { ChallengeProfile, PlayChallenge } from "./challengeModel";
+import type { ChallengeRepository, RemoteChallengeDraft } from "./challengeRepository";
 
-const PROFILE_STORAGE_KEY = "octagon-hq:challenge-profile:v1";
+const cody: ChallengeProfile = {
+  id: "11111111-1111-4111-8111-111111111111",
+  displayName: "CODY",
+  initials: "CK",
+};
 
-function renderWithChallenges(element: ReactNode, path: string) {
+const shane: ChallengeProfile = {
+  id: "22222222-2222-4222-8222-222222222222",
+  displayName: "SHANE",
+  initials: "SH",
+};
+
+function identityGateway(profile: ChallengeProfile): IdentityGateway {
+  return {
+    getSession: async () => ({ userId: profile.id }),
+    subscribe: () => () => undefined,
+    loadProfile: async () => profile,
+    signIn: async () => undefined,
+    createProfile: async () => undefined,
+    signOut: async () => undefined,
+  };
+}
+
+function fakeRepository(overrides: Partial<ChallengeRepository> = {}): ChallengeRepository {
+  return {
+    load: async () => ({ challenges: [], profiles: [] }),
+    findProfile: async () => shane,
+    create: async () => "MATCH123",
+    markOpened: async () => undefined,
+    submitResult: async () => undefined,
+    dismiss: async () => undefined,
+    ...overrides,
+  };
+}
+
+function renderWithProfile(
+  element: ReactNode,
+  path: string,
+  profile: ChallengeProfile,
+  repository: ChallengeRepository,
+) {
   return render(
-    <ChallengeProvider>
-      <MemoryRouter initialEntries={[path]}>{element}</MemoryRouter>
-    </ChallengeProvider>,
+    <IdentityProvider gateway={identityGateway(profile)}>
+      <ChallengeProvider repository={repository}>
+        <MemoryRouter initialEntries={[path]}>{element}</MemoryRouter>
+      </ChallengeProvider>
+    </IdentityProvider>,
   );
 }
 
@@ -24,52 +67,80 @@ function leaderButton(container: HTMLElement, leaderName: string) {
     .find((button) => button.textContent?.includes(leaderName));
 }
 
-describe("Play Challenge Center flow", () => {
+function profileChallenge(day: string): PlayChallenge {
+  const board = dailyFindLeaderBoard(day)!;
+  return {
+    code: "MATCH123",
+    gameId: "find-leader",
+    gameVersion: board.version,
+    gameTitle: "Find the Leader",
+    summary: board.question,
+    creatorId: cody.id,
+    recipientId: shane.id,
+    playUrl: `https://example.test/play/find-leader?day=${day}`,
+    setup: JSON.parse(JSON.stringify({ day, board })),
+    creatorResult: null,
+    responderResult: null,
+    createdAt: "2026-07-24T12:00:00.000Z",
+    openedAt: null,
+    completedAt: null,
+    declinedAt: null,
+    expiresAt: "2026-08-23T12:00:00.000Z",
+    hiddenFor: [],
+  };
+}
+
+describe("real profile Challenge Center flow", () => {
   beforeEach(() => {
-    window.localStorage.clear();
     Object.defineProperty(navigator, "share", {
       configurable: true,
       value: vi.fn().mockResolvedValue(undefined),
     });
+    Object.defineProperty(window, "scrollTo", { value: vi.fn(), writable: true });
   });
 
   afterEach(() => {
     cleanup();
-    window.localStorage.clear();
+    document.body.style.overflow = "";
     vi.restoreAllMocks();
   });
 
-  it("supports text sharing, freezes the board, and reveals both exact choice paths after completion", async () => {
+  it("freezes CODY's exact board and sends it to the real SHANE profile", async () => {
     const day = centralDay();
     const board = dailyFindLeaderBoard(day)!;
     const leader = board.candidates.find((fighter) => fighter.id === board.leaderId)!;
+    const create = vi.fn(async (_draft: RemoteChallengeDraft) => "MATCH123");
+    const findProfile = vi.fn(async () => shane);
+    const repository = fakeRepository({ create, findProfile });
 
-    const creatorView = renderWithChallenges(<PlayPage />, `/play/find-leader?day=${day}`);
+    const creatorView = renderWithProfile(<PlayPage />, `/play/find-leader?day=${day}`, cody, repository);
     fireEvent.click(leaderButton(creatorView.container, leader.name)!);
     fireEvent.click(screen.getByRole("button", { name: "CHALLENGE SOMEONE" }));
 
-    expect(screen.getByRole("dialog", { name: "Challenge Someone" })).toBeTruthy();
-    expect(screen.getByText("Send to an Octagon HQ profile or use your phone’s share sheet to text the exact challenge.")).toBeTruthy();
+    expect(await screen.findByRole("dialog", { name: "Challenge Someone" })).toBeTruthy();
+    expect(screen.getByText(/Enter the exact Octagon HQ profile name/i)).toBeTruthy();
 
     fireEvent.click(screen.getByRole("button", { name: "TEXT / SHARE LINK" }));
     await waitFor(() => expect(navigator.share).toHaveBeenCalledTimes(1));
 
+    fireEvent.change(screen.getByLabelText("PROFILE NAME"), { target: { value: "shane" } });
+    fireEvent.click(screen.getByRole("button", { name: "FIND PROFILE" }));
+    expect(await screen.findByText("SHANE FOUND")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "SEND TO PROFILE" }));
 
-    const sent = loadChallenges(window.localStorage);
-    expect(sent).toHaveLength(1);
-    expect(sent[0]?.creatorId).toBe("cody-preview");
-    expect(sent[0]?.recipientId).toBe("shane-preview");
-    expect(sent[0]?.creatorResult).toEqual({
+    await waitFor(() => expect(findProfile).toHaveBeenCalledWith("SHANE", cody.id));
+    await waitFor(() => expect(create).toHaveBeenCalledTimes(1));
+
+    const sent = create.mock.calls[0]![0];
+    expect(sent.recipientId).toBe(shane.id);
+    expect(sent.creatorResult).toEqual({
       score: 1,
       perfect: false,
       fatalId: leader.id,
       eliminated: [leader.id],
     });
-    expect(sent[0]?.responderResult).toBeNull();
-    expect(sent[0]?.completedAt).toBeNull();
 
-    const storedSetup = sent[0]?.setup as unknown as {
+    const storedSetup = sent.setup as unknown as {
       day: string;
       board: { leaderId: string; candidates: Array<{ id: string }> };
     };
@@ -77,72 +148,53 @@ describe("Play Challenge Center flow", () => {
     expect(storedSetup.board.leaderId).toBe(board.leaderId);
     expect(storedSetup.board.candidates.map((fighter) => fighter.id))
       .toEqual(board.candidates.map((fighter) => fighter.id));
+  });
 
-    creatorView.unmount();
-    window.localStorage.setItem(PROFILE_STORAGE_KEY, "shane-preview");
+  it("loads the masked challenge for SHANE, marks it opened, and submits SHANE's result", async () => {
+    const day = centralDay();
+    const board = dailyFindLeaderBoard(day)!;
+    const leader = board.candidates.find((fighter) => fighter.id === board.leaderId)!;
+    const row = profileChallenge(day);
+    const markOpened = vi.fn(async () => undefined);
+    const submitResult = vi.fn(async () => undefined);
+    const repository = fakeRepository({
+      load: async () => ({ challenges: [row], profiles: [cody] }),
+      markOpened,
+      submitResult,
+    });
 
-    const recipientView = renderWithChallenges(
+    const recipientView = renderWithProfile(
       <FindLeaderChallengeRoute />,
-      `/play/find-leader?challenge=${sent[0]!.code}&day=${day}`,
+      `/play/find-leader?challenge=${row.code}&day=${day}`,
+      shane,
+      repository,
     );
 
-    expect(screen.getByText("Cody sent this exact board.")).toBeTruthy();
-    const opened = loadChallenges(window.localStorage);
-    expect(opened[0]?.openedAt).not.toBeNull();
-    expect(opened[0]?.responderResult).toBeNull();
+    expect(await screen.findByText("CODY sent this exact board.")).toBeTruthy();
+    await waitFor(() => expect(markOpened).toHaveBeenCalledWith(row.code));
 
     fireEvent.click(leaderButton(recipientView.container, leader.name)!);
-    const completed = loadChallenges(window.localStorage);
-    expect(completed[0]?.responderResult).toEqual({
+    await waitFor(() => expect(submitResult).toHaveBeenCalledWith(row.code, {
       score: 1,
       perfect: false,
       fatalId: leader.id,
       eliminated: [leader.id],
-    });
-    expect(completed[0]?.completedAt).not.toBeNull();
-
-    recipientView.unmount();
-    window.localStorage.setItem(PROFILE_STORAGE_KEY, "cody-preview");
-    renderWithChallenges(<ChallengeCenter />, "/play");
-
-    expect(screen.getByText(/Shane · Find the Leader/)).toBeTruthy();
-    fireEvent.click(screen.getByRole("button", { name: "RESULTS" }));
-    expect(screen.getByRole("dialog", { name: "Find the Leader" })).toBeTruthy();
-    expect(screen.getByText("Tie game")).toBeTruthy();
-    expect(screen.getAllByText("1/10")).toHaveLength(4);
-    expect(screen.getAllByText("ELIMINATION ORDER")).toHaveLength(2);
-    expect(screen.getAllByText("LEADER")).toHaveLength(2);
-    expect(screen.getAllByText(leader.name).length).toBeGreaterThanOrEqual(2);
+    }));
   });
 
-  it("shows the shared All, Received, and Sent views for the active preview profile", () => {
-    const rows = [{
-      code: "CENTER01",
-      gameId: "find-leader",
-      gameVersion: "find-leader-v2",
-      gameTitle: "Find the Leader",
-      summary: "Who has the most UFC wins?",
-      creatorId: "cody-preview",
-      recipientId: "shane-preview",
-      setup: { day: "2026-07-24" },
-      creatorResult: { score: 8 },
-      responderResult: null,
-      createdAt: "2026-07-24T12:00:00.000Z",
-      openedAt: null,
-      completedAt: null,
-      expiresAt: "2026-08-23T12:00:00.000Z",
-    }];
-    window.localStorage.setItem(CHALLENGE_STORAGE_KEY, JSON.stringify(rows));
+  it("shows CODY's shared All, Received, and Sent views without a preview switcher", async () => {
+    const row = profileChallenge("2026-07-24");
+    const repository = fakeRepository({
+      load: async () => ({ challenges: [{ ...row, creatorResult: { score: 8 } }], profiles: [shane] }),
+    });
 
-    renderWithChallenges(<ChallengeCenter />, "/play");
+    renderWithProfile(<ChallengeCenter />, "/play", cody, repository);
+
+    expect(await screen.findByRole("heading", { name: "CODY's matchups" })).toBeTruthy();
     expect(screen.getByRole("tab", { name: "ALL 1" })).toBeTruthy();
     expect(screen.getByRole("tab", { name: "RECEIVED 0" })).toBeTruthy();
     expect(screen.getByRole("tab", { name: "SENT 1" })).toBeTruthy();
     expect(screen.getByText("WAITING")).toBeTruthy();
-
-    fireEvent.change(screen.getByLabelText("PREVIEWING AS"), { target: { value: "shane-preview" } });
-    expect(screen.getByRole("tab", { name: "RECEIVED 1" })).toBeTruthy();
-    expect(screen.getByText(/Cody · Find the Leader/)).toBeTruthy();
-    expect(screen.getByRole("button", { name: "PLAY" })).toBeTruthy();
+    expect(screen.queryByText("PREVIEW MODE")).toBeNull();
   });
 });

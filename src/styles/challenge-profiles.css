@@ -1,0 +1,110 @@
+.challenge-center__refresh {
+  min-height: 30px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: #0b0b0d;
+  color: var(--text-secondary);
+  padding: 0 10px;
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .06em;
+}
+
+.challenge-center__refresh:disabled {
+  opacity: .55;
+}
+
+.challenge-center__sign-in {
+  width: 100%;
+  border: 0;
+}
+
+.challenge-center__error {
+  margin: 0;
+  color: #ff9a52;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.challenge-dialog__profile-search {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: end;
+}
+
+.challenge-dialog__profile-search label {
+  display: grid;
+  gap: 6px;
+}
+
+.challenge-dialog__profile-search label > span {
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .1em;
+}
+
+.challenge-dialog__profile-search input {
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  outline: 0;
+  background: #0b0b0d;
+  color: var(--text-primary);
+  padding: 0 13px;
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: .04em;
+}
+
+.challenge-dialog__profile-search input:focus {
+  border-color: var(--ufc-red);
+  box-shadow: 0 0 0 3px rgba(229, 9, 20, .12);
+}
+
+.challenge-dialog__profile-search > button {
+  min-height: 46px;
+  border: 1px solid var(--ufc-red);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--ufc-red-strong);
+  padding: 0 12px;
+  font-size: 9px;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+.challenge-dialog__profile-search > button:disabled,
+.challenge-dialog footer button:disabled {
+  opacity: .48;
+}
+
+.challenge-overlay {
+  align-items: end;
+  padding: 12px 12px calc(12px + var(--safe-bottom));
+}
+
+.challenge-dialog {
+  max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 24px);
+  overscroll-behavior: contain;
+}
+
+@media (min-width: 680px) {
+  .challenge-overlay {
+    align-items: center;
+    padding: 18px;
+  }
+}
+
+@media (max-width: 430px) {
+  .challenge-dialog__profile-search {
+    grid-template-columns: 1fr;
+  }
+
+  .challenge-dialog__profile-search > button {
+    width: 100%;
+  }
+}

@@ -106,7 +106,9 @@ jobs:
           test -f dist/index.html
           grep -FRq "overscroll-behavior:contain" dist/assets/*.css
           grep -FRq "identity-overlay--viewport" dist/assets/*.js
-          echo "Production dist contains the viewport-owned profile dialog."
+          grep -FRq "NO PROFILE FOUND WITH THAT EXACT NAME" dist/assets/*.js
+          grep -FRq "SIGN IN TO CHALLENGE" dist/assets/*.js
+          echo "Production dist contains real profile challenges and the viewport-owned profile dialog."
 
       - name: Upload build diagnostics
         if: failure()
@@ -130,38 +132,36 @@ jobs:
             wrangler-deploy.log
           retention-days: 7
 
-      - name: Verify live profile frontend
+      - name: Verify live profile challenges
         shell: bash
         run: |
           set -euo pipefail
-          html_file="$RUNNER_TEMP/octagon-index.html"
-          curl --fail --silent --show-error \
-            --header "Cache-Control: no-cache" \
-            "${OCTAGON_PRODUCTION_URL}/?deployment=${GITHUB_SHA}" \
-            --output "$html_file"
+          live_assets_dir="$RUNNER_TEMP/octagon-live-assets"
+          mkdir -p "$live_assets_dir"
 
-          script_path=$(grep -oE 'src="[^"]+\.js"' "$html_file" | head -n 1 | cut -d '"' -f 2)
-          if [ -z "$script_path" ]; then
-            echo "::error title=Live frontend verification failed::The production HTML did not reference a JavaScript bundle."
-            cat "$html_file"
+          found_assets=0
+          for local_asset in dist/assets/*.js; do
+            asset_name=$(basename "$local_asset")
+            curl --fail --silent --show-error \
+              --header "Cache-Control: no-cache" \
+              "${OCTAGON_PRODUCTION_URL}/assets/${asset_name}?deployment=${GITHUB_SHA}" \
+              --output "$live_assets_dir/$asset_name"
+            found_assets=$((found_assets + 1))
+          done
+
+          if [ "$found_assets" -lt 1 ]; then
+            echo "::error title=Live frontend verification failed::No JavaScript assets were available for verification."
             exit 1
           fi
 
-          case "$script_path" in
-            http*) script_url="$script_path" ;;
-            /*) script_url="${OCTAGON_PRODUCTION_URL}${script_path}" ;;
-            *) script_url="${OCTAGON_PRODUCTION_URL}/${script_path}" ;;
-          esac
-
-          bundle_file="$RUNNER_TEMP/octagon-bundle.js"
-          curl --fail --silent --show-error \
-            --header "Cache-Control: no-cache" \
-            "$script_url?deployment=${GITHUB_SHA}" \
-            --output "$bundle_file"
+          cat "$live_assets_dir"/*.js > "$RUNNER_TEMP/octagon-all-live.js"
+          bundle_file="$RUNNER_TEMP/octagon-all-live.js"
 
           grep -Fq "SIGN IN" "$bundle_file"
           grep -Fq "identity-overlay--viewport" "$bundle_file"
-          echo "Live Worker contains the viewport-owned profile dialog."
+          grep -Fq "NO PROFILE FOUND WITH THAT EXACT NAME" "$bundle_file"
+          grep -Fq "SIGN IN TO CHALLENGE" "$bundle_file"
+          echo "Live Worker contains real profile challenges across the deployed production chunks."
 
       - name: Record deployment
         shell: bash
@@ -172,6 +172,6 @@ jobs:
             echo "- Production URL: $OCTAGON_PRODUCTION_URL"
             echo "- Source commit: $GITHUB_SHA"
             echo "- Supabase browser configuration was resolved from the V2 project without printing the key"
-            echo "- Profile dialog is portaled to document.body and owns the full viewport"
-            echo "- Live production bundle contains the viewport-owned profile dialog"
+            echo "- Challenge Center uses authenticated profiles and exact-name delivery"
+            echo "- All deployed production chunks were verified for real profile challenges"
           } >> "$GITHUB_STEP_SUMMARY"

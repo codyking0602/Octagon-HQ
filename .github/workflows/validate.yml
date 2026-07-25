@@ -36,7 +36,15 @@ jobs:
           retention-days: 7
 
       - name: Test
-        run: npm test
+        run: npm test 2>&1 | tee test.log
+
+      - name: Upload test diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-diagnostics
+          path: test.log
+          retention-days: 7
 
       - name: Build
         run: npm run build 2>&1 | tee build.log
