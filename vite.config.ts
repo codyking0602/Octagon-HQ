@@ -2,40 +2,51 @@ import react from "@vitejs/plugin-react";
 import { loadEnv } from "vite";
 import { defineConfig } from "vitest/config";
 
+function validSupabaseUrl(value: string) {
+  if (!value || value.includes("your-project-id")) return false;
+  try {
+    return new URL(value).hostname.endsWith(".supabase.co");
+  } catch {
+    return false;
+  }
+}
+
+function validPublishableKey(value: string) {
+  return Boolean(
+    value
+      && !value.includes("your-publishable-key")
+      && (value.startsWith("sb_publishable_") || value.startsWith("eyJ")),
+  );
+}
+
 export default defineConfig(({ command, mode }) => {
+  const browserDefines: Record<string, string> = {};
+
   if (command === "build") {
     const fileEnv = loadEnv(mode, process.cwd(), "");
-    const supabaseUrl = process.env.VITE_SUPABASE_URL || fileEnv.VITE_SUPABASE_URL || "";
-    const publishableKey = process.env.VITE_SUPABASE_PUBLISHABLE_KEY
-      || fileEnv.VITE_SUPABASE_PUBLISHABLE_KEY
-      || "";
+    const injectedUrl = process.env.VITE_SUPABASE_URL || "";
+    const injectedKey = process.env.VITE_SUPABASE_PUBLISHABLE_KEY || "";
+    const fileUrl = fileEnv.VITE_SUPABASE_URL || "";
+    const fileKey = fileEnv.VITE_SUPABASE_PUBLISHABLE_KEY || "";
 
-    let hostname = "";
-    try {
-      hostname = new URL(supabaseUrl).hostname;
-    } catch {
-      // The explicit error below owns the production build failure.
-    }
+    const supabaseUrl = validSupabaseUrl(injectedUrl) ? injectedUrl : fileUrl;
+    const publishableKey = validPublishableKey(injectedKey) ? injectedKey : fileKey;
 
-    if (
-      !supabaseUrl
-      || supabaseUrl.includes("your-project-id")
-      || !hostname.endsWith(".supabase.co")
-    ) {
+    if (!validSupabaseUrl(supabaseUrl)) {
       throw new Error("Production VITE_SUPABASE_URL is missing or still uses a placeholder.");
     }
 
-    if (
-      !publishableKey
-      || publishableKey.includes("your-publishable-key")
-      || !(publishableKey.startsWith("sb_publishable_") || publishableKey.startsWith("eyJ"))
-    ) {
+    if (!validPublishableKey(publishableKey)) {
       throw new Error("Production VITE_SUPABASE_PUBLISHABLE_KEY is missing or invalid.");
     }
+
+    browserDefines["import.meta.env.VITE_SUPABASE_URL"] = JSON.stringify(supabaseUrl);
+    browserDefines["import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY"] = JSON.stringify(publishableKey);
   }
 
   return {
     plugins: [react()],
+    define: browserDefines,
     build: {
       target: "es2022",
       sourcemap: true,
