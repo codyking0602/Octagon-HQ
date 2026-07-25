@@ -1,0 +1,169 @@
+name: Verify PIN Authentication Success
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/verify-pin-auth-success.yml"
+      - "supabase/functions/pin-auth/**"
+      - "supabase/migrations/**"
+      - "src/features/identity/**"
+
+permissions:
+  contents: read
+
+jobs:
+  verify-success:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+      OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
+    steps:
+      - name: Create, log in, verify, and remove a disposable PIN profile
+        shell: bash
+        run: |
+          set -euo pipefail
+          keys_file="$RUNNER_TEMP/supabase-api-keys.json"
+          created_file="$RUNNER_TEMP/pin-health-user.json"
+          login_file="$RUNNER_TEMP/pin-health-login.json"
+          verify_file="$RUNNER_TEMP/pin-health-verify.json"
+          health_user_id=""
+          secret_key=""
+          base="https://${SUPABASE_PROJECT_ID}.supabase.co"
+
+          cleanup() {
+            if [ -n "$health_user_id" ] && [ -n "$secret_key" ]; then
+              curl --silent --show-error \
+                --request DELETE \
+                --header "Authorization: Bearer $secret_key" \
+                --header "apikey: $secret_key" \
+                "$base/auth/v1/admin/users/$health_user_id" \
+                >/dev/null || true
+            fi
+            rm -f "$keys_file" "$created_file" "$login_file" "$verify_file"
+          }
+          trap cleanup EXIT
+
+          curl --fail --silent --show-error \
+            --header "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+            "https://api.supabase.com/v1/projects/${SUPABASE_PROJECT_ID}/api-keys?reveal=true" \
+            --output "$keys_file"
+
+          publishable_key=$(node - "$keys_file" <<'NODE'
+          const fs = require('fs');
+          const keys = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+          const key = keys.find((item) => item.type === 'publishable')
+            ?? keys.find((item) => item.type === 'legacy' && /anon/i.test(item.name ?? ''));
+          if (!key?.api_key) process.exit(1);
+          process.stdout.write(key.api_key);
+          NODE
+          )
+
+          secret_key=$(node - "$keys_file" <<'NODE'
+          const fs = require('fs');
+          const keys = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+          const key = keys.find((item) => item.type === 'secret')
+            ?? keys.find((item) => item.type === 'legacy' && /service.role/i.test(item.name ?? ''));
+          if (!key?.api_key) process.exit(1);
+          process.stdout.write(key.api_key);
+          NODE
+          )
+
+          suffix="${GITHUB_RUN_ID}${GITHUB_RUN_ATTEMPT}"
+          display_name="HQCHECK${suffix}"
+          display_name="${display_name:0:24}"
+          email="hqcheck-${suffix}@login.octagon-hq.app"
+          pin="4826"
+          password="HealthCheck-${suffix}!Aa1"
+
+          create_status=$(curl --silent --show-error \
+            --output "$created_file" \
+            --write-out "%{http_code}" \
+            --request POST \
+            --header "Authorization: Bearer $secret_key" \
+            --header "apikey: $secret_key" \
+            --header "Content-Type: application/json" \
+            --data "$(node -e 'process.stdout.write(JSON.stringify({email:process.argv[1],password:process.argv[2],email_confirm:true,user_metadata:{display_name:process.argv[3]}}))' "$email" "$password" "$display_name")" \
+            "$base/auth/v1/admin/users")
+
+          if [ "$create_status" != "200" ]; then
+            echo "::error title=Disposable Auth user creation failed::Received HTTP $create_status."
+            cat "$created_file"
+            exit 1
+          fi
+
+          health_user_id=$(node - "$created_file" <<'NODE'
+          const fs = require('fs');
+          const user = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+          if (!user?.id) process.exit(1);
+          process.stdout.write(user.id);
+          NODE
+          )
+
+          register_status=$(curl --silent --show-error \
+            --output "$RUNNER_TEMP/pin-health-register.json" \
+            --write-out "%{http_code}" \
+            --request POST \
+            --header "Authorization: Bearer $secret_key" \
+            --header "apikey: $secret_key" \
+            --header "Content-Type: application/json" \
+            --data "$(node -e 'process.stdout.write(JSON.stringify({p_profile_id:process.argv[1],p_display_name:process.argv[2],p_initials:"H",p_internal_email:process.argv[3],p_pin:process.argv[4]}))' "$health_user_id" "$display_name" "$email" "$pin")" \
+            "$base/rest/v1/rpc/register_pin_profile")
+
+          if [ "$register_status" != "200" ]; then
+            echo "::error title=Disposable PIN profile registration failed::Received HTTP $register_status."
+            cat "$RUNNER_TEMP/pin-health-register.json"
+            exit 1
+          fi
+
+          login_status=$(curl --silent --show-error \
+            --output "$login_file" \
+            --write-out "%{http_code}" \
+            --request POST \
+            --header "Origin: $OCTAGON_PRODUCTION_ORIGIN" \
+            --header "Authorization: Bearer $publishable_key" \
+            --header "apikey: $publishable_key" \
+            --header "x-client-info: supabase-js-web/2.110.7" \
+            --header "Content-Type: application/json" \
+            --data "$(node -e 'process.stdout.write(JSON.stringify({action:"login",displayName:process.argv[1],pin:process.argv[2]}))' "$display_name" "$pin")" \
+            "$base/functions/v1/pin-auth")
+
+          if [ "$login_status" != "200" ]; then
+            echo "::error title=PIN Edge Function success path failed::Received HTTP $login_status."
+            cat "$login_file"
+            exit 1
+          fi
+
+          token_hash=$(node - "$login_file" <<'NODE'
+          const fs = require('fs');
+          const body = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+          if (!body?.tokenHash) process.exit(1);
+          process.stdout.write(body.tokenHash);
+          NODE
+          )
+
+          verify_status=$(curl --silent --show-error \
+            --output "$verify_file" \
+            --write-out "%{http_code}" \
+            --request POST \
+            --header "apikey: $publishable_key" \
+            --header "Content-Type: application/json" \
+            --data "$(node -e 'process.stdout.write(JSON.stringify({token_hash:process.argv[1],type:"magiclink"}))' "$token_hash")" \
+            "$base/auth/v1/verify")
+
+          if [ "$verify_status" != "200" ]; then
+            echo "::error title=PIN-generated session verification failed::Received HTTP $verify_status."
+            cat "$verify_file"
+            exit 1
+          fi
+
+          node - "$verify_file" "$health_user_id" <<'NODE'
+          const fs = require('fs');
+          const body = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+          const expectedUserId = process.argv[3];
+          if (!body?.access_token) throw new Error('No access token was returned.');
+          if (body?.user?.id !== expectedUserId) throw new Error('Verified session belongs to the wrong user.');
+          console.log('Disposable profile completed the full create → PIN login → token verification path.');
+          NODE
