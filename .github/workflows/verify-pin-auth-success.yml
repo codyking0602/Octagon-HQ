@@ -23,7 +23,6 @@ jobs:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
       HEAD_BRANCH: ${{ github.head_ref }}
-      SOURCE_SHA: ${{ github.event.pull_request.head.sha }}
     steps:
       - name: Reproduce stale identity linkage through the live branch preview
         shell: bash
@@ -36,7 +35,8 @@ jobs:
           login_headers="$RUNNER_TEMP/pin-health-login-headers.txt"
           verify_file="$RUNNER_TEMP/pin-health-verify.json"
           verify_headers="$RUNNER_TEMP/pin-health-verify-headers.txt"
-          marker_file="$RUNNER_TEMP/pin-health-deployment.json"
+          shell_file="$RUNNER_TEMP/pin-health-shell.html"
+          bundle_file="$RUNNER_TEMP/pin-health-bundle.js"
           health_user_id=""
           secret_key=""
           base="https://${SUPABASE_PROJECT_ID}.supabase.co"
@@ -57,35 +57,39 @@ jobs:
                 >/dev/null || true
             fi
             rm -f "$keys_file" "$created_file" "$register_file" "$login_file" \
-              "$login_headers" "$verify_file" "$verify_headers" "$marker_file"
+              "$login_headers" "$verify_file" "$verify_headers" "$shell_file" "$bundle_file"
           }
           trap cleanup EXIT
 
           preview_ready=0
           for attempt in $(seq 1 24); do
+            : > "$bundle_file"
             if curl --fail --silent --show-error \
               --header "Cache-Control: no-cache" \
-              "${preview_origin}/deployment.json?pin-transport=${attempt}" \
-              --output "$marker_file"; then
-              if node - "$marker_file" "$SOURCE_SHA" <<'NODE'
-          const fs = require('fs');
-          const marker = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
-          if (marker?.sha !== process.argv[3]) process.exit(1);
-          NODE
-              then
-                preview_ready=1
-                break
-              fi
+              "${preview_origin}/?pin-transport=${attempt}" \
+              --output "$shell_file"; then
+              while IFS= read -r asset_path; do
+                curl --fail --silent --show-error \
+                  --header "Cache-Control: no-cache" \
+                  "${preview_origin}${asset_path}?pin-transport=${attempt}" \
+                  >> "$bundle_file" || true
+              done < <(grep -Eo 'src="/[^"]+\.js"' "$shell_file" | sed -E 's/^src="//; s/"$//' | sort -u)
+            fi
+
+            if grep -Fq "octagon-hq-web/1" "$bundle_file" \
+              && grep -Fq "Profile service returned HTTP" "$bundle_file"; then
+              preview_ready=1
+              break
             fi
 
             if [ "$attempt" -lt 24 ]; then
-              echo "Waiting for exact branch preview ${SOURCE_SHA} (attempt ${attempt} of 24)..."
+              echo "Waiting for the direct PIN transport bundle (attempt ${attempt} of 24)..."
               sleep 10
             fi
           done
 
           if [ "$preview_ready" -ne 1 ]; then
-            echo "::error title=Exact branch preview unavailable::${preview_origin} never served deployment ${SOURCE_SHA}."
+            echo "::error title=Direct PIN transport preview unavailable::${preview_origin} never served the rewritten PIN client."
             exit 1
           fi
 
@@ -213,5 +217,5 @@ jobs:
           const expectedUserId = process.argv[3];
           if (!body?.access_token) throw new Error('No access token was returned.');
           if (body?.user?.id !== expectedUserId) throw new Error('Verified session belongs to the wrong user.');
-          console.log('The exact Cloudflare branch preview completed stale-link PIN login and opened the authoritative Auth user.');
+          console.log('The live direct-PIN preview completed stale-link login and opened the authoritative Auth user.');
           NODE
