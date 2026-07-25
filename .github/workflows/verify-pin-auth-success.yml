@@ -34,4 +34,25 @@ jobs:
           node-version-file: .nvmrc
 
       - name: Verify direct PIN login through the live branch preview
-        run: node scripts/verify-pin-preview.mjs
+        id: pin-preview
+        continue-on-error: true
+        shell: bash
+        run: node scripts/verify-pin-preview.mjs > "$RUNNER_TEMP/pin-preview.log" 2>&1
+
+      - name: Upload concise PIN preview diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pin-preview-diagnostics
+          path: ${{ runner.temp }}/pin-preview.log
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Enforce PIN preview result
+        if: always()
+        shell: bash
+        env:
+          PIN_PREVIEW_OUTCOME: ${{ steps.pin-preview.outcome }}
+        run: |
+          cat "$RUNNER_TEMP/pin-preview.log"
+          test "$PIN_PREVIEW_OUTCOME" = "success"
