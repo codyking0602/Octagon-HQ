@@ -63,9 +63,29 @@ jobs:
         run: |
           set -euo pipefail
           migration_list=$(supabase migration list --linked)
-          grep -Fq "202607240001" <<< "$migration_list"
-          grep -Fq "202607250001" <<< "$migration_list"
-          grep -Fq "202607260001" <<< "$migration_list"
+          printf '%s\n' "$migration_list"
+
+          require_remote_migration() {
+            local version="$1"
+            local remote_version
+            remote_version=$(awk -F '│' -v version="$version" '
+              {
+                local_version = $1
+                remote_version = $2
+                gsub(/[[:space:]]/, "", local_version)
+                gsub(/[[:space:]]/, "", remote_version)
+                if (local_version == version) {
+                  print remote_version
+                  exit
+                }
+              }
+            ' <<< "$migration_list")
+            test "$remote_version" = "$version"
+          }
+
+          require_remote_migration "202607240001"
+          require_remote_migration "202607250001"
+          require_remote_migration "202607260001"
           supabase functions list --project-ref "$SUPABASE_PROJECT_ID" | grep -F "pin-auth"
 
           endpoint="https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/pin-auth"
