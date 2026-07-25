@@ -99,6 +99,7 @@ jobs:
       SOURCE_PR_NUMBER: ${{ inputs.pr_number || '0' }}
       VITE_SUPABASE_URL: ${{ needs.resolve-public-config.outputs.supabase_url }}
       VITE_SUPABASE_PUBLISHABLE_KEY: ${{ needs.resolve-public-config.outputs.publishable_key }}
+      VITE_EXPECTED_SUPABASE_HOSTNAME: ${{ secrets.SUPABASE_PROJECT_ID }}.supabase.co
     steps:
       - name: Revalidate requested PR head
         if: env.SOURCE_PR_NUMBER != '0'
