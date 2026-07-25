@@ -1,16 +1,41 @@
 import { createClient } from "npm:@supabase/supabase-js@2.110.7";
 import { corsHeaders as supabaseCorsHeaders } from "jsr:@supabase/supabase-js@2.110.7/cors";
 
-const corsHeaders = {
-  ...supabaseCorsHeaders,
-  "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
+function requestOriginAllowed(origin: string) {
+  const configuredOrigin = Deno.env.get("OCTAGON_APP_ORIGIN");
+  if (configuredOrigin && origin === configuredOrigin) return true;
 
-function response(body: Record<string, unknown>, status = 200) {
+  try {
+    const parsed = new URL(origin);
+    const isOctagonWorker = parsed.protocol === "https:"
+      && parsed.hostname.toLowerCase().endsWith(".hq-app.workers.dev");
+    const isLocalDevelopment = (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1")
+      && (parsed.protocol === "http:" || parsed.protocol === "https:");
+    return isOctagonWorker || isLocalDevelopment;
+  } catch {
+    return false;
+  }
+}
+
+function corsHeaders(request: Request) {
+  const requestOrigin = request.headers.get("Origin");
+  const configuredOrigin = Deno.env.get("OCTAGON_APP_ORIGIN");
+  const allowedOrigin = requestOrigin && requestOriginAllowed(requestOrigin)
+    ? requestOrigin
+    : configuredOrigin ?? "*";
+
+  return {
+    ...supabaseCorsHeaders,
+    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Vary": "Origin",
+  };
+}
+
+function response(request: Request, body: Record<string, unknown>, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
+    headers: { ...corsHeaders(request), "Content-Type": "application/json" },
   });
 }
 
@@ -36,14 +61,14 @@ function randomPassword() {
 }
 
 Deno.serve(async (request) => {
-  if (request.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
-  if (request.method !== "POST") return response({ message: "Method not allowed." }, 405);
+  if (request.method === "OPTIONS") return new Response("ok", { headers: corsHeaders(request) });
+  if (request.method !== "POST") return response(request, { message: "Method not allowed." }, 405);
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
   const secretKey = Deno.env.get("SUPABASE_SECRET_KEY")
     ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   if (!supabaseUrl || !secretKey) {
-    return response({ message: "Profile service is not configured." }, 503);
+    return response(request, { message: "Profile service is not configured." }, 503);
   }
 
   const admin = createClient(supabaseUrl, secretKey, {
@@ -54,7 +79,7 @@ Deno.serve(async (request) => {
   try {
     body = await request.json();
   } catch {
-    return response({ message: "Invalid request." }, 400);
+    return response(request, { message: "Invalid request." }, 400);
   }
 
   const action = body.action;
@@ -64,7 +89,7 @@ Deno.serve(async (request) => {
     || displayName.length < 2
     || displayName.length > 24
     || !validPin(pin)) {
-    return response({ message: "Enter a name and a 4-digit PIN." }, 400);
+    return response(request, { message: "Enter a name and a 4-digit PIN." }, 400);
   }
 
   async function issueSessionToken(email: string) {
@@ -85,21 +110,21 @@ Deno.serve(async (request) => {
     });
     if (error) {
       console.error("verify_profile_pin failed", { code: error.code, message: error.message });
-      return response({ message: "Profile login is unavailable." }, 503);
+      return response(request, { message: "Profile login is unavailable." }, 503);
     }
 
     const match = Array.isArray(data) ? data[0] : null;
     if (match?.auth_result === "locked") {
       const retrySeconds = Math.max(1, Number(match.retry_after_seconds) || 300);
       const retryMinutes = Math.max(1, Math.ceil(retrySeconds / 60));
-      return response({
+      return response(request, {
         message: `Too many attempts. Try again in ${retryMinutes} minute${retryMinutes === 1 ? "" : "s"}.`,
         retryAfterSeconds: retrySeconds,
       }, 423);
     }
 
     if (match?.auth_result !== "ok" || !match?.profile_id) {
-      return response({ message: "That name and PIN did not match." }, 401);
+      return response(request, { message: "That name and PIN did not match." }, 401);
     }
 
     const { data: authUserData, error: authUserError } = await admin.auth.admin.getUserById(match.profile_id);
@@ -109,19 +134,19 @@ Deno.serve(async (request) => {
         code: authUserError?.code ?? "missing_auth_email",
         message: authUserError?.message ?? "The verified profile has no Auth email.",
       });
-      return response({ message: "Profile login is unavailable." }, 503);
+      return response(request, { message: "Profile login is unavailable." }, 503);
     }
 
     try {
-      return response({ tokenHash: await issueSessionToken(authEmail) });
+      return response(request, { tokenHash: await issueSessionToken(authEmail) });
     } catch (error) {
       console.error("PIN session token generation failed", error instanceof Error ? error.message : "unknown error");
-      return response({ message: "Profile login is unavailable." }, 503);
+      return response(request, { message: "Profile login is unavailable." }, 503);
     }
   }
 
   if (Deno.env.get("OCTAGON_PROFILE_CREATION_OPEN") === "false") {
-    return response({ message: "New profiles are currently invite-only." }, 403);
+    return response(request, { message: "New profiles are currently invite-only." }, 403);
   }
 
   const internalEmail = `profile-${crypto.randomUUID()}@login.octagon-hq.app`;
@@ -134,7 +159,7 @@ Deno.serve(async (request) => {
 
   if (created.error || !created.data.user) {
     console.error("Profile user creation failed", created.error?.message ?? "missing created user");
-    return response({ message: "The profile could not be created." }, 503);
+    return response(request, { message: "The profile could not be created." }, 503);
   }
 
   const userId = created.data.user.id;
@@ -149,17 +174,17 @@ Deno.serve(async (request) => {
   if (registered.error) {
     await admin.auth.admin.deleteUser(userId);
     if (registered.error.code === "23505") {
-      return response({ message: "That name is already taken. Add your last initial." }, 409);
+      return response(request, { message: "That name is already taken. Add your last initial." }, 409);
     }
     console.error("Profile registration failed", { code: registered.error.code, message: registered.error.message });
-    return response({ message: "The profile could not be created." }, 503);
+    return response(request, { message: "The profile could not be created." }, 503);
   }
 
   try {
-    return response({ tokenHash: await issueSessionToken(internalEmail) }, 201);
+    return response(request, { tokenHash: await issueSessionToken(internalEmail) }, 201);
   } catch (error) {
     console.error("New profile session token generation failed", error instanceof Error ? error.message : "unknown error");
     await admin.auth.admin.deleteUser(userId);
-    return response({ message: "The profile could not be opened." }, 503);
+    return response(request, { message: "The profile could not be opened." }, 503);
   }
 });
