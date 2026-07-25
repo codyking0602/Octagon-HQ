@@ -83,16 +83,29 @@ Deno.serve(async (request) => {
       p_display_name: displayName,
       p_pin: pin,
     });
-    if (error) return response({ message: "Profile login is unavailable." }, 503);
+    if (error) {
+      console.error("verify_profile_pin failed", { code: error.code, message: error.message });
+      return response({ message: "Profile login is unavailable." }, 503);
+    }
 
     const match = Array.isArray(data) ? data[0] : null;
-    if (!match?.internal_email) {
+    if (match?.auth_result === "locked") {
+      const retrySeconds = Math.max(1, Number(match.retry_after_seconds) || 300);
+      const retryMinutes = Math.max(1, Math.ceil(retrySeconds / 60));
+      return response({
+        message: `Too many attempts. Try again in ${retryMinutes} minute${retryMinutes === 1 ? "" : "s"}.`,
+        retryAfterSeconds: retrySeconds,
+      }, 423);
+    }
+
+    if (match?.auth_result !== "ok" || !match?.internal_email) {
       return response({ message: "That name and PIN did not match." }, 401);
     }
 
     try {
       return response({ tokenHash: await issueSessionToken(match.internal_email) });
-    } catch {
+    } catch (error) {
+      console.error("PIN session token generation failed", error instanceof Error ? error.message : "unknown error");
       return response({ message: "Profile login is unavailable." }, 503);
     }
   }
@@ -110,6 +123,7 @@ Deno.serve(async (request) => {
   });
 
   if (created.error || !created.data.user) {
+    console.error("Profile user creation failed", created.error?.message ?? "missing created user");
     return response({ message: "The profile could not be created." }, 503);
   }
 
@@ -127,12 +141,14 @@ Deno.serve(async (request) => {
     if (registered.error.code === "23505") {
       return response({ message: "That name is already taken. Add your last initial." }, 409);
     }
+    console.error("Profile registration failed", { code: registered.error.code, message: registered.error.message });
     return response({ message: "The profile could not be created." }, 503);
   }
 
   try {
     return response({ tokenHash: await issueSessionToken(internalEmail) }, 201);
-  } catch {
+  } catch (error) {
+    console.error("New profile session token generation failed", error instanceof Error ? error.message : "unknown error");
     await admin.auth.admin.deleteUser(userId);
     return response({ message: "The profile could not be opened." }, 503);
   }
