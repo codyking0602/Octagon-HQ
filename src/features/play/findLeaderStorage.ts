@@ -21,7 +21,7 @@ function dayOffset(day: string, offset: number) {
   return date.toISOString().slice(0, 10);
 }
 
-export function loadFindLeaderHistory(): FindLeaderHistoryRow[] {
+export function loadDeviceFindLeaderHistory(): FindLeaderHistoryRow[] {
   if (typeof window === "undefined") return [];
   try {
     const parsed: unknown = JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? "[]");
@@ -46,13 +46,13 @@ export function loadFindLeaderHistory(): FindLeaderHistoryRow[] {
   }
 }
 
-function save(rows: FindLeaderHistoryRow[]) {
+function saveDeviceHistory(rows: FindLeaderHistoryRow[]) {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(rows.slice(0, 180)));
 }
 
-export function recordFindLeaderAttempt(day: string, score: number) {
-  const rows = loadFindLeaderHistory();
+export function recordDeviceFindLeaderAttempt(day: string, score: number) {
+  const rows = loadDeviceFindLeaderHistory();
   const existing = rows.find((row) => row.day === day);
   if (existing) {
     existing.bestScore = Math.max(existing.bestScore, score);
@@ -67,9 +67,14 @@ export function recordFindLeaderAttempt(day: string, score: number) {
     });
   }
   rows.sort((left, right) => right.day.localeCompare(left.day));
-  save(rows);
+  saveDeviceHistory(rows);
   return rows;
 }
+
+// Compatibility exports for focused device-storage tests. Runtime profile history
+// is owned by FindLeaderHistoryProvider and never writes here while signed in.
+export const loadFindLeaderHistory = loadDeviceFindLeaderHistory;
+export const recordFindLeaderAttempt = recordDeviceFindLeaderAttempt;
 
 export function findLeaderStreaks(rows: readonly FindLeaderHistoryRow[], today: string): FindLeaderStreaks {
   const days = [...new Set(rows.map((row) => row.day))].sort();

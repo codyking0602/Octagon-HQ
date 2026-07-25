@@ -86,7 +86,7 @@ export function ChallengeCenter() {
 
   if (!enabled || !activeProfile) {
     return (
-      <section className="challenge-center surface-card" data-play-challenge-center>
+      <section id="challenge-center" className="challenge-center surface-card" data-play-challenge-center>
         <header className="challenge-center__header">
           <div><p className="eyebrow">CHALLENGE CENTER</p><h2>Play against friends</h2></div>
         </header>
@@ -107,7 +107,7 @@ export function ChallengeCenter() {
   }
 
   return (
-    <section className="challenge-center surface-card" data-play-challenge-center>
+    <section id="challenge-center" className="challenge-center surface-card" data-play-challenge-center>
       <header className="challenge-center__header">
         <div>
           <p className="eyebrow">CHALLENGE CENTER</p>

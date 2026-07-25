@@ -108,7 +108,11 @@ jobs:
           grep -FRq "identity-overlay--viewport" dist/assets/*.js
           grep -FRq "NO PROFILE FOUND WITH THAT EXACT NAME" dist/assets/*.js
           grep -FRq "SIGN IN TO CHALLENGE" dist/assets/*.js
-          echo "Production dist contains real profile challenges and the viewport-owned profile dialog."
+          grep -FRq "SIGN IN TO YOUR HQ" dist/assets/*.js
+          grep -FRq "PROFILE PICKS NEXT" dist/assets/*.js
+          grep -FRq "list_my_find_leader_history" dist/assets/*.js
+          grep -FRq "set_my_favorite_fighter" dist/assets/*.js
+          echo "Production dist contains real profiles, challenges, and profile-backed Your HQ."
 
       - name: Upload build diagnostics
         if: failure()
@@ -132,36 +136,92 @@ jobs:
             wrangler-deploy.log
           retention-days: 7
 
-      - name: Verify live profile challenges
+      - name: Verify live profile-backed Your HQ
         shell: bash
         run: |
           set -euo pipefail
           live_assets_dir="$RUNNER_TEMP/octagon-live-assets"
-          mkdir -p "$live_assets_dir"
+          bundle_file="$RUNNER_TEMP/octagon-all-live.js"
+          markers=(
+            "SIGN IN"
+            "identity-overlay--viewport"
+            "NO PROFILE FOUND WITH THAT EXACT NAME"
+            "SIGN IN TO CHALLENGE"
+            "SIGN IN TO YOUR HQ"
+            "PROFILE PICKS NEXT"
+            "list_my_find_leader_history"
+            "set_my_favorite_fighter"
+          )
 
-          found_assets=0
-          for local_asset in dist/assets/*.js; do
-            asset_name=$(basename "$local_asset")
-            curl --fail --silent --show-error \
-              --header "Cache-Control: no-cache" \
-              "${OCTAGON_PRODUCTION_URL}/assets/${asset_name}?deployment=${GITHUB_SHA}" \
-              --output "$live_assets_dir/$asset_name"
-            found_assets=$((found_assets + 1))
+          verify_live_assets() {
+            local attempt="$1"
+            local found_assets=0
+            local missing_marker=""
+
+            rm -rf "$live_assets_dir"
+            mkdir -p "$live_assets_dir"
+
+            for local_asset in dist/assets/*.js; do
+              asset_name=$(basename "$local_asset")
+              live_asset="$live_assets_dir/$asset_name"
+
+              if ! curl --fail --silent --show-error \
+                --header "Cache-Control: no-cache" \
+                "${OCTAGON_PRODUCTION_URL}/assets/${asset_name}?deployment=${GITHUB_SHA}&attempt=${attempt}" \
+                --output "$live_asset"; then
+                echo "Live asset $asset_name is not available yet."
+                return 1
+              fi
+
+              if grep -Fqi "<!doctype html" "$live_asset"; then
+                echo "Live asset $asset_name still resolves to the SPA fallback."
+                return 1
+              fi
+
+              found_assets=$((found_assets + 1))
+            done
+
+            if [ "$found_assets" -lt 1 ]; then
+              echo "No JavaScript assets were available for verification."
+              return 1
+            fi
+
+            cat "$live_assets_dir"/*.js > "$bundle_file"
+
+            for marker in "${markers[@]}"; do
+              if ! grep -Fq "$marker" "$bundle_file"; then
+                missing_marker="$marker"
+                break
+              fi
+            done
+
+            if [ -n "$missing_marker" ]; then
+              echo "Live bundle is not current yet; missing marker: $missing_marker"
+              return 1
+            fi
+
+            return 0
+          }
+
+          verified=0
+          for attempt in $(seq 1 12); do
+            if verify_live_assets "$attempt"; then
+              verified=1
+              break
+            fi
+
+            if [ "$attempt" -lt 12 ]; then
+              echo "Waiting for Cloudflare asset propagation (attempt $attempt of 12)..."
+              sleep 5
+            fi
           done
 
-          if [ "$found_assets" -lt 1 ]; then
-            echo "::error title=Live frontend verification failed::No JavaScript assets were available for verification."
+          if [ "$verified" -ne 1 ]; then
+            echo "::error title=Live frontend verification failed::The current deployment did not become available across the production asset route after 12 attempts."
             exit 1
           fi
 
-          cat "$live_assets_dir"/*.js > "$RUNNER_TEMP/octagon-all-live.js"
-          bundle_file="$RUNNER_TEMP/octagon-all-live.js"
-
-          grep -Fq "SIGN IN" "$bundle_file"
-          grep -Fq "identity-overlay--viewport" "$bundle_file"
-          grep -Fq "NO PROFILE FOUND WITH THAT EXACT NAME" "$bundle_file"
-          grep -Fq "SIGN IN TO CHALLENGE" "$bundle_file"
-          echo "Live Worker contains real profile challenges across the deployed production chunks."
+          echo "Live Worker contains real profiles, challenges, and profile-backed Your HQ across the deployed production chunks."
 
       - name: Record deployment
         shell: bash
@@ -173,5 +233,6 @@ jobs:
             echo "- Source commit: $GITHUB_SHA"
             echo "- Supabase browser configuration was resolved from the V2 project without printing the key"
             echo "- Challenge Center uses authenticated profiles and exact-name delivery"
-            echo "- All deployed production chunks were verified for real profile challenges"
+            echo "- Your HQ uses profile history, canonical favorite fighter data, and cached challenge rows"
+            echo "- All deployed production chunks were verified for the current profile contracts"
           } >> "$GITHUB_STEP_SUMMARY"

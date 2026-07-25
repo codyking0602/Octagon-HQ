@@ -2,6 +2,8 @@ import { fireEvent, render } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it } from "vitest";
 import { ChallengeProvider } from "../challenges/ChallengeProvider";
+import { IdentityProvider } from "../identity/IdentityProvider";
+import { FindLeaderHistoryProvider } from "./FindLeaderHistoryProvider";
 import PlayPage from "./PlayPage";
 import {
   dailyFindLeaderBoard,
@@ -17,11 +19,15 @@ import { playGames } from "./playRegistry";
 
 function renderPlay(path = "/play") {
   return render(
-    <ChallengeProvider>
-      <MemoryRouter initialEntries={[path]}>
-        <PlayPage />
-      </MemoryRouter>
-    </ChallengeProvider>,
+    <IdentityProvider gateway={null}>
+      <FindLeaderHistoryProvider repository={null}>
+        <ChallengeProvider repository={null}>
+          <MemoryRouter initialEntries={[path]}>
+            <PlayPage />
+          </MemoryRouter>
+        </ChallengeProvider>
+      </FindLeaderHistoryProvider>
+    </IdentityProvider>,
   );
 }
 
