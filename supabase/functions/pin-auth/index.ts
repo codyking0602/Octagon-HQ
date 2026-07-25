@@ -67,10 +67,10 @@ Deno.serve(async (request) => {
     return response({ message: "Enter a name and a 4-digit PIN." }, 400);
   }
 
-  async function issueSessionToken(internalEmail: string) {
+  async function issueSessionToken(email: string) {
     const { data, error } = await admin.auth.admin.generateLink({
       type: "magiclink",
-      email: internalEmail,
+      email,
     });
     if (error) throw error;
     const tokenHash = data.properties?.hashed_token;
@@ -98,12 +98,22 @@ Deno.serve(async (request) => {
       }, 423);
     }
 
-    if (match?.auth_result !== "ok" || !match?.internal_email) {
+    if (match?.auth_result !== "ok" || !match?.profile_id) {
       return response({ message: "That name and PIN did not match." }, 401);
     }
 
+    const { data: authUserData, error: authUserError } = await admin.auth.admin.getUserById(match.profile_id);
+    const authEmail = authUserData.user?.email;
+    if (authUserError || !authEmail) {
+      console.error("PIN Auth user lookup failed", {
+        code: authUserError?.code ?? "missing_auth_email",
+        message: authUserError?.message ?? "The verified profile has no Auth email.",
+      });
+      return response({ message: "Profile login is unavailable." }, 503);
+    }
+
     try {
-      return response({ tokenHash: await issueSessionToken(match.internal_email) });
+      return response({ tokenHash: await issueSessionToken(authEmail) });
     } catch (error) {
       console.error("PIN session token generation failed", error instanceof Error ? error.message : "unknown error");
       return response({ message: "Profile login is unavailable." }, 503);
