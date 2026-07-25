@@ -1,6 +1,16 @@
 name: Deploy Supabase Backend
 
 on:
+  workflow_call:
+    inputs:
+      source_sha:
+        description: Exact same-repository PR head SHA to deploy.
+        required: true
+        type: string
+      pr_number:
+        description: Open pull request number whose head must still match source_sha.
+        required: true
+        type: string
   workflow_dispatch:
   push:
     branches:
@@ -11,6 +21,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read
 
 concurrency:
   group: octagon-hq-supabase-v2
@@ -21,17 +32,73 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
-      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+      SOURCE_SHA: ${{ inputs.source_sha || github.sha }}
+      SOURCE_PR_NUMBER: ${{ inputs.pr_number || '0' }}
       OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
 
     steps:
-      - name: Check out repository
+      - name: Revalidate requested PR head
+        if: env.SOURCE_PR_NUMBER != '0'
+        uses: actions/github-script@v7
+        env:
+          EXPECTED_SHA: ${{ env.SOURCE_SHA }}
+          PR_NUMBER: ${{ env.SOURCE_PR_NUMBER }}
+        with:
+          script: |
+            const prNumber = Number(process.env.PR_NUMBER);
+            const expectedSha = process.env.EXPECTED_SHA;
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+            });
+
+            if (pr.state !== "open") {
+              core.setFailed(`PR #${prNumber} is no longer open.`);
+              return;
+            }
+
+            if (pr.base.ref !== "main") {
+              core.setFailed(`PR #${prNumber} targets ${pr.base.ref}, not main.`);
+              return;
+            }
+
+            if (pr.head.repo?.full_name !== `${context.repo.owner}/${context.repo.repo}`) {
+              core.setFailed(`PR #${prNumber} is not a same-repository pull request.`);
+              return;
+            }
+
+            if (pr.head.sha !== expectedSha) {
+              core.setFailed(
+                `PR #${prNumber} moved from ${expectedSha} to ${pr.head.sha}. Reapply the deploy-backend label to deploy the new head.`,
+              );
+            }
+
+      - name: Check out exact deployment source
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 1
+          persist-credentials: false
+          show-progress: false
+
+      - name: Verify exact checked-out SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          checked_out_sha=$(git rev-parse HEAD)
+          if [ "$checked_out_sha" != "$SOURCE_SHA" ]; then
+            echo "::error title=Exact SHA checkout failed::Expected $SOURCE_SHA but checked out $checked_out_sha."
+            exit 1
+          fi
+          echo "Exact deployment source verified: $checked_out_sha"
 
       - name: Verify deployment credentials
         shell: bash
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
         run: |
           set -euo pipefail
           for name in SUPABASE_ACCESS_TOKEN SUPABASE_PROJECT_ID SUPABASE_DB_PASSWORD; do
@@ -47,19 +114,37 @@ jobs:
           version: latest
 
       - name: Link V2 project
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
         run: supabase link --project-ref "$SUPABASE_PROJECT_ID"
 
       - name: Publish canonical production origin
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
         run: supabase secrets set --project-ref "$SUPABASE_PROJECT_ID" OCTAGON_APP_ORIGIN="$OCTAGON_PRODUCTION_ORIGIN"
 
       - name: Apply database migrations
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
         run: supabase db push --linked
 
       - name: Deploy PIN authentication function
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
         run: supabase functions deploy pin-auth --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt
 
       - name: Verify migrations, function, and production CORS
         shell: bash
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
         run: |
           set -euo pipefail
           migration_list=$(supabase migration list --linked)
@@ -114,12 +199,19 @@ jobs:
         run: |
           {
             echo "### Octagon HQ V2 backend deployed"
+            echo "- Exact source SHA: \`$SOURCE_SHA\`"
+            if [ "$SOURCE_PR_NUMBER" != "0" ]; then
+              echo "- Source PR: #$SOURCE_PR_NUMBER"
+            else
+              echo "- Source event: $GITHUB_EVENT_NAME"
+            fi
+            echo "- Exact checkout was verified before deployment credentials were used"
             echo "- Profile/PIN migration applied"
             echo "- Real profile challenge migration applied"
             echo "- Profile-backed Your HQ migration applied"
             echo "- Profile-backed UFC Picks migration applied"
             echo "- pin-auth Edge Function deployed"
             echo "- Canonical production origin: $OCTAGON_PRODUCTION_ORIGIN"
-            echo "- Live validation endpoint returned the expected CORS and response contract"
-            echo "- Project secrets were never printed"
+            echo "- Remote migrations, live function contract, and production CORS were verified"
+            echo "- Project secrets were never printed or exposed to PR build code"
           } >> "$GITHUB_STEP_SUMMARY"
