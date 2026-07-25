@@ -46,7 +46,12 @@ describe("feature deployment workflow contract", () => {
     );
 
     expect(configJob).not.toContain("actions/checkout");
+    expect(configJob).toContain("octagon-public-config.env");
+    expect(configJob).toContain("actions/upload-artifact@v4");
+    expect(configJob).not.toContain("$GITHUB_OUTPUT");
     expect(buildJob).toContain("ref: ${{ env.SOURCE_SHA }}");
+    expect(buildJob).toContain("name: octagon-public-config-${{ github.run_id }}");
+    expect(buildJob).toContain('. "$config_file"');
     expect(buildJob).toContain("npm ci --silent --ignore-scripts");
     expect(buildJob).toContain('"public/deployment.json"');
     expect(buildJob).toContain("actions/upload-artifact@v4");
@@ -65,6 +70,8 @@ describe("feature deployment workflow contract", () => {
     expect(deployJob).toContain('"$WRANGLER_BIN" deploy --config "$GITHUB_WORKSPACE/wrangler.jsonc"');
     expect(deployJob).toContain("/deployment.json?deployment=${SOURCE_SHA}");
     expect(deployJob).toContain("marker.sha !== expectedSha");
+    expect(deployJob).toContain('grep -Fq "$VITE_EXPECTED_SUPABASE_HOSTNAME" "$bundle_file"');
+    expect(deployJob).toContain('grep -Fq "your-project-id" "$bundle_file"');
     expect(deployJob).not.toContain("npm run build");
     expect(deployJob).not.toContain("ref: ${{ env.SOURCE_SHA }}");
   });

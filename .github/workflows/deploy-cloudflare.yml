@@ -37,9 +37,6 @@ jobs:
   resolve-public-config:
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    outputs:
-      supabase_url: ${{ steps.resolve.outputs.supabase_url }}
-      publishable_key: ${{ steps.resolve.outputs.publishable_key }}
     steps:
       - name: Verify Supabase configuration credentials
         shell: bash
@@ -56,7 +53,6 @@ jobs:
           done
 
       - name: Resolve public Supabase browser configuration
-        id: resolve
         shell: bash
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
@@ -71,24 +67,33 @@ jobs:
             "https://api.supabase.com/v1/projects/${SUPABASE_PROJECT_ID}/api-keys?reveal=true" \
             --output "$api_keys_file"
 
-          publishable_key=$(node - "$api_keys_file" <<'NODE'
+          public_config_dir="$RUNNER_TEMP/octagon-public-config"
+          mkdir -p "$public_config_dir"
+
+          node - "$api_keys_file" "$public_config_dir/octagon-public-config.env" <<'NODE'
           const fs = require('fs');
           const keys = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
           const publicKey = keys.find((key) => key.type === 'publishable')
             ?? keys.find((key) => key.type === 'legacy' && /anon/i.test(key.name ?? ''));
-          if (!publicKey?.api_key) process.exit(1);
-          process.stdout.write(publicKey.api_key);
+          const projectId = process.env.SUPABASE_PROJECT_ID;
+          if (!/^[a-z0-9-]+$/.test(projectId ?? '')) throw new Error('Invalid Supabase project ID.');
+          if (!publicKey?.api_key) throw new Error('No public browser key was returned.');
+          fs.writeFileSync(process.argv[3], [
+            `VITE_SUPABASE_URL=https://${projectId}.supabase.co`,
+            `VITE_SUPABASE_PUBLISHABLE_KEY=${publicKey.api_key}`,
+            `VITE_EXPECTED_SUPABASE_HOSTNAME=${projectId}.supabase.co`,
+            '',
+          ].join('\n'), { mode: 0o600 });
           NODE
-          )
+          echo "Public browser configuration file resolved without checking out PR code or creating secret-derived job outputs."
 
-          if [ -z "$publishable_key" ]; then
-            echo "::error title=Supabase browser key unavailable::No publishable or legacy anon API key was returned for the V2 project."
-            exit 1
-          fi
-
-          echo "supabase_url=https://${SUPABASE_PROJECT_ID}.supabase.co" >> "$GITHUB_OUTPUT"
-          echo "publishable_key=$publishable_key" >> "$GITHUB_OUTPUT"
-          echo "Public browser configuration resolved without checking out PR code."
+      - name: Upload short-lived public browser configuration
+        uses: actions/upload-artifact@v4
+        with:
+          name: octagon-public-config-${{ github.run_id }}
+          path: ${{ runner.temp }}/octagon-public-config/octagon-public-config.env
+          if-no-files-found: error
+          retention-days: 1
 
   build-production-artifact:
     needs: resolve-public-config
@@ -97,9 +102,6 @@ jobs:
     env:
       SOURCE_SHA: ${{ inputs.source_sha || github.sha }}
       SOURCE_PR_NUMBER: ${{ inputs.pr_number || '0' }}
-      VITE_SUPABASE_URL: ${{ needs.resolve-public-config.outputs.supabase_url }}
-      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ needs.resolve-public-config.outputs.publishable_key }}
-      VITE_EXPECTED_SUPABASE_HOSTNAME: ${{ secrets.SUPABASE_PROJECT_ID }}.supabase.co
     steps:
       - name: Revalidate requested PR head
         if: env.SOURCE_PR_NUMBER != '0'
@@ -166,6 +168,12 @@ jobs:
       - name: Install application dependencies without lifecycle scripts
         run: npm ci --silent --ignore-scripts
 
+      - name: Download verified public browser configuration
+        uses: actions/download-artifact@v4
+        with:
+          name: octagon-public-config-${{ github.run_id }}
+          path: .public-config
+
       - name: Stamp exact deployment SHA
         shell: bash
         run: |
@@ -182,6 +190,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          config_file="$GITHUB_WORKSPACE/.public-config/octagon-public-config.env"
+          trap 'rm -rf "$GITHUB_WORKSPACE/.public-config"' EXIT
+          test -s "$config_file"
+          set -a
+          . "$config_file"
+          set +a
           npm run build 2>&1 | tee cloudflare-build.log
           test -f dist/index.html
           test -f dist/_headers
@@ -302,6 +316,12 @@ jobs:
           name: octagon-frontend-${{ env.SOURCE_SHA }}
           path: dist
 
+      - name: Download verified public browser configuration
+        uses: actions/download-artifact@v4
+        with:
+          name: octagon-public-config-${{ github.run_id }}
+          path: .public-config
+
       - name: Verify downloaded artifact SHA
         shell: bash
         run: |
@@ -383,6 +403,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          config_file="$GITHUB_WORKSPACE/.public-config/octagon-public-config.env"
+          trap 'rm -rf "$GITHUB_WORKSPACE/.public-config"' EXIT
+          test -s "$config_file"
+          set -a
+          . "$config_file"
+          set +a
           live_assets_dir="$RUNNER_TEMP/octagon-live-assets"
           bundle_file="$RUNNER_TEMP/octagon-all-live.js"
           shell_headers="$RUNNER_TEMP/octagon-shell-headers.txt"
@@ -469,6 +495,21 @@ jobs:
             fi
 
             cat "$live_assets_dir"/*.js > "$bundle_file"
+
+            if ! grep -Fq "$VITE_EXPECTED_SUPABASE_HOSTNAME" "$bundle_file"; then
+              echo "Live bundle is missing the expected Supabase project hostname."
+              return 1
+            fi
+
+            if ! grep -Fq "$VITE_SUPABASE_PUBLISHABLE_KEY" "$bundle_file"; then
+              echo "Live bundle is missing the validated public Supabase key."
+              return 1
+            fi
+
+            if grep -Fq "your-project-id" "$bundle_file" || grep -Fq "your-publishable-key" "$bundle_file"; then
+              echo "Live bundle contains forbidden placeholder Supabase configuration."
+              return 1
+            fi
 
             for marker in "${markers[@]}"; do
               if ! grep -Fq "$marker" "$bundle_file"; then
