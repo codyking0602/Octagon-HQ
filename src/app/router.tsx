@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import { createBrowserRouter, Navigate, type RouteObject } from "react-router-dom";
+import AppRouteError from "./AppRouteError";
 import { AppShell } from "./AppShell";
 
 const HomePage = lazy(() => import("../features/home/HomePage"));
@@ -19,6 +20,7 @@ export const appRoutes: RouteObject[] = [
   {
     path: "/",
     element: <AppShell />,
+    errorElement: <AppRouteError />,
     children: [
       { index: true, element: <HomePage /> },
       { path: "rankings", element: <RankingsPage /> },
