@@ -1,0 +1,210 @@
+name: Deploy Labeled PR Head
+
+on:
+  pull_request_target:
+    types:
+      - labeled
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/deploy-pr-head.yml"
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  ensure-deployment-labels:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    concurrency:
+      group: octagon-hq-deployment-label-setup
+      cancel-in-progress: false
+    steps:
+      - name: Ensure deployment labels exist
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const labels = [
+              {
+                name: "deploy-backend",
+                color: "7B1FA2",
+                description: "Deploy the exact open same-repository PR head to Supabase.",
+              },
+              {
+                name: "deploy-frontend",
+                color: "D73A4A",
+                description: "Deploy the exact open same-repository PR head to Cloudflare.",
+              },
+            ];
+
+            for (const label of labels) {
+              try {
+                await github.rest.issues.getLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: label.name,
+                });
+                await github.rest.issues.updateLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: label.name,
+                  new_name: label.name,
+                  color: label.color,
+                  description: label.description,
+                });
+              } catch (error) {
+                if (error.status !== 404) throw error;
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ...label,
+                });
+              }
+            }
+
+            await core.summary
+              .addHeading("Octagon HQ deployment labels")
+              .addList(labels.map((label) => `${label.name}: ready`))
+              .write();
+
+  authorize:
+    if: >-
+      github.event_name == 'pull_request_target' &&
+      (github.event.label.name == 'deploy-backend' || github.event.label.name == 'deploy-frontend')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    concurrency:
+      group: octagon-hq-pr-deploy-${{ github.event.pull_request.number }}-${{ github.event.label.name }}
+      cancel-in-progress: false
+    outputs:
+      deployment: ${{ steps.authorize.outputs.deployment }}
+      source_sha: ${{ steps.authorize.outputs.source_sha }}
+      pr_number: ${{ steps.authorize.outputs.pr_number }}
+    steps:
+      - name: Authorize exact same-repository PR head
+        id: authorize
+        uses: actions/github-script@v7
+        env:
+          EVENT_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          TRIGGER_LABEL: ${{ github.event.label.name }}
+        with:
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const expectedSha = process.env.EVENT_HEAD_SHA;
+            const triggerLabel = process.env.TRIGGER_LABEL;
+            const deployment = triggerLabel === "deploy-backend" ? "backend" : "frontend";
+            const repository = `${context.repo.owner}/${context.repo.repo}`;
+
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+            });
+
+            if (pr.state !== "open") {
+              core.setFailed(`PR #${prNumber} is no longer open.`);
+              return;
+            }
+
+            if (pr.base.ref !== "main") {
+              core.setFailed(`PR #${prNumber} targets ${pr.base.ref}, not main.`);
+              return;
+            }
+
+            if (pr.head.repo?.full_name !== repository) {
+              core.setFailed(
+                `PR #${prNumber} comes from ${pr.head.repo?.full_name ?? "an unknown repository"}. Production deployment labels only accept same-repository heads.`,
+              );
+              return;
+            }
+
+            if (pr.head.sha !== expectedSha) {
+              core.setFailed(
+                `PR #${prNumber} moved from ${expectedSha} to ${pr.head.sha} before authorization. Remove and reapply ${triggerLabel}.`,
+              );
+              return;
+            }
+
+            if (!pr.labels.some((label) => label.name === triggerLabel)) {
+              core.setFailed(`PR #${prNumber} no longer has the ${triggerLabel} label.`);
+              return;
+            }
+
+            core.setOutput("deployment", deployment);
+            core.setOutput("source_sha", pr.head.sha);
+            core.setOutput("pr_number", String(prNumber));
+
+            await core.summary
+              .addHeading(`Authorized ${deployment} deployment`)
+              .addRaw(`PR #${prNumber} is open, targets main, and is owned by ${repository}.\n`)
+              .addRaw(`Frozen source SHA: \`${pr.head.sha}\`\n`)
+              .addRaw("No PR code was checked out by the secret-bearing broker.\n")
+              .write();
+
+  deploy-backend:
+    needs: authorize
+    if: needs.authorize.outputs.deployment == 'backend'
+    uses: ./.github/workflows/deploy-supabase.yml
+    with:
+      source_sha: ${{ needs.authorize.outputs.source_sha }}
+      pr_number: ${{ needs.authorize.outputs.pr_number }}
+    secrets: inherit
+
+  deploy-frontend:
+    needs: authorize
+    if: needs.authorize.outputs.deployment == 'frontend'
+    uses: ./.github/workflows/deploy-cloudflare.yml
+    with:
+      source_sha: ${{ needs.authorize.outputs.source_sha }}
+      pr_number: ${{ needs.authorize.outputs.pr_number }}
+    secrets: inherit
+
+  reset-trigger:
+    needs:
+      - authorize
+      - deploy-backend
+      - deploy-frontend
+    if: >-
+      always() &&
+      github.event_name == 'pull_request_target' &&
+      (github.event.label.name == 'deploy-backend' || github.event.label.name == 'deploy-frontend')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Remove deployment trigger label
+        uses: actions/github-script@v7
+        env:
+          TRIGGER_LABEL: ${{ github.event.label.name }}
+          AUTHORIZE_RESULT: ${{ needs.authorize.result }}
+          BACKEND_RESULT: ${{ needs.deploy-backend.result }}
+          FRONTEND_RESULT: ${{ needs.deploy-frontend.result }}
+        with:
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const triggerLabel = process.env.TRIGGER_LABEL;
+
+            try {
+              await github.rest.issues.removeLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                name: triggerLabel,
+              });
+            } catch (error) {
+              if (error.status !== 404) throw error;
+            }
+
+            const targetedResult = triggerLabel === "deploy-backend"
+              ? process.env.BACKEND_RESULT
+              : process.env.FRONTEND_RESULT;
+
+            await core.summary
+              .addHeading("Deployment trigger reset")
+              .addRaw(`PR #${prNumber}: removed \`${triggerLabel}\` for safe repeat use.\n`)
+              .addRaw(`Authorization: ${process.env.AUTHORIZE_RESULT}\n`)
+              .addRaw(`Deployment: ${targetedResult}\n`)
+              .write();
