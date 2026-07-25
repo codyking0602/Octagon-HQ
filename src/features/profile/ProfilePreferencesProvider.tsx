@@ -3,6 +3,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
   type PropsWithChildren,
 } from "react";
@@ -34,17 +35,22 @@ export function ProfilePreferencesProvider({
   repository: suppliedRepository,
 }: PropsWithChildren<{ repository?: ProfilePreferencesRepository | null }>) {
   const identity = useIdentity();
-  const initialRepository = suppliedRepository === undefined
-    ? createProfilePreferencesRepository()
-    : suppliedRepository;
-  const [repository] = useState<ProfilePreferencesRepository | null>(initialRepository);
+  const profileId = identity.profile?.id ?? null;
+  const profileIdRef = useRef(profileId);
+  profileIdRef.current = profileId;
+  const [repository] = useState<ProfilePreferencesRepository | null>(() => (
+    suppliedRepository === undefined
+      ? createProfilePreferencesRepository()
+      : suppliedRepository
+  ));
   const [favoriteFighterSlug, setFavoriteFighterSlug] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
   const refresh = useCallback(async () => {
-    if (!identity.profile) {
+    const expectedProfileId = profileId;
+    if (!expectedProfileId) {
       setFavoriteFighterSlug(null);
       setLoading(false);
       setError("");
@@ -60,21 +66,40 @@ export function ProfilePreferencesProvider({
 
     setLoading(true);
     try {
-      setFavoriteFighterSlug(await repository.loadFavoriteFighter());
+      const favorite = await repository.loadFavoriteFighter();
+      if (profileIdRef.current !== expectedProfileId) return;
+      setFavoriteFighterSlug(favorite);
       setError("");
     } catch (nextError) {
+      if (profileIdRef.current !== expectedProfileId) return;
       setError(readableError(nextError));
     } finally {
-      setLoading(false);
+      if (profileIdRef.current === expectedProfileId) setLoading(false);
     }
-  }, [identity.profile, repository]);
+  }, [profileId, repository]);
 
   useEffect(() => {
+    setSaving(false);
     void refresh();
-  }, [identity.profile?.id, refresh]);
+  }, [refresh]);
+
+  useEffect(() => {
+    if (!profileId || !repository) return undefined;
+    const onFocus = () => void refresh();
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") void refresh();
+    };
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [profileId, refresh, repository]);
 
   const setFavoriteFighter = useCallback(async (fighterSlug: string | null) => {
-    if (!identity.profile) {
+    const expectedProfileId = profileId;
+    if (!expectedProfileId) {
       identity.openDialog();
       return;
     }
@@ -85,14 +110,17 @@ export function ProfilePreferencesProvider({
 
     setSaving(true);
     try {
-      setFavoriteFighterSlug(await repository.saveFavoriteFighter(fighterSlug));
+      const favorite = await repository.saveFavoriteFighter(fighterSlug);
+      if (profileIdRef.current !== expectedProfileId) return;
+      setFavoriteFighterSlug(favorite);
       setError("");
     } catch (nextError) {
+      if (profileIdRef.current !== expectedProfileId) return;
       setError(readableError(nextError));
     } finally {
-      setSaving(false);
+      if (profileIdRef.current === expectedProfileId) setSaving(false);
     }
-  }, [identity, repository]);
+  }, [identity.openDialog, profileId, repository]);
 
   return (
     <ProfilePreferencesContext.Provider value={{
