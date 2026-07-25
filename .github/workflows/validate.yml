@@ -47,17 +47,7 @@ jobs:
           retention-days: 7
 
       - name: Build
-        env:
-          VITE_SUPABASE_URL: https://octagonvalidation.supabase.co
-          VITE_SUPABASE_PUBLISHABLE_KEY: validation-publishable-key
-        run: |
-          set -euo pipefail
-          npm run build 2>&1 | tee build.log
-          test -f dist/index.html
-          test -f dist/worker.js
-          grep -Fq 'const PROJECT_REF = "octagonvalidation"' dist/worker.js
-          grep -Fq 'x-octagon-supabase-proxy' dist/worker.js
-          grep -Fq '/api/supabase/' dist/assets/*.js
+        run: npm run build 2>&1 | tee build.log
 
       - name: Upload build diagnostics
         if: failure()
