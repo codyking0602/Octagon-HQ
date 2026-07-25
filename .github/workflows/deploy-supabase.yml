@@ -139,7 +139,7 @@ jobs:
           SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
         run: supabase functions deploy pin-auth --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt
 
-      - name: Verify migrations, function, and production CORS
+      - name: Verify migrations, function, and browser CORS
         shell: bash
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
@@ -175,6 +175,28 @@ jobs:
           supabase functions list --project-ref "$SUPABASE_PROJECT_ID" | grep -F "pin-auth"
 
           endpoint="https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/pin-auth"
+          requested_headers="authorization, x-client-info, apikey, content-type, x-supabase-api-version"
+          preflight_status=$(curl --silent --show-error \
+            --dump-header "$RUNNER_TEMP/pin-auth-preflight-headers.txt" \
+            --output "$RUNNER_TEMP/pin-auth-preflight-response.txt" \
+            --write-out "%{http_code}" \
+            --request OPTIONS \
+            --header "Origin: $OCTAGON_PRODUCTION_ORIGIN" \
+            --header "Access-Control-Request-Method: POST" \
+            --header "Access-Control-Request-Headers: $requested_headers" \
+            "$endpoint")
+
+          if [ "$preflight_status" != "200" ]; then
+            echo "::error title=PIN browser preflight failed::Expected HTTP 200 from OPTIONS, received $preflight_status."
+            cat "$RUNNER_TEMP/pin-auth-preflight-response.txt"
+            exit 1
+          fi
+
+          grep -Fiq "access-control-allow-origin: $OCTAGON_PRODUCTION_ORIGIN" "$RUNNER_TEMP/pin-auth-preflight-headers.txt"
+          grep -Fiq "access-control-allow-methods:" "$RUNNER_TEMP/pin-auth-preflight-headers.txt"
+          grep -Fiq "POST" "$RUNNER_TEMP/pin-auth-preflight-headers.txt"
+          grep -Fiq "x-supabase-api-version" "$RUNNER_TEMP/pin-auth-preflight-headers.txt"
+
           status=$(curl --silent --show-error \
             --dump-header "$RUNNER_TEMP/pin-auth-headers.txt" \
             --output "$RUNNER_TEMP/pin-auth-response.json" \
@@ -212,6 +234,6 @@ jobs:
             echo "- Profile-backed UFC Picks migration applied"
             echo "- pin-auth Edge Function deployed"
             echo "- Canonical production origin: $OCTAGON_PRODUCTION_ORIGIN"
-            echo "- Remote migrations, live function contract, and production CORS were verified"
+            echo "- Browser OPTIONS preflight, live function contract, and production CORS were verified"
             echo "- Project secrets were never printed or exposed to PR build code"
           } >> "$GITHUB_STEP_SUMMARY"
