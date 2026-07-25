@@ -8,10 +8,13 @@ const config = {
 
 describe("PIN authentication transport", () => {
   it("posts directly to the same-origin PIN endpoint with the public project key", async () => {
-    const fetcher = vi.fn(async () => new Response(JSON.stringify({ tokenHash: "token-123" }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    }));
+    const fetcher = vi.fn(async (_input: RequestInfo | URL, _init?: RequestInit) => new Response(
+      JSON.stringify({ tokenHash: "token-123" }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      },
+    ));
 
     await expect(requestPinAuth(config, "login", "CODY", "1234", fetcher)).resolves.toBe("token-123");
     expect(fetcher).toHaveBeenCalledOnce();
@@ -32,7 +35,7 @@ describe("PIN authentication transport", () => {
   });
 
   it("surfaces the Edge Function response instead of the Supabase SDK wrapper message", async () => {
-    const fetcher = vi.fn(async () => new Response(
+    const fetcher = vi.fn(async (_input: RequestInfo | URL, _init?: RequestInit) => new Response(
       JSON.stringify({ message: "That name and PIN did not match." }),
       { status: 401, headers: { "Content-Type": "application/json" } },
     ));
@@ -42,7 +45,7 @@ describe("PIN authentication transport", () => {
   });
 
   it("keeps the platform error code when the response body is unavailable", async () => {
-    const fetcher = vi.fn(async () => new Response("not-json", {
+    const fetcher = vi.fn(async (_input: RequestInfo | URL, _init?: RequestInit) => new Response("not-json", {
       status: 500,
       headers: { "sb-error-code": "EDGE_FUNCTION_ERROR" },
     }));
@@ -54,6 +57,6 @@ describe("PIN authentication transport", () => {
   it("does not use the Supabase Functions SDK for PIN login", async () => {
     const source = await import("./identityGateway.ts?raw");
     expect(source.default).not.toContain("functions.invoke");
-    expect(source.default).toContain("requestPinAuth(config, action, displayName, pin)");
+    expect(source.default).toContain("requestPinAuth(browserConfig, action, displayName, pin)");
   });
 });
