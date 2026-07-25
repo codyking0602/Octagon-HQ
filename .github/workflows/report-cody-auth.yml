@@ -71,24 +71,30 @@ jobs:
               body: JSON.stringify({ type: "magiclink", email: user.email }),
             });
 
+            const tokenAvailable = Boolean(
+              tokenResult.body?.properties?.hashed_token
+                ?? tokenResult.body?.hashed_token,
+            );
             const code = tokenResult.body?.code ?? tokenResult.body?.error_code ?? "none";
             const message = String(
               tokenResult.body?.msg
                 ?? tokenResult.body?.message
                 ?? tokenResult.body?.error_description
-                ?? (tokenResult.body?.properties?.hashed_token ? "available" : "unknown"),
+                ?? (tokenAvailable ? "available" : "unknown"),
             ).replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, "[redacted-email]");
 
             const lines = [
               "### Temporary CODY Auth diagnosis",
               `- Profile row: ${state?.profile_exists ? "present" : "missing"}`,
               `- Credential row: ${state?.credential_exists ? "present" : "missing"}`,
-              `- Auth user: ${user?.id ? "present" : "missing"}`,
-              `- Email confirmed: ${Boolean(user?.email_confirmed_at)}`,
-              `- Banned: ${Boolean(user?.banned_until && new Date(user.banned_until) > new Date())}`,
+              `- Auth user in database: ${state?.auth_user_exists ? "present" : "missing"}`,
+              `- Credential email matches Auth user: ${Boolean(state?.internal_email_matches_auth)}`,
+              `- Email confirmed: ${Boolean(state?.email_confirmed)}`,
+              `- Banned: ${Boolean(state?.banned)}`,
               `- Failed PIN attempts: ${Number(state?.failed_attempts ?? 0)}`,
               `- PIN lock active: ${Boolean(state?.locked)}`,
               `- Session-token HTTP status: ${tokenResult.response.status}`,
+              `- Session token available: ${tokenAvailable}`,
               `- Supabase Auth code: ${code}`,
               `- Sanitized message: ${message}`,
             ];
