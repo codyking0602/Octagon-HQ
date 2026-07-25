@@ -108,7 +108,11 @@ jobs:
           grep -FRq "identity-overlay--viewport" dist/assets/*.js
           grep -FRq "NO PROFILE FOUND WITH THAT EXACT NAME" dist/assets/*.js
           grep -FRq "SIGN IN TO CHALLENGE" dist/assets/*.js
-          echo "Production dist contains real profile challenges and the viewport-owned profile dialog."
+          grep -FRq "SIGN IN TO YOUR HQ" dist/assets/*.js
+          grep -FRq "PROFILE PICKS NEXT" dist/assets/*.js
+          grep -FRq "list_my_find_leader_history" dist/assets/*.js
+          grep -FRq "set_my_favorite_fighter" dist/assets/*.js
+          echo "Production dist contains real profiles, challenges, and profile-backed Your HQ."
 
       - name: Upload build diagnostics
         if: failure()
@@ -132,7 +136,7 @@ jobs:
             wrangler-deploy.log
           retention-days: 7
 
-      - name: Verify live profile challenges
+      - name: Verify live profile-backed Your HQ
         shell: bash
         run: |
           set -euo pipefail
@@ -161,7 +165,11 @@ jobs:
           grep -Fq "identity-overlay--viewport" "$bundle_file"
           grep -Fq "NO PROFILE FOUND WITH THAT EXACT NAME" "$bundle_file"
           grep -Fq "SIGN IN TO CHALLENGE" "$bundle_file"
-          echo "Live Worker contains real profile challenges across the deployed production chunks."
+          grep -Fq "SIGN IN TO YOUR HQ" "$bundle_file"
+          grep -Fq "PROFILE PICKS NEXT" "$bundle_file"
+          grep -Fq "list_my_find_leader_history" "$bundle_file"
+          grep -Fq "set_my_favorite_fighter" "$bundle_file"
+          echo "Live Worker contains real profiles, challenges, and profile-backed Your HQ across the deployed production chunks."
 
       - name: Record deployment
         shell: bash
@@ -173,5 +181,6 @@ jobs:
             echo "- Source commit: $GITHUB_SHA"
             echo "- Supabase browser configuration was resolved from the V2 project without printing the key"
             echo "- Challenge Center uses authenticated profiles and exact-name delivery"
-            echo "- All deployed production chunks were verified for real profile challenges"
+            echo "- Your HQ uses profile history, canonical favorite fighter data, and cached challenge rows"
+            echo "- All deployed production chunks were verified for the current profile contracts"
           } >> "$GITHUB_STEP_SUMMARY"
