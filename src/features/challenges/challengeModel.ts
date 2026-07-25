@@ -52,11 +52,6 @@ export interface CreatePlayChallengeInput {
   expiresInDays?: number;
 }
 
-export const CHALLENGE_TEST_PROFILES: readonly ChallengeProfile[] = [
-  { id: "cody-preview", displayName: "Cody", initials: "CK" },
-  { id: "shane-preview", displayName: "Shane", initials: "SH" },
-];
-
 function cleanCode(value: string) {
   return value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 10);
 }
