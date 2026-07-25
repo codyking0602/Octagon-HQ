@@ -114,6 +114,11 @@ jobs:
             exit 1
           fi
 
+          if ! grep -Fq "202607260001" <<< "$migration_list"; then
+            echo "::error title=Your HQ migration not deployed::The profile-backed Find the Leader and favorite-fighter migration is not recorded on the linked project."
+            exit 1
+          fi
+
           if ! supabase functions list --project-ref "$SUPABASE_PROJECT_ID" | grep -Fq "pin-auth"; then
             echo "::error title=PIN function not deployed::The pin-auth Edge Function is not deployed to the V2 project."
             exit 1
@@ -159,6 +164,7 @@ jobs:
             echo "- Required Edge Function secret names: present"
             echo "- Profile/PIN migration: deployed"
             echo "- Real profile challenge migration: deployed"
+            echo "- Profile-backed Your HQ migration: deployed"
             echo "- pin-auth Edge Function: deployed and responding with the expected contract"
             echo "- Production CORS origin: $OCTAGON_PRODUCTION_ORIGIN"
             echo "- Cloudflare VITE values: cannot be read by GitHub and must be verified through the Cloudflare production build"
