@@ -1,10 +1,5 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import {
-  challengeDirection,
-  type PlayChallenge,
-} from "../challenges/challengeModel";
-import { challengePlayRoute } from "../challenges/challengeRuntime";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { useIdentity } from "../identity/IdentityProvider";
 import {
@@ -19,31 +14,14 @@ import { centralDay } from "../play/findLeaderEngine";
 import { findLeaderStreaks } from "../play/findLeaderStorage";
 import { useProfilePreferences } from "../profile/ProfilePreferencesProvider";
 import { FighterPhoto } from "../rankings/FighterPhoto";
-import { allTime, menAllTime } from "../rankings/rankingModel";
+import { allTime } from "../rankings/rankingModel";
+import { dailyRankingSpotlight } from "./homeSpotlightModel";
+import { RankingSpotlightCard } from "./RankingSpotlightCard";
+import { ShanesWatchlistCard } from "./ShanesWatchlistCard";
 import {
+  buildYourHqNextAction,
   meaningfulOpenChallenges,
-  mostRelevantOpenChallenge,
 } from "./yourHqModel";
-
-function nextAction(
-  openChallenges: readonly PlayChallenge[],
-  profileId: string,
-  playedToday: boolean,
-) {
-  const relevant = mostRelevantOpenChallenge(openChallenges, profileId);
-  if (relevant && challengeDirection(relevant, profileId) === "received") {
-    return {
-      label: `PLAY ${relevant.gameTitle.toUpperCase()} CHALLENGE`,
-      to: challengePlayRoute(relevant),
-    };
-  }
-  if (openChallenges.length) {
-    return { label: "OPEN CHALLENGE CENTER", to: "/play#challenge-center" };
-  }
-  return playedToday
-    ? { label: "PLAY ANOTHER UFC GAME", to: "/play" }
-    : { label: "PLAY TODAY’S FIND THE LEADER", to: "/play/find-leader" };
-}
 
 function eventDate(value: string) {
   return new Intl.DateTimeFormat(undefined, {
@@ -66,6 +44,7 @@ export default function HomePage() {
     () => allTime.slice().sort((left, right) => left.name.localeCompare(right.name)),
     [],
   );
+  const spotlight = useMemo(() => dailyRankingSpotlight(allTime, today), [today]);
   const favorite = preferences.favoriteFighterSlug
     ? allTime.find((fighter) => fighter.slug === preferences.favoriteFighterSlug) ?? null
     : null;
@@ -75,7 +54,13 @@ export default function HomePage() {
     ? meaningfulOpenChallenges(challengeState.challenges, identity.profile.id)
     : [];
   const action = identity.profile
-    ? nextAction(openChallenges, identity.profile.id, playedToday)
+    ? buildYourHqNextAction({
+        openChallenges,
+        profiles: challengeState.profiles,
+        profileId: identity.profile.id,
+        playedToday,
+        currentStreak: streak.current,
+      })
     : null;
   const currentEvent = picks.event;
   const currentMainEvent = mainEvent(currentEvent);
@@ -167,7 +152,14 @@ export default function HomePage() {
               </p>
             ) : null}
 
-            <Link className="primary-action" to={action!.to}>{action!.label}</Link>
+            <div className="hq-next-up">
+              <div className="hq-next-up__copy">
+                <small>NEXT UP</small>
+                <strong>{action!.title}</strong>
+                <p>{action!.description}</p>
+              </div>
+              <Link className="primary-action" to={action!.to}>{action!.label}</Link>
+            </div>
           </>
         )}
       </section>
@@ -204,25 +196,8 @@ export default function HomePage() {
         </section>
       ) : null}
 
-      <section className="surface-card board-preview" aria-labelledby="board-preview-title">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">TOP OF THE BOARD</p>
-            <h2 id="board-preview-title">UFC all-time</h2>
-          </div>
-          <Link className="text-link" to="/rankings">View all 80</Link>
-        </div>
-        <div className="board-preview__list">
-          {menAllTime.slice(0, 3).map((fighter) => (
-            <Link className="board-preview__row" to={`/fighters/${fighter.slug}`} key={fighter.slug}>
-              <span className="board-preview__rank">{fighter.rank}</span>
-              <FighterPhoto name={fighter.name} src={fighter.thumbUrl} />
-              <span><strong>{fighter.name}</strong><small>{fighter.visibleStats.ufcRecord} UFC · {fighter.division}</small></span>
-              <b>{fighter.ovr}</b>
-            </Link>
-          ))}
-        </div>
-      </section>
+      {spotlight ? <RankingSpotlightCard fighter={spotlight} /> : null}
+      <ShanesWatchlistCard />
     </div>
   );
 }
