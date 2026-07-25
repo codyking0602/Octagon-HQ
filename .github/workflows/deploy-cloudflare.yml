@@ -2,6 +2,12 @@ name: Deploy Cloudflare Frontend
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/deploy-cloudflare.yml"
+      - "src/features/challenges/**"
+      - "src/styles/challenge-profiles.css"
+      - "src/main.tsx"
   push:
     branches:
       - main
@@ -24,6 +30,7 @@ concurrency:
 
 jobs:
   deploy:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
@@ -106,7 +113,9 @@ jobs:
           test -f dist/index.html
           grep -FRq "overscroll-behavior:contain" dist/assets/*.css
           grep -FRq "identity-overlay--viewport" dist/assets/*.js
-          echo "Production dist contains the viewport-owned profile dialog."
+          grep -FRq "NO PROFILE FOUND WITH THAT EXACT NAME" dist/assets/*.js
+          grep -FRq "SIGN IN TO CHALLENGE" dist/assets/*.js
+          echo "Production dist contains real profile challenges and the viewport-owned profile dialog."
 
       - name: Upload build diagnostics
         if: failure()
@@ -130,7 +139,7 @@ jobs:
             wrangler-deploy.log
           retention-days: 7
 
-      - name: Verify live profile frontend
+      - name: Verify live profile challenges
         shell: bash
         run: |
           set -euo pipefail
@@ -161,7 +170,9 @@ jobs:
 
           grep -Fq "SIGN IN" "$bundle_file"
           grep -Fq "identity-overlay--viewport" "$bundle_file"
-          echo "Live Worker contains the viewport-owned profile dialog."
+          grep -Fq "NO PROFILE FOUND WITH THAT EXACT NAME" "$bundle_file"
+          grep -Fq "SIGN IN TO CHALLENGE" "$bundle_file"
+          echo "Live Worker contains real profile challenges and the viewport-owned profile dialog."
 
       - name: Record deployment
         shell: bash
@@ -172,6 +183,6 @@ jobs:
             echo "- Production URL: $OCTAGON_PRODUCTION_URL"
             echo "- Source commit: $GITHUB_SHA"
             echo "- Supabase browser configuration was resolved from the V2 project without printing the key"
-            echo "- Profile dialog is portaled to document.body and owns the full viewport"
-            echo "- Live production bundle contains the viewport-owned profile dialog"
+            echo "- Challenge Center uses authenticated profiles and exact-name delivery"
+            echo "- Live production bundle contains real profile challenges"
           } >> "$GITHUB_STEP_SUMMARY"
