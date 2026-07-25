@@ -6,6 +6,11 @@ const configSchema = z.object({
   publishableKey: z.string().min(1),
 });
 
+export interface SupabaseBrowserConfig {
+  url: string;
+  publishableKey: string;
+}
+
 type BrowserLocation = Pick<Location, "hostname" | "origin">;
 
 let client: SupabaseClient | null | undefined;
@@ -25,16 +30,26 @@ export function resolveSupabaseBrowserUrl(
   return `${browserLocation.origin}/api/supabase/${projectMatch[1]}`;
 }
 
-export function getSupabaseClient(): SupabaseClient | null {
-  if (client !== undefined) return client;
-
+export function getSupabaseBrowserConfig(): SupabaseBrowserConfig | null {
   const parsed = configSchema.safeParse({
     url: import.meta.env.VITE_SUPABASE_URL,
     publishableKey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
   });
 
-  client = parsed.success
-    ? createClient(resolveSupabaseBrowserUrl(parsed.data.url), parsed.data.publishableKey, {
+  return parsed.success
+    ? {
+        url: resolveSupabaseBrowserUrl(parsed.data.url),
+        publishableKey: parsed.data.publishableKey,
+      }
+    : null;
+}
+
+export function getSupabaseClient(): SupabaseClient | null {
+  if (client !== undefined) return client;
+
+  const config = getSupabaseBrowserConfig();
+  client = config
+    ? createClient(config.url, config.publishableKey, {
         auth: {
           persistSession: true,
           autoRefreshToken: true,
