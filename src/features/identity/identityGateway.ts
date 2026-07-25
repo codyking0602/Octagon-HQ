@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { getSupabaseClient } from "../../lib/supabase";
+import {
+  getSupabaseBrowserConfig,
+  getSupabaseClient,
+  type SupabaseBrowserConfig,
+} from "../../lib/supabase";
 import type { IdentityProfile } from "./identityModel";
 
 export interface IdentitySession {
@@ -29,50 +33,69 @@ const functionErrorBodySchema = z.object({
   message: z.string().min(1),
 });
 
-function readableError(error: unknown) {
-  if (error instanceof Error && error.message) return error.message;
-  return "Octagon HQ could not complete that request.";
+type PinAuthAction = "login" | "create";
+type FetchLike = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
+
+function parseJson(text: string): unknown {
+  if (!text) return {};
+  try {
+    return JSON.parse(text);
+  } catch {
+    return {};
+  }
 }
 
-function responseContext(error: unknown): Response | null {
-  if (!error || typeof error !== "object" || !("context" in error)) return null;
-  const context = (error as { context?: unknown }).context;
-  return typeof Response !== "undefined" && context instanceof Response ? context : null;
-}
+export async function requestPinAuth(
+  config: SupabaseBrowserConfig,
+  action: PinAuthAction,
+  displayName: string,
+  pin: string,
+  fetcher: FetchLike = fetch,
+) {
+  const endpoint = `${config.url.replace(/\/$/, "")}/functions/v1/pin-auth`;
+  let response: Response;
 
-export async function readFunctionErrorMessage(error: unknown) {
-  const context = responseContext(error);
-  if (context) {
-    try {
-      const body = functionErrorBodySchema.safeParse(await context.clone().json());
-      if (body.success) return body.data.message;
-    } catch {
-      // Fall through to the SDK or platform error below.
-    }
-
-    const platformCode = context.headers.get("sb-error-code");
-    if (platformCode) return `Profile service error (${platformCode}).`;
+  try {
+    response = await fetcher(endpoint, {
+      method: "POST",
+      headers: {
+        apikey: config.publishableKey,
+        Authorization: `Bearer ${config.publishableKey}`,
+        "Content-Type": "application/json",
+        "x-client-info": "octagon-hq-web/1",
+      },
+      body: JSON.stringify({ action, displayName, pin }),
+    });
+  } catch {
+    throw new Error("Octagon HQ could not reach the profile service.");
   }
 
-  return readableError(error);
+  const body = parseJson(await response.text());
+  if (!response.ok) {
+    const parsedError = functionErrorBodySchema.safeParse(body);
+    if (parsedError.success) throw new Error(parsedError.data.message);
+
+    const platformCode = response.headers.get("sb-error-code");
+    if (platformCode) throw new Error(`Profile service error (${platformCode}).`);
+
+    throw new Error(`Profile service returned HTTP ${response.status}.`);
+  }
+
+  const parsed = pinAuthResponseSchema.safeParse(body);
+  if (!parsed.success) throw new Error("Octagon HQ received an invalid login response.");
+  return parsed.data.tokenHash;
 }
 
 export function createIdentityGateway(): IdentityGateway | null {
   const supabase = getSupabaseClient();
-  if (!supabase) return null;
+  const config = getSupabaseBrowserConfig();
+  if (!supabase || !config) return null;
   const client = supabase;
 
-  async function authenticate(action: "login" | "create", displayName: string, pin: string) {
-    const { data, error } = await client.functions.invoke("pin-auth", {
-      body: { action, displayName, pin },
-    });
-
-    if (error) throw new Error(await readFunctionErrorMessage(error));
-    const parsed = pinAuthResponseSchema.safeParse(data);
-    if (!parsed.success) throw new Error("Octagon HQ received an invalid login response.");
-
+  async function authenticate(action: PinAuthAction, displayName: string, pin: string) {
+    const tokenHash = await requestPinAuth(config, action, displayName, pin);
     const verified = await client.auth.verifyOtp({
-      token_hash: parsed.data.tokenHash,
+      token_hash: tokenHash,
       type: "magiclink",
     });
     if (verified.error) throw new Error(verified.error.message);
