@@ -4,8 +4,8 @@
 .identity-trigger.is-ready { padding-left: 8px; border-color: rgba(229, 9, 20, .48); }
 .identity-trigger.is-ready span { max-width: 70px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-.identity-overlay { position: fixed; inset: 0; z-index: 80; display: grid; align-items: end; padding: 18px 12px calc(18px + var(--safe-bottom)); background: rgba(0, 0, 0, .78); backdrop-filter: blur(10px); }
-.identity-dialog { display: grid; gap: 16px; width: min(100%, 480px); max-height: min(90dvh, 720px); margin: 0 auto; overflow: auto; padding: 18px; border: 1px solid var(--border); border-radius: 24px; background: var(--surface); box-shadow: 0 24px 70px rgba(0, 0, 0, .62); }
+.identity-overlay { position: fixed; inset: 0; z-index: 80; display: grid; align-items: end; overflow: hidden; padding: 18px 12px calc(18px + var(--safe-bottom)); background: rgba(0, 0, 0, .78); backdrop-filter: blur(10px); }
+.identity-dialog { display: grid; gap: 16px; width: min(100%, 480px); max-height: min(calc(100dvh - 36px - var(--safe-bottom)), 720px); min-height: 0; margin: 0 auto; overflow: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding: 18px; border: 1px solid var(--border); border-radius: 24px; background: var(--surface); box-shadow: 0 24px 70px rgba(0, 0, 0, .62); }
 .identity-dialog > header { display: flex; align-items: start; justify-content: space-between; gap: 16px; }
 .identity-dialog > header > div { display: grid; gap: 7px; }
 .identity-dialog h2 { margin: 0; font-size: 27px; letter-spacing: -.045em; }
