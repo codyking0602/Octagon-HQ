@@ -1,0 +1,178 @@
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type PropsWithChildren,
+} from "react";
+import { useIdentity } from "../identity/IdentityProvider";
+import {
+  emptyPickSummary,
+  eventPicksLocked,
+  type PickEvent,
+  type PickSummary,
+} from "./picksModel";
+import {
+  createPicksRepository,
+  type PicksRepository,
+} from "./picksRepository";
+
+interface PicksContextValue {
+  configured: boolean;
+  loading: boolean;
+  savingBoutId: string | null;
+  error: string;
+  event: PickEvent | null;
+  selections: Record<string, string>;
+  summary: PickSummary;
+  refresh: () => Promise<void>;
+  setPick: (boutId: string, fighterSlug: string) => Promise<void>;
+}
+
+const PicksContext = createContext<PicksContextValue | null>(null);
+
+function readableError(error: unknown) {
+  if (error instanceof Error && error.message) return error.message;
+  return "Octagon HQ could not update Picks.";
+}
+
+function selectionsFromRows(rows: Awaited<ReturnType<PicksRepository["loadMyPicks"]>>) {
+  return Object.fromEntries(rows.map((row) => [row.boutId, row.fighterSlug]));
+}
+
+export function PicksProvider({
+  children,
+  repository: suppliedRepository,
+}: PropsWithChildren<{ repository?: PicksRepository | null }>) {
+  const identity = useIdentity();
+  const profileId = identity.profile?.id ?? null;
+  const profileIdRef = useRef(profileId);
+  profileIdRef.current = profileId;
+  const revisionRef = useRef(0);
+  const [repository] = useState<PicksRepository | null>(() => (
+    suppliedRepository === undefined ? createPicksRepository() : suppliedRepository
+  ));
+  const [event, setEvent] = useState<PickEvent | null>(null);
+  const [selections, setSelections] = useState<Record<string, string>>({});
+  const [summary, setSummary] = useState<PickSummary>(emptyPickSummary);
+  const [loading, setLoading] = useState(false);
+  const [savingBoutId, setSavingBoutId] = useState<string | null>(null);
+  const [error, setError] = useState("");
+
+  const refresh = useCallback(async () => {
+    const expectedProfileId = profileId;
+    const revision = ++revisionRef.current;
+
+    if (!repository) {
+      setEvent(null);
+      setSelections({});
+      setSummary(emptyPickSummary);
+      setLoading(false);
+      setError("Picks are not connected on this build.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const nextEvent = await repository.loadCurrentEvent();
+      if (revision !== revisionRef.current) return;
+      setEvent(nextEvent);
+
+      if (!expectedProfileId || !nextEvent) {
+        setSelections({});
+        setSummary(emptyPickSummary);
+        setError("");
+        return;
+      }
+
+      const [rows, nextSummary] = await Promise.all([
+        repository.loadMyPicks(nextEvent.eventId),
+        repository.loadMySummary(nextEvent.season),
+      ]);
+      if (revision !== revisionRef.current || profileIdRef.current !== expectedProfileId) return;
+      setSelections(selectionsFromRows(rows));
+      setSummary(nextSummary);
+      setError("");
+    } catch (nextError) {
+      if (revision !== revisionRef.current) return;
+      setError(readableError(nextError));
+    } finally {
+      if (revision === revisionRef.current) setLoading(false);
+    }
+  }, [profileId, repository]);
+
+  useEffect(() => {
+    setSavingBoutId(null);
+    void refresh();
+  }, [refresh]);
+
+  useEffect(() => {
+    if (!repository) return undefined;
+    const onFocus = () => void refresh();
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") void refresh();
+    };
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [refresh, repository]);
+
+  const setPick = useCallback(async (boutId: string, fighterSlug: string) => {
+    const expectedProfileId = profileId;
+    if (!expectedProfileId) {
+      identity.openDialog();
+      return;
+    }
+    if (!repository || !event) {
+      setError("Picks are not connected on this build.");
+      return;
+    }
+    if (eventPicksLocked(event)) {
+      setError("Picks are locked for this event.");
+      return;
+    }
+
+    setSavingBoutId(boutId);
+    try {
+      const saved = await repository.savePick(event.eventId, boutId, fighterSlug);
+      if (profileIdRef.current !== expectedProfileId) return;
+      setSelections((current) => ({ ...current, [saved.boutId]: saved.fighterSlug }));
+      const nextSummary = await repository.loadMySummary(event.season);
+      if (profileIdRef.current !== expectedProfileId) return;
+      setSummary(nextSummary);
+      setError("");
+    } catch (nextError) {
+      if (profileIdRef.current !== expectedProfileId) return;
+      setError(readableError(nextError));
+    } finally {
+      if (profileIdRef.current === expectedProfileId) setSavingBoutId(null);
+    }
+  }, [event, identity.openDialog, profileId, repository]);
+
+  return (
+    <PicksContext.Provider value={{
+      configured: Boolean(repository),
+      loading,
+      savingBoutId,
+      error,
+      event,
+      selections,
+      summary,
+      refresh,
+      setPick,
+    }}>
+      {children}
+    </PicksContext.Provider>
+  );
+}
+
+export function usePicks() {
+  const value = useContext(PicksContext);
+  if (!value) throw new Error("usePicks must be used inside PicksProvider");
+  return value;
+}
