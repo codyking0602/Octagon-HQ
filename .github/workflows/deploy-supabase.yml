@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - feature/real-profile-challenges
     paths:
       - ".github/workflows/deploy-supabase.yml"
       - "supabase/**"
