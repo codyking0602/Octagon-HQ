@@ -109,10 +109,12 @@ jobs:
           grep -FRq "NO PROFILE FOUND WITH THAT EXACT NAME" dist/assets/*.js
           grep -FRq "SIGN IN TO CHALLENGE" dist/assets/*.js
           grep -FRq "SIGN IN TO YOUR HQ" dist/assets/*.js
-          grep -FRq "PROFILE PICKS NEXT" dist/assets/*.js
+          grep -FRq "SIGN IN TO MAKE PICKS" dist/assets/*.js
           grep -FRq "list_my_find_leader_history" dist/assets/*.js
           grep -FRq "set_my_favorite_fighter" dist/assets/*.js
-          echo "Production dist contains real profiles, challenges, and profile-backed Your HQ."
+          grep -FRq "get_current_pick_event" dist/assets/*.js
+          grep -FRq "save_my_event_pick" dist/assets/*.js
+          echo "Production dist contains real profiles, challenges, Your HQ, and profile-backed UFC Picks."
 
       - name: Upload build diagnostics
         if: failure()
@@ -136,7 +138,7 @@ jobs:
             wrangler-deploy.log
           retention-days: 7
 
-      - name: Verify live profile-backed Your HQ
+      - name: Verify live profile-backed Picks
         shell: bash
         run: |
           set -euo pipefail
@@ -148,9 +150,11 @@ jobs:
             "NO PROFILE FOUND WITH THAT EXACT NAME"
             "SIGN IN TO CHALLENGE"
             "SIGN IN TO YOUR HQ"
-            "PROFILE PICKS NEXT"
+            "SIGN IN TO MAKE PICKS"
             "list_my_find_leader_history"
             "set_my_favorite_fighter"
+            "get_current_pick_event"
+            "save_my_event_pick"
           )
 
           verify_live_assets() {
@@ -221,7 +225,7 @@ jobs:
             exit 1
           fi
 
-          echo "Live Worker contains real profiles, challenges, and profile-backed Your HQ across the deployed production chunks."
+          echo "Live Worker contains real profiles, challenges, Your HQ, and profile-backed UFC Picks across the deployed production chunks."
 
       - name: Record deployment
         shell: bash
@@ -233,6 +237,7 @@ jobs:
             echo "- Source commit: $GITHUB_SHA"
             echo "- Supabase browser configuration was resolved from the V2 project without printing the key"
             echo "- Challenge Center uses authenticated profiles and exact-name delivery"
-            echo "- Your HQ uses profile history, canonical favorite fighter data, and cached challenge rows"
+            echo "- Your HQ uses profile history, Picks record, canonical favorite fighter data, and cached challenge rows"
+            echo "- Picks uses the public current event and authenticated cross-device profile selections"
             echo "- All deployed production chunks were verified for the current profile contracts"
           } >> "$GITHUB_STEP_SUMMARY"
