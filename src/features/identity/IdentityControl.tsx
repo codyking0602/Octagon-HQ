@@ -54,7 +54,7 @@ export function IdentityControl() {
 
   const buttonLabel = identity.profile?.displayName ?? "SIGN IN";
   const dialog = identity.dialogOpen ? createPortal(
-    <div className="identity-overlay" role="presentation" onMouseDown={(event) => {
+    <div className="identity-overlay identity-overlay--viewport" role="presentation" onMouseDown={(event) => {
       if (event.currentTarget === event.target) identity.closeDialog();
     }}>
       <section className="identity-dialog" role="dialog" aria-modal="true" aria-labelledby="identity-dialog-title">
