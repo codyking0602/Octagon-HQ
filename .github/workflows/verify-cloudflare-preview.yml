@@ -31,25 +31,46 @@ jobs:
             | tr '[:upper:]' '[:lower:]' \
             | sed -E 's#[^a-z0-9]+#-#g; s/^-+//; s/-+$//')
           preview_origin="https://${branch_slug}-octagon.hq-app.workers.dev"
-          proxy_probe="${preview_origin}/api/supabase/octagon-proxy-check/functions/v1/pin-auth"
 
           verified=0
           for attempt in $(seq 1 24); do
+            shell_file="$RUNNER_TEMP/octagon-preview-shell.html"
+            bundle_file="$RUNNER_TEMP/octagon-preview-bundle.js"
             headers="$RUNNER_TEMP/octagon-preview-headers.txt"
             body="$RUNNER_TEMP/octagon-preview-body.txt"
-            status=$(curl --silent --show-error \
-              --dump-header "$headers" \
-              --output "$body" \
-              --write-out "%{http_code}" \
-              --request POST \
-              --header "Content-Type: application/json" \
-              --data '{}' \
-              "$proxy_probe" || true)
+            : > "$bundle_file"
 
-            if grep -Fiq "x-octagon-supabase-proxy: 1" "$headers"; then
-              verified=1
-              echo "Same-origin proxy reached on ${preview_origin} with HTTP ${status}."
-              break
+            if curl --fail --silent --show-error \
+              --header "Cache-Control: no-cache" \
+              "${preview_origin}/?proxy-check=${attempt}" \
+              --output "$shell_file"; then
+              while IFS= read -r asset_path; do
+                curl --fail --silent --show-error \
+                  --header "Cache-Control: no-cache" \
+                  "${preview_origin}${asset_path}?proxy-check=${attempt}" \
+                  >> "$bundle_file" || true
+              done < <(grep -Eo 'src="/[^"]+\.js"' "$shell_file" | sed -E 's/^src="//; s/"$//' | sort -u)
+            fi
+
+            supabase_url=$(grep -Eo 'https://[a-z0-9-]+\.supabase\.co' "$bundle_file" | head -n 1 || true)
+            project_ref=$(printf '%s' "$supabase_url" | sed -E 's#https://([^.]*)\.supabase\.co#\1#')
+
+            if [ -n "$project_ref" ]; then
+              proxy_probe="${preview_origin}/api/supabase/${project_ref}/functions/v1/pin-auth"
+              status=$(curl --silent --show-error \
+                --dump-header "$headers" \
+                --output "$body" \
+                --write-out "%{http_code}" \
+                --request POST \
+                --header "Content-Type: application/json" \
+                --data '{}' \
+                "$proxy_probe" || true)
+
+              if grep -Fiq "x-octagon-supabase-proxy: 1" "$headers"; then
+                verified=1
+                echo "Same-origin proxy reached on ${preview_origin} with HTTP ${status}."
+                break
+              fi
             fi
 
             if [ "$attempt" -lt 24 ]; then
