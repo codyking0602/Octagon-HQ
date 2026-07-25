@@ -20,7 +20,6 @@ jobs:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
       OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
-      PUBLIC_CONFIG_PATH: ${{ runner.temp }}/octagon-public-config.env
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -38,6 +37,8 @@ jobs:
       - name: Verify successful login through the production browser UI
         id: browser-login
         continue-on-error: true
+        env:
+          PUBLIC_CONFIG_PATH: ${{ runner.temp }}/octagon-public-config.env
         run: node scripts/verify-pin-auth-live.mjs > "$RUNNER_TEMP/pin-browser.log" 2>&1
 
       - name: Upload concise browser diagnostics
