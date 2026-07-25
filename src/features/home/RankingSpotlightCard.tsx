@@ -3,6 +3,8 @@ import { FighterPhoto } from "../rankings/FighterPhoto";
 import type { RankingFighter } from "../rankings/rankingModel";
 import { resolveProfileWatchAction } from "../rankings/rankingPresentation";
 
+const fullWidthAction = { width: "100%" } as const;
+
 export function RankingSpotlightCard({ fighter }: { fighter: RankingFighter }) {
   const watchAction = resolveProfileWatchAction(fighter.slug);
 
@@ -29,18 +31,23 @@ export function RankingSpotlightCard({ fighter }: { fighter: RankingFighter }) {
         </div>
       </div>
 
-      <div className="ranking-spotlight__actions">
+      <div className="ranking-spotlight__actions" style={{ gridTemplateColumns: "1fr" }}>
         {watchAction ? (
           <a
             className="secondary-action ranking-spotlight__watch"
             href={watchAction.url}
             target="_blank"
             rel="noopener noreferrer"
+            style={fullWidthAction}
           >
             WATCH MOMENT ↗
           </a>
         ) : null}
-        <Link className="secondary-action" to={`/fighters/${fighter.slug}`}>
+        <Link
+          className="secondary-action"
+          style={fullWidthAction}
+          to={`/fighters/${fighter.slug}`}
+        >
           VIEW PROFILE →
         </Link>
       </div>
