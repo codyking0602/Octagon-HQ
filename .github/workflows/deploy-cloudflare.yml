@@ -63,8 +63,15 @@ jobs:
         with:
           node-version-file: .nvmrc
 
-      - name: Install dependencies
+      - name: Install application dependencies
         run: npm install --silent
+
+      - name: Install Wrangler
+        run: npm install --silent --no-save wrangler@4
+
+      - name: Verify Cloudflare identity
+        shell: bash
+        run: npx wrangler whoami 2>&1 | tee wrangler-whoami.log
 
       - name: Resolve public Supabase browser configuration
         shell: bash
@@ -96,7 +103,12 @@ jobs:
           echo "VITE_SUPABASE_PUBLISHABLE_KEY=$publishable_key" >> "$GITHUB_ENV"
 
       - name: Build production frontend
-        run: npm run build 2>&1 | tee cloudflare-build.log
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run build 2>&1 | tee cloudflare-build.log
+          test -f dist/index.html
+          echo "Production dist is ready."
 
       - name: Upload build diagnostics
         if: failure()
@@ -106,13 +118,9 @@ jobs:
           path: cloudflare-build.log
           retention-days: 7
 
-      - name: Verify Cloudflare identity
-        shell: bash
-        run: npx --yes wrangler@4 whoami 2>&1 | tee wrangler-whoami.log
-
       - name: Deploy octagon Worker
         shell: bash
-        run: npx --yes wrangler@4 deploy 2>&1 | tee wrangler-deploy.log
+        run: npx wrangler deploy 2>&1 | tee wrangler-deploy.log
 
       - name: Upload Wrangler diagnostics
         if: failure()
