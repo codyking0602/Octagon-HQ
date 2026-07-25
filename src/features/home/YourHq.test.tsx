@@ -175,9 +175,11 @@ describe("Your HQ", () => {
     expect(screen.queryByText("0", { exact: true })).not.toBeInTheDocument();
     expect(await screen.findByText("Ankalaev vs. Guskov")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "SIGN IN TO MAKE PICKS →" })).toBeInTheDocument();
+    expect(screen.getByText("RANKING SPOTLIGHT")).toBeInTheDocument();
+    expect(screen.getByText("Shane’s Fighters to Watch").closest("details")).not.toHaveAttribute("open");
   });
 
-  it("shows profile streak, Picks record, canonical favorite, meaningful challenges, and the next event", async () => {
+  it("shows profile data, the highest-priority next action, the next event, and the approved lower Home sections", async () => {
     const today = centralDay();
     const historyRepository: FindLeaderHistoryRepository = {
       load: async () => [
@@ -223,7 +225,8 @@ describe("Your HQ", () => {
     await waitFor(() => expect(within(challengeCard).getByText("2")).toBeInTheDocument());
     expect(loadChallenges).toHaveBeenCalledTimes(1);
 
-    const action = screen.getByRole("link", { name: "PLAY FIND THE LEADER CHALLENGE" });
+    expect(screen.getByText("SHANE is waiting for your answer")).toBeInTheDocument();
+    const action = screen.getByRole("link", { name: "RESPOND TO CHALLENGE" });
     expect(action).toHaveAttribute("href", expect.stringContaining("challenge=RECEIVED1"));
 
     fireEvent.change(screen.getByRole("combobox", { name: "Favorite fighter" }), {
@@ -235,5 +238,7 @@ describe("Your HQ", () => {
     expect(screen.getByText("Magomed Ankalaev vs. Bogdan Guskov")).toBeInTheDocument();
     expect(screen.getByText("1 OF 2")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "MAKE PICKS →" })).toHaveAttribute("href", "/picks");
+    expect(screen.getByText("RANKING SPOTLIGHT")).toBeInTheDocument();
+    expect(screen.getByText("Shane’s Fighters to Watch").closest("details")).not.toHaveAttribute("open");
   });
 });
