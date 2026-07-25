@@ -103,21 +103,34 @@ jobs:
         run: |
           set -euo pipefail
           migration_list=$(supabase migration list --linked)
+          printf '%s\n' "$migration_list"
 
-          if ! grep -Fq "202607240001" <<< "$migration_list"; then
-            echo "::error title=Profile migration not deployed::The V2 profile/PIN migration is not recorded on the linked project."
-            exit 1
-          fi
+          require_remote_migration() {
+            local version="$1"
+            local title="$2"
+            local remote_version
+            remote_version=$(awk -F '│' -v version="$version" '
+              {
+                local_version = $1
+                remote_version = $2
+                gsub(/[[:space:]]/, "", local_version)
+                gsub(/[[:space:]]/, "", remote_version)
+                if (local_version == version) {
+                  print remote_version
+                  exit
+                }
+              }
+            ' <<< "$migration_list")
 
-          if ! grep -Fq "202607250001" <<< "$migration_list"; then
-            echo "::error title=Challenge migration not deployed::The real profile challenge migration is not recorded on the linked project."
-            exit 1
-          fi
+            if [ "$remote_version" != "$version" ]; then
+              echo "::error title=${title}::Migration $version exists locally but is not recorded in the remote migration column."
+              exit 1
+            fi
+          }
 
-          if ! grep -Fq "202607260001" <<< "$migration_list"; then
-            echo "::error title=Your HQ migration not deployed::The profile-backed Find the Leader and favorite-fighter migration is not recorded on the linked project."
-            exit 1
-          fi
+          require_remote_migration "202607240001" "Profile migration not deployed"
+          require_remote_migration "202607250001" "Challenge migration not deployed"
+          require_remote_migration "202607260001" "Your HQ migration not deployed"
 
           if ! supabase functions list --project-ref "$SUPABASE_PROJECT_ID" | grep -Fq "pin-auth"; then
             echo "::error title=PIN function not deployed::The pin-auth Edge Function is not deployed to the V2 project."
@@ -162,9 +175,9 @@ jobs:
             echo "- Supabase access token/project pairing: accepted"
             echo "- Database password and migration connection: accepted"
             echo "- Required Edge Function secret names: present"
-            echo "- Profile/PIN migration: deployed"
-            echo "- Real profile challenge migration: deployed"
-            echo "- Profile-backed Your HQ migration: deployed"
+            echo "- Profile/PIN migration: deployed remotely"
+            echo "- Real profile challenge migration: deployed remotely"
+            echo "- Profile-backed Your HQ migration: deployed remotely"
             echo "- pin-auth Edge Function: deployed and responding with the expected contract"
             echo "- Production CORS origin: $OCTAGON_PRODUCTION_ORIGIN"
             echo "- Cloudflare VITE values: cannot be read by GitHub and must be verified through the Cloudflare production build"
