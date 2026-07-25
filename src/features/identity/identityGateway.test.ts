@@ -2,12 +2,12 @@ import { describe, expect, it, vi } from "vitest";
 import { requestPinAuth } from "./identityGateway";
 
 const config = {
-  url: "https://preview-octagon.hq-app.workers.dev/api/supabase/octagonproject",
+  url: "https://octagonproject.supabase.co",
   publishableKey: "sb_publishable_test",
 };
 
 describe("PIN authentication transport", () => {
-  it("posts directly to the same-origin PIN endpoint with the public project key", async () => {
+  it("posts directly to the Edge Function with the public project key", async () => {
     const fetcher = vi.fn(async (_input: RequestInfo | URL, _init?: RequestInit) => new Response(
       JSON.stringify({ tokenHash: "token-123" }),
       {
@@ -20,9 +20,7 @@ describe("PIN authentication transport", () => {
     expect(fetcher).toHaveBeenCalledOnce();
 
     const [url, init] = fetcher.mock.calls[0]!;
-    expect(url).toBe(
-      "https://preview-octagon.hq-app.workers.dev/api/supabase/octagonproject/functions/v1/pin-auth",
-    );
+    expect(url).toBe("https://octagonproject.supabase.co/functions/v1/pin-auth");
     expect(init).toMatchObject({
       method: "POST",
       headers: {
@@ -54,9 +52,10 @@ describe("PIN authentication transport", () => {
       .rejects.toThrow("Profile service error (EDGE_FUNCTION_ERROR).");
   });
 
-  it("does not use the Supabase Functions SDK for PIN login", async () => {
+  it("does not use the Supabase Functions SDK or a Cloudflare proxy for PIN login", async () => {
     const source = await import("./identityGateway.ts?raw");
     expect(source.default).not.toContain("functions.invoke");
+    expect(source.default).not.toContain("/api/supabase/");
     expect(source.default).toContain("requestPinAuth(browserConfig, action, displayName, pin)");
   });
 });
