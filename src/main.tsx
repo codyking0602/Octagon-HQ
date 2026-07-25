@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./app/App";
+import { installUpdateRecovery } from "./app/installUpdateRecovery";
 import "./styles/tokens.css";
 import "./styles/global.css";
 import "./styles/home.css";
@@ -15,6 +16,8 @@ import "./styles/final-play-games.css";
 import "./styles/challenge-center.css";
 import "./styles/challenge-profiles.css";
 import "./styles/challenge-matchups.css";
+
+installUpdateRecovery();
 
 const root = document.getElementById("root");
 
