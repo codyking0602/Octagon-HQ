@@ -1,36 +1,25 @@
-import { describe, expect, it } from "vitest";
-import { resolveSupabaseBrowserUrl } from "./supabase";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { getSupabaseBrowserConfig } from "./supabase";
 
-const configuredUrl = "https://octagonproject.supabase.co";
+afterEach(() => {
+  vi.unstubAllEnvs();
+});
 
-describe("resolveSupabaseBrowserUrl", () => {
-  it("routes production Workers traffic through the same origin", () => {
-    expect(resolveSupabaseBrowserUrl(configuredUrl, {
-      hostname: "octagon.hq-app.workers.dev",
-      origin: "https://octagon.hq-app.workers.dev",
-    })).toBe("https://octagon.hq-app.workers.dev/api/supabase/octagonproject");
+describe("getSupabaseBrowserConfig", () => {
+  it("keeps production and preview browsers pointed directly at Supabase", () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://octagonproject.supabase.co");
+    vi.stubEnv("VITE_SUPABASE_PUBLISHABLE_KEY", "sb_publishable_test");
+
+    expect(getSupabaseBrowserConfig()).toEqual({
+      url: "https://octagonproject.supabase.co",
+      publishableKey: "sb_publishable_test",
+    });
   });
 
-  it("routes branch previews through their own same origin", () => {
-    expect(resolveSupabaseBrowserUrl(configuredUrl, {
-      hostname: "feature-home-next-up-spotlight-watchlist-octagon.hq-app.workers.dev",
-      origin: "https://feature-home-next-up-spotlight-watchlist-octagon.hq-app.workers.dev",
-    })).toBe(
-      "https://feature-home-next-up-spotlight-watchlist-octagon.hq-app.workers.dev/api/supabase/octagonproject",
-    );
-  });
+  it("returns null when the public project configuration is incomplete", () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "");
+    vi.stubEnv("VITE_SUPABASE_PUBLISHABLE_KEY", "");
 
-  it("keeps local development pointed at Supabase directly", () => {
-    expect(resolveSupabaseBrowserUrl(configuredUrl, {
-      hostname: "localhost",
-      origin: "http://localhost:5173",
-    })).toBe(configuredUrl);
-  });
-
-  it("does not proxy custom Supabase domains without a locked project reference", () => {
-    expect(resolveSupabaseBrowserUrl("https://data.example.com", {
-      hostname: "octagon.hq-app.workers.dev",
-      origin: "https://octagon.hq-app.workers.dev",
-    })).toBe("https://data.example.com");
+    expect(getSupabaseBrowserConfig()).toBeNull();
   });
 });
