@@ -14,4 +14,11 @@ describe("PIN authentication identity contract", () => {
     expect(authoritativeIdentityMigration).not.toContain("internal_email text");
     expect(authoritativeIdentityMigration).not.toContain("c.internal_email");
   });
+
+  it("allows production and branch-preview Octagon HQ origins without a Cloudflare proxy", () => {
+    expect(pinAuthFunction).toContain('endsWith(".hq-app.workers.dev")');
+    expect(pinAuthFunction).toContain('"Access-Control-Allow-Origin": allowedOrigin');
+    expect(pinAuthFunction).toContain('"Vary": "Origin"');
+    expect(pinAuthFunction).not.toContain("/api/supabase/");
+  });
 });
