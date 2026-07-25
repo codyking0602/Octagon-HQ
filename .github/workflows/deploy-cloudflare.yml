@@ -163,10 +163,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-          cache: npm
 
-      - name: Install application dependencies without lifecycle scripts
-        run: npm ci --silent --ignore-scripts
+      - name: Install application dependencies
+        run: npm install --silent
 
       - name: Download verified public browser configuration
         uses: actions/download-artifact@v4
