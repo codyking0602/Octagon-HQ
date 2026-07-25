@@ -2,6 +2,10 @@ name: Deploy Cloudflare Frontend
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/deploy-cloudflare.yml"
+      - "src/features/identity/IdentityControl.tsx"
   push:
     branches:
       - main
@@ -24,6 +28,7 @@ concurrency:
 
 jobs:
   deploy:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
@@ -105,7 +110,8 @@ jobs:
           npm run build 2>&1 | tee cloudflare-build.log
           test -f dist/index.html
           grep -FRq "overscroll-behavior:contain" dist/assets/*.css
-          echo "Production dist contains the viewport-safe profile dialog styles."
+          grep -FRq "identity-overlay--viewport" dist/assets/*.js
+          echo "Production dist contains the viewport-owned profile dialog."
 
       - name: Upload build diagnostics
         if: failure()
@@ -158,12 +164,9 @@ jobs:
             "$script_url?deployment=${GITHUB_SHA}" \
             --output "$bundle_file"
 
-          if ! grep -Fq "SIGN IN" "$bundle_file"; then
-            echo "::error title=Stale production frontend::The live Worker bundle does not contain the merged profile control."
-            exit 1
-          fi
-
-          echo "Live Worker contains the canonical SIGN IN profile control."
+          grep -Fq "SIGN IN" "$bundle_file"
+          grep -Fq "identity-overlay--viewport" "$bundle_file"
+          echo "Live Worker contains the viewport-owned profile dialog."
 
       - name: Record deployment
         shell: bash
@@ -174,6 +177,6 @@ jobs:
             echo "- Production URL: $OCTAGON_PRODUCTION_URL"
             echo "- Source commit: $GITHUB_SHA"
             echo "- Supabase browser configuration was resolved from the V2 project without printing the key"
-            echo "- Deployed dist contains the viewport-safe mobile profile dialog styles"
-            echo "- Live production bundle contains the SIGN IN profile control"
+            echo "- Profile dialog is portaled to document.body and owns the full viewport"
+            echo "- Live production bundle contains the viewport-owned profile dialog"
           } >> "$GITHUB_STEP_SUMMARY"
