@@ -104,17 +104,20 @@ jobs:
           set -euo pipefail
           npm run build 2>&1 | tee cloudflare-build.log
           test -f dist/index.html
+          test -f dist/_headers
+          grep -Fq "Cache-Control: no-cache" dist/_headers
           grep -FRq "overscroll-behavior:contain" dist/assets/*.css
           grep -FRq "identity-overlay--viewport" dist/assets/*.js
           grep -FRq "NO PROFILE FOUND WITH THAT EXACT NAME" dist/assets/*.js
           grep -FRq "SIGN IN TO CHALLENGE" dist/assets/*.js
           grep -FRq "SIGN IN TO YOUR HQ" dist/assets/*.js
           grep -FRq "SIGN IN TO MAKE PICKS" dist/assets/*.js
+          grep -FRq "vite:preloadError" dist/assets/*.js
           grep -FRq "list_my_find_leader_history" dist/assets/*.js
           grep -FRq "set_my_favorite_fighter" dist/assets/*.js
           grep -FRq "get_current_pick_event" dist/assets/*.js
           grep -FRq "save_my_event_pick" dist/assets/*.js
-          echo "Production dist contains real profiles, challenges, Your HQ, and profile-backed UFC Picks."
+          echo "Production dist contains real profiles, challenges, Your HQ, profile-backed UFC Picks, and stale-chunk recovery."
 
       - name: Upload build diagnostics
         if: failure()
@@ -144,6 +147,7 @@ jobs:
           set -euo pipefail
           live_assets_dir="$RUNNER_TEMP/octagon-live-assets"
           bundle_file="$RUNNER_TEMP/octagon-all-live.js"
+          shell_headers="$RUNNER_TEMP/octagon-shell-headers.txt"
           markers=(
             "SIGN IN"
             "identity-overlay--viewport"
@@ -151,6 +155,7 @@ jobs:
             "SIGN IN TO CHALLENGE"
             "SIGN IN TO YOUR HQ"
             "SIGN IN TO MAKE PICKS"
+            "vite:preloadError"
             "list_my_find_leader_history"
             "set_my_favorite_fighter"
             "get_current_pick_event"
@@ -164,6 +169,20 @@ jobs:
 
             rm -rf "$live_assets_dir"
             mkdir -p "$live_assets_dir"
+
+            if ! curl --fail --silent --show-error \
+              --header "Cache-Control: no-cache" \
+              --dump-header "$shell_headers" \
+              --output "$RUNNER_TEMP/octagon-shell.html" \
+              "${OCTAGON_PRODUCTION_URL}/?deployment=${GITHUB_SHA}&attempt=${attempt}"; then
+              echo "The live SPA shell is not available yet."
+              return 1
+            fi
+
+            if ! grep -Fiq "cache-control: no-cache" "$shell_headers"; then
+              echo "The live SPA shell is missing the required no-cache policy."
+              return 1
+            fi
 
             for local_asset in dist/assets/*.js; do
               asset_name=$(basename "$local_asset")
@@ -225,7 +244,7 @@ jobs:
             exit 1
           fi
 
-          echo "Live Worker contains real profiles, challenges, Your HQ, and profile-backed UFC Picks across the deployed production chunks."
+          echo "Live Worker contains profile-backed UFC Picks and automatic stale-chunk recovery across the deployed production chunks."
 
       - name: Record deployment
         shell: bash
@@ -239,5 +258,7 @@ jobs:
             echo "- Challenge Center uses authenticated profiles and exact-name delivery"
             echo "- Your HQ uses profile history, Picks record, canonical favorite fighter data, and cached challenge rows"
             echo "- Picks uses the public current event and authenticated cross-device profile selections"
+            echo "- Stale lazy chunks trigger one guarded reload instead of the React Router developer error screen"
+            echo "- The SPA shell is served with Cache-Control: no-cache"
             echo "- All deployed production chunks were verified for the current profile contracts"
           } >> "$GITHUB_STEP_SUMMARY"
