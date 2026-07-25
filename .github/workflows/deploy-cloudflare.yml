@@ -456,14 +456,12 @@ jobs:
               return 1
             fi
 
-            if ! node --input-type=module - "$live_marker" "$SOURCE_SHA" <<'NODE'
-            import fs from "node:fs";
-            const markerPath = process.argv[2];
-            const expectedSha = process.argv[3];
-            const marker = JSON.parse(fs.readFileSync(markerPath, "utf8"));
-            if (marker.sha !== expectedSha) process.exit(1);
-            NODE
-            then
+            if ! node --input-type=module --eval '
+              import fs from "node:fs";
+              const [markerPath, expectedSha] = process.argv.slice(1);
+              const marker = JSON.parse(fs.readFileSync(markerPath, "utf8"));
+              if (marker.sha !== expectedSha) process.exit(1);
+            ' "$live_marker" "$SOURCE_SHA"; then
               echo "The live deployment marker does not match $SOURCE_SHA yet."
               return 1
             fi
