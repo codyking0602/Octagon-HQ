@@ -11,24 +11,7 @@ export interface SupabaseBrowserConfig {
   publishableKey: string;
 }
 
-type BrowserLocation = Pick<Location, "hostname" | "origin">;
-
 let client: SupabaseClient | null | undefined;
-
-export function resolveSupabaseBrowserUrl(
-  configuredUrl: string,
-  browserLocation: BrowserLocation | null = typeof window === "undefined" ? null : window.location,
-) {
-  if (!browserLocation || !browserLocation.hostname.toLowerCase().endsWith(".hq-app.workers.dev")) {
-    return configuredUrl;
-  }
-
-  const configured = new URL(configuredUrl);
-  const projectMatch = /^([a-z0-9-]+)\.supabase\.co$/i.exec(configured.hostname);
-  if (!projectMatch) return configuredUrl;
-
-  return `${browserLocation.origin}/api/supabase/${projectMatch[1]}`;
-}
 
 export function getSupabaseBrowserConfig(): SupabaseBrowserConfig | null {
   const parsed = configSchema.safeParse({
@@ -36,12 +19,7 @@ export function getSupabaseBrowserConfig(): SupabaseBrowserConfig | null {
     publishableKey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
   });
 
-  return parsed.success
-    ? {
-        url: resolveSupabaseBrowserUrl(parsed.data.url),
-        publishableKey: parsed.data.publishableKey,
-      }
-    : null;
+  return parsed.success ? parsed.data : null;
 }
 
 export function getSupabaseClient(): SupabaseClient | null {
