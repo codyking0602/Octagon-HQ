@@ -7,6 +7,13 @@ import {
 import { challengePlayRoute } from "../challenges/challengeRuntime";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { useIdentity } from "../identity/IdentityProvider";
+import {
+  eventPicksLocked,
+  mainEvent,
+  pickProgress,
+  pickRecord,
+} from "../picks/picksModel";
+import { usePicks } from "../picks/PicksProvider";
 import { useFindLeaderHistory } from "../play/FindLeaderHistoryProvider";
 import { centralDay } from "../play/findLeaderEngine";
 import { findLeaderStreaks } from "../play/findLeaderStorage";
@@ -38,10 +45,21 @@ function nextAction(
     : { label: "PLAY TODAY’S FIND THE LEADER", to: "/play/find-leader" };
 }
 
+function eventDate(value: string) {
+  return new Intl.DateTimeFormat(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(new Date(value));
+}
+
 export default function HomePage() {
   const identity = useIdentity();
   const history = useFindLeaderHistory();
   const preferences = useProfilePreferences();
+  const picks = usePicks();
   const challengeState = usePlayChallenges();
   const today = useMemo(() => centralDay(), []);
   const sortedFighters = useMemo(
@@ -59,6 +77,13 @@ export default function HomePage() {
   const action = identity.profile
     ? nextAction(openChallenges, identity.profile.id, playedToday)
     : null;
+  const currentEvent = picks.event;
+  const currentMainEvent = mainEvent(currentEvent);
+  const picksProgress = pickProgress(currentEvent, picks.selections);
+  const picksPercent = picksProgress.total
+    ? Math.round((picksProgress.completed / picksProgress.total) * 100)
+    : 0;
+  const picksLocked = currentEvent ? eventPicksLocked(currentEvent) : false;
 
   return (
     <div className="page home-page">
@@ -83,11 +108,11 @@ export default function HomePage() {
           <div className="hq-card__signed-out">
             <div className="hq-card__grid" aria-label="Your HQ profile benefits">
               <article className="hq-stat"><strong>—</strong><span>Daily streak</span><small>SYNC ACROSS DEVICES</small></article>
-              <article className="hq-stat"><strong>—</strong><span>Current Picks record</span><small>PROFILE PICKS NEXT</small></article>
+              <article className="hq-stat"><strong>—</strong><span>Current Picks record</span><small>SIGN IN TO TRACK</small></article>
               <article className="hq-stat"><strong>—</strong><span>Favorite fighter</span><small>MAKE IT YOUR HQ</small></article>
               <article className="hq-stat"><strong>—</strong><span>Open challenges</span><small>PLAY FRIENDS</small></article>
             </div>
-            <p>Sign in to carry your official game history, favorite fighter, and challenges between devices.</p>
+            <p>Sign in to carry your official game history, Picks record, favorite fighter, and challenges between devices.</p>
             <button className="primary-action" type="button" onClick={identity.openDialog}>SIGN IN TO YOUR HQ</button>
           </div>
         ) : (
@@ -99,10 +124,13 @@ export default function HomePage() {
                 <small>FIND THE LEADER</small>
               </article>
 
-              <article className="hq-stat is-unavailable">
-                <strong>—</strong>
+              <article className="hq-stat">
+                <strong>{picks.loading ? "…" : pickRecord(picks.summary)}</strong>
                 <span>Current Picks record</span>
-                <small>PROFILE PICKS NEXT</small>
+                <small>
+                  {currentEvent?.season ?? new Date().getFullYear()} SEASON
+                  {picks.summary.pending ? ` · ${picks.summary.pending} PENDING` : ""}
+                </small>
               </article>
 
               <article className="hq-stat hq-stat--favorite">
@@ -133,9 +161,9 @@ export default function HomePage() {
               </article>
             </div>
 
-            {history.error || preferences.error || challengeState.error ? (
+            {history.error || preferences.error || picks.error || challengeState.error ? (
               <p className="hq-card__error" role="status">
-                {history.error || preferences.error || challengeState.error}
+                {history.error || preferences.error || picks.error || challengeState.error}
               </p>
             ) : null}
 
@@ -143,6 +171,38 @@ export default function HomePage() {
           </>
         )}
       </section>
+
+      {currentEvent ? (
+        <section className="surface-card home-event-card" aria-labelledby="home-event-title">
+          <div className="home-event-card__topline">
+            <p className="eyebrow">NEXT UFC EVENT</p>
+            <span>{picksLocked ? "LOCKED" : "UPCOMING"}</span>
+          </div>
+          <h2 id="home-event-title">{currentEvent.name}</h2>
+          <strong>{currentEvent.subtitle}</strong>
+          <p>{eventDate(currentEvent.startsAt)}</p>
+          {currentMainEvent ? (
+            <p className="home-event-card__main-event">
+              <small>MAIN EVENT</small>
+              <b>{currentMainEvent.redFighterName} vs. {currentMainEvent.blueFighterName}</b>
+            </p>
+          ) : null}
+          <div className="picks-progress" aria-label={`${picksProgress.completed} of ${picksProgress.total} picks completed`}>
+            <div>
+              <span>{identity.profile ? "YOUR PICKS" : "PROFILE PICKS"}</span>
+              <b>{identity.profile ? `${picksProgress.completed} OF ${picksProgress.total}` : "SIGN IN"}</b>
+            </div>
+            <div className="picks-progress__track" aria-hidden="true"><span style={{ width: `${picksPercent}%` }} /></div>
+          </div>
+          {identity.profile ? (
+            <Link className="secondary-action" to="/picks">
+              {picksProgress.completed === picksProgress.total ? "REVIEW PICKS" : "MAKE PICKS"} →
+            </Link>
+          ) : (
+            <button className="secondary-action" type="button" onClick={identity.openDialog}>SIGN IN TO MAKE PICKS →</button>
+          )}
+        </section>
+      ) : null}
 
       <section className="surface-card board-preview" aria-labelledby="board-preview-title">
         <div className="section-heading">

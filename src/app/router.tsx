@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import { createBrowserRouter, Navigate, type RouteObject } from "react-router-dom";
+import AppRouteError from "./AppRouteError";
 import { AppShell } from "./AppShell";
 
 const HomePage = lazy(() => import("../features/home/HomePage"));
@@ -13,12 +14,13 @@ const BlindResumePage = lazy(() => import("../features/play/BlindResumePage"));
 const BlindRankPage = lazy(() => import("../features/play/BlindRankPage"));
 const KeepCutPage = lazy(() => import("../features/play/KeepCutPage"));
 const BetterThanPage = lazy(() => import("../features/play/BetterThanPage"));
-const PlaceholderPage = lazy(() => import("../features/placeholders/PlaceholderPage"));
+const PicksPage = lazy(() => import("../features/picks/PicksPage"));
 
 export const appRoutes: RouteObject[] = [
   {
     path: "/",
     element: <AppShell />,
+    errorElement: <AppRouteError />,
     children: [
       { index: true, element: <HomePage /> },
       { path: "rankings", element: <RankingsPage /> },
@@ -31,7 +33,7 @@ export const appRoutes: RouteObject[] = [
       { path: "play/blind-rank", element: <BlindRankPage /> },
       { path: "play/keep-cut", element: <KeepCutPage /> },
       { path: "play/better-than", element: <BetterThanPage /> },
-      { path: "picks", element: <PlaceholderPage title="Picks" eyebrow="EVENT PICKS" /> },
+      { path: "picks", element: <PicksPage /> },
       { path: "*", element: <Navigate to="/" replace /> },
     ],
   },

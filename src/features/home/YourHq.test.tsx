@@ -11,6 +11,9 @@ import {
 } from "../play/FindLeaderHistoryProvider";
 import type { FindLeaderHistoryRepository } from "../play/findLeaderHistoryRepository";
 import { centralDay } from "../play/findLeaderEngine";
+import { PicksProvider } from "../picks/PicksProvider";
+import type { PickEvent } from "../picks/picksModel";
+import type { PicksRepository } from "../picks/picksRepository";
 import {
   ProfilePreferencesProvider,
 } from "../profile/ProfilePreferencesProvider";
@@ -27,6 +30,40 @@ const shane: ChallengeProfile = {
   id: "22222222-2222-4222-8222-222222222222",
   displayName: "SHANE",
   initials: "SH",
+};
+
+const pickEvent: PickEvent = {
+  eventId: "ufc-test-event",
+  name: "UFC Fight Night",
+  subtitle: "Ankalaev vs. Guskov",
+  venue: "Etihad Arena",
+  location: "Abu Dhabi, United Arab Emirates",
+  startsAt: "2099-07-25T16:00:00.000Z",
+  locksAt: "2099-07-25T16:00:00.000Z",
+  season: 2026,
+  status: "upcoming",
+  bouts: [
+    {
+      boutId: "ankalaev-guskov",
+      position: 1,
+      weightClass: "Light Heavyweight",
+      redFighterSlug: "magomed-ankalaev",
+      redFighterName: "Magomed Ankalaev",
+      blueFighterSlug: "bogdan-guskov",
+      blueFighterName: "Bogdan Guskov",
+      winnerFighterSlug: null,
+    },
+    {
+      boutId: "erceg-temirov",
+      position: 2,
+      weightClass: "Flyweight",
+      redFighterSlug: "steve-erceg",
+      redFighterName: "Steve Erceg",
+      blueFighterSlug: "ramazan-temirov",
+      blueFighterName: "Ramazan Temirov",
+      winnerFighterSlug: null,
+    },
+  ],
 };
 
 function identityGateway(): IdentityGateway {
@@ -96,16 +133,39 @@ function challengeRepository(load = vi.fn(async () => ({
   };
 }
 
+function picksRepository(): PicksRepository {
+  return {
+    loadCurrentEvent: async () => pickEvent,
+    loadMyPicks: async () => [{
+      eventId: pickEvent.eventId,
+      boutId: "ankalaev-guskov",
+      fighterSlug: "magomed-ankalaev",
+      pickedAt: "2026-07-24T12:00:00.000Z",
+      updatedAt: "2026-07-24T12:00:00.000Z",
+    }],
+    loadMySummary: async () => ({ correct: 12, incorrect: 8, pending: 1, eventsEntered: 4 }),
+    savePick: async (eventId, boutId, fighterSlug) => ({
+      eventId,
+      boutId,
+      fighterSlug,
+      pickedAt: "2026-07-24T12:00:00.000Z",
+      updatedAt: "2026-07-24T12:00:00.000Z",
+    }),
+  };
+}
+
 describe("Your HQ", () => {
-  it("shows an understandable sign-in state instead of broken profile zeros", () => {
+  it("shows an understandable sign-in state instead of broken profile zeros", async () => {
     render(
       <IdentityProvider gateway={null}>
         <ProfilePreferencesProvider repository={null}>
-          <FindLeaderHistoryProvider repository={null}>
-            <ChallengeProvider repository={null}>
-              <MemoryRouter><HomePage /></MemoryRouter>
-            </ChallengeProvider>
-          </FindLeaderHistoryProvider>
+          <PicksProvider repository={picksRepository()}>
+            <FindLeaderHistoryProvider repository={null}>
+              <ChallengeProvider repository={null}>
+                <MemoryRouter><HomePage /></MemoryRouter>
+              </ChallengeProvider>
+            </FindLeaderHistoryProvider>
+          </PicksProvider>
         </ProfilePreferencesProvider>
       </IdentityProvider>,
     );
@@ -113,9 +173,11 @@ describe("Your HQ", () => {
     expect(screen.getByRole("button", { name: "SIGN IN TO YOUR HQ" })).toBeInTheDocument();
     expect(screen.getByText(/carry your official game history/i)).toBeInTheDocument();
     expect(screen.queryByText("0", { exact: true })).not.toBeInTheDocument();
+    expect(await screen.findByText("Ankalaev vs. Guskov")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "SIGN IN TO MAKE PICKS →" })).toBeInTheDocument();
   });
 
-  it("shows profile streak, canonical favorite, meaningful open challenges, and one next action", async () => {
+  it("shows profile streak, Picks record, canonical favorite, meaningful challenges, and the next event", async () => {
     const today = centralDay();
     const historyRepository: FindLeaderHistoryRepository = {
       load: async () => [
@@ -134,11 +196,13 @@ describe("Your HQ", () => {
     render(
       <IdentityProvider gateway={identityGateway()}>
         <ProfilePreferencesProvider repository={preferencesRepository}>
-          <FindLeaderHistoryProvider repository={historyRepository}>
-            <ChallengeProvider repository={challengeRepository(loadChallenges)}>
-              <MemoryRouter><HomePage /></MemoryRouter>
-            </ChallengeProvider>
-          </FindLeaderHistoryProvider>
+          <PicksProvider repository={picksRepository()}>
+            <FindLeaderHistoryProvider repository={historyRepository}>
+              <ChallengeProvider repository={challengeRepository(loadChallenges)}>
+                <MemoryRouter><HomePage /></MemoryRouter>
+              </ChallengeProvider>
+            </FindLeaderHistoryProvider>
+          </PicksProvider>
         </ProfilePreferencesProvider>
       </IdentityProvider>,
     );
@@ -147,6 +211,10 @@ describe("Your HQ", () => {
 
     const streakCard = screen.getByText("Daily streak").closest("article")!;
     await waitFor(() => expect(within(streakCard).getByText("2")).toBeInTheDocument());
+
+    const picksCard = screen.getByText("Current Picks record").closest("article")!;
+    await waitFor(() => expect(within(picksCard).getByText("12-8")).toBeInTheDocument());
+    expect(within(picksCard).getByText(/1 PENDING/)).toBeInTheDocument();
 
     const favoriteCard = screen.getByText("Favorite fighter").closest("article")!;
     await waitFor(() => expect(within(favoriteCard).getByText("Georges St-Pierre")).toBeInTheDocument());
@@ -164,7 +232,8 @@ describe("Your HQ", () => {
     await waitFor(() => expect(saveFavoriteFighter).toHaveBeenCalledWith("jon-jones"));
     await waitFor(() => expect(within(favoriteCard).getByText("Jon Jones")).toBeInTheDocument());
 
-    const picksCard = screen.getByText("Current Picks record").closest("article")!;
-    expect(within(picksCard).getByText("PROFILE PICKS NEXT")).toBeInTheDocument();
+    expect(screen.getByText("Magomed Ankalaev vs. Bogdan Guskov")).toBeInTheDocument();
+    expect(screen.getByText("1 OF 2")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "MAKE PICKS →" })).toHaveAttribute("href", "/picks");
   });
 });

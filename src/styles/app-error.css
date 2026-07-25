@@ -1,0 +1,40 @@
+.app-error {
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: 16px;
+  min-height: 100dvh;
+  width: min(100%, 560px);
+  margin: 0 auto;
+  padding: max(32px, var(--safe-top)) 24px max(32px, var(--safe-bottom));
+  background:
+    radial-gradient(circle at 92% 8%, rgba(210, 10, 10, .16), transparent 34%),
+    var(--canvas);
+}
+
+.app-error img {
+  width: 72px;
+  height: 72px;
+  border-radius: 16px;
+}
+
+.app-error h1 {
+  margin: 0;
+  max-width: 480px;
+  font-size: clamp(34px, 10vw, 52px);
+  line-height: .98;
+  letter-spacing: -.05em;
+}
+
+.app-error > p:not(.eyebrow) {
+  margin: 0;
+  max-width: 460px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.app-error .primary-action {
+  min-width: min(100%, 300px);
+  border: 0;
+  cursor: pointer;
+}
