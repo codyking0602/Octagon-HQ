@@ -31,7 +31,7 @@ create table if not exists public.profile_preferences (
     favorite_fighter_slug is null
     or (
       char_length(favorite_fighter_slug) between 1 and 80
-      and favorite_fighter_slug ~ '^[a-z0-9]+(?:-[a-z0-9]+)*$'
+      and favorite_fighter_slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'
     )
   )
 );
@@ -148,7 +148,7 @@ begin
 
   if v_slug is not null and (
     char_length(v_slug) > 80
-    or v_slug !~ '^[a-z0-9]+(?:-[a-z0-9]+)*$'
+    or v_slug !~ '^[a-z0-9]+(-[a-z0-9]+)*$'
   ) then
     raise exception 'invalid fighter';
   end if;
