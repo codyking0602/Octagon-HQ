@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - ".github/workflows/diagnose-cody-profile.yml"
+      - "scripts/diagnose-cody-profile.mjs"
       - "supabase/migrations/202607280001_pin_auth_status.sql"
       - "supabase/functions/pin-auth/**"
 
@@ -19,103 +20,13 @@ jobs:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
     steps:
-      - name: Inspect CODY profile without reading or testing the PIN
-        shell: bash
-        run: |
-          set -euo pipefail
-          keys_file="$RUNNER_TEMP/supabase-api-keys.json"
-          state_file="$RUNNER_TEMP/cody-pin-state.json"
-          profile_file="$RUNNER_TEMP/cody-profile.json"
-          user_file="$RUNNER_TEMP/cody-auth-user.json"
-          token_file="$RUNNER_TEMP/cody-session-token.json"
-          trap 'rm -f "$keys_file" "$state_file" "$profile_file" "$user_file" "$token_file"' EXIT
+      - name: Check out repository
+        uses: actions/checkout@v4
 
-          curl --fail --silent --show-error \
-            --header "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
-            "https://api.supabase.com/v1/projects/${SUPABASE_PROJECT_ID}/api-keys?reveal=true" \
-            --output "$keys_file"
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
 
-          secret_key=$(node - "$keys_file" <<'NODE'
-          const fs = require('fs');
-          const keys = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
-          const key = keys.find((item) => item.type === 'secret')
-            ?? keys.find((item) => item.type === 'legacy' && /service.role/i.test(item.name ?? ''));
-          if (!key?.api_key) process.exit(1);
-          process.stdout.write(key.api_key);
-          NODE
-          )
-
-          base="https://${SUPABASE_PROJECT_ID}.supabase.co"
-          curl --fail --silent --show-error \
-            --request POST \
-            --header "Authorization: Bearer $secret_key" \
-            --header "apikey: $secret_key" \
-            --header "Content-Type: application/json" \
-            --data '{"p_display_name":"CODY"}' \
-            "$base/rest/v1/rpc/inspect_profile_pin_state" \
-            --output "$state_file"
-
-          curl --fail --silent --show-error \
-            --header "Authorization: Bearer $secret_key" \
-            --header "apikey: $secret_key" \
-            "$base/rest/v1/profiles?normalized_name=eq.CODY&select=id,display_name" \
-            --output "$profile_file"
-
-          profile_id=$(node - "$profile_file" <<'NODE'
-          const fs = require('fs');
-          const rows = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
-          if (!Array.isArray(rows) || rows.length !== 1 || !rows[0]?.id) process.exit(1);
-          process.stdout.write(rows[0].id);
-          NODE
-          )
-
-          curl --fail --silent --show-error \
-            --header "Authorization: Bearer $secret_key" \
-            --header "apikey: $secret_key" \
-            "$base/auth/v1/admin/users/$profile_id" \
-            --output "$user_file"
-
-          internal_email=$(node - "$user_file" <<'NODE'
-          const fs = require('fs');
-          const user = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
-          if (!user?.id || !user?.email) process.exit(1);
-          process.stdout.write(user.email);
-          NODE
-          )
-
-          token_status=$(curl --silent --show-error \
-            --output "$token_file" \
-            --write-out "%{http_code}" \
-            --request POST \
-            --header "Authorization: Bearer $secret_key" \
-            --header "apikey: $secret_key" \
-            --header "Content-Type: application/json" \
-            --data "$(node -e 'process.stdout.write(JSON.stringify({type:"magiclink",email:process.argv[1]}))' "$internal_email")" \
-            "$base/auth/v1/admin/generate_link")
-
-          node - "$state_file" "$user_file" "$token_file" "$token_status" <<'NODE'
-          const fs = require('fs');
-          const rows = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
-          const user = JSON.parse(fs.readFileSync(process.argv[3], 'utf8'));
-          const tokenBody = JSON.parse(fs.readFileSync(process.argv[4], 'utf8'));
-          const tokenStatus = Number(process.argv[5]);
-          const state = Array.isArray(rows) ? rows[0] : null;
-          if (!state?.profile_exists) throw new Error('CODY profile row is missing.');
-          if (!state?.credential_exists) throw new Error('CODY PIN credential row is missing.');
-          if (!user?.id) throw new Error('CODY Auth user is missing.');
-          console.log('CODY profile row: present');
-          console.log('CODY credential row: present');
-          console.log('CODY Auth user: present');
-          console.log(`CODY email confirmed: ${Boolean(user.email_confirmed_at)}`);
-          console.log(`CODY banned: ${Boolean(user.banned_until && new Date(user.banned_until) > new Date())}`);
-          console.log(`CODY failed attempts: ${Number(state.failed_attempts ?? 0)}`);
-          console.log(`CODY currently locked: ${Boolean(state.locked)}`);
-          console.log(`CODY retry after seconds: ${Number(state.retry_after_seconds ?? 0)}`);
-          if (tokenStatus !== 200 || !tokenBody?.properties?.hashed_token) {
-            const safeCode = tokenBody?.code ?? tokenBody?.error_code ?? 'unknown';
-            const safeMessage = String(tokenBody?.msg ?? tokenBody?.message ?? tokenBody?.error_description ?? 'unknown error')
-              .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, '[redacted-email]');
-            throw new Error(`CODY session-token generation failed: HTTP ${tokenStatus}, code ${safeCode}, message ${safeMessage}`);
-          }
-          console.log('CODY session-token generation: available');
-          NODE
+      - name: Inspect CODY without reading or testing the PIN
+        run: node scripts/diagnose-cody-profile.mjs
