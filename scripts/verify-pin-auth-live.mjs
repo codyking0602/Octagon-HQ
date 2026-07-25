@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import { webkit } from "playwright";
 
 const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
@@ -53,6 +54,14 @@ const secretKey = keys.find((item) => item.type === "secret")?.api_key
 
 if (!publishableKey || !secretKey) {
   throw new Error("Project keys: required keys are unavailable.");
+}
+
+if (process.env.PUBLIC_CONFIG_PATH) {
+  fs.writeFileSync(
+    process.env.PUBLIC_CONFIG_PATH,
+    `VITE_SUPABASE_URL=${supabaseOrigin}\nVITE_SUPABASE_PUBLISHABLE_KEY=${publishableKey}\n`,
+    { mode: 0o600 },
+  );
 }
 
 const serviceHeaders = {
@@ -114,7 +123,6 @@ try {
     },
   );
 
-  // Prove the deployed backend contract before exercising browser CORS and the UI.
   const login = await request(
     "Direct live PIN login",
     `${supabaseOrigin}/functions/v1/pin-auth`,
