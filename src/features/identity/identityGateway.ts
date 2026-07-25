@@ -25,9 +25,36 @@ const pinAuthResponseSchema = z.object({
   tokenHash: z.string().min(1),
 });
 
+const functionErrorBodySchema = z.object({
+  message: z.string().min(1),
+});
+
 function readableError(error: unknown) {
   if (error instanceof Error && error.message) return error.message;
   return "Octagon HQ could not complete that request.";
+}
+
+function responseContext(error: unknown): Response | null {
+  if (!error || typeof error !== "object" || !("context" in error)) return null;
+  const context = (error as { context?: unknown }).context;
+  return typeof Response !== "undefined" && context instanceof Response ? context : null;
+}
+
+export async function readFunctionErrorMessage(error: unknown) {
+  const context = responseContext(error);
+  if (context) {
+    try {
+      const body = functionErrorBodySchema.safeParse(await context.clone().json());
+      if (body.success) return body.data.message;
+    } catch {
+      // Fall through to the SDK or platform error below.
+    }
+
+    const platformCode = context.headers.get("sb-error-code");
+    if (platformCode) return `Profile service error (${platformCode}).`;
+  }
+
+  return readableError(error);
 }
 
 export function createIdentityGateway(): IdentityGateway | null {
@@ -40,7 +67,7 @@ export function createIdentityGateway(): IdentityGateway | null {
       body: { action, displayName, pin },
     });
 
-    if (error) throw new Error(readableError(error));
+    if (error) throw new Error(await readFunctionErrorMessage(error));
     const parsed = pinAuthResponseSchema.safeParse(data);
     if (!parsed.success) throw new Error("Octagon HQ received an invalid login response.");
 
