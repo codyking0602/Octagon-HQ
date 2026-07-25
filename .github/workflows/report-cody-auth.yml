@@ -1,0 +1,101 @@
+name: Report CODY Auth Diagnosis
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/report-cody-auth.yml"
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  report:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Post sanitized CODY Auth result
+        uses: actions/github-script@v7
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        with:
+          script: |
+            const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
+            const projectId = process.env.SUPABASE_PROJECT_ID;
+            const requestJson = async (url, options = {}) => {
+              const response = await fetch(url, options);
+              const text = await response.text();
+              let body = {};
+              try { body = text ? JSON.parse(text) : {}; } catch { body = { message: text }; }
+              return { response, body };
+            };
+
+            const keysResult = await requestJson(
+              `https://api.supabase.com/v1/projects/${projectId}/api-keys?reveal=true`,
+              { headers: { Authorization: `Bearer ${accessToken}` } },
+            );
+            if (!keysResult.response.ok) throw new Error(`API key lookup failed: ${keysResult.response.status}`);
+            const keys = keysResult.body;
+            const secretKey = keys.find((item) => item.type === "secret")?.api_key
+              ?? keys.find((item) => item.type === "legacy" && /service.role/i.test(item.name ?? ""))?.api_key;
+            if (!secretKey) throw new Error("Secret key unavailable.");
+
+            const base = `https://${projectId}.supabase.co`;
+            const headers = {
+              Authorization: `Bearer ${secretKey}`,
+              apikey: secretKey,
+              "Content-Type": "application/json",
+            };
+
+            const stateResult = await requestJson(`${base}/rest/v1/rpc/inspect_profile_pin_state`, {
+              method: "POST",
+              headers,
+              body: JSON.stringify({ p_display_name: "CODY" }),
+            });
+            const state = Array.isArray(stateResult.body) ? stateResult.body[0] : null;
+
+            const profileResult = await requestJson(`${base}/rest/v1/profiles?normalized_name=eq.CODY&select=id`, { headers });
+            const profile = Array.isArray(profileResult.body) ? profileResult.body[0] : null;
+            if (!profile?.id) throw new Error("CODY profile missing.");
+
+            const userResult = await requestJson(`${base}/auth/v1/admin/users/${profile.id}`, { headers });
+            const user = userResult.body;
+            if (!user?.id || !user?.email) throw new Error("CODY Auth user missing or incomplete.");
+
+            const tokenResult = await requestJson(`${base}/auth/v1/admin/generate_link`, {
+              method: "POST",
+              headers,
+              body: JSON.stringify({ type: "magiclink", email: user.email }),
+            });
+
+            const code = tokenResult.body?.code ?? tokenResult.body?.error_code ?? "none";
+            const message = String(
+              tokenResult.body?.msg
+                ?? tokenResult.body?.message
+                ?? tokenResult.body?.error_description
+                ?? (tokenResult.body?.properties?.hashed_token ? "available" : "unknown"),
+            ).replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, "[redacted-email]");
+
+            const lines = [
+              "### Temporary CODY Auth diagnosis",
+              `- Profile row: ${state?.profile_exists ? "present" : "missing"}`,
+              `- Credential row: ${state?.credential_exists ? "present" : "missing"}`,
+              `- Auth user: ${user?.id ? "present" : "missing"}`,
+              `- Email confirmed: ${Boolean(user?.email_confirmed_at)}`,
+              `- Banned: ${Boolean(user?.banned_until && new Date(user.banned_until) > new Date())}`,
+              `- Failed PIN attempts: ${Number(state?.failed_attempts ?? 0)}`,
+              `- PIN lock active: ${Boolean(state?.locked)}`,
+              `- Session-token HTTP status: ${tokenResult.response.status}`,
+              `- Supabase Auth code: ${code}`,
+              `- Sanitized message: ${message}`,
+            ];
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: lines.join("\n"),
+            });
