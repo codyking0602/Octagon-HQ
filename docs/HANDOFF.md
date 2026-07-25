@@ -1,68 +1,120 @@
 # Octagon HQ V2 — Current Handoff
 
-_Last updated: 2026-07-24_
+_Last updated: 2026-07-25_
 
 This is the authoritative cold-start handoff for continuing Octagon HQ V2. Read this file, `docs/product-blueprint.md`, `docs/RANKINGS-MIGRATION.md`, `docs/rankings-parity-contract.md`, `docs/intelligence-verdict-flow.md`, and `docs/octagon-verdict-export.md`, then inspect current `main` before editing.
 
-## Repositories and live apps
-
-### V1 — legacy production reference
-
-- Repository: `codyking0602/ufc-goat-rankings`
-- Live URL: `https://codyking0602.github.io/ufc-goat-rankings/`
-- Pinned ranking-migration reference: `842ba06ea09c4f40723226f4c4dfd35041cb3314`
-- Keep V1 alive as the current visual, feature, asset, and rollback reference.
-- Do not resume structural cleanup or broad feature development in V1.
-
-### V2 — clean rebuild
+## Repository and production
 
 - Repository: `codyking0602/Octagon-HQ`
 - Production branch: `main`
-- Live Cloudflare URL: `https://app.octagon-hq.workers.dev`
-- Rankings URL: `https://app.octagon-hq.workers.dev/rankings`
+- Live app: `https://octagon.hq-app.workers.dev`
+- `main` is the live source of truth.
+- The legacy V1 repository, `codyking0602/ufc-goat-rankings`, is reference-only and must not be edited during V2 work.
+- Always verify the current `main` SHA before creating a feature branch.
 
-## Critical ranking status
+## Working standard
 
-The disposable ten-fighter ranking scaffold has been removed.
+Use:
 
-V2 contains the complete 80-fighter UFC-only ranking model:
+> One owner. One purpose. Small diff. Focused test. Exact-head green. Then merge.
 
-- 65-fighter Overall board;
-- 15-fighter Women board;
-- typed canonical fight facts and approved calculation inputs;
-- pure TypeScript calculations for Championship, Opponent Quality, Prime Dominance, Longevity, Peak Apex, Loss Context, and Era Depth;
-- calculated weighted totals, tie breakers, board ranks, and OVRs;
-- calculated visible stats and direct fighter-profile routes;
-- exact V1 production-output parity tests for every fighter.
+For every production slice:
 
-`src/features/rankings/rankingData.ts` no longer exists. Never recreate a hand-written ranking array or manually enter ranks, scores, or OVRs in presentation data.
+1. Start from current `main`.
+2. Create one new branch for one narrow purpose.
+3. Open a draft PR.
+4. Inspect and preserve the existing canonical owner.
+5. Add focused tests.
+6. Require the exact PR head to pass typecheck, the full test suite, and the production build.
+7. Deploy the exact PR head when live testing is required.
+8. Phone-test user-facing changes.
+9. Never merge without Cody explicitly approving that PR with the word `merge`.
+
+Do not use old branches, temporary workflows, duplicate providers, local fallbacks, competing query paths, or V1 runtime assumptions.
+
+## Canonical application owners
+
+- `src/main.tsx` — one application entry.
+- `src/app/App.tsx` — one startup/readiness owner.
+- `src/app/router.tsx` — one routing owner.
+- `src/lib/supabase.ts` — one Supabase client.
+- `src/features/identity/IdentityProvider.tsx` — identity/session owner.
+- `src/features/challenges/ChallengeProvider.tsx` — challenge state owner.
+- `src/features/play/FindLeaderHistoryProvider.tsx` — Find the Leader history owner.
+- `src/features/profile/ProfilePreferencesProvider.tsx` — profile preferences owner.
+- `src/features/picks/PicksProvider.tsx` — current Picks event, selections, and season-summary owner.
+- The ranking engine and calculated ranking model remain the only ranking-calculation owners.
+
+Consumers use provider state and canonical repository functions. They must not independently resolve identity, duplicate Supabase queries, read a local fallback, or publish competing readiness.
+
+## Current production product
+
+The following are complete and merged:
+
+- React, TypeScript, and Vite V2 application.
+- Branded startup and route-level lazy loading.
+- One startup/readiness owner, router owner, and Supabase client owner.
+- Profile/PIN authentication with cross-device signed-in profiles.
+- Complete 80-fighter UFC-only calculated ranking model.
+- Men’s and Women’s boards.
+- Divisions, Categories, search, and curated era filtering.
+- Full calculated fighter profiles for all 80 fighters.
+- Real local fighter photos and audited Signature Fight links.
+- Intelligence / Octagon Verdict handoff.
+- Compare and Ask Why handoffs into Intelligence.
+- Six Play games.
+- Challenge Center with profile-backed challenges.
+- Profile-backed Find the Leader history and streaks.
+- Profile-backed favorite fighter.
+- Profile-backed open-challenge count.
+- Profile-backed UFC Picks.
+- Public current UFC event and six-fight main-card Picks data.
+- Cross-device pick selections.
+- Database-enforced Picks lock and fighter validation.
+- Picks season record on Your HQ.
+- Home Next UFC Event / Picks card.
+- Stale Vite chunk recovery.
+- Branded route-error handling.
+- Fresh SPA shells served with `Cache-Control: no-cache`.
+
+## Your HQ
+
+Your HQ is profile-backed and currently contains:
+
+- Daily streak.
+- Current Picks record.
+- Favorite fighter.
+- Open challenges.
+- One intelligent next action.
+
+Home and the feature routes consume existing providers. Your HQ does not own a second profile, challenge, history, preference, or Picks query path.
 
 ## Ranking ownership
 
+The disposable ten-fighter scaffold and hand-written ranking array are gone.
+
 - `src/features/rankings/data/generated/canonical-ranking-inputs-842ba06e.json`
-  - complete captured canonical inputs for all 80 fighters;
-  - contains facts, shared era settings, approved judgment inputs, era-depth inputs, and presentation metadata;
-  - must not contain final ranks, OVRs, totals, or frozen category scores.
+  - complete canonical facts and approved inputs for all 80 fighters;
+  - no frozen ranks, totals, category scores, or OVRs.
 - `src/features/rankings/data/rankingInputs.ts`
-  - strict Zod validation and dataset reconciliation owner.
+  - strict validation and dataset reconciliation.
 - `src/features/rankings/engine/categoryCalculators.ts`
-  - pure owner of the seven approved category/modifier calculations.
+  - pure category calculations.
 - `src/features/rankings/engine/rankingEngine.ts`
-  - pure owner of weighting, totals, tie breakers, ranks, and fixed-anchor OVR projection.
+  - weighting, totals, tie breakers, ranks, and anchored OVR projection.
 - `src/features/rankings/engine/eraWindow.ts`
-  - audited exact/one-day date resolution matching V1 production behavior.
+  - audited date-window behavior.
 - `src/features/rankings/rankingModel.ts`
-  - single app-facing calculated projection and profile lookup owner.
+  - one app-facing calculated projection and profile lookup owner.
 - `src/features/rankings/engine/__fixtures__/v1-production-output-842ba06e.json`
-  - pinned V1 production-output oracle; never use it as runtime app data.
-- `scripts/capture-v1-ranking-inputs.mjs`
-  - deterministic pinned-V1 input capture.
-- `.github/workflows/capture-v1-ranking-inputs.yml`
-  - single reproducible capture workflow owner.
+  - pinned parity oracle only; never runtime data.
 
-## Current production ranking order
+Never recreate `src/features/rankings/rankingData.ts`, manually reorder fighters, or enter presentation-only ranks and OVRs. Change approved canonical facts or judgment inputs and let the engine recalculate.
 
-The model—not a hand-written list—produces the current men's top ten:
+## Current men’s top ten
+
+The calculated model currently produces:
 
 1. Jon Jones
 2. Georges St-Pierre
@@ -75,125 +127,159 @@ The model—not a hand-written list—produces the current men's top ten:
 9. Kamaru Usman
 10. Max Holloway
 
-Do not reorder fighters manually. Change approved facts or judgment inputs, then let the model recalculate.
-
-## Rankings and fighter-profile product status
-
-The calculation migration and the approved mobile Rankings/profile presentation are complete.
-
-Locked decisions:
-
-1. `/fighters/:slug` is the canonical profile route. Mobile uses a full-screen profile; a routed desktop right-side drawer remains a later enhancement.
-2. Leaderboard rows remain compact and uniform: rank, real fighter photo, name, UFC record, division, OVR, and one isolated Watch Moment action.
-3. Category ratings and explanations belong in fighter profiles and Category boards, not a six-chip wall on every leaderboard row.
-4. Preserve P4P, Women, Divisions, Categories, search, and curated era filtering.
-5. Do not invent rank-movement presentation until real movement data exists.
-6. Fighter profiles preserve Compare, Ask Why, Watch Fight, Share, Resume Snapshot, six category cards, Why Ranked Here, and Why Not Ranked Higher/Lower.
-7. All 80 Signature Fight destinations are direct, audited public YouTube links; UFC Fight Pass search links are excluded.
-
 ## Intelligence and Octagon Verdict
 
-Intelligence is a zero-cost handoff to the user's Octagon Verdict GPT, not an in-app AI or statistical Compare engine.
+Intelligence is a zero-cost handoff to the user’s Octagon Verdict GPT, not a second in-app ranking or comparison engine.
 
-Locked behavior:
-
-- Primary navigation is Home, Rankings, Play, and Picks until permission-aware War Room exists.
-- Intelligence is opened from the persistent top question-mark / Ask Octagon Verdict control.
+- The persistent question-mark control opens Intelligence.
+- Fighter Compare opens Intelligence with the source fighter selected.
+- Ask Why copies a question grounded in the current calculated rank.
+- Direct UFC fight history is context only and never overrides the calculated model.
 - Unauthorized users must not see a fake, disabled, or discoverable War Room destination.
-- Fighter-profile Compare opens Intelligence with the source fighter selected and the opponent control focused.
-- Fighter-profile Ask Why copies a current calculated-rank question and opens a visible FROM FIGHTER PROFILE context card.
-- Copy & Open Verdict is the primary action; visible prompt text and a separate copy control remain as fallbacks.
-- Ordinary matchup prompts stay short. Octagon Verdict's own instructions own verdict-first structure, counterarguments, and better-fighter versus better-UFC-resume framing.
-- Do not build a second in-app comparison calculation path.
+- Primary navigation remains Home, Rankings, Play, and Picks until permission-aware War Room ownership is built.
 
-### V2 export ownership
+## Fighter assets
 
-- `src/features/intelligence/octagonVerdictExport.ts` packages the existing calculated V2 owners; it does not recalculate rankings.
-- `scripts/export-octagon-verdict.mjs` owns the local `npm run export:verdict` command.
-- `.github/workflows/export-octagon-verdict.yml` builds, validates, and uploads the package for relevant pull requests, relevant changes on `main`, and manual runs.
-- The package contains the master JSON feed, compact index, 80 fighter files, calculated division boards, derived direct-matchup files, and `octagon-verdict-knowledge.md` for manual Custom GPT upload.
-- Direct UFC matchups are derived from canonical fight facts and reconciled by fighter pair and date. Head-to-head results are context only and never override the higher calculated total score.
-- `artifacts/` is ignored. Generated packages are outputs, not a second editable source.
-- V1 no longer owns the Octagon Verdict export pipeline.
+- `public/assets/app-icon.png` owns the app icon.
+- `public/assets/fighters/` owns one thumbnail and one profile WebP for each ranked fighter.
+- `src/config/brand.ts` owns local asset paths.
+- Tests reconcile the 80-fighter set to exactly 160 local fighter WebPs and reject external photo URLs.
+- Preserve real source photographs. Only crop, resize, recenter, lightly sharpen, clean framing, and convert to WebP unless Cody explicitly requests an AI-generated edit.
 
-## Local fighter asset ownership
+## Canonical deployment owners
 
-V2 owns the real Octagon HQ logo and all ranked-fighter images locally:
+- `.github/workflows/deploy-supabase.yml`
+  - owns Supabase migrations, Edge Function deployment, and remote backend verification.
+- `.github/workflows/verify-supabase-backend.yml`
+  - owns independent PR/backend credential, migration, function, and production-CORS verification.
+- `.github/workflows/deploy-cloudflare.yml`
+  - owns the production frontend build, Worker deployment, exact-SHA marker, and live-bundle verification.
+- `.github/workflows/deploy-pr-head.yml`
+  - owns only the trusted label-to-canonical-workflow handoff. It contains no checkout or deployment commands.
 
-- `public/assets/app-icon.png` owns the app icon;
-- `public/assets/fighters/` contains one 160x160 thumbnail and one profile WebP for each of the 80 ranked fighters;
-- `src/config/brand.ts` owns the local asset base;
-- automated tests reconcile the calculated fighter set to exactly 160 valid local WebP files and reject external fighter-photo URLs;
-- source photographs are preserved exactly; crop, resize, recenter, light sharpening, and WebP conversion remain the only allowed processing unless Cody explicitly requests an AI-generated edit;
-- V1 no longer serves any runtime V2 image asset.
+Pushes to `main` continue to trigger the canonical production deploy workflows automatically.
 
-## Architecture rules
+## Feature-branch deployment process
 
-- `src/main.tsx`: one application entry.
-- `src/app/App.tsx`: one startup/readiness owner.
-- `src/app/router.tsx`: one routing owner.
-- `src/lib/supabase.ts`: one Supabase client owner.
-- Future auth: exactly one session/identity provider.
-- `src/styles/tokens.css`: one semantic design-token source.
-- No global script-order architecture.
-- No duplicate initialization, fallback, recovery, ranking, comparison, or export owner.
-- Build in small vertical slices with focused tests.
-- Add fighters in small batches only after the current 80-fighter source and update workflow are explicitly extended.
+For an open same-repository PR targeting `main`:
 
-## Locked product requirements
+- Apply `deploy-backend` to deploy the exact current PR head through `deploy-supabase.yml`.
+- Apply `deploy-frontend` to deploy the exact current PR head through `deploy-cloudflare.yml`.
+- The broker freezes the event head SHA, re-fetches the PR, and rejects closed PRs, moved heads, forks, non-`main` targets, or missing trigger labels.
+- The canonical workflow re-fetches the PR and revalidates the frozen SHA before checking out code or using deployment credentials.
+- Checkout uses the exact commit SHA with persisted GitHub credentials disabled.
+- Production-target concurrency prevents overlapping backend or frontend deployments.
+- The Cloudflare build writes `deployment.json`; the live verifier must read the same SHA from production in addition to preserving all existing bundle-marker checks.
+- The Supabase workflow verifies the exact checkout, remote migrations, deployed function, live function contract, and production CORS.
+- The trigger label is removed after success or failure so the same explicit action can be used again.
+- The workflow never merges the PR.
+- Deployment labels are created automatically by the broker when the workflow lands on `main`.
 
-- Fresh launch opens Home, never Picks.
+Cody should not need to open GitHub Actions for feature deployments. The assistant can apply the labels through the connected GitHub tools, inspect runs and logs, and report the exact deployed SHA.
+
+## Security boundary
+
+The label broker runs from the protected/default-branch workflow definition and never checks out PR code.
+
+Secrets are available only to the existing canonical deployment workflows after:
+
+1. the PR is confirmed open;
+2. the PR targets `main`;
+3. the head repository exactly matches `codyking0602/Octagon-HQ`; and
+4. the current PR head still equals the frozen labeled-event SHA.
+
+Fork PRs and moved heads are rejected before deployment. PR build commands do not receive Cloudflare or Supabase administrative credentials. Dependency lifecycle scripts are disabled during the Cloudflare deployment install.
+
+## Product rules
+
+- UFC-only unless Cody explicitly says otherwise.
+- Fresh launches always open Home, never Picks.
 - War Room remains completely undiscoverable to unauthorized users.
-- Public copy says `Octagon HQ`; never expose internal development terminology.
-- Home retains the compact Your HQ card with Daily streak, Current Picks record, Favorite fighter, Open challenges, and one intelligent next action.
-- True black owns canvas/safe areas/navigation; charcoal owns cards and controls; white owns primary information; gray owns support information; UFC red is restrained emphasis.
+- No War Room card belongs on Home.
+- Public copy says `Octagon HQ`.
+- True black owns the canvas, safe areas, and navigation.
+- Charcoal owns cards and controls.
+- White owns primary information.
+- Gray owns supporting information.
+- UFC red is restrained emphasis.
+- Home should be personalized and useful, not an endless dashboard.
+- Avoid duplicate calls to action and oversized cards without dominant content.
 
-## Current implementation status
+## Remaining roadmap
 
-### Complete
+### Lower Home experience
 
-- React/TypeScript/Vite application shell.
-- One startup owner, router owner, and Supabase client factory.
-- Branded boot experience and route-level lazy loading.
-- Cloudflare Workers static-asset deployment with clean SPA routes.
-- Home foundation and calculated top-three preview.
-- Complete 80-fighter ranking input dataset and pure calculation engine.
-- Exact category, modifier, total, rank, OVR, visible-stat, and board-order parity with pinned V1 production.
-- Compact P4P and Women boards, Divisions, Categories, search, and curated era filtering.
-- Direct calculated fighter profiles for all 80 fighters.
-- Full approved profile presentation and audited Signature Fight destinations.
-- Final Intelligence/Octagon Verdict gateway, profile Compare handoff, and Ask Why handoff.
-- Native V2 Octagon Verdict JSON/Markdown exporter and reproducible artifact workflow.
-- Local V2 ownership of the app icon and all 160 ranked-fighter image files.
-- Disposable static ranking source deleted.
+Final intended Home order:
 
-### Not complete
+1. Your HQ.
+2. Next UFC Event / Picks.
+3. Compact daily Play or active-challenge status.
+4. Compact Ranking Spotlight.
+5. Shane’s Fighters to Watch — collapsed by default.
+6. Member Profiles — collapsed by default.
 
-- Routed desktop profile drawer.
-- Real Home personalization, onboarding, favorite fighter, Top 10/profile-photo reminders, and persistence.
-- Play games, Challenge Center, Picks, event recaps, authentication, profiles, permission-aware War Room, mentions, notifications, and final sharing/installability cutover.
+Ranking Spotlight should evolve the existing Top of the Board area rather than creating redundant ranking cards.
+
+Shane’s Fighters to Watch is structured Intelligence/editorial content, never a screenshot of notes or messages.
+
+Member Profiles should remain a compact preview on Home; the full directory belongs on its own screen.
+
+### Picks lifecycle and recaps
+
+- Record official bout winners through one canonical backend owner.
+- Recalculate profile Picks records from canonical results.
+- Show completed-event recaps and correct/incorrect picks.
+- Preserve event history.
+- Add and retire future events through one defined backend process.
+- Do not scrape or guess results in the browser.
+
+### Activity automation
+
+Create meaningful update cards only for:
+
+- new fighters;
+- ranking movement of at least three positions;
+- new games;
+- completed Picks event recaps;
+- new Fighters to Watch entries.
+
+Move temporary updates to archive after seven days and remove them after fifteen days unless they represent durable history owned elsewhere.
+
+### Onboarding and profile completion
+
+Use compact contextual reminders for:
+
+- completing a Top 10;
+- adding a profile photo;
+- choosing a favorite fighter;
+- other meaningful profile details.
+
+Do not build a mandatory multi-screen onboarding wall.
+
+### Permission-aware War Room
+
+- Completely hidden for signed-out and unauthorized users.
+- No disabled War Room button or fake destination.
+- Eligible signed-in profiles may see it in the appropriate navigation.
+- Invite-only users receive a clear `Join with invite` state.
+- Mentions and notifications come only after permission ownership is proven.
+
+### Sharing, installability, and cutover
+
+Later work includes consistent native sharing, clean deep links, PWA/installability review, carefully owned notifications, and final V2 cutover decisions.
 
 ## Validation standard
 
-Every production slice:
+Every production PR requires the exact final head to pass:
 
-1. Start from current `main`.
-2. Use one branch and one purpose.
-3. Make the smallest complete vertical change.
-4. Add focused tests.
-5. Require the exact PR head to pass `npm run typecheck`, `npm test`, and `npm run build`.
-6. Merge only after green.
-7. Confirm Cloudflare production deployment when the app bundle changes.
-8. Phone-test the exact live build when the user-facing app changes.
+- `npm run typecheck`;
+- `npm test`;
+- `npm run build`.
 
-Exporter changes additionally require a successful `Export Octagon Verdict V2 Package` workflow and inspection of the generated artifact.
+Relevant deployment and export workflows must also be green. Never describe a PR as deployed, verified, green, or merged without checking the exact current head.
 
 ## Next safe action
 
-Begin real Home personalization and onboarding: Daily streak, Current Picks record, Favorite fighter, Open challenges, and the locked Top 10/profile-photo setup reminders.
+Finish and merge the deployment-automation PR first. Do not begin another product feature before that PR is explicitly approved and merged.
 
-Keep the routed desktop profile drawer as a later Rankings enhancement; the current mobile full-screen profile and canonical `/fighters/:slug` route remain approved.
-
-## New-chat starter prompt
-
-> Continue the Octagon HQ V2 rebuild from current `main` in `codyking0602/Octagon-HQ`. First read `docs/HANDOFF.md`, `docs/product-blueprint.md`, `docs/RANKINGS-MIGRATION.md`, `docs/rankings-parity-contract.md`, `docs/intelligence-verdict-flow.md`, and `docs/octagon-verdict-export.md`, then inspect current `main`. The complete 80-fighter calculation migration, compact Rankings controls, full fighter profiles, audited Signature Fight links, final Intelligence handoff, native V2 Octagon Verdict exporter, and complete local fighter-asset ownership are complete. Compare and Ask Why are prompt handoffs into Intelligence—not a standalone in-app comparison engine. Do not recreate static ranking ownership, duplicate comparison calculations, generated export data as source, or V1's global runtime architecture. The next safe milestone is real Home personalization and onboarding; the desktop profile drawer remains a later Rankings enhancement.
+After deployment automation is active and proven, begin the lower Home experience on a new branch and separate draft PR.
