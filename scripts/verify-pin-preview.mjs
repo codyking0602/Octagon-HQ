@@ -12,7 +12,6 @@ const branchSlug = headBranch
   .replace(/^-+|-+$/g, "");
 const previewOrigin = `https://${branchSlug}-octagon.hq-app.workers.dev`;
 const supabaseOrigin = `https://${projectId}.supabase.co`;
-const proxyBase = `${previewOrigin}/api/supabase/${projectId}`;
 
 const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
@@ -50,9 +49,7 @@ async function requestJson(stage, url, options = {}) {
 async function requireOk(stage, url, options, expectedStatus = 200) {
   const result = await requestJson(stage, url, options);
   if (result.response.status !== expectedStatus) {
-    throw new Error(
-      `${stage}: HTTP ${result.response.status}; ${safeMessage(result.body)}`,
-    );
+    throw new Error(`${stage}: HTTP ${result.response.status}; ${safeMessage(result.body)}`);
   }
   return result;
 }
@@ -103,6 +100,23 @@ const secretKey = keys.find((item) => item.type === "secret")?.api_key
   ?? keys.find((item) => item.type === "legacy" && /service.role/i.test(item.name ?? ""))?.api_key;
 
 if (!publishableKey || !secretKey) throw new Error("Project keys: required keys are unavailable.");
+
+const functionUrl = `${supabaseOrigin}/functions/v1/pin-auth`;
+const preflight = await requireOk(
+  "Preview-origin PIN preflight",
+  functionUrl,
+  {
+    method: "OPTIONS",
+    headers: {
+      Origin: previewOrigin,
+      "Access-Control-Request-Method": "POST",
+      "Access-Control-Request-Headers": "authorization, apikey, content-type, x-client-info",
+    },
+  },
+);
+if (preflight.response.headers.get("access-control-allow-origin") !== previewOrigin) {
+  throw new Error("Preview-origin PIN preflight: Edge Function did not allow the branch-preview origin.");
+}
 
 const serviceHeaders = {
   Authorization: `Bearer ${secretKey}`,
@@ -159,8 +173,8 @@ try {
   );
 
   const login = await requireOk(
-    "Live preview PIN login",
-    `${proxyBase}/functions/v1/pin-auth`,
+    "Direct preview-origin PIN login",
+    functionUrl,
     {
       method: "POST",
       headers: {
@@ -170,16 +184,16 @@ try {
       body: JSON.stringify({ action: "login", displayName, pin }),
     },
   );
-  if (login.response.headers.get("x-octagon-supabase-proxy") !== "1") {
-    throw new Error("Live preview PIN login: Worker proxy marker is missing.");
+  if (login.response.headers.get("access-control-allow-origin") !== previewOrigin) {
+    throw new Error("Direct preview-origin PIN login: response did not allow the branch-preview origin.");
   }
 
   const tokenHash = login.body?.tokenHash;
-  if (!tokenHash) throw new Error("Live preview PIN login: response did not include a token hash.");
+  if (!tokenHash) throw new Error("Direct preview-origin PIN login: response did not include a token hash.");
 
   const verified = await requireOk(
-    "Live preview session verification",
-    `${proxyBase}/auth/v1/verify`,
+    "Direct session verification",
+    `${supabaseOrigin}/auth/v1/verify`,
     {
       method: "POST",
       headers: {
@@ -189,17 +203,14 @@ try {
       body: JSON.stringify({ token_hash: tokenHash, type: "magiclink" }),
     },
   );
-  if (verified.response.headers.get("x-octagon-supabase-proxy") !== "1") {
-    throw new Error("Live preview session verification: Worker proxy marker is missing.");
-  }
   if (!verified.body?.access_token) {
-    throw new Error("Live preview session verification: no access token was returned.");
+    throw new Error("Direct session verification: no access token was returned.");
   }
   if (verified.body?.user?.id !== userId) {
-    throw new Error("Live preview session verification: session belongs to the wrong Auth user.");
+    throw new Error("Direct session verification: session belongs to the wrong Auth user.");
   }
 
-  console.log("PASS: the live branch preview completed direct PIN login and opened the UUID-linked Auth user despite a stale credential email.");
+  console.log("PASS: the branch preview can call pin-auth directly, receive its CORS-approved response, and open the UUID-linked Auth user despite a stale credential email.");
 } finally {
   if (userId) {
     await fetch(`${supabaseOrigin}/auth/v1/admin/users/${userId}`, {
