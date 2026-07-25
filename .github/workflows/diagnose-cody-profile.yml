@@ -1,0 +1,91 @@
+name: Diagnose CODY Profile
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/diagnose-cody-profile.yml"
+      - "supabase/migrations/202607280001_pin_auth_status.sql"
+      - "supabase/functions/pin-auth/**"
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+    steps:
+      - name: Inspect CODY profile without reading or testing the PIN
+        shell: bash
+        run: |
+          set -euo pipefail
+          keys_file="$RUNNER_TEMP/supabase-api-keys.json"
+          state_file="$RUNNER_TEMP/cody-pin-state.json"
+          profile_file="$RUNNER_TEMP/cody-profile.json"
+          user_file="$RUNNER_TEMP/cody-auth-user.json"
+          trap 'rm -f "$keys_file" "$state_file" "$profile_file" "$user_file"' EXIT
+
+          curl --fail --silent --show-error \
+            --header "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+            "https://api.supabase.com/v1/projects/${SUPABASE_PROJECT_ID}/api-keys?reveal=true" \
+            --output "$keys_file"
+
+          secret_key=$(node - "$keys_file" <<'NODE'
+          const fs = require('fs');
+          const keys = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+          const key = keys.find((item) => item.type === 'secret')
+            ?? keys.find((item) => item.type === 'legacy' && /service.role/i.test(item.name ?? ''));
+          if (!key?.api_key) process.exit(1);
+          process.stdout.write(key.api_key);
+          NODE
+          )
+
+          base="https://${SUPABASE_PROJECT_ID}.supabase.co"
+          curl --fail --silent --show-error \
+            --request POST \
+            --header "Authorization: Bearer $secret_key" \
+            --header "apikey: $secret_key" \
+            --header "Content-Type: application/json" \
+            --data '{"p_display_name":"CODY"}' \
+            "$base/rest/v1/rpc/inspect_profile_pin_state" \
+            --output "$state_file"
+
+          curl --fail --silent --show-error \
+            --header "Authorization: Bearer $secret_key" \
+            --header "apikey: $secret_key" \
+            "$base/rest/v1/profiles?normalized_name=eq.CODY&select=id,display_name" \
+            --output "$profile_file"
+
+          profile_id=$(node - "$profile_file" <<'NODE'
+          const fs = require('fs');
+          const rows = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+          if (!Array.isArray(rows) || rows.length !== 1 || !rows[0]?.id) process.exit(1);
+          process.stdout.write(rows[0].id);
+          NODE
+          )
+
+          curl --fail --silent --show-error \
+            --header "Authorization: Bearer $secret_key" \
+            --header "apikey: $secret_key" \
+            "$base/auth/v1/admin/users/$profile_id" \
+            --output "$user_file"
+
+          node - "$state_file" "$user_file" <<'NODE'
+          const fs = require('fs');
+          const rows = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+          const user = JSON.parse(fs.readFileSync(process.argv[3], 'utf8'));
+          const state = Array.isArray(rows) ? rows[0] : null;
+          if (!state?.profile_exists) throw new Error('CODY profile row is missing.');
+          if (!state?.credential_exists) throw new Error('CODY PIN credential row is missing.');
+          if (!user?.id) throw new Error('CODY Auth user is missing.');
+          console.log(`CODY profile row: present`);
+          console.log(`CODY credential row: present`);
+          console.log(`CODY Auth user: present`);
+          console.log(`CODY failed attempts: ${Number(state.failed_attempts ?? 0)}`);
+          console.log(`CODY currently locked: ${Boolean(state.locked)}`);
+          console.log(`CODY retry after seconds: ${Number(state.retry_after_seconds ?? 0)}`);
+          NODE
