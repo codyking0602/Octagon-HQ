@@ -6,7 +6,24 @@ const configSchema = z.object({
   publishableKey: z.string().min(1),
 });
 
+type BrowserLocation = Pick<Location, "hostname" | "origin">;
+
 let client: SupabaseClient | null | undefined;
+
+export function resolveSupabaseBrowserUrl(
+  configuredUrl: string,
+  browserLocation: BrowserLocation | null = typeof window === "undefined" ? null : window.location,
+) {
+  if (!browserLocation || !browserLocation.hostname.toLowerCase().endsWith(".hq-app.workers.dev")) {
+    return configuredUrl;
+  }
+
+  const configured = new URL(configuredUrl);
+  const projectMatch = /^([a-z0-9-]+)\.supabase\.co$/i.exec(configured.hostname);
+  if (!projectMatch) return configuredUrl;
+
+  return `${browserLocation.origin}/api/supabase/${projectMatch[1]}`;
+}
 
 export function getSupabaseClient(): SupabaseClient | null {
   if (client !== undefined) return client;
@@ -17,7 +34,7 @@ export function getSupabaseClient(): SupabaseClient | null {
   });
 
   client = parsed.success
-    ? createClient(parsed.data.url, parsed.data.publishableKey, {
+    ? createClient(resolveSupabaseBrowserUrl(parsed.data.url), parsed.data.publishableKey, {
         auth: {
           persistSession: true,
           autoRefreshToken: true,
