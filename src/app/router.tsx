@@ -13,7 +13,7 @@ const BlindResumePage = lazy(() => import("../features/play/BlindResumePage"));
 const BlindRankPage = lazy(() => import("../features/play/BlindRankPage"));
 const KeepCutPage = lazy(() => import("../features/play/KeepCutPage"));
 const BetterThanPage = lazy(() => import("../features/play/BetterThanPage"));
-const PlaceholderPage = lazy(() => import("../features/placeholders/PlaceholderPage"));
+const PicksPage = lazy(() => import("../features/picks/PicksPage"));
 
 export const appRoutes: RouteObject[] = [
   {
@@ -31,7 +31,7 @@ export const appRoutes: RouteObject[] = [
       { path: "play/blind-rank", element: <BlindRankPage /> },
       { path: "play/keep-cut", element: <KeepCutPage /> },
       { path: "play/better-than", element: <BetterThanPage /> },
-      { path: "picks", element: <PlaceholderPage title="Picks" eyebrow="EVENT PICKS" /> },
+      { path: "picks", element: <PicksPage /> },
       { path: "*", element: <Navigate to="/" replace /> },
     ],
   },
