@@ -141,34 +141,86 @@ jobs:
         run: |
           set -euo pipefail
           live_assets_dir="$RUNNER_TEMP/octagon-live-assets"
-          mkdir -p "$live_assets_dir"
+          bundle_file="$RUNNER_TEMP/octagon-all-live.js"
+          markers=(
+            "SIGN IN"
+            "identity-overlay--viewport"
+            "NO PROFILE FOUND WITH THAT EXACT NAME"
+            "SIGN IN TO CHALLENGE"
+            "SIGN IN TO YOUR HQ"
+            "PROFILE PICKS NEXT"
+            "list_my_find_leader_history"
+            "set_my_favorite_fighter"
+          )
 
-          found_assets=0
-          for local_asset in dist/assets/*.js; do
-            asset_name=$(basename "$local_asset")
-            curl --fail --silent --show-error \
-              --header "Cache-Control: no-cache" \
-              "${OCTAGON_PRODUCTION_URL}/assets/${asset_name}?deployment=${GITHUB_SHA}" \
-              --output "$live_assets_dir/$asset_name"
-            found_assets=$((found_assets + 1))
+          verify_live_assets() {
+            local attempt="$1"
+            local found_assets=0
+            local missing_marker=""
+
+            rm -rf "$live_assets_dir"
+            mkdir -p "$live_assets_dir"
+
+            for local_asset in dist/assets/*.js; do
+              asset_name=$(basename "$local_asset")
+              live_asset="$live_assets_dir/$asset_name"
+
+              if ! curl --fail --silent --show-error \
+                --header "Cache-Control: no-cache" \
+                "${OCTAGON_PRODUCTION_URL}/assets/${asset_name}?deployment=${GITHUB_SHA}&attempt=${attempt}" \
+                --output "$live_asset"; then
+                echo "Live asset $asset_name is not available yet."
+                return 1
+              fi
+
+              if grep -Fqi "<!doctype html" "$live_asset"; then
+                echo "Live asset $asset_name still resolves to the SPA fallback."
+                return 1
+              fi
+
+              found_assets=$((found_assets + 1))
+            done
+
+            if [ "$found_assets" -lt 1 ]; then
+              echo "No JavaScript assets were available for verification."
+              return 1
+            fi
+
+            cat "$live_assets_dir"/*.js > "$bundle_file"
+
+            for marker in "${markers[@]}"; do
+              if ! grep -Fq "$marker" "$bundle_file"; then
+                missing_marker="$marker"
+                break
+              fi
+            done
+
+            if [ -n "$missing_marker" ]; then
+              echo "Live bundle is not current yet; missing marker: $missing_marker"
+              return 1
+            fi
+
+            return 0
+          }
+
+          verified=0
+          for attempt in $(seq 1 12); do
+            if verify_live_assets "$attempt"; then
+              verified=1
+              break
+            fi
+
+            if [ "$attempt" -lt 12 ]; then
+              echo "Waiting for Cloudflare asset propagation (attempt $attempt of 12)..."
+              sleep 5
+            fi
           done
 
-          if [ "$found_assets" -lt 1 ]; then
-            echo "::error title=Live frontend verification failed::No JavaScript assets were available for verification."
+          if [ "$verified" -ne 1 ]; then
+            echo "::error title=Live frontend verification failed::The current deployment did not become available across the production asset route after 12 attempts."
             exit 1
           fi
 
-          cat "$live_assets_dir"/*.js > "$RUNNER_TEMP/octagon-all-live.js"
-          bundle_file="$RUNNER_TEMP/octagon-all-live.js"
-
-          grep -Fq "SIGN IN" "$bundle_file"
-          grep -Fq "identity-overlay--viewport" "$bundle_file"
-          grep -Fq "NO PROFILE FOUND WITH THAT EXACT NAME" "$bundle_file"
-          grep -Fq "SIGN IN TO CHALLENGE" "$bundle_file"
-          grep -Fq "SIGN IN TO YOUR HQ" "$bundle_file"
-          grep -Fq "PROFILE PICKS NEXT" "$bundle_file"
-          grep -Fq "list_my_find_leader_history" "$bundle_file"
-          grep -Fq "set_my_favorite_fighter" "$bundle_file"
           echo "Live Worker contains real profiles, challenges, and profile-backed Your HQ across the deployed production chunks."
 
       - name: Record deployment
