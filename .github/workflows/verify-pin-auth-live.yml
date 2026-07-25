@@ -20,6 +20,7 @@ jobs:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
       OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
+      PUBLIC_CONFIG_PATH: ${{ runner.temp }}/octagon-public-config.env
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -47,6 +48,15 @@ jobs:
           path: ${{ runner.temp }}/pin-browser.log
           if-no-files-found: error
           retention-days: 7
+
+      - name: Upload verified public browser config
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: octagon-public-browser-config
+          path: ${{ runner.temp }}/octagon-public-config.env
+          if-no-files-found: error
+          retention-days: 1
 
       - name: Enforce browser login result
         if: always()
