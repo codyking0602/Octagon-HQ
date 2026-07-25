@@ -98,7 +98,7 @@ jobs:
           done
           exit "$missing"
 
-      - name: Verify deployed migrations, PIN function, and production CORS
+      - name: Verify deployed migrations, PIN function, and browser CORS
         shell: bash
         run: |
           set -euo pipefail
@@ -139,6 +139,35 @@ jobs:
           fi
 
           endpoint="https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/pin-auth"
+          requested_headers="authorization, x-client-info, apikey, content-type, x-supabase-api-version"
+          preflight_status=$(curl --silent --show-error \
+            --dump-header "$RUNNER_TEMP/pin-auth-preflight-headers.txt" \
+            --output "$RUNNER_TEMP/pin-auth-preflight-response.txt" \
+            --write-out "%{http_code}" \
+            --request OPTIONS \
+            --header "Origin: $OCTAGON_PRODUCTION_ORIGIN" \
+            --header "Access-Control-Request-Method: POST" \
+            --header "Access-Control-Request-Headers: $requested_headers" \
+            "$endpoint")
+
+          if [ "$preflight_status" != "200" ]; then
+            echo "::error title=PIN browser preflight failed::Expected HTTP 200 from OPTIONS, received $preflight_status."
+            cat "$RUNNER_TEMP/pin-auth-preflight-response.txt"
+            exit 1
+          fi
+
+          if ! grep -Fiq "access-control-allow-origin: $OCTAGON_PRODUCTION_ORIGIN" "$RUNNER_TEMP/pin-auth-preflight-headers.txt"; then
+            echo "::error title=Production origin mismatch::The browser preflight does not allow $OCTAGON_PRODUCTION_ORIGIN."
+            cat "$RUNNER_TEMP/pin-auth-preflight-headers.txt"
+            exit 1
+          fi
+
+          if ! grep -Fiq "x-supabase-api-version" "$RUNNER_TEMP/pin-auth-preflight-headers.txt"; then
+            echo "::error title=Supabase browser header blocked::The preflight does not allow x-supabase-api-version."
+            cat "$RUNNER_TEMP/pin-auth-preflight-headers.txt"
+            exit 1
+          fi
+
           status=$(curl --silent --show-error \
             --dump-header "$RUNNER_TEMP/pin-auth-headers.txt" \
             --output "$RUNNER_TEMP/pin-auth-response.json" \
@@ -181,6 +210,7 @@ jobs:
             echo "- Profile-backed Your HQ migration: deployed remotely"
             echo "- Profile-backed UFC Picks migration: deployed remotely"
             echo "- pin-auth Edge Function: deployed and responding with the expected contract"
+            echo "- Browser OPTIONS preflight: passed for current Supabase client headers"
             echo "- Production CORS origin: $OCTAGON_PRODUCTION_ORIGIN"
             echo "- Cloudflare VITE values: cannot be read by GitHub and must be verified through the Cloudflare production build"
           } >> "$GITHUB_STEP_SUMMARY"
