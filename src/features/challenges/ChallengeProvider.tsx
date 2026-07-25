@@ -1,13 +1,16 @@
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
   useState,
   type PropsWithChildren,
 } from "react";
+import { createPortal } from "react-dom";
+import { useIdentity } from "../identity/IdentityProvider";
+import type { PlayGameId } from "../play/playRegistry";
 import {
-  CHALLENGE_TEST_PROFILES,
   canViewChallengeResults,
   challengeCounterpartId,
   type ChallengeJson,
@@ -15,22 +18,15 @@ import {
   type PlayChallenge,
 } from "./challengeModel";
 import {
-  addChallenge,
-  challengesForProfile,
-  completeChallengeRow,
-  dismissChallengeRow,
-  loadChallenges,
-  openChallengeRow,
-  saveChallenges,
+  challengeRepositoryError,
+  createChallengeRepository,
+  type ChallengeRepository,
 } from "./challengeRepository";
 import {
   ChallengeResultDetails,
   challengeResultScoreLabel,
   challengeResultVerdict,
 } from "./ChallengeResultDetails";
-import type { PlayGameId } from "../play/playRegistry";
-
-const PROFILE_STORAGE_KEY = "octagon-hq:challenge-profile:v1";
 
 export interface ChallengeComposerDraft {
   gameId: PlayGameId;
@@ -45,28 +41,23 @@ export interface ChallengeComposerDraft {
 }
 
 interface PlayChallengesContextValue {
+  configured: boolean;
   enabled: boolean;
+  loading: boolean;
+  error: string;
   profiles: readonly ChallengeProfile[];
   activeProfile: ChallengeProfile | null;
   challenges: PlayChallenge[];
-  setActiveProfile: (profileId: string) => void;
+  refresh: () => Promise<void>;
   beginChallenge: (draft: ChallengeComposerDraft) => Promise<string>;
   getChallenge: (code: string) => PlayChallenge | null;
-  markOpened: (code: string) => void;
-  submitResult: (code: string, result: ChallengeJson) => void;
-  dismissChallenge: (code: string) => void;
+  markOpened: (code: string) => Promise<void>;
+  submitResult: (code: string, result: ChallengeJson) => Promise<void>;
+  dismissChallenge: (code: string) => Promise<void>;
   viewResults: (code: string) => void;
 }
 
 const PlayChallengesContext = createContext<PlayChallengesContextValue | null>(null);
-
-function challengeLabAvailable() {
-  if (typeof window === "undefined") return false;
-  const host = window.location.hostname;
-  return host === "localhost"
-    || host === "127.0.0.1"
-    || host.endsWith(".hq-app.workers.dev");
-}
 
 async function shareDraft(draft: ChallengeComposerDraft) {
   const payload = `${draft.shareText}\n\n${draft.shareUrl}`;
@@ -88,30 +79,60 @@ async function shareDraft(draft: ChallengeComposerDraft) {
   }
 }
 
-function profileById(id: string | null) {
-  return CHALLENGE_TEST_PROFILES.find((profile) => profile.id === id) ?? null;
-}
-
 function ComposerDialog({
   draft,
   activeProfile,
+  repository,
   onClose,
   onSend,
 }: {
   draft: ChallengeComposerDraft;
   activeProfile: ChallengeProfile;
+  repository: ChallengeRepository;
   onClose: () => void;
-  onSend: (recipientId: string) => void;
+  onSend: (recipient: ChallengeProfile) => Promise<void>;
 }) {
-  const recipients = CHALLENGE_TEST_PROFILES.filter((profile) => profile.id !== activeProfile.id);
-  const [recipientId, setRecipientId] = useState(recipients[0]?.id ?? "");
+  const [profileName, setProfileName] = useState("");
+  const [recipient, setRecipient] = useState<ChallengeProfile | null>(null);
+  const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState("");
+
+  async function findProfile() {
+    setBusy(true);
+    setStatus("");
+    setRecipient(null);
+    try {
+      const match = await repository.findProfile(profileName, activeProfile.id);
+      if (!match) {
+        setStatus("NO PROFILE FOUND WITH THAT EXACT NAME");
+        return;
+      }
+      setRecipient(match);
+      setStatus(`${match.displayName} FOUND`);
+    } catch (error) {
+      setStatus(challengeRepositoryError(error));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function sendToProfile() {
+    if (!recipient) return;
+    setBusy(true);
+    setStatus("");
+    try {
+      await onSend(recipient);
+    } catch (error) {
+      setStatus(challengeRepositoryError(error));
+      setBusy(false);
+    }
+  }
 
   async function shareExternally() {
     setStatus(await shareDraft(draft));
   }
 
-  return (
+  return createPortal(
     <div className="challenge-overlay" role="presentation" onMouseDown={(event) => {
       if (event.currentTarget === event.target) onClose();
     }}>
@@ -120,7 +141,7 @@ function ComposerDialog({
           <div>
             <p className="eyebrow">GAME CHALLENGE</p>
             <h2 id="challenge-dialog-title">Challenge Someone</h2>
-            <p>Send to an Octagon HQ profile or use your phone’s share sheet to text the exact challenge.</p>
+            <p>Enter the exact Octagon HQ profile name. The same locked game will appear on their device.</p>
           </div>
           <button type="button" className="challenge-dialog__close" aria-label="Close challenge dialog" onClick={onClose}>×</button>
         </header>
@@ -130,31 +151,48 @@ function ComposerDialog({
           <b>LOCKED</b>
         </div>
 
-        <div className="challenge-dialog__profiles">
-          {recipients.map((profile) => (
-            <button
-              className={profile.id === recipientId ? "is-selected" : ""}
-              type="button"
-              key={profile.id}
-              onClick={() => setRecipientId(profile.id)}
-            >
-              <i>{profile.initials}</i>
-              <span><strong>{profile.displayName}</strong><small>PREVIEW PROFILE</small></span>
+        <form className="challenge-dialog__profile-search" onSubmit={(event) => {
+          event.preventDefault();
+          void findProfile();
+        }}>
+          <label>
+            <span>PROFILE NAME</span>
+            <input
+              autoCapitalize="characters"
+              autoComplete="off"
+              maxLength={24}
+              placeholder="SHANE"
+              value={profileName}
+              onChange={(event) => {
+                setProfileName(event.target.value.toUpperCase());
+                setRecipient(null);
+                setStatus("");
+              }}
+            />
+          </label>
+          <button type="submit" disabled={busy || profileName.trim().length < 2}>FIND PROFILE</button>
+        </form>
+
+        {recipient ? (
+          <div className="challenge-dialog__profiles">
+            <button className="is-selected" type="button" onClick={() => undefined}>
+              <i>{recipient.initials}</i>
+              <span><strong>{recipient.displayName}</strong><small>OCTAGON HQ PROFILE</small></span>
               <em aria-hidden="true" />
             </button>
-          ))}
-        </div>
+          </div>
+        ) : null}
 
-        <p className="challenge-dialog__lab-note">
-          Profile delivery is running in the preview identity lab until the real V2 profile owner is connected.
-        </p>
         <p className="challenge-dialog__status" role="status">{status}</p>
         <footer>
-          <button type="button" onClick={() => void shareExternally()}>TEXT / SHARE LINK</button>
-          <button type="button" className="primary-action" disabled={!recipientId} onClick={() => onSend(recipientId)}>SEND TO PROFILE</button>
+          <button type="button" disabled={busy} onClick={() => void shareExternally()}>TEXT / SHARE LINK</button>
+          <button type="button" className="primary-action" disabled={!recipient || busy} onClick={() => void sendToProfile()}>
+            {busy ? "SENDING…" : "SEND TO PROFILE"}
+          </button>
         </footer>
       </section>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
@@ -176,7 +214,7 @@ function ResultsDialog({
   const responderName = responder?.displayName ?? "Responder";
   const verdict = challengeResultVerdict(challenge, creatorName, responderName);
 
-  return (
+  return createPortal(
     <div className="challenge-overlay" role="presentation" onMouseDown={(event) => {
       if (event.currentTarget === event.target) onClose();
     }}>
@@ -185,7 +223,7 @@ function ResultsDialog({
           <div>
             <p className="eyebrow">CHALLENGE RESULTS</p>
             <h2 id="challenge-results-title">{challenge.gameTitle}</h2>
-            <p>Both players completed the exact same challenge.</p>
+            <p>Both profiles completed the exact same challenge.</p>
           </div>
           <button type="button" className="challenge-dialog__close" aria-label="Close challenge results" onClick={onClose}>×</button>
         </header>
@@ -210,86 +248,147 @@ function ResultsDialog({
         <ChallengeResultDetails challenge={challenge} creatorName={creatorName} responderName={responderName} />
         <button type="button" className="primary-action challenge-results-dialog__close" onClick={onClose}>CLOSE</button>
       </section>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
-export function ChallengeProvider({ children }: PropsWithChildren) {
-  const enabled = challengeLabAvailable();
-  const [activeProfileId, setActiveProfileId] = useState(() => {
-    if (!enabled || typeof window === "undefined") return "";
-    const stored = window.localStorage.getItem(PROFILE_STORAGE_KEY);
-    return profileById(stored)?.id ?? CHALLENGE_TEST_PROFILES[0]!.id;
-  });
-  const [rows, setRows] = useState<PlayChallenge[]>(() => {
-    if (!enabled || typeof window === "undefined") return [];
-    return loadChallenges(window.localStorage);
-  });
+export function ChallengeProvider({
+  children,
+  repository: suppliedRepository,
+}: PropsWithChildren<{ repository?: ChallengeRepository | null }>) {
+  const identity = useIdentity();
+  const initialRepository = suppliedRepository === undefined ? createChallengeRepository() : suppliedRepository;
+  const [repository] = useState<ChallengeRepository | null>(initialRepository);
+  const [rows, setRows] = useState<PlayChallenge[]>([]);
+  const [counterparts, setCounterparts] = useState<ChallengeProfile[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [composer, setComposer] = useState<ChallengeComposerDraft | null>(null);
   const [resultCode, setResultCode] = useState<string | null>(null);
 
-  const activeProfile = profileById(activeProfileId);
-  const challenges = useMemo(
-    () => activeProfile ? challengesForProfile(rows, activeProfile.id) : [],
-    [activeProfile, rows],
-  );
+  const activeProfile = identity.profile;
+  const configured = Boolean(repository);
+  const enabled = Boolean(repository && activeProfile);
+  const profiles = useMemo(() => {
+    const map = new Map<string, ChallengeProfile>();
+    if (activeProfile) map.set(activeProfile.id, activeProfile);
+    counterparts.forEach((profile) => map.set(profile.id, profile));
+    return [...map.values()];
+  }, [activeProfile, counterparts]);
 
-  function persist(next: PlayChallenge[]) {
-    setRows(next);
-    if (enabled) saveChallenges(window.localStorage, next);
-  }
+  const refresh = useCallback(async () => {
+    if (!repository || !activeProfile) {
+      setRows([]);
+      setCounterparts([]);
+      return;
+    }
 
-  function setActiveProfile(profileId: string) {
-    const profile = profileById(profileId);
-    if (!profile) return;
-    setActiveProfileId(profile.id);
-    window.localStorage.setItem(PROFILE_STORAGE_KEY, profile.id);
+    setLoading(true);
+    try {
+      const snapshot = await repository.load();
+      setRows(snapshot.challenges);
+      setCounterparts(snapshot.profiles);
+      setError("");
+    } catch (nextError) {
+      setError(challengeRepositoryError(nextError));
+    } finally {
+      setLoading(false);
+    }
+  }, [activeProfile, repository]);
+
+  useEffect(() => {
     setComposer(null);
     setResultCode(null);
-  }
+    void refresh();
+  }, [activeProfile?.id, refresh]);
+
+  useEffect(() => {
+    if (!enabled) return undefined;
+    const interval = window.setInterval(() => void refresh(), 15_000);
+    const onFocus = () => void refresh();
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") void refresh();
+    };
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      window.clearInterval(interval);
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [enabled, refresh]);
+
+  useEffect(() => {
+    if (!composer && !resultCode) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [composer, resultCode]);
 
   async function beginChallenge(draft: ChallengeComposerDraft) {
-    if (!enabled || !activeProfile) return shareDraft(draft);
+    if (!activeProfile) {
+      identity.openDialog();
+      return "SIGN IN TO SEND PROFILE CHALLENGES";
+    }
+    if (!repository) return "CHALLENGES ARE NOT CONNECTED ON THIS BUILD";
     setComposer(draft);
-    return "CHOOSE A PROFILE OR TEXT THE LINK";
+    return "CHOOSE AN OCTAGON HQ PROFILE";
   }
 
-  function sendChallenge(recipientId: string) {
-    if (!composer || !activeProfile || recipientId === activeProfile.id) return;
-    const next = addChallenge(rows, {
+  async function sendChallenge(recipient: ChallengeProfile) {
+    if (!composer || !repository || !activeProfile) return;
+    await repository.create({
       gameId: composer.gameId,
       gameVersion: composer.gameVersion,
       gameTitle: composer.gameTitle,
       summary: composer.summary,
-      creatorId: activeProfile.id,
-      recipientId,
+      recipientId: recipient.id,
       playUrl: composer.shareUrl,
       setup: composer.setup,
       creatorResult: composer.creatorResult,
     });
-    persist(next.rows);
     setComposer(null);
+    await refresh();
   }
 
-  function getChallenge(code: string) {
-    return rows.find((row) => row.code === code) ?? null;
-  }
+  const getChallenge = useCallback(
+    (code: string) => rows.find((row) => row.code === code) ?? null,
+    [rows],
+  );
 
-  function markOpened(code: string) {
-    if (!activeProfile) return;
-    persist(openChallengeRow(rows, code, activeProfile.id));
-  }
+  const markOpened = useCallback(async (code: string) => {
+    if (!repository || !activeProfile) return;
+    try {
+      await repository.markOpened(code);
+      await refresh();
+    } catch (nextError) {
+      setError(challengeRepositoryError(nextError));
+    }
+  }, [activeProfile, refresh, repository]);
 
-  function submitResult(code: string, result: ChallengeJson) {
-    if (!activeProfile) return;
-    persist(completeChallengeRow(rows, code, activeProfile.id, result));
-  }
+  const submitResult = useCallback(async (code: string, result: ChallengeJson) => {
+    if (!repository || !activeProfile) return;
+    try {
+      await repository.submitResult(code, result);
+      await refresh();
+    } catch (nextError) {
+      setError(challengeRepositoryError(nextError));
+    }
+  }, [activeProfile, refresh, repository]);
 
-  function dismissChallengeByCode(code: string) {
-    if (!activeProfile) return;
-    persist(dismissChallengeRow(rows, code, activeProfile.id));
-    if (resultCode === code) setResultCode(null);
-  }
+  const dismissChallenge = useCallback(async (code: string) => {
+    if (!repository || !activeProfile) return;
+    try {
+      await repository.dismiss(code);
+      if (resultCode === code) setResultCode(null);
+      await refresh();
+    } catch (nextError) {
+      setError(challengeRepositoryError(nextError));
+    }
+  }, [activeProfile, refresh, repository, resultCode]);
 
   function viewResults(code: string) {
     const challenge = getChallenge(code);
@@ -297,35 +396,32 @@ export function ChallengeProvider({ children }: PropsWithChildren) {
     setResultCode(code);
   }
 
-  useEffect(() => {
-    if (!enabled) return undefined;
-    const onStorage = () => setRows(loadChallenges(window.localStorage));
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
-  }, [enabled]);
-
   const resultChallenge = resultCode ? getChallenge(resultCode) : null;
   const value: PlayChallengesContextValue = {
+    configured,
     enabled,
-    profiles: CHALLENGE_TEST_PROFILES,
+    loading,
+    error,
+    profiles,
     activeProfile,
-    challenges,
-    setActiveProfile,
+    challenges: rows,
+    refresh,
     beginChallenge,
     getChallenge,
     markOpened,
     submitResult,
-    dismissChallenge: dismissChallengeByCode,
+    dismissChallenge,
     viewResults,
   };
 
   return (
     <PlayChallengesContext.Provider value={value}>
       {children}
-      {composer && activeProfile ? (
+      {composer && activeProfile && repository ? (
         <ComposerDialog
           draft={composer}
           activeProfile={activeProfile}
+          repository={repository}
           onClose={() => setComposer(null)}
           onSend={sendChallenge}
         />
@@ -333,7 +429,7 @@ export function ChallengeProvider({ children }: PropsWithChildren) {
       {resultChallenge && activeProfile ? (
         <ResultsDialog
           challenge={resultChallenge}
-          profiles={CHALLENGE_TEST_PROFILES}
+          profiles={profiles}
           activeProfileId={activeProfile.id}
           onClose={() => setResultCode(null)}
         />
@@ -351,7 +447,7 @@ export function usePlayChallenges() {
 export function challengeCounterpart(
   challenge: PlayChallenge,
   activeProfileId: string,
-  profiles: readonly ChallengeProfile[] = CHALLENGE_TEST_PROFILES,
+  profiles: readonly ChallengeProfile[],
 ) {
   const counterpartId = challengeCounterpartId(challenge, activeProfileId);
   return profiles.find((profile) => profile.id === counterpartId) ?? null;
