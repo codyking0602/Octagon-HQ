@@ -98,13 +98,19 @@ jobs:
           done
           exit "$missing"
 
-      - name: Verify deployed migration, PIN function, and production CORS
+      - name: Verify deployed migrations, PIN function, and production CORS
         shell: bash
         run: |
           set -euo pipefail
+          migration_list=$(supabase migration list --linked)
 
-          if ! supabase migration list --linked | grep -Fq "202607240001"; then
+          if ! grep -Fq "202607240001" <<< "$migration_list"; then
             echo "::error title=Profile migration not deployed::The V2 profile/PIN migration is not recorded on the linked project."
+            exit 1
+          fi
+
+          if ! grep -Fq "202607250001" <<< "$migration_list"; then
+            echo "::error title=Challenge migration not deployed::The real profile challenge migration is not recorded on the linked project."
             exit 1
           fi
 
@@ -152,6 +158,7 @@ jobs:
             echo "- Database password and migration connection: accepted"
             echo "- Required Edge Function secret names: present"
             echo "- Profile/PIN migration: deployed"
+            echo "- Real profile challenge migration: deployed"
             echo "- pin-auth Edge Function: deployed and responding with the expected contract"
             echo "- Production CORS origin: $OCTAGON_PRODUCTION_ORIGIN"
             echo "- Cloudflare VITE values: cannot be read by GitHub and must be verified through the Cloudflare production build"
