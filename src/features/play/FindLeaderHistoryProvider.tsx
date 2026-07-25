@@ -3,6 +3,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
   type PropsWithChildren,
 } from "react";
@@ -44,17 +45,22 @@ export function FindLeaderHistoryProvider({
   repository: suppliedRepository,
 }: PropsWithChildren<{ repository?: FindLeaderHistoryRepository | null }>) {
   const identity = useIdentity();
-  const initialRepository = suppliedRepository === undefined
-    ? createFindLeaderHistoryRepository()
-    : suppliedRepository;
-  const [repository] = useState<FindLeaderHistoryRepository | null>(initialRepository);
+  const profileId = identity.profile?.id ?? null;
+  const profileIdRef = useRef(profileId);
+  profileIdRef.current = profileId;
+  const [repository] = useState<FindLeaderHistoryRepository | null>(() => (
+    suppliedRepository === undefined
+      ? createFindLeaderHistoryRepository()
+      : suppliedRepository
+  ));
   const [rows, setRows] = useState<FindLeaderHistoryRow[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const profileBacked = Boolean(identity.profile);
+  const profileBacked = Boolean(profileId);
 
   const refresh = useCallback(async () => {
-    if (!identity.profile) {
+    const expectedProfileId = profileId;
+    if (!expectedProfileId) {
       setRows(loadDeviceFindLeaderHistory());
       setLoading(false);
       setError("");
@@ -70,21 +76,24 @@ export function FindLeaderHistoryProvider({
 
     setLoading(true);
     try {
-      setRows(await repository.load());
+      const nextRows = await repository.load();
+      if (profileIdRef.current !== expectedProfileId) return;
+      setRows(nextRows);
       setError("");
     } catch (nextError) {
+      if (profileIdRef.current !== expectedProfileId) return;
       setError(readableError(nextError));
     } finally {
-      setLoading(false);
+      if (profileIdRef.current === expectedProfileId) setLoading(false);
     }
-  }, [identity.profile, repository]);
+  }, [profileId, repository]);
 
   useEffect(() => {
     void refresh();
-  }, [identity.profile?.id, refresh]);
+  }, [refresh]);
 
   useEffect(() => {
-    if (!identity.profile || !repository) return undefined;
+    if (!profileId || !repository) return undefined;
     const onFocus = () => void refresh();
     const onVisibility = () => {
       if (document.visibilityState === "visible") void refresh();
@@ -95,10 +104,11 @@ export function FindLeaderHistoryProvider({
       window.removeEventListener("focus", onFocus);
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [identity.profile, refresh, repository]);
+  }, [profileId, refresh, repository]);
 
   const recordAttempt = useCallback(async (day: string, score: number) => {
-    if (!identity.profile) {
+    const expectedProfileId = profileId;
+    if (!expectedProfileId) {
       setRows(recordDeviceFindLeaderAttempt(day, score));
       setError("");
       return;
@@ -111,12 +121,14 @@ export function FindLeaderHistoryProvider({
 
     try {
       const saved = await repository.recordAttempt(day, score);
+      if (profileIdRef.current !== expectedProfileId) return;
       setRows((current) => mergeHistoryRow(current, saved));
       setError("");
     } catch (nextError) {
+      if (profileIdRef.current !== expectedProfileId) return;
       setError(readableError(nextError));
     }
-  }, [identity.profile, repository]);
+  }, [profileId, repository]);
 
   return (
     <FindLeaderHistoryContext.Provider value={{
