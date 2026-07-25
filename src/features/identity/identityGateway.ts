@@ -33,9 +33,10 @@ function readableError(error: unknown) {
 export function createIdentityGateway(): IdentityGateway | null {
   const supabase = getSupabaseClient();
   if (!supabase) return null;
+  const client = supabase;
 
   async function authenticate(action: "login" | "create", displayName: string, pin: string) {
-    const { data, error } = await supabase.functions.invoke("pin-auth", {
+    const { data, error } = await client.functions.invoke("pin-auth", {
       body: { action, displayName, pin },
     });
 
@@ -43,7 +44,7 @@ export function createIdentityGateway(): IdentityGateway | null {
     const parsed = pinAuthResponseSchema.safeParse(data);
     if (!parsed.success) throw new Error("Octagon HQ received an invalid login response.");
 
-    const verified = await supabase.auth.verifyOtp({
+    const verified = await client.auth.verifyOtp({
       token_hash: parsed.data.tokenHash,
       type: "magiclink",
     });
@@ -52,20 +53,20 @@ export function createIdentityGateway(): IdentityGateway | null {
 
   return {
     async getSession() {
-      const { data, error } = await supabase.auth.getSession();
+      const { data, error } = await client.auth.getSession();
       if (error) throw new Error(error.message);
       return data.session ? { userId: data.session.user.id } : null;
     },
 
     subscribe(listener) {
-      const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+      const { data } = client.auth.onAuthStateChange((_event, session) => {
         listener(session ? { userId: session.user.id } : null);
       });
       return () => data.subscription.unsubscribe();
     },
 
     async loadProfile(userId) {
-      const { data, error } = await supabase
+      const { data, error } = await client
         .from("profiles")
         .select("id, display_name, initials")
         .eq("id", userId)
@@ -90,7 +91,7 @@ export function createIdentityGateway(): IdentityGateway | null {
     },
 
     async signOut() {
-      const { error } = await supabase.auth.signOut();
+      const { error } = await client.auth.signOut();
       if (error) throw new Error(error.message);
     },
   };
