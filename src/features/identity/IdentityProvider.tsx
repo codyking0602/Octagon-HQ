@@ -46,6 +46,7 @@ export function IdentityProvider({
 
   useEffect(() => {
     if (!gateway) return undefined;
+    const activeGateway = gateway;
     let active = true;
     let revision = 0;
 
@@ -60,7 +61,7 @@ export function IdentityProvider({
       }
 
       try {
-        const nextProfile = await gateway.loadProfile(session.userId);
+        const nextProfile = await activeGateway.loadProfile(session.userId);
         if (!active || current !== revision) return;
         if (!nextProfile) {
           setProfile(null);
@@ -80,7 +81,7 @@ export function IdentityProvider({
       }
     }
 
-    void gateway.getSession()
+    void activeGateway.getSession()
       .then((session) => applySession(session))
       .catch((nextError) => {
         if (!active) return;
@@ -88,7 +89,7 @@ export function IdentityProvider({
         setError(errorMessage(nextError));
       });
 
-    const unsubscribe = gateway.subscribe((session) => {
+    const unsubscribe = activeGateway.subscribe((session) => {
       void applySession(session);
     });
 
