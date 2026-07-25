@@ -98,7 +98,7 @@ jobs:
           done
           exit "$missing"
 
-      - name: Verify deployed migrations, PIN function, and browser CORS
+      - name: Verify deployed migrations and browser-equivalent PIN authentication
         shell: bash
         run: |
           set -euo pipefail
@@ -138,8 +138,25 @@ jobs:
             exit 1
           fi
 
+          api_keys_file="$RUNNER_TEMP/supabase-api-keys.json"
+          trap 'rm -f "$api_keys_file"' EXIT
+          curl --fail --silent --show-error \
+            --header "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+            "https://api.supabase.com/v1/projects/${SUPABASE_PROJECT_ID}/api-keys?reveal=true" \
+            --output "$api_keys_file"
+
+          publishable_key=$(node - "$api_keys_file" <<'NODE'
+          const fs = require('fs');
+          const keys = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+          const publicKey = keys.find((key) => key.type === 'publishable')
+            ?? keys.find((key) => key.type === 'legacy' && /anon/i.test(key.name ?? ''));
+          if (!publicKey?.api_key) process.exit(1);
+          process.stdout.write(publicKey.api_key);
+          NODE
+          )
+
           endpoint="https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/pin-auth"
-          requested_headers="authorization, x-client-info, apikey, content-type, x-supabase-api-version"
+          requested_headers="authorization, x-client-info, apikey, content-type"
           preflight_status=$(curl --silent --show-error \
             --dump-header "$RUNNER_TEMP/pin-auth-preflight-headers.txt" \
             --output "$RUNNER_TEMP/pin-auth-preflight-response.txt" \
@@ -162,37 +179,42 @@ jobs:
             exit 1
           fi
 
-          if ! grep -Fiq "x-supabase-api-version" "$RUNNER_TEMP/pin-auth-preflight-headers.txt"; then
-            echo "::error title=Supabase browser header blocked::The preflight does not allow x-supabase-api-version."
-            cat "$RUNNER_TEMP/pin-auth-preflight-headers.txt"
-            exit 1
-          fi
+          allow_headers=$(grep -i '^access-control-allow-headers:' "$RUNNER_TEMP/pin-auth-preflight-headers.txt" | tr '[:upper:]' '[:lower:]')
+          for header in authorization x-client-info apikey content-type; do
+            if [[ "$allow_headers" != *"$header"* ]]; then
+              echo "::error title=PIN browser header blocked::$header is missing from Access-Control-Allow-Headers."
+              exit 1
+            fi
+          done
 
-          status=$(curl --silent --show-error \
-            --dump-header "$RUNNER_TEMP/pin-auth-headers.txt" \
-            --output "$RUNNER_TEMP/pin-auth-response.json" \
+          browser_status=$(curl --silent --show-error \
+            --dump-header "$RUNNER_TEMP/pin-auth-browser-headers.txt" \
+            --output "$RUNNER_TEMP/pin-auth-browser-response.json" \
             --write-out "%{http_code}" \
             --request POST \
             --header "Origin: $OCTAGON_PRODUCTION_ORIGIN" \
+            --header "Authorization: Bearer $publishable_key" \
+            --header "apikey: $publishable_key" \
+            --header "x-client-info: supabase-js-web/2.110.7" \
             --header "Content-Type: application/json" \
-            --data '{}' \
+            --data '{"action":"login","displayName":"__OCTAGON_HEALTHCHECK__","pin":"0000"}' \
             "$endpoint")
 
-          if [ "$status" != "400" ]; then
-            echo "::error title=PIN function live check failed::Expected HTTP 400 from the deployed validation path, received $status."
-            cat "$RUNNER_TEMP/pin-auth-response.json"
+          if [ "$browser_status" != "401" ]; then
+            echo "::error title=Browser-equivalent PIN request failed::Expected the healthcheck profile to return HTTP 401, received $browser_status."
+            cat "$RUNNER_TEMP/pin-auth-browser-response.json"
             exit 1
           fi
 
-          if ! grep -Fq "Enter a name and a 4-digit PIN." "$RUNNER_TEMP/pin-auth-response.json"; then
-            echo "::error title=PIN function contract mismatch::The deployed function did not return the expected validation response."
-            cat "$RUNNER_TEMP/pin-auth-response.json"
+          if ! grep -Fq "That name and PIN did not match." "$RUNNER_TEMP/pin-auth-browser-response.json"; then
+            echo "::error title=PIN function browser contract mismatch::The browser-equivalent request did not reach the PIN lookup path."
+            cat "$RUNNER_TEMP/pin-auth-browser-response.json"
             exit 1
           fi
 
-          if ! grep -Fiq "access-control-allow-origin: $OCTAGON_PRODUCTION_ORIGIN" "$RUNNER_TEMP/pin-auth-headers.txt"; then
-            echo "::error title=Production origin mismatch::pin-auth is not allowing $OCTAGON_PRODUCTION_ORIGIN."
-            cat "$RUNNER_TEMP/pin-auth-headers.txt"
+          if ! grep -Fiq "access-control-allow-origin: $OCTAGON_PRODUCTION_ORIGIN" "$RUNNER_TEMP/pin-auth-browser-headers.txt"; then
+            echo "::error title=Production origin mismatch::The browser-equivalent response does not allow $OCTAGON_PRODUCTION_ORIGIN."
+            cat "$RUNNER_TEMP/pin-auth-browser-headers.txt"
             exit 1
           fi
 
@@ -209,8 +231,8 @@ jobs:
             echo "- Real profile challenge migration: deployed remotely"
             echo "- Profile-backed Your HQ migration: deployed remotely"
             echo "- Profile-backed UFC Picks migration: deployed remotely"
-            echo "- pin-auth Edge Function: deployed and responding with the expected contract"
-            echo "- Browser OPTIONS preflight: passed for current Supabase client headers"
+            echo "- pin-auth Edge Function: deployed and responding with the expected browser contract"
+            echo "- Browser OPTIONS preflight: passed for the actual Supabase SDK header set"
+            echo "- Browser-equivalent invoke: passed with the live production publishable key"
             echo "- Production CORS origin: $OCTAGON_PRODUCTION_ORIGIN"
-            echo "- Cloudflare VITE values: cannot be read by GitHub and must be verified through the Cloudflare production build"
           } >> "$GITHUB_STEP_SUMMARY"
