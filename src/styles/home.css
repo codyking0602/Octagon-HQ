@@ -146,6 +146,56 @@
   cursor: pointer;
 }
 
+.home-event-card {
+  gap: 10px;
+  padding: 20px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(210, 10, 10, .12), transparent 36%),
+    var(--surface);
+}
+
+.home-event-card__topline > span {
+  color: var(--ufc-red-strong);
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .12em;
+}
+
+.home-event-card h2 {
+  font-size: clamp(28px, 8vw, 40px);
+  line-height: 1;
+  letter-spacing: -.045em;
+}
+
+.home-event-card > strong {
+  font-size: 18px;
+}
+
+.home-event-card__main-event {
+  display: grid;
+  gap: 4px;
+  margin-top: 7px !important;
+  padding-top: 13px;
+  border-top: 1px solid var(--border);
+}
+
+.home-event-card__main-event small {
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .11em;
+}
+
+.home-event-card__main-event b {
+  color: var(--text-primary);
+  font-size: 13px;
+}
+
+.home-event-card .secondary-action {
+  margin-top: 5px;
+}
+
 @media (min-width: 640px) {
   .hq-card {
     padding: 20px;
@@ -157,5 +207,9 @@
 
   .hq-stat {
     min-height: 122px;
+  }
+
+  .home-event-card {
+    padding: 22px;
   }
 }
