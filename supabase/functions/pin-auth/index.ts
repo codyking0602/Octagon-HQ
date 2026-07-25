@@ -1,8 +1,9 @@
 import { createClient } from "npm:@supabase/supabase-js@2.110.7";
+import { corsHeaders as supabaseCorsHeaders } from "jsr:@supabase/supabase-js@2.110.7/cors";
 
 const corsHeaders = {
+  ...supabaseCorsHeaders,
   "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
