@@ -4,6 +4,7 @@ import { ChallengeCenter } from "../challenges/ChallengeCenter";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import type { ChallengeJson } from "../challenges/challengeModel";
 import { FighterPhoto } from "../rankings/FighterPhoto";
+import { useFindLeaderHistory } from "./FindLeaderHistoryProvider";
 import {
   centralDay,
   dailyFindLeaderBoard,
@@ -12,9 +13,7 @@ import {
 } from "./findLeaderEngine";
 import {
   findLeaderStreaks,
-  loadFindLeaderHistory,
   recentCalendarDays,
-  recordFindLeaderAttempt,
   type FindLeaderHistoryRow,
 } from "./findLeaderStorage";
 import { GameResultActions } from "./GameResultActions";
@@ -131,7 +130,19 @@ function findLeaderChallengeResult(result: FindLeaderResult): ChallengeJson {
   };
 }
 
-function DailyHistory({ rows, today }: { rows: FindLeaderHistoryRow[]; today: string }) {
+function DailyHistory({
+  rows,
+  today,
+  loading,
+  profileBacked,
+  error,
+}: {
+  rows: FindLeaderHistoryRow[];
+  today: string;
+  loading: boolean;
+  profileBacked: boolean;
+  error: string;
+}) {
   const stats = findLeaderStreaks(rows, today);
   const rowByDay = new Map(rows.map((row) => [row.day, row]));
   return (
@@ -167,7 +178,16 @@ function DailyHistory({ rows, today }: { rows: FindLeaderHistoryRow[]; today: st
               <span><strong>{dateLabel(row.day)}</strong><small>{row.attempts > 1 ? `Best ${row.bestScore}/10 · ${row.attempts} attempts` : "Official first attempt"}</small></span>
               <b>{row.officialScore}/10</b>
             </div>
-          )) : <p className="find-history__empty">Play today’s Find the Leader to begin your daily history.</p>}
+          )) : (
+            <p className="find-history__empty">
+              {loading
+                ? "Syncing Find the Leader history…"
+                : profileBacked
+                  ? "Play today’s Find the Leader to begin your profile history."
+                  : "Play today’s Find the Leader to begin this device’s history."}
+            </p>
+          )}
+          {error ? <p className="find-history__error" role="status">{error}</p> : null}
         </div>
       </div>
     </details>
@@ -349,6 +369,13 @@ export default function PlayPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { activeProfile, profiles, getChallenge, submitResult } = usePlayChallenges();
+  const {
+    rows: history,
+    loading: historyLoading,
+    error: historyError,
+    profileBacked,
+    recordAttempt,
+  } = useFindLeaderHistory();
   const today = useMemo(() => centralDay(), []);
   const isFindLeaderGame = location.pathname === "/play/find-leader";
   const searchParams = new URLSearchParams(location.search);
@@ -363,7 +390,6 @@ export default function PlayPage() {
   const gameBoard = storedChallengeBoard ?? generatedGameBoard;
   const [carousel, setCarousel] = useState<0 | 1>(0);
   const touchStartX = useRef<number | null>(null);
-  const [history, setHistory] = useState<FindLeaderHistoryRow[]>(() => loadFindLeaderHistory());
   const todayRow = history.find((row) => row.day === today);
   const challengeCreator = profileChallenge
     ? profiles.find((profile) => profile.id === profileChallenge.creatorId)
@@ -374,7 +400,7 @@ export default function PlayPage() {
       submitResult(profileChallenge.code, findLeaderChallengeResult(result));
       return;
     }
-    setHistory(recordFindLeaderAttempt(gameDay, result.score));
+    void recordAttempt(gameDay, result.score);
   }
 
   function openFindLeader() {
@@ -429,9 +455,9 @@ export default function PlayPage() {
             {todayRow ? (
               <div className="play-daily__score-row"><span><strong>Your official score</strong><small>First completed attempt</small></span><b>{todayRow.officialScore}/10</b></div>
             ) : (
-              <div className="play-daily__empty">No completed score yet. Play today’s challenge to get on your board.</div>
+              <div className="play-daily__empty">{historyLoading ? "Syncing your official result…" : "No completed score yet. Play today’s challenge to get on your board."}</div>
             )}
-            <small>The shared friend leaderboard will use this same daily result when V2 profiles connect.</small>
+            <small>{profileBacked ? "Your official result follows this profile across devices." : "Signed-out results stay on this device."}</small>
           </article>
         )}
         <div className="play-daily__dots" aria-label="Daily challenge carousel">
@@ -440,7 +466,13 @@ export default function PlayPage() {
         </div>
       </section>
 
-      <DailyHistory rows={history} today={today} />
+      <DailyHistory
+        rows={history}
+        today={today}
+        loading={historyLoading}
+        profileBacked={profileBacked}
+        error={historyError}
+      />
       <ChallengeCenter />
 
       <section className="play-games">
