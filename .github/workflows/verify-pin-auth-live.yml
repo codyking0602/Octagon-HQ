@@ -1,0 +1,33 @@
+name: Verify Live PIN Authentication
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/verify-pin-auth-live.yml"
+      - "scripts/verify-pin-auth-live.mjs"
+      - "supabase/functions/pin-auth/**"
+      - "supabase/migrations/**"
+
+permissions:
+  contents: read
+
+jobs:
+  verify-live-login:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+      OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Verify successful login against the live PIN function
+        run: node scripts/verify-pin-auth-live.mjs
