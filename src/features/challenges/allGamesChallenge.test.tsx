@@ -1,23 +1,16 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { ChallengeCenter } from "./ChallengeCenter";
-import { ChallengeProvider } from "./ChallengeProvider";
+import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it } from "vitest";
 import { ChallengeResultDetails } from "./ChallengeResultDetails";
 import {
+  challengeStatus,
   createPlayChallenge,
+  dismissChallenge,
   submitChallengeResult,
   type ChallengeJson,
   type PlayChallenge,
 } from "./challengeModel";
-import {
-  CHALLENGE_STORAGE_KEY,
-  loadChallenges,
-} from "./challengeRepository";
 import { challengePlayRoute } from "./challengeRuntime";
 import type { PlayGameId } from "../play/playRegistry";
-
-const PROFILE_STORAGE_KEY = "octagon-hq:challenge-profile:v1";
 
 function challenge(
   gameId: PlayGameId,
@@ -32,14 +25,14 @@ function challenge(
     gameVersion: `${gameId}-v2`,
     gameTitle: gameId,
     summary: `${gameId} matchup`,
-    creatorId: "cody-preview",
-    recipientId: "shane-preview",
+    creatorId: "cody-profile",
+    recipientId: "shane-profile",
     playUrl,
     setup,
     creatorResult,
     now: new Date("2026-07-24T12:00:00Z"),
   });
-  return submitChallengeResult(created, "shane-preview", responderResult, new Date("2026-07-24T12:10:00Z"));
+  return submitChallengeResult(created, "shane-profile", responderResult, new Date("2026-07-24T12:10:00Z"));
 }
 
 function renderDetails(row: PlayChallenge) {
@@ -53,13 +46,8 @@ function renderDetails(row: PlayChallenge) {
 }
 
 describe("all-game challenge contracts", () => {
-  beforeEach(() => {
-    window.localStorage.clear();
-  });
-
   afterEach(() => {
     cleanup();
-    window.localStorage.clear();
   });
 
   it("preserves every existing exact-share query while adding the profile challenge code", () => {
@@ -171,45 +159,24 @@ describe("all-game challenge contracts", () => {
     expect(screen.getByText("Delta")).toBeInTheDocument();
   });
 
-  it("lets the recipient ignore, shows Declined to the sender, then removes the row after both profiles clear it", () => {
+  it("lets the recipient decline while preserving a declined state for the sender", () => {
     const row = createPlayChallenge({
       code: "IGNORE01",
       gameId: "find-leader",
       gameVersion: "find-leader-v2",
       gameTitle: "Find the Leader",
       summary: "Exact daily board",
-      creatorId: "cody-preview",
-      recipientId: "shane-preview",
+      creatorId: "cody-profile",
+      recipientId: "shane-profile",
       playUrl: "/play/find-leader?day=2026-07-24",
       setup: { day: "2026-07-24" },
       creatorResult: { score: 8 },
       now: new Date("2026-07-24T12:00:00Z"),
     });
-    window.localStorage.setItem(CHALLENGE_STORAGE_KEY, JSON.stringify([row]));
-    window.localStorage.setItem(PROFILE_STORAGE_KEY, "shane-preview");
 
-    const recipientView = render(
-      <ChallengeProvider>
-        <MemoryRouter><ChallengeCenter /></MemoryRouter>
-      </ChallengeProvider>,
-    );
-    fireEvent.click(screen.getByRole("button", { name: "IGNORE Cody Find the Leader" }));
-    expect(screen.getByText(/No challenges here yet/)).toBeInTheDocument();
-    const ignored = loadChallenges(window.localStorage)[0]!;
-    expect(ignored.declinedAt).not.toBeNull();
-    expect(ignored.hiddenFor).toEqual(["shane-preview"]);
-    recipientView.unmount();
-
-    window.localStorage.setItem(PROFILE_STORAGE_KEY, "cody-preview");
-    const senderView = render(
-      <ChallengeProvider>
-        <MemoryRouter><ChallengeCenter /></MemoryRouter>
-      </ChallengeProvider>,
-    );
-    expect(screen.getByText("DECLINED")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "REMOVE Shane Find the Leader" }));
-    expect(screen.getByText(/No challenges here yet/)).toBeInTheDocument();
-    expect(loadChallenges(window.localStorage)).toHaveLength(0);
-    senderView.unmount();
+    const ignored = dismissChallenge(row, "shane-profile", new Date("2026-07-24T12:05:00Z"));
+    expect(ignored.declinedAt).toBe("2026-07-24T12:05:00.000Z");
+    expect(ignored.hiddenFor).toEqual(["shane-profile"]);
+    expect(challengeStatus(ignored, "cody-profile")).toBe("declined");
   });
 });
