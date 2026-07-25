@@ -3,6 +3,7 @@ import { useState, type PropsWithChildren } from "react";
 import { ChallengeProvider } from "../features/challenges/ChallengeProvider";
 import { IdentityProvider } from "../features/identity/IdentityProvider";
 import { FindLeaderHistoryProvider } from "../features/play/FindLeaderHistoryProvider";
+import { ProfilePreferencesProvider } from "../features/profile/ProfilePreferencesProvider";
 
 export function AppProviders({ children }: PropsWithChildren) {
   const [queryClient] = useState(
@@ -21,9 +22,11 @@ export function AppProviders({ children }: PropsWithChildren) {
   return (
     <QueryClientProvider client={queryClient}>
       <IdentityProvider>
-        <FindLeaderHistoryProvider>
-          <ChallengeProvider>{children}</ChallengeProvider>
-        </FindLeaderHistoryProvider>
+        <ProfilePreferencesProvider>
+          <FindLeaderHistoryProvider>
+            <ChallengeProvider>{children}</ChallengeProvider>
+          </FindLeaderHistoryProvider>
+        </ProfilePreferencesProvider>
       </IdentityProvider>
     </QueryClientProvider>
   );
