@@ -23,6 +23,7 @@ jobs:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
       HEAD_BRANCH: ${{ github.head_ref }}
+      SOURCE_SHA: ${{ github.event.pull_request.head.sha }}
     steps:
       - name: Reproduce stale identity linkage through the live branch preview
         shell: bash
@@ -66,7 +67,7 @@ jobs:
               --header "Cache-Control: no-cache" \
               "${preview_origin}/deployment.json?pin-transport=${attempt}" \
               --output "$marker_file"; then
-              if node - "$marker_file" "$GITHUB_SHA" <<'NODE'
+              if node - "$marker_file" "$SOURCE_SHA" <<'NODE'
           const fs = require('fs');
           const marker = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
           if (marker?.sha !== process.argv[3]) process.exit(1);
@@ -78,13 +79,13 @@ jobs:
             fi
 
             if [ "$attempt" -lt 24 ]; then
-              echo "Waiting for exact branch preview ${GITHUB_SHA} (attempt ${attempt} of 24)..."
+              echo "Waiting for exact branch preview ${SOURCE_SHA} (attempt ${attempt} of 24)..."
               sleep 10
             fi
           done
 
           if [ "$preview_ready" -ne 1 ]; then
-            echo "::error title=Exact branch preview unavailable::${preview_origin} never served deployment ${GITHUB_SHA}."
+            echo "::error title=Exact branch preview unavailable::${preview_origin} never served deployment ${SOURCE_SHA}."
             exit 1
           fi
 
