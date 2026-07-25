@@ -24,6 +24,7 @@ jobs:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+      OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
 
     steps:
       - name: Check out repository
@@ -48,13 +49,16 @@ jobs:
       - name: Link V2 project
         run: supabase link --project-ref "$SUPABASE_PROJECT_ID"
 
+      - name: Publish canonical production origin
+        run: supabase secrets set --project-ref "$SUPABASE_PROJECT_ID" OCTAGON_APP_ORIGIN="$OCTAGON_PRODUCTION_ORIGIN"
+
       - name: Apply database migrations
         run: supabase db push --linked
 
       - name: Deploy PIN authentication function
         run: supabase functions deploy pin-auth --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt
 
-      - name: Verify migration and function deployment
+      - name: Verify migration, function, and production CORS
         shell: bash
         run: |
           set -euo pipefail
@@ -63,9 +67,11 @@ jobs:
 
           endpoint="https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/pin-auth"
           status=$(curl --silent --show-error \
+            --dump-header "$RUNNER_TEMP/pin-auth-headers.txt" \
             --output "$RUNNER_TEMP/pin-auth-response.json" \
             --write-out "%{http_code}" \
             --request POST \
+            --header "Origin: $OCTAGON_PRODUCTION_ORIGIN" \
             --header "Content-Type: application/json" \
             --data '{}' \
             "$endpoint")
@@ -77,6 +83,7 @@ jobs:
           fi
 
           grep -Fq "Enter a name and a 4-digit PIN." "$RUNNER_TEMP/pin-auth-response.json"
+          grep -Fiq "access-control-allow-origin: $OCTAGON_PRODUCTION_ORIGIN" "$RUNNER_TEMP/pin-auth-headers.txt"
 
       - name: Record deployed backend
         shell: bash
@@ -85,6 +92,7 @@ jobs:
             echo "### Octagon HQ V2 backend deployed"
             echo "- Profile/PIN migration applied"
             echo "- pin-auth Edge Function deployed"
-            echo "- Live validation endpoint responded with the expected contract"
+            echo "- Canonical production origin: $OCTAGON_PRODUCTION_ORIGIN"
+            echo "- Live validation endpoint returned the expected CORS and response contract"
             echo "- Project secrets were never printed"
           } >> "$GITHUB_STEP_SUMMARY"
