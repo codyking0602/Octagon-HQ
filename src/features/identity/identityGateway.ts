@@ -91,9 +91,10 @@ export function createIdentityGateway(): IdentityGateway | null {
   const config = getSupabaseBrowserConfig();
   if (!supabase || !config) return null;
   const client = supabase;
+  const browserConfig: SupabaseBrowserConfig = config;
 
   async function authenticate(action: PinAuthAction, displayName: string, pin: string) {
-    const tokenHash = await requestPinAuth(config, action, displayName, pin);
+    const tokenHash = await requestPinAuth(browserConfig, action, displayName, pin);
     const verified = await client.auth.verifyOtp({
       token_hash: tokenHash,
       type: "magiclink",
