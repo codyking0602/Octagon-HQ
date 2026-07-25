@@ -1,3 +1,5 @@
+import { webkit } from "playwright";
+
 const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
 const projectId = process.env.SUPABASE_PROJECT_ID;
 const productionOrigin = process.env.OCTAGON_PRODUCTION_ORIGIN
@@ -62,7 +64,7 @@ const publicHeaders = {
   Authorization: `Bearer ${publishableKey}`,
   apikey: publishableKey,
   "Content-Type": "application/json",
-  "x-client-info": "octagon-hq-live-pin-check/1",
+  "x-client-info": "octagon-hq-live-pin-check/2",
   Origin: productionOrigin,
 };
 
@@ -73,6 +75,7 @@ const staleCredentialEmail = `stale-${suffix}@login.octagon-hq.app`;
 const pin = "4826";
 const password = `HealthCheck-${suffix}!Aa1`;
 let userId = "";
+let browser;
 
 try {
   const created = await request(
@@ -111,8 +114,9 @@ try {
     },
   );
 
+  // Prove the deployed backend contract before exercising browser CORS and the UI.
   const login = await request(
-    "Live PIN login",
+    "Direct live PIN login",
     `${supabaseOrigin}/functions/v1/pin-auth`,
     {
       method: "POST",
@@ -121,35 +125,69 @@ try {
     },
   );
 
-  const tokenHash = login.body?.tokenHash;
-  if (!tokenHash) {
-    throw new Error("Live PIN login: response did not include a token hash.");
+  if (!login.body?.tokenHash) {
+    throw new Error("Direct live PIN login: response did not include a token hash.");
   }
 
-  const verified = await request(
-    "Session verification",
-    `${supabaseOrigin}/auth/v1/verify`,
-    {
-      method: "POST",
-      headers: {
-        apikey: publishableKey,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ token_hash: tokenHash, type: "magiclink" }),
-    },
-  );
+  browser = await webkit.launch({ headless: true });
+  const context = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    locale: "en-US",
+  });
+  const page = await context.newPage();
+  const diagnostics = [];
 
-  if (!verified.body?.access_token) {
-    throw new Error("Session verification: no access token was returned.");
-  }
-  if (verified.body?.user?.id !== userId) {
-    throw new Error("Session verification: session belongs to the wrong Auth user.");
+  page.on("console", (message) => {
+    if (message.type() === "error" || message.type() === "warning") {
+      diagnostics.push(`console:${message.type()}: ${message.text()}`);
+    }
+  });
+  page.on("requestfailed", (request) => {
+    if (request.url().includes("supabase.co")) {
+      diagnostics.push(
+        `requestfailed: ${request.method()} ${request.url()} ${request.failure()?.errorText ?? "unknown"}`,
+      );
+    }
+  });
+  page.on("response", async (response) => {
+    if (!response.url().includes("/functions/v1/pin-auth")) return;
+    const request = response.request();
+    const headers = await response.allHeaders();
+    diagnostics.push(
+      `response: ${request.method()} ${response.status()} allow-origin=${headers["access-control-allow-origin"] ?? "missing"} allow-headers=${headers["access-control-allow-headers"] ?? "missing"}`,
+    );
+  });
+
+  await page.goto(`${productionOrigin}/?browser-pin-check=${suffix}`, {
+    waitUntil: "domcontentloaded",
+    timeout: 30_000,
+  });
+  await page.getByRole("button", { name: "Sign in to Octagon HQ" }).click();
+  await page.getByLabel("YOUR NAME").fill(displayName);
+  await page.getByLabel("YOUR 4-DIGIT PIN").fill(pin);
+  await page.getByRole("button", { name: "ENTER HQ" }).click();
+
+  const signedInButton = page.getByRole("button", {
+    name: `Open ${displayName} profile menu`,
+  });
+
+  try {
+    await signedInButton.waitFor({ state: "visible", timeout: 15_000 });
+  } catch {
+    const visibleError = await page.locator(".identity-error").textContent().catch(() => "");
+    throw new Error(
+      [
+        `Browser PIN login failed: ${visibleError?.trim() || "no visible error"}`,
+        ...diagnostics,
+      ].join("\n"),
+    );
   }
 
   console.log(
-    "PASS: live PIN auth verified the PIN, ignored the stale credential email, and opened the UUID-linked Auth user.",
+    "PASS: WebKit opened production Octagon HQ, submitted the visible PIN form, completed browser CORS, and loaded the UUID-linked profile.",
   );
 } finally {
+  if (browser) await browser.close().catch(() => undefined);
   if (userId) {
     await fetch(`${supabaseOrigin}/auth/v1/admin/users/${userId}`, {
       method: "DELETE",
