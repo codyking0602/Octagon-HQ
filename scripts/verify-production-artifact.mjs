@@ -26,6 +26,10 @@ const requiredApplicationMarkers = [
   "LOCK PICKS & BEGIN RESULTS",
   "COMPLETE EVENT",
   "get_pick_control_event",
+  "Event Setup",
+  "SYNC NEXT UFC EVENT",
+  "PUBLISH CARD",
+  "get_pick_event_setup",
 ];
 
 export async function verifyProductionArtifact({ dist = "dist", env = process.env } = {}) {
