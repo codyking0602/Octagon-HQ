@@ -5,9 +5,13 @@ const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
 const projectId = process.env.SUPABASE_PROJECT_ID;
 const productionOrigin = process.env.OCTAGON_PRODUCTION_ORIGIN
   ?? "https://octagon.hq-app.workers.dev";
+const expectedDeploymentSha = process.env.EXPECTED_DEPLOYMENT_SHA?.trim() ?? "";
 
 if (!accessToken || !projectId) {
   throw new Error("Live PIN verification is not configured.");
+}
+if (expectedDeploymentSha && !/^[0-9a-f]{40}$/i.test(expectedDeploymentSha)) {
+  throw new Error("EXPECTED_DEPLOYMENT_SHA must be a full commit SHA.");
 }
 
 const supabaseOrigin = `https://${projectId}.supabase.co`;
@@ -38,6 +42,19 @@ async function request(stage, url, options = {}) {
     throw new Error(`${stage}: HTTP ${response.status}; ${safeMessage(body)}`);
   }
   return { response, body };
+}
+
+if (expectedDeploymentSha) {
+  const marker = await request(
+    "Live frontend deployment marker",
+    `${productionOrigin}/deployment.json?expected=${expectedDeploymentSha}&run=${process.env.GITHUB_RUN_ID ?? Date.now()}`,
+    { headers: { "Cache-Control": "no-cache" } },
+  );
+  if (marker.body?.sha !== expectedDeploymentSha) {
+    throw new Error(
+      `Live frontend deployment marker: expected ${expectedDeploymentSha}, received ${marker.body?.sha ?? "missing"}.`,
+    );
+  }
 }
 
 const keysResult = await request(
@@ -192,7 +209,7 @@ try {
   }
 
   console.log(
-    "PASS: WebKit opened production Octagon HQ, submitted the visible PIN form, completed browser CORS, and loaded the UUID-linked profile.",
+    `PASS: WebKit verified exact production frontend ${expectedDeploymentSha || "(SHA not requested)"}, submitted the visible PIN form, completed browser CORS, and loaded the UUID-linked profile.`,
   );
 } finally {
   if (browser) await browser.close().catch(() => undefined);
