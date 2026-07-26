@@ -50,6 +50,7 @@ const eventSchema = z.object({
   locks_at: z.string(),
   season: z.number().int(),
   status: z.enum(["upcoming", "locked", "complete"]),
+  can_control: z.boolean().optional().default(false),
   bouts: z.array(boutSchema),
 });
 
@@ -171,6 +172,7 @@ export function mapPickEvent(value: unknown): PickEvent | null {
     locksAt: parsed.locks_at,
     season: parsed.season,
     status: parsed.status,
+    canControl: parsed.can_control,
     bouts: parsed.bouts.map((bout) => ({
       boutId: bout.bout_id,
       position: bout.position,
