@@ -1,5 +1,5 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { IdentityProvider } from "../identity/IdentityProvider";
 import type { IdentityGateway } from "../identity/identityGateway";
 import { PicksProvider, usePicks } from "./PicksProvider";
@@ -11,6 +11,8 @@ const cody = {
   displayName: "CODY",
   initials: "CK",
 };
+
+afterEach(cleanup);
 
 const event: PickEvent = {
   eventId: "ufc-test-event",
@@ -30,6 +32,8 @@ const event: PickEvent = {
     redFighterName: "Magomed Ankalaev",
     blueFighterSlug: "bogdan-guskov",
     blueFighterName: "Bogdan Guskov",
+    redAmericanOdds: -180,
+    blueAmericanOdds: 155,
     winnerFighterSlug: null,
   }],
 };
@@ -41,6 +45,9 @@ const history: PickHistory = {
     incorrect: 1,
     missing: 0,
     excluded: 1,
+    basePoints: 16,
+    lockBonus: 2,
+    totalPoints: 18,
     eventsEntered: 1,
   },
   events: [{
@@ -52,7 +59,8 @@ const history: PickHistory = {
     startsAt: "2026-06-20T23:00:00.000Z",
     season: 2026,
     completedAt: "2026-06-21T04:00:00.000Z",
-    record: { correct: 4, incorrect: 1, missing: 0, excluded: 1 },
+    record: { correct: 4, incorrect: 1, missing: 0, excluded: 1, basePoints: 16, lockBonus: 2, totalPoints: 18 },
+    underdogLock: null,
     bouts: [{
       boutId: "sample-bout",
       position: 1,
@@ -72,6 +80,10 @@ const history: PickHistory = {
       incorrect: 1,
       missing: 0,
       excluded: 1,
+      rank: 1,
+      basePoints: 16,
+      lockBonus: 2,
+      totalPoints: 18,
       isCurrentUser: true,
     }],
   }],
@@ -93,40 +105,54 @@ function Probe() {
   return (
     <div>
       <span>{picks.event?.subtitle ?? "NO EVENT"}</span>
-      <span>{picks.selections["ankalaev-guskov"] ?? "NO PICK"}</span>
+      <span>SELECTION {picks.selections["ankalaev-guskov"] ?? "NONE"}</span>
+      <span>LOCK {picks.underdogLock?.fighterSlug ?? "NONE"}</span>
+      <span>SCORE {picks.summary.totalPoints}</span>
       <span>{picks.summary.correct}-{picks.summary.incorrect}</span>
       <span>{picks.history.events.length} RECAP</span>
       <span>{picks.history.events[0]?.name ?? "NO RECAP"}</span>
-      <button type="button" onClick={() => void picks.setPick("ankalaev-guskov", "bogdan-guskov")}>PICK GUSKOV</button>
+      <button type="button" onClick={() => void picks.setPick("ankalaev-guskov", "magomed-ankalaev")}>PICK ANKALAEV</button>
     </div>
   );
 }
 
 describe("PicksProvider", () => {
-  it("loads current picks, summary, and completed history through one provider", async () => {
+  it("reloads the canonical lock and summary after saving a changed pick", async () => {
     const loadMyPicks = vi.fn(async () => [{
       eventId: event.eventId,
       boutId: "ankalaev-guskov",
-      fighterSlug: "magomed-ankalaev",
+      fighterSlug: "bogdan-guskov",
       pickedAt: "2026-07-24T12:00:00.000Z",
       updatedAt: "2026-07-24T12:00:00.000Z",
     }]);
     const loadMySummary = vi.fn()
-      .mockResolvedValueOnce({ correct: 4, incorrect: 2, pending: 1, eventsEntered: 1 })
-      .mockResolvedValueOnce({ correct: 4, incorrect: 2, pending: 1, eventsEntered: 1 });
+      .mockResolvedValueOnce({ correct: 4, incorrect: 2, pending: 1, eventsEntered: 1, basePoints: 16, lockBonus: 0, totalPoints: 16 })
+      .mockResolvedValueOnce({ correct: 5, incorrect: 2, pending: 1, eventsEntered: 1, basePoints: 20, lockBonus: 0, totalPoints: 20 });
     const loadMyHistory = vi.fn(async () => history);
+    const loadMyUnderdogLock = vi.fn()
+      .mockResolvedValueOnce({
+        eventId: event.eventId,
+        boutId: "ankalaev-guskov",
+        fighterSlug: "bogdan-guskov",
+        selectedAt: "2026-07-24T12:00:00.000Z",
+        frozenAmericanOdds: null,
+      })
+      .mockResolvedValueOnce(null);
     const savePick = vi.fn(async (eventId: string, boutId: string, fighterSlug: string) => ({
       eventId,
       boutId,
       fighterSlug,
       pickedAt: "2026-07-24T12:00:00.000Z",
-      updatedAt: "2026-07-24T12:00:00.000Z",
+      updatedAt: "2026-07-24T12:05:00.000Z",
     }));
     const repository: PicksRepository = {
       loadCurrentEvent: async () => event,
       loadMyPicks,
       loadMySummary,
       loadMyHistory,
+      loadMyUnderdogLock,
+      setUnderdogLock: vi.fn(),
+      clearUnderdogLock: vi.fn(),
       savePick,
     };
 
@@ -137,16 +163,22 @@ describe("PicksProvider", () => {
     );
 
     expect(await screen.findByText("Ankalaev vs. Guskov")).toBeInTheDocument();
-    await waitFor(() => expect(screen.getByText("magomed-ankalaev")).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText("SELECTION bogdan-guskov")).toBeInTheDocument());
+    expect(screen.getByText("LOCK bogdan-guskov")).toBeInTheDocument();
+    expect(screen.getByText("SCORE 16")).toBeInTheDocument();
     expect(screen.getByText("4-2")).toBeInTheDocument();
     expect(screen.getByText("1 RECAP")).toBeInTheDocument();
     expect(screen.getByText("UFC Oklahoma City")).toBeInTheDocument();
     expect(loadMyPicks).toHaveBeenCalledWith(event.eventId);
     expect(loadMyHistory).toHaveBeenCalledWith(2026);
 
-    fireEvent.click(screen.getByRole("button", { name: "PICK GUSKOV" }));
-    await waitFor(() => expect(savePick).toHaveBeenCalledWith(event.eventId, "ankalaev-guskov", "bogdan-guskov"));
-    await waitFor(() => expect(screen.getByText("bogdan-guskov")).toBeInTheDocument());
+    fireEvent.click(screen.getByRole("button", { name: "PICK ANKALAEV" }));
+    await waitFor(() => expect(savePick).toHaveBeenCalledWith(event.eventId, "ankalaev-guskov", "magomed-ankalaev"));
+    await waitFor(() => expect(screen.getByText("SELECTION magomed-ankalaev")).toBeInTheDocument());
+    expect(screen.getByText("LOCK NONE")).toBeInTheDocument();
+    expect(screen.getByText("SCORE 20")).toBeInTheDocument();
+    expect(loadMyUnderdogLock).toHaveBeenCalledTimes(2);
+    expect(loadMySummary).toHaveBeenCalledTimes(2);
   });
 
   it("loads completed history even while the next event is not available", async () => {
@@ -155,8 +187,11 @@ describe("PicksProvider", () => {
     const repository: PicksRepository = {
       loadCurrentEvent: async () => null,
       loadMyPicks,
-      loadMySummary: async () => ({ correct: 4, incorrect: 1, pending: 0, eventsEntered: 1 }),
+      loadMySummary: async () => ({ correct: 4, incorrect: 1, pending: 0, eventsEntered: 1, basePoints: 16, lockBonus: 0, totalPoints: 16 }),
       loadMyHistory,
+      loadMyUnderdogLock: async () => null,
+      setUnderdogLock: vi.fn(),
+      clearUnderdogLock: vi.fn(),
       savePick: vi.fn(),
     };
 
@@ -174,13 +209,16 @@ describe("PicksProvider", () => {
 
   it("loads the public event without requesting profile data while signed out", async () => {
     const loadMyPicks = vi.fn(async () => []);
-    const loadMySummary = vi.fn(async () => ({ correct: 0, incorrect: 0, pending: 0, eventsEntered: 0 }));
+    const loadMySummary = vi.fn(async () => ({ correct: 0, incorrect: 0, pending: 0, eventsEntered: 0, basePoints: 0, lockBonus: 0, totalPoints: 0 }));
     const loadMyHistory = vi.fn(async () => history);
     const repository: PicksRepository = {
       loadCurrentEvent: async () => event,
       loadMyPicks,
       loadMySummary,
       loadMyHistory,
+      loadMyUnderdogLock: async () => null,
+      setUnderdogLock: vi.fn(),
+      clearUnderdogLock: vi.fn(),
       savePick: vi.fn(),
     };
 
@@ -191,7 +229,7 @@ describe("PicksProvider", () => {
     );
 
     expect(await screen.findByText("Ankalaev vs. Guskov")).toBeInTheDocument();
-    expect(screen.getByText("NO PICK")).toBeInTheDocument();
+    expect(screen.getByText("SELECTION NONE")).toBeInTheDocument();
     expect(screen.getByText("0 RECAP")).toBeInTheDocument();
     expect(loadMyPicks).not.toHaveBeenCalled();
     expect(loadMySummary).not.toHaveBeenCalled();

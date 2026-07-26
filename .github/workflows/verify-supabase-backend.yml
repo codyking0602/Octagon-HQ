@@ -5,6 +5,7 @@ on:
     paths:
       - ".github/workflows/verify-supabase-backend.yml"
       - ".github/workflows/deploy-supabase.yml"
+      - "scripts/verify-picks-scoring-live.mjs"
       - "supabase/**"
   workflow_dispatch:
 
@@ -134,6 +135,9 @@ jobs:
           require_remote_migration "202607270001" "Picks migration not deployed"
           require_remote_migration "202607310001" "Picks result lifecycle migration not deployed"
           require_remote_migration "202608010001" "Picks recap migration not deployed"
+          require_remote_migration "202608020000" "Picks scoring preparation migration not deployed"
+          require_remote_migration "202608020001" "Picks scoring migration not deployed"
+          require_remote_migration "202608020002" "Picks scoring RPC verification migration not deployed"
 
           if ! supabase functions list --project-ref "$SUPABASE_PROJECT_ID" | grep -Fq "pin-auth"; then
             echo "::error title=PIN function not deployed::The pin-auth Edge Function is not deployed to the V2 project."
@@ -169,6 +173,9 @@ jobs:
             exit 1
           fi
 
+      - name: Verify live Picks scoring RPCs
+        run: node scripts/verify-picks-scoring-live.mjs
+
       - name: Record verification boundary
         shell: bash
         run: |
@@ -184,6 +191,8 @@ jobs:
             echo "- Profile-backed UFC Picks migration: deployed remotely"
             echo "- Picks result lifecycle migration: deployed remotely"
             echo "- Picks recap migration: deployed remotely"
+            echo "- Picks scoring migrations: deployed remotely"
+            echo "- Underdog Lock and seven-field scoring summary RPCs: responding in production"
             echo "- pin-auth Edge Function: deployed and responding with the expected contract"
             echo "- Production CORS origin: $OCTAGON_PRODUCTION_ORIGIN"
             echo "- Cloudflare VITE values: cannot be read by GitHub and must be verified through the Cloudflare production build"

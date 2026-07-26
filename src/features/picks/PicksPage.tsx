@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useIdentity } from "../identity/IdentityProvider";
 import {
+  americanOddsLabel,
   eventPicksLocked,
   pickProgress,
   type PickHistoryBout,
@@ -8,6 +9,7 @@ import {
   type PickHistoryRecord,
 } from "./picksModel";
 import { usePicks } from "./PicksProvider";
+import { FighterThumbnail } from "./FighterThumbnail";
 
 function eventDate(value: string) {
   return new Intl.DateTimeFormat(undefined, {
@@ -72,7 +74,7 @@ function EventRecap({ event, latest }: { event: PickHistoryEvent; latest: boolea
         </div>
         <div className="picks-recap-card__record" aria-label={`${event.record.correct} wins and ${event.record.incorrect} losses`}>
           <strong>{event.record.correct}-{event.record.incorrect}</strong>
-          <small>{recordNote(event.record)}</small>
+          <small>{event.record.totalPoints} PTS · {recordNote(event.record)}</small>
         </div>
       </summary>
 
@@ -86,20 +88,27 @@ function EventRecap({ event, latest }: { event: PickHistoryEvent; latest: boolea
             <small>{event.groupResults.length} ENTERED</small>
           </div>
           <div className="picks-group-results">
-            {event.groupResults.map((result, index) => (
+            {event.groupResults.map((result) => (
               <div
                 className={result.isCurrentUser ? "picks-group-result is-current-user" : "picks-group-result"}
                 key={result.displayName}
               >
-                <span>{index + 1}</span>
+                <span>{result.rank}</span>
                 <strong>{result.displayName}</strong>
                 <div>
-                  <b>{result.correct}-{result.incorrect}</b>
-                  <small>{recordNote(result)}</small>
+                  <b>{result.totalPoints} PTS</b>
+                  <small>{result.correct}-{result.incorrect} · +{result.lockBonus} lock</small>
                 </div>
               </div>
             ))}
           </div>
+        </section>
+
+        <section className="picks-recap-points" aria-label="Your scoring totals">
+          <div><span>RECORD</span><strong>{event.record.correct}-{event.record.incorrect}</strong></div>
+          <div><span>BASE</span><strong>{event.record.basePoints}</strong></div>
+          <div><span>LOCK</span><strong>+{event.record.lockBonus}</strong></div>
+          <div><span>TOTAL</span><strong>{event.record.totalPoints}</strong></div>
         </section>
 
         <section className="picks-recap-fights" aria-labelledby={`your-results-${event.eventId}`}>
@@ -186,6 +195,12 @@ export default function PicksPage() {
             <div className="picks-progress" aria-label={`${progress.completed} of ${progress.total} picks completed`}>
               <div><span>YOUR PICKS</span><b>{progress.completed} OF {progress.total}</b></div>
               <div className="picks-progress__track" aria-hidden="true"><span style={{ width: `${percent}%` }} /></div>
+              <p>UNDERDOG LOCK · {picks.underdogLock
+                ? orderedBouts.flatMap((bout) => [
+                    [bout.redFighterSlug, bout.redFighterName],
+                    [bout.blueFighterSlug, bout.blueFighterName],
+                  ]).find(([slug]) => slug === picks.underdogLock?.fighterSlug)?.[1] ?? picks.underdogLock.fighterSlug
+                : "NONE SELECTED"}</p>
             </div>
 
             {!identity.profile ? (
@@ -203,11 +218,22 @@ export default function PicksPage() {
             )}
           </section>
 
+          <details className="surface-card picks-scoring-guide">
+            <summary>HOW SCORING WORKS</summary>
+            <p><strong>Correct pick +4</strong><span>Incorrect and missing picks score 0. Draws, no contests, and cancellations are excluded.</span></p>
+            <p><strong>Underdog Lock bonus by odds</strong><span>Choose one fighter at +100 or longer. A winning lock adds +1 through +7 based on its frozen lock-time odds.</span></p>
+          </details>
+
           {identity.profile ? (
             <section className="picks-card-list" aria-label={`${event.name} fight picks`}>
               {orderedBouts.map((bout) => {
                 const selection = picks.selections[bout.boutId] ?? null;
                 const saving = picks.savingBoutId === bout.boutId;
+                const redOdds = americanOddsLabel(bout.redAmericanOdds);
+                const blueOdds = americanOddsLabel(bout.blueAmericanOdds);
+                const favorite = bout.redAmericanOdds !== null && bout.blueAmericanOdds !== null
+                  ? (bout.redAmericanOdds < bout.blueAmericanOdds ? "red" : bout.blueAmericanOdds < bout.redAmericanOdds ? "blue" : null)
+                  : null;
                 return (
                   <article className="surface-card pick-bout-card" key={bout.boutId}>
                     <div className="pick-bout-card__heading">
@@ -222,8 +248,10 @@ export default function PicksPage() {
                         disabled={locked || Boolean(picks.savingBoutId)}
                         onClick={() => void picks.setPick(bout.boutId, bout.redFighterSlug)}
                       >
+                        <FighterThumbnail name={bout.redFighterName} slug={bout.redFighterSlug} />
                         <span>{bout.redFighterName}</span>
-                        <small>{selection === bout.redFighterSlug ? "YOUR PICK" : "PICK FIGHTER"}</small>
+                        <small>{redOdds ?? "ODDS TBD"}{favorite === "red" ? " · FAVORITE" : ""}</small>
+                        <em>{selection === bout.redFighterSlug ? "YOUR PICK" : "PICK FIGHTER"}</em>
                       </button>
                       <span className="pick-bout-card__versus">VS</span>
                       <button
@@ -233,10 +261,25 @@ export default function PicksPage() {
                         disabled={locked || Boolean(picks.savingBoutId)}
                         onClick={() => void picks.setPick(bout.boutId, bout.blueFighterSlug)}
                       >
+                        <FighterThumbnail name={bout.blueFighterName} slug={bout.blueFighterSlug} />
                         <span>{bout.blueFighterName}</span>
-                        <small>{selection === bout.blueFighterSlug ? "YOUR PICK" : "PICK FIGHTER"}</small>
+                        <small>{blueOdds ?? "ODDS TBD"}{favorite === "blue" ? " · FAVORITE" : ""}</small>
+                        <em>{selection === bout.blueFighterSlug ? "YOUR PICK" : "PICK FIGHTER"}</em>
                       </button>
                     </div>
+                    {selection && ((selection === bout.redFighterSlug ? bout.redAmericanOdds : bout.blueAmericanOdds) ?? 0) > 0 ? (
+                      <button
+                        className={picks.underdogLock?.boutId === bout.boutId ? "pick-lock-action is-selected" : "pick-lock-action"}
+                        type="button"
+                        disabled={locked || picks.savingLock}
+                        aria-pressed={picks.underdogLock?.boutId === bout.boutId}
+                        onClick={() => picks.underdogLock?.boutId === bout.boutId
+                          ? void picks.clearUnderdogLock()
+                          : void picks.setUnderdogLock(bout.boutId, selection)}
+                      >
+                        {picks.underdogLock?.boutId === bout.boutId ? "UNDERDOG LOCK SELECTED · REMOVE" : "MAKE THIS MY UNDERDOG LOCK"}
+                      </button>
+                    ) : null}
                     {saving ? <p className="pick-bout-card__saving" role="status">SAVING PICK…</p> : null}
                   </article>
                 );
@@ -279,9 +322,9 @@ export default function PicksPage() {
                   <strong>{picks.history.summary.correct}-{picks.history.summary.incorrect}</strong>
                 </div>
                 <dl>
-                  <div><dt>EVENTS</dt><dd>{picks.history.summary.eventsEntered}</dd></div>
-                  <div><dt>MISSING</dt><dd>{picks.history.summary.missing}</dd></div>
-                  <div><dt>EXCLUDED</dt><dd>{picks.history.summary.excluded}</dd></div>
+                  <div><dt>BASE</dt><dd>{picks.history.summary.basePoints}</dd></div>
+                  <div><dt>LOCK</dt><dd>+{picks.history.summary.lockBonus}</dd></div>
+                  <div><dt>TOTAL</dt><dd>{picks.history.summary.totalPoints}</dd></div>
                 </dl>
               </section>
 

@@ -9,6 +9,12 @@ import {
 const requiredApplicationMarkers = [
   "Your event recaps",
   "get_my_pick_history",
+  "HOW SCORING WORKS",
+  "Correct pick +4",
+  "MAKE THIS MY UNDERDOG LOCK",
+  "pick-fighter-thumbnail",
+  "get_my_event_underdog_lock",
+  "set_my_event_underdog_lock",
 ];
 
 export async function verifyProductionArtifact({ dist = "dist", env = process.env } = {}) {

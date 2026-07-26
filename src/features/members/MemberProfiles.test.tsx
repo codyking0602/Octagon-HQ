@@ -78,10 +78,13 @@ function picksRepository(): PicksRepository {
     loadMyPicks: vi.fn(async () => []),
     loadMyHistory: vi.fn(async () => ({
       season: null,
-      summary: { correct: 3, incorrect: 1, missing: 0, excluded: 0, eventsEntered: 2 },
+      summary: { correct: 3, incorrect: 1, missing: 0, excluded: 0, eventsEntered: 2, basePoints: 12, lockBonus: 0, totalPoints: 12 },
       events: [],
     })),
-    loadMySummary: vi.fn(async () => ({ correct: 3, incorrect: 1, pending: 2, eventsEntered: 2 })),
+    loadMySummary: vi.fn(async () => ({ correct: 3, incorrect: 1, pending: 2, eventsEntered: 2, basePoints: 12, lockBonus: 0, totalPoints: 12 })),
+    loadMyUnderdogLock: async () => null,
+    setUnderdogLock: vi.fn(),
+    clearUnderdogLock: vi.fn(),
     savePick: vi.fn(),
   };
 }

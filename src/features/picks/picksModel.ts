@@ -10,7 +10,17 @@ export interface PickBout {
   redFighterName: string;
   blueFighterSlug: string;
   blueFighterName: string;
+  redAmericanOdds: number | null;
+  blueAmericanOdds: number | null;
   winnerFighterSlug: string | null;
+}
+
+export interface UnderdogLock {
+  eventId: string;
+  boutId: string;
+  fighterSlug: string;
+  selectedAt: string;
+  frozenAmericanOdds: number | null;
 }
 
 export interface PickEvent {
@@ -39,6 +49,9 @@ export interface PickSummary {
   incorrect: number;
   pending: number;
   eventsEntered: number;
+  basePoints: number;
+  lockBonus: number;
+  totalPoints: number;
 }
 
 export interface PickHistoryBout {
@@ -60,9 +73,13 @@ export interface PickHistoryRecord {
   incorrect: number;
   missing: number;
   excluded: number;
+  basePoints: number;
+  lockBonus: number;
+  totalPoints: number;
 }
 
 export interface PickGroupResult extends PickHistoryRecord {
+  rank: number;
   displayName: string;
   isCurrentUser: boolean;
 }
@@ -77,6 +94,7 @@ export interface PickHistoryEvent {
   season: number;
   completedAt: string;
   record: PickHistoryRecord;
+  underdogLock: UnderdogLock | null;
   bouts: PickHistoryBout[];
   groupResults: PickGroupResult[];
 }
@@ -96,6 +114,9 @@ export const emptyPickSummary: PickSummary = {
   incorrect: 0,
   pending: 0,
   eventsEntered: 0,
+  basePoints: 0,
+  lockBonus: 0,
+  totalPoints: 0,
 };
 
 export const emptyPickHistory: PickHistory = {
@@ -105,6 +126,9 @@ export const emptyPickHistory: PickHistory = {
     incorrect: 0,
     missing: 0,
     excluded: 0,
+    basePoints: 0,
+    lockBonus: 0,
+    totalPoints: 0,
     eventsEntered: 0,
   },
   events: [],
@@ -112,6 +136,11 @@ export const emptyPickHistory: PickHistory = {
 
 export function eventPicksLocked(event: PickEvent, now = Date.now()) {
   return event.status !== "upcoming" || Date.parse(event.locksAt) <= now;
+}
+
+export function americanOddsLabel(odds: number | null) {
+  if (odds === null) return null;
+  return odds > 0 ? `+${odds}` : `${odds}`;
 }
 
 export function pickProgress(event: PickEvent | null, selections: Readonly<Record<string, string>>) {
