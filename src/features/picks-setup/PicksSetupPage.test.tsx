@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import { IdentityProvider } from "../identity/IdentityProvider";
 import type { IdentityGateway } from "../identity/identityGateway";
-import type { PickSetupDraft } from "./pickSetupModel";
+import type { PickSetupDraft, PickSetupSourcePreview } from "./pickSetupModel";
 import PicksSetupPage from "./PicksSetupPage";
 import type { PickSetupRepository } from "./pickSetupRepository";
 
@@ -15,9 +15,9 @@ const cody = {
 
 const stagedDraft: PickSetupDraft = {
   draftId: "22222222-2222-4222-8222-222222222222",
-  source: "ufc.com",
+  source: "UFC.com metadata + MMA Mania card",
   sourceEventKey: "event/ufc-test",
-  sourceUrl: "https://www.ufc.com/event/ufc-test",
+  sourceUrl: "https://www.mmamania.com/ufc-fight-cards/1/ufc-test",
   eventId: "ufc-test-2026-08-01",
   name: "UFC Fight Night",
   subtitle: "Red vs. Blue",
@@ -32,7 +32,7 @@ const stagedDraft: PickSetupDraft = {
   warnings: [],
   canPublish: true,
   bouts: [{
-    boutId: "red-blue",
+    boutId: "main-event-red-fighter-blue-fighter",
     position: 1,
     weightClass: "Lightweight",
     redFighterSlug: "red-fighter",
@@ -41,7 +41,7 @@ const stagedDraft: PickSetupDraft = {
     blueFighterName: "Blue Fighter",
     included: true,
   }, {
-    boutId: "second-third",
+    boutId: "main-second-fighter-third-fighter",
     position: 2,
     weightClass: "Welterweight",
     redFighterSlug: "second-fighter",
@@ -50,6 +50,17 @@ const stagedDraft: PickSetupDraft = {
     blueFighterName: "Third Fighter",
     included: true,
   }],
+};
+
+const sourcePreview: PickSetupSourcePreview = {
+  sourceHash: "abc123",
+  requestedScope: "auto",
+  effectiveScope: "main",
+  source: "UFC.com metadata + MMA Mania card",
+  sourceUrl: "https://www.mmamania.com/ufc-fight-cards/1/ufc-test",
+  fightCount: 6,
+  changes: ["Moved Red Fighter vs. Blue Fighter from prelims to main event."],
+  warnings: [],
 };
 
 function gateway(): IdentityGateway {
@@ -67,6 +78,8 @@ function repository(draft: PickSetupDraft | null): PickSetupRepository {
   return {
     loadDraft: vi.fn().mockResolvedValue(draft),
     syncNextEvent: vi.fn().mockResolvedValue(undefined),
+    previewSource: vi.fn().mockResolvedValue(sourcePreview),
+    applySourcePreview: vi.fn().mockResolvedValue(undefined),
     updateMetadata: vi.fn().mockResolvedValue(undefined),
     saveBout: vi.fn().mockResolvedValue(undefined),
     removeBout: vi.fn().mockResolvedValue(undefined),
@@ -92,12 +105,36 @@ afterEach(() => {
 });
 
 describe("Event Setup and card review", () => {
-  it("syncs the next UFC event when no draft exists", async () => {
+  it("syncs the next event with auto scope when no draft exists", async () => {
     const repo = repository(null);
     renderPage(repo);
 
     fireEvent.click(await screen.findByRole("button", { name: "SYNC NEXT UFC EVENT" }));
-    await waitFor(() => expect(repo.syncNextEvent).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(repo.syncNextEvent).toHaveBeenCalledWith("auto"));
+  });
+
+  it("checks source changes without applying them until owner confirmation", async () => {
+    vi.spyOn(window, "confirm").mockReturnValue(true);
+    const repo = repository(stagedDraft);
+    renderPage(repo);
+
+    fireEvent.click(await screen.findByRole("button", { name: "CHECK FOR CARD UPDATES" }));
+    await waitFor(() => expect(repo.previewSource).toHaveBeenCalledWith("auto"));
+    expect(repo.applySourcePreview).not.toHaveBeenCalled();
+    expect(await screen.findByText("CARD CHANGES DETECTED")).toBeInTheDocument();
+    expect(screen.getByText(sourcePreview.changes[0])).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "APPLY SOURCE CHANGES" }));
+    await waitFor(() => expect(repo.applySourcePreview).toHaveBeenCalledWith(sourcePreview));
+  });
+
+  it("uses the full-card override for the next source check", async () => {
+    const repo = repository(stagedDraft);
+    renderPage(repo);
+
+    fireEvent.click(await screen.findByRole("button", { name: /FULL CARD Main card, prelims/i }));
+    fireEvent.click(screen.getByRole("button", { name: "CHECK FOR CARD UPDATES" }));
+    await waitFor(() => expect(repo.previewSource).toHaveBeenCalledWith("full"));
   });
 
   it("keeps review edits staged and publishes only after confirmation", async () => {
@@ -108,6 +145,7 @@ describe("Event Setup and card review", () => {
     expect(await screen.findByRole("heading", { name: "UFC Fight Night" })).toBeInTheDocument();
     expect(screen.getByText("STAGED CARD · NOT LIVE")).toBeInTheDocument();
     expect(screen.getByText("2 fights included")).toBeInTheDocument();
+    expect(screen.getByText("MAIN EVENT")).toBeInTheDocument();
 
     fireEvent.change(screen.getByLabelText("VENUE"), { target: { value: "Updated Arena" } });
     fireEvent.click(screen.getByRole("button", { name: "SAVE EVENT DETAILS" }));
@@ -119,7 +157,7 @@ describe("Event Setup and card review", () => {
     fireEvent.click(screen.getByRole("button", { name: /Move Red Fighter vs Blue Fighter down/i }));
     await waitFor(() => expect(repo.reorderBouts).toHaveBeenCalledWith(
       stagedDraft.draftId,
-      ["second-third", "red-blue"],
+      ["main-second-fighter-third-fighter", "main-event-red-fighter-blue-fighter"],
     ));
 
     fireEvent.click(screen.getByRole("button", { name: "PUBLISH CARD" }));
