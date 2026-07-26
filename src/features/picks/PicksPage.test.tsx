@@ -4,7 +4,7 @@ import { IdentityProvider } from "../identity/IdentityProvider";
 import type { IdentityGateway } from "../identity/identityGateway";
 import PicksPage from "./PicksPage";
 import { PicksProvider } from "./PicksProvider";
-import type { PickEvent } from "./picksModel";
+import type { PickEvent, PickHistory } from "./picksModel";
 import type { PicksRepository } from "./picksRepository";
 
 const cody = {
@@ -35,6 +35,62 @@ const event: PickEvent = {
   }],
 };
 
+const history: PickHistory = {
+  season: 2026,
+  summary: { correct: 4, incorrect: 1, missing: 0, excluded: 1, eventsEntered: 1 },
+  events: [{
+    eventId: "ufc-oklahoma-city",
+    name: "UFC Oklahoma City",
+    subtitle: "Main Card",
+    venue: "Paycom Center",
+    location: "Oklahoma City, Oklahoma",
+    startsAt: "2026-06-20T23:00:00.000Z",
+    season: 2026,
+    completedAt: "2026-06-21T04:00:00.000Z",
+    record: { correct: 4, incorrect: 1, missing: 0, excluded: 1 },
+    bouts: [{
+      boutId: "red-blue",
+      position: 1,
+      weightClass: "Lightweight",
+      redFighterSlug: "red-fighter",
+      redFighterName: "Red Fighter",
+      blueFighterSlug: "blue-fighter",
+      blueFighterName: "Blue Fighter",
+      resultStatus: "red_win",
+      winnerFighterSlug: "red-fighter",
+      pickedFighterSlug: "red-fighter",
+      verdict: "correct",
+    }, {
+      boutId: "excluded-bout",
+      position: 2,
+      weightClass: "Welterweight",
+      redFighterSlug: "third-fighter",
+      redFighterName: "Third Fighter",
+      blueFighterSlug: "fourth-fighter",
+      blueFighterName: "Fourth Fighter",
+      resultStatus: "no_contest",
+      winnerFighterSlug: null,
+      pickedFighterSlug: "third-fighter",
+      verdict: "excluded",
+    }],
+    groupResults: [{
+      displayName: "CODY",
+      correct: 4,
+      incorrect: 1,
+      missing: 0,
+      excluded: 1,
+      isCurrentUser: true,
+    }, {
+      displayName: "SHANE",
+      correct: 3,
+      incorrect: 2,
+      missing: 0,
+      excluded: 1,
+      isCurrentUser: false,
+    }],
+  }],
+};
+
 function gateway(): IdentityGateway {
   return {
     getSession: async () => ({ userId: cody.id }),
@@ -46,17 +102,21 @@ function gateway(): IdentityGateway {
   };
 }
 
-function repository(savePick = vi.fn(async (eventId: string, boutId: string, fighterSlug: string) => ({
-  eventId,
-  boutId,
-  fighterSlug,
-  pickedAt: "2026-07-24T12:00:00.000Z",
-  updatedAt: "2026-07-24T12:00:00.000Z",
-}))) : PicksRepository {
+function repository(
+  savePick = vi.fn(async (eventId: string, boutId: string, fighterSlug: string) => ({
+    eventId,
+    boutId,
+    fighterSlug,
+    pickedAt: "2026-07-24T12:00:00.000Z",
+    updatedAt: "2026-07-24T12:00:00.000Z",
+  })),
+  currentEvent: PickEvent | null = event,
+): PicksRepository {
   return {
-    loadCurrentEvent: async () => event,
+    loadCurrentEvent: async () => currentEvent,
     loadMyPicks: async () => [],
     loadMySummary: async () => ({ correct: 0, incorrect: 0, pending: 1, eventsEntered: 1 }),
+    loadMyHistory: async () => history,
     savePick,
   };
 }
@@ -79,7 +139,7 @@ describe("PicksPage", () => {
 
     expect(await screen.findByRole("heading", { name: "UFC Fight Night" })).toBeInTheDocument();
     expect(screen.getByText("Ankalaev vs. Guskov")).toBeInTheDocument();
-    expect(screen.getByText("MAIN EVENT")).toBeInTheDocument();
+    expect(screen.getAllByText("MAIN EVENT").length).toBeGreaterThan(0);
 
     fireEvent.click(screen.getByRole("button", { name: /Bogdan Guskov/i }));
     await waitFor(() => expect(savePick).toHaveBeenCalledWith(event.eventId, "ankalaev-guskov", "bogdan-guskov"));
@@ -97,5 +157,22 @@ describe("PicksPage", () => {
     expect(await screen.findByRole("heading", { name: "UFC Fight Night" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "SIGN IN TO MAKE PICKS" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /Magomed Ankalaev/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Your event recaps" })).not.toBeInTheDocument();
+  });
+
+  it("shows personal results and compact group standings when no active card exists", async () => {
+    render(
+      <IdentityProvider gateway={gateway()}>
+        <PicksProvider repository={repository(undefined, null)}><PicksPage /></PicksProvider>
+      </IdentityProvider>,
+    );
+
+    expect(await screen.findByRole("heading", { name: "Your event recaps" })).toBeInTheDocument();
+    expect(screen.getByText("UFC Oklahoma City")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "How everyone did" })).toBeInTheDocument();
+    expect(screen.getByText("SHANE")).toBeInTheDocument();
+    expect(screen.getByText("Correct")).toBeInTheDocument();
+    expect(screen.getByText("No contest")).toBeInTheDocument();
+    expect(screen.getByText("Excluded")).toBeInTheDocument();
   });
 });
