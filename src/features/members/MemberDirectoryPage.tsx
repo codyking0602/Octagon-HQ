@@ -74,7 +74,7 @@ export function MemberDirectoryView({
           <div>
             <p className="eyebrow">MEMBERS ONLY</p>
             <h2>Sign in to view the member directory</h2>
-            <p>Registered profile names, favorite fighters, streaks, and Picks records stay inside Octagon HQ.</p>
+            <p>Registered profile names, avatars, favorite fighters, streaks, and Picks records stay inside Octagon HQ.</p>
           </div>
           <button className="primary-action" type="button" onClick={identity.openDialog}>SIGN IN TO VIEW MEMBERS</button>
         </section>
@@ -101,16 +101,26 @@ export function MemberDirectoryView({
                 to={memberProfilePath(member.displayName)}
                 aria-label={`View ${member.displayName} member profile`}
               >
-                <div className="member-directory-card__topline">
-                  <div className="member-initials">{member.initials}</div>
-                  {member.isCurrentUser ? <span>YOU</span> : <span>MEMBER</span>}
+                <div className="member-directory-card__identity">
+                  <div className="member-directory-avatar">
+                    {member.avatarPhotoData ? (
+                      <img src={member.avatarPhotoData} alt={`${member.displayName} avatar`} />
+                    ) : (
+                      <span>{member.initials}</span>
+                    )}
+                  </div>
+                  <div>
+                    <div className="member-directory-card__topline">
+                      <span>{member.isCurrentUser ? "YOU" : "MEMBER"}</span>
+                    </div>
+                    <h2>{member.displayName}</h2>
+                  </div>
                 </div>
-                <h2>{member.displayName}</h2>
                 <div className="member-favorite-row">
                   {favorite ? (
                     <FighterPhoto name={favorite.name} src={favorite.thumbUrl} />
                   ) : (
-                    <i aria-hidden="true">{member.initials}</i>
+                    <i aria-hidden="true">UFC</i>
                   )}
                   <span>
                     <small>FAVORITE FIGHTER</small>
@@ -119,7 +129,7 @@ export function MemberDirectoryView({
                 </div>
                 <div className="member-card-stats">
                   <div><strong>{member.currentStreak}</strong><span>DAY STREAK</span></div>
-                  <div><strong>{member.picksCorrect}-{member.picksIncorrect}</strong><span>PICKS RECORD</span></div>
+                  <div><strong>{member.picksCorrect}-{member.picksIncorrect}</strong><span>CURRENT PICKS</span></div>
                 </div>
                 <b className="member-card-action">VIEW PROFILE →</b>
               </Link>
