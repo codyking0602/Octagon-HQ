@@ -28,6 +28,8 @@ const boutSchema = z.object({
   red_american_odds: americanOddsSchema,
   blue_american_odds: americanOddsSchema,
   winner_fighter_slug: z.string().nullable(),
+  result_status: z.enum(["pending", "red_win", "blue_win", "draw", "no_contest", "cancelled"]).optional().default("pending"),
+  result_recorded_at: z.string().nullable().optional().default(null),
 });
 
 const eventSchema = z.object({
@@ -163,6 +165,8 @@ export function mapPickEvent(value: unknown): PickEvent | null {
       redAmericanOdds: bout.red_american_odds,
       blueAmericanOdds: bout.blue_american_odds,
       winnerFighterSlug: bout.winner_fighter_slug,
+      resultStatus: bout.result_status,
+      resultRecordedAt: bout.result_recorded_at,
     })),
   };
 }
