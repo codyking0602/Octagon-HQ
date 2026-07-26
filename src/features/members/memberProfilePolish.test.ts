@@ -58,6 +58,12 @@ describe("Member Profile polish contracts", () => {
     expect(profilePage).not.toContain("<span>PICKS EVENTS</span>");
   });
 
+  it("loads the safe profile projection for the signed-in member so Picks activity can join provider results", () => {
+    expect(profilePage).toContain("setLoading(!isOwnProfile)");
+    expect(profilePage).toContain("remoteMember?.recentActivity?.length");
+    expect(profilePage).toContain("fallbackOwnActivity");
+  });
+
   it("derives achievements from real profile activity rather than decorative hard-coded counts", () => {
     const achievements = memberAchievements(member, {
       open: 0,
