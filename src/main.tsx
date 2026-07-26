@@ -9,6 +9,7 @@ import "./styles/home.css";
 import "./styles/picks.css";
 import "./styles/intelligence.css";
 import "./styles/identity.css";
+import "./styles/member-profiles.css";
 import "./styles/play.css";
 import "./styles/wavelength.css";
 import "./styles/game-results.css";
