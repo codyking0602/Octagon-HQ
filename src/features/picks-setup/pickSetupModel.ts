@@ -1,3 +1,7 @@
+export type PickSetupCardScope = "auto" | "main" | "full";
+export type PickSetupEffectiveScope = "main" | "full";
+export type PickSetupBoutSection = "main-event" | "main" | "prelim" | "early-prelim";
+
 export interface PickSetupBout {
   boutId: string;
   position: number;
@@ -30,6 +34,17 @@ export interface PickSetupDraft {
   bouts: PickSetupBout[];
 }
 
+export interface PickSetupSourcePreview {
+  sourceHash: string;
+  requestedScope: PickSetupCardScope;
+  effectiveScope: PickSetupEffectiveScope;
+  source: string;
+  sourceUrl: string;
+  fightCount: number;
+  changes: string[];
+  warnings: string[];
+}
+
 export interface PickSetupMetadataPatch {
   event_id?: string;
   name?: string;
@@ -50,4 +65,26 @@ export interface PickSetupBoutInput {
   blue_fighter_slug?: string;
   blue_fighter_name: string;
   included: boolean;
+}
+
+export function pickSetupBoutSection(boutId: string): PickSetupBoutSection {
+  if (boutId.startsWith("main-event-")) return "main-event";
+  if (boutId.startsWith("early-prelim-")) return "early-prelim";
+  if (boutId.startsWith("prelim-")) return "prelim";
+  return "main";
+}
+
+export function pickSetupBoutSectionLabel(boutId: string) {
+  const section = pickSetupBoutSection(boutId);
+  if (section === "main-event") return "MAIN EVENT";
+  if (section === "early-prelim") return "EARLY PRELIMS";
+  if (section === "prelim") return "PRELIMS";
+  return "MAIN CARD";
+}
+
+export function pickSetupDraftCardLabel(draft: PickSetupDraft) {
+  return draft.bouts.some((bout) => {
+    const section = pickSetupBoutSection(bout.boutId);
+    return section === "prelim" || section === "early-prelim";
+  }) ? "FULL CARD" : "MAIN CARD";
 }
