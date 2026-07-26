@@ -103,7 +103,9 @@ describe("Fight Night Control", () => {
     fireEvent.click(screen.getByRole("button", { name: /RED WINNER Red Fighter/i }));
     await waitFor(() => expect(repo.recordResult).toHaveBeenCalledWith("ufc-control", "red-blue", "red_win"));
 
-    fireEvent.click(screen.getByRole("button", { name: "CLEAR RESULT" }));
+    const clearButton = screen.getByRole("button", { name: "CLEAR RESULT" });
+    await waitFor(() => expect(clearButton).not.toBeDisabled());
+    fireEvent.click(clearButton);
     await waitFor(() => expect(repo.recordResult).toHaveBeenCalledWith("ufc-control", "second-fight", "pending"));
 
     expect(screen.getByRole("button", { name: "COMPLETE EVENT" })).toBeDisabled();
