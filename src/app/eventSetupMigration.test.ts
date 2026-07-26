@@ -1,0 +1,49 @@
+import { readFileSync } from "node:fs";
+import { describe, expect, it } from "vitest";
+
+const sql = readFileSync(
+  "supabase/migrations/202608050001_event_setup_card_review.sql",
+  "utf8",
+);
+const syncFunction = readFileSync("supabase/functions/sync-next-ufc-event/index.ts", "utf8");
+const config = readFileSync("supabase/config.toml", "utf8");
+const deployWorkflow = readFileSync(".github/workflows/deploy-supabase.yml", "utf8");
+
+describe("Phase 2B event setup backend", () => {
+  it("keeps imported cards private until atomic publish", () => {
+    expect(sql).toContain("create table if not exists public.pick_event_drafts");
+    expect(sql).toContain("create table if not exists public.pick_event_draft_bouts");
+    expect(sql).toContain("revoke all on table public.pick_event_drafts, public.pick_event_draft_bouts from public, anon, authenticated");
+    expect(sql).toContain("create or replace function public.publish_pick_event_draft");
+    expect(sql).toContain("delete from public.pick_events where status = 'upcoming'");
+    expect(sql).toContain("insert into public.pick_events");
+    expect(sql).toContain("insert into public.pick_bouts");
+  });
+
+  it("refuses to overwrite locked cards or upcoming cards with picks", () => {
+    expect(sql).toContain("a locked event already exists");
+    expect(sql).toContain("the current upcoming card already has picks");
+    expect(sql).toContain("join public.profile_event_picks pick on pick.event_id = event.event_id");
+  });
+
+  it("keeps staging service-owned and review actions owner-only", () => {
+    expect(sql).toContain("service role required to stage event data");
+    expect(sql).toContain("grant execute on function public.stage_pick_event_draft(jsonb) to service_role");
+    expect(sql.match(/pick control owner required/g)?.length).toBeGreaterThanOrEqual(6);
+    expect(sql).toContain("grant execute on function public.get_pick_event_setup() to authenticated");
+  });
+
+  it("uses the official UFC source and never publishes from the scraper", () => {
+    expect(syncFunction).toContain("https://www.ufc.com/events?language_content_entity=en");
+    expect(syncFunction).toContain("stage_pick_event_draft");
+    expect(syncFunction).not.toContain("publish_pick_event_draft");
+    expect(syncFunction).toContain("Fight Night owner access required");
+  });
+
+  it("deploys the sync function through the canonical backend owner", () => {
+    expect(config).toContain("[functions.sync-next-ufc-event]");
+    expect(config).toContain("verify_jwt = true");
+    expect(deployWorkflow).toContain("supabase functions deploy sync-next-ufc-event");
+    expect(deployWorkflow).toContain("require_remote_migration \"202608050001\"");
+  });
+});
