@@ -43,6 +43,7 @@ export interface PickEvent {
   locksAt: string;
   season: number;
   status: PickEventStatus;
+  canControl?: boolean;
   bouts: PickBout[];
 }
 
