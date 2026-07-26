@@ -70,6 +70,51 @@ async function requireRpcSuccess<T>(request: PromiseLike<{ data: T; error: { mes
   return data;
 }
 
+function nonEmptyMessage(value: unknown) {
+  return typeof value === "string" && value.trim() ? value.trim() : null;
+}
+
+export async function pickSetupFunctionErrorMessage(error: unknown) {
+  const candidate = error && typeof error === "object"
+    ? error as { message?: unknown; context?: unknown }
+    : null;
+  const context = candidate?.context;
+
+  if (context && typeof context === "object") {
+    type JsonContext = {
+      clone?: () => unknown;
+      json?: () => Promise<unknown>;
+    };
+    const original = context as JsonContext;
+    let readable = original;
+
+    if (typeof original.clone === "function") {
+      try {
+        const cloned = original.clone();
+        if (cloned && typeof cloned === "object") readable = cloned as JsonContext;
+      } catch {
+        // Fall through to the original context or generic Functions client message.
+      }
+    }
+
+    if (typeof readable.json === "function") {
+      try {
+        const payload = await readable.json();
+        if (payload && typeof payload === "object" && !Array.isArray(payload)) {
+          const message = nonEmptyMessage((payload as Record<string, unknown>).message);
+          if (message) return message;
+        }
+      } catch {
+        // The Functions client message remains the safe fallback for a non-JSON response.
+      }
+    }
+  }
+
+  return nonEmptyMessage(candidate?.message)
+    ?? (error instanceof Error ? nonEmptyMessage(error.message) : null)
+    ?? "The next UFC event could not be synced.";
+}
+
 export function mapPickSetupDraft(value: unknown): PickSetupDraft | null {
   if (!value) return null;
   const parsed = draftSchema.parse(value);
@@ -125,7 +170,7 @@ export function createPickSetupRepository(): PickSetupRepository | null {
 
   async function invokeSync(body: Record<string, unknown>) {
     const { data, error } = await client.functions.invoke("sync-next-ufc-event", { body });
-    if (error) throw new Error(error.message || "The next UFC event could not be synced.");
+    if (error) throw new Error(await pickSetupFunctionErrorMessage(error));
     return data;
   }
 
