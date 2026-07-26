@@ -3,6 +3,12 @@ export type PickBoutResultStatus = "pending" | "red_win" | "blue_win" | "draw" |
 export type PickVerdict = "correct" | "incorrect" | "missing" | "excluded" | "pending";
 export type PickEventPresentationState = "upcoming" | "locked" | "awaiting_results" | "complete";
 
+export interface PickGroupPick {
+  displayName: string;
+  pickedFighterSlug: string | null;
+  isCurrentUser: boolean;
+}
+
 export interface PickBout {
   boutId: string;
   position: number;
@@ -16,6 +22,7 @@ export interface PickBout {
   winnerFighterSlug: string | null;
   resultStatus?: PickBoutResultStatus;
   resultRecordedAt?: string | null;
+  groupPicks: PickGroupPick[];
 }
 
 export interface UnderdogLock {
@@ -69,6 +76,7 @@ export interface PickHistoryBout {
   winnerFighterSlug: string | null;
   pickedFighterSlug: string | null;
   verdict: PickVerdict;
+  groupPicks: PickGroupPick[];
 }
 
 export interface PickHistoryRecord {
