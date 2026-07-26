@@ -22,6 +22,10 @@ const requiredApplicationMarkers = [
   "+400+",
   "HOW EVERYONE PICKED",
   "group_picks",
+  "FIGHT NIGHT CONTROL",
+  "LOCK PICKS & BEGIN RESULTS",
+  "COMPLETE EVENT",
+  "get_pick_control_event",
 ];
 
 export async function verifyProductionArtifact({ dist = "dist", env = process.env } = {}) {
