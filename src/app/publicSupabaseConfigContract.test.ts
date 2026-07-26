@@ -22,6 +22,8 @@ const requiredMarkers = [
   "NOT PICKED",
   "VIEW FIGHT-BY-FIGHT RESULTS",
   "+400+",
+  "HOW EVERYONE PICKED",
+  "group_picks",
 ].join(" ");
 
 describe("production Supabase browser configuration", () => {
