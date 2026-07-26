@@ -25,7 +25,10 @@ describe("production Supabase browser configuration", () => {
     const dist = await mkdtemp(join(tmpdir(), "octagon-artifact-"));
     await mkdir(join(dist, "assets"));
     await writeFile(join(dist, "index.html"), '<script src="/assets/app.js"></script>');
-    await writeFile(join(dist, "assets/app.js"), `const url="https://${hostname}";const key="${publishableKey}";`);
+    await writeFile(
+      join(dist, "assets/app.js"),
+      `const url="https://${hostname}";const key="${publishableKey}";const markers="Your event recaps get_my_pick_history";`,
+    );
 
     await expect(verifyProductionArtifact({ dist, env: {
       VITE_SUPABASE_URL: valid.url,

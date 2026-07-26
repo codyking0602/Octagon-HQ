@@ -76,6 +76,11 @@ function picksRepository(): PicksRepository {
       bouts: [],
     })),
     loadMyPicks: vi.fn(async () => []),
+    loadMyHistory: vi.fn(async () => ({
+      season: null,
+      summary: { correct: 3, incorrect: 1, missing: 0, excluded: 0, eventsEntered: 2 },
+      events: [],
+    })),
     loadMySummary: vi.fn(async () => ({ correct: 3, incorrect: 1, pending: 2, eventsEntered: 2 })),
     savePick: vi.fn(),
   };
