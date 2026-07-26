@@ -99,7 +99,7 @@ jobs:
           done
           exit "$missing"
 
-      - name: Verify deployed migrations, PIN function, and production CORS
+      - name: Verify deployed migrations, functions, and production CORS
         shell: bash
         run: |
           set -euo pipefail
@@ -140,9 +140,15 @@ jobs:
           require_remote_migration "202608020002" "Picks scoring RPC verification migration not deployed"
           require_remote_migration "202608030001" "Resolved group pick reveal migration not deployed"
           require_remote_migration "202608040001" "Fight Night control migration not deployed"
+          require_remote_migration "202608050001" "Event setup and card review migration not deployed"
 
-          if ! supabase functions list --project-ref "$SUPABASE_PROJECT_ID" | grep -Fq "pin-auth"; then
+          function_list=$(supabase functions list --project-ref "$SUPABASE_PROJECT_ID")
+          if ! printf '%s\n' "$function_list" | grep -Fq "pin-auth"; then
             echo "::error title=PIN function not deployed::The pin-auth Edge Function is not deployed to the V2 project."
+            exit 1
+          fi
+          if ! printf '%s\n' "$function_list" | grep -Fq "sync-next-ufc-event"; then
+            echo "::error title=UFC event sync not deployed::The sync-next-ufc-event Edge Function is not deployed to the V2 project."
             exit 1
           fi
 
@@ -187,17 +193,11 @@ jobs:
             echo "- Supabase access token/project pairing: accepted"
             echo "- Database password and migration connection: accepted"
             echo "- Required Edge Function secret names: present"
-            echo "- Profile/PIN migration: deployed remotely"
-            echo "- Real profile challenge migration: deployed remotely"
-            echo "- Profile-backed Your HQ migration: deployed remotely"
-            echo "- Profile-backed UFC Picks migration: deployed remotely"
-            echo "- Picks result lifecycle migration: deployed remotely"
-            echo "- Picks recap migration: deployed remotely"
-            echo "- Picks scoring migrations: deployed remotely"
-            echo "- Resolved-bout group pick reveal migration: deployed remotely"
-            echo "- Fight Night results control migration: deployed remotely"
+            echo "- Existing profile, challenge, Your HQ, Picks, scoring, recap, reveal, and Fight Night migrations: deployed remotely"
+            echo "- Event setup and card review migration: deployed remotely"
             echo "- Underdog Lock and seven-field scoring summary RPCs: responding in production"
             echo "- pin-auth Edge Function: deployed and responding with the expected contract"
+            echo "- sync-next-ufc-event Edge Function: deployed"
             echo "- Production CORS origin: $OCTAGON_PRODUCTION_ORIGIN"
             echo "- Cloudflare VITE values: cannot be read by GitHub and must be verified through the Cloudflare production build"
           } >> "$GITHUB_STEP_SUMMARY"
