@@ -46,6 +46,7 @@ describe("Member Profile polish contracts", () => {
     expect(avatarEditor).toContain('type="range"');
     expect(avatarEditor).toContain("await onSave(photo)");
     expect(avatarEditor).toContain("await onSave(null)");
+    expect(avatarEditor).toContain("for (const outputSize of [320, 280, 240])");
     expect(profilePage).toContain("onSave={preferences.setAvatarPhoto}");
   });
 
