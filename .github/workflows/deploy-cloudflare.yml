@@ -165,7 +165,7 @@ jobs:
           node-version-file: .nvmrc
 
       - name: Install application dependencies
-        run: npm install --silent
+        run: npm ci --silent --ignore-scripts
 
       - name: Download verified public browser configuration
         uses: actions/download-artifact@v4
@@ -219,6 +219,8 @@ jobs:
           grep -FRq "set_my_favorite_fighter" dist/assets/*.js
           grep -FRq "get_current_pick_event" dist/assets/*.js
           grep -FRq "save_my_event_pick" dist/assets/*.js
+          grep -FRq "Your event recaps" dist/assets/*.js
+          grep -FRq "get_my_pick_history" dist/assets/*.js
           echo "Production artifact contains the exact SHA marker and all current profile contracts."
 
       - name: Upload build diagnostics
@@ -424,6 +426,8 @@ jobs:
             "set_my_favorite_fighter"
             "get_current_pick_event"
             "save_my_event_pick"
+            "Your event recaps"
+            "get_my_pick_history"
           )
 
           verify_live_assets() {

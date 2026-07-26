@@ -143,6 +143,11 @@ function picksRepository(): PicksRepository {
       pickedAt: "2026-07-24T12:00:00.000Z",
       updatedAt: "2026-07-24T12:00:00.000Z",
     }],
+    loadMyHistory: async () => ({
+      season: null,
+      summary: { correct: 12, incorrect: 8, missing: 0, excluded: 0, eventsEntered: 4 },
+      events: [],
+    }),
     loadMySummary: async () => ({ correct: 12, incorrect: 8, pending: 1, eventsEntered: 4 }),
     savePick: async (eventId, boutId, fighterSlug) => ({
       eventId,
