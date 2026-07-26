@@ -17,6 +17,7 @@ const BlindRankPage = lazy(() => import("../features/play/BlindRankPage"));
 const KeepCutPage = lazy(() => import("../features/play/KeepCutPage"));
 const BetterThanPage = lazy(() => import("../features/play/BetterThanPage"));
 const PicksPage = lazy(() => import("../features/picks/PicksPage"));
+const PicksControlPage = lazy(() => import("../features/picks-control/PicksControlPage"));
 
 export const appRoutes: RouteObject[] = [
   {
@@ -38,6 +39,7 @@ export const appRoutes: RouteObject[] = [
       { path: "play/keep-cut", element: <KeepCutPage /> },
       { path: "play/better-than", element: <BetterThanPage /> },
       { path: "picks", element: <PicksPage /> },
+      { path: "picks/control", element: <PicksControlPage /> },
       { path: "*", element: <Navigate to="/" replace /> },
     ],
   },
