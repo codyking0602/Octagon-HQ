@@ -8,14 +8,16 @@
   margin-bottom: 0;
 }
 
-.picks-setup-heading__links {
+.picks-setup-heading__links,
+.picks-control-heading__links {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
   margin-top: 10px;
 }
 
-.picks-setup-heading__links a {
+.picks-setup-heading__links a,
+.picks-control-heading__links a {
   color: var(--text-secondary);
   font-size: 8px;
   font-weight: 950;
@@ -256,7 +258,8 @@
 
 .picks-setup-page button:focus-visible,
 .picks-setup-page a:focus-visible,
-.picks-setup-page input:focus-visible {
+.picks-setup-page input:focus-visible,
+.picks-control-heading__links a:focus-visible {
   outline: 2px solid var(--text-primary);
   outline-offset: 3px;
 }
