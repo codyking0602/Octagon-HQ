@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import { IdentityProvider } from "../identity/IdentityProvider";
 import type { IdentityGateway } from "../identity/identityGateway";
 import { PicksProvider, usePicks } from "./PicksProvider";
-import type { PickEvent } from "./picksModel";
+import type { PickEvent, PickHistory } from "./picksModel";
 import type { PicksRepository } from "./picksRepository";
 
 const cody = {
@@ -34,6 +34,49 @@ const event: PickEvent = {
   }],
 };
 
+const history: PickHistory = {
+  season: 2026,
+  summary: {
+    correct: 4,
+    incorrect: 1,
+    missing: 0,
+    excluded: 1,
+    eventsEntered: 1,
+  },
+  events: [{
+    eventId: "ufc-oklahoma-city",
+    name: "UFC Oklahoma City",
+    subtitle: "Main Card",
+    venue: "Paycom Center",
+    location: "Oklahoma City, Oklahoma",
+    startsAt: "2026-06-20T23:00:00.000Z",
+    season: 2026,
+    completedAt: "2026-06-21T04:00:00.000Z",
+    record: { correct: 4, incorrect: 1, missing: 0, excluded: 1 },
+    bouts: [{
+      boutId: "sample-bout",
+      position: 1,
+      weightClass: "Lightweight",
+      redFighterSlug: "red-fighter",
+      redFighterName: "Red Fighter",
+      blueFighterSlug: "blue-fighter",
+      blueFighterName: "Blue Fighter",
+      resultStatus: "red_win",
+      winnerFighterSlug: "red-fighter",
+      pickedFighterSlug: "red-fighter",
+      verdict: "correct",
+    }],
+    groupResults: [{
+      displayName: "CODY",
+      correct: 4,
+      incorrect: 1,
+      missing: 0,
+      excluded: 1,
+      isCurrentUser: true,
+    }],
+  }],
+};
+
 function gateway(): IdentityGateway {
   return {
     getSession: async () => ({ userId: cody.id }),
@@ -52,13 +95,15 @@ function Probe() {
       <span>{picks.event?.subtitle ?? "NO EVENT"}</span>
       <span>{picks.selections["ankalaev-guskov"] ?? "NO PICK"}</span>
       <span>{picks.summary.correct}-{picks.summary.incorrect}</span>
+      <span>{picks.history.events.length} RECAP</span>
+      <span>{picks.history.events[0]?.name ?? "NO RECAP"}</span>
       <button type="button" onClick={() => void picks.setPick("ankalaev-guskov", "bogdan-guskov")}>PICK GUSKOV</button>
     </div>
   );
 }
 
 describe("PicksProvider", () => {
-  it("loads and saves only through the profile repository for a signed-in profile", async () => {
+  it("loads current picks, summary, and completed history through one provider", async () => {
     const loadMyPicks = vi.fn(async () => [{
       eventId: event.eventId,
       boutId: "ankalaev-guskov",
@@ -69,6 +114,7 @@ describe("PicksProvider", () => {
     const loadMySummary = vi.fn()
       .mockResolvedValueOnce({ correct: 4, incorrect: 2, pending: 1, eventsEntered: 1 })
       .mockResolvedValueOnce({ correct: 4, incorrect: 2, pending: 1, eventsEntered: 1 });
+    const loadMyHistory = vi.fn(async () => history);
     const savePick = vi.fn(async (eventId: string, boutId: string, fighterSlug: string) => ({
       eventId,
       boutId,
@@ -80,6 +126,7 @@ describe("PicksProvider", () => {
       loadCurrentEvent: async () => event,
       loadMyPicks,
       loadMySummary,
+      loadMyHistory,
       savePick,
     };
 
@@ -92,20 +139,48 @@ describe("PicksProvider", () => {
     expect(await screen.findByText("Ankalaev vs. Guskov")).toBeInTheDocument();
     await waitFor(() => expect(screen.getByText("magomed-ankalaev")).toBeInTheDocument());
     expect(screen.getByText("4-2")).toBeInTheDocument();
+    expect(screen.getByText("1 RECAP")).toBeInTheDocument();
+    expect(screen.getByText("UFC Oklahoma City")).toBeInTheDocument();
     expect(loadMyPicks).toHaveBeenCalledWith(event.eventId);
+    expect(loadMyHistory).toHaveBeenCalledWith(2026);
 
     fireEvent.click(screen.getByRole("button", { name: "PICK GUSKOV" }));
     await waitFor(() => expect(savePick).toHaveBeenCalledWith(event.eventId, "ankalaev-guskov", "bogdan-guskov"));
     await waitFor(() => expect(screen.getByText("bogdan-guskov")).toBeInTheDocument());
   });
 
-  it("loads the public event without requesting profile picks while signed out", async () => {
+  it("loads completed history even while the next event is not available", async () => {
+    const loadMyPicks = vi.fn(async () => []);
+    const loadMyHistory = vi.fn(async () => history);
+    const repository: PicksRepository = {
+      loadCurrentEvent: async () => null,
+      loadMyPicks,
+      loadMySummary: async () => ({ correct: 4, incorrect: 1, pending: 0, eventsEntered: 1 }),
+      loadMyHistory,
+      savePick: vi.fn(),
+    };
+
+    render(
+      <IdentityProvider gateway={gateway()}>
+        <PicksProvider repository={repository}><Probe /></PicksProvider>
+      </IdentityProvider>,
+    );
+
+    expect(await screen.findByText("UFC Oklahoma City")).toBeInTheDocument();
+    expect(screen.getByText("NO EVENT")).toBeInTheDocument();
+    expect(loadMyPicks).not.toHaveBeenCalled();
+    expect(loadMyHistory).toHaveBeenCalledWith(new Date().getFullYear());
+  });
+
+  it("loads the public event without requesting profile data while signed out", async () => {
     const loadMyPicks = vi.fn(async () => []);
     const loadMySummary = vi.fn(async () => ({ correct: 0, incorrect: 0, pending: 0, eventsEntered: 0 }));
+    const loadMyHistory = vi.fn(async () => history);
     const repository: PicksRepository = {
       loadCurrentEvent: async () => event,
       loadMyPicks,
       loadMySummary,
+      loadMyHistory,
       savePick: vi.fn(),
     };
 
@@ -117,7 +192,9 @@ describe("PicksProvider", () => {
 
     expect(await screen.findByText("Ankalaev vs. Guskov")).toBeInTheDocument();
     expect(screen.getByText("NO PICK")).toBeInTheDocument();
+    expect(screen.getByText("0 RECAP")).toBeInTheDocument();
     expect(loadMyPicks).not.toHaveBeenCalled();
     expect(loadMySummary).not.toHaveBeenCalled();
+    expect(loadMyHistory).not.toHaveBeenCalled();
   });
 });

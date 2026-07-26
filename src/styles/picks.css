@@ -196,6 +196,405 @@
   font-size: 12px;
 }
 
+.picks-history {
+  display: grid;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.picks-history__heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.picks-history__heading h2 {
+  margin-top: 4px;
+  font-size: clamp(25px, 7vw, 34px);
+  line-height: 1;
+  letter-spacing: -.04em;
+}
+
+.picks-history__heading > span {
+  flex: 0 0 auto;
+  padding: 7px 9px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .1em;
+}
+
+.picks-history-empty {
+  gap: 7px;
+  min-height: 130px;
+  place-content: center;
+  padding: 20px;
+  text-align: center;
+}
+
+.picks-history-empty strong {
+  font-size: 17px;
+}
+
+.picks-history-summary {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+  padding: 17px;
+  background:
+    radial-gradient(circle at 0% 100%, rgba(210, 10, 10, .16), transparent 42%),
+    var(--surface-card);
+}
+
+.picks-history-summary > div {
+  display: grid;
+  gap: 2px;
+}
+
+.picks-history-summary span,
+.picks-history-summary dt {
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .11em;
+}
+
+.picks-history-summary > div strong {
+  font-size: 34px;
+  line-height: 1;
+  letter-spacing: -.05em;
+}
+
+.picks-history-summary dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+  margin: 0;
+}
+
+.picks-history-summary dl > div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 9px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: rgba(255, 255, 255, .025);
+  text-align: center;
+}
+
+.picks-history-summary dd {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 16px;
+  font-weight: 950;
+}
+
+.picks-recap-list {
+  display: grid;
+  gap: 12px;
+}
+
+.picks-recap-card {
+  display: block;
+  padding: 0;
+  overflow: hidden;
+}
+
+.picks-recap-card__summary {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 17px 42px 17px 17px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.picks-recap-card__summary::-webkit-details-marker {
+  display: none;
+}
+
+.picks-recap-card__summary::after {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  content: "+";
+  color: var(--text-muted);
+  font-size: 19px;
+  font-weight: 800;
+  transform: translateY(-50%);
+}
+
+.picks-recap-card[open] .picks-recap-card__summary::after {
+  content: "−";
+}
+
+.picks-recap-card__summary > div:first-child {
+  min-width: 0;
+}
+
+.picks-recap-card__summary span {
+  color: var(--ufc-red-strong);
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .11em;
+}
+
+.picks-recap-card__summary h3 {
+  margin-top: 4px;
+  overflow: hidden;
+  font-size: 18px;
+  line-height: 1.05;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.picks-recap-card__summary p {
+  margin-top: 4px;
+  overflow: hidden;
+  color: var(--text-secondary);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.picks-recap-card__record {
+  display: grid;
+  justify-items: end;
+  gap: 3px;
+  min-width: 62px;
+}
+
+.picks-recap-card__record strong {
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: -.04em;
+}
+
+.picks-recap-card__record small {
+  max-width: 95px;
+  color: var(--text-muted);
+  font-size: 7px;
+  font-weight: 850;
+  line-height: 1.25;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+.picks-recap-card__body {
+  display: grid;
+  gap: 18px;
+  padding: 17px;
+  border-top: 1px solid var(--border);
+  background: rgba(0, 0, 0, .16);
+}
+
+.picks-recap-group,
+.picks-recap-fights {
+  display: grid;
+  gap: 10px;
+}
+
+.picks-recap-section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.picks-recap-section-heading span,
+.picks-recap-section-heading > small {
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .1em;
+}
+
+.picks-recap-section-heading h4 {
+  margin-top: 3px;
+  font-size: 16px;
+  line-height: 1.05;
+}
+
+.picks-group-results {
+  display: grid;
+  gap: 6px;
+}
+
+.picks-group-result {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  min-height: 48px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: var(--surface-raised);
+}
+
+.picks-group-result.is-current-user {
+  border-color: rgba(210, 10, 10, .65);
+  box-shadow: inset 3px 0 0 var(--ufc-red);
+}
+
+.picks-group-result > span {
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 950;
+  text-align: center;
+}
+
+.picks-group-result > strong {
+  overflow: hidden;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.picks-group-result > div {
+  display: grid;
+  justify-items: end;
+  gap: 1px;
+}
+
+.picks-group-result b {
+  font-size: 14px;
+}
+
+.picks-group-result small {
+  color: var(--text-muted);
+  font-size: 7px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.picks-recap-fight-list {
+  display: grid;
+  gap: 8px;
+}
+
+.picks-recap-fight {
+  display: grid;
+  gap: 9px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-raised);
+}
+
+.picks-recap-fight__topline,
+.picks-recap-fight__result {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.picks-recap-fight__topline > span {
+  color: var(--ufc-red-strong);
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .1em;
+}
+
+.picks-recap-fight__topline > small {
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.picks-recap-fight__matchup {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 20px minmax(0, 1fr);
+  align-items: center;
+  gap: 6px;
+}
+
+.picks-recap-fight__matchup strong {
+  font-size: 12px;
+  line-height: 1.15;
+}
+
+.picks-recap-fight__matchup strong:last-child {
+  text-align: right;
+}
+
+.picks-recap-fight__matchup > span {
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 950;
+  text-align: center;
+}
+
+.picks-recap-fight__result {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: end;
+  padding-top: 9px;
+  border-top: 1px solid var(--border);
+}
+
+.picks-recap-fight__result > div {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.picks-recap-fight__result > div:nth-child(2) {
+  text-align: right;
+}
+
+.picks-recap-fight__result span {
+  color: var(--text-muted);
+  font-size: 7px;
+  font-weight: 950;
+  letter-spacing: .09em;
+}
+
+.picks-recap-fight__result b {
+  overflow: hidden;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.picks-verdict {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 5px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  font-size: 7px;
+  font-style: normal;
+  font-weight: 950;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.picks-verdict--correct {
+  border-color: rgba(255, 255, 255, .35);
+  color: var(--text-primary);
+}
+
+.picks-verdict--incorrect {
+  border-color: rgba(210, 10, 10, .65);
+  color: var(--ufc-red-strong);
+}
+
+.picks-verdict--missing,
+.picks-verdict--excluded,
+.picks-verdict--pending {
+  color: var(--text-muted);
+}
+
 .secondary-action {
   display: flex;
   align-items: center;
@@ -226,5 +625,25 @@
 
   .pick-choice > span {
     font-size: 16px;
+  }
+
+  .picks-history-summary,
+  .picks-recap-card__summary,
+  .picks-recap-card__body {
+    padding: 20px;
+  }
+
+  .picks-recap-card__body {
+    grid-template-columns: minmax(220px, .7fr) minmax(0, 1.3fr);
+    align-items: start;
+  }
+
+  .picks-recap-fight__result {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  }
+
+  .picks-verdict {
+    grid-column: auto;
+    justify-self: end;
   }
 }

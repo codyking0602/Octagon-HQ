@@ -9,9 +9,11 @@ import {
 } from "react";
 import { useIdentity } from "../identity/IdentityProvider";
 import {
+  emptyPickHistory,
   emptyPickSummary,
   eventPicksLocked,
   type PickEvent,
+  type PickHistory,
   type PickSummary,
 } from "./picksModel";
 import {
@@ -27,6 +29,7 @@ interface PicksContextValue {
   event: PickEvent | null;
   selections: Record<string, string>;
   summary: PickSummary;
+  history: PickHistory;
   refresh: () => Promise<void>;
   setPick: (boutId: string, fighterSlug: string) => Promise<void>;
 }
@@ -57,6 +60,7 @@ export function PicksProvider({
   const [event, setEvent] = useState<PickEvent | null>(null);
   const [selections, setSelections] = useState<Record<string, string>>({});
   const [summary, setSummary] = useState<PickSummary>(emptyPickSummary);
+  const [history, setHistory] = useState<PickHistory>(emptyPickHistory);
   const [loading, setLoading] = useState(false);
   const [savingBoutId, setSavingBoutId] = useState<string | null>(null);
   const [error, setError] = useState("");
@@ -69,6 +73,7 @@ export function PicksProvider({
       setEvent(null);
       setSelections({});
       setSummary(emptyPickSummary);
+      setHistory(emptyPickHistory);
       setLoading(false);
       setError("Picks are not connected on this build.");
       return;
@@ -80,20 +85,24 @@ export function PicksProvider({
       if (revision !== revisionRef.current) return;
       setEvent(nextEvent);
 
-      if (!expectedProfileId || !nextEvent) {
+      if (!expectedProfileId) {
         setSelections({});
         setSummary(emptyPickSummary);
+        setHistory(emptyPickHistory);
         setError("");
         return;
       }
 
-      const [rows, nextSummary] = await Promise.all([
-        repository.loadMyPicks(nextEvent.eventId),
-        repository.loadMySummary(nextEvent.season),
+      const season = nextEvent?.season ?? new Date().getFullYear();
+      const [rows, nextSummary, nextHistory] = await Promise.all([
+        nextEvent ? repository.loadMyPicks(nextEvent.eventId) : Promise.resolve([]),
+        repository.loadMySummary(season),
+        repository.loadMyHistory(season),
       ]);
       if (revision !== revisionRef.current || profileIdRef.current !== expectedProfileId) return;
       setSelections(selectionsFromRows(rows));
       setSummary(nextSummary);
+      setHistory(nextHistory);
       setError("");
     } catch (nextError) {
       if (revision !== revisionRef.current) return;
@@ -163,6 +172,7 @@ export function PicksProvider({
       event,
       selections,
       summary,
+      history,
       refresh,
       setPick,
     }}>
