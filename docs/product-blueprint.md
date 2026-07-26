@@ -21,7 +21,7 @@ Octagon HQ is a UFC-only rankings, games, picks, and community product built for
 - Feature folders own their screens, state, and tests.
 - `src/features/picks/PicksProvider.tsx`: the only app-facing Picks state owner.
 - `src/features/picks/picksRepository.ts`: the only browser Supabase owner for Picks.
-- Backend RPCs own authoritative scoring, official results, event transitions, and completed-event projections.
+- Backend RPCs own authoritative scoring, official results, event transitions, completed-event projections, and group-pick reveal timing.
 
 ## Intentionally absent from the foundation
 - No service worker.
@@ -50,6 +50,20 @@ The player-facing Picks lifecycle is derived from the existing event timestamps,
 - **EVENT COMPLETE:** completed events are excluded from the active-event backend projection and live in completed recaps. A defensive frontend check also refuses to present a returned completed event as the active hero.
 
 Judgment call: when `locks_at` and `starts_at` are the same timestamp, the presentation moves directly from `UPCOMING` to `AWAITING RESULTS`. A distinct `PICKS LOCKED` window exists only when the canonical card data provides a real gap between lock time and event start, or when the backend has advanced the event to `locked` before `starts_at`.
+
+## Picks reveal privacy
+
+Group picks are social only after the result is known. Locking an event never reveals another member’s selection.
+
+- A bout reveals `HOW EVERYONE PICKED` only after the trusted official-result owner changes that bout from `pending` to a resolved result.
+- Resolving one bout reveals only that bout. Every unresolved sibling fight remains private.
+- Extending or correcting an event lock time cannot expose picks because reveal timing does not depend on `locks_at`.
+- Only authenticated accounts linked to a canonical Octagon HQ profile may receive revealed picks.
+- Anonymous visitors and authenticated accounts without an Octagon HQ profile receive empty reveal arrays.
+- The backend returns no hidden selections before reveal. React must never download private picks and conceal them with styling or conditional rendering.
+- Reveals include only event entrants. An entrant who skipped the resolved fight appears as `NO PICK`.
+- Member-facing reveal fields are limited to display name, selected fighter, and current-viewer highlighting. Profile UUIDs, emails, timestamps, PIN data, and administrative fields are excluded.
+- Completed-event recaps retain the resolved fight-by-fight group breakdown permanently.
 
 # PICKS FUTURE ROADMAP — LOCKED PRODUCT DIRECTION
 
