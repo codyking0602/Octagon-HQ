@@ -8,6 +8,21 @@ import { verifyProductionArtifact } from "../../scripts/verify-production-artifa
 const hostname = "example-project.supabase.co";
 const publishableKey = `sb_publishable_${"a".repeat(24)}`;
 const valid = { url: `https://${hostname}`, publishableKey, expectedHostname: hostname };
+const requiredMarkers = [
+  "Your event recaps",
+  "get_my_pick_history",
+  "HOW SCORING WORKS",
+  "Correct pick +4",
+  "MAKE THIS MY UNDERDOG LOCK",
+  "pick-fighter-thumbnail",
+  "get_my_event_underdog_lock",
+  "set_my_event_underdog_lock",
+  "PICKS LOCKED",
+  "AWAITING RESULTS",
+  "NOT PICKED",
+  "VIEW FIGHT-BY-FIGHT RESULTS",
+  "+400+",
+].join(" ");
 
 describe("production Supabase browser configuration", () => {
   it.each([
@@ -27,7 +42,7 @@ describe("production Supabase browser configuration", () => {
     await writeFile(join(dist, "index.html"), '<script src="/assets/app.js"></script>');
     await writeFile(
       join(dist, "assets/app.js"),
-      `const url="https://${hostname}";const key="${publishableKey}";const markers="Your event recaps get_my_pick_history";`,
+      `const url="https://${hostname}";const key="${publishableKey}";const markers="${requiredMarkers}";`,
     );
 
     await expect(verifyProductionArtifact({ dist, env: {
