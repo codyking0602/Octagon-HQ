@@ -2,8 +2,10 @@ import { z } from "zod";
 import { getSupabaseClient } from "../../lib/supabase";
 import type {
   PickSetupBoutInput,
+  PickSetupCardScope,
   PickSetupDraft,
   PickSetupMetadataPatch,
+  PickSetupSourcePreview,
 } from "./pickSetupModel";
 
 const draftBoutSchema = z.object({
@@ -38,9 +40,22 @@ const draftSchema = z.object({
   bouts: z.array(draftBoutSchema),
 });
 
+const sourcePreviewSchema = z.object({
+  source_hash: z.string().min(1),
+  requested_scope: z.enum(["auto", "main", "full"]),
+  effective_scope: z.enum(["main", "full"]),
+  source: z.string(),
+  source_url: z.string(),
+  fight_count: z.number().int().nonnegative(),
+  changes: z.array(z.string()),
+  warnings: z.array(z.string()).default([]),
+});
+
 export interface PickSetupRepository {
   loadDraft: () => Promise<PickSetupDraft | null>;
-  syncNextEvent: () => Promise<void>;
+  syncNextEvent: (scope: PickSetupCardScope) => Promise<void>;
+  previewSource: (scope: PickSetupCardScope) => Promise<PickSetupSourcePreview>;
+  applySourcePreview: (preview: PickSetupSourcePreview) => Promise<void>;
   updateMetadata: (draftId: string, patch: PickSetupMetadataPatch) => Promise<void>;
   saveBout: (draftId: string, bout: PickSetupBoutInput) => Promise<void>;
   removeBout: (draftId: string, boutId: string) => Promise<void>;
@@ -89,19 +104,51 @@ export function mapPickSetupDraft(value: unknown): PickSetupDraft | null {
   };
 }
 
+export function mapPickSetupSourcePreview(value: unknown): PickSetupSourcePreview {
+  const parsed = sourcePreviewSchema.parse(value);
+  return {
+    sourceHash: parsed.source_hash,
+    requestedScope: parsed.requested_scope,
+    effectiveScope: parsed.effective_scope,
+    source: parsed.source,
+    sourceUrl: parsed.source_url,
+    fightCount: parsed.fight_count,
+    changes: parsed.changes,
+    warnings: parsed.warnings,
+  };
+}
+
 export function createPickSetupRepository(): PickSetupRepository | null {
   const supabase = getSupabaseClient();
   if (!supabase) return null;
   const client = supabase;
+
+  async function invokeSync(body: Record<string, unknown>) {
+    const { data, error } = await client.functions.invoke("sync-next-ufc-event", { body });
+    if (error) throw new Error(error.message || "The next UFC event could not be synced.");
+    return data;
+  }
 
   return {
     async loadDraft() {
       return mapPickSetupDraft(await requireRpcSuccess(client.rpc("get_pick_event_setup")));
     },
 
-    async syncNextEvent() {
-      const { error } = await client.functions.invoke("sync-next-ufc-event", { body: {} });
-      if (error) throw new Error(error.message || "The next UFC event could not be synced.");
+    async syncNextEvent(scope) {
+      await invokeSync({ mode: "apply", card_scope: scope });
+    },
+
+    async previewSource(scope) {
+      const data = await invokeSync({ mode: "preview", card_scope: scope });
+      return mapPickSetupSourcePreview(data);
+    },
+
+    async applySourcePreview(preview) {
+      await invokeSync({
+        mode: "apply",
+        card_scope: preview.requestedScope,
+        expected_hash: preview.sourceHash,
+      });
     },
 
     async updateMetadata(draftId, patch) {
