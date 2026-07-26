@@ -110,6 +110,132 @@
   letter-spacing: .09em;
 }
 
+.pick-bout-card__official {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 36px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .025);
+}
+
+.pick-bout-card__official span,
+.picks-group-pick-reveal__heading span,
+.picks-group-pick-reveal__heading small {
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .1em;
+}
+
+.pick-bout-card__official span,
+.picks-group-pick-reveal__heading small {
+  color: var(--text-muted);
+}
+
+.pick-bout-card__official strong {
+  color: var(--text-primary);
+  font-size: 12px;
+  text-align: right;
+}
+
+.picks-group-pick-reveal {
+  display: grid;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.picks-group-pick-reveal__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.picks-group-pick-reveal__heading span {
+  color: var(--text-primary);
+}
+
+.picks-group-pick-reveal__split {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.picks-group-pick-reveal__split > div {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, .02);
+  text-align: center;
+}
+
+.picks-group-pick-reveal__split span {
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 7px;
+  font-weight: 900;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.picks-group-pick-reveal__split strong {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.picks-group-pick-reveal__members {
+  display: grid;
+  gap: 4px;
+}
+
+.picks-group-pick-reveal__members > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 30px;
+  padding: 5px 8px;
+  border-radius: 8px;
+  color: var(--text-secondary);
+}
+
+.picks-group-pick-reveal__members > div.is-current-user {
+  background: rgba(210, 10, 10, .1);
+  box-shadow: inset 2px 0 0 var(--ufc-red);
+  color: var(--text-primary);
+}
+
+.picks-group-pick-reveal__members strong {
+  overflow: hidden;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.picks-group-pick-reveal__members span {
+  flex: 0 0 auto;
+  max-width: 58%;
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 900;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.picks-group-pick-reveal__members > div.is-current-user span {
+  color: var(--text-secondary);
+}
+
 .picks-recap-card__record {
   min-width: 88px;
 }
