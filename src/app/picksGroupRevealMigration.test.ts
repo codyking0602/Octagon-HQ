@@ -8,8 +8,10 @@ const sql = readFileSync(
 const integrationSql = readFileSync("supabase/tests/picks_group_reveals.sql", "utf8");
 
 describe("resolved Picks group reveal migration", () => {
-  it("keeps locked unresolved and anonymous picks hidden in the backend", () => {
-    expect(sql).toContain("auth.uid() is null or bout.result_status = 'pending'");
+  it("keeps locked unresolved, anonymous, and non-profile picks hidden in the backend", () => {
+    expect(sql).toContain("auth.uid() is null");
+    expect(sql).toContain("not exists (select 1 from public.profiles viewer where viewer.id = auth.uid())");
+    expect(sql).toContain("bout.result_status = 'pending'");
     expect(sql).toContain("then '[]'::jsonb");
     expect(sql).toContain(
       "revoke all on function public.resolved_bout_group_picks(text,text) from public, anon, authenticated",
