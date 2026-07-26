@@ -7,6 +7,7 @@ import "./styles/global.css";
 import "./styles/app-error.css";
 import "./styles/home.css";
 import "./styles/picks.css";
+import "./styles/picks-lifecycle.css";
 import "./styles/intelligence.css";
 import "./styles/identity.css";
 import "./styles/member-profiles.css";
