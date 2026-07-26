@@ -1,0 +1,320 @@
+.picks-control-entry {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  margin-top: 4px;
+  border: 1px solid rgba(255, 255, 255, .28);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .04);
+  color: var(--text-primary);
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .09em;
+  text-align: center;
+  text-decoration: none;
+}
+
+.picks-control-page {
+  display: grid;
+  gap: 14px;
+  padding-bottom: 24px;
+}
+
+.picks-control-heading {
+  margin-bottom: 0;
+}
+
+.picks-control-state {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+}
+
+.picks-control-state h2,
+.picks-control-state p {
+  margin: 0;
+}
+
+.picks-control-state .primary-action,
+.picks-control-state .secondary-action {
+  width: 100%;
+  text-align: center;
+  text-decoration: none;
+}
+
+.picks-control-hero {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border-color: rgba(255, 255, 255, .2);
+}
+
+.picks-control-hero__topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.picks-control-hero h2,
+.picks-control-hero p {
+  margin: 0;
+}
+
+.picks-control-hero > strong {
+  color: var(--text-secondary);
+}
+
+.picks-control-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .12em;
+}
+
+.picks-control-status--locked {
+  border-color: rgba(255, 255, 255, .36);
+  color: var(--text-primary);
+}
+
+.picks-control-progress {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 13px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .025);
+}
+
+.picks-control-progress > div:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.picks-control-progress span,
+.picks-control-progress b {
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.picks-control-progress span {
+  color: var(--text-muted);
+}
+
+.picks-control-progress__track {
+  height: 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .08);
+}
+
+.picks-control-progress__track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--text-primary);
+  transition: width .18s ease;
+}
+
+.picks-control-lock {
+  width: 100%;
+  margin-top: 6px;
+}
+
+.picks-control-bouts {
+  display: grid;
+  gap: 10px;
+}
+
+.pick-control-bout {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
+.pick-control-bout__heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.pick-control-bout__heading > div {
+  display: grid;
+  gap: 4px;
+}
+
+.pick-control-bout__heading span,
+.pick-control-bout__heading small,
+.pick-control-bout__state {
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.pick-control-bout__heading span {
+  color: var(--ufc-red);
+}
+
+.pick-control-bout__heading small {
+  color: var(--text-muted);
+}
+
+.pick-control-bout__state {
+  max-width: 46%;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-muted);
+  font-style: normal;
+  line-height: 1.2;
+  text-align: right;
+}
+
+.pick-control-bout__state:not(.pick-control-bout__state--pending) {
+  border-color: rgba(255, 255, 255, .32);
+  color: var(--text-primary);
+}
+
+.pick-control-winners {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: stretch;
+  gap: 7px;
+}
+
+.pick-control-winners > span {
+  align-self: center;
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: 950;
+}
+
+.pick-control-result {
+  min-width: 0;
+  min-height: 54px;
+  padding: 9px 10px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: rgba(255, 255, 255, .025);
+  color: var(--text-primary);
+  font: inherit;
+}
+
+.pick-control-result:disabled {
+  cursor: default;
+  opacity: .55;
+}
+
+.pick-control-result.is-active {
+  border-color: rgba(255, 255, 255, .65);
+  background: rgba(255, 255, 255, .09);
+  box-shadow: inset 3px 0 0 var(--ufc-red);
+}
+
+.pick-control-winners .pick-control-result {
+  display: grid;
+  align-content: center;
+  gap: 5px;
+  text-align: left;
+}
+
+.pick-control-winners .pick-control-result:last-child {
+  text-align: right;
+}
+
+.pick-control-result span,
+.pick-control-result strong {
+  min-width: 0;
+}
+
+.pick-control-result span {
+  color: var(--text-muted);
+  font-size: 7px;
+  font-weight: 950;
+  letter-spacing: .1em;
+}
+
+.pick-control-result strong {
+  overflow-wrap: anywhere;
+  font-size: 12px;
+  line-height: 1.18;
+}
+
+.pick-control-exclusions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.pick-control-exclusions .pick-control-result {
+  min-height: 36px;
+  padding: 7px 5px;
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .07em;
+}
+
+.pick-control-clear {
+  justify-self: start;
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .1em;
+}
+
+.picks-control-complete {
+  display: grid;
+  gap: 14px;
+  padding: 17px;
+}
+
+.picks-control-complete h2,
+.picks-control-complete p {
+  margin: 0;
+}
+
+.picks-control-complete > div {
+  display: grid;
+  gap: 6px;
+}
+
+.picks-control-complete .primary-action {
+  width: 100%;
+}
+
+.picks-control-entry:focus-visible,
+.picks-control-page button:focus-visible,
+.picks-control-page a:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 3px;
+}
+
+@media (min-width: 640px) {
+  .picks-control-hero,
+  .pick-control-bout,
+  .picks-control-complete {
+    padding: 20px;
+  }
+
+  .pick-control-result strong {
+    font-size: 14px;
+  }
+}

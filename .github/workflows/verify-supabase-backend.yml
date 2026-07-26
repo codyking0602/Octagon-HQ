@@ -139,6 +139,7 @@ jobs:
           require_remote_migration "202608020001" "Picks scoring migration not deployed"
           require_remote_migration "202608020002" "Picks scoring RPC verification migration not deployed"
           require_remote_migration "202608030001" "Resolved group pick reveal migration not deployed"
+          require_remote_migration "202608040001" "Fight Night control migration not deployed"
 
           if ! supabase functions list --project-ref "$SUPABASE_PROJECT_ID" | grep -Fq "pin-auth"; then
             echo "::error title=PIN function not deployed::The pin-auth Edge Function is not deployed to the V2 project."
@@ -194,6 +195,7 @@ jobs:
             echo "- Picks recap migration: deployed remotely"
             echo "- Picks scoring migrations: deployed remotely"
             echo "- Resolved-bout group pick reveal migration: deployed remotely"
+            echo "- Fight Night results control migration: deployed remotely"
             echo "- Underdog Lock and seven-field scoring summary RPCs: responding in production"
             echo "- pin-auth Edge Function: deployed and responding with the expected contract"
             echo "- Production CORS origin: $OCTAGON_PRODUCTION_ORIGIN"

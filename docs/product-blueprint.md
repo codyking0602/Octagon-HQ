@@ -19,8 +19,9 @@ Octagon HQ is a UFC-only rankings, games, picks, and community product built for
 - `src/lib/supabase.ts`: one Supabase client owner.
 - `src/styles/tokens.css`: one semantic color and spacing source.
 - Feature folders own their screens, state, and tests.
-- `src/features/picks/PicksProvider.tsx`: the only app-facing Picks state owner.
-- `src/features/picks/picksRepository.ts`: the only browser Supabase owner for Picks.
+- `src/features/picks/PicksProvider.tsx`: the only app-facing player Picks state owner.
+- `src/features/picks/picksRepository.ts`: the only browser Supabase owner for player Picks.
+- `src/features/picks-control/pickControlRepository.ts`: the only browser Supabase owner for the separate owner-only Fight Night control page.
 - Backend RPCs own authoritative scoring, official results, event transitions, completed-event projections, and group-pick reveal timing.
 
 ## Intentionally absent from the foundation
@@ -65,36 +66,55 @@ Group picks are social only after the result is known. Locking an event never re
 - Member-facing reveal fields are limited to display name, selected fighter, and current-viewer highlighting. Profile UUIDs, emails, timestamps, PIN data, and administrative fields are excluded.
 - Completed-event recaps retain the resolved fight-by-fight group breakdown permanently.
 
-# PICKS FUTURE ROADMAP — LOCKED PRODUCT DIRECTION
+# PICKS ROADMAP — LOCKED PRODUCT DIRECTION
 
-The following phases are locked product direction. They must remain separate, narrow implementations and must preserve the current Picks owners and scoring rules.
+The following phases must remain separate, narrow implementations and must preserve the current Picks owners and scoring rules.
 
-## PHASE 2 — PRIVATE FIGHT NIGHT CONTROL
+## PHASE 2A — FIGHT NIGHT RESULTS CONTROL
 
-Build a separate owner-only operational page for Cody. It must not appear inside the normal player Picks page.
+Build a separate owner-only operational page. It must not appear inside the normal player Picks page and must not become a second player Picks provider.
 
-### Card
-- Create and edit an event.
-- Edit event name, subtitle, date, time, venue, and location.
-- Add, remove, and reorder fights.
-- Replace a fighter.
-- Edit weight class and lock time.
-- Cancel a fight.
-- Publish or lock an event.
-- Show a compact readiness status.
-
-### Results
+Locked behavior:
+- A private backend allowlist owns access. React names and hidden navigation are not authorization.
+- Use the existing `record_official_pick_bout_result` and `transition_pick_event` functions as the only mutation owners.
+- Lock picks and begin results only after the canonical `locks_at` timestamp.
+- Preserve the existing Underdog Lock odds-freeze trigger when the event moves from upcoming to locked.
 - One-tap red fighter winner.
 - One-tap blue fighter winner.
 - Draw.
 - No contest.
 - Cancelled.
-- Clear an unresolved result.
+- Clear or change a result only while the event is incomplete, with confirmation.
+- Show compact resolved progress such as `5 OF 6`.
 - Disable `Complete Event` until every bout is resolved.
-- Show compact progress such as `5 of 6 results entered`.
-- Preserve the existing backend result-transition owner as canonical.
+- Confirm completion before publishing the final recap.
+- Completed events and their official results remain immutable.
+- Each resolved fight immediately activates the existing backend-owned group-pick reveal.
 
-### Corrections
+Not included in 2A:
+- Event creation or card editing.
+- Odds administration.
+- Automatic imports or monitoring.
+- Broad `Reopen Event` behavior.
+- Post-completion corrections without an audit trail.
+
+## PHASE 2B — EVENT SETUP & CARD REVIEW
+
+The system should stage the next UFC card; Cody reviews and approves exceptions rather than manually typing every normal fight.
+
+Primary workflow:
+- Sync or stage the next UFC event.
+- Review event name, subtitle, date, time, venue, location, card order, weight classes, and lock time.
+- Add a missing fight only as an emergency fallback.
+- Remove or reorder a fight.
+- Replace a fighter.
+- Cancel a fight.
+- Publish the approved card.
+- Show compact readiness, mismatch, and missing-data warnings.
+
+2B must remain separate from live result entry. Do not build one giant page that combines card ingestion, odds, live results, corrections, season administration, and monitoring.
+
+## FUTURE AUDITED CORRECTIONS
 - Do not add a broad V1-style `Reopen Event` button.
 - Add a future audited `Correct Result` action.
 - Require a correction reason.

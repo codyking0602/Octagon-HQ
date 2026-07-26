@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import {
   americanOddsLabel,
@@ -262,6 +263,12 @@ export default function PicksPage() {
                       : `EACH PICK SAVES TO ${identity.profile.displayName}`}
               </p>
             )}
+
+            {identity.profile && activeEvent.canControl ? (
+              <Link className="picks-control-entry" to="/picks/control">
+                OPEN FIGHT NIGHT CONTROL
+              </Link>
+            ) : null}
           </section>
 
           <details className="surface-card picks-scoring-guide">

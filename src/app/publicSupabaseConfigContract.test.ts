@@ -24,6 +24,10 @@ const requiredMarkers = [
   "+400+",
   "HOW EVERYONE PICKED",
   "group_picks",
+  "Fight Night Control",
+  "LOCK PICKS & BEGIN RESULTS",
+  "COMPLETE EVENT",
+  "get_pick_control_event",
 ].join(" ");
 
 describe("production Supabase browser configuration", () => {
