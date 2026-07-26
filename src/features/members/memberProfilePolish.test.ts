@@ -7,6 +7,8 @@ const directoryPage = readFileSync(new URL("./MemberDirectoryPage.tsx", import.m
 const avatarEditor = readFileSync(new URL("./MemberAvatarEditor.tsx", import.meta.url), "utf8");
 const identityControl = readFileSync(new URL("../identity/IdentityControl.tsx", import.meta.url), "utf8");
 const homePage = readFileSync(new URL("../home/HomePage.tsx", import.meta.url), "utf8");
+const mainEntry = readFileSync(new URL("../../main.tsx", import.meta.url), "utf8");
+const compactStyles = readFileSync(new URL("../../styles/member-profile-compact.css", import.meta.url), "utf8");
 const migration = readFileSync(
   new URL("../../../supabase/migrations/202607290002_member_profile_polish.sql", import.meta.url),
   "utf8",
@@ -63,6 +65,16 @@ describe("Member Profile polish contracts", () => {
     expect(profilePage).toContain("setLoading(!isOwnProfile)");
     expect(profilePage).toContain("remoteMember?.recentActivity?.length");
     expect(profilePage).toContain("fallbackOwnActivity");
+  });
+
+  it("keeps the full profile dense and removes duplicate empty-state bulk", () => {
+    expect(mainEntry).toContain('import "./styles/member-profile-compact.css"');
+    expect(compactStyles).toContain("min-height: 82px");
+    expect(compactStyles).toContain("min-height: 62px");
+    expect(compactStyles).toContain("min-height: 58px");
+    expect(compactStyles).toContain(".member-profile-page .member-avatar-editor__preview");
+    expect(compactStyles).toContain(".member-profile-challenges:has(.member-profile-empty) .member-challenge-metrics");
+    expect(compactStyles).toContain("opacity: .62");
   });
 
   it("derives achievements from real profile activity rather than decorative hard-coded counts", () => {
