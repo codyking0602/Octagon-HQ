@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import type { PickSetupBout, PickSetupBoutInput, PickSetupDraft } from "./pickSetupModel";
 import {
@@ -131,6 +131,7 @@ interface PicksSetupPageProps {
 
 export default function PicksSetupPage({ repository: suppliedRepository }: PicksSetupPageProps) {
   const identity = useIdentity();
+  const navigate = useNavigate();
   const [repository] = useState<PickSetupRepository | null>(() => (
     suppliedRepository === undefined ? createPickSetupRepository() : suppliedRepository
   ));
@@ -264,7 +265,7 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
     if (!window.confirm("Publish this reviewed card? It will become the live upcoming Picks event.")) return;
     void runAction("publish", async () => {
       await repository!.publishDraft(draft.draftId);
-      window.location.assign("/picks");
+      navigate("/picks");
     });
   }
 
