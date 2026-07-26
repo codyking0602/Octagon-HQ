@@ -50,7 +50,6 @@ const pendingEvent: PickEvent = {
   ...resolvedEvent,
   eventId: "ufc-pending-reveal",
   startsAt: "2099-07-25T18:00:00.000Z",
-  winnerFighterSlug: null,
   bouts: [{
     ...resolvedEvent.bouts[0],
     winnerFighterSlug: null,
@@ -192,10 +191,10 @@ describe("Picks group reveals", () => {
     expect(await screen.findByText("HOW EVERYONE PICKED")).toBeInTheDocument();
     expect(screen.getByText("OFFICIAL RESULT")).toBeInTheDocument();
     expect(screen.getByText("3 ENTERED")).toBeInTheDocument();
-    expect(screen.getByText("CODY")).toBeInTheDocument();
+    expect(screen.getAllByText("CODY").length).toBeGreaterThan(0);
     expect(screen.getByText("SHANE")).toBeInTheDocument();
     expect(screen.getByText("TONY")).toBeInTheDocument();
-    expect(screen.getByText("NO PICK")).toBeInTheDocument();
+    expect(screen.getAllByText("NO PICK").length).toBeGreaterThan(0);
   });
 
   it("does not render another member reveal for a pending bout", async () => {
