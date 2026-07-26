@@ -33,8 +33,21 @@ describe("Phase 2B event setup backend", () => {
     expect(sql).toContain("grant execute on function public.get_pick_event_setup() to authenticated");
   });
 
-  it("uses the official UFC source and never publishes from the scraper", () => {
+  it("uses UFC metadata with MMA Mania sections instead of a first-six guess", () => {
     expect(syncFunction).toContain("https://www.ufc.com/events?language_content_entity=en");
+    expect(syncFunction).toContain("https://www.mmamania.com/ufc-fight-cards");
+    expect(syncFunction).toContain("parseMmaManiaCard");
+    expect(syncFunction).toContain("resolveCardScope");
+    expect(syncFunction).toContain('requested === "main" || requested === "full"');
+    expect(syncFunction).toContain("No UFC first-six fallback was used");
+    expect(syncFunction).not.toContain("bouts.slice(0, 6)");
+  });
+
+  it("previews source changes before replacing a staged draft", () => {
+    expect(syncFunction).toContain('mode === "preview"');
+    expect(syncFunction).toContain("sourceChanges(ownerProbe.data, event, effectiveScope)");
+    expect(syncFunction).toContain("expected_hash");
+    expect(syncFunction).toContain("The source card changed after review");
     expect(syncFunction).toContain("stage_pick_event_draft");
     expect(syncFunction).not.toContain("publish_pick_event_draft");
     expect(syncFunction).toContain("Fight Night owner access required");
