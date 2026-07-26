@@ -1,5 +1,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { createPortal } from "react-dom";
+import { Link } from "react-router-dom";
+import { memberProfilePath } from "../members/memberProfilesModel";
 import { useIdentity } from "./IdentityProvider";
 
 export function IdentityControl() {
@@ -73,6 +75,10 @@ export function IdentityControl() {
           <div className="identity-profile-card">
             <i>{identity.profile.initials}</i>
             <span><small>SIGNED IN AS</small><strong>{identity.profile.displayName}</strong></span>
+            <div className="identity-profile-card__links">
+              <Link to={memberProfilePath(identity.profile.displayName)} onClick={identity.closeDialog}>VIEW MY PROFILE</Link>
+              <Link to="/members" onClick={identity.closeDialog}>BROWSE MEMBERS</Link>
+            </div>
             <button type="button" disabled={identity.busy} onClick={() => void identity.signOut()}>SIGN OUT</button>
           </div>
         ) : identity.status === "unconfigured" ? (
