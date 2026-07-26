@@ -5,9 +5,17 @@ import {
   type PlayChallenge,
 } from "../challenges/challengeModel";
 
+export interface MemberRecentActivityItem {
+  kind: "find-leader" | "picks";
+  title: string;
+  detail: string;
+  occurredAt: string;
+}
+
 export interface MemberCardSummary {
   displayName: string;
   initials: string;
+  avatarPhotoData?: string | null;
   favoriteFighterSlug: string | null;
   currentStreak: number;
   picksCorrect: number;
@@ -22,6 +30,7 @@ export interface MemberProfileSummary extends MemberCardSummary {
   bestFindLeaderScore: number;
   picksPending: number;
   picksEventsEntered: number;
+  recentActivity?: MemberRecentActivityItem[];
 }
 
 export interface MemberChallengeSummary {
@@ -29,6 +38,13 @@ export interface MemberChallengeSummary {
   completed: number;
   sent: number;
   received: number;
+}
+
+export interface MemberAchievement {
+  id: string;
+  title: string;
+  detail: string;
+  unlocked: boolean;
 }
 
 export function normalizeMemberName(value: string) {
@@ -78,6 +94,51 @@ export function summarizeMemberChallenges(
     if (status !== "completed" && status !== "declined") summary.open += 1;
     return summary;
   }, { open: 0, completed: 0, sent: 0, received: 0 });
+}
+
+export function memberAchievements(
+  member: MemberProfileSummary,
+  challengeSummary: MemberChallengeSummary,
+): MemberAchievement[] {
+  const gradedPicks = member.picksCorrect + member.picksIncorrect;
+  return [
+    {
+      id: "profile-ready",
+      title: "Profile Ready",
+      detail: "Added a personal avatar or favorite fighter.",
+      unlocked: Boolean(member.avatarPhotoData || member.favoriteFighterSlug),
+    },
+    {
+      id: "perfect-ten",
+      title: "Perfect 10",
+      detail: "Scored 10/10 in Find the Leader.",
+      unlocked: member.perfectRuns > 0,
+    },
+    {
+      id: "three-day-run",
+      title: "Three-Day Run",
+      detail: "Built a three-day Find the Leader streak.",
+      unlocked: member.bestStreak >= 3,
+    },
+    {
+      id: "daily-regular",
+      title: "Daily Regular",
+      detail: "Recorded seven Find the Leader days.",
+      unlocked: member.recordedDays >= 7,
+    },
+    {
+      id: "picks-player",
+      title: "Picks Player",
+      detail: "Has graded UFC Picks results.",
+      unlocked: gradedPicks > 0,
+    },
+    {
+      id: "challenge-competitor",
+      title: "Challenge Competitor",
+      detail: "Completed a direct Octagon HQ challenge.",
+      unlocked: challengeSummary.completed > 0,
+    },
+  ];
 }
 
 export function challengeIsComparisonOnly(challenge: PlayChallenge) {
