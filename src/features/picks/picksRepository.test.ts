@@ -31,11 +31,12 @@ describe("Picks current-event compatibility", () => {
     expect(event?.bouts[0]?.blueAmericanOdds).toBeNull();
   });
 
-  it("defaults omitted result fields to a pending lifecycle state", () => {
+  it("defaults omitted result and reveal fields safely", () => {
     const event = mapPickEvent(eventPayload);
 
     expect(event?.bouts[0]?.resultStatus).toBe("pending");
     expect(event?.bouts[0]?.resultRecordedAt).toBeNull();
+    expect(event?.bouts[0]?.groupPicks).toEqual([]);
   });
 
   it("maps the existing backend result state without creating another query path", () => {
@@ -47,11 +48,24 @@ describe("Picks current-event compatibility", () => {
         winner_fighter_slug: "red-fighter",
         result_status: "red_win",
         result_recorded_at: "2026-07-26T18:00:00.000Z",
+        group_picks: [{
+          display_name: "CODY",
+          picked_fighter_slug: "red-fighter",
+          is_current_user: true,
+        }, {
+          display_name: "SHANE",
+          picked_fighter_slug: "blue-fighter",
+          is_current_user: false,
+        }],
       }],
     });
 
     expect(event?.bouts[0]?.resultStatus).toBe("red_win");
     expect(event?.bouts[0]?.resultRecordedAt).toBe("2026-07-26T18:00:00.000Z");
+    expect(event?.bouts[0]?.groupPicks).toEqual([
+      { displayName: "CODY", pickedFighterSlug: "red-fighter", isCurrentUser: true },
+      { displayName: "SHANE", pickedFighterSlug: "blue-fighter", isCurrentUser: false },
+    ]);
   });
 
   it("normalizes integer odds returned as JSON strings", () => {
