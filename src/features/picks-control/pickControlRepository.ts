@@ -1,0 +1,110 @@
+import { z } from "zod";
+import { getSupabaseClient } from "../../lib/supabase";
+import type { PickBoutResultStatus } from "../picks/picksModel";
+import type { PickControlEvent } from "./pickControlModel";
+
+const controlBoutSchema = z.object({
+  bout_id: z.string(),
+  position: z.number().int().positive(),
+  weight_class: z.string(),
+  red_fighter_slug: z.string(),
+  red_fighter_name: z.string(),
+  blue_fighter_slug: z.string(),
+  blue_fighter_name: z.string(),
+  result_status: z.enum(["pending", "red_win", "blue_win", "draw", "no_contest", "cancelled"]),
+  winner_fighter_slug: z.string().nullable(),
+  result_recorded_at: z.string().nullable(),
+});
+
+const controlEventSchema = z.object({
+  event_id: z.string(),
+  name: z.string(),
+  subtitle: z.string(),
+  venue: z.string(),
+  location: z.string(),
+  starts_at: z.string(),
+  locks_at: z.string(),
+  season: z.number().int(),
+  status: z.enum(["upcoming", "locked", "complete"]),
+  can_lock: z.boolean(),
+  can_complete: z.boolean(),
+  bouts: z.array(controlBoutSchema),
+});
+
+export interface PickControlRepository {
+  loadControlEvent: () => Promise<PickControlEvent | null>;
+  lockEvent: (eventId: string) => Promise<void>;
+  recordResult: (eventId: string, boutId: string, result: PickBoutResultStatus) => Promise<void>;
+  completeEvent: (eventId: string) => Promise<void>;
+}
+
+async function requireRpcSuccess<T>(request: PromiseLike<{ data: T; error: { message?: string } | null }>) {
+  const { data, error } = await request;
+  if (error) throw new Error(error.message || "Fight Night Control could not complete that request.");
+  return data;
+}
+
+export function mapPickControlEvent(value: unknown): PickControlEvent | null {
+  if (!value) return null;
+  const parsed = controlEventSchema.parse(value);
+  return {
+    eventId: parsed.event_id,
+    name: parsed.name,
+    subtitle: parsed.subtitle,
+    venue: parsed.venue,
+    location: parsed.location,
+    startsAt: parsed.starts_at,
+    locksAt: parsed.locks_at,
+    season: parsed.season,
+    status: parsed.status,
+    canLock: parsed.can_lock,
+    canComplete: parsed.can_complete,
+    bouts: parsed.bouts.map((bout) => ({
+      boutId: bout.bout_id,
+      position: bout.position,
+      weightClass: bout.weight_class,
+      redFighterSlug: bout.red_fighter_slug,
+      redFighterName: bout.red_fighter_name,
+      blueFighterSlug: bout.blue_fighter_slug,
+      blueFighterName: bout.blue_fighter_name,
+      resultStatus: bout.result_status,
+      winnerFighterSlug: bout.winner_fighter_slug,
+      resultRecordedAt: bout.result_recorded_at,
+    })),
+  };
+}
+
+export function createPickControlRepository(): PickControlRepository | null {
+  const supabase = getSupabaseClient();
+  if (!supabase) return null;
+  const client = supabase;
+
+  return {
+    async loadControlEvent() {
+      const data = await requireRpcSuccess(client.rpc("get_pick_control_event"));
+      return mapPickControlEvent(data);
+    },
+
+    async lockEvent(eventId) {
+      await requireRpcSuccess(client.rpc("transition_pick_event", {
+        p_event_id: eventId,
+        p_target_status: "locked",
+      }));
+    },
+
+    async recordResult(eventId, boutId, result) {
+      await requireRpcSuccess(client.rpc("record_official_pick_bout_result", {
+        p_event_id: eventId,
+        p_bout_id: boutId,
+        p_result_status: result,
+      }));
+    },
+
+    async completeEvent(eventId) {
+      await requireRpcSuccess(client.rpc("transition_pick_event", {
+        p_event_id: eventId,
+        p_target_status: "complete",
+      }));
+    },
+  };
+}
