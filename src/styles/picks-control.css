@@ -1,3 +1,20 @@
+.picks-control-entry {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  margin-top: 4px;
+  border: 1px solid rgba(255, 255, 255, .28);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .04);
+  color: var(--text-primary);
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .09em;
+  text-align: center;
+  text-decoration: none;
+}
+
 .picks-control-page {
   display: grid;
   gap: 14px;
@@ -283,6 +300,7 @@
   width: 100%;
 }
 
+.picks-control-entry:focus-visible,
 .picks-control-page button:focus-visible,
 .picks-control-page a:focus-visible {
   outline: 2px solid var(--text-primary);
