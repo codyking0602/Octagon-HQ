@@ -124,12 +124,16 @@ export function MemberAvatarEditor({
   }
 
   async function removePhoto() {
-    setStatus("Removing profile photo…");
-    await onSave(null);
-    setStatus("Profile photo removed. Your initials will be used.");
+    try {
+      setStatus("Removing profile photo…");
+      await onSave(null);
+      setStatus("Profile photo removed. Your initials will be used.");
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : "That photo could not be removed.");
+    }
   }
 
-  const geometry = crop ? cropGeometry(crop, 220) : null;
+  const geometry = crop ? cropGeometry(crop) : null;
   const previewRatio = 220 / OUTPUT_SIZE;
 
   return (
