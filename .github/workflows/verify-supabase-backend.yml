@@ -133,6 +133,7 @@ jobs:
           require_remote_migration "202607260001" "Your HQ migration not deployed"
           require_remote_migration "202607270001" "Picks migration not deployed"
           require_remote_migration "202607310001" "Picks result lifecycle migration not deployed"
+          require_remote_migration "202608010001" "Picks recap migration not deployed"
 
           if ! supabase functions list --project-ref "$SUPABASE_PROJECT_ID" | grep -Fq "pin-auth"; then
             echo "::error title=PIN function not deployed::The pin-auth Edge Function is not deployed to the V2 project."
@@ -182,6 +183,7 @@ jobs:
             echo "- Profile-backed Your HQ migration: deployed remotely"
             echo "- Profile-backed UFC Picks migration: deployed remotely"
             echo "- Picks result lifecycle migration: deployed remotely"
+            echo "- Picks recap migration: deployed remotely"
             echo "- pin-auth Edge Function: deployed and responding with the expected contract"
             echo "- Production CORS origin: $OCTAGON_PRODUCTION_ORIGIN"
             echo "- Cloudflare VITE values: cannot be read by GitHub and must be verified through the Cloudflare production build"
