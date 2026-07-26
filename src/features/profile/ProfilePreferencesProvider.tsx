@@ -142,8 +142,9 @@ export function ProfilePreferencesProvider({
       return;
     }
     if (!repository?.saveAvatarPhoto) {
-      setError("Profile photo uploads are not connected on this build.");
-      return;
+      const missingError = new Error("Profile photo uploads are not connected on this build.");
+      setError(missingError.message);
+      throw missingError;
     }
 
     setSavingAvatar(true);
@@ -155,6 +156,7 @@ export function ProfilePreferencesProvider({
     } catch (nextError) {
       if (profileIdRef.current !== expectedProfileId) return;
       setError(readableError(nextError));
+      throw nextError;
     } finally {
       if (profileIdRef.current === expectedProfileId) setSavingAvatar(false);
     }
