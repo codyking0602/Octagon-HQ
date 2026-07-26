@@ -161,11 +161,14 @@ export function PicksProvider({
     setSavingBoutId(boutId);
     try {
       const saved = await repository.savePick(event.eventId, boutId, fighterSlug);
+      const [nextLock, nextSummary] = await Promise.all([
+        repository.loadMyUnderdogLock(event.eventId),
+        repository.loadMySummary(event.season),
+      ]);
       if (profileIdRef.current !== expectedProfileId) return;
       setSelections((current) => ({ ...current, [saved.boutId]: saved.fighterSlug }));
-      setUnderdogLockState((current) => (
-        current?.boutId === saved.boutId && current.fighterSlug !== saved.fighterSlug ? null : current
-      ));
+      setUnderdogLockState(nextLock);
+      setSummary(nextSummary);
       setError("");
     } catch (nextError) {
       if (profileIdRef.current !== expectedProfileId) return;
