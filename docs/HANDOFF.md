@@ -1,6 +1,6 @@
 # Octagon HQ V2 — Current Handoff
 
-_Last updated: 2026-07-25_
+_Last updated: 2026-07-26_
 
 This is the authoritative cold-start handoff for continuing Octagon HQ V2. Read this file, `docs/product-blueprint.md`, `docs/RANKINGS-MIGRATION.md`, `docs/rankings-parity-contract.md`, `docs/intelligence-verdict-flow.md`, and `docs/octagon-verdict-export.md`, then inspect current `main` before editing.
 
@@ -11,6 +11,7 @@ This is the authoritative cold-start handoff for continuing Octagon HQ V2. Read 
 - Live app: `https://octagon.hq-app.workers.dev`
 - `main` is the live source of truth.
 - The legacy V1 repository, `codyking0602/ufc-goat-rankings`, is reference-only and must not be edited during V2 work.
+- No V1 runtime dependency remains. The completed V1 migration must never be rerun.
 - Always verify the current `main` SHA before creating a feature branch.
 
 ## Working standard
@@ -27,7 +28,7 @@ For every production slice:
 4. Inspect and preserve the existing canonical owner.
 5. Add focused tests.
 6. Require the exact PR head to pass typecheck, the full test suite, and the production build.
-7. Deploy the exact PR head when live testing is required.
+7. Deploy the exact PR head when live testing is required and explicitly approved.
 8. Phone-test user-facing changes.
 9. Never merge without Cody explicitly approving that PR with the word `merge`.
 
@@ -44,13 +45,14 @@ Do not use old branches, temporary workflows, duplicate providers, local fallbac
 - `src/features/play/FindLeaderHistoryProvider.tsx` — Find the Leader history owner.
 - `src/features/profile/ProfilePreferencesProvider.tsx` — profile preferences owner.
 - `src/features/picks/PicksProvider.tsx` — current Picks event, selections, and season-summary owner.
+- `src/features/members/memberProfilesRepository.ts` — authenticated member-facing profile projections.
 - The ranking engine and calculated ranking model remain the only ranking-calculation owners.
 
 Consumers use provider state and canonical repository functions. They must not independently resolve identity, duplicate Supabase queries, read a local fallback, or publish competing readiness.
 
 ## Current production product
 
-The following are complete and merged:
+The following are complete, merged, and live:
 
 - React, TypeScript, and Vite V2 application.
 - Branded startup and route-level lazy loading.
@@ -74,6 +76,9 @@ The following are complete and merged:
 - Database-enforced Picks lock and fighter validation.
 - Picks season record on Your HQ.
 - Home Next UFC Event / Picks card.
+- Authenticated Member Profiles directory and individual member pages.
+- Personal profile photos separate from Favorite Fighter.
+- Historical V1 member continuity through the canonical V2 profile, Picks, and Find the Leader owners.
 - Stale Vite chunk recovery.
 - Branded route-error handling.
 - Fresh SPA shells served with `Cache-Control: no-cache`.
@@ -89,6 +94,45 @@ Your HQ is profile-backed and currently contains:
 - One intelligent next action.
 
 Home and the feature routes consume existing providers. Your HQ does not own a second profile, challenge, history, preference, or Picks query path.
+
+## Member Profiles and historical continuity
+
+Member Profiles are merged and live at `/members`, with individual profiles at `/members/:memberName`.
+
+The completed controlled migration imported the canonical six-member group:
+
+- Brock
+- Cody
+- Rhonda
+- Shane
+- Tony
+- Tyler
+
+The completed import added:
+
+- 19 nonconflicting Find the Leader rows.
+- Two completed historical Picks events.
+- 12 resolved bouts.
+- 48 submitted historical picks.
+
+Cody’s reconciled historical results are:
+
+- Overall Picks record: **9-3**.
+- UFC 329: **5-2**.
+- UFC Oklahoma City: **4-1**.
+- Missing historical picks: **0**.
+- Find the Leader recorded days: **9**.
+- Best streak: **7**.
+- Perfect 10s: **4**.
+- Best score: **10**.
+
+One July 25, 2026 Find the Leader conflict was intentionally resolved in favor of the existing V2 row: V1 contained official 8, best 8, two attempts; V2 contained official 4, best 4, one attempt. July 25, 2026 and later V2 Picks data was hash-verified unchanged.
+
+Brock, Rhonda, Shane, Tony, and Tyler are historical profiles with no migrated PIN credential. Each person may use the normal Create Profile flow with the reserved name, choose a new PIN, and claim the existing profile and history. `public.claim_unclaimed_pin_profile(text, text)` and the existing `pin-auth` owner remain the durable claiming path.
+
+No V1 PIN, PIN hash, session token, or authentication credential was migrated.
+
+The migration is complete and must never be rerun. Forward migration `202607300005_retire_v1_history_import_rpcs.sql` retires the disposable `public.import_v1_history_atomic(jsonb)` and `public.import_v1_history_atomic_reconciled(jsonb)` entry points without changing imported rows or durable profile-claiming behavior. V1 is now reference-only.
 
 ## Ranking ownership
 
@@ -207,7 +251,40 @@ Fork PRs and moved heads are rejected before deployment. PR build commands do no
 
 ## Remaining roadmap
 
-### Lower Home experience
+### Picks lifecycle and completed-event recaps — next major phase
+
+Split the work into small PRs and preserve `PicksProvider` as the app-facing owner.
+
+1. Official result and event-completion owner.
+   - One trusted backend owner records official bout outcomes.
+   - One backend owner controls event status transitions.
+   - Complete an event atomically only when eligible outcomes are resolved.
+   - Expose derived event and season records through one canonical projection.
+   - Do not build a giant admin dashboard.
+2. Completed-event recap UI.
+   - Show official outcomes and the active member’s correct, incorrect, missing, and excluded picks.
+   - Show event record and compact group results.
+   - Preserve the current upcoming-event picking experience.
+3. Event rotation and next-event process.
+   - Keep exactly one active event.
+   - Retire completed events into durable history through one controlled process.
+   - Browser code remains read-only for official event administration.
+
+Completed-event scoring remains: correct submitted pick equals a win; incorrect submitted pick equals a loss; missing picks are separate; draws, no contests, cancelled bouts, and unresolved bouts are excluded.
+
+### Activity automation
+
+Create meaningful update cards only for:
+
+- new fighters;
+- ranking movement of at least three positions;
+- new games;
+- completed Picks event recaps;
+- new Fighters to Watch entries.
+
+Move temporary updates to archive after seven days and remove them after fifteen days unless they represent durable history owned elsewhere.
+
+### Lower Home experience — later
 
 Final intended Home order:
 
@@ -222,28 +299,7 @@ Ranking Spotlight should evolve the existing Top of the Board area rather than c
 
 Shane’s Fighters to Watch is structured Intelligence/editorial content, never a screenshot of notes or messages.
 
-Member Profiles should remain a compact preview on Home; the full directory belongs on its own screen.
-
-### Picks lifecycle and recaps
-
-- Record official bout winners through one canonical backend owner.
-- Recalculate profile Picks records from canonical results.
-- Show completed-event recaps and correct/incorrect picks.
-- Preserve event history.
-- Add and retire future events through one defined backend process.
-- Do not scrape or guess results in the browser.
-
-### Activity automation
-
-Create meaningful update cards only for:
-
-- new fighters;
-- ranking movement of at least three positions;
-- new games;
-- completed Picks event recaps;
-- new Fighters to Watch entries.
-
-Move temporary updates to archive after seven days and remove them after fifteen days unless they represent durable history owned elsewhere.
+Member Profiles should remain a compact preview on Home; the full directory belongs at `/members`.
 
 ### Onboarding and profile completion
 
@@ -256,7 +312,7 @@ Use compact contextual reminders for:
 
 Do not build a mandatory multi-screen onboarding wall.
 
-### Permission-aware War Room
+### Permission-aware War Room — later
 
 - Completely hidden for signed-out and unauthorized users.
 - No disabled War Room button or fake destination.
@@ -276,10 +332,10 @@ Every production PR requires the exact final head to pass:
 - `npm test`;
 - `npm run build`.
 
-Relevant deployment and export workflows must also be green. Never describe a PR as deployed, verified, green, or merged without checking the exact current head.
+Relevant Supabase SQL tests, migration-order checks, backend verification, deployment, and export workflows must also be green when applicable. Never describe a PR as deployed, verified, green, or merged without checking the exact current head.
 
 ## Next safe action
 
-Finish and merge the deployment-automation PR first. Do not begin another product feature before that PR is explicitly approved and merged.
+Review the draft cleanup PR that adds `202607300005_retire_v1_history_import_rpcs.sql`. Do not deploy it until Cody explicitly approves deployment, and do not merge it until Cody explicitly says `merge` for that PR.
 
-After deployment automation is active and proven, begin the lower Home experience on a new branch and separate draft PR.
+After the cleanup migration is deployed, verified, and explicitly merged, start the official Picks result and event-completion owner as a new branch and separate draft PR. Lower Home work and permission-aware War Room remain later phases.
