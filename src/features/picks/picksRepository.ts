@@ -8,6 +8,15 @@ import type {
   UnderdogLock,
 } from "./picksModel";
 
+const americanOddsSchema = z.preprocess((value) => {
+  if (value === undefined || value === null || value === "") return null;
+  if (typeof value === "string") {
+    const parsed = Number(value);
+    return Number.isInteger(parsed) ? parsed : value;
+  }
+  return value;
+}, z.number().int().nullable());
+
 const boutSchema = z.object({
   bout_id: z.string(),
   position: z.number().int().positive(),
@@ -16,8 +25,8 @@ const boutSchema = z.object({
   red_fighter_name: z.string(),
   blue_fighter_slug: z.string(),
   blue_fighter_name: z.string(),
-  red_american_odds: z.number().int().nullable(),
-  blue_american_odds: z.number().int().nullable(),
+  red_american_odds: americanOddsSchema,
+  blue_american_odds: americanOddsSchema,
   winner_fighter_slug: z.string().nullable(),
 });
 
@@ -130,7 +139,7 @@ async function requireRpcSuccess<T>(request: PromiseLike<{ data: T; error: { mes
   return data;
 }
 
-function mapEvent(value: unknown): PickEvent | null {
+export function mapPickEvent(value: unknown): PickEvent | null {
   if (!value) return null;
   const parsed = eventSchema.parse(value);
   return {
@@ -265,7 +274,7 @@ export function createPicksRepository(): PicksRepository | null {
   return {
     async loadCurrentEvent() {
       const data = await requireRpcSuccess(client.rpc("get_current_pick_event"));
-      return mapEvent(data);
+      return mapPickEvent(data);
     },
 
     async loadMyPicks(eventId) {
