@@ -12,6 +12,11 @@ const requestHeaders = {
   "User-Agent": "OctagonHQ/2.0 (+https://octagon.hq-app.workers.dev)",
   Accept: "text/html,application/xhtml+xml",
 };
+const monthNumbers: Record<string, string> = {
+  Jan: "01", Feb: "02", Mar: "03", Apr: "04", May: "05", Jun: "06",
+  Jul: "07", Aug: "08", Sep: "09", Oct: "10", Nov: "11", Dec: "12",
+};
+type CheerioInput = Parameters<cheerio.CheerioAPI>[0];
 
 const weightClasses = [
   "Women's Strawweight",
@@ -100,6 +105,13 @@ function timezoneOffset(zone: string) {
   return offsets[zone.toUpperCase()] ?? "";
 }
 
+function visibleDate(month: string, day: string, hour: number, minute: string, offset: string, year: number) {
+  const monthNumber = monthNumbers[month];
+  if (!monthNumber) return null;
+  const parsed = new Date(`${year}-${monthNumber}-${day.padStart(2, "0")}T${String(hour).padStart(2, "0")}:${minute}:00${offset}`);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
 function parseVisibleEventTime(text: string, now: Date) {
   const match = text.match(/(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun),\s+([A-Z][a-z]{2})\s+(\d{1,2})\s*\/\s*(\d{1,2}):(\d{2})\s*([AP]M)\s+([A-Z]{2,4})\s*\/\s*Main Card/i);
   if (!match) return null;
@@ -109,12 +121,11 @@ function parseVisibleEventTime(text: string, now: Date) {
   let year = now.getUTCFullYear();
   const offset = timezoneOffset(zone);
   if (!offset) return null;
-  const candidate = new Date(`${month} ${dayValue}, ${year} ${String(hour).padStart(2, "0")}:${minute}:00 ${offset}`);
-  if (Number.isNaN(candidate.getTime())) return null;
+  const candidate = visibleDate(month, dayValue, hour, minute, offset, year);
+  if (!candidate) return null;
   if (candidate.getTime() < now.getTime() - 7 * 86400000) {
     year += 1;
-    const nextYear = new Date(`${month} ${dayValue}, ${year} ${String(hour).padStart(2, "0")}:${minute}:00 ${offset}`);
-    return Number.isNaN(nextYear.getTime()) ? null : nextYear;
+    return visibleDate(month, dayValue, hour, minute, offset, year);
   }
   return candidate;
 }
@@ -162,7 +173,7 @@ function extractVenueAndLocation($: cheerio.CheerioAPI, name: string, subtitle: 
   };
 }
 
-function smallestBoutContainer($: cheerio.CheerioAPI, element: cheerio.Element) {
+function smallestBoutContainer($: cheerio.CheerioAPI, element: CheerioInput) {
   let current = $(element).parent();
   for (let depth = 0; depth < 7 && current.length; depth += 1) {
     const athleteLinks = current.find("a[href*='/athlete/']");
@@ -282,10 +293,11 @@ Deno.serve(async (request) => {
   if (request.method !== "POST") return json({ message: "Method not allowed." }, 405);
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
   const secretKey = Deno.env.get("SUPABASE_SECRET_KEY") ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   const authorization = request.headers.get("authorization") ?? "";
   const token = authorization.replace(/^Bearer\s+/i, "");
-  if (!supabaseUrl || !secretKey || !token) return json({ message: "Event sync is not configured." }, 503);
+  if (!supabaseUrl || !anonKey || !secretKey || !token) return json({ message: "Event sync is not configured." }, 503);
 
   const admin = createClient(supabaseUrl, secretKey, {
     auth: { autoRefreshToken: false, persistSession: false },
@@ -293,8 +305,15 @@ Deno.serve(async (request) => {
   const user = await admin.auth.getUser(token);
   if (user.error || !user.data.user) return json({ message: "Owner sign-in required." }, 401);
 
-  const owner = await admin.rpc("is_pick_control_owner", { p_profile_id: user.data.user.id });
-  if (owner.error || owner.data !== true) return json({ message: "Fight Night owner access required." }, 403);
+  const ownerClient = createClient(supabaseUrl, anonKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+    global: { headers: { Authorization: `Bearer ${token}` } },
+  });
+  const ownerProbe = await ownerClient.rpc("get_pick_event_setup");
+  if (ownerProbe.error) {
+    const denied = ownerProbe.error.message.toLowerCase().includes("pick control owner required");
+    return json({ message: denied ? "Fight Night owner access required." : "Event Setup is unavailable." }, denied ? 403 : 503);
+  }
 
   try {
     const event = await findNextEvent(new Date());
