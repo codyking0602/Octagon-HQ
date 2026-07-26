@@ -1,0 +1,5 @@
+-- Operational migration-ledger placeholder.
+-- Version 202607290002 is already deployed in the canonical V2 Supabase project
+-- from draft Member Profiles PR #51. This temporary branch is never merged;
+-- the file exists only so the trusted backend workflow sees the complete
+-- production migration history before deploying 202607300001 and 202607300002.
