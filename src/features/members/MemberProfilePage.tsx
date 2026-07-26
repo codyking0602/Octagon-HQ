@@ -14,7 +14,6 @@ import {
   challengeResultVerdict,
 } from "../challenges/ChallengeResultDetails";
 import { useIdentity } from "../identity/IdentityProvider";
-import { pickRecord } from "../picks/picksModel";
 import { usePicks } from "../picks/PicksProvider";
 import { useFindLeaderHistory } from "../play/FindLeaderHistoryProvider";
 import { centralDay } from "../play/findLeaderEngine";
@@ -22,13 +21,16 @@ import { findLeaderStreaks } from "../play/findLeaderStorage";
 import { useProfilePreferences } from "../profile/ProfilePreferencesProvider";
 import { FighterPhoto } from "../rankings/FighterPhoto";
 import { allTime } from "../rankings/rankingModel";
+import { MemberAvatarEditor } from "./MemberAvatarEditor";
 import {
   challengeIsComparisonOnly,
   challengesSharedWithMember,
+  memberAchievements,
   memberProfilePath,
   normalizeMemberName,
   summarizeMemberChallenges,
   type MemberProfileSummary,
+  type MemberRecentActivityItem,
 } from "./memberProfilesModel";
 import {
   createMemberProfilesRepository,
@@ -62,6 +64,20 @@ function completedChallengeCopy(
     headline: verdict,
     detail: `${creatorName} ${challengeResultScoreLabel(challenge, challenge.creatorResult)} · ${responderName} ${challengeResultScoreLabel(challenge, challenge.responderResult)}`,
   };
+}
+
+function activityDate(value: string) {
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return "RECENT";
+  return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(date).toUpperCase();
+}
+
+function profileAvatar(member: MemberProfileSummary) {
+  return member.avatarPhotoData ? (
+    <img src={member.avatarPhotoData} alt={`${member.displayName} avatar`} />
+  ) : (
+    <span>{member.initials}</span>
+  );
 }
 
 export function MemberProfileView({
@@ -124,9 +140,16 @@ export function MemberProfileView({
   }, [identity.profile?.id, isOwnProfile, repository, requestedName]);
 
   const ownStreaks = findLeaderStreaks(history.rows, today);
+  const ownRecentActivity = history.rows.slice(0, 5).map<MemberRecentActivityItem>((row) => ({
+    kind: "find-leader",
+    title: "Find the Leader",
+    detail: `${row.officialScore}/10`,
+    occurredAt: row.completedAt,
+  }));
   const ownMember: MemberProfileSummary | null = identity.profile && isOwnProfile ? {
     displayName: identity.profile.displayName,
     initials: identity.profile.initials,
+    avatarPhotoData: preferences.avatarPhotoData,
     favoriteFighterSlug: preferences.favoriteFighterSlug,
     currentStreak: ownStreaks.current,
     bestStreak: ownStreaks.best,
@@ -140,6 +163,7 @@ export function MemberProfileView({
     picksIncorrect: picks.summary.incorrect,
     picksPending: picks.summary.pending,
     picksEventsEntered: picks.summary.eventsEntered,
+    recentActivity: ownRecentActivity,
     isCurrentUser: true,
   } : null;
   const member = ownMember ?? remoteMember;
@@ -212,6 +236,11 @@ export function MemberProfileView({
   }
 
   const profileLoading = isOwnProfile && (history.loading || preferences.loading || picks.loading);
+  const gradedPicks = member.picksCorrect + member.picksIncorrect;
+  const picksAccuracy = gradedPicks ? Math.round((member.picksCorrect / gradedPicks) * 100) : 0;
+  const achievements = memberAchievements(member, challengeSummary);
+  const unlockedAchievements = achievements.filter((achievement) => achievement.unlocked).length;
+  const recentActivity = member.recentActivity ?? [];
 
   return (
     <div className="page member-profile-page">
@@ -219,21 +248,22 @@ export function MemberProfileView({
 
       <section className={`surface-card member-profile-hero${isOwnProfile ? " is-own" : ""}`}>
         <div className="member-profile-hero__identity">
-          <div className="member-profile-avatar">
-            {favorite ? (
-              <FighterPhoto name={favorite.name} src={favorite.thumbUrl} />
-            ) : (
-              <span>{member.initials}</span>
-            )}
-          </div>
+          <div className="member-profile-avatar">{profileAvatar(member)}</div>
           <div>
             <p className="eyebrow">{isOwnProfile ? "YOUR OCTAGON HQ PROFILE" : "OCTAGON HQ MEMBER"}</p>
             <h1>{member.displayName}</h1>
-            <p className="member-profile-favorite">
-              <small>FAVORITE FIGHTER</small>
-              <strong>{favorite?.name ?? "Not set"}</strong>
-            </p>
+            <p className="member-profile-role">GOAT26 MEMBER · GAMES, PICKS, AND CHALLENGES</p>
           </div>
+        </div>
+
+        <div className="member-profile-favorite-card">
+          <div className="member-profile-favorite-photo">
+            {favorite ? <FighterPhoto name={favorite.name} src={favorite.thumbUrl} /> : <span>UFC</span>}
+          </div>
+          <p className="member-profile-favorite">
+            <small>FAVORITE FIGHTER</small>
+            <strong>{favorite?.name ?? "Not set"}</strong>
+          </p>
         </div>
 
         {isOwnProfile ? (
@@ -258,23 +288,79 @@ export function MemberProfileView({
         )}
       </section>
 
+      {isOwnProfile ? (
+        <MemberAvatarEditor
+          photoData={preferences.avatarPhotoData}
+          initials={member.initials}
+          disabled={!preferences.avatarConfigured}
+          saving={preferences.savingAvatar}
+          onSave={preferences.setAvatarPhoto}
+        />
+      ) : null}
+
       <section className="member-profile-stat-grid" aria-label={`${member.displayName} profile stats`}>
         <article className="surface-card"><small>CURRENT STREAK</small><strong>{profileLoading ? "…" : member.currentStreak}</strong><span>Find the Leader days</span></article>
-        <article className="surface-card"><small>CURRENT PICKS</small><strong>{profileLoading ? "…" : `${member.picksCorrect}-${member.picksIncorrect}`}</strong><span>{member.picksPending ? `${member.picksPending} pending` : "Season record"}</span></article>
-        <article className="surface-card"><small>BEST FIND THE LEADER</small><strong>{profileLoading ? "…" : member.bestFindLeaderScore ? `${member.bestFindLeaderScore}/10` : "—"}</strong><span>Official first attempt</span></article>
+        <article className="surface-card"><small>CURRENT PICKS</small><strong>{profileLoading ? "…" : `${member.picksCorrect}-${member.picksIncorrect}`}</strong><span>{member.picksPending ? `${member.picksPending} pending` : "Current season"}</span></article>
+        <article className="surface-card"><small>ACHIEVEMENTS</small><strong>{profileLoading ? "…" : unlockedAchievements}</strong><span>of {achievements.length} unlocked</span></article>
         <article className="surface-card"><small>OPEN CHALLENGES</small><strong>{challengeState.loading ? "…" : challengeSummary.open}</strong><span>{isOwnProfile ? "Across HQ" : "With you"}</span></article>
       </section>
 
-      <section className="surface-card member-profile-achievements" aria-labelledby="member-game-title">
+      <section className="surface-card member-profile-data-section" aria-labelledby="member-find-leader-title">
         <div className="section-heading">
-          <div><p className="eyebrow">GAME PROFILE</p><h2 id="member-game-title">Find the Leader record</h2></div>
+          <div><p className="eyebrow">DAILY GAME</p><h2 id="member-find-leader-title">Find the Leader</h2></div>
         </div>
-        <div className="member-profile-achievement-grid">
+        <div className="member-profile-metric-grid">
           <div><strong>{member.bestStreak}</strong><span>BEST STREAK</span></div>
           <div><strong>{member.perfectRuns}</strong><span>PERFECT 10s</span></div>
           <div><strong>{member.recordedDays}</strong><span>RECORDED DAYS</span></div>
-          <div><strong>{member.picksEventsEntered}</strong><span>PICKS EVENTS</span></div>
+          <div><strong>{member.bestFindLeaderScore ? `${member.bestFindLeaderScore}/10` : "—"}</strong><span>BEST SCORE</span></div>
         </div>
+      </section>
+
+      <section className="surface-card member-profile-data-section" aria-labelledby="member-picks-title">
+        <div className="section-heading">
+          <div><p className="eyebrow">UFC PICKS</p><h2 id="member-picks-title">Current season</h2></div>
+        </div>
+        <div className="member-profile-metric-grid">
+          <div><strong>{member.picksCorrect}-{member.picksIncorrect}</strong><span>RECORD</span></div>
+          <div><strong>{picksAccuracy}%</strong><span>ACCURACY</span></div>
+          <div><strong>{member.picksPending}</strong><span>PENDING</span></div>
+          <div><strong>{member.picksEventsEntered}</strong><span>EVENTS ENTERED</span></div>
+        </div>
+      </section>
+
+      <section className="surface-card member-profile-data-section member-profile-resume" aria-labelledby="member-achievements-title">
+        <div className="section-heading">
+          <div><p className="eyebrow">ACHIEVEMENTS</p><h2 id="member-achievements-title">Octagon HQ résumé</h2></div>
+          <span>{unlockedAchievements}/{achievements.length} UNLOCKED</span>
+        </div>
+        <div className="member-profile-badge-grid">
+          {achievements.map((achievement) => (
+            <article className={achievement.unlocked ? "is-unlocked" : "is-locked"} key={achievement.id}>
+              <i aria-hidden="true">{achievement.unlocked ? "✓" : "·"}</i>
+              <div><strong>{achievement.title}</strong><span>{achievement.detail}</span></div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="surface-card member-profile-data-section member-profile-activity" aria-labelledby="member-activity-title">
+        <div className="section-heading">
+          <div><p className="eyebrow">RECENT ACTIVITY</p><h2 id="member-activity-title">Latest results</h2></div>
+        </div>
+        {recentActivity.length ? (
+          <div className="member-profile-activity-list">
+            {recentActivity.slice(0, 5).map((activity, index) => (
+              <article key={`${activity.kind}-${activity.occurredAt}-${index}`}>
+                <i aria-hidden="true">{activity.kind === "find-leader" ? "◎" : "✓"}</i>
+                <div><strong>{activity.title}</strong><span>{activity.detail}</span></div>
+                <small>{activityDate(activity.occurredAt)}</small>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div className="member-profile-empty"><strong>No recorded profile activity yet</strong><p>Completed Find the Leader days and graded Picks events will appear here.</p></div>
+        )}
       </section>
 
       <section className="surface-card member-profile-challenges" aria-labelledby="member-challenges-title">
