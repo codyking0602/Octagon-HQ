@@ -135,6 +135,13 @@ try {
     "pick control owner required",
   );
 
+  await requireDenied(
+    "Event Setup owner boundary",
+    `${supabaseOrigin}/rest/v1/rpc/get_pick_event_setup`,
+    { method: "POST", headers: userHeaders, body: "{}" },
+    "pick control owner required",
+  );
+
   const lock = await request(
     "Underdog Lock RPC",
     `${supabaseOrigin}/rest/v1/rpc/get_my_event_underdog_lock`,
@@ -164,7 +171,7 @@ try {
     }
   }
 
-  console.log(`PASS: production Picks scoring, group reveal, and Fight Night owner boundaries are healthy for event ${event.event_id}.`);
+  console.log(`PASS: production Picks scoring, group reveal, Fight Night control, and Event Setup owner boundaries are healthy for event ${event.event_id}.`);
 } finally {
   if (userId) {
     await fetch(`${supabaseOrigin}/auth/v1/admin/users/${userId}`, {
