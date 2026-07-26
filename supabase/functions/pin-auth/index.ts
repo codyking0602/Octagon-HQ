@@ -110,6 +110,26 @@ Deno.serve(async (request) => {
     }
   }
 
+  const claimed = await admin.rpc("claim_unclaimed_pin_profile", {
+    p_display_name: displayName,
+    p_pin: pin,
+  });
+  if (claimed.error) {
+    return response({ message: "The profile could not be claimed." }, 503);
+  }
+
+  const claimedMatch = Array.isArray(claimed.data) ? claimed.data[0] : null;
+  const claimedEmail = typeof claimedMatch?.internal_email === "string"
+    ? claimedMatch.internal_email
+    : "";
+  if (claimedMatch?.claim_result === "claimed" && claimedEmail) {
+    try {
+      return response({ tokenHash: await issueSessionToken(claimedEmail) }, 201);
+    } catch {
+      return response({ message: "The profile was claimed. Sign in with the PIN you chose." }, 503);
+    }
+  }
+
   if (Deno.env.get("OCTAGON_PROFILE_CREATION_OPEN") === "false") {
     return response({ message: "New profiles are currently invite-only." }, 403);
   }
