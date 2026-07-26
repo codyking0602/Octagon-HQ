@@ -38,7 +38,6 @@ create table if not exists public.profile_event_underdog_locks (
 alter table public.profile_event_underdog_locks enable row level security;
 revoke all on table public.profile_event_underdog_locks from public, anon, authenticated;
 
-
 create or replace function public.get_my_event_underdog_lock(p_event_id text)
 returns table (event_id text, bout_id text, fighter_slug text, selected_at timestamptz, frozen_american_odds integer)
 language sql stable security definer set search_path = '' as $$
@@ -113,18 +112,52 @@ end $$;
 drop trigger if exists clear_mismatched_underdog_lock on public.profile_event_picks;
 create trigger clear_mismatched_underdog_lock after update of fighter_slug on public.profile_event_picks
 for each row execute function public.clear_mismatched_underdog_lock();
+revoke all on function public.clear_mismatched_underdog_lock() from public, anon, authenticated;
 
--- The canonical event transition is the single freeze boundary. Subsequent odds
--- changes cannot affect a populated snapshot.
+-- The clock, not a later status update, is the odds mutation boundary. This
+-- preserves the final pre-lock line even when the trusted event transition runs late.
+create or replace function public.prevent_locked_pick_bout_odds_changes()
+returns trigger language plpgsql security definer set search_path = '' as $$
+declare
+  v_event public.pick_events;
+begin
+  select * into v_event from public.pick_events where event_id = old.event_id;
+  if not found then raise exception 'event not found'; end if;
+  if (v_event.status <> 'upcoming' or now() >= v_event.locks_at)
+    and (
+      new.red_american_odds is distinct from old.red_american_odds
+      or new.blue_american_odds is distinct from old.blue_american_odds
+      or new.odds_source is distinct from old.odds_source
+      or new.odds_updated_at is distinct from old.odds_updated_at
+    ) then
+    raise exception 'odds are locked for this event';
+  end if;
+  return new;
+end $$;
+drop trigger if exists prevent_locked_pick_bout_odds_changes on public.pick_bouts;
+create trigger prevent_locked_pick_bout_odds_changes
+before update of red_american_odds, blue_american_odds, odds_source, odds_updated_at on public.pick_bouts
+for each row execute function public.prevent_locked_pick_bout_odds_changes();
+revoke all on function public.prevent_locked_pick_bout_odds_changes() from public, anon, authenticated;
+
+-- The canonical transition copies the final line that was allowed before
+-- locks_at. A selected fighter that is no longer a positive-odds underdog keeps
+-- the selection for history but receives no frozen odds and therefore no bonus.
 create or replace function public.freeze_pick_event_underdog_odds()
 returns trigger language plpgsql security definer set search_path = '' as $$
 begin
   if old.status='upcoming' and new.status='locked' then
     update public.profile_event_underdog_locks lock set
-      frozen_american_odds = case lock.fighter_slug
-        when bout.red_fighter_slug then bout.red_american_odds
-        when bout.blue_fighter_slug then bout.blue_american_odds end,
-      frozen_at = now()
+      frozen_american_odds = case
+        when lock.fighter_slug = bout.red_fighter_slug and bout.red_american_odds >= 100 then bout.red_american_odds
+        when lock.fighter_slug = bout.blue_fighter_slug and bout.blue_american_odds >= 100 then bout.blue_american_odds
+        else null
+      end,
+      frozen_at = case
+        when lock.fighter_slug = bout.red_fighter_slug and bout.red_american_odds >= 100 then new.locks_at
+        when lock.fighter_slug = bout.blue_fighter_slug and bout.blue_american_odds >= 100 then new.locks_at
+        else null
+      end
     from public.pick_bouts bout
     where lock.event_id=new.event_id and bout.event_id=lock.event_id and bout.bout_id=lock.bout_id
       and lock.frozen_at is null;
@@ -134,6 +167,7 @@ end $$;
 drop trigger if exists freeze_pick_event_underdog_odds on public.pick_events;
 create trigger freeze_pick_event_underdog_odds after update of status on public.pick_events
 for each row execute function public.freeze_pick_event_underdog_odds();
+revoke all on function public.freeze_pick_event_underdog_odds() from public, anon, authenticated;
 
 create or replace function public.pick_underdog_bonus(p_odds integer)
 returns integer language sql immutable parallel safe set search_path = '' as $$
@@ -153,7 +187,8 @@ returns jsonb language sql stable security definer set search_path = '' as $$
       'red_fighter_slug',bout.red_fighter_slug,'red_fighter_name',bout.red_fighter_name,
       'blue_fighter_slug',bout.blue_fighter_slug,'blue_fighter_name',bout.blue_fighter_name,
       'red_american_odds',bout.red_american_odds,'blue_american_odds',bout.blue_american_odds,
-      'winner_fighter_slug',bout.winner_fighter_slug) order by bout.position)
+      'winner_fighter_slug',bout.winner_fighter_slug,'result_status',bout.result_status,
+      'result_recorded_at',bout.result_recorded_at) order by bout.position)
       from public.pick_bouts bout where bout.event_id=event.event_id),'[]'::jsonb))
   from public.pick_events event where event.status in ('upcoming','locked') order by event.starts_at limit 1;
 $$;
