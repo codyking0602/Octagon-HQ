@@ -4,7 +4,11 @@ import {
   pickSetupBoutSectionLabel,
   pickSetupDraftCardLabel,
 } from "./pickSetupModel";
-import { mapPickSetupDraft, mapPickSetupSourcePreview } from "./pickSetupRepository";
+import {
+  mapPickSetupDraft,
+  mapPickSetupSourcePreview,
+  pickSetupFunctionErrorMessage,
+} from "./pickSetupRepository";
 
 const payload = {
   draft_id: "11111111-1111-4111-8111-111111111111",
@@ -125,11 +129,29 @@ describe("Event Setup draft mapping", () => {
       warnings: ["MISSING EVENT START TIME", "MISSING VENUE"],
       can_publish: false,
     });
-
     expect(draft?.venue).toBe("");
     expect(draft?.location).toBe("");
     expect(draft?.startsAt).toBeNull();
     expect(draft?.canPublish).toBe(false);
     expect(draft?.warnings).toContain("MISSING VENUE");
+  });
+});
+
+describe("Event Setup sync errors", () => {
+  it("surfaces the Edge Function review error instead of the generic client status", async () => {
+    await expect(pickSetupFunctionErrorMessage({
+      message: "Edge Function returned a non-2xx status code",
+      context: {
+        json: async () => ({
+          message: "MMA Mania did not return a sectioned fight card matching the next UFC event.",
+        }),
+      },
+    })).resolves.toBe("MMA Mania did not return a sectioned fight card matching the next UFC event.");
+  });
+
+  it("keeps the Functions client message when the response body is unavailable", async () => {
+    await expect(pickSetupFunctionErrorMessage({
+      message: "Edge Function returned a non-2xx status code",
+    })).resolves.toBe("Edge Function returned a non-2xx status code");
   });
 });
