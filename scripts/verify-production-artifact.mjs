@@ -6,6 +6,11 @@ import {
   validatePublicSupabaseConfig,
 } from "./public-supabase-config.mjs";
 
+const requiredApplicationMarkers = [
+  "Your event recaps",
+  "get_my_pick_history",
+];
+
 export async function verifyProductionArtifact({ dist = "dist", env = process.env } = {}) {
   const config = validatePublicSupabaseConfig({
     url: env.VITE_SUPABASE_URL,
@@ -29,6 +34,9 @@ export async function verifyProductionArtifact({ dist = "dist", env = process.en
   }
   for (const pattern of forbiddenBrowserCredentialPatterns) {
     if (pattern.test(artifact)) throw new Error(`Compiled artifact contains an administrative credential pattern: ${pattern}.`);
+  }
+  for (const marker of requiredApplicationMarkers) {
+    if (!artifact.includes(marker)) throw new Error(`Compiled artifact is missing required application marker: ${marker}.`);
   }
 
   return { files: compiledFiles.length, hostname: config.expectedHostname };
