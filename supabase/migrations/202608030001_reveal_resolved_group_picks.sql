@@ -9,7 +9,10 @@ security definer
 set search_path = ''
 as $$
   select case
-    when auth.uid() is null or bout.result_status = 'pending' then '[]'::jsonb
+    when auth.uid() is null
+      or not exists (select 1 from public.profiles viewer where viewer.id = auth.uid())
+      or bout.result_status = 'pending'
+      then '[]'::jsonb
     else coalesce((
       select jsonb_agg(
         jsonb_build_object(
