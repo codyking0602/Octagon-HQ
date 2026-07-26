@@ -1,6 +1,7 @@
 export type PickEventStatus = "upcoming" | "locked" | "complete";
 export type PickBoutResultStatus = "pending" | "red_win" | "blue_win" | "draw" | "no_contest" | "cancelled";
 export type PickVerdict = "correct" | "incorrect" | "missing" | "excluded" | "pending";
+export type PickEventPresentationState = "upcoming" | "locked" | "awaiting_results" | "complete";
 
 export interface PickBout {
   boutId: string;
@@ -13,6 +14,8 @@ export interface PickBout {
   redAmericanOdds: number | null;
   blueAmericanOdds: number | null;
   winnerFighterSlug: string | null;
+  resultStatus?: PickBoutResultStatus;
+  resultRecordedAt?: string | null;
 }
 
 export interface UnderdogLock {
@@ -109,6 +112,22 @@ export interface PickHistory {
   events: PickHistoryEvent[];
 }
 
+export interface PickEventPresentation {
+  state: PickEventPresentationState;
+  eyebrow: string;
+  status: string;
+}
+
+export const underdogBonusTiers = [
+  { odds: "+100–149", bonus: "+1" },
+  { odds: "+150–199", bonus: "+2" },
+  { odds: "+200–249", bonus: "+3" },
+  { odds: "+250–299", bonus: "+4" },
+  { odds: "+300–349", bonus: "+5" },
+  { odds: "+350–399", bonus: "+6" },
+  { odds: "+400+", bonus: "+7" },
+] as const;
+
 export const emptyPickSummary: PickSummary = {
   correct: 0,
   incorrect: 0,
@@ -134,8 +153,29 @@ export const emptyPickHistory: PickHistory = {
   events: [],
 };
 
+export function pickEventPresentation(event: PickEvent, now = Date.now()): PickEventPresentation {
+  if (event.status === "complete") {
+    return { state: "complete", eyebrow: "EVENT COMPLETE", status: "COMPLETE" };
+  }
+
+  const hasRecordedResult = event.bouts.some((bout) => (
+    (bout.resultStatus ?? "pending") !== "pending" || Boolean(bout.resultRecordedAt)
+  ));
+  const eventStarted = Date.parse(event.startsAt) <= now;
+
+  if (eventStarted || hasRecordedResult) {
+    return { state: "awaiting_results", eyebrow: "EVENT IN PROGRESS", status: "AWAITING RESULTS" };
+  }
+
+  if (event.status === "locked" || Date.parse(event.locksAt) <= now) {
+    return { state: "locked", eyebrow: "PICKS LOCKED", status: "LOCKED" };
+  }
+
+  return { state: "upcoming", eyebrow: "NEXT UFC EVENT", status: "UPCOMING" };
+}
+
 export function eventPicksLocked(event: PickEvent, now = Date.now()) {
-  return event.status !== "upcoming" || Date.parse(event.locksAt) <= now;
+  return pickEventPresentation(event, now).state !== "upcoming";
 }
 
 export function americanOddsLabel(odds: number | null) {
@@ -158,4 +198,12 @@ export function pickRecord(summary: PickSummary) {
 export function mainEvent(event: PickEvent | null) {
   if (!event?.bouts.length) return null;
   return event.bouts.slice().sort((left, right) => left.position - right.position)[0] ?? null;
+}
+
+export function groupRankLabel(rank: number, results: readonly PickGroupResult[]) {
+  return results.filter((result) => result.rank === rank).length > 1 ? `T-${rank}` : `${rank}`;
+}
+
+export function mainCardFightLabel(index: number) {
+  return index === 0 ? "MAIN EVENT" : `MAIN CARD · FIGHT ${index + 1}`;
 }

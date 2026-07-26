@@ -15,6 +15,11 @@ const requiredApplicationMarkers = [
   "pick-fighter-thumbnail",
   "get_my_event_underdog_lock",
   "set_my_event_underdog_lock",
+  "PICKS LOCKED",
+  "AWAITING RESULTS",
+  "NOT PICKED",
+  "VIEW FIGHT-BY-FIGHT RESULTS",
+  "+400+",
 ];
 
 export async function verifyProductionArtifact({ dist = "dist", env = process.env } = {}) {

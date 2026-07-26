@@ -1,0 +1,203 @@
+.picks-status--locked {
+  border-color: rgba(255, 255, 255, .22);
+  color: var(--text-secondary);
+}
+
+.picks-status--awaiting-results {
+  border-color: rgba(255, 255, 255, .38);
+  color: var(--text-primary);
+}
+
+.picks-progress__track.is-complete span {
+  background: var(--text-primary);
+}
+
+.picks-scoring-tiers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.picks-scoring-tiers > span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+  padding: 8px 9px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .025);
+}
+
+.picks-scoring-tiers b,
+.picks-scoring-tiers em {
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .05em;
+  white-space: nowrap;
+}
+
+.picks-scoring-tiers b {
+  color: var(--text-secondary);
+}
+
+.picks-scoring-tiers em {
+  color: var(--text-primary);
+  font-style: normal;
+}
+
+.picks-card-list {
+  gap: 10px;
+}
+
+.pick-bout-card {
+  gap: 10px;
+  padding: 13px 14px;
+}
+
+.pick-bout-card__choices {
+  gap: 6px;
+}
+
+.pick-choice {
+  gap: 5px;
+  min-height: 78px;
+  padding: 9px 10px;
+}
+
+.pick-choice > span {
+  font-size: 13px;
+}
+
+.pick-choice.is-read-only,
+.pick-choice.is-read-only:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+.pick-choice.is-read-only:not(.is-selected) {
+  border-color: rgba(255, 255, 255, .08);
+  background: rgba(255, 255, 255, .018);
+}
+
+.pick-choice.is-read-only:not(.is-selected) .pick-fighter-thumbnail {
+  opacity: .7;
+}
+
+.pick-choice.is-read-only:not(.is-selected) > span,
+.pick-choice.is-read-only:not(.is-selected) > small,
+.pick-choice.is-read-only:not(.is-selected) > em {
+  color: var(--text-muted);
+}
+
+.pick-choice.is-read-only.is-selected {
+  box-shadow: inset 3px 0 0 var(--ufc-red);
+}
+
+.pick-lock-readonly {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  border: 1px solid rgba(255, 255, 255, .24);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .035);
+  color: var(--text-primary);
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .09em;
+}
+
+.picks-recap-card__record {
+  min-width: 88px;
+}
+
+.picks-recap-card__record strong {
+  font-size: 18px;
+  letter-spacing: -.025em;
+  white-space: nowrap;
+}
+
+.picks-recap-card__record small {
+  max-width: 112px;
+}
+
+.picks-recap-fights {
+  display: block;
+  grid-column: 1 / -1;
+}
+
+.picks-recap-fights > summary {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
+  padding: 0 34px 0 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.picks-recap-fights > summary::-webkit-details-marker {
+  display: none;
+}
+
+.picks-recap-fights > summary::after {
+  position: absolute;
+  top: 50%;
+  right: 2px;
+  content: "+";
+  color: var(--text-muted);
+  font-size: 18px;
+  font-weight: 900;
+  transform: translateY(-50%);
+}
+
+.picks-recap-fights[open] > summary::after {
+  content: "−";
+}
+
+.picks-recap-fights > summary > span {
+  color: var(--text-primary);
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .09em;
+}
+
+.picks-recap-fights > summary > small {
+  color: var(--text-muted);
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .07em;
+  text-align: right;
+}
+
+.picks-recap-fights[open] .picks-recap-fight-list {
+  margin-top: 10px;
+}
+
+.picks-scoring-guide summary:focus-visible,
+.picks-recap-card__summary:focus-visible,
+.picks-recap-fights > summary:focus-visible {
+  border-radius: 8px;
+  outline: 2px solid var(--text-primary);
+  outline-offset: 3px;
+}
+
+@media (min-width: 640px) {
+  .picks-scoring-tiers {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .pick-bout-card {
+    padding: 17px;
+  }
+
+  .pick-choice {
+    min-height: 88px;
+    padding: 12px;
+  }
+}
