@@ -2,6 +2,7 @@ import { z } from "zod";
 import { getSupabaseClient } from "../../lib/supabase";
 import type {
   PickEvent,
+  PickGroupPick,
   PickHistory,
   PickSummary,
   ProfileEventPick,
@@ -17,6 +18,12 @@ const americanOddsSchema = z.preprocess((value) => {
   return value;
 }, z.number().int().nullable());
 
+const groupPickSchema = z.object({
+  display_name: z.string(),
+  picked_fighter_slug: z.string().nullable(),
+  is_current_user: z.boolean(),
+});
+
 const boutSchema = z.object({
   bout_id: z.string(),
   position: z.number().int().positive(),
@@ -30,6 +37,7 @@ const boutSchema = z.object({
   winner_fighter_slug: z.string().nullable(),
   result_status: z.enum(["pending", "red_win", "blue_win", "draw", "no_contest", "cancelled"]).optional().default("pending"),
   result_recorded_at: z.string().nullable().optional().default(null),
+  group_picks: z.array(groupPickSchema).optional().default([]),
 });
 
 const eventSchema = z.object({
@@ -93,6 +101,7 @@ const historyBoutSchema = z.object({
   winner_fighter_slug: z.string().nullable(),
   picked_fighter_slug: z.string().nullable(),
   verdict: z.enum(["correct", "incorrect", "missing", "excluded", "pending"]),
+  group_picks: z.array(groupPickSchema).optional().default([]),
 });
 
 const groupResultSchema = historyRecordSchema.extend({
@@ -141,6 +150,14 @@ async function requireRpcSuccess<T>(request: PromiseLike<{ data: T; error: { mes
   return data;
 }
 
+function mapGroupPick(value: z.infer<typeof groupPickSchema>): PickGroupPick {
+  return {
+    displayName: value.display_name,
+    pickedFighterSlug: value.picked_fighter_slug,
+    isCurrentUser: value.is_current_user,
+  };
+}
+
 export function mapPickEvent(value: unknown): PickEvent | null {
   if (!value) return null;
   const parsed = eventSchema.parse(value);
@@ -167,6 +184,7 @@ export function mapPickEvent(value: unknown): PickEvent | null {
       winnerFighterSlug: bout.winner_fighter_slug,
       resultStatus: bout.result_status,
       resultRecordedAt: bout.result_recorded_at,
+      groupPicks: bout.group_picks.map(mapGroupPick),
     })),
   };
 }
@@ -253,6 +271,7 @@ function mapHistory(value: unknown): PickHistory {
         winnerFighterSlug: bout.winner_fighter_slug,
         pickedFighterSlug: bout.picked_fighter_slug,
         verdict: bout.verdict,
+        groupPicks: bout.group_picks.map(mapGroupPick),
       })),
       groupResults: event.group_results.map((result) => ({
         rank: result.rank,

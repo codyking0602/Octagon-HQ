@@ -94,6 +94,22 @@ try {
   if (!event?.event_id || !Number.isInteger(event?.season)) {
     throw new Error("Current Picks event did not return an event ID and season.");
   }
+  if (!Array.isArray(event.bouts) || event.bouts.some((bout) => !Array.isArray(bout.group_picks))) {
+    throw new Error("Current Picks event is missing the group_picks projection.");
+  }
+  if (event.bouts.some((bout) => bout.group_picks.length > 0)) {
+    throw new Error("Anonymous current-event projection exposed member picks.");
+  }
+
+  const authenticatedEvent = await request(
+    "Authenticated current Picks event",
+    `${supabaseOrigin}/rest/v1/rpc/get_current_pick_event`,
+    { method: "POST", headers: userHeaders, body: "{}" },
+  );
+  if (!Array.isArray(authenticatedEvent?.bouts)
+    || authenticatedEvent.bouts.some((bout) => !Array.isArray(bout.group_picks))) {
+    throw new Error("Authenticated current-event projection is missing group_picks arrays.");
+  }
 
   const lock = await request(
     "Underdog Lock RPC",
@@ -124,7 +140,7 @@ try {
     }
   }
 
-  console.log(`PASS: production Picks scoring RPCs are visible for event ${event.event_id}.`);
+  console.log(`PASS: production Picks scoring and group reveal RPCs are visible for event ${event.event_id}.`);
 } finally {
   if (userId) {
     await fetch(`${supabaseOrigin}/auth/v1/admin/users/${userId}`, {

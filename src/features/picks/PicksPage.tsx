@@ -7,12 +7,23 @@ import {
   pickEventPresentation,
   pickProgress,
   underdogBonusTiers,
+  type PickBoutResultStatus,
   type PickHistoryBout,
   type PickHistoryEvent,
   type PickHistoryRecord,
 } from "./picksModel";
 import { usePicks } from "./PicksProvider";
 import { FighterThumbnail } from "./FighterThumbnail";
+import { GroupPickReveal } from "./GroupPickReveal";
+
+interface BoutResultView {
+  redFighterSlug: string;
+  redFighterName: string;
+  blueFighterSlug: string;
+  blueFighterName: string;
+  resultStatus?: PickBoutResultStatus;
+  winnerFighterSlug: string | null;
+}
 
 function eventDate(value: string) {
   return new Intl.DateTimeFormat(undefined, {
@@ -32,14 +43,14 @@ function completedDate(value: string) {
   }).format(new Date(value));
 }
 
-function fighterName(bout: PickHistoryBout, slug: string | null) {
+function fighterName(bout: BoutResultView, slug: string | null) {
   if (!slug) return "No pick";
   if (slug === bout.redFighterSlug) return bout.redFighterName;
   if (slug === bout.blueFighterSlug) return bout.blueFighterName;
   return "Unknown fighter";
 }
 
-function officialResult(bout: PickHistoryBout) {
+function officialResult(bout: BoutResultView) {
   if (bout.resultStatus === "red_win" || bout.resultStatus === "blue_win") {
     return fighterName(bout, bout.winnerFighterSlug);
   }
@@ -156,6 +167,13 @@ function EventRecap({ event, latest }: { event: PickHistoryEvent; latest: boolea
                   <div><span>YOUR PICK</span><b>{fighterName(bout, bout.pickedFighterSlug)}</b></div>
                   <em className={`picks-verdict picks-verdict--${bout.verdict}`}>{verdictLabel(bout.verdict)}</em>
                 </div>
+                <GroupPickReveal
+                  redFighterSlug={bout.redFighterSlug}
+                  redFighterName={bout.redFighterName}
+                  blueFighterSlug={bout.blueFighterSlug}
+                  blueFighterName={bout.blueFighterName}
+                  picks={bout.groupPicks ?? []}
+                />
               </article>
             ))}
           </div>
@@ -236,7 +254,7 @@ export default function PicksPage() {
             ) : (
               <p className="picks-event-hero__save-note">
                 {activeLifecycle.state === "awaiting_results"
-                  ? "THE EVENT IS UNDERWAY. OFFICIAL RESULTS WILL UPDATE YOUR RECAP."
+                  ? "THE EVENT IS UNDERWAY. OFFICIAL RESULTS REVEAL HOW EVERYONE PICKED."
                   : locked
                     ? "PICKS ARE LOCKED FOR THIS EVENT."
                     : progress.completed === progress.total
@@ -273,6 +291,7 @@ export default function PicksPage() {
                     ? bout.blueAmericanOdds
                     : null;
                 const lockSelected = picks.underdogLock?.boutId === bout.boutId;
+                const resolved = (bout.resultStatus ?? "pending") !== "pending";
                 return (
                   <article className="surface-card pick-bout-card" key={bout.boutId}>
                     <div className="pick-bout-card__heading">
@@ -306,6 +325,12 @@ export default function PicksPage() {
                         <em>{choiceLabel(selection === bout.blueFighterSlug, locked)}</em>
                       </button>
                     </div>
+                    {resolved ? (
+                      <div className="pick-bout-card__official">
+                        <span>OFFICIAL RESULT</span>
+                        <strong>{officialResult(bout)}</strong>
+                      </div>
+                    ) : null}
                     {locked && lockSelected ? (
                       <div className="pick-lock-readonly" aria-label="Selected Underdog Lock">UNDERDOG LOCK</div>
                     ) : !locked && selection && (selectedOdds ?? 0) > 0 ? (
@@ -322,6 +347,13 @@ export default function PicksPage() {
                       </button>
                     ) : null}
                     {saving ? <p className="pick-bout-card__saving" role="status">SAVING PICK…</p> : null}
+                    <GroupPickReveal
+                      redFighterSlug={bout.redFighterSlug}
+                      redFighterName={bout.redFighterName}
+                      blueFighterSlug={bout.blueFighterSlug}
+                      blueFighterName={bout.blueFighterName}
+                      picks={bout.groupPicks ?? []}
+                    />
                   </article>
                 );
               })}
