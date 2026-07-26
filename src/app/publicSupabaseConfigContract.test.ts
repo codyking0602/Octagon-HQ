@@ -28,6 +28,10 @@ const requiredMarkers = [
   "LOCK PICKS & BEGIN RESULTS",
   "COMPLETE EVENT",
   "get_pick_control_event",
+  "Event Setup",
+  "SYNC NEXT UFC EVENT",
+  "PUBLISH CARD",
+  "get_pick_event_setup",
 ].join(" ");
 
 describe("production Supabase browser configuration", () => {
