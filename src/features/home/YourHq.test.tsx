@@ -51,6 +51,8 @@ const pickEvent: PickEvent = {
       redFighterName: "Magomed Ankalaev",
       blueFighterSlug: "bogdan-guskov",
       blueFighterName: "Bogdan Guskov",
+      redAmericanOdds: -180,
+      blueAmericanOdds: 155,
       winnerFighterSlug: null,
     },
     {
@@ -61,6 +63,8 @@ const pickEvent: PickEvent = {
       redFighterName: "Steve Erceg",
       blueFighterSlug: "ramazan-temirov",
       blueFighterName: "Ramazan Temirov",
+      redAmericanOdds: -120,
+      blueAmericanOdds: 100,
       winnerFighterSlug: null,
     },
   ],
@@ -145,10 +149,10 @@ function picksRepository(): PicksRepository {
     }],
     loadMyHistory: async () => ({
       season: null,
-      summary: { correct: 12, incorrect: 8, missing: 0, excluded: 0, eventsEntered: 4 },
+      summary: { correct: 12, incorrect: 8, missing: 0, excluded: 0, eventsEntered: 4, basePoints: 48, lockBonus: 0, totalPoints: 48 },
       events: [],
     }),
-    loadMySummary: async () => ({ correct: 12, incorrect: 8, pending: 1, eventsEntered: 4 }),
+    loadMySummary: async () => ({ correct: 12, incorrect: 8, pending: 1, eventsEntered: 4, basePoints: 48, lockBonus: 0, totalPoints: 48 }),
     savePick: async (eventId, boutId, fighterSlug) => ({
       eventId,
       boutId,

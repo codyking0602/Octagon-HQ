@@ -5,6 +5,7 @@ import type {
   PickHistory,
   PickSummary,
   ProfileEventPick,
+  UnderdogLock,
 } from "./picksModel";
 
 const boutSchema = z.object({
@@ -15,6 +16,8 @@ const boutSchema = z.object({
   red_fighter_name: z.string(),
   blue_fighter_slug: z.string(),
   blue_fighter_name: z.string(),
+  red_american_odds: z.number().int().nullable(),
+  blue_american_odds: z.number().int().nullable(),
   winner_fighter_slug: z.string().nullable(),
 });
 
@@ -44,6 +47,17 @@ const summaryRowSchema = z.object({
   incorrect: z.number().int().nonnegative(),
   pending: z.number().int().nonnegative(),
   events_entered: z.number().int().nonnegative(),
+  base_points: z.number().int().nonnegative(),
+  lock_bonus: z.number().int().nonnegative(),
+  total_points: z.number().int().nonnegative(),
+});
+
+const lockSchema = z.object({
+  event_id: z.string(),
+  bout_id: z.string(),
+  fighter_slug: z.string(),
+  selected_at: z.string(),
+  frozen_american_odds: z.number().int().nullable(),
 });
 
 const historyRecordSchema = z.object({
@@ -51,6 +65,9 @@ const historyRecordSchema = z.object({
   incorrect: z.number().int().nonnegative(),
   missing: z.number().int().nonnegative(),
   excluded: z.number().int().nonnegative(),
+  base_points: z.number().int().nonnegative(),
+  lock_bonus: z.number().int().nonnegative(),
+  total_points: z.number().int().nonnegative(),
 });
 
 const historyBoutSchema = z.object({
@@ -68,6 +85,7 @@ const historyBoutSchema = z.object({
 });
 
 const groupResultSchema = historyRecordSchema.extend({
+  rank: z.number().int().positive(),
   display_name: z.string(),
   is_current_user: z.boolean(),
 });
@@ -82,6 +100,7 @@ const historyEventSchema = z.object({
   season: z.number().int(),
   completed_at: z.string(),
   record: historyRecordSchema,
+  underdog_lock: lockSchema.nullable(),
   bouts: z.array(historyBoutSchema),
   group_results: z.array(groupResultSchema),
 });
@@ -97,9 +116,12 @@ const historySchema = z.object({
 export interface PicksRepository {
   loadCurrentEvent: () => Promise<PickEvent | null>;
   loadMyPicks: (eventId: string) => Promise<ProfileEventPick[]>;
+  loadMyUnderdogLock?: (eventId: string) => Promise<UnderdogLock | null>;
   loadMySummary: (season: number) => Promise<PickSummary>;
   loadMyHistory: (season: number | null) => Promise<PickHistory>;
   savePick: (eventId: string, boutId: string, fighterSlug: string) => Promise<ProfileEventPick>;
+  setUnderdogLock?: (eventId: string, boutId: string, fighterSlug: string) => Promise<UnderdogLock>;
+  clearUnderdogLock?: (eventId: string) => Promise<void>;
 }
 
 async function requireRpcSuccess<T>(request: PromiseLike<{ data: T; error: { message?: string } | null }>) {
@@ -129,8 +151,21 @@ function mapEvent(value: unknown): PickEvent | null {
       redFighterName: bout.red_fighter_name,
       blueFighterSlug: bout.blue_fighter_slug,
       blueFighterName: bout.blue_fighter_name,
+      redAmericanOdds: bout.red_american_odds,
+      blueAmericanOdds: bout.blue_american_odds,
       winnerFighterSlug: bout.winner_fighter_slug,
     })),
+  };
+}
+
+function mapLock(value: unknown): UnderdogLock {
+  const parsed = lockSchema.parse(value);
+  return {
+    eventId: parsed.event_id,
+    boutId: parsed.bout_id,
+    fighterSlug: parsed.fighter_slug,
+    selectedAt: parsed.selected_at,
+    frozenAmericanOdds: parsed.frozen_american_odds,
   };
 }
 
@@ -153,6 +188,9 @@ function mapSummary(value: unknown): PickSummary {
     incorrect: parsed.incorrect,
     pending: parsed.pending,
     eventsEntered: parsed.events_entered,
+    basePoints: parsed.base_points,
+    lockBonus: parsed.lock_bonus,
+    totalPoints: parsed.total_points,
   };
 }
 
@@ -167,6 +205,9 @@ function mapHistory(value: unknown): PickHistory {
       missing: parsed.summary.missing,
       excluded: parsed.summary.excluded,
       eventsEntered: parsed.summary.events_entered,
+      basePoints: parsed.summary.base_points,
+      lockBonus: parsed.summary.lock_bonus,
+      totalPoints: parsed.summary.total_points,
     },
     events: parsed.events.map((event) => ({
       eventId: event.event_id,
@@ -182,7 +223,11 @@ function mapHistory(value: unknown): PickHistory {
         incorrect: event.record.incorrect,
         missing: event.record.missing,
         excluded: event.record.excluded,
+        basePoints: event.record.base_points,
+        lockBonus: event.record.lock_bonus,
+        totalPoints: event.record.total_points,
       },
+      underdogLock: event.underdog_lock ? mapLock(event.underdog_lock) : null,
       bouts: event.bouts.map((bout) => ({
         boutId: bout.bout_id,
         position: bout.position,
@@ -197,11 +242,15 @@ function mapHistory(value: unknown): PickHistory {
         verdict: bout.verdict,
       })),
       groupResults: event.group_results.map((result) => ({
+        rank: result.rank,
         displayName: result.display_name,
         correct: result.correct,
         incorrect: result.incorrect,
         missing: result.missing,
         excluded: result.excluded,
+        basePoints: result.base_points,
+        lockBonus: result.lock_bonus,
+        totalPoints: result.total_points,
         isCurrentUser: result.is_current_user,
       })),
     })),
@@ -226,6 +275,12 @@ export function createPicksRepository(): PicksRepository | null {
       return z.array(pickRowSchema).parse(data ?? []).map(mapPick);
     },
 
+    async loadMyUnderdogLock(eventId) {
+      const data = await requireRpcSuccess(client.rpc("get_my_event_underdog_lock", { p_event_id: eventId }));
+      const raw = Array.isArray(data) ? data[0] : data;
+      return raw ? mapLock(raw) : null;
+    },
+
     async loadMySummary(season) {
       const data = await requireRpcSuccess(client.rpc("get_my_pick_summary", {
         p_season: season,
@@ -247,6 +302,19 @@ export function createPicksRepository(): PicksRepository | null {
         p_fighter_slug: fighterSlug,
       }));
       return mapPick(Array.isArray(data) ? data[0] : data);
+    },
+
+    async setUnderdogLock(eventId, boutId, fighterSlug) {
+      const data = await requireRpcSuccess(client.rpc("set_my_event_underdog_lock", {
+        p_event_id: eventId,
+        p_bout_id: boutId,
+        p_fighter_slug: fighterSlug,
+      }));
+      return mapLock(Array.isArray(data) ? data[0] : data);
+    },
+
+    async clearUnderdogLock(eventId) {
+      await requireRpcSuccess(client.rpc("clear_my_event_underdog_lock", { p_event_id: eventId }));
     },
   };
 }

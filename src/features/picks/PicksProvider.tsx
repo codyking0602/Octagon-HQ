@@ -15,6 +15,7 @@ import {
   type PickEvent,
   type PickHistory,
   type PickSummary,
+  type UnderdogLock,
 } from "./picksModel";
 import {
   createPicksRepository,
@@ -25,13 +26,17 @@ interface PicksContextValue {
   configured: boolean;
   loading: boolean;
   savingBoutId: string | null;
+  savingLock: boolean;
   error: string;
   event: PickEvent | null;
   selections: Record<string, string>;
+  underdogLock: UnderdogLock | null;
   summary: PickSummary;
   history: PickHistory;
   refresh: () => Promise<void>;
   setPick: (boutId: string, fighterSlug: string) => Promise<void>;
+  setUnderdogLock: (boutId: string, fighterSlug: string) => Promise<void>;
+  clearUnderdogLock: () => Promise<void>;
 }
 
 const PicksContext = createContext<PicksContextValue | null>(null);
@@ -59,10 +64,12 @@ export function PicksProvider({
   ));
   const [event, setEvent] = useState<PickEvent | null>(null);
   const [selections, setSelections] = useState<Record<string, string>>({});
+  const [underdogLock, setUnderdogLockState] = useState<UnderdogLock | null>(null);
   const [summary, setSummary] = useState<PickSummary>(emptyPickSummary);
   const [history, setHistory] = useState<PickHistory>(emptyPickHistory);
   const [loading, setLoading] = useState(false);
   const [savingBoutId, setSavingBoutId] = useState<string | null>(null);
+  const [savingLock, setSavingLock] = useState(false);
   const [error, setError] = useState("");
 
   const refresh = useCallback(async () => {
@@ -72,6 +79,7 @@ export function PicksProvider({
     if (!repository) {
       setEvent(null);
       setSelections({});
+      setUnderdogLockState(null);
       setSummary(emptyPickSummary);
       setHistory(emptyPickHistory);
       setLoading(false);
@@ -87,6 +95,7 @@ export function PicksProvider({
 
       if (!expectedProfileId) {
         setSelections({});
+        setUnderdogLockState(null);
         setSummary(emptyPickSummary);
         setHistory(emptyPickHistory);
         setError("");
@@ -94,13 +103,15 @@ export function PicksProvider({
       }
 
       const season = nextEvent?.season ?? new Date().getFullYear();
-      const [rows, nextSummary, nextHistory] = await Promise.all([
+      const [rows, nextLock, nextSummary, nextHistory] = await Promise.all([
         nextEvent ? repository.loadMyPicks(nextEvent.eventId) : Promise.resolve([]),
+        nextEvent && repository.loadMyUnderdogLock ? repository.loadMyUnderdogLock(nextEvent.eventId) : Promise.resolve(null),
         repository.loadMySummary(season),
         repository.loadMyHistory(season),
       ]);
       if (revision !== revisionRef.current || profileIdRef.current !== expectedProfileId) return;
       setSelections(selectionsFromRows(rows));
+      setUnderdogLockState(nextLock);
       setSummary(nextSummary);
       setHistory(nextHistory);
       setError("");
@@ -114,6 +125,7 @@ export function PicksProvider({
 
   useEffect(() => {
     setSavingBoutId(null);
+    setSavingLock(false);
     void refresh();
   }, [refresh]);
 
@@ -151,9 +163,6 @@ export function PicksProvider({
       const saved = await repository.savePick(event.eventId, boutId, fighterSlug);
       if (profileIdRef.current !== expectedProfileId) return;
       setSelections((current) => ({ ...current, [saved.boutId]: saved.fighterSlug }));
-      const nextSummary = await repository.loadMySummary(event.season);
-      if (profileIdRef.current !== expectedProfileId) return;
-      setSummary(nextSummary);
       setError("");
     } catch (nextError) {
       if (profileIdRef.current !== expectedProfileId) return;
@@ -163,18 +172,60 @@ export function PicksProvider({
     }
   }, [event, identity.openDialog, profileId, repository]);
 
+  const setUnderdogLock = useCallback(async (boutId: string, fighterSlug: string) => {
+    const expectedProfileId = profileId;
+    if (!expectedProfileId) return identity.openDialog();
+    if (!repository?.setUnderdogLock || !event || eventPicksLocked(event)) {
+      setError("Underdog Lock is closed for this event.");
+      return;
+    }
+    setSavingLock(true);
+    try {
+      const saved = await repository.setUnderdogLock(event.eventId, boutId, fighterSlug);
+      if (profileIdRef.current === expectedProfileId) {
+        setUnderdogLockState(saved);
+        setError("");
+      }
+    } catch (nextError) {
+      if (profileIdRef.current === expectedProfileId) setError(readableError(nextError));
+    } finally {
+      if (profileIdRef.current === expectedProfileId) setSavingLock(false);
+    }
+  }, [event, identity.openDialog, profileId, repository]);
+
+  const clearUnderdogLock = useCallback(async () => {
+    const expectedProfileId = profileId;
+    if (!expectedProfileId || !repository?.clearUnderdogLock || !event || eventPicksLocked(event)) return;
+    setSavingLock(true);
+    try {
+      await repository.clearUnderdogLock(event.eventId);
+      if (profileIdRef.current === expectedProfileId) {
+        setUnderdogLockState(null);
+        setError("");
+      }
+    } catch (nextError) {
+      if (profileIdRef.current === expectedProfileId) setError(readableError(nextError));
+    } finally {
+      if (profileIdRef.current === expectedProfileId) setSavingLock(false);
+    }
+  }, [event, profileId, repository]);
+
   return (
     <PicksContext.Provider value={{
       configured: Boolean(repository),
       loading,
       savingBoutId,
+      savingLock,
       error,
       event,
       selections,
+      underdogLock,
       summary,
       history,
       refresh,
       setPick,
+      setUnderdogLock,
+      clearUnderdogLock,
     }}>
       {children}
     </PicksContext.Provider>

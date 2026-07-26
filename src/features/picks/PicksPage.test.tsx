@@ -1,5 +1,5 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { IdentityProvider } from "../identity/IdentityProvider";
 import type { IdentityGateway } from "../identity/identityGateway";
 import PicksPage from "./PicksPage";
@@ -12,6 +12,8 @@ const cody = {
   displayName: "CODY",
   initials: "CK",
 };
+
+afterEach(cleanup);
 
 const event: PickEvent = {
   eventId: "ufc-test-event",
@@ -31,13 +33,15 @@ const event: PickEvent = {
     redFighterName: "Magomed Ankalaev",
     blueFighterSlug: "bogdan-guskov",
     blueFighterName: "Bogdan Guskov",
+    redAmericanOdds: -180,
+    blueAmericanOdds: 155,
     winnerFighterSlug: null,
   }],
 };
 
 const history: PickHistory = {
   season: 2026,
-  summary: { correct: 4, incorrect: 1, missing: 0, excluded: 1, eventsEntered: 1 },
+  summary: { correct: 4, incorrect: 1, missing: 0, excluded: 1, basePoints: 16, lockBonus: 2, totalPoints: 18, eventsEntered: 1 },
   events: [{
     eventId: "ufc-oklahoma-city",
     name: "UFC Oklahoma City",
@@ -47,7 +51,8 @@ const history: PickHistory = {
     startsAt: "2026-06-20T23:00:00.000Z",
     season: 2026,
     completedAt: "2026-06-21T04:00:00.000Z",
-    record: { correct: 4, incorrect: 1, missing: 0, excluded: 1 },
+    record: { correct: 4, incorrect: 1, missing: 0, excluded: 1, basePoints: 16, lockBonus: 2, totalPoints: 18 },
+    underdogLock: null,
     bouts: [{
       boutId: "red-blue",
       position: 1,
@@ -79,6 +84,10 @@ const history: PickHistory = {
       incorrect: 1,
       missing: 0,
       excluded: 1,
+      rank: 1,
+      basePoints: 16,
+      lockBonus: 2,
+      totalPoints: 18,
       isCurrentUser: true,
     }, {
       displayName: "SHANE",
@@ -86,6 +95,10 @@ const history: PickHistory = {
       incorrect: 2,
       missing: 0,
       excluded: 1,
+      rank: 1,
+      basePoints: 16,
+      lockBonus: 2,
+      totalPoints: 18,
       isCurrentUser: false,
     }],
   }],
@@ -115,7 +128,7 @@ function repository(
   return {
     loadCurrentEvent: async () => currentEvent,
     loadMyPicks: async () => [],
-    loadMySummary: async () => ({ correct: 0, incorrect: 0, pending: 1, eventsEntered: 1 }),
+    loadMySummary: async () => ({ correct: 0, incorrect: 0, pending: 1, eventsEntered: 1, basePoints: 0, lockBonus: 0, totalPoints: 0 }),
     loadMyHistory: async () => history,
     savePick,
   };
@@ -168,7 +181,7 @@ describe("PicksPage", () => {
     );
 
     expect(await screen.findByRole("heading", { name: "Your event recaps" })).toBeInTheDocument();
-    expect(screen.getByText("UFC Oklahoma City")).toBeInTheDocument();
+    expect(await screen.findByText("UFC Oklahoma City")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "How everyone did" })).toBeInTheDocument();
     expect(screen.getByText("SHANE")).toBeInTheDocument();
     expect(screen.getByText("Correct")).toBeInTheDocument();
