@@ -31,12 +31,19 @@ describe("Picks current-event compatibility", () => {
     expect(event?.bouts[0]?.blueAmericanOdds).toBeNull();
   });
 
-  it("defaults omitted result and reveal fields safely", () => {
+  it("defaults omitted result, reveal, and control fields safely", () => {
     const event = mapPickEvent(eventPayload);
 
     expect(event?.bouts[0]?.resultStatus).toBe("pending");
     expect(event?.bouts[0]?.resultRecordedAt).toBeNull();
     expect(event?.bouts[0]?.groupPicks).toEqual([]);
+    expect(event?.canControl).toBe(false);
+  });
+
+  it("maps the backend-owned control entry without inferring from the profile name", () => {
+    const event = mapPickEvent({ ...eventPayload, can_control: true });
+
+    expect(event?.canControl).toBe(true);
   });
 
   it("maps the existing backend result state without creating another query path", () => {
