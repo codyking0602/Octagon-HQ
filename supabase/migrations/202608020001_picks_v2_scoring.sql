@@ -200,7 +200,10 @@ with personal_bouts as (
     count(*) filter(where verdict='correct')::integer correct,count(*) filter(where verdict='incorrect')::integer incorrect,
     count(*) filter(where verdict='missing')::integer missing,count(*) filter(where verdict='excluded')::integer excluded,
     (4*count(*) filter(where verdict='correct'))::integer base_points,
-    coalesce(max(public.pick_underdog_bonus(lock.frozen_american_odds)) filter(where lock.fighter_slug=b.winner_fighter_slug),0)::integer lock_bonus,
+    coalesce(max(public.pick_underdog_bonus(lock.frozen_american_odds)) filter(
+      where lock.bout_id=b.bout_id and lock.fighter_slug=b.winner_fighter_slug
+    ),0)::integer lock_bonus,
+    bool_or(b.picked_fighter_slug is not null) entered,
     case when lock.event_id is null then null else jsonb_build_object('event_id',lock.event_id,'bout_id',lock.bout_id,
       'fighter_slug',lock.fighter_slug,'selected_at',lock.selected_at,'frozen_american_odds',lock.frozen_american_odds) end underdog_lock,
     jsonb_agg(jsonb_build_object('bout_id',b.bout_id,'position',b.position,'weight_class',b.weight_class,
@@ -241,7 +244,7 @@ with personal_bouts as (
 ), season as (
   select coalesce(sum(correct),0)::integer correct,coalesce(sum(incorrect),0)::integer incorrect,
     coalesce(sum(missing),0)::integer missing,coalesce(sum(excluded),0)::integer excluded,
-    count(*)::integer events_entered,coalesce(sum(base_points),0)::integer base_points,
+    count(*) filter(where entered)::integer events_entered,coalesce(sum(base_points),0)::integer base_points,
     coalesce(sum(lock_bonus),0)::integer lock_bonus from personal_events
 ), events as (
   select coalesce(jsonb_agg(jsonb_build_object('event_id',event.event_id,'name',event.name,'subtitle',event.subtitle,

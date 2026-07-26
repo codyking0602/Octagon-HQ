@@ -130,6 +130,9 @@ function repository(
     loadMyPicks: async () => [],
     loadMySummary: async () => ({ correct: 0, incorrect: 0, pending: 1, eventsEntered: 1, basePoints: 0, lockBonus: 0, totalPoints: 0 }),
     loadMyHistory: async () => history,
+    loadMyUnderdogLock: async () => null,
+    setUnderdogLock: vi.fn(),
+    clearUnderdogLock: vi.fn(),
     savePick,
   };
 }

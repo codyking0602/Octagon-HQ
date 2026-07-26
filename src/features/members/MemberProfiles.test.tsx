@@ -82,6 +82,9 @@ function picksRepository(): PicksRepository {
       events: [],
     })),
     loadMySummary: vi.fn(async () => ({ correct: 3, incorrect: 1, pending: 2, eventsEntered: 2, basePoints: 12, lockBonus: 0, totalPoints: 12 })),
+    loadMyUnderdogLock: async () => null,
+    setUnderdogLock: vi.fn(),
+    clearUnderdogLock: vi.fn(),
     savePick: vi.fn(),
   };
 }

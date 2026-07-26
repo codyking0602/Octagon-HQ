@@ -116,12 +116,12 @@ const historySchema = z.object({
 export interface PicksRepository {
   loadCurrentEvent: () => Promise<PickEvent | null>;
   loadMyPicks: (eventId: string) => Promise<ProfileEventPick[]>;
-  loadMyUnderdogLock?: (eventId: string) => Promise<UnderdogLock | null>;
+  loadMyUnderdogLock: (eventId: string) => Promise<UnderdogLock | null>;
   loadMySummary: (season: number) => Promise<PickSummary>;
   loadMyHistory: (season: number | null) => Promise<PickHistory>;
   savePick: (eventId: string, boutId: string, fighterSlug: string) => Promise<ProfileEventPick>;
-  setUnderdogLock?: (eventId: string, boutId: string, fighterSlug: string) => Promise<UnderdogLock>;
-  clearUnderdogLock?: (eventId: string) => Promise<void>;
+  setUnderdogLock: (eventId: string, boutId: string, fighterSlug: string) => Promise<UnderdogLock>;
+  clearUnderdogLock: (eventId: string) => Promise<void>;
 }
 
 async function requireRpcSuccess<T>(request: PromiseLike<{ data: T; error: { message?: string } | null }>) {

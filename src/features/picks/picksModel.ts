@@ -138,11 +138,6 @@ export function eventPicksLocked(event: PickEvent, now = Date.now()) {
   return event.status !== "upcoming" || Date.parse(event.locksAt) <= now;
 }
 
-export function underdogBonus(americanOdds: number) {
-  if (!Number.isInteger(americanOdds) || americanOdds < 100) return 0;
-  return Math.min(7, Math.floor((americanOdds - 100) / 50) + 1);
-}
-
 export function americanOddsLabel(odds: number | null) {
   if (odds === null) return null;
   return odds > 0 ? `+${odds}` : `${odds}`;

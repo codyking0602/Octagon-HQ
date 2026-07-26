@@ -105,7 +105,7 @@ export function PicksProvider({
       const season = nextEvent?.season ?? new Date().getFullYear();
       const [rows, nextLock, nextSummary, nextHistory] = await Promise.all([
         nextEvent ? repository.loadMyPicks(nextEvent.eventId) : Promise.resolve([]),
-        nextEvent && repository.loadMyUnderdogLock ? repository.loadMyUnderdogLock(nextEvent.eventId) : Promise.resolve(null),
+        nextEvent ? repository.loadMyUnderdogLock(nextEvent.eventId) : Promise.resolve(null),
         repository.loadMySummary(season),
         repository.loadMyHistory(season),
       ]);
@@ -163,6 +163,9 @@ export function PicksProvider({
       const saved = await repository.savePick(event.eventId, boutId, fighterSlug);
       if (profileIdRef.current !== expectedProfileId) return;
       setSelections((current) => ({ ...current, [saved.boutId]: saved.fighterSlug }));
+      setUnderdogLockState((current) => (
+        current?.boutId === saved.boutId && current.fighterSlug !== saved.fighterSlug ? null : current
+      ));
       setError("");
     } catch (nextError) {
       if (profileIdRef.current !== expectedProfileId) return;
@@ -175,7 +178,7 @@ export function PicksProvider({
   const setUnderdogLock = useCallback(async (boutId: string, fighterSlug: string) => {
     const expectedProfileId = profileId;
     if (!expectedProfileId) return identity.openDialog();
-    if (!repository?.setUnderdogLock || !event || eventPicksLocked(event)) {
+    if (!repository || !event || eventPicksLocked(event)) {
       setError("Underdog Lock is closed for this event.");
       return;
     }
@@ -195,7 +198,7 @@ export function PicksProvider({
 
   const clearUnderdogLock = useCallback(async () => {
     const expectedProfileId = profileId;
-    if (!expectedProfileId || !repository?.clearUnderdogLock || !event || eventPicksLocked(event)) return;
+    if (!expectedProfileId || !repository || !event || eventPicksLocked(event)) return;
     setSavingLock(true);
     try {
       await repository.clearUnderdogLock(event.eventId);

@@ -139,6 +139,9 @@ describe("PicksProvider", () => {
       loadMyPicks,
       loadMySummary,
       loadMyHistory,
+      loadMyUnderdogLock: async () => null,
+      setUnderdogLock: vi.fn(),
+      clearUnderdogLock: vi.fn(),
       savePick,
     };
 
@@ -169,6 +172,9 @@ describe("PicksProvider", () => {
       loadMyPicks,
       loadMySummary: async () => ({ correct: 4, incorrect: 1, pending: 0, eventsEntered: 1, basePoints: 16, lockBonus: 0, totalPoints: 16 }),
       loadMyHistory,
+      loadMyUnderdogLock: async () => null,
+      setUnderdogLock: vi.fn(),
+      clearUnderdogLock: vi.fn(),
       savePick: vi.fn(),
     };
 
@@ -193,6 +199,9 @@ describe("PicksProvider", () => {
       loadMyPicks,
       loadMySummary,
       loadMyHistory,
+      loadMyUnderdogLock: async () => null,
+      setUnderdogLock: vi.fn(),
+      clearUnderdogLock: vi.fn(),
       savePick: vi.fn(),
     };
 
