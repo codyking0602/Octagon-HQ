@@ -4,8 +4,8 @@ import type { FindLeaderHistoryRow } from "./findLeaderStorage";
 
 const historyRowSchema = z.object({
   day: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  official_score: z.coerce.number().int().min(1).max(10),
-  best_score: z.coerce.number().int().min(1).max(10),
+  official_score: z.coerce.number().int().min(0).max(10),
+  best_score: z.coerce.number().int().min(0).max(10),
   attempts: z.coerce.number().int().min(1),
   completed_at: z.string(),
 });
