@@ -21,8 +21,10 @@ Octagon HQ is a UFC-only rankings, games, picks, and community product built for
 - Feature folders own their screens, state, and tests.
 - `src/features/picks/PicksProvider.tsx`: the only app-facing player Picks state owner.
 - `src/features/picks/picksRepository.ts`: the only browser Supabase owner for player Picks.
-- `src/features/picks-control/pickControlRepository.ts`: the only browser Supabase owner for the separate owner-only Fight Night control page.
-- Backend RPCs own authoritative scoring, official results, event transitions, completed-event projections, and group-pick reveal timing.
+- `src/features/picks-control/pickControlRepository.ts`: the only browser Supabase owner for the separate owner-only Fight Night results page.
+- `src/features/picks-setup/pickSetupRepository.ts`: the only browser Supabase owner for the separate owner-only staged card review page.
+- `supabase/functions/sync-next-ufc-event`: the only official-source event staging owner. It may stage data but may never publish a live card.
+- Backend RPCs own authoritative scoring, official results, event transitions, completed-event projections, group-pick reveal timing, staged card review, and atomic card publishing.
 
 ## Intentionally absent from the foundation
 - No service worker.
@@ -100,19 +102,36 @@ Not included in 2A:
 
 ## PHASE 2B — EVENT SETUP & CARD REVIEW
 
-The system should stage the next UFC card; Cody reviews and approves exceptions rather than manually typing every normal fight.
+The system stages the next UFC card; Cody reviews and approves exceptions rather than manually typing every normal fight.
+
+Locked ownership and safety:
+- The server-side sync reads official UFC event pages. The browser does not scrape UFC pages or own imported card data.
+- Imported data is written only to private `pick_event_drafts` and `pick_event_draft_bouts` tables.
+- Draft tables are unavailable to anonymous and normal authenticated browser roles.
+- Syncing or refreshing a card never changes the live player Picks event.
+- The sync owner may stage a draft but may never publish it.
+- Only the backend Fight Night owner allowlist may view or edit a staged card.
+- Publishing is one explicit, confirmed, atomic backend action after owner review.
+- Publishing is blocked while a locked event exists.
+- Publishing is blocked if the current upcoming card already has submitted picks.
+- Live player Picks and Fight Night Results continue to read only `pick_events` and `pick_bouts`.
 
 Primary workflow:
-- Sync or stage the next UFC event.
+- `SYNC NEXT UFC EVENT` stages the earliest future official UFC event and its main-card matchups.
 - Review event name, subtitle, date, time, venue, location, card order, weight classes, and lock time.
+- Show clear warnings for missing metadata, too few fights, and live-card publishing blockers.
+- Replace a fighter or correct a weight class in the draft.
+- Include, exclude, remove, or reorder a fight in the draft.
 - Add a missing fight only as an emergency fallback.
-- Remove or reorder a fight.
-- Replace a fighter.
-- Cancel a fight.
-- Publish the approved card.
-- Show compact readiness, mismatch, and missing-data warnings.
+- `PUBLISH CARD` moves the reviewed draft into the canonical live Picks tables.
+- Keep Fight Night result entry on the separate `/picks/control` route.
 
-2B must remain separate from live result entry. Do not build one giant page that combines card ingestion, odds, live results, corrections, season administration, and monitoring.
+Not included in 2B:
+- Automatic odds.
+- Silent live-card monitoring or destructive automatic updates.
+- Post-lock fighter replacement rules.
+- Result entry, result corrections, season administration, or event recap redesign.
+- Automatic publication without Cody's approval.
 
 ## FUTURE AUDITED CORRECTIONS
 - Do not add a broad V1-style `Reopen Event` button.
