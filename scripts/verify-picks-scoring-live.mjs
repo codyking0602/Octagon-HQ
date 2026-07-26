@@ -25,6 +25,17 @@ async function request(stage, url, options = {}) {
   return body;
 }
 
+async function requireDenied(stage, url, options = {}, message) {
+  const response = await fetch(url, options);
+  const body = await readBody(response);
+  if (response.ok) {
+    throw new Error(`${stage}: unauthorized request unexpectedly succeeded.`);
+  }
+  if (!JSON.stringify(body).toLowerCase().includes(message.toLowerCase())) {
+    throw new Error(`${stage}: unexpected denial contract; HTTP ${response.status}; ${JSON.stringify(body)}`);
+  }
+}
+
 const keys = await request(
   "Project key lookup",
   `https://api.supabase.com/v1/projects/${projectId}/api-keys?reveal=true`,
@@ -100,6 +111,9 @@ try {
   if (event.bouts.some((bout) => bout.group_picks.length > 0)) {
     throw new Error("Anonymous current-event projection exposed member picks.");
   }
+  if (event.can_control !== false) {
+    throw new Error("Anonymous current-event projection returned control access.");
+  }
 
   const authenticatedEvent = await request(
     "Authenticated current Picks event",
@@ -110,6 +124,16 @@ try {
     || authenticatedEvent.bouts.some((bout) => !Array.isArray(bout.group_picks))) {
     throw new Error("Authenticated current-event projection is missing group_picks arrays.");
   }
+  if (authenticatedEvent.can_control !== false) {
+    throw new Error("A disposable non-owner account received Fight Night control access.");
+  }
+
+  await requireDenied(
+    "Fight Night control owner boundary",
+    `${supabaseOrigin}/rest/v1/rpc/get_pick_control_event`,
+    { method: "POST", headers: userHeaders, body: "{}" },
+    "pick control owner required",
+  );
 
   const lock = await request(
     "Underdog Lock RPC",
@@ -140,7 +164,7 @@ try {
     }
   }
 
-  console.log(`PASS: production Picks scoring and group reveal RPCs are visible for event ${event.event_id}.`);
+  console.log(`PASS: production Picks scoring, group reveal, and Fight Night owner boundaries are healthy for event ${event.event_id}.`);
 } finally {
   if (userId) {
     await fetch(`${supabaseOrigin}/auth/v1/admin/users/${userId}`, {
