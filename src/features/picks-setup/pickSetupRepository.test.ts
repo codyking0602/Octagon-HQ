@@ -1,11 +1,16 @@
 import { describe, expect, it } from "vitest";
-import { mapPickSetupDraft } from "./pickSetupRepository";
+import {
+  pickSetupBoutSection,
+  pickSetupBoutSectionLabel,
+  pickSetupDraftCardLabel,
+} from "./pickSetupModel";
+import { mapPickSetupDraft, mapPickSetupSourcePreview } from "./pickSetupRepository";
 
 const payload = {
   draft_id: "11111111-1111-4111-8111-111111111111",
-  source: "ufc.com",
+  source: "UFC.com metadata + MMA Mania card",
   source_event_key: "event/ufc-test",
-  source_url: "https://www.ufc.com/event/ufc-test",
+  source_url: "https://www.mmamania.com/ufc-fight-cards/1/ufc-test",
   event_id: "ufc-test-2026-08-01",
   name: "UFC Fight Night",
   subtitle: "Red vs. Blue",
@@ -20,7 +25,7 @@ const payload = {
   warnings: [],
   can_publish: true,
   bouts: [{
-    bout_id: "red-blue",
+    bout_id: "main-event-red-fighter-blue-fighter",
     position: 1,
     weight_class: "Lightweight",
     red_fighter_slug: "red-fighter",
@@ -32,12 +37,13 @@ const payload = {
 };
 
 describe("Event Setup draft mapping", () => {
-  it("maps private staged metadata and fight review fields", () => {
-    expect(mapPickSetupDraft(payload)).toEqual({
+  it("maps private staged metadata and section-aware fight review fields", () => {
+    const draft = mapPickSetupDraft(payload);
+    expect(draft).toEqual({
       draftId: payload.draft_id,
-      source: "ufc.com",
+      source: payload.source,
       sourceEventKey: "event/ufc-test",
-      sourceUrl: "https://www.ufc.com/event/ufc-test",
+      sourceUrl: payload.source_url,
       eventId: "ufc-test-2026-08-01",
       name: "UFC Fight Night",
       subtitle: "Red vs. Blue",
@@ -52,7 +58,7 @@ describe("Event Setup draft mapping", () => {
       warnings: [],
       canPublish: true,
       bouts: [{
-        boutId: "red-blue",
+        boutId: "main-event-red-fighter-blue-fighter",
         position: 1,
         weightClass: "Lightweight",
         redFighterSlug: "red-fighter",
@@ -61,6 +67,51 @@ describe("Event Setup draft mapping", () => {
         blueFighterName: "Blue Fighter",
         included: true,
       }],
+    });
+    expect(pickSetupBoutSection(draft!.bouts[0]!.boutId)).toBe("main-event");
+    expect(pickSetupBoutSectionLabel(draft!.bouts[0]!.boutId)).toBe("MAIN EVENT");
+    expect(pickSetupDraftCardLabel(draft!)).toBe("MAIN CARD");
+  });
+
+  it("recognizes prelim sections as a full card", () => {
+    const draft = mapPickSetupDraft({
+      ...payload,
+      bouts: [
+        ...payload.bouts,
+        {
+          ...payload.bouts[0],
+          bout_id: "prelim-fourth-fighter-fifth-fighter",
+          position: 2,
+          red_fighter_slug: "fourth-fighter",
+          red_fighter_name: "Fourth Fighter",
+          blue_fighter_slug: "fifth-fighter",
+          blue_fighter_name: "Fifth Fighter",
+        },
+      ],
+    });
+    expect(pickSetupDraftCardLabel(draft!)).toBe("FULL CARD");
+    expect(pickSetupBoutSectionLabel(draft!.bouts[1]!.boutId)).toBe("PRELIMS");
+  });
+
+  it("maps non-destructive source previews", () => {
+    expect(mapPickSetupSourcePreview({
+      source_hash: "abc123",
+      requested_scope: "auto",
+      effective_scope: "main",
+      source: payload.source,
+      source_url: payload.source_url,
+      fight_count: 6,
+      changes: ["Added main card: A vs. B."],
+      warnings: ["ONE OR MORE WEIGHT CLASSES NEED REVIEW"],
+    })).toEqual({
+      sourceHash: "abc123",
+      requestedScope: "auto",
+      effectiveScope: "main",
+      source: payload.source,
+      sourceUrl: payload.source_url,
+      fightCount: 6,
+      changes: ["Added main card: A vs. B."],
+      warnings: ["ONE OR MORE WEIGHT CLASSES NEED REVIEW"],
     });
   });
 
