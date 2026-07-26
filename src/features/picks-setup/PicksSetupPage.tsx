@@ -1,7 +1,15 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
-import type { PickSetupBout, PickSetupBoutInput, PickSetupDraft } from "./pickSetupModel";
+import {
+  pickSetupBoutSectionLabel,
+  pickSetupDraftCardLabel,
+  type PickSetupBout,
+  type PickSetupBoutInput,
+  type PickSetupCardScope,
+  type PickSetupDraft,
+  type PickSetupSourcePreview,
+} from "./pickSetupModel";
 import {
   createPickSetupRepository,
   type PickSetupRepository,
@@ -37,6 +45,12 @@ function isoDateTimeValue(value: string) {
   return value ? new Date(value).toISOString() : "";
 }
 
+const scopeOptions: Array<{ value: PickSetupCardScope; label: string; note: string }> = [
+  { value: "auto", label: "AUTO", note: "Fight Night main card · Numbered event full card" },
+  { value: "main", label: "MAIN CARD ONLY", note: "Main event and main card" },
+  { value: "full", label: "FULL CARD", note: "Main card, prelims, and early prelims" },
+];
+
 interface BoutEditorProps {
   bout: PickSetupBout;
   index: number;
@@ -66,7 +80,7 @@ function BoutEditor({ bout, index, total, busy, onSave, onMove, onRemove }: Bout
     <article className={`surface-card pick-setup-bout${bout.included ? "" : " is-excluded"}`}>
       <div className="pick-setup-bout__heading">
         <div>
-          <span>{index === 0 ? "MAIN EVENT" : `MAIN CARD · FIGHT ${index + 1}`}</span>
+          <span>{pickSetupBoutSectionLabel(bout.boutId)}{index === 0 ? "" : ` · FIGHT ${index + 1}`}</span>
           <small>{bout.included ? "INCLUDED" : "EXCLUDED FROM PICKS"}</small>
         </div>
         <div className="pick-setup-order" aria-label="Change fight order">
@@ -136,6 +150,8 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
     suppliedRepository === undefined ? createPickSetupRepository() : suppliedRepository
   ));
   const [draft, setDraft] = useState<PickSetupDraft | null>(null);
+  const [sourcePreview, setSourcePreview] = useState<PickSetupSourcePreview | null>(null);
+  const [cardScope, setCardScope] = useState<PickSetupCardScope>("auto");
   const [loading, setLoading] = useState(true);
   const [busyAction, setBusyAction] = useState("");
   const [error, setError] = useState("");
@@ -196,23 +212,44 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
     [draft],
   );
 
-  async function runAction(key: string, action: () => Promise<void>) {
+  async function runAction<T>(key: string, action: () => Promise<T>, reload = true) {
     setBusyAction(key);
     setError("");
     try {
-      await action();
-      await loadDraft();
+      const result = await action();
+      if (reload) await loadDraft();
+      return result;
     } catch (nextError) {
       setError(readableError(nextError));
+      return undefined;
     } finally {
       setBusyAction("");
     }
   }
 
+  function selectScope(scope: PickSetupCardScope) {
+    setCardScope(scope);
+    setSourcePreview(null);
+  }
+
   function syncEvent() {
     if (!repository) return;
-    if (draft && !window.confirm("Refresh this staged card from the official UFC source? Your draft edits will be replaced.")) return;
-    void runAction("sync", repository.syncNextEvent);
+    void runAction("sync", () => repository.syncNextEvent(cardScope));
+  }
+
+  async function checkSourceUpdates() {
+    if (!repository || !draft) return;
+    const preview = await runAction("preview", () => repository.previewSource(cardScope), false);
+    if (preview) setSourcePreview(preview);
+  }
+
+  function applySourceUpdates() {
+    if (!repository || !sourcePreview || !sourcePreview.changes.length) return;
+    if (!window.confirm("Apply these reviewed source changes? This replaces the staged draft only. The live Picks card will not change until you publish.")) return;
+    void runAction("apply-preview", async () => {
+      await repository.applySourcePreview(sourcePreview);
+      setSourcePreview(null);
+    });
   }
 
   function saveMetadata() {
@@ -279,7 +316,7 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
       <section className="page-heading picks-setup-heading">
         <p className="eyebrow">PRIVATE OWNER TOOL</p>
         <h1>Event Setup</h1>
-        <p>Sync the next UFC card, review exceptions, and publish only after the card is ready.</p>
+        <p>UFC.com supplies event details. MMA Mania supplies the card sections and fight order. Nothing becomes live until you publish it.</p>
         <div className="picks-setup-heading__links">
           <Link to="/picks/control">FIGHT NIGHT RESULTS</Link>
           <Link to="/picks">PLAYER PICKS</Link>
@@ -298,6 +335,30 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
         </section>
       ) : null}
 
+      {identity.profile && !loading ? (
+        <section className="surface-card picks-setup-scope" aria-label="Card scope">
+          <div>
+            <p className="eyebrow">PICKS CARD SCOPE</p>
+            <h2>Choose what counts</h2>
+          </div>
+          <div className="picks-setup-scope__options">
+            {scopeOptions.map((option) => (
+              <button
+                className={cardScope === option.value ? "is-active" : ""}
+                type="button"
+                key={option.value}
+                aria-pressed={cardScope === option.value}
+                disabled={Boolean(busyAction)}
+                onClick={() => selectScope(option.value)}
+              >
+                <strong>{option.label}</strong>
+                <small>{option.note}</small>
+              </button>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
       {identity.profile && !loading && error && !draft ? (
         <section className="surface-card picks-setup-state">
           <p className="eyebrow">SETUP UNAVAILABLE</p>
@@ -311,7 +372,7 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
           <div>
             <p className="eyebrow">NO STAGED CARD</p>
             <h2>Stage the next UFC event.</h2>
-            <p>The sync reads the official UFC event pages and keeps everything private until you publish.</p>
+            <p>Auto uses the main card for Fight Nights and the full card for numbered events.</p>
           </div>
           <button className="primary-action" type="button" disabled={Boolean(busyAction)} onClick={syncEvent}>
             {busyAction === "sync" ? "SYNCING UFC CARD…" : "SYNC NEXT UFC EVENT"}
@@ -328,13 +389,35 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
                 <h2>{draft.name}</h2>
                 <strong>{draft.subtitle}</strong>
               </div>
-              <button className="secondary-action" type="button" disabled={Boolean(busyAction)} onClick={syncEvent}>
-                {busyAction === "sync" ? "SYNCING…" : "REFRESH FROM UFC"}
+              <button className="secondary-action" type="button" disabled={Boolean(busyAction)} onClick={checkSourceUpdates}>
+                {busyAction === "preview" ? "CHECKING…" : "CHECK FOR CARD UPDATES"}
               </button>
             </div>
             <p>{displayTime(draft.startsAt)} · {draft.venue || "VENUE MISSING"} · {draft.location || "LOCATION MISSING"}</p>
             <small>Source: {draft.source} · Synced {displayTime(draft.syncedAt)}</small>
           </section>
+
+          {sourcePreview ? (
+            <section className={`surface-card picks-setup-preview${sourcePreview.changes.length ? " has-changes" : " is-current"}`} aria-live="polite">
+              <div>
+                <p className="eyebrow">{sourcePreview.changes.length ? "CARD CHANGES DETECTED" : "SOURCE MATCHES DRAFT"}</p>
+                <h2>{sourcePreview.effectiveScope === "full" ? "Full card" : "Main card"} · {sourcePreview.fightCount} fights</h2>
+                <small>{sourcePreview.source}</small>
+              </div>
+              {sourcePreview.changes.length ? (
+                <div className="picks-setup-preview__changes">
+                  {sourcePreview.changes.map((change) => <strong key={change}>{change}</strong>)}
+                </div>
+              ) : <p>No staged event details, fights, sections, or order changed.</p>}
+              {sourcePreview.warnings.map((warning) => <em key={warning}>{warning}</em>)}
+              {sourcePreview.changes.length ? (
+                <button className="primary-action" type="button" disabled={Boolean(busyAction)} onClick={applySourceUpdates}>
+                  {busyAction === "apply-preview" ? "APPLYING CHANGES…" : "APPLY SOURCE CHANGES"}
+                </button>
+              ) : null}
+              <button className="pick-setup-danger" type="button" disabled={Boolean(busyAction)} onClick={() => setSourcePreview(null)}>CLOSE REVIEW</button>
+            </section>
+          ) : null}
 
           {draft.warnings.length ? (
             <section className="surface-card picks-setup-warnings" aria-label="Card readiness warnings">
@@ -366,9 +449,9 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
             </button>
           </section>
 
-          <section className="picks-setup-card" aria-label="Staged main card">
+          <section className="picks-setup-card" aria-label="Staged Picks card">
             <div className="picks-setup-card__heading">
-              <div><p className="eyebrow">MAIN CARD</p><h2>{orderedBouts.filter((bout) => bout.included).length} fights included</h2></div>
+              <div><p className="eyebrow">{pickSetupDraftCardLabel(draft)}</p><h2>{orderedBouts.filter((bout) => bout.included).length} fights included</h2></div>
               <span>Use arrows to reorder</span>
             </div>
             {orderedBouts.map((bout, index) => (
