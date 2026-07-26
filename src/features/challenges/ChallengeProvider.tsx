@@ -48,6 +48,9 @@ interface PlayChallengesContextValue {
   profiles: readonly ChallengeProfile[];
   activeProfile: ChallengeProfile | null;
   challenges: PlayChallenge[];
+  preferredRecipientName: string;
+  prepareRecipient: (displayName: string) => void;
+  clearPreparedRecipient: () => void;
   refresh: () => Promise<void>;
   beginChallenge: (draft: ChallengeComposerDraft) => Promise<string>;
   getChallenge: (code: string) => PlayChallenge | null;
@@ -58,6 +61,10 @@ interface PlayChallengesContextValue {
 }
 
 const PlayChallengesContext = createContext<PlayChallengesContextValue | null>(null);
+
+function normalizeProfileName(value: string) {
+  return value.trim().replace(/\s+/g, " ").toUpperCase();
+}
 
 async function shareDraft(draft: ChallengeComposerDraft) {
   const payload = `${draft.shareText}\n\n${draft.shareUrl}`;
@@ -83,26 +90,30 @@ function ComposerDialog({
   draft,
   activeProfile,
   repository,
+  initialProfileName,
   onClose,
   onSend,
 }: {
   draft: ChallengeComposerDraft;
   activeProfile: ChallengeProfile;
   repository: ChallengeRepository;
+  initialProfileName: string;
   onClose: () => void;
   onSend: (recipient: ChallengeProfile) => Promise<void>;
 }) {
-  const [profileName, setProfileName] = useState("");
+  const [profileName, setProfileName] = useState(initialProfileName);
   const [recipient, setRecipient] = useState<ChallengeProfile | null>(null);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState("");
 
-  async function findProfile() {
+  async function lookupProfile(name: string) {
+    const normalizedName = normalizeProfileName(name);
+    if (normalizedName.length < 2) return;
     setBusy(true);
     setStatus("");
     setRecipient(null);
     try {
-      const match = await repository.findProfile(profileName, activeProfile.id);
+      const match = await repository.findProfile(normalizedName, activeProfile.id);
       if (!match) {
         setStatus("NO PROFILE FOUND WITH THAT EXACT NAME");
         return;
@@ -114,6 +125,14 @@ function ComposerDialog({
     } finally {
       setBusy(false);
     }
+  }
+
+  useEffect(() => {
+    if (initialProfileName) void lookupProfile(initialProfileName);
+  }, [initialProfileName]);
+
+  async function findProfile() {
+    await lookupProfile(profileName);
   }
 
   async function sendToProfile() {
@@ -266,6 +285,7 @@ export function ChallengeProvider({
   const [error, setError] = useState("");
   const [composer, setComposer] = useState<ChallengeComposerDraft | null>(null);
   const [resultCode, setResultCode] = useState<string | null>(null);
+  const [preferredRecipientName, setPreferredRecipientName] = useState("");
 
   const activeProfile = identity.profile;
   const configured = Boolean(repository);
@@ -300,6 +320,7 @@ export function ChallengeProvider({
   useEffect(() => {
     setComposer(null);
     setResultCode(null);
+    setPreferredRecipientName("");
     void refresh();
   }, [activeProfile?.id, refresh]);
 
@@ -328,6 +349,21 @@ export function ChallengeProvider({
     };
   }, [composer, resultCode]);
 
+  function prepareRecipient(displayName: string) {
+    if (!activeProfile) {
+      identity.openDialog();
+      return;
+    }
+    const normalized = normalizeProfileName(displayName);
+    if (!normalized || normalized === normalizeProfileName(activeProfile.displayName)) return;
+    setPreferredRecipientName(normalized);
+  }
+
+  function closeComposer() {
+    setComposer(null);
+    setPreferredRecipientName("");
+  }
+
   async function beginChallenge(draft: ChallengeComposerDraft) {
     if (!activeProfile) {
       identity.openDialog();
@@ -335,7 +371,9 @@ export function ChallengeProvider({
     }
     if (!repository) return "CHALLENGES ARE NOT CONNECTED ON THIS BUILD";
     setComposer(draft);
-    return "CHOOSE AN OCTAGON HQ PROFILE";
+    return preferredRecipientName
+      ? `CHOOSE ${preferredRecipientName}`
+      : "CHOOSE AN OCTAGON HQ PROFILE";
   }
 
   async function sendChallenge(recipient: ChallengeProfile) {
@@ -351,6 +389,7 @@ export function ChallengeProvider({
       creatorResult: composer.creatorResult,
     });
     setComposer(null);
+    setPreferredRecipientName("");
     await refresh();
   }
 
@@ -405,6 +444,9 @@ export function ChallengeProvider({
     profiles,
     activeProfile,
     challenges: rows,
+    preferredRecipientName,
+    prepareRecipient,
+    clearPreparedRecipient: () => setPreferredRecipientName(""),
     refresh,
     beginChallenge,
     getChallenge,
@@ -422,7 +464,8 @@ export function ChallengeProvider({
           draft={composer}
           activeProfile={activeProfile}
           repository={repository}
-          onClose={() => setComposer(null)}
+          initialProfileName={preferredRecipientName}
+          onClose={closeComposer}
           onSend={sendChallenge}
         />
       ) : null}
