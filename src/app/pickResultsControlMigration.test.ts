@@ -24,11 +24,14 @@ describe("Fight Night results control migration", () => {
     expect(sql).toContain("to authenticated, service_role");
   });
 
-  it("exposes one owner-only operational projection without member picks", () => {
-    expect(sql).toContain("create or replace function public.get_pick_control_event()");
-    expect(sql).toContain("'can_lock'");
-    expect(sql).toContain("'can_complete'");
-    expect(sql).not.toMatch(/get_pick_control_event[\s\S]+profile_event_picks/);
+  it("exposes one owner-only operational projection without member-pick fields", () => {
+    const controlProjection = sql.split("create or replace function public.get_pick_control_event()")[1]
+      ?.split("-- Preserve the latest public event projection")[0] ?? "";
+
+    expect(controlProjection).toContain("'can_lock'");
+    expect(controlProjection).toContain("'can_complete'");
+    expect(controlProjection).not.toContain("profile_event_picks");
+    expect(controlProjection).not.toContain("group_picks");
     expect(sql).toContain("grant execute on function public.get_pick_control_event() to authenticated");
   });
 
