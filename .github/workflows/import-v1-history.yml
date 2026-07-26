@@ -8,7 +8,7 @@ on:
     paths:
       - .github/workflows/import-v1-history.yml
       - scripts/import-v1-history.py
-      - supabase/imports/v1-history.encrypted.json
+      - supabase/imports/v1-history.part*
 
 permissions:
   contents: read
@@ -29,7 +29,7 @@ jobs:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
-      IMPORT_ENVELOPE: supabase/imports/v1-history.encrypted.json
+      IMPORT_ENVELOPE: /tmp/v1-history.encrypted.json
       IMPORT_REPORT: /tmp/v1-import-report.json
 
     steps:
@@ -104,8 +104,24 @@ jobs:
         shell: bash
         run: python -m py_compile scripts/import-v1-history.py
 
+      - name: Assemble sealed payload inside runner
+        id: payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          parts=(supabase/imports/v1-history.part*)
+          if [ "${#parts[@]}" -eq 0 ]; then
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          cat "${parts[@]}" > "$IMPORT_ENVELOPE"
+          test -s "$IMPORT_ENVELOPE"
+          chmod 600 "$IMPORT_ENVELOPE"
+          echo "available=true" >> "$GITHUB_OUTPUT"
+
       - name: Resolve V2 service credential without printing it
-        if: hashFiles('supabase/imports/v1-history.encrypted.json') != ''
+        if: steps.payload.outputs.available == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -126,7 +142,7 @@ jobs:
           printf 'V2_SUPABASE_URL=https://%s.supabase.co\n' "$SUPABASE_PROJECT_ID" >> "$GITHUB_ENV"
 
       - name: Import sealed V1 history without overwriting V2
-        if: hashFiles('supabase/imports/v1-history.encrypted.json') != ''
+        if: steps.payload.outputs.available == 'true'
         shell: bash
         env:
           V1_IMPORT_ENVELOPE: ${{ env.IMPORT_ENVELOPE }}
@@ -137,7 +153,7 @@ jobs:
           test -s "$IMPORT_REPORT"
 
       - name: Upload one-day reconciliation report
-        if: hashFiles('supabase/imports/v1-history.encrypted.json') != '' && always()
+        if: steps.payload.outputs.available == 'true' && always()
         uses: actions/upload-artifact@v4
         with:
           name: octagon-v1-import-report-${{ github.event.pull_request.head.sha }}
@@ -146,11 +162,16 @@ jobs:
           if-no-files-found: warn
           compression-level: 0
 
+      - name: Remove assembled payload from runner
+        if: always()
+        shell: bash
+        run: rm -f "$IMPORT_ENVELOPE"
+
       - name: Record import state
         shell: bash
         run: |
-          if [ -f "$IMPORT_ENVELOPE" ]; then
+          if [ "${{ steps.payload.outputs.available }}" = "true" ]; then
             echo "Sealed V1 import payload was processed on exact PR head ${{ github.event.pull_request.head.sha }}." >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "V2 recipient key prepared. No sealed V1 payload is committed yet." >> "$GITHUB_STEP_SUMMARY"
+            echo "V2 recipient key prepared. No sealed V1 payload chunks are committed yet." >> "$GITHUB_STEP_SUMMARY"
           fi
