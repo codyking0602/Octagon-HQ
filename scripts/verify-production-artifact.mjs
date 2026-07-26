@@ -20,6 +20,8 @@ const requiredApplicationMarkers = [
   "NOT PICKED",
   "VIEW FIGHT-BY-FIGHT RESULTS",
   "+400+",
+  "HOW EVERYONE PICKED",
+  "group_picks",
 ];
 
 export async function verifyProductionArtifact({ dist = "dist", env = process.env } = {}) {
