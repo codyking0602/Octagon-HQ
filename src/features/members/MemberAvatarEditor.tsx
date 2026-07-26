@@ -29,18 +29,18 @@ function cropGeometry(crop: CropState, outputSize = OUTPUT_SIZE) {
   };
 }
 
-function exportAvatar(crop: CropState) {
-  const geometry = cropGeometry(crop);
+function renderAvatar(crop: CropState, outputSize: number, quality: number) {
+  const geometry = cropGeometry(crop, outputSize);
   if (!geometry) throw new Error("That photo could not be cropped.");
 
   const canvas = document.createElement("canvas");
-  canvas.width = OUTPUT_SIZE;
-  canvas.height = OUTPUT_SIZE;
+  canvas.width = outputSize;
+  canvas.height = outputSize;
   const context = canvas.getContext("2d", { alpha: false });
   if (!context) throw new Error("Photo editing is not available on this device.");
 
   context.fillStyle = "#0b0b0d";
-  context.fillRect(0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
+  context.fillRect(0, 0, outputSize, outputSize);
   context.drawImage(
     crop.image,
     geometry.left,
@@ -49,11 +49,17 @@ function exportAvatar(crop: CropState) {
     geometry.height,
   );
 
-  for (const quality of [0.82, 0.72, 0.62, 0.52, 0.42]) {
-    const webp = canvas.toDataURL("image/webp", quality);
-    if (webp.startsWith("data:image/webp") && webp.length <= MAX_SAVED_CHARACTERS) return webp;
-    const jpeg = canvas.toDataURL("image/jpeg", quality);
-    if (jpeg.length <= MAX_SAVED_CHARACTERS) return jpeg;
+  const webp = canvas.toDataURL("image/webp", quality);
+  if (webp.startsWith("data:image/webp")) return webp;
+  return canvas.toDataURL("image/jpeg", quality);
+}
+
+function exportAvatar(crop: CropState) {
+  for (const outputSize of [320, 280, 240]) {
+    for (const quality of [0.82, 0.72, 0.62, 0.52, 0.42]) {
+      const photo = renderAvatar(crop, outputSize, quality);
+      if (photo.length <= MAX_SAVED_CHARACTERS) return photo;
+    }
   }
 
   throw new Error("That crop is still too large. Choose a simpler or smaller photo.");
@@ -88,7 +94,7 @@ export function MemberAvatarEditor({
     const file = event.target.files?.[0];
     event.target.value = "";
     if (!file) return;
-    if (!file.type.startsWith("image/")) {
+    if (!/^image\/(jpeg|png|webp)$/i.test(file.type)) {
       setStatus("Choose a JPG, PNG, or WebP photo.");
       return;
     }
