@@ -1,4 +1,6 @@
 export type PickEventStatus = "upcoming" | "locked" | "complete";
+export type PickBoutResultStatus = "pending" | "red_win" | "blue_win" | "draw" | "no_contest" | "cancelled";
+export type PickVerdict = "correct" | "incorrect" | "missing" | "excluded" | "pending";
 
 export interface PickBout {
   boutId: string;
@@ -39,11 +41,73 @@ export interface PickSummary {
   eventsEntered: number;
 }
 
+export interface PickHistoryBout {
+  boutId: string;
+  position: number;
+  weightClass: string;
+  redFighterSlug: string;
+  redFighterName: string;
+  blueFighterSlug: string;
+  blueFighterName: string;
+  resultStatus: PickBoutResultStatus;
+  winnerFighterSlug: string | null;
+  pickedFighterSlug: string | null;
+  verdict: PickVerdict;
+}
+
+export interface PickHistoryRecord {
+  correct: number;
+  incorrect: number;
+  missing: number;
+  excluded: number;
+}
+
+export interface PickGroupResult extends PickHistoryRecord {
+  displayName: string;
+  isCurrentUser: boolean;
+}
+
+export interface PickHistoryEvent {
+  eventId: string;
+  name: string;
+  subtitle: string;
+  venue: string;
+  location: string;
+  startsAt: string;
+  season: number;
+  completedAt: string;
+  record: PickHistoryRecord;
+  bouts: PickHistoryBout[];
+  groupResults: PickGroupResult[];
+}
+
+export interface PickHistorySummary extends PickHistoryRecord {
+  eventsEntered: number;
+}
+
+export interface PickHistory {
+  season: number | null;
+  summary: PickHistorySummary;
+  events: PickHistoryEvent[];
+}
+
 export const emptyPickSummary: PickSummary = {
   correct: 0,
   incorrect: 0,
   pending: 0,
   eventsEntered: 0,
+};
+
+export const emptyPickHistory: PickHistory = {
+  season: null,
+  summary: {
+    correct: 0,
+    incorrect: 0,
+    missing: 0,
+    excluded: 0,
+    eventsEntered: 0,
+  },
+  events: [],
 };
 
 export function eventPicksLocked(event: PickEvent, now = Date.now()) {
