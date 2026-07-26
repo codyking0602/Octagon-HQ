@@ -22,7 +22,7 @@ const requiredApplicationMarkers = [
   "+400+",
   "HOW EVERYONE PICKED",
   "group_picks",
-  "FIGHT NIGHT CONTROL",
+  "Fight Night Control",
   "LOCK PICKS & BEGIN RESULTS",
   "COMPLETE EVENT",
   "get_pick_control_event",
