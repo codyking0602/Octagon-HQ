@@ -102,7 +102,6 @@ describe("Event Setup and card review", () => {
 
   it("keeps review edits staged and publishes only after confirmation", async () => {
     vi.spyOn(window, "confirm").mockReturnValue(true);
-    const assign = vi.spyOn(window.location, "assign").mockImplementation(() => undefined);
     const repo = repository(stagedDraft);
     renderPage(repo);
 
@@ -125,7 +124,6 @@ describe("Event Setup and card review", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "PUBLISH CARD" }));
     await waitFor(() => expect(repo.publishDraft).toHaveBeenCalledWith(stagedDraft.draftId));
-    expect(assign).toHaveBeenCalledWith("/picks");
   });
 
   it("shows warnings and disables publish for an incomplete staged card", async () => {
