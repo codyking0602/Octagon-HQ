@@ -1,0 +1,332 @@
+name: Import sealed V1 history
+
+on:
+  pull_request:
+    branches:
+      - agent/member-profiles
+    types: [labeled]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: octagon-hq-v1-history-import
+  cancel-in-progress: false
+
+jobs:
+  import:
+    if: >-
+      github.event.label.name == 'run-v1-history-import' &&
+      github.event.pull_request.number == 52 &&
+      github.event.pull_request.state == 'open' &&
+      github.event.pull_request.base.ref == 'agent/member-profiles' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'codex/continue-v1-to-v2-data-migration'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      IMPORT_ENVELOPE: /tmp/v1-history.encrypted.json
+      FIRST_REPORT: /tmp/v1-import-first.json
+      SECOND_REPORT: /tmp/v1-import-second.json
+      COMBINED_REPORT: /tmp/v1-import-reconciliation.json
+
+    steps:
+      - name: Freeze and verify exact labeled PR head
+        uses: actions/github-script@v7
+        env:
+          EXPECTED_SHA: ${{ env.EXPECTED_SHA }}
+          PR_NUMBER: ${{ env.PR_NUMBER }}
+        with:
+          script: |
+            const prNumber = Number(process.env.PR_NUMBER);
+            const expectedSha = process.env.EXPECTED_SHA;
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+            });
+            const labels = pr.labels.map((label) => label.name);
+            if (pr.state !== "open") core.setFailed(`PR #${prNumber} is not open.`);
+            if (pr.base.ref !== "agent/member-profiles") core.setFailed(`Unexpected base ${pr.base.ref}.`);
+            if (pr.head.repo?.full_name !== `${context.repo.owner}/${context.repo.repo}`) core.setFailed("Fork PRs are not allowed.");
+            if (pr.head.ref !== "codex/continue-v1-to-v2-data-migration") core.setFailed(`Unexpected head ${pr.head.ref}.`);
+            if (pr.head.sha !== expectedSha) core.setFailed(`PR head moved from ${expectedSha} to ${pr.head.sha}.`);
+            if (!labels.includes("run-v1-history-import")) core.setFailed("Confirmation label is missing.");
+
+      - name: Check out exact reviewed importer head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_SHA }}
+          persist-credentials: false
+          fetch-depth: 1
+          show-progress: false
+
+      - name: Verify exact checked-out SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+
+      - name: Install sealed-import runtime
+        shell: bash
+        run: python -m pip install --quiet cryptography requests
+
+      - name: Validate importer code
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/import-v1-history.py
+          python -m unittest scripts/test_import_v1_history.py
+          ! grep -R -n --exclude-dir=.git -- '0-13' \
+            .github/workflows/import-v1-history.yml \
+            scripts/import-v1-history.py \
+            scripts/test_import_v1_history.py \
+            supabase/migrations/202607300001_atomic_v1_history_import.sql \
+            supabase/migrations/202607300002_v1_history_import_reconciliation.sql \
+            supabase/tests/atomic_v1_history_import.sql \
+            supabase/tests/v1_history_import_reconciliation.sql
+
+      - name: Derive private recipient key from V2 deployment secret
+        shell: bash
+        env:
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          if [ -z "${SUPABASE_DB_PASSWORD:-}" ] || [ -z "${SUPABASE_PROJECT_ID:-}" ]; then
+            echo "::error title=Missing V2 import secrets::The canonical V2 deployment secrets are unavailable."
+            exit 1
+          fi
+          python - <<'PY'
+          import base64
+          import os
+          from cryptography.hazmat.primitives import hashes
+          from cryptography.hazmat.primitives.kdf.hkdf import HKDF
+
+          private_bytes = HKDF(
+              algorithm=hashes.SHA256(),
+              length=32,
+              salt=os.environ["SUPABASE_PROJECT_ID"].encode(),
+              info=b"octagon-v1-v2-import-private-key",
+          ).derive(os.environ["SUPABASE_DB_PASSWORD"].encode())
+          private_b64 = base64.b64encode(private_bytes).decode()
+          print(f"::add-mask::{private_b64}")
+          with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as env:
+              env.write(f"V2_IMPORT_PRIVATE_KEY={private_b64}\n")
+          PY
+
+      - name: Download latest exact short-lived V1 encrypted export
+        id: export
+        shell: bash
+        env:
+          V1_EXPORT_TOKEN: ${{ secrets.V1_EXPORT_ARTIFACT_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${V1_EXPORT_TOKEN:-}" ]; then
+            echo "::error title=Missing artifact handoff credential::V1_EXPORT_ARTIFACT_TOKEN is unavailable."
+            exit 1
+          fi
+          runs=$(curl --fail-with-body --silent --show-error \
+            -H "Authorization: Bearer ${V1_EXPORT_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/codyking0602/ufc-goat-rankings/actions/workflows/export-v1-for-v2.yml/runs?branch=agent%2Fv1-data-export-for-v2&event=push&status=success&per_page=20")
+          found=0
+          while IFS=$'\t' read -r run_id source_sha; do
+            artifacts=$(curl --fail-with-body --silent --show-error \
+              -H "Authorization: Bearer ${V1_EXPORT_TOKEN}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/codyking0602/ufc-goat-rankings/actions/runs/${run_id}/artifacts")
+            artifact_url=$(printf '%s' "$artifacts" | jq -r \
+              '[.artifacts[] | select(.expired == false and .name == "octagon-v1-export-encrypted") | .archive_download_url] | if length == 1 then .[0] else empty end')
+            if [ -n "$artifact_url" ]; then
+              echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+              echo "source_sha=$source_sha" >> "$GITHUB_OUTPUT"
+              curl --fail-with-body --silent --show-error -L \
+                -H "Authorization: Bearer ${V1_EXPORT_TOKEN}" \
+                -o /tmp/v1-export.zip "$artifact_url"
+              found=1
+              break
+            fi
+          done < <(printf '%s' "$runs" | jq -r '.workflow_runs[] | [.id,.head_sha] | @tsv')
+          if [ "$found" -ne 1 ]; then
+            echo "::error title=Encrypted export unavailable::No successful unexpired stable V1 export artifact was found."
+            exit 1
+          fi
+          mkdir -p /tmp/v1-export
+          unzip -q /tmp/v1-export.zip -d /tmp/v1-export
+          mapfile -t envelopes < <(find /tmp/v1-export -type f -name '*.encrypted.json' -print)
+          test "${#envelopes[@]}" -eq 1
+          mv "${envelopes[0]}" "$IMPORT_ENVELOPE"
+          test -s "$IMPORT_ENVELOPE"
+          chmod 600 "$IMPORT_ENVELOPE"
+
+      - name: Revalidate PR head before V2 service credential
+        uses: actions/github-script@v7
+        env:
+          EXPECTED_SHA: ${{ env.EXPECTED_SHA }}
+          PR_NUMBER: ${{ env.PR_NUMBER }}
+        with:
+          script: |
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: Number(process.env.PR_NUMBER),
+            });
+            if (pr.head.sha !== process.env.EXPECTED_SHA) {
+              core.setFailed(`PR head moved from ${process.env.EXPECTED_SHA} to ${pr.head.sha}.`);
+            }
+
+      - name: Resolve V2 service credential without printing it
+        shell: bash
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          if [ -z "${SUPABASE_ACCESS_TOKEN:-}" ] || [ -z "${SUPABASE_PROJECT_ID:-}" ]; then
+            echo "::error title=Missing V2 service credential::Canonical deployment credentials are unavailable."
+            exit 1
+          fi
+          response=$(curl --fail-with-body --silent --show-error \
+            -H "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
+            "https://api.supabase.com/v1/projects/${SUPABASE_PROJECT_ID}/api-keys")
+          service_key=$(printf '%s' "$response" | jq -r '[.[] | select(.name == "service_role" or .name == "secret") | (.api_key // .key // empty)] | map(select(length > 0)) | first // empty')
+          if [ -z "$service_key" ]; then
+            echo "::error title=V2 service key unavailable::The Supabase management response did not include a service credential."
+            exit 1
+          fi
+          echo "::add-mask::$service_key"
+          printf 'V2_SERVICE_ROLE_KEY=%s\n' "$service_key" >> "$GITHUB_ENV"
+          printf 'V2_SUPABASE_URL=https://%s.supabase.co\n' "$SUPABASE_PROJECT_ID" >> "$GITHUB_ENV"
+
+      - name: Import sealed V1 history atomically — first run
+        shell: bash
+        env:
+          V1_IMPORT_ENVELOPE: ${{ env.IMPORT_ENVELOPE }}
+          V1_IMPORT_REPORT: ${{ env.FIRST_REPORT }}
+        run: |
+          set -euo pipefail
+          python scripts/import-v1-history.py
+          test -s "$FIRST_REPORT"
+
+      - name: Import same payload atomically — idempotency run
+        shell: bash
+        env:
+          V1_IMPORT_ENVELOPE: ${{ env.IMPORT_ENVELOPE }}
+          V1_IMPORT_REPORT: ${{ env.SECOND_REPORT }}
+        run: |
+          set -euo pipefail
+          python scripts/import-v1-history.py
+          test -s "$SECOND_REPORT"
+
+      - name: Verify reconciliation and build sanitized report
+        shell: bash
+        env:
+          V1_EXPORT_RUN_ID: ${{ steps.export.outputs.run_id }}
+          V1_SOURCE_SHA: ${{ steps.export.outputs.source_sha }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          first = json.loads(Path(os.environ["FIRST_REPORT"]).read_text())
+          second = json.loads(Path(os.environ["SECOND_REPORT"]).read_text())
+          mutation_keys = [
+              "avatarsInserted",
+              "findLeaderInserted",
+              "eventsInserted",
+              "boutsInserted",
+              "picksInserted",
+          ]
+          nonzero = {key: int(second.get("changes", {}).get(key, 0)) for key in mutation_keys if int(second.get("changes", {}).get(key, 0)) != 0}
+          if nonzero:
+              raise SystemExit(f"Second import mutated rows: {nonzero}")
+          for report_name, report in (("first", first), ("second", second)):
+              if report.get("protectedBeforeHash") != report.get("protectedAfterHash"):
+                  raise SystemExit(f"{report_name} import changed protected July 25+ Picks data")
+          if first.get("protectedAfterHash") != second.get("protectedBeforeHash"):
+              raise SystemExit("Protected Picks hash changed between import calls")
+          if first.get("profiles") != second.get("profiles"):
+              raise SystemExit("Derived member records changed on the second import")
+          if first.get("payloadChecksum") != second.get("payloadChecksum"):
+              raise SystemExit("The second call did not use the exact same encrypted payload")
+          combined = {
+              "schemaVersion": 1,
+              "importerSha": os.environ["EXPECTED_SHA"],
+              "v1ExportRunId": os.environ["V1_EXPORT_RUN_ID"],
+              "v1SourceSha": os.environ["V1_SOURCE_SHA"],
+              "payloadChecksum": first.get("payloadChecksum"),
+              "firstRun": first,
+              "secondRun": second,
+          }
+          Path(os.environ["COMBINED_REPORT"]).write_text(
+              json.dumps(combined, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          cody = first.get("profiles", {}).get("CODY", {})
+          print(json.dumps({
+              "status": "reconciled",
+              "codyRecord": {
+                  "wins": cody.get("historicalPicksCorrect", 0),
+                  "losses": cody.get("historicalPicksIncorrect", 0),
+                  "missing": cody.get("historicalPicksMissing", 0),
+              },
+              "firstRunChanges": first.get("changes", {}),
+              "secondRunChanges": second.get("changes", {}),
+          }))
+          PY
+          test -s "$COMBINED_REPORT"
+
+      - name: Upload one-day reconciliation report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: octagon-v1-import-reconciliation-${{ env.EXPECTED_SHA }}
+          path: /tmp/v1-import-reconciliation.json
+          retention-days: 1
+          if-no-files-found: warn
+          compression-level: 0
+
+      - name: Remove all temporary migration files
+        if: always()
+        shell: bash
+        run: rm -rf "$IMPORT_ENVELOPE" "$FIRST_REPORT" "$SECOND_REPORT" /tmp/v1-export /tmp/v1-export.zip
+
+      - name: Remove one-shot import label
+        if: always()
+        uses: actions/github-script@v7
+        env:
+          PR_NUMBER: ${{ env.PR_NUMBER }}
+        with:
+          script: |
+            try {
+              await github.rest.issues.removeLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: Number(process.env.PR_NUMBER),
+                name: "run-v1-history-import",
+              });
+            } catch (error) {
+              if (error.status !== 404) throw error;
+            }
+
+      - name: Record guarded import boundary
+        if: success()
+        shell: bash
+        run: |
+          {
+            echo "### V1 history import reconciled"
+            echo "- Exact importer SHA: \`${EXPECTED_SHA}\`"
+            echo "- V1 export run: \`${{ steps.export.outputs.run_id }}\`"
+            echo "- V1 source SHA: \`${{ steps.export.outputs.source_sha }}\`"
+            echo "- The exact encrypted payload was invoked twice"
+            echo "- The second invocation produced zero mutations"
+            echo "- July 25 and later Picks hashes remained unchanged"
+            echo "- Missing selections were reported separately and were not counted as losses"
+          } >> "$GITHUB_STEP_SUMMARY"
