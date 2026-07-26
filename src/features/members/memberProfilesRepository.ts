@@ -2,9 +2,17 @@ import { z } from "zod";
 import { getSupabaseClient } from "../../lib/supabase";
 import type { MemberCardSummary, MemberProfileSummary } from "./memberProfilesModel";
 
+const recentActivityRowSchema = z.object({
+  kind: z.enum(["find-leader", "picks"]),
+  title: z.string().min(1),
+  detail: z.string().min(1),
+  occurred_at: z.string(),
+});
+
 const memberCardRowSchema = z.object({
   display_name: z.string().min(1),
   initials: z.string().min(1).max(2),
+  avatar_photo_data: z.string().nullable().optional(),
   favorite_fighter_slug: z.string().nullable(),
   current_streak: z.coerce.number().int().nonnegative(),
   picks_correct: z.coerce.number().int().nonnegative(),
@@ -19,6 +27,7 @@ const memberProfileRowSchema = memberCardRowSchema.extend({
   best_find_leader_score: z.coerce.number().int().min(0).max(10),
   picks_pending: z.coerce.number().int().nonnegative(),
   picks_events_entered: z.coerce.number().int().nonnegative(),
+  recent_activity: z.array(recentActivityRowSchema).optional().default([]),
 });
 
 export interface MemberProfilesRepository {
@@ -31,6 +40,7 @@ function toMemberCard(value: unknown): MemberCardSummary {
   return {
     displayName: row.display_name,
     initials: row.initials,
+    avatarPhotoData: row.avatar_photo_data ?? null,
     favoriteFighterSlug: row.favorite_fighter_slug,
     currentStreak: row.current_streak,
     picksCorrect: row.picks_correct,
@@ -49,6 +59,12 @@ function toMemberProfile(value: unknown): MemberProfileSummary {
     bestFindLeaderScore: row.best_find_leader_score,
     picksPending: row.picks_pending,
     picksEventsEntered: row.picks_events_entered,
+    recentActivity: row.recent_activity.map((activity) => ({
+      kind: activity.kind,
+      title: activity.title,
+      detail: activity.detail,
+      occurredAt: activity.occurred_at,
+    })),
   };
 }
 
