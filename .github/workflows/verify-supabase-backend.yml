@@ -99,7 +99,7 @@ jobs:
           done
           exit "$missing"
 
-      - name: Verify deployed migrations, functions, and production CORS
+      - name: Verify deployed migrations
         shell: bash
         run: |
           set -euo pipefail
@@ -142,6 +142,10 @@ jobs:
           require_remote_migration "202608040001" "Fight Night control migration not deployed"
           require_remote_migration "202608050001" "Event setup and card review migration not deployed"
 
+      - name: Verify deployed functions and production CORS
+        shell: bash
+        run: |
+          set -euo pipefail
           function_list=$(supabase functions list --project-ref "$SUPABASE_PROJECT_ID")
           if ! printf '%s\n' "$function_list" | grep -Fq "pin-auth"; then
             echo "::error title=PIN function not deployed::The pin-auth Edge Function is not deployed to the V2 project."
