@@ -1,9 +1,13 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { createPortal } from "react-dom";
+import { Link } from "react-router-dom";
+import { memberProfilePath } from "../members/memberProfilesModel";
+import { useProfilePreferences } from "../profile/ProfilePreferencesProvider";
 import { useIdentity } from "./IdentityProvider";
 
 export function IdentityControl() {
   const identity = useIdentity();
+  const preferences = useProfilePreferences();
   const [mode, setMode] = useState<"login" | "create">("login");
   const [displayName, setDisplayName] = useState("");
   const [pin, setPin] = useState("");
@@ -53,6 +57,12 @@ export function IdentityControl() {
   }
 
   const buttonLabel = identity.profile?.displayName ?? "SIGN IN";
+  const avatarPhoto = identity.profile ? preferences.avatarPhotoData : null;
+  const avatar = identity.profile ? (
+    avatarPhoto
+      ? <img src={avatarPhoto} alt={`${identity.profile.displayName} avatar`} />
+      : identity.profile.initials
+  ) : null;
   const dialog = identity.dialogOpen ? createPortal(
     <div className="identity-overlay identity-overlay--viewport" role="presentation" onMouseDown={(event) => {
       if (event.currentTarget === event.target) identity.closeDialog();
@@ -71,8 +81,12 @@ export function IdentityControl() {
 
         {identity.profile ? (
           <div className="identity-profile-card">
-            <i>{identity.profile.initials}</i>
+            <i>{avatar}</i>
             <span><small>SIGNED IN AS</small><strong>{identity.profile.displayName}</strong></span>
+            <div className="identity-profile-card__links">
+              <Link to={memberProfilePath(identity.profile.displayName)} onClick={identity.closeDialog}>VIEW MY PROFILE</Link>
+              <Link to="/members" onClick={identity.closeDialog}>BROWSE MEMBERS</Link>
+            </div>
             <button type="button" disabled={identity.busy} onClick={() => void identity.signOut()}>SIGN OUT</button>
           </div>
         ) : identity.status === "unconfigured" ? (
@@ -84,7 +98,7 @@ export function IdentityControl() {
           <>
             <div className="identity-mode" role="tablist" aria-label="Profile access">
               <button type="button" role="tab" aria-selected={mode === "login"} className={mode === "login" ? "is-active" : ""} onClick={() => chooseMode("login")}>I HAVE A PROFILE</button>
-              <button type="button" role="tab" aria-selected={mode === "create"} className={mode === "create" ? "is-active" : ""} onClick={() => chooseMode("create")}>I'M NEW</button>
+              <button type="button" role="tab" aria-selected={mode === "create"} className={mode === "create" ? "is-active" : ""} onClick={() => chooseMode("create")}>I&apos;M NEW</button>
             </div>
 
             <form className="identity-form" onSubmit={(event) => void submit(event)}>
@@ -151,7 +165,7 @@ export function IdentityControl() {
         onClick={identity.openDialog}
         aria-label={identity.profile ? `Open ${identity.profile.displayName} profile menu` : "Sign in to Octagon HQ"}
       >
-        {identity.profile ? <i>{identity.profile.initials}</i> : null}
+        {identity.profile ? <i>{avatar}</i> : null}
         <span>{buttonLabel}</span>
       </button>
       {dialog}

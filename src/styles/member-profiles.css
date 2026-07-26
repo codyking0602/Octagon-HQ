@@ -1,0 +1,521 @@
+.member-directory-page,
+.member-profile-page {
+  display: grid;
+  gap: 14px;
+}
+
+.member-page-heading {
+  margin-bottom: 0;
+}
+
+.member-state-card {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  padding: 18px;
+}
+
+.member-state-card > .primary-action,
+.member-state-card > .secondary-action {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+.member-state-card h1,
+.member-state-card h2 {
+  margin: 4px 0 6px;
+  font-size: 23px;
+  line-height: 1.05;
+}
+
+.member-state-card p:not(.eyebrow) {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.member-initials {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border: 1px solid rgba(229, 9, 20, .5);
+  border-radius: 16px;
+  background: linear-gradient(145deg, var(--ufc-red), #690006);
+  color: #fff;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 950;
+  letter-spacing: .03em;
+}
+
+.member-directory-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.member-directory-card {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.member-directory-card.is-current {
+  border-color: rgba(229, 9, 20, .58);
+  background:
+    radial-gradient(circle at 0 0, rgba(229, 9, 20, .11), transparent 38%),
+    var(--surface);
+}
+
+.member-directory-card__topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.member-directory-card__topline span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 9px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.member-directory-card.is-current .member-directory-card__topline span {
+  border-color: var(--ufc-red);
+  color: var(--ufc-red-strong);
+}
+
+.member-directory-card h2 {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: -.035em;
+}
+
+.member-favorite-row {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 9px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface-raised);
+}
+
+.member-favorite-row img,
+.member-favorite-row > i {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+}
+
+.member-favorite-row img {
+  object-fit: cover;
+}
+
+.member-favorite-row > i {
+  display: grid;
+  place-items: center;
+  background: var(--surface-soft);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 950;
+}
+
+.member-favorite-row span,
+.member-favorite-row small,
+.member-favorite-row strong {
+  display: block;
+}
+
+.member-favorite-row small {
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .09em;
+}
+
+.member-favorite-row strong {
+  margin-top: 3px;
+  font-size: 13px;
+}
+
+.member-card-stats,
+.member-profile-stat-grid,
+.member-profile-achievement-grid,
+.member-challenge-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.member-card-stats > div,
+.member-profile-achievement-grid > div,
+.member-challenge-metrics > div {
+  display: grid;
+  gap: 3px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #0b0b0d;
+}
+
+.member-card-stats strong,
+.member-profile-achievement-grid strong,
+.member-challenge-metrics strong {
+  font-size: 21px;
+  line-height: 1;
+}
+
+.member-card-stats span,
+.member-profile-achievement-grid span,
+.member-challenge-metrics span {
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.member-card-action {
+  color: var(--ufc-red-strong);
+  font-size: 9px;
+  letter-spacing: .06em;
+}
+
+.member-profile-back {
+  justify-self: start;
+  color: var(--text-secondary);
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .08em;
+  text-decoration: none;
+}
+
+.member-profile-hero {
+  display: grid;
+  gap: 15px;
+  padding: 16px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 100% 0, rgba(229, 9, 20, .15), transparent 42%),
+    var(--surface);
+}
+
+.member-profile-hero.is-own {
+  border-color: rgba(229, 9, 20, .5);
+}
+
+.member-profile-hero__identity {
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+}
+
+.member-profile-avatar {
+  width: 82px;
+  height: 82px;
+  overflow: hidden;
+  border: 1px solid rgba(229, 9, 20, .5);
+  border-radius: 22px;
+  background: linear-gradient(145deg, var(--surface-raised), #080808);
+}
+
+.member-profile-avatar img,
+.member-profile-avatar span {
+  width: 100%;
+  height: 100%;
+}
+
+.member-profile-avatar img {
+  object-fit: cover;
+}
+
+.member-profile-avatar span {
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 25px;
+  font-weight: 950;
+}
+
+.member-profile-hero h1 {
+  margin: 4px 0 8px;
+  font-size: clamp(30px, 9vw, 44px);
+  line-height: .92;
+  letter-spacing: -.055em;
+}
+
+.member-profile-favorite {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+}
+
+.member-profile-favorite small,
+.member-profile-favorite-control > span {
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .1em;
+}
+
+.member-profile-favorite strong {
+  font-size: 13px;
+}
+
+.member-profile-favorite-control {
+  display: grid;
+  gap: 7px;
+}
+
+.member-profile-favorite-control select {
+  min-height: 48px;
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: #0b0b0d;
+  color: var(--text-primary);
+  padding: 0 12px;
+  font-weight: 850;
+}
+
+.member-profile-challenge {
+  width: 100%;
+  border: 0;
+}
+
+.member-profile-stat-grid article {
+  display: grid;
+  gap: 4px;
+  min-height: 112px;
+  padding: 13px;
+}
+
+.member-profile-stat-grid small {
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .09em;
+}
+
+.member-profile-stat-grid strong {
+  margin-top: auto;
+  font-size: 29px;
+  line-height: 1;
+}
+
+.member-profile-stat-grid span {
+  color: var(--text-secondary);
+  font-size: 9px;
+}
+
+.member-profile-achievements,
+.member-profile-challenges {
+  display: grid;
+  gap: 13px;
+  padding: 14px;
+}
+
+.member-profile-achievements h2,
+.member-profile-challenges h2 {
+  margin: 3px 0 0;
+  font-size: 21px;
+}
+
+.member-profile-achievement-grid,
+.member-challenge-metrics {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.member-profile-achievement-grid > div,
+.member-challenge-metrics > div {
+  min-width: 0;
+  padding: 9px 6px;
+  text-align: center;
+}
+
+.member-profile-achievement-grid strong,
+.member-challenge-metrics strong {
+  font-size: 18px;
+}
+
+.member-recent-challenges {
+  display: grid;
+  gap: 7px;
+}
+
+.member-recent-challenges article {
+  display: grid;
+  gap: 9px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: #0b0b0d;
+}
+
+.member-recent-challenges__identity {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 9px;
+  align-items: center;
+}
+
+.member-recent-challenges__identity i {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: var(--surface-soft);
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 950;
+}
+
+.member-recent-challenges__identity span,
+.member-recent-challenges__identity small,
+.member-recent-challenges__identity strong,
+.member-recent-challenges__copy strong,
+.member-recent-challenges__copy small {
+  display: block;
+}
+
+.member-recent-challenges__identity small {
+  color: var(--ufc-red-strong);
+  font-size: 7px;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.member-recent-challenges__identity strong {
+  margin-top: 3px;
+  font-size: 12px;
+}
+
+.member-recent-challenges__copy strong {
+  font-size: 11px;
+  line-height: 1.25;
+}
+
+.member-recent-challenges__copy small {
+  margin-top: 3px;
+  color: var(--text-muted);
+  font-size: 8px;
+  line-height: 1.3;
+}
+
+.member-recent-challenges article > button {
+  justify-self: start;
+  min-height: 30px;
+  border: 1px solid var(--success);
+  border-radius: 9px;
+  background: transparent;
+  color: #a8f0bd;
+  padding: 0 10px;
+  font-size: 8px;
+  font-weight: 950;
+}
+
+.member-profile-empty {
+  padding: 14px;
+  border: 1px dashed var(--border);
+  border-radius: 13px;
+  text-align: center;
+}
+
+.member-profile-empty strong {
+  display: block;
+  font-size: 13px;
+}
+
+.member-profile-empty p {
+  margin: 5px 0 0;
+  color: var(--text-muted);
+  font-size: 9px;
+  line-height: 1.4;
+}
+
+.member-profile-footer-actions {
+  display: grid;
+  gap: 8px;
+}
+
+.identity-profile-card__links {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.identity-profile-card__links a {
+  display: grid;
+  place-items: center;
+  min-height: 42px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #0b0b0b;
+  color: var(--text-primary);
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .04em;
+  text-align: center;
+  text-decoration: none;
+}
+
+.challenge-center__row {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.challenge-center__member-link {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+@media (min-width: 680px) {
+  .member-directory-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .member-profile-hero {
+    grid-template-columns: minmax(0, 1fr) minmax(260px, .65fr);
+    align-items: center;
+  }
+
+  .member-profile-stat-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .member-profile-footer-actions {
+    grid-template-columns: 1.25fr 1fr;
+  }
+}
+
+@media (max-width: 430px) {
+  .member-profile-achievement-grid,
+  .member-challenge-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .identity-profile-card__links {
+    grid-template-columns: 1fr;
+  }
+}

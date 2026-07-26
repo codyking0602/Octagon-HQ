@@ -15,12 +15,16 @@ import {
 
 interface ProfilePreferencesContextValue {
   configured: boolean;
+  avatarConfigured: boolean;
   loading: boolean;
   saving: boolean;
+  savingAvatar: boolean;
   error: string;
   favoriteFighterSlug: string | null;
+  avatarPhotoData: string | null;
   refresh: () => Promise<void>;
   setFavoriteFighter: (fighterSlug: string | null) => Promise<void>;
+  setAvatarPhoto: (photoData: string | null) => Promise<void>;
 }
 
 const ProfilePreferencesContext = createContext<ProfilePreferencesContextValue | null>(null);
@@ -44,14 +48,17 @@ export function ProfilePreferencesProvider({
       : suppliedRepository
   ));
   const [favoriteFighterSlug, setFavoriteFighterSlug] = useState<string | null>(null);
+  const [avatarPhotoData, setAvatarPhotoData] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [savingAvatar, setSavingAvatar] = useState(false);
   const [error, setError] = useState("");
 
   const refresh = useCallback(async () => {
     const expectedProfileId = profileId;
     if (!expectedProfileId) {
       setFavoriteFighterSlug(null);
+      setAvatarPhotoData(null);
       setLoading(false);
       setError("");
       return;
@@ -59,6 +66,7 @@ export function ProfilePreferencesProvider({
 
     if (!repository) {
       setFavoriteFighterSlug(null);
+      setAvatarPhotoData(null);
       setLoading(false);
       setError("Profile preferences are not connected on this build.");
       return;
@@ -66,9 +74,13 @@ export function ProfilePreferencesProvider({
 
     setLoading(true);
     try {
-      const favorite = await repository.loadFavoriteFighter();
+      const [favorite, avatar] = await Promise.all([
+        repository.loadFavoriteFighter(),
+        repository.loadAvatarPhoto ? repository.loadAvatarPhoto() : Promise.resolve(null),
+      ]);
       if (profileIdRef.current !== expectedProfileId) return;
       setFavoriteFighterSlug(favorite);
+      setAvatarPhotoData(avatar);
       setError("");
     } catch (nextError) {
       if (profileIdRef.current !== expectedProfileId) return;
@@ -80,6 +92,7 @@ export function ProfilePreferencesProvider({
 
   useEffect(() => {
     setSaving(false);
+    setSavingAvatar(false);
     void refresh();
   }, [refresh]);
 
@@ -122,15 +135,46 @@ export function ProfilePreferencesProvider({
     }
   }, [identity.openDialog, profileId, repository]);
 
+  const setAvatarPhoto = useCallback(async (photoData: string | null) => {
+    const expectedProfileId = profileId;
+    if (!expectedProfileId) {
+      identity.openDialog();
+      return;
+    }
+    if (!repository?.saveAvatarPhoto) {
+      const missingError = new Error("Profile photo uploads are not connected on this build.");
+      setError(missingError.message);
+      throw missingError;
+    }
+
+    setSavingAvatar(true);
+    try {
+      const avatar = await repository.saveAvatarPhoto(photoData);
+      if (profileIdRef.current !== expectedProfileId) return;
+      setAvatarPhotoData(avatar);
+      setError("");
+    } catch (nextError) {
+      if (profileIdRef.current !== expectedProfileId) return;
+      setError(readableError(nextError));
+      throw nextError;
+    } finally {
+      if (profileIdRef.current === expectedProfileId) setSavingAvatar(false);
+    }
+  }, [identity.openDialog, profileId, repository]);
+
   return (
     <ProfilePreferencesContext.Provider value={{
       configured: Boolean(repository),
+      avatarConfigured: Boolean(repository?.saveAvatarPhoto),
       loading,
       saving,
+      savingAvatar,
       error,
       favoriteFighterSlug,
+      avatarPhotoData,
       refresh,
       setFavoriteFighter,
+      setAvatarPhoto,
     }}>
       {children}
     </ProfilePreferencesContext.Provider>

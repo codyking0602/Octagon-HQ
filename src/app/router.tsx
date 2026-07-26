@@ -7,6 +7,8 @@ const HomePage = lazy(() => import("../features/home/HomePage"));
 const RankingsPage = lazy(() => import("../features/rankings/RankingsPage"));
 const FighterProfilePage = lazy(() => import("../features/rankings/FighterProfilePage"));
 const IntelligencePage = lazy(() => import("../features/intelligence/IntelligencePage"));
+const MemberDirectoryPage = lazy(() => import("../features/members/MemberDirectoryPage"));
+const MemberProfilePage = lazy(() => import("../features/members/MemberProfilePage"));
 const PlayPage = lazy(() => import("../features/play/PlayPage"));
 const FindLeaderChallengeRoute = lazy(() => import("../features/challenges/FindLeaderChallengeRoute"));
 const WavelengthPage = lazy(() => import("../features/play/WavelengthPage"));
@@ -26,6 +28,8 @@ export const appRoutes: RouteObject[] = [
       { path: "rankings", element: <RankingsPage /> },
       { path: "fighters/:slug", element: <FighterProfilePage /> },
       { path: "intelligence", element: <IntelligencePage /> },
+      { path: "members", element: <MemberDirectoryPage /> },
+      { path: "members/:memberName", element: <MemberProfilePage /> },
       { path: "play", element: <PlayPage /> },
       { path: "play/find-leader", element: <FindLeaderChallengeRoute /> },
       { path: "play/wavelength", element: <WavelengthPage /> },

@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
+import { memberProfilePath } from "../members/memberProfilesModel";
 import {
   challengeDirection,
   challengeStatus,
@@ -147,15 +148,30 @@ export function ChallengeCenter() {
               const canPlay = direction === "received" && status !== "completed" && status !== "declined";
               const canView = status === "completed";
               const dismissLabel = direction === "received" && !canView ? "IGNORE" : "REMOVE";
-
-              return (
-                <article className={`challenge-center__row${statusClass(status)}`} key={challenge.code}>
+              const memberContent = (
+                <>
                   <i className="challenge-center__avatar">{counterpart?.initials ?? "HQ"}</i>
                   <div className="challenge-center__row-copy">
                     <span>{copy.eyebrow}</span>
                     <strong>{counterpart?.displayName ?? "Octagon HQ profile"} · {challenge.gameTitle}</strong>
                     <small>{copy.detail}</small>
                   </div>
+                </>
+              );
+
+              return (
+                <article className={`challenge-center__row${statusClass(status)}`} key={challenge.code}>
+                  {counterpart ? (
+                    <Link
+                      className="challenge-center__member-link"
+                      to={memberProfilePath(counterpart.displayName)}
+                      aria-label={`View ${counterpart.displayName} member profile`}
+                    >
+                      {memberContent}
+                    </Link>
+                  ) : (
+                    <div className="challenge-center__member-link">{memberContent}</div>
+                  )}
                   <div className="challenge-center__row-actions">
                     {canView ? (
                       <button type="button" className="results" onClick={() => viewResults(challenge.code)}>RESULTS</button>
