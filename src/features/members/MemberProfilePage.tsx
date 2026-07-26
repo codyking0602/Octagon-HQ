@@ -109,7 +109,7 @@ export function MemberProfileView({
 
   useEffect(() => {
     const revision = ++revisionRef.current;
-    if (!identity.profile || isOwnProfile) {
+    if (!identity.profile) {
       setRemoteMember(null);
       setLoading(false);
       setError("");
@@ -118,11 +118,11 @@ export function MemberProfileView({
     if (!repository) {
       setRemoteMember(null);
       setLoading(false);
-      setError("Member Profiles are not connected on this build.");
+      setError(isOwnProfile ? "" : "Member Profiles are not connected on this build.");
       return;
     }
 
-    setLoading(true);
+    setLoading(!isOwnProfile);
     void repository.loadMember(requestedName)
       .then((member) => {
         if (revision !== revisionRef.current) return;
@@ -132,7 +132,7 @@ export function MemberProfileView({
       .catch((nextError) => {
         if (revision !== revisionRef.current) return;
         setRemoteMember(null);
-        setError(readableError(nextError));
+        setError(isOwnProfile ? "" : readableError(nextError));
       })
       .finally(() => {
         if (revision === revisionRef.current) setLoading(false);
@@ -140,12 +140,15 @@ export function MemberProfileView({
   }, [identity.profile?.id, isOwnProfile, repository, requestedName]);
 
   const ownStreaks = findLeaderStreaks(history.rows, today);
-  const ownRecentActivity = history.rows.slice(0, 5).map<MemberRecentActivityItem>((row) => ({
+  const fallbackOwnActivity = history.rows.slice(0, 5).map<MemberRecentActivityItem>((row) => ({
     kind: "find-leader",
     title: "Find the Leader",
     detail: `${row.officialScore}/10`,
     occurredAt: row.completedAt,
   }));
+  const ownRecentActivity = remoteMember?.recentActivity?.length
+    ? remoteMember.recentActivity
+    : fallbackOwnActivity;
   const ownMember: MemberProfileSummary | null = identity.profile && isOwnProfile ? {
     displayName: identity.profile.displayName,
     initials: identity.profile.initials,
@@ -313,7 +316,7 @@ export function MemberProfileView({
           <div><strong>{member.bestStreak}</strong><span>BEST STREAK</span></div>
           <div><strong>{member.perfectRuns}</strong><span>PERFECT 10s</span></div>
           <div><strong>{member.recordedDays}</strong><span>RECORDED DAYS</span></div>
-          <div><strong>{member.bestFindLeaderScore ? `${member.bestFindLeaderScore}/10` : "—"}</strong><span>BEST SCORE</span></div>
+          <div><strong>{member.recordedDays ? `${member.bestFindLeaderScore}/10` : "—"}</strong><span>BEST SCORE</span></div>
         </div>
       </section>
 
