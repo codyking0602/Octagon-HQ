@@ -1,0 +1,39 @@
+[
+  {
+    "id": "mma-event-rakic-blachowicz",
+    "sport_key": "mma_mixed_martial_arts",
+    "sport_title": "MMA",
+    "commence_time": "2026-08-15T23:00:00Z",
+    "home_team": "Aleksandar Rakić",
+    "away_team": "Jan Błachowicz",
+    "bookmakers": [
+      {
+        "key": "draftkings",
+        "title": "DraftKings",
+        "last_update": "2026-08-10T13:00:00Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              { "name": "Aleksandar Rakic", "price": -120 }
+            ]
+          }
+        ]
+      },
+      {
+        "key": "fanduel",
+        "title": "FanDuel",
+        "last_update": "2026-08-10T13:02:00Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              { "name": "Jan Blachowicz", "price": 115 },
+              { "name": "Aleksandar Rakic", "price": -135 }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
