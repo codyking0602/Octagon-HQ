@@ -138,12 +138,21 @@ function validIso(value: unknown) {
   return text && Number.isFinite(parsed.getTime()) ? parsed.toISOString() : "";
 }
 
+function canonicalUfcLocation(event: NormalizedUfcEvent) {
+  const city = safeMetadata(event.city, 80);
+  const region = safeMetadata(event.region, 80);
+  const country = safeMetadata(event.country, 80);
+  const preserveTwoLetterRegion = /^(?:US|USA|United States(?: of America)?|CA|CAN|Canada)$/i.test(country);
+  const terseInternationalRegion = Boolean(city && country && /^[A-Z]{2}$/.test(region) && !preserveTwoLetterRegion);
+  return safeMetadata([city, terseInternationalRegion ? "" : region, country].filter(Boolean).join(", "), 180);
+}
+
 export function canonicalUfcEventFields(event: NormalizedUfcEvent) {
   const number = event.eventNumber || eventNumber(event.eventName);
   const name = safeEventName(event.eventName, number);
   const headliners = event.headliners.map(canonicalFighterDisplay).filter(Boolean);
   const venue = safeMetadata(event.venue, 120);
-  const location = safeMetadata([event.city, event.region, event.country].map((part) => safeMetadata(part, 80)).filter(Boolean).join(", "), 180);
+  const location = canonicalUfcLocation(event);
   const startsAt = validIso(event.startsAt);
   const sourceEventKey = safeMetadata(event.canonicalEventKey, 180);
 
