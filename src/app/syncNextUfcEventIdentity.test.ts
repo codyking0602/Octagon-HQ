@@ -111,6 +111,28 @@ describe("sync-next-ufc-event multi-signal identity matching", () => {
     expect(result.signals).toEqual(expect.arrayContaining(["event-date", "both-headliners"]));
   });
 
+  it("accepts both headliners plus the event location when the article date is not exposed to the parser", () => {
+    const medicEvent: EventIdentity = {
+      name: "UFC Fight Night",
+      subtitle: "Uros Medic vs. Daniel Rodriguez",
+      venue: "Belgrade Arena",
+      location: "Belgrade, Serbia",
+      starts_at: "2026-08-01T19:00:00.000Z",
+    };
+    const result = matchEventIdentity(medicEvent, article({
+      url: "https://www.mmamania.com/ufc-fight-cards/446488/latest-ufc-belgrade-fight-card-paramount-start-time-date-and-location-medic-vs-rodriguez-mma",
+      title: "Latest UFC Belgrade fight card | Medic vs. Rodriguez",
+      metadata: "",
+      body: "Uros Medic vs Daniel Rodriguez headlines inside Belgrade Arena in Belgrade, Serbia.",
+      cardDateText: "",
+      publishedAt: "",
+    }));
+
+    expect(result.accepted).toBe(true);
+    expect(result.date).toBe("unknown");
+    expect(result.signals).toEqual(expect.arrayContaining(["both-headliners", "location:2"]));
+  });
+
   it("does not treat an advance article publication timestamp as a conflicting event date", () => {
     const publishedAt = "2026-07-26T10:00:00Z";
     const result = matchEventIdentity(event, article({
