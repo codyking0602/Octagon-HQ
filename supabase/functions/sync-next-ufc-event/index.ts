@@ -1,5 +1,6 @@
 import { createClient } from "npm:@supabase/supabase-js@2.110.7";
 import * as cheerio from "npm:cheerio@1.0.0";
+import { absoluteMmaManiaArticleUrl } from "./sourceUrls.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*",
@@ -94,17 +95,6 @@ function absoluteUfcEventUrl(value: string) {
   try {
     const url = new URL(value, "https://www.ufc.com");
     return url.hostname.endsWith("ufc.com") && url.pathname.startsWith("/event/")
-      ? url.toString()
-      : "";
-  } catch {
-    return "";
-  }
-}
-
-function absoluteMmaManiaUrl(value: string) {
-  try {
-    const url = new URL(value, MMA_MANIA_INDEX_URL);
-    return url.hostname.endsWith("mmamania.com") && url.pathname.includes("/ufc-fight-cards/")
       ? url.toString()
       : "";
   } catch {
@@ -396,7 +386,7 @@ async function findMmaManiaCard(metadata: UfcEventMetadata) {
   const candidates = new Map<string, { url: string; score: number }>();
 
   $("a[href]").each((_, element) => {
-    const url = absoluteMmaManiaUrl($(element).attr("href") ?? "");
+    const url = absoluteMmaManiaArticleUrl($(element).attr("href") ?? "");
     if (!url) return;
     const score = mmaLinkScore(clean($(element).text()), url, metadata);
     const previous = candidates.get(url);
