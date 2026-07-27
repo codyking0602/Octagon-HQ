@@ -23,7 +23,7 @@ jobs:
       SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
       OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
-      EXPECTED_SYNC_SOURCE_SHA: persisted-source-url-v1
+      EXPECTED_SYNC_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
 
     steps:
       - name: Check out repository
@@ -187,7 +187,7 @@ jobs:
             exit 1
           fi
 
-      - name: Verify deployed UFC sync runtime revision
+      - name: Verify exact deployed UFC sync source
         run: node scripts/verify-sync-function-deployment.mjs
 
       - name: Verify live Picks scoring RPCs
@@ -206,7 +206,7 @@ jobs:
             echo "- Event setup and card review migration: deployed remotely"
             echo "- Underdog Lock and seven-field scoring summary RPCs: responding in production"
             echo "- pin-auth Edge Function: deployed and responding with the expected contract"
-            echo "- sync-next-ufc-event Edge Function: runtime revision $EXPECTED_SYNC_SOURCE_SHA verified through its live marker"
+            echo "- sync-next-ufc-event Edge Function: exact deployed source $EXPECTED_SYNC_SOURCE_SHA verified through its live marker"
             echo "- Production CORS origin: $OCTAGON_PRODUCTION_ORIGIN"
             echo "- Cloudflare VITE values: cannot be read by GitHub and must be verified through the Cloudflare production build"
           } >> "$GITHUB_STEP_SUMMARY"
