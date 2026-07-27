@@ -1,6 +1,7 @@
 import { createClient } from "npm:@supabase/supabase-js@2.110.7";
 import * as cheerio from "npm:cheerio@1.0.0";
 import { absoluteMmaManiaArticleUrl } from "./sourceUrls.ts";
+import { chooseEventArticle, matchEventIdentity, type ArticleIdentity } from "./eventIdentity.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*",
@@ -336,22 +337,30 @@ function toStagedBouts(bouts: ParsedCardBout[]) {
   });
 }
 
-function eventSearchTokens(metadata: UfcEventMetadata) {
-  return Array.from(new Set(
-    `${metadata.name} ${metadata.subtitle}`.toLowerCase().match(/[a-z0-9]+/g)
-      ?.filter((token) => token.length >= 4 && !["fight", "night", "versus", "with"].includes(token)) ?? [],
-  ));
-}
-
-function mmaLinkScore(text: string, href: string, metadata: UfcEventMetadata) {
-  const haystack = `${text} ${href}`.toLowerCase();
-  let score = /fight-card|fight card/.test(haystack) ? 2 : 0;
-  const numbered = `${metadata.name} ${metadata.subtitle}`.match(/\bUFC\s+(\d{3,4})\b/i)?.[1];
-  if (numbered && new RegExp(`(?:ufc[- ]?)${numbered}\\b`, "i").test(haystack)) score += 30;
-  for (const token of eventSearchTokens(metadata)) {
-    if (haystack.includes(token)) score += 5;
-  }
-  return score;
+function articleIdentity(html: string, url: string, card: MmaManiaCard): ArticleIdentity {
+  const $ = cheerio.load(html);
+  const title = clean($("meta[property='og:title']").attr("content") ?? $("title").text() ?? $("h1").first().text());
+  const metadata = clean([
+    $("meta[property='og:description']").attr("content"),
+    $("meta[name='description']").attr("content"),
+    $("meta[property='article:published_time']").attr("content"),
+  ].filter(Boolean).join(" "));
+  const root = $("article").first().length ? $("article").first() : $("main").first();
+  const body = clean((root.length ? root : $("body")).text());
+  const dateSentences = `${title}. ${metadata}. ${body.slice(0, 6000)}`.split(/(?<=[.!?])\s+/)
+    .filter((sentence) => /\b(?:20\d{2}|january|february|march|april|may|june|july|august|september|october|november|december)\b/i.test(sentence)
+      && /\b(?:event|card|ufc|takes? place|scheduled|saturday|sunday)\b/i.test(sentence))
+    .slice(0, 8).join(" ");
+  return {
+    url,
+    title,
+    metadata,
+    body,
+    cardDateText: dateSentences,
+    publishedAt: clean($("meta[property='article:published_time']").attr("content") ?? $("time[datetime]").first().attr("datetime") ?? ""),
+    usedSectionHeadings: card.usedSectionHeadings,
+    boutCount: card.bouts.length,
+  };
 }
 
 async function fetchText(url: string, sourceLabel: string) {
@@ -383,37 +392,40 @@ async function findNextUfcEvent(now: Date) {
 async function findMmaManiaCard(metadata: UfcEventMetadata) {
   const indexHtml = await fetchText(MMA_MANIA_INDEX_URL, "MMA Mania");
   const $ = cheerio.load(indexHtml);
-  const candidates = new Map<string, { url: string; score: number }>();
+  const candidates = new Map<string, { url: string; discoveryText: string }>();
 
   $("a[href]").each((_, element) => {
     const url = absoluteMmaManiaArticleUrl($(element).attr("href") ?? "");
     if (!url) return;
-    const score = mmaLinkScore(clean($(element).text()), url, metadata);
+    const discoveryText = clean(`${$(element).text()} ${url}`);
+    if (!/\bufc\b|fight[- ]card|fight[- ]night/i.test(discoveryText)) return;
     const previous = candidates.get(url);
-    if (!previous || score > previous.score) candidates.set(url, { url, score });
+    if (!previous || discoveryText.length > previous.discoveryText.length) candidates.set(url, { url, discoveryText });
   });
 
-  const ranked = Array.from(candidates.values()).sort((left, right) => right.score - left.score).slice(0, 12);
-  if (!ranked.length) throw new Error("MMA Mania did not return any UFC fight-card articles.");
+  const discovered = Array.from(candidates.values()).slice(0, 24);
+  if (!discovered.length) throw new Error("Discovery: MMA Mania did not return any UFC fight-card article links.");
 
-  let best: { card: MmaManiaCard; score: number } | null = null;
-  for (const candidate of ranked) {
-    if (candidate.score < 5) continue;
+  const evaluated: Array<{ card: MmaManiaCard; match: ReturnType<typeof matchEventIdentity> }> = [];
+  let fetched = 0;
+  let parsed = 0;
+  for (const candidate of discovered) {
     try {
-      const card = parseMmaManiaCard(await fetchText(candidate.url, "MMA Mania"), candidate.url);
-      const score = candidate.score + card.bouts.length;
-      if (card.usedSectionHeadings && card.bouts.length >= 4 && (!best || score > best.score)) {
-        best = { card, score };
-      }
+      const html = await fetchText(candidate.url, "MMA Mania");
+      fetched += 1;
+      const card = parseMmaManiaCard(html, candidate.url);
+      if (card.usedSectionHeadings && card.bouts.length >= 4) parsed += 1;
+      evaluated.push({ card, match: matchEventIdentity(metadata, articleIdentity(html, candidate.url, card)) });
     } catch {
-      // Try the next matched article.
+      // A failed candidate fetch must not prevent evaluation of the remaining discovered articles.
     }
   }
 
-  if (!best) {
-    throw new Error("MMA Mania did not return a sectioned fight card matching the next UFC event. No UFC first-six fallback was used.");
-  }
-  return best.card;
+  if (!fetched) throw new Error("Discovery: MMA Mania article links were found, but none could be fetched.");
+  if (!parsed) throw new Error("Card parsing: fetched MMA Mania articles did not contain a plausible section-aware card. No UFC first-six fallback was used.");
+  const selected = chooseEventArticle(evaluated);
+  if (!selected.candidate) throw new Error(`${selected.error}. No UFC first-six fallback was used.`);
+  return selected.candidate.card;
 }
 
 async function buildNextEvent(now: Date, requestedScope: CardScope) {
