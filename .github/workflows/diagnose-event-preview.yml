@@ -15,10 +15,11 @@ jobs:
     timeout-minutes: 5
     env:
       GH_TOKEN: ${{ github.token }}
+      TARGET_SHA: e35afa13f79286aaa6246b73e9572afd3c8d1db2
     steps:
-      - name: List recent deployment workflow runs
+      - name: List target deployment workflow runs
         shell: bash
         run: |
           set -euo pipefail
-          gh api "/repos/$GITHUB_REPOSITORY/actions/runs?per_page=40" \
-            --jq '.workflow_runs[] | [.id,.name,.event,.head_branch,.head_sha,.status,.conclusion,.created_at] | @tsv'
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs?per_page=30" \
+            --jq '.workflow_runs[] | select(.head_sha == env.TARGET_SHA or .name == "Deploy Labeled PR Head") | [.id,.name,.event,.head_branch,.head_sha,.status,.conclusion,.created_at] | @tsv'
