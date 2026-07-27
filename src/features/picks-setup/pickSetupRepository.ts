@@ -53,8 +53,8 @@ const sourcePreviewSchema = z.object({
 
 export interface PickSetupRepository {
   loadDraft: () => Promise<PickSetupDraft | null>;
-  syncNextEvent: (scope: PickSetupCardScope) => Promise<void>;
-  previewSource: (scope: PickSetupCardScope) => Promise<PickSetupSourcePreview>;
+  syncNextEvent: (scope: PickSetupCardScope, sourceUrl?: string) => Promise<void>;
+  previewSource: (scope: PickSetupCardScope, sourceUrl?: string) => Promise<PickSetupSourcePreview>;
   applySourcePreview: (preview: PickSetupSourcePreview) => Promise<void>;
   updateMetadata: (draftId: string, patch: PickSetupMetadataPatch) => Promise<void>;
   saveBout: (draftId: string, bout: PickSetupBoutInput) => Promise<void>;
@@ -72,6 +72,11 @@ async function requireRpcSuccess<T>(request: PromiseLike<{ data: T; error: { mes
 
 function nonEmptyMessage(value: unknown) {
   return typeof value === "string" && value.trim() ? value.trim() : null;
+}
+
+function sourceUrlBody(sourceUrl?: string) {
+  const value = sourceUrl?.trim();
+  return value ? { source_url: value } : {};
 }
 
 export async function pickSetupFunctionErrorMessage(error: unknown) {
@@ -179,12 +184,12 @@ export function createPickSetupRepository(): PickSetupRepository | null {
       return mapPickSetupDraft(await requireRpcSuccess(client.rpc("get_pick_event_setup")));
     },
 
-    async syncNextEvent(scope) {
-      await invokeSync({ mode: "apply", card_scope: scope });
+    async syncNextEvent(scope, sourceUrl) {
+      await invokeSync({ mode: "apply", card_scope: scope, ...sourceUrlBody(sourceUrl) });
     },
 
-    async previewSource(scope) {
-      const data = await invokeSync({ mode: "preview", card_scope: scope });
+    async previewSource(scope, sourceUrl) {
+      const data = await invokeSync({ mode: "preview", card_scope: scope, ...sourceUrlBody(sourceUrl) });
       return mapPickSetupSourcePreview(data);
     },
 
@@ -193,6 +198,7 @@ export function createPickSetupRepository(): PickSetupRepository | null {
         mode: "apply",
         card_scope: preview.requestedScope,
         expected_hash: preview.sourceHash,
+        source_url: preview.sourceUrl,
       });
     },
 
