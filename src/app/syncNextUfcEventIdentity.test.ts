@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   chooseEventArticle,
   matchEventIdentity,
+  rankDiscoveryCandidates,
   type ArticleIdentity,
   type EventIdentity,
 } from "../../supabase/functions/sync-next-ufc-event/eventIdentity";
@@ -68,6 +69,25 @@ describe("sync-next-ufc-event multi-signal identity matching", () => {
     }));
 
     expect(result.accepted).toBe(true);
+  });
+
+  it("ranks the matching location article into a bounded fetch set", () => {
+    const generic = Array.from({ length: 12 }, (_, index) => ({
+      url: `https://www.mmamania.com/ufc-fight-cards/${index}/generic-card-${index}`,
+      discoveryText: `Latest UFC fight card ${index}`,
+      order: index,
+    }));
+    const belgrade = {
+      url: "https://www.mmamania.com/ufc-fight-cards/446488/latest-ufc-belgrade-fight-card",
+      discoveryText: "Latest UFC Belgrade Fight Card, Paramount+ Lineup",
+      order: 12,
+    };
+
+    const ranked = rankDiscoveryCandidates(event, [...generic, belgrade], 8);
+
+    expect(ranked).toHaveLength(8);
+    expect(ranked[0].url).toBe(belgrade.url);
+    expect(ranked[0].discoveryScore).toBeGreaterThan(ranked[1].discoveryScore);
   });
 
   it("does not treat an advance article publication timestamp as a conflicting event date", () => {
