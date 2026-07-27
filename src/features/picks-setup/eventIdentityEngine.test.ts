@@ -127,6 +127,17 @@ describe("durable event identity", () => {
     expect(JSON.stringify(staged)).not.toMatch(/iframe|googletagmanager|skip to main|src=|<|>/i);
   });
 
+  it("omits terse international region codes while preserving meaningful US regions", () => {
+    expect(canonicalUfcEventFields({ ...ufc, region: "BG" }).location).toBe("Belgrade, Serbia");
+    expect(canonicalUfcEventFields({
+      ...ufc,
+      venue: "T-Mobile Arena",
+      city: "Las Vegas",
+      region: "Nevada",
+      country: "United States",
+    }).location).toBe("Las Vegas, Nevada, United States");
+  });
+
   it("rejects polluted or implausibly long venue and location values from final staged metadata", () => {
     const polluted = canonicalUfcEventFields({
       ...ufc,
