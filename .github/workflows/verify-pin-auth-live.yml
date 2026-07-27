@@ -21,6 +21,7 @@ jobs:
       SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
       OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
       EXPECTED_DEPLOYMENT_SHA: ${{ github.event.pull_request.head.sha }}
+      EVENT_SETUP_SCREENSHOT_PATH: ${{ runner.temp }}/event-setup-preview.png
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -47,8 +48,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: pin-browser-diagnostics
-          path: ${{ runner.temp }}/pin-browser.log
-          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/pin-browser.log
+            ${{ runner.temp }}/event-setup-preview.png
+          if-no-files-found: warn
           retention-days: 7
 
       - name: Upload verified public browser config
