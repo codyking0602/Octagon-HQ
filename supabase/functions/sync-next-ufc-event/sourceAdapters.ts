@@ -1,8 +1,10 @@
+// @ts-ignore -- Supabase Edge Functions resolve Deno npm: specifiers at runtime.
 import * as cheerio from "npm:cheerio@1.0.0";
 import { eventNumber, explicitIsoDates, splitVersus } from "./normalization.ts";
 import type { NormalizedArticleEvent, NormalizedUfcEvent } from "./identityEngine.ts";
 
 type Bout = NormalizedArticleEvent["bouts"][number];
+type HtmlElement = unknown;
 
 function clean(value: unknown) {
   return String(value ?? "").replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
@@ -15,14 +17,15 @@ function records(value: unknown): Record<string, unknown>[] {
   return [record, ...records(record["@graph"])];
 }
 
-function jsonLd($: cheerio.CheerioAPI) {
-  return $("script[type='application/ld+json']").map((_, element) => {
+function jsonLd($: cheerio.CheerioAPI): Record<string, unknown>[] {
+  const values = $("script[type='application/ld+json']").map((_: number, element: HtmlElement) => {
     try {
-      return JSON.parse($(element).text());
+      return JSON.parse($(element).text()) as unknown;
     } catch {
       return null;
     }
-  }).get().flatMap(records);
+  }).get() as unknown[];
+  return values.flatMap(records);
 }
 
 function first(...values: unknown[]) {
@@ -33,17 +36,18 @@ function metaContent($: cheerio.CheerioAPI, selector: string) {
   return clean($(selector).first().attr("content"));
 }
 
-function semanticLines($: cheerio.CheerioAPI) {
+function semanticLines($: cheerio.CheerioAPI): string[] {
   const root = $("article").first().length
     ? $("article").first()
     : $(".c-entry-content, .article-body, main").first();
   const scope = root.length ? root : $("body");
-  const lines = scope.find("h1,h2,h3,h4,h5,h6,p,li,td").get().flatMap((element) => {
+  const elements = scope.find("h1,h2,h3,h4,h5,h6,p,li,td").get() as HtmlElement[];
+  const lines = elements.flatMap((element: HtmlElement) => {
     const clone = $(element).clone();
     clone.find("br").replaceWith("\n");
-    return clone.text().split(/\n+/).map(clean).filter(Boolean);
+    return String(clone.text()).split(/\n+/).map(clean).filter(Boolean);
   });
-  const unique = Array.from(new Set(lines));
+  const unique = Array.from(new Set<string>(lines));
   return unique.length ? unique : [clean(scope.text())].filter(Boolean);
 }
 
@@ -114,10 +118,10 @@ export function adaptUfcSource(
   const $ = cheerio.load(html);
   const structured = jsonLd($);
   const evidence: string[] = [];
-  const event = structured.find((item) => /event/i.test(clean(item["@type"]))) ?? {};
+  const event = structured.find((item: Record<string, unknown>) => /event/i.test(clean(item["@type"]))) ?? {};
   if (Object.keys(event).length) evidence.push("json-ld:Event");
 
-  const embedded = $("script[type='application/json'],script#__NEXT_DATA__").map((_, element) => $(element).text()).get().join(" ");
+  const embedded = $("script[type='application/json'],script#__NEXT_DATA__").map((_: number, element: HtmlElement) => $(element).text()).get().join(" ");
   if (embedded) evidence.push("embedded-page-state");
   const pageTitle = first(metaContent($, "meta[property='og:title']"), $("title").first().text());
   const description = first(
@@ -178,7 +182,7 @@ export function adaptMmaManiaSource(
   const $ = cheerio.load(html);
   const structured = jsonLd($);
   const evidence: string[] = [];
-  const article = structured.find((item) => /article|newsarticle/i.test(clean(item["@type"]))) ?? {};
+  const article = structured.find((item: Record<string, unknown>) => /article|newsarticle/i.test(clean(item["@type"]))) ?? {};
   if (Object.keys(article).length) evidence.push("json-ld:Article");
 
   const title = first(
@@ -196,8 +200,8 @@ export function adaptMmaManiaSource(
     article.dateModified,
     metaContent($, "meta[property='article:published_time']"),
     metaContent($, "meta[property='article:modified_time']"),
-  ].map(clean).filter(Boolean);
-  const lines = Array.from(new Set([...semanticLines($), description].filter(Boolean)));
+  ].map((value: unknown) => clean(value)).filter(Boolean);
+  const lines: string[] = Array.from(new Set<string>([...semanticLines($), description].filter(Boolean)));
   const eventField = labeledField(lines, "Event");
   const dateField = labeledField(lines, "Date");
   const locationSignals = locationEvidence(lines);
