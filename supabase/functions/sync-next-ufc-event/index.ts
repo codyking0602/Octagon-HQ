@@ -1,5 +1,6 @@
 import { createClient } from "npm:@supabase/supabase-js@2.110.7";
 import * as cheerio from "npm:cheerio@1.0.0";
+import { DEPLOYED_SOURCE_SHA } from "./deployment.ts";
 import { absoluteMmaManiaArticleUrl } from "./sourceUrls.ts";
 import { chooseEventArticle, matchEventIdentity, rankDiscoveryCandidates, type ArticleIdentity } from "./eventIdentity.ts";
 
@@ -7,6 +8,7 @@ const corsHeaders = {
   "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Expose-Headers": "X-Octagon-Backend-Sha",
 };
 
 const UFC_EVENT_INDEX_URL = "https://www.ufc.com/events?language_content_entity=en";
@@ -80,7 +82,11 @@ interface MmaManiaCard {
 function json(body: Record<string, unknown>, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
+    headers: {
+      ...corsHeaders,
+      "Content-Type": "application/json",
+      "X-Octagon-Backend-Sha": DEPLOYED_SOURCE_SHA,
+    },
   });
 }
 
@@ -363,6 +369,29 @@ function articleIdentity(html: string, url: string, card: MmaManiaCard): Article
   };
 }
 
+function nameTokens(value: string) {
+  return clean(value).toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ").trim().split(/\s+/).filter((token) => token.length > 1);
+}
+
+function sameFighter(expected: string, actual: string) {
+  const expectedTokens = nameTokens(expected);
+  const actualTokens = new Set(nameTokens(actual));
+  return expectedTokens.length > 0 && expectedTokens.every((token) => actualTokens.has(token));
+}
+
+function parsedMainEventMatches(metadata: UfcEventMetadata, card: MmaManiaCard) {
+  const expected = metadata.subtitle.split(/\s+(?:vs\.?|versus|v\.?)\s+/i).map(clean).filter(Boolean);
+  if (expected.length !== 2) return false;
+  const mainEvent = card.bouts.find((bout) => bout.section === "main-event") ?? card.bouts[0];
+  if (!mainEvent) return false;
+  return (
+    sameFighter(expected[0], mainEvent.red_fighter_name) && sameFighter(expected[1], mainEvent.blue_fighter_name)
+  ) || (
+    sameFighter(expected[0], mainEvent.blue_fighter_name) && sameFighter(expected[1], mainEvent.red_fighter_name)
+  );
+}
+
 async function fetchText(url: string, sourceLabel: string) {
   const response = await fetch(url, { headers: requestHeaders, redirect: "follow" });
   if (!response.ok) throw new Error(`${sourceLabel} returned HTTP ${response.status}.`);
@@ -389,7 +418,24 @@ async function findNextUfcEvent(now: Date) {
   return parsed[0] ?? null;
 }
 
-async function findMmaManiaCard(metadata: UfcEventMetadata) {
+async function fetchExactMmaManiaCard(metadata: UfcEventMetadata, requestedUrl: string) {
+  const sourceUrl = absoluteMmaManiaArticleUrl(requestedUrl);
+  if (!sourceUrl) {
+    throw new Error("The supplied source must be a specific MMA Mania fight-card article URL, not the fight-card index or another website.");
+  }
+  const html = await fetchText(sourceUrl, "MMA Mania");
+  const card = parseMmaManiaCard(html, sourceUrl);
+  if (!card.usedSectionHeadings || card.bouts.length < 4 || card.bouts.length > 20) {
+    throw new Error("The supplied MMA Mania article did not contain a plausible sectioned fight card.");
+  }
+  const identity = matchEventIdentity(metadata, articleIdentity(html, sourceUrl, card));
+  if (!identity.accepted && !parsedMainEventMatches(metadata, card)) {
+    throw new Error("The supplied MMA Mania article does not match the next UFC event or its main event.");
+  }
+  return card;
+}
+
+async function discoverMmaManiaCard(metadata: UfcEventMetadata) {
   const indexHtml = await fetchText(MMA_MANIA_INDEX_URL, "MMA Mania");
   const $ = cheerio.load(indexHtml);
   const candidates = new Map<string, { url: string; discoveryText: string; order: number }>();
@@ -407,7 +453,7 @@ async function findMmaManiaCard(metadata: UfcEventMetadata) {
   });
 
   const discovered = rankDiscoveryCandidates(metadata, Array.from(candidates.values()), 8);
-  if (!discovered.length) throw new Error("Discovery: MMA Mania did not return any UFC fight-card article links.");
+  if (!discovered.length) throw new Error("Automatic MMA Mania discovery returned no UFC fight-card article links.");
 
   const evaluated: Array<{ card: MmaManiaCard; match: ReturnType<typeof matchEventIdentity> }> = [];
   let fetched = 0;
@@ -424,17 +470,27 @@ async function findMmaManiaCard(metadata: UfcEventMetadata) {
     }
   }
 
-  if (!fetched) throw new Error("Discovery: MMA Mania article links were found, but none could be fetched.");
-  if (!parsed) throw new Error("Card parsing: fetched MMA Mania articles did not contain a plausible section-aware card. No UFC first-six fallback was used.");
+  if (!fetched) throw new Error("Automatic MMA Mania discovery found article links, but none could be fetched.");
+  if (!parsed) throw new Error("Automatic MMA Mania discovery did not find a plausible sectioned fight card.");
   const selected = chooseEventArticle(evaluated);
-  if (!selected.candidate) throw new Error(`${selected.error}. No UFC first-six fallback was used.`);
+  if (!selected.candidate) throw new Error(selected.error);
   return selected.candidate.card;
 }
 
-async function buildNextEvent(now: Date, requestedScope: CardScope) {
+async function findMmaManiaCard(metadata: UfcEventMetadata, preferredSourceUrl: string) {
+  if (preferredSourceUrl) return fetchExactMmaManiaCard(metadata, preferredSourceUrl);
+  try {
+    return await discoverMmaManiaCard(metadata);
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : "Automatic article discovery failed.";
+    throw new Error(`${detail} Paste the exact MMA Mania fight-card article URL in Event Setup and try again. No UFC first-six fallback was used.`);
+  }
+}
+
+async function buildNextEvent(now: Date, requestedScope: CardScope, preferredSourceUrl: string) {
   const metadata = await findNextUfcEvent(now);
   if (!metadata) throw new Error("No future UFC event metadata could be found.");
-  const card = await findMmaManiaCard(metadata);
+  const card = await findMmaManiaCard(metadata, preferredSourceUrl);
   const effectiveScope = resolveCardScope(metadata.name, metadata.subtitle, requestedScope);
   const selected = selectBouts(card, effectiveScope);
   if (!selected.length) throw new Error("The matched MMA Mania article did not contain fights for the selected card scope.");
@@ -483,6 +539,11 @@ function asRecord(value: unknown): Record<string, unknown> | null {
   return value && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : null;
 }
 
+function persistedSourceUrl(currentValue: unknown) {
+  const current = asRecord(currentValue);
+  return typeof current?.source_url === "string" ? current.source_url.trim() : "";
+}
+
 function sourceChanges(currentValue: unknown, event: ParsedEvent, effectiveScope: EffectiveScope) {
   const current = asRecord(currentValue);
   if (!current) return [`Stage a new ${effectiveScope === "full" ? "full" : "main"} card with ${event.bouts.length} fights.`];
@@ -494,6 +555,7 @@ function sourceChanges(currentValue: unknown, event: ParsedEvent, effectiveScope
     ["Location", "location", current.location, event.location],
     ["Event time", "starts_at", current.starts_at, event.starts_at],
     ["Picks lock", "locks_at", current.locks_at, event.locks_at],
+    ["Card source", "source_url", current.source_url, event.source_url],
   ];
   for (const [label, , oldValue, newValue] of metadataFields) {
     if (clean(String(oldValue ?? "")) !== clean(String(newValue ?? ""))) changes.push(`${label} changed.`);
@@ -540,6 +602,7 @@ async function sourceHash(event: ParsedEvent, effectiveScope: EffectiveScope) {
     effectiveScope,
     event: {
       source_event_key: event.source_event_key,
+      source_url: event.source_url,
       event_id: event.event_id,
       name: event.name,
       subtitle: event.subtitle,
@@ -557,6 +620,16 @@ async function sourceHash(event: ParsedEvent, effectiveScope: EffectiveScope) {
 Deno.serve(async (request) => {
   if (request.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (request.method !== "POST") return json({ message: "Method not allowed." }, 405);
+
+  let input: Record<string, unknown> = {};
+  try {
+    input = asRecord(await request.json()) ?? {};
+  } catch {
+    input = {};
+  }
+  if (input.mode === "deployment-info") {
+    return json({ deployment_sha: DEPLOYED_SOURCE_SHA });
+  }
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
   const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
@@ -581,18 +654,14 @@ Deno.serve(async (request) => {
     return json({ message: denied ? "Fight Night owner access required." : "Event Setup is unavailable." }, denied ? 403 : 503);
   }
 
-  let input: Record<string, unknown> = {};
-  try {
-    input = asRecord(await request.json()) ?? {};
-  } catch {
-    input = {};
-  }
   const mode = input.mode === "preview" ? "preview" : "apply";
   const requestedScope: CardScope = input.card_scope === "main" || input.card_scope === "full" ? input.card_scope : "auto";
   const expectedHash = typeof input.expected_hash === "string" ? input.expected_hash : "";
+  const suppliedSourceUrl = typeof input.source_url === "string" ? input.source_url.trim() : "";
+  const preferredSourceUrl = suppliedSourceUrl || persistedSourceUrl(ownerProbe.data);
 
   try {
-    const { event, effectiveScope } = await buildNextEvent(new Date(), requestedScope);
+    const { event, effectiveScope } = await buildNextEvent(new Date(), requestedScope, preferredSourceUrl);
     const hash = await sourceHash(event, effectiveScope);
     const changes = sourceChanges(ownerProbe.data, event, effectiveScope);
 
@@ -606,6 +675,7 @@ Deno.serve(async (request) => {
         fight_count: event.bouts.length,
         changes,
         warnings: event.warnings,
+        deployment_sha: DEPLOYED_SOURCE_SHA,
       });
     }
 
@@ -614,9 +684,15 @@ Deno.serve(async (request) => {
     }
     const staged = await admin.rpc("stage_pick_event_draft", { p_payload: event });
     if (staged.error) throw staged.error;
-    return json({ draftId: staged.data, source_hash: hash, effective_scope: effectiveScope, warnings: event.warnings });
+    return json({
+      draftId: staged.data,
+      source_hash: hash,
+      effective_scope: effectiveScope,
+      warnings: event.warnings,
+      deployment_sha: DEPLOYED_SOURCE_SHA,
+    });
   } catch (error) {
     const message = error instanceof Error ? error.message : "The next UFC event could not be staged.";
-    return json({ message }, 502);
+    return json({ message, deployment_sha: DEPLOYED_SOURCE_SHA }, 502);
   }
 });
