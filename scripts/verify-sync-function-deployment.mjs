@@ -1,11 +1,14 @@
 const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
 const projectId = process.env.SUPABASE_PROJECT_ID;
-const expectedRevision = process.env.EXPECTED_SYNC_SOURCE_SHA?.trim() ?? "";
+const expectedSha = process.env.EXPECTED_SYNC_SOURCE_SHA?.trim() ?? "";
 const productionOrigin = process.env.OCTAGON_PRODUCTION_ORIGIN
   ?? "https://octagon.hq-app.workers.dev";
 
-if (!accessToken || !projectId || !expectedRevision) {
-  throw new Error("Sync-function revision verification is not configured.");
+if (!accessToken || !projectId || !expectedSha) {
+  throw new Error("Exact sync-function verification is not configured.");
+}
+if (!/^[0-9a-f]{40}$/i.test(expectedSha)) {
+  throw new Error("EXPECTED_SYNC_SOURCE_SHA must be a full commit SHA.");
 }
 
 async function readBody(response) {
@@ -42,22 +45,22 @@ const response = await fetch(endpoint, {
     "Content-Type": "application/json",
     "Cache-Control": "no-cache",
   },
-  body: JSON.stringify({ mode: "deployment-info", expected_revision: expectedRevision }),
+  body: JSON.stringify({ mode: "deployment-info", expected_sha: expectedSha }),
 });
 const body = await readBody(response);
 if (!response.ok) {
   throw new Error(`Deployed sync-function marker returned HTTP ${response.status}: ${body?.message ?? "unknown response"}`);
 }
-if (body?.deployment_sha !== expectedRevision) {
+if (body?.deployment_sha !== expectedSha) {
   throw new Error(
-    `Deployed sync-function marker mismatch: expected ${expectedRevision}, received ${body?.deployment_sha ?? "missing"}.`,
+    `Deployed sync-function marker mismatch: expected ${expectedSha}, received ${body?.deployment_sha ?? "missing"}.`,
   );
 }
-if (response.headers.get("x-octagon-backend-sha") !== expectedRevision) {
-  throw new Error("Deployed sync-function response header did not match the expected runtime revision.");
+if (response.headers.get("x-octagon-backend-sha") !== expectedSha) {
+  throw new Error("Deployed sync-function SHA header did not match the expected exact source.");
 }
 if (response.headers.get("access-control-allow-origin") !== productionOrigin) {
   throw new Error(`Deployed sync function is not allowing ${productionOrigin}.`);
 }
 
-console.log(`PASS: sync-next-ufc-event is deployed from verified runtime revision ${expectedRevision}.`);
+console.log(`PASS: sync-next-ufc-event is deployed from exact source ${expectedSha}.`);
