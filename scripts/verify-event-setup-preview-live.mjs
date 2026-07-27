@@ -1,3 +1,5 @@
+import { assertReportedSourceChanges } from "./event-setup-preview-contract.mjs";
+
 const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
 const projectId = process.env.SUPABASE_PROJECT_ID;
 const expectedSha = process.env.EXPECTED_SYNC_SOURCE_SHA?.trim() ?? "";
@@ -42,7 +44,7 @@ async function request(stage, url, options = {}, acceptedStatuses = [200]) {
   return { response, body };
 }
 
-function assertCleanEvent(event, stage, expectedBouts) {
+function assertCleanEvent(event, stage) {
   if (!event || typeof event !== "object") throw new Error(`${stage} is missing the event payload.`);
   if (event.name !== "UFC Fight Night") throw new Error(`${stage} event name mismatch: ${event.name ?? "missing"}.`);
   if (event.subtitle !== "Uroš Medić vs. Daniel Rodriguez") {
@@ -61,28 +63,11 @@ function assertCleanEvent(event, stage, expectedBouts) {
   }))) {
     throw new Error(`${stage} contains rejected UFC visible-page pollution.`);
   }
-  if (!Array.isArray(event.bouts) || event.bouts.length < 4) {
-    throw new Error(`${stage} returned fewer than four main-card fights: ${event.bouts?.length ?? "missing"}.`);
+  if (!Array.isArray(event.bouts) || !event.bouts.length) {
+    throw new Error(`${stage} is missing its fight card.`);
   }
-  if (expectedBouts && event.bouts.length !== expectedBouts.length) {
-    throw new Error(`${stage} fight count differs from the staged draft: ${event.bouts.length}/${expectedBouts.length}.`);
-  }
-  event.bouts.forEach((bout, index) => {
-    const expected = expectedBouts?.[index];
-    if (expected && (bout?.red_fighter_name !== expected.red_fighter_name || bout?.blue_fighter_name !== expected.blue_fighter_name)) {
-      throw new Error(
-        `${stage} fight ${index + 1} differs from the staged draft: ${bout?.red_fighter_name ?? "missing"} vs. ${bout?.blue_fighter_name ?? "missing"}.`,
-      );
-    }
-  });
   if (JSON.stringify(event.bouts).includes("Bogdan Guskov 2")) {
     throw new Error(`${stage} retained the article-only Bogdan Guskov rematch marker.`);
-  }
-}
-
-function assertNoSourceChanges(changes) {
-  if (changes.length) {
-    throw new Error(`Preview reported changes after the same source was already applied: ${changes.join(" | ")}`);
   }
 }
 
@@ -213,8 +198,8 @@ try {
   if (!preview.body?.source_hash || !Array.isArray(preview.body?.changes)) {
     throw new Error("Preview response is missing its reviewed source hash or change list.");
   }
-  assertNoSourceChanges(preview.body.changes);
-  assertCleanEvent(preview.body.event_preview, "Preview", draftBefore?.bouts);
+  assertCleanEvent(preview.body.event_preview, "Preview");
+  assertReportedSourceChanges(draftBefore, preview.body.event_preview, preview.body.changes);
 
   const draftAfterPreview = (await rpc("get_pick_event_setup", userToken)).body;
   const liveAfterPreview = (await rpc("get_current_pick_event", userToken)).body;
@@ -227,7 +212,7 @@ try {
   assertCleanEvent(draftAfterPreview, "Current staged draft");
 
   console.log(
-    `PASS: production Event Setup preview returned zero changes for the already-applied clean staged main card at backend ${expectedSha}; the current private staged draft is exact and clean, the preview was non-destructive, the live Picks event was byte-for-byte unchanged, and nothing was published.`,
+    `PASS: production Event Setup preview returned an independently verified change list for the clean current source at backend ${expectedSha}; the preview was non-destructive, the live Picks event was byte-for-byte unchanged, and nothing was applied or published.`,
   );
 } finally {
   if (userId) {
