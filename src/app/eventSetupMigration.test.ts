@@ -67,6 +67,9 @@ describe("Phase 2B event setup backend", () => {
   it("verifies that the already-applied production source has no remaining changes", () => {
     expect(productionPreviewVerifier).toContain("assertNoSourceChanges(preview.body.changes)");
     expect(productionPreviewVerifier).toContain("changes after the same source was already applied");
+    expect(productionPreviewVerifier).toContain('assertCleanEvent(preview.body.event_preview, "Preview", draftBefore?.bouts)');
+    expect(productionPreviewVerifier).toContain("fight count differs from the staged draft");
+    expect(productionPreviewVerifier).not.toContain("expectedFights");
   });
 
   it("verifies the zero-change post-apply state in the production browser", () => {
