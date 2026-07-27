@@ -16,9 +16,9 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
-      - name: Extract the browser diagnostic error
+      - name: Show the final browser diagnostic lines
         shell: bash
         run: |
           set -euo pipefail
           gh api "/repos/$GITHUB_REPOSITORY/actions/jobs/89893664240/logs" > "$RUNNER_TEMP/job.log"
-          grep -E "Error:|PASS:|Timeout|visible Event Setup|browser request failures|waiting for|getByRole|strict mode" "$RUNNER_TEMP/job.log" | tail -n 40
+          tail -n 25 "$RUNNER_TEMP/job.log"
