@@ -34,6 +34,16 @@ export interface PickSetupDraft {
   bouts: PickSetupBout[];
 }
 
+export interface PickSetupSourceEventPreview {
+  name: string;
+  subtitle: string;
+  venue: string;
+  location: string;
+  startsAt: string;
+  locksAt: string;
+  bouts: PickSetupBout[];
+}
+
 export interface PickSetupSourcePreview {
   sourceHash: string;
   requestedScope: PickSetupCardScope;
@@ -43,6 +53,7 @@ export interface PickSetupSourcePreview {
   fightCount: number;
   changes: string[];
   warnings: string[];
+  event: PickSetupSourceEventPreview;
 }
 
 export interface PickSetupMetadataPatch {
