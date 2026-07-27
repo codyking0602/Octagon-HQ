@@ -1,5 +1,6 @@
 const MMA_MANIA_INDEX_URL = "https://www.mmamania.com/ufc-fight-cards";
 
+// MMA Mania indexes may link to dated article paths instead of /ufc-fight-cards/ paths.
 export function absoluteMmaManiaArticleUrl(value: string) {
   try {
     const url = new URL(value, MMA_MANIA_INDEX_URL);
