@@ -25,6 +25,19 @@ function clean(value: unknown) {
   return String(value ?? "").replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
 }
 
+function timestampsMatch(leftValue: unknown, rightValue: unknown) {
+  const left = clean(leftValue);
+  const right = clean(rightValue);
+  const leftTimestamp = Date.parse(left);
+  const rightTimestamp = Date.parse(right);
+
+  if (!Number.isNaN(leftTimestamp) && !Number.isNaN(rightTimestamp)) {
+    return leftTimestamp === rightTimestamp;
+  }
+
+  return left === right;
+}
+
 function asRecord(value: unknown): Record<string, unknown> | null {
   return value && typeof value === "object" && !Array.isArray(value)
     ? value as Record<string, unknown>
@@ -57,12 +70,18 @@ export function sourceChanges(currentValue: unknown, event: SourceEvent, effecti
     ["Main event", current.subtitle, event.subtitle],
     ["Venue", current.venue, event.venue],
     ["Location", current.location, event.location],
-    ["Event time", current.starts_at, event.starts_at],
-    ["Picks lock", current.locks_at, event.locks_at],
     ["Card source", current.source_url, event.source_url],
   ];
   for (const [label, oldValue, newValue] of metadataFields) {
     if (clean(oldValue) !== clean(newValue)) changes.push(`${label} changed.`);
+  }
+
+  const timestampFields: Array<[string, unknown, unknown]> = [
+    ["Event time", current.starts_at, event.starts_at],
+    ["Picks lock", current.locks_at, event.locks_at],
+  ];
+  for (const [label, oldValue, newValue] of timestampFields) {
+    if (!timestampsMatch(oldValue, newValue)) changes.push(`${label} changed.`);
   }
 
   const currentBouts = Array.isArray(current.bouts)
