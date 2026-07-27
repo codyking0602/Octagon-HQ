@@ -9,6 +9,7 @@ const syncFunction = readFileSync("supabase/functions/sync-next-ufc-event/index.
 const config = readFileSync("supabase/config.toml", "utf8");
 const deployWorkflow = readFileSync(".github/workflows/deploy-supabase.yml", "utf8");
 const deploymentVerifier = readFileSync("scripts/verify-sync-function-deployment.mjs", "utf8");
+const productionPreviewVerifier = readFileSync("scripts/verify-event-setup-preview-live.mjs", "utf8");
 
 describe("Phase 2B event setup backend", () => {
   it("keeps imported cards private until atomic publish", () => {
@@ -60,6 +61,11 @@ describe("Phase 2B event setup backend", () => {
     expect(syncFunction).toContain("stage_pick_event_draft");
     expect(syncFunction).not.toContain("publish_pick_event_draft");
     expect(syncFunction).toContain("Fight Night owner access required");
+  });
+
+  it("verifies that the already-applied production source has no remaining changes", () => {
+    expect(productionPreviewVerifier).toContain("assertNoSourceChanges(preview.body.changes)");
+    expect(productionPreviewVerifier).toContain("changes after the same source was already applied");
   });
 
   it("deploys and verifies the sync function runtime revision through the canonical backend owner", () => {
