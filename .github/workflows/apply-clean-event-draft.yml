@@ -1,0 +1,221 @@
+name: Apply Clean Event Draft
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/apply-clean-event-draft.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  apply-clean-draft:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+      OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
+      EXPECTED_BACKEND_SHA: e35afa13f79286aaa6246b73e9572afd3c8d1db2
+    steps:
+      - name: Preview, apply, and verify the staged Belgrade card
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
+          const projectId = process.env.SUPABASE_PROJECT_ID;
+          const origin = process.env.OCTAGON_PRODUCTION_ORIGIN;
+          const expectedSha = process.env.EXPECTED_BACKEND_SHA;
+          const supabaseOrigin = `https://${projectId}.supabase.co`;
+          const articleUrl = "https://www.mmamania.com/ufc-fight-cards/446488/latest-ufc-belgrade-fight-card-paramount-start-time-date-and-location-medic-vs-rodriguez-mma";
+
+          async function read(response) {
+            const text = await response.text();
+            try { return text ? JSON.parse(text) : {}; } catch { return { message: text }; }
+          }
+
+          async function request(stage, url, options = {}, accepted = [200]) {
+            const response = await fetch(url, options);
+            const body = await read(response);
+            if (!accepted.includes(response.status)) {
+              throw new Error(`${stage}: HTTP ${response.status}; ${body?.message ?? body?.error ?? body?.hint ?? "unknown"}`);
+            }
+            return body;
+          }
+
+          const keys = await request(
+            "project keys",
+            `https://api.supabase.com/v1/projects/${projectId}/api-keys?reveal=true`,
+            { headers: { Authorization: `Bearer ${accessToken}` } },
+          );
+          const publishableKey = keys.find((item) => item.type === "publishable")?.api_key
+            ?? keys.find((item) => item.type === "legacy" && /anon/i.test(item.name ?? ""))?.api_key;
+          const secretKey = keys.find((item) => item.type === "secret")?.api_key
+            ?? keys.find((item) => item.type === "legacy" && /service.role/i.test(item.name ?? ""))?.api_key;
+          if (!publishableKey || !secretKey) throw new Error("Supabase project keys are unavailable.");
+
+          const serviceHeaders = {
+            Authorization: `Bearer ${secretKey}`,
+            apikey: secretKey,
+            "Content-Type": "application/json",
+          };
+          const suffix = `${Date.now()}`;
+          const displayName = `HQAPPLY${suffix}`.slice(0, 24);
+          const email = `hqapply-${suffix}@login.octagon-hq.app`;
+          const password = `ApplyDraft-${suffix}!Aa1`;
+          let userId = "";
+
+          async function rpc(name, token, body = {}) {
+            return request(
+              `RPC ${name}`,
+              `${supabaseOrigin}/rest/v1/rpc/${name}`,
+              {
+                method: "POST",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  apikey: publishableKey,
+                  "Content-Type": "application/json",
+                  Origin: origin,
+                },
+                body: JSON.stringify(body),
+              },
+            );
+          }
+
+          try {
+            const created = await request(
+              "temporary owner creation",
+              `${supabaseOrigin}/auth/v1/admin/users`,
+              {
+                method: "POST",
+                headers: serviceHeaders,
+                body: JSON.stringify({ email, password, email_confirm: true, user_metadata: { display_name: displayName } }),
+              },
+            );
+            userId = created.id;
+            if (!userId) throw new Error("Temporary owner creation returned no user ID.");
+
+            await request(
+              "temporary profile registration",
+              `${supabaseOrigin}/rest/v1/rpc/register_pin_profile`,
+              {
+                method: "POST",
+                headers: serviceHeaders,
+                body: JSON.stringify({
+                  p_profile_id: userId,
+                  p_display_name: displayName,
+                  p_initials: "H",
+                  p_internal_email: email,
+                  p_pin: "7318",
+                }),
+              },
+            );
+
+            await request(
+              "temporary Event Setup owner grant",
+              `${supabaseOrigin}/rest/v1/pick_control_owners`,
+              {
+                method: "POST",
+                headers: { ...serviceHeaders, Prefer: "return=minimal" },
+                body: JSON.stringify({ profile_id: userId }),
+              },
+              [201],
+            );
+
+            const session = await request(
+              "temporary owner sign-in",
+              `${supabaseOrigin}/auth/v1/token?grant_type=password`,
+              {
+                method: "POST",
+                headers: { apikey: publishableKey, "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+              },
+            );
+            const userToken = session.access_token;
+            if (!userToken) throw new Error("Temporary owner sign-in returned no access token.");
+
+            const liveBefore = await rpc("get_current_pick_event", userToken);
+
+            const preview = await request(
+              "production Event Setup preview",
+              `${supabaseOrigin}/functions/v1/sync-next-ufc-event`,
+              {
+                method: "POST",
+                headers: {
+                  Authorization: `Bearer ${userToken}`,
+                  apikey: publishableKey,
+                  "Content-Type": "application/json",
+                  Origin: origin,
+                  "x-client-info": "octagon-hq-clean-draft/1",
+                },
+                body: JSON.stringify({ mode: "preview", card_scope: "auto", source_url: articleUrl }),
+              },
+            );
+
+            if (preview.deployment_sha !== expectedSha) {
+              throw new Error(`Backend SHA mismatch: expected ${expectedSha}, received ${preview.deployment_sha ?? "missing"}.`);
+            }
+            if (preview.effective_scope !== "main" || preview.fight_count !== 4 || !preview.source_hash) {
+              throw new Error(`Preview contract mismatch: scope=${preview.effective_scope ?? "missing"}, fights=${preview.fight_count ?? "missing"}.`);
+            }
+
+            const applied = await request(
+              "apply reviewed staged card",
+              `${supabaseOrigin}/functions/v1/sync-next-ufc-event`,
+              {
+                method: "POST",
+                headers: {
+                  Authorization: `Bearer ${userToken}`,
+                  apikey: publishableKey,
+                  "Content-Type": "application/json",
+                  Origin: origin,
+                  "x-client-info": "octagon-hq-clean-draft/1",
+                },
+                body: JSON.stringify({
+                  mode: "apply",
+                  card_scope: "auto",
+                  source_url: articleUrl,
+                  expected_hash: preview.source_hash,
+                }),
+              },
+            );
+            if (applied.deployment_sha !== expectedSha || !applied.draftId) {
+              throw new Error("The reviewed source was not applied to a staged draft.");
+            }
+
+            const draft = await rpc("get_pick_event_setup", userToken);
+            const bouts = Array.isArray(draft?.bouts) ? draft.bouts : [];
+            const pair = (bout) => `${bout.red_fighter_name} vs. ${bout.blue_fighter_name}`;
+            const pairs = bouts.map(pair);
+            const badMetadata = `${draft?.venue ?? ""} ${draft?.location ?? ""}`;
+
+            if (draft?.source_url !== articleUrl) throw new Error("The staged draft did not persist the reviewed MMA Mania source URL.");
+            if (bouts.length !== 4) throw new Error(`The staged draft contains ${bouts.length} fights instead of 4.`);
+            if (!pairs.some((value) => /Uro[sš]\s+Medi[cć].*Daniel Rodriguez/i.test(value))) throw new Error("The staged main event is missing.");
+            if (!pairs.some((value) => /Marcin Tybura.*Aleksandar Raki[cć]/i.test(value))) throw new Error("Tybura vs. Rakic is missing.");
+            if (!pairs.some((value) => /Ante Delija.*Johnny Walker/i.test(value))) throw new Error("Delija vs. Walker is missing.");
+            if (!pairs.some((value) => /Jan B[lł]achowicz.*Bogdan Guskov 2/i.test(value))) throw new Error("Blachowicz vs. Guskov 2 is missing.");
+            if (/iframe|googletagmanager|skip to main|src=|<|>/i.test(badMetadata)) throw new Error("The staged venue/location still contains page markup.");
+            if (!/Belgrade Arena/i.test(String(draft?.venue ?? ""))) throw new Error(`Unexpected staged venue: ${draft?.venue ?? "missing"}.`);
+            if (!/Belgrade|Serbia/i.test(String(draft?.location ?? ""))) throw new Error(`Unexpected staged location: ${draft?.location ?? "missing"}.`);
+
+            const liveAfter = await rpc("get_current_pick_event", userToken);
+            if (JSON.stringify(liveAfter) !== JSON.stringify(liveBefore)) {
+              throw new Error("Applying the staged draft changed the live Picks card.");
+            }
+
+            console.log(`PASS: replaced the stale staged draft with the reviewed Belgrade main card (${bouts.length} fights), removed corrupted metadata, preserved the source URL, and left the live Picks card unchanged. Nothing was published.`);
+          } finally {
+            if (userId) {
+              await fetch(`${supabaseOrigin}/rest/v1/pick_control_owners?profile_id=eq.${encodeURIComponent(userId)}`, {
+                method: "DELETE",
+                headers: serviceHeaders,
+              }).catch(() => undefined);
+              await fetch(`${supabaseOrigin}/auth/v1/admin/users/${userId}`, {
+                method: "DELETE",
+                headers: serviceHeaders,
+              }).catch(() => undefined);
+            }
+          }
+          NODE
