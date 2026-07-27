@@ -62,7 +62,7 @@ describe("Phase 2B event setup backend", () => {
     expect(syncFunction).toContain("Fight Night owner access required");
   });
 
-  it("deploys and verifies the exact sync function revision through the canonical backend owner", () => {
+  it("deploys and verifies the sync function runtime revision through the canonical backend owner", () => {
     expect(config).toContain("[functions.sync-next-ufc-event]");
     expect(config).toContain("verify_jwt = true");
     expect(deployWorkflow).toContain("supabase functions deploy sync-next-ufc-event");
@@ -70,7 +70,7 @@ describe("Phase 2B event setup backend", () => {
     expect(deployWorkflow).toContain("verify-sync-function-deployment.mjs");
     expect(deployWorkflow).toContain("require_remote_migration \"202608050001\"");
     expect(syncFunction).toContain('input.mode === "deployment-info"');
-    expect(deploymentVerifier).toContain("body?.deployment_sha !== expectedSha");
+    expect(deploymentVerifier).toContain("body?.deployment_sha !== expectedRevision");
     expect(deploymentVerifier).toContain("x-octagon-backend-sha");
   });
 });
