@@ -6,6 +6,7 @@ on:
       - ".github/workflows/diagnose-event-preview.yml"
 
 permissions:
+  actions: read
   contents: read
 
 jobs:
@@ -14,18 +15,10 @@ jobs:
     timeout-minutes: 5
     env:
       GH_TOKEN: ${{ github.token }}
-      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
-      OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
-      EXPECTED_SYNC_SOURCE_SHA: c80a3f60c5907beeb7ba54e895fd0156dd84071e
     steps:
-      - name: Prove authenticated production preview
+      - name: List recent deployment workflow runs
         shell: bash
         run: |
           set -euo pipefail
-          curl --silent --show-error --fail \
-            --header "Authorization: Bearer $GH_TOKEN" \
-            --header "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/$GITHUB_REPOSITORY/contents/scripts/verify-event-setup-preview-live.mjs?ref=$EXPECTED_SYNC_SOURCE_SHA" \
-            | jq -r .content | base64 --decode > "$RUNNER_TEMP/verify-event-preview.mjs"
-          node "$RUNNER_TEMP/verify-event-preview.mjs"
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs?per_page=40" \
+            --jq '.workflow_runs[] | [.id,.name,.event,.head_branch,.head_sha,.status,.conclusion,.created_at] | @tsv'
