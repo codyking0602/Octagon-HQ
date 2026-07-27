@@ -70,6 +70,18 @@ describe("sync-next-ufc-event multi-signal identity matching", () => {
     expect(result.accepted).toBe(true);
   });
 
+  it("does not treat an advance publication timestamp as a conflicting event date", () => {
+    const publishedAt = "2026-07-26T10:00:00Z";
+    const result = matchEventIdentity(event, article({
+      cardDateText: `UFC Fight Night preview ${publishedAt}`,
+      publishedAt,
+    }));
+
+    expect(result.accepted).toBe(false);
+    expect(result.date).toBe("unknown");
+    expect(result.reason).not.toContain("date conflicts");
+  });
+
   it("rejects competing candidates with similar confidence as ambiguous", () => {
     const first = { id: "first", match: matchEventIdentity(event, article()) };
     const second = { id: "second", match: matchEventIdentity(event, article({ url: "https://www.mmamania.com/second" })) };
