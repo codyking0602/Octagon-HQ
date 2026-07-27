@@ -74,4 +74,29 @@ describe("Event Setup card changes", () => {
       expect.stringContaining("Removed main card: Jan Błachowicz vs. Navajo Stirling."),
     ]));
   });
+
+  it("reports no changes after the same four-fight source review is applied", () => {
+    const stagedDraft = {
+      ...metadata,
+      starts_at: "2026-08-01T19:00:00+00:00",
+      locks_at: "2026-08-01T19:00:00+00:00",
+      bouts: [
+        bout("main-event-uros-medic-daniel-rodriguez", "Uroš Medić", "Daniel Rodriguez", "Welterweight"),
+        bout("main-marcin-tybura-aleksandar-rakic", "Marcin Tybura", "Aleksandar Rakić"),
+        bout("main-ante-delija-johnny-walker", "Ante Delija", "Johnny Walker"),
+        bout("main-jan-blachowicz-bogdan-guskov", "Jan Błachowicz", "Bogdan Guskov", "Light Heavyweight"),
+      ],
+    };
+    const sameSourceReview = {
+      ...metadata,
+      bouts: [
+        bout("main-event-uros-medic-daniel-rodriguez", "Uroš Medić", "Daniel Rodriguez", "Welterweight"),
+        bout("main-marcin-tybura-aleksandar-rakic", "Marcin Tybura", "Aleksandar Rakić"),
+        bout("main-ante-delija-johnny-walker", "Ante Delija", "Johnny Walker"),
+        bout("main-jan-blachowicz-bogdan-guskov", "Jan Błachowicz", "Bogdan Guskov", "Light Heavyweight"),
+      ],
+    };
+
+    expect(sourceChanges(stagedDraft, sameSourceReview, "main")).toEqual([]);
+  });
 });
