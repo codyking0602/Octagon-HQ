@@ -6,19 +6,124 @@ on:
       - ".github/workflows/diagnose-event-preview.yml"
 
 permissions:
-  actions: read
   contents: read
 
 jobs:
   diagnose:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 15
     env:
-      GH_TOKEN: ${{ github.token }}
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+      OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
+      EXPECTED_DEPLOYMENT_SHA: e35afa13f79286aaa6246b73e9572afd3c8d1db2
     steps:
-      - name: Show the final browser diagnostic lines
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install WebKit browser harness
+        run: |
+          npm install --no-save --ignore-scripts playwright@1.56.1
+          npx playwright install --with-deps webkit
+
+      - name: Prove the iPhone-sized Event Setup UI preview
         shell: bash
         run: |
           set -euo pipefail
-          gh api "/repos/$GITHUB_REPOSITORY/actions/jobs/89893664240/logs" > "$RUNNER_TEMP/job.log"
-          tail -n 25 "$RUNNER_TEMP/job.log"
+          cat > "$GITHUB_WORKSPACE/event-setup-browser.mjs" <<'NODE'
+          import { webkit } from "playwright";
+
+          const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
+          const projectId = process.env.SUPABASE_PROJECT_ID;
+          const origin = process.env.OCTAGON_PRODUCTION_ORIGIN;
+          const expectedSha = process.env.EXPECTED_DEPLOYMENT_SHA;
+          const supabaseOrigin = `https://${projectId}.supabase.co`;
+          const articleUrl = "https://www.mmamania.com/ufc-fight-cards/446488/latest-ufc-belgrade-fight-card-paramount-start-time-date-and-location-medic-vs-rodriguez-mma";
+
+          async function read(response) {
+            const text = await response.text();
+            try { return text ? JSON.parse(text) : {}; } catch { return { message: text }; }
+          }
+          async function request(stage, url, options = {}) {
+            const response = await fetch(url, options);
+            const body = await read(response);
+            if (!response.ok) throw new Error(`${stage}: HTTP ${response.status}; ${body?.message ?? body?.error ?? "unknown"}`);
+            return body;
+          }
+
+          const marker = await request("frontend marker", `${origin}/deployment.json?run=${Date.now()}`, { headers: { "Cache-Control": "no-cache" } });
+          if (marker.sha !== expectedSha) throw new Error(`frontend marker expected ${expectedSha}, received ${marker.sha ?? "missing"}`);
+
+          const keys = await request(
+            "project keys",
+            `https://api.supabase.com/v1/projects/${projectId}/api-keys?reveal=true`,
+            { headers: { Authorization: `Bearer ${accessToken}` } },
+          );
+          const publishableKey = keys.find((item) => item.type === "publishable")?.api_key
+            ?? keys.find((item) => item.type === "legacy" && /anon/i.test(item.name ?? ""))?.api_key;
+          const secretKey = keys.find((item) => item.type === "secret")?.api_key
+            ?? keys.find((item) => item.type === "legacy" && /service.role/i.test(item.name ?? ""))?.api_key;
+          if (!publishableKey || !secretKey) throw new Error("required Supabase keys unavailable");
+
+          const serviceHeaders = { Authorization: `Bearer ${secretKey}`, apikey: secretKey, "Content-Type": "application/json" };
+          const suffix = `${Date.now()}`;
+          const displayName = `HQIPHONE${suffix}`.slice(0, 24);
+          const authEmail = `hqiphone-${suffix}@login.octagon-hq.app`;
+          const staleEmail = `hqiphone-stale-${suffix}@login.octagon-hq.app`;
+          const password = `IphoneCheck-${suffix}!Aa1`;
+          const pin = "4826";
+          let userId = "";
+          let browser;
+
+          try {
+            const created = await request("create user", `${supabaseOrigin}/auth/v1/admin/users`, {
+              method: "POST",
+              headers: serviceHeaders,
+              body: JSON.stringify({ email: authEmail, password, email_confirm: true, user_metadata: { display_name: displayName } }),
+            });
+            userId = created.id;
+            if (!userId) throw new Error("create user returned no ID");
+
+            await request("register profile", `${supabaseOrigin}/rest/v1/rpc/register_pin_profile`, {
+              method: "POST",
+              headers: serviceHeaders,
+              body: JSON.stringify({ p_profile_id: userId, p_display_name: displayName, p_initials: "H", p_internal_email: staleEmail, p_pin: pin }),
+            });
+            await request("grant Event Setup owner", `${supabaseOrigin}/rest/v1/pick_control_owners`, {
+              method: "POST",
+              headers: { ...serviceHeaders, Prefer: "return=minimal" },
+              body: JSON.stringify({ profile_id: userId }),
+            });
+
+            browser = await webkit.launch({ headless: true });
+            const context = await browser.newContext({ viewport: { width: 390, height: 844 }, locale: "en-US" });
+            const page = await context.newPage();
+
+            await page.goto(`${origin}/?iphone-event-check=${suffix}`, { waitUntil: "domcontentloaded", timeout: 30_000 });
+            await page.getByRole("button", { name: "Sign in to Octagon HQ" }).click();
+            await page.getByLabel("YOUR NAME").fill(displayName);
+            await page.getByLabel("YOUR 4-DIGIT PIN").fill(pin);
+            await page.getByRole("button", { name: "ENTER HQ" }).click();
+            await page.getByRole("button", { name: `Open ${displayName} profile menu` }).waitFor({ state: "visible", timeout: 20_000 });
+
+            await page.goto(`${origin}/picks/setup?iphone-event-check=${suffix}`, { waitUntil: "domcontentloaded", timeout: 30_000 });
+            await page.getByRole("heading", { name: "Event Setup", exact: true }).waitFor({ state: "visible", timeout: 20_000 });
+            const sourceInput = page.getByLabel("MMA MANIA CARD URL (OPTIONAL)");
+            await sourceInput.waitFor({ state: "visible", timeout: 20_000 });
+            await sourceInput.fill(articleUrl);
+            await page.getByRole("button", { name: "CHECK FOR CARD UPDATES" }).click();
+            await page.getByRole("heading", { name: "Main card · 4 fights" }).waitFor({ state: "visible", timeout: 45_000 });
+
+            console.log(`PASS: iPhone-sized WebKit loaded exact frontend ${expectedSha}, signed in as an Event Setup owner, submitted the supplied MMA Mania URL, and displayed Main card · 4 fights. Apply and Publish were not clicked.`);
+          } finally {
+            if (browser) await browser.close().catch(() => undefined);
+            if (userId) {
+              await fetch(`${supabaseOrigin}/rest/v1/pick_control_owners?profile_id=eq.${encodeURIComponent(userId)}`, { method: "DELETE", headers: serviceHeaders }).catch(() => undefined);
+              await fetch(`${supabaseOrigin}/auth/v1/admin/users/${userId}`, { method: "DELETE", headers: serviceHeaders }).catch(() => undefined);
+            }
+            await import("node:fs/promises").then(({ unlink }) => unlink(`${process.cwd()}/event-setup-browser.mjs`).catch(() => undefined));
+          }
+          NODE
+          node "$GITHUB_WORKSPACE/event-setup-browser.mjs"
