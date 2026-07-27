@@ -6,6 +6,7 @@ const projectId = process.env.SUPABASE_PROJECT_ID;
 const productionOrigin = process.env.OCTAGON_PRODUCTION_ORIGIN
   ?? "https://octagon.hq-app.workers.dev";
 const expectedDeploymentSha = process.env.EXPECTED_DEPLOYMENT_SHA?.trim() ?? "";
+const articleUrl = "https://www.mmamania.com/ufc-fight-cards/446488/latest-ufc-belgrade-fight-card-paramount-start-time-date-and-location-medic-vs-rodriguez-mma";
 
 if (!accessToken || !projectId) {
   throw new Error("Live PIN verification is not configured.");
@@ -35,10 +36,10 @@ function safeMessage(body) {
   ).replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, "[redacted-email]");
 }
 
-async function request(stage, url, options = {}) {
+async function request(stage, url, options = {}, acceptedStatuses = [200]) {
   const response = await fetch(url, options);
   const body = await readBody(response);
-  if (!response.ok) {
+  if (!acceptedStatuses.includes(response.status)) {
     throw new Error(`${stage}: HTTP ${response.status}; ${safeMessage(body)}`);
   }
   return { response, body };
@@ -90,7 +91,7 @@ const publicHeaders = {
   Authorization: `Bearer ${publishableKey}`,
   apikey: publishableKey,
   "Content-Type": "application/json",
-  "x-client-info": "octagon-hq-live-pin-check/2",
+  "x-client-info": "octagon-hq-live-pin-check/3",
   Origin: productionOrigin,
 };
 
@@ -140,6 +141,17 @@ try {
     },
   );
 
+  await request(
+    "Temporary Event Setup owner grant",
+    `${supabaseOrigin}/rest/v1/pick_control_owners`,
+    {
+      method: "POST",
+      headers: { ...serviceHeaders, Prefer: "return=minimal" },
+      body: JSON.stringify({ profile_id: userId }),
+    },
+    [201],
+  );
+
   const login = await request(
     "Direct live PIN login",
     `${supabaseOrigin}/functions/v1/pin-auth`,
@@ -175,11 +187,11 @@ try {
     }
   });
   page.on("response", async (response) => {
-    if (!response.url().includes("/functions/v1/pin-auth")) return;
+    if (!response.url().includes("/functions/v1/")) return;
     const request = response.request();
     const headers = await response.allHeaders();
     diagnostics.push(
-      `response: ${request.method()} ${response.status()} allow-origin=${headers["access-control-allow-origin"] ?? "missing"} allow-headers=${headers["access-control-allow-headers"] ?? "missing"}`,
+      `response: ${request.method()} ${response.status()} ${response.url().split("/functions/v1/")[1]} allow-origin=${headers["access-control-allow-origin"] ?? "missing"}`,
     );
   });
 
@@ -208,12 +220,53 @@ try {
     );
   }
 
+  await page.goto(`${productionOrigin}/picks/setup?event-preview-check=${suffix}`, {
+    waitUntil: "domcontentloaded",
+    timeout: 30_000,
+  });
+  await page.getByRole("heading", { name: "Event Setup" }).waitFor({ state: "visible", timeout: 15_000 });
+  await page.getByLabel("MMA MANIA CARD URL (OPTIONAL)").fill(articleUrl);
+  await page.getByRole("button", { name: "CHECK FOR CARD UPDATES" }).click();
+  await page.getByText("SOURCE REVIEW · NOT APPLIED").waitFor({ state: "visible", timeout: 30_000 });
+  await page.getByRole("heading", { name: "Main card · 4 fights" }).waitFor({ state: "visible" });
+  await page.getByText("Uroš Medić vs. Daniel Rodriguez", { exact: true }).first().waitFor({ state: "visible" });
+  await page.getByText(/Belgrade Arena.*Belgrade, Serbia/).first().waitFor({ state: "visible" });
+  await page.getByText("Marcin Tybura vs. Aleksandar Rakić", { exact: true }).waitFor({ state: "visible" });
+  await page.getByText("Ante Delija vs. Johnny Walker", { exact: true }).waitFor({ state: "visible" });
+  await page.getByText("Jan Błachowicz vs. Bogdan Guskov", { exact: true }).waitFor({ state: "visible" });
+
+  const visibleText = await page.locator("body").innerText();
+  if (/iframe|googletagmanager|skip\s+to\s+main|src\s*=/i.test(visibleText)) {
+    throw new Error("Event Setup source review exposed polluted UFC visible-page metadata.");
+  }
+  if (/Bogdan Guskov 2\b/.test(visibleText)) {
+    throw new Error("Event Setup source review exposed the article-only Bogdan Guskov rematch marker.");
+  }
+  const falsePairChanges = visibleText.split("\n").filter((line) => /\b(?:added|removed)\b/i.test(line));
+  if (falsePairChanges.some((line) => /medic.*rodriguez|rodriguez.*medic/i.test(line))) {
+    throw new Error(`Event Setup reported a false Medic-Rodriguez change: ${falsePairChanges.join(" | ")}`);
+  }
+  if (falsePairChanges.some((line) => /tybura.*raki|raki.*tybura/i.test(line))) {
+    throw new Error(`Event Setup reported a false Tybura-Rakic change: ${falsePairChanges.join(" | ")}`);
+  }
+  if (await page.getByRole("button", { name: "PUBLISH CARD" }).count()) {
+    throw new Error("Publish controls remained visible during the read-only source review.");
+  }
+
+  const screenshotPath = process.env.EVENT_SETUP_SCREENSHOT_PATH
+    ?? `${process.env.RUNNER_TEMP ?? "/tmp"}/event-setup-preview.png`;
+  await page.screenshot({ path: screenshotPath, fullPage: true });
+
   console.log(
-    `PASS: WebKit verified exact production frontend ${expectedDeploymentSha || "(SHA not requested)"}, submitted the visible PIN form, completed browser CORS, and loaded the UUID-linked profile.`,
+    `PASS: WebKit verified exact production frontend ${expectedDeploymentSha || "(SHA not requested)"}, authenticated at 390x844, opened Event Setup, and displayed the clean four-fight UFC Belgrade source review without Apply or Publish.`,
   );
 } finally {
   if (browser) await browser.close().catch(() => undefined);
   if (userId) {
+    await fetch(`${supabaseOrigin}/rest/v1/pick_control_owners?profile_id=eq.${encodeURIComponent(userId)}`, {
+      method: "DELETE",
+      headers: serviceHeaders,
+    }).catch(() => undefined);
     await fetch(`${supabaseOrigin}/auth/v1/admin/users/${userId}`, {
       method: "DELETE",
       headers: serviceHeaders,
