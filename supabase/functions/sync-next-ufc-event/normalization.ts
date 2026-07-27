@@ -6,8 +6,16 @@ export function normalizeText(value: string) {
     .toLowerCase().replace(/[^a-z0-9]+/g, " ").replace(/\s+/g, " ").trim();
 }
 
+export function canonicalFighterDisplay(value: string) {
+  return value.replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim()
+    .replace(/\s*\((?:rematch\s*)?#?2\)\s*$/i, "")
+    .replace(/\s+(?:rematch\s*)?#?2\s*$/i, "")
+    .replace(/[.,;:]+$/, "")
+    .trim();
+}
+
 export function normalizeFighter(value: string) {
-  return normalizeText(value)
+  return normalizeText(canonicalFighterDisplay(value))
     .replace(/\b(?:interim|undisputed|former|current|champion|champ|titleholder)\b/g, " ")
     .replace(/\b(?:no|number)?\s*#?\d{1,2}\b/g, " ")
     .replace(/\s+/g, " ").trim()
