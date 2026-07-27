@@ -40,6 +40,17 @@ const payload = {
   }],
 };
 
+const mappedBout = {
+  boutId: "main-event-red-fighter-blue-fighter",
+  position: 1,
+  weightClass: "Lightweight",
+  redFighterSlug: "red-fighter",
+  redFighterName: "Red Fighter",
+  blueFighterSlug: "blue-fighter",
+  blueFighterName: "Blue Fighter",
+  included: true,
+};
+
 describe("Event Setup draft mapping", () => {
   it("maps private staged metadata and section-aware fight review fields", () => {
     const draft = mapPickSetupDraft(payload);
@@ -61,16 +72,7 @@ describe("Event Setup draft mapping", () => {
       updatedAt: payload.updated_at,
       warnings: [],
       canPublish: true,
-      bouts: [{
-        boutId: "main-event-red-fighter-blue-fighter",
-        position: 1,
-        weightClass: "Lightweight",
-        redFighterSlug: "red-fighter",
-        redFighterName: "Red Fighter",
-        blueFighterSlug: "blue-fighter",
-        blueFighterName: "Blue Fighter",
-        included: true,
-      }],
+      bouts: [mappedBout],
     });
     expect(pickSetupBoutSection(draft!.bouts[0]!.boutId)).toBe("main-event");
     expect(pickSetupBoutSectionLabel(draft!.bouts[0]!.boutId)).toBe("MAIN EVENT");
@@ -97,25 +99,43 @@ describe("Event Setup draft mapping", () => {
     expect(pickSetupBoutSectionLabel(draft!.bouts[1]!.boutId)).toBe("PRELIMS");
   });
 
-  it("maps non-destructive source previews", () => {
+  it("maps clean prospective metadata and fights from non-destructive source previews", () => {
     expect(mapPickSetupSourcePreview({
       source_hash: "abc123",
       requested_scope: "auto",
       effective_scope: "main",
       source: payload.source,
       source_url: payload.source_url,
-      fight_count: 6,
-      changes: ["Added main card: A vs. B."],
-      warnings: ["ONE OR MORE WEIGHT CLASSES NEED REVIEW"],
+      fight_count: 1,
+      changes: ["Venue changed."],
+      warnings: [],
+      event_preview: {
+        name: "UFC Fight Night",
+        subtitle: "Uroš Medić vs. Daniel Rodriguez",
+        venue: "Belgrade Arena",
+        location: "Belgrade, Serbia",
+        starts_at: "2026-08-01T17:00:00.000Z",
+        locks_at: "2026-08-01T17:00:00.000Z",
+        bouts: payload.bouts,
+      },
     })).toEqual({
       sourceHash: "abc123",
       requestedScope: "auto",
       effectiveScope: "main",
       source: payload.source,
       sourceUrl: payload.source_url,
-      fightCount: 6,
-      changes: ["Added main card: A vs. B."],
-      warnings: ["ONE OR MORE WEIGHT CLASSES NEED REVIEW"],
+      fightCount: 1,
+      changes: ["Venue changed."],
+      warnings: [],
+      event: {
+        name: "UFC Fight Night",
+        subtitle: "Uroš Medić vs. Daniel Rodriguez",
+        venue: "Belgrade Arena",
+        location: "Belgrade, Serbia",
+        startsAt: "2026-08-01T17:00:00.000Z",
+        locksAt: "2026-08-01T17:00:00.000Z",
+        bouts: [mappedBout],
+      },
     });
   });
 
