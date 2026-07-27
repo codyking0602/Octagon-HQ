@@ -12,20 +12,20 @@ jobs:
   diagnose:
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    env:
-      GH_TOKEN: ${{ github.token }}
-      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
-      OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
-      EXPECTED_SYNC_SOURCE_SHA: a191a969d37c655e5c52bb437b2015f3dcf7f648
     steps:
-      - name: Invoke authenticated production preview
+      - name: Inspect live source identity evidence
         shell: bash
         run: |
-          set -euo pipefail
-          curl --silent --show-error --fail \
-            --header "Authorization: Bearer $GH_TOKEN" \
-            --header "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/$GITHUB_REPOSITORY/contents/scripts/verify-event-setup-preview-live.mjs?ref=$EXPECTED_SYNC_SOURCE_SHA" \
-            | jq -r .content | base64 --decode > "$RUNNER_TEMP/verify-event-preview.mjs"
-          node "$RUNNER_TEMP/verify-event-preview.mjs"
+          node --input-type=module <<'NODE'
+          const headers={"User-Agent":"OctagonHQ/2.0 (+https://octagon.hq-app.workers.dev)",Accept:"text/html,application/xhtml+xml"};
+          const urls={ufc:"https://www.ufc.com/event/ufc-fight-night-august-01-2026",mma:"https://www.mmamania.com/ufc-fight-cards/446488/latest-ufc-belgrade-fight-card-paramount-start-time-date-and-location-medic-vs-rodriguez-mma"};
+          const decode=(value)=>value.replace(/&quot;/g,'"').replace(/&#39;|&apos;/g,"'").replace(/&amp;/g,'&').replace(/&nbsp;/g,' ').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+          for(const [label,url] of Object.entries(urls)){
+            const response=await fetch(url,{headers,redirect:"follow"}); const html=await response.text();
+            const tag=(name)=>[...html.matchAll(new RegExp(`<${name}[^>]*>([\\s\\S]*?)<\\/${name}>`,'gi'))].map(m=>decode(m[1])).filter(Boolean).slice(0,12);
+            const metas=[...html.matchAll(/<meta[^>]+(?:property|name)=["'](?:og:title|description|og:description)["'][^>]+content=["']([^"']+)["'][^>]*>/gi)].map(m=>decode(m[1])).slice(0,8);
+            const index=html.toLowerCase().indexOf('medic');
+            const snippet=index>=0?decode(html.slice(Math.max(0,index-800),index+1400)):"missing";
+            console.log(JSON.stringify({label,status:response.status,finalUrl:response.url,title:tag('title'),h1:tag('h1'),h2:tag('h2'),h3:tag('h3'),h4:tag('h4'),metas,medicSnippet:snippet},null,2));
+          }
+          NODE
