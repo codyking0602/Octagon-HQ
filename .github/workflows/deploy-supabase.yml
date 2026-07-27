@@ -184,7 +184,6 @@ jobs:
           require_remote_migration "202607250001"
           require_remote_migration "202607260001"
           require_remote_migration "202607270001"
-          require_remote_migration "202608050001"
 
           function_list=$(supabase functions list --project-ref "$SUPABASE_PROJECT_ID")
           printf '%s\n' "$function_list" | grep -F "pin-auth"
