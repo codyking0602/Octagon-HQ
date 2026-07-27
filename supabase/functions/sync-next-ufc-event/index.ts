@@ -1,7 +1,7 @@
 import { createClient } from "npm:@supabase/supabase-js@2.110.7";
 import * as cheerio from "npm:cheerio@1.0.0";
 import { absoluteMmaManiaArticleUrl } from "./sourceUrls.ts";
-import { chooseEventArticle, matchEventIdentity, type ArticleIdentity } from "./eventIdentity.ts";
+import { chooseEventArticle, matchEventIdentity, rankDiscoveryCandidates, type ArticleIdentity } from "./eventIdentity.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*",
@@ -346,7 +346,7 @@ function articleIdentity(html: string, url: string, card: MmaManiaCard): Article
     $("meta[property='article:published_time']").attr("content"),
   ].filter(Boolean).join(" "));
   const root = $("article").first().length ? $("article").first() : $("main").first();
-  const body = clean((root.length ? root : $("body")).text());
+  const body = clean((root.length ? root : $("body")).text()).slice(0, 12000);
   const dateSentences = `${title}. ${metadata}. ${body.slice(0, 6000)}`.split(/(?<=[.!?])\s+/)
     .filter((sentence) => /\b(?:20\d{2}|january|february|march|april|may|june|july|august|september|october|november|december)\b/i.test(sentence)
       && /\b(?:event|card|ufc|takes? place|scheduled|saturday|sunday)\b/i.test(sentence))
@@ -392,7 +392,8 @@ async function findNextUfcEvent(now: Date) {
 async function findMmaManiaCard(metadata: UfcEventMetadata) {
   const indexHtml = await fetchText(MMA_MANIA_INDEX_URL, "MMA Mania");
   const $ = cheerio.load(indexHtml);
-  const candidates = new Map<string, { url: string; discoveryText: string }>();
+  const candidates = new Map<string, { url: string; discoveryText: string; order: number }>();
+  let order = 0;
 
   $("a[href]").each((_, element) => {
     const url = absoluteMmaManiaArticleUrl($(element).attr("href") ?? "");
@@ -400,10 +401,12 @@ async function findMmaManiaCard(metadata: UfcEventMetadata) {
     const discoveryText = clean(`${$(element).text()} ${url}`);
     if (!/\bufc\b|fight[- ]card|fight[- ]night/i.test(discoveryText)) return;
     const previous = candidates.get(url);
-    if (!previous || discoveryText.length > previous.discoveryText.length) candidates.set(url, { url, discoveryText });
+    if (!previous || discoveryText.length > previous.discoveryText.length) {
+      candidates.set(url, { url, discoveryText, order: previous?.order ?? order++ });
+    }
   });
 
-  const discovered = Array.from(candidates.values()).slice(0, 24);
+  const discovered = rankDiscoveryCandidates(metadata, Array.from(candidates.values()), 8);
   if (!discovered.length) throw new Error("Discovery: MMA Mania did not return any UFC fight-card article links.");
 
   const evaluated: Array<{ card: MmaManiaCard; match: ReturnType<typeof matchEventIdentity> }> = [];
