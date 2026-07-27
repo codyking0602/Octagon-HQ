@@ -12,8 +12,14 @@ const thumbnailBySlug = new Map(
   }),
 );
 
+const thumbnailSlugAliases = new Map([
+  ["jan-b-achowicz", "jan-blachowicz"],
+  ["jan-błachowicz", "jan-blachowicz"],
+]);
+
 export function fighterThumbnailPath(slug: string) {
-  return thumbnailBySlug.get(slug) ?? null;
+  const canonicalSlug = thumbnailSlugAliases.get(slug) ?? slug;
+  return thumbnailBySlug.get(canonicalSlug) ?? null;
 }
 
 export function FighterThumbnail({ name, slug }: { name: string; slug: string }) {
