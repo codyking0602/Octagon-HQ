@@ -189,7 +189,10 @@ export function matchEventIdentity(event: EventIdentity, article: ArticleIdentit
   if (date === "match") { signals.push("event-date"); score += 50; }
 
   const strongIdentitySignals = Number(bothHeadliners) + Math.min(places, 2);
-  const accepted = exactNumber || (date === "match" && bothHeadliners) || (date === "match" && strongIdentitySignals >= 2);
+  const accepted = exactNumber
+    || (date === "match" && bothHeadliners)
+    || (date === "match" && strongIdentitySignals >= 2)
+    || (date === "unknown" && bothHeadliners && places >= 1);
   return {
     accepted,
     score,
