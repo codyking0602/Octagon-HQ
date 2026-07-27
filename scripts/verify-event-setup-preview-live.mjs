@@ -1,19 +1,3 @@
-import { writeFileSync } from "node:fs";
-
-function recordUnhandledFailure(error) {
-  const message = error instanceof Error ? error.stack ?? error.message : String(error);
-  const runnerTemp = process.env.RUNNER_TEMP?.trim();
-  if (!runnerTemp) return;
-  try {
-    writeFileSync(`${runnerTemp}/event-setup-webkit.log`, `${message}\n`, "utf8");
-  } catch {
-    // Preserve the original verifier failure if diagnostics cannot be written.
-  }
-}
-
-process.on("uncaughtException", recordUnhandledFailure);
-process.on("unhandledRejection", recordUnhandledFailure);
-
 const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
 const projectId = process.env.SUPABASE_PROJECT_ID;
 const expectedSha = process.env.EXPECTED_SYNC_SOURCE_SHA?.trim() ?? "";
