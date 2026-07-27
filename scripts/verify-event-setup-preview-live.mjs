@@ -48,11 +48,6 @@ async function request(stage, url, options = {}, acceptedStatuses = [200]) {
   return { response, body };
 }
 
-function normalized(value) {
-  return String(value ?? "").normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase().replace(/[^a-z0-9]+/g, " ").replace(/\s+/g, " ").trim();
-}
-
 function assertCleanEvent(event, stage) {
   if (!event || typeof event !== "object") throw new Error(`${stage} is missing the event payload.`);
   if (event.name !== "UFC Fight Night") throw new Error(`${stage} event name mismatch: ${event.name ?? "missing"}.`);
@@ -88,16 +83,9 @@ function assertCleanEvent(event, stage) {
   }
 }
 
-function assertNoFalsePairChanges(changes) {
-  const addRemove = changes.filter((change) => /\b(?:added|removed)\b/i.test(change));
-  for (const change of addRemove) {
-    const value = normalized(change);
-    if (value.includes("uros medic") && value.includes("daniel rodriguez")) {
-      throw new Error(`Preview reported a false Medic-Rodriguez add/remove: ${change}`);
-    }
-    if (value.includes("marcin tybura") && value.includes("aleksandar rakic")) {
-      throw new Error(`Preview reported a false Tybura-Rakic add/remove: ${change}`);
-    }
+function assertNoSourceChanges(changes) {
+  if (changes.length) {
+    throw new Error(`Preview reported changes after the same source was already applied: ${changes.join(" | ")}`);
   }
 }
 
@@ -229,7 +217,7 @@ try {
     throw new Error("Preview response is missing its reviewed source hash or change list.");
   }
   assertCleanEvent(preview.body.event_preview, "Preview");
-  assertNoFalsePairChanges(preview.body.changes);
+  assertNoSourceChanges(preview.body.changes);
 
   const draftAfterPreview = (await rpc("get_pick_event_setup", userToken)).body;
   const liveAfterPreview = (await rpc("get_current_pick_event", userToken)).body;
@@ -242,7 +230,7 @@ try {
   assertCleanEvent(draftAfterPreview, "Current staged draft");
 
   console.log(
-    `PASS: production Event Setup preview returned the exact clean four-fight main card at backend ${expectedSha}; the current private staged draft is exact and clean, no fake pair changes were reported, the preview was non-destructive, the live Picks event was byte-for-byte unchanged, and nothing was published.`,
+    `PASS: production Event Setup preview returned zero changes for the already-applied exact clean four-fight main card at backend ${expectedSha}; the current private staged draft is exact and clean, the preview was non-destructive, the live Picks event was byte-for-byte unchanged, and nothing was published.`,
   );
 } finally {
   if (userId) {
