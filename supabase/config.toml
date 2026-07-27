@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.sync-next-ufc-event]
 verify_jwt = true
+
+[functions.run-pick-monitoring]
+verify_jwt = true
