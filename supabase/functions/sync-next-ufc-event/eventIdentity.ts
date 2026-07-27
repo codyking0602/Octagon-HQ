@@ -74,6 +74,11 @@ function explicitDays(value: string) {
   return days;
 }
 
+function cardDateCopy(article: ArticleIdentity) {
+  const publishedAt = article.publishedAt.trim();
+  return publishedAt ? article.cardDateText.split(publishedAt).join(" ") : article.cardDateText;
+}
+
 function dayDistance(left: string, right: string) {
   const leftTime = Date.parse(`${left}T00:00:00Z`);
   const rightTime = Date.parse(`${right}T00:00:00Z`);
@@ -95,9 +100,9 @@ export function matchEventIdentity(event: EventIdentity, article: ArticleIdentit
 
   const haystack = normalized(`${article.title} ${article.url} ${article.metadata} ${article.body}`);
   const expectedDay = isoDay(event.starts_at);
-  // Only card/event date copy can reject identity. Publication timestamps are useful discovery metadata,
-  // but an advance article is normally published before the event and therefore cannot conflict.
-  const statedDays = explicitDays(article.cardDateText);
+  // Publication time is discovery metadata, not the card date. Remove the exact publication
+  // timestamp before extracting explicit event dates so an advance article cannot create a false conflict.
+  const statedDays = explicitDays(cardDateCopy(article));
   // UFC's timestamp is an instant while MMA Mania normally prints the venue's calendar date;
   // a one-day UTC boundary difference is therefore the same event date, not a conflict.
   const date = expectedDay && Array.from(statedDays).some((day) => dayDistance(day, expectedDay) <= 1)
