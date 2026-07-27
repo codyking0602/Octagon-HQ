@@ -40,6 +40,16 @@ const draftSchema = z.object({
   bouts: z.array(draftBoutSchema),
 });
 
+const sourcePreviewEventSchema = z.object({
+  name: z.string(),
+  subtitle: z.string(),
+  venue: z.string(),
+  location: z.string(),
+  starts_at: z.string(),
+  locks_at: z.string(),
+  bouts: z.array(draftBoutSchema),
+});
+
 const sourcePreviewSchema = z.object({
   source_hash: z.string().min(1),
   requested_scope: z.enum(["auto", "main", "full"]),
@@ -49,6 +59,7 @@ const sourcePreviewSchema = z.object({
   fight_count: z.number().int().nonnegative(),
   changes: z.array(z.string()),
   warnings: z.array(z.string()).default([]),
+  event_preview: sourcePreviewEventSchema,
 });
 
 export interface PickSetupRepository {
@@ -120,6 +131,19 @@ export async function pickSetupFunctionErrorMessage(error: unknown) {
     ?? "The next UFC event could not be synced.";
 }
 
+function mapBout(bout: z.infer<typeof draftBoutSchema>) {
+  return {
+    boutId: bout.bout_id,
+    position: bout.position,
+    weightClass: bout.weight_class,
+    redFighterSlug: bout.red_fighter_slug,
+    redFighterName: bout.red_fighter_name,
+    blueFighterSlug: bout.blue_fighter_slug,
+    blueFighterName: bout.blue_fighter_name,
+    included: bout.included,
+  };
+}
+
 export function mapPickSetupDraft(value: unknown): PickSetupDraft | null {
   if (!value) return null;
   const parsed = draftSchema.parse(value);
@@ -141,16 +165,7 @@ export function mapPickSetupDraft(value: unknown): PickSetupDraft | null {
     updatedAt: parsed.updated_at,
     warnings: parsed.warnings,
     canPublish: parsed.can_publish,
-    bouts: parsed.bouts.map((bout) => ({
-      boutId: bout.bout_id,
-      position: bout.position,
-      weightClass: bout.weight_class,
-      redFighterSlug: bout.red_fighter_slug,
-      redFighterName: bout.red_fighter_name,
-      blueFighterSlug: bout.blue_fighter_slug,
-      blueFighterName: bout.blue_fighter_name,
-      included: bout.included,
-    })),
+    bouts: parsed.bouts.map(mapBout),
   };
 }
 
@@ -165,6 +180,15 @@ export function mapPickSetupSourcePreview(value: unknown): PickSetupSourcePrevie
     fightCount: parsed.fight_count,
     changes: parsed.changes,
     warnings: parsed.warnings,
+    event: {
+      name: parsed.event_preview.name,
+      subtitle: parsed.event_preview.subtitle,
+      venue: parsed.event_preview.venue,
+      location: parsed.event_preview.location,
+      startsAt: parsed.event_preview.starts_at,
+      locksAt: parsed.event_preview.locks_at,
+      bouts: parsed.event_preview.bouts.map(mapBout),
+    },
   };
 }
 
