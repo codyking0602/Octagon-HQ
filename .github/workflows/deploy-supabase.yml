@@ -153,6 +153,26 @@ jobs:
             echo "sync-next-ufc-event is not present in this exact deployment source; skipping."
           fi
 
+      - name: Deploy manual Picks monitoring function when present
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          if [ -f supabase/functions/run-pick-monitoring/index.ts ]; then
+            secret_names=$(supabase secrets list --project-ref "$SUPABASE_PROJECT_ID" --output json \
+              | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>console.log(JSON.parse(s).map(x=>x.name).join("\n")))')
+            if ! printf '%s\n' "$secret_names" | grep -Fxq "THE_ODDS_API_KEY"; then
+              echo "::error title=Missing monitoring provider secret::THE_ODDS_API_KEY is not configured in the Supabase project."
+              exit 1
+            fi
+            printf '// Generated only in the deployment workspace.\nexport const DEPLOYED_SOURCE_SHA = "%s";\n' "$SOURCE_SHA" \
+              > supabase/functions/run-pick-monitoring/deployment.ts
+            supabase functions deploy run-pick-monitoring --project-ref "$SUPABASE_PROJECT_ID"
+          else
+            echo "run-pick-monitoring is not present in this exact deployment source; skipping."
+          fi
+
       - name: Verify migrations, functions, and production CORS
         shell: bash
         env:
@@ -186,11 +206,17 @@ jobs:
           require_remote_migration "202607250001"
           require_remote_migration "202607260001"
           require_remote_migration "202607270001"
+          if [ -f supabase/migrations/202608080001_manual_pick_monitoring_runner.sql ]; then
+            require_remote_migration "202608080001"
+          fi
 
           function_list=$(supabase functions list --project-ref "$SUPABASE_PROJECT_ID")
           printf '%s\n' "$function_list" | grep -F "pin-auth"
           if [ -f supabase/functions/sync-next-ufc-event/index.ts ]; then
             printf '%s\n' "$function_list" | grep -F "sync-next-ufc-event"
+          fi
+          if [ -f supabase/functions/run-pick-monitoring/index.ts ]; then
+            printf '%s\n' "$function_list" | grep -F "run-pick-monitoring"
           fi
 
           endpoint="https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/pin-auth"
@@ -221,6 +247,14 @@ jobs:
           EXPECTED_SYNC_SOURCE_SHA: ${{ env.SOURCE_SHA }}
         run: node scripts/verify-sync-function-deployment.mjs
 
+      - name: Verify exact deployed manual monitoring source
+        if: ${{ hashFiles('supabase/functions/run-pick-monitoring/index.ts') != '' }}
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+          EXPECTED_MONITORING_SOURCE_SHA: ${{ env.SOURCE_SHA }}
+        run: node scripts/verify-monitoring-function-deployment.mjs
+
       - name: Record deployed backend
         shell: bash
         run: |
@@ -238,7 +272,10 @@ jobs:
             if [ -f supabase/functions/sync-next-ufc-event/index.ts ]; then
               echo "- sync-next-ufc-event Edge Function deployed and returned the embedded exact source SHA"
             fi
+            if [ -f supabase/functions/run-pick-monitoring/index.ts ]; then
+              echo "- run-pick-monitoring Edge Function deployed, rejected unauthenticated execution without a provider call, and returned the embedded exact source SHA"
+            fi
             echo "- Canonical production origin: $OCTAGON_PRODUCTION_ORIGIN"
-            echo "- Remote migrations, exact deployed function revision, live PIN contract, and production CORS were verified"
+            echo "- Remote migrations, exact deployed function revisions, live authentication contracts, and production CORS were verified"
             echo "- Project secrets were never printed or exposed to PR build code"
           } >> "$GITHUB_STEP_SUMMARY"
