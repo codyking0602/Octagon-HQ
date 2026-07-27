@@ -90,9 +90,31 @@ describe("sync-next-ufc-event multi-signal identity matching", () => {
     expect(ranked[0].discoveryScore).toBeGreaterThan(ranked[1].discoveryScore);
   });
 
+  it("parses MMA Mania's labeled abbreviated event date without using an update date", () => {
+    const medicEvent: EventIdentity = {
+      name: "UFC Fight Night",
+      subtitle: "Uros Medic vs. Daniel Rodriguez",
+      venue: "Belgrade Arena",
+      location: "Belgrade, Serbia",
+      starts_at: "2026-08-01T19:00:00.000Z",
+    };
+    const result = matchEventIdentity(medicEvent, article({
+      title: "Latest UFC Belgrade fight card | Medic vs. Rodriguez",
+      metadata: "Updated Jul. 29, 2026",
+      body: "Updated Jul. 29, 2026. Event: UFC Belgrade: Medic vs. Rodriguez Date: Sat., Aug. 1, 2026 Location: Belgrade Arena in Belgrade, Serbia Uros Medic vs Daniel Rodriguez",
+      cardDateText: "",
+      publishedAt: "2026-07-29T10:00:00Z",
+    }));
+
+    expect(result.accepted).toBe(true);
+    expect(result.date).toBe("match");
+    expect(result.signals).toEqual(expect.arrayContaining(["event-date", "both-headliners"]));
+  });
+
   it("does not treat an advance article publication timestamp as a conflicting event date", () => {
     const publishedAt = "2026-07-26T10:00:00Z";
     const result = matchEventIdentity(event, article({
+      body: "Aleksandar Rakic vs Johnny Walker preview in Belgrade, Serbia.",
       cardDateText: `UFC Fight Night preview ${publishedAt}`,
       publishedAt,
     }));
@@ -111,7 +133,10 @@ describe("sync-next-ufc-event multi-signal identity matching", () => {
   });
 
   it("rejects a candidate whose stated card date conflicts", () => {
-    const result = matchEventIdentity(event, article({ cardDateText: "The UFC event takes place August 8, 2026." }));
+    const result = matchEventIdentity(event, article({
+      body: "Aleksandar Rakic vs Johnny Walker preview in Belgrade, Serbia.",
+      cardDateText: "The UFC event takes place August 8, 2026.",
+    }));
 
     expect(result.accepted).toBe(false);
     expect(result.date).toBe("conflict");
