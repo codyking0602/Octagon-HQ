@@ -146,6 +146,8 @@ jobs:
         run: |
           set -euo pipefail
           if [ -f supabase/functions/sync-next-ufc-event/index.ts ]; then
+            printf '// Generated only in the deployment workspace.\nexport const DEPLOYED_SOURCE_SHA = "%s";\n' "$SOURCE_SHA" \
+              > supabase/functions/sync-next-ufc-event/deployment.ts
             supabase functions deploy sync-next-ufc-event --project-ref "$SUPABASE_PROJECT_ID"
           else
             echo "sync-next-ufc-event is not present in this exact deployment source; skipping."
@@ -211,6 +213,14 @@ jobs:
           grep -Fq "Enter a name and a 4-digit PIN." "$RUNNER_TEMP/pin-auth-response.json"
           grep -Fiq "access-control-allow-origin: $OCTAGON_PRODUCTION_ORIGIN" "$RUNNER_TEMP/pin-auth-headers.txt"
 
+      - name: Verify exact deployed UFC sync source
+        if: ${{ hashFiles('supabase/functions/sync-next-ufc-event/index.ts') != '' }}
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+          EXPECTED_SYNC_SOURCE_SHA: ${{ env.SOURCE_SHA }}
+        run: node scripts/verify-sync-function-deployment.mjs
+
       - name: Record deployed backend
         shell: bash
         run: |
@@ -226,9 +236,9 @@ jobs:
             echo "- Database migrations applied"
             echo "- pin-auth Edge Function deployed"
             if [ -f supabase/functions/sync-next-ufc-event/index.ts ]; then
-              echo "- sync-next-ufc-event Edge Function deployed"
+              echo "- sync-next-ufc-event Edge Function deployed and returned the embedded exact source SHA"
             fi
             echo "- Canonical production origin: $OCTAGON_PRODUCTION_ORIGIN"
-            echo "- Remote migrations, deployed function presence, live PIN contract, and production CORS were verified"
+            echo "- Remote migrations, exact deployed function revision, live PIN contract, and production CORS were verified"
             echo "- Project secrets were never printed or exposed to PR build code"
           } >> "$GITHUB_STEP_SUMMARY"
