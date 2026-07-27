@@ -208,7 +208,7 @@ try {
         apikey: publishableKey,
         "Content-Type": "application/json",
         Origin: productionOrigin,
-        "x-client-info": "octagon-hq-event-preview-check/2",
+        "x-client-info": "octagon-hq-event-preview-check/3",
       },
       body: JSON.stringify({ mode: "preview", card_scope: "auto", source_url: articleUrl }),
     },
