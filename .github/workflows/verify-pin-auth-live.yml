@@ -5,6 +5,7 @@ on:
     paths:
       - ".github/workflows/verify-pin-auth-live.yml"
       - "scripts/verify-pin-auth-live.mjs"
+      - "scripts/verify-event-setup-preview-live.mjs"
       - "supabase/functions/pin-auth/**"
       - "supabase/migrations/**"
 
