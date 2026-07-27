@@ -25,6 +25,16 @@ export interface IdentityMatch {
   reason: string;
 }
 
+export interface DiscoveryCandidate {
+  url: string;
+  discoveryText: string;
+  order: number;
+}
+
+export interface RankedDiscoveryCandidate extends DiscoveryCandidate {
+  discoveryScore: number;
+}
+
 const genericTokens = new Set([
   "ufc", "fight", "fights", "card", "main", "prelim", "prelims", "night", "event",
   "arena", "center", "centre", "the", "and", "with", "from", "live", "stream", "start", "time",
@@ -91,6 +101,34 @@ function locationSignals(event: EventIdentity, haystack: string) {
       .map((group) => [group.join("|"), group]),
   ).values());
   return groups.filter((group) => group.every((token) => new RegExp(`\\b${token}\\b`, "i").test(haystack))).length;
+}
+
+function discoveryScore(event: EventIdentity, candidate: DiscoveryCandidate) {
+  const haystack = normalized(`${candidate.discoveryText} ${candidate.url}`);
+  let score = /\bfight\s+card\b|\bfight\s+night\b/i.test(haystack) ? 5 : 0;
+
+  const expectedNumber = eventNumber(`${event.name} ${event.subtitle}`);
+  const candidateNumber = eventNumber(haystack);
+  if (expectedNumber && candidateNumber === expectedNumber) score += 100;
+  else if (expectedNumber && candidateNumber) score -= 100;
+
+  const fighterMatches = headliners(event.subtitle).filter((fighter) => containsName(haystack, fighter)).length;
+  if (fighterMatches === 2) score += 60;
+  else if (fighterMatches === 1) score += 15;
+
+  score += Math.min(locationSignals(event, haystack), 2) * 20;
+  return score;
+}
+
+export function rankDiscoveryCandidates(
+  event: EventIdentity,
+  candidates: DiscoveryCandidate[],
+  limit = 8,
+): RankedDiscoveryCandidate[] {
+  return candidates
+    .map((candidate) => ({ ...candidate, discoveryScore: discoveryScore(event, candidate) }))
+    .sort((left, right) => right.discoveryScore - left.discoveryScore || left.order - right.order)
+    .slice(0, Math.max(1, limit));
 }
 
 export function matchEventIdentity(event: EventIdentity, article: ArticleIdentity): IdentityMatch {
