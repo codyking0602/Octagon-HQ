@@ -8,6 +8,7 @@ const sql = readFileSync(
 const syncFunction = readFileSync("supabase/functions/sync-next-ufc-event/index.ts", "utf8");
 const config = readFileSync("supabase/config.toml", "utf8");
 const deployWorkflow = readFileSync(".github/workflows/deploy-supabase.yml", "utf8");
+const deploymentVerifier = readFileSync("scripts/verify-sync-function-deployment.mjs", "utf8");
 
 describe("Phase 2B event setup backend", () => {
   it("keeps imported cards private until atomic publish", () => {
@@ -43,6 +44,14 @@ describe("Phase 2B event setup backend", () => {
     expect(syncFunction).not.toContain("bouts.slice(0, 6)");
   });
 
+  it("reuses a staged source URL and allows an exact owner-supplied article", () => {
+    expect(syncFunction).toContain("persistedSourceUrl(ownerProbe.data)");
+    expect(syncFunction).toContain("suppliedSourceUrl || persistedSourceUrl(ownerProbe.data)");
+    expect(syncFunction).toContain("fetchExactMmaManiaCard");
+    expect(syncFunction).toContain("Paste the exact MMA Mania fight-card article URL in Event Setup");
+    expect(syncFunction).toContain('["Card source", "source_url"');
+  });
+
   it("previews source changes before replacing a staged draft", () => {
     expect(syncFunction).toContain('mode === "preview"');
     expect(syncFunction).toContain("sourceChanges(ownerProbe.data, event, effectiveScope)");
@@ -53,10 +62,15 @@ describe("Phase 2B event setup backend", () => {
     expect(syncFunction).toContain("Fight Night owner access required");
   });
 
-  it("deploys the sync function through the canonical backend owner", () => {
+  it("deploys and verifies the exact sync function revision through the canonical backend owner", () => {
     expect(config).toContain("[functions.sync-next-ufc-event]");
     expect(config).toContain("verify_jwt = true");
     expect(deployWorkflow).toContain("supabase functions deploy sync-next-ufc-event");
+    expect(deployWorkflow).toContain("DEPLOYED_SOURCE_SHA");
+    expect(deployWorkflow).toContain("verify-sync-function-deployment.mjs");
     expect(deployWorkflow).toContain("require_remote_migration \"202608050001\"");
+    expect(syncFunction).toContain('input.mode === "deployment-info"');
+    expect(deploymentVerifier).toContain("body?.deployment_sha !== expectedSha");
+    expect(deploymentVerifier).toContain("x-octagon-backend-sha");
   });
 });
