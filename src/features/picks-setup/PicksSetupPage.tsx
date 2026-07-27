@@ -152,6 +152,7 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
   const [draft, setDraft] = useState<PickSetupDraft | null>(null);
   const [sourcePreview, setSourcePreview] = useState<PickSetupSourcePreview | null>(null);
   const [cardScope, setCardScope] = useState<PickSetupCardScope>("auto");
+  const [sourceUrl, setSourceUrl] = useState("");
   const [loading, setLoading] = useState(true);
   const [busyAction, setBusyAction] = useState("");
   const [error, setError] = useState("");
@@ -205,6 +206,7 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
       startsAt: localDateTimeValue(draft.startsAt),
       locksAt: localDateTimeValue(draft.locksAt),
     });
+    setSourceUrl(draft.sourceUrl ?? "");
   }, [draft]);
 
   const orderedBouts = useMemo(
@@ -234,13 +236,16 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
 
   function syncEvent() {
     if (!repository) return;
-    void runAction("sync", () => repository.syncNextEvent(cardScope));
+    void runAction("sync", () => repository.syncNextEvent(cardScope, sourceUrl));
   }
 
   async function checkSourceUpdates() {
     if (!repository || !draft) return;
-    const preview = await runAction("preview", () => repository.previewSource(cardScope), false);
-    if (preview) setSourcePreview(preview);
+    const preview = await runAction("preview", () => repository.previewSource(cardScope, sourceUrl), false);
+    if (preview) {
+      setSourcePreview(preview);
+      setSourceUrl(preview.sourceUrl);
+    }
   }
 
   function applySourceUpdates() {
@@ -356,6 +361,22 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
               </button>
             ))}
           </div>
+          <label className="picks-setup-source">
+            MMA MANIA CARD URL (OPTIONAL)
+            <input
+              type="url"
+              value={sourceUrl}
+              onChange={(event) => {
+                setSourceUrl(event.target.value);
+                setSourcePreview(null);
+              }}
+              disabled={Boolean(busyAction)}
+              placeholder="https://www.mmamania.com/..."
+              autoCapitalize="none"
+              autoCorrect="off"
+            />
+            <small>Leave blank for automatic discovery. Once staged, future checks reuse the saved article unless you replace it here.</small>
+          </label>
         </section>
       ) : null}
 
