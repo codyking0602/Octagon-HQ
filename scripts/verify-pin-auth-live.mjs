@@ -228,7 +228,8 @@ try {
   await page.getByLabel("MMA MANIA CARD URL (OPTIONAL)").fill(articleUrl);
   await page.getByRole("button", { name: "CHECK FOR CARD UPDATES" }).click();
   await page.getByText("SOURCE REVIEW · NOT APPLIED").waitFor({ state: "visible", timeout: 30_000 });
-  await page.getByRole("heading", { name: "Main card · 4 fights" }).waitFor({ state: "visible" });
+  await page.getByText("SOURCE MATCHES DRAFT", { exact: true }).waitFor({ state: "visible" });
+  await page.getByText("No staged event details, fights, sections, or order changed.", { exact: true }).waitFor({ state: "visible" });
   await page.getByText("Uroš Medić vs. Daniel Rodriguez", { exact: true }).first().waitFor({ state: "visible" });
   await page.getByText(/Belgrade Arena.*Belgrade, Serbia/).first().waitFor({ state: "visible" });
   await page.getByText("Marcin Tybura vs. Aleksandar Rakić", { exact: true }).waitFor({ state: "visible" });
@@ -242,12 +243,11 @@ try {
   if (/Bogdan Guskov 2\b/.test(visibleText)) {
     throw new Error("Event Setup source review exposed the article-only Bogdan Guskov rematch marker.");
   }
-  const falsePairChanges = visibleText.split("\n").filter((line) => /\b(?:added|removed)\b/i.test(line));
-  if (falsePairChanges.some((line) => /medic.*rodriguez|rodriguez.*medic/i.test(line))) {
-    throw new Error(`Event Setup reported a false Medic-Rodriguez change: ${falsePairChanges.join(" | ")}`);
+  if (/CARD CHANGES DETECTED/.test(visibleText)) {
+    throw new Error("Event Setup reported source changes after the same source was already applied.");
   }
-  if (falsePairChanges.some((line) => /tybura.*raki|raki.*tybura/i.test(line))) {
-    throw new Error(`Event Setup reported a false Tybura-Rakic change: ${falsePairChanges.join(" | ")}`);
+  if (await page.getByRole("button", { name: "APPLY SOURCE CHANGES" }).count()) {
+    throw new Error("Apply remained available even though the source matched the staged draft.");
   }
   if (await page.getByRole("button", { name: "PUBLISH CARD" }).count()) {
     throw new Error("Publish controls remained visible during the read-only source review.");
@@ -258,7 +258,7 @@ try {
   await page.screenshot({ path: screenshotPath, fullPage: true });
 
   console.log(
-    `PASS: WebKit verified exact production frontend ${expectedDeploymentSha || "(SHA not requested)"}, authenticated at 390x844, opened Event Setup, and displayed the clean four-fight UFC Belgrade source review without Apply or Publish.`,
+    `PASS: WebKit verified exact production frontend ${expectedDeploymentSha || "(SHA not requested)"}, authenticated at 390x844, opened Event Setup, and displayed the already-applied clean four-fight UFC Belgrade source as unchanged without Apply or Publish.`,
   );
 } finally {
   if (browser) await browser.close().catch(() => undefined);
