@@ -25,7 +25,6 @@ jobs:
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
       OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
       EXPECTED_SYNC_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-      EVENT_SETUP_APPLY_REVIEWED_SOURCE: "true"
 
     steps:
       - name: Check out repository
@@ -209,7 +208,8 @@ jobs:
             echo "- Required Edge Function secret names: present"
             echo "- Existing profile, challenge, Your HQ, Picks, scoring, recap, reveal, and Fight Night migrations: deployed remotely"
             echo "- Event setup and card review migration: deployed remotely"
-            echo "- Authenticated Event Setup preview: supplied MMA Mania URL returned a main-card preview; the reviewed hash was applied only to the private staged draft"
+            echo "- Authenticated Event Setup preview: supplied MMA Mania URL returned the exact clean four-fight main card without changing the staged or live cards"
+            echo "- Private staged draft: exact clean UFC Belgrade card verified"
             echo "- Underdog Lock and seven-field scoring summary RPCs: responding in production"
             echo "- pin-auth Edge Function: deployed and responding with the expected contract"
             echo "- sync-next-ufc-event Edge Function: exact deployed source $EXPECTED_SYNC_SOURCE_SHA verified through its live marker"

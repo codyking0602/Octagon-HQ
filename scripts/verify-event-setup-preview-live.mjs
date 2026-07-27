@@ -1,7 +1,6 @@
 const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
 const projectId = process.env.SUPABASE_PROJECT_ID;
 const expectedSha = process.env.EXPECTED_SYNC_SOURCE_SHA?.trim() ?? "";
-const shouldApply = process.env.EVENT_SETUP_APPLY_REVIEWED_SOURCE === "true";
 const productionOrigin = process.env.OCTAGON_PRODUCTION_ORIGIN
   ?? "https://octagon.hq-app.workers.dev";
 const articleUrl = process.env.EVENT_SETUP_TEST_MMA_URL
@@ -208,7 +207,7 @@ try {
         apikey: publishableKey,
         "Content-Type": "application/json",
         Origin: productionOrigin,
-        "x-client-info": "octagon-hq-event-preview-check/3",
+        "x-client-info": "octagon-hq-event-preview-check/4",
       },
       body: JSON.stringify({ mode: "preview", card_scope: "auto", source_url: articleUrl }),
     },
@@ -240,46 +239,11 @@ try {
   if (JSON.stringify(liveAfterPreview) !== JSON.stringify(liveBefore)) {
     throw new Error("Preview changed the live Picks event.");
   }
+  assertCleanEvent(draftAfterPreview, "Current staged draft");
 
-  if (shouldApply) {
-    const applied = await request(
-      "Production Event Setup reviewed Apply",
-      `${supabaseOrigin}/functions/v1/sync-next-ufc-event`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-          apikey: publishableKey,
-          "Content-Type": "application/json",
-          Origin: productionOrigin,
-          "x-client-info": "octagon-hq-event-reviewed-apply/1",
-        },
-        body: JSON.stringify({
-          mode: "apply",
-          card_scope: "auto",
-          source_url: articleUrl,
-          expected_hash: preview.body.source_hash,
-        }),
-      },
-    );
-    if (applied.body?.deployment_sha !== expectedSha || applied.body?.source_hash !== preview.body.source_hash) {
-      throw new Error("Reviewed Apply did not use the exact deployed source and reviewed hash.");
-    }
-
-    const draftAfterApply = (await rpc("get_pick_event_setup", userToken)).body;
-    const liveAfterApply = (await rpc("get_current_pick_event", userToken)).body;
-    assertCleanEvent(draftAfterApply, "Staged draft after Apply");
-    if (JSON.stringify(liveAfterApply) !== JSON.stringify(liveBefore)) {
-      throw new Error("Reviewed Apply changed the live Picks event.");
-    }
-    console.log(
-      `PASS: production Event Setup preview and reviewed Apply produced the exact clean four-fight private draft at backend ${expectedSha}; the live Picks event was byte-for-byte unchanged and nothing was published.`,
-    );
-  } else {
-    console.log(
-      `PASS: production Event Setup preview returned the exact clean four-fight main card at backend ${expectedSha}; no fake pair changes were reported, and staged and live cards were unchanged.`,
-    );
-  }
+  console.log(
+    `PASS: production Event Setup preview returned the exact clean four-fight main card at backend ${expectedSha}; the current private staged draft is exact and clean, no fake pair changes were reported, the preview was non-destructive, the live Picks event was byte-for-byte unchanged, and nothing was published.`,
+  );
 } finally {
   if (userId) {
     await fetch(`${supabaseOrigin}/rest/v1/pick_control_owners?profile_id=eq.${encodeURIComponent(userId)}`, {
