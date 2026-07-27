@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { matchSourceIdentity, type NormalizedArticleEvent, type NormalizedUfcEvent } from "../../../supabase/functions/sync-next-ufc-event/identityEngine";
 import { fighterMatch, normalizeText } from "../../../supabase/functions/sync-next-ufc-event/normalization";
-import { adaptMmaManiaSource } from "../../../supabase/functions/sync-next-ufc-event/sourceAdapters";
+import { adaptMmaManiaSource, adaptUfcSource } from "../../../supabase/functions/sync-next-ufc-event/sourceAdapters";
 
 const ufc: NormalizedUfcEvent = {
   canonicalEventKey: "event/test",
@@ -78,6 +78,32 @@ describe("durable event identity", () => {
     expect(matchSourceIdentity(numbered, { ...article, eventNumber: "998" }).accepted).toBe(false);
   });
 
+  it("uses official UFC title and description metadata when visible-page fallbacks are polluted", () => {
+    const html = `<!doctype html><html><head>
+      <title>UFC Fight Night: Medić vs Rodriguez | UFC Belgrade</title>
+      <meta property="og:description" content="Don't Miss A Moment Of UFC Fight Night: Medić vs Rodriguez, Live From Belgrade Arena In Belgrade, Serbia On August 1, 2026">
+      <script type="application/json">{"page":"event"}</script>
+    </head><body><h1>UFC Fight Night</h1><h2>Main navigation</h2></body></html>`;
+    const adapted = adaptUfcSource(
+      html,
+      "https://www.ufc.com/event/ufc-fight-night-august-01-2026",
+      {
+        name: "UFC Fight Night",
+        subtitle: "Bar UFC Fight Pass UFC Video Archive UFC Fight Night Medic vs Rodriguez Follow",
+        starts_at: "2026-08-01T10:00:00.000Z",
+        venue: "Belgrade Arena, BG Serbia",
+        location: "Skip to main content <iframe> UFC",
+        source_event_key: "event/ufc-fight-night-august-01-2026",
+      },
+    );
+
+    expect(adapted.headliners).toEqual(["Medić", "Rodriguez"]);
+    expect(adapted.localEventDate).toBe("2026-08-01");
+    expect(adapted.venue).toBe("Belgrade Arena");
+    expect(adapted.city).toBe("Belgrade");
+    expect(adapted.country).toBe("Serbia");
+  });
+
   it("extracts the real labeled MMA Mania event date, location, and full main-event names", () => {
     const html = readFileSync(resolve(
       process.cwd(),
@@ -97,7 +123,7 @@ describe("durable event identity", () => {
     );
 
     expect(adapted.explicitEventDates).toEqual(["2026-08-01"]);
-    expect(adapted.publicationDates).toEqual(expect.arrayContaining(["2026-06-19T17:48:00Z"]));
+    expect(adapted.publicationDates).toEqual(expect.arrayContaining(["2026-06-19T17:48:00+00:00"]));
     expect(adapted.locationSignals.join(" ")).toContain("Belgrade Arena");
     expect(adapted.headliners).toEqual(["Uroš Medić", "Daniel Rodriguez"]);
     const result = matchSourceIdentity(ufc, adapted);
