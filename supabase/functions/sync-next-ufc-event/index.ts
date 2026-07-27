@@ -4,7 +4,9 @@ import { DEPLOYED_SOURCE_SHA } from "./deployment.ts";
 import { absoluteMmaManiaArticleUrl } from "./sourceUrls.ts";
 import { chooseEventArticle, matchEventIdentity, rankDiscoveryCandidates, type ArticleIdentity } from "./eventIdentity.ts";
 import { matchSourceIdentity, type NormalizedUfcEvent } from "./identityEngine.ts";
-import { adaptMmaManiaSource, adaptUfcSource } from "./sourceAdapters.ts";
+import { sourceChanges } from "./cardChanges.ts";
+import { canonicalFightPair, canonicalFighterDisplay, fighterMatch } from "./normalization.ts";
+import { adaptMmaManiaSource, adaptUfcSource, canonicalUfcEventFields } from "./sourceAdapters.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*",
@@ -115,7 +117,8 @@ function clean(value: string) {
 }
 
 function slugify(value: string) {
-  return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  return value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 }
 
 function absoluteUfcEventUrl(value: string) {
@@ -232,7 +235,13 @@ export function parseUfcEventPage(html: string, sourceUrl: string, now = new Dat
     locks_at: startsAt.toISOString(),
     season,
   };
-  return { ...legacy, normalized: adaptUfcSource(html, sourceUrl, legacy) };
+  const normalized = adaptUfcSource(html, sourceUrl, legacy);
+  return {
+    ...legacy,
+    ...canonicalUfcEventFields(normalized),
+    ufc_source_url: sourceUrl,
+    normalized,
+  };
 }
 
 function classifySection(value: string): CardSection | null {
@@ -255,12 +264,12 @@ function weightClassFromPounds(value: number | null) {
 }
 
 function cleanFighterName(value: string) {
-  return clean(value)
-    .replace(/^#?\d+\s+/, "")
-    .replace(/\s+(?:[-–—|]\s*)?(?:odds|prediction|preview|live stream)\b.*$/i, "")
-    .replace(/\s*\([^)]*(?:cancelled|canceled|scrapped|replacement|odds)[^)]*\)\s*$/i, "")
-    .replace(/[.,;:]+$/, "")
-    .trim();
+  return canonicalFighterDisplay(
+    clean(value)
+      .replace(/^#?\d+\s+/, "")
+      .replace(/\s+(?:[-–—|]\s*)?(?:odds|prediction|preview|live stream)\b.*$/i, "")
+      .replace(/\s*\([^)]*(?:cancelled|canceled|scrapped|replacement|odds)[^)]*\)\s*$/i, ""),
+  );
 }
 
 function parseFightLine(value: string, section: CardSection): ParsedCardBout | null {
@@ -324,7 +333,7 @@ export function parseMmaManiaCard(html: string, sourceUrl: string): MmaManiaCard
     for (const line of elementLines($, element)) {
       const parsed = parseFightLine(line, section);
       if (!parsed) continue;
-      const pairKey = [slugify(parsed.red_fighter_name), slugify(parsed.blue_fighter_name)].sort().join("|");
+      const pairKey = canonicalFightPair(parsed.red_fighter_name, parsed.blue_fighter_name);
       if (seen.has(pairKey)) continue;
       seen.add(pairKey);
       bouts.push(parsed);
@@ -337,13 +346,6 @@ export function parseMmaManiaCard(html: string, sourceUrl: string): MmaManiaCard
 export function resolveCardScope(name: string, subtitle: string, requested: CardScope): EffectiveScope {
   if (requested === "main" || requested === "full") return requested;
   return /\bUFC\s+\d{3,4}\b/i.test(`${name} ${subtitle}`) ? "full" : "main";
-}
-
-function cardSectionLabel(section: CardSection) {
-  if (section === "main-event") return "main event";
-  if (section === "main") return "main card";
-  if (section === "early-prelim") return "early prelims";
-  return "prelims";
 }
 
 function selectBouts(card: MmaManiaCard, scope: EffectiveScope) {
@@ -526,15 +528,22 @@ async function buildNextEvent(now: Date, requestedScope: CardScope, preferredSou
   const metadata = await findNextUfcEvent(now);
   if (!metadata) throw new Error("No future UFC event metadata could be found.");
   const card = await findMmaManiaCard(metadata, preferredSourceUrl);
-  const effectiveScope = resolveCardScope(metadata.name, metadata.subtitle, requestedScope);
+  const canonicalMetadata = canonicalUfcEventFields(metadata.normalized);
+  const effectiveScope = resolveCardScope(canonicalMetadata.name, canonicalMetadata.subtitle, requestedScope);
   const selected = selectBouts(card, effectiveScope);
   if (!selected.length) throw new Error("The matched MMA Mania article did not contain fights for the selected card scope.");
 
   const bouts = toStagedBouts(selected);
-  const subtitle = metadata.subtitle || `${bouts[0]!.red_fighter_name} vs. ${bouts[0]!.blue_fighter_name}`;
+  const cardHeadliners = [bouts[0]!.red_fighter_name, bouts[0]!.blue_fighter_name];
+  const officialHeadliners = metadata.normalized.headliners;
+  const cardMatchesOfficial = officialHeadliners.length === 2
+    && officialHeadliners.every((name) => cardHeadliners.some((candidate) => fighterMatch(name, candidate, true)));
+  const subtitle = cardMatchesOfficial
+    ? `${cardHeadliners[0]} vs. ${cardHeadliners[1]}`
+    : canonicalMetadata.subtitle;
   const warnings = [
-    !metadata.venue ? "MISSING VENUE" : "",
-    !metadata.location ? "MISSING LOCATION" : "",
+    !canonicalMetadata.venue ? "MISSING VENUE" : "",
+    !canonicalMetadata.location ? "MISSING LOCATION" : "",
     !card.usedSectionHeadings ? "MMA MANIA CARD SECTIONS NEED REVIEW" : "",
     effectiveScope === "main" && bouts.length < 4 ? "FEWER THAN FOUR MAIN-CARD FIGHTS FOUND" : "",
     effectiveScope === "full" && bouts.length < 8 ? "FULL CARD HAS FEWER THAN EIGHT FIGHTS" : "",
@@ -543,31 +552,13 @@ async function buildNextEvent(now: Date, requestedScope: CardScope, preferredSou
 
   const event: ParsedEvent = {
     source: "UFC.com metadata + MMA Mania card",
-    source_event_key: metadata.source_event_key,
+    ...canonicalMetadata,
     source_url: card.sourceUrl,
-    event_id: metadata.event_id,
-    name: metadata.name,
     subtitle,
-    venue: metadata.venue,
-    location: metadata.location,
-    starts_at: metadata.starts_at,
-    locks_at: metadata.locks_at,
-    season: metadata.season,
     bouts,
     warnings,
   };
   return { event, effectiveScope };
-}
-
-function sectionFromBoutId(boutId: string): CardSection {
-  if (boutId.startsWith("main-event-")) return "main-event";
-  if (boutId.startsWith("early-prelim-")) return "early-prelim";
-  if (boutId.startsWith("prelim-")) return "prelim";
-  return "main";
-}
-
-function pairKey(red: string, blue: string) {
-  return [slugify(red), slugify(blue)].sort().join("|");
 }
 
 function asRecord(value: unknown): Record<string, unknown> | null {
@@ -577,59 +568,6 @@ function asRecord(value: unknown): Record<string, unknown> | null {
 function persistedSourceUrl(currentValue: unknown) {
   const current = asRecord(currentValue);
   return typeof current?.source_url === "string" ? current.source_url.trim() : "";
-}
-
-function sourceChanges(currentValue: unknown, event: ParsedEvent, effectiveScope: EffectiveScope) {
-  const current = asRecord(currentValue);
-  if (!current) return [`Stage a new ${effectiveScope === "full" ? "full" : "main"} card with ${event.bouts.length} fights.`];
-  const changes: string[] = [];
-  const metadataFields: Array<[string, string, unknown, unknown]> = [
-    ["Event name", "name", current.name, event.name],
-    ["Main event", "subtitle", current.subtitle, event.subtitle],
-    ["Venue", "venue", current.venue, event.venue],
-    ["Location", "location", current.location, event.location],
-    ["Event time", "starts_at", current.starts_at, event.starts_at],
-    ["Picks lock", "locks_at", current.locks_at, event.locks_at],
-    ["Card source", "source_url", current.source_url, event.source_url],
-  ];
-  for (const [label, , oldValue, newValue] of metadataFields) {
-    if (clean(String(oldValue ?? "")) !== clean(String(newValue ?? ""))) changes.push(`${label} changed.`);
-  }
-
-  const currentBouts = Array.isArray(current.bouts) ? current.bouts.map(asRecord).filter(Boolean) as Record<string, unknown>[] : [];
-  const currentMap = new Map(currentBouts.map((bout) => [
-    pairKey(String(bout.red_fighter_name ?? ""), String(bout.blue_fighter_name ?? "")),
-    bout,
-  ]));
-  const sourceMap = new Map(event.bouts.map((bout) => [pairKey(bout.red_fighter_name, bout.blue_fighter_name), bout]));
-
-  for (const [key, bout] of sourceMap) {
-    const existing = currentMap.get(key);
-    if (!existing) {
-      changes.push(`Added ${cardSectionLabel(sectionFromBoutId(bout.bout_id))}: ${bout.red_fighter_name} vs. ${bout.blue_fighter_name}.`);
-      continue;
-    }
-    const oldSection = sectionFromBoutId(String(existing.bout_id ?? ""));
-    const newSection = sectionFromBoutId(bout.bout_id);
-    if (oldSection !== newSection) {
-      changes.push(`Moved ${bout.red_fighter_name} vs. ${bout.blue_fighter_name} from ${cardSectionLabel(oldSection)} to ${cardSectionLabel(newSection)}.`);
-    }
-    if (clean(String(existing.weight_class ?? "")) !== clean(bout.weight_class)) {
-      changes.push(`Weight class changed for ${bout.red_fighter_name} vs. ${bout.blue_fighter_name}.`);
-    }
-  }
-
-  for (const [key, bout] of currentMap) {
-    if (sourceMap.has(key)) continue;
-    changes.push(`Removed ${cardSectionLabel(sectionFromBoutId(String(bout.bout_id ?? "")))}: ${String(bout.red_fighter_name ?? "")} vs. ${String(bout.blue_fighter_name ?? "")}.`);
-  }
-
-  const oldOrder = currentBouts.map((bout) => pairKey(String(bout.red_fighter_name ?? ""), String(bout.blue_fighter_name ?? ""))).filter((key) => sourceMap.has(key));
-  const newOrder = event.bouts.map((bout) => pairKey(bout.red_fighter_name, bout.blue_fighter_name)).filter((key) => currentMap.has(key));
-  if (oldOrder.length === newOrder.length && oldOrder.some((key, index) => key !== newOrder[index])) {
-    changes.push("Fight order changed.");
-  }
-  return Array.from(new Set(changes));
 }
 
 async function sourceHash(event: ParsedEvent, effectiveScope: EffectiveScope) {
