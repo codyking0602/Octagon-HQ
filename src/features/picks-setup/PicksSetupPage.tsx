@@ -213,6 +213,10 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
     () => draft?.bouts.slice().sort((left, right) => left.position - right.position) ?? [],
     [draft],
   );
+  const reviewedBouts = useMemo(
+    () => sourcePreview?.event.bouts.slice().sort((left, right) => left.position - right.position) ?? [],
+    [sourcePreview],
+  );
 
   async function runAction<T>(key: string, action: () => Promise<T>, reload = true) {
     setBusyAction(key);
@@ -406,16 +410,18 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
           <section className="surface-card picks-setup-hero">
             <div className="picks-setup-hero__topline">
               <div>
-                <p className="eyebrow">STAGED CARD · NOT LIVE</p>
-                <h2>{draft.name}</h2>
-                <strong>{draft.subtitle}</strong>
+                <p className="eyebrow">{sourcePreview ? "SOURCE REVIEW · NOT APPLIED" : "STAGED CARD · NOT LIVE"}</p>
+                <h2>{sourcePreview?.event.name ?? draft.name}</h2>
+                <strong>{sourcePreview?.event.subtitle ?? draft.subtitle}</strong>
               </div>
               <button className="secondary-action" type="button" disabled={Boolean(busyAction)} onClick={checkSourceUpdates}>
                 {busyAction === "preview" ? "CHECKING…" : "CHECK FOR CARD UPDATES"}
               </button>
             </div>
-            <p>{displayTime(draft.startsAt)} · {draft.venue || "VENUE MISSING"} · {draft.location || "LOCATION MISSING"}</p>
-            <small>Source: {draft.source} · Synced {displayTime(draft.syncedAt)}</small>
+            <p>
+              {displayTime(sourcePreview?.event.startsAt ?? draft.startsAt)} · {(sourcePreview?.event.venue ?? draft.venue) || "VENUE MISSING"} · {(sourcePreview?.event.location ?? draft.location) || "LOCATION MISSING"}
+            </p>
+            <small>{sourcePreview ? `Prospective source: ${sourcePreview.source}` : `Source: ${draft.source} · Synced ${displayTime(draft.syncedAt)}`}</small>
           </section>
 
           {sourcePreview ? (
@@ -425,8 +431,15 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
                 <h2>{sourcePreview.effectiveScope === "full" ? "Full card" : "Main card"} · {sourcePreview.fightCount} fights</h2>
                 <small>{sourcePreview.source}</small>
               </div>
+              <div className="picks-setup-preview__changes" aria-label="Prospective event card">
+                <strong>{sourcePreview.event.subtitle}</strong>
+                <span>{displayTime(sourcePreview.event.startsAt)} · {sourcePreview.event.venue || "VENUE MISSING"} · {sourcePreview.event.location || "LOCATION MISSING"}</span>
+                {reviewedBouts.map((bout) => (
+                  <span key={bout.boutId}>{bout.redFighterName} vs. {bout.blueFighterName}</span>
+                ))}
+              </div>
               {sourcePreview.changes.length ? (
-                <div className="picks-setup-preview__changes">
+                <div className="picks-setup-preview__changes" aria-label="Detected source changes">
                   {sourcePreview.changes.map((change) => <strong key={change}>{change}</strong>)}
                 </div>
               ) : <p>No staged event details, fights, sections, or order changed.</p>}
@@ -440,76 +453,80 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
             </section>
           ) : null}
 
-          {draft.warnings.length ? (
-            <section className="surface-card picks-setup-warnings" aria-label="Card readiness warnings">
-              <p className="eyebrow">REVIEW REQUIRED</p>
-              {draft.warnings.map((warning) => <strong key={warning}>{warning}</strong>)}
-            </section>
-          ) : (
-            <section className="surface-card picks-setup-ready">
-              <p className="eyebrow">CARD READY</p>
-              <strong>No blocking metadata warnings.</strong>
-            </section>
-          )}
+          {!sourcePreview ? (
+            <>
+              {draft.warnings.length ? (
+                <section className="surface-card picks-setup-warnings" aria-label="Card readiness warnings">
+                  <p className="eyebrow">REVIEW REQUIRED</p>
+                  {draft.warnings.map((warning) => <strong key={warning}>{warning}</strong>)}
+                </section>
+              ) : (
+                <section className="surface-card picks-setup-ready">
+                  <p className="eyebrow">CARD READY</p>
+                  <strong>No blocking metadata warnings.</strong>
+                </section>
+              )}
 
-          <section className="surface-card picks-setup-metadata">
-            <div>
-              <p className="eyebrow">EVENT DETAILS</p>
-              <h2>Review event information</h2>
-            </div>
-            <label>EVENT NAME<input value={metadata.name} onChange={(event) => setMetadata({ ...metadata, name: event.target.value })} /></label>
-            <label>SUBTITLE<input value={metadata.subtitle} onChange={(event) => setMetadata({ ...metadata, subtitle: event.target.value })} /></label>
-            <label>VENUE<input value={metadata.venue} onChange={(event) => setMetadata({ ...metadata, venue: event.target.value })} /></label>
-            <label>LOCATION<input value={metadata.location} onChange={(event) => setMetadata({ ...metadata, location: event.target.value })} /></label>
-            <div className="picks-setup-time-grid">
-              <label>MAIN CARD START<input type="datetime-local" value={metadata.startsAt} onChange={(event) => setMetadata({ ...metadata, startsAt: event.target.value })} /></label>
-              <label>PICKS LOCK<input type="datetime-local" value={metadata.locksAt} onChange={(event) => setMetadata({ ...metadata, locksAt: event.target.value })} /></label>
-            </div>
-            <button className="primary-action" type="button" disabled={Boolean(busyAction)} onClick={saveMetadata}>
-              {busyAction === "metadata" ? "SAVING DETAILS…" : "SAVE EVENT DETAILS"}
-            </button>
-          </section>
+              <section className="surface-card picks-setup-metadata">
+                <div>
+                  <p className="eyebrow">EVENT DETAILS</p>
+                  <h2>Review event information</h2>
+                </div>
+                <label>EVENT NAME<input value={metadata.name} onChange={(event) => setMetadata({ ...metadata, name: event.target.value })} /></label>
+                <label>SUBTITLE<input value={metadata.subtitle} onChange={(event) => setMetadata({ ...metadata, subtitle: event.target.value })} /></label>
+                <label>VENUE<input value={metadata.venue} onChange={(event) => setMetadata({ ...metadata, venue: event.target.value })} /></label>
+                <label>LOCATION<input value={metadata.location} onChange={(event) => setMetadata({ ...metadata, location: event.target.value })} /></label>
+                <div className="picks-setup-time-grid">
+                  <label>MAIN CARD START<input type="datetime-local" value={metadata.startsAt} onChange={(event) => setMetadata({ ...metadata, startsAt: event.target.value })} /></label>
+                  <label>PICKS LOCK<input type="datetime-local" value={metadata.locksAt} onChange={(event) => setMetadata({ ...metadata, locksAt: event.target.value })} /></label>
+                </div>
+                <button className="primary-action" type="button" disabled={Boolean(busyAction)} onClick={saveMetadata}>
+                  {busyAction === "metadata" ? "SAVING DETAILS…" : "SAVE EVENT DETAILS"}
+                </button>
+              </section>
 
-          <section className="picks-setup-card" aria-label="Staged Picks card">
-            <div className="picks-setup-card__heading">
-              <div><p className="eyebrow">{pickSetupDraftCardLabel(draft)}</p><h2>{orderedBouts.filter((bout) => bout.included).length} fights included</h2></div>
-              <span>Use arrows to reorder</span>
-            </div>
-            {orderedBouts.map((bout, index) => (
-              <BoutEditor
-                key={bout.boutId}
-                bout={bout}
-                index={index}
-                total={orderedBouts.length}
-                busy={Boolean(busyAction)}
-                onSave={saveBout}
-                onMove={(direction) => moveBout(index, direction)}
-                onRemove={() => removeBout(bout)}
-              />
-            ))}
-          </section>
+              <section className="picks-setup-card" aria-label="Staged Picks card">
+                <div className="picks-setup-card__heading">
+                  <div><p className="eyebrow">{pickSetupDraftCardLabel(draft)}</p><h2>{orderedBouts.filter((bout) => bout.included).length} fights included</h2></div>
+                  <span>Use arrows to reorder</span>
+                </div>
+                {orderedBouts.map((bout, index) => (
+                  <BoutEditor
+                    key={bout.boutId}
+                    bout={bout}
+                    index={index}
+                    total={orderedBouts.length}
+                    busy={Boolean(busyAction)}
+                    onSave={saveBout}
+                    onMove={(direction) => moveBout(index, direction)}
+                    onRemove={() => removeBout(bout)}
+                  />
+                ))}
+              </section>
 
-          <section className="surface-card picks-setup-add">
-            <div><p className="eyebrow">EMERGENCY FALLBACK</p><h2>Add a missing fight</h2></div>
-            <label>RED CORNER<input value={newBout.red} onChange={(event) => setNewBout({ ...newBout, red: event.target.value })} /></label>
-            <label>BLUE CORNER<input value={newBout.blue} onChange={(event) => setNewBout({ ...newBout, blue: event.target.value })} /></label>
-            <label>WEIGHT CLASS<input value={newBout.weightClass} onChange={(event) => setNewBout({ ...newBout, weightClass: event.target.value })} /></label>
-            <button className="secondary-action" type="button" disabled={Boolean(busyAction) || !newBout.red.trim() || !newBout.blue.trim()} onClick={addBout}>
-              {busyAction === "new-bout" ? "ADDING FIGHT…" : "ADD MISSING FIGHT"}
-            </button>
-          </section>
+              <section className="surface-card picks-setup-add">
+                <div><p className="eyebrow">EMERGENCY FALLBACK</p><h2>Add a missing fight</h2></div>
+                <label>RED CORNER<input value={newBout.red} onChange={(event) => setNewBout({ ...newBout, red: event.target.value })} /></label>
+                <label>BLUE CORNER<input value={newBout.blue} onChange={(event) => setNewBout({ ...newBout, blue: event.target.value })} /></label>
+                <label>WEIGHT CLASS<input value={newBout.weightClass} onChange={(event) => setNewBout({ ...newBout, weightClass: event.target.value })} /></label>
+                <button className="secondary-action" type="button" disabled={Boolean(busyAction) || !newBout.red.trim() || !newBout.blue.trim()} onClick={addBout}>
+                  {busyAction === "new-bout" ? "ADDING FIGHT…" : "ADD MISSING FIGHT"}
+                </button>
+              </section>
 
-          <section className="surface-card picks-setup-publish">
-            <div>
-              <p className="eyebrow">FINAL REVIEW</p>
-              <h2>Publish upcoming card</h2>
-              <p>Publishing replaces only an unclaimed upcoming card. A locked event or an upcoming card with submitted picks cannot be overwritten.</p>
-            </div>
-            <button className="primary-action" type="button" disabled={!draft.canPublish || Boolean(busyAction)} onClick={publishDraft}>
-              {busyAction === "publish" ? "PUBLISHING CARD…" : "PUBLISH CARD"}
-            </button>
-            <button className="pick-setup-danger" type="button" disabled={Boolean(busyAction)} onClick={discardDraft}>DISCARD STAGED CARD</button>
-          </section>
+              <section className="surface-card picks-setup-publish">
+                <div>
+                  <p className="eyebrow">FINAL REVIEW</p>
+                  <h2>Publish upcoming card</h2>
+                  <p>Publishing replaces only an unclaimed upcoming card. A locked event or an upcoming card with submitted picks cannot be overwritten.</p>
+                </div>
+                <button className="primary-action" type="button" disabled={!draft.canPublish || Boolean(busyAction)} onClick={publishDraft}>
+                  {busyAction === "publish" ? "PUBLISHING CARD…" : "PUBLISH CARD"}
+                </button>
+                <button className="pick-setup-danger" type="button" disabled={Boolean(busyAction)} onClick={discardDraft}>DISCARD STAGED CARD</button>
+              </section>
+            </>
+          ) : null}
 
           {error ? <p className="picks-error" role="status">{error}</p> : null}
         </>
