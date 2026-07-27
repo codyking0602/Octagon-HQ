@@ -46,7 +46,8 @@ describe("Phase 2B event setup backend", () => {
 
   it("reuses a staged source URL and allows an exact owner-supplied article", () => {
     expect(syncFunction).toContain("persistedSourceUrl(ownerProbe.data)");
-    expect(syncFunction).toContain("suppliedSourceUrl || persistedSourceUrl(ownerProbe.data)");
+    expect(syncFunction).toContain("suppliedSourceUrl || savedSourceUrl");
+    expect(syncFunction).toContain("Review the replacement MMA Mania source before applying it");
     expect(syncFunction).toContain("fetchExactMmaManiaCard");
     expect(syncFunction).toContain("Paste the exact MMA Mania fight-card article URL in Event Setup");
     expect(syncFunction).toContain('["Card source", "source_url"');

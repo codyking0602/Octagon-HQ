@@ -145,7 +145,7 @@ describe("Event Setup and card review", () => {
     const repo = repository(stagedDraft);
     renderPage(repo);
 
-    fireEvent.click(await screen.findByRole("button", { name: /FULL CARD Main card, prelims/i }));
+    fireEvent.click(await screen.findByRole("button", { name: "FULL CARD" }));
     fireEvent.click(screen.getByRole("button", { name: "CHECK FOR CARD UPDATES" }));
     await waitFor(() => expect(repo.previewSource).toHaveBeenCalledWith("full", stagedDraft.sourceUrl));
   });

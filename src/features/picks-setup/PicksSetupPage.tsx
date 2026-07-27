@@ -172,6 +172,7 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
     try {
       const nextDraft = await repository.loadDraft();
       setDraft(nextDraft);
+      setSourceUrl(nextDraft?.sourceUrl ?? "");
       setError("");
     } catch (nextError) {
       setDraft(null);
@@ -352,6 +353,7 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
                 className={cardScope === option.value ? "is-active" : ""}
                 type="button"
                 key={option.value}
+                aria-label={option.label}
                 aria-pressed={cardScope === option.value}
                 disabled={Boolean(busyAction)}
                 onClick={() => selectScope(option.value)}
@@ -361,9 +363,11 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
               </button>
             ))}
           </div>
-          <label className="picks-setup-source">
-            MMA MANIA CARD URL (OPTIONAL)
+          <label className="picks-setup-source" htmlFor="picks-setup-source-url">
+            <span>MMA MANIA CARD URL (OPTIONAL)</span>
             <input
+              id="picks-setup-source-url"
+              aria-label="MMA MANIA CARD URL (OPTIONAL)"
               type="url"
               value={sourceUrl}
               onChange={(event) => {

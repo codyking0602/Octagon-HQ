@@ -5,7 +5,11 @@ export function absoluteMmaManiaArticleUrl(value: string) {
   try {
     const url = new URL(value, MMA_MANIA_INDEX_URL);
     const isMmaMania = url.hostname === "mmamania.com" || url.hostname === "www.mmamania.com";
-    return isMmaMania && url.pathname !== "/ufc-fight-cards" ? url.toString() : "";
+    const segments = url.pathname.split("/").filter(Boolean);
+    const indexOrUtility = segments.length < 2
+      || ["ufc-fight-cards", "search", "auth", "users", "pages", "archives"].includes(segments.at(-1) ?? "")
+      || segments.some((segment) => ["search", "auth", "users", "pages"].includes(segment));
+    return isMmaMania && !indexOrUtility ? url.toString() : "";
   } catch {
     return "";
   }

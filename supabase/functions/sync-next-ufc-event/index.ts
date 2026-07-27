@@ -658,7 +658,12 @@ Deno.serve(async (request) => {
   const requestedScope: CardScope = input.card_scope === "main" || input.card_scope === "full" ? input.card_scope : "auto";
   const expectedHash = typeof input.expected_hash === "string" ? input.expected_hash : "";
   const suppliedSourceUrl = typeof input.source_url === "string" ? input.source_url.trim() : "";
-  const preferredSourceUrl = suppliedSourceUrl || persistedSourceUrl(ownerProbe.data);
+  const savedSourceUrl = persistedSourceUrl(ownerProbe.data);
+  const preferredSourceUrl = suppliedSourceUrl || savedSourceUrl;
+
+  if (mode === "apply" && savedSourceUrl && suppliedSourceUrl && suppliedSourceUrl !== savedSourceUrl && !expectedHash) {
+    return json({ message: "Review the replacement MMA Mania source before applying it to the staged draft." }, 409);
+  }
 
   try {
     const { event, effectiveScope } = await buildNextEvent(new Date(), requestedScope, preferredSourceUrl);

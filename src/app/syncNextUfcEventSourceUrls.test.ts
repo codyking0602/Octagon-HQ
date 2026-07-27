@@ -16,4 +16,9 @@ describe("sync-next-ufc-event MMA Mania article discovery", () => {
   it("rejects links outside MMA Mania", () => {
     expect(absoluteMmaManiaArticleUrl("https://notmmamania.com/2026/7/26/ufc-fight-card")).toBe("");
   });
+
+  it("rejects MMA Mania index and utility pages", () => {
+    expect(absoluteMmaManiaArticleUrl("https://www.mmamania.com/ufc-fight-cards/?output=1")).toBe("");
+    expect(absoluteMmaManiaArticleUrl("https://www.mmamania.com/search?q=ufc")).toBe("");
+  });
 });
