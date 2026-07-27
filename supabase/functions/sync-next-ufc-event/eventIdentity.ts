@@ -84,9 +84,27 @@ function explicitDays(value: string) {
   return days;
 }
 
+function withoutPublishedAt(value: string, publishedAt: string) {
+  const timestamp = publishedAt.trim();
+  return timestamp ? value.split(timestamp).join(" ") : value;
+}
+
 function cardDateCopy(article: ArticleIdentity) {
-  const publishedAt = article.publishedAt.trim();
-  return publishedAt ? article.cardDateText.split(publishedAt).join(" ") : article.cardDateText;
+  return withoutPublishedAt(article.cardDateText, article.publishedAt);
+}
+
+function contextualEventDays(article: ArticleIdentity) {
+  const copy = withoutPublishedAt(
+    `${article.title} ${article.metadata} ${article.body.slice(0, 6000)}`,
+    article.publishedAt,
+  );
+  const monthDate = "(?:January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)\\.?\\s+\\d{1,2}(?:st|nd|rd|th)?(?:,)?\\s+20\\d{2}";
+  const weekday = "(?:Mon(?:day)?|Tue(?:sday)?|Wed(?:nesday)?|Thu(?:rsday)?|Fri(?:day)?|Sat(?:urday)?|Sun(?:day)?)";
+  const windows = [
+    ...copy.matchAll(new RegExp(`\\bdate\\s*:\\s*(?:${weekday}\\.?,?\\s*)?${monthDate}`, "gi")),
+    ...copy.matchAll(new RegExp(`\\b(?:takes? place|scheduled(?: for)?|event (?:is )?(?:on|for))\\b.{0,120}?${monthDate}`, "gi")),
+  ].map((match) => match[0]);
+  return explicitDays(windows.join(" "));
 }
 
 function dayDistance(left: string, right: string) {
@@ -138,9 +156,10 @@ export function matchEventIdentity(event: EventIdentity, article: ArticleIdentit
 
   const haystack = normalized(`${article.title} ${article.url} ${article.metadata} ${article.body}`);
   const expectedDay = isoDay(event.starts_at);
-  // Publication time is discovery metadata, not the card date. Remove the exact publication
-  // timestamp before extracting explicit event dates so an advance article cannot create a false conflict.
-  const statedDays = explicitDays(cardDateCopy(article));
+  // Prefer an explicitly labeled event date from the article body. MMA Mania commonly formats this as
+  // "Date: Sat., Aug. 1, 2026", which sentence splitting can otherwise break at the month abbreviation.
+  const contextualDays = contextualEventDays(article);
+  const statedDays = contextualDays.size ? contextualDays : explicitDays(cardDateCopy(article));
   // UFC's timestamp is an instant while MMA Mania normally prints the venue's calendar date;
   // a one-day UTC boundary difference is therefore the same event date, not a conflict.
   const date = expectedDay && Array.from(statedDays).some((day) => dayDistance(day, expectedDay) <= 1)
