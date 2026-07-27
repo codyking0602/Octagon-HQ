@@ -105,21 +105,34 @@ afterEach(() => {
 });
 
 describe("Event Setup and card review", () => {
-  it("syncs the next event with auto scope when no draft exists", async () => {
+  it("syncs the next event with automatic discovery when no source URL is entered", async () => {
     const repo = repository(null);
     renderPage(repo);
 
     fireEvent.click(await screen.findByRole("button", { name: "SYNC NEXT UFC EVENT" }));
-    await waitFor(() => expect(repo.syncNextEvent).toHaveBeenCalledWith("auto"));
+    await waitFor(() => expect(repo.syncNextEvent).toHaveBeenCalledWith("auto", ""));
   });
 
-  it("checks source changes without applying them until owner confirmation", async () => {
+  it("allows the owner to supply an exact MMA Mania article when discovery is unreliable", async () => {
+    const repo = repository(null);
+    renderPage(repo);
+
+    const exactUrl = "https://www.mmamania.com/ufc-fight-cards/446488/latest-ufc-belgrade-fight-card";
+    fireEvent.change(await screen.findByLabelText("MMA MANIA CARD URL (OPTIONAL)"), {
+      target: { value: exactUrl },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "SYNC NEXT UFC EVENT" }));
+
+    await waitFor(() => expect(repo.syncNextEvent).toHaveBeenCalledWith("auto", exactUrl));
+  });
+
+  it("checks the saved source article without applying changes until owner confirmation", async () => {
     vi.spyOn(window, "confirm").mockReturnValue(true);
     const repo = repository(stagedDraft);
     renderPage(repo);
 
     fireEvent.click(await screen.findByRole("button", { name: "CHECK FOR CARD UPDATES" }));
-    await waitFor(() => expect(repo.previewSource).toHaveBeenCalledWith("auto"));
+    await waitFor(() => expect(repo.previewSource).toHaveBeenCalledWith("auto", stagedDraft.sourceUrl));
     expect(repo.applySourcePreview).not.toHaveBeenCalled();
     expect(await screen.findByText("CARD CHANGES DETECTED")).toBeInTheDocument();
     expect(screen.getByText(sourcePreview.changes[0])).toBeInTheDocument();
@@ -128,13 +141,13 @@ describe("Event Setup and card review", () => {
     await waitFor(() => expect(repo.applySourcePreview).toHaveBeenCalledWith(sourcePreview));
   });
 
-  it("uses the full-card override for the next source check", async () => {
+  it("uses the full-card override with the saved source article", async () => {
     const repo = repository(stagedDraft);
     renderPage(repo);
 
     fireEvent.click(await screen.findByRole("button", { name: /FULL CARD Main card, prelims/i }));
     fireEvent.click(screen.getByRole("button", { name: "CHECK FOR CARD UPDATES" }));
-    await waitFor(() => expect(repo.previewSource).toHaveBeenCalledWith("full"));
+    await waitFor(() => expect(repo.previewSource).toHaveBeenCalledWith("full", stagedDraft.sourceUrl));
   });
 
   it("keeps review edits staged and publishes only after confirmation", async () => {
