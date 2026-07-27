@@ -223,6 +223,74 @@ jobs:
           test -s "$EVENT_SETUP_SCREENSHOT_PATH"
           test "$(wc -c < "$EVENT_SETUP_SCREENSHOT_PATH")" -gt 5000
 
+      - name: Verify temporary proof user and owner grant cleanup
+        run: |
+          node --input-type=module <<'NODE'
+          const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
+          const projectId = process.env.SUPABASE_PROJECT_ID;
+          const productionOrigin = process.env.OCTAGON_PRODUCTION_ORIGIN;
+          const suffix = `${process.env.GITHUB_RUN_ID}${process.env.GITHUB_RUN_ATTEMPT}`;
+          const displayName = `HQCHECK${suffix}`.slice(0, 24);
+          const supabaseOrigin = `https://${projectId}.supabase.co`;
+
+          const keysResponse = await fetch(
+            `https://api.supabase.com/v1/projects/${projectId}/api-keys?reveal=true`,
+            { headers: { Authorization: `Bearer ${accessToken}` } },
+          );
+          if (!keysResponse.ok) throw new Error(`Project key lookup failed: HTTP ${keysResponse.status}`);
+          const keys = await keysResponse.json();
+          const publishableKey = keys.find((item) => item.type === "publishable")?.api_key
+            ?? keys.find((item) => item.type === "legacy" && /anon/i.test(item.name ?? ""))?.api_key;
+          const secretKey = keys.find((item) => item.type === "secret")?.api_key
+            ?? keys.find((item) => item.type === "legacy" && /service.role/i.test(item.name ?? ""))?.api_key;
+          if (!publishableKey || !secretKey) throw new Error("Cleanup proof could not resolve project keys.");
+
+          const loginResponse = await fetch(`${supabaseOrigin}/functions/v1/pin-auth`, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${publishableKey}`,
+              apikey: publishableKey,
+              "Content-Type": "application/json",
+              Origin: productionOrigin,
+              "x-client-info": "octagon-hq-cleanup-proof/1",
+            },
+            body: JSON.stringify({ action: "login", displayName, pin: "4826" }),
+          });
+          const loginBody = await loginResponse.json().catch(() => ({}));
+          if (loginResponse.status !== 401 || loginBody?.message !== "That name and PIN did not match.") {
+            throw new Error(`Temporary PIN profile still authenticates or returned an unexpected cleanup response: HTTP ${loginResponse.status}`);
+          }
+
+          const serviceHeaders = {
+            Authorization: `Bearer ${secretKey}`,
+            apikey: secretKey,
+            "Content-Type": "application/json",
+          };
+          const profileQuery = new URL(`${supabaseOrigin}/rest/v1/profiles`);
+          profileQuery.searchParams.set("display_name", `eq.${displayName}`);
+          profileQuery.searchParams.set("select", "id,display_name");
+          const profilesResponse = await fetch(profileQuery, { headers: serviceHeaders });
+          if (!profilesResponse.ok) throw new Error(`Temporary profile cleanup query failed: HTTP ${profilesResponse.status}`);
+          const profiles = await profilesResponse.json();
+          if (!Array.isArray(profiles) || profiles.length !== 0) {
+            throw new Error("Temporary profile row still exists after the WebKit proof.");
+          }
+
+          const ownersQuery = new URL(`${supabaseOrigin}/rest/v1/pick_control_owners`);
+          ownersQuery.searchParams.set("select", "profile_id,profiles(display_name)");
+          const ownersResponse = await fetch(ownersQuery, { headers: serviceHeaders });
+          if (!ownersResponse.ok) throw new Error(`Temporary owner-grant cleanup query failed: HTTP ${ownersResponse.status}`);
+          const owners = await ownersResponse.json();
+          const retainedOwner = Array.isArray(owners) && owners.some((owner) => {
+            const related = owner?.profiles;
+            if (Array.isArray(related)) return related.some((profile) => profile?.display_name === displayName);
+            return related?.display_name === displayName;
+          });
+          if (retainedOwner) throw new Error("Temporary Event Setup owner grant still exists after the WebKit proof.");
+
+          console.log(`Temporary profile and Event Setup owner grant cleanup verified for ${displayName}.`);
+          NODE
+
       - name: Upload production Event Setup WebKit proof
         if: always()
         uses: actions/upload-artifact@v4
@@ -248,6 +316,7 @@ jobs:
             echo "- Authenticated Event Setup preview: supplied MMA Mania URL returned the exact clean four-fight main card without changing the staged or live cards"
             echo "- Private staged draft: exact clean UFC Belgrade card verified"
             echo "- Production WebKit: exact frontend SHA verified at 390x844 with a retained screenshot artifact"
+            echo "- Temporary proof profile and Event Setup owner grant: removed and independently verified"
             echo "- Underdog Lock and seven-field scoring summary RPCs: responding in production"
             echo "- pin-auth Edge Function: deployed and responding with the expected contract"
             echo "- sync-next-ufc-event Edge Function: exact deployed source $EXPECTED_SYNC_SOURCE_SHA verified through its live marker"
