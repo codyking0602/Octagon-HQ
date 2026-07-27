@@ -1,195 +1,218 @@
 # Codex Task — Phase 1 Manual Monitoring Runner
 
-## Operating context
+## Codex Cloud operating model
 
 Repository: `codyking0602/Octagon-HQ`
 
 Production app: `https://octagon.hq-app.workers.dev`
 
-Base branch: `main`
+Canonical production base:
 
-Exact base `main` SHA: `ec93d102d454e81e21d20a3b2792dbcf0c76d758`
+`ec93d102d454e81e21d20a3b2792dbcf0c76d758`
 
-Working branch: `agent/phase1-manual-monitoring-runner`
+Handoff branch selected in Codex Cloud:
 
-This branch and draft PR were created before implementation so GitHub can serve as the shared handoff between Codex and ChatGPT.
+`agent/phase1-manual-monitoring-runner`
 
-Before editing, confirm:
+Codex Cloud may mount the selected branch on an internal local branch named `work`. That is expected.
 
-```bash
-git rev-parse HEAD
-git branch --show-current
-git status --short --branch
-```
+Do **not** stop merely because:
 
-Expected starting state:
+- `git branch --show-current` returns `work`;
+- no `origin` remote is configured inside the sandbox;
+- GitHub CLI is unavailable;
+- the sandbox cannot directly update an existing pull request.
 
-- branch: `agent/phase1-manual-monitoring-runner`
-- HEAD: the task-spec commit directly descended from `ec93d102d454e81e21d20a3b2792dbcf0c76d758`
-- clean working tree
+Instead, confirm the selected checkout contains this file, contains the merged Slice 1 and Slice 2 foundation, and descends from the canonical production base.
 
-Do not switch to or continue a generic `work` branch.
+The starting checkout should include the task-spec commit and therefore be ahead of the production base by this documentation file. A synthetic local branch name does not change the source snapshot.
+
+This task does **not** continue or update PR #82. PR #82 is only the superseded setup attempt.
+
+Implement and validate the work inside the Codex task. At completion, use Codex Cloud's normal **Create PR** or **Create draft PR** action to open one new implementation PR targeting `main`. Do not attempt to append a fresh Codex task to an existing PR.
 
 Use the project standard:
 
 > One owner. One purpose. Small diff. Focused test. Exact-head green. Then merge.
 
-Do not deploy or merge. Cody must explicitly approve deployment and must explicitly use the word `merge` for this PR.
+Do not deploy or merge. ChatGPT will review the new implementation PR and handle an exact-head deployment after review. Cody must explicitly use the word `merge` before merge.
 
 ## Read first
 
-Before editing, read and inspect:
+Before editing, inspect:
 
 - `docs/HANDOFF.md`
 - `docs/product-blueprint.md`
-- the current Picks monitoring code under `src/features/picks-monitoring/`
-- the current Event Setup and `sync-next-ufc-event` owners
+- `src/features/picks-monitoring/`
+- the current Event Setup implementation
+- the current `sync-next-ufc-event` Edge Function and shared owners
 - the current Picks repositories, projections, and lifecycle RPCs
 - `supabase/migrations/202608070001_pick_monitoring_storage.sql`
-- existing monitoring and Event Setup tests
-- canonical deployment and verification workflows
+- existing monitoring, Event Setup, and Picks tests
+- canonical backend deployment and verification workflows
 
-Report the current canonical owners in the PR before or alongside the implementation. Do not guess ownership from filenames alone.
+Identify the actual canonical owners before editing. Do not infer ownership from filenames alone.
 
 ## Current merged foundation
 
-### Slice 1 — odds-provider adapter
+### Slice 1 — Odds-provider adapter
 
-Existing code under `src/features/picks-monitoring/` already owns:
+The existing code under `src/features/picks-monitoring/` owns:
 
-- the normalized odds model;
+- normalized odds models;
 - The Odds API request and response adapter;
 - DraftKings preference;
 - FanDuel fallback only when DraftKings lacks a complete two-fighter snapshot;
-- no mixing prices from different sportsbooks;
-- normalized fighter and matchup identities;
-- provider diagnostics and quota metadata;
-- no browser runtime owner, scheduler, database write, or production mutation.
+- the rule forbidding mixed prices from different sportsbooks;
+- fighter and matchup normalization;
+- provider diagnostics and quota metadata.
 
-### Slice 2 — private monitoring storage
+It currently has no scheduler, database writer, browser runtime owner, provider secret, or production mutation path.
 
-Merged migration:
+### Slice 2 — Private monitoring storage
+
+Migration:
 
 `supabase/migrations/202608070001_pick_monitoring_storage.sql`
 
-It already owns:
+It owns:
 
 - `pick_monitoring_runs`;
 - `pick_monitoring_findings`;
 - `pick_monitoring_odds_snapshots`;
 - service-role-only atomic writer `record_pick_monitoring_run(jsonb)`;
-- immutable run, finding-evidence, and snapshot storage;
+- append-only run and snapshot evidence;
+- immutable finding evidence except review fields;
 - review states `new`, `reviewed`, and `dismissed`;
 - canonical event-lock capture;
-- strict pre-lock odds eligibility using `fetched_at < observed_locks_at`.
+- strict snapshot eligibility using `fetched_at < observed_locks_at`.
 
-The existing live card, staged draft, Picks, lock, result, scoring, and publication owners must remain unchanged.
+The live card, staged draft, Picks, lock, result, scoring, and publication owners must remain unchanged.
 
 ## Objective
 
-Implement **Phase 1, Slice 3: one manually triggered backend monitoring runner**.
+Implement **Phase 1, Slice 3: one secure, manually triggered backend monitoring runner**.
 
-The runner must connect the existing card-preview owner, Slice 1 odds adapter, and Slice 2 atomic storage owner into one real end-to-end monitoring execution.
+A single run must connect the existing UFC card-preview owner, Slice 1 odds adapter, and Slice 2 atomic storage writer.
 
-A single run should:
+The runner should:
 
-1. Inspect the current canonical UFC event without publishing or mutating it.
-2. Fetch current odds from The Odds API using the existing Slice 1 contract.
-3. Compare source card information and normalized odds against the canonical current or staged Picks event.
+1. Inspect the relevant canonical UFC event without publishing or mutating it.
+2. Fetch current odds through the existing The Odds API adapter.
+3. Compare source card information and normalized odds with the canonical current or staged Picks event.
 4. Produce deterministic reviewable findings.
-5. Persist the complete run, findings, diagnostics, quota information, and odds snapshots through `record_pick_monitoring_run(jsonb)`.
-6. Return a compact typed summary suitable for a future owner-only monitoring inbox.
+5. Persist the complete run, findings, sanitized diagnostics, quota information, and odds snapshots through `record_pick_monitoring_run(jsonb)`.
+6. Return a compact typed summary suitable for a later owner-only monitoring inbox.
 
-This must remain an explicitly invoked backend operation. Do not add scheduling yet.
+This is an explicitly invoked backend operation. Do not add scheduling.
 
 ## Canonical ownership
 
 Before editing, identify the current owners for:
 
-- UFC event source preview;
+- UFC source preview;
 - staged Event Setup draft;
 - active Picks event and bouts;
 - fighter and matchup normalization;
-- The Odds API adapter;
+- The Odds API parsing and sportsbook selection;
 - monitoring payload construction;
 - monitoring database recording;
-- canonical event lock time.
+- canonical `locks_at`.
 
 Preserve those owners.
 
-Expected ownership direction:
+Expected direction:
 
 - `sync-next-ufc-event` remains the sole UFC card-source owner.
-- Existing fighter/matchup normalization remains authoritative.
+- Existing fighter and matchup normalization remains authoritative.
 - Slice 1 remains the only The Odds API parsing and sportsbook-selection owner.
-- Slice 2’s `record_pick_monitoring_run(jsonb)` remains the only monitoring evidence writer.
-- Existing Picks repositories and RPCs remain authoritative for active/staged event projections.
-- The new runner orchestrates existing owners; it must not duplicate them.
+- `record_pick_monitoring_run(jsonb)` remains the only monitoring evidence writer.
+- Existing Picks repositories and RPCs remain authoritative for active and staged event projections.
+- The new runner is an orchestration owner only.
 
-Do not create another card parser, odds parser, Supabase client, identity path, event repository, lock owner, or monitoring storage path.
+Do not create another card parser, odds parser, Supabase client, identity path, event repository, lock owner, or storage writer.
 
-Do not overload `sync-next-ufc-event` with unrelated odds-storage responsibility merely to avoid adding a legitimate orchestration owner. If a new Edge Function is the cleanest single owner, create one narrowly named function and explain why.
+Do not overload `sync-next-ufc-event` with unrelated odds-storage responsibility merely to avoid a legitimate orchestration owner. A narrowly named new Edge Function is acceptable when it is the cleanest single owner. Explain that decision in the PR.
 
-## Manual trigger boundary
+## Manual trigger and security boundary
 
-Add one secure backend entry point for a single monitoring execution.
-
-The entry point must:
-
-- require a trusted server-side caller;
-- fail closed without required provider credentials;
-- never expose The Odds API key to browser code;
-- not be callable by ordinary authenticated profiles;
-- not add a public browser route or general-purpose proxy;
-- not create a polling loop, cron job, scheduler, webhook, or automatic retry loop.
-
-The Odds API key must come only from a backend secret. It must never be accepted from the request body.
-
-## Event selection
-
-The run must resolve the one relevant Picks event deterministically through existing canonical owners.
+Add one secure backend entry point for one monitoring execution.
 
 It must:
 
-- preserve the database-enforced one-active-event invariant;
-- identify which canonical event the source and odds correspond to;
-- fail closed when event identity is ambiguous or mismatched;
-- capture canonical `locks_at` from the database;
-- never trust a caller-supplied lock timestamp;
-- store unmatched provider events or fights as findings rather than guessing.
+- require a trusted server-side caller;
+- reject ordinary authenticated profiles;
+- fail closed without required provider credentials;
+- obtain The Odds API key only from backend secrets;
+- never accept the provider key in a request body;
+- never expose the key to browser code;
+- not add a public browser route or general-purpose proxy;
+- not create a scheduler, cron job, polling loop, webhook, background retry loop, or automatic invocation.
 
-Do not create, activate, rotate, complete, lock, stage, apply, or publish an event.
+Sanitize provider errors before logging, returning, or storing them.
+
+Never include secrets in:
+
+- logs;
+- diagnostics;
+- findings;
+- responses;
+- source details;
+- test fixtures;
+- build artifacts;
+- committed files.
+
+Quota metadata such as requests remaining, requests used, and request cost may be stored when provided.
+
+## Event resolution
+
+Resolve one relevant canonical Picks event through existing owners.
+
+The runner must:
+
+- preserve the database-enforced one-active-event invariant;
+- identify which canonical event the source and provider event represent;
+- fail closed when event identity is ambiguous or mismatched;
+- use canonical database `locks_at`;
+- never trust a caller-supplied lock timestamp;
+- store unmatched provider events or fights as evidence rather than guessing.
+
+Do not create, stage, activate, rotate, lock, complete, apply, or publish an event.
 
 ## Card comparison findings
 
-Generate deterministic evidence for meaningful source-card differences such as:
+Generate deterministic evidence for meaningful source-card differences, including where applicable:
 
 - bout added;
 - bout removed;
 - fighter replaced;
-- bout order or card-section change when materially relevant;
+- meaningful bout-order or card-section change;
 - event identity mismatch;
 - unmatched source bout;
 - malformed or incomplete source data.
 
-Reuse existing Event Setup comparison logic where possible. Do not add a second card-diff implementation if one already exists.
+Reuse existing Event Setup comparison logic where possible. Do not introduce a competing card-diff implementation.
 
-Card findings must be evidence only. They must not modify the staged draft or live card.
+Card findings are evidence only. They must not alter the staged draft or live card.
 
 ## Odds comparison findings
 
 For each confidently matched canonical bout:
 
-- preserve the selected sportsbook and full provider provenance;
+- preserve provider, source event, sportsbook, and timestamp provenance;
 - preserve both normalized fighter prices;
-- compare against currently stored canonical bout odds when available;
-- create an odds-change finding when either fighter’s American price changed at all;
+- compare with canonical stored bout odds when available;
+- create an `odds_change` finding when either fighter's American price changed at all;
 - retain exact before and after values;
-- include matchup identity, canonical bout ID, sportsbook, provider timestamps, and fetch timestamp.
+- include matchup identity and canonical bout ID.
 
-Do not introduce percentage thresholds, smoothing, consensus lines, movement history, or betting recommendations in this slice.
+Do not add percentage thresholds, smoothing, consensus lines, movement histories, wagering advice, or automatic application.
 
-If the canonical bout has no stored odds, record the snapshot and create informational evidence such as `odds_available`; do not silently treat it as an applied update.
+When a canonical bout has no stored odds:
+
+- record the snapshot;
+- create informational evidence such as `odds_available` if a narrow finding-type extension is necessary;
+- do not update the bout.
 
 Use existing finding types when possible:
 
@@ -199,15 +222,11 @@ Use existing finding types when possible:
 - `provider_error`;
 - `quota_warning`.
 
-Add a new finding type only if the current model cannot represent an essential state cleanly. Any extension must be narrow, migration-safe, and justified.
-
-Do not update live or staged bout odds.
+Add a new type only when essential, narrow, migration-safe, and justified.
 
 ## Finding contract
 
-Finding keys must be deterministic enough to support future review and deduplication work, but do not build cross-run suppression or notification deduplication yet.
-
-Each finding should include:
+Each finding should contain:
 
 - deterministic finding key;
 - finding type;
@@ -216,8 +235,10 @@ Each finding should include:
 - detection timestamp;
 - source and canonical identities when relevant;
 - matchup identity and bout ID when available;
-- before and after values when relevant;
-- useful provider/source details without secrets.
+- exact before and after values when relevant;
+- useful source/provider details without secrets.
+
+Keys should support future deduplication, but do not implement cross-run suppression or notification deduplication in this slice.
 
 ## Run status
 
@@ -227,30 +248,15 @@ Use existing statuses:
 - `partial`;
 - `failed`.
 
-Expected semantics:
+Semantics:
 
-- `completed`: source and provider checks completed without blocking errors, even if legitimate changes were found;
-- `partial`: useful evidence was recorded but coverage was incomplete or warnings prevented complete comparison;
+- `completed`: source and provider checks completed without blocking errors, even when legitimate differences were found;
+- `partial`: useful evidence was recorded but coverage was incomplete or warnings prevented full comparison;
 - `failed`: no trustworthy monitoring result could be produced.
 
-A detected card or odds change is not itself a failed run.
+Detected card or odds changes do not make the run fail.
 
-Provider quota exhaustion or provider failure should be recorded with sanitized diagnostics and an appropriate partial/failed status without mutating anything.
-
-## Security and secret handling
-
-The Odds API key must:
-
-- exist only as a backend secret;
-- never appear in logs, diagnostics, findings, responses, source details, build artifacts, tests, or browser code;
-- never be accepted from browser input;
-- never be committed.
-
-Sanitize provider errors before storage.
-
-Do not log raw provider response headers when they may contain sensitive values.
-
-Quota values such as requests remaining, requests used, and request cost may be stored when returned by the provider.
+Provider failure or quota exhaustion must produce sanitized diagnostics and an appropriate partial or failed status without mutation.
 
 ## Lock and Picks safety
 
@@ -259,7 +265,7 @@ This slice must not:
 - update live odds;
 - update staged odds;
 - update card metadata;
-- add, remove, or reorder bouts;
+- add, remove, or reorder canonical bouts;
 - publish a card;
 - apply Event Setup changes;
 - rotate events;
@@ -271,44 +277,44 @@ This slice must not:
 - expose group picks;
 - create a second active event.
 
-Odds snapshots fetched at or after the canonical lock must remain stored as audit evidence but remain ineligible for any future automatic application, using the existing Slice 2 rule.
+Snapshots fetched at or after canonical lock remain stored as audit evidence but must remain ineligible for future application under the existing Slice 2 rule.
 
 ## Response contract
 
-Return a compact typed response containing at least:
+Return a compact typed response with at least:
 
 - run ID;
 - run status;
 - canonical event ID;
 - source event identity;
 - start and completion timestamps;
-- number of findings by type and severity;
+- findings grouped by type and severity;
 - provider coverage summary;
 - quota summary;
 - number of stored odds snapshots.
 
-Do not return the provider secret or unnecessary raw source payloads.
+Do not return provider secrets or unnecessary raw provider/source payloads.
 
-## Tests
+## Required focused tests
 
-Add focused tests for at least:
+Cover at least:
 
-1. A clean matched event with complete DraftKings odds records a completed run and snapshots with no false changes.
+1. Clean matched event with complete DraftKings odds records a completed run and snapshots with no false changes.
 2. FanDuel is used only when DraftKings lacks a complete snapshot.
-3. A card difference creates a `card_change` finding without mutating the card or draft.
-4. A matched odds difference creates an `odds_change` finding with exact before/after evidence.
-5. A canonical bout with no current odds creates informational evidence and does not update the bout.
-6. An unmatched provider fight creates an `unmatched_fight` finding rather than an inferred match.
+3. Card difference creates `card_change` evidence without card or draft mutation.
+4. Matched odds difference creates `odds_change` with exact before/after evidence.
+5. Canonical bout with no current odds records informational evidence without updating the bout.
+6. Unmatched provider fight creates `unmatched_fight` rather than an inferred match.
 7. Provider failure stores sanitized diagnostics and returns partial or failed appropriately.
-8. Quota warning or exhaustion produces `quota_warning`.
-9. A snapshot immediately before lock is eligible.
-10. A snapshot exactly at or after lock is stored but not eligible.
+8. Quota warning or exhaustion creates `quota_warning`.
+9. Snapshot immediately before lock is eligible.
+10. Snapshot exactly at or after lock is stored but ineligible.
 11. Event identity mismatch fails closed.
-12. The runner calls the existing atomic monitoring writer rather than direct table inserts.
-13. Ordinary authenticated browser users cannot invoke the runner.
+12. Runner uses the atomic monitoring writer rather than direct table inserts.
+13. Ordinary authenticated users cannot invoke the runner.
 14. No card, pick, lock, result, scoring, or publication mutation is introduced.
 
-Use sanitized fixtures. Do not make real provider calls in tests.
+Use sanitized fixtures. Do not call the real provider in tests.
 
 Do not weaken existing tests or verifier assertions.
 
@@ -325,37 +331,14 @@ npm run build
 
 Also run focused monitoring, Event Setup, and Picks contract tests before the full suite.
 
-If the production build requires environment values, use the repository’s established safe local validation method. Do not commit placeholder credentials.
+Use the repository's established safe local build values when required. Do not commit placeholder production credentials.
 
-## GitHub reporting contract
+## Completion report
 
-Work only on `agent/phase1-manual-monitoring-runner`.
+At task completion, provide a final report containing:
 
-Commit and push the implementation to this branch.
-
-Update the existing draft PR body with:
-
-- exact base `main` SHA;
-- exact final head SHA;
-- objective and scope;
-- canonical owner analysis;
-- manual-trigger and security boundaries;
-- event resolution behavior;
-- finding behavior;
-- lock and mutation safety;
-- files changed;
-- focused and full validation results;
-- anything that could not be validated locally;
-- explicit confirmation that nothing was deployed or merged.
-
-Also leave a final PR comment beginning with:
-
-`CODEX FINAL REPORT`
-
-The comment must contain:
-
-1. Exact base `main` SHA.
-2. Exact final head SHA.
+1. Starting checkout SHA.
+2. Final Codex commit SHA.
 3. Root ownership decisions.
 4. Files changed.
 5. Monitoring execution flow.
@@ -363,23 +346,28 @@ The comment must contain:
 7. Security and secret-handling proof.
 8. Focused test results.
 9. Full typecheck, test, and build results.
-10. Remaining limitations or decisions needed.
+10. Remaining limitations or decisions.
 11. Confirmation that nothing was deployed, scheduled, published, mutated, or merged.
 
-Do not create a second PR.
+Then use Codex Cloud's **Create draft PR** action to open one new implementation PR targeting `main`.
 
-Do not add deployment labels.
+The new PR body should include the same report and state:
 
-Do not merge.
+- exact base `main` SHA;
+- exact final implementation head SHA;
+- no deployment performed;
+- no merge performed.
+
+Do not add deployment labels. Do not merge.
 
 ## Stop conditions
 
-Stop before editing and report in the existing PR if:
+Stop before editing only if:
 
-- this is not the `codyking0602/Octagon-HQ` repository;
-- the branch is not `agent/phase1-manual-monitoring-runner`;
-- the branch does not descend from base `ec93d102d454e81e21d20a3b2792dbcf0c76d758`;
-- the repository is missing the merged Slice 1 or Slice 2 foundation;
+- the checkout is not from `codyking0602/Octagon-HQ`;
+- this task file is missing;
+- the checkout does not descend from `ec93d102d454e81e21d20a3b2792dbcf0c76d758`;
+- the merged Slice 1 or Slice 2 foundation is missing;
 - ownership cannot be determined without introducing a duplicate runtime owner.
 
-Otherwise, complete the task in this branch and communicate entirely through the existing GitHub PR.
+A local branch named `work`, a missing Git remote, or unavailable GitHub CLI is **not** a stop condition in Codex Cloud.
