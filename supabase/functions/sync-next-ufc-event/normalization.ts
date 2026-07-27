@@ -18,6 +18,20 @@ export function splitVersus(value: string) {
   return value.split(/\s+(?:vs\.?|v\.?|versus)\s+/i).map((part) => part.trim()).filter(Boolean);
 }
 
+export function canonicalFightPair(red: string, blue: string) {
+  return [normalizeFighter(red), normalizeFighter(blue)].sort().join("|");
+}
+
+export function sameVersusLabel(left: string, right: string) {
+  const leftFighters = splitVersus(left);
+  const rightFighters = splitVersus(right);
+  if (leftFighters.length === 2 && rightFighters.length === 2) {
+    return canonicalFightPair(leftFighters[0], leftFighters[1])
+      === canonicalFightPair(rightFighters[0], rightFighters[1]);
+  }
+  return normalizeText(left) === normalizeText(right);
+}
+
 export function fighterMatch(expected: string, actual: string, surnameOnly = false) {
   const left = normalizeFighter(expected).split(" ").filter(Boolean);
   const right = new Set(normalizeFighter(actual).split(" ").filter(Boolean));
