@@ -5,6 +5,7 @@ on:
     paths:
       - ".github/workflows/verify-supabase-backend.yml"
       - ".github/workflows/deploy-supabase.yml"
+      - "scripts/verify-event-setup-preview-live.mjs"
       - "scripts/verify-picks-scoring-live.mjs"
       - "scripts/verify-sync-function-deployment.mjs"
       - "supabase/**"
@@ -190,6 +191,9 @@ jobs:
       - name: Verify exact deployed UFC sync source
         run: node scripts/verify-sync-function-deployment.mjs
 
+      - name: Verify authenticated production Event Setup preview
+        run: node scripts/verify-event-setup-preview-live.mjs
+
       - name: Verify live Picks scoring RPCs
         run: node scripts/verify-picks-scoring-live.mjs
 
@@ -204,6 +208,7 @@ jobs:
             echo "- Required Edge Function secret names: present"
             echo "- Existing profile, challenge, Your HQ, Picks, scoring, recap, reveal, and Fight Night migrations: deployed remotely"
             echo "- Event setup and card review migration: deployed remotely"
+            echo "- Authenticated Event Setup preview: supplied MMA Mania URL returned a main-card preview without changing staged or live cards"
             echo "- Underdog Lock and seven-field scoring summary RPCs: responding in production"
             echo "- pin-auth Edge Function: deployed and responding with the expected contract"
             echo "- sync-next-ufc-event Edge Function: exact deployed source $EXPECTED_SYNC_SOURCE_SHA verified through its live marker"

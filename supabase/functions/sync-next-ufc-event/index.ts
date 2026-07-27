@@ -3,6 +3,8 @@ import * as cheerio from "npm:cheerio@1.0.0";
 import { DEPLOYED_SOURCE_SHA } from "./deployment.ts";
 import { absoluteMmaManiaArticleUrl } from "./sourceUrls.ts";
 import { chooseEventArticle, matchEventIdentity, rankDiscoveryCandidates, type ArticleIdentity } from "./eventIdentity.ts";
+import { matchSourceIdentity, type NormalizedUfcEvent } from "./identityEngine.ts";
+import { adaptMmaManiaSource, adaptUfcSource } from "./sourceAdapters.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*",
@@ -25,6 +27,23 @@ const monthNumbers: Record<string, string> = {
 type CardScope = "auto" | "main" | "full";
 type EffectiveScope = "main" | "full";
 type CardSection = "main-event" | "main" | "prelim" | "early-prelim";
+type ErrorStage = "authentication" | "ufc-index-fetch" | "ufc-event-fetch" | "ufc-parse" | "mma-fetch" | "mma-parse" | "identity-match" | "preview-build" | "database-read" | "database-write";
+
+class SyncError extends Error {
+  constructor(readonly code: string, message: string, readonly stage: ErrorStage, readonly safeDetails: Record<string, unknown> = {}) { super(message); }
+}
+
+function errorJson(error: unknown, requestId: string, fallbackStage: ErrorStage, status = 502) {
+  const known = error instanceof SyncError;
+  return json({
+    code: known ? error.code : "SYNC_UNEXPECTED_ERROR",
+    message: known ? error.message : "The next UFC event could not be previewed safely.",
+    requestId,
+    stage: known ? error.stage : fallbackStage,
+    safeDetails: known ? error.safeDetails : {},
+    deployment_sha: DEPLOYED_SOURCE_SHA,
+  }, status);
+}
 
 interface UfcEventMetadata {
   source_event_key: string;
@@ -37,6 +56,7 @@ interface UfcEventMetadata {
   starts_at: string;
   locks_at: string;
   season: number;
+  normalized: NormalizedUfcEvent;
 }
 
 interface ParsedCardBout {
@@ -200,7 +220,7 @@ export function parseUfcEventPage(html: string, sourceUrl: string, now = new Dat
   const sourceEventKey = new URL(sourceUrl).pathname.replace(/^\/+|\/+$/g, "");
   const season = startsAt.getUTCFullYear();
 
-  return {
+  const legacy = {
     source_event_key: sourceEventKey,
     ufc_source_url: sourceUrl,
     event_id: slugify(`${name}-${subtitle}-${season}-${startsAt.toISOString().slice(0, 10)}`),
@@ -212,6 +232,7 @@ export function parseUfcEventPage(html: string, sourceUrl: string, now = new Dat
     locks_at: startsAt.toISOString(),
     season,
   };
+  return { ...legacy, normalized: adaptUfcSource(html, sourceUrl, legacy) };
 }
 
 function classifySection(value: string): CardSection | null {
@@ -285,10 +306,13 @@ export function parseMmaManiaCard(html: string, sourceUrl: string): MmaManiaCard
   let section: CardSection | null = null;
   let usedSectionHeadings = false;
 
-  scope.find("h2,h3,h4,p,li").each((_, element) => {
+  scope.find("h1,h2,h3,h4,h5,h6,p,li,td").each((_, element) => {
     const tag = element.tagName?.toLowerCase();
-    if (tag === "h2" || tag === "h3" || tag === "h4") {
-      const nextSection = classifySection($(element).text());
+    const headingSection = classifySection($(element).text());
+    const semanticHeading = /^h[1-6]$/.test(tag ?? "")
+      || (!/\s(?:vs\.?|v\.?|versus)\s/i.test($(element).text()) && clean($(element).text()).length < 60 && Boolean($(element).find("strong,b").length));
+    if (semanticHeading) {
+      const nextSection = headingSection;
       if (nextSection) {
         section = nextSection;
         usedSectionHeadings = true;
@@ -393,9 +417,16 @@ function parsedMainEventMatches(metadata: UfcEventMetadata, card: MmaManiaCard) 
 }
 
 async function fetchText(url: string, sourceLabel: string) {
-  const response = await fetch(url, { headers: requestHeaders, redirect: "follow" });
-  if (!response.ok) throw new Error(`${sourceLabel} returned HTTP ${response.status}.`);
-  return response.text();
+  const stage: ErrorStage = sourceLabel === "UFC.com" ? "ufc-event-fetch" : "mma-fetch";
+  let response: Response;
+  try { response = await fetch(url, { headers: requestHeaders, redirect: "follow", signal: AbortSignal.timeout(8000) }); }
+  catch { throw new SyncError("UPSTREAM_TIMEOUT", `${sourceLabel} did not respond within 8 seconds.`, stage, { source: sourceLabel }); }
+  if (!response.ok) throw new SyncError("UPSTREAM_HTTP_ERROR", `${sourceLabel} returned HTTP ${response.status}.`, stage, { source: sourceLabel, status: response.status });
+  const declared = Number(response.headers.get("content-length") ?? 0);
+  if (declared > 2_000_000) throw new SyncError("UPSTREAM_RESPONSE_TOO_LARGE", `${sourceLabel} response exceeded the 2 MB safety limit.`, stage, { source: sourceLabel });
+  const text = await response.text();
+  if (new TextEncoder().encode(text).byteLength > 2_000_000) throw new SyncError("UPSTREAM_RESPONSE_TOO_LARGE", `${sourceLabel} response exceeded the 2 MB safety limit.`, stage, { source: sourceLabel });
+  return text;
 }
 
 async function findNextUfcEvent(now: Date) {
@@ -428,9 +459,13 @@ async function fetchExactMmaManiaCard(metadata: UfcEventMetadata, requestedUrl: 
   if (!card.usedSectionHeadings || card.bouts.length < 4 || card.bouts.length > 20) {
     throw new Error("The supplied MMA Mania article did not contain a plausible sectioned fight card.");
   }
-  const identity = matchEventIdentity(metadata, articleIdentity(html, sourceUrl, card));
-  if (!identity.accepted && !parsedMainEventMatches(metadata, card)) {
-    throw new Error("The supplied MMA Mania article does not match the next UFC event or its main event.");
+  const article = adaptMmaManiaSource(html, sourceUrl, card.bouts, Array.from(new Set(card.bouts.map((bout) => bout.section))));
+  const identity = matchSourceIdentity(metadata.normalized, article);
+  if (!identity.accepted) {
+    throw new SyncError("ARTICLE_IDENTITY_REJECTED", identity.reason, "identity-match", {
+      confidence: identity.confidence, matchedSignals: identity.matchedSignals, conflicts: identity.conflicts,
+      normalizedUfcEvent: identity.normalizedUfcEvent, normalizedArticleEvent: identity.normalizedArticleEvent,
+    });
   }
   return card;
 }
@@ -618,8 +653,9 @@ async function sourceHash(event: ParsedEvent, effectiveScope: EffectiveScope) {
 }
 
 Deno.serve(async (request) => {
+  const requestId = crypto.randomUUID();
   if (request.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
-  if (request.method !== "POST") return json({ message: "Method not allowed." }, 405);
+  if (request.method !== "POST") return errorJson(new SyncError("METHOD_NOT_ALLOWED", "Method not allowed.", "authentication"), requestId, "authentication", 405);
 
   let input: Record<string, unknown> = {};
   try {
@@ -636,13 +672,13 @@ Deno.serve(async (request) => {
   const secretKey = Deno.env.get("SUPABASE_SECRET_KEY") ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   const authorization = request.headers.get("authorization") ?? "";
   const token = authorization.replace(/^Bearer\s+/i, "");
-  if (!supabaseUrl || !anonKey || !secretKey || !token) return json({ message: "Event sync is not configured." }, 503);
+  if (!supabaseUrl || !anonKey || !secretKey || !token) return errorJson(new SyncError("SYNC_NOT_CONFIGURED", "Event sync is not configured.", "authentication"), requestId, "authentication", 503);
 
   const admin = createClient(supabaseUrl, secretKey, {
     auth: { autoRefreshToken: false, persistSession: false },
   });
   const user = await admin.auth.getUser(token);
-  if (user.error || !user.data.user) return json({ message: "Owner sign-in required." }, 401);
+  if (user.error || !user.data.user) return errorJson(new SyncError("OWNER_AUTH_REQUIRED", "Owner sign-in required.", "authentication"), requestId, "authentication", 401);
 
   const ownerClient = createClient(supabaseUrl, anonKey, {
     auth: { autoRefreshToken: false, persistSession: false },
@@ -651,7 +687,7 @@ Deno.serve(async (request) => {
   const ownerProbe = await ownerClient.rpc("get_pick_event_setup");
   if (ownerProbe.error) {
     const denied = ownerProbe.error.message.toLowerCase().includes("pick control owner required");
-    return json({ message: denied ? "Fight Night owner access required." : "Event Setup is unavailable." }, denied ? 403 : 503);
+    return errorJson(new SyncError(denied ? "OWNER_ACCESS_REQUIRED" : "DATABASE_READ_FAILED", denied ? "Fight Night owner access required." : "Event Setup is unavailable.", denied ? "authentication" : "database-read"), requestId, "database-read", denied ? 403 : 503);
   }
 
   const mode = input.mode === "preview" ? "preview" : "apply";
@@ -680,7 +716,7 @@ Deno.serve(async (request) => {
     }
 
     if (expectedHash && expectedHash !== hash) {
-      return json({ message: "The source card changed after review. Check for card updates again before applying it." }, 409);
+      return errorJson(new SyncError("SOURCE_HASH_CHANGED", "The source card changed after review. Check for card updates again before applying it.", "database-write"), requestId, "database-write", 409);
     }
     const staged = await admin.rpc("stage_pick_event_draft", { p_payload: event });
     if (staged.error) throw staged.error;
@@ -692,7 +728,6 @@ Deno.serve(async (request) => {
       deployment_sha: DEPLOYED_SOURCE_SHA,
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "The next UFC event could not be staged.";
-    return json({ message, deployment_sha: DEPLOYED_SOURCE_SHA }, 502);
+    return errorJson(error, requestId, mode === "preview" ? "preview-build" : "database-write");
   }
 });
