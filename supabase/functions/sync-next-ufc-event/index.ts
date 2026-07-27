@@ -649,6 +649,7 @@ Deno.serve(async (request) => {
         fight_count: event.bouts.length,
         changes,
         warnings: event.warnings,
+        event_preview: event,
         deployment_sha: DEPLOYED_SOURCE_SHA,
       });
     }
