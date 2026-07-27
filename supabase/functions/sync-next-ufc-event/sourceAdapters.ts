@@ -1,6 +1,6 @@
 // @ts-ignore -- Supabase Edge Functions resolve Deno npm: specifiers at runtime.
 import * as cheerio from "npm:cheerio@1.0.0";
-import { eventNumber, explicitIsoDates, splitVersus } from "./normalization.ts";
+import { canonicalFighterDisplay, eventNumber, explicitIsoDates, normalizeText, splitVersus } from "./normalization.ts";
 import type { NormalizedArticleEvent, NormalizedUfcEvent } from "./identityEngine.ts";
 
 type Bout = NormalizedArticleEvent["bouts"][number];
@@ -86,16 +86,6 @@ function locationEvidence(lines: string[]) {
   return Array.from(new Set([labeled, ...contextual].map(clean).filter(Boolean)));
 }
 
-function versusLabel(value: string) {
-  const text = clean(value);
-  if (!text) return "";
-  const colonTail = text.includes(":") ? text.slice(text.lastIndexOf(":") + 1) : text;
-  const candidate = clean(colonTail.split(/\s*\|\s*|,\s*(?:Live|From|On|at)\b/i)[0]);
-  const parts = splitVersus(candidate);
-  if (parts.length !== 2 || parts.some((part) => part.length < 2 || part.length > 80)) return "";
-  return `${parts[0]} vs ${parts[1]}`;
-}
-
 function ufcPlaceFromDescription(value: string) {
   const text = clean(value);
   const withLocation = text.match(/\bLive\s+From\s+(.{2,120}?)\s+In\s+(.{2,120}?)\s+On\s+(?:(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun)[a-z]*\.?,?\s+)?(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?|tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\.?\s+\d{1,2}/i);
@@ -104,9 +94,76 @@ function ufcPlaceFromDescription(value: string) {
   return venueOnly ? { venue: clean(venueOnly[1]), location: "" } : { venue: "", location: "" };
 }
 
-function reasonableLocation(value: string) {
+function safeMetadata(value: unknown, maxLength: number) {
   const text = clean(value);
-  return text && text.length <= 160 && !/<|iframe|skip to main|main content/i.test(text) ? text : "";
+  if (!text || text.length > maxLength) return "";
+  if (/<|>|iframe|googletagmanager|skip\s+to\s+main|main\s+content|src\s*=|<\/?(?:script|style|nav)\b/i.test(text)) return "";
+  return text;
+}
+
+function safeEventName(value: string, number: string) {
+  if (number) return `UFC ${number}`;
+  return /\bufc\s+fight\s+night\b/i.test(value) ? "UFC Fight Night" : safeMetadata(value, 80);
+}
+
+function versusLabel(value: string) {
+  const text = safeMetadata(value, 400);
+  if (!text) return "";
+  const colonTail = text.includes(":") ? text.slice(text.lastIndexOf(":") + 1) : text;
+  const candidate = clean(colonTail.split(/\s*\|\s*|,\s*(?:Live|From|On|at)\b/i)[0]);
+  const parts = splitVersus(candidate).map(canonicalFighterDisplay);
+  if (parts.length !== 2 || parts.some((part) => part.length < 2 || part.length > 80)) return "";
+  return `${parts[0]} vs ${parts[1]}`;
+}
+
+function locationParts(value: unknown) {
+  const record = value && typeof value === "object" ? value as Record<string, unknown> : {};
+  const address = record.address && typeof record.address === "object"
+    ? record.address as Record<string, unknown>
+    : {};
+  const country = address.addressCountry && typeof address.addressCountry === "object"
+    ? clean((address.addressCountry as Record<string, unknown>).name)
+    : clean(address.addressCountry);
+  return {
+    venue: safeMetadata(record.name, 120),
+    city: safeMetadata(address.addressLocality, 80),
+    region: safeMetadata(address.addressRegion, 80),
+    country: safeMetadata(country, 80),
+  };
+}
+
+function validIso(value: unknown) {
+  const text = clean(value);
+  const parsed = new Date(text);
+  return text && Number.isFinite(parsed.getTime()) ? parsed.toISOString() : "";
+}
+
+export function canonicalUfcEventFields(event: NormalizedUfcEvent) {
+  const number = event.eventNumber || eventNumber(event.eventName);
+  const name = safeEventName(event.eventName, number);
+  const headliners = event.headliners.map(canonicalFighterDisplay).filter(Boolean);
+  const venue = safeMetadata(event.venue, 120);
+  const location = safeMetadata([event.city, event.region, event.country].map((part) => safeMetadata(part, 80)).filter(Boolean).join(", "), 180);
+  const startsAt = validIso(event.startsAt);
+  const sourceEventKey = safeMetadata(event.canonicalEventKey, 180);
+
+  if (!name || headliners.length !== 2 || !startsAt || !sourceEventKey) {
+    throw new Error("Official UFC metadata did not produce a safe canonical event identity.");
+  }
+
+  const subtitle = `${headliners[0]} vs. ${headliners[1]}`;
+  const date = startsAt.slice(0, 10);
+  return {
+    source_event_key: sourceEventKey,
+    event_id: normalizeText(`${name} ${subtitle} ${date}`).replace(/\s+/g, "-"),
+    name,
+    subtitle,
+    venue,
+    location,
+    starts_at: startsAt,
+    locks_at: startsAt,
+    season: Number(date.slice(0, 4)),
+  };
 }
 
 /** UFC owns identity. Structured data wins, then official metadata and canonical parser fallbacks. */
@@ -135,38 +192,50 @@ export function adaptUfcSource(
     versusLabel(description),
     versusLabel(fallback.subtitle),
   );
-  const name = first(event.name, $("[data-event-name]").attr("data-event-name"), fallback.name, $("h1").first().text());
-  const number = eventNumber(`${name} ${pageTitle} ${subtitle} ${embedded}`);
-  const place = ufcPlaceFromDescription(description);
-  const eventLocation = event.location && typeof event.location === "object" ? event.location as Record<string, unknown> : {};
-  const venue = first(eventLocation.name, place.venue, fallback.venue);
-  const location = first(place.location, reasonableLocation(fallback.location));
-  const parts = location.split(",").map(clean).filter(Boolean);
-  const structuredStart = first(event.startDate);
-  const localEventDate = structuredStart.match(/\b20\d{2}-\d{2}-\d{2}\b/)?.[0]
-    ?? explicitIsoDates(description)[0]
-    ?? fallback.starts_at.slice(0, 10);
+  const rawName = first(event.name, $("[data-event-name]").attr("data-event-name"), pageTitle, fallback.name, $("h1").first().text());
+  const number = eventNumber(`${rawName} ${pageTitle} ${subtitle} ${embedded}`);
+  const name = safeEventName(rawName, number);
+  const descriptionPlace = ufcPlaceFromDescription(description);
+  const structuredPlace = locationParts(event.location);
+  const fallbackVenue = safeMetadata(fallback.venue, 120);
+  const fallbackLocation = safeMetadata(fallback.location, 180);
+  const venue = first(
+    structuredPlace.venue,
+    safeMetadata(descriptionPlace.venue, 120),
+    fallbackVenue,
+  );
+  const descriptionLocation = safeMetadata(descriptionPlace.location, 180);
+  const fallbackParts = first(descriptionLocation, fallbackLocation).split(",").map((part) => safeMetadata(part, 80)).filter(Boolean);
+  const city = first(structuredPlace.city, fallbackParts[0]);
+  const country = first(structuredPlace.country, fallbackParts.at(-1));
+  const region = first(structuredPlace.region, fallbackParts.length > 2 ? fallbackParts[1] : "");
+  const startsAt = first(validIso(event.startDate), validIso(fallback.starts_at));
+  const localEventDate = startsAt.slice(0, 10)
+    || explicitIsoDates(description)[0]
+    || safeMetadata(fallback.starts_at.slice(0, 10), 10);
+  const canonicalEventKey = safeMetadata(fallback.source_event_key, 180)
+    || safeMetadata(new URL(canonicalUrl).pathname.replace(/^\/+|\/+$/g, ""), 180);
 
   evidence.push(
-    name === fallback.name ? "ufc-parser:event-name" : "structured:event-name",
+    name === safeEventName(fallback.name, number) ? "ufc-parser:event-name" : "structured:event-name",
     dataFightLabel && subtitle === versusLabel(dataFightLabel) ? "semantic:headliners" : "official-metadata:headliners",
-    place.venue ? "official-metadata:venue" : "ufc-parser:venue",
-    place.location ? "official-metadata:location" : "ufc-parser:location",
+    structuredPlace.venue || descriptionPlace.venue ? "official-metadata:venue" : "ufc-parser:venue",
+    structuredPlace.city || descriptionPlace.location ? "official-metadata:location" : "ufc-parser:location",
   );
 
   return {
-    canonicalEventKey: fallback.source_event_key,
+    canonicalEventKey,
     promotion: "UFC",
     eventType: number ? "numbered" : "fight-night",
     eventNumber: number,
     eventName: name,
-    headliners: splitVersus(subtitle).slice(0, 2),
-    startsAt: fallback.starts_at,
+    headliners: splitVersus(subtitle).slice(0, 2).map(canonicalFighterDisplay),
+    startsAt,
     localEventDate,
     venue,
-    city: parts[0] ?? "",
-    region: parts.length > 2 ? parts[1] ?? "" : "",
-    country: parts.at(-1) ?? "",
+    city,
+    region,
+    country,
     canonicalUrl,
     extractionEvidence: evidence,
   };
