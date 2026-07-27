@@ -71,6 +71,15 @@ function quotaInteger(value: string) {
   return Number.isSafeInteger(parsed) ? parsed : null;
 }
 
+function sanitizedProviderMessage(body: unknown, status: number) {
+  const record = asRecord(body);
+  const message = nonEmptyString(record?.message) || nonEmptyString(record?.error_code);
+  if (!message || message.length > 180 || /api[_-]?key|https?:\/\/|[?&]key=/i.test(message)) {
+    return `The Odds API request failed with status ${status}.`;
+  }
+  return message;
+}
+
 export function readTheOddsApiQuota(headers?: HeaderSource): OddsProviderQuota {
   return {
     requestsRemaining: quotaInteger(headerValue(headers, "x-requests-remaining")),
@@ -88,14 +97,6 @@ export function buildTheOddsApiRequestUrl(apiKey: string, origin = DEFAULT_API_O
   url.searchParams.set("oddsFormat", "american");
   url.searchParams.set("dateFormat", "iso");
   return url;
-}
-
-function providerMessage(body: unknown) {
-  const record = asRecord(body);
-  return nonEmptyString(record?.message)
-    || nonEmptyString(record?.error)
-    || nonEmptyString(record?.error_code)
-    || "The Odds API request failed.";
 }
 
 function invalidEventDiagnostic(sourceEventId: string, message: string): OddsAdapterDiagnostic {
@@ -279,7 +280,7 @@ export function adaptTheOddsApiResponse(response: TheOddsApiHttpResponse, fetche
       diagnostics: [{
         code: "provider_http_error",
         severity: "error",
-        message: providerMessage(response.body),
+        message: sanitizedProviderMessage(response.body, response.status),
       }],
       coverage: { providerEvents: 0, completeSnapshots: 0, missingSnapshots: 0 },
       quota,

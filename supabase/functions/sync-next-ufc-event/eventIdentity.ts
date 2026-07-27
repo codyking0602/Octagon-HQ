@@ -25,6 +25,20 @@ export interface IdentityMatch {
   reason: string;
 }
 
+/** Compares two database/source event projections without relying on generated IDs. */
+export function matchCanonicalEventIdentity(left: EventIdentity, right: EventIdentity) {
+  const leftNumber = eventNumber(`${left.name} ${left.subtitle}`);
+  const rightNumber = eventNumber(`${right.name} ${right.subtitle}`);
+  if (leftNumber && rightNumber && leftNumber !== rightNumber) return false;
+  const leftDay = isoDay(left.starts_at);
+  const rightDay = isoDay(right.starts_at);
+  const datesMatch = Boolean(leftDay && rightDay && dayDistance(leftDay, rightDay) <= 1);
+  const versusMatch = headliners(left.subtitle).length === 2
+    && headliners(right.subtitle).length === 2
+    && headliners(left.subtitle).every((fighter) => containsName(normalized(right.subtitle), fighter));
+  return datesMatch && (Boolean(leftNumber && leftNumber === rightNumber) || versusMatch);
+}
+
 export interface DiscoveryCandidate {
   url: string;
   discoveryText: string;
