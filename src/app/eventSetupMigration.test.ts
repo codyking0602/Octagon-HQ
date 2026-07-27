@@ -10,7 +10,8 @@ const config = readFileSync("supabase/config.toml", "utf8");
 const deployWorkflow = readFileSync(".github/workflows/deploy-supabase.yml", "utf8");
 const deploymentVerifier = readFileSync("scripts/verify-sync-function-deployment.mjs", "utf8");
 const productionPreviewVerifier = readFileSync("scripts/verify-event-setup-preview-live.mjs", "utf8");
-const productionBrowserVerifier = readFileSync("scripts/verify-pin-auth-live.mjs", "utf8");
+const productionPreviewContract = readFileSync("scripts/event-setup-preview-contract.mjs", "utf8");
+const webkitVerifier = readFileSync("scripts/verify-pin-auth-live.mjs", "utf8");
 
 describe("Phase 2B event setup backend", () => {
   it("keeps imported cards private until atomic publish", () => {
@@ -64,19 +65,16 @@ describe("Phase 2B event setup backend", () => {
     expect(syncFunction).toContain("Fight Night owner access required");
   });
 
-  it("verifies that the already-applied production source has no remaining changes", () => {
-    expect(productionPreviewVerifier).toContain("assertNoSourceChanges(preview.body.changes)");
-    expect(productionPreviewVerifier).toContain("changes after the same source was already applied");
-    expect(productionPreviewVerifier).toContain('assertCleanEvent(preview.body.event_preview, "Preview", draftBefore?.bouts)');
-    expect(productionPreviewVerifier).toContain("fight count differs from the staged draft");
+  it("independently verifies legitimate production source changes without fixed fight counts", () => {
+    expect(productionPreviewVerifier).toContain(
+      "assertReportedSourceChanges(draftBefore, preview.body.event_preview, preview.body.changes)",
+    );
+    expect(productionPreviewContract).toContain("expectedSourceChanges");
+    expect(productionPreviewContract).toContain("sameTimestamp");
     expect(productionPreviewVerifier).not.toContain("expectedFights");
-  });
-
-  it("verifies the zero-change post-apply state in the production browser", () => {
-    expect(productionBrowserVerifier).toContain('getByText("SOURCE MATCHES DRAFT"');
-    expect(productionBrowserVerifier).toContain("No staged event details, fights, sections, or order changed.");
-    expect(productionBrowserVerifier).toContain('getByRole("button", { name: "APPLY SOURCE CHANGES" }).count()');
-    expect(productionBrowserVerifier).toContain("already-applied clean four-fight UFC Belgrade source as unchanged");
+    expect(webkitVerifier).toContain("/Main card · \\d+ fights/i");
+    expect(webkitVerifier).not.toContain('name: "Main card · 4 fights"');
+    expect(webkitVerifier).not.toContain("SOURCE MATCHES DRAFT");
   });
 
   it("deploys and verifies the sync function runtime revision through the canonical backend owner", () => {
