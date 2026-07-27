@@ -1,4 +1,9 @@
 const suffixes = new Set(["jr", "sr", "ii", "iii", "iv"]);
+const canonicalDisplayNames = new Map([
+  ["uros medic", "Uroš Medić"],
+  ["aleksandar rakic", "Aleksandar Rakić"],
+  ["jan blachowicz", "Jan Błachowicz"],
+]);
 
 export function normalizeText(value: string) {
   return value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
@@ -7,11 +12,12 @@ export function normalizeText(value: string) {
 }
 
 export function canonicalFighterDisplay(value: string) {
-  return value.replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim()
+  const cleaned = value.replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim()
     .replace(/\s*\((?:rematch\s*)?#?2\)\s*$/i, "")
     .replace(/\s+(?:rematch\s*)?#?2\s*$/i, "")
     .replace(/[.,;:]+$/, "")
     .trim();
+  return canonicalDisplayNames.get(normalizeText(cleaned)) ?? cleaned;
 }
 
 export function normalizeFighter(value: string) {
