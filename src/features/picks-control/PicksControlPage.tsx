@@ -137,6 +137,10 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
         <p className="eyebrow">PRIVATE OWNER TOOL</p>
         <h1>Fight Night Control</h1>
         <p>Record official results one fight at a time. Each resolved fight immediately reveals how the group picked it.</p>
+        <div className="picks-control-heading__links">
+          <Link to="/picks/setup">EVENT SETUP</Link>
+          <Link to="/picks">PLAYER PICKS</Link>
+        </div>
       </section>
 
       {!identity.ready || loading ? (
@@ -165,8 +169,8 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
         <section className="surface-card picks-control-state">
           <p className="eyebrow">NO ACTIVE EVENT</p>
           <h2>There is no upcoming or locked card to control.</h2>
-          <p>The completed event is available in Picks recaps.</p>
-          <Link className="primary-action" to="/picks">VIEW PICKS</Link>
+          <p>Sync and publish the next UFC card in Event Setup.</p>
+          <Link className="primary-action" to="/picks/setup">OPEN EVENT SETUP</Link>
         </section>
       ) : null}
 

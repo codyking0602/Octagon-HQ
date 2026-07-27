@@ -20,6 +20,8 @@ jobs:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
       OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
+      EXPECTED_DEPLOYMENT_SHA: ${{ github.event.pull_request.head.sha }}
+      EVENT_SETUP_SCREENSHOT_PATH: ${{ runner.temp }}/event-setup-preview.png
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -34,7 +36,7 @@ jobs:
           npm install --no-save --ignore-scripts playwright@1.56.1
           npx playwright install --with-deps webkit
 
-      - name: Verify successful login through the production browser UI
+      - name: Verify exact deployment and successful login through production browser UI
         id: browser-login
         continue-on-error: true
         env:
@@ -46,8 +48,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: pin-browser-diagnostics
-          path: ${{ runner.temp }}/pin-browser.log
-          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/pin-browser.log
+            ${{ runner.temp }}/event-setup-preview.png
+          if-no-files-found: warn
           retention-days: 7
 
       - name: Upload verified public browser config
