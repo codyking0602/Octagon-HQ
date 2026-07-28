@@ -8,7 +8,7 @@ const schedulerHeader = "x-octagon-scheduler-token";
 const HOUR_MS = 60 * 60 * 1000;
 const corsHeaders = {
   "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*",
-  "Access-Control-Allow-Headers": "authorization, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
   "Access-Control-Expose-Headers": "X-Octagon-Backend-Sha",
 };
@@ -151,7 +151,7 @@ Deno.serve(async (request) => {
       })
     : await admin.rpc("record_pick_monitoring_run_and_apply_odds", { p_payload: payload });
   if (recorded.error || !recorded.data) {
-    if (scheduledNextEligibleAt) await releaseSchedule(scheduledNextEligibleAt);
+    if (scheduledNextEligibleAt) await releaseSchedule(retryInOneHour());
     return safeError(503, "MONITORING_RECORD_FAILED", "Monitoring evidence and eligible odds could not be recorded atomically.");
   }
   return json({ ...monitoringSummary(String(recorded.data), payload), trigger_kind: payload.trigger_kind, provider_called: true });
