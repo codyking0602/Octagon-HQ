@@ -1,106 +1,137 @@
-/* Picks UI 2.0: one visual owner layered over the existing Picks contracts. */
+/* Picks UI 2.0: the single visual owner for the player-facing Picks route. */
 
 .picks-page {
-  gap: 14px;
+  gap: 13px;
 }
 
 .picks-page-heading {
-  gap: 5px;
+  gap: 4px;
   padding-top: 0;
 }
 
 .picks-page-heading h1 {
-  font-size: clamp(32px, 9vw, 45px);
+  font-size: clamp(31px, 8.6vw, 43px);
 }
 
 .picks-page-heading > p:not(.eyebrow) {
   max-width: 520px;
-  font-size: 15px;
-  line-height: 1.4;
+  font-size: 14px;
+  line-height: 1.38;
 }
 
 .picks-event-hero {
   position: relative;
-  isolation: isolate;
-  min-height: 360px;
-  align-content: end;
-  gap: 16px;
-  padding: 18px;
+  display: grid;
+  gap: 0;
+  min-height: 0;
+  padding: 0;
   overflow: hidden;
+  border-radius: 20px;
   background:
-    radial-gradient(circle at 100% 0%, rgba(210, 10, 10, .22), transparent 40%),
+    radial-gradient(circle at 100% 0%, rgba(210, 10, 10, .2), transparent 42%),
     linear-gradient(145deg, #171717, #070707);
 }
 
-.picks-event-hero::before,
-.picks-event-hero::after {
+.picks-event-hero__poster {
+  position: relative;
+  min-height: 205px;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, .06), rgba(0, 0, 0, .18)),
+    var(--picks-event-poster),
+    linear-gradient(145deg, #242424, #080808);
+  background-position: center, center 43%, center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.picks-event-hero:not(.has-poster) .picks-event-hero__poster {
+  min-height: 90px;
+}
+
+.picks-event-hero__poster::after {
   position: absolute;
-  inset: 0;
+  inset: auto 0 0;
+  height: 48px;
+  background: linear-gradient(180deg, transparent, rgba(10, 10, 10, .88));
   content: "";
   pointer-events: none;
 }
 
-.picks-event-hero::before {
-  z-index: -2;
-  background-image: var(--picks-event-poster);
-  background-position: center 32%;
-  background-size: cover;
-  opacity: 0;
-  transform: scale(1.01);
-}
-
-.picks-event-hero.has-poster::before {
-  opacity: .92;
-}
-
-.picks-event-hero::after {
-  z-index: -1;
-  background:
-    linear-gradient(180deg, rgba(0, 0, 0, .12) 0%, rgba(0, 0, 0, .42) 42%, rgba(0, 0, 0, .97) 84%),
-    linear-gradient(90deg, rgba(0, 0, 0, .7), transparent 70%);
-}
-
 .picks-event-hero__topline {
   position: absolute;
-  top: 16px;
-  left: 16px;
-  right: 16px;
+  z-index: 1;
+  top: 13px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.picks-event-hero__topline .eyebrow {
+  color: rgba(255, 255, 255, .82);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, .85);
+}
+
+.picks-event-hero__content {
+  display: grid;
+  gap: 11px;
+  padding: 13px 14px 14px;
+  background: linear-gradient(180deg, #101010, #080808);
 }
 
 .picks-event-hero__copy {
   display: grid;
-  gap: 7px;
-  margin-top: 150px;
+  gap: 4px;
 }
 
 .picks-event-hero__copy h2 {
-  max-width: 90%;
-  font-size: clamp(27px, 8vw, 40px);
-  line-height: .98;
-  text-shadow: 0 2px 20px rgba(0, 0, 0, .8);
+  font-size: clamp(23px, 6.8vw, 33px);
+  line-height: 1;
 }
 
 .picks-event-hero__copy > strong {
-  font-size: clamp(17px, 5vw, 22px);
-  line-height: 1.08;
-  text-shadow: 0 2px 16px rgba(0, 0, 0, .8);
+  font-size: clamp(15px, 4.5vw, 20px);
+  line-height: 1.1;
 }
 
-.picks-event-hero__copy > p {
-  color: rgba(255, 255, 255, .72);
-  font-size: 12px;
-  line-height: 1.45;
-}
-
-.picks-event-hero__dashboard {
+.picks-event-hero__facts {
   display: grid;
-  gap: 11px;
-  padding: 12px;
-  border: 1px solid rgba(255, 255, 255, .16);
-  border-radius: 15px;
-  background: rgba(4, 4, 4, .72);
-  box-shadow: 0 14px 40px rgba(0, 0, 0, .24);
-  backdrop-filter: blur(12px);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.picks-event-hero__facts span {
+  display: grid;
+  place-items: center;
+  min-height: 32px;
+  padding: 6px 8px;
+  border: 1px solid rgba(255, 255, 255, .13);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: .025em;
+  line-height: 1.15;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.picks-event-hero .picks-progress {
+  display: grid;
+  gap: 6px;
+  padding-top: 2px;
+  border-top: 1px solid rgba(255, 255, 255, .09);
+}
+
+.picks-event-hero .picks-progress > div:first-child {
+  padding-top: 8px;
+}
+
+.picks-event-hero .picks-progress > p {
+  margin: 0;
+  font-size: 8px;
 }
 
 .picks-event-hero__actions {
@@ -114,8 +145,9 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
+  margin: 0;
   color: var(--text-secondary) !important;
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 950;
   letter-spacing: .09em;
 }
@@ -126,7 +158,7 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, .1);
+  background: rgba(255, 255, 255, .09);
   color: white;
   font-size: 11px;
 }
@@ -135,16 +167,21 @@
   min-height: auto;
   padding: 5px 0;
   border: 0;
-  color: var(--text-secondary);
-  font-size: 9px;
+  color: var(--text-muted);
+  font-size: 8px;
   font-weight: 900;
   letter-spacing: .08em;
   text-decoration: none;
 }
 
+.picks-control-entry:hover,
+.picks-control-entry:focus-visible {
+  color: white;
+}
+
 .picks-scoring-guide {
-  padding: 11px 14px;
-  border-radius: 15px;
+  padding: 10px 13px;
+  border-radius: 14px;
 }
 
 .picks-scoring-guide summary {
@@ -154,14 +191,16 @@
   list-style: none;
 }
 
-.picks-scoring-guide summary::-webkit-details-marker {
+.picks-scoring-guide summary::-webkit-details-marker,
+.picks-archive > summary::-webkit-details-marker,
+.picks-recap-card > summary::-webkit-details-marker {
   display: none;
 }
 
 .picks-scoring-guide summary::after {
-  content: "›";
   color: var(--text-muted);
-  font-size: 20px;
+  content: "›";
+  font-size: 19px;
   transform: rotate(90deg);
   transition: transform .18s ease;
 }
@@ -173,66 +212,85 @@
 .picks-card-zone {
   position: relative;
   display: grid;
+  gap: 9px;
+}
+
+.picks-card-odds {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 10px;
+  margin: 0;
+  padding: 0 3px;
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: .055em;
+  text-transform: uppercase;
+}
+
+.picks-card-odds span {
+  color: var(--ufc-red-strong);
+  font-weight: 950;
+}
+
+.picks-card-odds strong {
+  overflow: hidden;
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .picks-sticky-progress {
   position: sticky;
-  top: calc(54px + var(--safe-top));
+  top: calc(50px + var(--safe-top));
   z-index: 12;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  display: flex;
   align-items: center;
-  gap: 2px 12px;
-  min-height: 45px;
-  padding: 9px 12px;
-  border: 1px solid rgba(255, 255, 255, .13);
-  border-radius: 13px;
-  background: rgba(8, 8, 8, .92);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, .34);
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 37px;
+  padding: 7px 10px;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 12px;
+  background: rgba(8, 8, 8, .94);
+  box-shadow: 0 7px 20px rgba(0, 0, 0, .3);
   backdrop-filter: blur(18px);
-}
-
-.picks-sticky-progress strong {
-  overflow: hidden;
-  font-size: 11px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .picks-sticky-progress span,
 .picks-sticky-progress em {
-  color: var(--text-muted);
+  overflow: hidden;
   font-size: 8px;
   font-style: normal;
   font-weight: 900;
-  letter-spacing: .07em;
-}
-
-.picks-sticky-progress span {
-  justify-self: end;
-  color: var(--ufc-red-strong);
-}
-
-.picks-sticky-progress em {
-  grid-column: 1 / -1;
-  overflow: hidden;
+  letter-spacing: .065em;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+.picks-sticky-progress span {
+  flex: 0 0 auto;
+  color: var(--ufc-red-strong);
+}
+
+.picks-sticky-progress em {
+  color: var(--text-muted);
+  text-align: right;
+}
+
 .picks-card-list {
-  gap: 10px;
+  gap: 9px;
 }
 
 .pick-bout-card {
-  gap: 11px;
-  padding: 14px;
+  gap: 10px;
+  padding: 13px;
   border-radius: 18px;
 }
 
 .pick-bout-card.is-main-event {
-  padding: 16px;
+  padding: 15px;
   border-color: rgba(255, 255, 255, .17);
   background:
     radial-gradient(circle at 0% 0%, rgba(210, 10, 10, .1), transparent 38%),
@@ -241,54 +299,45 @@
 
 .pick-bout-card__meta {
   display: grid;
-  gap: 4px;
-}
-
-.pick-bout-card__meta > p {
-  color: var(--text-muted);
-  font-size: 8px;
-  font-weight: 800;
-  letter-spacing: .04em;
-  line-height: 1.2;
-  text-transform: uppercase;
+  gap: 3px;
 }
 
 .pick-bout-card__choices {
-  grid-template-columns: minmax(0, 1fr) 20px minmax(0, 1fr);
-  gap: 6px;
+  grid-template-columns: minmax(0, 1fr) 18px minmax(0, 1fr);
+  gap: 5px;
 }
 
 .pick-choice {
   align-content: start;
-  gap: 6px;
-  min-height: 128px;
-  padding: 11px;
-  border-radius: 15px;
+  gap: 5px;
+  min-height: 118px;
+  padding: 10px;
+  border-radius: 14px;
   background: #191919;
 }
 
 .pick-bout-card:not(.is-main-event) .pick-choice {
-  min-height: 118px;
+  min-height: 109px;
 }
 
 .pick-fighter-thumbnail {
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   margin-bottom: 1px;
 }
 
 .pick-bout-card.is-main-event .pick-fighter-thumbnail {
-  width: 64px;
-  height: 64px;
+  width: 59px;
+  height: 59px;
 }
 
 .pick-choice > span {
-  font-size: 15px;
-  line-height: 1.08;
+  font-size: 14px;
+  line-height: 1.07;
 }
 
 .pick-choice > small {
-  font-size: 8px;
+  font-size: 7px;
 }
 
 .pick-choice > em {
@@ -305,7 +354,7 @@
   background: linear-gradient(155deg, rgba(210, 10, 10, .14), #191919 68%);
   box-shadow:
     inset 0 0 0 1px rgba(210, 10, 10, .18),
-    0 0 20px rgba(210, 10, 10, .08);
+    0 0 18px rgba(210, 10, 10, .07);
 }
 
 .pick-choice.is-selected > em {
@@ -328,11 +377,11 @@
 .pick-lock-action,
 .pick-lock-readonly {
   width: fit-content;
-  min-height: 30px;
-  padding: 0 10px;
+  min-height: 28px;
+  padding: 0 9px;
   border-radius: 999px;
-  font-size: 8px;
-  letter-spacing: .07em;
+  font-size: 7px;
+  letter-spacing: .065em;
 }
 
 .pick-lock-action {
@@ -348,8 +397,8 @@
 }
 
 .picks-history {
-  gap: 11px;
-  margin-top: 16px;
+  gap: 9px;
+  margin-top: 12px;
 }
 
 .picks-history__heading {
@@ -357,27 +406,31 @@
 }
 
 .picks-history__heading h2 {
-  font-size: clamp(27px, 8vw, 38px);
+  font-size: clamp(25px, 7.4vw, 35px);
+}
+
+.picks-history__heading > span {
+  font-size: 8px;
 }
 
 .picks-history-summary {
   grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.95fr);
-  gap: 12px;
-  padding: 13px;
-  border-radius: 16px;
+  gap: 9px;
+  padding: 11px 12px;
+  border-radius: 15px;
   background: var(--surface);
 }
 
 .picks-history-summary > div strong {
-  font-size: 28px;
+  font-size: 25px;
 }
 
 .picks-history-summary dl {
-  gap: 4px;
+  gap: 2px;
 }
 
 .picks-history-summary dl > div {
-  padding: 7px 5px;
+  padding: 5px 4px;
   border: 0;
   border-left: 1px solid var(--border);
   border-radius: 0;
@@ -385,27 +438,86 @@
 }
 
 .picks-history-summary dd {
-  font-size: 15px;
+  font-size: 14px;
+}
+
+.picks-archive {
+  padding: 0;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.picks-archive__summary {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 66px;
+  padding: 12px 39px 12px 13px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.picks-archive__summary::after {
+  position: absolute;
+  top: 50%;
+  right: 13px;
+  color: var(--text-muted);
+  content: "›";
+  font-size: 23px;
+  transform: translateY(-50%) rotate(90deg);
+  transition: transform .18s ease;
+}
+
+.picks-archive[open] .picks-archive__summary::after {
+  transform: translateY(-50%) rotate(-90deg);
+}
+
+.picks-archive__summary > div {
+  display: grid;
+  gap: 3px;
+}
+
+.picks-archive__summary span,
+.picks-archive__summary small {
+  color: var(--text-muted);
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .085em;
+  text-transform: uppercase;
+}
+
+.picks-archive__summary strong {
+  font-size: 13px;
+  letter-spacing: .02em;
+}
+
+.picks-archive__summary small {
+  color: var(--ufc-red-strong);
+  white-space: nowrap;
 }
 
 .picks-recap-list {
-  gap: 9px;
+  display: grid;
+  gap: 8px;
+  padding: 0 9px 9px;
 }
 
 .picks-recap-card {
-  border-radius: 17px;
+  border-radius: 15px;
 }
 
 .picks-recap-card__summary {
-  gap: 10px;
-  min-height: 112px;
-  padding: 14px 38px 14px 14px;
+  gap: 9px;
+  min-height: 91px;
+  padding: 12px 34px 12px 12px;
 }
 
 .picks-recap-card__summary::after {
-  right: 13px;
+  right: 11px;
   content: "›";
-  font-size: 24px;
+  font-size: 22px;
   transform: translateY(-50%);
 }
 
@@ -417,15 +529,15 @@
 .picks-recap-card__date {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
 }
 
 .picks-recap-card__date time,
 .picks-recap-card__latest {
   color: var(--ufc-red-strong);
-  font-size: 8px;
+  font-size: 7px;
   font-weight: 950;
-  letter-spacing: .1em;
+  letter-spacing: .095em;
   text-transform: uppercase;
 }
 
@@ -436,25 +548,29 @@
 }
 
 .picks-recap-card__summary h3 {
-  margin-top: 6px;
-  font-size: 19px;
+  margin-top: 5px;
+  font-size: 17px;
+}
+
+.picks-recap-card__summary p {
+  font-size: 10px;
 }
 
 .picks-recap-card__record {
-  min-width: 74px;
+  min-width: 68px;
 }
 
 .picks-recap-card__record strong {
-  font-size: 23px;
+  font-size: 20px;
 }
 
 .picks-recap-card__record small {
-  max-width: 110px;
+  max-width: 102px;
   font-size: 7px;
 }
 
 .picks-recap-card__record em {
-  max-width: 110px;
+  max-width: 102px;
   padding: 3px 5px;
   border-radius: 999px;
   background: rgba(255, 255, 255, .05);
@@ -467,55 +583,47 @@
 }
 
 .app-shell:has(.picks-page) .app-header {
-  min-height: calc(54px + var(--safe-top));
+  min-height: calc(50px + var(--safe-top));
 }
 
 .app-shell:has(.picks-page) .brand-mark--compact {
-  gap: 9px;
-  font-size: 18px;
+  gap: 8px;
+  font-size: 17px;
 }
 
 .app-shell:has(.picks-page) .brand-mark--compact .brand-mark__logo {
-  width: 38px;
-  height: 38px;
+  width: 35px;
+  height: 35px;
 }
 
 .app-shell:has(.picks-page) .app-content {
-  padding-top: 16px;
-  padding-bottom: calc(84px + var(--safe-bottom));
+  padding-top: 14px;
+  padding-bottom: calc(80px + var(--safe-bottom));
 }
 
 .app-shell:has(.picks-page) .bottom-nav {
-  padding-top: 5px;
-  padding-bottom: calc(6px + var(--safe-bottom));
+  padding-top: 4px;
+  padding-bottom: calc(5px + var(--safe-bottom));
 }
 
 .app-shell:has(.picks-page) .bottom-nav__item {
-  min-height: 42px;
+  min-height: 40px;
 }
 
 @media (min-width: 680px) {
-  .picks-event-hero {
-    min-height: 430px;
-    padding: 24px;
+  .picks-event-hero__poster {
+    min-height: 300px;
   }
 
-  .picks-event-hero__copy {
-    max-width: 72%;
-    margin-top: 220px;
+  .picks-event-hero__content {
+    padding: 18px 20px 20px;
   }
 
-  .picks-event-hero__dashboard {
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: end;
-  }
-
-  .picks-event-hero__actions {
-    display: grid;
-    justify-items: end;
+  .picks-event-hero__facts {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .pick-choice {
-    min-height: 146px;
+    min-height: 134px;
   }
 }
