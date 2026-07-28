@@ -25,6 +25,8 @@ const lockedEvent: PickControlEvent = {
   status: "locked",
   canLock: false,
   canComplete: false,
+  canReorder: false,
+  hasReorderHistory: false,
   bouts: [
     {
       boutId: "red-blue",
@@ -180,9 +182,11 @@ describe("Fight Night Control", () => {
   });
 
   it("keeps move taps local and submits the complete before-and-after order once", async () => {
+    vi.mocked(window.prompt).mockReturnValueOnce("Official UFC bout order updated");
     const upcoming: PickControlEvent = {
       ...lockedEvent,
       status: "upcoming",
+      canReorder: true,
       bouts: lockedEvent.bouts.map((bout) => ({ ...bout, resultStatus: "pending" as const })),
     };
     const repo = repository(upcoming);
@@ -198,9 +202,42 @@ describe("Fight Night Control", () => {
       "ufc-control",
       ["red-blue", "second-fight"],
       ["second-fight", "red-blue"],
-      "Removed from the official UFC card",
+      "Official UFC bout order updated",
     ));
     expect(window.confirm).toHaveBeenCalledWith(expect.stringMatching(/BEFORE[\s\S]*1\. Red Fighter[\s\S]*AFTER[\s\S]*1\. Second Red/));
+  });
+
+  it("removes the approval action when the local order returns to canonical", async () => {
+    const upcoming: PickControlEvent = {
+      ...lockedEvent,
+      status: "upcoming",
+      canReorder: true,
+      bouts: lockedEvent.bouts.map((bout) => ({ ...bout, resultStatus: "pending" as const })),
+    };
+    const repo = repository(upcoming);
+    renderPage(repo);
+
+    fireEvent.click((await screen.findAllByRole("button", { name: "MOVE DOWN" }))[0]);
+    expect(screen.getByRole("button", { name: "APPROVE NEW ORDER" })).toBeInTheDocument();
+    fireEvent.click(screen.getAllByRole("button", { name: "MOVE UP" })[1]);
+
+    expect(screen.queryByRole("button", { name: "APPROVE NEW ORDER" })).not.toBeInTheDocument();
+    expect(repo.reorderCard).not.toHaveBeenCalled();
+  });
+
+  it("hides move and approval controls when the server closes reordering", async () => {
+    const upcoming: PickControlEvent = {
+      ...lockedEvent,
+      status: "upcoming",
+      canReorder: false,
+      bouts: lockedEvent.bouts.map((bout) => ({ ...bout, resultStatus: "pending" as const })),
+    };
+    const repo = repository(upcoming);
+    renderPage(repo);
+
+    expect(await screen.findByText("Fight-order changes are closed.")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "MOVE DOWN" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "APPROVE NEW ORDER" })).not.toBeInTheDocument();
   });
 
   it("requires explicit owner confirmation and submits stale-state guarded replacement details", async () => {
