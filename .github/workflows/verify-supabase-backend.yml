@@ -8,6 +8,7 @@ on:
       - "scripts/verify-event-setup-preview-live.mjs"
       - "scripts/verify-pin-auth-live.mjs"
       - "scripts/verify-picks-scoring-live.mjs"
+      - "scripts/verify-production-monitoring-scheduler.mjs"
       - "scripts/verify-sync-function-deployment.mjs"
       - "supabase/**"
   workflow_dispatch:
@@ -189,6 +190,9 @@ jobs:
             exit 1
           fi
 
+      - name: Verify production Picks monitoring scheduler is active
+        run: node scripts/verify-production-monitoring-scheduler.mjs
+
       - name: Verify exact deployed UFC sync source
         run: node scripts/verify-sync-function-deployment.mjs
 
@@ -312,6 +316,7 @@ jobs:
             echo "- Required Edge Function secret names: present"
             echo "- Existing profile, challenge, Your HQ, Picks, scoring, recap, reveal, and Fight Night migrations: deployed remotely"
             echo "- Event setup and card review migration: deployed remotely"
+            echo "- Production Picks monitoring scheduler: active, canonical, and token-configured without invoking the runner or provider"
             echo "- Authenticated Event Setup preview: supplied MMA Mania URL returned the exact clean four-fight main card without changing the staged or live cards"
             echo "- Private staged draft: exact clean UFC Belgrade card verified"
             echo "- Production WebKit: authenticated UI behavior verified at 390x844 with a retained screenshot artifact"
