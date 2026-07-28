@@ -203,7 +203,7 @@ try {
     waitUntil: "domcontentloaded",
     timeout: 30_000,
   });
-  await page.getByRole("heading", { name: "Monitoring Inbox" }).waitFor({ state: "visible", timeout: 15_000 });
+  await page.getByRole("heading", { name: "Monitoring Inbox", exact: true }).waitFor({ state: "visible", timeout: 15_000 });
   if (new URL(page.url()).pathname !== "/picks/monitoring") {
     throw new Error(`Monitoring Inbox deep link redirected before sign-in: ${page.url()}`);
   }
@@ -230,7 +230,7 @@ try {
   }
 
   await page.waitForURL((url) => url.pathname === "/picks/monitoring", { timeout: 15_000 });
-  await page.getByRole("heading", { name: "Monitoring Inbox" }).waitFor({ state: "visible" });
+  await page.getByRole("heading", { name: "Monitoring Inbox", exact: true }).waitFor({ state: "visible" });
   await page.getByRole("heading", { name: "Check now or refresh the ledger" }).waitFor({ state: "visible", timeout: 15_000 });
   await page.getByText(process.env.GITHUB_EVENT_NAME === "pull_request" ? "PAUSED" : "ACTIVE", { exact: true }).waitFor({ state: "visible" });
   if (await page.getByText("INBOX UNAVAILABLE", { exact: true }).count()) {
