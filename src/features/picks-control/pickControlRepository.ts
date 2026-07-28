@@ -32,6 +32,8 @@ const controlEventSchema = z.object({
   status: z.enum(["upcoming", "locked", "complete"]),
   can_lock: z.boolean(),
   can_complete: z.boolean(),
+  can_reorder: z.boolean().optional().default(false),
+  has_reorder_history: z.boolean().optional().default(false),
   bouts: z.array(controlBoutSchema),
 });
 
@@ -66,6 +68,8 @@ export function mapPickControlEvent(value: unknown): PickControlEvent | null {
     status: parsed.status,
     canLock: parsed.can_lock,
     canComplete: parsed.can_complete,
+    canReorder: parsed.can_reorder,
+    hasReorderHistory: parsed.has_reorder_history,
     bouts: parsed.bouts.map((bout) => ({
       boutId: bout.bout_id,
       position: bout.position,
