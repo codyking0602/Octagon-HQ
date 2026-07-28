@@ -12,10 +12,11 @@ export interface MonitoringBout {
   blue_fighter_name: string;
   red_american_odds?: number | null;
   blue_american_odds?: number | null;
+  included_in_picks?: boolean;
 }
 export interface MonitoringEvent { event_id: string; source_event_key?: string; name: string; subtitle: string; starts_at: string; locks_at: string; bouts: MonitoringBout[] }
 export interface SourcePreview extends MonitoringEvent { source: string; source_url: string; source_event_key: string; warnings?: string[] }
-export interface ResolvedMonitoringEvent { selected: MonitoringEvent; kind: "staged" | "current"; storageEventId?: string; identity: string }
+export interface ResolvedMonitoringEvent { selected: MonitoringEvent; kind: "staged" | "current"; storageEventId?: string; identity: string; ignoredMatchupIdentities: string[] }
 
 function stableEventMatch(left: MonitoringEvent, right: MonitoringEvent) {
   return matchCanonicalEventIdentity(
@@ -24,13 +25,27 @@ function stableEventMatch(left: MonitoringEvent, right: MonitoringEvent) {
   );
 }
 
+const matchupIdentity = (bout: MonitoringBout) => fightOddsMatchupIdentity(bout.red_fighter_name, bout.blue_fighter_name);
+const includedBouts = (event: MonitoringEvent) => event.bouts.filter((bout) => bout.included_in_picks !== false);
+
 export function resolveMonitoringEvent(staged?: MonitoringEvent | null, current?: MonitoringEvent | null): ResolvedMonitoringEvent {
-  const valid = (event: MonitoringEvent | null | undefined) => Boolean(event?.name?.trim() && event?.subtitle?.trim() && Number.isFinite(Date.parse(event.starts_at)) && Number.isFinite(Date.parse(event.locks_at)) && event.bouts?.length);
+  const valid = (event: MonitoringEvent | null | undefined) => Boolean(event?.name?.trim() && event?.subtitle?.trim() && Number.isFinite(Date.parse(event.starts_at)) && Number.isFinite(Date.parse(event.locks_at)) && includedBouts(event).length);
   staged = valid(staged) ? staged : null;
   current = valid(current) ? current : null;
   if (staged && current && !stableEventMatch(staged, current)) throw new Error("Staged and current event identities conflict.");
-  if (current) return { selected: current, kind: "current", storageEventId: current.event_id, identity: `ufc:${current.source_event_key || current.starts_at.slice(0, 10)}` };
-  if (staged) return { selected: staged, kind: "staged", identity: `ufc:${staged.source_event_key || staged.starts_at.slice(0, 10)}` };
+  if (current) return {
+    selected: { ...current, bouts: includedBouts(current) },
+    kind: "current",
+    storageEventId: current.event_id,
+    identity: `ufc:${current.source_event_key || current.starts_at.slice(0, 10)}`,
+    ignoredMatchupIdentities: current.bouts.filter((bout) => bout.included_in_picks === false).map(matchupIdentity),
+  };
+  if (staged) return {
+    selected: { ...staged, bouts: includedBouts(staged) },
+    kind: "staged",
+    identity: `ufc:${staged.source_event_key || staged.starts_at.slice(0, 10)}`,
+    ignoredMatchupIdentities: [],
+  };
   throw new Error("No monitorable staged or current Picks event exists.");
 }
 
@@ -38,7 +53,7 @@ export function sourceMatchesMonitoredEvent(source: SourcePreview, monitored: Mo
 
 export function filterOddsToMonitoredEvent(odds: OddsAdapterResult, event: MonitoringEvent): OddsAdapterResult {
   const eventTime = Date.parse(event.starts_at);
-  const boutIds = new Set(event.bouts.map((bout) => fightOddsMatchupIdentity(bout.red_fighter_name, bout.blue_fighter_name)));
+  const boutIds = new Set(includedBouts(event).map(matchupIdentity));
   const selected = odds.snapshots.filter((snapshot) => (
     Math.abs(Date.parse(snapshot.commenceTime) - eventTime) <= 18 * 60 * 60 * 1000
     && boutIds.has(snapshot.matchupIdentity)
@@ -85,10 +100,14 @@ export function buildManualMonitoringPayload(input: {
   const { resolved, source, scope, completedAt } = input;
   const canonical = resolved.selected;
   if (!sourceMatchesMonitoredEvent(source, canonical)) throw new Error("Source identity does not match the monitored Picks event.");
+  const ignored = new Set(resolved.ignoredMatchupIdentities);
+  const comparisonSource = ignored.size
+    ? { ...source, bouts: source.bouts.filter((bout) => !ignored.has(matchupIdentity(bout))) }
+    : source;
   const odds = filterOddsToMonitoredEvent(input.odds, canonical);
-  const canonicalByMatchup = new Map(canonical.bouts.map((bout) => [fightOddsMatchupIdentity(bout.red_fighter_name, bout.blue_fighter_name), bout]));
-  const cardReference = scope === "main" ? { ...canonical, bouts: canonical.bouts.filter((bout) => !/^(?:early-)?prelim-/.test(bout.bout_id)) } : canonical;
-  const findings: MonitoringFindingInput[] = sourceChanges(cardReference, source as never, scope).map((summary) => ({ finding_key: stableKey(resolved.identity, "card_change", summary), finding_type: "card_change", severity: "warning", summary, detected_at: completedAt, source_details: { source_event_identity: resolved.identity, monitored_event_kind: resolved.kind } }));
+  const canonicalByMatchup = new Map(canonical.bouts.map((bout) => [matchupIdentity(bout), bout]));
+  const cardReference = input.scope === "main" ? { ...canonical, bouts: canonical.bouts.filter((bout) => !/^(?:early-)?prelim-/.test(bout.bout_id)) } : canonical;
+  const findings: MonitoringFindingInput[] = sourceChanges(cardReference, comparisonSource as never, input.scope).map((summary) => ({ finding_key: stableKey(resolved.identity, "card_change", summary), finding_type: "card_change", severity: "warning", summary, detected_at: completedAt, source_details: { source_event_identity: resolved.identity, monitored_event_kind: resolved.kind } }));
   const matchedMatchups = new Set(odds.snapshots.map((snapshot) => snapshot.matchupIdentity));
   for (const snapshot of odds.snapshots) {
     const bout = canonicalByMatchup.get(snapshot.matchupIdentity);
@@ -103,9 +122,9 @@ export function buildManualMonitoringPayload(input: {
   }
   const providerBlocked = odds.diagnostics.some((diagnostic) => diagnostic.severity === "error" && !diagnostic.matchupIdentity);
   if (!providerBlocked) {
-    for (const [matchupIdentity, bout] of canonicalByMatchup) {
-      if (matchedMatchups.has(matchupIdentity)) continue;
-      findings.push({ finding_key: stableKey(resolved.identity, "unmatched_fight", matchupIdentity), finding_type: "unmatched_fight", severity: "warning", summary: "A monitored bout did not confidently match a provider snapshot.", detected_at: completedAt, matchup_identity: matchupIdentity, bout_id: bout.bout_id, source_details: { monitored_event_kind: resolved.kind } });
+    for (const [matchup, bout] of canonicalByMatchup) {
+      if (matchedMatchups.has(matchup)) continue;
+      findings.push({ finding_key: stableKey(resolved.identity, "unmatched_fight", matchup), finding_type: "unmatched_fight", severity: "warning", summary: "A monitored bout did not confidently match a provider snapshot.", detected_at: completedAt, matchup_identity: matchup, bout_id: bout.bout_id, source_details: { monitored_event_kind: resolved.kind } });
     }
   }
   odds.diagnostics.forEach((diagnostic) => findings.push({ finding_key: stableKey(resolved.identity, "provider_error", diagnostic.code, diagnostic.sourceEventId ?? "event", diagnostic.matchupIdentity ?? "event"), finding_type: "provider_error", severity: diagnostic.severity, summary: diagnostic.message, detected_at: completedAt, matchup_identity: diagnostic.matchupIdentity, source_details: { code: diagnostic.code, source_event_id: diagnostic.sourceEventId } }));
@@ -125,4 +144,4 @@ export function buildManualMonitoringPayload(input: {
 }
 
 export interface MonitoringSummary { run_id: string; status: MonitoringRunPayload["status"]; canonical_event_id: string | null; source_event_identity: string; started_at: string; completed_at: string; findings: Record<string, number>; severities: Record<string, number>; coverage: MonitoringRunPayload["coverage"]; quota: MonitoringRunPayload["quota"]; stored_odds_snapshots: number }
-export function monitoringSummary(runId: string, payload: MonitoringRunPayload): MonitoringSummary { const count = (field: "finding_type" | "severity") => Object.fromEntries([...new Set(payload.findings.map((finding) => finding[field]))].sort().map((value) => [value, payload.findings.filter((finding) => finding[field] === value).length])); return { run_id: runId, status: payload.status, canonical_event_id: payload.event_id ?? null, source_event_identity: payload.source_event_identity, started_at: payload.started_at, completed_at: payload.completed_at, findings: count("finding_type"), severities: count("severity"), coverage: payload.coverage, quota: payload.quota, stored_odds_snapshots: payload.odds_snapshots.length }; }
+export function monitoringSummary(runId: string, payload: MonitoringRunPayload): MonitoringSummary { const count = (field: "finding_type" | "severity") => Object.fromEntries([...new Set(payload.findings.map((finding) => finding[field]))].sort().map((value) => [value, payload.findings.filter((finding) => finding[field] === value).length])); return { run_id: runId, status: payload.status, canonical_event_id: payload.event_id ?? null, source_event_identity: payload.source_event_identity, started_at: payload.started_at, completed_at, findings: count("finding_type"), severities: count("severity"), coverage: payload.coverage, quota: payload.quota, stored_odds_snapshots: payload.odds_snapshots.length }; }
