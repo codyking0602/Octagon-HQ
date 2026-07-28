@@ -3,7 +3,8 @@ import { describe, expect, it } from "vitest";
 
 const schedulerMigration = readFileSync("supabase/migrations/202608090001_automatic_pick_monitoring_scheduler.sql", "utf8");
 const hardeningMigration = readFileSync("supabase/migrations/202608090002_harden_pick_monitoring_schedule_claims.sql", "utf8");
-const migration = `${schedulerMigration}\n${hardeningMigration}`;
+const runtimeVerificationMigration = readFileSync("supabase/migrations/202608090003_verify_pick_monitoring_scheduler_runtime.sql", "utf8");
+const migration = `${schedulerMigration}\n${hardeningMigration}\n${runtimeVerificationMigration}`;
 const runner = readFileSync("supabase/functions/run-pick-monitoring/index.ts", "utf8");
 const sync = readFileSync("supabase/functions/sync-next-ufc-event/index.ts", "utf8");
 const config = readFileSync("supabase/config.toml", "utf8");
@@ -25,8 +26,18 @@ describe("automatic Picks monitoring deployment", () => {
     expect(deploy).toContain("configure-monitoring-scheduler.mjs");
     expect(deploy).toContain("PICK_MONITORING_SCHEDULER_ENABLED");
     expect(verifier).toContain("202608090002");
+    expect(verifier).toContain("202608090003");
+    expect(verifier).toContain("health?.command_configured !== true");
     expect(verifier).toContain("fakeSchedulerResponse.status !== 401");
     expect(verifier).not.toContain("THE_ODDS_API_KEY=");
+  });
+
+  it("proves the runtime job command without exposing it or its credential", () => {
+    expect(runtimeVerificationMigration).toContain("cron.job_run_details");
+    expect(runtimeVerificationMigration).toContain("'command_configured'");
+    expect(runtimeVerificationMigration).toContain("/functions/v1/run-pick-monitoring");
+    expect(runtimeVerificationMigration).toContain("timeout_milliseconds := 60000");
+    expect(runtimeVerificationMigration).not.toContain("'command', v_job.command");
   });
 
   it("uses server authorization for scheduled and manual requests", () => {
