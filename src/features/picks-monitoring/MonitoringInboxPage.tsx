@@ -132,7 +132,7 @@ export default function MonitoringInboxPage({ repository: suppliedRepository }: 
       <section className="page-heading monitoring-inbox-heading">
         <p className="eyebrow">PRIVATE OWNER TOOL</p>
         <h1>Monitoring Inbox</h1>
-        <p>Automatic checks watch the UFC card and odds. Findings stay here for review; nothing is applied or published automatically.</p>
+        <p>Automatic checks watch the UFC card and odds. Valid pre-lock odds can update Picks automatically; card-change findings stay here for owner review and are never published automatically.</p>
         <div className="monitoring-inbox-heading__links">
           <Link to="/picks/setup">EVENT SETUP</Link>
           <Link to="/picks/control">FIGHT NIGHT RESULTS</Link>
