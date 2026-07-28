@@ -227,6 +227,15 @@ jobs:
           if [ -f supabase/migrations/202608090001_automatic_pick_monitoring_scheduler.sql ]; then
             require_remote_migration "202608090001"
           fi
+          if [ -f supabase/migrations/202608090002_harden_pick_monitoring_schedule_claims.sql ]; then
+            require_remote_migration "202608090002"
+          fi
+          if [ -f supabase/migrations/202608090003_verify_pick_monitoring_scheduler_runtime.sql ]; then
+            require_remote_migration "202608090003"
+          fi
+          if [ -f supabase/migrations/202608100001_pick_monitoring_inbox.sql ]; then
+            require_remote_migration "202608100001"
+          fi
 
           function_list=$(supabase functions list --project-ref "$SUPABASE_PROJECT_ID")
           printf '%s\n' "$function_list" | grep -F "pin-auth"
