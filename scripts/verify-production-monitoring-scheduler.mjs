@@ -1,3 +1,5 @@
+import fs from "node:fs";
+
 const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
 const projectId = process.env.SUPABASE_PROJECT_ID;
 if (!accessToken || !projectId) {
@@ -53,6 +55,14 @@ const safeHealth = {
   command_configured: health?.command_configured === true,
   function_name: health?.function_name ?? null,
 };
+
+if (process.env.RUNNER_TEMP) {
+  fs.writeFileSync(
+    `${process.env.RUNNER_TEMP}/event-setup-webkit.log`,
+    `${JSON.stringify({ expected_active: expectedActive, health: safeHealth }, null, 2)}\n`,
+  );
+}
+
 if (safeHealth.job_name !== "octagon-hq-pick-monitoring"
   || safeHealth.schedule !== "7 * * * *"
   || safeHealth.active !== expectedActive
