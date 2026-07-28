@@ -610,25 +610,35 @@ Deno.serve(async (request) => {
   const secretKey = Deno.env.get("SUPABASE_SECRET_KEY") ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   const authorization = request.headers.get("authorization") ?? "";
   const token = authorization.replace(/^Bearer\s+/i, "");
-  if (!supabaseUrl || !anonKey || !secretKey || !token) return errorJson(new SyncError("SYNC_NOT_CONFIGURED", "Event sync is not configured.", "authentication"), requestId, "authentication", 503);
+  if (!supabaseUrl || !anonKey || !secretKey) return errorJson(new SyncError("SYNC_NOT_CONFIGURED", "Event sync is not configured.", "authentication"), requestId, "authentication", 503);
 
   const admin = createClient(supabaseUrl, secretKey, {
     auth: { autoRefreshToken: false, persistSession: false },
   });
-  const user = await admin.auth.getUser(token);
-  if (user.error || !user.data.user) return errorJson(new SyncError("OWNER_AUTH_REQUIRED", "Owner sign-in required.", "authentication"), requestId, "authentication", 401);
+  const internalMonitoring = input.mode === "monitoring-preview" && request.headers.get("apikey") === secretKey;
+  let ownerProbe: { data: unknown; error: { message: string } | null };
+  if (internalMonitoring) {
+    const monitoringState = await admin.rpc("get_pick_monitoring_event_state");
+    const state = asRecord(monitoringState.data);
+    ownerProbe = { data: state?.staged ?? null, error: monitoringState.error };
+  } else {
+    if (!token) return errorJson(new SyncError("SYNC_NOT_CONFIGURED", "Event sync is not configured.", "authentication"), requestId, "authentication", 503);
+    const user = await admin.auth.getUser(token);
+    if (user.error || !user.data.user) return errorJson(new SyncError("OWNER_AUTH_REQUIRED", "Owner sign-in required.", "authentication"), requestId, "authentication", 401);
 
-  const ownerClient = createClient(supabaseUrl, anonKey, {
-    auth: { autoRefreshToken: false, persistSession: false },
-    global: { headers: { Authorization: `Bearer ${token}` } },
-  });
-  const ownerProbe = await ownerClient.rpc("get_pick_event_setup");
+    const ownerClient = createClient(supabaseUrl, anonKey, {
+      auth: { autoRefreshToken: false, persistSession: false },
+      global: { headers: { Authorization: `Bearer ${token}` } },
+    });
+    const ownerResult = await ownerClient.rpc("get_pick_event_setup");
+    ownerProbe = { data: ownerResult.data, error: ownerResult.error };
+  }
   if (ownerProbe.error) {
     const denied = ownerProbe.error.message.toLowerCase().includes("pick control owner required");
     return errorJson(new SyncError(denied ? "OWNER_ACCESS_REQUIRED" : "DATABASE_READ_FAILED", denied ? "Fight Night owner access required." : "Event Setup is unavailable.", denied ? "authentication" : "database-read"), requestId, "database-read", denied ? 403 : 503);
   }
 
-  const mode = input.mode === "preview" ? "preview" : "apply";
+  const mode = internalMonitoring || input.mode === "preview" ? "preview" : "apply";
   const requestedScope: CardScope = input.card_scope === "main" || input.card_scope === "full" ? input.card_scope : "auto";
   const expectedHash = typeof input.expected_hash === "string" ? input.expected_hash : "";
   const suppliedSourceUrl = typeof input.source_url === "string" ? input.source_url.trim() : "";
