@@ -137,9 +137,9 @@ describe("Fight Night Control", () => {
     expect(screen.getByRole("button", { name: "COMPLETE EVENT" })).toBeDisabled();
   });
 
-  it("corrects a finalized locked result through the separate reasoned workflow", async () => {
+  it("corrects a finalized locked result atomically through the separate reasoned workflow", async () => {
     vi.mocked(window.prompt)
-      .mockReturnValueOnce("PENDING")
+      .mockReturnValueOnce("BLUE")
       .mockReturnValueOnce("Result was entered against the wrong bout");
     const repo = repository(lockedEvent);
     renderPage(repo);
@@ -153,10 +153,10 @@ describe("Fight Night Control", () => {
         resultStatus: "cancelled",
         resultRecordedAt: "2026-08-01T02:20:00.000Z",
       }),
-      "pending",
+      "blue_win",
       "Result was entered against the wrong bout",
     ));
-    expect(repo.recordResult).not.toHaveBeenCalledWith("ufc-control", "second-fight", "pending");
+    expect(repo.recordResult).not.toHaveBeenCalledWith("ufc-control", "second-fight", expect.anything());
     expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("Submitted picks and Underdog Locks will not change"));
   });
 
