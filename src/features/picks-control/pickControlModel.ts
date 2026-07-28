@@ -11,6 +11,8 @@ export interface PickControlBout {
   resultStatus: PickBoutResultStatus;
   winnerFighterSlug: string | null;
   resultRecordedAt: string | null;
+  canCancel: boolean;
+  canRestore: boolean;
 }
 
 export interface PickControlEvent {
@@ -36,6 +38,10 @@ export const pickControlResultOptions = [
 
 export function resolvedBoutCount(event: PickControlEvent | null) {
   return event?.bouts.filter((bout) => bout.resultStatus !== "pending").length ?? 0;
+}
+
+export function cancelledBoutCount(event: PickControlEvent | null) {
+  return event?.bouts.filter((bout) => bout.resultStatus === "cancelled").length ?? 0;
 }
 
 export function pickControlResultLabel(bout: PickControlBout) {
