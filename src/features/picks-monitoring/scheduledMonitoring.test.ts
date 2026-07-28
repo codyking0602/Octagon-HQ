@@ -10,7 +10,13 @@ const event = (startsAt: string, locksAt = startsAt): MonitoringEvent => ({
   subtitle: "Medic vs. Rodriguez",
   starts_at: startsAt,
   locks_at: locksAt,
-  bouts: [{ bout_id: "main-event", red_fighter_name: "Uros Medic", blue_fighter_name: "Daniel Rodriguez" }],
+  bouts: [{
+    bout_id: "main-event",
+    red_fighter_slug: "uros-medic",
+    red_fighter_name: "Uros Medic",
+    blue_fighter_slug: "daniel-rodriguez",
+    blue_fighter_name: "Daniel Rodriguez",
+  }],
 });
 
 describe("scheduled monitoring cadence", () => {
