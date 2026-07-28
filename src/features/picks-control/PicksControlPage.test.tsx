@@ -45,8 +45,10 @@ const lockedEvent: PickControlEvent = {
       canReplace: false,
       canRemoveFromPicks: false,
       canRestoreToPicks: false,
+      canCorrectResult: false,
       hasReplacementHistory: false,
       hasRemovalHistory: false,
+      hasCorrectionHistory: false,
     },
     {
       boutId: "second-fight",
@@ -65,8 +67,10 @@ const lockedEvent: PickControlEvent = {
       canReplace: false,
       canRemoveFromPicks: false,
       canRestoreToPicks: false,
+      canCorrectResult: true,
       hasReplacementHistory: false,
       hasRemovalHistory: false,
+      hasCorrectionHistory: false,
     },
   ],
 };
@@ -91,6 +95,7 @@ function repository(event: PickControlEvent | null): PickControlRepository {
     replaceFighter: vi.fn().mockResolvedValue(undefined),
     reorderCard: vi.fn().mockResolvedValue(undefined),
     recordResult: vi.fn().mockResolvedValue(undefined),
+    correctResult: vi.fn().mockResolvedValue(undefined),
     completeEvent: vi.fn().mockResolvedValue(undefined),
   };
 }
@@ -116,7 +121,7 @@ afterEach(() => {
 });
 
 describe("Fight Night Control", () => {
-  it("records and clears one official result without enabling event completion early", async () => {
+  it("uses the initial-result owner only for a pending locked bout", async () => {
     const repo = repository(lockedEvent);
     renderPage(repo);
 
@@ -126,12 +131,77 @@ describe("Fight Night Control", () => {
     fireEvent.click(screen.getByRole("button", { name: /RED WINNER Red Fighter/i }));
     await waitFor(() => expect(repo.recordResult).toHaveBeenCalledWith("ufc-control", "red-blue", "red_win"));
 
-    const clearButton = screen.getByRole("button", { name: "CLEAR RESULT" });
-    await waitFor(() => expect(clearButton).not.toBeDisabled());
-    fireEvent.click(clearButton);
-    await waitFor(() => expect(repo.recordResult).toHaveBeenCalledWith("ufc-control", "second-fight", "pending"));
-
+    expect(screen.getByText(/CURRENT OFFICIAL RESULT/).closest("article")).toHaveTextContent("Second Red");
+    expect(screen.getByRole("button", { name: "CORRECT RESULT" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "CLEAR RESULT" })).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "COMPLETE EVENT" })).toBeDisabled();
+  });
+
+  it("corrects a finalized locked result atomically through the separate reasoned workflow", async () => {
+    vi.mocked(window.prompt)
+      .mockReturnValueOnce("BLUE")
+      .mockReturnValueOnce("Result was entered against the wrong bout");
+    const repo = repository(lockedEvent);
+    renderPage(repo);
+
+    fireEvent.click(await screen.findByRole("button", { name: "CORRECT RESULT" }));
+
+    await waitFor(() => expect(repo.correctResult).toHaveBeenCalledWith(
+      "ufc-control",
+      expect.objectContaining({
+        boutId: "second-fight",
+        resultStatus: "cancelled",
+        resultRecordedAt: "2026-08-01T02:20:00.000Z",
+      }),
+      "blue_win",
+      "Result was entered against the wrong bout",
+    ));
+    expect(repo.recordResult).not.toHaveBeenCalledWith("ufc-control", "second-fight", expect.anything());
+    expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("Submitted picks and Underdog Locks will not change"));
+  });
+
+  it("corrects a completed event without reopening its lifecycle and can load prior completed events", async () => {
+    vi.mocked(window.prompt)
+      .mockReturnValueOnce("BLUE")
+      .mockReturnValueOnce("Official commission corrected the winner");
+    const completed: PickControlEvent = {
+      ...lockedEvent,
+      status: "complete",
+      canComplete: false,
+      recentCompletedEvents: [
+        {
+          eventId: "older-complete",
+          name: "UFC Older Complete",
+          startsAt: "2026-07-25T02:00:00.000Z",
+          completedAt: "2026-07-25T05:00:00.000Z",
+        },
+      ],
+      bouts: lockedEvent.bouts.map((bout, index) => index === 0 ? {
+        ...bout,
+        resultStatus: "red_win" as const,
+        winnerFighterSlug: bout.redFighterSlug,
+        resultRecordedAt: "2026-08-01T02:30:00.000Z",
+        canCorrectResult: true,
+        hasCorrectionHistory: true,
+      } : bout),
+    };
+    const repo = repository(completed);
+    renderPage(repo);
+
+    expect(await screen.findByText("Recap remains published")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "COMPLETE EVENT" })).not.toBeInTheDocument();
+    expect(screen.getByText(/Prior result states and reasons remain privately audited/)).toBeInTheDocument();
+
+    fireEvent.click(screen.getAllByRole("button", { name: "CORRECT RESULT" })[0]);
+    await waitFor(() => expect(repo.correctResult).toHaveBeenCalledWith(
+      "ufc-control",
+      expect.objectContaining({ resultStatus: "red_win", winnerFighterSlug: "red-fighter" }),
+      "blue_win",
+      "Official commission corrected the winner",
+    ));
+
+    fireEvent.click(screen.getByRole("button", { name: "VIEW UFC OLDER COMPLETE" }));
+    await waitFor(() => expect(repo.loadControlEvent).toHaveBeenCalledWith("older-complete"));
   });
 
   it("approves and restores pre-lock cancellations with a required reason", async () => {
@@ -340,6 +410,7 @@ describe("Fight Night Control", () => {
         resultStatus: "red_win" as const,
         winnerFighterSlug: bout.redFighterSlug,
         resultRecordedAt: "2026-08-01T02:30:00.000Z",
+        canCorrectResult: true,
       } : bout),
     };
     const completeRepo = repository(ready);

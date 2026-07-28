@@ -3,6 +3,13 @@ import { getSupabaseClient } from "../../lib/supabase";
 import type { PickBoutResultStatus } from "../picks/picksModel";
 import type { PickControlEvent } from "./pickControlModel";
 
+const completedEventOptionSchema = z.object({
+  event_id: z.string(),
+  name: z.string(),
+  starts_at: z.string(),
+  completed_at: z.string(),
+});
+
 const controlBoutSchema = z.object({
   bout_id: z.string(),
   position: z.number().int().positive(),
@@ -20,8 +27,10 @@ const controlBoutSchema = z.object({
   can_replace: z.boolean().optional().default(false),
   can_remove_from_picks: z.boolean().optional().default(false),
   can_restore_to_picks: z.boolean().optional().default(false),
+  can_correct_result: z.boolean().optional().default(false),
   has_replacement_history: z.boolean().optional().default(false),
   has_removal_history: z.boolean().optional().default(false),
+  has_correction_history: z.boolean().optional().default(false),
 });
 
 const controlEventSchema = z.object({
@@ -38,17 +47,19 @@ const controlEventSchema = z.object({
   can_complete: z.boolean(),
   can_reorder: z.boolean().optional().default(false),
   has_reorder_history: z.boolean().optional().default(false),
+  recent_completed_events: z.array(completedEventOptionSchema).optional().default([]),
   bouts: z.array(controlBoutSchema),
 });
 
 export interface PickControlRepository {
-  loadControlEvent: () => Promise<PickControlEvent | null>;
+  loadControlEvent: (eventId?: string) => Promise<PickControlEvent | null>;
   lockEvent: (eventId: string) => Promise<void>;
   setCancellation: (eventId: string, boutId: string, cancelled: boolean, reason: string) => Promise<void>;
   setBoutInclusion: (eventId: string, bout: PickControlEvent["bouts"][number], includedInPicks: boolean, reason: string) => Promise<void>;
   replaceFighter: (eventId: string, bout: PickControlEvent["bouts"][number], corner: "red" | "blue", slug: string, name: string, reason: string) => Promise<void>;
   reorderCard: (eventId: string, expectedBoutIds: string[], proposedBoutIds: string[], reason: string) => Promise<void>;
   recordResult: (eventId: string, boutId: string, result: PickBoutResultStatus) => Promise<void>;
+  correctResult: (eventId: string, bout: PickControlEvent["bouts"][number], result: PickBoutResultStatus, reason: string) => Promise<void>;
   completeEvent: (eventId: string) => Promise<void>;
 }
 
@@ -75,6 +86,12 @@ export function mapPickControlEvent(value: unknown): PickControlEvent | null {
     canComplete: parsed.can_complete,
     canReorder: parsed.can_reorder,
     hasReorderHistory: parsed.has_reorder_history,
+    recentCompletedEvents: parsed.recent_completed_events.map((event) => ({
+      eventId: event.event_id,
+      name: event.name,
+      startsAt: event.starts_at,
+      completedAt: event.completed_at,
+    })),
     bouts: parsed.bouts.map((bout) => ({
       boutId: bout.bout_id,
       position: bout.position,
@@ -92,8 +109,10 @@ export function mapPickControlEvent(value: unknown): PickControlEvent | null {
       canReplace: bout.can_replace,
       canRemoveFromPicks: bout.can_remove_from_picks,
       canRestoreToPicks: bout.can_restore_to_picks,
+      canCorrectResult: bout.can_correct_result,
       hasReplacementHistory: bout.has_replacement_history,
       hasRemovalHistory: bout.has_removal_history,
+      hasCorrectionHistory: bout.has_correction_history,
     })),
   };
 }
@@ -104,8 +123,11 @@ export function createPickControlRepository(): PickControlRepository | null {
   const client = supabase;
 
   return {
-    async loadControlEvent() {
-      const data = await requireRpcSuccess(client.rpc("get_pick_control_event"));
+    async loadControlEvent(eventId) {
+      const request = eventId
+        ? client.rpc("get_pick_control_event", { p_event_id: eventId })
+        : client.rpc("get_pick_control_event");
+      const data = await requireRpcSuccess(request);
       return mapPickControlEvent(data);
     },
 
@@ -164,6 +186,18 @@ export function createPickControlRepository(): PickControlRepository | null {
         p_event_id: eventId,
         p_bout_id: boutId,
         p_result_status: result,
+      }));
+    },
+
+    async correctResult(eventId, bout, result, reason) {
+      await requireRpcSuccess(client.rpc("correct_official_pick_bout_result", {
+        p_event_id: eventId,
+        p_bout_id: bout.boutId,
+        p_result_status: result,
+        p_expected_result_status: bout.resultStatus,
+        p_expected_winner_fighter_slug: bout.winnerFighterSlug,
+        p_expected_result_recorded_at: bout.resultRecordedAt,
+        p_reason: reason,
       }));
     },
 
