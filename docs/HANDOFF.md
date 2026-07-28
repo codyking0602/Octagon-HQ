@@ -1,6 +1,6 @@
 # Octagon HQ V2 — Current Handoff
 
-_Last updated: 2026-07-26_
+_Last updated: 2026-07-28_
 
 This is the authoritative cold-start handoff for continuing Octagon HQ V2. Read this file, `docs/product-blueprint.md`, `docs/RANKINGS-MIGRATION.md`, `docs/rankings-parity-contract.md`, `docs/intelligence-verdict-flow.md`, and `docs/octagon-verdict-export.md`, then inspect current `main` before editing.
 
@@ -72,6 +72,8 @@ The following are complete, merged, and live:
 - Profile-backed open-challenge count.
 - Profile-backed UFC Picks.
 - Public current UFC event and six-fight main-card Picks data.
+- Owner-only manual Picks monitoring with durable run and finding evidence.
+- One quota-aware, server-owned Picks monitoring schedule with atomic claims and evidence recording.
 - Cross-device pick selections.
 - Database-enforced Picks lock and fighter validation.
 - Picks season record on Your HQ.
@@ -333,6 +335,15 @@ Every production PR requires the exact final head to pass:
 - `npm run build`.
 
 Relevant Supabase SQL tests, migration-order checks, backend verification, deployment, and export workflows must also be green when applicable. Never describe a PR as deployed, verified, green, or merged without checking the exact current head.
+
+## Picks monitoring operations
+
+- `run-pick-monitoring` remains the only manual and scheduled monitoring runner.
+- The database owns one `octagon-hq-pick-monitoring` cron job at minute 7 of each hour. Event-aware cadence reduces provider calls when the event is farther away and stops at the earliest Picks lock or event start.
+- Scheduled runs use a database-only Vault credential, an atomic short lease, and the existing monitoring evidence writer. They never publish an event, change Picks, or create a user-facing card.
+- Exact-head PR backend deployments leave the job inactive. The canonical `main` backend deployment is the only owner that enables it.
+- Backend verification must prove the exact function SHA, required migrations, provider-secret presence, production CORS, rejected unauthorized paths, scheduler active state, and the actual cron command shape. Scheduler health never returns the command or credential.
+- Operational history is available only to the service-role health RPC as non-sensitive last-run status and timestamps. Do not expose it to browser code.
 
 ## Next safe action
 

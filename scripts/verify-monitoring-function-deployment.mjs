@@ -37,7 +37,7 @@ if (!Array.isArray(secrets) || !secrets.some((secret) => secret?.name === "THE_O
 const functionList = cli(["functions", "list", "--project-ref", projectId]);
 if (!functionList.includes("run-pick-monitoring")) throw new Error("run-pick-monitoring is not deployed.");
 const migrationList = cli(["migration", "list", "--linked"]);
-for (const version of ["202608080001", "202608090001", "202608090002"]) {
+for (const version of ["202608080001", "202608090001", "202608090002", "202608090003"]) {
   if (!remoteMigrationRecorded(migrationList, version)) throw new Error(`Monitoring migration ${version} is not recorded remotely.`);
 }
 
@@ -105,6 +105,7 @@ if (!healthResponse.ok
   || health?.job_name !== "octagon-hq-pick-monitoring"
   || health?.schedule !== "7 * * * *"
   || health?.token_configured !== true
+  || health?.command_configured !== true
   || health?.function_name !== "run-pick-monitoring") {
   throw new Error("Canonical monitoring scheduler infrastructure is unavailable or mismatched.");
 }
