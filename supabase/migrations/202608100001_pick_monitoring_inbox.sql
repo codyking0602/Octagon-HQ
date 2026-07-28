@@ -288,9 +288,17 @@ begin
       reviewed_at = now(),
       reviewed_by = auth.uid()
   where finding.finding_id = p_finding_id
+    and finding.review_status = 'new'
   returning finding.* into v_finding;
 
   if not found then
+    if exists (
+      select 1
+      from public.pick_monitoring_findings finding
+      where finding.finding_id = p_finding_id
+    ) then
+      raise exception 'monitoring finding already reviewed';
+    end if;
     raise exception 'monitoring finding not found';
   end if;
 
