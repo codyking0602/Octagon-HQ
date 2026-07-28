@@ -29,6 +29,8 @@ export interface PickControlEvent {
   status: PickEventStatus;
   canLock: boolean;
   canComplete: boolean;
+  canReorder: boolean;
+  hasReorderHistory: boolean;
   bouts: PickControlBout[];
 }
 
