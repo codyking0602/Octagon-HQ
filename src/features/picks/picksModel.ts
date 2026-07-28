@@ -24,6 +24,7 @@ export interface PickBout {
   winnerFighterSlug: string | null;
   resultStatus?: PickBoutResultStatus;
   resultRecordedAt?: string | null;
+  includedInPicks?: boolean;
   groupPicks?: PickGroupPick[];
   repickRequired?: boolean;
 }
@@ -80,6 +81,7 @@ export interface PickHistoryBout {
   winnerFighterSlug: string | null;
   pickedFighterSlug: string | null;
   verdict: PickVerdict;
+  includedInPicks?: boolean;
   groupPicks?: PickGroupPick[];
   repickRequired?: boolean;
 }
@@ -172,6 +174,7 @@ export function pickEventPresentation(event: PickEvent, now = Date.now()): PickE
   }
 
   const hasRecordedFightResult = event.bouts.some((bout) => {
+    if (bout.includedInPicks === false) return false;
     const result = bout.resultStatus ?? "pending";
     return result !== "pending" && result !== "cancelled";
   });
@@ -199,7 +202,9 @@ export function americanOddsLabel(odds: number | null) {
 
 export function pickProgress(event: PickEvent | null, selections: Readonly<Record<string, string>>) {
   if (!event) return { completed: 0, total: 0 };
-  const eligibleBouts = event.bouts.filter((bout) => (bout.resultStatus ?? "pending") !== "cancelled");
+  const eligibleBouts = event.bouts.filter((bout) => (
+    bout.includedInPicks !== false && (bout.resultStatus ?? "pending") !== "cancelled"
+  ));
   return {
     completed: eligibleBouts.filter((bout) => Boolean(selections[bout.boutId])).length,
     total: eligibleBouts.length,
