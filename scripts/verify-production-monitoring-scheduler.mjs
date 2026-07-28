@@ -37,12 +37,19 @@ const health = await readBody(healthResponse);
 if (!healthResponse.ok) {
   throw new Error(`Production scheduler health failed with HTTP ${healthResponse.status}.`);
 }
-if (health?.job_name !== "octagon-hq-pick-monitoring"
-  || health?.schedule !== "7 * * * *"
-  || health?.active !== true
-  || health?.token_configured !== true
-  || health?.function_name !== "run-pick-monitoring") {
-  throw new Error("Production Picks monitoring scheduler is not active or canonical.");
+const safeHealth = {
+  job_name: health?.job_name ?? null,
+  schedule: health?.schedule ?? null,
+  active: health?.active === true,
+  token_configured: health?.token_configured === true,
+  function_name: health?.function_name ?? null,
+};
+if (safeHealth.job_name !== "octagon-hq-pick-monitoring"
+  || safeHealth.schedule !== "7 * * * *"
+  || safeHealth.active !== true
+  || safeHealth.token_configured !== true
+  || safeHealth.function_name !== "run-pick-monitoring") {
+  throw new Error(`Production Picks monitoring scheduler health mismatch: ${JSON.stringify(safeHealth)}`);
 }
 
 console.log("PASS: production Picks monitoring scheduler is active, canonical, and token-configured without invoking the runner or provider.");
