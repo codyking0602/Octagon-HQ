@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, writeFileSync } from "node:fs";
 
 const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
 const projectId = process.env.SUPABASE_PROJECT_ID;
@@ -69,5 +69,17 @@ console.log(`PASS: sync-next-ufc-event is deployed from exact source ${expectedS
 
 if (existsSync("supabase/functions/run-pick-monitoring/index.ts")) {
   process.env.EXPECTED_MONITORING_SOURCE_SHA = process.env.EXPECTED_MONITORING_SOURCE_SHA?.trim() || expectedSha;
-  await import("./verify-monitoring-function-deployment.mjs");
+  try {
+    await import("./verify-monitoring-function-deployment.mjs");
+  } catch (error) {
+    const message = error instanceof Error ? error.stack ?? error.message : String(error);
+    if (process.env.RUNNER_TEMP) {
+      writeFileSync(
+        `${process.env.RUNNER_TEMP}/event-setup-webkit.log`,
+        `Manual monitoring deployment verification failed:\n${message}\n`,
+        "utf8",
+      );
+    }
+    throw error;
+  }
 }
