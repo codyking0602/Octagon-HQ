@@ -28,6 +28,14 @@ export interface MonitoringFindingInput {
   source_details?: Record<string, unknown>;
 }
 
+export interface CanonicalOddsBoutInput {
+  boutId: string;
+  redFighterSlug: string;
+  redFighterIdentity: string;
+  blueFighterSlug: string;
+  blueFighterIdentity: string;
+}
+
 export interface StoredOddsSnapshotInput {
   provider: NormalizedFightOddsSnapshot["provider"];
   sport_key: NormalizedFightOddsSnapshot["sportKey"];
@@ -40,6 +48,12 @@ export interface StoredOddsSnapshotInput {
   sportsbook_updated_at: string;
   fetched_at: string;
   bout_id?: string;
+  canonical_red_fighter_slug?: string;
+  canonical_red_fighter_identity?: string;
+  canonical_red_american_odds?: number;
+  canonical_blue_fighter_slug?: string;
+  canonical_blue_fighter_identity?: string;
+  canonical_blue_american_odds?: number;
   prices: readonly [
     {
       fighter_name: string;
@@ -92,6 +106,7 @@ export interface BuildMonitoringRunPayloadInput {
   cardSourceUrl?: string;
   findings?: MonitoringFindingInput[];
   boutIdByMatchup?: Readonly<Record<string, string>>;
+  canonicalBoutByMatchup?: Readonly<Record<string, CanonicalOddsBoutInput>>;
 }
 
 export function monitoringRunStatus(odds: OddsAdapterResult): MonitoringRunStatus {
@@ -111,7 +126,29 @@ export function snapshotIsBeforeLock(fetchedAt: string, locksAt?: string | null)
 function storedSnapshot(
   snapshot: NormalizedFightOddsSnapshot,
   boutIdByMatchup: Readonly<Record<string, string>>,
+  canonicalBoutByMatchup: Readonly<Record<string, CanonicalOddsBoutInput>>,
 ): StoredOddsSnapshotInput {
+  const canonicalBout = canonicalBoutByMatchup[snapshot.matchupIdentity];
+  const redPrice = canonicalBout
+    ? snapshot.prices.find((price) => price.fighterIdentity === canonicalBout.redFighterIdentity)
+    : undefined;
+  const bluePrice = canonicalBout
+    ? snapshot.prices.find((price) => price.fighterIdentity === canonicalBout.blueFighterIdentity)
+    : undefined;
+  const oriented = canonicalBout && redPrice && bluePrice
+    ? {
+        bout_id: canonicalBout.boutId,
+        canonical_red_fighter_slug: canonicalBout.redFighterSlug,
+        canonical_red_fighter_identity: canonicalBout.redFighterIdentity,
+        canonical_red_american_odds: redPrice.americanOdds,
+        canonical_blue_fighter_slug: canonicalBout.blueFighterSlug,
+        canonical_blue_fighter_identity: canonicalBout.blueFighterIdentity,
+        canonical_blue_american_odds: bluePrice.americanOdds,
+      }
+    : {
+        bout_id: boutIdByMatchup[snapshot.matchupIdentity],
+      };
+
   return {
     provider: snapshot.provider,
     sport_key: snapshot.sportKey,
@@ -123,7 +160,7 @@ function storedSnapshot(
     sportsbook_title: snapshot.sportsbookTitle,
     sportsbook_updated_at: snapshot.sportsbookUpdatedAt,
     fetched_at: snapshot.fetchedAt,
-    bout_id: boutIdByMatchup[snapshot.matchupIdentity],
+    ...oriented,
     prices: [
       {
         fighter_name: snapshot.prices[0].fighterName,
@@ -151,6 +188,7 @@ export function buildMonitoringRunPayload({
   cardSourceUrl,
   findings = [],
   boutIdByMatchup = {},
+  canonicalBoutByMatchup = {},
 }: BuildMonitoringRunPayloadInput): MonitoringRunPayload {
   return {
     trigger_kind: triggerKind,
@@ -175,6 +213,10 @@ export function buildMonitoringRunPayload({
     },
     diagnostics: odds.diagnostics,
     findings,
-    odds_snapshots: odds.snapshots.map((snapshot) => storedSnapshot(snapshot, boutIdByMatchup)),
+    odds_snapshots: odds.snapshots.map((snapshot) => storedSnapshot(
+      snapshot,
+      boutIdByMatchup,
+      canonicalBoutByMatchup,
+    )),
   };
 }
