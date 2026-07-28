@@ -720,3 +720,18 @@
     justify-self: end;
   }
 }
+
+.pick-bout-card.is-repick-required {
+  border-color: rgba(214, 34, 39, .72);
+}
+
+.pick-bout-card__repick {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--ufc-red);
+  background: rgba(214, 34, 39, .1);
+}
+
+.pick-bout-card__repick strong { color: var(--ufc-red); letter-spacing: .08em; }
+.pick-bout-card__repick span { color: var(--text-muted); font-size: 12px; }

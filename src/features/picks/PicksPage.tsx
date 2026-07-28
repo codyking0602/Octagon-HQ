@@ -311,11 +311,12 @@ export default function PicksPage() {
                     : null;
                 const lockSelected = picks.underdogLock?.boutId === bout.boutId;
                 const cancelled = (bout.resultStatus ?? "pending") === "cancelled";
+                const repickRequired = Boolean(bout.repickRequired && !selection);
                 const resolved = (bout.resultStatus ?? "pending") !== "pending";
                 const readOnly = locked || cancelled;
                 const oddsMeta = oddsProvenance(bout.oddsSource, bout.oddsUpdatedAt);
                 return (
-                  <article className={`surface-card pick-bout-card${cancelled ? " is-cancelled" : ""}`} key={bout.boutId}>
+                  <article className={`surface-card pick-bout-card${cancelled ? " is-cancelled" : ""}${repickRequired ? " is-repick-required" : ""}`} key={bout.boutId}>
                     <div className="pick-bout-card__heading">
                       <span>{mainCardFightLabel(index)}</span>
                       <small>{bout.weightClass}</small>
@@ -324,6 +325,12 @@ export default function PicksPage() {
                       <div className="pick-bout-card__heading" aria-label="Sportsbook odds source">
                         <span>SPORTSBOOK ODDS</span>
                         <small>{oddsMeta}</small>
+                      </div>
+                    ) : null}
+                    {repickRequired ? (
+                      <div className="pick-bout-card__repick" role="status">
+                        <strong>REPICK REQUIRED</strong>
+                        <span>The matchup changed. Pick either current fighter again; your previous pick and Underdog Lock are no longer active.</span>
                       </div>
                     ) : null}
                     <div className="pick-bout-card__choices">

@@ -39,6 +39,8 @@ const lockedEvent: PickControlEvent = {
       resultRecordedAt: null,
       canCancel: false,
       canRestore: false,
+      canReplace: false,
+      hasReplacementHistory: false,
     },
     {
       boutId: "second-fight",
@@ -53,6 +55,8 @@ const lockedEvent: PickControlEvent = {
       resultRecordedAt: "2026-08-01T02:20:00.000Z",
       canCancel: false,
       canRestore: false,
+      canReplace: false,
+      hasReplacementHistory: false,
     },
   ],
 };
@@ -73,6 +77,7 @@ function repository(event: PickControlEvent | null): PickControlRepository {
     loadControlEvent: vi.fn().mockResolvedValue(event),
     lockEvent: vi.fn().mockResolvedValue(undefined),
     setCancellation: vi.fn().mockResolvedValue(undefined),
+    replaceFighter: vi.fn().mockResolvedValue(undefined),
     recordResult: vi.fn().mockResolvedValue(undefined),
     completeEvent: vi.fn().mockResolvedValue(undefined),
   };
@@ -128,6 +133,8 @@ describe("Fight Night Control", () => {
         resultRecordedAt: null,
         canCancel: true,
         canRestore: false,
+        canReplace: false,
+        hasReplacementHistory: false,
       } : {
         ...bout,
         resultStatus: "cancelled" as const,
@@ -171,6 +178,33 @@ describe("Fight Night Control", () => {
     expect(repo.setCancellation).not.toHaveBeenCalled();
   });
 
+  it("requires explicit owner confirmation and submits stale-state guarded replacement details", async () => {
+    vi.mocked(window.prompt)
+      .mockReturnValueOnce("red")
+      .mockReturnValueOnce("Replacement Fighter")
+      .mockReturnValueOnce("replacement-fighter")
+      .mockReturnValueOnce("Official opponent withdrew");
+    const upcoming: PickControlEvent = {
+      ...lockedEvent,
+      status: "upcoming",
+      canLock: false,
+      bouts: [{ ...lockedEvent.bouts[0], canReplace: true }],
+    };
+    const repo = repository(upcoming);
+    renderPage(repo);
+
+    fireEvent.click(await screen.findByRole("button", { name: "REPLACE FIGHTER" }));
+    await waitFor(() => expect(repo.replaceFighter).toHaveBeenCalledWith(
+      "ufc-control",
+      expect.objectContaining({ boutId: "red-blue", redFighterSlug: "red-fighter", blueFighterSlug: "blue-fighter" }),
+      "red",
+      "replacement-fighter",
+      "Replacement Fighter",
+      "Official opponent withdrew",
+    ));
+    expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("Every existing pick"));
+  });
+
   it("locks picks before result entry and completes only a fully resolved event", async () => {
     const upcoming = { ...lockedEvent, status: "upcoming" as const, canLock: true, bouts: lockedEvent.bouts.map((bout) => ({
       ...bout,
@@ -179,6 +213,8 @@ describe("Fight Night Control", () => {
       resultRecordedAt: null,
       canCancel: true,
       canRestore: false,
+      canReplace: false,
+      hasReplacementHistory: false,
     })) };
     const lockRepo = repository(upcoming);
     renderPage(lockRepo);

@@ -13,6 +13,8 @@ export interface PickControlBout {
   resultRecordedAt: string | null;
   canCancel: boolean;
   canRestore: boolean;
+  canReplace: boolean;
+  hasReplacementHistory: boolean;
 }
 
 export interface PickControlEvent {
