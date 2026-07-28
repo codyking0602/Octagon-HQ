@@ -4,6 +4,14 @@ if (!accessToken || !projectId) {
   throw new Error("Production monitoring scheduler verification is not configured.");
 }
 
+const configuredExpectation = process.env.EXPECTED_MONITORING_SCHEDULER_ACTIVE?.trim().toLowerCase();
+if (configuredExpectation && !["true", "false"].includes(configuredExpectation)) {
+  throw new Error("EXPECTED_MONITORING_SCHEDULER_ACTIVE must be true or false when provided.");
+}
+const expectedActive = configuredExpectation
+  ? configuredExpectation === "true"
+  : process.env.GITHUB_EVENT_NAME !== "pull_request";
+
 async function readBody(response) {
   const text = await response.text();
   try { return JSON.parse(text); } catch { return { message: text }; }
@@ -42,14 +50,20 @@ const safeHealth = {
   schedule: health?.schedule ?? null,
   active: health?.active === true,
   token_configured: health?.token_configured === true,
+  command_configured: health?.command_configured === true,
   function_name: health?.function_name ?? null,
 };
 if (safeHealth.job_name !== "octagon-hq-pick-monitoring"
   || safeHealth.schedule !== "7 * * * *"
-  || safeHealth.active !== true
+  || safeHealth.active !== expectedActive
   || safeHealth.token_configured !== true
+  || safeHealth.command_configured !== true
   || safeHealth.function_name !== "run-pick-monitoring") {
-  throw new Error(`Production Picks monitoring scheduler health mismatch: ${JSON.stringify(safeHealth)}`);
+  throw new Error(
+    `Production Picks monitoring scheduler health mismatch; expected active=${expectedActive}: ${JSON.stringify(safeHealth)}`,
+  );
 }
 
-console.log("PASS: production Picks monitoring scheduler is active, canonical, and token-configured without invoking the runner or provider.");
+console.log(
+  `PASS: production Picks monitoring scheduler is ${expectedActive ? "active" : "safely paused"}, canonical, command-configured, and token-configured without invoking the runner or provider.`,
+);
