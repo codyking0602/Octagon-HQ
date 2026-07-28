@@ -87,13 +87,14 @@ function recordNote(record: PickHistoryRecord) {
   return details.length ? details.join(" · ") : "All eligible fights scored";
 }
 
-function choiceLabel(selected: boolean, locked: boolean) {
+function choiceLabel(selected: boolean, locked: boolean, cancelled: boolean) {
   if (selected) return "YOUR PICK";
+  if (cancelled) return "FIGHT CANCELLED";
   return locked ? "NOT PICKED" : "PICK FIGHTER";
 }
 
-function choiceClassName(selected: boolean, locked: boolean) {
-  return ["pick-choice", selected ? "is-selected" : "", locked ? "is-read-only" : ""]
+function choiceClassName(selected: boolean, readOnly: boolean) {
+  return ["pick-choice", selected ? "is-selected" : "", readOnly ? "is-read-only" : ""]
     .filter(Boolean)
     .join(" ");
 }
@@ -309,10 +310,12 @@ export default function PicksPage() {
                     ? bout.blueAmericanOdds
                     : null;
                 const lockSelected = picks.underdogLock?.boutId === bout.boutId;
+                const cancelled = (bout.resultStatus ?? "pending") === "cancelled";
                 const resolved = (bout.resultStatus ?? "pending") !== "pending";
+                const readOnly = locked || cancelled;
                 const oddsMeta = oddsProvenance(bout.oddsSource, bout.oddsUpdatedAt);
                 return (
-                  <article className="surface-card pick-bout-card" key={bout.boutId}>
+                  <article className={`surface-card pick-bout-card${cancelled ? " is-cancelled" : ""}`} key={bout.boutId}>
                     <div className="pick-bout-card__heading">
                       <span>{mainCardFightLabel(index)}</span>
                       <small>{bout.weightClass}</small>
@@ -326,39 +329,44 @@ export default function PicksPage() {
                     <div className="pick-bout-card__choices">
                       <button
                         type="button"
-                        className={choiceClassName(selection === bout.redFighterSlug, locked)}
+                        className={choiceClassName(selection === bout.redFighterSlug, readOnly)}
                         aria-pressed={selection === bout.redFighterSlug}
-                        disabled={locked || Boolean(picks.savingBoutId)}
+                        disabled={readOnly || Boolean(picks.savingBoutId)}
                         onClick={() => void picks.setPick(bout.boutId, bout.redFighterSlug)}
                       >
                         <FighterThumbnail name={bout.redFighterName} slug={bout.redFighterSlug} />
                         <span>{bout.redFighterName}</span>
                         <small>{redOdds ?? "ODDS TBD"}{favorite === "red" ? " · FAVORITE" : ""}</small>
-                        <em>{choiceLabel(selection === bout.redFighterSlug, locked)}</em>
+                        <em>{choiceLabel(selection === bout.redFighterSlug, locked, cancelled)}</em>
                       </button>
                       <span className="pick-bout-card__versus">VS</span>
                       <button
                         type="button"
-                        className={choiceClassName(selection === bout.blueFighterSlug, locked)}
+                        className={choiceClassName(selection === bout.blueFighterSlug, readOnly)}
                         aria-pressed={selection === bout.blueFighterSlug}
-                        disabled={locked || Boolean(picks.savingBoutId)}
+                        disabled={readOnly || Boolean(picks.savingBoutId)}
                         onClick={() => void picks.setPick(bout.boutId, bout.blueFighterSlug)}
                       >
                         <FighterThumbnail name={bout.blueFighterName} slug={bout.blueFighterSlug} />
                         <span>{bout.blueFighterName}</span>
                         <small>{blueOdds ?? "ODDS TBD"}{favorite === "blue" ? " · FAVORITE" : ""}</small>
-                        <em>{choiceLabel(selection === bout.blueFighterSlug, locked)}</em>
+                        <em>{choiceLabel(selection === bout.blueFighterSlug, locked, cancelled)}</em>
                       </button>
                     </div>
-                    {resolved ? (
+                    {cancelled ? (
+                      <div className="pick-bout-card__official">
+                        <span>FIGHT STATUS</span>
+                        <strong>CANCELLED · EXCLUDED FROM SCORING</strong>
+                      </div>
+                    ) : resolved ? (
                       <div className="pick-bout-card__official">
                         <span>OFFICIAL RESULT</span>
                         <strong>{officialResult(bout)}</strong>
                       </div>
                     ) : null}
-                    {locked && lockSelected ? (
+                    {!cancelled && locked && lockSelected ? (
                       <div className="pick-lock-readonly" aria-label="Selected Underdog Lock">UNDERDOG LOCK</div>
-                    ) : !locked && selection && (selectedOdds ?? 0) > 0 ? (
+                    ) : !cancelled && !locked && selection && (selectedOdds ?? 0) > 0 ? (
                       <button
                         className={lockSelected ? "pick-lock-action is-selected" : "pick-lock-action"}
                         type="button"
