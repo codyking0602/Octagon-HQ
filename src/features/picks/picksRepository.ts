@@ -39,6 +39,7 @@ const boutSchema = z.object({
   winner_fighter_slug: z.string().nullable(),
   result_status: z.enum(["pending", "red_win", "blue_win", "draw", "no_contest", "cancelled"]).optional().default("pending"),
   result_recorded_at: z.string().nullable().optional().default(null),
+  included_in_picks: z.boolean().optional().default(true),
   group_picks: z.array(groupPickSchema).optional().default([]),
   repick_required: z.boolean().optional().default(false),
 });
@@ -105,6 +106,7 @@ const historyBoutSchema = z.object({
   winner_fighter_slug: z.string().nullable(),
   picked_fighter_slug: z.string().nullable(),
   verdict: z.enum(["correct", "incorrect", "missing", "excluded", "pending"]),
+  included_in_picks: z.boolean().optional().default(true),
   group_picks: z.array(groupPickSchema).optional().default([]),
   repick_required: z.boolean().optional().default(false),
 });
@@ -192,6 +194,7 @@ export function mapPickEvent(value: unknown): PickEvent | null {
       winnerFighterSlug: bout.winner_fighter_slug,
       resultStatus: bout.result_status,
       resultRecordedAt: bout.result_recorded_at,
+      includedInPicks: bout.included_in_picks,
       groupPicks: bout.group_picks.map(mapGroupPick),
       repickRequired: bout.repick_required,
     })),
@@ -280,7 +283,9 @@ function mapHistory(value: unknown): PickHistory {
         winnerFighterSlug: bout.winner_fighter_slug,
         pickedFighterSlug: bout.picked_fighter_slug,
         verdict: bout.verdict,
+        includedInPicks: bout.included_in_picks,
         groupPicks: bout.group_picks.map(mapGroupPick),
+        repickRequired: bout.repick_required,
       })),
       groupResults: event.group_results.map((result) => ({
         rank: result.rank,
