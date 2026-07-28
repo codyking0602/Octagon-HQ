@@ -42,6 +42,20 @@ function sameOrder(left: string[], right: string[]) {
   return left.length === right.length && left.every((value, index) => value === right[index]);
 }
 
+function parseCorrectedResult(
+  value: string,
+  eventStatus: PickControlEvent["status"],
+): PickBoutResultStatus | null {
+  const normalized = value.trim().toLowerCase().replace(/[\s-]+/g, "_");
+  if (normalized === "red" || normalized === "red_win") return "red_win";
+  if (normalized === "blue" || normalized === "blue_win") return "blue_win";
+  if (normalized === "draw") return "draw";
+  if (normalized === "no_contest" || normalized === "nc") return "no_contest";
+  if (normalized === "cancelled" || normalized === "canceled") return "cancelled";
+  if (normalized === "pending" && eventStatus === "locked") return "pending";
+  return null;
+}
+
 interface PicksControlPageProps {
   repository?: PickControlRepository | null;
 }
@@ -57,11 +71,11 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
   const [error, setError] = useState("");
   const [draftOrder, setDraftOrder] = useState<string[] | null>(null);
 
-  const loadEvent = useCallback(async () => {
+  const loadEvent = useCallback(async (eventId?: string) => {
     if (!repository || !identity.profile) return;
     setLoading(true);
     try {
-      const nextEvent = await repository.loadControlEvent();
+      const nextEvent = await repository.loadControlEvent(eventId);
       setEvent(nextEvent);
       setDraftOrder(null);
       setError("");
@@ -114,7 +128,7 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
     setError("");
     try {
       await action();
-      await loadEvent();
+      await loadEvent(event?.eventId);
     } catch (nextError) {
       const message = readableError(nextError);
       if (key === "reorder" && message.toLowerCase().includes("reload")) {
@@ -126,22 +140,45 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
     }
   }
 
-  function confirmResultChange(bout: PickControlBout, nextResult: PickBoutResultStatus) {
-    if (bout.resultStatus === "pending" || bout.resultStatus === nextResult) return true;
-    return window.confirm(
-      `Change ${bout.redFighterName} vs. ${bout.blueFighterName} from ${pickControlResultLabel(bout)} to the new result?`,
-    );
-  }
-
   function recordResult(bout: PickControlBout, result: PickBoutResultStatus) {
-    if (!event || !bout.includedInPicks || bout.resultStatus === result || !confirmResultChange(bout, result)) return;
+    if (!event || event.status !== "locked" || !bout.includedInPicks || bout.resultStatus !== "pending") return;
+    if (!window.confirm(`Record ${pickControlResultLabel({ ...bout, resultStatus: result })} as the official result for ${bout.redFighterName} vs. ${bout.blueFighterName}?`)) return;
     void runAction(`bout:${bout.boutId}`, () => repository!.recordResult(event.eventId, bout.boutId, result));
   }
 
-  function clearResult(bout: PickControlBout) {
-    if (!event || !bout.includedInPicks || bout.resultStatus === "pending") return;
-    if (!window.confirm(`Clear the official result for ${bout.redFighterName} vs. ${bout.blueFighterName}?`)) return;
-    void runAction(`bout:${bout.boutId}`, () => repository!.recordResult(event.eventId, bout.boutId, "pending"));
+  function correctResult(bout: PickControlBout) {
+    if (!event || !bout.canCorrectResult || !bout.resultRecordedAt) return;
+    const choices = event.status === "locked"
+      ? "Enter RED, BLUE, DRAW, NO CONTEST, CANCELLED, or PENDING."
+      : "Enter RED, BLUE, DRAW, NO CONTEST, or CANCELLED.";
+    const input = window.prompt(
+      `Correct ${bout.redFighterName} vs. ${bout.blueFighterName}.\nCurrent result: ${pickControlResultLabel(bout)}.\n${choices}`,
+    );
+    if (input === null) return;
+    const nextResult = parseCorrectedResult(input, event.status);
+    if (!nextResult) {
+      setError("Enter a valid corrected official result.");
+      return;
+    }
+    if (nextResult === bout.resultStatus) {
+      setError("The corrected official result must be different from the current result.");
+      return;
+    }
+    const reason = window.prompt("Why is this official result being corrected?")?.trim();
+    if (!reason) return;
+    if (reason.length < 3) {
+      setError("An official result correction requires a reason of at least 3 characters.");
+      return;
+    }
+    const nextLabel = nextResult === "pending"
+      ? "PENDING"
+      : pickControlResultLabel({ ...bout, resultStatus: nextResult });
+    if (!window.confirm(
+      `Correct ${bout.redFighterName} vs. ${bout.blueFighterName} from ${pickControlResultLabel(bout)} to ${nextLabel}? Submitted picks and Underdog Locks will not change. Scoring, standings, season totals, and recaps will recalculate from the corrected canonical result.`,
+    )) return;
+    void runAction(`correct:${bout.boutId}`, () => (
+      repository!.correctResult(event.eventId, bout, nextResult, reason)
+    ));
   }
 
   function setCancellation(bout: PickControlBout, nextCancelled: boolean) {
@@ -240,7 +277,7 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
 
   function completeEvent() {
     if (!event || !event.canComplete) return;
-    if (!window.confirm("Complete this event? Results become immutable and the final recap will be published.")) return;
+    if (!window.confirm("Complete this event? The recap will publish. Any later official-result correction must use the audited correction workflow.")) return;
     void runAction("complete", () => repository!.completeEvent(event.eventId));
   }
 
@@ -249,7 +286,7 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
       <section className="page-heading picks-control-heading">
         <p className="eyebrow">PRIVATE OWNER TOOL</p>
         <h1>Fight Night Control</h1>
-        <p>Approve pre-lock cancellations, removals, fighter replacements, or fight-order changes, then record official results after Picks lock.</p>
+        <p>Approve pre-lock card changes, enter each first official result after Picks lock, and correct finalized results through a separate audited workflow.</p>
         <div className="picks-control-heading__links">
           <Link to="/picks/monitoring">MONITORING INBOX</Link>
           <Link to="/picks/setup">EVENT SETUP</Link>
@@ -281,8 +318,8 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
 
       {identity.profile && !loading && !error && !event ? (
         <section className="surface-card picks-control-state">
-          <p className="eyebrow">NO ACTIVE EVENT</p>
-          <h2>There is no upcoming or locked card to control.</h2>
+          <p className="eyebrow">NO PICKS EVENT</p>
+          <h2>There is no published or completed card to control.</h2>
           <p>Sync and publish the next UFC card in Event Setup.</p>
           <Link className="primary-action" to="/picks/setup">OPEN EVENT SETUP</Link>
         </section>
@@ -291,13 +328,34 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
       {event ? (
         <>
           <section className="surface-card picks-control-hero" aria-labelledby="pick-control-event-title">
-            <div className="picks-control-hero__topline">
-              <p className="eyebrow">CARD & RESULTS</p>
+            <div className="picks-control-hero__top">
+              <p className="eyebrow">SEASON {event.season}</p>
               <span className={`picks-control-status picks-control-status--${event.status}`}>{event.status.toUpperCase()}</span>
             </div>
             <h2 id="pick-control-event-title">{event.name}</h2>
             <strong>{event.subtitle}</strong>
             <p>{eventTime(event.startsAt)} · {event.venue} · {event.location}</p>
+
+            {(event.recentCompletedEvents?.length ?? 0) > 0 ? (
+              <div className="picks-control-heading__links" aria-label="Completed event correction access">
+                {event.status === "complete" ? (
+                  <button className="secondary-action" type="button" disabled={Boolean(busyAction)} onClick={() => void loadEvent()}>
+                    OPEN CURRENT EVENT
+                  </button>
+                ) : null}
+                {event.recentCompletedEvents?.filter((item) => item.eventId !== event.eventId).map((item) => (
+                  <button
+                    className="secondary-action"
+                    type="button"
+                    key={item.eventId}
+                    disabled={Boolean(busyAction)}
+                    onClick={() => void loadEvent(item.eventId)}
+                  >
+                    VIEW {item.name.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+            ) : null}
 
             <div
               className="picks-control-progress"
@@ -422,11 +480,12 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
             </section>
           ) : null}
 
-          {event.status === "locked" ? (
+          {event.status === "locked" || event.status === "complete" ? (
             <section className="picks-control-bouts" aria-label={`${event.name} official results`}>
               {orderedBouts.map((bout, index) => {
-                const saving = busyAction === `bout:${bout.boutId}`;
+                const saving = busyAction === `bout:${bout.boutId}` || busyAction === `correct:${bout.boutId}`;
                 const isRemoved = !bout.includedInPicks;
+                const isPending = bout.resultStatus === "pending";
                 return (
                   <article className="surface-card pick-control-bout" key={bout.boutId}>
                     <div className="pick-control-bout__heading">
@@ -448,14 +507,13 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
                         </div>
                         <p><strong>EXCLUDED FROM SCORING</strong> · No official Picks result is required for this stored fight.</p>
                       </>
-                    ) : (
+                    ) : isPending && event.status === "locked" ? (
                       <>
                         <div className="pick-control-winners">
                           <button
-                            className={resultButtonClass(bout.resultStatus === "red_win")}
+                            className={resultButtonClass(false)}
                             type="button"
                             disabled={Boolean(busyAction)}
-                            aria-pressed={bout.resultStatus === "red_win"}
                             aria-label={`RED WINNER ${bout.redFighterName}`}
                             onClick={() => recordResult(bout, "red_win")}
                           >
@@ -464,10 +522,9 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
                           </button>
                           <span>VS</span>
                           <button
-                            className={resultButtonClass(bout.resultStatus === "blue_win")}
+                            className={resultButtonClass(false)}
                             type="button"
                             disabled={Boolean(busyAction)}
-                            aria-pressed={bout.resultStatus === "blue_win"}
                             aria-label={`BLUE WINNER ${bout.blueFighterName}`}
                             onClick={() => recordResult(bout, "blue_win")}
                           >
@@ -479,28 +536,36 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
                         <div className="pick-control-exclusions" aria-label="Other official result options">
                           {pickControlResultOptions.map((option) => (
                             <button
-                              className={resultButtonClass(bout.resultStatus === option.value)}
+                              className={resultButtonClass(false)}
                               type="button"
                               key={option.value}
                               disabled={Boolean(busyAction)}
-                              aria-pressed={bout.resultStatus === option.value}
                               onClick={() => recordResult(bout, option.value)}
                             >
                               {option.label}
                             </button>
                           ))}
                         </div>
-
-                        {bout.resultStatus !== "pending" ? (
-                          <button
-                            className="pick-control-clear"
-                            type="button"
-                            disabled={Boolean(busyAction)}
-                            onClick={() => clearResult(bout)}
-                          >
-                            CLEAR RESULT
-                          </button>
+                      </>
+                    ) : (
+                      <>
+                        <div className="pick-control-winners">
+                          <div><span>RED CORNER</span><strong>{bout.redFighterName}</strong></div>
+                          <span>VS</span>
+                          <div><span>BLUE CORNER</span><strong>{bout.blueFighterName}</strong></div>
+                        </div>
+                        <p><strong>CURRENT OFFICIAL RESULT</strong> · {pickControlResultLabel(bout)}</p>
+                        {bout.hasCorrectionHistory ? (
+                          <p className="pick-control-replacement-history"><strong>CORRECTION HISTORY EXISTS</strong> · Prior result states and reasons remain privately audited.</p>
                         ) : null}
+                        <button
+                          className="secondary-action"
+                          type="button"
+                          disabled={Boolean(busyAction) || !bout.canCorrectResult}
+                          onClick={() => correctResult(bout)}
+                        >
+                          {busyAction === `correct:${bout.boutId}` ? "CORRECTING…" : "CORRECT RESULT"}
+                        </button>
                       </>
                     )}
                   </article>
@@ -524,6 +589,16 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
               >
                 {busyAction === "complete" ? "COMPLETING EVENT…" : "COMPLETE EVENT"}
               </button>
+            </section>
+          ) : null}
+
+          {event.status === "complete" ? (
+            <section className="surface-card picks-control-complete">
+              <div>
+                <p className="eyebrow">EVENT COMPLETE</p>
+                <h2>Recap remains published</h2>
+                <p>Corrections update the canonical result and automatically recalculate scoring, standings, season totals, and completed recaps without reopening Picks or changing the event lifecycle.</p>
+              </div>
             </section>
           ) : null}
 
