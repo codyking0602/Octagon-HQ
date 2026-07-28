@@ -86,7 +86,7 @@ The following are complete, merged, and live:
 - Branded route-error handling.
 - Fresh SPA shells served with `Cache-Control: no-cache`.
 
-The automatic monitoring implementation is merged, but the read-only production runtime check added in draft PR #91 found the canonical scheduler **inactive** on 2026-07-28. Do not describe automatic monitoring as currently running until the canonical `main` backend deployment re-enables it and the health check passes.
+The automatic monitoring implementation is merged and active. On 2026-07-28, the canonical `main` Supabase deployment re-enabled the scheduler, and PR #91’s read-only production health verification then passed the active/canonical check without invoking the monitoring runner or consuming provider quota.
 
 ## Your HQ
 
@@ -359,14 +359,13 @@ Operational rules:
 - Scheduled runs use a database-only Vault credential, an atomic short lease, and the existing monitoring evidence writer.
 - Automatic monitoring records evidence and findings only. It never publishes or changes a card, draft, odds, picks, locks, results, scoring, event status, or publication state.
 - Exact-head PR backend deployments leave the scheduler inactive. The canonical `main` backend deployment is the only owner that enables it.
-- The read-only production check in PR #91 reached the canonical health RPC without invoking the runner or provider and failed because the scheduler was not active. No Odds API quota was consumed.
+- On 2026-07-28, the canonical `main` deployment re-enabled the scheduler. PR #91’s read-only verification then passed the active, canonical, token-configured scheduler check without invoking the runner or provider. No Odds API quota was consumed.
 
 Draft PR #91 adds the owner-only Monitoring Inbox at `/picks/monitoring`. It reuses the existing owner allowlist, monitoring runner, ledger, and review-only evidence fields. It is not merged or live until its exact backend and frontend are deployed and tested.
 
 ## Next safe action
 
-1. Re-run the canonical **Deploy Supabase Backend** workflow on `main` so production SHA `76d25c05c74088325f007d1855997f51889fb3a8` re-enables the scheduler.
-2. Re-run PR #91’s read-only backend verification and require the production scheduler step to pass without a provider call.
-3. Keep PR #91 draft and unmerged while its exact head remains green.
-4. When live phone testing is approved, deploy the exact PR #91 backend and frontend through the trusted labels, verify the Inbox on iPhone, and then restore the canonical `main` scheduler state if the PR deployment leaves it inactive.
-5. Never merge PR #91 until Cody explicitly says `merge PR #91`.
+1. Keep PR #91 draft and unmerged while its exact head remains green.
+2. When live phone testing is approved, deploy the exact PR #91 backend and frontend through the trusted labels and verify the Inbox on iPhone.
+3. Because a PR backend deployment intentionally leaves the scheduler inactive, rerun the canonical `main` backend deployment afterward and require the read-only scheduler-health step to pass again.
+4. Never merge PR #91 until Cody explicitly says `merge PR #91`.
