@@ -30,7 +30,9 @@ describe("feature deployment workflow contract", () => {
     expect(supabaseWorkflow).toContain("checked_out_sha=$(git rev-parse HEAD)");
     expect(supabaseWorkflow).toContain("pr.head.sha !== expectedSha");
     expect(supabaseWorkflow).toContain("supabase db push --linked");
-    expect(supabaseWorkflow).toContain("Remote migrations, live function contract, and production CORS were verified");
+    expect(supabaseWorkflow).toContain(
+      "Remote migrations, exact deployed function revisions, live authentication contracts, scheduler health, and production CORS were verified",
+    );
   });
 
   it("builds the PR frontend without administrative credentials", () => {
