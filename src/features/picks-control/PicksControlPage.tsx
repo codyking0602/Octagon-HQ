@@ -42,17 +42,13 @@ function sameOrder(left: string[], right: string[]) {
   return left.length === right.length && left.every((value, index) => value === right[index]);
 }
 
-function parseCorrectedResult(
-  value: string,
-  eventStatus: PickControlEvent["status"],
-): PickBoutResultStatus | null {
+function parseCorrectedResult(value: string): PickBoutResultStatus | null {
   const normalized = value.trim().toLowerCase().replace(/[\s-]+/g, "_");
   if (normalized === "red" || normalized === "red_win") return "red_win";
   if (normalized === "blue" || normalized === "blue_win") return "blue_win";
   if (normalized === "draw") return "draw";
   if (normalized === "no_contest" || normalized === "nc") return "no_contest";
   if (normalized === "cancelled" || normalized === "canceled") return "cancelled";
-  if (normalized === "pending" && eventStatus === "locked") return "pending";
   return null;
 }
 
@@ -148,16 +144,13 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
 
   function correctResult(bout: PickControlBout) {
     if (!event || !bout.canCorrectResult || !bout.resultRecordedAt) return;
-    const choices = event.status === "locked"
-      ? "Enter RED, BLUE, DRAW, NO CONTEST, CANCELLED, or PENDING."
-      : "Enter RED, BLUE, DRAW, NO CONTEST, or CANCELLED.";
     const input = window.prompt(
-      `Correct ${bout.redFighterName} vs. ${bout.blueFighterName}.\nCurrent result: ${pickControlResultLabel(bout)}.\n${choices}`,
+      `Correct ${bout.redFighterName} vs. ${bout.blueFighterName}.\nCurrent result: ${pickControlResultLabel(bout)}.\nEnter RED, BLUE, DRAW, NO CONTEST, or CANCELLED.`,
     );
     if (input === null) return;
-    const nextResult = parseCorrectedResult(input, event.status);
+    const nextResult = parseCorrectedResult(input);
     if (!nextResult) {
-      setError("Enter a valid corrected official result.");
+      setError("Enter a valid final corrected official result.");
       return;
     }
     if (nextResult === bout.resultStatus) {
@@ -170,9 +163,7 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
       setError("An official result correction requires a reason of at least 3 characters.");
       return;
     }
-    const nextLabel = nextResult === "pending"
-      ? "PENDING"
-      : pickControlResultLabel({ ...bout, resultStatus: nextResult });
+    const nextLabel = pickControlResultLabel({ ...bout, resultStatus: nextResult });
     if (!window.confirm(
       `Correct ${bout.redFighterName} vs. ${bout.blueFighterName} from ${pickControlResultLabel(bout)} to ${nextLabel}? Submitted picks and Underdog Locks will not change. Scoring, standings, season totals, and recaps will recalculate from the corrected canonical result.`,
     )) return;
