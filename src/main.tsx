@@ -9,6 +9,7 @@ import "./styles/home.css";
 import "./styles/picks.css";
 import "./styles/picks-lifecycle.css";
 import "./styles/picks-polish.css";
+import "./styles/picks-poster.css";
 import "./styles/picks-control.css";
 import "./styles/picks-setup.css";
 import "./styles/picks-setup-source.css";
