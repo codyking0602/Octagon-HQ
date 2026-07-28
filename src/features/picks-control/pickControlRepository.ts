@@ -14,10 +14,14 @@ const controlBoutSchema = z.object({
   result_status: z.enum(["pending", "red_win", "blue_win", "draw", "no_contest", "cancelled"]),
   winner_fighter_slug: z.string().nullable(),
   result_recorded_at: z.string().nullable(),
+  included_in_picks: z.boolean().optional().default(true),
   can_cancel: z.boolean().optional().default(false),
   can_restore: z.boolean().optional().default(false),
   can_replace: z.boolean().optional().default(false),
+  can_remove_from_picks: z.boolean().optional().default(false),
+  can_restore_to_picks: z.boolean().optional().default(false),
   has_replacement_history: z.boolean().optional().default(false),
+  has_removal_history: z.boolean().optional().default(false),
 });
 
 const controlEventSchema = z.object({
@@ -41,6 +45,7 @@ export interface PickControlRepository {
   loadControlEvent: () => Promise<PickControlEvent | null>;
   lockEvent: (eventId: string) => Promise<void>;
   setCancellation: (eventId: string, boutId: string, cancelled: boolean, reason: string) => Promise<void>;
+  setBoutInclusion: (eventId: string, bout: PickControlEvent["bouts"][number], includedInPicks: boolean, reason: string) => Promise<void>;
   replaceFighter: (eventId: string, bout: PickControlEvent["bouts"][number], corner: "red" | "blue", slug: string, name: string, reason: string) => Promise<void>;
   reorderCard: (eventId: string, expectedBoutIds: string[], proposedBoutIds: string[], reason: string) => Promise<void>;
   recordResult: (eventId: string, boutId: string, result: PickBoutResultStatus) => Promise<void>;
@@ -81,10 +86,14 @@ export function mapPickControlEvent(value: unknown): PickControlEvent | null {
       resultStatus: bout.result_status,
       winnerFighterSlug: bout.winner_fighter_slug,
       resultRecordedAt: bout.result_recorded_at,
+      includedInPicks: bout.included_in_picks,
       canCancel: bout.can_cancel,
       canRestore: bout.can_restore,
       canReplace: bout.can_replace,
+      canRemoveFromPicks: bout.can_remove_from_picks,
+      canRestoreToPicks: bout.can_restore_to_picks,
       hasReplacementHistory: bout.has_replacement_history,
+      hasRemovalHistory: bout.has_removal_history,
     })),
   };
 }
@@ -112,6 +121,18 @@ export function createPickControlRepository(): PickControlRepository | null {
         p_event_id: eventId,
         p_bout_id: boutId,
         p_cancelled: cancelled,
+        p_reason: reason,
+      }));
+    },
+
+    async setBoutInclusion(eventId, bout, includedInPicks, reason) {
+      await requireRpcSuccess(client.rpc("approve_pick_bout_inclusion", {
+        p_event_id: eventId,
+        p_bout_id: bout.boutId,
+        p_included_in_picks: includedInPicks,
+        p_expected_included_in_picks: bout.includedInPicks,
+        p_expected_red_fighter_slug: bout.redFighterSlug,
+        p_expected_blue_fighter_slug: bout.blueFighterSlug,
         p_reason: reason,
       }));
     },

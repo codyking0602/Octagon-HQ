@@ -39,10 +39,14 @@ const lockedEvent: PickControlEvent = {
       resultStatus: "pending",
       winnerFighterSlug: null,
       resultRecordedAt: null,
+      includedInPicks: true,
       canCancel: false,
       canRestore: false,
       canReplace: false,
+      canRemoveFromPicks: false,
+      canRestoreToPicks: false,
       hasReplacementHistory: false,
+      hasRemovalHistory: false,
     },
     {
       boutId: "second-fight",
@@ -55,10 +59,14 @@ const lockedEvent: PickControlEvent = {
       resultStatus: "cancelled",
       winnerFighterSlug: null,
       resultRecordedAt: "2026-08-01T02:20:00.000Z",
+      includedInPicks: true,
       canCancel: false,
       canRestore: false,
       canReplace: false,
+      canRemoveFromPicks: false,
+      canRestoreToPicks: false,
       hasReplacementHistory: false,
+      hasRemovalHistory: false,
     },
   ],
 };
@@ -79,6 +87,7 @@ function repository(event: PickControlEvent | null): PickControlRepository {
     loadControlEvent: vi.fn().mockResolvedValue(event),
     lockEvent: vi.fn().mockResolvedValue(undefined),
     setCancellation: vi.fn().mockResolvedValue(undefined),
+    setBoutInclusion: vi.fn().mockResolvedValue(undefined),
     replaceFighter: vi.fn().mockResolvedValue(undefined),
     reorderCard: vi.fn().mockResolvedValue(undefined),
     recordResult: vi.fn().mockResolvedValue(undefined),
@@ -164,6 +173,44 @@ describe("Fight Night Control", () => {
       "Removed from the official UFC card",
     ));
     expect(screen.queryByRole("button", { name: "COMPLETE EVENT" })).not.toBeInTheDocument();
+  });
+
+  it("removes and restores Picks inclusion through a separate stale-state guarded action", async () => {
+    const upcoming: PickControlEvent = {
+      ...lockedEvent,
+      status: "upcoming",
+      bouts: [
+        { ...lockedEvent.bouts[0], canCancel: true, canReplace: true, canRemoveFromPicks: true },
+        {
+          ...lockedEvent.bouts[1],
+          resultStatus: "pending",
+          resultRecordedAt: null,
+          includedInPicks: false,
+          canRestoreToPicks: true,
+          hasRemovalHistory: true,
+        },
+      ],
+    };
+    const repo = repository(upcoming);
+    renderPage(repo);
+
+    fireEvent.click(await screen.findByRole("button", { name: "REMOVE FROM PICKS" }));
+    await waitFor(() => expect(repo.setBoutInclusion).toHaveBeenCalledWith(
+      "ufc-control",
+      expect.objectContaining({ boutId: "red-blue", includedInPicks: true }),
+      false,
+      "Removed from the official UFC card",
+    ));
+    expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("submitted picks stay preserved"));
+
+    fireEvent.click(screen.getByRole("button", { name: "RESTORE TO PICKS" }));
+    await waitFor(() => expect(repo.setBoutInclusion).toHaveBeenCalledWith(
+      "ufc-control",
+      expect.objectContaining({ boutId: "second-fight", includedInPicks: false }),
+      true,
+      "Removed from the official UFC card",
+    ));
+    expect(screen.getByText(/Prior inclusion actions remain audited/)).toBeInTheDocument();
   });
 
   it("does not submit a cancellation without a reason", async () => {
