@@ -6,6 +6,7 @@ import {
   cancelledBoutCount,
   pickControlResultLabel,
   pickControlResultOptions,
+  removedBoutCount,
   resolvedBoutCount,
   type PickControlBout,
   type PickControlEvent,
@@ -104,7 +105,8 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
   const orderChanged = draftOrder !== null && !sameOrder(draftOrder, canonicalOrder);
   const resolved = resolvedBoutCount(event);
   const cancelled = cancelledBoutCount(event);
-  const progressCount = event?.status === "upcoming" ? cancelled : resolved;
+  const removed = removedBoutCount(event);
+  const progressCount = event?.status === "upcoming" ? cancelled + removed : resolved;
   const progress = event?.bouts.length ? Math.round((progressCount / event.bouts.length) * 100) : 0;
 
   async function runAction(key: string, action: () => Promise<void>) {
@@ -132,18 +134,18 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
   }
 
   function recordResult(bout: PickControlBout, result: PickBoutResultStatus) {
-    if (!event || bout.resultStatus === result || !confirmResultChange(bout, result)) return;
+    if (!event || !bout.includedInPicks || bout.resultStatus === result || !confirmResultChange(bout, result)) return;
     void runAction(`bout:${bout.boutId}`, () => repository!.recordResult(event.eventId, bout.boutId, result));
   }
 
   function clearResult(bout: PickControlBout) {
-    if (!event || bout.resultStatus === "pending") return;
+    if (!event || !bout.includedInPicks || bout.resultStatus === "pending") return;
     if (!window.confirm(`Clear the official result for ${bout.redFighterName} vs. ${bout.blueFighterName}?`)) return;
     void runAction(`bout:${bout.boutId}`, () => repository!.recordResult(event.eventId, bout.boutId, "pending"));
   }
 
   function setCancellation(bout: PickControlBout, nextCancelled: boolean) {
-    if (!event) return;
+    if (!event || !bout.includedInPicks) return;
     const reason = window.prompt(
       nextCancelled
         ? `Why is ${bout.redFighterName} vs. ${bout.blueFighterName} being cancelled?`
@@ -161,8 +163,31 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
     ));
   }
 
+  function setBoutInclusion(bout: PickControlBout, includedInPicks: boolean) {
+    if (!event) return;
+    const reason = window.prompt(
+      includedInPicks
+        ? `Why is ${bout.redFighterName} vs. ${bout.blueFighterName} being restored to Picks?`
+        : `Why is ${bout.redFighterName} vs. ${bout.blueFighterName} being removed from Picks?`,
+    )?.trim();
+    if (!reason) return;
+    if (reason.length < 3) {
+      setError("A Picks removal or restoration requires a reason of at least 3 characters.");
+      return;
+    }
+    const confirmed = window.confirm(
+      includedInPicks
+        ? `Restore ${bout.redFighterName} vs. ${bout.blueFighterName} to Picks? Preserved picks become active again. Any previously cleared Underdog Lock will not be restored.`
+        : `Remove ${bout.redFighterName} vs. ${bout.blueFighterName} from Picks? The fight and submitted picks stay preserved, but it will be excluded from progress and scoring. Any mutable Underdog Lock on it will be cleared.`,
+    );
+    if (!confirmed) return;
+    void runAction(`include:${bout.boutId}`, () => (
+      repository!.setBoutInclusion(event.eventId, bout, includedInPicks, reason)
+    ));
+  }
+
   function replaceFighter(bout: PickControlBout) {
-    if (!event || !bout.canReplace) return;
+    if (!event || !bout.canReplace || !bout.includedInPicks) return;
     const cornerInput = window.prompt(
       `Which corner should be replaced in ${bout.redFighterName} vs. ${bout.blueFighterName}? Enter RED or BLUE.`,
     )?.trim().toLowerCase();
@@ -224,7 +249,7 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
       <section className="page-heading picks-control-heading">
         <p className="eyebrow">PRIVATE OWNER TOOL</p>
         <h1>Fight Night Control</h1>
-        <p>Approve pre-lock cancellations, fighter replacements, or fight-order changes, then record official results after Picks lock.</p>
+        <p>Approve pre-lock cancellations, removals, fighter replacements, or fight-order changes, then record official results after Picks lock.</p>
         <div className="picks-control-heading__links">
           <Link to="/picks/monitoring">MONITORING INBOX</Link>
           <Link to="/picks/setup">EVENT SETUP</Link>
@@ -277,11 +302,11 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
             <div
               className="picks-control-progress"
               aria-label={event.status === "upcoming"
-                ? `${cancelled} of ${event.bouts.length} fights cancelled`
-                : `${resolved} of ${event.bouts.length} results entered`}
+                ? `${cancelled} fights cancelled and ${removed} removed from Picks`
+                : `${resolved} of ${event.bouts.length} results or exclusions resolved`}
             >
               <div>
-                <span>{event.status === "upcoming" ? "CARD CANCELLATIONS" : "OFFICIAL RESULTS"}</span>
+                <span>{event.status === "upcoming" ? "CARD CHANGES" : "OFFICIAL RESULTS"}</span>
                 <b>{progressCount} OF {event.bouts.length}</b>
               </div>
               <div className="picks-control-progress__track" aria-hidden="true">
@@ -320,8 +345,9 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
                 ) : null}
               </div>
               {displayedBouts.map((bout, index) => {
-                const saving = busyAction === `card:${bout.boutId}`;
+                const saving = busyAction === `card:${bout.boutId}` || busyAction === `include:${bout.boutId}`;
                 const isCancelled = bout.resultStatus === "cancelled";
+                const isRemoved = !bout.includedInPicks;
                 return (
                   <article className="surface-card pick-control-bout" key={bout.boutId}>
                     <div className="pick-control-bout__heading">
@@ -329,7 +355,7 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
                         <span>{index === 0 ? "MAIN EVENT" : `MAIN CARD · FIGHT ${index + 1}`}</span>
                         <small>{bout.weightClass}</small>
                       </div>
-                      <em className={`pick-control-bout__state pick-control-bout__state--${bout.resultStatus}`}>
+                      <em className={`pick-control-bout__state pick-control-bout__state--${isRemoved ? "removed" : bout.resultStatus}`}>
                         {saving ? "SAVING…" : pickControlResultLabel(bout)}
                       </em>
                     </div>
@@ -345,14 +371,20 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
                       <div><span>BLUE CORNER</span><strong>{bout.blueFighterName}</strong></div>
                     </div>
                     <p>
-                      {isCancelled
-                        ? "Original picks are preserved. This fight is excluded from scoring and cannot receive new picks."
-                        : "Cancel only after confirming the fight is off the pickable UFC card."}
+                      {isRemoved
+                        ? "The fight and submitted picks are preserved, but it is excluded from progress and scoring."
+                        : isCancelled
+                          ? "Original picks are preserved. This fight is excluded from scoring and cannot receive new picks."
+                          : "Cancellation means the fight is off. Removal means it stays stored but no longer belongs to the pickable card."}
                     </p>
                     {bout.hasReplacementHistory ? (
-                      <p className="pick-control-replacement-history"><strong>REPLACEMENT HISTORY EXISTS</strong> · The matchup above is currently live.</p>
+                      <p className="pick-control-replacement-history"><strong>REPLACEMENT HISTORY EXISTS</strong> · The matchup above is currently stored.</p>
                     ) : null}
-                    {!isCancelled ? (
+                    {bout.hasRemovalHistory ? (
+                      <p className="pick-control-replacement-history"><strong>REMOVAL HISTORY EXISTS</strong> · Prior inclusion actions remain audited.</p>
+                    ) : null}
+
+                    {!isRemoved && !isCancelled ? (
                       <button
                         className="secondary-action"
                         type="button"
@@ -362,14 +394,28 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
                         {busyAction === `replace:${bout.boutId}` ? "REPLACING…" : "REPLACE FIGHTER"}
                       </button>
                     ) : null}
-                    <button
-                      className={isCancelled ? "secondary-action" : "pick-control-clear"}
-                      type="button"
-                      disabled={Boolean(busyAction) || (isCancelled ? !bout.canRestore : !bout.canCancel)}
-                      onClick={() => setCancellation(bout, !isCancelled)}
-                    >
-                      {isCancelled ? "RESTORE FIGHT" : "CANCEL FIGHT"}
-                    </button>
+
+                    {!isRemoved ? (
+                      <button
+                        className={isCancelled ? "secondary-action" : "pick-control-clear"}
+                        type="button"
+                        disabled={Boolean(busyAction) || (isCancelled ? !bout.canRestore : !bout.canCancel)}
+                        onClick={() => setCancellation(bout, !isCancelled)}
+                      >
+                        {isCancelled ? "RESTORE FIGHT" : "CANCEL FIGHT"}
+                      </button>
+                    ) : null}
+
+                    {!isCancelled ? (
+                      <button
+                        className={isRemoved ? "secondary-action" : "pick-control-clear"}
+                        type="button"
+                        disabled={Boolean(busyAction) || (isRemoved ? !bout.canRestoreToPicks : !bout.canRemoveFromPicks)}
+                        onClick={() => setBoutInclusion(bout, isRemoved)}
+                      >
+                        {isRemoved ? "RESTORE TO PICKS" : "REMOVE FROM PICKS"}
+                      </button>
+                    ) : null}
                   </article>
                 );
               })}
@@ -380,6 +426,7 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
             <section className="picks-control-bouts" aria-label={`${event.name} official results`}>
               {orderedBouts.map((bout, index) => {
                 const saving = busyAction === `bout:${bout.boutId}`;
+                const isRemoved = !bout.includedInPicks;
                 return (
                   <article className="surface-card pick-control-bout" key={bout.boutId}>
                     <div className="pick-control-bout__heading">
@@ -387,62 +434,75 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
                         <span>{index === 0 ? "MAIN EVENT" : `MAIN CARD · FIGHT ${index + 1}`}</span>
                         <small>{bout.weightClass}</small>
                       </div>
-                      <em className={`pick-control-bout__state pick-control-bout__state--${bout.resultStatus}`}>
+                      <em className={`pick-control-bout__state pick-control-bout__state--${isRemoved ? "removed" : bout.resultStatus}`}>
                         {saving ? "SAVING…" : pickControlResultLabel(bout)}
                       </em>
                     </div>
 
-                    <div className="pick-control-winners">
-                      <button
-                        className={resultButtonClass(bout.resultStatus === "red_win")}
-                        type="button"
-                        disabled={Boolean(busyAction)}
-                        aria-pressed={bout.resultStatus === "red_win"}
-                        aria-label={`RED WINNER ${bout.redFighterName}`}
-                        onClick={() => recordResult(bout, "red_win")}
-                      >
-                        <span>RED WINNER</span>
-                        <strong>{bout.redFighterName}</strong>
-                      </button>
-                      <span>VS</span>
-                      <button
-                        className={resultButtonClass(bout.resultStatus === "blue_win")}
-                        type="button"
-                        disabled={Boolean(busyAction)}
-                        aria-pressed={bout.resultStatus === "blue_win"}
-                        aria-label={`BLUE WINNER ${bout.blueFighterName}`}
-                        onClick={() => recordResult(bout, "blue_win")}
-                      >
-                        <span>BLUE WINNER</span>
-                        <strong>{bout.blueFighterName}</strong>
-                      </button>
-                    </div>
+                    {isRemoved ? (
+                      <>
+                        <div className="pick-control-winners">
+                          <div><span>RED CORNER</span><strong>{bout.redFighterName}</strong></div>
+                          <span>VS</span>
+                          <div><span>BLUE CORNER</span><strong>{bout.blueFighterName}</strong></div>
+                        </div>
+                        <p><strong>EXCLUDED FROM SCORING</strong> · No official Picks result is required for this stored fight.</p>
+                      </>
+                    ) : (
+                      <>
+                        <div className="pick-control-winners">
+                          <button
+                            className={resultButtonClass(bout.resultStatus === "red_win")}
+                            type="button"
+                            disabled={Boolean(busyAction)}
+                            aria-pressed={bout.resultStatus === "red_win"}
+                            aria-label={`RED WINNER ${bout.redFighterName}`}
+                            onClick={() => recordResult(bout, "red_win")}
+                          >
+                            <span>RED WINNER</span>
+                            <strong>{bout.redFighterName}</strong>
+                          </button>
+                          <span>VS</span>
+                          <button
+                            className={resultButtonClass(bout.resultStatus === "blue_win")}
+                            type="button"
+                            disabled={Boolean(busyAction)}
+                            aria-pressed={bout.resultStatus === "blue_win"}
+                            aria-label={`BLUE WINNER ${bout.blueFighterName}`}
+                            onClick={() => recordResult(bout, "blue_win")}
+                          >
+                            <span>BLUE WINNER</span>
+                            <strong>{bout.blueFighterName}</strong>
+                          </button>
+                        </div>
 
-                    <div className="pick-control-exclusions" aria-label="Other official result options">
-                      {pickControlResultOptions.map((option) => (
-                        <button
-                          className={resultButtonClass(bout.resultStatus === option.value)}
-                          type="button"
-                          key={option.value}
-                          disabled={Boolean(busyAction)}
-                          aria-pressed={bout.resultStatus === option.value}
-                          onClick={() => recordResult(bout, option.value)}
-                        >
-                          {option.label}
-                        </button>
-                      ))}
-                    </div>
+                        <div className="pick-control-exclusions" aria-label="Other official result options">
+                          {pickControlResultOptions.map((option) => (
+                            <button
+                              className={resultButtonClass(bout.resultStatus === option.value)}
+                              type="button"
+                              key={option.value}
+                              disabled={Boolean(busyAction)}
+                              aria-pressed={bout.resultStatus === option.value}
+                              onClick={() => recordResult(bout, option.value)}
+                            >
+                              {option.label}
+                            </button>
+                          ))}
+                        </div>
 
-                    {bout.resultStatus !== "pending" ? (
-                      <button
-                        className="pick-control-clear"
-                        type="button"
-                        disabled={Boolean(busyAction)}
-                        onClick={() => clearResult(bout)}
-                      >
-                        CLEAR RESULT
-                      </button>
-                    ) : null}
+                        {bout.resultStatus !== "pending" ? (
+                          <button
+                            className="pick-control-clear"
+                            type="button"
+                            disabled={Boolean(busyAction)}
+                            onClick={() => clearResult(bout)}
+                          >
+                            CLEAR RESULT
+                          </button>
+                        ) : null}
+                      </>
+                    )}
                   </article>
                 );
               })}
@@ -454,7 +514,7 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
               <div>
                 <p className="eyebrow">FINAL STEP</p>
                 <h2>Complete event</h2>
-                <p>Every fight must have a winner, draw, no contest, or cancellation before the recap can publish.</p>
+                <p>Every included fight must have a winner, draw, no contest, or cancellation before the recap can publish. Removed fights need no result.</p>
               </div>
               <button
                 className="primary-action"
