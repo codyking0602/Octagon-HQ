@@ -52,6 +52,17 @@ describe("provider selection and deterministic evidence", () => {
   });
   it("keeps keys stable across run timestamps", () => { const first = build(); const second = build({ startedAt: "2026-08-11T00:00:00Z", completedAt: "2026-08-11T00:00:01Z" }); expect(first.findings.map((finding) => finding.finding_key)).toEqual(second.findings.map((finding) => finding.finding_key)); });
   it("aligns prices by identity across red/blue and provider outcome reversal", () => { const reversedEvent = { ...event, bouts: [{ ...event.bouts[0], red_fighter_name: "Daniel Rodriguez", blue_fighter_name: "Uros Medic", red_american_odds: -130, blue_american_odds: 110 }] }; const reversedProvider = structuredClone(fixture); reversedProvider[0].bookmakers[1].markets[0].outcomes.reverse(); const payload = build({ resolved: resolveMonitoringEvent(null, reversedEvent), odds: odds(reversedProvider), source: { ...source, bouts: reversedEvent.bouts } }); expect(payload.findings.some((finding) => finding.finding_type === "odds_change")).toBe(false); });
+  it("uses the same payload builder for scheduled runs and suppresses repeated meaningful findings", () => {
+    const first = build({ triggerKind: "scheduled", odds: odds(fixture, "0") });
+    const repeated = build({
+      triggerKind: "scheduled",
+      odds: odds(fixture, "0"),
+      suppressFindingKeys: new Set(first.findings.map((finding) => finding.finding_key)),
+    });
+    expect(first.trigger_kind).toBe("scheduled");
+    expect(first.findings.length).toBeGreaterThan(0);
+    expect(repeated.findings).toHaveLength(0);
+  });
 });
 
 describe("card scope and run status", () => {
@@ -63,6 +74,6 @@ describe("card scope and run status", () => {
 
 describe("runtime and storage contracts", () => {
   const edge = readFileSync("supabase/functions/run-pick-monitoring/index.ts", "utf8");
-  it("uses owner reads and the atomic writer without direct inserts or mutations", () => { expect(edge).toContain('owner.rpc("get_pick_event_setup")'); expect(edge).toContain('owner.rpc("get_current_pick_event")'); expect(edge).toContain('admin.rpc("record_pick_monitoring_run"'); expect(edge).not.toMatch(/\.from\(|stage_pick|publish_pick|update_pick|submit_pick|record_pick_result|setInterval|cron/); });
-  it("keeps provider credentials backend-only and denies nonowners", () => { expect(edge).toContain('Deno.env.get("THE_ODDS_API_KEY")'); expect(edge).not.toContain("input.THE_ODDS_API_KEY"); expect(edge).toContain("OWNER_ACCESS_REQUIRED"); });
+  it("uses owner reads and the atomic writer without direct inserts or Picks mutations", () => { expect(edge).toContain('owner.rpc("get_pick_event_setup")'); expect(edge).toContain('owner.rpc("get_current_pick_event")'); expect(edge).toContain('admin.rpc("record_pick_monitoring_run"'); expect(edge).toContain('admin.rpc("claim_pick_monitoring_schedule"'); expect(edge).not.toMatch(/\.from\(|stage_pick|publish_pick|update_pick|submit_pick|record_pick_result|setInterval/); });
+  it("keeps provider credentials backend-only and denies nonowners", () => { expect(edge).toContain('Deno.env.get("THE_ODDS_API_KEY")'); expect(edge).not.toContain("input.THE_ODDS_API_KEY"); expect(edge).toContain("OWNER_ACCESS_REQUIRED"); expect(edge).toContain("SCHEDULER_AUTH_REQUIRED"); });
 });
