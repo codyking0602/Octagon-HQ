@@ -9,6 +9,7 @@ const canonicalVerifier = readFileSync("scripts/verify-sync-function-deployment.
 describe("manual monitoring deployment contract", () => {
   it("requires the provider secret name without accepting or printing its value", () => {
     expect(workflow).toContain('grep -Fxq "THE_ODDS_API_KEY"');
+    expect(verifier).toContain('secret?.name === "THE_ODDS_API_KEY"');
     expect(workflow).not.toContain("VITE_THE_ODDS_API_KEY");
     expect(workflow).not.toContain("secrets.THE_ODDS_API_KEY");
   });
