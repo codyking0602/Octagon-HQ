@@ -14,15 +14,16 @@ This branch was created directly from exact production `main` commit:
 
 `55bd59b133a45cf279118a96c7642f683ae29a1f`
 
-A task-file commit was then added on top. Before editing, run:
+Two task-document commits were then added on top. Before editing, run:
 
 ```bash
 git rev-parse HEAD
-git rev-parse HEAD^
+git rev-list --max-parents=0 HEAD
+git merge-base HEAD 55bd59b133a45cf279118a96c7642f683ae29a1f
 git status --short --branch
 ```
 
-The starting branch must contain this task file, and `git rev-parse HEAD^` must equal `55bd59b133a45cf279118a96c7642f683ae29a1f`. If the parent is different, stop and report both SHAs. A Git remote is not required to implement or test the change locally.
+The exact production base commit `55bd59b133a45cf279118a96c7642f683ae29a1f` must exist in the local history and the `git merge-base` command above must return that same SHA. If it does not, stop and report the actual values. A Git remote is not required to implement or test the change locally.
 
 Implement the full task below. Do not merge, deploy, or modify real production card/member data. Remove this `CODEX_TASK_100.md` file before the final PR head so it is not merged into `main`.
 
