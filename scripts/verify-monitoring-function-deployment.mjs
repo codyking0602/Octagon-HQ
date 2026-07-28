@@ -29,6 +29,11 @@ const remoteMigrationRecorded = (output, version) => output.split(/\r?\n/).some(
   return local === version && remote === version;
 });
 
+const secrets = JSON.parse(cli(["secrets", "list", "--project-ref", projectId, "--output", "json"]));
+if (!Array.isArray(secrets) || !secrets.some((secret) => secret?.name === "THE_ODDS_API_KEY")) {
+  throw new Error("THE_ODDS_API_KEY is not configured in the Supabase project.");
+}
+
 const functionList = cli(["functions", "list", "--project-ref", projectId]);
 if (!functionList.includes("run-pick-monitoring")) {
   throw new Error("run-pick-monitoring is not deployed.");
@@ -77,4 +82,4 @@ if (deniedResponse.status !== 401) {
   throw new Error(`Monitoring authentication rejection expected HTTP 401, received ${deniedResponse.status}.`);
 }
 
-console.log(`PASS: run-pick-monitoring exact source, migration, function presence, CORS, and no-quota authentication contract verified for ${expectedSha}.`);
+console.log(`PASS: run-pick-monitoring secret, exact source, migration, function presence, CORS, and no-quota authentication contract verified for ${expectedSha}.`);
