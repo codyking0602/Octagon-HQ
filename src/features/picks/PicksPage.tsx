@@ -24,6 +24,7 @@ interface BoutResultView {
   blueFighterName: string;
   resultStatus?: PickBoutResultStatus;
   winnerFighterSlug: string | null;
+  includedInPicks?: boolean;
 }
 
 function eventDate(value: string) {
@@ -63,6 +64,7 @@ function fighterName(bout: BoutResultView, slug: string | null) {
 }
 
 function officialResult(bout: BoutResultView) {
+  if (bout.includedInPicks === false) return "Removed from Picks";
   if (bout.resultStatus === "red_win" || bout.resultStatus === "blue_win") {
     return fighterName(bout, bout.winnerFighterSlug);
   }
@@ -87,8 +89,9 @@ function recordNote(record: PickHistoryRecord) {
   return details.length ? details.join(" · ") : "All eligible fights scored";
 }
 
-function choiceLabel(selected: boolean, locked: boolean, cancelled: boolean) {
+function choiceLabel(selected: boolean, locked: boolean, cancelled: boolean, removed: boolean) {
   if (selected) return "YOUR PICK";
+  if (removed) return "REMOVED FROM PICKS";
   if (cancelled) return "FIGHT CANCELLED";
   return locked ? "NOT PICKED" : "PICK FIGHTER";
 }
@@ -164,31 +167,36 @@ function EventRecap({ event, latest }: { event: PickHistoryEvent; latest: boolea
             <small>{orderedBouts.length} FIGHTS · {completedDate(event.completedAt)}</small>
           </summary>
           <div className="picks-recap-fight-list">
-            {orderedBouts.map((bout, index) => (
-              <article className="picks-recap-fight" key={bout.boutId}>
-                <div className="picks-recap-fight__topline">
-                  <span>{mainCardFightLabel(index)}</span>
-                  <small>{bout.weightClass}</small>
-                </div>
-                <div className="picks-recap-fight__matchup">
-                  <strong>{bout.redFighterName}</strong>
-                  <span>VS</span>
-                  <strong>{bout.blueFighterName}</strong>
-                </div>
-                <div className="picks-recap-fight__result">
-                  <div><span>OFFICIAL</span><b>{officialResult(bout)}</b></div>
-                  <div><span>YOUR PICK</span><b>{fighterName(bout, bout.pickedFighterSlug)}</b></div>
-                  <em className={`picks-verdict picks-verdict--${bout.verdict}`}>{verdictLabel(bout.verdict)}</em>
-                </div>
-                <GroupPickReveal
-                  redFighterSlug={bout.redFighterSlug}
-                  redFighterName={bout.redFighterName}
-                  blueFighterSlug={bout.blueFighterSlug}
-                  blueFighterName={bout.blueFighterName}
-                  picks={bout.groupPicks ?? []}
-                />
-              </article>
-            ))}
+            {orderedBouts.map((bout, index) => {
+              const removed = bout.includedInPicks === false;
+              return (
+                <article className="picks-recap-fight" key={bout.boutId}>
+                  <div className="picks-recap-fight__topline">
+                    <span>{mainCardFightLabel(index)}</span>
+                    <small>{bout.weightClass}</small>
+                  </div>
+                  <div className="picks-recap-fight__matchup">
+                    <strong>{bout.redFighterName}</strong>
+                    <span>VS</span>
+                    <strong>{bout.blueFighterName}</strong>
+                  </div>
+                  <div className="picks-recap-fight__result">
+                    <div><span>{removed ? "PICKS STATUS" : "OFFICIAL"}</span><b>{officialResult(bout)}</b></div>
+                    <div><span>YOUR PICK</span><b>{fighterName(bout, bout.pickedFighterSlug)}</b></div>
+                    <em className={`picks-verdict picks-verdict--${bout.verdict}`}>
+                      {removed ? "Excluded from scoring" : verdictLabel(bout.verdict)}
+                    </em>
+                  </div>
+                  <GroupPickReveal
+                    redFighterSlug={bout.redFighterSlug}
+                    redFighterName={bout.redFighterName}
+                    blueFighterSlug={bout.blueFighterSlug}
+                    blueFighterName={bout.blueFighterName}
+                    picks={bout.groupPicks ?? []}
+                  />
+                </article>
+              );
+            })}
           </div>
         </details>
       </div>
@@ -285,7 +293,7 @@ export default function PicksPage() {
 
           <details className="surface-card picks-scoring-guide">
             <summary>HOW SCORING WORKS</summary>
-            <p><strong>Correct pick +4</strong><span>Incorrect and missing picks score 0. Draws, no contests, and cancellations are excluded.</span></p>
+            <p><strong>Correct pick +4</strong><span>Incorrect and missing picks score 0. Draws, no contests, cancellations, and fights removed from Picks are excluded.</span></p>
             <p><strong>Underdog Lock bonus by odds</strong><span>Choose one fighter at +100 or longer. A winning lock adds the frozen lock-time bonus below.</span></p>
             <div className="picks-scoring-tiers" aria-label="Underdog Lock bonus tiers">
               {underdogBonusTiers.map((tier) => (
@@ -299,9 +307,10 @@ export default function PicksPage() {
               {orderedBouts.map((bout, index) => {
                 const selection = picks.selections[bout.boutId] ?? null;
                 const saving = picks.savingBoutId === bout.boutId;
-                const redOdds = americanOddsLabel(bout.redAmericanOdds);
-                const blueOdds = americanOddsLabel(bout.blueAmericanOdds);
-                const favorite = bout.redAmericanOdds !== null && bout.blueAmericanOdds !== null
+                const removed = bout.includedInPicks === false;
+                const redOdds = removed ? null : americanOddsLabel(bout.redAmericanOdds);
+                const blueOdds = removed ? null : americanOddsLabel(bout.blueAmericanOdds);
+                const favorite = !removed && bout.redAmericanOdds !== null && bout.blueAmericanOdds !== null
                   ? (bout.redAmericanOdds < bout.blueAmericanOdds ? "red" : bout.blueAmericanOdds < bout.redAmericanOdds ? "blue" : null)
                   : null;
                 const selectedOdds = selection === bout.redFighterSlug
@@ -311,12 +320,12 @@ export default function PicksPage() {
                     : null;
                 const lockSelected = picks.underdogLock?.boutId === bout.boutId;
                 const cancelled = (bout.resultStatus ?? "pending") === "cancelled";
-                const repickRequired = Boolean(bout.repickRequired && !selection);
-                const resolved = (bout.resultStatus ?? "pending") !== "pending";
-                const readOnly = locked || cancelled;
-                const oddsMeta = oddsProvenance(bout.oddsSource, bout.oddsUpdatedAt);
+                const repickRequired = Boolean(!removed && bout.repickRequired && !selection);
+                const resolved = removed || (bout.resultStatus ?? "pending") !== "pending";
+                const readOnly = locked || cancelled || removed;
+                const oddsMeta = removed ? null : oddsProvenance(bout.oddsSource, bout.oddsUpdatedAt);
                 return (
-                  <article className={`surface-card pick-bout-card${cancelled ? " is-cancelled" : ""}${repickRequired ? " is-repick-required" : ""}`} key={bout.boutId}>
+                  <article className={`surface-card pick-bout-card${cancelled || removed ? " is-cancelled" : ""}${removed ? " is-removed" : ""}${repickRequired ? " is-repick-required" : ""}`} key={bout.boutId}>
                     <div className="pick-bout-card__heading">
                       <span>{mainCardFightLabel(index)}</span>
                       <small>{bout.weightClass}</small>
@@ -343,8 +352,8 @@ export default function PicksPage() {
                       >
                         <FighterThumbnail name={bout.redFighterName} slug={bout.redFighterSlug} />
                         <span>{bout.redFighterName}</span>
-                        <small>{redOdds ?? "ODDS TBD"}{favorite === "red" ? " · FAVORITE" : ""}</small>
-                        <em>{choiceLabel(selection === bout.redFighterSlug, locked, cancelled)}</em>
+                        <small>{removed ? "NOT ACTIVE" : `${redOdds ?? "ODDS TBD"}${favorite === "red" ? " · FAVORITE" : ""}`}</small>
+                        <em>{choiceLabel(selection === bout.redFighterSlug, locked, cancelled, removed)}</em>
                       </button>
                       <span className="pick-bout-card__versus">VS</span>
                       <button
@@ -356,11 +365,16 @@ export default function PicksPage() {
                       >
                         <FighterThumbnail name={bout.blueFighterName} slug={bout.blueFighterSlug} />
                         <span>{bout.blueFighterName}</span>
-                        <small>{blueOdds ?? "ODDS TBD"}{favorite === "blue" ? " · FAVORITE" : ""}</small>
-                        <em>{choiceLabel(selection === bout.blueFighterSlug, locked, cancelled)}</em>
+                        <small>{removed ? "NOT ACTIVE" : `${blueOdds ?? "ODDS TBD"}${favorite === "blue" ? " · FAVORITE" : ""}`}</small>
+                        <em>{choiceLabel(selection === bout.blueFighterSlug, locked, cancelled, removed)}</em>
                       </button>
                     </div>
-                    {cancelled ? (
+                    {removed ? (
+                      <div className="pick-bout-card__official">
+                        <span>PICKS STATUS</span>
+                        <strong>REMOVED FROM PICKS · EXCLUDED FROM SCORING</strong>
+                      </div>
+                    ) : cancelled ? (
                       <div className="pick-bout-card__official">
                         <span>FIGHT STATUS</span>
                         <strong>CANCELLED · EXCLUDED FROM SCORING</strong>
@@ -371,9 +385,9 @@ export default function PicksPage() {
                         <strong>{officialResult(bout)}</strong>
                       </div>
                     ) : null}
-                    {!cancelled && locked && lockSelected ? (
+                    {!removed && !cancelled && locked && lockSelected ? (
                       <div className="pick-lock-readonly" aria-label="Selected Underdog Lock">UNDERDOG LOCK</div>
-                    ) : !cancelled && !locked && selection && (selectedOdds ?? 0) > 0 ? (
+                    ) : !removed && !cancelled && !locked && selection && (selectedOdds ?? 0) > 0 ? (
                       <button
                         className={lockSelected ? "pick-lock-action is-selected" : "pick-lock-action"}
                         type="button"
