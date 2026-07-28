@@ -5,14 +5,18 @@ const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
 const projectId = process.env.SUPABASE_PROJECT_ID;
 const productionOrigin = process.env.OCTAGON_PRODUCTION_ORIGIN
   ?? "https://octagon.hq-app.workers.dev";
-const expectedDeploymentSha = process.env.EXPECTED_DEPLOYMENT_SHA?.trim() ?? "";
+const explicitDeploymentSha = process.env.EXPECTED_DEPLOYMENT_SHA?.trim() ?? "";
+const expectedDeploymentSha = explicitDeploymentSha
+  || (process.env.GITHUB_EVENT_NAME === "pull_request"
+    ? process.env.EXPECTED_SYNC_SOURCE_SHA?.trim() ?? ""
+    : "");
 const articleUrl = "https://www.mmamania.com/ufc-fight-cards/446488/latest-ufc-belgrade-fight-card-paramount-start-time-date-and-location-medic-vs-rodriguez-mma";
 
 if (!accessToken || !projectId) {
   throw new Error("Live PIN verification is not configured.");
 }
 if (expectedDeploymentSha && !/^[0-9a-f]{40}$/i.test(expectedDeploymentSha)) {
-  throw new Error("EXPECTED_DEPLOYMENT_SHA must be a full commit SHA.");
+  throw new Error("The expected frontend deployment SHA must be a full commit SHA.");
 }
 
 const supabaseOrigin = `https://${projectId}.supabase.co`;
