@@ -4,7 +4,7 @@ const HOUR_MS = 60 * 60 * 1000;
 const DAY_MS = 24 * HOUR_MS;
 
 export type ScheduledMonitoringSkipReason =
-  | "event_started"
+  | "monitoring_closed"
   | "invalid_event_time"
   | "not_due"
   | "quota_protected";
@@ -42,14 +42,14 @@ export function scheduledMonitoringIntervalMs(event: MonitoringEvent, now: Date)
   if (startsAt === null || locksAt === null) return null;
 
   const nowMs = now.getTime();
-  if (startsAt <= nowMs) return 0;
+  const monitoringStopsAt = Math.min(startsAt, locksAt);
+  if (monitoringStopsAt <= nowMs) return 0;
 
-  const proximityTarget = locksAt > nowMs ? locksAt : startsAt;
-  const remaining = proximityTarget - nowMs;
-  if (remaining > 7 * DAY_MS) return 24 * HOUR_MS;
-  if (remaining > 2 * DAY_MS) return 12 * HOUR_MS;
-  if (remaining > DAY_MS) return 6 * HOUR_MS;
-  if (remaining > 6 * HOUR_MS) return 2 * HOUR_MS;
+  const remaining = monitoringStopsAt - nowMs;
+  if (remaining > 14 * DAY_MS) return 24 * HOUR_MS;
+  if (remaining > 7 * DAY_MS) return 12 * HOUR_MS;
+  if (remaining > 2 * DAY_MS) return 6 * HOUR_MS;
+  if (remaining > 12 * HOUR_MS) return 3 * HOUR_MS;
   return HOUR_MS;
 }
 
@@ -60,7 +60,7 @@ export function decideScheduledMonitoring(input: {
 }): ScheduledMonitoringDecision {
   const interval = scheduledMonitoringIntervalMs(input.event, input.now);
   if (interval === null) return { due: false, reason: "invalid_event_time" };
-  if (interval === 0) return { due: false, reason: "event_started" };
+  if (interval === 0) return { due: false, reason: "monitoring_closed" };
 
   const remaining = input.state?.provider_requests_remaining;
   if (typeof remaining === "number" && remaining <= 5) {
