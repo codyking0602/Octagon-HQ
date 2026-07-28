@@ -204,11 +204,11 @@ begin
     perform public.correct_official_pick_bout_result(
       'post-lock-result-correction-test','correction-main','pending','draw',null,
       (select result_recorded_at from public.pick_bouts where event_id='post-lock-result-correction-test' and bout_id='correction-main'),
-      'Completed event cannot return to pending'
+      'A correction must be a final canonical result'
     );
-    raise exception 'completed result correction returned a bout to pending';
+    raise exception 'result correction accepted a pending outcome';
   exception when others then
-    if sqlerrm not like '%completed event corrections must remain final%' then raise; end if;
+    if sqlerrm not like '%corrected official result requires a final result%' then raise; end if;
   end;
 
   if (select count(*) from public.pick_result_corrections
