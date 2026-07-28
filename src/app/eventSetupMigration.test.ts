@@ -56,7 +56,7 @@ describe("Phase 2B event setup backend", () => {
   });
 
   it("previews source changes before replacing a staged draft", () => {
-    expect(syncFunction).toContain('mode === "preview"');
+    expect(syncFunction).toContain('input.mode === "preview"');
     expect(syncFunction).toContain("sourceChanges(ownerProbe.data, event, effectiveScope)");
     expect(syncFunction).toContain("expected_hash");
     expect(syncFunction).toContain("The source card changed after review");
@@ -79,12 +79,16 @@ describe("Phase 2B event setup backend", () => {
 
   it("deploys and verifies the sync function runtime revision through the canonical backend owner", () => {
     expect(config).toContain("[functions.sync-next-ufc-event]");
-    expect(config).toContain("verify_jwt = true");
+    expect(config).toContain("[functions.sync-next-ufc-event]\nverify_jwt = false");
     expect(deployWorkflow).toContain("supabase functions deploy sync-next-ufc-event");
+    expect(deployWorkflow).toContain("--no-verify-jwt");
     expect(deployWorkflow).toContain("DEPLOYED_SOURCE_SHA");
     expect(deployWorkflow).toContain("verify-sync-function-deployment.mjs");
-    expect(deployWorkflow).toContain("require_remote_migration \"202608050001\"");
+    expect(deployWorkflow).toContain('require_remote_migration "202608050001"');
     expect(syncFunction).toContain('input.mode === "deployment-info"');
+    expect(syncFunction).toContain("admin.auth.getUser(token)");
+    expect(syncFunction).toContain('input.mode === "monitoring-preview"');
+    expect(syncFunction).toContain('request.headers.get("apikey") === secretKey');
     expect(deploymentVerifier).toContain("body?.deployment_sha !== expectedRevision");
     expect(deploymentVerifier).toContain("x-octagon-backend-sha");
   });
