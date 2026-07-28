@@ -184,7 +184,7 @@ describe("Monitoring Inbox", () => {
   });
 
   it("disables owner actions while a manual check is in progress", async () => {
-    let finish: (() => void) | null = null;
+    let finish: () => void = () => undefined;
     const repo = repository(inbox);
     vi.mocked(repo.runManualCheck).mockImplementation(() => new Promise<void>((resolve) => { finish = resolve; }));
     renderPage(repo);
@@ -193,7 +193,7 @@ describe("Monitoring Inbox", () => {
     expect(await screen.findByRole("button", { name: "RUNNING CHECK…" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "REFRESH INBOX" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "MARK REVIEWED" })).toBeDisabled();
-    finish?.();
+    finish();
     await waitFor(() => expect(repo.loadInbox).toHaveBeenCalledTimes(2));
   });
 
