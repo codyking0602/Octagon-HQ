@@ -169,12 +169,13 @@ export function pickEventPresentation(event: PickEvent, now = Date.now()): PickE
     return { state: "complete", eyebrow: "EVENT COMPLETE", status: "COMPLETE" };
   }
 
-  const hasRecordedResult = event.bouts.some((bout) => (
-    (bout.resultStatus ?? "pending") !== "pending" || Boolean(bout.resultRecordedAt)
-  ));
+  const hasRecordedFightResult = event.bouts.some((bout) => {
+    const result = bout.resultStatus ?? "pending";
+    return result !== "pending" && result !== "cancelled";
+  });
   const eventStarted = Date.parse(event.startsAt) <= now;
 
-  if (eventStarted || hasRecordedResult) {
+  if (eventStarted || hasRecordedFightResult) {
     return { state: "awaiting_results", eyebrow: "EVENT IN PROGRESS", status: "AWAITING RESULTS" };
   }
 
@@ -196,9 +197,10 @@ export function americanOddsLabel(odds: number | null) {
 
 export function pickProgress(event: PickEvent | null, selections: Readonly<Record<string, string>>) {
   if (!event) return { completed: 0, total: 0 };
+  const eligibleBouts = event.bouts.filter((bout) => (bout.resultStatus ?? "pending") !== "cancelled");
   return {
-    completed: event.bouts.filter((bout) => Boolean(selections[bout.boutId])).length,
-    total: event.bouts.length,
+    completed: eligibleBouts.filter((bout) => Boolean(selections[bout.boutId])).length,
+    total: eligibleBouts.length,
   };
 }
 
