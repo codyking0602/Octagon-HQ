@@ -19,6 +19,8 @@ export interface PickBout {
   blueFighterName: string;
   redAmericanOdds: number | null;
   blueAmericanOdds: number | null;
+  oddsSource?: string | null;
+  oddsUpdatedAt?: string | null;
   winnerFighterSlug: string | null;
   resultStatus?: PickBoutResultStatus;
   resultRecordedAt?: string | null;

@@ -4,7 +4,15 @@ import { fightOddsMatchupIdentity, fighterOddsIdentity, type OddsAdapterResult }
 import { buildMonitoringRunPayload, type MonitoringFindingInput, type MonitoringRunPayload, type MonitoringTriggerKind } from "./monitoringStorageModel.ts";
 
 export type CardScope = "main" | "full";
-export interface MonitoringBout { bout_id: string; red_fighter_name: string; blue_fighter_name: string; red_american_odds?: number | null; blue_american_odds?: number | null }
+export interface MonitoringBout {
+  bout_id: string;
+  red_fighter_slug: string;
+  red_fighter_name: string;
+  blue_fighter_slug: string;
+  blue_fighter_name: string;
+  red_american_odds?: number | null;
+  blue_american_odds?: number | null;
+}
 export interface MonitoringEvent { event_id: string; source_event_key?: string; name: string; subtitle: string; starts_at: string; locks_at: string; bouts: MonitoringBout[] }
 export interface SourcePreview extends MonitoringEvent { source: string; source_url: string; source_event_key: string; warnings?: string[] }
 export interface ResolvedMonitoringEvent { selected: MonitoringEvent; kind: "staged" | "current"; storageEventId?: string; identity: string }
@@ -106,7 +114,14 @@ export function buildManualMonitoringPayload(input: {
     ? findings.filter((finding) => !input.suppressFindingKeys?.has(finding.finding_key))
     : findings;
   const boutIds = resolved.storageEventId ? Object.fromEntries([...canonicalByMatchup].map(([matchup, bout]) => [matchup, bout.bout_id])) : {};
-  return buildMonitoringRunPayload({ triggerKind: input.triggerKind ?? "manual", sourceEventIdentity: resolved.identity, eventId: resolved.storageEventId, locksAt: canonical.locks_at, startedAt: input.startedAt, completedAt, odds, cardSource: source.source, cardSourceUrl: source.source_url, findings: retainedFindings, boutIdByMatchup: boutIds });
+  const canonicalBouts = resolved.storageEventId ? Object.fromEntries([...canonicalByMatchup].map(([matchup, bout]) => [matchup, {
+    boutId: bout.bout_id,
+    redFighterSlug: bout.red_fighter_slug,
+    redFighterIdentity: fighterOddsIdentity(bout.red_fighter_name),
+    blueFighterSlug: bout.blue_fighter_slug,
+    blueFighterIdentity: fighterOddsIdentity(bout.blue_fighter_name),
+  }])) : {};
+  return buildMonitoringRunPayload({ triggerKind: input.triggerKind ?? "manual", sourceEventIdentity: resolved.identity, eventId: resolved.storageEventId, locksAt: canonical.locks_at, startedAt: input.startedAt, completedAt, odds, cardSource: source.source, cardSourceUrl: source.source_url, findings: retainedFindings, boutIdByMatchup: boutIds, canonicalBoutByMatchup: canonicalBouts });
 }
 
 export interface MonitoringSummary { run_id: string; status: MonitoringRunPayload["status"]; canonical_event_id: string | null; source_event_identity: string; started_at: string; completed_at: string; findings: Record<string, number>; severities: Record<string, number>; coverage: MonitoringRunPayload["coverage"]; quota: MonitoringRunPayload["quota"]; stored_odds_snapshots: number }

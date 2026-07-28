@@ -44,6 +44,17 @@ function completedDate(value: string) {
   }).format(new Date(value));
 }
 
+function oddsProvenance(source?: string | null, updatedAt?: string | null) {
+  if (!source || !updatedAt || !Number.isFinite(Date.parse(updatedAt))) return null;
+  const updated = new Intl.DateTimeFormat(undefined, {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(new Date(updatedAt));
+  return `${source} · UPDATED ${updated}`;
+}
+
 function fighterName(bout: BoutResultView, slug: string | null) {
   if (!slug) return "No pick";
   if (slug === bout.redFighterSlug) return bout.redFighterName;
@@ -299,12 +310,19 @@ export default function PicksPage() {
                     : null;
                 const lockSelected = picks.underdogLock?.boutId === bout.boutId;
                 const resolved = (bout.resultStatus ?? "pending") !== "pending";
+                const oddsMeta = oddsProvenance(bout.oddsSource, bout.oddsUpdatedAt);
                 return (
                   <article className="surface-card pick-bout-card" key={bout.boutId}>
                     <div className="pick-bout-card__heading">
                       <span>{mainCardFightLabel(index)}</span>
                       <small>{bout.weightClass}</small>
                     </div>
+                    {oddsMeta ? (
+                      <div className="pick-bout-card__heading" aria-label="Sportsbook odds source">
+                        <span>SPORTSBOOK ODDS</span>
+                        <small>{oddsMeta}</small>
+                      </div>
+                    ) : null}
                     <div className="pick-bout-card__choices">
                       <button
                         type="button"

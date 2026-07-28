@@ -149,10 +149,10 @@ Deno.serve(async (request) => {
         p_claimed_at: scheduledClaimedAt,
         p_next_eligible_at: scheduledNextEligibleAt,
       })
-    : await admin.rpc("record_pick_monitoring_run", { p_payload: payload });
+    : await admin.rpc("record_pick_monitoring_run_and_apply_odds", { p_payload: payload });
   if (recorded.error || !recorded.data) {
     if (scheduledNextEligibleAt) await releaseSchedule(scheduledNextEligibleAt);
-    return safeError(503, "MONITORING_RECORD_FAILED", "Monitoring evidence could not be recorded atomically.");
+    return safeError(503, "MONITORING_RECORD_FAILED", "Monitoring evidence and eligible odds could not be recorded atomically.");
   }
   return json({ ...monitoringSummary(String(recorded.data), payload), trigger_kind: payload.trigger_kind, provider_called: true });
 });
