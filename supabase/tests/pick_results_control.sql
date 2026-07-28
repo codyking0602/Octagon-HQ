@@ -73,16 +73,15 @@ begin
   end if;
 
   perform public.correct_official_pick_bout_result(
-    'pick-results-control-test','control-main','pending','red_win','control-red',v_result_at,
-    'Result was entered against the wrong bout'
+    'pick-results-control-test','control-main','blue_win','red_win','control-red',v_result_at,
+    'Official result was entered against the wrong winner'
   );
-  if (select result_status from public.pick_bouts where event_id='pick-results-control-test' and bout_id='control-main') <> 'pending' then
-    raise exception 'owner could not clear a locked result through the correction owner';
-  end if;
-
-  perform public.record_official_pick_bout_result('pick-results-control-test','control-main','red_win');
   select result_recorded_at into v_result_at
   from public.pick_bouts where event_id='pick-results-control-test' and bout_id='control-main';
+  if (select result_status from public.pick_bouts where event_id='pick-results-control-test' and bout_id='control-main') <> 'blue_win' then
+    raise exception 'owner could not correct a locked finalized result';
+  end if;
+
   begin
     perform public.transition_pick_event('pick-results-control-test','complete');
     raise exception 'event completed with a pending bout';
@@ -102,18 +101,18 @@ begin
   end if;
 
   perform public.correct_official_pick_bout_result(
-    'pick-results-control-test','control-main','blue_win','red_win','control-red',v_result_at,
+    'pick-results-control-test','control-main','red_win','blue_win','control-blue',v_result_at,
     'Official result corrected after event completion'
   );
   if (select status from public.pick_events where event_id='pick-results-control-test') <> 'complete'
-    or (select result_status from public.pick_bouts where event_id='pick-results-control-test' and bout_id='control-main') <> 'blue_win' then
+    or (select result_status from public.pick_bouts where event_id='pick-results-control-test' and bout_id='control-main') <> 'red_win' then
     raise exception 'completed correction changed lifecycle or failed to update canonical result';
   end if;
   if not exists(
     select 1 from public.pick_result_corrections
     where event_id='pick-results-control-test' and bout_id='control-main'
-      and before_state->>'result_status'='red_win'
-      and after_state->>'result_status'='blue_win'
+      and before_state->>'result_status'='blue_win'
+      and after_state->>'result_status'='red_win'
   ) then
     raise exception 'completed correction did not append immutable result evidence';
   end if;
