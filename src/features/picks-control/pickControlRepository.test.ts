@@ -24,6 +24,8 @@ const payload = {
     result_status: "red_win",
     winner_fighter_slug: "red-fighter",
     result_recorded_at: "2026-08-01T02:30:00.000Z",
+    can_cancel: false,
+    can_restore: false,
   }],
 };
 
@@ -41,7 +43,29 @@ describe("Fight Night control mapping", () => {
       boutId: "red-blue",
       resultStatus: "red_win",
       winnerFighterSlug: "red-fighter",
+      canCancel: false,
+      canRestore: false,
     });
+  });
+
+  it("maps pre-lock cancel and restore capabilities and safely defaults older responses", () => {
+    const cancellable = mapPickControlEvent({
+      ...payload,
+      status: "upcoming",
+      bouts: [{
+        ...payload.bouts[0],
+        result_status: "pending",
+        winner_fighter_slug: null,
+        result_recorded_at: null,
+        can_cancel: true,
+        can_restore: false,
+      }],
+    });
+    expect(cancellable?.bouts[0]).toMatchObject({ canCancel: true, canRestore: false });
+
+    const { can_cancel: _canCancel, can_restore: _canRestore, ...olderBout } = payload.bouts[0];
+    const older = mapPickControlEvent({ ...payload, bouts: [olderBout] });
+    expect(older?.bouts[0]).toMatchObject({ canCancel: false, canRestore: false });
   });
 
   it("returns null when there is no active event", () => {
