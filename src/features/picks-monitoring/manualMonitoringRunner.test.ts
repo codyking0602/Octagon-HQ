@@ -25,8 +25,27 @@ function unrelatedProviderFight() {
 }
 
 describe("monitoring event resolution", () => {
-  it("prefers a valid staged draft and does not represent it as published", () => { const resolved = resolveMonitoringEvent({ ...event, event_id: "draft-id" }, event); const payload = build({ resolved }); expect(resolved.kind).toBe("staged"); expect(resolved.storageEventId).toBeUndefined(); expect(payload.event_id).toBeUndefined(); expect(payload.locks_at).toBe(event.locks_at); expect(payload.odds_snapshots[0].bout_id).toBeUndefined(); expect(payload.odds_snapshots[0].canonical_red_fighter_slug).toBeUndefined(); });
-  it("uses current when no staged draft exists and fails closed for conflicts or no event", () => { expect(resolveMonitoringEvent(null, event).storageEventId).toBe("published-id"); expect(() => resolveMonitoringEvent({ ...event, name: "UFC 331", subtitle: "Other vs. Card" }, event)).toThrow(/conflict/); expect(() => resolveMonitoringEvent(null, null)).toThrow(/No monitorable/); });
+  it("prefers the published event when a staged draft mirrors it so live odds retain canonical storage", () => {
+    const resolved = resolveMonitoringEvent({ ...event, event_id: "draft-id" }, event);
+    const payload = build({ resolved });
+    expect(resolved.kind).toBe("current");
+    expect(resolved.storageEventId).toBe("published-id");
+    expect(payload.event_id).toBe("published-id");
+    expect(payload.locks_at).toBe(event.locks_at);
+    expect(payload.odds_snapshots[0]).toMatchObject({
+      bout_id: "main-event-1",
+      canonical_red_fighter_slug: "uros-medic",
+      canonical_blue_fighter_slug: "daniel-rodriguez",
+    });
+  });
+  it("uses a staged draft only when no current event exists and fails closed for conflicts or no event", () => {
+    const staged = resolveMonitoringEvent({ ...event, event_id: "draft-id" }, null);
+    expect(staged.kind).toBe("staged");
+    expect(staged.storageEventId).toBeUndefined();
+    expect(resolveMonitoringEvent(null, event).storageEventId).toBe("published-id");
+    expect(() => resolveMonitoringEvent({ ...event, name: "UFC 331", subtitle: "Other vs. Card" }, event)).toThrow(/conflict/);
+    expect(() => resolveMonitoringEvent(null, null)).toThrow(/No monitorable/);
+  });
   it("matches stable identity despite different generated IDs", () => expect(() => build()).not.toThrow());
 });
 
@@ -88,5 +107,5 @@ describe("card scope and run status", () => {
 describe("runtime and storage contracts", () => {
   const edge = readFileSync("supabase/functions/run-pick-monitoring/index.ts", "utf8");
   it("uses owner reads and the atomic odds boundary without direct inserts or Picks mutations", () => { expect(edge).toContain('owner.rpc("get_pick_event_setup")'); expect(edge).toContain('owner.rpc("get_current_pick_event")'); expect(edge).toContain('admin.rpc("record_pick_monitoring_run_and_apply_odds"'); expect(edge).toContain('admin.rpc("record_scheduled_pick_monitoring_run"'); expect(edge).toContain('admin.rpc("claim_pick_monitoring_schedule"'); expect(edge).not.toMatch(/\.from\(|stage_pick|publish_pick|update_pick|submit_pick|record_pick_result|setInterval/); });
-  it("keeps provider credentials backend-only and denies nonowners", () => { expect(edge).toContain('Deno.env.get("THE_ODDS_API_KEY")'); expect(edge).not.toContain("input.THE_ODDS_API_KEY"); expect(edge).toContain("OWNER_ACCESS_REQUIRED"); expect(edge).toContain("SCHEDULER_AUTH_REQUIRED"); });
+  it("allows Supabase browser invocation headers and keeps provider credentials backend-only", () => { expect(edge).toContain('"Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type"'); expect(edge).toContain('Deno.env.get("THE_ODDS_API_KEY")'); expect(edge).not.toContain("input.THE_ODDS_API_KEY"); expect(edge).toContain("OWNER_ACCESS_REQUIRED"); expect(edge).toContain("SCHEDULER_AUTH_REQUIRED"); });
 });

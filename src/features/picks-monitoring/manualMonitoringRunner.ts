@@ -29,8 +29,8 @@ export function resolveMonitoringEvent(staged?: MonitoringEvent | null, current?
   staged = valid(staged) ? staged : null;
   current = valid(current) ? current : null;
   if (staged && current && !stableEventMatch(staged, current)) throw new Error("Staged and current event identities conflict.");
-  if (staged) return { selected: staged, kind: "staged", identity: `ufc:${staged.source_event_key || staged.starts_at.slice(0, 10)}` };
   if (current) return { selected: current, kind: "current", storageEventId: current.event_id, identity: `ufc:${current.source_event_key || current.starts_at.slice(0, 10)}` };
+  if (staged) return { selected: staged, kind: "staged", identity: `ufc:${staged.source_event_key || staged.starts_at.slice(0, 10)}` };
   throw new Error("No monitorable staged or current Picks event exists.");
 }
 
