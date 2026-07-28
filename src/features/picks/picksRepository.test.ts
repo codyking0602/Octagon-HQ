@@ -95,3 +95,21 @@ describe("Picks current-event compatibility", () => {
     expect(event?.bouts[0]?.oddsUpdatedAt).toBe("2026-08-10T12:05:00.000Z");
   });
 });
+
+describe("fighter replacement projection", () => {
+  it("maps the private viewer-specific repick requirement without exposing audit evidence", () => {
+    const event = mapPickEvent({
+      ...eventPayload,
+      bouts: [{
+        ...eventPayload.bouts[0],
+        red_fighter_slug: "replacement-red",
+        red_fighter_name: "Replacement Red",
+        repick_required: true,
+      }],
+    });
+    expect(event?.bouts[0]).toMatchObject({
+      redFighterSlug: "replacement-red",
+      repickRequired: true,
+    });
+  });
+});

@@ -142,6 +142,27 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
     ));
   }
 
+  function replaceFighter(bout: PickControlBout) {
+    if (!event || !bout.canReplace) return;
+    const cornerInput = window.prompt(
+      `Which corner should be replaced in ${bout.redFighterName} vs. ${bout.blueFighterName}? Enter RED or BLUE.`,
+    )?.trim().toLowerCase();
+    if (cornerInput !== "red" && cornerInput !== "blue") return;
+    const name = window.prompt("Enter the replacement fighter’s canonical display name:")?.trim();
+    if (!name) return;
+    const suggestedSlug = name.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    const slug = window.prompt("Confirm the replacement fighter’s canonical slug:", suggestedSlug)?.trim().toLowerCase();
+    if (!slug) return;
+    const reason = window.prompt("Why is this fighter being replaced?")?.trim();
+    if (!reason) return;
+    if (!window.confirm(
+      `Approve ${cornerInput.toUpperCase()} corner replacement with ${name}? Every existing pick on this bout will be invalidated and require an active repick. Mutable Underdog Locks and prior odds will be cleared and will not return automatically.`,
+    )) return;
+    void runAction(`replace:${bout.boutId}`, () => repository!.replaceFighter(
+      event.eventId, bout, cornerInput, slug, name, reason,
+    ));
+  }
+
   function lockEvent() {
     if (!event || !event.canLock) return;
     if (!window.confirm("Lock all picks and begin Fight Night result entry? Picks will remain private until each fight is resolved.")) return;
@@ -159,7 +180,7 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
       <section className="page-heading picks-control-heading">
         <p className="eyebrow">PRIVATE OWNER TOOL</p>
         <h1>Fight Night Control</h1>
-        <p>Approve pre-lock cancellations, then record official results one fight at a time after Picks lock.</p>
+        <p>Approve pre-lock cancellations or fighter replacements, then record official results after Picks lock.</p>
         <div className="picks-control-heading__links">
           <Link to="/picks/monitoring">MONITORING INBOX</Link>
           <Link to="/picks/setup">EVENT SETUP</Link>
@@ -266,6 +287,19 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
                         ? "Original picks are preserved. This fight is excluded from scoring and cannot receive new picks."
                         : "Cancel only after confirming the fight is off the pickable UFC card."}
                     </p>
+                    {bout.hasReplacementHistory ? (
+                      <p className="pick-control-replacement-history"><strong>REPLACEMENT HISTORY EXISTS</strong> · The matchup above is currently live.</p>
+                    ) : null}
+                    {!isCancelled ? (
+                      <button
+                        className="secondary-action"
+                        type="button"
+                        disabled={Boolean(busyAction) || !bout.canReplace}
+                        onClick={() => replaceFighter(bout)}
+                      >
+                        {busyAction === `replace:${bout.boutId}` ? "REPLACING…" : "REPLACE FIGHTER"}
+                      </button>
+                    ) : null}
                     <button
                       className={isCancelled ? "secondary-action" : "pick-control-clear"}
                       type="button"
@@ -302,6 +336,7 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
                         type="button"
                         disabled={Boolean(busyAction)}
                         aria-pressed={bout.resultStatus === "red_win"}
+                        aria-label={`RED WINNER ${bout.redFighterName}`}
                         onClick={() => recordResult(bout, "red_win")}
                       >
                         <span>RED WINNER</span>
@@ -313,6 +348,7 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
                         type="button"
                         disabled={Boolean(busyAction)}
                         aria-pressed={bout.resultStatus === "blue_win"}
+                        aria-label={`BLUE WINNER ${bout.blueFighterName}`}
                         onClick={() => recordResult(bout, "blue_win")}
                       >
                         <span>BLUE WINNER</span>

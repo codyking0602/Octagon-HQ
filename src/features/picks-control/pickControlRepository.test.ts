@@ -72,3 +72,14 @@ describe("Fight Night control mapping", () => {
     expect(mapPickControlEvent(null)).toBeNull();
   });
 });
+
+describe("fighter replacement control projection", () => {
+  it("maps owner replacement capability and history without audit details", () => {
+    const event = mapPickControlEvent({
+      ...payload,
+      status: "upcoming",
+      bouts: [{ ...payload.bouts[0], result_status: "pending", can_replace: true, has_replacement_history: true }],
+    });
+    expect(event?.bouts[0]).toMatchObject({ canReplace: true, hasReplacementHistory: true });
+  });
+});

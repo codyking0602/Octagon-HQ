@@ -130,6 +130,16 @@ describe("approved cancelled fight presentation", () => {
     })).toEqual({ completed: 1, total: 1 });
   });
 
+
+  it("requires a changed matchup repick to count toward completion", () => {
+    const changed = {
+      ...cancelledEvent,
+      bouts: [{ ...cancelledEvent.bouts[1], repickRequired: true }],
+    };
+    expect(pickProgress(changed, {})).toEqual({ completed: 0, total: 1 });
+    expect(pickProgress(changed, { "active-fight": "active-blue" })).toEqual({ completed: 1, total: 1 });
+  });
+
   it("preserves the original pick while making the cancelled fight read-only and excluded", async () => {
     const repo = repository();
     renderPage(repo);
@@ -141,7 +151,7 @@ describe("approved cancelled fight presentation", () => {
     const blueChoice = screen.getByRole("button", { name: /Cancel Blue/i });
     expect(redChoice).toBeDisabled();
     expect(blueChoice).toBeDisabled();
-    expect(within(redChoice).getByText("YOUR PICK")).toBeInTheDocument();
+    expect(await within(redChoice).findByText("YOUR PICK")).toBeInTheDocument();
     expect(within(blueChoice).getByText("FIGHT CANCELLED")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /MAKE THIS MY UNDERDOG LOCK/i })).not.toBeInTheDocument();
 

@@ -40,6 +40,7 @@ const boutSchema = z.object({
   result_status: z.enum(["pending", "red_win", "blue_win", "draw", "no_contest", "cancelled"]).optional().default("pending"),
   result_recorded_at: z.string().nullable().optional().default(null),
   group_picks: z.array(groupPickSchema).optional().default([]),
+  repick_required: z.boolean().optional().default(false),
 });
 
 const eventSchema = z.object({
@@ -105,6 +106,7 @@ const historyBoutSchema = z.object({
   picked_fighter_slug: z.string().nullable(),
   verdict: z.enum(["correct", "incorrect", "missing", "excluded", "pending"]),
   group_picks: z.array(groupPickSchema).optional().default([]),
+  repick_required: z.boolean().optional().default(false),
 });
 
 const groupResultSchema = historyRecordSchema.extend({
@@ -191,6 +193,7 @@ export function mapPickEvent(value: unknown): PickEvent | null {
       resultStatus: bout.result_status,
       resultRecordedAt: bout.result_recorded_at,
       groupPicks: bout.group_picks.map(mapGroupPick),
+      repickRequired: bout.repick_required,
     })),
   };
 }

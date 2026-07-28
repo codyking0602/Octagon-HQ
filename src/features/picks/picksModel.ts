@@ -25,6 +25,7 @@ export interface PickBout {
   resultStatus?: PickBoutResultStatus;
   resultRecordedAt?: string | null;
   groupPicks?: PickGroupPick[];
+  repickRequired?: boolean;
 }
 
 export interface UnderdogLock {
@@ -80,6 +81,7 @@ export interface PickHistoryBout {
   pickedFighterSlug: string | null;
   verdict: PickVerdict;
   groupPicks?: PickGroupPick[];
+  repickRequired?: boolean;
 }
 
 export interface PickHistoryRecord {
