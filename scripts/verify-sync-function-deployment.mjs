@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+
 const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
 const projectId = process.env.SUPABASE_PROJECT_ID;
 const expectedSha = process.env.EXPECTED_SYNC_SOURCE_SHA?.trim() ?? "";
@@ -64,3 +66,8 @@ if (response.headers.get("access-control-allow-origin") !== productionOrigin) {
 }
 
 console.log(`PASS: sync-next-ufc-event is deployed from exact source ${expectedSha}.`);
+
+if (existsSync("supabase/functions/run-pick-monitoring/index.ts")) {
+  process.env.EXPECTED_MONITORING_SOURCE_SHA = process.env.EXPECTED_MONITORING_SOURCE_SHA?.trim() || expectedSha;
+  await import("./verify-monitoring-function-deployment.mjs");
+}

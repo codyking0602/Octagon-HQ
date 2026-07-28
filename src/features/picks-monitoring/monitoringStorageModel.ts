@@ -9,6 +9,7 @@ export type MonitoringRunStatus = "completed" | "partial" | "failed";
 export type MonitoringFindingType =
   | "card_change"
   | "odds_change"
+  | "odds_available"
   | "unmatched_fight"
   | "provider_error"
   | "quota_warning";
@@ -96,7 +97,7 @@ export interface BuildMonitoringRunPayloadInput {
 export function monitoringRunStatus(odds: OddsAdapterResult): MonitoringRunStatus {
   const hasError = odds.diagnostics.some((diagnostic) => diagnostic.severity === "error");
   if (hasError && odds.coverage.completeSnapshots === 0) return "failed";
-  if (odds.diagnostics.length > 0 || odds.coverage.missingSnapshots > 0) return "partial";
+  if (odds.diagnostics.length > 0 || odds.coverage.missingSnapshots > 0 || odds.quota.requestsRemaining === 0) return "partial";
   return "completed";
 }
 
