@@ -1,0 +1,521 @@
+/* Picks UI 2.0: one visual owner layered over the existing Picks contracts. */
+
+.picks-page {
+  gap: 14px;
+}
+
+.picks-page-heading {
+  gap: 5px;
+  padding-top: 0;
+}
+
+.picks-page-heading h1 {
+  font-size: clamp(32px, 9vw, 45px);
+}
+
+.picks-page-heading > p:not(.eyebrow) {
+  max-width: 520px;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.picks-event-hero {
+  position: relative;
+  isolation: isolate;
+  min-height: 360px;
+  align-content: end;
+  gap: 16px;
+  padding: 18px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(210, 10, 10, .22), transparent 40%),
+    linear-gradient(145deg, #171717, #070707);
+}
+
+.picks-event-hero::before,
+.picks-event-hero::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+}
+
+.picks-event-hero::before {
+  z-index: -2;
+  background-image: var(--picks-event-poster);
+  background-position: center 32%;
+  background-size: cover;
+  opacity: 0;
+  transform: scale(1.01);
+}
+
+.picks-event-hero.has-poster::before {
+  opacity: .92;
+}
+
+.picks-event-hero::after {
+  z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, .12) 0%, rgba(0, 0, 0, .42) 42%, rgba(0, 0, 0, .97) 84%),
+    linear-gradient(90deg, rgba(0, 0, 0, .7), transparent 70%);
+}
+
+.picks-event-hero__topline {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+}
+
+.picks-event-hero__copy {
+  display: grid;
+  gap: 7px;
+  margin-top: 150px;
+}
+
+.picks-event-hero__copy h2 {
+  max-width: 90%;
+  font-size: clamp(27px, 8vw, 40px);
+  line-height: .98;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, .8);
+}
+
+.picks-event-hero__copy > strong {
+  font-size: clamp(17px, 5vw, 22px);
+  line-height: 1.08;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, .8);
+}
+
+.picks-event-hero__copy > p {
+  color: rgba(255, 255, 255, .72);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.picks-event-hero__dashboard {
+  display: grid;
+  gap: 11px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: 15px;
+  background: rgba(4, 4, 4, .72);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, .24);
+  backdrop-filter: blur(12px);
+}
+
+.picks-event-hero__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.picks-save-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--text-secondary) !important;
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .09em;
+}
+
+.picks-save-state > span {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .1);
+  color: white;
+  font-size: 11px;
+}
+
+.picks-control-entry {
+  min-height: auto;
+  padding: 5px 0;
+  border: 0;
+  color: var(--text-secondary);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-decoration: none;
+}
+
+.picks-scoring-guide {
+  padding: 11px 14px;
+  border-radius: 15px;
+}
+
+.picks-scoring-guide summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  list-style: none;
+}
+
+.picks-scoring-guide summary::-webkit-details-marker {
+  display: none;
+}
+
+.picks-scoring-guide summary::after {
+  content: "›";
+  color: var(--text-muted);
+  font-size: 20px;
+  transform: rotate(90deg);
+  transition: transform .18s ease;
+}
+
+.picks-scoring-guide[open] summary::after {
+  transform: rotate(-90deg);
+}
+
+.picks-card-zone {
+  position: relative;
+  display: grid;
+  gap: 10px;
+}
+
+.picks-sticky-progress {
+  position: sticky;
+  top: calc(54px + var(--safe-top));
+  z-index: 12;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2px 12px;
+  min-height: 45px;
+  padding: 9px 12px;
+  border: 1px solid rgba(255, 255, 255, .13);
+  border-radius: 13px;
+  background: rgba(8, 8, 8, .92);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .34);
+  backdrop-filter: blur(18px);
+}
+
+.picks-sticky-progress strong {
+  overflow: hidden;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.picks-sticky-progress span,
+.picks-sticky-progress em {
+  color: var(--text-muted);
+  font-size: 8px;
+  font-style: normal;
+  font-weight: 900;
+  letter-spacing: .07em;
+}
+
+.picks-sticky-progress span {
+  justify-self: end;
+  color: var(--ufc-red-strong);
+}
+
+.picks-sticky-progress em {
+  grid-column: 1 / -1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.picks-card-list {
+  gap: 10px;
+}
+
+.pick-bout-card {
+  gap: 11px;
+  padding: 14px;
+  border-radius: 18px;
+}
+
+.pick-bout-card.is-main-event {
+  padding: 16px;
+  border-color: rgba(255, 255, 255, .17);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(210, 10, 10, .1), transparent 38%),
+    var(--surface);
+}
+
+.pick-bout-card__meta {
+  display: grid;
+  gap: 4px;
+}
+
+.pick-bout-card__meta > p {
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.pick-bout-card__choices {
+  grid-template-columns: minmax(0, 1fr) 20px minmax(0, 1fr);
+  gap: 6px;
+}
+
+.pick-choice {
+  align-content: start;
+  gap: 6px;
+  min-height: 128px;
+  padding: 11px;
+  border-radius: 15px;
+  background: #191919;
+}
+
+.pick-bout-card:not(.is-main-event) .pick-choice {
+  min-height: 118px;
+}
+
+.pick-fighter-thumbnail {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 1px;
+}
+
+.pick-bout-card.is-main-event .pick-fighter-thumbnail {
+  width: 64px;
+  height: 64px;
+}
+
+.pick-choice > span {
+  font-size: 15px;
+  line-height: 1.08;
+}
+
+.pick-choice > small {
+  font-size: 8px;
+}
+
+.pick-choice > em {
+  width: fit-content;
+  margin-top: auto;
+  padding: 4px 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .055);
+  font-size: 7px;
+}
+
+.pick-choice.is-selected {
+  border-color: var(--ufc-red);
+  background: linear-gradient(155deg, rgba(210, 10, 10, .14), #191919 68%);
+  box-shadow:
+    inset 0 0 0 1px rgba(210, 10, 10, .18),
+    0 0 20px rgba(210, 10, 10, .08);
+}
+
+.pick-choice.is-selected > em {
+  background: rgba(210, 10, 10, .13);
+}
+
+.pick-lock-row {
+  display: flex;
+  margin-top: -2px;
+}
+
+.pick-lock-row.is-red {
+  justify-content: flex-start;
+}
+
+.pick-lock-row.is-blue {
+  justify-content: flex-end;
+}
+
+.pick-lock-action,
+.pick-lock-readonly {
+  width: fit-content;
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 8px;
+  letter-spacing: .07em;
+}
+
+.pick-lock-action {
+  border-color: rgba(255, 255, 255, .17);
+  background: rgba(255, 255, 255, .025);
+}
+
+.pick-lock-action.is-selected,
+.pick-lock-readonly {
+  border: 1px solid rgba(210, 10, 10, .75);
+  background: rgba(210, 10, 10, .08);
+  color: var(--ufc-red-strong);
+}
+
+.picks-history {
+  gap: 11px;
+  margin-top: 16px;
+}
+
+.picks-history__heading {
+  align-items: end;
+}
+
+.picks-history__heading h2 {
+  font-size: clamp(27px, 8vw, 38px);
+}
+
+.picks-history-summary {
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.95fr);
+  gap: 12px;
+  padding: 13px;
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.picks-history-summary > div strong {
+  font-size: 28px;
+}
+
+.picks-history-summary dl {
+  gap: 4px;
+}
+
+.picks-history-summary dl > div {
+  padding: 7px 5px;
+  border: 0;
+  border-left: 1px solid var(--border);
+  border-radius: 0;
+  background: transparent;
+}
+
+.picks-history-summary dd {
+  font-size: 15px;
+}
+
+.picks-recap-list {
+  gap: 9px;
+}
+
+.picks-recap-card {
+  border-radius: 17px;
+}
+
+.picks-recap-card__summary {
+  gap: 10px;
+  min-height: 112px;
+  padding: 14px 38px 14px 14px;
+}
+
+.picks-recap-card__summary::after {
+  right: 13px;
+  content: "›";
+  font-size: 24px;
+  transform: translateY(-50%);
+}
+
+.picks-recap-card[open] .picks-recap-card__summary::after {
+  content: "›";
+  transform: translateY(-50%) rotate(90deg);
+}
+
+.picks-recap-card__date {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.picks-recap-card__date time,
+.picks-recap-card__latest {
+  color: var(--ufc-red-strong);
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.picks-recap-card__latest {
+  padding: 3px 6px;
+  border-radius: 999px;
+  background: rgba(210, 10, 10, .12);
+}
+
+.picks-recap-card__summary h3 {
+  margin-top: 6px;
+  font-size: 19px;
+}
+
+.picks-recap-card__record {
+  min-width: 74px;
+}
+
+.picks-recap-card__record strong {
+  font-size: 23px;
+}
+
+.picks-recap-card__record small {
+  max-width: 110px;
+  font-size: 7px;
+}
+
+.picks-recap-card__record em {
+  max-width: 110px;
+  padding: 3px 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .05);
+  color: var(--text-muted);
+  font-size: 6px;
+  font-style: normal;
+  font-weight: 900;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.app-shell:has(.picks-page) .app-header {
+  min-height: calc(54px + var(--safe-top));
+}
+
+.app-shell:has(.picks-page) .brand-mark--compact {
+  gap: 9px;
+  font-size: 18px;
+}
+
+.app-shell:has(.picks-page) .brand-mark--compact .brand-mark__logo {
+  width: 38px;
+  height: 38px;
+}
+
+.app-shell:has(.picks-page) .app-content {
+  padding-top: 16px;
+  padding-bottom: calc(84px + var(--safe-bottom));
+}
+
+.app-shell:has(.picks-page) .bottom-nav {
+  padding-top: 5px;
+  padding-bottom: calc(6px + var(--safe-bottom));
+}
+
+.app-shell:has(.picks-page) .bottom-nav__item {
+  min-height: 42px;
+}
+
+@media (min-width: 680px) {
+  .picks-event-hero {
+    min-height: 430px;
+    padding: 24px;
+  }
+
+  .picks-event-hero__copy {
+    max-width: 72%;
+    margin-top: 220px;
+  }
+
+  .picks-event-hero__dashboard {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+  }
+
+  .picks-event-hero__actions {
+    display: grid;
+    justify-items: end;
+  }
+
+  .pick-choice {
+    min-height: 146px;
+  }
+}
