@@ -1,22 +1,24 @@
-import cloudflareWorkflow from "../../.github/workflows/deploy-cloudflare.yml?raw";
-import brokerWorkflow from "../../.github/workflows/deploy-pr-head.yml?raw";
-import supabaseWorkflow from "../../.github/workflows/deploy-supabase.yml?raw";
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
+const workflow = readFileSync(".github/workflows/deploy-cloudflare-v2.yml", "utf8");
+const brokerWorkflow = readFileSync(".github/workflows/deploy-supabase-from-pr.yml", "utf8");
+const supabaseWorkflow = readFileSync(".github/workflows/deploy-supabase.yml", "utf8");
+
 function workflowJob(source: string, start: string, end?: string) {
-  const afterStart = source.split(`  ${start}:`)[1];
-  if (!afterStart) throw new Error(`Missing workflow job: ${start}`);
-  return end ? afterStart.split(`  ${end}:`)[0] : afterStart;
+  const startIndex = source.indexOf(`${start}:`);
+  if (startIndex < 0) return "";
+  const endIndex = end ? source.indexOf(`${end}:`, startIndex) : -1;
+  return source.slice(startIndex, endIndex < 0 ? undefined : endIndex);
 }
 
 describe("feature deployment workflow contract", () => {
-  it("keeps one label broker with no PR checkout or deployment implementation", () => {
-    expect(brokerWorkflow).toContain("pull_request_target:");
-    expect(brokerWorkflow).toContain("- labeled");
-    expect(brokerWorkflow).toContain("pr.head.repo?.full_name !== repository");
-    expect(brokerWorkflow).toContain("pr.head.sha !== expectedSha");
+  it("keeps the label broker credential-free and delegates only a frozen SHA", () => {
+    expect(brokerWorkflow).toContain("types: [labeled]");
+    expect(brokerWorkflow).toContain('github.event.label.name == \'deploy-backend\'');
     expect(brokerWorkflow).toContain("uses: ./.github/workflows/deploy-supabase.yml");
-    expect(brokerWorkflow).toContain("uses: ./.github/workflows/deploy-cloudflare.yml");
+    expect(brokerWorkflow).toContain("source_sha:");
+    expect(brokerWorkflow).toContain("pr.head.sha");
     expect(brokerWorkflow).toContain("removeLabel");
     expect(brokerWorkflow).not.toContain("actions/checkout");
     expect(brokerWorkflow).not.toContain("supabase db push");
@@ -30,49 +32,52 @@ describe("feature deployment workflow contract", () => {
     expect(supabaseWorkflow).toContain("checked_out_sha=$(git rev-parse HEAD)");
     expect(supabaseWorkflow).toContain("pr.head.sha !== expectedSha");
     expect(supabaseWorkflow).toContain("supabase db push --linked");
-    expect(supabaseWorkflow).toContain("Remote migrations, live function contract, and production CORS were verified");
+    expect(supabaseWorkflow).toContain(
+      "Remote migrations, exact deployed function revisions, live authentication contracts, scheduler health, and production CORS were verified",
+    );
   });
 
   it("builds the PR frontend without administrative credentials", () => {
     const configJob = workflowJob(
-      cloudflareWorkflow,
+      workflow,
       "resolve-public-config",
       "build-production-artifact",
     );
     const buildJob = workflowJob(
-      cloudflareWorkflow,
+      workflow,
       "build-production-artifact",
-      "deploy-production-artifact",
+      "deploy-v2",
     );
-
-    expect(configJob).not.toContain("actions/checkout");
-    expect(configJob).toContain("octagon-public-config.env");
-    expect(configJob).toContain("actions/upload-artifact@v4");
-    expect(configJob).not.toContain("$GITHUB_OUTPUT");
-    expect(buildJob).toContain("ref: ${{ env.SOURCE_SHA }}");
-    expect(buildJob).toContain("name: octagon-public-config-${{ github.run_id }}");
-    expect(buildJob).toContain('. "$config_file"');
-    expect(buildJob).toContain("npm ci --silent --ignore-scripts");
-    expect(buildJob).toContain('"public/deployment.json"');
-    expect(buildJob).toContain("actions/upload-artifact@v4");
-    expect(buildJob).not.toContain("CLOUDFLARE_API_TOKEN");
-    expect(buildJob).not.toContain("CLOUDFLARE_ACCOUNT_ID");
+    expect(configJob).toContain("SUPABASE_ACCESS_TOKEN");
+    expect(configJob).toContain("SUPABASE_PROJECT_ID");
+    expect(configJob).toContain("public-config.env");
+    expect(configJob).toContain("retention-days: 1");
+    expect(buildJob).toContain("needs: resolve-public-config");
+    expect(buildJob).toContain("download-artifact");
     expect(buildJob).not.toContain("SUPABASE_ACCESS_TOKEN");
+    expect(buildJob).not.toContain("SUPABASE_PROJECT_ID");
+    expect(buildJob).not.toContain("SUPABASE_DB_PASSWORD");
   });
 
-  it("deploys only the verified artifact with trusted configuration and tooling", () => {
-    const deployJob = workflowJob(cloudflareWorkflow, "deploy-production-artifact");
-
-    expect(deployJob).toContain("ref: ${{ env.TRUSTED_WORKFLOW_SHA }}");
-    expect(deployJob).toContain("TRUSTED_WORKFLOW_SHA: ${{ github.workflow_sha }}");
-    expect(deployJob).toContain("actions/download-artifact@v4");
-    expect(deployJob).toContain("Install trusted Wrangler outside the application artifact");
-    expect(deployJob).toContain('"$WRANGLER_BIN" deploy --config "$GITHUB_WORKSPACE/wrangler.jsonc"');
-    expect(deployJob).toContain("/deployment.json?deployment=${SOURCE_SHA}");
-    expect(deployJob).toContain("marker.sha !== expectedSha");
-    expect(deployJob).toContain('grep -Fq "$VITE_EXPECTED_SUPABASE_HOSTNAME" "$bundle_file"');
-    expect(deployJob).toContain('grep -Fq "your-project-id" "$bundle_file"');
+  it("keeps the deploy job limited to a verified artifact and Worker credentials", () => {
+    const deployJob = workflowJob(workflow, "deploy-v2", "verify-deployment");
+    expect(deployJob).toContain("needs: build-production-artifact");
+    expect(deployJob).toContain("CF_API_TOKEN");
+    expect(deployJob).toContain("CF_ACCOUNT_ID");
+    expect(deployJob).toContain("wrangler deploy --config wrangler.v2.jsonc");
+    expect(deployJob).not.toContain("npm ci");
     expect(deployJob).not.toContain("npm run build");
-    expect(deployJob).not.toContain("ref: ${{ env.SOURCE_SHA }}");
+    expect(deployJob).not.toContain("SUPABASE_ACCESS_TOKEN");
+    expect(deployJob).not.toContain("SUPABASE_PROJECT_ID");
+    expect(deployJob).not.toContain("SUPABASE_DB_PASSWORD");
+  });
+
+  it("verifies production separately after deployment", () => {
+    const verifyJob = workflowJob(workflow, "verify-deployment");
+    expect(verifyJob).toContain("needs: deploy-v2");
+    expect(verifyJob).toContain("verify-v2-deployment.mjs");
+    expect(verifyJob).not.toContain("SUPABASE_ACCESS_TOKEN");
+    expect(verifyJob).not.toContain("SUPABASE_PROJECT_ID");
+    expect(verifyJob).not.toContain("SUPABASE_DB_PASSWORD");
   });
 });
