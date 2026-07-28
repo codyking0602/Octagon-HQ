@@ -37,6 +37,10 @@ function resultButtonClass(active: boolean) {
   return active ? "pick-control-result is-active" : "pick-control-result";
 }
 
+function sameOrder(left: string[], right: string[]) {
+  return left.length === right.length && left.every((value, index) => value === right[index]);
+}
+
 interface PicksControlPageProps {
   repository?: PickControlRepository | null;
 }
@@ -50,6 +54,7 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
   const [loading, setLoading] = useState(true);
   const [busyAction, setBusyAction] = useState("");
   const [error, setError] = useState("");
+  const [draftOrder, setDraftOrder] = useState<string[] | null>(null);
 
   const loadEvent = useCallback(async () => {
     if (!repository || !identity.profile) return;
@@ -57,6 +62,7 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
     try {
       const nextEvent = await repository.loadControlEvent();
       setEvent(nextEvent);
+      setDraftOrder(null);
       setError("");
     } catch (nextError) {
       setEvent(null);
@@ -86,6 +92,16 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
     () => event?.bouts.slice().sort((left, right) => left.position - right.position) ?? [],
     [event],
   );
+  const canonicalOrder = useMemo(
+    () => orderedBouts.map((bout) => bout.boutId),
+    [orderedBouts],
+  );
+  const displayedBouts = useMemo(() => {
+    if (!draftOrder) return orderedBouts;
+    const byId = new Map(orderedBouts.map((bout) => [bout.boutId, bout]));
+    return draftOrder.map((id) => byId.get(id)).filter((bout): bout is PickControlBout => Boolean(bout));
+  }, [draftOrder, orderedBouts]);
+  const orderChanged = draftOrder !== null && !sameOrder(draftOrder, canonicalOrder);
   const resolved = resolvedBoutCount(event);
   const cancelled = cancelledBoutCount(event);
   const progressCount = event?.status === "upcoming" ? cancelled : resolved;
@@ -98,7 +114,11 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
       await action();
       await loadEvent();
     } catch (nextError) {
-      setError(readableError(nextError));
+      const message = readableError(nextError);
+      if (key === "reorder" && message.toLowerCase().includes("reload")) {
+        setDraftOrder(null);
+      }
+      setError(message);
     } finally {
       setBusyAction("");
     }
@@ -124,7 +144,6 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
 
   function setCancellation(bout: PickControlBout, nextCancelled: boolean) {
     if (!event) return;
-    const action = nextCancelled ? "cancel" : "restore";
     const reason = window.prompt(
       nextCancelled
         ? `Why is ${bout.redFighterName} vs. ${bout.blueFighterName} being cancelled?`
@@ -163,6 +182,31 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
     ));
   }
 
+  function moveBout(index: number, offset: -1 | 1) {
+    if (!event?.canReorder || busyAction) return;
+    const order = displayedBouts.map((bout) => bout.boutId);
+    const target = index + offset;
+    if (target < 0 || target >= order.length) return;
+    [order[index], order[target]] = [order[target], order[index]];
+    setDraftOrder(sameOrder(order, canonicalOrder) ? null : order);
+  }
+
+  function approveOrder() {
+    if (!event?.canReorder || !draftOrder || !orderChanged) return;
+    const reason = window.prompt("Why is the live fight order changing?")?.trim();
+    if (!reason) return;
+    if (reason.length < 3) {
+      setError("A fight-order change requires a reason of at least 3 characters.");
+      return;
+    }
+    const numbered = (ids: string[]) => ids.map((id, index) => {
+      const bout = event.bouts.find((item) => item.boutId === id)!;
+      return `${index + 1}. ${bout.redFighterName} vs. ${bout.blueFighterName}`;
+    }).join("\n");
+    if (!window.confirm(`Approve this new live fight order?\n\nBEFORE\n${numbered(canonicalOrder)}\n\nAFTER\n${numbered(draftOrder)}\n\nThis changes display order only. Picks and Underdog Locks stay attached to their bouts.`)) return;
+    void runAction("reorder", () => repository!.reorderCard(event.eventId, canonicalOrder, draftOrder, reason));
+  }
+
   function lockEvent() {
     if (!event || !event.canLock) return;
     if (!window.confirm("Lock all picks and begin Fight Night result entry? Picks will remain private until each fight is resolved.")) return;
@@ -180,7 +224,7 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
       <section className="page-heading picks-control-heading">
         <p className="eyebrow">PRIVATE OWNER TOOL</p>
         <h1>Fight Night Control</h1>
-        <p>Approve pre-lock cancellations or fighter replacements, then record official results after Picks lock.</p>
+        <p>Approve pre-lock cancellations, fighter replacements, or fight-order changes, then record official results after Picks lock.</p>
         <div className="picks-control-heading__links">
           <Link to="/picks/monitoring">MONITORING INBOX</Link>
           <Link to="/picks/setup">EVENT SETUP</Link>
@@ -263,7 +307,19 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
 
           {event.status === "upcoming" ? (
             <section className="picks-control-bouts" aria-label={`${event.name} pre-lock card controls`}>
-              {orderedBouts.map((bout, index) => {
+              <div className="surface-card picks-control-reorder">
+                <div>
+                  <strong>LIVE FIGHT ORDER</strong>
+                  <span>{event.canReorder ? "Move locally, then approve once." : "Fight-order changes are closed."}</span>
+                </div>
+                {event.hasReorderHistory ? <small>REORDER HISTORY EXISTS</small> : null}
+                {event.canReorder && orderChanged ? (
+                  <button className="primary-action" type="button" disabled={Boolean(busyAction)} onClick={approveOrder}>
+                    {busyAction === "reorder" ? "APPROVING…" : "APPROVE NEW ORDER"}
+                  </button>
+                ) : null}
+              </div>
+              {displayedBouts.map((bout, index) => {
                 const saving = busyAction === `card:${bout.boutId}`;
                 const isCancelled = bout.resultStatus === "cancelled";
                 return (
@@ -277,6 +333,12 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
                         {saving ? "SAVING…" : pickControlResultLabel(bout)}
                       </em>
                     </div>
+                    {event.canReorder ? (
+                      <div className="pick-control-move" aria-label={`Move ${bout.redFighterName} vs. ${bout.blueFighterName}`}>
+                        <button type="button" disabled={index === 0 || Boolean(busyAction)} onClick={() => moveBout(index, -1)}>MOVE UP</button>
+                        <button type="button" disabled={index === displayedBouts.length - 1 || Boolean(busyAction)} onClick={() => moveBout(index, 1)}>MOVE DOWN</button>
+                      </div>
+                    ) : null}
                     <div className="pick-control-winners">
                       <div><span>RED CORNER</span><strong>{bout.redFighterName}</strong></div>
                       <span>VS</span>

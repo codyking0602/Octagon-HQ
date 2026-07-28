@@ -32,6 +32,8 @@ const controlEventSchema = z.object({
   status: z.enum(["upcoming", "locked", "complete"]),
   can_lock: z.boolean(),
   can_complete: z.boolean(),
+  can_reorder: z.boolean().optional().default(false),
+  has_reorder_history: z.boolean().optional().default(false),
   bouts: z.array(controlBoutSchema),
 });
 
@@ -40,6 +42,7 @@ export interface PickControlRepository {
   lockEvent: (eventId: string) => Promise<void>;
   setCancellation: (eventId: string, boutId: string, cancelled: boolean, reason: string) => Promise<void>;
   replaceFighter: (eventId: string, bout: PickControlEvent["bouts"][number], corner: "red" | "blue", slug: string, name: string, reason: string) => Promise<void>;
+  reorderCard: (eventId: string, expectedBoutIds: string[], proposedBoutIds: string[], reason: string) => Promise<void>;
   recordResult: (eventId: string, boutId: string, result: PickBoutResultStatus) => Promise<void>;
   completeEvent: (eventId: string) => Promise<void>;
 }
@@ -65,6 +68,8 @@ export function mapPickControlEvent(value: unknown): PickControlEvent | null {
     status: parsed.status,
     canLock: parsed.can_lock,
     canComplete: parsed.can_complete,
+    canReorder: parsed.can_reorder,
+    hasReorderHistory: parsed.has_reorder_history,
     bouts: parsed.bouts.map((bout) => ({
       boutId: bout.bout_id,
       position: bout.position,
@@ -120,6 +125,15 @@ export function createPickControlRepository(): PickControlRepository | null {
         p_expected_blue_fighter_slug: bout.blueFighterSlug,
         p_replacement_fighter_slug: slug,
         p_replacement_fighter_name: name,
+        p_reason: reason,
+      }));
+    },
+
+    async reorderCard(eventId, expectedBoutIds, proposedBoutIds, reason) {
+      await requireRpcSuccess(client.rpc("approve_pick_card_reorder", {
+        p_event_id: eventId,
+        p_expected_bout_ids: expectedBoutIds,
+        p_proposed_bout_ids: proposedBoutIds,
         p_reason: reason,
       }));
     },
