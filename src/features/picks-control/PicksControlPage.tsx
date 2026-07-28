@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import type { PickBoutResultStatus } from "../picks/picksModel";
 import {
+  cancelledBoutCount,
   pickControlResultLabel,
   pickControlResultOptions,
   resolvedBoutCount,
@@ -86,7 +87,9 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
     [event],
   );
   const resolved = resolvedBoutCount(event);
-  const progress = event?.bouts.length ? Math.round((resolved / event.bouts.length) * 100) : 0;
+  const cancelled = cancelledBoutCount(event);
+  const progressCount = event?.status === "upcoming" ? cancelled : resolved;
+  const progress = event?.bouts.length ? Math.round((progressCount / event.bouts.length) * 100) : 0;
 
   async function runAction(key: string, action: () => Promise<void>) {
     setBusyAction(key);
@@ -119,6 +122,26 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
     void runAction(`bout:${bout.boutId}`, () => repository!.recordResult(event.eventId, bout.boutId, "pending"));
   }
 
+  function setCancellation(bout: PickControlBout, nextCancelled: boolean) {
+    if (!event) return;
+    const action = nextCancelled ? "cancel" : "restore";
+    const reason = window.prompt(
+      nextCancelled
+        ? `Why is ${bout.redFighterName} vs. ${bout.blueFighterName} being cancelled?`
+        : `Why is ${bout.redFighterName} vs. ${bout.blueFighterName} being restored?`,
+    )?.trim();
+    if (!reason) return;
+    const confirmed = window.confirm(
+      nextCancelled
+        ? `Cancel ${bout.redFighterName} vs. ${bout.blueFighterName}? Existing picks will be preserved, the fight will be excluded from scoring, and any Underdog Lock on it will be cleared.`
+        : `Restore ${bout.redFighterName} vs. ${bout.blueFighterName} before Picks lock? Existing picks remain preserved.`,
+    );
+    if (!confirmed) return;
+    void runAction(`card:${bout.boutId}`, () => (
+      repository!.setCancellation(event.eventId, bout.boutId, nextCancelled, reason)
+    ));
+  }
+
   function lockEvent() {
     if (!event || !event.canLock) return;
     if (!window.confirm("Lock all picks and begin Fight Night result entry? Picks will remain private until each fight is resolved.")) return;
@@ -136,7 +159,7 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
       <section className="page-heading picks-control-heading">
         <p className="eyebrow">PRIVATE OWNER TOOL</p>
         <h1>Fight Night Control</h1>
-        <p>Record official results one fight at a time. Each resolved fight immediately reveals how the group picked it.</p>
+        <p>Approve pre-lock cancellations, then record official results one fight at a time after Picks lock.</p>
         <div className="picks-control-heading__links">
           <Link to="/picks/monitoring">MONITORING INBOX</Link>
           <Link to="/picks/setup">EVENT SETUP</Link>
@@ -179,15 +202,23 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
         <>
           <section className="surface-card picks-control-hero" aria-labelledby="pick-control-event-title">
             <div className="picks-control-hero__topline">
-              <p className="eyebrow">RESULTS ONLY</p>
+              <p className="eyebrow">CARD & RESULTS</p>
               <span className={`picks-control-status picks-control-status--${event.status}`}>{event.status.toUpperCase()}</span>
             </div>
             <h2 id="pick-control-event-title">{event.name}</h2>
             <strong>{event.subtitle}</strong>
             <p>{eventTime(event.startsAt)} · {event.venue} · {event.location}</p>
 
-            <div className="picks-control-progress" aria-label={`${resolved} of ${event.bouts.length} results entered`}>
-              <div><span>OFFICIAL RESULTS</span><b>{resolved} OF {event.bouts.length}</b></div>
+            <div
+              className="picks-control-progress"
+              aria-label={event.status === "upcoming"
+                ? `${cancelled} of ${event.bouts.length} fights cancelled`
+                : `${resolved} of ${event.bouts.length} results entered`}
+            >
+              <div>
+                <span>{event.status === "upcoming" ? "CARD CANCELLATIONS" : "OFFICIAL RESULTS"}</span>
+                <b>{progressCount} OF {event.bouts.length}</b>
+              </div>
               <div className="picks-control-progress__track" aria-hidden="true">
                 <span style={{ width: `${progress}%` }} />
               </div>
@@ -208,6 +239,46 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
               </button>
             ) : null}
           </section>
+
+          {event.status === "upcoming" ? (
+            <section className="picks-control-bouts" aria-label={`${event.name} pre-lock card controls`}>
+              {orderedBouts.map((bout, index) => {
+                const saving = busyAction === `card:${bout.boutId}`;
+                const isCancelled = bout.resultStatus === "cancelled";
+                return (
+                  <article className="surface-card pick-control-bout" key={bout.boutId}>
+                    <div className="pick-control-bout__heading">
+                      <div>
+                        <span>{index === 0 ? "MAIN EVENT" : `MAIN CARD · FIGHT ${index + 1}`}</span>
+                        <small>{bout.weightClass}</small>
+                      </div>
+                      <em className={`pick-control-bout__state pick-control-bout__state--${bout.resultStatus}`}>
+                        {saving ? "SAVING…" : pickControlResultLabel(bout)}
+                      </em>
+                    </div>
+                    <div className="pick-control-winners">
+                      <div><span>RED CORNER</span><strong>{bout.redFighterName}</strong></div>
+                      <span>VS</span>
+                      <div><span>BLUE CORNER</span><strong>{bout.blueFighterName}</strong></div>
+                    </div>
+                    <p>
+                      {isCancelled
+                        ? "Original picks are preserved. This fight is excluded from scoring and cannot receive new picks."
+                        : "Cancel only after confirming the fight is off the pickable UFC card."}
+                    </p>
+                    <button
+                      className={isCancelled ? "secondary-action" : "pick-control-clear"}
+                      type="button"
+                      disabled={Boolean(busyAction) || (isCancelled ? !bout.canRestore : !bout.canCancel)}
+                      onClick={() => setCancellation(bout, !isCancelled)}
+                    >
+                      {isCancelled ? "RESTORE FIGHT" : "CANCEL FIGHT"}
+                    </button>
+                  </article>
+                );
+              })}
+            </section>
+          ) : null}
 
           {event.status === "locked" ? (
             <section className="picks-control-bouts" aria-label={`${event.name} official results`}>
@@ -280,21 +351,23 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
             </section>
           ) : null}
 
-          <section className="surface-card picks-control-complete">
-            <div>
-              <p className="eyebrow">FINAL STEP</p>
-              <h2>Complete event</h2>
-              <p>Every fight must have a winner, draw, no contest, or cancellation before the recap can publish.</p>
-            </div>
-            <button
-              className="primary-action"
-              type="button"
-              disabled={!event.canComplete || Boolean(busyAction)}
-              onClick={completeEvent}
-            >
-              {busyAction === "complete" ? "COMPLETING EVENT…" : "COMPLETE EVENT"}
-            </button>
-          </section>
+          {event.status === "locked" ? (
+            <section className="surface-card picks-control-complete">
+              <div>
+                <p className="eyebrow">FINAL STEP</p>
+                <h2>Complete event</h2>
+                <p>Every fight must have a winner, draw, no contest, or cancellation before the recap can publish.</p>
+              </div>
+              <button
+                className="primary-action"
+                type="button"
+                disabled={!event.canComplete || Boolean(busyAction)}
+                onClick={completeEvent}
+              >
+                {busyAction === "complete" ? "COMPLETING EVENT…" : "COMPLETE EVENT"}
+              </button>
+            </section>
+          ) : null}
 
           {error ? <p className="picks-error" role="status">{error}</p> : null}
         </>
