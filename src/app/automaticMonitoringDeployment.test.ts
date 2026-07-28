@@ -34,6 +34,18 @@ describe("automatic Picks monitoring deployment", () => {
     expect(sync).toContain("get_pick_monitoring_event_state");
   });
 
+  it("uses a short claim and completes scheduled evidence and cadence atomically", () => {
+    expect(migration).toContain("claim_pick_monitoring_schedule");
+    expect(migration).toContain("release_pick_monitoring_schedule");
+    expect(migration).toContain("record_scheduled_pick_monitoring_run");
+    expect(migration).toContain("v_run_id := public.record_pick_monitoring_run(p_payload)");
+    expect(migration).toContain("last_claimed_at = p_claimed_at");
+    expect(migration).toContain("finding.review_status = 'new'");
+    expect(migration).toContain("timeout_milliseconds := 60000");
+    expect(runner).toContain('admin.rpc("record_scheduled_pick_monitoring_run"');
+    expect(runner).toContain('admin.rpc("release_pick_monitoring_schedule"');
+  });
+
   it("records evidence only and never mutates Picks or publishes a card", () => {
     expect(migration).toContain("pick_monitoring_schedule_state");
     expect(runner).toContain('admin.rpc("record_pick_monitoring_run"');
