@@ -67,6 +67,15 @@ begin
   if v_replacement_slug in (v_bout.red_fighter_slug, v_bout.blue_fighter_slug) then
     raise exception 'replacement fighter must be different from both current fighters';
   end if;
+  if exists (
+    select 1
+    from public.pick_bouts booked_bout
+    where booked_bout.event_id = v_event_id
+      and booked_bout.bout_id <> v_bout_id
+      and v_replacement_slug in (booked_bout.red_fighter_slug, booked_bout.blue_fighter_slug)
+  ) then
+    raise exception 'replacement fighter is already booked on this event';
+  end if;
 
   select coalesce(jsonb_agg(to_jsonb(pick) order by pick.profile_id), '[]'::jsonb)
   into v_affected_picks from public.profile_event_picks pick

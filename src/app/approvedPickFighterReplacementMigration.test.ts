@@ -12,6 +12,8 @@ describe("approved pre-lock fighter replacements", () => {
     expect(sql).toContain("matchup changed; reload Fight Night Control");
     expect(sql).toContain("event.status <> 'upcoming' or now() >= v_event.locks_at or now() >= v_event.starts_at");
     expect(sql).toContain("replacement fighter must be different from both current fighters");
+    expect(sql).toContain("replacement fighter is already booked on this event");
+    expect(sql).toContain("booked_bout.bout_id <> v_bout_id");
   });
 
   it("audits before mutation, invalidates every affected pick, lock, and odds without touching other bouts", () => {
@@ -36,6 +38,8 @@ describe("approved pre-lock fighter replacements", () => {
     expect(integration).toContain("unaffected pick changed");
     expect(integration).toContain("old pick silently survived replacement");
     expect(integration).toContain("second replacement did not append independent audit evidence");
+    expect(integration).toContain("duplicate event fighter replacement was accepted");
+    expect(integration).toContain("replacement fighter is already booked on this event");
     expect(integration.trimEnd()).toMatch(/rollback;$/);
   });
 });
