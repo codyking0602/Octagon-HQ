@@ -1,7 +1,7 @@
 import { sourceChanges } from "../../../supabase/functions/sync-next-ufc-event/cardChanges.ts";
 import { matchCanonicalEventIdentity } from "../../../supabase/functions/sync-next-ufc-event/eventIdentity.ts";
 import { fightOddsMatchupIdentity, fighterOddsIdentity, type OddsAdapterResult } from "./oddsModel.ts";
-import { buildMonitoringRunPayload, type MonitoringFindingInput, type MonitoringRunPayload } from "./monitoringStorageModel.ts";
+import { buildMonitoringRunPayload, type MonitoringFindingInput, type MonitoringRunPayload, type MonitoringTriggerKind } from "./monitoringStorageModel.ts";
 
 export type CardScope = "main" | "full";
 export interface MonitoringBout { bout_id: string; red_fighter_name: string; blue_fighter_name: string; red_american_odds?: number | null; blue_american_odds?: number | null }
@@ -64,7 +64,16 @@ const normalizedValue = (value: unknown): string => Array.isArray(value)
     : JSON.stringify(value);
 const stableKey = (...values: unknown[]) => values.map((value) => String(value).toLowerCase().replace(/[^a-z0-9|:+-]+/g, "-").replace(/^-|-$/g, "")).join(":");
 
-export function buildManualMonitoringPayload(input: { resolved: ResolvedMonitoringEvent; source: SourcePreview; scope: CardScope; odds: OddsAdapterResult; startedAt: string; completedAt: string }): MonitoringRunPayload {
+export function buildManualMonitoringPayload(input: {
+  resolved: ResolvedMonitoringEvent;
+  source: SourcePreview;
+  scope: CardScope;
+  odds: OddsAdapterResult;
+  startedAt: string;
+  completedAt: string;
+  triggerKind?: MonitoringTriggerKind;
+  suppressFindingKeys?: ReadonlySet<string>;
+}): MonitoringRunPayload {
   const { resolved, source, scope, completedAt } = input;
   const canonical = resolved.selected;
   if (!sourceMatchesMonitoredEvent(source, canonical)) throw new Error("Source identity does not match the monitored Picks event.");
@@ -93,8 +102,11 @@ export function buildManualMonitoringPayload(input: { resolved: ResolvedMonitori
   }
   odds.diagnostics.forEach((diagnostic) => findings.push({ finding_key: stableKey(resolved.identity, "provider_error", diagnostic.code, diagnostic.sourceEventId ?? "event", diagnostic.matchupIdentity ?? "event"), finding_type: "provider_error", severity: diagnostic.severity, summary: diagnostic.message, detected_at: completedAt, matchup_identity: diagnostic.matchupIdentity, source_details: { code: diagnostic.code, source_event_id: diagnostic.sourceEventId } }));
   if (odds.quota.requestsRemaining !== null && odds.quota.requestsRemaining <= 5) findings.push({ finding_key: stableKey(resolved.identity, "quota_warning", odds.quota.requestsRemaining === 0 ? "exhausted" : "low"), finding_type: "quota_warning", severity: odds.quota.requestsRemaining === 0 ? "error" : "warning", summary: odds.quota.requestsRemaining === 0 ? "Odds provider quota is exhausted." : "Odds provider quota is low.", detected_at: completedAt, source_details: { requests_remaining: odds.quota.requestsRemaining } });
+  const retainedFindings = input.suppressFindingKeys
+    ? findings.filter((finding) => !input.suppressFindingKeys?.has(finding.finding_key))
+    : findings;
   const boutIds = resolved.storageEventId ? Object.fromEntries([...canonicalByMatchup].map(([matchup, bout]) => [matchup, bout.bout_id])) : {};
-  return buildMonitoringRunPayload({ triggerKind: "manual", sourceEventIdentity: resolved.identity, eventId: resolved.storageEventId, locksAt: canonical.locks_at, startedAt: input.startedAt, completedAt, odds, cardSource: source.source, cardSourceUrl: source.source_url, findings, boutIdByMatchup: boutIds });
+  return buildMonitoringRunPayload({ triggerKind: input.triggerKind ?? "manual", sourceEventIdentity: resolved.identity, eventId: resolved.storageEventId, locksAt: canonical.locks_at, startedAt: input.startedAt, completedAt, odds, cardSource: source.source, cardSourceUrl: source.source_url, findings: retainedFindings, boutIdByMatchup: boutIds });
 }
 
 export interface MonitoringSummary { run_id: string; status: MonitoringRunPayload["status"]; canonical_event_id: string | null; source_event_identity: string; started_at: string; completed_at: string; findings: Record<string, number>; severities: Record<string, number>; coverage: MonitoringRunPayload["coverage"]; quota: MonitoringRunPayload["quota"]; stored_odds_snapshots: number }
