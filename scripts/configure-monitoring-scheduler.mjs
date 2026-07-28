@@ -41,6 +41,7 @@ if (health?.job_name !== "octagon-hq-pick-monitoring"
   || health?.schedule !== "7 * * * *"
   || health?.active !== enabled
   || health?.token_configured !== true
+  || health?.command_configured !== true
   || health?.function_name !== "run-pick-monitoring") {
   throw new Error("Scheduler health did not match the requested canonical configuration.");
 }

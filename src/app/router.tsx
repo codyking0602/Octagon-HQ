@@ -19,6 +19,7 @@ const BetterThanPage = lazy(() => import("../features/play/BetterThanPage"));
 const PicksPage = lazy(() => import("../features/picks/PicksPage"));
 const PicksControlPage = lazy(() => import("../features/picks-control/PicksControlPage"));
 const PicksSetupPage = lazy(() => import("../features/picks-setup/PicksSetupPage"));
+const MonitoringInboxPage = lazy(() => import("../features/picks-monitoring/MonitoringInboxPage"));
 
 export const appRoutes: RouteObject[] = [
   {
@@ -42,6 +43,7 @@ export const appRoutes: RouteObject[] = [
       { path: "picks", element: <PicksPage /> },
       { path: "picks/control", element: <PicksControlPage /> },
       { path: "picks/setup", element: <PicksSetupPage /> },
+      { path: "picks/monitoring", element: <MonitoringInboxPage /> },
       { path: "*", element: <Navigate to="/" replace /> },
     ],
   },

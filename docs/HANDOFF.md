@@ -1,6 +1,6 @@
 # Octagon HQ V2 — Current Handoff
 
-_Last updated: 2026-07-26_
+_Last updated: 2026-07-28_
 
 This is the authoritative cold-start handoff for continuing Octagon HQ V2. Read this file, `docs/product-blueprint.md`, `docs/RANKINGS-MIGRATION.md`, `docs/rankings-parity-contract.md`, `docs/intelligence-verdict-flow.md`, and `docs/octagon-verdict-export.md`, then inspect current `main` before editing.
 
@@ -8,6 +8,7 @@ This is the authoritative cold-start handoff for continuing Octagon HQ V2. Read 
 
 - Repository: `codyking0602/Octagon-HQ`
 - Production branch: `main`
+- Current production `main` SHA: `76d25c05c74088325f007d1855997f51889fb3a8`
 - Live app: `https://octagon.hq-app.workers.dev`
 - `main` is the live source of truth.
 - The legacy V1 repository, `codyking0602/ufc-goat-rankings`, is reference-only and must not be edited during V2 work.
@@ -72,6 +73,8 @@ The following are complete, merged, and live:
 - Profile-backed open-challenge count.
 - Profile-backed UFC Picks.
 - Public current UFC event and six-fight main-card Picks data.
+- Owner-only manual Picks monitoring with durable run and finding evidence.
+- One quota-aware, server-owned Picks monitoring schedule with atomic claims and evidence recording.
 - Cross-device pick selections.
 - Database-enforced Picks lock and fighter validation.
 - Picks season record on Your HQ.
@@ -82,6 +85,8 @@ The following are complete, merged, and live:
 - Stale Vite chunk recovery.
 - Branded route-error handling.
 - Fresh SPA shells served with `Cache-Control: no-cache`.
+
+The automatic monitoring implementation is merged and active. On 2026-07-28, the canonical `main` Supabase deployment re-enabled the scheduler, and PR #91’s read-only production health verification then passed the active/canonical check without invoking the monitoring runner or consuming provider quota.
 
 ## Your HQ
 
@@ -193,9 +198,9 @@ Intelligence is a zero-cost handoff to the user’s Octagon Verdict GPT, not a s
 ## Canonical deployment owners
 
 - `.github/workflows/deploy-supabase.yml`
-  - owns Supabase migrations, Edge Function deployment, and remote backend verification.
+  - owns Supabase migrations, Edge Function deployment, scheduler activation, and remote backend verification.
 - `.github/workflows/verify-supabase-backend.yml`
-  - owns independent PR/backend credential, migration, function, and production-CORS verification.
+  - owns independent PR/backend credential, migration, function, production-CORS, and read-only production scheduler verification.
 - `.github/workflows/deploy-cloudflare.yml`
   - owns the production frontend build, Worker deployment, exact-SHA marker, and live-bundle verification.
 - `.github/workflows/deploy-pr-head.yml`
@@ -219,7 +224,7 @@ For an open same-repository PR targeting `main`:
 - The workflow never merges the PR.
 - Deployment labels are created automatically by the broker when the workflow lands on `main`.
 
-Cody should not need to open GitHub Actions for feature deployments. The assistant can apply the labels through the connected GitHub tools, inspect runs and logs, and report the exact deployed SHA.
+Cody should not need to open GitHub Actions for feature deployments. The assistant can apply the labels through the connected GitHub tools, inspect runs and logs, and report the exact deployed SHA. The connected GitHub tool currently does not expose workflow dispatch, so re-running the canonical `main` backend deployment may require one manual GitHub Actions action when no new `main` push exists.
 
 ## Security boundary
 
@@ -334,8 +339,33 @@ Every production PR requires the exact final head to pass:
 
 Relevant Supabase SQL tests, migration-order checks, backend verification, deployment, and export workflows must also be green when applicable. Never describe a PR as deployed, verified, green, or merged without checking the exact current head.
 
+## Picks monitoring operations
+
+Canonical owners:
+
+- `supabase/functions/run-pick-monitoring/index.ts` — the only manual and scheduled execution owner.
+- `src/features/picks-monitoring/manualMonitoringRunner.ts` — the shared comparison and payload builder.
+- `src/features/picks-monitoring/monitoringStorageModel.ts` — the app-independent evidence payload contract.
+- `public.record_pick_monitoring_run(jsonb)` and `public.record_scheduled_pick_monitoring_run(...)` — the only durable evidence writers.
+- migrations `202608090001`, `202608090002`, and draft runtime-verification migration `202608090003` — scheduler installation, claim hardening, and non-secret health proof.
+- `.github/workflows/deploy-supabase.yml` — the only deployment and activation owner.
+- `scripts/configure-monitoring-scheduler.mjs` — the deployment-owned scheduler state setter.
+- `scripts/verify-monitoring-function-deployment.mjs` and `scripts/verify-production-monitoring-scheduler.mjs` — exact-deployment and read-only production health checks.
+
+Operational rules:
+
+- The database owns one `octagon-hq-pick-monitoring` cron job at minute 7 of each hour.
+- Event-aware cadence reduces provider calls when the event is farther away and stops at the earliest Picks lock or event start.
+- Scheduled runs use a database-only Vault credential, an atomic short lease, and the existing monitoring evidence writer.
+- Automatic monitoring records evidence and findings only. It never publishes or changes a card, draft, odds, picks, locks, results, scoring, event status, or publication state.
+- Exact-head PR backend deployments leave the scheduler inactive. The canonical `main` backend deployment is the only owner that enables it.
+- On 2026-07-28, the canonical `main` deployment re-enabled the scheduler. PR #91’s read-only verification then passed the active, canonical, token-configured scheduler check without invoking the runner or provider. No Odds API quota was consumed.
+
+Draft PR #91 adds the owner-only Monitoring Inbox at `/picks/monitoring`. It reuses the existing owner allowlist, monitoring runner, ledger, and review-only evidence fields. It is not merged or live until its exact backend and frontend are deployed and tested.
+
 ## Next safe action
 
-Review the draft cleanup PR that adds `202607300005_retire_v1_history_import_rpcs.sql`. Do not deploy it until Cody explicitly approves deployment, and do not merge it until Cody explicitly says `merge` for that PR.
-
-After the cleanup migration is deployed, verified, and explicitly merged, start the official Picks result and event-completion owner as a new branch and separate draft PR. Lower Home work and permission-aware War Room remain later phases.
+1. Keep PR #91 draft and unmerged while its exact head remains green.
+2. When live phone testing is approved, deploy the exact PR #91 backend and frontend through the trusted labels and verify the Inbox on iPhone.
+3. Because a PR backend deployment intentionally leaves the scheduler inactive, rerun the canonical `main` backend deployment afterward and require the read-only scheduler-health step to pass again.
+4. Never merge PR #91 until Cody explicitly says `merge PR #91`.

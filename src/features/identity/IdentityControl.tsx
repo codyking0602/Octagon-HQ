@@ -1,6 +1,6 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { createPortal } from "react-dom";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { memberProfilePath } from "../members/memberProfilesModel";
 import { useProfilePreferences } from "../profile/ProfilePreferencesProvider";
 import { useIdentity } from "./IdentityProvider";
@@ -8,11 +8,22 @@ import { useIdentity } from "./IdentityProvider";
 export function IdentityControl() {
   const identity = useIdentity();
   const preferences = useProfilePreferences();
+  const location = useLocation();
+  const navigate = useNavigate();
   const [mode, setMode] = useState<"login" | "create">("login");
   const [displayName, setDisplayName] = useState("");
   const [pin, setPin] = useState("");
   const [confirmPin, setConfirmPin] = useState("");
   const [localError, setLocalError] = useState("");
+  const dialogWasOpen = useRef(false);
+  const returnPath = useRef("/");
+
+  useEffect(() => {
+    if (identity.dialogOpen && !dialogWasOpen.current) {
+      returnPath.current = `${location.pathname}${location.search}${location.hash}`;
+    }
+    dialogWasOpen.current = identity.dialogOpen;
+  }, [identity.dialogOpen, location.hash, location.pathname, location.search]);
 
   useEffect(() => {
     if (!identity.dialogOpen) return;
@@ -53,6 +64,7 @@ export function IdentityControl() {
       setDisplayName("");
       setPin("");
       setConfirmPin("");
+      navigate(returnPath.current, { replace: true });
     }
   }
 
