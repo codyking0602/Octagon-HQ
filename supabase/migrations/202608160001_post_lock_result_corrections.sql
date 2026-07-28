@@ -149,8 +149,8 @@ begin
     raise exception 'pick control owner required';
   end if;
 
-  if v_result_status not in ('pending', 'red_win', 'blue_win', 'draw', 'no_contest', 'cancelled') then
-    raise exception 'invalid corrected official bout result';
+  if v_result_status not in ('red_win', 'blue_win', 'draw', 'no_contest', 'cancelled') then
+    raise exception 'corrected official result requires a final result';
   end if;
   if v_expected_result_status not in ('red_win', 'blue_win', 'draw', 'no_contest', 'cancelled') then
     raise exception 'expected current final result is required';
@@ -170,9 +170,6 @@ begin
   if not found then raise exception 'event not found'; end if;
   if v_event.status not in ('locked', 'complete') then
     raise exception 'result corrections require a locked or completed event';
-  end if;
-  if v_event.status = 'complete' and v_result_status = 'pending' then
-    raise exception 'completed event corrections must remain final';
   end if;
 
   select * into v_bout
@@ -213,10 +210,7 @@ begin
         when 'blue_win' then v_bout.blue_fighter_slug
         else null
       end,
-      result_recorded_at = case
-        when v_result_status = 'pending' then null
-        else now()
-      end
+      result_recorded_at = now()
   where event_id = v_event_id
     and bout_id = v_bout_id
   returning * into v_bout;
