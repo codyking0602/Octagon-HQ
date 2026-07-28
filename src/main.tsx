@@ -11,6 +11,7 @@ import "./styles/picks-lifecycle.css";
 import "./styles/picks-control.css";
 import "./styles/picks-setup.css";
 import "./styles/picks-setup-source.css";
+import "./styles/picks-monitoring.css";
 import "./styles/intelligence.css";
 import "./styles/identity.css";
 import "./styles/member-profiles.css";
