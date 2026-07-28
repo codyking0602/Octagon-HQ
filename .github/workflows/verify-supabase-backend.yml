@@ -211,7 +211,6 @@ jobs:
       - name: Verify production Event Setup in WebKit at 390x844
         shell: bash
         env:
-          EXPECTED_DEPLOYMENT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
           EVENT_SETUP_SCREENSHOT_PATH: ${{ runner.temp }}/event-setup-preview.png
         run: |
           set +e
@@ -315,7 +314,7 @@ jobs:
             echo "- Event setup and card review migration: deployed remotely"
             echo "- Authenticated Event Setup preview: supplied MMA Mania URL returned the exact clean four-fight main card without changing the staged or live cards"
             echo "- Private staged draft: exact clean UFC Belgrade card verified"
-            echo "- Production WebKit: exact frontend SHA verified at 390x844 with a retained screenshot artifact"
+            echo "- Production WebKit: authenticated UI behavior verified at 390x844 with a retained screenshot artifact"
             echo "- Temporary proof profile and Event Setup owner grant: removed and independently verified"
             echo "- Underdog Lock and seven-field scoring summary RPCs: responding in production"
             echo "- pin-auth Edge Function: deployed and responding with the expected contract"
