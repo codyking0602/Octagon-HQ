@@ -17,8 +17,17 @@ export interface PickControlBout {
   canReplace: boolean;
   canRemoveFromPicks: boolean;
   canRestoreToPicks: boolean;
+  canCorrectResult?: boolean;
   hasReplacementHistory: boolean;
   hasRemovalHistory: boolean;
+  hasCorrectionHistory?: boolean;
+}
+
+export interface PickControlEventOption {
+  eventId: string;
+  name: string;
+  startsAt: string;
+  completedAt: string;
 }
 
 export interface PickControlEvent {
@@ -35,6 +44,7 @@ export interface PickControlEvent {
   canComplete: boolean;
   canReorder: boolean;
   hasReorderHistory: boolean;
+  recentCompletedEvents?: PickControlEventOption[];
   bouts: PickControlBout[];
 }
 
