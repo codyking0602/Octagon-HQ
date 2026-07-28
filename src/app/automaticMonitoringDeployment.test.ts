@@ -1,7 +1,9 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-const migration = readFileSync("supabase/migrations/202608090001_automatic_pick_monitoring_scheduler.sql", "utf8");
+const schedulerMigration = readFileSync("supabase/migrations/202608090001_automatic_pick_monitoring_scheduler.sql", "utf8");
+const hardeningMigration = readFileSync("supabase/migrations/202608090002_harden_pick_monitoring_schedule_claims.sql", "utf8");
+const migration = `${schedulerMigration}\n${hardeningMigration}`;
 const runner = readFileSync("supabase/functions/run-pick-monitoring/index.ts", "utf8");
 const sync = readFileSync("supabase/functions/sync-next-ufc-event/index.ts", "utf8");
 const config = readFileSync("supabase/config.toml", "utf8");
@@ -9,9 +11,9 @@ const deploy = readFileSync(".github/workflows/deploy-supabase.yml", "utf8");
 const verifier = readFileSync("scripts/verify-monitoring-function-deployment.mjs", "utf8");
 
 describe("automatic Picks monitoring deployment", () => {
-  it("has exactly one database scheduler that invokes the canonical runner", () => {
-    expect(migration.match(/cron\.schedule\(/g)).toHaveLength(1);
-    expect(migration).toContain("octagon-hq-pick-monitoring");
+  it("has one canonically named database scheduler that invokes the existing runner", () => {
+    const scheduledJobNames = [...migration.matchAll(/cron\.schedule\(\s*'([^']+)'/g)].map((match) => match[1]);
+    expect(new Set(scheduledJobNames)).toEqual(new Set(["octagon-hq-pick-monitoring"]));
     expect(migration).toContain("/functions/v1/run-pick-monitoring");
     expect(migration).not.toContain("THE_ODDS_API_KEY");
     expect(runner).toContain("buildManualMonitoringPayload");
@@ -22,6 +24,7 @@ describe("automatic Picks monitoring deployment", () => {
     expect(migration).toContain("set_pick_monitoring_scheduler_enabled");
     expect(deploy).toContain("configure-monitoring-scheduler.mjs");
     expect(deploy).toContain("PICK_MONITORING_SCHEDULER_ENABLED");
+    expect(verifier).toContain("202608090002");
     expect(verifier).toContain("fakeSchedulerResponse.status !== 401");
     expect(verifier).not.toContain("THE_ODDS_API_KEY=");
   });
@@ -35,13 +38,13 @@ describe("automatic Picks monitoring deployment", () => {
   });
 
   it("uses a short claim and completes scheduled evidence and cadence atomically", () => {
-    expect(migration).toContain("claim_pick_monitoring_schedule");
-    expect(migration).toContain("release_pick_monitoring_schedule");
-    expect(migration).toContain("record_scheduled_pick_monitoring_run");
-    expect(migration).toContain("v_run_id := public.record_pick_monitoring_run(p_payload)");
-    expect(migration).toContain("last_claimed_at = p_claimed_at");
-    expect(migration).toContain("finding.review_status = 'new'");
-    expect(migration).toContain("timeout_milliseconds := 60000");
+    expect(hardeningMigration).toContain("claim_pick_monitoring_schedule");
+    expect(hardeningMigration).toContain("release_pick_monitoring_schedule");
+    expect(hardeningMigration).toContain("record_scheduled_pick_monitoring_run");
+    expect(hardeningMigration).toContain("v_run_id := public.record_pick_monitoring_run(p_payload)");
+    expect(hardeningMigration).toContain("last_claimed_at = p_claimed_at");
+    expect(hardeningMigration).toContain("finding.review_status = 'new'");
+    expect(hardeningMigration).toContain("timeout_milliseconds := 60000");
     expect(runner).toContain('admin.rpc("record_scheduled_pick_monitoring_run"');
     expect(runner).toContain('admin.rpc("release_pick_monitoring_schedule"');
   });
