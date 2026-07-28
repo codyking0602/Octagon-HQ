@@ -35,6 +35,8 @@ const event: PickEvent = {
     blueFighterName: "Bogdan Guskov",
     redAmericanOdds: -180,
     blueAmericanOdds: 155,
+    oddsSource: "DraftKings",
+    oddsUpdatedAt: "2026-07-28T17:10:00.000Z",
     winnerFighterSlug: null,
   }],
 };
@@ -138,7 +140,7 @@ function repository(
 }
 
 describe("PicksPage", () => {
-  it("shows the current main card and saves a selected fighter to the profile", async () => {
+  it("shows one card-level odds source and saves a selected fighter to the profile", async () => {
     const savePick = vi.fn(async (eventId: string, boutId: string, fighterSlug: string) => ({
       eventId,
       boutId,
@@ -157,6 +159,7 @@ describe("PicksPage", () => {
     expect(screen.getByText("Ankalaev vs. Guskov")).toBeInTheDocument();
     expect(screen.getAllByText("MAIN EVENT").length).toBeGreaterThan(0);
     expect(screen.getByText("SCORING & UNDERDOG LOCK RULES")).toBeInTheDocument();
+    expect(screen.getAllByLabelText("Sportsbook odds source")).toHaveLength(1);
 
     fireEvent.click(screen.getByRole("button", { name: /Bogdan Guskov/i }));
     await waitFor(() => expect(savePick).toHaveBeenCalledWith(event.eventId, "ankalaev-guskov", "bogdan-guskov"));
@@ -177,7 +180,7 @@ describe("PicksPage", () => {
     expect(screen.queryByRole("heading", { name: "Your event archive" })).not.toBeInTheDocument();
   });
 
-  it("keeps the latest recap inside the unified event archive", async () => {
+  it("keeps completed events inside one collapsed archive disclosure", async () => {
     render(
       <IdentityProvider gateway={gateway()}>
         <PicksProvider repository={repository(undefined, null)}><PicksPage /></PicksProvider>
@@ -185,9 +188,12 @@ describe("PicksPage", () => {
     );
 
     expect(await screen.findByRole("heading", { name: "Your event archive" })).toBeInTheDocument();
+    expect(screen.getByText("OPEN EVENT ARCHIVE")).toBeInTheDocument();
+    expect(screen.queryByText("LATEST RECAP")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByText("OPEN EVENT ARCHIVE"));
     expect(await screen.findByText("UFC Oklahoma City")).toBeInTheDocument();
     expect(screen.getByText("LATEST")).toBeInTheDocument();
-    expect(screen.queryByText("LATEST RECAP")).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByText("UFC Oklahoma City"));
     expect(await screen.findByRole("heading", { name: "How everyone did" })).toBeInTheDocument();
