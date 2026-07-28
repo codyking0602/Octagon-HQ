@@ -78,6 +78,7 @@ function repository(event: PickControlEvent | null): PickControlRepository {
     lockEvent: vi.fn().mockResolvedValue(undefined),
     setCancellation: vi.fn().mockResolvedValue(undefined),
     replaceFighter: vi.fn().mockResolvedValue(undefined),
+    reorderCard: vi.fn().mockResolvedValue(undefined),
     recordResult: vi.fn().mockResolvedValue(undefined),
     completeEvent: vi.fn().mockResolvedValue(undefined),
   };
@@ -176,6 +177,30 @@ describe("Fight Night Control", () => {
 
     fireEvent.click(await screen.findByRole("button", { name: "CANCEL FIGHT" }));
     expect(repo.setCancellation).not.toHaveBeenCalled();
+  });
+
+  it("keeps move taps local and submits the complete before-and-after order once", async () => {
+    const upcoming: PickControlEvent = {
+      ...lockedEvent,
+      status: "upcoming",
+      bouts: lockedEvent.bouts.map((bout) => ({ ...bout, resultStatus: "pending" as const })),
+    };
+    const repo = repository(upcoming);
+    renderPage(repo);
+
+    const down = (await screen.findAllByRole("button", { name: "MOVE DOWN" }))[0];
+    fireEvent.click(down);
+    expect(repo.reorderCard).not.toHaveBeenCalled();
+    expect(screen.getByText("MAIN EVENT").closest("article")).toHaveTextContent("Second Red");
+
+    fireEvent.click(screen.getByRole("button", { name: "APPROVE NEW ORDER" }));
+    await waitFor(() => expect(repo.reorderCard).toHaveBeenCalledWith(
+      "ufc-control",
+      ["red-blue", "second-fight"],
+      ["second-fight", "red-blue"],
+      "Removed from the official UFC card",
+    ));
+    expect(window.confirm).toHaveBeenCalledWith(expect.stringMatching(/BEFORE[\s\S]*1\. Red Fighter[\s\S]*AFTER[\s\S]*1\. Second Red/));
   });
 
   it("requires explicit owner confirmation and submits stale-state guarded replacement details", async () => {

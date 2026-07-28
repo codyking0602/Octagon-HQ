@@ -40,6 +40,7 @@ export interface PickControlRepository {
   lockEvent: (eventId: string) => Promise<void>;
   setCancellation: (eventId: string, boutId: string, cancelled: boolean, reason: string) => Promise<void>;
   replaceFighter: (eventId: string, bout: PickControlEvent["bouts"][number], corner: "red" | "blue", slug: string, name: string, reason: string) => Promise<void>;
+  reorderCard: (eventId: string, expectedBoutIds: string[], proposedBoutIds: string[], reason: string) => Promise<void>;
   recordResult: (eventId: string, boutId: string, result: PickBoutResultStatus) => Promise<void>;
   completeEvent: (eventId: string) => Promise<void>;
 }
@@ -120,6 +121,15 @@ export function createPickControlRepository(): PickControlRepository | null {
         p_expected_blue_fighter_slug: bout.blueFighterSlug,
         p_replacement_fighter_slug: slug,
         p_replacement_fighter_name: name,
+        p_reason: reason,
+      }));
+    },
+
+    async reorderCard(eventId, expectedBoutIds, proposedBoutIds, reason) {
+      await requireRpcSuccess(client.rpc("approve_pick_card_reorder", {
+        p_event_id: eventId,
+        p_expected_bout_ids: expectedBoutIds,
+        p_proposed_bout_ids: proposedBoutIds,
         p_reason: reason,
       }));
     },

@@ -138,6 +138,13 @@
   gap: 10px;
 }
 
+.picks-control-reorder { display: grid; gap: 12px; padding: 14px; }
+.picks-control-reorder > div { display: flex; justify-content: space-between; gap: 10px; }
+.picks-control-reorder span { color: var(--text-muted); font-size: 9px; }
+.pick-control-move { display: flex; gap: 8px; }
+.pick-control-move button { min-height: 30px; padding: 0 10px; border: 1px solid var(--border); border-radius: 8px; background: transparent; color: var(--text-secondary); font-size: 8px; font-weight: 950; }
+.pick-control-move button:disabled { opacity: .35; }
+
 .pick-control-bout {
   display: grid;
   gap: 12px;
