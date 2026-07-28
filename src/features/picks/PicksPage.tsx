@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import {
@@ -86,14 +86,14 @@ function recordNote(record: PickHistoryRecord) {
   const details = [];
   if (record.missing) details.push(`${record.missing} missing`);
   if (record.excluded) details.push(`${record.excluded} excluded`);
-  return details.length ? details.join(" · ") : "All eligible fights scored";
+  return details.length ? details.join(" · ") : null;
 }
 
 function choiceLabel(selected: boolean, locked: boolean, cancelled: boolean, removed: boolean) {
   if (selected) return "YOUR PICK";
   if (removed) return "REMOVED FROM PICKS";
   if (cancelled) return "FIGHT CANCELLED";
-  return locked ? "NOT PICKED" : "PICK FIGHTER";
+  return locked ? "NOT PICKED" : null;
 }
 
 function choiceClassName(selected: boolean, readOnly: boolean) {
@@ -102,18 +102,26 @@ function choiceClassName(selected: boolean, readOnly: boolean) {
     .join(" ");
 }
 
+function savedPickLabel(completed: number) {
+  return `${completed} ${completed === 1 ? "PICK" : "PICKS"} SAVED`;
+}
+
 function EventRecap({ event, latest }: { event: PickHistoryEvent; latest: boolean }) {
   const orderedBouts = event.bouts.slice().sort((left, right) => left.position - right.position);
   const currentResult = event.groupResults.find((result) => result.isCurrentUser) ?? null;
   const finish = currentResult
     ? `${groupRankLabel(currentResult.rank, event.groupResults)} OF ${event.groupResults.length}`
     : null;
+  const note = recordNote(event.record);
 
   return (
-    <details className="surface-card picks-recap-card" open={latest}>
+    <details className="surface-card picks-recap-card">
       <summary className="picks-recap-card__summary">
         <div>
-          <span>{latest ? "LATEST RECAP" : completedDate(event.completedAt)}</span>
+          <div className="picks-recap-card__date">
+            {latest ? <span className="picks-recap-card__latest">LATEST</span> : null}
+            <time dateTime={event.completedAt}>{completedDate(event.completedAt)}</time>
+          </div>
           <h3>{event.name}</h3>
           <p>{event.subtitle}</p>
         </div>
@@ -124,7 +132,8 @@ function EventRecap({ event, latest }: { event: PickHistoryEvent; latest: boolea
             : `${event.record.correct} wins and ${event.record.incorrect} losses`}
         >
           <strong>{finish ?? `${event.record.correct}-${event.record.incorrect}`}</strong>
-          <small>{event.record.correct}-{event.record.incorrect} · {event.record.totalPoints} PTS · {recordNote(event.record)}</small>
+          <small>{event.record.correct}-{event.record.incorrect} · {event.record.totalPoints} PTS</small>
+          {note ? <em>{note}</em> : null}
         </div>
       </summary>
 
@@ -219,13 +228,27 @@ export default function PicksPage() {
     () => activeEvent?.bouts.slice().sort((left, right) => left.position - right.position) ?? [],
     [activeEvent],
   );
+  const underdogLockName = picks.underdogLock
+    ? orderedBouts.flatMap((bout) => [
+        [bout.redFighterSlug, bout.redFighterName],
+        [bout.blueFighterSlug, bout.blueFighterName],
+      ]).find(([slug]) => slug === picks.underdogLock?.fighterSlug)?.[1] ?? picks.underdogLock.fighterSlug
+    : "NONE SELECTED";
+  const eventPoster = activeEvent
+    && activeEvent.location.toLowerCase().includes("belgrade")
+    && activeEvent.subtitle.toLowerCase().includes("rodriguez")
+      ? "/events/ufc-fight-night-belgrade.svg"
+      : null;
+  const heroStyle = eventPoster
+    ? ({ "--picks-event-poster": `url("${eventPoster}")` } as CSSProperties)
+    : undefined;
 
   return (
     <div className="page picks-page">
-      <section className="page-heading">
+      <section className="page-heading picks-page-heading">
         <p className="eyebrow">EVENT PICKS</p>
         <h1>Call the fights</h1>
-        <p>Make your picks before the main card begins. Every choice saves to your Octagon HQ profile.</p>
+        <p>Pick every matchup before the card locks.</p>
       </section>
 
       {picks.loading && !activeEvent ? (
@@ -244,55 +267,58 @@ export default function PicksPage() {
 
       {activeEvent && activeLifecycle ? (
         <>
-          <section className="surface-card picks-event-hero" aria-labelledby="picks-event-title">
+          <section
+            className={`surface-card picks-event-hero${eventPoster ? " has-poster" : ""}`}
+            aria-labelledby="picks-event-title"
+            style={heroStyle}
+          >
             <div className="picks-event-hero__topline">
               <p className="eyebrow">{activeLifecycle.eyebrow}</p>
               <span className={`picks-status picks-status--${activeLifecycle.state.replace("_", "-")}`}>
                 {activeLifecycle.status}
               </span>
             </div>
-            <h2 id="picks-event-title">{activeEvent.name}</h2>
-            <strong>{activeEvent.subtitle}</strong>
-            <p>{eventDate(activeEvent.startsAt)} · {activeEvent.venue} · {activeEvent.location}</p>
-
-            <div className="picks-progress" aria-label={`${progress.completed} of ${progress.total} picks completed`}>
-              <div><span>YOUR PICKS</span><b>{progress.completed} OF {progress.total}</b></div>
-              <div className={completeProgress ? "picks-progress__track is-complete" : "picks-progress__track"} aria-hidden="true">
-                <span style={{ width: `${percent}%` }} />
-              </div>
-              <p>UNDERDOG LOCK · {picks.underdogLock
-                ? orderedBouts.flatMap((bout) => [
-                    [bout.redFighterSlug, bout.redFighterName],
-                    [bout.blueFighterSlug, bout.blueFighterName],
-                  ]).find(([slug]) => slug === picks.underdogLock?.fighterSlug)?.[1] ?? picks.underdogLock.fighterSlug
-                : "NONE SELECTED"}</p>
+            <div className="picks-event-hero__copy">
+              <h2 id="picks-event-title">{activeEvent.name}</h2>
+              <strong>{activeEvent.subtitle}</strong>
+              <p>{eventDate(activeEvent.startsAt)} · {activeEvent.venue} · {activeEvent.location}</p>
             </div>
 
-            {!identity.profile ? (
-              <button className="primary-action" type="button" onClick={identity.openDialog}>
-                SIGN IN TO MAKE PICKS
-              </button>
-            ) : (
-              <p className="picks-event-hero__save-note">
-                {activeLifecycle.state === "awaiting_results"
-                  ? "THE EVENT IS UNDERWAY. OFFICIAL RESULTS REVEAL HOW EVERYONE PICKED."
-                  : locked
-                    ? "PICKS ARE LOCKED FOR THIS EVENT."
-                    : progress.completed === progress.total
-                      ? `ALL ${progress.total} PICKS SAVED TO ${identity.profile.displayName}`
-                      : `EACH PICK SAVES TO ${identity.profile.displayName}`}
-              </p>
-            )}
+            <div className="picks-event-hero__dashboard">
+              <div className="picks-progress" aria-label={`${progress.completed} of ${progress.total} picks completed`}>
+                <div><span>YOUR PICKS</span><b>{progress.completed} OF {progress.total}</b></div>
+                <div className={completeProgress ? "picks-progress__track is-complete" : "picks-progress__track"} aria-hidden="true">
+                  <span style={{ width: `${percent}%` }} />
+                </div>
+                <p>UNDERDOG LOCK · {underdogLockName}</p>
+              </div>
 
-            {identity.profile && activeEvent.canControl ? (
-              <Link className="picks-control-entry" to="/picks/control">
-                OPEN FIGHT NIGHT CONTROL
-              </Link>
-            ) : null}
+              {!identity.profile ? (
+                <button className="primary-action" type="button" onClick={identity.openDialog}>
+                  SIGN IN TO MAKE PICKS
+                </button>
+              ) : (
+                <div className="picks-event-hero__actions">
+                  <p className="picks-save-state">
+                    <span aria-hidden="true">✓</span>
+                    {activeLifecycle.state === "awaiting_results"
+                      ? "EVENT UNDERWAY"
+                      : locked
+                        ? "PICKS LOCKED"
+                        : savedPickLabel(progress.completed)}
+                  </p>
+                  {activeEvent.canControl ? (
+                    <Link className="picks-control-entry" to="/picks/control">
+                      MANAGE EVENT
+                    </Link>
+                  ) : null}
+                </div>
+              )}
+            </div>
           </section>
 
           <details className="surface-card picks-scoring-guide">
-            <summary>HOW SCORING WORKS</summary>
+            <summary>SCORING &amp; UNDERDOG LOCK RULES</summary>
             <p><strong>Correct pick +4</strong><span>Incorrect and missing picks score 0. Draws, no contests, cancellations, and fights removed from Picks are excluded.</span></p>
             <p><strong>Underdog Lock bonus by odds</strong><span>Choose one fighter at +100 or longer. A winning lock adds the frozen lock-time bonus below.</span></p>
             <div className="picks-scoring-tiers" aria-label="Underdog Lock bonus tiers">
@@ -303,114 +329,133 @@ export default function PicksPage() {
           </details>
 
           {identity.profile ? (
-            <section className="picks-card-list" aria-label={`${activeEvent.name} fight picks`}>
-              {orderedBouts.map((bout, index) => {
-                const selection = picks.selections[bout.boutId] ?? null;
-                const saving = picks.savingBoutId === bout.boutId;
-                const removed = bout.includedInPicks === false;
-                const redOdds = removed ? null : americanOddsLabel(bout.redAmericanOdds);
-                const blueOdds = removed ? null : americanOddsLabel(bout.blueAmericanOdds);
-                const favorite = !removed && bout.redAmericanOdds !== null && bout.blueAmericanOdds !== null
-                  ? (bout.redAmericanOdds < bout.blueAmericanOdds ? "red" : bout.blueAmericanOdds < bout.redAmericanOdds ? "blue" : null)
-                  : null;
-                const selectedOdds = selection === bout.redFighterSlug
-                  ? bout.redAmericanOdds
-                  : selection === bout.blueFighterSlug
-                    ? bout.blueAmericanOdds
+            <section className="picks-card-zone">
+              <div className="picks-sticky-progress" aria-label="Current Picks progress">
+                <strong>{activeEvent.name}</strong>
+                <span>{progress.completed}/{progress.total} PICKS</span>
+                <em>LOCK · {underdogLockName}</em>
+              </div>
+
+              <section className="picks-card-list" aria-label={`${activeEvent.name} fight picks`}>
+                {orderedBouts.map((bout, index) => {
+                  const selection = picks.selections[bout.boutId] ?? null;
+                  const saving = picks.savingBoutId === bout.boutId;
+                  const removed = bout.includedInPicks === false;
+                  const redOdds = removed ? null : americanOddsLabel(bout.redAmericanOdds);
+                  const blueOdds = removed ? null : americanOddsLabel(bout.blueAmericanOdds);
+                  const favorite = !removed && bout.redAmericanOdds !== null && bout.blueAmericanOdds !== null
+                    ? (bout.redAmericanOdds < bout.blueAmericanOdds ? "red" : bout.blueAmericanOdds < bout.redAmericanOdds ? "blue" : null)
                     : null;
-                const lockSelected = picks.underdogLock?.boutId === bout.boutId;
-                const cancelled = (bout.resultStatus ?? "pending") === "cancelled";
-                const repickRequired = Boolean(!removed && bout.repickRequired && !selection);
-                const resolved = removed || (bout.resultStatus ?? "pending") !== "pending";
-                const readOnly = locked || cancelled || removed;
-                const oddsMeta = removed ? null : oddsProvenance(bout.oddsSource, bout.oddsUpdatedAt);
-                return (
-                  <article className={`surface-card pick-bout-card${cancelled || removed ? " is-cancelled" : ""}${removed ? " is-removed" : ""}${repickRequired ? " is-repick-required" : ""}`} key={bout.boutId}>
-                    <div className="pick-bout-card__heading">
-                      <span>{mainCardFightLabel(index)}</span>
-                      <small>{bout.weightClass}</small>
-                    </div>
-                    {oddsMeta ? (
-                      <div className="pick-bout-card__heading" aria-label="Sportsbook odds source">
-                        <span>SPORTSBOOK ODDS</span>
-                        <small>{oddsMeta}</small>
+                  const selectedOdds = selection === bout.redFighterSlug
+                    ? bout.redAmericanOdds
+                    : selection === bout.blueFighterSlug
+                      ? bout.blueAmericanOdds
+                      : null;
+                  const lockSelected = picks.underdogLock?.boutId === bout.boutId;
+                  const cancelled = (bout.resultStatus ?? "pending") === "cancelled";
+                  const repickRequired = Boolean(!removed && bout.repickRequired && !selection);
+                  const resolved = removed || (bout.resultStatus ?? "pending") !== "pending";
+                  const readOnly = locked || cancelled || removed;
+                  const oddsMeta = removed ? null : oddsProvenance(bout.oddsSource, bout.oddsUpdatedAt);
+                  const selectedCorner = selection === bout.redFighterSlug
+                    ? "red"
+                    : selection === bout.blueFighterSlug
+                      ? "blue"
+                      : null;
+                  const redChoiceLabel = choiceLabel(selection === bout.redFighterSlug, locked, cancelled, removed);
+                  const blueChoiceLabel = choiceLabel(selection === bout.blueFighterSlug, locked, cancelled, removed);
+                  return (
+                    <article
+                      className={`surface-card pick-bout-card${index === 0 ? " is-main-event" : ""}${cancelled || removed ? " is-cancelled" : ""}${removed ? " is-removed" : ""}${repickRequired ? " is-repick-required" : ""}`}
+                      key={bout.boutId}
+                    >
+                      <header className="pick-bout-card__meta">
+                        <div className="pick-bout-card__heading">
+                          <span>{mainCardFightLabel(index)}</span>
+                          <small>{bout.weightClass}</small>
+                        </div>
+                        {oddsMeta ? <p aria-label="Sportsbook odds source">{oddsMeta}</p> : null}
+                      </header>
+                      {repickRequired ? (
+                        <div className="pick-bout-card__repick" role="status">
+                          <strong>REPICK REQUIRED</strong>
+                          <span>The matchup changed. Pick either current fighter again; your previous pick and Underdog Lock are no longer active.</span>
+                        </div>
+                      ) : null}
+                      <div className="pick-bout-card__choices">
+                        <button
+                          type="button"
+                          className={choiceClassName(selection === bout.redFighterSlug, readOnly)}
+                          aria-pressed={selection === bout.redFighterSlug}
+                          disabled={readOnly || Boolean(picks.savingBoutId)}
+                          onClick={() => void picks.setPick(bout.boutId, bout.redFighterSlug)}
+                        >
+                          <FighterThumbnail name={bout.redFighterName} slug={bout.redFighterSlug} />
+                          <span>{bout.redFighterName}</span>
+                          <small>{removed ? "NOT ACTIVE" : `${redOdds ?? "ODDS TBD"}${favorite === "red" ? " · FAVORITE" : ""}`}</small>
+                          {redChoiceLabel ? <em>{redChoiceLabel}</em> : null}
+                        </button>
+                        <span className="pick-bout-card__versus">VS</span>
+                        <button
+                          type="button"
+                          className={choiceClassName(selection === bout.blueFighterSlug, readOnly)}
+                          aria-pressed={selection === bout.blueFighterSlug}
+                          disabled={readOnly || Boolean(picks.savingBoutId)}
+                          onClick={() => void picks.setPick(bout.boutId, bout.blueFighterSlug)}
+                        >
+                          <FighterThumbnail name={bout.blueFighterName} slug={bout.blueFighterSlug} />
+                          <span>{bout.blueFighterName}</span>
+                          <small>{removed ? "NOT ACTIVE" : `${blueOdds ?? "ODDS TBD"}${favorite === "blue" ? " · FAVORITE" : ""}`}</small>
+                          {blueChoiceLabel ? <em>{blueChoiceLabel}</em> : null}
+                        </button>
                       </div>
-                    ) : null}
-                    {repickRequired ? (
-                      <div className="pick-bout-card__repick" role="status">
-                        <strong>REPICK REQUIRED</strong>
-                        <span>The matchup changed. Pick either current fighter again; your previous pick and Underdog Lock are no longer active.</span>
-                      </div>
-                    ) : null}
-                    <div className="pick-bout-card__choices">
-                      <button
-                        type="button"
-                        className={choiceClassName(selection === bout.redFighterSlug, readOnly)}
-                        aria-pressed={selection === bout.redFighterSlug}
-                        disabled={readOnly || Boolean(picks.savingBoutId)}
-                        onClick={() => void picks.setPick(bout.boutId, bout.redFighterSlug)}
-                      >
-                        <FighterThumbnail name={bout.redFighterName} slug={bout.redFighterSlug} />
-                        <span>{bout.redFighterName}</span>
-                        <small>{removed ? "NOT ACTIVE" : `${redOdds ?? "ODDS TBD"}${favorite === "red" ? " · FAVORITE" : ""}`}</small>
-                        <em>{choiceLabel(selection === bout.redFighterSlug, locked, cancelled, removed)}</em>
-                      </button>
-                      <span className="pick-bout-card__versus">VS</span>
-                      <button
-                        type="button"
-                        className={choiceClassName(selection === bout.blueFighterSlug, readOnly)}
-                        aria-pressed={selection === bout.blueFighterSlug}
-                        disabled={readOnly || Boolean(picks.savingBoutId)}
-                        onClick={() => void picks.setPick(bout.boutId, bout.blueFighterSlug)}
-                      >
-                        <FighterThumbnail name={bout.blueFighterName} slug={bout.blueFighterSlug} />
-                        <span>{bout.blueFighterName}</span>
-                        <small>{removed ? "NOT ACTIVE" : `${blueOdds ?? "ODDS TBD"}${favorite === "blue" ? " · FAVORITE" : ""}`}</small>
-                        <em>{choiceLabel(selection === bout.blueFighterSlug, locked, cancelled, removed)}</em>
-                      </button>
-                    </div>
-                    {removed ? (
-                      <div className="pick-bout-card__official">
-                        <span>PICKS STATUS</span>
-                        <strong>REMOVED FROM PICKS · EXCLUDED FROM SCORING</strong>
-                      </div>
-                    ) : cancelled ? (
-                      <div className="pick-bout-card__official">
-                        <span>FIGHT STATUS</span>
-                        <strong>CANCELLED · EXCLUDED FROM SCORING</strong>
-                      </div>
-                    ) : resolved ? (
-                      <div className="pick-bout-card__official">
-                        <span>OFFICIAL RESULT</span>
-                        <strong>{officialResult(bout)}</strong>
-                      </div>
-                    ) : null}
-                    {!removed && !cancelled && locked && lockSelected ? (
-                      <div className="pick-lock-readonly" aria-label="Selected Underdog Lock">UNDERDOG LOCK</div>
-                    ) : !removed && !cancelled && !locked && selection && (selectedOdds ?? 0) > 0 ? (
-                      <button
-                        className={lockSelected ? "pick-lock-action is-selected" : "pick-lock-action"}
-                        type="button"
-                        disabled={picks.savingLock}
-                        aria-pressed={lockSelected}
-                        onClick={() => lockSelected
-                          ? void picks.clearUnderdogLock()
-                          : void picks.setUnderdogLock(bout.boutId, selection)}
-                      >
-                        {lockSelected ? "UNDERDOG LOCK SELECTED · REMOVE" : "MAKE THIS MY UNDERDOG LOCK"}
-                      </button>
-                    ) : null}
-                    {saving ? <p className="pick-bout-card__saving" role="status">SAVING PICK…</p> : null}
-                    <GroupPickReveal
-                      redFighterSlug={bout.redFighterSlug}
-                      redFighterName={bout.redFighterName}
-                      blueFighterSlug={bout.blueFighterSlug}
-                      blueFighterName={bout.blueFighterName}
-                      picks={bout.groupPicks ?? []}
-                    />
-                  </article>
-                );
-              })}
+                      {removed ? (
+                        <div className="pick-bout-card__official">
+                          <span>PICKS STATUS</span>
+                          <strong>REMOVED FROM PICKS · EXCLUDED FROM SCORING</strong>
+                        </div>
+                      ) : cancelled ? (
+                        <div className="pick-bout-card__official">
+                          <span>FIGHT STATUS</span>
+                          <strong>CANCELLED · EXCLUDED FROM SCORING</strong>
+                        </div>
+                      ) : resolved ? (
+                        <div className="pick-bout-card__official">
+                          <span>OFFICIAL RESULT</span>
+                          <strong>{officialResult(bout)}</strong>
+                        </div>
+                      ) : null}
+                      {!removed && !cancelled && locked && lockSelected ? (
+                        <div className={`pick-lock-row is-${selectedCorner ?? "red"}`}>
+                          <div className="pick-lock-readonly" aria-label="Selected Underdog Lock">★ UNDERDOG LOCK</div>
+                        </div>
+                      ) : !removed && !cancelled && !locked && selection && (selectedOdds ?? 0) > 0 ? (
+                        <div className={`pick-lock-row is-${selectedCorner ?? "red"}`}>
+                          <button
+                            className={lockSelected ? "pick-lock-action is-selected" : "pick-lock-action"}
+                            type="button"
+                            disabled={picks.savingLock}
+                            aria-pressed={lockSelected}
+                            onClick={() => lockSelected
+                              ? void picks.clearUnderdogLock()
+                              : void picks.setUnderdogLock(bout.boutId, selection)}
+                          >
+                            {lockSelected ? "★ UNDERDOG LOCK · REMOVE" : "☆ MAKE UNDERDOG LOCK"}
+                          </button>
+                        </div>
+                      ) : null}
+                      {saving ? <p className="pick-bout-card__saving" role="status">SAVING PICK…</p> : null}
+                      <GroupPickReveal
+                        redFighterSlug={bout.redFighterSlug}
+                        redFighterName={bout.redFighterName}
+                        blueFighterSlug={bout.blueFighterSlug}
+                        blueFighterName={bout.blueFighterName}
+                        picks={bout.groupPicks ?? []}
+                      />
+                    </article>
+                  );
+                })}
+              </section>
             </section>
           ) : null}
 
@@ -423,7 +468,7 @@ export default function PicksPage() {
           <div className="picks-history__heading">
             <div>
               <p className="eyebrow">COMPLETED EVENTS</p>
-              <h2 id="picks-history-title">Your event recaps</h2>
+              <h2 id="picks-history-title">Your event archive</h2>
             </div>
             <span>{picks.history.season ?? new Date().getFullYear()} SEASON</span>
           </div>
