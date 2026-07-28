@@ -11,10 +11,14 @@ export interface PickControlBout {
   resultStatus: PickBoutResultStatus;
   winnerFighterSlug: string | null;
   resultRecordedAt: string | null;
+  includedInPicks: boolean;
   canCancel: boolean;
   canRestore: boolean;
   canReplace: boolean;
+  canRemoveFromPicks: boolean;
+  canRestoreToPicks: boolean;
   hasReplacementHistory: boolean;
+  hasRemovalHistory: boolean;
 }
 
 export interface PickControlEvent {
@@ -41,14 +45,19 @@ export const pickControlResultOptions = [
 ] as const satisfies readonly { value: PickBoutResultStatus; label: string }[];
 
 export function resolvedBoutCount(event: PickControlEvent | null) {
-  return event?.bouts.filter((bout) => bout.resultStatus !== "pending").length ?? 0;
+  return event?.bouts.filter((bout) => !bout.includedInPicks || bout.resultStatus !== "pending").length ?? 0;
 }
 
 export function cancelledBoutCount(event: PickControlEvent | null) {
   return event?.bouts.filter((bout) => bout.resultStatus === "cancelled").length ?? 0;
 }
 
+export function removedBoutCount(event: PickControlEvent | null) {
+  return event?.bouts.filter((bout) => !bout.includedInPicks).length ?? 0;
+}
+
 export function pickControlResultLabel(bout: PickControlBout) {
+  if (!bout.includedInPicks) return "REMOVED FROM PICKS";
   if (bout.resultStatus === "red_win") return bout.redFighterName;
   if (bout.resultStatus === "blue_win") return bout.blueFighterName;
   if (bout.resultStatus === "draw") return "DRAW";
