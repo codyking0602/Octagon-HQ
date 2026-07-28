@@ -37,6 +37,8 @@ const lockedEvent: PickControlEvent = {
       resultStatus: "pending",
       winnerFighterSlug: null,
       resultRecordedAt: null,
+      canCancel: false,
+      canRestore: false,
     },
     {
       boutId: "second-fight",
@@ -49,6 +51,8 @@ const lockedEvent: PickControlEvent = {
       resultStatus: "cancelled",
       winnerFighterSlug: null,
       resultRecordedAt: "2026-08-01T02:20:00.000Z",
+      canCancel: false,
+      canRestore: false,
     },
   ],
 };
@@ -68,6 +72,7 @@ function repository(event: PickControlEvent | null): PickControlRepository {
   return {
     loadControlEvent: vi.fn().mockResolvedValue(event),
     lockEvent: vi.fn().mockResolvedValue(undefined),
+    setCancellation: vi.fn().mockResolvedValue(undefined),
     recordResult: vi.fn().mockResolvedValue(undefined),
     completeEvent: vi.fn().mockResolvedValue(undefined),
   };
@@ -85,6 +90,7 @@ function renderPage(repo: PickControlRepository, identityGateway = gateway()) {
 
 beforeEach(() => {
   vi.spyOn(window, "confirm").mockReturnValue(true);
+  vi.spyOn(window, "prompt").mockReturnValue("Removed from the official UFC card");
 });
 
 afterEach(() => {
@@ -111,12 +117,68 @@ describe("Fight Night Control", () => {
     expect(screen.getByRole("button", { name: "COMPLETE EVENT" })).toBeDisabled();
   });
 
+  it("approves and restores pre-lock cancellations with a required reason", async () => {
+    const upcoming: PickControlEvent = {
+      ...lockedEvent,
+      status: "upcoming",
+      canLock: false,
+      bouts: lockedEvent.bouts.map((bout, index) => index === 0 ? {
+        ...bout,
+        resultStatus: "pending" as const,
+        resultRecordedAt: null,
+        canCancel: true,
+        canRestore: false,
+      } : {
+        ...bout,
+        resultStatus: "cancelled" as const,
+        canCancel: false,
+        canRestore: true,
+      }),
+    };
+    const repo = repository(upcoming);
+    renderPage(repo);
+
+    fireEvent.click(await screen.findByRole("button", { name: "CANCEL FIGHT" }));
+    await waitFor(() => expect(repo.setCancellation).toHaveBeenCalledWith(
+      "ufc-control",
+      "red-blue",
+      true,
+      "Removed from the official UFC card",
+    ));
+
+    fireEvent.click(screen.getByRole("button", { name: "RESTORE FIGHT" }));
+    await waitFor(() => expect(repo.setCancellation).toHaveBeenCalledWith(
+      "ufc-control",
+      "second-fight",
+      false,
+      "Removed from the official UFC card",
+    ));
+    expect(screen.queryByRole("button", { name: "COMPLETE EVENT" })).not.toBeInTheDocument();
+  });
+
+  it("does not submit a cancellation without a reason", async () => {
+    vi.mocked(window.prompt).mockReturnValueOnce(null);
+    const upcoming: PickControlEvent = {
+      ...lockedEvent,
+      status: "upcoming",
+      canLock: false,
+      bouts: [{ ...lockedEvent.bouts[0], canCancel: true }],
+    };
+    const repo = repository(upcoming);
+    renderPage(repo);
+
+    fireEvent.click(await screen.findByRole("button", { name: "CANCEL FIGHT" }));
+    expect(repo.setCancellation).not.toHaveBeenCalled();
+  });
+
   it("locks picks before result entry and completes only a fully resolved event", async () => {
     const upcoming = { ...lockedEvent, status: "upcoming" as const, canLock: true, bouts: lockedEvent.bouts.map((bout) => ({
       ...bout,
       resultStatus: "pending" as const,
       winnerFighterSlug: null,
       resultRecordedAt: null,
+      canCancel: true,
+      canRestore: false,
     })) };
     const lockRepo = repository(upcoming);
     renderPage(lockRepo);
