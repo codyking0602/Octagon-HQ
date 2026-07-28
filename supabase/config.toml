@@ -4,7 +4,7 @@ project_id = "octagon-hq"
 verify_jwt = false
 
 [functions.sync-next-ufc-event]
-verify_jwt = true
+verify_jwt = false
 
 [functions.run-pick-monitoring]
-verify_jwt = true
+verify_jwt = false
