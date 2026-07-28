@@ -5,9 +5,10 @@ import { decideScheduledMonitoring, type ScheduledMonitoringState } from "../../
 import { DEPLOYED_SOURCE_SHA } from "./deployment.ts";
 
 const schedulerHeader = "x-octagon-scheduler-token";
+const HOUR_MS = 60 * 60 * 1000;
 const corsHeaders = {
   "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*",
-  "Access-Control-Allow-Headers": `authorization, apikey, content-type, ${schedulerHeader}`,
+  "Access-Control-Allow-Headers": "authorization, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
   "Access-Control-Expose-Headers": "X-Octagon-Backend-Sha",
 };
@@ -68,6 +69,8 @@ Deno.serve(async (request) => {
   }
 
   let suppressFindingKeys = new Set<string>();
+  let scheduledClaimedAt: string | null = null;
+  let scheduledNextEligibleAt: string | null = null;
   if (scheduled) {
     const scheduleStateResponse = await admin.rpc("get_pick_monitoring_schedule_state", { p_source_event_identity: resolved.identity });
     if (scheduleStateResponse.error) return safeError(503, "SCHEDULE_STATE_FAILED", "Monitoring schedule state is unavailable.");
@@ -75,10 +78,11 @@ Deno.serve(async (request) => {
     const decision = decideScheduledMonitoring({ event: resolved.selected, now: new Date(), state: scheduleState });
     if (!decision.due) return noOp(decision.reason, resolved.identity, decision.next_eligible_at);
 
+    scheduledClaimedAt = new Date().toISOString();
+    scheduledNextEligibleAt = decision.next_eligible_at;
     const claim = await admin.rpc("claim_pick_monitoring_schedule", {
       p_source_event_identity: resolved.identity,
-      p_now: new Date().toISOString(),
-      p_next_eligible_at: decision.next_eligible_at,
+      p_now: scheduledClaimedAt,
     });
     if (claim.error) return safeError(503, "SCHEDULE_CLAIM_FAILED", "Monitoring schedule could not be claimed safely.");
     if (claim.data !== true) return noOp("already_claimed", resolved.identity);
@@ -87,8 +91,21 @@ Deno.serve(async (request) => {
       : []);
   }
 
+  const releaseSchedule = async (retryAt: string) => {
+    if (!scheduled || !scheduledClaimedAt) return;
+    await admin.rpc("release_pick_monitoring_schedule", {
+      p_source_event_identity: resolved.identity,
+      p_claimed_at: scheduledClaimedAt,
+      p_retry_at: retryAt,
+    });
+  };
+  const retryInOneHour = () => new Date(Date.now() + HOUR_MS).toISOString();
+
   const providerKey = Deno.env.get("THE_ODDS_API_KEY");
-  if (!providerKey) return safeError(503, "MONITORING_NOT_CONFIGURED", "Monitoring credentials are not configured.");
+  if (!providerKey) {
+    await releaseSchedule(retryInOneHour());
+    return safeError(503, "MONITORING_NOT_CONFIGURED", "Monitoring credentials are not configured.");
+  }
 
   const startedAt = new Date().toISOString();
   const previewHeaders: Record<string, string> = { "Content-Type": "application/json" };
@@ -100,7 +117,10 @@ Deno.serve(async (request) => {
     body: JSON.stringify({ mode: scheduled ? "monitoring-preview" : "preview" }),
   });
   const previewBody = await previewResponse.json().catch(() => null) as { event_preview?: SourcePreview; effective_scope?: CardScope } | null;
-  if (!previewResponse.ok || !previewBody?.event_preview || !previewBody.effective_scope) return safeError(502, "SOURCE_PREVIEW_FAILED", "The UFC source preview failed safely.");
+  if (!previewResponse.ok || !previewBody?.event_preview || !previewBody.effective_scope) {
+    await releaseSchedule(retryInOneHour());
+    return safeError(502, "SOURCE_PREVIEW_FAILED", "The UFC source preview failed safely.");
+  }
 
   const fetchedAt = new Date().toISOString();
   let oddsResponse: Response;
@@ -119,9 +139,20 @@ Deno.serve(async (request) => {
       suppressFindingKeys: scheduled ? suppressFindingKeys : undefined,
     });
   } catch {
+    if (scheduledNextEligibleAt) await releaseSchedule(scheduledNextEligibleAt);
     return safeError(409, "EVENT_IDENTITY_MISMATCH", "Source and monitored event identities did not match.");
   }
-  const recorded = await admin.rpc("record_pick_monitoring_run", { p_payload: payload });
-  if (recorded.error || !recorded.data) return safeError(503, "MONITORING_RECORD_FAILED", "Monitoring evidence could not be recorded atomically.");
+
+  const recorded = scheduled
+    ? await admin.rpc("record_scheduled_pick_monitoring_run", {
+        p_payload: payload,
+        p_claimed_at: scheduledClaimedAt,
+        p_next_eligible_at: scheduledNextEligibleAt,
+      })
+    : await admin.rpc("record_pick_monitoring_run", { p_payload: payload });
+  if (recorded.error || !recorded.data) {
+    if (scheduledNextEligibleAt) await releaseSchedule(scheduledNextEligibleAt);
+    return safeError(503, "MONITORING_RECORD_FAILED", "Monitoring evidence could not be recorded atomically.");
+  }
   return json({ ...monitoringSummary(String(recorded.data), payload), trigger_kind: payload.trigger_kind, provider_called: true });
 });
