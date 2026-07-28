@@ -14,6 +14,8 @@ const controlBoutSchema = z.object({
   result_status: z.enum(["pending", "red_win", "blue_win", "draw", "no_contest", "cancelled"]),
   winner_fighter_slug: z.string().nullable(),
   result_recorded_at: z.string().nullable(),
+  can_cancel: z.boolean().optional().default(false),
+  can_restore: z.boolean().optional().default(false),
 });
 
 const controlEventSchema = z.object({
@@ -34,6 +36,7 @@ const controlEventSchema = z.object({
 export interface PickControlRepository {
   loadControlEvent: () => Promise<PickControlEvent | null>;
   lockEvent: (eventId: string) => Promise<void>;
+  setCancellation: (eventId: string, boutId: string, cancelled: boolean, reason: string) => Promise<void>;
   recordResult: (eventId: string, boutId: string, result: PickBoutResultStatus) => Promise<void>;
   completeEvent: (eventId: string) => Promise<void>;
 }
@@ -70,6 +73,8 @@ export function mapPickControlEvent(value: unknown): PickControlEvent | null {
       resultStatus: bout.result_status,
       winnerFighterSlug: bout.winner_fighter_slug,
       resultRecordedAt: bout.result_recorded_at,
+      canCancel: bout.can_cancel,
+      canRestore: bout.can_restore,
     })),
   };
 }
@@ -89,6 +94,15 @@ export function createPickControlRepository(): PickControlRepository | null {
       await requireRpcSuccess(client.rpc("transition_pick_event", {
         p_event_id: eventId,
         p_target_status: "locked",
+      }));
+    },
+
+    async setCancellation(eventId, boutId, cancelled, reason) {
+      await requireRpcSuccess(client.rpc("approve_pick_bout_cancellation", {
+        p_event_id: eventId,
+        p_bout_id: boutId,
+        p_cancelled: cancelled,
+        p_reason: reason,
       }));
     },
 
