@@ -128,6 +128,7 @@ begin
         from public.pick_monitoring_findings finding
         join public.pick_monitoring_runs run on run.run_id = finding.run_id
         where run.source_event_identity = p_source_event_identity
+          and finding.review_status = 'new'
       ) keys
     ), '[]'::jsonb)
   );
@@ -136,10 +137,12 @@ $$;
 revoke all on function public.get_pick_monitoring_schedule_state(text) from public, anon, authenticated;
 grant execute on function public.get_pick_monitoring_schedule_state(text) to service_role;
 
+-- A claim reserves only a short execution lease. The next cadence boundary is written
+-- atomically with scheduled evidence after the canonical writer succeeds. If the worker
+-- crashes, the lease expires and the still-due event can be retried safely.
 create or replace function public.claim_pick_monitoring_schedule(
   p_source_event_identity text,
-  p_now timestamptz,
-  p_next_eligible_at timestamptz
+  p_now timestamptz
 )
 returns boolean
 language plpgsql
@@ -152,19 +155,17 @@ begin
   if auth.role() is distinct from 'service_role' then
     raise exception 'service role required to claim pick monitoring schedule';
   end if;
-  if length(trim(coalesce(p_source_event_identity, ''))) = 0
-    or p_next_eligible_at <= p_now then
+  if length(trim(coalesce(p_source_event_identity, ''))) = 0 then
     raise exception 'invalid pick monitoring schedule claim';
   end if;
 
   insert into public.pick_monitoring_schedule_state (
-    source_event_identity, next_eligible_at, lease_until, last_claimed_at, updated_at
+    source_event_identity, lease_until, last_claimed_at, updated_at
   ) values (
-    p_source_event_identity, p_next_eligible_at, p_now + interval '15 minutes', p_now, now()
+    p_source_event_identity, p_now + interval '15 minutes', p_now, now()
   )
   on conflict (source_event_identity) do update
-  set next_eligible_at = excluded.next_eligible_at,
-      lease_until = excluded.lease_until,
+  set lease_until = excluded.lease_until,
       last_claimed_at = excluded.last_claimed_at,
       updated_at = now()
   where public.pick_monitoring_schedule_state.next_eligible_at <= p_now
@@ -177,8 +178,88 @@ begin
   return v_claimed is not null;
 end;
 $$;
-revoke all on function public.claim_pick_monitoring_schedule(text, timestamptz, timestamptz) from public, anon, authenticated;
-grant execute on function public.claim_pick_monitoring_schedule(text, timestamptz, timestamptz) to service_role;
+revoke all on function public.claim_pick_monitoring_schedule(text, timestamptz) from public, anon, authenticated;
+grant execute on function public.claim_pick_monitoring_schedule(text, timestamptz) to service_role;
+
+-- Handled pre-provider failures can release the exact claim with a bounded retry time.
+-- Matching last_claimed_at prevents a stale invocation from releasing a newer lease.
+create or replace function public.release_pick_monitoring_schedule(
+  p_source_event_identity text,
+  p_claimed_at timestamptz,
+  p_retry_at timestamptz
+)
+returns boolean
+language plpgsql
+security definer
+set search_path = ''
+as $$
+begin
+  if auth.role() is distinct from 'service_role' then
+    raise exception 'service role required to release pick monitoring schedule';
+  end if;
+  if length(trim(coalesce(p_source_event_identity, ''))) = 0
+    or p_retry_at <= p_claimed_at then
+    raise exception 'invalid pick monitoring schedule release';
+  end if;
+
+  update public.pick_monitoring_schedule_state
+  set next_eligible_at = p_retry_at,
+      lease_until = null,
+      updated_at = now()
+  where source_event_identity = p_source_event_identity
+    and last_claimed_at = p_claimed_at
+    and lease_until is not null;
+
+  return found;
+end;
+$$;
+revoke all on function public.release_pick_monitoring_schedule(text, timestamptz, timestamptz) from public, anon, authenticated;
+grant execute on function public.release_pick_monitoring_schedule(text, timestamptz, timestamptz) to service_role;
+
+-- Scheduled evidence still uses record_pick_monitoring_run as the sole evidence writer.
+-- This wrapper makes the evidence insert and schedule completion one database transaction.
+create or replace function public.record_scheduled_pick_monitoring_run(
+  p_payload jsonb,
+  p_claimed_at timestamptz,
+  p_next_eligible_at timestamptz
+)
+returns uuid
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_source_event_identity text := trim(coalesce(p_payload->>'source_event_identity', ''));
+  v_run_id uuid;
+begin
+  if auth.role() is distinct from 'service_role' then
+    raise exception 'service role required to record scheduled pick monitoring evidence';
+  end if;
+  if p_payload->>'trigger_kind' is distinct from 'scheduled'
+    or length(v_source_event_identity) = 0
+    or p_next_eligible_at <= p_claimed_at then
+    raise exception 'invalid scheduled pick monitoring completion';
+  end if;
+
+  v_run_id := public.record_pick_monitoring_run(p_payload);
+
+  update public.pick_monitoring_schedule_state
+  set next_eligible_at = p_next_eligible_at,
+      lease_until = null,
+      updated_at = now()
+  where source_event_identity = v_source_event_identity
+    and last_claimed_at = p_claimed_at
+    and lease_until is not null;
+
+  if not found then
+    raise exception 'scheduled pick monitoring claim is missing or stale';
+  end if;
+
+  return v_run_id;
+end;
+$$;
+revoke all on function public.record_scheduled_pick_monitoring_run(jsonb, timestamptz, timestamptz) from public, anon, authenticated;
+grant execute on function public.record_scheduled_pick_monitoring_run(jsonb, timestamptz, timestamptz) to service_role;
 
 -- The database generates and retains the scheduler credential. Its plaintext is never
 -- committed, printed, or copied into the browser or GitHub secrets.
@@ -236,7 +317,7 @@ select cron.schedule(
         )
       ),
       body := '{"mode":"scheduled"}'::jsonb,
-      timeout_milliseconds := 10000
+      timeout_milliseconds := 60000
     ) as request_id;
   $job$
 );
