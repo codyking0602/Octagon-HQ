@@ -91,7 +91,7 @@ const publicHeaders = {
   Authorization: `Bearer ${publishableKey}`,
   apikey: publishableKey,
   "Content-Type": "application/json",
-  "x-client-info": "octagon-hq-live-pin-check/3",
+  "x-client-info": "octagon-hq-live-pin-check/4",
   Origin: productionOrigin,
 };
 
@@ -195,10 +195,15 @@ try {
     );
   });
 
-  await page.goto(`${productionOrigin}/?browser-pin-check=${suffix}`, {
+  await page.goto(`${productionOrigin}/picks/monitoring?browser-pin-check=${suffix}`, {
     waitUntil: "domcontentloaded",
     timeout: 30_000,
   });
+  await page.getByRole("heading", { name: "Monitoring Inbox" }).waitFor({ state: "visible", timeout: 15_000 });
+  if (new URL(page.url()).pathname !== "/picks/monitoring") {
+    throw new Error(`Monitoring Inbox deep link redirected before sign-in: ${page.url()}`);
+  }
+
   await page.getByRole("button", { name: "Sign in to Octagon HQ" }).click();
   await page.getByLabel("YOUR NAME").fill(displayName);
   await page.getByLabel("YOUR 4-DIGIT PIN").fill(pin);
@@ -219,6 +224,18 @@ try {
       ].join("\n"),
     );
   }
+
+  await page.waitForURL((url) => url.pathname === "/picks/monitoring", { timeout: 15_000 });
+  await page.getByRole("heading", { name: "Monitoring Inbox" }).waitFor({ state: "visible" });
+  await page.getByRole("heading", { name: "Check now or refresh the ledger" }).waitFor({ state: "visible", timeout: 15_000 });
+  await page.getByText(process.env.GITHUB_EVENT_NAME === "pull_request" ? "PAUSED" : "ACTIVE", { exact: true }).waitFor({ state: "visible" });
+  if (await page.getByText("INBOX UNAVAILABLE", { exact: true }).count()) {
+    throw new Error("Monitoring Inbox rendered its unavailable state for the temporary owner.");
+  }
+
+  const monitoringScreenshotPath = process.env.MONITORING_INBOX_SCREENSHOT_PATH
+    ?? `${process.env.RUNNER_TEMP ?? "/tmp"}/monitoring-inbox-preview.png`;
+  await page.screenshot({ path: monitoringScreenshotPath, fullPage: true });
 
   await page.goto(`${productionOrigin}/picks/setup?event-preview-check=${suffix}`, {
     waitUntil: "domcontentloaded",
@@ -248,7 +265,7 @@ try {
   await page.screenshot({ path: screenshotPath, fullPage: true });
 
   console.log(
-    `PASS: WebKit verified exact production frontend ${expectedDeploymentSha || "(SHA not requested)"}, authenticated at 390x844, opened Event Setup, and displayed the clean current UFC Belgrade source review without publishing.`,
+    `PASS: WebKit verified exact production frontend ${expectedDeploymentSha || "(SHA not requested)"}, authenticated at 390x844, preserved the Monitoring Inbox route through sign-in, loaded owner-only monitoring data, and displayed the clean current UFC Belgrade source review without publishing.`,
   );
 } finally {
   if (browser) await browser.close().catch(() => undefined);
