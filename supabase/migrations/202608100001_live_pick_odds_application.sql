@@ -11,7 +11,6 @@ as $$
 declare
   v_run_id uuid;
   v_event_id text := nullif(lower(trim(p_payload->>'event_id')), '');
-  v_source_event_identity text := trim(coalesce(p_payload->>'source_event_identity', ''));
   v_snapshots jsonb := coalesce(p_payload->'odds_snapshots', '[]'::jsonb);
   v_snapshot jsonb;
   v_event public.pick_events;
@@ -23,6 +22,9 @@ declare
   v_blue_identity text;
   v_red_odds integer;
   v_blue_odds integer;
+  v_source_event_id text;
+  v_provider_event_identity text;
+  v_commence_time timestamptz;
   v_sportsbook text;
   v_sportsbook_title text;
   v_sportsbook_updated_at timestamptz;
@@ -66,6 +68,8 @@ begin
     v_blue_slug := nullif(lower(trim(v_snapshot->>'canonical_blue_fighter_slug')), '');
     v_red_identity := nullif(trim(v_snapshot->>'canonical_red_fighter_identity'), '');
     v_blue_identity := nullif(trim(v_snapshot->>'canonical_blue_fighter_identity'), '');
+    v_source_event_id := nullif(trim(v_snapshot->>'source_event_id'), '');
+    v_provider_event_identity := nullif(trim(v_snapshot->>'source_event_identity'), '');
     v_sportsbook := nullif(lower(trim(v_snapshot->>'sportsbook')), '');
     v_sportsbook_title := nullif(trim(v_snapshot->>'sportsbook_title'), '');
 
@@ -75,6 +79,8 @@ begin
       or v_blue_slug is null
       or v_red_identity is null
       or v_blue_identity is null
+      or v_source_event_id is null
+      or v_provider_event_identity is distinct from concat('mma_mixed_martial_arts:', v_source_event_id)
       or v_red_slug = v_blue_slug
       or v_red_identity = v_blue_identity
       or coalesce(v_snapshot->>'canonical_red_american_odds', '') !~ '^-?[0-9]+$'
@@ -83,7 +89,7 @@ begin
       or v_sportsbook_title is null
       or v_snapshot->>'provider' is distinct from 'the-odds-api'
       or v_snapshot->>'sport_key' is distinct from 'mma_mixed_martial_arts'
-      or v_snapshot->>'source_event_identity' is distinct from v_source_event_identity
+      or nullif(v_snapshot->>'commence_time', '') is null
       or nullif(v_snapshot->>'sportsbook_updated_at', '') is null
       or nullif(v_snapshot->>'fetched_at', '') is null then
       continue;
@@ -91,11 +97,13 @@ begin
 
     v_red_odds := (v_snapshot->>'canonical_red_american_odds')::integer;
     v_blue_odds := (v_snapshot->>'canonical_blue_american_odds')::integer;
+    v_commence_time := (v_snapshot->>'commence_time')::timestamptz;
     v_sportsbook_updated_at := (v_snapshot->>'sportsbook_updated_at')::timestamptz;
     v_fetched_at := (v_snapshot->>'fetched_at')::timestamptz;
 
     if not (v_red_odds <= -100 or v_red_odds >= 100)
       or not (v_blue_odds <= -100 or v_blue_odds >= 100)
+      or abs(extract(epoch from (v_commence_time - v_event.starts_at))) > 64800
       or v_fetched_at >= v_event.locks_at
       or v_sportsbook_updated_at > v_fetched_at then
       continue;
@@ -121,7 +129,9 @@ begin
       where snapshot.run_id = v_run_id
         and snapshot.event_id = v_event_id
         and snapshot.bout_id = v_bout_id
-        and snapshot.source_event_identity = v_source_event_identity
+        and snapshot.source_event_id = v_source_event_id
+        and snapshot.source_event_identity = v_provider_event_identity
+        and snapshot.commence_time = v_commence_time
         and snapshot.sportsbook = v_sportsbook
         and snapshot.sportsbook_title = v_sportsbook_title
         and snapshot.sportsbook_updated_at = v_sportsbook_updated_at
