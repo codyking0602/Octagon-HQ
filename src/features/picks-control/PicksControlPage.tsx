@@ -138,6 +138,7 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
         <h1>Fight Night Control</h1>
         <p>Record official results one fight at a time. Each resolved fight immediately reveals how the group picked it.</p>
         <div className="picks-control-heading__links">
+          <Link to="/picks/monitoring">MONITORING INBOX</Link>
           <Link to="/picks/setup">EVENT SETUP</Link>
           <Link to="/picks">PLAYER PICKS</Link>
         </div>
