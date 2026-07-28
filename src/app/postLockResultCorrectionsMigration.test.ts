@@ -28,11 +28,12 @@ describe("post-lock official result corrections", () => {
     expect(migration).not.toContain("insert into public.pick_card_change_actions");
   });
 
-  it("separates pending initial result entry from reasoned correction", () => {
+  it("separates pending initial result entry from atomic final correction", () => {
     expect(sql).toContain("create or replace function public.record_official_pick_bout_result");
     expect(sql).toContain("initial result entry requires a final official result");
     expect(sql).toContain("official result already recorded; use correction workflow");
     expect(sql).toContain("create or replace function public.correct_official_pick_bout_result");
+    expect(sql).toContain("corrected official result requires a final result");
     expect(sql).toContain("result correction reason required");
     expect(sql).toContain("pending bout requires initial result entry");
   });
@@ -49,7 +50,6 @@ describe("post-lock official result corrections", () => {
 
   it("supports completed-event correction without creating a lifecycle transition", () => {
     expect(sql).toContain("v_event.status not in ('locked', 'complete')");
-    expect(sql).toContain("completed event corrections must remain final");
     expect(sql).not.toContain("set status = 'locked'");
     expect(sql).not.toContain("set completed_at = null");
     expect(sql).not.toContain("perform public.transition_pick_event");
@@ -65,6 +65,8 @@ describe("post-lock official result corrections", () => {
 
   it("keeps the owner UI explicit about preserved picks and automatic recalculation", () => {
     expect(controlPage).toContain("CORRECT RESULT");
+    expect(controlPage).toContain("Enter RED, BLUE, DRAW, NO CONTEST, or CANCELLED");
+    expect(controlPage).not.toContain("or PENDING");
     expect(controlPage).toContain("Submitted picks and Underdog Locks will not change");
     expect(controlPage).toContain("Scoring, standings, season totals, and recaps will recalculate");
     expect(controlPage).toContain("Recap remains published");
