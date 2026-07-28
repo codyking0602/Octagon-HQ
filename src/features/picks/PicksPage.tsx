@@ -234,6 +234,9 @@ export default function PicksPage() {
         [bout.blueFighterSlug, bout.blueFighterName],
       ]).find(([slug]) => slug === picks.underdogLock?.fighterSlug)?.[1] ?? picks.underdogLock.fighterSlug
     : "NONE SELECTED";
+  const cardOddsMeta = orderedBouts
+    .map((bout) => oddsProvenance(bout.oddsSource, bout.oddsUpdatedAt))
+    .find(Boolean) ?? null;
   const eventPoster = activeEvent
     && activeEvent.location.toLowerCase().includes("belgrade")
     && activeEvent.subtitle.toLowerCase().includes("rodriguez")
@@ -272,19 +275,28 @@ export default function PicksPage() {
             aria-labelledby="picks-event-title"
             style={heroStyle}
           >
-            <div className="picks-event-hero__topline">
-              <p className="eyebrow">{activeLifecycle.eyebrow}</p>
-              <span className={`picks-status picks-status--${activeLifecycle.state.replace("_", "-")}`}>
-                {activeLifecycle.status}
-              </span>
-            </div>
-            <div className="picks-event-hero__copy">
-              <h2 id="picks-event-title">{activeEvent.name}</h2>
-              <strong>{activeEvent.subtitle}</strong>
-              <p>{eventDate(activeEvent.startsAt)} · {activeEvent.venue} · {activeEvent.location}</p>
+            <div className="picks-event-hero__poster" aria-hidden="true">
+              <div className="picks-event-hero__topline">
+                <p className="eyebrow">{activeLifecycle.eyebrow}</p>
+                <span className={`picks-status picks-status--${activeLifecycle.state.replace("_", "-")}`}>
+                  {activeLifecycle.status}
+                </span>
+              </div>
             </div>
 
-            <div className="picks-event-hero__dashboard">
+            <div className="picks-event-hero__content">
+              <div className="picks-event-hero__copy">
+                <h2 id="picks-event-title">{activeEvent.name}</h2>
+                <strong>{activeEvent.subtitle}</strong>
+              </div>
+
+              <div className="picks-event-hero__facts" aria-label="Event details">
+                <span>{eventDate(activeEvent.startsAt)}</span>
+                <span>{activeEvent.venue} · {activeEvent.location}</span>
+                <span>MAIN CARD ONLY</span>
+                <span>{progress.total} FIGHTS</span>
+              </div>
+
               <div className="picks-progress" aria-label={`${progress.completed} of ${progress.total} picks completed`}>
                 <div><span>YOUR PICKS</span><b>{progress.completed} OF {progress.total}</b></div>
                 <div className={completeProgress ? "picks-progress__track is-complete" : "picks-progress__track"} aria-hidden="true">
@@ -309,7 +321,7 @@ export default function PicksPage() {
                   </p>
                   {activeEvent.canControl ? (
                     <Link className="picks-control-entry" to="/picks/control">
-                      MANAGE EVENT
+                      MANAGE EVENT ›
                     </Link>
                   ) : null}
                 </div>
@@ -330,8 +342,14 @@ export default function PicksPage() {
 
           {identity.profile ? (
             <section className="picks-card-zone">
+              {cardOddsMeta ? (
+                <p className="picks-card-odds" aria-label="Sportsbook odds source">
+                  <span>SPORTSBOOK ODDS</span>
+                  <strong>{cardOddsMeta}</strong>
+                </p>
+              ) : null}
+
               <div className="picks-sticky-progress" aria-label="Current Picks progress">
-                <strong>{activeEvent.name}</strong>
                 <span>{progress.completed}/{progress.total} PICKS</span>
                 <em>LOCK · {underdogLockName}</em>
               </div>
@@ -356,7 +374,6 @@ export default function PicksPage() {
                   const repickRequired = Boolean(!removed && bout.repickRequired && !selection);
                   const resolved = removed || (bout.resultStatus ?? "pending") !== "pending";
                   const readOnly = locked || cancelled || removed;
-                  const oddsMeta = removed ? null : oddsProvenance(bout.oddsSource, bout.oddsUpdatedAt);
                   const selectedCorner = selection === bout.redFighterSlug
                     ? "red"
                     : selection === bout.blueFighterSlug
@@ -374,7 +391,6 @@ export default function PicksPage() {
                           <span>{mainCardFightLabel(index)}</span>
                           <small>{bout.weightClass}</small>
                         </div>
-                        {oddsMeta ? <p aria-label="Sportsbook odds source">{oddsMeta}</p> : null}
                       </header>
                       {repickRequired ? (
                         <div className="pick-bout-card__repick" role="status">
@@ -500,11 +516,20 @@ export default function PicksPage() {
                 </dl>
               </section>
 
-              <div className="picks-recap-list">
-                {picks.history.events.map((completedEvent, index) => (
-                  <EventRecap event={completedEvent} latest={index === 0} key={completedEvent.eventId} />
-                ))}
-              </div>
+              <details className="surface-card picks-archive">
+                <summary className="picks-archive__summary">
+                  <div>
+                    <span>EVENT ARCHIVE</span>
+                    <strong>{picks.history.events.length} COMPLETED {picks.history.events.length === 1 ? "EVENT" : "EVENTS"}</strong>
+                  </div>
+                  <small>OPEN EVENT ARCHIVE</small>
+                </summary>
+                <div className="picks-recap-list">
+                  {picks.history.events.map((completedEvent, index) => (
+                    <EventRecap event={completedEvent} latest={index === 0} key={completedEvent.eventId} />
+                  ))}
+                </div>
+              </details>
             </>
           ) : null}
         </section>
