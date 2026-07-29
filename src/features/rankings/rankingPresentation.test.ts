@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { allTime } from "./rankingModel";
 import { profileSignatureFightUrls } from "./profileSignatureFightUrls";
-import { resolveProfileWatchAction } from "./rankingPresentation";
+import {
+  resolveProfileWatchAction,
+  resolveWatchMomentAction,
+} from "./rankingPresentation";
 
 describe("ranking profile watch actions", () => {
   const actions = allTime.map((fighter) => ({
@@ -71,5 +74,15 @@ describe("ranking profile watch actions", () => {
     expect(resolveProfileWatchAction("amanda-nunes")?.url).toBe(
       "https://youtu.be/qwPBPiUzgag?is=pTBaihmA06TEDxKo",
     );
+  });
+
+  it("keeps fighter profiles on the signature fight while Home spotlight uses the short", () => {
+    const profileAction = resolveProfileWatchAction("cain-velasquez");
+    const spotlightAction = resolveWatchMomentAction("cain-velasquez");
+
+    expect(profileAction?.source).toBe("signature");
+    expect(spotlightAction?.source).toBe("watch-moment");
+    expect(spotlightAction?.url).toContain("youtube.com/shorts/");
+    expect(spotlightAction?.url).not.toBe(profileAction?.url);
   });
 });
