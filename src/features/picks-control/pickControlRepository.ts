@@ -54,7 +54,7 @@ const controlEventSchema = z.object({
 export interface PickControlRepository {
   loadControlEvent: (eventId?: string) => Promise<PickControlEvent | null>;
   lockEvent: (eventId: string) => Promise<void>;
-  adjustLockTime: (eventId: string, locksAt: string, expectedLocksAt: string, reason: string) => Promise<void>;
+  adjustLockTime?: (eventId: string, locksAt: string, expectedLocksAt: string, reason: string) => Promise<void>;
   setCancellation: (eventId: string, boutId: string, cancelled: boolean, reason: string) => Promise<void>;
   setBoutInclusion: (eventId: string, bout: PickControlEvent["bouts"][number], includedInPicks: boolean, reason: string) => Promise<void>;
   replaceFighter: (eventId: string, bout: PickControlEvent["bouts"][number], corner: "red" | "blue", slug: string, name: string, reason: string) => Promise<void>;
