@@ -1,5 +1,6 @@
 export type WarRoomAccessMode = "locked" | "invite" | "eligible";
 export type WarRoomRole = "member" | "admin";
+export type WarRoomReactionType = "like" | "dislike" | "exclaim" | "laugh";
 export type WarRoomRealtimeStatus =
   | "idle"
   | "connecting"
@@ -26,6 +27,12 @@ export interface WarRoomParentPreview {
   author: WarRoomMember;
 }
 
+export interface WarRoomReactionSummary {
+  type: WarRoomReactionType;
+  count: number;
+  reacted: boolean;
+}
+
 export interface WarRoomMessage {
   id: string;
   body: string | null;
@@ -34,6 +41,7 @@ export interface WarRoomMessage {
   author: WarRoomMember;
   parent: WarRoomParentPreview | null;
   mentions: WarRoomMember[];
+  reactions: WarRoomReactionSummary[];
   canDelete: boolean;
 }
 
@@ -85,7 +93,13 @@ export function mergeWarRoomMessages(
   incoming: readonly WarRoomMessage[],
 ) {
   const byId = new Map<string, WarRoomMessage>();
-  [...current, ...incoming].forEach((message) => byId.set(message.id, message));
+  current.forEach((message) => {
+    if (!message.deleted) byId.set(message.id, message);
+  });
+  incoming.forEach((message) => {
+    if (message.deleted) byId.delete(message.id);
+    else byId.set(message.id, message);
+  });
   return [...byId.values()].sort((left, right) => (
     left.createdAt.localeCompare(right.createdAt) || left.id.localeCompare(right.id)
   ));
