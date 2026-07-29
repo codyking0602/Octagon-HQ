@@ -78,10 +78,10 @@ function cleanNickname(value: string) {
   return value.trim().replace(/^[“”"']+|[“”"']+$/g, "").trim();
 }
 
-export function formatFighterDisplayName(slug: string, canonicalName: string) {
-  const presentation = fighterNamePresentationBySlug[slug];
-  if (!presentation) return canonicalName;
-
+export function formatPresentedFighterName(
+  canonicalName: string,
+  presentation: FighterNamePresentation,
+) {
   const nickname = cleanNickname(presentation.nickname);
   const baseName = presentation.baseName?.trim() || canonicalName.trim();
   if (!nickname || !baseName) return canonicalName;
@@ -93,4 +93,9 @@ export function formatFighterDisplayName(slug: string, canonicalName: string) {
   const parts = baseName.split(/\s+/).filter(Boolean);
   if (parts.length < 2) return `${baseName} ${quotedNickname}`;
   return `${parts[0]} ${quotedNickname} ${parts.slice(1).join(" ")}`;
+}
+
+export function formatFighterDisplayName(slug: string, canonicalName: string) {
+  const presentation = fighterNamePresentationBySlug[slug];
+  return presentation ? formatPresentedFighterName(canonicalName, presentation) : canonicalName;
 }
