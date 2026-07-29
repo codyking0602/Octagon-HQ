@@ -14,6 +14,7 @@ begin
   delete from private.game_whats_new_snapshot;
   delete from private.challenge_whats_new_snapshot;
   delete from private.achievement_whats_new_snapshot;
+  delete from private.engagement_whats_new_sync_state;
   delete from private.whats_new_items
   where source_key like 'games:new:%'
      or source_key like 'challenges:new:%'
@@ -50,6 +51,10 @@ begin
     or (v_result->>'new_challenges_published')::integer <> 0
     or (v_result->>'new_achievements_published')::integer <> 0 then
     raise exception 'initial engagement sync did not create quiet baselines: %', v_result;
+  end if;
+
+  if (select count(*) from private.engagement_whats_new_sync_state) <> 3 then
+    raise exception 'empty challenge and achievement baselines were not persisted';
   end if;
 
   if exists (
@@ -195,7 +200,8 @@ begin
 
   if has_table_privilege('authenticated', 'private.game_whats_new_snapshot', 'SELECT')
     or has_table_privilege('authenticated', 'private.challenge_whats_new_snapshot', 'SELECT')
-    or has_table_privilege('authenticated', 'private.achievement_whats_new_snapshot', 'SELECT') then
+    or has_table_privilege('authenticated', 'private.achievement_whats_new_snapshot', 'SELECT')
+    or has_table_privilege('authenticated', 'private.engagement_whats_new_sync_state', 'SELECT') then
     raise exception 'authenticated role can read private engagement snapshots';
   end if;
 
