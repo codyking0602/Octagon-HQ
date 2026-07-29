@@ -12,6 +12,7 @@ const integrationSql = readFileSync(
 const bottomNavigation = readFileSync("src/components/BottomNavigation.tsx", "utf8");
 const contract = readFileSync("docs/war-room-access-foundation.md", "utf8");
 const conversationContract = readFileSync("docs/war-room-conversation-core.md", "utf8");
+const launchContract = readFileSync("docs/war-room-launch.md", "utf8");
 
 describe("War Room access foundation", () => {
   it("keeps membership and invite evidence private and stores only invite hashes", () => {
@@ -51,11 +52,13 @@ describe("War Room access foundation", () => {
     expect(sql).not.toContain("grant execute on function public.create_war_room_invite(timestamptz, integer, uuid) to authenticated");
   });
 
-  it("keeps the final navigation contract while PR 2 remains hidden from primary navigation", () => {
-    expect(bottomNavigation.toLowerCase()).not.toContain("war room");
+  it("preserves the access contract through the permission-aware launch", () => {
+    expect(bottomNavigation).toContain('warRoom.status === "eligible"');
+    expect(bottomNavigation).toContain('label: "War Room"');
     expect(contract).toContain("Home → Rankings → Picks → Play → War Room");
     expect(contract).toContain("No route, tab, page, provider, badge, feed, or placeholder is added in this PR");
-    expect(conversationContract).toContain("hidden review route");
+    expect(conversationContract).toContain("PR 3 owns launch visibility");
+    expect(launchContract).toContain("Signed-out and unauthorized profiles receive no War Room tab");
   });
 
   it("keeps rollback coverage for privacy, invite use, revocation, and managed access", () => {
