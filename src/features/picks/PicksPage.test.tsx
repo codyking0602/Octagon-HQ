@@ -35,6 +35,8 @@ const event: PickEvent = {
     blueFighterName: "Bogdan Guskov",
     redAmericanOdds: -180,
     blueAmericanOdds: 155,
+    oddsSource: "DraftKings",
+    oddsUpdatedAt: "2026-07-28T17:10:00.000Z",
     winnerFighterSlug: null,
   }],
 };
@@ -138,7 +140,7 @@ function repository(
 }
 
 describe("PicksPage", () => {
-  it("shows the current main card and saves a selected fighter to the profile", async () => {
+  it("shows one card-level odds source and saves a selected fighter to the profile", async () => {
     const savePick = vi.fn(async (eventId: string, boutId: string, fighterSlug: string) => ({
       eventId,
       boutId,
@@ -156,11 +158,13 @@ describe("PicksPage", () => {
     expect(await screen.findByRole("heading", { name: "UFC Fight Night" })).toBeInTheDocument();
     expect(screen.getByText("Ankalaev vs. Guskov")).toBeInTheDocument();
     expect(screen.getAllByText("MAIN EVENT").length).toBeGreaterThan(0);
+    expect(screen.getByText("SCORING & UNDERDOG LOCK RULES")).toBeInTheDocument();
+    expect(screen.getAllByLabelText("Sportsbook odds source")).toHaveLength(1);
 
     fireEvent.click(screen.getByRole("button", { name: /Bogdan Guskov/i }));
     await waitFor(() => expect(savePick).toHaveBeenCalledWith(event.eventId, "ankalaev-guskov", "bogdan-guskov"));
     await waitFor(() => expect(screen.getByRole("button", { name: /Bogdan Guskov/i })).toHaveAttribute("aria-pressed", "true"));
-    expect(screen.getByText("ALL 1 PICKS SAVED TO CODY")).toBeInTheDocument();
+    expect(screen.getByText("1 PICK SAVED")).toBeInTheDocument();
   });
 
   it("shows the event publicly but requires sign-in before making picks", async () => {
@@ -173,22 +177,49 @@ describe("PicksPage", () => {
     expect(await screen.findByRole("heading", { name: "UFC Fight Night" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "SIGN IN TO MAKE PICKS" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /Magomed Ankalaev/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole("heading", { name: "Your event recaps" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Your event archive" })).not.toBeInTheDocument();
   });
 
-  it("shows personal results and compact group standings when no active card exists", async () => {
+  it("keeps completed events inside one collapsed archive disclosure", async () => {
     render(
       <IdentityProvider gateway={gateway()}>
         <PicksProvider repository={repository(undefined, null)}><PicksPage /></PicksProvider>
       </IdentityProvider>,
     );
 
-    expect(await screen.findByRole("heading", { name: "Your event recaps" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Your event archive" })).toBeInTheDocument();
+    expect(screen.getByText("OPEN EVENT ARCHIVE")).toBeInTheDocument();
+    expect(screen.queryByText("LATEST RECAP")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByText("OPEN EVENT ARCHIVE"));
     expect(await screen.findByText("UFC Oklahoma City")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "How everyone did" })).toBeInTheDocument();
+    expect(screen.getByText("LATEST")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText("UFC Oklahoma City"));
+    expect(await screen.findByRole("heading", { name: "How everyone did" })).toBeInTheDocument();
     expect(screen.getByText("SHANE")).toBeInTheDocument();
     expect(screen.getByText("Correct")).toBeInTheDocument();
     expect(screen.getByText("No contest")).toBeInTheDocument();
     expect(screen.getByText("Excluded")).toBeInTheDocument();
+  });
+
+  it("uses the Belgrade poster only for the matching current event", async () => {
+    const belgradeEvent: PickEvent = {
+      ...event,
+      subtitle: "Uroš Medić vs. Daniel Rodriguez",
+      venue: "Belgrade Arena",
+      location: "Belgrade, Serbia",
+    };
+
+    const { container } = render(
+      <IdentityProvider gateway={gateway()}>
+        <PicksProvider repository={repository(undefined, belgradeEvent)}><PicksPage /></PicksProvider>
+      </IdentityProvider>,
+    );
+
+    await screen.findByText("Uroš Medić vs. Daniel Rodriguez");
+    const hero = container.querySelector(".picks-event-hero");
+    expect(hero).toHaveClass("has-poster");
+    expect(hero).toHaveStyle('--picks-event-poster: url("/events/ufc-fight-night-belgrade.svg")');
   });
 });

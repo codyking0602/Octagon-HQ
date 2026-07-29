@@ -7,11 +7,13 @@ import {
 } from "./public-supabase-config.mjs";
 
 const requiredApplicationMarkers = [
-  "Your event recaps",
+  "STANDINGS & EVENTS",
+  "GROUP STANDINGS",
+  "EVENT ARCHIVE",
   "get_my_pick_history",
-  "HOW SCORING WORKS",
+  "SCORING & UNDERDOG LOCK RULES",
   "Correct pick +4",
-  "MAKE THIS MY UNDERDOG LOCK",
+  "MAKE UNDERDOG LOCK",
   "pick-fighter-thumbnail",
   "get_my_event_underdog_lock",
   "set_my_event_underdog_lock",

@@ -113,8 +113,13 @@ const historyBoutSchema = z.object({
 
 const groupResultSchema = historyRecordSchema.extend({
   rank: z.number().int().positive(),
+  profile_id: z.string().nullable().optional().default(null),
   display_name: z.string(),
   is_current_user: z.boolean(),
+});
+
+const seasonStandingSchema = groupResultSchema.extend({
+  events_entered: z.number().int().nonnegative(),
 });
 
 const historyEventSchema = z.object({
@@ -137,6 +142,7 @@ const historySchema = z.object({
   summary: historyRecordSchema.extend({
     events_entered: z.number().int().nonnegative(),
   }),
+  season_standings: z.array(seasonStandingSchema).optional().default([]),
   events: z.array(historyEventSchema),
 });
 
@@ -252,6 +258,20 @@ function mapHistory(value: unknown): PickHistory {
       lockBonus: parsed.summary.lock_bonus,
       totalPoints: parsed.summary.total_points,
     },
+    seasonStandings: parsed.season_standings.map((standing) => ({
+      rank: standing.rank,
+      profileId: standing.profile_id,
+      displayName: standing.display_name,
+      correct: standing.correct,
+      incorrect: standing.incorrect,
+      missing: standing.missing,
+      excluded: standing.excluded,
+      eventsEntered: standing.events_entered,
+      basePoints: standing.base_points,
+      lockBonus: standing.lock_bonus,
+      totalPoints: standing.total_points,
+      isCurrentUser: standing.is_current_user,
+    })),
     events: parsed.events.map((event) => ({
       eventId: event.event_id,
       name: event.name,
@@ -289,6 +309,7 @@ function mapHistory(value: unknown): PickHistory {
       })),
       groupResults: event.group_results.map((result) => ({
         rank: result.rank,
+        profileId: result.profile_id,
         displayName: result.display_name,
         correct: result.correct,
         incorrect: result.incorrect,
