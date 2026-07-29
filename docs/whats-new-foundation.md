@@ -21,7 +21,9 @@ What's New is Octagon HQ's global activity layer.
 
 ## Publishing owner
 
-`public.publish_whats_new_item(...)` is the only publishing boundary. It is service-role-only and idempotent by `source_key`.
+`public.publish_whats_new_item(...)` is the only externally callable publishing boundary. It is service-role-only and idempotent by `source_key`.
+
+Database-owned feature transitions may delegate to the same private idempotent storage owner. That internal function is not executable by browser roles and does not create a second feed or publishing API.
 
 Automatic producers may publish only:
 
@@ -37,6 +39,16 @@ Automatic producers may publish only:
 
 Manual publishing supports app announcements, major redesign explanations, featured content, polls, community prompts, temporary notices, weekly or monthly summaries, and important rule changes.
 
+## Picks completion producer
+
+`transition_pick_event(...)` remains the sole Picks lifecycle owner.
+
+- A successful transition to `complete` publishes one automatic `new_recap` item.
+- The item uses the event completion timestamp and links to the canonical Picks destination.
+- Locking an event does not publish an item.
+- Repeating an already-complete transition cannot create or republish an item.
+- Completion and recap availability happen in the same transaction, so the feed receives one recap-ready item instead of duplicate completion and recap cards.
+
 ## Noise rules
 
 Do not publish What's New items for minor bug fixes, routine monitoring checks, tiny text changes, one-position ranking moves, administrative backend work, or technical deployment activity.
@@ -49,6 +61,7 @@ Do not publish What's New items for minor bug fixes, routine monitoring checks, 
 - Realtime carries item identifiers and operations only; the provider reloads the guarded snapshot.
 - No local-storage unread fallback, polling loop, direct private-table read, or second feed owner is allowed.
 
-## Initial slice
+## Connected slices
 
-This foundation launches the full feed experience and one manual launch announcement. Ranking, Picks, game, fighter, challenge, and achievement producers should be connected in later focused slices through the existing publish RPC rather than adding another feed path.
+- Picks event completion and recap availability are connected through the canonical completion transition.
+- Ranking, game, fighter, challenge, and achievement producers remain for later focused slices.
