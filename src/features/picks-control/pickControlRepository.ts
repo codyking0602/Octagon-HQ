@@ -140,6 +140,10 @@ export function createPickControlRepository(): PickControlRepository | null {
     },
 
     async adjustLockTime(eventId, locksAt, expectedLocksAt, reason) {
+      const expectedDeadline = Date.parse(expectedLocksAt);
+      if (!Number.isFinite(expectedDeadline) || Date.now() >= expectedDeadline) {
+        throw new Error("Picks deadline has passed; it cannot be reopened.");
+      }
       await requireRpcSuccess(client.rpc("adjust_pick_event_lock_time", {
         p_event_id: eventId,
         p_locks_at: locksAt,
