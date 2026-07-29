@@ -3,19 +3,16 @@ import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import {
   americanOddsLabel,
-  groupRankLabel,
   mainCardFightLabel,
   pickEventPresentation,
   pickProgress,
   underdogBonusTiers,
   type PickBoutResultStatus,
-  type PickHistoryBout,
-  type PickHistoryEvent,
-  type PickHistoryRecord,
 } from "./picksModel";
 import { usePicks } from "./PicksProvider";
 import { FighterThumbnail } from "./FighterThumbnail";
 import { GroupPickReveal } from "./GroupPickReveal";
+import { PicksSeasonHub } from "./PicksSeasonHub";
 
 interface BoutResultView {
   redFighterSlug: string;
@@ -34,14 +31,6 @@ function eventDate(value: string) {
     day: "numeric",
     hour: "numeric",
     minute: "2-digit",
-  }).format(new Date(value));
-}
-
-function completedDate(value: string) {
-  return new Intl.DateTimeFormat(undefined, {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
   }).format(new Date(value));
 }
 
@@ -74,21 +63,6 @@ function officialResult(bout: BoutResultView) {
   return "Pending";
 }
 
-function verdictLabel(verdict: PickHistoryBout["verdict"]) {
-  if (verdict === "correct") return "Correct";
-  if (verdict === "incorrect") return "Incorrect";
-  if (verdict === "missing") return "No pick";
-  if (verdict === "excluded") return "Excluded";
-  return "Pending";
-}
-
-function recordNote(record: PickHistoryRecord) {
-  const details = [];
-  if (record.missing) details.push(`${record.missing} missing`);
-  if (record.excluded) details.push(`${record.excluded} excluded`);
-  return details.length ? details.join(" · ") : null;
-}
-
 function choiceLabel(selected: boolean, locked: boolean, cancelled: boolean, removed: boolean) {
   if (selected) return "YOUR PICK";
   if (removed) return "REMOVED FROM PICKS";
@@ -104,113 +78,6 @@ function choiceClassName(selected: boolean, readOnly: boolean) {
 
 function savedPickLabel(completed: number) {
   return `${completed} ${completed === 1 ? "PICK" : "PICKS"} SAVED`;
-}
-
-function EventRecap({ event, latest }: { event: PickHistoryEvent; latest: boolean }) {
-  const orderedBouts = event.bouts.slice().sort((left, right) => left.position - right.position);
-  const currentResult = event.groupResults.find((result) => result.isCurrentUser) ?? null;
-  const finish = currentResult
-    ? `${groupRankLabel(currentResult.rank, event.groupResults)} OF ${event.groupResults.length}`
-    : null;
-  const note = recordNote(event.record);
-
-  return (
-    <details className="surface-card picks-recap-card">
-      <summary className="picks-recap-card__summary">
-        <div>
-          <div className="picks-recap-card__date">
-            {latest ? <span className="picks-recap-card__latest">LATEST</span> : null}
-            <time dateTime={event.completedAt}>{completedDate(event.completedAt)}</time>
-          </div>
-          <h3>{event.name}</h3>
-          <p>{event.subtitle}</p>
-        </div>
-        <div
-          className="picks-recap-card__record"
-          aria-label={finish
-            ? `Your event finish ${finish}. ${event.record.correct} wins and ${event.record.incorrect} losses.`
-            : `${event.record.correct} wins and ${event.record.incorrect} losses`}
-        >
-          <strong>{finish ?? `${event.record.correct}-${event.record.incorrect}`}</strong>
-          <small>{event.record.correct}-{event.record.incorrect} · {event.record.totalPoints} PTS</small>
-          {note ? <em>{note}</em> : null}
-        </div>
-      </summary>
-
-      <div className="picks-recap-card__body">
-        <section className="picks-recap-group" aria-labelledby={`group-results-${event.eventId}`}>
-          <div className="picks-recap-section-heading">
-            <div>
-              <span>GROUP RESULTS</span>
-              <h4 id={`group-results-${event.eventId}`}>How everyone did</h4>
-            </div>
-            <small>{event.groupResults.length} ENTERED</small>
-          </div>
-          <div className="picks-group-results">
-            {event.groupResults.map((result) => (
-              <div
-                className={result.isCurrentUser ? "picks-group-result is-current-user" : "picks-group-result"}
-                key={result.displayName}
-              >
-                <span>{groupRankLabel(result.rank, event.groupResults)}</span>
-                <strong>{result.displayName}</strong>
-                <div>
-                  <b>{result.totalPoints} PTS</b>
-                  <small>{result.correct}-{result.incorrect} · +{result.lockBonus} lock</small>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="picks-recap-points" aria-label="Your scoring totals">
-          <div><span>RECORD</span><strong>{event.record.correct}-{event.record.incorrect}</strong></div>
-          <div><span>BASE</span><strong>{event.record.basePoints}</strong></div>
-          <div><span>LOCK</span><strong>+{event.record.lockBonus}</strong></div>
-          <div><span>TOTAL</span><strong>{event.record.totalPoints}</strong></div>
-        </section>
-
-        <details className="picks-recap-fights">
-          <summary>
-            <span>VIEW FIGHT-BY-FIGHT RESULTS</span>
-            <small>{orderedBouts.length} FIGHTS · {completedDate(event.completedAt)}</small>
-          </summary>
-          <div className="picks-recap-fight-list">
-            {orderedBouts.map((bout, index) => {
-              const removed = bout.includedInPicks === false;
-              return (
-                <article className="picks-recap-fight" key={bout.boutId}>
-                  <div className="picks-recap-fight__topline">
-                    <span>{mainCardFightLabel(index)}</span>
-                    <small>{bout.weightClass}</small>
-                  </div>
-                  <div className="picks-recap-fight__matchup">
-                    <strong>{bout.redFighterName}</strong>
-                    <span>VS</span>
-                    <strong>{bout.blueFighterName}</strong>
-                  </div>
-                  <div className="picks-recap-fight__result">
-                    <div><span>{removed ? "PICKS STATUS" : "OFFICIAL"}</span><b>{officialResult(bout)}</b></div>
-                    <div><span>YOUR PICK</span><b>{fighterName(bout, bout.pickedFighterSlug)}</b></div>
-                    <em className={`picks-verdict picks-verdict--${bout.verdict}`}>
-                      {removed ? "Excluded from scoring" : verdictLabel(bout.verdict)}
-                    </em>
-                  </div>
-                  <GroupPickReveal
-                    redFighterSlug={bout.redFighterSlug}
-                    redFighterName={bout.redFighterName}
-                    blueFighterSlug={bout.blueFighterSlug}
-                    blueFighterName={bout.blueFighterName}
-                    picks={bout.groupPicks ?? []}
-                  />
-                </article>
-              );
-            })}
-          </div>
-        </details>
-      </div>
-    </details>
-  );
 }
 
 export default function PicksPage() {
@@ -344,14 +211,12 @@ export default function PicksPage() {
             <section className="picks-card-zone">
               {cardOddsMeta ? (
                 <p className="picks-card-odds" aria-label="Sportsbook odds source">
-                  <span>SPORTSBOOK ODDS</span>
                   <strong>{cardOddsMeta}</strong>
                 </p>
               ) : null}
 
               <div className="picks-sticky-progress" aria-label="Current Picks progress">
-                <span>{progress.completed}/{progress.total} PICKS</span>
-                <em>LOCK · {underdogLockName}</em>
+                <span>{progress.completed}/{progress.total} PICKS · LOCK: {underdogLockName}</span>
               </div>
 
               <section className="picks-card-list" aria-label={`${activeEvent.name} fight picks`}>
@@ -479,61 +344,7 @@ export default function PicksPage() {
         </>
       ) : null}
 
-      {identity.profile ? (
-        <section className="picks-history" aria-labelledby="picks-history-title">
-          <div className="picks-history__heading">
-            <div>
-              <p className="eyebrow">COMPLETED EVENTS</p>
-              <h2 id="picks-history-title">Your event archive</h2>
-            </div>
-            <span>{picks.history.season ?? new Date().getFullYear()} SEASON</span>
-          </div>
-
-          {picks.loading && !picks.history.events.length ? (
-            <section className="surface-card picks-state-card" aria-live="polite">
-              <strong>Loading your event history…</strong>
-            </section>
-          ) : null}
-
-          {!picks.loading && !picks.history.events.length ? (
-            <section className="surface-card picks-history-empty">
-              <strong>No completed event recaps yet.</strong>
-              <p>Your first scored card will appear here after the event is completed.</p>
-            </section>
-          ) : null}
-
-          {picks.history.events.length ? (
-            <>
-              <section className="surface-card picks-history-summary" aria-label="Season Picks recap">
-                <div>
-                  <span>SEASON RECORD</span>
-                  <strong>{picks.history.summary.correct}-{picks.history.summary.incorrect}</strong>
-                </div>
-                <dl>
-                  <div><dt>BASE</dt><dd>{picks.history.summary.basePoints}</dd></div>
-                  <div><dt>LOCK</dt><dd>+{picks.history.summary.lockBonus}</dd></div>
-                  <div><dt>TOTAL</dt><dd>{picks.history.summary.totalPoints}</dd></div>
-                </dl>
-              </section>
-
-              <details className="surface-card picks-archive">
-                <summary className="picks-archive__summary">
-                  <div>
-                    <span>EVENT ARCHIVE</span>
-                    <strong>{picks.history.events.length} COMPLETED {picks.history.events.length === 1 ? "EVENT" : "EVENTS"}</strong>
-                  </div>
-                  <small>OPEN EVENT ARCHIVE</small>
-                </summary>
-                <div className="picks-recap-list">
-                  {picks.history.events.map((completedEvent, index) => (
-                    <EventRecap event={completedEvent} latest={index === 0} key={completedEvent.eventId} />
-                  ))}
-                </div>
-              </details>
-            </>
-          ) : null}
-        </section>
-      ) : null}
+      {identity.profile ? <PicksSeasonHub history={picks.history} loading={picks.loading} /> : null}
     </div>
   );
 }
