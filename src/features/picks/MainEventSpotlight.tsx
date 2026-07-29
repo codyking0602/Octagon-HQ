@@ -12,7 +12,10 @@ const profilePhotoBySlug = new Map(
     .filter(([path]) => !/-thumb\.(webp|png|jpe?g)$/i.test(path))
     .map(([path]) => {
       const filename = path.split("/").at(-1) ?? "";
-      return [filename.replace(/\.(webp|png|jpe?g)$/i, ""), path.replace(/^\/public/, "")] as const;
+      const slug = filename
+        .replace(/\.(webp|png|jpe?g)$/i, "")
+        .replace(/-profile$/i, "");
+      return [slug, path.replace(/^\/public/, "")] as const;
     }),
 );
 

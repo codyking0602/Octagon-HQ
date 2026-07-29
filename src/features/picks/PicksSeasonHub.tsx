@@ -10,6 +10,7 @@ import {
   type PickSeasonStanding,
 } from "./picksModel";
 import { GroupPickReveal } from "./GroupPickReveal";
+import { LatestEventRecap } from "./LatestEventRecap";
 
 interface BoutResultView {
   redFighterSlug: string;
@@ -118,7 +119,7 @@ function aggregateFallbackStandings(history: PickHistory): PickSeasonStanding[] 
   });
 }
 
-function EventRecap({ event, latest }: { event: PickHistoryEvent; latest: boolean }) {
+function EventRecap({ event }: { event: PickHistoryEvent }) {
   const orderedBouts = event.bouts.slice().sort((left, right) => left.position - right.position);
   const currentResult = event.groupResults.find((result) => result.isCurrentUser) ?? null;
   const finish = currentResult
@@ -131,7 +132,6 @@ function EventRecap({ event, latest }: { event: PickHistoryEvent; latest: boolea
       <summary className="picks-recap-card__summary">
         <div>
           <div className="picks-recap-card__date">
-            {latest ? <span className="picks-recap-card__latest">LATEST</span> : null}
             <time dateTime={event.completedAt}>{completedDate(event.completedAt)}</time>
           </div>
           <h3>{event.name}</h3>
@@ -237,6 +237,8 @@ export function PicksSeasonHub({ history, loading }: { history: PickHistory; loa
     ? `${groupRankLabel(currentStanding.rank, standings)} OF ${standings.length}`
     : standings.length ? `— OF ${standings.length}` : "NO RESULTS";
   const record = currentStanding ?? history.summary;
+  const latestEvent = history.events[0];
+  const olderEvents = history.events.slice(1);
 
   if (loading && !history.events.length) {
     return (
@@ -332,11 +334,12 @@ export function PicksSeasonHub({ history, loading }: { history: PickHistory; loa
                 </div>
                 <small>NEWEST FIRST</small>
               </div>
-              <div className="picks-recap-list">
-                {history.events.map((event, index) => (
-                  <EventRecap event={event} latest={index === 0} key={event.eventId} />
-                ))}
-              </div>
+              <LatestEventRecap event={latestEvent} />
+              {olderEvents.length ? (
+                <div className="picks-recap-list">
+                  {olderEvents.map((event) => <EventRecap event={event} key={event.eventId} />)}
+                </div>
+              ) : null}
             </section>
           )}
         </div>

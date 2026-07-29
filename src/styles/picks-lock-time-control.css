@@ -1,0 +1,46 @@
+.picks-control-deadline {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid rgba(255, 138, 31, .38);
+  border-radius: 13px;
+  background: rgba(255, 138, 31, .07);
+}
+
+.picks-control-deadline > div {
+  display: grid;
+  gap: 3px;
+}
+
+.picks-control-deadline span {
+  color: #ff8a1f;
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .1em;
+}
+
+.picks-control-deadline strong {
+  font-size: 16px;
+  line-height: 1.1;
+}
+
+.picks-control-deadline small {
+  color: var(--text-muted);
+  font-size: 9px;
+  line-height: 1.35;
+}
+
+.picks-control-deadline .secondary-action {
+  width: 100%;
+}
+
+@media (min-width: 680px) {
+  .picks-control-deadline {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .picks-control-deadline .secondary-action {
+    width: auto;
+  }
+}
