@@ -8,11 +8,34 @@ export type PlayGameId =
   | "keep-cut"
   | "better-than";
 
+export type PlayNewLineupControl =
+  | "none"
+  | "result-replay"
+  | "button-and-result-replay"
+  | "builder-reset";
+
+export type PlayRepetitionPolicy =
+  | "fixed-daily"
+  | "recent-items-deprioritized"
+  | "recent-fighters-deprioritized"
+  | "fixed-curated";
+
+export type PlayCompletionState =
+  | "leader-eliminated-or-nine-safe"
+  | "fourth-guess-locked"
+  | "five-picks-complete"
+  | "five-slots-locked"
+  | "eight-decisions-locked"
+  | "claim-locked";
+
 export interface PlayGameLineupDefinition {
   defaultType: PlayLineupType;
   supportedTypes: readonly PlayLineupType[];
   replayBehavior: PlayReplayBehavior;
+  newLineupControl: PlayNewLineupControl;
+  repetitionPolicy: PlayRepetitionPolicy;
   lineupSize: number | "variable";
+  completionState: PlayCompletionState;
   challengeEligible: boolean;
   dailyEligible: boolean;
   historyRecording: "official-daily" | "casual-and-challenge" | "challenge-completion";
@@ -37,7 +60,10 @@ export const playGames: readonly PlayGameDefinition[] = [
       defaultType: "daily",
       supportedTypes: ["daily", "curated"],
       replayBehavior: "same-daily-lineup",
+      newLineupControl: "none",
+      repetitionPolicy: "fixed-daily",
       lineupSize: 10,
+      completionState: "leader-eliminated-or-nine-safe",
       challengeEligible: true,
       dailyEligible: true,
       historyRecording: "official-daily",
@@ -53,7 +79,10 @@ export const playGames: readonly PlayGameDefinition[] = [
       defaultType: "replayable",
       supportedTypes: ["replayable", "curated"],
       replayBehavior: "new-lineup",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-items-deprioritized",
       lineupSize: 1,
+      completionState: "fourth-guess-locked",
       challengeEligible: true,
       dailyEligible: false,
       historyRecording: "casual-and-challenge",
@@ -69,7 +98,10 @@ export const playGames: readonly PlayGameDefinition[] = [
       defaultType: "replayable",
       supportedTypes: ["replayable", "curated"],
       replayBehavior: "new-lineup",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-fighters-deprioritized",
       lineupSize: 10,
+      completionState: "five-picks-complete",
       challengeEligible: true,
       dailyEligible: false,
       historyRecording: "casual-and-challenge",
@@ -85,7 +117,10 @@ export const playGames: readonly PlayGameDefinition[] = [
       defaultType: "replayable",
       supportedTypes: ["replayable", "curated"],
       replayBehavior: "new-lineup",
+      newLineupControl: "button-and-result-replay",
+      repetitionPolicy: "recent-fighters-deprioritized",
       lineupSize: 5,
+      completionState: "five-slots-locked",
       challengeEligible: true,
       dailyEligible: false,
       historyRecording: "casual-and-challenge",
@@ -101,7 +136,10 @@ export const playGames: readonly PlayGameDefinition[] = [
       defaultType: "replayable",
       supportedTypes: ["replayable", "curated"],
       replayBehavior: "new-lineup",
+      newLineupControl: "button-and-result-replay",
+      repetitionPolicy: "recent-fighters-deprioritized",
       lineupSize: 8,
+      completionState: "eight-decisions-locked",
       challengeEligible: true,
       dailyEligible: false,
       historyRecording: "casual-and-challenge",
@@ -117,7 +155,10 @@ export const playGames: readonly PlayGameDefinition[] = [
       defaultType: "curated",
       supportedTypes: ["curated"],
       replayBehavior: "same-curated-challenge",
+      newLineupControl: "builder-reset",
+      repetitionPolicy: "fixed-curated",
       lineupSize: "variable",
+      completionState: "claim-locked",
       challengeEligible: true,
       dailyEligible: false,
       historyRecording: "challenge-completion",
