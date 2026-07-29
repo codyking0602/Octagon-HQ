@@ -22,6 +22,7 @@ const PicksSetupPage = lazy(() => import("../features/picks-setup/PicksSetupPage
 const MonitoringInboxPage = lazy(() => import("../features/picks-monitoring/MonitoringInboxPage"));
 const WarRoomPage = lazy(() => import("../features/war-room/WarRoomPage"));
 const WarRoomJoinPage = lazy(() => import("../features/war-room/WarRoomJoinPage"));
+const WhatsNewPage = lazy(() => import("../features/whats-new/WhatsNewPage"));
 
 export const appRoutes: RouteObject[] = [
   {
@@ -48,6 +49,7 @@ export const appRoutes: RouteObject[] = [
       { path: "picks/monitoring", element: <MonitoringInboxPage /> },
       { path: "war-room/join", element: <WarRoomJoinPage /> },
       { path: "war-room", element: <WarRoomPage /> },
+      { path: "whats-new", element: <WhatsNewPage /> },
       { path: "*", element: <Navigate to="/" replace /> },
     ],
   },
