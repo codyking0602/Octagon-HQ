@@ -25,9 +25,9 @@ afterEach(() => {
 });
 
 describe("Fight Night event-wide Picks deadline", () => {
-  it("shows that every fight shares one deadline and lets the owner move it before the main card", async () => {
+  it("shows that every fight shares one deadline and lets the owner extend it before the main card", async () => {
     vi.spyOn(window, "prompt")
-      .mockReturnValueOnce("2026-08-01T11:30")
+      .mockReturnValueOnce("2026-08-01T18:30")
       .mockReturnValueOnce("Give the group another thirty minutes");
     vi.spyOn(window, "confirm").mockReturnValue(true);
     const adjustLockTime = vi.fn().mockResolvedValue(undefined);
@@ -38,8 +38,8 @@ describe("Fight Night event-wide Picks deadline", () => {
         subtitle: "Uroš Medić vs. Daniel Rodriguez",
         venue: "Belgrade Arena",
         location: "Belgrade, Serbia",
-        startsAt: "2026-08-01T17:00:00.000Z",
-        locksAt: "2026-08-01T16:00:00.000Z",
+        startsAt: "2026-08-01T19:00:00.000Z",
+        locksAt: "2026-08-01T18:00:00.000Z",
         season: 2026,
         status: "upcoming",
         canLock: false,
@@ -73,8 +73,8 @@ describe("Fight Night event-wide Picks deadline", () => {
 
     await waitFor(() => expect(adjustLockTime).toHaveBeenCalledWith(
       "ufc-belgrade",
-      new Date("2026-08-01T11:30").toISOString(),
-      "2026-08-01T16:00:00.000Z",
+      new Date("2026-08-01T18:30").toISOString(),
+      "2026-08-01T18:00:00.000Z",
       "Give the group another thirty minutes",
     ));
     expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("every fight"));
