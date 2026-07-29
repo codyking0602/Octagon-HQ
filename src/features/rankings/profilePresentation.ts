@@ -1,3 +1,4 @@
+import { formatFighterDisplayName } from "./fighterNamePresentation";
 import { categoryBoard, type CategoryGender, type RankingCategory } from "./rankingControls";
 import { categoryDisplayRating } from "./rankingDisplay";
 import type { RankingFighter } from "./rankingModel";
@@ -46,7 +47,7 @@ export const profileCategories = [
 export type ProfileCategory = (typeof profileCategories)[number];
 
 export function profileDisplayName(fighter: RankingFighter) {
-  return fighter.displayName;
+  return formatFighterDisplayName(fighter.slug, fighter.name, "profile");
 }
 
 export function tierForRating(rating: number) {
