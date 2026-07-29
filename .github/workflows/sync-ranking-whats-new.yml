@@ -1,0 +1,107 @@
+name: Sync Rankings What's New
+
+on:
+  workflow_run:
+    workflows:
+      - Deploy Cloudflare Frontend
+    types:
+      - completed
+
+permissions:
+  contents: read
+
+concurrency:
+  group: octagon-hq-ranking-whats-new
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
+
+    steps:
+      - name: Check out exact deployed Rankings source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 1
+          persist-credentials: false
+          show-progress: false
+
+      - name: Verify exact deployed SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          checked_out_sha=$(git rev-parse HEAD)
+          if [ "$checked_out_sha" != "$SOURCE_SHA" ]; then
+            echo "::error title=Exact SHA checkout failed::Expected $SOURCE_SHA but checked out $checked_out_sha."
+            exit 1
+          fi
+          echo "Exact deployed Rankings source verified: $checked_out_sha"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install application dependencies
+        run: npm install --silent
+
+      - name: Synchronize canonical Rankings into What's New
+        shell: bash
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+          RANKING_SYNC_MAX_ATTEMPTS: "20"
+          RANKING_SYNC_RETRY_DELAY_MS: "15000"
+        run: |
+          set -euo pipefail
+          for name in SUPABASE_ACCESS_TOKEN SUPABASE_PROJECT_ID; do
+            if [ -z "${!name:-}" ]; then
+              echo "::error title=Missing synchronization secret::$name is missing or empty."
+              exit 1
+            fi
+          done
+
+          api_keys_file="$RUNNER_TEMP/supabase-api-keys.json"
+          trap 'rm -f "$api_keys_file"' EXIT
+
+          curl --fail --silent --show-error \
+            --header "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+            "https://api.supabase.com/v1/projects/${SUPABASE_PROJECT_ID}/api-keys?reveal=true" \
+            --output "$api_keys_file"
+
+          service_key=$(node - "$api_keys_file" <<'NODE'
+          const fs = require('fs');
+          const keys = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+          const serviceKey = keys.find((key) => key.type === 'secret')
+            ?? keys.find((key) => key.type === 'legacy' && /service.?role/i.test(key.name ?? ''));
+          process.stdout.write(serviceKey?.api_key ?? '');
+          NODE
+          )
+
+          if [ -z "$service_key" ]; then
+            echo "::error title=Missing Supabase service key::No secret or service-role API key was returned."
+            exit 1
+          fi
+
+          echo "::add-mask::$service_key"
+          SUPABASE_URL="https://${SUPABASE_PROJECT_ID}.supabase.co" \
+          SUPABASE_SERVICE_ROLE_KEY="$service_key" \
+          node scripts/sync-ranking-whats-new.mjs
+
+      - name: Record Rankings synchronization
+        shell: bash
+        run: |
+          {
+            echo "### Rankings synchronized into What's New"
+            echo "- Exact deployed source SHA: \`$SOURCE_SHA\`"
+            echo "- Canonical calculated Rankings model was used"
+            echo "- Initial state baselines quietly; later new fighters and 3+ position moves publish automatically"
+            echo "- No PR-head, browser, polling, or local-storage publication path was used"
+          } >> "$GITHUB_STEP_SUMMARY"
