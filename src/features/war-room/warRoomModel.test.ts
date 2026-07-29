@@ -29,6 +29,7 @@ function message(id: string, createdAt: string, body: string): WarRoomMessage {
     author: cody,
     parent: null,
     mentions: [],
+    reactions: [],
     canDelete: true,
   };
 }
