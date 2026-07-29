@@ -122,6 +122,10 @@ export function replayLabelFor(type: PlayLineupType) {
   return "PLAY AGAIN";
 }
 
+export function dailyLineupSeed(day: string) {
+  return `daily|${cleanPart(day)}`;
+}
+
 export function dailyLineupIdentity(gameId: string, day: string, scopeId = "default"): PlayLineupIdentity {
   const cleanGame = cleanPart(gameId);
   const cleanScope = cleanPart(scopeId);
@@ -131,7 +135,7 @@ export function dailyLineupIdentity(gameId: string, day: string, scopeId = "defa
     type: "daily",
     scopeId: cleanScope,
     challengeId: `${cleanGame}:daily:${cleanDay}:${cleanScope}`,
-    seed: `daily|${cleanGame}|${cleanDay}|${cleanScope}`,
+    seed: dailyLineupSeed(day),
     replayBehavior: "same-daily-lineup",
     day,
   };
