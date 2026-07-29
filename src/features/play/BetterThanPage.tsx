@@ -21,6 +21,13 @@ import {
   type BetterThanPoolId,
 } from "./betterThanEngine";
 import { GameResultActions } from "./GameResultActions";
+import {
+  curatedLineupIdentity,
+  recordLineupCompletion,
+  rememberLineup,
+  replayLabelFor,
+  type PlayLineupIdentity,
+} from "./lineupModel";
 import { getPlayFighter, rankedPlayFighters, type PlayFighter } from "./playFighterPool";
 
 function record(value: ChallengeJson | undefined): { [key: string]: ChallengeJson } | null {
@@ -80,6 +87,17 @@ function ResultList({ title, fighters }: { title: string; fighters: readonly Pla
   );
 }
 
+function curatedClaimIdentity(
+  challenge: BetterThanChallenge,
+  challengeId: string,
+): PlayLineupIdentity {
+  const itemIds = [challenge.target.id, ...challenge.selections.map((fighter) => fighter.id)];
+  const scopeId = `${challenge.lens.id}:${challenge.pool.id}:${challenge.claimCount}`;
+  const identity = curatedLineupIdentity("better-than", challengeId, itemIds, scopeId);
+  rememberLineup(identity, itemIds, challenge.selections.map((fighter) => fighter.id));
+  return identity;
+}
+
 export default function BetterThanPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -111,6 +129,7 @@ export default function BetterThanPage() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [query, setQuery] = useState("");
   const [locked, setLocked] = useState(false);
+  const [lineupIdentity, setLineupIdentity] = useState<PlayLineupIdentity | null>(null);
   const [shareStatus, setShareStatus] = useState("");
 
   const target = getPlayFighter(targetId) ?? defaultTarget;
@@ -131,6 +150,7 @@ export default function BetterThanPage() {
     setSelected(new Set());
     setClaimCount(Math.max(1, Math.min(nextCount, betterThanMaxClaim(target.id, pool.id))));
     setLocked(false);
+    setLineupIdentity(null);
     setShareStatus("");
     setQuery("");
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -153,6 +173,7 @@ export default function BetterThanPage() {
     setSelected(new Set());
     setClaimCount(Math.min(5, betterThanMaxClaim(nextTarget.id, "all")));
     setLocked(false);
+    setLineupIdentity(null);
     setQuery("");
   }
 
@@ -161,6 +182,7 @@ export default function BetterThanPage() {
     setSelected(new Set());
     setClaimCount(Math.min(claimCount, betterThanMaxClaim(target.id, nextPool)));
     setLocked(false);
+    setLineupIdentity(null);
     setQuery("");
   }
 
@@ -168,6 +190,7 @@ export default function BetterThanPage() {
     setClaimCount(Math.max(1, Math.min(maxClaim, nextCount)));
     setSelected(new Set());
     setLocked(false);
+    setLineupIdentity(null);
   }
 
   function currentChallenge(): BetterThanChallenge {
@@ -176,12 +199,19 @@ export default function BetterThanPage() {
 
   function lockClaim() {
     if (!ready) return;
-    if (profileMatch.isRecipient) {
-      profileMatch.submitResult(asJson({
-        claimCount,
-        selections: selectedFighters.map((fighter) => ({ id: fighter.id, name: fighter.name })),
-      }));
-    }
+    const challenge = currentChallenge();
+    const fingerprint = `${target.id}:${lens.id}:${pool.id}:${claimCount}:${selectedFighters.map((fighter) => fighter.id).join("|")}`;
+    const identity = curatedClaimIdentity(
+      challenge,
+      profileMatch.challenge?.code ?? (incoming ? `shared:${fingerprint}` : `claim:${fingerprint}`),
+    );
+    const result = {
+      claimCount,
+      selections: selectedFighters.map((fighter) => ({ id: fighter.id, name: fighter.name })),
+    };
+    recordLineupCompletion(identity, result);
+    setLineupIdentity(identity);
+    if (profileMatch.isRecipient) profileMatch.submitResult(asJson(result));
     setLocked(true);
   }
 
@@ -263,8 +293,9 @@ export default function BetterThanPage() {
 
         <GameResultActions
           onChallenge={() => void challengeSomeone()}
-          onReplay={() => resetSelections(challengeMode ? incoming!.claimCount : 5)}
+          onReplay={() => resetSelections(claimCount)}
           onAllGames={() => navigate("/play")}
+          replayLabel={replayLabelFor(lineupIdentity?.type ?? "curated")}
           status={shareStatus}
         />
       </div>
@@ -283,7 +314,7 @@ export default function BetterThanPage() {
       <section className="better-than-builder">
         <header className="better-than-builder__header">
           <div>
-            <p className="eyebrow">{challengeMode ? "FRIEND CHALLENGE" : "SUBJECTIVE CLAIM BUILDER"}</p>
+            <p className="eyebrow">{challengeMode ? "FRIEND CHALLENGE" : "CURATED CHALLENGE BUILDER"}</p>
             <h1>{challengeMode ? "Build your counterclaim." : "Make a UFC argument."}</h1>
             <p>{challengeMode ? "The original exact list stays hidden until you lock yours." : "Set the argument, then pick the exact names you can defend."}</p>
           </div>
@@ -295,7 +326,7 @@ export default function BetterThanPage() {
 
         <div className="better-than-controls">
           <label className="better-than-field better-than-field--target"><span>CHALLENGE FIGHTER</span><select value={target.id} disabled={challengeMode} onChange={(event) => changeTarget(event.target.value)}>{rankedPlayFighters.map((fighter) => <option value={fighter.id} key={fighter.id}>{fighter.name}</option>)}</select></label>
-          <label className="better-than-field"><span>BETTER AT</span><select value={lens.id} disabled={challengeMode} onChange={(event) => { setLensId(event.target.value as BetterThanLensId); setSelected(new Set()); }}>{BETTER_THAN_LENSES.map((row) => <option value={row.id} key={row.id}>{row.label}</option>)}</select></label>
+          <label className="better-than-field"><span>BETTER AT</span><select value={lens.id} disabled={challengeMode} onChange={(event) => { setLensId(event.target.value as BetterThanLensId); setSelected(new Set()); setLineupIdentity(null); }}>{BETTER_THAN_LENSES.map((row) => <option value={row.id} key={row.id}>{row.label}</option>)}</select></label>
           <label className="better-than-field better-than-field--pool"><span>ELIGIBLE POOL</span><select value={pool.id} disabled={challengeMode} onChange={(event) => changePool(event.target.value as BetterThanPoolId)}>{betterThanPoolOptions(target).map((row) => <option value={row.id} key={row.id}>{row.label}</option>)}</select></label>
           <div className="better-than-count-control"><span>MY NUMBER</span><div><button type="button" disabled={claimCount <= 1} onClick={() => changeCount(claimCount - 1)}>−</button><strong>{claimCount}</strong><button type="button" disabled={claimCount >= maxClaim} onClick={() => changeCount(claimCount + 1)}>+</button></div><small>1–{maxClaim} allowed</small></div>
         </div>
