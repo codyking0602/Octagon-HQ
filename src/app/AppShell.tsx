@@ -4,7 +4,7 @@ import { BrandMark } from "../components/BrandMark";
 import { BottomNavigation } from "../components/BottomNavigation";
 import { RouteLoading } from "../components/RouteLoading";
 import { IdentityControl } from "../features/identity/IdentityControl";
-import { WhatsNewHeaderAction } from "../features/whats-new/WhatsNewHeaderAction";
+import { NotificationHeaderAction } from "../features/notifications/NotificationHeaderAction";
 
 const PLAY_GAME_TITLES: Record<string, string> = {
   "/play/find-leader": "Find the Leader",
@@ -35,7 +35,7 @@ export function AppShell() {
             <BrandMark size="compact" />
           </Link>
           <div className="app-header__actions">
-            <WhatsNewHeaderAction />
+            <NotificationHeaderAction />
             <NavLink
               className={({ isActive }) => (isActive ? "app-ask-action is-active" : "app-ask-action")}
               to="/intelligence"
