@@ -6,7 +6,7 @@ const sql = readFileSync(
   "utf8",
 );
 const correctionSql = readFileSync(
-  "supabase/migrations/202608180002_correct_belgrade_main_card_time.sql",
+  "supabase/migrations/202608180003_correct_accented_belgrade_main_card_time.sql",
   "utf8",
 );
 
@@ -36,10 +36,11 @@ describe("event-wide Picks deadline control", () => {
     expect(sql).toContain("Picks lock cannot follow the main-card start");
   });
 
-  it("applies the Belgrade correction through a new deployable migration", () => {
+  it("matches the accented Medić event without relying on an ASCII fighter-name comparison", () => {
     expect(correctionSql).toContain("timestamptz '2026-08-01 17:00:00+00'");
-    expect(correctionSql).toContain("lower(subtitle) like '%medic%'");
+    expect(correctionSql).toContain("lower(location) like '%belgrade%'");
     expect(correctionSql).toContain("lower(subtitle) like '%rodriguez%'");
+    expect(correctionSql).not.toContain("lower(subtitle) like '%medic%'");
     expect(correctionSql).toContain("update public.pick_event_drafts");
     expect(correctionSql).toContain("when locks_at = starts_at");
   });
