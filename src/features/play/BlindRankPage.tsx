@@ -8,15 +8,30 @@ import {
   blindRankChallengeUrl,
   blindRankPacks,
   createBlindRankLineup,
-  createBlindRankSeed,
-  loadBlindRankHistory,
   loadBlindRankPack,
   resolveBlindRankChallenge,
   saveBlindRankPack,
-  saveBlindRankReveal,
 } from "./blindRankEngine";
 import { GameResultActions } from "./GameResultActions";
-import type { BlindRankPackId, PlayFighter } from "./playFighterPool";
+import {
+  curatedLineupIdentity,
+  recordLineupCompletion,
+  rememberLineup,
+  replayLabelFor,
+  selectReplayLineup,
+  type PlayLineupIdentity,
+} from "./lineupModel";
+import {
+  blindRankPool,
+  type BlindRankPackId,
+  type PlayFighter,
+} from "./playFighterPool";
+
+interface BlindRankRun {
+  packId: BlindRankPackId;
+  lineup: PlayFighter[];
+  identity: PlayLineupIdentity;
+}
 
 function packIsValid(value: string | null): value is BlindRankPackId {
   return blindRankPacks.some((pack) => pack.id === value);
@@ -49,6 +64,40 @@ function compactDivision(fighter: PlayFighter) {
   return fighter.divisions.map((division) => abbreviations[division] ?? division).join(" / ");
 }
 
+function casualBlindRankRun(packId: BlindRankPackId): BlindRankRun {
+  const pool = blindRankPool(packId);
+  const validIds = new Set(pool.map((fighter) => fighter.id));
+  const selected = selectReplayLineup({
+    gameId: "blind-rank",
+    scopeId: packId,
+    lineupSize: 5,
+    attempts: 12,
+    validItemIds: validIds,
+    validFighterIds: validIds,
+    build: (seed) => {
+      const generated = createBlindRankLineup(packId, seed);
+      const ids = generated.fighters.map((fighter) => fighter.id);
+      return {
+        value: generated.fighters,
+        itemIds: ids,
+        fighterIds: ids,
+      };
+    },
+  });
+  return { packId, lineup: selected.value, identity: selected.identity };
+}
+
+function curatedBlindRankRun(
+  packId: BlindRankPackId,
+  lineup: PlayFighter[],
+  challengeId: string,
+): BlindRankRun {
+  const ids = lineup.map((fighter) => fighter.id);
+  const identity = curatedLineupIdentity("blind-rank", challengeId, ids, packId);
+  rememberLineup(identity, ids, ids);
+  return { packId, lineup, identity };
+}
+
 export default function BlindRankPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -61,31 +110,35 @@ export default function BlindRankPage() {
   const profileLineup = profilePack ? resolveBlindRankChallenge(profilePack, profileLineupIds) : null;
   const queryPack = searchParams.get("pack");
   const initialPack = profilePack ?? (packIsValid(queryPack) ? queryPack : loadBlindRankPack());
+  const queryLineup = searchParams.get("lineup") ?? "";
   const sharedLineup = useMemo(() => {
     if (profileLineup) return profileLineup;
-    const ids = (searchParams.get("lineup") ?? "").split(",").map((value) => value.trim()).filter(Boolean);
+    const ids = queryLineup.split(",").map((value) => value.trim()).filter(Boolean);
     return resolveBlindRankChallenge(initialPack, ids);
-  }, [initialPack, profileLineup, searchParams]);
-  const shared = Boolean(sharedLineup);
-  const initialSeed = useMemo(() => createBlindRankSeed(), []);
-  const initialLineup = useMemo(
-    () => sharedLineup ?? createBlindRankLineup(initialPack, initialSeed, loadBlindRankHistory(initialPack)).fighters,
-    [initialPack, initialSeed, sharedLineup],
+  }, [initialPack, profileLineup, queryLineup]);
+  const sharedChallengeId = profileMatch.challenge?.code
+    ?? `shared:${initialPack}:${sharedLineup?.map((fighter) => fighter.id).join("|") ?? "invalid"}`;
+  const [run, setRun] = useState<BlindRankRun>(() =>
+    sharedLineup
+      ? curatedBlindRankRun(initialPack, sharedLineup, sharedChallengeId)
+      : casualBlindRankRun(initialPack),
   );
-
-  const [packId, setPackId] = useState<BlindRankPackId>(initialPack);
-  const [lineup, setLineup] = useState<PlayFighter[]>(initialLineup);
   const [placements, setPlacements] = useState<Array<PlayFighter | null>>(Array(5).fill(null));
   const [currentIndex, setCurrentIndex] = useState(0);
   const [challengeStatus, setChallengeStatus] = useState("");
-  const pack = blindRankPacks.find((item) => item.id === packId)!;
+  const pack = blindRankPacks.find((item) => item.id === run.packId)!;
   const complete = currentIndex >= 5;
-  const current = lineup[currentIndex];
+  const current = run.lineup[currentIndex];
+  const shared = run.identity.type === "curated";
 
   useEffect(() => {
-    if (!complete || !profileMatch.isRecipient || profileMatch.challenge?.responderResult !== null) return;
-    profileMatch.submitResult(asJson({ placements: placements.flatMap((fighter) => fighter ? [fighter.id] : []) }));
-  }, [complete, placements, profileMatch]);
+    if (!complete) return;
+    const result = { placements: placements.flatMap((fighter) => fighter ? [fighter.id] : []) };
+    recordLineupCompletion(run.identity, result);
+    if (profileMatch.isRecipient && profileMatch.challenge?.responderResult === null) {
+      profileMatch.submitResult(asJson(result));
+    }
+  }, [complete, placements, profileMatch, run.identity]);
 
   function resetPlacements() {
     setPlacements(Array(5).fill(null));
@@ -94,13 +147,15 @@ export default function BlindRankPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  function startNewLineup(nextPack = packId) {
-    const nextSeed = createBlindRankSeed();
-    const next = createBlindRankLineup(nextPack, nextSeed, loadBlindRankHistory(nextPack));
+  function startNewLineup(nextPack = run.packId) {
     saveBlindRankPack(nextPack);
-    setPackId(nextPack);
-    setLineup(next.fighters);
+    setRun(casualBlindRankRun(nextPack));
     resetPlacements();
+  }
+
+  function replay() {
+    if (run.identity.type === "replayable") startNewLineup();
+    else resetPlacements();
   }
 
   function changePack(nextPack: BlindRankPackId) {
@@ -112,7 +167,6 @@ export default function BlindRankPage() {
     const next = [...placements];
     next[slotIndex] = current;
     setPlacements(next);
-    if (!shared) saveBlindRankReveal(packId, current.id, lineup);
     setCurrentIndex((index) => index + 1);
   }
 
@@ -125,15 +179,15 @@ export default function BlindRankPage() {
       gameTitle: "Blind Rank 5",
       summary: `${pack.name} · same five fighters`,
       setup: asJson({
-        packId,
+        packId: run.packId,
         packName: pack.name,
-        lineupIds: lineup.map((fighter) => fighter.id),
-        lineup: lineup.map((fighter) => ({ id: fighter.id, name: fighter.name })),
+        lineupIds: run.lineup.map((fighter) => fighter.id),
+        lineup: run.lineup.map((fighter) => ({ id: fighter.id, name: fighter.name })),
       }),
       creatorResult: asJson({ placements: placements.flatMap((fighter) => fighter ? [fighter.id] : []) }),
       shareTitle: "Blind Rank 5 Challenge",
       shareText: `I challenged you to rank the same five UFC fighters in ${pack.name}. Every slot locks before the next reveal.`,
-      shareUrl: blindRankChallengeUrl(packId, lineup),
+      shareUrl: blindRankChallengeUrl(run.packId, run.lineup),
     });
     setChallengeStatus(status);
   }
@@ -149,7 +203,7 @@ export default function BlindRankPage() {
       ) : null}
       <section className="blind-rank-intro">
         <div>
-          <p className="eyebrow">{shared ? "FRIEND CHALLENGE" : "BLIND RANK 5"}</p>
+          <p className="eyebrow">{shared ? "FRIEND CHALLENGE" : "REPLAYABLE GAME"}</p>
           <h1>{shared ? "Same five. Your ranking." : pack.prompt}</h1>
           <p>{pack.intro}</p>
         </div>
@@ -157,7 +211,7 @@ export default function BlindRankPage() {
           <div className="blind-rank-controls">
             <label>
               <span>Category</span>
-              <select aria-label="Blind Rank category" value={packId} onChange={(event) => changePack(event.target.value as BlindRankPackId)}>
+              <select aria-label="Blind Rank category" value={run.packId} onChange={(event) => changePack(event.target.value as BlindRankPackId)}>
                 {blindRankPacks.map((item) => <option value={item.id} key={item.id}>{item.name}</option>)}
               </select>
             </label>
@@ -198,8 +252,9 @@ export default function BlindRankPage() {
             </div>
             <GameResultActions
               onChallenge={() => void challengeSomeone()}
-              onReplay={resetPlacements}
+              onReplay={replay}
               onAllGames={() => navigate("/play")}
+              replayLabel={replayLabelFor(run.identity.type)}
               status={challengeStatus}
             />
           </div>
