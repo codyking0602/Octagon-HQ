@@ -51,7 +51,7 @@ function WatchFighterCard({ fighter, index }: { fighter: ShaneWatchFighter; inde
 
 export function ShanesWatchlistCard() {
   return (
-    <details className="home-collapsible shane-watchlist">
+    <details className="home-collapsible shane-watchlist" id="shanes-watchlist">
       <summary>
         <span className="home-collapsible__copy">
           <small>SCOUTING BOARD</small>
