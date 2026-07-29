@@ -1,0 +1,224 @@
+.play-page > .page-heading > p:not(.eyebrow) {
+  font-size: 0;
+  line-height: 1.45;
+}
+
+.play-page > .page-heading > p:not(.eyebrow)::after {
+  content: "Daily challenges and UFC debates built to argue about.";
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.play-daily__graphic b {
+  align-content: center;
+  gap: 2px;
+}
+
+.play-daily__graphic b::after {
+  color: var(--text-muted);
+  font-size: 7px;
+  font-weight: 950;
+  letter-spacing: .13em;
+}
+
+.play-daily__graphic b:first-child::after {
+  content: "FIGHTERS";
+}
+
+.play-daily__graphic b:last-of-type::after {
+  content: "LEADER";
+}
+
+.play-daily__graphic > small {
+  display: none;
+}
+
+.play-daily__challenge > em {
+  display: grid;
+  place-items: center;
+  min-height: 34px;
+  margin-top: 1px;
+  border-top: 1px solid rgba(255, 255, 255, .08);
+  color: transparent;
+  font-size: 0;
+}
+
+.play-daily__challenge > em::after {
+  content: "TAP TO PLAY  →";
+  color: var(--text-primary);
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 1000;
+  letter-spacing: .12em;
+}
+
+.play-daily__dots {
+  justify-content: stretch;
+  gap: 7px;
+}
+
+.play-daily__dots button {
+  display: grid;
+  place-items: center;
+  width: auto;
+  min-width: 0;
+  height: 30px;
+  flex: 1 1 0;
+  border: 1px solid var(--border);
+  background: #111114;
+  color: var(--text-muted);
+  font-size: 0;
+}
+
+.play-daily__dots button::after {
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.play-daily__dots button:first-child::after {
+  content: "CHALLENGE";
+}
+
+.play-daily__dots button:last-child::after {
+  content: "VIEW LEADERBOARD  →";
+}
+
+.play-daily__dots button.is-active {
+  border-color: rgba(240, 23, 23, .55);
+  background: rgba(210, 10, 10, .13);
+  color: var(--text-primary);
+}
+
+.find-history summary > span {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  color: var(--text-muted);
+  font-size: 9px;
+}
+
+.find-history summary > span b:first-child {
+  color: var(--text-primary);
+  font-size: 17px;
+  line-height: 1;
+}
+
+.find-history summary > span b:last-child {
+  color: var(--text-muted);
+  font-size: 9px;
+}
+
+.play-games__grid {
+  gap: 8px;
+}
+
+.play-game-card {
+  grid-template-columns: 46px minmax(0, 1fr) auto;
+  column-gap: 10px;
+  row-gap: 4px;
+  min-height: 102px;
+  padding: 10px 12px;
+}
+
+.play-game-card__icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  font-size: 19px;
+}
+
+.play-game-card__status {
+  padding: 4px 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ufc-red-strong);
+  font-size: 0;
+}
+
+.play-game-card__status::after {
+  content: "PLAY  →";
+  font-size: 8px;
+  font-weight: 1000;
+  letter-spacing: .08em;
+}
+
+.play-game-card > strong {
+  font-size: 18px;
+}
+
+.play-game-card > small {
+  font-size: 11px;
+  line-height: 1.32;
+}
+
+.play-games__grid > .play-game-card:last-child .play-game-card__icon {
+  font-size: 0;
+}
+
+.play-games__grid > .play-game-card:last-child .play-game-card__icon::after {
+  content: "1+";
+  font-size: 19px;
+  font-weight: 1000;
+  letter-spacing: -.06em;
+}
+
+.challenge-center:has(.challenge-center__empty) {
+  gap: 5px;
+  padding: 11px 12px;
+}
+
+.challenge-center:has(.challenge-center__empty) .challenge-center__header {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.challenge-center:has(.challenge-center__empty) .challenge-center__header h2,
+.challenge-center:has(.challenge-center__empty) .challenge-center__refresh,
+.challenge-center:has(.challenge-center__empty) .challenge-center__hint,
+.challenge-center:has(.challenge-center__empty) .challenge-center__filters {
+  display: none;
+}
+
+.challenge-center:has(.challenge-center__empty) .challenge-center__empty {
+  padding: 1px 0 2px;
+  border: 0;
+  color: transparent;
+  font-size: 0;
+  text-align: left;
+}
+
+.challenge-center:has(.challenge-center__empty) .challenge-center__empty::before {
+  content: "No active matchups";
+  display: block;
+  color: var(--text-primary);
+  font-size: 16px;
+  font-weight: 950;
+  line-height: 1.1;
+}
+
+.challenge-center:has(.challenge-center__empty) .challenge-center__empty::after {
+  content: "Finish a game and challenge another profile.";
+  display: block;
+  margin-top: 5px;
+  color: var(--text-muted);
+  font-size: 9px;
+  line-height: 1.35;
+}
+
+.challenge-center:has(.challenge-center__refresh:disabled) .challenge-center__empty::before {
+  content: "Syncing matchups";
+}
+
+.challenge-center:has(.challenge-center__refresh:disabled) .challenge-center__empty::after {
+  content: "Checking your latest profile challenges.";
+}
+
+@media (max-width: 420px) {
+  .play-daily__dots button::after {
+    font-size: 7px;
+  }
+
+  .play-game-card {
+    min-height: 100px;
+  }
+}
