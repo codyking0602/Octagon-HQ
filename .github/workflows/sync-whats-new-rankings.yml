@@ -128,11 +128,14 @@ jobs:
           )
           echo "::add-mask::$service_role_key"
 
-          export SUPABASE_URL="https://${SUPABASE_PROJECT_ID}.supabase.co"
-          export SUPABASE_SERVICE_ROLE_KEY="$service_role_key"
-          export SOURCE_SHA
+          SUPABASE_URL="https://${SUPABASE_PROJECT_ID}.supabase.co" \
+          SUPABASE_SERVICE_ROLE_KEY="$service_role_key" \
+          SOURCE_SHA="$SOURCE_SHA" \
+            node scripts/sync-ranking-whats-new.mjs
 
-          node scripts/sync-ranking-whats-new.mjs
-          node scripts/sync-engagement-whats-new.mjs
+          SUPABASE_URL="https://${SUPABASE_PROJECT_ID}.supabase.co" \
+          SUPABASE_SERVICE_ROLE_KEY="$service_role_key" \
+          SOURCE_SHA="$SOURCE_SHA" \
+            node scripts/sync-engagement-whats-new.mjs
 
-          unset service_role_key SUPABASE_SERVICE_ROLE_KEY
+          unset service_role_key
