@@ -163,56 +163,6 @@
   letter-spacing: -.06em;
 }
 
-.challenge-center:has(.challenge-center__empty) {
-  gap: 5px;
-  padding: 11px 12px;
-}
-
-.challenge-center:has(.challenge-center__empty) .challenge-center__header {
-  grid-template-columns: minmax(0, 1fr);
-}
-
-.challenge-center:has(.challenge-center__empty) .challenge-center__header h2,
-.challenge-center:has(.challenge-center__empty) .challenge-center__refresh,
-.challenge-center:has(.challenge-center__empty) .challenge-center__hint,
-.challenge-center:has(.challenge-center__empty) .challenge-center__filters {
-  display: none;
-}
-
-.challenge-center:has(.challenge-center__empty) .challenge-center__empty {
-  padding: 1px 0 2px;
-  border: 0;
-  color: transparent;
-  font-size: 0;
-  text-align: left;
-}
-
-.challenge-center:has(.challenge-center__empty) .challenge-center__empty::before {
-  content: "No active matchups";
-  display: block;
-  color: var(--text-primary);
-  font-size: 16px;
-  font-weight: 950;
-  line-height: 1.1;
-}
-
-.challenge-center:has(.challenge-center__empty) .challenge-center__empty::after {
-  content: "Finish a game and challenge another profile.";
-  display: block;
-  margin-top: 5px;
-  color: var(--text-muted);
-  font-size: 9px;
-  line-height: 1.35;
-}
-
-.challenge-center:has(.challenge-center__refresh:disabled) .challenge-center__empty::before {
-  content: "Syncing matchups";
-}
-
-.challenge-center:has(.challenge-center__refresh:disabled) .challenge-center__empty::after {
-  content: "Checking your latest profile challenges.";
-}
-
 @media (max-width: 420px) {
   .play-daily__dots button::after {
     font-size: 7px;
