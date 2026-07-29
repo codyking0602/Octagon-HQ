@@ -4,6 +4,14 @@ import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import type { ChallengeJson } from "../challenges/challengeModel";
 import { GameResultActions } from "./GameResultActions";
 import {
+  curatedLineupIdentity,
+  recordLineupCompletion,
+  rememberLineup,
+  replayLabelFor,
+  selectReplayLineup,
+  type PlayLineupIdentity,
+} from "./lineupModel";
+import {
   clampWavelength,
   wavelengthDistanceCopy,
   wavelengthScore,
@@ -17,24 +25,10 @@ import {
   wavelengthChallengeUrl,
 } from "./wavelengthChallenge";
 
-const LAST_TARGET_KEY = "octagon-hq:wavelength-last-target:v2";
-
-function previousTarget() {
-  if (typeof window === "undefined") return 0;
-  return Number(window.localStorage.getItem(LAST_TARGET_KEY)) || 0;
-}
-
-function rememberTarget(target: number) {
-  if (typeof window !== "undefined") window.localStorage.setItem(LAST_TARGET_KEY, String(target));
-}
-
-function freshSeed() {
-  const previous = previousTarget();
-  for (let attempt = 0; attempt < 6; attempt += 1) {
-    const seed = createWavelengthSeed();
-    if (createChallengeWavelengthRound(seed).target !== previous) return seed;
-  }
-  return createWavelengthSeed();
+interface WavelengthRun {
+  seed: string;
+  initialRound: WavelengthRound;
+  identity: PlayLineupIdentity;
 }
 
 function record(value: ChallengeJson | undefined): { [key: string]: ChallengeJson } | null {
@@ -67,6 +61,32 @@ function asJson(value: unknown): ChallengeJson {
   return JSON.parse(JSON.stringify(value)) as ChallengeJson;
 }
 
+function targetId(round: WavelengthRound) {
+  return `target:${round.target}`;
+}
+
+function casualWavelengthRun(): WavelengthRun {
+  const selected = selectReplayLineup({
+    gameId: "wavelength",
+    lineupSize: 1,
+    attempts: 10,
+    build: (seed) => {
+      const initialRound = createChallengeWavelengthRound(seed);
+      return {
+        value: { seed, initialRound },
+        itemIds: [targetId(initialRound)],
+      };
+    },
+  });
+  return { ...selected.value, identity: selected.identity };
+}
+
+function curatedWavelengthRun(seed: string, initialRound: WavelengthRound, challengeId: string): WavelengthRun {
+  const identity = curatedLineupIdentity("wavelength", challengeId, [targetId(initialRound)]);
+  rememberLineup(identity, [targetId(initialRound)]);
+  return { seed, initialRound, identity };
+}
+
 export default function WavelengthGame({
   challengeSeed,
   onExit,
@@ -79,13 +99,22 @@ export default function WavelengthGame({
   const profileSetup = record(profileMatch.challenge?.setup);
   const profileSeed = typeof profileSetup?.seed === "string" ? profileSetup.seed : undefined;
   const profileRound = storedRound(profileSetup?.round);
-  const initialSeed = useMemo(() => profileSeed ?? challengeSeed ?? freshSeed(), [challengeSeed, profileSeed]);
-  const initialRound = useMemo(() => {
-    const nextRound = profileRound ?? createChallengeWavelengthRound(initialSeed);
-    rememberTarget(nextRound.target);
-    return nextRound;
-  }, [initialSeed, profileRound]);
-  const [round, setRound] = useState<WavelengthRound>(initialRound);
+  const curatedSeed = profileSeed ?? challengeSeed;
+  const curatedRound = useMemo(
+    () => curatedSeed ? profileRound ?? createChallengeWavelengthRound(curatedSeed) : null,
+    [curatedSeed, profileRound],
+  );
+  const [run, setRun] = useState<WavelengthRun>(() => {
+    if (curatedSeed && curatedRound) {
+      return curatedWavelengthRun(
+        curatedSeed,
+        curatedRound,
+        profileMatch.challenge?.code ?? `shared:${curatedSeed}`,
+      );
+    }
+    return casualWavelengthRun();
+  });
+  const [round, setRound] = useState<WavelengthRound>(run.initialRound);
   const [clueIndex, setClueIndex] = useState(0);
   const [guess, setGuess] = useState(50);
   const [guesses, setGuesses] = useState<number[]>([]);
@@ -93,14 +122,19 @@ export default function WavelengthGame({
   const [challengeStatus, setChallengeStatus] = useState("");
   const clue = round.clues[clueIndex];
 
-  function replay() {
-    setRound(profileRound ?? createChallengeWavelengthRound(initialSeed));
+  function resetRound(nextRun: WavelengthRun) {
+    setRun(nextRun);
+    setRound(nextRun.initialRound);
     setClueIndex(0);
     setGuess(50);
     setGuesses([]);
     setComplete(false);
     setChallengeStatus("");
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function replay() {
+    resetRound(run.identity.type === "replayable" ? casualWavelengthRun() : run);
   }
 
   function lockGuess() {
@@ -110,17 +144,19 @@ export default function WavelengthGame({
     setGuesses(nextGuesses);
     if (clueIndex === 3) {
       const score = wavelengthScore(locked, round.target);
-      profileMatch.submitResult(asJson({
+      const result = {
         score,
         guesses: nextGuesses,
         finalGuess: locked,
         distance: Math.abs(locked - round.target),
-      }));
+      };
+      recordLineupCompletion(run.identity, result);
+      profileMatch.submitResult(asJson(result));
       setComplete(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
-    const nextClue = nextChallengeWavelengthClue(round, locked, clueIndex + 1, initialSeed, guesses);
+    const nextClue = nextChallengeWavelengthClue(round, locked, clueIndex + 1, run.seed, guesses);
     setRound((current) => ({ ...current, clues: [...current.clues, nextClue] }));
     setClueIndex((current) => current + 1);
   }
@@ -135,7 +171,7 @@ export default function WavelengthGame({
       gameVersion: "wavelength-v2",
       gameTitle: "Wavelength",
       summary: `Find hidden rating ${round.target} through four adaptive clues`,
-      setup: asJson({ seed: initialSeed, round: initialRound, target: round.target }),
+      setup: asJson({ seed: run.seed, round: run.initialRound, target: round.target }),
       creatorResult: asJson({
         score,
         guesses,
@@ -144,7 +180,7 @@ export default function WavelengthGame({
       }),
       shareTitle: "Wavelength Challenge",
       shareText: "I challenged you to find the same hidden UFC rating in four adaptive clues. Can you beat my final score?",
-      shareUrl: wavelengthChallengeUrl(initialSeed),
+      shareUrl: wavelengthChallengeUrl(run.seed),
     });
     setChallengeStatus(status);
   }
@@ -197,6 +233,7 @@ export default function WavelengthGame({
             onChallenge={() => void challengeSomeone()}
             onReplay={replay}
             onAllGames={onExit}
+            replayLabel={replayLabelFor(run.identity.type)}
             status={challengeStatus}
           />
         </section>
@@ -214,7 +251,7 @@ export default function WavelengthGame({
         </section>
       ) : null}
       <section className="wavelength-topline">
-        <span>FIND THE HIDDEN NUMBER</span>
+        <span>{run.identity.type === "curated" ? "CURATED CHALLENGE" : "REPLAYABLE GAME"}</span>
         <b>CLUE {clueIndex + 1} OF 4</b>
       </section>
       <div className="wavelength-progress" aria-label="Wavelength clue progress">
@@ -235,7 +272,7 @@ export default function WavelengthGame({
           aria-label="Your Wavelength guess from 1 to 100"
           max="100"
           min="1"
-          onChange={(event) => setGuess(clampWavelength(Number(event.target.value)))}
+          onChange={(event) => setGuess(clampWavelength(Number(event.target.value))}
           step="1"
           type="range"
           value={guess}
