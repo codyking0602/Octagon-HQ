@@ -1,0 +1,19 @@
+/* Underdog Lock accent: visually separate the bonus pick from UFC-red fighter selection. */
+
+.picks-page {
+  --underdog-lock-accent: #ff8a1f;
+  --underdog-lock-border: rgba(255, 138, 31, .78);
+  --underdog-lock-surface: rgba(255, 138, 31, .1);
+}
+
+.picks-event-hero .picks-progress > p {
+  color: var(--underdog-lock-accent);
+}
+
+.pick-lock-action.is-selected,
+.pick-lock-readonly {
+  border-color: var(--underdog-lock-border);
+  background: var(--underdog-lock-surface);
+  color: var(--underdog-lock-accent);
+  box-shadow: 0 0 14px rgba(255, 138, 31, .08);
+}
