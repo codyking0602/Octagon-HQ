@@ -35,6 +35,7 @@ import "./styles/challenge-matchups.css";
 import "./styles/play-hub-polish.css";
 import "./styles/war-room.css";
 import "./styles/war-room-launch.css";
+import "./styles/war-room-admin-polish.css";
 
 installUpdateRecovery();
 
