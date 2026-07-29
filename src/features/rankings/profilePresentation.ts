@@ -46,6 +46,7 @@ export const profileCategories = [
 
 export type ProfileCategory = (typeof profileCategories)[number];
 
+// Nicknames are profile-card presentation only. Ranking rows and other app surfaces stay canonical.
 export function profileDisplayName(fighter: RankingFighter) {
   return formatFighterDisplayName(fighter.slug, fighter.name, "profile");
 }
