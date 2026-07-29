@@ -17,6 +17,7 @@ This slice creates only the server-owned access foundation:
 - one authenticated access-status RPC;
 - one authenticated join-with-invite RPC;
 - service-role-only invite creation/revocation and membership management;
+- safe preservation of currently eligible V1 War Room members when the legacy tables share the database;
 - focused migration and rollback contracts.
 
 No route, tab, page, provider, badge, feed, or placeholder is added in this PR.
@@ -28,7 +29,8 @@ No route, tab, page, provider, badge, feed, or placeholder is added in this PR.
 - Future War Room UI must consume the resolved `auth.uid()` session and these RPCs.
 - The browser must never read War Room access tables directly.
 - Invite raw codes are returned once by the service-role creation RPC and are never stored.
-- A revoked membership cannot be restored by presenting a generic invite.
+- Existing V1 profiles with `octagon_access.can_access = true` retain eligibility; old locked rows are not imported as revocations.
+- A revoked V2 membership cannot be restored by presenting a generic invite.
 
 ## Later slices
 
