@@ -8,6 +8,8 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const supabaseUrl = process.env.SUPABASE_URL?.trim();
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
 const sourceSha = process.env.SOURCE_SHA?.trim().toLowerCase();
+const maxAttempts = Math.min(20, Math.max(1, Number(process.env.RANKING_SYNC_MAX_ATTEMPTS ?? 1)));
+const retryDelayMs = Math.min(30_000, Math.max(1_000, Number(process.env.RANKING_SYNC_RETRY_DELAY_MS ?? 15_000)));
 
 if (!supabaseUrl || !/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(supabaseUrl)) {
   throw new Error("A valid production SUPABASE_URL is required.");
@@ -18,7 +20,11 @@ if (!serviceRoleKey) {
 if (!sourceSha || !/^[0-9a-f]{40}$/.test(sourceSha)) {
   throw new Error("SOURCE_SHA must be the exact 40-character deployment SHA.");
 }
+if (!Number.isInteger(maxAttempts) || !Number.isInteger(retryDelayMs)) {
+  throw new Error("Ranking synchronization retry settings must be integers.");
+}
 
+const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 const vite = await createServer({
   root,
   appType: "custom",
@@ -42,14 +48,31 @@ try {
   const client = createClient(supabaseUrl, serviceRoleKey, {
     auth: { autoRefreshToken: false, persistSession: false },
   });
-  const { data, error } = await client.rpc("sync_ranking_whats_new", {
-    p_source_sha: sourceSha,
-    p_rows: rows,
-  });
 
-  if (error) throw new Error(`Ranking What's New sync failed: ${error.message}`);
+  let result = null;
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    const { data, error } = await client.rpc("sync_ranking_whats_new", {
+      p_source_sha: sourceSha,
+      p_rows: rows,
+    });
 
-  const result = data && typeof data === "object" ? data : {};
+    if (!error) {
+      result = data && typeof data === "object" ? data : {};
+      break;
+    }
+
+    const migrationStillDeploying = error.code === "PGRST202"
+      || /sync_ranking_whats_new/i.test(error.message ?? "");
+    if (!migrationStillDeploying || attempt === maxAttempts) {
+      throw new Error(`Ranking What's New sync failed: ${error.message}`);
+    }
+
+    console.log(`Ranking sync RPC is not available yet; retrying (${attempt}/${maxAttempts}).`);
+    await wait(retryDelayMs);
+  }
+
+  if (!result) throw new Error("Ranking What's New sync returned no result.");
+
   console.log([
     "Ranking What's New sync complete.",
     `Fighters: ${result.fighter_count ?? rows.length}.`,
