@@ -38,6 +38,8 @@ export interface PlayGameLineupDefinition {
   completionState: PlayCompletionState;
   challengeEligible: boolean;
   dailyEligible: boolean;
+  streakEligible: boolean;
+  reminderEligible: boolean;
   historyRecording: "official-daily" | "casual-and-challenge" | "challenge-completion";
   difficultyModel: string;
 }
@@ -66,6 +68,8 @@ export const playGames: readonly PlayGameDefinition[] = [
       completionState: "leader-eliminated-or-nine-safe",
       challengeEligible: true,
       dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
       historyRecording: "official-daily",
       difficultyModel: "Verified metric leader plus nine lower-value UFC fighters.",
     },
@@ -85,6 +89,8 @@ export const playGames: readonly PlayGameDefinition[] = [
       completionState: "fourth-guess-locked",
       challengeEligible: true,
       dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
       historyRecording: "casual-and-challenge",
       difficultyModel: "One hidden target with four adaptive clues and category-repeat pressure.",
     },
@@ -104,6 +110,8 @@ export const playGames: readonly PlayGameDefinition[] = [
       completionState: "five-picks-complete",
       challengeEligible: true,
       dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
       historyRecording: "casual-and-challenge",
       difficultyModel: "Five gender-valid matchup bands weighted toward close UFC résumé calls.",
     },
@@ -123,6 +131,8 @@ export const playGames: readonly PlayGameDefinition[] = [
       completionState: "five-slots-locked",
       challengeEligible: true,
       dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
       historyRecording: "casual-and-challenge",
       difficultyModel: "Five tiered roles with one maximum bad-fighter wildcard.",
     },
@@ -142,6 +152,8 @@ export const playGames: readonly PlayGameDefinition[] = [
       completionState: "eight-decisions-locked",
       challengeEligible: true,
       dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
       historyRecording: "casual-and-challenge",
       difficultyModel: "Eight role-balanced fighters with controlled traps and wildcard variance.",
     },
@@ -161,6 +173,8 @@ export const playGames: readonly PlayGameDefinition[] = [
       completionState: "claim-locked",
       challengeEligible: true,
       dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
       historyRecording: "challenge-completion",
       difficultyModel: "User-selected target, comparison lens, valid pool, claim size, and exact fighter list.",
     },
