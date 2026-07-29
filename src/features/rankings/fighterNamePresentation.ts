@@ -1,4 +1,5 @@
 export type FighterNicknamePosition = "prefix" | "middle" | "suffix";
+export type FighterNameSurface = "standard" | "profile";
 
 export interface FighterNamePresentation {
   nickname: string;
@@ -95,7 +96,12 @@ export function formatPresentedFighterName(
   return `${parts[0]} ${quotedNickname} ${parts.slice(1).join(" ")}`;
 }
 
-export function formatFighterDisplayName(slug: string, canonicalName: string) {
+export function formatFighterDisplayName(
+  slug: string,
+  canonicalName: string,
+  surface: FighterNameSurface = "standard",
+) {
+  if (surface !== "profile") return canonicalName;
   const presentation = fighterNamePresentationBySlug[slug];
   return presentation ? formatPresentedFighterName(canonicalName, presentation) : canonicalName;
 }
