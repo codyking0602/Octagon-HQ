@@ -98,7 +98,7 @@ export interface PickHistoryRecord {
 
 export interface PickGroupResult extends PickHistoryRecord {
   rank: number;
-  profileId: string | null;
+  profileId?: string | null;
   displayName: string;
   isCurrentUser: boolean;
 }
@@ -133,7 +133,7 @@ export interface PickHistorySummary extends PickHistoryRecord {
 export interface PickHistory {
   season: number | null;
   summary: PickHistorySummary;
-  seasonStandings: PickSeasonStanding[];
+  seasonStandings?: PickSeasonStanding[];
   events: PickHistoryEvent[];
 }
 
