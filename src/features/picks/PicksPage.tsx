@@ -160,12 +160,14 @@ export default function PicksPage() {
             style={heroStyle}
           >
             <div className="picks-event-hero__poster" aria-hidden="true">
-              <div className="picks-event-hero__topline">
-                <p className="eyebrow">{activeLifecycle.eyebrow}</p>
-                <span className={`picks-status picks-status--${activeLifecycle.state.replace("_", "-")}`}>
-                  {activeLifecycle.status}
-                </span>
-              </div>
+              {activeLifecycle.state !== "upcoming" ? (
+                <div className="picks-event-hero__topline">
+                  <p className="eyebrow">{activeLifecycle.eyebrow}</p>
+                  <span className={`picks-status picks-status--${activeLifecycle.state.replace("_", "-")}`}>
+                    {activeLifecycle.status}
+                  </span>
+                </div>
+              ) : null}
             </div>
 
             <div className="picks-event-hero__content">

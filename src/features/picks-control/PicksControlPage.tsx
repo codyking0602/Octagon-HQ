@@ -26,6 +26,12 @@ function eventTime(value: string) {
   }).format(new Date(value));
 }
 
+function localDateTimeValue(value: string) {
+  const date = new Date(value);
+  const offset = date.getTimezoneOffset() * 60000;
+  return new Date(date.getTime() - offset).toISOString().slice(0, 16);
+}
+
 function readableError(error: unknown) {
   const message = error instanceof Error ? error.message : "Fight Night Control could not complete that request.";
   if (message.toLowerCase().includes("pick control owner required")) {
@@ -260,6 +266,43 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
     void runAction("reorder", () => repository!.reorderCard(event.eventId, canonicalOrder, draftOrder, reason));
   }
 
+  function adjustLockTime() {
+    if (!event || event.status !== "upcoming" || Date.now() >= Date.parse(event.startsAt)) return;
+    const input = window.prompt(
+      "Enter the new event-wide Picks deadline in your local time (YYYY-MM-DDTHH:MM). All fights lock together.",
+      localDateTimeValue(event.locksAt),
+    )?.trim();
+    if (!input) return;
+    const proposed = new Date(input);
+    if (!Number.isFinite(proposed.getTime())) {
+      setError("Enter a valid local Picks deadline.");
+      return;
+    }
+    if (proposed.getTime() <= Date.now()) {
+      setError("The new Picks deadline must be in the future.");
+      return;
+    }
+    if (proposed.getTime() > Date.parse(event.startsAt)) {
+      setError("The Picks deadline cannot be later than the main-card start.");
+      return;
+    }
+    const reason = window.prompt("Why is the Picks deadline changing?")?.trim();
+    if (!reason) return;
+    if (reason.length < 3) {
+      setError("A Picks deadline change requires a reason of at least 3 characters.");
+      return;
+    }
+    if (!window.confirm(
+      `Change the deadline for every fight from ${eventTime(event.locksAt)} to ${eventTime(proposed.toISOString())}? This does not reopen an event that was manually moved to LOCKED.`,
+    )) return;
+    void runAction("lock-time", () => repository!.adjustLockTime(
+      event.eventId,
+      proposed.toISOString(),
+      event.locksAt,
+      reason,
+    ));
+  }
+
   function lockEvent() {
     if (!event || !event.canLock) return;
     if (!window.confirm("Lock all picks and begin Fight Night result entry? Picks will remain private until each fight is resolved.")) return;
@@ -268,7 +311,7 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
 
   function completeEvent() {
     if (!event || !event.canComplete) return;
-    if (!window.confirm("Complete this event? The recap will publish. Any later official-result correction must use the audited correction workflow.")) return;
+    if (!window.confirm("Complete this event? The recap will publish automatically. Any later official-result correction must use the audited correction workflow.")) return;
     void runAction("complete", () => repository!.completeEvent(event.eventId));
   }
 
@@ -362,6 +405,24 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
                 <span style={{ width: `${progress}%` }} />
               </div>
             </div>
+
+            {event.status === "upcoming" ? (
+              <div className="picks-control-deadline">
+                <div>
+                  <span>ALL FIGHTS LOCK TOGETHER</span>
+                  <strong>{eventTime(event.locksAt)}</strong>
+                  <small>Deadline can move while the event is upcoming, but never past the main-card start.</small>
+                </div>
+                <button
+                  className="secondary-action"
+                  type="button"
+                  disabled={Boolean(busyAction) || Date.now() >= Date.parse(event.startsAt)}
+                  onClick={adjustLockTime}
+                >
+                  {busyAction === "lock-time" ? "CHANGING…" : "CHANGE LOCK TIME"}
+                </button>
+              </div>
+            ) : null}
 
             {event.status === "upcoming" ? (
               <button
@@ -587,7 +648,7 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
             <section className="surface-card picks-control-complete">
               <div>
                 <p className="eyebrow">EVENT COMPLETE</p>
-                <h2>Recap remains published</h2>
+                <h2>Recap published automatically</h2>
                 <p>Corrections update the canonical result and automatically recalculate scoring, standings, season totals, and completed recaps without reopening Picks or changing the event lifecycle.</p>
               </div>
             </section>

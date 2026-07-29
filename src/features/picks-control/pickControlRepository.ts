@@ -54,6 +54,7 @@ const controlEventSchema = z.object({
 export interface PickControlRepository {
   loadControlEvent: (eventId?: string) => Promise<PickControlEvent | null>;
   lockEvent: (eventId: string) => Promise<void>;
+  adjustLockTime?: (eventId: string, locksAt: string, expectedLocksAt: string, reason: string) => Promise<void>;
   setCancellation: (eventId: string, boutId: string, cancelled: boolean, reason: string) => Promise<void>;
   setBoutInclusion: (eventId: string, bout: PickControlEvent["bouts"][number], includedInPicks: boolean, reason: string) => Promise<void>;
   replaceFighter: (eventId: string, bout: PickControlEvent["bouts"][number], corner: "red" | "blue", slug: string, name: string, reason: string) => Promise<void>;
@@ -135,6 +136,15 @@ export function createPickControlRepository(): PickControlRepository | null {
       await requireRpcSuccess(client.rpc("transition_pick_event", {
         p_event_id: eventId,
         p_target_status: "locked",
+      }));
+    },
+
+    async adjustLockTime(eventId, locksAt, expectedLocksAt, reason) {
+      await requireRpcSuccess(client.rpc("adjust_pick_event_lock_time", {
+        p_event_id: eventId,
+        p_locks_at: locksAt,
+        p_expected_locks_at: expectedLocksAt,
+        p_reason: reason,
       }));
     },
 

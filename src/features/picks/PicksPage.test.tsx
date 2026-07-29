@@ -67,6 +67,7 @@ const history: PickHistory = {
       winnerFighterSlug: "red-fighter",
       pickedFighterSlug: "red-fighter",
       verdict: "correct",
+      groupPicks: [{ displayName: "CODY", pickedFighterSlug: "red-fighter", isCurrentUser: true }, { displayName: "SHANE", pickedFighterSlug: "blue-fighter", isCurrentUser: false }],
     }, {
       boutId: "excluded-bout",
       position: 2,
@@ -216,7 +217,7 @@ describe("PicksPage", () => {
     expect(screen.queryByRole("heading", { name: "Your event archive" })).not.toBeInTheDocument();
   });
 
-  it("keeps completed events inside one collapsed archive disclosure", async () => {
+  it("opens the latest completed event as a generated full-screen recap", async () => {
     render(
       <IdentityProvider gateway={gateway()}>
         <PicksProvider repository={repository(undefined, null)}><PicksPage /></PicksProvider>
@@ -224,22 +225,21 @@ describe("PicksPage", () => {
     );
 
     expect(await screen.findByRole("heading", { name: "Your event archive" })).toBeInTheDocument();
-    expect(screen.getByText("OPEN EVENT ARCHIVE")).toBeInTheDocument();
-    expect(screen.queryByText("LATEST RECAP")).not.toBeInTheDocument();
-
     fireEvent.click(screen.getByText("OPEN EVENT ARCHIVE"));
-    expect(await screen.findByText("UFC Oklahoma City")).toBeInTheDocument();
-    expect(screen.getByText("LATEST")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByText("UFC Oklahoma City"));
-    expect(await screen.findByRole("heading", { name: "How everyone did" })).toBeInTheDocument();
-    expect(screen.getByText("SHANE")).toBeInTheDocument();
-    expect(screen.getByText("Correct")).toBeInTheDocument();
+    expect(await screen.findByText("UFC Oklahoma City Recap")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /OPEN FULL RECAP/i }));
+
+    expect(await screen.findByRole("dialog", { name: "UFC Oklahoma City Recap" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Event Standings" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Fight by Fight" })).toBeInTheDocument();
+    expect(screen.getAllByText("SHANE").length).toBeGreaterThan(0);
+    expect(screen.getByText("ROOM NAILED IT")).toBeInTheDocument();
     expect(screen.getByText("No contest")).toBeInTheDocument();
     expect(screen.getByText("Excluded")).toBeInTheDocument();
   });
 
-  it("uses the Belgrade poster only for the matching current event", async () => {
+  it("uses the Belgrade poster without covering the fighters with upcoming labels", async () => {
     const belgradeEvent: PickEvent = {
       ...event,
       subtitle: "Uroš Medić vs. Daniel Rodriguez",
@@ -257,6 +257,8 @@ describe("PicksPage", () => {
     const hero = container.querySelector(".picks-event-hero");
     expect(hero).toHaveClass("has-poster");
     expect(hero).toHaveStyle('--picks-event-poster: url("/events/ufc-fight-night-belgrade.svg")');
+    expect(screen.queryByText("NEXT UFC EVENT")).not.toBeInTheDocument();
+    expect(screen.queryByText("UPCOMING")).not.toBeInTheDocument();
   });
 
   it("opens the V1-style main event spotlight only for Medic versus Rodriguez", async () => {
