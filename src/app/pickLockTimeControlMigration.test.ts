@@ -5,6 +5,10 @@ const sql = readFileSync(
   "supabase/migrations/202608180001_pick_lock_time_control.sql",
   "utf8",
 );
+const correctionSql = readFileSync(
+  "supabase/migrations/202608180002_correct_belgrade_main_card_time.sql",
+  "utf8",
+);
 
 describe("event-wide Picks deadline control", () => {
   it("keeps one canonical event deadline rather than creating per-bout locks", () => {
@@ -32,10 +36,11 @@ describe("event-wide Picks deadline control", () => {
     expect(sql).toContain("Picks lock cannot follow the main-card start");
   });
 
-  it("corrects the current Belgrade event to the official 1 PM EDT main card", () => {
-    expect(sql).toContain("timestamptz '2026-08-01 17:00:00+00'");
-    expect(sql).toContain("lower(subtitle) like '%medic%'");
-    expect(sql).toContain("lower(subtitle) like '%rodriguez%'");
-    expect(sql).toContain("update public.pick_event_drafts");
+  it("applies the Belgrade correction through a new deployable migration", () => {
+    expect(correctionSql).toContain("timestamptz '2026-08-01 17:00:00+00'");
+    expect(correctionSql).toContain("lower(subtitle) like '%medic%'");
+    expect(correctionSql).toContain("lower(subtitle) like '%rodriguez%'");
+    expect(correctionSql).toContain("update public.pick_event_drafts");
+    expect(correctionSql).toContain("when locks_at = starts_at");
   });
 });
