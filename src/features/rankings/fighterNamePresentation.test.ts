@@ -4,19 +4,28 @@ import {
   formatFighterDisplayName,
   formatPresentedFighterName,
 } from "./fighterNamePresentation";
+import { profileDisplayName } from "./profilePresentation";
+import { getFighter } from "./rankingModel";
 
 describe("fighter name presentation", () => {
   it("keeps standard ranking and app surfaces on the canonical fighter name", () => {
+    const jon = getFighter("jon-jones");
+    const conor = getFighter("conor-mcgregor");
+
+    expect(jon?.displayName).toBe("Jon Jones");
+    expect(conor?.displayName).toBe("Conor McGregor");
     expect(formatFighterDisplayName("jon-jones", "Jon Jones")).toBe("Jon Jones");
-    expect(formatFighterDisplayName("conor-mcgregor", "Conor McGregor")).toBe(
-      "Conor McGregor",
-    );
+  });
+
+  it("applies nicknames only through the fighter profile presenter", () => {
+    const jon = getFighter("jon-jones");
+    const conor = getFighter("conor-mcgregor");
+
+    expect(jon && profileDisplayName(jon)).toBe("Jon “Bones” Jones");
+    expect(conor && profileDisplayName(conor)).toBe("“The Notorious” Conor McGregor");
   });
 
   it("places prefix nicknames before the complete fighter name on profiles", () => {
-    expect(formatFighterDisplayName("conor-mcgregor", "Conor McGregor", "profile")).toBe(
-      "“The Notorious” Conor McGregor",
-    );
     expect(formatFighterDisplayName("chan-sung-jung", "Chan Sung Jung", "profile")).toBe(
       "“The Korean Zombie” Chan Sung Jung",
     );
@@ -26,9 +35,6 @@ describe("fighter name presentation", () => {
   });
 
   it("places middle nicknames after the fighter's first name on profiles", () => {
-    expect(formatFighterDisplayName("jon-jones", "Jon Jones", "profile")).toBe(
-      "Jon “Bones” Jones",
-    );
     expect(formatFighterDisplayName("mauricio-rua", "Mauricio Rua", "profile")).toBe(
       "Maurício “Shogun” Rua",
     );
