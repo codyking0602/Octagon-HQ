@@ -99,8 +99,8 @@ begin
     or v_item.category <> 'picks'
     or v_item.origin <> 'automatic'
     or v_item.title <> 'UFC Picks Recap Test recap is ready'
-    or v_item.route <> '/picks?view=latest-recap'
-    or v_item.action_label <> 'OPEN RECAP'
+    or v_item.route <> '/picks'
+    or v_item.action_label <> 'VIEW RECAP'
   then
     raise exception 'completed Picks recap item is incorrect: %', to_jsonb(v_item);
   end if;
