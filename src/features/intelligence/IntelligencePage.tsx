@@ -36,7 +36,7 @@ function MatchupBuilder({ initialFighterSlug, initialOpponentSlug, expanded = fa
   const first = getFighter(firstSlug);
   const second = getFighter(secondSlug);
   const prompt = first && second && first.slug !== second.slug
-    ? matchupPrompt(first.name, second.name)
+    ? matchupPrompt(first.displayName, second.displayName)
     : "";
 
   async function handleCopy() {
@@ -57,14 +57,14 @@ function MatchupBuilder({ initialFighterSlug, initialOpponentSlug, expanded = fa
         <label>
           <span>First fighter</span>
           <select aria-label="First fighter" value={firstSlug} onChange={(event) => setFirstSlug(event.target.value)}>
-            {allTime.map((fighter) => <option value={fighter.slug} key={fighter.slug}>{fighter.name}</option>)}
+            {allTime.map((fighter) => <option value={fighter.slug} key={fighter.slug}>{fighter.displayName}</option>)}
           </select>
         </label>
         <label>
           <span>Second fighter</span>
           <select ref={secondSelectRef} aria-label="Second fighter" value={secondSlug} onChange={(event) => setSecondSlug(event.target.value)}>
             <option value="" disabled>Choose opponent</option>
-            {allTime.map((fighter) => <option value={fighter.slug} key={fighter.slug}>{fighter.name}</option>)}
+            {allTime.map((fighter) => <option value={fighter.slug} key={fighter.slug}>{fighter.displayName}</option>)}
           </select>
         </label>
       </div>
@@ -81,9 +81,9 @@ function MatchupBuilder({ initialFighterSlug, initialOpponentSlug, expanded = fa
 
   if (expanded) {
     const contextCopy = first && second
-      ? `${first.name} vs. ${second.name} is ready.`
+      ? `${first.displayName} vs. ${second.displayName} is ready.`
       : first
-        ? `${first.name} is ready. Choose an opponent.`
+        ? `${first.displayName} is ready. Choose an opponent.`
         : "Choose two fighters.";
     return (
       <section className="surface-card intelligence-matchup-card intelligence-matchup-card--open" aria-labelledby="matchup-title">
@@ -121,7 +121,7 @@ function WhyContext({ fighterSlug, copiedFromSource }: { fighterSlug: string; co
   return (
     <section className="surface-card intelligence-context-card" aria-labelledby="why-context-title">
       <p className="eyebrow">FROM FIGHTER PROFILE</p>
-      <h1 id="why-context-title">Why {fighter.name} ranks here</h1>
+      <h1 id="why-context-title">Why {fighter.displayName} ranks here</h1>
       <div className="intelligence-visible-prompt">{prompt}</div>
       <div className="intelligence-action-grid">
         <button className="intelligence-primary" type="button" onClick={handleCopyAndOpen}>Copy &amp; Open Verdict</button>
