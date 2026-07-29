@@ -2,13 +2,14 @@ import { NavLink } from "react-router-dom";
 import { useWarRoom } from "../features/war-room/WarRoomProvider";
 
 const baseDestinations = [
-  { to: "/", label: "Home", end: true },
-  { to: "/rankings", label: "Rankings", end: false },
-  { to: "/picks", label: "Picks", end: false },
-  { to: "/play", label: "Play", end: false },
+  { to: "/", label: "Home", emoji: "🏠", end: true },
+  { to: "/rankings", label: "Rankings", emoji: "🏆", end: false },
+  { to: "/picks", label: "Picks", emoji: "✅", end: false },
+  { to: "/play", label: "Play", emoji: "🎮", end: false },
 ] as const;
 
-const warRoomDestination = { to: "/war-room", label: "War Room", end: false } as const;
+const warRoomDestination = { to: "/war-room", label: "War Room", emoji: "💬", end: false } as const;
+const emojiStyle = { fontSize: "15px", lineHeight: 1, opacity: 0.82, filter: "saturate(.72)" } as const;
 
 export function BottomNavigation() {
   const warRoom = useWarRoom();
@@ -31,7 +32,8 @@ export function BottomNavigation() {
           className={({ isActive }) => (isActive ? "bottom-nav__item is-active" : "bottom-nav__item")}
         >
           <span className="bottom-nav__indicator" aria-hidden="true" />
-          <span>{destination.label}</span>
+          <span className="bottom-nav__emoji" aria-hidden="true" style={emojiStyle}>{destination.emoji}</span>
+          <span className="bottom-nav__label">{destination.label}</span>
           {destination.to === "/war-room" && warRoom.unreadCount > 0 ? (
             <b
               className="bottom-nav__badge"
