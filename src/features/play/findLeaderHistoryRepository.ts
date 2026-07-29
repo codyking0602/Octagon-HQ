@@ -42,7 +42,7 @@ export interface FindLeaderDailyLeaderboard {
 
 export interface FindLeaderHistoryRepository {
   load: () => Promise<FindLeaderHistoryRow[]>;
-  loadDailyLeaderboard: (day: string) => Promise<FindLeaderDailyLeaderboard>;
+  loadDailyLeaderboard?: (day: string) => Promise<FindLeaderDailyLeaderboard>;
   recordAttempt: (day: string, score: number) => Promise<FindLeaderHistoryRow>;
 }
 
