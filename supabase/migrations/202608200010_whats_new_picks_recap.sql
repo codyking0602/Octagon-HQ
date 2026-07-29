@@ -196,9 +196,9 @@ begin
     'picks',
     'automatic',
     left(coalesce(nullif(trim(v_event.name), ''), 'Picks event') || ' recap is ready', 100),
-    'The event is complete. Final standings and the full Picks recap are ready.',
-    '/picks?view=latest-recap',
-    'OPEN RECAP',
+    'The event is complete. Final standings and the full recap are now available in Picks.',
+    '/picks',
+    'VIEW RECAP',
     v_event.completed_at
   );
 
