@@ -4,7 +4,7 @@ import { IdentityProvider } from "../identity/IdentityProvider";
 import type { IdentityGateway } from "../identity/identityGateway";
 import PicksPage from "./PicksPage";
 import { PicksProvider } from "./PicksProvider";
-import type { PickEvent, PickHistory } from "./picksModel";
+import type { PickEvent, PickHistory, ProfileEventPick, UnderdogLock } from "./picksModel";
 import type { PicksRepository } from "./picksRepository";
 
 const cody = {
@@ -126,14 +126,22 @@ function repository(
     updatedAt: "2026-07-24T12:00:00.000Z",
   })),
   currentEvent: PickEvent | null = event,
+  initialPicks: ProfileEventPick[] = [],
+  initialLock: UnderdogLock | null = null,
 ): PicksRepository {
   return {
     loadCurrentEvent: async () => currentEvent,
-    loadMyPicks: async () => [],
+    loadMyPicks: async () => initialPicks,
     loadMySummary: async () => ({ correct: 0, incorrect: 0, pending: 1, eventsEntered: 1, basePoints: 0, lockBonus: 0, totalPoints: 0 }),
     loadMyHistory: async () => history,
-    loadMyUnderdogLock: async () => null,
-    setUnderdogLock: vi.fn(),
+    loadMyUnderdogLock: async () => initialLock,
+    setUnderdogLock: vi.fn(async (eventId, boutId, fighterSlug) => ({
+      eventId,
+      boutId,
+      fighterSlug,
+      selectedAt: "2026-07-24T12:00:00.000Z",
+      frozenAmericanOdds: 155,
+    })),
     clearUnderdogLock: vi.fn(),
     savePick,
   };
@@ -165,6 +173,34 @@ describe("PicksPage", () => {
     await waitFor(() => expect(savePick).toHaveBeenCalledWith(event.eventId, "ankalaev-guskov", "bogdan-guskov"));
     await waitFor(() => expect(screen.getByRole("button", { name: /Bogdan Guskov/i })).toHaveAttribute("aria-pressed", "true"));
     expect(screen.getByText("1 PICK SAVED")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "☆ LOCK FOR +2" })).toBeInTheDocument();
+  });
+
+  it("shows the frozen bonus anywhere the selected Underdog Lock is summarized", async () => {
+    const selectedPick: ProfileEventPick = {
+      eventId: event.eventId,
+      boutId: "ankalaev-guskov",
+      fighterSlug: "bogdan-guskov",
+      pickedAt: "2026-07-24T12:00:00.000Z",
+      updatedAt: "2026-07-24T12:00:00.000Z",
+    };
+    const selectedLock: UnderdogLock = {
+      eventId: event.eventId,
+      boutId: "ankalaev-guskov",
+      fighterSlug: "bogdan-guskov",
+      selectedAt: "2026-07-24T12:00:00.000Z",
+      frozenAmericanOdds: 250,
+    };
+
+    render(
+      <IdentityProvider gateway={gateway()}>
+        <PicksProvider repository={repository(undefined, event, [selectedPick], selectedLock)}><PicksPage /></PicksProvider>
+      </IdentityProvider>,
+    );
+
+    expect(await screen.findByText("UNDERDOG LOCK · Bogdan Guskov · +4 IF CORRECT")).toBeInTheDocument();
+    expect(screen.getByText("LOCK: Bogdan Guskov · +4")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "★ UNDERDOG LOCK · +4 · REMOVE" })).toBeInTheDocument();
   });
 
   it("shows the event publicly but requires sign-in before making picks", async () => {
@@ -221,5 +257,43 @@ describe("PicksPage", () => {
     const hero = container.querySelector(".picks-event-hero");
     expect(hero).toHaveClass("has-poster");
     expect(hero).toHaveStyle('--picks-event-poster: url("/events/ufc-fight-night-belgrade.svg")');
+  });
+
+  it("opens the V1-style main event spotlight only for Medic versus Rodriguez", async () => {
+    const belgradeEvent: PickEvent = {
+      ...event,
+      subtitle: "Uroš Medić vs. Daniel Rodriguez",
+      venue: "Belgrade Arena",
+      location: "Belgrade, Serbia",
+      bouts: [{
+        ...event.bouts[0],
+        boutId: "medic-rodriguez",
+        position: 1,
+        weightClass: "Welterweight",
+        redFighterSlug: "uros-medic",
+        redFighterName: "Uroš Medić",
+        blueFighterSlug: "daniel-rodriguez",
+        blueFighterName: "Daniel Rodriguez",
+        redAmericanOdds: -150,
+        blueAmericanOdds: 130,
+      }],
+    };
+
+    render(
+      <IdentityProvider gateway={gateway()}>
+        <PicksProvider repository={repository(undefined, belgradeEvent)}><PicksPage /></PicksProvider>
+      </IdentityProvider>,
+    );
+
+    const trigger = await screen.findByRole("button", { name: /View matchup breakdown/i });
+    fireEvent.click(trigger);
+
+    expect(screen.getByRole("dialog", { name: "Uroš Medić vs. Daniel Rodriguez" })).toBeInTheDocument();
+    expect(screen.getByText("TALE OF THE TAPE")).toBeInTheDocument();
+    expect(screen.getByText("MATCHUP EDGES")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "WATCH SPOTLIGHT ↗" })).toHaveAttribute(
+      "href",
+      "https://youtu.be/IBzzsI7TrDc?is=q7Q8ZfSD8TobYbjl",
+    );
   });
 });

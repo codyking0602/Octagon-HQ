@@ -153,6 +153,12 @@ export const underdogBonusTiers = [
   { odds: "+400+", bonus: "+7" },
 ] as const;
 
+export function underdogBonusForOdds(odds: number | null) {
+  if (odds === null || odds < 100) return 0;
+  if (odds >= 400) return 7;
+  return Math.floor((odds - 100) / 50) + 1;
+}
+
 export const emptyPickSummary: PickSummary = {
   correct: 0,
   incorrect: 0,
