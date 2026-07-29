@@ -37,7 +37,7 @@ begin
       'display_name', profile.display_name,
       'initials', profile.initials,
       'avatar_photo_data', preferences.avatar_photo_data,
-      'has_access', membership.status = 'active',
+      'has_access', coalesce(membership.status = 'active', false),
       'role', membership.role
     )
     order by profile.display_name
@@ -126,7 +126,7 @@ begin
     'display_name', profile.display_name,
     'initials', profile.initials,
     'avatar_photo_data', preferences.avatar_photo_data,
-    'has_access', membership.status = 'active',
+    'has_access', coalesce(membership.status = 'active', false),
     'role', membership.role
   )
     into v_result
@@ -146,6 +146,7 @@ revoke all on function public.set_war_room_profile_access(uuid, boolean) from pu
 grant execute on function public.get_war_room_access_roster() to authenticated;
 grant execute on function public.set_war_room_profile_access(uuid, boolean) to authenticated;
 
+drop policy if exists war_room_profile_receives_access_broadcast on realtime.messages;
 create policy war_room_profile_receives_access_broadcast
 on realtime.messages
 for select
