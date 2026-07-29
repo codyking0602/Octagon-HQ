@@ -12,7 +12,7 @@ if (configuredExpectation && !["true", "false"].includes(configuredExpectation))
 }
 const expectedActive = configuredExpectation
   ? configuredExpectation === "true"
-  : true;
+  : process.env.GITHUB_EVENT_NAME !== "pull_request";
 
 async function readBody(response) {
   const text = await response.text();
