@@ -21,9 +21,9 @@ What's New is Octagon HQ's global activity layer.
 
 ## Publishing owner
 
-`public.publish_whats_new_item(...)` is the only externally callable publishing boundary. It is service-role-only and idempotent by `source_key`.
+`public.publish_whats_new_item(...)` is the only general-purpose externally callable publishing boundary. It is service-role-only and idempotent by `source_key`.
 
-Database-owned feature transitions may delegate to the same private idempotent storage owner. That internal function is not executable by browser roles and does not create a second feed or publishing API.
+Database-owned feature transitions may delegate to the same private idempotent storage owner. Feature-specific service-only synchronizers may call the public publisher after comparing their own canonical state. Neither pattern is executable by browser roles or creates a second feed owner.
 
 Automatic producers may publish only:
 
@@ -49,6 +49,18 @@ Manual publishing supports app announcements, major redesign explanations, featu
 - Repeating an already-complete transition cannot create or republish an item.
 - Completion and recap availability happen in the same transaction, so the feed receives one recap-ready item instead of duplicate completion and recap cards.
 
+## Rankings and fighter producer
+
+`rankingModel.ts` remains the sole calculated source for fighter identity, board, and rank. A trusted workflow synchronizes that exact model only after the same `main` SHA has deployed successfully to production.
+
+- The first production synchronization quietly creates the baseline and does not publish the existing roster as 80 new updates.
+- A fighter slug absent from the prior production snapshot publishes one automatic `new_fighter` item linking to the canonical fighter profile.
+- An existing fighter moving at least three positions on the same board publishes one automatic `ranking_movement` item.
+- One- and two-position moves are intentionally ignored.
+- Unchanged deployments are idempotent and publish nothing.
+- PR-head deployments never synchronize production ranking state.
+- The private comparison snapshot is not a ranking source and is replaced from the calculated model after every successful synchronization.
+
 ## Noise rules
 
 Do not publish What's New items for minor bug fixes, routine monitoring checks, tiny text changes, one-position ranking moves, administrative backend work, or technical deployment activity.
@@ -64,4 +76,5 @@ Do not publish What's New items for minor bug fixes, routine monitoring checks, 
 ## Connected slices
 
 - Picks event completion and recap availability are connected through the canonical completion transition.
-- Ranking, game, fighter, challenge, and achievement producers remain for later focused slices.
+- New fighters and meaningful ranking movement are connected through the exact deployed calculated Rankings model.
+- Game, Fighters to Watch, challenge, and achievement producers remain for later focused slices.
