@@ -73,7 +73,7 @@ function aggregateFallbackStandings(history: PickHistory): PickSeasonStanding[] 
     event.groupResults.forEach((result) => {
       const key = result.profileId ?? `name:${result.displayName.trim().toLowerCase()}`;
       const current = totals.get(key) ?? {
-        profileId: result.profileId,
+        profileId: result.profileId ?? null,
         displayName: result.displayName,
         isCurrentUser: result.isCurrentUser,
         eventsEntered: 0,
@@ -227,10 +227,10 @@ function EventRecap({ event, latest }: { event: PickHistoryEvent; latest: boolea
 
 export function PicksSeasonHub({ history, loading }: { history: PickHistory; loading: boolean }) {
   const [activeTab, setActiveTab] = useState<"standings" | "events">("standings");
-  const standings = useMemo(
-    () => history.seasonStandings.length ? history.seasonStandings : aggregateFallbackStandings(history),
-    [history],
-  );
+  const standings = useMemo(() => {
+    const canonicalStandings = history.seasonStandings ?? [];
+    return canonicalStandings.length ? canonicalStandings : aggregateFallbackStandings(history);
+  }, [history]);
   const currentStanding = standings.find((standing) => standing.isCurrentUser) ?? null;
   const season = history.season ?? new Date().getFullYear();
   const finish = currentStanding
