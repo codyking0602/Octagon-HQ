@@ -7,7 +7,9 @@ import {
 } from "./public-supabase-config.mjs";
 
 const requiredApplicationMarkers = [
-  "Your event archive",
+  "STANDINGS & EVENTS",
+  "GROUP STANDINGS",
+  "EVENT ARCHIVE",
   "get_my_pick_history",
   "SCORING & UNDERDOG LOCK RULES",
   "Correct pick +4",
