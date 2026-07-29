@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
@@ -11,8 +11,8 @@ import {
   blindResumeTier,
   blindResumeWinner,
   createBlindResumeRounds,
-  createBlindResumeSeed,
   type BlindResumePair,
+  type BlindResumeRoundSet,
 } from "./blindResumeEngine";
 import {
   clearBlindResumeSession,
@@ -21,6 +21,16 @@ import {
   type StoredBlindResumeResult,
 } from "./blindResumeSession";
 import { GameResultActions } from "./GameResultActions";
+import {
+  curatedLineupIdentity,
+  recordLineupCompletion,
+  rememberLineup,
+  replayLabelFor,
+  replayLineupIdentity,
+  selectReplayLineup,
+  type PlayLineupIdentity,
+} from "./lineupModel";
+import { rankedPlayFighters } from "./playFighterPool";
 
 interface RoundResult {
   roundIndex: number;
@@ -30,7 +40,10 @@ interface RoundResult {
   correct: boolean;
 }
 
-type BlindResumeRoundSet = ReturnType<typeof createBlindResumeRounds>;
+interface BlindResumeRun {
+  roundSet: BlindResumeRoundSet;
+  identity: PlayLineupIdentity;
+}
 
 function record(value: ChallengeJson | undefined): { [key: string]: ChallengeJson } | null {
   return value && !Array.isArray(value) && typeof value === "object" ? value : null;
@@ -45,6 +58,46 @@ function storedRoundSet(value: ChallengeJson | undefined): BlindResumeRoundSet |
   return row && Array.isArray(row.pairs) && row.pairs.length === BLIND_RESUME_ROUNDS
     ? row as unknown as BlindResumeRoundSet
     : null;
+}
+
+function roundSetIds(roundSet: BlindResumeRoundSet) {
+  return roundSet.pairs.flatMap((pair) => [pair.fighterA.id, pair.fighterB.id]);
+}
+
+function casualBlindResumeRun(seed?: string): BlindResumeRun {
+  if (seed) {
+    const roundSet = createBlindResumeRounds(seed);
+    const ids = roundSetIds(roundSet);
+    const identity = replayLineupIdentity("blind-resume", seed);
+    rememberLineup(identity, ids, ids);
+    return { roundSet, identity };
+  }
+
+  const validIds = new Set(rankedPlayFighters.map((fighter) => fighter.id));
+  const selected = selectReplayLineup({
+    gameId: "blind-resume",
+    lineupSize: BLIND_RESUME_ROUNDS * 2,
+    attempts: 12,
+    validItemIds: validIds,
+    validFighterIds: validIds,
+    build: (nextSeed) => {
+      const roundSet = createBlindResumeRounds(nextSeed);
+      const ids = roundSetIds(roundSet);
+      return { value: roundSet, itemIds: ids, fighterIds: ids };
+    },
+  });
+  return { roundSet: selected.value, identity: selected.identity };
+}
+
+function curatedBlindResumeRun(
+  seed: string,
+  roundSet: BlindResumeRoundSet,
+  challengeId: string,
+): BlindResumeRun {
+  const ids = roundSetIds(roundSet);
+  const identity = curatedLineupIdentity("blind-resume", challengeId, ids);
+  rememberLineup(identity, ids, ids);
+  return { roundSet: { ...roundSet, seed }, identity };
 }
 
 function rankCopy(pair: BlindResumePair, fighterId: string) {
@@ -89,15 +142,24 @@ export default function BlindResumePage() {
   const profileSetup = record(profileMatch.challenge?.setup);
   const profileSeed = typeof profileSetup?.seed === "string" ? profileSetup.seed : "";
   const profileRoundSet = storedRoundSet(profileSetup?.roundSet);
-  const generatedSeed = useRef(createBlindResumeSeed());
   const challengeSeed = searchParams.get("challenge") || "";
   const runSeed = searchParams.get("run") || "";
-  const initialSeed = profileSeed || challengeSeed || runSeed || generatedSeed.current;
-  const sessionId = profileMatch.challenge
-    ? `match:${profileMatch.challenge.code}`
-    : `${challengeSeed ? "challenge" : "run"}:${initialSeed}`;
-  const returnPath = `/play/blind-resume?${searchParams.toString()}`;
-  const roundSet = useMemo(() => profileRoundSet ?? createBlindResumeRounds(initialSeed), [initialSeed, profileRoundSet]);
+  const [run, setRun] = useState<BlindResumeRun>(() => {
+    if (profileSeed) {
+      const roundSet = profileRoundSet ?? createBlindResumeRounds(profileSeed);
+      return curatedBlindResumeRun(profileSeed, roundSet, profileMatch.challenge?.code ?? `profile:${profileSeed}`);
+    }
+    if (challengeSeed) {
+      const roundSet = createBlindResumeRounds(challengeSeed);
+      return curatedBlindResumeRun(challengeSeed, roundSet, `shared:${challengeSeed}`);
+    }
+    return casualBlindResumeRun(runSeed || undefined);
+  });
+  const roundSet = run.roundSet;
+  const sessionId = run.identity.challengeId;
+  const returnPath = run.identity.type === "replayable"
+    ? `/play/blind-resume?run=${encodeURIComponent(roundSet.seed)}`
+    : `/play/blind-resume?${searchParams.toString()}`;
   const restored = useMemo(() => loadBlindResumeSession(sessionId), [sessionId]);
   const restoredResults = useMemo(
     () => (restored?.results ?? []).map((result) => hydrateResult(result, roundSet.pairs)).filter((result): result is RoundResult => Boolean(result)),
@@ -117,8 +179,11 @@ export default function BlindResumePage() {
   const pair = roundSet.pairs[roundIndex];
 
   useEffect(() => {
-    if (!profileMatch.challenge && !challengeSeed && !runSeed) setSearchParams({ run: initialSeed }, { replace: true });
-  }, [challengeSeed, initialSeed, profileMatch.challenge, runSeed, setSearchParams]);
+    if (run.identity.type !== "replayable") return;
+    if (searchParams.get("run") !== roundSet.seed) {
+      setSearchParams({ run: roundSet.seed }, { replace: true });
+    }
+  }, [roundSet.seed, run.identity.type, searchParams, setSearchParams]);
 
   useEffect(() => {
     saveBlindResumeSession(sessionId, {
@@ -129,12 +194,13 @@ export default function BlindResumePage() {
   }, [currentResult, results, roundIndex, sessionId]);
 
   useEffect(() => {
-    if (!complete || !profileMatch.isRecipient || profileMatch.challenge?.responderResult !== null) return;
-    profileMatch.submitResult(asJson({
-      score,
-      picks: results.map(storeResult),
-    }));
-  }, [complete, profileMatch, results, score]);
+    if (!complete) return;
+    const result = { score, picks: results.map(storeResult) };
+    recordLineupCompletion(run.identity, result);
+    if (profileMatch.isRecipient && profileMatch.challenge?.responderResult === null) {
+      profileMatch.submitResult(asJson(result));
+    }
+  }, [complete, profileMatch, results, run.identity, score]);
 
   function pick(fighterId: string) {
     if (currentResult || complete || !pair) return;
@@ -157,13 +223,21 @@ export default function BlindResumePage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  function replay() {
+  function resetRun(nextRun: BlindResumeRun) {
     clearBlindResumeSession(sessionId);
+    setRun(nextRun);
     setRoundIndex(0);
     setResults([]);
     setCurrentResult(null);
     setChallengeStatus("");
+    if (nextRun.identity.type === "replayable") {
+      setSearchParams({ run: nextRun.roundSet.seed }, { replace: true });
+    }
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function replay() {
+    resetRun(run.identity.type === "replayable" ? casualBlindResumeRun() : run);
   }
 
   async function challengeSomeone() {
@@ -174,11 +248,11 @@ export default function BlindResumePage() {
       gameVersion: "blind-resume-v2",
       gameTitle: "Blind Resume",
       summary: "Five hidden UFC resume matchups",
-      setup: asJson({ seed: initialSeed, roundSet, rounds: challengeRounds(roundSet) }),
+      setup: asJson({ seed: roundSet.seed, roundSet, rounds: challengeRounds(roundSet) }),
       creatorResult: asJson({ score, picks: results.map(storeResult) }),
       shareTitle: "Blind Resume Challenge",
       shareText: `I challenged you to the same five hidden UFC resume matchups. Beat my ${score}/${BLIND_RESUME_ROUNDS}.`,
-      shareUrl: blindResumeChallengeUrl(initialSeed),
+      shareUrl: blindResumeChallengeUrl(roundSet.seed),
     });
     setChallengeStatus(status);
   }
@@ -240,6 +314,7 @@ export default function BlindResumePage() {
           onChallenge={() => void challengeSomeone()}
           onReplay={replay}
           onAllGames={() => navigate("/play")}
+          replayLabel={replayLabelFor(run.identity.type)}
           status={challengeStatus}
         />
       </div>
@@ -283,7 +358,7 @@ export default function BlindResumePage() {
         <section className="challenge-game-banner"><span>PROFILE CHALLENGE</span><strong>{profileMatch.creator.displayName} sent this five-round card.</strong><small>Finish all five to unlock both pick sheets.</small></section>
       ) : null}
       <section className="blind-resume-scoreboard">
-        <div><p className="eyebrow">BLIND RESUME</p><h1>Which UFC career ranks higher?</h1></div>
+        <div><p className="eyebrow">{run.identity.type === "curated" ? "CURATED CHALLENGE" : "REPLAYABLE GAME"}</p><h1>Which UFC career ranks higher?</h1></div>
         <aside><span>ROUND {roundIndex + 1} OF {BLIND_RESUME_ROUNDS}</span><b>SCORE {score}-{results.length - score}</b></aside>
       </section>
       <section className="blind-resume-card">
