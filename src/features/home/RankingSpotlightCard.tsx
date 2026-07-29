@@ -13,12 +13,12 @@ export function RankingSpotlightCard({ fighter }: { fighter: RankingFighter }) {
       <div className="ranking-spotlight__fighter">
         <FighterPhoto
           className="ranking-spotlight__photo"
-          name={fighter.name}
+          name={fighter.displayName}
           src={fighter.thumbUrl}
         />
         <div>
           <p className="eyebrow">RANKING SPOTLIGHT</p>
-          <h2 id="ranking-spotlight-title">{fighter.name}</h2>
+          <h2 id="ranking-spotlight-title">{fighter.displayName}</h2>
           <p>
             <b>#{fighter.rank} ALL-TIME</b>
             <span aria-hidden="true"> · </span>
