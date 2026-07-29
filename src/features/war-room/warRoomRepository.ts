@@ -2,6 +2,7 @@ import { z } from "zod";
 import { getSupabaseClient } from "../../lib/supabase";
 import type {
   WarRoomAccess,
+  WarRoomAccessProfile,
   WarRoomCursor,
   WarRoomJoinResult,
   WarRoomMember,
@@ -16,6 +17,11 @@ const memberRowSchema = z.object({
   display_name: z.string().min(1),
   initials: z.string().min(1).max(2),
   avatar_photo_data: z.string().nullable().optional(),
+});
+
+const accessProfileRowSchema = memberRowSchema.extend({
+  has_access: z.boolean(),
+  role: z.enum(["member", "admin"]).nullable(),
 });
 
 const parentRowSchema = z.object({
@@ -91,10 +97,13 @@ export interface WarRoomRepository {
   ) => Promise<WarRoomMessage>;
   deleteMessage: (messageId: string) => Promise<WarRoomMessage>;
   markRead: (messageId: string) => Promise<WarRoomReadState>;
+  loadAccessRoster: () => Promise<WarRoomAccessProfile[]>;
+  setProfileAccess: (profileId: string, enabled: boolean) => Promise<WarRoomAccessProfile>;
   subscribe: (
     onChange: () => void,
     onStatus: (status: WarRoomRealtimeStatus) => void,
   ) => () => void;
+  subscribeAccess: (profileId: string, onChange: () => void) => () => void;
 }
 
 function toMember(value: unknown): WarRoomMember {
@@ -104,6 +113,15 @@ function toMember(value: unknown): WarRoomMember {
     displayName: row.display_name,
     initials: row.initials,
     avatarPhotoData: row.avatar_photo_data ?? null,
+  };
+}
+
+function toAccessProfile(value: unknown): WarRoomAccessProfile {
+  const row = accessProfileRowSchema.parse(value);
+  return {
+    ...toMember(row),
+    hasAccess: row.has_access,
+    role: row.role,
   };
 }
 
@@ -250,6 +268,25 @@ export function createWarRoomRepository(): WarRoomRepository | null {
       };
     },
 
+    async loadAccessRoster() {
+      const data = await requireRpcSuccess(
+        client.rpc("get_war_room_access_roster"),
+        "Octagon HQ could not load War Room access.",
+      );
+      return z.array(accessProfileRowSchema).parse(data).map(toAccessProfile);
+    },
+
+    async setProfileAccess(profileId, enabled) {
+      const data = await requireRpcSuccess(
+        client.rpc("set_war_room_profile_access", {
+          p_profile_id: profileId,
+          p_enabled: enabled,
+        }),
+        "Octagon HQ could not update War Room access.",
+      );
+      return toAccessProfile(data);
+    },
+
     subscribe(onChange, onStatus) {
       let active = true;
       let channel: ReturnType<typeof client.channel> | null = null;
@@ -272,6 +309,28 @@ export function createWarRoomRepository(): WarRoomRepository | null {
         .catch(() => {
           if (active) onStatus("error");
         });
+
+      return () => {
+        active = false;
+        if (channel) void client.removeChannel(channel);
+      };
+    },
+
+    subscribeAccess(profileId, onChange) {
+      let active = true;
+      let channel: ReturnType<typeof client.channel> | null = null;
+
+      void client.realtime.setAuth()
+        .then(() => {
+          if (!active) return;
+          channel = client
+            .channel(`war-room-access:${profileId}`, { config: { private: true } })
+            .on("broadcast", { event: "war_room_access_changed" }, () => {
+              if (active) onChange();
+            })
+            .subscribe();
+        })
+        .catch(() => undefined);
 
       return () => {
         active = false;

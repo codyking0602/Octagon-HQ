@@ -13,6 +13,7 @@ import {
   mentionedMemberIds,
   type WarRoomAccess,
   type WarRoomAccessMode,
+  type WarRoomAccessProfile,
   type WarRoomCursor,
   type WarRoomMember,
   type WarRoomMessage,
@@ -43,6 +44,8 @@ export type WarRoomInviteStatus =
   | "joined"
   | "error";
 
+export type WarRoomAccessRosterStatus = "idle" | "loading" | "ready" | "error";
+
 interface WarRoomContextValue {
   configured: boolean;
   status: WarRoomStatus;
@@ -61,7 +64,10 @@ interface WarRoomContextValue {
   inviteStatus: WarRoomInviteStatus;
   inviteAccess: WarRoomAccess | null;
   inviteError: string;
-  refresh: () => Promise<void>;
+  accessRoster: WarRoomAccessProfile[];
+  accessRosterStatus: WarRoomAccessRosterStatus;
+  accessRosterError: string;
+  accessSavingProfileId: string | null;
   loadOlder: () => Promise<void>;
   postMessage: (body: string, parentMessageId?: string | null) => Promise<boolean>;
   deleteMessage: (messageId: string) => Promise<boolean>;
@@ -69,6 +75,9 @@ interface WarRoomContextValue {
   checkInvite: (inviteCode: string) => Promise<WarRoomAccess | null>;
   joinWithInvite: (inviteCode: string) => Promise<boolean>;
   clearInvite: () => void;
+  loadAccessRoster: () => Promise<boolean>;
+  setProfileAccess: (profileId: string, enabled: boolean) => Promise<boolean>;
+  clearAccessRoster: () => void;
 }
 
 const WarRoomContext = createContext<WarRoomContextValue | null>(null);
@@ -91,6 +100,7 @@ export function WarRoomProvider({
   const markingReadRef = useRef(false);
   const profileIdRef = useRef(profileId);
   profileIdRef.current = profileId;
+
   const [status, setStatus] = useState<WarRoomStatus>("idle");
   const [accessMode, setAccessMode] = useState<WarRoomAccessMode | null>(null);
   const [role, setRole] = useState<WarRoomRole | null>(null);
@@ -109,6 +119,27 @@ export function WarRoomProvider({
   const [inviteStatus, setInviteStatus] = useState<WarRoomInviteStatus>("idle");
   const [inviteAccess, setInviteAccess] = useState<WarRoomAccess | null>(null);
   const [inviteError, setInviteError] = useState("");
+  const [accessRoster, setAccessRoster] = useState<WarRoomAccessProfile[]>([]);
+  const [accessRosterStatus, setAccessRosterStatus] = useState<WarRoomAccessRosterStatus>("idle");
+  const [accessRosterError, setAccessRosterError] = useState("");
+  const [accessSavingProfileId, setAccessSavingProfileId] = useState<string | null>(null);
+
+  const clearConversation = useCallback(() => {
+    setMessages([]);
+    setMembers([]);
+    setHasMore(false);
+    setNextCursor(null);
+    setRole(null);
+    setUnreadCount(0);
+    setLatestMessageId(null);
+  }, []);
+
+  const clearAccessRoster = useCallback(() => {
+    setAccessRoster([]);
+    setAccessRosterStatus("idle");
+    setAccessRosterError("");
+    setAccessSavingProfileId(null);
+  }, []);
 
   const applySnapshot = useCallback((snapshot: WarRoomSnapshot, merge = false) => {
     setRole(snapshot.role);
@@ -131,15 +162,49 @@ export function WarRoomProvider({
     setInviteError("");
   }, []);
 
-  useEffect(() => {
+  const recheckAccess = useCallback(async (showLoading = false) => {
+    const expectedProfileId = profileId;
+    if (!expectedProfileId || !repository) return false;
     const revision = ++revisionRef.current;
-    setMessages([]);
-    setMembers([]);
-    setHasMore(false);
-    setNextCursor(null);
-    setRole(null);
-    setUnreadCount(0);
-    setLatestMessageId(null);
+    if (showLoading) setLoading(true);
+
+    try {
+      const access = await repository.getAccess();
+      if (revision !== revisionRef.current || profileIdRef.current !== expectedProfileId) return false;
+      setAccessMode(access.mode);
+
+      if (access.mode !== "eligible") {
+        clearConversation();
+        clearAccessRoster();
+        setStatus(access.mode);
+        setRealtimeStatus("idle");
+        setError("");
+        return true;
+      }
+
+      setRole(access.role);
+      setUnreadCount(access.unreadCount);
+      const snapshot = await repository.loadSnapshot();
+      if (revision !== revisionRef.current || profileIdRef.current !== expectedProfileId) return false;
+      applySnapshot(snapshot);
+      if (snapshot.role !== "admin") clearAccessRoster();
+      return true;
+    } catch (nextError) {
+      if (revision !== revisionRef.current || profileIdRef.current !== expectedProfileId) return false;
+      setStatus("error");
+      setError(readableError(nextError));
+      return false;
+    } finally {
+      if (showLoading && revision === revisionRef.current && profileIdRef.current === expectedProfileId) {
+        setLoading(false);
+      }
+    }
+  }, [applySnapshot, clearAccessRoster, clearConversation, profileId, repository]);
+
+  useEffect(() => {
+    ++revisionRef.current;
+    clearConversation();
+    clearAccessRoster();
     setRealtimeStatus("idle");
     setError("");
     setLoading(false);
@@ -165,31 +230,8 @@ export function WarRoomProvider({
 
     setStatus("checking");
     setAccessMode(null);
-    setLoading(true);
-    void repository.getAccess()
-      .then(async (access) => {
-        if (revision !== revisionRef.current || profileIdRef.current !== profileId) return;
-        setAccessMode(access.mode);
-        if (access.mode !== "eligible") {
-          setStatus(access.mode);
-          setUnreadCount(0);
-          return;
-        }
-        setRole(access.role);
-        setUnreadCount(access.unreadCount);
-        const snapshot = await repository.loadSnapshot();
-        if (revision !== revisionRef.current || profileIdRef.current !== profileId) return;
-        applySnapshot(snapshot);
-      })
-      .catch((nextError) => {
-        if (revision !== revisionRef.current || profileIdRef.current !== profileId) return;
-        setStatus("error");
-        setError(readableError(nextError));
-      })
-      .finally(() => {
-        if (revision === revisionRef.current && profileIdRef.current === profileId) setLoading(false);
-      });
-  }, [applySnapshot, clearInvite, identity.status, profileId, repository]);
+    void recheckAccess(true);
+  }, [clearAccessRoster, clearConversation, clearInvite, identity.status, profileId, repository, recheckAccess]);
 
   const syncLatest = useCallback(async () => {
     const expectedProfileId = profileId;
@@ -204,21 +246,10 @@ export function WarRoomProvider({
     }
   }, [applySnapshot, profileId, repository, status]);
 
-  const refresh = useCallback(async () => {
-    const expectedProfileId = profileId;
-    if (!expectedProfileId || !repository || status !== "eligible") return;
-    setLoading(true);
-    try {
-      const snapshot = await repository.loadSnapshot();
-      if (profileIdRef.current !== expectedProfileId) return;
-      applySnapshot(snapshot, true);
-    } catch (nextError) {
-      if (profileIdRef.current !== expectedProfileId) return;
-      setError(readableError(nextError));
-    } finally {
-      if (profileIdRef.current === expectedProfileId) setLoading(false);
-    }
-  }, [applySnapshot, profileId, repository, status]);
+  useEffect(() => {
+    if (!repository || !profileId) return undefined;
+    return repository.subscribeAccess(profileId, () => void recheckAccess(false));
+  }, [profileId, recheckAccess, repository]);
 
   useEffect(() => {
     if (!repository || status !== "eligible") {
@@ -230,15 +261,11 @@ export function WarRoomProvider({
       () => void syncLatest(),
       (nextStatus) => {
         setRealtimeStatus(nextStatus);
-        if (nextStatus === "connected") {
-          void syncLatest();
-        }
+        if (nextStatus === "connected") void syncLatest();
       },
     );
 
-    return () => {
-      unsubscribe();
-    };
+    return () => unsubscribe();
   }, [repository, status, syncLatest]);
 
   useEffect(() => {
@@ -406,6 +433,47 @@ export function WarRoomProvider({
     }
   }, [applySnapshot, profileId, repository]);
 
+  const loadAccessRoster = useCallback(async () => {
+    const expectedProfileId = profileId;
+    if (!expectedProfileId || !repository || role !== "admin") return false;
+    setAccessRosterStatus("loading");
+    setAccessRosterError("");
+    try {
+      const roster = await repository.loadAccessRoster();
+      if (profileIdRef.current !== expectedProfileId) return false;
+      setAccessRoster(roster);
+      setAccessRosterStatus("ready");
+      return true;
+    } catch (nextError) {
+      if (profileIdRef.current !== expectedProfileId) return false;
+      setAccessRosterStatus("error");
+      setAccessRosterError(readableError(nextError));
+      return false;
+    }
+  }, [profileId, repository, role]);
+
+  const setProfileAccess = useCallback(async (targetProfileId: string, enabled: boolean) => {
+    const expectedProfileId = profileId;
+    if (!expectedProfileId || !repository || role !== "admin" || accessSavingProfileId) return false;
+    setAccessSavingProfileId(targetProfileId);
+    setAccessRosterError("");
+    try {
+      const saved = await repository.setProfileAccess(targetProfileId, enabled);
+      if (profileIdRef.current !== expectedProfileId) return false;
+      setAccessRoster((current) => current.map((profile) => (
+        profile.id === saved.id ? saved : profile
+      )));
+      await syncLatest();
+      return true;
+    } catch (nextError) {
+      if (profileIdRef.current !== expectedProfileId) return false;
+      setAccessRosterError(readableError(nextError));
+      return false;
+    } finally {
+      if (profileIdRef.current === expectedProfileId) setAccessSavingProfileId(null);
+    }
+  }, [accessSavingProfileId, profileId, repository, role, syncLatest]);
+
   return (
     <WarRoomContext.Provider value={{
       configured: Boolean(repository),
@@ -425,7 +493,10 @@ export function WarRoomProvider({
       inviteStatus,
       inviteAccess,
       inviteError,
-      refresh,
+      accessRoster,
+      accessRosterStatus,
+      accessRosterError,
+      accessSavingProfileId,
       loadOlder,
       postMessage,
       deleteMessage,
@@ -433,6 +504,9 @@ export function WarRoomProvider({
       checkInvite,
       joinWithInvite,
       clearInvite,
+      loadAccessRoster,
+      setProfileAccess,
+      clearAccessRoster,
     }}>
       {children}
     </WarRoomContext.Provider>

@@ -14,6 +14,11 @@ export interface WarRoomMember {
   avatarPhotoData: string | null;
 }
 
+export interface WarRoomAccessProfile extends WarRoomMember {
+  hasAccess: boolean;
+  role: WarRoomRole | null;
+}
+
 export interface WarRoomParentPreview {
   id: string;
   body: string | null;
