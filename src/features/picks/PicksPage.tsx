@@ -6,12 +6,15 @@ import {
   mainCardFightLabel,
   pickEventPresentation,
   pickProgress,
+  underdogBonusForOdds,
   underdogBonusTiers,
+  type PickBout,
   type PickBoutResultStatus,
 } from "./picksModel";
 import { usePicks } from "./PicksProvider";
 import { FighterThumbnail } from "./FighterThumbnail";
 import { GroupPickReveal } from "./GroupPickReveal";
+import { MainEventSpotlight } from "./MainEventSpotlight";
 import { PicksSeasonHub } from "./PicksSeasonHub";
 
 interface BoutResultView {
@@ -50,6 +53,13 @@ function fighterName(bout: BoutResultView, slug: string | null) {
   if (slug === bout.redFighterSlug) return bout.redFighterName;
   if (slug === bout.blueFighterSlug) return bout.blueFighterName;
   return "Unknown fighter";
+}
+
+function fighterOdds(bout: PickBout | null, slug: string | null) {
+  if (!bout || !slug) return null;
+  if (slug === bout.redFighterSlug) return bout.redAmericanOdds;
+  if (slug === bout.blueFighterSlug) return bout.blueAmericanOdds;
+  return null;
 }
 
 function officialResult(bout: BoutResultView) {
@@ -101,6 +111,13 @@ export default function PicksPage() {
         [bout.blueFighterSlug, bout.blueFighterName],
       ]).find(([slug]) => slug === picks.underdogLock?.fighterSlug)?.[1] ?? picks.underdogLock.fighterSlug
     : "NONE SELECTED";
+  const underdogLockBout = picks.underdogLock
+    ? orderedBouts.find((bout) => bout.boutId === picks.underdogLock?.boutId) ?? null
+    : null;
+  const underdogLockOdds = picks.underdogLock?.frozenAmericanOdds
+    ?? fighterOdds(underdogLockBout, picks.underdogLock?.fighterSlug ?? null);
+  const underdogLockBonus = underdogBonusForOdds(underdogLockOdds);
+  const underdogLockBonusLabel = underdogLockBonus > 0 ? `+${underdogLockBonus}` : null;
   const cardOddsMeta = orderedBouts
     .map((bout) => oddsProvenance(bout.oddsSource, bout.oddsUpdatedAt))
     .find(Boolean) ?? null;
@@ -169,7 +186,10 @@ export default function PicksPage() {
                 <div className={completeProgress ? "picks-progress__track is-complete" : "picks-progress__track"} aria-hidden="true">
                   <span style={{ width: `${percent}%` }} />
                 </div>
-                <p>UNDERDOG LOCK · {underdogLockName}</p>
+                <p>
+                  UNDERDOG LOCK · {underdogLockName}
+                  {underdogLockBonusLabel ? ` · ${underdogLockBonusLabel} IF CORRECT` : ""}
+                </p>
               </div>
 
               {!identity.profile ? (
@@ -216,7 +236,11 @@ export default function PicksPage() {
               ) : null}
 
               <div className="picks-sticky-progress" aria-label="Current Picks progress">
-                <span>{progress.completed}/{progress.total} PICKS · LOCK: {underdogLockName}</span>
+                <span>{progress.completed}/{progress.total} PICKS</span>
+                <em>
+                  LOCK: {underdogLockName}
+                  {underdogLockBonusLabel ? ` · ${underdogLockBonusLabel}` : ""}
+                </em>
               </div>
 
               <section className="picks-card-list" aria-label={`${activeEvent.name} fight picks`}>
@@ -235,6 +259,11 @@ export default function PicksPage() {
                       ? bout.blueAmericanOdds
                       : null;
                   const lockSelected = picks.underdogLock?.boutId === bout.boutId;
+                  const selectedLockOdds = lockSelected
+                    ? picks.underdogLock?.frozenAmericanOdds ?? selectedOdds
+                    : selectedOdds;
+                  const selectedLockBonus = underdogBonusForOdds(selectedLockOdds);
+                  const selectedLockBonusLabel = selectedLockBonus > 0 ? `+${selectedLockBonus}` : null;
                   const cancelled = (bout.resultStatus ?? "pending") === "cancelled";
                   const repickRequired = Boolean(!removed && bout.repickRequired && !selection);
                   const resolved = removed || (bout.resultStatus ?? "pending") !== "pending";
@@ -308,7 +337,9 @@ export default function PicksPage() {
                       ) : null}
                       {!removed && !cancelled && locked && lockSelected ? (
                         <div className={`pick-lock-row is-${selectedCorner ?? "red"}`}>
-                          <div className="pick-lock-readonly" aria-label="Selected Underdog Lock">★ UNDERDOG LOCK</div>
+                          <div className="pick-lock-readonly" aria-label="Selected Underdog Lock">
+                            ★ UNDERDOG LOCK{selectedLockBonusLabel ? ` · ${selectedLockBonusLabel}` : ""}
+                          </div>
                         </div>
                       ) : !removed && !cancelled && !locked && selection && (selectedOdds ?? 0) > 0 ? (
                         <div className={`pick-lock-row is-${selectedCorner ?? "red"}`}>
@@ -321,10 +352,13 @@ export default function PicksPage() {
                               ? void picks.clearUnderdogLock()
                               : void picks.setUnderdogLock(bout.boutId, selection)}
                           >
-                            {lockSelected ? "★ UNDERDOG LOCK · REMOVE" : "☆ MAKE UNDERDOG LOCK"}
+                            {lockSelected
+                              ? `★ UNDERDOG LOCK${selectedLockBonusLabel ? ` · ${selectedLockBonusLabel}` : ""} · REMOVE`
+                              : `☆ LOCK FOR ${selectedLockBonusLabel ?? "BONUS"}`}
                           </button>
                         </div>
                       ) : null}
+                      {index === 0 ? <MainEventSpotlight bout={bout} /> : null}
                       {saving ? <p className="pick-bout-card__saving" role="status">SAVING PICK…</p> : null}
                       <GroupPickReveal
                         redFighterSlug={bout.redFighterSlug}
