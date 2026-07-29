@@ -23,7 +23,7 @@ export function whyPromptFor(fighter: RankingFighter) {
     ? "Explain why the fighter is the benchmark and why the fighter should not be ranked lower."
     : "Explain why the fighter is not ranked higher.";
 
-  return `Why is ${fighter.name} ranked ${rankText} in this UFC-only GOAT model? Break down Championship, Opponent Quality, Prime Dominance, Longevity, Peak Apex, and Loss Context. Explain the key judgment calls, why the fighter ranks here, and ${finalQuestion}`;
+  return `Why is ${fighter.displayName} ranked ${rankText} in this UFC-only GOAT model? Break down Championship, Opponent Quality, Prime Dominance, Longevity, Peak Apex, and Loss Context. Explain the key judgment calls, why the fighter ranks here, and ${finalQuestion}`;
 }
 
 export async function copyText(value: string) {
