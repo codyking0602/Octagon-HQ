@@ -151,7 +151,7 @@ describe("Final Play game presentation", () => {
     expect(photo?.style.objectPosition).toBe("center");
   });
 
-  it("locks eight Keep Cut decisions and finishes with the shared result actions", () => {
+  it("locks eight curated Keep Cut decisions and labels replay honestly", () => {
     const lineup = createKeepCutLineup("ufc-careers", "render-keep-cut");
     const query = lineup.fighters.map((fighter) => fighter.id).join(",");
     const { container } = renderAt(<KeepCutPage />, `/play/keep-cut?pack=ufc-careers&lineup=${query}`);
@@ -163,7 +163,7 @@ describe("Final Play game presentation", () => {
     }
     expect(container.textContent).toContain("YOUR KEEP/CUT CARD");
     const actions = [...container.querySelectorAll(".game-result-actions button")].map((button) => button.textContent);
-    expect(actions).toEqual(["CHALLENGE SOMEONE", "REPLAY", "ALL GAMES"]);
+    expect(actions).toEqual(["CHALLENGE SOMEONE", "REPLAY CHALLENGE", "ALL GAMES"]);
   });
 
   it("keeps the original Better Than list hidden until the counterclaim locks", () => {
@@ -183,6 +183,6 @@ describe("Final Play game presentation", () => {
     expect(container.textContent).toContain("CLAIMS REVEALED");
     expect(container.querySelector(".better-than-result-list")?.textContent).not.toContain("ADD");
     const actions = [...container.querySelectorAll(".game-result-actions button")].map((button) => button.textContent);
-    expect(actions).toEqual(["CHALLENGE SOMEONE", "REPLAY", "ALL GAMES"]);
+    expect(actions).toEqual(["CHALLENGE SOMEONE", "REPLAY CHALLENGE", "ALL GAMES"]);
   });
 });

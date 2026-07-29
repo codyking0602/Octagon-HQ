@@ -8,17 +8,28 @@ import { GameResultActions } from "./GameResultActions";
 import {
   KEEP_CUT_PACKS,
   createKeepCutLineup,
-  createKeepCutSeed,
   keepCutChallengeUrl,
-  loadKeepCutHistory,
+  keepCutPool,
   resolveKeepCutChallenge,
-  saveKeepCutLineup,
   type KeepCutLineup,
   type KeepCutPackId,
 } from "./keepCutEngine";
+import {
+  curatedLineupIdentity,
+  recordLineupCompletion,
+  rememberLineup,
+  replayLabelFor,
+  selectReplayLineup,
+  type PlayLineupIdentity,
+} from "./lineupModel";
 import type { PlayFighter } from "./playFighterPool";
 
 type KeepCutChoice = "keep" | "cut";
+
+interface KeepCutRun {
+  lineup: KeepCutLineup;
+  identity: PlayLineupIdentity;
+}
 
 function validPack(value: string | null): value is KeepCutPackId {
   return KEEP_CUT_PACKS.some((pack) => pack.id === value);
@@ -36,10 +47,23 @@ function asJson(value: unknown): ChallengeJson {
   return JSON.parse(JSON.stringify(value)) as ChallengeJson;
 }
 
-function generatedLineup(packId: KeepCutPackId) {
-  const lineup = createKeepCutLineup(packId, createKeepCutSeed(), loadKeepCutHistory(packId));
-  saveKeepCutLineup(lineup);
-  return lineup;
+function casualKeepCutRun(packId: KeepCutPackId): KeepCutRun {
+  const pool = keepCutPool(packId);
+  const validIds = new Set(pool.map((fighter) => fighter.id));
+  const selected = selectReplayLineup({
+    gameId: "keep-cut",
+    scopeId: packId,
+    lineupSize: 8,
+    attempts: 14,
+    validItemIds: validIds,
+    validFighterIds: validIds,
+    build: (seed) => {
+      const lineup = createKeepCutLineup(packId, seed);
+      const ids = lineup.fighters.map((fighter) => fighter.id);
+      return { value: lineup, itemIds: ids, fighterIds: ids };
+    },
+  });
+  return { lineup: selected.value, identity: selected.identity };
 }
 
 function challengeLineup(packId: KeepCutPackId, fighters: PlayFighter[]): KeepCutLineup {
@@ -52,6 +76,18 @@ function challengeLineup(packId: KeepCutPackId, fighters: PlayFighter[]): KeepCu
     recentOverlap: 0,
     repeatedShape: false,
   };
+}
+
+function curatedKeepCutRun(
+  packId: KeepCutPackId,
+  fighters: PlayFighter[],
+  challengeId: string,
+): KeepCutRun {
+  const lineup = challengeLineup(packId, fighters);
+  const ids = fighters.map((fighter) => fighter.id);
+  const identity = curatedLineupIdentity("keep-cut", challengeId, ids, packId);
+  rememberLineup(identity, ids, ids);
+  return { lineup, identity };
 }
 
 function FighterTile({ fighter, compact = false }: { fighter: PlayFighter; compact?: boolean }) {
@@ -93,39 +129,61 @@ export default function KeepCutPage() {
   const profileLineup = profilePack ? resolveKeepCutChallenge(profilePack, profileLineupIds) : null;
   const requestedPack = searchParams.get("pack");
   const initialPack = profilePack ?? (validPack(requestedPack) ? requestedPack : "ufc-careers");
-  const challengeIds = (searchParams.get("lineup") ?? "").split(",").map((id) => id.trim()).filter(Boolean);
-  const resolvedChallenge = profileLineup ?? resolveKeepCutChallenge(initialPack, challengeIds);
-  const [lineup, setLineup] = useState<KeepCutLineup>(() =>
-    resolvedChallenge ? challengeLineup(initialPack, resolvedChallenge) : generatedLineup(initialPack),
+  const queryLineup = searchParams.get("lineup") ?? "";
+  const resolvedChallenge = useMemo(() => {
+    if (profileLineup) return profileLineup;
+    const ids = queryLineup.split(",").map((id) => id.trim()).filter(Boolean);
+    return resolveKeepCutChallenge(initialPack, ids);
+  }, [initialPack, profileLineup, queryLineup]);
+  const challengeId = profileMatch.challenge?.code
+    ?? `shared:${initialPack}:${resolvedChallenge?.map((fighter) => fighter.id).join("|") ?? "invalid"}`;
+  const [run, setRun] = useState<KeepCutRun>(() =>
+    resolvedChallenge
+      ? curatedKeepCutRun(initialPack, resolvedChallenge, challengeId)
+      : casualKeepCutRun(initialPack),
   );
   const [decisions, setDecisions] = useState<KeepCutChoice[]>([]);
   const [shareStatus, setShareStatus] = useState("");
 
+  const lineup = run.lineup;
   const pack = KEEP_CUT_PACKS.find((row) => row.id === lineup.packId) ?? KEEP_CUT_PACKS[0]!;
   const complete = decisions.length === 8;
   const kept = lineup.fighters.filter((_fighter, index) => decisions[index] === "keep");
   const cut = lineup.fighters.filter((_fighter, index) => decisions[index] === "cut");
   const current = lineup.fighters[decisions.length];
-  const isChallenge = Boolean(resolvedChallenge && lineup.seed === "friend-challenge");
+  const isChallenge = run.identity.type === "curated";
   const groupedPacks = useMemo(() => ["Serious", "Debate", "Entertainment", "Chaos"].map((group) => ({
     group,
     rows: KEEP_CUT_PACKS.filter((row) => row.group === group),
   })), []);
 
   useEffect(() => {
-    if (!complete || !profileMatch.isRecipient || profileMatch.challenge?.responderResult !== null) return;
-    profileMatch.submitResult(asJson({
+    if (!complete) return;
+    const result = {
       decisions,
       keptIds: kept.map((fighter) => fighter.id),
       cutIds: cut.map((fighter) => fighter.id),
-    }));
-  }, [complete, cut, decisions, kept, profileMatch]);
+    };
+    recordLineupCompletion(run.identity, result);
+    if (profileMatch.isRecipient && profileMatch.challenge?.responderResult === null) {
+      profileMatch.submitResult(asJson(result));
+    }
+  }, [complete, cut, decisions, kept, profileMatch, run.identity]);
 
-  function startNew(packId: KeepCutPackId = lineup.packId) {
-    setLineup(generatedLineup(packId));
+  function resetDecisions() {
     setDecisions([]);
     setShareStatus("");
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function startNew(packId: KeepCutPackId = lineup.packId) {
+    setRun(casualKeepCutRun(packId));
+    resetDecisions();
+  }
+
+  function replay() {
+    if (run.identity.type === "replayable") startNew();
+    else resetDecisions();
   }
 
   function decide(choice: KeepCutChoice) {
@@ -187,8 +245,9 @@ export default function KeepCutPage() {
           </div>
           <GameResultActions
             onChallenge={() => void challengeSomeone()}
-            onReplay={() => startNew()}
+            onReplay={replay}
             onAllGames={() => navigate("/play")}
+            replayLabel={replayLabelFor(run.identity.type)}
             status={shareStatus}
           />
         </section>
@@ -215,7 +274,7 @@ export default function KeepCutPage() {
       ) : null}
       <section className="keep-cut-intro">
         <div className="keep-cut-intro__copy">
-          <p className="eyebrow">{isChallenge ? "FRIEND CHALLENGE" : "KEEP 4 · CUT 4"}</p>
+          <p className="eyebrow">{isChallenge ? "FRIEND CHALLENGE" : "REPLAYABLE GAME"}</p>
           <h1>{pack.prompt}</h1>
           <p>{pack.description} You will not see who comes next.</p>
         </div>

@@ -3,6 +3,12 @@ import {
   playFighters,
   type PlayFighter,
 } from "./playFighterPool";
+import {
+  createReplaySeed,
+  seededLineupRandom,
+  shuffleLineup,
+  validateLineupIds,
+} from "./lineupModel";
 
 export type KeepCutPackId =
   | "ufc-careers"
@@ -54,11 +60,6 @@ export interface KeepCutLineup {
   repeatedShape: boolean;
 }
 
-export interface KeepCutHistory {
-  lineups: string[][];
-  shapes: string[];
-}
-
 export const KEEP_CUT_PACKS: readonly KeepCutPack[] = [
   { id: "ufc-careers", group: "Serious", name: "UFC Careers", prompt: "Keep four UFC careers. Cut four.", description: "Men's UFC-only career value." },
   { id: "all-careers", group: "Serious", name: "All UFC Careers", prompt: "Keep four UFC careers. Cut four.", description: "Men and women together on one UFC-only career scale." },
@@ -88,8 +89,6 @@ export const KEEP_CUT_ROLES: readonly KeepCutRole[] = [
 ] as const;
 
 const TIER_ORDER: readonly KeepCutTierId[] = ["elite", "great", "good", "average", "below-average", "bad"];
-const HISTORY_KEY = "octagon-hq:keep-cut-history:v2";
-const HISTORY_LIMIT = 4;
 const GENERATION_ATTEMPTS = 14;
 const TWO_BAD_LINEUP_RATE = 0.16;
 
@@ -123,35 +122,6 @@ const subjectiveOverrides: Record<string, Partial<Record<KeepCutPackId, number>>
 
 function clamp(value: number) {
   return Math.max(0, Math.min(100, Math.round(value)));
-}
-
-function hashSeed(value: string) {
-  let hash = 2166136261;
-  for (let index = 0; index < value.length; index += 1) {
-    hash ^= value.charCodeAt(index);
-    hash = Math.imul(hash, 16777619);
-  }
-  return hash >>> 0;
-}
-
-function mulberry32(seed: number) {
-  let value = seed >>> 0;
-  return () => {
-    value += 0x6d2b79f5;
-    let next = value;
-    next = Math.imul(next ^ (next >>> 15), next | 1);
-    next ^= next + Math.imul(next ^ (next >>> 7), next | 61);
-    return ((next ^ (next >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-function shuffle<T>(rows: readonly T[], random: () => number) {
-  const copy = [...rows];
-  for (let index = copy.length - 1; index > 0; index -= 1) {
-    const swap = Math.floor(random() * (index + 1));
-    [copy[index], copy[swap]] = [copy[swap], copy[index]];
-  }
-  return copy;
 }
 
 function packFor(packId: KeepCutPackId) {
@@ -266,7 +236,6 @@ function pickCandidate(
   badCount: number,
   badLimit: number,
   allowBad: boolean,
-  recentPressure: Map<string, number>,
   random: () => number,
 ) {
   const eligible = rows.filter((row) => {
@@ -275,42 +244,26 @@ function pickCandidate(
     return allowBad && badCount < badLimit;
   });
   const targetIndex = TIER_ORDER.indexOf(target);
-  const ordered = [...eligible].sort((left, right) => {
+  return shuffleLineup(eligible, random).sort((left, right) => {
     const leftDistance = Math.abs(TIER_ORDER.indexOf(left.tier) - targetIndex);
     const rightDistance = Math.abs(TIER_ORDER.indexOf(right.tier) - targetIndex);
-    if (leftDistance !== rightDistance) return leftDistance - rightDistance;
-    const leftPressure = recentPressure.get(left.fighter.id) ?? 0;
-    const rightPressure = recentPressure.get(right.fighter.id) ?? 0;
-    if (leftPressure !== rightPressure) return leftPressure - rightPressure;
-    return random() - 0.5;
-  });
-  return ordered[0] ?? null;
+    return leftDistance - rightDistance;
+  })[0] ?? null;
 }
 
 function shapeFor(tiers: readonly KeepCutTierId[]) {
   return TIER_ORDER.map((tier) => `${tier}:${tiers.filter((value) => value === tier).length}`).join("|");
 }
 
-function historyPressure(history: KeepCutHistory) {
-  const pressure = new Map<string, number>();
-  history.lineups.forEach((lineup, index) => {
-    const weight = Math.max(1, HISTORY_LIMIT - index);
-    lineup.forEach((id) => pressure.set(id, (pressure.get(id) ?? 0) + weight));
-  });
-  return pressure;
-}
-
 function attemptLineup(
   packId: KeepCutPackId,
   seed: string,
-  history: KeepCutHistory,
   twoBadRequested: boolean,
   attempt: number,
 ) {
-  const random = mulberry32(hashSeed(`keep-cut|${packId}|${seed}|${attempt}`));
+  const random = seededLineupRandom("keep-cut", packId, seed, attempt);
   const rows = keepCutPool(packId).map((fighter) => ({ fighter, tier: keepCutTier(keepCutRating(packId, fighter)) }));
   const badLimit = twoBadRequested && rows.filter((row) => row.tier === "bad").length >= 2 ? 2 : 1;
-  const pressure = historyPressure(history);
   const used = new Set<string>();
   const assignments: KeepCutAssignment[] = [];
   const fighters: PlayFighter[] = [];
@@ -320,7 +273,7 @@ function attemptLineup(
     const forcedBad = badLimit === 2 && (role.id === "trap-two" || role.id === "wildcard");
     const targetTier = forcedBad ? "bad" : weightedTier(role, random);
     const allowBad = role.allowBad || (badLimit === 2 && role.id === "trap-two");
-    const picked = pickCandidate(rows, targetTier, used, badCount, badLimit, allowBad, pressure, random);
+    const picked = pickCandidate(rows, targetTier, used, badCount, badLimit, allowBad, random);
     if (!picked) return null;
     fighters.push(picked.fighter);
     used.add(picked.fighter.id);
@@ -328,46 +281,32 @@ function attemptLineup(
     assignments.push({ roleId: role.id, targetTier, actualTier: picked.tier, fighterId: picked.fighter.id });
   }
 
-  const shuffled = shuffle(fighters, random);
-  const ids = shuffled.map((fighter) => fighter.id);
-  const recentSet = new Set(history.lineups.flat());
-  const recentOverlap = ids.filter((id) => recentSet.has(id)).length;
+  const shuffled = shuffleLineup(fighters, random);
   const shape = shapeFor(assignments.map((assignment) => assignment.actualTier));
-  return { fighters: shuffled, assignments, shape, recentOverlap, repeatedShape: history.shapes.includes(shape) };
+  return { fighters: shuffled, assignments, shape, recentOverlap: 0, repeatedShape: false };
 }
 
 export function createKeepCutSeed() {
-  return `${Date.now().toString(36)}-${Math.floor(Math.random() * 0xffffffff).toString(36)}`;
+  return createReplaySeed("keep-cut");
 }
 
-export function createKeepCutLineup(
-  packId: KeepCutPackId,
-  seed: string,
-  history: KeepCutHistory = { lineups: [], shapes: [] },
-): KeepCutLineup {
-  const surpriseRandom = mulberry32(hashSeed(`keep-cut-two-bad|${packId}|${seed}`));
+export function createKeepCutLineup(packId: KeepCutPackId, seed: string): KeepCutLineup {
+  const surpriseRandom = seededLineupRandom("keep-cut", "two-bad", packId, seed);
   const twoBadRequested = surpriseRandom() < TWO_BAD_LINEUP_RATE;
-  let best: ReturnType<typeof attemptLineup> = null;
-  let bestPenalty = Number.POSITIVE_INFINITY;
+
   for (let attempt = 0; attempt < GENERATION_ATTEMPTS; attempt += 1) {
-    const candidate = attemptLineup(packId, seed, history, twoBadRequested, attempt);
-    if (!candidate) continue;
-    const penalty = candidate.recentOverlap * 10 + (candidate.repeatedShape ? 5 : 0);
-    if (penalty < bestPenalty) {
-      best = candidate;
-      bestPenalty = penalty;
-    }
-    if (candidate.recentOverlap <= 1 && !candidate.repeatedShape) break;
+    const candidate = attemptLineup(packId, seed, twoBadRequested, attempt);
+    if (candidate) return { packId, seed, ...candidate };
   }
-  if (!best) throw new Error(`Keep 4, Cut 4 could not build a lineup for ${packFor(packId).name}.`);
-  return { packId, seed, ...best };
+
+  throw new Error(`Keep 4, Cut 4 could not build a lineup for ${packFor(packId).name}.`);
 }
 
 export function resolveKeepCutChallenge(packId: KeepCutPackId, lineupIds: readonly string[]) {
-  if (lineupIds.length !== 8 || new Set(lineupIds).size !== 8) return null;
-  const allowed = new Set(keepCutPool(packId).map((fighter) => fighter.id));
+  const validIds = new Set(keepCutPool(packId).map((fighter) => fighter.id));
+  if (!validateLineupIds(lineupIds, 8, validIds).valid) return null;
   const fighters = lineupIds.map((id) => getPlayFighter(id));
-  return fighters.every((fighter) => fighter && allowed.has(fighter.id)) ? fighters as PlayFighter[] : null;
+  return fighters.every(Boolean) ? fighters as PlayFighter[] : null;
 }
 
 export function keepCutChallengeUrl(packId: KeepCutPackId, lineup: readonly PlayFighter[]) {
@@ -375,32 +314,4 @@ export function keepCutChallengeUrl(packId: KeepCutPackId, lineup: readonly Play
   url.searchParams.set("pack", packId);
   url.searchParams.set("lineup", lineup.map((fighter) => fighter.id).join(","));
   return url.toString();
-}
-
-export function loadKeepCutHistory(packId: KeepCutPackId): KeepCutHistory {
-  if (typeof window === "undefined") return { lineups: [], shapes: [] };
-  try {
-    const parsed = JSON.parse(window.localStorage.getItem(HISTORY_KEY) ?? "{}") as Record<string, KeepCutHistory>;
-    return {
-      lineups: Array.isArray(parsed[packId]?.lineups) ? parsed[packId].lineups.slice(0, HISTORY_LIMIT) : [],
-      shapes: Array.isArray(parsed[packId]?.shapes) ? parsed[packId].shapes.slice(0, HISTORY_LIMIT) : [],
-    };
-  } catch {
-    return { lineups: [], shapes: [] };
-  }
-}
-
-export function saveKeepCutLineup(lineup: KeepCutLineup) {
-  if (typeof window === "undefined") return;
-  try {
-    const parsed = JSON.parse(window.localStorage.getItem(HISTORY_KEY) ?? "{}") as Record<string, KeepCutHistory>;
-    const current = loadKeepCutHistory(lineup.packId);
-    parsed[lineup.packId] = {
-      lineups: [lineup.fighters.map((fighter) => fighter.id), ...current.lineups].slice(0, HISTORY_LIMIT),
-      shapes: [lineup.shape, ...current.shapes].slice(0, HISTORY_LIMIT),
-    };
-    window.localStorage.setItem(HISTORY_KEY, JSON.stringify(parsed));
-  } catch {
-    // Repeat protection is progressive enhancement.
-  }
 }
