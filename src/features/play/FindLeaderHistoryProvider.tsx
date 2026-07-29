@@ -15,6 +15,7 @@ import {
 } from "./findLeaderStorage";
 import {
   createFindLeaderHistoryRepository,
+  type FindLeaderDailyLeaderboard,
   type FindLeaderHistoryRepository,
 } from "./findLeaderHistoryRepository";
 
@@ -24,7 +25,12 @@ interface FindLeaderHistoryContextValue {
   loading: boolean;
   error: string;
   rows: FindLeaderHistoryRow[];
+  dailyLeaderboard: FindLeaderDailyLeaderboard | null;
+  dailyLeaderboardDay: string | null;
+  dailyLeaderboardLoading: boolean;
+  dailyLeaderboardError: string;
   refresh: () => Promise<void>;
+  loadDailyLeaderboard: (day: string) => Promise<void>;
   recordAttempt: (day: string, score: number) => Promise<void>;
 }
 
@@ -33,6 +39,11 @@ const FindLeaderHistoryContext = createContext<FindLeaderHistoryContextValue | n
 function readableError(error: unknown) {
   if (error instanceof Error && error.message) return error.message;
   return "Octagon HQ could not sync Find the Leader history.";
+}
+
+function readableLeaderboardError(error: unknown) {
+  if (error instanceof Error && error.message) return error.message;
+  return "Octagon HQ could not load today’s leaderboard.";
 }
 
 function mergeHistoryRow(rows: FindLeaderHistoryRow[], next: FindLeaderHistoryRow) {
@@ -48,6 +59,8 @@ export function FindLeaderHistoryProvider({
   const profileId = identity.profile?.id ?? null;
   const profileIdRef = useRef(profileId);
   profileIdRef.current = profileId;
+  const leaderboardDayRef = useRef<string | null>(null);
+  const leaderboardRevisionRef = useRef(0);
   const [repository] = useState<FindLeaderHistoryRepository | null>(() => (
     suppliedRepository === undefined
       ? createFindLeaderHistoryRepository()
@@ -56,6 +69,10 @@ export function FindLeaderHistoryProvider({
   const [rows, setRows] = useState<FindLeaderHistoryRow[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [dailyLeaderboard, setDailyLeaderboard] = useState<FindLeaderDailyLeaderboard | null>(null);
+  const [dailyLeaderboardDay, setDailyLeaderboardDay] = useState<string | null>(null);
+  const [dailyLeaderboardLoading, setDailyLeaderboardLoading] = useState(false);
+  const [dailyLeaderboardError, setDailyLeaderboardError] = useState("");
   const profileBacked = Boolean(profileId);
 
   const refresh = useCallback(async () => {
@@ -88,23 +105,70 @@ export function FindLeaderHistoryProvider({
     }
   }, [profileId, repository]);
 
+  const loadDailyLeaderboard = useCallback(async (day: string) => {
+    const expectedProfileId = profileId;
+    const revision = ++leaderboardRevisionRef.current;
+    leaderboardDayRef.current = day;
+    setDailyLeaderboardDay(day);
+
+    if (!expectedProfileId) {
+      setDailyLeaderboard(null);
+      setDailyLeaderboardLoading(false);
+      setDailyLeaderboardError("");
+      return;
+    }
+
+    if (!repository?.loadDailyLeaderboard) {
+      setDailyLeaderboard(null);
+      setDailyLeaderboardLoading(false);
+      setDailyLeaderboardError("Today’s leaderboard is not connected on this build.");
+      return;
+    }
+
+    setDailyLeaderboardLoading(true);
+    try {
+      const nextLeaderboard = await repository.loadDailyLeaderboard(day);
+      if (revision !== leaderboardRevisionRef.current || profileIdRef.current !== expectedProfileId) return;
+      setDailyLeaderboard(nextLeaderboard);
+      setDailyLeaderboardError("");
+    } catch (nextError) {
+      if (revision !== leaderboardRevisionRef.current || profileIdRef.current !== expectedProfileId) return;
+      setDailyLeaderboard(null);
+      setDailyLeaderboardError(readableLeaderboardError(nextError));
+    } finally {
+      if (revision === leaderboardRevisionRef.current && profileIdRef.current === expectedProfileId) {
+        setDailyLeaderboardLoading(false);
+      }
+    }
+  }, [profileId, repository]);
+
   useEffect(() => {
+    leaderboardRevisionRef.current += 1;
+    leaderboardDayRef.current = null;
+    setDailyLeaderboard(null);
+    setDailyLeaderboardDay(null);
+    setDailyLeaderboardLoading(false);
+    setDailyLeaderboardError("");
     void refresh();
-  }, [refresh]);
+  }, [profileId, refresh]);
 
   useEffect(() => {
     if (!profileId || !repository) return undefined;
-    const onFocus = () => void refresh();
-    const onVisibility = () => {
-      if (document.visibilityState === "visible") void refresh();
+    const refreshVisibleData = () => {
+      void refresh();
+      const day = leaderboardDayRef.current;
+      if (day) void loadDailyLeaderboard(day);
     };
-    window.addEventListener("focus", onFocus);
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") refreshVisibleData();
+    };
+    window.addEventListener("focus", refreshVisibleData);
     document.addEventListener("visibilitychange", onVisibility);
     return () => {
-      window.removeEventListener("focus", onFocus);
+      window.removeEventListener("focus", refreshVisibleData);
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [profileId, refresh, repository]);
+  }, [loadDailyLeaderboard, profileId, refresh, repository]);
 
   const recordAttempt = useCallback(async (day: string, score: number) => {
     const expectedProfileId = profileId;
@@ -124,11 +188,14 @@ export function FindLeaderHistoryProvider({
       if (profileIdRef.current !== expectedProfileId) return;
       setRows((current) => mergeHistoryRow(current, saved));
       setError("");
+      if (repository.loadDailyLeaderboard) {
+        await loadDailyLeaderboard(day);
+      }
     } catch (nextError) {
       if (profileIdRef.current !== expectedProfileId) return;
       setError(readableError(nextError));
     }
-  }, [profileId, repository]);
+  }, [loadDailyLeaderboard, profileId, repository]);
 
   return (
     <FindLeaderHistoryContext.Provider value={{
@@ -137,7 +204,12 @@ export function FindLeaderHistoryProvider({
       loading,
       error,
       rows,
+      dailyLeaderboard,
+      dailyLeaderboardDay,
+      dailyLeaderboardLoading,
+      dailyLeaderboardError,
       refresh,
+      loadDailyLeaderboard,
       recordAttempt,
     }}>
       {children}
