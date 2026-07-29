@@ -30,7 +30,9 @@ export function AppShell() {
         </header>
       ) : (
         <header className="app-header">
-          <BrandMark size="compact" />
+          <Link to="/" aria-label="Return to Home" style={{ textDecoration: "none" }}>
+            <BrandMark size="compact" />
+          </Link>
           <div className="app-header__actions">
             <NavLink
               className={({ isActive }) => (isActive ? "app-ask-action is-active" : "app-ask-action")}
