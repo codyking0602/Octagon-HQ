@@ -5,6 +5,7 @@ import { IdentityProvider } from "../features/identity/IdentityProvider";
 import { FindLeaderHistoryProvider } from "../features/play/FindLeaderHistoryProvider";
 import { PicksProvider } from "../features/picks/PicksProvider";
 import { ProfilePreferencesProvider } from "../features/profile/ProfilePreferencesProvider";
+import { WarRoomProvider } from "../features/war-room/WarRoomProvider";
 
 export function AppProviders({ children }: PropsWithChildren) {
   const [queryClient] = useState(
@@ -23,13 +24,15 @@ export function AppProviders({ children }: PropsWithChildren) {
   return (
     <QueryClientProvider client={queryClient}>
       <IdentityProvider>
-        <ProfilePreferencesProvider>
-          <PicksProvider>
-            <FindLeaderHistoryProvider>
-              <ChallengeProvider>{children}</ChallengeProvider>
-            </FindLeaderHistoryProvider>
-          </PicksProvider>
-        </ProfilePreferencesProvider>
+        <WarRoomProvider>
+          <ProfilePreferencesProvider>
+            <PicksProvider>
+              <FindLeaderHistoryProvider>
+                <ChallengeProvider>{children}</ChallengeProvider>
+              </FindLeaderHistoryProvider>
+            </PicksProvider>
+          </ProfilePreferencesProvider>
+        </WarRoomProvider>
       </IdentityProvider>
     </QueryClientProvider>
   );

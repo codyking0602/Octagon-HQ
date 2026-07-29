@@ -34,4 +34,4 @@ No route, tab, page, provider, badge, feed, or placeholder is added in this PR.
 
 ## Later slices
 
-PR 2 will add the guarded conversation core. PR 3 will add unread/realtime ownership and conditionally expose the final navigation destination after the complete experience is ready.
+PR 2 adds the guarded continuous conversation core and hidden review route. PR 3 adds unread/realtime ownership, the invite-join presentation, and conditionally exposes the final navigation destination after the complete experience is ready.
