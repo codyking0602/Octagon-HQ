@@ -295,7 +295,7 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
     if (!window.confirm(
       `Change the deadline for every fight from ${eventTime(event.locksAt)} to ${eventTime(proposed.toISOString())}? This does not reopen an event that was manually moved to LOCKED.`,
     )) return;
-    void runAction("lock-time", () => repository!.adjustLockTime(
+    void runAction("lock-time", () => repository!.adjustLockTime!(
       event.eventId,
       proposed.toISOString(),
       event.locksAt,
