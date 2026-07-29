@@ -106,11 +106,13 @@ function WarRoomConversation() {
   const feedRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const reactionPressTimerRef = useRef<number | null>(null);
   const initialScrollRef = useRef(false);
   const previousLatestRef = useRef<string | null>(null);
   const [draft, setDraft] = useState("");
   const [cursor, setCursor] = useState(0);
   const [replyTo, setReplyTo] = useState<WarRoomMessage | null>(null);
+  const [reactionPickerMessageId, setReactionPickerMessageId] = useState<string | null>(null);
   const [atLatest, setAtLatest] = useState(true);
   const [accessManagerOpen, setAccessManagerOpen] = useState(false);
 
@@ -124,6 +126,29 @@ function WarRoomConversation() {
   function jumpToLatest(behavior: ScrollBehavior = "smooth") {
     bottomRef.current?.scrollIntoView({ behavior, block: "end" });
     setAtLatest(true);
+  }
+
+  function openReactionPicker(messageId: string) {
+    setReactionPickerMessageId((current) => current === messageId ? null : messageId);
+  }
+
+  function cancelReactionPress() {
+    if (reactionPressTimerRef.current === null) return;
+    window.clearTimeout(reactionPressTimerRef.current);
+    reactionPressTimerRef.current = null;
+  }
+
+  function startReactionPress(messageId: string) {
+    cancelReactionPress();
+    reactionPressTimerRef.current = window.setTimeout(() => {
+      setReactionPickerMessageId(messageId);
+      reactionPressTimerRef.current = null;
+    }, 420);
+  }
+
+  async function react(messageId: string, reactionType: WarRoomReactionType) {
+    const saved = await warRoom.toggleReaction(messageId, reactionType);
+    if (saved) setReactionPickerMessageId(null);
   }
 
   useEffect(() => {
@@ -162,7 +187,33 @@ function WarRoomConversation() {
     if (replyTo && !warRoom.messages.some((message) => message.id === replyTo.id)) {
       setReplyTo(null);
     }
-  }, [replyTo, warRoom.messages]);
+    if (
+      reactionPickerMessageId
+      && !warRoom.messages.some((message) => message.id === reactionPickerMessageId)
+    ) {
+      setReactionPickerMessageId(null);
+    }
+  }, [reactionPickerMessageId, replyTo, warRoom.messages]);
+
+  useEffect(() => {
+    if (!reactionPickerMessageId) return undefined;
+    const closePicker = (event: PointerEvent) => {
+      const target = event.target;
+      if (target instanceof Element && target.closest("[data-war-room-reaction-ui]")) return;
+      setReactionPickerMessageId(null);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setReactionPickerMessageId(null);
+    };
+    document.addEventListener("pointerdown", closePicker);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closePicker);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [reactionPickerMessageId]);
+
+  useEffect(() => () => cancelReactionPress(), []);
 
   const mention = activeMention(draft, cursor);
   const suggestions = mention ? warRoom.members
@@ -249,78 +300,119 @@ function WarRoomConversation() {
               <strong>Open the room.</strong>
               <span>Start the first UFC debate.</span>
             </div>
-          ) : warRoom.messages.map((message) => (
-            <article className="war-room-message" key={message.id}>
-              <Link className="war-room-message__avatar" to={memberProfilePath(message.author.displayName)}>
-                <MemberAvatar member={message.author} />
-              </Link>
-              <div className="war-room-message__content">
-                <div className="war-room-message__meta">
-                  <Link to={memberProfilePath(message.author.displayName)}>{message.author.displayName}</Link>
-                  <time dateTime={message.createdAt}>{formatTimestamp(message.createdAt)}</time>
-                </div>
+          ) : warRoom.messages.map((message) => {
+            const activeReactions = message.reactions.filter((reaction) => reaction.count > 0);
+            const pickerOpen = reactionPickerMessageId === message.id;
+            return (
+              <article className="war-room-message" key={message.id}>
+                <Link className="war-room-message__avatar" to={memberProfilePath(message.author.displayName)}>
+                  <MemberAvatar member={message.author} />
+                </Link>
+                <div className="war-room-message__content">
+                  <div className="war-room-message__meta">
+                    <Link to={memberProfilePath(message.author.displayName)}>{message.author.displayName}</Link>
+                    <time dateTime={message.createdAt}>{formatTimestamp(message.createdAt)}</time>
+                  </div>
 
-                {message.parent ? (
-                  <Link className="war-room-parent" to={memberProfilePath(message.parent.author.displayName)}>
-                    <strong>↳ {message.parent.author.displayName}</strong>
-                    <span>{message.parent.body}</span>
-                  </Link>
-                ) : null}
+                  <div
+                    className={`war-room-message__bubble${activeReactions.length ? " has-tapbacks" : ""}`}
+                    onPointerDown={() => startReactionPress(message.id)}
+                    onPointerUp={cancelReactionPress}
+                    onPointerCancel={cancelReactionPress}
+                    onPointerLeave={cancelReactionPress}
+                    onContextMenu={(event) => {
+                      event.preventDefault();
+                      cancelReactionPress();
+                      setReactionPickerMessageId(message.id);
+                    }}
+                  >
+                    {message.parent ? (
+                      <Link className="war-room-parent" to={memberProfilePath(message.parent.author.displayName)}>
+                        <strong>↳ {message.parent.author.displayName}</strong>
+                        <span>{message.parent.body}</span>
+                      </Link>
+                    ) : null}
 
-                {message.body ? (
-                  <p className="war-room-message__body">
-                    <MessageBody body={message.body} mentions={message.mentions} />
-                  </p>
-                ) : null}
+                    {message.body ? (
+                      <p className="war-room-message__body">
+                        <MessageBody body={message.body} mentions={message.mentions} />
+                      </p>
+                    ) : null}
 
-                <div className="war-room-reactions" aria-label="React to this message">
-                  {REACTION_OPTIONS.map((option) => {
-                    const reaction = message.reactions.find((item) => item.type === option.type);
-                    const selected = reaction?.reacted ?? false;
-                    const count = reaction?.count ?? 0;
-                    const reactionKey = `${message.id}:${option.type}`;
-                    return (
+                    {activeReactions.length ? (
+                      <button
+                        className="war-room-tapback-summary"
+                        data-war-room-reaction-ui
+                        type="button"
+                        aria-label="View or change reactions"
+                        onClick={() => openReactionPicker(message.id)}
+                      >
+                        {activeReactions.map((reaction) => {
+                          const option = REACTION_OPTIONS.find((item) => item.type === reaction.type);
+                          if (!option) return null;
+                          return (
+                            <span className={reaction.reacted ? "is-mine" : ""} key={reaction.type}>
+                              <i aria-hidden="true">{option.icon}</i>
+                              {reaction.count > 1 ? <b>{reaction.count}</b> : null}
+                            </span>
+                          );
+                        })}
+                      </button>
+                    ) : null}
+
+                    {pickerOpen ? (
+                      <div className="war-room-tapback-picker" data-war-room-reaction-ui role="toolbar" aria-label="React to this message">
+                        {REACTION_OPTIONS.map((option) => {
+                          const reaction = message.reactions.find((item) => item.type === option.type);
+                          const selected = reaction?.reacted ?? false;
+                          const reactionKey = `${message.id}:${option.type}`;
+                          return (
+                            <button
+                              type="button"
+                              key={option.type}
+                              className={selected ? "is-selected" : ""}
+                              aria-pressed={selected}
+                              aria-label={option.label}
+                              disabled={Boolean(warRoom.reactingKey)}
+                              onClick={() => void react(message.id, option.type)}
+                            >
+                              <span aria-hidden="true">{option.icon}</span>
+                              {warRoom.reactingKey === reactionKey ? <i aria-hidden="true" /> : null}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    ) : null}
+                  </div>
+
+                  <div className="war-room-message__actions">
+                    <button type="button" data-war-room-reaction-ui onClick={() => openReactionPicker(message.id)}>
+                      REACT
+                    </button>
+                    {!message.parent ? (
+                      <button type="button" onClick={() => {
+                        setReplyTo(message);
+                        textareaRef.current?.focus();
+                      }}>REPLY</button>
+                    ) : null}
+                    {message.canDelete ? (
                       <button
                         type="button"
-                        key={option.type}
-                        className={selected ? "is-selected" : ""}
-                        aria-pressed={selected}
-                        aria-label={`${option.label}${count ? `, ${count}` : ""}`}
-                        disabled={Boolean(warRoom.reactingKey)}
-                        onClick={() => void warRoom.toggleReaction(message.id, option.type)}
+                        disabled={warRoom.deletingMessageId === message.id}
+                        onClick={() => {
+                          if (window.confirm("Delete this War Room message?")) {
+                            void warRoom.deleteMessage(message.id);
+                          }
+                        }}
                       >
-                        <span aria-hidden="true">{option.icon}</span>
-                        {count > 0 ? <b>{count}</b> : null}
-                        {warRoom.reactingKey === reactionKey ? <i aria-hidden="true" /> : null}
+                        {warRoom.deletingMessageId === message.id ? "DELETING…" : "DELETE"}
                       </button>
-                    );
-                  })}
+                    ) : null}
+                  </div>
                 </div>
-
-                <div className="war-room-message__actions">
-                  {!message.parent ? (
-                    <button type="button" onClick={() => {
-                      setReplyTo(message);
-                      textareaRef.current?.focus();
-                    }}>REPLY</button>
-                  ) : null}
-                  {message.canDelete ? (
-                    <button
-                      type="button"
-                      disabled={warRoom.deletingMessageId === message.id}
-                      onClick={() => {
-                        if (window.confirm("Delete this War Room message?")) {
-                          void warRoom.deleteMessage(message.id);
-                        }
-                      }}
-                    >
-                      {warRoom.deletingMessageId === message.id ? "DELETING…" : "DELETE"}
-                    </button>
-                  ) : null}
-                </div>
-              </div>
-            </article>
-          ))}
+              </article>
+            );
+          })}
           <div ref={bottomRef} />
         </div>
 

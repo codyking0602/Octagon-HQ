@@ -20,7 +20,14 @@ Every visible message supports four reactions:
 - Exclaim `❗`
 - Laugh `😂`
 
-Each active War Room member may toggle each reaction independently. Counts are canonical across profiles and devices. A selected reaction is visually distinct and may be toggled off by selecting it again.
+The presentation follows an iMessage-style tapback pattern instead of showing four permanent buttons under every post.
+
+- Existing reactions appear as compact tapback badges attached to the message.
+- Selecting **REACT**, tapping an existing badge, pressing and holding the message, or opening its context menu reveals the four-choice floating picker.
+- The picker closes after a successful selection, an outside tap, or Escape.
+- Each active War Room member may toggle each reaction independently.
+- Counts are canonical across profiles and devices.
+- A selected reaction is visually distinct and may be toggled off by selecting it again.
 
 Deleted messages cannot receive reactions and retain no reaction rows.
 

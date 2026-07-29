@@ -46,15 +46,22 @@ describe("War Room reactions and disappearing deletes", () => {
     expect(repository).toContain('client.rpc("get_war_room_message"');
   });
 
-  it("locks the four independent reaction types", () => {
+  it("locks the four independent reaction types behind an iMessage-style tapback picker", () => {
     expect(migration).toContain("reaction_type in ('like', 'dislike', 'exclaim', 'laugh')");
     expect(model).toContain('"like" | "dislike" | "exclaim" | "laugh"');
     expect(page).toContain('{ type: "like", icon: "👍", label: "Like" }');
     expect(page).toContain('{ type: "dislike", icon: "👎", label: "Dislike" }');
     expect(page).toContain('{ type: "exclaim", icon: "❗", label: "Exclaim" }');
     expect(page).toContain('{ type: "laugh", icon: "😂", label: "Laugh" }');
+    expect(page).toContain("war-room-tapback-summary");
+    expect(page).toContain("war-room-tapback-picker");
+    expect(page).toContain("setTimeout(() =>");
+    expect(page).toContain("openReactionPicker(message.id)");
     expect(page).toContain("aria-pressed={selected}");
-    expect(styles).toContain(".war-room-reactions button.is-selected");
+    expect(styles).toContain(".war-room-tapback-picker button.is-selected");
+    expect(styles).toContain(".war-room-tapback-summary");
+    expect(styles).not.toContain(".war-room-reactions {");
+    expect(contract).toContain("compact tapback badges");
     expect(contract).toContain("toggle each reaction independently");
   });
 
