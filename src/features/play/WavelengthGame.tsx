@@ -20,7 +20,6 @@ import {
 } from "./wavelengthEngine";
 import {
   createChallengeWavelengthRound,
-  createWavelengthSeed,
   nextChallengeWavelengthClue,
   wavelengthChallengeUrl,
 } from "./wavelengthChallenge";
@@ -151,7 +150,9 @@ export default function WavelengthGame({
         distance: Math.abs(locked - round.target),
       };
       recordLineupCompletion(run.identity, result);
-      profileMatch.submitResult(asJson(result));
+      if (profileMatch.isRecipient && profileMatch.challenge?.responderResult === null) {
+        profileMatch.submitResult(asJson(result));
+      }
       setComplete(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
@@ -272,7 +273,7 @@ export default function WavelengthGame({
           aria-label="Your Wavelength guess from 1 to 100"
           max="100"
           min="1"
-          onChange={(event) => setGuess(clampWavelength(Number(event.target.value))}
+          onChange={(event) => setGuess(clampWavelength(Number(event.target.value)))}
           step="1"
           type="range"
           value={guess}
