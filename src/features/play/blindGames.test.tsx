@@ -18,7 +18,8 @@ import {
   createBlindRankLineup,
   resolveBlindRankChallenge,
 } from "./blindRankEngine";
-import { getPlayFighter, rankedPlayFighters } from "./playFighterPool";
+import { selectReplayLineup } from "./lineupModel";
+import { blindRankPool, getPlayFighter, rankedPlayFighters } from "./playFighterPool";
 
 function renderBlindResume(path = "/play/blind-resume") {
   return render(
@@ -105,6 +106,7 @@ describe("Blind Resume engine", () => {
 
 describe("Blind Resume presentation", () => {
   beforeEach(() => {
+    window.localStorage.clear();
     window.sessionStorage.clear();
     Object.defineProperty(window, "scrollTo", { value: vi.fn(), writable: true });
   });
@@ -136,7 +138,7 @@ describe("Blind Resume presentation", () => {
     expect(container.querySelector(".blind-resume-verdict h1")?.textContent).toBe(verdict);
   });
 
-  it("finishes after exactly five picks and keeps thumbnails in the compact recap", () => {
+  it("finishes a curated card after five picks and labels replay honestly", () => {
     const seed = "five-round-proof";
     const roundSet = createBlindResumeRounds(seed);
     const { container } = renderBlindResume(`/play/blind-resume?challenge=${seed}`);
@@ -150,7 +152,7 @@ describe("Blind Resume presentation", () => {
       roundSet.pairs.flatMap((pair) => [pair.fighterA.thumbUrl, pair.fighterB.thumbUrl]),
     );
     const actions = [...container.querySelectorAll(".game-result-actions button")].map((button) => button.textContent);
-    expect(actions).toEqual(["CHALLENGE SOMEONE", "REPLAY", "ALL GAMES"]);
+    expect(actions).toEqual(["CHALLENGE SOMEONE", "REPLAY CHALLENGE", "ALL GAMES"]);
   });
 });
 
@@ -164,7 +166,7 @@ describe("Blind Rank engine", () => {
     expect(BLIND_RANK_ROLES.find((role) => role.id === "wildcard")?.weights.bad).toBe(0.1);
   });
 
-  it("builds random-feeling deterministic five-fighter lineups with no duplicates and at most one Bad fighter", () => {
+  it("builds deterministic five-fighter lineups with no duplicates and at most one Bad fighter", () => {
     for (const pack of blindRankPacks) {
       const first = createBlindRankLineup(pack.id, `lineup-${pack.id}`);
       const second = createBlindRankLineup(pack.id, `lineup-${pack.id}`);
@@ -176,17 +178,26 @@ describe("Blind Rank engine", () => {
     }
   });
 
-  it("protects the recent reveal window and preserves exact shared lineups", () => {
-    const first = createBlindRankLineup("ufc-careers", "first-lineup");
-    const second = createBlindRankLineup("ufc-careers", "second-lineup", {
-      recent: first.fighters.map((fighter) => fighter.id),
-      lastLineup: first.fighters.map((fighter) => fighter.id),
+  it("delegates repeat protection to the shared owner and preserves exact shared lineups", () => {
+    window.localStorage.clear();
+    const validIds = new Set(blindRankPool("ufc-careers").map((fighter) => fighter.id));
+    const select = () => selectReplayLineup({
+      gameId: "blind-rank-proof",
+      lineupSize: 5,
+      attempts: 10,
+      validItemIds: validIds,
+      build: (seed) => {
+        const lineup = createBlindRankLineup("ufc-careers", seed).fighters;
+        const ids = lineup.map((fighter) => fighter.id);
+        return { value: lineup, itemIds: ids, fighterIds: ids };
+      },
     });
-    const firstIds = new Set(first.fighters.map((fighter) => fighter.id));
-    expect(second.fighters.every((fighter) => !firstIds.has(fighter.id))).toBe(true);
+    const first = select();
+    const second = select();
+    expect(second.itemIds).not.toEqual(first.itemIds);
 
-    const shared = resolveBlindRankChallenge("ufc-careers", first.fighters.map((fighter) => fighter.id));
-    expect(shared?.map((fighter) => fighter.id)).toEqual(first.fighters.map((fighter) => fighter.id));
+    const shared = resolveBlindRankChallenge("ufc-careers", first.itemIds);
+    expect(shared?.map((fighter) => fighter.id)).toEqual(first.itemIds);
   });
 });
 
@@ -196,7 +207,7 @@ describe("Blind Rank presentation", () => {
     Object.defineProperty(window, "scrollTo", { value: vi.fn(), writable: true });
   });
 
-  it("uses the thumbnail, locks five placements, then removes the duplicate slot strip", () => {
+  it("uses the thumbnail, locks five placements, then starts a new casual lineup", () => {
     const { container } = renderBlindRank();
     const currentPhoto = container.querySelector<HTMLImageElement>(".blind-rank-current__photo");
     expect(currentPhoto?.getAttribute("src")).toContain("-thumb.webp");
@@ -213,7 +224,7 @@ describe("Blind Rank presentation", () => {
     expect(container.querySelectorAll(".blind-rank-slot")).toHaveLength(0);
     expect(container.querySelectorAll(".blind-rank-results article")).toHaveLength(5);
     const actions = [...container.querySelectorAll(".game-result-actions button")].map((button) => button.textContent);
-    expect(actions).toEqual(["CHALLENGE SOMEONE", "REPLAY", "ALL GAMES"]);
+    expect(actions).toEqual(["CHALLENGE SOMEONE", "PLAY AGAIN", "ALL GAMES"]);
   });
 
   it("opens an exact five-fighter friend challenge", () => {
