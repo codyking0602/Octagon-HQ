@@ -79,6 +79,9 @@ begin
   if v_event.locks_at is distinct from p_expected_locks_at then
     raise exception 'Picks lock time changed; reload Fight Night Control';
   end if;
+  if now() >= v_event.locks_at then
+    raise exception 'Picks deadline has passed; it cannot be reopened';
+  end if;
   if p_locks_at <= now() then
     raise exception 'new Picks lock time must be in the future';
   end if;
@@ -133,16 +136,17 @@ revoke all on function public.adjust_pick_event_lock_time(text,timestamptz,times
 grant execute on function public.adjust_pick_event_lock_time(text,timestamptz,timestamptz,text)
   to authenticated, service_role;
 
--- Correct the currently published Belgrade main card to UFC's main-card time:
--- Aug. 1, 2026 at 1:00 p.m. EDT / 17:00 UTC. Preserve any intentionally earlier
--- owner-set lock; otherwise move the lock with the corrected start time.
+-- Correct the currently published Belgrade main card to the sourced main-card time:
+-- Aug. 1, 2026 at 3:00 p.m. EDT / 19:00 UTC (2:00 p.m. CDT in Dallas).
+-- Preserve any intentionally earlier owner-set lock; otherwise move the lock with
+-- the corrected start time.
 update public.pick_events
 set locks_at = case
-      when locks_at = starts_at or locks_at > timestamptz '2026-08-01 17:00:00+00'
-        then timestamptz '2026-08-01 17:00:00+00'
+      when locks_at = starts_at or locks_at > timestamptz '2026-08-01 19:00:00+00'
+        then timestamptz '2026-08-01 19:00:00+00'
       else locks_at
     end,
-    starts_at = timestamptz '2026-08-01 17:00:00+00'
+    starts_at = timestamptz '2026-08-01 19:00:00+00'
 where status = 'upcoming'
   and lower(subtitle) like '%medic%'
   and lower(subtitle) like '%rodriguez%'
@@ -150,11 +154,11 @@ where status = 'upcoming'
 
 update public.pick_event_drafts
 set locks_at = case
-      when locks_at = starts_at or locks_at > timestamptz '2026-08-01 17:00:00+00'
-        then timestamptz '2026-08-01 17:00:00+00'
+      when locks_at = starts_at or locks_at > timestamptz '2026-08-01 19:00:00+00'
+        then timestamptz '2026-08-01 19:00:00+00'
       else locks_at
     end,
-    starts_at = timestamptz '2026-08-01 17:00:00+00',
+    starts_at = timestamptz '2026-08-01 19:00:00+00',
     updated_at = now()
 where lower(subtitle) like '%medic%'
   and lower(subtitle) like '%rodriguez%'
