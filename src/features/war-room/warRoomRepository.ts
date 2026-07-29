@@ -3,8 +3,11 @@ import { getSupabaseClient } from "../../lib/supabase";
 import type {
   WarRoomAccess,
   WarRoomCursor,
+  WarRoomJoinResult,
   WarRoomMember,
   WarRoomMessage,
+  WarRoomReadState,
+  WarRoomRealtimeStatus,
   WarRoomSnapshot,
 } from "./warRoomModel";
 
@@ -44,6 +47,8 @@ const snapshotRowSchema = z.object({
   members: z.array(memberRowSchema).optional().default([]),
   has_more: z.boolean(),
   next_cursor: cursorRowSchema.nullable(),
+  unread_count: z.coerce.number().int().nonnegative(),
+  latest_message_id: z.string().uuid().nullable(),
 });
 
 const accessRowSchema = z.discriminatedUnion("mode", [
@@ -58,11 +63,26 @@ const accessRowSchema = z.discriminatedUnion("mode", [
     mode: z.literal("eligible"),
     eligible: z.literal(true),
     role: z.enum(["member", "admin"]),
+    unread_count: z.coerce.number().int().nonnegative(),
   }),
 ]);
 
+const joinRowSchema = z.object({
+  mode: z.literal("eligible"),
+  eligible: z.literal(true),
+  role: z.enum(["member", "admin"]),
+  unread_count: z.coerce.number().int().nonnegative(),
+  joined: z.boolean(),
+});
+
+const readRowSchema = z.object({
+  unread_count: z.coerce.number().int().nonnegative(),
+  last_read_message_id: z.string().uuid().nullable(),
+});
+
 export interface WarRoomRepository {
-  getAccess: () => Promise<WarRoomAccess>;
+  getAccess: (inviteCode?: string | null) => Promise<WarRoomAccess>;
+  joinWithInvite: (inviteCode: string) => Promise<WarRoomJoinResult>;
   loadSnapshot: (cursor?: WarRoomCursor | null) => Promise<WarRoomSnapshot>;
   postMessage: (
     body: string,
@@ -70,6 +90,11 @@ export interface WarRoomRepository {
     mentionedProfileIds: string[],
   ) => Promise<WarRoomMessage>;
   deleteMessage: (messageId: string) => Promise<WarRoomMessage>;
+  markRead: (messageId: string) => Promise<WarRoomReadState>;
+  subscribe: (
+    onChange: () => void,
+    onStatus: (status: WarRoomRealtimeStatus) => void,
+  ) => () => void;
 }
 
 function toMember(value: unknown): WarRoomMember {
@@ -112,6 +137,27 @@ function toSnapshot(value: unknown): WarRoomSnapshot {
       createdAt: row.next_cursor.created_at,
       id: row.next_cursor.id,
     } : null,
+    unreadCount: row.unread_count,
+    latestMessageId: row.latest_message_id,
+  };
+}
+
+function toAccess(value: unknown): WarRoomAccess {
+  const row = accessRowSchema.parse(value);
+  if (row.mode === "locked") return row;
+  if (row.mode === "eligible") {
+    return {
+      mode: row.mode,
+      eligible: row.eligible,
+      role: row.role,
+      unreadCount: row.unread_count,
+    };
+  }
+  return {
+    mode: row.mode,
+    eligible: row.eligible,
+    inviteExpiresAt: row.invite_expires_at,
+    inviteUsesRemaining: row.invite_uses_remaining,
   };
 }
 
@@ -124,25 +170,39 @@ async function requireRpcSuccess<T>(
   return data;
 }
 
+function realtimeStatus(value: string): WarRoomRealtimeStatus | null {
+  if (value === "SUBSCRIBED") return "connected";
+  if (value === "CLOSED") return "disconnected";
+  if (value === "CHANNEL_ERROR" || value === "TIMED_OUT") return "error";
+  return null;
+}
+
 export function createWarRoomRepository(): WarRoomRepository | null {
   const supabase = getSupabaseClient();
   if (!supabase) return null;
   const client = supabase;
 
   return {
-    async getAccess() {
+    async getAccess(inviteCode = null) {
       const data = await requireRpcSuccess(
-        client.rpc("get_my_war_room_access", { p_invite_code: null }),
+        client.rpc("get_my_war_room_access", { p_invite_code: inviteCode }),
         "Octagon HQ could not verify War Room access.",
       );
-      const row = accessRowSchema.parse(data);
-      if (row.mode === "eligible") return row;
-      if (row.mode === "locked") return row;
+      return toAccess(data);
+    },
+
+    async joinWithInvite(inviteCode) {
+      const data = await requireRpcSuccess(
+        client.rpc("join_war_room_with_invite", { p_invite_code: inviteCode }),
+        "Octagon HQ could not join the War Room.",
+      );
+      const row = joinRowSchema.parse(data);
       return {
         mode: row.mode,
         eligible: row.eligible,
-        inviteExpiresAt: row.invite_expires_at,
-        inviteUsesRemaining: row.invite_uses_remaining,
+        role: row.role,
+        unreadCount: row.unread_count,
+        joined: row.joined,
       };
     },
 
@@ -176,6 +236,47 @@ export function createWarRoomRepository(): WarRoomRepository | null {
         "Octagon HQ could not delete that War Room message.",
       );
       return toMessage(data);
+    },
+
+    async markRead(messageId) {
+      const data = await requireRpcSuccess(
+        client.rpc("mark_war_room_read", { p_message_id: messageId }),
+        "Octagon HQ could not update War Room read status.",
+      );
+      const row = readRowSchema.parse(data);
+      return {
+        unreadCount: row.unread_count,
+        lastReadMessageId: row.last_read_message_id,
+      };
+    },
+
+    subscribe(onChange, onStatus) {
+      let active = true;
+      let channel: ReturnType<typeof client.channel> | null = null;
+      onStatus("connecting");
+
+      void client.realtime.setAuth()
+        .then(() => {
+          if (!active) return;
+          channel = client
+            .channel("war-room:conversation", { config: { private: true } })
+            .on("broadcast", { event: "war_room_changed" }, () => {
+              if (active) onChange();
+            })
+            .subscribe((status) => {
+              if (!active) return;
+              const next = realtimeStatus(status);
+              if (next) onStatus(next);
+            });
+        })
+        .catch(() => {
+          if (active) onStatus("error");
+        });
+
+      return () => {
+        active = false;
+        if (channel) void client.removeChannel(channel);
+      };
     },
   };
 }
