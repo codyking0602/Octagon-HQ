@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ChallengeCenter } from "../challenges/ChallengeCenter";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
@@ -17,6 +17,14 @@ import {
   type FindLeaderHistoryRow,
 } from "./findLeaderStorage";
 import { GameResultActions } from "./GameResultActions";
+import {
+  curatedLineupIdentity,
+  dailyLineupIdentity,
+  recordLineupCompletion,
+  rememberLineup,
+  replayLabelFor,
+  type PlayLineupIdentity,
+} from "./lineupModel";
 import { playGames, type PlayGameId } from "./playRegistry";
 
 interface FindLeaderResult {
@@ -200,11 +208,13 @@ function CandidatePhoto({ fighter, className = "" }: { fighter: FindLeaderCandid
 
 function FindLeaderGame({
   board,
+  identity,
   onExit,
   onComplete,
   challengeFrom = "",
 }: {
   board: FindLeaderBoard;
+  identity: PlayLineupIdentity;
   onExit: () => void;
   onComplete: (result: FindLeaderResult) => void;
   challengeFrom?: string;
@@ -216,10 +226,16 @@ function FindLeaderGame({
   const eliminatedSet = new Set(eliminated);
   const remaining = board.candidates.filter((fighter) => !eliminatedSet.has(fighter.id));
   const statLabel = resultStatLabel(board);
+  const candidateIds = useMemo(() => board.candidates.map((fighter) => fighter.id), [board.candidates]);
+
+  useEffect(() => {
+    rememberLineup(identity, candidateIds, candidateIds);
+  }, [candidateIds, identity]);
 
   function finish(score: number, fatalId: string | null, nextEliminated: string[]) {
     const next = { score, perfect: score === 10, fatalId, eliminated: nextEliminated };
     setResult(next);
+    recordLineupCompletion(identity, next);
     onComplete(next);
   }
 
@@ -320,6 +336,7 @@ function FindLeaderGame({
             onChallenge={() => void challengeSomeone()}
             onReplay={replay}
             onAllGames={onExit}
+            replayLabel={replayLabelFor(identity.type)}
             status={challengeStatus}
           />
         </section>
@@ -338,7 +355,7 @@ function FindLeaderGame({
       ) : null}
       <section className="find-game__hero">
         <div>
-          <p className="eyebrow">{challengeFrom ? "PROFILE CHALLENGE" : "TODAY’S CHALLENGE"}</p>
+          <p className="eyebrow">{identity.type === "daily" ? "TODAY’S CHALLENGE" : "CURATED CHALLENGE"}</p>
           <h1>{board.question}</h1>
           <p>{objectiveCopy(board)}</p>
         </div>
@@ -388,6 +405,14 @@ export default function PlayPage() {
   const todayBoard = useMemo(() => dailyFindLeaderBoard(today), [today]);
   const generatedGameBoard = useMemo(() => dailyFindLeaderBoard(gameDay), [gameDay]);
   const gameBoard = storedChallengeBoard ?? generatedGameBoard;
+  const officialDaily = Boolean(isFindLeaderGame && gameBoard && !profileChallenge && !challengeDay && gameDay === today);
+  const gameIdentity = useMemo(() => {
+    if (!gameBoard) return null;
+    const ids = gameBoard.candidates.map((fighter) => fighter.id);
+    if (officialDaily) return dailyLineupIdentity("find-leader", gameDay, gameBoard.definitionId);
+    const challengeId = profileChallenge?.code ?? `day:${gameDay}:${gameBoard.definitionId}`;
+    return curatedLineupIdentity("find-leader", challengeId, ids, gameBoard.definitionId);
+  }, [gameBoard, gameDay, officialDaily, profileChallenge?.code]);
   const [carousel, setCarousel] = useState<0 | 1>(0);
   const touchStartX = useRef<number | null>(null);
   const todayRow = history.find((row) => row.day === today);
@@ -400,7 +425,7 @@ export default function PlayPage() {
       submitResult(profileChallenge.code, findLeaderChallengeResult(result));
       return;
     }
-    void recordAttempt(gameDay, result.score);
+    if (gameIdentity?.type === "daily") void recordAttempt(gameDay, result.score);
   }
 
   function openFindLeader() {
@@ -415,10 +440,11 @@ export default function PlayPage() {
     if (distance >= 45) setCarousel(0);
   }
 
-  if (isFindLeaderGame && gameBoard) {
+  if (isFindLeaderGame && gameBoard && gameIdentity) {
     return (
       <FindLeaderGame
         board={gameBoard}
+        identity={gameIdentity}
         onExit={() => navigate("/play")}
         onComplete={complete}
         challengeFrom={challengeCreator?.displayName}
