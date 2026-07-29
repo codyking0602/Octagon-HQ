@@ -37,22 +37,28 @@ describe("Play game lineup contracts", () => {
     expect(streakGames.map((game) => game.id)).toEqual(["find-leader"]);
     expect(reminderGames.map((game) => game.id)).toEqual(["find-leader"]);
     expect(dailyGames[0]?.lineup).toMatchObject({
-      defaultType: "daily",
-      replayBehavior: "same-daily-lineup",
-      newLineupControl: "none",
-      repetitionPolicy: "fixed-daily",
-      historyRecording: "official-daily",
+      defaultType: "replayable",
+      supportedTypes: ["daily", "replayable", "curated"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-fighters-deprioritized",
+      historyRecording: "official-daily-and-casual",
       streakEligible: true,
       reminderEligible: true,
     });
   });
 
-  it("gives casual games new lineups and exact challenges fixed replay behavior", () => {
-    for (const gameId of ["wavelength", "blind-resume", "blind-rank", "keep-cut"] as const) {
+  it("gives every casual game a new lineup and exact challenges fixed replay behavior", () => {
+    for (const gameId of ["find-leader", "wavelength", "blind-resume", "blind-rank", "keep-cut"] as const) {
       const contract = playGameDefinition(gameId).lineup;
       expect(contract.defaultType).toBe("replayable");
       expect(contract.supportedTypes).toContain("curated");
       expect(contract.replayBehavior).toBe("new-lineup");
+    }
+
+    expect(playGameDefinition("find-leader").lineup.historyRecording).toBe("official-daily-and-casual");
+    for (const gameId of ["wavelength", "blind-resume", "blind-rank", "keep-cut"] as const) {
+      const contract = playGameDefinition(gameId).lineup;
       expect(contract.historyRecording).toBe("casual-and-challenge");
       expect(contract.streakEligible).toBe(false);
       expect(contract.reminderEligible).toBe(false);
@@ -72,6 +78,7 @@ describe("Play game lineup contracts", () => {
 
   it("keeps all six games challenge eligible with defined completion states", () => {
     expect(playGames.every((game) => game.lineup.challengeEligible)).toBe(true);
+    expect(playGameDefinition("find-leader").lineup.completionState).toBe("leader-eliminated-or-nine-safe");
     expect(playGameDefinition("wavelength").lineup.completionState).toBe("fourth-guess-locked");
     expect(playGameDefinition("blind-resume").lineup.completionState).toBe("five-picks-complete");
     expect(playGameDefinition("blind-rank").lineup.completionState).toBe("five-slots-locked");

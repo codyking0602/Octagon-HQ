@@ -40,7 +40,11 @@ export interface PlayGameLineupDefinition {
   dailyEligible: boolean;
   streakEligible: boolean;
   reminderEligible: boolean;
-  historyRecording: "official-daily" | "casual-and-challenge" | "challenge-completion";
+  historyRecording:
+    | "official-daily"
+    | "official-daily-and-casual"
+    | "casual-and-challenge"
+    | "challenge-completion";
   difficultyModel: string;
 }
 
@@ -57,21 +61,21 @@ export const playGames: readonly PlayGameDefinition[] = [
     id: "find-leader",
     icon: "#1",
     title: "Find the Leader",
-    description: "Eliminate nine fighters without removing the verified stat leader.",
+    description: "Generate a fresh stat category and ten-fighter lineup, then leave the leader standing.",
     lineup: {
-      defaultType: "daily",
-      supportedTypes: ["daily", "curated"],
-      replayBehavior: "same-daily-lineup",
-      newLineupControl: "none",
-      repetitionPolicy: "fixed-daily",
+      defaultType: "replayable",
+      supportedTypes: ["daily", "replayable", "curated"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-fighters-deprioritized",
       lineupSize: 10,
       completionState: "leader-eliminated-or-nine-safe",
       challengeEligible: true,
       dailyEligible: true,
       streakEligible: true,
       reminderEligible: true,
-      historyRecording: "official-daily",
-      difficultyModel: "Verified metric leader plus nine lower-value UFC fighters.",
+      historyRecording: "official-daily-and-casual",
+      difficultyModel: "A verified metric leader plus nine lower-value UFC fighters on either the fixed daily board or a generated casual board.",
     },
   },
   {
