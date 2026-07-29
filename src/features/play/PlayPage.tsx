@@ -12,6 +12,11 @@ import {
   type FindLeaderCandidate,
 } from "./findLeaderEngine";
 import {
+  createReplayableFindLeaderRun,
+  resolveSeededFindLeaderBoard,
+  type FindLeaderRun,
+} from "./findLeaderLineups";
+import {
   findLeaderStreaks,
   recentCalendarDays,
   type FindLeaderHistoryRow,
@@ -35,7 +40,7 @@ interface FindLeaderResult {
 }
 
 const LIVE_GAME_ROUTES: Partial<Record<PlayGameId, string>> = {
-  "find-leader": "/play/find-leader",
+  "find-leader": "/play/find-leader?mode=replayable",
   wavelength: "/play/wavelength",
   "blind-resume": "/play/blind-resume",
   "blind-rank": "/play/blind-rank",
@@ -211,12 +216,14 @@ function FindLeaderGame({
   identity,
   onExit,
   onComplete,
+  onNewLineup,
   challengeFrom = "",
 }: {
   board: FindLeaderBoard;
   identity: PlayLineupIdentity;
   onExit: () => void;
   onComplete: (result: FindLeaderResult) => void;
+  onNewLineup: () => void;
   challengeFrom?: string;
 }) {
   const { beginChallenge } = usePlayChallenges();
@@ -253,6 +260,10 @@ function FindLeaderGame({
   }
 
   function replay() {
+    if (identity.type === "replayable") {
+      onNewLineup();
+      return;
+    }
     setEliminated([]);
     setResult(null);
     setChallengeStatus("");
@@ -263,7 +274,10 @@ function FindLeaderGame({
     if (!result) return;
     setChallengeStatus("");
     const url = new URL("/play/find-leader", window.location.origin);
+    url.searchParams.set("mode", "challenge");
     url.searchParams.set("day", board.day);
+    url.searchParams.set("definition", board.definitionId);
+    url.searchParams.set("seed", identity.seed);
     const status = await beginChallenge({
       gameId: "find-leader",
       gameVersion: board.version,
@@ -344,6 +358,12 @@ function FindLeaderGame({
     );
   }
 
+  const eyebrow = identity.type === "daily"
+    ? "TODAY’S CHALLENGE"
+    : identity.type === "replayable"
+      ? "REPLAYABLE GAME"
+      : "CURATED CHALLENGE";
+
   return (
     <div className="find-game page">
       {challengeFrom ? (
@@ -355,7 +375,7 @@ function FindLeaderGame({
       ) : null}
       <section className="find-game__hero">
         <div>
-          <p className="eyebrow">{identity.type === "daily" ? "TODAY’S CHALLENGE" : "CURATED CHALLENGE"}</p>
+          <p className="eyebrow">{eyebrow}</p>
           <h1>{board.question}</h1>
           <p>{objectiveCopy(board)}</p>
         </div>
@@ -399,20 +419,67 @@ export default function PlayPage() {
   const challengeCode = searchParams.get("challenge")?.toUpperCase() ?? "";
   const profileChallenge = challengeCode ? getChallenge(challengeCode) : null;
   const challengeDay = validChallengeDay(searchParams.get("day"));
+  const sharedDefinitionId = searchParams.get("definition")?.trim() ?? "";
+  const sharedSeed = searchParams.get("seed")?.trim() ?? "";
+  const replayableMode = Boolean(
+    isFindLeaderGame
+    && searchParams.get("mode") === "replayable"
+    && !profileChallenge
+    && !challengeDay
+    && !sharedDefinitionId
+    && !sharedSeed
+  );
+  const [replayableRun, setReplayableRun] = useState<FindLeaderRun | null>(() => (
+    replayableMode ? createReplayableFindLeaderRun(today) : null
+  ));
+
+  useEffect(() => {
+    if (replayableMode && !replayableRun) setReplayableRun(createReplayableFindLeaderRun(today));
+  }, [replayableMode, replayableRun, today]);
+
   const storedChallengeBoard = challengeSetupBoard(profileChallenge?.setup);
   const profileChallengeDay = storedChallengeBoard?.day ?? challengeSetupDay(profileChallenge?.setup);
   const gameDay = isFindLeaderGame ? profileChallengeDay ?? challengeDay ?? today : today;
   const todayBoard = useMemo(() => dailyFindLeaderBoard(today), [today]);
   const generatedGameBoard = useMemo(() => dailyFindLeaderBoard(gameDay), [gameDay]);
-  const gameBoard = storedChallengeBoard ?? generatedGameBoard;
-  const officialDaily = Boolean(isFindLeaderGame && gameBoard && !profileChallenge && !challengeDay && gameDay === today);
+  const seededChallengeBoard = useMemo(() => (
+    sharedDefinitionId && sharedSeed
+      ? resolveSeededFindLeaderBoard(sharedDefinitionId, sharedSeed, gameDay)
+      : null
+  ), [gameDay, sharedDefinitionId, sharedSeed]);
+  const gameBoard = storedChallengeBoard
+    ?? seededChallengeBoard
+    ?? (replayableMode ? replayableRun?.board ?? null : generatedGameBoard);
+  const officialDaily = Boolean(
+    isFindLeaderGame
+    && gameBoard
+    && !profileChallenge
+    && !challengeDay
+    && !sharedDefinitionId
+    && !sharedSeed
+    && !replayableMode
+    && gameDay === today
+  );
   const gameIdentity = useMemo(() => {
     if (!gameBoard) return null;
+    if (replayableMode && replayableRun) return replayableRun.identity;
     const ids = gameBoard.candidates.map((fighter) => fighter.id);
     if (officialDaily) return dailyLineupIdentity("find-leader", gameDay, gameBoard.definitionId);
-    const challengeId = profileChallenge?.code ?? `day:${gameDay}:${gameBoard.definitionId}`;
+    const challengeId = profileChallenge?.code
+      ?? (sharedDefinitionId && sharedSeed
+        ? `seed:${sharedDefinitionId}:${sharedSeed}`
+        : `day:${gameDay}:${gameBoard.definitionId}`);
     return curatedLineupIdentity("find-leader", challengeId, ids, gameBoard.definitionId);
-  }, [gameBoard, gameDay, officialDaily, profileChallenge?.code]);
+  }, [
+    gameBoard,
+    gameDay,
+    officialDaily,
+    profileChallenge?.code,
+    replayableMode,
+    replayableRun,
+    sharedDefinitionId,
+    sharedSeed,
+  ]);
   const [carousel, setCarousel] = useState<0 | 1>(0);
   const touchStartX = useRef<number | null>(null);
   const todayRow = history.find((row) => row.day === today);
@@ -428,8 +495,18 @@ export default function PlayPage() {
     if (gameIdentity?.type === "daily") void recordAttempt(gameDay, result.score);
   }
 
-  function openFindLeader() {
+  function openFindLeaderDaily() {
     if (todayBoard) navigate("/play/find-leader");
+  }
+
+  function openReplayableFindLeader() {
+    setReplayableRun(createReplayableFindLeaderRun(today));
+    navigate(LIVE_GAME_ROUTES["find-leader"]!);
+  }
+
+  function newReplayableFindLeader() {
+    setReplayableRun(createReplayableFindLeaderRun(today));
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function finishSwipe(clientX: number) {
@@ -443,10 +520,12 @@ export default function PlayPage() {
   if (isFindLeaderGame && gameBoard && gameIdentity) {
     return (
       <FindLeaderGame
+        key={gameIdentity.challengeId}
         board={gameBoard}
         identity={gameIdentity}
         onExit={() => navigate("/play")}
         onComplete={complete}
+        onNewLineup={newReplayableFindLeader}
         challengeFrom={challengeCreator?.displayName}
       />
     );
@@ -466,7 +545,7 @@ export default function PlayPage() {
         onTouchEnd={(event) => finishSwipe(event.changedTouches[0]?.clientX ?? 0)}
       >
         {carousel === 0 && todayBoard ? (
-          <button className="play-daily__challenge" type="button" onClick={openFindLeader}>
+          <button className="play-daily__challenge" type="button" onClick={openFindLeaderDaily}>
             <div className="play-daily__topline"><span>TODAY’S CHALLENGE</span><b>{dateLabel(today).toUpperCase()}</b></div>
             <h2>FIND THE LEADER</h2>
             <p>Eliminate nine fighters without removing today’s verified stat leader.</p>
@@ -511,7 +590,12 @@ export default function PlayPage() {
           {playGames.map((game) => {
             const route = LIVE_GAME_ROUTES[game.id];
             return route ? (
-              <button className="play-game-card" type="button" key={game.id} onClick={() => navigate(route)}>
+              <button
+                className="play-game-card"
+                type="button"
+                key={game.id}
+                onClick={game.id === "find-leader" ? openReplayableFindLeader : () => navigate(route)}
+              >
                 <span className="play-game-card__icon">{game.icon}</span>
                 <span className="play-game-card__status">PLAY NOW</span>
                 <strong>{game.title}</strong>
