@@ -1,0 +1,324 @@
+/* Final Picks season hub and compact review refinements. */
+
+.picks-event-hero__poster {
+  min-height: 190px;
+  background-position: center, center 68%, center;
+}
+
+.picks-control-entry,
+.picks-control-entry:visited {
+  min-height: auto !important;
+  padding: 4px 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--text-muted);
+}
+
+.picks-card-zone {
+  gap: 7px;
+}
+
+.picks-card-odds {
+  justify-content: flex-start;
+  min-height: 18px;
+  padding: 0 2px;
+  color: var(--text-muted);
+  font-size: 7px;
+  letter-spacing: .055em;
+}
+
+.picks-card-odds strong {
+  font-size: 7px;
+  font-weight: 850;
+}
+
+.picks-card-odds strong::before {
+  content: "ODDS · ";
+}
+
+.picks-sticky-progress {
+  justify-content: flex-start;
+  min-height: 32px;
+  padding: 5px 9px;
+  border-radius: 10px;
+}
+
+.picks-sticky-progress span {
+  width: 100%;
+  color: var(--text-secondary);
+  font-size: 7px;
+  letter-spacing: .06em;
+  text-align: left;
+}
+
+.picks-card-list {
+  gap: 8px;
+}
+
+.pick-bout-card,
+.pick-bout-card.is-main-event {
+  gap: 8px;
+  padding: 12px;
+}
+
+.pick-bout-card__choices {
+  gap: 4px;
+}
+
+.pick-choice {
+  min-height: 112px;
+  padding: 9px;
+}
+
+.pick-bout-card:not(.is-main-event) .pick-choice {
+  min-height: 104px;
+}
+
+.pick-choice > em {
+  padding: 3px 6px;
+}
+
+.picks-season-section {
+  gap: 0;
+  margin-top: 11px;
+}
+
+.picks-season-hub {
+  display: block;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.picks-season-hub > summary::-webkit-details-marker {
+  display: none;
+}
+
+.picks-season-hub__summary {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 78px;
+  padding: 12px 38px 12px 13px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.picks-season-hub__summary::after {
+  position: absolute;
+  top: 50%;
+  right: 13px;
+  color: var(--text-muted);
+  content: "›";
+  font-size: 22px;
+  transform: translateY(-50%) rotate(90deg);
+  transition: transform .18s ease;
+}
+
+.picks-season-hub[open] > .picks-season-hub__summary::after {
+  transform: translateY(-50%) rotate(-90deg);
+}
+
+.picks-season-hub__identity,
+.picks-season-hub__meta {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.picks-season-hub__identity > span,
+.picks-season-hub__meta > span,
+.picks-season-hub__meta > em {
+  color: var(--text-muted);
+  font-size: 7px;
+  font-style: normal;
+  font-weight: 950;
+  letter-spacing: .085em;
+  text-transform: uppercase;
+}
+
+.picks-season-hub__identity > strong {
+  font-size: 21px;
+  line-height: 1;
+  letter-spacing: -.035em;
+}
+
+.picks-season-hub__identity > small {
+  overflow: hidden;
+  color: var(--text-secondary);
+  font-size: 8px;
+  font-weight: 850;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.picks-season-hub__meta {
+  justify-items: end;
+  text-align: right;
+}
+
+.picks-season-hub__meta > em {
+  color: var(--ufc-red-strong);
+  white-space: nowrap;
+}
+
+.picks-season-hub__body {
+  display: grid;
+  gap: 11px;
+  padding: 11px;
+  border-top: 1px solid var(--border);
+  background: rgba(0, 0, 0, .16);
+}
+
+.picks-season-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .025);
+}
+
+.picks-season-tabs button {
+  min-height: 36px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .09em;
+  cursor: pointer;
+}
+
+.picks-season-tabs button.is-active {
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  box-shadow: inset 0 -2px 0 var(--ufc-red);
+}
+
+.picks-season-standings,
+.picks-season-events {
+  display: grid;
+  gap: 8px;
+}
+
+.picks-season-panel-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 1px 2px 0;
+}
+
+.picks-season-panel-heading > div {
+  display: grid;
+  gap: 2px;
+}
+
+.picks-season-panel-heading span,
+.picks-season-panel-heading small {
+  color: var(--text-muted);
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.picks-season-panel-heading strong {
+  font-size: 14px;
+}
+
+.picks-season-panel-heading small {
+  text-align: right;
+}
+
+.picks-season-standing-list {
+  display: grid;
+  gap: 5px;
+}
+
+.picks-season-standing {
+  display: grid;
+  grid-template-columns: 27px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 8px 9px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: var(--surface-raised);
+}
+
+.picks-season-standing.is-current-user {
+  border-color: rgba(210, 10, 10, .65);
+  box-shadow: inset 3px 0 0 var(--ufc-red);
+}
+
+.picks-season-standing > span {
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 950;
+  text-align: center;
+}
+
+.picks-season-standing > div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.picks-season-standing > div:last-child {
+  justify-items: end;
+  text-align: right;
+}
+
+.picks-season-standing strong {
+  overflow: hidden;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.picks-season-standing b {
+  font-size: 13px;
+}
+
+.picks-season-standing small {
+  color: var(--text-muted);
+  font-size: 6.5px;
+  font-weight: 850;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.picks-season-events .picks-recap-list {
+  padding: 0;
+}
+
+.picks-season-hub__summary:focus-visible,
+.picks-season-tabs button:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+@media (min-width: 680px) {
+  .picks-event-hero__poster {
+    min-height: 275px;
+  }
+
+  .picks-season-hub__summary {
+    min-height: 88px;
+    padding: 14px 44px 14px 16px;
+  }
+
+  .picks-season-standing {
+    min-height: 58px;
+    padding: 10px 12px;
+  }
+}
