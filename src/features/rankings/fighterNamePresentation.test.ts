@@ -21,8 +21,8 @@ describe("fighter name presentation", () => {
     const jon = getFighter("jon-jones");
     const conor = getFighter("conor-mcgregor");
 
-    expect(jon && profileDisplayName(jon)).toBe("Jon “Bones” Jones");
-    expect(conor && profileDisplayName(conor)).toBe("“The Notorious” Conor McGregor");
+    expect(jon ? profileDisplayName(jon) : "").toBe("Jon “Bones” Jones");
+    expect(conor ? profileDisplayName(conor) : "").toBe("“The Notorious” Conor McGregor");
   });
 
   it("places prefix nicknames before the complete fighter name on profiles", () => {
