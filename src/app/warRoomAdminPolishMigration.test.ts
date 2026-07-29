@@ -31,7 +31,7 @@ describe("War Room admin and mobile polish", () => {
   });
 
   it("uses a compact naturally sized feed and composer", () => {
-    expect(page).toContain('rows={1}');
+    expect(page).toContain("rows={1}");
     expect(page).toContain('"POST"');
     expect(page).toContain("resizeComposer");
     expect(styles).toContain(".war-room-shell");
@@ -72,8 +72,8 @@ describe("War Room admin and mobile polish", () => {
     expect(conversationSql).toContain("You cannot delete that War Room message");
     expect(page).toContain("message.canDelete");
     expect(integrationSql).toContain("member could not delete their own War Room message");
-    expect(integrationSql).toContain("regular member deleted another person's War Room message");
-    expect(integrationSql).toContain("War Room admin could not delete another member's message");
+    expect(integrationSql).toContain("regular member deleted another person''s War Room message");
+    expect(integrationSql).toContain("War Room admin could not delete another member''s message");
   });
 
   it("keeps rollback proof for access, permissions, and Realtime privacy", () => {
