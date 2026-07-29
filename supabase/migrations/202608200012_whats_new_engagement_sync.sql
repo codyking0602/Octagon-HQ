@@ -47,13 +47,27 @@ create table if not exists private.achievement_whats_new_snapshot (
   constraint achievement_whats_new_snapshot_source_valid check (source_sha ~ '^[0-9a-f]{40}$')
 );
 
+create table if not exists private.engagement_whats_new_sync_state (
+  model_key text primary key,
+  source_sha text not null,
+  synced_at timestamptz not null default now(),
+  constraint engagement_whats_new_sync_state_key_valid check (
+    model_key in ('games', 'challenges', 'achievements')
+  ),
+  constraint engagement_whats_new_sync_state_source_valid check (
+    source_sha ~ '^[0-9a-f]{40}$'
+  )
+);
+
 alter table private.game_whats_new_snapshot enable row level security;
 alter table private.challenge_whats_new_snapshot enable row level security;
 alter table private.achievement_whats_new_snapshot enable row level security;
+alter table private.engagement_whats_new_sync_state enable row level security;
 
 revoke all on private.game_whats_new_snapshot from public, anon, authenticated;
 revoke all on private.challenge_whats_new_snapshot from public, anon, authenticated;
 revoke all on private.achievement_whats_new_snapshot from public, anon, authenticated;
+revoke all on private.engagement_whats_new_sync_state from public, anon, authenticated;
 
 create or replace function public.sync_engagement_whats_new(
   p_source_sha text,
@@ -166,9 +180,15 @@ begin
     raise exception 'achievement snapshot contains duplicate IDs';
   end if;
 
-  select exists(select 1 from private.game_whats_new_snapshot) into v_has_game_baseline;
-  select exists(select 1 from private.challenge_whats_new_snapshot) into v_has_challenge_baseline;
-  select exists(select 1 from private.achievement_whats_new_snapshot) into v_has_achievement_baseline;
+  select exists(
+    select 1 from private.engagement_whats_new_sync_state where model_key = 'games'
+  ) into v_has_game_baseline;
+  select exists(
+    select 1 from private.engagement_whats_new_sync_state where model_key = 'challenges'
+  ) into v_has_challenge_baseline;
+  select exists(
+    select 1 from private.engagement_whats_new_sync_state where model_key = 'achievements'
+  ) into v_has_achievement_baseline;
 
   if v_has_game_baseline then
     for v_row in
@@ -270,6 +290,15 @@ begin
   insert into private.achievement_whats_new_snapshot(achievement_id, title, summary, route, action_label, source_sha, synced_at)
   select lower(trim(row_data.id)), trim(row_data.title), trim(row_data.summary), trim(row_data.route), trim(row_data.action_label), v_source_sha, v_published_at
   from jsonb_to_recordset(p_achievements) as row_data(id text, title text, summary text, route text, action_label text);
+
+  insert into private.engagement_whats_new_sync_state(model_key, source_sha, synced_at)
+  values
+    ('games', v_source_sha, v_published_at),
+    ('challenges', v_source_sha, v_published_at),
+    ('achievements', v_source_sha, v_published_at)
+  on conflict (model_key) do update
+    set source_sha = excluded.source_sha,
+        synced_at = excluded.synced_at;
 
   return jsonb_build_object(
     'game_baseline_created', not v_has_game_baseline,
