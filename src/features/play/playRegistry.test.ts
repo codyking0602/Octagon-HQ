@@ -24,18 +24,26 @@ describe("Play game lineup contracts", () => {
       expect(game.lineup.completionState).toBeTruthy();
       expect(game.lineup.newLineupControl).toBeTruthy();
       expect(game.lineup.repetitionPolicy).toBeTruthy();
+      expect(typeof game.lineup.streakEligible).toBe("boolean");
+      expect(typeof game.lineup.reminderEligible).toBe("boolean");
     }
   });
 
-  it("keeps Find the Leader as the sole official daily challenge", () => {
+  it("keeps Find the Leader as the sole official daily, streak, and reminder-eligible game", () => {
     const dailyGames = playGames.filter((game) => game.lineup.dailyEligible);
+    const streakGames = playGames.filter((game) => game.lineup.streakEligible);
+    const reminderGames = playGames.filter((game) => game.lineup.reminderEligible);
     expect(dailyGames.map((game) => game.id)).toEqual(["find-leader"]);
+    expect(streakGames.map((game) => game.id)).toEqual(["find-leader"]);
+    expect(reminderGames.map((game) => game.id)).toEqual(["find-leader"]);
     expect(dailyGames[0]?.lineup).toMatchObject({
       defaultType: "daily",
       replayBehavior: "same-daily-lineup",
       newLineupControl: "none",
       repetitionPolicy: "fixed-daily",
       historyRecording: "official-daily",
+      streakEligible: true,
+      reminderEligible: true,
     });
   });
 
@@ -46,6 +54,8 @@ describe("Play game lineup contracts", () => {
       expect(contract.supportedTypes).toContain("curated");
       expect(contract.replayBehavior).toBe("new-lineup");
       expect(contract.historyRecording).toBe("casual-and-challenge");
+      expect(contract.streakEligible).toBe(false);
+      expect(contract.reminderEligible).toBe(false);
     }
 
     expect(playGameDefinition("better-than").lineup).toMatchObject({
@@ -55,6 +65,8 @@ describe("Play game lineup contracts", () => {
       newLineupControl: "builder-reset",
       repetitionPolicy: "fixed-curated",
       historyRecording: "challenge-completion",
+      streakEligible: false,
+      reminderEligible: false,
     });
   });
 
