@@ -33,9 +33,9 @@ Automatic producers may publish only:
 - a completed Picks event;
 - a new recap;
 - a new Fighters to Watch entry;
-- a new challenge;
+- a new app-level challenge format;
 - a major ranking update;
-- a meaningful badge or achievement.
+- a meaningful permanent badge or achievement.
 
 Manual publishing supports app announcements, major redesign explanations, featured content, polls, community prompts, temporary notices, weekly or monthly summaries, and important rule changes.
 
@@ -63,9 +63,22 @@ Manual publishing supports app announcements, major redesign explanations, featu
 - PR-head deployments never synchronize production comparison state or publish production updates.
 - The private snapshots are comparison evidence only. They never become a ranking or watchlist source and are replaced from the canonical models after every successful synchronization.
 
+## Games, challenges, and achievements producers
+
+`playRegistry.ts` remains the sole source for permanent Play games. `engagementUpdateCatalog.ts` is the explicit source for new permanent app-level challenge formats and meaningful badges or achievements when those product features exist.
+
+- The first production synchronization quietly creates all three comparison baselines. It does not announce the six existing games or create placeholder challenge and achievement cards.
+- A game ID absent from the prior production game snapshot publishes one automatic `new_game` item linking directly to the game.
+- A challenge ID absent from the prior app-level challenge catalog snapshot publishes one automatic `new_challenge` item.
+- An achievement ID absent from the prior meaningful achievement catalog snapshot publishes one automatic `achievement` item.
+- Personal profile-to-profile challenge deliveries never enter the global feed. They remain visible only through the existing private Challenge Center owner.
+- Copy edits to existing entries do not create feed noise. Only a genuinely new stable ID publishes an item.
+- Empty challenge and achievement catalogs are valid until those permanent features exist; placeholder announcements are forbidden.
+- The same exact-main post-frontend workflow synchronizes rankings, fighters, games, challenge formats, and achievements after the live deployment marker matches the source SHA.
+
 ## Noise rules
 
-Do not publish What's New items for minor bug fixes, routine monitoring checks, tiny text changes, one-position ranking moves, administrative backend work, or technical deployment activity.
+Do not publish What's New items for minor bug fixes, routine monitoring checks, tiny text changes, one-position ranking moves, administrative backend work, technical deployment activity, personal challenge deliveries, or placeholder future features.
 
 ## Ownership
 
@@ -79,4 +92,5 @@ Do not publish What's New items for minor bug fixes, routine monitoring checks, 
 
 - Picks event completion and recap availability are connected through the canonical completion transition.
 - New ranked fighters, meaningful ranking movement, major ranking shakeups, and new Fighters to Watch entries are connected through the exact deployed canonical models.
-- Game, challenge, and achievement producers remain for the final focused slice.
+- New games, permanent app-level challenge formats, and meaningful badges or achievements are connected through the exact deployed canonical models.
+- All approved automatic producer families are connected.

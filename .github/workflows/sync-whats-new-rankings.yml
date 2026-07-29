@@ -1,4 +1,4 @@
-name: Sync Rankings and Fighters What's New
+name: Sync Canonical What's New Models
 
 on:
   workflow_run:
@@ -13,14 +13,14 @@ permissions:
   contents: read
 
 concurrency:
-  group: octagon-hq-whats-new-rankings-fighters
+  group: octagon-hq-whats-new-models
   cancel-in-progress: true
 
 jobs:
   sync:
     if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     env:
       SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
       OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
@@ -99,6 +99,8 @@ jobs:
           SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
           RANKING_SYNC_MAX_ATTEMPTS: 20
           RANKING_SYNC_RETRY_DELAY_MS: 15000
+          ENGAGEMENT_SYNC_MAX_ATTEMPTS: 20
+          ENGAGEMENT_SYNC_RETRY_DELAY_MS: 15000
         run: |
           set -euo pipefail
           for name in SUPABASE_ACCESS_TOKEN SUPABASE_PROJECT_ID; do
@@ -130,4 +132,10 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY="$service_role_key" \
           SOURCE_SHA="$SOURCE_SHA" \
             node scripts/sync-ranking-whats-new.mjs
+
+          SUPABASE_URL="https://${SUPABASE_PROJECT_ID}.supabase.co" \
+          SUPABASE_SERVICE_ROLE_KEY="$service_role_key" \
+          SOURCE_SHA="$SOURCE_SHA" \
+            node scripts/sync-engagement-whats-new.mjs
+
           unset service_role_key
