@@ -34,6 +34,13 @@ describe("War Room access foundation", () => {
     expect(sql).toContain("War Room access is not available for this profile");
   });
 
+  it("preserves previously eligible V1 members without importing locked profiles", () => {
+    expect(sql).toContain("Preserve existing V1 War Room eligibility");
+    expect(sql).toContain("to_regclass('public.octagon_access')");
+    expect(sql).toContain("where access.can_access");
+    expect(sql).toContain("on conflict (profile_id) do nothing");
+  });
+
   it("keeps grant, revoke, and invite creation service-role-only", () => {
     expect(sql).toContain("create or replace function public.create_war_room_invite");
     expect(sql).toContain("create or replace function public.revoke_war_room_invite");
