@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 import { FighterPhoto } from "../rankings/FighterPhoto";
 import type { RankingFighter } from "../rankings/rankingModel";
-import { resolveProfileWatchAction } from "../rankings/rankingPresentation";
+import { resolveWatchMomentAction } from "../rankings/rankingPresentation";
 
 const fullWidthAction = { width: "100%" } as const;
 
 export function RankingSpotlightCard({ fighter }: { fighter: RankingFighter }) {
-  const watchAction = resolveProfileWatchAction(fighter.slug);
+  const watchAction = resolveWatchMomentAction(fighter.slug);
 
   return (
     <section className="surface-card ranking-spotlight" aria-labelledby="ranking-spotlight-title">
