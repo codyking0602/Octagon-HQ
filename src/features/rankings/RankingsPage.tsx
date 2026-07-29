@@ -150,7 +150,7 @@ export default function RankingsPage() {
     const normalized = query.trim().toLowerCase();
     if (!normalized) return unsearchedRows;
     return unsearchedRows.filter((row) =>
-      `${row.fighter.name} ${row.fighter.division} ${row.meta}`
+      `${row.fighter.displayName} ${row.fighter.name} ${row.fighter.division} ${row.meta}`
         .toLowerCase()
         .includes(normalized),
     );
@@ -348,16 +348,16 @@ export default function RankingsPage() {
             <Link
               className="ranking-row__profile"
               to={`/fighters/${row.fighter.slug}`}
-              aria-label={`View ${row.fighter.name} profile`}
+              aria-label={`View ${row.fighter.displayName} profile`}
             >
               <span className="ranking-row__rank">{row.displayRank}</span>
               <FighterPhoto
-                name={row.fighter.name}
+                name={row.fighter.displayName}
                 src={row.fighter.thumbUrl}
                 className="ranking-row__photo"
               />
               <span className="ranking-row__identity">
-                <strong>{row.fighter.name}</strong>
+                <strong>{row.fighter.displayName}</strong>
                 <span className="ranking-row__meta">{row.meta}</span>
                 {row.detail ? <span className="ranking-row__detail">{row.detail}</span> : null}
               </span>
@@ -373,8 +373,8 @@ export default function RankingsPage() {
               href={watchMomentFor(row.fighter.slug)}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={`Watch ${row.fighter.name} moment on YouTube`}
-              title={`Watch ${row.fighter.name} moment`}
+              aria-label={`Watch ${row.fighter.displayName} moment on YouTube`}
+              title={`Watch ${row.fighter.displayName} moment`}
             >
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M9 7.6v8.8L16 12 9 7.6Z" />

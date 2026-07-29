@@ -41,7 +41,7 @@ export default function HomePage() {
   const challengeState = usePlayChallenges();
   const today = useMemo(() => centralDay(), []);
   const sortedFighters = useMemo(
-    () => allTime.slice().sort((left, right) => left.name.localeCompare(right.name)),
+    () => allTime.slice().sort((left, right) => left.displayName.localeCompare(right.displayName)),
     [],
   );
   const spotlight = useMemo(() => dailyRankingSpotlight(allTime, today), [today]);
@@ -120,8 +120,8 @@ export default function HomePage() {
 
               <article className="hq-stat hq-stat--favorite">
                 <div className="hq-stat__favorite-value">
-                  {favorite ? <FighterPhoto name={favorite.name} src={favorite.thumbUrl} /> : null}
-                  <strong>{preferences.loading ? "…" : favorite?.name ?? "SET ONE"}</strong>
+                  {favorite ? <FighterPhoto name={favorite.displayName} src={favorite.thumbUrl} /> : null}
+                  <strong>{preferences.loading ? "…" : favorite?.displayName ?? "SET ONE"}</strong>
                 </div>
                 <label>
                   <span>Favorite fighter</span>
@@ -133,7 +133,7 @@ export default function HomePage() {
                   >
                     <option value="">Choose fighter</option>
                     {sortedFighters.map((fighter) => (
-                      <option value={fighter.slug} key={fighter.slug}>{fighter.name}</option>
+                      <option value={fighter.slug} key={fighter.slug}>{fighter.displayName}</option>
                     ))}
                   </select>
                 </label>

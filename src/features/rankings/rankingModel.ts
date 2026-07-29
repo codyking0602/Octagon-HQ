@@ -18,6 +18,7 @@ import {
 } from "./engine/rankingEngine";
 import { v1ProductionRankingParityFixture } from "./engine/parityFixture";
 import type { CanonicalFight, RankingBoard } from "./engine/schemas";
+import { formatFighterDisplayName } from "./fighterNamePresentation";
 
 const FINISH_METHODS = new Set(["ko-tko", "submission", "doctor-stoppage"]);
 const TOP_FIVE_TIERS = new Set(["champion-level", "top-five"]);
@@ -85,6 +86,7 @@ export interface ProfileEvidence {
 export interface RankingFighter {
   fighter: string;
   name: string;
+  displayName: string;
   slug: string;
   board: RankingBoard;
   rank: number;
@@ -384,6 +386,7 @@ function appRow(
   return {
     fighter: row.fighter,
     name: row.fighter,
+    displayName: formatFighterDisplayName(presentation.slug, row.fighter),
     slug: presentation.slug,
     board: row.board,
     rank: row.rank,
