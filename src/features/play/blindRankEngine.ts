@@ -5,6 +5,12 @@ import {
   type BlindRankPackId,
   type PlayFighter,
 } from "./playFighterPool";
+import {
+  createReplaySeed,
+  seededLineupRandom,
+  shuffleLineup,
+  validateLineupIds,
+} from "./lineupModel";
 
 export type BlindRankTierId = "elite" | "great" | "good" | "average" | "below-average" | "bad";
 
@@ -35,12 +41,6 @@ export interface BlindRankLineup {
   fighters: PlayFighter[];
   assignments: BlindRankAssignment[];
   badFighters: number;
-  repeatWindow: number;
-}
-
-export interface BlindRankHistory {
-  recent: string[];
-  lastLineup: string[];
 }
 
 export const BLIND_RANK_TIERS: readonly { id: BlindRankTierId; name: string; minScore: number }[] = [
@@ -89,39 +89,8 @@ export const blindRankPacks: readonly BlindRankPack[] = [
 ] as const;
 
 const TIER_ORDER: readonly BlindRankTierId[] = ["elite", "great", "good", "average", "below-average", "bad"];
-const RELAX_WINDOWS = [15, 10, 5, 0] as const;
 const MAX_BAD_FIGHTERS = 1;
-const HISTORY_KEY = "octagon-hq:blind-rank-history:v2";
 const PACK_KEY = "octagon-hq:blind-rank-pack:v2";
-
-function hashSeed(value: string) {
-  let hash = 2166136261;
-  for (let index = 0; index < value.length; index += 1) {
-    hash ^= value.charCodeAt(index);
-    hash = Math.imul(hash, 16777619);
-  }
-  return hash >>> 0;
-}
-
-function mulberry32(seed: number) {
-  let value = seed >>> 0;
-  return () => {
-    value += 0x6d2b79f5;
-    let next = value;
-    next = Math.imul(next ^ (next >>> 15), next | 1);
-    next ^= next + Math.imul(next ^ (next >>> 7), next | 61);
-    return ((next ^ (next >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-function shuffle<T>(rows: readonly T[], random: () => number) {
-  const copy = [...rows];
-  for (let index = copy.length - 1; index > 0; index -= 1) {
-    const swap = Math.floor(random() * (index + 1));
-    [copy[index], copy[swap]] = [copy[swap], copy[index]];
-  }
-  return copy;
-}
 
 function weightedTier(role: BlindRankRole, random: () => number) {
   let cursor = random();
@@ -136,10 +105,6 @@ export function blindRankTier(score: number): BlindRankTierId {
   return BLIND_RANK_TIERS.find((tier) => score >= tier.minScore)?.id ?? "bad";
 }
 
-function signature(ids: readonly string[]) {
-  return [...ids].sort().join("|");
-}
-
 function chooseRow(
   rows: readonly { fighter: PlayFighter; score: number; tier: BlindRankTierId }[],
   targetTier: BlindRankTierId,
@@ -148,11 +113,11 @@ function chooseRow(
   random: () => number,
 ) {
   const eligible = rows.filter((row) => !used.has(row.fighter.id) && !(row.tier === "bad" && badCount >= MAX_BAD_FIGHTERS));
-  const exact = shuffle(eligible.filter((row) => row.tier === targetTier), random)[0];
+  const exact = shuffleLineup(eligible.filter((row) => row.tier === targetTier), random)[0];
   if (exact) return { row: exact, fallback: "exact" as const };
 
   const targetIndex = TIER_ORDER.indexOf(targetTier);
-  const adjacentTiers = shuffle(
+  const adjacentTiers = shuffleLineup(
     [targetIndex - 1, targetIndex + 1]
       .filter((index) => index >= 0 && index < TIER_ORDER.length)
       .map((index) => TIER_ORDER[index])
@@ -160,11 +125,11 @@ function chooseRow(
     random,
   );
   for (const tier of adjacentTiers) {
-    const adjacent = shuffle(eligible.filter((row) => row.tier === tier), random)[0];
+    const adjacent = shuffleLineup(eligible.filter((row) => row.tier === tier), random)[0];
     if (adjacent) return { row: adjacent, fallback: "adjacent" as const };
   }
 
-  const emergency = shuffle(eligible, random).sort((left, right) => {
+  const emergency = shuffleLineup(eligible, random).sort((left, right) => {
     const leftDistance = Math.abs(TIER_ORDER.indexOf(left.tier) - targetIndex);
     const rightDistance = Math.abs(TIER_ORDER.indexOf(right.tier) - targetIndex);
     return leftDistance - rightDistance;
@@ -175,17 +140,14 @@ function chooseRow(
 function attemptLineup(
   packId: BlindRankPackId,
   seed: string,
-  excluded: Set<string>,
   roleTargets: readonly BlindRankTierId[],
   attempt: number,
 ) {
-  const random = mulberry32(hashSeed(`blind-rank|${packId}|${seed}|${attempt}`));
-  const rows = blindRankPool(packId)
-    .filter((fighter) => !excluded.has(fighter.id))
-    .map((fighter) => {
-      const score = blindRankRating(fighter, packId);
-      return { fighter, score, tier: blindRankTier(score) };
-    });
+  const random = seededLineupRandom("blind-rank", packId, seed, attempt);
+  const rows = blindRankPool(packId).map((fighter) => {
+    const score = blindRankRating(fighter, packId);
+    return { fighter, score, tier: blindRankTier(score) };
+  });
   if (rows.length < 5) return null;
 
   const used = new Set<string>();
@@ -209,39 +171,28 @@ function attemptLineup(
     });
   }
 
-  return { fighters: shuffle(selected, random), assignments, badFighters: badCount };
+  return { fighters: shuffleLineup(selected, random), assignments, badFighters: badCount };
 }
 
 export function createBlindRankSeed() {
-  return `${Date.now().toString(36)}-${Math.floor(Math.random() * 0xffffffff).toString(36)}`;
+  return createReplaySeed("blind-rank");
 }
 
-export function createBlindRankLineup(
-  packId: BlindRankPackId,
-  seed: string,
-  history: BlindRankHistory = { recent: [], lastLineup: [] },
-): BlindRankLineup {
-  const targetRandom = mulberry32(hashSeed(`blind-rank-targets|${packId}|${seed}`));
+export function createBlindRankLineup(packId: BlindRankPackId, seed: string): BlindRankLineup {
+  const targetRandom = seededLineupRandom("blind-rank", "targets", packId, seed);
   const roleTargets = BLIND_RANK_ROLES.map((role) => weightedTier(role, targetRandom));
-  const lastSignature = signature(history.lastLineup);
 
-  for (const windowSize of RELAX_WINDOWS) {
-    const excluded = new Set(windowSize ? history.recent.slice(-windowSize) : []);
-    for (let attempt = 0; attempt < 50; attempt += 1) {
-      const candidate = attemptLineup(packId, seed, excluded, roleTargets, (windowSize * 100) + attempt);
-      if (!candidate) continue;
-      if (lastSignature && signature(candidate.fighters.map((fighter) => fighter.id)) === lastSignature) continue;
-      return { packId, seed, ...candidate, repeatWindow: windowSize };
-    }
+  for (let attempt = 0; attempt < 50; attempt += 1) {
+    const candidate = attemptLineup(packId, seed, roleTargets, attempt);
+    if (candidate) return { packId, seed, ...candidate };
   }
 
-  const emergency = attemptLineup(packId, seed, new Set(), roleTargets, 9999);
-  if (!emergency) throw new Error(`Blind Rank could not build a five-fighter lineup for ${packId}.`);
-  return { packId, seed, ...emergency, repeatWindow: 0 };
+  throw new Error(`Blind Rank could not build a five-fighter lineup for ${packId}.`);
 }
 
 export function resolveBlindRankChallenge(packId: BlindRankPackId, lineupIds: readonly string[]) {
-  if (lineupIds.length !== 5 || new Set(lineupIds).size !== 5) return null;
+  const validIds = new Set(blindRankPool(packId).map((fighter) => fighter.id));
+  if (!validateLineupIds(lineupIds, 5, validIds).valid) return null;
   const fighters = lineupIds.map((id) => getPlayFighter(id));
   return fighters.every(Boolean) ? fighters as PlayFighter[] : null;
 }
@@ -251,35 +202,6 @@ export function blindRankChallengeUrl(packId: BlindRankPackId, lineup: readonly 
   url.searchParams.set("pack", packId);
   url.searchParams.set("lineup", lineup.map((fighter) => fighter.id).join(","));
   return url.toString();
-}
-
-export function loadBlindRankHistory(packId: BlindRankPackId): BlindRankHistory {
-  if (typeof window === "undefined") return { recent: [], lastLineup: [] };
-  try {
-    const parsed = JSON.parse(window.localStorage.getItem(HISTORY_KEY) ?? "{}") as Record<string, BlindRankHistory>;
-    const history = parsed[packId];
-    return {
-      recent: Array.isArray(history?.recent) ? history.recent.filter(Boolean).slice(-15) : [],
-      lastLineup: Array.isArray(history?.lastLineup) ? history.lastLineup.filter(Boolean).slice(0, 5) : [],
-    };
-  } catch {
-    return { recent: [], lastLineup: [] };
-  }
-}
-
-export function saveBlindRankReveal(packId: BlindRankPackId, fighterId: string, lineup: readonly PlayFighter[]) {
-  if (typeof window === "undefined") return;
-  try {
-    const parsed = JSON.parse(window.localStorage.getItem(HISTORY_KEY) ?? "{}") as Record<string, BlindRankHistory>;
-    const current = loadBlindRankHistory(packId);
-    parsed[packId] = {
-      recent: [...current.recent, fighterId].slice(-15),
-      lastLineup: lineup.map((fighter) => fighter.id),
-    };
-    window.localStorage.setItem(HISTORY_KEY, JSON.stringify(parsed));
-  } catch {
-    // History is progressive enhancement; the game remains playable without storage.
-  }
 }
 
 export function loadBlindRankPack(): BlindRankPackId {
