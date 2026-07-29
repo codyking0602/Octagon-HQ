@@ -10,8 +10,8 @@ const integrationSql = readFileSync(
   "utf8",
 );
 const script = readFileSync("scripts/sync-ranking-whats-new.mjs", "utf8");
-const workflow = readFileSync(
-  ".github/workflows/sync-ranking-whats-new.yml",
+const backendWorkflow = readFileSync(
+  ".github/workflows/deploy-supabase.yml",
   "utf8",
 );
 const watchlistCard = readFileSync(
@@ -64,18 +64,18 @@ describe("What's New Rankings and fighter producers", () => {
     expect(script).not.toContain("window.");
   });
 
-  it("runs only after an exact successful main deployment with bounded coordination retry", () => {
-    expect(workflow).toContain("workflow_run:");
-    expect(workflow).toContain("Deploy Cloudflare Frontend");
-    expect(workflow).toContain("github.event.workflow_run.conclusion == 'success'");
-    expect(workflow).toContain("github.event.workflow_run.head_branch == 'main'");
-    expect(workflow).toContain("SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}");
-    expect(workflow).toContain("persist-credentials: false");
-    expect(workflow).toContain("::add-mask::$service_key");
-    expect(workflow).toContain('RANKING_SYNC_MAX_ATTEMPTS: "20"');
+  it("runs only through the exact-SHA canonical backend deployment", () => {
+    expect(backendWorkflow).toContain('ref: ${{ env.SOURCE_SHA }}');
+    expect(backendWorkflow).toContain("persist-credentials: false");
+    expect(backendWorkflow).toContain('env.SOURCE_PR_NUMBER == \'0\'');
+    expect(backendWorkflow).toContain("Synchronize production Rankings and Fighters into What's New");
+    expect(backendWorkflow).toContain('SOURCE_SHA="$SOURCE_SHA"');
+    expect(backendWorkflow).toContain('"src/features/home/shanesWatchlist.ts"');
+    expect(backendWorkflow).toContain('"src/features/rankings/**"');
+    expect(backendWorkflow).toContain('"scripts/sync-ranking-whats-new.mjs"');
+    expect(backendWorkflow).toContain('require_remote_migration "202608200011"');
     expect(script).toContain("for (let attempt = 1; attempt <= maxAttempts; attempt += 1)");
     expect(script).toContain('error.code === "PGRST202"');
-    expect(workflow).not.toContain("pull_request:");
   });
 
   it("locks thresholds, aggregation, watchlist deep link, and no-noise behavior", () => {
