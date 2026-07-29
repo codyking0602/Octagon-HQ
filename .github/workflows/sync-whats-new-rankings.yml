@@ -1,0 +1,133 @@
+name: Sync Rankings and Fighters What's New
+
+on:
+  workflow_run:
+    workflows:
+      - Deploy Cloudflare Frontend
+    types:
+      - completed
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: octagon-hq-whats-new-rankings-fighters
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
+      OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
+
+    steps:
+      - name: Confirm exact current main deployment
+        id: guard
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const sourceSha = context.payload.workflow_run.head_sha;
+            const sourceBranch = context.payload.workflow_run.head_branch;
+            const sourceEvent = context.payload.workflow_run.event;
+            const { data: main } = await github.rest.repos.getBranch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              branch: "main",
+            });
+            const shouldSync = sourceBranch === "main"
+              && sourceEvent === "push"
+              && main.commit.sha === sourceSha;
+            core.setOutput("should_sync", shouldSync ? "true" : "false");
+            core.info(shouldSync
+              ? `Synchronizing exact current main ${sourceSha}.`
+              : `Skipping stale or non-push deployment ${sourceSha}; current main is ${main.commit.sha}.`);
+
+      - name: Check out exact deployed source
+        if: steps.guard.outputs.should_sync == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 1
+          persist-credentials: false
+          show-progress: false
+
+      - name: Verify exact checkout and live deployment marker
+        if: steps.guard.outputs.should_sync == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          checked_out_sha=$(git rev-parse HEAD)
+          if [ "$checked_out_sha" != "$SOURCE_SHA" ]; then
+            echo "::error title=Exact SHA checkout failed::Expected $SOURCE_SHA but checked out $checked_out_sha."
+            exit 1
+          fi
+
+          marker_file="$RUNNER_TEMP/octagon-live-deployment.json"
+          curl --fail --silent --show-error \
+            --header "Cache-Control: no-cache" \
+            "${OCTAGON_PRODUCTION_ORIGIN}/deployment.json?expected=${SOURCE_SHA}" \
+            --output "$marker_file"
+          node --input-type=module - "$marker_file" "$SOURCE_SHA" <<'NODE'
+          import fs from "node:fs";
+          const marker = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+          const expectedSha = process.argv[3];
+          if (marker.sha !== expectedSha) {
+            throw new Error(`Expected live deployment ${expectedSha}, received ${marker.sha ?? "no SHA"}.`);
+          }
+          NODE
+
+      - name: Set up Node
+        if: steps.guard.outputs.should_sync == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install synchronization dependencies
+        if: steps.guard.outputs.should_sync == 'true'
+        run: npm install --silent
+
+      - name: Synchronize canonical production models
+        if: steps.guard.outputs.should_sync == 'true'
+        shell: bash
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+          RANKING_SYNC_MAX_ATTEMPTS: 20
+          RANKING_SYNC_RETRY_DELAY_MS: 15000
+        run: |
+          set -euo pipefail
+          for name in SUPABASE_ACCESS_TOKEN SUPABASE_PROJECT_ID; do
+            if [ -z "${!name:-}" ]; then
+              echo "::error title=Missing synchronization secret::$name is missing or empty."
+              exit 1
+            fi
+          done
+
+          api_keys_file="$RUNNER_TEMP/supabase-api-keys.json"
+          trap 'rm -f "$api_keys_file"' EXIT
+          curl --fail --silent --show-error \
+            --header "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+            "https://api.supabase.com/v1/projects/${SUPABASE_PROJECT_ID}/api-keys?reveal=true" \
+            --output "$api_keys_file"
+
+          service_role_key=$(node - "$api_keys_file" <<'NODE'
+          const fs = require("fs");
+          const keys = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+          const serviceKey = keys.find((key) => key.type === "secret" && key.api_key && key.disabled !== true)
+            ?? keys.find((key) => key.type === "legacy" && /service[_-]?role/i.test(key.name ?? "") && key.api_key);
+          if (!serviceKey?.api_key) throw new Error("No production service-role-capable Supabase key was returned.");
+          process.stdout.write(serviceKey.api_key);
+          NODE
+          )
+          echo "::add-mask::$service_role_key"
+
+          SUPABASE_URL="https://${SUPABASE_PROJECT_ID}.supabase.co" \
+          SUPABASE_SERVICE_ROLE_KEY="$service_role_key" \
+          SOURCE_SHA="$SOURCE_SHA" \
+            node scripts/sync-ranking-whats-new.mjs
+          unset service_role_key
