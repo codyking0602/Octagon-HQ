@@ -86,6 +86,7 @@ export interface ProfileEvidence {
 export interface RankingFighter {
   fighter: string;
   name: string;
+  displayName: string;
   slug: string;
   board: RankingBoard;
   rank: number;
@@ -384,7 +385,8 @@ function appRow(
   const presentation = metadata.input.presentation;
   return {
     fighter: row.fighter,
-    name: formatFighterDisplayName(presentation.slug, row.fighter),
+    name: row.fighter,
+    displayName: formatFighterDisplayName(presentation.slug, row.fighter),
     slug: presentation.slug,
     board: row.board,
     rank: row.rank,
