@@ -12,6 +12,7 @@ import "./styles/picks-polish.css";
 import "./styles/picks-underdog-lock.css";
 import "./styles/picks-main-event-spotlight.css";
 import "./styles/picks-season-hub.css";
+import "./styles/picks-event-recap.css";
 import "./styles/picks-control.css";
 import "./styles/picks-setup.css";
 import "./styles/picks-setup-source.css";
