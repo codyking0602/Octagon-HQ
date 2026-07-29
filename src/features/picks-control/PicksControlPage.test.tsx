@@ -90,6 +90,7 @@ function repository(event: PickControlEvent | null): PickControlRepository {
   return {
     loadControlEvent: vi.fn().mockResolvedValue(event),
     lockEvent: vi.fn().mockResolvedValue(undefined),
+    adjustLockTime: vi.fn().mockResolvedValue(undefined),
     setCancellation: vi.fn().mockResolvedValue(undefined),
     setBoutInclusion: vi.fn().mockResolvedValue(undefined),
     replaceFighter: vi.fn().mockResolvedValue(undefined),
