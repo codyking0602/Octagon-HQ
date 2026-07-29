@@ -1,6 +1,12 @@
 import { canonicalRankingInputs, type RankingInputFighter } from "../rankings/data/rankingInputs";
 import { allTime } from "../rankings/rankingModel";
 import type { CanonicalFight } from "../rankings/engine/schemas";
+import {
+  dailyLineupSeed,
+  seededLineupRandom,
+  shuffleLineup,
+  stableLineupHash,
+} from "./lineupModel";
 
 const VERSION = "find-leader-v2-20260724";
 const DAILY_ANCHOR = "2026-07-16";
@@ -258,35 +264,6 @@ function scoreFighter(input: RankingInputFighter, definition: FindLeaderQuestion
   }
 }
 
-function hashSeed(value: string) {
-  let hash = 2166136261;
-  for (let index = 0; index < value.length; index += 1) {
-    hash ^= value.charCodeAt(index);
-    hash = Math.imul(hash, 16777619);
-  }
-  return hash >>> 0;
-}
-
-function mulberry32(seed: number) {
-  let value = seed >>> 0;
-  return () => {
-    value += 0x6d2b79f5;
-    let next = value;
-    next = Math.imul(next ^ (next >>> 15), next | 1);
-    next ^= next + Math.imul(next ^ (next >>> 7), next | 61);
-    return ((next ^ (next >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-function shuffle<T>(values: readonly T[], random: () => number) {
-  const rows = [...values];
-  for (let index = rows.length - 1; index > 0; index -= 1) {
-    const swap = Math.floor(random() * (index + 1));
-    [rows[index], rows[swap]] = [rows[swap], rows[index]];
-  }
-  return rows;
-}
-
 function scoredPool(definition: FindLeaderQuestionDefinition) {
   return canonicalRankingInputs.fighters
     .map((input) => ({ input, value: scoreFighter(input, definition) }))
@@ -310,7 +287,7 @@ export function buildFindLeaderBoard(
   seed: string,
   day = centralDay(),
 ): FindLeaderBoard | null {
-  const random = mulberry32(hashSeed(`${VERSION}|${seed}|${definition.id}`));
+  const random = seededLineupRandom(VERSION, seed, definition.id);
   const pool = scoredPool(definition);
   if (pool.length < 10) return null;
   const possibleLeaders = pool.filter((row) => row.value > 0 && pool.filter((other) => other.value < row.value).length >= 9).slice(0, 10);
@@ -319,11 +296,11 @@ export function buildFindLeaderBoard(
   const lower = pool.filter((row) => row.value < leader.value);
   if (lower.length < 9) return null;
   const near = lower.slice(0, Math.min(14, lower.length));
-  const selected = [leader, ...shuffle(near, random).slice(0, Math.min(6, near.length))];
+  const selected = [leader, ...shuffleLineup(near, random).slice(0, Math.min(6, near.length))];
   const used = new Set(selected.map((row) => row.input.fighter));
-  selected.push(...shuffle(lower.filter((row) => !used.has(row.input.fighter)), random).slice(0, 10 - selected.length));
+  selected.push(...shuffleLineup(lower.filter((row) => !used.has(row.input.fighter)), random).slice(0, 10 - selected.length));
   if (selected.length !== 10) return null;
-  const candidates = shuffle(selected.map((row) => candidateFor(row.input, row.value)), random);
+  const candidates = shuffleLineup(selected.map((row) => candidateFor(row.input, row.value)), random);
   return {
     version: VERSION,
     day,
@@ -375,7 +352,7 @@ export function scheduledFindLeaderDefinition(day = centralDay()) {
     const preferred = available.filter((definition) => definition.family === family && !recent.has(definition.id));
     const fresh = available.filter((definition) => !recent.has(definition.id));
     const candidates = preferred.length ? preferred : fresh.length ? fresh : available;
-    selected = [...candidates].sort((left, right) => hashSeed(`${VERSION}|${slot}|${left.id}`) - hashSeed(`${VERSION}|${slot}|${right.id}`))[0] ?? null;
+    selected = [...candidates].sort((left, right) => stableLineupHash(`${VERSION}|${slot}|${left.id}`) - stableLineupHash(`${VERSION}|${slot}|${right.id}`))[0] ?? null;
     if (selected) history.push(selected.id);
   }
   return selected;
@@ -383,7 +360,7 @@ export function scheduledFindLeaderDefinition(day = centralDay()) {
 
 export function dailyFindLeaderBoard(day = centralDay()) {
   const definition = scheduledFindLeaderDefinition(day);
-  return definition ? buildFindLeaderBoard(definition, `daily|${day}`, day) : null;
+  return definition ? buildFindLeaderBoard(definition, dailyLineupSeed(day), day) : null;
 }
 
 export function findLeaderAudit() {
