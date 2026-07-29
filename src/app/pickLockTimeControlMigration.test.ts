@@ -22,16 +22,18 @@ describe("event-wide Picks deadline control", () => {
     expect(sql).toContain("Picks lock time changed; reload Fight Night Control");
   });
 
-  it("allows an upcoming deadline to move but never beyond the main-card start", () => {
+  it("allows an upcoming deadline to move only before the current deadline and never beyond the main-card start", () => {
     expect(sql).toContain("v_event.status <> 'upcoming'");
     expect(sql).toContain("now() >= v_event.starts_at");
+    expect(sql).toContain("now() >= v_event.locks_at");
+    expect(sql).toContain("Picks deadline has passed; it cannot be reopened");
     expect(sql).toContain("p_locks_at <= now()");
     expect(sql).toContain("p_locks_at > v_event.starts_at");
     expect(sql).toContain("Picks lock cannot follow the main-card start");
   });
 
-  it("corrects the current Belgrade event to the official 1 PM EDT main card", () => {
-    expect(sql).toContain("timestamptz '2026-08-01 17:00:00+00'");
+  it("corrects the current Belgrade event to the sourced 3 PM EDT main card", () => {
+    expect(sql).toContain("timestamptz '2026-08-01 19:00:00+00'");
     expect(sql).toContain("lower(subtitle) like '%medic%'");
     expect(sql).toContain("lower(subtitle) like '%rodriguez%'");
     expect(sql).toContain("update public.pick_event_drafts");
