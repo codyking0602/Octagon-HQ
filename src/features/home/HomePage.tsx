@@ -15,6 +15,7 @@ import { findLeaderStreaks } from "../play/findLeaderStorage";
 import { useProfilePreferences } from "../profile/ProfilePreferencesProvider";
 import { FighterPhoto } from "../rankings/FighterPhoto";
 import { allTime } from "../rankings/rankingModel";
+import { WhatsNewPreview } from "../whats-new/WhatsNewPreview";
 import { dailyRankingSpotlight } from "./homeSpotlightModel";
 import { RankingSpotlightCard } from "./RankingSpotlightCard";
 import { ShanesWatchlistCard } from "./ShanesWatchlistCard";
@@ -163,6 +164,8 @@ export default function HomePage() {
           </>
         )}
       </section>
+
+      <WhatsNewPreview />
 
       {currentEvent ? (
         <section className="surface-card home-event-card" aria-labelledby="home-event-title">
