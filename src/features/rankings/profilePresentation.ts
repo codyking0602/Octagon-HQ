@@ -46,7 +46,7 @@ export const profileCategories = [
 export type ProfileCategory = (typeof profileCategories)[number];
 
 export function profileDisplayName(fighter: RankingFighter) {
-  return fighter.name;
+  return fighter.displayName;
 }
 
 export function tierForRating(rating: number) {
