@@ -33,6 +33,7 @@ import "./styles/challenge-center.css";
 import "./styles/challenge-profiles.css";
 import "./styles/challenge-matchups.css";
 import "./styles/play-hub-polish.css";
+import "./styles/war-room.css";
 
 installUpdateRecovery();
 
