@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import {
   curatedLineupIdentity,
   dailyLineupIdentity,
+  dailyLineupSeed,
   loadLineupHistory,
   recordLineupCompletion,
   replayLabelFor,
@@ -15,11 +16,13 @@ beforeEach(() => {
 });
 
 describe("shared Play lineup owner", () => {
-  it("keeps daily identity deterministic and replay behavior fixed", () => {
+  it("keeps daily identity and seed deterministic with fixed replay behavior", () => {
     const first = dailyLineupIdentity("find-leader", "2026-07-29");
     const second = dailyLineupIdentity("find-leader", "2026-07-29");
     expect(first).toEqual(second);
     expect(first.type).toBe("daily");
+    expect(first.seed).toBe("daily|2026-07-29");
+    expect(first.seed).toBe(dailyLineupSeed("2026-07-29"));
     expect(first.replayBehavior).toBe("same-daily-lineup");
     expect(replayLabelFor(first.type)).toBe("REPLAY TODAY");
   });
