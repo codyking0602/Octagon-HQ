@@ -38,6 +38,7 @@ import "./styles/war-room-launch.css";
 import "./styles/war-room-admin-polish.css";
 import "./styles/war-room-reactions.css";
 import "./styles/whats-new.css";
+import "./styles/notifications.css";
 
 installUpdateRecovery();
 

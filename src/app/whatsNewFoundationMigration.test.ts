@@ -50,21 +50,24 @@ describe("What's New foundation", () => {
     expect(migration).toContain("on conflict (source_key) do update");
     expect(migration).toContain("to service_role");
     expect(migration).not.toContain("to authenticated;\n\ngrant execute on function public.publish_whats_new_item");
-    expect(contract).toContain("the only publishing boundary");
+    expect(contract).toContain("the only general-purpose externally callable publishing boundary");
   });
 
-  it("places the global action in the header and the compact preview after Your HQ", () => {
-    const whatsNewAction = shell.indexOf("<WhatsNewHeaderAction />");
+  it("keeps the complete feed on Home after the header slot becomes notifications", () => {
+    const notificationAction = shell.indexOf("<NotificationHeaderAction />");
     const askAction = shell.indexOf('to="/intelligence"');
     const yourHq = home.indexOf('id="your-hq-title"');
     const preview = home.indexOf("<WhatsNewPreview />");
     const event = home.indexOf("{currentEvent ? (");
 
-    expect(whatsNewAction).toBeGreaterThan(-1);
-    expect(whatsNewAction).toBeLessThan(askAction);
+    expect(notificationAction).toBeGreaterThan(-1);
+    expect(notificationAction).toBeLessThan(askAction);
+    expect(shell).not.toContain("<WhatsNewHeaderAction />");
     expect(preview).toBeGreaterThan(yourHq);
     expect(preview).toBeLessThan(event);
     expect(router).toContain('path: "whats-new"');
+    expect(contract).toContain("Home owns the permanent What's New preview");
+    expect(contract).toContain("continues to own the complete feed");
     expect(contract).toContain("not a bottom-navigation destination");
   });
 
