@@ -9,6 +9,7 @@ import {
 import { Link, Navigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { memberProfilePath } from "../members/memberProfilesModel";
+import { WarRoomAccessManager } from "./WarRoomAccessManager";
 import type { WarRoomMember, WarRoomMessage } from "./warRoomModel";
 import { useWarRoom } from "./WarRoomProvider";
 
@@ -79,6 +80,11 @@ function liveLabel(status: ReturnType<typeof useWarRoom>["realtimeStatus"]) {
   return "SYNC READY";
 }
 
+function resizeComposer(textarea: HTMLTextAreaElement) {
+  textarea.style.height = "auto";
+  textarea.style.height = `${Math.min(textarea.scrollHeight, 96)}px`;
+}
+
 function WarRoomConversation() {
   const identity = useIdentity();
   const warRoom = useWarRoom();
@@ -91,6 +97,7 @@ function WarRoomConversation() {
   const [cursor, setCursor] = useState(0);
   const [replyTo, setReplyTo] = useState<WarRoomMessage | null>(null);
   const [atLatest, setAtLatest] = useState(true);
+  const [accessManagerOpen, setAccessManagerOpen] = useState(false);
 
   function updateAtLatest() {
     const feed = feedRef.current;
@@ -150,8 +157,10 @@ function WarRoomConversation() {
     setDraft(next.slice(0, 500));
     setCursor(Math.min(nextCursor, 500));
     requestAnimationFrame(() => {
-      textareaRef.current?.focus();
-      textareaRef.current?.setSelectionRange(nextCursor, nextCursor);
+      const textarea = textareaRef.current;
+      textarea?.focus();
+      textarea?.setSelectionRange(nextCursor, nextCursor);
+      if (textarea) resizeComposer(textarea);
     });
   }
 
@@ -164,6 +173,7 @@ function WarRoomConversation() {
     setDraft("");
     setCursor(0);
     setReplyTo(null);
+    if (textareaRef.current) textareaRef.current.style.height = "auto";
     requestAnimationFrame(() => jumpToLatest("smooth"));
   }
 
@@ -182,19 +192,17 @@ function WarRoomConversation() {
   return (
     <div className="page war-room-page">
       <section className="page-heading war-room-heading">
-        <div>
-          <p className="eyebrow">PRIVATE OCTAGON HQ CONVERSATION</p>
-          <h1>War Room</h1>
-          <p>One ongoing UFC conversation for the people inside HQ.</p>
-        </div>
+        <h1>War Room</h1>
         <div className="war-room-heading__actions">
           <span className={`war-room-live is-${warRoom.realtimeStatus}`}>
             <i aria-hidden="true" />
             {liveLabel(warRoom.realtimeStatus)}
           </span>
-          <button type="button" onClick={() => void warRoom.refresh()} disabled={warRoom.loading}>
-            {warRoom.loading ? "SYNCING…" : "REFRESH"}
-          </button>
+          {warRoom.role === "admin" ? (
+            <button className="war-room-manage-access" type="button" onClick={() => setAccessManagerOpen(true)}>
+              MANAGE ACCESS
+            </button>
+          ) : null}
         </div>
       </section>
 
@@ -287,21 +295,27 @@ function WarRoomConversation() {
             </div>
           ) : null}
 
-          <div className="war-room-composer__field">
-            <textarea
-              ref={textareaRef}
-              value={draft}
-              maxLength={500}
-              rows={3}
-              placeholder="Say it in the War Room…"
-              onChange={(event) => {
-                setDraft(event.target.value);
-                setCursor(event.target.selectionStart ?? event.target.value.length);
-              }}
-              onSelect={(event) => setCursor(event.currentTarget.selectionStart ?? draft.length)}
-              aria-label="War Room message"
-            />
-            <span>{draft.length}/500</span>
+          <div className="war-room-composer__row">
+            <div className="war-room-composer__field">
+              <textarea
+                ref={textareaRef}
+                value={draft}
+                maxLength={500}
+                rows={1}
+                placeholder="Say it in the War Room…"
+                onChange={(event) => {
+                  setDraft(event.target.value);
+                  setCursor(event.target.selectionStart ?? event.target.value.length);
+                  resizeComposer(event.target);
+                }}
+                onSelect={(event) => setCursor(event.currentTarget.selectionStart ?? draft.length)}
+                aria-label="War Room message"
+              />
+              <span>{draft.length}/500</span>
+            </div>
+            <button className="primary-action war-room-send" type="submit" disabled={!draft.trim() || warRoom.posting}>
+              {warRoom.posting ? "POSTING…" : "POST"}
+            </button>
           </div>
 
           {suggestions.length ? (
@@ -314,12 +328,13 @@ function WarRoomConversation() {
               ))}
             </div>
           ) : null}
-
-          <button className="primary-action war-room-send" type="submit" disabled={!draft.trim() || warRoom.posting}>
-            {warRoom.posting ? "POSTING…" : "POST MESSAGE"}
-          </button>
         </form>
       </section>
+
+      <WarRoomAccessManager open={accessManagerOpen} onClose={() => {
+        setAccessManagerOpen(false);
+        warRoom.clearAccessRoster();
+      }} />
     </div>
   );
 }
