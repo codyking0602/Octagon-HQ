@@ -6,8 +6,10 @@ import type { ChallengeJson } from "../challenges/challengeModel";
 import { FighterPhoto } from "../rankings/FighterPhoto";
 import { useFindLeaderHistory } from "./FindLeaderHistoryProvider";
 import {
+  buildFindLeaderBoard,
   centralDay,
   dailyFindLeaderBoard,
+  findLeaderQuestions,
   type FindLeaderBoard,
   type FindLeaderCandidate,
 } from "./findLeaderEngine";
@@ -23,6 +25,9 @@ import {
   recordLineupCompletion,
   rememberLineup,
   replayLabelFor,
+  seededLineupRandom,
+  selectReplayLineup,
+  shuffleLineup,
   type PlayLineupIdentity,
 } from "./lineupModel";
 import { playGames, type PlayGameId } from "./playRegistry";
@@ -34,8 +39,13 @@ interface FindLeaderResult {
   eliminated: string[];
 }
 
+interface CasualFindLeaderRun {
+  board: FindLeaderBoard;
+  identity: PlayLineupIdentity;
+}
+
 const LIVE_GAME_ROUTES: Partial<Record<PlayGameId, string>> = {
-  "find-leader": "/play/find-leader",
+  "find-leader": "/play/find-leader?mode=casual",
   wavelength: "/play/wavelength",
   "blind-resume": "/play/blind-resume",
   "blind-rank": "/play/blind-rank",
@@ -138,6 +148,33 @@ function findLeaderChallengeResult(result: FindLeaderResult): ChallengeJson {
   };
 }
 
+function createCasualFindLeaderRun(day = centralDay()): CasualFindLeaderRun {
+  const selected = selectReplayLineup({
+    gameId: "find-leader",
+    scopeId: "casual",
+    lineupSize: 1,
+    attempts: 12,
+    validItemIds: new Set(findLeaderQuestions.map((definition) => definition.id)),
+    build: (seed) => {
+      const definitions = shuffleLineup(
+        findLeaderQuestions,
+        seededLineupRandom("find-leader", "casual-definition", seed),
+      );
+      const board = definitions
+        .map((definition) => buildFindLeaderBoard(definition, `casual|${seed}`, day))
+        .find((candidate): candidate is FindLeaderBoard => Boolean(candidate));
+      if (!board) throw new Error("Find the Leader could not build a casual board.");
+      return {
+        value: board,
+        itemIds: [board.definitionId],
+        fighterIds: board.candidates.map((fighter) => fighter.id),
+      };
+    },
+  });
+
+  return { board: selected.value, identity: selected.identity };
+}
+
 function DailyHistory({
   rows,
   today,
@@ -211,12 +248,14 @@ function FindLeaderGame({
   identity,
   onExit,
   onComplete,
+  onReplay,
   challengeFrom = "",
 }: {
   board: FindLeaderBoard;
   identity: PlayLineupIdentity;
   onExit: () => void;
   onComplete: (result: FindLeaderResult) => void;
+  onReplay?: () => void;
   challengeFrom?: string;
 }) {
   const { beginChallenge } = usePlayChallenges();
@@ -253,6 +292,10 @@ function FindLeaderGame({
   }
 
   function replay() {
+    if (identity.type === "replayable" && onReplay) {
+      onReplay();
+      return;
+    }
     setEliminated([]);
     setResult(null);
     setChallengeStatus("");
@@ -344,6 +387,12 @@ function FindLeaderGame({
     );
   }
 
+  const eyebrow = identity.type === "daily"
+    ? "TODAY’S CHALLENGE"
+    : identity.type === "replayable"
+      ? "CASUAL GAME"
+      : "CURATED CHALLENGE";
+
   return (
     <div className="find-game page">
       {challengeFrom ? (
@@ -355,7 +404,7 @@ function FindLeaderGame({
       ) : null}
       <section className="find-game__hero">
         <div>
-          <p className="eyebrow">{identity.type === "daily" ? "TODAY’S CHALLENGE" : "CURATED CHALLENGE"}</p>
+          <p className="eyebrow">{eyebrow}</p>
           <h1>{board.question}</h1>
           <p>{objectiveCopy(board)}</p>
         </div>
@@ -399,20 +448,29 @@ export default function PlayPage() {
   const challengeCode = searchParams.get("challenge")?.toUpperCase() ?? "";
   const profileChallenge = challengeCode ? getChallenge(challengeCode) : null;
   const challengeDay = validChallengeDay(searchParams.get("day"));
+  const casualMode = isFindLeaderGame && searchParams.get("mode") === "casual" && !profileChallenge && !challengeDay;
   const storedChallengeBoard = challengeSetupBoard(profileChallenge?.setup);
   const profileChallengeDay = storedChallengeBoard?.day ?? challengeSetupDay(profileChallenge?.setup);
   const gameDay = isFindLeaderGame ? profileChallengeDay ?? challengeDay ?? today : today;
   const todayBoard = useMemo(() => dailyFindLeaderBoard(today), [today]);
   const generatedGameBoard = useMemo(() => dailyFindLeaderBoard(gameDay), [gameDay]);
-  const gameBoard = storedChallengeBoard ?? generatedGameBoard;
-  const officialDaily = Boolean(isFindLeaderGame && gameBoard && !profileChallenge && !challengeDay && gameDay === today);
+  const [casualRun, setCasualRun] = useState<CasualFindLeaderRun | null>(() => casualMode ? createCasualFindLeaderRun(today) : null);
+
+  useEffect(() => {
+    if (casualMode && !casualRun) setCasualRun(createCasualFindLeaderRun(today));
+    if (!casualMode && casualRun) setCasualRun(null);
+  }, [casualMode, casualRun, today]);
+
+  const gameBoard = storedChallengeBoard ?? (casualMode ? casualRun?.board ?? null : generatedGameBoard);
+  const officialDaily = Boolean(isFindLeaderGame && gameBoard && !casualMode && !profileChallenge && !challengeDay && gameDay === today);
   const gameIdentity = useMemo(() => {
     if (!gameBoard) return null;
+    if (casualMode) return casualRun?.identity ?? null;
     const ids = gameBoard.candidates.map((fighter) => fighter.id);
     if (officialDaily) return dailyLineupIdentity("find-leader", gameDay, gameBoard.definitionId);
     const challengeId = profileChallenge?.code ?? `day:${gameDay}:${gameBoard.definitionId}`;
     return curatedLineupIdentity("find-leader", challengeId, ids, gameBoard.definitionId);
-  }, [gameBoard, gameDay, officialDaily, profileChallenge?.code]);
+  }, [casualMode, casualRun?.identity, gameBoard, gameDay, officialDaily, profileChallenge?.code]);
   const [carousel, setCarousel] = useState<0 | 1>(0);
   const touchStartX = useRef<number | null>(null);
   const todayRow = history.find((row) => row.day === today);
@@ -432,6 +490,11 @@ export default function PlayPage() {
     if (todayBoard) navigate("/play/find-leader");
   }
 
+  function newCasualFindLeader() {
+    setCasualRun(createCasualFindLeaderRun(today));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   function finishSwipe(clientX: number) {
     if (touchStartX.current === null) return;
     const distance = clientX - touchStartX.current;
@@ -443,10 +506,12 @@ export default function PlayPage() {
   if (isFindLeaderGame && gameBoard && gameIdentity) {
     return (
       <FindLeaderGame
+        key={gameIdentity.challengeId}
         board={gameBoard}
         identity={gameIdentity}
         onExit={() => navigate("/play")}
         onComplete={complete}
+        onReplay={gameIdentity.type === "replayable" ? newCasualFindLeader : undefined}
         challengeFrom={challengeCreator?.displayName}
       />
     );
