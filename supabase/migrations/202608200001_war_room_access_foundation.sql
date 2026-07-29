@@ -364,6 +364,48 @@ begin
 end;
 $$;
 
+-- Preserve existing V1 War Room eligibility when the legacy tables share this database.
+do $$
+begin
+  if to_regclass('public.octagon_access') is not null
+    and to_regclass('public.pick_group_members') is not null
+    and to_regclass('public.pick_groups') is not null
+  then
+    execute $copy_legacy_access$
+      insert into private.war_room_memberships (
+        profile_id,
+        role,
+        status,
+        joined_at,
+        revoked_at,
+        updated_at
+      )
+      select
+        profile.id,
+        case
+          when coalesce(legacy.is_app_admin, false)
+            or legacy_group.owner_member_id = legacy.id
+          then 'admin'
+          else 'member'
+        end,
+        'active',
+        coalesce(access.enabled_at, access.created_at, now()),
+        null,
+        now()
+      from public.octagon_access access
+      join public.pick_group_members legacy on legacy.id = access.member_id
+      join public.pick_groups legacy_group on legacy_group.id = access.group_id
+      join public.profiles profile
+        on profile.normalized_name = upper(regexp_replace(trim(legacy.display_name), '\s+', ' ', 'g'))
+      where access.can_access
+        and coalesce(legacy.is_active, true)
+        and (coalesce(legacy_group.is_canonical, false) or legacy_group.code = 'GOAT26')
+      on conflict (profile_id) do nothing
+    $copy_legacy_access$;
+  end if;
+end;
+$$;
+
 insert into private.war_room_memberships (
   profile_id,
   role,
