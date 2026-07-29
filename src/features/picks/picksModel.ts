@@ -98,8 +98,17 @@ export interface PickHistoryRecord {
 
 export interface PickGroupResult extends PickHistoryRecord {
   rank: number;
+  profileId: string | null;
   displayName: string;
   isCurrentUser: boolean;
+}
+
+export interface PickSeasonStanding extends PickHistoryRecord {
+  rank: number;
+  profileId: string | null;
+  displayName: string;
+  isCurrentUser: boolean;
+  eventsEntered: number;
 }
 
 export interface PickHistoryEvent {
@@ -124,6 +133,7 @@ export interface PickHistorySummary extends PickHistoryRecord {
 export interface PickHistory {
   season: number | null;
   summary: PickHistorySummary;
+  seasonStandings: PickSeasonStanding[];
   events: PickHistoryEvent[];
 }
 
@@ -165,6 +175,7 @@ export const emptyPickHistory: PickHistory = {
     totalPoints: 0,
     eventsEntered: 0,
   },
+  seasonStandings: [],
   events: [],
 };
 
@@ -215,12 +226,17 @@ export function pickRecord(summary: PickSummary) {
   return `${summary.correct}-${summary.incorrect}`;
 }
 
+export function pickWinPercentage(correct: number, incorrect: number) {
+  const decided = correct + incorrect;
+  return decided > 0 ? (correct / decided) * 100 : 0;
+}
+
 export function mainEvent(event: PickEvent | null) {
   if (!event?.bouts.length) return null;
   return event.bouts.slice().sort((left, right) => left.position - right.position)[0] ?? null;
 }
 
-export function groupRankLabel(rank: number, results: readonly PickGroupResult[]) {
+export function groupRankLabel(rank: number, results: readonly { rank: number }[]) {
   return results.filter((result) => result.rank === rank).length > 1 ? `T-${rank}` : `${rank}`;
 }
 
