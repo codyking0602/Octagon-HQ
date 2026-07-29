@@ -10,8 +10,8 @@ const integrationSql = readFileSync(
   "utf8",
 );
 const script = readFileSync("scripts/sync-ranking-whats-new.mjs", "utf8");
-const backendWorkflow = readFileSync(
-  ".github/workflows/deploy-supabase.yml",
+const syncWorkflow = readFileSync(
+  ".github/workflows/sync-whats-new-rankings.yml",
   "utf8",
 );
 const watchlistCard = readFileSync(
@@ -64,16 +64,20 @@ describe("What's New Rankings and fighter producers", () => {
     expect(script).not.toContain("window.");
   });
 
-  it("runs only through the exact-SHA canonical backend deployment", () => {
-    expect(backendWorkflow).toContain('ref: ${{ env.SOURCE_SHA }}');
-    expect(backendWorkflow).toContain("persist-credentials: false");
-    expect(backendWorkflow).toContain('env.SOURCE_PR_NUMBER == \'0\'');
-    expect(backendWorkflow).toContain("Synchronize production Rankings and Fighters into What's New");
-    expect(backendWorkflow).toContain('SOURCE_SHA="$SOURCE_SHA"');
-    expect(backendWorkflow).toContain('"src/features/home/shanesWatchlist.ts"');
-    expect(backendWorkflow).toContain('"src/features/rankings/**"');
-    expect(backendWorkflow).toContain('"scripts/sync-ranking-whats-new.mjs"');
-    expect(backendWorkflow).toContain('require_remote_migration "202608200011"');
+  it("runs only after the exact current main frontend is live", () => {
+    expect(syncWorkflow).toContain("workflow_run:");
+    expect(syncWorkflow).toContain("Deploy Cloudflare Frontend");
+    expect(syncWorkflow).toContain("github.event.workflow_run.conclusion == 'success'");
+    expect(syncWorkflow).toContain('sourceBranch === "main"');
+    expect(syncWorkflow).toContain('sourceEvent === "push"');
+    expect(syncWorkflow).toContain("main.commit.sha === sourceSha");
+    expect(syncWorkflow).toContain('ref: ${{ env.SOURCE_SHA }}');
+    expect(syncWorkflow).toContain("persist-credentials: false");
+    expect(syncWorkflow).toContain("deployment.json?expected=${SOURCE_SHA}");
+    expect(syncWorkflow).toContain("marker.sha !== expectedSha");
+    expect(syncWorkflow).toContain('SOURCE_SHA="$SOURCE_SHA"');
+    expect(syncWorkflow).toContain("RANKING_SYNC_MAX_ATTEMPTS: 20");
+    expect(syncWorkflow).toContain('echo "::add-mask::$service_role_key"');
     expect(script).toContain("for (let attempt = 1; attempt <= maxAttempts; attempt += 1)");
     expect(script).toContain('error.code === "PGRST202"');
   });

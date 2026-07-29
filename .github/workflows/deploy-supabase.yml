@@ -17,9 +17,6 @@ on:
       - main
     paths:
       - ".github/workflows/deploy-supabase.yml"
-      - "scripts/sync-ranking-whats-new.mjs"
-      - "src/features/home/shanesWatchlist.ts"
-      - "src/features/rankings/**"
       - "supabase/**"
 
 permissions:
@@ -33,7 +30,7 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
     env:
       SOURCE_SHA: ${{ inputs.source_sha || github.sha }}
       SOURCE_PR_NUMBER: ${{ inputs.pr_number || '0' }}
@@ -242,12 +239,6 @@ jobs:
           if [ -f supabase/migrations/202608110001_live_pick_odds_application.sql ]; then
             require_remote_migration "202608110001"
           fi
-          if [ -f supabase/migrations/202608200010_whats_new_picks_recap.sql ]; then
-            require_remote_migration "202608200010"
-          fi
-          if [ -f supabase/migrations/202608200011_whats_new_rankings_sync.sql ]; then
-            require_remote_migration "202608200011"
-          fi
 
           function_list=$(supabase functions list --project-ref "$SUPABASE_PROJECT_ID")
           printf '%s\n' "$function_list" | grep -F "pin-auth"
@@ -295,48 +286,6 @@ jobs:
           EXPECTED_MONITORING_SCHEDULER_ENABLED: ${{ env.EXPECTED_MONITORING_SCHEDULER_ENABLED }}
         run: node scripts/verify-monitoring-function-deployment.mjs
 
-      - name: Set up Node for production Rankings and Fighters sync
-        if: ${{ env.SOURCE_PR_NUMBER == '0' && hashFiles('scripts/sync-ranking-whats-new.mjs') != '' }}
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-
-      - name: Install production Rankings and Fighters sync dependencies
-        if: ${{ env.SOURCE_PR_NUMBER == '0' && hashFiles('scripts/sync-ranking-whats-new.mjs') != '' }}
-        run: npm install --silent
-
-      - name: Synchronize production Rankings and Fighters into What's New
-        if: ${{ env.SOURCE_PR_NUMBER == '0' && hashFiles('scripts/sync-ranking-whats-new.mjs') != '' }}
-        shell: bash
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
-        run: |
-          set -euo pipefail
-          api_keys_file="$RUNNER_TEMP/supabase-api-keys.json"
-          trap 'rm -f "$api_keys_file"' EXIT
-
-          curl --fail --silent --show-error \
-            --header "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
-            "https://api.supabase.com/v1/projects/${SUPABASE_PROJECT_ID}/api-keys?reveal=true" \
-            --output "$api_keys_file"
-
-          service_role_key=$(node - "$api_keys_file" <<'NODE'
-          const fs = require("fs");
-          const keys = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
-          const serviceKey = keys.find((key) => key.type === "secret" && key.api_key && key.disabled !== true)
-            ?? keys.find((key) => key.type === "legacy" && /service[_-]?role/i.test(key.name ?? "") && key.api_key);
-          if (!serviceKey?.api_key) throw new Error("No production service-role-capable Supabase key was returned.");
-          process.stdout.write(serviceKey.api_key);
-          NODE
-          )
-
-          SUPABASE_URL="https://${SUPABASE_PROJECT_ID}.supabase.co" \
-          SUPABASE_SERVICE_ROLE_KEY="$service_role_key" \
-          SOURCE_SHA="$SOURCE_SHA" \
-            node scripts/sync-ranking-whats-new.mjs
-          unset service_role_key
-
       - name: Record deployed backend
         shell: bash
         run: |
@@ -359,9 +308,6 @@ jobs:
             fi
             if [ -f supabase/migrations/202608090001_automatic_pick_monitoring_scheduler.sql ]; then
               echo "- Canonical hourly scheduler verified; active state: ${EXPECTED_MONITORING_SCHEDULER_ENABLED:-not-configured}"
-            fi
-            if [ "$SOURCE_PR_NUMBER" = "0" ] && [ -f scripts/sync-ranking-whats-new.mjs ]; then
-              echo "- Canonical Rankings and Fighters to Watch snapshots synchronized into What's New"
             fi
             echo "- Canonical production origin: $OCTAGON_PRODUCTION_ORIGIN"
             echo "- Remote migrations, exact deployed function revisions, live authentication contracts, scheduler health, and production CORS were verified"
