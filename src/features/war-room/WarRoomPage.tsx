@@ -72,6 +72,13 @@ function activeMention(body: string, cursor: number) {
   return { start: at, query: (match[2] ?? "").trim().toUpperCase() };
 }
 
+function liveLabel(status: ReturnType<typeof useWarRoom>["realtimeStatus"]) {
+  if (status === "connected") return "LIVE";
+  if (status === "connecting") return "CONNECTING";
+  if (status === "error") return "RECONNECTING";
+  return "SYNC READY";
+}
+
 function WarRoomConversation() {
   const identity = useIdentity();
   const warRoom = useWarRoom();
@@ -79,16 +86,55 @@ function WarRoomConversation() {
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const initialScrollRef = useRef(false);
+  const previousLatestRef = useRef<string | null>(null);
   const [draft, setDraft] = useState("");
   const [cursor, setCursor] = useState(0);
   const [replyTo, setReplyTo] = useState<WarRoomMessage | null>(null);
+  const [atLatest, setAtLatest] = useState(true);
+
+  function updateAtLatest() {
+    const feed = feedRef.current;
+    if (!feed) return;
+    const distance = feed.scrollHeight - feed.scrollTop - feed.clientHeight;
+    setAtLatest(distance <= 72);
+  }
+
+  function jumpToLatest(behavior: ScrollBehavior = "smooth") {
+    bottomRef.current?.scrollIntoView({ behavior, block: "end" });
+    setAtLatest(true);
+  }
 
   useEffect(() => {
     if (!initialScrollRef.current && !warRoom.loading && warRoom.messages.length) {
       initialScrollRef.current = true;
-      bottomRef.current?.scrollIntoView({ block: "end" });
+      jumpToLatest("auto");
     }
   }, [warRoom.loading, warRoom.messages.length]);
+
+  const latestMessageId = warRoom.messages.at(-1)?.id ?? null;
+
+  useEffect(() => {
+    const previous = previousLatestRef.current;
+    previousLatestRef.current = latestMessageId;
+    if (previous && latestMessageId && previous !== latestMessageId && atLatest) {
+      requestAnimationFrame(() => jumpToLatest("smooth"));
+    }
+  }, [atLatest, latestMessageId]);
+
+  useEffect(() => {
+    if (!atLatest || document.visibilityState !== "visible") return;
+    void warRoom.markReadThroughLatest();
+  }, [atLatest, latestMessageId, warRoom.markReadThroughLatest, warRoom.unreadCount]);
+
+  useEffect(() => {
+    const onVisibility = () => {
+      if (document.visibilityState === "visible" && atLatest) {
+        void warRoom.markReadThroughLatest();
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => document.removeEventListener("visibilitychange", onVisibility);
+  }, [atLatest, warRoom.markReadThroughLatest]);
 
   const mention = activeMention(draft, cursor);
   const suggestions = mention ? warRoom.members
@@ -118,7 +164,7 @@ function WarRoomConversation() {
     setDraft("");
     setCursor(0);
     setReplyTo(null);
-    requestAnimationFrame(() => bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" }));
+    requestAnimationFrame(() => jumpToLatest("smooth"));
   }
 
   async function loadOlder() {
@@ -129,6 +175,7 @@ function WarRoomConversation() {
     requestAnimationFrame(() => {
       if (!feed) return;
       feed.scrollTop = previousTop + feed.scrollHeight - previousHeight;
+      updateAtLatest();
     });
   }
 
@@ -140,15 +187,26 @@ function WarRoomConversation() {
           <h1>War Room</h1>
           <p>One ongoing UFC conversation for the people inside HQ.</p>
         </div>
-        <button type="button" onClick={() => void warRoom.refresh()} disabled={warRoom.loading}>
-          {warRoom.loading ? "SYNCING…" : "REFRESH"}
-        </button>
+        <div className="war-room-heading__actions">
+          <span className={`war-room-live is-${warRoom.realtimeStatus}`}>
+            <i aria-hidden="true" />
+            {liveLabel(warRoom.realtimeStatus)}
+          </span>
+          <button type="button" onClick={() => void warRoom.refresh()} disabled={warRoom.loading}>
+            {warRoom.loading ? "SYNCING…" : "REFRESH"}
+          </button>
+        </div>
       </section>
 
       {warRoom.error ? <div className="war-room-error" role="status">{warRoom.error}</div> : null}
 
       <section className="surface-card war-room-shell">
-        <div className="war-room-feed" ref={feedRef} aria-live="polite">
+        <div
+          className="war-room-feed"
+          ref={feedRef}
+          aria-live="polite"
+          onScroll={updateAtLatest}
+        >
           {warRoom.hasMore ? (
             <button className="war-room-load-older" type="button" onClick={() => void loadOlder()} disabled={warRoom.loadingOlder}>
               {warRoom.loadingOlder ? "LOADING…" : "LOAD OLDER MESSAGES"}
@@ -214,6 +272,12 @@ function WarRoomConversation() {
           ))}
           <div ref={bottomRef} />
         </div>
+
+        {warRoom.unreadCount > 0 && !atLatest ? (
+          <button className="war-room-new-messages" type="button" onClick={() => jumpToLatest("smooth")}>
+            {warRoom.unreadCount > 99 ? "99+" : warRoom.unreadCount} NEW
+          </button>
+        ) : null}
 
         <form className="war-room-composer" onSubmit={(event) => void submit(event)}>
           {replyTo ? (

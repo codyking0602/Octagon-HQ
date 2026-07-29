@@ -47,15 +47,16 @@ describe("War Room conversation core", () => {
     expect(provider).toContain("useIdentity()");
     expect(provider).not.toContain("localStorage");
     expect(provider).not.toContain("setInterval");
-    expect(provider).not.toContain(".channel(");
   });
 
-  it("adds only a guarded hidden review route", () => {
+  it("keeps the conversation route guarded while launch navigation remains permission-aware", () => {
     expect(router).toContain('path: "war-room"');
-    expect(bottomNavigation.toLowerCase()).not.toContain("war room");
+    expect(router).toContain('path: "war-room/join"');
+    expect(bottomNavigation).toContain('warRoom.status === "eligible"');
     expect(page).toContain('return <Navigate to="/" replace />');
     expect(page).toContain("warRoom.status !== \"eligible\"");
-    expect(contract).toContain("No Home card, disabled button, fake page, invite placeholder, badge, or bottom-navigation item");
+    expect(contract).toContain("PR 2 created the guarded conversation core");
+    expect(contract).toContain("PR 3 owns launch visibility");
   });
 
   it("keeps rollback proof for access, pagination, replies, mentions, deletion, and privacy", () => {

@@ -21,6 +21,7 @@ const PicksControlPage = lazy(() => import("../features/picks-control/PicksContr
 const PicksSetupPage = lazy(() => import("../features/picks-setup/PicksSetupPage"));
 const MonitoringInboxPage = lazy(() => import("../features/picks-monitoring/MonitoringInboxPage"));
 const WarRoomPage = lazy(() => import("../features/war-room/WarRoomPage"));
+const WarRoomJoinPage = lazy(() => import("../features/war-room/WarRoomJoinPage"));
 
 export const appRoutes: RouteObject[] = [
   {
@@ -45,6 +46,7 @@ export const appRoutes: RouteObject[] = [
       { path: "picks/control", element: <PicksControlPage /> },
       { path: "picks/setup", element: <PicksSetupPage /> },
       { path: "picks/monitoring", element: <MonitoringInboxPage /> },
+      { path: "war-room/join", element: <WarRoomJoinPage /> },
       { path: "war-room", element: <WarRoomPage /> },
       { path: "*", element: <Navigate to="/" replace /> },
     ],

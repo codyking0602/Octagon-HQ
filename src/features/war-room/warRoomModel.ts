@@ -1,5 +1,11 @@
 export type WarRoomAccessMode = "locked" | "invite" | "eligible";
 export type WarRoomRole = "member" | "admin";
+export type WarRoomRealtimeStatus =
+  | "idle"
+  | "connecting"
+  | "connected"
+  | "disconnected"
+  | "error";
 
 export interface WarRoomMember {
   id: string;
@@ -37,6 +43,8 @@ export interface WarRoomSnapshot {
   members: WarRoomMember[];
   hasMore: boolean;
   nextCursor: WarRoomCursor | null;
+  unreadCount: number;
+  latestMessageId: string | null;
 }
 
 export type WarRoomAccess =
@@ -47,7 +55,25 @@ export type WarRoomAccess =
       inviteExpiresAt: string;
       inviteUsesRemaining: number;
     }
-  | { mode: "eligible"; eligible: true; role: WarRoomRole };
+  | {
+      mode: "eligible";
+      eligible: true;
+      role: WarRoomRole;
+      unreadCount: number;
+    };
+
+export interface WarRoomJoinResult {
+  mode: "eligible";
+  eligible: true;
+  role: WarRoomRole;
+  unreadCount: number;
+  joined: boolean;
+}
+
+export interface WarRoomReadState {
+  unreadCount: number;
+  lastReadMessageId: string | null;
+}
 
 export function mergeWarRoomMessages(
   current: readonly WarRoomMessage[],
