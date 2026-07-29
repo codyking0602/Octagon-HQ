@@ -21,9 +21,9 @@ What's New is Octagon HQ's global activity layer.
 
 ## Publishing owner
 
-`public.publish_whats_new_item(...)` is the only externally callable publishing boundary. It is service-role-only and idempotent by `source_key`.
+`public.publish_whats_new_item(...)` is the only general-purpose externally callable publishing boundary. It is service-role-only and idempotent by `source_key`.
 
-Database-owned feature transitions may delegate to the same private idempotent storage owner. That internal function is not executable by browser roles and does not create a second feed or publishing API.
+Database-owned feature transitions may delegate to the same private idempotent storage owner. Feature-specific service-only synchronizers may call the public publisher after comparing their own canonical state. Neither pattern is executable by browser roles or creates a second feed owner.
 
 Automatic producers may publish only:
 
@@ -49,6 +49,20 @@ Manual publishing supports app announcements, major redesign explanations, featu
 - Repeating an already-complete transition cannot create or republish an item.
 - Completion and recap availability happen in the same transaction, so the feed receives one recap-ready item instead of duplicate completion and recap cards.
 
+## Rankings and fighter producers
+
+`rankingModel.ts` remains the sole calculated source for ranked fighter identity, board, and position. `shanesWatchlist.ts` remains the sole source for Shane's Fighters to Watch. A trusted production workflow synchronizes those exact models only after the same `main` SHA has deployed successfully.
+
+- The first production synchronization quietly creates both comparison baselines. It does not publish the existing ranked roster or current watchlist as new updates.
+- A fighter slug absent from the prior production ranking snapshot publishes one automatic `new_fighter` item linking to the canonical fighter profile.
+- An existing fighter moving at least three positions on the same board publishes one automatic `ranking_movement` item.
+- One- and two-position moves are intentionally ignored.
+- When five or more fighters move at least three spots in one deployment, one `major_ranking_update` summary replaces a pile of individual movement cards.
+- A watchlist ID absent from the prior production watchlist snapshot publishes one automatic `fighters_to_watch` item linking to Shane's Home watchlist.
+- Unchanged deployments are idempotent and publish nothing.
+- PR-head deployments never synchronize production comparison state or publish production updates.
+- The private snapshots are comparison evidence only. They never become a ranking or watchlist source and are replaced from the canonical models after every successful synchronization.
+
 ## Noise rules
 
 Do not publish What's New items for minor bug fixes, routine monitoring checks, tiny text changes, one-position ranking moves, administrative backend work, or technical deployment activity.
@@ -64,4 +78,5 @@ Do not publish What's New items for minor bug fixes, routine monitoring checks, 
 ## Connected slices
 
 - Picks event completion and recap availability are connected through the canonical completion transition.
-- Ranking, game, fighter, challenge, and achievement producers remain for later focused slices.
+- New ranked fighters, meaningful ranking movement, major ranking shakeups, and new Fighters to Watch entries are connected through the exact deployed canonical models.
+- Game, challenge, and achievement producers remain for the final focused slice.
