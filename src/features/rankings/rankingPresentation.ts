@@ -11,6 +11,19 @@ export interface ProfileWatchAction {
   source: "signature" | "watch-moment";
 }
 
+export function resolveWatchMomentAction(slug: string): ProfileWatchAction | null {
+  const presentation = presentationBySlug.get(slug);
+  if (!presentation) throw new Error(`Missing ranking presentation metadata for ${slug}.`);
+
+  if (!presentation.watchUrl) return null;
+
+  return {
+    label: presentation.watchLabel ?? "Watch Moment",
+    url: presentation.watchUrl,
+    source: "watch-moment",
+  };
+}
+
 export function resolveProfileWatchAction(slug: string): ProfileWatchAction | null {
   const presentation = presentationBySlug.get(slug);
   if (!presentation) throw new Error(`Missing ranking presentation metadata for ${slug}.`);
