@@ -60,13 +60,23 @@ export function mergeWarRoomMessages(
   ));
 }
 
-function mentionPattern(displayName: string) {
-  const escaped = displayName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  return new RegExp(`(^|[^A-Z0-9])@${escaped}(?=$|[^A-Z0-9])`, "i");
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 export function mentionedMemberIds(body: string, members: readonly WarRoomMember[]) {
-  return members
-    .filter((member) => mentionPattern(member.displayName).test(body))
-    .map((member) => member.id);
+  if (!members.length) return [];
+  const byName = new Map(members.map((member) => [member.displayName.toUpperCase(), member]));
+  const names = [...byName.keys()].sort((left, right) => right.length - left.length);
+  const expression = new RegExp(
+    `(^|[^A-Z0-9])@(${names.map(escapeRegExp).join("|")})(?=$|[^A-Z0-9])`,
+    "gi",
+  );
+  const mentioned = new Set<string>();
+  let match: RegExpExecArray | null;
+  while ((match = expression.exec(body))) {
+    const member = byName.get((match[2] ?? "").toUpperCase());
+    if (member) mentioned.add(member.id);
+  }
+  return members.filter((member) => mentioned.has(member.id)).map((member) => member.id);
 }
