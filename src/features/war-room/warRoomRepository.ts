@@ -7,6 +7,7 @@ import type {
   WarRoomJoinResult,
   WarRoomMember,
   WarRoomMessage,
+  WarRoomReactionType,
   WarRoomReadState,
   WarRoomRealtimeStatus,
   WarRoomSnapshot,
@@ -31,6 +32,12 @@ const parentRowSchema = z.object({
   author: memberRowSchema,
 });
 
+const reactionRowSchema = z.object({
+  type: z.enum(["like", "dislike", "exclaim", "laugh"]),
+  count: z.coerce.number().int().nonnegative(),
+  reacted: z.boolean(),
+});
+
 const messageRowSchema = z.object({
   id: z.string().uuid(),
   body: z.string().nullable(),
@@ -39,6 +46,7 @@ const messageRowSchema = z.object({
   author: memberRowSchema,
   parent: parentRowSchema.nullable(),
   mentions: z.array(memberRowSchema).optional().default([]),
+  reactions: z.array(reactionRowSchema).optional().default([]),
   can_delete: z.boolean(),
 });
 
@@ -86,21 +94,30 @@ const readRowSchema = z.object({
   last_read_message_id: z.string().uuid().nullable(),
 });
 
+const changeSignalSchema = z.object({
+  message_id: z.string().uuid(),
+}).passthrough();
+
 export interface WarRoomRepository {
   getAccess: (inviteCode?: string | null) => Promise<WarRoomAccess>;
   joinWithInvite: (inviteCode: string) => Promise<WarRoomJoinResult>;
   loadSnapshot: (cursor?: WarRoomCursor | null) => Promise<WarRoomSnapshot>;
+  loadMessage: (messageId: string) => Promise<WarRoomMessage | null>;
   postMessage: (
     body: string,
     parentMessageId: string | null,
     mentionedProfileIds: string[],
   ) => Promise<WarRoomMessage>;
   deleteMessage: (messageId: string) => Promise<WarRoomMessage>;
+  toggleReaction: (
+    messageId: string,
+    reactionType: WarRoomReactionType,
+  ) => Promise<WarRoomMessage>;
   markRead: (messageId: string) => Promise<WarRoomReadState>;
   loadAccessRoster: () => Promise<WarRoomAccessProfile[]>;
   setProfileAccess: (profileId: string, enabled: boolean) => Promise<WarRoomAccessProfile>;
   subscribe: (
-    onChange: () => void,
+    onChange: (messageId: string | null) => void,
     onStatus: (status: WarRoomRealtimeStatus) => void,
   ) => () => void;
   subscribeAccess: (profileId: string, onChange: () => void) => () => void;
@@ -133,13 +150,14 @@ function toMessage(value: unknown): WarRoomMessage {
     deleted: row.deleted,
     createdAt: row.created_at,
     author: toMember(row.author),
-    parent: row.parent ? {
+    parent: row.parent && !row.parent.deleted ? {
       id: row.parent.id,
       body: row.parent.body,
-      deleted: row.parent.deleted,
+      deleted: false,
       author: toMember(row.parent.author),
     } : null,
     mentions: row.mentions.map(toMember),
+    reactions: row.reactions,
     canDelete: row.can_delete,
   };
 }
@@ -236,6 +254,15 @@ export function createWarRoomRepository(): WarRoomRepository | null {
       return toSnapshot(data);
     },
 
+    async loadMessage(messageId) {
+      const data = await requireRpcSuccess(
+        client.rpc("get_war_room_message", { p_message_id: messageId }),
+        "Octagon HQ could not load that War Room message.",
+      );
+      const row = messageRowSchema.nullable().parse(data);
+      return row ? toMessage(row) : null;
+    },
+
     async postMessage(body, parentMessageId, mentionedProfileIds) {
       const data = await requireRpcSuccess(
         client.rpc("post_war_room_message", {
@@ -252,6 +279,17 @@ export function createWarRoomRepository(): WarRoomRepository | null {
       const data = await requireRpcSuccess(
         client.rpc("delete_war_room_message", { p_message_id: messageId }),
         "Octagon HQ could not delete that War Room message.",
+      );
+      return toMessage(data);
+    },
+
+    async toggleReaction(messageId, reactionType) {
+      const data = await requireRpcSuccess(
+        client.rpc("toggle_war_room_reaction", {
+          p_message_id: messageId,
+          p_reaction_type: reactionType,
+        }),
+        "Octagon HQ could not update that reaction.",
       );
       return toMessage(data);
     },
@@ -297,8 +335,11 @@ export function createWarRoomRepository(): WarRoomRepository | null {
           if (!active) return;
           channel = client
             .channel("war-room:conversation", { config: { private: true } })
-            .on("broadcast", { event: "war_room_changed" }, () => {
-              if (active) onChange();
+            .on("broadcast", { event: "war_room_changed" }, (event) => {
+              if (!active) return;
+              const raw = event as unknown as { payload?: unknown };
+              const parsed = changeSignalSchema.safeParse(raw.payload);
+              onChange(parsed.success ? parsed.data.message_id : null);
             })
             .subscribe((status) => {
               if (!active) return;

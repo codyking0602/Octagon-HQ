@@ -10,8 +10,23 @@ import { Link, Navigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { memberProfilePath } from "../members/memberProfilesModel";
 import { WarRoomAccessManager } from "./WarRoomAccessManager";
-import type { WarRoomMember, WarRoomMessage } from "./warRoomModel";
+import type {
+  WarRoomMember,
+  WarRoomMessage,
+  WarRoomReactionType,
+} from "./warRoomModel";
 import { useWarRoom } from "./WarRoomProvider";
+
+const REACTION_OPTIONS = [
+  { type: "like", icon: "👍", label: "Like" },
+  { type: "dislike", icon: "👎", label: "Dislike" },
+  { type: "exclaim", icon: "❗", label: "Exclaim" },
+  { type: "laugh", icon: "😂", label: "Laugh" },
+] satisfies readonly {
+  type: WarRoomReactionType;
+  icon: string;
+  label: string;
+}[];
 
 function formatTimestamp(value: string) {
   const date = new Date(value);
@@ -143,6 +158,12 @@ function WarRoomConversation() {
     return () => document.removeEventListener("visibilitychange", onVisibility);
   }, [atLatest, warRoom.markReadThroughLatest]);
 
+  useEffect(() => {
+    if (replyTo && !warRoom.messages.some((message) => message.id === replyTo.id)) {
+      setReplyTo(null);
+    }
+  }, [replyTo, warRoom.messages]);
+
   const mention = activeMention(draft, cursor);
   const suggestions = mention ? warRoom.members
     .filter((member) => member.id !== identity.profile?.id)
@@ -229,7 +250,7 @@ function WarRoomConversation() {
               <span>Start the first UFC debate.</span>
             </div>
           ) : warRoom.messages.map((message) => (
-            <article className={`war-room-message${message.deleted ? " is-deleted" : ""}`} key={message.id}>
+            <article className="war-room-message" key={message.id}>
               <Link className="war-room-message__avatar" to={memberProfilePath(message.author.displayName)}>
                 <MemberAvatar member={message.author} />
               </Link>
@@ -242,39 +263,61 @@ function WarRoomConversation() {
                 {message.parent ? (
                   <Link className="war-room-parent" to={memberProfilePath(message.parent.author.displayName)}>
                     <strong>↳ {message.parent.author.displayName}</strong>
-                    <span>{message.parent.deleted ? "Message deleted" : message.parent.body}</span>
+                    <span>{message.parent.body}</span>
                   </Link>
                 ) : null}
 
-                <p className="war-room-message__body">
-                  {message.deleted || !message.body
-                    ? <em>Message deleted</em>
-                    : <MessageBody body={message.body} mentions={message.mentions} />}
-                </p>
+                {message.body ? (
+                  <p className="war-room-message__body">
+                    <MessageBody body={message.body} mentions={message.mentions} />
+                  </p>
+                ) : null}
 
-                {!message.deleted ? (
-                  <div className="war-room-message__actions">
-                    {!message.parent ? (
-                      <button type="button" onClick={() => {
-                        setReplyTo(message);
-                        textareaRef.current?.focus();
-                      }}>REPLY</button>
-                    ) : null}
-                    {message.canDelete ? (
+                <div className="war-room-reactions" aria-label="React to this message">
+                  {REACTION_OPTIONS.map((option) => {
+                    const reaction = message.reactions.find((item) => item.type === option.type);
+                    const selected = reaction?.reacted ?? false;
+                    const count = reaction?.count ?? 0;
+                    const reactionKey = `${message.id}:${option.type}`;
+                    return (
                       <button
                         type="button"
-                        disabled={warRoom.deletingMessageId === message.id}
-                        onClick={() => {
-                          if (window.confirm("Delete this War Room message?")) {
-                            void warRoom.deleteMessage(message.id);
-                          }
-                        }}
+                        key={option.type}
+                        className={selected ? "is-selected" : ""}
+                        aria-pressed={selected}
+                        aria-label={`${option.label}${count ? `, ${count}` : ""}`}
+                        disabled={Boolean(warRoom.reactingKey)}
+                        onClick={() => void warRoom.toggleReaction(message.id, option.type)}
                       >
-                        {warRoom.deletingMessageId === message.id ? "DELETING…" : "DELETE"}
+                        <span aria-hidden="true">{option.icon}</span>
+                        {count > 0 ? <b>{count}</b> : null}
+                        {warRoom.reactingKey === reactionKey ? <i aria-hidden="true" /> : null}
                       </button>
-                    ) : null}
-                  </div>
-                ) : null}
+                    );
+                  })}
+                </div>
+
+                <div className="war-room-message__actions">
+                  {!message.parent ? (
+                    <button type="button" onClick={() => {
+                      setReplyTo(message);
+                      textareaRef.current?.focus();
+                    }}>REPLY</button>
+                  ) : null}
+                  {message.canDelete ? (
+                    <button
+                      type="button"
+                      disabled={warRoom.deletingMessageId === message.id}
+                      onClick={() => {
+                        if (window.confirm("Delete this War Room message?")) {
+                          void warRoom.deleteMessage(message.id);
+                        }
+                      }}
+                    >
+                      {warRoom.deletingMessageId === message.id ? "DELETING…" : "DELETE"}
+                    </button>
+                  ) : null}
+                </div>
               </div>
             </article>
           ))}

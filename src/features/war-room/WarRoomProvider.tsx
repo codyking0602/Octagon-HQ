@@ -17,6 +17,7 @@ import {
   type WarRoomCursor,
   type WarRoomMember,
   type WarRoomMessage,
+  type WarRoomReactionType,
   type WarRoomRealtimeStatus,
   type WarRoomRole,
   type WarRoomSnapshot,
@@ -57,6 +58,7 @@ interface WarRoomContextValue {
   loadingOlder: boolean;
   posting: boolean;
   deletingMessageId: string | null;
+  reactingKey: string | null;
   error: string;
   messages: WarRoomMessage[];
   members: WarRoomMember[];
@@ -71,6 +73,7 @@ interface WarRoomContextValue {
   loadOlder: () => Promise<void>;
   postMessage: (body: string, parentMessageId?: string | null) => Promise<boolean>;
   deleteMessage: (messageId: string) => Promise<boolean>;
+  toggleReaction: (messageId: string, reactionType: WarRoomReactionType) => Promise<boolean>;
   markReadThroughLatest: () => Promise<boolean>;
   checkInvite: (inviteCode: string) => Promise<WarRoomAccess | null>;
   joinWithInvite: (inviteCode: string) => Promise<boolean>;
@@ -111,6 +114,7 @@ export function WarRoomProvider({
   const [loadingOlder, setLoadingOlder] = useState(false);
   const [posting, setPosting] = useState(false);
   const [deletingMessageId, setDeletingMessageId] = useState<string | null>(null);
+  const [reactingKey, setReactingKey] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [messages, setMessages] = useState<WarRoomMessage[]>([]);
   const [members, setMembers] = useState<WarRoomMember[]>([]);
@@ -132,6 +136,8 @@ export function WarRoomProvider({
     setRole(null);
     setUnreadCount(0);
     setLatestMessageId(null);
+    setDeletingMessageId(null);
+    setReactingKey(null);
   }, []);
 
   const clearAccessRoster = useCallback(() => {
@@ -144,7 +150,7 @@ export function WarRoomProvider({
   const applySnapshot = useCallback((snapshot: WarRoomSnapshot, merge = false) => {
     setRole(snapshot.role);
     setMessages((current) => (
-      merge ? mergeWarRoomMessages(current, snapshot.messages) : snapshot.messages
+      merge ? mergeWarRoomMessages(current, snapshot.messages) : mergeWarRoomMessages([], snapshot.messages)
     ));
     setMembers(snapshot.members);
     setHasMore(snapshot.hasMore);
@@ -246,6 +252,29 @@ export function WarRoomProvider({
     }
   }, [applySnapshot, profileId, repository, status]);
 
+  const syncChange = useCallback(async (messageId: string | null) => {
+    const expectedProfileId = profileId;
+    if (!expectedProfileId || !repository || status !== "eligible") return;
+    try {
+      const [snapshot, changedMessage] = await Promise.all([
+        repository.loadSnapshot(),
+        messageId ? repository.loadMessage(messageId) : Promise.resolve(null),
+      ]);
+      if (profileIdRef.current !== expectedProfileId) return;
+      applySnapshot(snapshot, true);
+      if (messageId) {
+        setMessages((current) => (
+          changedMessage
+            ? mergeWarRoomMessages(current, [changedMessage])
+            : current.filter((message) => message.id !== messageId)
+        ));
+      }
+    } catch (nextError) {
+      if (profileIdRef.current !== expectedProfileId) return;
+      setError(readableError(nextError));
+    }
+  }, [applySnapshot, profileId, repository, status]);
+
   useEffect(() => {
     if (!repository || !profileId) return undefined;
     return repository.subscribeAccess(profileId, () => void recheckAccess(false));
@@ -258,7 +287,7 @@ export function WarRoomProvider({
     }
 
     const unsubscribe = repository.subscribe(
-      () => void syncLatest(),
+      (messageId) => void syncChange(messageId),
       (nextStatus) => {
         setRealtimeStatus(nextStatus);
         if (nextStatus === "connected") void syncLatest();
@@ -266,7 +295,7 @@ export function WarRoomProvider({
     );
 
     return () => unsubscribe();
-  }, [repository, status, syncLatest]);
+  }, [repository, status, syncChange, syncLatest]);
 
   useEffect(() => {
     if (status !== "eligible") return undefined;
@@ -333,9 +362,9 @@ export function WarRoomProvider({
     if (!expectedProfileId || !repository || status !== "eligible" || deletingMessageId) return false;
     setDeletingMessageId(messageId);
     try {
-      const saved = await repository.deleteMessage(messageId);
+      await repository.deleteMessage(messageId);
       if (profileIdRef.current !== expectedProfileId) return false;
-      setMessages((current) => mergeWarRoomMessages(current, [saved]));
+      setMessages((current) => current.filter((message) => message.id !== messageId));
       setError("");
       return true;
     } catch (nextError) {
@@ -346,6 +375,29 @@ export function WarRoomProvider({
       if (profileIdRef.current === expectedProfileId) setDeletingMessageId(null);
     }
   }, [deletingMessageId, profileId, repository, status]);
+
+  const toggleReaction = useCallback(async (
+    messageId: string,
+    reactionType: WarRoomReactionType,
+  ) => {
+    const expectedProfileId = profileId;
+    const nextKey = `${messageId}:${reactionType}`;
+    if (!expectedProfileId || !repository || status !== "eligible" || reactingKey) return false;
+    setReactingKey(nextKey);
+    try {
+      const saved = await repository.toggleReaction(messageId, reactionType);
+      if (profileIdRef.current !== expectedProfileId) return false;
+      setMessages((current) => mergeWarRoomMessages(current, [saved]));
+      setError("");
+      return true;
+    } catch (nextError) {
+      if (profileIdRef.current !== expectedProfileId) return false;
+      setError(readableError(nextError));
+      return false;
+    } finally {
+      if (profileIdRef.current === expectedProfileId) setReactingKey(null);
+    }
+  }, [profileId, reactingKey, repository, status]);
 
   const markReadThroughLatest = useCallback(async () => {
     const expectedProfileId = profileId;
@@ -486,6 +538,7 @@ export function WarRoomProvider({
       loadingOlder,
       posting,
       deletingMessageId,
+      reactingKey,
       error,
       messages,
       members,
@@ -500,6 +553,7 @@ export function WarRoomProvider({
       loadOlder,
       postMessage,
       deleteMessage,
+      toggleReaction,
       markReadThroughLatest,
       checkInvite,
       joinWithInvite,

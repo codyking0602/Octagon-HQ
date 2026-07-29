@@ -1,0 +1,73 @@
+.war-room-reactions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 9px;
+}
+
+.war-room-reactions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 38px;
+  min-height: 30px;
+  padding: 3px 8px;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .035);
+  color: var(--text-secondary);
+  transition: border-color .16s ease, background .16s ease, transform .16s ease;
+}
+
+.war-room-reactions button:not(:disabled):active {
+  transform: scale(.95);
+}
+
+.war-room-reactions button.is-selected {
+  border-color: rgba(240, 23, 23, .65);
+  background: rgba(240, 23, 23, .14);
+  color: #fff;
+}
+
+.war-room-reactions button:disabled {
+  cursor: wait;
+  opacity: .72;
+}
+
+.war-room-reactions button > span {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.war-room-reactions button > b {
+  color: inherit;
+  font-size: 9px;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.war-room-reactions button > i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: war-room-reaction-pulse .7s ease-in-out infinite alternate;
+}
+
+@keyframes war-room-reaction-pulse {
+  from { opacity: .35; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 420px) {
+  .war-room-reactions {
+    gap: 5px;
+  }
+
+  .war-room-reactions button {
+    min-width: 36px;
+    min-height: 29px;
+    padding-inline: 7px;
+  }
+}
