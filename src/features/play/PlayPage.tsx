@@ -4,6 +4,7 @@ import { ChallengeCenter } from "../challenges/ChallengeCenter";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import type { ChallengeJson } from "../challenges/challengeModel";
 import { FighterPhoto } from "../rankings/FighterPhoto";
+import { FindLeaderDailyLeaderboard } from "./FindLeaderDailyLeaderboard";
 import { useFindLeaderHistory } from "./FindLeaderHistoryProvider";
 import {
   centralDay,
@@ -482,7 +483,6 @@ export default function PlayPage() {
   ]);
   const [carousel, setCarousel] = useState<0 | 1>(0);
   const touchStartX = useRef<number | null>(null);
-  const todayRow = history.find((row) => row.day === today);
   const challengeCreator = profileChallenge
     ? profiles.find((profile) => profile.id === profileChallenge.creatorId)
     : null;
@@ -554,16 +554,7 @@ export default function PlayPage() {
             <em>TAP TO PLAY · SWIPE FOR LEADERBOARD →</em>
           </button>
         ) : (
-          <article className="play-daily__leaderboard">
-            <p className="eyebrow">{dateLabel(today).toUpperCase()}</p>
-            <h2>Find the Leader<br />Leaderboard</h2>
-            {todayRow ? (
-              <div className="play-daily__score-row"><span><strong>Your official score</strong><small>First completed attempt</small></span><b>{todayRow.officialScore}/10</b></div>
-            ) : (
-              <div className="play-daily__empty">{historyLoading ? "Syncing your official result…" : "No completed score yet. Play today’s challenge to get on your board."}</div>
-            )}
-            <small>{profileBacked ? "Your official result follows this profile across devices." : "Signed-out results stay on this device."}</small>
-          </article>
+          <FindLeaderDailyLeaderboard day={today} />
         )}
         <div className="play-daily__dots" aria-label="Daily challenge carousel">
           <button aria-label="Show today’s challenge" className={carousel === 0 ? "is-active" : ""} type="button" onClick={() => setCarousel(0)} />
