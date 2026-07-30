@@ -5,8 +5,16 @@ const migration = readFileSync(
   "supabase/migrations/202608200011_whats_new_rankings_sync.sql",
   "utf8",
 );
+const repairMigration = readFileSync(
+  "supabase/migrations/202608200027_repair_whats_new_watchlist_sync.sql",
+  "utf8",
+);
 const integrationSql = readFileSync(
   "supabase/tests/whats_new_rankings_sync.sql",
+  "utf8",
+);
+const repairIntegrationSql = readFileSync(
+  "supabase/tests/whats_new_watchlist_sync_repair.sql",
   "utf8",
 );
 const script = readFileSync("scripts/sync-ranking-whats-new.mjs", "utf8");
@@ -28,10 +36,13 @@ describe("What's New Rankings and fighter producers", () => {
     expect(migration).toContain("alter table private.fighters_to_watch_whats_new_snapshot enable row level security");
     expect(migration).toContain("revoke all on private.ranking_whats_new_snapshot from public, anon, authenticated");
     expect(migration).toContain("revoke all on private.fighters_to_watch_whats_new_snapshot from public, anon, authenticated");
-    expect(migration).toContain("create or replace function public.sync_ranking_whats_new");
-    expect(migration).toContain("if auth.role() <> 'service_role'");
-    expect(migration).toContain("to service_role");
-    expect(migration).not.toContain("grant select on private.ranking_whats_new_snapshot to authenticated");
+    expect(repairMigration).toContain("create table if not exists private.fighters_to_watch_whats_new_seen");
+    expect(repairMigration).toContain("alter table private.fighters_to_watch_whats_new_seen enable row level security");
+    expect(repairMigration).toContain("revoke all on private.fighters_to_watch_whats_new_seen from public, anon, authenticated");
+    expect(repairMigration).toContain("create or replace function public.sync_ranking_whats_new");
+    expect(repairMigration).toContain("if auth.role() <> 'service_role'");
+    expect(repairMigration).toContain("to service_role");
+    expect(repairMigration).not.toContain("grant select on private.fighters_to_watch_whats_new_seen to authenticated");
   });
 
   it("uses the existing publisher for approved meaningful updates", () => {
@@ -39,27 +50,36 @@ describe("What's New Rankings and fighter producers", () => {
     expect(migration).toContain("'new_fighter'");
     expect(migration).toContain("'ranking_movement'");
     expect(migration).toContain("'major_ranking_update'");
-    expect(migration).toContain("'fighters_to_watch'");
+    expect(repairMigration).toContain("perform public.publish_whats_new_item");
+    expect(repairMigration).toContain("'fighters_to_watch'");
+    expect(repairMigration).toContain("'fighters-to-watch:new:' || v_row.watch_id");
     expect(migration).toContain("abs(prior.ranking_position - row_data.rank) >= 3");
     expect(migration).toContain("if v_meaningful_movements >= 5 then");
     expect(migration).toContain("'/fighters/' || v_row.fighter_slug");
-    expect(migration).toContain("'/#shanes-watchlist'");
-    expect(migration).not.toContain("insert into private.whats_new_items");
+    expect(repairMigration).toContain("'/fighters-to-watch'");
+    expect(repairMigration).not.toContain("insert into private.whats_new_items");
   });
 
-  it("creates quiet baselines and replaces them from canonical models", () => {
-    expect(migration).toContain("if v_has_ranking_baseline then");
-    expect(migration).toContain("if v_has_watchlist_baseline then");
-    expect(migration).toContain("'ranking_baseline_created', not v_has_ranking_baseline");
-    expect(migration).toContain("'watchlist_baseline_created', not v_has_watchlist_baseline");
-    expect(migration).toContain("delete from private.ranking_whats_new_snapshot");
-    expect(migration).toContain("delete from private.fighters_to_watch_whats_new_snapshot");
+  it("keeps durable watchlist history separate from the disposable snapshot", () => {
+    expect(repairMigration).toContain("set schema private");
+    expect(repairMigration).toContain("rename to sync_ranking_whats_new_core");
+    expect(repairMigration).toContain("delete from private.fighters_to_watch_whats_new_snapshot");
+    expect(repairMigration).toContain("left join private.fighters_to_watch_whats_new_seen seen");
+    expect(repairMigration).toContain("on conflict (watch_id) do update");
+    expect(repairMigration).toContain("'sync_contract_version', 2");
+    expect(repairMigration).toContain("'watchlist_baseline_created', false");
+    expect(repairMigration).toContain("'fatima-kline'");
+    expect(repairMigration).toContain("'abdul-rakhman-yakhyaev'");
+    expect(repairMigration).toContain("'daniil-donchenko'");
+    expect(repairMigration).not.toMatch(/values[\s\S]*'gable-steveson'[\s\S]*on conflict \(watch_id\) do nothing/);
+    expect(script).toContain("const requiredContractVersion = 2");
+    expect(script).toContain("candidate.sync_contract_version === requiredContractVersion");
+    expect(script).toContain("is not deployed yet; retrying");
     expect(script).toContain('vite.ssrLoadModule("/src/features/rankings/rankingModel.ts")');
     expect(script).toContain('vite.ssrLoadModule("/src/features/home/shanesWatchlist.ts")');
     expect(script).toContain("rankingModel.allTime.map");
     expect(script).toContain("watchlistModel.shanesWatchlist.fighters.map");
     expect(script).toContain("p_watchlist_rows: watchlistRows");
-    expect(script).toContain('client.rpc("sync_ranking_whats_new"');
     expect(script).not.toContain("localStorage");
     expect(script).not.toContain("window.");
   });
@@ -82,26 +102,29 @@ describe("What's New Rankings and fighter producers", () => {
     expect(script).toContain('error.code === "PGRST202"');
   });
 
-  it("locks thresholds, aggregation, watchlist deep link, and no-noise behavior", () => {
-    expect(contract).toContain("first production synchronization quietly creates both comparison baselines");
+  it("locks thresholds, aggregation, watchlist deep links, and no-noise behavior", () => {
+    expect(contract).toContain("historical rollout baseline is stored as durable seen-ID evidence");
+    expect(contract).toContain("A delayed or skipped deployment cannot silently absorb a new watchlist ID");
     expect(contract).toContain("moving at least three positions");
     expect(contract).toContain("One- and two-position moves are intentionally ignored");
     expect(contract).toContain("five or more fighters move at least three spots");
-    expect(contract).toContain("A watchlist ID absent from the prior production watchlist snapshot");
+    expect(contract).toContain("stable source key based on the watchlist ID");
     expect(contract).toContain("PR-head deployments never synchronize production comparison state");
     expect(contract).toContain("comparison evidence only");
     expect(watchlistCard).toContain('id="shanes-watchlist"');
   });
 
-  it("keeps rollback proof for all meaningful producers, idempotency, and privacy", () => {
+  it("keeps rollback proof for meaningful producers, delayed sync, idempotency, and privacy", () => {
     expect(integrationSql).toContain("initial Rankings and Fighters sync did not create quiet baselines");
     expect(integrationSql).toContain("new ranked fighter update was not published correctly");
     expect(integrationSql).toContain("one- or two-position ranking movement created feed noise");
     expect(integrationSql).toContain("new Fighters to Watch update was not published correctly");
     expect(integrationSql).toContain("major Rankings shakeup was not consolidated correctly");
-    expect(integrationSql).toContain("major ranking update also published duplicate individual movement cards");
     expect(integrationSql).toContain("idempotent Rankings and Fighters sync created duplicate items");
-    expect(integrationSql).toContain("authenticated role can execute the Rankings and Fighters What''s New sync");
-    expect(integrationSql.trimEnd()).toMatch(/rollback;$/);
+    expect(repairIntegrationSql).toContain("Gable backfill did not publish exactly one Fighters to Watch item");
+    expect(repairIntegrationSql).toContain("delayed watchlist sync swallowed a new fighter already present in the snapshot");
+    expect(repairIntegrationSql).toContain("idempotent repaired watchlist sync created duplicate items");
+    expect(repairIntegrationSql).toContain("authenticated role can execute the repaired Rankings and Fighters What''s New sync");
+    expect(repairIntegrationSql.trimEnd()).toMatch(/rollback;$/);
   });
 });
