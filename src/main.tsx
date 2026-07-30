@@ -24,6 +24,7 @@ import "./styles/identity.css";
 import "./styles/member-profiles.css";
 import "./styles/member-profile-polish.css";
 import "./styles/member-profile-compact.css";
+import "./styles/member-profile-push.css";
 import "./styles/play.css";
 import "./styles/find-leader-leaderboard.css";
 import "./styles/wavelength.css";
