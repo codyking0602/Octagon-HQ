@@ -27,6 +27,7 @@ export interface AppLinkShareRequest {
 export interface NativeShareRuntime {
   appOrigin?: string;
   navigator?: ShareNavigator;
+  shareToken?: string;
 }
 
 function isAbortError(error: unknown) {
@@ -39,6 +40,7 @@ function activeRuntime(runtime: NativeShareRuntime) {
       ?? (typeof navigator === "undefined" ? undefined : navigator),
     appOrigin: runtime.appOrigin
       ?? (typeof window === "undefined" ? "" : window.location.origin),
+    shareToken: runtime.shareToken ?? Date.now().toString(36),
   };
 }
 
@@ -54,14 +56,22 @@ function exactSameOriginUrl(value: string, appOrigin: string) {
   }
 }
 
+function versionedShareUrl(value: string, shareToken: string) {
+  const url = new URL(value);
+  url.searchParams.set("share", shareToken);
+  return url.toString();
+}
+
 async function shareExactUrl(
   request: AppLinkShareRequest,
-  activeNavigator?: ShareNavigator,
+  activeNavigator: ShareNavigator | undefined,
+  shareToken: string,
 ): Promise<NativeShareOutcome> {
+  const url = versionedShareUrl(request.url, shareToken);
   const shareData: ShareData = {
     title: request.title,
     text: request.text,
-    url: request.url,
+    url,
   };
 
   if (activeNavigator?.share) {
@@ -76,7 +86,7 @@ async function shareExactUrl(
   if (!activeNavigator?.clipboard?.writeText) return "unavailable";
 
   try {
-    await activeNavigator.clipboard.writeText(request.url);
+    await activeNavigator.clipboard.writeText(url);
     return "copied";
   } catch {
     return "unavailable";
@@ -92,29 +102,30 @@ export async function shareAppLink(
   request: AppLinkShareRequest,
   runtime: NativeShareRuntime = {},
 ): Promise<NativeShareOutcome> {
-  const { activeNavigator, appOrigin } = activeRuntime(runtime);
+  const { activeNavigator, appOrigin, shareToken } = activeRuntime(runtime);
   if (!appOrigin) return "unavailable";
 
   const url = exactSameOriginUrl(request.url, appOrigin);
   if (!url) return "unavailable";
 
-  return shareExactUrl({ ...request, url }, activeNavigator);
+  return shareExactUrl({ ...request, url }, activeNavigator, shareToken);
 }
 
 /**
  * The one owner for canonical app sharing. It opens the platform share sheet
- * when available and otherwise copies the exact canonical URL.
+ * when available and otherwise copies the exact destination URL with a fresh
+ * preview token that the server removes from the canonical metadata.
  */
 export async function shareCanonicalDestination(
   request: CanonicalShareRequest,
   runtime: NativeShareRuntime = {},
 ): Promise<NativeShareOutcome> {
-  const { activeNavigator, appOrigin } = activeRuntime(runtime);
+  const { activeNavigator, appOrigin, shareToken } = activeRuntime(runtime);
   if (!appOrigin) return "unavailable";
 
   try {
     const url = canonicalDestinationUrl(request.destination, appOrigin);
-    return shareExactUrl({ title: request.title, text: request.text, url }, activeNavigator);
+    return shareExactUrl({ title: request.title, text: request.text, url }, activeNavigator, shareToken);
   } catch {
     return "unavailable";
   }
