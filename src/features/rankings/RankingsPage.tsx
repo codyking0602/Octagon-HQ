@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link, Navigate, useSearchParams } from "react-router-dom";
 import { FighterPhoto } from "./FighterPhoto";
 import {
   abbreviateDivisionLabel,
@@ -22,6 +22,7 @@ import {
   type RankingDivision,
   type RankingView,
 } from "./rankingControls";
+import { resolveRankingDestination } from "./rankingDestination";
 import { menAllTime, womenAllTime, type RankingFighter } from "./rankingModel";
 import { watchMomentFor } from "./rankingPresentation";
 import "./RankingsPage.css";
@@ -69,8 +70,19 @@ function validGender(value: string | null): CategoryGender {
 
 export default function RankingsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [query, setQuery] = useState("");
-  const view = validView(searchParams.get("view"));
+  const destination = useMemo(() => resolveRankingDestination(searchParams), [searchParams]);
+  const rankingTarget = destination.kind === "fighter" ? destination.fighter : null;
+  const rankingTargetSlug = rankingTarget?.slug ?? "";
+  const rankingTargetName = rankingTarget?.displayName ?? "";
+  const targetRowRef = useRef<HTMLElement | null>(null);
+  const [query, setQuery] = useState(() => rankingTargetName);
+  const requestedView = validView(searchParams.get("view"));
+  const targetIsWomen = Boolean(
+    rankingTarget && womenAllTime.some((fighter) => fighter.slug === rankingTarget.slug),
+  );
+  const view = rankingTarget && !searchParams.has("view") && targetIsWomen
+    ? "women"
+    : requestedView;
   const selectedDivision = validDivision(searchParams.get("division"));
   const selectedCategory = validCategory(searchParams.get("category"));
   const categoryGender = validGender(searchParams.get("gender"));
@@ -83,6 +95,19 @@ export default function RankingsPage() {
     (category) => category.value === selectedCategory,
   )!;
   const searchableBoard = view === "p4p" || view === "women";
+
+  useEffect(() => {
+    if (rankingTargetName) setQuery(rankingTargetName);
+  }, [rankingTargetName]);
+
+  useEffect(() => {
+    if (!rankingTargetSlug) return undefined;
+    const frame = requestAnimationFrame(() => {
+      targetRowRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      targetRowRef.current?.focus({ preventScroll: true });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [rankingTargetSlug, view]);
 
   const heading = useMemo(() => {
     if (view === "women") {
@@ -172,16 +197,30 @@ export default function RankingsPage() {
 
   function updateParameter(name: string, value: string | null) {
     const next = new URLSearchParams(searchParams);
+    next.delete("fighter");
     if (value) next.set(name, value);
     else next.delete(name);
     setSearchParams(next);
+  }
+
+  function updateQuery(value: string) {
+    setQuery(value);
+    if (!searchParams.has("fighter")) return;
+    const next = new URLSearchParams(searchParams);
+    next.delete("fighter");
+    setSearchParams(next, { replace: true });
   }
 
   function clearOptionalFilters() {
     setQuery("");
     const next = new URLSearchParams(searchParams);
     next.delete("era");
+    next.delete("fighter");
     setSearchParams(next);
+  }
+
+  if (destination.kind === "comparison") {
+    return <Navigate to={destination.path} replace />;
   }
 
   return (
@@ -236,7 +275,7 @@ export default function RankingsPage() {
               <span className="sr-only">Search {heading.title}</span>
               <input
                 value={query}
-                onChange={(event) => setQuery(event.target.value)}
+                onChange={(event) => updateQuery(event.target.value)}
                 type="search"
                 placeholder={`Search ${unsearchedRows.length} fighters`}
               />
@@ -339,49 +378,56 @@ export default function RankingsPage() {
       ) : null}
 
       <section className="ranking-list" aria-label={`${heading.title} list`}>
-        {filteredRows.map((row) => (
-          <article
-            className={`ranking-row${row.detail ? " ranking-row--contextual" : ""}${row.score === undefined ? " ranking-row--no-score" : ""}`}
-            data-rank={row.displayRank}
-            key={`${view}-${selectedDivision}-${selectedCategory}-${categoryGender}-${row.fighter.slug}`}
-          >
-            <Link
-              className="ranking-row__profile"
-              to={`/fighters/${row.fighter.slug}`}
-              aria-label={`View ${row.fighter.displayName} profile`}
+        {filteredRows.map((row) => {
+          const linked = rankingTargetSlug === row.fighter.slug;
+          return (
+            <article
+              ref={linked ? targetRowRef : undefined}
+              className={`ranking-row${row.detail ? " ranking-row--contextual" : ""}${row.score === undefined ? " ranking-row--no-score" : ""}${linked ? " is-linked" : ""}`}
+              data-rank={row.displayRank}
+              data-fighter-slug={row.fighter.slug}
+              tabIndex={linked ? -1 : undefined}
+              aria-current={linked ? true : undefined}
+              key={`${view}-${selectedDivision}-${selectedCategory}-${categoryGender}-${row.fighter.slug}`}
             >
-              <span className="ranking-row__rank">{row.displayRank}</span>
-              <FighterPhoto
-                name={row.fighter.displayName}
-                src={row.fighter.thumbUrl}
-                className="ranking-row__photo"
-              />
-              <span className="ranking-row__identity">
-                <strong>{row.fighter.displayName}</strong>
-                <span className="ranking-row__meta">{row.meta}</span>
-                {row.detail ? <span className="ranking-row__detail">{row.detail}</span> : null}
-              </span>
-              {row.score !== undefined ? (
-                <span className="ranking-row__ovr">
-                  <strong>{row.score}</strong>
-                  <span>{row.scoreLabel}</span>
+              <Link
+                className="ranking-row__profile"
+                to={`/fighters/${row.fighter.slug}`}
+                aria-label={`View ${row.fighter.displayName} profile`}
+              >
+                <span className="ranking-row__rank">{row.displayRank}</span>
+                <FighterPhoto
+                  name={row.fighter.displayName}
+                  src={row.fighter.thumbUrl}
+                  className="ranking-row__photo"
+                />
+                <span className="ranking-row__identity">
+                  <strong>{row.fighter.displayName}</strong>
+                  <span className="ranking-row__meta">{row.meta}</span>
+                  {row.detail ? <span className="ranking-row__detail">{row.detail}</span> : null}
                 </span>
-              ) : null}
-            </Link>
-            <a
-              className="ranking-row__watch"
-              href={watchMomentFor(row.fighter.slug)}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Watch ${row.fighter.displayName} moment on YouTube`}
-              title={`Watch ${row.fighter.displayName} moment`}
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M9 7.6v8.8L16 12 9 7.6Z" />
-              </svg>
-            </a>
-          </article>
-        ))}
+                {row.score !== undefined ? (
+                  <span className="ranking-row__ovr">
+                    <strong>{row.score}</strong>
+                    <span>{row.scoreLabel}</span>
+                  </span>
+                ) : null}
+              </Link>
+              <a
+                className="ranking-row__watch"
+                href={watchMomentFor(row.fighter.slug)}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Watch ${row.fighter.displayName} moment on YouTube`}
+                title={`Watch ${row.fighter.displayName} moment`}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M9 7.6v8.8L16 12 9 7.6Z" />
+                </svg>
+              </a>
+            </article>
+          );
+        })}
       </section>
 
       {filteredRows.length === 0 ? (
