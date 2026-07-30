@@ -1,8 +1,20 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { defineConfig } from "vitest/config";
 import { loadEnv, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import { validatePublicSupabaseConfig } from "./scripts/public-supabase-config.mjs";
 import { allTime } from "./src/features/rankings/rankingModel";
+
+function deployedAssetPath(path: string) {
+  return existsSync(join(process.cwd(), "public", path.replace(/^\/+/, "")));
+}
+
+function previewImagePath(profileUrl: string, thumbUrl: string) {
+  if (deployedAssetPath(profileUrl)) return profileUrl;
+  if (deployedAssetPath(thumbUrl)) return thumbUrl;
+  return "/assets/app-icon.png";
+}
 
 function richPreviewCatalogPlugin(): Plugin {
   return {
@@ -19,7 +31,7 @@ function richPreviewCatalogPlugin(): Plugin {
           ovr: fighter.ovr,
           division: fighter.division,
           oneLiner: fighter.oneLiner,
-          imagePath: fighter.profileUrl,
+          imagePath: previewImagePath(fighter.profileUrl, fighter.thumbUrl),
         })),
       };
       this.emitFile({
