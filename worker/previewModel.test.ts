@@ -15,7 +15,7 @@ const catalog: RichPreviewCatalog = {
       rank: 1,
       ovr: 99,
       division: "Light Heavyweight / Heavyweight",
-      oneLiner: "The UFC-only GOAT benchmark.",
+      oneLiner: "The UFC-only benchmark.",
       imagePath: "/assets/fighters/jon-jones.webp",
     },
     {
@@ -57,7 +57,7 @@ describe("resolveRichPreview", () => {
     );
     expect(fighter).toMatchObject({
       kind: "fighter",
-      title: "Jon Jones | UFC GOAT #1 | Octagon HQ",
+      title: "Jon Jones | UFC Rank #1 | Octagon HQ",
       canonicalPath: "/fighters/jon-jones",
     });
 
@@ -168,7 +168,7 @@ describe("resolveRichPreview", () => {
       {
         kind: "major-ranking-update",
         source_sha: "0123456789abcdef0123456789abcdef01234567",
-        title: "The UFC GOAT rankings had a major shakeup",
+        title: "The UFC rankings had a major shakeup",
         summary: "Six fighters moved three or more spots.",
         movement_count: 6,
         movements: [
@@ -196,7 +196,7 @@ describe("resolveRichPreview", () => {
     expect(preview.images).toHaveLength(2);
   });
 
-  it("falls back safely and keeps plain copy", () => {
+  it("falls back safely and keeps the approved copy standard", () => {
     const preview = resolveRichPreview(
       new URL("https://octagon.hq-app.workers.dev/fighters/not-real"),
       catalog,
@@ -207,7 +207,7 @@ describe("resolveRichPreview", () => {
       new URL("https://octagon.hq-app.workers.dev/fighters/jon-jones"),
       catalog,
     );
-    expect(`${fighter.title} ${fighter.description}`).toContain("GOAT");
-    expect(`${fighter.title} ${fighter.description}`).not.toMatch(/[\u00e9\u00c9]/);
+    expect(`${fighter.title} ${fighter.description}`).toContain("UFC Rank #1");
+    expect(`${fighter.title} ${fighter.description}`).not.toMatch(/r[éÉ]sum[éÉ]/);
   });
 });
