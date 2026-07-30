@@ -2,11 +2,11 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const migration = readFileSync(
-  "supabase/migrations/202608200022_notification_preferences_and_push_readiness.sql",
+  "supabase/migrations/202608200023_notification_preferences_and_push_readiness.sql",
   "utf8",
 );
 const privilegeMigration = readFileSync(
-  "supabase/migrations/202608200023_notification_preferences_private_privileges.sql",
+  "supabase/migrations/202608200024_notification_preferences_private_privileges.sql",
   "utf8",
 );
 const integrationSql = readFileSync(
