@@ -221,7 +221,9 @@ describe("Your HQ", () => {
       </IdentityProvider>,
     );
 
-    expect(await screen.findByText("CODY")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Your HQ" })).toBeInTheDocument();
+    expect(screen.queryByText("PERSONALIZED")).not.toBeInTheDocument();
+    expect(screen.queryByText("CODY")).not.toBeInTheDocument();
 
     const streakCard = screen.getByText("Daily streak").closest("article")!;
     await waitFor(() => expect(within(streakCard).getByText("2")).toBeInTheDocument());
