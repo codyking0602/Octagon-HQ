@@ -13,7 +13,8 @@ const workerConfig = source("../../vite.worker.config.ts");
 const worker = source("../../worker/index.ts");
 const previewModel = source("../../worker/previewModel.ts");
 const previewCard = source("../../worker/previewCard.ts");
-const deployWorkflow = source("../../.github/workflows/deploy-cloudflare.yml");
+const liveVerifier = source("../../scripts/verify-live-rich-previews.mjs");
+const liveWorkflow = source("../../.github/workflows/verify-live-rich-previews.yml");
 const architecture = source("../../docs/rich-preview-architecture.md");
 const migration = source("../../supabase/migrations/202608200028_dynamic_rich_preview_data.sql");
 const assetsIgnore = source("../../public/.assetsignore");
@@ -95,13 +96,14 @@ describe("rich preview ownership", () => {
   });
 
   it("requires exact live crawler and PNG proof after production deployment", () => {
-    expect(deployWorkflow).toContain("worker/**");
-    expect(deployWorkflow).toContain("Verify live rich preview cards");
-    expect(deployWorkflow).toContain("x-octagon-preview:");
-    expect(deployWorkflow).toContain("share-preview");
-    expect(deployWorkflow).toContain("image/png");
-    expect(deployWorkflow).toContain("readUInt32BE(16)");
-    expect(deployWorkflow).toContain("readUInt32BE(20)");
+    expect(liveWorkflow).toContain("Deploy Cloudflare Frontend");
+    expect(liveWorkflow).toContain("Verify live rich preview cards");
+    expect(liveWorkflow).toContain("workflow_run.head_sha");
+    expect(liveVerifier).toContain("x-octagon-preview");
+    expect(liveVerifier).toContain("share-preview");
+    expect(liveVerifier).toContain("image/png");
+    expect(liveVerifier).toContain("readUInt32BE(16)");
+    expect(liveVerifier).toContain("readUInt32BE(20)");
   });
 
   it("normalizes legacy ranking copy and accented career spelling", () => {
