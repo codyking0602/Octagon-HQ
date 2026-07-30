@@ -13,6 +13,7 @@ import {
 } from "./picksModel";
 import { usePicks } from "./PicksProvider";
 import { FighterThumbnail } from "./FighterThumbnail";
+import { GroupPickProgress } from "./GroupPickProgress";
 import { GroupPickReveal } from "./GroupPickReveal";
 import { MainEventSpotlight } from "./MainEventSpotlight";
 import { PicksSeasonHub } from "./PicksSeasonHub";
@@ -217,6 +218,10 @@ export default function PicksPage() {
               )}
             </div>
           </section>
+
+          {identity.profile ? (
+            <GroupPickProgress event={activeEvent} locked={locked} mySelections={picks.selections} />
+          ) : null}
 
           <details className="surface-card picks-scoring-guide">
             <summary>SCORING &amp; UNDERDOG LOCK RULES</summary>
