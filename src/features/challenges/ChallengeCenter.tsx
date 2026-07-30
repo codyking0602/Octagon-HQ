@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { memberProfilePath } from "../members/memberProfilesModel";
 import {
@@ -54,6 +54,7 @@ function statusClass(status: ChallengeStatus) {
 
 export function ChallengeCenter() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const identity = useIdentity();
   const {
     configured,
@@ -70,6 +71,9 @@ export function ChallengeCenter() {
   } = usePlayChallenges();
   const [filter, setFilter] = useState<ChallengeCenterFilter>("all");
   const [expanded, setExpanded] = useState(false);
+  const centerRef = useRef<HTMLElement | null>(null);
+  const handledDestinationRef = useRef("");
+  const requestedCode = searchParams.get("challenge")?.trim().toUpperCase() ?? "";
 
   const counts = useMemo(() => ({
     all: challenges.length,
@@ -83,11 +87,46 @@ export function ChallengeCenter() {
   });
   const visibleRows = expanded ? rows : rows.slice(0, COLLAPSED_ROW_LIMIT);
 
+  useEffect(() => {
+    if (!requestedCode || !activeProfile || loading) return;
+    const requested = challenges.find((challenge) => challenge.code === requestedCode);
+    if (!requested) return;
+
+    const requestKey = `${activeProfile.id}:${requested.code}`;
+    if (handledDestinationRef.current === requestKey) return;
+    handledDestinationRef.current = requestKey;
+
+    const direction = challengeDirection(requested, activeProfile.id);
+    const status = challengeStatus(requested, activeProfile.id);
+
+    if (status === "completed") {
+      viewResults(requested.code);
+      return;
+    }
+
+    if (direction === "received" && status !== "declined") {
+      void markOpened(requested.code);
+      navigate(challengePlayRoute(requested), { replace: true });
+      return;
+    }
+
+    setFilter(direction);
+    setExpanded(true);
+    centerRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    centerRef.current?.focus({ preventScroll: true });
+  }, [activeProfile, challenges, loading, markOpened, navigate, requestedCode, viewResults]);
+
   if (!configured) return null;
 
   if (!enabled || !activeProfile) {
     return (
-      <section id="challenge-center" className="challenge-center surface-card" data-play-challenge-center>
+      <section
+        ref={centerRef}
+        id="challenge-center"
+        className="challenge-center surface-card"
+        data-play-challenge-center
+        tabIndex={requestedCode ? -1 : undefined}
+      >
         <header className="challenge-center__header">
           <div><p className="eyebrow">CHALLENGE CENTER</p><h2>Play against friends</h2></div>
         </header>
@@ -108,7 +147,13 @@ export function ChallengeCenter() {
   }
 
   return (
-    <section id="challenge-center" className="challenge-center surface-card" data-play-challenge-center>
+    <section
+      ref={centerRef}
+      id="challenge-center"
+      className="challenge-center surface-card"
+      data-play-challenge-center
+      tabIndex={requestedCode ? -1 : undefined}
+    >
       <header className="challenge-center__header">
         <div>
           <p className="eyebrow">CHALLENGE CENTER</p>
