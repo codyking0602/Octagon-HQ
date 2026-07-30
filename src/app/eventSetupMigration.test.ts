@@ -89,7 +89,9 @@ describe("Phase 2B event setup backend", () => {
     expect(syncFunction).toContain("admin.auth.getUser(token)");
     expect(syncFunction).toContain('input.mode === "monitoring-preview"');
     expect(syncFunction).toContain('request.headers.get("apikey") === secretKey');
-    expect(deploymentVerifier).toContain("body?.deployment_sha !== expectedRevision");
-    expect(deploymentVerifier).toContain("x-octagon-backend-sha");
+    expect(deploymentVerifier).toContain('process.env.GITHUB_EVENT_NAME !== "pull_request"');
+    expect(deploymentVerifier).toContain("verifyExactSource && deployedSha !== expectedSha");
+    expect(deploymentVerifier).toContain('x-octagon-backend-sha") !== deployedSha');
+    expect(deploymentVerifier).toContain("|| deployedSha");
   });
 });
