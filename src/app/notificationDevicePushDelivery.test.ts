@@ -110,7 +110,8 @@ describe("notification device push delivery", () => {
     );
   });
 
-  it("requests permission only from the single explicit profile switch", () => {
+  it("requests permission immediately from the single explicit profile switch", () => {
+    expect(pushConnection).toContain("export async function requestNotificationDevicePermission");
     expect(pushConnection).toContain("Notification.requestPermission");
     expect(pushConnection).toContain("pushManager.subscribe");
     expect(pushConnection).toContain("applicationServerKey");
@@ -120,7 +121,11 @@ describe("notification device push delivery", () => {
     expect(provider).toContain("enableDevicePush");
     expect(provider).toContain("disableDevicePush");
     expect(profilePush).toContain('role="switch"');
+    expect(profilePush).toContain("requestNotificationDevicePermission()");
     expect(profilePush).toContain("notifications.enableDevicePush()");
+    expect(profilePush.indexOf("requestNotificationDevicePermission()"))
+      .toBeLessThan(profilePush.indexOf("notifications.enableDevicePush()"));
+    expect(profilePush).toContain("Your iPhone should ask for permission");
     expect(profilePush).toContain("notifications.disableDevicePush()");
     expect(profilePush).toContain("Bell notifications still");
     expect(center).not.toContain("Device notifications");
