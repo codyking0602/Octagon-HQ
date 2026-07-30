@@ -270,8 +270,10 @@ export default function NotificationCenterPage() {
         ) : null}
       </section>
 
-      {notifications.error ? (
-        <div className="notification-error" role="status">{notifications.error}</div>
+      {notifications.error && notifications.items.length ? (
+        <div className="notification-error" role="status">
+          Notifications could not refresh. The last available updates are shown below.
+        </div>
       ) : null}
 
       {!identity.profile ? (
@@ -288,6 +290,19 @@ export default function NotificationCenterPage() {
           {notifications.status === "loading" && !notifications.items.length ? (
             <section className="surface-card notification-empty">
               <strong>Loading notifications…</strong>
+            </section>
+          ) : notifications.error && !notifications.items.length ? (
+            <section className="surface-card notification-empty" role="status">
+              <span className="notification-empty__bell" aria-hidden="true">!</span>
+              <strong>Notifications are temporarily unavailable.</strong>
+              <p>Octagon HQ could not reach the notification service. Try again shortly.</p>
+              <button
+                className="primary-action"
+                type="button"
+                onClick={() => void notifications.refresh()}
+              >
+                TRY AGAIN
+              </button>
             </section>
           ) : !notifications.items.length ? (
             <section className="surface-card notification-empty">
