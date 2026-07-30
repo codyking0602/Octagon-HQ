@@ -81,13 +81,7 @@ export default function HomePage() {
 
       <section className="surface-card hq-card" aria-labelledby="your-hq-title">
         <div className="section-heading hq-card__heading">
-          <div>
-            <p className="eyebrow">PERSONALIZED</p>
-            <h2 id="your-hq-title">Your HQ</h2>
-          </div>
-          {identity.profile ? (
-            <span className="hq-card__profile">{identity.profile.displayName}</span>
-          ) : null}
+          <h2 id="your-hq-title">Your HQ</h2>
         </div>
 
         {!identity.profile ? (
