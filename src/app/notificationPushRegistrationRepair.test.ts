@@ -6,7 +6,7 @@ const pushConnection = readFileSync(
   "utf8",
 );
 const repairMigration = readFileSync(
-  "supabase/migrations/202608200027_notification_push_registration_repair.sql",
+  "supabase/migrations/202608200032_notification_push_registration_repair.sql",
   "utf8",
 );
 const deployWorkflow = readFileSync(
