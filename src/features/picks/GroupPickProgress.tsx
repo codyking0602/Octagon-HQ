@@ -43,23 +43,24 @@ export function GroupPickProgress({ event, locked, mySelections }: GroupPickProg
     });
   }, [event.bouts, locked, mySelections, selected]);
 
-  const summary = loading
-    ? "LOADING"
-    : members.length
-      ? `${completedMembers}/${members.length} COMPLETE`
-      : "UNAVAILABLE";
+  if (loading || error || !members.length) {
+    const status = loading ? "LOADING" : error ? "UNAVAILABLE" : "NO PICKS YET";
+    return (
+      <div className="surface-card picks-group-progress picks-group-progress--static" aria-live="polite">
+        <span>GROUP PICKS</span>
+        <strong>{status}</strong>
+      </div>
+    );
+  }
 
   return (
     <>
       <details className="surface-card picks-group-progress">
         <summary>
           <span>GROUP PICKS</span>
-          <strong>{summary}</strong>
+          <strong>{completedMembers}/{members.length} COMPLETE</strong>
         </summary>
         <div className="picks-group-progress__members">
-          {loading ? <p className="picks-group-progress__state">Loading group progress…</p> : null}
-          {!loading && error ? <p className="picks-group-progress__state">Group progress is temporarily unavailable.</p> : null}
-          {!loading && !error && !members.length ? <p className="picks-group-progress__state">No member progress yet.</p> : null}
           {members.map((member) => (
             <button
               type="button"
