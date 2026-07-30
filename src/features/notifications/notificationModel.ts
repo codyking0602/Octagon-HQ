@@ -55,6 +55,15 @@ export type NotificationCategory = typeof notificationCategories[number];
 export type NotificationPriority = typeof notificationPriorities[number];
 export type NotificationPreferenceKey = typeof notificationPreferenceKeys[number];
 export type NotificationPermissionState = "unsupported" | "default" | "granted" | "denied";
+export type NotificationDevicePushStatus =
+  | "checking"
+  | "off"
+  | "on"
+  | "enabling"
+  | "disabling"
+  | "blocked"
+  | "unsupported"
+  | "error";
 
 export interface NotificationItem {
   id: string;
@@ -98,6 +107,12 @@ export interface NotificationDeviceReadiness {
   permission: NotificationPermissionState;
 }
 
+export interface NotificationDevicePushState {
+  status: NotificationDevicePushStatus;
+  currentDeviceRegistered: boolean;
+  activeDeviceCount: number;
+}
+
 export const defaultNotificationPreferences: NotificationPreferences = {
   picksReminders: true,
   dailyChallengeReminders: true,
@@ -118,6 +133,12 @@ export const initialNotificationDeviceReadiness: NotificationDeviceReadiness = {
   isIos: false,
   installPromptAvailable: false,
   permission: "unsupported",
+};
+
+export const initialNotificationDevicePushState: NotificationDevicePushState = {
+  status: "checking",
+  currentDeviceRegistered: false,
+  activeDeviceCount: 0,
 };
 
 const categoryLabels: Record<NotificationCategory, string> = {
