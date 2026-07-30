@@ -37,15 +37,8 @@ const DEFAULT_PREVIEW: RichPreviewMetadata = {
   images: [{ path: "/assets/app-icon.png", alt: "Octagon HQ" }],
 };
 
-function plainLanguage(value: string) {
-  return value
-    .replace(/G\.O\.A\.T\./gi, "GOAT")
-    .replace(/résumé/gi, "resume")
-    .replace(/resumé/gi, "resume");
-}
-
 function clipped(value: string, maximum = 190) {
-  const copy = plainLanguage(value).replace(/\s+/g, " ").trim();
+  const copy = value.replace(/\s+/g, " ").trim();
   return copy.length <= maximum ? copy : `${copy.slice(0, maximum - 1).trimEnd()}…`;
 }
 
@@ -58,7 +51,7 @@ function safeDecode(value: string) {
 }
 
 function fighterBySlug(catalog: RankingPreviewCatalog, value: string | null) {
-  const slug = plainLanguage((value ?? "").trim());
+  const slug = (value ?? "").trim();
   return slug ? catalog.fighters.find((fighter) => fighter.slug === slug) : undefined;
 }
 
