@@ -1,7 +1,47 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { defineConfig } from "vitest/config";
-import { loadEnv } from "vite";
+import { loadEnv, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import { validatePublicSupabaseConfig } from "./scripts/public-supabase-config.mjs";
+import { allTime } from "./src/features/rankings/rankingModel";
+
+function deployedAssetPath(path: string) {
+  return existsSync(join(process.cwd(), "public", path.replace(/^\/+/, "")));
+}
+
+function previewImagePath(profileUrl: string, thumbUrl: string) {
+  if (deployedAssetPath(profileUrl)) return profileUrl;
+  if (deployedAssetPath(thumbUrl)) return thumbUrl;
+  return "/assets/app-icon.png";
+}
+
+function richPreviewCatalogPlugin(): Plugin {
+  return {
+    name: "octagon-rich-preview-catalog",
+    apply: "build",
+    generateBundle() {
+      const catalog = {
+        version: 1 as const,
+        fighters: allTime.map((fighter) => ({
+          slug: fighter.slug,
+          displayName: fighter.displayName,
+          board: fighter.board,
+          rank: fighter.rank,
+          ovr: fighter.ovr,
+          division: fighter.division,
+          oneLiner: fighter.oneLiner,
+          imagePath: previewImagePath(fighter.profileUrl, fighter.thumbUrl),
+        })),
+      };
+      this.emitFile({
+        type: "asset",
+        fileName: "preview-data/rankings.json",
+        source: `${JSON.stringify(catalog, null, 2)}\n`,
+      });
+    },
+  };
+}
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
@@ -14,7 +54,7 @@ export default defineConfig(({ mode }) => {
   }
 
   return {
-    plugins: [react()],
+    plugins: [react(), richPreviewCatalogPlugin()],
     build: {
       target: "es2022",
       sourcemap: true,
