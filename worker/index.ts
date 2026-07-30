@@ -13,10 +13,18 @@ import {
   renderPreviewCardHtml,
 } from "./previewCard";
 
-declare const HTMLRewriter: new () => {
-  on: (selector: string, handlers: { element: (element: any) => void }) => any;
-  transform: (response: Response) => Response;
-};
+interface HtmlRewriterElement {
+  setInnerContent(content: string): void;
+  setAttribute(name: string, value: string): void;
+  append(content: string, options?: { html?: boolean }): void;
+}
+
+interface HtmlRewriterInstance {
+  on(selector: string, handlers: { element: (element: HtmlRewriterElement) => void }): HtmlRewriterInstance;
+  transform(response: Response): Response;
+}
+
+declare const HTMLRewriter: new () => HtmlRewriterInstance;
 declare const __OCTAGON_SUPABASE_URL__: string;
 declare const __OCTAGON_SUPABASE_PUBLISHABLE_KEY__: string;
 declare const __OCTAGON_PREVIEW_CATALOG__: string;
