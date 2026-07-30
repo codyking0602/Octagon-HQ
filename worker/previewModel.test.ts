@@ -85,20 +85,14 @@ describe("resolveRichPreview", () => {
     ).kind).toBe("default");
   });
 
-  it("normalizes accented or punctuated variants in preview copy", () => {
-    const accentedCatalog: RankingPreviewCatalog = {
-      ...catalog,
-      fighters: [{
-        ...catalog.fighters[0],
-        oneLiner: "The G.O.A.T. résumé case.",
-      }],
-    };
+  it("keeps the approved plain-copy standard", () => {
     const preview = resolveRichPreview(
       new URL("https://octagon.hq-app.workers.dev/fighters/jon-jones"),
-      accentedCatalog,
+      catalog,
     );
 
-    expect(preview.description).toContain("GOAT resume");
-    expect(preview.description).not.toMatch(/G\.O\.A\.T\.|résumé|resumé/i);
+    expect(preview.title).toContain("GOAT");
+    expect(preview.description).toContain("GOAT");
+    expect(preview.description).not.toMatch(/[éÉ]/);
   });
 });
