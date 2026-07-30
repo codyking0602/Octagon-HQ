@@ -1,12 +1,10 @@
 import { useMemo, useState } from "react";
 import type { PickEvent } from "./picksModel";
 import type { PickEventMemberProgress } from "./groupProgressModel";
+import { usePicks } from "./PicksProvider";
 
 interface GroupPickProgressProps {
   event: PickEvent;
-  members: readonly PickEventMemberProgress[];
-  loading: boolean;
-  error: string;
   locked: boolean;
   mySelections: Readonly<Record<string, string>>;
 }
@@ -17,14 +15,11 @@ function memberStatus(member: PickEventMemberProgress) {
   return "NOT STARTED";
 }
 
-export function GroupPickProgress({
-  event,
-  members,
-  loading,
-  error,
-  locked,
-  mySelections,
-}: GroupPickProgressProps) {
+export function GroupPickProgress({ event, locked, mySelections }: GroupPickProgressProps) {
+  const picks = usePicks();
+  const members = picks.groupProgress;
+  const loading = picks.groupProgressLoading;
+  const error = picks.groupProgressError;
   const [selectedName, setSelectedName] = useState<string | null>(null);
   const selected = members.find((member) => member.displayName === selectedName) ?? null;
   const completedMembers = members.filter((member) => member.completed === member.total && member.total > 0).length;
