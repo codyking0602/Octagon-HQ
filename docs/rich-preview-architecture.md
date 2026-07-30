@@ -25,7 +25,7 @@ Each preview provides a route-specific title, description, canonical URL, and re
 
 ## Copy standard
 
-Preview copy uses plain `GOAT` and `resume`. It never uses `G.O.A.T.`, `résumé`, or `resumé`.
+Preview copy uses plain `GOAT` and `resume` everywhere.
 
 ## Safe fallback
 
