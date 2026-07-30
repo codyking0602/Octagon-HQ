@@ -1,3 +1,4 @@
+// Verification-only branch: prove the exact merged production release, then close without merging.
 import fs from "node:fs";
 import { webkit } from "playwright";
 
