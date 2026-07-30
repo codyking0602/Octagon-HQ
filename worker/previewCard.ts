@@ -28,6 +28,118 @@ function visibleTitle(title: string) {
   return title.replace(/\s*\|\s*Octagon HQ\s*$/i, "").trim();
 }
 
+function humanize(value: string) {
+  return value
+    .split("-")
+    .filter(Boolean)
+    .map((part) => `${part.slice(0, 1).toUpperCase()}${part.slice(1)}`)
+    .join(" ");
+}
+
+function safeSlug(value: string | null) {
+  const slug = (value ?? "").trim().toLowerCase();
+  return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) ? slug : "";
+}
+
+function withoutShareToken(url: URL) {
+  const clean = new URL(url.toString());
+  clean.searchParams.delete("share");
+  return clean;
+}
+
+export function canonicalPreviewUrl(url: URL) {
+  return withoutShareToken(url);
+}
+
+export function ensureDestinationPreview(
+  requestUrl: URL,
+  preview: RichPreviewMetadata,
+): RichPreviewMetadata {
+  if (preview.kind !== "default") return preview;
+
+  const fighterMatch = requestUrl.pathname.match(/^\/fighters\/([^/]+)\/?$/);
+  if (fighterMatch) {
+    const slug = safeSlug(fighterMatch[1] ?? "");
+    if (slug) {
+      const name = humanize(slug);
+      return {
+        kind: "fighter",
+        title: `${name} fighter profile | Octagon HQ`,
+        description: `Open ${name}'s fighter profile in Octagon HQ.`,
+        canonicalPath: `/fighters/${slug}`,
+        images: [],
+      };
+    }
+  }
+
+  if (requestUrl.pathname === "/rankings" || requestUrl.pathname === "/rankings/") {
+    const left = safeSlug(requestUrl.searchParams.get("compareLeft"));
+    const right = safeSlug(requestUrl.searchParams.get("compareRight"));
+    if (left && right && left !== right) {
+      const search = new URLSearchParams({ compareLeft: left, compareRight: right });
+      return {
+        kind: "comparison",
+        title: `${humanize(left)} vs. ${humanize(right)} | Octagon HQ`,
+        description: "Open the exact fighter comparison in Octagon HQ.",
+        canonicalPath: `/rankings?${search.toString()}`,
+        images: [],
+      };
+    }
+
+    const fighter = safeSlug(requestUrl.searchParams.get("fighter"));
+    if (fighter) {
+      const search = new URLSearchParams({ fighter });
+      return {
+        kind: "ranking",
+        title: `${humanize(fighter)} ranking | Octagon HQ`,
+        description: "Open the fighter's exact position in the UFC all-time rankings.",
+        canonicalPath: `/rankings?${search.toString()}`,
+        images: [],
+      };
+    }
+
+    const update = (requestUrl.searchParams.get("update") ?? "").trim().toLowerCase();
+    if (/^[0-9a-f]{40}$/.test(update)) {
+      return {
+        kind: "major-ranking-update",
+        title: "Major UFC ranking update | Octagon HQ",
+        description: "Open the latest major movement across the UFC all-time rankings.",
+        canonicalPath: `/rankings?update=${update}`,
+        images: [{ path: "/assets/share/ranking-update.svg", alt: "Major UFC ranking update" }],
+      };
+    }
+  }
+
+  if (requestUrl.pathname === "/picks" || requestUrl.pathname === "/picks/") {
+    const event = safeSlug(requestUrl.searchParams.get("event"));
+    if (event && requestUrl.searchParams.get("view") === "recap") {
+      const search = new URLSearchParams({ event, view: "recap" });
+      return {
+        kind: "picks-recap",
+        title: `${humanize(event)} Picks recap | Octagon HQ`,
+        description: "Open the completed event recap, final standings, and main-event results.",
+        canonicalPath: `/picks?${search.toString()}`,
+        images: [{ path: "/assets/share/picks-recap.svg", alt: "UFC Picks event recap" }],
+      };
+    }
+  }
+
+  if (requestUrl.pathname === "/play" || requestUrl.pathname === "/play/") {
+    const challenge = (requestUrl.searchParams.get("challenge") ?? "").trim().toUpperCase();
+    if (/^[A-Z0-9]{8}$/.test(challenge)) {
+      return {
+        kind: "challenge",
+        title: "Octagon HQ game challenge",
+        description: "Open the exact challenge and play the same locked setup.",
+        canonicalPath: `/play?challenge=${challenge}`,
+        images: [],
+      };
+    }
+  }
+
+  return preview;
+}
+
 function hashText(value: string) {
   let hash = 0x811c9dc5;
   for (let index = 0; index < value.length; index += 1) {
