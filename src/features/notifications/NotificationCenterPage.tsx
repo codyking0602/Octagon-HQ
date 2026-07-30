@@ -5,36 +5,8 @@ import {
   notificationCategoryLabel,
   notificationCategoryMark,
   type NotificationItem,
-  type NotificationPreferenceKey,
 } from "./notificationModel";
 import { useNotifications } from "./NotificationProvider";
-
-const preferenceOptions: Array<{
-  key: NotificationPreferenceKey;
-  title: string;
-  description: string;
-}> = [
-  {
-    key: "picksReminders",
-    title: "Picks reminders",
-    description: "Finish-your-card and event-start timing.",
-  },
-  {
-    key: "dailyChallengeReminders",
-    title: "Daily Challenge",
-    description: "The four-hours-left Find the Leader reminder.",
-  },
-  {
-    key: "gameChallengeActivity",
-    title: "Game challenges",
-    description: "Challenges, accepts, results, and expiry alerts.",
-  },
-  {
-    key: "warRoomActivity",
-    title: "War Room activity",
-    description: "Mentions, replies, and invite activity.",
-  },
-];
 
 function NotificationCopy({ item }: { item: NotificationItem }) {
   return (
@@ -93,207 +65,6 @@ function NotificationRow({ item }: { item: NotificationItem }) {
   );
 }
 
-function PreferenceSwitch({
-  preferenceKey,
-  title,
-  description,
-}: {
-  preferenceKey: NotificationPreferenceKey;
-  title: string;
-  description: string;
-}) {
-  const notifications = useNotifications();
-  const enabled = notifications.preferences[preferenceKey];
-  const saving = notifications.preferenceStatus === "saving";
-
-  return (
-    <div className="notification-setting-row">
-      <span>
-        <strong>{title}</strong>
-        <small>{description}</small>
-      </span>
-      <button
-        className={`notification-switch${enabled ? " is-on" : ""}`}
-        type="button"
-        role="switch"
-        aria-checked={enabled}
-        aria-label={`${title}: ${enabled ? "on" : "off"}`}
-        disabled={saving}
-        onClick={() => void notifications.updatePreference(preferenceKey, !enabled)}
-      >
-        <span aria-hidden="true" />
-      </button>
-    </div>
-  );
-}
-
-function DeviceReadinessCard() {
-  const notifications = useNotifications();
-  const readiness = notifications.deviceReadiness;
-  const push = notifications.devicePush;
-  const permissionLabel = {
-    unsupported: "Unavailable",
-    default: "Not requested",
-    granted: "Allowed",
-    denied: "Blocked",
-  }[readiness.permission];
-  const connectionLabel = {
-    checking: "Checking",
-    off: "Off",
-    on: "On",
-    enabling: "Connecting",
-    disabling: "Disconnecting",
-    blocked: "Blocked",
-    unsupported: "Unavailable",
-    error: "Needs retry",
-  }[push.status];
-  const busy = push.status === "checking"
-    || push.status === "enabling"
-    || push.status === "disabling";
-  const canEnable = readiness.status === "ready"
-    && readiness.permission !== "denied"
-    && (!readiness.isIos || readiness.installed)
-    && push.status !== "on";
-
-  return (
-    <section className="surface-card notification-settings-card notification-device-card">
-      <div className="notification-settings-card__heading">
-        <div>
-          <p className="eyebrow">DEVICE DELIVERY</p>
-          <h2>Device notifications</h2>
-          <p>Receive important Octagon HQ actions even when the app is closed.</p>
-        </div>
-        <b className={`notification-roadmap-badge${push.status === "on" ? " is-live" : ""}`}>
-          {push.status === "on" ? "LIVE" : "OPTIONAL"}
-        </b>
-      </div>
-
-      <div className="notification-readiness-grid">
-        <span>
-          <small>App mode</small>
-          <strong>{readiness.installed ? "Installed" : "Browser mode"}</strong>
-        </span>
-        <span>
-          <small>Push support</small>
-          <strong>{readiness.status === "ready" ? "Supported" : "Unavailable"}</strong>
-        </span>
-        <span>
-          <small>Permission</small>
-          <strong>{permissionLabel}</strong>
-        </span>
-        <span>
-          <small>This device</small>
-          <strong>{connectionLabel}</strong>
-        </span>
-      </div>
-
-      {busy ? (
-        <p className="notification-device-note">Updating this device’s notification connection…</p>
-      ) : readiness.isIos && !readiness.installed ? (
-        <p className="notification-device-note">
-          On iPhone or iPad, use <strong>Share → Add to Home Screen</strong>, open the installed app,
-          and then turn notifications on.
-        </p>
-      ) : push.status === "on" ? (
-        <p className="notification-device-note is-ready">
-          Important mentions, Picks actions, challenge results, and Cody-only control alerts can now
-          reach this device. {push.activeDeviceCount === 1
-            ? "This is your only connected device."
-            : `${push.activeDeviceCount} devices are connected to your profile.`}
-        </p>
-      ) : push.status === "blocked" ? (
-        <p className="notification-device-note">
-          Notifications are blocked for Octagon HQ. Allow them in this browser or device’s settings,
-          then return here.
-        </p>
-      ) : push.status === "error" ? (
-        <p className="notification-device-note">
-          Octagon HQ could not finish the device connection. Check your connection and try again.
-        </p>
-      ) : readiness.status === "unsupported" || push.status === "unsupported" ? (
-        <p className="notification-device-note">
-          This browser cannot receive Octagon HQ device notifications.
-        </p>
-      ) : (
-        <p className="notification-device-note">
-          Turn this on once to allow Octagon HQ to deliver push-candidate notifications to this device.
-        </p>
-      )}
-
-      {readiness.installPromptAvailable && !readiness.installed ? (
-        <button
-          className="primary-action notification-install-action"
-          type="button"
-          disabled={busy}
-          onClick={() => void notifications.installApp()}
-        >
-          INSTALL APP
-        </button>
-      ) : null}
-
-      {push.status === "on" ? (
-        <button
-          className="notification-device-action is-disable"
-          type="button"
-          disabled={busy}
-          onClick={() => void notifications.disableDevicePush()}
-        >
-          TURN OFF DEVICE NOTIFICATIONS
-        </button>
-      ) : canEnable ? (
-        <button
-          className="primary-action notification-device-action"
-          type="button"
-          disabled={busy}
-          onClick={() => void notifications.enableDevicePush()}
-        >
-          TURN ON DEVICE NOTIFICATIONS
-        </button>
-      ) : null}
-    </section>
-  );
-}
-
-function NotificationSettings() {
-  const notifications = useNotifications();
-
-  return (
-    <div className="notification-settings">
-      <section className="surface-card notification-settings-card">
-        <div className="notification-settings-card__heading">
-          <div>
-            <p className="eyebrow">PREFERENCES</p>
-            <h2>What should reach you?</h2>
-            <p>Optional reminders can be controlled without muting important account actions.</p>
-          </div>
-          {notifications.preferenceStatus === "saving" ? <b>Saving…</b> : null}
-        </div>
-
-        <div className="notification-setting-row is-locked">
-          <span>
-            <strong>Critical actions</strong>
-            <small>
-              Repicks, cancellations, recap corrections, account safety, and Cody-only control alerts.
-            </small>
-          </span>
-          <b className="notification-always-on">ALWAYS ON</b>
-        </div>
-
-        {preferenceOptions.map((option) => (
-          <PreferenceSwitch
-            key={option.key}
-            preferenceKey={option.key}
-            title={option.title}
-            description={option.description}
-          />
-        ))}
-      </section>
-
-      <DeviceReadinessCard />
-    </div>
-  );
-}
-
 export default function NotificationCenterPage() {
   const identity = useIdentity();
   const notifications = useNotifications();
@@ -332,38 +103,33 @@ export default function NotificationCenterPage() {
             SIGN IN
           </button>
         </section>
+      ) : notifications.status === "loading" && !notifications.items.length ? (
+        <section className="surface-card notification-empty">
+          <strong>Loading notifications…</strong>
+        </section>
+      ) : notifications.error && !notifications.items.length ? (
+        <section className="surface-card notification-empty" role="status">
+          <span className="notification-empty__bell" aria-hidden="true">!</span>
+          <strong>Notifications are temporarily unavailable.</strong>
+          <p>Octagon HQ could not reach the notification service. Try again shortly.</p>
+          <button
+            className="primary-action"
+            type="button"
+            onClick={() => void notifications.refresh()}
+          >
+            TRY AGAIN
+          </button>
+        </section>
+      ) : !notifications.items.length ? (
+        <section className="surface-card notification-empty">
+          <span className="notification-empty__bell" aria-hidden="true">♢</span>
+          <strong>You&apos;re caught up.</strong>
+          <p>Actionable Octagon HQ updates will appear here.</p>
+        </section>
       ) : (
-        <>
-          {notifications.status === "loading" && !notifications.items.length ? (
-            <section className="surface-card notification-empty">
-              <strong>Loading notifications…</strong>
-            </section>
-          ) : notifications.error && !notifications.items.length ? (
-            <section className="surface-card notification-empty" role="status">
-              <span className="notification-empty__bell" aria-hidden="true">!</span>
-              <strong>Notifications are temporarily unavailable.</strong>
-              <p>Octagon HQ could not reach the notification service. Try again shortly.</p>
-              <button
-                className="primary-action"
-                type="button"
-                onClick={() => void notifications.refresh()}
-              >
-                TRY AGAIN
-              </button>
-            </section>
-          ) : !notifications.items.length ? (
-            <section className="surface-card notification-empty">
-              <span className="notification-empty__bell" aria-hidden="true">♢</span>
-              <strong>You&apos;re caught up.</strong>
-              <p>Actionable Octagon HQ updates will appear here.</p>
-            </section>
-          ) : (
-            <section className="notification-list" aria-label="Notifications">
-              {notifications.items.map((item) => <NotificationRow item={item} key={item.id} />)}
-            </section>
-          )}
-          <NotificationSettings />
-        </>
+        <section className="notification-list" aria-label="Notifications">
+          {notifications.items.map((item) => <NotificationRow item={item} key={item.id} />)}
+        </section>
       )}
     </div>
   );
