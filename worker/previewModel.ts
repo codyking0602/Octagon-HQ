@@ -125,11 +125,13 @@ const DEFAULT_PREVIEW: RichPreviewMetadata = {
   images: [{ path: "/assets/app-icon.png", alt: "Octagon HQ" }],
 };
 
+const legacyRankingLabel = new RegExp("\\bG\\.?O\\.?A\\.?T\\.?\\b", "gi");
+const accentedCareerLabel = new RegExp("r(?:é|e)sum(?:é|e)", "gi");
+
 function plainCopy(value: string) {
   return value
-    .normalize("NFD")
-    .replace(/\p{M}/gu, "")
-    .replace(/G\.O\.A\.T\./gi, "GOAT")
+    .replace(legacyRankingLabel, "UFC")
+    .replace(accentedCareerLabel, "resume")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -158,7 +160,7 @@ function gameById(catalog: RichPreviewCatalog, value: string | null) {
 }
 
 function boardLabel(board: RankingPreviewFighter["board"]) {
-  return board === "women" ? "women's UFC GOAT board" : "men's UFC GOAT board";
+  return board === "women" ? "women's UFC all-time board" : "men's UFC all-time board";
 }
 
 function fighterImage(fighter: RankingPreviewFighter): RichPreviewImage {
@@ -313,7 +315,7 @@ function dynamicMetadata(
   const movementCopy = topMoves.map((movement) => (
     `${plainCopy(movement.fighter_name)} #${movement.previous_rank} to #${movement.current_rank}`
   )).join("; ");
-  const fallback = { path: "/assets/share/ranking-update.svg", alt: "Major UFC GOAT ranking update" };
+  const fallback = { path: "/assets/share/ranking-update.svg", alt: "Major UFC ranking update" };
   const images = uniqueImages(
     topMoves.map((movement) => assetImage(catalog, movement.fighter_slug, movement.fighter_name)),
     fallback,
@@ -343,7 +345,7 @@ export function resolveRichPreview(
 
     return {
       kind: "fighter",
-      title: `${fighter.displayName} | UFC GOAT #${fighter.rank} | Octagon HQ`,
+      title: `${fighter.displayName} | UFC Rank #${fighter.rank} | Octagon HQ`,
       description: clipped(
         `${fighter.displayName} is ranked #${fighter.rank} on the ${boardLabel(fighter.board)} with a ${fighter.ovr} OVR. ${fighter.oneLiner}`,
       ),
@@ -364,7 +366,7 @@ export function resolveRichPreview(
         kind: "comparison",
         title: `${left.displayName} vs. ${right.displayName} | Octagon HQ`,
         description: clipped(
-          `UFC GOAT comparison: #${left.rank} ${left.displayName} (${left.ovr} OVR) vs. #${right.rank} ${right.displayName} (${right.ovr} OVR).`,
+          `UFC comparison: #${left.rank} ${left.displayName} (${left.ovr} OVR) vs. #${right.rank} ${right.displayName} (${right.ovr} OVR).`,
         ),
         canonicalPath: `/rankings?${search.toString()}`,
         images: [fighterImage(left), fighterImage(right)],
@@ -376,7 +378,7 @@ export function resolveRichPreview(
       const search = new URLSearchParams({ fighter: rankedFighter.slug });
       return {
         kind: "ranking",
-        title: `${rankedFighter.displayName} is UFC GOAT #${rankedFighter.rank} | Octagon HQ`,
+        title: `${rankedFighter.displayName} is ranked #${rankedFighter.rank} | Octagon HQ`,
         description: clipped(
           `${rankedFighter.displayName} holds the #${rankedFighter.rank} spot on the ${boardLabel(rankedFighter.board)} with a ${rankedFighter.ovr} OVR.`,
         ),
