@@ -53,13 +53,17 @@ Manual publishing supports app announcements, major redesign explanations, featu
 
 `rankingModel.ts` remains the sole calculated source for ranked fighter identity, board, and position. `shanesWatchlist.ts` remains the sole source for Shane's Fighters to Watch. A trusted production workflow synchronizes those exact models only after the same `main` SHA has deployed successfully.
 
-- The first production synchronization quietly creates both comparison baselines. It does not publish the existing ranked roster or current watchlist as new updates.
+- The ranking snapshot still provides disposable comparison evidence for new ranked fighters and position movement.
+- The Fighters to Watch historical rollout baseline is stored as durable seen-ID evidence, separate from the disposable current snapshot.
+- Fatima Kline, Abdul Rakhman Yakhyaev, and Daniil Donchenko are the historical rollout baseline. Gable Steveson was added afterward and is intentionally backfilled as a real new entry.
+- A delayed or skipped deployment cannot silently absorb a new watchlist ID merely because that fighter already appears in a later snapshot.
+- Each genuinely new watchlist ID publishes once using a stable source key based on the watchlist ID, then joins the durable seen ledger.
 - A fighter slug absent from the prior production ranking snapshot publishes one automatic `new_fighter` item linking to the canonical fighter profile.
 - An existing fighter moving at least three positions on the same board publishes one automatic `ranking_movement` item.
 - One- and two-position moves are intentionally ignored.
-- When five or more fighters move at least three spots in one deployment, one `major_ranking_update` summary replaces a pile of individual movement cards.
-- A watchlist ID absent from the prior production watchlist snapshot publishes one automatic `fighters_to_watch` item linking to Shane's Home watchlist.
+- When five or more fighters move at least three spots in one deployment, one `major_ranking_update` summary replaces a pile of individual cards.
 - Unchanged deployments are idempotent and publish nothing.
+- The synchronization script refuses the legacy contract and retries until the repaired database function is deployed, preventing frontend/backend deployment races from swallowing an update.
 - PR-head deployments never synchronize production comparison state or publish production updates.
 - The private snapshots are comparison evidence only. They never become a ranking or watchlist source and are replaced from the canonical models after every successful synchronization.
 
