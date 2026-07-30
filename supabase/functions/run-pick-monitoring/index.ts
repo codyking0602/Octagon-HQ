@@ -16,7 +16,20 @@ const json = (body: unknown, status = 200) => new Response(JSON.stringify(body),
 const safeError = (status: number, code: string, message: string) => json({ code, message, deployment_sha: DEPLOYED_SOURCE_SHA }, status);
 const asRecord = (value: unknown): Record<string, unknown> | null => value && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : null;
 const asEvent = (value: unknown) => asRecord(value) as unknown as MonitoringEvent | null;
-const noOp = (reason: string, sourceEventIdentity?: string, nextEligibleAt?: string) => json({ status: "noop", reason, source_event_identity: sourceEventIdentity ?? null, next_eligible_at: nextEligibleAt ?? null, provider_called: false, deployment_sha: DEPLOYED_SOURCE_SHA });
+const noOp = (
+  reason: string,
+  sourceEventIdentity?: string,
+  nextEligibleAt?: string,
+  notificationDispatch?: unknown,
+) => json({
+  status: "noop",
+  reason,
+  source_event_identity: sourceEventIdentity ?? null,
+  next_eligible_at: nextEligibleAt ?? null,
+  provider_called: false,
+  notification_dispatch: notificationDispatch ?? null,
+  deployment_sha: DEPLOYED_SOURCE_SHA,
+});
 
 Deno.serve(async (request) => {
   if (request.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
@@ -36,11 +49,20 @@ Deno.serve(async (request) => {
   const authorization = request.headers.get("authorization") ?? "";
   let setupData: MonitoringEvent | null = null;
   let currentData: MonitoringEvent | null = null;
+  let notificationDispatch: unknown = null;
 
   if (scheduled) {
     const schedulerToken = request.headers.get(schedulerHeader) ?? "";
     const authorized = await admin.rpc("authorize_pick_monitoring_scheduler", { p_token: schedulerToken });
     if (authorized.error || authorized.data !== true) return safeError(401, "SCHEDULER_AUTH_REQUIRED", "Scheduled monitoring authorization required.");
+
+    // Reuse the one trusted hourly wake-up for all due in-app reminders and owner actions.
+    // The database function owns timing and idempotency; this Edge Function adds no scheduler.
+    const dispatched = await admin.rpc("dispatch_due_in_app_notifications", {
+      p_now: new Date().toISOString(),
+    });
+    if (dispatched.error) return safeError(503, "NOTIFICATION_DISPATCH_FAILED", "Due notifications could not be dispatched safely.");
+    notificationDispatch = dispatched.data;
 
     const eventState = await admin.rpc("get_pick_monitoring_event_state");
     if (eventState.error) return safeError(503, "DATABASE_READ_FAILED", "Canonical Picks state is unavailable.");
@@ -64,7 +86,7 @@ Deno.serve(async (request) => {
     resolved = resolveMonitoringEvent(setupData, currentData);
   } catch (error) {
     const message = error instanceof Error ? error.message : "";
-    if (scheduled && message.includes("No monitorable")) return noOp("no_event");
+    if (scheduled && message.includes("No monitorable")) return noOp("no_event", undefined, undefined, notificationDispatch);
     return safeError(409, "EVENT_RESOLUTION_FAILED", "Monitoring event identity is missing, conflicting, or ambiguous.");
   }
 
@@ -76,7 +98,7 @@ Deno.serve(async (request) => {
     if (scheduleStateResponse.error) return safeError(503, "SCHEDULE_STATE_FAILED", "Monitoring schedule state is unavailable.");
     const scheduleState = asRecord(scheduleStateResponse.data) as ScheduledMonitoringState & { existing_finding_keys?: unknown } | null;
     const decision = decideScheduledMonitoring({ event: resolved.selected, now: new Date(), state: scheduleState });
-    if (!decision.due) return noOp(decision.reason, resolved.identity, decision.next_eligible_at);
+    if (!decision.due) return noOp(decision.reason, resolved.identity, decision.next_eligible_at, notificationDispatch);
 
     scheduledClaimedAt = new Date().toISOString();
     scheduledNextEligibleAt = decision.next_eligible_at;
@@ -85,7 +107,7 @@ Deno.serve(async (request) => {
       p_now: scheduledClaimedAt,
     });
     if (claim.error) return safeError(503, "SCHEDULE_CLAIM_FAILED", "Monitoring schedule could not be claimed safely.");
-    if (claim.data !== true) return noOp("already_claimed", resolved.identity);
+    if (claim.data !== true) return noOp("already_claimed", resolved.identity, undefined, notificationDispatch);
     suppressFindingKeys = new Set(Array.isArray(scheduleState?.existing_finding_keys)
       ? scheduleState.existing_finding_keys.filter((value): value is string => typeof value === "string")
       : []);
@@ -154,5 +176,10 @@ Deno.serve(async (request) => {
     if (scheduledNextEligibleAt) await releaseSchedule(retryInOneHour());
     return safeError(503, "MONITORING_RECORD_FAILED", "Monitoring evidence and eligible odds could not be recorded atomically.");
   }
-  return json({ ...monitoringSummary(String(recorded.data), payload), trigger_kind: payload.trigger_kind, provider_called: true });
+  return json({
+    ...monitoringSummary(String(recorded.data), payload),
+    trigger_kind: payload.trigger_kind,
+    provider_called: true,
+    notification_dispatch: notificationDispatch,
+  });
 });
