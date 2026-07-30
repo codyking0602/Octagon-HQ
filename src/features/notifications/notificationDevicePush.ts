@@ -76,17 +76,53 @@ export function serializeNotificationPushSubscription(
   };
 }
 
+async function createNotificationPushSubscription(
+  registration: ServiceWorkerRegistration,
+  publicKey: string,
+) {
+  return registration.pushManager.subscribe({
+    userVisibleOnly: true,
+    applicationServerKey: base64UrlToBytes(publicKey),
+  });
+}
+
+async function usableExistingSubscription(registration: ServiceWorkerRegistration) {
+  const existing = await registration.pushManager.getSubscription();
+  if (!existing) return null;
+  try {
+    serializeNotificationPushSubscription(existing);
+    return existing;
+  } catch {
+    await existing.unsubscribe().catch(() => false);
+    return null;
+  }
+}
+
 export async function enableNotificationDevicePush(publicKey: string) {
   await requestNotificationDevicePermission();
 
   const registration = await getNotificationServiceWorkerRegistration();
   if (!registration) throw new Error("The notification service worker is unavailable.");
 
-  const existing = await registration.pushManager.getSubscription();
-  const subscription = existing ?? await registration.pushManager.subscribe({
-    userVisibleOnly: true,
-    applicationServerKey: base64UrlToBytes(publicKey),
-  });
+  const existing = await usableExistingSubscription(registration);
+  if (existing) {
+    return {
+      subscription: existing,
+      input: serializeNotificationPushSubscription(existing),
+    };
+  }
+
+  let subscription: PushSubscription;
+  try {
+    subscription = await createNotificationPushSubscription(registration, publicKey);
+  } catch {
+    // Installed iPhone web apps can retain a half-created subscription after an interrupted
+    // first attempt. Refresh the one service-worker owner and replace that stale subscription once.
+    await registration.update().catch(() => undefined);
+    const stale = await registration.pushManager.getSubscription().catch(() => null);
+    if (stale) await stale.unsubscribe().catch(() => false);
+    subscription = await createNotificationPushSubscription(registration, publicKey);
+  }
 
   return {
     subscription,
