@@ -23,6 +23,20 @@ function bytesToBase64Url(value: ArrayBuffer) {
   return window.btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
 }
 
+function sameBytes(left: ArrayBuffer | ArrayBufferView, right: Uint8Array) {
+  const leftBytes = left instanceof ArrayBuffer
+    ? new Uint8Array(left)
+    : new Uint8Array(left.buffer, left.byteOffset, left.byteLength);
+  if (leftBytes.byteLength !== right.byteLength) return false;
+  return leftBytes.every((byte, index) => byte === right[index]);
+}
+
+function subscriptionUsesPublicKey(subscription: PushSubscription, publicKey: string) {
+  const existingKey = subscription.options.applicationServerKey;
+  if (!existingKey) return true;
+  return sameBytes(existingKey, base64UrlToBytes(publicKey));
+}
+
 function requireNotificationSupport() {
   if (
     typeof window === "undefined"
@@ -86,11 +100,18 @@ async function createNotificationPushSubscription(
   });
 }
 
-async function usableExistingSubscription(registration: ServiceWorkerRegistration) {
+async function usableExistingSubscription(
+  registration: ServiceWorkerRegistration,
+  publicKey: string,
+) {
   const existing = await registration.pushManager.getSubscription();
   if (!existing) return null;
   try {
     serializeNotificationPushSubscription(existing);
+    if (!subscriptionUsesPublicKey(existing, publicKey)) {
+      await existing.unsubscribe().catch(() => false);
+      return null;
+    }
     return existing;
   } catch {
     await existing.unsubscribe().catch(() => false);
@@ -104,7 +125,7 @@ export async function enableNotificationDevicePush(publicKey: string) {
   const registration = await getNotificationServiceWorkerRegistration();
   if (!registration) throw new Error("The notification service worker is unavailable.");
 
-  const existing = await usableExistingSubscription(registration);
+  const existing = await usableExistingSubscription(registration, publicKey);
   if (existing) {
     return {
       subscription: existing,
