@@ -139,5 +139,5 @@ export const shanesWatchlist = {
       ufcUrl: "https://www.ufc.com/athlete/daniil-donchenko",
     },
   ] satisfies ShaneWatchFighter[],
-  formerFighters: [] satisfies ShaneFormerPick[],
-} as const;
+  formerFighters: [] as ShaneFormerPick[],
+};
