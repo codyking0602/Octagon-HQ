@@ -11,7 +11,7 @@ export function shareProfile(name: string, slug: string) {
   return shareCanonicalDestination({
     destination: { kind: "fighter", fighterSlug: slug },
     title: `${name} · Octagon HQ`,
-    text: `View ${name}'s UFC GOAT profile in Octagon HQ.`,
+    text: `View ${name}'s UFC all-time profile in Octagon HQ.`,
   });
 }
 
