@@ -1,0 +1,75 @@
+name: Verify Live Frontend Delivery
+
+on:
+  workflow_run:
+    workflows:
+      - Deploy Cloudflare Frontend
+    types:
+      - completed
+  workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: Exact deployed main commit SHA to verify.
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: octagon-hq-live-frontend-${{ github.event.workflow_run.head_sha || inputs.expected_sha }}
+  cancel-in-progress: true
+
+jobs:
+  verify-live-delivery:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push' &&
+       github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      EXPECTED_SOURCE_SHA: ${{ github.event.workflow_run.head_sha || inputs.expected_sha }}
+      OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
+    steps:
+      - name: Check out exact verification source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_SOURCE_SHA }}
+          fetch-depth: 1
+          persist-credentials: false
+          show-progress: false
+
+      - name: Verify exact checked-out source
+        shell: bash
+        run: |
+          set -euo pipefail
+          checked_out_sha=$(git rev-parse HEAD)
+          if [ "$checked_out_sha" != "$EXPECTED_SOURCE_SHA" ]; then
+            echo "::error title=Exact verification checkout failed::Expected $EXPECTED_SOURCE_SHA but checked out $checked_out_sha."
+            exit 1
+          fi
+          test -f scripts/verify-live-frontend-delivery.mjs
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Prove live shell CSS and JavaScript delivery
+        run: node scripts/verify-live-frontend-delivery.mjs
+
+      - name: Record exact delivery proof
+        shell: bash
+        run: |
+          {
+            echo "### Exact live frontend delivery verified"
+            echo "- Production URL: $OCTAGON_PRODUCTION_ORIGIN"
+            echo "- Exact source SHA: \`$EXPECTED_SOURCE_SHA\`"
+            echo "- Live deployment marker matches the exact source SHA"
+            echo "- Live SPA shell is served with a no-cache policy"
+            echo "- Live shell references fingerprinted JavaScript and CSS assets"
+            echo "- The JavaScript loaded by that shell contains the exact deployment SHA"
+            echo "- The referenced JavaScript and CSS files are real assets, not SPA fallbacks"
+          } >> "$GITHUB_STEP_SUMMARY"
