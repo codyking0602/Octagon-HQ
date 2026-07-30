@@ -14,6 +14,7 @@ import "./styles/picks-underdog-lock.css";
 import "./styles/picks-main-event-spotlight.css";
 import "./styles/picks-season-hub.css";
 import "./styles/picks-event-recap.css";
+import "./styles/picks-group-progress.css";
 import "./styles/picks-control.css";
 import "./styles/picks-lock-time-control.css";
 import "./styles/picks-setup.css";
