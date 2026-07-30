@@ -10,6 +10,7 @@ const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
 const sourceSha = process.env.SOURCE_SHA?.trim().toLowerCase();
 const maxAttempts = Math.min(20, Math.max(1, Number(process.env.RANKING_SYNC_MAX_ATTEMPTS ?? 1)));
 const retryDelayMs = Math.min(30_000, Math.max(1_000, Number(process.env.RANKING_SYNC_RETRY_DELAY_MS ?? 15_000)));
+const requiredContractVersion = 2;
 
 if (!supabaseUrl || !/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(supabaseUrl)) {
   throw new Error("A valid production SUPABASE_URL is required.");
@@ -70,8 +71,23 @@ try {
     });
 
     if (!error) {
-      result = data && typeof data === "object" ? data : {};
-      break;
+      const candidate = data && typeof data === "object" ? data : {};
+      if (candidate.sync_contract_version === requiredContractVersion) {
+        result = candidate;
+        break;
+      }
+
+      if (attempt === maxAttempts) {
+        throw new Error(
+          `Rankings and Fighters What's New sync contract ${requiredContractVersion} was not deployed.`,
+        );
+      }
+
+      console.log(
+        `Ranking sync contract ${requiredContractVersion} is not deployed yet; retrying (${attempt}/${maxAttempts}).`,
+      );
+      await wait(retryDelayMs);
+      continue;
     }
 
     const migrationStillDeploying = error.code === "PGRST202"
@@ -88,6 +104,7 @@ try {
 
   console.log([
     "Rankings and Fighters What's New sync complete.",
+    `Contract: v${result.sync_contract_version}.`,
     `Ranked fighters: ${result.fighter_count ?? rows.length}.`,
     `Watchlist fighters: ${result.watchlist_count ?? watchlistRows.length}.`,
     `Ranking baseline created: ${result.ranking_baseline_created === true ? "yes" : "no"}.`,
@@ -97,6 +114,7 @@ try {
     `Movement items published: ${result.ranking_movements_published ?? 0}.`,
     `Major ranking updates published: ${result.major_ranking_updates_published ?? 0}.`,
     `Fighters to Watch published: ${result.fighters_to_watch_published ?? 0}.`,
+    `Watchlist IDs seen: ${result.watchlist_seen_count ?? watchlistRows.length}.`,
   ].join(" "));
 } finally {
   await vite.close();
