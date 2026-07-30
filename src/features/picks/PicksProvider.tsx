@@ -17,6 +17,8 @@ import {
   type PickSummary,
   type UnderdogLock,
 } from "./picksModel";
+import type { PickEventMemberProgress } from "./groupProgressModel";
+import { loadPickGroupProgress } from "./picksGroupProgressRepository";
 import {
   createPicksRepository,
   type PicksRepository,
@@ -25,11 +27,14 @@ import {
 interface PicksContextValue {
   configured: boolean;
   loading: boolean;
+  groupProgressLoading: boolean;
   savingBoutId: string | null;
   savingLock: boolean;
   error: string;
+  groupProgressError: string;
   event: PickEvent | null;
   selections: Record<string, string>;
+  groupProgress: PickEventMemberProgress[];
   underdogLock: UnderdogLock | null;
   summary: PickSummary;
   history: PickHistory;
@@ -64,13 +69,16 @@ export function PicksProvider({
   ));
   const [event, setEvent] = useState<PickEvent | null>(null);
   const [selections, setSelections] = useState<Record<string, string>>({});
+  const [groupProgress, setGroupProgress] = useState<PickEventMemberProgress[]>([]);
   const [underdogLock, setUnderdogLockState] = useState<UnderdogLock | null>(null);
   const [summary, setSummary] = useState<PickSummary>(emptyPickSummary);
   const [history, setHistory] = useState<PickHistory>(emptyPickHistory);
   const [loading, setLoading] = useState(false);
+  const [groupProgressLoading, setGroupProgressLoading] = useState(false);
   const [savingBoutId, setSavingBoutId] = useState<string | null>(null);
   const [savingLock, setSavingLock] = useState(false);
   const [error, setError] = useState("");
+  const [groupProgressError, setGroupProgressError] = useState("");
 
   const refresh = useCallback(async () => {
     const expectedProfileId = profileId;
@@ -79,11 +87,14 @@ export function PicksProvider({
     if (!repository) {
       setEvent(null);
       setSelections({});
+      setGroupProgress([]);
       setUnderdogLockState(null);
       setSummary(emptyPickSummary);
       setHistory(emptyPickHistory);
       setLoading(false);
+      setGroupProgressLoading(false);
       setError("Picks are not connected on this build.");
+      setGroupProgressError("");
       return;
     }
 
@@ -95,22 +106,32 @@ export function PicksProvider({
 
       if (!expectedProfileId) {
         setSelections({});
+        setGroupProgress([]);
         setUnderdogLockState(null);
         setSummary(emptyPickSummary);
         setHistory(emptyPickHistory);
         setError("");
+        setGroupProgressError("");
         return;
       }
 
       const season = nextEvent?.season ?? new Date().getFullYear();
-      const [rows, nextLock, nextSummary, nextHistory] = await Promise.all([
+      setGroupProgressLoading(Boolean(nextEvent));
+      const [rows, nextLock, nextSummary, nextHistory, progressResult] = await Promise.all([
         nextEvent ? repository.loadMyPicks(nextEvent.eventId) : Promise.resolve([]),
         nextEvent ? repository.loadMyUnderdogLock(nextEvent.eventId) : Promise.resolve(null),
         repository.loadMySummary(season),
         repository.loadMyHistory(season),
+        nextEvent
+          ? loadPickGroupProgress(nextEvent.eventId)
+              .then((value) => ({ value, error: "" }))
+              .catch((progressError: unknown) => ({ value: [], error: readableError(progressError) }))
+          : Promise.resolve({ value: [], error: "" }),
       ]);
       if (revision !== revisionRef.current || profileIdRef.current !== expectedProfileId) return;
       setSelections(selectionsFromRows(rows));
+      setGroupProgress(progressResult.value);
+      setGroupProgressError(progressResult.error);
       setUnderdogLockState(nextLock);
       setSummary(nextSummary);
       setHistory(nextHistory);
@@ -119,7 +140,10 @@ export function PicksProvider({
       if (revision !== revisionRef.current) return;
       setError(readableError(nextError));
     } finally {
-      if (revision === revisionRef.current) setLoading(false);
+      if (revision === revisionRef.current) {
+        setLoading(false);
+        setGroupProgressLoading(false);
+      }
     }
   }, [profileId, repository]);
 
@@ -161,12 +185,15 @@ export function PicksProvider({
     setSavingBoutId(boutId);
     try {
       const saved = await repository.savePick(event.eventId, boutId, fighterSlug);
-      const [nextLock, nextSummary] = await Promise.all([
+      const [nextLock, nextSummary, nextProgress] = await Promise.all([
         repository.loadMyUnderdogLock(event.eventId),
         repository.loadMySummary(event.season),
+        loadPickGroupProgress(event.eventId).catch(() => groupProgress),
       ]);
       if (profileIdRef.current !== expectedProfileId) return;
       setSelections((current) => ({ ...current, [saved.boutId]: saved.fighterSlug }));
+      setGroupProgress(nextProgress);
+      setGroupProgressError("");
       setUnderdogLockState(nextLock);
       setSummary(nextSummary);
       setError("");
@@ -176,7 +203,7 @@ export function PicksProvider({
     } finally {
       if (profileIdRef.current === expectedProfileId) setSavingBoutId(null);
     }
-  }, [event, identity.openDialog, profileId, repository]);
+  }, [event, groupProgress, identity.openDialog, profileId, repository]);
 
   const setUnderdogLock = useCallback(async (boutId: string, fighterSlug: string) => {
     const expectedProfileId = profileId;
@@ -188,8 +215,11 @@ export function PicksProvider({
     setSavingLock(true);
     try {
       const saved = await repository.setUnderdogLock(event.eventId, boutId, fighterSlug);
+      const nextProgress = await loadPickGroupProgress(event.eventId).catch(() => groupProgress);
       if (profileIdRef.current === expectedProfileId) {
         setUnderdogLockState(saved);
+        setGroupProgress(nextProgress);
+        setGroupProgressError("");
         setError("");
       }
     } catch (nextError) {
@@ -197,7 +227,7 @@ export function PicksProvider({
     } finally {
       if (profileIdRef.current === expectedProfileId) setSavingLock(false);
     }
-  }, [event, identity.openDialog, profileId, repository]);
+  }, [event, groupProgress, identity.openDialog, profileId, repository]);
 
   const clearUnderdogLock = useCallback(async () => {
     const expectedProfileId = profileId;
@@ -205,8 +235,11 @@ export function PicksProvider({
     setSavingLock(true);
     try {
       await repository.clearUnderdogLock(event.eventId);
+      const nextProgress = await loadPickGroupProgress(event.eventId).catch(() => groupProgress);
       if (profileIdRef.current === expectedProfileId) {
         setUnderdogLockState(null);
+        setGroupProgress(nextProgress);
+        setGroupProgressError("");
         setError("");
       }
     } catch (nextError) {
@@ -214,17 +247,20 @@ export function PicksProvider({
     } finally {
       if (profileIdRef.current === expectedProfileId) setSavingLock(false);
     }
-  }, [event, profileId, repository]);
+  }, [event, groupProgress, profileId, repository]);
 
   return (
     <PicksContext.Provider value={{
       configured: Boolean(repository),
       loading,
+      groupProgressLoading,
       savingBoutId,
       savingLock,
       error,
+      groupProgressError,
       event,
       selections,
+      groupProgress,
       underdogLock,
       summary,
       history,
