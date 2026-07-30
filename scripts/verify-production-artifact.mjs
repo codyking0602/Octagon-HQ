@@ -41,6 +41,17 @@ const requiredApplicationMarkers = [
   "get_pick_event_setup",
 ];
 
+const requiredShareArtwork = [
+  "find-leader.svg",
+  "wavelength.svg",
+  "blind-resume.svg",
+  "blind-rank.svg",
+  "keep-cut.svg",
+  "better-than.svg",
+  "picks-recap.svg",
+  "ranking-update.svg",
+];
+
 export async function verifyProductionArtifact({ dist = "dist", env = process.env } = {}) {
   const config = validatePublicSupabaseConfig({
     url: env.VITE_SUPABASE_URL,
@@ -57,21 +68,49 @@ export async function verifyProductionArtifact({ dist = "dist", env = process.en
     if (!files.includes(requiredPath)) throw new Error(`${requiredPath} is missing.`);
   }
 
+  for (const artwork of requiredShareArtwork) {
+    const artworkPath = join(dist, "assets", "share", artwork);
+    if (!files.includes(artworkPath)) throw new Error(`${artworkPath} is missing.`);
+  }
+
   const worker = await readFile(workerPath, "utf8");
-  for (const marker of ["X-Octagon-Preview", "og:title", "twitter:card", "preview-data/rankings.json"]) {
+  for (const marker of [
+    "X-Octagon-Preview",
+    "og:title",
+    "twitter:card",
+    "preview-data/rankings.json",
+    "get_rich_preview_data",
+    "picks-recap",
+    "major-ranking-update",
+  ]) {
     if (!worker.includes(marker)) throw new Error(`Compiled rich preview Worker is missing marker: ${marker}.`);
   }
+
   const assetsIgnore = await readFile(assetsIgnorePath, "utf8");
   if (!assetsIgnore.split(/\r?\n/).includes("_worker.js")) {
     throw new Error("dist/.assetsignore must exclude _worker.js from public static assets.");
   }
+
   const previewCatalog = JSON.parse(await readFile(previewCatalogPath, "utf8"));
-  if (previewCatalog.version !== 1 || !Array.isArray(previewCatalog.fighters) || previewCatalog.fighters.length < 1) {
-    throw new Error("The ranking rich preview catalog is missing or invalid.");
+  if (
+    previewCatalog.version !== 2
+    || !Array.isArray(previewCatalog.fighters)
+    || previewCatalog.fighters.length < 1
+    || !Array.isArray(previewCatalog.games)
+    || previewCatalog.games.length !== 6
+    || !previewCatalog.fighterAssets
+    || typeof previewCatalog.fighterAssets !== "object"
+  ) {
+    throw new Error("The complete rich preview catalog is missing or invalid.");
   }
   for (const fighter of previewCatalog.fighters) {
     if (!fighter.slug || !fighter.displayName || !fighter.imagePath || !Number.isFinite(fighter.rank) || !Number.isFinite(fighter.ovr)) {
-      throw new Error("The ranking rich preview catalog contains an incomplete fighter.");
+      throw new Error("The rich preview catalog contains an incomplete fighter.");
+    }
+  }
+  for (const game of previewCatalog.games) {
+    if (!game.id || !game.title || !game.description || !game.imagePath) {
+      throw new Error("The rich preview catalog contains an incomplete game.");
     }
   }
 
@@ -99,6 +138,7 @@ export async function verifyProductionArtifact({ dist = "dist", env = process.en
     files: compiledFiles.length,
     hostname: config.expectedHostname,
     previewFighters: previewCatalog.fighters.length,
+    previewGames: previewCatalog.games.length,
   };
 }
 
@@ -112,5 +152,7 @@ async function walk(directory) {
 
 if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
   const result = await verifyProductionArtifact();
-  console.log(`Verified ${result.files} compiled files for ${result.hostname}, including ${result.previewFighters} fighter previews.`);
+  console.log(
+    `Verified ${result.files} compiled files for ${result.hostname}, including ${result.previewFighters} fighter and ${result.previewGames} game previews.`,
+  );
 }
