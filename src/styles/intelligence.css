@@ -50,5 +50,6 @@
 
 @media (min-width: 680px) {
   .intelligence-action-grid { grid-template-columns: 1.35fr 1fr; }
+  .intelligence-action-grid--shareable { grid-template-columns: 1.35fr 1fr 1fr; }
   .intelligence-select-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
