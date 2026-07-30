@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { appendFileSync, existsSync } from "node:fs";
 
 const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
 const projectId = process.env.SUPABASE_PROJECT_ID;
@@ -74,6 +74,9 @@ if (verifyExactSource) {
   console.log(`PASS: sync-next-ufc-event is deployed from exact source ${expectedSha}.`);
 } else {
   console.log(`PASS: production sync-next-ufc-event deployment ${deployedSha} is healthy; unmerged PR source ${expectedSha} was not required to be live.`);
+  if (process.env.GITHUB_ENV) {
+    appendFileSync(process.env.GITHUB_ENV, `EXPECTED_SYNC_SOURCE_SHA=${deployedSha}\n`);
+  }
 }
 
 if (existsSync("supabase/functions/run-pick-monitoring/index.ts")) {
