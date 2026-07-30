@@ -296,6 +296,7 @@ jobs:
           show-progress: false
           sparse-checkout: |
             wrangler.jsonc
+            scripts/verify-live-frontend-delivery.mjs
           sparse-checkout-cone-mode: false
 
       - name: Verify trusted deployment configuration source
@@ -308,6 +309,7 @@ jobs:
             exit 1
           fi
           test -f wrangler.jsonc
+          test -f scripts/verify-live-frontend-delivery.mjs
           echo "Trusted deployment configuration verified: $checked_out_sha"
 
       - name: Download exact production artifact
@@ -402,150 +404,14 @@ jobs:
             wrangler-deploy.log
           retention-days: 7
 
-      - name: Verify exact live frontend and profile-backed Picks
+      - name: Verify exact live shell delivery
         shell: bash
-        run: |
-          set -euo pipefail
-          config_file="$GITHUB_WORKSPACE/.public-config/octagon-public-config.env"
-          trap 'rm -rf "$GITHUB_WORKSPACE/.public-config"' EXIT
-          test -s "$config_file"
-          set -a
-          . "$config_file"
-          set +a
-          live_assets_dir="$RUNNER_TEMP/octagon-live-assets"
-          bundle_file="$RUNNER_TEMP/octagon-all-live.js"
-          shell_headers="$RUNNER_TEMP/octagon-shell-headers.txt"
-          live_marker="$RUNNER_TEMP/octagon-deployment.json"
-          markers=(
-            "SIGN IN"
-            "identity-overlay--viewport"
-            "NO PROFILE FOUND WITH THAT EXACT NAME"
-            "SIGN IN TO CHALLENGE"
-            "SIGN IN TO YOUR HQ"
-            "SIGN IN TO MAKE PICKS"
-            "vite:preloadError"
-            "list_my_find_leader_history"
-            "set_my_favorite_fighter"
-            "get_current_pick_event"
-            "save_my_event_pick"
-          )
-
-          verify_live_assets() {
-            local attempt="$1"
-            local found_assets=0
-            local missing_marker=""
-
-            rm -rf "$live_assets_dir"
-            mkdir -p "$live_assets_dir"
-
-            if ! curl --fail --silent --show-error \
-              --header "Cache-Control: no-cache" \
-              --dump-header "$shell_headers" \
-              --output "$RUNNER_TEMP/octagon-shell.html" \
-              "${OCTAGON_PRODUCTION_URL}/?deployment=${SOURCE_SHA}&attempt=${attempt}"; then
-              echo "The live SPA shell is not available yet."
-              return 1
-            fi
-
-            if ! grep -Fiq "cache-control: no-cache" "$shell_headers"; then
-              echo "The live SPA shell is missing the required no-cache policy."
-              return 1
-            fi
-
-            if ! curl --fail --silent --show-error \
-              --header "Cache-Control: no-cache" \
-              "${OCTAGON_PRODUCTION_URL}/deployment.json?deployment=${SOURCE_SHA}&attempt=${attempt}" \
-              --output "$live_marker"; then
-              echo "The live exact-SHA marker is not available yet."
-              return 1
-            fi
-
-            if ! node --input-type=module --eval '
-              import fs from "node:fs";
-              const [markerPath, expectedSha] = process.argv.slice(1);
-              const marker = JSON.parse(fs.readFileSync(markerPath, "utf8"));
-              if (marker.sha !== expectedSha) process.exit(1);
-            ' "$live_marker" "$SOURCE_SHA"; then
-              echo "The live deployment marker does not match $SOURCE_SHA yet."
-              return 1
-            fi
-
-            for local_asset in dist/assets/*.js; do
-              asset_name=$(basename "$local_asset")
-              live_asset="$live_assets_dir/$asset_name"
-
-              if ! curl --fail --silent --show-error \
-                --header "Cache-Control: no-cache" \
-                "${OCTAGON_PRODUCTION_URL}/assets/${asset_name}?deployment=${SOURCE_SHA}&attempt=${attempt}" \
-                --output "$live_asset"; then
-                echo "Live asset $asset_name is not available yet."
-                return 1
-              fi
-
-              if grep -Fqi "<!doctype html" "$live_asset"; then
-                echo "Live asset $asset_name still resolves to the SPA fallback."
-                return 1
-              fi
-
-              found_assets=$((found_assets + 1))
-            done
-
-            if [ "$found_assets" -lt 1 ]; then
-              echo "No JavaScript assets were available for verification."
-              return 1
-            fi
-
-            cat "$live_assets_dir"/*.js > "$bundle_file"
-
-            if ! grep -Fq "$VITE_EXPECTED_SUPABASE_HOSTNAME" "$bundle_file"; then
-              echo "Live bundle is missing the expected Supabase project hostname."
-              return 1
-            fi
-
-            if ! grep -Fq "$VITE_SUPABASE_PUBLISHABLE_KEY" "$bundle_file"; then
-              echo "Live bundle is missing the validated public Supabase key."
-              return 1
-            fi
-
-            if grep -Fq "your-project-id" "$bundle_file" || grep -Fq "your-publishable-key" "$bundle_file"; then
-              echo "Live bundle contains forbidden placeholder Supabase configuration."
-              return 1
-            fi
-
-            for marker in "${markers[@]}"; do
-              if ! grep -Fq "$marker" "$bundle_file"; then
-                missing_marker="$marker"
-                break
-              fi
-            done
-
-            if [ -n "$missing_marker" ]; then
-              echo "Live bundle is not current yet; missing marker: $missing_marker"
-              return 1
-            fi
-
-            return 0
-          }
-
-          verified=0
-          for attempt in $(seq 1 12); do
-            if verify_live_assets "$attempt"; then
-              verified=1
-              break
-            fi
-
-            if [ "$attempt" -lt 12 ]; then
-              echo "Waiting for Cloudflare asset propagation (attempt $attempt of 12)..."
-              sleep 5
-            fi
-          done
-
-          if [ "$verified" -ne 1 ]; then
-            echo "::error title=Live frontend verification failed::Exact SHA $SOURCE_SHA did not become the verified production build after 12 attempts."
-            exit 1
-          fi
-
-          echo "Live Worker exactly matches $SOURCE_SHA and contains profile-backed UFC Picks plus automatic stale-chunk recovery."
+        env:
+          EXPECTED_SOURCE_SHA: ${{ env.SOURCE_SHA }}
+          OCTAGON_PRODUCTION_ORIGIN: ${{ env.OCTAGON_PRODUCTION_URL }}
+          FRONTEND_DELIVERY_ATTEMPTS: 36
+          FRONTEND_DELIVERY_DELAY_MS: 5000
+        run: node scripts/verify-live-frontend-delivery.mjs
 
       - name: Record deployment
         shell: bash
@@ -562,7 +428,7 @@ jobs:
             fi
             echo "- PR application code built in a job with no administrative deployment credentials"
             echo "- Deployment used only the verified artifact, trusted workflow revision, and trusted Wrangler runtime"
-            echo "- Exact live deployment marker and all production chunks were verified"
+            echo "- Exact live deployment marker and shell-loaded JavaScript and CSS were verified"
             echo "- Supabase browser configuration was resolved without printing administrative credentials"
             echo "- Challenge Center uses authenticated profiles and exact-name delivery"
             echo "- Your HQ uses profile history, Picks record, canonical favorite fighter data, and cached challenge rows"
