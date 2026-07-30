@@ -92,6 +92,8 @@ describe("Phase 2B event setup backend", () => {
     expect(deploymentVerifier).toContain('process.env.GITHUB_EVENT_NAME !== "pull_request"');
     expect(deploymentVerifier).toContain("verifyExactSource && deployedSha !== expectedSha");
     expect(deploymentVerifier).toContain('x-octagon-backend-sha") !== deployedSha');
+    expect(deploymentVerifier).toContain("appendFileSync(process.env.GITHUB_ENV");
+    expect(deploymentVerifier).toContain("EXPECTED_SYNC_SOURCE_SHA=${deployedSha}");
     expect(deploymentVerifier).toContain("|| deployedSha");
   });
 });
