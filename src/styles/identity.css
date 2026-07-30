@@ -2,8 +2,9 @@
 .identity-trigger { display: flex; align-items: center; justify-content: center; gap: 7px; min-width: 46px; height: 46px; padding: 0 12px; border: 1px solid var(--border); border-radius: 15px; background: var(--surface); color: var(--text-primary); font-size: 10px; font-weight: 950; letter-spacing: .05em; cursor: pointer; }
 .identity-trigger i { display: grid; place-items: center; width: 27px; height: 27px; overflow: hidden; border-radius: 9px; background: var(--ufc-red); color: #fff; font-size: 10px; font-style: normal; }
 .identity-trigger i img, .identity-profile-card > i img { width: 100%; height: 100%; display: block; object-fit: cover; }
-.identity-trigger.is-ready { gap: 0; overflow: hidden; height: 46px; padding: 0; border: 0; border-radius: 15px; background: var(--surface); box-shadow: inset 0 0 0 1px rgba(229, 9, 20, .48); }
-.identity-trigger.is-ready > .identity-trigger__photo { flex: 0 0 46px; width: 46px; min-width: 46px; max-width: 46px; height: 46px; margin: 0; padding: 0; border-right: 1px solid rgba(229, 9, 20, .48); border-radius: 15px 0 0 15px; box-shadow: none; font-size: 13px; }
+.identity-trigger.is-ready { position: relative; gap: 0; overflow: hidden; height: 46px; padding: 0; border: 0; border-radius: 15px; background: var(--surface); box-shadow: none; }
+.identity-trigger.is-ready::after { content: ""; position: absolute; inset: 0; border: 1px solid rgba(229, 9, 20, .48); border-radius: inherit; pointer-events: none; }
+.identity-trigger.is-ready > .identity-trigger__photo { flex: 0 0 46px; width: 46px; min-width: 46px; max-width: 46px; height: 46px; margin: 0; padding: 0; border-right: 1px solid rgba(229, 9, 20, .48); border-radius: 0; box-shadow: none; font-size: 13px; }
 .identity-trigger.is-ready > .identity-trigger__photo > img { display: block; width: 46px; min-width: 46px; max-width: 46px; height: 46px; margin: 0; object-fit: cover; }
 .identity-trigger.is-ready span { display: flex; align-items: center; height: 46px; max-width: 82px; padding: 0 12px; overflow: hidden; border: 0; border-radius: 0; background: transparent; text-overflow: ellipsis; white-space: nowrap; }
 
