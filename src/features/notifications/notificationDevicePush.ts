@@ -23,6 +23,28 @@ function bytesToBase64Url(value: ArrayBuffer) {
   return window.btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
 }
 
+function requireNotificationSupport() {
+  if (
+    typeof window === "undefined"
+    || !("Notification" in window)
+    || !("PushManager" in window)
+    || !window.isSecureContext
+  ) throw new Error("This browser does not support device notifications.");
+}
+
+export async function requestNotificationDevicePermission() {
+  requireNotificationSupport();
+  const permission = window.Notification.permission === "granted"
+    ? "granted"
+    : await window.Notification.requestPermission();
+  if (permission !== "granted") {
+    throw new Error(permission === "denied"
+      ? "Device notifications are blocked in this browser's settings."
+      : "Device notification permission was not granted.");
+  }
+  return permission;
+}
+
 export async function getNotificationServiceWorkerRegistration() {
   if (typeof navigator === "undefined" || !("serviceWorker" in navigator)) return null;
   const registration = await navigator.serviceWorker.register(workerPath, {
@@ -55,21 +77,7 @@ export function serializeNotificationPushSubscription(
 }
 
 export async function enableNotificationDevicePush(publicKey: string) {
-  if (
-    typeof window === "undefined"
-    || !("Notification" in window)
-    || !("PushManager" in window)
-    || !window.isSecureContext
-  ) throw new Error("This browser does not support device notifications.");
-
-  const permission = window.Notification.permission === "granted"
-    ? "granted"
-    : await window.Notification.requestPermission();
-  if (permission !== "granted") {
-    throw new Error(permission === "denied"
-      ? "Device notifications are blocked in this browser's settings."
-      : "Device notification permission was not granted.");
-  }
+  await requestNotificationDevicePermission();
 
   const registration = await getNotificationServiceWorkerRegistration();
   if (!registration) throw new Error("The notification service worker is unavailable.");
