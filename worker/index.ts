@@ -3,8 +3,13 @@ import {
   resolveRichPreview,
   type DynamicPreviewData,
   type RichPreviewCatalog,
-  type RichPreviewImage,
+  type RichPreviewMetadata,
 } from "./previewModel";
+import {
+  previewCardFingerprint,
+  previewCardImagePath,
+  renderPreviewCardHtml,
+} from "./previewCard";
 
 declare const HTMLRewriter: new () => {
   on: (selector: string, handlers: { element: (element: any) => void }) => any;
@@ -12,11 +17,28 @@ declare const HTMLRewriter: new () => {
 };
 declare const __OCTAGON_SUPABASE_URL__: string;
 declare const __OCTAGON_SUPABASE_PUBLISHABLE_KEY__: string;
+declare const __OCTAGON_PREVIEW_CATALOG__: string;
+
+interface BrowserRunBinding {
+  quickAction(
+    action: "screenshot",
+    input: {
+      html: string;
+      viewport: { width: number; height: number; deviceScaleFactor?: number };
+      screenshotOptions?: { captureBeyondViewport?: boolean; omitBackground?: boolean };
+    },
+  ): Promise<Response>;
+}
 
 interface Env {
   ASSETS: {
     fetch(input: Request | URL | string): Promise<Response>;
   };
+  BROWSER: BrowserRunBinding;
+}
+
+interface WorkerExecutionContext {
+  waitUntil(promise: Promise<unknown>): void;
 }
 
 const EMPTY_CATALOG: RichPreviewCatalog = {
@@ -25,7 +47,23 @@ const EMPTY_CATALOG: RichPreviewCatalog = {
   games: [],
   fighterAssets: {},
 };
-let catalogPromise: Promise<RichPreviewCatalog> | null = null;
+
+function embeddedCatalog(): RichPreviewCatalog {
+  try {
+    const catalog = JSON.parse(__OCTAGON_PREVIEW_CATALOG__) as RichPreviewCatalog;
+    return catalog?.version === 2
+      && Array.isArray(catalog.fighters)
+      && Array.isArray(catalog.games)
+      && catalog.fighterAssets
+      && typeof catalog.fighterAssets === "object"
+      ? catalog
+      : EMPTY_CATALOG;
+  } catch {
+    return EMPTY_CATALOG;
+  }
+}
+
+const catalog = embeddedCatalog();
 
 function escapeAttribute(value: string) {
   return value
@@ -39,33 +77,12 @@ function absoluteUrl(path: string, origin: string) {
   return new URL(path, `${origin}/`).toString();
 }
 
-function imageType(image: RichPreviewImage) {
-  const path = image.path.toLowerCase();
-  if (path.endsWith(".png")) return "image/png";
-  if (path.endsWith(".jpg") || path.endsWith(".jpeg")) return "image/jpeg";
-  if (path.endsWith(".webp")) return "image/webp";
-  if (path.endsWith(".svg")) return "image/svg+xml";
-  return "image/*";
-}
-
 function metadataMarkup(
   title: string,
   description: string,
   canonicalUrl: string,
-  images: RichPreviewImage[],
-  origin: string,
+  cardImageUrl: string,
 ) {
-  const primaryImage = images[0];
-  const openGraphImages = images.map((image) => {
-    const url = absoluteUrl(image.path, origin);
-    return [
-      `<meta property="og:image" content="${escapeAttribute(url)}" />`,
-      `<meta property="og:image:secure_url" content="${escapeAttribute(url)}" />`,
-      `<meta property="og:image:type" content="${imageType(image)}" />`,
-      `<meta property="og:image:alt" content="${escapeAttribute(image.alt)}" />`,
-    ].join("");
-  }).join("");
-
   return [
     `<link rel="canonical" href="${escapeAttribute(canonicalUrl)}" />`,
     `<meta property="og:site_name" content="Octagon HQ" />`,
@@ -73,40 +90,18 @@ function metadataMarkup(
     `<meta property="og:title" content="${escapeAttribute(title)}" />`,
     `<meta property="og:description" content="${escapeAttribute(description)}" />`,
     `<meta property="og:url" content="${escapeAttribute(canonicalUrl)}" />`,
-    openGraphImages,
+    `<meta property="og:image" content="${escapeAttribute(cardImageUrl)}" />`,
+    `<meta property="og:image:secure_url" content="${escapeAttribute(cardImageUrl)}" />`,
+    `<meta property="og:image:type" content="image/png" />`,
+    `<meta property="og:image:width" content="1200" />`,
+    `<meta property="og:image:height" content="630" />`,
+    `<meta property="og:image:alt" content="${escapeAttribute(title)}" />`,
     `<meta name="twitter:card" content="summary_large_image" />`,
     `<meta name="twitter:title" content="${escapeAttribute(title)}" />`,
     `<meta name="twitter:description" content="${escapeAttribute(description)}" />`,
-    primaryImage
-      ? `<meta name="twitter:image" content="${escapeAttribute(absoluteUrl(primaryImage.path, origin))}" />`
-      : "",
-    primaryImage
-      ? `<meta name="twitter:image:alt" content="${escapeAttribute(primaryImage.alt)}" />`
-      : "",
+    `<meta name="twitter:image" content="${escapeAttribute(cardImageUrl)}" />`,
+    `<meta name="twitter:image:alt" content="${escapeAttribute(title)}" />`,
   ].join("");
-}
-
-async function loadCatalog(env: Env, requestUrl: URL) {
-  catalogPromise ??= (async () => {
-    try {
-      const catalogUrl = new URL("/preview-data/rankings.json", requestUrl.origin);
-      const response = await env.ASSETS.fetch(new Request(catalogUrl, {
-        headers: { Accept: "application/json" },
-      }));
-      if (!response.ok) return EMPTY_CATALOG;
-      const catalog = await response.json() as RichPreviewCatalog;
-      return catalog?.version === 2
-        && Array.isArray(catalog.fighters)
-        && Array.isArray(catalog.games)
-        && catalog.fighterAssets
-        && typeof catalog.fighterAssets === "object"
-        ? catalog
-        : EMPTY_CATALOG;
-    } catch {
-      return EMPTY_CATALOG;
-    }
-  })();
-  return catalogPromise;
 }
 
 async function loadDynamicPreview(requestUrl: URL): Promise<DynamicPreviewData | null> {
@@ -147,56 +142,121 @@ function isPreviewRoute(url: URL) {
     || url.pathname.startsWith("/play/");
 }
 
+function previewSourceUrl(imageUrl: URL) {
+  const path = imageUrl.searchParams.get("path") ?? "";
+  if (!path.startsWith("/") || path.startsWith("//")) return null;
+  try {
+    const source = new URL(path, imageUrl.origin);
+    return source.origin === imageUrl.origin && isPreviewRoute(source) ? source : null;
+  } catch {
+    return null;
+  }
+}
+
+function imageRequestMatchesPreview(requestUrl: URL, preview: RichPreviewMetadata) {
+  const match = requestUrl.pathname.match(/^\/share-preview\/([a-z-]+)-([0-9a-f]{8})\.png$/);
+  if (!match) return false;
+  return match[1] === preview.kind && match[2] === previewCardFingerprint(preview);
+}
+
+function edgeCache() {
+  return (globalThis as unknown as { caches: { default: Cache } }).caches.default;
+}
+
+async function servePreviewImage(
+  request: Request,
+  env: Env,
+  context: WorkerExecutionContext,
+) {
+  const requestUrl = new URL(request.url);
+  const sourceUrl = previewSourceUrl(requestUrl);
+  if (!sourceUrl) return new Response("Invalid preview source.", { status: 400 });
+
+  const cache = edgeCache();
+  const cached = await cache.match(request);
+  if (cached) return cached;
+
+  const dynamicData = await loadDynamicPreview(sourceUrl);
+  const preview = resolveRichPreview(sourceUrl, catalog, dynamicData);
+  if (preview.kind === "default" || !imageRequestMatchesPreview(requestUrl, preview)) {
+    return new Response("Preview card is stale or unavailable.", { status: 404 });
+  }
+
+  const screenshot = await env.BROWSER.quickAction("screenshot", {
+    html: renderPreviewCardHtml(preview, requestUrl.origin),
+    viewport: { width: 1200, height: 630, deviceScaleFactor: 1 },
+    screenshotOptions: { captureBeyondViewport: false, omitBackground: false },
+  });
+  if (!screenshot.ok || !screenshot.body) {
+    return new Response("Preview card rendering failed.", { status: 503 });
+  }
+
+  const response = new Response(screenshot.body, {
+    status: 200,
+    headers: {
+      "Content-Type": "image/png",
+      "Cache-Control": "public, max-age=31536000, immutable",
+      "X-Octagon-Preview-Image": preview.kind,
+    },
+  });
+  context.waitUntil(cache.put(request, response.clone()));
+  return response;
+}
+
+async function servePreviewPage(request: Request, env: Env) {
+  const requestUrl = new URL(request.url);
+  const shell = await env.ASSETS.fetch(request);
+  const contentType = shell.headers.get("content-type") ?? "";
+  if (!shell.ok || !contentType.includes("text/html")) return shell;
+
+  const dynamicData = await loadDynamicPreview(requestUrl);
+  const preview = resolveRichPreview(requestUrl, catalog, dynamicData);
+  const canonicalUrl = absoluteUrl(preview.canonicalPath, requestUrl.origin);
+  const cardImageUrl = absoluteUrl(previewCardImagePath(preview), requestUrl.origin);
+  const markup = metadataMarkup(
+    preview.title,
+    preview.description,
+    canonicalUrl,
+    cardImageUrl,
+  );
+
+  const transformed = new HTMLRewriter()
+    .on("title", {
+      element(element) {
+        element.setInnerContent(preview.title);
+      },
+    })
+    .on('meta[name="description"]', {
+      element(element) {
+        element.setAttribute("content", preview.description);
+      },
+    })
+    .on("head", {
+      element(element) {
+        element.append(markup, { html: true });
+      },
+    })
+    .transform(shell);
+
+  const headers = new Headers(transformed.headers);
+  headers.set("X-Octagon-Preview", preview.kind);
+  headers.set("X-Octagon-Preview-Image", cardImageUrl);
+  headers.set("Cache-Control", "no-cache");
+  return new Response(transformed.body, {
+    status: transformed.status,
+    statusText: transformed.statusText,
+    headers,
+  });
+}
+
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
+  async fetch(request: Request, env: Env, context: WorkerExecutionContext): Promise<Response> {
     const requestUrl = new URL(request.url);
-    if (request.method !== "GET" || !isPreviewRoute(requestUrl)) {
-      return env.ASSETS.fetch(request);
+    if (request.method !== "GET") return env.ASSETS.fetch(request);
+    if (requestUrl.pathname.startsWith("/share-preview/")) {
+      return servePreviewImage(request, env, context);
     }
-
-    const shell = await env.ASSETS.fetch(request);
-    const contentType = shell.headers.get("content-type") ?? "";
-    if (!shell.ok || !contentType.includes("text/html")) return shell;
-
-    const [catalog, dynamicData] = await Promise.all([
-      loadCatalog(env, requestUrl),
-      loadDynamicPreview(requestUrl),
-    ]);
-    const preview = resolveRichPreview(requestUrl, catalog, dynamicData);
-    const canonicalUrl = absoluteUrl(preview.canonicalPath, requestUrl.origin);
-    const markup = metadataMarkup(
-      preview.title,
-      preview.description,
-      canonicalUrl,
-      preview.images,
-      requestUrl.origin,
-    );
-
-    const transformed = new HTMLRewriter()
-      .on("title", {
-        element(element) {
-          element.setInnerContent(preview.title);
-        },
-      })
-      .on('meta[name="description"]', {
-        element(element) {
-          element.setAttribute("content", preview.description);
-        },
-      })
-      .on("head", {
-        element(element) {
-          element.append(markup, { html: true });
-        },
-      })
-      .transform(shell);
-
-    const headers = new Headers(transformed.headers);
-    headers.set("X-Octagon-Preview", preview.kind);
-    headers.set("Cache-Control", "no-cache");
-    return new Response(transformed.body, {
-      status: transformed.status,
-      statusText: transformed.statusText,
-      headers,
-    });
+    if (!isPreviewRoute(requestUrl)) return env.ASSETS.fetch(request);
+    return servePreviewPage(request, env);
   },
 };
