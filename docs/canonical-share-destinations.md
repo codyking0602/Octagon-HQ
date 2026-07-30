@@ -22,6 +22,12 @@ Notification targets do not receive a separate canonical URL. They resolve to th
 - This module owns deterministic route construction and absolute same-origin share URLs.
 - Feature screens own resolving their identifiers, permissions, loading states, and exact on-screen focus.
 - Internal navigation, notifications, and native sharing should consume this contract rather than reconstructing paths.
-- This first change does not add share buttons or duplicate any feature routing logic.
+- No duplicate route or screen owner should be introduced solely for shared links.
 
-The next routing change should teach the existing feature owners to consume these destination parameters during cold starts and in-app navigation.
+## Implemented consumers
+
+- Rankings resolves `/rankings?fighter=:fighterSlug`, opens the correct men's or women's board, filters to the requested fighter, and focuses that ranking row.
+- Rankings hands `/rankings?compareLeft=:fighterSlug&compareRight=:fighterSlug` to the existing Intelligence comparison owner while preserving left/right orientation.
+- Invalid, incomplete, unknown, or duplicate ranking targets safely fall back to the normal Rankings screen.
+
+The remaining feature owners should consume their canonical parameters in similarly small, tested batches.
