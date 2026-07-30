@@ -30,7 +30,11 @@ const provider = readFileSync(
   "src/features/notifications/NotificationProvider.tsx",
   "utf8",
 );
-const page = readFileSync(
+const profilePush = readFileSync(
+  "src/features/notifications/NotificationPushSetting.tsx",
+  "utf8",
+);
+const center = readFileSync(
   "src/features/notifications/NotificationCenterPage.tsx",
   "utf8",
 );
@@ -106,7 +110,7 @@ describe("notification device push delivery", () => {
     );
   });
 
-  it("requests permission only from the member's explicit device action", () => {
+  it("requests permission only from the single explicit profile switch", () => {
     expect(pushConnection).toContain("Notification.requestPermission");
     expect(pushConnection).toContain("pushManager.subscribe");
     expect(pushConnection).toContain("applicationServerKey");
@@ -115,16 +119,18 @@ describe("notification device push delivery", () => {
     expect(readiness).not.toContain("pushManager.subscribe");
     expect(provider).toContain("enableDevicePush");
     expect(provider).toContain("disableDevicePush");
-    expect(page).toContain("TURN ON DEVICE NOTIFICATIONS");
-    expect(page).toContain("TURN OFF DEVICE NOTIFICATIONS");
-    expect(page).toContain("Share → Add to Home Screen");
+    expect(profilePush).toContain('role="switch"');
+    expect(profilePush).toContain("notifications.enableDevicePush()");
+    expect(profilePush).toContain("notifications.disableDevicePush()");
+    expect(profilePush).toContain("Bell notifications still");
+    expect(center).not.toContain("Device notifications");
     expect(repository).not.toContain("localStorage");
     expect(provider).not.toContain("localStorage");
   });
 
   it("shows push only when the app is hidden and routes notification clicks", () => {
     expect(serviceWorker).toContain('addEventListener("push"');
-    expect(serviceWorker).toContain("visibilityState === \"visible\"");
+    expect(serviceWorker).toContain('visibilityState === "visible"');
     expect(serviceWorker).toContain("postMessage");
     expect(serviceWorker).toContain("showNotification");
     expect(serviceWorker).toContain('addEventListener("notificationclick"');

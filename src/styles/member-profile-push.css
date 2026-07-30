@@ -1,0 +1,104 @@
+.member-profile-push-route {
+  padding-top: 0;
+}
+
+.member-profile-push-setting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 20px;
+}
+
+.member-profile-push-setting__copy {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.member-profile-push-setting__copy h2,
+.member-profile-push-setting__copy p {
+  margin: 0;
+}
+
+.member-profile-push-setting__copy h2 {
+  font-size: 20px;
+  line-height: 1.15;
+}
+
+.member-profile-push-setting__copy p:not(.eyebrow) {
+  max-width: 620px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.member-profile-push-setting__control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.member-profile-push-setting__control > strong {
+  color: var(--text-secondary);
+  font-size: 11px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.member-profile-push-switch {
+  position: relative;
+  width: 52px;
+  height: 30px;
+  flex: 0 0 auto;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-raised);
+  cursor: pointer;
+  transition: background .16s ease, border-color .16s ease;
+}
+
+.member-profile-push-switch > span {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: transform .16s ease, background .16s ease;
+}
+
+.member-profile-push-switch.is-on {
+  border-color: rgba(245, 158, 11, .62);
+  background: rgba(245, 158, 11, .18);
+}
+
+.member-profile-push-switch.is-on > span {
+  background: #f5b942;
+  transform: translateX(22px);
+}
+
+.member-profile-push-switch:focus-visible {
+  outline: 2px solid #f5b942;
+  outline-offset: 3px;
+}
+
+.member-profile-push-switch:disabled {
+  cursor: not-allowed;
+  opacity: .52;
+}
+
+@media (max-width: 520px) {
+  .member-profile-push-setting {
+    align-items: flex-start;
+    padding: 17px;
+  }
+
+  .member-profile-push-setting__control {
+    flex-direction: column-reverse;
+    align-items: flex-end;
+  }
+}

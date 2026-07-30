@@ -3,8 +3,11 @@ import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { BrandMark } from "../components/BrandMark";
 import { BottomNavigation } from "../components/BottomNavigation";
 import { RouteLoading } from "../components/RouteLoading";
-import { IdentityControl } from "../features/identity/IdentityControl";
+import { useIdentity } from "../features/identity/IdentityProvider";
+import { memberProfilePath } from "../features/members/memberProfilesModel";
 import { NotificationHeaderAction } from "../features/notifications/NotificationHeaderAction";
+import { NotificationPushSetting } from "../features/notifications/NotificationPushSetting";
+import { IdentityControl } from "../features/identity/IdentityControl";
 
 const PLAY_GAME_TITLES: Record<string, string> = {
   "/play/find-leader": "Find the Leader",
@@ -14,6 +17,20 @@ const PLAY_GAME_TITLES: Record<string, string> = {
   "/play/keep-cut": "Keep 4, Cut 4",
   "/play/better-than": "Better Than…",
 };
+
+function ProfilePushSettingRoute() {
+  const identity = useIdentity();
+  const location = useLocation();
+  const ownProfilePath = identity.profile ? memberProfilePath(identity.profile.displayName) : null;
+
+  if (!ownProfilePath || location.pathname !== ownProfilePath) return null;
+
+  return (
+    <div className="page member-profile-push-route">
+      <NotificationPushSetting />
+    </div>
+  );
+}
 
 export function AppShell() {
   const location = useLocation();
@@ -56,6 +73,7 @@ export function AppShell() {
         <Suspense fallback={<RouteLoading />}>
           <Outlet />
         </Suspense>
+        <ProfilePushSettingRoute />
       </main>
 
       <BottomNavigation />
