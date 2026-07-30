@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { shareCanonicalDestination } from "../../app/nativeShare";
 import { copyText, whyPromptFor } from "../intelligence/intelligence";
 import { FighterPhoto } from "./FighterPhoto";
 import { getFighter } from "./rankingModel";
@@ -7,13 +8,11 @@ import { resolveProfileWatchAction } from "./rankingPresentation";
 import { profileCategoryRows, profileDisplayName } from "./profilePresentation";
 
 export function shareProfile(name: string, slug: string) {
-  const path = `/fighters/${slug}`;
-  const url = typeof window === "undefined" ? path : new URL(path, window.location.origin).toString();
-  if (typeof navigator !== "undefined" && navigator.share) {
-    void navigator.share({ title: `${name} · Octagon HQ`, url });
-    return;
-  }
-  if (typeof navigator !== "undefined" && navigator.clipboard) void navigator.clipboard.writeText(url);
+  return shareCanonicalDestination({
+    destination: { kind: "fighter", fighterSlug: slug },
+    title: `${name} · Octagon HQ`,
+    text: `View ${name}'s UFC GOAT profile in Octagon HQ.`,
+  });
 }
 
 export function normalizeResumeCopy(copy: string) {
@@ -50,6 +49,7 @@ export default function FighterProfilePage() {
   const navigate = useNavigate();
   const fighter = getFighter(slug);
   const [activeCategory, setActiveCategory] = useState<string | null>("championship");
+  const [shareLabel, setShareLabel] = useState("Share");
   const categories = useMemo(() => (fighter ? profileCategoryRows(fighter) : []), [fighter]);
 
   if (!fighter) {
@@ -80,6 +80,11 @@ export default function FighterProfilePage() {
     navigate(`/intelligence?mode=why&fighter=${fighter.slug}`, { state: { copied } });
   }
 
+  async function handleShare() {
+    const outcome = await shareProfile(displayName, fighter.slug);
+    setShareLabel(outcome === "copied" ? "Copied" : outcome === "unavailable" ? "Try Again" : "Share");
+  }
+
   return (
     <div className="page fighter-profile-page v1-profile">
       <div className="profile-toolbar">
@@ -104,7 +109,7 @@ export default function FighterProfilePage() {
         <button type="button" onClick={openComparison}>Compare</button>
         <button type="button" onClick={() => void askWhy()}>Ask Why</button>
         {watchAction ? <a href={watchAction.url} target="_blank" rel="noreferrer" aria-label={watchAction.label}>Watch Fight</a> : null}
-        <button type="button" onClick={() => shareProfile(fighter.name, fighter.slug)}><svg className="profile-action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0 5 5m-5-5-5 5"/><path d="M5 12v7h14v-7"/></svg>Share</button>
+        <button type="button" onClick={() => void handleShare()}><svg className="profile-action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0 5 5m-5-5-5 5"/><path d="M5 12v7h14v-7"/></svg>{shareLabel}</button>
       </section>
 
       <section className="surface-card resume-snapshot" aria-labelledby="resume-title">
