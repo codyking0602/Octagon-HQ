@@ -6,6 +6,7 @@ const crawlerHeaders = {
   "User-Agent": "facebookexternalhit/1.1 (+https://www.facebook.com/externalhit_uatext.php)",
   "Cache-Control": "no-cache",
 };
+const renderSpacingMs = 11_000;
 
 const cases = [
   {
@@ -24,6 +25,10 @@ const cases = [
     requiredText: ["Blind Resume challenge", "/share-preview/challenge-"],
   },
 ];
+
+function wait(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
 
 function decodeHtml(value) {
   return value
@@ -95,13 +100,16 @@ async function verifyCase(testCase, attempt) {
 let lastError;
 for (let attempt = 1; attempt <= 12; attempt += 1) {
   try {
-    for (const testCase of cases) await verifyCase(testCase, attempt);
+    for (let index = 0; index < cases.length; index += 1) {
+      await verifyCase(cases[index], attempt);
+      if (index < cases.length - 1) await wait(renderSpacingMs);
+    }
     console.log("Verified live fighter, comparison, and challenge rich-preview cards at 1200x630.");
     process.exit(0);
   } catch (error) {
     lastError = error;
     console.log(`Rich-preview verification attempt ${attempt} failed: ${error instanceof Error ? error.message : error}`);
-    if (attempt < 12) await new Promise((resolve) => setTimeout(resolve, 5_000));
+    if (attempt < 12) await wait(renderSpacingMs);
   }
 }
 
