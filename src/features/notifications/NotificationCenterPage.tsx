@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
+import { memberProfilePath } from "../members/memberProfilesModel";
 import {
   formatNotificationAge,
   notificationCategoryLabel,
@@ -65,9 +66,36 @@ function NotificationRow({ item }: { item: NotificationItem }) {
   );
 }
 
+function pushProfilePrompt(status: ReturnType<typeof useNotifications>["devicePush"]["status"]) {
+  if (status === "off") {
+    return {
+      title: "Turn on push notifications",
+      detail: "Get important alerts even when Octagon HQ is closed.",
+      action: "OPEN PROFILE",
+    };
+  }
+  if (status === "error") {
+    return {
+      title: "Push notifications need attention",
+      detail: "Open your Profile to retry the device connection.",
+      action: "RETRY IN PROFILE",
+    };
+  }
+  if (status === "blocked") {
+    return {
+      title: "Push notifications are blocked",
+      detail: "Open your Profile for the steps to turn them back on.",
+      action: "OPEN PROFILE",
+    };
+  }
+  return null;
+}
+
 export default function NotificationCenterPage() {
   const identity = useIdentity();
   const notifications = useNotifications();
+  const ownProfilePath = identity.profile ? memberProfilePath(identity.profile.displayName) : null;
+  const pushPrompt = pushProfilePrompt(notifications.devicePush.status);
 
   return (
     <div className="page notification-page">
@@ -103,33 +131,52 @@ export default function NotificationCenterPage() {
             SIGN IN
           </button>
         </section>
-      ) : notifications.status === "loading" && !notifications.items.length ? (
-        <section className="surface-card notification-empty">
-          <strong>Loading notifications…</strong>
-        </section>
-      ) : notifications.status === "error" && !notifications.items.length ? (
-        <section className="surface-card notification-empty" role="status">
-          <span className="notification-empty__bell" aria-hidden="true">!</span>
-          <strong>Notifications are temporarily unavailable.</strong>
-          <p>Octagon HQ could not reach the notification service. Try again shortly.</p>
-          <button
-            className="primary-action"
-            type="button"
-            onClick={() => void notifications.refresh()}
-          >
-            TRY AGAIN
-          </button>
-        </section>
-      ) : !notifications.items.length ? (
-        <section className="surface-card notification-empty">
-          <span className="notification-empty__bell" aria-hidden="true">♢</span>
-          <strong>You&apos;re caught up.</strong>
-          <p>Actionable Octagon HQ updates will appear here.</p>
-        </section>
       ) : (
-        <section className="notification-list" aria-label="Notifications">
-          {notifications.items.map((item) => <NotificationRow item={item} key={item.id} />)}
-        </section>
+        <>
+          {notifications.status === "loading" && !notifications.items.length ? (
+            <section className="surface-card notification-empty">
+              <strong>Loading notifications…</strong>
+            </section>
+          ) : notifications.status === "error" && !notifications.items.length ? (
+            <section className="surface-card notification-empty" role="status">
+              <span className="notification-empty__bell" aria-hidden="true">!</span>
+              <strong>Notifications are temporarily unavailable.</strong>
+              <p>Octagon HQ could not reach the notification service. Try again shortly.</p>
+              <button
+                className="primary-action"
+                type="button"
+                onClick={() => void notifications.refresh()}
+              >
+                TRY AGAIN
+              </button>
+            </section>
+          ) : !notifications.items.length ? (
+            <section className="surface-card notification-empty">
+              <span className="notification-empty__bell" aria-hidden="true">♢</span>
+              <strong>You&apos;re caught up.</strong>
+              <p>Actionable Octagon HQ updates will appear here.</p>
+            </section>
+          ) : (
+            <section className="notification-list" aria-label="Notifications">
+              {notifications.items.map((item) => <NotificationRow item={item} key={item.id} />)}
+            </section>
+          )}
+
+          {ownProfilePath && pushPrompt ? (
+            <Link className="notification-push-profile-prompt" to={ownProfilePath}>
+              <span className="notification-push-profile-prompt__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" />
+                </svg>
+              </span>
+              <span className="notification-push-profile-prompt__copy">
+                <strong>{pushPrompt.title}</strong>
+                <small>{pushPrompt.detail}</small>
+              </span>
+              <b>{pushPrompt.action} →</b>
+            </Link>
+          ) : null}
+        </>
       )}
     </div>
   );
