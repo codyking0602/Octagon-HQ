@@ -69,7 +69,7 @@ export const shanesWatchlist = {
       highlight: "First-round UFC debut knockout",
       scoutingNote: "Olympic wrestling with heavyweight explosiveness. He has the highest ceiling on the board.",
       comparison: "Justin Gaethje",
-      photoUrl: null,
+      photoUrl: "/assets/fighters/gable-steveson-thumb.webp",
       ufcUrl: "https://www.ufc.com/athlete/gable-steveson",
     },
     {

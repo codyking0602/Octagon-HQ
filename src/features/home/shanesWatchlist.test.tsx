@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
@@ -5,15 +6,16 @@ import ShanesWatchlistPage from "./ShanesWatchlistPage";
 import { shanesWatchlist, watchMovement } from "./shanesWatchlist";
 
 describe("Shane's ranked watchlist", () => {
-  it("keeps one ordered Top 15 model with Gable first", () => {
+  it("keeps one ordered Top 15 model with Gable first and his real thumbnail wired", () => {
     expect(shanesWatchlist.capacity).toBe(15);
     expect(shanesWatchlist.fighters.map((fighter) => fighter.rank)).toEqual([1, 2, 3, 4]);
     expect(shanesWatchlist.fighters[0]).toMatchObject({
       id: "gable-steveson",
       rank: 1,
       comparison: "Justin Gaethje",
-      photoUrl: null,
+      photoUrl: "/assets/fighters/gable-steveson-thumb.webp",
     });
+    expect(existsSync("public/assets/fighters/gable-steveson-thumb.webp")).toBe(true);
     expect(watchMovement(shanesWatchlist.fighters[0])).toEqual({ label: "NEW", direction: "new" });
   });
 
