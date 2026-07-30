@@ -29,6 +29,10 @@ const readiness = readFileSync(
   "src/features/notifications/notificationDeviceReadiness.ts",
   "utf8",
 );
+const pushConnection = readFileSync(
+  "src/features/notifications/notificationDevicePush.ts",
+  "utf8",
+);
 const manifest = readFileSync("public/app.webmanifest", "utf8");
 const serviceWorker = readFileSync("public/push-readiness-sw.js", "utf8");
 const indexHtml = readFileSync("index.html", "utf8");
@@ -109,7 +113,7 @@ describe("notification preferences and push readiness", () => {
     expect(provider).not.toContain("setInterval");
   });
 
-  it("publishes installability and reports readiness without enabling push", () => {
+  it("keeps installability and passive readiness detection intact", () => {
     expect(parsedManifest.name).toBe("Octagon HQ");
     expect(parsedManifest.display).toBe("standalone");
     expect(parsedManifest.start_url).toBe("/");
@@ -120,19 +124,19 @@ describe("notification preferences and push readiness", () => {
     expect(readiness).toContain('"Notification" in window');
     expect(readiness).toContain("beforeinstallprompt");
     expect(readiness).toContain("promptNotificationAppInstall");
-    expect(page).toContain("Device delivery is not active yet");
-    expect(page).toContain("Share → Add to Home Screen");
-    expect(page).toContain("Permission has not been requested yet");
-  });
-
-  it("keeps the readiness worker inert until the final delivery PR", () => {
-    expect(serviceWorker).toContain('addEventListener("install"');
-    expect(serviceWorker).toContain('addEventListener("activate"');
-    expect(serviceWorker).not.toContain('addEventListener("push"');
-    expect(serviceWorker).not.toContain('addEventListener("notificationclick"');
     expect(readiness).not.toContain("Notification.requestPermission");
     expect(readiness).not.toContain("pushManager.subscribe");
     expect(readiness).not.toContain("applicationServerKey");
+    expect(page).toContain("Share → Add to Home Screen");
+  });
+
+  it("moves permission and delivery into the explicit final connection owner", () => {
+    expect(pushConnection).toContain("Notification.requestPermission");
+    expect(pushConnection).toContain("pushManager.subscribe");
+    expect(pushConnection).toContain("applicationServerKey");
+    expect(serviceWorker).toContain('addEventListener("push"');
+    expect(serviceWorker).toContain('addEventListener("notificationclick"');
+    expect(serviceWorker).toContain("showNotification");
     expect(contract).toContain("Device delivery is not active after this PR");
     expect(contract).toContain("Actual device push registration and delivery — final PR");
   });
