@@ -1,5 +1,12 @@
 -- Remove the two legacy Cody test messages that predate the current deletion path.
 -- The selector is intentionally exact: author, body, Central-time date, hour, and minute.
+-- This deployment-owned data repair bypasses the live member-validation and Broadcast
+-- triggers only for the duration of this transaction; both triggers are restored below.
+
+alter table private.war_room_messages
+  disable trigger war_room_messages_validate;
+alter table private.war_room_messages
+  disable trigger war_room_messages_broadcast;
 
 do $cleanup$
 declare
@@ -68,5 +75,10 @@ begin
     );
 end;
 $cleanup$;
+
+alter table private.war_room_messages
+  enable trigger war_room_messages_validate;
+alter table private.war_room_messages
+  enable trigger war_room_messages_broadcast;
 
 notify pgrst, 'reload schema';
