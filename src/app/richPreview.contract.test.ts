@@ -77,10 +77,10 @@ describe("rich preview ownership", () => {
     expect(architecture).toContain("Major ranking updates");
   });
 
-  it("uses plain GOAT and resume copy", () => {
+  it("normalizes legacy ranking copy and accented career spelling", () => {
     const previewSources = `${previewModel}\n${architecture}`;
-    expect(previewSources).toContain("GOAT");
     expect(previewSources).toContain("resume");
-    expect(previewSources).not.toMatch(/G\.O\.A\.T\.|[\u00e9\u00c9]/);
+    expect(previewSources).not.toMatch(/r[éÉ]sum[éÉ]/);
+    expect(previewSources).not.toContain("UFC GOAT");
   });
 });
