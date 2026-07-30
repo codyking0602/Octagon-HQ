@@ -234,6 +234,7 @@ jobs:
         with:
           name: octagon-frontend-${{ env.SOURCE_SHA }}
           path: dist
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 2
 
@@ -327,7 +328,10 @@ jobs:
           set -euo pipefail
           test -f dist/index.html
           test -f dist/_headers
+          test -f dist/_worker.js
+          test -f dist/.assetsignore
           test -f dist/deployment.json
+          grep -Fxq "_worker.js" dist/.assetsignore
           node --input-type=module - "$SOURCE_SHA" <<'NODE'
           import fs from "node:fs";
           const expectedSha = process.argv[2];
