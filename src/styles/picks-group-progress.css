@@ -1,22 +1,31 @@
 .picks-group-progress {
-  margin-top: 14px;
+  margin-top: 12px;
+  min-height: 0;
   overflow: hidden;
 }
 
-.picks-group-progress summary {
+.picks-group-progress summary,
+.picks-group-progress--static {
   align-items: center;
-  cursor: pointer;
   display: flex;
   justify-content: space-between;
+  min-height: 52px;
+  padding: 0 18px;
+}
+
+.picks-group-progress summary {
+  cursor: pointer;
   list-style: none;
-  padding: 16px 18px;
 }
 
 .picks-group-progress summary::-webkit-details-marker { display: none; }
-.picks-group-progress summary span { color: var(--text-muted); font-size: 12px; font-weight: 900; letter-spacing: .12em; }
-.picks-group-progress summary strong { font-size: 13px; letter-spacing: .03em; }
+.picks-group-progress summary span,
+.picks-group-progress--static span { color: var(--text-muted); font-size: 11px; font-weight: 900; letter-spacing: .12em; }
+.picks-group-progress summary strong,
+.picks-group-progress--static strong { font-size: 12px; letter-spacing: .04em; }
 .picks-group-progress summary::after { content: "⌄"; margin-left: 10px; transition: transform .18s ease; }
 .picks-group-progress[open] summary::after { transform: rotate(180deg); }
+.picks-group-progress--static strong { color: var(--text-muted); }
 
 .picks-group-progress__members {
   border-top: 1px solid var(--border-subtle);
@@ -32,16 +41,17 @@
   display: flex;
   font: inherit;
   justify-content: space-between;
-  padding: 14px 18px;
+  min-height: 50px;
+  padding: 9px 18px;
   text-align: left;
 }
 
 .picks-group-progress__members button:last-child { border-bottom: 0; }
 .picks-group-progress__members button.is-current-user { background: color-mix(in srgb, var(--accent) 8%, transparent); }
-.picks-group-progress__members button > span { display: grid; gap: 3px; }
-.picks-group-progress__members strong { font-size: 14px; }
-.picks-group-progress__members small { color: var(--text-muted); font-size: 10px; font-weight: 800; letter-spacing: .07em; }
-.picks-group-progress__members b { font-size: 15px; }
+.picks-group-progress__members button > span { display: grid; gap: 2px; }
+.picks-group-progress__members strong { font-size: 13px; }
+.picks-group-progress__members small { color: var(--text-muted); font-size: 9px; font-weight: 800; letter-spacing: .07em; }
+.picks-group-progress__members b { font-size: 14px; }
 
 .picks-member-progress-dialog {
   inset: 0;
