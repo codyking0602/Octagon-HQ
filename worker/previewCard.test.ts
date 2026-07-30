@@ -34,10 +34,10 @@ describe("rendered rich preview cards", () => {
   it("renders one destination-specific 1200 by 630 fighter card", () => {
     const html = renderPreviewCardHtml(fighterPreview, "https://octagon.hq-app.workers.dev");
 
-    expect(html).toContain('width=1200');
-    expect(html).toContain('width:1200px;height:630px');
+    expect(html).toContain("width=1200");
+    expect(html).toContain("width:1200px;height:630px");
     expect(html).toContain("FIGHTER PROFILE");
-    expect(html).toContain("JON JONES | UFC RANK #1");
+    expect(html).toContain("Jon Jones | UFC Rank #1");
     expect(html).toContain("jon-jones.webp");
     expect(html).not.toContain("app-icon.png");
   });
@@ -46,7 +46,7 @@ describe("rendered rich preview cards", () => {
     const html = renderPreviewCardHtml(comparisonPreview, "https://octagon.hq-app.workers.dev");
 
     expect(html).toContain("FIGHTER COMPARISON");
-    expect(html).toContain("GEORGES ST-PIERRE VS. JON JONES");
+    expect(html).toContain("Georges St-Pierre vs. Jon Jones");
     expect(html).toContain("georges-st-pierre.webp");
     expect(html).toContain("jon-jones.webp");
     expect(html).toContain("grid-template-columns:1fr 1fr");
@@ -63,7 +63,7 @@ describe("rendered rich preview cards", () => {
     const html = renderPreviewCardHtml(result, "https://octagon.hq-app.workers.dev");
 
     expect(html).toContain("GAME RESULT");
-    expect(html).toContain("CODY WINS");
+    expect(html).toContain("CODY wins");
     expect(html).toContain("CODY 8/10 vs. SHANE 6/10");
   });
 
