@@ -1,0 +1,75 @@
+name: Verify Live Rich Preview Cards
+
+on:
+  workflow_run:
+    workflows:
+      - Deploy Cloudflare Frontend
+    types:
+      - completed
+
+permissions:
+  contents: read
+
+concurrency:
+  group: octagon-hq-live-rich-preview-proof
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    if: >-
+      github.event.workflow_run.conclusion == 'success'
+      && github.event.workflow_run.event == 'push'
+      && github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
+      EXPECTED_SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
+    steps:
+      - name: Check out exact deployed source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_SOURCE_SHA }}
+          fetch-depth: 1
+          persist-credentials: false
+          show-progress: false
+
+      - name: Verify exact source checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          checked_out_sha=$(git rev-parse HEAD)
+          if [ "$checked_out_sha" != "$EXPECTED_SOURCE_SHA" ]; then
+            echo "::error title=Exact preview proof checkout failed::Expected $EXPECTED_SOURCE_SHA but checked out $checked_out_sha."
+            exit 1
+          fi
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Verify live rich preview cards
+        run: node scripts/verify-live-rich-previews.mjs
+
+      - name: Upload rendered preview proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-rich-preview-proof-${{ env.EXPECTED_SOURCE_SHA }}
+          path: ${{ runner.temp }}/octagon-*-preview.png
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Record verification
+        if: success()
+        shell: bash
+        run: |
+          {
+            echo "### Live rich-preview cards verified"
+            echo "- Exact deployed SHA: \`$EXPECTED_SOURCE_SHA\`"
+            echo "- Fighter profile returned a destination-specific preview"
+            echo "- Fighter comparison returned both fighters in one card"
+            echo "- Game challenge returned its exact challenge card"
+            echo "- Every verified image was a 1200x630 PNG"
+          } >> "$GITHUB_STEP_SUMMARY"
