@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { requestNotificationDevicePermission } from "./notificationDevicePush";
 import { useNotifications } from "./NotificationProvider";
 
 export function NotificationPushSetting() {
@@ -33,8 +34,18 @@ export function NotificationPushSetting() {
   async function togglePush() {
     if (busy || unavailable) return;
     setAttemptedConnection(true);
-    if (isOn) await notifications.disableDevicePush();
-    else await notifications.enableDevicePush();
+    if (isOn) {
+      await notifications.disableDevicePush();
+      return;
+    }
+
+    try {
+      // iPhone requires this prompt to begin directly from the member's tap.
+      await requestNotificationDevicePermission();
+    } catch {
+      // Let the canonical provider translate denied or failed permission into shared state.
+    }
+    await notifications.enableDevicePush();
   }
 
   const detail = readiness.isIos && !readiness.installed
@@ -43,11 +54,15 @@ export function NotificationPushSetting() {
       ? "Push notifications are blocked in this device's settings. Bell notifications still work."
       : effectiveStatus === "unsupported"
         ? "This browser cannot receive push notifications. Bell notifications still work."
-        : effectiveStatus === "error"
-          ? "The last connection attempt did not finish. Bell notifications still work."
-          : isOn
-            ? "Phone alerts are enabled for this device. Bell notifications remain available inside Octagon HQ."
-            : "Phone alerts are off. Bell notifications still appear inside Octagon HQ.";
+        : effectiveStatus === "error" && readiness.permission === "default"
+          ? "Tap the switch again. Your iPhone should ask for permission before Octagon HQ connects."
+          : effectiveStatus === "error" && readiness.permission === "granted"
+            ? "Your iPhone allowed notifications, but Octagon HQ could not finish registering this device. Tap the switch to retry."
+            : effectiveStatus === "error"
+              ? "The last connection attempt did not finish. Bell notifications still work."
+              : isOn
+                ? "Phone alerts are enabled for this device. Bell notifications remain available inside Octagon HQ."
+                : "Phone alerts are off. Bell notifications still appear inside Octagon HQ.";
 
   return (
     <section className="surface-card member-profile-push-setting" aria-labelledby="profile-push-title">
