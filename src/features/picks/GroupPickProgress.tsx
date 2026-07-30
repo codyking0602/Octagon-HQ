@@ -1,21 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
-import { getSupabaseClient } from "../../lib/supabase";
+import { useMemo, useState } from "react";
 import type { PickEvent } from "./picksModel";
 import type { PickEventMemberProgress } from "./groupProgressModel";
+import { usePicks } from "./PicksProvider";
 
 interface GroupPickProgressProps {
   event: PickEvent;
   locked: boolean;
   mySelections: Readonly<Record<string, string>>;
-}
-
-interface ProgressRow {
-  profile_id: string;
-  display_name: string;
-  completed: number;
-  total: number;
-  has_underdog_lock: boolean;
-  is_current_user: boolean;
 }
 
 function memberStatus(member: PickEventMemberProgress) {
@@ -24,45 +15,14 @@ function memberStatus(member: PickEventMemberProgress) {
   return "NOT STARTED";
 }
 
-function mapProgress(rows: ProgressRow[]): PickEventMemberProgress[] {
-  return rows.map((row) => ({
-    profileId: row.profile_id,
-    displayName: row.display_name,
-    completed: row.completed,
-    total: row.total,
-    hasUnderdogLock: row.has_underdog_lock,
-    isCurrentUser: row.is_current_user,
-  }));
-}
-
 export function GroupPickProgress({ event, locked, mySelections }: GroupPickProgressProps) {
-  const [members, setMembers] = useState<PickEventMemberProgress[]>([]);
+  const picks = usePicks();
+  const members = picks.groupProgress;
+  const loading = picks.groupProgressLoading;
+  const error = picks.groupProgressError;
   const [selectedName, setSelectedName] = useState<string | null>(null);
   const selected = members.find((member) => member.displayName === selectedName) ?? null;
   const completedMembers = members.filter((member) => member.completed === member.total && member.total > 0).length;
-
-  useEffect(() => {
-    const supabase = getSupabaseClient();
-    if (!supabase) return undefined;
-    let active = true;
-
-    const load = async () => {
-      const { data, error } = await supabase.rpc("get_event_pick_progress", { p_event_id: event.eventId });
-      if (!active || error) return;
-      setMembers(mapProgress((data ?? []) as ProgressRow[]));
-    };
-
-    void load();
-    const onVisible = () => {
-      if (document.visibilityState === "visible") void load();
-    };
-    document.addEventListener("visibilitychange", onVisible);
-    return () => {
-      active = false;
-      document.removeEventListener("visibilitychange", onVisible);
-    };
-  }, [event.eventId]);
-
   const selectedPicks = useMemo(() => {
     if (!selected || !locked) return [];
     return event.bouts.map((bout) => {
@@ -83,16 +43,23 @@ export function GroupPickProgress({ event, locked, mySelections }: GroupPickProg
     });
   }, [event.bouts, locked, mySelections, selected]);
 
-  if (!members.length) return null;
+  const summary = loading
+    ? "LOADING"
+    : members.length
+      ? `${completedMembers}/${members.length} COMPLETE`
+      : "UNAVAILABLE";
 
   return (
     <>
       <details className="surface-card picks-group-progress">
         <summary>
           <span>GROUP PICKS</span>
-          <strong>{completedMembers}/{members.length} COMPLETE</strong>
+          <strong>{summary}</strong>
         </summary>
         <div className="picks-group-progress__members">
+          {loading ? <p className="picks-group-progress__state">Loading group progress…</p> : null}
+          {!loading && error ? <p className="picks-group-progress__state">Group progress is temporarily unavailable.</p> : null}
+          {!loading && !error && !members.length ? <p className="picks-group-progress__state">No member progress yet.</p> : null}
           {members.map((member) => (
             <button
               type="button"
