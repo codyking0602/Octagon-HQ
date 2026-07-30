@@ -9,6 +9,10 @@ const repairMigration = readFileSync(
   "supabase/migrations/202608200027_repair_whats_new_watchlist_sync.sql",
   "utf8",
 );
+const previewMigration = readFileSync(
+  "supabase/migrations/202608200028_dynamic_rich_preview_data.sql",
+  "utf8",
+);
 const integrationSql = readFileSync(
   "supabase/tests/whats_new_rankings_sync.sql",
   "utf8",
@@ -39,10 +43,10 @@ describe("What's New Rankings and fighter producers", () => {
     expect(repairMigration).toContain("create table if not exists private.fighters_to_watch_whats_new_seen");
     expect(repairMigration).toContain("alter table private.fighters_to_watch_whats_new_seen enable row level security");
     expect(repairMigration).toContain("revoke all on private.fighters_to_watch_whats_new_seen from public, anon, authenticated");
-    expect(repairMigration).toContain("create or replace function public.sync_ranking_whats_new");
-    expect(repairMigration).toContain("if auth.role() <> 'service_role'");
-    expect(repairMigration).toContain("to service_role");
-    expect(repairMigration).not.toContain("grant select on private.fighters_to_watch_whats_new_seen to authenticated");
+    expect(previewMigration).toContain("create table if not exists private.rich_preview_major_ranking_updates");
+    expect(previewMigration).toContain("revoke all on private.rich_preview_major_ranking_updates from public, anon, authenticated");
+    expect(previewMigration).toContain("if auth.role() <> 'service_role'");
+    expect(previewMigration).toContain("to service_role");
   });
 
   it("uses the existing publisher for approved meaningful updates", () => {
@@ -57,22 +61,27 @@ describe("What's New Rankings and fighter producers", () => {
     expect(migration).toContain("if v_meaningful_movements >= 5 then");
     expect(migration).toContain("'/fighters/' || v_row.fighter_slug");
     expect(repairMigration).toContain("'/fighters-to-watch'");
+    expect(previewMigration).toContain("private.sync_ranking_whats_new_v2_core");
+    expect(previewMigration).toContain("'/rankings?update=' || v_source_sha");
     expect(repairMigration).not.toContain("insert into private.whats_new_items");
   });
 
-  it("keeps durable watchlist history separate from the disposable snapshot", () => {
+  it("keeps durable watchlist history and preview evidence separate", () => {
     expect(repairMigration).toContain("set schema private");
     expect(repairMigration).toContain("rename to sync_ranking_whats_new_core");
     expect(repairMigration).toContain("delete from private.fighters_to_watch_whats_new_snapshot");
     expect(repairMigration).toContain("left join private.fighters_to_watch_whats_new_seen seen");
     expect(repairMigration).toContain("on conflict (watch_id) do update");
     expect(repairMigration).toContain("'sync_contract_version', 2");
+    expect(previewMigration).toContain("rename to sync_ranking_whats_new_v2_core");
+    expect(previewMigration).toContain("'sync_contract_version', 3");
+    expect(previewMigration).toContain("'rich_preview_movement_count'");
     expect(repairMigration).toContain("'watchlist_baseline_created', false");
     expect(repairMigration).toContain("'fatima-kline'");
     expect(repairMigration).toContain("'abdul-rakhman-yakhyaev'");
     expect(repairMigration).toContain("'daniil-donchenko'");
     expect(repairMigration).not.toMatch(/values[\s\S]*'gable-steveson'[\s\S]*on conflict \(watch_id\) do nothing/);
-    expect(script).toContain("const requiredContractVersion = 2");
+    expect(script).toContain("const requiredContractVersion = 3");
     expect(script).toContain("candidate.sync_contract_version === requiredContractVersion");
     expect(script).toContain("is not deployed yet; retrying");
     expect(script).toContain('vite.ssrLoadModule("/src/features/rankings/rankingModel.ts")');
