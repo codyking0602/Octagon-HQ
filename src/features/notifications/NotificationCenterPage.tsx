@@ -96,6 +96,7 @@ export default function NotificationCenterPage() {
   const notifications = useNotifications();
   const ownProfilePath = identity.profile ? memberProfilePath(identity.profile.displayName) : null;
   const pushPrompt = pushProfilePrompt(notifications.devicePush.status);
+  const hasReadNotifications = notifications.items.some((item) => item.isRead);
 
   return (
     <div className="page notification-page">
@@ -105,14 +106,27 @@ export default function NotificationCenterPage() {
           <h1>Notifications</h1>
           <p>Personal updates, reminders, and actions from across the app.</p>
         </div>
-        {notifications.unreadCount > 0 ? (
-          <button
-            className="notification-page__mark-all"
-            type="button"
-            onClick={() => void notifications.markAllRead()}
-          >
-            Mark all as read
-          </button>
+        {notifications.unreadCount > 0 || hasReadNotifications ? (
+          <div className="notification-page__actions">
+            {notifications.unreadCount > 0 ? (
+              <button
+                className="notification-page__mark-all"
+                type="button"
+                onClick={() => void notifications.markAllRead()}
+              >
+                Mark all as read
+              </button>
+            ) : null}
+            {hasReadNotifications ? (
+              <button
+                className="notification-page__mark-all"
+                type="button"
+                onClick={() => void notifications.clearRead()}
+              >
+                Clear read
+              </button>
+            ) : null}
+          </div>
         ) : null}
       </section>
 
