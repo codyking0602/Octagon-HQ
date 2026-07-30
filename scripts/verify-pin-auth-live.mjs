@@ -5,11 +5,7 @@ const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
 const projectId = process.env.SUPABASE_PROJECT_ID;
 const productionOrigin = process.env.OCTAGON_PRODUCTION_ORIGIN
   ?? "https://octagon.hq-app.workers.dev";
-const explicitDeploymentSha = process.env.EXPECTED_DEPLOYMENT_SHA?.trim() ?? "";
-const expectedDeploymentSha = explicitDeploymentSha
-  || (process.env.GITHUB_EVENT_NAME === "pull_request"
-    ? process.env.EXPECTED_SYNC_SOURCE_SHA?.trim() ?? ""
-    : "");
+const expectedDeploymentSha = process.env.EXPECTED_DEPLOYMENT_SHA?.trim() ?? "";
 const articleUrl = "https://www.mmamania.com/ufc-fight-cards/446488/latest-ufc-belgrade-fight-card-paramount-start-time-date-and-location-medic-vs-rodriguez-mma";
 
 if (!accessToken || !projectId) {
@@ -49,17 +45,22 @@ async function request(stage, url, options = {}, acceptedStatuses = [200]) {
   return { response, body };
 }
 
-if (expectedDeploymentSha) {
-  const marker = await request(
-    "Live frontend deployment marker",
-    `${productionOrigin}/deployment.json?expected=${expectedDeploymentSha}&run=${process.env.GITHUB_RUN_ID ?? Date.now()}`,
-    { headers: { "Cache-Control": "no-cache" } },
+const markerUrl = new URL("/deployment.json", productionOrigin);
+markerUrl.searchParams.set("run", process.env.GITHUB_RUN_ID ?? String(Date.now()));
+if (expectedDeploymentSha) markerUrl.searchParams.set("expected", expectedDeploymentSha);
+const marker = await request(
+  "Live frontend deployment marker",
+  markerUrl.toString(),
+  { headers: { "Cache-Control": "no-cache" } },
+);
+const liveDeploymentSha = marker.body?.sha ?? "";
+if (!/^[0-9a-f]{40}$/i.test(liveDeploymentSha)) {
+  throw new Error(`Live frontend deployment marker is missing or invalid: ${liveDeploymentSha || "missing"}.`);
+}
+if (expectedDeploymentSha && liveDeploymentSha !== expectedDeploymentSha) {
+  throw new Error(
+    `Live frontend deployment marker: expected ${expectedDeploymentSha}, received ${liveDeploymentSha}.`,
   );
-  if (marker.body?.sha !== expectedDeploymentSha) {
-    throw new Error(
-      `Live frontend deployment marker: expected ${expectedDeploymentSha}, received ${marker.body?.sha ?? "missing"}.`,
-    );
-  }
 }
 
 const keysResult = await request(
@@ -232,7 +233,7 @@ try {
   await page.waitForURL((url) => url.pathname === "/picks/monitoring", { timeout: 15_000 });
   await page.getByRole("heading", { name: "Monitoring Inbox", exact: true }).waitFor({ state: "visible" });
   await page.getByRole("heading", { name: "Check now or refresh the ledger" }).waitFor({ state: "visible", timeout: 15_000 });
-  await page.getByText(process.env.GITHUB_EVENT_NAME === "pull_request" ? "PAUSED" : "ACTIVE", { exact: true }).waitFor({ state: "visible" });
+  await page.getByText("ACTIVE", { exact: true }).waitFor({ state: "visible" });
   if (await page.getByText("INBOX UNAVAILABLE", { exact: true }).count()) {
     throw new Error("Monitoring Inbox rendered its unavailable state for the temporary owner.");
   }
@@ -269,7 +270,7 @@ try {
   await page.screenshot({ path: screenshotPath, fullPage: true });
 
   console.log(
-    `PASS: WebKit verified exact production frontend ${expectedDeploymentSha || "(SHA not requested)"}, authenticated at 390x844, preserved the Monitoring Inbox route through sign-in, loaded owner-only monitoring data, and displayed the clean current UFC Belgrade source review without publishing.`,
+    `PASS: WebKit verified live production frontend ${liveDeploymentSha}, authenticated at 390x844, preserved the Monitoring Inbox route through sign-in, loaded active owner-only monitoring data, and displayed the clean current UFC Belgrade source review without publishing.`,
   );
 } finally {
   if (browser) await browser.close().catch(() => undefined);
