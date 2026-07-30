@@ -5,7 +5,7 @@ const page = readFileSync("src/features/picks/PicksPage.tsx", "utf8");
 const component = readFileSync("src/features/picks/GroupPickProgress.tsx", "utf8");
 const provider = readFileSync("src/features/picks/PicksProvider.tsx", "utf8");
 const repository = readFileSync("src/features/picks/picksGroupProgressRepository.ts", "utf8");
-const migration = readFileSync("supabase/migrations/202607310002_group_pick_progress.sql", "utf8");
+const migration = readFileSync("supabase/migrations/202608010001_group_pick_progress.sql", "utf8");
 
 describe("Group Picks production wiring", () => {
   it("renders the collapsed progress surface through the canonical Picks owner", () => {
