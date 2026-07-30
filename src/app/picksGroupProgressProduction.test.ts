@@ -3,12 +3,25 @@ import { describe, expect, it } from "vitest";
 
 const page = readFileSync("src/features/picks/PicksPage.tsx", "utf8");
 const component = readFileSync("src/features/picks/GroupPickProgress.tsx", "utf8");
+const provider = readFileSync("src/features/picks/PicksProvider.tsx", "utf8");
+const repository = readFileSync("src/features/picks/picksGroupProgressRepository.ts", "utf8");
 const migration = readFileSync("supabase/migrations/202607310002_group_pick_progress.sql", "utf8");
 
 describe("Group Picks production wiring", () => {
-  it("renders the collapsed progress owner on the active Picks event", () => {
+  it("renders the collapsed progress surface through the canonical Picks owner", () => {
     expect(page).toContain("<GroupPickProgress event={activeEvent} locked={locked} mySelections={picks.selections} />");
-    expect(component).toContain('supabase.rpc("get_event_pick_progress"');
+    expect(component).toContain("const picks = usePicks()");
+    expect(component).not.toContain("getSupabaseClient");
+    expect(component).not.toContain("supabase.rpc");
+    expect(provider).toContain("loadPickGroupProgress");
+    expect(repository).toContain('supabase.rpc("get_event_pick_progress"');
+  });
+
+  it("keeps the feature non-blocking when progress data is unavailable", () => {
+    expect(provider).toContain("groupProgressError");
+    expect(provider).toContain(".catch((progressError: unknown)");
+    expect(component).toContain("Group progress is temporarily unavailable.");
+    expect(component).toContain("No member progress yet.");
   });
 
   it("returns member counts without pre-lock fighter selections", () => {
