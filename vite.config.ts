@@ -19,9 +19,10 @@ function previewImagePath(profileUrl: string, thumbUrl: string) {
 
 function plainBuildCopy(value: string) {
   return value
-    .normalize("NFD")
-    .replace(/\p{M}/gu, "")
-    .replace(/G\.O\.A\.T\./gi, "GOAT");
+    .replace(/G\.O\.A\.T\./gi, "GOAT")
+    .replace(/r\u00e9sum\u00e9/gi, "resume")
+    .replace(/resum\u00e9/gi, "resume")
+    .replace(/r\u00e9sume/gi, "resume");
 }
 
 function deployedFighterAssets() {
