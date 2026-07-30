@@ -12,42 +12,59 @@ const viteConfig = source("../../vite.config.ts");
 const workerConfig = source("../../vite.worker.config.ts");
 const worker = source("../../worker/index.ts");
 const previewModel = source("../../worker/previewModel.ts");
+const previewCard = source("../../worker/previewCard.ts");
+const deployWorkflow = source("../../.github/workflows/deploy-cloudflare.yml");
 const architecture = source("../../docs/rich-preview-architecture.md");
 const migration = source("../../supabase/migrations/202608200028_dynamic_rich_preview_data.sql");
 const assetsIgnore = source("../../public/.assetsignore");
 
 describe("rich preview ownership", () => {
-  it("uses one Worker for every approved preview surface", () => {
+  it("uses one Worker and one Browser Run binding for every approved preview surface", () => {
     expect(wrangler).toContain('"main": "./dist/_worker.js"');
     expect(wrangler).toContain('"binding": "ASSETS"');
-    for (const route of ['"/fighters/*"', '"/rankings"', '"/picks"', '"/play"', '"/play/*"']) {
+    expect(wrangler).toContain('"browser"');
+    expect(wrangler).toContain('"binding": "BROWSER"');
+    for (const route of [
+      '"/fighters/*"',
+      '"/rankings"',
+      '"/picks"',
+      '"/play"',
+      '"/play/*"',
+      '"/share-preview/*"',
+    ]) {
       expect(wrangler).toContain(route);
     }
     expect(wrangler).not.toContain('"run_worker_first": true');
     expect(assetsIgnore).toContain("_worker.js");
   });
 
-  it("derives compact preview catalogs from canonical app owners", () => {
+  it("embeds compact preview catalogs from canonical app owners", () => {
     expect(viteConfig).toContain('import { allTime } from "./src/features/rankings/rankingModel"');
     expect(viteConfig).toContain('import { playGames } from "./src/features/play/playRegistry"');
     expect(viteConfig).toContain('version: 2 as const');
     expect(viteConfig).toContain("fighterAssets: deployedFighterAssets()");
     expect(viteConfig).toContain('fileName: "preview-data/rankings.json"');
-    expect(worker).toContain("preview-data/rankings.json");
+    expect(workerConfig).toContain('"preview-data", "rankings.json"');
+    expect(workerConfig).toContain("__OCTAGON_PREVIEW_CATALOG__");
+    expect(worker).not.toContain("preview-data/rankings.json");
     expect(worker).not.toContain("rankingInputs");
   });
 
-  it("bundles the one server metadata owner into the exact production artifact", () => {
+  it("bundles one server metadata owner and one rendered PNG card owner", () => {
     expect(packageJson).toContain("vite build --config vite.worker.config.ts");
     expect(workerConfig).toContain('fileName: () => "_worker.js"');
     expect(workerConfig).toContain("emptyOutDir: false");
     expect(workerConfig).toContain("__OCTAGON_SUPABASE_URL__");
     expect(workerConfig).toContain("__OCTAGON_SUPABASE_PUBLISHABLE_KEY__");
     expect(worker).toContain("HTMLRewriter");
-    expect(worker).toContain("og:title");
-    expect(worker).toContain("og:image");
-    expect(worker).toContain("twitter:card");
-    expect(worker).toContain("X-Octagon-Preview");
+    expect(worker).toContain('quickAction("screenshot"');
+    expect(worker).toContain("og:image:width");
+    expect(worker).toContain("og:image:height");
+    expect(worker).toContain("image/png");
+    expect(worker).toContain("X-Octagon-Preview-Image");
+    expect(previewCard).toContain("renderPreviewCardHtml");
+    expect(previewCard).toContain("previewCardImagePath");
+    expect(previewCard).toContain("width:1200px;height:630px");
   });
 
   it("uses one deliberately small public RPC for dynamic cards", () => {
@@ -77,8 +94,18 @@ describe("rich preview ownership", () => {
     expect(architecture).toContain("Major ranking updates");
   });
 
+  it("requires exact live crawler and PNG proof after production deployment", () => {
+    expect(deployWorkflow).toContain("worker/**");
+    expect(deployWorkflow).toContain("Verify live rich preview cards");
+    expect(deployWorkflow).toContain("x-octagon-preview:");
+    expect(deployWorkflow).toContain("share-preview");
+    expect(deployWorkflow).toContain("image/png");
+    expect(deployWorkflow).toContain("readUInt32BE(16)");
+    expect(deployWorkflow).toContain("readUInt32BE(20)");
+  });
+
   it("normalizes legacy ranking copy and accented career spelling", () => {
-    const previewSources = `${previewModel}\n${architecture}`;
+    const previewSources = `${previewModel}\n${previewCard}\n${architecture}`;
     const legacyLabel = ["G", "O", "A", "T"].join("");
     expect(previewSources).toContain("resume");
     expect(previewSources).not.toMatch(/r[éÉ]sum[éÉ]/);
