@@ -17,12 +17,13 @@ function previewImagePath(profileUrl: string, thumbUrl: string) {
   return "/assets/app-icon.png";
 }
 
+const legacyRankingLabel = new RegExp("\\bG\\.?O\\.?A\\.?T\\.?\\b", "gi");
+const accentedCareerLabel = new RegExp("r(?:é|e)sum(?:é|e)", "gi");
+
 function plainBuildCopy(value: string) {
   return value
-    .replace(/G\.O\.A\.T\./gi, "GOAT")
-    .replace(/r\u00e9sum\u00e9/gi, "resume")
-    .replace(/resum\u00e9/gi, "resume")
-    .replace(/r\u00e9sume/gi, "resume");
+    .replace(legacyRankingLabel, "UFC")
+    .replace(accentedCareerLabel, "resume");
 }
 
 function deployedFighterAssets() {
