@@ -77,6 +77,14 @@ describe("Phase 2B event setup backend", () => {
     expect(webkitVerifier).not.toContain("SOURCE MATCHES DRAFT");
   });
 
+  it("keeps live frontend and backend verification on their actual production revisions", () => {
+    expect(webkitVerifier).not.toContain("EXPECTED_SYNC_SOURCE_SHA");
+    expect(webkitVerifier).toContain("const liveDeploymentSha");
+    expect(webkitVerifier).toContain("expectedDeploymentSha && liveDeploymentSha !== expectedDeploymentSha");
+    expect(webkitVerifier).toContain('page.getByText("ACTIVE", { exact: true })');
+    expect(webkitVerifier).not.toContain('? "PAUSED" : "ACTIVE"');
+  });
+
   it("deploys and verifies the sync function runtime revision through the canonical backend owner", () => {
     expect(config).toContain("[functions.sync-next-ufc-event]");
     expect(config).toContain("[functions.sync-next-ufc-event]\nverify_jwt = false");
