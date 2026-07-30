@@ -10,7 +10,7 @@ const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
 const sourceSha = process.env.SOURCE_SHA?.trim().toLowerCase();
 const maxAttempts = Math.min(20, Math.max(1, Number(process.env.RANKING_SYNC_MAX_ATTEMPTS ?? 1)));
 const retryDelayMs = Math.min(30_000, Math.max(1_000, Number(process.env.RANKING_SYNC_RETRY_DELAY_MS ?? 15_000)));
-const requiredContractVersion = 2;
+const requiredContractVersion = 3;
 
 if (!supabaseUrl || !/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(supabaseUrl)) {
   throw new Error("A valid production SUPABASE_URL is required.");
@@ -113,6 +113,7 @@ try {
     `Meaningful movements detected: ${result.meaningful_movements_detected ?? 0}.`,
     `Movement items published: ${result.ranking_movements_published ?? 0}.`,
     `Major ranking updates published: ${result.major_ranking_updates_published ?? 0}.`,
+    `Rich preview movements captured: ${result.rich_preview_movement_count ?? 0}.`,
     `Fighters to Watch published: ${result.fighters_to_watch_published ?? 0}.`,
     `Watchlist IDs seen: ${result.watchlist_seen_count ?? watchlistRows.length}.`,
   ].join(" "));
