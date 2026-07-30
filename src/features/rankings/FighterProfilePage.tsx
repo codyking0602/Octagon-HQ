@@ -81,6 +81,7 @@ export default function FighterProfilePage() {
   }
 
   async function handleShare() {
+    if (!fighter) return;
     const outcome = await shareProfile(displayName, fighter.slug);
     setShareLabel(outcome === "copied" ? "Copied" : outcome === "unavailable" ? "Try Again" : "Share");
   }
