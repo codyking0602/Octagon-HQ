@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
@@ -14,6 +15,7 @@ describe("Shane's ranked watchlist", () => {
       comparison: "Justin Gaethje",
       photoUrl: "/assets/fighters/gable-steveson-thumb.webp",
     });
+    expect(existsSync("public/assets/fighters/gable-steveson-thumb.webp")).toBe(true);
     expect(watchMovement(shanesWatchlist.fighters[0])).toEqual({ label: "NEW", direction: "new" });
   });
 
