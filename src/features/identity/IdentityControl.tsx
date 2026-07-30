@@ -177,7 +177,7 @@ export function IdentityControl() {
         onClick={identity.openDialog}
         aria-label={identity.profile ? `Open ${identity.profile.displayName} profile menu` : "Sign in to Octagon HQ"}
       >
-        {identity.profile ? <i>{avatar}</i> : null}
+        {identity.profile ? <i className="identity-trigger__photo">{avatar}</i> : null}
         <span>{buttonLabel}</span>
       </button>
       {dialog}
