@@ -77,6 +77,14 @@ describe("Phase 2B event setup backend", () => {
     expect(webkitVerifier).not.toContain("SOURCE MATCHES DRAFT");
   });
 
+  it("keeps live frontend and backend verification on their actual production revisions", () => {
+    expect(webkitVerifier).not.toContain("EXPECTED_SYNC_SOURCE_SHA");
+    expect(webkitVerifier).toContain("const liveDeploymentSha");
+    expect(webkitVerifier).toContain("expectedDeploymentSha && liveDeploymentSha !== expectedDeploymentSha");
+    expect(webkitVerifier).toContain('page.getByText("ACTIVE", { exact: true })');
+    expect(webkitVerifier).not.toContain('? "PAUSED" : "ACTIVE"');
+  });
+
   it("deploys and verifies the sync function runtime revision through the canonical backend owner", () => {
     expect(config).toContain("[functions.sync-next-ufc-event]");
     expect(config).toContain("[functions.sync-next-ufc-event]\nverify_jwt = false");
@@ -89,7 +97,11 @@ describe("Phase 2B event setup backend", () => {
     expect(syncFunction).toContain("admin.auth.getUser(token)");
     expect(syncFunction).toContain('input.mode === "monitoring-preview"');
     expect(syncFunction).toContain('request.headers.get("apikey") === secretKey');
-    expect(deploymentVerifier).toContain("body?.deployment_sha !== expectedRevision");
-    expect(deploymentVerifier).toContain("x-octagon-backend-sha");
+    expect(deploymentVerifier).toContain('process.env.GITHUB_EVENT_NAME !== "pull_request"');
+    expect(deploymentVerifier).toContain("verifyExactSource && deployedSha !== expectedSha");
+    expect(deploymentVerifier).toContain('x-octagon-backend-sha") !== deployedSha');
+    expect(deploymentVerifier).toContain("appendFileSync(process.env.GITHUB_ENV");
+    expect(deploymentVerifier).toContain("EXPECTED_SYNC_SOURCE_SHA=${deployedSha}");
+    expect(deploymentVerifier).toContain("|| deployedSha");
   });
 });

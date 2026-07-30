@@ -10,6 +10,7 @@ const sync = readFileSync("supabase/functions/sync-next-ufc-event/index.ts", "ut
 const config = readFileSync("supabase/config.toml", "utf8");
 const deploy = readFileSync(".github/workflows/deploy-supabase.yml", "utf8");
 const verifier = readFileSync("scripts/verify-monitoring-function-deployment.mjs", "utf8");
+const productionVerifier = readFileSync("scripts/verify-production-monitoring-scheduler.mjs", "utf8");
 
 describe("automatic Picks monitoring deployment", () => {
   it("has one canonically named database scheduler that invokes the existing runner", () => {
@@ -30,6 +31,11 @@ describe("automatic Picks monitoring deployment", () => {
     expect(verifier).toContain("health?.command_configured !== true");
     expect(verifier).toContain("fakeSchedulerResponse.status !== 401");
     expect(verifier).not.toContain("THE_ODDS_API_KEY=");
+  });
+
+  it("checks the live production scheduler as active even when verification runs on a PR", () => {
+    expect(productionVerifier).toContain(': true;');
+    expect(productionVerifier).not.toContain('process.env.GITHUB_EVENT_NAME !== "pull_request"');
   });
 
   it("proves the runtime job command without exposing it or its credential", () => {

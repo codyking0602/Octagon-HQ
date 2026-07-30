@@ -1,10 +1,11 @@
-import { existsSync } from "node:fs";
+import { appendFileSync, existsSync } from "node:fs";
 
 const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
 const projectId = process.env.SUPABASE_PROJECT_ID;
 const expectedSha = process.env.EXPECTED_SYNC_SOURCE_SHA?.trim() ?? "";
 const productionOrigin = process.env.OCTAGON_PRODUCTION_ORIGIN
   ?? "https://octagon.hq-app.workers.dev";
+const verifyExactSource = process.env.GITHUB_EVENT_NAME !== "pull_request";
 
 if (!accessToken || !projectId || !expectedSha) {
   throw new Error("Exact sync-function verification is not configured.");
@@ -53,21 +54,32 @@ const body = await readBody(response);
 if (!response.ok) {
   throw new Error(`Deployed sync-function marker returned HTTP ${response.status}: ${body?.message ?? "unknown response"}`);
 }
-if (body?.deployment_sha !== expectedSha) {
+const deployedSha = body?.deployment_sha ?? "";
+if (!/^[0-9a-f]{40}$/i.test(deployedSha)) {
+  throw new Error(`Deployed sync-function marker is missing or invalid: ${deployedSha || "missing"}.`);
+}
+if (verifyExactSource && deployedSha !== expectedSha) {
   throw new Error(
-    `Deployed sync-function marker mismatch: expected ${expectedSha}, received ${body?.deployment_sha ?? "missing"}.`,
+    `Deployed sync-function marker mismatch: expected ${expectedSha}, received ${deployedSha}.`,
   );
 }
-if (response.headers.get("x-octagon-backend-sha") !== expectedSha) {
-  throw new Error("Deployed sync-function SHA header did not match the expected exact source.");
+if (response.headers.get("x-octagon-backend-sha") !== deployedSha) {
+  throw new Error("Deployed sync-function SHA header did not match its deployment marker.");
 }
 if (response.headers.get("access-control-allow-origin") !== productionOrigin) {
   throw new Error(`Deployed sync function is not allowing ${productionOrigin}.`);
 }
 
-console.log(`PASS: sync-next-ufc-event is deployed from exact source ${expectedSha}.`);
+if (verifyExactSource) {
+  console.log(`PASS: sync-next-ufc-event is deployed from exact source ${expectedSha}.`);
+} else {
+  console.log(`PASS: production sync-next-ufc-event deployment ${deployedSha} is healthy; unmerged PR source ${expectedSha} was not required to be live.`);
+  if (process.env.GITHUB_ENV) {
+    appendFileSync(process.env.GITHUB_ENV, `EXPECTED_SYNC_SOURCE_SHA=${deployedSha}\n`);
+  }
+}
 
 if (existsSync("supabase/functions/run-pick-monitoring/index.ts")) {
-  process.env.EXPECTED_MONITORING_SOURCE_SHA = process.env.EXPECTED_MONITORING_SOURCE_SHA?.trim() || expectedSha;
+  process.env.EXPECTED_MONITORING_SOURCE_SHA = process.env.EXPECTED_MONITORING_SOURCE_SHA?.trim() || deployedSha;
   await import("./verify-monitoring-function-deployment.mjs");
 }
