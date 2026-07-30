@@ -28,6 +28,9 @@ Notification targets do not receive a separate canonical URL. They resolve to th
 
 - Rankings resolves `/rankings?fighter=:fighterSlug`, opens the correct men's or women's board, filters to the requested fighter, and focuses that ranking row.
 - Rankings hands `/rankings?compareLeft=:fighterSlug&compareRight=:fighterSlug` to the existing Intelligence comparison owner while preserving left/right orientation.
-- Invalid, incomplete, unknown, or duplicate ranking targets safely fall back to the normal Rankings screen.
+- Picks resolves archived `/picks?event=:eventId` destinations through the existing season archive, opens the Events view, expands the exact event, and focuses the archive.
+- Picks recap links use the same archive owner and open the requested event's recap details without creating a second recap route.
+- Active Picks-event links naturally land on the one current card already owned by the main Picks screen.
+- Invalid, incomplete, unknown, or duplicate targets safely fall back to their normal feature screen.
 
 The remaining feature owners should consume their canonical parameters in similarly small, tested batches.
