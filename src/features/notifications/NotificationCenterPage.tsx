@@ -88,7 +88,7 @@ export default function NotificationCenterPage() {
         ) : null}
       </section>
 
-      {notifications.error && notifications.items.length ? (
+      {notifications.status === "error" && notifications.items.length ? (
         <div className="notification-error" role="status">
           Notifications could not refresh. The last available updates are shown below.
         </div>
@@ -107,7 +107,7 @@ export default function NotificationCenterPage() {
         <section className="surface-card notification-empty">
           <strong>Loading notifications…</strong>
         </section>
-      ) : notifications.error && !notifications.items.length ? (
+      ) : notifications.status === "error" && !notifications.items.length ? (
         <section className="surface-card notification-empty" role="status">
           <span className="notification-empty__bell" aria-hidden="true">!</span>
           <strong>Notifications are temporarily unavailable.</strong>
