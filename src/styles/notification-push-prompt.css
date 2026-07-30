@@ -1,0 +1,79 @@
+.notification-push-profile-prompt {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 14px;
+  border: 1px solid rgba(245, 158, 11, .36);
+  border-radius: 16px;
+  background: rgba(245, 158, 11, .075);
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.notification-push-profile-prompt__icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 13px;
+  background: rgba(245, 158, 11, .14);
+  color: #f5b942;
+}
+
+.notification-push-profile-prompt__icon svg {
+  width: 21px;
+  height: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.notification-push-profile-prompt__copy {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.notification-push-profile-prompt__copy strong {
+  font-size: 13px;
+  line-height: 1.25;
+}
+
+.notification-push-profile-prompt__copy small {
+  color: var(--text-secondary);
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.notification-push-profile-prompt > b {
+  color: #f5b942;
+  font-size: 8px;
+  font-weight: 1000;
+  letter-spacing: .05em;
+  white-space: nowrap;
+}
+
+.notification-push-profile-prompt:focus-visible {
+  outline: 2px solid #f5b942;
+  outline-offset: 3px;
+}
+
+@media (max-width: 520px) {
+  .notification-push-profile-prompt {
+    grid-template-columns: 38px minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .notification-push-profile-prompt__icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+  }
+
+  .notification-push-profile-prompt > b {
+    grid-column: 2;
+  }
+}
