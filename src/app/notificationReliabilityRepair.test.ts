@@ -22,12 +22,14 @@ const migration = readFileSync(
   "utf8",
 );
 
- describe("notification reliability repair", () => {
-  it("replaces a valid-looking subscription when its VAPID public key is stale", () => {
+describe("notification reliability repair", () => {
+  it("replaces a valid-looking subscription when its VAPID public key is stale or unavailable", () => {
     expect(pushConnection).toContain("subscription.options.applicationServerKey");
+    expect(pushConnection).toContain("if (!existingKey) return false");
     expect(pushConnection).toContain("subscriptionUsesPublicKey(existing, publicKey)");
     expect(pushConnection).toContain("await existing.unsubscribe().catch(() => false)");
     expect(pushConnection).toContain("usableExistingSubscription(registration, publicKey)");
+    expect(pushConnection).not.toContain("if (!existingKey) return true");
     expect(pushConnection).not.toContain("localStorage");
     expect(pushConnection).not.toContain("setInterval");
   });
