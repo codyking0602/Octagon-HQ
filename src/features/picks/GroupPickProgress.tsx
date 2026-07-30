@@ -1,18 +1,11 @@
 import { useMemo, useState } from "react";
 import type { PickEvent } from "./picksModel";
-import type { PickEventMemberProgress } from "./groupProgressModel";
 import { usePicks } from "./PicksProvider";
 
 interface GroupPickProgressProps {
   event: PickEvent;
   locked: boolean;
   mySelections: Readonly<Record<string, string>>;
-}
-
-function memberStatus(member: PickEventMemberProgress) {
-  if (member.completed === member.total && member.total > 0) return "COMPLETE";
-  if (member.completed > 0) return "IN PROGRESS";
-  return "NOT STARTED";
 }
 
 export function GroupPickProgress({ event, locked, mySelections }: GroupPickProgressProps) {
@@ -54,58 +47,50 @@ export function GroupPickProgress({ event, locked, mySelections }: GroupPickProg
   }
 
   return (
-    <>
-      <details className="surface-card picks-group-progress">
-        <summary>
-          <span>GROUP PICKS</span>
-          <strong>{completedMembers}/{members.length} COMPLETE</strong>
-        </summary>
-        <div className="picks-group-progress__members">
-          {members.map((member) => (
-            <button
-              type="button"
-              className={member.isCurrentUser ? "is-current-user" : ""}
-              key={member.profileId}
-              onClick={() => setSelectedName(member.displayName)}
-            >
-              <span>
+    <details className="surface-card picks-group-progress">
+      <summary>
+        <span>GROUP PICKS</span>
+        <strong>{completedMembers}/{members.length} COMPLETE</strong>
+      </summary>
+      <div className="picks-group-progress__members">
+        {members.map((member) => {
+          const isSelected = member.displayName === selectedName;
+          return (
+            <div className="picks-group-progress__member" key={member.profileId}>
+              <button
+                type="button"
+                className={member.isCurrentUser ? "is-current-user" : ""}
+                aria-expanded={isSelected}
+                onClick={() => setSelectedName(isSelected ? null : member.displayName)}
+              >
                 <strong>{member.displayName}{member.isCurrentUser ? " · YOU" : ""}</strong>
-                <small>{memberStatus(member)}{member.hasUnderdogLock ? " · LOCK SET" : ""}</small>
-              </span>
-              <b>{member.completed}/{member.total}</b>
-            </button>
-          ))}
-        </div>
-      </details>
-
-      {selected ? (
-        <div className="picks-member-progress-dialog" role="dialog" aria-modal="true" aria-label={`${selected.displayName} Picks progress`}>
-          <button className="picks-member-progress-dialog__backdrop" type="button" aria-label="Close" onClick={() => setSelectedName(null)} />
-          <section className="surface-card picks-member-progress-dialog__sheet">
-            <header>
-              <div><span>MEMBER PICKS</span><h2>{selected.displayName}</h2></div>
-              <button type="button" aria-label="Close" onClick={() => setSelectedName(null)}>×</button>
-            </header>
-            <div className="picks-member-progress-dialog__summary">
-              <strong>{selected.completed}/{selected.total} PICKS</strong>
-              <span>{memberStatus(selected)} · {selected.hasUnderdogLock ? "UNDERDOG LOCK SET" : "NO UNDERDOG LOCK"}</span>
-            </div>
-            {!locked ? (
-              <p className="picks-member-progress-dialog__note">Individual picks stay hidden until the event locks.</p>
-            ) : (
-              <div className="picks-member-progress-dialog__picks">
-                {selectedPicks.map((pick) => (
-                  <div key={pick.boutId}>
-                    <span>{pick.fight}</span>
-                    <strong>{selected.displayName}: {pick.memberPick}</strong>
-                    <small>{pick.same ? "SAME AS YOU" : `YOU: ${pick.myPick}`}</small>
+                <b>{member.completed}/{member.total}</b>
+              </button>
+              {isSelected ? (
+                <div className="picks-group-progress__inline">
+                  <div className="picks-group-progress__inline-meta">
+                    <span>UNDERDOG LOCK</span>
+                    <strong>{member.hasUnderdogLock ? "SET" : "—"}</strong>
                   </div>
-                ))}
-              </div>
-            )}
-          </section>
-        </div>
-      ) : null}
-    </>
+                  {!locked ? (
+                    <p>Individual picks stay hidden until the event locks.</p>
+                  ) : (
+                    <div className="picks-group-progress__inline-picks">
+                      {selectedPicks.map((pick) => (
+                        <div key={pick.boutId}>
+                          <span>{pick.fight}</span>
+                          <strong>{pick.memberPick}</strong>
+                          <small>{pick.same ? "SAME AS YOU" : `YOU: ${pick.myPick}`}</small>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : null}
+            </div>
+          );
+        })}
+      </div>
+    </details>
   );
 }
