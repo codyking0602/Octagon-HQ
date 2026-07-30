@@ -2,7 +2,8 @@
 .identity-trigger { display: flex; align-items: center; justify-content: center; gap: 7px; min-width: 46px; height: 46px; padding: 0 12px; border: 1px solid var(--border); border-radius: 15px; background: var(--surface); color: var(--text-primary); font-size: 10px; font-weight: 950; letter-spacing: .05em; cursor: pointer; }
 .identity-trigger i { display: grid; place-items: center; width: 27px; height: 27px; overflow: hidden; border-radius: 9px; background: var(--ufc-red); color: #fff; font-size: 10px; font-style: normal; }
 .identity-trigger i img, .identity-profile-card > i img { width: 100%; height: 100%; display: block; object-fit: cover; }
-.identity-trigger.is-ready { padding-left: 8px; border-color: rgba(229, 9, 20, .48); }
+.identity-trigger.is-ready { gap: 10px; overflow: hidden; padding: 0 12px 0 0; border-color: rgba(229, 9, 20, .48); }
+.identity-trigger.is-ready i { flex: 0 0 44px; width: 44px; height: 44px; border-radius: 14px 0 0 14px; font-size: 13px; }
 .identity-trigger.is-ready span { max-width: 70px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .identity-overlay { position: fixed; inset: 0; z-index: 80; display: grid; align-items: end; overflow: hidden; padding: 18px 12px calc(18px + var(--safe-bottom)); background: rgba(0, 0, 0, .78); backdrop-filter: blur(10px); }
