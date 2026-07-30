@@ -6,6 +6,8 @@ import {
   type RichPreviewMetadata,
 } from "./previewModel";
 import {
+  canonicalPreviewUrl,
+  ensureDestinationPreview,
   previewCardFingerprint,
   previewCardImagePath,
   renderPreviewCardHtml,
@@ -50,13 +52,13 @@ const EMPTY_CATALOG: RichPreviewCatalog = {
 
 function embeddedCatalog(): RichPreviewCatalog {
   try {
-    const catalog = JSON.parse(__OCTAGON_PREVIEW_CATALOG__) as RichPreviewCatalog;
-    return catalog?.version === 2
-      && Array.isArray(catalog.fighters)
-      && Array.isArray(catalog.games)
-      && catalog.fighterAssets
-      && typeof catalog.fighterAssets === "object"
-      ? catalog
+    const previewCatalog = JSON.parse(__OCTAGON_PREVIEW_CATALOG__) as RichPreviewCatalog;
+    return previewCatalog?.version === 2
+      && Array.isArray(previewCatalog.fighters)
+      && Array.isArray(previewCatalog.games)
+      && previewCatalog.fighterAssets
+      && typeof previewCatalog.fighterAssets === "object"
+      ? previewCatalog
       : EMPTY_CATALOG;
   } catch {
     return EMPTY_CATALOG;
@@ -146,7 +148,7 @@ function previewSourceUrl(imageUrl: URL) {
   const path = imageUrl.searchParams.get("path") ?? "";
   if (!path.startsWith("/") || path.startsWith("//")) return null;
   try {
-    const source = new URL(path, imageUrl.origin);
+    const source = canonicalPreviewUrl(new URL(path, imageUrl.origin));
     return source.origin === imageUrl.origin && isPreviewRoute(source) ? source : null;
   } catch {
     return null;
@@ -163,6 +165,15 @@ function edgeCache() {
   return (globalThis as unknown as { caches: { default: Cache } }).caches.default;
 }
 
+async function resolvedPreview(requestUrl: URL) {
+  const canonicalUrl = canonicalPreviewUrl(requestUrl);
+  const dynamicData = await loadDynamicPreview(canonicalUrl);
+  return ensureDestinationPreview(
+    canonicalUrl,
+    resolveRichPreview(canonicalUrl, catalog, dynamicData),
+  );
+}
+
 async function servePreviewImage(
   request: Request,
   env: Env,
@@ -176,8 +187,7 @@ async function servePreviewImage(
   const cached = await cache.match(request);
   if (cached) return cached;
 
-  const dynamicData = await loadDynamicPreview(sourceUrl);
-  const preview = resolveRichPreview(sourceUrl, catalog, dynamicData);
+  const preview = await resolvedPreview(sourceUrl);
   if (preview.kind === "default" || !imageRequestMatchesPreview(requestUrl, preview)) {
     return new Response("Preview card is stale or unavailable.", { status: 404 });
   }
@@ -209,8 +219,7 @@ async function servePreviewPage(request: Request, env: Env) {
   const contentType = shell.headers.get("content-type") ?? "";
   if (!shell.ok || !contentType.includes("text/html")) return shell;
 
-  const dynamicData = await loadDynamicPreview(requestUrl);
-  const preview = resolveRichPreview(requestUrl, catalog, dynamicData);
+  const preview = await resolvedPreview(requestUrl);
   const canonicalUrl = absoluteUrl(preview.canonicalPath, requestUrl.origin);
   const cardImageUrl = absoluteUrl(previewCardImagePath(preview), requestUrl.origin);
   const markup = metadataMarkup(
