@@ -33,7 +33,7 @@ function sameBytes(left: ArrayBuffer | ArrayBufferView, right: Uint8Array) {
 
 function subscriptionUsesPublicKey(subscription: PushSubscription, publicKey: string) {
   const existingKey = subscription.options.applicationServerKey;
-  if (!existingKey) return true;
+  if (!existingKey) return false;
   return sameBytes(existingKey, base64UrlToBytes(publicKey));
 }
 
