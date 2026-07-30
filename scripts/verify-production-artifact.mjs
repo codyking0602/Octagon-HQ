@@ -76,12 +76,16 @@ export async function verifyProductionArtifact({ dist = "dist", env = process.en
   const worker = await readFile(workerPath, "utf8");
   for (const marker of [
     "X-Octagon-Preview",
+    "X-Octagon-Preview-Image",
     "og:title",
+    "og:image:width",
     "twitter:card",
-    "preview-data/rankings.json",
+    "share-preview",
+    "image/png",
     "get_rich_preview_data",
     "picks-recap",
     "major-ranking-update",
+    "jon-jones",
   ]) {
     if (!worker.includes(marker)) throw new Error(`Compiled rich preview Worker is missing marker: ${marker}.`);
   }

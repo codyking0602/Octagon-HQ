@@ -2,9 +2,10 @@ import { describe, expect, it, vi } from "vitest";
 import { shareAppLink, shareCanonicalDestination } from "./nativeShare";
 
 const fighterDestination = { kind: "fighter", fighterSlug: "jon-jones" } as const;
+const runtimeToken = "fresh123";
 
 describe("shareCanonicalDestination", () => {
-  it("opens the platform share sheet with the exact canonical URL", async () => {
+  it("opens the platform share sheet with the exact destination and a fresh preview token", async () => {
     const share = vi.fn().mockResolvedValue(undefined);
 
     await expect(shareCanonicalDestination({
@@ -13,17 +14,18 @@ describe("shareCanonicalDestination", () => {
       text: "View Jon Jones in Octagon HQ.",
     }, {
       appOrigin: "https://octagon.hq-app.workers.dev/other/path",
+      shareToken: runtimeToken,
       navigator: { share },
     })).resolves.toBe("shared");
 
     expect(share).toHaveBeenCalledWith({
       title: "Jon Jones · Octagon HQ",
       text: "View Jon Jones in Octagon HQ.",
-      url: "https://octagon.hq-app.workers.dev/fighters/jon-jones",
+      url: "https://octagon.hq-app.workers.dev/fighters/jon-jones?share=fresh123",
     });
   });
 
-  it("copies only the exact destination URL when native sharing is unavailable", async () => {
+  it("copies only the exact destination URL with the fresh preview token", async () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
 
     await expect(shareCanonicalDestination({
@@ -32,11 +34,12 @@ describe("shareCanonicalDestination", () => {
       text: "Recap copy that should not replace the link.",
     }, {
       appOrigin: "https://octagon.hq-app.workers.dev",
+      shareToken: runtimeToken,
       navigator: { clipboard: { writeText } },
     })).resolves.toBe("copied");
 
     expect(writeText).toHaveBeenCalledWith(
-      "https://octagon.hq-app.workers.dev/picks?event=ufc-325&view=recap",
+      "https://octagon.hq-app.workers.dev/picks?event=ufc-325&view=recap&share=fresh123",
     );
   });
 
@@ -50,6 +53,7 @@ describe("shareCanonicalDestination", () => {
       title: "Jon Jones · Octagon HQ",
     }, {
       appOrigin: "https://octagon.hq-app.workers.dev",
+      shareToken: runtimeToken,
       navigator: {
         share: vi.fn().mockRejectedValue(cancelled),
         clipboard: { writeText },
@@ -71,6 +75,7 @@ describe("shareCanonicalDestination", () => {
       title: "GSP vs. Anderson Silva",
     }, {
       appOrigin: "https://octagon.hq-app.workers.dev",
+      shareToken: runtimeToken,
       navigator: {
         share: vi.fn().mockRejectedValue(new Error("Share failed")),
         clipboard: { writeText },
@@ -78,7 +83,7 @@ describe("shareCanonicalDestination", () => {
     })).resolves.toBe("copied");
 
     expect(writeText).toHaveBeenCalledWith(
-      "https://octagon.hq-app.workers.dev/rankings?compareLeft=georges-st-pierre&compareRight=anderson-silva",
+      "https://octagon.hq-app.workers.dev/rankings?compareLeft=georges-st-pierre&compareRight=anderson-silva&share=fresh123",
     );
   });
 
@@ -88,6 +93,7 @@ describe("shareCanonicalDestination", () => {
       title: "Jon Jones · Octagon HQ",
     }, {
       appOrigin: "https://octagon.hq-app.workers.dev",
+      shareToken: runtimeToken,
       navigator: {},
     })).resolves.toBe("unavailable");
   });
@@ -103,13 +109,14 @@ describe("shareAppLink", () => {
       text: "Can you beat my score?",
     }, {
       appOrigin: "https://octagon.hq-app.workers.dev/play",
+      shareToken: runtimeToken,
       navigator: { share },
     })).resolves.toBe("shared");
 
     expect(share).toHaveBeenCalledWith({
       title: "Wavelength Challenge",
       text: "Can you beat my score?",
-      url: "https://octagon.hq-app.workers.dev/play/wavelength?challenge=target-72",
+      url: "https://octagon.hq-app.workers.dev/play/wavelength?challenge=target-72&share=fresh123",
     });
   });
 
@@ -122,6 +129,7 @@ describe("shareAppLink", () => {
       title: "Wrong app",
     }, {
       appOrigin: "https://octagon.hq-app.workers.dev",
+      shareToken: runtimeToken,
       navigator: { share, clipboard: { writeText } },
     })).resolves.toBe("unavailable");
 
