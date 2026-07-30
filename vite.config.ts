@@ -85,6 +85,10 @@ function richPreviewCatalogPlugin(): Plugin {
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
+  const deploymentSha = (env.VITE_DEPLOYMENT_SHA ?? process.env.SOURCE_SHA ?? "").trim().toLowerCase();
+  if (deploymentSha && !/^[0-9a-f]{40}$/.test(deploymentSha)) {
+    throw new Error("VITE_DEPLOYMENT_SHA or SOURCE_SHA must be an exact 40-character commit SHA.");
+  }
   if (mode === "production") {
     validatePublicSupabaseConfig({
       url: env.VITE_SUPABASE_URL,
@@ -95,6 +99,13 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react(), richPreviewCatalogPlugin()],
+    ...(mode === "production"
+      ? {
+          define: {
+            __OCTAGON_DEPLOYMENT_SHA__: JSON.stringify(deploymentSha),
+          },
+        }
+      : {}),
     build: {
       target: "es2022",
       sourcemap: true,
