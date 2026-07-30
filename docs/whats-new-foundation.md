@@ -51,20 +51,23 @@ Manual publishing supports app announcements, major redesign explanations, featu
 
 ## Rankings and fighter producers
 
-`rankingModel.ts` remains the sole calculated source for ranked fighter identity, board, and position. `shanesWatchlist.ts` remains the sole source for Shane's Fighters to Watch. A trusted production workflow synchronizes those exact models only after the same `main` SHA has deployed successfully.
+`rankingModel.ts` remains the sole calculated source for ranked fighter identity, board, and position. `shanesWatchlist.ts` remains the sole source for Shane's Fighters to Watch. One trusted workflow synchronizes the exact model currently deployed to production.
 
 - The ranking snapshot still provides disposable comparison evidence for new ranked fighters and position movement.
 - The Fighters to Watch historical rollout baseline is stored as durable seen-ID evidence, separate from the disposable current snapshot.
-- Fatima Kline, Abdul Rakhman Yakhyaev, and Daniil Donchenko are the historical rollout baseline. Gable Steveson was added afterward and is intentionally backfilled as a real new entry.
+- Fatima Kline, Abdul Rakhman Yakhyaev, and Daniil Donchenko are the historical rollout baseline. Gable Steveson was added afterward.
+- A one-time backend repair guarantees the missed Gable Steveson item exists with the stable source key `fighters-to-watch:new:gable-steveson`, refreshes it into the current feed, and records Gable in the durable seen ledger.
 - A delayed or skipped deployment cannot silently absorb a new watchlist ID merely because that fighter already appears in a later snapshot.
 - Each genuinely new watchlist ID publishes once using a stable source key based on the watchlist ID, then joins the durable seen ledger.
 - A fighter slug absent from the prior production ranking snapshot publishes one automatic `new_fighter` item linking to the canonical fighter profile.
 - An existing fighter moving at least three positions on the same board publishes one automatic `ranking_movement` item.
 - One- and two-position moves are intentionally ignored.
-- When five or more fighters move at least three spots in one deployment, one `major_ranking_update` summary replaces a pile of individual cards.
+- When five or more fighters move at least three spots in one deployment, one `major_ranking_update` summary replaces a pile of individual movement cards.
 - Unchanged deployments are idempotent and publish nothing.
 - The synchronization script refuses the legacy contract and retries until the repaired database function is deployed, preventing frontend/backend deployment races from swallowing an update.
-- PR-head deployments never synchronize production comparison state or publish production updates.
+- A successful frontend deployment triggers immediate synchronization of the actual live SHA, even when `main` has already advanced.
+- The actual live deployment is reconciled hourly and may also be reconciled manually, so a missed or cancelled callback cannot permanently lose an update.
+- Only a live SHA that is current `main` or an ancestor of current `main` may synchronize production state. PR-head deployments never publish production updates.
 - The private snapshots are comparison evidence only. They never become a ranking or watchlist source and are replaced from the canonical models after every successful synchronization.
 
 ## Games, challenges, and achievements producers
@@ -78,7 +81,7 @@ Manual publishing supports app announcements, major redesign explanations, featu
 - Personal profile-to-profile challenge deliveries never enter the global feed. They remain visible only through the existing private Challenge Center owner.
 - Copy edits to existing entries do not create feed noise. Only a genuinely new stable ID publishes an item.
 - Empty challenge and achievement catalogs are valid until those permanent features exist; placeholder announcements are forbidden.
-- The same exact-main post-frontend workflow synchronizes rankings, fighters, games, challenge formats, and achievements after the live deployment marker matches the source SHA.
+- The same live-source reconciliation workflow synchronizes rankings, fighters, games, challenge formats, and achievements.
 
 ## Noise rules
 
