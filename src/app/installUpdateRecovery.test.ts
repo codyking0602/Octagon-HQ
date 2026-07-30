@@ -58,7 +58,7 @@ describe("deployment update recovery", () => {
     });
 
     await vi.waitFor(() => expect(reload).toHaveBeenCalledTimes(1));
-    window.dispatchEvent(new PageTransitionEvent("pageshow"));
+    window.dispatchEvent(new Event("pageshow"));
     await vi.waitFor(() => expect(fetchDeploymentSha).toHaveBeenCalledTimes(2));
     expect(reload).toHaveBeenCalledTimes(1);
     remove();
@@ -93,7 +93,7 @@ describe("deployment update recovery", () => {
     });
 
     await vi.waitFor(() => expect(fetchDeploymentSha).toHaveBeenCalledTimes(1));
-    window.dispatchEvent(new PageTransitionEvent("pageshow"));
+    window.dispatchEvent(new Event("pageshow"));
     await vi.waitFor(() => expect(reload).toHaveBeenCalledTimes(1));
     remove();
   });
