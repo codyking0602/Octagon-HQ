@@ -57,7 +57,9 @@ function permissionState(): NotificationDeviceReadiness["permission"] {
 export function subscribeNotificationDeviceReadiness(listener: ReadinessListener) {
   installBrowserListeners();
   readinessListeners.add(listener);
-  return () => readinessListeners.delete(listener);
+  return () => {
+    readinessListeners.delete(listener);
+  };
 }
 
 export async function inspectNotificationDeviceReadiness(): Promise<NotificationDeviceReadiness> {
