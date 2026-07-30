@@ -1,6 +1,6 @@
 .hq-card {
-  gap: 16px;
-  padding: 18px;
+  gap: 14px;
+  padding: 16px;
   overflow: hidden;
   background:
     radial-gradient(circle at 92% 0%, rgba(210, 10, 10, .12), transparent 34%),
@@ -9,20 +9,6 @@
 
 .hq-card__heading {
   align-items: flex-start;
-}
-
-.hq-card__profile {
-  display: inline-flex;
-  align-items: center;
-  min-height: 27px;
-  padding: 0 10px;
-  border: 1px solid rgba(255, 255, 255, .1);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, .04);
-  color: var(--text-secondary);
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: .1em;
 }
 
 .hq-card__grid {
@@ -35,8 +21,8 @@
   align-content: start;
   gap: 5px;
   min-width: 0;
-  min-height: 108px;
-  padding: 14px;
+  min-height: 102px;
+  padding: 13px;
   background: var(--surface-raised);
 }
 
@@ -72,7 +58,7 @@
 }
 
 .hq-stat--favorite {
-  gap: 8px;
+  gap: 6px;
 }
 
 .hq-stat__favorite-value {
@@ -83,8 +69,8 @@
 }
 
 .hq-stat__favorite-value .fighter-photo {
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   border-radius: 10px;
 }
 
@@ -95,14 +81,14 @@
 
 .hq-stat--favorite label {
   display: grid;
-  gap: 5px;
+  gap: 4px;
   min-width: 0;
 }
 
 .hq-stat--favorite select {
   width: 100%;
   min-width: 0;
-  min-height: 31px;
+  min-height: 29px;
   padding: 0 25px 0 9px;
   border: 1px solid var(--border);
   border-radius: 9px;
@@ -125,7 +111,7 @@
 
 .hq-card__signed-out {
   display: grid;
-  gap: 14px;
+  gap: 12px;
 }
 
 .hq-card__signed-out > p {
@@ -141,15 +127,15 @@
 }
 
 .hq-card .primary-action {
-  min-height: 46px;
+  min-height: 42px;
   border: 0;
   cursor: pointer;
 }
 
 .hq-next-up {
   display: grid;
-  gap: 13px;
-  padding: 15px;
+  gap: 10px;
+  padding: 13px;
   border: 1px solid var(--border);
   border-radius: 15px;
   background: linear-gradient(135deg, rgba(229, 9, 20, .09), var(--surface-raised) 52%);
@@ -157,7 +143,7 @@
 
 .hq-next-up__copy {
   display: grid;
-  gap: 5px;
+  gap: 4px;
 }
 
 .hq-next-up__copy small {
@@ -565,7 +551,7 @@
 
 @media (min-width: 640px) {
   .hq-card {
-    padding: 20px;
+    padding: 18px;
   }
 
   .hq-card__grid {
@@ -573,7 +559,7 @@
   }
 
   .hq-stat {
-    min-height: 122px;
+    min-height: 110px;
   }
 
   .hq-next-up {

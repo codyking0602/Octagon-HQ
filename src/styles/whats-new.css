@@ -13,8 +13,8 @@
 }
 
 .app-whats-new-action.is-active {
-  border-color: rgba(245, 158, 11, .72);
-  box-shadow: 0 0 0 2px rgba(245, 158, 11, .12);
+  border-color: rgba(229, 9, 20, .72);
+  box-shadow: 0 0 0 2px rgba(229, 9, 20, .12);
 }
 
 .app-whats-new-action svg {
@@ -42,8 +42,8 @@
   padding: 0 5px;
   border: 2px solid #000;
   border-radius: 999px;
-  background: #f59e0b;
-  color: #111;
+  background: var(--ufc-red);
+  color: white;
   font-size: 8px;
   font-weight: 1000;
   line-height: 1;
@@ -74,10 +74,10 @@
 
 .whats-new-preview__heading > span {
   padding: 5px 8px;
-  border: 1px solid rgba(245, 158, 11, .42);
+  border: 1px solid rgba(229, 9, 20, .42);
   border-radius: 999px;
-  background: rgba(245, 158, 11, .1);
-  color: #f5b942;
+  background: rgba(229, 9, 20, .1);
+  color: var(--ufc-red-strong);
   font-size: 8px;
   font-weight: 1000;
   letter-spacing: .08em;
@@ -102,8 +102,8 @@
   width: 36px;
   height: 36px;
   border-radius: 12px;
-  background: rgba(245, 158, 11, .12);
-  color: #f5b942;
+  background: rgba(229, 9, 20, .1);
+  color: var(--ufc-red-strong);
   font-size: 17px;
 }
 
@@ -145,7 +145,7 @@
 
 .whats-new-preview__all {
   justify-self: end;
-  color: #f5b942;
+  color: var(--ufc-red-strong);
   font-size: 9px;
   font-weight: 1000;
   letter-spacing: .08em;
@@ -213,8 +213,8 @@
 .whats-new-item__meta b {
   padding: 3px 5px;
   border-radius: 999px;
-  background: #f59e0b;
-  color: #111;
+  background: var(--ufc-red);
+  color: white;
   font-size: 7px;
 }
 
@@ -231,7 +231,7 @@
 }
 
 .whats-new-item__body > em {
-  color: #f5b942;
+  color: var(--ufc-red-strong);
   font-size: 8px;
   font-style: normal;
   font-weight: 1000;
@@ -246,9 +246,9 @@
 
 .whats-new-error {
   padding: 11px 13px;
-  border: 1px solid rgba(245, 158, 11, .42);
+  border: 1px solid rgba(229, 9, 20, .42);
   border-radius: 13px;
-  background: rgba(245, 158, 11, .1);
+  background: rgba(229, 9, 20, .1);
   color: var(--text-primary);
   font-size: 12px;
 }
