@@ -62,6 +62,11 @@
   min-width: 0;
 }
 
+.notification-page__actions {
+  justify-items: end;
+  flex: 0 0 auto;
+}
+
 .notification-page__mark-all,
 .notification-item__read {
   border: 0;
@@ -258,8 +263,12 @@
     align-items: start;
   }
 
+  .notification-page__actions {
+    max-width: 90px;
+  }
+
   .notification-page__mark-all {
-    max-width: 76px;
+    max-width: 90px;
     text-align: right;
   }
 }
