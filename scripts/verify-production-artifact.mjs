@@ -49,6 +49,32 @@ export async function verifyProductionArtifact({ dist = "dist", env = process.en
   });
   const files = await walk(dist);
   if (!files.some((file) => file.endsWith("index.html"))) throw new Error("dist/index.html is missing.");
+
+  const workerPath = join(dist, "_worker.js");
+  const assetsIgnorePath = join(dist, ".assetsignore");
+  const previewCatalogPath = join(dist, "preview-data", "rankings.json");
+  for (const requiredPath of [workerPath, assetsIgnorePath, previewCatalogPath]) {
+    if (!files.includes(requiredPath)) throw new Error(`${requiredPath} is missing.`);
+  }
+
+  const worker = await readFile(workerPath, "utf8");
+  for (const marker of ["X-Octagon-Preview", "og:title", "twitter:card", "preview-data/rankings.json"]) {
+    if (!worker.includes(marker)) throw new Error(`Compiled rich preview Worker is missing marker: ${marker}.`);
+  }
+  const assetsIgnore = await readFile(assetsIgnorePath, "utf8");
+  if (!assetsIgnore.split(/\r?\n/).includes("_worker.js")) {
+    throw new Error("dist/.assetsignore must exclude _worker.js from public static assets.");
+  }
+  const previewCatalog = JSON.parse(await readFile(previewCatalogPath, "utf8"));
+  if (previewCatalog.version !== 1 || !Array.isArray(previewCatalog.fighters) || previewCatalog.fighters.length < 1) {
+    throw new Error("The ranking rich preview catalog is missing or invalid.");
+  }
+  for (const fighter of previewCatalog.fighters) {
+    if (!fighter.slug || !fighter.displayName || !fighter.imagePath || !Number.isFinite(fighter.rank) || !Number.isFinite(fighter.ovr)) {
+      throw new Error("The ranking rich preview catalog contains an incomplete fighter.");
+    }
+  }
+
   const compiledFiles = files.filter((file) => file.endsWith(".html") || file.endsWith(".js"));
   const contents = await Promise.all(compiledFiles.map((file) => readFile(file, "utf8")));
   const artifact = contents.join("\n");
@@ -69,7 +95,11 @@ export async function verifyProductionArtifact({ dist = "dist", env = process.en
     if (!artifact.includes(marker)) throw new Error(`Compiled artifact is missing required application marker: ${marker}.`);
   }
 
-  return { files: compiledFiles.length, hostname: config.expectedHostname };
+  return {
+    files: compiledFiles.length,
+    hostname: config.expectedHostname,
+    previewFighters: previewCatalog.fighters.length,
+  };
 }
 
 async function walk(directory) {
@@ -82,5 +112,5 @@ async function walk(directory) {
 
 if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
   const result = await verifyProductionArtifact();
-  console.log(`Verified ${result.files} compiled files for ${result.hostname}.`);
+  console.log(`Verified ${result.files} compiled files for ${result.hostname}, including ${result.previewFighters} fighter previews.`);
 }
