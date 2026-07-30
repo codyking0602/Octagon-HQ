@@ -48,13 +48,6 @@ const serviceHeaders = {
   apikey: secretKey,
   "Content-Type": "application/json",
 };
-const publicHeaders = {
-  Authorization: `Bearer ${publishableKey}`,
-  apikey: publishableKey,
-  "Content-Type": "application/json",
-  Origin: productionOrigin,
-  "x-client-info": "octagon-hq-whats-new-live-proof/1",
-};
 const suffix = `${process.env.GITHUB_RUN_ID ?? Date.now()}${process.env.GITHUB_RUN_ATTEMPT ?? "1"}`;
 const displayName = `HQNEWS${suffix}`.slice(0, 24);
 const authEmail = `hqnews-${suffix}@login.octagon-hq.app`;
@@ -137,9 +130,9 @@ try {
     ].join("\n"));
   }
 
-  const item = gableTitle.locator("xpath=ancestor-or-self::*[contains(@class,'whats-new-item')][1]");
-  await item.getByText("VIEW WATCHLIST", { exact: false }).waitFor({ state: "visible" });
-  const href = await item.getAttribute("href");
+  const itemLink = gableTitle.locator("xpath=ancestor::a[contains(@class,'whats-new-item')][1]");
+  await itemLink.getByText("VIEW WATCHLIST", { exact: false }).waitFor({ state: "visible" });
+  const href = await itemLink.getAttribute("href");
   if (href !== "/fighters-to-watch") {
     throw new Error(`Gable What's New item links to ${href ?? "no route"}, expected /fighters-to-watch.`);
   }
