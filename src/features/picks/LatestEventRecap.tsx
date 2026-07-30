@@ -1,4 +1,5 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { shareCanonicalDestination } from "../../app/nativeShare";
 import {
   groupRankLabel,
   mainCardFightLabel,
@@ -91,6 +92,7 @@ function recapText(event: PickHistoryEvent, champions: readonly string[]) {
 
 export function LatestEventRecap({ event }: { event: PickHistoryEvent }) {
   const [open, setOpen] = useState(false);
+  const [shareLabel, setShareLabel] = useState("SHARE");
   const titleId = useId();
   const closeRef = useRef<HTMLButtonElement | null>(null);
   const recap = useMemo(() => {
@@ -146,12 +148,12 @@ export function LatestEventRecap({ event }: { event: PickHistoryEvent }) {
 
   async function shareRecap() {
     const champions = recap.champions.map((result) => result.displayName);
-    const text = recapText(event, champions);
-    if (navigator.share) {
-      await navigator.share({ title: `${event.name} recap`, text });
-      return;
-    }
-    await navigator.clipboard?.writeText(text);
+    const outcome = await shareCanonicalDestination({
+      destination: { kind: "picks-recap", eventId: event.eventId },
+      title: `${event.name} recap · Octagon HQ`,
+      text: recapText(event, champions),
+    });
+    setShareLabel(outcome === "copied" ? "COPIED" : outcome === "unavailable" ? "TRY AGAIN" : "SHARE");
   }
 
   const championNames = recap.champions.map((result) => result.displayName);
@@ -206,7 +208,7 @@ export function LatestEventRecap({ event }: { event: PickHistoryEvent }) {
             <header className="picks-event-recap__header">
               <button ref={closeRef} type="button" aria-label="Close event recap" onClick={() => setOpen(false)}>×</button>
               <span>EVENT RECAP</span>
-              <button type="button" onClick={() => void shareRecap()}>SHARE</button>
+              <button type="button" onClick={() => void shareRecap()}>{shareLabel}</button>
             </header>
 
             <main className="picks-event-recap__scroll">
