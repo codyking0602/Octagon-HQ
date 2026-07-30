@@ -99,9 +99,13 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react(), richPreviewCatalogPlugin()],
-    define: {
-      __OCTAGON_DEPLOYMENT_SHA__: JSON.stringify(deploymentSha),
-    },
+    ...(mode === "production"
+      ? {
+          define: {
+            __OCTAGON_DEPLOYMENT_SHA__: JSON.stringify(deploymentSha),
+          },
+        }
+      : {}),
     build: {
       target: "es2022",
       sourcemap: true,
