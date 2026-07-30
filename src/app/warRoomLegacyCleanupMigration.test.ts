@@ -21,11 +21,19 @@ describe("War Room legacy message cleanup", () => {
     expect(migration).toContain("Legacy War Room cleanup selector matched more than one message");
   });
 
-  it("uses the canonical soft-delete path without broad message deletion", () => {
+  it("uses the canonical soft-delete fields without broad message deletion", () => {
     expect(migration).toContain("delete from private.war_room_reactions reaction");
     expect(migration).toContain("update private.war_room_messages message");
     expect(migration).toContain("deleted_at = coalesce(message.deleted_at, now())");
     expect(migration).toContain("deleted_by_profile_id = coalesce(");
     expect(migration).not.toContain("delete from private.war_room_messages");
+  });
+
+  it("bypasses and restores only the existing live message triggers", () => {
+    expect(migration).toContain("disable trigger war_room_messages_validate");
+    expect(migration).toContain("disable trigger war_room_messages_broadcast");
+    expect(migration).toContain("enable trigger war_room_messages_validate");
+    expect(migration).toContain("enable trigger war_room_messages_broadcast");
+    expect(migration).not.toContain("disable trigger all");
   });
 });
