@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import {
   groupRankLabel,
   mainCardFightLabel,
@@ -11,6 +12,7 @@ import {
 } from "./picksModel";
 import { GroupPickReveal } from "./GroupPickReveal";
 import { LatestEventRecap } from "./LatestEventRecap";
+import { resolvePicksDestination } from "./picksDestination";
 
 interface BoutResultView {
   redFighterSlug: string;
@@ -119,7 +121,14 @@ function aggregateFallbackStandings(history: PickHistory): PickSeasonStanding[] 
   });
 }
 
-function EventRecap({ event }: { event: PickHistoryEvent }) {
+function EventRecap({
+  event,
+  requestedOpen = false,
+}: {
+  event: PickHistoryEvent;
+  requestedOpen?: boolean;
+}) {
+  const [open, setOpen] = useState(requestedOpen);
   const orderedBouts = event.bouts.slice().sort((left, right) => left.position - right.position);
   const currentResult = event.groupResults.find((result) => result.isCurrentUser) ?? null;
   const finish = currentResult
@@ -127,8 +136,17 @@ function EventRecap({ event }: { event: PickHistoryEvent }) {
     : null;
   const note = recordNote(event.record);
 
+  useEffect(() => {
+    setOpen(requestedOpen);
+  }, [event.eventId, requestedOpen]);
+
   return (
-    <details className="surface-card picks-recap-card">
+    <details
+      className="surface-card picks-recap-card"
+      data-picks-event-id={event.eventId}
+      open={open}
+      onToggle={(toggleEvent) => setOpen(toggleEvent.currentTarget.open)}
+    >
       <summary className="picks-recap-card__summary">
         <div>
           <div className="picks-recap-card__date">
@@ -226,7 +244,26 @@ function EventRecap({ event }: { event: PickHistoryEvent }) {
 }
 
 export function PicksSeasonHub({ history, loading }: { history: PickHistory; loading: boolean }) {
-  const [activeTab, setActiveTab] = useState<"standings" | "events">("standings");
+  const [searchParams] = useSearchParams();
+  const archivedEventIds = useMemo(
+    () => history.events.map((event) => event.eventId),
+    [history.events],
+  );
+  const destination = useMemo(
+    () => resolvePicksDestination(searchParams, archivedEventIds),
+    [archivedEventIds, searchParams],
+  );
+  const targetEventId = destination.kind === "archived-event" ? destination.eventId : "";
+  const recapRequested = destination.kind === "archived-event" && destination.recapRequested;
+  const targetEvent = useMemo(
+    () => history.events.find((event) => event.eventId === targetEventId) ?? null,
+    [history.events, targetEventId],
+  );
+  const [activeTab, setActiveTab] = useState<"standings" | "events">(
+    targetEventId ? "events" : "standings",
+  );
+  const [hubOpen, setHubOpen] = useState(Boolean(targetEventId));
+  const hubRef = useRef<HTMLElement | null>(null);
   const standings = useMemo(() => {
     const canonicalStandings = history.seasonStandings ?? [];
     return canonicalStandings.length ? canonicalStandings : aggregateFallbackStandings(history);
@@ -239,6 +276,22 @@ export function PicksSeasonHub({ history, loading }: { history: PickHistory; loa
   const record = currentStanding ?? history.summary;
   const latestEvent = history.events[0];
   const olderEvents = history.events.slice(1);
+  const targetIsLatest = Boolean(latestEvent && latestEvent.eventId === targetEventId);
+
+  useEffect(() => {
+    if (!targetEventId) return;
+    setActiveTab("events");
+    setHubOpen(true);
+  }, [targetEventId]);
+
+  useEffect(() => {
+    if (!targetEvent || !hubOpen || activeTab !== "events") return undefined;
+    const frame = requestAnimationFrame(() => {
+      hubRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      hubRef.current?.focus({ preventScroll: true });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [activeTab, hubOpen, targetEvent]);
 
   if (loading && !history.events.length) {
     return (
@@ -258,8 +311,18 @@ export function PicksSeasonHub({ history, loading }: { history: PickHistory; loa
   }
 
   return (
-    <section className="picks-history picks-season-section" aria-labelledby="picks-season-title">
-      <details className="surface-card picks-season-hub">
+    <section
+      ref={hubRef}
+      className="picks-history picks-season-section"
+      aria-labelledby="picks-season-title"
+      aria-current={targetEvent ? "true" : undefined}
+      tabIndex={targetEvent ? -1 : undefined}
+    >
+      <details
+        className="surface-card picks-season-hub"
+        open={hubOpen}
+        onToggle={(toggleEvent) => setHubOpen(toggleEvent.currentTarget.open)}
+      >
         <summary className="picks-season-hub__summary">
           <div className="picks-season-hub__identity">
             <span>{season} SEASON</span>
@@ -334,10 +397,20 @@ export function PicksSeasonHub({ history, loading }: { history: PickHistory; loa
                 </div>
                 <small>NEWEST FIRST</small>
               </div>
-              <LatestEventRecap event={latestEvent} />
+              {targetIsLatest && recapRequested ? (
+                <EventRecap event={latestEvent} requestedOpen />
+              ) : (
+                <LatestEventRecap event={latestEvent} />
+              )}
               {olderEvents.length ? (
                 <div className="picks-recap-list">
-                  {olderEvents.map((event) => <EventRecap event={event} key={event.eventId} />)}
+                  {olderEvents.map((event) => (
+                    <EventRecap
+                      event={event}
+                      requestedOpen={event.eventId === targetEventId}
+                      key={event.eventId}
+                    />
+                  ))}
                 </div>
               ) : null}
             </section>
