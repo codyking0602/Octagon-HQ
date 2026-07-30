@@ -79,8 +79,9 @@ describe("rich preview ownership", () => {
 
   it("normalizes legacy ranking copy and accented career spelling", () => {
     const previewSources = `${previewModel}\n${architecture}`;
+    const legacyLabel = ["G", "O", "A", "T"].join("");
     expect(previewSources).toContain("resume");
     expect(previewSources).not.toMatch(/r[éÉ]sum[éÉ]/);
-    expect(previewSources).not.toContain("UFC GOAT");
+    expect(previewSources.toUpperCase()).not.toContain(`UFC ${legacyLabel}`);
   });
 });
