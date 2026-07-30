@@ -188,7 +188,8 @@ describe("Your HQ", () => {
     expect(await screen.findByText("Ankalaev vs. Guskov")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "SIGN IN TO MAKE PICKS →" })).toBeInTheDocument();
     expect(screen.getByText("RANKING SPOTLIGHT")).toBeInTheDocument();
-    expect(screen.getByText("Shane’s Fighters to Watch").closest("details")).not.toHaveAttribute("open");
+    expect(screen.getByRole("heading", { name: "Shane’s Fighters to Watch" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "VIEW SHANE’S TOP 15 →" })).toHaveAttribute("href", "/fighters-to-watch");
   });
 
   it("shows profile data, the highest-priority next action, the next event, and the approved lower Home sections", async () => {
@@ -234,6 +235,7 @@ describe("Your HQ", () => {
 
     const favoriteCard = screen.getByText("Favorite fighter").closest("article")!;
     await waitFor(() => expect(within(favoriteCard).getByText("Georges St-Pierre")).toBeInTheDocument());
+    expect(screen.getByRole("link", { name: "Open Georges St-Pierre profile" })).toHaveAttribute("href", "/fighters/georges-st-pierre");
 
     const challengeCard = screen.getByText("Open challenges").closest("article")!;
     await waitFor(() => expect(within(challengeCard).getByText("2")).toBeInTheDocument());
@@ -248,11 +250,13 @@ describe("Your HQ", () => {
     });
     await waitFor(() => expect(saveFavoriteFighter).toHaveBeenCalledWith("jon-jones"));
     await waitFor(() => expect(within(favoriteCard).getByText("Jon Jones")).toBeInTheDocument());
+    expect(screen.getByRole("link", { name: "Open Jon Jones profile" })).toHaveAttribute("href", "/fighters/jon-jones");
 
     expect(screen.getByText("Magomed Ankalaev vs. Bogdan Guskov")).toBeInTheDocument();
     expect(screen.getByText("1 OF 2")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "MAKE PICKS →" })).toHaveAttribute("href", "/picks");
     expect(screen.getByText("RANKING SPOTLIGHT")).toBeInTheDocument();
-    expect(screen.getByText("Shane’s Fighters to Watch").closest("details")).not.toHaveAttribute("open");
+    expect(screen.getByRole("heading", { name: "Shane’s Fighters to Watch" })).toBeInTheDocument();
+    expect(screen.getByText("Gable Steveson")).toBeInTheDocument();
   });
 });

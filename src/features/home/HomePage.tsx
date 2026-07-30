@@ -114,10 +114,20 @@ export default function HomePage() {
               </article>
 
               <article className="hq-stat hq-stat--favorite">
-                <div className="hq-stat__favorite-value">
-                  {favorite ? <FighterPhoto name={favorite.displayName} src={favorite.thumbUrl} /> : null}
-                  <strong>{preferences.loading ? "…" : favorite?.displayName ?? "SET ONE"}</strong>
-                </div>
+                {favorite ? (
+                  <Link
+                    className="hq-stat__favorite-value hq-stat__favorite-link"
+                    to={`/fighters/${favorite.slug}`}
+                    aria-label={`Open ${favorite.displayName} profile`}
+                  >
+                    <FighterPhoto name={favorite.displayName} src={favorite.thumbUrl} />
+                    <strong>{favorite.displayName}</strong>
+                  </Link>
+                ) : (
+                  <div className="hq-stat__favorite-value">
+                    <strong>{preferences.loading ? "…" : "SET ONE"}</strong>
+                  </div>
+                )}
                 <label>
                   <span>Favorite fighter</span>
                   <select

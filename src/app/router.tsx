@@ -4,6 +4,7 @@ import AppRouteError from "./AppRouteError";
 import { AppShell } from "./AppShell";
 
 const HomePage = lazy(() => import("../features/home/HomePage"));
+const ShanesWatchlistPage = lazy(() => import("../features/home/ShanesWatchlistPage"));
 const RankingsPage = lazy(() => import("../features/rankings/RankingsPage"));
 const FighterProfilePage = lazy(() => import("../features/rankings/FighterProfilePage"));
 const IntelligencePage = lazy(() => import("../features/intelligence/IntelligencePage"));
@@ -32,6 +33,7 @@ export const appRoutes: RouteObject[] = [
     errorElement: <AppRouteError />,
     children: [
       { index: true, element: <HomePage /> },
+      { path: "fighters-to-watch", element: <ShanesWatchlistPage /> },
       { path: "rankings", element: <RankingsPage /> },
       { path: "fighters/:slug", element: <FighterProfilePage /> },
       { path: "intelligence", element: <IntelligencePage /> },
