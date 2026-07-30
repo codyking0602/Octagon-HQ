@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { shareCanonicalDestination } from "../../app/nativeShare";
 import { allTime, getFighter } from "../rankings/rankingModel";
 import {
   OCTAGON_VERDICT_URL,
@@ -51,6 +52,26 @@ function MatchupBuilder({ initialFighterSlug, initialOpponentSlug, expanded = fa
     });
   }
 
+  async function handleShare() {
+    if (!first || !second || first.slug === second.slug) return;
+    const outcome = await shareCanonicalDestination({
+      destination: {
+        kind: "comparison",
+        leftFighterSlug: first.slug,
+        rightFighterSlug: second.slug,
+      },
+      title: `${first.displayName} vs. ${second.displayName} · Octagon HQ`,
+      text: `Compare ${first.displayName} vs. ${second.displayName} in Octagon HQ.`,
+    });
+    setStatus(
+      outcome === "copied"
+        ? "Comparison link copied."
+        : outcome === "unavailable"
+          ? "Sharing is unavailable on this device."
+          : "",
+    );
+  }
+
   const content = (
     <div className="intelligence-matchup-body">
       <div className="intelligence-select-grid">
@@ -71,9 +92,10 @@ function MatchupBuilder({ initialFighterSlug, initialOpponentSlug, expanded = fa
       <div className="intelligence-visible-prompt" aria-live="polite">
         {prompt || "Choose two different fighters to prepare the debate."}
       </div>
-      <div className="intelligence-action-grid">
+      <div className={expanded ? "intelligence-action-grid intelligence-action-grid--shareable" : "intelligence-action-grid"}>
         <button className="intelligence-primary" type="button" disabled={!prompt} onClick={handleCopyAndOpen}>Copy &amp; Open Verdict</button>
         <button className="intelligence-secondary" type="button" disabled={!prompt} onClick={() => void handleCopy()}>Copy Matchup</button>
+        {expanded ? <button className="intelligence-secondary" type="button" disabled={!prompt} onClick={() => void handleShare()}>Share Matchup</button> : null}
       </div>
       {status ? <p className="intelligence-status" role="status">{status}</p> : null}
     </div>
