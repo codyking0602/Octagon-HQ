@@ -63,6 +63,7 @@ export interface NotificationRepository {
   loadSnapshot: () => Promise<NotificationSnapshot>;
   markRead: (notificationId: string) => Promise<number>;
   markAllRead: () => Promise<number>;
+  clearRead: () => Promise<number>;
   loadPreferences: () => Promise<NotificationPreferences>;
   savePreferences: (preferences: NotificationPreferences) => Promise<NotificationPreferences>;
   subscribe: (profileId: string, onChange: () => void) => () => void;
@@ -151,6 +152,14 @@ export function createNotificationRepository(): NotificationRepository | null {
       const data = await requireRpcSuccess(
         client.rpc("mark_all_notifications_read"),
         "Octagon HQ could not update notifications.",
+      );
+      return readRowSchema.parse(data).unread_count;
+    },
+
+    async clearRead() {
+      const data = await requireRpcSuccess(
+        client.rpc("dismiss_read_notifications"),
+        "Octagon HQ could not clear read notifications.",
       );
       return readRowSchema.parse(data).unread_count;
     },
