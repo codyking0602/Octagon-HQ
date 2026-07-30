@@ -13,6 +13,10 @@ const previewMigration = readFileSync(
   "supabase/migrations/202608200028_dynamic_rich_preview_data.sql",
   "utf8",
 );
+const gableBackfillMigration = readFileSync(
+  "supabase/migrations/202608200030_backfill_gable_whats_new.sql",
+  "utf8",
+);
 const integrationSql = readFileSync(
   "supabase/tests/whats_new_rankings_sync.sql",
   "utf8",
@@ -93,14 +97,30 @@ describe("What's New Rankings and fighter producers", () => {
     expect(script).not.toContain("window.");
   });
 
-  it("runs only after the exact current main frontend is live", () => {
+  it("guarantees the missed Gable announcement through one idempotent backend repair", () => {
+    expect(gableBackfillMigration).toContain("'fighters-to-watch:new:gable-steveson'");
+    expect(gableBackfillMigration).toContain("'Gable Steveson added to Fighters to Watch'");
+    expect(gableBackfillMigration).toContain("'/fighters-to-watch'");
+    expect(gableBackfillMigration).toContain("on conflict (source_key) do update");
+    expect(gableBackfillMigration).toContain("published_at = excluded.published_at");
+    expect(gableBackfillMigration).toContain("insert into private.fighters_to_watch_whats_new_seen");
+    expect(gableBackfillMigration).toContain("'fba223d1e485a64debaf3d873d45a14f45f68ad6'");
+    expect(gableBackfillMigration).toContain("source_key <> 'fighters-to-watch:new:gable-steveson'");
+  });
+
+  it("reconciles the exact live deployment immediately and after missed callbacks", () => {
     expect(syncWorkflow).toContain("workflow_run:");
     expect(syncWorkflow).toContain("Deploy Cloudflare Frontend");
-    expect(syncWorkflow).toContain("github.event.workflow_run.conclusion == 'success'");
-    expect(syncWorkflow).toContain('sourceBranch === "main"');
-    expect(syncWorkflow).toContain('sourceEvent === "push"');
-    expect(syncWorkflow).toContain("main.commit.sha === sourceSha");
-    expect(syncWorkflow).toContain('ref: ${{ env.SOURCE_SHA }}');
+    expect(syncWorkflow).toContain("workflow_dispatch:");
+    expect(syncWorkflow).toContain('cron: "17 * * * *"');
+    expect(syncWorkflow).toContain("github.event_name != 'workflow_run'");
+    expect(syncWorkflow).toContain("/deployment.json?reconcile=${Date.now()}");
+    expect(syncWorkflow).toContain("compareCommitsWithBasehead");
+    expect(syncWorkflow).toContain("`${liveSha}...${mainSha}`");
+    expect(syncWorkflow).toContain('comparison.status === "ahead" || comparison.status === "identical"');
+    expect(syncWorkflow).toContain("comparison.merge_base_commit.sha.toLowerCase() !== liveSha");
+    expect(syncWorkflow).toContain("reconciling actual live source");
+    expect(syncWorkflow).toContain('ref: ${{ steps.guard.outputs.source_sha }}');
     expect(syncWorkflow).toContain("persist-credentials: false");
     expect(syncWorkflow).toContain("deployment.json?expected=${SOURCE_SHA}");
     expect(syncWorkflow).toContain("marker.sha !== expectedSha");
@@ -109,11 +129,14 @@ describe("What's New Rankings and fighter producers", () => {
     expect(syncWorkflow).toContain('echo "::add-mask::$service_role_key"');
     expect(script).toContain("for (let attempt = 1; attempt <= maxAttempts; attempt += 1)");
     expect(script).toContain('error.code === "PGRST202"');
+    expect(syncWorkflow).not.toContain("main.commit.sha === sourceSha");
   });
 
   it("locks thresholds, aggregation, watchlist deep links, and no-noise behavior", () => {
     expect(contract).toContain("historical rollout baseline is stored as durable seen-ID evidence");
     expect(contract).toContain("A delayed or skipped deployment cannot silently absorb a new watchlist ID");
+    expect(contract).toContain("A one-time backend repair guarantees the missed Gable Steveson item exists");
+    expect(contract).toContain("The actual live deployment is reconciled hourly");
     expect(contract).toContain("moving at least three positions");
     expect(contract).toContain("One- and two-position moves are intentionally ignored");
     expect(contract).toContain("five or more fighters move at least three spots");
