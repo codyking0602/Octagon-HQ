@@ -97,6 +97,7 @@ export function ChallengeCenter() {
     handledDestinationRef.current = requestKey;
 
     const direction = challengeDirection(requested, activeProfile.id);
+    if (!direction) return;
     const status = challengeStatus(requested, activeProfile.id);
 
     if (status === "completed") {
