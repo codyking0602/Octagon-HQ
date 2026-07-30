@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { shareCanonicalDestination } from "./nativeShare";
+import { shareAppLink, shareCanonicalDestination } from "./nativeShare";
 
 const fighterDestination = { kind: "fighter", fighterSlug: "jon-jones" } as const;
 
@@ -90,5 +90,42 @@ describe("shareCanonicalDestination", () => {
       appOrigin: "https://octagon.hq-app.workers.dev",
       navigator: {},
     })).resolves.toBe("unavailable");
+  });
+});
+
+describe("shareAppLink", () => {
+  it("shares an existing same-origin reproducible challenge URL", async () => {
+    const share = vi.fn().mockResolvedValue(undefined);
+
+    await expect(shareAppLink({
+      url: "/play/wavelength?challenge=target-72",
+      title: "Wavelength Challenge",
+      text: "Can you beat my score?",
+    }, {
+      appOrigin: "https://octagon.hq-app.workers.dev/play",
+      navigator: { share },
+    })).resolves.toBe("shared");
+
+    expect(share).toHaveBeenCalledWith({
+      title: "Wavelength Challenge",
+      text: "Can you beat my score?",
+      url: "https://octagon.hq-app.workers.dev/play/wavelength?challenge=target-72",
+    });
+  });
+
+  it("rejects cross-origin links", async () => {
+    const share = vi.fn().mockResolvedValue(undefined);
+    const writeText = vi.fn().mockResolvedValue(undefined);
+
+    await expect(shareAppLink({
+      url: "https://example.com/not-octagon-hq",
+      title: "Wrong app",
+    }, {
+      appOrigin: "https://octagon.hq-app.workers.dev",
+      navigator: { share, clipboard: { writeText } },
+    })).resolves.toBe("unavailable");
+
+    expect(share).not.toHaveBeenCalled();
+    expect(writeText).not.toHaveBeenCalled();
   });
 });

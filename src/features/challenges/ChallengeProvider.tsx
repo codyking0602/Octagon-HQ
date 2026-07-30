@@ -8,6 +8,7 @@ import {
   type PropsWithChildren,
 } from "react";
 import { createPortal } from "react-dom";
+import { shareAppLink, shareCanonicalDestination } from "../../app/nativeShare";
 import { useIdentity } from "../identity/IdentityProvider";
 import type { PlayGameId } from "../play/playRegistry";
 import {
@@ -67,23 +68,15 @@ function normalizeProfileName(value: string) {
 }
 
 async function shareDraft(draft: ChallengeComposerDraft) {
-  const payload = `${draft.shareText}\n\n${draft.shareUrl}`;
-  try {
-    if (navigator.share) {
-      await navigator.share({ title: draft.shareTitle, text: draft.shareText, url: draft.shareUrl });
-      return "CHALLENGE SHARED";
-    }
-    await navigator.clipboard.writeText(payload);
-    return "CHALLENGE LINK COPIED";
-  } catch (error) {
-    if (error instanceof DOMException && error.name === "AbortError") return "";
-    try {
-      await navigator.clipboard.writeText(payload);
-      return "CHALLENGE LINK COPIED";
-    } catch {
-      return "CHALLENGE FAILED";
-    }
-  }
+  const outcome = await shareAppLink({
+    url: draft.shareUrl,
+    title: draft.shareTitle,
+    text: draft.shareText,
+  });
+  if (outcome === "shared") return "CHALLENGE SHARED";
+  if (outcome === "copied") return "CHALLENGE LINK COPIED";
+  if (outcome === "unavailable") return "CHALLENGE FAILED";
+  return "";
 }
 
 function ComposerDialog({
@@ -226,12 +219,30 @@ function ResultsDialog({
   activeProfileId: string;
   onClose: () => void;
 }) {
+  const [shareStatus, setShareStatus] = useState("");
   if (!canViewChallengeResults(challenge, activeProfileId) || !challenge.responderResult) return null;
   const creator = profiles.find((profile) => profile.id === challenge.creatorId);
   const responder = profiles.find((profile) => profile.id === challenge.recipientId);
   const creatorName = creator?.displayName ?? "Sender";
   const responderName = responder?.displayName ?? "Responder";
   const verdict = challengeResultVerdict(challenge, creatorName, responderName);
+  const creatorScore = challengeResultScoreLabel(challenge, challenge.creatorResult);
+  const responderScore = challengeResultScoreLabel(challenge, challenge.responderResult);
+
+  async function shareResults() {
+    const outcome = await shareCanonicalDestination({
+      destination: { kind: "challenge", challengeId: challenge.code },
+      title: `${challenge.gameTitle} challenge result · Octagon HQ`,
+      text: `${creatorName} ${creatorScore} vs. ${responderName} ${responderScore}. ${verdict}`,
+    });
+    setShareStatus(
+      outcome === "copied"
+        ? "RESULT LINK COPIED"
+        : outcome === "unavailable"
+          ? "SHARING IS UNAVAILABLE"
+          : "",
+    );
+  }
 
   return createPortal(
     <div className="challenge-overlay" role="presentation" onMouseDown={(event) => {
@@ -255,17 +266,21 @@ function ResultsDialog({
           <article>
             <small>SENDER</small>
             <strong>{creatorName}</strong>
-            <b>{challengeResultScoreLabel(challenge, challenge.creatorResult)}</b>
+            <b>{creatorScore}</b>
           </article>
           <em>VS</em>
           <article>
             <small>RESPONDER</small>
             <strong>{responderName}</strong>
-            <b>{challengeResultScoreLabel(challenge, challenge.responderResult)}</b>
+            <b>{responderScore}</b>
           </article>
         </div>
         <ChallengeResultDetails challenge={challenge} creatorName={creatorName} responderName={responderName} />
-        <button type="button" className="primary-action challenge-results-dialog__close" onClick={onClose}>CLOSE</button>
+        <p className="challenge-dialog__status" role="status">{shareStatus}</p>
+        <footer>
+          <button type="button" onClick={() => void shareResults()}>SHARE RESULTS</button>
+          <button type="button" className="primary-action" onClick={onClose}>CLOSE</button>
+        </footer>
       </section>
     </div>,
     document.body,
