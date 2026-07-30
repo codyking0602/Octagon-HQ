@@ -1,9 +1,14 @@
+export type ShaneWatchStatus = "Rising" | "Holding" | "Concern" | "Inactive";
+
 export interface ShaneWatchFighter {
   id: string;
+  rank: number;
+  previousRank: number | null;
   name: string;
   nickname: string;
-  status: string;
+  status: ShaneWatchStatus;
   added: string;
+  lastReviewed: string;
   division: string;
   age: number;
   country: string;
@@ -14,21 +19,68 @@ export interface ShaneWatchFighter {
   highlight: string;
   scoutingNote: string;
   comparison: string;
-  photoUrl: string;
+  photoUrl: string | null;
   ufcUrl: string;
+}
+
+export interface ShaneFormerPick {
+  id: string;
+  name: string;
+  peakRank: number;
+  added: string;
+  removed: string;
+  exitNote: string;
+}
+
+export function watchMovement(fighter: ShaneWatchFighter) {
+  if (fighter.previousRank === null) return { label: "NEW", direction: "new" } as const;
+  if (fighter.previousRank > fighter.rank) {
+    return { label: `↑${fighter.previousRank - fighter.rank}`, direction: "up" } as const;
+  }
+  if (fighter.previousRank < fighter.rank) {
+    return { label: `↓${fighter.rank - fighter.previousRank}`, direction: "down" } as const;
+  }
+  return { label: "—", direction: "same" } as const;
 }
 
 export const shanesWatchlist = {
   curator: "Shane",
   title: "Shane’s Fighters to Watch",
-  subtitle: "Early prospect calls, tracked from the moment Shane picked them.",
+  subtitle: "A living Top 15 of early prospect calls, updated as their careers progress.",
+  capacity: 15,
+  lastUpdated: "July 2026",
   fighters: [
     {
+      id: "gable-steveson",
+      rank: 1,
+      previousRank: null,
+      name: "Gable Steveson",
+      nickname: "",
+      status: "Rising",
+      added: "July 2026",
+      lastReviewed: "July 2026",
+      division: "Heavyweight",
+      age: 26,
+      country: "United States",
+      proRecord: "4–0",
+      ufcRecord: "1–0",
+      winStreak: "4",
+      finishes: "4",
+      highlight: "First-round UFC debut knockout",
+      scoutingNote: "Olympic wrestling with heavyweight explosiveness. He has the highest ceiling on the board.",
+      comparison: "Justin Gaethje",
+      photoUrl: null,
+      ufcUrl: "https://www.ufc.com/athlete/gable-steveson",
+    },
+    {
       id: "fatima-kline",
+      rank: 2,
+      previousRank: 1,
       name: "Fatima Kline",
       nickname: "The Archangel",
-      status: "Latest call",
+      status: "Rising",
       added: "July 2026",
+      lastReviewed: "July 2026",
       division: "Women’s Strawweight",
       age: 26,
       country: "United States",
@@ -44,10 +96,13 @@ export const shanesWatchlist = {
     },
     {
       id: "abdul-rakhman-yakhyaev",
+      rank: 3,
+      previousRank: 2,
       name: "Abdul Rakhman Yakhyaev",
       nickname: "The Hunter",
-      status: "On the rise",
+      status: "Rising",
       added: "July 2026",
+      lastReviewed: "July 2026",
       division: "Light Heavyweight",
       age: 25,
       country: "Türkiye",
@@ -57,16 +112,19 @@ export const shanesWatchlist = {
       finishes: "9",
       highlight: "8-second UFC knockout",
       scoutingNote: "This guy could be the real deal.",
-      comparison: "Magomed Ankalaev",
+      comparison: "Khamzat Chimaev",
       photoUrl: "/assets/fighters/abdul-rakhman-yakhyaev-thumb.webp",
       ufcUrl: "https://www.ufc.com/athlete/abdulrakhman-yakhyaev",
     },
     {
       id: "daniil-donchenko",
+      rank: 4,
+      previousRank: 3,
       name: "Daniil Donchenko",
       nickname: "",
-      status: "Watching",
+      status: "Rising",
       added: "July 2026",
+      lastReviewed: "July 2026",
       division: "Welterweight",
       age: 24,
       country: "Ukraine",
@@ -81,4 +139,5 @@ export const shanesWatchlist = {
       ufcUrl: "https://www.ufc.com/athlete/daniil-donchenko",
     },
   ] satisfies ShaneWatchFighter[],
+  formerFighters: [] satisfies ShaneFormerPick[],
 } as const;
