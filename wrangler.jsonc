@@ -3,6 +3,9 @@
   "name": "octagon",
   "main": "./dist/_worker.js",
   "compatibility_date": "2026-07-22",
+  "browser": {
+    "binding": "BROWSER"
+  },
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
@@ -15,7 +18,8 @@
       "/picks/",
       "/play",
       "/play/",
-      "/play/*"
+      "/play/*",
+      "/share-preview/*"
     ]
   }
 }
