@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import type { PickBout, PickEventMemberProgress } from "./picksModel";
+import type { PickBout } from "./picksModel";
+import type { PickEventMemberProgress } from "./groupProgressModel";
 
 interface GroupPickProgressProps {
   members: readonly PickEventMemberProgress[];
