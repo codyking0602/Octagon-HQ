@@ -42,7 +42,7 @@ Unknown, private, incomplete, malformed, or unavailable dynamic data falls back 
 
 ## Copy standard
 
-Preview copy uses plain `GOAT` and `resume` everywhere. Build-time and Worker output normalize incoming presentation text before it reaches preview metadata.
+Preview copy uses plain `resume` where that word appears and avoids legacy ranking labels. Build-time and Worker output normalize incoming presentation text before it reaches preview metadata.
 
 ## Visual fallback
 
