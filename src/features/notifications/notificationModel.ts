@@ -43,9 +43,18 @@ export const notificationCategories = [
 
 export const notificationPriorities = ["push_candidate", "in_app"] as const;
 
+export const notificationPreferenceKeys = [
+  "picksReminders",
+  "dailyChallengeReminders",
+  "gameChallengeActivity",
+  "warRoomActivity",
+] as const;
+
 export type NotificationKind = typeof notificationKinds[number];
 export type NotificationCategory = typeof notificationCategories[number];
 export type NotificationPriority = typeof notificationPriorities[number];
+export type NotificationPreferenceKey = typeof notificationPreferenceKeys[number];
+export type NotificationPermissionState = "unsupported" | "default" | "granted" | "denied";
 
 export interface NotificationItem {
   id: string;
@@ -66,6 +75,50 @@ export interface NotificationSnapshot {
   items: NotificationItem[];
   unreadCount: number;
 }
+
+export interface NotificationPreferences {
+  picksReminders: boolean;
+  dailyChallengeReminders: boolean;
+  gameChallengeActivity: boolean;
+  warRoomActivity: boolean;
+  criticalActions: true;
+  updatedAt: string | null;
+}
+
+export interface NotificationDeviceReadiness {
+  status: "checking" | "ready" | "unsupported" | "error";
+  secureContext: boolean;
+  notificationsSupported: boolean;
+  serviceWorkerSupported: boolean;
+  pushSupported: boolean;
+  serviceWorkerReady: boolean;
+  installed: boolean;
+  isIos: boolean;
+  installPromptAvailable: boolean;
+  permission: NotificationPermissionState;
+}
+
+export const defaultNotificationPreferences: NotificationPreferences = {
+  picksReminders: true,
+  dailyChallengeReminders: true,
+  gameChallengeActivity: true,
+  warRoomActivity: true,
+  criticalActions: true,
+  updatedAt: null,
+};
+
+export const initialNotificationDeviceReadiness: NotificationDeviceReadiness = {
+  status: "checking",
+  secureContext: false,
+  notificationsSupported: false,
+  serviceWorkerSupported: false,
+  pushSupported: false,
+  serviceWorkerReady: false,
+  installed: false,
+  isIos: false,
+  installPromptAvailable: false,
+  permission: "unsupported",
+};
 
 const categoryLabels: Record<NotificationCategory, string> = {
   social: "Social",

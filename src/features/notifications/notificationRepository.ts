@@ -5,6 +5,7 @@ import {
   notificationKinds,
   notificationPriorities,
   type NotificationItem,
+  type NotificationPreferences,
   type NotificationSnapshot,
 } from "./notificationModel";
 
@@ -33,10 +34,21 @@ const readRowSchema = z.object({
   marked_count: z.coerce.number().int().nonnegative().optional().default(0),
 });
 
+const preferenceRowSchema = z.object({
+  picks_reminders: z.boolean(),
+  daily_challenge_reminders: z.boolean(),
+  game_challenge_activity: z.boolean(),
+  war_room_activity: z.boolean(),
+  critical_actions: z.literal(true),
+  updated_at: z.string().nullable(),
+});
+
 export interface NotificationRepository {
   loadSnapshot: () => Promise<NotificationSnapshot>;
   markRead: (notificationId: string) => Promise<number>;
   markAllRead: () => Promise<number>;
+  loadPreferences: () => Promise<NotificationPreferences>;
+  savePreferences: (preferences: NotificationPreferences) => Promise<NotificationPreferences>;
   subscribe: (profileId: string, onChange: () => void) => () => void;
 }
 
@@ -55,6 +67,18 @@ function toItem(value: unknown): NotificationItem {
     aggregateCount: row.aggregate_count,
     latestEventAt: row.latest_event_at,
     isRead: row.is_read,
+  };
+}
+
+function toPreferences(value: unknown): NotificationPreferences {
+  const row = preferenceRowSchema.parse(value);
+  return {
+    picksReminders: row.picks_reminders,
+    dailyChallengeReminders: row.daily_challenge_reminders,
+    gameChallengeActivity: row.game_challenge_activity,
+    warRoomActivity: row.war_room_activity,
+    criticalActions: true,
+    updatedAt: row.updated_at,
   };
 }
 
@@ -99,6 +123,27 @@ export function createNotificationRepository(): NotificationRepository | null {
         "Octagon HQ could not update notifications.",
       );
       return readRowSchema.parse(data).unread_count;
+    },
+
+    async loadPreferences() {
+      const data = await requireRpcSuccess(
+        client.rpc("get_my_notification_preferences"),
+        "Octagon HQ could not load notification preferences.",
+      );
+      return toPreferences(data);
+    },
+
+    async savePreferences(preferences) {
+      const data = await requireRpcSuccess(
+        client.rpc("set_my_notification_preferences", {
+          p_picks_reminders: preferences.picksReminders,
+          p_daily_challenge_reminders: preferences.dailyChallengeReminders,
+          p_game_challenge_activity: preferences.gameChallengeActivity,
+          p_war_room_activity: preferences.warRoomActivity,
+        }),
+        "Octagon HQ could not save notification preferences.",
+      );
+      return toPreferences(data);
     },
 
     subscribe(profileId, onChange) {
