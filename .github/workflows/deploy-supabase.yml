@@ -173,6 +173,20 @@ jobs:
             echo "run-pick-monitoring is not present in this exact deployment source; skipping."
           fi
 
+      - name: Deploy notification push delivery function when present
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          if [ -f supabase/functions/deliver-notification-push/index.ts ]; then
+            printf '// Generated only in the deployment workspace.\nexport const DEPLOYED_SOURCE_SHA = "%s";\n' "$SOURCE_SHA" \
+              > supabase/functions/deliver-notification-push/deployment.ts
+            supabase functions deploy deliver-notification-push --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt
+          else
+            echo "deliver-notification-push is not present in this exact deployment source; skipping."
+          fi
+
       - name: Configure canonical automatic monitoring scheduler
         if: ${{ hashFiles('supabase/migrations/202608090001_automatic_pick_monitoring_scheduler.sql') != '' }}
         env:
@@ -239,6 +253,9 @@ jobs:
           if [ -f supabase/migrations/202608110001_live_pick_odds_application.sql ]; then
             require_remote_migration "202608110001"
           fi
+          if [ -f supabase/migrations/202608200025_notification_device_push_delivery.sql ]; then
+            require_remote_migration "202608200025"
+          fi
 
           function_list=$(supabase functions list --project-ref "$SUPABASE_PROJECT_ID")
           printf '%s\n' "$function_list" | grep -F "pin-auth"
@@ -247,6 +264,9 @@ jobs:
           fi
           if [ -f supabase/functions/run-pick-monitoring/index.ts ]; then
             printf '%s\n' "$function_list" | grep -F "run-pick-monitoring"
+          fi
+          if [ -f supabase/functions/deliver-notification-push/index.ts ]; then
+            printf '%s\n' "$function_list" | grep -F "deliver-notification-push"
           fi
 
           endpoint="https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/pin-auth"
@@ -268,6 +288,33 @@ jobs:
 
           grep -Fq "Enter a name and a 4-digit PIN." "$RUNNER_TEMP/pin-auth-response.json"
           grep -Fiq "access-control-allow-origin: $OCTAGON_PRODUCTION_ORIGIN" "$RUNNER_TEMP/pin-auth-headers.txt"
+
+          if [ -f supabase/functions/deliver-notification-push/index.ts ]; then
+            push_endpoint="https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/deliver-notification-push"
+            push_status=$(curl --silent --show-error \
+              --dump-header "$RUNNER_TEMP/push-config-headers.txt" \
+              --output "$RUNNER_TEMP/push-config-response.json" \
+              --write-out "%{http_code}" \
+              --request POST \
+              --header "Origin: $OCTAGON_PRODUCTION_ORIGIN" \
+              --header "Content-Type: application/json" \
+              --data '{"mode":"configuration"}' \
+              "$push_endpoint")
+            test "$push_status" = "200"
+            grep -Fq '"public_key"' "$RUNNER_TEMP/push-config-response.json"
+            grep -Fq "\"deployment_sha\":\"$SOURCE_SHA\"" "$RUNNER_TEMP/push-config-response.json"
+            grep -Fiq "access-control-allow-origin: $OCTAGON_PRODUCTION_ORIGIN" "$RUNNER_TEMP/push-config-headers.txt"
+
+            unauthorized_status=$(curl --silent --show-error \
+              --output "$RUNNER_TEMP/push-unauthorized-response.json" \
+              --write-out "%{http_code}" \
+              --request POST \
+              --header "Content-Type: application/json" \
+              --data '{"mode":"deliver","notification_id":"00000000-0000-0000-0000-000000000000"}' \
+              "$push_endpoint")
+            test "$unauthorized_status" = "401"
+            grep -Fq "DELIVERY_AUTH_REQUIRED" "$RUNNER_TEMP/push-unauthorized-response.json"
+          fi
 
       - name: Verify exact deployed UFC sync source
         if: ${{ hashFiles('supabase/functions/sync-next-ufc-event/index.ts') != '' }}
@@ -306,10 +353,13 @@ jobs:
             if [ -f supabase/functions/run-pick-monitoring/index.ts ]; then
               echo "- run-pick-monitoring Edge Function deployed, rejected unauthenticated and fake-scheduler execution without a provider call, and returned the embedded exact source SHA"
             fi
+            if [ -f supabase/functions/deliver-notification-push/index.ts ]; then
+              echo "- deliver-notification-push Edge Function deployed, created or reused private VAPID keys, returned its public key, and rejected unauthenticated delivery"
+            fi
             if [ -f supabase/migrations/202608090001_automatic_pick_monitoring_scheduler.sql ]; then
               echo "- Canonical hourly scheduler verified; active state: ${EXPECTED_MONITORING_SCHEDULER_ENABLED:-not-configured}"
             fi
             echo "- Canonical production origin: $OCTAGON_PRODUCTION_ORIGIN"
-            echo "- Remote migrations, exact deployed function revisions, live authentication contracts, scheduler health, and production CORS were verified"
+            echo "- Remote migrations, exact deployed function revisions, live authentication contracts, scheduler health, push configuration, and production CORS were verified"
             echo "- Project secrets were never printed or exposed to PR build code"
           } >> "$GITHUB_STEP_SUMMARY"

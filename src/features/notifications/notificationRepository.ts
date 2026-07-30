@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { getSupabaseClient } from "../../lib/supabase";
+import type { NotificationPushSubscriptionInput } from "./notificationDevicePush";
 import {
   notificationCategories,
   notificationKinds,
@@ -43,6 +44,21 @@ const preferenceRowSchema = z.object({
   updated_at: z.string().nullable(),
 });
 
+const pushStatusRowSchema = z.object({
+  current_device_registered: z.boolean(),
+  active_device_count: z.coerce.number().int().nonnegative(),
+});
+
+const pushConfigurationSchema = z.object({
+  public_key: z.string().min(40),
+  deployment_sha: z.string().min(1).optional(),
+});
+
+export interface NotificationPushStatusSnapshot {
+  currentDeviceRegistered: boolean;
+  activeDeviceCount: number;
+}
+
 export interface NotificationRepository {
   loadSnapshot: () => Promise<NotificationSnapshot>;
   markRead: (notificationId: string) => Promise<number>;
@@ -50,6 +66,12 @@ export interface NotificationRepository {
   loadPreferences: () => Promise<NotificationPreferences>;
   savePreferences: (preferences: NotificationPreferences) => Promise<NotificationPreferences>;
   subscribe: (profileId: string, onChange: () => void) => () => void;
+  loadPushConfiguration?: () => Promise<string>;
+  loadPushStatus?: (endpoint: string | null) => Promise<NotificationPushStatusSnapshot>;
+  registerPushSubscription?: (
+    subscription: NotificationPushSubscriptionInput,
+  ) => Promise<NotificationPushStatusSnapshot>;
+  removePushSubscription?: (endpoint: string) => Promise<NotificationPushStatusSnapshot>;
 }
 
 function toItem(value: unknown): NotificationItem {
@@ -79,6 +101,14 @@ function toPreferences(value: unknown): NotificationPreferences {
     warRoomActivity: row.war_room_activity,
     criticalActions: true,
     updatedAt: row.updated_at,
+  };
+}
+
+function toPushStatus(value: unknown): NotificationPushStatusSnapshot {
+  const row = pushStatusRowSchema.parse(value);
+  return {
+    currentDeviceRegistered: row.current_device_registered,
+    activeDeviceCount: row.active_device_count,
   };
 }
 
@@ -144,6 +174,43 @@ export function createNotificationRepository(): NotificationRepository | null {
         "Octagon HQ could not save notification preferences.",
       );
       return toPreferences(data);
+    },
+
+    async loadPushConfiguration() {
+      const { data, error } = await client.functions.invoke("deliver-notification-push", {
+        body: { mode: "configuration" },
+      });
+      if (error) throw new Error("Octagon HQ could not prepare device notifications.");
+      return pushConfigurationSchema.parse(data).public_key;
+    },
+
+    async loadPushStatus(endpoint) {
+      const data = await requireRpcSuccess(
+        client.rpc("get_my_notification_push_status", { p_endpoint: endpoint }),
+        "Octagon HQ could not check this device's notification connection.",
+      );
+      return toPushStatus(data);
+    },
+
+    async registerPushSubscription(subscription) {
+      const data = await requireRpcSuccess(
+        client.rpc("register_my_notification_push_subscription", {
+          p_endpoint: subscription.endpoint,
+          p_p256dh: subscription.p256dh,
+          p_auth: subscription.auth,
+          p_user_agent: subscription.userAgent,
+        }),
+        "Octagon HQ could not connect this device.",
+      );
+      return toPushStatus(data);
+    },
+
+    async removePushSubscription(endpoint) {
+      const data = await requireRpcSuccess(
+        client.rpc("remove_my_notification_push_subscription", { p_endpoint: endpoint }),
+        "Octagon HQ could not disconnect this device.",
+      );
+      return toPushStatus(data);
     },
 
     subscribe(profileId, onChange) {

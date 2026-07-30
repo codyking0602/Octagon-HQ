@@ -10,7 +10,9 @@ import {
 import { useIdentity } from "../identity/IdentityProvider";
 import {
   defaultNotificationPreferences,
+  initialNotificationDevicePushState,
   initialNotificationDeviceReadiness,
+  type NotificationDevicePushState,
   type NotificationDeviceReadiness,
   type NotificationItem,
   type NotificationPreferenceKey,
@@ -21,6 +23,11 @@ import {
   promptNotificationAppInstall,
   subscribeNotificationDeviceReadiness,
 } from "./notificationDeviceReadiness";
+import {
+  disableNotificationDevicePush,
+  enableNotificationDevicePush,
+  getCurrentNotificationPushSubscription,
+} from "./notificationDevicePush";
 import {
   createNotificationRepository,
   type NotificationRepository,
@@ -51,11 +58,14 @@ interface NotificationContextValue {
   preferences: NotificationPreferences;
   preferenceStatus: NotificationPreferenceStatus;
   deviceReadiness: NotificationDeviceReadiness;
+  devicePush: NotificationDevicePushState;
   refresh: () => Promise<boolean>;
   markRead: (notificationId: string) => Promise<boolean>;
   markAllRead: () => Promise<boolean>;
   updatePreference: (key: NotificationPreferenceKey, enabled: boolean) => Promise<boolean>;
   installApp: () => Promise<boolean>;
+  enableDevicePush: () => Promise<boolean>;
+  disableDevicePush: () => Promise<boolean>;
 }
 
 const NotificationContext = createContext<NotificationContextValue | null>(null);
@@ -75,6 +85,7 @@ export function NotificationProvider({
   profileIdRef.current = profileId;
   const revisionRef = useRef(0);
   const preferenceRevisionRef = useRef(0);
+  const pushRevisionRef = useRef(0);
   const [repository] = useState<NotificationRepository | null>(() => (
     suppliedRepository === undefined ? createNotificationRepository() : suppliedRepository
   ));
@@ -90,6 +101,9 @@ export function NotificationProvider({
   const [preferenceStatus, setPreferenceStatus] = useState<NotificationPreferenceStatus>("idle");
   const [deviceReadiness, setDeviceReadiness] = useState<NotificationDeviceReadiness>(
     initialNotificationDeviceReadiness,
+  );
+  const [devicePush, setDevicePush] = useState<NotificationDevicePushState>(
+    initialNotificationDevicePushState,
   );
 
   const loadSnapshot = useCallback(async (showLoading = false) => {
@@ -172,20 +186,60 @@ export function NotificationProvider({
     }
   }, []);
 
+  const refreshDevicePush = useCallback(async () => {
+    const expectedProfileId = profileIdRef.current;
+    const revision = ++pushRevisionRef.current;
+    if (!expectedProfileId) {
+      setDevicePush({ status: "off", currentDeviceRegistered: false, activeDeviceCount: 0 });
+      return true;
+    }
+    if (!repository?.loadPushStatus) {
+      setDevicePush({ status: "unsupported", currentDeviceRegistered: false, activeDeviceCount: 0 });
+      return false;
+    }
+
+    setDevicePush((current) => ({ ...current, status: "checking" }));
+    try {
+      const readiness = await inspectNotificationDeviceReadiness();
+      const subscription = readiness.status === "ready"
+        ? await getCurrentNotificationPushSubscription()
+        : null;
+      const pushStatus = await repository.loadPushStatus(subscription?.endpoint ?? null);
+      if (revision !== pushRevisionRef.current || profileIdRef.current !== expectedProfileId) return false;
+
+      const nextStatus = readiness.status !== "ready"
+        ? "unsupported"
+        : readiness.permission === "denied"
+          ? "blocked"
+          : pushStatus.currentDeviceRegistered
+            ? "on"
+            : "off";
+      setDevicePush({ status: nextStatus, ...pushStatus });
+      return true;
+    } catch {
+      if (revision !== pushRevisionRef.current || profileIdRef.current !== expectedProfileId) return false;
+      setDevicePush((current) => ({ ...current, status: "error" }));
+      return false;
+    }
+  }, [repository]);
+
   useEffect(() => {
     void refreshDeviceReadiness();
     return subscribeNotificationDeviceReadiness(() => {
       void refreshDeviceReadiness();
+      void refreshDevicePush();
     });
-  }, [refreshDeviceReadiness]);
+  }, [refreshDevicePush, refreshDeviceReadiness]);
 
   useEffect(() => {
     ++revisionRef.current;
     ++preferenceRevisionRef.current;
+    ++pushRevisionRef.current;
     setItems([]);
     setUnreadCount(0);
     setError("");
     setPreferences(defaultNotificationPreferences);
+    setDevicePush(initialNotificationDevicePushState);
 
     if (identity.status === "loading") {
       setStatus("loading");
@@ -196,12 +250,14 @@ export function NotificationProvider({
     if (!profileId) {
       setStatus("signed-out");
       setPreferenceStatus("signed-out");
+      setDevicePush({ status: "off", currentDeviceRegistered: false, activeDeviceCount: 0 });
       return;
     }
 
     void loadSnapshot(true);
     void loadPreferences(true);
-  }, [identity.status, loadPreferences, loadSnapshot, profileId]);
+    void refreshDevicePush();
+  }, [identity.status, loadPreferences, loadSnapshot, profileId, refreshDevicePush]);
 
   useEffect(() => {
     if (!repository || !profileId) return undefined;
@@ -214,20 +270,26 @@ export function NotificationProvider({
       void loadSnapshot(false);
       void loadPreferences(false);
       void refreshDeviceReadiness();
+      void refreshDevicePush();
     };
     const onVisibility = () => {
       if (document.visibilityState === "visible") refreshVisibleData();
+    };
+    const onServiceWorkerMessage = (event: MessageEvent) => {
+      if (event.data?.type === "octagon-notification-push") void loadSnapshot(false);
     };
 
     window.addEventListener("focus", refreshVisibleData);
     window.addEventListener("online", refreshVisibleData);
     document.addEventListener("visibilitychange", onVisibility);
+    navigator.serviceWorker?.addEventListener("message", onServiceWorkerMessage);
     return () => {
       window.removeEventListener("focus", refreshVisibleData);
       window.removeEventListener("online", refreshVisibleData);
       document.removeEventListener("visibilitychange", onVisibility);
+      navigator.serviceWorker?.removeEventListener("message", onServiceWorkerMessage);
     };
-  }, [loadPreferences, loadSnapshot, profileId, refreshDeviceReadiness]);
+  }, [loadPreferences, loadSnapshot, profileId, refreshDevicePush, refreshDeviceReadiness]);
 
   const markRead = useCallback(async (notificationId: string) => {
     const expectedProfileId = profileIdRef.current;
@@ -310,12 +372,78 @@ export function NotificationProvider({
     try {
       const installed = await promptNotificationAppInstall();
       await refreshDeviceReadiness();
+      await refreshDevicePush();
       return installed;
     } catch {
       await refreshDeviceReadiness();
+      await refreshDevicePush();
       return false;
     }
-  }, [refreshDeviceReadiness]);
+  }, [refreshDevicePush, refreshDeviceReadiness]);
+
+  const enableDevicePush = useCallback(async () => {
+    const expectedProfileId = profileIdRef.current;
+    if (
+      !expectedProfileId
+      || !repository?.loadPushConfiguration
+      || !repository.registerPushSubscription
+    ) return false;
+
+    const revision = ++pushRevisionRef.current;
+    setDevicePush((current) => ({ ...current, status: "enabling" }));
+    try {
+      const readiness = await inspectNotificationDeviceReadiness();
+      if (readiness.status !== "ready") throw new Error("This browser does not support device notifications.");
+      if (readiness.isIos && !readiness.installed) {
+        throw new Error("Add Octagon HQ to the Home Screen before enabling device notifications.");
+      }
+
+      const publicKey = await repository.loadPushConfiguration();
+      const connected = await enableNotificationDevicePush(publicKey);
+      const pushStatus = await repository.registerPushSubscription(connected.input);
+      if (revision !== pushRevisionRef.current || profileIdRef.current !== expectedProfileId) return false;
+      setDevicePush({ status: "on", ...pushStatus });
+      await refreshDeviceReadiness();
+      return true;
+    } catch {
+      if (revision !== pushRevisionRef.current || profileIdRef.current !== expectedProfileId) return false;
+      const permission = typeof Notification === "undefined" ? "unsupported" : Notification.permission;
+      setDevicePush((current) => ({
+        ...current,
+        status: permission === "denied" ? "blocked" : "error",
+        currentDeviceRegistered: false,
+      }));
+      await refreshDeviceReadiness();
+      return false;
+    }
+  }, [refreshDeviceReadiness, repository]);
+
+  const disableDevicePush = useCallback(async () => {
+    const expectedProfileId = profileIdRef.current;
+    if (!expectedProfileId || !repository?.removePushSubscription) return false;
+
+    const revision = ++pushRevisionRef.current;
+    setDevicePush((current) => ({ ...current, status: "disabling" }));
+    try {
+      const subscription = await getCurrentNotificationPushSubscription();
+      let nextStatus = {
+        currentDeviceRegistered: false,
+        activeDeviceCount: devicePush.activeDeviceCount,
+      };
+      if (subscription) {
+        nextStatus = await repository.removePushSubscription(subscription.endpoint);
+      }
+      await disableNotificationDevicePush();
+      if (revision !== pushRevisionRef.current || profileIdRef.current !== expectedProfileId) return false;
+      setDevicePush({ status: "off", ...nextStatus, currentDeviceRegistered: false });
+      await refreshDeviceReadiness();
+      return true;
+    } catch {
+      if (revision !== pushRevisionRef.current || profileIdRef.current !== expectedProfileId) return false;
+      setDevicePush((current) => ({ ...current, status: "error" }));
+      return false;
+    }
+  }, [devicePush.activeDeviceCount, refreshDeviceReadiness, repository]);
 
   return (
     <NotificationContext.Provider value={{
@@ -326,11 +454,14 @@ export function NotificationProvider({
       preferences,
       preferenceStatus,
       deviceReadiness,
+      devicePush,
       refresh: () => loadSnapshot(false),
       markRead,
       markAllRead,
       updatePreference,
       installApp,
+      enableDevicePush,
+      disableDevicePush,
     }}>
       {children}
     </NotificationContext.Provider>

@@ -130,29 +130,42 @@ function PreferenceSwitch({
 function DeviceReadinessCard() {
   const notifications = useNotifications();
   const readiness = notifications.deviceReadiness;
+  const push = notifications.devicePush;
   const permissionLabel = {
     unsupported: "Unavailable",
     default: "Not requested",
     granted: "Allowed",
     denied: "Blocked",
   }[readiness.permission];
-
-  const readyForFinalConnection = readiness.status === "ready"
-    && readiness.serviceWorkerReady
-    && readiness.installed;
+  const connectionLabel = {
+    checking: "Checking",
+    off: "Off",
+    on: "On",
+    enabling: "Connecting",
+    disabling: "Disconnecting",
+    blocked: "Blocked",
+    unsupported: "Unavailable",
+    error: "Needs retry",
+  }[push.status];
+  const busy = push.status === "checking"
+    || push.status === "enabling"
+    || push.status === "disabling";
+  const canEnable = readiness.status === "ready"
+    && readiness.permission !== "denied"
+    && (!readiness.isIos || readiness.installed)
+    && push.status !== "on";
 
   return (
     <section className="surface-card notification-settings-card notification-device-card">
       <div className="notification-settings-card__heading">
         <div>
-          <p className="eyebrow">DEVICE READINESS</p>
+          <p className="eyebrow">DEVICE DELIVERY</p>
           <h2>Device notifications</h2>
-          <p>
-            Device delivery is not active yet. This confirms whether Octagon HQ and this browser
-            are ready for the final push connection.
-          </p>
+          <p>Receive important Octagon HQ actions even when the app is closed.</p>
         </div>
-        <b className="notification-roadmap-badge">PR 2 OF 3</b>
+        <b className={`notification-roadmap-badge${push.status === "on" ? " is-live" : ""}`}>
+          {push.status === "on" ? "LIVE" : "OPTIONAL"}
+        </b>
       </div>
 
       <div className="notification-readiness-grid">
@@ -169,28 +182,41 @@ function DeviceReadinessCard() {
           <strong>{permissionLabel}</strong>
         </span>
         <span>
-          <small>Service worker</small>
-          <strong>{readiness.serviceWorkerReady ? "Ready" : "Not ready"}</strong>
+          <small>This device</small>
+          <strong>{connectionLabel}</strong>
         </span>
       </div>
 
-      {readiness.status === "checking" ? (
-        <p className="notification-device-note">Checking this device…</p>
+      {busy ? (
+        <p className="notification-device-note">Updating this device’s notification connection…</p>
       ) : readiness.isIos && !readiness.installed ? (
         <p className="notification-device-note">
-          On iPhone or iPad, use <strong>Share → Add to Home Screen</strong> first.
+          On iPhone or iPad, use <strong>Share → Add to Home Screen</strong>, open the installed app,
+          and then turn notifications on.
         </p>
-      ) : readyForFinalConnection ? (
+      ) : push.status === "on" ? (
         <p className="notification-device-note is-ready">
-          This device is ready for the final push connection. Permission has not been requested yet.
+          Important mentions, Picks actions, challenge results, and Cody-only control alerts can now
+          reach this device. {push.activeDeviceCount === 1
+            ? "This is your only connected device."
+            : `${push.activeDeviceCount} devices are connected to your profile.`}
         </p>
-      ) : readiness.status === "unsupported" ? (
+      ) : push.status === "blocked" ? (
         <p className="notification-device-note">
-          This browser cannot complete the future device-push connection.
+          Notifications are blocked for Octagon HQ. Allow them in this browser or device’s settings,
+          then return here.
+        </p>
+      ) : push.status === "error" ? (
+        <p className="notification-device-note">
+          Octagon HQ could not finish the device connection. Check your connection and try again.
+        </p>
+      ) : readiness.status === "unsupported" || push.status === "unsupported" ? (
+        <p className="notification-device-note">
+          This browser cannot receive Octagon HQ device notifications.
         </p>
       ) : (
         <p className="notification-device-note">
-          Install Octagon HQ to complete device readiness before push delivery is added.
+          Turn this on once to allow Octagon HQ to deliver push-candidate notifications to this device.
         </p>
       )}
 
@@ -198,9 +224,30 @@ function DeviceReadinessCard() {
         <button
           className="primary-action notification-install-action"
           type="button"
+          disabled={busy}
           onClick={() => void notifications.installApp()}
         >
           INSTALL APP
+        </button>
+      ) : null}
+
+      {push.status === "on" ? (
+        <button
+          className="notification-device-action is-disable"
+          type="button"
+          disabled={busy}
+          onClick={() => void notifications.disableDevicePush()}
+        >
+          TURN OFF DEVICE NOTIFICATIONS
+        </button>
+      ) : canEnable ? (
+        <button
+          className="primary-action notification-device-action"
+          type="button"
+          disabled={busy}
+          onClick={() => void notifications.enableDevicePush()}
+        >
+          TURN ON DEVICE NOTIFICATIONS
         </button>
       ) : null}
     </section>
