@@ -22,8 +22,10 @@ const accentedCareerLabel = new RegExp("r(?:é|e)sum(?:é|e)", "gi");
 
 function plainBuildCopy(value: string) {
   return value
-    .replace(legacyRankingLabel, "UFC")
-    .replace(accentedCareerLabel, "resume");
+    .replace(legacyRankingLabel, "")
+    .replace(accentedCareerLabel, "resume")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function deployedFighterAssets() {
