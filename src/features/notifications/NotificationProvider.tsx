@@ -62,6 +62,7 @@ interface NotificationContextValue {
   refresh: () => Promise<boolean>;
   markRead: (notificationId: string) => Promise<boolean>;
   markAllRead: () => Promise<boolean>;
+  clearRead: () => Promise<boolean>;
   updatePreference: (key: NotificationPreferenceKey, enabled: boolean) => Promise<boolean>;
   installApp: () => Promise<boolean>;
   enableDevicePush: () => Promise<boolean>;
@@ -329,6 +330,24 @@ export function NotificationProvider({
     }
   }, [repository, unreadCount]);
 
+  const clearRead = useCallback(async () => {
+    const expectedProfileId = profileIdRef.current;
+    if (!expectedProfileId || !repository) return false;
+
+    try {
+      const nextUnreadCount = await repository.clearRead();
+      if (profileIdRef.current !== expectedProfileId) return false;
+      setUnreadCount(nextUnreadCount);
+      setItems((current) => current.filter((item) => !item.isRead));
+      setError("");
+      return true;
+    } catch (nextError) {
+      if (profileIdRef.current !== expectedProfileId) return false;
+      setError(readableError(nextError));
+      return false;
+    }
+  }, [repository]);
+
   const updatePreference = useCallback(async (
     key: NotificationPreferenceKey,
     enabled: boolean,
@@ -458,6 +477,7 @@ export function NotificationProvider({
       refresh: () => loadSnapshot(false),
       markRead,
       markAllRead,
+      clearRead,
       updatePreference,
       installApp,
       enableDevicePush,
