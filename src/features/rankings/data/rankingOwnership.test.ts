@@ -15,7 +15,11 @@ describe("V2 ranking ownership", () => {
       repository: "codyking0602/ufc-goat-rankings",
       commit: "842ba06ea09c4f40723226f4c4dfd35041cb3314",
     });
-    expect(rankingContract).toEqual(v1ProductionRankingParityFixture.contract);
+    expect(rankingContract).toEqual({
+      categoryMax: v1ProductionRankingParityFixture.contract.categoryMax,
+      weights: v1ProductionRankingParityFixture.contract.weights,
+      ovr: v1ProductionRankingParityFixture.contract.ovr,
+    });
   });
 
   it("keeps the imported 80-fighter roster as sealed migration evidence", () => {
