@@ -22,8 +22,8 @@ export interface V2RankingRosterOverlay {
  *
  * The historical 80-fighter import is evidence only and is never regenerated from V1.
  */
-export const v2RankingRoster = {
+export const v2RankingRoster: V2RankingRosterOverlay = {
   additions: [],
   replacements: {},
   eraMembership: {},
-} satisfies V2RankingRosterOverlay;
+};
