@@ -1,3 +1,5 @@
+import historicalMigrationSeedJson from "./generated/canonical-ranking-inputs-842ba06e.json";
+
 export interface V2RankingRosterOverlay {
   additions: readonly unknown[];
   replacements: Readonly<Record<string, unknown>>;
@@ -254,9 +256,28 @@ const rafaelDosAnjos = {
   },
 };
 
+const stipeMiocicBaseline = historicalMigrationSeedJson.fighters.find(
+  (fighter) => fighter.fighter === "Stipe Miocic",
+);
+
+if (!stipeMiocicBaseline) {
+  throw new Error("Stipe Miocic is missing from the sealed ranking baseline.");
+}
+
+const stipeMiocic = {
+  ...stipeMiocicBaseline,
+  presentation: {
+    ...stipeMiocicBaseline.presentation,
+    whyRankedHere: "Stipe built the greatest heavyweight resume in UFC history through sustained championship success rather than one dominant run. He owns the division's record for consecutive title defenses, reclaimed the belt after defeat, defeated Daniel Cormier twice in their trilogy, and consistently beat championship-caliber heavyweights across multiple eras. No UFC heavyweight combines championship accomplishment, elite wins, and longevity as completely.",
+    whyNotHigher: "Heavyweight has never offered the week-to-week depth or sustained elite competition of divisions like welterweight or lightweight, limiting how high even its greatest champion can climb. Stipe also lacks the extended championship dominance of the fighters above him, and his prime includes decisive losses to Daniel Cormier and Francis Ngannou before the late-career Jon Jones defeat.",
+  },
+};
+
 export const v2RankingRoster: V2RankingRosterOverlay = {
   additions: [rafaelDosAnjos],
-  replacements: {},
+  replacements: {
+    "Stipe Miocic": stipeMiocic,
+  },
   eraMembership: {
     "Rafael dos Anjos": {
       primary: "golden-age",
@@ -264,7 +285,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     },
   },
   factsVersion: "octagon-hq-v2-rda-20260730",
-  judgmentVersion: "octagon-hq-v2-rda-20260730",
+  judgmentVersion: "octagon-hq-v2-stipe-profile-20260731",
   eraDepthVersion: "octagon-hq-v2-rda-20260730",
   eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
 };
