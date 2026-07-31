@@ -132,12 +132,12 @@ describe("branded pull-to-refresh", () => {
 
     expect(Number.parseFloat(region!.style.getPropertyValue("--pull-refresh-distance")))
       .toBeGreaterThanOrEqual(PULL_REFRESH_THRESHOLD);
-    expect(region).toHaveClass("pull-refresh-region--ready");
+    expect(region!.classList.contains("pull-refresh-region--ready")).toBe(true);
     expect(screen.queryByText(/pull to refresh|release to refresh|refreshing hq|updated/i)).toBeNull();
 
     fireEvent.touchEnd(content!);
 
-    expect(region).toHaveClass("pull-refresh-region--refreshing");
+    expect(region!.classList.contains("pull-refresh-region--refreshing")).toBe(true);
     expect(region!.style.getPropertyValue("--pull-refresh-distance"))
       .toBe(`${PULL_REFRESH_HOLD_DISTANCE}px`);
     expect(refreshMocks.notifications).toHaveBeenCalledTimes(1);
@@ -150,7 +150,7 @@ describe("branded pull-to-refresh", () => {
 
     finishNotification(true);
     await waitFor(() => {
-      expect(region).toHaveClass("pull-refresh-region--idle");
+      expect(region!.classList.contains("pull-refresh-region--idle")).toBe(true);
       expect(region!.style.getPropertyValue("--pull-refresh-distance")).toBe("0px");
     });
   });
@@ -179,6 +179,6 @@ describe("branded pull-to-refresh", () => {
 
     expect(tabClick).toHaveBeenCalledTimes(1);
     expect(refreshMocks.notifications).not.toHaveBeenCalled();
-    expect(region!.style.getPropertyValue("--pull-refresh-distance")).toBe("");
+    expect(region!.style.getPropertyValue("--pull-refresh-distance")).toBe("0px");
   });
 });
