@@ -16,10 +16,16 @@ const fighters = exported.fighters as any[];
 describe("V2 Octagon Verdict exporter", () => {
   it("exports the complete calculated fighter set without creating a second ranking owner", () => {
     expect(feed.source).toBe("octagon-hq-v2-calculated-typescript");
-    expect(feed.fighterCount).toBe(80);
-    expect(fighters.filter((fighter) => fighter.group === "men")).toHaveLength(65);
-    expect(fighters.filter((fighter) => fighter.group === "women")).toHaveLength(15);
-    expect(new Set(fighters.map((fighter) => fighter.slug)).size).toBe(80);
+    expect(feed.fighterCount).toBe(canonicalRankingInputs.counts.fighters);
+    expect(fighters.filter((fighter) => fighter.group === "men")).toHaveLength(
+      canonicalRankingInputs.counts.men,
+    );
+    expect(fighters.filter((fighter) => fighter.group === "women")).toHaveLength(
+      canonicalRankingInputs.counts.women,
+    );
+    expect(new Set(fighters.map((fighter) => fighter.slug)).size).toBe(
+      canonicalRankingInputs.counts.fighters,
+    );
 
     const jon = fighters.find((fighter) => fighter.slug === "jon-jones")!;
     expect(jon.rank).toBe(1);

@@ -11,12 +11,12 @@ import {
 } from "./engine/categoryCalculators";
 import { resolveEraWindow } from "./engine/eraWindow";
 import { round2 } from "./engine/math";
+import { rankingContract } from "./engine/rankingContract";
 import {
   buildRankingProjection,
   type BaseCategoryScores,
   type RankingModifiers,
 } from "./engine/rankingEngine";
-import { v1ProductionRankingParityFixture } from "./engine/parityFixture";
 import type { CanonicalFight, RankingBoard } from "./engine/schemas";
 import { formatFighterDisplayName } from "./fighterNamePresentation";
 
@@ -330,8 +330,6 @@ function divisionStrengthCopy(input: RankingInputFighter, eraDepth: number) {
   return `The shared UFC era ledger applies a ${multiplier.toFixed(2)} division multiplier, while the approved era-depth adjustment ${direction} ${Math.abs(eraDepth).toFixed(2)} points to the final score.`;
 }
 
-const contract = v1ProductionRankingParityFixture.contract;
-
 const calculationSeeds = canonicalRankingInputs.fighters.map((input) => {
   const eraWindow = resolveEraWindow(input.facts.fights, input.era.window);
   const championship = calculateChampionship(input.judgments.championship);
@@ -376,7 +374,7 @@ const calculationSeeds = canonicalRankingInputs.fighters.map((input) => {
   return { fighter: input.fighter, board: input.board, categories, modifiers, metadata };
 });
 
-export const calculatedRankingProjection = buildRankingProjection(calculationSeeds, contract);
+export const calculatedRankingProjection = buildRankingProjection(calculationSeeds, rankingContract);
 
 function appRow(
   row: (typeof calculatedRankingProjection.rows)[number],

@@ -19,11 +19,20 @@ function calculatedRow(fighter: string) {
 }
 
 describe("complete calculation-backed ranking model", () => {
-  it("loads exactly 80 typed input fighters without calculated ownership fields", () => {
-    expect(canonicalRankingInputs.counts).toEqual({ fighters: 80, men: 65, women: 15 });
-    expect(canonicalRankingInputs.fighters).toHaveLength(80);
-    expect(new Set(canonicalRankingInputs.fighters.map((fighter) => fighter.fighter))).toHaveLength(80);
-    expect(new Set(canonicalRankingInputs.fighters.map((fighter) => fighter.presentation.slug))).toHaveLength(80);
+  it("loads one typed input per V2 roster fighter without calculated ownership fields", () => {
+    expect(canonicalRankingInputs.counts.fighters).toBe(canonicalRankingInputs.fighters.length);
+    expect(canonicalRankingInputs.counts.men).toBe(
+      canonicalRankingInputs.fighters.filter((fighter) => fighter.board === "men").length,
+    );
+    expect(canonicalRankingInputs.counts.women).toBe(
+      canonicalRankingInputs.fighters.filter((fighter) => fighter.board === "women").length,
+    );
+    expect(
+      new Set(canonicalRankingInputs.fighters.map((fighter) => fighter.fighter)).size,
+    ).toBe(canonicalRankingInputs.counts.fighters);
+    expect(
+      new Set(canonicalRankingInputs.fighters.map((fighter) => fighter.presentation.slug)).size,
+    ).toBe(canonicalRankingInputs.counts.fighters);
 
     const forbidden = new Set([
       "rank",
@@ -41,37 +50,39 @@ describe("complete calculation-backed ranking model", () => {
     });
   });
 
-  it("recalculates every V1 category, modifier, total, rank, OVR, and visible stat", () => {
-    expect(calculatedRankingProjection.rows).toHaveLength(80);
-    calculatedRankingProjection.rows.forEach((row) => {
-      const expected = parityByFighter.get(row.fighter);
-      expect(expected, `${row.fighter} must exist in the V1 parity fixture`).toBeDefined();
-      expect(row.board, `${row.fighter} board`).toBe(expected!.board);
-      expect(row.categories, `${row.fighter} categories`).toEqual(expected!.categories);
-      expect(row.modifiers, `${row.fighter} modifiers`).toEqual(expected!.modifiers);
-      expect(row.weighted, `${row.fighter} weighted categories`).toEqual(expected!.weighted);
-      expect(row.totals, `${row.fighter} totals`).toEqual(expected!.totals);
-      expect(row.tieBreakers, `${row.fighter} tie breakers`).toEqual(expected!.tieBreakers);
-      expect(row.rank, `${row.fighter} rank`).toBe(expected!.rank);
-      expect(row.ovr, `${row.fighter} OVR`).toBe(expected!.ovr);
+  it("preserves every migrated fighter's audited calculations while allowing V2 expansion", () => {
+    v1ProductionRankingParityFixture.fighters.forEach((expected) => {
+      const row = calculatedRow(expected.fighter);
+      expect(row.board, `${row.fighter} board`).toBe(expected.board);
+      expect(row.categories, `${row.fighter} categories`).toEqual(expected.categories);
+      expect(row.modifiers, `${row.fighter} modifiers`).toEqual(expected.modifiers);
+      expect(row.weighted, `${row.fighter} weighted categories`).toEqual(expected.weighted);
+      expect(row.totals, `${row.fighter} totals`).toEqual(expected.totals);
+      expect(row.tieBreakers, `${row.fighter} tie breakers`).toEqual(expected.tieBreakers);
       expect(row.metadata?.visibleStats, `${row.fighter} visible stats`).toEqual(
-        expected!.visibleStats,
+        expected.visibleStats,
       );
     });
   });
 
-  it("preserves the exact men's and women's production boards", () => {
-    expect(calculatedRankingProjection.men.map((fighter) => fighter.fighter)).toEqual(
-      v1ProductionRankingParityFixture.boards.men,
-    );
-    expect(calculatedRankingProjection.women.map((fighter) => fighter.fighter)).toEqual(
-      v1ProductionRankingParityFixture.boards.women,
-    );
-    expect(menAllTime).toHaveLength(65);
-    expect(womenAllTime).toHaveLength(15);
-    expect(allTime).toHaveLength(80);
+  it("keeps the migrated board order intact inside the expandable V2 boards", () => {
+    const historicalMen = new Set(v1ProductionRankingParityFixture.boards.men);
+    const historicalWomen = new Set(v1ProductionRankingParityFixture.boards.women);
+
+    expect(
+      calculatedRankingProjection.men
+        .map((fighter) => fighter.fighter)
+        .filter((fighter) => historicalMen.has(fighter)),
+    ).toEqual(v1ProductionRankingParityFixture.boards.men);
+    expect(
+      calculatedRankingProjection.women
+        .map((fighter) => fighter.fighter)
+        .filter((fighter) => historicalWomen.has(fighter)),
+    ).toEqual(v1ProductionRankingParityFixture.boards.women);
+    expect(menAllTime).toHaveLength(canonicalRankingInputs.counts.men);
+    expect(womenAllTime).toHaveLength(canonicalRankingInputs.counts.women);
+    expect(allTime).toHaveLength(canonicalRankingInputs.counts.fighters);
     expect(menAllTime[0]).toMatchObject({ fighter: "Jon Jones", rank: 1, ovr: 99 });
-    expect(womenAllTime[0].fighter).toBe(v1ProductionRankingParityFixture.boards.women[0]);
   });
 
   it("retains the locked loss-context exceptions from canonical facts", () => {

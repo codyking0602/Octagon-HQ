@@ -1,17 +1,19 @@
 # Octagon Verdict V2 Export
 
-Octagon Verdict knowledge is generated directly from Octagon HQ V2. V1 is no longer the export owner.
+Octagon Verdict knowledge is generated directly from Octagon HQ V2. V1 is not an export, roster, or regeneration owner.
 
 ## Source ownership
 
-The exporter reads only the existing V2 owners:
+The exporter reads only existing V2 owners:
 
 - `src/features/rankings/rankingModel.ts` for calculated ranks, scores, OVRs, profile values, visible stats, and traces;
-- `src/features/rankings/data/rankingInputs.ts` for validated canonical UFC fight facts and presentation metadata;
+- `src/features/rankings/data/rankingInputs.ts` for the validated composed V2 roster and canonical UFC facts;
 - `src/features/rankings/rankingControls.ts` for calculated division boards;
 - `src/features/intelligence/octagonVerdictExport.ts` for packaging and knowledge-document rendering.
 
-Do not manually edit generated output or introduce another ranking, matchup, or profile source.
+The live fighter count comes from the composed ranking dataset. Do not hard-code it into the exporter or workflow.
+
+Do not manually edit generated output or introduce another ranking, matchup, roster, or profile source.
 
 ## Generate locally
 
@@ -40,7 +42,7 @@ Generated outputs:
 - whenever relevant exporter or ranking ownership changes reach `main`;
 - manually through **Actions → Export Octagon Verdict V2 Package → Run workflow**.
 
-The workflow validates the package and uploads an artifact named `octagon-verdict-v2-package`.
+The workflow validates the package against its own V2-derived roster count and uploads an artifact named `octagon-verdict-v2-package`.
 
 ## Update Octagon Verdict
 
@@ -62,9 +64,10 @@ Head-to-head results are context only. They never override the UFC-only GOAT ver
 
 A valid package must have:
 
-- 80 unique fighters: 65 men and 15 women;
+- a positive fighter count matching the current canonical V2 roster;
+- unique fighter names and slugs;
+- matching feed, index, and individual-fighter file counts;
 - passing calculated division boards;
-- one fighter file per fighter;
 - one matchup file per derived direct matchup;
 - no duplicate fight dates inside a matchup ledger;
 - current rank, OVR, score, and category values matching `rankingModel.ts`;
