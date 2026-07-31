@@ -239,12 +239,20 @@ describe("PicksPage", () => {
     expect(screen.getByText("Excluded")).toBeInTheDocument();
   });
 
-  it("uses the Belgrade poster without covering the fighters with upcoming labels", async () => {
+  it("uses the registered event poster without covering the fighters with upcoming labels", async () => {
     const belgradeEvent: PickEvent = {
       ...event,
       subtitle: "Uroš Medić vs. Daniel Rodriguez",
       venue: "Belgrade Arena",
       location: "Belgrade, Serbia",
+      bouts: [{
+        ...event.bouts[0],
+        boutId: "medic-rodriguez",
+        redFighterSlug: "uros-medic",
+        redFighterName: "Uroš Medić",
+        blueFighterSlug: "daniel-rodriguez",
+        blueFighterName: "Daniel Rodriguez",
+      }],
     };
 
     const { container } = render(
@@ -257,8 +265,20 @@ describe("PicksPage", () => {
     const hero = container.querySelector(".picks-event-hero");
     expect(hero).toHaveClass("has-poster");
     expect(hero).toHaveStyle('--picks-event-poster: url("/events/ufc-fight-night-belgrade.svg")');
+    expect(hero).toHaveStyle("--picks-event-poster-aspect: 480 / 321");
     expect(screen.queryByText("NEXT UFC EVENT")).not.toBeInTheDocument();
     expect(screen.queryByText("UPCOMING")).not.toBeInTheDocument();
+  });
+
+  it("uses the standard no-poster hero when no event asset is registered", async () => {
+    const { container } = render(
+      <IdentityProvider gateway={gateway()}>
+        <PicksProvider repository={repository()}><PicksPage /></PicksProvider>
+      </IdentityProvider>,
+    );
+
+    await screen.findByText("Ankalaev vs. Guskov");
+    expect(container.querySelector(".picks-event-hero")).not.toHaveClass("has-poster");
   });
 
   it("opens the V1-style main event spotlight only for Medic versus Rodriguez", async () => {
