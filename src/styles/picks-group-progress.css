@@ -10,8 +10,8 @@
   align-items: center;
   display: flex;
   justify-content: space-between;
-  min-height: 46px;
-  padding: 0 16px;
+  min-height: var(--picks-disclosure-height, 46px);
+  padding: 0 var(--picks-disclosure-padding, 16px);
 }
 
 .picks-group-progress summary {
@@ -21,11 +21,23 @@
 
 .picks-group-progress summary::-webkit-details-marker { display: none; }
 .picks-group-progress summary span,
-.picks-group-progress--static span { color: var(--text-muted); font-size: 11px; font-weight: 900; letter-spacing: .12em; }
+.picks-group-progress--static span {
+  color: var(--picks-disclosure-color, var(--text-muted));
+  font-size: var(--picks-disclosure-font-size, 11px);
+  font-weight: 900;
+  letter-spacing: var(--picks-disclosure-letter-spacing, .12em);
+}
 .picks-group-progress summary strong,
 .picks-group-progress--static strong { font-size: 12px; letter-spacing: .04em; }
-.picks-group-progress summary::after { content: "⌄"; margin-left: 8px; transition: transform .18s ease; }
-.picks-group-progress[open] summary::after { transform: rotate(180deg); }
+.picks-group-progress summary::after {
+  color: var(--picks-disclosure-color, var(--text-muted));
+  content: "›";
+  font-size: 19px;
+  margin-left: 8px;
+  transform: rotate(90deg);
+  transition: transform .18s ease;
+}
+.picks-group-progress[open] summary::after { transform: rotate(-90deg); }
 .picks-group-progress--static strong { color: var(--text-muted); }
 
 .picks-group-progress__members {
@@ -45,13 +57,44 @@
   background: transparent;
   border: 0;
   color: inherit;
-  display: flex;
+  cursor: pointer;
+  display: grid;
   font: inherit;
-  justify-content: space-between;
-  min-height: 34px;
-  padding: 4px 16px;
+  gap: 10px;
+  grid-template-columns: minmax(0, 1fr) auto 12px;
+  min-height: 38px;
+  padding: 4px 14px 4px 16px;
   text-align: left;
+  transition: background .15s ease;
   width: 100%;
+}
+
+.picks-group-progress__member > button::after {
+  color: var(--text-muted);
+  content: "›";
+  font-size: 18px;
+  line-height: 1;
+  transform: rotate(0deg);
+  transition: color .15s ease, transform .18s ease;
+}
+
+.picks-group-progress__member > button[aria-expanded="true"]::after {
+  color: var(--text-secondary);
+  transform: rotate(90deg);
+}
+
+.picks-group-progress__member > button:hover,
+.picks-group-progress__member > button:focus-visible {
+  background: color-mix(in srgb, var(--accent) 9%, transparent);
+}
+
+.picks-group-progress__member > button:focus-visible {
+  outline: 1px solid color-mix(in srgb, var(--accent) 65%, transparent);
+  outline-offset: -2px;
+}
+
+.picks-group-progress__member > button:active {
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
 }
 
 .picks-group-progress__member > button.is-current-user { background: color-mix(in srgb, var(--accent) 6%, transparent); }
