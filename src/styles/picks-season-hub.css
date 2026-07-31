@@ -1,84 +1,4 @@
-/* Final Picks season hub and compact review refinements. */
-
-.picks-event-hero__poster {
-  min-height: 190px;
-  background-position: center, center 68%, center;
-}
-
-.picks-control-entry,
-.picks-control-entry:visited {
-  min-height: auto !important;
-  padding: 4px 0 !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  color: var(--text-muted);
-}
-
-.picks-card-zone {
-  gap: 7px;
-}
-
-.picks-card-odds {
-  justify-content: flex-start;
-  min-height: 18px;
-  padding: 0 2px;
-  color: var(--text-muted);
-  font-size: 7px;
-  letter-spacing: .055em;
-}
-
-.picks-card-odds strong {
-  font-size: 7px;
-  font-weight: 850;
-}
-
-.picks-card-odds strong::before {
-  content: "ODDS · ";
-}
-
-.picks-sticky-progress {
-  justify-content: flex-start;
-  min-height: 32px;
-  padding: 5px 9px;
-  border-radius: 10px;
-}
-
-.picks-sticky-progress span {
-  width: 100%;
-  color: var(--text-secondary);
-  font-size: 7px;
-  letter-spacing: .06em;
-  text-align: left;
-}
-
-.picks-card-list {
-  gap: 8px;
-}
-
-.pick-bout-card,
-.pick-bout-card.is-main-event {
-  gap: 8px;
-  padding: 12px;
-}
-
-.pick-bout-card__choices {
-  gap: 4px;
-}
-
-.pick-choice {
-  min-height: 112px;
-  padding: 9px;
-}
-
-.pick-bout-card:not(.is-main-event) .pick-choice {
-  min-height: 104px;
-}
-
-.pick-choice > em {
-  padding: 3px 6px;
-}
+/* Picks season hub only. Shared event-page presentation lives in picks-polish.css. */
 
 .picks-season-section {
   gap: 0;
@@ -308,10 +228,6 @@
 }
 
 @media (min-width: 680px) {
-  .picks-event-hero__poster {
-    min-height: 275px;
-  }
-
   .picks-season-hub__summary {
     min-height: 88px;
     padding: 14px 44px 14px 16px;
