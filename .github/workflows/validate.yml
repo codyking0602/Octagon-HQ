@@ -37,6 +37,16 @@ jobs:
       - name: Install dependencies
         run: npm install --silent
 
+      - name: Package repair dependencies
+        run: tar -czf "$RUNNER_TEMP/octagon-repair-node-modules.tgz" node_modules
+
+      - name: Upload repair dependencies
+        uses: actions/upload-artifact@v4
+        with:
+          name: repair-node-modules
+          path: ${{ runner.temp }}/octagon-repair-node-modules.tgz
+          retention-days: 1
+
       - name: Typecheck
         run: npm run typecheck 2>&1 | tee typecheck.log
 
