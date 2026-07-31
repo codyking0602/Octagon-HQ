@@ -27,7 +27,6 @@
   position: relative;
   transform: none;
   transition: transform 260ms cubic-bezier(.2, .8, .2, 1);
-  will-change: transform;
   z-index: 1;
   background: var(--canvas);
 }
@@ -36,6 +35,7 @@
 .pull-refresh-region--ready .pull-refresh-content,
 .pull-refresh-region--refreshing .pull-refresh-content {
   transform: translate3d(0, var(--pull-refresh-distance), 0);
+  will-change: transform;
 }
 
 .pull-refresh-region--pulling .pull-refresh-content,
