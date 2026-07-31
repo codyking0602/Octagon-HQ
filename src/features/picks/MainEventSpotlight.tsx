@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { fighterThumbnailPath } from "./FighterThumbnail";
 import type { PickBout } from "./picksModel";
 
@@ -149,6 +150,70 @@ export function MainEventSpotlight({ bout }: { bout: PickBout }) {
 
   if (!data) return null;
 
+  const modal = open ? (
+    <div className="main-event-spotlight-modal" role="presentation">
+      <button
+        className="main-event-spotlight__backdrop"
+        type="button"
+        aria-label="Close main event spotlight"
+        onClick={() => setOpen(false)}
+      />
+      <section
+        className="main-event-spotlight__panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+      >
+        <button
+          className="main-event-spotlight__close"
+          type="button"
+          ref={closeRef}
+          aria-label="Close main event spotlight"
+          onClick={() => setOpen(false)}
+        >
+          ×
+        </button>
+
+        <div className="main-event-spotlight__hero">
+          <p>{data.kicker}</p>
+          <div className="main-event-spotlight__fighters">
+            <FighterHero fighter={data.red} corner="red" />
+            <div className="main-event-spotlight__vs">VS</div>
+            <FighterHero fighter={data.blue} corner="blue" />
+          </div>
+        </div>
+
+        <div className="main-event-spotlight__body">
+          <section className="main-event-spotlight__preview">
+            <span>FIGHT PREVIEW</span>
+            <h2 id={titleId}>{data.red.name} vs. {data.blue.name}</h2>
+            <p>{data.preview}</p>
+            <a href={data.clipUrl} target="_blank" rel="noopener noreferrer">WATCH SPOTLIGHT ↗</a>
+          </section>
+
+          <section className="main-event-spotlight__section">
+            <div className="main-event-spotlight__section-title"><span>TALE OF THE TAPE</span></div>
+            <div className="main-event-spotlight__tale">
+              <TaleRow label="Age" red={data.red.age} blue={data.blue.age} />
+              <TaleRow label="Height" red={data.red.height} blue={data.blue.height} />
+              <TaleRow label="Reach" red={data.red.reach} blue={data.blue.reach} />
+              <TaleRow label="Stance" red={data.red.stance} blue={data.blue.stance} />
+            </div>
+          </section>
+
+          <section className="main-event-spotlight__section">
+            <div className="main-event-spotlight__section-title"><span>MATCHUP EDGES</span></div>
+            <div className="main-event-spotlight__edges">
+              <EdgeColumn fighter={data.red} corner="red" />
+              <div className="main-event-spotlight__edge-divider" />
+              <EdgeColumn fighter={data.blue} corner="blue" />
+            </div>
+          </section>
+        </div>
+      </section>
+    </div>
+  ) : null;
+
   return (
     <>
       <button
@@ -161,69 +226,7 @@ export function MainEventSpotlight({ bout }: { bout: PickBout }) {
         <i aria-hidden="true">›</i>
       </button>
 
-      {open ? (
-        <div className="main-event-spotlight-modal" role="presentation">
-          <button
-            className="main-event-spotlight__backdrop"
-            type="button"
-            aria-label="Close main event spotlight"
-            onClick={() => setOpen(false)}
-          />
-          <section
-            className="main-event-spotlight__panel"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby={titleId}
-          >
-            <button
-              className="main-event-spotlight__close"
-              type="button"
-              ref={closeRef}
-              aria-label="Close main event spotlight"
-              onClick={() => setOpen(false)}
-            >
-              ×
-            </button>
-
-            <div className="main-event-spotlight__hero">
-              <p>{data.kicker}</p>
-              <div className="main-event-spotlight__fighters">
-                <FighterHero fighter={data.red} corner="red" />
-                <div className="main-event-spotlight__vs">VS</div>
-                <FighterHero fighter={data.blue} corner="blue" />
-              </div>
-            </div>
-
-            <div className="main-event-spotlight__body">
-              <section className="main-event-spotlight__preview">
-                <span>FIGHT PREVIEW</span>
-                <h2 id={titleId}>{data.red.name} vs. {data.blue.name}</h2>
-                <p>{data.preview}</p>
-                <a href={data.clipUrl} target="_blank" rel="noopener noreferrer">WATCH SPOTLIGHT ↗</a>
-              </section>
-
-              <section className="main-event-spotlight__section">
-                <div className="main-event-spotlight__section-title"><span>TALE OF THE TAPE</span></div>
-                <div className="main-event-spotlight__tale">
-                  <TaleRow label="Age" red={data.red.age} blue={data.blue.age} />
-                  <TaleRow label="Height" red={data.red.height} blue={data.blue.height} />
-                  <TaleRow label="Reach" red={data.red.reach} blue={data.blue.reach} />
-                  <TaleRow label="Stance" red={data.red.stance} blue={data.blue.stance} />
-                </div>
-              </section>
-
-              <section className="main-event-spotlight__section">
-                <div className="main-event-spotlight__section-title"><span>MATCHUP EDGES</span></div>
-                <div className="main-event-spotlight__edges">
-                  <EdgeColumn fighter={data.red} corner="red" />
-                  <div className="main-event-spotlight__edge-divider" />
-                  <EdgeColumn fighter={data.blue} corner="blue" />
-                </div>
-              </section>
-            </div>
-          </section>
-        </div>
-      ) : null}
+      {modal ? createPortal(modal, document.body) : null}
     </>
   );
 }
