@@ -52,15 +52,18 @@ describe("branded pull-to-refresh", () => {
     expect(component).toContain("findLeader.loadDailyLeaderboard");
   });
 
-  it("provides branded progress, optional haptics, and exactly one release action without a reload path", () => {
+  it("provides branded progress, optional haptics, and exactly one release action without another data owner", () => {
     expect(component).toContain("navigator.vibrate");
     expect(component).toContain("RELEASE TO REFRESH");
     expect(component).toContain("REFRESHING HQ");
     expect(component).toContain("brand.logoUrl");
     expect(component).toContain('document.addEventListener("touchmove", onTouchMove, { passive: false })');
     expect(component).toContain("refreshingRef.current = true");
-    expect(component).not.toContain("window.location.reload");
-    expect(component).not.toContain("location.reload");
+    expect(component).not.toContain("getSupabaseClient");
+    expect(component).not.toContain("invalidateQueries");
+    expect(component).not.toContain("dispatchEvent");
+    expect(component).not.toContain("window.location");
+    expect(component).not.toContain("document.location");
     expect(component).not.toContain("queryClient");
     expect(component).not.toContain("setInterval");
     expect(component).not.toContain("fetch(");
