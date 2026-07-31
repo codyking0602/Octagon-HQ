@@ -19,6 +19,16 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Package repair source
+        run: tar --exclude=.git --exclude=node_modules -czf "$RUNNER_TEMP/octagon-repair-source.tgz" .
+
+      - name: Upload repair source
+        uses: actions/upload-artifact@v4
+        with:
+          name: repair-source
+          path: ${{ runner.temp }}/octagon-repair-source.tgz
+          retention-days: 1
+
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
