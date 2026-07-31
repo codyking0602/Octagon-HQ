@@ -1,9 +1,20 @@
 name: Validate ranking engine
 
 on:
+  pull_request:
+    paths:
+      - .github/workflows/validate-ranking-engine.yml
+      - src/features/rankings/**
+      - src/features/home/HomePage.tsx
+      - src/app/App.test.tsx
+      - src/styles/global.css
+      - package.json
+      - tsconfig.json
+      - vite.config.ts
+      - vitest.setup.ts
   push:
     branches:
-      - "agent/**"
+      - main
     paths:
       - .github/workflows/validate-ranking-engine.yml
       - src/features/rankings/**
@@ -27,6 +38,8 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -50,7 +63,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           REPOSITORY: ${{ github.repository }}
-          COMMIT_SHA: ${{ github.sha }}
+          COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
           JOB_STATUS: ${{ job.status }}
         run: |
           if [ "$JOB_STATUS" = "success" ]; then
