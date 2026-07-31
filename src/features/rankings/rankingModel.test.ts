@@ -27,12 +27,12 @@ describe("complete calculation-backed ranking model", () => {
     expect(canonicalRankingInputs.counts.women).toBe(
       canonicalRankingInputs.fighters.filter((fighter) => fighter.board === "women").length,
     );
-    expect(new Set(canonicalRankingInputs.fighters.map((fighter) => fighter.fighter))).toHaveLength(
-      canonicalRankingInputs.counts.fighters,
-    );
     expect(
-      new Set(canonicalRankingInputs.fighters.map((fighter) => fighter.presentation.slug)),
-    ).toHaveLength(canonicalRankingInputs.counts.fighters);
+      new Set(canonicalRankingInputs.fighters.map((fighter) => fighter.fighter)).size,
+    ).toBe(canonicalRankingInputs.counts.fighters);
+    expect(
+      new Set(canonicalRankingInputs.fighters.map((fighter) => fighter.presentation.slug)).size,
+    ).toBe(canonicalRankingInputs.counts.fighters);
 
     const forbidden = new Set([
       "rank",
