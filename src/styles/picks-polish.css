@@ -1,6 +1,11 @@
 /* Picks UI 2.0: the single visual owner for the player-facing Picks route. */
 
 .picks-page {
+  --picks-disclosure-height: 46px;
+  --picks-disclosure-padding: 16px;
+  --picks-disclosure-color: var(--text-muted);
+  --picks-disclosure-font-size: 11px;
+  --picks-disclosure-letter-spacing: .12em;
   gap: 13px;
 }
 
@@ -103,8 +108,11 @@
 }
 
 .picks-event-hero__copy > strong {
+  overflow: hidden;
   font-size: clamp(15px, 4.5vw, 20px);
   line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .picks-event-hero.has-poster .picks-event-hero__copy h2 {
@@ -120,8 +128,8 @@
 }
 
 .picks-event-hero.has-poster .picks-event-hero__copy > strong {
-  font-size: clamp(20px, 5.8vw, 29px);
-  line-height: 1.05;
+  font-size: clamp(17px, 4.75vw, 23px);
+  line-height: 1.1;
 }
 
 .picks-event-hero__facts {
@@ -208,7 +216,8 @@
 }
 
 .picks-scoring-guide {
-  padding: 10px 13px;
+  padding: 0;
+  overflow: hidden;
   border-radius: 14px;
 }
 
@@ -216,7 +225,23 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  min-height: var(--picks-disclosure-height);
+  padding: 0 var(--picks-disclosure-padding);
+  color: var(--picks-disclosure-color);
+  cursor: pointer;
+  font-size: var(--picks-disclosure-font-size);
+  font-weight: 900;
+  letter-spacing: var(--picks-disclosure-letter-spacing);
   list-style: none;
+}
+
+.picks-scoring-guide[open] {
+  padding-bottom: 10px;
+}
+
+.picks-scoring-guide > :not(summary) {
+  margin-right: 13px;
+  margin-left: 13px;
 }
 
 .picks-scoring-guide summary::-webkit-details-marker,
@@ -226,7 +251,7 @@
 }
 
 .picks-scoring-guide summary::after {
-  color: var(--text-muted);
+  color: var(--picks-disclosure-color);
   content: "›";
   font-size: 19px;
   transform: rotate(90deg);
@@ -248,12 +273,15 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+  min-height: 40px;
   margin: 0;
-  padding: 0 3px;
+  padding: 8px 3px;
+  border-top: 1px solid rgba(255, 255, 255, .09);
+  border-bottom: 1px solid rgba(255, 255, 255, .09);
   color: var(--text-muted);
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 850;
-  letter-spacing: .055em;
+  letter-spacing: .07em;
   text-transform: uppercase;
 }
 
@@ -264,47 +292,9 @@
 
 .picks-card-odds strong {
   overflow: hidden;
-  font-size: 8px;
+  font-size: 10px;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.picks-sticky-progress {
-  position: sticky;
-  top: calc(50px + var(--safe-top));
-  z-index: 12;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  min-height: 37px;
-  padding: 7px 10px;
-  border: 1px solid rgba(255, 255, 255, .12);
-  border-radius: 12px;
-  background: rgba(8, 8, 8, .94);
-  box-shadow: 0 7px 20px rgba(0, 0, 0, .3);
-  backdrop-filter: blur(18px);
-}
-
-.picks-sticky-progress span,
-.picks-sticky-progress em {
-  overflow: hidden;
-  font-size: 8px;
-  font-style: normal;
-  font-weight: 900;
-  letter-spacing: .065em;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.picks-sticky-progress span {
-  flex: 0 0 auto;
-  color: var(--ufc-red-strong);
-}
-
-.picks-sticky-progress em {
-  color: var(--text-muted);
-  text-align: right;
 }
 
 .picks-card-list {
