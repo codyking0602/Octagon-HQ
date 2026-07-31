@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { brand, fighterAsset } from "../../config/brand";
+import { canonicalRankingInputs } from "./data/rankingInputs";
 import { allTime } from "./rankingModel";
 
 const publicRoot = path.resolve(process.cwd(), "public");
@@ -37,8 +38,8 @@ describe("local V2 fighter assets", () => {
     expect([...header]).toEqual([0x89, 0x50, 0x4e, 0x47]);
   });
 
-  it("reconciles all 80 ranked fighters to valid local WebP files", () => {
-    expect(allTime).toHaveLength(80);
+  it("reconciles the complete calculated roster to valid local WebP files", () => {
+    expect(allTime).toHaveLength(canonicalRankingInputs.counts.fighters);
     const expectedFiles = new Set<string>();
 
     allTime.forEach((fighter) => {
@@ -66,6 +67,7 @@ describe("local V2 fighter assets", () => {
       fs.readdirSync(fighterDirectory).filter((name) => name.endsWith(".webp")),
     );
     expectedFiles.forEach((name) => expect(actualFiles.has(name), name).toBe(true));
-    expect(actualFiles.size).toBeGreaterThanOrEqual(160);
+    expect(expectedFiles.size).toBe(canonicalRankingInputs.counts.fighters * 2);
+    expect(actualFiles.size).toBeGreaterThanOrEqual(expectedFiles.size);
   });
 });
