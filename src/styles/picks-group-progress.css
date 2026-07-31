@@ -3,6 +3,7 @@
   min-height: 0;
   overflow: hidden;
   padding: 0;
+  border-radius: 14px;
 }
 
 .picks-group-progress summary,
