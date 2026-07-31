@@ -1,12 +1,20 @@
-/* Picks UI 2.0: the single visual owner for the player-facing Picks route. */
+/* Canonical player-facing Picks event page standard. Loaded after every Picks sub-style. */
 
 .picks-page {
+  --picks-page-gap: 13px;
+  --picks-section-gap: 9px;
+  --picks-surface-radius: 18px;
+  --picks-choice-radius: 14px;
+  --picks-card-padding: 12px;
+  --picks-choice-min-height: 112px;
+  --picks-thumb-size: 52px;
+  --picks-main-thumb-size: 59px;
   --picks-disclosure-height: 46px;
   --picks-disclosure-padding: 16px;
   --picks-disclosure-color: var(--text-muted);
   --picks-disclosure-font-size: 11px;
   --picks-disclosure-letter-spacing: .12em;
-  gap: 13px;
+  gap: var(--picks-page-gap);
 }
 
 .picks-page-heading {
@@ -24,6 +32,13 @@
   line-height: 1.38;
 }
 
+.picks-state-card {
+  min-height: 150px;
+  padding: 20px;
+  border-radius: var(--picks-surface-radius);
+}
+
+/* Event hero */
 .picks-event-hero {
   position: relative;
   display: grid;
@@ -39,25 +54,33 @@
 
 .picks-event-hero__poster {
   position: relative;
-  min-height: 205px;
+  min-height: 116px;
   background:
     linear-gradient(180deg, rgba(0, 0, 0, .06), rgba(0, 0, 0, .18)),
     var(--picks-event-poster),
     linear-gradient(145deg, #242424, #080808);
-  background-position: center, center 43%, center;
+  background-position: center, center, center;
   background-repeat: no-repeat;
   background-size: cover;
 }
 
 .picks-event-hero.has-poster .picks-event-hero__poster {
-  aspect-ratio: 480 / 321;
+  aspect-ratio: var(--picks-event-poster-aspect, 480 / 321);
   min-height: 0;
   background-position: center;
   background-size: cover, contain, cover;
 }
 
-.picks-event-hero:not(.has-poster) .picks-event-hero__poster {
-  min-height: 90px;
+.picks-event-hero:not(.has-poster) .picks-event-hero__poster::before {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, .42);
+  content: "OCTAGON HQ PICKS";
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: .2em;
 }
 
 .picks-event-hero__poster::after {
@@ -99,12 +122,16 @@
 
 .picks-event-hero__copy {
   display: grid;
+  min-width: 0;
   gap: 4px;
 }
 
 .picks-event-hero__copy h2 {
+  overflow: hidden;
   font-size: clamp(23px, 6.8vw, 33px);
   line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .picks-event-hero__copy > strong {
@@ -165,9 +192,15 @@
   padding-top: 8px;
 }
 
+.picks-event-hero .picks-progress span,
+.picks-event-hero .picks-progress b {
+  font-size: 9px;
+}
+
 .picks-event-hero .picks-progress > p {
   margin: 0;
   font-size: 8px;
+  line-height: 1.35;
 }
 
 .picks-event-hero__actions {
@@ -199,10 +232,14 @@
   font-size: 11px;
 }
 
-.picks-control-entry {
-  min-height: auto;
-  padding: 5px 0;
-  border: 0;
+.picks-control-entry,
+.picks-control-entry:visited {
+  min-height: auto !important;
+  padding: 5px 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
   color: var(--text-muted);
   font-size: 8px;
   font-weight: 900;
@@ -215,6 +252,42 @@
   color: white;
 }
 
+/* Shared disclosure standard */
+.picks-group-progress {
+  margin-top: 0;
+  border-radius: 14px;
+}
+
+.picks-group-progress summary,
+.picks-group-progress--static,
+.picks-scoring-guide summary {
+  min-height: var(--picks-disclosure-height);
+  padding: 0 var(--picks-disclosure-padding);
+  color: var(--picks-disclosure-color);
+  font-size: var(--picks-disclosure-font-size);
+  font-weight: 900;
+  letter-spacing: var(--picks-disclosure-letter-spacing);
+}
+
+.picks-group-progress summary strong,
+.picks-group-progress--static strong {
+  color: var(--text-primary);
+  font-size: 12px;
+  letter-spacing: .04em;
+}
+
+.picks-group-progress__member > button {
+  min-height: 40px;
+}
+
+.picks-group-progress__member > button strong {
+  font-size: 12px;
+}
+
+.picks-group-progress__member > button b {
+  font-size: 13px;
+}
+
 .picks-scoring-guide {
   padding: 0;
   overflow: hidden;
@@ -225,13 +298,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: var(--picks-disclosure-height);
-  padding: 0 var(--picks-disclosure-padding);
-  color: var(--picks-disclosure-color);
   cursor: pointer;
-  font-size: var(--picks-disclosure-font-size);
-  font-weight: 900;
-  letter-spacing: var(--picks-disclosure-letter-spacing);
   list-style: none;
 }
 
@@ -262,16 +329,17 @@
   transform: rotate(-90deg);
 }
 
+/* Fight card separator and list */
 .picks-card-zone {
   position: relative;
   display: grid;
-  gap: 9px;
+  gap: var(--picks-section-gap);
 }
 
 .picks-card-odds {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 10px;
   min-height: 40px;
   margin: 0;
@@ -285,30 +353,31 @@
   text-transform: uppercase;
 }
 
-.picks-card-odds span {
-  color: var(--ufc-red-strong);
-  font-weight: 950;
-}
-
 .picks-card-odds strong {
   overflow: hidden;
   font-size: 10px;
+  font-weight: 850;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.picks-card-list {
-  gap: 9px;
+.picks-card-odds strong::before {
+  content: "ODDS · ";
 }
 
-.pick-bout-card {
+.picks-card-list {
+  display: grid;
+  gap: var(--picks-section-gap);
+}
+
+.pick-bout-card,
+.pick-bout-card.is-main-event {
   gap: 10px;
-  padding: 13px;
-  border-radius: 18px;
+  padding: var(--picks-card-padding);
+  border-radius: var(--picks-surface-radius);
 }
 
 .pick-bout-card.is-main-event {
-  padding: 15px;
   border-color: rgba(255, 255, 255, .17);
   background:
     radial-gradient(circle at 0% 0%, rgba(210, 10, 10, .1), transparent 38%),
@@ -320,6 +389,23 @@
   gap: 3px;
 }
 
+.pick-bout-card__heading {
+  min-width: 0;
+}
+
+.pick-bout-card__heading > span {
+  font-size: 9px;
+  letter-spacing: .11em;
+}
+
+.pick-bout-card__heading > small {
+  overflow: hidden;
+  max-width: 46%;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .pick-bout-card__choices {
   grid-template-columns: minmax(0, 1fr) 18px minmax(0, 1fr);
   gap: 5px;
@@ -328,34 +414,38 @@
 .pick-choice {
   align-content: start;
   gap: 5px;
-  min-height: 118px;
+  min-height: var(--picks-choice-min-height);
   padding: 10px;
-  border-radius: 14px;
+  border-radius: var(--picks-choice-radius);
   background: #191919;
 }
 
-.pick-bout-card:not(.is-main-event) .pick-choice {
-  min-height: 109px;
-}
-
 .pick-fighter-thumbnail {
-  width: 52px;
-  height: 52px;
+  width: var(--picks-thumb-size);
+  height: var(--picks-thumb-size);
   margin-bottom: 1px;
 }
 
 .pick-bout-card.is-main-event .pick-fighter-thumbnail {
-  width: 59px;
-  height: 59px;
+  width: var(--picks-main-thumb-size);
+  height: var(--picks-main-thumb-size);
 }
 
 .pick-choice > span {
+  min-height: 30px;
+  overflow: hidden;
   font-size: 14px;
   line-height: 1.07;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .pick-choice > small {
+  overflow: hidden;
   font-size: 7px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .pick-choice > em {
@@ -379,9 +469,13 @@
   background: rgba(210, 10, 10, .13);
 }
 
+.pick-bout-card__versus {
+  font-size: 9px;
+}
+
 .pick-lock-row {
   display: flex;
-  margin-top: -2px;
+  margin-top: -1px;
 }
 
 .pick-lock-row.is-red {
@@ -395,8 +489,8 @@
 .pick-lock-action,
 .pick-lock-readonly {
   width: fit-content;
-  min-height: 28px;
-  padding: 0 9px;
+  min-height: 29px;
+  padding: 0 10px;
   border-radius: 999px;
   font-size: 7px;
   letter-spacing: .065em;
@@ -409,13 +503,29 @@
 
 .pick-lock-action.is-selected,
 .pick-lock-readonly {
-  border: 1px solid rgba(210, 10, 10, .75);
-  background: rgba(210, 10, 10, .08);
-  color: var(--ufc-red-strong);
+  border-color: var(--underdog-lock-border, rgba(255, 138, 31, .78));
+  background: var(--underdog-lock-surface, rgba(255, 138, 31, .1));
+  color: var(--underdog-lock-accent, #ff8a1f);
 }
 
+.main-event-spotlight-trigger {
+  min-height: 60px;
+  padding: 12px 14px;
+  border-radius: var(--picks-choice-radius);
+}
+
+.main-event-spotlight-trigger b {
+  font-size: 8px;
+}
+
+.main-event-spotlight-trigger strong {
+  font-size: 14px;
+  line-height: 1.15;
+}
+
+/* Season and recap surfaces */
 .picks-history {
-  gap: 9px;
+  gap: var(--picks-section-gap);
   margin-top: 12px;
 }
 
@@ -459,10 +569,33 @@
   font-size: 14px;
 }
 
+.picks-season-section {
+  margin-top: 4px;
+}
+
+.picks-season-hub,
 .picks-archive {
   padding: 0;
   overflow: hidden;
   border-radius: 16px;
+}
+
+.picks-season-hub__summary {
+  min-height: 78px;
+  padding: 12px 38px 12px 13px;
+}
+
+.picks-season-hub__identity > strong {
+  font-size: 21px;
+}
+
+.picks-season-hub__identity > small {
+  font-size: 8px;
+}
+
+.picks-season-hub__meta > span,
+.picks-season-hub__meta > em {
+  font-size: 7px;
 }
 
 .picks-archive__summary {
@@ -600,6 +733,7 @@
   text-transform: uppercase;
 }
 
+/* Picks-specific shell density */
 .app-shell:has(.picks-page) .app-header {
   min-height: calc(50px + var(--safe-top));
 }
@@ -629,8 +763,8 @@
 }
 
 @media (min-width: 680px) {
-  .picks-event-hero__poster {
-    min-height: 300px;
+  .picks-event-hero:not(.has-poster) .picks-event-hero__poster {
+    min-height: 170px;
   }
 
   .picks-event-hero__content {
@@ -643,5 +777,10 @@
 
   .pick-choice {
     min-height: 134px;
+  }
+
+  .picks-season-hub__summary {
+    min-height: 88px;
+    padding: 14px 44px 14px 16px;
   }
 }
