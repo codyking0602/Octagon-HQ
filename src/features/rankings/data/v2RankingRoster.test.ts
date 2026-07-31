@@ -2,7 +2,10 @@ import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { getFighter } from "../rankingModel";
-import { canonicalRankingInputs } from "./rankingInputs";
+import {
+  canonicalRankingInputs,
+  historicalRankingMigrationInputs,
+} from "./rankingInputs";
 import {
   v2RankingRoster,
   type V2RankingRosterOverlay,
@@ -27,13 +30,13 @@ const sourceOverrides: Pick<
   eraDepthResolutionVersion: v2RankingRoster.eraDepthResolutionVersion,
 };
 
-describe("Rafael dos Anjos V2 roster addition", () => {
-  it("adds one complete men's fighter without changing the sealed baseline", () => {
+describe("V2 ranking roster overlay", () => {
+  it("adds Rafael dos Anjos without changing the sealed baseline", () => {
     expect(v2RankingRoster.additions).toHaveLength(1);
-    expect(v2RankingRoster.replacements).toEqual({});
+    expect(Object.keys(v2RankingRoster.replacements)).toEqual(["Stipe Miocic"]);
     expect(sourceOverrides).toMatchObject({
       factsVersion: "octagon-hq-v2-rda-20260730",
-      judgmentVersion: "octagon-hq-v2-rda-20260730",
+      judgmentVersion: "octagon-hq-v2-stipe-profile-20260731",
       eraDepthVersion: "octagon-hq-v2-rda-20260730",
       eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
     });
@@ -65,7 +68,31 @@ describe("Rafael dos Anjos V2 roster addition", () => {
     });
   });
 
-  it("calculates the profile through the canonical engine", () => {
+  it("replaces only Stipe Miocic's approved profile reasoning", () => {
+    const historical = historicalRankingMigrationInputs.fighters.find(
+      (fighter) => fighter.fighter === "Stipe Miocic",
+    );
+    const current = canonicalRankingInputs.fighters.find(
+      (fighter) => fighter.fighter === "Stipe Miocic",
+    );
+
+    expect(historical).toBeDefined();
+    expect(current).toBeDefined();
+    expect(current?.facts).toEqual(historical?.facts);
+    expect(current?.era).toEqual(historical?.era);
+    expect(current?.judgments).toEqual(historical?.judgments);
+    expect(current?.eraDepth).toEqual(historical?.eraDepth);
+    expect(current?.presentation).toEqual({
+      ...historical?.presentation,
+      whyRankedHere: "Stipe built the greatest heavyweight resume in UFC history through sustained championship success rather than one dominant run. He owns the division's record for consecutive title defenses, reclaimed the belt after defeat, defeated Daniel Cormier twice in their trilogy, and consistently beat championship-caliber heavyweights across multiple eras. No UFC heavyweight combines championship accomplishment, elite wins, and longevity as completely.",
+      whyNotHigher: "Heavyweight has never offered the week-to-week depth or sustained elite competition of divisions like welterweight or lightweight, limiting how high even its greatest champion can climb. Stipe also lacks the extended championship dominance of the fighters above him, and his prime includes decisive losses to Daniel Cormier and Francis Ngannou before the late-career Jon Jones defeat.",
+    });
+    expect(
+      `${current?.presentation.whyRankedHere}${current?.presentation.whyNotHigher}`,
+    ).toMatch(/^[\x00-\x7F]+$/);
+  });
+
+  it("calculates Rafael dos Anjos through the canonical engine", () => {
     const fighter = getFighter("rafael-dos-anjos");
     expect(fighter).toBeDefined();
     expect(fighter?.visibleStats.ufcRecord).toBe("20-14");
@@ -84,7 +111,7 @@ describe("Rafael dos Anjos V2 roster addition", () => {
     expect(usman).toMatchObject({ phase: "prime", upwardDivision: true });
   });
 
-  it("uses the existing local thumbnail and profile assets", () => {
+  it("uses the existing local Rafael dos Anjos assets", () => {
     expect(
       existsSync(
         `${projectRoot}public/assets/fighters/rafael-dos-anjos-thumb.webp`,
