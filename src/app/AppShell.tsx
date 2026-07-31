@@ -8,6 +8,7 @@ import { memberProfilePath } from "../features/members/memberProfilesModel";
 import { NotificationHeaderAction } from "../features/notifications/NotificationHeaderAction";
 import { NotificationPushSetting } from "../features/notifications/NotificationPushSetting";
 import { IdentityControl } from "../features/identity/IdentityControl";
+import { RouteScrollManager } from "./RouteScrollManager";
 
 const PLAY_GAME_TITLES: Record<string, string> = {
   "/play/find-leader": "Find the Leader",
@@ -39,6 +40,8 @@ export function AppShell() {
 
   return (
     <div className={`app-shell${isPlayGame ? " app-shell--game" : ""}`}>
+      <RouteScrollManager />
+
       {isPlayGame ? (
         <header className="app-header app-header--game">
           <Link className="game-header__back" to="/play" aria-label="Return to Play Hub">

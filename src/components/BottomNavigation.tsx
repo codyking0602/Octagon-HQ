@@ -1,4 +1,5 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
+import { scrollPageToTop } from "../app/RouteScrollManager";
 import { useWarRoom } from "../features/war-room/WarRoomProvider";
 
 type NavigationIconName = "home" | "rankings" | "picks" | "play" | "war-room";
@@ -61,6 +62,7 @@ function NavigationIcon({ name }: { name: NavigationIconName }) {
 }
 
 export function BottomNavigation() {
+  const location = useLocation();
   const warRoom = useWarRoom();
   const destinations = warRoom.status === "eligible"
     ? [...baseDestinations, warRoomDestination]
@@ -78,6 +80,11 @@ export function BottomNavigation() {
           key={destination.to}
           to={destination.to}
           end={destination.end}
+          onClick={(event) => {
+            if (location.pathname !== destination.to) return;
+            event.preventDefault();
+            scrollPageToTop("smooth");
+          }}
           className={({ isActive }) => (isActive ? "bottom-nav__item is-active" : "bottom-nav__item")}
         >
           <span className="bottom-nav__indicator" aria-hidden="true" />
