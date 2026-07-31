@@ -8,6 +8,7 @@ import { memberProfilePath } from "../features/members/memberProfilesModel";
 import { NotificationHeaderAction } from "../features/notifications/NotificationHeaderAction";
 import { NotificationPushSetting } from "../features/notifications/NotificationPushSetting";
 import { IdentityControl } from "../features/identity/IdentityControl";
+import { BrandedPullToRefresh } from "./BrandedPullToRefresh";
 import { RouteScrollManager } from "./RouteScrollManager";
 
 const PLAY_GAME_TITLES: Record<string, string> = {
@@ -41,6 +42,7 @@ export function AppShell() {
   return (
     <div className={`app-shell${isPlayGame ? " app-shell--game" : ""}`}>
       <RouteScrollManager />
+      <BrandedPullToRefresh />
 
       {isPlayGame ? (
         <header className="app-header app-header--game">
