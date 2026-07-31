@@ -43,6 +43,7 @@ describe("Picks event UI standard", () => {
     expect(picksStyles).toContain("--picks-disclosure-color: var(--text-muted);");
     expect(picksStyles).toContain(".picks-group-progress summary,");
     expect(picksStyles).toContain(".picks-scoring-guide summary {");
+    expect(groupStyles).toContain(".picks-group-progress {\n  display: block;");
     expect(groupStyles).toContain("min-height: var(--picks-disclosure-height, 46px);");
   });
 
