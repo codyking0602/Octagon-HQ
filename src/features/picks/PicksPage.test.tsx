@@ -169,6 +169,7 @@ describe("PicksPage", () => {
     expect(screen.getAllByText("MAIN EVENT").length).toBeGreaterThan(0);
     expect(screen.getByText("SCORING & UNDERDOG LOCK RULES")).toBeInTheDocument();
     expect(screen.getAllByLabelText("Sportsbook odds source")).toHaveLength(1);
+    expect(screen.queryByLabelText("Current Picks progress")).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: /Bogdan Guskov/i }));
     await waitFor(() => expect(savePick).toHaveBeenCalledWith(event.eventId, "ankalaev-guskov", "bogdan-guskov"));
@@ -177,7 +178,7 @@ describe("PicksPage", () => {
     expect(screen.getByRole("button", { name: "☆ LOCK FOR +2" })).toBeInTheDocument();
   });
 
-  it("shows the frozen bonus anywhere the selected Underdog Lock is summarized", async () => {
+  it("shows the frozen bonus in the event summary and selected lock action", async () => {
     const selectedPick: ProfileEventPick = {
       eventId: event.eventId,
       boutId: "ankalaev-guskov",
@@ -200,7 +201,6 @@ describe("PicksPage", () => {
     );
 
     expect(await screen.findByText("UNDERDOG LOCK · Bogdan Guskov · +4 IF CORRECT")).toBeInTheDocument();
-    expect(screen.getByText("LOCK: Bogdan Guskov · +4")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "★ UNDERDOG LOCK · +4 · REMOVE" })).toBeInTheDocument();
   });
 
