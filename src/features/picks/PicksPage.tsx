@@ -16,6 +16,7 @@ import { FighterThumbnail } from "./FighterThumbnail";
 import { GroupPickProgress } from "./GroupPickProgress";
 import { GroupPickReveal } from "./GroupPickReveal";
 import { MainEventSpotlight } from "./MainEventSpotlight";
+import { pickEventPoster } from "./picksEventAssets";
 import { PicksSeasonHub } from "./PicksSeasonHub";
 
 interface BoutResultView {
@@ -122,13 +123,12 @@ export default function PicksPage() {
   const cardOddsMeta = orderedBouts
     .map((bout) => oddsProvenance(bout.oddsSource, bout.oddsUpdatedAt))
     .find(Boolean) ?? null;
-  const eventPoster = activeEvent
-    && activeEvent.location.toLowerCase().includes("belgrade")
-    && activeEvent.subtitle.toLowerCase().includes("rodriguez")
-      ? "/events/ufc-fight-night-belgrade.svg"
-      : null;
+  const eventPoster = pickEventPoster(activeEvent);
   const heroStyle = eventPoster
-    ? ({ "--picks-event-poster": `url("${eventPoster}")` } as CSSProperties)
+    ? ({
+        "--picks-event-poster": `url("${eventPoster.src}")`,
+        "--picks-event-poster-aspect": eventPoster.aspectRatio,
+      } as CSSProperties)
     : undefined;
 
   return (
