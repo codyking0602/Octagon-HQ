@@ -22,8 +22,249 @@ export interface V2RankingRosterOverlay {
  *
  * The historical 80-fighter import is evidence only and is never regenerated from V1.
  */
+
+interface RdaFightSeed {
+  date: string;
+  opponent: string;
+  result: "win" | "loss";
+  method: string;
+  tier: string;
+  division: string;
+  rounds?: readonly [won: number, lost: number, drawn?: number];
+  championshipType?: string;
+  championshipManualCredit?: number | null;
+  upward?: boolean;
+}
+
+function rdaFightId(date: string, opponent: string) {
+  const opponentSlug = opponent
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+  return `${date}-${opponentSlug}`;
+}
+
+function rdaFight(seed: RdaFightSeed) {
+  return {
+    id: rdaFightId(seed.date, seed.opponent),
+    date: seed.date,
+    opponent: seed.opponent,
+    division: seed.division,
+    officialResult: seed.result,
+    scoringDisposition: seed.result === "win" ? "count-win" : "count-loss",
+    methodCategory: seed.method,
+    qualityTier: seed.tier,
+    championshipType: seed.championshipType ?? "none",
+    championshipEligible: true,
+    championshipOpponentStrength: null,
+    championshipManualCredit: seed.championshipManualCredit ?? null,
+    rounds: seed.rounds
+      ? {
+          status: "audited",
+          won: seed.rounds[0],
+          lost: seed.rounds[1],
+          drawn: seed.rounds[2] ?? 0,
+        }
+      : { status: "unavailable", won: 0, lost: 0, drawn: 0 },
+    lossClassification: {
+      competitive: true,
+      divisionContext: seed.upward ? "upward" : "home",
+      overrideRule: null,
+    },
+  };
+}
+
+const rdaFightSeeds: readonly RdaFightSeed[] = [
+  { date: "2008-11-15", opponent: "Jeremy Stephens", result: "loss", method: "ko-tko", tier: "top-ten", division: "Lightweight" },
+  { date: "2009-04-01", opponent: "Tyson Griffin", result: "loss", method: "decision", tier: "top-ten", division: "Lightweight" },
+  { date: "2009-09-19", opponent: "Rob Emerson", result: "win", method: "decision", tier: "solid", division: "Lightweight" },
+  { date: "2010-01-11", opponent: "Kyle Bradley", result: "win", method: "decision", tier: "solid", division: "Lightweight" },
+  { date: "2010-04-10", opponent: "Terry Etim", result: "win", method: "submission", tier: "ranked", division: "Lightweight" },
+  { date: "2011-07-02", opponent: "George Sotiropoulos", result: "win", method: "ko-tko", tier: "top-ten", division: "Lightweight" },
+  { date: "2011-11-19", opponent: "Gleison Tibau", result: "loss", method: "decision", tier: "top-ten", division: "Lightweight" },
+  { date: "2012-05-15", opponent: "Kamal Shalorus", result: "win", method: "submission", tier: "solid", division: "Lightweight" },
+  { date: "2012-11-10", opponent: "Mark Bocek", result: "win", method: "decision", tier: "top-ten", division: "Lightweight" },
+  { date: "2013-05-18", opponent: "Evan Dunham", result: "win", method: "decision", tier: "top-ten", division: "Lightweight" },
+  { date: "2013-08-28", opponent: "Donald Cerrone", result: "win", method: "decision", tier: "top-five", division: "Lightweight" },
+  { date: "2014-04-19", opponent: "Khabib Nurmagomedov", result: "loss", method: "decision", tier: "champion-level", division: "Lightweight" },
+  { date: "2014-06-07", opponent: "Jason High", result: "win", method: "ko-tko", tier: "ranked", division: "Lightweight" },
+  { date: "2014-08-23", opponent: "Benson Henderson", result: "win", method: "ko-tko", tier: "champion-level", division: "Lightweight", rounds: [1, 0] },
+  { date: "2014-12-13", opponent: "Nate Diaz", result: "win", method: "decision", tier: "top-five", division: "Lightweight", rounds: [3, 0] },
+  { date: "2015-03-14", opponent: "Anthony Pettis", result: "win", method: "decision", tier: "champion-level", division: "Lightweight", rounds: [5, 0], championshipType: "normal", championshipManualCredit: 1 },
+  { date: "2015-12-19", opponent: "Donald Cerrone", result: "win", method: "ko-tko", tier: "top-five", division: "Lightweight", rounds: [1, 0], championshipType: "normal", championshipManualCredit: 0.85 },
+  { date: "2016-07-07", opponent: "Eddie Alvarez", result: "loss", method: "ko-tko", tier: "champion-level", division: "Lightweight", rounds: [0, 1], championshipType: "normal", championshipManualCredit: 0 },
+  { date: "2016-11-05", opponent: "Tony Ferguson", result: "loss", method: "decision", tier: "top-five", division: "Lightweight", rounds: [2, 3] },
+  { date: "2017-06-17", opponent: "Tarec Saffiedine", result: "win", method: "decision", tier: "top-ten", division: "Welterweight", rounds: [3, 0] },
+  { date: "2017-09-09", opponent: "Neil Magny", result: "win", method: "submission", tier: "top-ten", division: "Welterweight", rounds: [1, 0] },
+  { date: "2017-12-16", opponent: "Robbie Lawler", result: "win", method: "decision", tier: "champion-level", division: "Welterweight", rounds: [5, 0] },
+  { date: "2018-06-09", opponent: "Colby Covington", result: "loss", method: "decision", tier: "top-five", division: "Welterweight", rounds: [1, 4], championshipType: "interim", championshipManualCredit: 0, upward: true },
+  { date: "2018-11-30", opponent: "Kamaru Usman", result: "loss", method: "decision", tier: "champion-level", division: "Welterweight", rounds: [0, 5], upward: true },
+  { date: "2019-05-18", opponent: "Kevin Lee", result: "win", method: "submission", tier: "top-five", division: "Welterweight", rounds: [3, 1] },
+  { date: "2019-07-20", opponent: "Leon Edwards", result: "loss", method: "decision", tier: "top-five", division: "Welterweight" },
+  { date: "2020-01-25", opponent: "Michael Chiesa", result: "loss", method: "decision", tier: "top-ten", division: "Welterweight" },
+  { date: "2020-11-14", opponent: "Paul Felder", result: "win", method: "decision", tier: "top-ten", division: "Lightweight" },
+  { date: "2022-03-05", opponent: "Renato Moicano", result: "win", method: "decision", tier: "top-ten", division: "Catchweight" },
+  { date: "2022-07-09", opponent: "Rafael Fiziev", result: "loss", method: "ko-tko", tier: "top-five", division: "Lightweight" },
+  { date: "2022-12-03", opponent: "Bryan Barberena", result: "win", method: "submission", tier: "ranked", division: "Welterweight" },
+  { date: "2023-08-12", opponent: "Vicente Luque", result: "loss", method: "decision", tier: "top-ten", division: "Welterweight" },
+  { date: "2024-03-09", opponent: "Mateusz Gamrot", result: "loss", method: "decision", tier: "top-five", division: "Lightweight" },
+  { date: "2024-10-26", opponent: "Geoff Neal", result: "loss", method: "ko-tko", tier: "top-ten", division: "Welterweight" },
+];
+
+function rdaQualityWin(date: string, opponent: string, finalCredit: number) {
+  return {
+    fightId: rdaFightId(date, opponent),
+    opponent,
+    date,
+    finalCredit,
+  };
+}
+
+const rafaelDosAnjos = {
+  fighter: "Rafael dos Anjos",
+  board: "men",
+  facts: {
+    identity: {
+      primaryDivision: "Lightweight",
+      secondaryDivisions: ["Welterweight"],
+    },
+    primeWindow: {
+      startFightId: rdaFightId("2014-08-23", "Benson Henderson"),
+      endFightId: rdaFightId("2019-05-18", "Kevin Lee"),
+      open: false,
+    },
+    gapCapMonths: 18,
+    fights: rdaFightSeeds.map(rdaFight),
+  },
+  era: {
+    window: {
+      start: "2014-08-23",
+      end: "2019-05-18",
+    },
+    statusMultiplier: 1.05,
+    divisionMultiplier: 1.1,
+  },
+  judgments: {
+    championship: {
+      fighter: "Rafael dos Anjos",
+      benchmarkCredit: 14.54,
+      inputs: [
+        {
+          fightId: rdaFightId("2015-03-14", "Anthony Pettis"),
+          opponent: "Anthony Pettis",
+          date: "2015-03-14",
+          titleType: "normal",
+          officialTitleFight: true,
+          finalAdjustedCredit: 1,
+          notes: "Won the undisputed UFC lightweight title with a dominant five-round decision.",
+        },
+        {
+          fightId: rdaFightId("2015-12-19", "Donald Cerrone"),
+          opponent: "Donald Cerrone",
+          date: "2015-12-19",
+          titleType: "normal",
+          officialTitleFight: true,
+          finalAdjustedCredit: 0.85,
+          notes: "Successfully defended the lightweight title against an elite contender.",
+        },
+      ],
+    },
+    opponentQuality: {
+      fighter: "Rafael dos Anjos",
+      benchmarkCredit: 14.1,
+      fighterAdjustment: 0,
+      inputs: [
+        rdaQualityWin("2015-03-14", "Anthony Pettis", 1.25),
+        rdaQualityWin("2014-08-23", "Benson Henderson", 1.25),
+        rdaQualityWin("2017-12-16", "Robbie Lawler", 1.25),
+        rdaQualityWin("2013-08-28", "Donald Cerrone", 1),
+        rdaQualityWin("2015-12-19", "Donald Cerrone", 1),
+        rdaQualityWin("2014-12-13", "Nate Diaz", 1),
+        rdaQualityWin("2019-05-18", "Kevin Lee", 1),
+        rdaQualityWin("2017-09-09", "Neil Magny", 0.85),
+        rdaQualityWin("2020-11-14", "Paul Felder", 0.85),
+        rdaQualityWin("2022-03-05", "Renato Moicano", 0.85),
+        rdaQualityWin("2011-07-02", "George Sotiropoulos", 0.85),
+        rdaQualityWin("2012-11-10", "Mark Bocek", 0.85),
+        rdaQualityWin("2013-05-18", "Evan Dunham", 0.85),
+        rdaQualityWin("2017-06-17", "Tarec Saffiedine", 0.65),
+        rdaQualityWin("2014-06-07", "Jason High", 0.65),
+        rdaQualityWin("2022-12-03", "Bryan Barberena", 0.65),
+        rdaQualityWin("2010-04-10", "Terry Etim", 0.45),
+        rdaQualityWin("2009-09-19", "Rob Emerson", 0.45),
+        rdaQualityWin("2010-01-11", "Kyle Bradley", 0.45),
+        rdaQualityWin("2012-05-15", "Kamal Shalorus", 0.45),
+      ],
+    },
+    apex: {
+      fighter: "Rafael dos Anjos",
+      performances: [
+        {
+          fightId: rdaFightId("2015-03-14", "Anthony Pettis"),
+          opponent: "Anthony Pettis",
+          date: "2015-03-14",
+          rating: 9.7,
+        },
+        {
+          fightId: rdaFightId("2014-08-23", "Benson Henderson"),
+          opponent: "Benson Henderson",
+          date: "2014-08-23",
+          rating: 9.6,
+        },
+      ],
+      components: {
+        twoPerformanceStrength: 1.93,
+        proof: 1.4,
+        bestFighterClaim: 0.9,
+        aura: 0.65,
+      },
+      notes: "The Pettis title win and first-round Henderson knockout form an elite lightweight peak with clear championship proof.",
+    },
+  },
+  eraDepth: {
+    fighter: "Rafael dos Anjos",
+    depthIndex: 0.92,
+    approvedAdjustment: null,
+  },
+  presentation: {
+    slug: "rafael-dos-anjos",
+    primaryDivision: "Lightweight",
+    secondaryDivision: "Welterweight",
+    divisionLabel: "Lightweight / Welterweight",
+    resumeTag: "Lightweight champion with two-division longevity",
+    oneLiner: "A dominant UFC lightweight champion whose elite wins, welterweight contender run, and extraordinary longevity create one of the deepest UFC-only resumes outside the highest title-reign tier.",
+    whyRankedHere: "Dos Anjos ranks here because he combined an undisputed lightweight title and defense with elite wins over Anthony Pettis, Benson Henderson, Donald Cerrone, Nate Diaz, Robbie Lawler, and Kevin Lee. His ability to remain relevant across lightweight and welterweight for more than a decade adds major UFC-only depth.",
+    whyNotHigher: "He does not rank higher because the championship reign lasted only one defense, the Alvarez and Ferguson losses ended his lightweight peak quickly, and the later welterweight run produced strong contender wins without a second title.",
+    finalTakeaway: "RDA is the deep-resume lightweight champion: a shorter reign than the division's highest legends, but an elite peak and rare two-division longevity that clearly belong on the all-time board.",
+    keyJudgmentCalls: [
+      "Prime begins with the Benson Henderson knockout and ends with the Kevin Lee submission.",
+      "Khabib Nurmagomedov is treated as a pre-prime elite loss.",
+      "Colby Covington and Kamaru Usman are treated as prime elite losses in an upward division.",
+      "Michael Chiesa and every later loss are treated as post-prime.",
+      "Only UFC accomplishments are scored.",
+    ],
+    photoUrl: "assets/fighters/rafael-dos-anjos-profile.webp",
+    thumbUrl: "assets/fighters/rafael-dos-anjos-thumb.webp",
+    watchUrl: "https://www.ufc.com/video/47604",
+    watchLabel: "Watch: RDA dominates Nate Diaz",
+    signatureFightUrl: "https://ufcfightpass.com/search?query=Rafael%20dos%20Anjos%20vs%20Anthony%20Pettis%20UFC%20185",
+    signatureFightLabel: "Signature Fight: Anthony Pettis",
+  },
+};
+
 export const v2RankingRoster: V2RankingRosterOverlay = {
-  additions: [],
+  additions: [rafaelDosAnjos],
   replacements: {},
-  eraMembership: {},
+  eraMembership: {
+    "Rafael dos Anjos": {
+      primary: "golden-age",
+      secondary: "superstar",
+    },
+  },
+  factsVersion: "octagon-hq-v2-rda-20260730",
+  judgmentVersion: "octagon-hq-v2-rda-20260730",
+  eraDepthVersion: "octagon-hq-v2-rda-20260730",
+  eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
 };
