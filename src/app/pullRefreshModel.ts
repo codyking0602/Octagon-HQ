@@ -8,8 +8,7 @@ export type PullRefreshScope =
   | "play"
   | "find-leader"
   | "notifications"
-  | "whats-new"
-  | "war-room";
+  | "whats-new";
 
 export function pullRefreshScope(pathname: string): PullRefreshScope | null {
   switch (pathname) {
@@ -25,8 +24,6 @@ export function pullRefreshScope(pathname: string): PullRefreshScope | null {
       return "notifications";
     case "/whats-new":
       return "whats-new";
-    case "/war-room":
-      return "war-room";
     default:
       return null;
   }
