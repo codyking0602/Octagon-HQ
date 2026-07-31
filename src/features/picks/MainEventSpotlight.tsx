@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { fighterThumbnailPath } from "./FighterThumbnail";
 import type { PickBout } from "./picksModel";
 
@@ -161,7 +162,7 @@ export function MainEventSpotlight({ bout }: { bout: PickBout }) {
         <i aria-hidden="true">›</i>
       </button>
 
-      {open ? (
+      {open ? createPortal(
         <div className="main-event-spotlight-modal" role="presentation">
           <button
             className="main-event-spotlight__backdrop"
@@ -222,7 +223,8 @@ export function MainEventSpotlight({ bout }: { bout: PickBout }) {
               </section>
             </div>
           </section>
-        </div>
+        </div>,
+        document.body,
       ) : null}
     </>
   );
