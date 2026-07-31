@@ -13,7 +13,6 @@ import { useNotifications } from "../features/notifications/NotificationProvider
 import { usePicks } from "../features/picks/PicksProvider";
 import { useFindLeaderHistory } from "../features/play/FindLeaderHistoryProvider";
 import { useProfilePreferences } from "../features/profile/ProfilePreferencesProvider";
-import { useWarRoom } from "../features/war-room/WarRoomProvider";
 import { useWhatsNew } from "../features/whats-new/WhatsNewProvider";
 import {
   PULL_REFRESH_THRESHOLD,
@@ -47,7 +46,6 @@ export function BrandedPullToRefresh() {
   const location = useLocation();
   const notifications = useNotifications();
   const whatsNew = useWhatsNew();
-  const warRoom = useWarRoom();
   const profilePreferences = useProfilePreferences();
   const picks = usePicks();
   const findLeader = useFindLeaderHistory();
@@ -104,9 +102,6 @@ export function BrandedPullToRefresh() {
       case "whats-new":
         tasks.push(notifications.refresh(), whatsNew.refresh());
         break;
-      case "war-room":
-        tasks.push(notifications.refresh(), warRoom.refresh());
-        break;
     }
 
     await Promise.allSettled(tasks);
@@ -119,7 +114,6 @@ export function BrandedPullToRefresh() {
     picks.refresh,
     profilePreferences.refresh,
     scope,
-    warRoom.refresh,
     whatsNew.refresh,
   ]);
 
