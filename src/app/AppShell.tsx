@@ -42,7 +42,6 @@ export function AppShell() {
   return (
     <div className={`app-shell${isPlayGame ? " app-shell--game" : ""}`}>
       <RouteScrollManager />
-      <BrandedPullToRefresh />
 
       {isPlayGame ? (
         <header className="app-header app-header--game">
@@ -74,12 +73,14 @@ export function AppShell() {
         </header>
       )}
 
-      <main className={`app-content${isPlayGame ? " app-content--game" : ""}`}>
-        <Suspense fallback={<RouteLoading />}>
-          <Outlet />
-        </Suspense>
-        <ProfilePushSettingRoute />
-      </main>
+      <BrandedPullToRefresh>
+        <main className={`app-content${isPlayGame ? " app-content--game" : ""}`}>
+          <Suspense fallback={<RouteLoading />}>
+            <Outlet />
+          </Suspense>
+          <ProfilePushSettingRoute />
+        </main>
+      </BrandedPullToRefresh>
 
       <BottomNavigation />
     </div>
