@@ -25,11 +25,17 @@
 .pull-refresh-content {
   min-height: calc(100dvh - 60px - var(--safe-top));
   position: relative;
-  transform: translate3d(0, var(--pull-refresh-distance), 0);
+  transform: none;
   transition: transform 260ms cubic-bezier(.2, .8, .2, 1);
   will-change: transform;
   z-index: 1;
   background: var(--canvas);
+}
+
+.pull-refresh-region--pulling .pull-refresh-content,
+.pull-refresh-region--ready .pull-refresh-content,
+.pull-refresh-region--refreshing .pull-refresh-content {
+  transform: translate3d(0, var(--pull-refresh-distance), 0);
 }
 
 .pull-refresh-region--pulling .pull-refresh-content,
