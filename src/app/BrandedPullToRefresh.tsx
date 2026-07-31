@@ -3,33 +3,38 @@ import {
   useEffect,
   useRef,
   useState,
-  type CSSProperties,
+  type PropsWithChildren,
 } from "react";
 import { useLocation } from "react-router-dom";
 import { brand } from "../config/brand";
 import { usePlayChallenges } from "../features/challenges/ChallengeProvider";
-import { useIdentity } from "../features/identity/IdentityProvider";
 import { useNotifications } from "../features/notifications/NotificationProvider";
 import { usePicks } from "../features/picks/PicksProvider";
 import { useFindLeaderHistory } from "../features/play/FindLeaderHistoryProvider";
 import { useProfilePreferences } from "../features/profile/ProfilePreferencesProvider";
 import { useWhatsNew } from "../features/whats-new/WhatsNewProvider";
 import {
+  PULL_REFRESH_HOLD_DISTANCE,
+  PULL_REFRESH_INTENT_DISTANCE,
   PULL_REFRESH_THRESHOLD,
   pullRefreshReady,
-  pullRefreshScope,
   resistedPullDistance,
+  verticalPullIntent,
 } from "./pullRefreshModel";
 
-type PullPhase = "idle" | "pulling" | "ready" | "refreshing" | "complete";
+type PullPhase = "idle" | "pulling" | "ready" | "refreshing";
 
-const COMPLETE_HOLD_MS = 420;
+type PullGesture = {
+  x: number;
+  y: number;
+  accepted: boolean;
+};
+
 const IGNORED_PULL_TARGETS = [
   "input",
   "textarea",
   "select",
   "[contenteditable='true']",
-  "[aria-modal='true']",
   "[data-pull-refresh-ignore]",
 ].join(",");
 
@@ -41,8 +46,7 @@ function pulseHaptic(pattern: number | number[]) {
   }
 }
 
-export function BrandedPullToRefresh() {
-  const identity = useIdentity();
+export function BrandedPullToRefresh({ children }: PropsWithChildren) {
   const location = useLocation();
   const notifications = useNotifications();
   const whatsNew = useWhatsNew();
@@ -50,58 +54,56 @@ export function BrandedPullToRefresh() {
   const picks = usePicks();
   const findLeader = useFindLeaderHistory();
   const challenges = usePlayChallenges();
-  const scope = pullRefreshScope(location.pathname);
-  const eligible = Boolean(identity.profile && scope);
-  const [phase, setPhase] = useState<PullPhase>("idle");
-  const [distance, setDistance] = useState(0);
-  const phaseRef = useRef<PullPhase>(phase);
-  const startRef = useRef<{ x: number; y: number } | null>(null);
+  const regionRef = useRef<HTMLDivElement | null>(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const gestureRef = useRef<PullGesture | null>(null);
   const thresholdReachedRef = useRef(false);
   const refreshingRef = useRef(false);
-  const completeTimerRef = useRef<number | null>(null);
+  const refreshRunRef = useRef(0);
+  const [phase, setPhase] = useState<PullPhase>("idle");
+  const phaseRef = useRef<PullPhase>(phase);
   phaseRef.current = phase;
 
-  const reset = useCallback(() => {
-    startRef.current = null;
-    thresholdReachedRef.current = false;
-    refreshingRef.current = false;
-    setDistance(0);
-    setPhase("idle");
+  const applyDistance = useCallback((distance: number) => {
+    const region = regionRef.current;
+    if (!region) return;
+    const normalizedDistance = Math.max(0, distance);
+    region.style.setProperty("--pull-refresh-distance", `${Math.round(normalizedDistance)}px`);
+    region.style.setProperty(
+      "--pull-refresh-progress",
+      String(Math.min(1, normalizedDistance / PULL_REFRESH_THRESHOLD)),
+    );
   }, []);
 
-  const refreshCurrentRoute = useCallback(async () => {
-    if (!scope) return;
-    const tasks: Promise<unknown>[] = [];
+  const setPullPhase = useCallback((nextPhase: PullPhase) => {
+    if (phaseRef.current === nextPhase) return;
+    phaseRef.current = nextPhase;
+    setPhase(nextPhase);
+  }, []);
 
-    switch (scope) {
-      case "home":
-        tasks.push(
-          notifications.refresh(),
-          whatsNew.refresh(),
-          picks.refresh(),
-          challenges.refresh(),
-          profilePreferences.refresh(),
-          findLeader.refresh(),
-        );
-        break;
-      case "picks":
-        tasks.push(notifications.refresh(), picks.refresh());
-        break;
-      case "play":
-        tasks.push(notifications.refresh(), challenges.refresh(), findLeader.refresh());
-        break;
-      case "find-leader":
-        tasks.push(notifications.refresh(), challenges.refresh(), findLeader.refresh());
-        if (findLeader.dailyLeaderboardDay) {
-          tasks.push(findLeader.loadDailyLeaderboard(findLeader.dailyLeaderboardDay));
-        }
-        break;
-      case "notifications":
-        tasks.push(notifications.refresh());
-        break;
-      case "whats-new":
-        tasks.push(notifications.refresh(), whatsNew.refresh());
-        break;
+  const resetGesture = useCallback((cancelRefresh = false) => {
+    gestureRef.current = null;
+    thresholdReachedRef.current = false;
+    if (cancelRefresh) {
+      refreshRunRef.current += 1;
+      refreshingRef.current = false;
+    }
+    applyDistance(0);
+    setPullPhase("idle");
+  }, [applyDistance, setPullPhase]);
+
+  const refreshApp = useCallback(async () => {
+    const tasks: Promise<unknown>[] = [
+      notifications.refresh(),
+      whatsNew.refresh(),
+      picks.refresh(),
+      challenges.refresh(),
+      profilePreferences.refresh(),
+      findLeader.refresh(),
+    ];
+
+    if (findLeader.dailyLeaderboardDay) {
+      tasks.push(findLeader.loadDailyLeaderboard(findLeader.dailyLeaderboardDay));
     }
 
     await Promise.allSettled(tasks);
@@ -113,22 +115,25 @@ export function BrandedPullToRefresh() {
     notifications.refresh,
     picks.refresh,
     profilePreferences.refresh,
-    scope,
     whatsNew.refresh,
   ]);
-
-  useEffect(() => reset(), [location.key, reset]);
+  const refreshAppRef = useRef(refreshApp);
+  refreshAppRef.current = refreshApp;
 
   useEffect(() => {
-    if (!eligible) return undefined;
-    document.documentElement.classList.add("octagon-pull-refresh");
+    resetGesture(true);
+  }, [location.key, resetGesture]);
+
+  useEffect(() => {
+    const content = contentRef.current;
+    if (!content) return undefined;
 
     const cancelPull = () => {
-      startRef.current = null;
+      gestureRef.current = null;
       thresholdReachedRef.current = false;
       if (!refreshingRef.current) {
-        setDistance(0);
-        setPhase("idle");
+        applyDistance(0);
+        setPullPhase("idle");
       }
     };
 
@@ -137,106 +142,113 @@ export function BrandedPullToRefresh() {
         event.touches.length !== 1
         || window.scrollY > 0
         || refreshingRef.current
-        || phaseRef.current === "complete"
       ) return;
       const target = event.target;
       if (target instanceof Element && target.closest(IGNORED_PULL_TARGETS)) return;
+
       const touch = event.touches[0];
-      startRef.current = { x: touch.clientX, y: touch.clientY };
+      gestureRef.current = {
+        x: touch.clientX,
+        y: touch.clientY,
+        accepted: false,
+      };
       thresholdReachedRef.current = false;
-      setPhase("pulling");
     };
 
     const onTouchMove = (event: TouchEvent) => {
-      const start = startRef.current;
-      if (!start || event.touches.length !== 1 || refreshingRef.current) return;
-      const touch = event.touches[0];
-      const deltaX = touch.clientX - start.x;
-      const deltaY = touch.clientY - start.y;
+      const gesture = gestureRef.current;
+      if (!gesture || event.touches.length !== 1 || refreshingRef.current) return;
 
-      if (window.scrollY > 0 || deltaY <= 0 || Math.abs(deltaX) > deltaY) {
+      const touch = event.touches[0];
+      const deltaX = touch.clientX - gesture.x;
+      const deltaY = touch.clientY - gesture.y;
+
+      if (!gesture.accepted) {
+        if (
+          Math.abs(deltaX) < PULL_REFRESH_INTENT_DISTANCE
+          && Math.abs(deltaY) < PULL_REFRESH_INTENT_DISTANCE
+        ) return;
+        if (!verticalPullIntent(deltaX, deltaY)) {
+          cancelPull();
+          return;
+        }
+        gesture.accepted = true;
+        setPullPhase("pulling");
+      }
+
+      if (window.scrollY > 0 || deltaY <= 0) {
         cancelPull();
         return;
       }
 
-      const nextDistance = resistedPullDistance(deltaY);
-      if (nextDistance <= 0) return;
       event.preventDefault();
-      setDistance(nextDistance);
+      const nextDistance = resistedPullDistance(deltaY);
+      applyDistance(nextDistance);
 
       const ready = pullRefreshReady(nextDistance);
       if (ready && !thresholdReachedRef.current) pulseHaptic(8);
       thresholdReachedRef.current = ready;
-      setPhase(ready ? "ready" : "pulling");
+      setPullPhase(ready ? "ready" : "pulling");
     };
 
     const onTouchEnd = () => {
-      if (!startRef.current || refreshingRef.current) return;
-      startRef.current = null;
+      const gesture = gestureRef.current;
+      gestureRef.current = null;
+      if (!gesture || refreshingRef.current) return;
 
-      if (!thresholdReachedRef.current) {
-        cancelPull();
+      if (!gesture.accepted || !thresholdReachedRef.current) {
+        thresholdReachedRef.current = false;
+        applyDistance(0);
+        setPullPhase("idle");
         return;
       }
 
       thresholdReachedRef.current = false;
       refreshingRef.current = true;
-      setDistance(PULL_REFRESH_THRESHOLD);
-      setPhase("refreshing");
-      void refreshCurrentRoute().finally(() => {
+      const refreshRun = ++refreshRunRef.current;
+      applyDistance(PULL_REFRESH_HOLD_DISTANCE);
+      setPullPhase("refreshing");
+
+      void refreshAppRef.current().finally(() => {
+        if (refreshRun !== refreshRunRef.current) return;
+        refreshingRef.current = false;
         pulseHaptic(12);
-        setPhase("complete");
-        completeTimerRef.current = window.setTimeout(reset, COMPLETE_HOLD_MS);
+        applyDistance(0);
+        setPullPhase("idle");
       });
     };
 
-    document.addEventListener("touchstart", onTouchStart, { passive: true });
-    document.addEventListener("touchmove", onTouchMove, { passive: false });
-    document.addEventListener("touchend", onTouchEnd, { passive: true });
-    document.addEventListener("touchcancel", cancelPull, { passive: true });
+    content.addEventListener("touchstart", onTouchStart, { passive: true });
+    content.addEventListener("touchmove", onTouchMove, { passive: false });
+    content.addEventListener("touchend", onTouchEnd, { passive: true });
+    content.addEventListener("touchcancel", cancelPull, { passive: true });
 
     return () => {
-      document.documentElement.classList.remove("octagon-pull-refresh");
-      document.removeEventListener("touchstart", onTouchStart);
-      document.removeEventListener("touchmove", onTouchMove);
-      document.removeEventListener("touchend", onTouchEnd);
-      document.removeEventListener("touchcancel", cancelPull);
-      if (completeTimerRef.current !== null) {
-        window.clearTimeout(completeTimerRef.current);
-        completeTimerRef.current = null;
-      }
-      startRef.current = null;
-      thresholdReachedRef.current = false;
+      content.removeEventListener("touchstart", onTouchStart);
+      content.removeEventListener("touchmove", onTouchMove);
+      content.removeEventListener("touchend", onTouchEnd);
+      content.removeEventListener("touchcancel", cancelPull);
+      refreshRunRef.current += 1;
       refreshingRef.current = false;
+      gestureRef.current = null;
+      thresholdReachedRef.current = false;
     };
-  }, [eligible, refreshCurrentRoute, reset]);
-
-  if (!eligible) return null;
-
-  const progress = Math.min(1, distance / PULL_REFRESH_THRESHOLD);
-  const label = phase === "ready"
-    ? "RELEASE TO REFRESH"
-    : phase === "refreshing"
-      ? "REFRESHING HQ"
-      : phase === "complete"
-        ? "UPDATED"
-        : "PULL TO REFRESH";
-  const indicatorStyle = {
-    opacity: phase === "idle" ? 0 : Math.max(0.08, progress),
-    transform: `translate3d(-50%, ${Math.round(-58 + distance)}px, 0) scale(${(0.78 + progress * 0.22).toFixed(3)})`,
-  } satisfies CSSProperties;
+  }, [applyDistance, setPullPhase]);
 
   return (
     <div
-      className={`pull-refresh-indicator pull-refresh-indicator--${phase}`}
-      style={indicatorStyle}
-      aria-hidden={phase === "idle"}
-      aria-live="polite"
+      ref={regionRef}
+      className={`pull-refresh-region pull-refresh-region--${phase}`}
     >
-      <span className="pull-refresh-indicator__badge">
-        <img src={brand.logoUrl} alt="" decoding="async" />
-      </span>
-      <span className="pull-refresh-indicator__label">{label}</span>
+      <div className="pull-refresh-reveal" aria-hidden="true">
+        <span className="pull-refresh-logo">
+          <img src={brand.logoUrl} alt="" decoding="async" />
+          <span className="pull-refresh-logo__flash" />
+        </span>
+      </div>
+      <div ref={contentRef} className="pull-refresh-content">
+        {children}
+      </div>
     </div>
   );
 }
