@@ -4,6 +4,7 @@ import { App } from "./app/App";
 import { installUpdateRecovery } from "./app/installUpdateRecovery";
 import "./styles/tokens.css";
 import "./styles/global.css";
+import "./styles/pull-to-refresh.css";
 import "./styles/app-error.css";
 import "./styles/home.css";
 import "./styles/watchlist.css";
