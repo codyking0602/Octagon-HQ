@@ -169,6 +169,7 @@ describe("PicksPage", () => {
     expect(screen.getAllByText("MAIN EVENT").length).toBeGreaterThan(0);
     expect(screen.getByText("SCORING & UNDERDOG LOCK RULES")).toBeInTheDocument();
     expect(screen.getAllByLabelText("Sportsbook odds source")).toHaveLength(1);
+    expect(screen.queryByLabelText("Current Picks progress")).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: /Bogdan Guskov/i }));
     await waitFor(() => expect(savePick).toHaveBeenCalledWith(event.eventId, "ankalaev-guskov", "bogdan-guskov"));
@@ -177,7 +178,7 @@ describe("PicksPage", () => {
     expect(screen.getByRole("button", { name: "☆ LOCK FOR +2" })).toBeInTheDocument();
   });
 
-  it("shows the frozen bonus anywhere the selected Underdog Lock is summarized", async () => {
+  it("shows the frozen bonus in the event summary and selected lock action", async () => {
     const selectedPick: ProfileEventPick = {
       eventId: event.eventId,
       boutId: "ankalaev-guskov",
@@ -200,7 +201,6 @@ describe("PicksPage", () => {
     );
 
     expect(await screen.findByText("UNDERDOG LOCK · Bogdan Guskov · +4 IF CORRECT")).toBeInTheDocument();
-    expect(screen.getByText("LOCK: Bogdan Guskov · +4")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "★ UNDERDOG LOCK · +4 · REMOVE" })).toBeInTheDocument();
   });
 
@@ -239,12 +239,20 @@ describe("PicksPage", () => {
     expect(screen.getByText("Excluded")).toBeInTheDocument();
   });
 
-  it("uses the Belgrade poster without covering the fighters with upcoming labels", async () => {
+  it("uses the registered event poster without covering the fighters with upcoming labels", async () => {
     const belgradeEvent: PickEvent = {
       ...event,
       subtitle: "Uroš Medić vs. Daniel Rodriguez",
       venue: "Belgrade Arena",
       location: "Belgrade, Serbia",
+      bouts: [{
+        ...event.bouts[0],
+        boutId: "medic-rodriguez",
+        redFighterSlug: "uros-medic",
+        redFighterName: "Uroš Medić",
+        blueFighterSlug: "daniel-rodriguez",
+        blueFighterName: "Daniel Rodriguez",
+      }],
     };
 
     const { container } = render(
@@ -257,8 +265,20 @@ describe("PicksPage", () => {
     const hero = container.querySelector(".picks-event-hero");
     expect(hero).toHaveClass("has-poster");
     expect(hero).toHaveStyle('--picks-event-poster: url("/events/ufc-fight-night-belgrade.svg")');
+    expect(hero).toHaveStyle("--picks-event-poster-aspect: 480 / 321");
     expect(screen.queryByText("NEXT UFC EVENT")).not.toBeInTheDocument();
     expect(screen.queryByText("UPCOMING")).not.toBeInTheDocument();
+  });
+
+  it("uses the standard no-poster hero when no event asset is registered", async () => {
+    const { container } = render(
+      <IdentityProvider gateway={gateway()}>
+        <PicksProvider repository={repository()}><PicksPage /></PicksProvider>
+      </IdentityProvider>,
+    );
+
+    await screen.findByText("Ankalaev vs. Guskov");
+    expect(container.querySelector(".picks-event-hero")).not.toHaveClass("has-poster");
   });
 
   it("opens the V1-style main event spotlight only for Medic versus Rodriguez", async () => {
