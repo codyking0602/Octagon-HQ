@@ -242,14 +242,6 @@ export default function PicksPage() {
                 </p>
               ) : null}
 
-              <div className="picks-sticky-progress" aria-label="Current Picks progress">
-                <span>{progress.completed}/{progress.total} PICKS</span>
-                <em>
-                  LOCK: {underdogLockName}
-                  {underdogLockBonusLabel ? ` · ${underdogLockBonusLabel}` : ""}
-                </em>
-              </div>
-
               <section className="picks-card-list" aria-label={`${activeEvent.name} fight picks`}>
                 {orderedBouts.map((bout, index) => {
                   const selection = picks.selections[bout.boutId] ?? null;
