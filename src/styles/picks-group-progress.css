@@ -63,7 +63,7 @@
   display: grid;
   font: inherit;
   gap: 10px;
-  grid-template-columns: minmax(0, 1fr) auto 12px;
+  grid-template-columns: 24px minmax(0, 1fr) auto 12px;
   min-height: 38px;
   padding: 4px 14px 4px 16px;
   text-align: left;
@@ -78,6 +78,10 @@
   line-height: 1;
   transform: rotate(0deg);
   transition: color .15s ease, transform .18s ease;
+}
+
+.picks-group-progress__member > button[aria-expanded="true"] {
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
 }
 
 .picks-group-progress__member > button[aria-expanded="true"]::after {
@@ -100,33 +104,214 @@
 }
 
 .picks-group-progress__member > button.is-current-user { background: color-mix(in srgb, var(--accent) 6%, transparent); }
-.picks-group-progress__member > button strong { font-size: 12px; }
+
+.picks-group-progress__member-status {
+  align-items: center;
+  border: 1px solid var(--border-subtle);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .035);
+  color: var(--text-muted);
+  display: flex;
+  font-size: 8px;
+  font-weight: 950;
+  height: 22px;
+  justify-content: center;
+  letter-spacing: 0;
+  width: 22px;
+}
+
+.picks-group-progress__member > button.is-complete .picks-group-progress__member-status {
+  border-color: rgba(72, 174, 82, .58);
+  background: rgba(72, 174, 82, .14);
+  color: #70c977;
+  font-size: 11px;
+}
+
+.picks-group-progress__member > button strong {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .picks-group-progress__member > button b { font-size: 13px; }
 
-.picks-group-progress__inline {
+.picks-group-progress__comparison {
   border-top: 1px solid var(--border-subtle);
-  padding: 5px 16px 7px;
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 42%),
+    color-mix(in srgb, var(--surface) 94%, black);
 }
 
-.picks-group-progress__inline-meta {
+.picks-group-progress__comparison-header {
   align-items: center;
   display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
   justify-content: space-between;
-  min-height: 22px;
+  min-height: 42px;
+  padding: 8px 12px;
 }
 
-.picks-group-progress__inline-meta span,
-.picks-group-progress__inline p,
-.picks-group-progress__inline-picks small {
+.picks-group-progress__comparison-header > div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.picks-group-progress__comparison-header span {
+  color: var(--text-primary);
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: .08em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.picks-group-progress__comparison-header strong {
   color: var(--text-muted);
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: .05em;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .08em;
 }
 
-.picks-group-progress__inline-meta strong { font-size: 10px; }
-.picks-group-progress__inline p { margin: 3px 0 1px; line-height: 1.35; }
-.picks-group-progress__inline-picks { display: grid; margin-top: 4px; }
-.picks-group-progress__inline-picks > div { border-top: 1px solid var(--border-subtle); display: grid; gap: 2px; padding: 6px 0; }
-.picks-group-progress__inline-picks > div > span { color: var(--text-muted); font-size: 10px; }
-.picks-group-progress__inline-picks > div > strong { font-size: 12px; }
+.picks-group-progress__comparison-header > b {
+  border: 1px solid var(--underdog-lock-border, rgba(255, 138, 31, .58));
+  border-radius: 999px;
+  background: var(--underdog-lock-surface, rgba(255, 138, 31, .1));
+  color: var(--underdog-lock-accent, #ff8a1f);
+  font-size: 7px;
+  letter-spacing: .07em;
+  padding: 4px 7px;
+  white-space: nowrap;
+}
+
+.picks-group-progress__privacy {
+  border-top: 1px solid var(--border-subtle);
+  display: grid;
+  gap: 3px;
+  padding: 11px 12px 13px;
+}
+
+.picks-group-progress__privacy strong {
+  color: var(--text-secondary);
+  font-size: 9px;
+  letter-spacing: .08em;
+}
+
+.picks-group-progress__privacy p {
+  color: var(--text-muted);
+  font-size: 10px;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.picks-group-progress__comparison-list {
+  border-top: 1px solid var(--border-subtle);
+  display: grid;
+  gap: 6px;
+  padding: 7px 8px 9px;
+}
+
+.picks-group-progress__fight {
+  border: 1px solid var(--border-subtle);
+  border-left: 2px solid color-mix(in srgb, var(--accent) 72%, transparent);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .022);
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  padding: 8px 9px 9px;
+}
+
+.picks-group-progress__fight.is-same {
+  border-left-color: rgba(72, 174, 82, .72);
+}
+
+.picks-group-progress__matchup {
+  align-items: center;
+  display: grid;
+  gap: 7px;
+  grid-template-columns: 19px minmax(0, 1fr);
+  min-width: 0;
+}
+
+.picks-group-progress__matchup > b {
+  align-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .065);
+  color: var(--text-muted);
+  display: flex;
+  font-size: 8px;
+  height: 19px;
+  justify-content: center;
+  width: 19px;
+}
+
+.picks-group-progress__matchup > span {
+  color: var(--text-muted);
+  display: -webkit-box;
+  font-size: 9px;
+  line-height: 1.25;
+  min-width: 0;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.picks-group-progress__choices {
+  align-items: center;
+  display: grid;
+  gap: 7px;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  min-width: 0;
+}
+
+.picks-group-progress__choices > div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.picks-group-progress__choices > div.is-you {
+  text-align: right;
+}
+
+.picks-group-progress__choices small {
+  color: var(--text-muted);
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .07em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.picks-group-progress__choices strong {
+  color: var(--text-primary);
+  display: -webkit-box;
+  font-size: 11px;
+  line-height: 1.15;
+  min-width: 0;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.picks-group-progress__choices em {
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  color: var(--accent);
+  font-size: 7px;
+  font-style: normal;
+  font-weight: 950;
+  letter-spacing: .08em;
+  padding: 4px 6px;
+}
+
+.picks-group-progress__fight.is-same .picks-group-progress__choices em {
+  background: rgba(72, 174, 82, .13);
+  color: #70c977;
+}

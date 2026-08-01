@@ -18,22 +18,29 @@ export function GroupPickProgress({ event, locked, mySelections }: GroupPickProg
   const completedMembers = members.filter((member) => member.completed === member.total && member.total > 0).length;
   const selectedPicks = useMemo(() => {
     if (!selected || !locked) return [];
-    return event.bouts.map((bout) => {
-      const memberPick = bout.groupPicks?.find((pick) => pick.displayName === selected.displayName)?.pickedFighterSlug ?? null;
-      const myPick = mySelections[bout.boutId] ?? null;
-      const fighterName = (slug: string | null) => {
-        if (slug === bout.redFighterSlug) return bout.redFighterName;
-        if (slug === bout.blueFighterSlug) return bout.blueFighterName;
-        return "No pick";
-      };
-      return {
-        boutId: bout.boutId,
-        fight: `${bout.redFighterName} vs ${bout.blueFighterName}`,
-        memberPick: fighterName(memberPick),
-        myPick: fighterName(myPick),
-        same: Boolean(memberPick && myPick && memberPick === myPick),
-      };
-    });
+
+    return event.bouts
+      .filter((bout) => bout.includedInPicks !== false && (bout.resultStatus ?? "pending") !== "cancelled")
+      .slice()
+      .sort((left, right) => left.position - right.position)
+      .map((bout, index) => {
+        const memberPick = bout.groupPicks?.find((pick) => pick.displayName === selected.displayName)?.pickedFighterSlug ?? null;
+        const myPick = mySelections[bout.boutId] ?? null;
+        const fighterName = (slug: string | null) => {
+          if (slug === bout.redFighterSlug) return bout.redFighterName;
+          if (slug === bout.blueFighterSlug) return bout.blueFighterName;
+          return "No pick";
+        };
+
+        return {
+          boutId: bout.boutId,
+          fightNumber: index + 1,
+          fight: `${bout.redFighterName} vs ${bout.blueFighterName}`,
+          memberPick: fighterName(memberPick),
+          myPick: fighterName(myPick),
+          same: memberPick === myPick,
+        };
+      });
   }, [event.bouts, locked, mySelections, selected]);
 
   if (loading || error || !members.length) {
@@ -55,37 +62,65 @@ export function GroupPickProgress({ event, locked, mySelections }: GroupPickProg
       <div className="picks-group-progress__members">
         {members.map((member) => {
           const isSelected = member.displayName === selectedName;
+          const isComplete = member.completed === member.total && member.total > 0;
+          const memberStateClass = [member.isCurrentUser ? "is-current-user" : "", isComplete ? "is-complete" : ""]
+            .filter(Boolean)
+            .join(" ");
           return (
             <div className="picks-group-progress__member" key={member.profileId}>
               <button
                 type="button"
-                className={member.isCurrentUser ? "is-current-user" : ""}
+                className={memberStateClass}
                 aria-expanded={isSelected}
                 onClick={() => setSelectedName(isSelected ? null : member.displayName)}
               >
+                <span className="picks-group-progress__member-status" aria-hidden="true">
+                  {isComplete ? "✓" : member.displayName.trim().charAt(0).toUpperCase()}
+                </span>
                 <strong>{member.displayName}{member.isCurrentUser ? " · YOU" : ""}</strong>
                 <b>{member.completed}/{member.total}</b>
               </button>
               {isSelected ? (
-                <div className="picks-group-progress__inline">
-                  <div className="picks-group-progress__inline-meta">
-                    <span>UNDERDOG LOCK</span>
-                    <strong>{member.hasUnderdogLock ? "SET" : "—"}</strong>
-                  </div>
+                <section className="picks-group-progress__comparison" aria-label={`${member.displayName} pick comparison`}>
+                  <header className="picks-group-progress__comparison-header">
+                    <div>
+                      <span>{member.displayName}'S PICKS</span>
+                      <strong>{member.completed}/{member.total} COMPLETE</strong>
+                    </div>
+                    {member.hasUnderdogLock ? <b>UNDERDOG LOCK SET</b> : null}
+                  </header>
                   {!locked ? (
-                    <p>Individual picks stay hidden until the event locks.</p>
+                    <div className="picks-group-progress__privacy">
+                      <strong>PICKS HIDDEN</strong>
+                      <p>Individual picks stay hidden until the event locks.</p>
+                    </div>
                   ) : (
-                    <div className="picks-group-progress__inline-picks">
+                    <div className="picks-group-progress__comparison-list">
                       {selectedPicks.map((pick) => (
-                        <div key={pick.boutId}>
-                          <span>{pick.fight}</span>
-                          <strong>{pick.memberPick}</strong>
-                          <small>{pick.same ? "SAME AS YOU" : `YOU: ${pick.myPick}`}</small>
-                        </div>
+                        <article
+                          className={`picks-group-progress__fight ${pick.same ? "is-same" : "is-different"}`}
+                          key={pick.boutId}
+                        >
+                          <div className="picks-group-progress__matchup">
+                            <b>{pick.fightNumber}</b>
+                            <span>{pick.fight}</span>
+                          </div>
+                          <div className="picks-group-progress__choices">
+                            <div>
+                              <small>{member.displayName}</small>
+                              <strong>{pick.memberPick}</strong>
+                            </div>
+                            <em>{pick.same ? "SAME" : "DIFF"}</em>
+                            <div className="is-you">
+                              <small>YOU</small>
+                              <strong>{pick.myPick}</strong>
+                            </div>
+                          </div>
+                        </article>
                       ))}
                     </div>
                   )}
-                </div>
+                </section>
               ) : null}
             </div>
           );
