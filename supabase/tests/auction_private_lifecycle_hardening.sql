@@ -270,3 +270,5 @@ begin
 end $$;
 
 rollback;
+
+\ir auction_playable_server_engine.sql
