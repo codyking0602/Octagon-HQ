@@ -128,7 +128,6 @@ describe("Auction playable server migration", () => {
     for (const requiredProof of [
       "prepared Auction rerolled",
       "anonymous role inherited an Auction command",
-      "generic challenge creation bypassed the Auction engine",
       "opening the route was treated as Auction acceptance",
       "recipient projection leaked the challenger sealed bid",
       "higher-bid resolution or arithmetic was incorrect",
@@ -143,6 +142,8 @@ describe("Auction playable server migration", () => {
       expect(databaseTest).toContain(requiredProof);
     }
 
+    expect(databaseTest).toContain("public.create_play_challenge(");
+    expect(databaseTest).toContain("pg_temp.expect_rejection(format(");
     expect(databaseTest).toContain(
       "public.submit_auction_bid(v_auction, v_round, v_revision, 5, null)",
     );
