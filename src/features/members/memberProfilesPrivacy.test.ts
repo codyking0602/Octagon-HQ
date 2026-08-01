@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   challengeIsComparisonOnly,
@@ -9,11 +10,11 @@ import {
 import type { PlayChallenge } from "../challenges/challengeModel";
 
 const migration = readFileSync(
-  new URL("../../../supabase/migrations/202607290001_member_profiles.sql", import.meta.url),
+  resolve(process.cwd(), "supabase/migrations/202607290001_member_profiles.sql"),
   "utf8",
 );
 const repository = readFileSync(
-  new URL("./memberProfilesRepository.ts", import.meta.url),
+  resolve(process.cwd(), "src/features/members/memberProfilesRepository.ts"),
   "utf8",
 );
 

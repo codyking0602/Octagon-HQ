@@ -1,16 +1,18 @@
 import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { memberAchievements, type MemberProfileSummary } from "./memberProfilesModel";
 
-const profilePage = readFileSync(new URL("./MemberProfilePage.tsx", import.meta.url), "utf8");
-const directoryPage = readFileSync(new URL("./MemberDirectoryPage.tsx", import.meta.url), "utf8");
-const avatarEditor = readFileSync(new URL("./MemberAvatarEditor.tsx", import.meta.url), "utf8");
-const identityControl = readFileSync(new URL("../identity/IdentityControl.tsx", import.meta.url), "utf8");
-const homePage = readFileSync(new URL("../home/HomePage.tsx", import.meta.url), "utf8");
-const mainEntry = readFileSync(new URL("../../main.tsx", import.meta.url), "utf8");
-const compactStyles = readFileSync(new URL("../../styles/member-profile-compact.css", import.meta.url), "utf8");
+const source = (path: string) => readFileSync(resolve(process.cwd(), path), "utf8");
+const profilePage = source("src/features/members/MemberProfilePage.tsx");
+const directoryPage = source("src/features/members/MemberDirectoryPage.tsx");
+const avatarEditor = source("src/features/members/MemberAvatarEditor.tsx");
+const identityControl = source("src/features/identity/IdentityControl.tsx");
+const homePage = source("src/features/home/HomePage.tsx");
+const mainEntry = source("src/main.tsx");
+const compactStyles = source("src/styles/member-profile-compact.css");
 const migration = readFileSync(
-  new URL("../../../supabase/migrations/202607290002_member_profile_polish.sql", import.meta.url),
+  resolve(process.cwd(), "supabase/migrations/202607290002_member_profile_polish.sql"),
   "utf8",
 );
 

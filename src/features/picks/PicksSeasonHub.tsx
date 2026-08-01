@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useInRouterContext, useSearchParams } from "react-router-dom";
 import {
   groupRankLabel,
   mainCardFightLabel,
@@ -243,8 +243,13 @@ function EventRecap({
   );
 }
 
-export function PicksSeasonHub({ history, loading }: { history: PickHistory; loading: boolean }) {
-  const [searchParams] = useSearchParams();
+interface PicksSeasonHubProps {
+  history: PickHistory;
+  loading: boolean;
+  searchParams: URLSearchParams;
+}
+
+function PicksSeasonHubContent({ history, loading, searchParams }: PicksSeasonHubProps) {
   const archivedEventIds = useMemo(
     () => history.events.map((event) => event.eventId),
     [history.events],
@@ -419,4 +424,15 @@ export function PicksSeasonHub({ history, loading }: { history: PickHistory; loa
       </details>
     </section>
   );
+}
+
+function RoutedPicksSeasonHub(props: Omit<PicksSeasonHubProps, "searchParams">) {
+  const [searchParams] = useSearchParams();
+  return <PicksSeasonHubContent {...props} searchParams={searchParams} />;
+}
+
+export function PicksSeasonHub(props: Omit<PicksSeasonHubProps, "searchParams">) {
+  const routed = useInRouterContext();
+  if (routed) return <RoutedPicksSeasonHub {...props} />;
+  return <PicksSeasonHubContent {...props} searchParams={new URLSearchParams(window.location.search)} />;
 }

@@ -12,17 +12,17 @@ describe("ranking profile watch actions", () => {
     action: resolveProfileWatchAction(fighter.slug),
   }));
 
-  it("restores a V1 signature fight for every ranked fighter", () => {
-    expect(Object.keys(profileSignatureFightUrls)).toHaveLength(allTime.length);
-    expect(actions.filter(({ action }) => action?.source === "signature")).toHaveLength(allTime.length);
-    expect(actions.filter(({ action }) => action?.source === "watch-moment")).toHaveLength(0);
+  it("restores the V1 signature fights and uses RDA's canonical watch moment", () => {
+    expect(Object.keys(profileSignatureFightUrls)).toHaveLength(allTime.length - 1);
+    expect(actions.filter(({ action }) => action?.source === "signature")).toHaveLength(allTime.length - 1);
+    expect(actions.filter(({ action }) => action?.source === "watch-moment")).toHaveLength(1);
     expect(actions.filter(({ action }) => action === null)).toHaveLength(0);
   });
 
   it("never routes a signature-fight action to UFC Fight Pass search", () => {
     actions.forEach(({ action }) => {
       expect(action?.url).not.toContain("ufcfightpass.com");
-      expect(action?.url).toMatch(/^https:\/\/(youtu\.be|www\.youtube\.com)\//);
+      expect(action?.url).toMatch(/^https:\/\/(youtu\.be|www\.youtube\.com|www\.ufc\.com)\//);
     });
   });
 

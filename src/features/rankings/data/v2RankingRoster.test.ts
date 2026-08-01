@@ -1,5 +1,5 @@
 import { existsSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { getFighter } from "../rankingModel";
 import {
@@ -11,7 +11,7 @@ import {
   type V2RankingRosterOverlay,
 } from "./v2RankingRoster";
 
-const projectRoot = fileURLToPath(new URL("../../../../", import.meta.url));
+const projectRoot = resolve(process.cwd());
 
 const sourceOverrides: Pick<
   V2RankingRosterOverlay,
@@ -113,14 +113,10 @@ describe("V2 ranking roster overlay", () => {
 
   it("uses the existing local Rafael dos Anjos assets", () => {
     expect(
-      existsSync(
-        `${projectRoot}public/assets/fighters/rafael-dos-anjos-thumb.webp`,
-      ),
+      existsSync(resolve(projectRoot, "public/assets/fighters/rafael-dos-anjos-thumb.webp")),
     ).toBe(true);
     expect(
-      existsSync(
-        `${projectRoot}public/assets/fighters/rafael-dos-anjos-profile.webp`,
-      ),
+      existsSync(resolve(projectRoot, "public/assets/fighters/rafael-dos-anjos-profile.webp")),
     ).toBe(true);
   });
 });
