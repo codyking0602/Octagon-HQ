@@ -187,20 +187,15 @@ jobs:
             echo "deliver-notification-push is not present in this exact deployment source; skipping."
           fi
 
-      - name: Configure canonical automatic monitoring scheduler
+      - name: Keep canonical automatic monitoring scheduler active
         if: ${{ hashFiles('supabase/migrations/202608090001_automatic_pick_monitoring_scheduler.sql') != '' }}
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
         run: |
           set -euo pipefail
-          if [ "$SOURCE_PR_NUMBER" = "0" ]; then
-            enabled=true
-          else
-            enabled=false
-          fi
-          PICK_MONITORING_SCHEDULER_ENABLED="$enabled" node scripts/configure-monitoring-scheduler.mjs
-          echo "EXPECTED_MONITORING_SCHEDULER_ENABLED=$enabled" >> "$GITHUB_ENV"
+          PICK_MONITORING_SCHEDULER_ENABLED=true node scripts/configure-monitoring-scheduler.mjs
+          echo "EXPECTED_MONITORING_SCHEDULER_ENABLED=true" >> "$GITHUB_ENV"
 
       - name: Verify migrations, functions, and production CORS
         shell: bash
