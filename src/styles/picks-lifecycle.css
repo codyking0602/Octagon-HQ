@@ -236,6 +236,148 @@
   color: var(--text-secondary);
 }
 
+/* Locked and live fight cards keep every detail while using a denser event-night layout. */
+.pick-bout-card:has(.pick-choice.is-read-only) {
+  gap: 8px;
+  padding: 10px 11px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .pick-bout-card__meta {
+  gap: 1px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .pick-bout-card__choices {
+  grid-template-columns: minmax(0, 1fr) 14px minmax(0, 1fr);
+  gap: 4px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .pick-choice {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  grid-template-rows: auto auto auto;
+  align-content: center;
+  align-items: center;
+  column-gap: 8px;
+  row-gap: 2px;
+  min-height: 58px;
+  padding: 7px 8px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .pick-fighter-thumbnail,
+.pick-bout-card.is-main-event:has(.pick-choice.is-read-only) .pick-fighter-thumbnail {
+  grid-column: 1;
+  grid-row: 1 / 4;
+  width: 34px;
+  height: 34px;
+  margin: 0;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .pick-choice > span {
+  display: block;
+  grid-column: 2;
+  min-height: 0;
+  overflow: hidden;
+  font-size: 11px;
+  line-height: 1.08;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-line-clamp: unset;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .pick-choice > small,
+.pick-bout-card:has(.pick-choice.is-read-only) .pick-choice > em {
+  grid-column: 2;
+  overflow: hidden;
+  font-size: 6px;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .pick-choice > em {
+  width: fit-content;
+  margin: 0;
+  padding: 3px 5px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .pick-bout-card__official {
+  min-height: 31px;
+  padding: 6px 8px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .pick-bout-card__official strong {
+  font-size: 10px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .pick-lock-readonly {
+  min-height: 25px;
+  padding: 0 8px;
+  font-size: 6px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .main-event-spotlight-trigger {
+  min-height: 46px;
+  padding: 9px 11px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .main-event-spotlight-trigger strong {
+  font-size: 12px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .picks-group-pick-reveal {
+  gap: 6px;
+  padding-top: 8px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .picks-group-pick-reveal__split {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .picks-group-pick-reveal__split > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  min-height: 30px;
+  padding: 5px 7px;
+  text-align: left;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .picks-group-pick-reveal__split strong {
+  flex: 0 0 auto;
+  font-size: 14px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .picks-group-pick-reveal__members {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .picks-group-pick-reveal__members > div {
+  display: grid;
+  align-content: center;
+  justify-content: stretch;
+  gap: 1px;
+  min-width: 0;
+  min-height: 34px;
+  padding: 5px 7px;
+  border: 1px solid rgba(255, 255, 255, .055);
+  background: rgba(255, 255, 255, .018);
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .picks-group-pick-reveal__members strong,
+.pick-bout-card:has(.pick-choice.is-read-only) .picks-group-pick-reveal__members span {
+  display: block;
+  max-width: none;
+  overflow: hidden;
+  font-size: 7px;
+  line-height: 1.15;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .picks-recap-card__record {
   min-width: 88px;
 }
@@ -311,6 +453,12 @@
   border-radius: 8px;
   outline: 2px solid var(--text-primary);
   outline-offset: 3px;
+}
+
+@media (min-width: 390px) {
+  .pick-bout-card:has(.pick-choice.is-read-only) .picks-group-pick-reveal__members {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (min-width: 640px) {
