@@ -73,6 +73,12 @@ describe("Auction private lifecycle foundation", () => {
     expect(migration).toContain("constraint auction_games_cancellation_audit");
     expect(migration).toContain("constraint auction_games_completed_result");
     expect(migration).toContain("Auction terminal state cannot change");
+    expect(migration).toContain(
+      "if v_round > (case when v_auction.mode_id = 'ultimate-fighter' then 10 else 8 end) then",
+    );
+    expect(migration).not.toContain(
+      "if v_round > case when v_auction.mode_id = 'ultimate-fighter' then 10 else 8 end then",
+    );
     expect(integrationSql).toContain("self-challenge was accepted");
     expect(integrationSql).toContain("negative bankroll was accepted");
     expect(integrationSql).toContain("excess selection count was accepted");
