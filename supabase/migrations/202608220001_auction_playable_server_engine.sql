@@ -140,6 +140,24 @@ begin
     raise exception 'Auction private row requires an Auction';
   end if;
 
+  if tg_table_name = 'auction_deck_entries' then
+    if new.deck_position > (
+      case when v_auction.mode_id = 'ultimate-fighter' then 10 else 8 end
+    ) then
+      raise exception 'Auction deck position exceeds the selected mode';
+    end if;
+    if not exists (
+      select 1
+      from private.auction_catalog catalog
+      where catalog.content_version = v_auction.content_version
+        and catalog.mode_id = v_auction.mode_id
+        and catalog.item_reference = new.private_item_reference
+    ) then
+      raise exception 'Auction deck item is not in the pinned catalog';
+    end if;
+    return new;
+  end if;
+
   if tg_table_name = 'auction_pending_bids' then
     if new.bidder_id not in (v_auction.challenger_id, v_auction.recipient_id) then
       raise exception 'Auction private row must belong to a participant';
@@ -250,7 +268,7 @@ begin
       case
         when p_random_order is null then random()
         else p_random_order[
-          row_number() over (order by catalog.item_reference)
+          (row_number() over (order by catalog.item_reference))::integer
         ]
       end as random_key
     from private.auction_catalog catalog
