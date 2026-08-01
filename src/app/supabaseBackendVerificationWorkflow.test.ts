@@ -9,6 +9,10 @@ const deploymentWorkflow = readFileSync(
   ".github/workflows/deploy-supabase.yml",
   "utf8",
 );
+const syncDeploymentVerification = readFileSync(
+  "scripts/verify-sync-function-deployment.mjs",
+  "utf8",
+);
 
 describe("Supabase backend verification release boundary", () => {
   it("resolves the last genuinely deployed frontend ancestor for non-runtime main commits", () => {
@@ -100,18 +104,25 @@ describe("Supabase backend verification release boundary", () => {
         "supabase/migrations/202608220004_auction_catalog_version_rotation.sql",
       ],
     ] as const;
-    const releaseOwners = [deploymentWorkflow, workflow];
 
-    for (const owner of releaseOwners) {
-      for (const [version, path] of playableMigrations) {
-        expect(owner).toContain(path);
-        expect(owner).toContain(`require_remote_migration "${version}"`);
-      }
+    expect(workflow).toContain(
+      "node scripts/verify-sync-function-deployment.mjs",
+    );
 
-      expect(owner).toContain(
-        "Auction playable server migrations 202608220001 through 202608220004 verified in linked production history",
+    for (const [version, path] of playableMigrations) {
+      expect(deploymentWorkflow).toContain(path);
+      expect(deploymentWorkflow).toContain(
+        `require_remote_migration "${version}"`,
       );
+      expect(syncDeploymentVerification).toContain(`"${version}"`);
     }
+
+    expect(deploymentWorkflow).toContain(
+      "Auction playable server migrations 202608220001 through 202608220004 verified in linked production history",
+    );
+    expect(syncDeploymentVerification).toContain(
+      "PASS: Auction migrations 202608220001 through 202608220004 are recorded in linked remote history.",
+    );
   });
 
   it("verifies the live shell and records the resolved SHA explicitly", () => {
