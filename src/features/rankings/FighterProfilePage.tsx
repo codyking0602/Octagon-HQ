@@ -37,11 +37,7 @@ export function profileCopy(copy: string, rank: number) {
 }
 
 export function whyNotProfileCopy(fighter: { rank: number; slug: string; whyNotHigher?: string }) {
-  if (fighter.rank !== 1) return fighter.whyNotHigher ?? "";
-  if (fighter.slug === "jon-jones") {
-    return "He cannot rank higher. The argument against a runaway #1 case is based on close fights, inactivity, heavyweight sample size, and outside-the-cage controversy—not a stronger UFC resume above him.";
-  }
-  return fighter.whyNotHigher || "They cannot rank higher on this board. The debate is whether the gap over the fighters below is large enough, not whether a stronger UFC resume currently sits above them.";
+  return fighter.whyNotHigher ?? "";
 }
 
 export default function FighterProfilePage() {
