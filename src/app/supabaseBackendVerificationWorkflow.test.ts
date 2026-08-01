@@ -39,6 +39,23 @@ describe("Supabase backend verification release boundary", () => {
     expect(workflow).toContain("Runtime paths: ${runtimeChanges.join(\", \")}");
   });
 
+  it("executes both Auction SQL suites against a fresh local database", () => {
+    expect(workflow).toContain(
+      "- name: Execute Auction lifecycle SQL tests on a fresh local database",
+    );
+    expect(workflow).toContain("supabase db start");
+    expect(workflow).toContain("supabase/tests/auction_private_lifecycle.sql");
+    expect(workflow).toContain(
+      "supabase/tests/auction_private_lifecycle_hardening.sql",
+    );
+    expect(workflow).toContain(
+      'psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"',
+    );
+    expect(workflow).toContain(
+      "Auction lifecycle SQL tests: executed against a fresh local Supabase database",
+    );
+  });
+
   it("verifies the live shell and records the resolved SHA explicitly", () => {
     expect(workflow).toContain(
       "EXPECTED_SOURCE_SHA: ${{ steps.live_frontend.outputs.sha }}",
