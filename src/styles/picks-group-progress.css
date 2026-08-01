@@ -63,7 +63,7 @@
   display: grid;
   font: inherit;
   gap: 10px;
-  grid-template-columns: minmax(0, 1fr) auto 12px;
+  grid-template-columns: 24px minmax(0, 1fr) auto 12px;
   min-height: 38px;
   padding: 4px 14px 4px 16px;
   text-align: left;
@@ -104,6 +104,29 @@
 }
 
 .picks-group-progress__member > button.is-current-user { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+
+.picks-group-progress__member-status {
+  align-items: center;
+  border: 1px solid var(--border-subtle);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .035);
+  color: var(--text-muted);
+  display: flex;
+  font-size: 8px;
+  font-weight: 950;
+  height: 22px;
+  justify-content: center;
+  letter-spacing: 0;
+  width: 22px;
+}
+
+.picks-group-progress__member > button.is-complete .picks-group-progress__member-status {
+  border-color: rgba(72, 174, 82, .58);
+  background: rgba(72, 174, 82, .14);
+  color: #70c977;
+  font-size: 11px;
+}
+
 .picks-group-progress__member > button strong {
   min-width: 0;
   overflow: hidden;
