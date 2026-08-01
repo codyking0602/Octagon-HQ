@@ -289,6 +289,12 @@ jobs:
           require_remote_migration "202608200027" "Fighters to Watch durable event migration not deployed"
           require_remote_migration "202608200028" "What's New sync contract v3 migration not deployed"
           require_remote_migration "202608200030" "Gable production repair migration not deployed"
+          require_remote_migration "202608210002" "Auction private lifecycle migration not deployed"
+          require_remote_migration "202608210003" "Auction lifecycle hardening migration not deployed"
+          require_remote_migration "202608220001" "Auction playable server engine migration not deployed"
+          require_remote_migration "202608220002" "Auction playable server hardening migration not deployed"
+          require_remote_migration "202608220003" "Auction round notification hardening migration not deployed"
+          require_remote_migration "202608220004" "Auction catalog version rotation migration not deployed"
 
       - name: Verify deployed functions and production CORS
         shell: bash
@@ -469,6 +475,7 @@ jobs:
             echo "- Required Edge Function secret names: present"
             echo "- Existing profile, challenge, Your HQ, Picks, scoring, recap, reveal, Fight Night, and What's New migrations: deployed remotely"
             echo "- Event setup and card review migration: deployed remotely"
+            echo "- Auction lifecycle and playable server migrations 202608210002 through 202608220004: deployed remotely"
             echo "- Production Picks monitoring scheduler: active, canonical, and token-configured without invoking the runner or provider"
             echo "- Authenticated Event Setup preview: supplied MMA Mania URL returned the exact clean four-fight main card without changing the staged or live cards"
             echo "- Private staged draft: exact clean UFC Belgrade card verified"
