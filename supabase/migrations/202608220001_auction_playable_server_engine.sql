@@ -146,15 +146,6 @@ begin
     ) then
       raise exception 'Auction deck position exceeds the selected mode';
     end if;
-    if not exists (
-      select 1
-      from private.auction_catalog catalog
-      where catalog.content_version = v_auction.content_version
-        and catalog.mode_id = v_auction.mode_id
-        and catalog.item_reference = new.private_item_reference
-    ) then
-      raise exception 'Auction deck item is not in the pinned catalog';
-    end if;
     return new;
   end if;
 
@@ -1634,7 +1625,10 @@ as $$
       select jsonb_agg(
         jsonb_build_object(
           'deck_position', deck.deck_position,
-          'item_reference', deck.private_item_reference,
+          'item_reference', case
+            when catalog.item_reference is not null
+              then deck.private_item_reference
+          end,
           'display_label', catalog.display_label,
           'awarded_to', award.awarded_to,
           'category', award.visible_category,
@@ -1646,7 +1640,7 @@ as $$
       join private.auction_deck_entries deck
         on deck.id = award.deck_entry_id
         and deck.auction_id = award.auction_id
-      join private.auction_catalog catalog
+      left join private.auction_catalog catalog
         on catalog.content_version = auction.content_version
         and catalog.mode_id = auction.mode_id
         and catalog.item_reference = deck.private_item_reference
