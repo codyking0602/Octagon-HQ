@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import { appendFileSync, existsSync } from "node:fs";
 
 const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
@@ -6,12 +7,46 @@ const expectedSha = process.env.EXPECTED_SYNC_SOURCE_SHA?.trim() ?? "";
 const productionOrigin = process.env.OCTAGON_PRODUCTION_ORIGIN
   ?? "https://octagon.hq-app.workers.dev";
 const verifyExactSource = process.env.GITHUB_EVENT_NAME !== "pull_request";
+const requiredAuctionMigrationVersions = [
+  "202608220001",
+  "202608220002",
+  "202608220003",
+  "202608220004",
+];
 
 if (!accessToken || !projectId || !expectedSha) {
   throw new Error("Exact sync-function verification is not configured.");
 }
 if (!/^[0-9a-f]{40}$/i.test(expectedSha)) {
   throw new Error("EXPECTED_SYNC_SOURCE_SHA must be a full commit SHA.");
+}
+
+function verifyAuctionMigrationHistory() {
+  const migrationList = execFileSync(
+    "supabase",
+    ["migration", "list", "--linked"],
+    { encoding: "utf8" },
+  );
+  const rows = migrationList.split("\n").map((line) => {
+    const columns = line.replaceAll("│", "|").split("|");
+    return {
+      local: (columns[0] ?? "").replaceAll(/[^0-9]/g, ""),
+      remote: (columns[1] ?? "").replaceAll(/[^0-9]/g, ""),
+    };
+  });
+
+  for (const version of requiredAuctionMigrationVersions) {
+    const row = rows.find((candidate) => candidate.local === version);
+    if (!row || row.remote !== version) {
+      throw new Error(
+        `Auction migration ${version} is not recorded in linked remote history.`,
+      );
+    }
+  }
+
+  console.log(
+    "PASS: Auction migrations 202608220001 through 202608220004 are recorded in linked remote history.",
+  );
 }
 
 async function readBody(response) {
@@ -22,6 +57,8 @@ async function readBody(response) {
     return { message: text };
   }
 }
+
+verifyAuctionMigrationHistory();
 
 const keysResponse = await fetch(
   `https://api.supabase.com/v1/projects/${projectId}/api-keys?reveal=true`,
