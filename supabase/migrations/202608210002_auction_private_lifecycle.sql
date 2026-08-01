@@ -231,7 +231,7 @@ begin
   if v_profile_id not in (v_auction.challenger_id, v_auction.recipient_id) then
     raise exception 'Auction private row must belong to a participant';
   end if;
-  if v_round > case when v_auction.mode_id = 'ultimate-fighter' then 10 else 8 end then
+  if v_round > (case when v_auction.mode_id = 'ultimate-fighter' then 10 else 8 end) then
     raise exception 'Auction round exceeds the selected mode';
   end if;
   return new;
