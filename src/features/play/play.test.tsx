@@ -34,7 +34,7 @@ function renderPlay(path = "/play") {
 describe("Play registry", () => {
   beforeEach(() => window.localStorage.clear());
 
-  it("preserves the approved six-game order and explanatory descriptions", () => {
+  it("preserves the approved game order and explanatory descriptions", () => {
     expect(playGames.map((game) => game.id)).toEqual([
       "find-leader",
       "wavelength",
@@ -42,6 +42,7 @@ describe("Play registry", () => {
       "blind-rank",
       "keep-cut",
       "better-than",
+      "auction",
     ]);
     expect(playGames.find((game) => game.id === "wavelength")?.description).toContain("hidden 1–100 rating");
     expect(playGames.find((game) => game.id === "blind-resume")?.description).toContain("UFC career");
@@ -49,7 +50,7 @@ describe("Play registry", () => {
     expect(playGames.find((game) => game.id === "blind-rank")?.description).toContain("slot is locked");
   });
 
-  it("renders all six games and opens the routed ten-fighter daily board", () => {
+  it("renders every game and opens the routed ten-fighter daily board", () => {
     const { container } = renderPlay();
     const titles = [...container.querySelectorAll(".play-game-card > strong")].map((node) => node.textContent);
     expect(titles).toEqual(playGames.map((game) => game.title));

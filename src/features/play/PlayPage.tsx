@@ -47,6 +47,7 @@ const LIVE_GAME_ROUTES: Partial<Record<PlayGameId, string>> = {
   "blind-rank": "/play/blind-rank",
   "keep-cut": "/play/keep-cut",
   "better-than": "/play/better-than",
+  auction: "/play/auction",
 };
 
 const DIVISION_ABBREVIATIONS: Record<string, string> = {
@@ -588,7 +589,9 @@ export default function PlayPage() {
                 onClick={game.id === "find-leader" ? openReplayableFindLeader : () => navigate(route)}
               >
                 <span className="play-game-card__icon">{game.icon}</span>
-                <span className="play-game-card__status">PLAY NOW</span>
+                <span className={`play-game-card__status${game.availability === "preview" ? " is-preview" : ""}`}>
+                  {game.availability === "preview" ? "PREVIEW" : "PLAY NOW"}
+                </span>
                 <strong>{game.title}</strong>
                 <small>{game.description}</small>
                 <em>OPEN GAME →</em>

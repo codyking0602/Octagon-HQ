@@ -9,6 +9,7 @@ const expectedIds: PlayGameId[] = [
   "blind-rank",
   "keep-cut",
   "better-than",
+  "auction",
 ];
 
 describe("Play game lineup contracts", () => {
@@ -76,7 +77,7 @@ describe("Play game lineup contracts", () => {
     });
   });
 
-  it("keeps all six games challenge eligible with defined completion states", () => {
+  it("keeps every game challenge eligible with defined completion states", () => {
     expect(playGames.every((game) => game.lineup.challengeEligible)).toBe(true);
     expect(playGameDefinition("find-leader").lineup.completionState).toBe("leader-eliminated-or-nine-safe");
     expect(playGameDefinition("wavelength").lineup.completionState).toBe("fourth-guess-locked");
@@ -84,5 +85,6 @@ describe("Play game lineup contracts", () => {
     expect(playGameDefinition("blind-rank").lineup.completionState).toBe("five-slots-locked");
     expect(playGameDefinition("keep-cut").lineup.completionState).toBe("eight-decisions-locked");
     expect(playGameDefinition("better-than").lineup.completionState).toBe("claim-locked");
+    expect(playGameDefinition("auction").lineup.completionState).toBe("auction-complete");
   });
 });

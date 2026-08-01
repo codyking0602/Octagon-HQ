@@ -1,0 +1,22 @@
+.auction-page { gap: 16px; }
+.auction-hero {
+  gap: 10px;
+  padding: 20px;
+  background: radial-gradient(circle at 90% 0, rgba(210, 10, 10, .18), transparent 42%), linear-gradient(145deg, #19191d, #080808);
+}
+.auction-hero h1 { margin: 0; font-size: clamp(40px, 12vw, 62px); line-height: .9; letter-spacing: -.06em; }
+.auction-hero > p:not(.eyebrow) { margin: 0; color: var(--text-secondary); font-size: 14px; line-height: 1.5; }
+.auction-hero__notice { justify-self: start; margin-top: 5px; padding: 8px 11px; border: 1px solid rgba(240, 23, 23, .5); border-radius: 999px; color: var(--ufc-red-strong); font-size: 9px; letter-spacing: .11em; }
+.auction-catalog { display: grid; gap: 13px; }
+.auction-catalog > header { display: grid; gap: 5px; }
+.auction-catalog h2 { margin: 0; font-size: 28px; letter-spacing: -.04em; }
+.auction-catalog header > p:not(.eyebrow) { margin: 0; color: var(--text-secondary); font-size: 13px; }
+.auction-catalog ol { display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; }
+.auction-catalog li { display: grid; grid-template-columns: 31px 1fr; align-items: center; gap: 10px; min-height: 53px; padding: 10px 13px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface); }
+.auction-catalog li span { color: var(--ufc-red-strong); font-size: 10px; font-weight: 950; letter-spacing: .08em; }
+.auction-catalog li strong { font-size: 14px; line-height: 1.25; }
+.play-game-card__status.is-preview { background: rgba(240, 177, 23, .14); color: #f5ca68; }
+
+@media (min-width: 680px) {
+  .auction-catalog ol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

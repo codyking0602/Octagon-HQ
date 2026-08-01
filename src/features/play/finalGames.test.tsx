@@ -131,10 +131,11 @@ describe("Final Play game presentation", () => {
     Object.defineProperty(window, "scrollTo", { value: vi.fn(), writable: true });
   });
 
-  it("shows all six Play Hub cards as live buttons", () => {
+  it("shows the six live games and the Auction preview as routed buttons", () => {
     const { container } = renderAt(<PlayPage />, "/play");
-    expect(container.querySelectorAll(".play-games__grid .play-game-card")).toHaveLength(6);
-    expect(container.querySelectorAll(".play-games__grid button.play-game-card")).toHaveLength(6);
+    expect(container.querySelectorAll(".play-games__grid .play-game-card")).toHaveLength(7);
+    expect(container.querySelectorAll(".play-games__grid button.play-game-card")).toHaveLength(7);
+    expect(container.querySelector(".play-game-card__status.is-preview")).toHaveTextContent("PREVIEW");
   });
 
   it("matches the Blind Rank square thumbnail treatment in Keep Cut", () => {
