@@ -51,7 +51,7 @@ describe("official Picks result lifecycle migration", () => {
       "grant execute on function public.transition_pick_event(text, text) to service_role;",
     );
     expect(migration).not.toMatch(
-      /grant execute on function public\.(record_official_pick_bout_result|transition_pick_event).*to (anon|authenticated)/,
+      /grant execute on function public\.(record_official_pick_bout_result|transition_pick_event)[^;]*to (anon|authenticated)/,
     );
   });
 

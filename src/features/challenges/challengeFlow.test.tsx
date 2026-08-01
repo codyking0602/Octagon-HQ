@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { IdentityProvider } from "../identity/IdentityProvider";
 import type { IdentityGateway } from "../identity/identityGateway";
 import PlayPage from "../play/PlayPage";
+import { FindLeaderHistoryProvider } from "../play/FindLeaderHistoryProvider";
 import { centralDay, dailyFindLeaderBoard } from "../play/findLeaderEngine";
 import { ChallengeCenter } from "./ChallengeCenter";
 import { ChallengeProvider } from "./ChallengeProvider";
@@ -55,9 +56,11 @@ function renderWithProfile(
 ) {
   return render(
     <IdentityProvider gateway={identityGateway(profile)}>
-      <ChallengeProvider repository={repository}>
-        <MemoryRouter initialEntries={[path]}>{element}</MemoryRouter>
-      </ChallengeProvider>
+      <FindLeaderHistoryProvider repository={null}>
+        <ChallengeProvider repository={repository}>
+          <MemoryRouter initialEntries={[path]}>{element}</MemoryRouter>
+        </ChallengeProvider>
+      </FindLeaderHistoryProvider>
     </IdentityProvider>,
   );
 }
@@ -111,9 +114,11 @@ describe("real profile Challenge Center flow", () => {
     const leader = board.candidates.find((fighter) => fighter.id === board.leaderId)!;
     const create = vi.fn(async (_draft: RemoteChallengeDraft) => "MATCH123");
     const findProfile = vi.fn(async () => shane);
-    const repository = fakeRepository({ create, findProfile });
+    const load = vi.fn(async () => ({ challenges: [], profiles: [] }));
+    const repository = fakeRepository({ create, findProfile, load });
 
     const creatorView = renderWithProfile(<PlayPage />, `/play/find-leader?day=${day}`, cody, repository);
+    await waitFor(() => expect(load).toHaveBeenCalled());
     fireEvent.click(leaderButton(creatorView.container, leader.name)!);
     fireEvent.click(screen.getByRole("button", { name: "CHALLENGE SOMEONE" }));
 
@@ -191,7 +196,7 @@ describe("real profile Challenge Center flow", () => {
     renderWithProfile(<ChallengeCenter />, "/play", cody, repository);
 
     expect(await screen.findByRole("heading", { name: "CODY's matchups" })).toBeTruthy();
-    expect(screen.getByRole("tab", { name: "ALL 1" })).toBeTruthy();
+    expect(await screen.findByRole("tab", { name: "ALL 1" })).toBeTruthy();
     expect(screen.getByRole("tab", { name: "RECEIVED 0" })).toBeTruthy();
     expect(screen.getByRole("tab", { name: "SENT 1" })).toBeTruthy();
     expect(screen.getByText("WAITING")).toBeTruthy();

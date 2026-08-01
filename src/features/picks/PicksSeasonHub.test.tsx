@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
+import { MemoryRouter } from "react-router-dom";
 import type { PickHistory } from "./picksModel";
 import { PicksSeasonHub } from "./PicksSeasonHub";
 
@@ -101,16 +102,16 @@ const history: PickHistory = {
 
 describe("PicksSeasonHub", () => {
   it("starts compact and summarizes the current member with win percentage", () => {
-    render(<PicksSeasonHub history={history} loading={false} />);
+    render(<MemoryRouter><PicksSeasonHub history={history} loading={false} /></MemoryRouter>);
 
     expect(screen.getByText("2026 SEASON")).toBeInTheDocument();
     expect(screen.getByText("T-1 OF 4")).toBeInTheDocument();
     expect(screen.getByText("12-5 · 70.6% WIN · 48 PTS")).toBeInTheDocument();
-    expect(screen.queryByText("Season leaderboard")).not.toBeInTheDocument();
+    expect(screen.getByText("STANDINGS & EVENTS").closest("details")).not.toHaveAttribute("open");
   });
 
   it("opens to a fluid standings table and keeps tied point totals tied", () => {
-    render(<PicksSeasonHub history={history} loading={false} />);
+    render(<MemoryRouter><PicksSeasonHub history={history} loading={false} /></MemoryRouter>);
 
     fireEvent.click(screen.getByText("STANDINGS & EVENTS"));
 
@@ -123,13 +124,13 @@ describe("PicksSeasonHub", () => {
   });
 
   it("switches to the expandable completed-event archive", () => {
-    render(<PicksSeasonHub history={history} loading={false} />);
+    render(<MemoryRouter><PicksSeasonHub history={history} loading={false} /></MemoryRouter>);
 
     fireEvent.click(screen.getByText("STANDINGS & EVENTS"));
     fireEvent.click(screen.getByRole("tab", { name: "EVENTS" }));
 
     expect(screen.getByText("1 COMPLETED EVENT")).toBeInTheDocument();
-    expect(screen.getByText("UFC Fight Night")).toBeInTheDocument();
+    expect(screen.getByText("UFC Fight Night Recap")).toBeInTheDocument();
     expect(screen.getByText("Ankalaev vs. Guskov")).toBeInTheDocument();
   });
 });

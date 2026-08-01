@@ -9,27 +9,26 @@ describe("Picks group progress presentation", () => {
   it("stays collapsed by default and shows completion counts", () => {
     expect(component).toContain('<details className="surface-card picks-group-progress">');
     expect(component).not.toContain('<details open');
-    expect(component).toContain("`${completedMembers}/${members.length} COMPLETE`");
+    expect(component).toContain("{completedMembers}/{members.length} COMPLETE");
     expect(component).toContain("{member.completed}/{member.total}");
   });
 
-  it("shows member status without revealing pre-lock fighter choices", () => {
+  it("shows member completion counts without revealing pre-lock fighter choices", () => {
     expect(component).toContain('if (!selected || !locked) return []');
     expect(component).toContain("Individual picks stay hidden until the event locks.");
-    expect(component).toContain("COMPLETE");
-    expect(component).toContain("IN PROGRESS");
-    expect(component).toContain("NOT STARTED");
+    expect(component).toContain("{member.completed}/{member.total}");
   });
 
   it("supports post-lock comparison against the current user", () => {
     expect(component).toContain("SAME AS YOU");
     expect(component).toContain("YOU: ${pick.myPick}");
-    expect(component).toContain("UNDERDOG LOCK SET");
+    expect(component).toContain("UNDERDOG LOCK");
+    expect(component).toContain('member.hasUnderdogLock ? "SET" : "—"');
   });
 
   it("uses the existing Picks stylesheet owner", () => {
     expect(entry).toContain('import "./styles/picks-group-progress.css";');
     expect(styles).toContain(".picks-group-progress");
-    expect(styles).toContain(".picks-member-progress-dialog");
+    expect(styles).toContain(".picks-group-progress__inline");
   });
 });

@@ -79,7 +79,7 @@ describe("Play registry", () => {
     fireEvent.click(fighterCards[leaderIndex]);
 
     const actionLabels = [...container.querySelectorAll(".game-result-actions button")].map((button) => button.textContent);
-    expect(actionLabels).toEqual(["CHALLENGE SOMEONE", "REPLAY", "ALL GAMES"]);
+    expect(actionLabels).toEqual(["CHALLENGE SOMEONE", "REPLAY CHALLENGE", "ALL GAMES"]);
   });
 });
 

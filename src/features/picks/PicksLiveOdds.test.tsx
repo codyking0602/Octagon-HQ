@@ -1,11 +1,16 @@
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { MemoryRouter } from "react-router-dom";
 import { IdentityProvider } from "../identity/IdentityProvider";
 import type { IdentityGateway } from "../identity/identityGateway";
 import PicksPage from "./PicksPage";
 import { PicksProvider } from "./PicksProvider";
 import type { PickEvent } from "./picksModel";
 import type { PicksRepository } from "./picksRepository";
+
+vi.mock("./picksGroupProgressRepository", () => ({
+  loadPickGroupProgress: vi.fn(async () => []),
+}));
 
 const profile = {
   id: "11111111-1111-4111-8111-111111111111",
@@ -97,19 +102,21 @@ describe("Picks live odds", () => {
   it("shows canonical American odds, favorite status, sportsbook freshness, and underdog eligibility", async () => {
     const repo = repository();
     render(
-      <IdentityProvider gateway={gateway()}>
-        <PicksProvider repository={repo.value}><PicksPage /></PicksProvider>
-      </IdentityProvider>,
+      <MemoryRouter>
+        <IdentityProvider gateway={gateway()}>
+          <PicksProvider repository={repo.value}><PicksPage /></PicksProvider>
+        </IdentityProvider>
+      </MemoryRouter>,
     );
 
     expect(await screen.findByText("-180 · FAVORITE")).toBeInTheDocument();
     expect(screen.getByText("+155")).toBeInTheDocument();
-    expect(screen.getByText("SPORTSBOOK ODDS")).toBeInTheDocument();
+    expect(screen.getByLabelText("Sportsbook odds source")).toBeInTheDocument();
     expect(screen.getByText(/DraftKings · UPDATED/i)).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: /Bogdan Guskov/i }));
-    expect(await screen.findByRole("button", { name: "MAKE THIS MY UNDERDOG LOCK" })).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "MAKE THIS MY UNDERDOG LOCK" }));
+    expect(await screen.findByRole("button", { name: "☆ LOCK FOR +2" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "☆ LOCK FOR +2" }));
 
     await waitFor(() => expect(repo.setUnderdogLock).toHaveBeenCalledWith(
       event.eventId,

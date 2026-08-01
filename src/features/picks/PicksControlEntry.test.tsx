@@ -8,6 +8,10 @@ import { PicksProvider } from "./PicksProvider";
 import type { PickEvent } from "./picksModel";
 import type { PicksRepository } from "./picksRepository";
 
+vi.mock("./picksGroupProgressRepository", () => ({
+  loadPickGroupProgress: vi.fn(async () => []),
+}));
+
 const profile = {
   id: "11111111-1111-4111-8111-111111111111",
   displayName: "CODY",
@@ -105,7 +109,7 @@ describe("Fight Night control entry", () => {
   it("shows the separate control route only when the backend grants access", async () => {
     renderPage(event);
 
-    const link = await screen.findByRole("link", { name: "OPEN FIGHT NIGHT CONTROL" });
+    const link = await screen.findByRole("link", { name: "MANAGE EVENT ›" });
     expect(link).toHaveAttribute("href", "/picks/control");
   });
 
@@ -113,6 +117,6 @@ describe("Fight Night control entry", () => {
     renderPage({ ...event, canControl: false });
 
     expect(await screen.findByRole("heading", { name: "UFC Control Entry" })).toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: "OPEN FIGHT NIGHT CONTROL" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "MANAGE EVENT ›" })).not.toBeInTheDocument();
   });
 });

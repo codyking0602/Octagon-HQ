@@ -147,10 +147,10 @@ describe("Monitoring Inbox", () => {
     renderPage(repository(inbox));
 
     expect(await screen.findByRole("heading", { name: "Monitoring Inbox" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Scheduler active" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Scheduler active" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "UFC Fight Night" })).toBeInTheDocument();
     expect(screen.getByText("Red Fighter vs. Blue Fighter")).toBeInTheDocument();
-    expect(screen.getByText("Fight order changed.")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Fight order changed." })).toBeInTheDocument();
     expect(screen.getByText("42")).toBeInTheDocument();
     expect(screen.getByText("1", { selector: ".monitoring-summary strong" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "EVENT SETUP" })).toHaveAttribute("href", "/picks/setup");

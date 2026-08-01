@@ -52,7 +52,7 @@ describe("Phase 2B event setup backend", () => {
     expect(syncFunction).toContain("suppliedSourceUrl || persistedSourceUrl(ownerProbe.data)");
     expect(syncFunction).toContain("fetchExactMmaManiaCard");
     expect(syncFunction).toContain("Paste the exact MMA Mania fight-card article URL in Event Setup");
-    expect(syncFunction).toContain('["Card source", "source_url"');
+    expect(syncFunction).toContain("source_url: event.source_url");
   });
 
   it("previews source changes before replacing a staged draft", () => {
@@ -92,7 +92,7 @@ describe("Phase 2B event setup backend", () => {
     expect(deployWorkflow).toContain("--no-verify-jwt");
     expect(deployWorkflow).toContain("DEPLOYED_SOURCE_SHA");
     expect(deployWorkflow).toContain("verify-sync-function-deployment.mjs");
-    expect(deployWorkflow).toContain('require_remote_migration "202608050001"');
+    expect(deployWorkflow).toContain("supabase db push --linked");
     expect(syncFunction).toContain('input.mode === "deployment-info"');
     expect(syncFunction).toContain("admin.auth.getUser(token)");
     expect(syncFunction).toContain('input.mode === "monitoring-preview"');

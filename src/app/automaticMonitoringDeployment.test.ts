@@ -66,9 +66,9 @@ describe("automatic Picks monitoring deployment", () => {
     expect(runner).toContain('admin.rpc("release_pick_monitoring_schedule"');
   });
 
-  it("records evidence only and never mutates Picks or publishes a card", () => {
+  it("records evidence and applies canonical live odds without publishing a card or member pick", () => {
     expect(migration).toContain("pick_monitoring_schedule_state");
-    expect(runner).toContain('admin.rpc("record_pick_monitoring_run"');
+    expect(runner).toContain('admin.rpc("record_pick_monitoring_run_and_apply_odds"');
     expect(`${migration}\n${runner}`).not.toMatch(/publish_pick_event_draft|stage_pick_event_draft|submit_pick|record_pick_result|delete from public\.pick_events|update public\.pick_events/);
   });
 });

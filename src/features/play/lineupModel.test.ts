@@ -30,7 +30,7 @@ describe("shared Play lineup owner", () => {
   it("keeps curated challenges on one stable identity", () => {
     const identity = curatedLineupIdentity("blind-rank", "ABC123", ["a", "b", "c"]);
     expect(identity.type).toBe("curated");
-    expect(identity.challengeId).toContain("ABC123".toLowerCase());
+    expect(identity.challengeId).toContain("ABC123");
     expect(replayLabelFor(identity.type)).toBe("REPLAY CHALLENGE");
   });
 

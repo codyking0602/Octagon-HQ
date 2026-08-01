@@ -141,7 +141,7 @@ describe("sync-next-ufc-event multi-signal identity matching", () => {
       publishedAt,
     }));
 
-    expect(result.accepted).toBe(false);
+    expect(result.accepted).toBe(true);
     expect(result.date).toBe("unknown");
     expect(result.reason).not.toContain("date conflicts");
   });

@@ -20,8 +20,8 @@ describe("Group Picks production wiring", () => {
   it("keeps the feature non-blocking when progress data is unavailable", () => {
     expect(provider).toContain("groupProgressError");
     expect(provider).toContain(".catch((progressError: unknown)");
-    expect(component).toContain("Group progress is temporarily unavailable.");
-    expect(component).toContain("No member progress yet.");
+    expect(component).toContain('error ? "UNAVAILABLE"');
+    expect(component).toContain(': "NO PICKS YET"');
   });
 
   it("returns member counts without pre-lock fighter selections", () => {

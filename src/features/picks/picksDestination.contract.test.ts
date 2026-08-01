@@ -1,9 +1,9 @@
 import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const seasonHub = readFileSync(
-  fileURLToPath(new URL("./PicksSeasonHub.tsx", import.meta.url)),
+  resolve(process.cwd(), "src/features/picks/PicksSeasonHub.tsx"),
   "utf8",
 );
 

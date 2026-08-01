@@ -1,11 +1,16 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { MemoryRouter } from "react-router-dom";
 import { IdentityProvider } from "../identity/IdentityProvider";
 import type { IdentityGateway } from "../identity/identityGateway";
 import PicksPage from "./PicksPage";
 import { PicksProvider } from "./PicksProvider";
 import type { PickEvent, PickHistory } from "./picksModel";
 import type { PicksRepository } from "./picksRepository";
+
+vi.mock("./picksGroupProgressRepository", () => ({
+  loadPickGroupProgress: vi.fn(async () => []),
+}));
 
 const cody = {
   id: "11111111-1111-4111-8111-111111111111",
@@ -174,11 +179,13 @@ function repository(currentEvent: PickEvent | null, history: PickHistory = empty
 
 function renderPage(currentEvent: PickEvent | null, history: PickHistory = emptyHistory) {
   return render(
-    <IdentityProvider gateway={gateway()}>
-      <PicksProvider repository={repository(currentEvent, history)}>
-        <PicksPage />
-      </PicksProvider>
-    </IdentityProvider>,
+    <MemoryRouter>
+      <IdentityProvider gateway={gateway()}>
+        <PicksProvider repository={repository(currentEvent, history)}>
+          <PicksPage />
+        </PicksProvider>
+      </IdentityProvider>
+    </MemoryRouter>,
   );
 }
 
@@ -208,10 +215,12 @@ describe("Picks group reveals", () => {
   it("keeps the same group reveal in the completed fight-by-fight recap", async () => {
     renderPage(null, completedHistory);
 
-    const toggle = await screen.findByText("VIEW FIGHT-BY-FIGHT RESULTS");
-    fireEvent.click(toggle.closest("summary")!);
+    await screen.findByText("STANDINGS & EVENTS");
+    fireEvent.click(screen.getByText("STANDINGS & EVENTS"));
+    fireEvent.click(screen.getByRole("tab", { name: "EVENTS" }));
+    fireEvent.click(screen.getByRole("button", { name: /OPEN FULL RECAP/i }));
 
-    expect(screen.getByText("HOW EVERYONE PICKED")).toBeInTheDocument();
+    expect(await screen.findByText("HOW EVERYONE PICKED")).toBeInTheDocument();
     expect(screen.getByText("3 ENTERED")).toBeInTheDocument();
     expect(screen.getByText("SHANE")).toBeInTheDocument();
     expect(screen.getByText("TONY")).toBeInTheDocument();

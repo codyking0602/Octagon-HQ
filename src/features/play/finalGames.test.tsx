@@ -4,6 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ChallengeProvider } from "../challenges/ChallengeProvider";
 import { IdentityProvider } from "../identity/IdentityProvider";
+import { FindLeaderHistoryProvider } from "./FindLeaderHistoryProvider";
 import BetterThanPage from "./BetterThanPage";
 import KeepCutPage from "./KeepCutPage";
 import PlayPage from "./PlayPage";
@@ -29,9 +30,11 @@ import { getPlayFighter } from "./playFighterPool";
 function renderAt(element: ReactNode, path: string) {
   return render(
     <IdentityProvider gateway={null}>
-      <ChallengeProvider repository={null}>
-        <MemoryRouter initialEntries={[path]}>{element}</MemoryRouter>
-      </ChallengeProvider>
+      <FindLeaderHistoryProvider repository={null}>
+        <ChallengeProvider repository={null}>
+          <MemoryRouter initialEntries={[path]}>{element}</MemoryRouter>
+        </ChallengeProvider>
+      </FindLeaderHistoryProvider>
     </IdentityProvider>,
   );
 }
@@ -142,7 +145,7 @@ describe("Final Play game presentation", () => {
     const photo = container.querySelector<HTMLImageElement>(".keep-cut-current__photo");
     expect(container.querySelector(".keep-cut-game-card .keep-cut-current")).toBeTruthy();
     expect(container.querySelector(".keep-cut-new-lineup")).toBeTruthy();
-    expect(photo?.getAttribute("src")).toBe(lineup.fighters[0]?.thumbUrl);
+    expect(photo?.tagName).toBe("CANVAS");
     expect(card?.style.gridTemplateColumns).toBe("96px minmax(0, 1fr)");
     expect(photo?.style.width).toBe("96px");
     expect(photo?.style.height).toBe("96px");

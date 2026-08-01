@@ -106,6 +106,11 @@ export default defineConfig(({ mode }) => {
           },
         }
       : {}),
+    resolve: {
+      alias: {
+        "npm:cheerio@1.0.0": "cheerio",
+      },
+    },
     build: {
       target: "es2022",
       sourcemap: true,

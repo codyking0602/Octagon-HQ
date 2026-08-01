@@ -41,13 +41,15 @@ function renderLeaderboard(
   leaderboard: DailyLeaderboard,
   gateway: IdentityGateway | null = signedInGateway(),
 ) {
-  return render(
+  const historyRepository = repository(leaderboard);
+  const result = render(
     <IdentityProvider gateway={gateway}>
-      <FindLeaderHistoryProvider repository={repository(leaderboard)}>
+      <FindLeaderHistoryProvider repository={historyRepository}>
         <FindLeaderDailyLeaderboard day={DAY} />
       </FindLeaderHistoryProvider>
     </IdentityProvider>,
   );
+  return { ...result, historyRepository };
 }
 
 describe("Find the Leader daily leaderboard", () => {
@@ -60,7 +62,7 @@ describe("Find the Leader daily leaderboard", () => {
   });
 
   it("pins the current profile and renders the full official-score board with shared tie ranks", async () => {
-    const { container } = renderLeaderboard({
+    const { container, historyRepository } = renderLeaderboard({
       unlocked: true,
       playerCount: 3,
       entries: [
@@ -70,7 +72,8 @@ describe("Find the Leader daily leaderboard", () => {
       ],
     });
 
-    expect(await screen.findByText("3 PLAYED")).toBeTruthy();
+    await waitFor(() => expect(historyRepository.loadDailyLeaderboard).toHaveBeenCalledWith(DAY));
+    expect(await screen.findByText("3 PLAYED", {}, { timeout: 5_000 })).toBeTruthy();
     expect(screen.getByText("YOUR OFFICIAL RESULT")).toBeTruthy();
     expect(screen.getAllByText("T-1")).toHaveLength(2);
     expect(screen.getAllByText("#3")).toHaveLength(2);
