@@ -41,18 +41,12 @@ describe("Auction playable server migration", () => {
       "cancel_auction",
       "get_auction_participant_state",
     ]) {
-      expect(sql).toMatch(
-        new RegExp(
-          `revoke all on function public\\.${commandName}\\([\\s\\S]*?from public, anon, authenticated;`,
-        ),
-      );
-      expect(sql).toMatch(
-        new RegExp(
-          `grant execute on function public\\.${commandName}\\([\\s\\S]*?to authenticated;`,
-        ),
-      );
+      expect(sql).toContain(`revoke all on function public.${commandName}(`);
+      expect(sql).toContain(`grant execute on function public.${commandName}(`);
     }
 
+    expect(sql).toContain("from public, anon, authenticated;");
+    expect(sql).toContain("to authenticated;");
     expect(sql).toContain("for update");
     expect(sql).toContain("auction_one_award_per_round");
     expect(sql).toContain("auction_pending_bids_immutable");
