@@ -6,6 +6,7 @@ import { IdentityProvider } from "../identity/IdentityProvider";
 import type { IdentityGateway } from "../identity/identityGateway";
 import PlayPage from "../play/PlayPage";
 import { centralDay, dailyFindLeaderBoard } from "../play/findLeaderEngine";
+import { FindLeaderHistoryProvider } from "../play/FindLeaderHistoryProvider";
 import { ChallengeCenter } from "./ChallengeCenter";
 import { ChallengeProvider } from "./ChallengeProvider";
 import FindLeaderChallengeRoute from "./FindLeaderChallengeRoute";
@@ -37,7 +38,7 @@ function identityGateway(profile: ChallengeProfile): IdentityGateway {
 
 function fakeRepository(overrides: Partial<ChallengeRepository> = {}): ChallengeRepository {
   return {
-    load: async () => ({ challenges: [], profiles: [] }),
+    load: vi.fn(async () => ({ challenges: [], profiles: [] })),
     findProfile: async () => shane,
     create: async () => "MATCH123",
     markOpened: async () => undefined,
@@ -55,9 +56,11 @@ function renderWithProfile(
 ) {
   return render(
     <IdentityProvider gateway={identityGateway(profile)}>
-      <ChallengeProvider repository={repository}>
-        <MemoryRouter initialEntries={[path]}>{element}</MemoryRouter>
-      </ChallengeProvider>
+      <FindLeaderHistoryProvider repository={null}>
+        <ChallengeProvider repository={repository}>
+          <MemoryRouter initialEntries={[path]}>{element}</MemoryRouter>
+        </ChallengeProvider>
+      </FindLeaderHistoryProvider>
     </IdentityProvider>,
   );
 }
@@ -114,6 +117,7 @@ describe("real profile Challenge Center flow", () => {
     const repository = fakeRepository({ create, findProfile });
 
     const creatorView = renderWithProfile(<PlayPage />, `/play/find-leader?day=${day}`, cody, repository);
+    await waitFor(() => expect(repository.load).toHaveBeenCalled());
     fireEvent.click(leaderButton(creatorView.container, leader.name)!);
     fireEvent.click(screen.getByRole("button", { name: "CHALLENGE SOMEONE" }));
 
@@ -158,7 +162,7 @@ describe("real profile Challenge Center flow", () => {
     const markOpened = vi.fn(async () => undefined);
     const submitResult = vi.fn(async () => undefined);
     const repository = fakeRepository({
-      load: async () => ({ challenges: [row], profiles: [cody] }),
+      load: vi.fn(async () => ({ challenges: [row], profiles: [cody] })),
       markOpened,
       submitResult,
     });
@@ -169,6 +173,7 @@ describe("real profile Challenge Center flow", () => {
       shane,
       repository,
     );
+    await waitFor(() => expect(repository.load).toHaveBeenCalled());
 
     expect(await screen.findByText("CODY sent this exact board.")).toBeTruthy();
     await waitFor(() => expect(markOpened).toHaveBeenCalledWith(row.code));
@@ -185,10 +190,11 @@ describe("real profile Challenge Center flow", () => {
   it("shows CODY's shared All, Received, and Sent views without a preview switcher", async () => {
     const row = profileChallenge("2026-07-24");
     const repository = fakeRepository({
-      load: async () => ({ challenges: [{ ...row, creatorResult: { score: 8 } }], profiles: [shane] }),
+      load: vi.fn(async () => ({ challenges: [{ ...row, creatorResult: { score: 8 } }], profiles: [shane] })),
     });
 
     renderWithProfile(<ChallengeCenter />, "/play", cody, repository);
+    await waitFor(() => expect(repository.load).toHaveBeenCalled());
 
     expect(await screen.findByRole("heading", { name: "CODY's matchups" })).toBeTruthy();
     expect(screen.getByRole("tab", { name: "ALL 1" })).toBeTruthy();

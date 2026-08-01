@@ -1,6 +1,7 @@
 import { fireEvent, render, within } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { IdentityProvider } from "../identity/IdentityProvider";
 import { ChallengeProvider } from "../challenges/ChallengeProvider";
 import IntelligencePage from "../intelligence/IntelligencePage";
 import { canonicalRankingInputs } from "../rankings/data/rankingInputs";
@@ -23,34 +24,34 @@ import { blindRankPool, getPlayFighter, rankedPlayFighters } from "./playFighter
 
 function renderBlindResume(path = "/play/blind-resume") {
   return render(
-    <ChallengeProvider>
+    <IdentityProvider gateway={null}><ChallengeProvider>
       <MemoryRouter initialEntries={[path]}>
         <BlindResumePage />
       </MemoryRouter>
-    </ChallengeProvider>,
+    </ChallengeProvider></IdentityProvider>,
   );
 }
 
 function renderBlindResumeWithIntelligence(path = "/play/blind-resume") {
   return render(
-    <ChallengeProvider>
+    <IdentityProvider gateway={null}><ChallengeProvider>
       <MemoryRouter initialEntries={[path]}>
         <Routes>
           <Route path="/play/blind-resume" element={<BlindResumePage />} />
           <Route path="/intelligence" element={<IntelligencePage />} />
         </Routes>
       </MemoryRouter>
-    </ChallengeProvider>,
+    </ChallengeProvider></IdentityProvider>,
   );
 }
 
 function renderBlindRank(path = "/play/blind-rank") {
   return render(
-    <ChallengeProvider>
+    <IdentityProvider gateway={null}><ChallengeProvider>
       <MemoryRouter initialEntries={[path]}>
         <BlindRankPage />
       </MemoryRouter>
-    </ChallengeProvider>,
+    </ChallengeProvider></IdentityProvider>,
   );
 }
 
@@ -148,9 +149,7 @@ describe("Blind Resume presentation", () => {
     }
     expect(container.textContent).toContain("FIVE-ROUND RESULTS");
     expect(container.querySelectorAll(".blind-resume-recap__round")).toHaveLength(5);
-    expect([...container.querySelectorAll<HTMLImageElement>(".blind-resume-recap__photo")].map((photo) => photo.getAttribute("src"))).toEqual(
-      roundSet.pairs.flatMap((pair) => [pair.fighterA.thumbUrl, pair.fighterB.thumbUrl]),
-    );
+    expect(container.querySelectorAll("canvas.blind-resume-recap__photo")).toHaveLength(10);
     const actions = [...container.querySelectorAll(".game-result-actions button")].map((button) => button.textContent);
     expect(actions).toEqual(["CHALLENGE SOMEONE", "REPLAY CHALLENGE", "ALL GAMES"]);
   });
@@ -209,8 +208,8 @@ describe("Blind Rank presentation", () => {
 
   it("uses the thumbnail, locks five placements, then starts a new casual lineup", () => {
     const { container } = renderBlindRank();
-    const currentPhoto = container.querySelector<HTMLImageElement>(".blind-rank-current__photo");
-    expect(currentPhoto?.getAttribute("src")).toContain("-thumb.webp");
+    const currentPhoto = container.querySelector<HTMLCanvasElement>(".blind-rank-current__photo");
+    expect(currentPhoto?.tagName).toBe("CANVAS");
     expect(container.querySelectorAll(".blind-rank-slot")).toHaveLength(5);
 
     for (let placement = 0; placement < 4; placement += 1) {

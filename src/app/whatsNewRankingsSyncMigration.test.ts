@@ -141,7 +141,7 @@ describe("What's New Rankings and fighter producers", () => {
     expect(contract).toContain("One- and two-position moves are intentionally ignored");
     expect(contract).toContain("five or more fighters move at least three spots");
     expect(contract).toContain("stable source key based on the watchlist ID");
-    expect(contract).toContain("PR-head deployments never synchronize production comparison state");
+    expect(contract).toContain("PR-head deployments never publish production updates");
     expect(contract).toContain("comparison evidence only");
     expect(watchlistCard).toContain('id="shanes-watchlist"');
   });

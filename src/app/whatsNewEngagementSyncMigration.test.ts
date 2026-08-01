@@ -61,10 +61,10 @@ describe("What's New games, challenges, and achievements producers", () => {
   it("shares the exact post-frontend deployment owner without adding another workflow", () => {
     expect(workflow).toContain("name: Sync Canonical What's New Models");
     expect(workflow).toContain("Deploy Cloudflare Frontend");
-    expect(workflow).toContain('sourceBranch === "main"');
-    expect(workflow).toContain('sourceEvent === "push"');
-    expect(workflow).toContain("main.commit.sha === sourceSha");
-    expect(workflow).toContain("deployment.json?expected=${SOURCE_SHA}");
+    expect(workflow).toContain('workflowRun.head_branch !== "main"');
+    expect(workflow).toContain('workflowRun.event !== "push"');
+    expect(workflow).toContain("main.commit.sha.toLowerCase()");
+    expect(workflow).toContain("deployment.json?reconcile=${Date.now()}");
     expect(workflow).toContain("node scripts/sync-ranking-whats-new.mjs");
     expect(workflow).toContain("node scripts/sync-engagement-whats-new.mjs");
     expect(workflow).toContain("ENGAGEMENT_SYNC_MAX_ATTEMPTS: 20");

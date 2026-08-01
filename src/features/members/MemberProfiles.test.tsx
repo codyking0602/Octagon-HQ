@@ -266,8 +266,8 @@ describe("Member Profiles", () => {
 
     expect(await screen.findByRole("heading", { name: "CODY" })).toBeInTheDocument();
     expect(screen.getByText("YOUR OCTAGON HQ PROFILE")).toBeInTheDocument();
-    expect(screen.getByText("3-1")).toBeInTheDocument();
-    expect(screen.getByText("10/10")).toBeInTheDocument();
+    await waitFor(() => expect(document.body).toHaveTextContent("3-1"));
+    expect(screen.getAllByText("10/10").length).toBeGreaterThan(0);
     const favorite = screen.getByRole("combobox", { name: "Favorite fighter" });
     fireEvent.change(favorite, { target: { value: "georges-st-pierre" } });
     await waitFor(() => expect(preferences.saveFavoriteFighter).toHaveBeenCalledWith("georges-st-pierre"));

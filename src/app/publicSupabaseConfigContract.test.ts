@@ -3,35 +3,20 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { validatePublicSupabaseConfig } from "../../scripts/public-supabase-config.mjs";
-import { verifyProductionArtifact } from "../../scripts/verify-production-artifact.mjs";
+import {
+  requiredApplicationMarkers,
+  requiredShareArtwork,
+  verifyProductionArtifact,
+} from "../../scripts/verify-production-artifact.mjs";
 
 const hostname = "example-project.supabase.co";
 const publishableKey = `sb_publishable_${"a".repeat(24)}`;
 const valid = { url: `https://${hostname}`, publishableKey, expectedHostname: hostname };
-const requiredMarkers = [
-  "Your event recaps",
-  "get_my_pick_history",
-  "HOW SCORING WORKS",
-  "Correct pick +4",
-  "MAKE THIS MY UNDERDOG LOCK",
-  "pick-fighter-thumbnail",
-  "get_my_event_underdog_lock",
-  "set_my_event_underdog_lock",
-  "PICKS LOCKED",
-  "AWAITING RESULTS",
-  "NOT PICKED",
-  "VIEW FIGHT-BY-FIGHT RESULTS",
-  "+400+",
-  "HOW EVERYONE PICKED",
-  "group_picks",
-  "Fight Night Control",
-  "LOCK PICKS & BEGIN RESULTS",
-  "COMPLETE EVENT",
-  "get_pick_control_event",
-  "Event Setup",
-  "SYNC NEXT UFC EVENT",
-  "PUBLISH CARD",
-  "get_pick_event_setup",
+const requiredMarkers = requiredApplicationMarkers.join(" ");
+const workerMarkers = [
+  "X-Octagon-Preview", "X-Octagon-Preview-Image", "og:title", "og:image:width",
+  "twitter:card", "share-preview", "image/png", "get_rich_preview_data", "picks-recap",
+  "major-ranking-update", "jon-jones",
 ].join(" ");
 
 describe("production Supabase browser configuration", () => {
@@ -49,11 +34,22 @@ describe("production Supabase browser configuration", () => {
   it("inspects the generated JavaScript, not only source configuration", async () => {
     const dist = await mkdtemp(join(tmpdir(), "octagon-artifact-"));
     await mkdir(join(dist, "assets"));
+    await mkdir(join(dist, "assets/share"), { recursive: true });
+    await mkdir(join(dist, "preview-data"), { recursive: true });
     await writeFile(join(dist, "index.html"), '<script src="/assets/app.js"></script>');
     await writeFile(
       join(dist, "assets/app.js"),
       `const url="https://${hostname}";const key="${publishableKey}";const markers="${requiredMarkers}";`,
     );
+    await writeFile(join(dist, "_worker.js"), workerMarkers);
+    await writeFile(join(dist, ".assetsignore"), "_worker.js\n");
+    await writeFile(join(dist, "preview-data/rankings.json"), JSON.stringify({
+      version: 2,
+      fighters: [{ slug: "jon-jones", displayName: "Jon Jones", imagePath: "/jon.webp", rank: 1, ovr: 99 }],
+      games: Array.from({ length: 6 }, (_, index) => ({ id: `game-${index}`, title: "Game", description: "Play", imagePath: "/game.svg" })),
+      fighterAssets: { "jon-jones": "/jon.webp" },
+    }));
+    await Promise.all(requiredShareArtwork.map((name) => writeFile(join(dist, "assets/share", name), "<svg/>")));
 
     await expect(verifyProductionArtifact({ dist, env: {
       VITE_SUPABASE_URL: valid.url,

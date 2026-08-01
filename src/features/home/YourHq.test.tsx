@@ -18,6 +18,7 @@ import {
   ProfilePreferencesProvider,
 } from "../profile/ProfilePreferencesProvider";
 import type { ProfilePreferencesRepository } from "../profile/profilePreferencesRepository";
+import { WhatsNewProvider } from "../whats-new/WhatsNewProvider";
 import HomePage from "./HomePage";
 
 const cody: ChallengeProfile = {
@@ -174,7 +175,7 @@ describe("Your HQ", () => {
           <PicksProvider repository={picksRepository()}>
             <FindLeaderHistoryProvider repository={null}>
               <ChallengeProvider repository={null}>
-                <MemoryRouter><HomePage /></MemoryRouter>
+                <WhatsNewProvider repository={null}><MemoryRouter><HomePage /></MemoryRouter></WhatsNewProvider>
               </ChallengeProvider>
             </FindLeaderHistoryProvider>
           </PicksProvider>
@@ -214,7 +215,7 @@ describe("Your HQ", () => {
           <PicksProvider repository={picksRepository()}>
             <FindLeaderHistoryProvider repository={historyRepository}>
               <ChallengeProvider repository={challengeRepository(loadChallenges)}>
-                <MemoryRouter><HomePage /></MemoryRouter>
+                <WhatsNewProvider repository={null}><MemoryRouter><HomePage /></MemoryRouter></WhatsNewProvider>
               </ChallengeProvider>
             </FindLeaderHistoryProvider>
           </PicksProvider>
@@ -226,19 +227,17 @@ describe("Your HQ", () => {
     expect(screen.queryByText("PERSONALIZED")).not.toBeInTheDocument();
     expect(screen.queryByText("CODY")).not.toBeInTheDocument();
 
-    const streakCard = screen.getByText("Daily streak").closest("article")!;
-    await waitFor(() => expect(within(streakCard).getByText("2")).toBeInTheDocument());
+    await waitFor(() => expect(within(screen.getByText("Daily streak").closest("article")!).getByText("2")).toBeInTheDocument());
 
     const picksCard = screen.getByText("Current Picks record").closest("article")!;
     await waitFor(() => expect(within(picksCard).getByText("12-8")).toBeInTheDocument());
     expect(within(picksCard).getByText(/1 PENDING/)).toBeInTheDocument();
 
     const favoriteCard = screen.getByText("Favorite fighter").closest("article")!;
-    await waitFor(() => expect(within(favoriteCard).getByText("Georges St-Pierre")).toBeInTheDocument());
+    await waitFor(() => expect(within(favoriteCard).getAllByText("Georges St-Pierre").length).toBeGreaterThan(0));
     expect(screen.getByRole("link", { name: "Open Georges St-Pierre profile" })).toHaveAttribute("href", "/fighters/georges-st-pierre");
 
-    const challengeCard = screen.getByText("Open challenges").closest("article")!;
-    await waitFor(() => expect(within(challengeCard).getByText("2")).toBeInTheDocument());
+    await waitFor(() => expect(within(screen.getByText("Open challenges").closest("article")!).getByText("2")).toBeInTheDocument());
     expect(loadChallenges).toHaveBeenCalledTimes(1);
 
     expect(screen.getByText("SHANE is waiting for your answer")).toBeInTheDocument();
@@ -249,7 +248,7 @@ describe("Your HQ", () => {
       target: { value: "jon-jones" },
     });
     await waitFor(() => expect(saveFavoriteFighter).toHaveBeenCalledWith("jon-jones"));
-    await waitFor(() => expect(within(favoriteCard).getByText("Jon Jones")).toBeInTheDocument());
+    await waitFor(() => expect(within(favoriteCard).getAllByText("Jon Jones").length).toBeGreaterThan(0));
     expect(screen.getByRole("link", { name: "Open Jon Jones profile" })).toHaveAttribute("href", "/fighters/jon-jones");
 
     expect(screen.getByText("Magomed Ankalaev vs. Bogdan Guskov")).toBeInTheDocument();

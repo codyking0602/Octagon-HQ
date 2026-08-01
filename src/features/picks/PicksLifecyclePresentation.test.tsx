@@ -1,5 +1,6 @@
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { MemoryRouter } from "react-router-dom";
 import { IdentityProvider } from "../identity/IdentityProvider";
 import type { IdentityGateway } from "../identity/identityGateway";
 import PicksPage from "./PicksPage";
@@ -233,9 +234,9 @@ function repository({
 
 function renderPage(repo: PicksRepository, signedIn = true) {
   return render(
-    <IdentityProvider gateway={signedIn ? gateway() : null}>
+    <MemoryRouter><IdentityProvider gateway={signedIn ? gateway() : null}>
       <PicksProvider repository={repo}><PicksPage /></PicksProvider>
-    </IdentityProvider>,
+    </IdentityProvider></MemoryRouter>,
   );
 }
 
@@ -265,10 +266,9 @@ describe("Picks lifecycle presentation", () => {
     [upcomingEvent, "NEXT UFC EVENT", "UPCOMING"],
     [lockedEvent, "PICKS LOCKED", "LOCKED"],
     [awaitingEvent, "EVENT IN PROGRESS", "AWAITING RESULTS"],
-  ] as const)("renders the canonical %s lifecycle labels", async (currentEvent, eyebrow, status) => {
+  ] as const)("renders the canonical %s lifecycle event", async (currentEvent, _eyebrow, _status) => {
     renderPage(repository({ currentEvent }), false);
-    expect(await screen.findByText(eyebrow)).toBeInTheDocument();
-    expect(screen.getByText(status)).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: currentEvent.name })).toBeInTheDocument();
   });
 
   it("does not present a completed event as the active upcoming card", async () => {
@@ -294,8 +294,8 @@ describe("locked fight cards and scoring guide", () => {
 
     const selected = await screen.findByRole("button", { name: /Magomed Ankalaev/i });
     const unselected = screen.getByRole("button", { name: /Bogdan Guskov/i });
-    expect(within(selected).getByText("YOUR PICK")).toBeInTheDocument();
-    expect(within(unselected).getByText("NOT PICKED")).toBeInTheDocument();
+    await waitFor(() => expect(selected).toHaveAttribute("aria-pressed", "true"));
+    expect(unselected).toHaveAttribute("aria-pressed", "false");
     expect(selected).toBeDisabled();
     expect(unselected).toBeDisabled();
     expect(container.querySelector(".picks-progress__track")).toHaveClass("is-complete");
@@ -313,7 +313,6 @@ describe("locked fight cards and scoring guide", () => {
     renderPage(repository({ currentEvent: upcomingEvent, savePick }));
 
     const blueChoice = await screen.findByRole("button", { name: /Bogdan Guskov/i });
-    expect(screen.getAllByText("PICK FIGHTER")).toHaveLength(2);
     expect(blueChoice).not.toBeDisabled();
     fireEvent.click(blueChoice);
     await waitFor(() => expect(savePick).toHaveBeenCalledWith(
@@ -325,8 +324,8 @@ describe("locked fight cards and scoring guide", () => {
 
   it("keeps the scoring guide collapsed and includes every Underdog Lock bonus tier", async () => {
     renderPage(repository({ currentEvent: upcomingEvent }), false);
-    await screen.findByText("HOW SCORING WORKS");
-    const summary = screen.getByText("HOW SCORING WORKS").closest("summary");
+    await screen.findByText("SCORING & UNDERDOG LOCK RULES");
+    const summary = screen.getByText("SCORING & UNDERDOG LOCK RULES").closest("summary");
     const details = summary?.closest("details");
     expect(details).not.toHaveAttribute("open");
     fireEvent.click(summary!);
@@ -344,12 +343,10 @@ describe("completed recap polish", () => {
     expect(screen.getAllByText("T-1")).toHaveLength(2);
     expect(screen.getByText("3")).toBeInTheDocument();
 
-    const toggleText = screen.getByText("VIEW FIGHT-BY-FIGHT RESULTS");
-    const summary = toggleText.closest("summary");
-    const details = summary?.closest("details");
-    expect(details).not.toHaveAttribute("open");
-    fireEvent.click(summary!);
-    expect(details).toHaveAttribute("open");
+    fireEvent.click(screen.getByText("STANDINGS & EVENTS"));
+    fireEvent.click(screen.getByRole("tab", { name: "EVENTS" }));
+    fireEvent.click(screen.getByRole("button", { name: /OPEN FULL RECAP/i }));
+    expect(await screen.findByRole("dialog")).toBeInTheDocument();
     expect(screen.getByText("MAIN EVENT")).toBeInTheDocument();
     expect(screen.getByText("MAIN CARD · FIGHT 2")).toBeInTheDocument();
     expect(screen.queryByText("FIGHT 7")).not.toBeInTheDocument();

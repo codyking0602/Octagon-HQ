@@ -1,5 +1,6 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { MemoryRouter } from "react-router-dom";
 import { IdentityProvider } from "../identity/IdentityProvider";
 import type { IdentityGateway } from "../identity/identityGateway";
 import PicksPage from "./PicksPage";
@@ -174,11 +175,11 @@ function repository(currentEvent: PickEvent | null, history: PickHistory = empty
 
 function renderPage(currentEvent: PickEvent | null, history: PickHistory = emptyHistory) {
   return render(
-    <IdentityProvider gateway={gateway()}>
+    <MemoryRouter><IdentityProvider gateway={gateway()}>
       <PicksProvider repository={repository(currentEvent, history)}>
         <PicksPage />
       </PicksProvider>
-    </IdentityProvider>,
+    </IdentityProvider></MemoryRouter>,
   );
 }
 
@@ -208,8 +209,9 @@ describe("Picks group reveals", () => {
   it("keeps the same group reveal in the completed fight-by-fight recap", async () => {
     renderPage(null, completedHistory);
 
-    const toggle = await screen.findByText("VIEW FIGHT-BY-FIGHT RESULTS");
-    fireEvent.click(toggle.closest("summary")!);
+    fireEvent.click(await screen.findByText("STANDINGS & EVENTS"));
+    fireEvent.click(screen.getByRole("tab", { name: "EVENTS" }));
+    fireEvent.click(screen.getByRole("button", { name: /OPEN FULL RECAP/i }));
 
     expect(screen.getByText("HOW EVERYONE PICKED")).toBeInTheDocument();
     expect(screen.getByText("3 ENTERED")).toBeInTheDocument();

@@ -1,5 +1,6 @@
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { MemoryRouter } from "react-router-dom";
 import { IdentityProvider } from "../identity/IdentityProvider";
 import type { IdentityGateway } from "../identity/identityGateway";
 import PicksPage from "./PicksPage";
@@ -159,9 +160,9 @@ describe("PicksPage", () => {
     }));
 
     render(
-      <IdentityProvider gateway={gateway()}>
+      <MemoryRouter><IdentityProvider gateway={gateway()}>
         <PicksProvider repository={repository(savePick)}><PicksPage /></PicksProvider>
-      </IdentityProvider>,
+      </IdentityProvider></MemoryRouter>,
     );
 
     expect(await screen.findByRole("heading", { name: "UFC Fight Night" })).toBeInTheDocument();
@@ -195,9 +196,9 @@ describe("PicksPage", () => {
     };
 
     render(
-      <IdentityProvider gateway={gateway()}>
+      <MemoryRouter><IdentityProvider gateway={gateway()}>
         <PicksProvider repository={repository(undefined, event, [selectedPick], selectedLock)}><PicksPage /></PicksProvider>
-      </IdentityProvider>,
+      </IdentityProvider></MemoryRouter>,
     );
 
     expect(await screen.findByText("UNDERDOG LOCK · Bogdan Guskov · +4 IF CORRECT")).toBeInTheDocument();
@@ -206,9 +207,9 @@ describe("PicksPage", () => {
 
   it("shows the event publicly but requires sign-in before making picks", async () => {
     render(
-      <IdentityProvider gateway={null}>
+      <MemoryRouter><IdentityProvider gateway={null}>
         <PicksProvider repository={repository()}><PicksPage /></PicksProvider>
-      </IdentityProvider>,
+      </IdentityProvider></MemoryRouter>,
     );
 
     expect(await screen.findByRole("heading", { name: "UFC Fight Night" })).toBeInTheDocument();
@@ -219,14 +220,14 @@ describe("PicksPage", () => {
 
   it("opens the latest completed event as a generated full-screen recap", async () => {
     render(
-      <IdentityProvider gateway={gateway()}>
+      <MemoryRouter><IdentityProvider gateway={gateway()}>
         <PicksProvider repository={repository(undefined, null)}><PicksPage /></PicksProvider>
-      </IdentityProvider>,
+      </IdentityProvider></MemoryRouter>,
     );
 
-    expect(await screen.findByRole("heading", { name: "Your event archive" })).toBeInTheDocument();
-    fireEvent.click(screen.getByText("OPEN EVENT ARCHIVE"));
-
+    expect(await screen.findByText("STANDINGS & EVENTS")).toBeInTheDocument();
+    fireEvent.click(screen.getByText("STANDINGS & EVENTS"));
+    fireEvent.click(screen.getByRole("tab", { name: "EVENTS" }));
     expect(await screen.findByText("UFC Oklahoma City Recap")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /OPEN FULL RECAP/i }));
 
@@ -256,9 +257,9 @@ describe("PicksPage", () => {
     };
 
     const { container } = render(
-      <IdentityProvider gateway={gateway()}>
+      <MemoryRouter><IdentityProvider gateway={gateway()}>
         <PicksProvider repository={repository(undefined, belgradeEvent)}><PicksPage /></PicksProvider>
-      </IdentityProvider>,
+      </IdentityProvider></MemoryRouter>,
     );
 
     await screen.findByText("Uroš Medić vs. Daniel Rodriguez");
@@ -272,9 +273,9 @@ describe("PicksPage", () => {
 
   it("uses the standard no-poster hero when no event asset is registered", async () => {
     const { container } = render(
-      <IdentityProvider gateway={gateway()}>
+      <MemoryRouter><IdentityProvider gateway={gateway()}>
         <PicksProvider repository={repository()}><PicksPage /></PicksProvider>
-      </IdentityProvider>,
+      </IdentityProvider></MemoryRouter>,
     );
 
     await screen.findByText("Ankalaev vs. Guskov");
@@ -302,9 +303,9 @@ describe("PicksPage", () => {
     };
 
     render(
-      <IdentityProvider gateway={gateway()}>
+      <MemoryRouter><IdentityProvider gateway={gateway()}>
         <PicksProvider repository={repository(undefined, belgradeEvent)}><PicksPage /></PicksProvider>
-      </IdentityProvider>,
+      </IdentityProvider></MemoryRouter>,
     );
 
     const trigger = await screen.findByRole("button", { name: /View matchup breakdown/i });

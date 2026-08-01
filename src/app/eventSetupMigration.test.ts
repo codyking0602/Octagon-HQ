@@ -6,6 +6,7 @@ const sql = readFileSync(
   "utf8",
 );
 const syncFunction = readFileSync("supabase/functions/sync-next-ufc-event/index.ts", "utf8");
+const cardChanges = readFileSync("supabase/functions/sync-next-ufc-event/cardChanges.ts", "utf8");
 const config = readFileSync("supabase/config.toml", "utf8");
 const deployWorkflow = readFileSync(".github/workflows/deploy-supabase.yml", "utf8");
 const deploymentVerifier = readFileSync("scripts/verify-sync-function-deployment.mjs", "utf8");
@@ -52,7 +53,7 @@ describe("Phase 2B event setup backend", () => {
     expect(syncFunction).toContain("suppliedSourceUrl || persistedSourceUrl(ownerProbe.data)");
     expect(syncFunction).toContain("fetchExactMmaManiaCard");
     expect(syncFunction).toContain("Paste the exact MMA Mania fight-card article URL in Event Setup");
-    expect(syncFunction).toContain('["Card source", "source_url"');
+    expect(cardChanges).toContain('["Card source", current.source_url, event.source_url]');
   });
 
   it("previews source changes before replacing a staged draft", () => {

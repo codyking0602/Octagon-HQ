@@ -105,7 +105,7 @@ describe("Fight Night control entry", () => {
   it("shows the separate control route only when the backend grants access", async () => {
     renderPage(event);
 
-    const link = await screen.findByRole("link", { name: "OPEN FIGHT NIGHT CONTROL" });
+    const link = await screen.findByRole("link", { name: "MANAGE EVENT ›" });
     expect(link).toHaveAttribute("href", "/picks/control");
   });
 
@@ -113,6 +113,6 @@ describe("Fight Night control entry", () => {
     renderPage({ ...event, canControl: false });
 
     expect(await screen.findByRole("heading", { name: "UFC Control Entry" })).toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: "OPEN FIGHT NIGHT CONTROL" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "MANAGE EVENT ›" })).not.toBeInTheDocument();
   });
 });

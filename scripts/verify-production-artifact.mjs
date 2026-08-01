@@ -6,7 +6,7 @@ import {
   validatePublicSupabaseConfig,
 } from "./public-supabase-config.mjs";
 
-const requiredApplicationMarkers = [
+export const requiredApplicationMarkers = [
   "STANDINGS & EVENTS",
   "GROUP STANDINGS",
   "EVENT ARCHIVE",
@@ -41,7 +41,7 @@ const requiredApplicationMarkers = [
   "get_pick_event_setup",
 ];
 
-const requiredShareArtwork = [
+export const requiredShareArtwork = [
   "find-leader.svg",
   "wavelength.svg",
   "blind-resume.svg",

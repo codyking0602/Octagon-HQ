@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { IdentityProvider } from "../identity/IdentityProvider";
 import { ChallengeProvider } from "../challenges/ChallengeProvider";
 import WavelengthGame from "./WavelengthGame";
 import {
@@ -18,11 +19,11 @@ import {
 
 function renderWavelength() {
   return render(
-    <ChallengeProvider>
+    <IdentityProvider gateway={null}><ChallengeProvider>
       <MemoryRouter initialEntries={["/play/wavelength?challenge=rendered-challenge"]}>
         <WavelengthGame challengeSeed="rendered-challenge" onExit={() => undefined} />
       </MemoryRouter>
-    </ChallengeProvider>,
+    </ChallengeProvider></IdentityProvider>,
   );
 }
 
@@ -84,7 +85,7 @@ describe("Wavelength game", () => {
     expect(screen.getByText("HIDDEN NUMBER")).toBeInTheDocument();
     expect(document.querySelectorAll(".wavelength-reveal__row")).toHaveLength(4);
     expect(screen.getByRole("button", { name: "CHALLENGE SOMEONE" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "REPLAY" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "REPLAY CHALLENGE" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "ALL GAMES" })).toBeInTheDocument();
   });
 });

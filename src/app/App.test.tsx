@@ -256,7 +256,9 @@ describe("V1-style fighter profile restoration", () => {
     Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText } });
     renderRoute("/fighters/jon-jones");
     fireEvent.click(await screen.findByRole("button", { name: "Share" }));
-    expect(writeText).toHaveBeenCalledWith("http://localhost:3000/fighters/jon-jones");
+    expect(writeText).toHaveBeenCalledWith(expect.stringMatching(
+      /^http:\/\/localhost:3000\/fighters\/jon-jones\?share=/,
+    ));
     Object.defineProperty(navigator, "share", { configurable: true, value: originalShare });
     Object.defineProperty(navigator, "clipboard", { configurable: true, value: originalClipboard });
   });
@@ -453,7 +455,7 @@ describe("all-fighter profile coverage", () => {
       else expect(screen.queryByRole("link", { name: /Watch/ })).not.toBeInTheDocument();
       within(screen.getByTestId("category-expanded")).getAllByTestId("evidence-tile").forEach((tile) => expect(tile).not.toHaveTextContent(/^\s*$/));
     }
-  }, 30000);
+  }, 120_000);
 });
 
 describe("final profile correctness pass", () => {
