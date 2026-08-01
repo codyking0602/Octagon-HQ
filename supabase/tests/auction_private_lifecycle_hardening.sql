@@ -29,9 +29,9 @@ begin
       'auction-hardening-unrelated@login.octagon-hq.app', '', now(), now(), now(), '{}'::jsonb);
 
   insert into public.profiles (id, display_name, normalized_name, initials) values
-    (v_challenger, 'Auction Hardening Challenger', 'AUCTION HARDENING CHALLENGER', 'HC'),
-    (v_recipient, 'Auction Hardening Recipient', 'AUCTION HARDENING RECIPIENT', 'HR'),
-    (v_unrelated, 'Auction Hardening Unrelated', 'AUCTION HARDENING UNRELATED', 'HU');
+    (v_challenger, 'Auction Challenger', 'AUCTION CHALLENGER', 'AC'),
+    (v_recipient, 'Auction Recipient', 'AUCTION RECIPIENT', 'AR'),
+    (v_unrelated, 'Auction Unrelated', 'AUCTION UNRELATED', 'AU');
 
   insert into private.auction_games (
     id, challenger_id, recipient_id, mode_id, lifecycle_state,
