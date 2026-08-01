@@ -213,7 +213,8 @@ jobs:
 
           for test_file in \
             supabase/tests/auction_private_lifecycle.sql \
-            supabase/tests/auction_private_lifecycle_hardening.sql
+            supabase/tests/auction_private_lifecycle_hardening.sql \
+            supabase/tests/auction_playable_server_engine.sql
           do
             echo "Executing $test_file"
             psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"
