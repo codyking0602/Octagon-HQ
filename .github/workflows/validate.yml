@@ -4,6 +4,7 @@ on:
   pull_request:
 
 permissions:
+  actions: read
   contents: write
 
 jobs:
@@ -16,16 +17,23 @@ jobs:
           ref: chatgpt/repair-honest-test-baseline
           fetch-depth: 0
 
+      - name: Download reviewed repair source
+        uses: actions/download-artifact@v4
+        with:
+          name: repair-source
+          path: ${{ runner.temp }}/repair-source
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: codyking0602/Octagon-HQ
+          run-id: 30670937123
+
       - name: Apply exact repaired source
         shell: bash
         run: |
           set -euo pipefail
-          test -f .repair/part-00
           cp .github/workflows/validate.yml "$RUNNER_TEMP/validate-bootstrap.yml"
-          cat .repair/part-* | base64 --decode > "$RUNNER_TEMP/repair-files.tgz"
-          tar -xzf "$RUNNER_TEMP/repair-files.tgz" -C .
+          tar -xzf "$RUNNER_TEMP/repair-source/octagon-repair-source.tgz" -C .
           cp "$RUNNER_TEMP/validate-bootstrap.yml" .github/workflows/validate.yml
-          rm -rf .repair
+          rm -rf .repair .github/workflows/apply-repair-bundle.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
