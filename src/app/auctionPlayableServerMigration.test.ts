@@ -29,16 +29,24 @@ function projectionSql() {
 
 describe("Auction playable server migration", () => {
   it("keeps one authenticated command boundary and private engine owners", () => {
-    for (const command of [
-      "public.prepare_auction(uuid, text)",
-      "public.abandon_prepared_auction(uuid, bigint)",
-      "public.send_auction_first_bid(uuid, bigint, numeric, text)",
-      "public.submit_auction_bid(uuid, integer, bigint, numeric, text)",
-      "public.cancel_auction(uuid, bigint)",
-      "public.get_auction_participant_state(uuid)",
+    for (const commandName of [
+      "prepare_auction",
+      "abandon_prepared_auction",
+      "send_auction_first_bid",
+      "submit_auction_bid",
+      "cancel_auction",
+      "get_auction_participant_state",
     ]) {
-      expect(sql).toContain(`revoke all on function ${command}`);
-      expect(sql).toContain(`grant execute on function ${command}`);
+      expect(sql).toMatch(
+        new RegExp(
+          `revoke all on function public\\.${commandName}\\([\\s\\S]*?from public, anon, authenticated;`,
+        ),
+      );
+      expect(sql).toMatch(
+        new RegExp(
+          `grant execute on function public\\.${commandName}\\([\\s\\S]*?to authenticated;`,
+        ),
+      );
     }
 
     expect(sql).toContain("for update");
@@ -60,7 +68,9 @@ describe("Auction playable server migration", () => {
       "Use the Auction cancellation command for an active Auction",
     );
     expect(sql).toContain("if v_challenge.game_id = 'auction' then\n    return true;");
-    expect(sql).toContain("challenge.setup = '{}'::jsonb");
+    expect(sql).toContain(
+      "'/play/auction?auction=' || v_game.id::text,\n        '{}'::jsonb,\n        '{}'::jsonb",
+    );
     expect(sql).not.toContain("jsonb_build_object('auction_id'");
   });
 
