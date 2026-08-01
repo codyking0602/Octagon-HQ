@@ -52,6 +52,19 @@ describe("auction public product contract", () => {
     expect(parseAuctionModeId("future-mode")).toBeNull();
   });
 
+  it("limits career-performance auctions to the three locked fighter careers", () => {
+    expect(
+      auctionModes
+        .filter((mode) => mode.family === "career-performance-auction")
+        .map((mode) => mode.id),
+    ).toEqual([
+      "jon-jones-performances",
+      "conor-mcgregor-performances",
+      "charles-oliveira-performances",
+    ]);
+    expect(auctionModeDefinition("fighter-performances").family).toBe("historical-collection-auction");
+  });
+
   it("locks the Ultimate Fighter structure and categories", () => {
     expect(auctionModeDefinition("ultimate-fighter")).toMatchObject({
       rounds: 10,
