@@ -291,11 +291,30 @@ const stipeMiocic = {
   },
 };
 
+const jonJonesBaseline = historicalMigrationSeedJson.fighters.find(
+  (fighter) => fighter.fighter === "Jon Jones",
+);
+
+if (!jonJonesBaseline) {
+  throw new Error("Jon Jones is missing from the sealed ranking baseline.");
+}
+
+const jonJones = {
+  ...jonJonesBaseline,
+  presentation: {
+    ...jonJonesBaseline.presentation,
+    oneLiner: "At his best, Jones controlled fights before opponents could establish their own game. His length, oblique and side kicks, clinch elbows, and chain wrestling let him dominate distance and punish every attempted adjustment. He could win methodical rounds, turn scrambles into top control, or finish with ground strikes and submissions. His greatest weapon was how quickly he solved elite opponents.",
+    whyRankedHere: "Jones has the strongest championship resume in UFC history. He became the youngest champion, earned a record 16 title-fight wins, and beat generations of elite opposition from Mauricio Rua and Lyoto Machida through Daniel Cormier and Alexander Gustafsson. He later added heavyweight title wins over Ciryl Gane and Stipe Miocic. Twelve top-five wins and more than a decade of elite success separate him from every other case.",
+    whyNotHigher: "The case against greater separation rests on three things: disputed decisions against Alexander Gustafsson, Thiago Santos, and Dominick Reyes; long absences that repeatedly interrupted his championship years; and a heavyweight resume built on only two wins. Suspensions, stripped titles, and stalled activity kept him from producing an even cleaner reign. Those flaws narrow the gap, but no rival owns the stronger UFC resume.",
+  },
+};
+
 export const v2RankingRoster: V2RankingRosterOverlay = {
   additions: [rafaelDosAnjos],
   replacements: {
     "Jose Aldo": joseAldo,
     "Stipe Miocic": stipeMiocic,
+    "Jon Jones": jonJones,
   },
   eraMembership: {
     "Rafael dos Anjos": {
@@ -304,7 +323,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     },
   },
   factsVersion: "octagon-hq-v2-rda-20260730",
-  judgmentVersion: "octagon-hq-v2-jose-aldo-profile-20260801",
+  judgmentVersion: "octagon-hq-v2-jon-jones-profile-20260801",
   eraDepthVersion: "octagon-hq-v2-rda-20260730",
   eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
 };
