@@ -55,10 +55,10 @@ begin
       'auction-engine-unrelated@login.octagon-hq.app', '', now(), now(), now(), '{}'::jsonb);
 
   insert into public.profiles (id, display_name, normalized_name, initials) values
-    (v_challenger, 'Auction Engine Challenger', 'AUCTION ENGINE CHALLENGER', 'AEC'),
-    (v_recipient, 'Auction Engine Recipient', 'AUCTION ENGINE RECIPIENT', 'AER'),
-    (v_alternate, 'Auction Engine Alternate', 'AUCTION ENGINE ALTERNATE', 'AEA'),
-    (v_unrelated, 'Auction Engine Unrelated', 'AUCTION ENGINE UNRELATED', 'AEU');
+    (v_challenger, 'Engine Challenger', 'ENGINE CHALLENGER', 'EC'),
+    (v_recipient, 'Engine Recipient', 'ENGINE RECIPIENT', 'ER'),
+    (v_alternate, 'Engine Alternate', 'ENGINE ALTERNATE', 'EA'),
+    (v_unrelated, 'Engine Unrelated', 'ENGINE UNRELATED', 'EU');
 
   if has_table_privilege('authenticated', 'private.auction_catalog_versions', 'SELECT')
     or has_table_privilege('authenticated', 'private.auction_catalog_items', 'SELECT')
