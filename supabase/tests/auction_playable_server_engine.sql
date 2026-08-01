@@ -905,7 +905,7 @@ begin
     into v_payload
   from public.get_auction_participant_state(v_auction) state;
 
-  if v_payload->'current_item' is not null
+  if v_payload->>'current_item' is not null
     or (v_payload->>'current_user_submitted_bid')::boolean
     or v_payload->>'action_required_by' <> 'none'
     or jsonb_array_length(v_payload->'awarded_collections') <> 8
@@ -1152,7 +1152,7 @@ begin
 
   if (v_payload->>'current_user_submitted_bid')::boolean
     or v_payload->>'action_required_by' <> 'none'
-    or v_payload->'current_item' is not null
+    or v_payload->>'current_item' is not null
     or v_payload::text like '%"challenger_bid": 3%'
   then
     raise exception 'cancelled projection exposed pending state: %', v_payload;
