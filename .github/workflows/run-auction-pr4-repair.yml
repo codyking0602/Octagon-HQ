@@ -17,7 +17,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: run-auction-pr4-repair
+  group: run-auction-pr4-repair-v2
   cancel-in-progress: false
 
 jobs:
@@ -48,6 +48,17 @@ jobs:
               for line in workflow[start:end].splitlines()
           ) + "\n"
           exec(compile(script, "repair-auction-pr4-branch", "exec"))
+
+          center = Path("src/features/challenges/ChallengeCenter.tsx")
+          center_text = center.read_text()
+          center_text = center_text.replace(
+              "challengeDirection(challenge, activeProfile.id)",
+              "challengeDirection(challenge, activeProfile!.id)",
+          ).replace(
+              "challengeStatus(challenge, activeProfile.id)",
+              "challengeStatus(challenge, activeProfile!.id)",
+          )
+          center.write_text(center_text)
           Path(".github/workflows/run-auction-pr4-repair.yml").unlink()
           PY
 
