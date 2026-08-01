@@ -191,7 +191,6 @@ export const playGames: readonly PlayGameDefinition[] = [
     icon: "$",
     title: "Auction",
     description: "Choose a UFC auction, submit private sealed bids, and build your collection asynchronously.",
-    availability: "preview",
     lineup: {
       defaultType: "curated",
       supportedTypes: ["curated"],

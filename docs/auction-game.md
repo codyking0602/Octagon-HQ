@@ -26,9 +26,10 @@ GitHub Actions is the only deployment owner. A merged change is not automaticall
 | Auction PR 1: typed public contract and route shell | Complete | #203 | `fd294e00165b56db3a63d477622e93ff4e51f01f` |
 | Canonical Auction implementation record | Complete | #204 | `4048e0e11e40ad628ade7437c8e028b18dcdf987` |
 | Auction PR 2: backend foundation | Complete | #205 / #211 release proof | `b5f9d4fd6bf27f52a091fd4f15352ebb331a969d` |
-| Auction PR 3: playable server engine | Implemented in this change | New PR | Assigned when merged |
+| Auction PR 3: playable server engine | Complete | #212 / #213 release proof | `0e9377ee6557a33b4db5d1225761901764707537` |
+| Auction PR 4: complete gameplay UI | Implemented in this change | #215 | Assigned when merged |
 
-PR #205 established the private lifecycle and PR #211 proved its production migrations. PR 3 adds the authenticated transactional preparation, send, sealed-bid resolution, forced-assignment, and completion boundary. PR 4 is the next stage and owns the gameplay UI.
+PR #205 established the private lifecycle and PR #211 proved its production migrations. PR #212 added the authenticated transactional preparation, send, sealed-bid resolution, forced-assignment, and neutral completion boundary; PR #213 repaired and proved its production release. PR #215 adds the complete gameplay UI. PR 5 is the next stage and owns real UFC content and private grading.
 
 PR #203 established one Play game identity, the sixteen public mode definitions, one canonical `/play/auction` route, and a nonfunctional preview shell. It did not add persistence, bidding, prepared challenges, deck generation, grading, or notifications.
 

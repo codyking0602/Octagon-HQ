@@ -33,6 +33,13 @@ function rowCopy(challenge: PlayChallenge, profileId: string) {
   const direction = challengeDirection(challenge, profileId);
   const status = challengeStatus(challenge, profileId);
 
+  if (challenge.gameId === "auction") {
+    if (status === "completed") return { eyebrow: "AUCTION COMPLETE WITH", detail: "Open the final server state", action: "OPEN" };
+    if (status === "declined") return { eyebrow: "AUCTION DECLINED", detail: "This Auction has ended", action: "DECLINED" };
+    if (direction === "sent") return { eyebrow: "AUCTION WITH", detail: status === "opened" ? "Open Auction · check whose bid is required" : "Waiting for their first bid", action: "OPEN" };
+    return { eyebrow: "AUCTION FROM", detail: status === "opened" ? "Open Auction · check whose bid is required" : "Your first sealed bid accepts", action: status === "opened" ? "OPEN" : "BID" };
+  }
+
   if (direction === "sent") {
     if (status === "completed") return { eyebrow: "COMPLETED WITH", detail: `Both finished ${timeAgo(challenge.completedAt ?? challenge.createdAt)}`, action: "RESULTS" };
     if (status === "declined") return { eyebrow: "DECLINED BY", detail: "They passed on this challenge", action: "DECLINED" };
@@ -100,6 +107,12 @@ export function ChallengeCenter() {
     if (!direction) return;
     const status = challengeStatus(requested, activeProfile.id);
 
+    if (requested.gameId === "auction") {
+      if (direction === "received" && status === "new") void markOpened(requested.code);
+      navigate(challengePlayRoute(requested), { replace: true });
+      return;
+    }
+
     if (status === "completed") {
       viewResults(requested.code);
       return;
@@ -138,6 +151,13 @@ export function ChallengeCenter() {
   }
 
   function openChallenge(challenge: PlayChallenge) {
+    if (challenge.gameId === "auction") {
+      const direction = challengeDirection(challenge, activeProfile!.id);
+      const status = challengeStatus(challenge, activeProfile!.id);
+      if (direction === "received" && status === "new") void markOpened(challenge.code);
+      navigate(challengePlayRoute(challenge));
+      return;
+    }
     void markOpened(challenge.code);
     navigate(challengePlayRoute(challenge));
   }
@@ -187,12 +207,15 @@ export function ChallengeCenter() {
         <>
           <div className="challenge-center__list">
             {visibleRows.map((challenge) => {
-              const direction = challengeDirection(challenge, activeProfile.id);
-              const status = challengeStatus(challenge, activeProfile.id);
+              const direction = challengeDirection(challenge, activeProfile!.id);
+              const status = challengeStatus(challenge, activeProfile!.id);
               const counterpart = challengeCounterpart(challenge, activeProfile.id, profiles);
               const copy = rowCopy(challenge, activeProfile.id);
-              const canPlay = direction === "received" && status !== "completed" && status !== "declined";
-              const canView = status === "completed";
+              const auction = challenge.gameId === "auction";
+              const canPlay = auction ? status !== "declined" : direction === "received" && status !== "completed" && status !== "declined";
+              const canView = !auction && status === "completed";
+              const canDeclineAuction = auction && direction === "received" && status === "new";
+              const canRemoveAuction = auction && (status === "completed" || status === "declined");
               const dismissLabel = direction === "received" && !canView ? "IGNORE" : "REMOVE";
               const memberContent = (
                 <>
@@ -222,18 +245,31 @@ export function ChallengeCenter() {
                     {canView ? (
                       <button type="button" className="results" onClick={() => viewResults(challenge.code)}>RESULTS</button>
                     ) : canPlay ? (
-                      <button type="button" onClick={() => openChallenge(challenge)}>PLAY</button>
+                      <button type="button" onClick={() => openChallenge(challenge)}>{auction ? copy.action : "PLAY"}</button>
                     ) : (
                       <span className={`challenge-center__status is-${status}`}>{copy.action}</span>
                     )}
-                    <button
-                      type="button"
-                      className="challenge-center__dismiss"
-                      aria-label={`${dismissLabel} ${counterpart?.displayName ?? "challenge"} ${challenge.gameTitle}`}
-                      onClick={() => void dismissChallenge(challenge.code)}
-                    >
-                      {dismissLabel}
-                    </button>
+                    {auction ? (
+                      canDeclineAuction || canRemoveAuction ? (
+                        <button
+                          type="button"
+                          className="challenge-center__dismiss"
+                          aria-label={`${canDeclineAuction ? "DECLINE" : "REMOVE"} ${counterpart?.displayName ?? "challenge"} ${challenge.gameTitle}`}
+                          onClick={() => void dismissChallenge(challenge.code)}
+                        >
+                          {canDeclineAuction ? "DECLINE" : "REMOVE"}
+                        </button>
+                      ) : null
+                    ) : (
+                      <button
+                        type="button"
+                        className="challenge-center__dismiss"
+                        aria-label={`${dismissLabel} ${counterpart?.displayName ?? "challenge"} ${challenge.gameTitle}`}
+                        onClick={() => void dismissChallenge(challenge.code)}
+                      >
+                        {dismissLabel}
+                      </button>
+                    )}
                   </div>
                 </article>
               );
