@@ -1,0 +1,36 @@
+name: Apply repair bundle
+
+on:
+  push:
+    branches:
+      - chatgpt/repair-honest-test-baseline
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: contains(github.event.head_commit.message, '[apply-repair-bundle]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repair branch
+        uses: actions/checkout@v4
+        with:
+          ref: chatgpt/repair-honest-test-baseline
+          fetch-depth: 0
+
+      - name: Apply exact repaired source
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .repair/part-* | base64 --decode > "$RUNNER_TEMP/repair-files.tgz"
+          package_entry="$(tar -tzf "$RUNNER_TEMP/repair-files.tgz" | grep -E '(^|/)package\.json$' | head -n 1)"
+          test -n "$package_entry"
+          strip_components="$(awk -F/ '{ print NF - 1 }' <<< "$package_entry")"
+          tar -xzf "$RUNNER_TEMP/repair-files.tgz" -C . --strip-components="$strip_components"
+          rm -rf .repair .github/workflows/apply-repair-bundle.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Repair inherited V2 validation baseline"
+          git push origin HEAD:chatgpt/repair-honest-test-baseline
