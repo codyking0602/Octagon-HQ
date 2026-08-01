@@ -35,3 +35,8 @@ for each row execute function private.normalize_auction_grading_status_on_insert
 
 revoke all on function private.normalize_auction_grading_status_on_insert()
 from public, anon, authenticated;
+
+revoke all on function public.get_auction_participant_state(uuid)
+from public, anon;
+grant execute on function public.get_auction_participant_state(uuid)
+to authenticated;
