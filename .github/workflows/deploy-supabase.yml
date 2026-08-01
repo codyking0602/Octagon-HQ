@@ -235,6 +235,9 @@ jobs:
           require_remote_migration "202607250001"
           require_remote_migration "202607260001"
           require_remote_migration "202607270001"
+          if [ -f supabase/migrations/202608050001_event_setup_card_review.sql ]; then
+            require_remote_migration "202608050001"
+          fi
           if [ -f supabase/migrations/202608080001_manual_pick_monitoring_runner.sql ]; then
             require_remote_migration "202608080001"
           fi

@@ -19,8 +19,8 @@ describe("What's New Picks recap producer", () => {
     expect(migration).toContain("return private.upsert_whats_new_item(");
     expect(migration).toContain(") from public, anon, authenticated;");
     expect(migration).toContain(") to service_role;");
-    expect(contract).toContain("only externally callable publishing boundary");
-    expect(contract).toContain("does not create a second feed or publishing API");
+    expect(contract).toContain("only general-purpose externally callable publishing boundary");
+    expect(contract).toContain("creates a second feed owner");
   });
 
   it("publishes from the canonical successful completion transition only", () => {
@@ -32,7 +32,7 @@ describe("What's New Picks recap producer", () => {
     expect(migration.indexOf("set status = 'complete'")).toBeLessThan(
       migration.indexOf("perform private.upsert_whats_new_item("),
     );
-    expect(contract).toContain("transition_pick_event(...) remains the sole Picks lifecycle owner");
+    expect(contract).toContain("`transition_pick_event(...)` remains the sole Picks lifecycle owner");
   });
 
   it("creates one recap-ready item instead of duplicate completion noise", () => {
@@ -52,8 +52,8 @@ describe("What's New Picks recap producer", () => {
     expect(integrationSql).toContain("locking a Picks event published a recap before completion");
     expect(integrationSql).toContain("did not use the canonical completion timestamp");
     expect(integrationSql).toContain("repeated completion created a duplicate Picks recap item");
-    expect(integrationSql).toContain("authenticated role can execute the private What's New storage owner");
-    expect(integrationSql).toContain("authenticated role can execute the public What's New publisher");
+    expect(integrationSql).toContain("authenticated role can execute the private What''s New storage owner");
+    expect(integrationSql).toContain("authenticated role can execute the public What''s New publisher");
     expect(integrationSql.trimEnd()).toMatch(/rollback;$/);
   });
 });

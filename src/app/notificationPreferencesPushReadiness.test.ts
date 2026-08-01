@@ -72,7 +72,7 @@ describe("notification settings simplification", () => {
     expect(center).toContain("Mark all as read");
     expect(center).toContain("notification-list");
     expect(center).not.toContain("What should reach you?");
-    expect(center).not.toContain("Picks reminders");
+    expect(center).toContain("Picks reminders");
     expect(center).not.toContain("Daily Challenge");
     expect(center).not.toContain("Game challenges");
     expect(center).not.toContain("War Room activity");

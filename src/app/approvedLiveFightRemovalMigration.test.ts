@@ -11,6 +11,7 @@ const integrationSql = readFileSync(
 );
 const controlPage = readFileSync("src/features/picks-control/PicksControlPage.tsx", "utf8");
 const picksPage = readFileSync("src/features/picks/PicksPage.tsx", "utf8");
+const seasonHub = readFileSync("src/features/picks/PicksSeasonHub.tsx", "utf8");
 const monitoring = readFileSync("src/features/picks-monitoring/manualMonitoringRunner.ts", "utf8");
 
 describe("approved pre-lock live fight removal", () => {
@@ -48,7 +49,7 @@ describe("approved pre-lock live fight removal", () => {
     expect(controlPage).toContain("submitted picks stay preserved");
     expect(picksPage).toContain("REMOVED FROM PICKS · EXCLUDED FROM SCORING");
     expect(picksPage).toContain("bout.includedInPicks === false");
-    expect(picksPage).toContain("Excluded from scoring");
+    expect(seasonHub).toContain("Excluded from scoring");
   });
 
   it("keeps monitoring advisory and removes only intentional exclusions from active comparison", () => {

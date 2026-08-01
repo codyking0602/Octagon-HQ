@@ -12,6 +12,10 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      VITE_SUPABASE_URL: https://octagon-validation.supabase.co
+      VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_octagon_validation_only_00000000000000000000
+      VITE_EXPECTED_SUPABASE_HOSTNAME: octagon-validation.supabase.co
     defaults:
       run:
         shell: bash --noprofile --norc -eo pipefail {0}

@@ -43,11 +43,15 @@ describe("local V2 fighter assets", () => {
     const expectedFiles = new Set<string>();
 
     allTime.forEach((fighter) => {
-      const expectedThumb = fighterAsset(fighter.slug, "thumb");
-      const expectedProfile = fighterAsset(fighter.slug, "profile");
+      const configured = canonicalRankingInputs.fighters.find(
+        (input) => input.presentation.slug === fighter.slug,
+      )?.presentation;
+      expect(configured).toBeDefined();
+      const expectedThumb = `/${configured?.thumbUrl}`;
+      const expectedProfile = `/${configured?.photoUrl}`;
 
-      expect(fighter.thumbUrl).toBe(expectedThumb);
-      expect(fighter.profileUrl).toBe(expectedProfile);
+      expect(fighter.thumbUrl).toBe(expectedThumb || fighterAsset(fighter.slug, "thumb"));
+      expect(fighter.profileUrl).toBe(expectedProfile || fighterAsset(fighter.slug, "profile"));
       expect(fighter.thumbUrl.startsWith("/assets/fighters/")).toBe(true);
       expect(fighter.profileUrl.startsWith("/assets/fighters/")).toBe(true);
       expect(fighter.thumbUrl).not.toMatch(/^https?:\/\//i);
@@ -55,8 +59,8 @@ describe("local V2 fighter assets", () => {
       expect(fighter.thumbUrl).not.toContain("ufc-goat-rankings");
       expect(fighter.profileUrl).not.toContain("ufc-goat-rankings");
 
-      const thumbName = `${fighter.slug}-thumb.webp`;
-      const profileName = `${fighter.slug}.webp`;
+      const thumbName = path.basename(fighter.thumbUrl);
+      const profileName = path.basename(fighter.profileUrl);
       expectedFiles.add(thumbName);
       expectedFiles.add(profileName);
       expectWebP(path.join(fighterDirectory, thumbName));

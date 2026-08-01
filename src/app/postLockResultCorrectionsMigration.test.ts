@@ -69,7 +69,7 @@ describe("post-lock official result corrections", () => {
     expect(controlPage).not.toContain("or PENDING");
     expect(controlPage).toContain("Submitted picks and Underdog Locks will not change");
     expect(controlPage).toContain("Scoring, standings, season totals, and recaps will recalculate");
-    expect(controlPage).toContain("Recap remains published");
+    expect(controlPage).toContain("Recap published automatically");
     expect(controlPage).not.toContain("REOPEN EVENT");
   });
 

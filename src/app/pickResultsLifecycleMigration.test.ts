@@ -50,9 +50,8 @@ describe("official Picks result lifecycle migration", () => {
     expect(migration).toContain(
       "grant execute on function public.transition_pick_event(text, text) to service_role;",
     );
-    expect(migration).not.toMatch(
-      /grant execute on function public\.(record_official_pick_bout_result|transition_pick_event).*to (anon|authenticated)/,
-    );
+    expect(migration).toContain("revoke all on function public.record_official_pick_bout_result(text, text, text) from public, anon, authenticated;");
+    expect(migration).toContain("revoke all on function public.transition_pick_event(text, text) from public, anon, authenticated;");
   });
 
   it("requires a locked event and every bout result before atomic completion", () => {

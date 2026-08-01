@@ -3,6 +3,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type PropsWithChildren,
@@ -142,7 +143,7 @@ export function FindLeaderHistoryProvider({
     }
   }, [profileId, repository]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     leaderboardRevisionRef.current += 1;
     leaderboardDayRef.current = null;
     setDailyLeaderboard(null);

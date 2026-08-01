@@ -59,7 +59,7 @@ describe("V2 ranking ownership", () => {
       },
     });
 
-    expect(expanded.counts.fighters).toBe(81);
-    expect(expanded.counts.men).toBe(66);
+    expect(expanded.counts.fighters).toBe(canonicalRankingInputs.counts.fighters + 1);
+    expect(expanded.counts.men).toBe(canonicalRankingInputs.counts.men + 1);
   });
 });

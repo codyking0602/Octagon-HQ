@@ -49,7 +49,7 @@ V1 repository access: blocked by `CONNECT tunnel failed, response 403`, so displ
 | petr-yan | Petr “No Mercy” Yan | Established common/UFC nickname override |
 | sean-strickland | Sean “Tarzan” Strickland | Established common/UFC nickname override |
 | deiveson-figueiredo | Deiveson “Deus da Guerra” Figueiredo | Established common/UFC nickname override |
-| conor-mcgregor | Conor “The Notorious” McGregor | Established common/UFC nickname override |
+| conor-mcgregor | “The Notorious” Conor McGregor | Established common/UFC nickname override |
 | brandon-moreno | Brandon “The Assassin Baby” Moreno | Established common/UFC nickname override |
 | vitor-belfort | Vitor “The Phenom” Belfort | Established common/UFC nickname override |
 | lyoto-machida | Lyoto “The Dragon” Machida | Established common/UFC nickname override |
@@ -61,7 +61,7 @@ V1 repository access: blocked by `CONNECT tunnel failed, response 403`, so displ
 | khamzat-chimaev | Khamzat “Borz” Chimaev | Established common/UFC nickname override |
 | michael-bisping | Michael “The Count” Bisping | Established common/UFC nickname override |
 | anthony-pettis | Anthony “Showtime” Pettis | Established common/UFC nickname override |
-| sean-omalley | Sean “Suga” O’Malley | Established common/UFC nickname override |
+| sean-omalley | “Suga” Sean O’Malley | Established common/UFC nickname override |
 | quinton-jackson | Quinton “Rampage” Jackson | Established common/UFC nickname override |
 | shogun-rua | Maurício “Shogun” Rua | Established common/UFC nickname override |
 | forrest-griffin | Forrest Griffin | No verified nickname; canonical V2 name used |
@@ -84,3 +84,4 @@ V1 repository access: blocked by `CONNECT tunnel failed, response 403`, so displ
 | julianna-pena | Julianna “The Venezuelan Vixen” Peña | Established common/UFC nickname override |
 | miesha-tate | Miesha “Cupcake” Tate | Established common/UFC nickname override |
 | holly-holm | Holly “The Preacher’s Daughter” Holm | Established common/UFC nickname override |
+| rafael-dos-anjos | Rafael dos Anjos | No verified nickname; canonical V2 name used |

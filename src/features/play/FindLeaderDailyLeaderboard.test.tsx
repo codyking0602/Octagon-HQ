@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { IdentityProvider } from "../identity/IdentityProvider";
+import { useIdentity } from "../identity/IdentityProvider";
 import type { IdentityGateway } from "../identity/identityGateway";
 import { FindLeaderDailyLeaderboard } from "./FindLeaderDailyLeaderboard";
 import { FindLeaderHistoryProvider } from "./FindLeaderHistoryProvider";
@@ -25,7 +26,13 @@ function signedInGateway(): IdentityGateway {
 
 function repository(leaderboard: DailyLeaderboard): FindLeaderHistoryRepository {
   return {
-    load: async () => [],
+    load: async () => leaderboard.unlocked ? [{
+      day: DAY,
+      officialScore: 8,
+      bestScore: 8,
+      attempts: 1,
+      completedAt: "2026-07-29T12:00:00Z",
+    }] : [],
     loadDailyLeaderboard: vi.fn(async () => leaderboard),
     recordAttempt: async (day, score) => ({
       day,
@@ -44,10 +51,16 @@ function renderLeaderboard(
   return render(
     <IdentityProvider gateway={gateway}>
       <FindLeaderHistoryProvider repository={repository(leaderboard)}>
-        <FindLeaderDailyLeaderboard day={DAY} />
+        <ProfileReadyLeaderboard />
       </FindLeaderHistoryProvider>
     </IdentityProvider>,
   );
+}
+
+function ProfileReadyLeaderboard() {
+  const identity = useIdentity();
+  if (identity.status === "loading") return null;
+  return <FindLeaderDailyLeaderboard day={DAY} />;
 }
 
 describe("Find the Leader daily leaderboard", () => {
@@ -70,7 +83,7 @@ describe("Find the Leader daily leaderboard", () => {
       ],
     });
 
-    expect(await screen.findByText("3 PLAYED")).toBeTruthy();
+    await waitFor(() => expect(document.body).toHaveTextContent("3 PLAYED"));
     expect(screen.getByText("YOUR OFFICIAL RESULT")).toBeTruthy();
     expect(screen.getAllByText("T-1")).toHaveLength(2);
     expect(screen.getAllByText("#3")).toHaveLength(2);

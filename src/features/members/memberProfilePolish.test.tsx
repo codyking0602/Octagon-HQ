@@ -1,15 +1,16 @@
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { MemberAvatarEditor } from "./MemberAvatarEditor";
 import { memberAchievements, type MemberProfileSummary } from "./memberProfilesModel";
 
 const migration = readFileSync(
-  new URL("../../../supabase/migrations/202607290002_member_profile_polish.sql", import.meta.url),
+  resolve(process.cwd(), "supabase/migrations/202607290002_member_profile_polish.sql"),
   "utf8",
 );
-const directorySource = readFileSync(new URL("./MemberDirectoryPage.tsx", import.meta.url), "utf8");
-const profileSource = readFileSync(new URL("./MemberProfilePage.tsx", import.meta.url), "utf8");
+const directorySource = readFileSync(resolve(process.cwd(), "src/features/members/MemberDirectoryPage.tsx"), "utf8");
+const profileSource = readFileSync(resolve(process.cwd(), "src/features/members/MemberProfilePage.tsx"), "utf8");
 
 const member: MemberProfileSummary = {
   displayName: "CODY",

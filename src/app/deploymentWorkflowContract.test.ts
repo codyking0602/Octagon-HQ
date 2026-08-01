@@ -31,7 +31,7 @@ describe("feature deployment workflow contract", () => {
     expect(supabaseWorkflow).toContain("pr.head.sha !== expectedSha");
     expect(supabaseWorkflow).toContain("supabase db push --linked");
     expect(supabaseWorkflow).toContain(
-      "Remote migrations, exact deployed function revisions, live authentication contracts, scheduler health, and production CORS were verified",
+      "Remote migrations, exact deployed function revisions, live authentication contracts, scheduler health, push configuration, and production CORS were verified",
     );
   });
 
@@ -54,7 +54,7 @@ describe("feature deployment workflow contract", () => {
     expect(buildJob).toContain("ref: ${{ env.SOURCE_SHA }}");
     expect(buildJob).toContain("name: octagon-public-config-${{ github.run_id }}");
     expect(buildJob).toContain('. "$config_file"');
-    expect(buildJob).toContain("npm ci --silent --ignore-scripts");
+    expect(buildJob).toContain("npm install --silent");
     expect(buildJob).toContain('"public/deployment.json"');
     expect(buildJob).toContain("actions/upload-artifact@v4");
     expect(buildJob).not.toContain("CLOUDFLARE_API_TOKEN");
@@ -70,10 +70,10 @@ describe("feature deployment workflow contract", () => {
     expect(deployJob).toContain("actions/download-artifact@v4");
     expect(deployJob).toContain("Install trusted Wrangler outside the application artifact");
     expect(deployJob).toContain('"$WRANGLER_BIN" deploy --config "$GITHUB_WORKSPACE/wrangler.jsonc"');
-    expect(deployJob).toContain("/deployment.json?deployment=${SOURCE_SHA}");
+    expect(deployJob).toContain("dist/deployment.json");
     expect(deployJob).toContain("marker.sha !== expectedSha");
-    expect(deployJob).toContain('grep -Fq "$VITE_EXPECTED_SUPABASE_HOSTNAME" "$bundle_file"');
-    expect(deployJob).toContain('grep -Fq "your-project-id" "$bundle_file"');
+    expect(deployJob).toContain("node scripts/verify-live-frontend-delivery.mjs");
+    expect(deployJob).toContain("Download verified public browser configuration");
     expect(deployJob).not.toContain("npm run build");
     expect(deployJob).not.toContain("ref: ${{ env.SOURCE_SHA }}");
   });

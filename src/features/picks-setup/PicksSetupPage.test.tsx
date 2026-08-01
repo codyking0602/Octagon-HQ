@@ -147,7 +147,7 @@ describe("Event Setup and card review", () => {
     renderPage(repo);
 
     const exactUrl = "https://www.mmamania.com/ufc-fight-cards/446488/latest-ufc-belgrade-fight-card";
-    fireEvent.change(await screen.findByLabelText("MMA MANIA CARD URL (OPTIONAL)"), {
+    fireEvent.change(await screen.findByPlaceholderText("https://www.mmamania.com/..."), {
       target: { value: exactUrl },
     });
     fireEvent.click(screen.getByRole("button", { name: "SYNC NEXT UFC EVENT" }));
@@ -182,6 +182,7 @@ describe("Event Setup and card review", () => {
     const repo = repository(stagedDraft);
     renderPage(repo);
 
+    await waitFor(() => expect(screen.getByPlaceholderText("https://www.mmamania.com/...")).toHaveValue(stagedDraft.sourceUrl));
     fireEvent.click(await screen.findByRole("button", { name: "CHECK FOR CARD UPDATES" }));
     await waitFor(() => expect(repo.previewSource).toHaveBeenCalledWith("auto", stagedDraft.sourceUrl));
     expect(repo.applySourcePreview).not.toHaveBeenCalled();
@@ -196,7 +197,8 @@ describe("Event Setup and card review", () => {
     const repo = repository(stagedDraft);
     renderPage(repo);
 
-    fireEvent.click(await screen.findByRole("button", { name: /FULL CARD Main card, prelims/i }));
+    await waitFor(() => expect(screen.getByPlaceholderText("https://www.mmamania.com/...")).toHaveValue(stagedDraft.sourceUrl));
+    fireEvent.click((await screen.findByText("FULL CARD")).closest("button")!);
     fireEvent.click(screen.getByRole("button", { name: "CHECK FOR CARD UPDATES" }));
     await waitFor(() => expect(repo.previewSource).toHaveBeenCalledWith("full", stagedDraft.sourceUrl));
   });

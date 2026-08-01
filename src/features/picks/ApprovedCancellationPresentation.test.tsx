@@ -1,5 +1,6 @@
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { MemoryRouter } from "react-router-dom";
 import { IdentityProvider } from "../identity/IdentityProvider";
 import type { IdentityGateway } from "../identity/identityGateway";
 import PicksPage from "./PicksPage";
@@ -109,9 +110,9 @@ function repository(): PicksRepository {
 
 function renderPage(repo: PicksRepository) {
   return render(
-    <IdentityProvider gateway={gateway()}>
+    <MemoryRouter><IdentityProvider gateway={gateway()}>
       <PicksProvider repository={repo}><PicksPage /></PicksProvider>
-    </IdentityProvider>,
+    </IdentityProvider></MemoryRouter>,
   );
 }
 

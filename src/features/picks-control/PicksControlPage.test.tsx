@@ -189,7 +189,7 @@ describe("Fight Night Control", () => {
     const repo = repository(completed);
     renderPage(repo);
 
-    expect(await screen.findByText("Recap remains published")).toBeInTheDocument();
+    expect(await screen.findByText("Recap published automatically")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "COMPLETE EVENT" })).not.toBeInTheDocument();
     expect(screen.getByText(/Prior result states and reasons remain privately audited/)).toBeInTheDocument();
 

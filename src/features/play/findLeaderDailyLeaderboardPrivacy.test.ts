@@ -1,12 +1,13 @@
 import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const migration = readFileSync(
-  new URL("../../../supabase/migrations/202608190001_find_leader_daily_leaderboard.sql", import.meta.url),
+  resolve(process.cwd(), "supabase/migrations/202608190001_find_leader_daily_leaderboard.sql"),
   "utf8",
 );
 const repository = readFileSync(
-  new URL("./findLeaderHistoryRepository.ts", import.meta.url),
+  resolve(process.cwd(), "src/features/play/findLeaderHistoryRepository.ts"),
   "utf8",
 );
 
