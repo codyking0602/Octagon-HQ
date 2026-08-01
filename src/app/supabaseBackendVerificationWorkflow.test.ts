@@ -43,7 +43,7 @@ describe("Supabase backend verification release boundary", () => {
     expect(workflow).toContain("Runtime paths: ${runtimeChanges.join(\", \")}");
   });
 
-  it("executes both Auction SQL suites against a fresh local database", () => {
+  it("executes every Auction SQL suite against a fresh local database", () => {
     expect(workflow).toContain(
       "- name: Execute Auction lifecycle SQL tests on a fresh local database",
     );
@@ -53,14 +53,17 @@ describe("Supabase backend verification release boundary", () => {
       "supabase/tests/auction_private_lifecycle_hardening.sql",
     );
     expect(workflow).toContain(
+      "supabase/tests/auction_playable_server_engine.sql",
+    );
+    expect(workflow).toContain(
       'psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"',
     );
     expect(workflow).toContain(
-      "Auction lifecycle SQL tests: executed against a fresh local Supabase database",
+      "Auction lifecycle SQL tests executed successfully against a fresh local database.",
     );
   });
 
-  it("requires both Auction lifecycle migrations in linked production history", () => {
+  it("requires the Auction lifecycle foundation in linked production history", () => {
     expect(deploymentWorkflow).toContain(
       "supabase/migrations/202608210002_auction_private_lifecycle.sql",
     );
@@ -75,6 +78,38 @@ describe("Supabase backend verification release boundary", () => {
     );
     expect(deploymentWorkflow).toContain(
       "Auction lifecycle migrations 202608210002 and 202608210003 verified in linked production history",
+    );
+  });
+
+  it("requires every playable Auction migration in linked production history", () => {
+    const playableMigrations = [
+      [
+        "202608220001",
+        "supabase/migrations/202608220001_auction_playable_server_engine.sql",
+      ],
+      [
+        "202608220002",
+        "supabase/migrations/202608220002_auction_playable_server_engine_hardening.sql",
+      ],
+      [
+        "202608220003",
+        "supabase/migrations/202608220003_auction_round_notification_hardening.sql",
+      ],
+      [
+        "202608220004",
+        "supabase/migrations/202608220004_auction_catalog_version_rotation.sql",
+      ],
+    ] as const;
+
+    for (const [version, path] of playableMigrations) {
+      expect(deploymentWorkflow).toContain(path);
+      expect(deploymentWorkflow).toContain(
+        `require_remote_migration "${version}"`,
+      );
+    }
+
+    expect(deploymentWorkflow).toContain(
+      "Auction playable server migrations 202608220001 through 202608220004 verified in linked production history",
     );
   });
 
