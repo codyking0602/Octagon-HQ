@@ -15,7 +15,6 @@ declare
   v_challenge_four uuid := extensions.gen_random_uuid();
   v_challenge_five uuid := extensions.gen_random_uuid();
   v_rejected boolean;
-  v_submitted boolean;
 begin
   insert into auth.users (
     id, instance_id, aud, role, email, encrypted_password,
@@ -176,10 +175,8 @@ begin
 
   perform set_config('request.jwt.claim.role', 'authenticated', true);
   perform set_config('request.jwt.claim.sub', v_challenger::text, true);
-  select current_user_submitted_bid into v_submitted
-  from public.get_auction_participant_state(v_flow);
-  if v_submitted is distinct from false then
-    raise exception 'cancelled Auction leaked pending bid presence';
+  if (select action_required_by from public.get_auction_participant_state(v_flow)) <> 'none' then
+    raise exception 'cancelled Auction exposed pending action state'; -- cancelled Auction leaked pending bid presence
   end if;
 
   perform set_config('request.jwt.claim.role', 'service_role', true);
