@@ -52,7 +52,7 @@ const modes: readonly [AuctionModeId, string, AuctionFamily][] = [
   ["jon-jones-performances", "Best Jon Jones Performances", "career-performance-auction"],
   ["conor-mcgregor-performances", "Best Conor McGregor Performances", "career-performance-auction"],
   ["charles-oliveira-performances", "Best Charles Oliveira Performances", "career-performance-auction"],
-  ["fighter-performances", "Best Fighter Performances", "career-performance-auction"],
+  ["fighter-performances", "Best Fighter Performances", "historical-collection-auction"],
   ["strikers", "Best Strikers", "fighter-auction"],
   ["grapplers", "Best Grapplers", "fighter-auction"],
   ["knockout-artists", "Best Knockout Artists", "fighter-auction"],
