@@ -26,7 +26,6 @@ afterEach(() => {
 });
 
 describe("Fight Night event-wide Picks deadline", () => {
-  // Keep this event-control test pinned before the fixed main-card start.
   it("shows that every fight shares one deadline and lets the owner extend it before the main card", async () => {
     vi.useFakeTimers({ toFake: ["Date"] });
     vi.setSystemTime(new Date("2026-08-01T17:00:00.000Z"));
