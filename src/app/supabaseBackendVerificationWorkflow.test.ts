@@ -81,7 +81,7 @@ describe("Supabase backend verification release boundary", () => {
     );
   });
 
-  it("requires every playable Auction migration in linked production history", () => {
+  it("keeps playable Auction migration proof in both release owners", () => {
     const playableMigrations = [
       [
         "202608220001",
@@ -100,17 +100,18 @@ describe("Supabase backend verification release boundary", () => {
         "supabase/migrations/202608220004_auction_catalog_version_rotation.sql",
       ],
     ] as const;
+    const releaseOwners = [deploymentWorkflow, workflow];
 
-    for (const [version, path] of playableMigrations) {
-      expect(deploymentWorkflow).toContain(path);
-      expect(deploymentWorkflow).toContain(
-        `require_remote_migration "${version}"`,
+    for (const owner of releaseOwners) {
+      for (const [version, path] of playableMigrations) {
+        expect(owner).toContain(path);
+        expect(owner).toContain(`require_remote_migration "${version}"`);
+      }
+
+      expect(owner).toContain(
+        "Auction playable server migrations 202608220001 through 202608220004 verified in linked production history",
       );
     }
-
-    expect(deploymentWorkflow).toContain(
-      "Auction playable server migrations 202608220001 through 202608220004 verified in linked production history",
-    );
   });
 
   it("verifies the live shell and records the resolved SHA explicitly", () => {
