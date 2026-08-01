@@ -22,10 +22,13 @@ const identityGateway: IdentityGateway = {
 afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
+  vi.useRealTimers();
 });
 
 describe("Fight Night event-wide Picks deadline", () => {
   it("shows that every fight shares one deadline and lets the owner extend it before the main card", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2026-08-01T17:00:00.000Z"));
     vi.spyOn(window, "prompt")
       .mockReturnValueOnce("2026-08-01T18:30")
       .mockReturnValueOnce("Give the group another thirty minutes");
