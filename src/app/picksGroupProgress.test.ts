@@ -6,11 +6,15 @@ const styles = readFileSync("src/styles/picks-group-progress.css", "utf8");
 const entry = readFileSync("src/main.tsx", "utf8");
 
 describe("Picks group progress presentation", () => {
-  it("stays collapsed by default and shows completion counts", () => {
+  it("stays collapsed by default and shows scannable completion states", () => {
     expect(component).toContain('<details className="surface-card picks-group-progress">');
     expect(component).not.toContain('<details open');
     expect(component).toContain("{completedMembers}/{members.length} COMPLETE");
     expect(component).toContain("{member.completed}/{member.total}");
+    expect(component).toContain("const isComplete = member.completed === member.total && member.total > 0");
+    expect(component).toContain('{isComplete ? "✓" : member.displayName.trim().charAt(0).toUpperCase()}');
+    expect(styles).toContain(".picks-group-progress__member-status");
+    expect(styles).toContain("button.is-complete .picks-group-progress__member-status");
   });
 
   it("keeps one inline member comparison open at a time", () => {
