@@ -33,6 +33,13 @@ function rowCopy(challenge: PlayChallenge, profileId: string) {
   const direction = challengeDirection(challenge, profileId);
   const status = challengeStatus(challenge, profileId);
 
+  if (challenge.gameId === "auction") {
+    if (status === "completed") return { eyebrow: "AUCTION COMPLETE WITH", detail: "Open the final server state", action: "OPEN" };
+    if (status === "declined") return { eyebrow: "AUCTION DECLINED BY", detail: "This Auction has ended", action: "DECLINED" };
+    if (direction === "sent") return { eyebrow: "AUCTION WITH", detail: status === "opened" ? "Open Auction · check whose bid is required" : "Waiting for their first bid", action: "OPEN" };
+    return { eyebrow: "AUCTION FROM", detail: status === "opened" ? "Open Auction · check whose bid is required" : "Your first sealed bid accepts", action: "BID" };
+  }
+
   if (direction === "sent") {
     if (status === "completed") return { eyebrow: "COMPLETED WITH", detail: `Both finished ${timeAgo(challenge.completedAt ?? challenge.createdAt)}`, action: "RESULTS" };
     if (status === "declined") return { eyebrow: "DECLINED BY", detail: "They passed on this challenge", action: "DECLINED" };
@@ -191,8 +198,9 @@ export function ChallengeCenter() {
               const status = challengeStatus(challenge, activeProfile.id);
               const counterpart = challengeCounterpart(challenge, activeProfile.id, profiles);
               const copy = rowCopy(challenge, activeProfile.id);
-              const canPlay = direction === "received" && status !== "completed" && status !== "declined";
-              const canView = status === "completed";
+              const auction = challenge.gameId === "auction";
+              const canPlay = auction ? status !== "declined" : direction === "received" && status !== "completed" && status !== "declined";
+              const canView = !auction && status === "completed";
               const dismissLabel = direction === "received" && !canView ? "IGNORE" : "REMOVE";
               const memberContent = (
                 <>
@@ -226,14 +234,14 @@ export function ChallengeCenter() {
                     ) : (
                       <span className={`challenge-center__status is-${status}`}>{copy.action}</span>
                     )}
-                    <button
+                    {!auction ? <button
                       type="button"
                       className="challenge-center__dismiss"
                       aria-label={`${dismissLabel} ${counterpart?.displayName ?? "challenge"} ${challenge.gameTitle}`}
                       onClick={() => void dismissChallenge(challenge.code)}
                     >
                       {dismissLabel}
-                    </button>
+                    </button> : null}
                   </div>
                 </article>
               );

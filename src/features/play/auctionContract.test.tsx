@@ -20,12 +20,12 @@ afterEach(cleanup);
 const canonicalChildRoutes = appRoutes.flatMap((route) => route.children ?? []);
 
 describe("auction public product contract", () => {
-  it("registers exactly one preview game with one canonical route owner", () => {
+  it("registers exactly one playable game with one canonical route owner", () => {
     const auctionGames = playGames.filter((game) => game.id === "auction");
     expect(auctionGames).toHaveLength(1);
     expect(playGameDefinition("auction")).toMatchObject({
       title: "Auction",
-      availability: "preview",
+      availability: undefined,
       lineup: { challengeEligible: true },
     });
     expect(PLAY_ROUTE_BY_GAME.auction).toBe("/play/auction");
@@ -82,7 +82,7 @@ describe("auction public product contract", () => {
     }
   });
 
-  it("renders the shell from the only canonical auction SPA route", async () => {
+  it("renders mode selection from the only canonical auction SPA route", async () => {
     const auctionRoutes = canonicalChildRoutes.filter((route) => route.path === "play/auction");
     expect(auctionRoutes).toHaveLength(1);
     expect(canonicalChildRoutes.some((route) => route.path === "auction" || route.path === "/auction")).toBe(false);
@@ -94,10 +94,6 @@ describe("auction public product contract", () => {
     );
 
     expect(await screen.findByRole("heading", { name: "Auction" })).toBeInTheDocument();
-    expect(screen.getByText("GAMEPLAY NOT YET ENABLED")).toBeInTheDocument();
-    expect(screen.getAllByRole("listitem")).toHaveLength(16);
-    for (const mode of auctionModes) {
-      expect(screen.getByText(mode.displayName)).toBeInTheDocument();
-    }
+    expect(screen.getByRole("button", { name: "SIGN IN TO PLAY" })).toBeInTheDocument();
   });
 });
