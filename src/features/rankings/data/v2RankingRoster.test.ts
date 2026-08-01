@@ -33,10 +33,13 @@ const sourceOverrides: Pick<
 describe("V2 ranking roster overlay", () => {
   it("adds Rafael dos Anjos without changing the sealed baseline", () => {
     expect(v2RankingRoster.additions).toHaveLength(1);
-    expect(Object.keys(v2RankingRoster.replacements)).toEqual(["Stipe Miocic"]);
+    expect(Object.keys(v2RankingRoster.replacements)).toEqual([
+      "Jose Aldo",
+      "Stipe Miocic",
+    ]);
     expect(sourceOverrides).toMatchObject({
       factsVersion: "octagon-hq-v2-rda-20260730",
-      judgmentVersion: "octagon-hq-v2-stipe-profile-20260731",
+      judgmentVersion: "octagon-hq-v2-jose-aldo-profile-20260801",
       eraDepthVersion: "octagon-hq-v2-rda-20260730",
       eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
     });
@@ -66,6 +69,31 @@ describe("V2 ranking roster overlay", () => {
       primary: "golden-age",
       secondary: "superstar",
     });
+  });
+
+  it("replaces only Jose Aldo's approved profile copy", () => {
+    const historical = historicalRankingMigrationInputs.fighters.find(
+      (fighter) => fighter.fighter === "Jose Aldo",
+    );
+    const current = canonicalRankingInputs.fighters.find(
+      (fighter) => fighter.fighter === "Jose Aldo",
+    );
+
+    expect(historical).toBeDefined();
+    expect(current).toBeDefined();
+    expect(current?.facts).toEqual(historical?.facts);
+    expect(current?.era).toEqual(historical?.era);
+    expect(current?.judgments).toEqual(historical?.judgments);
+    expect(current?.eraDepth).toEqual(historical?.eraDepth);
+    expect(current?.presentation).toEqual({
+      ...historical?.presentation,
+      oneLiner: "At his best, Aldo combined explosive speed, brutal leg kicks, elite takedown defense, and calm counterstriking. He won nearly seven of every ten scored rounds during his prime, controlling championship fights without needing to chase finishes.",
+      whyRankedHere: "Eight UFC title-fight wins, two victories each over Frankie Edgar and Chad Mendes, and a deep list of ranked wins give Aldo both championship success and real depth. He repeatedly beat elite contenders and remained dangerous long after his original title reign ended.",
+      whyNotHigher: "Part of Aldo's championship legacy happened before he entered the UFC, while his defining UFC losses came against the featherweights who followed him. McGregor stopped him immediately, Holloway finished him twice, and Volkanovski clearly beat him. His bantamweight run added longevity, but not another title-level peak.",
+    });
+    expect(
+      `${current?.presentation.oneLiner}${current?.presentation.whyRankedHere}${current?.presentation.whyNotHigher}`,
+    ).toMatch(/^[\x00-\x7F]+$/);
   });
 
   it("replaces only Stipe Miocic's approved profile reasoning", () => {
