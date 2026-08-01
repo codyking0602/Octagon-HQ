@@ -17,21 +17,36 @@ jobs:
           ref: chatgpt/repair-honest-test-baseline
           fetch-depth: 0
 
-      - name: Download reviewed repair source
+      - name: Download recovered repair parts
         uses: actions/download-artifact@v4
         with:
-          name: repair-source
-          path: ${{ runner.temp }}/repair-source
+          name: repair-parts-recovered
+          path: ${{ runner.temp }}/repair-parts
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: codyking0602/Octagon-HQ
-          run-id: 30670937123
+          run-id: 30681469380
 
-      - name: Apply exact repaired source
+      - name: Verify and apply exact repaired source
         shell: bash
         run: |
           set -euo pipefail
           cp .github/workflows/validate.yml "$RUNNER_TEMP/validate-bootstrap.yml"
-          tar -xzf "$RUNNER_TEMP/repair-source/octagon-repair-source.tgz" -C .
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+
+          path = Path("${{ runner.temp }}/repair-parts/part-10")
+          content = path.read_text()
+          assert len(content) == 11420
+          assert content[11328:11332] == "8RRP"
+          repaired = content[:11328] + content[11332:]
+          digest = hashlib.sha1(f"blob {len(repaired)}\0".encode() + repaired.encode()).hexdigest()
+          assert digest == "66e5a1124f3f5746b0b6fb2d72594b849b2b63a4"
+          path.write_text(repaired)
+          PY
+          cat "$RUNNER_TEMP"/repair-parts/part-* | base64 --decode > "$RUNNER_TEMP/repaired-files.tgz"
+          gzip -t "$RUNNER_TEMP/repaired-files.tgz"
+          tar -xzf "$RUNNER_TEMP/repaired-files.tgz" -C .
           cp "$RUNNER_TEMP/validate-bootstrap.yml" .github/workflows/validate.yml
           rm -rf .repair .github/workflows/apply-repair-bundle.yml
           git config user.name "github-actions[bot]"
