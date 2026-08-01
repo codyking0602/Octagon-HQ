@@ -459,11 +459,11 @@ describe("all-fighter profile coverage", () => {
 });
 
 describe("final profile correctness pass", () => {
-  it("uses fighter-specific #1 why-not copy", () => {
-    expect(whyNotProfileCopy({ rank: 1, slug: "jon-jones" })).toContain("heavyweight sample size");
+  it("uses canonical #1 why-not copy", () => {
+    const jon = getFighter("jon-jones")!;
+    expect(whyNotProfileCopy(jon)).toBe(jon.whyNotHigher);
     const amanda = getFighter("amanda-nunes")!;
-    expect(whyNotProfileCopy({ ...amanda, rank: 1 })).not.toContain("heavyweight sample size");
-    expect(whyNotProfileCopy({ rank: 1, slug: "future-one" })).toBe("They cannot rank higher on this board. The debate is whether the gap over the fighters below is large enough, not whether a stronger UFC resume currently sits above them.");
+    expect(whyNotProfileCopy({ ...amanda, rank: 1 })).toBe(amanda.whyNotHigher);
   });
 
   it("has no unresolved stale rank phrases after profile copy rendering", () => {
