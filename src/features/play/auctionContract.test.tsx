@@ -3,7 +3,9 @@ import { Suspense } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, describe, expect, it } from "vitest";
 import { appRoutes } from "../../app/router";
+import { ChallengeProvider } from "../challenges/ChallengeProvider";
 import { PLAY_ROUTE_BY_GAME } from "../challenges/challengeRuntime";
+import { IdentityProvider } from "../identity/IdentityProvider";
 import {
   AUCTION_MODE_IDS,
   ULTIMATE_FIGHTER_CATEGORIES,
@@ -25,9 +27,9 @@ describe("auction public product contract", () => {
     expect(auctionGames).toHaveLength(1);
     expect(playGameDefinition("auction")).toMatchObject({
       title: "Auction",
-      availability: undefined,
       lineup: { challengeEligible: true },
     });
+    expect(playGameDefinition("auction")).not.toHaveProperty("availability");
     expect(PLAY_ROUTE_BY_GAME.auction).toBe("/play/auction");
   });
 
@@ -82,15 +84,19 @@ describe("auction public product contract", () => {
     }
   });
 
-  it("renders mode selection from the only canonical auction SPA route", async () => {
+  it("renders the signed-out state from the only canonical auction SPA route", async () => {
     const auctionRoutes = canonicalChildRoutes.filter((route) => route.path === "play/auction");
     expect(auctionRoutes).toHaveLength(1);
     expect(canonicalChildRoutes.some((route) => route.path === "auction" || route.path === "/auction")).toBe(false);
 
     render(
-      <MemoryRouter>
-        <Suspense fallback={null}>{auctionRoutes[0]?.element}</Suspense>
-      </MemoryRouter>,
+      <IdentityProvider gateway={null}>
+        <ChallengeProvider repository={null}>
+<MemoryRouter>
+  <Suspense fallback={null}>{auctionRoutes[0]?.element}</Suspense>
+</MemoryRouter>
+        </ChallengeProvider>
+      </IdentityProvider>,
     );
 
     expect(await screen.findByRole("heading", { name: "Auction" })).toBeInTheDocument();

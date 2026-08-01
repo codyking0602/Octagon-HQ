@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import { useState } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { IdentityProvider } from "../identity/IdentityProvider";
 import type { IdentityGateway } from "../identity/identityGateway";
@@ -65,6 +66,17 @@ function fakeRepository(overrides: Partial<ChallengeRepository> = {}): Challenge
   };
 }
 
+function ProfileLookup() {
+  const challenges = usePlayChallenges();
+  const [result, setResult] = useState("");
+  return (
+    <div>
+      <button type="button" onClick={() => void challenges.findProfile("SHANE").then((profile) => setResult(profile?.displayName ?? "NOT FOUND"))}>FIND SHANE</button>
+      <span>{result}</span>
+    </div>
+  );
+}
+
 function ChallengeStarter() {
   const challenges = usePlayChallenges();
   return (
@@ -102,6 +114,22 @@ describe("real profile challenges", () => {
     expect(await screen.findByRole("heading", { name: "CODY's matchups" })).toBeTruthy();
     expect(await screen.findByText("SHANE · Find the Leader")).toBeTruthy();
     expect(screen.queryByText("PREVIEW MODE")).toBeNull();
+  });
+
+  it("exposes the canonical exact-name profile lookup without a second query path", async () => {
+    const findProfile = vi.fn(async () => shane);
+    render(
+      <IdentityProvider gateway={identityGateway()}>
+        <ChallengeProvider repository={fakeRepository({ findProfile })}>
+          <MemoryRouter><ProfileLookup /></MemoryRouter>
+        </ChallengeProvider>
+      </IdentityProvider>,
+    );
+
+    expect(await screen.findByText("FIND SHANE")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "FIND SHANE" }));
+    expect(await screen.findByText("SHANE")).toBeTruthy();
+    expect(findProfile).toHaveBeenCalledWith("SHANE", cody.id);
   });
 
   it("finds an exact profile name and creates the shared challenge for that profile", async () => {

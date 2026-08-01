@@ -21,6 +21,8 @@ describe("Auction frontend repository", () => {
     expect(() => auctionProjectionSchema.parse({ ...projection, future_deck: [firstItem] })).toThrow();
     expect(() => auctionProjectionSchema.parse({ ...projection, pending_opponent_bid: 12 })).toThrow();
     expect(() => auctionProjectionSchema.parse({ ...projection, grading_weights: {} })).toThrow();
+    expect(() => auctionProjectionSchema.parse({ ...projection, pending_category_intent: "Heart" })).toThrow();
+    expect(() => auctionProjectionSchema.parse({ ...projection, rarity_version: "private-v1" })).toThrow();
   });
 
   it("owns preparation, canonical read, first-bid send, and active commands", async () => {

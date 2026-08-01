@@ -52,12 +52,13 @@ interface PlayChallengesContextValue {
   preferredRecipientName: string;
   prepareRecipient: (displayName: string) => void;
   clearPreparedRecipient: () => void;
+  findProfile: (displayName: string) => Promise<ChallengeProfile | null>;
   refresh: () => Promise<void>;
   beginChallenge: (draft: ChallengeComposerDraft) => Promise<string>;
   getChallenge: (code: string) => PlayChallenge | null;
   markOpened: (code: string) => Promise<void>;
   submitResult: (code: string, result: ChallengeJson) => Promise<void>;
-  dismissChallenge: (code: string) => Promise<void>;
+  dismissChallenge: (code: string) => Promise<boolean>;
   viewResults: (code: string) => void;
 }
 
@@ -433,14 +434,28 @@ export function ChallengeProvider({
     }
   }, [activeProfile, refresh, repository]);
 
+  const findProfile = useCallback(async (displayName: string) => {
+    if (!repository || !activeProfile) return null;
+    try {
+      const profile = await repository.findProfile(displayName, activeProfile.id);
+      setError("");
+      return profile;
+    } catch (nextError) {
+      setError(challengeRepositoryError(nextError));
+      return null;
+    }
+  }, [activeProfile, repository]);
+
   const dismissChallenge = useCallback(async (code: string) => {
-    if (!repository || !activeProfile) return;
+    if (!repository || !activeProfile) return false;
     try {
       await repository.dismiss(code);
       if (resultCode === code) setResultCode(null);
       await refresh();
+      return true;
     } catch (nextError) {
       setError(challengeRepositoryError(nextError));
+      return false;
     }
   }, [activeProfile, refresh, repository, resultCode]);
 
@@ -462,6 +477,7 @@ export function ChallengeProvider({
     preferredRecipientName,
     prepareRecipient,
     clearPreparedRecipient: () => setPreferredRecipientName(""),
+    findProfile,
     refresh,
     beginChallenge,
     getChallenge,
