@@ -198,6 +198,29 @@ jobs:
 
           echo "Database password and migration connection are valid."
 
+      - name: Execute Auction lifecycle SQL tests on a fresh local database
+        shell: bash
+        run: |
+          set -euo pipefail
+          supabase db start
+          trap 'supabase stop --no-backup >/dev/null 2>&1 || true' EXIT
+
+          db_url=$(supabase status -o env | sed -n 's/^DB_URL=//p' | tr -d '"')
+          if [ -z "$db_url" ]; then
+            echo "::error title=Local Supabase database unavailable::The local database started, but its connection URL was not reported."
+            exit 1
+          fi
+
+          for test_file in \
+            supabase/tests/auction_private_lifecycle.sql \
+            supabase/tests/auction_private_lifecycle_hardening.sql
+          do
+            echo "Executing $test_file"
+            psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"
+          done
+
+          echo "Auction lifecycle SQL tests executed successfully against a fresh local database."
+
       - name: Verify required Edge Function secret names
         shell: bash
         run: |
@@ -441,6 +464,7 @@ jobs:
             echo "- GitHub deployment secrets: present and accepted"
             echo "- Supabase access token/project pairing: accepted"
             echo "- Database password and migration connection: accepted"
+            echo "- Auction lifecycle SQL tests: executed against a fresh local Supabase database"
             echo "- Required Edge Function secret names: present"
             echo "- Existing profile, challenge, Your HQ, Picks, scoring, recap, reveal, Fight Night, and What's New migrations: deployed remotely"
             echo "- Event setup and card review migration: deployed remotely"
