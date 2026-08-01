@@ -23,11 +23,13 @@ GitHub Actions is the only deployment owner. A merged change is not automaticall
 | Stage | Status | Pull request | Merge SHA |
 | --- | --- | --- | --- |
 | Honest V2 validation baseline | Complete | #202 | `2ce76b4172bdacf6e26a5920688388446fbb245e` |
-| Auction implementation PR 1: typed public contract and route shell | Complete | #203 | `fd294e00165b56db3a63d477622e93ff4e51f01f` |
-| Canonical Auction implementation record | In progress in the documentation PR that introduced this file | Assigned when opened | Assigned when merged |
-| Auction implementation PR 2: private lifecycle, RLS, and safe projection | Next | Not started | Not started |
+| Auction PR 1: typed public contract and route shell | Complete | #203 | `fd294e00165b56db3a63d477622e93ff4e51f01f` |
+| Canonical Auction implementation record | Complete | #204 | `4048e0e11e40ad628ade7437c8e028b18dcdf987` |
+| Auction PR 2: backend foundation | In repair; original drafted head rejected | #205 | Assigned when merged |
 
 PR #203 established one Play game identity, the sixteen public mode definitions, one canonical `/play/auction` route, and a nonfunctional preview shell. It did not add persistence, bidding, prepared challenges, deck generation, grading, or notifications.
+
+The original PR #205 head `4438f5cbc429b40be84ff3c454ca1e948d568104` was rejected because prepared-state privacy, PostgreSQL NULL constraint behavior, lifecycle transitions, terminal immutability, canonical challenge-link immutability, terminal bid-state privacy, adversarial SQL coverage, and exact-head backend verification were not sufficient. PR #205 remains the single backend-foundation owner and must be repaired rather than replaced by a second foundation PR.
 
 ## Product definition
 
@@ -55,6 +57,13 @@ The first-round tie-priority player is visible before bidding. To support that r
 10. The recipient sees the exact mode, first item, and visible tie priority, but never the challenger’s pending bid or hidden category choice.
 11. The recipient accepts the Auction by submitting the recipient’s first sealed bid and applicable category intent.
 12. The server resolves the first round transactionally and the normal asynchronous round loop begins.
+
+Prepared-state authorization is lifecycle-aware:
+
+- Before send, only the challenger may read the safe prepared projection.
+- The proposed recipient must not be able to read or discover an unsent prepared Auction.
+- An abandoned prepared Auction is no longer client-readable.
+- After send, both canonical participants may read the safe projection.
 
 Explicitly abandoning an unsent prepared Auction removes it without notifying the proposed opponent. A prepared Auction is private server state, not a second challenge system.
 
@@ -105,6 +114,8 @@ Examples:
 
 Client-side messaging may preview this maximum, but only the server validates and enforces it.
 
+Bankrolls may never exceed their mode’s starting amount and may never increase during a game. Collection counts, current round, and revision may never move backward.
+
 ## Forced assignment
 
 Once one player fills every required collection slot, normal bidding stops.
@@ -139,9 +150,20 @@ If the bidder wins, the fighter fills the selected category. If the bidder loses
 
 ## Challenge lifecycle
 
+The canonical lifecycle graph is:
+
+```text
+prepared -> sent -> active -> completed
+    |         |        |
+    v         v        v
+abandoned  declined  cancelled
+```
+
+No reverse or skipped transition is allowed. Participants, selected mode, and fixed version snapshots never change after creation. Once linked, the canonical challenge identity cannot be replaced or removed. Completed, cancelled, abandoned, and declined rows are terminal and immutable; idempotent commands must return without rewriting terminal data.
+
 ### Decline
 
-Before acceptance, the recipient may decline through the existing challenge lifecycle.
+Before acceptance, the recipient may decline through the existing challenge lifecycle. The linked Auction becomes terminal with no winner or score.
 
 ### Cancellation
 
@@ -155,9 +177,9 @@ Cancellation requires a confirmation dialog. It must:
 - Remove it from active challenge presentation.
 - Notify the opponent once.
 - Produce no winner, loss, grade, score, or forfeit.
-- Make pending bids and hidden state unreachable to clients.
+- Make pending bids and hidden state unreachable to clients, including pending-bid presence.
 - Be terminal and idempotent.
-- Record the cancelling participant and timestamp for server audit.
+- Record a non-null cancelling participant and timestamp for server audit.
 
 Do not overload ordinary per-user hiding or pre-acceptance decline as active-game cancellation.
 
@@ -179,6 +201,8 @@ The final result shows only:
 - Player one’s overall score from `0` through `100`.
 - Player two’s overall score from `0` through `100`.
 - The winner, or an actual tie when the numeric scores are equal.
+
+Unequal final scores require the higher-scoring participant as a non-null winner. Equal scores require a null winner and represent a true tie.
 
 There are no letter grades.
 
@@ -338,7 +362,7 @@ Each prepared Auction is pinned at creation to its exact:
 - Full private deck.
 - Initial tie-priority player.
 
-Later content or grading changes apply only to newly prepared games. Active or completed games never change midstream.
+Participants, mode, canonical challenge linkage after send, and version snapshots are immutable. Later content or grading changes apply only to newly prepared games. Active or completed games never change midstream.
 
 Version metadata and hidden scores remain backend-owned. Public version identifiers may be exposed only when they reveal no private content and have a concrete product or support purpose.
 
@@ -377,7 +401,7 @@ The Auction requires a limited set of new owners because its hidden state cannot
 
 1. A focused frontend Auction repository using the shared Supabase client and Zod-validated safe payloads.
 2. Server-private Auction lifecycle, deck, bid, category-intent, collection, bankroll, version, and audit storage linked to the canonical challenge identity.
-3. Transactional authenticated SQL RPCs for prepared creation, send-with-first-bid, recipient accept-with-bid, later bids, round resolution, safe reads, cancellation, and any other required state transition.
+3. Transactional authenticated SQL RPCs for prepared creation, send-with-first-bid, recipient accept-with-bid, later bids, round resolution, safe reads, cancellation, and required state transitions.
 4. A private versioned catalog and rarity owner.
 5. A server-authoritative deck generator.
 6. A private grader implemented in Supabase SQL or one existing-workflow-deployed Edge Function only when SQL is genuinely unsuitable.
@@ -399,7 +423,7 @@ The safe projection may include only information needed to render the authorized
 - Visible tie-priority player.
 - Awarded collection items and resolved Ultimate Fighter placements.
 - Current bankrolls and collection progress.
-- Whether the current user has submitted a bid, as a boolean.
+- Whether the current user has submitted a bid, as a boolean, only while that bid state is currently actionable and authorized.
 - Whose action is required.
 - Prepared, sent, active, forced-assignment, completed, declined, abandoned, or cancelled presentation state as applicable.
 - Final overall scores and winner or tie after completion.
@@ -415,12 +439,14 @@ The safe projection may include only information needed to render the authorized
 - Hidden item values.
 - Grading weights, features, intermediate scores, explanations, or item grades.
 - Service-role credentials or grader secrets.
+- The existence or state of an unsent prepared Auction to the proposed recipient.
+- Pending-bid presence after cancellation, decline, abandonment, or completion.
 
 ### Enforcement requirements
 
 - Revoke direct browser access to Auction-private tables.
 - Use authenticated server commands based on `auth.uid()`.
-- Verify that the caller is one of the two participants.
+- Verify that the caller is authorized for the current lifecycle state, not merely named in the row.
 - Do not trust client-declared winners, assignments, bankrolls, rounds, scores, or next items.
 - Validate integer whole-dollar bids and the `$1` minimum server-side.
 - Validate the reserve-based maximum bid server-side.
@@ -429,6 +455,9 @@ The safe projection may include only information needed to render the authorized
 - Make appropriate commands idempotent or explicitly reject duplicates.
 - Keep notifications free of bids, hidden categories, future items, and grading details.
 - Test raw RPC payloads using both participants and an unrelated authenticated user.
+- Test prepared-state confidentiality separately from sent and active participant access.
+- Test PostgreSQL NULL behavior for cancellation audits, winners, and every security-sensitive check constraint.
+- Test every allowed lifecycle edge, forbidden reverse/skip edge, terminal immutability, and canonical challenge-link immutability.
 
 Do not place the private deck, bids, category intent, or grading data in generic challenge `setup`, `creator_result`, `responder_result`, route parameters, notification payloads, local storage, or browser-readable tables.
 
@@ -440,7 +469,7 @@ Frontend hiding, minification, TypeScript types, and browser-side encryption are
 Challenger selects opponent and exact mode
   -> authenticated prepare command
   -> server fixes versions, private deck, first item, and initial tie priority
-  -> safe prepared projection returns
+  -> challenger-only safe prepared projection returns
 
 Challenger locks first bid and optional category
   -> authenticated atomic send command
@@ -485,10 +514,13 @@ Do not add:
 - A new deployment workflow when the existing canonical workflow can be extended.
 - A second Supabase project or alternate backend deployment script.
 - A rematch that reuses the prior game row, mode automatically, or deck.
+- A second backend-foundation PR competing with PR #205.
 
 ## Implementation sequence
 
-The implementation is divided into twelve narrow technical PRs. The documentation PR that created this file is a continuity safeguard and is not one of the twelve feature stages.
+The implementation now uses six feature PRs total: the completed public-contract PR plus five remaining delivery PRs. The prior PR 3 through PR 12 micro-stage plan was retired because it split one playable product into too many review and handoff boundaries.
+
+Each PR still follows one owner, one coherent purpose, focused tests, and exact-head verification. Split a PR only when its diff becomes genuinely unreviewable or crosses an ownership boundary—not merely to preserve an old numbering plan.
 
 ### PR 1 — Public contract and route shell — complete in #203
 
@@ -498,95 +530,66 @@ The implementation is divided into twelve narrow technical PRs. The documentatio
 - One canonical `/play/auction` route.
 - Nonfunctional preview shell.
 
-### PR 2 — Private Auction lifecycle, RLS, and safe projection — next
+### PR 2 — Backend foundation — current #205
 
-- Add the minimum server-private lifecycle schema linked to canonical challenge identity.
-- Represent prepared and sent/active/terminal Auction ownership safely.
-- Add private storage foundations for versions, current round/revision, bankrolls, collections, tie priority, deck positions, bids, category intent, cancellation audit, and final result fields only as structurally necessary.
-- Revoke direct browser access.
-- Add a participant-only safe read projection/RPC that structurally omits pending bids, future deck items, hidden category intent, and grading internals.
-- Add SQL and source-contract tests proving the privacy boundary with two participants and an unrelated user where supported by current test patterns.
-- Do not add real catalog content, deck generation, prepared creation commands, challenge sending, bidding commands, grading, or UI gameplay yet.
+- Final server-private lifecycle schema linked to the canonical challenge identity.
+- Lifecycle-aware authorization: prepared challenger-only, abandoned unreadable, sent/active/terminal participant access as authorized.
+- Explicit forward-only lifecycle graph with declined, cancelled, abandoned, and completed terminal states.
+- Immutable participants, mode, version snapshots, canonical challenge link, and terminal records.
+- Private foundations for versions, round/revision, bankrolls, collections, tie priority, deck positions, bids, category intent, cancellation audit, and final result fields.
+- Direct browser access revoked.
+- Narrow safe read projection that omits pending bids, future deck items, hidden category intent, grading internals, and terminal pending-bid presence.
+- Adversarial SQL and source-contract tests for both participants, an unrelated user, PostgreSQL NULL behavior, lifecycle edges, terminal immutability, and challenge-link immutability.
+- No real catalog content, deck generation, prepare/send/bid commands, grading, notifications, or gameplay UI.
+- This is the final backend-foundation PR. Do not create a repair PR after it; repair #205 until exact-head green.
 
-### PR 3 — Versioned catalog and server-private deck-generation framework
+### PR 3 — Playable server engine
 
-- Private catalog/content/rarity/grading version storage.
-- Mode constraints and initial version framework.
-- Server-private generator with injectable deterministic randomness for tests.
-- Statistical simulation contracts for Jon, category aces, duplicate prevention, and deck extremes.
-
-### PR 4 — Prepared challenge and atomic send with first bid
-
-- Prepare exact mode/opponent.
-- Fix versions, deck, first item, and initial tie priority.
-- Resume same draft with no reroll.
-- Atomically lock first bid and optional category, create/link canonical challenge, and notify recipient.
-
-### PR 5 — Acceptance, bidding, and round resolution
-
-- Accept only by recipient’s first bid.
-- Later bid command.
-- Whole-dollar, minimum, reserve, membership, stale-revision, and idempotency enforcement.
-- Alternating visible tie priority.
-- Transactional reveal and advancement.
+- Private catalog/content/rarity/grading version framework.
+- Server-private deck generator with deterministic injectable randomness for tests.
+- Prepared creation with fixed deck, first revealed item, initial tie priority, and no reroll.
+- Atomic send with challenger’s first sealed bid and canonical challenge creation/linkage.
+- Recipient acceptance only through the recipient’s first bid.
+- Later bid command and transactional round resolution.
+- Whole-dollar minimum, reserve maximum, participant membership, stale-revision, duplicate/idempotency, tie-priority, bankroll, collection, and round enforcement.
 - Sequential `$1` forced assignments.
+- Basic notifications required by these state transitions through the existing publisher.
+- Statistical simulation contracts for Jon, category aces, duplicate prevention, deck strength, and extreme decks.
 
-### PR 6 — Shared mobile Auction board
+### PR 4 — Complete gameplay UI
 
-- Safe projection rendering.
-- Bid entry and validation messaging.
-- Current item, bankrolls, collections, tie priority, and action state.
-- Refresh and exact-destination restoration.
-- No hidden-state requests or fake persistence.
-
-### PR 7 — Decline, cancellation, Challenge Center states, and rematch
-
+- One focused frontend Auction repository using the shared Supabase client and Zod-safe payloads.
+- Shared mobile Auction board for current item, bid entry, bankrolls, collections, tie priority, action state, and resolved-round reveal.
+- Exact refresh, reopening, and Challenge Center destination restoration.
+- Build the Ultimate Fighter private category selection and visible awarded placements.
 - Preserve pre-acceptance decline.
-- Add confirmed active cancellation and notification.
-- No winner/no loss semantics.
-- Extend existing Challenge Center statuses and actions.
+- Confirmed accepted-game cancellation with no winner/loss semantics.
+- Challenge Center states and actions.
 - Rematch returns to mode choice and creates a new prepared game.
+- No hidden-state requests, fake persistence, duplicate provider, or alternate route owner.
 
-### PR 8 — Ultimate Fighter placement and balanced fighter pool
+### PR 5 — Real content and grading
 
-- Private category-intent mechanics integrated with bidding.
-- Real UFC-only fighter pool.
-- Balanced rarity model.
+- Real UFC-only content for all sixteen modes.
+- Balanced Ultimate Fighter pool and five-category data.
 - Jon Jones mythic target and specialist/elite/core/wildcard simulation checks.
-
-### PR 9 — Broad fighter-category content
-
-- Best Strikers.
-- Best Grapplers.
-- Best Knockout Artists.
-- Best Nicknames.
-- Category-ace and flat-nickname rarity behavior.
-
-### PR 10 — Historical and career content pools
-
-- Fighter and championship performances.
-- Finishes, dominant performances, wars, rivalries, iconic moments, and greatest card.
-- Jon Jones, Conor McGregor, and Charles Oliveira career pools.
-- Large-pool and small-career rarity simulation checks.
-
-### PR 11 — Private grading and final results
-
-- Fixed private grading version.
-- Overall `0–100` scores only.
-- Winner or numeric tie.
+- Broad striker, grappler, knockout-artist, and nickname pools.
+- Historical, card-building, rivalry, moment, finish, dominance, championship, and fighter-performance pools.
+- Jon Jones, Conor McGregor, and Charles Oliveira career-performance pools.
+- Private fixed-version grader.
+- Final overall `0–100` scores only, with numeric ties.
 - Existing result presentation integration.
-- Artifact tests proving no grading internals or item values reach the browser.
+- Artifact tests proving no grading internals, item values, private rarity data, or intermediate scores reach the browser.
 
-### PR 12 — Notification completion, exact deep links, privacy proof, and release verification
+### PR 6 — Notifications and release proof
 
 - Complete all Auction notification producers through the existing publisher.
 - Reuse existing push delivery.
-- Verify exact reopening for prepared, active, action-needed, cancelled, and completed states.
+- Verify exact deep links and reopening for prepared, sent, active, action-needed, declined, cancelled, completed, and rematch flows.
 - Add safe rich previews only.
-- Extend existing backend verification and frontend artifact privacy checks.
+- Complete end-to-end privacy proof with two real profiles and an unrelated user.
+- Extend existing backend verification and frontend artifact privacy checks without creating a second deployment or verification owner.
 - Prove exact deployed frontend SHA and deployed backend migrations/functions before any live claim.
-
-Basic transactional notifications required for earlier flows should be added alongside the PR that creates the relevant state transition. PR 12 completes the end-to-end notification, deep-link, privacy, and live-proof system rather than postponing all notifications until the end.
 
 ## Verification standard for every Auction PR
 
@@ -595,15 +598,16 @@ Before merge:
 1. Resolve current `main` before branching.
 2. Branch from that exact `main`.
 3. Preserve the canonical owner.
-4. Make one narrow change.
+4. Make one coherent change.
 5. Add focused tests appropriate to that layer.
 6. Resolve the exact final PR head.
 7. Require typecheck, full test suite, and production build on that exact head.
 8. Require relevant backend verification to be genuinely green for Supabase changes.
-9. Do not dismiss a permanently failing check as unrelated.
-10. Merge only the exact verified head.
-11. Deploy the exact head through GitHub Actions when live testing is required.
-12. Verify the exact production deployment SHA before describing it as live.
+9. Do not dismiss a permanently failing or skipped required check as unrelated.
+10. For database foundations, execute or otherwise genuinely validate the migration and adversarial SQL path; source-string tests alone are not backend proof.
+11. Merge only the exact verified head.
+12. Deploy the exact head through GitHub Actions when live testing is required.
+13. Verify the exact production deployment SHA before describing it as live.
 
 Update this document in the same PR when a stage completes, a locked rule changes, a material architecture fact is discovered, or the next PR boundary changes. Do not create a competing Auction handoff document.
 
@@ -614,6 +618,7 @@ Update this document in the same PR when a stage completes, a locked rule change
 - Two-player asynchronous sealed-bid gameplay.
 - Challenger selects exact mode.
 - Prepared challenge with fixed deck and no reroll.
+- Prepared state is challenger-only until send; abandoned state is unreadable.
 - First visible tie priority before challenger’s bid.
 - First bid locked before recipient notification.
 - Acceptance requires recipient’s bid.
@@ -627,9 +632,12 @@ Update this document in the same PR when a stage completes, a locked rule change
 - Sequential `$1` forced assignment.
 - No timers, forfeits, or gameplay expiration.
 - Participant cancellation with no winner or loss.
+- Non-null cancellation audit for cancelled games.
+- Forward-only lifecycle with immutable terminal rows.
+- Immutable participants, selected mode, version snapshots, and canonical challenge link.
 - Rematch returns to mode selection and creates a new game.
 - Final overall `0–100` scores only.
-- Numeric equality is an actual tie.
+- Numeric equality is an actual tie; unequal scores require the higher-scoring participant as winner.
 - Unspent money has no grading effect.
 - Sixteen-mode initial catalog.
 - UFC-only initial content.
@@ -639,6 +647,7 @@ Update this document in the same PR when a stage completes, a locked rule change
 - Jon Jones target near `1%–2%` of games.
 - Broad category aces near `25%` individually.
 - Existing canonical providers, routes, repositories, notifications, and deployment owners remain in control.
+- Six feature PRs total: PR #203 plus five remaining delivery PRs, unless a future reviewed contract change proves a split is necessary.
 
 ### Tunable through reviewed content work and simulations
 
@@ -664,3 +673,7 @@ Update this document in the same PR when a stage completes, a locked rule change
 - Adopted the prepared challenge/no-reroll opening flow.
 - Completed the architecture inspection and preserved the existing Play, Challenge, Supabase, notification, Worker, and deployment owners.
 - Merged implementation PR #203 establishing the typed public catalog and canonical route shell.
+- Merged PR #204 establishing this canonical implementation record.
+- Rejected the original PR #205 head because its privacy, lifecycle, NULL constraints, terminal immutability, tests, and backend verification were not sufficient.
+- Kept PR #205 as the one backend-foundation owner and required repair on the same branch.
+- Replaced the prior ten remaining micro-PRs with five coherent delivery PRs: backend foundation, playable server engine, complete gameplay UI, real content and grading, and notifications/release proof.
