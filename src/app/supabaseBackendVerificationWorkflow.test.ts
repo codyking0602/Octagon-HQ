@@ -5,6 +5,10 @@ const workflow = readFileSync(
   ".github/workflows/verify-supabase-backend.yml",
   "utf8",
 );
+const deploymentWorkflow = readFileSync(
+  ".github/workflows/deploy-supabase.yml",
+  "utf8",
+);
 
 describe("Supabase backend verification release boundary", () => {
   it("resolves the last genuinely deployed frontend ancestor for non-runtime main commits", () => {
@@ -53,6 +57,24 @@ describe("Supabase backend verification release boundary", () => {
     );
     expect(workflow).toContain(
       "Auction lifecycle SQL tests: executed against a fresh local Supabase database",
+    );
+  });
+
+  it("requires both Auction lifecycle migrations in linked production history", () => {
+    expect(deploymentWorkflow).toContain(
+      "supabase/migrations/202608210002_auction_private_lifecycle.sql",
+    );
+    expect(deploymentWorkflow).toContain(
+      'require_remote_migration "202608210002"',
+    );
+    expect(deploymentWorkflow).toContain(
+      "supabase/migrations/202608210003_auction_private_lifecycle_hardening.sql",
+    );
+    expect(deploymentWorkflow).toContain(
+      'require_remote_migration "202608210003"',
+    );
+    expect(deploymentWorkflow).toContain(
+      "Auction lifecycle migrations 202608210002 and 202608210003 verified in linked production history",
     );
   });
 

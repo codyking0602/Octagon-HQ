@@ -259,6 +259,12 @@ jobs:
           if [ -f supabase/migrations/202608200025_notification_device_push_delivery.sql ]; then
             require_remote_migration "202608200025"
           fi
+          if [ -f supabase/migrations/202608210002_auction_private_lifecycle.sql ]; then
+            require_remote_migration "202608210002"
+          fi
+          if [ -f supabase/migrations/202608210003_auction_private_lifecycle_hardening.sql ]; then
+            require_remote_migration "202608210003"
+          fi
 
           function_list=$(supabase functions list --project-ref "$SUPABASE_PROJECT_ID")
           printf '%s\n' "$function_list" | grep -F "pin-auth"
@@ -361,6 +367,9 @@ jobs:
             fi
             if [ -f supabase/migrations/202608090001_automatic_pick_monitoring_scheduler.sql ]; then
               echo "- Canonical hourly scheduler verified; active state: ${EXPECTED_MONITORING_SCHEDULER_ENABLED:-not-configured}"
+            fi
+            if [ -f supabase/migrations/202608210003_auction_private_lifecycle_hardening.sql ]; then
+              echo "- Auction lifecycle migrations 202608210002 and 202608210003 verified in linked production history"
             fi
             echo "- Canonical production origin: $OCTAGON_PRODUCTION_ORIGIN"
             echo "- Remote migrations, exact deployed function revisions, live authentication contracts, scheduler health, push configuration, and production CORS were verified"
