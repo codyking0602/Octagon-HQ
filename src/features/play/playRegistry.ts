@@ -6,7 +6,8 @@ export type PlayGameId =
   | "blind-resume"
   | "blind-rank"
   | "keep-cut"
-  | "better-than";
+  | "better-than"
+  | "auction";
 
 export type PlayNewLineupControl =
   | "none"
@@ -26,7 +27,8 @@ export type PlayCompletionState =
   | "five-picks-complete"
   | "five-slots-locked"
   | "eight-decisions-locked"
-  | "claim-locked";
+  | "claim-locked"
+  | "auction-complete";
 
 export interface PlayGameLineupDefinition {
   defaultType: PlayLineupType;
@@ -53,6 +55,7 @@ export interface PlayGameDefinition {
   icon: string;
   title: string;
   description: string;
+  availability?: "preview";
   lineup: PlayGameLineupDefinition;
 }
 
@@ -181,6 +184,28 @@ export const playGames: readonly PlayGameDefinition[] = [
       reminderEligible: false,
       historyRecording: "challenge-completion",
       difficultyModel: "User-selected target, comparison lens, valid pool, claim size, and exact fighter list.",
+    },
+  },
+  {
+    id: "auction",
+    icon: "$",
+    title: "Auction",
+    description: "Choose a UFC auction, submit private sealed bids, and build your collection asynchronously.",
+    availability: "preview",
+    lineup: {
+      defaultType: "curated",
+      supportedTypes: ["curated"],
+      replayBehavior: "same-curated-challenge",
+      newLineupControl: "none",
+      repetitionPolicy: "fixed-curated",
+      lineupSize: "variable",
+      completionState: "auction-complete",
+      challengeEligible: true,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "challenge-completion",
+      difficultyModel: "One selected auction mode with fixed public rounds, collection size, and starting bankroll.",
     },
   },
 ] as const;

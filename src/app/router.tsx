@@ -18,6 +18,7 @@ const BlindResumePage = lazy(() => import("../features/play/BlindResumePage"));
 const BlindRankPage = lazy(() => import("../features/play/BlindRankPage"));
 const KeepCutPage = lazy(() => import("../features/play/KeepCutPage"));
 const BetterThanPage = lazy(() => import("../features/play/BetterThanPage"));
+const AuctionPage = lazy(() => import("../features/play/AuctionPage"));
 const PicksPage = lazy(() => import("../features/picks/PicksPage"));
 const PicksControlPage = lazy(() => import("../features/picks-control/PicksControlPage"));
 const PicksSetupPage = lazy(() => import("../features/picks-setup/PicksSetupPage"));
@@ -47,6 +48,7 @@ export const appRoutes: RouteObject[] = [
       { path: "play/blind-rank", element: <BlindRankPage /> },
       { path: "play/keep-cut", element: <KeepCutPage /> },
       { path: "play/better-than", element: <BetterThanPage /> },
+      { path: "play/auction", element: <AuctionPage /> },
       { path: "picks", element: <PicksPage /> },
       { path: "picks/control", element: <PicksControlPage /> },
       { path: "picks/setup", element: <PicksSetupPage /> },

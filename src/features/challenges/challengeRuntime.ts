@@ -11,6 +11,7 @@ export const PLAY_ROUTE_BY_GAME: Record<PlayGameId, string> = {
   "blind-rank": "/play/blind-rank",
   "keep-cut": "/play/keep-cut",
   "better-than": "/play/better-than",
+  auction: "/play/auction",
 };
 
 function challengeCodeFromSearch(search: string, gameId: PlayGameId) {
