@@ -64,17 +64,19 @@ describe("Supabase backend verification release boundary", () => {
   });
 
   it("requires the Auction lifecycle foundation in linked production history", () => {
+    for (const owner of [deploymentWorkflow, workflow]) {
+      expect(owner).toContain(
+        'require_remote_migration "202608210002"',
+      );
+      expect(owner).toContain(
+        'require_remote_migration "202608210003"',
+      );
+    }
     expect(deploymentWorkflow).toContain(
       "supabase/migrations/202608210002_auction_private_lifecycle.sql",
     );
     expect(deploymentWorkflow).toContain(
-      'require_remote_migration "202608210002"',
-    );
-    expect(deploymentWorkflow).toContain(
       "supabase/migrations/202608210003_auction_private_lifecycle_hardening.sql",
-    );
-    expect(deploymentWorkflow).toContain(
-      'require_remote_migration "202608210003"',
     );
     expect(deploymentWorkflow).toContain(
       "Auction lifecycle migrations 202608210002 and 202608210003 verified in linked production history",
@@ -103,13 +105,18 @@ describe("Supabase backend verification release boundary", () => {
 
     for (const [version, path] of playableMigrations) {
       expect(deploymentWorkflow).toContain(path);
-      expect(deploymentWorkflow).toContain(
-        `require_remote_migration "${version}"`,
-      );
+      for (const owner of [deploymentWorkflow, workflow]) {
+        expect(owner).toContain(
+          `require_remote_migration "${version}"`,
+        );
+      }
     }
 
     expect(deploymentWorkflow).toContain(
       "Auction playable server migrations 202608220001 through 202608220004 verified in linked production history",
+    );
+    expect(workflow).toContain(
+      "Auction lifecycle and playable server migrations 202608210002 through 202608220004: deployed remotely",
     );
   });
 
