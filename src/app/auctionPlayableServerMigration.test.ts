@@ -5,6 +5,10 @@ const sql = readFileSync(
   "supabase/migrations/202608220001_auction_playable_server_engine.sql",
   "utf8",
 );
+const hardeningSql = readFileSync(
+  "supabase/migrations/202608220002_auction_playable_server_engine_hardening.sql",
+  "utf8",
+);
 const databaseTest = readFileSync(
   "supabase/tests/auction_playable_server_engine.sql",
   "utf8",
@@ -67,11 +71,25 @@ describe("Auction playable server migration", () => {
     expect(sql).toContain(
       "Use the Auction cancellation command for an active Auction",
     );
-    expect(sql).toContain("if v_challenge.game_id = 'auction' then\n    return true;");
     expect(sql).toContain(
       "'/play/auction?auction=' || v_game.id::text,\n        '{}'::jsonb,\n        '{}'::jsonb",
     );
     expect(sql).not.toContain("jsonb_build_object('auction_id'");
+  });
+
+  it("keeps route opening separate from Auction acceptance", () => {
+    const auctionGuard = hardeningSql.indexOf(
+      "if v_challenge.game_id = 'auction' then",
+    );
+    const openedUpdate = hardeningSql.indexOf(
+      "update public.play_challenges challenge",
+    );
+
+    expect(auctionGuard).toBeGreaterThanOrEqual(0);
+    expect(openedUpdate).toBeGreaterThan(auctionGuard);
+    expect(hardeningSql).toContain(
+      "Auction route reads do not accept the challenge or stamp opened_at",
+    );
   });
 
   it("preserves the canonical projection and adds only current and resolved state", () => {
@@ -119,17 +137,24 @@ describe("Auction playable server migration", () => {
       "generic challenge creation bypassed the Auction engine",
       "opening the route was treated as Auction acceptance",
       "recipient projection leaked the challenger sealed bid",
-      "late-game reserve maximum was not enforced",
-      "tied bid did not use and flip visible tie priority",
+      "higher-bid resolution or arithmetic was incorrect",
+      "pending opponent bid presence leaked",
       "forced assignment or completion arithmetic was incorrect",
+      "tied bid did not use and flip visible tie priority",
       "cancel retry was not idempotent",
       "pre-acceptance decline did not use canonical lifecycle",
       "pending Ultimate Fighter intent leaked",
-      "filled Ultimate Fighter category was accepted again",
+      "Ultimate Fighter category placement was not awarded",
     ]) {
       expect(databaseTest).toContain(requiredProof);
     }
 
+    expect(databaseTest).toContain(
+      "public.submit_auction_bid(v_auction, v_round, v_revision, 5, null)",
+    );
+    expect(databaseTest).toContain(
+      "public.submit_auction_bid(v_auction, 2, v_revision, 5, 'Power')",
+    );
     expect(verificationWorkflow).toContain(
       "supabase/tests/auction_playable_server_engine.sql",
     );
