@@ -4,12 +4,18 @@ on:
   push:
     branches:
       - agent/prove-auction-pr3-production-release
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
 
 permissions:
   contents: write
 
 jobs:
   patch:
+    if: github.event_name == 'push' || github.head_ref == 'agent/prove-auction-pr3-production-release'
     runs-on: ubuntu-latest
     steps:
       - name: Check out repair branch
