@@ -62,14 +62,21 @@ export function GroupPickProgress({ event, locked, mySelections }: GroupPickProg
       <div className="picks-group-progress__members">
         {members.map((member) => {
           const isSelected = member.displayName === selectedName;
+          const isComplete = member.completed === member.total && member.total > 0;
+          const memberStateClass = [member.isCurrentUser ? "is-current-user" : "", isComplete ? "is-complete" : ""]
+            .filter(Boolean)
+            .join(" ");
           return (
             <div className="picks-group-progress__member" key={member.profileId}>
               <button
                 type="button"
-                className={member.isCurrentUser ? "is-current-user" : ""}
+                className={memberStateClass}
                 aria-expanded={isSelected}
                 onClick={() => setSelectedName(isSelected ? null : member.displayName)}
               >
+                <span className="picks-group-progress__member-status" aria-hidden="true">
+                  {isComplete ? "✓" : member.displayName.trim().charAt(0).toUpperCase()}
+                </span>
                 <strong>{member.displayName}{member.isCurrentUser ? " · YOU" : ""}</strong>
                 <b>{member.completed}/{member.total}</b>
               </button>
