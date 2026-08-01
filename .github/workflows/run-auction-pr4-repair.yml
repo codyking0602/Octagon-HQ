@@ -1,0 +1,76 @@
+name: Run Auction PR 4 Repair
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/run-auction-pr4-repair.yml
+      - .github/workflows/repair-auction-pr4-branch.yml
+  push:
+    branches:
+      - codex/implement-complete-gameplay-ui-for-auction
+    paths:
+      - .github/workflows/run-auction-pr4-repair.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: repair-auction-pr4-branch
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: codex/implement-complete-gameplay-ui-for-auction
+          fetch-depth: 0
+
+      - name: Execute reviewed patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          python <<'PY'
+          from pathlib import Path
+
+          workflow = Path(".github/workflows/repair-auction-pr4-branch.yml").read_text()
+          start_marker = "          python <<'PY'\n"
+          end_marker = "\n          PY\n"
+          start = workflow.index(start_marker) + len(start_marker)
+          end = workflow.index(end_marker, start)
+          script = "\n".join(
+              line[10:] if line.startswith("          ") else line
+              for line in workflow[start:end].splitlines()
+          ) + "\n"
+          exec(compile(script, "repair-auction-pr4-branch", "exec"))
+          Path(".github/workflows/run-auction-pr4-repair.yml").unlink()
+          PY
+
+      - name: Verify focused repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --silent
+          npm run typecheck
+          npx vitest run \
+            src/features/play/auctionContract.test.tsx \
+            src/features/play/auctionRepository.test.ts \
+            src/features/play/finalGames.test.tsx \
+            src/features/challenges/ChallengeProvider.test.tsx \
+            src/features/challenges/AuctionChallengeCenter.test.tsx
+          git diff --check
+
+      - name: Commit reviewed repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Repair complete Auction gameplay UI"
+          git push origin HEAD:codex/implement-complete-gameplay-ui-for-auction
