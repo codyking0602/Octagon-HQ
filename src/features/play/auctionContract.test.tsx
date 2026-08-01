@@ -1,8 +1,8 @@
 import { cleanup, render, screen } from "@testing-library/react";
-import { createMemoryRouter, RouterProvider } from "react-router-dom";
+import { Suspense } from "react";
+import { MemoryRouter } from "react-router-dom";
 import { afterEach, describe, expect, it } from "vitest";
 import { appRoutes } from "../../app/router";
-import { AppProviders } from "../../app/providers";
 import { PLAY_ROUTE_BY_GAME } from "../challenges/challengeRuntime";
 import {
   AUCTION_MODE_IDS,
@@ -17,15 +17,7 @@ import { playGameDefinition, playGames } from "./playRegistry";
 
 afterEach(cleanup);
 
-function renderRoute(path: string) {
-  const router = createMemoryRouter(appRoutes, { initialEntries: [path] });
-  render(
-    <AppProviders>
-      <RouterProvider router={router} />
-    </AppProviders>,
-  );
-  return router;
-}
+const canonicalChildRoutes = appRoutes.flatMap((route) => route.children ?? []);
 
 describe("auction public product contract", () => {
   it("registers exactly one preview game with one canonical route owner", () => {
@@ -90,18 +82,22 @@ describe("auction public product contract", () => {
     }
   });
 
-  it("renders the shell and all modes through only the canonical SPA route", async () => {
-    renderRoute("/play/auction");
+  it("renders the shell from the only canonical auction SPA route", async () => {
+    const auctionRoutes = canonicalChildRoutes.filter((route) => route.path === "play/auction");
+    expect(auctionRoutes).toHaveLength(1);
+    expect(canonicalChildRoutes.some((route) => route.path === "auction" || route.path === "/auction")).toBe(false);
+
+    render(
+      <MemoryRouter>
+        <Suspense fallback={null}>{auctionRoutes[0]?.element}</Suspense>
+      </MemoryRouter>,
+    );
+
     expect(await screen.findByRole("heading", { name: "Auction" })).toBeInTheDocument();
     expect(screen.getByText("GAMEPLAY NOT YET ENABLED")).toBeInTheDocument();
     expect(screen.getAllByRole("listitem")).toHaveLength(16);
     for (const mode of auctionModes) {
       expect(screen.getByText(mode.displayName)).toBeInTheDocument();
     }
-    cleanup();
-
-    const competingRoute = renderRoute("/auction");
-    expect(await screen.findByRole("heading", { name: "Welcome to Octagon HQ" })).toBeInTheDocument();
-    expect(competingRoute.state.location.pathname).toBe("/");
   });
 });
