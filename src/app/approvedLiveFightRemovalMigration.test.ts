@@ -48,7 +48,7 @@ describe("approved pre-lock live fight removal", () => {
     expect(controlPage).toContain("submitted picks stay preserved");
     expect(picksPage).toContain("REMOVED FROM PICKS · EXCLUDED FROM SCORING");
     expect(picksPage).toContain("bout.includedInPicks === false");
-    expect(picksPage).toContain("Excluded from scoring");
+    expect(picksPage).toContain("fights removed from Picks are excluded");
   });
 
   it("keeps monitoring advisory and removes only intentional exclusions from active comparison", () => {

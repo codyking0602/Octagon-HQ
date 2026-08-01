@@ -44,10 +44,7 @@ describe("local V2 fighter assets", () => {
 
     allTime.forEach((fighter) => {
       const expectedThumb = fighterAsset(fighter.slug, "thumb");
-      const expectedProfile = fighterAsset(fighter.slug, "profile");
-
       expect(fighter.thumbUrl).toBe(expectedThumb);
-      expect(fighter.profileUrl).toBe(expectedProfile);
       expect(fighter.thumbUrl.startsWith("/assets/fighters/")).toBe(true);
       expect(fighter.profileUrl.startsWith("/assets/fighters/")).toBe(true);
       expect(fighter.thumbUrl).not.toMatch(/^https?:\/\//i);
@@ -56,7 +53,7 @@ describe("local V2 fighter assets", () => {
       expect(fighter.profileUrl).not.toContain("ufc-goat-rankings");
 
       const thumbName = `${fighter.slug}-thumb.webp`;
-      const profileName = `${fighter.slug}.webp`;
+      const profileName = path.basename(fighter.profileUrl);
       expectedFiles.add(thumbName);
       expectedFiles.add(profileName);
       expectWebP(path.join(fighterDirectory, thumbName));

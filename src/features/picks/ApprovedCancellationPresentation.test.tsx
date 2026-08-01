@@ -1,11 +1,16 @@
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { MemoryRouter } from "react-router-dom";
 import { IdentityProvider } from "../identity/IdentityProvider";
 import type { IdentityGateway } from "../identity/identityGateway";
 import PicksPage from "./PicksPage";
 import { PicksProvider } from "./PicksProvider";
 import { pickEventPresentation, pickProgress, type PickEvent, type PickHistory } from "./picksModel";
 import type { PicksRepository } from "./picksRepository";
+
+vi.mock("./picksGroupProgressRepository", () => ({
+  loadPickGroupProgress: vi.fn(async () => []),
+}));
 
 const cody = {
   id: "11111111-1111-4111-8111-111111111111",
@@ -109,9 +114,11 @@ function repository(): PicksRepository {
 
 function renderPage(repo: PicksRepository) {
   return render(
-    <IdentityProvider gateway={gateway()}>
-      <PicksProvider repository={repo}><PicksPage /></PicksProvider>
-    </IdentityProvider>,
+    <MemoryRouter>
+      <IdentityProvider gateway={gateway()}>
+        <PicksProvider repository={repo}><PicksPage /></PicksProvider>
+      </IdentityProvider>
+    </MemoryRouter>,
   );
 }
 

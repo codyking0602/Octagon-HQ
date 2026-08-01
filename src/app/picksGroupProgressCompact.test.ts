@@ -17,7 +17,7 @@ describe("compact Group Picks presentation", () => {
   });
 
   it("uses a compact collapsed height", () => {
-    expect(styles).toContain("min-height: 52px");
-    expect(styles).toContain("padding: 0 18px");
+    expect(styles).toContain("min-height: var(--picks-disclosure-height, 46px)");
+    expect(styles).toContain("padding: 0 var(--picks-disclosure-padding, 16px)");
   });
 });

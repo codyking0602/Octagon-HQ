@@ -1,6 +1,6 @@
-import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { ChallengeProvider } from "../challenges/ChallengeProvider";
 import type { ChallengeProfile, PlayChallenge } from "../challenges/challengeModel";
 import type { ChallengeRepository } from "../challenges/challengeRepository";
@@ -18,6 +18,7 @@ import {
   ProfilePreferencesProvider,
 } from "../profile/ProfilePreferencesProvider";
 import type { ProfilePreferencesRepository } from "../profile/profilePreferencesRepository";
+import { WhatsNewProvider } from "../whats-new/WhatsNewProvider";
 import HomePage from "./HomePage";
 
 const cody: ChallengeProfile = {
@@ -166,11 +167,15 @@ function picksRepository(): PicksRepository {
   };
 }
 
+
+afterEach(cleanup);
+
 describe("Your HQ", () => {
   it("shows an understandable sign-in state instead of broken profile zeros", async () => {
     render(
       <IdentityProvider gateway={null}>
-        <ProfilePreferencesProvider repository={null}>
+        <WhatsNewProvider repository={null}>
+          <ProfilePreferencesProvider repository={null}>
           <PicksProvider repository={picksRepository()}>
             <FindLeaderHistoryProvider repository={null}>
               <ChallengeProvider repository={null}>
@@ -178,7 +183,8 @@ describe("Your HQ", () => {
               </ChallengeProvider>
             </FindLeaderHistoryProvider>
           </PicksProvider>
-        </ProfilePreferencesProvider>
+          </ProfilePreferencesProvider>
+        </WhatsNewProvider>
       </IdentityProvider>,
     );
 
@@ -210,7 +216,8 @@ describe("Your HQ", () => {
 
     render(
       <IdentityProvider gateway={identityGateway()}>
-        <ProfilePreferencesProvider repository={preferencesRepository}>
+        <WhatsNewProvider repository={null}>
+          <ProfilePreferencesProvider repository={preferencesRepository}>
           <PicksProvider repository={picksRepository()}>
             <FindLeaderHistoryProvider repository={historyRepository}>
               <ChallengeProvider repository={challengeRepository(loadChallenges)}>
@@ -218,7 +225,8 @@ describe("Your HQ", () => {
               </ChallengeProvider>
             </FindLeaderHistoryProvider>
           </PicksProvider>
-        </ProfilePreferencesProvider>
+          </ProfilePreferencesProvider>
+        </WhatsNewProvider>
       </IdentityProvider>,
     );
 
@@ -226,6 +234,7 @@ describe("Your HQ", () => {
     expect(screen.queryByText("PERSONALIZED")).not.toBeInTheDocument();
     expect(screen.queryByText("CODY")).not.toBeInTheDocument();
 
+    await screen.findByRole("link", { name: "Open Georges St-Pierre profile" });
     const streakCard = screen.getByText("Daily streak").closest("article")!;
     await waitFor(() => expect(within(streakCard).getByText("2")).toBeInTheDocument());
 
@@ -234,8 +243,7 @@ describe("Your HQ", () => {
     expect(within(picksCard).getByText(/1 PENDING/)).toBeInTheDocument();
 
     const favoriteCard = screen.getByText("Favorite fighter").closest("article")!;
-    await waitFor(() => expect(within(favoriteCard).getByText("Georges St-Pierre")).toBeInTheDocument());
-    expect(screen.getByRole("link", { name: "Open Georges St-Pierre profile" })).toHaveAttribute("href", "/fighters/georges-st-pierre");
+    expect(within(favoriteCard).getByRole("link", { name: "Open Georges St-Pierre profile" })).toHaveAttribute("href", "/fighters/georges-st-pierre");
 
     const challengeCard = screen.getByText("Open challenges").closest("article")!;
     await waitFor(() => expect(within(challengeCard).getByText("2")).toBeInTheDocument());
@@ -249,8 +257,7 @@ describe("Your HQ", () => {
       target: { value: "jon-jones" },
     });
     await waitFor(() => expect(saveFavoriteFighter).toHaveBeenCalledWith("jon-jones"));
-    await waitFor(() => expect(within(favoriteCard).getByText("Jon Jones")).toBeInTheDocument());
-    expect(screen.getByRole("link", { name: "Open Jon Jones profile" })).toHaveAttribute("href", "/fighters/jon-jones");
+    await waitFor(() => expect(within(favoriteCard).getByRole("link", { name: "Open Jon Jones profile" })).toHaveAttribute("href", "/fighters/jon-jones"));
 
     expect(screen.getByText("Magomed Ankalaev vs. Bogdan Guskov")).toBeInTheDocument();
     expect(screen.getByText("1 OF 2")).toBeInTheDocument();

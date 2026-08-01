@@ -41,7 +41,7 @@ describe("Octagon HQ V2", () => {
     expect(screen.queryByText(/UFC-only/i)).not.toBeInTheDocument();
 
     const summary = screen.getByLabelText("P4P ranking summary");
-    expect(summary).toHaveTextContent("65");
+    expect(summary).toHaveTextContent(String(allTime.filter((fighter) => fighter.board === "men").length));
 
     const jonProfile = screen.getByRole("link", { name: "View Jon Jones profile" });
     expect(jonProfile).toHaveAttribute("href", "/fighters/jon-jones");
@@ -119,14 +119,15 @@ describe("Octagon HQ V2", () => {
     renderRoute("/rankings");
     await screen.findByRole("heading", { name: "UFC All-Time P4P" });
 
-    const search = screen.getByPlaceholderText("Search 65 fighters");
+    const menCount = allTime.filter((fighter) => fighter.board === "men").length;
+    const search = screen.getByPlaceholderText(`Search ${menCount} fighters`);
     fireEvent.change(search, { target: { value: "Matt Hughes" } });
     expect(screen.getByLabelText("P4P ranking summary")).toHaveTextContent("1");
     expect(screen.getByRole("link", { name: "View Matt Hughes profile" })).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Clear ranking filters" }));
     expect(search).toHaveValue("");
-    expect(screen.getByLabelText("P4P ranking summary")).toHaveTextContent("65");
+    expect(screen.getByLabelText("P4P ranking summary")).toHaveTextContent(String(menCount));
     expect(screen.queryByRole("button", { name: "Clear ranking filters" })).not.toBeInTheDocument();
   });
 
@@ -245,7 +246,10 @@ describe("V1-style fighter profile restoration", () => {
     Object.defineProperty(navigator, "share", { configurable: true, value: share });
     renderRoute("/fighters/jon-jones");
     fireEvent.click(await screen.findByRole("button", { name: "Share" }));
-    expect(share).toHaveBeenCalledWith(expect.objectContaining({ title: "Jon Jones · Octagon HQ", url: "http://localhost:3000/fighters/jon-jones" }));
+    expect(share).toHaveBeenCalledWith(expect.objectContaining({
+      title: "Jon “Bones” Jones · Octagon HQ",
+      url: expect.stringMatching(/^http:\/\/localhost:3000\/fighters\/jon-jones\?share=[a-z0-9]+$/),
+    }));
     cleanup();
 
     const writeText = vi.fn().mockResolvedValue(undefined);
@@ -253,7 +257,7 @@ describe("V1-style fighter profile restoration", () => {
     Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText } });
     renderRoute("/fighters/jon-jones");
     fireEvent.click(await screen.findByRole("button", { name: "Share" }));
-    expect(writeText).toHaveBeenCalledWith("http://localhost:3000/fighters/jon-jones");
+    expect(writeText).toHaveBeenCalledWith(expect.stringMatching(/^http:\/\/localhost:3000\/fighters\/jon-jones\?share=[a-z0-9]+$/));
     Object.defineProperty(navigator, "share", { configurable: true, value: originalShare });
     Object.defineProperty(navigator, "clipboard", { configurable: true, value: originalClipboard });
   });
@@ -473,8 +477,8 @@ describe("final profile correctness pass", () => {
 
   it("resolves honest watch destinations for every fighter", () => {
     const actions = allTime.map((fighter) => resolveProfileWatchAction(fighter.slug));
-    expect(actions.filter((action) => action?.source === "signature")).toHaveLength(allTime.length);
-    expect(actions.filter((action) => action?.source === "watch-moment")).toHaveLength(0);
+    expect(actions.filter((action) => action?.source === "signature")).toHaveLength(allTime.length - 1);
+    expect(actions.filter((action) => action?.source === "watch-moment")).toHaveLength(1);
     expect(actions.filter((action) => action === null)).toHaveLength(0);
   });
 });

@@ -44,9 +44,10 @@ describe("Fight Night results control migration", () => {
   it("keeps rollback-only owner, mutation, and completion coverage", () => {
     expect(integrationSql).toContain("non-owner recorded an official result");
     expect(integrationSql).toContain("owner could not lock the event");
-    expect(integrationSql).toContain("owner could not clear the result");
+    expect(integrationSql).toContain("owner could not correct a locked finalized result");
     expect(integrationSql).toContain("event completed with a pending bout");
-    expect(integrationSql).toContain("completed result was changed");
+    expect(integrationSql).toContain("completed correction changed lifecycle or failed to update canonical result");
+    expect(integrationSql).toContain("completed correction did not append immutable result evidence");
     expect(integrationSql.trimEnd()).toMatch(/rollback;$/);
   });
 });

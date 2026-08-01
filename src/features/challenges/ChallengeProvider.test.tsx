@@ -100,7 +100,7 @@ describe("real profile challenges", () => {
     );
 
     expect(await screen.findByRole("heading", { name: "CODY's matchups" })).toBeTruthy();
-    expect(screen.getByText("SHANE · Find the Leader")).toBeTruthy();
+    expect(await screen.findByText("SHANE · Find the Leader")).toBeTruthy();
     expect(screen.queryByText("PREVIEW MODE")).toBeNull();
   });
 

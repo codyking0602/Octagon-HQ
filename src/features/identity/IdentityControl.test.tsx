@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, useLocation, useNavigate } from "react-router-dom";
 import { afterEach, describe, expect, it } from "vitest";
 import { ProfilePreferencesProvider } from "../profile/ProfilePreferencesProvider";
@@ -7,6 +7,7 @@ import { IdentityProvider } from "./IdentityProvider";
 import type { IdentityGateway } from "./identityGateway";
 
 afterEach(() => {
+  cleanup();
   document.body.style.overflow = "";
 });
 

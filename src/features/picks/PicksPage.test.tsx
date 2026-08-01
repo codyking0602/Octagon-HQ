@@ -1,11 +1,16 @@
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { MemoryRouter } from "react-router-dom";
 import { IdentityProvider } from "../identity/IdentityProvider";
 import type { IdentityGateway } from "../identity/identityGateway";
 import PicksPage from "./PicksPage";
 import { PicksProvider } from "./PicksProvider";
 import type { PickEvent, PickHistory, ProfileEventPick, UnderdogLock } from "./picksModel";
 import type { PicksRepository } from "./picksRepository";
+
+vi.mock("./picksGroupProgressRepository", () => ({
+  loadPickGroupProgress: vi.fn(async () => []),
+}));
 
 const cody = {
   id: "11111111-1111-4111-8111-111111111111",
@@ -148,6 +153,16 @@ function repository(
   };
 }
 
+function renderPage(repo: PicksRepository, identityGateway: IdentityGateway | null = gateway()) {
+  return render(
+    <MemoryRouter>
+      <IdentityProvider gateway={identityGateway}>
+        <PicksProvider repository={repo}><PicksPage /></PicksProvider>
+      </IdentityProvider>
+    </MemoryRouter>,
+  );
+}
+
 describe("PicksPage", () => {
   it("shows one card-level odds source and saves a selected fighter to the profile", async () => {
     const savePick = vi.fn(async (eventId: string, boutId: string, fighterSlug: string) => ({
@@ -158,11 +173,7 @@ describe("PicksPage", () => {
       updatedAt: "2026-07-24T12:00:00.000Z",
     }));
 
-    render(
-      <IdentityProvider gateway={gateway()}>
-        <PicksProvider repository={repository(savePick)}><PicksPage /></PicksProvider>
-      </IdentityProvider>,
-    );
+    renderPage(repository(savePick));
 
     expect(await screen.findByRole("heading", { name: "UFC Fight Night" })).toBeInTheDocument();
     expect(screen.getByText("Ankalaev vs. Guskov")).toBeInTheDocument();
@@ -194,22 +205,14 @@ describe("PicksPage", () => {
       frozenAmericanOdds: 250,
     };
 
-    render(
-      <IdentityProvider gateway={gateway()}>
-        <PicksProvider repository={repository(undefined, event, [selectedPick], selectedLock)}><PicksPage /></PicksProvider>
-      </IdentityProvider>,
-    );
+    renderPage(repository(undefined, event, [selectedPick], selectedLock));
 
     expect(await screen.findByText("UNDERDOG LOCK · Bogdan Guskov · +4 IF CORRECT")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "★ UNDERDOG LOCK · +4 · REMOVE" })).toBeInTheDocument();
   });
 
   it("shows the event publicly but requires sign-in before making picks", async () => {
-    render(
-      <IdentityProvider gateway={null}>
-        <PicksProvider repository={repository()}><PicksPage /></PicksProvider>
-      </IdentityProvider>,
-    );
+    renderPage(repository(), null);
 
     expect(await screen.findByRole("heading", { name: "UFC Fight Night" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "SIGN IN TO MAKE PICKS" })).toBeInTheDocument();
@@ -218,16 +221,13 @@ describe("PicksPage", () => {
   });
 
   it("opens the latest completed event as a generated full-screen recap", async () => {
-    render(
-      <IdentityProvider gateway={gateway()}>
-        <PicksProvider repository={repository(undefined, null)}><PicksPage /></PicksProvider>
-      </IdentityProvider>,
-    );
+    renderPage(repository(undefined, null));
 
-    expect(await screen.findByRole("heading", { name: "Your event archive" })).toBeInTheDocument();
-    fireEvent.click(screen.getByText("OPEN EVENT ARCHIVE"));
+    expect(await screen.findByText("2026 SEASON")).toBeInTheDocument();
+    fireEvent.click(screen.getByText("STANDINGS & EVENTS"));
+    fireEvent.click(screen.getByRole("tab", { name: "EVENTS" }));
 
-    expect(await screen.findByText("UFC Oklahoma City Recap")).toBeInTheDocument();
+    expect(screen.getByText("UFC Oklahoma City Recap")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /OPEN FULL RECAP/i }));
 
     expect(await screen.findByRole("dialog", { name: "UFC Oklahoma City Recap" })).toBeInTheDocument();
@@ -255,11 +255,7 @@ describe("PicksPage", () => {
       }],
     };
 
-    const { container } = render(
-      <IdentityProvider gateway={gateway()}>
-        <PicksProvider repository={repository(undefined, belgradeEvent)}><PicksPage /></PicksProvider>
-      </IdentityProvider>,
-    );
+    const { container } = renderPage(repository(undefined, belgradeEvent));
 
     await screen.findByText("Uroš Medić vs. Daniel Rodriguez");
     const hero = container.querySelector(".picks-event-hero");
@@ -271,11 +267,7 @@ describe("PicksPage", () => {
   });
 
   it("uses the standard no-poster hero when no event asset is registered", async () => {
-    const { container } = render(
-      <IdentityProvider gateway={gateway()}>
-        <PicksProvider repository={repository()}><PicksPage /></PicksProvider>
-      </IdentityProvider>,
-    );
+    const { container } = renderPage(repository());
 
     await screen.findByText("Ankalaev vs. Guskov");
     expect(container.querySelector(".picks-event-hero")).not.toHaveClass("has-poster");
@@ -301,11 +293,7 @@ describe("PicksPage", () => {
       }],
     };
 
-    render(
-      <IdentityProvider gateway={gateway()}>
-        <PicksProvider repository={repository(undefined, belgradeEvent)}><PicksPage /></PicksProvider>
-      </IdentityProvider>,
-    );
+    renderPage(repository(undefined, belgradeEvent));
 
     const trigger = await screen.findByRole("button", { name: /View matchup breakdown/i });
     fireEvent.click(trigger);

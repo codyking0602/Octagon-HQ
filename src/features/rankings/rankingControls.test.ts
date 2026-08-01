@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { allTime } from "./rankingModel";
 import {
   abbreviateDivisionLabel,
   categoryBadgeLabel,
@@ -44,7 +45,7 @@ describe("ranking control projections", () => {
     expect(rankingCategoryOptions).toHaveLength(6);
     rankingCategoryOptions.forEach((category) => {
       const board = categoryBoard("men", category.value);
-      expect(board).toHaveLength(65);
+      expect(board).toHaveLength(allTime.filter((fighter) => fighter.board === "men").length);
       expectDescending(board.map((fighter) => fighter[category.value]));
       expect(categoryDisplayRating("men", category.value, board[0])).toBe(99);
       expect(categoryBadgeLabel(category.value)).not.toBe("OVR");

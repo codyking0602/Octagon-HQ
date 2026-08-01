@@ -50,6 +50,10 @@ jobs:
           retention-days: 7
 
       - name: Build
+        env:
+          VITE_SUPABASE_URL: https://octagon-validation.supabase.co
+          VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_validation_only_1234567890
+          VITE_EXPECTED_SUPABASE_HOSTNAME: octagon-validation.supabase.co
         run: npm run build 2>&1 | tee build.log
 
       - name: Upload build diagnostics

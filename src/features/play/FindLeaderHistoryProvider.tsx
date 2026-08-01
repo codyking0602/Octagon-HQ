@@ -143,6 +143,7 @@ export function FindLeaderHistoryProvider({
   }, [profileId, repository]);
 
   useEffect(() => {
+    const requestedLeaderboardDay = leaderboardDayRef.current;
     leaderboardRevisionRef.current += 1;
     leaderboardDayRef.current = null;
     setDailyLeaderboard(null);
@@ -150,7 +151,10 @@ export function FindLeaderHistoryProvider({
     setDailyLeaderboardLoading(false);
     setDailyLeaderboardError("");
     void refresh();
-  }, [profileId, refresh]);
+    if (requestedLeaderboardDay) {
+      void loadDailyLeaderboard(requestedLeaderboardDay);
+    }
+  }, [loadDailyLeaderboard, profileId, refresh]);
 
   useEffect(() => {
     if (!profileId || !repository) return undefined;

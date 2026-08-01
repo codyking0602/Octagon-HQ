@@ -1,5 +1,5 @@
 import { existsSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+
 import { describe, expect, it } from "vitest";
 import { getFighter } from "../rankingModel";
 import {
@@ -11,7 +11,7 @@ import {
   type V2RankingRosterOverlay,
 } from "./v2RankingRoster";
 
-const projectRoot = fileURLToPath(new URL("../../../../", import.meta.url));
+const projectRoot = `${process.cwd()}/`;
 
 const sourceOverrides: Pick<
   V2RankingRosterOverlay,

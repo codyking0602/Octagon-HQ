@@ -1,5 +1,6 @@
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { MemoryRouter } from "react-router-dom";
 import { IdentityProvider } from "../identity/IdentityProvider";
 import type { IdentityGateway } from "../identity/identityGateway";
 import PicksPage from "./PicksPage";
@@ -10,6 +11,10 @@ import {
   type PickHistory,
 } from "./picksModel";
 import type { PicksRepository } from "./picksRepository";
+
+vi.mock("./picksGroupProgressRepository", () => ({
+  loadPickGroupProgress: vi.fn(async () => []),
+}));
 
 const cody = {
   id: "11111111-1111-4111-8111-111111111111",
@@ -233,9 +238,11 @@ function repository({
 
 function renderPage(repo: PicksRepository, signedIn = true) {
   return render(
-    <IdentityProvider gateway={signedIn ? gateway() : null}>
-      <PicksProvider repository={repo}><PicksPage /></PicksProvider>
-    </IdentityProvider>,
+    <MemoryRouter>
+      <IdentityProvider gateway={signedIn ? gateway() : null}>
+        <PicksProvider repository={repo}><PicksPage /></PicksProvider>
+      </IdentityProvider>
+    </MemoryRouter>,
   );
 }
 
@@ -261,8 +268,15 @@ describe("Picks lifecycle presentation", () => {
     expect(pickEventPresentation(completeEvent).state).toBe("complete");
   });
 
+  it("keeps the upcoming hero clean while preserving the canonical event identity", async () => {
+    renderPage(repository({ currentEvent: upcomingEvent }), false);
+    expect(await screen.findByRole("heading", { name: upcomingEvent.name })).toBeInTheDocument();
+    expect(screen.getByText(upcomingEvent.subtitle)).toBeInTheDocument();
+    expect(screen.queryByText("NEXT UFC EVENT")).not.toBeInTheDocument();
+    expect(screen.queryByText("UPCOMING")).not.toBeInTheDocument();
+  });
+
   it.each([
-    [upcomingEvent, "NEXT UFC EVENT", "UPCOMING"],
     [lockedEvent, "PICKS LOCKED", "LOCKED"],
     [awaitingEvent, "EVENT IN PROGRESS", "AWAITING RESULTS"],
   ] as const)("renders the canonical %s lifecycle labels", async (currentEvent, eyebrow, status) => {
@@ -294,7 +308,7 @@ describe("locked fight cards and scoring guide", () => {
 
     const selected = await screen.findByRole("button", { name: /Magomed Ankalaev/i });
     const unselected = screen.getByRole("button", { name: /Bogdan Guskov/i });
-    expect(within(selected).getByText("YOUR PICK")).toBeInTheDocument();
+    expect(await within(selected).findByText("YOUR PICK")).toBeInTheDocument();
     expect(within(unselected).getByText("NOT PICKED")).toBeInTheDocument();
     expect(selected).toBeDisabled();
     expect(unselected).toBeDisabled();
@@ -302,7 +316,7 @@ describe("locked fight cards and scoring guide", () => {
     expect(container.querySelectorAll(".pick-fighter-thumbnail")).toHaveLength(2);
   });
 
-  it("keeps open cards interactive, labeled PICK FIGHTER, and on the existing save flow", async () => {
+  it("keeps open cards interactive and on the existing save flow", async () => {
     const savePick = vi.fn(async (eventId: string, boutId: string, fighterSlug: string) => ({
       eventId,
       boutId,
@@ -313,7 +327,6 @@ describe("locked fight cards and scoring guide", () => {
     renderPage(repository({ currentEvent: upcomingEvent, savePick }));
 
     const blueChoice = await screen.findByRole("button", { name: /Bogdan Guskov/i });
-    expect(screen.getAllByText("PICK FIGHTER")).toHaveLength(2);
     expect(blueChoice).not.toBeDisabled();
     fireEvent.click(blueChoice);
     await waitFor(() => expect(savePick).toHaveBeenCalledWith(
@@ -325,8 +338,8 @@ describe("locked fight cards and scoring guide", () => {
 
   it("keeps the scoring guide collapsed and includes every Underdog Lock bonus tier", async () => {
     renderPage(repository({ currentEvent: upcomingEvent }), false);
-    await screen.findByText("HOW SCORING WORKS");
-    const summary = screen.getByText("HOW SCORING WORKS").closest("summary");
+    await screen.findByText("SCORING & UNDERDOG LOCK RULES");
+    const summary = screen.getByText("SCORING & UNDERDOG LOCK RULES").closest("summary");
     const details = summary?.closest("details");
     expect(details).not.toHaveAttribute("open");
     fireEvent.click(summary!);
@@ -344,12 +357,13 @@ describe("completed recap polish", () => {
     expect(screen.getAllByText("T-1")).toHaveLength(2);
     expect(screen.getByText("3")).toBeInTheDocument();
 
-    const toggleText = screen.getByText("VIEW FIGHT-BY-FIGHT RESULTS");
-    const summary = toggleText.closest("summary");
-    const details = summary?.closest("details");
-    expect(details).not.toHaveAttribute("open");
-    fireEvent.click(summary!);
-    expect(details).toHaveAttribute("open");
+    const hub = screen.getByText("STANDINGS & EVENTS").closest("details");
+    expect(hub).not.toHaveAttribute("open");
+    fireEvent.click(screen.getByText("STANDINGS & EVENTS"));
+    expect(hub).toHaveAttribute("open");
+    fireEvent.click(screen.getByRole("tab", { name: "EVENTS" }));
+    fireEvent.click(screen.getByRole("button", { name: /OPEN FULL RECAP/i }));
+    expect(await screen.findByRole("dialog", { name: "UFC Oklahoma City Recap" })).toBeInTheDocument();
     expect(screen.getByText("MAIN EVENT")).toBeInTheDocument();
     expect(screen.getByText("MAIN CARD · FIGHT 2")).toBeInTheDocument();
     expect(screen.queryByText("FIGHT 7")).not.toBeInTheDocument();
