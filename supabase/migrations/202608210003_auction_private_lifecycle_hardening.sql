@@ -106,7 +106,7 @@ begin
     raise exception 'Invalid Auction lifecycle transition from % to %', old.lifecycle_state, new.lifecycle_state;
   end if;
 
-  if new.revision < old.revision then
+  if new.revision >= 0 and new.revision < old.revision then
     raise exception 'Auction revision cannot decrease';
   end if;
 
