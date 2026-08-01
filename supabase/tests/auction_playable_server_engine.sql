@@ -136,12 +136,14 @@ begin
   ));
 
   v_auction := public.prepare_auction(v_recipient, 'strikers');
+
   select string_agg(deck.private_item_reference, ',' order by deck.deck_position)
     into v_snapshot
   from private.auction_deck_entries deck
   where deck.auction_id = v_auction;
 
   v_resumed := public.prepare_auction(v_recipient, 'strikers');
+
   select string_agg(deck.private_item_reference, ',' order by deck.deck_position)
     into v_resumed_snapshot
   from private.auction_deck_entries deck
@@ -171,7 +173,8 @@ begin
   end if;
 
   if exists (
-    select 1 from public.play_challenges
+    select 1
+    from public.play_challenges
     where creator_id = v_challenger
       and recipient_id = v_recipient
       and game_id = 'auction'
@@ -179,11 +182,14 @@ begin
     raise exception 'prepared Auction created a public challenge before send';
   end if;
 
-  select private_item_reference into v_future_reference
+  select private_item_reference
+    into v_future_reference
   from private.auction_deck_entries
-  where auction_id = v_auction and deck_position = 2;
+  where auction_id = v_auction
+    and deck_position = 2;
 
-  select to_jsonb(state) into v_payload
+  select to_jsonb(state)
+    into v_payload
   from public.get_auction_participant_state(v_auction) state;
 
   if v_payload is null
@@ -247,7 +253,12 @@ begin
     into v_order
   from generate_series(
     1,
-    (select count(*) from private.auction_catalog where content_version = 'fixture-2026-08-22-v1' and mode_id = 'grapplers')
+    (
+      select count(*)
+      from private.auction_catalog
+      where content_version = 'fixture-2026-08-22-v1'
+        and mode_id = 'grapplers'
+    )
   ) series(value);
 
   perform private.generate_auction_deck(v_deterministic_one, 'fixture-2026-08-22-v1', 'grapplers', 8, v_order);
@@ -277,6 +288,7 @@ begin
   perform pg_temp.set_actor(v_challenger);
   v_abandoned := public.prepare_auction(v_recipient, 'nicknames');
   v_revision := public.abandon_prepared_auction(v_abandoned, 0);
+
   if v_revision <> 1
     or public.abandon_prepared_auction(v_abandoned, 0) <> 1
     or exists (select 1 from public.get_auction_participant_state(v_abandoned))
@@ -301,6 +313,7 @@ declare
   v_state private.auction_games;
 begin
   perform pg_temp.set_actor(v_challenger);
+
   select id, tie_priority_profile_id
     into v_auction, v_tie_priority
   from private.auction_games
@@ -345,16 +358,18 @@ begin
 
   if (
     select count(*)
-    from private.notification_events event
-    where event.recipient_profile_id = v_recipient
-      and event.source_key = 'auction:received:' || v_auction::text
+    from private.notification_events
+    where recipient_profile_id = v_recipient
+      and source_key = 'auction:received:' || v_auction::text
   ) <> 1 then
     raise exception 'challenge received notification linkage is incorrect';
   end if;
 
   perform pg_temp.expect_rejection(format('select public.send_auction_first_bid(%L::uuid, 0, 20, null)', v_auction));
+
   if (
-    select count(*) from public.play_challenges
+    select count(*)
+    from public.play_challenges
     where creator_id = v_challenger
       and recipient_id = v_recipient
       and game_id = 'auction'
@@ -364,22 +379,28 @@ begin
   end if;
 
   perform pg_temp.set_actor(v_recipient);
+
   if not public.open_play_challenge(v_code) then
     raise exception 'recipient could not open canonical Auction challenge';
   end if;
 
   if not exists (
-    select 1 from private.auction_games
-    where id = v_auction and lifecycle_state = 'sent'
+    select 1
+    from private.auction_games
+    where id = v_auction
+      and lifecycle_state = 'sent'
   )
     or exists (
-      select 1 from private.notification_events
+      select 1
+      from private.notification_events
       where recipient_profile_id = v_challenger
         and source_key = 'auction:accepted:' || v_auction::text
     )
     or exists (
-      select 1 from public.play_challenges
-      where code = v_code and opened_at is not null
+      select 1
+      from public.play_challenges
+      where code = v_code
+        and opened_at is not null
     )
   then
     raise exception 'opening the route was treated as Auction acceptance';
@@ -391,11 +412,14 @@ begin
     '{}'
   ));
 
-  select private_item_reference into v_future_reference
+  select private_item_reference
+    into v_future_reference
   from private.auction_deck_entries
-  where auction_id = v_auction and deck_position = 2;
+  where auction_id = v_auction
+    and deck_position = 2;
 
-  select to_jsonb(state) into v_payload
+  select to_jsonb(state)
+    into v_payload
   from public.get_auction_participant_state(v_auction) state;
 
   if v_payload is null
@@ -408,17 +432,37 @@ begin
     raise exception 'recipient projection leaked the challenger sealed bid: %', v_payload;
   end if;
 
-  select revision into v_revision from private.auction_games where id = v_auction;
-  perform pg_temp.expect_rejection(format('select public.submit_auction_bid(%L::uuid, 1, %s, 10, null)', v_auction, v_revision - 1));
-  perform pg_temp.expect_rejection(format('select public.submit_auction_bid(%L::uuid, 2, %s, 10, null)', v_auction, v_revision));
+  select revision
+    into v_revision
+  from private.auction_games
+  where id = v_auction;
+
+  perform pg_temp.expect_rejection(format(
+    'select public.submit_auction_bid(%L::uuid, 1, %s, 10, null)',
+    v_auction,
+    v_revision - 1
+  ));
+  perform pg_temp.expect_rejection(format(
+    'select public.submit_auction_bid(%L::uuid, 2, %s, 10, null)',
+    v_auction,
+    v_revision
+  ));
 
   perform pg_temp.set_actor(v_outsider);
-  perform pg_temp.expect_rejection(format('select public.submit_auction_bid(%L::uuid, 1, %s, 10, null)', v_auction, v_revision));
+  perform pg_temp.expect_rejection(format(
+    'select public.submit_auction_bid(%L::uuid, 1, %s, 10, null)',
+    v_auction,
+    v_revision
+  ));
 
   perform pg_temp.set_actor(v_recipient);
   perform public.submit_auction_bid(v_auction, 1, v_revision, 10, null);
 
-  select * into v_state from private.auction_games where id = v_auction;
+  select *
+    into v_state
+  from private.auction_games
+  where id = v_auction;
+
   if v_state.lifecycle_state <> 'active'
     or v_state.current_round <> 2
     or v_state.revision <> v_revision + 1
@@ -427,28 +471,46 @@ begin
     or v_state.challenger_selection_count <> 1
     or v_state.recipient_selection_count <> 0
     or v_state.tie_priority_profile_id <> v_tie_priority
-    or (select count(*) from private.auction_awards where auction_id = v_auction and awarded_to = v_challenger and resolved_round = 1) <> 1
+    or (
+      select count(*)
+      from private.auction_awards
+      where auction_id = v_auction
+        and awarded_to = v_challenger
+        and resolved_round = 1
+    ) <> 1
   then
     raise exception 'higher-bid resolution or arithmetic was incorrect';
   end if;
 
   if not exists (
-    select 1 from public.play_challenges
-    where code = v_code and opened_at is not null
+    select 1
+    from public.play_challenges
+    where code = v_code
+      and opened_at is not null
   )
-    or (select count(*) from private.notification_events where recipient_profile_id = v_challenger and source_key = 'auction:accepted:' || v_auction::text) <> 1
+    or (
+      select count(*)
+      from private.notification_events
+      where recipient_profile_id = v_challenger
+        and source_key = 'auction:accepted:' || v_auction::text
+    ) <> 1
   then
     raise exception 'recipient first bid did not own acceptance exactly once';
   end if;
 
   perform set_config('request.jwt.claim.role', 'service_role', true);
   perform private.resolve_auction_round(v_auction);
+
   if (select count(*) from private.auction_awards where auction_id = v_auction) <> 1 then
     raise exception 'duplicate resolution awarded the same round twice';
   end if;
 
   for v_round in 2..4 loop
-    select revision into v_revision from private.auction_games where id = v_auction;
+    select revision
+      into v_revision
+    from private.auction_games
+    where id = v_auction;
+
     perform pg_temp.set_actor(v_challenger);
 
     if v_round = 4 then
@@ -461,6 +523,7 @@ begin
     end if;
 
     perform public.submit_auction_bid(v_auction, v_round, v_revision, 5, null);
+
     perform pg_temp.expect_rejection(format(
       'select public.submit_auction_bid(%L::uuid, %s, %s, 4, null)',
       v_auction,
@@ -469,13 +532,19 @@ begin
     ));
 
     perform pg_temp.set_actor(v_recipient);
-    select to_jsonb(state) into v_payload
+
+    select to_jsonb(state)
+      into v_payload
     from public.get_auction_participant_state(v_auction) state;
 
     if (v_payload->>'current_user_submitted_bid')::boolean
       or v_payload->>'action_required_by' <> 'current_user'
       or jsonb_array_length(v_payload->'resolved_rounds') <> v_round - 1
-      or v_payload::text like '%"challenger_bid": 5%'
+      or exists (
+        select 1
+        from jsonb_array_elements(v_payload->'resolved_rounds') resolved
+        where (resolved->>'round')::integer >= v_round
+      )
     then
       raise exception 'pending opponent bid presence leaked before round % resolution: %', v_round, v_payload;
     end if;
@@ -483,7 +552,11 @@ begin
     perform public.submit_auction_bid(v_auction, v_round, v_revision, 1, null);
   end loop;
 
-  select * into v_state from private.auction_games where id = v_auction;
+  select *
+    into v_state
+  from private.auction_games
+  where id = v_auction;
+
   if v_state.lifecycle_state <> 'completed'
     or v_state.challenger_selection_count <> 4
     or v_state.recipient_selection_count <> 4
@@ -496,31 +569,35 @@ begin
     or (
       select count(*)
       from private.auction_awards award
-      left join private.auction_pending_bids cb
-        on cb.auction_id = award.auction_id
-        and cb.round_number = award.resolved_round
-        and cb.bidder_id = v_challenger
-      left join private.auction_pending_bids rb
-        on rb.auction_id = award.auction_id
-        and rb.round_number = award.resolved_round
-        and rb.bidder_id = v_recipient
+      left join private.auction_pending_bids challenger_bid
+        on challenger_bid.auction_id = award.auction_id
+        and challenger_bid.round_number = award.resolved_round
+        and challenger_bid.bidder_id = v_challenger
+      left join private.auction_pending_bids recipient_bid
+        on recipient_bid.auction_id = award.auction_id
+        and recipient_bid.round_number = award.resolved_round
+        and recipient_bid.bidder_id = v_recipient
       where award.auction_id = v_auction
-        and cb.auction_id is null
-        and rb.auction_id is null
+        and challenger_bid.auction_id is null
+        and recipient_bid.auction_id is null
     ) <> 4
   then
     raise exception 'forced assignment or completion arithmetic was incorrect';
   end if;
 
   if not exists (
-    select 1 from public.play_challenges
-    where code = v_code and completed_at is not null
+    select 1
+    from public.play_challenges
+    where code = v_code
+      and completed_at is not null
   ) then
     raise exception 'canonical challenge was not completed by the engine';
   end if;
 
   perform pg_temp.set_actor(v_challenger);
-  select to_jsonb(state) into v_payload
+
+  select to_jsonb(state)
+    into v_payload
   from public.get_auction_participant_state(v_auction) state;
 
   if v_payload->>'current_item' is not null
@@ -534,12 +611,24 @@ begin
       where (round_state->>'forced')::boolean
         and (round_state->>'charged_amount')::integer = 1
     ) <> 4
-    or v_payload ?| array['content_version', 'rarity_version', 'grading_version', 'rarity_band', 'grading_weights', 'intermediate_score']
+    or v_payload ?| array[
+      'content_version',
+      'rarity_version',
+      'grading_version',
+      'rarity_band',
+      'grading_weights',
+      'intermediate_score'
+    ]
   then
     raise exception 'completed safe projection leaked or omitted state: %', v_payload;
   end if;
 
-  if (select count(*) from private.notification_events where source_key = 'auction:completed:' || v_auction::text and recipient_profile_id in (v_challenger, v_recipient)) <> 2 then
+  if (
+    select count(*)
+    from private.notification_events
+    where source_key = 'auction:completed:' || v_auction::text
+      and recipient_profile_id in (v_challenger, v_recipient)
+  ) <> 2 then
     raise exception 'completion notifications were not published exactly once';
   end if;
 
@@ -574,20 +663,31 @@ declare
 begin
   perform pg_temp.set_actor(v_challenger);
   v_tie_auction := public.prepare_auction(v_recipient, 'grapplers');
-  select tie_priority_profile_id into v_priority_before
-  from private.auction_games where id = v_tie_auction;
+
+  select tie_priority_profile_id
+    into v_priority_before
+  from private.auction_games
+  where id = v_tie_auction;
 
   v_tie_code := public.send_auction_first_bid(v_tie_auction, 0, 7, null);
-  select revision into v_revision from private.auction_games where id = v_tie_auction;
+
+  select revision
+    into v_revision
+  from private.auction_games
+  where id = v_tie_auction;
 
   perform pg_temp.set_actor(v_recipient);
   perform public.submit_auction_bid(v_tie_auction, 1, v_revision, 7, null);
-  select tie_priority_profile_id into v_priority_after
-  from private.auction_games where id = v_tie_auction;
+
+  select tie_priority_profile_id
+    into v_priority_after
+  from private.auction_games
+  where id = v_tie_auction;
 
   if v_priority_after = v_priority_before
     or not exists (
-      select 1 from private.auction_awards
+      select 1
+      from private.auction_awards
       where auction_id = v_tie_auction
         and resolved_round = 1
         and awarded_to = v_priority_before
@@ -606,7 +706,11 @@ begin
     raise exception 'tied bid did not use and flip visible tie priority';
   end if;
 
-  select revision into v_revision from private.auction_games where id = v_tie_auction;
+  select revision
+    into v_revision
+  from private.auction_games
+  where id = v_tie_auction;
+
   perform pg_temp.set_actor(v_challenger);
   perform public.submit_auction_bid(v_tie_auction, 2, v_revision, 2, null);
   perform pg_temp.set_actor(v_recipient);
@@ -616,12 +720,17 @@ begin
     raise exception 'non-tied round changed tie priority';
   end if;
 
-  select revision into v_revision from private.auction_games where id = v_tie_auction;
+  select revision
+    into v_revision
+  from private.auction_games
+  where id = v_tie_auction;
+
   perform pg_temp.set_actor(v_challenger);
   perform public.submit_auction_bid(v_tie_auction, 3, v_revision, 3, null);
   perform pg_temp.set_actor(v_recipient);
 
   perform pg_temp.expect_rejection(format('select public.dismiss_play_challenge(%L)', v_tie_code));
+
   v_cancel_revision := public.cancel_auction(v_tie_auction, v_revision);
 
   if not exists (
@@ -639,25 +748,37 @@ begin
   end if;
 
   if public.cancel_auction(v_tie_auction, v_revision) <> v_cancel_revision
-    or (select count(*) from private.notification_events where recipient_profile_id = v_challenger and source_key = 'auction:cancelled:' || v_tie_auction::text) <> 1
+    or (
+      select count(*)
+      from private.notification_events
+      where recipient_profile_id = v_challenger
+        and source_key = 'auction:cancelled:' || v_tie_auction::text
+    ) <> 1
   then
     raise exception 'cancel retry was not idempotent';
   end if;
 
   perform pg_temp.set_actor(v_challenger);
-  select to_jsonb(state) into v_payload
+
+  select to_jsonb(state)
+    into v_payload
   from public.get_auction_participant_state(v_tie_auction) state;
 
   if (v_payload->>'current_user_submitted_bid')::boolean
     or v_payload->>'action_required_by' <> 'none'
     or v_payload->>'current_item' is not null
-    or v_payload::text like '%"challenger_bid": 3%'
+    or exists (
+      select 1
+      from jsonb_array_elements(v_payload->'resolved_rounds') resolved
+      where (resolved->>'round')::integer >= 3
+    )
   then
     raise exception 'cancelled projection exposed pending state: %', v_payload;
   end if;
 
   v_decline_auction := public.prepare_auction(v_recipient, 'wars');
   v_decline_code := public.send_auction_first_bid(v_decline_auction, 0, 3, null);
+
   perform pg_temp.set_actor(v_recipient);
 
   if not public.dismiss_play_challenge(v_decline_code) then
@@ -672,7 +793,12 @@ begin
       and auction.lifecycle_state = 'declined'
       and challenge.declined_at is not null
   )
-    or (select count(*) from private.notification_events where recipient_profile_id = v_challenger and source_key = 'auction:declined:' || v_decline_auction::text) <> 1
+    or (
+      select count(*)
+      from private.notification_events
+      where recipient_profile_id = v_challenger
+        and source_key = 'auction:declined:' || v_decline_auction::text
+    ) <> 1
   then
     raise exception 'pre-acceptance decline did not use canonical lifecycle';
   end if;
@@ -697,7 +823,8 @@ begin
   v_auction := public.prepare_auction(v_player_two, 'ultimate-fighter');
 
   if not exists (
-    select 1 from private.auction_games auction
+    select 1
+    from private.auction_games auction
     where auction.id = v_auction
       and auction.challenger_bankroll = 50
       and auction.recipient_bankroll = 50
@@ -706,16 +833,21 @@ begin
     raise exception 'Ultimate Fighter opening rules are incorrect';
   end if;
 
-  select tie_priority_profile_id into v_priority
-  from private.auction_games where id = v_auction;
+  select tie_priority_profile_id
+    into v_priority
+  from private.auction_games
+  where id = v_auction;
 
   perform pg_temp.expect_rejection(format('select public.send_auction_first_bid(%L::uuid, 0, 10, null)', v_auction));
   perform pg_temp.expect_rejection(format('select public.send_auction_first_bid(%L::uuid, 0, 10, %L)', v_auction, 'Takedowns'));
   perform pg_temp.expect_rejection(format('select public.send_auction_first_bid(%L::uuid, 0, 47, %L)', v_auction, 'Striking'));
+
   perform public.send_auction_first_bid(v_auction, 0, 10, 'Striking');
 
   perform pg_temp.set_actor(v_player_two);
-  select to_jsonb(state) into v_payload
+
+  select to_jsonb(state)
+    into v_payload
   from public.get_auction_participant_state(v_auction) state;
 
   if v_payload::text like '%Striking%'
@@ -724,11 +856,17 @@ begin
     raise exception 'pending Ultimate Fighter intent leaked: %', v_payload;
   end if;
 
-  select revision into v_revision from private.auction_games where id = v_auction;
+  select revision
+    into v_revision
+  from private.auction_games
+  where id = v_auction;
+
   perform public.submit_auction_bid(v_auction, 1, v_revision, 5, 'Grappling');
 
   perform pg_temp.set_actor(v_challenger);
-  select to_jsonb(state) into v_payload
+
+  select to_jsonb(state)
+    into v_payload
   from public.get_auction_participant_state(v_auction) state;
 
   if jsonb_array_length(v_payload->'awarded_collections') <> 1
@@ -739,7 +877,11 @@ begin
     raise exception 'Ultimate Fighter resolved intent visibility is incorrect: %', v_payload;
   end if;
 
-  select revision into v_revision from private.auction_games where id = v_auction;
+  select revision
+    into v_revision
+  from private.auction_games
+  where id = v_auction;
+
   perform pg_temp.expect_rejection(format(
     'select public.submit_auction_bid(%L::uuid, 2, %s, 5, %L)',
     v_auction,
@@ -748,8 +890,11 @@ begin
   ));
 
   perform public.submit_auction_bid(v_auction, 2, v_revision, 5, 'Power');
+
   perform pg_temp.set_actor(v_player_two);
-  select to_jsonb(state) into v_payload
+
+  select to_jsonb(state)
+    into v_payload
   from public.get_auction_participant_state(v_auction) state;
 
   if v_payload::text like '%Power%'
@@ -759,8 +904,10 @@ begin
   end if;
 
   perform public.submit_auction_bid(v_auction, 2, v_revision, 1, 'Frame');
+
   if not exists (
-    select 1 from private.auction_awards
+    select 1
+    from private.auction_awards
     where auction_id = v_auction
       and awarded_to = v_challenger
       and visible_category = 'Power'
@@ -769,7 +916,11 @@ begin
     raise exception 'Ultimate Fighter category placement was not awarded';
   end if;
 
-  select revision into v_revision from private.auction_games where id = v_auction;
+  select revision
+    into v_revision
+  from private.auction_games
+  where id = v_auction;
+
   perform public.cancel_auction(v_auction, v_revision);
 end;
 $$;
