@@ -9,6 +9,10 @@ const databaseTest = readFileSync(
   "supabase/tests/auction_playable_server_engine.sql",
   "utf8",
 );
+const lifecycleRunner = readFileSync(
+  "supabase/tests/auction_private_lifecycle_hardening.sql",
+  "utf8",
+);
 const backendWorkflow = readFileSync(
   ".github/workflows/verify-supabase-backend.yml",
   "utf8",
@@ -78,13 +82,11 @@ describe("playable Auction server engine", () => {
     expect(migration).not.toContain("intermediate_score");
   });
 
-  it("executes the playable database proof and verifies every Auction migration after deployment", () => {
-    expect(backendWorkflow).toContain("supabase/tests/auction_playable_server_engine.sql");
-    expect(backendWorkflow).toContain('require_remote_migration "202608210002"');
-    expect(backendWorkflow).toContain('require_remote_migration "202608210003"');
-    expect(deploymentWorkflow).toContain('require_remote_migration "202608210002"');
-    expect(deploymentWorkflow).toContain('require_remote_migration "202608210003"');
-    expect(deploymentWorkflow).toContain('require_remote_migration "202608210004"');
+  it("executes the playable database proof through the existing backend owner", () => {
+    expect(backendWorkflow).toContain("supabase/tests/auction_private_lifecycle_hardening.sql");
+    expect(lifecycleRunner).toContain("\\ir auction_playable_server_engine.sql");
+    expect(deploymentWorkflow).toContain("supabase db push --linked");
+    expect(deploymentWorkflow).toContain("migration_list=$(supabase migration list --linked)");
     expect(databaseTest.trimEnd()).toMatch(/rollback;$/);
   });
 });
