@@ -17,7 +17,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: repair-auction-pr4-branch
+  group: run-auction-pr4-repair
   cancel-in-progress: false
 
 jobs:
