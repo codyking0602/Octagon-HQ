@@ -42,18 +42,18 @@ const event: PickEvent = {
   }],
 };
 
-function gateway(): IdentityGateway {
+function gateway(canControlPicks = false): IdentityGateway {
   return {
     getSession: async () => ({ userId: profile.id }),
     subscribe: () => () => undefined,
-    loadProfile: async () => profile,
+    loadProfile: async () => ({ ...profile, canControlPicks }),
     signIn: async () => undefined,
     createProfile: async () => undefined,
     signOut: async () => undefined,
   };
 }
 
-function repository(currentEvent: PickEvent): PicksRepository {
+function repository(currentEvent: PickEvent | null): PicksRepository {
   return {
     loadCurrentEvent: async () => currentEvent,
     loadMyPicks: async () => [],
@@ -61,7 +61,7 @@ function repository(currentEvent: PickEvent): PicksRepository {
     loadMySummary: async () => ({
       correct: 0,
       incorrect: 0,
-      pending: 1,
+      pending: currentEvent ? 1 : 0,
       eventsEntered: 0,
       basePoints: 0,
       lockBonus: 0,
@@ -87,10 +87,10 @@ function repository(currentEvent: PickEvent): PicksRepository {
   };
 }
 
-function renderPage(currentEvent: PickEvent) {
+function renderPage(currentEvent: PickEvent | null, canControlPicks = false) {
   return render(
     <MemoryRouter>
-      <IdentityProvider gateway={gateway()}>
+      <IdentityProvider gateway={gateway(canControlPicks)}>
         <PicksProvider repository={repository(currentEvent)}>
           <PicksPage />
         </PicksProvider>
@@ -102,17 +102,35 @@ function renderPage(currentEvent: PickEvent) {
 afterEach(cleanup);
 
 describe("Fight Night control entry", () => {
-  it("shows the separate control route only when the backend grants access", async () => {
+  it("shows the separate active-event control route only when the backend grants access", async () => {
     renderPage(event);
 
     const link = await screen.findByRole("link", { name: "MANAGE EVENT ›" });
     expect(link).toHaveAttribute("href", "/picks/control");
   });
 
-  it("does not infer control access from the signed-in profile name", async () => {
+  it("does not infer active-event control access from the signed-in profile name", async () => {
     renderPage({ ...event, canControl: false });
 
     expect(await screen.findByRole("heading", { name: "UFC Control Entry" })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "MANAGE EVENT ›" })).not.toBeInTheDocument();
+  });
+
+  it("guides the designated owner to the canonical setup anchor when no card exists", async () => {
+    renderPage(null, true);
+
+    expect(await screen.findByText("Check back when the next UFC main card is ready.")).toBeInTheDocument();
+    const link = screen.getByRole("link", { name: "STAGE NEXT UFC EVENT" });
+    expect(link).toHaveAttribute("href", "/picks/control#setup");
+    expect(screen.getByText("Stage → sync → review → publish → monitor → lock/results.")).toBeInTheDocument();
+  });
+
+  it("keeps the ordinary no-card state unchanged and private", async () => {
+    renderPage(null, false);
+
+    expect(await screen.findByRole("heading", { name: "The next Picks card is being prepared." })).toBeInTheDocument();
+    expect(screen.getByText("Check back when the next UFC main card is ready.")).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "STAGE NEXT UFC EVENT" })).not.toBeInTheDocument();
+    expect(screen.queryByText(/Stage → sync/)).not.toBeInTheDocument();
   });
 });

@@ -98,6 +98,9 @@ export function IdentityControl() {
             <div className="identity-profile-card__links">
               <Link to={memberProfilePath(identity.profile.displayName)} onClick={identity.closeDialog}>VIEW MY PROFILE</Link>
               <Link to="/members" onClick={identity.closeDialog}>BROWSE MEMBERS</Link>
+              {identity.profile.canControlPicks === true ? (
+                <Link to="/picks/control" onClick={identity.closeDialog}>MANAGE PICKS</Link>
+              ) : null}
             </div>
             <button type="button" disabled={identity.busy} onClick={() => void identity.signOut()}>SIGN OUT</button>
           </div>

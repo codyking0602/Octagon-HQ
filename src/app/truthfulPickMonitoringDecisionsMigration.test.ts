@@ -17,6 +17,10 @@ const integrationSql = readFileSync(
   "supabase/tests/pick_monitoring_truthful_decisions.sql",
   "utf8",
 );
+const ownerIdentitySql = readFileSync(
+  "supabase/tests/picks_owner_identity_projection.sql",
+  "utf8",
+);
 const backendWorkflow = readFileSync(
   ".github/workflows/verify-supabase-backend.yml",
   "utf8",
@@ -72,7 +76,9 @@ describe("truthful automatic Picks monitoring decisions", () => {
     expect(integrationSql).toContain("decision-only row corrupted provider cadence or quota state");
     expect(integrationSql).toContain("owner inbox mixed scheduler decisions with provider runs");
     expect(integrationSql).toContain("non-owner loaded Monitoring Inbox");
-    expect(integrationSql.trimEnd()).toMatch(/rollback;$/);
+    expect(integrationSql).toMatch(/rollback;\s*-- This file is the canonical Picks fresh-database suite entrypoint/);
+    expect(integrationSql.trimEnd()).toMatch(/\\ir picks_owner_identity_projection\.sql$/);
+    expect(ownerIdentitySql.trimEnd()).toMatch(/rollback;$/);
     expect(backendWorkflow).toContain("supabase/tests/pick_monitoring_truthful_decisions.sql");
     expect(backendWorkflow).toContain(
       "Truthful Picks monitoring SQL tests executed successfully against the same fresh local database.",
