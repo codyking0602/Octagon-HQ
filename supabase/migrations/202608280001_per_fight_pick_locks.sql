@@ -750,56 +750,56 @@ revoke all on function private.get_current_pick_event_per_fight_core()
 
 create function public.get_current_pick_event()
 returns jsonb
-language sql
+language plpgsql
 stable
 security definer
 set search_path = ''
 as $$
-  with core as (
-    select private.get_current_pick_event_per_fight_core() value
-  ), enriched as (
-    select
-      value,
-      event,
-      coalesce((
-        select jsonb_agg(
-          item || jsonb_build_object(
-            'locks_at', coalesce(bout.locks_at, event.locks_at),
-            'is_locked', private.pick_bout_is_locked(event, bout)
-          )
-          order by (item->>'position')::integer
-        )
-        from jsonb_array_elements(value->'bouts') item
-        join public.pick_bouts bout
-          on bout.event_id = event.event_id
-         and bout.bout_id = item->>'bout_id'
-      ), '[]'::jsonb) bouts
-    from core
-    join public.pick_events event on event.event_id = value->>'event_id'
-    where value is not null
-  )
-  select case
-    when (select value from core) is null then null
-    else jsonb_set(
-      jsonb_set(value, '{bouts}', bouts),
-      '{status}',
-      to_jsonb((case
-        when event.status = 'locked' then 'locked'
-        when not exists (
-          select 1
-          from public.pick_bouts open_bout
-          where open_bout.event_id = event.event_id
-            and open_bout.included_in_picks
-            and not private.pick_bout_is_locked(event, open_bout)
-        ) then 'locked'
-        else 'upcoming'
-      end)::text)
+declare
+  v_value jsonb;
+  v_event public.pick_events;
+  v_bouts jsonb;
+begin
+  v_value := private.get_current_pick_event_per_fight_core();
+  if v_value is null then return null; end if;
+
+  select * into v_event
+  from public.pick_events
+  where event_id = v_value->>'event_id';
+  if not found then return null; end if;
+
+  select coalesce(jsonb_agg(
+    item || jsonb_build_object(
+      'locks_at', coalesce(bout.locks_at, v_event.locks_at),
+      'is_locked', private.pick_bout_is_locked(v_event, bout)
     )
-  end
-  from enriched
-  union all
-  select null
-  where (select value from core) is null;
+    order by (item->>'position')::integer
+  ), '[]'::jsonb)
+  into v_bouts
+  from jsonb_array_elements(v_value->'bouts') item
+  join public.pick_bouts bout
+    on bout.event_id = v_event.event_id
+   and bout.bout_id = item->>'bout_id';
+
+  v_value := jsonb_set(v_value, '{bouts}', v_bouts);
+  v_value := jsonb_set(
+    v_value,
+    '{status}',
+    to_jsonb((case
+      when v_event.status = 'locked' then 'locked'
+      when not exists (
+        select 1
+        from public.pick_bouts open_bout
+        where open_bout.event_id = v_event.event_id
+          and open_bout.included_in_picks
+          and not private.pick_bout_is_locked(v_event, open_bout)
+      ) then 'locked'
+      else 'upcoming'
+    end)::text)
+  );
+
+  return v_value;
+end;
 $$;
 revoke all on function public.get_current_pick_event() from public;
 grant execute on function public.get_current_pick_event() to anon, authenticated;
