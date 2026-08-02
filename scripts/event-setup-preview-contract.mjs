@@ -2,6 +2,10 @@ function clean(value) {
   return String(value ?? "").replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
 }
 
+function isRecord(value) {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
 function normalizeText(value) {
   return value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
     .replace(/[’‘`]/g, "'").replace(/[‐‑‒–—]/g, "-")
@@ -160,29 +164,35 @@ export function assertSafeEventSourceRollover(body) {
   }
 }
 
-export function expectedSourceChanges(current, event) {
+export function expectedSourceChanges(current, event, effectiveScope = "main") {
+  const sourceBouts = Array.isArray(event?.bouts) ? event.bouts : [];
+  if (!isRecord(current)) {
+    return [
+      `Stage a new ${effectiveScope === "full" ? "full" : "main"} card with ${sourceBouts.length} fights.`,
+    ];
+  }
+
   const changes = [];
   const metadata = [
-    ["Event name", current?.name, event?.name],
-    ["Main event", current?.subtitle, event?.subtitle],
-    ["Venue", current?.venue, event?.venue],
-    ["Location", current?.location, event?.location],
-    ["Card source", current?.source_url, event?.source_url],
+    ["Event name", current.name, event?.name],
+    ["Main event", current.subtitle, event?.subtitle],
+    ["Venue", current.venue, event?.venue],
+    ["Location", current.location, event?.location],
+    ["Card source", current.source_url, event?.source_url],
   ];
   for (const [label, before, after] of metadata) {
     if (clean(before) !== clean(after)) changes.push(`${label} changed.`);
   }
 
   const timestamps = [
-    ["Event time", current?.starts_at, event?.starts_at],
-    ["Picks lock", current?.locks_at, event?.locks_at],
+    ["Event time", current.starts_at, event?.starts_at],
+    ["Picks lock", current.locks_at, event?.locks_at],
   ];
   for (const [label, before, after] of timestamps) {
     if (!sameTimestamp(before, after)) changes.push(`${label} changed.`);
   }
 
-  const currentBouts = Array.isArray(current?.bouts) ? current.bouts : [];
-  const sourceBouts = Array.isArray(event?.bouts) ? event.bouts : [];
+  const currentBouts = Array.isArray(current.bouts) ? current.bouts : [];
   const currentMap = new Map(currentBouts.map((bout) => [fightPair(bout), bout]));
   const sourceMap = new Map(sourceBouts.map((bout) => [fightPair(bout), bout]));
 
@@ -217,8 +227,8 @@ export function expectedSourceChanges(current, event) {
   return [...new Set(changes)];
 }
 
-export function assertReportedSourceChanges(current, event, reported) {
-  const expected = expectedSourceChanges(current, event);
+export function assertReportedSourceChanges(current, event, reported, effectiveScope = "main") {
+  const expected = expectedSourceChanges(current, event, effectiveScope);
   if (JSON.stringify(reported) !== JSON.stringify(expected)) {
     throw new Error(
       `Preview change list mismatch; expected ${JSON.stringify(expected)}, received ${JSON.stringify(reported)}.`,

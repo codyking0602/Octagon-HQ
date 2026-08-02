@@ -44,7 +44,8 @@ describe("Phase 2B event setup backend", () => {
     expect(syncFunction).toContain("parseMmaManiaCard");
     expect(syncFunction).toContain("resolveCardScope");
     expect(syncFunction).toContain('requested === "main" || requested === "full"');
-    expect(syncFunction).toContain("No UFC first-six fallback was used");
+    expect(syncFunction).toContain('"ARTICLE_DISCOVERY_FAILED"');
+    expect(syncFunction).toContain('"ARTICLE_DISCOVERY_REJECTED"');
     expect(syncFunction).not.toContain("bouts.slice(0, 6)");
   });
 
@@ -52,7 +53,8 @@ describe("Phase 2B event setup backend", () => {
     expect(syncFunction).toContain("persistedSourceUrl(ownerProbe.data)");
     expect(syncFunction).toContain("suppliedSourceUrl || persistedSourceUrl(ownerProbe.data)");
     expect(syncFunction).toContain("fetchExactMmaManiaCard");
-    expect(syncFunction).toContain("Paste the exact MMA Mania fight-card article URL in Event Setup");
+    expect(syncFunction).toContain('"ARTICLE_SOURCE_REJECTED"');
+    expect(syncFunction).toContain("The supplied source must be a specific MMA Mania fight-card article URL.");
     expect(cardChanges).toContain('["Card source", current.source_url, event.source_url]');
   });
 
@@ -67,12 +69,24 @@ describe("Phase 2B event setup backend", () => {
   });
 
   it("independently verifies legitimate production source changes without fixed fight counts", () => {
-    expect(productionPreviewVerifier).toContain(
-      "assertReportedSourceChanges(draftBefore, preview.body.event_preview, preview.body.changes)",
+    expect(productionPreviewVerifier).toContain("assertReportedSourceChanges(");
+    expect(productionPreviewVerifier).toContain("preview.body.effective_scope");
+    expect(productionPreviewContract).toContain('expectedSourceChanges(current, event, effectiveScope = "main")');
+    expect(productionPreviewContract).toContain("if (!isRecord(current))");
+    expect(productionPreviewContract).toContain(
+      '`Stage a new ${effectiveScope === "full" ? "full" : "main"} card with ${sourceBouts.length} fights.`',
     );
-    expect(productionPreviewContract).toContain("expectedSourceChanges");
     expect(productionPreviewContract).toContain("sameTimestamp");
     expect(productionPreviewVerifier).not.toContain("expectedFights");
+    expect(webkitVerifier).toContain('page.getByLabel("MMA MANIA CARD URL (OPTIONAL)")');
+    expect(webkitVerifier).toContain('const updateButton = page.getByRole("button", { name: "CHECK FOR CARD UPDATES" });');
+    expect(webkitVerifier).toContain('const syncButton = page.getByRole("button", { name: "SYNC NEXT UFC EVENT" });');
+    expect(webkitVerifier).toContain("if (await updateButton.count())");
+    expect(webkitVerifier).toContain("await updateButton.click()");
+    expect(webkitVerifier).toContain("} else if (await syncButton.count())");
+    expect(webkitVerifier).toContain('page.getByText("NO STAGED CARD", { exact: true })');
+    expect(webkitVerifier).toContain("syncRequestCount !== syncRequestsBeforeSetup");
+    expect(webkitVerifier).not.toContain("Event Setup has no persisted MMA Mania source to review.");
     expect(webkitVerifier).toContain("/^(Main card|Full card) · \\d+ fights$/i");
     expect(webkitVerifier).not.toContain('name: "Main card · 4 fights"');
     expect(webkitVerifier).not.toContain("SOURCE MATCHES DRAFT");
