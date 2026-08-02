@@ -78,24 +78,25 @@ const findingSchema = z.object({
   reviewed_at: z.string().nullable(),
 });
 
-const inboxSchema = z.object({
-  generated_at: z.string(),
-  scheduler: schedulerSchema,
-  monitored_event: eventSchema.nullable(),
-  schedule_state: scheduleStateSchema.nullable(),
-  latest_run: runSchema.nullable(),
-  unresolved_count: z.number().int().nonnegative(),
-  new_findings: z.array(findingSchema),
-  reviewed_findings: z.array(findingSchema),
-  recent_runs: z.array(runSchema),
-});
-
 const decisionSchema = z.object({
   outcome: z.enum(["completed", "partial", "failed", "skipped"]),
   reason: z.string().nullable(),
   attempted_at: z.string(),
   provider_called: z.boolean(),
 }).nullable();
+
+const inboxSchema = z.object({
+  generated_at: z.string(),
+  scheduler: schedulerSchema,
+  monitored_event: eventSchema.nullable(),
+  schedule_state: scheduleStateSchema.nullable(),
+  latest_scheduled_decision: decisionSchema,
+  latest_run: runSchema.nullable(),
+  unresolved_count: z.number().int().nonnegative(),
+  new_findings: z.array(findingSchema),
+  reviewed_findings: z.array(findingSchema),
+  recent_runs: z.array(runSchema),
+});
 
 export interface MonitoringInboxRepository {
   loadInbox: () => Promise<MonitoringInbox>;
@@ -224,6 +225,12 @@ export function mapMonitoringInbox(value: unknown): MonitoringInbox {
       lastClaimedAt: parsed.schedule_state.last_claimed_at,
       updatedAt: parsed.schedule_state.updated_at,
     } : null,
+    latestScheduledDecision: parsed.latest_scheduled_decision ? {
+      outcome: parsed.latest_scheduled_decision.outcome,
+      reason: parsed.latest_scheduled_decision.reason,
+      attemptedAt: parsed.latest_scheduled_decision.attempted_at,
+      providerCalled: parsed.latest_scheduled_decision.provider_called,
+    } : null,
     latestRun: parsed.latest_run ? mapRun(parsed.latest_run) : null,
     unresolvedCount: parsed.unresolved_count,
     newFindings: parsed.new_findings.map(mapFinding),
@@ -239,18 +246,9 @@ export function createMonitoringInboxRepository(): MonitoringInboxRepository | n
 
   return {
     async loadInbox() {
-      const [rawInbox, rawDecision] = await Promise.all([
-        requireRpcSuccess(client.rpc("get_pick_monitoring_inbox")),
-        requireRpcSuccess(client.rpc("get_latest_pick_monitoring_scheduler_decision")),
-      ]);
-      const inbox = mapMonitoringInbox(rawInbox);
-      const decision = decisionSchema.parse(rawDecision);
-      return { ...inbox, latestScheduledDecision: decision ? {
-        outcome: decision.outcome,
-        reason: decision.reason,
-        attemptedAt: decision.attempted_at,
-        providerCalled: decision.provider_called,
-      } : null };
+      return mapMonitoringInbox(
+        await requireRpcSuccess(client.rpc("get_pick_monitoring_inbox")),
+      );
     },
 
     async runManualCheck() {
