@@ -17,6 +17,10 @@ const integrationSql = readFileSync(
   "supabase/tests/pick_monitoring_truthful_decisions.sql",
   "utf8",
 );
+const backendWorkflow = readFileSync(
+  ".github/workflows/verify-supabase-backend.yml",
+  "utf8",
+);
 
 describe("truthful automatic Picks monitoring decisions", () => {
   it("extends the existing ledger without adding a second inbox owner", () => {
@@ -63,11 +67,15 @@ describe("truthful automatic Picks monitoring decisions", () => {
     expect(runner).toContain('reason: "monitoring_record_failed"');
   });
 
-  it("has rollback-only SQL proof for event selection, cadence, ownership, and inbox separation", () => {
+  it("runs rollback-only SQL proof for event selection, cadence, ownership, and inbox separation", () => {
     expect(integrationSql).toContain("boundary-past event remained monitorable");
     expect(integrationSql).toContain("decision-only row corrupted provider cadence or quota state");
     expect(integrationSql).toContain("owner inbox mixed scheduler decisions with provider runs");
     expect(integrationSql).toContain("non-owner loaded Monitoring Inbox");
     expect(integrationSql.trimEnd()).toMatch(/rollback;$/);
+    expect(backendWorkflow).toContain("supabase/tests/pick_monitoring_truthful_decisions.sql");
+    expect(backendWorkflow).toContain(
+      "Truthful Picks monitoring SQL tests executed successfully against the same fresh local database.",
+    );
   });
 });
