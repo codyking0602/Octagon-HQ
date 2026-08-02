@@ -138,6 +138,15 @@ describe("production Event Setup preview contract", () => {
     expect(syncSource).not.toContain("Promise.all(urls.map");
   });
 
+  it("verifies the canonical new-card summary when no staged draft exists", () => {
+    expect(liveVerifier).toContain("function assertCanonicalChangeList");
+    expect(liveVerifier).toContain('if (!current || typeof current !== "object" || Array.isArray(current))');
+    expect(liveVerifier).toContain(
+      '`Stage a new ${effectiveScope === "full" ? "full" : "main"} card with ${event.bouts.length} fights.`',
+    );
+    expect(liveVerifier).toContain("assertReportedSourceChanges(current, event, reported)");
+  });
+
   it("preserves typed canonical-source failures and keeps the live verifier red with sanitized details", () => {
     expect(syncSource).toContain("if (error instanceof SyncError) throw error;");
     expect(syncSource).toContain('"UFC_EVENT_METADATA_REJECTED"');
