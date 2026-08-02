@@ -186,16 +186,26 @@ function renderPage(currentEvent: PickEvent | null, history: PickHistory = empty
 afterEach(cleanup);
 
 describe("Picks group reveals", () => {
-  it("shows the official result and every entrant after a live bout is resolved", async () => {
+  it("shows the official result and reveals entrants from the selected total", async () => {
     renderPage(resolvedEvent);
 
     expect(await screen.findByText("HOW EVERYONE PICKED")).toBeInTheDocument();
     expect(screen.getByText("OFFICIAL RESULT")).toBeInTheDocument();
     expect(screen.getByText("3 ENTERED")).toBeInTheDocument();
-    expect(screen.getAllByText("CODY").length).toBeGreaterThan(0);
+    expect(screen.queryByText("CODY · YOU")).not.toBeInTheDocument();
+    expect(screen.queryByText("SHANE")).not.toBeInTheDocument();
+    expect(screen.queryByText("TONY")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Red Fighter: 1 pick" }));
+    expect(screen.getByText("CODY · YOU")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Blue Fighter: 1 pick" }));
+    expect(screen.queryByText("CODY · YOU")).not.toBeInTheDocument();
     expect(screen.getByText("SHANE")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "NO PICK: 1 pick" }));
+    expect(screen.queryByText("SHANE")).not.toBeInTheDocument();
     expect(screen.getByText("TONY")).toBeInTheDocument();
-    expect(screen.getAllByText("NO PICK").length).toBeGreaterThan(0);
   });
 
   it("does not render another member reveal for a pending bout", async () => {
@@ -206,7 +216,7 @@ describe("Picks group reveals", () => {
     expect(screen.queryByText("OFFICIAL RESULT")).not.toBeInTheDocument();
   });
 
-  it("keeps the same group reveal in the completed fight-by-fight recap", async () => {
+  it("keeps the tappable group reveal in the completed fight-by-fight recap", async () => {
     renderPage(null, completedHistory);
 
     fireEvent.click(await screen.findByText("STANDINGS & EVENTS"));
@@ -215,7 +225,14 @@ describe("Picks group reveals", () => {
 
     expect(screen.getByText("HOW EVERYONE PICKED")).toBeInTheDocument();
     expect(screen.getByText("3 ENTERED")).toBeInTheDocument();
+    expect(screen.queryByText("SHANE")).not.toBeInTheDocument();
+    expect(screen.queryByText("TONY")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Blue Fighter: 1 pick" }));
     expect(screen.getByText("SHANE")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "NO PICK: 1 pick" }));
+    expect(screen.queryByText("SHANE")).not.toBeInTheDocument();
     expect(screen.getByText("TONY")).toBeInTheDocument();
   });
 });

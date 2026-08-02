@@ -117,5 +117,6 @@ describe("Picks live odds", () => {
       "ankalaev-guskov",
       "bogdan-guskov",
     ));
+    expect(await screen.findByRole("button", { name: "★ UNDERDOG LOCK · +2 · REMOVE" })).toBeInTheDocument();
   });
 });

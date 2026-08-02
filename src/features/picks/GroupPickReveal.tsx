@@ -1,3 +1,4 @@
+import { useId, useState } from "react";
 import type { PickGroupPick } from "./picksModel";
 
 interface GroupPickRevealProps {
@@ -8,17 +9,7 @@ interface GroupPickRevealProps {
   picks: readonly PickGroupPick[];
 }
 
-function selectedFighterName({
-  pickedFighterSlug,
-  redFighterSlug,
-  redFighterName,
-  blueFighterSlug,
-  blueFighterName,
-}: PickGroupPick & Omit<GroupPickRevealProps, "picks">) {
-  if (pickedFighterSlug === redFighterSlug) return redFighterName;
-  if (pickedFighterSlug === blueFighterSlug) return blueFighterName;
-  return "NO PICK";
-}
+type RevealGroupKey = "red" | "blue" | "missing";
 
 export function GroupPickReveal({
   redFighterSlug,
@@ -27,11 +18,27 @@ export function GroupPickReveal({
   blueFighterName,
   picks,
 }: GroupPickRevealProps) {
+  const [selectedGroupKey, setSelectedGroupKey] = useState<RevealGroupKey | null>(null);
+  const detailId = useId();
+
   if (!picks.length) return null;
 
-  const redCount = picks.filter((pick) => pick.pickedFighterSlug === redFighterSlug).length;
-  const blueCount = picks.filter((pick) => pick.pickedFighterSlug === blueFighterSlug).length;
-  const missingCount = picks.length - redCount - blueCount;
+  const groups = [{
+    key: "red" as const,
+    label: redFighterName,
+    members: picks.filter((pick) => pick.pickedFighterSlug === redFighterSlug),
+  }, {
+    key: "blue" as const,
+    label: blueFighterName,
+    members: picks.filter((pick) => pick.pickedFighterSlug === blueFighterSlug),
+  }, {
+    key: "missing" as const,
+    label: "NO PICK",
+    members: picks.filter((pick) => (
+      pick.pickedFighterSlug !== redFighterSlug && pick.pickedFighterSlug !== blueFighterSlug
+    )),
+  }];
+  const selectedGroup = groups.find((group) => group.key === selectedGroupKey) ?? null;
 
   return (
     <section className="picks-group-pick-reveal" aria-label="How everyone picked">
@@ -41,36 +48,39 @@ export function GroupPickReveal({
       </div>
 
       <div className="picks-group-pick-reveal__split" aria-label="Group pick totals">
-        <div>
-          <span>{redFighterName}</span>
-          <strong>{redCount}</strong>
-        </div>
-        <div>
-          <span>{blueFighterName}</span>
-          <strong>{blueCount}</strong>
-        </div>
-        {missingCount ? (
-          <div>
-            <span>NO PICK</span>
-            <strong>{missingCount}</strong>
-          </div>
-        ) : null}
+        {groups.map((group) => {
+          const selected = group.key === selectedGroupKey;
+          const count = group.members.length;
+          return (
+            <button
+              type="button"
+              className={selected ? "is-selected" : ""}
+              aria-controls={detailId}
+              aria-expanded={selected}
+              aria-label={`${group.label}: ${count} ${count === 1 ? "pick" : "picks"}`}
+              disabled={!count}
+              key={group.key}
+              onClick={() => setSelectedGroupKey(selected ? null : group.key)}
+            >
+              <span>{group.label}</span>
+              <strong>{count}</strong>
+            </button>
+          );
+        })}
       </div>
 
-      <div className="picks-group-pick-reveal__members">
-        {picks.map((pick) => (
-          <div className={pick.isCurrentUser ? "is-current-user" : ""} key={pick.displayName}>
-            <strong>{pick.displayName}</strong>
-            <span>{selectedFighterName({
-              ...pick,
-              redFighterSlug,
-              redFighterName,
-              blueFighterSlug,
-              blueFighterName,
-            })}</span>
+      {selectedGroup ? (
+        <div className="picks-group-pick-reveal__detail" id={detailId}>
+          <span>{selectedGroup.label}</span>
+          <div>
+            {selectedGroup.members.map((pick) => (
+              <strong className={pick.isCurrentUser ? "is-current-user" : ""} key={pick.displayName}>
+                {pick.displayName}{pick.isCurrentUser ? " · YOU" : ""}
+              </strong>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
+      ) : null}
     </section>
   );
 }

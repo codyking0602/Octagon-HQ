@@ -24,18 +24,21 @@ describe("Picks group progress presentation", () => {
     expect(component).toContain("aria-expanded={isSelected}");
   });
 
-  it("shows member status without revealing pre-lock fighter choices", () => {
+  it("shows lock completion without revealing its target before lock", () => {
     expect(component).toContain("if (!selected || !locked) return []");
     expect(component).toContain("PICKS HIDDEN");
     expect(component).toContain("Individual picks stay hidden until the event locks.");
-    expect(component).toContain('{member.hasUnderdogLock ? <b>UNDERDOG LOCK SET</b> : null}');
+    expect(component).toContain('{!locked && member.hasUnderdogLock ? <b>UNDERDOG LOCK SET</b> : null}');
   });
 
-  it("renders reusable post-lock comparison rows from canonical event data", () => {
+  it("renders reusable post-lock comparison rows and marks the exact lock target", () => {
     expect(component).toContain('bout.includedInPicks !== false && (bout.resultStatus ?? "pending") !== "cancelled"');
     expect(component).toContain(".sort((left, right) => left.position - right.position)");
     expect(component).toContain("fight: `${bout.redFighterName} vs ${bout.blueFighterName}`");
     expect(component).toContain("same: memberPick === myPick");
+    expect(component).toContain("selected.underdogLockBoutId === bout.boutId");
+    expect(component).toContain("selected.underdogLockFighterSlug === memberPick");
+    expect(component).toContain("★ UNDERDOG LOCK");
     expect(component).toContain('{pick.same ? "SAME" : "DIFF"}');
     expect(component).toContain("<small>{member.displayName}</small>");
     expect(component).toContain("<small>YOU</small>");
@@ -43,12 +46,13 @@ describe("Picks group progress presentation", () => {
     expect(component).not.toContain("Jan Błachowicz");
   });
 
-  it("uses the existing Picks stylesheet owner for the compact comparison hierarchy", () => {
+  it("uses the existing Picks stylesheet owner for clear SAME, DIFF, and lock states", () => {
     expect(entry).toContain('import "./styles/picks-group-progress.css";');
     expect(styles).toContain(".picks-group-progress__comparison");
     expect(styles).toContain(".picks-group-progress__comparison-list");
     expect(styles).toContain(".picks-group-progress__fight.is-same");
-    expect(styles).toContain(".picks-group-progress__choices");
+    expect(styles).toContain("border: 1px solid rgba(210, 10, 10, .34)");
+    expect(styles).toContain(".picks-group-progress__lock-marker");
     expect(styles).toContain('button[aria-expanded="true"]');
   });
 });

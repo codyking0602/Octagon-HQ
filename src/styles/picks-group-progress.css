@@ -301,9 +301,10 @@
 }
 
 .picks-group-progress__choices em {
+  border: 1px solid rgba(210, 10, 10, .34);
   border-radius: 999px;
-  background: color-mix(in srgb, var(--accent) 16%, transparent);
-  color: var(--accent);
+  background: rgba(210, 10, 10, .14);
+  color: #ff6262;
   font-size: 7px;
   font-style: normal;
   font-weight: 950;
@@ -312,6 +313,23 @@
 }
 
 .picks-group-progress__fight.is-same .picks-group-progress__choices em {
+  border-color: rgba(72, 174, 82, .28);
   background: rgba(72, 174, 82, .13);
   color: #70c977;
+}
+
+.picks-group-progress__lock-marker {
+  align-items: center;
+  border: 1px solid var(--underdog-lock-border, rgba(255, 138, 31, .58));
+  border-radius: 999px;
+  background: var(--underdog-lock-surface, rgba(255, 138, 31, .1));
+  color: var(--underdog-lock-accent, #ff8a1f);
+  display: inline-flex;
+  font-size: 6px;
+  font-weight: 950;
+  justify-self: start;
+  letter-spacing: .06em;
+  line-height: 1;
+  padding: 3px 5px;
+  white-space: nowrap;
 }
