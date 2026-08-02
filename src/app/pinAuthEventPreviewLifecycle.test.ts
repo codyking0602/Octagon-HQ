@@ -19,14 +19,25 @@ describe("production WebKit Picks Control Center lifecycle proof", () => {
     expect(verifier).toContain("Temporary Picks control owner grant");
   });
 
-  it("accepts only the current setup, monitoring, or fight-night lifecycle", () => {
+  it("resolves the canonical header status before testing the matching lifecycle section", () => {
+    expect(verifier).toContain('page.locator(".picks-control-center__status")');
+    expect(verifier).toContain('"OWNER SIGN-IN REQUIRED", "LOADING CONTROL CENTER", "CHECKING NEXT EVENT"');
+    expect(verifier).toContain('status === "CONTROL UNAVAILABLE" || status === "SETUP UNAVAILABLE"');
+    expect(verifier).toContain('status === "SET UP NEXT EVENT" || status === "REVIEW CARD"');
+    expect(verifier).toContain('status === "PICKS OPEN"');
+    expect(verifier).toContain("FIGHT(?:S)? NEED RESULTS|PICKS CLOSED · RESULTS OPEN|EVENT COMPLETE");
     expect(verifier).toContain('{ name: "Event Setup", exact: true }');
     expect(verifier).toContain('{ name: "Monitoring Inbox", exact: true }');
     expect(verifier).toContain('{ name: "Fight Night Control", exact: true }');
-    expect(verifier).toContain("heading.getClientRects().length > 0");
-    expect(verifier).toContain("The unified Picks Control Center did not expose a recognized lifecycle.");
     expect(verifier).toContain("INBOX UNAVAILABLE");
-    expect(verifier).toContain("CONTROL UNAVAILABLE");
+    expect(verifier).toContain("Fight Night Control rendered its unavailable state");
+  });
+
+  it("retains actionable diagnostics instead of an opaque lifecycle timeout", () => {
+    expect(verifier).toContain("The unified Picks Control Center lifecycle did not resolve. Status: ${status}.");
+    expect(verifier).toContain("Headings: ${headings.map");
+    expect(verifier).toContain("page.screenshot({ path: screenshotPath, fullPage: true })");
+    expect(verifier).toContain("The unified Picks Control Center returned an unrecognized lifecycle status");
   });
 
   it("remains read-only and verifies the live deployment marker", () => {
