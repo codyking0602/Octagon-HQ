@@ -4,6 +4,7 @@ export interface IdentityProfile {
   id: string;
   displayName: string;
   initials: string;
+  canManagePicks?: boolean;
 }
 
 const displayNameSchema = z
