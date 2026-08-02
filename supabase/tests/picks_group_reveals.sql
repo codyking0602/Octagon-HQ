@@ -113,8 +113,8 @@ begin
   if has_function_privilege('authenticated','public.resolved_bout_group_picks(text,text)','EXECUTE') then
     raise exception 'browser role can call the private reveal helper directly';
   end if;
-  if has_table_privilege('authenticated','public.profile_event_picks','SELECT') then
-    raise exception 'browser role can read hidden pick rows directly';
+  if has_table_privilege('anon','public.profile_event_picks','SELECT') then
+    raise exception 'anonymous browser role can read private pick rows directly';
   end if;
 end $$;
 
