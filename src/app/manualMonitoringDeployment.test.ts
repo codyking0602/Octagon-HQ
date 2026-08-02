@@ -32,8 +32,9 @@ describe("manual monitoring deployment contract", () => {
   });
   it("configures the one scheduler only through the existing trusted backend deploy", () => {
     expect(workflow).toContain("configure-monitoring-scheduler.mjs");
-    expect(workflow).toContain('if [ "$SOURCE_PR_NUMBER" = "0" ]');
-    expect(workflow).toContain("EXPECTED_MONITORING_SCHEDULER_ENABLED");
+    expect(workflow).toContain("PICK_MONITORING_SCHEDULER_ENABLED=true");
+    expect(workflow).toContain('echo "EXPECTED_MONITORING_SCHEDULER_ENABLED=true"');
+    expect(workflow).not.toContain('if [ "$SOURCE_PR_NUMBER" = "0" ]');
     expect(schedulerConfigurator).toContain("set_pick_monitoring_scheduler_enabled");
     expect(schedulerConfigurator).toContain('health?.job_name !== "octagon-hq-pick-monitoring"');
   });

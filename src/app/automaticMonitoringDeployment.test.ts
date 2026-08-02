@@ -21,11 +21,14 @@ describe("automatic Picks monitoring deployment", () => {
     expect(runner).toContain("buildManualMonitoringPayload");
   });
 
-  it("keeps PR deployment quota-safe and activates only through the trusted deploy owner", () => {
+  it("keeps the production scheduler active through the trusted deployment owner", () => {
     expect(migration).toContain("active := false");
     expect(migration).toContain("set_pick_monitoring_scheduler_enabled");
-    expect(deploy).toContain("configure-monitoring-scheduler.mjs");
-    expect(deploy).toContain("PICK_MONITORING_SCHEDULER_ENABLED");
+    expect(deploy).toContain("Keep canonical automatic monitoring scheduler active");
+    expect(deploy).toContain("PICK_MONITORING_SCHEDULER_ENABLED=true node scripts/configure-monitoring-scheduler.mjs");
+    expect(deploy).toContain('echo "EXPECTED_MONITORING_SCHEDULER_ENABLED=true"');
+    expect(deploy).not.toContain('enabled=false');
+    expect(deploy).not.toContain('if [ "$SOURCE_PR_NUMBER" = "0" ]');
     expect(verifier).toContain("202608090002");
     expect(verifier).toContain("202608090003");
     expect(verifier).toContain("health?.command_configured !== true");
