@@ -34,6 +34,22 @@ function RouteHarness() {
   );
 }
 
+function signedInGateway(canControlPicks: boolean): IdentityGateway {
+  return {
+    getSession: async () => ({ userId: "11111111-1111-4111-8111-111111111111" }),
+    subscribe: () => () => undefined,
+    loadProfile: async () => ({
+      id: "11111111-1111-4111-8111-111111111111",
+      displayName: "CODY",
+      initials: "CK",
+      canControlPicks,
+    }),
+    signIn: async () => undefined,
+    createProfile: async () => undefined,
+    signOut: async () => undefined,
+  };
+}
+
 describe("IdentityControl", () => {
   it("portals the dialog to document.body and locks page scrolling", () => {
     const { container } = render(
@@ -93,5 +109,28 @@ describe("IdentityControl", () => {
     fireEvent.click(screen.getByRole("button", { name: "ENTER HQ" }));
 
     await waitFor(() => expect(screen.getByTestId("current-path")).toHaveTextContent("/picks/monitoring"));
+  });
+
+  it("shows Manage Picks in the designated owner's profile menu", async () => {
+    render(
+      <Providers gateway={signedInGateway(true)}>
+        <IdentityControl />
+      </Providers>,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: /open cody profile menu/i }));
+    const link = screen.getByRole("link", { name: "MANAGE PICKS" });
+    expect(link).toHaveAttribute("href", "/picks/control");
+  });
+
+  it("does not expose Manage Picks in an ordinary member's profile menu", async () => {
+    render(
+      <Providers gateway={signedInGateway(false)}>
+        <IdentityControl />
+      </Providers>,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: /open cody profile menu/i }));
+    expect(screen.queryByRole("link", { name: "MANAGE PICKS" })).not.toBeInTheDocument();
   });
 });
