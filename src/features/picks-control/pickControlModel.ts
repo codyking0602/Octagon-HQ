@@ -2,6 +2,12 @@ import type { PickBoutResultStatus, PickEventStatus } from "../picks/picksModel"
 
 export interface PickControlBout {
   boutId: string;
+  /** Backend-projected effective deadline for this stable bout. */
+  locksAt?: string;
+  /** Authoritative server lock state; browser time is presentation-only. */
+  isLocked?: boolean;
+  /** Server-owned permission to move this still-open deadline. */
+  canAdjustLock?: boolean;
   position: number;
   weightClass: string;
   redFighterSlug: string;
