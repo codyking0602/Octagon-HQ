@@ -78,6 +78,9 @@ describe("Phase 2B event setup backend", () => {
     );
     expect(productionPreviewContract).toContain("sameTimestamp");
     expect(productionPreviewVerifier).not.toContain("expectedFights");
+    expect(webkitVerifier).toContain('page.getByLabel("MMA MANIA CARD URL (OPTIONAL)")');
+    expect(webkitVerifier).toContain('page.getByRole("button", { name: "CHECK FOR CARD UPDATES" }).click()');
+    expect(webkitVerifier).not.toContain("Event Setup has no persisted MMA Mania source to review.");
     expect(webkitVerifier).toContain("/^(Main card|Full card) · \\d+ fights$/i");
     expect(webkitVerifier).not.toContain('name: "Main card · 4 fights"');
     expect(webkitVerifier).not.toContain("SOURCE MATCHES DRAFT");
