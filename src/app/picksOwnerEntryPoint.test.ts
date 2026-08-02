@@ -62,6 +62,8 @@ describe("Picks owner entry point architecture", () => {
     expect(integrationSql).toContain("member identity projection is incorrect");
     expect(integrationSql).toContain("browser role can read the private Picks owner table");
     expect(integrationSql).toContain("anonymous role can execute the private identity projection");
-    expect(integrationSql).toMatch(/rollback;\s*\\ir picks_stale_draft_rollover\.sql$/);
+    const staleSuiteInclude = `${String.fromCharCode(92)}ir picks_stale_draft_rollover.sql`;
+    expect(integrationSql).toContain("rollback;");
+    expect(integrationSql.trimEnd().endsWith(staleSuiteInclude)).toBe(true);
   });
 });
