@@ -69,12 +69,13 @@ describe("Phase 2B event setup backend", () => {
   });
 
   it("independently verifies legitimate production source changes without fixed fight counts", () => {
-    expect(productionPreviewVerifier).toContain("assertCanonicalChangeList(");
-    expect(productionPreviewVerifier).toContain(
-      '`Stage a new ${effectiveScope === "full" ? "full" : "main"} card with ${event.bouts.length} fights.`',
+    expect(productionPreviewVerifier).toContain("assertReportedSourceChanges(");
+    expect(productionPreviewVerifier).toContain("preview.body.effective_scope");
+    expect(productionPreviewContract).toContain('expectedSourceChanges(current, event, effectiveScope = "main")');
+    expect(productionPreviewContract).toContain("if (!isRecord(current))");
+    expect(productionPreviewContract).toContain(
+      '`Stage a new ${effectiveScope === "full" ? "full" : "main"} card with ${sourceBouts.length} fights.`',
     );
-    expect(productionPreviewVerifier).toContain("assertReportedSourceChanges(current, event, reported)");
-    expect(productionPreviewContract).toContain("expectedSourceChanges");
     expect(productionPreviewContract).toContain("sameTimestamp");
     expect(productionPreviewVerifier).not.toContain("expectedFights");
     expect(webkitVerifier).toContain("/^(Main card|Full card) · \\d+ fights$/i");
