@@ -32,6 +32,7 @@ describe("completed Picks event recaps", () => {
     expect(recapCss).toContain("min-height: 0");
     expect(recapCss).toContain("overflow-y: scroll");
     expect(recapCss).toContain("touch-action: pan-y");
+    expect(recapCss).not.toContain("touch-action: none");
     expect(recapCss).toContain("-webkit-overflow-scrolling: touch");
     expect(recapSource).toContain('data-testid="picks-event-recap-scroll"');
   });
