@@ -54,6 +54,11 @@ export function WhatsNewProvider({
   const [latestItemId, setLatestItemId] = useState<string | null>(null);
   const [error, setError] = useState("");
 
+  useEffect(() => () => {
+    ++revisionRef.current;
+    profileIdRef.current = null;
+  }, []);
+
   const loadSnapshot = useCallback(async (showLoading = false) => {
     if (!repository) {
       setStatus("unconfigured");
