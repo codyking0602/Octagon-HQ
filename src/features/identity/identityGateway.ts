@@ -21,6 +21,8 @@ const profileRowSchema = z.object({
   initials: z.string().min(1).max(2),
 });
 
+const pickControlCapabilitySchema = z.boolean();
+
 const pinAuthResponseSchema = z.object({
   tokenHash: z.string().min(1),
 });
@@ -66,19 +68,25 @@ export function createIdentityGateway(): IdentityGateway | null {
     },
 
     async loadProfile(userId) {
-      const { data, error } = await client
-        .from("profiles")
-        .select("id, display_name, initials")
-        .eq("id", userId)
-        .maybeSingle();
+      const [profileResult, capabilityResult] = await Promise.all([
+        client
+          .from("profiles")
+          .select("id, display_name, initials")
+          .eq("id", userId)
+          .maybeSingle(),
+        client.rpc("get_my_pick_control_capability"),
+      ]);
 
-      if (error) throw new Error(error.message);
-      if (!data) return null;
-      const parsed = profileRowSchema.parse(data);
+      if (profileResult.error) throw new Error(profileResult.error.message);
+      if (capabilityResult.error) throw new Error(capabilityResult.error.message);
+      if (!profileResult.data) return null;
+
+      const parsed = profileRowSchema.parse(profileResult.data);
       return {
         id: parsed.id,
         displayName: parsed.display_name,
         initials: parsed.initials,
+        canManagePicks: pickControlCapabilitySchema.parse(capabilityResult.data),
       };
     },
 
