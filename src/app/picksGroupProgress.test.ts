@@ -26,12 +26,13 @@ describe("Picks group progress presentation", () => {
 
   it("reveals only server-locked fights while later fights stay private", () => {
     expect(component).toContain("if (!selected) return []");
-    expect(component).toContain('.filter((bout) => locked || bout.isLocked === true)');
+    expect(component).toContain('const masterLocked = event.status !== "upcoming"');
+    expect(component).toContain('.filter(({ bout }) => masterLocked || bout.isLocked === true)');
     expect(component).toContain("PICKS HIDDEN");
     expect(component).toContain("Individual picks reveal as each fight locks.");
     expect(component).toContain("hiddenFightCount");
     expect(component).toContain("Those picks reveal when each fight locks.");
-    expect(component).toContain('{!locked && member.hasUnderdogLock ? <b>UNDERDOG LOCK SET</b> : null}');
+    expect(component).toContain('{!masterLocked && member.hasUnderdogLock ? <b>UNDERDOG LOCK SET</b> : null}');
   });
 
   it("renders reusable revealed comparison rows and marks the exact lock target", () => {
