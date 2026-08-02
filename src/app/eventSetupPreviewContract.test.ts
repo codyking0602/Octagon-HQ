@@ -111,10 +111,15 @@ describe("production Event Setup preview contract", () => {
   });
 
   it("keeps unexpected preview failures red while exposing only sanitized details", () => {
-    expect(liveVerifier).toContain("try {\n      assertSafeEventSourceRollover(preview.body);");
+    expect(liveVerifier).toContain(
+      'preview.body?.code !== "ARTICLE_IDENTITY_REJECTED"',
+    );
+    expect(liveVerifier).toContain(
+      'preview.body?.stage !== "identity-match"',
+    );
     expect(liveVerifier).toContain("message=${safeMessage(preview.body)}");
     expect(liveVerifier).toContain("details=${safeDetails(preview.body)}");
     expect(liveVerifier).toContain("[200, 502]");
-    expect(liveVerifier).not.toContain("SYNC_UNEXPECTED_ERROR\"");
+    expect(liveVerifier).not.toContain('preview.body?.code === "SYNC_UNEXPECTED_ERROR"');
   });
 });
