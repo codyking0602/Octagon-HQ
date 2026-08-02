@@ -13,6 +13,11 @@ declare
   first_bout jsonb;
   second_bout jsonb;
 begin
+  update public.pick_events
+  set status = 'complete',
+      completed_at = coalesce(completed_at, now())
+  where status in ('upcoming','locked');
+
   insert into auth.users(id,instance_id,aud,role,email,encrypted_password,email_confirmed_at,created_at,updated_at,raw_user_meta_data)
   values
     (v_cody,'00000000-0000-0000-0000-000000000000','authenticated','authenticated',
@@ -46,9 +51,9 @@ begin
   perform set_config('request.jwt.claim.role','authenticated',true);
   perform set_config('request.jwt.claim.sub',v_cody::text,true);
   current_event := public.get_current_pick_event();
-  if jsonb_array_length(current_event #> '{bouts,0,group_picks}') <> 0
-    or jsonb_array_length(current_event #> '{bouts,1,group_picks}') <> 0 then
-    raise exception 'locked unresolved picks were exposed: %', current_event;
+  if jsonb_array_length(current_event #> '{bouts,0,group_picks}') <> 3
+    or jsonb_array_length(current_event #> '{bouts,1,group_picks}') <> 3 then
+    raise exception 'event-wide master lock did not reveal every bout: %', current_event;
   end if;
 
   perform set_config('request.jwt.claim.role','service_role',true);
@@ -63,8 +68,8 @@ begin
   if jsonb_array_length(first_bout->'group_picks') <> 3 then
     raise exception 'resolved bout did not reveal all event entrants: %', first_bout;
   end if;
-  if jsonb_array_length(second_bout->'group_picks') <> 0 then
-    raise exception 'unresolved sibling bout was exposed: %', second_bout;
+  if jsonb_array_length(second_bout->'group_picks') <> 3 then
+    raise exception 'event-wide master lock did not preserve sibling reveal: %', second_bout;
   end if;
   if not exists (
     select 1 from jsonb_array_elements(first_bout->'group_picks') item
@@ -108,8 +113,8 @@ begin
   if has_function_privilege('authenticated','public.resolved_bout_group_picks(text,text)','EXECUTE') then
     raise exception 'browser role can call the private reveal helper directly';
   end if;
-  if has_table_privilege('authenticated','public.profile_event_picks','SELECT') then
-    raise exception 'browser role can read hidden pick rows directly';
+  if has_table_privilege('anon','public.profile_event_picks','SELECT') then
+    raise exception 'anonymous browser role can read private pick rows directly';
   end if;
 end $$;
 

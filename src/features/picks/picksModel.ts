@@ -16,6 +16,10 @@ export interface PickWatchMoment {
 
 export interface PickBout {
   boutId: string;
+  /** Backend-projected deadline for the later per-fight lock UI. */
+  locksAt?: string;
+  /** Effective server-owned state; never use browser time for authorization. */
+  isLocked?: boolean;
   position: number;
   weightClass: string;
   redFighterSlug: string;

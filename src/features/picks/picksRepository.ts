@@ -31,6 +31,8 @@ const watchMomentSchema = z.object({
 
 const boutSchema = z.object({
   bout_id: z.string(),
+  locks_at: z.string().optional(),
+  is_locked: z.boolean().optional(),
   position: z.number().int().positive(),
   weight_class: z.string(),
   red_fighter_slug: z.string(),
@@ -193,6 +195,8 @@ export function mapPickEvent(value: unknown): PickEvent | null {
     canControl: parsed.can_control,
     bouts: parsed.bouts.map((bout) => ({
       boutId: bout.bout_id,
+      locksAt: bout.locks_at,
+      isLocked: bout.is_locked,
       position: bout.position,
       weightClass: bout.weight_class,
       redFighterSlug: bout.red_fighter_slug,
