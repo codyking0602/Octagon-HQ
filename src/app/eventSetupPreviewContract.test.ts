@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { hasSourceIdentityConflict } from "../../supabase/functions/sync-next-ufc-event/identityEngine";
 import {
@@ -5,6 +6,15 @@ import {
   assertSafeEventSourceRollover,
   expectedSourceChanges,
 } from "../../scripts/event-setup-preview-contract.mjs";
+
+const syncSource = readFileSync(
+  "supabase/functions/sync-next-ufc-event/index.ts",
+  "utf8",
+);
+const liveVerifier = readFileSync(
+  "scripts/verify-event-setup-preview-live.mjs",
+  "utf8",
+);
 
 const bout = (bout_id: string, red_fighter_name: string, blue_fighter_name: string) => ({
   bout_id,
@@ -115,5 +125,17 @@ describe("production Event Setup preview contract", () => {
     expect(hasSourceIdentityConflict({
       conflicts: ["neither-headliner-matches"],
     })).toBe(true);
+  });
+
+  it("accepts the current official UFC event-page time shape without requiring a Main Card suffix", () => {
+    expect(syncSource).toContain("(?:\\s*\\/\\s*Main Card)?");
+  });
+
+  it("preserves typed canonical-source failures and keeps the live verifier red with sanitized details", () => {
+    expect(syncSource).toContain("if (error instanceof SyncError) throw error;");
+    expect(syncSource).toContain('"UFC_EVENT_METADATA_REJECTED"');
+    expect(liveVerifier).toContain("message=${safeMessage(preview.body)}");
+    expect(liveVerifier).toContain("details=${safeDetails(preview.body)}");
+    expect(liveVerifier).not.toContain('preview.body?.code === "SYNC_UNEXPECTED_ERROR"');
   });
 });
