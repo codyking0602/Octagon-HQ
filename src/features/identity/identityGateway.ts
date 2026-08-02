@@ -19,6 +19,7 @@ const profileRowSchema = z.object({
   id: z.string().uuid(),
   display_name: z.string().min(1),
   initials: z.string().min(1).max(2),
+  can_control_picks: z.boolean(),
 });
 
 const pinAuthResponseSchema = z.object({
@@ -66,19 +67,19 @@ export function createIdentityGateway(): IdentityGateway | null {
     },
 
     async loadProfile(userId) {
-      const { data, error } = await client
-        .from("profiles")
-        .select("id, display_name, initials")
-        .eq("id", userId)
-        .maybeSingle();
+      const { data, error } = await client.rpc("get_my_identity_profile");
 
       if (error) throw new Error(error.message);
       if (!data) return null;
       const parsed = profileRowSchema.parse(data);
+      if (parsed.id !== userId) {
+        throw new Error("Octagon HQ received a profile for the wrong session.");
+      }
       return {
         id: parsed.id,
         displayName: parsed.display_name,
         initials: parsed.initials,
+        canControlPicks: parsed.can_control_picks,
       };
     },
 
