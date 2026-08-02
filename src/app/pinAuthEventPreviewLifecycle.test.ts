@@ -23,6 +23,7 @@ describe("production WebKit Picks Control Center lifecycle proof", () => {
     expect(verifier).toContain('{ name: "Event Setup", exact: true }');
     expect(verifier).toContain('{ name: "Monitoring Inbox", exact: true }');
     expect(verifier).toContain('{ name: "Fight Night Control", exact: true }');
+    expect(verifier).toContain("heading.getClientRects().length > 0");
     expect(verifier).toContain("The unified Picks Control Center did not expose a recognized lifecycle.");
     expect(verifier).toContain("INBOX UNAVAILABLE");
     expect(verifier).toContain("CONTROL UNAVAILABLE");
@@ -30,8 +31,10 @@ describe("production WebKit Picks Control Center lifecycle proof", () => {
 
   it("remains read-only and verifies the live deployment marker", () => {
     expect(verifier).toContain("expectedDeploymentSha");
-    expect(verifier).toContain('page.getByRole("button", { name: "CHECK FOR CARD UPDATES" })');
-    expect(verifier).not.toContain('.click();\n  const previewResponse');
+    expect(verifier).toContain('page.getByRole("button", { name: "CHECK FOR CARD UPDATES" }).waitFor');
+    expect(verifier).not.toContain("/functions/v1/sync-next-ufc-event");
+    expect(verifier).not.toContain("page.waitForResponse(");
+    expect(verifier).not.toContain('getByRole("button", { name: "CHECK FOR CARD UPDATES" }).click');
     expect(verifier).not.toContain('getByRole("button", { name: "PUBLISH CARD" }).click');
     expect(verifier).not.toContain('getByRole("button", { name: "CHECK NOW" }).click');
   });
