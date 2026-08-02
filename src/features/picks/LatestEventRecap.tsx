@@ -108,10 +108,11 @@ function universalRecapText(
   champions: string,
   winningPoints: number,
 ) {
+  const watchMoments = event.watchMoments ?? [];
   const lines = [
     `${event.name} recap — ${championLabel}: ${champions} with ${winningPoints} points.`,
-    ...event.watchMoments.map((moment, index) => (
-      `${event.watchMoments.length > 1 ? `Must-watch moment ${index + 1}` : "Must-watch moment"}: ${moment.url}`
+    ...watchMoments.map((moment, index) => (
+      `${watchMoments.length > 1 ? `Must-watch moment ${index + 1}` : "Must-watch moment"}: ${moment.url}`
     )),
     "View your event recap in Octagon HQ:",
   ];
@@ -130,6 +131,7 @@ export function LatestEventRecap({
   const titleId = useId();
   const closeRef = useRef<HTMLButtonElement | null>(null);
   const scrollRef = useRef<HTMLElement | null>(null);
+  const watchMoments = event.watchMoments ?? [];
   const recap = useMemo(() => {
     const bouts = event.bouts.slice().sort((left, right) => left.position - right.position);
     const analyses = bouts.map(boutAnalysis).filter((value): value is BoutAnalysis => Boolean(value));
@@ -243,7 +245,7 @@ export function LatestEventRecap({
         groupRecord: `${recap.correctPicks}-${Math.max(0, recap.decidedPicks - recap.correctPicks)}`,
         stories,
         standings: recap.standings,
-        watchMoments: event.watchMoments,
+        watchMoments,
       });
       files = [file];
     } catch {
@@ -316,23 +318,23 @@ export function LatestEventRecap({
             ))}
           </section>
 
-          {event.watchMoments.length ? (
+          {watchMoments.length ? (
             <section className="picks-event-recap__moments" aria-labelledby={`${titleId}-moments`}>
               <div className="picks-event-recap__section-heading">
                 <div>
-                  <span>{event.watchMoments.length > 1 ? "MUST-WATCH MOMENTS" : "MUST-WATCH MOMENT"}</span>
+                  <span>{watchMoments.length > 1 ? "MUST-WATCH MOMENTS" : "MUST-WATCH MOMENT"}</span>
                   <h3 id={`${titleId}-moments`}>Watch the card back</h3>
                 </div>
-                <small>{event.watchMoments.length} {event.watchMoments.length === 1 ? "CLIP" : "CLIPS"}</small>
+                <small>{watchMoments.length} {watchMoments.length === 1 ? "CLIP" : "CLIPS"}</small>
               </div>
               <div className="picks-event-recap__moment-list">
-                {event.watchMoments.map((moment) => {
+                {watchMoments.map((moment) => {
                   const thumbnail = youtubeThumbnail(moment.url);
                   return (
                     <a href={moment.url} target="_blank" rel="noreferrer" key={`${moment.title}:${moment.url}`}>
                       {thumbnail ? <img src={thumbnail} alt="" loading="lazy" /> : <span className="picks-event-recap__moment-placeholder" aria-hidden="true">▶</span>}
                       <div>
-                        <span>{event.watchMoments.length > 1 ? "WATCH MOMENT" : "EVENT HIGHLIGHT"}</span>
+                        <span>{watchMoments.length > 1 ? "WATCH MOMENT" : "EVENT HIGHLIGHT"}</span>
                         <strong>{moment.title}</strong>
                         <b>WATCH ON YOUTUBE ↗</b>
                       </div>
