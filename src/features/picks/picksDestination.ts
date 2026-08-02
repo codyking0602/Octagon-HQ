@@ -4,19 +4,22 @@ export type PicksDestination =
 
 /**
  * Lets the existing Picks archive owner consume canonical event links.
- * The active card already owns the main Picks screen, so only archived
- * event identifiers require an archive-state handoff.
+ * A recap request without an event is a compatibility handoff for older
+ * notifications and resolves only to the newest archived event.
  */
 export function resolvePicksDestination(
   searchParams: URLSearchParams,
   archivedEventIds: readonly string[],
 ): PicksDestination {
-  const eventId = searchParams.get("event")?.trim() ?? "";
+  const requestedEventId = searchParams.get("event")?.trim() ?? "";
+  const recapRequested = searchParams.get("view") === "recap";
+  const eventId = requestedEventId || (recapRequested ? archivedEventIds[0] ?? "" : "");
+
   if (!eventId || !archivedEventIds.includes(eventId)) return { kind: "none" };
 
   return {
     kind: "archived-event",
     eventId,
-    recapRequested: searchParams.get("view") === "recap",
+    recapRequested,
   };
 }
