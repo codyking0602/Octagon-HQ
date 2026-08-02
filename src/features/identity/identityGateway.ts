@@ -78,7 +78,6 @@ export function createIdentityGateway(): IdentityGateway | null {
       ]);
 
       if (profileResult.error) throw new Error(profileResult.error.message);
-      if (capabilityResult.error) throw new Error(capabilityResult.error.message);
       if (!profileResult.data) return null;
 
       const parsed = profileRowSchema.parse(profileResult.data);
@@ -86,7 +85,9 @@ export function createIdentityGateway(): IdentityGateway | null {
         id: parsed.id,
         displayName: parsed.display_name,
         initials: parsed.initials,
-        canManagePicks: pickControlCapabilitySchema.parse(capabilityResult.data),
+        canManagePicks: capabilityResult.error
+          ? false
+          : pickControlCapabilitySchema.parse(capabilityResult.data),
       };
     },
 
