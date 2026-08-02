@@ -257,41 +257,46 @@ export default function PicksControlCenterPage({
 
       {event?.status === "upcoming" ? (
         <section id="monitoring" className="picks-control-center__section" aria-label="Automatic monitoring and card review">
-          {inbox ? (
-            <section className={`surface-card picks-control-center__monitoring${schedulerReady ? " is-ready" : " needs-attention"}`}>
-              <div className="picks-control-center__monitoring-heading">
-                <div>
-                  <p className="eyebrow">AUTOMATIC MONITORING</p>
-                  <h2>{schedulerReady ? "AUTOMATION READY" : "AUTOMATION NEEDS ATTENTION"}</h2>
+          <section
+            className={`surface-card picks-control-center__monitoring${schedulerReady ? " is-ready" : " needs-attention"}`}
+            hidden={!inbox}
+          >
+            {inbox ? (
+              <>
+                <div className="picks-control-center__monitoring-heading">
+                  <div>
+                    <p className="eyebrow">AUTOMATIC MONITORING</p>
+                    <h2>{schedulerReady ? "AUTOMATION READY" : "AUTOMATION NEEDS ATTENTION"}</h2>
+                  </div>
+                  <span>{inbox.newFindings.length ? `${inbox.newFindings.length} TO REVIEW` : "NO OPEN FINDINGS"}</span>
                 </div>
-                <span>{inbox.newFindings.length ? `${inbox.newFindings.length} TO REVIEW` : "NO OPEN FINDINGS"}</span>
-              </div>
-              <div className="picks-control-center__monitoring-grid" aria-label="Operational monitoring status">
-                <div><span>LAST OUTCOME</span><strong>{decisionLabel(inbox)}</strong></div>
-                <div><span>LAST CARD CHECK</span><strong>{displayTime(inbox.latestRun?.cardSource ? inbox.latestRun.completedAt ?? inbox.latestRun.startedAt : null)}</strong></div>
-                <div><span>LAST ODDS CHECK</span><strong>{displayTime(inbox.latestRun?.oddsProvider ? inbox.latestRun.completedAt ?? inbox.latestRun.startedAt : null)}</strong></div>
-                <div><span>NEXT ELIGIBLE CHECK</span><strong>{displayTime(inbox.scheduleState?.nextEligibleAt)}</strong></div>
-                <div><span>FINDINGS NEEDING REVIEW</span><strong>{inbox.unresolvedCount}</strong></div>
-              </div>
-              <details className="picks-control-center__system-details">
-                <summary>SYSTEM DETAILS</summary>
-                <div>
-                  <span>SCHEDULE</span><strong>{inbox.scheduler.schedule ?? "NOT INSTALLED"}</strong>
-                  <span>LAST SCHEDULER WAKE</span><strong>{displayTime(inbox.scheduler.lastWakeStartedAt)}</strong>
-                  <span>WAKE STATUS</span><strong>{inbox.scheduler.lastWakeStatus?.toUpperCase() ?? "NOT YET"}</strong>
-                  <span>TOKEN CONFIGURED</span><strong>{inbox.scheduler.tokenConfigured ? "YES" : "NO"}</strong>
-                  <span>JOB</span><strong>{inbox.scheduler.jobName ?? inbox.scheduler.jobId ?? "NOT INSTALLED"}</strong>
-                  <span>LEASE UNTIL</span><strong>{displayTime(inbox.scheduleState?.leaseUntil)}</strong>
-                  <span>LAST CLAIMED</span><strong>{displayTime(inbox.scheduleState?.lastClaimedAt)}</strong>
-                  <span>PROVIDER</span><strong>{inbox.latestRun?.oddsProvider ?? "NOT YET"}</strong>
-                  <span>QUOTA REMAINING</span><strong>{inbox.latestRun?.providerRequestsRemaining ?? "UNKNOWN"}</strong>
-                  <span>PROVIDER CALLED</span><strong>{inbox.latestScheduledDecision?.providerCalled ? "YES" : "NO"}</strong>
-                  <span>LATEST RUN</span><strong>{inbox.latestRun ? monitoringRunStatusLabel(inbox.latestRun.status) : "NO RUN"}</strong>
+                <div className="picks-control-center__monitoring-grid" aria-label="Operational monitoring status">
+                  <div><span>LAST OUTCOME</span><strong>{decisionLabel(inbox)}</strong></div>
+                  <div><span>LAST CARD CHECK</span><strong>{displayTime(inbox.latestRun?.cardSource ? inbox.latestRun.completedAt ?? inbox.latestRun.startedAt : null)}</strong></div>
+                  <div><span>LAST ODDS CHECK</span><strong>{displayTime(inbox.latestRun?.oddsProvider ? inbox.latestRun.completedAt ?? inbox.latestRun.startedAt : null)}</strong></div>
+                  <div><span>NEXT ELIGIBLE CHECK</span><strong>{displayTime(inbox.scheduleState?.nextEligibleAt)}</strong></div>
+                  <div><span>FINDINGS NEEDING REVIEW</span><strong>{inbox.unresolvedCount}</strong></div>
                 </div>
-                {inbox.latestRun?.diagnostics.length ? <pre>{JSON.stringify(inbox.latestRun.diagnostics, null, 2)}</pre> : null}
-              </details>
-            </section>
-          ) : null}
+                <details className="picks-control-center__system-details">
+                  <summary>SYSTEM DETAILS</summary>
+                  <div>
+                    <span>SCHEDULE</span><strong>{inbox.scheduler.schedule ?? "NOT INSTALLED"}</strong>
+                    <span>LAST SCHEDULER WAKE</span><strong>{displayTime(inbox.scheduler.lastWakeStartedAt)}</strong>
+                    <span>WAKE STATUS</span><strong>{inbox.scheduler.lastWakeStatus?.toUpperCase() ?? "NOT YET"}</strong>
+                    <span>TOKEN CONFIGURED</span><strong>{inbox.scheduler.tokenConfigured ? "YES" : "NO"}</strong>
+                    <span>JOB</span><strong>{inbox.scheduler.jobName ?? inbox.scheduler.jobId ?? "NOT INSTALLED"}</strong>
+                    <span>LEASE UNTIL</span><strong>{displayTime(inbox.scheduleState?.leaseUntil)}</strong>
+                    <span>LAST CLAIMED</span><strong>{displayTime(inbox.scheduleState?.lastClaimedAt)}</strong>
+                    <span>PROVIDER</span><strong>{inbox.latestRun?.oddsProvider ?? "NOT YET"}</strong>
+                    <span>QUOTA REMAINING</span><strong>{inbox.latestRun?.providerRequestsRemaining ?? "UNKNOWN"}</strong>
+                    <span>PROVIDER CALLED</span><strong>{inbox.latestScheduledDecision?.providerCalled ? "YES" : "NO"}</strong>
+                    <span>LATEST RUN</span><strong>{inbox.latestRun ? monitoringRunStatusLabel(inbox.latestRun.status) : "NO RUN"}</strong>
+                  </div>
+                  {inbox.latestRun?.diagnostics.length ? <pre>{JSON.stringify(inbox.latestRun.diagnostics, null, 2)}</pre> : null}
+                </details>
+              </>
+            ) : null}
+          </section>
           <MonitoringInboxPage repository={ownedMonitoringRepository} />
         </section>
       ) : null}
