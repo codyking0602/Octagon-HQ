@@ -10,18 +10,21 @@ const picksProvider = readFileSync(
   "utf8",
 );
 
-const unmountCancellation = `useEffect(() => () => {
-    ++revisionRef.current;
-    profileIdRef.current = null;
-  }, []);`;
+const lifecycleCancellation = `useEffect(() => {
+    profileIdRef.current = profileId;
+    return () => {
+      ++revisionRef.current;
+      profileIdRef.current = null;
+    };
+  }, [profileId]);`;
 
 function occurrences(value: string, needle: string) {
   return value.split(needle).length - 1;
 }
 
 describe("provider work cancellation on unmount", () => {
-  it("invalidates the existing What's New revision owner exactly once", () => {
-    expect(occurrences(whatsNewProvider, unmountCancellation)).toBe(1);
+  it("restores then invalidates the existing What's New owners exactly once", () => {
+    expect(occurrences(whatsNewProvider, lifecycleCancellation)).toBe(1);
     expect(whatsNewProvider).toContain(
       "revision !== revisionRef.current || profileIdRef.current !== expectedProfileId",
     );
@@ -32,8 +35,8 @@ describe("provider work cancellation on unmount", () => {
     expect(whatsNewProvider).not.toContain("AbortController");
   });
 
-  it("invalidates the existing Picks revision and identity owner exactly once", () => {
-    expect(occurrences(picksProvider, unmountCancellation)).toBe(1);
+  it("restores then invalidates the existing Picks owners exactly once", () => {
+    expect(occurrences(picksProvider, lifecycleCancellation)).toBe(1);
     expect(picksProvider).toContain("if (revision !== revisionRef.current) return;");
     expect(picksProvider).toContain(
       "revision !== revisionRef.current || profileIdRef.current !== expectedProfileId",
@@ -43,6 +46,16 @@ describe("provider work cancellation on unmount", () => {
     );
     expect(picksProvider).not.toContain("mountedRef");
     expect(picksProvider).not.toContain("AbortController");
+  });
+
+  it("remains safe through Strict Mode effect setup and cleanup", () => {
+    for (const provider of [whatsNewProvider, picksProvider]) {
+      expect(provider).toContain("profileIdRef.current = profileId;");
+      expect(provider).toContain("++revisionRef.current;");
+      expect(provider).toContain("profileIdRef.current = null;");
+      expect(provider).toContain("}, [profileId]);");
+      expect(provider).not.toContain("}, []);\n\n  const");
+    }
   });
 
   it("does not add another repository, provider, or refresh owner", () => {
