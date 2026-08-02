@@ -60,10 +60,9 @@ function parseCorrectedResult(value: string): PickBoutResultStatus | null {
 
 interface PicksControlPageProps {
   repository?: PickControlRepository | null;
-  onEventState?: (event: PickControlEvent | null) => void;
 }
 
-export default function PicksControlPage({ repository: suppliedRepository, onEventState }: PicksControlPageProps) {
+export default function PicksControlPage({ repository: suppliedRepository }: PicksControlPageProps) {
   const identity = useIdentity();
   const [repository] = useState<PickControlRepository | null>(() => (
     suppliedRepository === undefined ? createPickControlRepository() : suppliedRepository
@@ -80,7 +79,6 @@ export default function PicksControlPage({ repository: suppliedRepository, onEve
     try {
       const nextEvent = await repository.loadControlEvent(eventId);
       setEvent(nextEvent);
-      onEventState?.(nextEvent);
       setDraftOrder(null);
       setError("");
     } catch (nextError) {
@@ -89,7 +87,7 @@ export default function PicksControlPage({ repository: suppliedRepository, onEve
     } finally {
       setLoading(false);
     }
-  }, [identity.profile, onEventState, repository]);
+  }, [identity.profile, repository]);
 
   useEffect(() => {
     if (!identity.ready) return;

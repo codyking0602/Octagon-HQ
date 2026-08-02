@@ -251,6 +251,9 @@ jobs:
           if [ -f supabase/migrations/202608110001_live_pick_odds_application.sql ]; then
             require_remote_migration "202608110001"
           fi
+          if [ -f supabase/migrations/202608250001_truthful_pick_monitoring_decisions.sql ]; then
+            require_remote_migration "202608250001"
+          fi
           if [ -f supabase/migrations/202608200025_notification_device_push_delivery.sql ]; then
             require_remote_migration "202608200025"
           fi

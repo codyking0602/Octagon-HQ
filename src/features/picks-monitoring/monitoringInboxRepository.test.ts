@@ -72,6 +72,12 @@ const payload = {
     last_claimed_at: "2026-08-01T12:00:00.000Z",
     updated_at: "2026-08-01T12:00:05.000Z",
   },
+  latest_scheduled_decision: {
+    outcome: "skipped",
+    reason: "not_due",
+    attempted_at: "2026-08-01T12:07:00.000Z",
+    provider_called: false,
+  },
   latest_run: run,
   unresolved_count: 1,
   new_findings: [finding],
@@ -100,6 +106,12 @@ describe("Monitoring Inbox projection mapping", () => {
     });
     expect(inbox.monitoredEvent?.name).toBe("UFC Fight Night");
     expect(inbox.scheduleState?.nextEligibleAt).toBe("2026-08-01T18:00:00.000Z");
+    expect(inbox.latestScheduledDecision).toEqual({
+      outcome: "skipped",
+      reason: "not_due",
+      attemptedAt: "2026-08-01T12:07:00.000Z",
+      providerCalled: false,
+    });
     expect(inbox.latestRun?.completeSnapshotCount).toBe(6);
     expect(inbox.latestRun?.providerRequestsRemaining).toBe(42);
     expect(inbox.newFindings[0]).toMatchObject({
@@ -110,11 +122,17 @@ describe("Monitoring Inbox projection mapping", () => {
     expect(inbox.reviewedFindings[0]?.reviewStatus).toBe("dismissed");
   });
 
-  it("accepts the valid no-event and no-run state", () => {
+  it("accepts the valid no-event and no-run state with a truthful skipped wake", () => {
     const inbox = mapMonitoringInbox({
       ...payload,
       monitored_event: null,
       schedule_state: null,
+      latest_scheduled_decision: {
+        outcome: "skipped",
+        reason: "no_event",
+        attempted_at: "2026-08-01T13:07:00.000Z",
+        provider_called: false,
+      },
       latest_run: null,
       unresolved_count: 0,
       new_findings: [],
@@ -124,6 +142,8 @@ describe("Monitoring Inbox projection mapping", () => {
 
     expect(inbox.monitoredEvent).toBeNull();
     expect(inbox.latestRun).toBeNull();
+    expect(inbox.latestScheduledDecision?.reason).toBe("no_event");
+    expect(inbox.latestScheduledDecision?.providerCalled).toBe(false);
     expect(inbox.newFindings).toEqual([]);
   });
 
@@ -131,6 +151,10 @@ describe("Monitoring Inbox projection mapping", () => {
     expect(() => mapMonitoringInbox({
       ...payload,
       scheduler: { ...payload.scheduler, active: "yes" },
+    })).toThrow();
+    expect(() => mapMonitoringInbox({
+      ...payload,
+      latest_scheduled_decision: { ...payload.latest_scheduled_decision, provider_called: "no" },
     })).toThrow();
     expect(() => mapMonitoringInbox({
       ...payload,
@@ -144,6 +168,7 @@ describe("Monitoring Inbox repository ownership", () => {
 
   it("uses only the canonical projection, review RPC, and existing monitoring runner", () => {
     expect(repository.match(/get_pick_monitoring_inbox/g)).toHaveLength(1);
+    expect(repository).not.toContain("get_latest_pick_monitoring_scheduler_decision");
     expect(repository.match(/review_pick_monitoring_finding/g)).toHaveLength(1);
     expect(repository.match(/functions\.invoke\("run-pick-monitoring"/g)).toHaveLength(1);
     expect(repository).not.toContain("THE_ODDS_API_KEY");

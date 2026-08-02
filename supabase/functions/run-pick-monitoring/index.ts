@@ -46,6 +46,31 @@ Deno.serve(async (request) => {
 
   const admin = createClient(url, serviceKey, { auth: { autoRefreshToken: false, persistSession: false } });
   const scheduled = input.mode === "scheduled";
+  const finishScheduledDecision = async (decision: {
+    outcome: "skipped" | "failed";
+    reason: string;
+    response: Response;
+    identity?: string;
+    nextEligibleAt?: string;
+    providerCalled?: boolean;
+  }) => {
+    if (!scheduled) return decision.response;
+    const recorded = await admin.rpc("record_pick_monitoring_scheduler_decision", {
+      p_outcome: decision.outcome,
+      p_reason: decision.reason,
+      p_source_event_identity: decision.identity ?? null,
+      p_next_eligible_at: decision.nextEligibleAt ?? null,
+      p_provider_called: decision.providerCalled ?? false,
+    });
+    if (recorded.error || !recorded.data) {
+      return safeError(
+        503,
+        "MONITORING_DECISION_RECORD_FAILED",
+        "The scheduled monitoring outcome could not be recorded safely.",
+      );
+    }
+    return decision.response;
+  };
   const authorization = request.headers.get("authorization") ?? "";
   let setupData: MonitoringEvent | null = null;
   let currentData: MonitoringEvent | null = null;
@@ -61,11 +86,23 @@ Deno.serve(async (request) => {
     const dispatched = await admin.rpc("dispatch_due_in_app_notifications", {
       p_now: new Date().toISOString(),
     });
-    if (dispatched.error) return safeError(503, "NOTIFICATION_DISPATCH_FAILED", "Due notifications could not be dispatched safely.");
+    if (dispatched.error) {
+      return finishScheduledDecision({
+        outcome: "failed",
+        reason: "notification_dispatch_failed",
+        response: safeError(503, "NOTIFICATION_DISPATCH_FAILED", "Due notifications could not be dispatched safely."),
+      });
+    }
     notificationDispatch = dispatched.data;
 
     const eventState = await admin.rpc("get_pick_monitoring_event_state");
-    if (eventState.error) return safeError(503, "DATABASE_READ_FAILED", "Canonical Picks state is unavailable.");
+    if (eventState.error) {
+      return finishScheduledDecision({
+        outcome: "failed",
+        reason: "database_read_failed",
+        response: safeError(503, "DATABASE_READ_FAILED", "Canonical Picks state is unavailable."),
+      });
+    }
     const state = asRecord(eventState.data);
     setupData = asEvent(state?.staged);
     currentData = asEvent(state?.current);
@@ -86,8 +123,18 @@ Deno.serve(async (request) => {
     resolved = resolveMonitoringEvent(setupData, currentData);
   } catch (error) {
     const message = error instanceof Error ? error.message : "";
-    if (scheduled && message.includes("No monitorable")) return noOp("no_event", undefined, undefined, notificationDispatch);
-    return safeError(409, "EVENT_RESOLUTION_FAILED", "Monitoring event identity is missing, conflicting, or ambiguous.");
+    if (scheduled && message.includes("No monitorable")) {
+      return finishScheduledDecision({
+        outcome: "skipped",
+        reason: "no_event",
+        response: noOp("no_event", undefined, undefined, notificationDispatch),
+      });
+    }
+    return finishScheduledDecision({
+      outcome: "failed",
+      reason: "event_resolution_failed",
+      response: safeError(409, "EVENT_RESOLUTION_FAILED", "Monitoring event identity is missing, conflicting, or ambiguous."),
+    });
   }
 
   let suppressFindingKeys = new Set<string>();
@@ -95,10 +142,25 @@ Deno.serve(async (request) => {
   let scheduledNextEligibleAt: string | null = null;
   if (scheduled) {
     const scheduleStateResponse = await admin.rpc("get_pick_monitoring_schedule_state", { p_source_event_identity: resolved.identity });
-    if (scheduleStateResponse.error) return safeError(503, "SCHEDULE_STATE_FAILED", "Monitoring schedule state is unavailable.");
+    if (scheduleStateResponse.error) {
+      return finishScheduledDecision({
+        outcome: "failed",
+        reason: "schedule_state_failed",
+        identity: resolved.identity,
+        response: safeError(503, "SCHEDULE_STATE_FAILED", "Monitoring schedule state is unavailable."),
+      });
+    }
     const scheduleState = asRecord(scheduleStateResponse.data) as ScheduledMonitoringState & { existing_finding_keys?: unknown } | null;
     const decision = decideScheduledMonitoring({ event: resolved.selected, now: new Date(), state: scheduleState });
-    if (!decision.due) return noOp(decision.reason, resolved.identity, decision.next_eligible_at, notificationDispatch);
+    if (!decision.due) {
+      return finishScheduledDecision({
+        outcome: "skipped",
+        reason: decision.reason,
+        identity: resolved.identity,
+        nextEligibleAt: decision.next_eligible_at,
+        response: noOp(decision.reason, resolved.identity, decision.next_eligible_at, notificationDispatch),
+      });
+    }
 
     scheduledClaimedAt = new Date().toISOString();
     scheduledNextEligibleAt = decision.next_eligible_at;
@@ -106,8 +168,23 @@ Deno.serve(async (request) => {
       p_source_event_identity: resolved.identity,
       p_now: scheduledClaimedAt,
     });
-    if (claim.error) return safeError(503, "SCHEDULE_CLAIM_FAILED", "Monitoring schedule could not be claimed safely.");
-    if (claim.data !== true) return noOp("already_claimed", resolved.identity, undefined, notificationDispatch);
+    if (claim.error) {
+      return finishScheduledDecision({
+        outcome: "failed",
+        reason: "schedule_claim_failed",
+        identity: resolved.identity,
+        nextEligibleAt: scheduledNextEligibleAt,
+        response: safeError(503, "SCHEDULE_CLAIM_FAILED", "Monitoring schedule could not be claimed safely."),
+      });
+    }
+    if (claim.data !== true) {
+      return finishScheduledDecision({
+        outcome: "skipped",
+        reason: "already_claimed",
+        identity: resolved.identity,
+        response: noOp("already_claimed", resolved.identity, undefined, notificationDispatch),
+      });
+    }
     suppressFindingKeys = new Set(Array.isArray(scheduleState?.existing_finding_keys)
       ? scheduleState.existing_finding_keys.filter((value): value is string => typeof value === "string")
       : []);
@@ -125,8 +202,15 @@ Deno.serve(async (request) => {
 
   const providerKey = Deno.env.get("THE_ODDS_API_KEY");
   if (!providerKey) {
-    await releaseSchedule(retryInOneHour());
-    return safeError(503, "MONITORING_NOT_CONFIGURED", "Monitoring credentials are not configured.");
+    const retryAt = retryInOneHour();
+    await releaseSchedule(retryAt);
+    return finishScheduledDecision({
+      outcome: "failed",
+      reason: "monitoring_not_configured",
+      identity: resolved.identity,
+      nextEligibleAt: retryAt,
+      response: safeError(503, "MONITORING_NOT_CONFIGURED", "Monitoring credentials are not configured."),
+    });
   }
 
   const startedAt = new Date().toISOString();
@@ -140,8 +224,16 @@ Deno.serve(async (request) => {
   });
   const previewBody = await previewResponse.json().catch(() => null) as { event_preview?: SourcePreview; effective_scope?: CardScope } | null;
   if (!previewResponse.ok || !previewBody?.event_preview || !previewBody.effective_scope) {
-    await releaseSchedule(retryInOneHour());
-    return safeError(502, "SOURCE_PREVIEW_FAILED", "The UFC source preview failed safely.");
+    const retryAt = retryInOneHour();
+    await releaseSchedule(retryAt);
+    return finishScheduledDecision({
+      outcome: "failed",
+      reason: "source_preview_failed",
+      identity: resolved.identity,
+      nextEligibleAt: retryAt,
+      providerCalled: true,
+      response: safeError(502, "SOURCE_PREVIEW_FAILED", "The UFC source preview failed safely."),
+    });
   }
 
   const fetchedAt = new Date().toISOString();
@@ -162,7 +254,14 @@ Deno.serve(async (request) => {
     });
   } catch {
     if (scheduledNextEligibleAt) await releaseSchedule(scheduledNextEligibleAt);
-    return safeError(409, "EVENT_IDENTITY_MISMATCH", "Source and monitored event identities did not match.");
+    return finishScheduledDecision({
+      outcome: "failed",
+      reason: "event_identity_mismatch",
+      identity: resolved.identity,
+      nextEligibleAt: scheduledNextEligibleAt ?? undefined,
+      providerCalled: true,
+      response: safeError(409, "EVENT_IDENTITY_MISMATCH", "Source and monitored event identities did not match."),
+    });
   }
 
   const recorded = scheduled
@@ -173,8 +272,16 @@ Deno.serve(async (request) => {
       })
     : await admin.rpc("record_pick_monitoring_run_and_apply_odds", { p_payload: payload });
   if (recorded.error || !recorded.data) {
-    if (scheduledNextEligibleAt) await releaseSchedule(retryInOneHour());
-    return safeError(503, "MONITORING_RECORD_FAILED", "Monitoring evidence and eligible odds could not be recorded atomically.");
+    const retryAt = retryInOneHour();
+    if (scheduledNextEligibleAt) await releaseSchedule(retryAt);
+    return finishScheduledDecision({
+      outcome: "failed",
+      reason: "monitoring_record_failed",
+      identity: resolved.identity,
+      nextEligibleAt: retryAt,
+      providerCalled: true,
+      response: safeError(503, "MONITORING_RECORD_FAILED", "Monitoring evidence and eligible odds could not be recorded atomically."),
+    });
   }
   return json({
     ...monitoringSummary(String(recorded.data), payload),
