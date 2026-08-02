@@ -8,7 +8,7 @@ interface GroupPickProgressProps {
   mySelections: Readonly<Record<string, string>>;
 }
 
-export function GroupPickProgress({ event, locked, mySelections }: GroupPickProgressProps) {
+export function GroupPickProgress({ event, locked: _locked, mySelections }: GroupPickProgressProps) {
   const picks = usePicks();
   const members = picks.groupProgress;
   const loading = picks.groupProgressLoading;
@@ -16,6 +16,7 @@ export function GroupPickProgress({ event, locked, mySelections }: GroupPickProg
   const [selectedName, setSelectedName] = useState<string | null>(null);
   const selected = members.find((member) => member.displayName === selectedName) ?? null;
   const completedMembers = members.filter((member) => member.completed === member.total && member.total > 0).length;
+  const masterLocked = event.status !== "upcoming";
   const eligibleBouts = useMemo(() => event.bouts
     .filter((bout) => bout.includedInPicks !== false && (bout.resultStatus ?? "pending") !== "cancelled")
     .slice()
@@ -24,8 +25,9 @@ export function GroupPickProgress({ event, locked, mySelections }: GroupPickProg
     if (!selected) return [];
 
     return eligibleBouts
-      .filter((bout) => locked || bout.isLocked === true)
-      .map((bout, index) => {
+      .map((bout, index) => ({ bout, index }))
+      .filter(({ bout }) => masterLocked || bout.isLocked === true)
+      .map(({ bout, index }) => {
         const memberSelection = bout.groupPicks?.find((pick) => pick.displayName === selected.displayName) ?? null;
         const memberPick = memberSelection?.pickedFighterSlug ?? null;
         const myPick = mySelections[bout.boutId] ?? null;
@@ -46,7 +48,7 @@ export function GroupPickProgress({ event, locked, mySelections }: GroupPickProg
             && selected.underdogLockFighterSlug === memberPick,
         };
       });
-  }, [eligibleBouts, locked, mySelections, selected]);
+  }, [eligibleBouts, masterLocked, mySelections, selected]);
   const hiddenFightCount = selected ? Math.max(eligibleBouts.length - selectedPicks.length, 0) : 0;
 
   if (loading || error || !members.length) {
@@ -93,7 +95,7 @@ export function GroupPickProgress({ event, locked, mySelections }: GroupPickProg
                       <span>{member.displayName}'S PICKS</span>
                       <strong>{member.completed}/{member.total} COMPLETE</strong>
                     </div>
-                    {!locked && member.hasUnderdogLock ? <b>UNDERDOG LOCK SET</b> : null}
+                    {!masterLocked && member.hasUnderdogLock ? <b>UNDERDOG LOCK SET</b> : null}
                   </header>
                   {!selectedPicks.length ? (
                     <div className="picks-group-progress__privacy">
