@@ -37,21 +37,28 @@ describe("production Picks Control Center WebKit verification", () => {
     expect(verifier).toContain('/^\\d+ FIGHTS? NEED RESULTS$/.test(status)');
   });
 
-  it("requires monitoring only for a published open card", () => {
+  it("requires the visible monitoring section only for a published open card", () => {
     expect(verifier).toContain('if (controlStatus === "PICKS OPEN")');
-    expect(verifier).toContain('getByRole("heading", { name: "Monitoring Inbox", exact: true })');
+    expect(verifier).toContain('const monitoringSection = page.locator("#monitoring")');
+    expect(verifier).toContain('monitoringSection.getByRole("button", { name: "RUN CHECK NOW" }).waitFor');
+    expect(verifier).toContain('monitoringSection.getByRole("button", { name: "REFRESH INBOX" }).waitFor');
+    expect(verifier).toContain('page.getByText("ACTIVE", { exact: true }).count()');
+    expect(verifier).toContain('page.locator("#monitoring").count()');
     expect(verifier).toContain("Monitoring Inbox rendered during the ${controlStatus} lifecycle.");
     expect(verifier).toContain("Picks Control Center did not reach a valid owner lifecycle");
+    expect(verifier).not.toContain('getByRole("heading", { name: "Monitoring Inbox", exact: true })');
   });
 
-  it("runs Event Setup review only in setup lifecycles and avoids provider calls for an active card", () => {
+  it("scopes Event Setup review to the visible setup owner and avoids provider calls for an active card", () => {
     expect(verifier).toContain("if (isSetupLifecycle(setupStatus))");
-    expect(verifier).toContain('getByRole("heading", { name: "Event Setup" })');
-    expect(verifier).toContain('getByRole("button", { name: "CHECK FOR CARD UPDATES" }).click()');
+    expect(verifier).toContain('const setupSection = page.locator("#setup")');
+    expect(verifier).toContain('setupSection.getByRole("button", { name: "CHECK FOR CARD UPDATES" }).click()');
     expect(verifier).toContain("} else if (isActiveEventLifecycle(setupStatus)) {");
+    expect(verifier).toContain('page.locator("#setup").count()');
     expect(verifier).toContain("Event Setup rendered during the ${setupStatus} lifecycle.");
     expect(verifier).toContain("correctly omits Event Setup without calling the sync provider");
     expect(verifier).toContain("Picks Control Center did not reach a valid setup lifecycle");
+    expect(verifier).not.toContain('getByRole("heading", { name: "Event Setup" })');
   });
 
   it("retains the 390x844 proof and guaranteed disposable-owner cleanup", () => {
