@@ -1,74 +1,217 @@
--- Record every scheduled decision in the existing append-only monitoring ledger and
--- prevent a completed event from masking the next eligible UFC event.
+-- Make automatic Picks monitoring decisions durable and keep the existing
+-- monitoring ledger, runner, scheduler, provider, and owner projection canonical.
 alter table public.pick_monitoring_runs
   add column if not exists decision_reason text,
   add column if not exists provider_called boolean not null default true;
 
-alter table public.pick_monitoring_runs drop constraint if exists pick_monitoring_run_status;
-alter table public.pick_monitoring_runs add constraint pick_monitoring_run_status
-  check (status in ('completed','partial','failed','skipped'));
+alter table public.pick_monitoring_runs
+  drop constraint if exists pick_monitoring_run_status;
+alter table public.pick_monitoring_runs
+  add constraint pick_monitoring_run_status
+  check (status in ('completed', 'partial', 'failed', 'skipped'));
+
+alter table public.pick_monitoring_runs
+  drop constraint if exists pick_monitoring_skipped_without_provider;
+alter table public.pick_monitoring_runs
+  add constraint pick_monitoring_skipped_without_provider
+  check (status <> 'skipped' or provider_called = false);
 
 create or replace function public.record_pick_monitoring_scheduler_decision(
-  p_outcome text, p_reason text, p_source_event_identity text default null,
-  p_next_eligible_at timestamptz default null
-) returns uuid language plpgsql security definer set search_path = '' as $$
-declare v_run_id uuid; v_reason text := lower(trim(coalesce(p_reason,'')));
+  p_outcome text,
+  p_reason text,
+  p_source_event_identity text default null,
+  p_next_eligible_at timestamptz default null,
+  p_provider_called boolean default false
+)
+returns uuid
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_run_id uuid;
+  v_reason text := lower(trim(coalesce(p_reason, '')));
 begin
-  if auth.role() is distinct from 'service_role' then raise exception 'service role required'; end if;
-  if p_outcome not in ('skipped','failed') or v_reason='' then raise exception 'invalid scheduler decision'; end if;
-  insert into public.pick_monitoring_runs(trigger_kind,status,source_event_identity,
-    started_at,completed_at,decision_reason,provider_called,diagnostics)
-  values ('scheduled',p_outcome,coalesce(nullif(trim(p_source_event_identity),''),'none'),
-    now(),now(),v_reason,false,case when p_next_eligible_at is null then '[]'::jsonb
-    else jsonb_build_array(jsonb_build_object('next_eligible_at',p_next_eligible_at)) end)
+  if auth.role() is distinct from 'service_role' then
+    raise exception 'service role required';
+  end if;
+  if p_outcome not in ('skipped', 'failed') or v_reason = '' then
+    raise exception 'invalid scheduler decision';
+  end if;
+  if p_outcome = 'skipped' and p_provider_called then
+    raise exception 'skipped scheduler decisions cannot call providers';
+  end if;
+
+  insert into public.pick_monitoring_runs (
+    trigger_kind,
+    status,
+    source_event_identity,
+    started_at,
+    completed_at,
+    decision_reason,
+    provider_called,
+    diagnostics
+  )
+  values (
+    'scheduled',
+    p_outcome,
+    coalesce(nullif(trim(p_source_event_identity), ''), 'none'),
+    now(),
+    now(),
+    v_reason,
+    p_provider_called,
+    case
+      when p_next_eligible_at is null then '[]'::jsonb
+      else jsonb_build_array(jsonb_build_object('next_eligible_at', p_next_eligible_at))
+    end
+  )
   returning run_id into v_run_id;
+
   return v_run_id;
-end $$;
-revoke all on function public.record_pick_monitoring_scheduler_decision(text,text,text,timestamptz) from public,anon,authenticated;
-grant execute on function public.record_pick_monitoring_scheduler_decision(text,text,text,timestamptz) to service_role;
+end;
+$$;
 
+revoke all on function public.record_pick_monitoring_scheduler_decision(
+  text, text, text, timestamptz, boolean
+) from public, anon, authenticated;
+grant execute on function public.record_pick_monitoring_scheduler_decision(
+  text, text, text, timestamptz, boolean
+) to service_role;
+
+-- Decision-only rows must never change provider cadence or quota protection.
+create or replace function public.get_pick_monitoring_schedule_state(
+  p_source_event_identity text
+)
+returns jsonb
+language plpgsql
+stable
+security definer
+set search_path = ''
+as $$
+declare
+  v_last public.pick_monitoring_runs;
+  v_schedule public.pick_monitoring_schedule_state;
+begin
+  if auth.role() is distinct from 'service_role' then
+    raise exception 'service role required to read pick monitoring schedule state';
+  end if;
+
+  select run.* into v_last
+  from public.pick_monitoring_runs run
+  where run.source_event_identity = p_source_event_identity
+    and run.provider_called
+    and run.decision_reason is null
+  order by coalesce(run.completed_at, run.started_at) desc, run.created_at desc
+  limit 1;
+
+  select state.* into v_schedule
+  from public.pick_monitoring_schedule_state state
+  where state.source_event_identity = p_source_event_identity;
+
+  return jsonb_build_object(
+    'last_completed_at', v_last.completed_at,
+    'provider_requests_remaining', v_last.provider_requests_remaining,
+    'next_eligible_at', v_schedule.next_eligible_at,
+    'lease_until', v_schedule.lease_until,
+    'existing_finding_keys', coalesce((
+      select jsonb_agg(keys.finding_key order by keys.finding_key)
+      from (
+        select distinct finding.finding_key
+        from public.pick_monitoring_findings finding
+        join public.pick_monitoring_runs run on run.run_id = finding.run_id
+        where run.source_event_identity = p_source_event_identity
+          and run.decision_reason is null
+          and finding.review_status = 'new'
+      ) keys
+    ), '[]'::jsonb)
+  );
+end;
+$$;
+
+revoke all on function public.get_pick_monitoring_schedule_state(text)
+  from public, anon, authenticated;
+grant execute on function public.get_pick_monitoring_schedule_state(text)
+  to service_role;
+
+-- Keep completed, locked, or otherwise boundary-past events out of the one canonical
+-- service projection. Current published Picks remain preferred by the shared resolver.
 create or replace function public.get_pick_monitoring_event_state()
-returns jsonb language plpgsql stable security definer set search_path = '' as $$
-declare v_staged jsonb; v_current jsonb;
+returns jsonb
+language plpgsql
+stable
+security definer
+set search_path = ''
+as $$
+declare
+  v_staged jsonb;
+  v_current jsonb;
 begin
-  if auth.role() is distinct from 'service_role' then raise exception 'service role required to read pick monitoring event state'; end if;
-  select jsonb_build_object('event_id',draft.event_id,'source_event_key',draft.source_event_key,
-    'name',draft.name,'subtitle',draft.subtitle,'starts_at',draft.starts_at,'locks_at',draft.locks_at,
-    'bouts',coalesce((select jsonb_agg(jsonb_build_object('bout_id',bout.bout_id,
-      'red_fighter_name',bout.red_fighter_name,'blue_fighter_name',bout.blue_fighter_name) order by bout.position)
-      from public.pick_event_draft_bouts bout where bout.draft_id=draft.draft_id and bout.included),'[]'::jsonb)) into v_staged
-  from public.pick_event_drafts draft where draft.state='staged'
-    and least(draft.starts_at,draft.locks_at)>now() order by draft.starts_at,draft.synced_at desc limit 1;
-  select jsonb_build_object('event_id',event.event_id,'name',event.name,'subtitle',event.subtitle,
-    'starts_at',event.starts_at,'locks_at',event.locks_at,'bouts',coalesce((select jsonb_agg(jsonb_build_object(
-      'bout_id',bout.bout_id,'red_fighter_slug',bout.red_fighter_slug,'red_fighter_name',bout.red_fighter_name,
-      'blue_fighter_slug',bout.blue_fighter_slug,'blue_fighter_name',bout.blue_fighter_name,
-      'red_american_odds',bout.red_american_odds,'blue_american_odds',bout.blue_american_odds) order by bout.position)
-      from public.pick_bouts bout where bout.event_id=event.event_id),'[]'::jsonb)) into v_current
-  from public.pick_events event where event.status='upcoming'
-    and least(event.starts_at,event.locks_at)>now() order by event.starts_at limit 1;
-  return jsonb_build_object('staged',v_staged,'current',v_current);
-end $$;
-revoke all on function public.get_pick_monitoring_event_state() from public,anon,authenticated;
-grant execute on function public.get_pick_monitoring_event_state() to service_role;
+  if auth.role() is distinct from 'service_role' then
+    raise exception 'service role required to read pick monitoring event state';
+  end if;
 
-create or replace function public.get_latest_pick_monitoring_scheduler_decision()
-returns jsonb language plpgsql stable security definer set search_path = '' as $$
-declare v_run public.pick_monitoring_runs;
-begin
-  if not public.is_pick_control_owner(auth.uid()) then raise exception 'pick control owner required'; end if;
-  select * into v_run from public.pick_monitoring_runs where trigger_kind='scheduled'
-  order by created_at desc limit 1;
-  if v_run.run_id is null then return null; end if;
-  return jsonb_build_object('outcome',v_run.status,'reason',v_run.decision_reason,
-    'attempted_at',v_run.started_at,'provider_called',v_run.provider_called);
-end $$;
-revoke all on function public.get_latest_pick_monitoring_scheduler_decision() from public,anon;
-grant execute on function public.get_latest_pick_monitoring_scheduler_decision() to authenticated;
+  select jsonb_build_object(
+    'event_id', draft.event_id,
+    'source_event_key', draft.source_event_key,
+    'name', draft.name,
+    'subtitle', draft.subtitle,
+    'starts_at', draft.starts_at,
+    'locks_at', draft.locks_at,
+    'bouts', coalesce((
+      select jsonb_agg(jsonb_build_object(
+        'bout_id', bout.bout_id,
+        'red_fighter_name', bout.red_fighter_name,
+        'blue_fighter_name', bout.blue_fighter_name
+      ) order by bout.position)
+      from public.pick_event_draft_bouts bout
+      where bout.draft_id = draft.draft_id
+        and bout.included
+    ), '[]'::jsonb)
+  ) into v_staged
+  from public.pick_event_drafts draft
+  where draft.state = 'staged'
+    and least(draft.starts_at, draft.locks_at) > now()
+  order by draft.starts_at asc, draft.synced_at desc
+  limit 1;
 
+  select jsonb_build_object(
+    'event_id', event.event_id,
+    'name', event.name,
+    'subtitle', event.subtitle,
+    'starts_at', event.starts_at,
+    'locks_at', event.locks_at,
+    'bouts', coalesce((
+      select jsonb_agg(jsonb_build_object(
+        'bout_id', bout.bout_id,
+        'red_fighter_slug', bout.red_fighter_slug,
+        'red_fighter_name', bout.red_fighter_name,
+        'blue_fighter_slug', bout.blue_fighter_slug,
+        'blue_fighter_name', bout.blue_fighter_name,
+        'red_american_odds', bout.red_american_odds,
+        'blue_american_odds', bout.blue_american_odds,
+        'included_in_picks', bout.included_in_picks
+      ) order by bout.position)
+      from public.pick_bouts bout
+      where bout.event_id = event.event_id
+    ), '[]'::jsonb)
+  ) into v_current
+  from public.pick_events event
+  where event.status = 'upcoming'
+    and least(event.starts_at, event.locks_at) > now()
+  order by event.starts_at asc
+  limit 1;
 
--- Re-project the owner inbox with the same eligibility boundary and keep scheduler
--- decisions separate from real provider runs.
+  return jsonb_build_object('staged', v_staged, 'current', v_current);
+end;
+$$;
+
+revoke all on function public.get_pick_monitoring_event_state()
+  from public, anon, authenticated;
+grant execute on function public.get_pick_monitoring_event_state()
+  to service_role;
+
+-- Extend the existing single owner inbox projection. Scheduler decisions and real
+-- provider runs are returned from one consistent database snapshot.
 create or replace function public.get_pick_monitoring_inbox()
 returns jsonb
 language plpgsql
@@ -80,6 +223,7 @@ declare
   v_monitored_event jsonb;
   v_source_event_identity text;
   v_latest_run public.pick_monitoring_runs;
+  v_latest_decision public.pick_monitoring_runs;
   v_schedule public.pick_monitoring_schedule_state;
   v_job cron.job;
   v_last_wake_status text;
@@ -90,46 +234,51 @@ begin
     raise exception 'pick control owner required';
   end if;
 
+  -- Match resolveMonitoringEvent(): prefer the published current event, then staged.
   select jsonb_build_object(
-    'kind', 'staged',
-    'event_id', draft.event_id,
-    'source_event_identity', 'ufc:' || coalesce(nullif(trim(draft.source_event_key), ''), to_char(draft.starts_at at time zone 'UTC', 'YYYY-MM-DD')),
-    'name', draft.name,
-    'subtitle', draft.subtitle,
-    'starts_at', draft.starts_at,
-    'locks_at', draft.locks_at,
+    'kind', 'current',
+    'event_id', event.event_id,
+    'source_event_identity', 'ufc:' || to_char(event.starts_at at time zone 'UTC', 'YYYY-MM-DD'),
+    'name', event.name,
+    'subtitle', event.subtitle,
+    'starts_at', event.starts_at,
+    'locks_at', event.locks_at,
     'bout_count', (
       select count(*)::integer
-      from public.pick_event_draft_bouts bout
-      where bout.draft_id = draft.draft_id
-        and bout.included
+      from public.pick_bouts bout
+      where bout.event_id = event.event_id
+        and bout.included_in_picks
     )
   ) into v_monitored_event
-  from public.pick_event_drafts draft
-  where draft.state = 'staged'
-    and least(draft.starts_at, draft.locks_at) > now()
-  order by draft.synced_at desc
+  from public.pick_events event
+  where event.status = 'upcoming'
+    and least(event.starts_at, event.locks_at) > now()
+  order by event.starts_at asc
   limit 1;
 
   if v_monitored_event is null then
     select jsonb_build_object(
-      'kind', 'current',
-      'event_id', event.event_id,
-      'source_event_identity', 'ufc:' || to_char(event.starts_at at time zone 'UTC', 'YYYY-MM-DD'),
-      'name', event.name,
-      'subtitle', event.subtitle,
-      'starts_at', event.starts_at,
-      'locks_at', event.locks_at,
+      'kind', 'staged',
+      'event_id', draft.event_id,
+      'source_event_identity', 'ufc:' || coalesce(
+        nullif(trim(draft.source_event_key), ''),
+        to_char(draft.starts_at at time zone 'UTC', 'YYYY-MM-DD')
+      ),
+      'name', draft.name,
+      'subtitle', draft.subtitle,
+      'starts_at', draft.starts_at,
+      'locks_at', draft.locks_at,
       'bout_count', (
         select count(*)::integer
-        from public.pick_bouts bout
-        where bout.event_id = event.event_id
+        from public.pick_event_draft_bouts bout
+        where bout.draft_id = draft.draft_id
+          and bout.included
       )
     ) into v_monitored_event
-    from public.pick_events event
-    where event.status = 'upcoming'
-      and least(event.starts_at, event.locks_at) > now()
-    order by event.starts_at asc
+    from public.pick_event_drafts draft
+    where draft.state = 'staged'
+      and least(draft.starts_at, draft.locks_at) > now()
+    order by draft.starts_at asc, draft.synced_at desc
     limit 1;
   end if;
 
@@ -138,8 +287,17 @@ begin
   select run.* into v_latest_run
   from public.pick_monitoring_runs run
   where run.provider_called
-    and (v_source_event_identity is null
-     or run.source_event_identity = v_source_event_identity)
+    and run.decision_reason is null
+    and (
+      v_source_event_identity is null
+      or run.source_event_identity = v_source_event_identity
+    )
+  order by coalesce(run.completed_at, run.started_at) desc, run.created_at desc
+  limit 1;
+
+  select run.* into v_latest_decision
+  from public.pick_monitoring_runs run
+  where run.trigger_kind = 'scheduled'
   order by coalesce(run.completed_at, run.started_at) desc, run.created_at desc
   limit 1;
 
@@ -187,6 +345,15 @@ begin
         'lease_until', v_schedule.lease_until,
         'last_claimed_at', v_schedule.last_claimed_at,
         'updated_at', v_schedule.updated_at
+      )
+    end,
+    'latest_scheduled_decision', case
+      when v_latest_decision.run_id is null then null
+      else jsonb_build_object(
+        'outcome', v_latest_decision.status,
+        'reason', v_latest_decision.decision_reason,
+        'attempted_at', v_latest_decision.started_at,
+        'provider_called', v_latest_decision.provider_called
       )
     end,
     'latest_run', case
@@ -317,12 +484,24 @@ begin
       ) order by coalesce(run.completed_at, run.started_at) desc)
       from (
         select item.*,
-          (select count(*)::integer from public.pick_monitoring_findings finding where finding.run_id = item.run_id) as finding_count,
-          (select count(*)::integer from public.pick_monitoring_findings finding where finding.run_id = item.run_id and finding.review_status = 'new') as new_finding_count
+          (
+            select count(*)::integer
+            from public.pick_monitoring_findings finding
+            where finding.run_id = item.run_id
+          ) as finding_count,
+          (
+            select count(*)::integer
+            from public.pick_monitoring_findings finding
+            where finding.run_id = item.run_id
+              and finding.review_status = 'new'
+          ) as new_finding_count
         from public.pick_monitoring_runs item
         where item.provider_called
-          and (v_source_event_identity is null
-           or item.source_event_identity = v_source_event_identity)
+          and item.decision_reason is null
+          and (
+            v_source_event_identity is null
+            or item.source_event_identity = v_source_event_identity
+          )
         order by coalesce(item.completed_at, item.started_at) desc, item.created_at desc
         limit 12
       ) run
