@@ -53,6 +53,31 @@ async function request(stage, url, options = {}, acceptedStatuses = [200]) {
   return { response, body };
 }
 
+function isSetupLifecycle(status) {
+  return status === "SET UP NEXT EVENT" || status === "REVIEW CARD";
+}
+
+function isActiveEventLifecycle(status) {
+  return status === "PICKS OPEN"
+    || status === "PICKS CLOSED · RESULTS OPEN"
+    || status === "EVENT COMPLETE"
+    || /^\d+ FIGHTS? NEED RESULTS$/.test(status);
+}
+
+async function waitForControlStatus(page) {
+  const statusLocator = page.locator(".picks-control-center__status");
+  await statusLocator.waitFor({ state: "visible", timeout: 15_000 });
+  await page.waitForFunction(() => {
+    const text = document.querySelector(".picks-control-center__status")?.textContent?.trim() ?? "";
+    return Boolean(text && ![
+      "LOADING CONTROL CENTER",
+      "CHECKING NEXT EVENT",
+      "OWNER SIGN-IN REQUIRED",
+    ].includes(text));
+  }, undefined, { timeout: 15_000 });
+  return (await statusLocator.textContent())?.trim() ?? "";
+}
+
 const markerUrl = new URL("/deployment.json", productionOrigin);
 markerUrl.searchParams.set("run", process.env.GITHUB_RUN_ID ?? String(Date.now()));
 if (expectedDeploymentSha) markerUrl.searchParams.set("expected", expectedDeploymentSha);
@@ -212,10 +237,11 @@ try {
     waitUntil: "domcontentloaded",
     timeout: 30_000,
   });
-  await page.getByRole("heading", { name: "Monitoring Inbox", exact: true }).waitFor({ state: "visible", timeout: 15_000 });
-  if (new URL(page.url()).pathname !== "/picks/monitoring") {
-    throw new Error(`Monitoring Inbox deep link redirected before sign-in: ${page.url()}`);
-  }
+  await page.waitForURL(
+    (url) => url.pathname === "/picks/control" && url.hash === "#monitoring",
+    { timeout: 15_000 },
+  );
+  await page.getByText("PRIVATE PICKS OWNER", { exact: true }).waitFor({ state: "visible", timeout: 15_000 });
 
   await page.getByRole("button", { name: "Sign in to Octagon HQ" }).click();
   await page.getByLabel("YOUR NAME").fill(displayName);
@@ -238,12 +264,28 @@ try {
     );
   }
 
-  await page.waitForURL((url) => url.pathname === "/picks/monitoring", { timeout: 15_000 });
-  await page.getByRole("heading", { name: "Monitoring Inbox", exact: true }).waitFor({ state: "visible" });
-  await page.getByRole("heading", { name: "Check now or refresh the ledger" }).waitFor({ state: "visible", timeout: 15_000 });
-  await page.getByText("ACTIVE", { exact: true }).waitFor({ state: "visible" });
-  if (await page.getByText("INBOX UNAVAILABLE", { exact: true }).count()) {
-    throw new Error("Monitoring Inbox rendered its unavailable state for the temporary owner.");
+  await page.waitForURL(
+    (url) => url.pathname === "/picks/control" && url.hash === "#monitoring",
+    { timeout: 15_000 },
+  );
+  const controlStatus = await waitForControlStatus(page);
+  let monitoringOutcome;
+
+  if (controlStatus === "PICKS OPEN") {
+    await page.getByRole("heading", { name: "Monitoring Inbox", exact: true }).waitFor({ state: "visible" });
+    await page.getByRole("heading", { name: "Check now or refresh the ledger" }).waitFor({ state: "visible", timeout: 15_000 });
+    await page.getByText("ACTIVE", { exact: true }).waitFor({ state: "visible" });
+    if (await page.getByText("INBOX UNAVAILABLE", { exact: true }).count()) {
+      throw new Error("Monitoring Inbox rendered its unavailable state for the temporary owner.");
+    }
+    monitoringOutcome = "loaded active owner-only monitoring data for the published card";
+  } else if (isSetupLifecycle(controlStatus) || isActiveEventLifecycle(controlStatus)) {
+    if (await page.getByRole("heading", { name: "Monitoring Inbox", exact: true }).count()) {
+      throw new Error(`Monitoring Inbox rendered during the ${controlStatus} lifecycle.`);
+    }
+    monitoringOutcome = `confirmed the ${controlStatus} lifecycle correctly omits monitoring`;
+  } else {
+    throw new Error(`Picks Control Center did not reach a valid owner lifecycle: ${controlStatus || "missing"}.`);
   }
 
   const monitoringScreenshotPath = process.env.MONITORING_INBOX_SCREENSHOT_PATH
@@ -254,73 +296,89 @@ try {
     waitUntil: "domcontentloaded",
     timeout: 30_000,
   });
-  await page.getByRole("heading", { name: "Event Setup" }).waitFor({ state: "visible", timeout: 15_000 });
-  const sourceInput = page.getByLabel("MMA MANIA CARD URL (OPTIONAL)");
-  const stagedSourceUrl = await sourceInput.inputValue();
-  if (configuredArticleUrl) {
-    await sourceInput.fill(configuredArticleUrl);
-  } else if (!stagedSourceUrl.trim()) {
-    throw new Error("Event Setup has no persisted MMA Mania source to review.");
-  }
-
-  const previewResponsePromise = page.waitForResponse(
-    (response) => response.url().includes("/functions/v1/sync-next-ufc-event")
-      && response.request().method() === "POST",
-    { timeout: 30_000 },
+  await page.waitForURL(
+    (url) => url.pathname === "/picks/control" && url.hash === "#setup",
+    { timeout: 15_000 },
   );
-  await page.getByRole("button", { name: "CHECK FOR CARD UPDATES" }).click();
-  const previewResponse = await previewResponsePromise;
-  const previewBody = await previewResponse.json().catch(() => ({}));
-  if (expectedSyncSourceSha && previewBody?.deployment_sha !== expectedSyncSourceSha) {
-    throw new Error(
-      `WebKit Event Setup backend SHA mismatch: expected ${expectedSyncSourceSha}, received ${previewBody?.deployment_sha ?? "missing"}.`,
-    );
-  }
-
+  await page.getByText("PRIVATE PICKS OWNER", { exact: true }).waitFor({ state: "visible", timeout: 15_000 });
+  const setupStatus = await waitForControlStatus(page);
   let previewOutcome;
-  if (previewResponse.status() === 200) {
-    assertCurrentEventPreview({
-      ...previewBody.event_preview,
-      source_url: previewBody.source_url,
-    });
-    await page.getByText("SOURCE REVIEW · NOT APPLIED").waitFor({ state: "visible", timeout: 15_000 });
-    await page.getByRole("heading", { name: /^(Main card|Full card) · \d+ fights$/i }).waitFor({ state: "visible" });
-    const visibleText = await page.locator("body").innerText();
-    for (const expected of [
-      previewBody.event_preview?.name,
-      previewBody.event_preview?.subtitle,
-      previewBody.event_preview?.venue,
-      previewBody.event_preview?.location,
-    ]) {
-      if (!expected || !visibleText.includes(expected)) {
-        throw new Error(`Event Setup source review did not render ${expected || "a required event field"}.`);
-      }
+
+  if (isSetupLifecycle(setupStatus)) {
+    await page.getByRole("heading", { name: "Event Setup" }).waitFor({ state: "visible", timeout: 15_000 });
+    const sourceInput = page.getByLabel("MMA MANIA CARD URL (OPTIONAL)");
+    const stagedSourceUrl = await sourceInput.inputValue();
+    if (configuredArticleUrl) {
+      await sourceInput.fill(configuredArticleUrl);
+    } else if (!stagedSourceUrl.trim()) {
+      throw new Error("Event Setup has no persisted MMA Mania source to review.");
     }
-    if (await page.getByRole("button", { name: "PUBLISH CARD" }).count()) {
-      throw new Error("Publish controls remained visible during the read-only source review.");
-    }
-    previewOutcome = `rendered a clean ${previewBody.fight_count}-fight current-source review`;
-  } else if (previewResponse.status() === 502) {
-    assertSafeEventSourceRollover(previewBody);
-    const visibleError = page.locator(".picks-error");
-    await visibleError.waitFor({ state: "visible", timeout: 15_000 });
-    const visibleErrorText = (await visibleError.textContent())?.trim() ?? "";
-    if (!visibleErrorText || (previewBody?.message && !visibleErrorText.includes(previewBody.message))) {
-      throw new Error(`Event Setup did not display the safe source rollover message: ${visibleErrorText || "missing"}.`);
-    }
-    await page.getByText("STAGED CARD · NOT LIVE").waitFor({ state: "visible" });
-    await page.getByRole("button", { name: "CHECK FOR CARD UPDATES" }).waitFor({ state: "visible" });
-    if (await page.getByText("SOURCE REVIEW · NOT APPLIED").count()) {
-      throw new Error("Event Setup opened a source review after the backend rejected the event identity.");
-    }
-    if ((await sourceInput.inputValue()) !== (configuredArticleUrl || stagedSourceUrl)) {
-      throw new Error("Event Setup changed the persisted source field after a safe source rollover rejection.");
-    }
-    previewOutcome = "displayed the fail-closed source rollover without applying or publishing it";
-  } else {
-    throw new Error(
-      `Event Setup returned unexpected HTTP ${previewResponse.status()}: ${safeMessage(previewBody)}.\n${diagnostics.join("\n")}`,
+
+    const previewResponsePromise = page.waitForResponse(
+      (response) => response.url().includes("/functions/v1/sync-next-ufc-event")
+        && response.request().method() === "POST",
+      { timeout: 30_000 },
     );
+    await page.getByRole("button", { name: "CHECK FOR CARD UPDATES" }).click();
+    const previewResponse = await previewResponsePromise;
+    const previewBody = await previewResponse.json().catch(() => ({}));
+    if (expectedSyncSourceSha && previewBody?.deployment_sha !== expectedSyncSourceSha) {
+      throw new Error(
+        `WebKit Event Setup backend SHA mismatch: expected ${expectedSyncSourceSha}, received ${previewBody?.deployment_sha ?? "missing"}.`,
+      );
+    }
+
+    if (previewResponse.status() === 200) {
+      assertCurrentEventPreview({
+        ...previewBody.event_preview,
+        source_url: previewBody.source_url,
+      });
+      await page.getByText("SOURCE REVIEW · NOT APPLIED").waitFor({ state: "visible", timeout: 15_000 });
+      await page.getByRole("heading", { name: /^(Main card|Full card) · \d+ fights$/i }).waitFor({ state: "visible" });
+      const visibleText = await page.locator("body").innerText();
+      for (const expected of [
+        previewBody.event_preview?.name,
+        previewBody.event_preview?.subtitle,
+        previewBody.event_preview?.venue,
+        previewBody.event_preview?.location,
+      ]) {
+        if (!expected || !visibleText.includes(expected)) {
+          throw new Error(`Event Setup source review did not render ${expected || "a required event field"}.`);
+        }
+      }
+      if (await page.getByRole("button", { name: "PUBLISH CARD" }).count()) {
+        throw new Error("Publish controls remained visible during the read-only source review.");
+      }
+      previewOutcome = `rendered a clean ${previewBody.fight_count}-fight current-source review`;
+    } else if (previewResponse.status() === 502) {
+      assertSafeEventSourceRollover(previewBody);
+      const visibleError = page.locator(".picks-error");
+      await visibleError.waitFor({ state: "visible", timeout: 15_000 });
+      const visibleErrorText = (await visibleError.textContent())?.trim() ?? "";
+      if (!visibleErrorText || (previewBody?.message && !visibleErrorText.includes(previewBody.message))) {
+        throw new Error(`Event Setup did not display the safe source rollover message: ${visibleErrorText || "missing"}.`);
+      }
+      await page.getByText("STAGED CARD · NOT LIVE").waitFor({ state: "visible" });
+      await page.getByRole("button", { name: "CHECK FOR CARD UPDATES" }).waitFor({ state: "visible" });
+      if (await page.getByText("SOURCE REVIEW · NOT APPLIED").count()) {
+        throw new Error("Event Setup opened a source review after the backend rejected the event identity.");
+      }
+      if ((await sourceInput.inputValue()) !== (configuredArticleUrl || stagedSourceUrl)) {
+        throw new Error("Event Setup changed the persisted source field after a safe source rollover rejection.");
+      }
+      previewOutcome = "displayed the fail-closed source rollover without applying or publishing it";
+    } else {
+      throw new Error(
+        `Event Setup returned unexpected HTTP ${previewResponse.status()}: ${safeMessage(previewBody)}.\n${diagnostics.join("\n")}`,
+      );
+    }
+  } else if (isActiveEventLifecycle(setupStatus)) {
+    if (await page.getByRole("heading", { name: "Event Setup" }).count()) {
+      throw new Error(`Event Setup rendered during the ${setupStatus} lifecycle.`);
+    }
+    previewOutcome = `confirmed the ${setupStatus} lifecycle correctly omits Event Setup without calling the sync provider`;
+  } else {
+    throw new Error(`Picks Control Center did not reach a valid setup lifecycle: ${setupStatus || "missing"}.`);
   }
 
   const visibleText = await page.locator("body").innerText();
@@ -333,7 +391,7 @@ try {
   await page.screenshot({ path: screenshotPath, fullPage: true });
 
   console.log(
-    `PASS: WebKit verified live production frontend ${liveDeploymentSha}, authenticated at 390x844, preserved the Monitoring Inbox route through sign-in, loaded active owner-only monitoring data, and ${previewOutcome}.`,
+    `PASS: WebKit verified live production frontend ${liveDeploymentSha}, authenticated at 390x844, preserved the canonical Picks Control Center monitoring and setup anchors through sign-in, ${monitoringOutcome}, and ${previewOutcome}.`,
   );
 } finally {
   if (browser) await browser.close().catch(() => undefined);
