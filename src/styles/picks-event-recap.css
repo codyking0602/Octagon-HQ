@@ -88,7 +88,7 @@ body.picks-recap-open {
   height: 100dvh;
   min-height: 0;
   overflow: hidden;
-  touch-action: none;
+  touch-action: pan-y;
   background: #050505;
 }
 
