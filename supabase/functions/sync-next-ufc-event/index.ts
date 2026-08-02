@@ -42,7 +42,9 @@ function errorJson(error: unknown, requestId: string, fallbackStage: ErrorStage,
     message: known ? error.message : "The next UFC event could not be previewed safely.",
     requestId,
     stage: known ? error.stage : fallbackStage,
-    safeDetails: known ? error.safeDetails : {},
+    safeDetails: known ? error.safeDetails : {
+      errorType: error instanceof Error ? error.name : typeof error,
+    },
     deployment_sha: DEPLOYED_SOURCE_SHA,
   }, status);
 }
@@ -149,7 +151,7 @@ function visibleDate(month: string, day: string, hour: number, minute: string, o
 }
 
 function parseVisibleEventTime(text: string, now: Date) {
-  const match = text.match(/(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun),\s+([A-Z][a-z]{2})\s+(\d{1,2})\s*\/\s*(\d{1,2}):(\d{2})\s*([AP]M)\s+([A-Z]{2,4})\s*\/\s*Main Card/i);
+  const match = text.match(/(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun),\s+([A-Z][a-z]{2})\s+(\d{1,2})\s*\/\s*(\d{1,2}):(\d{2})\s*([AP]M)\s+([A-Z]{2,4})(?:\s*\/\s*Main Card)?/i);
   if (!match) return null;
   const [, month, dayValue, hourValue, minute, meridiem, zone] = match;
   let hour = Number(hourValue) % 12;
@@ -437,7 +439,14 @@ async function findNextUfcEvent(now: Date) {
   const urls = Array.from(new Set(
     $("a[href*='/event/']").map((_, element) => absoluteUfcEventUrl($(element).attr("href") ?? "")).get().filter(Boolean),
   )).slice(0, 12);
-  if (!urls.length) throw new Error("UFC.com did not return any upcoming event links.");
+  if (!urls.length) {
+    throw new SyncError(
+      "UFC_EVENT_LINKS_MISSING",
+      "Official UFC event discovery did not return event links.",
+      "ufc-index-fetch",
+      { reason: "no-event-links" },
+    );
+  }
 
   const parsed = (await Promise.all(urls.map(async (url) => {
     try {
@@ -464,7 +473,12 @@ function sourceIdentityDetails(identity: ReturnType<typeof matchSourceIdentity>)
 async function fetchExactMmaManiaCard(metadata: UfcEventMetadata, requestedUrl: string) {
   const sourceUrl = absoluteMmaManiaArticleUrl(requestedUrl);
   if (!sourceUrl) {
-    throw new Error("The supplied source must be a specific MMA Mania fight-card article URL, not the fight-card index or another website.");
+    throw new SyncError(
+      "ARTICLE_SOURCE_REJECTED",
+      "The supplied source must be a specific MMA Mania fight-card article URL.",
+      "mma-fetch",
+      { reason: "invalid-article-url" },
+    );
   }
   const html = await fetchText(sourceUrl, "MMA Mania");
   const card = parseMmaManiaCard(html, sourceUrl);
@@ -506,7 +520,14 @@ async function discoverMmaManiaCard(metadata: UfcEventMetadata) {
   });
 
   const discovered = rankDiscoveryCandidates(metadata, Array.from(candidates.values()), 8);
-  if (!discovered.length) throw new Error("Automatic MMA Mania discovery returned no UFC fight-card article links.");
+  if (!discovered.length) {
+    throw new SyncError(
+      "ARTICLE_DISCOVERY_EMPTY",
+      "MMA Mania did not return a current UFC fight-card article candidate.",
+      "mma-fetch",
+      { reason: "no-article-links" },
+    );
+  }
 
   const evaluated: Array<{ card: MmaManiaCard; match: ReturnType<typeof matchEventIdentity> }> = [];
   let fetched = 0;
@@ -523,10 +544,31 @@ async function discoverMmaManiaCard(metadata: UfcEventMetadata) {
     }
   }
 
-  if (!fetched) throw new Error("Automatic MMA Mania discovery found article links, but none could be fetched.");
-  if (!parsed) throw new Error("Automatic MMA Mania discovery did not find a plausible sectioned fight card.");
+  if (!fetched) {
+    throw new SyncError(
+      "ARTICLE_FETCH_EMPTY",
+      "MMA Mania article candidates could not be fetched safely.",
+      "mma-fetch",
+      { reason: "no-candidate-fetched" },
+    );
+  }
+  if (!parsed) {
+    throw new SyncError(
+      "ARTICLE_CARD_REJECTED",
+      "MMA Mania did not return a plausible sectioned fight card.",
+      "mma-parse",
+      { reason: "no-plausible-card" },
+    );
+  }
   const selected = chooseEventArticle(evaluated);
-  if (!selected.candidate) throw new Error(selected.error);
+  if (!selected.candidate) {
+    throw new SyncError(
+      "ARTICLE_DISCOVERY_REJECTED",
+      "MMA Mania article candidates did not match the official UFC event safely.",
+      "identity-match",
+      { reason: "no-deterministic-candidate" },
+    );
+  }
   return selected.candidate.card;
 }
 
@@ -535,19 +577,38 @@ async function findMmaManiaCard(metadata: UfcEventMetadata, preferredSourceUrl: 
   try {
     return await discoverMmaManiaCard(metadata);
   } catch (error) {
-    const detail = error instanceof Error ? error.message : "Automatic article discovery failed.";
-    throw new Error(`${detail} Paste the exact MMA Mania fight-card article URL in Event Setup and try again. No UFC first-six fallback was used.`);
+    if (error instanceof SyncError) throw error;
+    throw new SyncError(
+      "ARTICLE_DISCOVERY_FAILED",
+      "Automatic MMA Mania article discovery failed safely.",
+      "mma-fetch",
+      { reason: "unexpected-discovery-failure" },
+    );
   }
 }
 
 async function buildNextEvent(now: Date, requestedScope: CardScope, preferredSourceUrl: string) {
   const metadata = await findNextUfcEvent(now);
-  if (!metadata) throw new Error("No future UFC event metadata could be found.");
+  if (!metadata) {
+    throw new SyncError(
+      "UFC_EVENT_METADATA_REJECTED",
+      "Official UFC event metadata could not be parsed safely.",
+      "ufc-parse",
+      { reason: "no-future-event-metadata" },
+    );
+  }
   const card = await findMmaManiaCard(metadata, preferredSourceUrl);
   const canonicalMetadata = canonicalUfcEventFields(metadata.normalized);
   const effectiveScope = resolveCardScope(canonicalMetadata.name, canonicalMetadata.subtitle, requestedScope);
   const selected = selectBouts(card, effectiveScope);
-  if (!selected.length) throw new Error("The matched MMA Mania article did not contain fights for the selected card scope.");
+  if (!selected.length) {
+    throw new SyncError(
+      "ARTICLE_CARD_REJECTED",
+      "The matched MMA Mania article did not contain fights for the selected card scope.",
+      "mma-parse",
+      { reason: "selected-scope-empty", effectiveScope },
+    );
+  }
 
   const bouts = toStagedBouts(selected);
   const cardHeadliners = [bouts[0]!.red_fighter_name, bouts[0]!.blue_fighter_name];
