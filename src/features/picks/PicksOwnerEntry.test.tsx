@@ -107,8 +107,8 @@ describe("Picks owner entry", () => {
 
     expect(await screen.findByRole("heading", { name: "The next Picks card is being prepared." })).toBeInTheDocument();
     expect(screen.getByText("Check back when the next UFC main card is ready.")).toBeInTheDocument();
-    expect(screen.getByText("Stage → sync → review → publish → monitor → lock/results.")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "STAGE NEXT UFC EVENT" })).toHaveAttribute(
+    expect(await screen.findByText("Stage → sync → review → publish → monitor → lock/results.")).toBeInTheDocument();
+    expect(await screen.findByRole("link", { name: "STAGE NEXT UFC EVENT" })).toHaveAttribute(
       "href",
       "/picks/control#setup",
     );
@@ -118,6 +118,7 @@ describe("Picks owner entry", () => {
     renderPage(null, false);
 
     expect(await screen.findByText("Check back when the next UFC main card is ready.")).toBeInTheDocument();
+    expect(await screen.findByText("STANDINGS & EVENTS")).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "STAGE NEXT UFC EVENT" })).not.toBeInTheDocument();
     expect(screen.queryByText("WEEKLY OWNER FLOW")).not.toBeInTheDocument();
   });
@@ -126,6 +127,7 @@ describe("Picks owner entry", () => {
     renderPage(activeEvent, true);
 
     expect(await screen.findByRole("heading", { name: "UFC Owner Entry Active" })).toBeInTheDocument();
+    expect(await screen.findByText("STANDINGS & EVENTS")).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "STAGE NEXT UFC EVENT" })).not.toBeInTheDocument();
   });
 });
