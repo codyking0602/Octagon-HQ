@@ -1,4 +1,5 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { shareCanonicalDestination } from "../../app/nativeShare";
 import {
   groupRankLabel,
@@ -90,8 +91,14 @@ function recapText(event: PickHistoryEvent, champions: readonly string[]) {
   return `${event.name} recap. ${championLabel}: ${joinNames(champions)}. ${event.record.correct}-${event.record.incorrect} record and ${event.record.totalPoints} points.`;
 }
 
-export function LatestEventRecap({ event }: { event: PickHistoryEvent }) {
-  const [open, setOpen] = useState(false);
+export function LatestEventRecap({
+  event,
+  requestedOpen = false,
+}: {
+  event: PickHistoryEvent;
+  requestedOpen?: boolean;
+}) {
+  const [open, setOpen] = useState(requestedOpen);
   const [shareLabel, setShareLabel] = useState("SHARE");
   const titleId = useId();
   const closeRef = useRef<HTMLButtonElement | null>(null);
@@ -130,6 +137,10 @@ export function LatestEventRecap({ event }: { event: PickHistoryEvent }) {
       )),
     };
   }, [event]);
+
+  useEffect(() => {
+    setOpen(requestedOpen);
+  }, [event.eventId, requestedOpen]);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -186,6 +197,99 @@ export function LatestEventRecap({ event }: { event: PickHistoryEvent }) {
       : "Nobody landed the bonus.",
   }];
 
+  const overlay = open ? (
+    <div
+      className="picks-event-recap-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={titleId}
+      data-pull-refresh-ignore
+    >
+      <div className="picks-event-recap">
+        <header className="picks-event-recap__header">
+          <button ref={closeRef} type="button" aria-label="Close event recap" onClick={() => setOpen(false)}>×</button>
+          <span>EVENT RECAP</span>
+          <button type="button" onClick={() => void shareRecap()}>{shareLabel}</button>
+        </header>
+
+        <main className="picks-event-recap__scroll">
+          <section className="picks-event-recap__hero">
+            <span>ARCHIVED EVENT FINAL</span>
+            <h2 id={titleId}>{event.name} Recap</h2>
+            <strong>{recap.subtitle}</strong>
+            <p>{completedDate(event.completedAt)} · {event.venue} · {event.location}</p>
+            <em>{gradedFights} GRADED {gradedFights === 1 ? "FIGHT" : "FIGHTS"}</em>
+            <div className="picks-event-recap__champion">
+              <span>{recap.champions.length > 1 ? "CO-CHAMPIONS" : "CHAMPION"}</span>
+              <strong>{joinNames(championNames)}</strong>
+              <b>{recap.winningPoints} PTS</b>
+            </div>
+          </section>
+
+          <section className="picks-event-recap__metrics" aria-label="Event recap totals">
+            <div><strong>{event.groupResults.length}</strong><span>PLAYERS</span></div>
+            <div><strong>{recap.groupAccuracy}%</strong><span>GROUP ACCURACY</span></div>
+            <div><strong>{recap.current ? `${recap.current.correct}/${recap.current.correct + recap.current.incorrect}` : `${event.record.correct}/${event.record.correct + event.record.incorrect}`}</strong><span>YOUR PICKS</span></div>
+            <div><strong>{recap.current?.totalPoints ?? event.record.totalPoints}</strong><span>YOUR POINTS</span></div>
+          </section>
+
+          <section className="picks-event-recap__stories" aria-label="Story of the card">
+            {stories.map((story) => (
+              <article key={story.label}>
+                <span>{story.label}</span>
+                <strong>{story.title}</strong>
+                <p>{story.detail}</p>
+              </article>
+            ))}
+          </section>
+
+          <section className="picks-event-recap__standings" aria-labelledby={`${titleId}-standings`}>
+            <div className="picks-event-recap__section-heading">
+              <div><span>FINAL TABLE</span><h3 id={`${titleId}-standings`}>Event Standings</h3></div>
+              <small>{event.groupResults.length} PLAYERS</small>
+            </div>
+            <div className="picks-event-recap__standing-list">
+              {recap.standings.map((result) => (
+                <article className={result.isCurrentUser ? "is-current-user" : ""} key={result.profileId ?? result.displayName}>
+                  <span>{groupRankLabel(result.rank, event.groupResults)}</span>
+                  <div><strong>{result.displayName}{result.isCurrentUser ? <em>YOU</em> : null}</strong><small>{result.correct}/{result.correct + result.incorrect} correct · {winPercentage(result.correct, result.incorrect)}{result.lockBonus ? ` · +${result.lockBonus} lock` : ""}</small></div>
+                  <b>{result.totalPoints}<small>PTS</small></b>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="picks-event-recap__fights" aria-labelledby={`${titleId}-fights`}>
+            <div className="picks-event-recap__section-heading">
+              <div><span>CARD RESULTS</span><h3 id={`${titleId}-fights`}>Fight by Fight</h3></div>
+              <small>{recap.bouts.length} FIGHTS</small>
+            </div>
+            <div className="picks-event-recap__fight-list">
+              {recap.bouts.map((bout, index) => (
+                <article key={bout.boutId}>
+                  <div className="picks-event-recap__fight-meta"><span>{mainCardFightLabel(index)}</span><small>{bout.weightClass}</small></div>
+                  <div className="picks-event-recap__matchup"><strong>{bout.redFighterName}</strong><span>VS</span><strong>{bout.blueFighterName}</strong></div>
+                  <div className="picks-event-recap__fight-result">
+                    <div><span>OFFICIAL</span><strong>{officialResult(bout)}</strong></div>
+                    <div><span>YOUR PICK</span><strong>{fighterName(bout, bout.pickedFighterSlug)}</strong></div>
+                    <em className={`picks-verdict picks-verdict--${bout.verdict}`}>{verdictLabel(bout)}</em>
+                  </div>
+                  <GroupPickReveal
+                    redFighterSlug={bout.redFighterSlug}
+                    redFighterName={bout.redFighterName}
+                    blueFighterSlug={bout.blueFighterSlug}
+                    blueFighterName={bout.blueFighterName}
+                    picks={bout.groupPicks ?? []}
+                  />
+                </article>
+              ))}
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+  ) : null;
+
   return (
     <>
       <article className="picks-latest-recap-card">
@@ -202,92 +306,7 @@ export function LatestEventRecap({ event }: { event: PickHistoryEvent }) {
         <button type="button" onClick={() => setOpen(true)}>OPEN FULL RECAP <span aria-hidden="true">›</span></button>
       </article>
 
-      {open ? (
-        <div className="picks-event-recap-overlay" role="dialog" aria-modal="true" aria-labelledby={titleId}>
-          <div className="picks-event-recap">
-            <header className="picks-event-recap__header">
-              <button ref={closeRef} type="button" aria-label="Close event recap" onClick={() => setOpen(false)}>×</button>
-              <span>EVENT RECAP</span>
-              <button type="button" onClick={() => void shareRecap()}>{shareLabel}</button>
-            </header>
-
-            <main className="picks-event-recap__scroll">
-              <section className="picks-event-recap__hero">
-                <span>ARCHIVED EVENT FINAL</span>
-                <h2 id={titleId}>{event.name} Recap</h2>
-                <strong>{recap.subtitle}</strong>
-                <p>{completedDate(event.completedAt)} · {event.venue} · {event.location}</p>
-                <em>{gradedFights} GRADED {gradedFights === 1 ? "FIGHT" : "FIGHTS"}</em>
-                <div className="picks-event-recap__champion">
-                  <span>{recap.champions.length > 1 ? "CO-CHAMPIONS" : "CHAMPION"}</span>
-                  <strong>{joinNames(championNames)}</strong>
-                  <b>{recap.winningPoints} PTS</b>
-                </div>
-              </section>
-
-              <section className="picks-event-recap__metrics" aria-label="Event recap totals">
-                <div><strong>{event.groupResults.length}</strong><span>PLAYERS</span></div>
-                <div><strong>{recap.groupAccuracy}%</strong><span>GROUP ACCURACY</span></div>
-                <div><strong>{recap.current ? `${recap.current.correct}/${recap.current.correct + recap.current.incorrect}` : `${event.record.correct}/${event.record.correct + event.record.incorrect}`}</strong><span>YOUR PICKS</span></div>
-                <div><strong>{recap.current?.totalPoints ?? event.record.totalPoints}</strong><span>YOUR POINTS</span></div>
-              </section>
-
-              <section className="picks-event-recap__stories" aria-label="Story of the card">
-                {stories.map((story) => (
-                  <article key={story.label}>
-                    <span>{story.label}</span>
-                    <strong>{story.title}</strong>
-                    <p>{story.detail}</p>
-                  </article>
-                ))}
-              </section>
-
-              <section className="picks-event-recap__standings" aria-labelledby={`${titleId}-standings`}>
-                <div className="picks-event-recap__section-heading">
-                  <div><span>FINAL TABLE</span><h3 id={`${titleId}-standings`}>Event Standings</h3></div>
-                  <small>{event.groupResults.length} PLAYERS</small>
-                </div>
-                <div className="picks-event-recap__standing-list">
-                  {recap.standings.map((result) => (
-                    <article className={result.isCurrentUser ? "is-current-user" : ""} key={result.profileId ?? result.displayName}>
-                      <span>{groupRankLabel(result.rank, event.groupResults)}</span>
-                      <div><strong>{result.displayName}{result.isCurrentUser ? <em>YOU</em> : null}</strong><small>{result.correct}/{result.correct + result.incorrect} correct · {winPercentage(result.correct, result.incorrect)}{result.lockBonus ? ` · +${result.lockBonus} lock` : ""}</small></div>
-                      <b>{result.totalPoints}<small>PTS</small></b>
-                    </article>
-                  ))}
-                </div>
-              </section>
-
-              <section className="picks-event-recap__fights" aria-labelledby={`${titleId}-fights`}>
-                <div className="picks-event-recap__section-heading">
-                  <div><span>CARD RESULTS</span><h3 id={`${titleId}-fights`}>Fight by Fight</h3></div>
-                  <small>{recap.bouts.length} FIGHTS</small>
-                </div>
-                <div className="picks-event-recap__fight-list">
-                  {recap.bouts.map((bout, index) => (
-                    <article key={bout.boutId}>
-                      <div className="picks-event-recap__fight-meta"><span>{mainCardFightLabel(index)}</span><small>{bout.weightClass}</small></div>
-                      <div className="picks-event-recap__matchup"><strong>{bout.redFighterName}</strong><span>VS</span><strong>{bout.blueFighterName}</strong></div>
-                      <div className="picks-event-recap__fight-result">
-                        <div><span>OFFICIAL</span><strong>{officialResult(bout)}</strong></div>
-                        <div><span>YOUR PICK</span><strong>{fighterName(bout, bout.pickedFighterSlug)}</strong></div>
-                        <em className={`picks-verdict picks-verdict--${bout.verdict}`}>{verdictLabel(bout)}</em>
-                      </div>
-                      <GroupPickReveal
-                        redFighterSlug={bout.redFighterSlug}
-                        redFighterName={bout.redFighterName}
-                        blueFighterSlug={bout.blueFighterSlug}
-                        blueFighterName={bout.blueFighterName}
-                        picks={bout.groupPicks ?? []}
-                      />
-                    </article>
-                  ))}
-                </div>
-              </section>
-            </main>
-          </div>
-        </div>
-      ) : null}
+      {overlay ? createPortal(overlay, document.body) : null}
     </>
   );
 }

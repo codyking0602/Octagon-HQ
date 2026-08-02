@@ -140,6 +140,10 @@ function EventRecap({
     setOpen(requestedOpen);
   }, [event.eventId, requestedOpen]);
 
+  if (requestedOpen) {
+    return <LatestEventRecap event={event} requestedOpen />;
+  }
+
   return (
     <details
       className="surface-card picks-recap-card"
@@ -398,7 +402,7 @@ export function PicksSeasonHub({ history, loading }: { history: PickHistory; loa
                 <small>NEWEST FIRST</small>
               </div>
               {targetIsLatest && recapRequested ? (
-                <EventRecap event={latestEvent} requestedOpen />
+                <LatestEventRecap event={latestEvent} requestedOpen />
               ) : (
                 <LatestEventRecap event={latestEvent} />
               )}
@@ -407,7 +411,7 @@ export function PicksSeasonHub({ history, loading }: { history: PickHistory; loa
                   {olderEvents.map((event) => (
                     <EventRecap
                       event={event}
-                      requestedOpen={event.eventId === targetEventId}
+                      requestedOpen={recapRequested && event.eventId === targetEventId}
                       key={event.eventId}
                     />
                   ))}

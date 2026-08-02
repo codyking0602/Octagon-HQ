@@ -27,16 +27,18 @@ describe("resolvePicksDestination", () => {
     });
   });
 
-  it("safely ignores unknown events", () => {
-    expect(
-      resolvePicksDestination(new URLSearchParams("event=unknown"), archivedEventIds),
-    ).toEqual({ kind: "none" });
+  it("hands a legacy recap request to the newest archived event", () => {
+    expect(resolvePicksDestination(new URLSearchParams("view=recap"), archivedEventIds)).toEqual({
+      kind: "archived-event",
+      eventId: "ufc-325",
+      recapRequested: true,
+    });
   });
 
-  it("safely ignores incomplete destinations", () => {
-    expect(resolvePicksDestination(new URLSearchParams("view=recap"), archivedEventIds)).toEqual({
-      kind: "none",
-    });
+  it("safely ignores unknown explicit events", () => {
+    expect(
+      resolvePicksDestination(new URLSearchParams("event=unknown&view=recap"), archivedEventIds),
+    ).toEqual({ kind: "none" });
   });
 
   it("does not treat unsupported views as recap requests", () => {
