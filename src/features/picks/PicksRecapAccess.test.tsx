@@ -1,9 +1,14 @@
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import { LatestEventRecap } from "./LatestEventRecap";
 import type { PickHistory, PickHistoryEvent } from "./picksModel";
 import { PicksSeasonHub } from "./PicksSeasonHub";
+
+Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
+  configurable: true,
+  value: vi.fn(),
+});
 
 const event: PickHistoryEvent = {
   eventId: "ufc-fight-night-belgrade",
