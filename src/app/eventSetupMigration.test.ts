@@ -44,7 +44,8 @@ describe("Phase 2B event setup backend", () => {
     expect(syncFunction).toContain("parseMmaManiaCard");
     expect(syncFunction).toContain("resolveCardScope");
     expect(syncFunction).toContain('requested === "main" || requested === "full"');
-    expect(syncFunction).toContain("No UFC first-six fallback was used");
+    expect(syncFunction).toContain('"ARTICLE_DISCOVERY_FAILED"');
+    expect(syncFunction).toContain('"ARTICLE_DISCOVERY_REJECTED"');
     expect(syncFunction).not.toContain("bouts.slice(0, 6)");
   });
 
@@ -52,7 +53,8 @@ describe("Phase 2B event setup backend", () => {
     expect(syncFunction).toContain("persistedSourceUrl(ownerProbe.data)");
     expect(syncFunction).toContain("suppliedSourceUrl || persistedSourceUrl(ownerProbe.data)");
     expect(syncFunction).toContain("fetchExactMmaManiaCard");
-    expect(syncFunction).toContain("Paste the exact MMA Mania fight-card article URL in Event Setup");
+    expect(syncFunction).toContain('"ARTICLE_SOURCE_REJECTED"');
+    expect(syncFunction).toContain("The supplied source must be a specific MMA Mania fight-card article URL.");
     expect(cardChanges).toContain('["Card source", current.source_url, event.source_url]');
   });
 
