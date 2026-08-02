@@ -5,13 +5,21 @@ const verifier = readFileSync("scripts/verify-production-artifact.mjs", "utf8");
 const controlPage = readFileSync("src/features/picks-control/PicksControlPage.tsx", "utf8");
 const controlRepository = readFileSync("src/features/picks-control/pickControlRepository.ts", "utf8");
 
+const currentArtifactMarkers = [
+  "EVENT-WIDE MASTER LOCK",
+  "CHANGE FIGHT LOCK",
+  "LOCK ALL PICKS & BEGIN RESULTS",
+] as const;
+
+const retiredArtifactMarkers = [
+  "ALL FIGHTS LOCK TOGETHER",
+  '"CHANGE LOCK TIME"',
+  '"LOCK PICKS & BEGIN RESULTS"',
+] as const;
+
 describe("production artifact Picks lock contracts", () => {
   it("proves the current event-wide and per-fight lock owners", () => {
-    for (const marker of [
-      "EVENT-WIDE MASTER LOCK",
-      "CHANGE FIGHT LOCK",
-      "LOCK ALL PICKS & BEGIN RESULTS",
-    ]) {
+    for (const marker of currentArtifactMarkers) {
       expect(controlPage).toContain(marker);
       expect(verifier).toContain(marker);
     }
@@ -20,8 +28,8 @@ describe("production artifact Picks lock contracts", () => {
   });
 
   it("does not require superseded all-fights-lock-together copy", () => {
-    expect(verifier).not.toContain("ALL FIGHTS LOCK TOGETHER");
-    expect(verifier).not.toContain('"CHANGE LOCK TIME"');
-    expect(verifier).not.toContain('"LOCK PICKS & BEGIN RESULTS"');
+    for (const marker of retiredArtifactMarkers) {
+      expect(verifier).not.toContain(marker);
+    }
   });
 });
