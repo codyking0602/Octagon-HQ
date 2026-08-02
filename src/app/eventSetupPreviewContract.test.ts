@@ -60,6 +60,21 @@ describe("production Event Setup preview contract", () => {
     })).toEqual([]);
   });
 
+  it("requires the exact canonical staging summary when Event Setup has no draft", () => {
+    expect(expectedSourceChanges(null, currentPreview, "main")).toEqual([
+      "Stage a new main card with 4 fights.",
+    ]);
+    expect(expectedSourceChanges(undefined, {
+      ...currentPreview,
+      bouts: [
+        ...currentPreview.bouts,
+        bout("prelim-example-fight", "Example Red", "Example Blue"),
+      ],
+    }, "full")).toEqual([
+      "Stage a new full card with 5 fights.",
+    ]);
+  });
+
   it("accepts only the real membership and order changes in an updated card", () => {
     const second = bout("main-tybura-rakic", "Marcin Tybura", "Aleksandar Rakić");
     const third = bout("main-delija-walker", "Ante Delija", "Johnny Walker");
@@ -136,15 +151,6 @@ describe("production Event Setup preview contract", () => {
     expect(syncSource).toContain(".slice(0, MAX_UFC_EVENT_PAGE_ATTEMPTS)");
     expect(syncSource).toContain("for (const url of urls)");
     expect(syncSource).not.toContain("Promise.all(urls.map");
-  });
-
-  it("verifies the canonical new-card summary when no staged draft exists", () => {
-    expect(liveVerifier).toContain("function assertCanonicalChangeList");
-    expect(liveVerifier).toContain('if (!current || typeof current !== "object" || Array.isArray(current))');
-    expect(liveVerifier).toContain(
-      '`Stage a new ${effectiveScope === "full" ? "full" : "main"} card with ${event.bouts.length} fights.`',
-    );
-    expect(liveVerifier).toContain("assertReportedSourceChanges(current, event, reported)");
   });
 
   it("preserves typed canonical-source failures and keeps the live verifier red with sanitized details", () => {
