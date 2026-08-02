@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { memberProfilePath } from "../members/memberProfilesModel";
+import { notificationDestination } from "./notificationDestination";
 import {
   formatNotificationAge,
   notificationCategoryLabel,
@@ -9,7 +10,7 @@ import {
 } from "./notificationModel";
 import { useNotifications } from "./NotificationProvider";
 
-function NotificationCopy({ item }: { item: NotificationItem }) {
+function NotificationCopy({ item, route }: { item: NotificationItem; route: string | null }) {
   return (
     <>
       <span
@@ -31,21 +32,22 @@ function NotificationCopy({ item }: { item: NotificationItem }) {
         <p>{item.summary}</p>
         {item.actionLabel ? <em>{item.actionLabel} →</em> : null}
       </span>
-      {item.route ? <span className="notification-item__chevron" aria-hidden="true">›</span> : null}
+      {route ? <span className="notification-item__chevron" aria-hidden="true">›</span> : null}
     </>
   );
 }
 
 function NotificationRow({ item }: { item: NotificationItem }) {
   const notifications = useNotifications();
-  const copy = <NotificationCopy item={item} />;
+  const route = notificationDestination(item);
+  const copy = <NotificationCopy item={item} route={route} />;
 
   return (
     <article className={`notification-item${item.isRead ? " is-read" : " is-unread"}`}>
-      {item.route ? (
+      {route ? (
         <Link
           className="notification-item__main"
-          to={item.route}
+          to={route}
           onClick={() => void notifications.markRead(item.id)}
         >
           {copy}
