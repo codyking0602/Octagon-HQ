@@ -311,7 +311,7 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
     if (!window.confirm("Publish this reviewed card? It will become the live upcoming Picks event.")) return;
     void runAction("publish", async () => {
       await repository!.publishDraft(draft.draftId);
-      navigate("/picks");
+      navigate("/picks/control");
     });
   }
 
