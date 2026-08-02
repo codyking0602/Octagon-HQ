@@ -56,6 +56,110 @@ function sameTimestamp(left, right) {
     : leftValue === rightValue;
 }
 
+function isMmaManiaArticleUrl(value) {
+  try {
+    const url = new URL(value);
+    const path = url.pathname.replace(/\/+$/, "");
+    return url.protocol === "https:"
+      && url.hostname === "www.mmamania.com"
+      && path.length > 1
+      && path !== "/ufc-fight-cards"
+      && !path.endsWith("/archives");
+  } catch {
+    return false;
+  }
+}
+
+function normalizedIdentityFingerprint(value) {
+  if (!value || typeof value !== "object") return "";
+  return JSON.stringify({
+    eventNumber: value.eventNumber ?? null,
+    headliners: Array.isArray(value.headliners) ? value.headliners : [],
+    eventDate: value.eventDate ?? null,
+    location: value.location ?? null,
+  });
+}
+
+export function assertCurrentEventPreview(event, now = new Date()) {
+  if (!event || typeof event !== "object") {
+    throw new Error("Preview is missing the event payload.");
+  }
+
+  for (const field of ["name", "subtitle", "venue", "location"]) {
+    if (!clean(event[field])) throw new Error(`Preview is missing ${field}.`);
+  }
+
+  const startsAt = Date.parse(clean(event.starts_at));
+  const locksAt = Date.parse(clean(event.locks_at));
+  if (!Number.isFinite(startsAt) || !Number.isFinite(locksAt)) {
+    throw new Error("Preview has an invalid event or Picks lock timestamp.");
+  }
+  if (startsAt < now.getTime() - 24 * 60 * 60 * 1000) {
+    throw new Error("Preview selected an event more than one day in the past.");
+  }
+  if (locksAt > startsAt) {
+    throw new Error("Preview places the Picks lock after the event start.");
+  }
+
+  if (!isMmaManiaArticleUrl(event.source_url)) {
+    throw new Error("Preview is missing a specific MMA Mania article source.");
+  }
+
+  const bouts = Array.isArray(event.bouts) ? event.bouts : [];
+  if (bouts.length < 4 || bouts.length > 20) {
+    throw new Error(`Preview returned an implausible ${bouts.length}-fight card.`);
+  }
+
+  const seenIds = new Set();
+  const seenPairs = new Set();
+  for (const bout of bouts) {
+    const boutId = clean(bout?.bout_id);
+    const red = clean(bout?.red_fighter_name);
+    const blue = clean(bout?.blue_fighter_name);
+    if (!boutId || !red || !blue) throw new Error("Preview contains an incomplete fight.");
+    if (seenIds.has(boutId)) throw new Error(`Preview repeats bout ID ${boutId}.`);
+    const pair = fightPair(bout);
+    if (!pair || pair.startsWith("|") || pair.endsWith("|")) {
+      throw new Error(`Preview contains an invalid fighter pair for ${boutId}.`);
+    }
+    if (seenPairs.has(pair)) throw new Error(`Preview repeats fighter pair ${red} vs. ${blue}.`);
+    seenIds.add(boutId);
+    seenPairs.add(pair);
+  }
+
+  const visible = JSON.stringify({
+    name: event.name,
+    subtitle: event.subtitle,
+    venue: event.venue,
+    location: event.location,
+  });
+  if (/iframe|googletagmanager|skip\s+to\s+main|src\s*=|<|>/i.test(visible)) {
+    throw new Error("Preview contains rejected visible-page pollution.");
+  }
+}
+
+export function assertSafeEventSourceRollover(body) {
+  if (body?.code !== "ARTICLE_IDENTITY_REJECTED" || body?.stage !== "identity-match") {
+    throw new Error(
+      `Expected a safe article identity rejection, received ${body?.code ?? "missing"}/${body?.stage ?? "missing"}.`,
+    );
+  }
+
+  const details = body.safeDetails;
+  if (!details || typeof details !== "object") {
+    throw new Error("Safe article rejection is missing structured identity details.");
+  }
+  if (!Array.isArray(details.conflicts) || !details.conflicts.length) {
+    throw new Error("Safe article rejection did not report an identity conflict.");
+  }
+
+  const ufcFingerprint = normalizedIdentityFingerprint(details.normalizedUfcEvent);
+  const articleFingerprint = normalizedIdentityFingerprint(details.normalizedArticleEvent);
+  if (!ufcFingerprint || !articleFingerprint || ufcFingerprint === articleFingerprint) {
+    throw new Error("Safe article rejection does not prove a real source rollover mismatch.");
+  }
+}
+
 export function expectedSourceChanges(current, event) {
   const changes = [];
   const metadata = [
