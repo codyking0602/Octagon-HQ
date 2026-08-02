@@ -5,7 +5,6 @@ import {
   monitoringFindingTypeLabel,
   monitoringRunStatusLabel,
   type MonitoringFinding,
-  type MonitoringInbox,
 } from "./monitoringInboxModel";
 import {
   createMonitoringInboxRepository,
@@ -54,18 +53,14 @@ function FindingEvidence({ finding }: { finding: MonitoringFinding }) {
 
 interface MonitoringInboxPageProps {
   repository?: MonitoringInboxRepository | null;
-  onInboxChange?: (inbox: MonitoringInbox | null) => void;
 }
 
-export default function MonitoringInboxPage({
-  repository: suppliedRepository,
-  onInboxChange,
-}: MonitoringInboxPageProps) {
+export default function MonitoringInboxPage({ repository: suppliedRepository }: MonitoringInboxPageProps) {
   const identity = useIdentity();
   const [repository] = useState<MonitoringInboxRepository | null>(() => (
     suppliedRepository === undefined ? createMonitoringInboxRepository() : suppliedRepository
   ));
-  const [inbox, setInbox] = useState<MonitoringInbox | null>(null);
+  const [inbox, setInbox] = useState<Awaited<ReturnType<MonitoringInboxRepository["loadInbox"]>> | null>(null);
   const [loading, setLoading] = useState(true);
   const [busyAction, setBusyAction] = useState("");
   const [error, setError] = useState("");
@@ -74,36 +69,31 @@ export default function MonitoringInboxPage({
     if (!repository || !identity.profile) return;
     setLoading(true);
     try {
-      const nextInbox = await repository.loadInbox();
-      setInbox(nextInbox);
-      onInboxChange?.(nextInbox);
+      setInbox(await repository.loadInbox());
       setError("");
     } catch (nextError) {
       setInbox(null);
-      onInboxChange?.(null);
       setError(readableError(nextError));
     } finally {
       setLoading(false);
     }
-  }, [identity.profile, onInboxChange, repository]);
+  }, [identity.profile, repository]);
 
   useEffect(() => {
     if (!identity.ready) return;
     if (!identity.profile) {
       setInbox(null);
-      onInboxChange?.(null);
       setLoading(false);
       setError("");
       return;
     }
     if (!repository) {
-      onInboxChange?.(null);
       setLoading(false);
       setError("Monitoring Inbox is not connected on this build.");
       return;
     }
     void loadInbox();
-  }, [identity.profile, identity.ready, loadInbox, onInboxChange, repository]);
+  }, [identity.profile, identity.ready, loadInbox, repository]);
 
   async function runAction(key: string, action: () => Promise<void>) {
     setBusyAction(key);
@@ -187,12 +177,12 @@ export default function MonitoringInboxPage({
               </div>
               <span>{schedulerReady ? "ACTIVE" : "PAUSED"}</span>
             </div>
-            <div className="monitoring-status__grid">
-              <div><span>SCHEDULE</span><strong>{inbox.scheduler.schedule ?? "NOT INSTALLED"}</strong></div>
-              <div><span>LAST WAKE</span><strong>{displayTime(inbox.scheduler.lastWakeStartedAt)}</strong></div>
-              <div><span>WAKE STATUS</span><strong>{inbox.scheduler.lastWakeStatus?.toUpperCase() ?? "NOT YET"}</strong></div>
+            <div className="monitoring-status__grid" aria-label="Operational monitoring status">
               <div><span>LAST OUTCOME</span><strong>{decisionLabel}</strong></div>
-              <div><span>NEXT CHECK</span><strong>{displayTime(inbox.scheduleState?.nextEligibleAt)}</strong></div>
+              <div><span>LAST CARD CHECK</span><strong>{displayTime(latestRun?.cardSource ? latestRun.completedAt ?? latestRun.startedAt : null)}</strong></div>
+              <div><span>LAST ODDS CHECK</span><strong>{displayTime(latestRun?.oddsProvider ? latestRun.completedAt ?? latestRun.startedAt : null)}</strong></div>
+              <div><span>NEXT ELIGIBLE CHECK</span><strong>{displayTime(inbox.scheduleState?.nextEligibleAt)}</strong></div>
+              <div><span>FINDINGS NEEDING REVIEW</span><strong>{inbox.unresolvedCount}</strong></div>
             </div>
             <small>A scheduler wake proves infrastructure only. LAST OUTCOME reports whether providers were actually checked or why work was skipped.</small>
           </section>
@@ -220,10 +210,7 @@ export default function MonitoringInboxPage({
 
           <section className="monitoring-summary" aria-label="Monitoring status summary">
             <div><span>UNRESOLVED</span><strong>{inbox.unresolvedCount}</strong></div>
-            <div><span>LAST CARD CHECK</span><strong>{displayTime(latestRun?.cardSource ? latestRun.completedAt ?? latestRun.startedAt : null)}</strong></div>
-            <div><span>LAST ODDS CHECK</span><strong>{displayTime(latestRun?.oddsProvider ? latestRun.completedAt ?? latestRun.startedAt : null)}</strong></div>
             <div><span>RESULT</span><strong>{latestRun ? monitoringRunStatusLabel(latestRun.status) : "NO RUN"}</strong></div>
-            <div><span>QUOTA LEFT</span><strong>{latestRun?.providerRequestsRemaining ?? "—"}</strong></div>
           </section>
 
           <section className="surface-card monitoring-actions">
@@ -268,6 +255,25 @@ export default function MonitoringInboxPage({
               </section>
             )}
           </section>
+
+          <details className="surface-card monitoring-history monitoring-system-details">
+            <summary><span>SYSTEM DETAILS</span><small>TECHNICAL</small></summary>
+            <div>
+              <article><div><strong>SCHEDULE</strong><span>{inbox.scheduler.schedule ?? "NOT INSTALLED"}</span></div></article>
+              <article><div><strong>LAST SCHEDULER WAKE</strong><span>{displayTime(inbox.scheduler.lastWakeStartedAt)}</span></div></article>
+              <article><div><strong>WAKE STATUS</strong><span>{inbox.scheduler.lastWakeStatus?.toUpperCase() ?? "NOT YET"}</span></div></article>
+              <article><div><strong>TOKEN CONFIGURED</strong><span>{inbox.scheduler.tokenConfigured ? "YES" : "NO"}</span></div></article>
+              <article><div><strong>JOB</strong><span>{inbox.scheduler.jobName ?? inbox.scheduler.jobId ?? "NOT INSTALLED"}</span></div></article>
+              <article><div><strong>LEASE UNTIL</strong><span>{displayTime(inbox.scheduleState?.leaseUntil)}</span></div></article>
+              <article><div><strong>LAST CLAIMED</strong><span>{displayTime(inbox.scheduleState?.lastClaimedAt)}</span></div></article>
+              <article><div><strong>PROVIDER</strong><span>{latestRun?.oddsProvider ?? "NOT YET"}</span></div></article>
+              <article><div><strong>QUOTA REMAINING</strong><span>{latestRun?.providerRequestsRemaining ?? "UNKNOWN"}</span></div></article>
+              <article><div><strong>PROVIDER CALLED</strong><span>{decision?.providerCalled ? "YES" : "NO"}</span></div></article>
+              {latestRun?.diagnostics.length ? (
+                <article><div><strong>RAW DIAGNOSTICS</strong></div><pre>{JSON.stringify(latestRun.diagnostics, null, 2)}</pre></article>
+              ) : null}
+            </div>
+          </details>
 
           <details className="surface-card monitoring-history">
             <summary><span>RECENT CHECKS</span><small>{inbox.recentRuns.length} RUNS</small></summary>
