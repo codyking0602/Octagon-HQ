@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import MonitoringInboxPage from "../picks-monitoring/MonitoringInboxPage";
@@ -74,16 +74,6 @@ function decisionLabel(inbox: MonitoringInbox) {
   return "CHECKED SUCCESSFULLY";
 }
 
-function monitoringSnapshotKey(inbox: MonitoringInbox) {
-  return [
-    inbox.generatedAt,
-    inbox.unresolvedCount,
-    inbox.newFindings.length,
-    inbox.latestScheduledDecision?.attemptedAt ?? "",
-    inbox.latestRun?.runId ?? "",
-  ].join("|");
-}
-
 interface PicksControlCenterPageProps {
   controlRepository?: PickControlRepository | null;
   setupRepository?: PickSetupRepository | null;
@@ -108,9 +98,8 @@ export default function PicksControlCenterPage({
   ));
   const [eventState, setEventState] = useState<ResourceState<PickControlEvent | null>>({ status: "idle" });
   const [draftState, setDraftState] = useState<ResourceState<PickSetupDraft | null>>({ status: "idle" });
-  const [monitoringState, setMonitoringState] = useState<ResourceState<MonitoringInbox>>({ status: "idle" });
+  const [inbox, setInbox] = useState<MonitoringInbox | null>(null);
   const [controlRevision, setControlRevision] = useState(0);
-  const monitoringSnapshot = useRef("");
 
   const ownedControlRepository = useMemo<PickControlRepository | null>(() => {
     if (!controlRepository) return null;
@@ -154,33 +143,12 @@ export default function PicksControlCenterPage({
     };
   }, [setupRepository]);
 
-  const ownedMonitoringRepository = useMemo<MonitoringInboxRepository | null>(() => {
-    if (!monitoringRepository) return null;
-    return {
-      ...monitoringRepository,
-      async loadInbox() {
-        try {
-          const inbox = await monitoringRepository.loadInbox();
-          const snapshot = monitoringSnapshotKey(inbox);
-          if (monitoringSnapshot.current !== snapshot) {
-            monitoringSnapshot.current = snapshot;
-            setMonitoringState({ status: "ready", value: inbox });
-          }
-          return inbox;
-        } catch (error) {
-          if (monitoringSnapshot.current !== "error") {
-            monitoringSnapshot.current = "error";
-            setMonitoringState({ status: "error" });
-          }
-          throw error;
-        }
-      },
-    };
-  }, [monitoringRepository]);
+  const receiveInbox = useCallback((nextInbox: MonitoringInbox | null) => {
+    setInbox(nextInbox);
+  }, []);
 
   const event = eventState.status === "ready" ? eventState.value : undefined;
   const draft = draftState.status === "ready" ? draftState.value : undefined;
-  const inbox = monitoringState.status === "ready" ? monitoringState.value : undefined;
   const staged = event === null ? draft ?? null : null;
   const unresolved = event ? unresolvedFightCount(event) : 0;
   const eventName = event?.name ?? staged?.name ?? "NEXT UFC EVENT";
@@ -219,7 +187,7 @@ export default function PicksControlCenterPage({
     const sectionId = location.hash.replace(/^#/, "");
     if (!sectionId) return;
     document.getElementById(sectionId)?.scrollIntoView?.({ block: "start" });
-  }, [draftState.status, eventState.status, location.hash, monitoringState.status]);
+  }, [draftState.status, eventState.status, inbox, location.hash]);
 
   return (
     <div className="picks-control-center">
@@ -314,7 +282,7 @@ export default function PicksControlCenterPage({
               </>
             ) : null}
           </section>
-          <MonitoringInboxPage repository={ownedMonitoringRepository} />
+          <MonitoringInboxPage repository={monitoringRepository} onInboxChange={receiveInbox} />
         </section>
       ) : null}
     </div>
