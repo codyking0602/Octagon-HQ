@@ -310,8 +310,6 @@ try {
     const stagedSourceUrl = await sourceInput.inputValue();
     if (configuredArticleUrl) {
       await sourceInput.fill(configuredArticleUrl);
-    } else if (!stagedSourceUrl.trim()) {
-      throw new Error("Event Setup has no persisted MMA Mania source to review.");
     }
 
     const previewResponsePromise = page.waitForResponse(
