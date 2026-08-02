@@ -54,10 +54,13 @@ export function WhatsNewProvider({
   const [latestItemId, setLatestItemId] = useState<string | null>(null);
   const [error, setError] = useState("");
 
-  useEffect(() => () => {
-    ++revisionRef.current;
-    profileIdRef.current = null;
-  }, []);
+  useEffect(() => {
+    profileIdRef.current = profileId;
+    return () => {
+      ++revisionRef.current;
+      profileIdRef.current = null;
+    };
+  }, [profileId]);
 
   const loadSnapshot = useCallback(async (showLoading = false) => {
     if (!repository) {
