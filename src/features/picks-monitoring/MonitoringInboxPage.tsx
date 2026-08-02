@@ -126,6 +126,12 @@ export default function MonitoringInboxPage({ repository: suppliedRepository }: 
 
   const schedulerReady = inbox?.scheduler.active && inbox.scheduler.tokenConfigured;
   const latestRun = inbox?.latestRun ?? null;
+  const decision = inbox?.latestScheduledDecision ?? null;
+  const decisionLabel = decision?.outcome === "skipped"
+    ? `SKIPPED — ${(decision.reason ?? "unknown").replaceAll("_", " ").toUpperCase()}`
+    : decision?.outcome === "failed" ? "FAILED — ACTION NEEDED"
+      : decision?.outcome === "partial" ? "CHECKED — PARTIAL COVERAGE"
+        : decision?.outcome === "completed" ? "CHECKED SUCCESSFULLY" : "NOT YET";
 
   return (
     <div className="page monitoring-inbox-page">
@@ -168,7 +174,7 @@ export default function MonitoringInboxPage({ repository: suppliedRepository }: 
             <div className="monitoring-status__topline">
               <div>
                 <p className="eyebrow">AUTOMATIC MONITORING</p>
-                <h2>{schedulerReady ? "Scheduler active" : "Scheduler needs attention"}</h2>
+                <h2>{schedulerReady ? "AUTOMATION READY" : "AUTOMATION NEEDS ATTENTION"}</h2>
               </div>
               <span>{schedulerReady ? "ACTIVE" : "PAUSED"}</span>
             </div>
@@ -176,9 +182,10 @@ export default function MonitoringInboxPage({ repository: suppliedRepository }: 
               <div><span>SCHEDULE</span><strong>{inbox.scheduler.schedule ?? "NOT INSTALLED"}</strong></div>
               <div><span>LAST WAKE</span><strong>{displayTime(inbox.scheduler.lastWakeStartedAt)}</strong></div>
               <div><span>WAKE STATUS</span><strong>{inbox.scheduler.lastWakeStatus?.toUpperCase() ?? "NOT YET"}</strong></div>
+              <div><span>LAST OUTCOME</span><strong>{decisionLabel}</strong></div>
               <div><span>NEXT CHECK</span><strong>{displayTime(inbox.scheduleState?.nextEligibleAt)}</strong></div>
             </div>
-            <small>The scheduler wakes hourly. The backend skips provider calls until the monitored event is actually due.</small>
+            <small>A scheduler wake proves infrastructure only. LAST OUTCOME reports whether providers were actually checked or why work was skipped.</small>
           </section>
 
           {inbox.monitoredEvent ? (
@@ -204,7 +211,8 @@ export default function MonitoringInboxPage({ repository: suppliedRepository }: 
 
           <section className="monitoring-summary" aria-label="Monitoring status summary">
             <div><span>UNRESOLVED</span><strong>{inbox.unresolvedCount}</strong></div>
-            <div><span>LAST CHECK</span><strong>{displayTime(latestRun?.completedAt ?? latestRun?.startedAt)}</strong></div>
+            <div><span>LAST CARD CHECK</span><strong>{displayTime(latestRun?.cardSource ? latestRun.completedAt ?? latestRun.startedAt : null)}</strong></div>
+            <div><span>LAST ODDS CHECK</span><strong>{displayTime(latestRun?.oddsProvider ? latestRun.completedAt ?? latestRun.startedAt : null)}</strong></div>
             <div><span>RESULT</span><strong>{latestRun ? monitoringRunStatusLabel(latestRun.status) : "NO RUN"}</strong></div>
             <div><span>QUOTA LEFT</span><strong>{latestRun?.providerRequestsRemaining ?? "—"}</strong></div>
           </section>

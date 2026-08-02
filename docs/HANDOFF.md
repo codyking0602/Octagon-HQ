@@ -124,6 +124,9 @@ Operational rules:
 
 - The database owns one `octagon-hq-pick-monitoring` cron job at minute 7 of each hour.
 - Event-aware cadence skips provider calls until the monitored event is due and stops at the earliest Picks lock or event start.
+- Every authenticated scheduled decision is durable evidence: due checks remain provider runs, while not-due, no-event, closed-boundary, and failure outcomes are recorded without pretending a provider was called.
+- Scheduler wake health is infrastructure evidence only; the owner inbox reports the latest monitoring outcome separately.
+- Completed or boundary-past events are excluded from monitoring selection and cannot mask the next eligible staged or published UFC event.
 - The published current event is preferred when a matching staged draft also exists, so eligible odds bind to canonical live bouts.
 - A staged draft is monitored only when no current published event exists.
 - Conflicting staged and current identities fail closed.

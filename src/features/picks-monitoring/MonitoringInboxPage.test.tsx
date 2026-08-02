@@ -91,6 +91,12 @@ const inbox: MonitoringInbox = {
     reviewedAt: "2026-08-01T12:30:00.000Z",
   }],
   recentRuns: [],
+  latestScheduledDecision: {
+    outcome: "completed",
+    reason: null,
+    attemptedAt: "2026-08-01T12:00:00.000Z",
+    providerCalled: true,
+  },
 };
 
 function gateway(profile = cody): IdentityGateway {
@@ -147,7 +153,8 @@ describe("Monitoring Inbox", () => {
     renderPage(repository(inbox));
 
     expect(await screen.findByRole("heading", { name: "Monitoring Inbox" })).toBeInTheDocument();
-    expect(await screen.findByRole("heading", { name: "Scheduler active" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "AUTOMATION READY" })).toBeInTheDocument();
+    expect(screen.getByText("CHECKED SUCCESSFULLY")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "UFC Fight Night" })).toBeInTheDocument();
     expect(screen.getByText("Red Fighter vs. Blue Fighter")).toBeInTheDocument();
     expect(screen.getAllByText("Fight order changed.").length).toBeGreaterThan(0);
@@ -156,6 +163,22 @@ describe("Monitoring Inbox", () => {
     expect(screen.getByRole("link", { name: "EVENT SETUP" })).toHaveAttribute("href", "/picks/setup");
     expect(screen.getByRole("link", { name: "FIGHT NIGHT RESULTS" })).toHaveAttribute("href", "/picks/control");
     expect(screen.getByRole("link", { name: "PLAYER PICKS" })).toHaveAttribute("href", "/picks");
+  });
+
+  it("does not present a successful scheduler wake as provider work", async () => {
+    renderPage(repository({
+      ...inbox,
+      latestRun: null,
+      latestScheduledDecision: {
+        outcome: "skipped",
+        reason: "not_due",
+        attemptedAt: "2026-08-01T12:07:00.000Z",
+        providerCalled: false,
+      },
+    }));
+    expect(await screen.findByText("SKIPPED — NOT DUE")).toBeInTheDocument();
+    expect(screen.getByText(/scheduler wake proves infrastructure only/i)).toBeInTheDocument();
+    expect(screen.getByText("NO RUN")).toBeInTheDocument();
   });
 
   it("uses the existing manual runner and refreshes the ledger after success", async () => {
