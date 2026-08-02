@@ -157,7 +157,6 @@ try {
       }),
     },
   );
-
   userId = created.body?.id;
   if (!userId) {
     throw new Error("Disposable Auth user creation: response did not include a user ID.");
@@ -305,7 +304,8 @@ try {
   let previewOutcome;
 
   if (isSetupLifecycle(setupStatus)) {
-    await page.getByRole("heading", { name: "Event Setup" }).waitFor({ state: "visible", timeout: 15_000 });
+    await page.getByRole("region", { name: "Card scope" }).waitFor({ state: "visible", timeout: 15_000 });
+    await page.getByRole("heading", { name: "Choose what counts", exact: true }).waitFor({ state: "visible", timeout: 15_000 });
     const sourceInput = page.getByLabel("MMA MANIA CARD URL (OPTIONAL)");
     const stagedSourceUrl = await sourceInput.inputValue();
     if (configuredArticleUrl) {
@@ -373,7 +373,7 @@ try {
       );
     }
   } else if (isActiveEventLifecycle(setupStatus)) {
-    if (await page.getByRole("heading", { name: "Event Setup" }).count()) {
+    if (await page.getByRole("region", { name: "Card scope" }).count()) {
       throw new Error(`Event Setup rendered during the ${setupStatus} lifecycle.`);
     }
     previewOutcome = `confirmed the ${setupStatus} lifecycle correctly omits Event Setup without calling the sync provider`;
