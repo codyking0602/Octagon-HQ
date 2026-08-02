@@ -42,18 +42,18 @@ const event: PickEvent = {
   }],
 };
 
-function gateway(): IdentityGateway {
+function gateway(canControlPicks = false, displayName = profile.displayName): IdentityGateway {
   return {
     getSession: async () => ({ userId: profile.id }),
     subscribe: () => () => undefined,
-    loadProfile: async () => profile,
+    loadProfile: async () => ({ ...profile, displayName, canControlPicks }),
     signIn: async () => undefined,
     createProfile: async () => undefined,
     signOut: async () => undefined,
   };
 }
 
-function repository(currentEvent: PickEvent): PicksRepository {
+function repository(currentEvent: PickEvent | null): PicksRepository {
   return {
     loadCurrentEvent: async () => currentEvent,
     loadMyPicks: async () => [],
@@ -87,10 +87,10 @@ function repository(currentEvent: PickEvent): PicksRepository {
   };
 }
 
-function renderPage(currentEvent: PickEvent) {
+function renderPage(currentEvent: PickEvent | null, identityGateway = gateway()) {
   return render(
     <MemoryRouter>
-      <IdentityProvider gateway={gateway()}>
+      <IdentityProvider gateway={identityGateway}>
         <PicksProvider repository={repository(currentEvent)}>
           <PicksPage />
         </PicksProvider>
@@ -114,5 +114,27 @@ describe("Fight Night control entry", () => {
 
     expect(await screen.findByRole("heading", { name: "UFC Control Entry" })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "MANAGE EVENT ›" })).not.toBeInTheDocument();
+  });
+
+  it("gives only the projected owner the no-card setup entry and workflow guidance", async () => {
+    const { unmount } = renderPage(null, gateway(true));
+
+    const link = await screen.findByRole("link", { name: "STAGE NEXT UFC EVENT" });
+    expect(link).toHaveAttribute("href", "/picks/control#setup");
+    expect(screen.getByText("Stage → sync → review → publish → monitor → lock/results.")).toBeInTheDocument();
+    expect(screen.getByText("Check back when the next UFC main card is ready.")).toBeInTheDocument();
+    unmount();
+
+    renderPage(null, gateway(false, "CODY"));
+    expect(await screen.findByText("NO ACTIVE CARD")).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "STAGE NEXT UFC EVENT" })).not.toBeInTheDocument();
+    expect(screen.queryByText(/Stage → sync/)).not.toBeInTheDocument();
+  });
+
+  it("does not add the staging action when an event is active", async () => {
+    renderPage(event, gateway(true));
+    expect(await screen.findByRole("heading", { name: "UFC Control Entry" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "STAGE NEXT UFC EVENT" })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "MANAGE EVENT ›" })).toBeInTheDocument();
   });
 });

@@ -215,6 +215,7 @@ jobs:
             supabase/tests/auction_private_lifecycle.sql \
             supabase/tests/auction_private_lifecycle_hardening.sql \
             supabase/tests/auction_playable_server_engine.sql \
+            supabase/tests/picks_owner_identity_projection.sql \
             supabase/tests/pick_monitoring_truthful_decisions.sql
           do
             echo "Executing $test_file"

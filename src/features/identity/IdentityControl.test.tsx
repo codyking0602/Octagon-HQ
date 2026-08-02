@@ -35,6 +35,30 @@ function RouteHarness() {
 }
 
 describe("IdentityControl", () => {
+  it("shows the canonical Picks route only in an owner's profile menu", async () => {
+    const profileGateway = (canControlPicks: boolean): IdentityGateway => ({
+      getSession: async () => ({ userId: "11111111-1111-4111-8111-111111111111" }),
+      subscribe: () => () => undefined,
+      loadProfile: async () => ({
+        id: "11111111-1111-4111-8111-111111111111",
+        displayName: "CODY",
+        initials: "CK",
+        canControlPicks,
+      }),
+      signIn: async () => undefined,
+      createProfile: async () => undefined,
+      signOut: async () => undefined,
+    });
+    const { unmount } = render(<Providers gateway={profileGateway(true)}><IdentityControl /></Providers>);
+    fireEvent.click(await screen.findByRole("button", { name: /open cody profile menu/i }));
+    expect(screen.getByRole("link", { name: "MANAGE PICKS" })).toHaveAttribute("href", "/picks/control");
+    unmount();
+
+    render(<Providers gateway={profileGateway(false)}><IdentityControl /></Providers>);
+    fireEvent.click(await screen.findByRole("button", { name: /open cody profile menu/i }));
+    expect(screen.queryByRole("link", { name: "MANAGE PICKS" })).not.toBeInTheDocument();
+  });
+
   it("portals the dialog to document.body and locks page scrolling", () => {
     const { container } = render(
       <Providers>
