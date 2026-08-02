@@ -54,6 +54,8 @@ describe("Picks owner entry capability", () => {
   it("loads the owner capability once through the existing identity profile owner", () => {
     expect(occurrences(identityGateway, 'rpc("get_my_pick_control_capability")')).toBe(1);
     expect(identityGateway).toContain("canManagePicks:");
+    expect(identityGateway).toContain("capabilityResult.error");
+    expect(identityGateway).toContain("? false");
     expect(identityGateway).not.toContain("pick_control_owners");
     expect(identityGateway).not.toContain("displayName === \"CODY\"");
   });
