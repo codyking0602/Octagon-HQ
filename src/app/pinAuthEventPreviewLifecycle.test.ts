@@ -14,15 +14,19 @@ describe("production WebKit Event Setup lifecycle proof", () => {
     expect(verifier).not.toContain("Uroš Medić vs. Daniel Rodriguez");
   });
 
-  it("proves the fail-closed rollover remains staged and unapplied", () => {
-    expect(verifier).toContain('page.getByText("STAGED CARD · NOT LIVE")');
-    expect(verifier).toContain('page.getByText("SOURCE REVIEW · NOT APPLIED")');
+  it("proves the fail-closed rollover remains staged and unapplied inside the visible setup owner", () => {
+    expect(verifier).toContain('const setupSection = page.locator("#setup")');
+    expect(verifier).toContain('setupSection.getByText("STAGED CARD · NOT LIVE").waitFor');
+    expect(verifier).toContain('setupSection.getByText("SOURCE REVIEW · NOT APPLIED").waitFor');
     expect(verifier).toContain("Event Setup opened a source review after the backend rejected the event identity.");
     expect(verifier).toContain("Event Setup changed the persisted source field after a safe source rollover rejection.");
   });
 
-  it("still proves the live owner-only surfaces and exact deployment markers", () => {
-    expect(verifier).toContain('page.getByRole("heading", { name: "Monitoring Inbox", exact: true })');
+  it("still proves the visible live owner surface and exact deployment markers", () => {
+    expect(verifier).toContain('const monitoringSection = page.locator("#monitoring")');
+    expect(verifier).toContain('monitoringSection.getByRole("button", { name: "RUN CHECK NOW" }).waitFor');
+    expect(verifier).toContain('monitoringSection.getByRole("button", { name: "REFRESH INBOX" }).waitFor');
+    expect(verifier).not.toContain('page.getByRole("heading", { name: "Monitoring Inbox", exact: true })');
     expect(verifier).toContain("expectedDeploymentSha");
     expect(verifier).toContain("expectedSyncSourceSha");
     expect(verifier).toContain("Temporary Event Setup owner grant");
