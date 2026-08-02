@@ -267,20 +267,25 @@ try {
 
   let lifecycleOutcome;
   if (status === "SET UP NEXT EVENT" || status === "REVIEW CARD") {
-    await page.getByRole("heading", { name: "Event Setup", exact: true }).waitFor({ state: "visible", timeout: 15_000 });
-    await page.getByLabel("MMA MANIA CARD URL (OPTIONAL)").waitFor({ state: "visible" });
-    await page.getByRole("button", { name: "CHECK FOR CARD UPDATES" }).waitFor({ state: "visible" });
+    const setupSection = page.locator("#setup");
+    await setupSection.waitFor({ state: "visible", timeout: 15_000 });
+    await setupSection.getByLabel("MMA MANIA CARD URL (OPTIONAL)").waitFor({ state: "visible" });
+    await setupSection.getByRole("button", { name: "CHECK FOR CARD UPDATES" }).waitFor({ state: "visible" });
     lifecycleOutcome = "loaded the no-active-event setup owner without invoking sync or publish";
   } else if (status === "PICKS OPEN") {
-    await page.getByRole("heading", { name: "Monitoring Inbox", exact: true }).waitFor({ state: "visible", timeout: 15_000 });
-    await page.getByText("ACTIVE", { exact: true }).waitFor({ state: "visible", timeout: 15_000 });
-    if (await page.getByText("INBOX UNAVAILABLE", { exact: true }).count()) {
+    const monitoringSection = page.locator("#monitoring");
+    await monitoringSection.waitFor({ state: "visible", timeout: 15_000 });
+    await monitoringSection.getByRole("button", { name: "RUN CHECK NOW" }).waitFor({ state: "visible", timeout: 15_000 });
+    await monitoringSection.getByRole("button", { name: "REFRESH INBOX" }).waitFor({ state: "visible", timeout: 15_000 });
+    if (await monitoringSection.getByText("INBOX UNAVAILABLE", { exact: true }).count()) {
       throw new Error("Monitoring Inbox rendered its unavailable state for the temporary owner.");
     }
     lifecycleOutcome = "loaded the published/open event with active owner-only monitoring";
   } else if (/FIGHT(?:S)? NEED RESULTS|PICKS CLOSED · RESULTS OPEN|EVENT COMPLETE/.test(status)) {
-    await page.getByRole("heading", { name: "Fight Night Control", exact: true }).waitFor({ state: "visible", timeout: 15_000 });
-    if (await page.getByText("CONTROL UNAVAILABLE", { exact: true }).count()) {
+    const fightNightSection = page.locator("#fight-night");
+    await fightNightSection.waitFor({ state: "visible", timeout: 15_000 });
+    await fightNightSection.locator(".picks-control-hero").waitFor({ state: "visible", timeout: 15_000 });
+    if (await fightNightSection.getByText("CONTROL UNAVAILABLE", { exact: true }).count()) {
       throw new Error("Fight Night Control rendered its unavailable state for the temporary owner.");
     }
     lifecycleOutcome = "loaded the locked, result-entry, or completed event owner";
