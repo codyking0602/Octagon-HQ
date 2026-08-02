@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { hasSourceIdentityConflict } from "../../supabase/functions/sync-next-ufc-event/identityEngine";
 import {
   assertCurrentEventPreview,
   assertSafeEventSourceRollover,
@@ -102,5 +103,17 @@ describe("production Event Setup preview contract", () => {
       stage: "mma-fetch",
       safeDetails: {},
     })).toThrow("Expected a safe article identity rejection");
+  });
+
+  it("distinguishes a real source rollover from card-shape failure alone", () => {
+    expect(hasSourceIdentityConflict({
+      conflicts: ["implausible-or-unsectioned-card"],
+    })).toBe(false);
+    expect(hasSourceIdentityConflict({
+      conflicts: ["implausible-or-unsectioned-card", "event-date:2026-08-01!=2026-08-08"],
+    })).toBe(true);
+    expect(hasSourceIdentityConflict({
+      conflicts: ["neither-headliner-matches"],
+    })).toBe(true);
   });
 });
