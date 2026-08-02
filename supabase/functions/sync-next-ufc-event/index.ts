@@ -17,6 +17,7 @@ const corsHeaders = {
 
 const UFC_EVENT_INDEX_URL = "https://www.ufc.com/events?language_content_entity=en";
 const MMA_MANIA_INDEX_URL = "https://www.mmamania.com/ufc-fight-cards";
+const MAX_UFC_EVENT_PAGE_ATTEMPTS = 4;
 const requestHeaders = {
   "User-Agent": "OctagonHQ/2.0 (+https://octagon.hq-app.workers.dev)",
   Accept: "text/html,application/xhtml+xml",
@@ -438,7 +439,7 @@ async function findNextUfcEvent(now: Date) {
   const $ = cheerio.load(indexHtml);
   const urls = Array.from(new Set(
     $("a[href*='/event/']").map((_, element) => absoluteUfcEventUrl($(element).attr("href") ?? "")).get().filter(Boolean),
-  )).slice(0, 12);
+  )).slice(0, MAX_UFC_EVENT_PAGE_ATTEMPTS);
   if (!urls.length) {
     throw new SyncError(
       "UFC_EVENT_LINKS_MISSING",
@@ -448,16 +449,15 @@ async function findNextUfcEvent(now: Date) {
     );
   }
 
-  const parsed = (await Promise.all(urls.map(async (url) => {
+  for (const url of urls) {
     try {
-      return parseUfcEventPage(await fetchText(url, "UFC.com"), url, now);
+      const parsed = parseUfcEventPage(await fetchText(url, "UFC.com"), url, now);
+      if (parsed) return parsed;
     } catch {
-      return null;
+      // Preserve index order and continue to the next bounded official UFC event candidate.
     }
-  }))).filter((value): value is UfcEventMetadata => Boolean(value));
-
-  parsed.sort((left, right) => new Date(left.starts_at).getTime() - new Date(right.starts_at).getTime());
-  return parsed[0] ?? null;
+  }
+  return null;
 }
 
 function sourceIdentityDetails(identity: ReturnType<typeof matchSourceIdentity>) {
