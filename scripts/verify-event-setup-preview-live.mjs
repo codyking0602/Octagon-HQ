@@ -178,7 +178,10 @@ try {
     if (!preview.body?.source_hash || !Array.isArray(preview.body?.changes)) {
       throw new Error("Preview response is missing its reviewed source hash or change list.");
     }
-    assertCurrentEventPreview(preview.body.event_preview);
+    assertCurrentEventPreview({
+      ...preview.body.event_preview,
+      source_url: preview.body.source_url,
+    });
     assertReportedSourceChanges(draftBefore, preview.body.event_preview, preview.body.changes);
     outcome = `returned an independently verified ${preview.body.fight_count}-fight current-source change list`;
   } else {
