@@ -38,21 +38,6 @@ function safeDetails(body) {
     : "{}";
 }
 
-function assertCanonicalChangeList(current, event, reported, effectiveScope) {
-  if (!current || typeof current !== "object" || Array.isArray(current)) {
-    const expected = [
-      `Stage a new ${effectiveScope === "full" ? "full" : "main"} card with ${event.bouts.length} fights.`,
-    ];
-    if (JSON.stringify(reported) !== JSON.stringify(expected)) {
-      throw new Error(
-        `Preview new-card change list mismatch; expected ${JSON.stringify(expected)}, received ${JSON.stringify(reported)}.`,
-      );
-    }
-    return;
-  }
-  assertReportedSourceChanges(current, event, reported);
-}
-
 async function request(stage, url, options = {}, acceptedStatuses = [200]) {
   const response = await fetch(url, options);
   const body = await readBody(response);
@@ -200,7 +185,7 @@ try {
       ...preview.body.event_preview,
       source_url: preview.body.source_url,
     });
-    assertCanonicalChangeList(
+    assertReportedSourceChanges(
       draftBefore,
       preview.body.event_preview,
       preview.body.changes,
