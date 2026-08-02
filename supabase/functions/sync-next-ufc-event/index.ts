@@ -3,7 +3,7 @@ import * as cheerio from "npm:cheerio@1.0.0";
 import { DEPLOYED_SOURCE_SHA } from "./deployment.ts";
 import { absoluteMmaManiaArticleUrl } from "./sourceUrls.ts";
 import { chooseEventArticle, matchEventIdentity, rankDiscoveryCandidates, type ArticleIdentity } from "./eventIdentity.ts";
-import { matchSourceIdentity, type NormalizedUfcEvent } from "./identityEngine.ts";
+import { hasSourceIdentityConflict, matchSourceIdentity, type NormalizedUfcEvent } from "./identityEngine.ts";
 import { sourceChanges } from "./cardChanges.ts";
 import { canonicalFightPair, canonicalFighterDisplay, fighterMatch } from "./normalization.ts";
 import { adaptMmaManiaSource, adaptUfcSource, canonicalUfcEventFields } from "./sourceAdapters.ts";
@@ -451,6 +451,16 @@ async function findNextUfcEvent(now: Date) {
   return parsed[0] ?? null;
 }
 
+function sourceIdentityDetails(identity: ReturnType<typeof matchSourceIdentity>) {
+  return {
+    confidence: identity.confidence,
+    matchedSignals: identity.matchedSignals,
+    conflicts: identity.conflicts,
+    normalizedUfcEvent: identity.normalizedUfcEvent,
+    normalizedArticleEvent: identity.normalizedArticleEvent,
+  };
+}
+
 async function fetchExactMmaManiaCard(metadata: UfcEventMetadata, requestedUrl: string) {
   const sourceUrl = absoluteMmaManiaArticleUrl(requestedUrl);
   if (!sourceUrl) {
@@ -458,16 +468,22 @@ async function fetchExactMmaManiaCard(metadata: UfcEventMetadata, requestedUrl: 
   }
   const html = await fetchText(sourceUrl, "MMA Mania");
   const card = parseMmaManiaCard(html, sourceUrl);
-  if (!card.usedSectionHeadings || card.bouts.length < 4 || card.bouts.length > 20) {
-    throw new Error("The supplied MMA Mania article did not contain a plausible sectioned fight card.");
-  }
   const article = adaptMmaManiaSource(html, sourceUrl, card.bouts, Array.from(new Set(card.bouts.map((bout) => bout.section))));
   const identity = matchSourceIdentity(metadata.normalized, article);
+  const safeDetails = sourceIdentityDetails(identity);
+  if (!card.usedSectionHeadings || card.bouts.length < 4 || card.bouts.length > 20) {
+    if (hasSourceIdentityConflict(identity)) {
+      throw new SyncError("ARTICLE_IDENTITY_REJECTED", identity.reason, "identity-match", safeDetails);
+    }
+    throw new SyncError(
+      "ARTICLE_CARD_REJECTED",
+      "The supplied MMA Mania article did not contain a plausible sectioned fight card.",
+      "mma-parse",
+      safeDetails,
+    );
+  }
   if (!identity.accepted) {
-    throw new SyncError("ARTICLE_IDENTITY_REJECTED", identity.reason, "identity-match", {
-      confidence: identity.confidence, matchedSignals: identity.matchedSignals, conflicts: identity.conflicts,
-      normalizedUfcEvent: identity.normalizedUfcEvent, normalizedArticleEvent: identity.normalizedArticleEvent,
-    });
+    throw new SyncError("ARTICLE_IDENTITY_REJECTED", identity.reason, "identity-match", safeDetails);
   }
   return card;
 }
