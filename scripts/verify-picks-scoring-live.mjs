@@ -36,6 +36,18 @@ async function requireDenied(stage, url, options = {}, message) {
   }
 }
 
+function assertCurrentEventProjection(event, audience) {
+  if (!event?.event_id || !Number.isInteger(event?.season)) {
+    throw new Error(`${audience} current Picks event did not return an event ID and season.`);
+  }
+  if (!Array.isArray(event.bouts) || event.bouts.some((bout) => !Array.isArray(bout.group_picks))) {
+    throw new Error(`${audience} current Picks event is missing the group_picks projection.`);
+  }
+  if (event.can_control !== false) {
+    throw new Error(`${audience} current Picks event returned control access.`);
+  }
+}
+
 const keys = await request(
   "Project key lookup",
   `https://api.supabase.com/v1/projects/${projectId}/api-keys?reveal=true`,
@@ -102,17 +114,13 @@ try {
     `${supabaseOrigin}/rest/v1/rpc/get_current_pick_event`,
     { method: "POST", headers: publicHeaders, body: "{}" },
   );
-  if (!event?.event_id || !Number.isInteger(event?.season)) {
-    throw new Error("Current Picks event did not return an event ID and season.");
-  }
-  if (!Array.isArray(event.bouts) || event.bouts.some((bout) => !Array.isArray(bout.group_picks))) {
-    throw new Error("Current Picks event is missing the group_picks projection.");
-  }
-  if (event.bouts.some((bout) => bout.group_picks.length > 0)) {
-    throw new Error("Anonymous current-event projection exposed member picks.");
-  }
-  if (event.can_control !== false) {
-    throw new Error("Anonymous current-event projection returned control access.");
+  const hasCurrentEvent = event !== null;
+
+  if (hasCurrentEvent) {
+    assertCurrentEventProjection(event, "Anonymous");
+    if (event.bouts.some((bout) => bout.group_picks.length > 0)) {
+      throw new Error("Anonymous current-event projection exposed member picks.");
+    }
   }
 
   const authenticatedEvent = await request(
@@ -120,12 +128,14 @@ try {
     `${supabaseOrigin}/rest/v1/rpc/get_current_pick_event`,
     { method: "POST", headers: userHeaders, body: "{}" },
   );
-  if (!Array.isArray(authenticatedEvent?.bouts)
-    || authenticatedEvent.bouts.some((bout) => !Array.isArray(bout.group_picks))) {
-    throw new Error("Authenticated current-event projection is missing group_picks arrays.");
-  }
-  if (authenticatedEvent.can_control !== false) {
-    throw new Error("A disposable non-owner account received Fight Night control access.");
+
+  if (hasCurrentEvent) {
+    assertCurrentEventProjection(authenticatedEvent, "Authenticated");
+    if (authenticatedEvent.event_id !== event.event_id) {
+      throw new Error("Anonymous and authenticated current-event projections disagree.");
+    }
+  } else if (authenticatedEvent !== null) {
+    throw new Error("Anonymous and authenticated empty current-event projections disagree.");
   }
 
   await requireDenied(
@@ -142,26 +152,29 @@ try {
     "pick control owner required",
   );
 
-  const lock = await request(
-    "Underdog Lock RPC",
-    `${supabaseOrigin}/rest/v1/rpc/get_my_event_underdog_lock`,
-    {
-      method: "POST",
-      headers: userHeaders,
-      body: JSON.stringify({ p_event_id: event.event_id }),
-    },
-  );
-  if (!Array.isArray(lock)) {
-    throw new Error("Underdog Lock RPC did not return a table-shaped JSON array.");
+  if (hasCurrentEvent) {
+    const lock = await request(
+      "Underdog Lock RPC",
+      `${supabaseOrigin}/rest/v1/rpc/get_my_event_underdog_lock`,
+      {
+        method: "POST",
+        headers: userHeaders,
+        body: JSON.stringify({ p_event_id: event.event_id }),
+      },
+    );
+    if (!Array.isArray(lock)) {
+      throw new Error("Underdog Lock RPC did not return a table-shaped JSON array.");
+    }
   }
 
+  const scoringSeason = hasCurrentEvent ? event.season : new Date().getUTCFullYear();
   const summary = await request(
     "Picks scoring summary RPC",
     `${supabaseOrigin}/rest/v1/rpc/get_my_pick_summary`,
     {
       method: "POST",
       headers: userHeaders,
-      body: JSON.stringify({ p_season: event.season }),
+      body: JSON.stringify({ p_season: scoringSeason }),
     },
   );
   const row = Array.isArray(summary) ? summary[0] : null;
@@ -171,7 +184,8 @@ try {
     }
   }
 
-  console.log(`PASS: production Picks scoring, group reveal, Fight Night control, and Event Setup owner boundaries are healthy for event ${event.event_id}.`);
+  const lifecycle = hasCurrentEvent ? `event ${event.event_id}` : "the canonical no-active-card state";
+  console.log(`PASS: production Picks scoring, current-event privacy, Fight Night control, and Event Setup owner boundaries are healthy for ${lifecycle}.`);
 } finally {
   if (userId) {
     await fetch(`${supabaseOrigin}/auth/v1/admin/users/${userId}`, {
