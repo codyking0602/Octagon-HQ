@@ -16,13 +16,15 @@ export function GroupPickProgress({ event, locked, mySelections }: GroupPickProg
   const [selectedName, setSelectedName] = useState<string | null>(null);
   const selected = members.find((member) => member.displayName === selectedName) ?? null;
   const completedMembers = members.filter((member) => member.completed === member.total && member.total > 0).length;
+  const eligibleBouts = useMemo(() => event.bouts
+    .filter((bout) => bout.includedInPicks !== false && (bout.resultStatus ?? "pending") !== "cancelled")
+    .slice()
+    .sort((left, right) => left.position - right.position), [event.bouts]);
   const selectedPicks = useMemo(() => {
-    if (!selected || !locked) return [];
+    if (!selected) return [];
 
-    return event.bouts
-      .filter((bout) => bout.includedInPicks !== false && (bout.resultStatus ?? "pending") !== "cancelled")
-      .slice()
-      .sort((left, right) => left.position - right.position)
+    return eligibleBouts
+      .filter((bout) => locked || bout.isLocked === true)
       .map((bout, index) => {
         const memberSelection = bout.groupPicks?.find((pick) => pick.displayName === selected.displayName) ?? null;
         const memberPick = memberSelection?.pickedFighterSlug ?? null;
@@ -44,7 +46,8 @@ export function GroupPickProgress({ event, locked, mySelections }: GroupPickProg
             && selected.underdogLockFighterSlug === memberPick,
         };
       });
-  }, [event.bouts, locked, mySelections, selected]);
+  }, [eligibleBouts, locked, mySelections, selected]);
+  const hiddenFightCount = selected ? Math.max(eligibleBouts.length - selectedPicks.length, 0) : 0;
 
   if (loading || error || !members.length) {
     const status = loading ? "LOADING" : error ? "UNAVAILABLE" : "NO PICKS YET";
@@ -92,39 +95,47 @@ export function GroupPickProgress({ event, locked, mySelections }: GroupPickProg
                     </div>
                     {!locked && member.hasUnderdogLock ? <b>UNDERDOG LOCK SET</b> : null}
                   </header>
-                  {!locked ? (
+                  {!selectedPicks.length ? (
                     <div className="picks-group-progress__privacy">
                       <strong>PICKS HIDDEN</strong>
-                      <p>Individual picks stay hidden until the event locks.</p>
+                      <p>Individual picks reveal as each fight locks.</p>
                     </div>
                   ) : (
-                    <div className="picks-group-progress__comparison-list">
-                      {selectedPicks.map((pick) => (
-                        <article
-                          className={`picks-group-progress__fight ${pick.same ? "is-same" : "is-different"}`}
-                          key={pick.boutId}
-                        >
-                          <div className="picks-group-progress__matchup">
-                            <b>{pick.fightNumber}</b>
-                            <span>{pick.fight}</span>
-                          </div>
-                          <div className="picks-group-progress__choices">
-                            <div>
-                              <small>{member.displayName}</small>
-                              <strong>{pick.memberPick}</strong>
-                              {pick.isUnderdogLock ? (
-                                <b className="picks-group-progress__lock-marker">★ UNDERDOG LOCK</b>
-                              ) : null}
+                    <>
+                      <div className="picks-group-progress__comparison-list">
+                        {selectedPicks.map((pick) => (
+                          <article
+                            className={`picks-group-progress__fight ${pick.same ? "is-same" : "is-different"}`}
+                            key={pick.boutId}
+                          >
+                            <div className="picks-group-progress__matchup">
+                              <b>{pick.fightNumber}</b>
+                              <span>{pick.fight}</span>
                             </div>
-                            <em>{pick.same ? "SAME" : "DIFF"}</em>
-                            <div className="is-you">
-                              <small>YOU</small>
-                              <strong>{pick.myPick}</strong>
+                            <div className="picks-group-progress__choices">
+                              <div>
+                                <small>{member.displayName}</small>
+                                <strong>{pick.memberPick}</strong>
+                                {pick.isUnderdogLock ? (
+                                  <b className="picks-group-progress__lock-marker">★ UNDERDOG LOCK</b>
+                                ) : null}
+                              </div>
+                              <em>{pick.same ? "SAME" : "DIFF"}</em>
+                              <div className="is-you">
+                                <small>YOU</small>
+                                <strong>{pick.myPick}</strong>
+                              </div>
                             </div>
-                          </div>
-                        </article>
-                      ))}
-                    </div>
+                          </article>
+                        ))}
+                      </div>
+                      {hiddenFightCount ? (
+                        <div className="picks-group-progress__privacy">
+                          <strong>{hiddenFightCount} {hiddenFightCount === 1 ? "FIGHT" : "FIGHTS"} STILL OPEN</strong>
+                          <p>Those picks reveal when each fight locks.</p>
+                        </div>
+                      ) : null}
+                    </>
                   )}
                 </section>
               ) : null}
