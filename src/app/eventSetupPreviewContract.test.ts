@@ -1,9 +1,15 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   assertCurrentEventPreview,
   assertSafeEventSourceRollover,
   expectedSourceChanges,
 } from "../../scripts/event-setup-preview-contract.mjs";
+
+const liveVerifier = readFileSync(
+  "scripts/verify-event-setup-preview-live.mjs",
+  "utf8",
+);
 
 const bout = (bout_id: string, red_fighter_name: string, blue_fighter_name: string) => ({
   bout_id,
@@ -102,5 +108,13 @@ describe("production Event Setup preview contract", () => {
       stage: "mma-fetch",
       safeDetails: {},
     })).toThrow("Expected a safe article identity rejection");
+  });
+
+  it("keeps unexpected preview failures red while exposing only sanitized details", () => {
+    expect(liveVerifier).toContain("try {\n      assertSafeEventSourceRollover(preview.body);");
+    expect(liveVerifier).toContain("message=${safeMessage(preview.body)}");
+    expect(liveVerifier).toContain("details=${safeDetails(preview.body)}");
+    expect(liveVerifier).toContain("[200, 502]");
+    expect(liveVerifier).not.toContain("SYNC_UNEXPECTED_ERROR\"");
   });
 });
