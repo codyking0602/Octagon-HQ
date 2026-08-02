@@ -20,9 +20,7 @@ const KeepCutPage = lazy(() => import("../features/play/KeepCutPage"));
 const BetterThanPage = lazy(() => import("../features/play/BetterThanPage"));
 const AuctionPage = lazy(() => import("../features/play/AuctionPage"));
 const PicksPage = lazy(() => import("../features/picks/PicksPage"));
-const PicksControlPage = lazy(() => import("../features/picks-control/PicksControlPage"));
-const PicksSetupPage = lazy(() => import("../features/picks-setup/PicksSetupPage"));
-const MonitoringInboxPage = lazy(() => import("../features/picks-monitoring/MonitoringInboxPage"));
+const PicksControlCenterPage = lazy(() => import("../features/picks-control/PicksControlCenterPage"));
 const WarRoomPage = lazy(() => import("../features/war-room/WarRoomPage"));
 const WarRoomJoinPage = lazy(() => import("../features/war-room/WarRoomJoinPage"));
 const WhatsNewPage = lazy(() => import("../features/whats-new/WhatsNewPage"));
@@ -50,9 +48,9 @@ export const appRoutes: RouteObject[] = [
       { path: "play/better-than", element: <BetterThanPage /> },
       { path: "play/auction", element: <AuctionPage /> },
       { path: "picks", element: <PicksPage /> },
-      { path: "picks/control", element: <PicksControlPage /> },
-      { path: "picks/setup", element: <PicksSetupPage /> },
-      { path: "picks/monitoring", element: <MonitoringInboxPage /> },
+      { path: "picks/control", element: <PicksControlCenterPage /> },
+      { path: "picks/setup", element: <Navigate to="/picks/control#setup" replace /> },
+      { path: "picks/monitoring", element: <Navigate to="/picks/control#monitoring" replace /> },
       { path: "war-room/join", element: <WarRoomJoinPage /> },
       { path: "war-room", element: <WarRoomPage /> },
       { path: "whats-new", element: <WhatsNewPage /> },

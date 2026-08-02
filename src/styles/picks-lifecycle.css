@@ -462,3 +462,33 @@
     padding: 12px;
   }
 }
+.picks-control-center__header {
+  padding-bottom: 0;
+}
+
+.picks-control-center__header h1 {
+  margin-bottom: .45rem;
+}
+
+.picks-control-center__status {
+  display: inline-flex;
+  padding: .45rem .7rem;
+  border: 1px solid rgb(212 168 74 / 55%);
+  border-radius: 999px;
+  color: var(--gold, #d4a84a);
+  letter-spacing: .08em;
+}
+
+.picks-control-center > section > .page > .page-heading {
+  display: none;
+}
+
+.picks-control-center__section {
+  border-top: 1px solid rgb(255 255 255 / 10%);
+}
+
+@media (max-width: 480px) {
+  .picks-control-center__header .secondary-action {
+    width: 100%;
+  }
+}
