@@ -150,6 +150,15 @@ export default function PicksPage() {
           <p className="eyebrow">NO ACTIVE CARD</p>
           <h2>The next Picks card is being prepared.</h2>
           <p>{picks.error || "Check back when the next UFC main card is ready."}</p>
+          {identity.profile?.canManagePicks ? (
+            <div className="picks-owner-empty-entry">
+              <small>WEEKLY OWNER FLOW</small>
+              <span>Stage → sync → review → publish → monitor → lock/results.</span>
+              <Link className="primary-action picks-owner-empty-entry__action" to="/picks/control#setup">
+                STAGE NEXT UFC EVENT
+              </Link>
+            </div>
+          ) : null}
         </section>
       ) : null}
 
