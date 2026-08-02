@@ -58,6 +58,24 @@ function parseCorrectedResult(value: string): PickBoutResultStatus | null {
   return null;
 }
 
+function effectiveBoutLockTime(event: PickControlEvent, bout: PickControlBout) {
+  return bout.locksAt ?? event.locksAt;
+}
+
+function boutLockLabel(event: PickControlEvent, bout: PickControlBout) {
+  if (event.status !== "upcoming" || bout.isLocked) return "LOCKED";
+  const remaining = Date.parse(effectiveBoutLockTime(event, bout)) - Date.now();
+  return Number.isFinite(remaining) && remaining <= 60 * 60 * 1000 ? "LOCKING SOON" : "OPEN";
+}
+
+function boutLockClosedReason(event: PickControlEvent, bout: PickControlBout) {
+  if (event.status !== "upcoming") return "The event-wide master lock is active, so no fight can reopen.";
+  if (bout.resultStatus !== "pending") return "Completed, resulted, or cancelled fights cannot be reopened.";
+  if (bout.isLocked) return "This fight is already locked and cannot be reopened.";
+  if (!bout.canAdjustLock) return "This fight’s lock time can no longer be edited.";
+  return "Only this fight’s future lock time will change.";
+}
+
 interface PicksControlPageProps {
   repository?: PickControlRepository | null;
 }
@@ -269,7 +287,7 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
   function adjustLockTime() {
     if (!event || event.status !== "upcoming" || Date.now() >= Date.parse(event.startsAt)) return;
     const input = window.prompt(
-      "Enter the new event-wide Picks deadline in your local time (YYYY-MM-DDTHH:MM). All fights lock together.",
+      "Enter the new event-wide Picks deadline in your local time (YYYY-MM-DDTHH:MM). This remains the master override.",
       localDateTimeValue(event.locksAt),
     )?.trim();
     if (!input) return;
@@ -293,9 +311,9 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
       return;
     }
     if (!window.confirm(
-      `Change the deadline for every fight from ${eventTime(event.locksAt)} to ${eventTime(proposed.toISOString())}? This does not reopen an event that was manually moved to LOCKED.`,
+      `Change the event-wide master deadline from ${eventTime(event.locksAt)} to ${eventTime(proposed.toISOString())}? Fights still synchronized to the old default move with it; individually adjusted fights remain independent.`,
     )) return;
-    void runAction("lock-time", () => repository!.adjustLockTime!(
+    void runAction("lock-time", () => repository!.adjustLockTime(
       event.eventId,
       proposed.toISOString(),
       event.locksAt,
@@ -303,9 +321,40 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
     ));
   }
 
+  function adjustBoutLockTime(bout: PickControlBout) {
+    if (!event || !repository?.adjustBoutLockTime || !bout.canAdjustLock) return;
+    const currentLock = effectiveBoutLockTime(event, bout);
+    const input = window.prompt(
+      `Enter the new lock time for ${bout.redFighterName} vs. ${bout.blueFighterName} in your local time (YYYY-MM-DDTHH:MM).`,
+      localDateTimeValue(currentLock),
+    )?.trim();
+    if (!input) return;
+    const proposed = new Date(input);
+    if (!Number.isFinite(proposed.getTime())) {
+      setError("Enter a valid local fight lock time.");
+      return;
+    }
+    if (proposed.getTime() <= Date.now()) {
+      setError("The new fight lock time must be in the future.");
+      return;
+    }
+    if (proposed.getTime() > Date.parse(event.startsAt)) {
+      setError("A fight cannot lock after the main-card start.");
+      return;
+    }
+    if (!window.confirm(
+      `Change only ${bout.redFighterName} vs. ${bout.blueFighterName} from ${eventTime(currentLock)} to ${eventTime(proposed.toISOString())}? The event-wide master lock can still close every fight earlier.`,
+    )) return;
+    void runAction(`bout-lock:${bout.boutId}`, () => repository.adjustBoutLockTime!(
+      event.eventId,
+      bout.boutId,
+      proposed.toISOString(),
+    ));
+  }
+
   function lockEvent() {
     if (!event || !event.canLock) return;
-    if (!window.confirm("Lock all picks and begin Fight Night result entry? Picks will remain private until each fight is resolved.")) return;
+    if (!window.confirm("Lock all picks and begin Fight Night result entry? The event-wide master lock closes every remaining open fight.")) return;
     void runAction("lock", () => repository!.lockEvent(event.eventId));
   }
 
@@ -320,7 +369,7 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
       <section className="page-heading picks-control-heading">
         <p className="eyebrow">PRIVATE OWNER TOOL</p>
         <h1>Fight Night Control</h1>
-        <p>Approve pre-lock card changes, enter each first official result after Picks lock, and correct finalized results through a separate audited workflow.</p>
+        <p>Manage each fight’s lock, approve pre-lock card changes, enter official results, and use the event-wide lock as the master override.</p>
         <div className="picks-control-heading__links">
           <Link to="/picks/monitoring">MONITORING INBOX</Link>
           <Link to="/picks/setup">EVENT SETUP</Link>
@@ -409,9 +458,9 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
             {event.status === "upcoming" ? (
               <div className="picks-control-deadline">
                 <div>
-                  <span>ALL FIGHTS LOCK TOGETHER</span>
+                  <span>EVENT-WIDE MASTER LOCK</span>
                   <strong>{eventTime(event.locksAt)}</strong>
-                  <small>Deadline can move while the event is upcoming, but never past the main-card start.</small>
+                  <small>This closes every remaining open fight. Individual fight times cannot override an active master lock.</small>
                 </div>
                 <button
                   className="secondary-action"
@@ -419,7 +468,7 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
                   disabled={Boolean(busyAction) || Date.now() >= Date.parse(event.startsAt)}
                   onClick={adjustLockTime}
                 >
-                  {busyAction === "lock-time" ? "CHANGING…" : "CHANGE LOCK TIME"}
+                  {busyAction === "lock-time" ? "CHANGING…" : "CHANGE MASTER LOCK"}
                 </button>
               </div>
             ) : null}
@@ -434,8 +483,8 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
                 {busyAction === "lock"
                   ? "LOCKING PICKS…"
                   : event.canLock
-                    ? "LOCK PICKS & BEGIN RESULTS"
-                    : `PICKS LOCK ${eventTime(event.locksAt).toUpperCase()}`}
+                    ? "LOCK ALL PICKS & BEGIN RESULTS"
+                    : `MASTER LOCK ${eventTime(event.locksAt).toUpperCase()}`}
               </button>
             ) : null}
           </section>
@@ -456,8 +505,10 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
               </div>
               {displayedBouts.map((bout, index) => {
                 const saving = busyAction === `card:${bout.boutId}` || busyAction === `include:${bout.boutId}`;
+                const lockSaving = busyAction === `bout-lock:${bout.boutId}`;
                 const isCancelled = bout.resultStatus === "cancelled";
                 const isRemoved = !bout.includedInPicks;
+                const lockLabel = boutLockLabel(event, bout);
                 return (
                   <article className="surface-card pick-control-bout" key={bout.boutId}>
                     <div className="pick-control-bout__heading">
@@ -468,6 +519,21 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
                       <em className={`pick-control-bout__state pick-control-bout__state--${isRemoved ? "removed" : bout.resultStatus}`}>
                         {saving ? "SAVING…" : pickControlResultLabel(bout)}
                       </em>
+                    </div>
+                    <div className="picks-control-deadline">
+                      <div>
+                        <span>FIGHT LOCK · {lockLabel}</span>
+                        <strong>{eventTime(effectiveBoutLockTime(event, bout))}</strong>
+                        <small>{boutLockClosedReason(event, bout)}</small>
+                      </div>
+                      <button
+                        className="secondary-action"
+                        type="button"
+                        disabled={Boolean(busyAction) || !bout.canAdjustLock || !repository?.adjustBoutLockTime}
+                        onClick={() => adjustBoutLockTime(bout)}
+                      >
+                        {lockSaving ? "CHANGING…" : bout.canAdjustLock ? "CHANGE FIGHT LOCK" : "LOCK CLOSED"}
+                      </button>
                     </div>
                     {event.canReorder ? (
                       <div className="pick-control-move" aria-label={`Move ${bout.redFighterName} vs. ${bout.blueFighterName}`}>
@@ -485,7 +551,9 @@ export default function PicksControlPage({ repository: suppliedRepository }: Pic
                         ? "The fight and submitted picks are preserved, but it is excluded from progress and scoring."
                         : isCancelled
                           ? "Original picks are preserved. This fight is excluded from scoring and cannot receive new picks."
-                          : "Cancellation means the fight is off. Removal means it stays stored but no longer belongs to the pickable card."}
+                          : bout.isLocked
+                            ? "Submitted picks are preserved and revealed through the existing fight-specific privacy owner. Later open fights remain editable."
+                            : "Cancellation means the fight is off. Removal means it stays stored but no longer belongs to the pickable card."}
                     </p>
                     {bout.hasReplacementHistory ? (
                       <p className="pick-control-replacement-history"><strong>REPLACEMENT HISTORY EXISTS</strong> · The matchup above is currently stored.</p>

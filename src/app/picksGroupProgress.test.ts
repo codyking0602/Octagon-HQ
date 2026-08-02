@@ -24,14 +24,18 @@ describe("Picks group progress presentation", () => {
     expect(component).toContain("aria-expanded={isSelected}");
   });
 
-  it("shows lock completion without revealing its target before lock", () => {
-    expect(component).toContain("if (!selected || !locked) return []");
+  it("reveals only server-locked fights while later fights stay private", () => {
+    expect(component).toContain("if (!selected) return []");
+    expect(component).toContain('const masterLocked = event.status !== "upcoming"');
+    expect(component).toContain('.filter(({ bout }) => masterLocked || bout.isLocked === true)');
     expect(component).toContain("PICKS HIDDEN");
-    expect(component).toContain("Individual picks stay hidden until the event locks.");
-    expect(component).toContain('{!locked && member.hasUnderdogLock ? <b>UNDERDOG LOCK SET</b> : null}');
+    expect(component).toContain("Individual picks reveal as each fight locks.");
+    expect(component).toContain("hiddenFightCount");
+    expect(component).toContain("Those picks reveal when each fight locks.");
+    expect(component).toContain('{!masterLocked && member.hasUnderdogLock ? <b>UNDERDOG LOCK SET</b> : null}');
   });
 
-  it("renders reusable post-lock comparison rows and marks the exact lock target", () => {
+  it("renders reusable revealed comparison rows and marks the exact lock target", () => {
     expect(component).toContain('bout.includedInPicks !== false && (bout.resultStatus ?? "pending") !== "cancelled"');
     expect(component).toContain(".sort((left, right) => left.position - right.position)");
     expect(component).toContain("fight: `${bout.redFighterName} vs ${bout.blueFighterName}`");

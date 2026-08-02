@@ -11,7 +11,7 @@ import { useIdentity } from "../identity/IdentityProvider";
 import {
   emptyPickHistory,
   emptyPickSummary,
-  eventPicksLocked,
+  pickBoutLocked,
   type PickEvent,
   type PickHistory,
   type PickSummary,
@@ -49,6 +49,11 @@ const PicksContext = createContext<PicksContextValue | null>(null);
 function readableError(error: unknown) {
   if (error instanceof Error && error.message) return error.message;
   return "Octagon HQ could not update Picks.";
+}
+
+function isFightLockRejection(error: unknown) {
+  const message = readableError(error).toLowerCase();
+  return message.includes("locked for this fight") || message.includes("closed for this fight");
 }
 
 function selectionsFromRows(rows: Awaited<ReturnType<PicksRepository["loadMyPicks"]>>) {
@@ -185,8 +190,13 @@ export function PicksProvider({
       setError("Picks are not connected on this build.");
       return;
     }
-    if (eventPicksLocked(event)) {
-      setError("Picks are locked for this event.");
+    const bout = event.bouts.find((item) => item.boutId === boutId);
+    if (!bout) {
+      setError("That fight is no longer on the current Picks card.");
+      return;
+    }
+    if (pickBoutLocked(event, bout)) {
+      setError("This fight is locked. Your saved pick is preserved.");
       return;
     }
 
@@ -207,17 +217,29 @@ export function PicksProvider({
       setError("");
     } catch (nextError) {
       if (profileIdRef.current !== expectedProfileId) return;
-      setError(readableError(nextError));
+      if (isFightLockRejection(nextError)) {
+        await refresh();
+        if (profileIdRef.current === expectedProfileId) {
+          setError("This fight just locked. Your saved pick was refreshed.");
+        }
+      } else {
+        setError(readableError(nextError));
+      }
     } finally {
       if (profileIdRef.current === expectedProfileId) setSavingBoutId(null);
     }
-  }, [event, groupProgress, identity.openDialog, profileId, repository]);
+  }, [event, groupProgress, identity.openDialog, profileId, refresh, repository]);
 
   const setUnderdogLock = useCallback(async (boutId: string, fighterSlug: string) => {
     const expectedProfileId = profileId;
     if (!expectedProfileId) return identity.openDialog();
-    if (!repository || !event || eventPicksLocked(event)) {
-      setError("Underdog Lock is closed for this event.");
+    if (!repository || !event) {
+      setError("Underdog Lock is not connected on this build.");
+      return;
+    }
+    const bout = event.bouts.find((item) => item.boutId === boutId);
+    if (!bout || pickBoutLocked(event, bout)) {
+      setError("Underdog Lock is closed for this fight.");
       return;
     }
     setSavingLock(true);
@@ -231,15 +253,28 @@ export function PicksProvider({
         setError("");
       }
     } catch (nextError) {
-      if (profileIdRef.current === expectedProfileId) setError(readableError(nextError));
+      if (profileIdRef.current !== expectedProfileId) return;
+      if (isFightLockRejection(nextError)) {
+        await refresh();
+        if (profileIdRef.current === expectedProfileId) {
+          setError("This fight just locked. Your Underdog Lock was refreshed.");
+        }
+      } else {
+        setError(readableError(nextError));
+      }
     } finally {
       if (profileIdRef.current === expectedProfileId) setSavingLock(false);
     }
-  }, [event, groupProgress, identity.openDialog, profileId, repository]);
+  }, [event, groupProgress, identity.openDialog, profileId, refresh, repository]);
 
   const clearUnderdogLock = useCallback(async () => {
     const expectedProfileId = profileId;
-    if (!expectedProfileId || !repository || !event || eventPicksLocked(event)) return;
+    if (!expectedProfileId || !repository || !event || !underdogLock) return;
+    const bout = event.bouts.find((item) => item.boutId === underdogLock.boutId);
+    if (!bout || pickBoutLocked(event, bout)) {
+      setError("Underdog Lock is closed for this fight.");
+      return;
+    }
     setSavingLock(true);
     try {
       await repository.clearUnderdogLock(event.eventId);
@@ -251,11 +286,19 @@ export function PicksProvider({
         setError("");
       }
     } catch (nextError) {
-      if (profileIdRef.current === expectedProfileId) setError(readableError(nextError));
+      if (profileIdRef.current !== expectedProfileId) return;
+      if (isFightLockRejection(nextError)) {
+        await refresh();
+        if (profileIdRef.current === expectedProfileId) {
+          setError("This fight just locked. Your Underdog Lock was refreshed.");
+        }
+      } else {
+        setError(readableError(nextError));
+      }
     } finally {
       if (profileIdRef.current === expectedProfileId) setSavingLock(false);
     }
-  }, [event, groupProgress, profileId, repository]);
+  }, [event, groupProgress, profileId, refresh, repository, underdogLock]);
 
   return (
     <PicksContext.Provider value={{

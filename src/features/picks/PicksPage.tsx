@@ -4,6 +4,7 @@ import { useIdentity } from "../identity/IdentityProvider";
 import {
   americanOddsLabel,
   mainCardFightLabel,
+  pickBoutLocked,
   pickEventPresentation,
   pickProgress,
   underdogBonusForOdds,
@@ -257,6 +258,7 @@ export default function PicksPage() {
                   const selection = picks.selections[bout.boutId] ?? null;
                   const saving = picks.savingBoutId === bout.boutId;
                   const removed = bout.includedInPicks === false;
+                  const boutLocked = pickBoutLocked(activeEvent, bout);
                   const redOdds = removed ? null : americanOddsLabel(bout.redAmericanOdds);
                   const blueOdds = removed ? null : americanOddsLabel(bout.blueAmericanOdds);
                   const favorite = !removed && bout.redAmericanOdds !== null && bout.blueAmericanOdds !== null
@@ -276,14 +278,14 @@ export default function PicksPage() {
                   const cancelled = (bout.resultStatus ?? "pending") === "cancelled";
                   const repickRequired = Boolean(!removed && bout.repickRequired && !selection);
                   const resolved = removed || (bout.resultStatus ?? "pending") !== "pending";
-                  const readOnly = locked || cancelled || removed;
+                  const readOnly = boutLocked || cancelled || removed;
                   const selectedCorner = selection === bout.redFighterSlug
                     ? "red"
                     : selection === bout.blueFighterSlug
                       ? "blue"
                       : null;
-                  const redChoiceLabel = choiceLabel(selection === bout.redFighterSlug, locked, cancelled, removed);
-                  const blueChoiceLabel = choiceLabel(selection === bout.blueFighterSlug, locked, cancelled, removed);
+                  const redChoiceLabel = choiceLabel(selection === bout.redFighterSlug, boutLocked, cancelled, removed);
+                  const blueChoiceLabel = choiceLabel(selection === bout.blueFighterSlug, boutLocked, cancelled, removed);
                   return (
                     <article
                       className={`surface-card pick-bout-card${index === 0 ? " is-main-event" : ""}${cancelled || removed ? " is-cancelled" : ""}${removed ? " is-removed" : ""}${repickRequired ? " is-repick-required" : ""}`}
@@ -294,6 +296,14 @@ export default function PicksPage() {
                           <span>{mainCardFightLabel(index)}</span>
                           <small>{bout.weightClass}</small>
                         </div>
+                        {!removed && !cancelled ? (
+                          <span
+                            className={`picks-status picks-status--${boutLocked ? "locked" : "upcoming"}`}
+                            aria-label={`${bout.redFighterName} versus ${bout.blueFighterName} is ${boutLocked ? "locked" : "open"}`}
+                          >
+                            {boutLocked ? "LOCKED" : "OPEN"}
+                          </span>
+                        ) : null}
                       </header>
                       {repickRequired ? (
                         <div className="pick-bout-card__repick" role="status">
@@ -344,13 +354,13 @@ export default function PicksPage() {
                           <strong>{officialResult(bout)}</strong>
                         </div>
                       ) : null}
-                      {!removed && !cancelled && locked && lockSelected ? (
+                      {!removed && !cancelled && boutLocked && lockSelected ? (
                         <div className={`pick-lock-row is-${selectedCorner ?? "red"}`}>
                           <div className="pick-lock-readonly" aria-label="Selected Underdog Lock">
                             ★ UNDERDOG LOCK{selectedLockBonusLabel ? ` · ${selectedLockBonusLabel}` : ""}
                           </div>
                         </div>
-                      ) : !removed && !cancelled && !locked && selection && (selectedOdds ?? 0) > 0 ? (
+                      ) : !removed && !cancelled && !boutLocked && selection && (selectedOdds ?? 0) > 0 ? (
                         <div className={`pick-lock-row is-${selectedCorner ?? "red"}`}>
                           <button
                             className={lockSelected ? "pick-lock-action is-selected" : "pick-lock-action"}

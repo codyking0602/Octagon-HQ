@@ -211,7 +211,7 @@ export function pickEventPresentation(event: PickEvent, now = Date.now()): PickE
     return { state: "awaiting_results", eyebrow: "EVENT IN PROGRESS", status: "AWAITING RESULTS" };
   }
 
-  if (event.status === "locked" || Date.parse(event.locksAt) <= now) {
+  if (event.status === "locked") {
     return { state: "locked", eyebrow: "PICKS LOCKED", status: "LOCKED" };
   }
 
@@ -220,6 +220,10 @@ export function pickEventPresentation(event: PickEvent, now = Date.now()): PickE
 
 export function eventPicksLocked(event: PickEvent, now = Date.now()) {
   return pickEventPresentation(event, now).state !== "upcoming";
+}
+
+export function pickBoutLocked(event: PickEvent, bout: PickBout) {
+  return event.status !== "upcoming" || bout.isLocked === true;
 }
 
 export function americanOddsLabel(odds: number | null) {
