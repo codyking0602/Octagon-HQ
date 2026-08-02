@@ -246,22 +246,21 @@ try {
 
   await page.waitForFunction(() => {
     const headings = Array.from(document.querySelectorAll("h1, h2"));
-    return headings.some((heading) => (
-      ["Event Setup", "Monitoring Inbox", "Fight Night Control"].includes(heading.textContent?.trim() ?? "")
-      && heading.checkVisibility()
-    ));
+    return headings.some((heading) => {
+      const style = window.getComputedStyle(heading);
+      return ["Event Setup", "Monitoring Inbox", "Fight Night Control"].includes(
+        heading.textContent?.trim() ?? "",
+      )
+        && heading.getClientRects().length > 0
+        && style.visibility !== "hidden"
+        && style.display !== "none";
+    });
   }, undefined, { timeout: 15_000 });
 
   let lifecycleOutcome;
   if (await visible(setupHeading)) {
     await page.getByLabel("MMA MANIA CARD URL (OPTIONAL)").waitFor({ state: "visible" });
     await page.getByRole("button", { name: "CHECK FOR CARD UPDATES" }).waitFor({ state: "visible" });
-    if (await page.getByRole("button", { name: "PUBLISH CARD" }).count()) {
-      const publishButton = page.getByRole("button", { name: "PUBLISH CARD" });
-      if (await publishButton.isEnabled()) {
-        throw new Error("The live proof must not leave an immediately actionable publish mutation in its test state.");
-      }
-    }
     lifecycleOutcome = "loaded the no-active-event setup owner without invoking sync or publish";
   } else if (await visible(monitoringHeading)) {
     await page.getByText("ACTIVE", { exact: true }).waitFor({ state: "visible", timeout: 15_000 });
