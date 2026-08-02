@@ -74,6 +74,28 @@ function renderPage(repo: PicksRepository) {
   </IdentityProvider></MemoryRouter>);
 }
 
+function fightCardByState(label: string) {
+  const card = screen.getByLabelText(label).closest("article");
+  if (!card) throw new Error(`Fight card not found: ${label}`);
+  return within(card);
+}
+
+function fightCardByStatus(text: string) {
+  const card = screen.getByText(text).closest("article");
+  if (!card) throw new Error(`Fight card not found: ${text}`);
+  return within(card);
+}
+
+function openGroupComparison() {
+  const label = screen.getByText("GROUP PICKS", { selector: "summary span" });
+  const details = label.closest("details");
+  const summary = label.closest("summary");
+  if (!details || !summary) throw new Error("Group Picks details not found");
+  fireEvent.click(summary);
+  fireEvent.click(within(details).getByRole("button", { name: /SHANE/ }));
+  return screen.getByLabelText("SHANE pick comparison");
+}
+
 beforeEach(() => {
   vi.mocked(loadPickGroupProgress).mockResolvedValue([{
     profileId: "22222222-2222-4222-8222-222222222222", displayName: "SHANE", completed: 2, total: 2,
@@ -92,11 +114,13 @@ describe("per-fight Picks lock UI", () => {
     }));
     renderPage(repository(fightEvent(), savePick));
     expect(await screen.findByRole("heading", { name: "UFC Per-Fight Test" })).toBeInTheDocument();
-    expect(screen.getByLabelText("First Red versus First Blue is locked")).toHaveTextContent("LOCKED");
-    expect(screen.getByLabelText("Later Red versus Later Blue is open")).toHaveTextContent("OPEN");
-    expect(screen.getByRole("button", { name: /First Red/i })).toBeDisabled();
-    expect(screen.getByRole("button", { name: /First Red/i })).toHaveAttribute("aria-pressed", "true");
-    const laterBlue = screen.getByRole("button", { name: /Later Blue/i });
+    const firstFight = fightCardByState("First Red versus First Blue is locked");
+    const laterFight = fightCardByState("Later Red versus Later Blue is open");
+    expect(firstFight.getByText("LOCKED")).toBeInTheDocument();
+    expect(laterFight.getByText("OPEN")).toBeInTheDocument();
+    expect(firstFight.getByRole("button", { name: /^First Red/ })).toBeDisabled();
+    expect(firstFight.getByRole("button", { name: /^First Red/ })).toHaveAttribute("aria-pressed", "true");
+    const laterBlue = laterFight.getByRole("button", { name: /^Later Blue/ });
     expect(laterBlue).toBeEnabled();
     fireEvent.click(laterBlue);
     await waitFor(() => expect(savePick).toHaveBeenCalledWith("ufc-per-fight", "later-fight", "later-blue"));
@@ -108,8 +132,19 @@ describe("per-fight Picks lock UI", () => {
     event.bouts = event.bouts.map((bout) => ({ ...bout, isLocked: false }));
     renderPage(repository(event));
     expect(await screen.findByRole("heading", { name: "UFC Per-Fight Test" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Later Red/i })).toBeDisabled();
-    expect(screen.getByRole("button", { name: /Later Blue/i })).toBeDisabled();
+    const laterFight = fightCardByState("Later Red versus Later Blue is locked");
+    expect(laterFight.getByRole("button", { name: /^Later Red/ })).toBeDisabled();
+    expect(laterFight.getByRole("button", { name: /^Later Blue/ })).toBeDisabled();
+  });
+
+  it("does not let an expired browser deadline override a server-open fight", async () => {
+    const event = fightEvent();
+    event.locksAt = "2000-01-01T00:00:00.000Z";
+    renderPage(repository(event));
+    expect(await screen.findByRole("heading", { name: "UFC Per-Fight Test" })).toBeInTheDocument();
+    const laterFight = fightCardByState("Later Red versus Later Blue is open");
+    expect(laterFight.getByRole("button", { name: /^Later Blue/ })).toBeEnabled();
+    expect(screen.queryByText("PICKS LOCKED")).not.toBeInTheDocument();
   });
 
   it("refreshes authoritative state when a stale open card is rejected", async () => {
@@ -118,29 +153,30 @@ describe("per-fight Picks lock UI", () => {
     const loadCurrentEvent = vi.fn().mockResolvedValueOnce(openEvent).mockResolvedValue(fightEvent());
     const savePick = vi.fn().mockRejectedValue(new Error("pick is locked for this fight"));
     renderPage(repository(openEvent, savePick, loadCurrentEvent));
-    const firstBlue = await screen.findByRole("button", { name: /First Blue/i });
+    await screen.findByRole("heading", { name: "UFC Per-Fight Test" });
+    const openFirstFight = fightCardByState("First Red versus First Blue is open");
+    const firstBlue = openFirstFight.getByRole("button", { name: /^First Blue/ });
     expect(firstBlue).toBeEnabled();
     fireEvent.click(firstBlue);
     expect(await screen.findByText("This fight just locked. Your saved pick was refreshed.")).toBeInTheDocument();
     await waitFor(() => expect(loadCurrentEvent).toHaveBeenCalledTimes(2));
-    expect(screen.getByRole("button", { name: /First Blue/i })).toBeDisabled();
-    expect(screen.getByRole("button", { name: /First Red/i })).toHaveAttribute("aria-pressed", "true");
+    const lockedFirstFight = fightCardByState("First Red versus First Blue is locked");
+    expect(lockedFirstFight.getByRole("button", { name: /^First Blue/ })).toBeDisabled();
+    expect(lockedFirstFight.getByRole("button", { name: /^First Red/ })).toHaveAttribute("aria-pressed", "true");
   });
 
   it("reveals locked fights before the master lock and the full card afterward", async () => {
     const { unmount } = renderPage(repository(fightEvent()));
-    fireEvent.click(await screen.findByText("GROUP PICKS"));
-    fireEvent.click(screen.getByRole("button", { name: /SHANE/ }));
-    const comparison = screen.getByLabelText("SHANE pick comparison");
+    await screen.findByRole("heading", { name: "UFC Per-Fight Test" });
+    const comparison = openGroupComparison();
     expect(within(comparison).getByText("First Blue")).toBeInTheDocument();
     expect(within(comparison).getByText("1 FIGHT STILL OPEN")).toBeInTheDocument();
     expect(within(comparison).queryByText("Later Red")).not.toBeInTheDocument();
     expect(within(comparison).getByText("★ UNDERDOG LOCK")).toBeInTheDocument();
     unmount();
     renderPage(repository(fightEvent("locked")));
-    fireEvent.click(await screen.findByText("GROUP PICKS"));
-    fireEvent.click(screen.getByRole("button", { name: /SHANE/ }));
-    const lockedComparison = screen.getByLabelText("SHANE pick comparison");
+    await screen.findByRole("heading", { name: "UFC Per-Fight Test" });
+    const lockedComparison = openGroupComparison();
     expect(within(lockedComparison).getByText("First Blue")).toBeInTheDocument();
     expect(within(lockedComparison).getByText("Later Red")).toBeInTheDocument();
     expect(within(lockedComparison).queryByText(/STILL OPEN/)).not.toBeInTheDocument();
@@ -151,9 +187,9 @@ describe("per-fight Picks lock UI", () => {
     event.bouts[0] = { ...event.bouts[0], isLocked: false, resultStatus: "cancelled" };
     event.bouts[1] = { ...event.bouts[1], includedInPicks: false };
     renderPage(repository(event));
-    expect(await screen.findByText("CANCELLED · EXCLUDED FROM SCORING")).toBeInTheDocument();
-    expect(screen.getByText("REMOVED FROM PICKS · EXCLUDED FROM SCORING")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /First Red/i })).toBeDisabled();
-    expect(screen.getByRole("button", { name: /Later Red/i })).toBeDisabled();
+    const cancelledFight = fightCardByStatus(await screen.findByText("CANCELLED · EXCLUDED FROM SCORING").then((node) => node.textContent ?? ""));
+    const removedFight = fightCardByStatus("REMOVED FROM PICKS · EXCLUDED FROM SCORING");
+    expect(cancelledFight.getByRole("button", { name: /^First Red/ })).toBeDisabled();
+    expect(removedFight.getByRole("button", { name: /^Later Red/ })).toBeDisabled();
   });
 });
