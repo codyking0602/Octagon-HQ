@@ -9,6 +9,7 @@ import "./styles/app-error.css";
 import "./styles/home.css";
 import "./styles/watchlist.css";
 import "./styles/picks.css";
+import "./styles/picks-owner-entry.css";
 import "./styles/picks-lifecycle.css";
 import "./styles/picks-underdog-lock.css";
 import "./styles/picks-main-event-spotlight.css";
