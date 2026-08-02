@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import { IdentityProvider } from "../identity/IdentityProvider";
@@ -58,6 +58,14 @@ function renderPage(repo: PickControlRepository) {
   </IdentityProvider></MemoryRouter>);
 }
 
+function controlCardByLockState(state: string) {
+  const card = screen.getAllByText(state)
+    .map((node) => node.closest("article"))
+    .find((node): node is HTMLElement => Boolean(node));
+  if (!card) throw new Error(`Control card not found: ${state}`);
+  return within(card);
+}
+
 beforeEach(() => {
   vi.spyOn(window, "prompt").mockReturnValue("2099-08-09T02:30");
   vi.spyOn(window, "confirm").mockReturnValue(true);
@@ -73,12 +81,11 @@ describe("per-fight Fight Night Control", () => {
     renderPage(repo);
     expect(await screen.findByRole("heading", { name: "UFC Control Locks" })).toBeInTheDocument();
     expect(screen.getByText("EVENT-WIDE MASTER LOCK")).toBeInTheDocument();
-    expect(screen.getByText("FIGHT LOCK · LOCKED")).toBeInTheDocument();
-    expect(screen.getByText("FIGHT LOCK · OPEN")).toBeInTheDocument();
-    expect(screen.getByText("Completed, resulted, or cancelled fights cannot be reopened.")).toBeInTheDocument();
-    const closed = screen.getByRole("button", { name: "LOCK CLOSED" });
-    expect(closed).toBeDisabled();
-    fireEvent.click(screen.getByRole("button", { name: "CHANGE FIGHT LOCK" }));
+    const lockedFight = controlCardByLockState("FIGHT LOCK · LOCKED");
+    const openFight = controlCardByLockState("FIGHT LOCK · OPEN");
+    expect(lockedFight.getByText("Completed, resulted, or cancelled fights cannot be reopened.")).toBeInTheDocument();
+    expect(lockedFight.getByRole("button", { name: "LOCK CLOSED" })).toBeDisabled();
+    fireEvent.click(openFight.getByRole("button", { name: "CHANGE FIGHT LOCK" }));
     await waitFor(() => expect(repo.adjustBoutLockTime).toHaveBeenCalledWith(
       "ufc-control-locks", "open-fight", new Date("2099-08-09T02:30").toISOString(),
     ));
