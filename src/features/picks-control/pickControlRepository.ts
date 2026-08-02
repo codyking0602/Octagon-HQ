@@ -12,6 +12,9 @@ const completedEventOptionSchema = z.object({
 
 const controlBoutSchema = z.object({
   bout_id: z.string(),
+  locks_at: z.string().optional(),
+  is_locked: z.boolean().optional().default(false),
+  can_adjust_lock: z.boolean().optional().default(false),
   position: z.number().int().positive(),
   weight_class: z.string(),
   red_fighter_slug: z.string(),
@@ -55,6 +58,7 @@ export interface PickControlRepository {
   loadControlEvent: (eventId?: string) => Promise<PickControlEvent | null>;
   lockEvent: (eventId: string) => Promise<void>;
   adjustLockTime: (eventId: string, locksAt: string, expectedLocksAt: string, reason: string) => Promise<void>;
+  adjustBoutLockTime: (eventId: string, boutId: string, locksAt: string) => Promise<void>;
   setCancellation: (eventId: string, boutId: string, cancelled: boolean, reason: string) => Promise<void>;
   setBoutInclusion: (eventId: string, bout: PickControlEvent["bouts"][number], includedInPicks: boolean, reason: string) => Promise<void>;
   replaceFighter: (eventId: string, bout: PickControlEvent["bouts"][number], corner: "red" | "blue", slug: string, name: string, reason: string) => Promise<void>;
@@ -95,6 +99,9 @@ export function mapPickControlEvent(value: unknown): PickControlEvent | null {
     })),
     bouts: parsed.bouts.map((bout) => ({
       boutId: bout.bout_id,
+      locksAt: bout.locks_at ?? parsed.locks_at,
+      isLocked: parsed.status !== "upcoming" || bout.is_locked,
+      canAdjustLock: parsed.status === "upcoming" && bout.can_adjust_lock,
       position: bout.position,
       weightClass: bout.weight_class,
       redFighterSlug: bout.red_fighter_slug,
@@ -149,6 +156,14 @@ export function createPickControlRepository(): PickControlRepository | null {
         p_locks_at: locksAt,
         p_expected_locks_at: expectedLocksAt,
         p_reason: reason,
+      }));
+    },
+
+    async adjustBoutLockTime(eventId, boutId, locksAt) {
+      await requireRpcSuccess(client.rpc("adjust_pick_bout_lock_time", {
+        p_event_id: eventId,
+        p_bout_id: boutId,
+        p_locks_at: locksAt,
       }));
     },
 
