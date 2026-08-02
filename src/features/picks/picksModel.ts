@@ -211,7 +211,7 @@ export function pickEventPresentation(event: PickEvent, now = Date.now()): PickE
     return { state: "awaiting_results", eyebrow: "EVENT IN PROGRESS", status: "AWAITING RESULTS" };
   }
 
-  if (event.status === "locked" || Date.parse(event.locksAt) <= now) {
+  if (event.status === "locked") {
     return { state: "locked", eyebrow: "PICKS LOCKED", status: "LOCKED" };
   }
 
