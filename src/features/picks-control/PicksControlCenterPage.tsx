@@ -44,19 +44,16 @@ function primaryStatus(
 ) {
   if (eventState.status === "error") return "CONTROL UNAVAILABLE";
   if (eventState.status !== "ready") return "LOADING CONTROL CENTER";
-  if (!eventState.value) {
+  if (!eventState.value || eventState.value.status === "complete") {
     if (draftState.status === "error") return "SETUP UNAVAILABLE";
     if (draftState.status !== "ready") return "CHECKING NEXT EVENT";
     return draftState.value ? "REVIEW CARD" : "SET UP NEXT EVENT";
   }
   if (eventState.value.status === "upcoming") return "PICKS OPEN";
-  if (eventState.value.status === "locked") {
-    const unresolved = unresolvedFightCount(eventState.value);
-    return unresolved
-      ? `${unresolved} FIGHT${unresolved === 1 ? "" : "S"} NEED RESULTS`
-      : "PICKS CLOSED · RESULTS OPEN";
-  }
-  return "EVENT COMPLETE";
+  const unresolved = unresolvedFightCount(eventState.value);
+  return unresolved
+    ? `${unresolved} FIGHT${unresolved === 1 ? "" : "S"} NEED RESULTS`
+    : "PICKS CLOSED · RESULTS OPEN";
 }
 
 interface PicksControlCenterPageProps {
@@ -128,30 +125,29 @@ export default function PicksControlCenterPage({
   }, [setupRepository]);
 
   const event = eventState.status === "ready" ? eventState.value : undefined;
+  const activeEvent = event?.status === "complete" ? null : event;
   const draft = draftState.status === "ready" ? draftState.value : undefined;
-  const staged = event === null ? draft ?? null : null;
-  const unresolved = event ? unresolvedFightCount(event) : 0;
-  const eventName = event?.name ?? staged?.name ?? "NEXT UFC EVENT";
-  const eventDate = event?.startsAt ?? staged?.startsAt ?? null;
-  const lockTime = event?.locksAt ?? staged?.locksAt ?? null;
-  const fightCount = event?.bouts.length ?? staged?.bouts.filter((bout) => bout.included).length ?? 0;
-  const lifecycle = event
-    ? event.status === "upcoming" ? "PUBLISHED" : event.status === "locked" ? "LOCKED / LIVE" : "COMPLETE"
+  const staged = activeEvent === null ? draft ?? null : null;
+  const unresolved = activeEvent ? unresolvedFightCount(activeEvent) : 0;
+  const eventName = activeEvent?.name ?? staged?.name ?? "NEXT UFC EVENT";
+  const eventDate = activeEvent?.startsAt ?? staged?.startsAt ?? null;
+  const lockTime = activeEvent?.locksAt ?? staged?.locksAt ?? null;
+  const fightCount = activeEvent?.bouts.length ?? staged?.bouts.filter((bout) => bout.included).length ?? 0;
+  const lifecycle = activeEvent
+    ? activeEvent.status === "upcoming" ? "PUBLISHED" : "LOCKED / LIVE"
     : staged ? "STAGED" : "NO ACTIVE EVENT";
-  const lockStatus = event
-    ? event.status === "upcoming"
-      ? Date.now() < Date.parse(event.locksAt) ? `OPEN · ${displayTime(event.locksAt)}` : "LOCK DEADLINE PASSED"
-      : event.status === "locked" ? "LOCKED" : "CLOSED"
+  const lockStatus = activeEvent
+    ? activeEvent.status === "upcoming"
+      ? Date.now() < Date.parse(activeEvent.locksAt) ? `OPEN · ${displayTime(activeEvent.locksAt)}` : "LOCK DEADLINE PASSED"
+      : "LOCKED"
     : staged ? `STAGED · ${displayTime(lockTime)}` : "NOT SET";
   const status = identity.ready && !identity.profile
     ? "OWNER SIGN-IN REQUIRED"
     : primaryStatus(eventState, draftState);
-  const primaryAction = event
-    ? event.status === "upcoming"
+  const primaryAction = activeEvent
+    ? activeEvent.status === "upcoming"
       ? { href: "#fight-night", label: "MANAGE OPEN PICKS" }
-      : event.status === "locked"
-        ? { href: "#fight-night", label: unresolved ? "ENTER RESULTS" : "COMPLETE EVENT" }
-        : { href: "#fight-night", label: "REVIEW EVENT" }
+      : { href: "#fight-night", label: unresolved ? "ENTER RESULTS" : "COMPLETE EVENT" }
     : { href: "#setup", label: staged ? "REVIEW & PUBLISH" : "STAGE NEXT EVENT" };
 
   useEffect(() => {
@@ -169,7 +165,7 @@ export default function PicksControlCenterPage({
         </div>
         <h1>{eventName}</h1>
         <strong className="picks-control-center__status">{status}</strong>
-        {event?.subtitle || staged?.subtitle ? <p>{event?.subtitle ?? staged?.subtitle}</p> : null}
+        {activeEvent?.subtitle || staged?.subtitle ? <p>{activeEvent?.subtitle ?? staged?.subtitle}</p> : null}
 
         <div className="picks-control-center__facts" aria-label="Picks event status">
           <div className="is-wide"><span>EVENT</span><strong>{eventName}</strong></div>
@@ -188,7 +184,7 @@ export default function PicksControlCenterPage({
         </div>
       </header>
 
-      {event === null ? (
+      {activeEvent === null ? (
         <section id="setup" className="picks-control-center__section" aria-label="Event setup">
           <PicksSetupPage repository={ownedSetupRepository} />
         </section>
@@ -203,7 +199,7 @@ export default function PicksControlCenterPage({
         <PicksControlPage key={controlRevision} repository={ownedControlRepository} />
       </section>
 
-      {event?.status === "upcoming" ? (
+      {activeEvent?.status === "upcoming" ? (
         <section id="monitoring" className="picks-control-center__section" aria-label="Automatic monitoring and card review">
           <MonitoringInboxPage repository={monitoringRepository} />
         </section>
