@@ -185,7 +185,12 @@ try {
       ...preview.body.event_preview,
       source_url: preview.body.source_url,
     });
-    assertReportedSourceChanges(draftBefore, preview.body.event_preview, preview.body.changes);
+    assertReportedSourceChanges(
+      draftBefore,
+      preview.body.event_preview,
+      preview.body.changes,
+      preview.body.effective_scope,
+    );
     outcome = `returned an independently verified ${preview.body.fight_count}-fight current-source change list`;
   } else {
     if (preview.body?.deployment_sha !== expectedSha) {
