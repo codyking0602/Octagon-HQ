@@ -192,3 +192,5 @@ if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).
     `PASS: live shell loads deployment ${result.expectedSha} through ${result.javascriptAssets} JavaScript and ${result.stylesheetAssets} CSS assets.`,
   );
 }
+
+// Verification-only branch marker for merged main ab28f50cd036121e5246022b664379a38295f4d8; no behavior change.
