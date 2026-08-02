@@ -90,6 +90,13 @@ const inboxSchema = z.object({
   recent_runs: z.array(runSchema),
 });
 
+const decisionSchema = z.object({
+  outcome: z.enum(["completed", "partial", "failed", "skipped"]),
+  reason: z.string().nullable(),
+  attempted_at: z.string(),
+  provider_called: z.boolean(),
+}).nullable();
+
 export interface MonitoringInboxRepository {
   loadInbox: () => Promise<MonitoringInbox>;
   runManualCheck: () => Promise<void>;
@@ -232,7 +239,18 @@ export function createMonitoringInboxRepository(): MonitoringInboxRepository | n
 
   return {
     async loadInbox() {
-      return mapMonitoringInbox(await requireRpcSuccess(client.rpc("get_pick_monitoring_inbox")));
+      const [rawInbox, rawDecision] = await Promise.all([
+        requireRpcSuccess(client.rpc("get_pick_monitoring_inbox")),
+        requireRpcSuccess(client.rpc("get_latest_pick_monitoring_scheduler_decision")),
+      ]);
+      const inbox = mapMonitoringInbox(rawInbox);
+      const decision = decisionSchema.parse(rawDecision);
+      return { ...inbox, latestScheduledDecision: decision ? {
+        outcome: decision.outcome,
+        reason: decision.reason,
+        attemptedAt: decision.attempted_at,
+        providerCalled: decision.provider_called,
+      } : null };
     },
 
     async runManualCheck() {

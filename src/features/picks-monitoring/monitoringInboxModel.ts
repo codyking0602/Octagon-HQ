@@ -85,6 +85,12 @@ export interface MonitoringInbox {
   newFindings: MonitoringFinding[];
   reviewedFindings: MonitoringFinding[];
   recentRuns: MonitoringRun[];
+  latestScheduledDecision?: {
+    outcome: "completed" | "partial" | "failed" | "skipped";
+    reason: string | null;
+    attemptedAt: string;
+    providerCalled: boolean;
+  } | null;
 }
 
 export function monitoringFindingTypeLabel(type: MonitoringFindingType) {
