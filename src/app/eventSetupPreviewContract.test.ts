@@ -131,6 +131,13 @@ describe("production Event Setup preview contract", () => {
     expect(syncSource).toContain("(?:\\s*\\/\\s*Main Card)?");
   });
 
+  it("bounds official UFC event discovery within the canonical Edge Function owner", () => {
+    expect(syncSource).toContain("const MAX_UFC_EVENT_PAGE_ATTEMPTS = 4;");
+    expect(syncSource).toContain(".slice(0, MAX_UFC_EVENT_PAGE_ATTEMPTS)");
+    expect(syncSource).toContain("for (const url of urls)");
+    expect(syncSource).not.toContain("Promise.all(urls.map");
+  });
+
   it("preserves typed canonical-source failures and keeps the live verifier red with sanitized details", () => {
     expect(syncSource).toContain("if (error instanceof SyncError) throw error;");
     expect(syncSource).toContain('"UFC_EVENT_METADATA_REJECTED"');
