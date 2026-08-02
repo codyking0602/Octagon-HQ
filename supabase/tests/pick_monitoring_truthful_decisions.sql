@@ -17,7 +17,8 @@ declare
   v_inbox jsonb;
 begin
   update public.pick_events
-  set status = 'complete'
+  set status = 'complete',
+      completed_at = coalesce(completed_at, now())
   where status in ('upcoming', 'locked');
 
   insert into auth.users (
@@ -81,7 +82,8 @@ begin
   end if;
 
   update public.pick_events
-  set status = 'complete'
+  set status = 'complete',
+      completed_at = now()
   where event_id = 'pick-monitoring-boundary-past';
 
   insert into public.pick_events (
