@@ -47,9 +47,9 @@ describe("Supabase backend verification release boundary", () => {
     expect(workflow).toContain("Runtime paths: ${runtimeChanges.join(\", \")}");
   });
 
-  it("executes every Auction SQL suite against a fresh local database", () => {
+  it("executes every required SQL suite against a fresh local database", () => {
     expect(workflow).toContain(
-      "- name: Execute Auction lifecycle SQL tests on a fresh local database",
+      "- name: Execute required SQL tests on a fresh local database",
     );
     expect(workflow).toContain("supabase db start");
     expect(workflow).toContain("supabase/tests/auction_private_lifecycle.sql");
@@ -60,10 +60,16 @@ describe("Supabase backend verification release boundary", () => {
       "supabase/tests/auction_playable_server_engine.sql",
     );
     expect(workflow).toContain(
+      "supabase/tests/pick_owner_entry_capability.sql",
+    );
+    expect(workflow).toContain(
       'psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"',
     );
     expect(workflow).toContain(
       "Auction lifecycle SQL tests executed successfully against a fresh local database.",
+    );
+    expect(workflow).toContain(
+      "Picks owner entry capability SQL test executed successfully against the same fresh local database.",
     );
   });
 
