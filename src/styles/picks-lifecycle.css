@@ -161,19 +161,46 @@
 
 .picks-group-pick-reveal__split {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 6px;
 }
 
-.picks-group-pick-reveal__split > div {
+.picks-group-pick-reveal__split > button {
   display: grid;
   gap: 3px;
   min-width: 0;
+  min-height: 44px;
   padding: 8px;
   border: 1px solid var(--border);
   border-radius: 9px;
   background: rgba(255, 255, 255, .02);
+  color: var(--text-primary);
+  cursor: pointer;
+  font: inherit;
   text-align: center;
+  transition: background .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+
+.picks-group-pick-reveal__split > button:hover,
+.picks-group-pick-reveal__split > button:focus-visible {
+  border-color: rgba(255, 255, 255, .24);
+  background: rgba(255, 255, 255, .045);
+}
+
+.picks-group-pick-reveal__split > button:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+.picks-group-pick-reveal__split > button.is-selected {
+  border-color: rgba(210, 10, 10, .68);
+  background: rgba(210, 10, 10, .09);
+  box-shadow: inset 0 0 0 1px rgba(210, 10, 10, .16);
+}
+
+.picks-group-pick-reveal__split > button:disabled {
+  cursor: default;
+  opacity: .5;
 }
 
 .picks-group-pick-reveal__split span {
@@ -191,49 +218,46 @@
   line-height: 1;
 }
 
-.picks-group-pick-reveal__members {
+.picks-group-pick-reveal__detail {
   display: grid;
-  gap: 4px;
+  gap: 6px;
+  padding: 8px 9px;
+  border: 1px solid rgba(255, 255, 255, .09);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, .018);
 }
 
-.picks-group-pick-reveal__members > div {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  min-height: 30px;
-  padding: 5px 8px;
-  border-radius: 8px;
-  color: var(--text-secondary);
-}
-
-.picks-group-pick-reveal__members > div.is-current-user {
-  background: rgba(210, 10, 10, .1);
-  box-shadow: inset 2px 0 0 var(--ufc-red);
-  color: var(--text-primary);
-}
-
-.picks-group-pick-reveal__members strong {
-  overflow: hidden;
-  font-size: 10px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.picks-group-pick-reveal__members span {
-  flex: 0 0 auto;
-  max-width: 58%;
+.picks-group-pick-reveal__detail > span {
   overflow: hidden;
   color: var(--text-muted);
-  font-size: 8px;
-  font-weight: 900;
-  text-align: right;
+  font-size: 7px;
+  font-weight: 950;
+  letter-spacing: .08em;
   text-overflow: ellipsis;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
-.picks-group-pick-reveal__members > div.is-current-user span {
+.picks-group-pick-reveal__detail > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.picks-group-pick-reveal__detail strong {
+  padding: 4px 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .055);
   color: var(--text-secondary);
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .035em;
+}
+
+.picks-group-pick-reveal__detail strong.is-current-user {
+  background: rgba(210, 10, 10, .13);
+  color: var(--text-primary);
+  box-shadow: inset 2px 0 0 var(--ufc-red);
 }
 
 /* Locked and live fight cards keep every detail while using a denser event-night layout. */
@@ -330,52 +354,21 @@
 }
 
 .pick-bout-card:has(.pick-choice.is-read-only) .picks-group-pick-reveal__split {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 4px;
 }
 
-.pick-bout-card:has(.pick-choice.is-read-only) .picks-group-pick-reveal__split > div {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
-  min-height: 30px;
-  padding: 5px 7px;
-  text-align: left;
+.pick-bout-card:has(.pick-choice.is-read-only) .picks-group-pick-reveal__split > button {
+  min-height: 36px;
+  padding: 5px 6px;
 }
 
 .pick-bout-card:has(.pick-choice.is-read-only) .picks-group-pick-reveal__split strong {
-  flex: 0 0 auto;
   font-size: 14px;
 }
 
-.pick-bout-card:has(.pick-choice.is-read-only) .picks-group-pick-reveal__members {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 4px;
-}
-
-.pick-bout-card:has(.pick-choice.is-read-only) .picks-group-pick-reveal__members > div {
-  display: grid;
-  align-content: center;
-  justify-content: stretch;
-  gap: 1px;
-  min-width: 0;
-  min-height: 34px;
-  padding: 5px 7px;
-  border: 1px solid rgba(255, 255, 255, .055);
-  background: rgba(255, 255, 255, .018);
-}
-
-.pick-bout-card:has(.pick-choice.is-read-only) .picks-group-pick-reveal__members strong,
-.pick-bout-card:has(.pick-choice.is-read-only) .picks-group-pick-reveal__members span {
-  display: block;
-  max-width: none;
-  overflow: hidden;
-  font-size: 7px;
-  line-height: 1.15;
-  text-align: left;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.pick-bout-card:has(.pick-choice.is-read-only) .picks-group-pick-reveal__detail {
+  gap: 5px;
+  padding: 7px 8px;
 }
 
 .picks-recap-card__record {
@@ -453,12 +446,6 @@
   border-radius: 8px;
   outline: 2px solid var(--text-primary);
   outline-offset: 3px;
-}
-
-@media (min-width: 390px) {
-  .pick-bout-card:has(.pick-choice.is-read-only) .picks-group-pick-reveal__members {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
 }
 
 @media (min-width: 640px) {

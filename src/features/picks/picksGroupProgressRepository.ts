@@ -8,6 +8,8 @@ const progressRowSchema = z.object({
   completed: z.number().int().nonnegative(),
   total: z.number().int().nonnegative(),
   has_underdog_lock: z.boolean(),
+  underdog_lock_bout_id: z.string().nullable().optional().default(null),
+  underdog_lock_fighter_slug: z.string().nullable().optional().default(null),
   is_current_user: z.boolean(),
 });
 
@@ -26,6 +28,8 @@ export async function loadPickGroupProgress(eventId: string): Promise<PickEventM
     completed: row.completed,
     total: row.total,
     hasUnderdogLock: row.has_underdog_lock,
+    underdogLockBoutId: row.underdog_lock_bout_id,
+    underdogLockFighterSlug: row.underdog_lock_fighter_slug,
     isCurrentUser: row.is_current_user,
   }));
 }

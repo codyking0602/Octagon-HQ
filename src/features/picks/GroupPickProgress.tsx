@@ -24,7 +24,8 @@ export function GroupPickProgress({ event, locked, mySelections }: GroupPickProg
       .slice()
       .sort((left, right) => left.position - right.position)
       .map((bout, index) => {
-        const memberPick = bout.groupPicks?.find((pick) => pick.displayName === selected.displayName)?.pickedFighterSlug ?? null;
+        const memberSelection = bout.groupPicks?.find((pick) => pick.displayName === selected.displayName) ?? null;
+        const memberPick = memberSelection?.pickedFighterSlug ?? null;
         const myPick = mySelections[bout.boutId] ?? null;
         const fighterName = (slug: string | null) => {
           if (slug === bout.redFighterSlug) return bout.redFighterName;
@@ -39,6 +40,8 @@ export function GroupPickProgress({ event, locked, mySelections }: GroupPickProg
           memberPick: fighterName(memberPick),
           myPick: fighterName(myPick),
           same: memberPick === myPick,
+          isUnderdogLock: selected.underdogLockBoutId === bout.boutId
+            && selected.underdogLockFighterSlug === memberPick,
         };
       });
   }, [event.bouts, locked, mySelections, selected]);
@@ -87,7 +90,7 @@ export function GroupPickProgress({ event, locked, mySelections }: GroupPickProg
                       <span>{member.displayName}'S PICKS</span>
                       <strong>{member.completed}/{member.total} COMPLETE</strong>
                     </div>
-                    {member.hasUnderdogLock ? <b>UNDERDOG LOCK SET</b> : null}
+                    {!locked && member.hasUnderdogLock ? <b>UNDERDOG LOCK SET</b> : null}
                   </header>
                   {!locked ? (
                     <div className="picks-group-progress__privacy">
@@ -109,6 +112,9 @@ export function GroupPickProgress({ event, locked, mySelections }: GroupPickProg
                             <div>
                               <small>{member.displayName}</small>
                               <strong>{pick.memberPick}</strong>
+                              {pick.isUnderdogLock ? (
+                                <b className="picks-group-progress__lock-marker">★ UNDERDOG LOCK</b>
+                              ) : null}
                             </div>
                             <em>{pick.same ? "SAME" : "DIFF"}</em>
                             <div className="is-you">
