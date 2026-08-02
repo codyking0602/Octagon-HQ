@@ -12,7 +12,8 @@ describe("canonical Picks destination consumption", () => {
     expect(seasonHub).toContain("resolvePicksDestination(searchParams, archivedEventIds)");
     expect(seasonHub).toContain('setActiveTab("events")');
     expect(seasonHub).toContain("setHubOpen(true)");
-    expect(seasonHub).toContain("requestedOpen={event.eventId === targetEventId}");
+    expect(seasonHub).toContain("<LatestEventRecap event={latestEvent} requestedOpen />");
+    expect(seasonHub).toContain("requestedOpen={recapRequested && event.eventId === targetEventId}");
   });
 
   it("does not add a second Picks recap route or browser-storage fallback", () => {
