@@ -222,6 +222,10 @@ export function eventPicksLocked(event: PickEvent, now = Date.now()) {
   return pickEventPresentation(event, now).state !== "upcoming";
 }
 
+export function pickBoutLocked(event: PickEvent, bout: PickBout) {
+  return event.status !== "upcoming" || bout.isLocked === true;
+}
+
 export function americanOddsLabel(odds: number | null) {
   if (odds === null) return null;
   return odds > 0 ? `+${odds}` : `${odds}`;
