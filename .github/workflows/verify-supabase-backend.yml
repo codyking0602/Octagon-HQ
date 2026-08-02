@@ -198,7 +198,7 @@ jobs:
 
           echo "Database password and migration connection are valid."
 
-      - name: Execute Auction lifecycle SQL tests on a fresh local database
+      - name: Execute required SQL tests on a fresh local database
         shell: bash
         run: |
           set -euo pipefail
@@ -215,7 +215,8 @@ jobs:
             supabase/tests/auction_private_lifecycle.sql \
             supabase/tests/auction_private_lifecycle_hardening.sql \
             supabase/tests/auction_playable_server_engine.sql \
-            supabase/tests/pick_monitoring_truthful_decisions.sql
+            supabase/tests/pick_monitoring_truthful_decisions.sql \
+            supabase/tests/pick_owner_entry_capability.sql
           do
             echo "Executing $test_file"
             psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"
@@ -223,6 +224,7 @@ jobs:
 
           echo "Auction lifecycle SQL tests executed successfully against a fresh local database."
           echo "Truthful Picks monitoring SQL tests executed successfully against the same fresh local database."
+          echo "Picks owner entry capability SQL test executed successfully against the same fresh local database."
 
       - name: Verify required Edge Function secret names
         shell: bash
@@ -469,6 +471,7 @@ jobs:
             echo "- Database password and migration connection: accepted"
             echo "- Auction lifecycle SQL tests: executed against a fresh local Supabase database"
             echo "- Truthful Picks monitoring SQL test: executed against the same fresh local Supabase database"
+            echo "- Picks owner entry capability SQL test: executed against the same fresh local Supabase database"
             echo "- Required Edge Function secret names: present"
             echo "- Existing profile, challenge, Your HQ, Picks, scoring, recap, reveal, Fight Night, and What's New migrations: deployed remotely"
             echo "- Event setup and card review migration: deployed remotely"
