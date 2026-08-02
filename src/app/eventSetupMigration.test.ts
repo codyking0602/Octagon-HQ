@@ -73,17 +73,20 @@ describe("Phase 2B event setup backend", () => {
     expect(productionPreviewContract).toContain("expectedSourceChanges");
     expect(productionPreviewContract).toContain("sameTimestamp");
     expect(productionPreviewVerifier).not.toContain("expectedFights");
-    expect(webkitVerifier).toContain("/^(Main card|Full card) · \\d+ fights$/i");
+    expect(webkitVerifier).not.toContain("/functions/v1/sync-next-ufc-event");
+    expect(webkitVerifier).not.toContain("page.waitForResponse(");
     expect(webkitVerifier).not.toContain('name: "Main card · 4 fights"');
     expect(webkitVerifier).not.toContain("SOURCE MATCHES DRAFT");
   });
 
   it("keeps live frontend and backend verification on their actual production revisions", () => {
-    expect(webkitVerifier).toContain("EXPECTED_SYNC_SOURCE_SHA");
+    expect(productionPreviewVerifier).toContain("EXPECTED_SYNC_SOURCE_SHA");
+    expect(productionPreviewVerifier).toContain("preview.body?.deployment_sha !== expectedSha");
+    expect(webkitVerifier).toContain("EXPECTED_DEPLOYMENT_SHA");
     expect(webkitVerifier).toContain("const liveDeploymentSha");
     expect(webkitVerifier).toContain("expectedDeploymentSha && liveDeploymentSha !== expectedDeploymentSha");
-    expect(webkitVerifier).toContain("previewBody?.deployment_sha !== expectedSyncSourceSha");
     expect(webkitVerifier).toContain('page.getByText("ACTIVE", { exact: true })');
+    expect(webkitVerifier).not.toContain("EXPECTED_SYNC_SOURCE_SHA");
     expect(webkitVerifier).not.toContain('? "PAUSED" : "ACTIVE"');
   });
 
