@@ -16,5 +16,13 @@ export interface PreviewEvent {
   bouts: PreviewBout[];
 }
 
+export interface SourceRolloverResponse {
+  code?: unknown;
+  stage?: unknown;
+  safeDetails?: unknown;
+}
+
+export function assertCurrentEventPreview(event: PreviewEvent, now?: Date): void;
+export function assertSafeEventSourceRollover(body: SourceRolloverResponse): void;
 export function expectedSourceChanges(current: PreviewEvent, event: PreviewEvent): string[];
 export function assertReportedSourceChanges(current: PreviewEvent, event: PreviewEvent, reported: string[]): void;

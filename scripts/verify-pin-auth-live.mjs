@@ -1,18 +1,26 @@
 import fs from "node:fs";
 import { webkit } from "playwright";
+import {
+  assertCurrentEventPreview,
+  assertSafeEventSourceRollover,
+} from "./event-setup-preview-contract.mjs";
 
 const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
 const projectId = process.env.SUPABASE_PROJECT_ID;
 const productionOrigin = process.env.OCTAGON_PRODUCTION_ORIGIN
   ?? "https://octagon.hq-app.workers.dev";
 const expectedDeploymentSha = process.env.EXPECTED_DEPLOYMENT_SHA?.trim() ?? "";
-const articleUrl = "https://www.mmamania.com/ufc-fight-cards/446488/latest-ufc-belgrade-fight-card-paramount-start-time-date-and-location-medic-vs-rodriguez-mma";
+const expectedSyncSourceSha = process.env.EXPECTED_SYNC_SOURCE_SHA?.trim() ?? "";
+const configuredArticleUrl = process.env.EVENT_SETUP_TEST_MMA_URL?.trim() ?? "";
 
 if (!accessToken || !projectId) {
   throw new Error("Live PIN verification is not configured.");
 }
 if (expectedDeploymentSha && !/^[0-9a-f]{40}$/i.test(expectedDeploymentSha)) {
   throw new Error("The expected frontend deployment SHA must be a full commit SHA.");
+}
+if (expectedSyncSourceSha && !/^[0-9a-f]{40}$/i.test(expectedSyncSourceSha)) {
+  throw new Error("The expected UFC sync deployment SHA must be a full commit SHA.");
 }
 
 const supabaseOrigin = `https://${projectId}.supabase.co`;
@@ -96,7 +104,7 @@ const publicHeaders = {
   Authorization: `Bearer ${publishableKey}`,
   apikey: publishableKey,
   "Content-Type": "application/json",
-  "x-client-info": "octagon-hq-live-pin-check/4",
+  "x-client-info": "octagon-hq-live-pin-check/5",
   Origin: productionOrigin,
 };
 
@@ -184,19 +192,19 @@ try {
       diagnostics.push(`console:${message.type()}: ${message.text()}`);
     }
   });
-  page.on("requestfailed", (request) => {
-    if (request.url().includes("supabase.co")) {
+  page.on("requestfailed", (failedRequest) => {
+    if (failedRequest.url().includes("supabase.co")) {
       diagnostics.push(
-        `requestfailed: ${request.method()} ${request.url()} ${request.failure()?.errorText ?? "unknown"}`,
+        `requestfailed: ${failedRequest.method()} ${failedRequest.url()} ${failedRequest.failure()?.errorText ?? "unknown"}`,
       );
     }
   });
   page.on("response", async (response) => {
     if (!response.url().includes("/functions/v1/")) return;
-    const request = response.request();
+    const responseRequest = response.request();
     const headers = await response.allHeaders();
     diagnostics.push(
-      `response: ${request.method()} ${response.status()} ${response.url().split("/functions/v1/")[1]} allow-origin=${headers["access-control-allow-origin"] ?? "missing"}`,
+      `response: ${responseRequest.method()} ${response.status()} ${response.url().split("/functions/v1/")[1]} allow-origin=${headers["access-control-allow-origin"] ?? "missing"}`,
     );
   });
 
@@ -247,22 +255,77 @@ try {
     timeout: 30_000,
   });
   await page.getByRole("heading", { name: "Event Setup" }).waitFor({ state: "visible", timeout: 15_000 });
-  await page.getByLabel("MMA MANIA CARD URL (OPTIONAL)").fill(articleUrl);
+  const sourceInput = page.getByLabel("MMA MANIA CARD URL (OPTIONAL)");
+  const stagedSourceUrl = await sourceInput.inputValue();
+  if (configuredArticleUrl) {
+    await sourceInput.fill(configuredArticleUrl);
+  } else if (!stagedSourceUrl.trim()) {
+    throw new Error("Event Setup has no persisted MMA Mania source to review.");
+  }
+
+  const previewResponsePromise = page.waitForResponse(
+    (response) => response.url().includes("/functions/v1/sync-next-ufc-event")
+      && response.request().method() === "POST",
+    { timeout: 30_000 },
+  );
   await page.getByRole("button", { name: "CHECK FOR CARD UPDATES" }).click();
-  await page.getByText("SOURCE REVIEW · NOT APPLIED").waitFor({ state: "visible", timeout: 30_000 });
-  await page.getByRole("heading", { name: /Main card · \d+ fights/i }).waitFor({ state: "visible" });
-  await page.getByText("Uroš Medić vs. Daniel Rodriguez", { exact: true }).first().waitFor({ state: "visible" });
-  await page.getByText(/Belgrade Arena.*Belgrade, Serbia/).first().waitFor({ state: "visible" });
+  const previewResponse = await previewResponsePromise;
+  const previewBody = await previewResponse.json().catch(() => ({}));
+  if (expectedSyncSourceSha && previewBody?.deployment_sha !== expectedSyncSourceSha) {
+    throw new Error(
+      `WebKit Event Setup backend SHA mismatch: expected ${expectedSyncSourceSha}, received ${previewBody?.deployment_sha ?? "missing"}.`,
+    );
+  }
+
+  let previewOutcome;
+  if (previewResponse.status() === 200) {
+    assertCurrentEventPreview({
+      ...previewBody.event_preview,
+      source_url: previewBody.source_url,
+    });
+    await page.getByText("SOURCE REVIEW · NOT APPLIED").waitFor({ state: "visible", timeout: 15_000 });
+    await page.getByRole("heading", { name: /^(Main card|Full card) · \d+ fights$/i }).waitFor({ state: "visible" });
+    const visibleText = await page.locator("body").innerText();
+    for (const expected of [
+      previewBody.event_preview?.name,
+      previewBody.event_preview?.subtitle,
+      previewBody.event_preview?.venue,
+      previewBody.event_preview?.location,
+    ]) {
+      if (!expected || !visibleText.includes(expected)) {
+        throw new Error(`Event Setup source review did not render ${expected || "a required event field"}.`);
+      }
+    }
+    if (await page.getByRole("button", { name: "PUBLISH CARD" }).count()) {
+      throw new Error("Publish controls remained visible during the read-only source review.");
+    }
+    previewOutcome = `rendered a clean ${previewBody.fight_count}-fight current-source review`;
+  } else if (previewResponse.status() === 502) {
+    assertSafeEventSourceRollover(previewBody);
+    const visibleError = page.locator(".picks-error");
+    await visibleError.waitFor({ state: "visible", timeout: 15_000 });
+    const visibleErrorText = (await visibleError.textContent())?.trim() ?? "";
+    if (!visibleErrorText || (previewBody?.message && !visibleErrorText.includes(previewBody.message))) {
+      throw new Error(`Event Setup did not display the safe source rollover message: ${visibleErrorText || "missing"}.`);
+    }
+    await page.getByText("STAGED CARD · NOT LIVE").waitFor({ state: "visible" });
+    await page.getByRole("button", { name: "CHECK FOR CARD UPDATES" }).waitFor({ state: "visible" });
+    if (await page.getByText("SOURCE REVIEW · NOT APPLIED").count()) {
+      throw new Error("Event Setup opened a source review after the backend rejected the event identity.");
+    }
+    if ((await sourceInput.inputValue()) !== (configuredArticleUrl || stagedSourceUrl)) {
+      throw new Error("Event Setup changed the persisted source field after a safe source rollover rejection.");
+    }
+    previewOutcome = "displayed the fail-closed source rollover without applying or publishing it";
+  } else {
+    throw new Error(
+      `Event Setup returned unexpected HTTP ${previewResponse.status()}: ${safeMessage(previewBody)}.\n${diagnostics.join("\n")}`,
+    );
+  }
 
   const visibleText = await page.locator("body").innerText();
   if (/iframe|googletagmanager|skip\s+to\s+main|src\s*=/i.test(visibleText)) {
-    throw new Error("Event Setup source review exposed polluted UFC visible-page metadata.");
-  }
-  if (/Bogdan Guskov 2\b/.test(visibleText)) {
-    throw new Error("Event Setup source review exposed the article-only Bogdan Guskov rematch marker.");
-  }
-  if (await page.getByRole("button", { name: "PUBLISH CARD" }).count()) {
-    throw new Error("Publish controls remained visible during the read-only source review.");
+    throw new Error("Event Setup exposed polluted UFC visible-page metadata.");
   }
 
   const screenshotPath = process.env.EVENT_SETUP_SCREENSHOT_PATH
@@ -270,7 +333,7 @@ try {
   await page.screenshot({ path: screenshotPath, fullPage: true });
 
   console.log(
-    `PASS: WebKit verified live production frontend ${liveDeploymentSha}, authenticated at 390x844, preserved the Monitoring Inbox route through sign-in, loaded active owner-only monitoring data, and displayed the clean current UFC Belgrade source review without publishing.`,
+    `PASS: WebKit verified live production frontend ${liveDeploymentSha}, authenticated at 390x844, preserved the Monitoring Inbox route through sign-in, loaded active owner-only monitoring data, and ${previewOutcome}.`,
   );
 } finally {
   if (browser) await browser.close().catch(() => undefined);
