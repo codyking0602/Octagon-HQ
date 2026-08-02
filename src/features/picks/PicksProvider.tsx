@@ -80,6 +80,14 @@ export function PicksProvider({
   const [error, setError] = useState("");
   const [groupProgressError, setGroupProgressError] = useState("");
 
+  useEffect(() => {
+    profileIdRef.current = profileId;
+    return () => {
+      ++revisionRef.current;
+      profileIdRef.current = null;
+    };
+  }, [profileId]);
+
   const refresh = useCallback(async () => {
     const expectedProfileId = profileId;
     const revision = ++revisionRef.current;
