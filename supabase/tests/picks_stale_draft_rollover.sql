@@ -104,7 +104,7 @@ begin
   from public.pick_events
   where event_id = 'stale-draft-completed-event'
     and status = 'complete';
-  if v_completed_event_name <> 'UFC Completed Draft Test' then
+  if v_completed_event_name is distinct from 'UFC Completed Draft Test' then
     raise exception 'completed event history was removed during stale draft rollover';
   end if;
 
