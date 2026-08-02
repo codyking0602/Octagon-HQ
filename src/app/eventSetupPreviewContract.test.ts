@@ -61,7 +61,7 @@ describe("production Event Setup preview contract", () => {
   });
 
   it("requires the exact canonical staging summary when Event Setup has no draft", () => {
-    expect(expectedSourceChanges(null, currentPreview)).toEqual([
+    expect(expectedSourceChanges(null as unknown as typeof draft, currentPreview)).toEqual([
       "Stage a new main card with 4 fights.",
     ]);
   });
