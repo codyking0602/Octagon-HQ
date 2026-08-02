@@ -46,9 +46,9 @@ begin
   perform set_config('request.jwt.claim.role','authenticated',true);
   perform set_config('request.jwt.claim.sub',v_cody::text,true);
   current_event := public.get_current_pick_event();
-  if jsonb_array_length(current_event #> '{bouts,0,group_picks}') <> 0
-    or jsonb_array_length(current_event #> '{bouts,1,group_picks}') <> 0 then
-    raise exception 'locked unresolved picks were exposed: %', current_event;
+  if jsonb_array_length(current_event #> '{bouts,0,group_picks}') <> 3
+    or jsonb_array_length(current_event #> '{bouts,1,group_picks}') <> 3 then
+    raise exception 'event-wide master lock did not reveal every bout: %', current_event;
   end if;
 
   perform set_config('request.jwt.claim.role','service_role',true);
@@ -63,8 +63,8 @@ begin
   if jsonb_array_length(first_bout->'group_picks') <> 3 then
     raise exception 'resolved bout did not reveal all event entrants: %', first_bout;
   end if;
-  if jsonb_array_length(second_bout->'group_picks') <> 0 then
-    raise exception 'unresolved sibling bout was exposed: %', second_bout;
+  if jsonb_array_length(second_bout->'group_picks') <> 3 then
+    raise exception 'event-wide master lock did not preserve sibling reveal: %', second_bout;
   end if;
   if not exists (
     select 1 from jsonb_array_elements(first_bout->'group_picks') item

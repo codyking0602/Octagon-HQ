@@ -8,7 +8,7 @@ const sql = readFileSync(
 const integrationSql = readFileSync("supabase/tests/picks_group_reveals.sql", "utf8");
 
 describe("resolved Picks group reveal migration", () => {
-  it("keeps locked unresolved, anonymous, and non-profile picks hidden in the backend", () => {
+  it("keeps anonymous and non-profile picks hidden in the backend", () => {
     expect(sql).toContain("auth.uid() is null");
     expect(sql).toContain("not exists (select 1 from public.profiles viewer where viewer.id = auth.uid())");
     expect(sql).toContain("bout.result_status = 'pending'");
@@ -34,8 +34,8 @@ describe("resolved Picks group reveal migration", () => {
   });
 
   it("keeps rollback coverage for partial reveal and permanent recap behavior", () => {
-    expect(integrationSql).toContain("locked unresolved picks were exposed");
-    expect(integrationSql).toContain("unresolved sibling bout was exposed");
+    expect(integrationSql).toContain("event-wide master lock did not reveal every bout");
+    expect(integrationSql).toContain("event-wide master lock did not preserve sibling reveal");
     expect(integrationSql).toContain("anonymous viewer received revealed member picks");
     expect(integrationSql).toContain("completed recap did not preserve group pick reveals");
     expect(integrationSql.trimEnd()).toMatch(/rollback;$/);
