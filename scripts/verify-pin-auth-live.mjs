@@ -210,10 +210,16 @@ try {
   });
   const page = await context.newPage();
   const diagnostics = [];
+  let syncRequestCount = 0;
 
   page.on("console", (message) => {
     if (message.type() === "error" || message.type() === "warning") {
       diagnostics.push(`console:${message.type()}: ${message.text()}`);
+    }
+  });
+  page.on("request", (request) => {
+    if (request.url().includes("/functions/v1/sync-next-ufc-event")) {
+      syncRequestCount += 1;
     }
   });
   page.on("requestfailed", (failedRequest) => {
@@ -291,6 +297,7 @@ try {
     ?? `${process.env.RUNNER_TEMP ?? "/tmp"}/monitoring-inbox-preview.png`;
   await page.screenshot({ path: monitoringScreenshotPath, fullPage: true });
 
+  const syncRequestsBeforeSetup = syncRequestCount;
   await page.goto(`${productionOrigin}/picks/setup?event-preview-check=${suffix}`, {
     waitUntil: "domcontentloaded",
     timeout: 30_000,
@@ -312,63 +319,88 @@ try {
       await sourceInput.fill(configuredArticleUrl);
     }
 
-    const previewResponsePromise = page.waitForResponse(
-      (response) => response.url().includes("/functions/v1/sync-next-ufc-event")
-        && response.request().method() === "POST",
-      { timeout: 30_000 },
-    );
-    await page.getByRole("button", { name: "CHECK FOR CARD UPDATES" }).click();
-    const previewResponse = await previewResponsePromise;
-    const previewBody = await previewResponse.json().catch(() => ({}));
-    if (expectedSyncSourceSha && previewBody?.deployment_sha !== expectedSyncSourceSha) {
-      throw new Error(
-        `WebKit Event Setup backend SHA mismatch: expected ${expectedSyncSourceSha}, received ${previewBody?.deployment_sha ?? "missing"}.`,
-      );
-    }
+    const updateButton = page.getByRole("button", { name: "CHECK FOR CARD UPDATES" });
+    const syncButton = page.getByRole("button", { name: "SYNC NEXT UFC EVENT" });
 
-    if (previewResponse.status() === 200) {
-      assertCurrentEventPreview({
-        ...previewBody.event_preview,
-        source_url: previewBody.source_url,
-      });
-      await page.getByText("SOURCE REVIEW · NOT APPLIED").waitFor({ state: "visible", timeout: 15_000 });
-      await page.getByRole("heading", { name: /^(Main card|Full card) · \d+ fights$/i }).waitFor({ state: "visible" });
-      const visibleText = await page.locator("body").innerText();
-      for (const expected of [
-        previewBody.event_preview?.name,
-        previewBody.event_preview?.subtitle,
-        previewBody.event_preview?.venue,
-        previewBody.event_preview?.location,
-      ]) {
-        if (!expected || !visibleText.includes(expected)) {
-          throw new Error(`Event Setup source review did not render ${expected || "a required event field"}.`);
+    if (await updateButton.count()) {
+      const previewResponsePromise = page.waitForResponse(
+        (response) => response.url().includes("/functions/v1/sync-next-ufc-event")
+          && response.request().method() === "POST",
+        { timeout: 30_000 },
+      );
+      await updateButton.click();
+      const previewResponse = await previewResponsePromise;
+      const previewBody = await previewResponse.json().catch(() => ({}));
+      if (expectedSyncSourceSha && previewBody?.deployment_sha !== expectedSyncSourceSha) {
+        throw new Error(
+          `WebKit Event Setup backend SHA mismatch: expected ${expectedSyncSourceSha}, received ${previewBody?.deployment_sha ?? "missing"}.`,
+        );
+      }
+
+      if (previewResponse.status() === 200) {
+        assertCurrentEventPreview({
+          ...previewBody.event_preview,
+          source_url: previewBody.source_url,
+        });
+        await page.getByText("SOURCE REVIEW · NOT APPLIED").waitFor({ state: "visible", timeout: 15_000 });
+        await page.getByRole("heading", { name: /^(Main card|Full card) · \d+ fights$/i }).waitFor({ state: "visible" });
+        const visibleText = await page.locator("body").innerText();
+        for (const expected of [
+          previewBody.event_preview?.name,
+          previewBody.event_preview?.subtitle,
+          previewBody.event_preview?.venue,
+          previewBody.event_preview?.location,
+        ]) {
+          if (!expected || !visibleText.includes(expected)) {
+            throw new Error(`Event Setup source review did not render ${expected || "a required event field"}.`);
+          }
         }
+        if (await page.getByRole("button", { name: "PUBLISH CARD" }).count()) {
+          throw new Error("Publish controls remained visible during the read-only source review.");
+        }
+        previewOutcome = `rendered a clean ${previewBody.fight_count}-fight current-source review`;
+      } else if (previewResponse.status() === 502) {
+        assertSafeEventSourceRollover(previewBody);
+        const visibleError = page.locator(".picks-error");
+        await visibleError.waitFor({ state: "visible", timeout: 15_000 });
+        const visibleErrorText = (await visibleError.textContent())?.trim() ?? "";
+        if (!visibleErrorText || (previewBody?.message && !visibleErrorText.includes(previewBody.message))) {
+          throw new Error(`Event Setup did not display the safe source rollover message: ${visibleErrorText || "missing"}.`);
+        }
+        await page.getByText("STAGED CARD · NOT LIVE").waitFor({ state: "visible" });
+        await updateButton.waitFor({ state: "visible" });
+        if (await page.getByText("SOURCE REVIEW · NOT APPLIED").count()) {
+          throw new Error("Event Setup opened a source review after the backend rejected the event identity.");
+        }
+        if ((await sourceInput.inputValue()) !== (configuredArticleUrl || stagedSourceUrl)) {
+          throw new Error("Event Setup changed the persisted source field after a safe source rollover rejection.");
+        }
+        previewOutcome = "displayed the fail-closed source rollover without applying or publishing it";
+      } else {
+        throw new Error(
+          `Event Setup returned unexpected HTTP ${previewResponse.status()}: ${safeMessage(previewBody)}.\n${diagnostics.join("\n")}`,
+        );
+      }
+    } else if (await syncButton.count()) {
+      await page.getByText("NO STAGED CARD", { exact: true }).waitFor({ state: "visible", timeout: 15_000 });
+      await page.getByRole("heading", { name: "Stage the next UFC event.", exact: true }).waitFor({ state: "visible", timeout: 15_000 });
+      await syncButton.waitFor({ state: "visible", timeout: 15_000 });
+      if (await syncButton.isDisabled()) {
+        throw new Error("Event Setup disabled the canonical no-draft sync action.");
+      }
+      if (await page.getByText("SOURCE REVIEW · NOT APPLIED").count()) {
+        throw new Error("Event Setup opened a source review without a staged draft.");
       }
       if (await page.getByRole("button", { name: "PUBLISH CARD" }).count()) {
-        throw new Error("Publish controls remained visible during the read-only source review.");
+        throw new Error("Event Setup exposed publish controls without a staged draft.");
       }
-      previewOutcome = `rendered a clean ${previewBody.fight_count}-fight current-source review`;
-    } else if (previewResponse.status() === 502) {
-      assertSafeEventSourceRollover(previewBody);
-      const visibleError = page.locator(".picks-error");
-      await visibleError.waitFor({ state: "visible", timeout: 15_000 });
-      const visibleErrorText = (await visibleError.textContent())?.trim() ?? "";
-      if (!visibleErrorText || (previewBody?.message && !visibleErrorText.includes(previewBody.message))) {
-        throw new Error(`Event Setup did not display the safe source rollover message: ${visibleErrorText || "missing"}.`);
+      await page.waitForTimeout(250);
+      if (syncRequestCount !== syncRequestsBeforeSetup) {
+        throw new Error("Event Setup called the sync provider while rendering the no-draft review state.");
       }
-      await page.getByText("STAGED CARD · NOT LIVE").waitFor({ state: "visible" });
-      await page.getByRole("button", { name: "CHECK FOR CARD UPDATES" }).waitFor({ state: "visible" });
-      if (await page.getByText("SOURCE REVIEW · NOT APPLIED").count()) {
-        throw new Error("Event Setup opened a source review after the backend rejected the event identity.");
-      }
-      if ((await sourceInput.inputValue()) !== (configuredArticleUrl || stagedSourceUrl)) {
-        throw new Error("Event Setup changed the persisted source field after a safe source rollover rejection.");
-      }
-      previewOutcome = "displayed the fail-closed source rollover without applying or publishing it";
+      previewOutcome = "confirmed the no-draft setup presents its canonical sync action without applying or publishing anything";
     } else {
-      throw new Error(
-        `Event Setup returned unexpected HTTP ${previewResponse.status()}: ${safeMessage(previewBody)}.\n${diagnostics.join("\n")}`,
-      );
+      throw new Error("Event Setup rendered neither its staged-card review action nor its no-draft sync action.");
     }
   } else if (isActiveEventLifecycle(setupStatus)) {
     if (await page.getByRole("region", { name: "Card scope" }).count()) {
