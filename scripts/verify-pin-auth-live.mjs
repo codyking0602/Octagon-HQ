@@ -272,15 +272,20 @@ try {
   let monitoringOutcome;
 
   if (controlStatus === "PICKS OPEN") {
-    await page.getByRole("heading", { name: "Monitoring Inbox", exact: true }).waitFor({ state: "visible" });
-    await page.getByRole("heading", { name: "Check now or refresh the ledger" }).waitFor({ state: "visible", timeout: 15_000 });
-    await page.getByText("ACTIVE", { exact: true }).waitFor({ state: "visible" });
-    if (await page.getByText("INBOX UNAVAILABLE", { exact: true }).count()) {
+    const monitoringSection = page.locator("#monitoring");
+    await monitoringSection.waitFor({ state: "visible", timeout: 15_000 });
+    await monitoringSection.getByRole("heading", { name: "Check now or refresh the ledger" }).waitFor({ state: "visible", timeout: 15_000 });
+    await monitoringSection.getByRole("button", { name: "RUN CHECK NOW" }).waitFor({ state: "visible", timeout: 15_000 });
+    await monitoringSection.getByRole("button", { name: "REFRESH INBOX" }).waitFor({ state: "visible", timeout: 15_000 });
+    if (!(await page.getByText("ACTIVE", { exact: true }).count())) {
+      throw new Error("Monitoring Inbox did not render the active scheduler state.");
+    }
+    if (await monitoringSection.getByText("INBOX UNAVAILABLE", { exact: true }).count()) {
       throw new Error("Monitoring Inbox rendered its unavailable state for the temporary owner.");
     }
     monitoringOutcome = "loaded active owner-only monitoring data for the published card";
   } else if (isSetupLifecycle(controlStatus) || isActiveEventLifecycle(controlStatus)) {
-    if (await page.getByRole("heading", { name: "Monitoring Inbox", exact: true }).count()) {
+    if (await page.locator("#monitoring").count()) {
       throw new Error(`Monitoring Inbox rendered during the ${controlStatus} lifecycle.`);
     }
     monitoringOutcome = `confirmed the ${controlStatus} lifecycle correctly omits monitoring`;
@@ -305,8 +310,9 @@ try {
   let previewOutcome;
 
   if (isSetupLifecycle(setupStatus)) {
-    await page.getByRole("heading", { name: "Event Setup" }).waitFor({ state: "visible", timeout: 15_000 });
-    const sourceInput = page.getByLabel("MMA MANIA CARD URL (OPTIONAL)");
+    const setupSection = page.locator("#setup");
+    await setupSection.waitFor({ state: "visible", timeout: 15_000 });
+    const sourceInput = setupSection.getByLabel("MMA MANIA CARD URL (OPTIONAL)");
     const stagedSourceUrl = await sourceInput.inputValue();
     if (configuredArticleUrl) {
       await sourceInput.fill(configuredArticleUrl);
@@ -319,7 +325,7 @@ try {
         && response.request().method() === "POST",
       { timeout: 30_000 },
     );
-    await page.getByRole("button", { name: "CHECK FOR CARD UPDATES" }).click();
+    await setupSection.getByRole("button", { name: "CHECK FOR CARD UPDATES" }).click();
     const previewResponse = await previewResponsePromise;
     const previewBody = await previewResponse.json().catch(() => ({}));
     if (expectedSyncSourceSha && previewBody?.deployment_sha !== expectedSyncSourceSha) {
@@ -333,8 +339,8 @@ try {
         ...previewBody.event_preview,
         source_url: previewBody.source_url,
       });
-      await page.getByText("SOURCE REVIEW · NOT APPLIED").waitFor({ state: "visible", timeout: 15_000 });
-      await page.getByRole("heading", { name: /^(Main card|Full card) · \d+ fights$/i }).waitFor({ state: "visible" });
+      await setupSection.getByText("SOURCE REVIEW · NOT APPLIED").waitFor({ state: "visible", timeout: 15_000 });
+      await setupSection.getByRole("heading", { name: /^(Main card|Full card) · \d+ fights$/i }).waitFor({ state: "visible" });
       const visibleText = await page.locator("body").innerText();
       for (const expected of [
         previewBody.event_preview?.name,
@@ -346,21 +352,21 @@ try {
           throw new Error(`Event Setup source review did not render ${expected || "a required event field"}.`);
         }
       }
-      if (await page.getByRole("button", { name: "PUBLISH CARD" }).count()) {
+      if (await setupSection.getByRole("button", { name: "PUBLISH CARD" }).count()) {
         throw new Error("Publish controls remained visible during the read-only source review.");
       }
       previewOutcome = `rendered a clean ${previewBody.fight_count}-fight current-source review`;
     } else if (previewResponse.status() === 502) {
       assertSafeEventSourceRollover(previewBody);
-      const visibleError = page.locator(".picks-error");
+      const visibleError = setupSection.locator(".picks-error");
       await visibleError.waitFor({ state: "visible", timeout: 15_000 });
       const visibleErrorText = (await visibleError.textContent())?.trim() ?? "";
       if (!visibleErrorText || (previewBody?.message && !visibleErrorText.includes(previewBody.message))) {
         throw new Error(`Event Setup did not display the safe source rollover message: ${visibleErrorText || "missing"}.`);
       }
-      await page.getByText("STAGED CARD · NOT LIVE").waitFor({ state: "visible" });
-      await page.getByRole("button", { name: "CHECK FOR CARD UPDATES" }).waitFor({ state: "visible" });
-      if (await page.getByText("SOURCE REVIEW · NOT APPLIED").count()) {
+      await setupSection.getByText("STAGED CARD · NOT LIVE").waitFor({ state: "visible" });
+      await setupSection.getByRole("button", { name: "CHECK FOR CARD UPDATES" }).waitFor({ state: "visible" });
+      if (await setupSection.getByText("SOURCE REVIEW · NOT APPLIED").count()) {
         throw new Error("Event Setup opened a source review after the backend rejected the event identity.");
       }
       if ((await sourceInput.inputValue()) !== (configuredArticleUrl || stagedSourceUrl)) {
@@ -373,7 +379,7 @@ try {
       );
     }
   } else if (isActiveEventLifecycle(setupStatus)) {
-    if (await page.getByRole("heading", { name: "Event Setup" }).count()) {
+    if (await page.locator("#setup").count()) {
       throw new Error(`Event Setup rendered during the ${setupStatus} lifecycle.`);
     }
     previewOutcome = `confirmed the ${setupStatus} lifecycle correctly omits Event Setup without calling the sync provider`;
