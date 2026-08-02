@@ -191,14 +191,15 @@ try {
     if (preview.body?.deployment_sha !== expectedSha) {
       throw new Error(`Rejected preview backend SHA mismatch: expected ${expectedSha}, received ${preview.body?.deployment_sha ?? "missing"}.`);
     }
-    try {
-      assertSafeEventSourceRollover(preview.body);
-    } catch (error) {
-      const contractMessage = error instanceof Error ? error.message : String(error);
+    if (
+      preview.body?.code !== "ARTICLE_IDENTITY_REJECTED"
+      || preview.body?.stage !== "identity-match"
+    ) {
       throw new Error(
-        `${contractMessage}; message=${safeMessage(preview.body)}; details=${safeDetails(preview.body)}`,
+        `Expected a safe article identity rejection, received ${preview.body?.code ?? "missing"}/${preview.body?.stage ?? "missing"}; message=${safeMessage(preview.body)}; details=${safeDetails(preview.body)}`,
       );
     }
+    assertSafeEventSourceRollover(preview.body);
     outcome = "safely rejected a persisted article after the official UFC event identity rolled forward";
   }
 
