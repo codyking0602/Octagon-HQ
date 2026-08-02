@@ -127,7 +127,7 @@ export interface PickHistoryEvent {
   completedAt: string;
   record: PickHistoryRecord;
   underdogLock: UnderdogLock | null;
-  watchMoments: PickWatchMoment[];
+  watchMoments?: PickWatchMoment[];
   bouts: PickHistoryBout[];
   groupResults: PickGroupResult[];
 }
