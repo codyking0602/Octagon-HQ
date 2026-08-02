@@ -96,6 +96,11 @@ export function IdentityControl() {
             <i>{avatar}</i>
             <span><small>SIGNED IN AS</small><strong>{identity.profile.displayName}</strong></span>
             <div className="identity-profile-card__links">
+              {identity.profile.canManagePicks ? (
+                <Link className="identity-profile-card__owner-link" to="/picks/control#setup" onClick={identity.closeDialog}>
+                  MANAGE PICKS
+                </Link>
+              ) : null}
               <Link to={memberProfilePath(identity.profile.displayName)} onClick={identity.closeDialog}>VIEW MY PROFILE</Link>
               <Link to="/members" onClick={identity.closeDialog}>BROWSE MEMBERS</Link>
             </div>
