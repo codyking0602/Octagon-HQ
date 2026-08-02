@@ -53,7 +53,8 @@ Event completion, the global What's New recap item, and all personal entrant not
 - Completion and recap availability are the same moment, so there is no separate “event completed” notification.
 - The notification does not recalculate scoring or create a second recap projection.
 
-No second inbox, provider, repository, scheduler, polling loop, lifecycle transition, recap projection, or browser-storage fallback is added.
+No second inbox, provider, repository, scheduler, polling loop, lifecycle transition, or browser-storage fallback is added.
+No second recap projection or navigation owner is added.
 
 ## Deferred work
 
