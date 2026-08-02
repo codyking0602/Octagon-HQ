@@ -32,15 +32,18 @@ function safeMessage(body) {
     .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, "[redacted-email]");
 }
 
+function safeDetails(body) {
+  return body?.safeDetails && typeof body.safeDetails === "object"
+    ? JSON.stringify(body.safeDetails)
+    : "{}";
+}
+
 async function request(stage, url, options = {}, acceptedStatuses = [200]) {
   const response = await fetch(url, options);
   const body = await readBody(response);
   if (!acceptedStatuses.includes(response.status)) {
-    const safeDetails = body?.safeDetails && typeof body.safeDetails === "object"
-      ? JSON.stringify(body.safeDetails)
-      : "{}";
     throw new Error(
-      `${stage}: HTTP ${response.status}; ${safeMessage(body)}; stage=${body?.stage ?? "unknown"}; details=${safeDetails}`,
+      `${stage}: HTTP ${response.status}; ${safeMessage(body)}; stage=${body?.stage ?? "unknown"}; details=${safeDetails(body)}`,
     );
   }
   return { response, body };
@@ -182,11 +185,24 @@ try {
       ...preview.body.event_preview,
       source_url: preview.body.source_url,
     });
-    assertReportedSourceChanges(draftBefore, preview.body.event_preview, preview.body.changes);
+    assertReportedSourceChanges(
+      draftBefore,
+      preview.body.event_preview,
+      preview.body.changes,
+      preview.body.effective_scope,
+    );
     outcome = `returned an independently verified ${preview.body.fight_count}-fight current-source change list`;
   } else {
     if (preview.body?.deployment_sha !== expectedSha) {
       throw new Error(`Rejected preview backend SHA mismatch: expected ${expectedSha}, received ${preview.body?.deployment_sha ?? "missing"}.`);
+    }
+    if (
+      preview.body?.code !== "ARTICLE_IDENTITY_REJECTED"
+      || preview.body?.stage !== "identity-match"
+    ) {
+      throw new Error(
+        `Expected a safe article identity rejection, received ${preview.body?.code ?? "missing"}/${preview.body?.stage ?? "missing"}; message=${safeMessage(preview.body)}; details=${safeDetails(preview.body)}`,
+      );
     }
     assertSafeEventSourceRollover(preview.body);
     outcome = "safely rejected a persisted article after the official UFC event identity rolled forward";

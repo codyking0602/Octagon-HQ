@@ -1,9 +1,20 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
+import { hasSourceIdentityConflict } from "../../supabase/functions/sync-next-ufc-event/identityEngine";
 import {
   assertCurrentEventPreview,
   assertSafeEventSourceRollover,
   expectedSourceChanges,
 } from "../../scripts/event-setup-preview-contract.mjs";
+
+const syncSource = readFileSync(
+  "supabase/functions/sync-next-ufc-event/index.ts",
+  "utf8",
+);
+const liveVerifier = readFileSync(
+  "scripts/verify-event-setup-preview-live.mjs",
+  "utf8",
+);
 
 const bout = (bout_id: string, red_fighter_name: string, blue_fighter_name: string) => ({
   bout_id,
@@ -47,6 +58,12 @@ describe("production Event Setup preview contract", () => {
       locks_at: "2026-08-01T19:00:00.000Z",
       bouts: [bout("main-event-rodriguez-medic", "Daniel Rodriguez", "Uros Medic")],
     })).toEqual([]);
+  });
+
+  it("requires the exact canonical staging summary when Event Setup has no draft", () => {
+    expect(expectedSourceChanges(null as unknown as typeof draft, currentPreview)).toEqual([
+      "Stage a new main card with 4 fights.",
+    ]);
   });
 
   it("accepts only the real membership and order changes in an updated card", () => {
@@ -102,5 +119,36 @@ describe("production Event Setup preview contract", () => {
       stage: "mma-fetch",
       safeDetails: {},
     })).toThrow("Expected a safe article identity rejection");
+  });
+
+  it("distinguishes a real source rollover from card-shape failure alone", () => {
+    expect(hasSourceIdentityConflict({
+      conflicts: ["implausible-or-unsectioned-card"],
+    })).toBe(false);
+    expect(hasSourceIdentityConflict({
+      conflicts: ["implausible-or-unsectioned-card", "event-date:2026-08-01!=2026-08-08"],
+    })).toBe(true);
+    expect(hasSourceIdentityConflict({
+      conflicts: ["neither-headliner-matches"],
+    })).toBe(true);
+  });
+
+  it("accepts the current official UFC event-page time shape without requiring a Main Card suffix", () => {
+    expect(syncSource).toContain("(?:\\s*\\/\\s*Main Card)?");
+  });
+
+  it("bounds official UFC event discovery within the canonical Edge Function owner", () => {
+    expect(syncSource).toContain("const MAX_UFC_EVENT_PAGE_ATTEMPTS = 4;");
+    expect(syncSource).toContain(".slice(0, MAX_UFC_EVENT_PAGE_ATTEMPTS)");
+    expect(syncSource).toContain("for (const url of urls)");
+    expect(syncSource).not.toContain("Promise.all(urls.map");
+  });
+
+  it("preserves typed canonical-source failures and keeps the live verifier red with sanitized details", () => {
+    expect(syncSource).toContain("if (error instanceof SyncError) throw error;");
+    expect(syncSource).toContain('"UFC_EVENT_METADATA_REJECTED"');
+    expect(liveVerifier).toContain("message=${safeMessage(preview.body)}");
+    expect(liveVerifier).toContain("details=${safeDetails(preview.body)}");
+    expect(liveVerifier).not.toContain('preview.body?.code === "SYNC_UNEXPECTED_ERROR"');
   });
 });

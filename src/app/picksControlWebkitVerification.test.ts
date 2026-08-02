@@ -44,11 +44,17 @@ describe("production Picks Control Center WebKit verification", () => {
     expect(verifier).toContain("Picks Control Center did not reach a valid owner lifecycle");
   });
 
-  it("runs Event Setup review only in setup lifecycles and avoids provider calls for an active card", () => {
+  it("runs the correct Event Setup proof for staged and no-draft setup lifecycles", () => {
     expect(verifier).toContain("if (isSetupLifecycle(setupStatus))");
     expect(verifier).toContain('getByRole("region", { name: "Card scope" })');
     expect(verifier).toContain('getByRole("heading", { name: "Choose what counts", exact: true })');
-    expect(verifier).toContain('getByRole("button", { name: "CHECK FOR CARD UPDATES" }).click()');
+    expect(verifier).toContain('const updateButton = page.getByRole("button", { name: "CHECK FOR CARD UPDATES" });');
+    expect(verifier).toContain('const syncButton = page.getByRole("button", { name: "SYNC NEXT UFC EVENT" });');
+    expect(verifier).toContain("if (await updateButton.count())");
+    expect(verifier).toContain("await updateButton.click()");
+    expect(verifier).toContain("} else if (await syncButton.count())");
+    expect(verifier).toContain('getByText("NO STAGED CARD", { exact: true })');
+    expect(verifier).toContain("syncRequestCount !== syncRequestsBeforeSetup");
     expect(verifier).toContain("} else if (isActiveEventLifecycle(setupStatus)) {");
     expect(verifier).toContain("Event Setup rendered during the ${setupStatus} lifecycle.");
     expect(verifier).toContain("correctly omits Event Setup without calling the sync provider");
