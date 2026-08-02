@@ -4,10 +4,16 @@ export interface NormalizedUfcEvent { canonicalEventKey:string; promotion:"UFC";
 export interface NormalizedArticleEvent { canonicalUrl:string; articleTitle:string; explicitEventName:string; eventNumber:string; headliners:string[]; explicitEventDates:string[]; publicationDates:string[]; venueSignals:string[]; locationSignals:string[]; cardSections:string[]; bouts:Array<{section:string;red_fighter_name:string;blue_fighter_name:string;weight_class:string}>; extractionEvidence:string[] }
 export interface IdentityResult { accepted:boolean; confidence:number; matchedSignals:string[]; conflicts:string[]; normalizedUfcEvent:NormalizedUfcEvent; normalizedArticleEvent:NormalizedArticleEvent; reason:string }
 
+const CARD_SHAPE_CONFLICT = "implausible-or-unsectioned-card";
+
+export function hasSourceIdentityConflict(result: Pick<IdentityResult, "conflicts">) {
+  return result.conflicts.some((conflict) => conflict !== CARD_SHAPE_CONFLICT);
+}
+
 export function matchSourceIdentity(ufc:NormalizedUfcEvent, article:NormalizedArticleEvent):IdentityResult {
   const signals:string[] = [], conflicts:string[] = [];
   const plausible = article.cardSections.length > 0 && article.bouts.length >= 4 && article.bouts.length <= 20;
-  if (!plausible) conflicts.push("implausible-or-unsectioned-card");
+  if (!plausible) conflicts.push(CARD_SHAPE_CONFLICT);
   if (!/^https:\/\/(?:www\.)?mmamania\.com\//i.test(article.canonicalUrl)) conflicts.push("non-mma-mania-url");
   if (ufc.eventNumber && article.eventNumber && ufc.eventNumber !== article.eventNumber) conflicts.push(`event-number:${article.eventNumber}!=${ufc.eventNumber}`);
   const expectedDay = ufc.localEventDate || ufc.startsAt.slice(0,10);
