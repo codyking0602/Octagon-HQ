@@ -85,7 +85,8 @@ describe("Phase 2B event setup backend", () => {
     expect(webkitVerifier).toContain("EXPECTED_DEPLOYMENT_SHA");
     expect(webkitVerifier).toContain("const liveDeploymentSha");
     expect(webkitVerifier).toContain("expectedDeploymentSha && liveDeploymentSha !== expectedDeploymentSha");
-    expect(webkitVerifier).toContain('page.getByText("ACTIVE", { exact: true })');
+    expect(webkitVerifier).toContain('page.locator("#monitoring")');
+    expect(webkitVerifier).toContain('monitoringSection.getByRole("button", { name: "RUN CHECK NOW" }).waitFor');
     expect(webkitVerifier).not.toContain("EXPECTED_SYNC_SOURCE_SHA");
     expect(webkitVerifier).not.toContain('? "PAUSED" : "ACTIVE"');
   });
