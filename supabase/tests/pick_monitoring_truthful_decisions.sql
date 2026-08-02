@@ -77,7 +77,7 @@ begin
   );
 
   v_event_state := public.get_pick_monitoring_event_state();
-  if v_event_state->'current' is not null then
+  if coalesce(v_event_state->'current', 'null'::jsonb) <> 'null'::jsonb then
     raise exception 'boundary-past event remained monitorable: %', v_event_state;
   end if;
 
