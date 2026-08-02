@@ -54,9 +54,13 @@ function FindingEvidence({ finding }: { finding: MonitoringFinding }) {
 
 interface MonitoringInboxPageProps {
   repository?: MonitoringInboxRepository | null;
+  onInboxChange?: (inbox: MonitoringInbox | null) => void;
 }
 
-export default function MonitoringInboxPage({ repository: suppliedRepository }: MonitoringInboxPageProps) {
+export default function MonitoringInboxPage({
+  repository: suppliedRepository,
+  onInboxChange,
+}: MonitoringInboxPageProps) {
   const identity = useIdentity();
   const [repository] = useState<MonitoringInboxRepository | null>(() => (
     suppliedRepository === undefined ? createMonitoringInboxRepository() : suppliedRepository
@@ -70,31 +74,36 @@ export default function MonitoringInboxPage({ repository: suppliedRepository }: 
     if (!repository || !identity.profile) return;
     setLoading(true);
     try {
-      setInbox(await repository.loadInbox());
+      const nextInbox = await repository.loadInbox();
+      setInbox(nextInbox);
+      onInboxChange?.(nextInbox);
       setError("");
     } catch (nextError) {
       setInbox(null);
+      onInboxChange?.(null);
       setError(readableError(nextError));
     } finally {
       setLoading(false);
     }
-  }, [identity.profile, repository]);
+  }, [identity.profile, onInboxChange, repository]);
 
   useEffect(() => {
     if (!identity.ready) return;
     if (!identity.profile) {
       setInbox(null);
+      onInboxChange?.(null);
       setLoading(false);
       setError("");
       return;
     }
     if (!repository) {
+      onInboxChange?.(null);
       setLoading(false);
       setError("Monitoring Inbox is not connected on this build.");
       return;
     }
     void loadInbox();
-  }, [identity.profile, identity.ready, loadInbox, repository]);
+  }, [identity.profile, identity.ready, loadInbox, onInboxChange, repository]);
 
   async function runAction(key: string, action: () => Promise<void>) {
     setBusyAction(key);
