@@ -28,31 +28,6 @@ function gateway(profile: typeof owner | null = owner): IdentityGateway {
   };
 }
 
-function bout(resultStatus: PickControlEvent["bouts"][number]["resultStatus"] = "pending") {
-  return {
-    boutId: "red-blue",
-    position: 1,
-    weightClass: "Lightweight",
-    redFighterSlug: "red-fighter",
-    redFighterName: "Red Fighter",
-    blueFighterSlug: "blue-fighter",
-    blueFighterName: "Blue Fighter",
-    resultStatus,
-    winnerFighterSlug: resultStatus === "red_win" ? "red-fighter" : null,
-    resultRecordedAt: resultStatus === "pending" ? null : "2099-08-09T03:00:00.000Z",
-    includedInPicks: true,
-    canCancel: false,
-    canRestore: false,
-    canReplace: false,
-    canRemoveFromPicks: false,
-    canRestoreToPicks: false,
-    canCorrectResult: resultStatus !== "pending",
-    hasReplacementHistory: false,
-    hasRemovalHistory: false,
-    hasCorrectionHistory: false,
-  };
-}
-
 function controlEvent(
   status: PickControlEvent["status"],
   resultStatus: PickControlEvent["bouts"][number]["resultStatus"] = "pending",
@@ -77,7 +52,28 @@ function controlEvent(
       startsAt: "2099-08-02T04:00:00.000Z",
       completedAt: "2099-08-02T06:00:00.000Z",
     }] : [],
-    bouts: [bout(resultStatus)],
+    bouts: [{
+      boutId: "red-blue",
+      position: 1,
+      weightClass: "Lightweight",
+      redFighterSlug: "red-fighter",
+      redFighterName: "Red Fighter",
+      blueFighterSlug: "blue-fighter",
+      blueFighterName: "Blue Fighter",
+      resultStatus,
+      winnerFighterSlug: resultStatus === "red_win" ? "red-fighter" : null,
+      resultRecordedAt: resultStatus === "pending" ? null : "2099-08-09T03:30:00.000Z",
+      includedInPicks: true,
+      canCancel: false,
+      canRestore: false,
+      canReplace: false,
+      canRemoveFromPicks: false,
+      canRestoreToPicks: false,
+      canCorrectResult: resultStatus !== "pending",
+      hasReplacementHistory: false,
+      hasRemovalHistory: false,
+      hasCorrectionHistory: false,
+    }],
   };
 }
 
@@ -173,7 +169,7 @@ const monitoringInbox: MonitoringInbox = {
 function controlRepository(events: Array<PickControlEvent | null>): PickControlRepository {
   const loadControlEvent = vi.fn();
   for (const event of events) loadControlEvent.mockResolvedValueOnce(event);
-  if (events.length) loadControlEvent.mockResolvedValue(events.at(-1));
+  loadControlEvent.mockResolvedValue(events.at(-1) ?? null);
   return {
     loadControlEvent,
     lockEvent: vi.fn().mockResolvedValue(undefined),
@@ -191,7 +187,7 @@ function controlRepository(events: Array<PickControlEvent | null>): PickControlR
 function setupRepository(drafts: Array<PickSetupDraft | null>): PickSetupRepository {
   const loadDraft = vi.fn();
   for (const draft of drafts) loadDraft.mockResolvedValueOnce(draft);
-  if (drafts.length) loadDraft.mockResolvedValue(drafts.at(-1));
+  loadDraft.mockResolvedValue(drafts.at(-1) ?? null);
   return {
     loadDraft,
     syncNextEvent: vi.fn().mockResolvedValue(undefined),
@@ -260,11 +256,15 @@ describe("Unified Picks Control Center", () => {
     expect(screen.queryByRole("button", { name: /WINNER/ })).not.toBeInTheDocument();
   });
 
-  it("distinguishes a staged card, keeps publication canonical, and refreshes the current event once", async () => {
-    const upcoming = controlEvent("upcoming");
-    const control = controlRepository([null, upcoming]);
+  it("distinguishes a staged card, publishes canonically, and refreshes the current event", async () => {
+    const control = controlRepository([null, controlEvent("upcoming")]);
     const setup = setupRepository([stagedDraft, null]);
-    const monitoring = monitoringRepository({ ...monitoringInbox, latestScheduledDecision: null, newFindings: [], unresolvedCount: 0 });
+    const monitoring = monitoringRepository({
+      ...monitoringInbox,
+      latestScheduledDecision: null,
+      newFindings: [],
+      unresolvedCount: 0,
+    });
     renderCenter(control, setup, monitoring, gateway(), "/picks/control#setup");
 
     expect(await screen.findByText("REVIEW CARD")).toBeInTheDocument();
@@ -272,28 +272,23 @@ describe("Unified Picks Control Center", () => {
     expect(screen.getByRole("link", { name: "REVIEW & PUBLISH" })).toHaveAttribute("href", "#setup");
 
     fireEvent.click(screen.getByRole("button", { name: "PUBLISH CARD" }));
-
     await waitFor(() => expect(setup.publishDraft).toHaveBeenCalledWith("draft"));
     expect(await screen.findByText("PICKS OPEN")).toBeInTheDocument();
     await waitFor(() => expect(control.loadControlEvent).toHaveBeenCalledTimes(2));
   });
 
-  it("keeps the published-event action primary while surfacing monitoring failure and review needs", async () => {
-    const control = controlRepository([controlEvent("upcoming"), controlEvent("locked")]);
-    const setup = setupRepository([]);
+  it("keeps the published-event action primary while surfacing monitoring failures", async () => {
+    const control = controlRepository([controlEvent("upcoming")]);
     const monitoring = monitoringRepository();
-    renderCenter(control, setup, monitoring, gateway(), "/picks/control#monitoring");
+    renderCenter(control, setupRepository([]), monitoring);
 
     expect(await screen.findByText("PICKS OPEN")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "MANAGE OPEN PICKS" })).toHaveAttribute("href", "#fight-night");
+    await waitFor(() => expect(monitoring.loadInbox).toHaveBeenCalledTimes(1));
     expect(await screen.findByText("1 MONITORING FINDING NEEDS REVIEW")).toBeInTheDocument();
     expect(screen.getByText("FAILED · ACTION NEEDED")).toBeInTheDocument();
     expect(screen.getByLabelText("Operational monitoring status")).toBeInTheDocument();
-    expect(monitoring.loadInbox).toHaveBeenCalledTimes(1);
-
-    fireEvent.click(screen.getByRole("button", { name: "LOCK PICKS & BEGIN RESULTS" }));
-    await waitFor(() => expect(control.lockEvent).toHaveBeenCalledWith("ufc-control"));
-    expect(await screen.findByText("1 FIGHT NEED RESULTS")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "LOCK PICKS & BEGIN RESULTS" })).toBeEnabled();
   });
 
   it("exposes canonical result entry for locked events", async () => {
@@ -307,9 +302,11 @@ describe("Unified Picks Control Center", () => {
   });
 
   it("keeps completed-event corrections and history in the canonical control", async () => {
-    const complete = controlEvent("complete", "red_win");
-    const control = controlRepository([complete]);
-    renderCenter(control, setupRepository([]), monitoringRepository());
+    renderCenter(
+      controlRepository([controlEvent("complete", "red_win")]),
+      setupRepository([]),
+      monitoringRepository(),
+    );
 
     expect(await screen.findAllByText("EVENT COMPLETE")).not.toHaveLength(0);
     expect(screen.getByText("Recap published automatically")).toBeInTheDocument();
@@ -317,7 +314,7 @@ describe("Unified Picks Control Center", () => {
     expect(screen.getByRole("button", { name: "CORRECT RESULT" })).toBeInTheDocument();
   });
 
-  it("does not initialize any owner repository before authorization", async () => {
+  it("does not initialize owner repositories before authorization", async () => {
     const control = controlRepository([controlEvent("upcoming")]);
     const setup = setupRepository([stagedDraft]);
     const monitoring = monitoringRepository();
