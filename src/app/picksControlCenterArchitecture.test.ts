@@ -39,14 +39,15 @@ describe("Unified Picks Control Center architecture", () => {
     expect(center.match(/setupRepository\.loadDraft\(\)/g)).toHaveLength(1);
     expect(center).not.toContain("monitoringRepository.loadInbox");
     expect(monitoringPage.match(/repository\.loadInbox\(\)/g)).toHaveLength(1);
-    expect(center).toContain("onInboxChange={receiveInbox}");
+    expect(center).not.toContain("onInboxChange");
     expect(center.match(/setupRepository\.publishDraft\(draftId\)/g)).toHaveLength(1);
     expect(setupPage).toContain('navigate("/picks/control")');
   });
 
   it("keeps technical evidence collapsed and card changes review-only", () => {
-    expect(center).toContain('<details className="picks-control-center__system-details">');
-    expect(center).toContain("SYSTEM DETAILS");
+    expect(monitoringPage).toContain('<details className="surface-card monitoring-history monitoring-system-details">');
+    expect(monitoringPage).toContain("SYSTEM DETAILS");
+    expect(monitoringPage).toContain("RAW DIAGNOSTICS");
     expect(monitoringPage).toContain("card-change findings stay here for owner review and are never published automatically");
   });
 
