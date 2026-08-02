@@ -284,13 +284,11 @@ describe("Unified Picks Control Center", () => {
 
     expect(await screen.findByText("PICKS OPEN")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "MANAGE OPEN PICKS" })).toHaveAttribute("href", "#fight-night");
-    await waitFor(
-      () => expect(screen.getByText("1 MONITORING FINDING NEEDS REVIEW")).toBeInTheDocument(),
-      { timeout: 2_000 },
-    );
-    expect(monitoring.loadInbox).toHaveBeenCalledTimes(1);
-    expect(screen.getByText("FAILED · ACTION NEEDED")).toBeInTheDocument();
-    expect(screen.getByLabelText("Operational monitoring status")).toBeInTheDocument();
+    await waitFor(() => expect(monitoring.loadInbox).toHaveBeenCalledTimes(1));
+    expect(await screen.findByText("FAILED — ACTION NEEDED")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Open findings" })).toBeInTheDocument();
+    expect(screen.getByText("Card source failed.")).toBeInTheDocument();
+    expect(screen.getByLabelText("Monitoring status summary")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "LOCK PICKS & BEGIN RESULTS" })).toBeEnabled();
   });
 
