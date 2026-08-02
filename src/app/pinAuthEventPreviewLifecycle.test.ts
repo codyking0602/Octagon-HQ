@@ -19,18 +19,22 @@ describe("production WebKit Picks Control Center lifecycle proof", () => {
     expect(verifier).toContain("Temporary Picks control owner grant");
   });
 
-  it("resolves the canonical header status before testing the matching lifecycle section", () => {
+  it("resolves the canonical header status before testing the matching visible section owner", () => {
     expect(verifier).toContain('page.locator(".picks-control-center__status")');
     expect(verifier).toContain('"OWNER SIGN-IN REQUIRED", "LOADING CONTROL CENTER", "CHECKING NEXT EVENT"');
     expect(verifier).toContain('status === "CONTROL UNAVAILABLE" || status === "SETUP UNAVAILABLE"');
     expect(verifier).toContain('status === "SET UP NEXT EVENT" || status === "REVIEW CARD"');
     expect(verifier).toContain('status === "PICKS OPEN"');
     expect(verifier).toContain("FIGHT(?:S)? NEED RESULTS|PICKS CLOSED · RESULTS OPEN|EVENT COMPLETE");
-    expect(verifier).toContain('{ name: "Event Setup", exact: true }');
-    expect(verifier).toContain('{ name: "Monitoring Inbox", exact: true }');
-    expect(verifier).toContain('{ name: "Fight Night Control", exact: true }');
+    expect(verifier).toContain('page.locator("#setup")');
+    expect(verifier).toContain('page.locator("#monitoring")');
+    expect(verifier).toContain('page.locator("#fight-night")');
+    expect(verifier).toContain('fightNightSection.locator(".picks-control-hero")');
     expect(verifier).toContain("INBOX UNAVAILABLE");
     expect(verifier).toContain("Fight Night Control rendered its unavailable state");
+    expect(verifier).not.toContain('{ name: "Event Setup", exact: true }');
+    expect(verifier).not.toContain('{ name: "Monitoring Inbox", exact: true }');
+    expect(verifier).not.toContain('{ name: "Fight Night Control", exact: true }');
   });
 
   it("retains actionable diagnostics instead of an opaque lifecycle timeout", () => {
@@ -42,11 +46,12 @@ describe("production WebKit Picks Control Center lifecycle proof", () => {
 
   it("remains read-only and verifies the live deployment marker", () => {
     expect(verifier).toContain("expectedDeploymentSha");
-    expect(verifier).toContain('page.getByRole("button", { name: "CHECK FOR CARD UPDATES" }).waitFor');
+    expect(verifier).toContain('setupSection.getByRole("button", { name: "CHECK FOR CARD UPDATES" }).waitFor');
+    expect(verifier).toContain('monitoringSection.getByRole("button", { name: "RUN CHECK NOW" }).waitFor');
     expect(verifier).not.toContain("/functions/v1/sync-next-ufc-event");
     expect(verifier).not.toContain("page.waitForResponse(");
     expect(verifier).not.toContain('getByRole("button", { name: "CHECK FOR CARD UPDATES" }).click');
     expect(verifier).not.toContain('getByRole("button", { name: "PUBLISH CARD" }).click');
-    expect(verifier).not.toContain('getByRole("button", { name: "CHECK NOW" }).click');
+    expect(verifier).not.toContain('getByRole("button", { name: "RUN CHECK NOW" }).click');
   });
 });
