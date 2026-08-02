@@ -106,6 +106,7 @@ const completedHistory: PickHistory = {
       totalPoints: 4,
     },
     underdogLock: null,
+    watchMoments: [],
     bouts: [{
       boutId: "red-blue",
       position: 1,

@@ -24,6 +24,11 @@ const groupPickSchema = z.object({
   is_current_user: z.boolean(),
 });
 
+const watchMomentSchema = z.object({
+  title: z.string().min(3).max(120),
+  url: z.string().url(),
+});
+
 const boutSchema = z.object({
   bout_id: z.string(),
   position: z.number().int().positive(),
@@ -133,6 +138,7 @@ const historyEventSchema = z.object({
   completed_at: z.string(),
   record: historyRecordSchema,
   underdog_lock: lockSchema.nullable(),
+  watch_moments: z.array(watchMomentSchema).optional().default([]),
   bouts: z.array(historyBoutSchema),
   group_results: z.array(groupResultSchema),
 });
@@ -291,6 +297,7 @@ function mapHistory(value: unknown): PickHistory {
         totalPoints: event.record.total_points,
       },
       underdogLock: event.underdog_lock ? mapLock(event.underdog_lock) : null,
+      watchMoments: event.watch_moments.map((moment) => ({ title: moment.title, url: moment.url })),
       bouts: event.bouts.map((bout) => ({
         boutId: bout.bout_id,
         position: bout.position,

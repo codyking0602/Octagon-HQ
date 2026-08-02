@@ -9,6 +9,10 @@ Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
   configurable: true,
   value: vi.fn(),
 });
+Object.defineProperty(HTMLElement.prototype, "scrollTo", {
+  configurable: true,
+  value: vi.fn(),
+});
 
 const event: PickHistoryEvent = {
   eventId: "ufc-fight-night-belgrade",
@@ -29,6 +33,10 @@ const event: PickHistoryEvent = {
     totalPoints: 12,
   },
   underdogLock: null,
+  watchMoments: [{
+    title: "Uroš Medić vs. Daniel Rodriguez — Must-Watch Moment",
+    url: "https://youtu.be/9Gm3-DqFwHU",
+  }],
   bouts: [{
     boutId: "medic-rodriguez",
     position: 1,
@@ -79,7 +87,8 @@ const history: PickHistory = {
 
 afterEach(() => {
   cleanup();
-  document.body.style.overflow = "";
+  document.documentElement.classList.remove("picks-recap-open");
+  document.body.classList.remove("picks-recap-open");
 });
 
 describe("permanent Picks recap access", () => {
@@ -91,20 +100,28 @@ describe("permanent Picks recap access", () => {
     );
 
     expect(await screen.findByRole("dialog", { name: "UFC Fight Night Recap" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Watch the card back" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Uroš Medić vs. Daniel Rodriguez/i })).toHaveAttribute(
+      "href",
+      "https://youtu.be/9Gm3-DqFwHU",
+    );
     expect(screen.getByRole("heading", { name: "Event Standings" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Fight by Fight" })).toBeInTheDocument();
   });
 
-  it("portals the recap outside the app shell stacking context and restores body scrolling", async () => {
+  it("portals the recap into one explicit mobile scroll screen and restores the document", async () => {
     render(<LatestEventRecap event={event} requestedOpen />);
 
     const dialog = await screen.findByRole("dialog", { name: "UFC Fight Night Recap" });
     expect(dialog.parentElement).toBe(document.body);
     expect(dialog).toHaveAttribute("data-pull-refresh-ignore");
-    expect(document.body.style.overflow).toBe("hidden");
+    expect(screen.getByTestId("picks-event-recap-scroll")).toBeInTheDocument();
+    expect(document.documentElement).toHaveClass("picks-recap-open");
+    expect(document.body).toHaveClass("picks-recap-open");
 
     fireEvent.click(screen.getByRole("button", { name: "Close event recap" }));
     await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
-    expect(document.body.style.overflow).toBe("");
+    expect(document.documentElement).not.toHaveClass("picks-recap-open");
+    expect(document.body).not.toHaveClass("picks-recap-open");
   });
 });

@@ -9,6 +9,11 @@ export interface PickGroupPick {
   isCurrentUser: boolean;
 }
 
+export interface PickWatchMoment {
+  title: string;
+  url: string;
+}
+
 export interface PickBout {
   boutId: string;
   position: number;
@@ -122,6 +127,7 @@ export interface PickHistoryEvent {
   completedAt: string;
   record: PickHistoryRecord;
   underdogLock: UnderdogLock | null;
+  watchMoments?: PickWatchMoment[];
   bouts: PickHistoryBout[];
   groupResults: PickGroupResult[];
 }
