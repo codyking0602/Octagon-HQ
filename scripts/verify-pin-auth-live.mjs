@@ -181,6 +181,8 @@ try {
   });
   const page = await context.newPage();
   const diagnostics = [];
+  const screenshotPath = process.env.EVENT_SETUP_SCREENSHOT_PATH
+    ?? `${process.env.RUNNER_TEMP ?? "/tmp"}/picks-control-center-preview.png`;
 
   page.on("console", (message) => {
     if (message.type() === "error" || message.type() === "warning") {
@@ -240,45 +242,57 @@ try {
     { timeout: 15_000 },
   );
 
-  const setupHeading = page.getByRole("heading", { name: "Event Setup", exact: true });
-  const monitoringHeading = page.getByRole("heading", { name: "Monitoring Inbox", exact: true });
-  const fightNightHeading = page.getByRole("heading", { name: "Fight Night Control", exact: true });
+  const controlStatus = page.locator(".picks-control-center__status");
+  try {
+    await page.waitForFunction(() => {
+      const status = document.querySelector(".picks-control-center__status")?.textContent?.trim() ?? "";
+      return Boolean(status)
+        && !["OWNER SIGN-IN REQUIRED", "LOADING CONTROL CENTER", "CHECKING NEXT EVENT"].includes(status);
+    }, undefined, { timeout: 30_000 });
+  } catch {
+    await page.screenshot({ path: screenshotPath, fullPage: true }).catch(() => undefined);
+    const status = (await controlStatus.textContent().catch(() => ""))?.trim() || "missing";
+    const headings = await page.locator("h1, h2").allTextContents().catch(() => []);
+    throw new Error([
+      `The unified Picks Control Center lifecycle did not resolve. Status: ${status}.`,
+      `Headings: ${headings.map((heading) => heading.trim()).filter(Boolean).join(" | ") || "none"}.`,
+      ...diagnostics,
+    ].join("\n"));
+  }
 
-  await page.waitForFunction(() => {
-    const headings = Array.from(document.querySelectorAll("h1, h2"));
-    return headings.some((heading) => {
-      const style = window.getComputedStyle(heading);
-      return ["Event Setup", "Monitoring Inbox", "Fight Night Control"].includes(
-        heading.textContent?.trim() ?? "",
-      )
-        && heading.getClientRects().length > 0
-        && style.visibility !== "hidden"
-        && style.display !== "none";
-    });
-  }, undefined, { timeout: 15_000 });
+  const status = (await controlStatus.textContent())?.trim() ?? "";
+  if (status === "CONTROL UNAVAILABLE" || status === "SETUP UNAVAILABLE") {
+    await page.screenshot({ path: screenshotPath, fullPage: true }).catch(() => undefined);
+    throw new Error([
+      `The unified Picks Control Center reported ${status}.`,
+      ...diagnostics,
+    ].join("\n"));
+  }
 
   let lifecycleOutcome;
-  if (await visible(setupHeading)) {
+  if (status === "SET UP NEXT EVENT" || status === "REVIEW CARD") {
+    await page.getByRole("heading", { name: "Event Setup", exact: true }).waitFor({ state: "visible", timeout: 15_000 });
     await page.getByLabel("MMA MANIA CARD URL (OPTIONAL)").waitFor({ state: "visible" });
     await page.getByRole("button", { name: "CHECK FOR CARD UPDATES" }).waitFor({ state: "visible" });
     lifecycleOutcome = "loaded the no-active-event setup owner without invoking sync or publish";
-  } else if (await visible(monitoringHeading)) {
+  } else if (status === "PICKS OPEN") {
+    await page.getByRole("heading", { name: "Monitoring Inbox", exact: true }).waitFor({ state: "visible", timeout: 15_000 });
     await page.getByText("ACTIVE", { exact: true }).waitFor({ state: "visible", timeout: 15_000 });
     if (await page.getByText("INBOX UNAVAILABLE", { exact: true }).count()) {
       throw new Error("Monitoring Inbox rendered its unavailable state for the temporary owner.");
     }
     lifecycleOutcome = "loaded the published/open event with active owner-only monitoring";
-  } else if (await visible(fightNightHeading)) {
+  } else if (/FIGHT(?:S)? NEED RESULTS|PICKS CLOSED · RESULTS OPEN|EVENT COMPLETE/.test(status)) {
+    await page.getByRole("heading", { name: "Fight Night Control", exact: true }).waitFor({ state: "visible", timeout: 15_000 });
     if (await page.getByText("CONTROL UNAVAILABLE", { exact: true }).count()) {
       throw new Error("Fight Night Control rendered its unavailable state for the temporary owner.");
     }
     lifecycleOutcome = "loaded the locked, result-entry, or completed event owner";
   } else {
-    throw new Error(`The unified Picks Control Center did not expose a recognized lifecycle.\n${diagnostics.join("\n")}`);
+    await page.screenshot({ path: screenshotPath, fullPage: true }).catch(() => undefined);
+    throw new Error(`The unified Picks Control Center returned an unrecognized lifecycle status: ${status}.`);
   }
 
-  const screenshotPath = process.env.EVENT_SETUP_SCREENSHOT_PATH
-    ?? `${process.env.RUNNER_TEMP ?? "/tmp"}/picks-control-center-preview.png`;
   await page.screenshot({ path: screenshotPath, fullPage: true });
 
   console.log(
