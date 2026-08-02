@@ -1,13 +1,15 @@
-import { assertReportedSourceChanges } from "./event-setup-preview-contract.mjs";
+import {
+  assertCurrentEventPreview,
+  assertReportedSourceChanges,
+  assertSafeEventSourceRollover,
+} from "./event-setup-preview-contract.mjs";
 
 const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
 const projectId = process.env.SUPABASE_PROJECT_ID;
 const expectedSha = process.env.EXPECTED_SYNC_SOURCE_SHA?.trim() ?? "";
 const productionOrigin = process.env.OCTAGON_PRODUCTION_ORIGIN
   ?? "https://octagon.hq-app.workers.dev";
-const articleUrl = process.env.EVENT_SETUP_TEST_MMA_URL
-  ?? "https://www.mmamania.com/ufc-fight-cards/446488/latest-ufc-belgrade-fight-card-paramount-start-time-date-and-location-medic-vs-rodriguez-mma";
-const pollution = /iframe|googletagmanager|skip\s+to\s+main|src\s*=|<|>/i;
+const configuredArticleUrl = process.env.EVENT_SETUP_TEST_MMA_URL?.trim() ?? "";
 
 if (!accessToken || !projectId || !/^[0-9a-f]{40}$/i.test(expectedSha)) {
   throw new Error("Live Event Setup preview verification is not configured.");
@@ -42,33 +44,6 @@ async function request(stage, url, options = {}, acceptedStatuses = [200]) {
     );
   }
   return { response, body };
-}
-
-function assertCleanEvent(event, stage) {
-  if (!event || typeof event !== "object") throw new Error(`${stage} is missing the event payload.`);
-  if (event.name !== "UFC Fight Night") throw new Error(`${stage} event name mismatch: ${event.name ?? "missing"}.`);
-  if (event.subtitle !== "Uroš Medić vs. Daniel Rodriguez") {
-    throw new Error(`${stage} subtitle mismatch: ${event.subtitle ?? "missing"}.`);
-  }
-  if (event.venue !== "Belgrade Arena") throw new Error(`${stage} venue mismatch: ${event.venue ?? "missing"}.`);
-  if (event.location !== "Belgrade, Serbia") throw new Error(`${stage} location mismatch: ${event.location ?? "missing"}.`);
-  if (String(event.starts_at ?? "").slice(0, 10) !== "2026-08-01") {
-    throw new Error(`${stage} event date mismatch: ${event.starts_at ?? "missing"}.`);
-  }
-  if (pollution.test(JSON.stringify({
-    name: event.name,
-    subtitle: event.subtitle,
-    venue: event.venue,
-    location: event.location,
-  }))) {
-    throw new Error(`${stage} contains rejected UFC visible-page pollution.`);
-  }
-  if (!Array.isArray(event.bouts) || !event.bouts.length) {
-    throw new Error(`${stage} is missing its fight card.`);
-  }
-  if (JSON.stringify(event.bouts).includes("Bogdan Guskov 2")) {
-    throw new Error(`${stage} retained the article-only Bogdan Guskov rematch marker.`);
-  }
 }
 
 const keysResult = await request(
@@ -166,6 +141,8 @@ try {
 
   const draftBefore = (await rpc("get_pick_event_setup", userToken)).body;
   const liveBefore = (await rpc("get_current_pick_event", userToken)).body;
+  const previewPayload = { mode: "preview", card_scope: "auto" };
+  if (configuredArticleUrl) previewPayload.source_url = configuredArticleUrl;
 
   const preview = await request(
     "Production Event Setup preview",
@@ -177,29 +154,43 @@ try {
         apikey: publishableKey,
         "Content-Type": "application/json",
         Origin: productionOrigin,
-        "x-client-info": "octagon-hq-event-preview-check/4",
+        "x-client-info": "octagon-hq-event-preview-check/5",
       },
-      body: JSON.stringify({ mode: "preview", card_scope: "auto", source_url: articleUrl }),
+      body: JSON.stringify(previewPayload),
     },
+    [200, 502],
   );
 
-  if (preview.body?.deployment_sha !== expectedSha) {
-    throw new Error(`Preview backend SHA mismatch: expected ${expectedSha}, received ${preview.body?.deployment_sha ?? "missing"}.`);
+  let outcome;
+  if (preview.response.status === 200) {
+    if (preview.body?.deployment_sha !== expectedSha) {
+      throw new Error(`Preview backend SHA mismatch: expected ${expectedSha}, received ${preview.body?.deployment_sha ?? "missing"}.`);
+    }
+    if (preview.body?.requested_scope !== "auto" || !["main", "full"].includes(preview.body?.effective_scope)) {
+      throw new Error(`Preview scope mismatch: ${preview.body?.requested_scope ?? "missing"}/${preview.body?.effective_scope ?? "missing"}.`);
+    }
+    if (configuredArticleUrl && preview.body?.source_url !== configuredArticleUrl) {
+      throw new Error(`Preview source mismatch: received ${preview.body?.source_url ?? "missing"}.`);
+    }
+    if (preview.body?.fight_count !== preview.body?.event_preview?.bouts?.length) {
+      throw new Error(`Preview fight count does not match its event payload: ${preview.body?.fight_count ?? "missing"}/${preview.body?.event_preview?.bouts?.length ?? "missing"}.`);
+    }
+    if (!preview.body?.source_hash || !Array.isArray(preview.body?.changes)) {
+      throw new Error("Preview response is missing its reviewed source hash or change list.");
+    }
+    assertCurrentEventPreview({
+      ...preview.body.event_preview,
+      source_url: preview.body.source_url,
+    });
+    assertReportedSourceChanges(draftBefore, preview.body.event_preview, preview.body.changes);
+    outcome = `returned an independently verified ${preview.body.fight_count}-fight current-source change list`;
+  } else {
+    if (preview.body?.deployment_sha !== expectedSha) {
+      throw new Error(`Rejected preview backend SHA mismatch: expected ${expectedSha}, received ${preview.body?.deployment_sha ?? "missing"}.`);
+    }
+    assertSafeEventSourceRollover(preview.body);
+    outcome = "safely rejected a persisted article after the official UFC event identity rolled forward";
   }
-  if (preview.body?.requested_scope !== "auto" || preview.body?.effective_scope !== "main") {
-    throw new Error(`Preview scope mismatch: ${preview.body?.requested_scope ?? "missing"}/${preview.body?.effective_scope ?? "missing"}.`);
-  }
-  if (preview.body?.source_url !== articleUrl) {
-    throw new Error(`Preview source mismatch: received ${preview.body?.source_url ?? "missing"}.`);
-  }
-  if (preview.body?.fight_count !== preview.body?.event_preview?.bouts?.length) {
-    throw new Error(`Preview fight count does not match its event payload: ${preview.body?.fight_count ?? "missing"}/${preview.body?.event_preview?.bouts?.length ?? "missing"}.`);
-  }
-  if (!preview.body?.source_hash || !Array.isArray(preview.body?.changes)) {
-    throw new Error("Preview response is missing its reviewed source hash or change list.");
-  }
-  assertCleanEvent(preview.body.event_preview, "Preview");
-  assertReportedSourceChanges(draftBefore, preview.body.event_preview, preview.body.changes);
 
   const draftAfterPreview = (await rpc("get_pick_event_setup", userToken)).body;
   const liveAfterPreview = (await rpc("get_current_pick_event", userToken)).body;
@@ -209,10 +200,9 @@ try {
   if (JSON.stringify(liveAfterPreview) !== JSON.stringify(liveBefore)) {
     throw new Error("Preview changed the live Picks event.");
   }
-  assertCleanEvent(draftAfterPreview, "Current staged draft");
 
   console.log(
-    `PASS: production Event Setup preview returned an independently verified change list for the clean current source at backend ${expectedSha}; the preview was non-destructive, the live Picks event was byte-for-byte unchanged, and nothing was applied or published.`,
+    `PASS: production Event Setup preview ${outcome} at backend ${expectedSha}; the authenticated preview boundary was non-destructive, the staged draft and live Picks event were byte-for-byte unchanged, and nothing was applied or published.`,
   );
 } finally {
   if (userId) {
