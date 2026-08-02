@@ -8,6 +8,10 @@ import {
   type PickHistoryBout,
   type PickHistoryEvent,
 } from "./picksModel";
+import {
+  createPicksRecapShareImage,
+  type PicksRecapStory,
+} from "./picksRecapShareImage";
 import { GroupPickReveal } from "./GroupPickReveal";
 
 interface BoutAnalysis {
@@ -86,9 +90,32 @@ function eventSubtitle(event: PickHistoryEvent, bouts: readonly PickHistoryBout[
   return mainEvent ? `${mainEvent.redFighterName} vs. ${mainEvent.blueFighterName}` : event.subtitle;
 }
 
-function recapText(event: PickHistoryEvent, champions: readonly string[]) {
-  const championLabel = champions.length > 1 ? "Co-champions" : "Champion";
-  return `${event.name} recap. ${championLabel}: ${joinNames(champions)}. ${event.record.correct}-${event.record.incorrect} record and ${event.record.totalPoints} points.`;
+function youtubeThumbnail(value: string) {
+  try {
+    const url = new URL(value);
+    const id = url.hostname === "youtu.be"
+      ? url.pathname.split("/").filter(Boolean)[0]
+      : url.searchParams.get("v") ?? url.pathname.match(/\/(?:shorts|embed)\/([^/?]+)/)?.[1];
+    return id ? `https://i.ytimg.com/vi/${encodeURIComponent(id)}/hqdefault.jpg` : null;
+  } catch {
+    return null;
+  }
+}
+
+function universalRecapText(
+  event: PickHistoryEvent,
+  championLabel: string,
+  champions: string,
+  winningPoints: number,
+) {
+  const lines = [
+    `${event.name} recap — ${championLabel}: ${champions} with ${winningPoints} points.`,
+    ...event.watchMoments.map((moment, index) => (
+      `${event.watchMoments.length > 1 ? `Must-watch moment ${index + 1}` : "Must-watch moment"}: ${moment.url}`
+    )),
+    "View your event recap in Octagon HQ:",
+  ];
+  return lines.join("\n");
 }
 
 export function LatestEventRecap({
@@ -102,6 +129,7 @@ export function LatestEventRecap({
   const [shareLabel, setShareLabel] = useState("SHARE");
   const titleId = useId();
   const closeRef = useRef<HTMLButtonElement | null>(null);
+  const scrollRef = useRef<HTMLElement | null>(null);
   const recap = useMemo(() => {
     const bouts = event.bouts.slice().sort((left, right) => left.position - right.position);
     const analyses = bouts.map(boutAnalysis).filter((value): value is BoutAnalysis => Boolean(value));
@@ -119,6 +147,7 @@ export function LatestEventRecap({
     const champions = event.groupResults.filter((result) => result.totalPoints === winningPoints);
     const current = event.groupResults.find((result) => result.isCurrentUser) ?? null;
     const decidedPicks = event.groupResults.reduce((total, result) => total + result.correct + result.incorrect, 0);
+    const totalPicks = event.groupResults.reduce((total, result) => total + result.correct + result.incorrect + result.missing, 0);
     const correctPicks = event.groupResults.reduce((total, result) => total + result.correct, 0);
     const lockWinners = event.groupResults.filter((result) => result.lockBonus > 0);
     return {
@@ -129,6 +158,9 @@ export function LatestEventRecap({
       winningPoints,
       champions,
       current,
+      decidedPicks,
+      totalPicks,
+      correctPicks,
       groupAccuracy: decidedPicks ? Math.round((correctPicks / decidedPicks) * 100) : 0,
       lockWinners,
       subtitle: eventSubtitle(event, bouts),
@@ -144,32 +176,29 @@ export function LatestEventRecap({
 
   useEffect(() => {
     if (!open) return undefined;
-    const priorOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    closeRef.current?.focus();
+    document.documentElement.classList.add("picks-recap-open");
+    document.body.classList.add("picks-recap-open");
+    const frame = window.requestAnimationFrame(() => {
+      scrollRef.current?.scrollTo({ top: 0 });
+      closeRef.current?.focus();
+    });
     const closeOnEscape = (keyboardEvent: KeyboardEvent) => {
       if (keyboardEvent.key === "Escape") setOpen(false);
     };
     window.addEventListener("keydown", closeOnEscape);
     return () => {
-      document.body.style.overflow = priorOverflow;
+      window.cancelAnimationFrame(frame);
+      document.documentElement.classList.remove("picks-recap-open");
+      document.body.classList.remove("picks-recap-open");
       window.removeEventListener("keydown", closeOnEscape);
     };
   }, [open]);
 
-  async function shareRecap() {
-    const champions = recap.champions.map((result) => result.displayName);
-    const outcome = await shareCanonicalDestination({
-      destination: { kind: "picks-recap", eventId: event.eventId },
-      title: `${event.name} recap · Octagon HQ`,
-      text: recapText(event, champions),
-    });
-    setShareLabel(outcome === "copied" ? "COPIED" : outcome === "unavailable" ? "TRY AGAIN" : "SHARE");
-  }
-
   const championNames = recap.champions.map((result) => result.displayName);
+  const championLabel = recap.champions.length > 1 ? "CO-CHAMPIONS" : "CHAMPION";
+  const championCopy = joinNames(championNames);
   const gradedFights = recap.bouts.filter((bout) => bout.includedInPicks !== false && bout.verdict !== "excluded").length;
-  const stories = [{
+  const stories: PicksRecapStory[] = [{
     label: "BEST CALL",
     title: recap.bestCall ? fighterName(recap.bestCall.bout, recap.bestCall.bout.winnerFighterSlug) : "No pick split available",
     detail: recap.bestCall
@@ -197,6 +226,41 @@ export function LatestEventRecap({
       : "Nobody landed the bonus.",
   }];
 
+  async function shareRecap() {
+    setShareLabel("PREPARING…");
+    let files: File[] | undefined;
+    try {
+      const file = await createPicksRecapShareImage({
+        eventName: event.name,
+        subtitle: recap.subtitle,
+        eventMeta: `${completedDate(event.completedAt)} · ${event.venue} · ${event.location}`,
+        championLabel,
+        champions: championCopy,
+        winningPoints: recap.winningPoints,
+        players: event.groupResults.length,
+        groupAccuracy: recap.groupAccuracy,
+        totalPicks: recap.totalPicks,
+        groupRecord: `${recap.correctPicks}-${Math.max(0, recap.decidedPicks - recap.correctPicks)}`,
+        stories,
+        standings: recap.standings,
+        watchMoments: event.watchMoments,
+      });
+      files = [file];
+    } catch {
+      files = undefined;
+    }
+
+    const copy = universalRecapText(event, championLabel, championCopy, recap.winningPoints);
+    const outcome = await shareCanonicalDestination({
+      destination: { kind: "picks-recap", eventId: event.eventId },
+      title: `${event.name} recap · Octagon HQ`,
+      text: copy,
+      fallbackText: copy,
+      files,
+    });
+    setShareLabel(outcome === "copied" ? "COPIED" : outcome === "unavailable" ? "TRY AGAIN" : "SHARE");
+  }
+
   const overlay = open ? (
     <div
       className="picks-event-recap-overlay"
@@ -209,10 +273,10 @@ export function LatestEventRecap({
         <header className="picks-event-recap__header">
           <button ref={closeRef} type="button" aria-label="Close event recap" onClick={() => setOpen(false)}>×</button>
           <span>EVENT RECAP</span>
-          <button type="button" onClick={() => void shareRecap()}>{shareLabel}</button>
+          <button type="button" disabled={shareLabel === "PREPARING…"} onClick={() => void shareRecap()}>{shareLabel}</button>
         </header>
 
-        <main className="picks-event-recap__scroll">
+        <main ref={scrollRef} className="picks-event-recap__scroll" data-testid="picks-event-recap-scroll">
           <section className="picks-event-recap__hero">
             <span>ARCHIVED EVENT FINAL</span>
             <h2 id={titleId}>{event.name} Recap</h2>
@@ -220,8 +284,8 @@ export function LatestEventRecap({
             <p>{completedDate(event.completedAt)} · {event.venue} · {event.location}</p>
             <em>{gradedFights} GRADED {gradedFights === 1 ? "FIGHT" : "FIGHTS"}</em>
             <div className="picks-event-recap__champion">
-              <span>{recap.champions.length > 1 ? "CO-CHAMPIONS" : "CHAMPION"}</span>
-              <strong>{joinNames(championNames)}</strong>
+              <span>{championLabel}</span>
+              <strong>{championCopy}</strong>
               <b>{recap.winningPoints} PTS</b>
             </div>
           </section>
@@ -229,8 +293,17 @@ export function LatestEventRecap({
           <section className="picks-event-recap__metrics" aria-label="Event recap totals">
             <div><strong>{event.groupResults.length}</strong><span>PLAYERS</span></div>
             <div><strong>{recap.groupAccuracy}%</strong><span>GROUP ACCURACY</span></div>
-            <div><strong>{recap.current ? `${recap.current.correct}/${recap.current.correct + recap.current.incorrect}` : `${event.record.correct}/${event.record.correct + event.record.incorrect}`}</strong><span>YOUR PICKS</span></div>
-            <div><strong>{recap.current?.totalPoints ?? event.record.totalPoints}</strong><span>YOUR POINTS</span></div>
+            {recap.current ? (
+              <>
+                <div><strong>{recap.current.correct}/{recap.current.correct + recap.current.incorrect}</strong><span>YOUR PICKS</span></div>
+                <div><strong>{recap.current.totalPoints}</strong><span>YOUR POINTS</span></div>
+              </>
+            ) : (
+              <div className="picks-event-recap__not-entered">
+                <strong>DID NOT ENTER</strong>
+                <span>YOUR EVENT</span>
+              </div>
+            )}
           </section>
 
           <section className="picks-event-recap__stories" aria-label="Story of the card">
@@ -242,6 +315,33 @@ export function LatestEventRecap({
               </article>
             ))}
           </section>
+
+          {event.watchMoments.length ? (
+            <section className="picks-event-recap__moments" aria-labelledby={`${titleId}-moments`}>
+              <div className="picks-event-recap__section-heading">
+                <div>
+                  <span>{event.watchMoments.length > 1 ? "MUST-WATCH MOMENTS" : "MUST-WATCH MOMENT"}</span>
+                  <h3 id={`${titleId}-moments`}>Watch the card back</h3>
+                </div>
+                <small>{event.watchMoments.length} {event.watchMoments.length === 1 ? "CLIP" : "CLIPS"}</small>
+              </div>
+              <div className="picks-event-recap__moment-list">
+                {event.watchMoments.map((moment) => {
+                  const thumbnail = youtubeThumbnail(moment.url);
+                  return (
+                    <a href={moment.url} target="_blank" rel="noreferrer" key={`${moment.title}:${moment.url}`}>
+                      {thumbnail ? <img src={thumbnail} alt="" loading="lazy" /> : <span className="picks-event-recap__moment-placeholder" aria-hidden="true">▶</span>}
+                      <div>
+                        <span>{event.watchMoments.length > 1 ? "WATCH MOMENT" : "EVENT HIGHLIGHT"}</span>
+                        <strong>{moment.title}</strong>
+                        <b>WATCH ON YOUTUBE ↗</b>
+                      </div>
+                    </a>
+                  );
+                })}
+              </div>
+            </section>
+          ) : null}
 
           <section className="picks-event-recap__standings" aria-labelledby={`${titleId}-standings`}>
             <div className="picks-event-recap__section-heading">
@@ -299,8 +399,8 @@ export function LatestEventRecap({
           <p>{recap.subtitle}</p>
         </div>
         <div className="picks-latest-recap-card__result">
-          <small>{recap.champions.length > 1 ? "CO-CHAMPIONS" : "CHAMPION"}</small>
-          <strong>{joinNames(championNames)}</strong>
+          <small>{championLabel}</small>
+          <strong>{championCopy}</strong>
           <b>{recap.winningPoints} PTS</b>
         </div>
         <button type="button" onClick={() => setOpen(true)}>OPEN FULL RECAP <span aria-hidden="true">›</span></button>
