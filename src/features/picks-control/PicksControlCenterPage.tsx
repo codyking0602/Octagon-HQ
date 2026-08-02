@@ -1,7 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import MonitoringInboxPage from "../picks-monitoring/MonitoringInboxPage";
+import {
+  monitoringRunStatusLabel,
+  type MonitoringInbox,
+} from "../picks-monitoring/monitoringInboxModel";
 import {
   createMonitoringInboxRepository,
   type MonitoringInboxRepository,
@@ -59,6 +63,17 @@ function primaryStatus(
   return "EVENT COMPLETE";
 }
 
+function decisionLabel(inbox: MonitoringInbox) {
+  const decision = inbox.latestScheduledDecision;
+  if (!decision) return "NOT YET";
+  if (decision.outcome === "skipped") {
+    return `SKIPPED · ${(decision.reason ?? "unknown").replaceAll("_", " ").toUpperCase()}`;
+  }
+  if (decision.outcome === "failed") return "FAILED · ACTION NEEDED";
+  if (decision.outcome === "partial") return "CHECKED · PARTIAL COVERAGE";
+  return "CHECKED SUCCESSFULLY";
+}
+
 interface PicksControlCenterPageProps {
   controlRepository?: PickControlRepository | null;
   setupRepository?: PickSetupRepository | null;
@@ -83,6 +98,7 @@ export default function PicksControlCenterPage({
   ));
   const [eventState, setEventState] = useState<ResourceState<PickControlEvent | null>>({ status: "idle" });
   const [draftState, setDraftState] = useState<ResourceState<PickSetupDraft | null>>({ status: "idle" });
+  const [inbox, setInbox] = useState<MonitoringInbox | null>(null);
   const [controlRevision, setControlRevision] = useState(0);
 
   const ownedControlRepository = useMemo<PickControlRepository | null>(() => {
@@ -127,6 +143,10 @@ export default function PicksControlCenterPage({
     };
   }, [setupRepository]);
 
+  const receiveInbox = useCallback((nextInbox: MonitoringInbox | null) => {
+    setInbox(nextInbox);
+  }, []);
+
   const event = eventState.status === "ready" ? eventState.value : undefined;
   const draft = draftState.status === "ready" ? draftState.value : undefined;
   const staged = event === null ? draft ?? null : null;
@@ -153,12 +173,21 @@ export default function PicksControlCenterPage({
         ? { href: "#fight-night", label: unresolved ? "ENTER RESULTS" : "COMPLETE EVENT" }
         : { href: "#fight-night", label: "REVIEW EVENT" }
     : { href: "#setup", label: staged ? "REVIEW & PUBLISH" : "STAGE NEXT EVENT" };
+  const schedulerReady = Boolean(inbox?.scheduler.active && inbox.scheduler.tokenConfigured);
+  const monitoringNeedsAttention = Boolean(
+    inbox && (
+      !schedulerReady
+      || inbox.newFindings.length
+      || inbox.latestScheduledDecision?.outcome === "failed"
+      || inbox.latestRun?.status === "failed"
+    )
+  );
 
   useEffect(() => {
     const sectionId = location.hash.replace(/^#/, "");
     if (!sectionId) return;
     document.getElementById(sectionId)?.scrollIntoView?.({ block: "start" });
-  }, [draftState.status, eventState.status, location.hash]);
+  }, [draftState.status, eventState.status, inbox, location.hash]);
 
   return (
     <div className="picks-control-center">
@@ -177,6 +206,14 @@ export default function PicksControlCenterPage({
           <div><span>PICKS LOCK</span><strong>{lockStatus}</strong></div>
           <div><span>FIGHTS</span><strong>{fightCount}</strong></div>
         </div>
+
+        {monitoringNeedsAttention ? (
+          <p className="picks-control-center__attention" role="status">
+            {inbox?.newFindings.length
+              ? `${inbox.newFindings.length} MONITORING FINDING${inbox.newFindings.length === 1 ? "" : "S"} ${inbox.newFindings.length === 1 ? "NEEDS" : "NEED"} REVIEW`
+              : "AUTOMATIC MONITORING NEEDS ATTENTION"}
+          </p>
+        ) : null}
 
         <div className="picks-control-center__actions">
           {identity.ready && !identity.profile ? (
@@ -205,7 +242,47 @@ export default function PicksControlCenterPage({
 
       {event?.status === "upcoming" ? (
         <section id="monitoring" className="picks-control-center__section" aria-label="Automatic monitoring and card review">
-          <MonitoringInboxPage repository={monitoringRepository} />
+          <section
+            className={`surface-card picks-control-center__monitoring${schedulerReady ? " is-ready" : " needs-attention"}`}
+            hidden={!inbox}
+          >
+            {inbox ? (
+              <>
+                <div className="picks-control-center__monitoring-heading">
+                  <div>
+                    <p className="eyebrow">AUTOMATIC MONITORING</p>
+                    <h2>{schedulerReady ? "AUTOMATION READY" : "AUTOMATION NEEDS ATTENTION"}</h2>
+                  </div>
+                  <span>{inbox.newFindings.length ? `${inbox.newFindings.length} TO REVIEW` : "NO OPEN FINDINGS"}</span>
+                </div>
+                <div className="picks-control-center__monitoring-grid" aria-label="Operational monitoring status">
+                  <div><span>LAST OUTCOME</span><strong>{decisionLabel(inbox)}</strong></div>
+                  <div><span>LAST CARD CHECK</span><strong>{displayTime(inbox.latestRun?.cardSource ? inbox.latestRun.completedAt ?? inbox.latestRun.startedAt : null)}</strong></div>
+                  <div><span>LAST ODDS CHECK</span><strong>{displayTime(inbox.latestRun?.oddsProvider ? inbox.latestRun.completedAt ?? inbox.latestRun.startedAt : null)}</strong></div>
+                  <div><span>NEXT ELIGIBLE CHECK</span><strong>{displayTime(inbox.scheduleState?.nextEligibleAt)}</strong></div>
+                  <div><span>FINDINGS NEEDING REVIEW</span><strong>{inbox.unresolvedCount}</strong></div>
+                </div>
+                <details className="picks-control-center__system-details">
+                  <summary>SYSTEM DETAILS</summary>
+                  <div>
+                    <span>SCHEDULE</span><strong>{inbox.scheduler.schedule ?? "NOT INSTALLED"}</strong>
+                    <span>LAST SCHEDULER WAKE</span><strong>{displayTime(inbox.scheduler.lastWakeStartedAt)}</strong>
+                    <span>WAKE STATUS</span><strong>{inbox.scheduler.lastWakeStatus?.toUpperCase() ?? "NOT YET"}</strong>
+                    <span>TOKEN CONFIGURED</span><strong>{inbox.scheduler.tokenConfigured ? "YES" : "NO"}</strong>
+                    <span>JOB</span><strong>{inbox.scheduler.jobName ?? inbox.scheduler.jobId ?? "NOT INSTALLED"}</strong>
+                    <span>LEASE UNTIL</span><strong>{displayTime(inbox.scheduleState?.leaseUntil)}</strong>
+                    <span>LAST CLAIMED</span><strong>{displayTime(inbox.scheduleState?.lastClaimedAt)}</strong>
+                    <span>PROVIDER</span><strong>{inbox.latestRun?.oddsProvider ?? "NOT YET"}</strong>
+                    <span>QUOTA REMAINING</span><strong>{inbox.latestRun?.providerRequestsRemaining ?? "UNKNOWN"}</strong>
+                    <span>PROVIDER CALLED</span><strong>{inbox.latestScheduledDecision?.providerCalled ? "YES" : "NO"}</strong>
+                    <span>LATEST RUN</span><strong>{inbox.latestRun ? monitoringRunStatusLabel(inbox.latestRun.status) : "NO RUN"}</strong>
+                  </div>
+                  {inbox.latestRun?.diagnostics.length ? <pre>{JSON.stringify(inbox.latestRun.diagnostics, null, 2)}</pre> : null}
+                </details>
+              </>
+            ) : null}
+          </section>
+          <MonitoringInboxPage repository={monitoringRepository} onInboxChange={receiveInbox} />
         </section>
       ) : null}
     </div>
