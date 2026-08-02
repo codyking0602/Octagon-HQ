@@ -7,21 +7,25 @@ export type NativeShareOutcome = "shared" | "copied" | "cancelled" | "unavailabl
 
 interface ShareNavigator {
   share?: (data: ShareData) => Promise<void>;
+  canShare?: (data: ShareData) => boolean;
   clipboard?: {
     writeText: (text: string) => Promise<void>;
   };
 }
 
-export interface CanonicalShareRequest {
-  destination: CanonicalDestination;
+interface ShareContent {
   title: string;
   text?: string;
+  files?: File[];
+  fallbackText?: string;
 }
 
-export interface AppLinkShareRequest {
+export interface CanonicalShareRequest extends ShareContent {
+  destination: CanonicalDestination;
+}
+
+export interface AppLinkShareRequest extends ShareContent {
   url: string;
-  title: string;
-  text?: string;
 }
 
 export interface NativeShareRuntime {
@@ -62,17 +66,25 @@ function versionedShareUrl(value: string, shareToken: string) {
   return url.toString();
 }
 
+function nativeShareData(request: AppLinkShareRequest, activeNavigator: ShareNavigator | undefined, url: string) {
+  const basic: ShareData = {
+    title: request.title,
+    text: request.text,
+    url,
+  };
+  if (!request.files?.length) return basic;
+  const withFiles: ShareData = { ...basic, files: request.files };
+  if (activeNavigator?.canShare && !activeNavigator.canShare(withFiles)) return basic;
+  return withFiles;
+}
+
 async function shareExactUrl(
   request: AppLinkShareRequest,
   activeNavigator: ShareNavigator | undefined,
   shareToken: string,
 ): Promise<NativeShareOutcome> {
   const url = versionedShareUrl(request.url, shareToken);
-  const shareData: ShareData = {
-    title: request.title,
-    text: request.text,
-    url,
-  };
+  const shareData = nativeShareData(request, activeNavigator, url);
 
   if (activeNavigator?.share) {
     try {
@@ -86,7 +98,10 @@ async function shareExactUrl(
   if (!activeNavigator?.clipboard?.writeText) return "unavailable";
 
   try {
-    await activeNavigator.clipboard.writeText(url);
+    const clipboardValue = request.fallbackText
+      ? `${request.fallbackText.trim()}\n${url}`
+      : url;
+    await activeNavigator.clipboard.writeText(clipboardValue);
     return "copied";
   } catch {
     return "unavailable";
@@ -113,8 +128,8 @@ export async function shareAppLink(
 
 /**
  * The one owner for canonical app sharing. It opens the platform share sheet
- * when available and otherwise copies the exact destination URL with a fresh
- * preview token that the server removes from the canonical metadata.
+ * when available and otherwise copies the exact destination URL, or the
+ * explicitly supplied rich fallback copy, with a fresh preview token.
  */
 export async function shareCanonicalDestination(
   request: CanonicalShareRequest,
@@ -125,7 +140,7 @@ export async function shareCanonicalDestination(
 
   try {
     const url = canonicalDestinationUrl(request.destination, appOrigin);
-    return shareExactUrl({ title: request.title, text: request.text, url }, activeNavigator, shareToken);
+    return shareExactUrl({ ...request, url }, activeNavigator, shareToken);
   } catch {
     return "unavailable";
   }
