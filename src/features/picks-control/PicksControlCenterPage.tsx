@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import MonitoringInboxPage from "../picks-monitoring/MonitoringInboxPage";
@@ -74,6 +74,16 @@ function decisionLabel(inbox: MonitoringInbox) {
   return "CHECKED SUCCESSFULLY";
 }
 
+function monitoringSnapshotKey(inbox: MonitoringInbox) {
+  return [
+    inbox.generatedAt,
+    inbox.unresolvedCount,
+    inbox.newFindings.length,
+    inbox.latestScheduledDecision?.attemptedAt ?? "",
+    inbox.latestRun?.runId ?? "",
+  ].join("|");
+}
+
 interface PicksControlCenterPageProps {
   controlRepository?: PickControlRepository | null;
   setupRepository?: PickSetupRepository | null;
@@ -100,6 +110,7 @@ export default function PicksControlCenterPage({
   const [draftState, setDraftState] = useState<ResourceState<PickSetupDraft | null>>({ status: "idle" });
   const [monitoringState, setMonitoringState] = useState<ResourceState<MonitoringInbox>>({ status: "idle" });
   const [controlRevision, setControlRevision] = useState(0);
+  const monitoringSnapshot = useRef("");
 
   const ownedControlRepository = useMemo<PickControlRepository | null>(() => {
     if (!controlRepository) return null;
@@ -148,13 +159,19 @@ export default function PicksControlCenterPage({
     return {
       ...monitoringRepository,
       async loadInbox() {
-        setMonitoringState({ status: "loading" });
         try {
           const inbox = await monitoringRepository.loadInbox();
-          setMonitoringState({ status: "ready", value: inbox });
+          const snapshot = monitoringSnapshotKey(inbox);
+          if (monitoringSnapshot.current !== snapshot) {
+            monitoringSnapshot.current = snapshot;
+            setMonitoringState({ status: "ready", value: inbox });
+          }
           return inbox;
         } catch (error) {
-          setMonitoringState({ status: "error" });
+          if (monitoringSnapshot.current !== "error") {
+            monitoringSnapshot.current = "error";
+            setMonitoringState({ status: "error" });
+          }
           throw error;
         }
       },
