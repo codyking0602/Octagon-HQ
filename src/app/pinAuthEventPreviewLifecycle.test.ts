@@ -14,6 +14,12 @@ describe("production WebKit Event Setup lifecycle proof", () => {
     expect(verifier).not.toContain("Uroš Medić vs. Daniel Rodriguez");
   });
 
+  it("uses the current visible unified Event Setup boundary", () => {
+    expect(verifier).toContain('page.getByRole("region", { name: "Card scope" })');
+    expect(verifier).toContain('page.getByRole("heading", { name: "Choose what counts", exact: true })');
+    expect(verifier).not.toContain('page.getByRole("heading", { name: "Event Setup" })');
+  });
+
   it("proves the fail-closed rollover remains staged and unapplied", () => {
     expect(verifier).toContain('page.getByText("STAGED CARD · NOT LIVE")');
     expect(verifier).toContain('page.getByText("SOURCE REVIEW · NOT APPLIED")');
