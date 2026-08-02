@@ -13,6 +13,11 @@ declare
   first_bout jsonb;
   second_bout jsonb;
 begin
+  update public.pick_events
+  set status = 'complete',
+      completed_at = coalesce(completed_at, now())
+  where status in ('upcoming','locked');
+
   insert into auth.users(id,instance_id,aud,role,email,encrypted_password,email_confirmed_at,created_at,updated_at,raw_user_meta_data)
   values
     (v_cody,'00000000-0000-0000-0000-000000000000','authenticated','authenticated',
