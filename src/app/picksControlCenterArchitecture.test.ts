@@ -37,7 +37,9 @@ describe("Unified Picks Control Center architecture", () => {
   it("delegates each lifecycle read and publication to the existing repository exactly once", () => {
     expect(center.match(/controlRepository\.loadControlEvent\(eventId\)/g)).toHaveLength(1);
     expect(center.match(/setupRepository\.loadDraft\(\)/g)).toHaveLength(1);
-    expect(center.match(/monitoringRepository\.loadInbox\(\)/g)).toHaveLength(1);
+    expect(center).not.toContain("monitoringRepository.loadInbox");
+    expect(monitoringPage.match(/repository\.loadInbox\(\)/g)).toHaveLength(1);
+    expect(center).toContain("onInboxChange={receiveInbox}");
     expect(center.match(/setupRepository\.publishDraft\(draftId\)/g)).toHaveLength(1);
     expect(setupPage).toContain('navigate("/picks/control")');
   });
