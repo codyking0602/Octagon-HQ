@@ -79,7 +79,13 @@ describe("Phase 2B event setup backend", () => {
     expect(productionPreviewContract).toContain("sameTimestamp");
     expect(productionPreviewVerifier).not.toContain("expectedFights");
     expect(webkitVerifier).toContain('page.getByLabel("MMA MANIA CARD URL (OPTIONAL)")');
-    expect(webkitVerifier).toContain('page.getByRole("button", { name: "CHECK FOR CARD UPDATES" }).click()');
+    expect(webkitVerifier).toContain('const updateButton = page.getByRole("button", { name: "CHECK FOR CARD UPDATES" });');
+    expect(webkitVerifier).toContain('const syncButton = page.getByRole("button", { name: "SYNC NEXT UFC EVENT" });');
+    expect(webkitVerifier).toContain("if (await updateButton.count())");
+    expect(webkitVerifier).toContain("await updateButton.click()");
+    expect(webkitVerifier).toContain("} else if (await syncButton.count())");
+    expect(webkitVerifier).toContain('page.getByText("NO STAGED CARD", { exact: true })');
+    expect(webkitVerifier).toContain("syncRequestCount !== syncRequestsBeforeSetup");
     expect(webkitVerifier).not.toContain("Event Setup has no persisted MMA Mania source to review.");
     expect(webkitVerifier).toContain("/^(Main card|Full card) · \\d+ fights$/i");
     expect(webkitVerifier).not.toContain('name: "Main card · 4 fights"');
