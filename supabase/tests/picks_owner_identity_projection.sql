@@ -50,3 +50,5 @@ begin
 end $$;
 
 rollback;
+
+\ir picks_stale_draft_rollover.sql

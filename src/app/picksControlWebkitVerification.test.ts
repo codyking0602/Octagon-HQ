@@ -46,7 +46,8 @@ describe("production Picks Control Center WebKit verification", () => {
 
   it("runs Event Setup review only in setup lifecycles and avoids provider calls for an active card", () => {
     expect(verifier).toContain("if (isSetupLifecycle(setupStatus))");
-    expect(verifier).toContain('getByRole("heading", { name: "Event Setup" })');
+    expect(verifier).toContain('getByRole("region", { name: "Card scope" })');
+    expect(verifier).toContain('getByRole("heading", { name: "Choose what counts", exact: true })');
     expect(verifier).toContain('getByRole("button", { name: "CHECK FOR CARD UPDATES" }).click()');
     expect(verifier).toContain("} else if (isActiveEventLifecycle(setupStatus)) {");
     expect(verifier).toContain("Event Setup rendered during the ${setupStatus} lifecycle.");
