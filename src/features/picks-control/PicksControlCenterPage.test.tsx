@@ -279,7 +279,7 @@ describe("Unified Picks Control Center", () => {
   });
 
   it("keeps the published-event action primary while surfacing monitoring failure and review needs", async () => {
-    const control = controlRepository([controlEvent("upcoming")]);
+    const control = controlRepository([controlEvent("upcoming"), controlEvent("locked")]);
     const setup = setupRepository([]);
     const monitoring = monitoringRepository();
     renderCenter(control, setup, monitoring, gateway(), "/picks/control#monitoring");
@@ -293,6 +293,7 @@ describe("Unified Picks Control Center", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "LOCK PICKS & BEGIN RESULTS" }));
     await waitFor(() => expect(control.lockEvent).toHaveBeenCalledWith("ufc-control"));
+    expect(await screen.findByText("1 FIGHT NEED RESULTS")).toBeInTheDocument();
   });
 
   it("exposes canonical result entry for locked events", async () => {
