@@ -103,6 +103,8 @@ describe("Picks event import policy", () => {
     expect(migration).toContain("private.publish_pick_event_draft_import_core(p_draft_id)");
     expect(migration).toContain("create function public.publish_pick_event_draft(p_draft_id uuid)");
     expect(migration.match(/early-prelim-%/g)?.length).toBeGreaterThanOrEqual(3);
+    expect(migration).toContain("Existing owner workflows may stage legacy main-card payloads");
+    expect(migration).toContain("Draft editing predates segment metadata");
     expect(migration).toContain("prelims_starts_at timestamptz");
     expect(migration).toContain("card_segment text");
     expect(migration).toContain("segment_sequence smallint");
