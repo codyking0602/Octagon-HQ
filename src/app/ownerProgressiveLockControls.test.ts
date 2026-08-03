@@ -24,7 +24,7 @@ describe("owner progressive-lock controls", () => {
     expect(controlPage).toContain('"+10 MIN"');
     expect(controlPage).toContain('"+20 MIN"');
     expect(controlPage).toContain('"SET TIME"');
-    expect(controlPage.match(/repository\.adjustBoutLockTime!/g)).toHaveLength(3);
+    expect(controlPage.match(/repository\.adjustBoutLockTime!/g)).toHaveLength(2);
     expect(repository.match(/adjust_pick_bout_lock_time/g)).toHaveLength(1);
     expect(repository.match(/adjustBoutLockTime/g)?.length).toBeGreaterThanOrEqual(2);
     expect(controlPage).not.toContain("A fight cannot lock after the main-card start");
