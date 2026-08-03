@@ -151,6 +151,34 @@ begin
   where bout.draft_id = v_draft_id
     and bout.bout_id = public.slugify_pick_text(payload.item->>'bout_id');
 
+  -- Existing owner workflows may stage legacy main-card payloads without the
+  -- new fields. Derive the same metadata from the canonical bout id and the
+  -- established headline-first position instead of adding another write path.
+  with ranked as (
+    select
+      bout.draft_id,
+      bout.bout_id,
+      coalesce(
+        bout.card_segment,
+        case when bout.bout_id like 'prelim-%' then 'prelim' else 'main' end
+      ) card_segment,
+      row_number() over (
+        partition by bout.draft_id, coalesce(
+          bout.card_segment,
+          case when bout.bout_id like 'prelim-%' then 'prelim' else 'main' end
+        )
+        order by bout.position desc
+      )::smallint segment_sequence
+    from public.pick_event_draft_bouts bout
+    where bout.draft_id = v_draft_id
+  )
+  update public.pick_event_draft_bouts bout
+  set card_segment = ranked.card_segment,
+      segment_sequence = ranked.segment_sequence
+  from ranked
+  where ranked.draft_id = bout.draft_id
+    and ranked.bout_id = bout.bout_id;
+
   if exists (
     select 1
     from public.pick_event_draft_bouts bout
@@ -196,6 +224,34 @@ as $$
 declare
   v_event public.pick_events;
 begin
+  -- Draft editing predates segment metadata. Recompute it from the current
+  -- canonical order immediately before the sole publication owner validates
+  -- and copies the card.
+  with ranked as (
+    select
+      bout.draft_id,
+      bout.bout_id,
+      coalesce(
+        bout.card_segment,
+        case when bout.bout_id like 'prelim-%' then 'prelim' else 'main' end
+      ) card_segment,
+      row_number() over (
+        partition by bout.draft_id, coalesce(
+          bout.card_segment,
+          case when bout.bout_id like 'prelim-%' then 'prelim' else 'main' end
+        )
+        order by bout.position desc
+      )::smallint segment_sequence
+    from public.pick_event_draft_bouts bout
+    where bout.draft_id = p_draft_id
+  )
+  update public.pick_event_draft_bouts bout
+  set card_segment = ranked.card_segment,
+      segment_sequence = ranked.segment_sequence
+  from ranked
+  where ranked.draft_id = bout.draft_id
+    and ranked.bout_id = bout.bout_id;
+
   if exists (
     select 1
     from public.pick_event_draft_bouts bout
