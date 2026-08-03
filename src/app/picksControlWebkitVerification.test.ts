@@ -38,8 +38,10 @@ describe("production Picks Control Center WebKit verification", () => {
   });
 
   it("requires monitoring only for a published open card", () => {
+    expect(verifier).toContain('const monitoringRegion = page.getByRole("region", {');
+    expect(verifier).toContain('name: "Automatic monitoring and card review"');
     expect(verifier).toContain('if (controlStatus === "PICKS OPEN")');
-    expect(verifier).toContain('getByRole("heading", { name: "Monitoring Inbox", exact: true })');
+    expect(verifier).toContain('await monitoringRegion.waitFor({ state: "visible", timeout: 15_000 })');
     expect(verifier).toContain("Monitoring Inbox rendered during the ${controlStatus} lifecycle.");
     expect(verifier).toContain("Picks Control Center did not reach a valid owner lifecycle");
   });
