@@ -97,6 +97,8 @@ describe("Phase 2B event setup backend", () => {
     expect(webkitVerifier).toContain("const liveDeploymentSha");
     expect(webkitVerifier).toContain("expectedDeploymentSha && liveDeploymentSha !== expectedDeploymentSha");
     expect(webkitVerifier).toContain("previewBody?.deployment_sha !== expectedSyncSourceSha");
+    expect(webkitVerifier).toContain('name: "Automatic monitoring and card review"');
+    expect(webkitVerifier).not.toContain('name: "Monitoring Inbox", exact: true }).waitFor');
     expect(webkitVerifier).toContain('page.getByText("ACTIVE", { exact: true })');
     expect(webkitVerifier).not.toContain('? "PAUSED" : "ACTIVE"');
   });
