@@ -10,6 +10,10 @@ const posterByMainEvent: Readonly<Record<string, PickEventPoster>> = {
     src: "/events/ufc-fight-night-belgrade.svg",
     aspectRatio: "480 / 321",
   },
+  "mateusz-gamrot:quillan-salkilld": {
+    src: "/events/ufc-fight-night-gamrot-salkilld.svg",
+    aspectRatio: "480 / 221",
+  },
 };
 
 function mainEventKey(event: PickEvent) {
