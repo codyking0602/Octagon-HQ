@@ -158,20 +158,18 @@ begin
   end;
 
   perform set_config('request.jwt.claim.sub',v_owner::text,true);
-  begin
-    perform public.adjust_pick_bout_lock_time(
-      'per-fight-lock-test','later-bout',now()+interval '3 days'
-    );
-    raise exception 'invalid lock after event start was accepted';
-  exception when others then
-    if sqlerrm not like '%valid future bout lock time required%' then raise; end if;
-  end;
+  v_later_lock := now() + interval '3 days';
   perform public.adjust_pick_bout_lock_time(
-    'per-fight-lock-test','later-bout',now()+interval '20 hours'
+    'per-fight-lock-test','later-bout',v_later_lock
   );
-  v_later_lock := (
-    select locks_at from public.pick_bouts
-    where event_id='per-fight-lock-test' and bout_id='later-bout'
+  if (select locks_at from public.pick_bouts
+      where event_id='per-fight-lock-test' and bout_id='later-bout')
+      is distinct from v_later_lock then
+    raise exception 'future lock after event start was not accepted';
+  end if;
+  v_later_lock := now() + interval '20 hours';
+  perform public.adjust_pick_bout_lock_time(
+    'per-fight-lock-test','later-bout',v_later_lock
   );
 
   -- Approved pre-lock cancellation/restoration remains intact and private.
@@ -465,7 +463,7 @@ begin
     if sqlerrm not like '%event cannot be reopened%' then raise; end if;
   end;
 
-  -- Event Setup publication initializes every new bout with the safe event lock.
+  -- Event Setup publication initializes Main Card deadlines from chronological sequence.
   perform set_config('request.jwt.claim.role','service_role',true);
   v_draft_id := public.stage_pick_event_draft(jsonb_build_object(
     'source','UFC.com + MMA Mania',
@@ -502,14 +500,23 @@ begin
   perform set_config('request.jwt.claim.role','authenticated',true);
   perform set_config('request.jwt.claim.sub',v_owner::text,true);
   perform public.publish_pick_event_draft(v_draft_id);
-  if exists (
-    select 1
-    from public.pick_bouts bout
-    join public.pick_events event on event.event_id=bout.event_id
-    where bout.event_id='per-fight-lock-publication'
-      and bout.locks_at is distinct from event.locks_at
-  ) then
-    raise exception 'published bout did not receive the safe event lock default';
+  if (select bout.locks_at
+      from public.pick_bouts bout
+      where bout.event_id='per-fight-lock-publication'
+        and bout.bout_id='publish-two-red-publish-two-blue')
+      is distinct from (select event.starts_at
+        from public.pick_events event
+        where event.event_id='per-fight-lock-publication') then
+    raise exception 'published Main Card opener missed the official Main Card start';
+  end if;
+  if (select bout.locks_at
+      from public.pick_bouts bout
+      where bout.event_id='per-fight-lock-publication'
+        and bout.bout_id='publish-red-publish-blue')
+      is distinct from (select event.starts_at + interval '30 minutes'
+        from public.pick_events event
+        where event.event_id='per-fight-lock-publication') then
+    raise exception 'published later Main Card fight missed its 30-minute increment';
   end if;
 end
 $$;
