@@ -28,9 +28,9 @@ GitHub Actions is the only deployment owner. A merged change is not automaticall
 | Auction PR 2: backend foundation | Complete | #205 / #211 release proof | `b5f9d4fd6bf27f52a091fd4f15352ebb331a969d` |
 | Auction PR 3: playable server engine | Complete | #212 / #213 release proof | `0e9377ee6557a33b4db5d1225761901764707537` |
 | Auction PR 4: complete gameplay UI | Complete | #215 | `515e9293807a8a689d31ebca47ea59148bfeb918` |
-| Auction PR 5: real UFC content and private grading | Implemented on the current branch; not released | Draft PR | Assigned when merged |
+| Auction PR 5: real UFC content and private grading | Complete | #274 | `3fdac6e7e526d92e437789c2bed128fa821914ee` |
 
-PR #205 established the private lifecycle and PR #211 proved its production migrations. PR #212 added the authenticated transactional preparation, send, sealed-bid resolution, forced-assignment, and neutral completion boundary; PR #213 repaired and proved its production release. PR #215 added and released the complete gameplay UI. PR 5 is the current implemented stage: it adds the versioned real UFC-only catalog, balanced private generation weights, and the fixed private grader. PR 5 is not released merely because its branch or pull request exists. PR 6 remains the notification-completion and final release-proof stage.
+PR #205 established the private lifecycle and PR #211 proved its production migrations. PR #212 added the authenticated transactional preparation, send, sealed-bid resolution, forced-assignment, and neutral completion boundary; PR #213 repaired and proved its production release. PR #215 added and released the complete gameplay UI. PR #274 added the versioned real UFC-only catalog, balanced private generation weights, and the fixed private grader. Its exact reviewed head `bb78d8a5db2bac51897bbfe7c60bfdd943376353` passed typecheck, all 907 tests, the production build, fresh-database Auction SQL, statistical simulations, and the complete backend verifier. The trusted backend workflow applied and verified migrations `202609020001` through `202609020008`. PR 6 remains the notification-completion and final release-proof stage.
 
 PR #203 established one Play game identity, the sixteen public mode definitions, one canonical `/play/auction` route, and a nonfunctional preview shell. It did not add persistence, bidding, prepared challenges, deck generation, grading, or notifications.
 
@@ -682,3 +682,10 @@ Update this document in the same PR when a stage completes, a locked rule change
 - Rejected the original PR #205 head because its privacy, lifecycle, NULL constraints, terminal immutability, tests, and backend verification were not sufficient.
 - Kept PR #205 as the one backend-foundation owner and required repair on the same branch.
 - Replaced the prior ten remaining micro-PRs with five coherent delivery PRs: backend foundation, playable server engine, complete gameplay UI, real content and grading, and notifications/release proof.
+
+### 2026-08-03
+
+- Merged PR #274 from exact reviewed head `bb78d8a5db2bac51897bbfe7c60bfdd943376353` as merge commit `3fdac6e7e526d92e437789c2bed128fa821914ee`.
+- Released all sixteen UFC-only content pools, the balanced private generator, and the fixed-version private grader.
+- Applied and verified production migrations `202609020001` through `202609020008` through the canonical Supabase workflow.
+- Preserved PR 6 for notification completion, rich previews, full multi-profile privacy proof, and final Auction certification.
