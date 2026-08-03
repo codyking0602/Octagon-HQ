@@ -47,8 +47,7 @@ export function scheduledMonitoringIntervalMs(event: MonitoringEvent, now: Date)
 
   const remaining = monitoringStopsAt - nowMs;
   if (remaining > 14 * DAY_MS) return 24 * HOUR_MS;
-  if (remaining > 7 * DAY_MS) return 12 * HOUR_MS;
-  if (remaining > 2 * DAY_MS) return 6 * HOUR_MS;
+  if (remaining > 2 * DAY_MS) return 12 * HOUR_MS;
   if (remaining > 12 * HOUR_MS) return 3 * HOUR_MS;
   return HOUR_MS;
 }
