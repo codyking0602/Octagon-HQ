@@ -399,7 +399,7 @@ describe("Fight Night Control", () => {
     const lockRepo = repository(upcoming);
     renderPage(lockRepo);
 
-    fireEvent.click(await screen.findByRole("button", { name: "LOCK PICKS & BEGIN RESULTS" }));
+    fireEvent.click(await screen.findByRole("button", { name: "LOCK ALL PICKS & BEGIN RESULTS" }));
     await waitFor(() => expect(lockRepo.lockEvent).toHaveBeenCalledWith("ufc-control"));
     cleanup();
 

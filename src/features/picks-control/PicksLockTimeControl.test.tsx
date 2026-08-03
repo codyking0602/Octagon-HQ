@@ -26,7 +26,7 @@ afterEach(() => {
 });
 
 describe("Fight Night event-wide Picks deadline", () => {
-  it("shows that every fight shares one deadline and lets the owner extend it before the main card", async () => {
+  it("presents the event deadline as the master lock and preserves independent fight adjustments", async () => {
     vi.useFakeTimers({ toFake: ["Date"] });
     vi.setSystemTime(new Date("2026-08-01T17:00:00.000Z"));
     vi.spyOn(window, "prompt")
@@ -71,8 +71,8 @@ describe("Fight Night event-wide Picks deadline", () => {
       </MemoryRouter>,
     );
 
-    expect(await screen.findByText("ALL FIGHTS LOCK TOGETHER")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "CHANGE LOCK TIME" }));
+    expect(await screen.findByText("EVENT-WIDE MASTER LOCK")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "CHANGE MASTER LOCK" }));
 
     await waitFor(() => expect(adjustLockTime).toHaveBeenCalledWith(
       "ufc-belgrade",
@@ -80,6 +80,6 @@ describe("Fight Night event-wide Picks deadline", () => {
       "2026-08-01T18:00:00.000Z",
       "Give the group another thirty minutes",
     ));
-    expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("every fight"));
+    expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("individually adjusted fights remain independent"));
   });
 });
