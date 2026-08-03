@@ -1,0 +1,80 @@
+name: Apply Picks Import Hardening
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.head_ref == 'agent/repair-picks-event-import'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/repair-picks-event-import
+          fetch-depth: 1
+      - name: Fail closed on official timing contradictions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("supabase/functions/sync-next-ufc-event/index.ts")
+          source = path.read_text()
+
+          def replace_once(old: str, new: str) -> None:
+              global source
+              count = source.count(old)
+              if count != 1:
+                  raise SystemExit(f"Expected one source match, found {count}: {old[:80]!r}")
+              source = source.replace(old, new, 1)
+
+          replace_once(
+              '  const segmentTimes = parseOfficialUfcSegmentTimes(\n'
+              '    bodyText,\n'
+              '    sourceNormalized.startsAt || legacy.starts_at,\n'
+              '    sourceNormalized.eventType === "numbered",\n'
+              '    now,\n'
+              '  );\n',
+              '  let segmentTimes: ReturnType<typeof parseOfficialUfcSegmentTimes>;\n'
+              '  try {\n'
+              '    segmentTimes = parseOfficialUfcSegmentTimes(\n'
+              '      bodyText,\n'
+              '      sourceNormalized.startsAt || legacy.starts_at,\n'
+              '      sourceNormalized.eventType === "numbered",\n'
+              '      now,\n'
+              '    );\n'
+              '  } catch (error) {\n'
+              '    throw new SyncError(\n'
+              '      "UFC_EVENT_TIME_REJECTED",\n'
+              '      "Official UFC card times were missing or contradictory.",\n'
+              '      "ufc-parse",\n'
+              '      { reason: error instanceof Error ? error.message : "invalid-official-card-times" },\n'
+              '    );\n'
+              '  }\n',
+          )
+          replace_once(
+              '    } catch {\n'
+              '      // Preserve index order and continue to the next bounded official UFC event candidate.\n'
+              '    }\n',
+              '    } catch (error) {\n'
+              '      if (error instanceof SyncError) throw error;\n'
+              '      // Preserve index order and continue after a transport or unrelated-page failure.\n'
+              '    }\n',
+          )
+
+          path.write_text(source)
+          PY
+          rm .github/workflows/apply-picks-import-hardening.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --all
+          git commit -m "Fail Picks import closed on timing conflicts"
+          git push origin HEAD:agent/repair-picks-event-import
