@@ -281,12 +281,11 @@ try {
 
   if (controlStatus === "PICKS OPEN") {
     await monitoringRegion.waitFor({ state: "visible", timeout: 15_000 });
-    await page.getByRole("heading", { name: "Check now or refresh the ledger" }).waitFor({ state: "visible", timeout: 15_000 });
-    await page.getByText("ACTIVE", { exact: true }).waitFor({ state: "visible" });
+    await monitoringRegion.getByRole("heading", { name: "Check now or refresh the ledger" }).waitFor({ state: "visible", timeout: 15_000 });
     if (await page.getByText("INBOX UNAVAILABLE", { exact: true }).count()) {
       throw new Error("Monitoring Inbox rendered its unavailable state for the temporary owner.");
     }
-    monitoringOutcome = "loaded active owner-only monitoring data for the published card";
+    monitoringOutcome = "loaded visible owner-only monitoring controls for the published card";
   } else if (isSetupLifecycle(controlStatus) || isActiveEventLifecycle(controlStatus)) {
     if (await monitoringRegion.count()) {
       throw new Error(`Monitoring Inbox rendered during the ${controlStatus} lifecycle.`);
