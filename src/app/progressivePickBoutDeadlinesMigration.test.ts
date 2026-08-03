@@ -47,11 +47,11 @@ describe("staggered initial Picks bout deadlines", () => {
     expect(migration).toContain(
       "row_number() over (order by bout.position, bout.bout_id) - 1",
     );
-    expect(migration).toContain("v_event.locks_at");
+    expect(migration).toContain("set locks_at = v_event.locks_at");
     expect(migration).toContain(
       "- make_interval(mins => 30 * ordered.deadline_offset)",
     );
-    expect(migration).not.toContain("event.starts_at");
+    expect(migration).not.toContain("set locks_at = v_event.starts_at");
     expect(migration).not.toContain("prelims_starts_at");
     expect(migration).not.toContain("segment_sequence");
   });
