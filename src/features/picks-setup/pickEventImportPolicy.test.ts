@@ -104,7 +104,7 @@ describe("Picks event import policy", () => {
     expect(cardChangesSource).toContain('["Prelims time", current.prelims_starts_at, event.prelims_starts_at]');
   });
 
-  it("keeps stage, setup projection, and publish as the only database owners", () => {
+  it("keeps stage, setup, monitoring, and publish on their established owners", () => {
     expect(migration).toContain("alter function public.stage_pick_event_draft(jsonb)");
     expect(migration).toContain("private.stage_pick_event_draft_import_core(p_payload)");
     expect(migration).toContain("create function public.stage_pick_event_draft(p_payload jsonb)");
@@ -120,7 +120,10 @@ describe("Picks event import policy", () => {
     expect(migration.match(/set card_segment = null,/g)?.length).toBe(2);
     expect(projectionMigration).toContain("private.get_pick_event_setup_import_segments_core()");
     expect(projectionMigration).toContain("create function public.get_pick_event_setup()");
+    expect(projectionMigration).toContain("private.get_pick_monitoring_event_state_import_segments_core()");
+    expect(projectionMigration).toContain("create function public.get_pick_monitoring_event_state()");
     expect(projectionMigration).toContain("'card_segment', bout.card_segment");
     expect(projectionMigration).toContain("'segment_sequence', bout.segment_sequence");
+    expect(projectionMigration).toContain("'prelims_starts_at'");
   });
 });
