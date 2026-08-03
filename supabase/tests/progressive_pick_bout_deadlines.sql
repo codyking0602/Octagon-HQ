@@ -91,12 +91,12 @@ begin
   perform set_config('request.jwt.claim.sub',v_owner::text,true);
   perform public.reorder_pick_event_draft_bouts(
     v_draft_id,
-    array[
+    jsonb_build_array(
       'gamrot-quillan-main-event',
       'main-card-3',
       'main-card-2',
       'main-card-4'
-    ]
+    )
   );
   select * into v_event from public.publish_pick_event_draft(v_draft_id);
 
