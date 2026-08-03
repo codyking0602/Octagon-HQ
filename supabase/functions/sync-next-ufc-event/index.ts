@@ -7,6 +7,14 @@ import { hasSourceIdentityConflict, matchSourceIdentity, type NormalizedUfcEvent
 import { sourceChanges } from "./cardChanges.ts";
 import { canonicalFightPair, canonicalFighterDisplay, fighterMatch } from "./normalization.ts";
 import { adaptMmaManiaSource, adaptUfcSource, canonicalUfcEventFields } from "./sourceAdapters.ts";
+import {
+  parseOfficialUfcSegmentTimes,
+  resolveImportedCardScope,
+  selectAndSequenceImportedBouts,
+  type CardScope,
+  type CardSection,
+  type EffectiveScope,
+} from "./importPolicy.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*",
@@ -27,9 +35,6 @@ const monthNumbers: Record<string, string> = {
   Jul: "07", Aug: "08", Sep: "09", Oct: "10", Nov: "11", Dec: "12",
 };
 
-type CardScope = "auto" | "main" | "full";
-type EffectiveScope = "main" | "full";
-type CardSection = "main-event" | "main" | "prelim" | "early-prelim";
 type ErrorStage = "authentication" | "ufc-index-fetch" | "ufc-event-fetch" | "ufc-parse" | "mma-fetch" | "mma-parse" | "identity-match" | "preview-build" | "database-read" | "database-write";
 
 class SyncError extends Error {
@@ -59,6 +64,7 @@ interface UfcEventMetadata {
   venue: string;
   location: string;
   starts_at: string;
+  prelims_starts_at: string;
   locks_at: string;
   season: number;
   normalized: NormalizedUfcEvent;
@@ -80,6 +86,8 @@ interface StagedBout {
   blue_fighter_slug: string;
   blue_fighter_name: string;
   included: boolean;
+  card_segment: "main" | "prelim";
+  segment_sequence: number;
 }
 
 interface ParsedEvent {
@@ -92,6 +100,7 @@ interface ParsedEvent {
   venue: string;
   location: string;
   starts_at: string;
+  prelims_starts_at: string;
   locks_at: string;
   season: number;
   bouts: StagedBout[];
@@ -238,10 +247,22 @@ export function parseUfcEventPage(html: string, sourceUrl: string, now = new Dat
     locks_at: startsAt.toISOString(),
     season,
   };
-  const normalized = adaptUfcSource(html, sourceUrl, legacy);
+  const sourceNormalized = adaptUfcSource(html, sourceUrl, legacy);
+  const segmentTimes = parseOfficialUfcSegmentTimes(
+    bodyText,
+    sourceNormalized.startsAt || legacy.starts_at,
+    sourceNormalized.eventType === "numbered",
+    now,
+  );
+  const normalized = {
+    ...sourceNormalized,
+    startsAt: segmentTimes.mainCardStartsAt,
+    localEventDate: segmentTimes.localEventDate,
+  };
   return {
     ...legacy,
     ...canonicalUfcEventFields(normalized),
+    prelims_starts_at: segmentTimes.prelimsStartsAt,
     ufc_source_url: sourceUrl,
     normalized,
   };
@@ -347,15 +368,14 @@ export function parseMmaManiaCard(html: string, sourceUrl: string): MmaManiaCard
 }
 
 export function resolveCardScope(name: string, subtitle: string, requested: CardScope): EffectiveScope {
-  if (requested === "main" || requested === "full") return requested;
-  return /\bUFC\s+\d{3,4}\b/i.test(`${name} ${subtitle}`) ? "full" : "main";
+  return resolveImportedCardScope(name, subtitle, requested);
 }
 
 function selectBouts(card: MmaManiaCard, scope: EffectiveScope) {
-  return card.bouts.filter((bout) => scope === "full" || bout.section === "main-event" || bout.section === "main");
+  return selectAndSequenceImportedBouts(card.bouts, scope);
 }
 
-function toStagedBouts(bouts: ParsedCardBout[]) {
+function toStagedBouts(bouts: ReturnType<typeof selectBouts>) {
   return bouts.map((bout, index): StagedBout => {
     const redSlug = slugify(bout.red_fighter_name);
     const blueSlug = slugify(bout.blue_fighter_name);
@@ -368,6 +388,8 @@ function toStagedBouts(bouts: ParsedCardBout[]) {
       blue_fighter_slug: blueSlug,
       blue_fighter_name: bout.blue_fighter_name,
       included: true,
+      card_segment: bout.card_segment,
+      segment_sequence: bout.segment_sequence,
     };
   });
 }
@@ -631,6 +653,7 @@ async function buildNextEvent(now: Date, requestedScope: CardScope, preferredSou
     source: "UFC.com metadata + MMA Mania card",
     ...canonicalMetadata,
     source_url: card.sourceUrl,
+    prelims_starts_at: metadata.prelims_starts_at,
     subtitle,
     bouts,
     warnings,
@@ -659,6 +682,7 @@ async function sourceHash(event: ParsedEvent, effectiveScope: EffectiveScope) {
       venue: event.venue,
       location: event.location,
       starts_at: event.starts_at,
+      prelims_starts_at: event.prelims_starts_at,
       locks_at: event.locks_at,
       bouts: event.bouts,
     },
