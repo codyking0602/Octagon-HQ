@@ -5,8 +5,16 @@ const priorMigration = readFileSync(
   "supabase/migrations/202608300001_progressive_pick_bout_deadlines.sql",
   "utf8",
 );
-const migration = readFileSync(
+const publicationMigration = readFileSync(
   "supabase/migrations/202609010001_stagger_initial_pick_bout_deadlines.sql",
+  "utf8",
+);
+const deployedCompetingMigration = readFileSync(
+  "supabase/migrations/202609010002_restore_chronological_pick_bout_deadlines.sql",
+  "utf8",
+);
+const recoveryMigration = readFileSync(
+  "supabase/migrations/202609010003_restore_headline_first_pick_bout_deadlines.sql",
   "utf8",
 );
 const integrationSql = readFileSync(
@@ -26,54 +34,73 @@ const controlRepository = readFileSync(
   "utf8",
 );
 
-describe("staggered initial Picks bout deadlines", () => {
-  it("replaces the deadline step inside the one canonical publication owner", () => {
-    expect(migration).toContain(
+describe("headline-first initial Picks bout deadlines", () => {
+  it("preserves the one canonical publication owner and calculator", () => {
+    expect(publicationMigration).toContain(
       "create or replace function public.publish_pick_event_draft(p_draft_id uuid)",
     );
-    expect(migration).toContain(
+    expect(publicationMigration).toContain(
       "v_event := private.publish_pick_event_draft_progressive_lock_core(p_draft_id)",
     );
-    expect(migration).toContain(
+    expect(publicationMigration).toContain(
       "private.apply_initial_pick_bout_deadlines(v_event.event_id, false)",
     );
-    expect(migration.match(/create or replace function public\.publish_pick_event_draft/g))
+    expect(publicationMigration.match(/create or replace function public\.publish_pick_event_draft/g))
       .toHaveLength(1);
-    expect(migration).not.toContain("publish_pick_event_draft_initial_deadline_core");
-    expect(migration).not.toContain("alter function public.publish_pick_event_draft");
+    expect(recoveryMigration.match(/create or replace function private\.apply_initial_pick_bout_deadlines/g))
+      .toHaveLength(1);
+    expect(recoveryMigration).not.toContain(
+      "create or replace function public.publish_pick_event_draft",
+    );
+    expect(recoveryMigration).not.toContain("adjust_pick_bout_lock_time");
+  });
+
+  it("records the exact remotely deployed competing migration before correcting it", () => {
+    expect(deployedCompetingMigration).toContain(
+      "+ make_interval(mins => 30 * (bout.segment_sequence - 1))",
+    );
+    expect(deployedCompetingMigration).toContain("v_correct_segment_pattern");
+    expect(recoveryMigration).toContain("v_chronological_segment_pattern");
+    expect(recoveryMigration).toContain("case bout.card_segment");
+    expect(recoveryMigration).toContain(
+      "+ make_interval(mins => 30 * (bout.segment_sequence - 1))",
+    );
+    expect(recoveryMigration).toContain(
+      "or v_chronological_segment_pattern",
+    );
   });
 
   it("gives position one the latest deadline and subtracts exact 30-minute steps", () => {
-    expect(migration).toContain(
+    expect(recoveryMigration).toContain(
       "row_number() over (order by bout.position, bout.bout_id) - 1",
     );
-    expect(migration).toContain("set locks_at = v_event.locks_at");
-    expect(migration).toContain(
+    expect(recoveryMigration).toContain("set locks_at = v_event.locks_at");
+    expect(recoveryMigration).toContain(
       "- make_interval(mins => 30 * ordered.deadline_offset)",
     );
-    expect(migration).not.toContain("set locks_at = v_event.starts_at");
-    expect(migration).not.toContain("prelims_starts_at");
-    expect(migration).not.toContain("segment_sequence");
+    expect(recoveryMigration).not.toContain("set locks_at = v_event.starts_at");
   });
 
-  it("repairs only untouched upcoming cards through that same calculator", () => {
-    expect(migration).toContain("p_require_uniform_default boolean default false");
-    expect(migration).toContain("v_event.status <> 'upcoming'");
-    expect(migration).toContain("now() >= v_event.locks_at");
-    expect(migration).toContain("private.pick_bout_is_locked(v_event, bout)");
-    expect(migration).toContain("bout.locks_at is distinct from v_event.locks_at");
-    expect(migration).toContain(
+  it("repairs only recognized system schedules through that same calculator", () => {
+    expect(recoveryMigration).toContain(
+      "p_require_uniform_default boolean default false",
+    );
+    expect(recoveryMigration).toContain("v_event.status <> 'upcoming'");
+    expect(recoveryMigration).toContain("now() >= v_event.locks_at");
+    expect(recoveryMigration).toContain("private.pick_bout_is_locked(v_event, bout)");
+    expect(recoveryMigration).toContain("v_uniform_default");
+    expect(recoveryMigration).toContain("v_headline_first_pattern");
+    expect(recoveryMigration).toContain("v_chronological_segment_pattern");
+    expect(recoveryMigration).toContain(
       "private.apply_initial_pick_bout_deadlines(v_event_id, true)",
     );
-    expect(migration).not.toContain("gamrot-vs-quillan");
-    expect(migration.match(/apply_initial_pick_bout_deadlines/g)?.length)
-      .toBeGreaterThanOrEqual(4);
+    expect(recoveryMigration).not.toContain("gamrot-vs-quillan");
   });
 
   it("keeps the established manual mutation and owner controls unchanged", () => {
     expect(priorMigration.match(/create or replace function public\.adjust_pick_bout_lock_time/g))
       .toHaveLength(1);
-    expect(migration).not.toContain("adjust_pick_bout_lock_time");
+    expect(recoveryMigration).not.toContain("adjust_pick_bout_lock_time");
     expect(controlPage).toContain('"+10 MIN"');
     expect(controlPage).toContain('"+20 MIN"');
     expect(controlPage).toContain('"SET TIME"');
