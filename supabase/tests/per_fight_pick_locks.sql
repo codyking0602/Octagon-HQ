@@ -463,7 +463,7 @@ begin
     if sqlerrm not like '%event cannot be reopened%' then raise; end if;
   end;
 
-  -- Event Setup publication initializes Main Card deadlines from chronological sequence.
+  -- Event Setup publication initializes deadlines from final headline-first order.
   perform set_config('request.jwt.claim.role','service_role',true);
   v_draft_id := public.stage_pick_event_draft(jsonb_build_object(
     'source','UFC.com + MMA Mania',
@@ -503,20 +503,20 @@ begin
   if (select bout.locks_at
       from public.pick_bouts bout
       where bout.event_id='per-fight-lock-publication'
-        and bout.bout_id='publish-two-red-publish-two-blue')
-      is distinct from (select event.starts_at
+        and bout.bout_id='publish-red-publish-blue')
+      is distinct from (select event.locks_at
         from public.pick_events event
         where event.event_id='per-fight-lock-publication') then
-    raise exception 'published Main Card opener missed the official Main Card start';
+    raise exception 'published main event missed the latest initial deadline';
   end if;
   if (select bout.locks_at
       from public.pick_bouts bout
       where bout.event_id='per-fight-lock-publication'
-        and bout.bout_id='publish-red-publish-blue')
-      is distinct from (select event.starts_at + interval '30 minutes'
+        and bout.bout_id='publish-two-red-publish-two-blue')
+      is distinct from (select event.locks_at - interval '30 minutes'
         from public.pick_events event
         where event.event_id='per-fight-lock-publication') then
-    raise exception 'published later Main Card fight missed its 30-minute increment';
+    raise exception 'published preceding fight missed its 30-minute decrement';
   end if;
 end
 $$;
