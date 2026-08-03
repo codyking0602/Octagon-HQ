@@ -7,7 +7,7 @@ const lifecycleStyles = readFileSync("src/styles/picks-lifecycle.css", "utf8");
 
 describe("Picks locked and live fight-card density", () => {
   it("compacts only the existing read-only lifecycle without changing pick entry", () => {
-    expect(page).toContain("const readOnly = locked || cancelled || removed;");
+    expect(page).toContain("const readOnly = boutLocked || cancelled || removed;");
     expect(page).toContain("className={choiceClassName(selection === bout.redFighterSlug, readOnly)}");
     expect(page).toContain("className={choiceClassName(selection === bout.blueFighterSlug, readOnly)}");
     expect(lifecycleStyles).toContain(".pick-bout-card:has(.pick-choice.is-read-only) {");

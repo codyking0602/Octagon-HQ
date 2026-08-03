@@ -289,7 +289,7 @@ describe("Unified Picks Control Center", () => {
     expect(screen.getByRole("heading", { name: "Open findings" })).toBeInTheDocument();
     expect(screen.getByText("Card source failed.")).toBeInTheDocument();
     expect(screen.getByLabelText("Monitoring status summary")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "LOCK PICKS & BEGIN RESULTS" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "LOCK ALL PICKS & BEGIN RESULTS" })).toBeEnabled();
   });
 
   it("exposes canonical result entry for locked events", async () => {
