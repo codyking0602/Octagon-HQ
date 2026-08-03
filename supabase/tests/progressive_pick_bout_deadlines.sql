@@ -21,9 +21,9 @@ begin
   ) values (
     v_owner,'00000000-0000-0000-0000-000000000000','authenticated','authenticated',
     'chronological-deadline-owner@login.octagon-hq.app','',now(),now(),now(),
-    jsonb_build_object('display_name','CHRONOLOGICAL DEADLINE OWNER','historical_unclaimed',true)
+    jsonb_build_object('display_name','DEADLINE OWNER','historical_unclaimed',true)
   );
-  perform public.register_unclaimed_pin_profile(v_owner,'Chronological Deadline Owner','CD');
+  perform public.register_unclaimed_pin_profile(v_owner,'Deadline Owner','CD');
   insert into public.pick_control_owners(profile_id) values(v_owner);
 
   -- Stage a headline-first card, then change its approved order before publish.
