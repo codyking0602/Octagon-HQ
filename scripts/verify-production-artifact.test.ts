@@ -5,7 +5,6 @@ describe("production artifact Picks control markers", () => {
   it("tracks the compiled progressive per-fight lock UI instead of retired lock copy", () => {
     expect(requiredApplicationMarkers).toEqual(expect.arrayContaining([
       "EVENT-WIDE MASTER LOCK",
-      "CHANGE FIGHT",
       "+10 MIN",
       "+20 MIN",
       "SET TIME",
@@ -17,6 +16,7 @@ describe("production artifact Picks control markers", () => {
     expect(requiredApplicationMarkers).not.toEqual(expect.arrayContaining([
       "ALL FIGHTS LOCK TOGETHER",
       "CHANGE LOCK TIME",
+      "CHANGE FIGHT",
       "CHANGE FIGHT LOCK",
       "LOCK PICKS & BEGIN RESULTS",
     ]));
