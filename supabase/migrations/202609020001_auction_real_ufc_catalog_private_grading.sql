@@ -23,8 +23,9 @@ set search_path = ''
 as $$
 begin
   with raw as (
-    select row_text, ordinal
-    from regexp_split_to_table(trim(p_rows), E'\n') with ordinality as rows(row_text, ordinal)
+    select btrim(row_text) as row_text, ordinal
+    from regexp_split_to_table(p_rows, E'\r?\n') with ordinality as rows(row_text, ordinal)
+    where btrim(row_text) <> ''
   ), parsed as (
     select
       split_part(row_text, '|', 1) as mode_id,
