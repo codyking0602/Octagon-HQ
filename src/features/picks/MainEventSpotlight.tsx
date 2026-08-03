@@ -31,12 +31,17 @@ interface SpotlightFighter {
   edges: string[];
 }
 
+interface SpotlightWatch {
+  label: string;
+  url: string;
+}
+
 interface SpotlightData {
   kicker: string;
   preview: string;
   red: SpotlightFighter;
   blue: SpotlightFighter;
-  clipUrl: string;
+  watchSpotlights: SpotlightWatch[];
 }
 
 const medicRodriguezSpotlight: SpotlightData = {
@@ -62,11 +67,47 @@ const medicRodriguezSpotlight: SpotlightData = {
     stance: "Southpaw",
     edges: ["Volume boxing", "Reach and pocket combinations", "Veteran composure"],
   },
-  clipUrl: "https://youtu.be/IBzzsI7TrDc?is=q7Q8ZfSD8TobYbjl",
+  watchSpotlights: [{
+    label: "WATCH SPOTLIGHT ↗",
+    url: "https://youtu.be/IBzzsI7TrDc?is=q7Q8ZfSD8TobYbjl",
+  }],
+};
+
+const gamrotSalkilldSpotlight: SpotlightData = {
+  kicker: "MAIN EVENT · 5 ROUNDS · LIGHTWEIGHT",
+  preview: "A proven top-10 pressure wrestler meets the division's fastest-rising finisher. Gamrot can turn every exchange into a chain-wrestling and scramble test; Salkilld brings length, explosive finishing power, and the takedown defense to keep the fight dangerous everywhere.",
+  red: {
+    slug: "mateusz-gamrot",
+    name: "Mateusz Gamrot",
+    record: "9-4 UFC",
+    age: "35",
+    height: "5'10\"",
+    reach: "70.5\"",
+    stance: "Southpaw",
+    edges: ["Chain wrestling and mat returns", "Scramble pace and endurance", "Five-round top-10 experience"],
+  },
+  blue: {
+    slug: "quillan-salkilld",
+    name: "Quillan Salkilld",
+    record: "5-0 UFC",
+    age: "26",
+    height: "6'0\"",
+    reach: "75\"",
+    stance: "Orthodox",
+    edges: ["First-round finishing threat", "Length and explosive speed", "Youth and unbeaten UFC momentum"],
+  },
+  watchSpotlights: [{
+    label: "WATCH GAMROT SPOTLIGHT ↗",
+    url: "https://youtu.be/a6B2uVbD10U?si=9V8KK6f6uNN65g-L",
+  }, {
+    label: "WATCH SALKILLD SPOTLIGHT ↗",
+    url: "https://youtu.be/Kjq4Jz1XuiI?si=QJdJ5ozZpi-oUy4l",
+  }],
 };
 
 function spotlightForBout(bout: PickBout): SpotlightData | null {
   const slugs = new Set([bout.redFighterSlug, bout.blueFighterSlug]);
+  if (slugs.has("mateusz-gamrot") && slugs.has("quillan-salkilld")) return gamrotSalkilldSpotlight;
   if (slugs.has("uros-medic") && slugs.has("daniel-rodriguez")) return medicRodriguezSpotlight;
   return null;
 }
@@ -200,7 +241,16 @@ export function MainEventSpotlight({ bout }: { bout: PickBout }) {
                 <span>FIGHT PREVIEW</span>
                 <h2 id={titleId}>{data.red.name} vs. {data.blue.name}</h2>
                 <p>{data.preview}</p>
-                <a href={data.clipUrl} target="_blank" rel="noopener noreferrer">WATCH SPOTLIGHT ↗</a>
+                <div
+                  className="main-event-spotlight__watch-links"
+                  style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}
+                >
+                  {data.watchSpotlights.map((spotlight) => (
+                    <a key={spotlight.url} href={spotlight.url} target="_blank" rel="noopener noreferrer">
+                      {spotlight.label}
+                    </a>
+                  ))}
+                </div>
               </section>
 
               <section className="main-event-spotlight__section">
