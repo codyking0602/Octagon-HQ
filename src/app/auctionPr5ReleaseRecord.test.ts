@@ -6,6 +6,10 @@ const backendDeployment = readFileSync(
   ".github/workflows/deploy-supabase.yml",
   "utf8",
 );
+const backendVerification = readFileSync(
+  ".github/workflows/verify-supabase-backend.yml",
+  "utf8",
+);
 
 const pr5MigrationVersions = [
   "202609020001",
@@ -47,5 +51,19 @@ describe("Auction PR 5 release proof", () => {
     expect(backendDeployment).toContain(
       "Auction real-content and private-grading migrations 202609020001 through 202609020008 verified in linked production history",
     );
+  });
+
+  it("treats the live-verifier script as verification code, not deployed frontend runtime", () => {
+    expect(backendVerification).toContain(
+      '- "scripts/verify-live-frontend-delivery.mjs"',
+    );
+    const runtimePatterns = backendVerification.match(
+      /const runtimePathPatterns = \[([\s\S]*?)\n\s*\];/,
+    )?.[1];
+    expect(runtimePatterns).toBeDefined();
+    expect(runtimePatterns).not.toContain(
+      "scripts\\/verify-live-frontend-delivery",
+    );
+    expect(runtimePatterns).toContain("^src\\/");
   });
 });
