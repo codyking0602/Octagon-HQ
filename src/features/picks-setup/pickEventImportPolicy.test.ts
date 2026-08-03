@@ -124,6 +124,6 @@ describe("Picks event import policy", () => {
     expect(projectionMigration).toContain("create function public.get_pick_monitoring_event_state()");
     expect(projectionMigration).toContain("'card_segment', bout.card_segment");
     expect(projectionMigration).toContain("'segment_sequence', bout.segment_sequence");
-    expect(projectionMigration).toContain("'prelims_starts_at'");
+    expect(projectionMigration).toContain("{prelims_starts_at}");
   });
 });
