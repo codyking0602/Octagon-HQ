@@ -241,7 +241,10 @@ export function MainEventSpotlight({ bout }: { bout: PickBout }) {
                 <span>FIGHT PREVIEW</span>
                 <h2 id={titleId}>{data.red.name} vs. {data.blue.name}</h2>
                 <p>{data.preview}</p>
-                <div className="main-event-spotlight__watch-links">
+                <div
+                  className="main-event-spotlight__watch-links"
+                  style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}
+                >
                   {data.watchSpotlights.map((spotlight) => (
                     <a key={spotlight.url} href={spotlight.url} target="_blank" rel="noopener noreferrer">
                       {spotlight.label}
