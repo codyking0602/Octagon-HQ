@@ -84,15 +84,10 @@ $$;
 revoke all on function private.apply_initial_pick_bout_deadlines(text,boolean)
   from public, anon, authenticated, service_role;
 
--- Extend the sole publication owner rather than adding another initializer.
-alter function public.publish_pick_event_draft(uuid)
-  rename to publish_pick_event_draft_initial_deadline_core;
-alter function public.publish_pick_event_draft_initial_deadline_core(uuid)
-  set schema private;
-revoke all on function private.publish_pick_event_draft_initial_deadline_core(uuid)
-  from public, anon, authenticated, service_role;
-
-create function public.publish_pick_event_draft(p_draft_id uuid)
+-- Replace only the deadline step of the sole publication owner. The private
+-- import core still owns validation, publication, and final-order persistence;
+-- this function is the only initial deadline calculator executed afterward.
+create or replace function public.publish_pick_event_draft(p_draft_id uuid)
 returns public.pick_events
 language plpgsql
 security definer
@@ -101,7 +96,7 @@ as $$
 declare
   v_event public.pick_events;
 begin
-  v_event := private.publish_pick_event_draft_initial_deadline_core(p_draft_id);
+  v_event := private.publish_pick_event_draft_progressive_lock_core(p_draft_id);
 
   if not private.apply_initial_pick_bout_deadlines(v_event.event_id, false) then
     raise exception 'Published Picks fights require valid initial deadlines';
