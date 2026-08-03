@@ -51,7 +51,6 @@ jobs:
             const runtimePathPatterns = [
               /^\.github\/workflows\/deploy-cloudflare\.yml$/,
               /^\.github\/workflows\/verify-live-frontend-delivery\.yml$/,
-              /^scripts\/verify-live-frontend-delivery\.mjs$/,
               /^src\//,
               /^public\//,
               /^index\.html$/,
@@ -468,7 +467,7 @@ jobs:
             echo "- Supabase access token/project pairing: accepted"
             echo "- Database password and migration connection: accepted"
             echo "- Auction lifecycle SQL tests: executed against a fresh local Supabase database"
-            echo "- Truthful Picks monitoring SQL test: executed against the same fresh local Supabase database"
+            echo "- Truthful Picks monitoring SQL test: executed against the same fresh local database"
             echo "- Required Edge Function secret names: present"
             echo "- Existing profile, challenge, Your HQ, Picks, scoring, recap, reveal, Fight Night, and What's New migrations: deployed remotely"
             echo "- Event setup and card review migration: deployed remotely"
