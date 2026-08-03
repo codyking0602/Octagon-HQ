@@ -48,6 +48,66 @@ function assertCurrentEventProjection(event, audience) {
   }
 }
 
+function assertGamrotQuillanDeadlineSchedule(controlEvent) {
+  const identity = `${controlEvent?.name ?? ""} ${controlEvent?.subtitle ?? ""}`.toLowerCase();
+  if (!identity.includes("gamrot") || !identity.includes("quillan")) {
+    throw new Error(
+      `Live Picks Control expected Gamrot vs. Quillan, received ${controlEvent?.name ?? "missing event"}.`,
+    );
+  }
+
+  const eventDeadline = Date.parse(controlEvent?.locks_at ?? "");
+  const expectedMainDeadline = Date.parse("2026-08-09T00:00:00.000Z");
+  if (!Number.isFinite(eventDeadline) || eventDeadline !== expectedMainDeadline) {
+    throw new Error(
+      `Gamrot vs. Quillan event deadline expected 2026-08-09T00:00:00.000Z, received ${controlEvent?.locks_at ?? "missing"}.`,
+    );
+  }
+
+  const bouts = Array.isArray(controlEvent?.bouts)
+    ? [...controlEvent.bouts].sort((left, right) => left.position - right.position)
+    : [];
+  if (bouts.length < 2) {
+    throw new Error(`Gamrot vs. Quillan Control Center returned only ${bouts.length} fight controls.`);
+  }
+
+  const mainEventIdentity = `${bouts[0]?.red_fighter_name ?? ""} ${bouts[0]?.blue_fighter_name ?? ""}`.toLowerCase();
+  if (!mainEventIdentity.includes("gamrot") || !mainEventIdentity.includes("quillan")) {
+    throw new Error("Position one is not the Gamrot vs. Quillan main event.");
+  }
+
+  const formatter = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Chicago",
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+  const visibleDeadlines = bouts.map((bout, index) => {
+    if (bout.position !== index + 1) {
+      throw new Error(`Live Picks Control positions are not contiguous at fight ${index + 1}.`);
+    }
+    const deadline = Date.parse(bout.locks_at ?? "");
+    const expectedDeadline = eventDeadline - index * 30 * 60 * 1000;
+    if (!Number.isFinite(deadline) || deadline !== expectedDeadline) {
+      throw new Error(
+        `Fight ${index + 1} deadline expected ${new Date(expectedDeadline).toISOString()}, received ${bout.locks_at ?? "missing"}.`,
+      );
+    }
+    return formatter.format(deadline);
+  });
+
+  if (visibleDeadlines[0] !== "Sat, Aug 8, 7:00 PM") {
+    throw new Error(`Main event visible deadline expected Sat, Aug 8, 7:00 PM, received ${visibleDeadlines[0]}.`);
+  }
+  if (visibleDeadlines[1] !== "Sat, Aug 8, 6:30 PM") {
+    throw new Error(`Main card fight 2 visible deadline expected Sat, Aug 8, 6:30 PM, received ${visibleDeadlines[1]}.`);
+  }
+
+  return visibleDeadlines;
+}
+
 const keys = await request(
   "Project key lookup",
   `https://api.supabase.com/v1/projects/${projectId}/api-keys?reveal=true`,
@@ -152,6 +212,23 @@ try {
     "pick control owner required",
   );
 
+  await request(
+    "Temporary Picks control owner grant",
+    `${supabaseOrigin}/rest/v1/pick_control_owners`,
+    {
+      method: "POST",
+      headers: { ...serviceHeaders, Prefer: "return=minimal" },
+      body: JSON.stringify({ profile_id: userId }),
+    },
+  );
+
+  const controlEvent = await request(
+    "Live Picks Control deadline schedule",
+    `${supabaseOrigin}/rest/v1/rpc/get_pick_control_event`,
+    { method: "POST", headers: userHeaders, body: "{}" },
+  );
+  const visibleDeadlines = assertGamrotQuillanDeadlineSchedule(controlEvent);
+
   if (hasCurrentEvent) {
     const lock = await request(
       "Underdog Lock RPC",
@@ -184,10 +261,15 @@ try {
     }
   }
 
-  const lifecycle = hasCurrentEvent ? `event ${event.event_id}` : "the canonical no-active-card state";
-  console.log(`PASS: production Picks scoring, current-event privacy, Fight Night control, and Event Setup owner boundaries are healthy for ${lifecycle}.`);
+  console.log(
+    `PASS: production Picks scoring and owner boundaries are healthy; Gamrot vs. Quillan live Control deadlines are ${visibleDeadlines.join(" | ")}.`,
+  );
 } finally {
   if (userId) {
+    await fetch(`${supabaseOrigin}/rest/v1/pick_control_owners?profile_id=eq.${encodeURIComponent(userId)}`, {
+      method: "DELETE",
+      headers: serviceHeaders,
+    }).catch(() => undefined);
     await fetch(`${supabaseOrigin}/auth/v1/admin/users/${userId}`, {
       method: "DELETE",
       headers: serviceHeaders,
