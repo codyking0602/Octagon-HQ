@@ -139,8 +139,8 @@ begin
     select 1
     from private.auction_games
     where id = v_game
-      and challenger_final_score = 95.50
-      and recipient_final_score = 95.50
+      and challenger_final_score = 96.25
+      and recipient_final_score = 96.25
       and winner_profile_id is null
   ) then
     raise exception 'equal numeric scores did not produce a true tie';
