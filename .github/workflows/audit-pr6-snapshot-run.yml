@@ -1,0 +1,49 @@
+name: Audit PR 6 Snapshot Run
+
+on:
+  push:
+    branches:
+      - audit/pr276-main-backend-proof
+    paths:
+      - ".github/workflows/audit-pr6-snapshot-run.yml"
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TARGET_SHA: 54ebd72a02386ae3a2e6ddc21ca74310b3b1ec8a
+      TARGET_WORKFLOW: Auction PR 6 Checkout Snapshot
+      PROOF_FILE: verification-artifacts/pr6-snapshot-run.txt
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Capture target run
+        shell: bash
+        run: |
+          set -euo pipefail
+          run_json=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs?head_sha=$TARGET_SHA&per_page=100")
+          run_id=$(printf '%s' "$run_json" | jq -r --arg workflow "$TARGET_WORKFLOW" '.workflow_runs[] | select(.name == $workflow) | .id' | head -n 1)
+          test -n "$run_id"
+          test "$run_id" != "null"
+          run_meta=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id")
+          mkdir -p "$(dirname "$PROOF_FILE")"
+          {
+            echo "Run ID: $run_id"
+            printf '%s' "$run_meta" | jq -r '"Status: \(.status)\nConclusion: \(.conclusion)\nURL: \(.html_url)"'
+            echo
+            gh run view "$run_id" --repo "$GITHUB_REPOSITORY" --log || true
+          } > "$PROOF_FILE"
+      - name: Commit diagnostic
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$PROOF_FILE"
+          git commit -m "Record PR 6 snapshot run diagnostic"
+          git push origin "HEAD:$GITHUB_REF_NAME"
