@@ -1,0 +1,139 @@
+name: Audit PR 276 Main Backend Proof
+
+on:
+  push:
+    branches:
+      - audit/pr276-main-backend-proof
+    paths:
+      - ".github/workflows/audit-pr276-main-backend-proof.yml"
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TARGET_SHA: d580c20124d3d269829af693efde382622fb88ba
+      TARGET_WORKFLOW: Deploy Supabase Backend
+      PROOF_FILE: verification-artifacts/pr276-main-backend-proof.txt
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Check out audit branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Resolve and verify canonical main deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          run_json=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs?head_sha=$TARGET_SHA&event=push&per_page=100")
+          run_id=$(printf '%s' "$run_json" | jq -r \
+            --arg sha "$TARGET_SHA" \
+            --arg workflow "$TARGET_WORKFLOW" \
+            '.workflow_runs[] | select(.head_sha == $sha and .event == "push" and .name == $workflow) | .id' \
+            | head -n 1)
+
+          if [ -z "$run_id" ] || [ "$run_id" = "null" ]; then
+            echo "::error title=Canonical backend deployment missing::No main-push Deploy Supabase Backend run exists for $TARGET_SHA."
+            exit 1
+          fi
+
+          run_meta=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id")
+          status=$(printf '%s' "$run_meta" | jq -r '.status')
+          conclusion=$(printf '%s' "$run_meta" | jq -r '.conclusion')
+          head_sha=$(printf '%s' "$run_meta" | jq -r '.head_sha')
+          event=$(printf '%s' "$run_meta" | jq -r '.event')
+          head_branch=$(printf '%s' "$run_meta" | jq -r '.head_branch')
+          workflow_path=$(printf '%s' "$run_meta" | jq -r '.path')
+          run_url=$(printf '%s' "$run_meta" | jq -r '.html_url')
+
+          test "$status" = "completed"
+          test "$conclusion" = "success"
+          test "$head_sha" = "$TARGET_SHA"
+          test "$event" = "push"
+          test "$head_branch" = "main"
+
+          jobs_json=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id/jobs?per_page=100")
+          job_id=$(printf '%s' "$jobs_json" | jq -r '.jobs[] | select(.name == "deploy") | .id' | head -n 1)
+          test -n "$job_id"
+          test "$job_id" != "null"
+
+          for step_name in \
+            "Verify exact checked-out SHA" \
+            "Verify migrations, functions, and production CORS" \
+            "Record deployed backend"; do
+            step_conclusion=$(printf '%s' "$jobs_json" | jq -r --arg name "$step_name" \
+              '.jobs[] | select(.name == "deploy") | .steps[] | select(.name == $name) | .conclusion')
+            if [ "$step_conclusion" != "success" ]; then
+              echo "::error title=Required deployment step not green::$step_name concluded $step_conclusion."
+              exit 1
+            fi
+          done
+
+          log_file="$RUNNER_TEMP/pr276-main-backend.log"
+          gh run view "$run_id" --repo "$GITHUB_REPOSITORY" --log > "$log_file"
+
+          exact_checkout=$(grep -F "Exact deployment source verified: $TARGET_SHA" "$log_file" | tail -n 1)
+          test -n "$exact_checkout"
+
+          versions=(
+            202609020001
+            202609020002
+            202609020003
+            202609020004
+            202609020005
+            202609020006
+            202609020007
+            202609020008
+          )
+
+          remote_rows=()
+          for version in "${versions[@]}"; do
+            row=$(grep -E "$version[^0-9]+$version" "$log_file" | tail -n 1 || true)
+            if [ -z "$row" ]; then
+              echo "::error title=Remote migration proof missing::The deployment log did not show local and remote version $version on the same migration-list row."
+              exit 1
+            fi
+            remote_rows+=("$row")
+          done
+
+          mkdir -p "$(dirname "$PROOF_FILE")"
+          {
+            echo "PR #276 canonical main backend deployment proof"
+            echo "Target merge SHA: $TARGET_SHA"
+            echo "Run ID: $run_id"
+            echo "Run URL: $run_url"
+            echo "Workflow: $TARGET_WORKFLOW"
+            echo "Workflow path: $workflow_path"
+            echo "Event: $event"
+            echo "Branch: $head_branch"
+            echo "Status: $status"
+            echo "Conclusion: $conclusion"
+            echo "Deploy job ID: $job_id"
+            echo
+            echo "Required successful steps:"
+            echo "- Verify exact checked-out SHA"
+            echo "- Verify migrations, functions, and production CORS"
+            echo "- Record deployed backend"
+            echo
+            echo "Exact checkout log:"
+            echo "$exact_checkout"
+            echo
+            echo "Linked production migration rows:"
+            printf '%s\n' "${remote_rows[@]}"
+          } > "$PROOF_FILE"
+
+      - name: Commit immutable audit result
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$PROOF_FILE"
+          git commit -m "Record PR 276 main backend deployment proof"
+          git push origin "HEAD:$GITHUB_REF_NAME"
