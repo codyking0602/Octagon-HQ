@@ -248,12 +248,22 @@ export function parseUfcEventPage(html: string, sourceUrl: string, now = new Dat
     season,
   };
   const sourceNormalized = adaptUfcSource(html, sourceUrl, legacy);
-  const segmentTimes = parseOfficialUfcSegmentTimes(
-    bodyText,
-    sourceNormalized.startsAt || legacy.starts_at,
-    sourceNormalized.eventType === "numbered",
-    now,
-  );
+  let segmentTimes: ReturnType<typeof parseOfficialUfcSegmentTimes>;
+  try {
+    segmentTimes = parseOfficialUfcSegmentTimes(
+      bodyText,
+      sourceNormalized.startsAt || legacy.starts_at,
+      sourceNormalized.eventType === "numbered",
+      now,
+    );
+  } catch (error) {
+    throw new SyncError(
+      "UFC_EVENT_TIME_REJECTED",
+      "Official UFC card times were missing or contradictory.",
+      "ufc-parse",
+      { reason: error instanceof Error ? error.message : "invalid-official-card-times" },
+    );
+  }
   const normalized = {
     ...sourceNormalized,
     startsAt: segmentTimes.mainCardStartsAt,
@@ -475,8 +485,9 @@ async function findNextUfcEvent(now: Date) {
     try {
       const parsed = parseUfcEventPage(await fetchText(url, "UFC.com"), url, now);
       if (parsed) return parsed;
-    } catch {
-      // Preserve index order and continue to the next bounded official UFC event candidate.
+    } catch (error) {
+      if (error instanceof SyncError) throw error;
+      // Preserve index order and continue after a transport or unrelated-page failure.
     }
   }
   return null;
