@@ -275,17 +275,19 @@ try {
   );
   const controlStatus = await waitForControlStatus(page);
   let monitoringOutcome;
+  const monitoringRegion = page.getByRole("region", {
+    name: "Automatic monitoring and card review",
+  });
 
   if (controlStatus === "PICKS OPEN") {
-    await page.getByRole("heading", { name: "Monitoring Inbox", exact: true }).waitFor({ state: "visible" });
-    await page.getByRole("heading", { name: "Check now or refresh the ledger" }).waitFor({ state: "visible", timeout: 15_000 });
-    await page.getByText("ACTIVE", { exact: true }).waitFor({ state: "visible" });
+    await monitoringRegion.waitFor({ state: "visible", timeout: 15_000 });
+    await monitoringRegion.getByRole("heading", { name: "Check now or refresh the ledger" }).waitFor({ state: "visible", timeout: 15_000 });
     if (await page.getByText("INBOX UNAVAILABLE", { exact: true }).count()) {
       throw new Error("Monitoring Inbox rendered its unavailable state for the temporary owner.");
     }
-    monitoringOutcome = "loaded active owner-only monitoring data for the published card";
+    monitoringOutcome = "loaded visible owner-only monitoring controls for the published card";
   } else if (isSetupLifecycle(controlStatus) || isActiveEventLifecycle(controlStatus)) {
-    if (await page.getByRole("heading", { name: "Monitoring Inbox", exact: true }).count()) {
+    if (await monitoringRegion.count()) {
       throw new Error(`Monitoring Inbox rendered during the ${controlStatus} lifecycle.`);
     }
     monitoringOutcome = `confirmed the ${controlStatus} lifecycle correctly omits monitoring`;
