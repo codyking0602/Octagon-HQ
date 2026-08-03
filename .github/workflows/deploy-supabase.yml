@@ -275,6 +275,16 @@ jobs:
           if [ -f supabase/migrations/202608220004_auction_catalog_version_rotation.sql ]; then
             require_remote_migration "202608220004"
           fi
+          if [ -f supabase/migrations/202609020001_auction_real_ufc_catalog_private_grading.sql ]; then
+            require_remote_migration "202609020001"
+            require_remote_migration "202609020002"
+            require_remote_migration "202609020003"
+            require_remote_migration "202609020004"
+            require_remote_migration "202609020005"
+            require_remote_migration "202609020006"
+            require_remote_migration "202609020007"
+            require_remote_migration "202609020008"
+          fi
 
           function_list=$(supabase functions list --project-ref "$SUPABASE_PROJECT_ID")
           printf '%s\n' "$function_list" | grep -F "pin-auth"
@@ -383,6 +393,9 @@ jobs:
             fi
             if [ -f supabase/migrations/202608220004_auction_catalog_version_rotation.sql ]; then
               echo "- Auction playable server migrations 202608220001 through 202608220004 verified in linked production history"
+            fi
+            if [ -f supabase/migrations/202609020008_auction_private_fixed_grader.sql ]; then
+              echo "- Auction real-content and private-grading migrations 202609020001 through 202609020008 verified in linked production history"
             fi
             echo "- Canonical production origin: $OCTAGON_PRODUCTION_ORIGIN"
             echo "- Remote migrations, exact deployed function revisions, live authentication contracts, scheduler health, push configuration, and production CORS were verified"

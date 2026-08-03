@@ -51,7 +51,6 @@ jobs:
             const runtimePathPatterns = [
               /^\.github\/workflows\/deploy-cloudflare\.yml$/,
               /^\.github\/workflows\/verify-live-frontend-delivery\.yml$/,
-              /^scripts\/verify-live-frontend-delivery\.mjs$/,
               /^src\//,
               /^public\//,
               /^index\.html$/,
