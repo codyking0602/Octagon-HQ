@@ -1,0 +1,6 @@
+Verification-only marker for PR #261.
+
+Expected merged main and live backend source:
+a3b0cd8f53b9c8e742ce5a617038928e7bc5cf92
+
+This branch will never merge. It exists only to run the canonical production verifiers against the merged release.
