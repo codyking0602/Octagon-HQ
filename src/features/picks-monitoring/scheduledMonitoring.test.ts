@@ -20,11 +20,12 @@ const event = (startsAt: string, locksAt = startsAt): MonitoringEvent => ({
 });
 
 describe("scheduled monitoring cadence", () => {
-  it("uses low frequency far away and escalates through fight week and event day", () => {
+  it("stays twice daily through fight week and escalates only inside the final 48 hours", () => {
     expect(scheduledMonitoringIntervalMs(event("2026-08-25T12:00:01Z"), now)).toBe(24 * 60 * 60 * 1000);
     expect(scheduledMonitoringIntervalMs(event("2026-08-20T12:00:00Z"), now)).toBe(12 * 60 * 60 * 1000);
-    expect(scheduledMonitoringIntervalMs(event("2026-08-15T12:00:00Z"), now)).toBe(6 * 60 * 60 * 1000);
-    expect(scheduledMonitoringIntervalMs(event("2026-08-11T18:00:00Z"), now)).toBe(3 * 60 * 60 * 1000);
+    expect(scheduledMonitoringIntervalMs(event("2026-08-15T12:00:00Z"), now)).toBe(12 * 60 * 60 * 1000);
+    expect(scheduledMonitoringIntervalMs(event("2026-08-12T12:00:01Z"), now)).toBe(12 * 60 * 60 * 1000);
+    expect(scheduledMonitoringIntervalMs(event("2026-08-12T12:00:00Z"), now)).toBe(3 * 60 * 60 * 1000);
     expect(scheduledMonitoringIntervalMs(event("2026-08-10T17:00:00Z"), now)).toBe(60 * 60 * 1000);
   });
 
