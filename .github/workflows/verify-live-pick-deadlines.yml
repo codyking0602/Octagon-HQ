@@ -6,6 +6,8 @@ on:
       - ".github/workflows/verify-live-pick-deadlines.yml"
       - "scripts/verify-live-pick-deadlines.mjs"
       - "supabase/migrations/202609010002_restore_chronological_pick_bout_deadlines.sql"
+      - "supabase/migrations/202609010003_restore_headline_first_pick_bout_deadlines.sql"
+      - "supabase/migrations/202609010004_restore_user_confirmed_chronological_pick_bout_deadlines.sql"
       - "supabase/tests/per_fight_pick_locks.sql"
       - "supabase/tests/progressive_pick_bout_deadlines.sql"
   workflow_dispatch:
