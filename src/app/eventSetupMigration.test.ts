@@ -98,9 +98,10 @@ describe("Phase 2B event setup backend", () => {
     expect(webkitVerifier).toContain("expectedDeploymentSha && liveDeploymentSha !== expectedDeploymentSha");
     expect(webkitVerifier).toContain("previewBody?.deployment_sha !== expectedSyncSourceSha");
     expect(webkitVerifier).toContain('name: "Automatic monitoring and card review"');
+    expect(webkitVerifier).toContain('monitoringRegion.getByRole("heading", { name: "Check now or refresh the ledger" })');
     expect(webkitVerifier).not.toContain('name: "Monitoring Inbox", exact: true }).waitFor');
-    expect(webkitVerifier).toContain('page.getByText("ACTIVE", { exact: true })');
-    expect(webkitVerifier).not.toContain('? "PAUSED" : "ACTIVE"');
+    expect(webkitVerifier).not.toContain('page.getByText("ACTIVE", { exact: true })');
+    expect(deployWorkflow).toContain("verify-production-monitoring-scheduler.mjs");
   });
 
   it("deploys and verifies the sync function runtime revision through the canonical backend owner", () => {
