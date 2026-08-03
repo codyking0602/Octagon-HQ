@@ -227,6 +227,162 @@ begin
 end;
 $$;
 
+do $$
+declare
+  v_owner_id uuid;
+  v_identity text := 'ufc:notification-noise-test';
+  v_aggregation_key text := 'monitoring-repeatedly-failed:' || v_identity;
+  v_now timestamptz := now();
+  v_group_count integer;
+  v_event_count integer;
+  v_aggregate_count integer;
+begin
+  perform set_config('request.jwt.claim.role', 'service_role', true);
+  perform set_config('request.jwt.claim.sub', '', true);
+
+  select profile.id
+    into v_owner_id
+  from public.profiles profile
+  where upper(trim(profile.display_name)) = 'MONITORING OWNER'
+  order by profile.id
+  limit 1;
+
+  if v_owner_id is null then
+    raise exception 'monitoring owner fixture was not available for notification proof';
+  end if;
+
+  insert into private.notification_owner(singleton, profile_id)
+  values (true, v_owner_id)
+  on conflict (singleton) do update
+    set profile_id = excluded.profile_id,
+        updated_at = now();
+
+  insert into public.pick_monitoring_runs (
+    trigger_kind,
+    status,
+    source_event_identity,
+    started_at,
+    completed_at,
+    odds_provider,
+    provider_requests_remaining,
+    provider_requests_used,
+    provider_last_request_cost,
+    provider_event_count,
+    complete_snapshot_count,
+    missing_snapshot_count,
+    diagnostics,
+    provider_called,
+    decision_reason
+  ) values
+    (
+      'scheduled', 'failed', v_identity,
+      v_now - interval '4 hours 1 minute', v_now - interval '4 hours',
+      'the-odds-api', 500, 1, 1, 0, 0, 1,
+      '[{"code":"provider_unavailable","severity":"error"}]'::jsonb,
+      true, null
+    ),
+    (
+      'scheduled', 'failed', v_identity,
+      v_now - interval '3 hours 1 minute', v_now - interval '3 hours',
+      'the-odds-api', 499, 2, 1, 0, 0, 1,
+      '[{"code":"provider_unavailable","severity":"error"}]'::jsonb,
+      true, null
+    ),
+    (
+      'manual', 'failed', v_identity,
+      v_now - interval '2 hours 1 minute', v_now - interval '2 hours',
+      'the-odds-api', 498, 3, 1, 0, 0, 1,
+      '[{"code":"provider_unavailable","severity":"error"}]'::jsonb,
+      true, null
+    );
+
+  perform public.record_pick_monitoring_scheduler_decision(
+    'failed',
+    'schedule_state_failed',
+    v_identity,
+    null,
+    false
+  );
+
+  perform public.dispatch_due_in_app_notifications(v_now);
+
+  select count(*)
+    into v_group_count
+  from private.notification_groups notification
+  where notification.recipient_profile_id = v_owner_id
+    and notification.aggregation_key = v_aggregation_key;
+
+  if v_group_count <> 0 then
+    raise exception 'manual or decision-only monitoring failure created repeated-failure notification noise';
+  end if;
+
+  insert into public.pick_monitoring_runs (
+    trigger_kind,
+    status,
+    source_event_identity,
+    started_at,
+    completed_at,
+    odds_provider,
+    provider_requests_remaining,
+    provider_requests_used,
+    provider_last_request_cost,
+    provider_event_count,
+    complete_snapshot_count,
+    missing_snapshot_count,
+    diagnostics,
+    provider_called,
+    decision_reason
+  ) values (
+    'scheduled', 'failed', v_identity,
+    v_now - interval '11 minutes', v_now - interval '10 minutes',
+    'the-odds-api', 497, 4, 1, 0, 0, 1,
+    '[{"code":"provider_unavailable","severity":"error"}]'::jsonb,
+    true, null
+  );
+
+  perform public.dispatch_due_in_app_notifications(v_now);
+
+  select count(*), max(notification.aggregate_count)
+    into v_group_count, v_aggregate_count
+  from private.notification_groups notification
+  where notification.recipient_profile_id = v_owner_id
+    and notification.aggregation_key = v_aggregation_key;
+
+  select count(*)
+    into v_event_count
+  from private.notification_events event
+  join private.notification_groups notification
+    on notification.id = event.group_id
+  where notification.recipient_profile_id = v_owner_id
+    and notification.aggregation_key = v_aggregation_key;
+
+  if v_group_count <> 1 or v_event_count <> 1 or v_aggregate_count <> 1 then
+    raise exception 'three scheduled provider failures did not create one owner notification: groups %, events %, aggregate %',
+      v_group_count, v_event_count, v_aggregate_count;
+  end if;
+
+  perform public.dispatch_due_in_app_notifications(v_now);
+
+  select count(*), max(notification.aggregate_count)
+    into v_group_count, v_aggregate_count
+  from private.notification_groups notification
+  where notification.recipient_profile_id = v_owner_id
+    and notification.aggregation_key = v_aggregation_key;
+
+  select count(*)
+    into v_event_count
+  from private.notification_events event
+  join private.notification_groups notification
+    on notification.id = event.group_id
+  where notification.recipient_profile_id = v_owner_id
+    and notification.aggregation_key = v_aggregation_key;
+
+  if v_group_count <> 1 or v_event_count <> 1 or v_aggregate_count <> 1 then
+    raise exception 'hourly dispatcher replay duplicated an unchanged repeated-failure alert';
+  end if;
+end;
+$$;
+
 rollback;
 
 -- This file is the canonical Picks fresh-database suite entrypoint in backend verification.
