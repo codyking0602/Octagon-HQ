@@ -30,7 +30,6 @@ export const requiredApplicationMarkers = [
   "group_picks",
   "Fight Night Control",
   "EVENT-WIDE MASTER LOCK",
-  "CHANGE FIGHT",
   "+10 MIN",
   "+20 MIN",
   "SET TIME",
