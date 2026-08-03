@@ -3,6 +3,7 @@ const DEFAULT_ORIGIN = "https://octagon.hq-app.workers.dev";
 const DEFAULT_ATTEMPTS = 12;
 const DEFAULT_DELAY_MS = 5_000;
 
+// This exact-marker verifier also supplies release proof for documentation-only handoff corrections.
 const REQUIRED_JAVASCRIPT_MARKERS = [
   "vite:preloadError",
   "deployment.json",
