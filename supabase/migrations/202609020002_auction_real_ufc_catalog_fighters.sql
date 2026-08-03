@@ -29,7 +29,7 @@ ultimate-fighter|Petr Yan|3|1.0|core|89:92:78:78:88:95
 ultimate-fighter|Merab Dvalishvili|2|1.15|specialist|90:68:92:77:80:98
 ultimate-fighter|Aljamain Sterling|3|1.0|core|89:70:93:81:82:91
 ultimate-fighter|Tom Aspinall|3|1.0|core|88:88:54:97:96:88
-ultimate-fighter|Dricus du Plessis|2|1.2|wildcard|88:78:78:91:92:96
+ultimate-fighter|Dricus du Plessis|2|1.2|wildcard|88:78:42:91:92:96
 ultimate-fighter|Zhang Weili|3|1.0|core|92:89:83:76:89:96
 strikers|Anderson Silva|5|0.35|ace|99
 strikers|Israel Adesanya|4|0.35|ace|98
