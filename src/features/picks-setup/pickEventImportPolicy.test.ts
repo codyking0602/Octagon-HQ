@@ -10,6 +10,10 @@ const syncSource = readFileSync(
   "supabase/functions/sync-next-ufc-event/index.ts",
   "utf8",
 );
+const cardChangesSource = readFileSync(
+  "supabase/functions/sync-next-ufc-event/cardChanges.ts",
+  "utf8",
+);
 const migration = readFileSync(
   "supabase/migrations/202608290001_pick_event_import_segments.sql",
   "utf8",
@@ -93,6 +97,7 @@ describe("Picks event import policy", () => {
     expect(syncSource).toContain("prelims_starts_at: metadata.prelims_starts_at");
     expect(syncSource).toContain("card_segment: bout.card_segment");
     expect(syncSource).not.toContain('scope === "full" || bout.section === "main-event"');
+    expect(cardChangesSource).toContain('["Prelims time", current.prelims_starts_at, event.prelims_starts_at]');
   });
 
   it("keeps stage and publish as the only database owners and rejects Early Prelims twice", () => {
