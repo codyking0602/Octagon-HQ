@@ -97,10 +97,10 @@ const gamrotSalkilldSpotlight: SpotlightData = {
     edges: ["First-round finishing threat", "Length and explosive speed", "Youth and unbeaten UFC momentum"],
   },
   watchSpotlights: [{
-    label: "WATCH GAMROT SPOTLIGHT ↗",
+    label: "GAMROT SPOTLIGHT ↗",
     url: "https://youtu.be/a6B2uVbD10U?si=9V8KK6f6uNN65g-L",
   }, {
-    label: "WATCH SALKILLD SPOTLIGHT ↗",
+    label: "SALKILLD SPOTLIGHT ↗",
     url: "https://youtu.be/Kjq4Jz1XuiI?si=QJdJ5ozZpi-oUy4l",
   }],
 };
@@ -243,7 +243,11 @@ export function MainEventSpotlight({ bout }: { bout: PickBout }) {
                 <p>{data.preview}</p>
                 <div
                   className="main-event-spotlight__watch-links"
-                  style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: `repeat(${data.watchSpotlights.length}, minmax(0, 1fr))`,
+                    gap: "8px",
+                  }}
                 >
                   {data.watchSpotlights.map((spotlight) => (
                     <a key={spotlight.url} href={spotlight.url} target="_blank" rel="noopener noreferrer">
