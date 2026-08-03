@@ -26,3 +26,4 @@ jobs:
           grep -RIn --exclude-dir=node_modules --exclude-dir=.git -E "from\(['\"]profiles['\"]\)|upsert\(|insert\(|update\(|PROFILE UPDATED" src | head -n 300
           echo "=== PROFILE TABLE/POLICY DEFINITIONS ==="
           grep -RIn --exclude-dir=node_modules --exclude-dir=.git -E "create table.*profiles|alter table.*profiles|policy.*profiles|on public\.profiles|user_id.*profiles|profiles.*user_id" supabase/migrations | head -n 500
+          echo "=== END PROFILE OWNER DIAGNOSTIC ==="
