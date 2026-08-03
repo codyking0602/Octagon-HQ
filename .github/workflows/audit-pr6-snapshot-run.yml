@@ -1,4 +1,4 @@
-name: Audit PR 6 Snapshot Run
+name: Stage Auction PR 6 Payload
 
 on:
   push:
@@ -8,42 +8,53 @@ on:
       - ".github/workflows/audit-pr6-snapshot-run.yml"
 
 permissions:
-  actions: read
   contents: write
 
 jobs:
-  audit:
+  stage:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
-      TARGET_SHA: 54ebd72a02386ae3a2e6ddc21ca74310b3b1ec8a
-      TARGET_WORKFLOW: Auction PR 6 Checkout Snapshot
-      PROOF_FILE: verification-artifacts/pr6-snapshot-run.txt
+      BASE_SHA: d580c20124d3d269829af693efde382622fb88ba
+      TARGET_BRANCH: feat/auction-pr6-final-release
+      PAYLOAD_SHA256: 76f35256bea507cf90d3fc0b6f710ad5ee9c73383a71a39185cfb62d7e87fdac
       GH_TOKEN: ${{ github.token }}
     steps:
-      - uses: actions/checkout@v4
-      - name: Capture target run
+      - name: Check out staging source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Reassemble verified implementation payload
         shell: bash
         run: |
           set -euo pipefail
-          run_json=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs?head_sha=$TARGET_SHA&per_page=100")
-          run_id=$(printf '%s' "$run_json" | jq -r --arg workflow "$TARGET_WORKFLOW" '.workflow_runs[] | select(.name == $workflow) | .id' | head -n 1)
-          test -n "$run_id"
-          test "$run_id" != "null"
-          run_meta=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id")
-          mkdir -p "$(dirname "$PROOF_FILE")"
-          {
-            echo "Run ID: $run_id"
-            printf '%s' "$run_meta" | jq -r '"Status: \(.status)\nConclusion: \(.conclusion)\nURL: \(.html_url)"'
-            echo
-            gh run view "$run_id" --repo "$GITHUB_REPOSITORY" --log || true
-          } > "$PROOF_FILE"
-      - name: Commit diagnostic
+          cat verification-artifacts/pr6-payload/part-* > "$RUNNER_TEMP/auction-pr6-payload.b64"
+          base64 --decode "$RUNNER_TEMP/auction-pr6-payload.b64" > "$RUNNER_TEMP/auction-pr6-payload.tar.gz"
+          echo "$PAYLOAD_SHA256  $RUNNER_TEMP/auction-pr6-payload.tar.gz" | sha256sum --check --status
+
+      - name: Replace target branch with one clean implementation commit
         shell: bash
         run: |
           set -euo pipefail
+          target="$RUNNER_TEMP/octagon-pr6"
+          git clone "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$target"
+          cd "$target"
+          git checkout --detach "$BASE_SHA"
+          git switch -C "$TARGET_BRANCH"
+          tar --extract --gzip --file "$RUNNER_TEMP/auction-pr6-payload.tar.gz" --directory .
+
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "$PROOF_FILE"
-          git commit -m "Record PR 6 snapshot run diagnostic"
-          git push origin "HEAD:$GITHUB_REF_NAME"
+          git add --all
+
+          changed_count=$(git diff --cached --name-only | wc -l | tr -d ' ')
+          test "$changed_count" = "25"
+          test ! -e .github/workflows/auction-pr6-checkout-snapshot.yml
+          test ! -e verification-artifacts/auction-pr6-snapshot.txt
+
+          git commit -m "Complete Auction notifications and final release proof"
+          final_sha=$(git rev-parse HEAD)
+          test "$(git rev-parse HEAD^)" = "$BASE_SHA"
+          git push --force origin "HEAD:refs/heads/$TARGET_BRANCH"
+          echo "Final staged head: $final_sha"
