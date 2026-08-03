@@ -30,7 +30,7 @@ const catalog = catalogRows.map((row): CatalogItem => {
   const itemNumber = (counters.get(mode_id) ?? 0) + 1;
   counters.set(mode_id, itemNumber);
   const scores = scoreText.split(":").map(Number);
-  const grading_inputs = mode_id === "ultimate-fighter"
+  const grading_inputs: Record<string, number> = mode_id === "ultimate-fighter"
     ? { overall: scores[0]!, Striking: scores[1]!, Grappling: scores[2]!, Frame: scores[3]!, Power: scores[4]!, Heart: scores[5]! }
     : { overall: scores[0]! };
   return {
