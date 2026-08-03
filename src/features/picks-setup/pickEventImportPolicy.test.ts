@@ -18,6 +18,10 @@ const migration = readFileSync(
   "supabase/migrations/202608290001_pick_event_import_segments.sql",
   "utf8",
 );
+const projectionMigration = readFileSync(
+  "supabase/migrations/202608290002_expose_pick_event_import_segments.sql",
+  "utf8",
+);
 
 describe("Picks event import policy", () => {
   it("uses the official labeled Gamrot time instead of a conflicting structured timestamp", () => {
@@ -100,7 +104,7 @@ describe("Picks event import policy", () => {
     expect(cardChangesSource).toContain('["Prelims time", current.prelims_starts_at, event.prelims_starts_at]');
   });
 
-  it("keeps stage and publish as the only database owners and rejects Early Prelims twice", () => {
+  it("keeps stage, setup projection, and publish as the only database owners", () => {
     expect(migration).toContain("alter function public.stage_pick_event_draft(jsonb)");
     expect(migration).toContain("private.stage_pick_event_draft_import_core(p_payload)");
     expect(migration).toContain("create function public.stage_pick_event_draft(p_payload jsonb)");
@@ -114,5 +118,9 @@ describe("Picks event import policy", () => {
     expect(migration).toContain("card_segment text");
     expect(migration).toContain("segment_sequence smallint");
     expect(migration.match(/set card_segment = null,/g)?.length).toBe(2);
+    expect(projectionMigration).toContain("private.get_pick_event_setup_import_segments_core()");
+    expect(projectionMigration).toContain("create function public.get_pick_event_setup()");
+    expect(projectionMigration).toContain("'card_segment', bout.card_segment");
+    expect(projectionMigration).toContain("'segment_sequence', bout.segment_sequence");
   });
 });
