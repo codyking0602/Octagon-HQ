@@ -106,16 +106,22 @@ describe("Auction PR 5 private content and grader", () => {
     const ultimate = byMode.get("ultimate-fighter")!;
     expect(ultimate).toHaveLength(30);
 
+    const mismatches: string[] = [];
     for (const item of ultimate) {
       const fighter = playByName.get(item.display_label);
       expect(fighter, item.display_label).toBeDefined();
-      expect(item.grading_inputs.overall, item.display_label).toBe(fighter!.ratings.career);
-      expect(item.grading_inputs.Striking, item.display_label).toBe(fighter!.ratings.striking);
-      expect(item.grading_inputs.Grappling, item.display_label).toBe(fighter!.ratings.grappling);
+      for (const [label, actual, expected] of [
+        ["overall", item.grading_inputs.overall, fighter!.ratings.career],
+        ["Striking", item.grading_inputs.Striking, fighter!.ratings.striking],
+        ["Grappling", item.grading_inputs.Grappling, fighter!.ratings.grappling],
+      ] as const) {
+        if (actual !== expected) mismatches.push(`${item.display_label} ${label}: ${actual} -> ${expected}`);
+      }
       expect(Object.keys(item.grading_inputs).sort()).toEqual([
         "Frame", "Grappling", "Heart", "Power", "Striking", "overall",
       ]);
     }
+    expect(mismatches).toEqual([]);
 
     const jon = ultimate.find((item) => item.display_label === "Jon Jones");
     expect(jon?.grading_inputs.overall).toBe(99);
