@@ -1,0 +1,9 @@
+Verification-only trigger for the PR #263 release proof.
+
+Expected live main: 286df54d72ed6a1d58e109f505d7538df22a1fd9
+Expected owner controls on an open pending bout:
+- +10 MIN
+- +20 MIN
+- SET TIME
+
+This branch must never merge. It exists only to run the canonical Supabase and 390x844 WebKit verification against the exact released main SHA.
