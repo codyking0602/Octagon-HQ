@@ -200,14 +200,68 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: stretch;
-  gap: 7px;
+  gap: 10px;
 }
 
 .pick-control-winners > span {
   align-self: center;
   color: var(--text-muted);
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.pick-control-winners > div {
+  display: grid;
+  align-content: center;
+  gap: 5px;
+  min-width: 0;
+  padding: 8px 0;
+}
+
+.pick-control-winners > div:last-child {
+  text-align: right;
+}
+
+.pick-control-winners > div > span {
+  color: var(--text-muted);
+  font-size: 0;
+  font-weight: 950;
+  letter-spacing: .12em;
+}
+
+.pick-control-winners > div:first-child > span::after {
+  content: "RED";
+}
+
+.pick-control-winners > div:last-child > span::after {
+  content: "BLUE";
+}
+
+.pick-control-winners > div > span::after {
+  font-size: 8px;
+}
+
+.pick-control-winners > div > strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 16px;
+  line-height: 1.08;
+}
+
+.pick-control-winners + p {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1.35;
+}
+
+.pick-control-winners + p > strong {
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: .03em;
 }
 
 .pick-control-result {
