@@ -7,12 +7,17 @@ on:
     paths:
       - ".github/agent/repair-picks-event-import.patch"
       - ".github/workflows/apply-repair-picks-event-import.yml"
+  pull_request:
+    branches:
+      - main
+    types: [opened, reopened, synchronize]
 
 permissions:
   contents: write
 
 jobs:
   apply:
+    if: github.event_name == 'push' || github.head_ref == 'agent/repair-picks-event-import'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
