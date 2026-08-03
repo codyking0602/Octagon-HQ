@@ -129,7 +129,8 @@ export default function PicksControlCenterPage({
   const draft = draftState.status === "ready" ? draftState.value : undefined;
   const staged = activeEvent === null ? draft ?? null : null;
   const unresolved = activeEvent ? unresolvedFightCount(activeEvent) : 0;
-  const eventName = activeEvent?.name ?? staged?.name ?? "NEXT UFC EVENT";
+  const eventName = activeEvent?.name ?? staged?.name ?? "NOT STAGED";
+  const heading = activeEvent || staged ? eventName : "Event Setup";
   const eventDate = activeEvent?.startsAt ?? staged?.startsAt ?? null;
   const lockTime = activeEvent?.locksAt ?? staged?.locksAt ?? null;
   const fightCount = activeEvent?.bouts.length ?? staged?.bouts.filter((bout) => bout.included).length ?? 0;
@@ -148,7 +149,7 @@ export default function PicksControlCenterPage({
     ? activeEvent.status === "upcoming"
       ? { href: "#fight-night", label: "MANAGE OPEN PICKS" }
       : { href: "#fight-night", label: unresolved ? "ENTER RESULTS" : "COMPLETE EVENT" }
-    : { href: "#setup", label: staged ? "REVIEW & PUBLISH" : "STAGE NEXT EVENT" };
+    : { href: "#setup", label: staged ? "REVIEW & PUBLISH" : "OPEN EVENT SETUP" };
 
   useEffect(() => {
     const sectionId = location.hash.replace(/^#/, "");
@@ -163,12 +164,12 @@ export default function PicksControlCenterPage({
           <p className="eyebrow">PRIVATE PICKS OWNER</p>
           <span>{lifecycle}</span>
         </div>
-        <h1>{eventName}</h1>
         <strong className="picks-control-center__status">{status}</strong>
+        <h1>{heading}</h1>
         {activeEvent?.subtitle || staged?.subtitle ? <p>{activeEvent?.subtitle ?? staged?.subtitle}</p> : null}
 
         <div className="picks-control-center__facts" aria-label="Picks event status">
-          <div className="is-wide"><span>EVENT</span><strong>{eventName}</strong></div>
+          <div><span>EVENT</span><strong>{eventName}</strong></div>
           <div><span>DATE & LOCAL TIME</span><strong>{displayTime(eventDate)}</strong></div>
           <div><span>PICKS LOCK</span><strong>{lockStatus}</strong></div>
           <div><span>FIGHTS</span><strong>{fightCount}</strong></div>
@@ -178,7 +179,7 @@ export default function PicksControlCenterPage({
           {identity.ready && !identity.profile ? (
             <button className="primary-action" type="button" onClick={identity.openDialog}>SIGN IN</button>
           ) : (
-            <a className="primary-action" href={primaryAction.href}>{primaryAction.label}</a>
+            <a className={activeEvent ? "primary-action" : "secondary-action"} href={primaryAction.href}>{primaryAction.label}</a>
           )}
           <Link className="secondary-action" to="/picks">OPEN PLAYER PICKS</Link>
         </div>
@@ -186,7 +187,15 @@ export default function PicksControlCenterPage({
 
       {activeEvent === null ? (
         <section id="setup" className="picks-control-center__section" aria-label="Event setup">
-          <PicksSetupPage repository={ownedSetupRepository} />
+          <details className="surface-card picks-control-center__panel" open>
+            <summary>
+              <span>EVENT SETUP</span>
+              <strong>{staged ? "REVIEW STAGED CARD" : "STAGE THE NEXT CARD"}</strong>
+            </summary>
+            <div className="picks-control-center__panel-body">
+              <PicksSetupPage repository={ownedSetupRepository} />
+            </div>
+          </details>
         </section>
       ) : null}
 

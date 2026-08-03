@@ -241,14 +241,16 @@ afterEach(() => {
 });
 
 describe("Unified Picks Control Center", () => {
-  it("loads each canonical no-event owner exactly once and emphasizes setup", async () => {
+  it("loads each canonical no-event owner exactly once and keeps setup available without overpowering the page", async () => {
     const control = controlRepository([null]);
     const setup = setupRepository([null]);
     const monitoring = monitoringRepository();
     renderCenter(control, setup, monitoring);
 
     expect(await screen.findByText("SET UP NEXT EVENT")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "STAGE NEXT EVENT" })).toHaveAttribute("href", "#setup");
+    const setupLink = screen.getByRole("link", { name: "OPEN EVENT SETUP" });
+    expect(setupLink).toHaveAttribute("href", "#setup");
+    expect(setupLink).toHaveClass("secondary-action");
     expect(screen.getByRole("region", { name: "Event setup" })).toBeInTheDocument();
     expect(control.loadControlEvent).toHaveBeenCalledTimes(1);
     expect(setup.loadDraft).toHaveBeenCalledTimes(1);
