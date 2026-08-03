@@ -101,7 +101,8 @@ describe("Phase 2B event setup backend", () => {
     expect(webkitVerifier).toContain('monitoringRegion.getByRole("heading", { name: "Check now or refresh the ledger" })');
     expect(webkitVerifier).not.toContain('name: "Monitoring Inbox", exact: true }).waitFor');
     expect(webkitVerifier).not.toContain('page.getByText("ACTIVE", { exact: true })');
-    expect(deployWorkflow).toContain("verify-production-monitoring-scheduler.mjs");
+    expect(deployWorkflow).toContain("verify-monitoring-function-deployment.mjs");
+    expect(deployWorkflow).toContain("EXPECTED_MONITORING_SCHEDULER_ENABLED");
   });
 
   it("deploys and verifies the sync function runtime revision through the canonical backend owner", () => {
