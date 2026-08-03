@@ -57,6 +57,13 @@ export const requiredShareArtwork = [
   "ranking-update.svg",
 ];
 
+export const forbiddenAuctionPrivateMarkers = [
+  "generation_weight",
+  "private_generation_class",
+  "grading_inputs",
+  "Anderson Silva vs Forrest Griffin — UFC 101",
+];
+
 export async function verifyProductionArtifact({ dist = "dist", env = process.env } = {}) {
   const config = validatePublicSupabaseConfig({
     url: env.VITE_SUPABASE_URL,
@@ -138,6 +145,9 @@ export async function verifyProductionArtifact({ dist = "dist", env = process.en
   }
   for (const pattern of forbiddenBrowserCredentialPatterns) {
     if (pattern.test(artifact)) throw new Error(`Compiled artifact contains an administrative credential pattern: ${pattern}.`);
+  }
+  for (const marker of forbiddenAuctionPrivateMarkers) {
+    if (artifact.includes(marker)) throw new Error(`Compiled artifact contains private Auction marker: ${marker}.`);
   }
   for (const marker of requiredApplicationMarkers) {
     if (!artifact.includes(marker)) throw new Error(`Compiled artifact is missing required application marker: ${marker}.`);
