@@ -27,9 +27,10 @@ GitHub Actions is the only deployment owner. A merged change is not automaticall
 | Canonical Auction implementation record | Complete | #204 | `4048e0e11e40ad628ade7437c8e028b18dcdf987` |
 | Auction PR 2: backend foundation | Complete | #205 / #211 release proof | `b5f9d4fd6bf27f52a091fd4f15352ebb331a969d` |
 | Auction PR 3: playable server engine | Complete | #212 / #213 release proof | `0e9377ee6557a33b4db5d1225761901764707537` |
-| Auction PR 4: complete gameplay UI | Implemented in this change | #215 | Assigned when merged |
+| Auction PR 4: complete gameplay UI | Complete | #215 | `515e9293807a8a689d31ebca47ea59148bfeb918` |
+| Auction PR 5: real UFC content and private grading | Implemented on the current branch; not released | Draft PR | Assigned when merged |
 
-PR #205 established the private lifecycle and PR #211 proved its production migrations. PR #212 added the authenticated transactional preparation, send, sealed-bid resolution, forced-assignment, and neutral completion boundary; PR #213 repaired and proved its production release. PR #215 adds the complete gameplay UI. PR 5 is the next stage and owns real UFC content and private grading.
+PR #205 established the private lifecycle and PR #211 proved its production migrations. PR #212 added the authenticated transactional preparation, send, sealed-bid resolution, forced-assignment, and neutral completion boundary; PR #213 repaired and proved its production release. PR #215 added and released the complete gameplay UI. PR 5 is the current implemented stage: it adds the versioned real UFC-only catalog, balanced private generation weights, and the fixed private grader. PR 5 is not released merely because its branch or pull request exists. PR 6 remains the notification-completion and final release-proof stage.
 
 PR #203 established one Play game identity, the sixteen public mode definitions, one canonical `/play/auction` route, and a nonfunctional preview shell. It did not add persistence, bidding, prepared challenges, deck generation, grading, or notifications.
 
@@ -365,6 +366,8 @@ Each prepared Auction is pinned at creation to its exact:
 - Initial tie-priority player.
 
 Participants, mode, canonical challenge linkage after send, and version snapshots are immutable. Later content or grading changes apply only to newly prepared games. Active or completed games never change midstream.
+
+The canonical private owner is `private.auction_catalog_versions` plus `private.auction_catalog`, extended append-only by `supabase/migrations/202609020001_auction_real_ufc_catalog_private_grading.sql`. The active snapshots are `ufc-auction-2026-08-v1`, `balanced-rarity-2026-08-v1`, and `ufc-private-grader-2026-08-v1`. `private.generate_auction_deck` remains the only generator and `private.grade_auction` is the only authoritative grader. Catalog grading inputs, rarity bands, and generation weights have no browser grants; prepared games retain their pinned versions and fixed deck.
 
 Version metadata and hidden scores remain backend-owned. Public version identifiers may be exposed only when they reveal no private content and have a concrete product or support purpose.
 
