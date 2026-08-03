@@ -1,1 +1,0 @@
-`progressive_pick_lock_defaults.sql` is the focused fresh-database proof for the progressive lock migration. Backend verification applies the migration; the companion Vitest contract ensures this proof remains synchronized until it is folded into the canonical Picks SQL chain.
