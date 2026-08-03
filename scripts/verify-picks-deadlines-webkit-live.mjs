@@ -4,7 +4,11 @@ const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
 const projectId = process.env.SUPABASE_PROJECT_ID;
 const productionOrigin = process.env.OCTAGON_PRODUCTION_ORIGIN
   ?? "https://octagon.hq-app.workers.dev";
-const expectedMainSha = process.env.EXPECTED_MAIN_SHA?.trim() ?? "";
+const expectedMainSha = (
+  process.env.EXPECTED_MAIN_SHA
+  ?? process.env.EXPECTED_LIVE_MAIN_SHA
+  ?? ""
+).trim();
 const screenshotPath = process.env.PICKS_DEADLINE_SCREENSHOT_PATH
   ?? `${process.env.RUNNER_TEMP ?? "/tmp"}/picks-deadline-control-mobile.png`;
 
