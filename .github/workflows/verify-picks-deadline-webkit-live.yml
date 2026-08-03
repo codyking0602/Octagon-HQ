@@ -1,0 +1,59 @@
+name: Verify Picks Deadline WebKit Live
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/verify-picks-deadline-webkit-live.yml"
+      - "scripts/verify-picks-deadlines-webkit-live.mjs"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
+      PICKS_DEADLINE_MERGE_SHA: d4093be3d3aa5af766833967ab26b4cbb376a963
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+      PICKS_DEADLINE_SCREENSHOT_PATH: ${{ runner.temp }}/picks-deadline-control-mobile.png
+
+    steps:
+      - name: Check out verification source
+        uses: actions/checkout@v4
+
+      - name: Resolve current main and intended merge
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          git fetch origin main --depth=100
+          git merge-base --is-ancestor "$PICKS_DEADLINE_MERGE_SHA" origin/main
+          CURRENT_MAIN_SHA="$(gh api "repos/${GITHUB_REPOSITORY}/commits/main" --jq .sha)"
+          test -n "$CURRENT_MAIN_SHA"
+          echo "EXPECTED_MAIN_SHA=$CURRENT_MAIN_SHA" >> "$GITHUB_ENV"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install WebKit proof harness
+        run: |
+          npm install --no-save --ignore-scripts playwright@1.56.1
+          npx playwright install --with-deps webkit
+
+      - name: Verify live mobile deadline display
+        run: node scripts/verify-picks-deadlines-webkit-live.mjs
+
+      - name: Upload mobile deadline proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: picks-deadline-webkit-${{ env.EXPECTED_MAIN_SHA }}
+          path: ${{ env.PICKS_DEADLINE_SCREENSHOT_PATH }}
+          if-no-files-found: warn
+          retention-days: 7
