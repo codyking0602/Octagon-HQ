@@ -11,7 +11,7 @@ function occurrences(value: string, pattern: RegExp) {
 }
 
 describe("Picks weekly rollover", () => {
-  it("treats a completed card as history while making next-event setup primary", () => {
+  it("treats a completed card as history while making next-event setup available", () => {
     expect(controlCenter).toContain(
       'const activeEvent = event?.status === "complete" ? null : event;',
     );
@@ -19,7 +19,8 @@ describe("Picks weekly rollover", () => {
       'if (!eventState.value || eventState.value.status === "complete")',
     );
     expect(controlCenter).toContain("{activeEvent === null ? (");
-    expect(controlCenter).toContain('label: staged ? "REVIEW & PUBLISH" : "STAGE NEXT EVENT"');
+    expect(controlCenter).toContain('label: staged ? "REVIEW & PUBLISH" : "OPEN EVENT SETUP"');
+    expect(controlCenter).toContain('className={activeEvent ? "primary-action" : "secondary-action"}');
     expect(controlCenter).toContain('hidden={!identity.profile || event === null}');
   });
 
