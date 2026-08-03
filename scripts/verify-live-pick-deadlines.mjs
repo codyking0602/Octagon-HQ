@@ -44,18 +44,12 @@ eventUrl.searchParams.set(
 );
 eventUrl.searchParams.set("status", "eq.upcoming");
 eventUrl.searchParams.set("order", "starts_at.asc,event_id.asc");
-eventUrl.searchParams.set("limit", "1");
+eventUrl.searchParams.set("limit", "2");
 const events = await readJson("Current Picks event lookup", eventUrl, { headers });
 if (!Array.isArray(events) || events.length !== 1) {
   throw new Error("Current Picks event lookup did not return exactly one upcoming event.");
 }
 const event = events[0];
-const eventIdentity = `${event.event_id ?? ""} ${event.name ?? ""} ${event.subtitle ?? ""}`;
-if (!/gamrot/i.test(eventIdentity) || !/quillan/i.test(eventIdentity)) {
-  throw new Error(
-    `Expected the Gamrot vs. Quillan production card, received ${event.name ?? "missing"} · ${event.subtitle ?? "missing"}.`,
-  );
-}
 
 const boutsUrl = new URL(`${supabaseOrigin}/rest/v1/pick_bouts`);
 boutsUrl.searchParams.set(
@@ -101,6 +95,9 @@ function verifySegment(segment, anchorValue) {
 
 const prelims = verifySegment("prelim", event.prelims_starts_at);
 const mainCard = verifySegment("main", event.starts_at);
+if (prelims.length + mainCard.length !== bouts.length) {
+  throw new Error("The production card contains an unsupported or missing card segment.");
+}
 if (mainCard.length < 2) {
   throw new Error("The production main card did not contain enough fights to prove progressive deadlines.");
 }
