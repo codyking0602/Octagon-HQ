@@ -1,0 +1,45 @@
+diff --git a/supabase/migrations/202608290001_pick_event_import_segments.sql b/supabase/migrations/202608290001_pick_event_import_segments.sql
+--- a/supabase/migrations/202608290001_pick_event_import_segments.sql
++++ b/supabase/migrations/202608290001_pick_event_import_segments.sql
+@@ -139,6 +139,11 @@ begin
+   set prelims_starts_at = v_prelims_starts_at
+   where draft.draft_id = v_draft_id;
+ 
++  update public.pick_event_draft_bouts bout
++  set card_segment = null,
++      segment_sequence = null
++  where bout.draft_id = v_draft_id;
++
+   with payload_bouts as (
+     select value item
+     from jsonb_array_elements(coalesce(p_payload->'bouts', '[]'::jsonb))
+@@ -178,7 +183,8 @@ begin
+   from ranked
+   where ranked.draft_id = bout.draft_id
+-    and ranked.bout_id = bout.bout_id;
++    and ranked.bout_id = bout.bout_id
++    and (bout.card_segment is null or bout.segment_sequence is null);
+ 
+   if exists (
+     select 1
+@@ -225,6 +231,11 @@ declare
+   v_event public.pick_events;
+ begin
++  update public.pick_event_draft_bouts bout
++  set card_segment = null,
++      segment_sequence = null
++  where bout.draft_id = p_draft_id;
++
+   -- Draft editing predates segment metadata. Recompute it from the current
+   -- canonical order immediately before the sole publication owner validates
+   -- and copies the card.
+diff --git a/src/features/picks-setup/pickEventImportPolicy.test.ts b/src/features/picks-setup/pickEventImportPolicy.test.ts
+--- a/src/features/picks-setup/pickEventImportPolicy.test.ts
++++ b/src/features/picks-setup/pickEventImportPolicy.test.ts
+@@ -115,6 +115,7 @@ describe("Picks event import policy", () => {
+     expect(migration).toContain("prelims_starts_at timestamptz");
+     expect(migration).toContain("card_segment text");
+     expect(migration).toContain("segment_sequence smallint");
++    expect(migration.match(/set card_segment = null,/g)?.length).toBe(2);
+   });
+ });
