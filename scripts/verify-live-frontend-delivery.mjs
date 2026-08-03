@@ -192,3 +192,5 @@ if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).
     `PASS: live shell loads deployment ${result.expectedSha} through ${result.javascriptAssets} JavaScript and ${result.stylesheetAssets} CSS assets.`,
   );
 }
+
+// Verification-only trigger for merged main 60ac1aadb9c056bd0536babef330289ee1ea40f2; no behavior change.
