@@ -1,12 +1,16 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-const priorMigration = readFileSync(
+const progressiveMigration = readFileSync(
   "supabase/migrations/202608300001_progressive_pick_bout_deadlines.sql",
   "utf8",
 );
-const migration = readFileSync(
+const deployedReverseMigration = readFileSync(
   "supabase/migrations/202609010001_stagger_initial_pick_bout_deadlines.sql",
+  "utf8",
+);
+const migration = readFileSync(
+  "supabase/migrations/202609010002_restore_chronological_pick_bout_deadlines.sql",
   "utf8",
 );
 const integrationSql = readFileSync(
@@ -26,52 +30,49 @@ const controlRepository = readFileSync(
   "utf8",
 );
 
-describe("staggered initial Picks bout deadlines", () => {
-  it("replaces the deadline step inside the one canonical publication owner", () => {
-    expect(migration).toContain(
+describe("chronological initial Picks bout deadlines", () => {
+  it("corrects the one deployed calculator without adding another publication owner", () => {
+    expect(deployedReverseMigration).toContain(
       "create or replace function public.publish_pick_event_draft(p_draft_id uuid)",
     );
-    expect(migration).toContain(
-      "v_event := private.publish_pick_event_draft_progressive_lock_core(p_draft_id)",
-    );
-    expect(migration).toContain(
+    expect(deployedReverseMigration).toContain(
       "private.apply_initial_pick_bout_deadlines(v_event.event_id, false)",
     );
-    expect(migration.match(/create or replace function public\.publish_pick_event_draft/g))
+    expect(migration.match(/create or replace function private\.apply_initial_pick_bout_deadlines/g))
       .toHaveLength(1);
+    expect(migration).not.toContain("create or replace function public.publish_pick_event_draft");
     expect(migration).not.toContain("publish_pick_event_draft_initial_deadline_core");
     expect(migration).not.toContain("alter function public.publish_pick_event_draft");
   });
 
-  it("gives position one the latest deadline and subtracts exact 30-minute steps", () => {
+  it("uses the official segment opener and adds exact 30-minute chronological steps", () => {
+    expect(migration).toContain("case bout.card_segment");
+    expect(migration).toContain("when 'prelim' then v_event.prelims_starts_at");
+    expect(migration).toContain("else v_event.starts_at");
     expect(migration).toContain(
-      "row_number() over (order by bout.position, bout.bout_id) - 1",
+      "+ make_interval(mins => 30 * (bout.segment_sequence - 1))",
     );
-    expect(migration).toContain("set locks_at = v_event.locks_at");
-    expect(migration).toContain(
-      "- make_interval(mins => 30 * ordered.deadline_offset)",
-    );
-    expect(migration).not.toContain("set locks_at = v_event.starts_at");
-    expect(migration).not.toContain("prelims_starts_at");
-    expect(migration).not.toContain("segment_sequence");
+    const finalUpdate = migration.split("update public.pick_bouts bout").at(-1) ?? "";
+    expect(finalUpdate).toContain("bout.segment_sequence");
+    expect(finalUpdate).not.toContain("bout.position");
   });
 
-  it("repairs only untouched upcoming cards through that same calculator", () => {
-    expect(migration).toContain("p_require_uniform_default boolean default false");
-    expect(migration).toContain("v_event.status <> 'upcoming'");
-    expect(migration).toContain("now() >= v_event.locks_at");
+  it("repairs only known system schedules through that same calculator", () => {
+    expect(migration).toContain(
+      "p_require_uniform_default boolean default false",
+    );
+    expect(migration).toContain("v_uniform_default");
+    expect(migration).toContain("v_reverse_position_pattern");
+    expect(migration).toContain("v_correct_segment_pattern");
     expect(migration).toContain("private.pick_bout_is_locked(v_event, bout)");
-    expect(migration).toContain("bout.locks_at is distinct from v_event.locks_at");
     expect(migration).toContain(
       "private.apply_initial_pick_bout_deadlines(v_event_id, true)",
     );
     expect(migration).not.toContain("gamrot-vs-quillan");
-    expect(migration.match(/apply_initial_pick_bout_deadlines/g)?.length)
-      .toBeGreaterThanOrEqual(4);
   });
 
   it("keeps the established manual mutation and owner controls unchanged", () => {
-    expect(priorMigration.match(/create or replace function public\.adjust_pick_bout_lock_time/g))
+    expect(progressiveMigration.match(/create or replace function public\.adjust_pick_bout_lock_time/g))
       .toHaveLength(1);
     expect(migration).not.toContain("adjust_pick_bout_lock_time");
     expect(controlPage).toContain('"+10 MIN"');
@@ -83,21 +84,24 @@ describe("staggered initial Picks bout deadlines", () => {
     expect(integrationSql).toContain("custom-time adjustment failed");
   });
 
-  it("proves final order, future publication, guarded repair, and finality", () => {
+  it("proves final order, future publication, guarded live repair, and finality", () => {
     expect(integrationSql).toContain(
       "approved draft reorder did not own the published deadline order",
     );
     expect(integrationSql).toContain(
-      "main event did not receive the latest initial deadline",
+      "first chronological main-card fight missed the 7:00 PM anchor",
     );
     expect(integrationSql).toContain(
-      "preceding fights were not exactly 30 minutes earlier",
+      "later main-card fights missed 30-minute increments",
     );
     expect(integrationSql).toContain(
-      "future event creation did not apply the stagger automatically",
+      "main event did not receive the latest deadline",
     );
     expect(integrationSql).toContain(
-      "Gamrot vs. Quillan canonical repair did not apply",
+      "future event creation did not apply the chronological stagger automatically",
+    );
+    expect(integrationSql).toContain(
+      "Gamrot vs. Quillan reverse schedule repair did not apply",
     );
     expect(integrationSql).toContain(
       "manual deadline was overwritten by initial deadline repair",
