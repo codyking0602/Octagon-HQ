@@ -23,6 +23,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # Apply once, commit the canonical source/test edits, and remove this helper.
           python - <<'PY'
           from pathlib import Path
 
