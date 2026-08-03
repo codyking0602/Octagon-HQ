@@ -19,7 +19,7 @@ const bout: PickBout = {
 afterEach(cleanup);
 
 describe("MainEventSpotlight", () => {
-  it("opens the Gamrot-Salkilld breakdown above app chrome with both fighter spotlights", () => {
+  it("opens the Gamrot-Salkilld breakdown above app chrome with both fighter spotlights on one row", () => {
     const { container } = render(<MainEventSpotlight bout={bout} />);
 
     fireEvent.click(screen.getByRole("button", { name: /View matchup breakdown/i }));
@@ -34,13 +34,21 @@ describe("MainEventSpotlight", () => {
     expect(screen.getByText("5-0 UFC")).toBeInTheDocument();
     expect(screen.getByText("Chain wrestling and mat returns")).toBeInTheDocument();
     expect(screen.getByText("First-round finishing threat")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "WATCH GAMROT SPOTLIGHT ↗" })).toHaveAttribute(
+
+    const gamrotSpotlight = screen.getByRole("link", { name: "GAMROT SPOTLIGHT ↗" });
+    const salkilldSpotlight = screen.getByRole("link", { name: "SALKILLD SPOTLIGHT ↗" });
+
+    expect(gamrotSpotlight).toHaveAttribute(
       "href",
       "https://youtu.be/a6B2uVbD10U?si=9V8KK6f6uNN65g-L",
     );
-    expect(screen.getByRole("link", { name: "WATCH SALKILLD SPOTLIGHT ↗" })).toHaveAttribute(
+    expect(salkilldSpotlight).toHaveAttribute(
       "href",
       "https://youtu.be/Kjq4Jz1XuiI?si=QJdJ5ozZpi-oUy4l",
     );
+    expect(gamrotSpotlight.parentElement).toHaveStyle({
+      display: "grid",
+      gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+    });
   });
 });
