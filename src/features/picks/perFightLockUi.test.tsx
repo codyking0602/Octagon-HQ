@@ -74,16 +74,22 @@ function renderPage(repo: PicksRepository) {
   </IdentityProvider></MemoryRouter>);
 }
 
+function scopedFightCard(card: HTMLElement, label: string) {
+  const choices = card.querySelector<HTMLElement>(".pick-bout-card__choices");
+  if (!choices) throw new Error(`Fight choices not found: ${label}`);
+  return { ...within(card), getByRole: within(choices).getByRole };
+}
+
 function fightCardByState(label: string) {
   const card = screen.getByLabelText(label).closest("article");
   if (!card) throw new Error(`Fight card not found: ${label}`);
-  return within(card);
+  return scopedFightCard(card, label);
 }
 
 function fightCardByStatus(text: string) {
   const card = screen.getByText(text).closest("article");
   if (!card) throw new Error(`Fight card not found: ${text}`);
-  return within(card);
+  return scopedFightCard(card, text);
 }
 
 function openGroupComparison() {
