@@ -26,11 +26,29 @@ const event: PickEvent = {
   }],
 };
 
+const gamrotSalkilldEvent: PickEvent = {
+  ...event,
+  eventId: "ufc-gamrot-salkilld",
+  subtitle: "Mateusz Gamrot vs. Quillan Salkilld",
+  bouts: [{
+    ...event.bouts[0],
+    boutId: "gamrot-salkilld",
+    redFighterSlug: "mateusz-gamrot",
+    redFighterName: "Mateusz Gamrot",
+    blueFighterSlug: "quillan-salkilld",
+    blueFighterName: "Quillan Salkilld",
+  }],
+};
+
 describe("Picks event assets", () => {
   it("resolves posters from canonical main-event fighter identity", () => {
     expect(pickEventPoster(event)).toEqual({
       src: "/events/ufc-fight-night-belgrade.svg",
       aspectRatio: "480 / 321",
+    });
+    expect(pickEventPoster(gamrotSalkilldEvent)).toEqual({
+      src: "/events/ufc-fight-night-gamrot-salkilld.svg",
+      aspectRatio: "480 / 221",
     });
   });
 
@@ -54,5 +72,13 @@ describe("Picks event assets", () => {
         blueFighterSlug: "uros-medic",
       }],
     })?.src).toBe("/events/ufc-fight-night-belgrade.svg");
+    expect(pickEventPoster({
+      ...gamrotSalkilldEvent,
+      bouts: [{
+        ...gamrotSalkilldEvent.bouts[0],
+        redFighterSlug: "quillan-salkilld",
+        blueFighterSlug: "mateusz-gamrot",
+      }],
+    })?.src).toBe("/events/ufc-fight-night-gamrot-salkilld.svg");
   });
 });
