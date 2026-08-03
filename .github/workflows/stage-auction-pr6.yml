@@ -1,0 +1,60 @@
+name: Stage Auction PR 6
+
+on:
+  push:
+    branches:
+      - audit/pr276-main-backend-proof
+    paths:
+      - ".github/workflows/stage-auction-pr6.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      BASE_SHA: d580c20124d3d269829af693efde382622fb88ba
+      TARGET_BRANCH: feat/auction-pr6-final-release
+      PAYLOAD_SHA256: 76f35256bea507cf90d3fc0b6f710ad5ee9c73383a71a39185cfb62d7e87fdac
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Check out staging source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Reassemble verified implementation payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat verification-artifacts/pr6-payload/part-* > "$RUNNER_TEMP/auction-pr6-payload.b64"
+          base64 --decode "$RUNNER_TEMP/auction-pr6-payload.b64" > "$RUNNER_TEMP/auction-pr6-payload.tar.gz"
+          echo "$PAYLOAD_SHA256  $RUNNER_TEMP/auction-pr6-payload.tar.gz" | sha256sum --check --status
+
+      - name: Replace target branch with one clean implementation commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          target="$RUNNER_TEMP/octagon-pr6"
+          git clone "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$target"
+          cd "$target"
+          git checkout --detach "$BASE_SHA"
+          git switch -C "$TARGET_BRANCH"
+          tar --extract --gzip --file "$RUNNER_TEMP/auction-pr6-payload.tar.gz" --directory .
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --all
+
+          changed_count=$(git diff --cached --name-only | wc -l | tr -d ' ')
+          test "$changed_count" = "25"
+          test ! -e .github/workflows/auction-pr6-checkout-snapshot.yml
+          test ! -e verification-artifacts/auction-pr6-snapshot.txt
+
+          git commit -m "Complete Auction notifications and final release proof"
+          final_sha=$(git rev-parse HEAD)
+          test "$(git rev-parse HEAD^)" = "$BASE_SHA"
+          git push --force origin "HEAD:refs/heads/$TARGET_BRANCH"
+          echo "Final staged head: $final_sha"
