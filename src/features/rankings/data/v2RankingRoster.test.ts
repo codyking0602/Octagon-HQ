@@ -38,10 +38,11 @@ describe("V2 ranking roster overlay", () => {
       "Stipe Miocic",
       "Jon Jones",
       "Randy Couture",
+      "Israel Adesanya",
     ]);
     expect(sourceOverrides).toMatchObject({
       factsVersion: "octagon-hq-v2-rda-20260730",
-      judgmentVersion: "octagon-hq-v2-randy-couture-profile-20260802",
+      judgmentVersion: "octagon-hq-v2-israel-adesanya-profile-20260803",
       eraDepthVersion: "octagon-hq-v2-rda-20260730",
       eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
     });
@@ -178,6 +179,37 @@ describe("V2 ranking roster overlay", () => {
       whyNotHigher,
     });
     expect(`${oneLiner}${whyRankedHere}${whyNotHigher}`).toMatch(/^[\x00-\x7F]+$/);
+  });
+
+  it("replaces only Israel Adesanya's approved profile copy", () => {
+    const oneLiner = "Adesanya dictated fights through feints, stance changes, distance control, and elite counter striking. His kicks punished hesitation, while his reads made reckless entries dangerous. Once opponents became impatient, he turned small mistakes into knockdowns or sudden finishes without surrendering control.";
+    const whyRankedHere = "Adesanya built one of the strongest UFC middleweight resumes ever: an interim title win over Kelvin Gastelum, a knockout of Robert Whittaker to unify the division, five defenses in his first reign, and a title-regaining knockout of Alex Pereira. Wins over Whittaker twice, Paulo Costa, Marvin Vettori, Jared Cannonier, and Yoel Romero give his championship run exceptional depth.";
+    const whyNotHigher = "The case stops short of the highest tier because his later championship years became too uneven. Pereira ended his first reign, Sean Strickland clearly took the belt from him, and Dricus du Plessis submitted him in another title fight. The failed light heavyweight bid also denied him a second-division achievement, leaving more defining setbacks than the cleaner resumes above him.";
+    const historical = historicalRankingMigrationInputs.fighters.find(
+      (fighter) => fighter.fighter === "Israel Adesanya",
+    );
+    const current = canonicalRankingInputs.fighters.find(
+      (fighter) => fighter.fighter === "Israel Adesanya",
+    );
+
+    expect(historical).toBeDefined();
+    expect(current).toBeDefined();
+    expect(current?.presentation.oneLiner).toBe(oneLiner);
+    expect(current?.presentation.whyRankedHere).toBe(whyRankedHere);
+    expect(current?.presentation.whyNotHigher).toBe(whyNotHigher);
+    expect(current?.facts).toEqual(historical?.facts);
+    expect(current?.era).toEqual(historical?.era);
+    expect(current?.judgments).toEqual(historical?.judgments);
+    expect(current?.eraDepth).toEqual(historical?.eraDepth);
+    expect(current?.presentation).toEqual({
+      ...historical?.presentation,
+      oneLiner,
+      whyRankedHere,
+      whyNotHigher,
+    });
+    for (const value of [oneLiner, whyRankedHere, whyNotHigher]) {
+      expect(value).toMatch(/^[\x00-\x7F]+$/);
+    }
   });
 
   it("calculates Rafael dos Anjos through the canonical engine", () => {
