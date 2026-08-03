@@ -1,0 +1,139 @@
+const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
+const projectId = process.env.SUPABASE_PROJECT_ID;
+
+if (!accessToken || !projectId) {
+  throw new Error("Live Picks deadline verification is not configured.");
+}
+
+const supabaseOrigin = `https://${projectId}.supabase.co`;
+
+async function readJson(stage, url, options = {}) {
+  const response = await fetch(url, options);
+  const text = await response.text();
+  let body;
+  try {
+    body = text ? JSON.parse(text) : null;
+  } catch {
+    throw new Error(`${stage}: response was not valid JSON.`);
+  }
+  if (!response.ok) {
+    const message = body?.message ?? body?.error ?? `HTTP ${response.status}`;
+    throw new Error(`${stage}: ${message}`);
+  }
+  return body;
+}
+
+const keys = await readJson(
+  "Project key lookup",
+  `https://api.supabase.com/v1/projects/${projectId}/api-keys?reveal=true`,
+  { headers: { Authorization: `Bearer ${accessToken}` } },
+);
+const secretKey = keys.find((item) => item.type === "secret")?.api_key
+  ?? keys.find((item) => item.type === "legacy" && /service.role/i.test(item.name ?? ""))?.api_key;
+if (!secretKey) throw new Error("Project key lookup did not return a service credential.");
+
+const headers = {
+  Authorization: `Bearer ${secretKey}`,
+  apikey: secretKey,
+};
+
+const eventUrl = new URL(`${supabaseOrigin}/rest/v1/pick_events`);
+eventUrl.searchParams.set(
+  "select",
+  "event_id,name,status,starts_at,prelims_starts_at,locks_at",
+);
+eventUrl.searchParams.set("status", "eq.upcoming");
+eventUrl.searchParams.set("order", "starts_at.asc,event_id.asc");
+eventUrl.searchParams.set("limit", "1");
+const events = await readJson("Current Picks event lookup", eventUrl, { headers });
+if (!Array.isArray(events) || events.length !== 1) {
+  throw new Error("Current Picks event lookup did not return exactly one upcoming event.");
+}
+const event = events[0];
+if (!/gamrot/i.test(event.name ?? "") || !/quillan/i.test(event.name ?? "")) {
+  throw new Error(`Expected the Gamrot vs. Quillan production card, received ${event.name ?? "missing"}.`);
+}
+
+const boutsUrl = new URL(`${supabaseOrigin}/rest/v1/pick_bouts`);
+boutsUrl.searchParams.set(
+  "select",
+  "bout_id,position,card_segment,segment_sequence,locks_at,red_fighter_name,blue_fighter_name,included_in_picks,result_status",
+);
+boutsUrl.searchParams.set("event_id", `eq.${event.event_id}`);
+boutsUrl.searchParams.set("included_in_picks", "eq.true");
+boutsUrl.searchParams.set("result_status", "eq.pending");
+boutsUrl.searchParams.set("order", "position.asc,bout_id.asc");
+const bouts = await readJson("Current Picks bout lookup", boutsUrl, { headers });
+if (!Array.isArray(bouts) || bouts.length === 0) {
+  throw new Error("Current Picks bout lookup returned no pending included fights.");
+}
+
+function timestamp(value, label) {
+  const parsed = Date.parse(value ?? "");
+  if (!Number.isFinite(parsed)) throw new Error(`${label} is missing or invalid.`);
+  return parsed;
+}
+
+function verifySegment(segment, anchorValue) {
+  const segmentBouts = bouts
+    .filter((bout) => bout.card_segment === segment)
+    .sort((left, right) => left.segment_sequence - right.segment_sequence);
+  if (segmentBouts.length === 0) return [];
+
+  const anchor = timestamp(anchorValue, `${segment} segment anchor`);
+  for (const [index, bout] of segmentBouts.entries()) {
+    if (bout.segment_sequence !== index + 1) {
+      throw new Error(`${segment} segment sequence is not contiguous at ${bout.bout_id}.`);
+    }
+    const expected = anchor + index * 30 * 60 * 1000;
+    const actual = timestamp(bout.locks_at, `${bout.bout_id} deadline`);
+    if (actual !== expected) {
+      throw new Error(
+        `${bout.red_fighter_name} vs. ${bout.blue_fighter_name} expected ${new Date(expected).toISOString()}, received ${new Date(actual).toISOString()}.`,
+      );
+    }
+  }
+  return segmentBouts;
+}
+
+const prelims = verifySegment("prelim", event.prelims_starts_at);
+const mainCard = verifySegment("main", event.starts_at);
+if (mainCard.length < 2) {
+  throw new Error("The production main card did not contain enough fights to prove progressive deadlines.");
+}
+
+const chronologicalMain = [...mainCard].sort(
+  (left, right) => left.segment_sequence - right.segment_sequence,
+);
+const opener = chronologicalMain[0];
+const mainEvent = chronologicalMain.at(-1);
+const positionOne = bouts.find((bout) => bout.position === 1);
+if (!positionOne || positionOne.bout_id !== mainEvent.bout_id) {
+  throw new Error("The headline main event is not the latest chronological main-card fight.");
+}
+if (timestamp(opener.locks_at, "main-card opener deadline") !== timestamp(event.starts_at, "main-card start")) {
+  throw new Error("The first chronological main-card fight does not lock at the official main-card start.");
+}
+if (timestamp(mainEvent.locks_at, "main-event deadline") <= timestamp(opener.locks_at, "main-card opener deadline")) {
+  throw new Error("The main event does not hold the latest main-card deadline.");
+}
+
+const centralFormatter = new Intl.DateTimeFormat("en-US", {
+  timeZone: "America/Chicago",
+  weekday: "short",
+  month: "short",
+  day: "numeric",
+  hour: "numeric",
+  minute: "2-digit",
+});
+const schedule = chronologicalMain.map((bout) => (
+  `${bout.segment_sequence}. ${bout.red_fighter_name} vs. ${bout.blue_fighter_name} — ${centralFormatter.format(new Date(bout.locks_at))}`
+));
+
+console.log(
+  [
+    `PASS: ${event.name} uses chronological 30-minute production deadlines.`,
+    ...schedule,
+    prelims.length ? `Preliminary fights verified: ${prelims.length}.` : "Main-card-only event verified.",
+  ].join("\n"),
+);
