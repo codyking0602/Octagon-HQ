@@ -4,7 +4,7 @@
 -- its official start, then each later fight locks 30 minutes later.
 create or replace function private.apply_initial_pick_bout_deadlines(
   p_event_id text,
-  p_require_known_initial_pattern boolean default false
+  p_require_uniform_default boolean default false
 )
 returns boolean
 language plpgsql
@@ -65,7 +65,9 @@ begin
     return false;
   end if;
 
-  if p_require_known_initial_pattern then
+  -- Keep the deployed parameter name for function identity compatibility. When
+  -- true, repair only a recognized system-generated initial schedule.
+  if p_require_uniform_default then
     select not exists (
       select 1
       from public.pick_bouts bout
