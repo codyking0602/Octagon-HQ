@@ -220,7 +220,7 @@ jobs:
             psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"
           done
 
-          echo "Auction lifecycle SQL tests executed successfully against a fresh local Supabase database."
+          echo "Auction lifecycle SQL tests executed successfully against a fresh local database."
           echo "Truthful Picks monitoring and per-fight lock SQL tests executed successfully against the same fresh local database."
 
       - name: Verify required Edge Function secret names
