@@ -64,15 +64,16 @@ describe("headline-first initial Picks bout deadlines", () => {
   });
 
   it("preserves every deployed competing migration before each correction", () => {
-    for (const deployedMigration of [
-      deployedCompetingMigration002,
-      deployedCompetingMigration004,
-    ]) {
-      expect(deployedMigration).toContain(
-        "+ make_interval(mins => 30 * (bout.segment_sequence - 1))",
-      );
-      expect(deployedMigration).toContain("v_chronological_segment_pattern");
-    }
+    expect(deployedCompetingMigration002).toContain(
+      "+ make_interval(mins => 30 * (bout.segment_sequence - 1))",
+    );
+    expect(deployedCompetingMigration002).toContain("v_correct_segment_pattern");
+    expect(deployedCompetingMigration004).toContain(
+      "+ make_interval(mins => 30 * (bout.segment_sequence - 1))",
+    );
+    expect(deployedCompetingMigration004).toContain(
+      "v_chronological_segment_pattern",
+    );
 
     for (const recoveryMigration of [
       firstRecoveryMigration003,
