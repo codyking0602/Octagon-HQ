@@ -29,6 +29,9 @@ describe("Picks weekly rollover", () => {
     expect(occurrences(controlCenter, /setupRepository\.loadDraft\(\)/g)).toBe(1);
     expect(occurrences(controlCenter, /<PicksControlPage/g)).toBe(1);
     expect(occurrences(controlCenter, /<PicksSetupPage/g)).toBe(1);
-    expect(controlCenter).not.toMatch(/getSupabaseClient|\.rpc\(|createClient|setInterval|setTimeout/);
+    expect(controlCenter).not.toMatch(/getSupabaseClient|\.rpc\(|createClient|setInterval/);
+    expect(occurrences(controlCenter, /window\.setTimeout/g)).toBe(1);
+    expect(occurrences(controlCenter, /window\.clearTimeout/g)).toBe(1);
+    expect(controlCenter).toContain("nextProgressiveLockClockAt");
   });
 });
