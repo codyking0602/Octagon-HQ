@@ -18,6 +18,7 @@ import {
   createPickControlRepository,
   type PickControlRepository,
 } from "./pickControlRepository";
+import { nextProgressiveLockClockAt } from "./progressiveLockTiming";
 
 type ResourceState<T> =
   | { status: "idle" | "loading" | "error" }
@@ -54,6 +55,31 @@ function primaryStatus(
   return unresolved
     ? `${unresolved} FIGHT${unresolved === 1 ? "" : "S"} NEED RESULTS`
     : "PICKS CLOSED · RESULTS OPEN";
+}
+
+function useProgressiveLockClock(event: PickControlEvent | null | undefined) {
+  const [now, setNow] = useState(() => Date.now());
+
+  useEffect(() => {
+    let timeoutId: number | undefined;
+    const schedule = () => {
+      const current = Date.now();
+      setNow(current);
+      const nextBoundary = nextProgressiveLockClockAt(event, current);
+      if (nextBoundary === null) return;
+      timeoutId = window.setTimeout(
+        schedule,
+        Math.max(25, nextBoundary - current + 25),
+      );
+    };
+
+    schedule();
+    return () => {
+      if (timeoutId !== undefined) window.clearTimeout(timeoutId);
+    };
+  }, [event]);
+
+  return now;
 }
 
 interface PicksControlCenterPageProps {
@@ -126,6 +152,7 @@ export default function PicksControlCenterPage({
 
   const event = eventState.status === "ready" ? eventState.value : undefined;
   const activeEvent = event?.status === "complete" ? null : event;
+  const now = useProgressiveLockClock(activeEvent);
   const draft = draftState.status === "ready" ? draftState.value : undefined;
   const staged = activeEvent === null ? draft ?? null : null;
   const unresolved = activeEvent ? unresolvedFightCount(activeEvent) : 0;
@@ -139,7 +166,7 @@ export default function PicksControlCenterPage({
     : staged ? "STAGED" : "NO ACTIVE EVENT";
   const lockStatus = activeEvent
     ? activeEvent.status === "upcoming"
-      ? Date.now() < Date.parse(activeEvent.locksAt) ? `OPEN · ${displayTime(activeEvent.locksAt)}` : "LOCK DEADLINE PASSED"
+      ? now < Date.parse(activeEvent.locksAt) ? `OPEN · ${displayTime(activeEvent.locksAt)}` : "LOCK DEADLINE PASSED"
       : "LOCKED"
     : staged ? `STAGED · ${displayTime(lockTime)}` : "NOT SET";
   const status = identity.ready && !identity.profile
@@ -205,7 +232,7 @@ export default function PicksControlCenterPage({
         aria-label="Event and fight-night control"
         hidden={!identity.profile || event === null}
       >
-        <PicksControlPage key={controlRevision} repository={ownedControlRepository} />
+        <PicksControlPage key={controlRevision} repository={ownedControlRepository} now={now} />
       </section>
 
       {activeEvent?.status === "upcoming" ? (

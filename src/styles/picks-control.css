@@ -196,6 +196,99 @@
   color: var(--text-primary);
 }
 
+.picks-control-deadline {
+  display: grid;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .025);
+}
+
+.picks-control-deadline > div:first-child {
+  display: grid;
+  gap: 4px;
+}
+
+.picks-control-deadline span,
+.picks-control-deadline small,
+.picks-control-lock-warning,
+.picks-control-lock-final {
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.picks-control-deadline span,
+.picks-control-deadline small {
+  color: var(--text-muted);
+}
+
+.picks-control-deadline strong {
+  font-size: 14px;
+  line-height: 1.15;
+}
+
+.picks-control-deadline--open {
+  border-color: rgba(255, 255, 255, .22);
+  box-shadow: inset 3px 0 0 var(--ufc-red);
+}
+
+.picks-control-deadline--final {
+  background: rgba(255, 255, 255, .015);
+}
+
+.picks-control-lock-warning {
+  justify-self: start;
+  margin-top: 2px;
+  padding: 5px 7px;
+  border: 1px solid rgba(255, 255, 255, .35);
+  border-radius: 999px;
+  color: var(--text-primary);
+}
+
+.picks-control-lock-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.picks-control-lock-actions .secondary-action {
+  min-width: 0;
+  min-height: 42px;
+  padding: 0 6px;
+  font-size: 8px;
+  line-height: 1.1;
+}
+
+.picks-control-lock-final {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  color: var(--text-muted);
+}
+
+.picks-control-feedback {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1.35;
+}
+
+.picks-control-feedback--success {
+  border-color: rgba(255, 255, 255, .35);
+  background: rgba(255, 255, 255, .06);
+  color: var(--text-primary);
+}
+
 .pick-control-winners {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
@@ -373,6 +466,11 @@
   .pick-control-bout,
   .picks-control-complete {
     padding: 20px;
+  }
+
+  .picks-control-deadline {
+    grid-template-columns: minmax(0, 1fr) minmax(260px, auto);
+    align-items: center;
   }
 
   .pick-control-result strong {
