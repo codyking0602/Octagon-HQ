@@ -232,3 +232,4 @@ rollback;
 -- This file is the canonical Picks fresh-database suite entrypoint in backend verification.
 \ir picks_owner_identity_projection.sql
 \ir per_fight_pick_locks.sql
+\ir progressive_pick_bout_deadlines.sql
