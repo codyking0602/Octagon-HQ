@@ -7,8 +7,12 @@ import { hasSourceIdentityConflict, matchSourceIdentity, type NormalizedUfcEvent
 import { sourceChanges } from "./cardChanges.ts";
 import { canonicalFightPair, canonicalFighterDisplay, fighterMatch } from "./normalization.ts";
 import { adaptMmaManiaSource, adaptUfcSource, canonicalUfcEventFields } from "./sourceAdapters.ts";
-import { segmentImportedBouts, selectImportedBouts } from "./eventImportPolicy.ts";
-import { parseOfficialUfcSegmentTimes } from "./officialUfcTimes.ts";
+import {
+  parseOfficialUfcSegmentTimes,
+  resolveImportedCardScope,
+  selectAndSequenceImportedBouts,
+  type SequencedBoutMetadata,
+} from "./importPolicy.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*",
@@ -222,10 +226,8 @@ function extractVenueAndLocation($: cheerio.CheerioAPI, name: string, subtitle: 
 export function parseUfcEventPage(html: string, sourceUrl: string, now = new Date()): UfcEventMetadata | null {
   const $ = cheerio.load(html);
   const bodyText = clean($("body").text());
-  const officialTimes = parseOfficialUfcSegmentTimes(bodyText, now);
-  if (!officialTimes) return null;
-  const startsAt = new Date(officialTimes.mainCardStartsAt);
-  if (startsAt.getTime() < now.getTime() - 6 * 3600000) return null;
+  const fallbackStart = eventTime($, bodyText, now);
+  if (!fallbackStart || fallbackStart.getTime() < now.getTime() - 6 * 3600000) return null;
 
   const name = headingText($, "h1") || "UFC Event";
   const versusHeadings = $("h1,h2,h3").map((_, element) => clean($(element).text())).get()
@@ -233,27 +235,42 @@ export function parseUfcEventPage(html: string, sourceUrl: string, now = new Dat
   const subtitle = versusHeadings[0] ?? "";
   const { venue, location } = extractVenueAndLocation($, name, subtitle);
   const sourceEventKey = new URL(sourceUrl).pathname.replace(/^\/+|\/+$/g, "");
-  const season = startsAt.getUTCFullYear();
+  const season = fallbackStart.getUTCFullYear();
 
   const legacy = {
     source_event_key: sourceEventKey,
     ufc_source_url: sourceUrl,
-    event_id: slugify(`${name}-${subtitle}-${season}-${startsAt.toISOString().slice(0, 10)}`),
+    event_id: slugify(`${name}-${subtitle}-${season}-${fallbackStart.toISOString().slice(0, 10)}`),
     name,
     subtitle,
     venue,
     location,
-    starts_at: officialTimes.mainCardStartsAt,
-    locks_at: officialTimes.mainCardStartsAt,
+    starts_at: fallbackStart.toISOString(),
+    locks_at: fallbackStart.toISOString(),
     season,
   };
-  const adapted = adaptUfcSource(html, sourceUrl, legacy);
+  const sourceNormalized = adaptUfcSource(html, sourceUrl, legacy);
+  let officialTimes;
+  try {
+    officialTimes = parseOfficialUfcSegmentTimes(
+      bodyText,
+      sourceNormalized.startsAt,
+      sourceNormalized.eventType === "numbered",
+      now,
+    );
+  } catch (error) {
+    throw new SyncError(
+      "UFC_EVENT_TIME_REJECTED",
+      error instanceof Error ? error.message : "Official UFC segment times were rejected.",
+      "ufc-parse",
+      { sourceUrl },
+    );
+  }
   const normalized = {
-    ...adapted,
+    ...sourceNormalized,
     startsAt: officialTimes.mainCardStartsAt,
     localEventDate: officialTimes.localEventDate,
   };
-  if (normalized.eventType === "numbered" && !officialTimes.prelimsStartsAt) return null;
 
   return {
     ...legacy,
@@ -364,16 +381,15 @@ export function parseMmaManiaCard(html: string, sourceUrl: string): MmaManiaCard
 }
 
 export function resolveCardScope(name: string, subtitle: string, requested: CardScope): EffectiveScope {
-  if (requested === "main" || requested === "full") return requested;
-  return /\bUFC\s+\d{3,4}\b/i.test(`${name} ${subtitle}`) ? "full" : "main";
+  return resolveImportedCardScope(name, subtitle, requested);
 }
 
 function selectBouts(card: MmaManiaCard, scope: EffectiveScope) {
-  return selectImportedBouts(card.bouts, scope);
+  return selectAndSequenceImportedBouts(card.bouts, scope);
 }
 
-function toStagedBouts(bouts: ParsedCardBout[]) {
-  return segmentImportedBouts(bouts).map(({ bout, card_segment, segment_sequence }, index): StagedBout => {
+function toStagedBouts(bouts: Array<ParsedCardBout & SequencedBoutMetadata>) {
+  return bouts.map((bout, index): StagedBout => {
     const redSlug = slugify(bout.red_fighter_name);
     const blueSlug = slugify(bout.blue_fighter_name);
     return {
@@ -384,8 +400,8 @@ function toStagedBouts(bouts: ParsedCardBout[]) {
       red_fighter_name: bout.red_fighter_name,
       blue_fighter_slug: blueSlug,
       blue_fighter_name: bout.blue_fighter_name,
-      card_segment,
-      segment_sequence,
+      card_segment: bout.card_segment,
+      segment_sequence: bout.segment_sequence,
       included: true,
     };
   });
