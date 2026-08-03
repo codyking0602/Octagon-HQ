@@ -1,0 +1,3 @@
+-- Verification-only marker for merged main 4f8cdff15c419cac45d34fecd03b7bbc7ea0f32b.
+-- This branch will never merge. The canonical backend workflow must prove the exact
+-- current-main frontend deployment and report the live backend deployment marker.
