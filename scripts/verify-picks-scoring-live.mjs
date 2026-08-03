@@ -194,3 +194,6 @@ try {
     }).catch(() => undefined);
   }
 }
+
+process.env.EXPECTED_MAIN_SHA = process.env.EXPECTED_LIVE_MAIN_SHA ?? "";
+await import("./verify-picks-deadlines-webkit-live.mjs");
