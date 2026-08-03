@@ -327,6 +327,24 @@ const randyCouture = {
   },
 };
 
+const israelAdesanyaBaseline = historicalMigrationSeedJson.fighters.find(
+  (fighter) => fighter.fighter === "Israel Adesanya",
+);
+
+if (!israelAdesanyaBaseline) {
+  throw new Error("Israel Adesanya is missing from the sealed ranking baseline.");
+}
+
+const israelAdesanya = {
+  ...israelAdesanyaBaseline,
+  presentation: {
+    ...israelAdesanyaBaseline.presentation,
+    oneLiner: "Adesanya dictated fights through feints, stance changes, distance control, and elite counter striking. His kicks punished hesitation, while his reads made reckless entries dangerous. Once opponents became impatient, he turned small mistakes into knockdowns or sudden finishes without surrendering control.",
+    whyRankedHere: "Adesanya built one of the strongest UFC middleweight resumes ever: an interim title win over Kelvin Gastelum, a knockout of Robert Whittaker to unify the division, five defenses in his first reign, and a title-regaining knockout of Alex Pereira. Wins over Whittaker twice, Paulo Costa, Marvin Vettori, Jared Cannonier, and Yoel Romero give his championship run exceptional depth.",
+    whyNotHigher: "The case stops short of the highest tier because his later championship years became too uneven. Pereira ended his first reign, Sean Strickland clearly took the belt from him, and Dricus du Plessis submitted him in another title fight. The failed light heavyweight bid also denied him a second-division achievement, leaving more defining setbacks than the cleaner resumes above him.",
+  },
+};
+
 export const v2RankingRoster: V2RankingRosterOverlay = {
   additions: [rafaelDosAnjos],
   replacements: {
@@ -334,6 +352,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     "Stipe Miocic": stipeMiocic,
     "Jon Jones": jonJones,
     "Randy Couture": randyCouture,
+    "Israel Adesanya": israelAdesanya,
   },
   eraMembership: {
     "Rafael dos Anjos": {
@@ -342,7 +361,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     },
   },
   factsVersion: "octagon-hq-v2-rda-20260730",
-  judgmentVersion: "octagon-hq-v2-randy-couture-profile-20260802",
+  judgmentVersion: "octagon-hq-v2-israel-adesanya-profile-20260803",
   eraDepthVersion: "octagon-hq-v2-rda-20260730",
   eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
 };
