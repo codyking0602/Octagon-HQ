@@ -472,7 +472,8 @@ async function findNextUfcEvent(now: Date) {
     try {
       const parsed = parseUfcEventPage(await fetchText(url, "UFC.com"), url, now);
       if (parsed) return parsed;
-    } catch {
+    } catch (error) {
+      if (error instanceof SyncError && error.code === "UFC_EVENT_TIME_REJECTED") throw error;
       // Preserve index order and continue to the next bounded official UFC event candidate.
     }
   }

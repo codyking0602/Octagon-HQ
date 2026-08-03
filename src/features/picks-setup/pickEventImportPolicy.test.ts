@@ -87,7 +87,7 @@ describe("Picks event import policy", () => {
     expect(syncSource).toContain("parseOfficialUfcSegmentTimes(");
     expect(syncSource).toContain('sourceNormalized.eventType === "numbered"');
     expect(syncSource).toContain('"UFC_EVENT_TIME_REJECTED"');
-    expect(syncSource).toContain("if (error instanceof SyncError) throw error;");
+    expect(syncSource).toContain('error.code === "UFC_EVENT_TIME_REJECTED"');
     expect(syncSource).toContain("resolveImportedCardScope(name, subtitle, requested)");
     expect(syncSource).toContain("selectAndSequenceImportedBouts(card.bouts, scope)");
     expect(syncSource).toContain("prelims_starts_at: metadata.prelims_starts_at");
