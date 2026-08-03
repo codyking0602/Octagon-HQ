@@ -78,7 +78,8 @@ describe("truthful automatic Picks monitoring decisions", () => {
     expect(integrationSql).toContain("non-owner loaded Monitoring Inbox");
     expect(integrationSql).toMatch(/rollback;\s*-- This file is the canonical Picks fresh-database suite entrypoint/);
     expect(integrationSql).toContain("\\ir picks_owner_identity_projection.sql");
-    expect(integrationSql.trimEnd()).toMatch(/\\ir per_fight_pick_locks\.sql$/);
+    expect(integrationSql).toContain("\\ir per_fight_pick_locks.sql");
+    expect(integrationSql.trimEnd()).toMatch(/\\ir progressive_pick_bout_deadlines\.sql$/);
     const staleSuiteInclude = `${String.fromCharCode(92)}ir picks_stale_draft_rollover.sql`;
     expect(ownerIdentitySql).toContain("rollback;");
     expect(ownerIdentitySql.trimEnd().endsWith(staleSuiteInclude)).toBe(true);
