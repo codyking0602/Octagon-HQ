@@ -113,5 +113,6 @@ describe("Picks event import policy", () => {
     expect(migration).toContain("prelims_starts_at timestamptz");
     expect(migration).toContain("card_segment text");
     expect(migration).toContain("segment_sequence smallint");
+    expect(migration.match(/set card_segment = null,/g)?.length).toBe(2);
   });
 });

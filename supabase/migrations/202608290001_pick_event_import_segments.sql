@@ -140,6 +140,11 @@ begin
   set prelims_starts_at = v_prelims_starts_at
   where draft.draft_id = v_draft_id;
 
+  update public.pick_event_draft_bouts bout
+  set card_segment = null,
+      segment_sequence = null
+  where bout.draft_id = v_draft_id;
+
   with payload_bouts as (
     select value item
     from jsonb_array_elements(coalesce(p_payload->'bouts', '[]'::jsonb))
@@ -177,7 +182,8 @@ begin
       segment_sequence = ranked.segment_sequence
   from ranked
   where ranked.draft_id = bout.draft_id
-    and ranked.bout_id = bout.bout_id;
+    and ranked.bout_id = bout.bout_id
+    and (bout.card_segment is null or bout.segment_sequence is null);
 
   if exists (
     select 1
@@ -224,6 +230,11 @@ as $$
 declare
   v_event public.pick_events;
 begin
+  update public.pick_event_draft_bouts bout
+  set card_segment = null,
+      segment_sequence = null
+  where bout.draft_id = p_draft_id;
+
   -- Draft editing predates segment metadata. Recompute it from the current
   -- canonical order immediately before the sole publication owner validates
   -- and copies the card.
