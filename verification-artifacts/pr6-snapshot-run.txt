@@ -1,0 +1,134 @@
+Run ID: 30861353156
+Status: completed
+Conclusion: failure
+URL: https://github.com/codyking0602/Octagon-HQ/actions/runs/30861353156
+
+snapshot	Set up job	﻿2026-08-03T23:10:39.3361385Z Current runner version: '2.336.0'
+snapshot	Set up job	2026-08-03T23:10:39.3397126Z ##[group]Runner Image Provisioner
+snapshot	Set up job	2026-08-03T23:10:39.3398431Z Hosted Compute Agent
+snapshot	Set up job	2026-08-03T23:10:39.3399425Z Version: 20260707.563
+snapshot	Set up job	2026-08-03T23:10:39.3400437Z Commit: 02667638d2b423fbc733a8e32a88b44996a3ba6e
+snapshot	Set up job	2026-08-03T23:10:39.3401520Z Build Date: 2026-07-07T19:33:50Z
+snapshot	Set up job	2026-08-03T23:10:39.3402604Z Worker ID: {7b9c7cd8-18c0-4af8-b319-0102cd645c65}
+snapshot	Set up job	2026-08-03T23:10:39.3404157Z Azure Region: eastus2
+snapshot	Set up job	2026-08-03T23:10:39.3405251Z ##[endgroup]
+snapshot	Set up job	2026-08-03T23:10:39.3407838Z ##[group]Operating System
+snapshot	Set up job	2026-08-03T23:10:39.3409349Z Ubuntu
+snapshot	Set up job	2026-08-03T23:10:39.3410163Z 24.04.4
+snapshot	Set up job	2026-08-03T23:10:39.3410923Z LTS
+snapshot	Set up job	2026-08-03T23:10:39.3411780Z ##[endgroup]
+snapshot	Set up job	2026-08-03T23:10:39.3412652Z ##[group]Runner Image
+snapshot	Set up job	2026-08-03T23:10:39.3413602Z Image: ubuntu-24.04
+snapshot	Set up job	2026-08-03T23:10:39.3414745Z Version: 20260720.247.2
+snapshot	Set up job	2026-08-03T23:10:39.3416395Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260720.247/images/ubuntu/Ubuntu2404-Readme.md
+snapshot	Set up job	2026-08-03T23:10:39.3419248Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260720.247
+snapshot	Set up job	2026-08-03T23:10:39.3420761Z ##[endgroup]
+snapshot	Set up job	2026-08-03T23:10:39.3422500Z ##[group]GITHUB_TOKEN Permissions
+snapshot	Set up job	2026-08-03T23:10:39.3425828Z Contents: write
+snapshot	Set up job	2026-08-03T23:10:39.3426786Z Metadata: read
+snapshot	Set up job	2026-08-03T23:10:39.3427705Z ##[endgroup]
+snapshot	Set up job	2026-08-03T23:10:39.3430685Z Secret source: Actions
+snapshot	Set up job	2026-08-03T23:10:39.3432797Z Prepare workflow directory
+snapshot	Set up job	2026-08-03T23:10:39.3892507Z Prepare all required actions
+snapshot	Set up job	2026-08-03T23:10:39.3960967Z Getting action download info
+snapshot	Set up job	2026-08-03T23:10:39.5538260Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+snapshot	Set up job	2026-08-03T23:10:39.8001798Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+snapshot	Set up job	2026-08-03T23:10:40.0121761Z Complete job name: snapshot
+snapshot	Check out exact branch	﻿2026-08-03T23:10:40.0980932Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+snapshot	Check out exact branch	2026-08-03T23:10:40.0989979Z ##[group]Run actions/checkout@v4
+snapshot	Check out exact branch	2026-08-03T23:10:40.0990677Z with:
+snapshot	Check out exact branch	2026-08-03T23:10:40.0991101Z   fetch-depth: 1
+snapshot	Check out exact branch	2026-08-03T23:10:40.0991573Z   repository: codyking0602/Octagon-HQ
+snapshot	Check out exact branch	2026-08-03T23:10:40.0995768Z   token: ***
+snapshot	Check out exact branch	2026-08-03T23:10:40.0996207Z   ssh-strict: true
+snapshot	Check out exact branch	2026-08-03T23:10:40.0996649Z   ssh-user: git
+snapshot	Check out exact branch	2026-08-03T23:10:40.0997092Z   persist-credentials: true
+snapshot	Check out exact branch	2026-08-03T23:10:40.0997574Z   clean: true
+snapshot	Check out exact branch	2026-08-03T23:10:40.0998016Z   sparse-checkout-cone-mode: true
+snapshot	Check out exact branch	2026-08-03T23:10:40.0998541Z   fetch-tags: false
+snapshot	Check out exact branch	2026-08-03T23:10:40.0998989Z   show-progress: true
+snapshot	Check out exact branch	2026-08-03T23:10:40.0999424Z   lfs: false
+snapshot	Check out exact branch	2026-08-03T23:10:40.0999827Z   submodules: false
+snapshot	Check out exact branch	2026-08-03T23:10:40.1000324Z   set-safe-directory: true
+snapshot	Check out exact branch	2026-08-03T23:10:40.1000820Z   allow-unsafe-pr-checkout: false
+snapshot	Check out exact branch	2026-08-03T23:10:40.1001642Z ##[endgroup]
+snapshot	Check out exact branch	2026-08-03T23:10:40.2013931Z Syncing repository: codyking0602/Octagon-HQ
+snapshot	Check out exact branch	2026-08-03T23:10:40.2016354Z ##[group]Getting Git version info
+snapshot	Check out exact branch	2026-08-03T23:10:40.2017365Z Working directory is '/home/runner/work/Octagon-HQ/Octagon-HQ'
+snapshot	Check out exact branch	2026-08-03T23:10:40.2018925Z [command]/usr/bin/git version
+snapshot	Check out exact branch	2026-08-03T23:10:40.2083553Z git version 2.54.0
+snapshot	Check out exact branch	2026-08-03T23:10:40.2105661Z ##[endgroup]
+snapshot	Check out exact branch	2026-08-03T23:10:40.2121087Z Temporarily overriding HOME='/home/runner/work/_temp/70b897ab-a8ef-4b8d-aa88-c4756fe2d55a' before making global git config changes
+snapshot	Check out exact branch	2026-08-03T23:10:40.2123240Z Adding repository directory to the temporary git global config as a safe directory
+snapshot	Check out exact branch	2026-08-03T23:10:40.2126841Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Octagon-HQ/Octagon-HQ
+snapshot	Check out exact branch	2026-08-03T23:10:40.2178844Z Deleting the contents of '/home/runner/work/Octagon-HQ/Octagon-HQ'
+snapshot	Check out exact branch	2026-08-03T23:10:40.2183082Z ##[group]Initializing the repository
+snapshot	Check out exact branch	2026-08-03T23:10:40.2191494Z [command]/usr/bin/git init /home/runner/work/Octagon-HQ/Octagon-HQ
+snapshot	Check out exact branch	2026-08-03T23:10:40.2287873Z hint: Using 'master' as the name for the initial branch. This default branch name
+snapshot	Check out exact branch	2026-08-03T23:10:40.2289451Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+snapshot	Check out exact branch	2026-08-03T23:10:40.2290955Z hint: to use in all of your new repositories, which will suppress this warning,
+snapshot	Check out exact branch	2026-08-03T23:10:40.2293648Z hint: call:
+snapshot	Check out exact branch	2026-08-03T23:10:40.2294419Z hint:
+snapshot	Check out exact branch	2026-08-03T23:10:40.2294951Z hint: 	git config --global init.defaultBranch <name>
+snapshot	Check out exact branch	2026-08-03T23:10:40.2295581Z hint:
+snapshot	Check out exact branch	2026-08-03T23:10:40.2296174Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+snapshot	Check out exact branch	2026-08-03T23:10:40.2297106Z hint: 'development'. The just-created branch can be renamed via this command:
+snapshot	Check out exact branch	2026-08-03T23:10:40.2297848Z hint:
+snapshot	Check out exact branch	2026-08-03T23:10:40.2298272Z hint: 	git branch -m <name>
+snapshot	Check out exact branch	2026-08-03T23:10:40.2298747Z hint:
+snapshot	Check out exact branch	2026-08-03T23:10:40.2299395Z hint: Disable this message with "git config set advice.defaultBranchName false"
+snapshot	Check out exact branch	2026-08-03T23:10:40.2300793Z Initialized empty Git repository in /home/runner/work/Octagon-HQ/Octagon-HQ/.git/
+snapshot	Check out exact branch	2026-08-03T23:10:40.2303066Z [command]/usr/bin/git remote add origin https://github.com/codyking0602/Octagon-HQ
+snapshot	Check out exact branch	2026-08-03T23:10:40.2349533Z ##[endgroup]
+snapshot	Check out exact branch	2026-08-03T23:10:40.2350715Z ##[group]Disabling automatic garbage collection
+snapshot	Check out exact branch	2026-08-03T23:10:40.2357952Z [command]/usr/bin/git config --local gc.auto 0
+snapshot	Check out exact branch	2026-08-03T23:10:40.2395379Z ##[endgroup]
+snapshot	Check out exact branch	2026-08-03T23:10:40.2396992Z ##[group]Setting up auth
+snapshot	Check out exact branch	2026-08-03T23:10:40.2402764Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+snapshot	Check out exact branch	2026-08-03T23:10:40.2441524Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+snapshot	Check out exact branch	2026-08-03T23:10:40.2802577Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+snapshot	Check out exact branch	2026-08-03T23:10:40.2841493Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+snapshot	Check out exact branch	2026-08-03T23:10:40.3114768Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+snapshot	Check out exact branch	2026-08-03T23:10:40.3157782Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+snapshot	Check out exact branch	2026-08-03T23:10:40.3418783Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+snapshot	Check out exact branch	2026-08-03T23:10:40.3462259Z ##[endgroup]
+snapshot	Check out exact branch	2026-08-03T23:10:40.3463578Z ##[group]Fetching the repository
+snapshot	Check out exact branch	2026-08-03T23:10:40.3473581Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +54ebd72a02386ae3a2e6ddc21ca74310b3b1ec8a:refs/remotes/origin/feat/auction-pr6-final-release
+snapshot	Check out exact branch	2026-08-03T23:10:41.5872377Z From https://github.com/codyking0602/Octagon-HQ
+snapshot	Check out exact branch	2026-08-03T23:10:41.5875673Z  * [new ref]         54ebd72a02386ae3a2e6ddc21ca74310b3b1ec8a -> origin/feat/auction-pr6-final-release
+snapshot	Check out exact branch	2026-08-03T23:10:41.5946422Z ##[endgroup]
+snapshot	Check out exact branch	2026-08-03T23:10:41.5947896Z ##[group]Determining the checkout info
+snapshot	Check out exact branch	2026-08-03T23:10:41.5949371Z ##[endgroup]
+snapshot	Check out exact branch	2026-08-03T23:10:41.5950469Z [command]/usr/bin/git sparse-checkout disable
+snapshot	Check out exact branch	2026-08-03T23:10:41.6330352Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+snapshot	Check out exact branch	2026-08-03T23:10:41.6371862Z ##[group]Checking out the ref
+snapshot	Check out exact branch	2026-08-03T23:10:41.6379036Z [command]/usr/bin/git checkout --progress --force -B feat/auction-pr6-final-release refs/remotes/origin/feat/auction-pr6-final-release
+snapshot	Check out exact branch	2026-08-03T23:10:41.8398272Z Switched to a new branch 'feat/auction-pr6-final-release'
+snapshot	Check out exact branch	2026-08-03T23:10:41.8400397Z branch 'feat/auction-pr6-final-release' set up to track 'origin/feat/auction-pr6-final-release'.
+snapshot	Check out exact branch	2026-08-03T23:10:41.8411638Z ##[endgroup]
+snapshot	Check out exact branch	2026-08-03T23:10:41.8842017Z [command]/usr/bin/git log -1 --format=%H
+snapshot	Check out exact branch	2026-08-03T23:10:41.8879810Z 54ebd72a02386ae3a2e6ddc21ca74310b3b1ec8a
+snapshot	Build repository snapshot	﻿2026-08-03T23:10:41.9121337Z ##[group]Run set -euo pipefail
+snapshot	Build repository snapshot	2026-08-03T23:10:41.9121849Z ^[[36;1mset -euo pipefail^[[0m
+snapshot	Build repository snapshot	2026-08-03T23:10:41.9122426Z ^[[36;1mtar --exclude=.git --exclude=octagon-pr6-repository.tar.gz -czf octagon-pr6-repository.tar.gz .^[[0m
+snapshot	Build repository snapshot	2026-08-03T23:10:41.9176095Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+snapshot	Build repository snapshot	2026-08-03T23:10:41.9176568Z ##[endgroup]
+snapshot	Build repository snapshot	2026-08-03T23:10:42.6834866Z tar: .: file changed as we read it
+snapshot	Build repository snapshot	2026-08-03T23:10:42.6884529Z ##[error]Process completed with exit code 1.
+snapshot	Post Check out exact branch	﻿2026-08-03T23:10:42.7032066Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+snapshot	Post Check out exact branch	2026-08-03T23:10:42.7033871Z Post job cleanup.
+snapshot	Post Check out exact branch	2026-08-03T23:10:42.8010752Z [command]/usr/bin/git version
+snapshot	Post Check out exact branch	2026-08-03T23:10:42.8086291Z git version 2.54.0
+snapshot	Post Check out exact branch	2026-08-03T23:10:42.8123891Z Temporarily overriding HOME='/home/runner/work/_temp/649269b2-a59b-4d5d-9869-6143ce40c792' before making global git config changes
+snapshot	Post Check out exact branch	2026-08-03T23:10:42.8125597Z Adding repository directory to the temporary git global config as a safe directory
+snapshot	Post Check out exact branch	2026-08-03T23:10:42.8129757Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Octagon-HQ/Octagon-HQ
+snapshot	Post Check out exact branch	2026-08-03T23:10:42.8171792Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+snapshot	Post Check out exact branch	2026-08-03T23:10:42.8210434Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+snapshot	Post Check out exact branch	2026-08-03T23:10:42.8482758Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+snapshot	Post Check out exact branch	2026-08-03T23:10:42.8508501Z http.https://github.com/.extraheader
+snapshot	Post Check out exact branch	2026-08-03T23:10:42.8520500Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+snapshot	Post Check out exact branch	2026-08-03T23:10:42.8558649Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+snapshot	Post Check out exact branch	2026-08-03T23:10:42.8826639Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+snapshot	Post Check out exact branch	2026-08-03T23:10:42.8869719Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+snapshot	Complete job	﻿2026-08-03T23:10:42.9318180Z Cleaning up orphan processes
+snapshot	Complete job	2026-08-03T23:10:42.9646133Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
