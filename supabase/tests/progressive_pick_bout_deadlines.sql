@@ -315,7 +315,14 @@ begin
   end;
 
   -- Explicit event lock and completion remain the master override even when an
-  -- individual bout carries a later future deadline.
+  -- individual bout carries a later future deadline. Move the event-wide lock
+  -- to its valid transition boundary without changing any explicit bout lock.
+  perform set_config('request.jwt.claim.role','service_role',true);
+  update public.pick_events
+  set locks_at=now()-interval '1 minute'
+  where event_id='progressive-numbered';
+  perform set_config('request.jwt.claim.role','authenticated',true);
+  perform set_config('request.jwt.claim.sub',v_owner::text,true);
   perform public.transition_pick_event('progressive-numbered','locked');
   select * into v_event from public.pick_events where event_id='progressive-numbered';
   select * into v_bout from public.pick_bouts
