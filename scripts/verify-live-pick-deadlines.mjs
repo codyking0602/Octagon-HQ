@@ -40,7 +40,7 @@ const headers = {
 const eventUrl = new URL(`${supabaseOrigin}/rest/v1/pick_events`);
 eventUrl.searchParams.set(
   "select",
-  "event_id,name,status,starts_at,prelims_starts_at,locks_at",
+  "event_id,name,subtitle,status,starts_at,prelims_starts_at,locks_at",
 );
 eventUrl.searchParams.set("status", "eq.upcoming");
 eventUrl.searchParams.set("order", "starts_at.asc,event_id.asc");
@@ -50,8 +50,11 @@ if (!Array.isArray(events) || events.length !== 1) {
   throw new Error("Current Picks event lookup did not return exactly one upcoming event.");
 }
 const event = events[0];
-if (!/gamrot/i.test(event.name ?? "") || !/quillan/i.test(event.name ?? "")) {
-  throw new Error(`Expected the Gamrot vs. Quillan production card, received ${event.name ?? "missing"}.`);
+const eventIdentity = `${event.event_id ?? ""} ${event.name ?? ""} ${event.subtitle ?? ""}`;
+if (!/gamrot/i.test(eventIdentity) || !/quillan/i.test(eventIdentity)) {
+  throw new Error(
+    `Expected the Gamrot vs. Quillan production card, received ${event.name ?? "missing"} · ${event.subtitle ?? "missing"}.`,
+  );
 }
 
 const boutsUrl = new URL(`${supabaseOrigin}/rest/v1/pick_bouts`);
@@ -132,7 +135,7 @@ const schedule = chronologicalMain.map((bout) => (
 
 console.log(
   [
-    `PASS: ${event.name} uses chronological 30-minute production deadlines.`,
+    `PASS: ${event.name} · ${event.subtitle} uses chronological 30-minute production deadlines.`,
     ...schedule,
     prelims.length ? `Preliminary fights verified: ${prelims.length}.` : "Main-card-only event verified.",
   ].join("\n"),
