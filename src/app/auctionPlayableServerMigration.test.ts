@@ -9,10 +9,10 @@ const hardeningSql = readFileSync(
   "supabase/migrations/202608220002_auction_playable_server_engine_hardening.sql",
   "utf8",
 );
-const databaseTest = readFileSync(
-  "supabase/tests/auction_playable_server_engine.sql",
-  "utf8",
-);
+const databaseTest = [
+  readFileSync("supabase/tests/auction_playable_server_engine.sql", "utf8"),
+  readFileSync("supabase/tests/auction_playable_server_engine_legacy.sql", "utf8"),
+].join("\n");
 const verificationWorkflow = readFileSync(
   ".github/workflows/verify-supabase-backend.yml",
   "utf8",

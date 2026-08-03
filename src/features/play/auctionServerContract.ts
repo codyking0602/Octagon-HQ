@@ -1,8 +1,8 @@
 import { auctionModeDefinition, type AuctionModeId } from "./auctionContract";
 
-export const AUCTION_CONTENT_VERSION = "fixture-2026-08-22-v1";
-export const AUCTION_RARITY_VERSION = "rarity-fixture-v1";
-export const AUCTION_GRADING_VERSION = "grader-contract-v1";
+export const AUCTION_CONTENT_VERSION = "ufc-auction-2026-08-v1";
+export const AUCTION_RARITY_VERSION = "balanced-rarity-2026-08-v1";
+export const AUCTION_GRADING_VERSION = "ufc-private-grader-2026-08-v1";
 
 export interface AuctionCatalogItem {
   reference: string;
