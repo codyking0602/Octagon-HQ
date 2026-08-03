@@ -194,3 +194,5 @@ try {
     }).catch(() => undefined);
   }
 }
+
+await import("./verify-picks-deadlines-webkit-live.mjs");
