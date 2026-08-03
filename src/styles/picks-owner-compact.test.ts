@@ -1,8 +1,9 @@
 import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
-const compactStyles = readFileSync(new URL("./picks-owner-compact.css", import.meta.url), "utf8");
-const appEntry = readFileSync(new URL("../main.tsx", import.meta.url), "utf8");
+const compactStyles = readFileSync(resolve(process.cwd(), "src/styles/picks-owner-compact.css"), "utf8");
+const appEntry = readFileSync(resolve(process.cwd(), "src/main.tsx"), "utf8");
 
 describe("compact Picks owner controls", () => {
   it("removes the redundant unlocked status without hiding locked state", () => {
