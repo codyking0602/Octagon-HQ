@@ -1,0 +1,35 @@
+name: Apply Picks Event Import Repair
+
+on:
+  push:
+    branches:
+      - agent/repair-picks-event-import
+    paths:
+      - ".github/agent/repair-picks-event-import.patch"
+      - ".github/workflows/apply-repair-picks-event-import.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/repair-picks-event-import
+          fetch-depth: 1
+      - name: Apply narrow source patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git apply --check .github/agent/repair-picks-event-import.patch
+          git apply .github/agent/repair-picks-event-import.patch
+          rm .github/agent/repair-picks-event-import.patch
+          rm .github/workflows/apply-repair-picks-event-import.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --all
+          git commit -m "Repair Picks event import source"
+          git push origin HEAD:agent/repair-picks-event-import
