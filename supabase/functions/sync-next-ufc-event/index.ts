@@ -7,14 +7,8 @@ import { hasSourceIdentityConflict, matchSourceIdentity, type NormalizedUfcEvent
 import { sourceChanges } from "./cardChanges.ts";
 import { canonicalFightPair, canonicalFighterDisplay, fighterMatch } from "./normalization.ts";
 import { adaptMmaManiaSource, adaptUfcSource, canonicalUfcEventFields } from "./sourceAdapters.ts";
-import {
-  parseOfficialUfcSegmentTimes,
-  resolveImportedCardScope,
-  selectAndSequenceImportedBouts,
-  type CardScope,
-  type CardSection,
-  type EffectiveScope,
-} from "./importPolicy.ts";
+import { segmentImportedBouts, selectImportedBouts } from "./eventImportPolicy.ts";
+import { parseOfficialUfcSegmentTimes } from "./officialUfcTimes.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*",
@@ -29,12 +23,16 @@ const MAX_UFC_EVENT_PAGE_ATTEMPTS = 4;
 const requestHeaders = {
   "User-Agent": "OctagonHQ/2.0 (+https://octagon.hq-app.workers.dev)",
   Accept: "text/html,application/xhtml+xml",
+  "Accept-Language": "en-US,en;q=0.9",
 };
 const monthNumbers: Record<string, string> = {
   Jan: "01", Feb: "02", Mar: "03", Apr: "04", May: "05", Jun: "06",
   Jul: "07", Aug: "08", Sep: "09", Oct: "10", Nov: "11", Dec: "12",
 };
 
+type CardScope = "auto" | "main" | "full";
+type EffectiveScope = "main" | "full";
+type CardSection = "main-event" | "main" | "prelim" | "early-prelim";
 type ErrorStage = "authentication" | "ufc-index-fetch" | "ufc-event-fetch" | "ufc-parse" | "mma-fetch" | "mma-parse" | "identity-match" | "preview-build" | "database-read" | "database-write";
 
 class SyncError extends Error {
@@ -85,9 +83,9 @@ interface StagedBout {
   red_fighter_name: string;
   blue_fighter_slug: string;
   blue_fighter_name: string;
-  included: boolean;
-  card_segment: "main" | "prelim";
+  card_segment: "prelim" | "main";
   segment_sequence: number;
+  included: boolean;
 }
 
 interface ParsedEvent {
@@ -224,8 +222,10 @@ function extractVenueAndLocation($: cheerio.CheerioAPI, name: string, subtitle: 
 export function parseUfcEventPage(html: string, sourceUrl: string, now = new Date()): UfcEventMetadata | null {
   const $ = cheerio.load(html);
   const bodyText = clean($("body").text());
-  const startsAt = eventTime($, bodyText, now);
-  if (!startsAt || startsAt.getTime() < now.getTime() - 6 * 3600000) return null;
+  const officialTimes = parseOfficialUfcSegmentTimes(bodyText, now);
+  if (!officialTimes) return null;
+  const startsAt = new Date(officialTimes.mainCardStartsAt);
+  if (startsAt.getTime() < now.getTime() - 6 * 3600000) return null;
 
   const name = headingText($, "h1") || "UFC Event";
   const versusHeadings = $("h1,h2,h3").map((_, element) => clean($(element).text())).get()
@@ -243,36 +243,22 @@ export function parseUfcEventPage(html: string, sourceUrl: string, now = new Dat
     subtitle,
     venue,
     location,
-    starts_at: startsAt.toISOString(),
-    locks_at: startsAt.toISOString(),
+    starts_at: officialTimes.mainCardStartsAt,
+    locks_at: officialTimes.mainCardStartsAt,
     season,
   };
-  const sourceNormalized = adaptUfcSource(html, sourceUrl, legacy);
-  let segmentTimes: ReturnType<typeof parseOfficialUfcSegmentTimes>;
-  try {
-    segmentTimes = parseOfficialUfcSegmentTimes(
-      bodyText,
-      sourceNormalized.startsAt || legacy.starts_at,
-      sourceNormalized.eventType === "numbered",
-      now,
-    );
-  } catch (error) {
-    throw new SyncError(
-      "UFC_EVENT_TIME_REJECTED",
-      "Official UFC card times were missing or contradictory.",
-      "ufc-parse",
-      { reason: error instanceof Error ? error.message : "invalid-official-card-times" },
-    );
-  }
+  const adapted = adaptUfcSource(html, sourceUrl, legacy);
   const normalized = {
-    ...sourceNormalized,
-    startsAt: segmentTimes.mainCardStartsAt,
-    localEventDate: segmentTimes.localEventDate,
+    ...adapted,
+    startsAt: officialTimes.mainCardStartsAt,
+    localEventDate: officialTimes.localEventDate,
   };
+  if (normalized.eventType === "numbered" && !officialTimes.prelimsStartsAt) return null;
+
   return {
     ...legacy,
     ...canonicalUfcEventFields(normalized),
-    prelims_starts_at: segmentTimes.prelimsStartsAt,
+    prelims_starts_at: officialTimes.prelimsStartsAt,
     ufc_source_url: sourceUrl,
     normalized,
   };
@@ -378,15 +364,16 @@ export function parseMmaManiaCard(html: string, sourceUrl: string): MmaManiaCard
 }
 
 export function resolveCardScope(name: string, subtitle: string, requested: CardScope): EffectiveScope {
-  return resolveImportedCardScope(name, subtitle, requested);
+  if (requested === "main" || requested === "full") return requested;
+  return /\bUFC\s+\d{3,4}\b/i.test(`${name} ${subtitle}`) ? "full" : "main";
 }
 
 function selectBouts(card: MmaManiaCard, scope: EffectiveScope) {
-  return selectAndSequenceImportedBouts(card.bouts, scope);
+  return selectImportedBouts(card.bouts, scope);
 }
 
-function toStagedBouts(bouts: ReturnType<typeof selectBouts>) {
-  return bouts.map((bout, index): StagedBout => {
+function toStagedBouts(bouts: ParsedCardBout[]) {
+  return segmentImportedBouts(bouts).map(({ bout, card_segment, segment_sequence }, index): StagedBout => {
     const redSlug = slugify(bout.red_fighter_name);
     const blueSlug = slugify(bout.blue_fighter_name);
     return {
@@ -397,9 +384,9 @@ function toStagedBouts(bouts: ReturnType<typeof selectBouts>) {
       red_fighter_name: bout.red_fighter_name,
       blue_fighter_slug: blueSlug,
       blue_fighter_name: bout.blue_fighter_name,
+      card_segment,
+      segment_sequence,
       included: true,
-      card_segment: bout.card_segment,
-      segment_sequence: bout.segment_sequence,
     };
   });
 }
@@ -485,9 +472,8 @@ async function findNextUfcEvent(now: Date) {
     try {
       const parsed = parseUfcEventPage(await fetchText(url, "UFC.com"), url, now);
       if (parsed) return parsed;
-    } catch (error) {
-      if (error instanceof SyncError) throw error;
-      // Preserve index order and continue after a transport or unrelated-page failure.
+    } catch {
+      // Preserve index order and continue to the next bounded official UFC event candidate.
     }
   }
   return null;
@@ -663,8 +649,8 @@ async function buildNextEvent(now: Date, requestedScope: CardScope, preferredSou
   const event: ParsedEvent = {
     source: "UFC.com metadata + MMA Mania card",
     ...canonicalMetadata,
-    source_url: card.sourceUrl,
     prelims_starts_at: metadata.prelims_starts_at,
+    source_url: card.sourceUrl,
     subtitle,
     bouts,
     warnings,
