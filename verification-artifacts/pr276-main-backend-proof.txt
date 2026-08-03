@@ -1,0 +1,29 @@
+PR #276 canonical main backend deployment proof
+Target merge SHA: d580c20124d3d269829af693efde382622fb88ba
+Run ID: 30860689085
+Run URL: https://github.com/codyking0602/Octagon-HQ/actions/runs/30860689085
+Workflow: Deploy Supabase Backend
+Workflow path: .github/workflows/deploy-supabase.yml
+Event: push
+Branch: main
+Status: completed
+Conclusion: success
+Deploy job ID: 91841789148
+
+Required successful steps:
+- Verify exact checked-out SHA
+- Verify migrations, functions, and production CORS
+- Record deployed backend
+
+Exact checkout log:
+deploy	Verify exact checked-out SHA	2026-08-03T22:59:53.7851282Z Exact deployment source verified: d580c20124d3d269829af693efde382622fb88ba
+
+Linked production migration rows:
+deploy	Verify migrations, functions, and production CORS	2026-08-03T23:00:33.1865519Z    `202609020001` | `202609020001` | `202609020001` 
+deploy	Verify migrations, functions, and production CORS	2026-08-03T23:00:33.1866142Z    `202609020002` | `202609020002` | `202609020002` 
+deploy	Verify migrations, functions, and production CORS	2026-08-03T23:00:33.1866670Z    `202609020003` | `202609020003` | `202609020003` 
+deploy	Verify migrations, functions, and production CORS	2026-08-03T23:00:33.1867199Z    `202609020004` | `202609020004` | `202609020004` 
+deploy	Verify migrations, functions, and production CORS	2026-08-03T23:00:33.1868233Z    `202609020005` | `202609020005` | `202609020005` 
+deploy	Verify migrations, functions, and production CORS	2026-08-03T23:00:33.1868787Z    `202609020006` | `202609020006` | `202609020006` 
+deploy	Verify migrations, functions, and production CORS	2026-08-03T23:00:33.1869312Z    `202609020007` | `202609020007` | `202609020007` 
+deploy	Verify migrations, functions, and production CORS	2026-08-03T23:00:33.1869832Z    `202609020008` | `202609020008` | `202609020008` 
