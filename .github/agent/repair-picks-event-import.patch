@@ -1,0 +1,24 @@
+diff --git a/supabase/functions/sync-next-ufc-event/index.ts b/supabase/functions/sync-next-ufc-event/index.ts
+--- a/supabase/functions/sync-next-ufc-event/index.ts
++++ b/supabase/functions/sync-next-ufc-event/index.ts
+@@ -484,7 +484,7 @@ async function findNextUfcEvent(now: Date) {
+       const parsed = parseUfcEventPage(await fetchText(url, "UFC.com"), url, now);
+       if (parsed) return parsed;
+     } catch (error) {
+-      if (error instanceof SyncError) throw error;
++      if (error instanceof SyncError && error.code === "UFC_EVENT_TIME_REJECTED") throw error;
+       // Preserve index order and continue after a transport or unrelated-page failure.
+     }
+   }
+diff --git a/src/features/picks-setup/pickEventImportPolicy.test.ts b/src/features/picks-setup/pickEventImportPolicy.test.ts
+--- a/src/features/picks-setup/pickEventImportPolicy.test.ts
++++ b/src/features/picks-setup/pickEventImportPolicy.test.ts
+@@ -90,7 +90,7 @@ describe("Picks event import policy", () => {
+     expect(syncSource).toContain("parseOfficialUfcSegmentTimes(");
+     expect(syncSource).toContain('sourceNormalized.eventType === "numbered"');
+     expect(syncSource).toContain('"UFC_EVENT_TIME_REJECTED"');
+-    expect(syncSource).toContain("if (error instanceof SyncError) throw error;");
++    expect(syncSource).toContain('error.code === "UFC_EVENT_TIME_REJECTED"');
+     expect(syncSource).toContain("resolveImportedCardScope(name, subtitle, requested)");
+     expect(syncSource).toContain("selectAndSequenceImportedBouts(card.bouts, scope)");
+     expect(syncSource).toContain("prelims_starts_at: metadata.prelims_starts_at");
