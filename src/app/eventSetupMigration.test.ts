@@ -43,7 +43,7 @@ describe("Phase 2B event setup backend", () => {
     expect(syncFunction).toContain("https://www.mmamania.com/ufc-fight-cards");
     expect(syncFunction).toContain("parseMmaManiaCard");
     expect(syncFunction).toContain("resolveCardScope");
-    expect(syncFunction).toContain('requested === "main" || requested === "full"');
+    expect(syncFunction).toContain("resolveImportedCardScope(name, subtitle, requested)");
     expect(syncFunction).toContain('"ARTICLE_DISCOVERY_FAILED"');
     expect(syncFunction).toContain('"ARTICLE_DISCOVERY_REJECTED"');
     expect(syncFunction).not.toContain("bouts.slice(0, 6)");
@@ -97,6 +97,8 @@ describe("Phase 2B event setup backend", () => {
     expect(webkitVerifier).toContain("const liveDeploymentSha");
     expect(webkitVerifier).toContain("expectedDeploymentSha && liveDeploymentSha !== expectedDeploymentSha");
     expect(webkitVerifier).toContain("previewBody?.deployment_sha !== expectedSyncSourceSha");
+    expect(webkitVerifier).toContain('name: "Automatic monitoring and card review"');
+    expect(webkitVerifier).not.toContain('name: "Monitoring Inbox", exact: true }).waitFor');
     expect(webkitVerifier).toContain('page.getByText("ACTIVE", { exact: true })');
     expect(webkitVerifier).not.toContain('? "PAUSED" : "ACTIVE"');
   });

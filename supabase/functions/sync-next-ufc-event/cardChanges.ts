@@ -16,6 +16,7 @@ interface SourceEvent {
   venue: string;
   location: string;
   starts_at: string;
+  prelims_starts_at?: string;
   locks_at: string;
   source_url: string;
   bouts: SourceBout[];
@@ -77,7 +78,8 @@ export function sourceChanges(currentValue: unknown, event: SourceEvent, effecti
   }
 
   const timestampFields: Array<[string, unknown, unknown]> = [
-    ["Event time", current.starts_at, event.starts_at],
+    ["Main-card time", current.starts_at, event.starts_at],
+    ["Prelims time", current.prelims_starts_at, event.prelims_starts_at],
     ["Picks lock", current.locks_at, event.locks_at],
   ];
   for (const [label, oldValue, newValue] of timestampFields) {
