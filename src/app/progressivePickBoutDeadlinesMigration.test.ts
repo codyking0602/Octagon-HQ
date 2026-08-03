@@ -59,7 +59,7 @@ describe("chronological initial Picks bout deadlines", () => {
 
   it("repairs only known system schedules through that same calculator", () => {
     expect(migration).toContain(
-      "p_require_known_initial_pattern boolean default false",
+      "p_require_uniform_default boolean default false",
     );
     expect(migration).toContain("v_uniform_default");
     expect(migration).toContain("v_reverse_position_pattern");
