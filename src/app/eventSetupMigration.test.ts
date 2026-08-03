@@ -43,7 +43,7 @@ describe("Phase 2B event setup backend", () => {
     expect(syncFunction).toContain("https://www.mmamania.com/ufc-fight-cards");
     expect(syncFunction).toContain("parseMmaManiaCard");
     expect(syncFunction).toContain("resolveCardScope");
-    expect(syncFunction).toContain('requested === "main" || requested === "full"');
+    expect(syncFunction).toContain("resolveImportedCardScope(name, subtitle, requested)");
     expect(syncFunction).toContain('"ARTICLE_DISCOVERY_FAILED"');
     expect(syncFunction).toContain('"ARTICLE_DISCOVERY_REJECTED"');
     expect(syncFunction).not.toContain("bouts.slice(0, 6)");
