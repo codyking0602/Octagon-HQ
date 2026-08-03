@@ -124,6 +124,7 @@ if (!publishableKey || !secretKey) {
 }
 
 const suffix = `${process.env.GITHUB_RUN_ID ?? Date.now()}${process.env.GITHUB_RUN_ATTEMPT ?? "1"}`;
+const displayName = `PICKSCHECK${suffix}`.slice(0, 24);
 const email = `picks-check-${suffix}@login.octagon-hq.app`;
 const password = `PicksCheck-${suffix}!Aa1`;
 const serviceHeaders = {
@@ -140,11 +141,32 @@ try {
     {
       method: "POST",
       headers: serviceHeaders,
-      body: JSON.stringify({ email, password, email_confirm: true }),
+      body: JSON.stringify({
+        email,
+        password,
+        email_confirm: true,
+        user_metadata: { display_name: displayName },
+      }),
     },
   );
   userId = created?.id ?? "";
   if (!userId) throw new Error("Disposable Auth user creation returned no user ID.");
+
+  await request(
+    "Disposable profile registration",
+    `${supabaseOrigin}/rest/v1/rpc/register_pin_profile`,
+    {
+      method: "POST",
+      headers: serviceHeaders,
+      body: JSON.stringify({
+        p_profile_id: userId,
+        p_display_name: displayName,
+        p_initials: "PC",
+        p_internal_email: email,
+        p_pin: "5937",
+      }),
+    },
+  );
 
   const session = await request(
     "Disposable user sign-in",
