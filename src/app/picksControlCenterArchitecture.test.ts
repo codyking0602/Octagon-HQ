@@ -25,11 +25,14 @@ describe("Unified Picks Control Center architecture", () => {
     expect(router).toContain('path: "picks", element: <PicksPage />');
   });
 
-  it("composes existing pages without creating another data owner", () => {
+  it("composes existing pages without creating another data owner or polling loop", () => {
     expect(occurrences(center, /<PicksControlPage/g)).toBe(1);
     expect(occurrences(center, /<PicksSetupPage/g)).toBe(1);
     expect(occurrences(center, /<MonitoringInboxPage/g)).toBe(1);
-    expect(center).not.toMatch(/getSupabaseClient|\.rpc\(|functions\.invoke|createClient|setInterval|setTimeout/);
+    expect(center).not.toMatch(/getSupabaseClient|\.rpc\(|functions\.invoke|createClient|setInterval/);
+    expect(occurrences(center, /window\.setTimeout/g)).toBe(1);
+    expect(occurrences(center, /window\.clearTimeout/g)).toBe(1);
+    expect(center).toContain("nextProgressiveLockClockAt");
     expect(controlPage).not.toContain("onEventState");
     expect(monitoringRepository.match(/get_pick_monitoring_inbox/g)).toHaveLength(1);
   });
