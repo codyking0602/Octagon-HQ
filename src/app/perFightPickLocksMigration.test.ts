@@ -68,7 +68,10 @@ describe("per-fight Picks lock backend architecture", () => {
       "event-wide deadline overwrote an explicitly adjusted bout",
     );
     expect(integrationSql).toContain(
-      "published bout did not receive the safe event lock default",
+      "published Main Card opener missed the official Main Card start",
+    );
+    expect(integrationSql).toContain(
+      "published later Main Card fight missed its 30-minute increment",
     );
   });
 
