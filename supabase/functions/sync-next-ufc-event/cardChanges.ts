@@ -16,7 +16,7 @@ interface SourceEvent {
   venue: string;
   location: string;
   starts_at: string;
-  prelims_starts_at: string;
+  prelims_starts_at?: string;
   locks_at: string;
   source_url: string;
   bouts: SourceBout[];
