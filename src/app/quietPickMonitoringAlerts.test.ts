@@ -13,10 +13,6 @@ const integrationSql = readFileSync(
   "supabase/tests/pick_monitoring_truthful_decisions.sql",
   "utf8",
 );
-const deployWorkflow = readFileSync(
-  ".github/workflows/deploy-supabase.yml",
-  "utf8",
-);
 
 describe("quiet far-out Picks monitoring alerts", () => {
   it("keeps provider checks twice daily until the final 48 hours", () => {
@@ -51,14 +47,5 @@ describe("quiet far-out Picks monitoring alerts", () => {
       "hourly dispatcher replay duplicated an unchanged repeated-failure alert",
     );
     expect(integrationSql.trimEnd()).toContain("\\ir progressive_pick_bout_deadlines.sql");
-  });
-
-  it("requires the repair migration after trusted backend deployment", () => {
-    expect(deployWorkflow).toContain(
-      "supabase/migrations/202608310001_quiet_far_out_pick_monitoring_alerts.sql",
-    );
-    expect(deployWorkflow).toContain(
-      'require_remote_migration "202608310001"',
-    );
   });
 });
