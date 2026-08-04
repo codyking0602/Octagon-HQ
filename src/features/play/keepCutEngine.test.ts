@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   KEEP_CUT_PACKS,
   createKeepCutLineup,
+  keepCutBoardIsCompetitive,
   keepCutPool,
   keepCutRating,
   keepCutScoreLabel,
@@ -12,7 +13,7 @@ import {
 import { rankedPlayFighters } from "./playFighterPool";
 
 describe("Keep 4, Cut 4 engine", () => {
-  it("generates eight unique category-valid fighters through the canonical pools", () => {
+  it("generates eight unique category-valid competitive fighters through canonical owners", () => {
     for (const pack of KEEP_CUT_PACKS) {
       const lineup = createKeepCutLineup(pack.id, `unique-${pack.id}`);
       const validIds = new Set(keepCutPool(pack.id).map((fighter) => fighter.id));
@@ -20,75 +21,141 @@ describe("Keep 4, Cut 4 engine", () => {
       expect(ids).toHaveLength(8);
       expect(new Set(ids).size).toBe(8);
       expect(ids.every((id) => validIds.has(id))).toBe(true);
+      expect(keepCutBoardIsCompetitive(pack.id, lineup.fighters)).toBe(true);
       expect(lineup.attemptsUsed).toBeGreaterThan(0);
-      expect(lineup.attemptsUsed).toBeLessThanOrEqual(18);
+      expect(lineup.attemptsUsed).toBeLessThanOrEqual(36);
     }
   });
 
-  it("requires exactly four keeps and classifies kept and cut fighters", () => {
+  it("requires exactly four unique keeps from the board and classifies the other four as cuts", () => {
     const lineup = createKeepCutLineup("all-careers", "selection-proof");
     const ids = lineup.fighters.map((fighter) => fighter.id);
     expect(() => scoreKeepCutSelection("all-careers", lineup.fighters, ids.slice(0, 3))).toThrow("exactly four");
     expect(() => scoreKeepCutSelection("all-careers", lineup.fighters, ids.slice(0, 5))).toThrow("exactly four");
+    expect(() => scoreKeepCutSelection("all-careers", lineup.fighters, [ids[0]!, ids[0]!, ids[1]!, ids[2]!])).toThrow("exactly four");
+    expect(() => scoreKeepCutSelection("all-careers", lineup.fighters, [ids[0]!, ids[1]!, ids[2]!, "not-on-board"])).toThrow("from the board");
     const result = scoreKeepCutSelection("all-careers", lineup.fighters, ids.slice(0, 4));
     expect(result.keptIds).toEqual(ids.slice(0, 4));
     expect(result.cutIds).toEqual(ids.slice(4));
+    expect(result.kept).toHaveLength(4);
+    expect(result.cut).toHaveLength(4);
   });
 
-  it("scores deterministically and rewards stronger groups", () => {
+  it("scores deterministically, independently of selection order and display-only fields", () => {
     const lineup = createKeepCutLineup("all-careers", "score-proof");
     const sorted = [...lineup.fighters].sort((a, b) => keepCutRating("all-careers", b) - keepCutRating("all-careers", a));
-    const strong = scoreKeepCutSelection("all-careers", lineup.fighters, sorted.slice(0, 4).map((fighter) => fighter.id));
-    const weak = scoreKeepCutSelection("all-careers", lineup.fighters, sorted.slice(4).map((fighter) => fighter.id));
-    expect(scoreKeepCutSelection("all-careers", lineup.fighters, strong.keptIds)).toEqual(strong);
+    const strongIds = sorted.slice(0, 4).map((fighter) => fighter.id);
+    const weakIds = sorted.slice(4).map((fighter) => fighter.id);
+    const strong = scoreKeepCutSelection("all-careers", lineup.fighters, strongIds);
+    const reordered = scoreKeepCutSelection("all-careers", lineup.fighters, [...strongIds].reverse());
+    const renamedAndReorderedBoard = [...lineup.fighters]
+      .reverse()
+      .map((fighter) => ({ ...fighter, name: `DISPLAY ${fighter.id}` }));
+    const displayChanged = scoreKeepCutSelection("all-careers", renamedAndReorderedBoard, strongIds);
+    const weak = scoreKeepCutSelection("all-careers", lineup.fighters, weakIds);
+    expect(reordered.score).toBe(strong.score);
+    expect(reordered.label).toBe(strong.label);
+    expect(displayChanged.score).toBe(strong.score);
+    expect(displayChanged.label).toBe(strong.label);
     expect(strong.score).toBeGreaterThan(weak.score);
+    expect(strong.score).toBeGreaterThanOrEqual(0);
+    expect(strong.score).toBeLessThanOrEqual(100);
   });
 
-  it("maps score labels to deterministic bands", () => {
-    expect(keepCutScoreLabel(95)).toBe("Legendary four");
-    expect(keepCutScoreLabel(80)).toBe("Excellent keeps");
-    expect(keepCutScoreLabel(70)).toBe("Solid card");
-    expect(keepCutScoreLabel(50)).toBe("Tough cuts");
-    expect(keepCutScoreLabel(20)).toBe("Rough room");
+  it("maps every whole-number score to one gapless deterministic label band", () => {
+    const expected = (score: number) => {
+      if (score >= 90) return "Legendary four";
+      if (score >= 78) return "Excellent keeps";
+      if (score >= 62) return "Solid card";
+      if (score >= 45) return "Tough cuts";
+      return "Rough room";
+    };
+    const labels = Array.from({ length: 101 }, (_, score) => keepCutScoreLabel(score));
+    labels.forEach((label, score) => expect(label).toBe(expected(score)));
+    expect(new Set(labels)).toEqual(new Set([
+      "Legendary four",
+      "Excellent keeps",
+      "Solid card",
+      "Tough cuts",
+      "Rough room",
+    ]));
   });
 
-  it("hydrates exact challenge boards by stable fighter IDs", () => {
+  it("hydrates the exact challenge board and order from stable fighter IDs", () => {
     const lineup = createKeepCutLineup("ufc-careers", "challenge-proof");
     const ids = lineup.fighters.map((fighter) => fighter.id);
     expect(resolveKeepCutChallenge("ufc-careers", ids)?.map((fighter) => fighter.id)).toEqual(ids);
     expect(resolveKeepCutChallenge("ufc-careers", [...ids.slice(1), ids[0]])?.map((fighter) => fighter.id)).toEqual([...ids.slice(1), ids[0]]);
+    expect(resolveKeepCutChallenge("ufc-careers", ids.slice(0, 7))).toBeNull();
   });
 
-  it("proves deterministic simulation fairness and score distribution", () => {
-    const sampleSize = 320;
+  it("proves deterministic board fairness and useful score distribution over 1,024 boards", () => {
+    const sampleSize = 1_024;
     const rankedIds = new Set(rankedPlayFighters.map((fighter) => fighter.id));
+    const allEligibleIds = new Set(KEEP_CUT_PACKS.flatMap((pack) => keepCutPool(pack.id).map((fighter) => fighter.id)));
     const boardSignatures = new Set<string>();
-    let ranked = 0, playOnly = 0, men = 0, women = 0, strong = 0, middle = 0, weaker = 0, badBoards = 0;
-    const scores = { weak: 0, average: 0, good: 0, excellent: 0 };
+    const fightersSeen = new Set<string>();
+    const appearanceCounts = new Map<string, number>();
+    const scoreValues: number[] = [];
+    const scores = { weak: 0, average: 0, good: 0, excellent: 0, nearPerfect: 0, perfect: 0 };
+    const categoryBoards: Record<string, number> = {};
+    const categoryWomen: Record<string, number> = {};
+    let ranked = 0;
+    let playOnly = 0;
+    let men = 0;
+    let women = 0;
+    let strong = 0;
+    let middle = 0;
+    let weaker = 0;
+    let badBoards = 0;
+    let fallbackBoards = 0;
+
     for (let index = 0; index < sampleSize; index += 1) {
       const pack = KEEP_CUT_PACKS[index % KEEP_CUT_PACKS.length]!;
       const lineup = createKeepCutLineup(pack.id, `simulation-${index}`);
+      const repeat = createKeepCutLineup(pack.id, `simulation-${index}`);
       const ids = lineup.fighters.map((fighter) => fighter.id);
       const validIds = new Set(keepCutPool(pack.id).map((fighter) => fighter.id));
+      expect(repeat.fighters.map((fighter) => fighter.id)).toEqual(ids);
       expect(ids).toHaveLength(8);
       expect(new Set(ids).size).toBe(8);
       expect(ids.every((id) => validIds.has(id))).toBe(true);
-      expect(lineup.attemptsUsed).toBeLessThanOrEqual(18);
+      expect(keepCutBoardIsCompetitive(pack.id, lineup.fighters)).toBe(true);
+      expect(lineup.attemptsUsed).toBeLessThanOrEqual(36);
+      if (lineup.fallbackUsed) fallbackBoards += 1;
+      categoryBoards[pack.id] = (categoryBoards[pack.id] ?? 0) + 1;
       boardSignatures.add([...ids].sort().join("|"));
+
       const sorted = [...lineup.fighters].sort((a, b) => keepCutRating(pack.id, b) - keepCutRating(pack.id, a));
       const strongResult = scoreKeepCutSelection(pack.id, lineup.fighters, sorted.slice(0, 4).map((fighter) => fighter.id));
       const weakResult = scoreKeepCutSelection(pack.id, lineup.fighters, sorted.slice(4).map((fighter) => fighter.id));
+      const mixedResult = scoreKeepCutSelection(pack.id, lineup.fighters, [sorted[0]!, sorted[2]!, sorted[4]!, sorted[6]!].map((fighter) => fighter.id));
+      const middleResult = scoreKeepCutSelection(pack.id, lineup.fighters, sorted.slice(2, 6).map((fighter) => fighter.id));
       expect(strongResult.score).toBeGreaterThan(weakResult.score);
-      for (const score of [strongResult.score, weakResult.score, scoreKeepCutSelection(pack.id, lineup.fighters, [sorted[0]!, sorted[2]!, sorted[4]!, sorted[6]!].map((fighter) => fighter.id)).score]) {
+
+      for (const score of [strongResult.score, weakResult.score, mixedResult.score, middleResult.score]) {
+        expect(score).toBeGreaterThanOrEqual(0);
+        expect(score).toBeLessThanOrEqual(100);
+        scoreValues.push(score);
         if (score < 45) scores.weak += 1;
         else if (score < 62) scores.average += 1;
         else if (score < 78) scores.good += 1;
         else scores.excellent += 1;
+        if (score >= 95) scores.nearPerfect += 1;
+        if (score === 100) scores.perfect += 1;
       }
+
       let boardBad = 0;
       for (const fighter of lineup.fighters) {
-        if (rankedIds.has(fighter.id)) ranked += 1; else playOnly += 1;
-        if (fighter.gender === "men") men += 1; else women += 1;
+        fightersSeen.add(fighter.id);
+        appearanceCounts.set(fighter.id, (appearanceCounts.get(fighter.id) ?? 0) + 1);
+        if (rankedIds.has(fighter.id)) ranked += 1;
+        else playOnly += 1;
+        if (fighter.gender === "men") men += 1;
+        else {
+          women += 1;
+          categoryWomen[pack.id] = (categoryWomen[pack.id] ?? 0) + 1;
+        }
         const tier = keepCutTier(keepCutRating(pack.id, fighter));
         if (tier === "elite" || tier === "great") strong += 1;
         if (tier === "good" || tier === "average") middle += 1;
@@ -98,18 +165,63 @@ describe("Keep 4, Cut 4 engine", () => {
       expect(boardBad).toBeLessThanOrEqual(2);
       if (boardBad > 0) badBoards += 1;
     }
+
+    const totalAppearances = sampleSize * 8;
+    const sortedScores = [...scoreValues].sort((a, b) => a - b);
+    const p10 = sortedScores[Math.floor(sortedScores.length * 0.1)]!;
+    const p90 = sortedScores[Math.floor(sortedScores.length * 0.9)]!;
+    const sortedAppearances = [...appearanceCounts.entries()].sort((left, right) => right[1] - left[1]);
+    const topTenAppearances = sortedAppearances.slice(0, 10).reduce((sum, [, count]) => sum + count, 0);
+    const maxFighterAppearances = sortedAppearances[0]?.[1] ?? 0;
+    const metrics = {
+      sampleSize,
+      categoryBoards,
+      uniqueBoards: boardSignatures.size,
+      eligibleFighters: allEligibleIds.size,
+      fightersSeen: fightersSeen.size,
+      ranked,
+      playOnly,
+      men,
+      women,
+      categoryWomen,
+      strong,
+      middle,
+      weaker,
+      badBoards,
+      fallbackBoards,
+      scores,
+      uniqueScores: new Set(scoreValues).size,
+      p10,
+      p90,
+      scoreSpread: p90 - p10,
+      maxFighterAppearances,
+      maxFighterBoardShare: Number((maxFighterAppearances / sampleSize).toFixed(4)),
+      topTenAppearanceShare: Number((topTenAppearances / totalAppearances).toFixed(4)),
+      topFighters: sortedAppearances.slice(0, 10),
+    };
+    console.info("KEEP_CUT_SIMULATION", JSON.stringify(metrics));
+
+    expect(Object.values(categoryBoards)).toEqual(Array(KEEP_CUT_PACKS.length).fill(sampleSize / KEEP_CUT_PACKS.length));
     expect(boardSignatures.size).toBeGreaterThan(sampleSize * 0.9);
-    expect(ranked).toBeGreaterThan(600);
-    expect(playOnly).toBeGreaterThan(500);
-    expect(men).toBeGreaterThan(women);
-    expect(women).toBeGreaterThan(150);
-    expect(strong).toBeGreaterThan(250);
-    expect(middle).toBeGreaterThan(800);
-    expect(weaker).toBeGreaterThan(250);
-    expect(badBoards).toBeGreaterThan(10);
+    expect(fightersSeen.size).toBeGreaterThan(allEligibleIds.size * 0.55);
+    expect(ranked).toBeGreaterThan(totalAppearances * 0.15);
+    expect(playOnly).toBeGreaterThan(totalAppearances * 0.15);
+    expect(men).toBeGreaterThan(totalAppearances * 0.5);
+    expect(women).toBeGreaterThan(totalAppearances * 0.1);
+    expect(categoryWomen["womens-careers"]).toBe(categoryBoards["womens-careers"] * 8);
+    expect(strong).toBeGreaterThan(totalAppearances * 0.1);
+    expect(middle).toBeGreaterThan(totalAppearances * 0.3);
+    expect(weaker).toBeGreaterThan(totalAppearances * 0.1);
+    expect(badBoards).toBeGreaterThan(20);
     expect(scores.weak).toBeGreaterThan(0);
     expect(scores.average).toBeGreaterThan(0);
     expect(scores.good).toBeGreaterThan(0);
     expect(scores.excellent).toBeGreaterThan(0);
+    expect(scores.nearPerfect).toBeLessThan(scoreValues.length * 0.1);
+    expect(scores.perfect).toBeLessThan(scoreValues.length * 0.02);
+    expect(new Set(scoreValues).size).toBeGreaterThan(35);
+    expect(p90 - p10).toBeGreaterThanOrEqual(35);
+    expect(maxFighterAppearances / sampleSize).toBeLessThan(0.3);
+    expect(topTenAppearances / totalAppearances).toBeLessThan(0.25);
   });
 });
