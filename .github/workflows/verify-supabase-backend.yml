@@ -32,16 +32,17 @@ jobs:
 
           model = Path("worker/previewModel.ts")
           text = model.read_text()
-          old = """  return staticGameChallenge(requestUrl, catalog) ?? DEFAULT_PREVIEW;
-}
-"""
-          new = """  if (requestUrl.pathname === \"/play/auction\" || requestUrl.pathname === \"/play/auction/\") {
-    return DEFAULT_PREVIEW;
-  }
-
-  return staticGameChallenge(requestUrl, catalog) ?? DEFAULT_PREVIEW;
-}
-"""
+          old = (
+              "  return staticGameChallenge(requestUrl, catalog) ?? DEFAULT_PREVIEW;\n"
+              "}\n"
+          )
+          new = (
+              "  if (requestUrl.pathname === \"/play/auction\" || requestUrl.pathname === \"/play/auction/\") {\n"
+              "    return DEFAULT_PREVIEW;\n"
+              "  }\n\n"
+              "  return staticGameChallenge(requestUrl, catalog) ?? DEFAULT_PREVIEW;\n"
+              "}\n"
+          )
           if old not in text:
               if new not in text:
                   raise SystemExit("preview fallback anchor missing")
@@ -56,24 +57,23 @@ jobs:
               test_text = test_text.replace(import_anchor, import_anchor + extra_import, 1)
 
           test_anchor = '  it("renders only the completed public Auction result", () => {\n'
-          addition = """  it(\"routes private or unavailable Auctions through the canonical private card\", () => {
-    const url = new URL(
-      \"https://octagon.hq-app.workers.dev/play/auction?auction=123e4567-e89b-42d3-a456-426614174000\",
-    );
-    const unresolved = resolveRichPreview(url, catalog);
-    expect(unresolved.kind).toBe(\"default\");
-
-    const preview = ensureDestinationPreview(url, unresolved);
-    expect(preview).toMatchObject({
-      kind: \"auction\",
-      title: \"Private Auction | Octagon HQ\",
-      canonicalPath: \"/play/auction?auction=123e4567-e89b-42d3-a456-426614174000\",
-    });
-    expect(preview.description).toContain(\"Sign in as a participant\");
-    expect(JSON.stringify(preview)).not.toMatch(/bid|rarity|formula|grade|deck|bankroll/i);
-  });
-
-"""
+          addition = (
+              '  it("routes private or unavailable Auctions through the canonical private card", () => {\n'
+              '    const url = new URL(\n'
+              '      "https://octagon.hq-app.workers.dev/play/auction?auction=123e4567-e89b-42d3-a456-426614174000",\n'
+              '    );\n'
+              '    const unresolved = resolveRichPreview(url, catalog);\n'
+              '    expect(unresolved.kind).toBe("default");\n\n'
+              '    const preview = ensureDestinationPreview(url, unresolved);\n'
+              '    expect(preview).toMatchObject({\n'
+              '      kind: "auction",\n'
+              '      title: "Private Auction | Octagon HQ",\n'
+              '      canonicalPath: "/play/auction?auction=123e4567-e89b-42d3-a456-426614174000",\n'
+              '    });\n'
+              '    expect(preview.description).toContain("Sign in as a participant");\n'
+              '    expect(JSON.stringify(preview)).not.toMatch(/bid|rarity|formula|grade|deck|bankroll/i);\n'
+              '  });\n\n'
+          )
           if addition not in test_text:
               if test_anchor not in test_text:
                   raise SystemExit("preview test anchor missing")
