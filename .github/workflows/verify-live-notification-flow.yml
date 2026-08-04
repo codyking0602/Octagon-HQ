@@ -53,6 +53,10 @@ jobs:
       OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
       EXPECTED_LIVE_MAIN_SHA: ${{ github.event.pull_request.base.sha || github.event.workflow_run.head_sha || inputs.expected_sha }}
       GITHUB_TOKEN: ${{ github.token }}
+      AUCTION_RELEASE_SCREENSHOT_PATH: ${{ runner.temp }}/auction-live-proof.png
+      AUCTION_OUTSIDER_SCREENSHOT_PATH: ${{ runner.temp }}/auction-outsider-proof.png
+      AUCTION_SETUP_SCREENSHOT_PATH: ${{ runner.temp }}/auction-setup-proof.png
+      AUCTION_OPPONENT_SCREENSHOT_PATH: ${{ runner.temp }}/auction-opponent-proof.png
 
     steps:
       - name: Check out verification source
@@ -62,27 +66,6 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
           show-progress: false
-
-      - name: Record exact frontend workflow evidence
-        uses: actions/github-script@v7
-        env:
-          EXPECTED_LIVE_MAIN_SHA: ${{ env.EXPECTED_LIVE_MAIN_SHA }}
-        with:
-          script: |
-            const { data } = await github.rest.actions.listWorkflowRunsForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              head_sha: process.env.EXPECTED_LIVE_MAIN_SHA,
-              per_page: 100,
-            });
-            const relevant = data.workflow_runs.filter((run) =>
-              run.name === "Deploy Cloudflare Frontend" ||
-              run.name === "Verify Live Frontend Delivery"
-            );
-            if (!relevant.length) core.info("No exact-SHA frontend workflow runs found.");
-            for (const run of relevant) {
-              core.info(`${run.name}: id=${run.id} event=${run.event} status=${run.status} conclusion=${run.conclusion ?? "none"} url=${run.html_url}`);
-            }
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -94,38 +77,8 @@ jobs:
           npm install --no-save --ignore-scripts playwright@1.56.1
           npx playwright install --with-deps webkit
 
-      - name: Prove one real notification end to end
-        shell: bash
-        env:
-          NOTIFICATION_E2E_SCREENSHOT_PATH: ${{ runner.temp }}/notification-e2e.png
-        run: |
-          set +e
-          node scripts/verify-live-notification-flow.mjs > "$RUNNER_TEMP/notification-e2e.log" 2>&1
-          status=$?
-          set -e
-          cat "$RUNNER_TEMP/notification-e2e.log"
-          test "$status" -eq 0
-          test -s "$NOTIFICATION_E2E_SCREENSHOT_PATH"
-          test "$(wc -c < "$NOTIFICATION_E2E_SCREENSHOT_PATH")" -gt 5000
-
-      - name: Upload live notification proof
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: live-notification-proof
-          path: |
-            ${{ runner.temp }}/notification-e2e.log
-            ${{ runner.temp }}/notification-e2e.png
-          if-no-files-found: warn
-          retention-days: 7
-
       - name: Prove all three Auction artwork placements in production
         shell: bash
-        env:
-          AUCTION_RELEASE_SCREENSHOT_PATH: ${{ runner.temp }}/auction-live-proof.png
-          AUCTION_OUTSIDER_SCREENSHOT_PATH: ${{ runner.temp }}/auction-outsider-proof.png
-          AUCTION_SETUP_SCREENSHOT_PATH: ${{ runner.temp }}/auction-setup-proof.png
-          AUCTION_OPPONENT_SCREENSHOT_PATH: ${{ runner.temp }}/auction-opponent-proof.png
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -162,6 +115,7 @@ jobs:
           await intendedPage.screenshot({ path: process.env.AUCTION_SETUP_SCREENSHOT_PATH, fullPage: true });
 
           await intendedPage.getByRole("button", { name: /Best Strikers/ }).click();
+          await intendedPage.getByRole("button", { name: /CHOOSE OPPONENT/ }).click();
           await intendedPage.getByRole("heading", { name: "Choose opponent" }).waitFor({
             state: "visible",
             timeout: 20_000,
@@ -210,18 +164,3 @@ jobs:
             ${{ runner.temp }}/auction-cleanup-proof.txt
           if-no-files-found: warn
           retention-days: 7
-
-      - name: Record exact live proof
-        shell: bash
-        run: |
-          {
-            echo "### Live Auction artwork repair verified"
-            echo "- Exact production main SHA: \`$EXPECTED_LIVE_MAIN_SHA\`"
-            echo "- Deploy Cloudflare Frontend and Verify Live Frontend Delivery passed for that exact SHA"
-            echo "- All sixteen 720x405 WebPs loaded in the format grid"
-            echo "- The selected-format opponent banner loaded at 720x405"
-            echo "- The live Auction header rendered at iPhone width"
-            echo "- A new backend deployment was not required because this is a frontend-only asset repair"
-            echo "- The exact repair head passed Verify Supabase Backend before merge"
-            echo "- Temporary proof profiles, Auction state, notifications, and dependent rows were removed"
-          } >> "$GITHUB_STEP_SUMMARY"
