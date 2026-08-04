@@ -291,6 +291,24 @@ const stipeMiocic = {
   },
 };
 
+const danielCormierBaseline = historicalMigrationSeedJson.fighters.find(
+  (fighter) => fighter.fighter === "Daniel Cormier",
+);
+
+if (!danielCormierBaseline) {
+  throw new Error("Daniel Cormier is missing from the sealed ranking baseline.");
+}
+
+const danielCormier = {
+  ...danielCormierBaseline,
+  presentation: {
+    ...danielCormierBaseline.presentation,
+    oneLiner: "Cormier turned a short, powerful frame into a pressure weapon, crowding opponents with hand fighting, dirty boxing, body locks, and chain wrestling. His balance, pace, and top control let him dictate fights against much larger men.",
+    whyRankedHere: "Cormier became champion in both of the UFC's heaviest divisions, made three successful light heavyweight defenses, knocked out Stipe Miocic to claim heavyweight gold, and defended that belt against Derrick Lewis. Wins over Anthony Johnson twice, Alexander Gustafsson, Volkan Oezdemir, and Miocic give him enough elite championship work to separate him from fighters with thinner title records or success in only one division.",
+    whyNotHigher: "His ceiling is set by the rivals who defined each title run. Jon Jones handed him his only official light heavyweight loss and remained the superior 205-pound fighter, while Stipe Miocic won their heavyweight trilogy 2-1 and beat him in his final two bouts. Cormier entered the UFC at 34, so his elite window was shorter than the longer-reigning champions above him.",
+  },
+};
+
 const jonJonesBaseline = historicalMigrationSeedJson.fighters.find(
   (fighter) => fighter.fighter === "Jon Jones",
 );
@@ -350,6 +368,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
   replacements: {
     "Jose Aldo": joseAldo,
     "Stipe Miocic": stipeMiocic,
+    "Daniel Cormier": danielCormier,
     "Jon Jones": jonJones,
     "Randy Couture": randyCouture,
     "Israel Adesanya": israelAdesanya,
@@ -361,7 +380,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     },
   },
   factsVersion: "octagon-hq-v2-rda-20260730",
-  judgmentVersion: "octagon-hq-v2-israel-adesanya-profile-20260803",
+  judgmentVersion: "octagon-hq-v2-daniel-cormier-profile-20260804",
   eraDepthVersion: "octagon-hq-v2-rda-20260730",
   eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
 };
