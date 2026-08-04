@@ -216,13 +216,14 @@ jobs:
             supabase/tests/auction_private_lifecycle_hardening.sql \
             supabase/tests/auction_playable_server_engine.sql \
             supabase/tests/auction_notifications_share_release.sql \
+            supabase/tests/auction_launch_notification.sql \
             supabase/tests/pick_monitoring_truthful_decisions.sql
           do
             echo "Executing $test_file"
             psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"
           done
 
-          echo "Auction lifecycle SQL tests executed successfully against a fresh local database."
+          echo "Auction lifecycle and launch-notification SQL tests executed successfully against a fresh local database."
           echo "Truthful Picks monitoring and per-fight lock SQL tests executed successfully against the same fresh local database."
 
       - name: Verify required Edge Function secret names
@@ -275,6 +276,27 @@ jobs:
             fi
           }
 
+          require_local_migration() {
+            local version="$1"
+            local title="$2"
+            local local_version
+            local_version=$(printf '%s\n' "$migration_list" | sed 's/│/|/g' | awk -F '|' -v version="$version" '
+              {
+                local_version = $1
+                gsub(/[^0-9]/, "", local_version)
+                if (local_version == version) {
+                  print local_version
+                  exit
+                }
+              }
+            ')
+
+            if [ "$local_version" != "$version" ]; then
+              echo "::error title=${title}::Migration $version is not present in the exact checked-out head."
+              exit 1
+            fi
+          }
+
           require_remote_migration "202607240001" "Profile migration not deployed"
           require_remote_migration "202607250001" "Challenge migration not deployed"
           require_remote_migration "202607260001" "Your HQ migration not deployed"
@@ -294,23 +316,12 @@ jobs:
           require_remote_migration "202608200030" "Gable production repair migration not deployed"
 
           if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
-            local_version=$(printf '%s\n' "$migration_list" | sed 's/│/|/g' | awk -F '|' '
-              {
-                local_version = $1
-                gsub(/[^0-9]/, "", local_version)
-                if (local_version == "202609030001") {
-                  print local_version
-                  exit
-                }
-              }
-            ')
-            if [ "$local_version" != "202609030001" ]; then
-              echo "::error title=Auction PR 6 migration missing::Migration 202609030001 is not present in the exact PR head."
-              exit 1
-            fi
-            echo "Auction PR 6 migration 202609030001 exists locally and passed the fresh-database suite; linked production history is hard-required after merge by the canonical deployment workflow."
+            require_local_migration "202609030001" "Auction PR 6 migration missing"
+            require_local_migration "202609030003" "Auction launch migration missing"
+            echo "Auction migrations 202609030001 and 202609030003 exist locally and passed the fresh-database suite; linked production history is hard-required after merge by the canonical deployment workflow."
           else
             require_remote_migration "202609030001" "Auction PR 6 notifications and share release migration not deployed"
+            require_remote_migration "202609030003" "Auction launch notification migration not deployed"
           fi
 
       - name: Verify deployed functions and production CORS
@@ -488,7 +499,7 @@ jobs:
             echo "- GitHub deployment secrets: present and accepted"
             echo "- Supabase access token/project pairing: accepted"
             echo "- Database password and migration connection: accepted"
-            echo "- Auction lifecycle, notification, push eligibility, completed-share, privacy, and cleanup SQL tests: executed against a fresh local Supabase database"
+            echo "- Auction lifecycle, notification, push eligibility, launch targeting, completed-share, privacy, and cleanup SQL tests: executed against a fresh local Supabase database"
             echo "- Truthful Picks monitoring SQL test: executed against the same fresh local Supabase database"
             echo "- Required Edge Function secret names: present"
             echo "- Existing profile, challenge, Your HQ, Picks, scoring, recap, reveal, Fight Night, and What's New migrations: deployed remotely"
