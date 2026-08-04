@@ -12,6 +12,7 @@ export interface ChallengeProfile {
   id: string;
   displayName: string;
   initials: string;
+  avatarPhotoData?: string | null;
 }
 
 export interface PlayChallenge {

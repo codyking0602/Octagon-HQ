@@ -108,3 +108,70 @@
     width: 100%;
   }
 }
+
+
+.challenge-member-picker {
+  display: grid;
+  gap: 9px;
+  min-width: 0;
+}
+
+.challenge-member-picker__search {
+  display: grid;
+  gap: 6px;
+}
+
+.challenge-member-picker__search > span {
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .1em;
+}
+
+.challenge-member-picker__search input {
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  outline: 0;
+  background: #0b0b0d;
+  color: var(--text-primary);
+  padding: 0 13px;
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: .04em;
+}
+
+.challenge-member-picker__search input:focus {
+  border-color: var(--ufc-red);
+  box-shadow: 0 0 0 3px rgba(229, 9, 20, .12);
+}
+
+.challenge-member-picker__list {
+  max-height: min(310px, 42dvh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 2px;
+}
+
+.challenge-dialog__profiles i {
+  overflow: hidden;
+}
+
+.challenge-dialog__profiles i img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.challenge-member-picker__empty {
+  margin: 0;
+  padding: 15px;
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  color: var(--text-muted);
+  font-size: 10px;
+  line-height: 1.4;
+  text-align: center;
+}

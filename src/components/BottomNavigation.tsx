@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { NavLink, useLocation } from "react-router-dom";
 import { scrollPageToTop } from "../app/RouteScrollManager";
 import { useWarRoom } from "../features/war-room/WarRoomProvider";
@@ -64,42 +66,76 @@ function NavigationIcon({ name }: { name: NavigationIconName }) {
 export function BottomNavigation() {
   const location = useLocation();
   const warRoom = useWarRoom();
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
   const destinations = warRoom.status === "eligible"
     ? [...baseDestinations, warRoomDestination]
     : baseDestinations;
   const unreadLabel = warRoom.unreadCount > 99 ? "99+" : String(warRoom.unreadCount);
 
-  return (
+  useEffect(() => {
+    const viewport = window.visualViewport;
+    if (!viewport) return undefined;
+
+    const syncKeyboardState = () => {
+      const activeElement = document.activeElement;
+      const editing = activeElement instanceof HTMLElement
+        && activeElement.matches("input, textarea, select, [contenteditable='true']");
+      const occludedHeight = Math.max(
+        0,
+        window.innerHeight - viewport.height - viewport.offsetTop,
+      );
+      setKeyboardOpen(editing && occludedHeight > 120);
+    };
+    const syncAfterFocus = () => window.setTimeout(syncKeyboardState, 0);
+
+    syncKeyboardState();
+    viewport.addEventListener("resize", syncKeyboardState);
+    viewport.addEventListener("scroll", syncKeyboardState);
+    document.addEventListener("focusin", syncAfterFocus);
+    document.addEventListener("focusout", syncAfterFocus);
+    window.addEventListener("orientationchange", syncAfterFocus);
+    return () => {
+      viewport.removeEventListener("resize", syncKeyboardState);
+      viewport.removeEventListener("scroll", syncKeyboardState);
+      document.removeEventListener("focusin", syncAfterFocus);
+      document.removeEventListener("focusout", syncAfterFocus);
+      window.removeEventListener("orientationchange", syncAfterFocus);
+    };
+  }, []);
+
+  const navigation = (
     <nav
-      className="bottom-nav"
+      className={`bottom-nav${keyboardOpen ? " is-keyboard-open" : ""}`}
       aria-label="Primary navigation"
       style={{ gridTemplateColumns: `repeat(${destinations.length}, minmax(0, 1fr))` }}
     >
       {destinations.map((destination) => (
         <NavLink
-          key={destination.to}
-          to={destination.to}
-          end={destination.end}
-          onClick={(event) => {
-            if (location.pathname !== destination.to) return;
-            event.preventDefault();
-            scrollPageToTop("smooth");
-          }}
-          className={({ isActive }) => (isActive ? "bottom-nav__item is-active" : "bottom-nav__item")}
+key={destination.to}
+to={destination.to}
+end={destination.end}
+onClick={(event) => {
+  if (location.pathname !== destination.to) return;
+  event.preventDefault();
+  scrollPageToTop("smooth");
+}}
+className={({ isActive }) => (isActive ? "bottom-nav__item is-active" : "bottom-nav__item")}
         >
-          <span className="bottom-nav__indicator" aria-hidden="true" />
-          <NavigationIcon name={destination.icon} />
-          <span className="bottom-nav__label">{destination.label}</span>
-          {destination.to === "/war-room" && warRoom.unreadCount > 0 ? (
-            <b
-              className="bottom-nav__badge"
-              aria-label={`${unreadLabel} unread War Room message${warRoom.unreadCount === 1 ? "" : "s"}`}
-            >
-              {unreadLabel}
-            </b>
-          ) : null}
+<span className="bottom-nav__indicator" aria-hidden="true" />
+<NavigationIcon name={destination.icon} />
+<span className="bottom-nav__label">{destination.label}</span>
+{destination.to === "/war-room" && warRoom.unreadCount > 0 ? (
+  <b
+    className="bottom-nav__badge"
+    aria-label={`${unreadLabel} unread War Room message${warRoom.unreadCount === 1 ? "" : "s"}`}
+  >
+    {unreadLabel}
+  </b>
+) : null}
         </NavLink>
       ))}
     </nav>
   );
+
+  return createPortal(navigation, document.body);
 }

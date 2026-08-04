@@ -219,14 +219,19 @@ export function ChallengeCenter() {
               const dismissLabel = direction === "received" && !canView ? "IGNORE" : "REMOVE";
               const memberContent = (
                 <>
-                  <i className="challenge-center__avatar">{counterpart?.initials ?? "HQ"}</i>
+                  <i className="challenge-center__avatar">
+                    {counterpart?.avatarPhotoData
+                      ? <img src={counterpart.avatarPhotoData} alt={`${counterpart.displayName} profile`} />
+                      : counterpart?.initials ?? "HQ"}
+                  </i>
                   <div className="challenge-center__row-copy">
                     <span>{copy.eyebrow}</span>
-                    <strong>{counterpart?.displayName ?? "Octagon HQ profile"} · {challenge.gameTitle}</strong>
-                    <small>{copy.detail}</small>
+                    <strong>{counterpart?.displayName ?? "Octagon HQ profile"}</strong>
+                    <small>{challenge.gameTitle} · {copy.detail}</small>
                   </div>
                 </>
               );
+
 
               return (
                 <article className={`challenge-center__row${statusClass(status)}`} key={challenge.code}>

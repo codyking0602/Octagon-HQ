@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { shareCanonicalDestination } from "../../app/nativeShare";
+import { ChallengeMemberPicker } from "../challenges/ChallengeMemberPicker";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { useIdentity } from "../identity/IdentityProvider";
-import type { MemberProfileSummary } from "../members/memberProfilesModel";
+import type { MemberCardSummary, MemberProfileSummary } from "../members/memberProfilesModel";
 import { createMemberProfilesRepository } from "../members/memberProfilesRepository";
 import {
   ULTIMATE_FIGHTER_CATEGORIES,
@@ -446,7 +447,7 @@ export default function AuctionPage() {
   const [mode, setMode] = useState<AuctionModeId | null>(null);
   const [modeGroup, setModeGroup] = useState<AuctionModeGroupId | "all">("all");
   const [setupStep, setSetupStep] = useState<"formats" | "opponent">("formats");
-  const [opponentName, setOpponentName] = useState("");
+  const [selectedOpponent, setSelectedOpponent] = useState<MemberCardSummary | null>(null);
   const [participantProfiles, setParticipantProfiles] = useState<AuctionParticipantProfiles>({});
   const [busy, setBusy] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -550,7 +551,7 @@ export default function AuctionPage() {
     setState(null);
     setMode(null);
     setSetupStep("formats");
-    setOpponentName("");
+    setSelectedOpponent(null);
     setError("");
     setShareStatus("");
     navigate("/play/auction", { replace: true });
@@ -563,12 +564,12 @@ export default function AuctionPage() {
   }
 
   async function prepare() {
-    if (!repository || !mode || opponentName.trim().length < 2 || submitting.current) return;
+    if (!repository || !mode || !selectedOpponent || submitting.current) return;
     submitting.current = true;
     setBusy(true);
     setError("");
     try {
-      const opponent = await challenges.findProfile(opponentName);
+      const opponent = await challenges.findProfile(selectedOpponent.displayName);
       if (!opponent) throw new Error("No Octagon HQ profile matched that exact name.");
       const prepared = await repository.prepare(opponent.id, mode);
       setState(prepared);
@@ -782,26 +783,18 @@ export default function AuctionPage() {
             <small>SELECTED AUCTION</small>
             <strong>{selectedMode?.displayName}</strong>
           </div>
-          <input
-            aria-label="Auction opponent profile name"
-            autoCapitalize="characters"
-            autoComplete="off"
-            list="auction-opponent-suggestions"
-            maxLength={24}
-            placeholder="EXACT PROFILE NAME"
-            value={opponentName}
-            onChange={(event) => setOpponentName(event.target.value.toUpperCase())}
+          <ChallengeMemberPicker
+            members={challenges.members}
+            recentNames={challenges.profiles.map((profile) => profile.displayName)}
+            selectedName={selectedOpponent?.displayName}
+            busy={busy}
+            onSelect={setSelectedOpponent}
           />
-          <datalist id="auction-opponent-suggestions">
-            {challenges.profiles
-              .filter((profile) => profile.id !== identity.profile?.id)
-              .map((profile) => <option key={profile.id} value={profile.displayName} />)}
-          </datalist>
-          <p>Enter the exact Octagon HQ profile name. Recent opponents appear as suggestions.</p>
+          <p>Choose any Octagon HQ member. Search is optional.</p>
           <button
             className="primary-action"
             type="button"
-            disabled={!repository || !mode || opponentName.trim().length < 2 || busy}
+            disabled={!repository || !mode || !selectedOpponent || busy}
             onClick={() => void prepare()}
           >
             {busy ? "PREPARING…" : "PREPARE AUCTION"}

@@ -121,6 +121,13 @@ img { max-width: 100%; }
   border-top: 1px solid #202020;
   background: rgba(0, 0, 0, .97);
   backdrop-filter: blur(20px);
+  transform: translate3d(0, 0, 0);
+  transition: transform .16s ease, opacity .16s ease;
+}
+.bottom-nav.is-keyboard-open {
+  transform: translate3d(0, calc(100% + var(--safe-bottom)), 0);
+  opacity: 0;
+  pointer-events: none;
 }
 .bottom-nav__item { position: relative; display: grid; place-items: center; min-height: 47px; color: var(--text-muted); font-size: 10px; font-weight: 800; text-decoration: none; }
 .bottom-nav__item.is-active { color: var(--ufc-red-strong); }
