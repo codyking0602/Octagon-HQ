@@ -60,7 +60,24 @@ export const requiredShareArtwork = [
 export const forbiddenAuctionPrivateMarkers = [
   "generation_weight",
   "private_generation_class",
+  "private_item_reference",
+  "pending_bid",
+  "future_deck",
+  "category_intent",
+  "rarity_weight",
+  "rarity_band",
+  "rarity_class",
   "grading_inputs",
+  "grading_formula",
+  "grading_weights",
+  "intermediate_score",
+  "category_grade",
+  "item_grade",
+  "winner_explanation",
+  "best_purchase",
+  "overpay",
+  "missed_opportunity",
+  "random_seed",
   "Anderson Silva vs Forrest Griffin — UFC 101",
 ];
 
@@ -97,6 +114,7 @@ export async function verifyProductionArtifact({ dist = "dist", env = process.en
     "get_rich_preview_data",
     "picks-recap",
     "major-ranking-update",
+    "auction-result",
     "jon-jones",
   ]) {
     if (!worker.includes(marker)) throw new Error(`Compiled rich preview Worker is missing marker: ${marker}.`);

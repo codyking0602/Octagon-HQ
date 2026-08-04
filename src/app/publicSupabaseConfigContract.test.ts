@@ -16,7 +16,7 @@ const requiredMarkers = requiredApplicationMarkers.join(" ");
 const workerMarkers = [
   "X-Octagon-Preview", "X-Octagon-Preview-Image", "og:title", "og:image:width",
   "twitter:card", "share-preview", "image/png", "get_rich_preview_data", "picks-recap",
-  "major-ranking-update", "jon-jones",
+  "major-ranking-update", "auction-result", "jon-jones",
 ].join(" ");
 
 describe("production Supabase browser configuration", () => {

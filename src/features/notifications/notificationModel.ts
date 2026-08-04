@@ -7,6 +7,8 @@ export const notificationKinds = [
   "game_opponent_finished",
   "game_challenge_result_ready",
   "game_challenge_expiring",
+  "auction_action_required",
+  "auction_result_ready",
   "picks_repick_required",
   "picks_fight_cancelled",
   "picks_incomplete_near_lock",

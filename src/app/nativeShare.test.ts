@@ -43,6 +43,30 @@ describe("shareCanonicalDestination", () => {
     );
   });
 
+  it("shares the exact completed Auction destination without embedding private state", async () => {
+    const share = vi.fn().mockResolvedValue(undefined);
+
+    await expect(shareCanonicalDestination({
+      destination: {
+        kind: "auction",
+        auctionId: "123e4567-e89b-42d3-a456-426614174000",
+      },
+      title: "Octagon HQ Auction Result",
+      text: "CODY 91.5 – SHANE 88. CODY wins.",
+    }, {
+      appOrigin: "https://octagon.hq-app.workers.dev",
+      shareToken: runtimeToken,
+      navigator: { share },
+    })).resolves.toBe("shared");
+
+    expect(share).toHaveBeenCalledWith({
+      title: "Octagon HQ Auction Result",
+      text: "CODY 91.5 – SHANE 88. CODY wins.",
+      url: "https://octagon.hq-app.workers.dev/play/auction?auction=123e4567-e89b-42d3-a456-426614174000&share=fresh123",
+    });
+    expect(JSON.stringify(share.mock.calls)).not.toMatch(/bid|rarity|formula|grade|deck/i);
+  });
+
   it("does not copy after the member cancels the native share sheet", async () => {
     const cancelled = new Error("Share cancelled");
     cancelled.name = "AbortError";

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { shareCanonicalDestination } from "../../app/nativeShare";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { useIdentity } from "../identity/IdentityProvider";
 import {
@@ -71,6 +72,39 @@ function RoundReveal({ state }: { state: AuctionProjection }) {
   );
 }
 
+
+function AuctionFinalResult({ state }: { state: AuctionProjection }) {
+  if (
+    state.lifecycle_state !== "completed"
+    || state.challenger_final_score === null
+    || state.recipient_final_score === null
+  ) return null;
+
+  const verdict = state.is_tie
+    ? "TRUE TIE"
+    : state.winner_profile_id === state.challenger_id
+      ? `${state.challenger_display_name} WINS`
+      : `${state.recipient_display_name} WINS`;
+
+  return (
+    <section className="auction-final surface-card" aria-label="Auction final result">
+      <p className="eyebrow">FINAL 0–100 SCORE</p>
+      <h2>{verdict}</h2>
+      <div>
+        <article>
+          <small>{state.challenger_display_name}</small>
+          <strong>{state.challenger_final_score}</strong>
+        </article>
+        <span>–</span>
+        <article>
+          <small>{state.recipient_display_name}</small>
+          <strong>{state.recipient_final_score}</strong>
+        </article>
+      </div>
+    </section>
+  );
+}
+
 function AuctionBoard({
   state,
   profileId,
@@ -81,6 +115,8 @@ function AuctionBoard({
   onDecline,
   onAbandon,
   onRematch,
+  onShare,
+  shareStatus,
 }: {
   state: AuctionProjection;
   profileId: string;
@@ -91,6 +127,8 @@ function AuctionBoard({
   onDecline(): void;
   onAbandon(): void;
   onRematch(): void;
+  onShare(): void;
+  shareStatus: string;
 }) {
   const mode = auctionModeDefinition(state.mode_id);
   const [amount, setAmount] = useState("");
@@ -170,6 +208,7 @@ function AuctionBoard({
         <strong className="auction-current__status">{status}</strong>
       </section>
       <RoundReveal state={state} />
+      <AuctionFinalResult state={state} />
       <section className="auction-collections">
         <article>
 <h3>{state.challenger_display_name}</h3>
@@ -233,10 +272,14 @@ function AuctionBoard({
         {state.lifecycle_state === "active" ? (
 <button type="button" disabled={busy} onClick={onCancel}>CANCEL GAME</button>
         ) : null}
+        {state.lifecycle_state === "completed" ? (
+<button type="button" disabled={busy} onClick={onShare}>SHARE RESULT</button>
+        ) : null}
         {terminal ? (
 <button className="primary-action" type="button" disabled={busy} onClick={onRematch}>NEW AUCTION</button>
         ) : null}
       </footer>
+      {shareStatus ? <p className="auction-share-status" role="status">{shareStatus}</p> : null}
     </div>
   );
 }
@@ -253,6 +296,7 @@ export default function AuctionPage() {
   const [busy, setBusy] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [shareStatus, setShareStatus] = useState("");
   const submitting = useRef(false);
   const auctionId = params.get("auction") ?? "";
 
@@ -315,6 +359,7 @@ setError(nextError instanceof Error ? nextError.message : "Auction could not be 
     setMode(null);
     setOpponentName("");
     setError("");
+    setShareStatus("");
     navigate("/play/auction", { replace: true });
   }
 
@@ -372,6 +417,36 @@ setError(nextError instanceof Error ? nextError.message : "Auction could not be 
     }
   }
 
+  async function shareResult() {
+    if (
+      state?.lifecycle_state !== "completed"
+      || state.challenger_final_score === null
+      || state.recipient_final_score === null
+    ) return;
+
+    const verdict = state.is_tie
+      ? "True tie"
+      : state.winner_profile_id === state.challenger_id
+        ? `${state.challenger_display_name} wins`
+        : `${state.recipient_display_name} wins`;
+    const score = `${state.challenger_display_name} ${state.challenger_final_score} – ${state.recipient_display_name} ${state.recipient_final_score}`;
+    const outcome = await shareCanonicalDestination({
+      destination: { kind: "auction", auctionId: state.auction_id },
+      title: "Octagon HQ Auction Result",
+      text: `${score}. ${verdict}.`,
+      fallbackText: `${score}. ${verdict}.`,
+    });
+    setShareStatus(
+      outcome === "shared"
+        ? "Auction result shared."
+        : outcome === "copied"
+          ? "Auction result link copied."
+          : outcome === "cancelled"
+            ? "Share cancelled."
+            : "Sharing is unavailable on this device.",
+    );
+  }
+
   const backLink = (
     <Link className="game-header__back" to="/play">
       <span>‹</span><span><small>PLAY</small><strong>All Games</strong></span>
@@ -390,6 +465,8 @@ busy={busy || loading}
 onBid={(amount, category) => void command(() => repository!.bid(state, amount, category))}
 onReload={() => void reload()}
 onRematch={returnToModeSelection}
+onShare={() => void shareResult()}
+shareStatus={shareStatus}
 onAbandon={() => void abandon()}
 onDecline={() => void decline()}
 onCancel={() => {
@@ -413,6 +490,20 @@ onCancel={() => {
 {!loading ? (
   <button className="primary-action" type="button" onClick={returnToModeSelection}>BACK TO AUCTION MENU</button>
 ) : null}
+        </section>
+      </div>
+    );
+  }
+
+  if (auctionId && !identity.profile) {
+    return (
+      <div className="page-stack auction-page">
+        {backLink}
+        <section className="auction-destination surface-card">
+          <p className="eyebrow">PRIVATE AUCTION</p>
+          <h1>Sign in to open this Auction</h1>
+          <p>The exact destination will stay here while you sign in. Only a participant can load the sealed-bid game.</p>
+          <button className="primary-action" type="button" onClick={identity.openDialog}>SIGN IN TO CONTINUE</button>
         </section>
       </div>
     );

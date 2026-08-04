@@ -22,6 +22,10 @@ describe("canonicalDestinationPath", () => {
       "/play/find-leader?result=result-42",
     ],
     [{ kind: "challenge", challengeId: "challenge-42" }, "/play?challenge=challenge-42"],
+    [
+      { kind: "auction", auctionId: "123e4567-e89b-42d3-a456-426614174000" },
+      "/play/auction?auction=123e4567-e89b-42d3-a456-426614174000",
+    ],
     [{ kind: "picks-event", eventId: "ufc-325" }, "/picks?event=ufc-325"],
     [{ kind: "picks-recap", eventId: "ufc-325" }, "/picks?event=ufc-325&view=recap"],
     [

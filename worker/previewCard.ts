@@ -7,6 +7,8 @@ const CARD_LABELS: Record<RichPreviewKind, string> = {
   comparison: "FIGHTER COMPARISON",
   challenge: "GAME CHALLENGE",
   "game-result": "GAME RESULT",
+  auction: "PRIVATE AUCTION",
+  "auction-result": "AUCTION RESULT",
   "picks-recap": "UFC PICKS RECAP",
   "major-ranking-update": "RANKING UPDATE",
 };
@@ -133,6 +135,20 @@ export function ensureDestinationPreview(
         description: "Open the exact challenge and play the same locked setup.",
         canonicalPath: `/play?challenge=${challenge}`,
         images: [],
+      };
+    }
+  }
+
+  if (requestUrl.pathname === "/play/auction" || requestUrl.pathname === "/play/auction/") {
+    const auctionId = (requestUrl.searchParams.get("auction") ?? "").trim().toLowerCase();
+    if (/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(auctionId)) {
+      const search = new URLSearchParams({ auction: auctionId });
+      return {
+        kind: "auction",
+        title: "Private Auction | Octagon HQ",
+        description: "Sign in as a participant to open this exact sealed-bid Auction.",
+        canonicalPath: `/play/auction?${search.toString()}`,
+        images: [{ path: "/assets/share/auction.svg", alt: "Octagon HQ Auction" }],
       };
     }
   }

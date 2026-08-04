@@ -67,6 +67,21 @@ describe("rendered rich preview cards", () => {
     expect(html).toContain("CODY 8/10 vs. SHANE 6/10");
   });
 
+  it("places only completed Auction scores and verdict on the result card", () => {
+    const result: RichPreviewMetadata = {
+      kind: "auction-result",
+      title: "Strikers Auction result | CODY wins | Octagon HQ",
+      description: "CODY 91.5 vs. SHANE 88. CODY wins.",
+      canonicalPath: "/play/auction?auction=123e4567-e89b-42d3-a456-426614174000",
+      images: [{ path: "/assets/share/auction.svg", alt: "Auction" }],
+    };
+    const html = renderPreviewCardHtml(result, "https://octagon.hq-app.workers.dev");
+
+    expect(html).toContain("AUCTION RESULT");
+    expect(html).toContain("CODY 91.5 vs. SHANE 88");
+    expect(html).not.toMatch(/sealed bid|rarity|formula|category grade|item grade/i);
+  });
+
   it("uses a versioned PNG URL whose fingerprint changes with visible data", () => {
     const first = previewCardImagePath(fighterPreview);
     const updated = previewCardImagePath({
@@ -112,12 +127,18 @@ describe("rendered rich preview cards", () => {
       new URL("https://octagon.hq-app.workers.dev/play?challenge=AB12CD34"),
       generic,
     );
+    const auction = ensureDestinationPreview(
+      new URL("https://octagon.hq-app.workers.dev/play/auction?auction=123e4567-e89b-42d3-a456-426614174000"),
+      generic,
+    );
 
-    expect([fighter.kind, comparison.kind, recap.kind, challenge.kind]).toEqual([
+    expect([fighter.kind, comparison.kind, recap.kind, challenge.kind, auction.kind]).toEqual([
       "fighter",
       "comparison",
       "picks-recap",
       "challenge",
+      "auction",
     ]);
+    expect(auction.description).toContain("Sign in as a participant");
   });
 });

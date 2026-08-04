@@ -34,7 +34,7 @@ describe("Auction PR 5 release proof", () => {
       "migrations `202609020001` through `202609020008`",
     );
     expect(auctionContract).toContain(
-      "PR 6 remains the notification-completion and final release-proof stage.",
+      "Auction PR 6: notifications and final release proof completes the existing server-owned notification lifecycle",
     );
     expect(auctionContract).not.toContain(
       "Implemented on the current branch; not released",
