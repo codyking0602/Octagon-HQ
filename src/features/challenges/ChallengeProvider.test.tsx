@@ -9,6 +9,34 @@ import { ChallengeProvider, usePlayChallenges } from "./ChallengeProvider";
 import type { ChallengeProfile, PlayChallenge } from "./challengeModel";
 import type { ChallengeRepository } from "./challengeRepository";
 
+vi.mock("../members/memberProfilesRepository", () => ({
+  createMemberProfilesRepository: () => ({
+    listMembers: async () => [
+      {
+        displayName: "CODY",
+        initials: "CK",
+        avatarPhotoData: null,
+        favoriteFighterSlug: "jon-jones",
+        currentStreak: 2,
+        picksCorrect: 3,
+        picksIncorrect: 1,
+        isCurrentUser: true,
+      },
+      {
+        displayName: "SHANE",
+        initials: "SH",
+        avatarPhotoData: "data:image/webp;base64,shane",
+        favoriteFighterSlug: null,
+        currentStreak: 4,
+        picksCorrect: 5,
+        picksIncorrect: 2,
+        isCurrentUser: false,
+      },
+    ],
+    loadMember: async () => null,
+  }),
+}));
+
 const cody: ChallengeProfile = {
   id: "11111111-1111-4111-8111-111111111111",
   displayName: "CODY",
@@ -112,7 +140,8 @@ describe("real profile challenges", () => {
     );
 
     expect(await screen.findByRole("heading", { name: "CODY's matchups" })).toBeTruthy();
-    expect(await screen.findByText("SHANE · Find the Leader")).toBeTruthy();
+    expect(await screen.findByRole("link", { name: "View SHANE member profile" })).toBeTruthy();
+    expect(screen.getByText("Find the Leader", { exact: false })).toBeTruthy();
     expect(screen.queryByText("PREVIEW MODE")).toBeNull();
   });
 
@@ -132,7 +161,7 @@ describe("real profile challenges", () => {
     expect(findProfile).toHaveBeenCalledWith("SHANE", cody.id);
   });
 
-  it("finds an exact profile name and creates the shared challenge for that profile", async () => {
+  it("selects a populated member and creates the shared challenge for that profile", async () => {
     const findProfile = vi.fn(async () => shane);
     const create = vi.fn(async () => "MATCH123");
 
@@ -147,11 +176,10 @@ describe("real profile challenges", () => {
     expect(await screen.findByText("CODY")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "START CHALLENGE" }));
 
-    const input = await screen.findByLabelText("PROFILE NAME");
-    fireEvent.change(input, { target: { value: "shane" } });
-    fireEvent.click(screen.getByRole("button", { name: "FIND PROFILE" }));
+    const shaneOption = await screen.findByRole("option", { name: /SHANE/i });
+    fireEvent.click(shaneOption);
 
-    expect(await screen.findByText("SHANE FOUND")).toBeTruthy();
+    expect(await screen.findByText("SHANE SELECTED")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "SEND TO PROFILE" }));
 
     await waitFor(() => expect(findProfile).toHaveBeenCalledWith("SHANE", cody.id));

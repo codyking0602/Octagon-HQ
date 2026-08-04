@@ -3,12 +3,14 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { memberProfilePath } from "../members/memberProfilesModel";
 import {
+  challengeCounterpartId,
   challengeDirection,
   challengeStatus,
+  type ChallengeProfile,
   type ChallengeStatus,
   type PlayChallenge,
 } from "./challengeModel";
-import { challengeCounterpart, usePlayChallenges } from "./ChallengeProvider";
+import { usePlayChallenges } from "./ChallengeProvider";
 import { challengePlayRoute } from "./challengeRuntime";
 
 export type ChallengeCenterFilter = "all" | "received" | "sent";
@@ -57,6 +59,15 @@ function statusClass(status: ChallengeStatus) {
   if (status === "declined") return " is-declined";
   if (status === "new") return " is-new";
   return "";
+}
+
+function challengeCounterpart(
+  challenge: PlayChallenge,
+  activeProfileId: string,
+  profiles: readonly ChallengeProfile[],
+) {
+  const counterpartId = challengeCounterpartId(challenge, activeProfileId);
+  return profiles.find((profile) => profile.id === counterpartId) ?? null;
 }
 
 export function ChallengeCenter() {
@@ -219,11 +230,15 @@ export function ChallengeCenter() {
               const dismissLabel = direction === "received" && !canView ? "IGNORE" : "REMOVE";
               const memberContent = (
                 <>
-                  <i className="challenge-center__avatar">{counterpart?.initials ?? "HQ"}</i>
+                  <i className="challenge-center__avatar">
+                    {counterpart?.avatarPhotoData
+                      ? <img src={counterpart.avatarPhotoData} alt={`${counterpart.displayName} profile`} />
+                      : counterpart?.initials ?? "HQ"}
+                  </i>
                   <div className="challenge-center__row-copy">
                     <span>{copy.eyebrow}</span>
-                    <strong>{counterpart?.displayName ?? "Octagon HQ profile"} · {challenge.gameTitle}</strong>
-                    <small>{copy.detail}</small>
+                    <strong>{counterpart?.displayName ?? "Octagon HQ profile"}</strong>
+                    <small>{challenge.gameTitle} · {copy.detail}</small>
                   </div>
                 </>
               );

@@ -18,6 +18,34 @@ import { MemberDirectoryView } from "./MemberDirectoryPage";
 import { MemberProfileView } from "./MemberProfilePage";
 import type { MemberProfilesRepository } from "./memberProfilesRepository";
 
+vi.mock("./memberProfilesRepository", () => ({
+  createMemberProfilesRepository: () => ({
+    listMembers: async () => [
+      {
+        displayName: "CODY",
+        initials: "CK",
+        avatarPhotoData: null,
+        favoriteFighterSlug: "jon-jones",
+        currentStreak: 2,
+        picksCorrect: 3,
+        picksIncorrect: 1,
+        isCurrentUser: true,
+      },
+      {
+        displayName: "SHANE",
+        initials: "SH",
+        avatarPhotoData: "data:image/webp;base64,shane",
+        favoriteFighterSlug: null,
+        currentStreak: 4,
+        picksCorrect: 5,
+        picksIncorrect: 2,
+        isCurrentUser: false,
+      },
+    ],
+    loadMember: async () => null,
+  }),
+}));
+
 const cody: IdentityProfile = {
   id: "11111111-1111-4111-8111-111111111111",
   displayName: "CODY",
@@ -302,7 +330,8 @@ describe("Member Profiles", () => {
     expect(await screen.findByTestId("preferred-member")).toHaveTextContent("SHANE");
     fireEvent.click(screen.getByRole("button", { name: "OPEN COMPOSER" }));
     await waitFor(() => expect(challengeRepo.findProfile).toHaveBeenCalledWith("SHANE", cody.id));
-    expect(await screen.findByDisplayValue("SHANE")).toBeInTheDocument();
+    expect(await screen.findByText("SHANE SELECTED")).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: /SHANE/i })).toHaveAttribute("aria-selected", "true");
     expect(screen.getByRole("button", { name: "SEND TO PROFILE" })).toBeEnabled();
   });
 
