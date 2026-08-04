@@ -1,0 +1,45 @@
+name: Materialize Auction asset verifier
+
+on:
+  push:
+    branches:
+      - chatgpt/repair-auction-photo-quality
+    paths:
+      - .github/workflows/materialize-auction-verifier-repair.yml
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repair branch
+        uses: actions/checkout@v4
+        with:
+          ref: chatgpt/repair-auction-photo-quality
+          fetch-depth: 0
+
+      - name: Download and verify strengthened production verifier
+        shell: bash
+        run: |
+          set -euo pipefail
+          target="$RUNNER_TEMP/verify-live-frontend-delivery.mjs"
+          curl --fail --location --retry 4 --retry-all-errors \
+            --output "$target" \
+            "https://tmpfiles.org/dl/35363817/verify-live-frontend-delivery.mjs"
+          echo "6ae8b8f0b50696df23e89c045447e0245f88e0d0e10a1685c53a4fe3450d1678  $target" | sha256sum --check --strict
+          node --check "$target"
+          cp "$target" scripts/verify-live-frontend-delivery.mjs
+
+      - name: Commit verifier and remove temporary workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm .github/workflows/materialize-auction-verifier-repair.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/verify-live-frontend-delivery.mjs .github/workflows/materialize-auction-verifier-repair.yml
+          git commit -m "Verify production Auction artwork quality"
+          git push origin HEAD:chatgpt/repair-auction-photo-quality
