@@ -22,6 +22,10 @@ export interface WavelengthOfficialRevealProjection {
   versions: typeof WAVELENGTH_CONTRACT_VERSIONS;
 }
 
+export type WavelengthOfficialProjectionRequest =
+  | { stage: "pre-reveal"; currentClueIndex: number }
+  | { stage: "reveal"; finalGuess?: number };
+
 export function materializeWavelengthOfficialSetup(round: WavelengthRound): WavelengthOfficialMaterializedSetup {
   return {
     gameId: "wavelength",
@@ -40,6 +44,8 @@ export function projectWavelengthPreReveal(
   currentClueIndex: number,
 ): WavelengthOfficialPreRevealProjection {
   const currentClue = setup.clues[Math.max(0, Math.min(currentClueIndex, setup.clues.length - 1))];
+  if (!currentClue) throw new RangeError("A Wavelength official setup requires at least one clue.");
+
   return {
     gameId: "wavelength",
     clueCount: setup.clues.length,
@@ -59,4 +65,21 @@ export function projectWavelengthReveal(
     finalScore: typeof finalGuess === "number" ? wavelengthScore(finalGuess, setup.target) : undefined,
     versions: setup.versions,
   };
+}
+
+/**
+ * This is the canonical future-official wire boundary. The generalized daily
+ * backend must serialize only this allowlisted projection rather than the
+ * private materialized setup. Casual and direct-challenge payloads remain on
+ * their existing owners and do not use this official projection contract.
+ */
+export function serializeWavelengthOfficialProjection(
+  setup: WavelengthOfficialMaterializedSetup,
+  request: WavelengthOfficialProjectionRequest,
+) {
+  const projection = request.stage === "pre-reveal"
+    ? projectWavelengthPreReveal(setup, request.currentClueIndex)
+    : projectWavelengthReveal(setup, request.finalGuess);
+
+  return JSON.stringify(projection);
 }
