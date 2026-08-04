@@ -79,6 +79,34 @@ async function fetchNoCache(url, fetchFn) {
   });
 }
 
+function webpDimensions(webp) {
+  let offset = 12;
+  while (offset + 8 <= webp.length) {
+    const type = webp.subarray(offset, offset + 4).toString("ascii");
+    const size = webp.readUInt32LE(offset + 4);
+    const data = offset + 8;
+
+    if (type === "VP8X" && data + 10 <= webp.length) {
+      return [1 + webp.readUIntLE(data + 4, 3), 1 + webp.readUIntLE(data + 7, 3)];
+    }
+    if (type === "VP8 " && data + 10 <= webp.length) {
+      if (!webp.subarray(data + 3, data + 6).equals(Buffer.from([0x9d, 0x01, 0x2a]))) break;
+      return [webp.readUInt16LE(data + 6) & 0x3fff, webp.readUInt16LE(data + 8) & 0x3fff];
+    }
+    if (type === "VP8L" && data + 5 <= webp.length) {
+      if (webp[data] !== 0x2f) break;
+      const b1 = webp[data + 1];
+      const b2 = webp[data + 2];
+      const b3 = webp[data + 3];
+      const b4 = webp[data + 4];
+      return [1 + b1 + ((b2 & 0x3f) << 8), 1 + (b2 >> 6) + (b3 << 2) + ((b4 & 0x0f) << 10)];
+    }
+
+    offset = data + size + (size % 2);
+  }
+  throw new Error("WebP dimensions were unavailable.");
+}
+
 async function verifyAttempt({ origin, expectedSha, attempt, fetchFn }) {
   const shellUrl = new URL("/", `${origin}/`);
   shellUrl.searchParams.set("delivery", expectedSha);
@@ -169,10 +197,14 @@ async function verifyAttempt({ origin, expectedSha, attempt, fetchFn }) {
         throw new Error(`Live Auction asset ${path} returned ${contentType || "no content type"}.`);
       }
       const bytes = Buffer.from(await response.arrayBuffer());
-      if (bytes.length < 5_000) throw new Error(`Live Auction asset ${path} is unexpectedly small.`);
+      if (bytes.length <= 20_000) throw new Error(`Live Auction asset ${path} is unexpectedly small.`);
       if (bytes.subarray(0, 4).toString("ascii") !== "RIFF"
         || bytes.subarray(8, 12).toString("ascii") !== "WEBP") {
         throw new Error(`Live Auction asset ${path} is not a valid WebP container.`);
+      }
+      const [width, height] = webpDimensions(bytes);
+      if (width !== 720 || height !== 405) {
+        throw new Error(`Live Auction asset ${path} is ${width}x${height}, expected 720x405.`);
       }
       auctionFormatAssets += 1;
     }
