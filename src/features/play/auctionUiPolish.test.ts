@@ -5,6 +5,10 @@ import { playGames } from "./playRegistry";
 
 const page = readFileSync("src/features/play/AuctionPage.tsx", "utf8");
 const styles = readFileSync("src/styles/auction.css", "utf8");
+const whatsNewMigration = readFileSync(
+  "supabase/migrations/202609030002_auction_ui_release_whats_new.sql",
+  "utf8",
+);
 
 describe("Auction release polish", () => {
   it("features Auction first without a temporary new badge or asynchronous copy", () => {
@@ -41,5 +45,14 @@ describe("Auction release polish", () => {
     expect(page).toContain(">REFRESH</button>");
     expect(styles).toMatch(/\.auction-current__item\s*\{[\s\S]*?min-height:\s*150px/);
     expect(styles).toMatch(/\.auction-current__item h2\s*\{[\s\S]*?clamp\(24px, 7vw, 40px\)/);
+  });
+
+  it("publishes one idempotent Auction release through the canonical What's New owner", () => {
+    expect(whatsNewMigration).toContain("select public.publish_whats_new_item(");
+    expect(whatsNewMigration).toContain("'games:release:auction'");
+    expect(whatsNewMigration).toContain("'Auction is now playable'");
+    expect(whatsNewMigration).toContain("'/play/auction'");
+    expect(whatsNewMigration).toContain("'PLAY AUCTION'");
+    expect(whatsNewMigration).toContain("Expected exactly one canonical Auction release announcement");
   });
 });
