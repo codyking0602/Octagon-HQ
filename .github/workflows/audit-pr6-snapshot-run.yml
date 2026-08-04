@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - audit/pr276-main-backend-proof
-    paths:
-      - ".github/workflows/audit-pr6-snapshot-run.yml"
 
 permissions:
   contents: write
