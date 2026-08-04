@@ -11,7 +11,7 @@ describe("generalized Today's Challenge backend contract", () => {
     "utf8",
   );
   const backendWorkflow = readFileSync(
-    ".github/workflows/verify-supabase-backend.yml",
+    ".github/workflows/verify-generalized-daily-backend.yml",
     "utf8",
   );
   const roadmap = readFileSync("docs/play-games-roadmap.md", "utf8");
@@ -86,12 +86,13 @@ describe("generalized Today's Challenge backend contract", () => {
     expect(roadmap).toContain("PR 9 owns activating the twenty-day rotation");
   });
 
-  it("requires the real fresh, legacy, authorization, DST, and concurrency proofs in backend CI", () => {
+  it("requires real fresh, legacy, authorization, DST, concurrency, and exact deployment proofs", () => {
     expect(sqlTest).toContain("daylight-saving transitions");
     expect(sqlTest).toContain("future eligible games did not fit the generalized server grader");
     expect(backendWorkflow).toContain("generalized_todays_challenge_backend.sql");
     expect(backendWorkflow).toContain("generalized_todays_challenge_legacy_seed.sql");
     expect(backendWorkflow).toContain("verify-generalized-daily-concurrency.sh");
     expect(backendWorkflow).toContain("202609050001");
+    expect(backendWorkflow).toContain("Deploy Supabase Backend");
   });
 });
