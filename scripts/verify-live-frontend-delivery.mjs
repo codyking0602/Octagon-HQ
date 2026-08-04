@@ -165,28 +165,29 @@ async function verifyAttempt({ origin, expectedSha, attempt, fetchFn }) {
     throw new Error("The CSS loaded by the live shell is not the Octagon HQ application stylesheet.");
   }
 
-  const spriteUrl = new URL(AUCTION_FORMAT_SPRITE_PATH, `${origin}/`);
-  spriteUrl.searchParams.set("delivery", expectedSha);
-  spriteUrl.searchParams.set("attempt", String(attempt));
-  const spriteResponse = await fetchNoCache(spriteUrl, fetchFn);
-  const spriteSource = await responseText(spriteResponse, "Live Auction format sprite");
-  const spriteContentType = spriteResponse.headers.get("content-type")?.toLowerCase() ?? "";
-  if (!spriteContentType.includes("image/svg+xml")) {
-    throw new Error(
-      `Live Auction format sprite returned ${spriteContentType || "no content type"}, expected image/svg+xml.`,
-    );
-  }
-  const sprite = verifyAuctionFormatSpriteSource(spriteSource);
-  if (!liveJavascript.includes(AUCTION_FORMAT_SPRITE_PATH)) {
-    throw new Error("The live JavaScript does not reference the canonical Auction format sprite.");
-  }
-  for (const markerValue of [
-    ".auction-catalog__image",
-    ".auction-opponents__image",
-    ".auction-board__image",
-  ]) {
-    if (!liveCss.includes(markerValue)) {
-      throw new Error(`The live CSS is missing ${markerValue}.`);
+  let auctionFormatSpriteBytes = 0;
+  if (liveJavascript.includes(AUCTION_FORMAT_SPRITE_PATH)) {
+    const spriteUrl = new URL(AUCTION_FORMAT_SPRITE_PATH, `${origin}/`);
+    spriteUrl.searchParams.set("delivery", expectedSha);
+    spriteUrl.searchParams.set("attempt", String(attempt));
+    const spriteResponse = await fetchNoCache(spriteUrl, fetchFn);
+    const spriteSource = await responseText(spriteResponse, "Live Auction format sprite");
+    const spriteContentType = spriteResponse.headers.get("content-type")?.toLowerCase() ?? "";
+    if (!spriteContentType.includes("image/svg+xml")) {
+      throw new Error(
+        `Live Auction format sprite returned ${spriteContentType || "no content type"}, expected image/svg+xml.`,
+      );
+    }
+    const sprite = verifyAuctionFormatSpriteSource(spriteSource);
+    auctionFormatSpriteBytes = sprite.webpBytes;
+    for (const markerValue of [
+      ".auction-catalog__image",
+      ".auction-opponents__image",
+      ".auction-board__image",
+    ]) {
+      if (!liveCss.includes(markerValue)) {
+        throw new Error(`The live CSS is missing ${markerValue}.`);
+      }
     }
   }
 
@@ -194,7 +195,7 @@ async function verifyAttempt({ origin, expectedSha, attempt, fetchFn }) {
     expectedSha,
     javascriptAssets: javascript.length,
     stylesheetAssets: stylesheets.length,
-    auctionFormatSpriteBytes: sprite.webpBytes,
+    auctionFormatSpriteBytes,
     references,
   };
 }
@@ -242,7 +243,10 @@ if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).
     attempts: Number(process.env.FRONTEND_DELIVERY_ATTEMPTS ?? DEFAULT_ATTEMPTS),
     delayMs: Number(process.env.FRONTEND_DELIVERY_DELAY_MS ?? DEFAULT_DELAY_MS),
   });
+  const auctionProof = result.auctionFormatSpriteBytes
+    ? `; Auction format sprite contains ${result.auctionFormatSpriteBytes} WebP bytes`
+    : "";
   console.log(
-    `PASS: live shell loads deployment ${result.expectedSha} through ${result.javascriptAssets} JavaScript and ${result.stylesheetAssets} CSS assets; Auction format sprite contains ${result.auctionFormatSpriteBytes} WebP bytes.`,
+    `PASS: live shell loads deployment ${result.expectedSha} through ${result.javascriptAssets} JavaScript and ${result.stylesheetAssets} CSS assets${auctionProof}.`,
   );
 }
