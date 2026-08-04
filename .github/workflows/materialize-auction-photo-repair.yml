@@ -1,9 +1,9 @@
 name: Materialize Auction photo repair
 
 on:
-  push:
+  pull_request:
     branches:
-      - chatgpt/repair-auction-photo-quality
+      - main
     paths:
       - .github/workflows/materialize-auction-photo-repair.yml
 
@@ -12,6 +12,7 @@ permissions:
 
 jobs:
   materialize:
+    if: github.event.pull_request.head.ref == 'chatgpt/repair-auction-photo-quality'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
