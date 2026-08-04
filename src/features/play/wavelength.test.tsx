@@ -28,10 +28,10 @@ function renderWavelength() {
 }
 
 describe("Wavelength engine", () => {
-  it("preserves the complete V1 target and expanded clue banks", () => {
+  it("preserves the target bank and uses the expanded approved clue catalog", () => {
     expect(wavelengthTargets).toHaveLength(22);
-    expect(wavelengthClues).toHaveLength(96);
-    expect(new Set(wavelengthClues.map((clue) => clue.id)).size).toBe(96);
+    expect(wavelengthClues).toHaveLength(300);
+    expect(new Set(wavelengthClues.map((clue) => clue.id)).size).toBe(300);
     expect(Math.min(...wavelengthClues.map((clue) => clue.rating))).toBe(2);
     expect(Math.max(...wavelengthClues.map((clue) => clue.rating))).toBe(99);
   });

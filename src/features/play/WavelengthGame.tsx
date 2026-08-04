@@ -15,6 +15,7 @@ import {
   clampWavelength,
   wavelengthDistanceCopy,
   wavelengthScore,
+  wavelengthClues,
   type WavelengthClue,
   type WavelengthRound,
 } from "./wavelengthEngine";
@@ -36,13 +37,14 @@ function record(value: ChallengeJson | undefined): { [key: string]: ChallengeJso
 
 function storedClue(value: ChallengeJson | undefined): WavelengthClue | null {
   const row = record(value);
-  return row
-    && typeof row.id === "string"
-    && typeof row.category === "string"
-    && typeof row.text === "string"
-    && typeof row.rating === "number"
-    ? { id: row.id, category: row.category, text: row.text, rating: row.rating }
-    : null;
+  if (!row
+    || typeof row.id !== "string"
+    || typeof row.category !== "string"
+    || typeof row.text !== "string"
+    || typeof row.rating !== "number"
+  ) return null;
+  const canonical = wavelengthClues.find((clue) => clue.category === row.category);
+  return canonical ? { id: row.id, category: canonical.category, text: row.text, rating: row.rating } : null;
 }
 
 function storedRound(value: ChallengeJson | undefined): WavelengthRound | null {
