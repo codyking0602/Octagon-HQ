@@ -2,6 +2,24 @@ const SHA_PATTERN = /^[0-9a-f]{40}$/i;
 const DEFAULT_ORIGIN = "https://octagon.hq-app.workers.dev";
 const DEFAULT_ATTEMPTS = 12;
 const DEFAULT_DELAY_MS = 5_000;
+const AUCTION_FORMAT_ASSET_PATHS = [
+  "/auction/ultimate-fighter.webp",
+  "/auction/jon-jones-performances.webp",
+  "/auction/conor-mcgregor-performances.webp",
+  "/auction/charles-oliveira-performances.webp",
+  "/auction/fighter-performances.webp",
+  "/auction/strikers.webp",
+  "/auction/grapplers.webp",
+  "/auction/knockout-artists.webp",
+  "/auction/greatest-ufc-card.webp",
+  "/auction/championship-performances.webp",
+  "/auction/finishes.webp",
+  "/auction/dominant-performances.webp",
+  "/auction/wars.webp",
+  "/auction/rivalries.webp",
+  "/auction/iconic-moments.webp",
+  "/auction/nicknames.webp",
+];
 
 // This exact-marker verifier also supplies release proof for documentation-only handoff corrections.
 const REQUIRED_JAVASCRIPT_MARKERS = [
@@ -138,10 +156,42 @@ async function verifyAttempt({ origin, expectedSha, attempt, fetchFn }) {
     throw new Error("The CSS loaded by the live shell is not the Octagon HQ application stylesheet.");
   }
 
+  let auctionFormatAssets = 0;
+  if (liveJavascript.includes(AUCTION_FORMAT_ASSET_PATHS[0])) {
+    for (const path of AUCTION_FORMAT_ASSET_PATHS) {
+      const assetUrl = new URL(path, `${origin}/`);
+      assetUrl.searchParams.set("delivery", expectedSha);
+      assetUrl.searchParams.set("attempt", String(attempt));
+      const response = await fetchNoCache(assetUrl, fetchFn);
+      if (!response.ok) throw new Error(`Live Auction asset ${path} returned HTTP ${response.status}.`);
+      const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
+      if (!contentType.includes("image/webp")) {
+        throw new Error(`Live Auction asset ${path} returned ${contentType || "no content type"}.`);
+      }
+      const bytes = Buffer.from(await response.arrayBuffer());
+      if (bytes.length < 5_000) throw new Error(`Live Auction asset ${path} is unexpectedly small.`);
+      if (bytes.subarray(0, 4).toString("ascii") !== "RIFF"
+        || bytes.subarray(8, 12).toString("ascii") !== "WEBP") {
+        throw new Error(`Live Auction asset ${path} is not a valid WebP container.`);
+      }
+      auctionFormatAssets += 1;
+    }
+    for (const markerValue of [
+      ".auction-catalog__image",
+      ".auction-opponents__image",
+      ".auction-board__image",
+    ]) {
+      if (!liveCss.includes(markerValue)) {
+        throw new Error(`The live CSS is missing ${markerValue}.`);
+      }
+    }
+  }
+
   return {
     expectedSha,
     javascriptAssets: javascript.length,
     stylesheetAssets: stylesheets.length,
+    auctionFormatAssets,
     references,
   };
 }
@@ -189,7 +239,10 @@ if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).
     attempts: Number(process.env.FRONTEND_DELIVERY_ATTEMPTS ?? DEFAULT_ATTEMPTS),
     delayMs: Number(process.env.FRONTEND_DELIVERY_DELAY_MS ?? DEFAULT_DELAY_MS),
   });
+  const auctionProof = result.auctionFormatAssets
+    ? `; verified ${result.auctionFormatAssets} Auction format WebPs`
+    : "";
   console.log(
-    `PASS: live shell loads deployment ${result.expectedSha} through ${result.javascriptAssets} JavaScript and ${result.stylesheetAssets} CSS assets.`,
+    `PASS: live shell loads deployment ${result.expectedSha} through ${result.javascriptAssets} JavaScript and ${result.stylesheetAssets} CSS assets${auctionProof}.`,
   );
 }

@@ -15,6 +15,7 @@ import {
   type AuctionModeId,
   type UltimateFighterCategory,
 } from "./auctionContract";
+import { auctionModeArtwork } from "./auctionModeArtwork";
 import {
   AuctionRepositoryError,
   createAuctionRepository,
@@ -56,6 +57,26 @@ function MemberAvatar({
         ? <img src={avatar.avatarPhotoData} alt={`${name} profile`} />
         : avatar.initials}
     </span>
+  );
+}
+
+function AuctionArtworkImage({
+  modeId,
+  className,
+}: {
+  modeId: AuctionModeId;
+  className: string;
+}) {
+  const artwork = auctionModeArtwork(modeId);
+  return (
+    <img
+      className={className}
+      src={artwork.src}
+      alt=""
+      aria-hidden="true"
+      style={{ objectPosition: artwork.objectPosition }}
+      onError={(event) => { event.currentTarget.hidden = true; }}
+    />
   );
 }
 
@@ -302,7 +323,11 @@ function AuctionBoard({
   return (
     <div className="auction-board">
       <header className="auction-board__top">
-        <div><p className="eyebrow">{mode.displayName}</p><h1>Auction</h1></div>
+        <AuctionArtworkImage modeId={state.mode_id} className="auction-board__image" />
+        <div className="auction-board__title">
+          <p className="eyebrow">{mode.displayName}</p>
+          <h1>Auction</h1>
+        </div>
         <button type="button" onClick={onReload} disabled={busy}>REFRESH</button>
       </header>
       <section className="auction-scoreboard surface-card">
@@ -729,9 +754,10 @@ export default function AuctionPage() {
               return (
                 <li className={mode === item.id ? "is-selected" : ""} key={item.id}>
                   <button type="button" onClick={() => setMode(item.id)}>
-                    <span>{String(index + 1).padStart(2, "0")}</span>
-                    <strong>{item.displayName}</strong>
-                    <em aria-hidden="true">{mode === item.id ? "✓" : "›"}</em>
+                    <AuctionArtworkImage modeId={item.id} className="auction-catalog__image" />
+                    <span className="auction-catalog__number">{String(index + 1).padStart(2, "0")}</span>
+                    <strong className="auction-catalog__name">{item.displayName}</strong>
+                    <em className="auction-catalog__mark" aria-hidden="true">{mode === item.id ? "✓" : "›"}</em>
                   </button>
                 </li>
               );
@@ -754,8 +780,13 @@ export default function AuctionPage() {
           <p className="eyebrow">STEP 2</p>
           <h2>Choose opponent</h2>
           <div className="auction-opponents__selection">
-            <small>SELECTED AUCTION</small>
-            <strong>{selectedMode?.displayName}</strong>
+            {selectedMode ? (
+              <AuctionArtworkImage modeId={selectedMode.id} className="auction-opponents__image" />
+            ) : null}
+            <div className="auction-opponents__selection-copy">
+              <small>SELECTED AUCTION</small>
+              <strong>{selectedMode?.displayName}</strong>
+            </div>
           </div>
           <input
             aria-label="Auction opponent profile name"
