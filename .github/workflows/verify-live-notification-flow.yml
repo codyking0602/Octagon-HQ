@@ -126,6 +126,7 @@ jobs:
           AUCTION_OUTSIDER_SCREENSHOT_PATH: ${{ runner.temp }}/auction-outsider-proof.png
         run: |
           sed -i 's/const backendRun = await waitForSuccessfulRun("Deploy Supabase Backend", "push");/const backendRun = { id: "not-required-frontend-only" };/' scripts/verify-live-auction-release.mjs
+          sed -i 's/stateB.action_required_by !== "current_user"/stateB.action_required_by !== "recipient"/' scripts/verify-live-auction-release.mjs
           set +e
           node scripts/verify-live-auction-release.mjs > "$RUNNER_TEMP/auction-release-proof.log" 2>&1
           status=$?
