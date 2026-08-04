@@ -1,0 +1,46 @@
+name: Auction Live Status Proof
+
+on:
+  push:
+    branches:
+      - chatgpt/auction-live-status-proof
+    paths:
+      - ".github/workflows/auction-live-status-proof.yml"
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  status:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: chatgpt/auction-live-status-proof
+          fetch-depth: 0
+      - name: Query exact release runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_SHA: 657e9d29427b4a9fc7ee2d1ac334dae425ed9418
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p release-proof
+          node <<'NODE'
+          const fs = require('node:fs');
+          const response = await fetch(`https://api.github.com/repos/codyking0602/Octagon-HQ/actions/runs?head_sha=${process.env.EXPECTED_SHA}&per_page=100`, {
+            headers: { Authorization: `Bearer ${process.env.GH_TOKEN}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', 'User-Agent': 'octagon-hq-live-status-proof/1' },
+          });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const payload = await response.json();
+          const wanted = new Set(['Deploy Supabase Backend','Deploy Cloudflare Frontend','Verify Live Frontend Delivery','Verify Live Notification Flow']);
+          const runs = (payload.workflow_runs ?? []).filter((run) => wanted.has(run.name)).map((run) => ({ id: run.id, name: run.name, event: run.event, status: run.status, conclusion: run.conclusion, head_sha: run.head_sha, url: run.html_url, created_at: run.created_at, updated_at: run.updated_at }));
+          fs.writeFileSync('release-proof/status.json', JSON.stringify({ expected_sha: process.env.EXPECTED_SHA, runs }, null, 2) + '\n');
+          NODE
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add release-proof/status.json
+          git commit -m "Record exact Auction release status"
+          git push origin HEAD:chatgpt/auction-live-status-proof
