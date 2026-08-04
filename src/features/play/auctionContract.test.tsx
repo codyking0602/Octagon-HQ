@@ -102,4 +102,28 @@ describe("auction public product contract", () => {
     expect(await screen.findByRole("heading", { name: "Auction" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "SIGN IN TO PLAY" })).toBeInTheDocument();
   });
+
+  it("keeps the exact private Auction destination while a participant signs in", async () => {
+    const auctionRoute = canonicalChildRoutes.find((route) => route.path === "play/auction");
+    expect(auctionRoute).toBeDefined();
+
+    render(
+      <IdentityProvider gateway={null}>
+        <ChallengeProvider repository={null}>
+          <MemoryRouter
+            initialEntries={[
+              "/play/auction?auction=123e4567-e89b-42d3-a456-426614174000",
+            ]}
+          >
+            <Suspense fallback={null}>{auctionRoute?.element}</Suspense>
+          </MemoryRouter>
+        </ChallengeProvider>
+      </IdentityProvider>,
+    );
+
+    expect(await screen.findByRole("heading", { name: "Sign in to open this Auction" })).toBeInTheDocument();
+    expect(screen.getByText(/exact destination will stay here while you sign in/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "SIGN IN TO CONTINUE" })).toBeInTheDocument();
+  });
+
 });

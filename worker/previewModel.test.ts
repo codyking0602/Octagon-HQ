@@ -42,6 +42,12 @@ const catalog: RichPreviewCatalog = {
       description: "Choose the stronger UFC career five times.",
       imagePath: "/assets/share/blind-resume.svg",
     },
+    {
+      id: "auction",
+      title: "Auction",
+      description: "Build a UFC collection with private sealed bids.",
+      imagePath: "/assets/share/auction.svg",
+    },
   ],
   fighterAssets: {
     "jon-jones": "/assets/fighters/jon-jones.webp",
@@ -86,6 +92,15 @@ describe("resolveRichPreview", () => {
       "https://octagon.hq-app.workers.dev/play?challenge=AB12CD34",
     ))).toEqual({ kind: "challenge", key: "AB12CD34" });
     expect(dynamicPreviewRequest(new URL(
+      "https://octagon.hq-app.workers.dev/play/auction?auction=123e4567-e89b-42d3-a456-426614174000",
+    ))).toEqual({
+      kind: "auction",
+      key: "123e4567-e89b-42d3-a456-426614174000",
+    });
+    expect(dynamicPreviewRequest(new URL(
+      "https://octagon.hq-app.workers.dev/play/auction?auction=not-an-auction",
+    ))).toBeNull();
+    expect(dynamicPreviewRequest(new URL(
       "https://octagon.hq-app.workers.dev/rankings?update=0123456789abcdef0123456789abcdef01234567",
     ))).toEqual({
       kind: "major-ranking-update",
@@ -126,6 +141,29 @@ describe("resolveRichPreview", () => {
     expect(preview.title).toContain("CODY wins");
     expect(preview.description).toContain("CODY 8/10 vs. SHANE 6/10");
     expect(preview.images[0]?.path).toBe("/assets/share/find-leader.svg");
+  });
+
+  it("renders only the completed public Auction result", () => {
+    const preview = resolveRichPreview(
+      new URL("https://octagon.hq-app.workers.dev/play/auction?auction=123e4567-e89b-42d3-a456-426614174000"),
+      catalog,
+      {
+        kind: "auction-result",
+        auction_id: "123e4567-e89b-42d3-a456-426614174000",
+        mode_id: "strikers",
+        challenger_name: "CODY",
+        recipient_name: "SHANE",
+        challenger_score: 91.5,
+        recipient_score: 88,
+        verdict: "CODY wins",
+      },
+    );
+
+    expect(preview.kind).toBe("auction-result");
+    expect(preview.title).toBe("Strikers Auction result | CODY wins | Octagon HQ");
+    expect(preview.description).toBe("CODY 91.5 vs. SHANE 88. CODY wins.");
+    expect(preview.images[0]?.path).toBe("/assets/share/auction.svg");
+    expect(JSON.stringify(preview)).not.toMatch(/bid|rarity|formula|grade|deck|bankroll/i);
   });
 
   it("renders Picks recap leaders and main-event fighters", () => {

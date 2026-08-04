@@ -20,7 +20,7 @@ export function RouteScrollManager() {
   useEffect(() => {
     if (location.hash) return;
     scrollPageToTop();
-  }, [location.hash, location.pathname]);
+  }, [location.hash, location.pathname, location.search]);
 
   return null;
 }

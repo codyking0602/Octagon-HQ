@@ -5,6 +5,8 @@ export type RichPreviewKind =
   | "comparison"
   | "challenge"
   | "game-result"
+  | "auction"
+  | "auction-result"
   | "picks-recap"
   | "major-ranking-update";
 
@@ -47,7 +49,7 @@ export interface RichPreviewMetadata {
 }
 
 export interface DynamicPreviewRequest {
-  kind: "challenge" | "picks-recap" | "major-ranking-update";
+  kind: "challenge" | "auction" | "picks-recap" | "major-ranking-update";
   key: string;
 }
 
@@ -67,6 +69,17 @@ interface DynamicGameResultPreview {
   responder_name: string;
   creator_score: string;
   responder_score: string;
+  verdict: string;
+}
+
+interface DynamicAuctionResultPreview {
+  kind: "auction-result";
+  auction_id: string;
+  mode_id: string;
+  challenger_name: string;
+  recipient_name: string;
+  challenger_score: number;
+  recipient_score: number;
   verdict: string;
 }
 
@@ -114,6 +127,7 @@ interface DynamicMajorRankingPreview {
 export type DynamicPreviewData =
   | DynamicChallengePreview
   | DynamicGameResultPreview
+  | DynamicAuctionResultPreview
   | DynamicPicksRecapPreview
   | DynamicMajorRankingPreview;
 
@@ -139,6 +153,14 @@ function plainCopy(value: string) {
 function clipped(value: string, maximum = 190) {
   const copy = plainCopy(value);
   return copy.length <= maximum ? copy : `${copy.slice(0, maximum - 1).trimEnd()}…`;
+}
+
+function humanize(value: string) {
+  return value
+    .split("-")
+    .filter(Boolean)
+    .map((part) => `${part.slice(0, 1).toUpperCase()}${part.slice(1)}`)
+    .join(" ");
 }
 
 function safeDecode(value: string) {
@@ -213,6 +235,14 @@ export function dynamicPreviewRequest(requestUrl: URL): DynamicPreviewRequest | 
     if (/^[0-9a-f]{40}$/.test(update)) return { kind: "major-ranking-update", key: update };
   }
 
+  if (requestUrl.pathname === "/play/auction" || requestUrl.pathname === "/play/auction/") {
+    const auctionId = (requestUrl.searchParams.get("auction") ?? "").trim().toLowerCase();
+    if (/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(auctionId)) {
+      return { kind: "auction", key: auctionId };
+    }
+    return null;
+  }
+
   if (requestUrl.pathname === "/play" || requestUrl.pathname === "/play/") {
     const code = challengeCode(requestUrl.searchParams.get("challenge"));
     return code ? { kind: "challenge", key: code } : null;
@@ -234,6 +264,7 @@ function isDynamicPreviewData(value: unknown): value is DynamicPreviewData {
   const kind = (value as { kind?: unknown }).kind;
   return kind === "challenge"
     || kind === "game-result"
+    || kind === "auction-result"
     || kind === "picks-recap"
     || kind === "major-ranking-update";
 }
@@ -275,6 +306,20 @@ function dynamicMetadata(
       title: `${plainCopy(data.game_title)} result | ${plainCopy(data.verdict)} | Octagon HQ`,
       description: clipped(
         `${data.creator_name} ${data.creator_score} vs. ${data.responder_name} ${data.responder_score}. ${data.verdict}. ${data.summary}`,
+      ),
+      canonicalPath: requestPath(requestUrl),
+      images: [gameImage(game)],
+    };
+  }
+
+  if (data.kind === "auction-result") {
+    const game = gameById(catalog, "auction");
+    const modeName = humanize(data.mode_id);
+    return {
+      kind: "auction-result",
+      title: `${modeName} Auction result | ${plainCopy(data.verdict)} | Octagon HQ`,
+      description: clipped(
+        `${plainCopy(data.challenger_name)} ${data.challenger_score} vs. ${plainCopy(data.recipient_name)} ${data.recipient_score}. ${plainCopy(data.verdict)}.`,
       ),
       canonicalPath: requestPath(requestUrl),
       images: [gameImage(game)],

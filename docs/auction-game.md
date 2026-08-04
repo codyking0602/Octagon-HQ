@@ -29,8 +29,9 @@ GitHub Actions is the only deployment owner. A merged change is not automaticall
 | Auction PR 3: playable server engine | Complete | #212 / #213 release proof | `0e9377ee6557a33b4db5d1225761901764707537` |
 | Auction PR 4: complete gameplay UI | Complete | #215 | `515e9293807a8a689d31ebca47ea59148bfeb918` |
 | Auction PR 5: real UFC content and private grading | Complete | #274 | `3fdac6e7e526d92e437789c2bed128fa821914ee` |
+| Auction PR 6: notifications and final release proof | Implementation complete; release evidence pending exact-head merge | Current focused PR | Recorded after exact production certification |
 
-PR #205 established the private lifecycle and PR #211 proved its production migrations. PR #212 added the authenticated transactional preparation, send, sealed-bid resolution, forced-assignment, and neutral completion boundary; PR #213 repaired and proved its production release. PR #215 added and released the complete gameplay UI. PR #274 added the versioned real UFC-only catalog, balanced private generation weights, and the fixed private grader. Its exact reviewed head `bb78d8a5db2bac51897bbfe7c60bfdd943376353` passed typecheck, all 907 tests, the production build, fresh-database Auction SQL, statistical simulations, and the complete backend verifier. The trusted backend workflow applied and verified migrations `202609020001` through `202609020008`. PR 6 remains the notification-completion and final release-proof stage.
+PR #205 established the private lifecycle and PR #211 proved its production migrations. PR #212 added the authenticated transactional preparation, send, sealed-bid resolution, forced-assignment, and neutral completion boundary; PR #213 repaired and proved its production release. PR #215 added and released the complete gameplay UI. PR #274 added the versioned real UFC-only catalog, balanced private generation weights, and the fixed private grader. Its exact reviewed head `bb78d8a5db2bac51897bbfe7c60bfdd943376353` passed typecheck, all 907 tests, the production build, fresh-database Auction SQL, statistical simulations, and the complete backend verifier. The trusted backend workflow applied and verified migrations `202609020001` through `202609020008`. Auction PR 6: notifications and final release proof completes the existing server-owned notification lifecycle, push eligibility, completed-only Auction share previews, exact deep-link recovery, three-profile privacy proof, and final production certification. GitHub Actions remains the only deployment owner.
 
 PR #203 established one Play game identity, the sixteen public mode definitions, one canonical `/play/auction` route, and a nonfunctional preview shell. It did not add persistence, bidding, prepared challenges, deck generation, grading, or notifications.
 
@@ -586,15 +587,17 @@ Each PR still follows one owner, one coherent purpose, focused tests, and exact-
 - Existing result presentation integration.
 - Artifact tests proving no grading internals, item values, private rarity data, or intermediate scores reach the browser.
 
-### PR 6 — Notifications and release proof
+### PR 6 — Notifications and final release proof
 
-- Complete all Auction notification producers through the existing publisher.
-- Reuse existing push delivery.
-- Verify exact deep links and reopening for prepared, sent, active, action-needed, declined, cancelled, completed, and rematch flows.
-- Add safe rich previews only.
-- Complete end-to-end privacy proof with two real profiles and an unrelated user.
-- Extend existing backend verification and frontend artifact privacy checks without creating a second deployment or verification owner.
-- Prove exact deployed frontend SHA and deployed backend migrations/functions before any live claim.
+- The existing private database lifecycle remains the only Auction notification producer. Challenge received, first-round acceptance, later action-needed rounds, completion, true ties, declines, and cancellations publish idempotent public-safe notifications from the authoritative server transaction.
+- The existing notification preference and push-delivery owners classify actionable Auction and terminal result notifications as push candidates without placing bids, hidden intentions, future deck entries, private values, rarity, grading internals, or explanations in the payload.
+- The existing canonical destination owner resolves every Auction notification and share to `/play/auction?auction=<uuid>`. Signed-out navigation retains that exact route through authentication; participants reopen the safe projection; unrelated users receive an honest unavailable state.
+- The existing native-share owner and Cloudflare Worker provide completed-only Auction share previews. In-progress, invalid, missing, deleted, and unauthorized destinations expose only the generic private-Auction card. Completed previews expose only mode, participant names, final 0–100 scores, and winner or true tie.
+- The production proof uses two participants and one unrelated signed-in profile through the supported authentication path. It prepares, sends, accepts, progresses, completes, grades, verifies notifications and push authorization, restores deep links, verifies the completed rich preview, proves unrelated-user privacy, and removes every temporary profile and dependent row.
+- Fresh-database SQL proves exactly-once notification creation, preference-aware push eligibility, safe payloads, terminal transitions, completed-only previews, winner-or-true-tie semantics, unrelated-user privacy, and cascade cleanup.
+- The production artifact verifier rejects private Auction catalog, rarity, random-state, and grading markers from browser JavaScript and Worker output.
+- The existing Validate V2, Verify Supabase Backend, Verify Live Notification Flow, canonical frontend deployment, canonical backend deployment, live frontend delivery, and Worker preview owners provide the release proof. No second provider, client, repository, route, notification system, preview runtime, verification owner, or deployment path is added.
+- Exact PR, reviewed-head, merge, workflow-run, and live-SHA evidence is recorded only after the immutable release identifiers exist.
 
 ## Verification standard for every Auction PR
 
@@ -689,3 +692,7 @@ Update this document in the same PR when a stage completes, a locked rule change
 - Released all sixteen UFC-only content pools, the balanced private generator, and the fixed-version private grader.
 - Applied and verified production migrations `202609020001` through `202609020008` through the canonical Supabase workflow.
 - Preserved PR 6 for notification completion, rich previews, full multi-profile privacy proof, and final Auction certification.
+
+### Auction PR 6 final certification contract
+
+Auction is not considered released when code merges. Final certification requires exact-head typecheck, the complete test suite, the production client and Worker build, all Auction SQL suites on a fresh database, linked migration `202609030001`, the canonical backend deployment, the canonical frontend deployment, exact live frontend delivery, the two-participant plus unrelated-user production proof, safe push claims, completed-only rich preview output, cleanup proof, and current `main` equal to the certified merge commit.

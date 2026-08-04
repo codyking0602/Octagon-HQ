@@ -17,6 +17,7 @@ const liveVerifier = source("../../scripts/verify-live-rich-previews.mjs");
 const liveWorkflow = source("../../.github/workflows/verify-live-rich-previews.yml");
 const architecture = source("../../docs/rich-preview-architecture.md");
 const migration = source("../../supabase/migrations/202608200028_dynamic_rich_preview_data.sql");
+const auctionReleaseMigration = source("../../supabase/migrations/202609030001_auction_notifications_share_release.sql");
 const assetsIgnore = source("../../public/.assetsignore");
 
 describe("rich preview ownership", () => {
@@ -73,6 +74,8 @@ describe("rich preview ownership", () => {
     expect(worker).toContain("dynamicPreviewRequest");
     expect(migration).toContain("create or replace function public.get_rich_preview_data");
     expect(migration).toContain("grant execute on function public.get_rich_preview_data(text, text) to anon, authenticated");
+    expect(auctionReleaseMigration).toContain("private.get_rich_preview_data_pr6_core");
+    expect(auctionReleaseMigration).toContain("auction.lifecycle_state = 'completed'");
     expect(migration).toContain("revoke all on private.rich_preview_major_ranking_updates from public, anon, authenticated");
     expect(worker).not.toContain("localStorage");
     expect(worker).not.toContain("sessionStorage");
@@ -84,6 +87,7 @@ describe("rich preview ownership", () => {
       '"game-result"',
       '"picks-recap"',
       '"major-ranking-update"',
+      '"auction-result"',
     ]) {
       expect(previewModel).toContain(marker);
     }
@@ -93,6 +97,7 @@ describe("rich preview ownership", () => {
     expect(architecture).toContain("Challenge invitations");
     expect(architecture).toContain("Completed matchup results");
     expect(architecture).toContain("Major ranking updates");
+    expect(architecture).toContain("Completed Auction results");
   });
 
   it("requires exact live crawler and PNG proof after production deployment", () => {

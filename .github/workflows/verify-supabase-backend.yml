@@ -7,6 +7,7 @@ on:
       - ".github/workflows/deploy-supabase.yml"
       - "scripts/verify-event-setup-preview-live.mjs"
       - "scripts/verify-live-frontend-delivery.mjs"
+      - "scripts/verify-live-auction-release.mjs"
       - "scripts/verify-pin-auth-live.mjs"
       - "scripts/verify-picks-scoring-live.mjs"
       - "scripts/verify-production-monitoring-scheduler.mjs"
@@ -214,6 +215,7 @@ jobs:
             supabase/tests/auction_private_lifecycle.sql \
             supabase/tests/auction_private_lifecycle_hardening.sql \
             supabase/tests/auction_playable_server_engine.sql \
+            supabase/tests/auction_notifications_share_release.sql \
             supabase/tests/pick_monitoring_truthful_decisions.sql
           do
             echo "Executing $test_file"
@@ -290,6 +292,26 @@ jobs:
           require_remote_migration "202608200027" "Fighters to Watch durable event migration not deployed"
           require_remote_migration "202608200028" "What's New sync contract v3 migration not deployed"
           require_remote_migration "202608200030" "Gable production repair migration not deployed"
+
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            local_version=$(printf '%s\n' "$migration_list" | sed 's/│/|/g' | awk -F '|' '
+              {
+                local_version = $1
+                gsub(/[^0-9]/, "", local_version)
+                if (local_version == "202609030001") {
+                  print local_version
+                  exit
+                }
+              }
+            ')
+            if [ "$local_version" != "202609030001" ]; then
+              echo "::error title=Auction PR 6 migration missing::Migration 202609030001 is not present in the exact PR head."
+              exit 1
+            fi
+            echo "Auction PR 6 migration 202609030001 exists locally and passed the fresh-database suite; linked production history is hard-required after merge by the canonical deployment workflow."
+          else
+            require_remote_migration "202609030001" "Auction PR 6 notifications and share release migration not deployed"
+          fi
 
       - name: Verify deployed functions and production CORS
         shell: bash
@@ -466,7 +488,7 @@ jobs:
             echo "- GitHub deployment secrets: present and accepted"
             echo "- Supabase access token/project pairing: accepted"
             echo "- Database password and migration connection: accepted"
-            echo "- Auction lifecycle SQL tests: executed against a fresh local Supabase database"
+            echo "- Auction lifecycle, notification, push eligibility, completed-share, privacy, and cleanup SQL tests: executed against a fresh local Supabase database"
             echo "- Truthful Picks monitoring SQL test: executed against the same fresh local Supabase database"
             echo "- Required Edge Function secret names: present"
             echo "- Existing profile, challenge, Your HQ, Picks, scoring, recap, reveal, Fight Night, and What's New migrations: deployed remotely"

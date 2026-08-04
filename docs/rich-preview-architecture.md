@@ -15,6 +15,7 @@ Implemented previews:
 - Challenge invitations
 - Completed matchup results
 - Major ranking updates
+- Completed Auction results
 
 Every approved destination points to one rendered 1200×630 PNG card. The card itself contains the relevant fighter, matchup, score, verdict, challenge, recap result, or ranking movement. Messaging clients do not have to combine multiple image tags or infer the important content from plain metadata.
 
@@ -40,6 +41,7 @@ The metadata page publishes exactly one `og:image` and one matching Twitter imag
 - Fighter and comparison cards use the real deployed fighter files.
 - Picks recaps and ranking updates can place two relevant fighters into the same card.
 - Game-result cards place both score labels and the verdict directly on the image.
+- Auction cards remain generic while the game is private and in progress; completed result cards show only the two names, final 0–100 scores, and winner or true tie.
 - Recognized share destinations receive a destination-specific card even if optional dynamic data is temporarily unavailable; they never silently become the generic app preview.
 
 ## Fresh shares and canonical URLs
@@ -54,6 +56,7 @@ The public preview projection never returns full Picks history, submitted picks,
 - A completed shared matchup exposes the two display names, public score labels, and final verdict.
 - A Picks recap exposes the event name, first-place result, entrant count, and main-event fighters.
 - A major ranking update exposes only the already-published update summary and the relevant rank movements.
+- An incomplete Auction exposes no dynamic database projection. A completed shared Auction exposes only mode, participant display names, final 0–100 scores, and winner or true tie. It never exposes bids, future entries, rarity, formulas, intermediate grading, item grades, or explanations.
 
 Unknown, private, malformed, or unsupported routes still fall back safely without creating another lookup path.
 
@@ -63,4 +66,4 @@ Preview copy uses plain `resume` where that word appears and avoids legacy ranki
 
 ## Production proof
 
-The Cloudflare deployment is not considered successful merely because the homepage and JavaScript chunks load. It must also prove live crawler responses for a fighter, a comparison, and a game challenge, then fetch the published card image and verify its PNG signature and exact 1200×630 dimensions.
+The Cloudflare deployment is not considered successful merely because the homepage and JavaScript chunks load. It must also prove live crawler responses for a fighter, a comparison, a game challenge, and the completed Auction result produced by the canonical multi-profile release proof, then fetch the published card image and verify its PNG signature and exact 1200×630 dimensions.
