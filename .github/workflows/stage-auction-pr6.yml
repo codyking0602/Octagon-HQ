@@ -49,7 +49,7 @@ jobs:
           git add --all
 
           changed_count=$(git diff --cached --name-only | wc -l | tr -d ' ')
-          test "$changed_count" = "25"
+          test "$changed_count" = "12"
           test ! -e .github/workflows/auction-pr6-checkout-snapshot.yml
           test ! -e verification-artifacts/auction-pr6-snapshot.txt
 
