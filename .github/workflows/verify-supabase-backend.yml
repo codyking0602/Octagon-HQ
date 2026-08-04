@@ -29,63 +29,65 @@ jobs:
 
           python - <<'PY'
           from pathlib import Path
+          from textwrap import dedent
 
           migration = Path("supabase/migrations/202609030001_auction_notifications_share_release.sql")
           text = migration.read_text()
           start = text.index("-- Profile deletion already owns dependent public challenge cleanup.")
           end = text.index("alter table private.notification_groups", start)
-          replacement = """-- Profile deletion already owns dependent public challenge cleanup. Keep that
--- single cleanup boundary complete without making ordinary private rows mutable.
-alter table private.auction_games
-  drop constraint auction_games_challenger_id_fkey,
-  drop constraint auction_games_recipient_id_fkey,
-  drop constraint auction_games_challenge_id_fkey,
-  drop constraint auction_games_tie_priority_profile_id_fkey,
-  drop constraint auction_games_cancelled_by_fkey,
-  drop constraint auction_games_winner_profile_id_fkey;
+          replacement = dedent("""\
+          -- Profile deletion already owns dependent public challenge cleanup. Keep that
+          -- single cleanup boundary complete without making ordinary private rows mutable.
+          alter table private.auction_games
+            drop constraint auction_games_challenger_id_fkey,
+            drop constraint auction_games_recipient_id_fkey,
+            drop constraint auction_games_challenge_id_fkey,
+            drop constraint auction_games_tie_priority_profile_id_fkey,
+            drop constraint auction_games_cancelled_by_fkey,
+            drop constraint auction_games_winner_profile_id_fkey;
 
-alter table private.auction_games
-  add constraint auction_games_challenger_id_fkey
-    foreign key (challenger_id) references public.profiles(id) on delete cascade,
-  add constraint auction_games_recipient_id_fkey
-    foreign key (recipient_id) references public.profiles(id) on delete cascade,
-  add constraint auction_games_challenge_id_fkey
-    foreign key (challenge_id) references public.play_challenges(id) on delete cascade;
+          alter table private.auction_games
+            add constraint auction_games_challenger_id_fkey
+              foreign key (challenger_id) references public.profiles(id) on delete cascade,
+            add constraint auction_games_recipient_id_fkey
+              foreign key (recipient_id) references public.profiles(id) on delete cascade,
+            add constraint auction_games_challenge_id_fkey
+              foreign key (challenge_id) references public.play_challenges(id) on delete cascade;
 
--- These identities are already constrained to the two participants, so their
--- direct profile foreign keys are redundant and would compete with game cleanup.
-alter table private.auction_pending_bids
-  drop constraint auction_pending_bids_bidder_id_fkey;
+          -- These identities are already constrained to the two participants, so their
+          -- direct profile foreign keys are redundant and would compete with game cleanup.
+          alter table private.auction_pending_bids
+            drop constraint auction_pending_bids_bidder_id_fkey;
 
-alter table private.auction_awards
-  drop constraint auction_awards_awarded_to_fkey,
-  drop constraint auction_awards_deck_entry_id_auction_id_fkey,
-  add constraint auction_awards_deck_entry_id_auction_id_fkey
-    foreign key (deck_entry_id, auction_id)
-    references private.auction_deck_entries(id, auction_id) on delete cascade;
+          alter table private.auction_awards
+            drop constraint auction_awards_awarded_to_fkey,
+            drop constraint auction_awards_deck_entry_id_auction_id_fkey,
+            add constraint auction_awards_deck_entry_id_auction_id_fkey
+              foreign key (deck_entry_id, auction_id)
+              references private.auction_deck_entries(id, auction_id) on delete cascade;
 
-create or replace function private.prevent_auction_private_mutation()
-returns trigger
-language plpgsql
-set search_path = ''
-as $$
-begin
-  if tg_op = 'DELETE'
-    and tg_table_name in ('auction_deck_entries', 'auction_pending_bids', 'auction_awards')
-    and not exists (
-      select 1
-      from private.auction_games auction
-      where auction.id = old.auction_id
-    )
-  then
-    return old;
-  end if;
+          create or replace function private.prevent_auction_private_mutation()
+          returns trigger
+          language plpgsql
+          set search_path = ''
+          as $$
+          begin
+            if tg_op = 'DELETE'
+              and tg_table_name in ('auction_deck_entries', 'auction_pending_bids', 'auction_awards')
+              and not exists (
+                select 1
+                from private.auction_games auction
+                where auction.id = old.auction_id
+              )
+            then
+              return old;
+            end if;
 
-  raise exception 'Auction private records are immutable';
-end;
-$$;
+            raise exception 'Auction private records are immutable';
+          end;
+          $$;
 
-"""
+          """)
           migration.write_text(text[:start] + replacement + text[end:])
 
           test_file = Path("src/app/auctionPr6ReleaseContract.test.ts")
