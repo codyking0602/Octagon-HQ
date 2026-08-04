@@ -217,6 +217,7 @@ jobs:
             supabase/tests/auction_playable_server_engine.sql \
             supabase/tests/auction_notifications_share_release.sql \
             supabase/tests/auction_launch_notification.sql \
+            supabase/tests/auction_catalog_expansion.sql \
             supabase/tests/pick_monitoring_truthful_decisions.sql
           do
             echo "Executing $test_file"
@@ -318,10 +319,14 @@ jobs:
           if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
             require_local_migration "202609030001" "Auction PR 6 migration missing"
             require_local_migration "202609030003" "Auction launch migration missing"
+            require_local_migration "202609040001" "Auction catalog expansion migration missing"
+            require_local_migration "202609040002" "Auction v2 grader migration missing"
             echo "Auction migrations 202609030001 and 202609030003 exist locally and passed the fresh-database suite; linked production history is hard-required after merge by the canonical deployment workflow."
           else
             require_remote_migration "202609030001" "Auction PR 6 notifications and share release migration not deployed"
             require_remote_migration "202609030003" "Auction launch notification migration not deployed"
+            require_remote_migration "202609040001" "Auction catalog expansion migration not deployed"
+            require_remote_migration "202609040002" "Auction v2 grader migration not deployed"
           fi
 
       - name: Verify deployed functions and production CORS
