@@ -62,45 +62,45 @@ export function ChallengeMemberPicker({
       <label className="challenge-member-picker__search">
         <span>CHOOSE MEMBER</span>
         <input
-autoCapitalize="characters"
-autoComplete="off"
-placeholder="SEARCH MEMBERS"
-value={query}
-onChange={(event) => setQuery(event.target.value.toUpperCase())}
+          autoCapitalize="characters"
+          autoComplete="off"
+          placeholder="SEARCH MEMBERS"
+          value={query}
+          onChange={(event) => setQuery(event.target.value.toUpperCase())}
         />
       </label>
 
       <div className="challenge-dialog__profiles challenge-member-picker__list" role="listbox" aria-label="Octagon HQ members">
         {options.map((member) => {
-const normalizedName = normalizeMemberName(member.displayName);
-const selected = normalizedName === normalizedSelected;
-return (
-  <button
-    className={selected ? "is-selected" : ""}
-    type="button"
-    role="option"
-    aria-selected={selected}
-    disabled={busy}
-    key={member.displayName}
-    onClick={() => onSelect(member)}
-  >
-    <i>
-      {member.avatarPhotoData
-        ? <img src={member.avatarPhotoData} alt={`${member.displayName} profile`} />
-        : member.initials}
-    </i>
-    <span>
-      <strong>{member.displayName}</strong>
-      <small>{recentSet.has(normalizedName) ? "RECENT OPPONENT" : "OCTAGON HQ MEMBER"}</small>
-    </span>
-    <em aria-hidden="true" />
-  </button>
-);
+          const normalizedName = normalizeMemberName(member.displayName);
+          const selected = normalizedName === normalizedSelected;
+          return (
+            <button
+              className={selected ? "is-selected" : ""}
+              type="button"
+              role="option"
+              aria-selected={selected}
+              disabled={busy}
+              key={member.displayName}
+              onClick={() => onSelect(member)}
+            >
+              <i>
+                {member.avatarPhotoData
+                  ? <img src={member.avatarPhotoData} alt={`${member.displayName} profile`} />
+                  : member.initials}
+              </i>
+              <span>
+                <strong>{member.displayName}</strong>
+                <small>{recentSet.has(normalizedName) ? "RECENT OPPONENT" : "OCTAGON HQ MEMBER"}</small>
+              </span>
+              <em aria-hidden="true" />
+            </button>
+          );
         })}
         {!options.length ? (
-<p className="challenge-member-picker__empty">
-  {query ? "No members match that search." : "No other Octagon HQ members are available yet."}
-</p>
+          <p className="challenge-member-picker__empty">
+            {query ? "No members match that search." : "No other Octagon HQ members are available yet."}
+          </p>
         ) : null}
       </div>
     </section>
