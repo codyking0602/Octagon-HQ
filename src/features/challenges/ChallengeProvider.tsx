@@ -10,7 +10,10 @@ import {
 import { createPortal } from "react-dom";
 import { shareAppLink, shareCanonicalDestination } from "../../app/nativeShare";
 import { useIdentity } from "../identity/IdentityProvider";
+import type { MemberCardSummary } from "../members/memberProfilesModel";
+import { createMemberProfilesRepository } from "../members/memberProfilesRepository";
 import type { PlayGameId } from "../play/playRegistry";
+import { ChallengeMemberPicker } from "./ChallengeMemberPicker";
 import {
   canViewChallengeResults,
   challengeCounterpartId,
@@ -47,6 +50,7 @@ interface PlayChallengesContextValue {
   loading: boolean;
   error: string;
   profiles: readonly ChallengeProfile[];
+  members: readonly MemberCardSummary[];
   activeProfile: ChallengeProfile | null;
   challenges: PlayChallenge[];
   preferredRecipientName: string;
@@ -84,6 +88,8 @@ function ComposerDialog({
   draft,
   activeProfile,
   repository,
+  members,
+  recentProfileNames,
   initialProfileName,
   onClose,
   onSend,
@@ -91,18 +97,21 @@ function ComposerDialog({
   draft: ChallengeComposerDraft;
   activeProfile: ChallengeProfile;
   repository: ChallengeRepository;
+  members: readonly MemberCardSummary[];
+  recentProfileNames: readonly string[];
   initialProfileName: string;
   onClose: () => void;
   onSend: (recipient: ChallengeProfile) => Promise<void>;
 }) {
-  const [profileName, setProfileName] = useState(initialProfileName);
   const [recipient, setRecipient] = useState<ChallengeProfile | null>(null);
+  const [selectedName, setSelectedName] = useState(initialProfileName);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState("");
 
-  async function lookupProfile(name: string) {
+  async function lookupProfile(name: string, avatarPhotoData?: string | null) {
     const normalizedName = normalizeProfileName(name);
     if (normalizedName.length < 2) return;
+    setSelectedName(normalizedName);
     setBusy(true);
     setStatus("");
     setRecipient(null);
@@ -112,8 +121,11 @@ function ComposerDialog({
         setStatus("NO PROFILE FOUND WITH THAT EXACT NAME");
         return;
       }
-      setRecipient(match);
-      setStatus(`${match.displayName} FOUND`);
+      setRecipient({
+        ...match,
+        avatarPhotoData: avatarPhotoData ?? match.avatarPhotoData ?? null,
+      });
+      setStatus(`${match.displayName} SELECTED`);
     } catch (error) {
       setStatus(challengeRepositoryError(error));
     } finally {
@@ -122,12 +134,12 @@ function ComposerDialog({
   }
 
   useEffect(() => {
-    if (initialProfileName) void lookupProfile(initialProfileName);
-  }, [initialProfileName]);
-
-  async function findProfile() {
-    await lookupProfile(profileName);
-  }
+    if (!initialProfileName) return;
+    const member = members.find(
+      (candidate) => normalizeProfileName(candidate.displayName) === normalizeProfileName(initialProfileName),
+    );
+    void lookupProfile(initialProfileName, member?.avatarPhotoData);
+  }, [initialProfileName, members]);
 
   async function sendToProfile() {
     if (!recipient) return;
@@ -154,7 +166,7 @@ function ComposerDialog({
           <div>
             <p className="eyebrow">GAME CHALLENGE</p>
             <h2 id="challenge-dialog-title">Challenge Someone</h2>
-            <p>Enter the exact Octagon HQ profile name. The same locked game will appear on their device.</p>
+            <p>Choose any Octagon HQ member below. Search is optional.</p>
           </div>
           <button type="button" className="challenge-dialog__close" aria-label="Close challenge dialog" onClick={onClose}>×</button>
         </header>
@@ -164,37 +176,13 @@ function ComposerDialog({
           <b>LOCKED</b>
         </div>
 
-        <form className="challenge-dialog__profile-search" onSubmit={(event) => {
-          event.preventDefault();
-          void findProfile();
-        }}>
-          <label>
-            <span>PROFILE NAME</span>
-            <input
-              autoCapitalize="characters"
-              autoComplete="off"
-              maxLength={24}
-              placeholder="SHANE"
-              value={profileName}
-              onChange={(event) => {
-                setProfileName(event.target.value.toUpperCase());
-                setRecipient(null);
-                setStatus("");
-              }}
-            />
-          </label>
-          <button type="submit" disabled={busy || profileName.trim().length < 2}>FIND PROFILE</button>
-        </form>
-
-        {recipient ? (
-          <div className="challenge-dialog__profiles">
-            <button className="is-selected" type="button" onClick={() => undefined}>
-              <i>{recipient.initials}</i>
-              <span><strong>{recipient.displayName}</strong><small>OCTAGON HQ PROFILE</small></span>
-              <em aria-hidden="true" />
-            </button>
-          </div>
-        ) : null}
+        <ChallengeMemberPicker
+          members={members}
+          recentNames={recentProfileNames}
+          selectedName={selectedName}
+          busy={busy}
+          onSelect={(member) => void lookupProfile(member.displayName, member.avatarPhotoData)}
+        />
 
         <p className="challenge-dialog__status" role="status">{status}</p>
         <footer>
@@ -295,8 +283,10 @@ export function ChallengeProvider({
   const identity = useIdentity();
   const initialRepository = suppliedRepository === undefined ? createChallengeRepository() : suppliedRepository;
   const [repository] = useState<ChallengeRepository | null>(initialRepository);
+  const [memberRepository] = useState(() => createMemberProfilesRepository());
   const [rows, setRows] = useState<PlayChallenge[]>([]);
   const [counterparts, setCounterparts] = useState<ChallengeProfile[]>([]);
+  const [members, setMembers] = useState<MemberCardSummary[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [composer, setComposer] = useState<ChallengeComposerDraft | null>(null);
@@ -307,11 +297,18 @@ export function ChallengeProvider({
   const configured = Boolean(repository);
   const enabled = Boolean(repository && activeProfile);
   const profiles = useMemo(() => {
+    const membersByName = new Map(
+      members.map((member) => [normalizeProfileName(member.displayName), member]),
+    );
+    const enrich = (profile: ChallengeProfile): ChallengeProfile => ({
+      ...profile,
+      avatarPhotoData: membersByName.get(normalizeProfileName(profile.displayName))?.avatarPhotoData ?? null,
+    });
     const map = new Map<string, ChallengeProfile>();
-    if (activeProfile) map.set(activeProfile.id, activeProfile);
-    counterparts.forEach((profile) => map.set(profile.id, profile));
+    if (activeProfile) map.set(activeProfile.id, enrich(activeProfile));
+    counterparts.forEach((profile) => map.set(profile.id, enrich(profile)));
     return [...map.values()];
-  }, [activeProfile, counterparts]);
+  }, [activeProfile, counterparts, members]);
 
   const refresh = useCallback(async () => {
     if (!repository || !activeProfile) {
@@ -339,6 +336,24 @@ export function ChallengeProvider({
     setPreferredRecipientName("");
     void refresh();
   }, [activeProfile?.id, refresh]);
+
+  useEffect(() => {
+    let active = true;
+    if (!activeProfile || !memberRepository) {
+      setMembers([]);
+      return () => { active = false; };
+    }
+
+    void memberRepository.listMembers()
+      .then((nextMembers) => {
+        if (active) setMembers(nextMembers.filter((member) => !member.isCurrentUser));
+      })
+      .catch(() => {
+        if (active) setMembers([]);
+      });
+
+    return () => { active = false; };
+  }, [activeProfile?.id, memberRepository]);
 
   useEffect(() => {
     if (!enabled) return undefined;
@@ -438,13 +453,16 @@ export function ChallengeProvider({
     if (!repository || !activeProfile) return null;
     try {
       const profile = await repository.findProfile(displayName, activeProfile.id);
+      const member = members.find(
+        (candidate) => normalizeProfileName(candidate.displayName) === normalizeProfileName(displayName),
+      );
       setError("");
-      return profile;
+      return profile ? { ...profile, avatarPhotoData: member?.avatarPhotoData ?? null } : null;
     } catch (nextError) {
       setError(challengeRepositoryError(nextError));
       return null;
     }
-  }, [activeProfile, repository]);
+  }, [activeProfile, members, repository]);
 
   const dismissChallenge = useCallback(async (code: string) => {
     if (!repository || !activeProfile) return false;
@@ -472,6 +490,7 @@ export function ChallengeProvider({
     loading,
     error,
     profiles,
+    members,
     activeProfile,
     challenges: rows,
     preferredRecipientName,
@@ -495,6 +514,8 @@ export function ChallengeProvider({
           draft={composer}
           activeProfile={activeProfile}
           repository={repository}
+          members={members}
+          recentProfileNames={counterparts.map((profile) => profile.displayName)}
           initialProfileName={preferredRecipientName}
           onClose={closeComposer}
           onSend={sendChallenge}
@@ -516,13 +537,4 @@ export function usePlayChallenges() {
   const value = useContext(PlayChallengesContext);
   if (!value) throw new Error("usePlayChallenges must be used inside ChallengeProvider");
   return value;
-}
-
-export function challengeCounterpart(
-  challenge: PlayChallenge,
-  activeProfileId: string,
-  profiles: readonly ChallengeProfile[],
-) {
-  const counterpartId = challengeCounterpartId(challenge, activeProfileId);
-  return profiles.find((profile) => profile.id === counterpartId) ?? null;
 }
