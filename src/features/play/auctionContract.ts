@@ -80,7 +80,49 @@ export const auctionModes: readonly PublicAuctionMode[] = modes.map(([id, displa
   };
 });
 
+export type AuctionModeGroupId = "fighters" | "skills" | "performances" | "history";
+
+export interface AuctionModeGroup {
+  id: AuctionModeGroupId;
+  label: string;
+  modeIds: readonly AuctionModeId[];
+}
+
+export const auctionModeGroups: readonly AuctionModeGroup[] = [
+  {
+    id: "fighters",
+    label: "Fighters",
+    modeIds: [
+      "ultimate-fighter",
+      "jon-jones-performances",
+      "conor-mcgregor-performances",
+      "charles-oliveira-performances",
+    ],
+  },
+  {
+    id: "skills",
+    label: "Skills",
+    modeIds: ["strikers", "grapplers", "knockout-artists"],
+  },
+  {
+    id: "performances",
+    label: "Performances",
+    modeIds: [
+      "fighter-performances",
+      "championship-performances",
+      "finishes",
+      "dominant-performances",
+    ],
+  },
+  {
+    id: "history",
+    label: "UFC History",
+    modeIds: ["greatest-ufc-card", "wars", "rivalries", "iconic-moments", "nicknames"],
+  },
+];
+
 const auctionModeById = new Map(auctionModes.map((mode) => [mode.id, mode]));
+const auctionModeGroupById = new Map(auctionModeGroups.map((group) => [group.id, group]));
 
 export function isAuctionModeId(value: string): value is AuctionModeId {
   return auctionModeById.has(value as AuctionModeId);
@@ -92,6 +134,12 @@ export function parseAuctionModeId(value: string): AuctionModeId | null {
 
 export function auctionModeDefinition(id: AuctionModeId): PublicAuctionMode {
   return auctionModeById.get(id)!;
+}
+
+export function auctionModesForGroup(groupId: AuctionModeGroupId | "all") {
+  if (groupId === "all") return auctionModes;
+  const group = auctionModeGroupById.get(groupId);
+  return group?.modeIds.map(auctionModeDefinition) ?? [];
 }
 
 export function usesUltimateFighterPlacement(id: AuctionModeId): boolean {
