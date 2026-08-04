@@ -696,3 +696,36 @@ Update this document in the same PR when a stage completes, a locked rule change
 ### Auction PR 6 final certification contract
 
 Auction is not considered released when code merges. Final certification requires exact-head typecheck, the complete test suite, the production client and Worker build, all Auction SQL suites on a fresh database, linked migration `202609030001`, the canonical backend deployment, the canonical frontend deployment, exact live frontend delivery, the two-participant plus unrelated-user production proof, safe push claims, completed-only rich preview output, cleanup proof, and current `main` equal to the certified merge commit.
+
+## Catalog expansion snapshot (implementation, not live)
+
+Migration `supabase/migrations/202609040001_auction_catalog_expansion.sql` adds the append-only `ufc-auction-2026-08-v2` content snapshot and `balanced-rarity-2026-08-v2` rarity snapshot. Migration `supabase/migrations/202609040002_auction_catalog_v2_grader.sql` extends the single canonical grader to `ufc-private-grader-2026-08-v2` while retaining full v1 support. New preparations select v2; existing prepared, active, and completed games remain pinned to their immutable versions and decks.
+
+| Mode | V2 items |
+| --- | ---: |
+| Build the Ultimate Fighter | 80 |
+| Best Jon Jones Performances | 24 |
+| Best Conor McGregor Performances | 14 |
+| Best Charles Oliveira Performances | 37 |
+| Best Fighter Performances | 64 |
+| Best Strikers | 48 |
+| Best Grapplers | 48 |
+| Best Knockout Artists | 48 |
+| Build the Greatest UFC Card | 64 |
+| Best Championship Performances | 48 |
+| Best Finishes | 64 |
+| Most Dominant Performances | 48 |
+| Best Wars | 48 |
+| Best Rivalries | 48 |
+| Most Iconic UFC Moments | 64 |
+| Best Nicknames | 64 |
+
+Career histories use a **2026-03-07 UTC research cutoff**. Bout identity and completion were reconciled against the official UFC athlete records and UFCStats bout histories: UFC bouts only; wins, losses, and no contests included; rematches retained separately; cancelled bouts, exhibitions, and pre-UFC bouts excluded. Scores judge the named fighter's bout performance rather than assigning a result-derived value.
+
+V2 preserves each copied v1 grading input byte-for-byte. New values use the same absolute `0–100` anchors: `98–100` historic, `94–97` truly elite, `89–93` excellent, `83–88` strong, `75–82` notable but flawed, `65–74` weak, and below `65` genuinely poor. Pool size, rarity, selection frequency, and deck peers never modify contribution: standard results remain the arithmetic mean of four awarded `overall` values, and Ultimate Fighter remains the arithmetic mean of the five awarded category values. Jon Jones remains `99` overall.
+
+The expanded replayability contract keeps ten unique fighters for Ultimate Fighter and eight unique items elsewhere. Generation remains the private weighted, without-replacement owner with caps of two Mythic/Crown, two featured Ace/Headliner/Signature, and four total high-end items. Deterministic seeded simulations continue to enforce Jon Jones near `1%–2%`, category aces near `25%`, mixed deck strength, avoidance of extreme decks, and lower independent-game overlap. No weights, classes, grades, or future deck entries are added to safe browser projections.
+
+Ultimate Fighter v2 is not a separate ranking owner. Its `overall`, `Striking`, and `Grappling` inputs are materialized from `rankedPlayFighters`, which in turn uses the canonical calculated ranking output and the reviewed striking/grappling anchors. `Frame` maps the canonical primary weight division to a fixed size band; `Power` maps canonical UFC finish rate; and `Heart` maps canonical rounds-won percentage plus calculated longevity. The source-contract test recomputes the three directly owned inputs for every added fighter, preventing hand-entered synthetic sequences from drifting away from the canonical ranking owner.
+
+The catalog-expansion validation owns positive semantic fixtures for added title bouts, sustained rivalries, and named-fighter performances; it rejects cross-mode reuse and requires all 50 added Ultimate Fighter rows to reproduce canonical Overall, Striking, Grappling, Frame, Power, and Heart inputs. The fresh-database suite calls `private.generate_auction_deck` for deterministic eight- and ten-item v2 decks and calls `private.grade_auction` for pinned v1, pinned v2, standard-mode, and five-category Ultimate Fighter fixtures.
