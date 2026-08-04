@@ -21,6 +21,7 @@ import {
   KEEP_CUT_PACKS,
   KEEP_CUT_ROLES,
   createKeepCutLineup,
+  keepCutBoardIsCompetitive,
   keepCutTier,
   keepCutRating,
   resolveKeepCutChallenge,
@@ -50,13 +51,15 @@ describe("Keep 4, Cut 4 engine", () => {
     expect(KEEP_CUT_ROLES.map((role) => role.id)).toContain("middle-cluster");
   });
 
-  it("builds deterministic unique eight-fighter lineups with no more than two Bad fighters", () => {
+  it("builds deterministic unique competitive eight-fighter lineups with no more than two Bad fighters", () => {
     for (const pack of KEEP_CUT_PACKS) {
       const first = createKeepCutLineup(pack.id, `proof-${pack.id}`);
       const second = createKeepCutLineup(pack.id, `proof-${pack.id}`);
       expect(first.fighters.map((fighter) => fighter.id)).toEqual(second.fighters.map((fighter) => fighter.id));
       expect(first.fighters).toHaveLength(8);
       expect(new Set(first.fighters.map((fighter) => fighter.id)).size).toBe(8);
+      expect(keepCutBoardIsCompetitive(pack.id, first.fighters)).toBe(true);
+      expect(first.attemptsUsed).toBeLessThanOrEqual(36);
       const badFighters = first.fighters.filter((fighter) => keepCutTier(keepCutRating(pack.id, fighter)) === "bad");
       expect(badFighters.length).toBeLessThanOrEqual(2);
     }
@@ -137,25 +140,58 @@ describe("Final Play game presentation", () => {
     expect(container.querySelector(".play-game-card__status.is-preview")).toBeNull();
   });
 
-  it("shows the full eight-fighter Keep Cut board", () => {
+  it("shows the full eight-fighter Keep Cut board with resolved names and photos", () => {
     const lineup = createKeepCutLineup("ufc-careers", "thumbnail-proof");
     const query = lineup.fighters.map((fighter) => fighter.id).join(",");
     const { container } = renderAt(<KeepCutPage />, `/play/keep-cut?pack=ufc-careers&lineup=${query}`);
     expect(container.querySelectorAll(".keep-cut-select-card")).toHaveLength(8);
+    expect(container.querySelectorAll(".keep-cut-fighter__photo")).toHaveLength(8);
+    lineup.fighters.forEach((fighter) => expect(container.textContent).toContain(fighter.name));
     expect(container.textContent).toContain("0 of 4 kept");
     expect(container.querySelector(".keep-cut-new-lineup")).toBeTruthy();
   });
 
-  it("locks eight curated Keep Cut decisions and labels replay honestly", () => {
+  it("allows reversible selection, blocks invalid counts, and submits exactly four keeps", () => {
     const lineup = createKeepCutLineup("ufc-careers", "render-keep-cut");
     const query = lineup.fighters.map((fighter) => fighter.id).join(",");
     const { container } = renderAt(<KeepCutPage />, `/play/keep-cut?pack=ufc-careers&lineup=${query}`);
     const cards = [...container.querySelectorAll<HTMLButtonElement>(".keep-cut-select-card")];
+    const submit = container.querySelector<HTMLButtonElement>(".keep-cut-submit")!;
+    expect(submit.disabled).toBe(true);
+
     cards.slice(0, 4).forEach((card) => fireEvent.click(card));
-    fireEvent.click(container.querySelector<HTMLButtonElement>(".keep-cut-submit")!);
+    expect(container.textContent).toContain("4 of 4 kept");
+    expect(submit.disabled).toBe(false);
+    fireEvent.click(cards[4]!);
+    expect(cards[4]?.getAttribute("aria-pressed")).toBe("false");
+    expect(container.textContent).toContain("4 of 4 kept");
+
+    fireEvent.click(cards[0]!);
+    expect(container.textContent).toContain("3 of 4 kept");
+    expect(submit.disabled).toBe(true);
+    fireEvent.click(cards[4]!);
+    expect(container.textContent).toContain("4 of 4 kept");
+    expect(submit.disabled).toBe(false);
+
+    fireEvent.click(submit);
     expect(container.textContent).toContain("SUBMITTED RESULT");
+    expect(container.querySelectorAll(".keep-cut-result-group--keep .keep-cut-fighter")).toHaveLength(4);
+    expect(container.querySelectorAll(".keep-cut-result-group--cut .keep-cut-fighter")).toHaveLength(4);
+    expect(container.textContent).toContain("Private score grades only your kept fighters");
     const actions = [...container.querySelectorAll(".game-result-actions button")].map((button) => button.textContent);
     expect(actions).toEqual(["CHALLENGE SOMEONE", "REPLAY CHALLENGE", "ALL GAMES"]);
+  });
+
+  it("replays a curated Keep Cut board through the same canonical board", () => {
+    const lineup = createKeepCutLineup("all-careers", "replay-proof");
+    const ids = lineup.fighters.map((fighter) => fighter.id);
+    const { container } = renderAt(<KeepCutPage />, `/play/keep-cut?pack=all-careers&lineup=${ids.join(",")}`);
+    const cards = [...container.querySelectorAll<HTMLButtonElement>(".keep-cut-select-card")];
+    cards.slice(0, 4).forEach((card) => fireEvent.click(card));
+    fireEvent.click(container.querySelector<HTMLButtonElement>(".keep-cut-submit")!);
+    fireEvent.click([...container.querySelectorAll<HTMLButtonElement>(".game-result-actions button")][1]!);
+    expect(container.textContent).toContain("0 of 4 kept");
+    expect([...container.querySelectorAll(".keep-cut-select-card .keep-cut-fighter strong")].map((node) => node.textContent)).toEqual(lineup.fighters.map((fighter) => fighter.name));
   });
 
   it("keeps the original Better Than list hidden until the counterclaim locks", () => {
