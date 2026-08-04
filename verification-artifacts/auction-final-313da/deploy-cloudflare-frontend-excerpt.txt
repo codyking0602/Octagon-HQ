@@ -1,0 +1,12 @@
+2026-08-04T01:29:16.9469457Z Live frontend delivery verification attempt 1 failed: Live deployment marker is b68384af0d7f2d4ebb131d414e50c974f76f1fc4, expected 313da4481a50c21a92531df726dbf225e69afa5c.
+2026-08-04T01:29:22.0177334Z Live frontend delivery verification attempt 2 failed: Live deployment marker is b68384af0d7f2d4ebb131d414e50c974f76f1fc4, expected 313da4481a50c21a92531df726dbf225e69afa5c.
+2026-08-04T01:29:27.0825525Z Live frontend delivery verification attempt 3 failed: Live deployment marker is b68384af0d7f2d4ebb131d414e50c974f76f1fc4, expected 313da4481a50c21a92531df726dbf225e69afa5c.
+2026-08-04T01:29:32.4204378Z PASS: live shell loads deployment 313da4481a50c21a92531df726dbf225e69afa5c through 3 JavaScript and 1 CSS assets.
+2026-08-04T01:29:32.4333657Z [36;1m  echo "- Exact live deployment marker and shell-loaded JavaScript and CSS were verified"[0m
+2026-08-04T01:29:16.9469403Z Live frontend delivery verification attempt 1 failed: Live deployment marker is b68384af0d7f2d4ebb131d414e50c974f76f1fc4, expected 313da4481a50c21a92531df726dbf225e69afa5c.
+2026-08-04T01:29:22.0177296Z Live frontend delivery verification attempt 2 failed: Live deployment marker is b68384af0d7f2d4ebb131d414e50c974f76f1fc4, expected 313da4481a50c21a92531df726dbf225e69afa5c.
+2026-08-04T01:29:27.0825479Z Live frontend delivery verification attempt 3 failed: Live deployment marker is b68384af0d7f2d4ebb131d414e50c974f76f1fc4, expected 313da4481a50c21a92531df726dbf225e69afa5c.
+2026-08-04T01:29:32.4204337Z PASS: live shell loads deployment 313da4481a50c21a92531df726dbf225e69afa5c through 3 JavaScript and 1 CSS assets.
+2026-08-04T01:29:32.4333649Z [36;1m  echo "- Exact live deployment marker and shell-loaded JavaScript and CSS were verified"[0m
+2026-08-04T01:28:35.2973470Z [36;1m  throw new Error(`Expected deployment marker ${expectedSha}, received ${marker.sha}`);[0m
+2026-08-04T01:28:35.2973467Z [36;1m  throw new Error(`Expected deployment marker ${expectedSha}, received ${marker.sha}`);[0m

@@ -1,0 +1,4 @@
+2026-08-04T01:29:50.1208871Z PASS: live shell loads deployment 313da4481a50c21a92531df726dbf225e69afa5c through 3 JavaScript and 1 CSS assets.
+2026-08-04T01:29:50.1291767Z [36;1m  echo "- Live deployment marker matches the exact source SHA"[0m
+2026-08-04T01:29:50.1208832Z PASS: live shell loads deployment 313da4481a50c21a92531df726dbf225e69afa5c through 3 JavaScript and 1 CSS assets.
+2026-08-04T01:29:50.1291762Z [36;1m  echo "- Live deployment marker matches the exact source SHA"[0m
