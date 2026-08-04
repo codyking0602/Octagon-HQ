@@ -84,8 +84,8 @@ jobs:
           git fetch origin main --depth=1
           git checkout origin/main -- .github/workflows/verify-supabase-backend.yml
           git rm .github/workflows/repair-auction-private-preview-once.yml
-          git diff --check
-          test "$(git diff --name-only | wc -l | tr -d ' ')" = "4"
+          git diff --check HEAD
+          test "$(git diff --name-only HEAD | wc -l | tr -d ' ')" = "4"
 
           npm ci
           npx vitest run worker/previewModel.test.ts worker/previewCard.test.ts
