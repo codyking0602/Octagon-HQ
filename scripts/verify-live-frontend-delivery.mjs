@@ -210,11 +210,19 @@ async function verifyAttempt({ origin, expectedSha, attempt, fetchFn }) {
     }
     for (const markerValue of [
       ".auction-catalog__image",
-      ".auction-opponents__image",
-      ".auction-board__image",
+      ".auction-opponents__summary",
+      ".auction-board__header",
     ]) {
       if (!liveCss.includes(markerValue)) {
         throw new Error(`The live CSS is missing ${markerValue}.`);
+      }
+    }
+    for (const legacyMarker of [
+      ".auction-opponents__image",
+      ".auction-board__image",
+    ]) {
+      if (liveCss.includes(legacyMarker)) {
+        throw new Error(`The live CSS still contains retired Auction artwork marker ${legacyMarker}.`);
       }
     }
   }

@@ -60,10 +60,13 @@ describe("Supabase backend verification release boundary", () => {
       "supabase/tests/auction_playable_server_engine.sql",
     );
     expect(workflow).toContain(
+      "supabase/tests/auction_launch_notification.sql",
+    );
+    expect(workflow).toContain(
       'psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"',
     );
     expect(workflow).toContain(
-      "Auction lifecycle SQL tests executed successfully against a fresh local database.",
+      "Auction lifecycle and launch-notification SQL tests executed successfully against a fresh local database.",
     );
   });
 

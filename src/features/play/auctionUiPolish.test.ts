@@ -32,19 +32,40 @@ describe("Auction release polish", () => {
     expect(styles).toContain("grid-template-columns: repeat(2, minmax(0, 1fr))");
   });
 
-  it("uses canonical member profiles for winner photos and readable collection rows", () => {
+  it("reduces only the introductory hero while preserving the photo catalog cards", () => {
+    expect(page).toContain("auction-hero surface-card");
+    expect(page).toContain("auction-catalog__image");
+    expect(styles).toMatch(/\.auction-hero\s*\{[\s\S]*?gap:\s*6px;[\s\S]*?padding:\s*16px 18px;/);
+    expect(styles).toMatch(/\.auction-hero h1\s*\{[\s\S]*?clamp\(32px, 9vw, 46px\)/);
+    expect(styles).toMatch(/\.auction-catalog li button\s*\{[\s\S]*?min-height:\s*112px/);
+  });
+
+  it("uses a compact text-only selected-format summary for opponent selection", () => {
+    expect(page).toContain("auction-opponents__summary");
+    expect(page).toContain("SELECTED AUCTION");
+    expect(page).not.toContain("auction-opponents__image");
+    expect(styles).toMatch(/\.auction-opponents__summary\s*\{[\s\S]*?padding:\s*12px 14px/);
+    expect(styles).not.toContain(".auction-opponents__image");
+  });
+
+  it("uses canonical member profiles for result identity and readable collection rows", () => {
     expect(page).toContain("createMemberProfilesRepository");
     expect(page).toContain("auction-result__winner");
     expect(page).toContain("auction-final__winner");
     expect(page).toContain("auction-collections__rows");
     expect(styles).toContain("overflow-wrap: anywhere");
-    expect(styles).not.toMatch(/auction-collections[\s\S]*?white-space:\s*nowrap/);
+    expect(styles).not.toMatch(
+      /\.auction-collections__rows strong\s*\{[^}]*white-space:\s*nowrap/,
+    );
   });
 
-  it("keeps manual refresh while tightening the branded live presentation", () => {
+  it("keeps manual refresh in a substantially shorter text-only live header", () => {
     expect(page).toContain(">REFRESH</button>");
-    expect(page).toContain("auction-board__image");
-    expect(styles).toMatch(/\.auction-board__top\s*\{[\s\S]*?min-height:\s*150px/);
+    expect(page).toContain("auction-board__header");
+    expect(page).toContain("SELECTED AUCTION · {mode.displayName}");
+    expect(page).not.toContain("auction-board__image");
+    expect(styles).toMatch(/\.auction-board__header\s*\{[\s\S]*?min-height:\s*78px/);
+    expect(styles).not.toContain(".auction-board__image");
     expect(styles).toMatch(/\.auction-scoreboard\s*\{[\s\S]*?padding:\s*11px 12px/);
     expect(styles).toMatch(/\.auction-current__item\s*\{[\s\S]*?min-height:\s*112px/);
     expect(styles).toMatch(/\.auction-current__item h2\s*\{[\s\S]*?clamp\(22px, 6vw, 34px\)/);

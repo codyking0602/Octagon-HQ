@@ -322,10 +322,9 @@ function AuctionBoard({
 
   return (
     <div className="auction-board">
-      <header className="auction-board__top">
-        <AuctionArtworkImage modeId={state.mode_id} className="auction-board__image" />
+      <header className="auction-board__header">
         <div className="auction-board__title">
-          <p className="eyebrow">{mode.displayName}</p>
+          <p className="eyebrow">SELECTED AUCTION · {mode.displayName}</p>
           <h1>Auction</h1>
         </div>
         <button type="button" onClick={onReload} disabled={busy}>REFRESH</button>
@@ -774,19 +773,14 @@ export default function AuctionPage() {
         </section>
       ) : (
         <section className="auction-opponents surface-card">
-          <button className="auction-opponents__back" type="button" onClick={() => setSetupStep("formats")}>
+          <button className="auction-opponents__back" type="button" onClick={() => setSetupStep("formats")}> 
             ← CHANGE FORMAT
           </button>
           <p className="eyebrow">STEP 2</p>
           <h2>Choose opponent</h2>
-          <div className="auction-opponents__selection">
-            {selectedMode ? (
-              <AuctionArtworkImage modeId={selectedMode.id} className="auction-opponents__image" />
-            ) : null}
-            <div className="auction-opponents__selection-copy">
-              <small>SELECTED AUCTION</small>
-              <strong>{selectedMode?.displayName}</strong>
-            </div>
+          <div className="auction-opponents__summary">
+            <small>SELECTED AUCTION</small>
+            <strong>{selectedMode?.displayName}</strong>
           </div>
           <input
             aria-label="Auction opponent profile name"

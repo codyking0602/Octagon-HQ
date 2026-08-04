@@ -60,12 +60,14 @@ describe("Auction mode artwork", () => {
     }
   });
 
-  it("uses the one artwork mapping in all three approved Auction placements", () => {
+  it("uses the one artwork mapping only in the format-selection catalog", () => {
     expect(page).toContain("auctionModeArtwork");
     expect(page).toContain("auction-catalog__image");
-    expect(page).toContain("auction-opponents__image");
-    expect(page).toContain("auction-board__image");
+    expect(page).toContain("auction-opponents__summary");
+    expect(page).toContain("auction-board__header");
+    expect(page).not.toContain("auction-opponents__image");
+    expect(page).not.toContain("auction-board__image");
     expect(page).not.toContain("auction-format-sprite");
-    expect(page.match(/<AuctionArtworkImage/g)).toHaveLength(3);
+    expect(page.match(/<AuctionArtworkImage/g)).toHaveLength(1);
   });
 });
