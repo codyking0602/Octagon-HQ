@@ -75,6 +75,31 @@ jobs:
           ])
           script = script[:patch_start] + replacement + script[patch_end:]
 
+          center_patch_start = script.index("old_member = '''")
+          center_patch_end_marker = "center.write_text(center_text.replace(old_member, new_member, 1))"
+          center_patch_end = script.index(center_patch_end_marker, center_patch_start) + len(center_patch_end_marker)
+          center_replacement = "\n".join([
+              "member_start = center_text.index('              const memberContent = (')",
+              "member_end = center_text.index('\\n\\n              return (', member_start)",
+              "new_member = '''              const memberContent = (",
+              "                <>",
+              "                  <i className=\"challenge-center__avatar\">",
+              "                    {counterpart?.avatarPhotoData",
+              "                      ? <img src={counterpart.avatarPhotoData} alt={`${counterpart.displayName} profile`} />",
+              "                      : counterpart?.initials ?? \"HQ\"}",
+              "                  </i>",
+              "                  <div className=\"challenge-center__row-copy\">",
+              "                    <span>{copy.eyebrow}</span>",
+              "                    <strong>{counterpart?.displayName ?? \"Octagon HQ profile\"}</strong>",
+              "                    <small>{challenge.gameTitle} · {copy.detail}</small>",
+              "                  </div>",
+              "                </>",
+              "              );",
+              "'''",
+              "center.write_text(center_text[:member_start] + new_member + center_text[member_end:])",
+          ])
+          script = script[:center_patch_start] + center_replacement + script[center_patch_end:]
+
           exec(compile(script, 'challenge-member-picker-repair', 'exec'))
           Path('.github/workflows/apply-challenge-member-picker-pr.yml').unlink()
           Path('.repair-trigger').unlink(missing_ok=True)
