@@ -75,7 +75,7 @@ export function desiredWavelengthCorrection(target: number, guess: number, nextC
   if (Math.abs(error) <= 2) return clampWavelength(target + (random() > 0.5 ? 2 : -2));
   const factors = [0, 0.36, 0.5, 0.62];
   const factor = factors[nextClueIndex] ?? 0.5;
-  const push = Math.max(4, Math.min(22, Math.round(Math.abs(error) * factor));
+  const push = Math.max(4, Math.min(22, Math.round(Math.abs(error) * factor)));
   return clampWavelength(target + (Math.sign(error) * push));
 }
 
