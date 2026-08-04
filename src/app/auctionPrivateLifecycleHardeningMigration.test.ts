@@ -63,16 +63,16 @@ describe("Auction private lifecycle hardening", () => {
     expect(hardeningSql).toContain("cancelled Auction leaked pending bid presence");
   });
 
-  it("replaces the ten remaining micro-PRs with five coherent delivery PRs", () => {
+  it("records the five coherent delivery PRs that replaced the ten micro-PRs", () => {
     expect(auctionContract).toContain(
-      "six feature PRs total: the completed public-contract PR plus five remaining delivery PRs",
+      "Six feature PRs total: PR #203 plus five remaining delivery PRs",
     );
     for (const heading of [
       "### PR 2 — Backend foundation",
       "### PR 3 — Playable server engine",
       "### PR 4 — Complete gameplay UI",
       "### PR 5 — Real content and grading",
-      "### PR 6 — Notifications and release proof",
+      "### PR 6 — Notifications and final release proof",
     ]) {
       expect(auctionContract).toContain(heading);
     }
