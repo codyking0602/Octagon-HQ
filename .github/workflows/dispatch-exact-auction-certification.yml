@@ -1,0 +1,154 @@
+name: Invoke Exact Auction Certification
+
+on:
+  pull_request:
+    types: [synchronize]
+    branches:
+      - audit/auction-final-cert-base
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  invoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      TARGET_SHA: 313da4481a50c21a92531df726dbf225e69afa5c
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Require exact current main
+        shell: bash
+        run: |
+          set -euo pipefail
+          current=$(curl --fail --silent --show-error \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/git/ref/heads/main" \
+            | python -c 'import json,sys; print(json.load(sys.stdin)["object"]["sha"])')
+          echo "Current main: $current"
+          test "$current" = "$TARGET_SHA"
+
+      - name: Dispatch canonical Supabase deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error \
+            -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/deploy-supabase.yml/dispatches" \
+            -d '{"ref":"main"}'
+
+      - name: Require canonical backend deployment success
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p exact-certification
+          for attempt in $(seq 1 90); do
+            curl --fail --silent --show-error \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/deploy-supabase.yml/runs?event=workflow_dispatch&branch=main&per_page=20" \
+              > exact-certification/backend-runs.json
+            state=$(python - exact-certification/backend-runs.json "$TARGET_SHA" exact-certification/backend-selected.json <<'PY'
+          import json, sys
+          source, target, output = sys.argv[1:]
+          matches = [
+              run for run in json.load(open(source)).get("workflow_runs", [])
+              if run.get("head_sha") == target
+          ]
+          run = matches[0] if matches else None
+          json.dump(run or {}, open(output, "w"), indent=2, sort_keys=True)
+          if not run or run.get("status") != "completed":
+              print("pending")
+          elif run.get("conclusion") == "success":
+              print("success")
+          else:
+              print("failure")
+          PY
+            )
+            echo "backend attempt=$attempt state=$state"
+            if [ "$state" = "success" ]; then
+              break
+            fi
+            test "$state" != "failure"
+            sleep 10
+          done
+          test "$(python -c 'import json; print(json.load(open("exact-certification/backend-selected.json")).get("conclusion", ""))')" = "success"
+
+      - name: Dispatch canonical full Auction verifier
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error \
+            -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/verify-live-notification-flow.yml/dispatches" \
+            -d "{\"ref\":\"main\",\"inputs\":{\"expected_sha\":\"$TARGET_SHA\"}}"
+
+      - name: Require canonical three-profile production proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 180); do
+            curl --fail --silent --show-error \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/verify-live-notification-flow.yml/runs?event=workflow_dispatch&branch=main&per_page=20" \
+              > exact-certification/auction-runs.json
+            state=$(python - exact-certification/auction-runs.json "$TARGET_SHA" exact-certification/auction-selected.json <<'PY'
+          import json, sys
+          source, target, output = sys.argv[1:]
+          matches = [
+              run for run in json.load(open(source)).get("workflow_runs", [])
+              if run.get("head_sha") == target
+          ]
+          run = matches[0] if matches else None
+          json.dump(run or {}, open(output, "w"), indent=2, sort_keys=True)
+          if not run or run.get("status") != "completed":
+              print("pending")
+          elif run.get("conclusion") == "success":
+              print("success")
+          else:
+              print("failure")
+          PY
+            )
+            echo "auction attempt=$attempt state=$state"
+            if [ "$state" = "success" ]; then
+              break
+            fi
+            test "$state" != "failure"
+            sleep 10
+          done
+          test "$(python -c 'import json; print(json.load(open("exact-certification/auction-selected.json")).get("conclusion", ""))')" = "success"
+
+      - name: Record exact canonical run IDs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY' | tee exact-certification/REPORT.md
+          import json
+          backend = json.load(open("exact-certification/backend-selected.json"))
+          auction = json.load(open("exact-certification/auction-selected.json"))
+          print("# Canonical exact-SHA Auction certification invocation")
+          print()
+          print(f"- Target SHA: `{auction.get('head_sha')}`")
+          print(f"- Deploy Supabase Backend: run `{backend.get('id')}`, conclusion `{backend.get('conclusion')}`")
+          print(f"- Verify Live Notification Flow: run `{auction.get('id')}`, conclusion `{auction.get('conclusion')}`")
+          PY
+
+      - name: Upload invocation evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: canonical-auction-certification-invocation-${{ env.TARGET_SHA }}
+          path: exact-certification
+          if-no-files-found: error
+          retention-days: 30
