@@ -1,0 +1,36 @@
+name: Verify exact live SHA ee458c
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+permissions:
+  contents: read
+
+jobs:
+  verify-live:
+    if: github.head_ref == 'chatgpt/verify-live-ee458c'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Read and verify production deployment marker
+        shell: bash
+        env:
+          EXPECTED_SHA: ee458c12443e0da61ba4b958f29e229ae0eafec3
+          MARKER_URL: https://octagon.hq-app.workers.dev/deployment.json
+        run: |
+          set -euo pipefail
+          marker=$(curl --fail --silent --show-error \
+            --retry 12 --retry-delay 5 --retry-all-errors \
+            -H 'Cache-Control: no-cache' \
+            "$MARKER_URL?verify=${GITHUB_RUN_ID}")
+          live_sha=$(node -e 'const value=JSON.parse(process.argv[1]); if(typeof value.sha!=="string") process.exit(2); process.stdout.write(value.sha)' "$marker")
+          echo "Expected live SHA: $EXPECTED_SHA"
+          echo "Observed live SHA: $live_sha"
+          test "$live_sha" = "$EXPECTED_SHA"
+          echo "Exact production deployment verified: $live_sha"
