@@ -538,3 +538,12 @@ export function usePlayChallenges() {
   if (!value) throw new Error("usePlayChallenges must be used inside ChallengeProvider");
   return value;
 }
+
+export function challengeCounterpart(
+  challenge: PlayChallenge,
+  activeProfileId: string,
+  profiles: readonly ChallengeProfile[],
+) {
+  const counterpartId = challengeCounterpartId(challenge, activeProfileId);
+  return profiles.find((profile) => profile.id === counterpartId) ?? null;
+}
