@@ -120,7 +120,6 @@ jobs:
           retention-days: 7
 
       - name: Prove the complete Auction release in production
-        if: github.event_name != 'pull_request'
         shell: bash
         env:
           AUCTION_RELEASE_SCREENSHOT_PATH: ${{ runner.temp }}/auction-release-proof.png
@@ -139,7 +138,7 @@ jobs:
           test "$(wc -c < "$AUCTION_OUTSIDER_SCREENSHOT_PATH")" -gt 5000
 
       - name: Upload live Auction release proof
-        if: always() && github.event_name != 'pull_request'
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: live-auction-release-proof-${{ env.EXPECTED_LIVE_MAIN_SHA }}
@@ -164,10 +163,8 @@ jobs:
             echo "- The live Notification Center rendered the correct account, copy, and route"
             echo "- Opening the notification marked it read, opened the exact challenge destination, and produced the creator acceptance notification"
             echo "- Temporary proof profiles and their dependent data were removed"
-            if [ "${{ github.event_name }}" != "pull_request" ]; then
-              echo "- Auction prepared, sent, accepted, progressed, completed, scored, notified, push-authorized, deep-linked, and shared through the existing owners"
-              echo "- Two participants and one unrelated signed-in profile proved the complete privacy boundary"
-              echo "- Completed-only rich preview and winner-or-true-tie output were verified"
-              echo "- Temporary Auction profiles, challenge, notifications, and dependent rows were removed"
-            fi
+            echo "- Auction prepared, sent, accepted, progressed, completed, scored, notified, push-authorized, deep-linked, and shared through the existing owners"
+            echo "- Two participants and one unrelated signed-in profile proved the complete privacy boundary"
+            echo "- Completed-only rich preview and winner-or-true-tie output were verified"
+            echo "- Temporary Auction profiles, challenge, notifications, and dependent rows were removed"
           } >> "$GITHUB_STEP_SUMMARY"
