@@ -1,0 +1,1829 @@
+name: Build Auction UI Polish
+
+on:
+  push:
+    branches:
+      - chatgpt/auction-ui-polish
+    paths:
+      - .github/workflows/build-auction-ui-polish.yml
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out exact branch
+        uses: actions/checkout@v4
+        with:
+          ref: chatgpt/auction-ui-polish
+          fetch-depth: 0
+
+      - name: Verify production currently matches the branch base
+        env:
+          EXPECTED_SOURCE_SHA: f4149e067cc1780d66a2b6f293f875025141c011
+          FRONTEND_DELIVERY_ATTEMPTS: 3
+          FRONTEND_DELIVERY_DELAY_MS: 5000
+        run: node scripts/verify-live-frontend-delivery.mjs
+
+      - name: Apply Auction release polish
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          cat > src/features/play/auctionContract.ts <<'EOF'
+          export const AUCTION_MODE_IDS = [
+            "ultimate-fighter",
+            "jon-jones-performances",
+            "conor-mcgregor-performances",
+            "charles-oliveira-performances",
+            "fighter-performances",
+            "strikers",
+            "grapplers",
+            "knockout-artists",
+            "greatest-ufc-card",
+            "championship-performances",
+            "finishes",
+            "dominant-performances",
+            "wars",
+            "rivalries",
+            "iconic-moments",
+            "nicknames",
+          ] as const;
+
+          export type AuctionModeId = (typeof AUCTION_MODE_IDS)[number];
+
+          export type AuctionFamily =
+            | "fighter-auction"
+            | "career-performance-auction"
+            | "historical-collection-auction"
+            | "card-building-auction"
+            | "nickname-auction";
+
+          export const ULTIMATE_FIGHTER_CATEGORIES = [
+            "Striking",
+            "Grappling",
+            "Frame",
+            "Power",
+            "Heart",
+          ] as const;
+
+          export type UltimateFighterCategory = (typeof ULTIMATE_FIGHTER_CATEGORIES)[number];
+
+          export interface PublicAuctionMode {
+            id: AuctionModeId;
+            displayName: string;
+            family: AuctionFamily;
+            rounds: number;
+            requiredSelectionsPerPlayer: number;
+            startingBankroll: number;
+            usesUltimateFighterPlacement: boolean;
+            categories: readonly UltimateFighterCategory[];
+          }
+
+          const modes: readonly [AuctionModeId, string, AuctionFamily][] = [
+            ["ultimate-fighter", "Build the Ultimate Fighter", "fighter-auction"],
+            ["jon-jones-performances", "Best Jon Jones Performances", "career-performance-auction"],
+            ["conor-mcgregor-performances", "Best Conor McGregor Performances", "career-performance-auction"],
+            ["charles-oliveira-performances", "Best Charles Oliveira Performances", "career-performance-auction"],
+            ["fighter-performances", "Best Fighter Performances", "historical-collection-auction"],
+            ["strikers", "Best Strikers", "fighter-auction"],
+            ["grapplers", "Best Grapplers", "fighter-auction"],
+            ["knockout-artists", "Best Knockout Artists", "fighter-auction"],
+            ["greatest-ufc-card", "Build the Greatest UFC Card", "card-building-auction"],
+            ["championship-performances", "Best Championship Performances", "historical-collection-auction"],
+            ["finishes", "Best Finishes", "historical-collection-auction"],
+            ["dominant-performances", "Most Dominant Performances", "historical-collection-auction"],
+            ["wars", "Best Wars", "historical-collection-auction"],
+            ["rivalries", "Best Rivalries", "historical-collection-auction"],
+            ["iconic-moments", "Most Iconic UFC Moments", "historical-collection-auction"],
+            ["nicknames", "Best Nicknames", "nickname-auction"],
+          ];
+
+          export const auctionModes: readonly PublicAuctionMode[] = modes.map(([id, displayName, family]) => {
+            const ultimateFighter = id === "ultimate-fighter";
+            return {
+              id,
+              displayName,
+              family,
+              rounds: ultimateFighter ? 10 : 8,
+              requiredSelectionsPerPlayer: ultimateFighter ? 5 : 4,
+              startingBankroll: ultimateFighter ? 50 : 40,
+              usesUltimateFighterPlacement: ultimateFighter,
+              categories: ultimateFighter ? ULTIMATE_FIGHTER_CATEGORIES : [],
+            };
+          });
+
+          export type AuctionModeGroupId = "fighters" | "skills" | "performances" | "history";
+
+          export interface AuctionModeGroup {
+            id: AuctionModeGroupId;
+            label: string;
+            modeIds: readonly AuctionModeId[];
+          }
+
+          export const auctionModeGroups: readonly AuctionModeGroup[] = [
+            {
+              id: "fighters",
+              label: "Fighters",
+              modeIds: [
+                "ultimate-fighter",
+                "jon-jones-performances",
+                "conor-mcgregor-performances",
+                "charles-oliveira-performances",
+              ],
+            },
+            {
+              id: "skills",
+              label: "Skills",
+              modeIds: ["strikers", "grapplers", "knockout-artists"],
+            },
+            {
+              id: "performances",
+              label: "Performances",
+              modeIds: [
+                "fighter-performances",
+                "championship-performances",
+                "finishes",
+                "dominant-performances",
+              ],
+            },
+            {
+              id: "history",
+              label: "UFC History",
+              modeIds: ["greatest-ufc-card", "wars", "rivalries", "iconic-moments", "nicknames"],
+            },
+          ];
+
+          const auctionModeById = new Map(auctionModes.map((mode) => [mode.id, mode]));
+          const auctionModeGroupById = new Map(auctionModeGroups.map((group) => [group.id, group]));
+
+          export function isAuctionModeId(value: string): value is AuctionModeId {
+            return auctionModeById.has(value as AuctionModeId);
+          }
+
+          export function parseAuctionModeId(value: string): AuctionModeId | null {
+            return isAuctionModeId(value) ? value : null;
+          }
+
+          export function auctionModeDefinition(id: AuctionModeId): PublicAuctionMode {
+            return auctionModeById.get(id)!;
+          }
+
+          export function auctionModesForGroup(groupId: AuctionModeGroupId | "all") {
+            if (groupId === "all") return auctionModes;
+            const group = auctionModeGroupById.get(groupId);
+            return group?.modeIds.map(auctionModeDefinition) ?? [];
+          }
+
+          export function usesUltimateFighterPlacement(id: AuctionModeId): boolean {
+            return auctionModeDefinition(id).usesUltimateFighterPlacement;
+          }
+          EOF
+
+          cat > src/features/play/AuctionPage.tsx <<'EOF'
+          import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+          import { Link, useNavigate, useSearchParams } from "react-router-dom";
+          import { shareCanonicalDestination } from "../../app/nativeShare";
+          import { usePlayChallenges } from "../challenges/ChallengeProvider";
+          import { useIdentity } from "../identity/IdentityProvider";
+          import { createMemberProfilesRepository } from "../members/memberProfilesRepository";
+          import type { MemberProfileSummary } from "../members/memberProfilesModel";
+          import {
+            ULTIMATE_FIGHTER_CATEGORIES,
+            auctionModeDefinition,
+            auctionModeGroups,
+            auctionModes,
+            auctionModesForGroup,
+            type AuctionModeGroupId,
+            type AuctionModeId,
+            type UltimateFighterCategory,
+          } from "./auctionContract";
+          import {
+            AuctionRepositoryError,
+            createAuctionRepository,
+            maximumLegalAuctionBid,
+            validateAuctionBid,
+            type AuctionProjection,
+          } from "./auctionRepository";
+
+          type AuctionParticipantProfile = Pick<
+            MemberProfileSummary,
+            "displayName" | "initials" | "avatarPhotoData"
+          >;
+          type AuctionParticipantProfiles = Record<string, AuctionParticipantProfile | undefined>;
+
+          function fallbackInitials(displayName: string) {
+            const words = displayName.trim().split(/\s+/).filter(Boolean);
+            return (words.length > 1
+              ? `${words[0]?.[0] ?? ""}${words[1]?.[0] ?? ""}`
+              : words[0]?.slice(0, 1) ?? "?").toUpperCase();
+          }
+
+          function fallbackParticipant(displayName: string): AuctionParticipantProfile {
+            return { displayName, initials: fallbackInitials(displayName), avatarPhotoData: null };
+          }
+
+          function MemberAvatar({
+            name,
+            profile,
+            className = "",
+          }: {
+            name: string;
+            profile?: AuctionParticipantProfile;
+            className?: string;
+          }) {
+            const avatar = profile ?? fallbackParticipant(name);
+            return (
+              <span className={`auction-member-avatar${className ? ` ${className}` : ""}`}>
+                {avatar.avatarPhotoData
+                  ? <img src={avatar.avatarPhotoData} alt={`${name} profile`} />
+                  : avatar.initials}
+              </span>
+            );
+          }
+
+          function CollectionComparison({
+            state,
+            participants,
+          }: {
+            state: AuctionProjection;
+            participants: AuctionParticipantProfiles;
+          }) {
+            const mode = auctionModeDefinition(state.mode_id);
+            const challengerAwards = state.awarded_collections.filter((item) => item.awarded_to === state.challenger_id);
+            const recipientAwards = state.awarded_collections.filter((item) => item.awarded_to === state.recipient_id);
+            const rows = mode.usesUltimateFighterPlacement
+              ? ULTIMATE_FIGHTER_CATEGORIES.map((category) => ({
+                label: category,
+                challenger: challengerAwards.find((item) => item.category === category)?.display_label ?? "OPEN",
+                recipient: recipientAwards.find((item) => item.category === category)?.display_label ?? "OPEN",
+              }))
+              : Array.from({ length: mode.requiredSelectionsPerPlayer }, (_, index) => ({
+                label: `PICK ${index + 1}`,
+                challenger: challengerAwards[index]?.display_label ?? "OPEN",
+                recipient: recipientAwards[index]?.display_label ?? "OPEN",
+              }));
+
+            return (
+              <section className={`auction-collections surface-card${state.lifecycle_state === "completed" ? " is-complete" : ""}`}>
+                <header className="auction-collections__header">
+                  <div>
+                    <MemberAvatar
+                      name={state.challenger_display_name}
+                      profile={participants[state.challenger_id]}
+                    />
+                    <strong>{state.challenger_display_name}</strong>
+                  </div>
+                  <span>VS</span>
+                  <div>
+                    <MemberAvatar
+                      name={state.recipient_display_name}
+                      profile={participants[state.recipient_id]}
+                    />
+                    <strong>{state.recipient_display_name}</strong>
+                  </div>
+                </header>
+                <div className="auction-collections__rows">
+                  {rows.map((row) => (
+                    <article key={row.label}>
+                      <div className={row.challenger === "OPEN" ? "" : "is-filled"}>
+                        <small>{row.label}</small>
+                        <strong>{row.challenger}</strong>
+                      </div>
+                      <span aria-hidden="true">VS</span>
+                      <div className={row.recipient === "OPEN" ? "" : "is-filled"}>
+                        <small>{row.label}</small>
+                        <strong>{row.recipient}</strong>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </section>
+            );
+          }
+
+          function RoundReveal({
+            state,
+            participants,
+          }: {
+            state: AuctionProjection;
+            participants: AuctionParticipantProfiles;
+          }) {
+            const round = state.resolved_rounds.at(-1);
+            if (!round) return null;
+            const award = state.awarded_collections.find((item) => item.resolved_round === round.round);
+            const winnerId = round.winner;
+            const winner = winnerId === state.challenger_id
+              ? state.challenger_display_name
+              : state.recipient_display_name;
+            return (
+              <section className="auction-result surface-card" aria-label="Latest resolved round">
+                <p className="eyebrow">{round.forced ? "FORCED $1 ASSIGNMENT" : `ROUND ${round.round} RESULT`}</p>
+                <h2>{award?.display_label ?? "Resolved item"}</h2>
+                <strong className="auction-result__winner">
+                  <MemberAvatar name={winner} profile={participants[winnerId]} />
+                  <span>{winner} WON · ${round.charged_amount}</span>
+                </strong>
+                {round.forced ? (
+                  <p>The server awarded this remaining item for $1 after the other collection filled.</p>
+                ) : (
+                  <p>
+                    {state.challenger_display_name} ${round.challenger_bid} · {state.recipient_display_name} ${round.recipient_bid}
+                    {award?.category ? ` · ${award.category}` : ""}
+                  </p>
+                )}
+              </section>
+            );
+          }
+
+          function AuctionFinalResult({
+            state,
+            participants,
+          }: {
+            state: AuctionProjection;
+            participants: AuctionParticipantProfiles;
+          }) {
+            if (
+              state.lifecycle_state !== "completed"
+              || state.challenger_final_score === null
+              || state.recipient_final_score === null
+            ) return null;
+
+            const winnerName = state.winner_profile_id === state.challenger_id
+              ? state.challenger_display_name
+              : state.recipient_display_name;
+            const verdict = state.is_tie ? "TRUE TIE" : `${winnerName} WINS`;
+
+            return (
+              <section className="auction-final surface-card" aria-label="Auction final result">
+                <p className="eyebrow">FINAL 0–100 SCORE</p>
+                <div className="auction-final__winner">
+                  {state.is_tie ? (
+                    <span className="auction-final__avatars">
+                      <MemberAvatar
+                        name={state.challenger_display_name}
+                        profile={participants[state.challenger_id]}
+                      />
+                      <MemberAvatar
+                        name={state.recipient_display_name}
+                        profile={participants[state.recipient_id]}
+                      />
+                    </span>
+                  ) : (
+                    <MemberAvatar
+                      name={winnerName}
+                      profile={participants[state.winner_profile_id ?? ""]}
+                      className="is-winner"
+                    />
+                  )}
+                  <h2>{verdict}</h2>
+                </div>
+                <div className="auction-final__scores">
+                  <article>
+                    <span>
+                      <MemberAvatar
+                        name={state.challenger_display_name}
+                        profile={participants[state.challenger_id]}
+                      />
+                      <small>{state.challenger_display_name}</small>
+                    </span>
+                    <strong>{state.challenger_final_score}</strong>
+                  </article>
+                  <b>–</b>
+                  <article>
+                    <span>
+                      <MemberAvatar
+                        name={state.recipient_display_name}
+                        profile={participants[state.recipient_id]}
+                      />
+                      <small>{state.recipient_display_name}</small>
+                    </span>
+                    <strong>{state.recipient_final_score}</strong>
+                  </article>
+                </div>
+              </section>
+            );
+          }
+
+          function AuctionBoard({
+            state,
+            participants,
+            profileId,
+            busy,
+            onBid,
+            onReload,
+            onCancel,
+            onDecline,
+            onAbandon,
+            onRematch,
+            onShare,
+            shareStatus,
+          }: {
+            state: AuctionProjection;
+            participants: AuctionParticipantProfiles;
+            profileId: string;
+            busy: boolean;
+            onBid(amount: number, category?: UltimateFighterCategory): void;
+            onReload(): void;
+            onCancel(): void;
+            onDecline(): void;
+            onAbandon(): void;
+            onRematch(): void;
+            onShare(): void;
+            shareStatus: string;
+          }) {
+            const mode = auctionModeDefinition(state.mode_id);
+            const [amount, setAmount] = useState("");
+            const [category, setCategory] = useState<UltimateFighterCategory | "">("");
+            const [formError, setFormError] = useState("");
+            const maximum = maximumLegalAuctionBid(state, profileId);
+            const ownAwards = state.awarded_collections.filter((item) => item.awarded_to === profileId);
+            const usedCategories = new Set(ownAwards.map((item) => item.category));
+            const canBid = ["prepared", "sent", "active"].includes(state.lifecycle_state)
+              && !state.current_user_submitted_bid
+              && state.action_required_by !== "opponent"
+              && !(state.lifecycle_state === "sent" && profileId === state.challenger_id);
+            const tieName = state.tie_priority_profile_id === state.challenger_id
+              ? state.challenger_display_name
+              : state.recipient_display_name;
+            const terminal = ["completed", "declined", "cancelled"].includes(state.lifecycle_state);
+            const status = state.lifecycle_state === "prepared"
+              ? "Your first bid sends this challenge"
+              : state.lifecycle_state === "sent"
+                ? profileId === state.recipient_id
+                  ? "Your first bid accepts this challenge"
+                  : "Waiting for opponent's first bid"
+                : state.lifecycle_state === "active" && state.current_user_submitted_bid
+                  ? "Bid locked · waiting for opponent"
+                  : state.lifecycle_state === "active"
+                    ? "Your sealed bid is required"
+                    : state.lifecycle_state === "completed"
+                      ? "Auction complete · collections locked"
+                      : state.lifecycle_state === "cancelled"
+                        ? "Cancelled · no winner, loss, score, or forfeit"
+                        : "Challenge declined";
+
+            useEffect(() => {
+              setAmount("");
+              setCategory("");
+              setFormError("");
+            }, [state.auction_id, state.current_round, state.revision]);
+
+            function submit(event: FormEvent) {
+              event.preventDefault();
+              const nextError = validateAuctionBid(
+                amount,
+                maximum,
+                mode.usesUltimateFighterPlacement,
+                category,
+              );
+              setFormError(nextError);
+              if (!nextError) onBid(Number(amount), category || undefined);
+            }
+
+            return (
+              <div className="auction-board">
+                <header className="auction-board__top">
+                  <div><p className="eyebrow">{mode.displayName}</p><h1>Auction</h1></div>
+                  <button type="button" onClick={onReload} disabled={busy}>REFRESH</button>
+                </header>
+                <section className="auction-scoreboard surface-card">
+                  <article>
+                    <small>CHALLENGER</small>
+                    <div className="auction-scoreboard__identity">
+                      <MemberAvatar
+                        name={state.challenger_display_name}
+                        profile={participants[state.challenger_id]}
+                      />
+                      <strong>{state.challenger_display_name}</strong>
+                    </div>
+                    <b>${state.challenger_bankroll}</b>
+                    <em>{state.challenger_selection_count}/{mode.requiredSelectionsPerPlayer}</em>
+                  </article>
+                  <span>VS</span>
+                  <article>
+                    <small>OPPONENT</small>
+                    <div className="auction-scoreboard__identity">
+                      <MemberAvatar
+                        name={state.recipient_display_name}
+                        profile={participants[state.recipient_id]}
+                      />
+                      <strong>{state.recipient_display_name}</strong>
+                    </div>
+                    <b>${state.recipient_bankroll}</b>
+                    <em>{state.recipient_selection_count}/{mode.requiredSelectionsPerPlayer}</em>
+                  </article>
+                </section>
+                <section className="auction-current surface-card">
+                  <div className="auction-current__meta">
+                    <span>ROUND {Math.min(state.current_round, mode.rounds)} / {mode.rounds}</span>
+                    <span>TIES → {tieName}</span>
+                  </div>
+                  <div className="auction-current__item">
+                    <small>CURRENT ITEM</small>
+                    <h2>{state.current_item?.display_label ?? (terminal ? "FINAL BELL" : "LOADING")}</h2>
+                  </div>
+                  <strong className="auction-current__status">{status}</strong>
+                </section>
+                <RoundReveal state={state} participants={participants} />
+                <AuctionFinalResult state={state} participants={participants} />
+                <CollectionComparison state={state} participants={participants} />
+                {canBid ? (
+                  <form className="auction-bid surface-card" onSubmit={submit}>
+                    {mode.usesUltimateFighterPlacement ? (
+                      <fieldset>
+                        <legend>PLACE FIGHTER</legend>
+                        {ULTIMATE_FIGHTER_CATEGORIES.map((value) => (
+                          <button
+                            type="button"
+                            key={value}
+                            className={category === value ? "is-selected" : ""}
+                            disabled={usedCategories.has(value)}
+                            onClick={() => setCategory(value)}
+                          >
+                            {value}
+                          </button>
+                        ))}
+                      </fieldset>
+                    ) : null}
+                    <label>
+                      <span>SEALED BID · MAX ${maximum}</span>
+                      <div>
+                        <b>$</b>
+                        <input
+                          aria-label="Whole-dollar bid"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
+                          value={amount}
+                          onChange={(event) => setAmount(event.target.value)}
+                        />
+                      </div>
+                    </label>
+                    {formError ? <p role="alert">{formError}</p> : null}
+                    <button className="primary-action" disabled={busy} type="submit">
+                      {busy
+                        ? "LOCKING…"
+                        : state.lifecycle_state === "prepared"
+                          ? "LOCK BID & SEND"
+                          : state.lifecycle_state === "sent"
+                            ? "LOCK BID & ACCEPT"
+                            : "LOCK SEALED BID"}
+                    </button>
+                  </form>
+                ) : null}
+                <footer className="auction-board__actions">
+                  {state.lifecycle_state === "prepared" ? (
+                    <button type="button" disabled={busy} onClick={onAbandon}>ABANDON AUCTION</button>
+                  ) : null}
+                  {state.lifecycle_state === "sent" && profileId === state.recipient_id ? (
+                    <button type="button" disabled={busy} onClick={onDecline}>DECLINE</button>
+                  ) : null}
+                  {state.lifecycle_state === "active" ? (
+                    <button type="button" disabled={busy} onClick={onCancel}>CANCEL GAME</button>
+                  ) : null}
+                  {state.lifecycle_state === "completed" ? (
+                    <button type="button" disabled={busy} onClick={onShare}>SHARE RESULT</button>
+                  ) : null}
+                  {terminal ? (
+                    <button className="primary-action" type="button" disabled={busy} onClick={onRematch}>NEW AUCTION</button>
+                  ) : null}
+                </footer>
+                {shareStatus ? <p className="auction-share-status" role="status">{shareStatus}</p> : null}
+              </div>
+            );
+          }
+
+          export default function AuctionPage() {
+            const identity = useIdentity();
+            const challenges = usePlayChallenges();
+            const navigate = useNavigate();
+            const [params] = useSearchParams();
+            const repository = useMemo(() => createAuctionRepository(), []);
+            const memberRepository = useMemo(() => createMemberProfilesRepository(), []);
+            const [state, setState] = useState<AuctionProjection | null>(null);
+            const [mode, setMode] = useState<AuctionModeId | null>(null);
+            const [modeGroup, setModeGroup] = useState<AuctionModeGroupId | "all">("all");
+            const [setupStep, setSetupStep] = useState<"formats" | "opponent">("formats");
+            const [opponentName, setOpponentName] = useState("");
+            const [participantProfiles, setParticipantProfiles] = useState<AuctionParticipantProfiles>({});
+            const [busy, setBusy] = useState(false);
+            const [loading, setLoading] = useState(false);
+            const [error, setError] = useState("");
+            const [shareStatus, setShareStatus] = useState("");
+            const submitting = useRef(false);
+            const auctionId = params.get("auction") ?? "";
+            const visibleModes = useMemo(() => auctionModesForGroup(modeGroup), [modeGroup]);
+            const selectedMode = mode ? auctionModeDefinition(mode) : null;
+
+            useEffect(() => {
+              let cancelled = false;
+              setState(null);
+              setError("");
+              if (!auctionId || !identity.profile || !repository) {
+                setLoading(false);
+                return () => { cancelled = true; };
+              }
+              setLoading(true);
+              void repository.read(auctionId)
+                .then((nextState) => {
+                  if (!cancelled) setState(nextState);
+                })
+                .catch((nextError) => {
+                  if (!cancelled) {
+                    setError(nextError instanceof Error ? nextError.message : "Auction could not be loaded.");
+                  }
+                })
+                .finally(() => {
+                  if (!cancelled) setLoading(false);
+                });
+              return () => { cancelled = true; };
+            }, [auctionId, identity.profile?.id, repository]);
+
+            useEffect(() => {
+              let active = true;
+              if (!state || !memberRepository) {
+                setParticipantProfiles({});
+                return () => { active = false; };
+              }
+
+              const challengerFallback = fallbackParticipant(state.challenger_display_name);
+              const recipientFallback = fallbackParticipant(state.recipient_display_name);
+              void Promise.all([
+                memberRepository.loadMember(state.challenger_display_name),
+                memberRepository.loadMember(state.recipient_display_name),
+              ]).then(([challenger, recipient]) => {
+                if (!active) return;
+                setParticipantProfiles({
+                  [state.challenger_id]: challenger ?? challengerFallback,
+                  [state.recipient_id]: recipient ?? recipientFallback,
+                });
+              }).catch(() => {
+                if (!active) return;
+                setParticipantProfiles({
+                  [state.challenger_id]: challengerFallback,
+                  [state.recipient_id]: recipientFallback,
+                });
+              });
+
+              return () => { active = false; };
+            }, [
+              memberRepository,
+              state?.challenger_display_name,
+              state?.challenger_id,
+              state?.recipient_display_name,
+              state?.recipient_id,
+            ]);
+
+            async function reload() {
+              if (!repository || !auctionId || !identity.profile) return;
+              setLoading(true);
+              setError("");
+              try {
+                setState(await repository.read(auctionId));
+              } catch (nextError) {
+                setError(nextError instanceof Error ? nextError.message : "Auction could not be loaded.");
+              } finally {
+                setLoading(false);
+              }
+            }
+
+            async function command(action: () => Promise<AuctionProjection>) {
+              if (submitting.current) return;
+              submitting.current = true;
+              setBusy(true);
+              setError("");
+              try {
+                setState(await action());
+                await challenges.refresh();
+              } catch (nextError) {
+                setError(nextError instanceof Error ? nextError.message : "Auction could not be updated.");
+                if (nextError instanceof AuctionRepositoryError && nextError.stale) await reload();
+              } finally {
+                submitting.current = false;
+                setBusy(false);
+              }
+            }
+
+            function returnToModeSelection() {
+              setState(null);
+              setMode(null);
+              setSetupStep("formats");
+              setOpponentName("");
+              setError("");
+              setShareStatus("");
+              navigate("/play/auction", { replace: true });
+            }
+
+            function continueToOpponent() {
+              if (!mode) return;
+              setSetupStep("opponent");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+
+            async function prepare() {
+              if (!repository || !mode || opponentName.trim().length < 2 || submitting.current) return;
+              submitting.current = true;
+              setBusy(true);
+              setError("");
+              try {
+                const opponent = await challenges.findProfile(opponentName);
+                if (!opponent) throw new Error("No Octagon HQ profile matched that exact name.");
+                const prepared = await repository.prepare(opponent.id, mode);
+                setState(prepared);
+                navigate(`/play/auction?auction=${prepared.auction_id}`, { replace: true });
+              } catch (nextError) {
+                setError(nextError instanceof Error ? nextError.message : "Auction could not be prepared.");
+              } finally {
+                submitting.current = false;
+                setBusy(false);
+              }
+            }
+
+            async function abandon() {
+              if (!repository || state?.lifecycle_state !== "prepared" || submitting.current) return;
+              submitting.current = true;
+              setBusy(true);
+              setError("");
+              try {
+                await repository.abandon(state);
+                await challenges.refresh();
+                returnToModeSelection();
+              } catch (nextError) {
+                setError(nextError instanceof Error ? nextError.message : "Auction could not be abandoned.");
+              } finally {
+                submitting.current = false;
+                setBusy(false);
+              }
+            }
+
+            async function decline() {
+              if (!state?.challenge_code || submitting.current) return;
+              submitting.current = true;
+              setBusy(true);
+              setError("");
+              try {
+                const declined = await challenges.dismissChallenge(state.challenge_code);
+                if (!declined) {
+                  setError("Auction could not be declined.");
+                  return;
+                }
+                returnToModeSelection();
+              } finally {
+                submitting.current = false;
+                setBusy(false);
+              }
+            }
+
+            async function shareResult() {
+              if (
+                state?.lifecycle_state !== "completed"
+                || state.challenger_final_score === null
+                || state.recipient_final_score === null
+              ) return;
+
+              const verdict = state.is_tie
+                ? "True tie"
+                : state.winner_profile_id === state.challenger_id
+                  ? `${state.challenger_display_name} wins`
+                  : `${state.recipient_display_name} wins`;
+              const score = `${state.challenger_display_name} ${state.challenger_final_score} – ${state.recipient_display_name} ${state.recipient_final_score}`;
+              const outcome = await shareCanonicalDestination({
+                destination: { kind: "auction", auctionId: state.auction_id },
+                title: "Octagon HQ Auction Result",
+                text: `${score}. ${verdict}.`,
+                fallbackText: `${score}. ${verdict}.`,
+              });
+              setShareStatus(
+                outcome === "shared"
+                  ? "Auction result shared."
+                  : outcome === "copied"
+                    ? "Auction result link copied."
+                    : outcome === "cancelled"
+                      ? "Share cancelled."
+                      : "Sharing is unavailable on this device.",
+              );
+            }
+
+            const backLink = (
+              <Link className="game-header__back" to="/play">
+                <span>‹</span><span><small>PLAY</small><strong>All Games</strong></span>
+              </Link>
+            );
+
+            if (state && identity.profile) {
+              return (
+                <div className="page-stack auction-page">
+                  {backLink}
+                  {error ? <p className="auction-error" role="status">{error}</p> : null}
+                  <AuctionBoard
+                    state={state}
+                    participants={participantProfiles}
+                    profileId={identity.profile.id}
+                    busy={busy || loading}
+                    onBid={(amount, category) => void command(() => repository!.bid(state, amount, category))}
+                    onReload={() => void reload()}
+                    onRematch={returnToModeSelection}
+                    onShare={() => void shareResult()}
+                    shareStatus={shareStatus}
+                    onAbandon={() => void abandon()}
+                    onDecline={() => void decline()}
+                    onCancel={() => {
+                      if (window.confirm("Cancel this Auction for both players? It ends with no winner, loss, score, grade, or forfeit.")) {
+                        void command(() => repository!.cancel(state));
+                      }
+                    }}
+                  />
+                </div>
+              );
+            }
+
+            if (auctionId && identity.profile) {
+              return (
+                <div className="page-stack auction-page">
+                  {backLink}
+                  <section className="auction-destination surface-card">
+                    <p className="eyebrow">AUCTION DESTINATION</p>
+                    <h1>{loading ? "Loading Auction…" : "Auction unavailable"}</h1>
+                    {error ? <p className="auction-error" role="status">{error}</p> : null}
+                    {!loading ? (
+                      <button className="primary-action" type="button" onClick={returnToModeSelection}>BACK TO AUCTION MENU</button>
+                    ) : null}
+                  </section>
+                </div>
+              );
+            }
+
+            if (auctionId && !identity.profile) {
+              return (
+                <div className="page-stack auction-page">
+                  {backLink}
+                  <section className="auction-destination surface-card">
+                    <p className="eyebrow">PRIVATE AUCTION</p>
+                    <h1>Sign in to open this Auction</h1>
+                    <p>The exact destination will stay here while you sign in. Only a participant can load the sealed-bid game.</p>
+                    <button className="primary-action" type="button" onClick={identity.openDialog}>SIGN IN TO CONTINUE</button>
+                  </section>
+                </div>
+              );
+            }
+
+            return (
+              <div className="page-stack auction-page">
+                {backLink}
+                <header className="auction-hero surface-card">
+                  <p className="eyebrow">SEALED BID CHALLENGE</p>
+                  <h1>Auction</h1>
+                  <p>Pick a format and challenge another member. Bid privately to build the stronger collection.</p>
+                </header>
+                {!identity.profile ? (
+                  <button className="primary-action" type="button" onClick={identity.openDialog}>SIGN IN TO PLAY</button>
+                ) : setupStep === "formats" ? (
+                  <section className="auction-catalog" aria-labelledby="auction-modes-title">
+                    <header>
+                      <p className="eyebrow">STEP 1</p>
+                      <h2 id="auction-modes-title">Choose your auction</h2>
+                      <p>Browse everything or narrow the board by type.</p>
+                    </header>
+                    <div className="auction-catalog__tabs" role="tablist" aria-label="Auction format groups">
+                      <button
+                        type="button"
+                        aria-pressed={modeGroup === "all"}
+                        className={modeGroup === "all" ? "is-active" : ""}
+                        onClick={() => setModeGroup("all")}
+                      >
+                        ALL
+                      </button>
+                      {auctionModeGroups.map((group) => (
+                        <button
+                          type="button"
+                          key={group.id}
+                          aria-pressed={modeGroup === group.id}
+                          className={modeGroup === group.id ? "is-active" : ""}
+                          onClick={() => setModeGroup(group.id)}
+                        >
+                          {group.label.toUpperCase()}
+                        </button>
+                      ))}
+                    </div>
+                    <ol>
+                      {visibleModes.map((item) => {
+                        const index = auctionModes.findIndex((candidate) => candidate.id === item.id);
+                        return (
+                          <li className={mode === item.id ? "is-selected" : ""} key={item.id}>
+                            <button type="button" onClick={() => setMode(item.id)}>
+                              <span>{String(index + 1).padStart(2, "0")}</span>
+                              <strong>{item.displayName}</strong>
+                              <em aria-hidden="true">{mode === item.id ? "✓" : "›"}</em>
+                            </button>
+                          </li>
+                        );
+                      })}
+                    </ol>
+                    {selectedMode ? (
+                      <div className="auction-catalog__continue">
+                        <span><small>SELECTED</small><strong>{selectedMode.displayName}</strong></span>
+                        <button className="primary-action" type="button" onClick={continueToOpponent}>
+                          CHOOSE OPPONENT →
+                        </button>
+                      </div>
+                    ) : null}
+                  </section>
+                ) : (
+                  <section className="auction-opponents surface-card">
+                    <button className="auction-opponents__back" type="button" onClick={() => setSetupStep("formats")}>
+                      ← CHANGE FORMAT
+                    </button>
+                    <p className="eyebrow">STEP 2</p>
+                    <h2>Choose opponent</h2>
+                    <div className="auction-opponents__selection">
+                      <small>SELECTED AUCTION</small>
+                      <strong>{selectedMode?.displayName}</strong>
+                    </div>
+                    <input
+                      aria-label="Auction opponent profile name"
+                      autoCapitalize="characters"
+                      autoComplete="off"
+                      list="auction-opponent-suggestions"
+                      maxLength={24}
+                      placeholder="EXACT PROFILE NAME"
+                      value={opponentName}
+                      onChange={(event) => setOpponentName(event.target.value.toUpperCase())}
+                    />
+                    <datalist id="auction-opponent-suggestions">
+                      {challenges.profiles
+                        .filter((profile) => profile.id !== identity.profile?.id)
+                        .map((profile) => <option key={profile.id} value={profile.displayName} />)}
+                    </datalist>
+                    <p>Enter the exact Octagon HQ profile name. Recent opponents appear as suggestions.</p>
+                    <button
+                      className="primary-action"
+                      type="button"
+                      disabled={!repository || !mode || opponentName.trim().length < 2 || busy}
+                      onClick={() => void prepare()}
+                    >
+                      {busy ? "PREPARING…" : "PREPARE AUCTION"}
+                    </button>
+                  </section>
+                )}
+                {error ? <p className="auction-error" role="status">{error}</p> : null}
+              </div>
+            );
+          }
+          EOF
+
+          cat > src/styles/auction.css <<'EOF'
+          .auction-page {
+            gap: 16px;
+            max-width: 760px;
+          }
+
+          .auction-hero {
+            display: grid;
+            gap: 10px;
+            padding: 24px;
+            background: radial-gradient(circle at 90% 0, rgba(240, 23, 23, .2), transparent 45%), var(--surface);
+          }
+
+          .auction-hero h1,
+          .auction-board__top h1 {
+            margin: 0;
+            font-size: clamp(40px, 12vw, 64px);
+            line-height: .9;
+            letter-spacing: -.06em;
+          }
+
+          .auction-hero > p:not(.eyebrow) {
+            margin: 0;
+            color: var(--text-secondary);
+          }
+
+          .auction-catalog {
+            display: grid;
+            gap: 12px;
+          }
+
+          .auction-catalog header {
+            display: grid;
+            gap: 4px;
+          }
+
+          .auction-catalog h2,
+          .auction-opponents h2 {
+            margin: 0;
+            font-size: 27px;
+          }
+
+          .auction-catalog header > p:last-child {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 12px;
+          }
+
+          .auction-catalog__tabs {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 2px;
+            scrollbar-width: none;
+          }
+
+          .auction-catalog__tabs::-webkit-scrollbar {
+            display: none;
+          }
+
+          .auction-catalog__tabs button {
+            flex: 0 0 auto;
+            padding: 8px 10px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            background: var(--surface);
+            color: var(--text-secondary);
+            font-size: 9px;
+            font-weight: 950;
+          }
+
+          .auction-catalog__tabs button.is-active {
+            border-color: var(--ufc-red-strong);
+            background: rgba(240, 23, 23, .14);
+            color: #fff;
+          }
+
+          .auction-catalog ol {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 7px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+          }
+
+          .auction-catalog li {
+            min-width: 0;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: var(--surface);
+            overflow: hidden;
+          }
+
+          .auction-catalog li.is-selected {
+            border-color: var(--ufc-red-strong);
+            background: linear-gradient(135deg, rgba(240, 23, 23, .2), var(--surface));
+            box-shadow: 0 0 0 1px var(--ufc-red-strong);
+          }
+
+          .auction-catalog li button {
+            display: grid;
+            grid-template-columns: 26px minmax(0, 1fr) 14px;
+            gap: 6px;
+            width: 100%;
+            min-height: 68px;
+            align-items: center;
+            padding: 9px 10px;
+            border: 0;
+            background: transparent;
+            color: inherit;
+            text-align: left;
+          }
+
+          .auction-catalog li span {
+            color: var(--ufc-red-strong);
+            font-size: 9px;
+            font-weight: 950;
+          }
+
+          .auction-catalog li strong {
+            min-width: 0;
+            font-size: 12px;
+            line-height: 1.15;
+          }
+
+          .auction-catalog li em {
+            justify-self: end;
+            color: var(--text-secondary);
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 950;
+          }
+
+          .auction-catalog li.is-selected em {
+            color: #fff;
+          }
+
+          .auction-catalog__continue {
+            position: sticky;
+            bottom: 76px;
+            z-index: 3;
+            display: grid;
+            gap: 8px;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: rgba(18, 18, 18, .96);
+            box-shadow: 0 -10px 26px rgba(0, 0, 0, .35);
+            backdrop-filter: blur(12px);
+          }
+
+          .auction-catalog__continue > span {
+            display: grid;
+            gap: 2px;
+            min-width: 0;
+          }
+
+          .auction-catalog__continue small {
+            color: var(--ufc-red-strong);
+            font-size: 8px;
+            font-weight: 950;
+          }
+
+          .auction-catalog__continue strong {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 12px;
+          }
+
+          .auction-opponents {
+            display: grid;
+            gap: 10px;
+            padding: 18px;
+          }
+
+          .auction-opponents p {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 12px;
+          }
+
+          .auction-opponents input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--surface);
+            color: inherit;
+            font-weight: 800;
+          }
+
+          .auction-opponents__back {
+            justify-self: start;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            color: var(--ufc-red-strong);
+            font-size: 9px;
+            font-weight: 950;
+          }
+
+          .auction-opponents__selection {
+            display: grid;
+            gap: 3px;
+            padding: 12px;
+            border: 1px solid rgba(240, 23, 23, .45);
+            border-radius: 10px;
+            background: rgba(240, 23, 23, .08);
+          }
+
+          .auction-opponents__selection small {
+            color: var(--ufc-red-strong);
+            font-size: 8px;
+            font-weight: 950;
+          }
+
+          .auction-opponents__selection strong {
+            font-size: 15px;
+          }
+
+          .auction-destination {
+            display: grid;
+            gap: 12px;
+            padding: 20px;
+          }
+
+          .auction-destination h1,
+          .auction-destination p {
+            margin: 0;
+          }
+
+          .auction-board {
+            display: grid;
+            gap: 12px;
+          }
+
+          .auction-board__top {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+          }
+
+          .auction-board__top button,
+          .auction-board__actions button {
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            padding: 9px 11px;
+            background: var(--surface);
+            color: inherit;
+            font-size: 10px;
+            font-weight: 900;
+          }
+
+          .auction-member-avatar {
+            display: inline-grid;
+            width: 28px;
+            height: 28px;
+            flex: 0 0 28px;
+            place-items: center;
+            overflow: hidden;
+            border: 1px solid rgba(240, 23, 23, .65);
+            border-radius: 50%;
+            background: var(--surface-raised);
+            color: #fff;
+            font-size: 9px;
+            font-weight: 950;
+          }
+
+          .auction-member-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+
+          .auction-scoreboard {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 10px;
+            padding: 14px;
+            align-items: center;
+          }
+
+          .auction-scoreboard article {
+            display: grid;
+            gap: 3px;
+            min-width: 0;
+          }
+
+          .auction-scoreboard article:last-child {
+            text-align: right;
+          }
+
+          .auction-scoreboard small {
+            color: var(--text-secondary);
+            font-size: 8px;
+            font-weight: 900;
+          }
+
+          .auction-scoreboard__identity {
+            display: flex;
+            min-width: 0;
+            align-items: center;
+            gap: 6px;
+          }
+
+          .auction-scoreboard article:last-child .auction-scoreboard__identity {
+            flex-direction: row-reverse;
+          }
+
+          .auction-scoreboard__identity .auction-member-avatar {
+            width: 24px;
+            height: 24px;
+            flex-basis: 24px;
+          }
+
+          .auction-scoreboard strong {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 13px;
+          }
+
+          .auction-scoreboard b {
+            font-size: 27px;
+          }
+
+          .auction-scoreboard em {
+            color: var(--ufc-red-strong);
+            font-size: 10px;
+            font-style: normal;
+            font-weight: 900;
+          }
+
+          .auction-scoreboard > span {
+            font-size: 9px;
+            font-weight: 950;
+          }
+
+          .auction-current {
+            overflow: hidden;
+          }
+
+          .auction-current__meta {
+            display: flex;
+            justify-content: space-between;
+            padding: 11px 14px;
+            background: var(--surface-raised);
+            font-size: 9px;
+            font-weight: 950;
+          }
+
+          .auction-current__item {
+            display: grid;
+            min-height: 150px;
+            place-content: center;
+            padding: 20px;
+            background: radial-gradient(circle, rgba(240, 23, 23, .2), transparent 65%);
+            text-align: center;
+          }
+
+          .auction-current__item small {
+            color: var(--ufc-red-strong);
+            font-size: 9px;
+            font-weight: 950;
+            letter-spacing: .14em;
+          }
+
+          .auction-current__item h2 {
+            margin: 7px 0 0;
+            font-size: clamp(24px, 7vw, 40px);
+            line-height: 1;
+            letter-spacing: -.04em;
+          }
+
+          .auction-current__status {
+            display: block;
+            padding: 12px 14px;
+            background: var(--ufc-red-strong);
+            color: #fff;
+            text-align: center;
+            font-size: 11px;
+            letter-spacing: .04em;
+          }
+
+          .auction-result {
+            display: grid;
+            gap: 7px;
+            padding: 15px;
+          }
+
+          .auction-result h2,
+          .auction-result p {
+            margin: 0;
+          }
+
+          .auction-result p {
+            color: var(--text-secondary);
+            font-size: 11px;
+          }
+
+          .auction-result__winner {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          }
+
+          .auction-collections {
+            overflow: hidden;
+          }
+
+          .auction-collections__header {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+            gap: 8px;
+            align-items: center;
+            padding: 12px;
+            background: var(--surface-raised);
+          }
+
+          .auction-collections__header > div {
+            display: flex;
+            min-width: 0;
+            align-items: center;
+            gap: 7px;
+          }
+
+          .auction-collections__header > div:last-child {
+            flex-direction: row-reverse;
+            text-align: right;
+          }
+
+          .auction-collections__header strong {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 11px;
+          }
+
+          .auction-collections__header > span,
+          .auction-collections__rows article > span {
+            color: var(--text-secondary);
+            font-size: 8px;
+            font-weight: 950;
+          }
+
+          .auction-collections__rows {
+            display: grid;
+          }
+
+          .auction-collections__rows article {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+            gap: 8px;
+            align-items: stretch;
+            padding: 8px 10px;
+            border-top: 1px solid var(--border);
+          }
+
+          .auction-collections__rows article > div {
+            display: grid;
+            gap: 3px;
+            min-width: 0;
+            align-content: start;
+            padding: 7px;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+          }
+
+          .auction-collections__rows article > div:last-child {
+            text-align: right;
+          }
+
+          .auction-collections__rows article > div.is-filled {
+            border-style: solid;
+            background: rgba(255, 255, 255, .025);
+          }
+
+          .auction-collections__rows small {
+            color: var(--text-secondary);
+            font-size: 7px;
+            font-weight: 900;
+          }
+
+          .auction-collections__rows strong {
+            overflow-wrap: anywhere;
+            font-size: 10px;
+            line-height: 1.25;
+          }
+
+          .auction-collections.is-complete .auction-collections__rows strong {
+            font-size: 11px;
+          }
+
+          .auction-bid {
+            display: grid;
+            gap: 11px;
+            padding: 15px;
+          }
+
+          .auction-bid fieldset {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin: 0;
+            padding: 0;
+            border: 0;
+          }
+
+          .auction-bid legend {
+            width: 100%;
+            margin-bottom: 6px;
+            font-size: 9px;
+            font-weight: 950;
+          }
+
+          .auction-bid fieldset button {
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            background: transparent;
+            color: inherit;
+            font-size: 9px;
+            font-weight: 800;
+          }
+
+          .auction-bid fieldset button.is-selected {
+            border-color: var(--ufc-red-strong);
+            background: var(--ufc-red-strong);
+            color: #fff;
+          }
+
+          .auction-bid label > span {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 9px;
+            font-weight: 950;
+          }
+
+          .auction-bid label > div {
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+          }
+
+          .auction-bid input {
+            width: 100%;
+            padding: 12px 5px;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            color: inherit;
+            font-size: 25px;
+            font-weight: 950;
+          }
+
+          .auction-bid p,
+          .auction-error {
+            margin: 0;
+            color: var(--ufc-red-strong);
+            font-size: 11px;
+            font-weight: 800;
+          }
+
+          .auction-board__actions {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding-bottom: 10px;
+          }
+
+          .auction-final {
+            display: grid;
+            gap: 12px;
+            padding: 18px;
+            background: radial-gradient(circle at 50% 0, rgba(240, 23, 23, .22), transparent 62%), var(--surface);
+          }
+
+          .auction-final__winner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+          }
+
+          .auction-final__winner h2 {
+            margin: 0;
+            text-align: center;
+            font-size: clamp(28px, 8vw, 44px);
+            line-height: .95;
+            letter-spacing: -.045em;
+          }
+
+          .auction-final__winner .auction-member-avatar.is-winner,
+          .auction-final__avatars .auction-member-avatar {
+            width: 44px;
+            height: 44px;
+            flex-basis: 44px;
+            font-size: 13px;
+          }
+
+          .auction-final__avatars {
+            display: flex;
+          }
+
+          .auction-final__avatars .auction-member-avatar + .auction-member-avatar {
+            margin-left: -12px;
+          }
+
+          .auction-final__scores {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+            align-items: center;
+            gap: 10px;
+          }
+
+          .auction-final__scores article {
+            display: grid;
+            gap: 5px;
+            min-width: 0;
+            text-align: center;
+          }
+
+          .auction-final__scores article > span {
+            display: flex;
+            min-width: 0;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+          }
+
+          .auction-final__scores article .auction-member-avatar {
+            width: 22px;
+            height: 22px;
+            flex-basis: 22px;
+            font-size: 7px;
+          }
+
+          .auction-final__scores small {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--text-secondary);
+            font-size: 9px;
+            font-weight: 900;
+          }
+
+          .auction-final__scores strong {
+            font-size: clamp(34px, 10vw, 52px);
+            line-height: 1;
+          }
+
+          .auction-final__scores > b {
+            color: var(--text-secondary);
+            font-size: 18px;
+            font-weight: 900;
+          }
+
+          .auction-share-status {
+            margin: -4px 0 4px;
+            color: var(--text-secondary);
+            text-align: center;
+            font-size: 11px;
+            font-weight: 800;
+          }
+
+          @media (min-width: 680px) {
+            .auction-catalog ol {
+              grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            .auction-collections__rows strong {
+              font-size: 12px;
+            }
+          }
+          EOF
+
+          python <<'PY'
+          from pathlib import Path
+
+          def replace_once(path: str, old: str, new: str) -> None:
+              file = Path(path)
+              text = file.read_text()
+              if text.count(old) != 1:
+                  raise SystemExit(f"Expected exactly one match in {path}: {old[:100]!r}")
+              file.write_text(text.replace(old, new, 1))
+
+          registry = Path("src/features/play/playRegistry.ts")
+          text = registry.read_text()
+          start = text.index('  {\n    id: "auction",')
+          suffix = '\n  },\n] as const;'
+          end = text.index(suffix, start) + len('\n  },')
+          block = text[start:end]
+          text = text[:start] + text[end:]
+          block = block.replace(
+              'description: "Choose a UFC auction, submit private sealed bids, and build your collection asynchronously.",',
+              'description: "Choose a UFC auction, bid privately, and build the stronger collection.",',
+          )
+          marker = 'export const playGames: readonly PlayGameDefinition[] = [\n'
+          if text.count(marker) != 1:
+              raise SystemExit("Play registry owner marker changed")
+          registry.write_text(text.replace(marker, marker + block + '\n', 1))
+
+          test = Path("src/features/play/auctionContract.test.tsx")
+          text = test.read_text()
+          text = text.replace(
+              '  auctionModeDefinition,\n  auctionModes,',
+              '  auctionModeDefinition,\n  auctionModeGroups,\n  auctionModes,\n  auctionModesForGroup,',
+              1,
+          )
+          text = text.replace(
+              '    expect(playGameDefinition("auction")).toMatchObject({\n      title: "Auction",\n      lineup: { challengeEligible: true },\n    });',
+              '    expect(playGames[0]?.id).toBe("auction");\n    expect(playGameDefinition("auction")).toMatchObject({\n      icon: "$",\n      title: "Auction",\n      description: "Choose a UFC auction, bid privately, and build the stronger collection.",\n      lineup: { challengeEligible: true },\n    });',
+              1,
+          )
+          anchor = '''  it("limits career-performance auctions to the three locked fighter careers", () => {'''
+          group_test = '''  it("groups every approved mode once without forcing a sixteen-row setup list", () => {\n    const groupedIds = auctionModeGroups.flatMap((group) => group.modeIds);\n    expect(auctionModeGroups.map((group) => group.id)).toEqual([\n      "fighters",\n      "skills",\n      "performances",\n      "history",\n    ]);\n    expect(groupedIds).toHaveLength(16);\n    expect(new Set(groupedIds).size).toBe(16);\n    expect([...groupedIds].sort()).toEqual([...AUCTION_MODE_IDS].sort());\n    expect(auctionModesForGroup("all")).toEqual(auctionModes);\n    for (const group of auctionModeGroups) {\n      expect(auctionModesForGroup(group.id).map((mode) => mode.id)).toEqual(group.modeIds);\n    }\n  });\n\n'''
+          if text.count(anchor) != 1:
+              raise SystemExit("Auction contract test anchor changed")
+          test.write_text(text.replace(anchor, group_test + anchor, 1))
+
+          final_games = Path("src/features/play/finalGames.test.tsx")
+          text = final_games.read_text()
+          old = '''    expect(container.querySelectorAll(".play-games__grid .play-game-card")).toHaveLength(7);\n    expect(container.querySelectorAll(".play-games__grid button.play-game-card")).toHaveLength(7);\n    expect(container.querySelector(".play-game-card__status.is-preview")).toBeNull();'''
+          new = '''    const cards = [...container.querySelectorAll<HTMLElement>(".play-games__grid .play-game-card")];\n    expect(cards).toHaveLength(7);\n    expect(container.querySelectorAll(".play-games__grid button.play-game-card")).toHaveLength(7);\n    expect(cards[0]?.textContent).toContain("Auction");\n    expect(cards[0]?.textContent).toContain("bid privately");\n    expect(cards[0]?.textContent).not.toContain("asynchronously");\n    expect(container.querySelector(".play-game-card__status.is-preview")).toBeNull();'''
+          if text.count(old) != 1:
+              raise SystemExit("Final games test anchor changed")
+          final_games.write_text(text.replace(old, new, 1))
+
+          verify = Path(".github/workflows/verify-supabase-backend.yml")
+          text = verify.read_text()
+          text = text.replace(
+              '            supabase/tests/auction_notifications_share_release.sql \\\n            supabase/tests/pick_monitoring_truthful_decisions.sql',
+              '            supabase/tests/auction_notifications_share_release.sql \\\n            supabase/tests/auction_ui_release_whats_new.sql \\\n            supabase/tests/pick_monitoring_truthful_decisions.sql',
+              1,
+          )
+          migration_anchor = '''          else\n            require_remote_migration "202609030001" "Auction PR 6 notifications and share release migration not deployed"\n          fi\n'''
+          migration_insert = migration_anchor + '''\n          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then\n            local_version=$(printf '%s\\n' "$migration_list" | sed 's/│/|/g' | awk -F '|' '\n              {\n                local_version = $1\n                gsub(/[^0-9]/, "", local_version)\n                if (local_version == "202609030002") {\n                  print local_version\n                  exit\n                }\n              }\n            ')\n            if [ "$local_version" != "202609030002" ]; then\n              echo "::error title=Auction UI release migration missing::Migration 202609030002 is not present in the exact PR head."\n              exit 1\n            fi\n            echo "Auction UI release migration 202609030002 exists locally and passed the fresh-database suite; linked production history is required after merge."\n          else\n            require_remote_migration "202609030002" "Auction UI release What's New migration not deployed"\n          fi\n'''
+          if text.count(migration_anchor) != 1:
+              raise SystemExit("Backend migration verification anchor changed")
+          verify.write_text(text.replace(migration_anchor, migration_insert, 1))
+
+          deploy = Path(".github/workflows/deploy-supabase.yml")
+          text = deploy.read_text()
+          deploy_anchor = '''          if [ -f supabase/migrations/202609030001_auction_notifications_share_release.sql ]; then\n            require_remote_migration "202609030001"\n          fi\n'''
+          deploy_insert = deploy_anchor + '''          if [ -f supabase/migrations/202609030002_auction_ui_release_whats_new.sql ]; then\n            require_remote_migration "202609030002"\n          fi\n'''
+          if text.count(deploy_anchor) != 1:
+              raise SystemExit("Supabase deployment migration anchor changed")
+          deploy.write_text(text.replace(deploy_anchor, deploy_insert, 1))
+          PY
+
+          cat > supabase/migrations/202609030002_auction_ui_release_whats_new.sql <<'EOF'
+          -- Publish one canonical Auction release announcement after the complete game and mobile polish ship.
+          -- The durable source key keeps retries and future deploys idempotent.
+
+          delete from private.whats_new_items
+          where kind = 'new_game'
+            and source_key <> 'games:release:auction'
+            and (
+              source_key like 'games:new:%:auction'
+              or lower(title) = 'auction is now playable'
+            );
+
+          select public.publish_whats_new_item(
+            'games:release:auction',
+            'new_game',
+            'games',
+            'automatic',
+            'Auction is now playable',
+            'Choose a UFC auction, bid privately, and build the stronger collection.',
+            '/play/auction',
+            'PLAY AUCTION',
+            now()
+          );
+          EOF
+
+          cat > supabase/tests/auction_ui_release_whats_new.sql <<'EOF'
+          begin;
+
+          do $$
+          declare
+            v_count integer;
+          begin
+            select count(*)
+            into v_count
+            from private.whats_new_items
+            where source_key = 'games:release:auction';
+
+            if v_count <> 1 then
+              raise exception 'Expected exactly one canonical Auction release announcement, found %', v_count;
+            end if;
+
+            if not exists (
+              select 1
+              from private.whats_new_items
+              where source_key = 'games:release:auction'
+                and kind = 'new_game'
+                and category = 'games'
+                and title = 'Auction is now playable'
+                and summary = 'Choose a UFC auction, bid privately, and build the stronger collection.'
+                and route = '/play/auction'
+                and action_label = 'PLAY AUCTION'
+            ) then
+              raise exception 'Auction release announcement does not match the approved public copy and route';
+            end if;
+
+            if exists (
+              select 1
+              from private.whats_new_items
+              where kind = 'new_game'
+                and source_key <> 'games:release:auction'
+                and (
+                  source_key like 'games:new:%:auction'
+                  or lower(title) = 'auction is now playable'
+                )
+            ) then
+              raise exception 'A duplicate Auction release announcement remains';
+            end if;
+          end
+          $$;
+
+          rollback;
+          EOF
+
+          rm .github/workflows/build-auction-ui-polish.yml
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run exact-head validation
+        env:
+          VITE_DEPLOYMENT_SHA: ${{ github.sha }}
+        run: |
+          npm run typecheck
+          npm test
+          npm run build
+
+      - name: Commit validated change
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Polish Auction setup and results"
+          git push origin HEAD:chatgpt/auction-ui-polish
