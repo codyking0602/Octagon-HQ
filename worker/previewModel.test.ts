@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { ensureDestinationPreview } from "./previewCard";
 import {
   dynamicPreviewRequest,
   resolveRichPreview,
@@ -141,6 +142,25 @@ describe("resolveRichPreview", () => {
     expect(preview.title).toContain("CODY wins");
     expect(preview.description).toContain("CODY 8/10 vs. SHANE 6/10");
     expect(preview.images[0]?.path).toBe("/assets/share/find-leader.svg");
+  });
+
+  it("routes private or unavailable Auctions through the canonical private card", () => {
+    const url = new URL(
+      "https://octagon.hq-app.workers.dev/play/auction?auction=123e4567-e89b-42d3-a456-426614174000",
+    );
+    const unresolved = resolveRichPreview(url, catalog);
+    expect(unresolved.kind).toBe("default");
+
+    const preview = ensureDestinationPreview(url, unresolved);
+    expect(preview).toMatchObject({
+      kind: "auction",
+      title: "Private Auction | Octagon HQ",
+      canonicalPath: "/play/auction?auction=123e4567-e89b-42d3-a456-426614174000",
+    });
+    expect(preview.description).toContain("Sign in as a participant");
+    expect(JSON.stringify(preview)).not.toMatch(
+      /private_item|pending_bid|future_deck|rarity_weight|rarity_class|grading_formula|grading_weight|intermediate_grade|category_grade|item_grade|winner_explanation|best_purchase|overpay|missed_opportunity|random_seed/i,
+    );
   });
 
   it("renders only the completed public Auction result", () => {

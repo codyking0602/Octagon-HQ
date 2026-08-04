@@ -433,5 +433,9 @@ export function resolveRichPreview(
     }
   }
 
+  if (requestUrl.pathname === "/play/auction" || requestUrl.pathname === "/play/auction/") {
+    return DEFAULT_PREVIEW;
+  }
+
   return staticGameChallenge(requestUrl, catalog) ?? DEFAULT_PREVIEW;
 }
