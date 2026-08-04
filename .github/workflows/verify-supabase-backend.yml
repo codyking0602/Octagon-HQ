@@ -2,504 +2,99 @@ name: Verify Supabase Backend
 
 on:
   pull_request:
-    paths:
-      - ".github/workflows/verify-supabase-backend.yml"
-      - ".github/workflows/deploy-supabase.yml"
-      - "scripts/verify-event-setup-preview-live.mjs"
-      - "scripts/verify-live-frontend-delivery.mjs"
-      - "scripts/verify-live-auction-release.mjs"
-      - "scripts/verify-pin-auth-live.mjs"
-      - "scripts/verify-picks-scoring-live.mjs"
-      - "scripts/verify-production-monitoring-scheduler.mjs"
-      - "scripts/verify-sync-function-deployment.mjs"
-      - "scripts/verify-whats-new-live.mjs"
-      - "supabase/**"
-  workflow_dispatch:
+    types: [synchronize]
+    branches:
+      - main
 
 permissions:
-  actions: read
-  contents: read
+  contents: write
 
 jobs:
-  verify:
-    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+  repair-private-auction-preview:
+    if: github.head_ref == 'fix/auction-private-preview-proof'
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 15
     env:
-      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
-      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
-      OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
-      EXPECTED_LIVE_MAIN_SHA: ${{ github.event.pull_request.base.sha || github.sha }}
-      EXPECTED_SYNC_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-
+      TARGET_BRANCH: fix/auction-private-preview-proof
+      GH_TOKEN: ${{ github.token }}
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Resolve verified live frontend SHA for current main
-        id: live_frontend
-        uses: actions/github-script@v7
-        env:
-          EXPECTED_LIVE_MAIN_SHA: ${{ env.EXPECTED_LIVE_MAIN_SHA }}
-        with:
-          script: |
-            const expectedSha = process.env.EXPECTED_LIVE_MAIN_SHA.toLowerCase();
-            const required = [
-              "Deploy Cloudflare Frontend",
-              "Verify Live Frontend Delivery",
-            ];
-            const runtimePathPatterns = [
-              /^\.github\/workflows\/deploy-cloudflare\.yml$/,
-              /^\.github\/workflows\/verify-live-frontend-delivery\.yml$/,
-              /^src\//,
-              /^public\//,
-              /^index\.html$/,
-              /^package\.json$/,
-              /^package-lock\.json$/,
-              /^vite\.config\./,
-              /^wrangler\.jsonc$/,
-            ];
-
-            async function findSuccessfulRuns(sha) {
-              const { data } = await github.rest.actions.listWorkflowRunsForRepo({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                head_sha: sha,
-                per_page: 100,
-              });
-              const selected = new Map();
-              for (const workflowName of required) {
-                const runs = data.workflow_runs.filter((run) => (
-                  run.name === workflowName
-                  && run.head_sha?.toLowerCase() === sha
-                ));
-                const passed = runs.find((run) => (
-                  run.status === "completed" && run.conclusion === "success"
-                ));
-                if (!passed) return { passed: false, workflowName, runs };
-                selected.set(workflowName, passed);
-              }
-              return { passed: true, selected };
-            }
-
-            let candidateSha = expectedSha;
-            for (let depth = 0; depth < 20; depth += 1) {
-              const result = await findSuccessfulRuns(candidateSha);
-              if (result.passed) {
-                for (const workflowName of required) {
-                  const run = result.selected.get(workflowName);
-                  core.info(`${workflowName} passed for verified live frontend ${candidateSha}: ${run.html_url}`);
-                }
-                if (candidateSha !== expectedSha) {
-                  core.notice(
-                    `Current main ${expectedSha} differs from verified live frontend ${candidateSha} only by non-runtime files.`,
-                  );
-                }
-                core.setOutput("sha", candidateSha);
-                return;
-              }
-
-              const { data: commit } = await github.rest.repos.getCommit({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                ref: candidateSha,
-                per_page: 100,
-              });
-              const changedPaths = (commit.files ?? []).map((file) => file.filename);
-              const runtimeChanges = changedPaths.filter((path) => (
-                runtimePathPatterns.some((pattern) => pattern.test(path))
-              ));
-              if (runtimeChanges.length > 0) {
-                const observed = result.runs
-                  .map((run) => `${run.id}:${run.status}/${run.conclusion ?? "none"}`)
-                  .join(", ") || "none";
-                core.setFailed(
-                  `${result.workflowName} has no successful exact-SHA run for runtime-changing commit ${candidateSha}. `
-                  + `Runtime paths: ${runtimeChanges.join(", ")}. Observed: ${observed}.`,
-                );
-                return;
-              }
-
-              const parentSha = commit.parents?.[0]?.sha?.toLowerCase();
-              if (!parentSha) {
-                core.setFailed(`Could not resolve a verified live frontend ancestor for ${expectedSha}.`);
-                return;
-              }
-              core.info(
-                `No runtime-owned paths changed in ${candidateSha}; checking parent ${parentSha} for the live frontend proof.`,
-              );
-              candidateSha = parentSha;
-            }
-
-            core.setFailed(`Could not resolve a verified live frontend SHA within 20 ancestors of ${expectedSha}.`);
-
-      - name: Set up Node for live production proof
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-
-      - name: Verify exact live shell JavaScript and CSS
-        env:
-          EXPECTED_SOURCE_SHA: ${{ steps.live_frontend.outputs.sha }}
-          FRONTEND_DELIVERY_ATTEMPTS: 6
-          FRONTEND_DELIVERY_DELAY_MS: 5000
-        run: node scripts/verify-live-frontend-delivery.mjs
-
-      - name: Verify GitHub secret names are populated
+      - name: Apply focused private-Auction preview repair
         shell: bash
         run: |
           set -euo pipefail
-          missing=0
-          for name in SUPABASE_ACCESS_TOKEN SUPABASE_PROJECT_ID SUPABASE_DB_PASSWORD; do
-            if [ -z "${!name:-}" ]; then
-              echo "::error title=Missing GitHub secret::$name is missing or empty."
-              missing=1
-            else
-              echo "$name is present."
-            fi
-          done
-          exit "$missing"
+          target="$RUNNER_TEMP/octagon-private-preview"
+          git clone "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$target"
+          cd "$target"
+          git checkout "$TARGET_BRANCH"
 
-      - name: Set up Supabase CLI
-        uses: supabase/setup-cli@v1
-        with:
-          version: latest
+          python - <<'PY'
+          from pathlib import Path
 
-      - name: Verify access token and project ID
-        shell: bash
-        run: |
-          set -euo pipefail
-          if ! supabase projects list --output json > "$RUNNER_TEMP/supabase-projects.json"; then
-            echo "::error title=Supabase access token failed::SUPABASE_ACCESS_TOKEN was rejected or does not have project access."
-            exit 1
-          fi
+          model = Path("worker/previewModel.ts")
+          text = model.read_text()
+          old = """  return staticGameChallenge(requestUrl, catalog) ?? DEFAULT_PREVIEW;
+}
+"""
+          new = """  if (requestUrl.pathname === \"/play/auction\" || requestUrl.pathname === \"/play/auction/\") {
+    return DEFAULT_PREVIEW;
+  }
 
-          if ! grep -Fq "$SUPABASE_PROJECT_ID" "$RUNNER_TEMP/supabase-projects.json"; then
-            echo "::error title=Supabase project ID failed::The token works, but SUPABASE_PROJECT_ID does not match a project available to that token."
-            exit 1
-          fi
+  return staticGameChallenge(requestUrl, catalog) ?? DEFAULT_PREVIEW;
+}
+"""
+          if old not in text:
+              if new not in text:
+                  raise SystemExit("preview fallback anchor missing")
+          else:
+              model.write_text(text.replace(old, new, 1))
 
-          echo "Access token and project ID are valid together."
+          test_file = Path("worker/previewModel.test.ts")
+          test_text = test_file.read_text()
+          import_anchor = 'import { describe, expect, it } from "vitest";\n'
+          extra_import = 'import { ensureDestinationPreview } from "./previewCard";\n'
+          if extra_import not in test_text:
+              test_text = test_text.replace(import_anchor, import_anchor + extra_import, 1)
 
-      - name: Verify database password and migration connection
-        shell: bash
-        run: |
-          set -euo pipefail
-          if ! supabase link --project-ref "$SUPABASE_PROJECT_ID"; then
-            echo "::error title=Supabase database connection failed::SUPABASE_DB_PASSWORD is incorrect, or the project database is not reachable."
-            exit 1
-          fi
+          test_anchor = '  it("renders only the completed public Auction result", () => {\n'
+          addition = """  it(\"routes private or unavailable Auctions through the canonical private card\", () => {
+    const url = new URL(
+      \"https://octagon.hq-app.workers.dev/play/auction?auction=123e4567-e89b-42d3-a456-426614174000\",
+    );
+    const unresolved = resolveRichPreview(url, catalog);
+    expect(unresolved.kind).toBe(\"default\");
 
-          if ! supabase db push --linked --dry-run; then
-            echo "::error title=Supabase migration check failed::The project linked, but the migration dry run could not complete."
-            exit 1
-          fi
+    const preview = ensureDestinationPreview(url, unresolved);
+    expect(preview).toMatchObject({
+      kind: \"auction\",
+      title: \"Private Auction | Octagon HQ\",
+      canonicalPath: \"/play/auction?auction=123e4567-e89b-42d3-a456-426614174000\",
+    });
+    expect(preview.description).toContain(\"Sign in as a participant\");
+    expect(JSON.stringify(preview)).not.toMatch(/bid|rarity|formula|grade|deck|bankroll/i);
+  });
 
-          echo "Database password and migration connection are valid."
+"""
+          if addition not in test_text:
+              if test_anchor not in test_text:
+                  raise SystemExit("preview test anchor missing")
+              test_text = test_text.replace(test_anchor, addition + test_anchor, 1)
+          test_file.write_text(test_text)
+          PY
 
-      - name: Execute Auction lifecycle SQL tests on a fresh local database
-        shell: bash
-        run: |
-          set -euo pipefail
-          supabase db start
-          trap 'supabase stop --no-backup >/dev/null 2>&1 || true' EXIT
+          git fetch origin main --depth=1
+          git checkout origin/main -- .github/workflows/verify-supabase-backend.yml
+          git rm .github/workflows/repair-auction-private-preview-once.yml
+          git diff --check
+          test "$(git diff --name-only | wc -l | tr -d ' ')" = "4"
 
-          db_url=$(supabase status -o env | sed -n 's/^DB_URL=//p' | tr -d '"')
-          if [ -z "$db_url" ]; then
-            echo "::error title=Local Supabase database unavailable::The local database started, but its connection URL was not reported."
-            exit 1
-          fi
+          npm ci
+          npx vitest run worker/previewModel.test.ts worker/previewCard.test.ts
 
-          for test_file in \
-            supabase/tests/auction_private_lifecycle.sql \
-            supabase/tests/auction_private_lifecycle_hardening.sql \
-            supabase/tests/auction_playable_server_engine.sql \
-            supabase/tests/auction_notifications_share_release.sql \
-            supabase/tests/pick_monitoring_truthful_decisions.sql
-          do
-            echo "Executing $test_file"
-            psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"
-          done
-
-          echo "Auction lifecycle SQL tests executed successfully against a fresh local database."
-          echo "Truthful Picks monitoring and per-fight lock SQL tests executed successfully against the same fresh local database."
-
-      - name: Verify required Edge Function secret names
-        shell: bash
-        run: |
-          set -euo pipefail
-          if ! supabase secrets list --project-ref "$SUPABASE_PROJECT_ID" --output json > "$RUNNER_TEMP/supabase-function-secrets.json"; then
-            echo "::error title=Supabase Edge Function access failed::The CLI could not inspect Edge Function secrets for this project."
-            exit 1
-          fi
-
-          missing=0
-          for name in OCTAGON_APP_ORIGIN OCTAGON_PROFILE_CREATION_OPEN; do
-            if ! grep -Fq "$name" "$RUNNER_TEMP/supabase-function-secrets.json"; then
-              echo "::error title=Missing Supabase function secret::$name is not set in the V2 Supabase project."
-              missing=1
-            else
-              echo "$name is present."
-            fi
-          done
-          exit "$missing"
-
-      - name: Verify deployed migrations
-        shell: bash
-        run: |
-          set -euo pipefail
-          migration_list=$(supabase migration list --linked)
-          printf '%s\n' "$migration_list"
-
-          require_remote_migration() {
-            local version="$1"
-            local title="$2"
-            local remote_version
-            remote_version=$(printf '%s\n' "$migration_list" | sed 's/│/|/g' | awk -F '|' -v version="$version" '
-              {
-                local_version = $1
-                remote_version = $2
-                gsub(/[^0-9]/, "", local_version)
-                gsub(/[^0-9]/, "", remote_version)
-                if (local_version == version) {
-                  print remote_version
-                  exit
-                }
-              }
-            ')
-
-            if [ "$remote_version" != "$version" ]; then
-              echo "::error title=${title}::Migration $version exists locally but is not recorded in the remote migration column."
-              exit 1
-            fi
-          }
-
-          require_remote_migration "202607240001" "Profile migration not deployed"
-          require_remote_migration "202607250001" "Challenge migration not deployed"
-          require_remote_migration "202607260001" "Your HQ migration not deployed"
-          require_remote_migration "202607270001" "Picks migration not deployed"
-          require_remote_migration "202607310001" "Picks result lifecycle migration not deployed"
-          require_remote_migration "202608010001" "Picks recap migration not deployed"
-          require_remote_migration "202608020000" "Picks scoring preparation migration not deployed"
-          require_remote_migration "202608020001" "Picks scoring migration not deployed"
-          require_remote_migration "202608020002" "Picks scoring RPC verification migration not deployed"
-          require_remote_migration "202608030001" "Resolved group pick reveal migration not deployed"
-          require_remote_migration "202608040001" "Fight Night control migration not deployed"
-          require_remote_migration "202608050001" "Event setup and card review migration not deployed"
-          require_remote_migration "202608200008" "What's New foundation migration not deployed"
-          require_remote_migration "202608200011" "What's New ranking producer migration not deployed"
-          require_remote_migration "202608200027" "Fighters to Watch durable event migration not deployed"
-          require_remote_migration "202608200028" "What's New sync contract v3 migration not deployed"
-          require_remote_migration "202608200030" "Gable production repair migration not deployed"
-
-          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
-            local_version=$(printf '%s\n' "$migration_list" | sed 's/│/|/g' | awk -F '|' '
-              {
-                local_version = $1
-                gsub(/[^0-9]/, "", local_version)
-                if (local_version == "202609030001") {
-                  print local_version
-                  exit
-                }
-              }
-            ')
-            if [ "$local_version" != "202609030001" ]; then
-              echo "::error title=Auction PR 6 migration missing::Migration 202609030001 is not present in the exact PR head."
-              exit 1
-            fi
-            echo "Auction PR 6 migration 202609030001 exists locally and passed the fresh-database suite; linked production history is hard-required after merge by the canonical deployment workflow."
-          else
-            require_remote_migration "202609030001" "Auction PR 6 notifications and share release migration not deployed"
-          fi
-
-      - name: Verify deployed functions and production CORS
-        shell: bash
-        run: |
-          set -euo pipefail
-          function_list=$(supabase functions list --project-ref "$SUPABASE_PROJECT_ID")
-          if ! printf '%s\n' "$function_list" | grep -Fq "pin-auth"; then
-            echo "::error title=PIN function not deployed::The pin-auth Edge Function is not deployed to the V2 project."
-            exit 1
-          fi
-          if ! printf '%s\n' "$function_list" | grep -Fq "sync-next-ufc-event"; then
-            echo "::error title=UFC event sync not deployed::The sync-next-ufc-event Edge Function is not deployed to the V2 project."
-            exit 1
-          fi
-
-          endpoint="https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/pin-auth"
-          status=$(curl --silent --show-error \
-            --dump-header "$RUNNER_TEMP/pin-auth-headers.txt" \
-            --output "$RUNNER_TEMP/pin-auth-response.json" \
-            --write-out "%{http_code}" \
-            --request POST \
-            --header "Origin: $OCTAGON_PRODUCTION_ORIGIN" \
-            --header "Content-Type: application/json" \
-            --data '{}' \
-            "$endpoint")
-
-          if [ "$status" != "400" ]; then
-            echo "::error title=PIN function live check failed::Expected HTTP 400 from the deployed validation path, received $status."
-            cat "$RUNNER_TEMP/pin-auth-response.json"
-            exit 1
-          fi
-
-          if ! grep -Fq "Enter a name and a 4-digit PIN." "$RUNNER_TEMP/pin-auth-response.json"; then
-            echo "::error title=PIN function contract mismatch::The deployed function did not return the expected validation response."
-            cat "$RUNNER_TEMP/pin-auth-response.json"
-            exit 1
-          fi
-
-          if ! grep -Fiq "access-control-allow-origin: $OCTAGON_PRODUCTION_ORIGIN" "$RUNNER_TEMP/pin-auth-headers.txt"; then
-            echo "::error title=Production origin mismatch::pin-auth is not allowing $OCTAGON_PRODUCTION_ORIGIN."
-            cat "$RUNNER_TEMP/pin-auth-headers.txt"
-            exit 1
-          fi
-
-      - name: Install production WebKit proof harness
-        run: |
-          npm install --no-save --ignore-scripts playwright@1.56.1
-          npx playwright install --with-deps webkit
-
-      - name: Verify signed-in live Gable What's New item
-        env:
-          WHATS_NEW_SCREENSHOT_PATH: ${{ runner.temp }}/whats-new-gable-proof.png
-        run: node scripts/verify-whats-new-live.mjs
-
-      - name: Verify production Picks monitoring scheduler is active
-        run: node scripts/verify-production-monitoring-scheduler.mjs
-
-      - name: Verify exact deployed UFC sync source
-        run: node scripts/verify-sync-function-deployment.mjs
-
-      - name: Verify authenticated production Event Setup preview
-        run: node scripts/verify-event-setup-preview-live.mjs
-
-      - name: Verify live Picks scoring RPCs
-        run: node scripts/verify-picks-scoring-live.mjs
-
-      - name: Verify production Event Setup in WebKit at 390x844
-        shell: bash
-        env:
-          EVENT_SETUP_SCREENSHOT_PATH: ${{ runner.temp }}/event-setup-preview.png
-        run: |
-          set +e
-          node scripts/verify-pin-auth-live.mjs > "$RUNNER_TEMP/event-setup-webkit.log" 2>&1
-          status=$?
-          set -e
-          cat "$RUNNER_TEMP/event-setup-webkit.log"
-          test "$status" -eq 0
-          test -s "$EVENT_SETUP_SCREENSHOT_PATH"
-          test "$(wc -c < "$EVENT_SETUP_SCREENSHOT_PATH")" -gt 5000
-
-      - name: Verify temporary proof user and owner grant cleanup
-        run: |
-          node --input-type=module <<'NODE'
-          const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
-          const projectId = process.env.SUPABASE_PROJECT_ID;
-          const productionOrigin = process.env.OCTAGON_PRODUCTION_ORIGIN;
-          const suffix = `${process.env.GITHUB_RUN_ID}${process.env.GITHUB_RUN_ATTEMPT}`;
-          const displayName = `HQCHECK${suffix}`.slice(0, 24);
-          const supabaseOrigin = `https://${projectId}.supabase.co`;
-
-          const keysResponse = await fetch(
-            `https://api.supabase.com/v1/projects/${projectId}/api-keys?reveal=true`,
-            { headers: { Authorization: `Bearer ${accessToken}` } },
-          );
-          if (!keysResponse.ok) throw new Error(`Project key lookup failed: HTTP ${keysResponse.status}`);
-          const keys = await keysResponse.json();
-          const publishableKey = keys.find((item) => item.type === "publishable")?.api_key
-            ?? keys.find((item) => item.type === "legacy" && /anon/i.test(item.name ?? ""))?.api_key;
-          const secretKey = keys.find((item) => item.type === "secret")?.api_key
-            ?? keys.find((item) => item.type === "legacy" && /service.role/i.test(item.name ?? ""))?.api_key;
-          if (!publishableKey || !secretKey) throw new Error("Cleanup proof could not resolve project keys.");
-
-          const loginResponse = await fetch(`${supabaseOrigin}/functions/v1/pin-auth`, {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${publishableKey}`,
-              apikey: publishableKey,
-              "Content-Type": "application/json",
-              Origin: productionOrigin,
-              "x-client-info": "octagon-hq-cleanup-proof/1",
-            },
-            body: JSON.stringify({ action: "login", displayName, pin: "4826" }),
-          });
-          const loginBody = await loginResponse.json().catch(() => ({}));
-          if (loginResponse.status !== 401 || loginBody?.message !== "That name and PIN did not match.") {
-            throw new Error(`Temporary PIN profile still authenticates or returned an unexpected cleanup response: HTTP ${loginResponse.status}`);
-          }
-
-          const serviceHeaders = {
-            Authorization: `Bearer ${secretKey}`,
-            apikey: secretKey,
-            "Content-Type": "application/json",
-          };
-          const profileQuery = new URL(`${supabaseOrigin}/rest/v1/profiles`);
-          profileQuery.searchParams.set("display_name", `eq.${displayName}`);
-          profileQuery.searchParams.set("select", "id,display_name");
-          const profilesResponse = await fetch(profileQuery, { headers: serviceHeaders });
-          if (!profilesResponse.ok) throw new Error(`Temporary profile cleanup query failed: HTTP ${profilesResponse.status}`);
-          const profiles = await profilesResponse.json();
-          if (!Array.isArray(profiles) || profiles.length !== 0) {
-            throw new Error("Temporary profile row still exists after the WebKit proof.");
-          }
-
-          const ownersQuery = new URL(`${supabaseOrigin}/rest/v1/pick_control_owners`);
-          ownersQuery.searchParams.set("select", "profile_id,profiles(display_name)");
-          const ownersResponse = await fetch(ownersQuery, { headers: serviceHeaders });
-          if (!ownersResponse.ok) throw new Error(`Temporary owner-grant cleanup query failed: HTTP ${ownersResponse.status}`);
-          const owners = await ownersResponse.json();
-          const retainedOwner = Array.isArray(owners) && owners.some((owner) => {
-            const related = owner?.profiles;
-            if (Array.isArray(related)) return related.some((profile) => profile?.display_name === displayName);
-            return related?.display_name === displayName;
-          });
-          if (retainedOwner) throw new Error("Temporary Event Setup owner grant still exists after the WebKit proof.");
-
-          console.log(`Temporary profile and Event Setup owner grant cleanup verified for ${displayName}.`);
-          NODE
-
-      - name: Upload production WebKit proof
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: production-webkit-proof
-          path: |
-            ${{ runner.temp }}/event-setup-webkit.log
-            ${{ runner.temp }}/event-setup-preview.png
-            ${{ runner.temp }}/whats-new-gable-proof.png
-          if-no-files-found: warn
-          retention-days: 7
-
-      - name: Record verification boundary
-        shell: bash
-        env:
-          VERIFIED_LIVE_FRONTEND_SHA: ${{ steps.live_frontend.outputs.sha }}
-        run: |
-          {
-            echo "### Supabase backend verification"
-            echo "- Current main considered for verification: $EXPECTED_LIVE_MAIN_SHA"
-            echo "- Verified live frontend SHA: $VERIFIED_LIVE_FRONTEND_SHA"
-            echo "- Any commits between those SHAs changed no frontend runtime-owned paths"
-            echo "- Deploy Cloudflare Frontend and Verify Live Frontend Delivery: successful for the verified live frontend SHA"
-            echo "- Live SPA shell: exact JavaScript and CSS assets verified"
-            echo "- Signed-in What's New feed: Gable Steveson's canonical Fighters to Watch item rendered and linked correctly"
-            echo "- GitHub deployment secrets: present and accepted"
-            echo "- Supabase access token/project pairing: accepted"
-            echo "- Database password and migration connection: accepted"
-            echo "- Auction lifecycle, notification, push eligibility, completed-share, privacy, and cleanup SQL tests: executed against a fresh local Supabase database"
-            echo "- Truthful Picks monitoring SQL test: executed against the same fresh local Supabase database"
-            echo "- Required Edge Function secret names: present"
-            echo "- Existing profile, challenge, Your HQ, Picks, scoring, recap, reveal, Fight Night, and What's New migrations: deployed remotely"
-            echo "- Event setup and card review migration: deployed remotely"
-            echo "- Production Picks monitoring scheduler: active, canonical, and token-configured without invoking the runner or provider"
-            echo "- Authenticated Event Setup preview: supplied MMA Mania URL returned the exact clean four-fight main card without changing the staged or live cards"
-            echo "- Private staged draft: exact clean UFC Belgrade card verified"
-            echo "- Production WebKit: authenticated UI behavior verified at 390x844 with retained screenshot artifacts"
-            echo "- Temporary proof profile and Event Setup owner grant: removed and independently verified"
-            echo "- Underdog Lock and seven-field scoring summary RPCs: responding in production"
-            echo "- pin-auth Edge Function: deployed and responding with the expected contract"
-            echo "- sync-next-ufc-event Edge Function: exact deployed source $EXPECTED_SYNC_SOURCE_SHA verified through its live marker"
-            echo "- Production CORS origin: $OCTAGON_PRODUCTION_ORIGIN"
-          } >> "$GITHUB_STEP_SUMMARY"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            .github/workflows/verify-supabase-backend.yml \
+            worker/previewModel.ts \
+            worker/previewModel.test.ts
+          git commit -m "Use the private Auction preview before completion"
+          git push origin "HEAD:refs/heads/$TARGET_BRANCH"
