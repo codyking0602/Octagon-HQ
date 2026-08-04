@@ -7,6 +7,8 @@ const productionOrigin = (process.env.OCTAGON_PRODUCTION_ORIGIN
   ?? "https://octagon.hq-app.workers.dev").replace(/\/$/, "");
 const screenshotPath = process.env.WHATS_NEW_SCREENSHOT_PATH
   ?? `${process.env.RUNNER_TEMP ?? "/tmp"}/whats-new-gable-proof.png`;
+const auctionScreenshotPath = process.env.AUCTION_UI_SCREENSHOT_PATH
+  ?? `${process.env.RUNNER_TEMP ?? "/tmp"}/auction-ui-release-proof.png`;
 
 if (!accessToken || !projectId) {
   throw new Error("Live What's New verification requires Supabase project credentials.");
@@ -106,7 +108,7 @@ try {
     }
   });
 
-  await page.goto(`${productionOrigin}/whats-new?gable-proof=${suffix}`, {
+  await page.goto(`${productionOrigin}/whats-new?auction-release-proof=${suffix}`, {
     waitUntil: "domcontentloaded",
     timeout: 30_000,
   });
@@ -130,18 +132,96 @@ try {
     ].join("\n"));
   }
 
-  const itemLink = gableTitle.locator("xpath=ancestor::a[contains(@class,'whats-new-item')][1]");
-  await itemLink.getByText("VIEW WATCHLIST", { exact: false }).waitFor({ state: "visible" });
-  const href = await itemLink.getAttribute("href");
-  if (href !== "/fighters-to-watch") {
-    throw new Error(`Gable What's New item links to ${href ?? "no route"}, expected /fighters-to-watch.`);
+  const gableLink = gableTitle.locator("xpath=ancestor::a[contains(@class,'whats-new-item')][1]");
+  await gableLink.getByText("VIEW WATCHLIST", { exact: false }).waitFor({ state: "visible" });
+  const gableHref = await gableLink.getAttribute("href");
+  if (gableHref !== "/fighters-to-watch") {
+    throw new Error(`Gable What's New item links to ${gableHref ?? "no route"}, expected /fighters-to-watch.`);
+  }
+
+  const auctionTitle = page.getByText("Auction is now playable", { exact: true });
+  try {
+    await auctionTitle.waitFor({ state: "visible", timeout: 15_000 });
+  } catch {
+    const body = await page.locator("body").innerText().catch(() => "");
+    throw new Error([
+      "The signed-in live What's New feed did not render the canonical Auction release item.",
+      `Visible feed text: ${body.slice(0, 2200)}`,
+      ...diagnostics,
+    ].join("\n"));
+  }
+
+  const auctionLink = auctionTitle.locator("xpath=ancestor::a[contains(@class,'whats-new-item')][1]");
+  await auctionLink.getByText("PLAY AUCTION", { exact: false }).waitFor({ state: "visible" });
+  const auctionHref = await auctionLink.getAttribute("href");
+  if (auctionHref !== "/play/auction") {
+    throw new Error(`Auction What's New item links to ${auctionHref ?? "no route"}, expected /play/auction.`);
   }
 
   await page.screenshot({ path: screenshotPath, fullPage: true });
   if (!fs.existsSync(screenshotPath) || fs.statSync(screenshotPath).size < 5_000) {
     throw new Error("The signed-in What's New screenshot was not created correctly.");
   }
-  console.log("PASS: signed-in live What's New renders the canonical Gable Steveson Fighters to Watch item.");
+
+  await page.goto(`${productionOrigin}/play?auction-release-proof=${suffix}`, {
+    waitUntil: "domcontentloaded",
+    timeout: 30_000,
+  });
+  await page.getByRole("heading", { name: "Pick your debate", exact: true })
+    .waitFor({ state: "visible", timeout: 15_000 });
+
+  const gameCards = page.locator(".play-games__grid .play-game-card");
+  if (await gameCards.count() !== 7) {
+    throw new Error(`The live Play registry rendered ${await gameCards.count()} games, expected 7.`);
+  }
+  const firstGame = gameCards.first();
+  const firstGameText = await firstGame.innerText();
+  if (!firstGameText.includes("Auction") || !firstGameText.includes("$")) {
+    throw new Error(`Auction is not the first live Play game with the approved icon. First card: ${firstGameText}`);
+  }
+  if (/\bNEW\b/i.test(firstGameText)) {
+    throw new Error(`The live Auction game card incorrectly includes a NEW badge: ${firstGameText}`);
+  }
+  await firstGame.click();
+
+  await page.getByRole("heading", { name: "Auction", exact: true })
+    .waitFor({ state: "visible", timeout: 15_000 });
+  await page.getByText("SEALED BID CHALLENGE", { exact: true }).waitFor({ state: "visible" });
+  const auctionBody = await page.locator("body").innerText();
+  if (/asynchronous/i.test(auctionBody)) {
+    throw new Error("The live Auction setup still contains the removed asynchronous copy.");
+  }
+
+  const formatCards = page.locator(".auction-catalog li");
+  if (await formatCards.count() !== 16) {
+    throw new Error(`The live Auction setup rendered ${await formatCards.count()} formats, expected 16.`);
+  }
+  for (const tab of ["ALL", "FIGHTERS", "SKILLS", "PERFORMANCES", "UFC HISTORY"]) {
+    await page.getByRole("button", { name: tab, exact: true }).waitFor({ state: "visible" });
+  }
+
+  const grapplersCard = formatCards.filter({ hasText: "Best Grapplers" });
+  if (await grapplersCard.count() !== 1) {
+    throw new Error("The live grouped Auction setup did not expose exactly one Best Grapplers format.");
+  }
+  await grapplersCard.getByRole("button").click();
+  await page.getByRole("button", { name: /CHOOSE OPPONENT/ }).waitFor({ state: "visible" });
+  await page.getByRole("button", { name: /CHOOSE OPPONENT/ }).click();
+  await page.getByRole("heading", { name: "Choose opponent", exact: true })
+    .waitFor({ state: "visible", timeout: 10_000 });
+  await page.getByText("SELECTED AUCTION", { exact: true }).waitFor({ state: "visible" });
+  await page.getByText("Best Grapplers", { exact: true }).waitFor({ state: "visible" });
+  await page.getByRole("button", { name: "← CHANGE FORMAT", exact: true }).waitFor({ state: "visible" });
+  if (await page.locator(".auction-catalog").count() !== 0) {
+    throw new Error("The live opponent step still renders the sixteen-format catalog.");
+  }
+
+  await page.screenshot({ path: auctionScreenshotPath, fullPage: true });
+  if (!fs.existsSync(auctionScreenshotPath) || fs.statSync(auctionScreenshotPath).size < 5_000) {
+    throw new Error("The signed-in Auction release screenshot was not created correctly.");
+  }
+
+  console.log("PASS: signed-in live What's New renders the Auction release item and the released 390x844 Auction setup is first, grouped, compact, and split into two steps.");
 } finally {
   if (browser) await browser.close();
   if (userId) {
