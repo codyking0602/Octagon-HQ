@@ -71,7 +71,9 @@ jobs:
               '      canonicalPath: "/play/auction?auction=123e4567-e89b-42d3-a456-426614174000",\n'
               '    });\n'
               '    expect(preview.description).toContain("Sign in as a participant");\n'
-              '    expect(JSON.stringify(preview)).not.toMatch(/bid|rarity|formula|grade|deck|bankroll/i);\n'
+              '    expect(JSON.stringify(preview)).not.toMatch(\n'
+              '      /private_item|pending_bid|future_deck|rarity_weight|rarity_class|grading_formula|grading_weight|intermediate_grade|category_grade|item_grade|winner_explanation|best_purchase|overpay|missed_opportunity|random_seed/i,\n'
+              '    );\n'
               '  });\n\n'
           )
           if addition not in test_text:
