@@ -1,0 +1,45 @@
+{
+  "total_count": 2,
+  "artifacts": [
+    {
+      "id": 8876422233,
+      "node_id": "MDg6QXJ0aWZhY3Q4ODc2NDIyMjMz",
+      "name": "live-auction-release-proof-b68384af0d7f2d4ebb131d414e50c974f76f1fc4",
+      "size_in_bytes": 816,
+      "url": "https://api.github.com/repos/codyking0602/Octagon-HQ/actions/artifacts/8876422233",
+      "archive_download_url": "https://api.github.com/repos/codyking0602/Octagon-HQ/actions/artifacts/8876422233/zip",
+      "expired": false,
+      "digest": "sha256:4c8b91ead0aa5bbf6defcba5d2664b1b4b689a326b1a49e3da5a26a3d227e0b4",
+      "created_at": "2026-08-04T00:51:11Z",
+      "updated_at": "2026-08-04T00:51:11Z",
+      "expires_at": "2026-08-11T00:51:11Z",
+      "workflow_run": {
+        "id": 30866815358,
+        "repository_id": 1309429296,
+        "head_repository_id": 1309429296,
+        "head_branch": "main",
+        "head_sha": "b68384af0d7f2d4ebb131d414e50c974f76f1fc4"
+      }
+    },
+    {
+      "id": 8876419887,
+      "node_id": "MDg6QXJ0aWZhY3Q4ODc2NDE5ODg3",
+      "name": "live-notification-proof",
+      "size_in_bytes": 46710,
+      "url": "https://api.github.com/repos/codyking0602/Octagon-HQ/actions/artifacts/8876419887",
+      "archive_download_url": "https://api.github.com/repos/codyking0602/Octagon-HQ/actions/artifacts/8876419887/zip",
+      "expired": false,
+      "digest": "sha256:b874f15b6df47e6440f7a0ca93db232b0ba26890cf46832b794101dd62e77da2",
+      "created_at": "2026-08-04T00:51:04Z",
+      "updated_at": "2026-08-04T00:51:04Z",
+      "expires_at": "2026-08-11T00:51:04Z",
+      "workflow_run": {
+        "id": 30866815358,
+        "repository_id": 1309429296,
+        "head_repository_id": 1309429296,
+        "head_branch": "main",
+        "head_sha": "b68384af0d7f2d4ebb131d414e50c974f76f1fc4"
+      }
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+2026-08-04T00:48:33.8770229Z [36;1mecho "Exact deployment source verified: $checked_out_sha"[0m
+2026-08-04T00:48:33.8933981Z Exact deployment source verified: b68384af0d7f2d4ebb131d414e50c974f76f1fc4
+2026-08-04T00:48:43.3324068Z  • [1m202609030001_auction_notifications_share_release.sql[22m
+2026-08-04T00:48:43.8448820Z Applying migration 202609030001_auction_notifications_share_release.sql...
+2026-08-04T00:49:09.7345788Z [36;1mif [ -f supabase/migrations/202609030001_auction_notifications_share_release.sql ]; then[0m
+2026-08-04T00:49:09.7346267Z [36;1m  require_remote_migration "202609030001"[0m
+2026-08-04T00:49:11.4793679Z    `202609030001` | `202609030001` | `202609030001` 
+2026-08-04T00:49:36.8160150Z [36;1m  if [ -f supabase/migrations/202609030001_auction_notifications_share_release.sql ]; then[0m
+2026-08-04T00:49:36.8161651Z [36;1m    echo "- Auction notification, push-eligibility, and completed-share migration 202609030001 verified in linked production history"[0m
+2026-08-04T00:48:33.8770225Z [36;1mecho "Exact deployment source verified: $checked_out_sha"[0m
+2026-08-04T00:48:33.8933906Z Exact deployment source verified: b68384af0d7f2d4ebb131d414e50c974f76f1fc4
+2026-08-04T00:48:43.3324029Z  • [1m202609030001_auction_notifications_share_release.sql[22m
+2026-08-04T00:48:43.8448681Z Applying migration 202609030001_auction_notifications_share_release.sql...
+2026-08-04T00:49:09.7345786Z [36;1mif [ -f supabase/migrations/202609030001_auction_notifications_share_release.sql ]; then[0m
+2026-08-04T00:49:09.7346259Z [36;1m  require_remote_migration "202609030001"[0m
+2026-08-04T00:49:11.4793677Z    `202609030001` | `202609030001` | `202609030001` 
+2026-08-04T00:49:36.8160141Z [36;1m  if [ -f supabase/migrations/202609030001_auction_notifications_share_release.sql ]; then[0m
+2026-08-04T00:49:36.8161639Z [36;1m    echo "- Auction notification, push-eligibility, and completed-share migration 202609030001 verified in linked production history"[0m

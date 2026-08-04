@@ -1,0 +1,45 @@
+{
+  "total_count": 2,
+  "artifacts": [
+    {
+      "id": 8876380912,
+      "node_id": "MDg6QXJ0aWZhY3Q4ODc2MzgwOTEy",
+      "name": "octagon-frontend-b68384af0d7f2d4ebb131d414e50c974f76f1fc4",
+      "size_in_bytes": 38464554,
+      "url": "https://api.github.com/repos/codyking0602/Octagon-HQ/actions/artifacts/8876380912",
+      "archive_download_url": "https://api.github.com/repos/codyking0602/Octagon-HQ/actions/artifacts/8876380912/zip",
+      "expired": false,
+      "digest": "sha256:e4200fd53581f9497aa2ffe811b10463f58f03a2960b1d029a054874d1ae9faa",
+      "created_at": "2026-08-04T00:49:02Z",
+      "updated_at": "2026-08-04T00:49:02Z",
+      "expires_at": "2026-08-06T00:49:00Z",
+      "workflow_run": {
+        "id": 30866730695,
+        "repository_id": 1309429296,
+        "head_repository_id": 1309429296,
+        "head_branch": "main",
+        "head_sha": "b68384af0d7f2d4ebb131d414e50c974f76f1fc4"
+      }
+    },
+    {
+      "id": 8876371448,
+      "node_id": "MDg6QXJ0aWZhY3Q4ODc2MzcxNDQ4",
+      "name": "octagon-public-config-30866730695",
+      "size_in_bytes": 312,
+      "url": "https://api.github.com/repos/codyking0602/Octagon-HQ/actions/artifacts/8876371448",
+      "archive_download_url": "https://api.github.com/repos/codyking0602/Octagon-HQ/actions/artifacts/8876371448/zip",
+      "expired": false,
+      "digest": "sha256:f9ceb8750583f0c1431bea7c9ff529371a616f0785fe289ba4fb9427d877475d",
+      "created_at": "2026-08-04T00:48:32Z",
+      "updated_at": "2026-08-04T00:48:32Z",
+      "expires_at": "2026-08-05T00:48:31Z",
+      "workflow_run": {
+        "id": 30866730695,
+        "repository_id": 1309429296,
+        "head_repository_id": 1309429296,
+        "head_branch": "main",
+        "head_sha": "b68384af0d7f2d4ebb131d414e50c974f76f1fc4"
+      }
+    }
+  ]
+}

@@ -1,0 +1,385 @@
+{
+  "total_count": 3,
+  "jobs": [
+    {
+      "id": 91860122241,
+      "run_id": 30866730695,
+      "workflow_name": "Deploy Cloudflare Frontend",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/codyking0602/Octagon-HQ/actions/runs/30866730695",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOTgxOMM8AAAAVY0o6gQ",
+      "head_sha": "b68384af0d7f2d4ebb131d414e50c974f76f1fc4",
+      "url": "https://api.github.com/repos/codyking0602/Octagon-HQ/actions/jobs/91860122241",
+      "html_url": "https://github.com/codyking0602/Octagon-HQ/actions/runs/30866730695/job/91860122241",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-08-04T00:48:20Z",
+      "started_at": "2026-08-04T00:48:28Z",
+      "completed_at": "2026-08-04T00:48:33Z",
+      "name": "resolve-public-config",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-08-04T00:48:29Z",
+          "completed_at": "2026-08-04T00:48:30Z"
+        },
+        {
+          "name": "Verify Supabase configuration credentials",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-08-04T00:48:30Z",
+          "completed_at": "2026-08-04T00:48:30Z"
+        },
+        {
+          "name": "Resolve public Supabase browser configuration",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-08-04T00:48:30Z",
+          "completed_at": "2026-08-04T00:48:31Z"
+        },
+        {
+          "name": "Upload short-lived public browser configuration",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-08-04T00:48:31Z",
+          "completed_at": "2026-08-04T00:48:32Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-08-04T00:48:32Z",
+          "completed_at": "2026-08-04T00:48:32Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/codyking0602/Octagon-HQ/check-runs/91860122241",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000030521,
+      "runner_name": "GitHub Actions 1000030521",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 91860155600,
+      "run_id": 30866730695,
+      "workflow_name": "Deploy Cloudflare Frontend",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/codyking0602/Octagon-HQ/actions/runs/30866730695",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOTgxOMM8AAAAVY0q80A",
+      "head_sha": "b68384af0d7f2d4ebb131d414e50c974f76f1fc4",
+      "url": "https://api.github.com/repos/codyking0602/Octagon-HQ/actions/jobs/91860155600",
+      "html_url": "https://github.com/codyking0602/Octagon-HQ/actions/runs/30866730695/job/91860155600",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-08-04T00:48:33Z",
+      "started_at": "2026-08-04T00:48:34Z",
+      "completed_at": "2026-08-04T00:49:04Z",
+      "name": "build-production-artifact",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-08-04T00:48:35Z",
+          "completed_at": "2026-08-04T00:48:36Z"
+        },
+        {
+          "name": "Revalidate requested PR head",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 2,
+          "started_at": "2026-08-04T00:48:36Z",
+          "completed_at": "2026-08-04T00:48:36Z"
+        },
+        {
+          "name": "Check out exact application source",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-08-04T00:48:36Z",
+          "completed_at": "2026-08-04T00:48:37Z"
+        },
+        {
+          "name": "Verify exact checked-out SHA",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-08-04T00:48:37Z",
+          "completed_at": "2026-08-04T00:48:37Z"
+        },
+        {
+          "name": "Set up Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-08-04T00:48:37Z",
+          "completed_at": "2026-08-04T00:48:42Z"
+        },
+        {
+          "name": "Install application dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-08-04T00:48:42Z",
+          "completed_at": "2026-08-04T00:48:55Z"
+        },
+        {
+          "name": "Download verified public browser configuration",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-08-04T00:48:55Z",
+          "completed_at": "2026-08-04T00:48:55Z"
+        },
+        {
+          "name": "Stamp exact deployment SHA",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-08-04T00:48:55Z",
+          "completed_at": "2026-08-04T00:48:55Z"
+        },
+        {
+          "name": "Build production frontend without administrative credentials",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-08-04T00:48:55Z",
+          "completed_at": "2026-08-04T00:49:00Z"
+        },
+        {
+          "name": "Upload build diagnostics",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-08-04T00:49:00Z",
+          "completed_at": "2026-08-04T00:49:00Z"
+        },
+        {
+          "name": "Upload exact production artifact",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-08-04T00:49:00Z",
+          "completed_at": "2026-08-04T00:49:02Z"
+        },
+        {
+          "name": "Post Set up Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 21,
+          "started_at": "2026-08-04T00:49:02Z",
+          "completed_at": "2026-08-04T00:49:02Z"
+        },
+        {
+          "name": "Post Check out exact application source",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 22,
+          "started_at": "2026-08-04T00:49:02Z",
+          "completed_at": "2026-08-04T00:49:03Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 23,
+          "started_at": "2026-08-04T00:49:03Z",
+          "completed_at": "2026-08-04T00:49:03Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/codyking0602/Octagon-HQ/check-runs/91860155600",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000030522,
+      "runner_name": "GitHub Actions 1000030522",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 91860241650,
+      "run_id": 30866730695,
+      "workflow_name": "Deploy Cloudflare Frontend",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/codyking0602/Octagon-HQ/actions/runs/30866730695",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOTgxOMM8AAAAVY0wM8g",
+      "head_sha": "b68384af0d7f2d4ebb131d414e50c974f76f1fc4",
+      "url": "https://api.github.com/repos/codyking0602/Octagon-HQ/actions/jobs/91860241650",
+      "html_url": "https://github.com/codyking0602/Octagon-HQ/actions/runs/30866730695/job/91860241650",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-08-04T00:49:04Z",
+      "started_at": "2026-08-04T00:49:06Z",
+      "completed_at": "2026-08-04T00:49:42Z",
+      "name": "deploy-production-artifact",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-08-04T00:49:07Z",
+          "completed_at": "2026-08-04T00:49:08Z"
+        },
+        {
+          "name": "Revalidate requested PR head before production credentials",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 2,
+          "started_at": "2026-08-04T00:49:08Z",
+          "completed_at": "2026-08-04T00:49:08Z"
+        },
+        {
+          "name": "Check out trusted deployment configuration",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-08-04T00:49:08Z",
+          "completed_at": "2026-08-04T00:49:08Z"
+        },
+        {
+          "name": "Verify trusted deployment configuration source",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-08-04T00:49:08Z",
+          "completed_at": "2026-08-04T00:49:08Z"
+        },
+        {
+          "name": "Download exact production artifact",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-08-04T00:49:08Z",
+          "completed_at": "2026-08-04T00:49:10Z"
+        },
+        {
+          "name": "Download verified public browser configuration",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-08-04T00:49:10Z",
+          "completed_at": "2026-08-04T00:49:10Z"
+        },
+        {
+          "name": "Verify downloaded artifact SHA",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-08-04T00:49:10Z",
+          "completed_at": "2026-08-04T00:49:10Z"
+        },
+        {
+          "name": "Set up trusted Wrangler runtime",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-08-04T00:49:10Z",
+          "completed_at": "2026-08-04T00:49:15Z"
+        },
+        {
+          "name": "Install trusted Wrangler outside the application artifact",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-08-04T00:49:15Z",
+          "completed_at": "2026-08-04T00:49:24Z"
+        },
+        {
+          "name": "Check Cloudflare deployment credentials",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-08-04T00:49:24Z",
+          "completed_at": "2026-08-04T00:49:24Z"
+        },
+        {
+          "name": "Verify Cloudflare identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-08-04T00:49:24Z",
+          "completed_at": "2026-08-04T00:49:26Z"
+        },
+        {
+          "name": "Deploy exact artifact with trusted configuration",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-08-04T00:49:26Z",
+          "completed_at": "2026-08-04T00:49:34Z"
+        },
+        {
+          "name": "Upload Wrangler diagnostics",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13,
+          "started_at": "2026-08-04T00:49:34Z",
+          "completed_at": "2026-08-04T00:49:34Z"
+        },
+        {
+          "name": "Verify exact live shell delivery",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-08-04T00:49:34Z",
+          "completed_at": "2026-08-04T00:49:40Z"
+        },
+        {
+          "name": "Record deployment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-08-04T00:49:40Z",
+          "completed_at": "2026-08-04T00:49:40Z"
+        },
+        {
+          "name": "Post Set up trusted Wrangler runtime",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 29,
+          "started_at": "2026-08-04T00:49:40Z",
+          "completed_at": "2026-08-04T00:49:40Z"
+        },
+        {
+          "name": "Post Check out trusted deployment configuration",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 30,
+          "started_at": "2026-08-04T00:49:40Z",
+          "completed_at": "2026-08-04T00:49:40Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 31,
+          "started_at": "2026-08-04T00:49:40Z",
+          "completed_at": "2026-08-04T00:49:40Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/codyking0602/Octagon-HQ/check-runs/91860241650",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000030523,
+      "runner_name": "GitHub Actions 1000030523",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}

@@ -1,0 +1,193 @@
+{
+  "total_count": 1,
+  "jobs": [
+    {
+      "id": 91860122058,
+      "run_id": 30866730716,
+      "workflow_name": "Deploy Supabase Backend",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/codyking0602/Octagon-HQ/actions/runs/30866730716",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOTgxOMM8AAAAVY0o5yg",
+      "head_sha": "b68384af0d7f2d4ebb131d414e50c974f76f1fc4",
+      "url": "https://api.github.com/repos/codyking0602/Octagon-HQ/actions/jobs/91860122058",
+      "html_url": "https://github.com/codyking0602/Octagon-HQ/actions/runs/30866730716/job/91860122058",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-08-04T00:48:20Z",
+      "started_at": "2026-08-04T00:48:29Z",
+      "completed_at": "2026-08-04T00:49:40Z",
+      "name": "deploy",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-08-04T00:48:30Z",
+          "completed_at": "2026-08-04T00:48:32Z"
+        },
+        {
+          "name": "Revalidate requested PR head",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 2,
+          "started_at": "2026-08-04T00:48:32Z",
+          "completed_at": "2026-08-04T00:48:32Z"
+        },
+        {
+          "name": "Check out exact deployment source",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-08-04T00:48:32Z",
+          "completed_at": "2026-08-04T00:48:33Z"
+        },
+        {
+          "name": "Verify exact checked-out SHA",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-08-04T00:48:33Z",
+          "completed_at": "2026-08-04T00:48:33Z"
+        },
+        {
+          "name": "Verify deployment credentials",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-08-04T00:48:33Z",
+          "completed_at": "2026-08-04T00:48:33Z"
+        },
+        {
+          "name": "Set up Supabase CLI",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-08-04T00:48:33Z",
+          "completed_at": "2026-08-04T00:48:36Z"
+        },
+        {
+          "name": "Link V2 project",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-08-04T00:48:36Z",
+          "completed_at": "2026-08-04T00:48:40Z"
+        },
+        {
+          "name": "Publish canonical production origin",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-08-04T00:48:40Z",
+          "completed_at": "2026-08-04T00:48:42Z"
+        },
+        {
+          "name": "Apply database migrations",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-08-04T00:48:42Z",
+          "completed_at": "2026-08-04T00:48:46Z"
+        },
+        {
+          "name": "Deploy PIN authentication function",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-08-04T00:48:46Z",
+          "completed_at": "2026-08-04T00:48:58Z"
+        },
+        {
+          "name": "Deploy UFC event sync function when present",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-08-04T00:48:58Z",
+          "completed_at": "2026-08-04T00:49:01Z"
+        },
+        {
+          "name": "Deploy manual Picks monitoring function when present",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-08-04T00:49:01Z",
+          "completed_at": "2026-08-04T00:49:05Z"
+        },
+        {
+          "name": "Deploy notification push delivery function when present",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-08-04T00:49:05Z",
+          "completed_at": "2026-08-04T00:49:08Z"
+        },
+        {
+          "name": "Keep canonical automatic monitoring scheduler active",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-08-04T00:49:08Z",
+          "completed_at": "2026-08-04T00:49:09Z"
+        },
+        {
+          "name": "Verify migrations, functions, and production CORS",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-08-04T00:49:09Z",
+          "completed_at": "2026-08-04T00:49:15Z"
+        },
+        {
+          "name": "Verify exact deployed UFC sync source",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-08-04T00:49:15Z",
+          "completed_at": "2026-08-04T00:49:29Z"
+        },
+        {
+          "name": "Verify exact deployed manual monitoring source and scheduler",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-08-04T00:49:29Z",
+          "completed_at": "2026-08-04T00:49:36Z"
+        },
+        {
+          "name": "Record deployed backend",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18,
+          "started_at": "2026-08-04T00:49:36Z",
+          "completed_at": "2026-08-04T00:49:36Z"
+        },
+        {
+          "name": "Post Check out exact deployment source",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 36,
+          "started_at": "2026-08-04T00:49:36Z",
+          "completed_at": "2026-08-04T00:49:37Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 37,
+          "started_at": "2026-08-04T00:49:37Z",
+          "completed_at": "2026-08-04T00:49:37Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/codyking0602/Octagon-HQ/check-runs/91860122058",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000030520,
+      "runner_name": "GitHub Actions 1000030520",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+2026-08-04T00:49:34.9406780Z Live frontend delivery verification attempt 1 failed: Live deployment marker is d580c20124d3d269829af693efde382622fb88ba, expected b68384af0d7f2d4ebb131d414e50c974f76f1fc4.
+2026-08-04T00:49:40.2413488Z PASS: live shell loads deployment b68384af0d7f2d4ebb131d414e50c974f76f1fc4 through 3 JavaScript and 1 CSS assets.
+2026-08-04T00:49:40.2520643Z [36;1m  echo "- Exact live deployment marker and shell-loaded JavaScript and CSS were verified"[0m
+2026-08-04T00:49:34.9406729Z Live frontend delivery verification attempt 1 failed: Live deployment marker is d580c20124d3d269829af693efde382622fb88ba, expected b68384af0d7f2d4ebb131d414e50c974f76f1fc4.
+2026-08-04T00:49:40.2413447Z PASS: live shell loads deployment b68384af0d7f2d4ebb131d414e50c974f76f1fc4 through 3 JavaScript and 1 CSS assets.
+2026-08-04T00:49:40.2520640Z [36;1m  echo "- Exact live deployment marker and shell-loaded JavaScript and CSS were verified"[0m
+2026-08-04T00:48:55.9469245Z [36;1m  throw new Error(`Expected deployment marker ${expectedSha}, received ${marker.sha}`);[0m
+2026-08-04T00:48:55.9469241Z [36;1m  throw new Error(`Expected deployment marker ${expectedSha}, received ${marker.sha}`);[0m
