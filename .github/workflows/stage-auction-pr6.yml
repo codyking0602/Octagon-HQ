@@ -17,7 +17,8 @@ jobs:
     env:
       BASE_SHA: d580c20124d3d269829af693efde382622fb88ba
       TARGET_BRANCH: feat/auction-pr6-final-release
-      PAYLOAD_SHA256: 76f35256bea507cf90d3fc0b6f710ad5ee9c73383a71a39185cfb62d7e87fdac
+      PAYLOAD_COMMIT: 304a0fbb70cd889a1125a89f5ea400a7f81f32dd
+      PAYLOAD_SHA256: 1f397245d46356ba589402b6fb0c4959958c3fd1134fcd6857c18d9cb180bb72
       GH_TOKEN: ${{ github.token }}
     steps:
       - name: Check out staging source
@@ -25,13 +26,15 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Reassemble verified implementation payload
+      - name: Recover verified implementation payload
         shell: bash
         run: |
           set -euo pipefail
-          cat verification-artifacts/pr6-payload/part-* > "$RUNNER_TEMP/auction-pr6-payload.b64"
+          git fetch --no-tags origin "$PAYLOAD_COMMIT"
+          git show "$PAYLOAD_COMMIT:verification-artifacts/pr6-payload.b64" > "$RUNNER_TEMP/auction-pr6-payload.b64"
           base64 --decode "$RUNNER_TEMP/auction-pr6-payload.b64" > "$RUNNER_TEMP/auction-pr6-payload.tar.gz"
           echo "$PAYLOAD_SHA256  $RUNNER_TEMP/auction-pr6-payload.tar.gz" | sha256sum --check --status
+          test "$(tar -tzf "$RUNNER_TEMP/auction-pr6-payload.tar.gz" | wc -l | tr -d ' ')" = "12"
 
       - name: Replace target branch with one clean implementation commit
         shell: bash
@@ -59,4 +62,4 @@ jobs:
           git push --force origin "HEAD:refs/heads/$TARGET_BRANCH"
           echo "Final staged head: $final_sha"
 
-# Triggered after PR #277 opened so the target branch is replaced from exact main.
+# Recovers the reviewed payload from its immutable repository commit.
