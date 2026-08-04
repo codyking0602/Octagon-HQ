@@ -1,3 +1,4 @@
+// Verification-only branch for Auction photo production proof. Never merge.
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
