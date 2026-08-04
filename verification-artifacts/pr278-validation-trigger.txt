@@ -1,0 +1,1 @@
+Trigger exact-head validation after the focused Auction preview repair.
