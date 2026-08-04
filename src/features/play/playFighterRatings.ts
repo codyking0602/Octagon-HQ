@@ -1,9 +1,16 @@
-import type { PlayGender } from "./playFighterPool";
+import type { RankingFighter } from "../rankings/rankingModel";
+
+export type PlayGender = "men" | "women";
 
 export const PLAY_ONLY_RATING_METHODOLOGY_VERSION = "play-ufc-depth-v1";
+export const PLAY_ONLY_RATING_INITIAL_PASS_VERSION = "play-ufc-depth-initial-v1";
+export const PLAY_ONLY_RATING_RECONCILIATION_VERSION = "play-ufc-depth-reconciliation-v1";
+export const PLAY_ONLY_RATING_REVIEW_DATE = "2026-08-04";
+export const PLAY_ONLY_MATERIAL_DISAGREEMENT_THRESHOLD = 12;
 export const PLAY_ONLY_SUPPORTED_CATEGORY_IDS = ["career", "striking", "grappling"] as const;
 
 export type PlayOnlySupportedCategoryId = typeof PLAY_ONLY_SUPPORTED_CATEGORY_IDS[number];
+export type PlayCategoryRatings = Record<PlayOnlySupportedCategoryId, number>;
 
 export interface PlayOnlyFighterRatingEvidence {
   id: string;
@@ -11,14 +18,28 @@ export interface PlayOnlyFighterRatingEvidence {
   gender: PlayGender;
   divisions: readonly string[];
   mainEra: string;
-  ufcFightHistory: string;
+  ufcEvidence: {
+    scope: "ufc-only";
+    summary: string;
+  };
   review: {
-    initialPlacement: string;
-    reconciliation: string;
-    materialDisagreementThreshold: number;
+    initialPassVersion: typeof PLAY_ONLY_RATING_INITIAL_PASS_VERSION;
+    reconciliationPassVersion: typeof PLAY_ONLY_RATING_RECONCILIATION_VERSION;
     status: "approved" | "quarantined";
   };
-  ratings: Record<PlayOnlySupportedCategoryId, number>;
+  ratings: PlayCategoryRatings;
+}
+
+export type PlayOnlyRatingResolution = "confirmed" | "rerated" | "rewritten" | "quarantined";
+
+export interface PlayOnlyRatingReviewDecision {
+  fighterId: string;
+  category: PlayOnlySupportedCategoryId;
+  initialRating: number;
+  secondPassRating: number;
+  resolvedRating: number;
+  resolution: PlayOnlyRatingResolution;
+  rationale: string;
 }
 
 export const PLAY_ONLY_RATING_RUBRIC = {
@@ -34,11 +55,35 @@ export const PLAY_ONLY_RATING_RUBRIC = {
   ],
   reviewProcess: [
     "Initial placement uses UFC-only record quality, ranked/champion context, divisional relevance, and category-specific skill evidence.",
-    "Reconciliation pass compares the placement against ranked-fighter OVR bands and neighboring Play-only fighters.",
-    "A material disagreement is any category gap of 12 or more points; records that cannot be reconciled are rewritten, rerated, or quarantined.",
-    "No blind averaging is used; the approved value must have an auditable reconciliation note.",
+    "A separate reconciliation pass compares the placement against calculated ranked-fighter bands and neighboring Play-only evidence.",
+    `A material disagreement is a category gap of ${PLAY_ONLY_MATERIAL_DISAGREEMENT_THRESHOLD} or more points.`,
+    "Material disagreements are resolved by a documented rerating, rewrite, removal, or quarantine; they are never blindly averaged.",
+    "A semantic methodology change requires a new version instead of rewriting historical evidence in place.",
   ],
 } as const;
+
+function clamp(value: number) {
+  return Math.max(0, Math.min(100, Math.round(value)));
+}
+
+/**
+ * Ranked fighters stay projected from the canonical calculated ranking model.
+ * No ranked identity, OVR, total, or category map is copied into the Play-only owner.
+ */
+export function projectRankedPlayRatings(fighter: RankingFighter): PlayCategoryRatings {
+  const finish = fighter.visibleStats.finishRatePct;
+  const prime = Math.min(100, (fighter.primeDominance / 30) * 100);
+  const apex = Math.min(100, 55 + (fighter.apexPeak / 6) * 44);
+  const quality = Math.min(100, (fighter.opponentQuality / 30) * 100);
+  const championship = Math.min(100, (fighter.championship / 30) * 100);
+  const control = fighter.visibleStats.roundsWonPct;
+
+  return {
+    career: fighter.ovr,
+    striking: clamp((prime * 0.45) + (finish * 0.3) + (apex * 0.25)),
+    grappling: clamp((quality * 0.32) + (championship * 0.28) + (control * 0.4)),
+  };
+}
 
 const e = (
   id: string,
@@ -46,18 +91,26 @@ const e = (
   gender: PlayGender,
   divisions: readonly string[],
   mainEra: string,
-  ufcFightHistory: string,
-  ratings: Record<PlayOnlySupportedCategoryId, number>,
-  initialPlacement = "UFC-only divisional résumé and category skill evidence placed against the published ranked-fighter bands.",
-  reconciliation = "Second pass checked neighboring Play-only records, ranked OVR bands, UFC eligibility, and category-specific evidence; no material disagreement remains.",
+  ufcSummary: string,
+  ratings: PlayCategoryRatings,
 ): PlayOnlyFighterRatingEvidence => ({
-  id, name, gender, divisions, mainEra, ufcFightHistory, ratings,
-  review: { initialPlacement, reconciliation, materialDisagreementThreshold: 12, status: "approved" },
+  id,
+  name,
+  gender,
+  divisions,
+  mainEra,
+  ufcEvidence: { scope: "ufc-only", summary: ufcSummary },
+  review: {
+    initialPassVersion: PLAY_ONLY_RATING_INITIAL_PASS_VERSION,
+    reconciliationPassVersion: PLAY_ONLY_RATING_RECONCILIATION_VERSION,
+    status: "approved",
+  },
+  ratings,
 });
 
 export const playOnlyFighterRatings: readonly PlayOnlyFighterRatingEvidence[] = [
-  e("cm-punk", "CM Punk", "men", ["Welterweight"], "Superstar Era", "UFC 203 and UFC 225 appearances", { career: 5, striking: 5, grappling: 8 }, "Winless UFC run with no competitive category evidence.", "Confirmed low-end novelty record; high non-UFC fame is intentionally excluded from UFC-career ratings."),
-  e("kimbo-slice", "Kimbo Slice", "men", ["Heavyweight"], "TUF Boom", "UFC 113 win and TUF 10 UFC tenure", { career: 25, striking: 45, grappling: 20 }, "Short UFC heavyweight run with limited success and clear striking-first profile.", "UFC-only score excludes broader celebrity and EliteXC evidence."),
+  e("cm-punk", "CM Punk", "men", ["Welterweight"], "Superstar Era", "UFC 203 and UFC 225 appearances", { career: 5, striking: 5, grappling: 8 }),
+  e("kimbo-slice", "Kimbo Slice", "men", ["Heavyweight"], "TUF Boom", "UFC 113 win and TUF 10 UFC tenure", { career: 25, striking: 45, grappling: 20 }),
   e("paulo-costa", "Paulo Costa", "men", ["Middleweight"], "ESPN+ Era", "UFC title challenger and ranked middleweight wins", { career: 67, striking: 78, grappling: 55 }),
   e("marvin-vettori", "Marvin Vettori", "men", ["Middleweight"], "ESPN+ Era", "UFC title challenger with durable ranked middleweight run", { career: 69, striking: 63, grappling: 72 }),
   e("derek-brunson", "Derek Brunson", "men", ["Middleweight"], "ESPN+ Era", "Long UFC middleweight contender run", { career: 68, striking: 60, grappling: 76 }),
@@ -68,7 +121,7 @@ export const playOnlyFighterRatings: readonly PlayOnlyFighterRatingEvidence[] = 
   e("anthony-smith", "Anthony Smith", "men", ["Light Heavyweight", "Middleweight"], "ESPN+ Era", "UFC light heavyweight title challenger", { career: 66, striking: 67, grappling: 63 }),
   e("thiago-santos", "Thiago Santos", "men", ["Light Heavyweight", "Middleweight"], "ESPN+ Era", "UFC title challenger and knockout threat", { career: 69, striking: 82, grappling: 42 }),
   e("volkan-oezdemir", "Volkan Oezdemir", "men", ["Light Heavyweight"], "ESPN+ Era", "UFC title challenger and ranked light heavyweight", { career: 62, striking: 72, grappling: 45 }),
-  e("dominic-reyes", "Dominick Reyes", "men", ["Light Heavyweight"], "ESPN+ Era", "UFC title challenger with sharp peak and steep decline", { career: 61, striking: 73, grappling: 48 }),
+  e("dominick-reyes", "Dominick Reyes", "men", ["Light Heavyweight"], "ESPN+ Era", "UFC title challenger with sharp peak and steep decline", { career: 61, striking: 73, grappling: 48 }),
   e("ovince-saint-preux", "Ovince Saint Preux", "men", ["Light Heavyweight"], "Fox / PPV Boom", "Long UFC light heavyweight run and interim title challenger", { career: 60, striking: 58, grappling: 66 }),
   e("ryan-bader", "Ryan Bader", "men", ["Light Heavyweight"], "Fox / PPV Boom", "UFC top-ten light heavyweight veteran", { career: 64, striking: 55, grappling: 77 }),
   e("patrick-cummins", "Patrick Cummins", "men", ["Light Heavyweight"], "Fox / PPV Boom", "UFC light heavyweight veteran", { career: 42, striking: 35, grappling: 62 }),
@@ -95,9 +148,9 @@ export const playOnlyFighterRatings: readonly PlayOnlyFighterRatingEvidence[] = 
   e("stephen-thompson", "Stephen Thompson", "men", ["Welterweight"], "ESPN+ Era", "Multiple-time UFC welterweight title challenger", { career: 73, striking: 90, grappling: 48 }),
   e("gilbert-burns", "Gilbert Burns", "men", ["Welterweight", "Lightweight"], "ESPN+ Era", "UFC welterweight title challenger", { career: 72, striking: 72, grappling: 88 }),
   e("darren-till", "Darren Till", "men", ["Welterweight", "Middleweight"], "ESPN+ Era", "UFC welterweight title challenger", { career: 58, striking: 72, grappling: 45 }),
-  e("ben-askren", "Ben Askren", "men", ["Welterweight"], "ESPN+ Era", "Short UFC welterweight run with one official win", { career: 42, striking: 20, grappling: 82 }),
+  e("ben-askren", "Ben Askren", "men", ["Welterweight"], "ESPN+ Era", "Short UFC welterweight run with one official win", { career: 42, striking: 20, grappling: 70 }),
   e("james-vick", "James Vick", "men", ["Lightweight"], "ESPN+ Era", "UFC lightweight veteran with sharp decline", { career: 44, striking: 55, grappling: 45 }),
-  e("ronda-marcos", "Randa Markos", "women", ["Strawweight"], "ESPN+ Era", "Long UFC strawweight veteran", { career: 42, striking: 43, grappling: 55 }),
+  e("randa-markos", "Randa Markos", "women", ["Strawweight"], "ESPN+ Era", "Long UFC strawweight veteran", { career: 42, striking: 43, grappling: 55 }),
   e("paige-vanzant", "Paige VanZant", "women", ["Strawweight", "Flyweight"], "Fox / PPV Boom", "UFC strawweight/flyweight veteran and crossover name", { career: 40, striking: 49, grappling: 46 }),
   e("felice-herrig", "Felice Herrig", "women", ["Strawweight"], "Fox / PPV Boom", "UFC strawweight veteran", { career: 41, striking: 50, grappling: 48 }),
   e("michelle-waterson", "Michelle Waterson", "women", ["Strawweight"], "ESPN+ Era", "UFC strawweight contender and main-event veteran", { career: 56, striking: 62, grappling: 60 }),
@@ -140,3 +193,84 @@ export const playOnlyFighterRatings: readonly PlayOnlyFighterRatingEvidence[] = 
   e("cory-sandhagen", "Cory Sandhagen", "men", ["Bantamweight"], "ESPN+ Era", "Interim UFC bantamweight title challenger", { career: 69, striking: 84, grappling: 58 }),
   e("marlon-vera", "Marlon Vera", "men", ["Bantamweight"], "ESPN+ Era", "UFC bantamweight title challenger", { career: 65, striking: 76, grappling: 63 }),
 ] as const;
+
+/**
+ * Concrete reconciliation evidence sampled across high, middle, below-average,
+ * and low-end bands. The Ben Askren decision records the material disagreement
+ * found during review: pre-UFC dominance was not allowed to inflate UFC-only
+ * grappling evidence, and the final value was not an average.
+ */
+export const PLAY_ONLY_RATING_REVIEW_EVIDENCE: readonly PlayOnlyRatingReviewDecision[] = [
+  { fighterId: "alexander-gustafsson", category: "career", initialRating: 76, secondPassRating: 76, resolvedRating: 76, resolution: "confirmed", rationale: "Multiple UFC title challenges and elite UFC performances support the high established-contender band." },
+  { fighterId: "stephen-thompson", category: "striking", initialRating: 90, secondPassRating: 90, resolvedRating: 90, resolution: "confirmed", rationale: "UFC title-level striking success and sustained stylistic effectiveness support the elite striking boundary." },
+  { fighterId: "brian-ortega", category: "grappling", initialRating: 91, secondPassRating: 91, resolvedRating: 91, resolution: "confirmed", rationale: "Repeated UFC submission threat against ranked opposition supports the historically elite grappling band." },
+  { fighterId: "jim-miller", category: "career", initialRating: 70, secondPassRating: 70, resolvedRating: 70, resolution: "confirmed", rationale: "Exceptional UFC longevity and win volume place the career at the established-veteran threshold." },
+  { fighterId: "anthony-smith", category: "career", initialRating: 66, secondPassRating: 66, resolvedRating: 66, resolution: "confirmed", rationale: "A UFC title challenge and durable ranked light-heavyweight relevance support the upper middle band." },
+  { fighterId: "michelle-waterson", category: "career", initialRating: 56, secondPassRating: 56, resolvedRating: 56, resolution: "confirmed", rationale: "UFC main-event and contender experience support a credible middle-tier career without title-level elevation." },
+  { fighterId: "randa-markos", category: "career", initialRating: 42, secondPassRating: 42, resolvedRating: 42, resolution: "confirmed", rationale: "A long UFC tenure with inconsistent results fits the reviewed below-average career band." },
+  { fighterId: "sam-alvey", category: "career", initialRating: 38, secondPassRating: 38, resolvedRating: 38, resolution: "confirmed", rationale: "UFC longevity is credited, while the extended winless closing stretch keeps the career below average." },
+  { fighterId: "artem-lobov", category: "career", initialRating: 30, secondPassRating: 30, resolvedRating: 30, resolution: "confirmed", rationale: "A losing UFC record and limited divisional impact support the low-end career band." },
+  { fighterId: "jared-vanderaa", category: "career", initialRating: 24, secondPassRating: 24, resolvedRating: 24, resolution: "confirmed", rationale: "The reviewed UFC heavyweight results remain clearly within the low-end career band." },
+  { fighterId: "mike-jackson", category: "career", initialRating: 12, secondPassRating: 12, resolvedRating: 12, resolution: "confirmed", rationale: "Limited UFC success and replacement-level evidence support a score near the bottom of the pool." },
+  { fighterId: "cm-punk", category: "career", initialRating: 5, secondPassRating: 5, resolvedRating: 5, resolution: "confirmed", rationale: "A winless and noncompetitive UFC run remains the benchmark low-end career case." },
+  { fighterId: "ryan-bader", category: "career", initialRating: 64, secondPassRating: 64, resolvedRating: 64, resolution: "confirmed", rationale: "Only the UFC top-ten run is scored; later Bellator championship accomplishments are intentionally excluded." },
+  { fighterId: "marlon-moraes", category: "career", initialRating: 61, secondPassRating: 61, resolvedRating: 61, resolution: "confirmed", rationale: "The UFC title challenge is credited while WEC accomplishments remain outside the UFC-career score." },
+  { fighterId: "kimbo-slice", category: "career", initialRating: 25, secondPassRating: 25, resolvedRating: 25, resolution: "confirmed", rationale: "The short UFC run is scored without credit for celebrity or EliteXC accomplishments." },
+  { fighterId: "ben-askren", category: "grappling", initialRating: 82, secondPassRating: 70, resolvedRating: 70, resolution: "rerated", rationale: "The second pass limited the score to UFC evidence and did not import pre-UFC wrestling dominance into the Play rating." },
+] as const;
+
+export function validatePlayOnlyRatingDecision(decision: PlayOnlyRatingReviewDecision) {
+  const ratings = [decision.initialRating, decision.secondPassRating, decision.resolvedRating];
+  if (ratings.some((rating) => !Number.isInteger(rating) || rating < 0 || rating > 100)) return false;
+  if (decision.rationale.trim().length < 24) return false;
+
+  const disagreement = Math.abs(decision.initialRating - decision.secondPassRating);
+  const material = disagreement >= PLAY_ONLY_MATERIAL_DISAGREEMENT_THRESHOLD;
+  if (material) {
+    if (decision.resolution === "confirmed") return false;
+    if (decision.resolvedRating === Math.round((decision.initialRating + decision.secondPassRating) / 2)) return false;
+  } else if (
+    decision.resolution === "confirmed"
+    && (decision.initialRating !== decision.secondPassRating || decision.resolvedRating !== decision.initialRating)
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
+export function validatePlayOnlyRatingAudit() {
+  const canonicalKeys = [...PLAY_ONLY_SUPPORTED_CATEGORY_IDS].sort().join("|");
+  const byId = new Map(playOnlyFighterRatings.map((fighter) => [fighter.id, fighter]));
+
+  for (const fighter of playOnlyFighterRatings) {
+    if (fighter.review.initialPassVersion !== PLAY_ONLY_RATING_INITIAL_PASS_VERSION) return false;
+    if (fighter.review.reconciliationPassVersion !== PLAY_ONLY_RATING_RECONCILIATION_VERSION) return false;
+    if (fighter.review.status !== "approved") return false;
+    if (fighter.ufcEvidence.scope !== "ufc-only" || !/\bUFC\b/i.test(fighter.ufcEvidence.summary)) return false;
+    if (Object.keys(fighter.ratings).sort().join("|") !== canonicalKeys) return false;
+    if (Object.values(fighter.ratings).some((rating) => !Number.isInteger(rating) || rating < 0 || rating > 100)) return false;
+  }
+
+  const seen = new Set<string>();
+  for (const decision of PLAY_ONLY_RATING_REVIEW_EVIDENCE) {
+    const key = `${decision.fighterId}:${decision.category}`;
+    if (seen.has(key) || !validatePlayOnlyRatingDecision(decision)) return false;
+    seen.add(key);
+    const fighter = byId.get(decision.fighterId);
+    if (!fighter || fighter.ratings[decision.category] !== decision.resolvedRating) return false;
+  }
+
+  return true;
+}
+
+export const PLAY_ONLY_RATING_AUDIT = {
+  methodologyVersion: PLAY_ONLY_RATING_METHODOLOGY_VERSION,
+  initialPassVersion: PLAY_ONLY_RATING_INITIAL_PASS_VERSION,
+  reconciliationPassVersion: PLAY_ONLY_RATING_RECONCILIATION_VERSION,
+  reviewDate: PLAY_ONLY_RATING_REVIEW_DATE,
+  reviewedRecordCount: playOnlyFighterRatings.length,
+  reconciliationEvidenceCount: PLAY_ONLY_RATING_REVIEW_EVIDENCE.length,
+  materialDisagreementThreshold: PLAY_ONLY_MATERIAL_DISAGREEMENT_THRESHOLD,
+  disagreementPolicy: "Rewrite, rerate, remove, or quarantine. Never blindly average a material disagreement.",
+} as const;
