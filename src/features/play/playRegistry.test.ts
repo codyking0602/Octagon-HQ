@@ -83,7 +83,7 @@ describe("Play game lineup contracts", () => {
     expect(playGameDefinition("wavelength").lineup.completionState).toBe("fourth-guess-locked");
     expect(playGameDefinition("blind-resume").lineup.completionState).toBe("five-picks-complete");
     expect(playGameDefinition("blind-rank").lineup.completionState).toBe("five-slots-locked");
-    expect(playGameDefinition("keep-cut").lineup.completionState).toBe("eight-decisions-locked");
+    expect(playGameDefinition("keep-cut").lineup.completionState).toBe("four-keeps-submitted");
     expect(playGameDefinition("better-than").lineup.completionState).toBe("claim-locked");
     expect(playGameDefinition("auction").lineup.completionState).toBe("auction-complete");
   });
