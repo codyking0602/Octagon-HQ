@@ -91,7 +91,7 @@ describe("canonical Play fighter pool", () => {
     );
     expect(validatePlayOnlyRatingAudit()).toBe(true);
 
-    const forbiddenPromotions = /\b(Pride|Strikeforce|WEC|ONE|Bellator|EliteXC|boxing|regional)\b/i;
+    const forbiddenPromotions = /\b(Pride|Strikeforce|WEC|ONE Championship|Bellator|EliteXC|boxing|regional)\b/i;
     for (const fighter of playOnlyFighterRatings) {
       expect(fighter.ufcEvidence.scope).toBe("ufc-only");
       expect(fighter.ufcEvidence.summary).toMatch(/\bUFC\b/i);
