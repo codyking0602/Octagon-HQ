@@ -1,7 +1,14 @@
 import { canonicalRankingInputs } from "../rankings/data/rankingInputs";
 import { allTime, type RankingFighter } from "../rankings/rankingModel";
+import {
+  playOnlyFighterRatings,
+  PLAY_ONLY_RATING_METHODOLOGY_VERSION,
+  projectRankedPlayRatings,
+  type PlayGender,
+} from "./playFighterRatings";
 
-export type PlayGender = "men" | "women";
+export type { PlayGender } from "./playFighterRatings";
+
 export type BlindRankPackId =
   | "ufc-careers"
   | "all-careers"
@@ -32,74 +39,22 @@ export interface RankedPlayFighter extends PlayFighter {
   model: RankingFighter;
 }
 
-const strikingAnchors: Record<string, number> = {
-  "Anderson Silva": 99, "Israel Adesanya": 98, "Alex Pereira": 97, "Jose Aldo": 96,
-  "Max Holloway": 96, "Joanna Jedrzejczyk": 95, "Valentina Shevchenko": 95,
-  "Alexander Volkanovski": 94, "Conor McGregor": 94, "Ilia Topuria": 93, "Petr Yan": 92,
-  "Sean O'Malley": 91, "Dustin Poirier": 90, "Lyoto Machida": 90, "Zhang Weili": 89,
-  "Amanda Nunes": 89, "Justin Gaethje": 88, "Robert Whittaker": 88, "Demetrious Johnson": 88,
-  "Jon Jones": 87, "Leon Edwards": 87, "Anthony Pettis": 87, "Georges St-Pierre": 86,
-  "Charles Oliveira": 81, "Stipe Miocic": 81, "Francis Ngannou": 81, "Tony Ferguson": 81,
-  "Islam Makhachev": 80, "B.J. Penn": 80, "Dominick Cruz": 84, "Rafael dos Anjos": 79,
-  "T.J. Dillashaw": 84, "Deiveson Figueiredo": 83, "Brandon Moreno": 83,
-  "Dricus du Plessis": 78, "Tyron Woodley": 78, "Chris Weidman": 72, "Luke Rockhold": 76,
-  "Cain Velasquez": 73, "Daniel Cormier": 70, "Kamaru Usman": 76, "Henry Cejudo": 77,
-  "Benson Henderson": 77, "Eddie Alvarez": 79, "Alexandre Pantoja": 78,
-  "Aljamain Sterling": 70, "Merab Dvalishvili": 68, "Khabib Nurmagomedov": 72,
-  "Matt Hughes": 62, "Randy Couture": 60, "Frankie Edgar": 81, "Urijah Faber": 70,
-  "Ronda Rousey": 52, "Miesha Tate": 58, "Julianna Pena": 57, "Carla Esparza": 48,
-  "Alexa Grasso": 82, "Kayla Harrison": 58, "Mackenzie Dern": 62, "Rose Namajunas": 84,
-  "Holly Holm": 85, "Junior dos Santos": 84, "Brock Lesnar": 45, "Fabricio Werdum": 60,
-  "Frank Mir": 55, "Royce Gracie": 25, "Ken Shamrock": 36, "Frank Shamrock": 68,
-  "Mark Coleman": 35, "Tito Ortiz": 58, "Rashad Evans": 72, "Glover Teixeira": 66,
-  "Mauricio Rua": 82, "Chuck Liddell": 88, "Quinton Jackson": 86,
-};
+export const PLAY_FIGHTER_RATING_OWNER_VERSION = "play-fighter-rating-owner-v1";
+export const PLAY_FIGHTER_PLAY_ONLY_METHODOLOGY_VERSION = PLAY_ONLY_RATING_METHODOLOGY_VERSION;
 
-const grapplingAnchors: Record<string, number> = {
-  "Khabib Nurmagomedov": 99, "Islam Makhachev": 98, "Georges St-Pierre": 97,
-  "Demetrious Johnson": 97, "Jon Jones": 96, "Charles Oliveira": 96, "Fabricio Werdum": 95,
-  "Daniel Cormier": 95, "Ronda Rousey": 95, "Matt Hughes": 94, "Henry Cejudo": 94,
-  "Alexandre Pantoja": 94, "Aljamain Sterling": 93, "Merab Dvalishvili": 92, "B.J. Penn": 91,
-  "Cain Velasquez": 91, "Urijah Faber": 90, "Valentina Shevchenko": 90, "Kamaru Usman": 90,
-  "Randy Couture": 88, "Amanda Nunes": 88, "Glover Teixeira": 88, "Chris Weidman": 87,
-  "Frank Mir": 87, "T.J. Dillashaw": 86, "Alexander Volkanovski": 86, "Ilia Topuria": 85,
-  "Benson Henderson": 84, "Rafael dos Anjos": 84, "Frankie Edgar": 84, "Zhang Weili": 83,
-  "Rose Namajunas": 82, "Miesha Tate": 82, "Deiveson Figueiredo": 81, "Brandon Moreno": 81,
-  "Tony Ferguson": 80, "Petr Yan": 78, "Dominick Cruz": 79, "Jose Aldo": 82,
-  "Dustin Poirier": 74, "Justin Gaethje": 67, "Max Holloway": 72, "Anderson Silva": 72,
-  "Israel Adesanya": 62, "Alex Pereira": 57, "Conor McGregor": 64, "Robert Whittaker": 78,
-  "Stipe Miocic": 76, "Francis Ngannou": 66, "Junior dos Santos": 62, "Brock Lesnar": 86,
-  "Tito Ortiz": 86, "Rashad Evans": 84, "Frank Shamrock": 88, "Ken Shamrock": 84,
-  "Royce Gracie": 94, "Mark Coleman": 88, "Mauricio Rua": 67, "Chuck Liddell": 58,
-  "Quinton Jackson": 55, "Lyoto Machida": 66, "Tyron Woodley": 78, "Leon Edwards": 74,
-  "Holly Holm": 62, "Joanna Jedrzejczyk": 70, "Alexa Grasso": 72, "Julianna Pena": 78,
-  "Carla Esparza": 86, "Kayla Harrison": 96, "Mackenzie Dern": 95,
-};
-
-const playOnlyFighters: readonly PlayFighter[] = [
-  {
-    id: "cm-punk",
-    name: "CM Punk",
-    gender: "men",
-    divisions: ["Welterweight"],
-    mainEra: "Superstar Era",
-    thumbUrl: "/assets/fighters/cm-punk-thumb.webp",
+const playOnlyFighters: readonly PlayFighter[] = playOnlyFighterRatings
+  .filter((fighter) => fighter.review.status === "approved")
+  .map((fighter) => ({
+    id: fighter.id,
+    name: fighter.name,
+    gender: fighter.gender,
+    divisions: [...fighter.divisions],
+    mainEra: fighter.mainEra,
+    thumbUrl: `/assets/fighters/${fighter.id}-thumb.webp`,
     profileUrl: "",
     model: null,
-    ratings: { career: 5, striking: 5, grappling: 8 },
-  },
-  {
-    id: "kimbo-slice",
-    name: "Kimbo Slice",
-    gender: "men",
-    divisions: ["Heavyweight"],
-    mainEra: "TUF Boom",
-    thumbUrl: "/assets/fighters/kimbo-slice-thumb.webp",
-    profileUrl: "",
-    model: null,
-    ratings: { career: 25, striking: 45, grappling: 20 },
-  },
-] as const;
+    ratings: { ...fighter.ratings },
+  }));
 
 const eraNameById = new Map(
   canonicalRankingInputs.filters.eras.map((era) => [era.id, era.name]),
@@ -108,38 +63,6 @@ const eraNameById = new Map(
 function mainEraFor(name: string) {
   const membership = canonicalRankingInputs.filters.eraMembership[name];
   return membership ? eraNameById.get(membership.primary) ?? "—" : "—";
-}
-
-function clamp(value: number) {
-  return Math.max(0, Math.min(100, Math.round(value)));
-}
-
-function normalizedName(value: string) {
-  return value
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[’‘`]/g, "'")
-    .toLowerCase();
-}
-
-function anchoredRating(anchors: Record<string, number>, name: string) {
-  const target = normalizedName(name);
-  const match = Object.entries(anchors).find(([anchor]) => normalizedName(anchor) === target);
-  return match?.[1];
-}
-
-function derivedStriking(fighter: RankingFighter) {
-  const finish = fighter.visibleStats.finishRatePct;
-  const prime = Math.min(100, (fighter.primeDominance / 30) * 100);
-  const apex = Math.min(100, 55 + (fighter.apexPeak / 6) * 44);
-  return clamp((prime * 0.45) + (finish * 0.3) + (apex * 0.25));
-}
-
-function derivedGrappling(fighter: RankingFighter) {
-  const quality = Math.min(100, (fighter.opponentQuality / 30) * 100);
-  const championship = Math.min(100, (fighter.championship / 30) * 100);
-  const control = fighter.visibleStats.roundsWonPct;
-  return clamp((quality * 0.32) + (championship * 0.28) + (control * 0.4));
 }
 
 function divisionsFor(fighter: RankingFighter) {
@@ -157,11 +80,7 @@ export const rankedPlayFighters: readonly RankedPlayFighter[] = allTime.map((fig
   thumbUrl: fighter.thumbUrl,
   profileUrl: fighter.profileUrl,
   model: fighter,
-  ratings: {
-    career: fighter.ovr,
-    striking: anchoredRating(strikingAnchors, fighter.name) ?? derivedStriking(fighter),
-    grappling: anchoredRating(grapplingAnchors, fighter.name) ?? derivedGrappling(fighter),
-  },
+  ratings: projectRankedPlayRatings(fighter),
 }));
 
 const rankedIds = new Set(rankedPlayFighters.map((fighter) => fighter.id));
@@ -178,9 +97,21 @@ export function getPlayFighter(id: string) {
 }
 
 export function blindRankRating(fighter: PlayFighter, packId: BlindRankPackId) {
-  if (packId === "striking") return fighter.ratings.striking;
-  if (packId === "wrestling-grappling") return fighter.ratings.grappling;
-  return fighter.ratings.career;
+  switch (packId) {
+    case "striking":
+      return fighter.ratings.striking;
+    case "wrestling-grappling":
+      return fighter.ratings.grappling;
+    case "ufc-careers":
+    case "all-careers":
+    case "womens-careers":
+    case "lightweight":
+    case "welterweight":
+    case "heavyweight":
+      return fighter.ratings.career;
+    default:
+      throw new Error(`Unsupported Blind Rank category: ${String(packId)}`);
+  }
 }
 
 export function blindRankPool(packId: BlindRankPackId) {
