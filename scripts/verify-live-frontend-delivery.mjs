@@ -2,7 +2,24 @@ const SHA_PATTERN = /^[0-9a-f]{40}$/i;
 const DEFAULT_ORIGIN = "https://octagon.hq-app.workers.dev";
 const DEFAULT_ATTEMPTS = 12;
 const DEFAULT_DELAY_MS = 5_000;
-const AUCTION_FORMAT_SPRITE_PATH = "/auction/auction-format-sprite.svg";
+const AUCTION_FORMAT_ASSET_PATHS = [
+  "/auction/ultimate-fighter.webp",
+  "/auction/jon-jones-performances.webp",
+  "/auction/conor-mcgregor-performances.webp",
+  "/auction/charles-oliveira-performances.webp",
+  "/auction/fighter-performances.webp",
+  "/auction/strikers.webp",
+  "/auction/grapplers.webp",
+  "/auction/knockout-artists.webp",
+  "/auction/greatest-ufc-card.webp",
+  "/auction/championship-performances.webp",
+  "/auction/finishes.webp",
+  "/auction/dominant-performances.webp",
+  "/auction/wars.webp",
+  "/auction/rivalries.webp",
+  "/auction/iconic-moments.webp",
+  "/auction/nicknames.webp",
+];
 
 // This exact-marker verifier also supplies release proof for documentation-only handoff corrections.
 const REQUIRED_JAVASCRIPT_MARKERS = [
@@ -60,32 +77,6 @@ async function fetchNoCache(url, fetchFn) {
     },
     redirect: "follow",
   });
-}
-
-export function verifyAuctionFormatSpriteSource(source) {
-  if (/href=["']https?:\/\//i.test(source)) {
-    throw new Error("Auction format sprite contains an external image URL.");
-  }
-  const encoded = source.match(/href=["']data:image\/webp;base64,([^"']+)["']/i)?.[1];
-  if (!encoded) {
-    throw new Error("Auction format sprite is missing its embedded WebP photo asset.");
-  }
-
-  const webp = Buffer.from(encoded, "base64");
-  if (webp.length < 15_000) {
-    throw new Error(`Auction format sprite WebP is unexpectedly small (${webp.length} bytes).`);
-  }
-  if (webp.subarray(0, 4).toString("ascii") !== "RIFF") {
-    throw new Error("Auction format sprite WebP is missing its RIFF signature.");
-  }
-  if (webp.subarray(8, 12).toString("ascii") !== "WEBP") {
-    throw new Error("Auction format sprite is not a valid WebP container.");
-  }
-  if (webp.readUInt32LE(4) + 8 !== webp.length) {
-    throw new Error("Auction format sprite WebP has an invalid container length.");
-  }
-
-  return { webpBytes: webp.length };
 }
 
 async function verifyAttempt({ origin, expectedSha, attempt, fetchFn }) {
@@ -165,21 +156,26 @@ async function verifyAttempt({ origin, expectedSha, attempt, fetchFn }) {
     throw new Error("The CSS loaded by the live shell is not the Octagon HQ application stylesheet.");
   }
 
-  let auctionFormatSpriteBytes = 0;
-  if (liveJavascript.includes(AUCTION_FORMAT_SPRITE_PATH)) {
-    const spriteUrl = new URL(AUCTION_FORMAT_SPRITE_PATH, `${origin}/`);
-    spriteUrl.searchParams.set("delivery", expectedSha);
-    spriteUrl.searchParams.set("attempt", String(attempt));
-    const spriteResponse = await fetchNoCache(spriteUrl, fetchFn);
-    const spriteSource = await responseText(spriteResponse, "Live Auction format sprite");
-    const spriteContentType = spriteResponse.headers.get("content-type")?.toLowerCase() ?? "";
-    if (!spriteContentType.includes("image/svg+xml")) {
-      throw new Error(
-        `Live Auction format sprite returned ${spriteContentType || "no content type"}, expected image/svg+xml.`,
-      );
+  let auctionFormatAssets = 0;
+  if (liveJavascript.includes(AUCTION_FORMAT_ASSET_PATHS[0])) {
+    for (const path of AUCTION_FORMAT_ASSET_PATHS) {
+      const assetUrl = new URL(path, `${origin}/`);
+      assetUrl.searchParams.set("delivery", expectedSha);
+      assetUrl.searchParams.set("attempt", String(attempt));
+      const response = await fetchNoCache(assetUrl, fetchFn);
+      if (!response.ok) throw new Error(`Live Auction asset ${path} returned HTTP ${response.status}.`);
+      const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
+      if (!contentType.includes("image/webp")) {
+        throw new Error(`Live Auction asset ${path} returned ${contentType || "no content type"}.`);
+      }
+      const bytes = Buffer.from(await response.arrayBuffer());
+      if (bytes.length < 5_000) throw new Error(`Live Auction asset ${path} is unexpectedly small.`);
+      if (bytes.subarray(0, 4).toString("ascii") !== "RIFF"
+        || bytes.subarray(8, 12).toString("ascii") !== "WEBP") {
+        throw new Error(`Live Auction asset ${path} is not a valid WebP container.`);
+      }
+      auctionFormatAssets += 1;
     }
-    const sprite = verifyAuctionFormatSpriteSource(spriteSource);
-    auctionFormatSpriteBytes = sprite.webpBytes;
     for (const markerValue of [
       ".auction-catalog__image",
       ".auction-opponents__image",
@@ -195,7 +191,7 @@ async function verifyAttempt({ origin, expectedSha, attempt, fetchFn }) {
     expectedSha,
     javascriptAssets: javascript.length,
     stylesheetAssets: stylesheets.length,
-    auctionFormatSpriteBytes,
+    auctionFormatAssets,
     references,
   };
 }
@@ -243,8 +239,8 @@ if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).
     attempts: Number(process.env.FRONTEND_DELIVERY_ATTEMPTS ?? DEFAULT_ATTEMPTS),
     delayMs: Number(process.env.FRONTEND_DELIVERY_DELAY_MS ?? DEFAULT_DELAY_MS),
   });
-  const auctionProof = result.auctionFormatSpriteBytes
-    ? `; Auction format sprite contains ${result.auctionFormatSpriteBytes} WebP bytes`
+  const auctionProof = result.auctionFormatAssets
+    ? `; verified ${result.auctionFormatAssets} Auction format WebPs`
     : "";
   console.log(
     `PASS: live shell loads deployment ${result.expectedSha} through ${result.javascriptAssets} JavaScript and ${result.stylesheetAssets} CSS assets${auctionProof}.`,

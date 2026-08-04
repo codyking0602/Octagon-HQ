@@ -5,10 +5,9 @@ import { AUCTION_MODE_IDS } from "./auctionContract";
 import { auctionModeArtworks } from "./auctionModeArtwork";
 
 const page = readFileSync("src/features/play/AuctionPage.tsx", "utf8");
-const spritePath = resolve("public/auction/auction-format-sprite.svg");
 
 describe("Auction mode artwork", () => {
-  it("maps every canonical mode exactly once to a unique local sprite view", () => {
+  it("maps every canonical mode exactly once to a unique local WebP", () => {
     const entries = Object.entries(auctionModeArtworks);
     const mappedIds = entries.map(([modeId]) => modeId);
     const mappedAssets = entries.map(([, artwork]) => artwork.src);
@@ -18,26 +17,16 @@ describe("Auction mode artwork", () => {
     expect(new Set(mappedAssets).size).toBe(16);
 
     for (const asset of mappedAssets) {
-      expect(asset).toMatch(
-        /^\/auction\/auction-format-sprite\.svg#svgView\(viewBox\(\d+,\d+,180,101\)\)$/,
-      );
+      expect(asset).toMatch(/^\/auction\/[a-z0-9-]+\.webp$/);
       expect(asset).not.toMatch(/^https?:\/\//);
-      const [assetPath] = asset.split("#");
-      expect(existsSync(resolve("public", assetPath.slice(1)))).toBe(true);
+      const path = resolve("public", asset.slice(1));
+      expect(existsSync(path)).toBe(true);
+      const webp = readFileSync(path);
+      expect(webp.subarray(0, 4).toString("ascii")).toBe("RIFF");
+      expect(webp.subarray(8, 12).toString("ascii")).toBe("WEBP");
+      expect(webp.readUInt32LE(4) + 8).toBe(webp.length);
+      expect(webp.length).toBeGreaterThan(5_000);
     }
-  });
-
-  it("embeds a complete local WebP made from the supplied photos", () => {
-    const sprite = readFileSync(spritePath, "utf8");
-    const encoded = sprite.match(/href="data:image\/webp;base64,([^"]+)"/)?.[1];
-    expect(encoded).toBeTruthy();
-    expect(sprite).not.toMatch(/href="https?:\/\//);
-
-    const webp = Buffer.from(encoded!, "base64");
-    expect(webp.subarray(0, 4).toString("ascii")).toBe("RIFF");
-    expect(webp.subarray(8, 12).toString("ascii")).toBe("WEBP");
-    expect(webp.readUInt32LE(4) + 8).toBe(webp.length);
-    expect(webp.length).toBeGreaterThan(15_000);
   });
 
   it("uses the one artwork mapping in all three approved Auction placements", () => {

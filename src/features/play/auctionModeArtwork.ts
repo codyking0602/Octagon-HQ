@@ -5,32 +5,27 @@ export interface AuctionModeArtwork {
   objectPosition: string;
 }
 
-const sprite = "/auction/auction-format-sprite.svg";
-
-function spriteView(x: number, y: number): AuctionModeArtwork {
-  return {
-    src: `${sprite}#svgView(viewBox(${x},${y},180,101))`,
-    objectPosition: "50% 50%",
-  };
+function artwork(src: string, objectPosition: string): AuctionModeArtwork {
+  return { src, objectPosition };
 }
 
 export const auctionModeArtworks = {
-  "ultimate-fighter": spriteView(0, 0),
-  "jon-jones-performances": spriteView(180, 0),
-  "conor-mcgregor-performances": spriteView(360, 0),
-  "charles-oliveira-performances": spriteView(540, 0),
-  "fighter-performances": spriteView(0, 101),
-  strikers: spriteView(180, 101),
-  grapplers: spriteView(360, 101),
-  "knockout-artists": spriteView(540, 101),
-  "greatest-ufc-card": spriteView(0, 202),
-  "championship-performances": spriteView(180, 202),
-  finishes: spriteView(360, 202),
-  "dominant-performances": spriteView(540, 202),
-  wars: spriteView(0, 303),
-  rivalries: spriteView(180, 303),
-  "iconic-moments": spriteView(360, 303),
-  nicknames: spriteView(540, 303),
+  "ultimate-fighter": artwork("/auction/ultimate-fighter.webp", "50% 50%"),
+  "jon-jones-performances": artwork("/auction/jon-jones-performances.webp", "50% 42%"),
+  "conor-mcgregor-performances": artwork("/auction/conor-mcgregor-performances.webp", "50% 45%"),
+  "charles-oliveira-performances": artwork("/auction/charles-oliveira-performances.webp", "50% 38%"),
+  "fighter-performances": artwork("/auction/fighter-performances.webp", "50% 50%"),
+  strikers: artwork("/auction/strikers.webp", "50% 50%"),
+  grapplers: artwork("/auction/grapplers.webp", "50% 54%"),
+  "knockout-artists": artwork("/auction/knockout-artists.webp", "50% 50%"),
+  "greatest-ufc-card": artwork("/auction/greatest-ufc-card.webp", "50% 50%"),
+  "championship-performances": artwork("/auction/championship-performances.webp", "50% 50%"),
+  finishes: artwork("/auction/finishes.webp", "50% 50%"),
+  "dominant-performances": artwork("/auction/dominant-performances.webp", "50% 50%"),
+  wars: artwork("/auction/wars.webp", "50% 50%"),
+  rivalries: artwork("/auction/rivalries.webp", "50% 50%"),
+  "iconic-moments": artwork("/auction/iconic-moments.webp", "50% 50%"),
+  nicknames: artwork("/auction/nicknames.webp", "50% 42%"),
 } as const satisfies Readonly<Record<AuctionModeId, AuctionModeArtwork>>;
 
 export function auctionModeArtwork(modeId: AuctionModeId): AuctionModeArtwork {
