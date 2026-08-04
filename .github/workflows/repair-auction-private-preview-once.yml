@@ -1,17 +1,17 @@
 name: Repair Auction Private Preview Once
 
 on:
-  push:
+  pull_request:
+    types: [opened, synchronize]
     branches:
-      - fix/auction-private-preview-proof
-    paths:
-      - ".github/workflows/repair-auction-private-preview-once.yml"
+      - main
 
 permissions:
   contents: write
 
 jobs:
   repair:
+    if: github.head_ref == 'fix/auction-private-preview-proof'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
