@@ -6,6 +6,7 @@ on:
       - ".github/workflows/verify-generalized-daily-backend.yml"
       - "scripts/verify-generalized-daily-concurrency.sh"
       - "supabase/migrations/202609050001_generalized_todays_challenge_backend.sql"
+      - "supabase/migrations/202609050002_generalized_todays_challenge_grader_compat.sql"
       - "supabase/tests/generalized_todays_challenge_backend.sql"
       - "supabase/tests/generalized_todays_challenge_legacy_seed.sql"
       - "supabase/tests/generalized_todays_challenge_legacy_assert.sql"
@@ -58,8 +59,11 @@ jobs:
         run: |
           set -euo pipefail
           psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/generalized_todays_challenge_legacy_seed.sql
-          psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202609050001_generalized_todays_challenge_backend.sql
-          psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202609050001_generalized_todays_challenge_backend.sql
+          for pass in 1 2; do
+            echo "Reapplying generalized daily migrations for idempotency pass $pass"
+            psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202609050001_generalized_todays_challenge_backend.sql
+            psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202609050002_generalized_todays_challenge_grader_compat.sql
+          done
           psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/generalized_todays_challenge_legacy_assert.sql
 
       - name: Execute concurrent first-attempt proof
@@ -77,7 +81,7 @@ jobs:
           {
             echo "### Generalized Today’s Challenge backend verified"
             echo "- Exact source SHA: \`$GITHUB_SHA\`"
-            echo "- Fresh database migration: passed"
+            echo "- Fresh database migrations: passed"
             echo "- Five server-owned graders: passed"
             echo "- Central-time DST boundaries: passed"
             echo "- Immutable first attempt and replay isolation: passed"
@@ -113,7 +117,7 @@ jobs:
         with:
           version: latest
 
-      - name: Verify exact migration is recorded remotely with no pending database changes
+      - name: Verify exact migrations are recorded remotely with no pending database changes
         shell: bash
         run: |
           set -euo pipefail
@@ -128,24 +132,29 @@ jobs:
           migration_list=$(supabase migration list --linked)
           printf '%s\n' "$migration_list"
 
-          remote_version=$(printf '%s\n' "$migration_list" | sed 's/│/|/g' | awk -F '|' '
-            {
-              local_version = $1
-              remote_version = $2
-              gsub(/[^0-9]/, "", local_version)
-              gsub(/[^0-9]/, "", remote_version)
-              if (local_version == "202609050001") {
-                print remote_version
-                exit
+          require_remote_migration() {
+            local version="$1"
+            local remote_version
+            remote_version=$(printf '%s\n' "$migration_list" | sed 's/│/|/g' | awk -F '|' -v version="$version" '
+              {
+                local_version = $1
+                remote_version = $2
+                gsub(/[^0-9]/, "", local_version)
+                gsub(/[^0-9]/, "", remote_version)
+                if (local_version == version) {
+                  print remote_version
+                  exit
+                }
               }
-            }
-          ')
+            ')
+            if [ "$remote_version" != "$version" ]; then
+              echo "::error title=Generalized daily migration not deployed::Migration $version is not recorded in the remote column."
+              exit 1
+            fi
+          }
 
-          if [ "$remote_version" != "202609050001" ]; then
-            echo "::error title=Generalized daily migration not deployed::Migration 202609050001 is not recorded in the remote column."
-            exit 1
-          fi
-
+          require_remote_migration "202609050001"
+          require_remote_migration "202609050002"
           supabase db push --linked --dry-run
 
       - name: Record exact deployed backend proof
@@ -155,6 +164,6 @@ jobs:
             echo "### Generalized Today’s Challenge backend deployment verified"
             echo "- Canonical deploy workflow run: ${{ github.event.workflow_run.html_url }}"
             echo "- Exact deployed source SHA: \`$SOURCE_SHA\`"
-            echo "- Remote migration: \`202609050001\`"
+            echo "- Remote migrations: \`202609050001\`, \`202609050002\`"
             echo "- Linked dry run: no unapplied database changes"
           } >> "$GITHUB_STEP_SUMMARY"
