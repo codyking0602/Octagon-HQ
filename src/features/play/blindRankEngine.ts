@@ -298,6 +298,18 @@ function attemptLineup(
   return { fighters: shuffleLineup(selected, random), assignments, badFighters: badCount };
 }
 
+function buildArchetypeLineup(
+  packId: BlindRankPackId,
+  seed: string,
+  archetype: BlindRankArchetype,
+) {
+  for (let attempt = 0; attempt < ARCHETYPE_REROLL_ATTEMPTS; attempt += 1) {
+    const candidate = attemptLineup(packId, seed, archetype, attempt);
+    if (candidate) return candidate;
+  }
+  return null;
+}
+
 export function createBlindRankSeed() {
   return createReplaySeed("blind-rank");
 }
@@ -307,17 +319,27 @@ export function createBlindRankLineup(
   seed: string,
   options: CreateBlindRankLineupOptions = {},
 ): BlindRankLineup {
-  const archetype = options.archetype
+  const requestedArchetype = options.archetype
     ? BLIND_RANK_ARCHETYPES.find((row) => row.id === options.archetype)
     : blindRankArchetypeForSeed(packId, seed);
-  if (!archetype) throw new Error(`Unsupported Blind Rank archetype: ${String(options.archetype)}`);
+  if (!requestedArchetype) throw new Error(`Unsupported Blind Rank archetype: ${String(options.archetype)}`);
 
-  for (let attempt = 0; attempt < ARCHETYPE_REROLL_ATTEMPTS; attempt += 1) {
-    const candidate = attemptLineup(packId, seed, archetype, attempt);
-    if (candidate) return { packId, seed, archetype: archetype.id, ...candidate };
+  const requestedCandidate = buildArchetypeLineup(packId, seed, requestedArchetype);
+  if (requestedCandidate) {
+    return { packId, seed, archetype: requestedArchetype.id, ...requestedCandidate };
   }
 
-  throw new Error(`Blind Rank could not build a ${archetype.name} five-fighter lineup for ${packId}.`);
+  const balancedArchetype = BLIND_RANK_ARCHETYPES.find((row) => row.id === "balanced")!;
+  if (requestedArchetype.id !== balancedArchetype.id) {
+    const balancedCandidate = buildArchetypeLineup(packId, seed, balancedArchetype);
+    if (balancedCandidate) {
+      return { packId, seed, archetype: balancedArchetype.id, ...balancedCandidate };
+    }
+  }
+
+  throw new Error(
+    `Blind Rank could not build a ${requestedArchetype.name} or Balanced five-fighter lineup for ${packId}.`,
+  );
 }
 
 export function resolveBlindRankChallenge(packId: BlindRankPackId, lineupIds: readonly string[]) {
