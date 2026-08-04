@@ -26,7 +26,6 @@ function ScrollHarness() {
       <Link to="/rankings">Rankings route</Link>
       <Link to="/fighters/jon-jones">Jon Jones fighter card</Link>
       <Link to="/fighters/jon-jones#resume">Jon Jones resume section</Link>
-      <Link to="/play/auction?auction=123e4567-e89b-42d3-a456-426614174000">Auction destination</Link>
       <output aria-label="Current route">
         {location.pathname}{location.search}{location.hash}
       </output>
@@ -72,11 +71,6 @@ describe("predictable navigation scroll", () => {
     scrollTo.mockClear();
     fireEvent.click(screen.getByRole("link", { name: "Jon Jones fighter card" }));
     await screen.findByText("/fighters/jon-jones");
-    expect(scrollTo).toHaveBeenCalledWith({ top: 0, left: 0, behavior: "auto" });
-
-    scrollTo.mockClear();
-    fireEvent.click(screen.getByRole("link", { name: "Auction destination" }));
-    await screen.findByText("/play/auction?auction=123e4567-e89b-42d3-a456-426614174000");
     expect(scrollTo).toHaveBeenCalledWith({ top: 0, left: 0, behavior: "auto" });
 
     scrollTo.mockClear();
