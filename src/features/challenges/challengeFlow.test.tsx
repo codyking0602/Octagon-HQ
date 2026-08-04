@@ -13,6 +13,34 @@ import FindLeaderChallengeRoute from "./FindLeaderChallengeRoute";
 import type { ChallengeProfile, PlayChallenge } from "./challengeModel";
 import type { ChallengeRepository, RemoteChallengeDraft } from "./challengeRepository";
 
+vi.mock("../members/memberProfilesRepository", () => ({
+  createMemberProfilesRepository: () => ({
+    listMembers: async () => [
+      {
+        displayName: "CODY",
+        initials: "CK",
+        avatarPhotoData: null,
+        favoriteFighterSlug: "jon-jones",
+        currentStreak: 2,
+        picksCorrect: 3,
+        picksIncorrect: 1,
+        isCurrentUser: true,
+      },
+      {
+        displayName: "SHANE",
+        initials: "SH",
+        avatarPhotoData: "data:image/webp;base64,shane",
+        favoriteFighterSlug: null,
+        currentStreak: 4,
+        picksCorrect: 5,
+        picksIncorrect: 2,
+        isCurrentUser: false,
+      },
+    ],
+    loadMember: async () => null,
+  }),
+}));
+
 const cody: ChallengeProfile = {
   id: "11111111-1111-4111-8111-111111111111",
   displayName: "CODY",
@@ -108,7 +136,7 @@ describe("real profile Challenge Center flow", () => {
     vi.restoreAllMocks();
   });
 
-  it("freezes CODY's exact board and sends it to the real SHANE profile", async () => {
+  it("freezes CODY's exact board and sends it to the selected SHANE profile", async () => {
     const day = centralDay();
     const board = dailyFindLeaderBoard(day)!;
     const leader = board.candidates.find((fighter) => fighter.id === board.leaderId)!;
@@ -122,14 +150,13 @@ describe("real profile Challenge Center flow", () => {
     fireEvent.click(screen.getByRole("button", { name: "CHALLENGE SOMEONE" }));
 
     expect(await screen.findByRole("dialog", { name: "Challenge Someone" })).toBeTruthy();
-    expect(screen.getByText(/Enter the exact Octagon HQ profile name/i)).toBeTruthy();
+    expect(screen.getByText(/Choose any Octagon HQ member below/i)).toBeTruthy();
 
     fireEvent.click(screen.getByRole("button", { name: "TEXT / SHARE LINK" }));
     await waitFor(() => expect(navigator.share).toHaveBeenCalledTimes(1));
 
-    fireEvent.change(screen.getByLabelText("PROFILE NAME"), { target: { value: "shane" } });
-    fireEvent.click(screen.getByRole("button", { name: "FIND PROFILE" }));
-    expect(await screen.findByText("SHANE FOUND")).toBeTruthy();
+    fireEvent.click(await screen.findByRole("option", { name: /SHANE/i }));
+    expect(await screen.findByText("SHANE SELECTED")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "SEND TO PROFILE" }));
 
     await waitFor(() => expect(findProfile).toHaveBeenCalledWith("SHANE", cody.id));
