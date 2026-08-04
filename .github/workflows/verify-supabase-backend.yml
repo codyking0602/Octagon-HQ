@@ -87,7 +87,7 @@ jobs:
           git diff --check HEAD
           test "$(git diff --name-only HEAD | wc -l | tr -d ' ')" = "4"
 
-          npm ci
+          npm install --no-package-lock --ignore-scripts
           npx vitest run worker/previewModel.test.ts worker/previewCard.test.ts
 
           git config user.name "github-actions[bot]"
