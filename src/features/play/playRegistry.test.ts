@@ -3,13 +3,13 @@ import { replayBehaviorFor } from "./lineupModel";
 import { playGameDefinition, playGames, type PlayGameId } from "./playRegistry";
 
 const expectedIds: PlayGameId[] = [
+  "auction",
   "find-leader",
   "wavelength",
   "blind-resume",
   "blind-rank",
   "keep-cut",
   "better-than",
-  "auction",
 ];
 
 describe("Play game lineup contracts", () => {

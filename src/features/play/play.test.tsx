@@ -36,13 +36,13 @@ describe("Play registry", () => {
 
   it("preserves the approved game order and explanatory descriptions", () => {
     expect(playGames.map((game) => game.id)).toEqual([
+      "auction",
       "find-leader",
       "wavelength",
       "blind-resume",
       "blind-rank",
       "keep-cut",
       "better-than",
-      "auction",
     ]);
     expect(playGames.find((game) => game.id === "wavelength")?.description).toContain("hidden 1–100 rating");
     expect(playGames.find((game) => game.id === "blind-resume")?.description).toContain("UFC career");

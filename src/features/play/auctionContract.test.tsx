@@ -10,7 +10,9 @@ import {
   AUCTION_MODE_IDS,
   ULTIMATE_FIGHTER_CATEGORIES,
   auctionModeDefinition,
+  auctionModeGroups,
   auctionModes,
+  auctionModesForGroup,
   isAuctionModeId,
   parseAuctionModeId,
   usesUltimateFighterPlacement,
@@ -25,8 +27,11 @@ describe("auction public product contract", () => {
   it("registers exactly one playable game with one canonical route owner", () => {
     const auctionGames = playGames.filter((game) => game.id === "auction");
     expect(auctionGames).toHaveLength(1);
+    expect(playGames[0]?.id).toBe("auction");
     expect(playGameDefinition("auction")).toMatchObject({
+      icon: "$",
       title: "Auction",
+      description: "Choose a UFC auction, bid privately, and build the stronger collection.",
       lineup: { challengeEligible: true },
     });
     expect(playGameDefinition("auction")).not.toHaveProperty("availability");
@@ -44,6 +49,23 @@ describe("auction public product contract", () => {
       expect(mode.family).toMatch(/-auction$/);
     }
     expect(parseAuctionModeId("future-mode")).toBeNull();
+  });
+
+  it("groups every approved mode once without forcing a sixteen-row setup list", () => {
+    const groupedIds = auctionModeGroups.flatMap((group) => group.modeIds);
+    expect(auctionModeGroups.map((group) => group.id)).toEqual([
+      "fighters",
+      "skills",
+      "performances",
+      "history",
+    ]);
+    expect(groupedIds).toHaveLength(16);
+    expect(new Set(groupedIds).size).toBe(16);
+    expect([...groupedIds].sort()).toEqual([...AUCTION_MODE_IDS].sort());
+    expect(auctionModesForGroup("all")).toEqual(auctionModes);
+    for (const group of auctionModeGroups) {
+      expect(auctionModesForGroup(group.id).map((mode) => mode.id)).toEqual(group.modeIds);
+    }
   });
 
   it("limits career-performance auctions to the three locked fighter careers", () => {
@@ -92,14 +114,15 @@ describe("auction public product contract", () => {
     render(
       <IdentityProvider gateway={null}>
         <ChallengeProvider repository={null}>
-<MemoryRouter>
-  <Suspense fallback={null}>{auctionRoutes[0]?.element}</Suspense>
-</MemoryRouter>
+          <MemoryRouter>
+            <Suspense fallback={null}>{auctionRoutes[0]?.element}</Suspense>
+          </MemoryRouter>
         </ChallengeProvider>
       </IdentityProvider>,
     );
 
     expect(await screen.findByRole("heading", { name: "Auction" })).toBeInTheDocument();
+    expect(screen.getByText("SEALED BID CHALLENGE")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "SIGN IN TO PLAY" })).toBeInTheDocument();
   });
 
@@ -125,5 +148,4 @@ describe("auction public product contract", () => {
     expect(screen.getByText(/exact destination will stay here while you sign in/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "SIGN IN TO CONTINUE" })).toBeInTheDocument();
   });
-
 });
