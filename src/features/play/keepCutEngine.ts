@@ -16,6 +16,7 @@ import {
   blindRankArchetypeForSeed,
   blindRankTier,
   createBlindRankLineup,
+  type BlindRankArchetypeId,
   type BlindRankTierId,
 } from "./blindRankEngine";
 
@@ -46,6 +47,7 @@ export interface KeepCutLineup {
   recentOverlap: number;
   repeatedShape: boolean;
   attemptsUsed: number;
+  fallbackUsed: boolean;
 }
 
 export interface KeepCutResult {
@@ -61,7 +63,8 @@ export type KeepCutScoreLabel = "Legendary four" | "Excellent keeps" | "Solid ca
 
 const KEEP_COUNT = 4;
 const BOARD_SIZE = 8;
-const GENERATION_ATTEMPTS = 18;
+const PRIMARY_GENERATION_ATTEMPTS = 18;
+const BALANCED_FALLBACK_ATTEMPTS = 18;
 const MAX_BAD_FIGHTERS = 2;
 
 export const KEEP_CUT_PACKS: readonly KeepCutPack[] = [
@@ -99,7 +102,7 @@ function shapeFor(packId: KeepCutPackId, fighters: readonly PlayFighter[]) {
     .join("|");
 }
 
-function isCompetitiveBoard(packId: KeepCutPackId, fighters: readonly PlayFighter[]) {
+export function keepCutBoardIsCompetitive(packId: KeepCutPackId, fighters: readonly PlayFighter[]) {
   if (fighters.length !== BOARD_SIZE) return false;
   if (new Set(fighters.map((fighter) => fighter.id)).size !== BOARD_SIZE) return false;
   const scores = fighters.map((fighter) => keepCutRating(packId, fighter)).sort((a, b) => b - a);
@@ -112,20 +115,34 @@ function isCompetitiveBoard(packId: KeepCutPackId, fighters: readonly PlayFighte
   return high >= 1 && high <= 4 && middle >= 2 && low >= 1 && bad <= MAX_BAD_FIGHTERS && finalCutGap <= 20;
 }
 
-function attemptLineup(packId: KeepCutPackId, seed: string, attempt: number) {
-  const random = seededLineupRandom("keep-cut", packId, seed, attempt);
-  const first = createBlindRankLineup(packId, `${seed}:keep:${attempt}:a`);
-  const archetype = blindRankArchetypeForSeed(packId, `${seed}:keep:${attempt}:b`);
-  const second = createBlindRankLineup(packId, `${seed}:keep:${attempt}:b`, { archetype: archetype.id });
-  const rows = shuffleLineup([...first.fighters, ...second.fighters], random);
-  const byId = new Map<string, PlayFighter>();
-  for (const fighter of rows) {
-    if (!byId.has(fighter.id)) byId.set(fighter.id, fighter);
-    if (byId.size === BOARD_SIZE) break;
+function combinedBlindRankBoard(
+  packId: KeepCutPackId,
+  seed: string,
+  attempt: number,
+  forcedArchetype?: BlindRankArchetypeId,
+) {
+  try {
+    const random = seededLineupRandom("keep-cut", packId, seed, attempt, forcedArchetype ?? "weighted");
+    const firstSeed = `${seed}:keep:${attempt}:a`;
+    const secondSeed = `${seed}:keep:${attempt}:b`;
+    const first = createBlindRankLineup(
+      packId,
+      firstSeed,
+      forcedArchetype ? { archetype: forcedArchetype } : undefined,
+    );
+    const secondArchetype = forcedArchetype ?? blindRankArchetypeForSeed(packId, secondSeed).id;
+    const second = createBlindRankLineup(packId, secondSeed, { archetype: secondArchetype });
+    const rows = shuffleLineup([...first.fighters, ...second.fighters], random);
+    const byId = new Map<string, PlayFighter>();
+    for (const fighter of rows) {
+      if (!byId.has(fighter.id)) byId.set(fighter.id, fighter);
+      if (byId.size === BOARD_SIZE) break;
+    }
+    const fighters = shuffleLineup([...byId.values()], random);
+    return keepCutBoardIsCompetitive(packId, fighters) ? fighters : null;
+  } catch {
+    return null;
   }
-  const fighters = shuffleLineup([...byId.values()], random);
-  if (!isCompetitiveBoard(packId, fighters)) return null;
-  return fighters;
 }
 
 export function createKeepCutSeed() {
@@ -133,21 +150,44 @@ export function createKeepCutSeed() {
 }
 
 export function createKeepCutLineup(packId: KeepCutPackId, seed: string): KeepCutLineup {
-  let fallback: PlayFighter[] | null = null;
-  for (let attempt = 0; attempt < GENERATION_ATTEMPTS; attempt += 1) {
-    const candidate = attemptLineup(packId, seed, attempt);
+  for (let attempt = 0; attempt < PRIMARY_GENERATION_ATTEMPTS; attempt += 1) {
+    const candidate = combinedBlindRankBoard(packId, seed, attempt);
     if (candidate) {
-      return { packId, seed, fighters: candidate, assignments: [], shape: shapeFor(packId, candidate), recentOverlap: 0, repeatedShape: false, attemptsUsed: attempt + 1 };
-    }
-    if (!fallback) {
-      const random = seededLineupRandom("keep-cut", "fallback", packId, seed, attempt);
-      fallback = shuffleLineup(keepCutPool(packId), random).slice(0, BOARD_SIZE);
+      return {
+        packId,
+        seed,
+        fighters: candidate,
+        assignments: [],
+        shape: shapeFor(packId, candidate),
+        recentOverlap: 0,
+        repeatedShape: false,
+        attemptsUsed: attempt + 1,
+        fallbackUsed: false,
+      };
     }
   }
-  if (fallback?.length === BOARD_SIZE) {
-    return { packId, seed, fighters: fallback, assignments: [], shape: shapeFor(packId, fallback), recentOverlap: 0, repeatedShape: false, attemptsUsed: GENERATION_ATTEMPTS };
+
+  // The only degradation path remains inside this owner and reuses PR 5's canonical
+  // Balanced archetype. It is deterministic, separately bounded, and still must pass
+  // the exact same eight-fighter competitive-board contract before it can be returned.
+  for (let attempt = 0; attempt < BALANCED_FALLBACK_ATTEMPTS; attempt += 1) {
+    const candidate = combinedBlindRankBoard(packId, `${seed}:balanced-fallback`, attempt, "balanced");
+    if (candidate) {
+      return {
+        packId,
+        seed,
+        fighters: candidate,
+        assignments: [],
+        shape: shapeFor(packId, candidate),
+        recentOverlap: 0,
+        repeatedShape: false,
+        attemptsUsed: PRIMARY_GENERATION_ATTEMPTS + attempt + 1,
+        fallbackUsed: true,
+      };
+    }
   }
-  throw new Error(`Keep 4, Cut 4 could not build a lineup for ${packFor(packId).name}.`);
+
+  throw new Error(`Keep 4, Cut 4 could not build a competitive lineup for ${packFor(packId).name}.`);
 }
 
 export function resolveKeepCutChallenge(packId: KeepCutPackId, lineupIds: readonly string[]) {
@@ -178,10 +218,9 @@ export function scoreKeepCutSelection(packId: KeepCutPackId, board: readonly Pla
   const kept = board.filter((fighter) => keptSet.has(fighter.id));
   const cut = board.filter((fighter) => !keptSet.has(fighter.id));
   const poolScores = keepCutPool(packId).map((fighter) => keepCutRating(packId, fighter)).sort((a, b) => a - b);
-  // Formula: each kept fighter is converted to a percentile inside the eligible category pool,
-  // then the four percentiles are averaged and rounded to 0–100. This uses only the canonical
-  // blindRankRating owner, rewards stronger kept groups, broadens score distribution across
-  // category-specific bands, and keeps individual hidden ratings private.
+  // Each kept fighter becomes a percentile inside the eligible category pool. The four
+  // percentiles are averaged and rounded to 0–100. Only blindRankRating supplies grading
+  // evidence; fighter names, display order, and presentation fields do not affect the score.
   const percentiles = kept.map((fighter) => {
     const rating = keepCutRating(packId, fighter);
     const belowOrEqual = poolScores.filter((score) => score <= rating).length;
