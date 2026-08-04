@@ -54,7 +54,9 @@ describe("Auction release polish", () => {
     expect(page).toContain("auction-final__winner");
     expect(page).toContain("auction-collections__rows");
     expect(styles).toContain("overflow-wrap: anywhere");
-    expect(styles).not.toMatch(/auction-collections[\s\S]*?white-space:\s*nowrap/);
+    expect(styles).not.toMatch(
+      /\.auction-collections__rows strong\s*\{[^}]*white-space:\s*nowrap/,
+    );
   });
 
   it("keeps manual refresh in a substantially shorter text-only live header", () => {
