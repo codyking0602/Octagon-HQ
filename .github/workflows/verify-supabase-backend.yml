@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 jobs:
-  repair-cloudflare-worker-trigger:
+  prepare-cloudflare-worker-trigger:
     if: github.head_ref == 'fix/cloudflare-worker-deploy-trigger'
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -18,7 +18,7 @@ jobs:
       TARGET_BRANCH: fix/cloudflare-worker-deploy-trigger
       GH_TOKEN: ${{ github.token }}
     steps:
-      - name: Apply focused Cloudflare Worker trigger repair
+      - name: Prepare verified Cloudflare Worker trigger blobs
         shell: bash
         run: |
           set -euo pipefail
@@ -53,20 +53,18 @@ jobs:
               test_file.write_text(test_text.replace(anchor, anchor + addition, 1))
           PY
 
-          git fetch origin main --depth=1
-          git checkout origin/main -- .github/workflows/verify-supabase-backend.yml
-          git rm verification-artifacts/cloudflare-worker-trigger-repair.txt
-          git diff --check HEAD
-          test "$(git diff --name-only HEAD | wc -l | tr -d ' ')" = "4"
-
+          git diff --check
           npm install --no-package-lock --ignore-scripts
           npx vitest run src/app/deploymentWorkflowContract.test.ts
 
+          output=verification-artifacts/cloudflare-worker-trigger
+          mkdir -p "$output"
+          cp .github/workflows/deploy-cloudflare.yml "$output/deploy-cloudflare.yml.txt"
+          cp src/app/deploymentWorkflowContract.test.ts "$output/deploymentWorkflowContract.test.ts.txt"
+          git checkout -- .github/workflows/deploy-cloudflare.yml src/app/deploymentWorkflowContract.test.ts
+
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add \
-            .github/workflows/deploy-cloudflare.yml \
-            .github/workflows/verify-supabase-backend.yml \
-            src/app/deploymentWorkflowContract.test.ts
-          git commit -m "Deploy Worker-only frontend changes"
+          git add "$output"
+          git commit -m "Prepare verified Cloudflare Worker trigger blobs"
           git push origin "HEAD:refs/heads/$TARGET_BRANCH"
