@@ -25,7 +25,7 @@ jobs:
       - name: Download repaired assets
         run: |
           python -m pip install --disable-pip-version-check --quiet gdown
-          gdown --id 1VZ7O8AKEXZjTMjDRcC3JRlPlPg-kvYzw --output /tmp/auction-photo-repair.zip
+          gdown 1VZ7O8AKEXZjTMjDRcC3JRlPlPg-kvYzw --output /tmp/auction-photo-repair.zip
           file /tmp/auction-photo-repair.zip
           unzip -t /tmp/auction-photo-repair.zip
 
