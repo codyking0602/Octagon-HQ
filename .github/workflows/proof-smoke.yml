@@ -1,0 +1,28 @@
+name: Auction Proof Smoke
+
+on:
+  push:
+    branches:
+      - chatgpt/auction-final-live-proof
+    paths:
+      - ".github/workflows/proof-smoke.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: chatgpt/auction-final-live-proof
+          fetch-depth: 0
+      - run: |
+          mkdir -p release-proof
+          printf '{"status":"started","run_id":"%s"}\n' "$GITHUB_RUN_ID" > release-proof/smoke.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add release-proof/smoke.json
+          git commit -m "Record proof smoke"
+          git push origin HEAD:chatgpt/auction-final-live-proof
