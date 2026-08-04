@@ -41,6 +41,21 @@ jobs:
               for line in text[start:end].splitlines()
           ) + "\n"
 
+          auction_read_marker = "auction_text = auction.read_text()\n"
+          auction_import_patch = "\n".join([
+              "auction_text = auction_text.replace(",
+              "    'import type { MemberProfileSummary } from \"../members/memberProfilesModel\";',",
+              "    'import type { MemberCardSummary, MemberProfileSummary } from \"../members/memberProfilesModel\";',",
+              "    1,",
+              ")",
+              "",
+          ])
+          script = script.replace(
+              auction_read_marker,
+              auction_read_marker + auction_import_patch,
+              1,
+          )
+
           patch_start = script.index("old_picker = '''")
           patch_end = script.index("auction.write_text(auction_text)", patch_start)
           replacement = "\n".join([
