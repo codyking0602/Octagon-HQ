@@ -1,0 +1,84 @@
+name: Verify Auction Final Release Proof
+
+on:
+  push:
+    branches:
+      - chatgpt/auction-final-live-proof
+    paths:
+      - ".github/workflows/verify-auction-final-release-proof.yml"
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: auction-final-release-proof
+  cancel-in-progress: false
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      EXPECTED_SOURCE_SHA: 657e9d29427b4a9fc7ee2d1ac334dae425ed9418
+      OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+      PROOF_PATH: ${{ github.workspace }}/release-proof/auction-final-657e9d29427b4a9fc7ee2d1ac334dae425ed9418.json
+      SCREENSHOT_DIR: ${{ runner.temp }}/auction-final-proof
+
+    steps:
+      - name: Check out disposable proof branch
+        uses: actions/checkout@v4
+        with:
+          ref: chatgpt/auction-final-live-proof
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install release proof dependencies
+        run: |
+          npm ci
+          npm install --no-save --ignore-scripts playwright@1.56.1
+          npx playwright install --with-deps webkit
+
+      - name: Prove exact backend, frontend, launch, push, and iPhone UI
+        id: proof
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/verify-auction-final-release-proof.mjs
+
+      - name: Commit sanitized proof record
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -s "$PROOF_PATH" ]; then
+            mkdir -p "$(dirname "$PROOF_PATH")"
+            printf '{"status":"failed","expected_sha":"%s","error":"Proof process exited before writing a record."}\n' "$EXPECTED_SOURCE_SHA" > "$PROOF_PATH"
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$PROOF_PATH"
+          git commit -m "Record Auction final release proof" || true
+          git push origin HEAD:chatgpt/auction-final-live-proof
+
+      - name: Upload iPhone-width screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: auction-final-live-proof
+          path: |
+            ${{ env.PROOF_PATH }}
+            ${{ env.SCREENSHOT_DIR }}/*.png
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Require successful proof
+        if: steps.proof.outcome != 'success'
+        run: exit 1
