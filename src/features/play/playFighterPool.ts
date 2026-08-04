@@ -1,5 +1,6 @@
 import { canonicalRankingInputs } from "../rankings/data/rankingInputs";
 import { allTime, type RankingFighter } from "../rankings/rankingModel";
+import { playOnlyFighterRatings, PLAY_ONLY_RATING_METHODOLOGY_VERSION } from "./playFighterRatings";
 
 export type PlayGender = "men" | "women";
 export type BlindRankPackId =
@@ -76,30 +77,21 @@ const grapplingAnchors: Record<string, number> = {
   "Carla Esparza": 86, "Kayla Harrison": 96, "Mackenzie Dern": 95,
 };
 
-const playOnlyFighters: readonly PlayFighter[] = [
-  {
-    id: "cm-punk",
-    name: "CM Punk",
-    gender: "men",
-    divisions: ["Welterweight"],
-    mainEra: "Superstar Era",
-    thumbUrl: "/assets/fighters/cm-punk-thumb.webp",
+export const PLAY_FIGHTER_RATING_OWNER_VERSION = PLAY_ONLY_RATING_METHODOLOGY_VERSION;
+
+const playOnlyFighters: readonly PlayFighter[] = playOnlyFighterRatings
+  .filter((fighter) => fighter.review.status === "approved")
+  .map((fighter) => ({
+    id: fighter.id,
+    name: fighter.name,
+    gender: fighter.gender,
+    divisions: [...fighter.divisions],
+    mainEra: fighter.mainEra,
+    thumbUrl: `/assets/fighters/${fighter.id}-thumb.webp`,
     profileUrl: "",
     model: null,
-    ratings: { career: 5, striking: 5, grappling: 8 },
-  },
-  {
-    id: "kimbo-slice",
-    name: "Kimbo Slice",
-    gender: "men",
-    divisions: ["Heavyweight"],
-    mainEra: "TUF Boom",
-    thumbUrl: "/assets/fighters/kimbo-slice-thumb.webp",
-    profileUrl: "",
-    model: null,
-    ratings: { career: 25, striking: 45, grappling: 20 },
-  },
-] as const;
+    ratings: { ...fighter.ratings },
+  }));
 
 const eraNameById = new Map(
   canonicalRankingInputs.filters.eras.map((era) => [era.id, era.name]),
