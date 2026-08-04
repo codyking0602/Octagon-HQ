@@ -3,7 +3,7 @@
 -- inputs inside the canonical database transaction.
 
 -- Profile deletion already owns dependent public challenge cleanup. Keep that
--- single cleanup boundary complete for private Auction state and every child row.
+-- single cleanup boundary complete without making ordinary private rows mutable.
 alter table private.auction_games
   drop constraint auction_games_challenger_id_fkey,
   drop constraint auction_games_recipient_id_fkey,
@@ -18,23 +18,40 @@ alter table private.auction_games
   add constraint auction_games_recipient_id_fkey
     foreign key (recipient_id) references public.profiles(id) on delete cascade,
   add constraint auction_games_challenge_id_fkey
-    foreign key (challenge_id) references public.play_challenges(id) on delete cascade,
-  add constraint auction_games_tie_priority_profile_id_fkey
-    foreign key (tie_priority_profile_id) references public.profiles(id) on delete cascade,
-  add constraint auction_games_cancelled_by_fkey
-    foreign key (cancelled_by) references public.profiles(id) on delete cascade,
-  add constraint auction_games_winner_profile_id_fkey
-    foreign key (winner_profile_id) references public.profiles(id) on delete cascade;
+    foreign key (challenge_id) references public.play_challenges(id) on delete cascade;
 
+-- These identities are already constrained to the two participants, so their
+-- direct profile foreign keys are redundant and would compete with game cleanup.
 alter table private.auction_pending_bids
-  drop constraint auction_pending_bids_bidder_id_fkey,
-  add constraint auction_pending_bids_bidder_id_fkey
-    foreign key (bidder_id) references public.profiles(id) on delete cascade;
+  drop constraint auction_pending_bids_bidder_id_fkey;
 
 alter table private.auction_awards
   drop constraint auction_awards_awarded_to_fkey,
-  add constraint auction_awards_awarded_to_fkey
-    foreign key (awarded_to) references public.profiles(id) on delete cascade;
+  drop constraint auction_awards_deck_entry_id_auction_id_fkey,
+  add constraint auction_awards_deck_entry_id_auction_id_fkey
+    foreign key (deck_entry_id, auction_id)
+    references private.auction_deck_entries(id, auction_id) on delete cascade;
+
+create or replace function private.prevent_auction_private_mutation()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  if tg_op = 'DELETE'
+    and tg_table_name in ('auction_deck_entries', 'auction_pending_bids', 'auction_awards')
+    and not exists (
+      select 1
+      from private.auction_games auction
+      where auction.id = old.auction_id
+    )
+  then
+    return old;
+  end if;
+
+  raise exception 'Auction private records are immutable';
+end;
+$$;
 
 alter table private.notification_groups
   drop constraint if exists notification_groups_kind_valid;

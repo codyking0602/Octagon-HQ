@@ -61,7 +61,9 @@ describe("Auction PR 6 release contract", () => {
     expect(migration).toContain("auction_games_challenge_id_fkey");
     expect(migration).toContain("auction_pending_bids_bidder_id_fkey");
     expect(migration).toContain("auction_awards_awarded_to_fkey");
-    expect(migration.match(/on delete cascade/g)?.length).toBeGreaterThanOrEqual(8);
+    expect(migration.match(/on delete cascade/g)?.length).toBeGreaterThanOrEqual(4);
+    expect(migration).toContain("tg_table_name in (\'auction_deck_entries\', \'auction_pending_bids\', \'auction_awards\')");
+    expect(migration).toContain("where auction.id = old.auction_id");
     expect(auctionPage).not.toContain("publish_notification_to_profile");
     expect(auctionPage).not.toContain("deliver-notification-push");
     expect(notificationModel).toContain('"auction_action_required"');
