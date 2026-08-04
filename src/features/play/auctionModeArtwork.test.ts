@@ -27,10 +27,17 @@ describe("Auction mode artwork", () => {
     }
   });
 
-  it("embeds only the supplied local photos in the production asset", () => {
+  it("embeds a complete local WebP made from the supplied photos", () => {
     const sprite = readFileSync(spritePath, "utf8");
-    expect(sprite).toContain("data:image/webp;base64,");
-    expect(sprite).not.toMatch(/https?:\/\//);
+    const encoded = sprite.match(/href="data:image\/webp;base64,([^"]+)"/)?.[1];
+    expect(encoded).toBeTruthy();
+    expect(sprite).not.toMatch(/href="https?:\/\//);
+
+    const webp = Buffer.from(encoded!, "base64");
+    expect(webp.subarray(0, 4).toString("ascii")).toBe("RIFF");
+    expect(webp.subarray(8, 12).toString("ascii")).toBe("WEBP");
+    expect(webp.readUInt32LE(4) + 8).toBe(webp.length);
+    expect(webp.length).toBeGreaterThan(15_000);
   });
 
   it("uses the one artwork mapping in all three approved Auction placements", () => {
