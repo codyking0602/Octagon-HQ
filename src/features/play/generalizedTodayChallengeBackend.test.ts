@@ -15,6 +15,10 @@ describe("generalized Today's Challenge backend contract", () => {
     "utf8",
   );
   const roadmap = readFileSync("docs/play-games-roadmap.md", "utf8");
+  const submissionRpc = migration.slice(
+    migration.indexOf("create or replace function public.submit_my_daily_challenge_attempt"),
+    migration.indexOf("-- Existing Find the Leader rows"),
+  );
 
   it("keeps schedule, setup, daily identity, attempts, and the canonical history projection private", () => {
     expect(migration).toContain("private.daily_challenge_schedule_versions");
@@ -47,15 +51,15 @@ describe("generalized Today's Challenge backend contract", () => {
     expect(migration).not.toContain("set game_type = excluded.game_type");
   });
 
-  it("grades all five games behind the database boundary without accepting client scores or timestamps", () => {
+  it("grades all five games behind the database boundary without accepting client scores, grading evidence, or timestamps", () => {
     expect(migration).toContain("private.grade_daily_challenge");
-    expect(migration).toContain("p_submission jsonb");
     expect(migration).toContain("play-official-score-v1");
     expect(migration).toContain("correct_picks");
     expect(migration).toContain("correct_comparisons");
-    expect(migration).not.toContain("p_native_score");
-    expect(migration).not.toContain("p_completed_at");
-    expect(migration).not.toContain("p_private_grading_evidence jsonb default");
+    expect(submissionRpc).toContain("p_submission jsonb");
+    expect(submissionRpc).not.toContain("p_native_score");
+    expect(submissionRpc).not.toContain("p_completed_at");
+    expect(submissionRpc).not.toContain("p_private_grading_evidence");
     expect(migration).not.toContain("record_my_daily_challenge_attempt");
   });
 
@@ -93,6 +97,7 @@ describe("generalized Today's Challenge backend contract", () => {
     expect(backendWorkflow).toContain("generalized_todays_challenge_legacy_seed.sql");
     expect(backendWorkflow).toContain("verify-generalized-daily-concurrency.sh");
     expect(backendWorkflow).toContain("202609050001");
+    expect(backendWorkflow).toContain("202609050002");
     expect(backendWorkflow).toContain("Deploy Supabase Backend");
   });
 });
