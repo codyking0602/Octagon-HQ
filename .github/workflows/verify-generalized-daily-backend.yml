@@ -25,13 +25,27 @@ jobs:
     if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    env:
+      SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
 
     steps:
       - name: Check out exact source
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 0
 
-      - name: Verify clean patch
-        run: git diff --check
+      - name: Verify exact checkout and clean patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          if [ -n "$BASE_SHA" ]; then
+            git diff --check "$BASE_SHA...$SOURCE_SHA"
+          else
+            git diff --check HEAD^..HEAD
+          fi
 
       - name: Set up Supabase CLI
         uses: supabase/setup-cli@v1
@@ -80,7 +94,7 @@ jobs:
         run: |
           {
             echo "### Generalized Today’s Challenge backend verified"
-            echo "- Exact source SHA: \`$GITHUB_SHA\`"
+            echo "- Exact source SHA: \`$SOURCE_SHA\`"
             echo "- Fresh database migrations: passed"
             echo "- Five server-owned graders: passed"
             echo "- Central-time DST boundaries: passed"
