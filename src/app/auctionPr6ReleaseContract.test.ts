@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 // Verification-only branch for exact main 85236ddfebb205a8f0c7be6356ff73d4fe314bc9; never merge.
+// Final trigger: capture format grid, opponent banner, and live Auction header at iPhone width.
 const migration = readFileSync(
   "supabase/migrations/202609030001_auction_notifications_share_release.sql",
   "utf8",
