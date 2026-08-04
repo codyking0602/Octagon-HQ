@@ -35,12 +35,19 @@ export interface BlindRankAssignment {
   fallback: "exact" | "adjacent" | "emergency";
 }
 
+export type BlindRankArchetypeId = "balanced" | "top-heavy" | "bottom-heavy" | "middle-cluster" | "chaos";
+
 export interface BlindRankLineup {
   packId: BlindRankPackId;
   seed: string;
+  archetype: BlindRankArchetypeId;
   fighters: PlayFighter[];
   assignments: BlindRankAssignment[];
   badFighters: number;
+}
+
+export interface CreateBlindRankLineupOptions {
+  archetype?: BlindRankArchetypeId;
 }
 
 export const BLIND_RANK_TIERS: readonly { id: BlindRankTierId; name: string; minScore: number }[] = [
@@ -89,16 +96,128 @@ export const blindRankPacks: readonly BlindRankPack[] = [
 ] as const;
 
 const TIER_ORDER: readonly BlindRankTierId[] = ["elite", "great", "good", "average", "below-average", "bad"];
+const BOARD_SIZE = 5;
 const MAX_BAD_FIGHTERS = 1;
 const PACK_KEY = "octagon-hq:blind-rank-pack:v2";
 
-function weightedTier(role: BlindRankRole, random: () => number) {
+export interface BlindRankArchetype {
+  id: BlindRankArchetypeId;
+  name: string;
+  weight: number;
+  targets: readonly BlindRankTierId[];
+  minRange: number;
+  minHigh?: number;
+  maxHigh?: number;
+  minMiddle?: number;
+  maxMiddle?: number;
+  minLow?: number;
+  maxLow?: number;
+}
+
+// Weighted internally so daily, replayable, and challenge boards improve through the same
+// canonical generator without adding user-facing controls. Balanced is intentionally favored
+// as the safest default, while the other archetypes combine for a majority-big-enough variety
+// surface over repeated play without equal 20% odds flattening the experience.
+export const BLIND_RANK_ARCHETYPES: readonly BlindRankArchetype[] = [
+  {
+    id: "balanced",
+    name: "Balanced",
+    weight: 0.45,
+    targets: ["elite", "great", "good", "average", "below-average"],
+    minRange: 32,
+    minHigh: 1,
+    maxHigh: 2,
+    minMiddle: 2,
+    minLow: 1,
+    maxLow: 2,
+  },
+  {
+    id: "top-heavy",
+    name: "Top-heavy",
+    weight: 0.18,
+    targets: ["elite", "elite", "great", "good", "average"],
+    minRange: 18,
+    minHigh: 3,
+    maxHigh: 4,
+    minMiddle: 1,
+    minLow: 0,
+    maxLow: 1,
+  },
+  {
+    id: "bottom-heavy",
+    name: "Bottom-heavy",
+    weight: 0.16,
+    targets: ["great", "average", "below-average", "below-average", "bad"],
+    minRange: 24,
+    minHigh: 1,
+    maxHigh: 2,
+    minMiddle: 1,
+    minLow: 3,
+    maxLow: 4,
+  },
+  {
+    id: "middle-cluster",
+    name: "Middle cluster",
+    weight: 0.13,
+    targets: ["good", "good", "average", "average", "below-average"],
+    minRange: 15,
+    maxHigh: 3,
+    minMiddle: 2,
+    minLow: 0,
+    maxLow: 2,
+  },
+  {
+    id: "chaos",
+    name: "Chaos",
+    weight: 0.08,
+    targets: ["elite", "great", "good", "below-average", "bad"],
+    minRange: 45,
+    minHigh: 1,
+    minMiddle: 1,
+    minLow: 1,
+  },
+] as const;
+
+const HIGH_TIERS = new Set<BlindRankTierId>(["elite", "great"]);
+const MIDDLE_TIERS = new Set<BlindRankTierId>(["good", "average"]);
+const LOW_TIERS = new Set<BlindRankTierId>(["below-average", "bad"]);
+const ARCHETYPE_REROLL_ATTEMPTS = 80;
+
+function bandCounts(tiers: readonly BlindRankTierId[]) {
+  return tiers.reduce((counts, tier) => {
+    if (HIGH_TIERS.has(tier)) counts.high += 1;
+    if (MIDDLE_TIERS.has(tier)) counts.middle += 1;
+    if (LOW_TIERS.has(tier)) counts.low += 1;
+    return counts;
+  }, { high: 0, middle: 0, low: 0 });
+}
+
+export function blindRankArchetypeForSeed(packId: BlindRankPackId, seed: string): BlindRankArchetype {
+  const random = seededLineupRandom("blind-rank", "archetype", packId, seed);
   let cursor = random();
-  for (const tier of TIER_ORDER) {
-    cursor -= role.weights[tier];
-    if (cursor <= 0) return tier;
+  for (const archetype of BLIND_RANK_ARCHETYPES) {
+    cursor -= archetype.weight;
+    if (cursor <= 0) return archetype;
   }
-  return TIER_ORDER.at(-1)!;
+  return BLIND_RANK_ARCHETYPES.at(-1)!;
+}
+
+function validateArchetypeCandidate(
+  archetype: BlindRankArchetype,
+  rows: readonly { score: number; tier: BlindRankTierId }[],
+) {
+  if (rows.length !== BOARD_SIZE) return false;
+  const scores = rows.map((row) => row.score);
+  const range = Math.max(...scores) - Math.min(...scores);
+  if (range < archetype.minRange) return false;
+  const counts = bandCounts(rows.map((row) => row.tier));
+  if (archetype.minHigh !== undefined && counts.high < archetype.minHigh) return false;
+  if (archetype.maxHigh !== undefined && counts.high > archetype.maxHigh) return false;
+  if (archetype.minMiddle !== undefined && counts.middle < archetype.minMiddle) return false;
+  if (archetype.maxMiddle !== undefined && counts.middle > archetype.maxMiddle) return false;
+  if (archetype.minLow !== undefined && counts.low < archetype.minLow) return false;
+  if (archetype.maxLow !== undefined && counts.low > archetype.maxLow) return false;
+  return true;
 }
 
 export function blindRankTier(score: number): BlindRankTierId {
@@ -140,7 +259,7 @@ function chooseRow(
 function attemptLineup(
   packId: BlindRankPackId,
   seed: string,
-  roleTargets: readonly BlindRankTierId[],
+  archetype: BlindRankArchetype,
   attempt: number,
 ) {
   const random = seededLineupRandom("blind-rank", packId, seed, attempt);
@@ -157,20 +276,25 @@ function attemptLineup(
 
   for (let index = 0; index < BLIND_RANK_ROLES.length; index += 1) {
     const role = BLIND_RANK_ROLES[index];
-    const picked = chooseRow(rows, roleTargets[index], used, badCount, random);
+    const picked = chooseRow(rows, archetype.targets[index], used, badCount, random);
     if (!picked) return null;
     used.add(picked.row.fighter.id);
     selected.push(picked.row.fighter);
     badCount += picked.row.tier === "bad" ? 1 : 0;
     assignments.push({
       roleId: role.id,
-      targetTier: roleTargets[index],
+      targetTier: archetype.targets[index],
       actualTier: picked.row.tier,
       fighterId: picked.row.fighter.id,
       fallback: picked.fallback,
     });
   }
 
+  const selectedRows = selected.map((fighter) => {
+    const score = blindRankRating(fighter, packId);
+    return { fighter, score, tier: blindRankTier(score) };
+  });
+  if (!validateArchetypeCandidate(archetype, selectedRows)) return null;
   return { fighters: shuffleLineup(selected, random), assignments, badFighters: badCount };
 }
 
@@ -178,16 +302,22 @@ export function createBlindRankSeed() {
   return createReplaySeed("blind-rank");
 }
 
-export function createBlindRankLineup(packId: BlindRankPackId, seed: string): BlindRankLineup {
-  const targetRandom = seededLineupRandom("blind-rank", "targets", packId, seed);
-  const roleTargets = BLIND_RANK_ROLES.map((role) => weightedTier(role, targetRandom));
+export function createBlindRankLineup(
+  packId: BlindRankPackId,
+  seed: string,
+  options: CreateBlindRankLineupOptions = {},
+): BlindRankLineup {
+  const archetype = options.archetype
+    ? BLIND_RANK_ARCHETYPES.find((row) => row.id === options.archetype)
+    : blindRankArchetypeForSeed(packId, seed);
+  if (!archetype) throw new Error(`Unsupported Blind Rank archetype: ${String(options.archetype)}`);
 
-  for (let attempt = 0; attempt < 50; attempt += 1) {
-    const candidate = attemptLineup(packId, seed, roleTargets, attempt);
-    if (candidate) return { packId, seed, ...candidate };
+  for (let attempt = 0; attempt < ARCHETYPE_REROLL_ATTEMPTS; attempt += 1) {
+    const candidate = attemptLineup(packId, seed, archetype, attempt);
+    if (candidate) return { packId, seed, archetype: archetype.id, ...candidate };
   }
 
-  throw new Error(`Blind Rank could not build a five-fighter lineup for ${packId}.`);
+  throw new Error(`Blind Rank could not build a ${archetype.name} five-fighter lineup for ${packId}.`);
 }
 
 export function resolveBlindRankChallenge(packId: BlindRankPackId, lineupIds: readonly string[]) {

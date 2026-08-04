@@ -14,13 +14,15 @@ import {
   createBlindResumeRounds,
 } from "./blindResumeEngine";
 import {
+  BLIND_RANK_ARCHETYPES,
   BLIND_RANK_ROLES,
   blindRankPacks,
   createBlindRankLineup,
   resolveBlindRankChallenge,
+  blindRankTier,
 } from "./blindRankEngine";
 import { selectReplayLineup } from "./lineupModel";
-import { blindRankPool, getPlayFighter, rankedPlayFighters } from "./playFighterPool";
+import { blindRankPool, blindRankRating, getPlayFighter, rankedPlayFighters } from "./playFighterPool";
 
 function renderBlindResume(path = "/play/blind-resume") {
   return render(
@@ -175,6 +177,88 @@ describe("Blind Rank engine", () => {
       expect(first.badFighters).toBeLessThanOrEqual(1);
       expect(first.assignments).toHaveLength(5);
     }
+  });
+
+  it("generates every Blind Rank archetype with documented weights and contract-safe boards", () => {
+    expect(BLIND_RANK_ARCHETYPES.map((archetype) => [archetype.id, archetype.weight])).toEqual([
+      ["balanced", 0.45],
+      ["top-heavy", 0.18],
+      ["bottom-heavy", 0.16],
+      ["middle-cluster", 0.13],
+      ["chaos", 0.08],
+    ]);
+    expect(BLIND_RANK_ARCHETYPES.reduce((sum, archetype) => sum + archetype.weight, 0)).toBeCloseTo(1, 8);
+
+    const validIds = new Set(blindRankPool("all-careers").map((fighter) => fighter.id));
+    for (const archetype of BLIND_RANK_ARCHETYPES) {
+      const lineup = createBlindRankLineup(
+        "all-careers",
+        `contract-all-careers-${archetype.id}`,
+        { archetype: archetype.id },
+      );
+      const ids = lineup.fighters.map((fighter) => fighter.id);
+      const tiers = lineup.fighters.map((fighter) => blindRankTier(blindRankRating(fighter, "all-careers")));
+      const scores = lineup.fighters.map((fighter) => blindRankRating(fighter, "all-careers"));
+      const high = tiers.filter((tier) => tier === "elite" || tier === "great").length;
+      const middle = tiers.filter((tier) => tier === "good" || tier === "average").length;
+      const low = tiers.filter((tier) => tier === "below-average" || tier === "bad").length;
+
+      expect(lineup.archetype).toBe(archetype.id);
+      expect(ids).toHaveLength(5);
+      expect(new Set(ids).size).toBe(5);
+      expect(ids.every((id) => validIds.has(id))).toBe(true);
+      expect(Math.max(...scores) - Math.min(...scores)).toBeGreaterThanOrEqual(archetype.minRange);
+      if (archetype.minHigh !== undefined) expect(high).toBeGreaterThanOrEqual(archetype.minHigh);
+      if (archetype.maxHigh !== undefined) expect(high).toBeLessThanOrEqual(archetype.maxHigh);
+      if (archetype.minMiddle !== undefined) expect(middle).toBeGreaterThanOrEqual(archetype.minMiddle);
+      if (archetype.maxMiddle !== undefined) expect(middle).toBeLessThanOrEqual(archetype.maxMiddle);
+      if (archetype.minLow !== undefined) expect(low).toBeGreaterThanOrEqual(archetype.minLow);
+      if (archetype.maxLow !== undefined) expect(low).toBeLessThanOrEqual(archetype.maxLow);
+    }
+
+    for (const pack of blindRankPacks) {
+      expect(() => createBlindRankLineup(pack.id, `playable-${pack.id}`)).not.toThrow();
+    }
+  });
+
+  it("keeps seeded archetype weighting diverse without starving expanded pool tiers or ownership", () => {
+    const sampleSize = 1000;
+    const counts = new Map(BLIND_RANK_ARCHETYPES.map((archetype) => [archetype.id, 0]));
+    const seen = new Set<string>();
+    const tiersSeen = new Set<string>();
+    let rankedAppearances = 0;
+    let playOnlyAppearances = 0;
+    let menAppearances = 0;
+    let womenAppearances = 0;
+    const rankedIds = new Set(rankedPlayFighters.map((fighter) => fighter.id));
+    const validIds = new Set(blindRankPool("all-careers").map((fighter) => fighter.id));
+
+    for (let index = 0; index < sampleSize; index += 1) {
+      const lineup = createBlindRankLineup("all-careers", `fairness-${index}`);
+      counts.set(lineup.archetype, (counts.get(lineup.archetype) ?? 0) + 1);
+      const ids = lineup.fighters.map((fighter) => fighter.id);
+      expect(new Set(ids).size).toBe(5);
+      expect(ids.every((id) => validIds.has(id))).toBe(true);
+      for (const fighter of lineup.fighters) {
+        seen.add(fighter.id);
+        tiersSeen.add(blindRankTier(blindRankRating(fighter, "all-careers")));
+        if (rankedIds.has(fighter.id)) rankedAppearances += 1;
+        else playOnlyAppearances += 1;
+        if (fighter.gender === "men") menAppearances += 1;
+        else womenAppearances += 1;
+      }
+    }
+
+    for (const archetype of BLIND_RANK_ARCHETYPES) {
+      expect(counts.get(archetype.id)! / sampleSize).toBeGreaterThanOrEqual(archetype.weight - 0.06);
+      expect(counts.get(archetype.id)! / sampleSize).toBeLessThanOrEqual(archetype.weight + 0.06);
+    }
+    expect(seen.size).toBeGreaterThanOrEqual(Math.floor(validIds.size * 0.6));
+    expect(tiersSeen).toEqual(new Set(["elite", "great", "good", "average", "below-average", "bad"]));
+    expect(rankedAppearances).toBeGreaterThan(0);
+    expect(playOnlyAppearances).toBeGreaterThan(0);
+    expect(menAppearances).toBeGreaterThan(0);
+    expect(womenAppearances).toBeGreaterThan(0);
   });
 
   it("delegates repeat protection to the shared owner and preserves exact shared lineups", () => {
