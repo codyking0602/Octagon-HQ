@@ -8,6 +8,19 @@ Read this document before changing any Play game, Today’s Challenge, daily sco
 
 Current implementation owners remain authoritative until a roadmap PR intentionally replaces or extends them. This document records approved direction; it does not mean the roadmap has already been implemented.
 
+
+## PR 7 generalized Today’s Challenge backend owner
+
+PR 7 establishes `public.daily_challenges`, private setup/evidence tables, private attempt storage, and RPC-only projections as the canonical backend owner for official Today’s Challenge state. Supabase owns authenticated cross-device official daily state: schedule identity, exact setup identity, content-version snapshots, scoring-version snapshots, immutable first official attempts, replay isolation, generalized history, streaks, and guarded leaderboards.
+
+The browser must read only the public RPC projections. Hidden setup evidence and grading evidence live in `private.daily_challenge_setups` and `private.daily_challenge_attempts`; future answers, fighter orderings, Wavelength targets, clues, expected Keep 4 selections, and grader evidence are not exposed through public tables, views, or policies.
+
+The schedule is versioned by `schedule_version` and Central-time `central_day`. The backend schema can represent Find the Leader, Blind Resume, Wavelength, Blind Rank 5, and Keep 4, Cut 4, while Auction and Better Than remain outside Today’s Challenge. The initial production-compatible schedule version remains Find-the-Leader-only; PR 8 owns frontend integration, and PR 9 owns activating the twenty-day rotation.
+
+The first completed official attempt for a player/day is stored as `official_first` and is immutable. Later completions are recorded only as replay evidence and never replace the official score. Leaderboard ranks use normalized score only; tied normalized scores share rank, and completion time is not a tiebreaker. Streak credit is projected from official completions regardless of score.
+
+Legacy Find the Leader history remains visible through compatibility projections. Existing `find_leader_history` rows are not rewritten, and the Find the Leader frontend can continue using the existing RPC names while they project through the generalized daily leaderboard/history owner.
+
 ## Product objective
 
 The current games are individually complete, but they do not yet operate as one coherent daily-game system.
