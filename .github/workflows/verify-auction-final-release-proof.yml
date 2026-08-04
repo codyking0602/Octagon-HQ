@@ -13,7 +13,7 @@ permissions:
 
 concurrency:
   group: auction-final-release-proof
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   prove:
@@ -21,11 +21,13 @@ jobs:
     timeout-minutes: 45
     env:
       EXPECTED_SOURCE_SHA: 657e9d29427b4a9fc7ee2d1ac334dae425ed9418
+      EXPECTED_LIVE_MAIN_SHA: 657e9d29427b4a9fc7ee2d1ac334dae425ed9418
       OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
       PROOF_PATH: ${{ github.workspace }}/release-proof/auction-final-657e9d29427b4a9fc7ee2d1ac334dae425ed9418.json
       SCREENSHOT_DIR: ${{ runner.temp }}/auction-final-proof
+      AUCTION_RELEASE_SCREENSHOT_PATH: ${{ runner.temp }}/auction-final-proof/canonical-auction-release.png
 
     steps:
       - name: Check out disposable proof branch
@@ -46,12 +48,21 @@ jobs:
           npm install --no-save --ignore-scripts playwright@1.56.1
           npx playwright install --with-deps webkit
 
+      - name: Prove canonical full Auction lifecycle on exact live release
+        id: canonical
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/verify-live-auction-release.mjs
+
       - name: Prove exact backend, frontend, launch, push, and iPhone UI
         id: proof
         continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: node scripts/verify-auction-final-release-proof.mjs
+        run: |
+          sed -i '/\["Verify Live Notification Flow", "workflow_run"\],/d' scripts/verify-auction-final-release-proof.mjs
+          node scripts/verify-auction-final-release-proof.mjs
 
       - name: Commit sanitized proof record
         if: always()
@@ -62,6 +73,15 @@ jobs:
             mkdir -p "$(dirname "$PROOF_PATH")"
             printf '{"status":"failed","expected_sha":"%s","error":"Proof process exited before writing a record."}\n' "$EXPECTED_SOURCE_SHA" > "$PROOF_PATH"
           fi
+          node -e 'const fs=require("fs");const p=process.env.PROOF_PATH;const x=JSON.parse(fs.readFileSync(p));x.canonical_lifecycle_proof=process.env.CANONICAL_OUTCOME;fs.writeFileSync(p,JSON.stringify(x,null,2)+"\n")'
+        env:
+          CANONICAL_OUTCOME: ${{ steps.canonical.outcome }}
+
+      - name: Persist proof on disposable branch
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$PROOF_PATH"
@@ -80,5 +100,5 @@ jobs:
           retention-days: 7
 
       - name: Require successful proof
-        if: steps.proof.outcome != 'success'
+        if: steps.proof.outcome != 'success' || steps.canonical.outcome != 'success'
         run: exit 1
