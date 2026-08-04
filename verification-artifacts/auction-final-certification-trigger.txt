@@ -1,2 +1,3 @@
 Run the isolated exact-SHA Auction production certification for main commit 313da4481a50c21a92531df726dbf225e69afa5c.
-Status snapshot refresh: 1.
+Status snapshot refresh: 2.
+Invoke canonical backend and full production proof.
