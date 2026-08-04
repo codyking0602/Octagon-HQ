@@ -1,0 +1,50 @@
+name: Materialize Auction photo repair
+
+on:
+  push:
+    branches:
+      - chatgpt/repair-auction-photo-quality
+    paths:
+      - .github/workflows/materialize-auction-photo-repair.yml
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repair branch
+        uses: actions/checkout@v4
+        with:
+          ref: chatgpt/repair-auction-photo-quality
+          fetch-depth: 0
+
+      - name: Download exact repaired assets
+        run: |
+          curl --fail --location --retry 3 \
+            "https://drive.google.com/uc?export=download&id=1VZ7O8AKEXZjTMjDRcC3JRlPlPg-kvYzw" \
+            --output /tmp/auction-photo-repair.zip
+          echo "5463031105d6528507937c465467e255444f1efb36e192febdccdda3bf518230  /tmp/auction-photo-repair.zip" | sha256sum --check
+
+      - name: Replace all sixteen Auction WebPs
+        run: |
+          rm -rf public/auction
+          mkdir -p public/auction
+          unzip -q /tmp/auction-photo-repair.zip -d public/auction
+          test "$(find public/auction -maxdepth 1 -type f -name '*.webp' | wc -l)" -eq 16
+          while IFS= read -r asset; do
+            test "$(stat -c%s "$asset")" -gt 20000
+            test "$(head -c4 "$asset")" = "RIFF"
+            test "$(dd if="$asset" bs=1 skip=8 count=4 status=none)" = "WEBP"
+          done < <(find public/auction -maxdepth 1 -type f -name '*.webp' -print | sort)
+
+      - name: Commit clean repaired assets
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/materialize-auction-photo-repair.yml
+          git add public/auction
+          git commit -m "Replace corrupted Auction photos from original sources"
+          git push origin HEAD:chatgpt/repair-auction-photo-quality
