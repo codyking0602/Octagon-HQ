@@ -10,6 +10,10 @@ function workflowJob(source: string, start: string, end?: string) {
 }
 
 describe("feature deployment workflow contract", () => {
+  it("deploys Worker-only frontend changes through the canonical owner", () => {
+    expect(cloudflareWorkflow).toContain('- "worker/**"');
+  });
+
   it("keeps one label broker with no PR checkout or deployment implementation", () => {
     expect(brokerWorkflow).toContain("pull_request_target:");
     expect(brokerWorkflow).toContain("- labeled");

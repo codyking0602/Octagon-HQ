@@ -18,6 +18,7 @@ on:
     paths:
       - ".github/workflows/deploy-cloudflare.yml"
       - "src/**"
+      - "worker/**"
       - "public/**"
       - "index.html"
       - "package.json"
