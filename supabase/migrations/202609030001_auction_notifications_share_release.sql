@@ -2,6 +2,40 @@
 -- add a completed-only public share projection, and keep all private Auction
 -- inputs inside the canonical database transaction.
 
+-- Profile deletion already owns dependent public challenge cleanup. Keep that
+-- single cleanup boundary complete for private Auction state and every child row.
+alter table private.auction_games
+  drop constraint auction_games_challenger_id_fkey,
+  drop constraint auction_games_recipient_id_fkey,
+  drop constraint auction_games_challenge_id_fkey,
+  drop constraint auction_games_tie_priority_profile_id_fkey,
+  drop constraint auction_games_cancelled_by_fkey,
+  drop constraint auction_games_winner_profile_id_fkey;
+
+alter table private.auction_games
+  add constraint auction_games_challenger_id_fkey
+    foreign key (challenger_id) references public.profiles(id) on delete cascade,
+  add constraint auction_games_recipient_id_fkey
+    foreign key (recipient_id) references public.profiles(id) on delete cascade,
+  add constraint auction_games_challenge_id_fkey
+    foreign key (challenge_id) references public.play_challenges(id) on delete cascade,
+  add constraint auction_games_tie_priority_profile_id_fkey
+    foreign key (tie_priority_profile_id) references public.profiles(id) on delete cascade,
+  add constraint auction_games_cancelled_by_fkey
+    foreign key (cancelled_by) references public.profiles(id) on delete cascade,
+  add constraint auction_games_winner_profile_id_fkey
+    foreign key (winner_profile_id) references public.profiles(id) on delete cascade;
+
+alter table private.auction_pending_bids
+  drop constraint auction_pending_bids_bidder_id_fkey,
+  add constraint auction_pending_bids_bidder_id_fkey
+    foreign key (bidder_id) references public.profiles(id) on delete cascade;
+
+alter table private.auction_awards
+  drop constraint auction_awards_awarded_to_fkey,
+  add constraint auction_awards_awarded_to_fkey
+    foreign key (awarded_to) references public.profiles(id) on delete cascade;
+
 alter table private.notification_groups
   drop constraint if exists notification_groups_kind_valid;
 
