@@ -75,6 +75,9 @@ describe("Auction PR 6 release contract", () => {
     expect(worker).toContain("get_rich_preview_data");
     expect(migration).toContain("create or replace function public.get_rich_preview_data");
     expect(migration).toContain("private.get_rich_preview_data_pr6_core");
+    expect(migration).toContain("pg_catalog.btrim(p_kind)");
+    expect(migration).toContain("pg_catalog.btrim(p_key)");
+    expect(migration).not.toContain("pg_catalog.trim(");
     expect(migration).toContain("auction.lifecycle_state = 'completed'");
   });
 

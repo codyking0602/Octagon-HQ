@@ -518,8 +518,8 @@ security definer
 set search_path = ''
 as $$
 declare
-  v_kind text := lower(pg_catalog.trim(p_kind));
-  v_key text := lower(pg_catalog.trim(p_key));
+  v_kind text := lower(pg_catalog.btrim(p_kind));
+  v_key text := lower(pg_catalog.btrim(p_key));
   v_result jsonb;
 begin
   if v_kind <> 'auction' then
