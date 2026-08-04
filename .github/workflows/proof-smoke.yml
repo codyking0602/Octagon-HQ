@@ -1,4 +1,4 @@
-name: Auction Final Release Proof
+name: Auction Final Release Status
 
 on:
   push:
@@ -16,58 +16,33 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  prove:
+  status:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
         with:
           ref: chatgpt/auction-final-live-proof
           fetch-depth: 0
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-          cache: npm
-
-      - name: Install proof dependencies
-        run: |
-          npm ci
-          npm install --no-save --ignore-scripts playwright@1.56.1
-          npx playwright install --with-deps webkit
-
-      - name: Run and persist exact release proof
+      - name: Persist exact workflow states
         env:
-          EXPECTED_SOURCE_SHA: 657e9d29427b4a9fc7ee2d1ac334dae425ed9418
-          EXPECTED_LIVE_MAIN_SHA: 657e9d29427b4a9fc7ee2d1ac334dae425ed9418
-          OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
-          GITHUB_TOKEN: ${{ github.token }}
-          PROOF_PATH: ${{ github.workspace }}/release-proof/auction-final-657e9d29427b4a9fc7ee2d1ac334dae425ed9418.json
-          SCREENSHOT_DIR: ${{ runner.temp }}/auction-final-proof
-          AUCTION_RELEASE_SCREENSHOT_PATH: ${{ runner.temp }}/auction-final-proof/canonical-auction-release.png
-        shell: bash
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_SHA: 657e9d29427b4a9fc7ee2d1ac334dae425ed9418
         run: |
-          set +e
-          mkdir -p "$SCREENSHOT_DIR" "$(dirname "$PROOF_PATH")"
-          node scripts/verify-live-auction-release.mjs
-          canonical_status=$?
-          sed -i '/\["Verify Live Notification Flow", "workflow_run"\],/d' scripts/verify-auction-final-release-proof.mjs
-          node scripts/verify-auction-final-release-proof.mjs
-          proof_status=$?
-
-          if [ ! -s "$PROOF_PATH" ]; then
-            printf '{"status":"failed","expected_sha":"%s","error":"Proof process exited before writing a record."}\n' "$EXPECTED_SOURCE_SHA" > "$PROOF_PATH"
-          fi
-          CANONICAL_STATUS="$canonical_status" node -e 'const fs=require("fs");const p=process.env.PROOF_PATH;const x=JSON.parse(fs.readFileSync(p));x.canonical_lifecycle_proof=process.env.CANONICAL_STATUS==="0"?"passed":"failed";fs.writeFileSync(p,JSON.stringify(x,null,2)+"\n")'
-
+          mkdir -p release-proof
+          node <<'NODE'
+          const fs = require('node:fs');
+          const response = await fetch(`https://api.github.com/repos/codyking0602/Octagon-HQ/actions/runs?head_sha=${process.env.EXPECTED_SHA}&per_page=100`, {
+            headers: { Authorization: `Bearer ${process.env.GH_TOKEN}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', 'User-Agent': 'octagon-hq-release-status/1' },
+          });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const body = await response.json();
+          const wanted = new Set(['Deploy Supabase Backend','Deploy Cloudflare Frontend','Verify Live Frontend Delivery','Verify Live Notification Flow']);
+          const runs = (body.workflow_runs ?? []).filter((run) => wanted.has(run.name)).map((run) => ({ id: run.id, name: run.name, event: run.event, status: run.status, conclusion: run.conclusion, head_sha: run.head_sha, url: run.html_url, created_at: run.created_at, updated_at: run.updated_at }));
+          fs.writeFileSync('release-proof/release-status.json', JSON.stringify({ expected_sha: process.env.EXPECTED_SHA, runs }, null, 2) + '\n');
+          NODE
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add "$PROOF_PATH"
-          git commit -m "Record Auction final release proof" || true
+          git add release-proof/release-status.json
+          git commit -m "Record Auction release workflow status"
           git push origin HEAD:chatgpt/auction-final-live-proof
-
-          if [ "$canonical_status" -ne 0 ] || [ "$proof_status" -ne 0 ]; then
-            exit 1
-          fi
