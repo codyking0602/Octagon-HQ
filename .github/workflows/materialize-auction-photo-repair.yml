@@ -22,19 +22,41 @@ jobs:
           ref: chatgpt/repair-auction-photo-quality
           fetch-depth: 0
 
-      - name: Download exact repaired assets
+      - name: Download repaired assets
         run: |
           curl --fail --location --retry 3 \
             "https://drive.google.com/uc?export=download&id=1VZ7O8AKEXZjTMjDRcC3JRlPlPg-kvYzw" \
             --output /tmp/auction-photo-repair.zip
-          echo "5463031105d6528507937c465467e255444f1efb36e192febdccdda3bf518230  /tmp/auction-photo-repair.zip" | sha256sum --check
+          file /tmp/auction-photo-repair.zip
+          unzip -t /tmp/auction-photo-repair.zip
 
-      - name: Replace all sixteen Auction WebPs
+      - name: Replace and verify all sixteen Auction WebPs
         run: |
-          rm -rf public/auction
-          mkdir -p public/auction
-          unzip -q /tmp/auction-photo-repair.zip -d public/auction
+          rm -rf public/auction /tmp/auction-photo-repair
+          mkdir -p public/auction /tmp/auction-photo-repair
+          unzip -q /tmp/auction-photo-repair.zip -d /tmp/auction-photo-repair
+          find /tmp/auction-photo-repair -type f -name '*.webp' -exec cp {} public/auction/ \;
           test "$(find public/auction -maxdepth 1 -type f -name '*.webp' | wc -l)" -eq 16
+          cat > /tmp/auction-photo-checksums <<'EOF'
+          3629a856ca0f5aa7a39e8ba08c32916b43bbd56551e380c7479402543b58757e  public/auction/championship-performances.webp
+          2df46b064a538584f2639007053d34841097c0a2727d133975d351dc379cdeab  public/auction/charles-oliveira-performances.webp
+          e5d5fe85353c5b02321708283469285217eb01f319b4a024e232118e6f20c88d  public/auction/conor-mcgregor-performances.webp
+          3d711abcf727bbc6ace4f36942c658a92d477251f4991cd011efd5a758608173  public/auction/dominant-performances.webp
+          8d31be130616eb903e7ffa5befac1ff3124cdc25b7ec03e885d136e9817bbe70  public/auction/fighter-performances.webp
+          a5d596375654d47ef3ad0d1cbebfd3098260f197e4af65017bea546e25382a30  public/auction/finishes.webp
+          c29fcf21e859f8e594c65bc9dba77abb659369fbeae1dad600e287c06d1414af  public/auction/grapplers.webp
+          ea99d3a7b7cfea30fbca0815bacd0606643d12b42ff98c8ad8c4c56d010e1bad  public/auction/greatest-ufc-card.webp
+          61596b0fe09a886e6bab7435709bac62e1d60f5311534115cb67fe1f1c7c710a  public/auction/iconic-moments.webp
+          1661a6f86082578fc62ffc3bc2906813fbe33d916dd23d94b20141516fdc781d  public/auction/jon-jones-performances.webp
+          c98b517626f9b7f21e36bd1ab5781fa609c394adbf5a4370f31fa678e19ff602  public/auction/knockout-artists.webp
+          1ea4d83c5afefa6f22edbc5d33d323c8dc755daad384f4b2a26dca345e8bc6f4  public/auction/nicknames.webp
+          8ede49a630eef32ff833e7564bc18727b2e3f3f8fa4a309b8d4f25005884fe6a  public/auction/rivalries.webp
+          bd416fcc7bd33ab0cbe3762d69b752e610b01157b29a1c42c62c3ba38aea436b  public/auction/strikers.webp
+          177ddc6b1350a63fb4a9bced9ad45f81884b4274f522f64d91c9fcbdd50afe49  public/auction/ultimate-fighter.webp
+          31dd11256a5c98e32627403483e5ebfb885561e033a2692008fd9bbdd3237755  public/auction/wars.webp
+          EOF
+          sed -i 's/^          //' /tmp/auction-photo-checksums
+          sha256sum --check /tmp/auction-photo-checksums
           while IFS= read -r asset; do
             test "$(stat -c%s "$asset")" -gt 20000
             test "$(head -c4 "$asset")" = "RIFF"
