@@ -8,7 +8,7 @@ on:
       - .github/workflows/materialize-auction-photo-repair.yml
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   materialize:
@@ -16,25 +16,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Check out repair branch
-        uses: actions/checkout@v4
-        with:
-          ref: chatgpt/repair-auction-photo-quality
-          fetch-depth: 0
-
-      - name: Probe exact Canva asset delivery
+      - name: Probe Canva page render
         env:
-          THUMB_URL: "https://media.canva.com/v2/image-resize/format:JPG/height:112/quality:75/uri:ifs%3A%2F%2FM%2F70b348b7-77f5-4c98-9534-cea8102fd2e5/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAACx6gg_ThhC4KthnTlSAQAwMR6VVtV126g9QdzugjNHg&exp=1785836373&osig=AAAAAAAAAAAAAAAAAAAAAAFrx-NAyqa6eRXdSpxqwq2FZsIPE7mZ2eQl2BuxP6nM&signer=media-rpc&x-canva-quality=thumbnail"
-          FULL_URL: "https://media.canva.com/v2/image-resize/format:WEBP/height:405/quality:95/uri:ifs%3A%2F%2FM%2F70b348b7-77f5-4c98-9534-cea8102fd2e5/watermark:F/width:720?csig=AAAAAAAAAAAAAAAAAAAAACx6gg_ThhC4KthnTlSAQAwMR6VVtV126g9QdzugjNHg&exp=1785836373&osig=AAAAAAAAAAAAAAAAAAAAAAFrx-NAyqa6eRXdSpxqwq2FZsIPE7mZ2eQl2BuxP6nM&signer=media-rpc"
-          SOURCE_URL: "https://media.canva.com/v2/image-resize/format:WEBP/uri:ifs%3A%2F%2FM%2F70b348b7-77f5-4c98-9534-cea8102fd2e5/watermark:F?csig=AAAAAAAAAAAAAAAAAAAAACx6gg_ThhC4KthnTlSAQAwMR6VVtV126g9QdzugjNHg&exp=1785836373&osig=AAAAAAAAAAAAAAAAAAAAAAFrx-NAyqa6eRXdSpxqwq2FZsIPE7mZ2eQl2BuxP6nM&signer=media-rpc"
+          PAGE_URL: "https://media.canva.com/v2/document-image/hash:792072898/height:335/id:DAHRTTm0exk/type:B/width:596?brand=BAGU9Bq9udo&csig=AAAAAAAAAAAAAAAAAAAAANXfxq5O5DsngXF8B7kIvJB_qIXfjHdkA_v3POjLuS1Y&disableexport=T&exp=1785823403&fallback=https%3A%2F%2Fs3.amazonaws.com%2Fdocument-export.canva.com%2Fm0exk%2FDAHRTTm0exk%2F1%2Fthumbnail%2F0001.png%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQYCGKMUHYGFFNMW3%252F20260803%252Fus-east-1%252Fs3%252Faws4_request%26X-Amz-Date%3D20260803T074237Z%26X-Amz-Expires%3D80446%26X-Amz-Signature%3D11eca38f7acf7da56662a49041605b4a931421cc080df25f8873420bb5c62816%26X-Amz-SignedHeaders%3Dhost%26response-expires%3DTue%252C%252004%2520Aug%25202026%252006%253A03%253A23%2520GMT&osig=AAAAAAAAAAAAAAAAAAAAAJ6ZiAEyW8ZrAnFwzkVwfSNVvYQ1q2Dg47loE492xFgl&page=1&signed=brand%2Cdisableexport%2Cfallback%2Cpage%2Cversion&signer=document-rpc&version=1"
         run: |
-          for kind in thumb full source; do
-            var="${kind^^}_URL"
-            url="${!var}"
-            code=$(curl --location --silent --show-error --output "/tmp/$kind" --write-out '%{http_code}' "$url")
-            echo "$kind HTTP $code"
-            file "/tmp/$kind"
-            stat -c '%n %s bytes' "/tmp/$kind"
-            identify "/tmp/$kind" || true
-          done
-          test "$(identify -format '%wx%h' /tmp/full 2>/dev/null || true)" = "720x405"
+          curl --fail --location --silent --show-error "$PAGE_URL" --output /tmp/page.png
+          file /tmp/page.png
+          identify /tmp/page.png
+          stat -c '%s bytes' /tmp/page.png
+          test "$(identify -format '%wx%h' /tmp/page.png)" = "596x335"
