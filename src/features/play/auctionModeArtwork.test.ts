@@ -5,9 +5,10 @@ import { AUCTION_MODE_IDS } from "./auctionContract";
 import { auctionModeArtworks } from "./auctionModeArtwork";
 
 const page = readFileSync("src/features/play/AuctionPage.tsx", "utf8");
+const spritePath = resolve("public/auction/auction-format-sprite.svg");
 
 describe("Auction mode artwork", () => {
-  it("maps every canonical mode exactly once to a unique local asset", () => {
+  it("maps every canonical mode exactly once to a unique local sprite view", () => {
     const entries = Object.entries(auctionModeArtworks);
     const mappedIds = entries.map(([modeId]) => modeId);
     const mappedAssets = entries.map(([, artwork]) => artwork.src);
@@ -17,10 +18,19 @@ describe("Auction mode artwork", () => {
     expect(new Set(mappedAssets).size).toBe(16);
 
     for (const asset of mappedAssets) {
-      expect(asset).toMatch(/^\/auction\/[a-z0-9-]+\.svg$/);
+      expect(asset).toMatch(
+        /^\/auction\/auction-format-sprite\.svg#svgView\(viewBox\(\d+,\d+,180,101\)\)$/,
+      );
       expect(asset).not.toMatch(/^https?:\/\//);
-      expect(existsSync(resolve("public", asset.slice(1)))).toBe(true);
+      const [assetPath] = asset.split("#");
+      expect(existsSync(resolve("public", assetPath.slice(1)))).toBe(true);
     }
+  });
+
+  it("embeds only the supplied local photos in the production asset", () => {
+    const sprite = readFileSync(spritePath, "utf8");
+    expect(sprite).toContain("data:image/webp;base64,");
+    expect(sprite).not.toMatch(/https?:\/\//);
   });
 
   it("uses the one artwork mapping in all three approved Auction placements", () => {
