@@ -11,7 +11,9 @@ import {
   rankedPlayFighters,
 } from "./playFighterPool";
 
-function boardBands(packId: Parameters<typeof blindRankPool>[0], fighterIds: readonly string[]) {
+type PackId = Parameters<typeof blindRankPool>[0];
+
+function boardBands(packId: PackId, fighterIds: readonly string[]) {
   const byId = new Map(blindRankPool(packId).map((fighter) => [fighter.id, fighter]));
   const rows = fighterIds.map((id) => {
     const fighter = byId.get(id);
@@ -27,60 +29,64 @@ function boardBands(packId: Parameters<typeof blindRankPool>[0], fighterIds: rea
   return { high, middle, low, bad, range: Math.max(...scores) - Math.min(...scores) };
 }
 
+function expectArchetypeContract(
+  packId: PackId,
+  lineup: ReturnType<typeof createBlindRankLineup>,
+) {
+  const ids = lineup.fighters.map((fighter) => fighter.id);
+  const validIds = new Set(blindRankPool(packId).map((fighter) => fighter.id));
+  const archetype = BLIND_RANK_ARCHETYPES.find((row) => row.id === lineup.archetype)!;
+  const bands = boardBands(packId, ids);
+
+  expect(ids).toHaveLength(5);
+  expect(new Set(ids).size).toBe(5);
+  expect(ids.every((id) => validIds.has(id))).toBe(true);
+  expect(bands.bad).toBeLessThanOrEqual(1);
+  expect(bands.range).toBeGreaterThanOrEqual(archetype.minRange);
+  if (archetype.minHigh !== undefined) expect(bands.high).toBeGreaterThanOrEqual(archetype.minHigh);
+  if (archetype.maxHigh !== undefined) expect(bands.high).toBeLessThanOrEqual(archetype.maxHigh);
+  if (archetype.minMiddle !== undefined) expect(bands.middle).toBeGreaterThanOrEqual(archetype.minMiddle);
+  if (archetype.maxMiddle !== undefined) expect(bands.middle).toBeLessThanOrEqual(archetype.maxMiddle);
+  if (archetype.minLow !== undefined) expect(bands.low).toBeGreaterThanOrEqual(archetype.minLow);
+  if (archetype.maxLow !== undefined) expect(bands.low).toBeLessThanOrEqual(archetype.maxLow);
+}
+
 describe("Blind Rank lineup archetype release proof", () => {
-  it("builds every archetype for every supported category with its intended product contract", () => {
+  it("builds every broad-pool archetype and uses one deterministic Balanced degradation for narrow pools", () => {
+    for (const archetype of BLIND_RANK_ARCHETYPES) {
+      const first = createBlindRankLineup(
+        "all-careers",
+        `release-proof:all-careers:${archetype.id}`,
+        { archetype: archetype.id },
+      );
+      const second = createBlindRankLineup(
+        "all-careers",
+        `release-proof:all-careers:${archetype.id}`,
+        { archetype: archetype.id },
+      );
+      expect(first).toEqual(second);
+      expect(first.archetype).toBe(archetype.id);
+      expectArchetypeContract("all-careers", first);
+    }
+
     for (const pack of blindRankPacks) {
-      const validIds = new Set(blindRankPool(pack.id).map((fighter) => fighter.id));
       for (const archetype of BLIND_RANK_ARCHETYPES) {
-        const first = createBlindRankLineup(pack.id, `release-proof:${pack.id}:${archetype.id}`, {
-          archetype: archetype.id,
-        });
-        const second = createBlindRankLineup(pack.id, `release-proof:${pack.id}:${archetype.id}`, {
-          archetype: archetype.id,
-        });
-        const ids = first.fighters.map((fighter) => fighter.id);
-        const bands = boardBands(pack.id, ids);
-
+        const seed = `release-proof:${pack.id}:${archetype.id}`;
+        const first = createBlindRankLineup(pack.id, seed, { archetype: archetype.id });
+        const second = createBlindRankLineup(pack.id, seed, { archetype: archetype.id });
         expect(first).toEqual(second);
-        expect(first.archetype).toBe(archetype.id);
-        expect(ids).toHaveLength(5);
-        expect(new Set(ids).size).toBe(5);
-        expect(ids.every((id) => validIds.has(id))).toBe(true);
-        expect(bands.bad).toBeLessThanOrEqual(1);
-
-        if (archetype.id === "balanced") {
-          expect(bands.high).toBeGreaterThanOrEqual(1);
-          expect(bands.high).toBeLessThanOrEqual(2);
-          expect(bands.middle).toBeGreaterThanOrEqual(2);
-          expect(bands.low).toBeGreaterThanOrEqual(1);
-          expect(bands.low).toBeLessThanOrEqual(2);
-          expect(bands.range).toBeGreaterThanOrEqual(32);
-        } else if (archetype.id === "top-heavy") {
-          expect(bands.high).toBeGreaterThanOrEqual(3);
-          expect(bands.high).toBeLessThanOrEqual(4);
-          expect(bands.middle).toBeGreaterThanOrEqual(1);
-          expect(bands.low).toBeLessThanOrEqual(1);
-          expect(bands.range).toBeGreaterThanOrEqual(18);
-        } else if (archetype.id === "bottom-heavy") {
-          expect(bands.high).toBeGreaterThanOrEqual(1);
-          expect(bands.high).toBeLessThanOrEqual(2);
-          expect(bands.middle).toBeGreaterThanOrEqual(1);
-          expect(bands.low).toBeGreaterThanOrEqual(3);
-          expect(bands.low).toBeLessThanOrEqual(4);
-          expect(bands.range).toBeGreaterThanOrEqual(24);
-        } else if (archetype.id === "middle-cluster") {
-          expect(bands.high).toBeLessThanOrEqual(1);
-          expect(bands.middle).toBeGreaterThanOrEqual(3);
-          expect(bands.low).toBeLessThanOrEqual(1);
-          expect(bands.range).toBeGreaterThanOrEqual(15);
-        } else {
-          expect(bands.high).toBeGreaterThanOrEqual(1);
-          expect(bands.middle).toBeGreaterThanOrEqual(1);
-          expect(bands.low).toBeGreaterThanOrEqual(1);
-          expect(bands.range).toBeGreaterThanOrEqual(45);
-        }
+        expect([archetype.id, "balanced"]).toContain(first.archetype);
+        expectArchetypeContract(pack.id, first);
       }
     }
+
+    const degradedHeavyweight = createBlindRankLineup(
+      "heavyweight",
+      "release-proof:heavyweight:middle-cluster",
+      { archetype: "middle-cluster" },
+    );
+    expect(degradedHeavyweight.archetype).toBe("balanced");
+    expectArchetypeContract("heavyweight", degradedHeavyweight);
   });
 
   it("keeps repeated seeded boards unique with meaningful pool, band, ownership, and gender usage", () => {
@@ -104,6 +110,7 @@ describe("Blind Rank lineup archetype release proof", () => {
       expect(new Set(ids).size).toBe(5);
       expect(ids.every((id) => validIds.has(id))).toBe(true);
       expect(lineup.badFighters).toBeLessThanOrEqual(1);
+      expectArchetypeContract("all-careers", lineup);
 
       boardSignatures.add([...ids].sort().join("|"));
       for (const fighter of lineup.fighters) {
