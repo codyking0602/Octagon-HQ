@@ -24,9 +24,8 @@ jobs:
 
       - name: Download repaired assets
         run: |
-          curl --fail --location --retry 3 \
-            "https://drive.google.com/uc?export=download&id=1VZ7O8AKEXZjTMjDRcC3JRlPlPg-kvYzw" \
-            --output /tmp/auction-photo-repair.zip
+          python -m pip install --disable-pip-version-check --quiet gdown
+          gdown --id 1VZ7O8AKEXZjTMjDRcC3JRlPlPg-kvYzw --output /tmp/auction-photo-repair.zip
           file /tmp/auction-photo-repair.zip
           unzip -t /tmp/auction-photo-repair.zip
 
