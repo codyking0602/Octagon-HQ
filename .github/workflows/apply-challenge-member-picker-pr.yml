@@ -40,6 +40,39 @@ jobs:
               line[10:] if line.startswith("          ") else line
               for line in text[start:end].splitlines()
           ) + "\n"
+
+          patch_start = script.index("old_picker = '''")
+          patch_end = script.index("auction.write_text(auction_text)", patch_start)
+          replacement = """picker_start = auction_text.index(
+              '          <input\\n            aria-label=\"Auction opponent profile name\"'
+          )
+          button_start = auction_text.index(
+              '          <button\\n            className=\"primary-action\"',
+              picker_start,
+          )
+          button_body = auction_text.index(
+              '            {busy ? \"PREPARING…\"',
+              button_start,
+          )
+          new_picker = '''          <ChallengeMemberPicker
+            members={challenges.members}
+            recentNames={challenges.profiles.map((profile) => profile.displayName)}
+            selectedName={selectedOpponent?.displayName}
+            busy={busy}
+            onSelect={setSelectedOpponent}
+          />
+          <p>Choose any Octagon HQ member. Search is optional.</p>
+          <button
+            className=\"primary-action\"
+            type=\"button\"
+            disabled={!repository || !mode || !selectedOpponent || busy}
+            onClick={() => void prepare()}
+          >
+'''
+          auction_text = auction_text[:picker_start] + new_picker + auction_text[button_body:]
+          """
+          script = script[:patch_start] + replacement + script[patch_end:]
+
           exec(compile(script, 'challenge-member-picker-repair', 'exec'))
           Path('.github/workflows/apply-challenge-member-picker-pr.yml').unlink()
           Path('.repair-trigger').unlink(missing_ok=True)
