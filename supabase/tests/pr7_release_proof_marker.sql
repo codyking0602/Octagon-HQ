@@ -1,0 +1,4 @@
+-- Read-only release proof marker for merged Play PR 7.
+-- This file intentionally contains no executable database statements.
+-- The disposable verification PR exists only to trigger the canonical production backend verifier
+-- against base main ff1cc05353da7b17c806bf204d542e325b2a8515 and will be closed without merge.
