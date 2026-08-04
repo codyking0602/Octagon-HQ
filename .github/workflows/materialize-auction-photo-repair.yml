@@ -1,0 +1,108 @@
+name: Materialize clean Auction photos
+
+on:
+  push:
+    branches:
+      - chatgpt/repair-auction-photo-quality
+    paths:
+      - .github/workflows/materialize-auction-photo-repair.yml
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repair branch
+        uses: actions/checkout@v4
+        with:
+          ref: chatgpt/repair-auction-photo-quality
+          fetch-depth: 0
+
+      - name: Download and verify clean photo archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive="$RUNNER_TEMP/auction-photo-repair.zip"
+          curl --fail --location --retry 4 --retry-all-errors \
+            --output "$archive" \
+            "https://tmpfiles.org/dl/35362714/auction-photo-repair-640q74.zip"
+          echo "a0581a46723629ab80786cdb6a44c3cac248c345aed19de8e47842a773ce2485  $archive" | sha256sum --check --strict
+
+          mapfile -t entries < <(unzip -Z1 "$archive" | sort)
+          expected=(
+            championship-performances.webp
+            charles-oliveira-performances.webp
+            conor-mcgregor-performances.webp
+            dominant-performances.webp
+            fighter-performances.webp
+            finishes.webp
+            grapplers.webp
+            greatest-ufc-card.webp
+            iconic-moments.webp
+            jon-jones-performances.webp
+            knockout-artists.webp
+            nicknames.webp
+            rivalries.webp
+            strikers.webp
+            ultimate-fighter.webp
+            wars.webp
+          )
+          if [[ "${entries[*]}" != "${expected[*]}" ]]; then
+            printf 'Unexpected archive entries:\n%s\n' "${entries[*]}"
+            exit 1
+          fi
+
+          mkdir -p public/auction
+          unzip -o "$archive" -d public/auction
+
+          python - <<'PY'
+          from pathlib import Path
+
+          expected = {
+              "championship-performances.webp",
+              "charles-oliveira-performances.webp",
+              "conor-mcgregor-performances.webp",
+              "dominant-performances.webp",
+              "fighter-performances.webp",
+              "finishes.webp",
+              "grapplers.webp",
+              "greatest-ufc-card.webp",
+              "iconic-moments.webp",
+              "jon-jones-performances.webp",
+              "knockout-artists.webp",
+              "nicknames.webp",
+              "rivalries.webp",
+              "strikers.webp",
+              "ultimate-fighter.webp",
+              "wars.webp",
+          }
+          root = Path("public/auction")
+          actual = {path.name for path in root.glob("*.webp")}
+          if actual != expected:
+              raise SystemExit(f"Unexpected materialized files: {sorted(actual)}")
+          total = 0
+          for name in sorted(expected):
+              data = (root / name).read_bytes()
+              if data[:4] != b"RIFF" or data[8:12] != b"WEBP":
+                  raise SystemExit(f"Invalid WebP container: {name}")
+              if len(data) < 15_000:
+                  raise SystemExit(f"Unexpectedly small WebP: {name} ({len(data)} bytes)")
+              total += len(data)
+          if total < 400_000:
+              raise SystemExit(f"Auction artwork payload is too small: {total} bytes")
+          print(f"Verified 16 clean WebPs totaling {total} bytes.")
+          PY
+
+      - name: Commit clean local assets and remove temporary workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm .github/workflows/materialize-auction-photo-repair.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/auction .github/workflows/materialize-auction-photo-repair.yml
+          git commit -m "Replace pixelated Auction photos with clean assets"
+          git push origin HEAD:chatgpt/repair-auction-photo-quality
