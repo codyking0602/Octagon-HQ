@@ -11,6 +11,7 @@ import {
   keepCutChallengeUrl,
   keepCutPool,
   resolveKeepCutChallenge,
+  scoreKeepCutSelection,
   type KeepCutLineup,
   type KeepCutPackId,
 } from "./keepCutEngine";
@@ -23,8 +24,6 @@ import {
   type PlayLineupIdentity,
 } from "./lineupModel";
 import type { PlayFighter } from "./playFighterPool";
-
-type KeepCutChoice = "keep" | "cut";
 
 interface KeepCutRun {
   lineup: KeepCutLineup;
@@ -75,6 +74,8 @@ function challengeLineup(packId: KeepCutPackId, fighters: PlayFighter[]): KeepCu
     shape: "friend-challenge",
     recentOverlap: 0,
     repeatedShape: false,
+    attemptsUsed: 0,
+    fallbackUsed: false,
   };
 }
 
@@ -99,7 +100,7 @@ function FighterTile({ fighter, compact = false }: { fighter: PlayFighter; compa
   );
 }
 
-function DecisionTray({ title, fighters }: { title: KeepCutChoice; fighters: PlayFighter[] }) {
+function DecisionTray({ title, fighters }: { title: "keep" | "cut"; fighters: PlayFighter[] }) {
   return (
     <section className={`keep-cut-tray keep-cut-tray--${title}`}>
       <header><strong>{title.toUpperCase()}</strong><span>{fighters.length}/4</span></header>
@@ -142,36 +143,42 @@ export default function KeepCutPage() {
       ? curatedKeepCutRun(initialPack, resolvedChallenge, challengeId)
       : casualKeepCutRun(initialPack),
   );
-  const [decisions, setDecisions] = useState<KeepCutChoice[]>([]);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [submitted, setSubmitted] = useState(false);
   const [shareStatus, setShareStatus] = useState("");
 
   const lineup = run.lineup;
   const pack = KEEP_CUT_PACKS.find((row) => row.id === lineup.packId) ?? KEEP_CUT_PACKS[0]!;
-  const complete = decisions.length === 8;
-  const kept = lineup.fighters.filter((_fighter, index) => decisions[index] === "keep");
-  const cut = lineup.fighters.filter((_fighter, index) => decisions[index] === "cut");
-  const current = lineup.fighters[decisions.length];
+  const result = useMemo(
+    () => submitted ? scoreKeepCutSelection(lineup.packId, lineup.fighters, selectedIds) : null,
+    [lineup, selectedIds, submitted],
+  );
+  const kept = result?.kept ?? lineup.fighters.filter((fighter) => selectedIds.includes(fighter.id));
+  const cut = result?.cut ?? [];
+  const canSubmit = selectedIds.length === 4;
   const isChallenge = run.identity.type === "curated";
-  const groupedPacks = useMemo(() => ["Serious", "Debate", "Entertainment", "Chaos"].map((group) => ({
+  const groupedPacks = useMemo(() => ["Careers", "Divisions", "Skills"].map((group) => ({
     group,
     rows: KEEP_CUT_PACKS.filter((row) => row.group === group),
   })), []);
 
   useEffect(() => {
-    if (!complete) return;
-    const result = {
-      decisions,
-      keptIds: kept.map((fighter) => fighter.id),
-      cutIds: cut.map((fighter) => fighter.id),
+    if (!result) return;
+    const persistedResult = {
+      keptIds: result.keptIds,
+      cutIds: result.cutIds,
+      score: result.score,
+      label: result.label,
     };
-    recordLineupCompletion(run.identity, result);
+    recordLineupCompletion(run.identity, persistedResult);
     if (profileMatch.isRecipient && profileMatch.challenge?.responderResult === null) {
-      profileMatch.submitResult(asJson(result));
+      profileMatch.submitResult(asJson(persistedResult));
     }
-  }, [complete, cut, decisions, kept, profileMatch, run.identity]);
+  }, [profileMatch, result, run.identity]);
 
   function resetDecisions() {
-    setDecisions([]);
+    setSelectedIds([]);
+    setSubmitted(false);
     setShareStatus("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -186,53 +193,57 @@ export default function KeepCutPage() {
     else resetDecisions();
   }
 
-  function decide(choice: KeepCutChoice) {
-    if (!current || complete) return;
-    if (choice === "keep" && kept.length >= 4) return;
-    if (choice === "cut" && cut.length >= 4) return;
-    setDecisions((rows) => [...rows, choice]);
+  function toggleKeep(fighterId: string) {
+    if (submitted) return;
+    setSelectedIds((ids) => ids.includes(fighterId)
+      ? ids.filter((id) => id !== fighterId)
+      : ids.length < 4 ? [...ids, fighterId] : ids);
+  }
+
+  function submit() {
+    if (!canSubmit) return;
+    setSubmitted(true);
   }
 
   async function challengeSomeone() {
-    if (!complete) return;
+    if (!result) return;
     setShareStatus("");
     const status = await beginChallenge({
       gameId: "keep-cut",
       gameVersion: "keep-cut-v2",
       gameTitle: "Keep 4, Cut 4",
-      summary: `${pack.name} · exact eight-fighter lineup`,
+      summary: `${pack.name} · exact eight-fighter board`,
       setup: asJson({
         packId: lineup.packId,
-        packName: pack.name,
         lineupIds: lineup.fighters.map((fighter) => fighter.id),
-        lineup: lineup.fighters.map((fighter) => ({ id: fighter.id, name: fighter.name })),
       }),
       creatorResult: asJson({
-        decisions,
-        keptIds: kept.map((fighter) => fighter.id),
-        cutIds: cut.map((fighter) => fighter.id),
+        keptIds: result.keptIds,
+        cutIds: result.cutIds,
+        score: result.score,
+        label: result.label,
       }),
       shareTitle: "UFC Keep 4, Cut 4 Challenge",
-      shareText: `Keep four and cut four from my exact ${pack.name} lineup. Every decision locks.`,
+      shareText: `Select four keeps from my exact ${pack.name} board.`,
       shareUrl: keepCutChallengeUrl(lineup.packId, lineup.fighters),
     });
     setShareStatus(status);
   }
 
-  if (complete) {
+  if (result) {
     return (
       <div className="page keep-cut-page">
         {profileMatch.creator ? (
           <section className="challenge-game-banner">
             <span>PROFILE CHALLENGE</span>
-            <strong>{profileMatch.creator.displayName} sent this exact eight-fighter lineup.</strong>
-            <small>Both Keep/Cut cards reveal after your eighth call.</small>
+            <strong>{profileMatch.creator.displayName} sent this exact eight-fighter board.</strong>
+            <small>Both private scores reveal after you submit your four keeps.</small>
           </section>
         ) : null}
         <section className="keep-cut-result-hero">
-          <p className="eyebrow">EIGHT CALLS LOCKED</p>
-          <h1>YOUR KEEP/CUT CARD</h1>
-          <p>{pack.name} · four kept, four cut.</p>
+          <p className="eyebrow">SUBMITTED RESULT</p>
+          <h1>{result.score}/100 · {result.label}</h1>
+          <p>{pack.name} · four kept, four cut. Private score grades only your kept fighters.</p>
         </section>
         <section className="keep-cut-results">
           <div className="keep-cut-result-group keep-cut-result-group--keep">
@@ -255,28 +266,20 @@ export default function KeepCutPage() {
     );
   }
 
-  const keepFull = kept.length >= 4;
-  const cutFull = cut.length >= 4;
-  const forced = keepFull
-    ? "KEEP IS FULL — THIS FIGHTER MUST BE CUT"
-    : cutFull
-      ? "CUT IS FULL — THIS FIGHTER MUST BE KEPT"
-      : "MAKE THE CALL. IT LOCKS IMMEDIATELY.";
-
   return (
     <div className="page keep-cut-page">
       {profileMatch.creator ? (
         <section className="challenge-game-banner">
           <span>PROFILE CHALLENGE</span>
-          <strong>{profileMatch.creator.displayName} sent this exact eight-fighter lineup.</strong>
-          <small>Your card remains hidden until all eight calls are locked.</small>
+          <strong>{profileMatch.creator.displayName} sent this exact eight-fighter board.</strong>
+          <small>Your four keeps remain private until you submit.</small>
         </section>
       ) : null}
       <section className="keep-cut-intro">
         <div className="keep-cut-intro__copy">
           <p className="eyebrow">{isChallenge ? "FRIEND CHALLENGE" : "REPLAYABLE GAME"}</p>
           <h1>{pack.prompt}</h1>
-          <p>{pack.description} You will not see who comes next.</p>
+          <p>{pack.description} All eight fighters are available now. Select exactly four to keep.</p>
         </div>
         <div className="keep-cut-intro__controls">
           <label>
@@ -299,45 +302,38 @@ export default function KeepCutPage() {
             disabled={isChallenge}
             onClick={() => startNew()}
           >
-            {isChallenge ? "SHARED LINEUP" : "NEW LINEUP"}
+            {isChallenge ? "SHARED BOARD" : "NEW BOARD"}
           </button>
         </div>
       </section>
 
       <section className="keep-cut-game-card">
         <header className="keep-cut-progress">
-          <strong>FIGHTER {decisions.length + 1} OF 8</strong>
+          <strong>{selectedIds.length} of 4 kept</strong>
           <span>{pack.group} · {pack.name}</span>
         </header>
 
-        <div className="keep-cut-board">
-          <DecisionTray title="keep" fighters={kept} />
-          <DecisionTray title="cut" fighters={cut} />
+        <div className="keep-cut-board keep-cut-board--selection">
+          {lineup.fighters.map((fighter) => {
+            const selected = selectedIds.includes(fighter.id);
+            return (
+              <button
+                type="button"
+                className={`keep-cut-select-card${selected ? " is-kept" : ""}`}
+                onClick={() => toggleKeep(fighter.id)}
+                key={fighter.id}
+                aria-pressed={selected}
+              >
+                <FighterTile fighter={fighter} />
+                <strong>{selected ? "KEEP" : selectedIds.length >= 4 ? "CUT" : "TAP TO KEEP"}</strong>
+              </button>
+            );
+          })}
         </div>
 
-        {current ? (
-          <section
-            className="keep-cut-current"
-            style={{ gridTemplateColumns: "96px minmax(0, 1fr)" }}
-          >
-            <FighterPhoto
-              name={current.name}
-              src={current.thumbUrl}
-              className="keep-cut-current__photo"
-              style={{ width: "96px", height: "96px", aspectRatio: "1 / 1", objectFit: "cover", objectPosition: "center" }}
-            />
-            <div>
-              <span>REVEAL {decisions.length + 1} OF 8</span>
-              <h2>{current.name}</h2>
-              <p>{current.divisions.join(" / ")} · {current.mainEra}</p>
-              <small className={keepFull || cutFull ? "is-forced" : ""}>{forced}</small>
-              <div className="keep-cut-current__actions">
-                <button type="button" className="keep" disabled={keepFull} onClick={() => decide("keep")}>KEEP</button>
-                <button type="button" className="cut" disabled={cutFull} onClick={() => decide("cut")}>CUT</button>
-              </div>
-            </div>
-          </section>
-        ) : null}
+        <button type="button" className="keep-cut-submit" disabled={!canSubmit} onClick={submit}>
+          {canSubmit ? "SUBMIT FOUR KEEPS" : `SELECT ${4 - selectedIds.length} MORE KEEP${4 - selectedIds.length === 1 ? "" : "S"}`}
+        </button>
       </section>
     </div>
   );

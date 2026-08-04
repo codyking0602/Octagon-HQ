@@ -26,7 +26,7 @@ export type PlayCompletionState =
   | "fourth-guess-locked"
   | "five-picks-complete"
   | "five-slots-locked"
-  | "eight-decisions-locked"
+  | "four-keeps-submitted"
   | "claim-locked"
   | "auction-complete";
 
@@ -169,7 +169,7 @@ export const playGames: readonly PlayGameDefinition[] = [
     id: "keep-cut",
     icon: "4/4",
     title: "Keep 4, Cut 4",
-    description: "Make eight locked decisions without knowing which fighter is waiting at the end.",
+    description: "See eight UFC fighters, keep exactly four, and receive a private 0–100 score.",
     lineup: {
       defaultType: "replayable",
       supportedTypes: ["replayable", "curated"],
@@ -177,13 +177,13 @@ export const playGames: readonly PlayGameDefinition[] = [
       newLineupControl: "button-and-result-replay",
       repetitionPolicy: "recent-fighters-deprioritized",
       lineupSize: 8,
-      completionState: "eight-decisions-locked",
+      completionState: "four-keeps-submitted",
       challengeEligible: true,
       dailyEligible: false,
       streakEligible: false,
       reminderEligible: false,
       historyRecording: "casual-and-challenge",
-      difficultyModel: "Eight role-balanced fighters with controlled traps and wildcard variance.",
+      difficultyModel: "Two canonical Blind Rank archetype lineups combined into a cutoff-centered eight-fighter board with bounded Balanced degradation.",
     },
   },
   {

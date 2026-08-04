@@ -1,3 +1,4 @@
+import { getPlayFighter } from "../play/playFighterPool";
 import { resultScore, type ChallengeJson, type PlayChallenge } from "./challengeModel";
 
 interface NamedChoice {
@@ -44,6 +45,24 @@ function overlapCount(left: readonly string[], right: readonly string[]) {
   return left.filter((value) => rightSet.has(value)).length;
 }
 
+function keepCutLineup(challenge: PlayChallenge) {
+  const setup = record(challenge.setup);
+  const legacy = namedChoices(setup?.lineup ?? null);
+  const legacyNames = new Map(legacy.map((fighter) => [fighter.id, fighter.name]));
+  const lineupIds = strings(setup?.lineupIds ?? null);
+  return lineupIds.length > 0
+    ? lineupIds.map((id) => ({ id, name: getPlayFighter(id)?.name ?? legacyNames.get(id) ?? id }))
+    : legacy;
+}
+
+function keepCutDecisions(result: ChallengeJson, lineupIds: readonly string[]) {
+  const row = record(result);
+  const legacyDecisions = strings(row?.decisions ?? null);
+  if (legacyDecisions.length === lineupIds.length) return legacyDecisions;
+  const keptIds = new Set(strings(row?.keptIds ?? null));
+  return lineupIds.map((id) => keptIds.has(id) ? "keep" : "cut");
+}
+
 export function challengeResultVerdict(
   challenge: PlayChallenge,
   creatorName: string,
@@ -60,8 +79,12 @@ export function challengeResultVerdict(
   }
 
   if (challenge.gameId === "keep-cut") {
-    const creatorDecisions = strings(creator?.decisions ?? null);
-    const responderDecisions = strings(responder?.decisions ?? null);
+    if (resultScore(challenge.creatorResult) !== null && resultScore(challenge.responderResult) !== null) {
+      return scoreVerdict(challenge, creatorName, responderName);
+    }
+    const lineupIds = keepCutLineup(challenge).map((fighter) => fighter.id);
+    const creatorDecisions = keepCutDecisions(challenge.creatorResult, lineupIds);
+    const responderDecisions = keepCutDecisions(challenge.responderResult, lineupIds);
     const matches = creatorDecisions.filter((choice, index) => responderDecisions[index] === choice).length;
     return `${matches} of 8 calls matched`;
   }
@@ -82,7 +105,7 @@ export function challengeResultScoreLabel(challenge: PlayChallenge, result: Chal
   if (challenge.gameId === "blind-resume") return score === null ? "DONE" : `${score}/5`;
   if (challenge.gameId === "find-leader") return score === null ? "DONE" : `${score}/10`;
   if (challenge.gameId === "blind-rank") return `${strings(row?.placements ?? null).length}/5`;
-  if (challenge.gameId === "keep-cut") return `${strings(row?.decisions ?? null).length}/8`;
+  if (challenge.gameId === "keep-cut") return score === null ? `${strings(row?.decisions ?? null).length}/8` : `${score}/100`;
   if (challenge.gameId === "better-than") {
     const count = typeof row?.claimCount === "number" ? row.claimCount : namedChoices(row?.selections ?? null).length;
     return `${count} NAMES`;
@@ -213,12 +236,10 @@ function BlindRankDetails({ challenge, creatorName, responderName }: DetailProps
 }
 
 function KeepCutDetails({ challenge, creatorName, responderName }: DetailProps) {
-  const setup = record(challenge.setup);
-  const lineup = namedChoices(setup?.lineup ?? null);
-  const creator = record(challenge.creatorResult);
-  const responder = record(challenge.responderResult);
-  const creatorDecisions = strings(creator?.decisions ?? null);
-  const responderDecisions = strings(responder?.decisions ?? null);
+  const lineup = keepCutLineup(challenge);
+  const lineupIds = lineup.map((fighter) => fighter.id);
+  const creatorDecisions = keepCutDecisions(challenge.creatorResult, lineupIds);
+  const responderDecisions = keepCutDecisions(challenge.responderResult, lineupIds);
 
   return (
     <div className="challenge-call-comparison">

@@ -552,3 +552,27 @@ The roadmap is complete only when all of the following are true in production:
 - Do not expose private official answers merely to simplify the frontend.
 - Do not rewrite historical results when content or rating versions change.
 - Do not combine all eight remaining implementation phases into one giant PR.
+
+## Keep 4, Cut 4 PR 6 implementation contract
+
+Keep 4, Cut 4 shows one complete eight-fighter UFC board. Players select exactly four fighters to keep, may toggle selections before submission, cannot add a fifth keep, and receive four kept and four cut fighters after submission.
+
+Generation stays with the canonical Play fighter and rating owners: ranked fighters project from the calculated all-time ranking output, Play-only fighters come from the reviewed Play-only rating owner, and category ratings resolve through `blindRankRating`. Keep/Cut categories intentionally match the supported Blind Rank categories only: UFC Careers, All UFC Careers, Women’s UFC Careers, Lightweight, Welterweight, Heavyweight, Striking, and Wrestling & Grappling.
+
+The board generator reuses the PR 5 Blind Rank lineup-archetype owner. It composes two deterministic archetype lineups, deduplicates by stable fighter ID, shuffles the eight-fighter board, and accepts only competitive boards with at least one strong option, multiple middle options, at least one weaker option, no more than two Bad-tier fighters, and a bounded fourth/fifth rating gap. Generation first makes at most 18 weighted-archetype attempts. If none qualify, the same owner makes at most 18 deterministic forced-Balanced attempts. Every fallback candidate must pass the identical competitive-board contract; the engine never returns an unvalidated random board.
+
+Private scoring grades only the four kept fighters. Each kept fighter’s hidden category rating is converted to its percentile inside the eligible category pool, then the four percentiles are averaged and rounded to a private 0–100 score. The UI shows the private score and deterministic label, but does not reveal hidden per-fighter numeric ratings. Fighter name, board order, selection order, and display-only attributes do not affect grading.
+
+Score-label bands are:
+
+- 90–100: Legendary four
+- 78–89: Excellent keeps
+- 62–77: Solid card
+- 45–61: Tough cuts
+- 0–44: Rough room
+
+Challenges preserve the existing Challenge Center architecture. Current setup persists only the category and exact eight stable fighter IDs. Current results persist only stable kept/cut IDs, the private score, and its label. Challenge hydration resolves the exact board and order through the canonical Keep/Cut pool instead of generating a replacement board or copying fighter display records. Challenge Center keeps backward-compatible rendering for historical eight-decision results. Replay and All Games entry points continue through the canonical Play game flow.
+
+The deterministic simulation samples 1,024 fixed-seed boards, exactly 128 per supported category. It produced 1,017 unique board signatures, reached all 164 eligible fighters, recorded 3,266 ranked and 4,926 Play-only appearances, and produced 6,577 men’s and 1,615 women’s appearances consistent with the eligible pools. It recorded 2,898 strong-tier, 3,136 middle-tier, and 2,158 weaker-tier appearances; 328 boards contained at least one Bad-tier fighter and none exceeded the two-Bad limit. No sampled board required the Balanced fallback.
+
+Across 4,096 deterministic selection results, the measured score distribution was 1,670 weak, 1,189 average, 817 good, and 420 excellent. Only four results scored at least 95 and none scored 100. Scores used 93 distinct values, with a 10th percentile of 19, a 90th percentile of 78, and a 59-point spread. The most frequently appearing fighter was on 16.89% of boards, and the ten most frequent fighters represented 17.44% of all fighter appearances. Every sampled stronger four-fighter group outscored the materially weaker four-fighter group from the same board.
