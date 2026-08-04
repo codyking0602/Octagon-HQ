@@ -41,10 +41,13 @@ describe("Auction release polish", () => {
     expect(styles).not.toMatch(/auction-collections[\s\S]*?white-space:\s*nowrap/);
   });
 
-  it("keeps manual refresh while shrinking the current-item presentation", () => {
+  it("keeps manual refresh while tightening the branded live presentation", () => {
     expect(page).toContain(">REFRESH</button>");
-    expect(styles).toMatch(/\.auction-current__item\s*\{[\s\S]*?min-height:\s*150px/);
-    expect(styles).toMatch(/\.auction-current__item h2\s*\{[\s\S]*?clamp\(24px, 7vw, 40px\)/);
+    expect(page).toContain("auction-board__image");
+    expect(styles).toMatch(/\.auction-board__top\s*\{[\s\S]*?min-height:\s*150px/);
+    expect(styles).toMatch(/\.auction-scoreboard\s*\{[\s\S]*?padding:\s*11px 12px/);
+    expect(styles).toMatch(/\.auction-current__item\s*\{[\s\S]*?min-height:\s*112px/);
+    expect(styles).toMatch(/\.auction-current__item h2\s*\{[\s\S]*?clamp\(22px, 6vw, 34px\)/);
   });
 
   it("publishes one idempotent Auction release through the canonical What's New owner", () => {
