@@ -1,0 +1,215 @@
+name: Audit Exact Final Auction Certification
+
+on:
+  push:
+    branches:
+      - audit/auction-pr6-release-proof
+    paths:
+      - ".github/workflows/audit-auction-final-certification-313da.yml"
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      TARGET_SHA: 313da4481a50c21a92531df726dbf225e69afa5c
+      GH_TOKEN: ${{ github.token }}
+      PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Poll exact release chain
+        shell: bash
+        run: |
+          set -euo pipefail
+          dir=verification-artifacts/auction-final-certification-313da
+          mkdir -p "$dir"
+          for attempt in $(seq 1 120); do
+            curl --fail --silent --show-error \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs?head_sha=${TARGET_SHA}&per_page=100" \
+              > "$dir/runs.json"
+            state=$(python - "$dir/runs.json" "$dir/selected.json" <<'PY'
+          import json, sys
+          source, output = sys.argv[1:]
+          data = json.load(open(source))
+          names = [
+              "Deploy Cloudflare Frontend",
+              "Verify Live Frontend Delivery",
+              "Verify Live Notification Flow",
+          ]
+          selected = {}
+          for name in names:
+              matches = sorted(
+                  [r for r in data.get("workflow_runs", []) if r.get("name") == name],
+                  key=lambda r: r.get("created_at") or "",
+                  reverse=True,
+              )
+              if matches:
+                  selected[name] = matches[0]
+          json.dump(selected, open(output, "w"), indent=2, sort_keys=True)
+          if len(selected) != len(names) or any(r.get("status") != "completed" for r in selected.values()):
+              print("pending")
+          elif any(r.get("conclusion") != "success" for r in selected.values()):
+              print("failed")
+          else:
+              print("ready")
+          PY
+            )
+            echo "attempt=$attempt state=$state"
+            if [ "$state" != "pending" ]; then
+              printf '%s\n' "$state" > "$dir/state.txt"
+              break
+            fi
+            sleep 12
+          done
+          test -f "$dir/state.txt" || printf 'timed-out\n' > "$dir/state.txt"
+
+      - name: Collect exact logs and artifacts
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          dir=verification-artifacts/auction-final-certification-313da
+          python - "$dir/selected.json" <<'PY' > "$dir/run-ids.tsv"
+          import json, re, sys
+          for name, run in json.load(open(sys.argv[1])).items():
+              key = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+              print(f"{key}\t{run['id']}\t{name}")
+          PY
+          while IFS=$'\t' read -r key run_id name; do
+            curl --fail --silent --show-error \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}/jobs?per_page=100" \
+              > "$dir/${key}-jobs.json"
+            curl --fail --silent --show-error \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}/artifacts?per_page=100" \
+              > "$dir/${key}-artifacts.json"
+            curl --fail --location --silent --show-error \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}/logs" \
+              -o "$dir/${key}-logs.zip" || true
+            if [ -f "$dir/${key}-logs.zip" ]; then
+              unzip -p "$dir/${key}-logs.zip" 2>/dev/null \
+                | grep -E "Exact deployment source verified|PASS: live shell loads deployment|Auction release proof passed|Auction cleanup proof|Prepared Auction|Private Auction|unrelated|completed-only|winner|true tie|live-auction-release-proof|deployment marker" \
+                | tail -n 240 > "$dir/${key}-excerpt.txt" || true
+              rm -f "$dir/${key}-logs.zip"
+            fi
+          done < "$dir/run-ids.tsv"
+
+      - name: Verify live exact SHA
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          dir=verification-artifacts/auction-final-certification-313da
+          EXPECTED_SOURCE_SHA="$TARGET_SHA" \
+            OCTAGON_PRODUCTION_ORIGIN="$PRODUCTION_ORIGIN" \
+            FRONTEND_DELIVERY_ATTEMPTS=12 \
+            FRONTEND_DELIVERY_DELAY_MS=5000 \
+            node scripts/verify-live-frontend-delivery.mjs > "$dir/live-verifier.txt" 2>&1
+          status=$?
+          set -e
+          printf '%s\n' "$status" > "$dir/live-status.txt"
+          curl --fail --silent --show-error \
+            -H "Cache-Control: no-cache, no-store, max-age=0" \
+            -H "Pragma: no-cache" \
+            "$PRODUCTION_ORIGIN/deployment.json?audit=$TARGET_SHA" > "$dir/deployment.json"
+
+      - name: Write final report
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          dir=verification-artifacts/auction-final-certification-313da
+          python - "$dir" "$TARGET_SHA" <<'PY'
+          import json, pathlib, re, sys
+          d = pathlib.Path(sys.argv[1]); target = sys.argv[2]
+          selected = json.loads((d / "selected.json").read_text())
+          state = (d / "state.txt").read_text().strip()
+          marker = json.loads((d / "deployment.json").read_text())
+          live_status = (d / "live-status.txt").read_text().strip()
+          names = [
+              "Deploy Cloudflare Frontend",
+              "Verify Live Frontend Delivery",
+              "Verify Live Notification Flow",
+          ]
+          artifacts = {}
+          excerpts = {}
+          jobs = {}
+          for name in names:
+              key = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+              artifacts[name] = json.loads((d / f"{key}-artifacts.json").read_text()).get("artifacts", [])
+              jobs[name] = json.loads((d / f"{key}-jobs.json").read_text()).get("jobs", [])
+              p = d / f"{key}-excerpt.txt"
+              excerpts[name] = p.read_text().strip() if p.exists() else ""
+          notification_excerpt = excerpts["Verify Live Notification Flow"]
+          proof_artifact = any(a.get("name", "").startswith("live-auction-release-proof-") for a in artifacts["Verify Live Notification Flow"])
+          passed = (
+              state == "ready"
+              and live_status == "0"
+              and marker.get("sha") == target
+              and all(selected.get(n, {}).get("head_sha") == target for n in names)
+              and all(selected.get(n, {}).get("conclusion") == "success" for n in names)
+              and proof_artifact
+              and "Auction release proof passed" in notification_excerpt
+          )
+          lines = [
+              "# Exact final Auction production certification",
+              "",
+              f"- Target main SHA: `{target}`",
+              f"- Workflow state: `{state}`",
+              f"- Live deployment marker: `{marker.get('sha', 'missing')}`",
+              f"- Independent live verifier exit: `{live_status}`",
+              f"- Full Auction proof artifact present: `{proof_artifact}`",
+              "",
+              "| Workflow | Run | Conclusion | Head SHA |",
+              "|---|---:|---|---|",
+          ]
+          for name in names:
+              run = selected.get(name, {})
+              lines.append(f"| {name} | {run.get('id')} | {run.get('conclusion')} | `{run.get('head_sha')}` |")
+          lines += ["", "## Jobs and artifacts", ""]
+          for name in names:
+              lines.append(f"- **{name} jobs:** " + ", ".join(f"{j.get('name')} (ID {j.get('id')}, {j.get('conclusion')})" for j in jobs[name]))
+              lines.append(f"- **{name} artifacts:** " + (", ".join(f"{a.get('name')} (ID {a.get('id')})" for a in artifacts[name]) or "none"))
+          lines += ["", "## Focused proof logs", ""]
+          for name in names:
+              lines += [f"### {name}", "", "```text", excerpts[name] or "No focused lines matched.", "```", ""]
+          lines += ["## Independent live delivery", "", "```text", (d / "live-verifier.txt").read_text().strip(), "```", "", "## Certification", "", "PASS" if passed else "FAIL", ""]
+          (d / "REPORT.md").write_text("\n".join(lines))
+          (d / "result.txt").write_text("PASS\n" if passed else "FAIL\n")
+          PY
+          cat "$dir/REPORT.md"
+
+      - name: Commit isolated certification evidence
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add verification-artifacts/auction-final-certification-313da
+          if ! git diff --cached --quiet; then
+            git commit -m "Record exact final Auction certification"
+            git push origin HEAD:audit/auction-pr6-release-proof
+          fi
+
+      - name: Require certification
+        shell: bash
+        run: test "$(cat verification-artifacts/auction-final-certification-313da/result.txt)" = "PASS"
