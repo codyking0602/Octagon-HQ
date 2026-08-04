@@ -58,3 +58,5 @@ jobs:
           test "$(git rev-parse HEAD^)" = "$BASE_SHA"
           git push --force origin "HEAD:refs/heads/$TARGET_BRANCH"
           echo "Final staged head: $final_sha"
+
+# Triggered after PR #277 opened so the target branch is replaced from exact main.
