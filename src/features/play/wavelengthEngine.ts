@@ -14,6 +14,17 @@ export const WAVELENGTH_CONTRACT_VERSIONS = {
   reveal: WAVELENGTH_REVEAL_CONTRACT_VERSION,
 } as const;
 
+export const WAVELENGTH_RELAXATION_POLICY = {
+  version: "wavelength-relaxation-v1",
+  order: [
+    "recent exact clue-sequence prefixes",
+    "recent clue ids",
+    "directional clue side",
+    "recent targets while preserving the immediately previous-target exclusion",
+  ],
+  rule: "Relax only the exhausted exclusion currently being applied and continue using the same canonical candidate pool and generator.",
+} as const;
+
 export interface WavelengthClue {
   id: string;
   category: WavelengthCategory;
@@ -64,12 +75,25 @@ export function desiredWavelengthCorrection(target: number, guess: number, nextC
   if (Math.abs(error) <= 2) return clampWavelength(target + (random() > 0.5 ? 2 : -2));
   const factors = [0, 0.36, 0.5, 0.62];
   const factor = factors[nextClueIndex] ?? 0.5;
-  const push = Math.max(4, Math.min(22, Math.round(Math.abs(error) * factor)));
+  const push = Math.max(4, Math.min(22, Math.round(Math.abs(error) * factor));
   return clampWavelength(target + (Math.sign(error) * push));
 }
 
 function relax<T>(preferred: readonly T[], relaxed: readonly T[]) {
   return preferred.length ? preferred : relaxed;
+}
+
+function repeatsRecentSequencePrefix(
+  target: number,
+  clueIds: readonly string[],
+  candidateId: string,
+  recentSequenceKeys: readonly string[],
+) {
+  const proposedPrefix = [String(target), ...clueIds, candidateId];
+  return recentSequenceKeys.some((key) => {
+    const prior = key.split("|");
+    return proposedPrefix.every((value, index) => prior[index] === value);
+  });
 }
 
 export function chooseWavelengthClue(
@@ -79,6 +103,7 @@ export function chooseWavelengthClue(
     direction?: number;
     usedIds?: readonly string[];
     usedCategories?: readonly WavelengthCategory[];
+    sequencePrefixIds?: readonly string[];
     recent?: WavelengthRecentHistory;
     random?: () => number;
   },
@@ -88,7 +113,18 @@ export function chooseWavelengthClue(
   const recentIds = new Set(options.recent?.clueIds ?? []);
   const usedCategories = new Set(options.usedCategories ?? []);
   const recentCategories = new Set(options.recent?.categories ?? []);
+  const recentSequenceKeys = options.recent?.clueSequenceKeys ?? [];
+  const sequencePrefixIds = options.sequencePrefixIds ?? [];
   let candidates: readonly WavelengthClue[] = wavelengthClues.filter((clue) => !usedIds.has(clue.id));
+  candidates = relax(
+    candidates.filter((clue) => !repeatsRecentSequencePrefix(
+      options.target,
+      sequencePrefixIds,
+      clue.id,
+      recentSequenceKeys,
+    )),
+    candidates,
+  );
   candidates = relax(candidates.filter((clue) => !recentIds.has(clue.id)), candidates);
   if ((options.direction ?? 0) > 0) {
     candidates = relax(candidates.filter((clue) => clue.rating > options.target), candidates);
@@ -124,6 +160,7 @@ export function createWavelengthRound(options: number | {
   const target = targets[Math.floor(random() * targets.length)] ?? 65;
   const firstClue = chooseWavelengthClue(clampWavelength(target + (random() > 0.5 ? 3 : -3)), {
     target,
+    sequencePrefixIds: [],
     recent,
     random,
   });
@@ -144,6 +181,7 @@ export function nextWavelengthClue(
     direction,
     usedIds: round.clues.map((clue) => clue.id),
     usedCategories: round.clues.map((clue) => clue.category),
+    sequencePrefixIds: round.clues.map((clue) => clue.id),
     recent,
     random,
   });
