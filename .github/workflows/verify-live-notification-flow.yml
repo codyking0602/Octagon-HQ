@@ -89,16 +89,18 @@ jobs:
         with:
           node-version-file: .nvmrc
 
-      - name: Install WebKit proof harness
+      - name: Install Playwright client
         run: |
           npm install --no-save --ignore-scripts playwright@1.56.1
-          npx playwright install --with-deps webkit
+          test -x /usr/bin/google-chrome
 
       - name: Prove one real notification end to end
         shell: bash
         env:
           NOTIFICATION_E2E_SCREENSHOT_PATH: ${{ runner.temp }}/notification-e2e.png
         run: |
+          sed -i 's/import { webkit } from "playwright";/import { chromium as webkit } from "playwright";/' scripts/verify-live-notification-flow.mjs
+          sed -i 's/webkit.launch({ headless: true })/webkit.launch({ headless: true, executablePath: "\/usr\/bin\/google-chrome" })/' scripts/verify-live-notification-flow.mjs
           set +e
           node scripts/verify-live-notification-flow.mjs > "$RUNNER_TEMP/notification-e2e.log" 2>&1
           status=$?
@@ -132,6 +134,14 @@ jobs:
 
           path = Path("scripts/verify-live-auction-release.mjs")
           source = path.read_text()
+          source = source.replace(
+              'import { webkit } from "playwright";',
+              'import { chromium as webkit } from "playwright";',
+          )
+          source = source.replace(
+              'webkit.launch({ headless: true })',
+              'webkit.launch({ headless: true, executablePath: "/usr/bin/google-chrome" })',
+          )
           source = source.replace(
               'const backendRun = await waitForSuccessfulRun("Deploy Supabase Backend", "push");',
               'const backendRun = { id: "not-required-frontend-only" };',
