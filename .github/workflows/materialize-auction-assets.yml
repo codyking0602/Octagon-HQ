@@ -1,0 +1,43 @@
+name: Materialize Auction Assets
+
+on:
+  push:
+    branches:
+      - chatgpt/auction-format-photos
+    paths:
+      - ".github/workflows/materialize-auction-assets.yml"
+      - "scripts/materialize-auction-assets.py"
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact branch head
+        uses: actions/checkout@v4
+        with:
+          ref: chatgpt/auction-format-photos
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Materialize individual WebP assets
+        run: |
+          python -m pip install --disable-pip-version-check pillow==11.3.0
+          python scripts/materialize-auction-assets.py
+
+      - name: Commit generated assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/auction/*.webp
+          git commit -m "Materialize individual Auction WebP assets"
+          git push origin HEAD:chatgpt/auction-format-photos
