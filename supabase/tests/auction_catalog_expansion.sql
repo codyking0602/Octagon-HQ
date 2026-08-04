@@ -14,6 +14,15 @@ begin
 end;
 $$;
 
+-- Prior frozen Auction suites deliberately commit their pinned preparation pointer.
+-- Establish the v2 pointer inside this rollback-only test before validating v2 behavior.
+update private.auction_catalog_versions
+set is_preparation_version = false
+where is_preparation_version;
+update private.auction_catalog_versions
+set is_preparation_version = true
+where content_version = 'ufc-auction-2026-08-v2';
+
 select pg_temp.assert_true(
   (select count(*) from private.auction_catalog_versions where content_version='ufc-auction-2026-08-v2') = 1,
   'v2 version exists'
