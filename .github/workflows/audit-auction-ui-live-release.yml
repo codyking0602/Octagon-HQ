@@ -1,0 +1,125 @@
+name: Audit Auction UI Live Release
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/audit-auction-ui-live-release.yml
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  verify:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      EXPECTED_SOURCE_SHA: ${{ github.event.pull_request.base.sha }}
+      OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+
+    steps:
+      - name: Require canonical exact-SHA deployment runs
+        uses: actions/github-script@v7
+        env:
+          EXPECTED_SOURCE_SHA: ${{ env.EXPECTED_SOURCE_SHA }}
+        with:
+          script: |
+            const expectedSha = process.env.EXPECTED_SOURCE_SHA.toLowerCase();
+            const required = [
+              "Deploy Cloudflare Frontend",
+              "Verify Live Frontend Delivery",
+              "Deploy Supabase Backend",
+            ];
+            const { data } = await github.rest.actions.listWorkflowRunsForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head_sha: expectedSha,
+              per_page: 100,
+            });
+            for (const workflowName of required) {
+              const runs = data.workflow_runs.filter((run) => (
+                run.name === workflowName && run.head_sha?.toLowerCase() === expectedSha
+              ));
+              const passed = runs.find((run) => (
+                run.status === "completed" && run.conclusion === "success"
+              ));
+              if (!passed) {
+                const observed = runs
+                  .map((run) => `${run.id}:${run.status}/${run.conclusion ?? "none"}`)
+                  .join(", ") || "none";
+                core.setFailed(`${workflowName} is not green for exact main ${expectedSha}. Observed: ${observed}.`);
+                return;
+              }
+              core.info(`${workflowName} passed for ${expectedSha}: ${passed.html_url}`);
+            }
+
+      - name: Check out exact live source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_SOURCE_SHA }}
+          fetch-depth: 1
+          persist-credentials: false
+          show-progress: false
+
+      - name: Verify exact checkout
+        shell: bash
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SOURCE_SHA"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Verify exact live frontend marker and assets
+        env:
+          FRONTEND_DELIVERY_ATTEMPTS: 6
+          FRONTEND_DELIVERY_DELAY_MS: 5000
+        run: node scripts/verify-live-frontend-delivery.mjs
+
+      - name: Set up Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Verify Auction UI release migration is deployed
+        shell: bash
+        run: |
+          set -euo pipefail
+          supabase link --project-ref "$SUPABASE_PROJECT_ID"
+          migration_list=$(supabase migration list --linked)
+          printf '%s\n' "$migration_list"
+          remote_version=$(printf '%s\n' "$migration_list" | sed 's/│/|/g' | awk -F '|' '
+            {
+              local_version = $1
+              remote_version = $2
+              gsub(/[^0-9]/, "", local_version)
+              gsub(/[^0-9]/, "", remote_version)
+              if (local_version == "202609030002") {
+                print remote_version
+                exit
+              }
+            }
+          ')
+          if [ "$remote_version" != "202609030002" ]; then
+            echo "::error title=Auction UI release migration not deployed::Migration 202609030002 is not recorded in the remote migration column."
+            exit 1
+          fi
+
+      - name: Record release proof
+        shell: bash
+        run: |
+          {
+            echo "### Auction UI exact release verified"
+            echo "- Exact main SHA: \`$EXPECTED_SOURCE_SHA\`"
+            echo "- Canonical Cloudflare deployment: green"
+            echo "- Canonical live-delivery verifier: green"
+            echo "- Live deployment marker and fingerprinted assets: exact SHA"
+            echo "- Canonical Supabase deployment: green"
+            echo "- Remote migration 202609030002: present"
+          } >> "$GITHUB_STEP_SUMMARY"
