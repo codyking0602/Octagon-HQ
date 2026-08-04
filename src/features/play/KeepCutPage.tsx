@@ -25,7 +25,6 @@ import {
 } from "./lineupModel";
 import type { PlayFighter } from "./playFighterPool";
 
-
 interface KeepCutRun {
   lineup: KeepCutLineup;
   identity: PlayLineupIdentity;
@@ -76,6 +75,7 @@ function challengeLineup(packId: KeepCutPackId, fighters: PlayFighter[]): KeepCu
     recentOverlap: 0,
     repeatedShape: false,
     attemptsUsed: 0,
+    fallbackUsed: false,
   };
 }
 
@@ -149,7 +149,10 @@ export default function KeepCutPage() {
 
   const lineup = run.lineup;
   const pack = KEEP_CUT_PACKS.find((row) => row.id === lineup.packId) ?? KEEP_CUT_PACKS[0]!;
-  const result = useMemo(() => submitted ? scoreKeepCutSelection(lineup.packId, lineup.fighters, selectedIds) : null, [lineup, selectedIds, submitted]);
+  const result = useMemo(
+    () => submitted ? scoreKeepCutSelection(lineup.packId, lineup.fighters, selectedIds) : null,
+    [lineup, selectedIds, submitted],
+  );
   const kept = result?.kept ?? lineup.fighters.filter((fighter) => selectedIds.includes(fighter.id));
   const cut = result?.cut ?? [];
   const canSubmit = selectedIds.length === 4;
@@ -161,9 +164,15 @@ export default function KeepCutPage() {
 
   useEffect(() => {
     if (!result) return;
-    recordLineupCompletion(run.identity, result);
+    const persistedResult = {
+      keptIds: result.keptIds,
+      cutIds: result.cutIds,
+      score: result.score,
+      label: result.label,
+    };
+    recordLineupCompletion(run.identity, persistedResult);
     if (profileMatch.isRecipient && profileMatch.challenge?.responderResult === null) {
-      profileMatch.submitResult(asJson(result));
+      profileMatch.submitResult(asJson(persistedResult));
     }
   }, [profileMatch, result, run.identity]);
 
@@ -203,12 +212,10 @@ export default function KeepCutPage() {
       gameId: "keep-cut",
       gameVersion: "keep-cut-v2",
       gameTitle: "Keep 4, Cut 4",
-      summary: `${pack.name} · exact eight-fighter lineup`,
+      summary: `${pack.name} · exact eight-fighter board`,
       setup: asJson({
         packId: lineup.packId,
-        packName: pack.name,
         lineupIds: lineup.fighters.map((fighter) => fighter.id),
-        lineup: lineup.fighters.map((fighter) => ({ id: fighter.id, name: fighter.name })),
       }),
       creatorResult: asJson({
         keptIds: result.keptIds,
@@ -217,7 +224,7 @@ export default function KeepCutPage() {
         label: result.label,
       }),
       shareTitle: "UFC Keep 4, Cut 4 Challenge",
-      shareText: `Keep four and cut four from my exact ${pack.name} lineup. Every decision locks.`,
+      shareText: `Select four keeps from my exact ${pack.name} board.`,
       shareUrl: keepCutChallengeUrl(lineup.packId, lineup.fighters),
     });
     setShareStatus(status);
@@ -229,8 +236,8 @@ export default function KeepCutPage() {
         {profileMatch.creator ? (
           <section className="challenge-game-banner">
             <span>PROFILE CHALLENGE</span>
-            <strong>{profileMatch.creator.displayName} sent this exact eight-fighter lineup.</strong>
-            <small>Both Keep/Cut cards reveal after your eighth call.</small>
+            <strong>{profileMatch.creator.displayName} sent this exact eight-fighter board.</strong>
+            <small>Both private scores reveal after you submit your four keeps.</small>
           </section>
         ) : null}
         <section className="keep-cut-result-hero">
@@ -264,8 +271,8 @@ export default function KeepCutPage() {
       {profileMatch.creator ? (
         <section className="challenge-game-banner">
           <span>PROFILE CHALLENGE</span>
-          <strong>{profileMatch.creator.displayName} sent this exact eight-fighter lineup.</strong>
-          <small>Your card remains hidden until all eight calls are locked.</small>
+          <strong>{profileMatch.creator.displayName} sent this exact eight-fighter board.</strong>
+          <small>Your four keeps remain private until you submit.</small>
         </section>
       ) : null}
       <section className="keep-cut-intro">
@@ -295,7 +302,7 @@ export default function KeepCutPage() {
             disabled={isChallenge}
             onClick={() => startNew()}
           >
-            {isChallenge ? "SHARED LINEUP" : "NEW LINEUP"}
+            {isChallenge ? "SHARED BOARD" : "NEW BOARD"}
           </button>
         </div>
       </section>
