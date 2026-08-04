@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { NavLink, useLocation } from "react-router-dom";
 import { scrollPageToTop } from "../app/RouteScrollManager";
 import { useWarRoom } from "../features/war-room/WarRoomProvider";
@@ -15,11 +17,7 @@ const warRoomDestination = { to: "/war-room", label: "War Room", icon: "war-room
 
 function NavigationIcon({ name }: { name: NavigationIconName }) {
   const iconPaths = {
-    home: (
-      <>
-        <path d="M3.5 10.5 12 3.5l8.5 7v9.75H14.8v-6.1H9.2v6.1H3.5Z" />
-      </>
-    ),
+    home: <path d="M3.5 10.5 12 3.5l8.5 7v9.75H14.8v-6.1H9.2v6.1H3.5Z" />,
     rankings: (
       <>
         <path d="M8 4.25h8v4.5a4 4 0 0 1-8 0Z" />
@@ -32,9 +30,7 @@ function NavigationIcon({ name }: { name: NavigationIconName }) {
         <path d="m7.5 9 1.75 1.75L12.5 7.5M7.5 15h9" />
       </>
     ),
-    play: (
-      <path d="m8 5 10 7-10 7Z" />
-    ),
+    play: <path d="m8 5 10 7-10 7Z" />,
     "war-room": (
       <>
         <path d="M4 5h16v11H9l-5 4Z" />
@@ -64,14 +60,46 @@ function NavigationIcon({ name }: { name: NavigationIconName }) {
 export function BottomNavigation() {
   const location = useLocation();
   const warRoom = useWarRoom();
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
   const destinations = warRoom.status === "eligible"
     ? [...baseDestinations, warRoomDestination]
     : baseDestinations;
   const unreadLabel = warRoom.unreadCount > 99 ? "99+" : String(warRoom.unreadCount);
 
-  return (
+  useEffect(() => {
+    const viewport = window.visualViewport;
+    if (!viewport) return undefined;
+
+    const syncKeyboardState = () => {
+      const activeElement = document.activeElement;
+      const editing = activeElement instanceof HTMLElement
+        && activeElement.matches("input, textarea, select, [contenteditable='true']");
+      const occludedHeight = Math.max(
+        0,
+        window.innerHeight - viewport.height - viewport.offsetTop,
+      );
+      setKeyboardOpen(editing && occludedHeight > 120);
+    };
+    const syncAfterFocus = () => window.setTimeout(syncKeyboardState, 0);
+
+    syncKeyboardState();
+    viewport.addEventListener("resize", syncKeyboardState);
+    viewport.addEventListener("scroll", syncKeyboardState);
+    document.addEventListener("focusin", syncAfterFocus);
+    document.addEventListener("focusout", syncAfterFocus);
+    window.addEventListener("orientationchange", syncAfterFocus);
+    return () => {
+      viewport.removeEventListener("resize", syncKeyboardState);
+      viewport.removeEventListener("scroll", syncKeyboardState);
+      document.removeEventListener("focusin", syncAfterFocus);
+      document.removeEventListener("focusout", syncAfterFocus);
+      window.removeEventListener("orientationchange", syncAfterFocus);
+    };
+  }, []);
+
+  const navigation = (
     <nav
-      className="bottom-nav"
+      className={`bottom-nav${keyboardOpen ? " is-keyboard-open" : ""}`}
       aria-label="Primary navigation"
       style={{ gridTemplateColumns: `repeat(${destinations.length}, minmax(0, 1fr))` }}
     >
@@ -102,4 +130,6 @@ export function BottomNavigation() {
       ))}
     </nav>
   );
+
+  return createPortal(navigation, document.body);
 }
