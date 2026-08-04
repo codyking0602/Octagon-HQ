@@ -7,6 +7,7 @@ The clean V2 rebuild of Octagon HQ: UFC rankings, games, picks, and community.
 Before starting work in a new conversation, read:
 
 - [`docs/HANDOFF.md`](docs/HANDOFF.md) — exact current status, deployment, temporary dependencies, completed work, next safe action, and a copy-paste new-chat prompt.
+- [`docs/play-games-roadmap.md`](docs/play-games-roadmap.md) — approved Play-game audit, official scoring contract, Today’s Challenge rotation, ownership rules, and the nine-PR implementation roadmap.
 - [`docs/product-blueprint.md`](docs/product-blueprint.md) — stable product principles, ownership rules, and migration order.
 - [`docs/RANKINGS-MIGRATION.md`](docs/RANKINGS-MIGRATION.md) — critical correction that the current V2 Rankings page is static disposable scaffolding, plus the required scoring-parity and visual-parity migration plan.
 
