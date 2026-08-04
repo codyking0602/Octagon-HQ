@@ -1,0 +1,93 @@
+name: Materialize Auction Artwork
+
+on:
+  push:
+    branches:
+      - chatgpt/auction-final-photo-notification-polish
+    paths:
+      - ".github/workflows/materialize-auction-artwork.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out exact branch
+        uses: actions/checkout@v4
+        with:
+          ref: chatgpt/auction-final-photo-notification-polish
+          fetch-depth: 0
+
+      - name: Decode and verify exact artwork
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .github/auction-asset-chunks/jon-final-*.b64 | base64 --decode > public/auction/jon-jones-performances.webp
+          cat .github/auction-asset-chunks/nick-final-*.b64 | base64 --decode > public/auction/nicknames.webp
+
+          printf '%s  %s\n' \
+            '28dd1e815471c27baffe6e80d0b03cc12cda1572bb5a42465792c89216ab531c' \
+            'public/auction/jon-jones-performances.webp' \
+            'f87a950f86b2741fe89735be0c8600f48eebcd74f7a36b74aaf8ffcf057c2117' \
+            'public/auction/nicknames.webp' \
+            | sha256sum --check --strict
+
+          test "$(wc -c < public/auction/jon-jones-performances.webp)" -eq 21022
+          test "$(wc -c < public/auction/nicknames.webp)" -eq 20504
+
+          node <<'NODE'
+          const fs = require('node:fs');
+
+          function dimensions(bytes) {
+            if (bytes.subarray(0, 4).toString('ascii') !== 'RIFF'
+              || bytes.subarray(8, 12).toString('ascii') !== 'WEBP') {
+              throw new Error('Invalid WebP container.');
+            }
+            let offset = 12;
+            while (offset + 8 <= bytes.length) {
+              const type = bytes.subarray(offset, offset + 4).toString('ascii');
+              const size = bytes.readUInt32LE(offset + 4);
+              const data = offset + 8;
+              if (type === 'VP8X' && data + 10 <= bytes.length) {
+                return [1 + bytes.readUIntLE(data + 4, 3), 1 + bytes.readUIntLE(data + 7, 3)];
+              }
+              if (type === 'VP8 ' && data + 10 <= bytes.length) {
+                return [bytes.readUInt16LE(data + 6) & 0x3fff, bytes.readUInt16LE(data + 8) & 0x3fff];
+              }
+              if (type === 'VP8L' && data + 5 <= bytes.length) {
+                const b1 = bytes[data + 1];
+                const b2 = bytes[data + 2];
+                const b3 = bytes[data + 3];
+                const b4 = bytes[data + 4];
+                return [1 + b1 + ((b2 & 0x3f) << 8), 1 + (b2 >> 6) + (b3 << 2) + ((b4 & 0x0f) << 10)];
+              }
+              offset = data + size + (size % 2);
+            }
+            throw new Error('WebP dimensions unavailable.');
+          }
+
+          for (const path of [
+            'public/auction/jon-jones-performances.webp',
+            'public/auction/nicknames.webp',
+          ]) {
+            const size = dimensions(fs.readFileSync(path));
+            if (size[0] !== 720 || size[1] !== 405) {
+              throw new Error(`${path} is ${size.join('x')}, expected 720x405.`);
+            }
+          }
+          NODE
+
+      - name: Remove staging files and commit exact assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .github/auction-asset-chunks
+          rm -f .github/workflows/materialize-auction-artwork.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Replace final Auction format artwork'
+          git push origin HEAD:chatgpt/auction-final-photo-notification-polish
