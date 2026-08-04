@@ -34,6 +34,7 @@ describe("Auction mode artwork", () => {
     expect(page).toContain("auction-catalog__image");
     expect(page).toContain("auction-opponents__image");
     expect(page).toContain("auction-board__image");
+    expect(page).not.toContain("auction-format-sprite");
     expect(page.match(/<AuctionArtworkImage/g)).toHaveLength(3);
   });
 });
