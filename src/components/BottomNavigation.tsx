@@ -111,27 +111,27 @@ export function BottomNavigation() {
     >
       {destinations.map((destination) => (
         <NavLink
-key={destination.to}
-to={destination.to}
-end={destination.end}
-onClick={(event) => {
-  if (location.pathname !== destination.to) return;
-  event.preventDefault();
-  scrollPageToTop("smooth");
-}}
-className={({ isActive }) => (isActive ? "bottom-nav__item is-active" : "bottom-nav__item")}
+          key={destination.to}
+          to={destination.to}
+          end={destination.end}
+          onClick={(event) => {
+            if (location.pathname !== destination.to) return;
+            event.preventDefault();
+            scrollPageToTop("smooth");
+          }}
+          className={({ isActive }) => (isActive ? "bottom-nav__item is-active" : "bottom-nav__item")}
         >
-<span className="bottom-nav__indicator" aria-hidden="true" />
-<NavigationIcon name={destination.icon} />
-<span className="bottom-nav__label">{destination.label}</span>
-{destination.to === "/war-room" && warRoom.unreadCount > 0 ? (
-  <b
-    className="bottom-nav__badge"
-    aria-label={`${unreadLabel} unread War Room message${warRoom.unreadCount === 1 ? "" : "s"}`}
-  >
-    {unreadLabel}
-  </b>
-) : null}
+          <span className="bottom-nav__indicator" aria-hidden="true" />
+          <NavigationIcon name={destination.icon} />
+          <span className="bottom-nav__label">{destination.label}</span>
+          {destination.to === "/war-room" && warRoom.unreadCount > 0 ? (
+            <b
+              className="bottom-nav__badge"
+              aria-label={`${unreadLabel} unread War Room message${warRoom.unreadCount === 1 ? "" : "s"}`}
+            >
+              {unreadLabel}
+            </b>
+          ) : null}
         </NavLink>
       ))}
     </nav>
