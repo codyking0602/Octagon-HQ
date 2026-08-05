@@ -13,14 +13,13 @@ const games = [
 ];
 
 function chromePath() {
-  const candidates = [
+  return [
     process.env.OCTAGON_CHROME_PATH,
     "/usr/bin/google-chrome",
     "/usr/bin/google-chrome-stable",
     "/usr/bin/chromium",
     "/usr/bin/chromium-browser",
-  ].filter(Boolean);
-  return candidates.find((candidate) => existsSync(candidate)) ?? null;
+  ].filter(Boolean).find((candidate) => existsSync(candidate)) ?? null;
 }
 
 async function freePort() {
@@ -35,12 +34,12 @@ async function freePort() {
   });
 }
 
-async function waitForJson(url, attempts = 120) {
+async function waitForHttp(url, attempts = 120) {
   let lastError;
   for (let attempt = 0; attempt < attempts; attempt += 1) {
     try {
       const response = await fetch(url, { cache: "no-store" });
-      if (response.ok) return response.json();
+      if (response.ok) return response;
       lastError = new Error(`${url} returned HTTP ${response.status}`);
     } catch (error) {
       lastError = error;
@@ -48,6 +47,11 @@ async function waitForJson(url, attempts = 120) {
     await new Promise((resolve) => setTimeout(resolve, 250));
   }
   throw lastError ?? new Error(`${url} did not become ready.`);
+}
+
+async function waitForJson(url, attempts = 120) {
+  const response = await waitForHttp(url, attempts);
+  return response.json();
 }
 
 class CdpClient {
@@ -58,11 +62,12 @@ class CdpClient {
   }
 
   async open() {
-    if (this.socket.readyState === WebSocket.OPEN) return;
-    await new Promise((resolve, reject) => {
-      this.socket.addEventListener("open", resolve, { once: true });
-      this.socket.addEventListener("error", reject, { once: true });
-    });
+    if (this.socket.readyState !== WebSocket.OPEN) {
+      await new Promise((resolve, reject) => {
+        this.socket.addEventListener("open", resolve, { once: true });
+        this.socket.addEventListener("error", reject, { once: true });
+      });
+    }
     this.socket.addEventListener("message", (event) => {
       const message = JSON.parse(String(event.data));
       if (!message.id) return;
@@ -111,9 +116,7 @@ async function waitForFixture(client, expectedGame) {
 }
 
 const chrome = chromePath();
-if (!chrome) {
-  throw new Error("Chrome is required for the Today’s Challenge 390x844 proof.");
-}
+if (!chrome) throw new Error("Chrome is required for the Today’s Challenge 390x844 proof.");
 
 const vitePort = await freePort();
 const debugPort = await freePort();
@@ -123,26 +126,34 @@ const proofDir = process.env.RUNNER_TEMP
   : join(tmpdir(), "todays-challenge-phone-proof");
 mkdirSync(proofDir, { recursive: true });
 
+let viteLog = "";
+let browserLog = "";
 const vite = spawn(process.execPath, [
   "node_modules/vite/bin/vite.js",
   "--host", "127.0.0.1",
   "--port", String(vitePort),
   "--strictPort",
 ], { stdio: ["ignore", "pipe", "pipe"] });
+vite.stdout.on("data", (chunk) => { viteLog += String(chunk); });
+vite.stderr.on("data", (chunk) => { viteLog += String(chunk); });
+
 const browser = spawn(chrome, [
   "--headless=new",
   "--no-sandbox",
   "--disable-dev-shm-usage",
   "--disable-gpu",
+  "--remote-allow-origins=*",
   `--remote-debugging-port=${debugPort}`,
   `--user-data-dir=${profileDir}`,
   "--window-size=390,844",
   "about:blank",
 ], { stdio: ["ignore", "pipe", "pipe"] });
+browser.stdout.on("data", (chunk) => { browserLog += String(chunk); });
+browser.stderr.on("data", (chunk) => { browserLog += String(chunk); });
 
 let client;
 try {
-  await waitForJson(`http://127.0.0.1:${vitePort}/scripts/todays-challenge-phone/index.html`);
+  await waitForHttp(`http://127.0.0.1:${vitePort}/scripts/todays-challenge-phone/index.html`);
   const targets = await waitForJson(`http://127.0.0.1:${debugPort}/json/list`);
   const pageTarget = targets.find((target) => target.type === "page" && target.webSocketDebuggerUrl);
   if (!pageTarget) throw new Error("Chrome did not expose a debuggable page target.");
@@ -161,8 +172,9 @@ try {
   });
 
   for (const [game, expectedText] of games) {
-    const url = `http://127.0.0.1:${vitePort}/scripts/todays-challenge-phone/index.html?game=${game}`;
-    await client.send("Page.navigate", { url });
+    await client.send("Page.navigate", {
+      url: `http://127.0.0.1:${vitePort}/scripts/todays-challenge-phone/index.html?game=${game}`,
+    });
     const result = await waitForFixture(client, game);
     if (result.viewportWidth !== 390) {
       throw new Error(`${game} rendered at ${result.viewportWidth}px instead of 390px.`);
@@ -185,6 +197,8 @@ try {
     writeFileSync(screenshotPath, Buffer.from(captured.data, "base64"));
     console.log(`PASS: ${game} rendered at 390x844 without horizontal overflow (${screenshotPath}).`);
   }
+} catch (error) {
+  throw new Error(`${error instanceof Error ? error.message : String(error)}\nVite:\n${viteLog}\nChrome:\n${browserLog}`);
 } finally {
   client?.close();
   browser.kill("SIGTERM");
