@@ -17,6 +17,9 @@ on:
       - main
     paths:
       - ".github/workflows/deploy-supabase.yml"
+      - "scripts/bundle-daily-challenge-runtime.mjs"
+      - "package.json"
+      - "package-lock.json"
       - "supabase/**"
 
 permissions:
@@ -180,8 +183,11 @@ jobs:
         run: |
           set -euo pipefail
           if [ -f supabase/functions/daily-challenge-runtime/index.ts ]; then
+            npm install --silent --ignore-scripts
             printf '// Generated only in the deployment workspace.\nexport const DEPLOYED_SOURCE_SHA = "%s";\n' "$SOURCE_SHA" \
               > supabase/functions/daily-challenge-runtime/deployment.ts
+            node scripts/bundle-daily-challenge-runtime.mjs
+            test -f supabase/functions/daily-challenge-runtime/runtime.generated.mjs
             supabase functions deploy daily-challenge-runtime --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt
           else
             echo "daily-challenge-runtime is not present in this exact deployment source; skipping."
@@ -435,7 +441,7 @@ jobs:
               echo "- run-pick-monitoring Edge Function deployed, rejected unauthenticated and fake-scheduler execution without a provider call, and returned the embedded exact source SHA"
             fi
             if [ -f supabase/functions/daily-challenge-runtime/index.ts ]; then
-              echo "- daily-challenge-runtime Edge Function deployed, returned the embedded exact source SHA, and rejected unauthenticated game access"
+              echo "- daily-challenge-runtime Edge Function deployed from the generated canonical runtime bundle, returned the embedded exact source SHA, and rejected unauthenticated game access"
             fi
             if [ -f supabase/functions/deliver-notification-push/index.ts ]; then
               echo "- deliver-notification-push Edge Function deployed, created or reused private VAPID keys, returned its public key, and rejected unauthenticated delivery"
