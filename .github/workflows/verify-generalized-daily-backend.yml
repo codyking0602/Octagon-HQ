@@ -65,19 +65,7 @@ jobs:
         with:
           version: latest
 
-      - name: Start fresh Supabase database
-        shell: bash
-        run: |
-          set -euo pipefail
-          supabase db start
-          db_url=$(supabase status -o env | sed -n 's/^DB_URL=//p' | tr -d '"')
-          if [ -z "$db_url" ]; then
-            echo "::error title=Local database unavailable::Supabase did not report DB_URL."
-            exit 1
-          fi
-          echo "DB_URL=$db_url" >> "$GITHUB_ENV"
-
-      - name: Bundle and execute daily runtime Edge Function locally
+      - name: Start isolated fresh Supabase stack
         shell: bash
         run: |
           set -euo pipefail
@@ -97,16 +85,19 @@ jobs:
           verify_jwt = false
           EOF
 
-          log_file="$RUNNER_TEMP/daily-runtime-local.log"
-          response_file="$RUNNER_TEMP/daily-runtime-local.json"
-          supabase functions serve daily-challenge-runtime --no-verify-jwt >"$log_file" 2>&1 &
-          function_pid=$!
-          cleanup() {
-            kill "$function_pid" 2>/dev/null || true
-            wait "$function_pid" 2>/dev/null || true
-          }
-          trap cleanup EXIT
+          supabase start
+          db_url=$(supabase status -o env | sed -n 's/^DB_URL=//p' | tr -d '"')
+          if [ -z "$db_url" ]; then
+            echo "::error title=Local database unavailable::Supabase did not report DB_URL."
+            exit 1
+          fi
+          echo "DB_URL=$db_url" >> "$GITHUB_ENV"
 
+      - name: Execute daily runtime Edge Function locally
+        shell: bash
+        run: |
+          set -euo pipefail
+          response_file="$RUNNER_TEMP/daily-runtime-local.json"
           status=""
           for attempt in $(seq 1 90); do
             status=$(curl --silent --show-error \
@@ -119,22 +110,15 @@ jobs:
             if [ "$status" = "200" ]; then
               break
             fi
-            if ! kill -0 "$function_pid" 2>/dev/null; then
-              cat "$log_file"
-              echo "::error title=Daily runtime bundle failed::The local Edge Function process exited before becoming healthy."
-              exit 1
-            fi
             sleep 1
           done
 
           if [ "$status" != "200" ]; then
-            cat "$log_file"
+            supabase status || true
             echo "::error title=Daily runtime did not start::Expected HTTP 200 from the local deployment-info path, received ${status:-none}."
             exit 1
           fi
           grep -Fq '"deployment_sha":"daily-challenge-runtime-v1"' "$response_file"
-          cleanup
-          trap - EXIT
 
       - name: Execute generalized SQL, RPC, RLS, scoring, DST, and replay proof
         shell: bash
@@ -161,7 +145,7 @@ jobs:
         shell: bash
         run: bash scripts/verify-generalized-daily-concurrency.sh "$DB_URL"
 
-      - name: Stop local Supabase database
+      - name: Stop local Supabase stack
         if: always()
         run: supabase stop --no-backup
 
