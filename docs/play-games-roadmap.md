@@ -1,6 +1,6 @@
 # Octagon HQ Play Games Improvement Contract
 
-_Last approved: 2026-08-04_
+_Last approved: 2026-08-05_
 
 This is the canonical product contract and implementation roadmap for improving Octagon HQ Play and expanding Today’s Challenge beyond Find the Leader.
 
@@ -337,8 +337,8 @@ After all eligible games are ready, use a deterministic twenty-day cycle:
 | Game | Days per cycle | Share |
 | --- | ---: | ---: |
 | Find the Leader | 8 | 40% |
-| Blind Resume | 5 | 25% |
-| Wavelength | 3 | 15% |
+| Blind Resume | 3 | 15% |
+| Wavelength | 5 | 25% |
 | Blind Rank 5 | 2 | 10% |
 | Keep 4, Cut 4 | 2 | 10% |
 
@@ -517,7 +517,7 @@ Purpose:
 
 Scope:
 
-- Enable the 40/25/15/10/10 deterministic schedule.
+- Enable the 40/15/25/10/10 deterministic schedule.
 - Enforce no consecutive same-game days.
 - Confirm official first-attempt persistence across every game type.
 - Confirm tied leaderboard ranks and no time tiebreaker.
