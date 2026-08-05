@@ -288,8 +288,8 @@ describe("Unified Picks Control Center", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "PUBLISH CARD" }));
     await waitFor(() => expect(setup.publishDraft).toHaveBeenCalledWith("draft"));
-    expect(await screen.findByText("PICKS OPEN")).toBeInTheDocument();
-    await waitFor(() => expect(control.loadControlEvent).toHaveBeenCalledTimes(2));
+    expect(await screen.findByText("PICKS OPEN", { selector: ".picks-control-center__status" })).toBeInTheDocument();
+    expect(control.loadControlEvent).toHaveBeenCalledTimes(2);
   });
 
   it("puts visible monitoring ahead of compact fight management", async () => {
@@ -297,9 +297,9 @@ describe("Unified Picks Control Center", () => {
     const monitoring = monitoringRepository();
     renderCenter(control, setupRepository([]), monitoring);
 
-    expect(await screen.findByText("PICKS OPEN")).toBeInTheDocument();
-    await waitFor(() => expect(monitoring.loadInbox).toHaveBeenCalledTimes(1));
+    expect(await screen.findByText("PICKS OPEN", { selector: ".picks-control-center__status" })).toBeInTheDocument();
     const automation = await screen.findByRole("heading", { name: "AUTO-SYNC NEEDS ATTENTION" });
+    expect(monitoring.loadInbox).toHaveBeenCalledTimes(1);
     const firstFight = screen.getByRole("button", { name: "EXPAND Red Fighter vs. Blue Fighter" });
     expect(automation.compareDocumentPosition(firstFight) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(screen.getByLabelText("Automation status")).toBeInTheDocument();
