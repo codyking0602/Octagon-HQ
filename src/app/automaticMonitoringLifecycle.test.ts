@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const runner = readFileSync("supabase/functions/run-pick-monitoring/index.ts", "utf8");
+const productionVerifier = readFileSync("scripts/verify-production-monitoring-scheduler.mjs", "utf8");
 const sourceContextMigration = readFileSync(
   "supabase/migrations/202609120001_repair_pick_monitoring_source_context.sql",
   "utf8",
@@ -47,6 +48,16 @@ describe("automatic Picks monitoring lifecycle", () => {
     expect(runner.indexOf('reason: "source_preview_failed"')).toBeLessThan(
       runner.indexOf("buildTheOddsApiRequestUrl(providerKey)"),
     );
+  });
+
+  it("proves a recent production scheduler wake and its durable decision without forcing due work", () => {
+    expect(productionVerifier).toContain('safeHealth.last_run_status !== "succeeded"');
+    expect(productionVerifier).toContain("pick_monitoring_runs");
+    expect(productionVerifier).toContain('trigger_kind: "eq.scheduled"');
+    expect(productionVerifier).toContain('latestDecision.status === "skipped"');
+    expect(productionVerifier).toContain("preProviderFailureReasons.has(latestDecision.decision_reason)");
+    expect(productionVerifier).toContain("without forcing a provider call");
+    expect(productionVerifier).not.toContain("run-pick-monitoring`, {");
   });
 
   it("keeps outcomes, odds application, and card review on their existing owners", () => {
