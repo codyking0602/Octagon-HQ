@@ -1,13 +1,14 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
-import { useFindLeaderHistory } from "./FindLeaderHistoryProvider";
 import { todayChallengeAdapter, type DailyGameType } from "./todaysChallengeAdapters";
 import type {
   TodayChallengeHistoryRow,
   TodayChallengeLeaderboard,
   TodayChallengeProjection,
 } from "./todayChallengeRepository";
+import { useTodayChallengeOverview } from "./useTodayChallengeOverview";
+import { useTodayChallengeRuntime } from "./useTodayChallengeRuntime";
 
 function dayLabel(day: string) {
   return new Intl.DateTimeFormat("en-US", {
@@ -100,27 +101,18 @@ export default function TodayChallengeHub() {
   const navigate = useNavigate();
   const [panel, setPanel] = useState<"challenge" | "leaderboard">("challenge");
   const signedIn = identity.status === "ready" && Boolean(identity.profile?.id);
-  const {
-    loading,
-    error,
-    dailyRows,
-    dailyStreak,
-    todayChallenge: projection,
-    dailyLeaderboard,
-    dailyLeaderboardDay,
-    dailyLeaderboardLoading,
-    refresh,
-    loadDailyLeaderboard,
-  } = useFindLeaderHistory();
+  const profileId = identity.profile?.id ?? "signed-out";
+  const runtime = useTodayChallengeRuntime({ profileId, enabled: signedIn });
+  const overview = useTodayChallengeOverview({
+    profileId,
+    enabled: signedIn,
+    projection: runtime.projection,
+  });
+  const projection = runtime.projection;
   const adapter = useMemo(
     () => todayChallengeAdapter(projection?.gameType),
     [projection?.gameType],
   );
-
-  useEffect(() => {
-    if (!signedIn || !projection) return;
-    void loadDailyLeaderboard(projection.centralDay, projection.scheduleVersion);
-  }, [loadDailyLeaderboard, projection, signedIn]);
 
   if (!signedIn) {
     return (
@@ -135,7 +127,7 @@ export default function TodayChallengeHub() {
     );
   }
 
-  if (loading && !projection) {
+  if (runtime.loading && !projection) {
     return (
       <section className="today-hub-loading" aria-live="polite">
         <span />
@@ -150,16 +142,15 @@ export default function TodayChallengeHub() {
         <div>
           <p className="eyebrow">TODAY’S CHALLENGE</p>
           <h2>The official game did not load.</h2>
-          <p>{error || "Refresh the official daily connection and try again."}</p>
+          <p>{runtime.error instanceof Error ? runtime.error.message : "Refresh the official daily connection and try again."}</p>
         </div>
-        <button type="button" onClick={() => void refresh()}>TRY AGAIN</button>
+        <button type="button" onClick={() => void runtime.refresh()}>TRY AGAIN</button>
       </section>
     );
   }
 
   const completed = Boolean(projection.officialAttempt);
-  const history = dailyRows.slice(0, 6);
-  const leaderboard = dailyLeaderboardDay === projection.centralDay ? dailyLeaderboard : null;
+  const history = overview.history.slice(0, 6);
   return (
     <section className="today-hub" data-game={projection.gameType}>
       <div className="today-hub__tabs" aria-label="Today’s Challenge panels">
@@ -201,12 +192,12 @@ export default function TodayChallengeHub() {
         <div className="today-hub-leaderboard">
           <header>
             <div><p className="eyebrow">OFFICIAL DAILY</p><h2>{adapter.title} leaderboard</h2></div>
-            <span>{leaderboard?.playerCount ?? 0} PLAYERS</span>
+            <span>{overview.leaderboard?.playerCount ?? 0} PLAYERS</span>
           </header>
           <DailyLeaderboard
-            leaderboard={leaderboard}
+            leaderboard={overview.leaderboard}
             gameType={projection.gameType}
-            loading={dailyLeaderboardLoading}
+            loading={overview.loading}
           />
         </div>
       )}
@@ -214,7 +205,7 @@ export default function TodayChallengeHub() {
       <details className="today-hub-history">
         <summary>
           <div><p className="eyebrow">DAILY HISTORY</p><strong>Official challenge record</strong></div>
-          <span><b>{dailyStreak?.currentStreak ?? 0}</b>-day current · <b>{dailyStreak?.bestStreak ?? 0}</b>-day best</span>
+          <span><b>{overview.streak.currentStreak}</b>-day current · <b>{overview.streak.bestStreak}</b>-day best</span>
         </summary>
         <div className="today-hub-history__body">
           {history.length ? history.map((row) => (
@@ -226,8 +217,8 @@ export default function TodayChallengeHub() {
           )) : (
             <p className="today-hub-empty">Complete an official daily to begin your history.</p>
           )}
-          {error ? (
-            <button type="button" onClick={() => void refresh()}>REFRESH HISTORY</button>
+          {overview.error ? (
+            <button type="button" onClick={() => void overview.refresh()}>REFRESH HISTORY</button>
           ) : null}
         </div>
       </details>
