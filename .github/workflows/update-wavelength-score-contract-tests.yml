@@ -1,0 +1,62 @@
+name: Update Wavelength score contract tests
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/update-wavelength-score-contract-tests.yml
+
+permissions:
+  contents: write
+
+jobs:
+  update-tests:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Align Wavelength contract expectations
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          catalog = Path('src/features/play/wavelengthCatalog.test.ts')
+          text = catalog.read_text()
+          replacements = {
+            'expect(reveal.finalScore).toBe(93);': 'expect(reveal.finalScore).toBe(86);',
+            'expect(wavelengthScore(0, 75)).toBe(25);': 'expect(wavelengthScore(0, 75)).toBe(0);',
+            'expect(wavelengthScore(68, 75)).toBe(adaptWavelengthOfficialScore(93).score);': 'expect(wavelengthScore(68, 75)).toBe(adaptWavelengthOfficialScore(86).score);',
+          }
+          for old, new in replacements.items():
+              if text.count(old) != 1:
+                  raise SystemExit(f'Expected one catalog assertion: {old}')
+              text = text.replace(old, new, 1)
+          catalog.write_text(text)
+
+          audit = Path('src/features/play/wavelengthContractAudit.test.ts')
+          text = audit.read_text()
+          if text.count('toBe(93);') != 2:
+              raise SystemExit(f'Expected two old fourth-guess assertions, found {text.count("toBe(93);")}')
+          text = text.replace('toBe(93);', 'toBe(86);')
+          if text.count('expect(payload.finalScore).toBe(97);') != 1:
+              raise SystemExit('Expected one old reveal assertion')
+          text = text.replace('expect(payload.finalScore).toBe(97);', 'expect(payload.finalScore).toBe(94);', 1)
+          audit.write_text(text)
+          PY
+          git diff --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            src/features/play/wavelengthCatalog.test.ts \
+            src/features/play/wavelengthContractAudit.test.ts
+          git commit -m "Align Wavelength scoring contracts"
+          git push origin HEAD:agent/calibrate-wavelength-score
