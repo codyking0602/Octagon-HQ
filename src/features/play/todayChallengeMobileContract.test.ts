@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 
 const gameCss = readFileSync("src/styles/today-challenge.css", "utf8");
 const hubCss = readFileSync("src/styles/today-challenge-hub.css", "utf8");
+const hubPage = readFileSync("src/features/play/TodayChallengeHubPage.tsx", "utf8");
 
 describe("Today’s Challenge 390×844 presentation contract", () => {
   it("keeps the official game and hub containers shrinkable without horizontal overflow", () => {
@@ -29,11 +30,14 @@ describe("Today’s Challenge 390×844 presentation contract", () => {
     expect(hubCss).toContain("flex-direction: column");
   });
 
-  it("replaces the legacy Find-the-Leader-only hub presentation without removing casual Play", () => {
-    expect(hubCss).toContain(".today-challenge-hub-page__legacy > .play-page > .play-daily");
-    expect(hubCss).toContain(".today-challenge-hub-page__legacy > .play-page > .find-history");
-    expect(hubCss).toContain("display: none");
-    expect(hubCss).toContain(".today-challenge-hub-page__legacy > .play-page");
-    expect(hubCss).toContain("display: contents");
+  it("replaces the legacy Find-the-Leader-only hub without removing casual games or challenges", () => {
+    expect(hubPage).toContain("<TodayChallengeHub />");
+    expect(hubPage).toContain("<ChallengeCenter />");
+    expect(hubPage).toContain("playGames.map");
+    expect(hubPage).toContain('"find-leader": "/play/find-leader?mode=replayable"');
+    expect(hubPage).toContain('wavelength: "/play/wavelength"');
+    expect(hubPage).toContain('"blind-resume": "/play/blind-resume"');
+    expect(hubPage).toContain('"blind-rank": "/play/blind-rank"');
+    expect(hubPage).toContain('"keep-cut": "/play/keep-cut"');
   });
 });
