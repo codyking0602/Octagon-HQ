@@ -1,0 +1,61 @@
+name: Temporary Play Thumbnail Framing Repair
+
+on:
+  push:
+    branches:
+      - chatgpt/repair-play-thumbnail-framing
+    paths:
+      - scripts/repair-play-thumbnail-framing.py
+      - .github/workflows/repair-play-thumbnail-framing.yml
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SOURCE_SHA: 1894f3b0a23f58b1a8195ac24525f4df1de5d217
+      CONTACT_SHEET: ${{ runner.temp }}/play-thumbnail-framing-comparison.png
+    steps:
+      - name: Check out repair branch with source history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install ordinary image-processing dependency
+        run: python -m pip install --disable-pip-version-check --quiet Pillow==11.3.0
+
+      - name: Reframe all 46 thumbnails from exact merged source
+        run: >-
+          python scripts/repair-play-thumbnail-framing.py
+          --source-sha "$SOURCE_SHA"
+          --contact-sheet "$CONTACT_SHEET"
+
+      - name: Upload old-versus-new contact sheet
+        uses: actions/upload-artifact@v4
+        with:
+          name: play-thumbnail-framing-comparison-${{ github.sha }}
+          path: ${{ env.CONTACT_SHEET }}
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Commit repaired thumbnail assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/assets/fighters/*-thumb.webp
+          if git diff --cached --quiet; then
+            echo "No thumbnail changes were produced."
+            exit 0
+          fi
+          git commit -m "Reframe Play fighter thumbnails"
+          git push origin HEAD:${GITHUB_REF_NAME}
