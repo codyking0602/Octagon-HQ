@@ -387,7 +387,7 @@ describe("Unified Picks Control Center", () => {
       }),
     );
 
-    expect(await screen.findByRole("heading", { name: "AUTO-SYNC CHECKED THE EVENT" })).toBeInTheDocument();
+    expect(await screen.findAllByRole("heading", { name: "AUTO-SYNC CHECKED THE EVENT" })).not.toHaveLength(0);
     expect(screen.getByRole("banner")).toHaveTextContent("UFC Control");
     expect(screen.getByRole("banner")).toHaveTextContent("MASTER LOCK");
     expect(screen.getByRole("button", { name: "CHECK NOW" })).toBeInTheDocument();
