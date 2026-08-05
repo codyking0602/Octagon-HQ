@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Navigate, useLocation } from "react-router-dom";
+import { FindLeaderHistoryProvider } from "../play/FindLeaderHistoryProvider";
 import PlayPage from "../play/PlayPage";
 import { usePlayChallenges } from "./ChallengeProvider";
 
@@ -29,5 +30,9 @@ export default function FindLeaderChallengeRoute() {
     return <Navigate replace to={`${location.pathname}?${searchParams.toString()}`} />;
   }
 
-  return <PlayPage />;
+  return (
+    <FindLeaderHistoryProvider>
+      <PlayPage />
+    </FindLeaderHistoryProvider>
+  );
 }
