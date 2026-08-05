@@ -48,7 +48,7 @@ describe("Unified Picks Control Center architecture", () => {
     expect(openDashboard).toContain("repository!.replaceFighter");
     expect(openDashboard).toContain("repository!.setCancellation");
     expect(openDashboard).toContain("repository!.setBoutInclusion");
-    expect(controlRepository.match(/getSupabaseClient/g)).toHaveLength(1);
+    expect(controlRepository.match(/getSupabaseClient\(\)/g)).toHaveLength(1);
     expect(monitoringRepository.match(/get_pick_monitoring_inbox/g)).toHaveLength(1);
     expect(`${center}\n${openDashboard}\n${controlPage}\n${setupPage}\n${monitoringPage}`).not.toContain("setInterval");
     expect(occurrences(center, /window\.setTimeout/g)).toBe(1);
