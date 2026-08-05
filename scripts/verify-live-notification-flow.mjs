@@ -7,6 +7,8 @@ const projectId = process.env.SUPABASE_PROJECT_ID;
 const githubToken = process.env.GITHUB_TOKEN;
 const repository = process.env.GITHUB_REPOSITORY ?? "codyking0602/Octagon-HQ";
 const expectedMainSha = process.env.EXPECTED_LIVE_MAIN_SHA?.trim().toLowerCase() ?? "";
+const expectedSyncSourceSha = process.env.EXPECTED_SYNC_SOURCE_SHA?.trim().toLowerCase() ?? "";
+const isPullRequest = process.env.GITHUB_EVENT_NAME === "pull_request";
 const productionOrigin = (process.env.OCTAGON_PRODUCTION_ORIGIN
   ?? "https://octagon.hq-app.workers.dev").replace(/\/$/, "");
 
@@ -16,6 +18,12 @@ if (!accessToken || !projectId || !githubToken) {
 if (!/^[0-9a-f]{40}$/.test(expectedMainSha)) {
   throw new Error("An exact current-main SHA is required for live notification verification.");
 }
+if (expectedSyncSourceSha && (!isPullRequest || !/^[0-9a-f]{40}$/.test(expectedSyncSourceSha))) {
+  throw new Error("An alternate live SHA is allowed only for an exact same-repository pull-request head.");
+}
+const allowedDeployedShas = isPullRequest && expectedSyncSourceSha
+  ? [expectedSyncSourceSha]
+  : [];
 
 const supabaseOrigin = `https://${projectId}.supabase.co`;
 
@@ -123,6 +131,7 @@ if (new Date(deliveryRun.created_at).getTime() < new Date(deployRun.updated_at).
 const liveDelivery = await verifyLiveFrontendDelivery({
   origin: productionOrigin,
   expectedSha: expectedMainSha,
+  allowedDeployedShas,
 });
 
 const keysResult = await request(
@@ -344,7 +353,7 @@ try {
   );
 
   console.log(
-    `PASS: current main ${expectedMainSha} has successful frontend deploy and live-delivery workflows; the live shell loads ${liveDelivery.javascriptAssets} JavaScript and ${liveDelivery.stylesheetAssets} CSS assets from that exact deployment; canonical challenge ${code} created the correct unread notification for ${recipientName}; Notification Center rendered it and opened ${expectedRoute}; the open marked it read and created the creator acceptance notification.`,
+    `PASS: current main ${expectedMainSha} retained successful frontend deploy and live-delivery workflows; the exact live deployment ${liveDelivery.expectedSha} loads ${liveDelivery.javascriptAssets} JavaScript and ${liveDelivery.stylesheetAssets} CSS assets; canonical challenge ${code} created the correct unread notification for ${recipientName}; Notification Center rendered it and opened ${expectedRoute}; the open marked it read and created the creator acceptance notification.`,
   );
 } finally {
   if (browser) await browser.close().catch(() => undefined);
