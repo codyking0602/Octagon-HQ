@@ -31,7 +31,7 @@ Auction and Better Than remain direct challenge games and do not enter Today’s
 | Wavelength | Native score from 0–100 | Yes, after content audit | Opinion-calibration daily |
 | Blind Resume | Native score from 0–5 | Yes | Hidden résumé daily |
 | Blind Rank 5 | Completed ranking only | Yes, after grading and difficulty repair | Blind ordering daily |
-| Keep 4, Cut 4 | Completed card only | Yes, after grading and difficulty repair | Resource-allocation daily |
+| Keep 4, Cut 4 | Blind four/four card plus private 0–100 score | Yes, after grading and difficulty repair | Resource-allocation daily |
 | Better Than | Subjective claim comparison | No | Direct argument challenge |
 | Auction | Private final score from 0–100 | No | Flagship strategic challenge |
 
@@ -230,10 +230,10 @@ Five fighters create ten pairwise ordering comparisons.
 
 ### Current strengths
 
-- Strong locked-decision tension.
+- Strong one-at-a-time blind-decision tension.
 - Exact four/four constraint creates meaningful resource pressure.
-- Fourteen category concepts provide broad casual replay value.
-- Direct challenges are naturally comparable.
+- Eight canonical category packs provide broad replay value without a second rating owner.
+- Direct challenges are naturally comparable because they preserve the exact reveal order.
 
 ### Current weaknesses
 
@@ -241,6 +241,15 @@ Five fighters create ten pairwise ordering comparisons.
 - Low-end surprises are too uncommon.
 - The completed result is a card, not an official judgment.
 - Highly subjective categories are not equally suitable for an official daily.
+
+### Approved gameplay
+
+- Reveal exactly one fighter at a time in the stored eight-fighter order.
+- The player must immediately choose Keep or Cut.
+- Every decision locks; there is no undo, toggling, or board-wide selection screen.
+- Fighters who have not yet appeared remain hidden.
+- After either tray reaches four, the remaining decisions are forced to the other tray.
+- The game completes only after eight locked decisions produce exactly four kept and four cut fighters.
 
 ### Approved generation changes
 
@@ -254,31 +263,26 @@ The player should frequently regret filling a Keep slot too early because later 
 
 ### Approved daily categories
 
-Initial official daily eligibility should favor defensible categories:
+Initial official daily eligibility uses the same supported canonical Play rating contracts as Blind Rank:
 
 - UFC Careers
 - All UFC Careers
-- Former Champions
-- Divisional careers
-- Hardest to Beat at Their Peak
-- Most Complete Fighter
-- Best Finisher
-
-The following remain casual until their ratings receive a Wavelength-style audit:
-
-- Biggest UFC What-If
-- Action Fighters
-- UFC Star Power
-- Cult & Chaos
+- Women’s UFC Careers
+- Lightweight
+- Welterweight
+- Heavyweight
+- Striking
+- Wrestling & Grappling
 
 ### Approved score
 
 Four kept fighters compared with four cut fighters create sixteen kept-versus-cut comparisons.
 
 - Score the percentage of comparisons where the kept fighter has the stronger canonical rating.
-- Use one consistent rounding rule.
+- Apply the approved small tolerance for nearly tied ratings.
+- Award 6.25 points per correct comparison and round the final result to the nearest whole number.
+- Keeping the board’s four strongest fighters must score 100.
 - Show both the normalized score and the number of model top-four fighters retained.
-- Apply a defensible tolerance for nearly tied ratings.
 
 Example result:
 
@@ -461,6 +465,7 @@ Scope:
 - Rebuild lineup generation around clear keeps, clear cuts, and bubble fighters.
 - Add versioned lineup-shape variation.
 - Restrict initial daily eligibility to defensible categories.
+- Preserve the one-at-a-time blind reveal and eight locked Keep/Cut decisions.
 - Add sixteen-comparison grading, top-four retention, tolerance, and result reveal.
 - Preserve subjective casual categories and direct challenges.
 - Add deterministic cutoff-quality and score tests.
@@ -538,7 +543,7 @@ The roadmap is complete only when all of the following are true in production:
 - Existing Find the Leader history is preserved exactly.
 - Wavelength has a large, calibrated, private answer bank.
 - Blind Rank regularly creates difficult low-end, clustered, and chaotic boards.
-- Keep/Cut centers difficulty around the four/four cutoff.
+- Keep/Cut preserves one-at-a-time locked decisions and centers difficulty around the four/four cutoff.
 - Better Than remains subjective and unscored.
 - Auction remains a separate private strategic challenge.
 - Exact production deployment evidence matches the intended final commit.
@@ -555,13 +560,13 @@ The roadmap is complete only when all of the following are true in production:
 
 ## Keep 4, Cut 4 PR 6 implementation contract
 
-Keep 4, Cut 4 shows one complete eight-fighter UFC board. Players select exactly four fighters to keep, may toggle selections before submission, cannot add a fifth keep, and receive four kept and four cut fighters after submission.
+Keep 4, Cut 4 is a blind eight-decision game. The exact board order is fixed before play, but the player sees only the current fighter. The player immediately chooses Keep or Cut, that decision locks, and the next fighter is then revealed. Future fighters remain hidden. The run completes only after eight locked calls produce exactly four kept and four cut fighters; when either tray fills, all remaining calls are forced to the other tray.
 
 Generation stays with the canonical Play fighter and rating owners: ranked fighters project from the calculated all-time ranking output, Play-only fighters come from the reviewed Play-only rating owner, and category ratings resolve through `blindRankRating`. Keep/Cut categories intentionally match the supported Blind Rank categories only: UFC Careers, All UFC Careers, Women’s UFC Careers, Lightweight, Welterweight, Heavyweight, Striking, and Wrestling & Grappling.
 
 The board generator reuses the PR 5 Blind Rank lineup-archetype owner. It composes two deterministic archetype lineups, deduplicates by stable fighter ID, shuffles the eight-fighter board, and accepts only competitive boards with at least one strong option, multiple middle options, at least one weaker option, no more than two Bad-tier fighters, and a bounded fourth/fifth rating gap. Generation first makes at most 18 weighted-archetype attempts. If none qualify, the same owner makes at most 18 deterministic forced-Balanced attempts. Every fallback candidate must pass the identical competitive-board contract; the engine never returns an unvalidated random board.
 
-Private scoring grades only the four kept fighters. Each kept fighter’s hidden category rating is converted to its percentile inside the eligible category pool, then the four percentiles are averaged and rounded to a private 0–100 score. The UI shows the private score and deterministic label, but does not reveal hidden per-fighter numeric ratings. Fighter name, board order, selection order, and display-only attributes do not affect grading.
+Private scoring is board-relative and matches the official comparison contract. Each of the four kept fighters is compared with each of the four cut fighters, creating sixteen comparisons. A kept fighter wins a comparison when its canonical category rating is at least the cut fighter’s rating minus the approved one-point tolerance. Each correct comparison is worth 6.25 points; the final score is rounded to the nearest whole number and clamped to 0–100. Keeping the board’s actual four strongest fighters produces sixteen correct comparisons and a score of 100. The result also reports the number of model top-four fighters retained. Hidden per-fighter numeric ratings are never exposed.
 
 Score-label bands are:
 
@@ -571,8 +576,6 @@ Score-label bands are:
 - 45–61: Tough cuts
 - 0–44: Rough room
 
-Challenges preserve the existing Challenge Center architecture. Current setup persists only the category and exact eight stable fighter IDs. Current results persist only stable kept/cut IDs, the private score, and its label. Challenge hydration resolves the exact board and order through the canonical Keep/Cut pool instead of generating a replacement board or copying fighter display records. Challenge Center keeps backward-compatible rendering for historical eight-decision results. Replay and All Games entry points continue through the canonical Play game flow.
+Challenges preserve the existing Challenge Center architecture. Current setup persists only the category and exact eight stable fighter IDs in reveal order. Current results persist stable kept/cut IDs, correct-comparison count, model-top-four retention, private score, and label. Challenge hydration resolves the exact board and reveal order through the canonical Keep/Cut pool instead of generating a replacement board or copying fighter display records. Challenge Center keeps backward-compatible rendering for historical eight-decision results. Replay and All Games entry points continue through the canonical Play game flow.
 
-The deterministic simulation samples 1,024 fixed-seed boards, exactly 128 per supported category. It produced 1,017 unique board signatures, reached all 164 eligible fighters, recorded 3,266 ranked and 4,926 Play-only appearances, and produced 6,577 men’s and 1,615 women’s appearances consistent with the eligible pools. It recorded 2,898 strong-tier, 3,136 middle-tier, and 2,158 weaker-tier appearances; 328 boards contained at least one Bad-tier fighter and none exceeded the two-Bad limit. No sampled board required the Balanced fallback.
-
-Across 4,096 deterministic selection results, the measured score distribution was 1,670 weak, 1,189 average, 817 good, and 420 excellent. Only four results scored at least 95 and none scored 100. Scores used 93 distinct values, with a 10th percentile of 19, a 90th percentile of 78, and a 59-point spread. The most frequently appearing fighter was on 16.89% of boards, and the ten most frequent fighters represented 17.44% of all fighter appearances. Every sampled stronger four-fighter group outscored the materially weaker four-fighter group from the same board.
+The deterministic board simulation samples 1,024 fixed-seed boards, exactly 128 per supported category. It verifies unique category-valid boards, broad fighter usage, ranked and Play-only representation, men’s and women’s coverage, strong/middle/weaker tier coverage, no more than two Bad-tier fighters, bounded generation, and stable challenge order. The scoring proof separately requires the strongest four fighters on every sampled board to produce sixteen correct comparisons, four model-top-four keeps, and a 100 score; weaker and mixed decisions must remain deterministic and score lower when they lose board-relative comparisons.

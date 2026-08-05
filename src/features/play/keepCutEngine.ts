@@ -19,6 +19,7 @@ import {
   type BlindRankArchetypeId,
   type BlindRankTierId,
 } from "./blindRankEngine";
+import { OFFICIAL_COMPARISON_GRADING_RULES } from "./officialScoreContract";
 
 export type KeepCutPackId = BlindRankPackId;
 export type KeepCutTierId = BlindRankTierId;
@@ -55,6 +56,8 @@ export interface KeepCutResult {
   cut: PlayFighter[];
   keptIds: string[];
   cutIds: string[];
+  correctComparisons: number;
+  modelTopFourKept: number;
   score: number;
   label: KeepCutScoreLabel;
 }
@@ -214,20 +217,46 @@ export function scoreKeepCutSelection(packId: KeepCutPackId, board: readonly Pla
   }
   const boardIds = new Set(board.map((fighter) => fighter.id));
   if (keptIds.some((id) => !boardIds.has(id))) throw new Error("Kept fighters must come from the board.");
+
   const keptSet = new Set(keptIds);
   const kept = board.filter((fighter) => keptSet.has(fighter.id));
   const cut = board.filter((fighter) => !keptSet.has(fighter.id));
-  const poolScores = keepCutPool(packId).map((fighter) => keepCutRating(packId, fighter)).sort((a, b) => a - b);
-  // Each kept fighter becomes a percentile inside the eligible category pool. The four
-  // percentiles are averaged and rounded to 0–100. Only blindRankRating supplies grading
-  // evidence; fighter names, display order, and presentation fields do not affect the score.
-  const percentiles = kept.map((fighter) => {
-    const rating = keepCutRating(packId, fighter);
-    const belowOrEqual = poolScores.filter((score) => score <= rating).length;
-    return ((belowOrEqual - 1) / Math.max(1, poolScores.length - 1)) * 100;
-  });
-  const score = Math.max(0, Math.min(100, Math.round(percentiles.reduce((sum, value) => sum + value, 0) / KEEP_COUNT)));
-  return { kept, cut, keptIds: kept.map((fighter) => fighter.id), cutIds: cut.map((fighter) => fighter.id), score, label: keepCutScoreLabel(score) };
+  const rules = OFFICIAL_COMPARISON_GRADING_RULES["keep-cut"];
+  let correctComparisons = 0;
+
+  for (const keptFighter of kept) {
+    const keptRating = keepCutRating(packId, keptFighter);
+    for (const cutFighter of cut) {
+      const cutRating = keepCutRating(packId, cutFighter);
+      if (keptRating >= cutRating - rules.ratingTieTolerance) correctComparisons += 1;
+    }
+  }
+
+  const score = Math.max(
+    0,
+    Math.min(100, Math.round(correctComparisons * rules.normalizedPointsPerComparison)),
+  );
+  const modelTopFourIds = new Set(
+    [...board]
+      .sort((left, right) => {
+        const ratingDifference = keepCutRating(packId, right) - keepCutRating(packId, left);
+        return ratingDifference || left.id.localeCompare(right.id);
+      })
+      .slice(0, KEEP_COUNT)
+      .map((fighter) => fighter.id),
+  );
+  const modelTopFourKept = kept.filter((fighter) => modelTopFourIds.has(fighter.id)).length;
+
+  return {
+    kept,
+    cut,
+    keptIds: kept.map((fighter) => fighter.id),
+    cutIds: cut.map((fighter) => fighter.id),
+    correctComparisons,
+    modelTopFourKept,
+    score,
+    label: keepCutScoreLabel(score),
+  };
 }
 
 export function keepCutChallengeUrl(packId: KeepCutPackId, lineup: readonly PlayFighter[]) {

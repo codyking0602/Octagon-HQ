@@ -83,8 +83,16 @@ describe("Play game lineup contracts", () => {
     expect(playGameDefinition("wavelength").lineup.completionState).toBe("fourth-guess-locked");
     expect(playGameDefinition("blind-resume").lineup.completionState).toBe("five-picks-complete");
     expect(playGameDefinition("blind-rank").lineup.completionState).toBe("five-slots-locked");
-    expect(playGameDefinition("keep-cut").lineup.completionState).toBe("four-keeps-submitted");
+    expect(playGameDefinition("keep-cut").lineup.completionState).toBe("eight-decisions-locked");
     expect(playGameDefinition("better-than").lineup.completionState).toBe("claim-locked");
     expect(playGameDefinition("auction").lineup.completionState).toBe("auction-complete");
+  });
+
+  it("keeps Keep Cut blind and locked instead of exposing the full board", () => {
+    const game = playGameDefinition("keep-cut");
+    expect(game.description).toContain("one at a time");
+    expect(game.description).toContain("lock four keeps and four cuts");
+    expect(game.lineup.difficultyModel).toContain("revealed one fighter at a time");
+    expect(game.lineup.difficultyModel).toContain("decision locked");
   });
 });
