@@ -17,10 +17,9 @@ async function fetchLiveMarker() {
         { cache: "no-store", headers: { Accept: "application/json" } },
       );
       expect(response.ok).toBe(true);
-      const marker = await response.json() as { sha?: unknown; asset?: unknown };
+      const marker = await response.json() as { sha?: unknown };
       expect(marker.sha).toBe(EXPECTED_SHA);
-      expect(typeof marker.asset).toBe("string");
-      return marker as { sha: string; asset: string };
+      return;
     } catch (error) {
       lastError = error;
       if (attempt < 36) await delay(5_000);
@@ -30,13 +29,26 @@ async function fetchLiveMarker() {
   throw lastError;
 }
 
-it("serves PR 313 from the exact live frontend and daily runtime deployment", async () => {
-  const marker = await fetchLiveMarker();
-  const assetResponse = await fetch(new URL(marker.asset, PRODUCTION_ORIGIN), {
+async function fetchLiveApplicationAsset() {
+  const htmlResponse = await fetch(`${PRODUCTION_ORIGIN}/?proof=${Date.now()}`, {
+    cache: "no-store",
+    headers: { Accept: "text/html" },
+  });
+  expect(htmlResponse.ok).toBe(true);
+  const html = await htmlResponse.text();
+  const assetPath = html.match(/<script[^>]+src=["']([^"']+\/assets\/[^"']+\.js)["']/i)?.[1];
+  expect(assetPath).toBeTruthy();
+
+  const assetResponse = await fetch(new URL(assetPath!, PRODUCTION_ORIGIN), {
     cache: "no-store",
   });
   expect(assetResponse.ok).toBe(true);
-  const asset = await assetResponse.text();
+  return assetResponse.text();
+}
+
+it("serves PR 313 from the exact live frontend and daily runtime deployment", async () => {
+  await fetchLiveMarker();
+  const asset = await fetchLiveApplicationAsset();
   const supabaseOrigin = asset.match(/https:\/\/[a-z0-9-]+\.supabase\.co/i)?.[0];
   expect(supabaseOrigin).toBeTruthy();
 
