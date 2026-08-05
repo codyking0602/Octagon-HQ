@@ -14,11 +14,20 @@ import {
   recordDeviceFindLeaderAttempt,
   type FindLeaderHistoryRow,
 } from "./findLeaderStorage";
-import {
-  createFindLeaderHistoryRepository,
-  type FindLeaderDailyLeaderboard,
-  type FindLeaderHistoryRepository,
+import type {
+  FindLeaderDailyLeaderboard,
+  FindLeaderHistoryRepository,
 } from "./findLeaderHistoryRepository";
+import {
+  createTodayChallengeRepository,
+  type TodayChallengeHistoryRow,
+  type TodayChallengeLeaderboard,
+  type TodayChallengeProjection,
+  type TodayChallengeRepository,
+  type TodayChallengeStreak,
+} from "./todayChallengeRepository";
+
+type HistoryRepository = TodayChallengeRepository | FindLeaderHistoryRepository;
 
 interface FindLeaderHistoryContextValue {
   configured: boolean;
@@ -26,12 +35,15 @@ interface FindLeaderHistoryContextValue {
   loading: boolean;
   error: string;
   rows: FindLeaderHistoryRow[];
-  dailyLeaderboard: FindLeaderDailyLeaderboard | null;
+  dailyRows: TodayChallengeHistoryRow[];
+  dailyStreak: TodayChallengeStreak | null;
+  todayChallenge: TodayChallengeProjection | null;
+  dailyLeaderboard: TodayChallengeLeaderboard | null;
   dailyLeaderboardDay: string | null;
   dailyLeaderboardLoading: boolean;
   dailyLeaderboardError: string;
   refresh: () => Promise<void>;
-  loadDailyLeaderboard: (day: string) => Promise<void>;
+  loadDailyLeaderboard: (day: string, scheduleVersion?: string) => Promise<void>;
   recordAttempt: (day: string, score: number) => Promise<void>;
 }
 
@@ -39,12 +51,36 @@ const FindLeaderHistoryContext = createContext<FindLeaderHistoryContextValue | n
 
 function readableError(error: unknown) {
   if (error instanceof Error && error.message) return error.message;
-  return "Octagon HQ could not sync Find the Leader history.";
+  return "Octagon HQ could not sync Today’s Challenge history.";
 }
 
-function readableLeaderboardError(error: unknown) {
-  if (error instanceof Error && error.message) return error.message;
-  return "Octagon HQ could not load today’s leaderboard.";
+function legacyFindLeaderRows(rows: TodayChallengeHistoryRow[]): FindLeaderHistoryRow[] {
+  return rows
+    .filter((row) => row.gameType === "find_leader")
+    .map((row) => ({
+      day: row.day,
+      officialScore: row.nativeScore,
+      bestScore: row.nativeScore,
+      attempts: 1,
+      completedAt: row.completedAt,
+    }));
+}
+
+function legacyLeaderboard(value: FindLeaderDailyLeaderboard): TodayChallengeLeaderboard {
+  return {
+    unlocked: value.unlocked,
+    playerCount: value.playerCount,
+    entries: value.entries.map((entry) => ({
+      rank: entry.rank,
+      displayName: entry.displayName,
+      initials: entry.initials,
+      avatarPhotoData: entry.avatarPhotoData,
+      gameType: "find_leader",
+      nativeScore: entry.officialScore,
+      normalizedScore: entry.officialScore * 10,
+      isCurrentUser: entry.isCurrentUser,
+    })),
+  };
 }
 
 function mergeHistoryRow(rows: FindLeaderHistoryRow[], next: FindLeaderHistoryRow) {
@@ -55,22 +91,24 @@ function mergeHistoryRow(rows: FindLeaderHistoryRow[], next: FindLeaderHistoryRo
 export function FindLeaderHistoryProvider({
   children,
   repository: suppliedRepository,
-}: PropsWithChildren<{ repository?: FindLeaderHistoryRepository | null }>) {
+}: PropsWithChildren<{ repository?: HistoryRepository | null }>) {
   const identity = useIdentity();
   const profileId = identity.profile?.id ?? null;
   const profileIdRef = useRef(profileId);
   profileIdRef.current = profileId;
   const leaderboardDayRef = useRef<string | null>(null);
+  const leaderboardVersionRef = useRef<string | undefined>(undefined);
   const leaderboardRevisionRef = useRef(0);
-  const [repository] = useState<FindLeaderHistoryRepository | null>(() => (
-    suppliedRepository === undefined
-      ? createFindLeaderHistoryRepository()
-      : suppliedRepository
+  const [repository] = useState<HistoryRepository | null>(() => (
+    suppliedRepository === undefined ? createTodayChallengeRepository() : suppliedRepository
   ));
   const [rows, setRows] = useState<FindLeaderHistoryRow[]>([]);
+  const [dailyRows, setDailyRows] = useState<TodayChallengeHistoryRow[]>([]);
+  const [dailyStreak, setDailyStreak] = useState<TodayChallengeStreak | null>(null);
+  const [todayChallenge, setTodayChallenge] = useState<TodayChallengeProjection | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [dailyLeaderboard, setDailyLeaderboard] = useState<FindLeaderDailyLeaderboard | null>(null);
+  const [dailyLeaderboard, setDailyLeaderboard] = useState<TodayChallengeLeaderboard | null>(null);
   const [dailyLeaderboardDay, setDailyLeaderboardDay] = useState<string | null>(null);
   const [dailyLeaderboardLoading, setDailyLeaderboardLoading] = useState(false);
   const [dailyLeaderboardError, setDailyLeaderboardError] = useState("");
@@ -80,6 +118,9 @@ export function FindLeaderHistoryProvider({
     const expectedProfileId = profileId;
     if (!expectedProfileId) {
       setRows(loadDeviceFindLeaderHistory());
+      setDailyRows([]);
+      setDailyStreak(null);
+      setTodayChallenge(null);
       setLoading(false);
       setError("");
       return;
@@ -87,6 +128,9 @@ export function FindLeaderHistoryProvider({
 
     if (!repository) {
       setRows([]);
+      setDailyRows([]);
+      setDailyStreak(null);
+      setTodayChallenge(null);
       setLoading(false);
       setError("Profile history is not connected on this build.");
       return;
@@ -94,22 +138,39 @@ export function FindLeaderHistoryProvider({
 
     setLoading(true);
     try {
-      const nextRows = await repository.load();
-      if (profileIdRef.current !== expectedProfileId) return;
-      setRows(nextRows);
+      if ("loadToday" in repository) {
+        const [today, history, streak] = await Promise.all([
+          repository.loadToday(),
+          repository.loadHistory(),
+          repository.loadStreak(),
+        ]);
+        if (profileIdRef.current !== expectedProfileId) return;
+        setTodayChallenge(today);
+        setDailyRows(history);
+        setRows(legacyFindLeaderRows(history));
+        setDailyStreak(streak);
+      } else {
+        const history = await repository.load();
+        if (profileIdRef.current !== expectedProfileId) return;
+        setRows(history);
+        setDailyRows([]);
+        setDailyStreak(null);
+        setTodayChallenge(null);
+      }
       setError("");
     } catch (nextError) {
-      if (profileIdRef.current !== expectedProfileId) return;
-      setError(readableError(nextError));
+      if (profileIdRef.current === expectedProfileId) setError(readableError(nextError));
     } finally {
       if (profileIdRef.current === expectedProfileId) setLoading(false);
     }
   }, [profileId, repository]);
 
-  const loadDailyLeaderboard = useCallback(async (day: string) => {
+  const loadDailyLeaderboard = useCallback(async (day: string, scheduleVersion?: string) => {
     const expectedProfileId = profileId;
     const revision = ++leaderboardRevisionRef.current;
+    const version = scheduleVersion ?? todayChallenge?.scheduleVersion;
     leaderboardDayRef.current = day;
+    leaderboardVersionRef.current = version;
     setDailyLeaderboardDay(day);
 
     if (!expectedProfileId) {
@@ -119,7 +180,7 @@ export function FindLeaderHistoryProvider({
       return;
     }
 
-    if (!repository?.loadDailyLeaderboard) {
+    if (!repository) {
       setDailyLeaderboard(null);
       setDailyLeaderboardLoading(false);
       setDailyLeaderboardError("Today’s leaderboard is not connected on this build.");
@@ -128,24 +189,35 @@ export function FindLeaderHistoryProvider({
 
     setDailyLeaderboardLoading(true);
     try {
-      const nextLeaderboard = await repository.loadDailyLeaderboard(day);
+      let next: TodayChallengeLeaderboard | null = null;
+      if ("loadToday" in repository) {
+        if (!version) {
+          setDailyLeaderboard(null);
+          setDailyLeaderboardError("");
+          return;
+        }
+        next = await repository.loadDailyLeaderboard(day, version);
+      } else if (repository.loadDailyLeaderboard) {
+        next = legacyLeaderboard(await repository.loadDailyLeaderboard(day));
+      }
       if (revision !== leaderboardRevisionRef.current || profileIdRef.current !== expectedProfileId) return;
-      setDailyLeaderboard(nextLeaderboard);
+      setDailyLeaderboard(next);
       setDailyLeaderboardError("");
     } catch (nextError) {
       if (revision !== leaderboardRevisionRef.current || profileIdRef.current !== expectedProfileId) return;
       setDailyLeaderboard(null);
-      setDailyLeaderboardError(readableLeaderboardError(nextError));
+      setDailyLeaderboardError(readableError(nextError));
     } finally {
       if (revision === leaderboardRevisionRef.current && profileIdRef.current === expectedProfileId) {
         setDailyLeaderboardLoading(false);
       }
     }
-  }, [profileId, repository]);
+  }, [profileId, repository, todayChallenge?.scheduleVersion]);
 
   useLayoutEffect(() => {
     leaderboardRevisionRef.current += 1;
     leaderboardDayRef.current = null;
+    leaderboardVersionRef.current = undefined;
     setDailyLeaderboard(null);
     setDailyLeaderboardDay(null);
     setDailyLeaderboardLoading(false);
@@ -158,7 +230,7 @@ export function FindLeaderHistoryProvider({
     const refreshVisibleData = () => {
       void refresh();
       const day = leaderboardDayRef.current;
-      if (day) void loadDailyLeaderboard(day);
+      if (day) void loadDailyLeaderboard(day, leaderboardVersionRef.current);
     };
     const onVisibility = () => {
       if (document.visibilityState === "visible") refreshVisibleData();
@@ -184,17 +256,19 @@ export function FindLeaderHistoryProvider({
       return;
     }
 
+    if ("loadToday" in repository) {
+      setError("Official daily results are saved by the Today’s Challenge runtime.");
+      return;
+    }
+
     try {
       const saved = await repository.recordAttempt(day, score);
       if (profileIdRef.current !== expectedProfileId) return;
       setRows((current) => mergeHistoryRow(current, saved));
       setError("");
-      if (repository.loadDailyLeaderboard) {
-        await loadDailyLeaderboard(day);
-      }
+      if (repository.loadDailyLeaderboard) await loadDailyLeaderboard(day);
     } catch (nextError) {
-      if (profileIdRef.current !== expectedProfileId) return;
-      setError(readableError(nextError));
+      if (profileIdRef.current === expectedProfileId) setError(readableError(nextError));
     }
   }, [loadDailyLeaderboard, profileId, repository]);
 
@@ -205,6 +279,9 @@ export function FindLeaderHistoryProvider({
       loading,
       error,
       rows,
+      dailyRows,
+      dailyStreak,
+      todayChallenge,
       dailyLeaderboard,
       dailyLeaderboardDay,
       dailyLeaderboardLoading,
