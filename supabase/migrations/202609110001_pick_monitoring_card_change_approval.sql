@@ -54,6 +54,16 @@ begin
     raise exception 'monitoring finding is not bound to a published event';
   end if;
 
+  if v_run.run_id is distinct from (
+    select latest.run_id
+    from public.pick_monitoring_runs latest
+    where latest.event_id = v_run.event_id
+    order by latest.created_at desc, latest.run_id desc
+    limit 1
+  ) then
+    raise exception 'newer monitoring evidence exists; run a fresh check';
+  end if;
+
   v_proposal := v_finding.source_details->'approval_proposal';
   if jsonb_typeof(v_proposal) <> 'object' then
     raise exception 'monitoring finding is review-only';
