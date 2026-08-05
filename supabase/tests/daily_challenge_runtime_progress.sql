@@ -208,17 +208,20 @@ begin
   v_progress := public.get_my_daily_challenge_progress(:'daily_id'::uuid);
   if v_progress->>'revision' <> '2'
     or v_progress#>>'{public_state,complete}' <> 'true'
-    or v_progress::text like '%ratings%'
-    or v_progress::text like '%pack_id%' then
+    or v_progress ? 'submission_state'
+    or v_progress ? 'private_setup_evidence'
+    or v_progress ? 'private_grading_evidence'
+    or v_progress ? 'reveal_setup' then
     raise exception 'authenticated progress projection leaked or lost state: %', v_progress;
   end if;
 
   v_today := public.get_today_challenge_public();
   if v_today->>'progress_revision' <> '2'
     or v_today#>>'{public_state,complete}' <> 'true'
-    or v_today->'reveal_setup' is not null
-    or v_today::text like '%private_grading_evidence%'
-    or v_today::text like '%ratings%' then
+    or coalesce(v_today->'reveal_setup', 'null'::jsonb) <> 'null'::jsonb
+    or v_today ? 'submission_state'
+    or v_today ? 'private_setup_evidence'
+    or v_today ? 'private_grading_evidence' then
     raise exception 'pre-attempt public Today projection leaked private evidence: %', v_today;
   end if;
 
@@ -227,8 +230,12 @@ begin
       :'daily_id'::uuid,
       '74000000-0000-4000-8000-000000000001'::uuid
     );
-  exception when insufficient_privilege then
-    v_failed := true;
+  exception when others then
+    if sqlerrm like '%service role required%' then
+      v_failed := true;
+    else
+      raise;
+    end if;
   end;
   if not v_failed then
     raise exception 'authenticated caller reached service-only runtime context';
