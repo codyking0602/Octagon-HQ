@@ -7,7 +7,12 @@ import MonitoringInboxPage from "./MonitoringInboxPage";
 import type { MonitoringInbox } from "./monitoringInboxModel";
 import type { MonitoringInboxRepository } from "./monitoringInboxRepository";
 
-const cody = { id: "11111111-1111-4111-8111-111111111111", displayName: "CODY", initials: "CK" };
+const cody = {
+  id: "11111111-1111-4111-8111-111111111111",
+  displayName: "CODY",
+  initials: "CK",
+};
+
 const finding = {
   findingId: "22222222-2222-4222-8222-222222222222",
   runId: "33333333-3333-4333-8333-333333333333",
@@ -79,7 +84,12 @@ const inbox: MonitoringInbox = {
   },
   unresolvedCount: 1,
   newFindings: [finding],
-  reviewedFindings: [],
+  reviewedFindings: [{
+    ...finding,
+    findingId: "44444444-4444-4444-8444-444444444444",
+    reviewStatus: "dismissed",
+    reviewedAt: "2026-08-01T12:30:00.000Z",
+  }],
   recentRuns: [],
   latestScheduledDecision: {
     outcome: "completed",
@@ -100,6 +110,17 @@ function gateway(profile = cody): IdentityGateway {
   };
 }
 
+function signedOutGateway(): IdentityGateway {
+  return {
+    getSession: async () => null,
+    subscribe: () => () => undefined,
+    loadProfile: async () => null,
+    signIn: async () => undefined,
+    createProfile: async () => undefined,
+    signOut: async () => undefined,
+  };
+}
+
 function repository(value: MonitoringInbox): MonitoringInboxRepository {
   return {
     loadInbox: vi.fn().mockResolvedValue(value),
@@ -108,24 +129,31 @@ function repository(value: MonitoringInbox): MonitoringInboxRepository {
   };
 }
 
-function renderPage(repo: MonitoringInboxRepository) {
+function renderPage(repo: MonitoringInboxRepository, identityGateway: IdentityGateway = gateway()) {
   return render(
     <MemoryRouter>
-      <IdentityProvider gateway={gateway()}>
+      <IdentityProvider gateway={identityGateway}>
         <MonitoringInboxPage repository={repo} />
       </IdentityProvider>
     </MemoryRouter>,
   );
 }
 
-beforeEach(() => vi.spyOn(window, "confirm").mockReturnValue(true));
-afterEach(() => { cleanup(); vi.restoreAllMocks(); });
+beforeEach(() => {
+  vi.spyOn(window, "confirm").mockReturnValue(true);
+});
+
+afterEach(() => {
+  cleanup();
+  vi.restoreAllMocks();
+});
 
 describe("Monitoring Inbox", () => {
   it("shows one compact automation state, current event, and pending changes", async () => {
     renderPage(repository(inbox));
 
     expect(await screen.findByRole("heading", { name: "AUTO-SYNC CHECKED THE EVENT" })).toBeInTheDocument();
+    expect(screen.getByText(/last scheduled provider check/i)).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "UFC Fight Night" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Review only what changed" })).toBeInTheDocument();
     expect(screen.getByText("Fight order changed.")).toBeInTheDocument();
@@ -137,7 +165,6 @@ describe("Monitoring Inbox", () => {
   it("does not describe a scheduler wake as a provider check", async () => {
     renderPage(repository({
       ...inbox,
-      latestRun: null,
       latestScheduledDecision: {
         outcome: "skipped",
         reason: "not_due",
@@ -150,31 +177,99 @@ describe("Monitoring Inbox", () => {
     expect(screen.getByText(/no provider check was due/i)).toBeInTheDocument();
   });
 
+  it("surfaces partial scheduled coverage as needing attention", async () => {
+    renderPage(repository({
+      ...inbox,
+      latestScheduledDecision: {
+        outcome: "partial",
+        reason: "partial_coverage",
+        attemptedAt: "2026-08-01T12:07:00.000Z",
+        providerCalled: true,
+      },
+    }));
+
+    expect(await screen.findByRole("heading", { name: "AUTO-SYNC HAS PARTIAL COVERAGE" })).toBeInTheDocument();
+    expect(screen.getByText(/returned partial coverage/i)).toBeInTheDocument();
+  });
+
   it("runs the canonical manual check and refreshes the same inbox", async () => {
     const repo = repository(inbox);
     renderPage(repo);
 
     fireEvent.click(await screen.findByRole("button", { name: "CHECK NOW" }));
+
     await waitFor(() => expect(repo.runManualCheck).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(repo.loadInbox).toHaveBeenCalledTimes(2));
     expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("42 requests remaining"));
   });
 
-  it("keeps existing review and dismiss mutations", async () => {
-    const repo = repository(inbox);
-    renderPage(repo);
+  it("keeps both existing review mutations", async () => {
+    const reviewRepo = repository(inbox);
+    renderPage(reviewRepo);
 
     fireEvent.click(await screen.findByRole("button", { name: "MARK REVIEWED" }));
-    await waitFor(() => expect(repo.reviewFinding).toHaveBeenCalledWith(finding.findingId, "reviewed"));
+    await waitFor(() => expect(reviewRepo.reviewFinding).toHaveBeenCalledWith(finding.findingId, "reviewed"));
+    cleanup();
+
+    const dismissRepo = repository(inbox);
+    renderPage(dismissRepo);
+    fireEvent.click(await screen.findByRole("button", { name: "DISMISS" }));
+    await waitFor(() => expect(dismissRepo.reviewFinding).toHaveBeenCalledWith(finding.findingId, "dismissed"));
   });
 
-  it("uses an honest empty state", async () => {
+  it("disables owner actions while a manual check is in progress", async () => {
+    let finish: () => void = () => undefined;
+    const repo = repository(inbox);
+    vi.mocked(repo.runManualCheck).mockImplementation(() => new Promise<void>((resolve) => { finish = resolve; }));
+    renderPage(repo);
+
+    fireEvent.click(await screen.findByRole("button", { name: "CHECK NOW" }));
+    expect(await screen.findByRole("button", { name: "CHECKING NOW…" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "REFRESH STATUS" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "MARK REVIEWED" })).toBeDisabled();
+    finish();
+    await waitFor(() => expect(repo.loadInbox).toHaveBeenCalledTimes(2));
+  });
+
+  it("shows an owner sign-in prompt without loading operational data", async () => {
+    const repo = repository(inbox);
+    renderPage(repo, signedOutGateway());
+
+    expect(await screen.findByRole("heading", { name: "Sign in to manage Picks monitoring." })).toBeInTheDocument();
+    expect(repo.loadInbox).not.toHaveBeenCalled();
+    expect(screen.queryByText("UFC Fight Night")).not.toBeInTheDocument();
+  });
+
+  it("shows a non-owner denial without leaking event or finding data", async () => {
+    const repo = repository(inbox);
+    vi.mocked(repo.loadInbox).mockRejectedValue(new Error("pick control owner required"));
+    renderPage(repo);
+
+    expect(await screen.findByText("Monitoring Inbox is available only to the designated Fight Night owner.")).toBeInTheDocument();
+    expect(screen.queryByText("UFC Fight Night")).not.toBeInTheDocument();
+    expect(screen.queryByText("Fight order changed.")).not.toBeInTheDocument();
+  });
+
+  it("explains the no-event and no-finding state", async () => {
     renderPage(repository({
       ...inbox,
+      monitoredEvent: null,
+      scheduleState: null,
+      latestRun: null,
       unresolvedCount: 0,
       newFindings: [],
+      reviewedFindings: [],
+      recentRuns: [],
+      latestScheduledDecision: {
+        outcome: "skipped",
+        reason: "no_event",
+        attemptedAt: "2026-08-01T12:07:00.000Z",
+        providerCalled: false,
+      },
     }));
 
-    expect(await screen.findByRole("heading", { name: "No event changes need your attention." })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Stage or publish the next UFC card." })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "No event changes need your attention." })).toBeInTheDocument();
+    expect(screen.getByText(/there is no event to monitor/i)).toBeInTheDocument();
   });
 });
