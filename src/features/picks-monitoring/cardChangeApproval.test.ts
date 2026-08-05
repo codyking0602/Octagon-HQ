@@ -58,7 +58,7 @@ describe("monitoring card-change approval proposals", () => {
     });
 
     expect(result).toHaveLength(1);
-    expect(result[0]).toMatchObject({
+    expect(result[0]!).toMatchObject({
       bout_id: first.bout_id,
       summary: "Replace Beta with Replacement.",
       source_details: {
@@ -77,7 +77,7 @@ describe("monitoring card-change approval proposals", () => {
   it("creates explicit removal, reorder, and deadline proposals", () => {
     const removal = findings({ ...source, bouts: [second] });
     expect(removal).toHaveLength(1);
-    expect(removal[0].source_details.approval_proposal).toMatchObject({
+    expect(removal[0]!.source_details?.approval_proposal).toMatchObject({
       action: "remove_bout",
       bout_id: first.bout_id,
       expected_included_in_picks: true,
@@ -85,7 +85,7 @@ describe("monitoring card-change approval proposals", () => {
 
     const reorder = findings({ ...source, bouts: [second, first] });
     expect(reorder).toHaveLength(1);
-    expect(reorder[0].source_details.approval_proposal).toEqual({
+    expect(reorder[0]!.source_details?.approval_proposal).toEqual({
       action: "reorder_card",
       event_id: canonical.event_id,
       expected_bout_ids: [first.bout_id, second.bout_id],
@@ -97,7 +97,7 @@ describe("monitoring card-change approval proposals", () => {
       locks_at: "2099-08-10T00:30:00.000Z",
     });
     expect(deadline).toHaveLength(1);
-    expect(deadline[0].source_details.approval_proposal).toMatchObject({
+    expect(deadline[0]!.source_details?.approval_proposal).toMatchObject({
       action: "adjust_event_lock",
       expected_locks_at: canonical.locks_at,
       proposed_locks_at: "2099-08-10T00:30:00.000Z",
@@ -106,7 +106,7 @@ describe("monitoring card-change approval proposals", () => {
 
   it("fails closed for staged cards and ambiguous event-time changes", () => {
     const staged = findings({ ...source, bouts: [second, first] }, "staged");
-    expect(staged.some((item) => item.source_details.approval_proposal)).toBe(false);
+    expect(staged.some((item) => item.source_details?.approval_proposal)).toBe(false);
 
     const movedEvent = findings({
       ...source,
@@ -117,6 +117,6 @@ describe("monitoring card-change approval proposals", () => {
       "Main-card time changed.",
       "Picks lock changed.",
     ]));
-    expect(movedEvent.some((item) => item.source_details.approval_proposal)).toBe(false);
+    expect(movedEvent.some((item) => item.source_details?.approval_proposal)).toBe(false);
   });
 });
