@@ -44,7 +44,9 @@ describe("owner-approved monitoring card changes", () => {
     expect(migration).toContain("v_finding.review_status <> 'new'");
     expect(migration).toContain("v_finding.source_details->'approval_proposal'");
     expect(migration).toContain("v_finding.event_id is distinct from v_run.event_id");
-    expect(migration).toContain("order by latest.created_at desc, latest.run_id desc");
+    expect(migration).toContain(
+      "order by coalesce(latest.completed_at, latest.started_at) desc",
+    );
     expect(migration).toContain("newer monitoring evidence exists; run a fresh check");
     expect(migration).toContain("review_status = 'reviewed'");
     expect(migration).toContain("reviewed_by = auth.uid()");
