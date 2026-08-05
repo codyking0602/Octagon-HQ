@@ -1,0 +1,81 @@
+name: Verify Picks Monitoring Approval
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/verify-picks-monitoring-approval.yml"
+      - "src/features/picks-monitoring/**"
+      - "supabase/migrations/202609110001_pick_monitoring_card_change_approval.sql"
+      - "supabase/tests/pick_monitoring_card_change_approval.sql"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fresh-database-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
+
+    steps:
+      - name: Check out exact source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 0
+
+      - name: Verify exact checkout and clean patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          if [ -n "$BASE_SHA" ]; then
+            git diff --check "$BASE_SHA...$SOURCE_SHA"
+          else
+            git diff --check HEAD^..HEAD
+          fi
+
+      - name: Set up Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start fresh Supabase database
+        shell: bash
+        run: |
+          set -euo pipefail
+          supabase db start
+          db_url=$(supabase status -o env | sed -n 's/^DB_URL=//p' | tr -d '"')
+          if [ -z "$db_url" ]; then
+            echo "::error title=Local database unavailable::Supabase did not report DB_URL."
+            exit 1
+          fi
+          echo "DB_URL=$db_url" >> "$GITHUB_ENV"
+
+      - name: Execute owner-approved monitoring card-change proof
+        shell: bash
+        run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/pick_monitoring_card_change_approval.sql
+
+      - name: Stop local Supabase database
+        if: always()
+        run: supabase stop --no-backup
+
+      - name: Record exact-head proof
+        if: success()
+        shell: bash
+        run: |
+          {
+            echo "### Picks monitoring approval verified"
+            echo "- Exact source SHA: \`$SOURCE_SHA\`"
+            echo "- Fresh migrations: passed"
+            echo "- Owner authorization: passed"
+            echo "- Deadline approval: passed"
+            echo "- Fight removal approval: passed"
+            echo "- Fighter replacement and repick boundary: passed"
+            echo "- Fight reorder approval: passed"
+            echo "- Stale-state rejection and atomic rollback: passed"
+            echo "- Canonical card-change audit ownership: passed"
+          } >> "$GITHUB_STEP_SUMMARY"
