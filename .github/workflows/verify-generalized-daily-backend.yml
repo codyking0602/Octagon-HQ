@@ -70,6 +70,49 @@ jobs:
           fi
           echo "DB_URL=$db_url" >> "$GITHUB_ENV"
 
+      - name: Bundle and execute daily runtime Edge Function locally
+        shell: bash
+        run: |
+          set -euo pipefail
+          log_file="$RUNNER_TEMP/daily-runtime-local.log"
+          response_file="$RUNNER_TEMP/daily-runtime-local.json"
+          supabase functions serve daily-challenge-runtime --no-verify-jwt >"$log_file" 2>&1 &
+          function_pid=$!
+          cleanup() {
+            kill "$function_pid" 2>/dev/null || true
+            wait "$function_pid" 2>/dev/null || true
+          }
+          trap cleanup EXIT
+
+          status=""
+          for attempt in $(seq 1 90); do
+            status=$(curl --silent --show-error \
+              --output "$response_file" \
+              --write-out "%{http_code}" \
+              --request POST \
+              --header "Content-Type: application/json" \
+              --data '{"mode":"deployment-info"}' \
+              "http://127.0.0.1:54321/functions/v1/daily-challenge-runtime" || true)
+            if [ "$status" = "200" ]; then
+              break
+            fi
+            if ! kill -0 "$function_pid" 2>/dev/null; then
+              cat "$log_file"
+              echo "::error title=Daily runtime bundle failed::The local Edge Function process exited before becoming healthy."
+              exit 1
+            fi
+            sleep 1
+          done
+
+          if [ "$status" != "200" ]; then
+            cat "$log_file"
+            echo "::error title=Daily runtime did not start::Expected HTTP 200 from the local deployment-info path, received ${status:-none}."
+            exit 1
+          fi
+          grep -Fq '"deployment_sha":"daily-challenge-runtime-v1"' "$response_file"
+          cleanup
+          trap - EXIT
+
       - name: Execute generalized SQL, RPC, RLS, scoring, DST, and replay proof
         shell: bash
         run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/generalized_todays_challenge_backend.sql
@@ -107,6 +150,7 @@ jobs:
             echo "### Generalized Today’s Challenge backend verified"
             echo "- Exact source SHA: \`$SOURCE_SHA\`"
             echo "- Fresh database migrations: passed"
+            echo "- Daily runtime Edge Function local bundle and execution: passed"
             echo "- Five server-owned graders: passed"
             echo "- Five deterministic runtime setup adapters: passed"
             echo "- Progressive reveal and hidden-evidence boundaries: passed"
