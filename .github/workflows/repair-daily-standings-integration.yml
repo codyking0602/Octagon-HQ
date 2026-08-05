@@ -125,13 +125,13 @@ jobs:
             raise SystemExit("repository method insertion point changed")
           text = text.replace(method_marker, method_replacement, 1)
 
-          implementation_marker = dedent('''\
+          implementation_marker = '''\
               async loadStreak() {
                 const row = streakSchema.parse(await rpc(client, "get_my_daily_challenge_streak"));
                 return { currentStreak: row.current_streak, bestStreak: row.best_streak };
               },
-              async loadDailyLeaderboard(day, scheduleVersion) {''')
-          implementation_replacement = dedent('''\
+              async loadDailyLeaderboard(day, scheduleVersion) {'''
+          implementation_replacement = '''\
               async loadStreak() {
                 const row = streakSchema.parse(await rpc(client, "get_my_daily_challenge_streak"));
                 return { currentStreak: row.current_streak, bestStreak: row.best_streak };
@@ -164,7 +164,7 @@ jobs:
                   })),
                 };
               },
-              async loadDailyLeaderboard(day, scheduleVersion) {''')
+              async loadDailyLeaderboard(day, scheduleVersion) {'''
           if text.count(implementation_marker) != 1:
             raise SystemExit("repository implementation insertion point changed")
           repo.write_text(text.replace(implementation_marker, implementation_replacement, 1))
