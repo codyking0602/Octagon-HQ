@@ -55,9 +55,15 @@ function fighter(value: unknown): FighterPresentation | null {
     name: row.name,
     gender: typeof row.gender === "string" ? row.gender : "",
     divisions: strings(row.divisions),
-    mainEra: typeof row.main_era === "string" ? row.main_era : "",
-    thumbUrl: typeof row.thumb_url === "string" ? row.thumb_url : "",
-    profileUrl: typeof row.profile_url === "string" ? row.profile_url : "",
+    mainEra: typeof row.main_era === "string"
+      ? row.main_era
+      : typeof row.mainEra === "string" ? row.mainEra : "",
+    thumbUrl: typeof row.thumb_url === "string"
+      ? row.thumb_url
+      : typeof row.thumbUrl === "string" ? row.thumbUrl : "",
+    profileUrl: typeof row.profile_url === "string"
+      ? row.profile_url
+      : typeof row.profileUrl === "string" ? row.profileUrl : "",
   };
 }
 
