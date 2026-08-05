@@ -1,0 +1,454 @@
+name: Materialize Daily Challenge Standings
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/materialize-daily-challenge-standings.yml
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Integrate standings owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          repo = Path('src/features/play/todayChallengeRepository.ts')
+          text = repo.read_text()
+          marker = '''const streakSchema = z.object({
+            current_streak: z.coerce.number().int().nonnegative(),
+            best_streak: z.coerce.number().int().nonnegative(),
+          });
+          '''
+          addition = marker + '''const standingsEntrySchema = z.object({
+            rank: z.coerce.number().int().positive(),
+            profile_id: z.string().uuid(),
+            display_name: z.string(),
+            initials: z.string(),
+            avatar_photo_data: z.string().nullable().optional(),
+            wins: z.coerce.number().int().nonnegative(),
+            played: z.coerce.number().int().nonnegative(),
+            average_score: z.coerce.number().nonnegative(),
+            current_streak: z.coerce.number().int().nonnegative(),
+            best_streak: z.coerce.number().int().nonnegative(),
+            game_averages: z.object({
+              find_leader: z.coerce.number().nullable(),
+              wavelength: z.coerce.number().nullable(),
+              blind_resume: z.coerce.number().nullable(),
+              blind_rank_5: z.coerce.number().nullable(),
+              keep_4_cut_4: z.coerce.number().nullable(),
+            }),
+            is_current_user: z.boolean(),
+          });
+          const standingsSchema = z.object({
+            player_count: z.coerce.number().int().nonnegative(),
+            current_user_rank: z.coerce.number().int().positive().nullable(),
+            current_user_wins: z.coerce.number().int().nonnegative(),
+            entries: z.array(standingsEntrySchema),
+          });
+          '''
+          if text.count(marker) != 1:
+              raise SystemExit('standings schema insertion point changed')
+          text = text.replace(marker, addition, 1)
+
+          marker = '''export interface TodayChallengeStreak {
+            currentStreak: number;
+            bestStreak: number;
+          }
+          '''
+          addition = marker + '''
+          export interface TodayChallengeStandingsEntry {
+            rank: number;
+            profileId: string;
+            displayName: string;
+            initials: string;
+            avatarPhotoData: string | null;
+            wins: number;
+            played: number;
+            averageScore: number;
+            currentStreak: number;
+            bestStreak: number;
+            gameAverages: {
+              findLeader: number | null;
+              wavelength: number | null;
+              blindResume: number | null;
+              blindRank5: number | null;
+              keep4Cut4: number | null;
+            };
+            isCurrentUser: boolean;
+          }
+
+          export interface TodayChallengeStandings {
+            playerCount: number;
+            currentUserRank: number | null;
+            currentUserWins: number;
+            entries: TodayChallengeStandingsEntry[];
+          }
+          '''
+          if text.count(marker) != 1:
+              raise SystemExit('standings interface insertion point changed')
+          text = text.replace(marker, addition, 1)
+
+          marker = '''  loadHistory(): Promise<TodayChallengeHistoryRow[]>;
+            loadStreak(): Promise<TodayChallengeStreak>;
+            loadDailyLeaderboard(day: string, scheduleVersion: string): Promise<TodayChallengeLeaderboard>;
+          }'''
+          replacement = '''  loadHistory(): Promise<TodayChallengeHistoryRow[]>;
+            loadStreak(): Promise<TodayChallengeStreak>;
+            loadStandings(): Promise<TodayChallengeStandings>;
+            loadDailyLeaderboard(day: string, scheduleVersion: string): Promise<TodayChallengeLeaderboard>;
+          }'''
+          if text.count(marker) != 1:
+              raise SystemExit('repository method insertion point changed')
+          text = text.replace(marker, replacement, 1)
+
+          marker = '''    async loadStreak() {
+              const row = streakSchema.parse(await rpc(client, "get_my_daily_challenge_streak"));
+              return { currentStreak: row.current_streak, bestStreak: row.best_streak };
+            },
+            async loadDailyLeaderboard(day, scheduleVersion) {'''
+          replacement = '''    async loadStreak() {
+              const row = streakSchema.parse(await rpc(client, "get_my_daily_challenge_streak"));
+              return { currentStreak: row.current_streak, bestStreak: row.best_streak };
+            },
+            async loadStandings() {
+              const row = standingsSchema.parse(await rpc(client, "get_daily_challenge_standings"));
+              return {
+                playerCount: row.player_count,
+                currentUserRank: row.current_user_rank,
+                currentUserWins: row.current_user_wins,
+                entries: row.entries.map((entry) => ({
+                  rank: entry.rank,
+                  profileId: entry.profile_id,
+                  displayName: entry.display_name,
+                  initials: entry.initials,
+                  avatarPhotoData: entry.avatar_photo_data ?? null,
+                  wins: entry.wins,
+                  played: entry.played,
+                  averageScore: entry.average_score,
+                  currentStreak: entry.current_streak,
+                  bestStreak: entry.best_streak,
+                  gameAverages: {
+                    findLeader: entry.game_averages.find_leader,
+                    wavelength: entry.game_averages.wavelength,
+                    blindResume: entry.game_averages.blind_resume,
+                    blindRank5: entry.game_averages.blind_rank_5,
+                    keep4Cut4: entry.game_averages.keep_4_cut_4,
+                  },
+                  isCurrentUser: entry.is_current_user,
+                })),
+              };
+            },
+            async loadDailyLeaderboard(day, scheduleVersion) {'''
+          if text.count(marker) != 1:
+              raise SystemExit('repository implementation insertion point changed')
+          repo.write_text(text.replace(marker, replacement, 1))
+
+          overview = Path('src/features/play/useTodayChallengeOverview.ts')
+          overview.write_text('''import { useMemo } from "react";
+          import { useQuery } from "@tanstack/react-query";
+          import {
+            createTodayChallengeRepository,
+            type TodayChallengeProjection,
+            type TodayChallengeRepository,
+          } from "./todayChallengeRepository";
+
+          export const todayChallengeStandingsQueryKey = (profileId: string) => [
+            "daily-challenge-standings",
+            profileId,
+          ] as const;
+
+          export const todayChallengeLeaderboardQueryKey = (
+            profileId: string,
+            day: string,
+            scheduleVersion: string,
+          ) => [
+            "today-challenge-leaderboard",
+            profileId,
+            day,
+            scheduleVersion,
+          ] as const;
+
+          export function useTodayChallengeOverview({
+            profileId,
+            enabled,
+            projection,
+            repository: suppliedRepository,
+          }: {
+            profileId: string;
+            enabled: boolean;
+            projection: TodayChallengeProjection | null;
+            repository?: TodayChallengeRepository | null;
+          }) {
+            const repository = useMemo(
+              () => suppliedRepository === undefined
+                ? createTodayChallengeRepository()
+                : suppliedRepository,
+              [suppliedRepository],
+            );
+            const ready = enabled && Boolean(profileId) && Boolean(repository);
+            const standings = useQuery({
+              queryKey: todayChallengeStandingsQueryKey(profileId),
+              queryFn: () => repository!.loadStandings(),
+              enabled: ready,
+            });
+            const leaderboard = useQuery({
+              queryKey: todayChallengeLeaderboardQueryKey(
+                profileId,
+                projection?.centralDay ?? "unavailable",
+                projection?.scheduleVersion ?? "unavailable",
+              ),
+              queryFn: () => repository!.loadDailyLeaderboard(
+                projection!.centralDay,
+                projection!.scheduleVersion,
+              ),
+              enabled: ready && Boolean(projection),
+            });
+
+            return {
+              configured: Boolean(repository),
+              standings: standings.data ?? null,
+              leaderboard: leaderboard.data ?? null,
+              standingsLoading: standings.isLoading,
+              leaderboardLoading: leaderboard.isLoading,
+              loading: standings.isLoading || leaderboard.isLoading,
+              error: standings.error ?? leaderboard.error ?? null,
+              refresh: async () => {
+                await Promise.all([
+                  standings.refetch(),
+                  projection ? leaderboard.refetch() : Promise.resolve(),
+                ]);
+              },
+            };
+          }
+          '''.replace('          ', ''))
+
+          hub = Path('src/features/play/TodayChallengeHub.tsx')
+          text = hub.read_text()
+          text = text.replace('import { useIdentity } from "../identity/IdentityProvider";\n', 'import { useIdentity } from "../identity/IdentityProvider";\nimport { DailyChallengeStandings } from "./DailyChallengeStandings";\n', 1)
+          text = text.replace('''import type {
+            TodayChallengeHistoryRow,
+            TodayChallengeLeaderboard,
+            TodayChallengeProjection,
+          } from "./todayChallengeRepository";''', '''import type {
+            TodayChallengeLeaderboard,
+            TodayChallengeProjection,
+          } from "./todayChallengeRepository";''', 1)
+          text = re.sub(r'\nfunction nativeResult\([\s\S]*?\n}\n\nfunction gameTitle\([\s\S]*?\n}\n', '\n', text, count=1)
+          text = text.replace('  const history = overview.history.slice(0, 6);\n', '')
+          replacement = '''      <DailyChallengeStandings
+                standings={overview.standings}
+                loading={overview.standingsLoading}
+                error={overview.error instanceof Error ? overview.error : null}
+                onRefresh={() => { void overview.refresh(); }}
+              />'''
+          text, count = re.subn(r'      <details className="today-hub-history">[\s\S]*?      </details>', replacement, text, count=1)
+          if count != 1:
+              raise SystemExit('history accordion replacement point changed')
+          text = text.replace('loading={overview.loading}', 'loading={overview.leaderboardLoading}', 1)
+          hub.write_text(text)
+
+          css = Path('src/styles/today-challenge-hub.css')
+          css_text = css.read_text()
+          css_addition = r'''
+
+          .daily-standings {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            background: linear-gradient(145deg, var(--surface-raised), var(--surface));
+            min-width: 0;
+            overflow: hidden;
+          }
+
+          .daily-standings > summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--space-3);
+            padding: var(--space-4);
+            cursor: pointer;
+            list-style: none;
+          }
+
+          .daily-standings > summary::-webkit-details-marker { display: none; }
+          .daily-standings > summary strong { display: block; margin-top: 3px; }
+          .daily-standings > summary > span {
+            color: var(--text-muted);
+            font-size: 0.68rem;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            text-align: right;
+            text-transform: uppercase;
+            white-space: nowrap;
+          }
+          .daily-standings > summary > span b { color: var(--text-primary); }
+
+          .daily-standings__body {
+            display: grid;
+            gap: 6px;
+            padding: 0 var(--space-3) var(--space-3);
+          }
+
+          .daily-standings__header,
+          .daily-standings__row {
+            display: grid;
+            grid-template-columns: 24px minmax(86px, 1fr) 28px 34px 40px 44px 46px;
+            align-items: center;
+            gap: 5px;
+            min-width: 0;
+          }
+
+          .daily-standings__header {
+            padding: 0 7px 5px;
+            color: var(--text-muted);
+            font-size: 0.5rem;
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: 0.035em;
+            text-align: center;
+            text-transform: uppercase;
+          }
+          .daily-standings__header span:nth-child(2) { text-align: left; }
+
+          .daily-standings__member {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: color-mix(in srgb, var(--surface-raised) 70%, transparent);
+            overflow: hidden;
+          }
+          .daily-standings__member.is-current {
+            border-color: color-mix(in srgb, var(--ufc-red) 65%, var(--border));
+          }
+
+          .daily-standings__row {
+            width: 100%;
+            min-height: 46px;
+            padding: 6px 7px;
+            border: 0;
+            background: transparent;
+            color: inherit;
+            font: inherit;
+            font-size: 0.64rem;
+            text-align: center;
+            cursor: pointer;
+          }
+          .daily-standings__row > b { color: var(--ufc-red-strong); }
+          .daily-standings__row > strong,
+          .daily-standings__row > span { white-space: nowrap; }
+
+          .daily-standings__identity {
+            display: grid;
+            grid-template-columns: 28px minmax(0, 1fr);
+            align-items: center;
+            gap: 7px;
+            min-width: 0;
+            text-align: left;
+          }
+          .daily-standings__identity img,
+          .daily-standings__identity > span {
+            width: 28px;
+            height: 28px;
+            border-radius: 999px;
+            object-fit: cover;
+            display: grid;
+            place-items: center;
+            background: var(--surface);
+            font-size: 0.58rem;
+            font-weight: 900;
+          }
+          .daily-standings__identity strong {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+          .daily-standings__games {
+            display: grid;
+            gap: 8px;
+            padding: 10px;
+            border-top: 1px solid var(--border);
+          }
+          .daily-standings__games > strong {
+            font-size: 0.64rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+          }
+          .daily-standings__games > div {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 6px;
+          }
+          .daily-standings__games span {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 7px 8px;
+            border-radius: 7px;
+            background: var(--surface);
+          }
+          .daily-standings__games small { color: var(--text-muted); }
+          .daily-standings__games b { color: var(--ufc-red-strong); }
+
+          .daily-standings__refresh {
+            min-height: 42px;
+            border: 0;
+            border-radius: var(--radius-sm);
+            background: var(--ufc-red);
+            color: #fff;
+            font: inherit;
+            font-size: 0.72rem;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+          }
+
+          @media (max-width: 380px) {
+            .daily-standings__body { padding-inline: 7px; }
+            .daily-standings__header,
+            .daily-standings__row {
+              grid-template-columns: 22px minmax(78px, 1fr) 26px 31px 36px 40px 42px;
+              gap: 3px;
+            }
+            .daily-standings__row { padding-inline: 5px; font-size: 0.59rem; }
+            .daily-standings__header { padding-inline: 5px; font-size: 0.46rem; }
+          }
+          '''.replace('          ', '')
+          if '.daily-standings {' in css_text:
+              raise SystemExit('standings CSS already exists')
+          css.write_text(css_text.rstrip() + css_addition + '\n')
+
+          sql = Path('supabase/tests/generalized_todays_challenge_backend.sql')
+          sql_text = sql.read_text()
+          marker = '\\ir wavelength_score_calibration.sql\n'
+          replacement = marker + '\\ir daily_challenge_standings.sql\n\\ir ../migrations/202609100001_daily_challenge_standings.sql\n\\ir ../migrations/202609100001_daily_challenge_standings.sql\n'
+          if sql_text.count(marker) != 1:
+              raise SystemExit('generalized SQL include point changed')
+          sql.write_text(sql_text.replace(marker, replacement, 1))
+          PY
+
+          git diff --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            src/features/play/todayChallengeRepository.ts \
+            src/features/play/useTodayChallengeOverview.ts \
+            src/features/play/TodayChallengeHub.tsx \
+            src/styles/today-challenge-hub.css \
+            supabase/tests/generalized_todays_challenge_backend.sql
+          git commit -m "Integrate Daily Challenge Standings"
+          git push origin HEAD:feature/daily-challenge-standings
