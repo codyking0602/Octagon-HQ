@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { DailyChallengeStandings } from "./DailyChallengeStandings";
@@ -38,7 +38,6 @@ function gameProgress(projection: TodayChallengeProjection) {
   }
 }
 
-
 function LeaderboardAvatar({ entry }: { entry: TodayChallengeLeaderboard["entries"][number] }) {
   return entry.avatarPhotoData ? (
     <img src={entry.avatarPhotoData} alt="" />
@@ -71,7 +70,7 @@ function DailyLeaderboard({
   }
   return (
     <div className="today-hub-leaderboard__rows">
-      {leaderboard.entries.slice(0, 8).map((entry) => (
+      {leaderboard.entries.map((entry) => (
         <article className={entry.isCurrentUser ? "is-current" : ""} key={`${entry.rank}-${entry.displayName}`}>
           <b>#{entry.rank}</b>
           <LeaderboardAvatar entry={entry} />
@@ -90,6 +89,7 @@ function DailyLeaderboard({
 export default function TodayChallengeHub() {
   const identity = useIdentity();
   const navigate = useNavigate();
+  const carouselRef = useRef<HTMLDivElement>(null);
   const [panel, setPanel] = useState<"challenge" | "leaderboard">("challenge");
   const signedIn = identity.status === "ready" && Boolean(identity.profile?.id);
   const profileId = identity.profile?.id ?? "signed-out";
@@ -141,47 +141,59 @@ export default function TodayChallengeHub() {
   }
 
   const completed = Boolean(projection.officialAttempt);
+
+  const showPanel = (nextPanel: "challenge" | "leaderboard") => {
+    const carousel = carouselRef.current;
+    const targetLeft = carousel ? carousel.clientWidth * (nextPanel === "leaderboard" ? 1 : 0) : 0;
+    if (carousel && typeof carousel.scrollTo === "function") {
+      carousel.scrollTo({ left: targetLeft, behavior: "smooth" });
+    } else if (carousel) {
+      carousel.scrollLeft = targetLeft;
+    }
+    setPanel(nextPanel);
+  };
+
+  const updatePanelFromScroll = () => {
+    const carousel = carouselRef.current;
+    if (!carousel?.clientWidth) return;
+    const nextPanel = carousel.scrollLeft >= carousel.clientWidth / 2 ? "leaderboard" : "challenge";
+    setPanel((current) => current === nextPanel ? current : nextPanel);
+  };
+
   return (
     <section className="today-hub" data-game={projection.gameType}>
-      <div className="today-hub__tabs" aria-label="Today’s Challenge panels">
-        <button className={panel === "challenge" ? "is-active" : ""} type="button" onClick={() => setPanel("challenge")}>TODAY’S GAME</button>
-        <button className={panel === "leaderboard" ? "is-active" : ""} type="button" onClick={() => setPanel("leaderboard")}>LEADERBOARD</button>
-      </div>
-
-      {panel === "challenge" ? (
+      <div
+        className="today-hub__carousel"
+        ref={carouselRef}
+        onScroll={updatePanelFromScroll}
+        aria-label="Today’s Challenge and leaderboard"
+      >
         <button className="today-hub-card" type="button" onClick={() => navigate(adapter.dailyRoute)}>
           <div className="today-hub-card__topline">
             <span>TODAY’S CHALLENGE</span>
             <b>{dayLabel(projection.centralDay).toUpperCase()}</b>
           </div>
           <div className="today-hub-card__body">
-            <div>
-              <small>{completed ? "OFFICIAL RESULT" : gameProgress(projection)}</small>
-              <h2>{adapter.title}</h2>
-              <p>{adapter.instructions}</p>
-            </div>
-            <aside>
-              {completed && projection.officialAttempt ? (
-                <>
-                  <span>DAILY SCORE</span>
-                  <strong>{projection.officialAttempt.normalizedScore}</strong>
-                  <small>{adapter.nativeDisplay(projection.officialAttempt)}</small>
-                </>
-              ) : (
-                <>
-                  <span>{projection.progressRevision > 0 ? "SAVED PROGRESS" : "OFFICIAL DAILY"}</span>
-                  <strong>{projection.progressRevision > 0 ? gameProgress(projection) : "NEW"}</strong>
-                  <small>Across devices</small>
-                </>
-              )}
-            </aside>
+            <small>
+              {completed && projection.officialAttempt
+                ? `OFFICIAL RESULT · ${projection.officialAttempt.normalizedScore}`
+                : projection.progressRevision > 0
+                  ? `SAVED · ${gameProgress(projection)}`
+                  : gameProgress(projection)}
+            </small>
+            <h2>{adapter.title}</h2>
+            <p>{adapter.instructions}</p>
           </div>
           <em>{completed ? "VIEW OFFICIAL RESULT" : projection.progressRevision > 0 ? "CONTINUE OFFICIAL GAME" : adapter.cta.toUpperCase()} →</em>
+          <span className="today-hub-card__swipe">SWIPE FOR TODAY’S LEADERBOARD →</span>
         </button>
-      ) : (
+
         <div className="today-hub-leaderboard">
           <header>
-            <div><p className="eyebrow">OFFICIAL DAILY</p><h2>{adapter.title} leaderboard</h2></div>
+            <div>
+              <p className="eyebrow">TODAY’S LEADERBOARD</p>
+              <h2>{adapter.title}</h2>
+            </div>
             <span>{overview.leaderboard?.playerCount ?? 0} PLAYERS</span>
           </header>
           <DailyLeaderboard
@@ -189,15 +201,37 @@ export default function TodayChallengeHub() {
             gameType={projection.gameType}
             loading={overview.leaderboardLoading}
           />
+          <small className="today-hub-leaderboard__swipe">← SWIPE FOR TODAY’S GAME</small>
         </div>
-      )}
+      </div>
 
-<DailyChallengeStandings
-  standings={overview.standings}
-  loading={overview.standingsLoading}
-  error={overview.error instanceof Error ? overview.error : null}
-  onRefresh={() => { void overview.refresh(); }}
-/>
+      <div className="today-hub__pager" aria-label="Today’s Challenge carousel controls">
+        <button
+          className={panel === "challenge" ? "is-active" : ""}
+          type="button"
+          aria-label="Show today’s game"
+          aria-pressed={panel === "challenge"}
+          onClick={() => showPanel("challenge")}
+        >
+          <span>GAME</span>
+        </button>
+        <button
+          className={panel === "leaderboard" ? "is-active" : ""}
+          type="button"
+          aria-label="Show today’s leaderboard"
+          aria-pressed={panel === "leaderboard"}
+          onClick={() => showPanel("leaderboard")}
+        >
+          <span>LEADERBOARD</span>
+        </button>
+      </div>
+
+      <DailyChallengeStandings
+        standings={overview.standings}
+        loading={overview.standingsLoading}
+        error={overview.error instanceof Error ? overview.error : null}
+        onRefresh={() => { void overview.refresh(); }}
+      />
     </section>
   );
 }
