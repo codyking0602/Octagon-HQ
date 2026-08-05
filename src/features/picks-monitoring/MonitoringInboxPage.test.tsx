@@ -156,6 +156,7 @@ describe("Monitoring Inbox", () => {
     expect(screen.getByText(/last scheduled provider check/i)).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "UFC Fight Night" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Review only what changed" })).toBeInTheDocument();
+    expect(screen.getByText(/eligible pre-lock odds apply automatically/i)).toBeInTheDocument();
     expect(screen.getByText("Fight order changed.")).toBeInTheDocument();
     expect(screen.queryByText("SYSTEM DETAILS")).not.toBeInTheDocument();
     expect(screen.queryByText("RECENT CHECKS")).not.toBeInTheDocument();
