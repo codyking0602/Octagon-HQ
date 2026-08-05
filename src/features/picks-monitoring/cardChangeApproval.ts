@@ -213,26 +213,29 @@ export function buildCardChangeFindings(input: {
     }
   }
 
-  for (const current of unmatchedCurrent) {
-    if (consumedCurrent.has(matchup(current))) continue;
-    result.push(finding({
-      identity: input.identity,
-      kind: input.kind,
-      detectedAt: input.detectedAt,
-      summary: `Remove ${current.red_fighter_name} vs. ${current.blue_fighter_name} from Picks.`,
-      beforeValue: { included_in_picks: true },
-      afterValue: { included_in_picks: false },
-      boutId: current.bout_id,
-      matchupIdentity: matchup(current),
-      proposal: {
-        action: "remove_bout",
-        event_id: input.eventId,
-        bout_id: current.bout_id,
-        expected_included_in_picks: true,
-        expected_red_fighter_slug: current.red_fighter_slug,
-        expected_blue_fighter_slug: current.blue_fighter_slug,
-      },
-    }));
+  const hasUnresolvedAddedFight = unmatchedSource.some((bout) => !consumedSource.has(matchup(bout)));
+  if (!hasUnresolvedAddedFight) {
+    for (const current of unmatchedCurrent) {
+      if (consumedCurrent.has(matchup(current))) continue;
+      result.push(finding({
+        identity: input.identity,
+        kind: input.kind,
+        detectedAt: input.detectedAt,
+        summary: `Remove ${current.red_fighter_name} vs. ${current.blue_fighter_name} from Picks.`,
+        beforeValue: { included_in_picks: true },
+        afterValue: { included_in_picks: false },
+        boutId: current.bout_id,
+        matchupIdentity: matchup(current),
+        proposal: {
+          action: "remove_bout",
+          event_id: input.eventId,
+          bout_id: current.bout_id,
+          expected_included_in_picks: true,
+          expected_red_fighter_slug: current.red_fighter_slug,
+          expected_blue_fighter_slug: current.blue_fighter_slug,
+        },
+      }));
+    }
   }
 
   const expectedOrder = canonicalBouts.map((bout) => bout.bout_id);
@@ -286,9 +289,10 @@ export function buildCardChangeFindings(input: {
         consumedCurrent.has(matchup(bout))
         && summary.includes(`${bout.red_fighter_name} vs. ${bout.blue_fighter_name}`)
       ));
-      if (consumed || unmatchedCurrent.some((bout) => (
+      const proposedRemoval = !hasUnresolvedAddedFight && unmatchedCurrent.some((bout) => (
         summary.includes(`${bout.red_fighter_name} vs. ${bout.blue_fighter_name}`)
-      ))) continue;
+      ));
+      if (consumed || proposedRemoval) continue;
     }
     if (summary.startsWith("Added ") && unmatchedSource.some((bout) => (
       consumedSource.has(matchup(bout))
