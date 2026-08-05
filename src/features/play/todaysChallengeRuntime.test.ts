@@ -71,6 +71,23 @@ describe("official Today’s Challenge runtime", () => {
     }
   });
 
+  it("keeps every browser-facing setup and initial state free of private grading evidence", () => {
+    for (const game of games) {
+      const setup = buildOfficialDailySetup(game, day, scheduleVersion);
+      const browserProjection = JSON.stringify({
+        public_setup: setup.publicSetup,
+        public_state: initialOfficialDailyPublicState(setup.publicSetup),
+      });
+      expect(browserProjection).not.toContain("privateSetupEvidence");
+      expect(browserProjection).not.toContain("privateGradingEvidence");
+      expect(browserProjection).not.toContain("private_setup_evidence");
+      expect(browserProjection).not.toContain("private_grading_evidence");
+      expect(browserProjection).not.toContain('"ratings"');
+      expect(browserProjection).not.toContain('"canonical_order"');
+      expect(browserProjection).not.toContain('"model_top_four_ids"');
+    }
+  });
+
   it("keeps Wavelength target, clue ratings, and future clues private until their reveal boundary", () => {
     const setup = buildOfficialDailySetup("wavelength", day, scheduleVersion);
     const publicJson = JSON.stringify(setup.publicSetup);
