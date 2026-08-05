@@ -101,7 +101,7 @@
 
 .today-hub-card,
 .today-hub-leaderboard {
-  min-height: 340px;
+  min-height: 0;
 }
 
 .today-hub-card {
@@ -201,12 +201,12 @@
 .today-hub-leaderboard {
   display: grid;
   align-content: start;
-  gap: var(--space-3);
+  gap: var(--space-2);
   padding: var(--space-5);
 }
 
 .today-hub-leaderboard header {
-  margin-bottom: var(--space-1);
+  margin-bottom: 0;
 }
 
 .today-hub-leaderboard h2 {
@@ -222,7 +222,7 @@
 .today-hub-leaderboard__rows {
   display: grid;
   gap: 8px;
-  max-height: 228px;
+  max-height: 132px;
   overflow-y: auto;
   padding-right: 2px;
   overscroll-behavior: contain;
@@ -279,7 +279,7 @@
 .today-hub-empty {
   display: grid;
   place-items: center;
-  min-height: 180px;
+  min-height: 96px;
   margin: 0;
   padding: var(--space-4);
   border: 1px dashed var(--border);
@@ -341,11 +341,6 @@
     padding: var(--space-4);
   }
 
-  .today-hub-card,
-  .today-hub-leaderboard {
-    min-height: 320px;
-  }
-
   .today-hub-card h2 {
     font-size: clamp(2.25rem, 11vw, 3.4rem);
   }
@@ -360,7 +355,7 @@
   }
 
   .today-hub-leaderboard__rows {
-    max-height: 216px;
+    max-height: 132px;
   }
 
   .today-hub-leaderboard__rows article {
