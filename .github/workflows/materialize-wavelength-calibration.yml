@@ -1,0 +1,361 @@
+name: Materialize Wavelength score calibration
+
+on:
+  push:
+    branches:
+      - agent/calibrate-wavelength-score
+    paths:
+      - .github/workflows/materialize-wavelength-calibration.yml
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out calibration branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/calibrate-wavelength-score
+          fetch-depth: 0
+
+      - name: Apply narrow Wavelength calibration
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path: str, old: str, new: str) -> None:
+              file = Path(path)
+              text = file.read_text()
+              if text.count(old) != 1:
+                  raise SystemExit(f"Expected exactly one match in {path}: {old!r}; found {text.count(old)}")
+              file.write_text(text.replace(old, new, 1))
+
+          replace_once(
+              "src/features/play/wavelengthEngine.ts",
+              "  return Math.max(0, 100 - Math.abs(guess - target));",
+              "  return Math.max(0, 100 - (Math.abs(guess - target) * 2));",
+          )
+
+          replace_once(
+              "src/features/play/WavelengthGame.tsx",
+              '      gameVersion: "wavelength-v2",',
+              '      gameVersion: "wavelength-v3",',
+          )
+
+          replace_once(
+              "src/features/play/officialScoreContract.ts",
+              'export const OFFICIAL_SCORE_CONTRACT_VERSION = "play-official-score-v1" as const;\n',
+              'export const OFFICIAL_SCORE_CONTRACT_VERSION = "play-official-score-v1" as const;\n'
+              'export const WAVELENGTH_OFFICIAL_SCORE_CONTRACT_VERSION = "play-official-score-v2" as const;\n\n'
+              'export type OfficialScoreContractVersion =\n'
+              '  | typeof OFFICIAL_SCORE_CONTRACT_VERSION\n'
+              '  | typeof WAVELENGTH_OFFICIAL_SCORE_CONTRACT_VERSION;\n',
+          )
+          replace_once(
+              "src/features/play/officialScoreContract.ts",
+              '  contractVersion: typeof OFFICIAL_SCORE_CONTRACT_VERSION;',
+              '  contractVersion: OfficialScoreContractVersion;',
+          )
+          replace_once(
+              "src/features/play/officialScoreContract.ts",
+              '    contractVersion: OFFICIAL_SCORE_CONTRACT_VERSION,\n    gameId: "wavelength",',
+              '    contractVersion: WAVELENGTH_OFFICIAL_SCORE_CONTRACT_VERSION,\n    gameId: "wavelength",',
+          )
+
+          runtime = Path("src/features/play/todaysChallengeRuntime.ts")
+          text = runtime.read_text()
+          anchor = 'import {\n  WAVELENGTH_CONTRACT_VERSIONS,'
+          if text.count(anchor) != 1:
+              raise SystemExit("Could not locate Wavelength runtime import anchor")
+          text = text.replace(
+              anchor,
+              'import {\n  OFFICIAL_SCORE_CONTRACT_VERSION,\n  WAVELENGTH_OFFICIAL_SCORE_CONTRACT_VERSION,\n} from "./officialScoreContract";\nimport {\n  WAVELENGTH_CONTRACT_VERSIONS,',
+              1,
+          )
+          text = text.replace(
+              'export const OFFICIAL_DAILY_SCORING_VERSION = "play-official-score-v1";',
+              'export const OFFICIAL_DAILY_SCORING_VERSION = OFFICIAL_SCORE_CONTRACT_VERSION;\n'
+              'export const WAVELENGTH_OFFICIAL_DAILY_SCORING_VERSION = WAVELENGTH_OFFICIAL_SCORE_CONTRACT_VERSION;',
+              1,
+          )
+          text = text.replace(
+              '  scoringVersion: typeof OFFICIAL_DAILY_SCORING_VERSION;',
+              '  scoringVersion:\n'
+              '    | typeof OFFICIAL_DAILY_SCORING_VERSION\n'
+              '    | typeof WAVELENGTH_OFFICIAL_DAILY_SCORING_VERSION;',
+              1,
+          )
+          wavelength_block = (
+              '    setupKey: `${WAVELENGTH_CONTRACT_VERSIONS.generator}:${scheduleVersion}:${day}`,\n'
+              '    contentVersion: WAVELENGTH_CONTRACT_VERSIONS.generator,\n'
+              '    scoringVersion: OFFICIAL_DAILY_SCORING_VERSION,'
+          )
+          replacement = wavelength_block.replace(
+              'scoringVersion: OFFICIAL_DAILY_SCORING_VERSION',
+              'scoringVersion: WAVELENGTH_OFFICIAL_DAILY_SCORING_VERSION',
+          )
+          if text.count(wavelength_block) != 1:
+              raise SystemExit("Could not locate Wavelength setup scoring version")
+          runtime.write_text(text.replace(wavelength_block, replacement, 1))
+
+          replace_once(
+              "src/features/play/wavelength.test.tsx",
+              '    expect(wavelengthScore(68, 75)).toBe(93);',
+              '    expect(wavelengthScore(68, 75)).toBe(86);\n'
+              '    expect(wavelengthScore(55, 75)).toBe(60);\n'
+              '    expect(wavelengthScore(25, 75)).toBe(0);',
+          )
+
+          replace_once(
+              "src/features/play/officialScoreContract.test.ts",
+              '      contractVersion: "play-official-score-v1",\n      gameId: "wavelength",',
+              '      contractVersion: "play-official-score-v2",\n      gameId: "wavelength",',
+          )
+          replace_once(
+              "src/features/play/todaysChallengeRuntime.test.ts",
+              '      expect(first.scoringVersion).toBe("play-official-score-v1");',
+              '      expect(first.scoringVersion).toBe(\n'
+              '        game === "wavelength" ? "play-official-score-v2" : "play-official-score-v1",\n'
+              '      );',
+          )
+
+          replace_once(
+              "docs/play-games-roadmap.md",
+              '| Wavelength | 0–100 | Existing distance score |',
+              '| Wavelength | 0–100 | `max(0, 100 − 2 × final distance)` |',
+          )
+
+          source = Path("supabase/migrations/202609050001_generalized_todays_challenge_backend.sql").read_text()
+          start = source.index("create or replace function private.grade_daily_challenge(")
+          end = source.index("\n$$;", start) + len("\n$$;")
+          function = source[start:end]
+          old_gate = """  if p_scoring_version <> 'play-official-score-v1' then
+    raise exception 'unsupported daily scoring version %', p_scoring_version;
+  end if;"""
+          new_gate = """  if p_game_type = 'wavelength' then
+    if p_scoring_version not in ('play-official-score-v1', 'play-official-score-v2') then
+      raise exception 'unsupported daily scoring version %', p_scoring_version;
+    end if;
+  elsif p_scoring_version <> 'play-official-score-v1' then
+    raise exception 'unsupported daily scoring version %', p_scoring_version;
+  end if;"""
+          if function.count(old_gate) != 1:
+              raise SystemExit("Could not locate official scoring version gate")
+          function = function.replace(old_gate, new_gate, 1)
+          old_formula = "    native_score := greatest(0, 100 - abs(v_guesses[4]::integer - v_target));"
+          new_formula = """    if p_scoring_version = 'play-official-score-v2' then
+      native_score := greatest(0, 100 - (2 * abs(v_guesses[4]::integer - v_target)));
+    else
+      native_score := greatest(0, 100 - abs(v_guesses[4]::integer - v_target));
+    end if;"""
+          if function.count(old_formula) != 1:
+              raise SystemExit("Could not locate Wavelength database formula")
+          function = function.replace(old_formula, new_formula, 1)
+          migration = """-- Calibrate Wavelength only while preserving every historical v1 result and all other game formulas.
+-- New Wavelength setups publish play-official-score-v2; v1 remains readable for immutable history.
+""" + function + "\n"
+          Path("supabase/migrations/202609090001_calibrate_wavelength_scoring.sql").write_text(migration)
+
+          sql_test = r"""\set ON_ERROR_STOP on
+begin;
+
+do $$
+declare
+  v_native integer;
+  v_normalized integer;
+begin
+  select native_score, normalized_score
+  into v_native, v_normalized
+  from private.grade_daily_challenge(
+    'find_leader',
+    'play-official-score-v1',
+    jsonb_build_object('eliminated_ids', jsonb_build_array('f1','f2','f3','f4','f5','f6','f7','leader')),
+    jsonb_build_object(
+      'candidate_ids', jsonb_build_array('f1','f2','f3','f4','f5','f6','f7','leader','f9','f10'),
+      'leader_id', 'leader'
+    )
+  );
+  if v_native <> 8 or v_normalized <> 80 then
+    raise exception 'Find the Leader scoring changed: %, %', v_native, v_normalized;
+  end if;
+
+  select native_score, normalized_score
+  into v_native, v_normalized
+  from private.grade_daily_challenge(
+    'blind_resume',
+    'play-official-score-v1',
+    jsonb_build_object('choices', jsonb_build_array('a','b','c','d','wrong')),
+    jsonb_build_object('correct_choices', jsonb_build_array('a','b','c','d','e'))
+  );
+  if v_native <> 4 or v_normalized <> 80 then
+    raise exception 'Blind Resume scoring changed: %, %', v_native, v_normalized;
+  end if;
+
+  select native_score, normalized_score
+  into v_native, v_normalized
+  from private.grade_daily_challenge(
+    'wavelength',
+    'play-official-score-v1',
+    jsonb_build_object('guesses', jsonb_build_array('50','50','50','55')),
+    jsonb_build_object('target', 75)
+  );
+  if v_native <> 80 or v_normalized <> 80 then
+    raise exception 'historical Wavelength v1 changed: %, %', v_native, v_normalized;
+  end if;
+
+  select native_score, normalized_score
+  into v_native, v_normalized
+  from private.grade_daily_challenge(
+    'wavelength',
+    'play-official-score-v2',
+    jsonb_build_object('guesses', jsonb_build_array('50','50','50','55')),
+    jsonb_build_object('target', 75)
+  );
+  if v_native <> 60 or v_normalized <> 60 then
+    raise exception 'calibrated Wavelength miss should score 60: %, %', v_native, v_normalized;
+  end if;
+
+  select native_score, normalized_score
+  into v_native, v_normalized
+  from private.grade_daily_challenge(
+    'wavelength',
+    'play-official-score-v2',
+    jsonb_build_object('guesses', jsonb_build_array('50','60','70','75')),
+    jsonb_build_object('target', 75)
+  );
+  if v_native <> 100 or v_normalized <> 100 then
+    raise exception 'calibrated exact Wavelength answer should score 100: %, %', v_native, v_normalized;
+  end if;
+
+  select native_score, normalized_score
+  into v_native, v_normalized
+  from private.grade_daily_challenge(
+    'blind_rank_5',
+    'play-official-score-v1',
+    jsonb_build_object('ordered_ids', jsonb_build_array('a','b','c','d','e')),
+    jsonb_build_object(
+      'fighter_ids', jsonb_build_array('a','b','c','d','e'),
+      'ratings', jsonb_build_object('a',100,'b',80,'c',60,'d',40,'e',20),
+      'tolerance', 1
+    )
+  );
+  if v_native <> 10 or v_normalized <> 100 then
+    raise exception 'Blind Rank scoring changed: %, %', v_native, v_normalized;
+  end if;
+
+  select native_score, normalized_score
+  into v_native, v_normalized
+  from private.grade_daily_challenge(
+    'keep_4_cut_4',
+    'play-official-score-v1',
+    jsonb_build_object('kept_ids', jsonb_build_array('a','b','c','d')),
+    jsonb_build_object(
+      'fighter_ids', jsonb_build_array('a','b','c','d','e','f','g','h'),
+      'ratings', jsonb_build_object('a',100,'b',90,'c',80,'d',70,'e',60,'f',50,'g',40,'h',30),
+      'tolerance', 1
+    )
+  );
+  if v_native <> 16 or v_normalized <> 100 then
+    raise exception 'Keep Cut scoring changed: %, %', v_native, v_normalized;
+  end if;
+
+  begin
+    perform * from private.grade_daily_challenge(
+      'blind_resume',
+      'play-official-score-v2',
+      jsonb_build_object('choices', jsonb_build_array('a','b','c','d','e')),
+      jsonb_build_object('correct_choices', jsonb_build_array('a','b','c','d','e'))
+    );
+    raise exception 'Wavelength-only scoring version was accepted by Blind Resume';
+  exception
+    when others then
+      if sqlerrm = 'Wavelength-only scoring version was accepted by Blind Resume' then
+        raise;
+      end if;
+  end;
+end
+$$;
+
+rollback;
+
+\echo 'Wavelength score calibration proof passed.'
+"""
+          Path("supabase/tests/wavelength_score_calibration.sql").write_text(sql_test)
+
+          workflow = Path(".github/workflows/verify-generalized-daily-backend.yml")
+          text = workflow.read_text()
+          text = text.replace(
+              '      - "supabase/migrations/202609080001_activate_daily_challenge_rotation.sql"\n',
+              '      - "supabase/migrations/202609080001_activate_daily_challenge_rotation.sql"\n'
+              '      - "supabase/migrations/202609090001_calibrate_wavelength_scoring.sql"\n',
+              1,
+          )
+          text = text.replace(
+              '      - "supabase/tests/daily_challenge_rotation.sql"\n',
+              '      - "supabase/tests/daily_challenge_rotation.sql"\n'
+              '      - "supabase/tests/wavelength_score_calibration.sql"\n',
+              1,
+          )
+          text = text.replace(
+              '      - name: Execute deterministic rotation and fallback release proof\n',
+              '      - name: Execute Wavelength score calibration and regression proof\n'
+              '        shell: bash\n'
+              '        run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/wavelength_score_calibration.sql\n\n'
+              '      - name: Execute deterministic rotation and fallback release proof\n',
+              1,
+          )
+          text = text.replace(
+              '            psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202609080001_activate_daily_challenge_rotation.sql\n',
+              '            psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202609080001_activate_daily_challenge_rotation.sql\n'
+              '            psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202609090001_calibrate_wavelength_scoring.sql\n',
+              1,
+          )
+          text = text.replace(
+              '            echo "- Versioned 20-day rotation and persisted fallback: passed"\n',
+              '            echo "- Wavelength-only v2 scoring calibration and four-game regression proof: passed"\n'
+              '            echo "- Versioned 20-day rotation and persisted fallback: passed"\n',
+              1,
+          )
+          text = text.replace(
+              '          require_remote_migration "202609080001"\n',
+              '          require_remote_migration "202609080001"\n'
+              '          require_remote_migration "202609090001"\n',
+              1,
+          )
+          text = text.replace(
+              '            echo "- Remote migrations: `202609050001`, `202609050002`, `202609060001`, `202609080001`"\n',
+              '            echo "- Remote migrations: `202609050001`, `202609050002`, `202609060001`, `202609080001`, `202609090001`"\n',
+              1,
+          )
+          workflow.write_text(text)
+
+          Path(".github/workflows/materialize-wavelength-calibration.yml").unlink()
+          PY
+
+      - name: Commit calibrated scoring change
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            .github/workflows/verify-generalized-daily-backend.yml \
+            .github/workflows/materialize-wavelength-calibration.yml \
+            docs/play-games-roadmap.md \
+            src/features/play/WavelengthGame.tsx \
+            src/features/play/officialScoreContract.test.ts \
+            src/features/play/officialScoreContract.ts \
+            src/features/play/todaysChallengeRuntime.test.ts \
+            src/features/play/todaysChallengeRuntime.ts \
+            src/features/play/wavelength.test.tsx \
+            src/features/play/wavelengthEngine.ts \
+            supabase/migrations/202609090001_calibrate_wavelength_scoring.sql \
+            supabase/tests/wavelength_score_calibration.sql
+          git commit -m "Calibrate Wavelength scoring"
+          git push origin HEAD:agent/calibrate-wavelength-score
