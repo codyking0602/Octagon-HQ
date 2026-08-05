@@ -180,7 +180,10 @@ describe("generalized Today’s Challenge hub", () => {
     expect(codyRow).toHaveAttribute("aria-expanded", "true");
     expect(screen.getByText("Average Score by Game")).toBeInTheDocument();
     expect(screen.getByText("Find the Leader").parentElement).toHaveTextContent("84.1");
-    expect(screen.getByText("Blind Resume").parentElement).toHaveTextContent("90.6");
+    const blindResumeAverage = screen
+      .getAllByText("Blind Resume")
+      .find((element) => element.tagName === "SMALL");
+    expect(blindResumeAverage?.parentElement).toHaveTextContent("90.6");
   });
 
   it("keeps today’s leaderboard guarded until the current member finishes", () => {
