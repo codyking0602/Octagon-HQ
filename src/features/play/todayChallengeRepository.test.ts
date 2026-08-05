@@ -2,7 +2,6 @@ import { describe, expect, it, vi } from "vitest";
 import {
   createTodayChallengeRepository,
   parseTodayChallengeProjection,
-  TodayChallengeRepositoryError,
 } from "./todayChallengeRepository";
 
 const dailyId = "11111111-1111-4111-8111-111111111111";
@@ -89,7 +88,7 @@ describe("Today’s Challenge runtime repository", () => {
     const repository = createTodayChallengeRepository(client as never)!;
 
     await expect(repository.advance({ id: dailyId, progressRevision: 4 }, { guess: 50 }))
-      .rejects.toMatchObject<TodayChallengeRepositoryError>({
+      .rejects.toMatchObject({
         code: "STALE_PROGRESS",
         stale: true,
       });
