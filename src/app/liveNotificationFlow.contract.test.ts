@@ -1,3 +1,4 @@
+// Verification-only branch for merged PR #326 at main 7347ff8eb1a940f67269fe856978fe1c56841e9a. Never merge.
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
