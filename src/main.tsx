@@ -33,6 +33,7 @@ import "./styles/member-profile-push.css";
 import "./styles/play.css";
 import "./styles/today-challenge.css";
 import "./styles/today-challenge-hub.css";
+import "./styles/daily-challenge-standings.css";
 import "./styles/auction.css";
 import "./styles/find-leader-leaderboard.css";
 import "./styles/wavelength.css";
