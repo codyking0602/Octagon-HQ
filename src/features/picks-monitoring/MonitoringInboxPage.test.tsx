@@ -129,11 +129,15 @@ function repository(value: MonitoringInbox): MonitoringInboxRepository {
   };
 }
 
-function renderPage(repo: MonitoringInboxRepository, identityGateway: IdentityGateway = gateway()) {
+function renderPage(
+  repo: MonitoringInboxRepository,
+  identityGateway: IdentityGateway = gateway(),
+  embedded = false,
+) {
   return render(
     <MemoryRouter>
       <IdentityProvider gateway={identityGateway}>
-        <MonitoringInboxPage repository={repo} />
+        <MonitoringInboxPage repository={repo} embedded={embedded} />
       </IdentityProvider>
     </MemoryRouter>,
   );
@@ -149,18 +153,28 @@ afterEach(() => {
 });
 
 describe("Monitoring Inbox", () => {
-  it("shows one compact automation state, current event, and pending changes", async () => {
+  it("shows one compact automation state, current event, source, and pending changes", async () => {
     renderPage(repository(inbox));
 
     expect(await screen.findByRole("heading", { name: "AUTO-SYNC CHECKED THE EVENT" })).toBeInTheDocument();
     expect(screen.getByText(/last scheduled provider check/i)).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "UFC Fight Night" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "OPEN UFC EVENT SOURCE" })).toHaveAttribute("href", "https://www.mmamania.com/test");
     expect(screen.getByRole("heading", { name: "Review only what changed" })).toBeInTheDocument();
     expect(screen.getByText(/eligible pre-lock odds apply automatically/i)).toBeInTheDocument();
     expect(screen.getByText("Fight order changed.")).toBeInTheDocument();
     expect(screen.queryByText("SYSTEM DETAILS")).not.toBeInTheDocument();
     expect(screen.queryByText("RECENT CHECKS")).not.toBeInTheDocument();
     expect(screen.queryByText("REVIEWED FINDINGS")).not.toBeInTheDocument();
+  });
+
+  it("keeps the embedded event dashboard free of duplicate event cards", async () => {
+    renderPage(repository(inbox), gateway(), true);
+
+    expect(await screen.findByRole("heading", { name: "AUTO-SYNC CHECKED THE EVENT" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "UFC Fight Night" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "CHECK NOW" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "REFRESH STATUS" })).toBeInTheDocument();
   });
 
   it("does not describe a scheduler wake as a provider check", async () => {
@@ -176,6 +190,7 @@ describe("Monitoring Inbox", () => {
 
     expect(await screen.findByRole("heading", { name: "AUTO-SYNC IS WAITING FOR ITS NEXT CHECK" })).toBeInTheDocument();
     expect(screen.getByText(/no provider check was due/i)).toBeInTheDocument();
+    expect(screen.queryByText(/last scheduled provider check/i)).not.toBeInTheDocument();
   });
 
   it("surfaces partial scheduled coverage as needing attention", async () => {
@@ -202,6 +217,16 @@ describe("Monitoring Inbox", () => {
     await waitFor(() => expect(repo.runManualCheck).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(repo.loadInbox).toHaveBeenCalledTimes(2));
     expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("42 requests remaining"));
+  });
+
+  it("keeps refresh read-only", async () => {
+    const repo = repository(inbox);
+    renderPage(repo);
+
+    fireEvent.click(await screen.findByRole("button", { name: "REFRESH STATUS" }));
+
+    await waitFor(() => expect(repo.loadInbox).toHaveBeenCalledTimes(2));
+    expect(repo.runManualCheck).not.toHaveBeenCalled();
   });
 
   it("keeps both existing review mutations", async () => {
@@ -251,7 +276,20 @@ describe("Monitoring Inbox", () => {
     expect(screen.queryByText("Fight order changed.")).not.toBeInTheDocument();
   });
 
-  it("explains the no-event and no-finding state", async () => {
+  it("keeps zero findings compact and omits the Pending Changes section", async () => {
+    renderPage(repository({
+      ...inbox,
+      unresolvedCount: 0,
+      newFindings: [],
+      reviewedFindings: [],
+    }));
+
+    expect(await screen.findByLabelText("Pending changes all clear")).toHaveTextContent("No event changes need your attention.");
+    expect(screen.queryByRole("heading", { name: "Review only what changed" })).not.toBeInTheDocument();
+    expect(screen.queryByText("PENDING CHANGES")).not.toBeInTheDocument();
+  });
+
+  it("explains the no-event state without a large empty findings section", async () => {
     renderPage(repository({
       ...inbox,
       monitoredEvent: null,
@@ -270,7 +308,8 @@ describe("Monitoring Inbox", () => {
     }));
 
     expect(await screen.findByRole("heading", { name: "Stage or publish the next UFC card." })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "No event changes need your attention." })).toBeInTheDocument();
+    expect(screen.getByLabelText("Pending changes all clear")).toBeInTheDocument();
     expect(screen.getByText(/there is no event to monitor/i)).toBeInTheDocument();
+    expect(screen.queryByText("PENDING CHANGES")).not.toBeInTheDocument();
   });
 });
