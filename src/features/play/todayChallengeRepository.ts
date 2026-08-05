@@ -60,6 +60,32 @@ const streakSchema = z.object({
   current_streak: z.coerce.number().int().nonnegative(),
   best_streak: z.coerce.number().int().nonnegative(),
 });
+const standingsEntrySchema = z.object({
+  rank: z.coerce.number().int().positive(),
+  profile_id: z.string().uuid(),
+  display_name: z.string(),
+  initials: z.string(),
+  avatar_photo_data: z.string().nullable().optional(),
+  wins: z.coerce.number().int().nonnegative(),
+  played: z.coerce.number().int().nonnegative(),
+  average_score: z.coerce.number().nonnegative(),
+  current_streak: z.coerce.number().int().nonnegative(),
+  best_streak: z.coerce.number().int().nonnegative(),
+  game_averages: z.object({
+    find_leader: z.coerce.number().nullable(),
+    wavelength: z.coerce.number().nullable(),
+    blind_resume: z.coerce.number().nullable(),
+    blind_rank_5: z.coerce.number().nullable(),
+    keep_4_cut_4: z.coerce.number().nullable(),
+  }),
+  is_current_user: z.boolean(),
+});
+const standingsSchema = z.object({
+  player_count: z.coerce.number().int().nonnegative(),
+  current_user_rank: z.coerce.number().int().positive().nullable(),
+  current_user_wins: z.coerce.number().int().nonnegative(),
+  entries: z.array(standingsEntrySchema),
+});
 
 export interface TodayChallengeProjection {
   available: true;
@@ -107,6 +133,34 @@ export interface TodayChallengeLeaderboard {
 export interface TodayChallengeStreak {
   currentStreak: number;
   bestStreak: number;
+}
+
+export interface TodayChallengeStandingsEntry {
+  rank: number;
+  profileId: string;
+  displayName: string;
+  initials: string;
+  avatarPhotoData: string | null;
+  wins: number;
+  played: number;
+  averageScore: number;
+  currentStreak: number;
+  bestStreak: number;
+  gameAverages: {
+    findLeader: number | null;
+    wavelength: number | null;
+    blindResume: number | null;
+    blindRank5: number | null;
+    keep4Cut4: number | null;
+  };
+  isCurrentUser: boolean;
+}
+
+export interface TodayChallengeStandings {
+  playerCount: number;
+  currentUserRank: number | null;
+  currentUserWins: number;
+  entries: TodayChallengeStandingsEntry[];
 }
 
 type FunctionError = {
@@ -227,6 +281,7 @@ export interface TodayChallengeRepository {
   ): Promise<TodayChallengeProjection>;
   loadHistory(): Promise<TodayChallengeHistoryRow[]>;
   loadStreak(): Promise<TodayChallengeStreak>;
+  loadStandings(): Promise<TodayChallengeStandings>;
   loadDailyLeaderboard(day: string, scheduleVersion: string): Promise<TodayChallengeLeaderboard>;
 }
 
@@ -267,6 +322,34 @@ export function createTodayChallengeRepository(
     async loadStreak() {
       const row = streakSchema.parse(await rpc(client, "get_my_daily_challenge_streak"));
       return { currentStreak: row.current_streak, bestStreak: row.best_streak };
+    },
+    async loadStandings() {
+      const row = standingsSchema.parse(await rpc(client, "get_daily_challenge_standings"));
+      return {
+        playerCount: row.player_count,
+        currentUserRank: row.current_user_rank,
+        currentUserWins: row.current_user_wins,
+        entries: row.entries.map((entry) => ({
+          rank: entry.rank,
+          profileId: entry.profile_id,
+          displayName: entry.display_name,
+          initials: entry.initials,
+          avatarPhotoData: entry.avatar_photo_data ?? null,
+          wins: entry.wins,
+          played: entry.played,
+          averageScore: entry.average_score,
+          currentStreak: entry.current_streak,
+          bestStreak: entry.best_streak,
+          gameAverages: {
+            findLeader: entry.game_averages.find_leader,
+            wavelength: entry.game_averages.wavelength,
+            blindResume: entry.game_averages.blind_resume,
+            blindRank5: entry.game_averages.blind_rank_5,
+            keep4Cut4: entry.game_averages.keep_4_cut_4,
+          },
+          isCurrentUser: entry.is_current_user,
+        })),
+      };
     },
     async loadDailyLeaderboard(day, scheduleVersion) {
       const row = leaderboardSchema.parse(await rpc(

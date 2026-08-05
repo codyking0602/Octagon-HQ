@@ -362,3 +362,6 @@ $$;
 rollback;
 
 \ir wavelength_score_calibration.sql
+\ir daily_challenge_standings.sql
+\ir ../migrations/202609100001_daily_challenge_standings.sql
+\ir ../migrations/202609100001_daily_challenge_standings.sql
