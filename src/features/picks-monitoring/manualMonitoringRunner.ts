@@ -18,10 +18,26 @@ export interface MonitoringEvent { event_id: string; source_event_key?: string; 
 export interface SourcePreview extends MonitoringEvent { source: string; source_url: string; source_event_key: string; warnings?: string[] }
 export interface ResolvedMonitoringEvent { selected: MonitoringEvent; kind: "staged" | "current"; storageEventId?: string; identity: string; ignoredMatchupIdentities: string[] }
 
+function normalizedEventName(value: string) {
+  return value
+    .normalize("NFKD")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
 function stableEventMatch(left: MonitoringEvent, right: MonitoringEvent) {
   const leftKey = left.source_event_key?.trim().toLowerCase();
   const rightKey = right.source_event_key?.trim().toLowerCase();
-  if (leftKey && rightKey) return leftKey === rightKey;
+  if (leftKey && rightKey) {
+    if (leftKey !== rightKey) return false;
+    const leftStart = Date.parse(left.starts_at);
+    const rightStart = Date.parse(right.starts_at);
+    return normalizedEventName(left.name) === normalizedEventName(right.name)
+      && Number.isFinite(leftStart)
+      && Number.isFinite(rightStart)
+      && Math.abs(leftStart - rightStart) <= 18 * 60 * 60 * 1000;
+  }
   return matchCanonicalEventIdentity(
     { name: left.name, subtitle: left.subtitle, venue: "", location: "", starts_at: left.starts_at },
     { name: right.name, subtitle: right.subtitle, venue: "", location: "", starts_at: right.starts_at },
