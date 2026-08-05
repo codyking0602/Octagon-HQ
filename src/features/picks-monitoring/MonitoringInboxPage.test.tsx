@@ -252,7 +252,9 @@ describe("Monitoring Inbox", () => {
     fireEvent.click(await screen.findByRole("button", { name: "CHECK NOW" }));
     expect(await screen.findByRole("button", { name: "CHECKING NOW…" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "REFRESH STATUS" })).toBeDisabled();
-    expect(screen.getByRole("button", { name: "MARK REVIEWED" })).toBeDisabled();
+    const reviewButtons = screen.getAllByRole("button", { name: "MARK REVIEWED" });
+    expect(reviewButtons).not.toHaveLength(0);
+    for (const button of reviewButtons) expect(button).toBeDisabled();
     finish();
     await waitFor(() => expect(repo.loadInbox).toHaveBeenCalledTimes(2));
   });
