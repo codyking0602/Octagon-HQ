@@ -6,14 +6,11 @@ import {
   type TodayChallengeProjection,
   type TodayChallengeRepository,
 } from "./todayChallengeRepository";
-import {
-  todayChallengeHistoryQueryKey,
-  todayChallengeLeaderboardQueryKey,
-  todayChallengeRuntimeQueryKey,
-  todayChallengeStreakQueryKey,
-} from "./todayChallengeQueryKeys";
 
-export { todayChallengeRuntimeQueryKey } from "./todayChallengeQueryKeys";
+export const todayChallengeRuntimeQueryKey = (profileId: string) => [
+  "today-challenge-runtime",
+  profileId,
+] as const;
 
 export function useTodayChallengeRuntime({
   profileId,
@@ -57,24 +54,7 @@ export function useTodayChallengeRuntime({
     },
     onSuccess: (projection) => {
       queryClient.setQueryData(queryKey, projection);
-      if (projection.officialAttempt) {
-        void queryClient.invalidateQueries({
-          queryKey: todayChallengeHistoryQueryKey(profileId),
-          exact: true,
-        });
-        void queryClient.invalidateQueries({
-          queryKey: todayChallengeStreakQueryKey(profileId),
-          exact: true,
-        });
-        void queryClient.invalidateQueries({
-          queryKey: todayChallengeLeaderboardQueryKey(
-            profileId,
-            projection.centralDay,
-            projection.scheduleVersion,
-          ),
-          exact: true,
-        });
-      }
+      if (projection.officialAttempt) window.dispatchEvent(new Event("focus"));
     },
   });
 
