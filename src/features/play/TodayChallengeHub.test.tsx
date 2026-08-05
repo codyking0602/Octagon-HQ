@@ -114,6 +114,7 @@ describe("generalized Today’s Challenge hub", () => {
     useTodayChallengeOverview.mockReturnValue({
       configured: true,
       standings,
+      streak: { currentStreak: 6, bestStreak: 13 },
       leaderboard: { unlocked: false, playerCount: 0, entries: [] },
       standingsLoading: false,
       leaderboardLoading: false,
@@ -164,9 +165,10 @@ describe("generalized Today’s Challenge hub", () => {
     expect(summary?.parentElement).not.toHaveAttribute("open");
 
     fireEvent.click(summary!);
-    expect(screen.getByText("Current Streak")).toBeInTheDocument();
-    expect(screen.getByText("Longest Streak")).toBeInTheDocument();
-    expect(screen.getByRole("img", { hidden: true })).toHaveAttribute(
+    const header = document.querySelector(".daily-standings__header");
+    expect(header).toHaveTextContent("CurrentStreak");
+    expect(header).toHaveTextContent("LongestStreak");
+    expect(screen.getByText("Cody").parentElement?.querySelector("img")).toHaveAttribute(
       "src",
       "data:image/webp;base64,cody",
     );
