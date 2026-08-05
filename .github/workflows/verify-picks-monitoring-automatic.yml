@@ -4,6 +4,9 @@ on:
   pull_request:
     paths:
       - ".github/workflows/verify-picks-monitoring-automatic.yml"
+      - ".github/workflows/verify-live-notification-flow.yml"
+      - "scripts/verify-live-notification-flow.mjs"
+      - "src/app/liveNotificationFlow.contract.test.ts"
       - "src/app/automaticMonitoringDeployment.test.ts"
       - "src/app/automaticMonitoringLifecycle.test.ts"
       - "src/features/picks-monitoring/**"
