@@ -1,4 +1,4 @@
-name: Temporary ESPN headshot probe
+name: Temporary Play thumbnail importer
 
 on:
   push:
@@ -9,43 +9,339 @@ permissions:
   contents: write
 
 jobs:
-  probe:
+  import-thumbnails:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           ref: chatgpt/play-thumbnail-completeness
-      - name: Probe ESPN search endpoints
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install image tooling
+        run: python -m pip install --disable-pip-version-check pillow==11.3.0
+
+      - name: Download and process official ESPN headshots
+        env:
+          GITHUB_RUN_ID_VALUE: ${{ github.run_id }}
         run: |
           python - <<'PY'
+          from __future__ import annotations
+
+          import io
           import json
+          import re
+          import unicodedata
           import urllib.parse
           import urllib.request
           from pathlib import Path
 
-          name = "Marvin Vettori"
-          encoded = urllib.parse.quote(name)
-          urls = [
-              f"https://site.web.api.espn.com/apis/search/v2?region=us&lang=en&limit=10&page=1&query={encoded}",
-              f"https://site.web.api.espn.com/apis/common/v3/search?query={encoded}&limit=10",
+          from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageOps
+
+          fighters = [
+              ("marvin-vettori", "Marvin Vettori"),
+              ("derek-brunson", "Derek Brunson"),
+              ("uriah-hall", "Uriah Hall"),
+              ("edmen-shahbazyan", "Edmen Shahbazyan"),
+              ("johnny-walker", "Johnny Walker"),
+              ("anthony-smith", "Anthony Smith"),
+              ("volkan-oezdemir", "Volkan Oezdemir"),
+              ("dominick-reyes", "Dominick Reyes"),
+              ("ovince-saint-preux", "Ovince Saint Preux"),
+              ("ryan-bader", "Ryan Bader"),
+              ("patrick-cummins", "Patrick Cummins"),
+              ("ciryl-gane", "Ciryl Gane"),
+              ("curtis-blaydes", "Curtis Blaydes"),
+              ("roy-nelson", "Roy Nelson"),
+              ("stefan-struve", "Stefan Struve"),
+              ("jared-vanderaa", "Jared Vanderaa"),
+              ("joseph-benavidez", "Joseph Benavidez"),
+              ("kenny-florian", "Kenny Florian"),
+              ("mike-jackson", "Mike Jackson"),
+              ("mickey-gall", "Mickey Gall"),
+              ("michael-johnson", "Michael Johnson"),
+              ("al-iaquinta", "Al Iaquinta"),
+              ("gilbert-burns", "Gilbert Burns"),
+              ("james-vick", "James Vick"),
+              ("sean-sherk", "Sean Sherk"),
+              ("dan-hardy", "Dan Hardy"),
+              ("randa-markos", "Randa Markos"),
+              ("felice-herrig", "Felice Herrig"),
+              ("claudia-gadelha", "Claudia Gadelha"),
+              ("katlyn-chookagian", "Katlyn Chookagian"),
+              ("lauren-murphy", "Lauren Murphy"),
+              ("cynthia-calvillo", "Cynthia Calvillo"),
+              ("sara-mcmann", "Sara McMann"),
+              ("cat-zingano", "Cat Zingano"),
+              ("megan-anderson", "Megan Anderson"),
+              ("brian-ortega", "Brian Ortega"),
+              ("yair-rodriguez", "Yair Rodriguez"),
+              ("josh-emmett", "Josh Emmett"),
+              ("calvin-kattar", "Calvin Kattar"),
+              ("dan-ige", "Dan Ige"),
+              ("kris-moutinho", "Kris Moutinho"),
+              ("joshua-culibao", "Joshua Culibao"),
+              ("bo-nickal", "Bo Nickal"),
+              ("raul-rosas-jr", "Raul Rosas Jr."),
+              ("tony-kelley", "Tony Kelley"),
+              ("marlon-moraes", "Marlon Moraes"),
           ]
-          results = []
-          for url in urls:
+
+          aliases = {
+              "Ovince Saint Preux": {"Ovince St. Preux", "Ovince Saint Preux"},
+              "Raul Rosas Jr.": {"Raul Rosas Jr.", "Raul Rosas Jr"},
+          }
+
+          root = Path.cwd()
+          output_dir = root / "public/assets/fighters"
+          output_dir.mkdir(parents=True, exist_ok=True)
+          tmp_dir = root / "tmp"
+          tmp_dir.mkdir(exist_ok=True)
+
+          def normalized(value: str) -> str:
+              value = unicodedata.normalize("NFKD", value)
+              value = "".join(char for char in value if not unicodedata.combining(char))
+              return re.sub(r"[^a-z0-9]+", "", value.lower())
+
+          def get_json(url: str) -> dict:
+              request = urllib.request.Request(
+                  url,
+                  headers={
+                      "User-Agent": "Mozilla/5.0 (compatible; OctagonHQAssetAudit/1.0)",
+                      "Accept": "application/json,text/plain,*/*",
+                  },
+              )
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  return json.load(response)
+
+          def get_bytes(url: str) -> bytes:
+              request = urllib.request.Request(
+                  url,
+                  headers={
+                      "User-Agent": "Mozilla/5.0 (compatible; OctagonHQAssetAudit/1.0)",
+                      "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+                      "Referer": "https://www.espn.com/",
+                  },
+              )
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  return response.read()
+
+          def find_espn_player(name: str) -> dict:
+              query = urllib.parse.quote(name)
+              url = (
+                  "https://site.web.api.espn.com/apis/search/v2"
+                  f"?region=us&lang=en&limit=20&page=1&query={query}"
+              )
+              payload = get_json(url)
+              expected = {normalized(candidate) for candidate in aliases.get(name, {name})}
+              candidates = []
+              for result in payload.get("results", []):
+                  if result.get("type") != "player":
+                      continue
+                  for candidate in result.get("contents", []):
+                      if candidate.get("sport") != "mma" and candidate.get("description") != "MMA":
+                          continue
+                      candidates.append(candidate)
+                      if normalized(candidate.get("displayName", "")) in expected:
+                          return candidate
+              raise RuntimeError(
+                  f"No exact ESPN MMA athlete match for {name}. Candidates: "
+                  + ", ".join(candidate.get("displayName", "?") for candidate in candidates)
+              )
+
+          def expanded_alpha_crop(image: Image.Image) -> Image.Image:
+              rgba = ImageOps.exif_transpose(image).convert("RGBA")
+              alpha = rgba.getchannel("A")
+              bbox = alpha.getbbox()
+              if not bbox or bbox == (0, 0, rgba.width, rgba.height):
+                  return rgba
+              left, top, right, bottom = bbox
+              pad_x = max(4, round((right - left) * 0.08))
+              pad_y = max(4, round((bottom - top) * 0.06))
+              return rgba.crop((
+                  max(0, left - pad_x),
+                  max(0, top - pad_y),
+                  min(rgba.width, right + pad_x),
+                  min(rgba.height, bottom + pad_y),
+              ))
+
+          def make_thumbnail(source: bytes) -> Image.Image:
+              with Image.open(io.BytesIO(source)) as opened:
+                  image = expanded_alpha_crop(opened)
+              alpha = image.getchannel("A")
+              has_transparency = alpha.getextrema()[0] < 255
+              if has_transparency:
+                  fitted = ImageOps.contain(image, (154, 154), Image.Resampling.LANCZOS)
+                  canvas = Image.new("RGBA", (160, 160), (0, 0, 0, 0))
+                  x = (160 - fitted.width) // 2
+                  y = max(2, 158 - fitted.height)
+                  canvas.alpha_composite(fitted, (x, y))
+                  result = canvas
+              else:
+                  result = ImageOps.fit(
+                      image,
+                      (160, 160),
+                      Image.Resampling.LANCZOS,
+                      centering=(0.5, 0.42),
+                  )
+              return result.filter(ImageFilter.UnsharpMask(radius=0.55, percent=70, threshold=3))
+
+          report = []
+          failures = []
+          rendered = []
+
+          for slug, name in fighters:
+              output_path = output_dir / f"{slug}-thumb.webp"
+              if output_path.exists():
+                  report.append({
+                      "slug": slug,
+                      "name": name,
+                      "status": "already-present",
+                      "output": str(output_path.relative_to(root)),
+                      "bytes": output_path.stat().st_size,
+                  })
+                  continue
               try:
-                  request = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-                  with urllib.request.urlopen(request, timeout=30) as response:
-                      body = response.read().decode("utf-8", "replace")
-                  results.append({"url": url, "ok": True, "body": body[:50000]})
+                  player = find_espn_player(name)
+                  image_url = player.get("image", {}).get("default")
+                  page_url = player.get("link", {}).get("web")
+                  if not image_url or not page_url:
+                      raise RuntimeError("ESPN athlete result did not contain an official image and profile URL")
+                  source = get_bytes(image_url)
+                  if len(source) < 3000:
+                      raise RuntimeError(f"Downloaded image was unexpectedly small ({len(source)} bytes)")
+                  thumb = make_thumbnail(source)
+                  thumb.save(output_path, "WEBP", quality=88, method=6)
+                  if output_path.stat().st_size < 2500:
+                      raise RuntimeError(f"Processed WebP was unexpectedly small ({output_path.stat().st_size} bytes)")
+                  rendered.append((name, thumb.copy()))
+                  report.append({
+                      "slug": slug,
+                      "name": name,
+                      "status": "generated",
+                      "espnId": player.get("uid", "").split("~a:")[-1],
+                      "profileUrl": page_url,
+                      "imageUrl": image_url,
+                      "output": str(output_path.relative_to(root)),
+                      "width": thumb.width,
+                      "height": thumb.height,
+                      "bytes": output_path.stat().st_size,
+                  })
               except Exception as exc:
-                  results.append({"url": url, "ok": False, "error": repr(exc)})
-          Path("tmp").mkdir(exist_ok=True)
-          Path("tmp/espn-headshot-probe.json").write_text(json.dumps(results, indent=2), encoding="utf-8")
+                  failures.append({"slug": slug, "name": name, "error": repr(exc)})
+                  report.append({"slug": slug, "name": name, "status": "failed", "error": repr(exc)})
+
+          font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+          bold_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+          font = ImageFont.truetype(font_path, 15)
+          bold = ImageFont.truetype(bold_path, 16)
+          columns = 6
+          cell_w, cell_h = 210, 220
+          rows = max(1, (len(rendered) + columns - 1) // columns)
+          sheet = Image.new("RGB", (columns * cell_w, rows * cell_h), (12, 12, 14))
+          draw = ImageDraw.Draw(sheet)
+          for index, (name, thumb) in enumerate(rendered):
+              col = index % columns
+              row = index // columns
+              x = col * cell_w
+              y = row * cell_h
+              draw.rounded_rectangle((x + 8, y + 8, x + cell_w - 8, y + cell_h - 8), radius=18, fill=(27, 27, 30), outline=(78, 78, 84), width=2)
+              preview = Image.new("RGBA", (168, 168), (8, 8, 10, 255))
+              preview.alpha_composite(thumb, (4, 4))
+              sheet.paste(preview.convert("RGB"), (x + 21, y + 14))
+              words = name.split()
+              lines = [name]
+              if draw.textlength(name, font=bold) > cell_w - 24 and len(words) > 1:
+                  split = max(1, len(words) // 2)
+                  lines = [" ".join(words[:split]), " ".join(words[split:])]
+              text_y = y + 186
+              for line in lines:
+                  width = draw.textlength(line, font=bold)
+                  draw.text((x + (cell_w - width) / 2, text_y), line, font=bold, fill=(245, 245, 247))
+                  text_y += 18
+          sheet.save(tmp_dir / "play-thumbnail-contact-sheet.jpg", quality=88, optimize=True)
+
+          (tmp_dir / "play-thumbnail-import-report.json").write_text(
+              json.dumps({"generated": len(rendered), "failures": failures, "records": report}, indent=2),
+              encoding="utf-8",
+          )
+          (tmp_dir / "play-thumbnail-run-id.txt").write_text(
+              str(__import__("os").environ["GITHUB_RUN_ID_VALUE"]),
+              encoding="utf-8",
+          )
+
+          generated_records = [record for record in report if record["status"] == "generated"]
+          source_lines = [
+              "# Play fighter thumbnail sources",
+              "",
+              "These local 160×160 WebP thumbnails were created from official ESPN MMA athlete headshots using ordinary image processing only: crop/contain, resize, light sharpening, and WebP conversion.",
+              "",
+          ]
+          for record in generated_records:
+              source_lines.append(
+                  f"- **{record['name']}** — [ESPN fighter profile]({record['profileUrl']}) · [source headshot]({record['imageUrl']})"
+              )
+          source_lines.append("")
+          (root / "docs/play-thumbnail-sources.md").write_text("\n".join(source_lines), encoding="utf-8")
+
+          test_source = '''import { existsSync, readFileSync, statSync } from "node:fs";
+          import { fileURLToPath } from "node:url";
+          import { resolve } from "node:path";
+          import { describe, expect, it } from "vitest";
+          import { playFighters } from "./playFighterPool";
+
+          const projectRoot = fileURLToPath(new URL("../../..", import.meta.url));
+
+          describe("Play fighter thumbnail completeness", () => {
+            it("keeps one valid local WebP thumbnail for every eligible fighter", () => {
+              const missing: string[] = [];
+              const invalid: string[] = [];
+
+              for (const fighter of playFighters) {
+                const relativePath = fighter.thumbUrl.replace(/^\//, "");
+                const absolutePath = resolve(projectRoot, relativePath);
+                if (!existsSync(absolutePath)) {
+                  missing.push(`${fighter.id}: ${relativePath}`);
+                  continue;
+                }
+
+                const header = readFileSync(absolutePath).subarray(0, 12);
+                const isWebP = header.subarray(0, 4).toString("ascii") === "RIFF"
+                  && header.subarray(8, 12).toString("ascii") === "WEBP";
+                if (!isWebP || statSync(absolutePath).size < 2_500) {
+                  invalid.push(`${fighter.id}: ${relativePath}`);
+                }
+              }
+
+              expect(missing).toEqual([]);
+              expect(invalid).toEqual([]);
+            });
+          });
+          '''
+          test_source = "\n".join(line[10:] if line.startswith("          ") else line for line in test_source.splitlines()) + "\n"
+          (root / "src/features/play/playThumbnailCompleteness.test.ts").write_text(test_source, encoding="utf-8")
+
+          print(json.dumps({"generated": len(rendered), "failed": len(failures), "failures": failures}, indent=2))
           PY
-      - name: Commit probe output
+
+      - name: Upload visual audit package
+        uses: actions/upload-artifact@v4
+        with:
+          name: play-thumbnail-visual-audit
+          path: |
+            tmp/play-thumbnail-contact-sheet.jpg
+            tmp/play-thumbnail-import-report.json
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Commit generated assets and audit files
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add tmp/espn-headshot-probe.json
-          git commit -m "Record ESPN headshot probe" || exit 0
+          git add public/assets/fighters/*-thumb.webp docs/play-thumbnail-sources.md src/features/play/playThumbnailCompleteness.test.ts tmp/play-thumbnail-import-report.json tmp/play-thumbnail-run-id.txt
+          git commit -m "Add missing Play fighter thumbnails" || exit 0
           git push origin HEAD:chatgpt/play-thumbnail-completeness
