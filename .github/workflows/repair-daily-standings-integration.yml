@@ -1,0 +1,318 @@
+name: Repair Daily Challenge Standings Integration
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/repair-daily-standings-integration.yml
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Integrate canonical standings owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          from textwrap import dedent
+
+          repo = Path("src/features/play/todayChallengeRepository.ts")
+          text = repo.read_text()
+
+          schema_marker = dedent('''\
+          const streakSchema = z.object({
+            current_streak: z.coerce.number().int().nonnegative(),
+            best_streak: z.coerce.number().int().nonnegative(),
+          });
+          ''')
+          schema_addition = schema_marker + dedent('''\
+          const standingsEntrySchema = z.object({
+            rank: z.coerce.number().int().positive(),
+            profile_id: z.string().uuid(),
+            display_name: z.string(),
+            initials: z.string(),
+            avatar_photo_data: z.string().nullable().optional(),
+            wins: z.coerce.number().int().nonnegative(),
+            played: z.coerce.number().int().nonnegative(),
+            average_score: z.coerce.number().nonnegative(),
+            current_streak: z.coerce.number().int().nonnegative(),
+            best_streak: z.coerce.number().int().nonnegative(),
+            game_averages: z.object({
+              find_leader: z.coerce.number().nullable(),
+              wavelength: z.coerce.number().nullable(),
+              blind_resume: z.coerce.number().nullable(),
+              blind_rank_5: z.coerce.number().nullable(),
+              keep_4_cut_4: z.coerce.number().nullable(),
+            }),
+            is_current_user: z.boolean(),
+          });
+          const standingsSchema = z.object({
+            player_count: z.coerce.number().int().nonnegative(),
+            current_user_rank: z.coerce.number().int().positive().nullable(),
+            current_user_wins: z.coerce.number().int().nonnegative(),
+            entries: z.array(standingsEntrySchema),
+          });
+          ''')
+          if text.count(schema_marker) != 1:
+            raise SystemExit("standings schema insertion point changed")
+          text = text.replace(schema_marker, schema_addition, 1)
+
+          interface_marker = dedent('''\
+          export interface TodayChallengeStreak {
+            currentStreak: number;
+            bestStreak: number;
+          }
+          ''')
+          interface_addition = interface_marker + dedent('''\
+
+          export interface TodayChallengeStandingsEntry {
+            rank: number;
+            profileId: string;
+            displayName: string;
+            initials: string;
+            avatarPhotoData: string | null;
+            wins: number;
+            played: number;
+            averageScore: number;
+            currentStreak: number;
+            bestStreak: number;
+            gameAverages: {
+              findLeader: number | null;
+              wavelength: number | null;
+              blindResume: number | null;
+              blindRank5: number | null;
+              keep4Cut4: number | null;
+            };
+            isCurrentUser: boolean;
+          }
+
+          export interface TodayChallengeStandings {
+            playerCount: number;
+            currentUserRank: number | null;
+            currentUserWins: number;
+            entries: TodayChallengeStandingsEntry[];
+          }
+          ''')
+          if text.count(interface_marker) != 1:
+            raise SystemExit("standings interface insertion point changed")
+          text = text.replace(interface_marker, interface_addition, 1)
+
+          method_marker = dedent('''\
+            loadHistory(): Promise<TodayChallengeHistoryRow[]>;
+            loadStreak(): Promise<TodayChallengeStreak>;
+            loadDailyLeaderboard(day: string, scheduleVersion: string): Promise<TodayChallengeLeaderboard>;
+          }''')
+          method_replacement = dedent('''\
+            loadHistory(): Promise<TodayChallengeHistoryRow[]>;
+            loadStreak(): Promise<TodayChallengeStreak>;
+            loadStandings(): Promise<TodayChallengeStandings>;
+            loadDailyLeaderboard(day: string, scheduleVersion: string): Promise<TodayChallengeLeaderboard>;
+          }''')
+          if text.count(method_marker) != 1:
+            raise SystemExit("repository method insertion point changed")
+          text = text.replace(method_marker, method_replacement, 1)
+
+          implementation_marker = dedent('''\
+              async loadStreak() {
+                const row = streakSchema.parse(await rpc(client, "get_my_daily_challenge_streak"));
+                return { currentStreak: row.current_streak, bestStreak: row.best_streak };
+              },
+              async loadDailyLeaderboard(day, scheduleVersion) {''')
+          implementation_replacement = dedent('''\
+              async loadStreak() {
+                const row = streakSchema.parse(await rpc(client, "get_my_daily_challenge_streak"));
+                return { currentStreak: row.current_streak, bestStreak: row.best_streak };
+              },
+              async loadStandings() {
+                const row = standingsSchema.parse(await rpc(client, "get_daily_challenge_standings"));
+                return {
+                  playerCount: row.player_count,
+                  currentUserRank: row.current_user_rank,
+                  currentUserWins: row.current_user_wins,
+                  entries: row.entries.map((entry) => ({
+                    rank: entry.rank,
+                    profileId: entry.profile_id,
+                    displayName: entry.display_name,
+                    initials: entry.initials,
+                    avatarPhotoData: entry.avatar_photo_data ?? null,
+                    wins: entry.wins,
+                    played: entry.played,
+                    averageScore: entry.average_score,
+                    currentStreak: entry.current_streak,
+                    bestStreak: entry.best_streak,
+                    gameAverages: {
+                      findLeader: entry.game_averages.find_leader,
+                      wavelength: entry.game_averages.wavelength,
+                      blindResume: entry.game_averages.blind_resume,
+                      blindRank5: entry.game_averages.blind_rank_5,
+                      keep4Cut4: entry.game_averages.keep_4_cut_4,
+                    },
+                    isCurrentUser: entry.is_current_user,
+                  })),
+                };
+              },
+              async loadDailyLeaderboard(day, scheduleVersion) {''')
+          if text.count(implementation_marker) != 1:
+            raise SystemExit("repository implementation insertion point changed")
+          repo.write_text(text.replace(implementation_marker, implementation_replacement, 1))
+
+          Path("src/features/play/useTodayChallengeOverview.ts").write_text(dedent('''\
+          import { useMemo } from "react";
+          import { useQuery } from "@tanstack/react-query";
+          import {
+            createTodayChallengeRepository,
+            type TodayChallengeProjection,
+            type TodayChallengeRepository,
+          } from "./todayChallengeRepository";
+
+          export const todayChallengeStandingsQueryKey = (profileId: string) => [
+            "daily-challenge-standings",
+            profileId,
+          ] as const;
+
+          export const todayChallengeLeaderboardQueryKey = (
+            profileId: string,
+            day: string,
+            scheduleVersion: string,
+          ) => [
+            "today-challenge-leaderboard",
+            profileId,
+            day,
+            scheduleVersion,
+          ] as const;
+
+          export function useTodayChallengeOverview({
+            profileId,
+            enabled,
+            projection,
+            repository: suppliedRepository,
+          }: {
+            profileId: string;
+            enabled: boolean;
+            projection: TodayChallengeProjection | null;
+            repository?: TodayChallengeRepository | null;
+          }) {
+            const repository = useMemo(
+              () => suppliedRepository === undefined
+                ? createTodayChallengeRepository()
+                : suppliedRepository,
+              [suppliedRepository],
+            );
+            const ready = enabled && Boolean(profileId) && Boolean(repository);
+            const standings = useQuery({
+              queryKey: todayChallengeStandingsQueryKey(profileId),
+              queryFn: () => repository!.loadStandings(),
+              enabled: ready,
+            });
+            const leaderboard = useQuery({
+              queryKey: todayChallengeLeaderboardQueryKey(
+                profileId,
+                projection?.centralDay ?? "unavailable",
+                projection?.scheduleVersion ?? "unavailable",
+              ),
+              queryFn: () => repository!.loadDailyLeaderboard(
+                projection!.centralDay,
+                projection!.scheduleVersion,
+              ),
+              enabled: ready && Boolean(projection),
+            });
+
+            return {
+              configured: Boolean(repository),
+              standings: standings.data ?? null,
+              leaderboard: leaderboard.data ?? null,
+              standingsLoading: standings.isLoading,
+              leaderboardLoading: leaderboard.isLoading,
+              loading: standings.isLoading || leaderboard.isLoading,
+              error: standings.error ?? leaderboard.error ?? null,
+              refresh: async () => {
+                await Promise.all([
+                  standings.refetch(),
+                  projection ? leaderboard.refetch() : Promise.resolve(),
+                ]);
+              },
+            };
+          }
+          '''))
+
+          hub = Path("src/features/play/TodayChallengeHub.tsx")
+          text = hub.read_text()
+          identity_import = 'import { useIdentity } from "../identity/IdentityProvider";\n'
+          if text.count(identity_import) != 1:
+            raise SystemExit("hub identity import changed")
+          text = text.replace(
+            identity_import,
+            identity_import + 'import { DailyChallengeStandings } from "./DailyChallengeStandings";\n',
+            1,
+          )
+          text = text.replace("  TodayChallengeHistoryRow,\n", "", 1)
+          text, removed = re.subn(
+            r'\nfunction nativeResult\([\s\S]*?\n}\n\nfunction gameTitle\([\s\S]*?\n}\n',
+            '\n',
+            text,
+            count=1,
+          )
+          if removed != 1:
+            raise SystemExit("hub history helpers changed")
+          text = text.replace("  const history = overview.history.slice(0, 6);\n", "", 1)
+          standings = dedent('''\
+              <DailyChallengeStandings
+                standings={overview.standings}
+                loading={overview.standingsLoading}
+                error={overview.error instanceof Error ? overview.error : null}
+                onRefresh={() => { void overview.refresh(); }}
+              />''')
+          text, replaced = re.subn(
+            r'      <details className="today-hub-history">[\s\S]*?      </details>',
+            standings,
+            text,
+            count=1,
+          )
+          if replaced != 1:
+            raise SystemExit("history accordion replacement point changed")
+          if text.count("loading={overview.loading}") != 1:
+            raise SystemExit("leaderboard loading owner changed")
+          text = text.replace(
+            "loading={overview.loading}",
+            "loading={overview.leaderboardLoading}",
+            1,
+          )
+          hub.write_text(text)
+
+          sql = Path("supabase/tests/generalized_todays_challenge_backend.sql")
+          sql_text = sql.read_text()
+          include = "\\ir wavelength_score_calibration.sql\n"
+          if sql_text.count(include) != 1:
+            raise SystemExit("generalized SQL include point changed")
+          sql.write_text(sql_text.replace(
+            include,
+            include + "\\ir daily_challenge_standings.sql\n"
+            + "\\ir ../migrations/202609100001_daily_challenge_standings.sql\n"
+            + "\\ir ../migrations/202609100001_daily_challenge_standings.sql\n",
+            1,
+          ))
+          PY
+
+          git diff --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            src/features/play/todayChallengeRepository.ts \
+            src/features/play/useTodayChallengeOverview.ts \
+            src/features/play/TodayChallengeHub.tsx \
+            supabase/tests/generalized_todays_challenge_backend.sql
+          git commit -m "Integrate Daily Challenge Standings"
+          git push origin HEAD:feature/daily-challenge-standings
