@@ -13,6 +13,7 @@ const MemberProfilePage = lazy(() => import("../features/members/MemberProfilePa
 const NotificationCenterPage = lazy(() => import("../features/notifications/NotificationCenterPage"));
 const PlayPage = lazy(() => import("../features/play/PlayPage"));
 const FindLeaderChallengeRoute = lazy(() => import("../features/challenges/FindLeaderChallengeRoute"));
+const TodayChallengeGameRoute = lazy(() => import("../features/play/TodayChallengeGameRoute"));
 const WavelengthPage = lazy(() => import("../features/play/WavelengthPage"));
 const BlindResumePage = lazy(() => import("../features/play/BlindResumePage"));
 const BlindRankPage = lazy(() => import("../features/play/BlindRankPage"));
@@ -40,11 +41,11 @@ export const appRoutes: RouteObject[] = [
       { path: "members/:memberName", element: <MemberProfilePage /> },
       { path: "notifications", element: <NotificationCenterPage /> },
       { path: "play", element: <PlayPage /> },
-      { path: "play/find-leader", element: <FindLeaderChallengeRoute /> },
-      { path: "play/wavelength", element: <WavelengthPage /> },
-      { path: "play/blind-resume", element: <BlindResumePage /> },
-      { path: "play/blind-rank", element: <BlindRankPage /> },
-      { path: "play/keep-cut", element: <KeepCutPage /> },
+      { path: "play/find-leader", element: <TodayChallengeGameRoute gameType="find_leader" casual={<FindLeaderChallengeRoute />} /> },
+      { path: "play/wavelength", element: <TodayChallengeGameRoute gameType="wavelength" casual={<WavelengthPage />} /> },
+      { path: "play/blind-resume", element: <TodayChallengeGameRoute gameType="blind_resume" casual={<BlindResumePage />} /> },
+      { path: "play/blind-rank", element: <TodayChallengeGameRoute gameType="blind_rank_5" casual={<BlindRankPage />} /> },
+      { path: "play/keep-cut", element: <TodayChallengeGameRoute gameType="keep_4_cut_4" casual={<KeepCutPage />} /> },
       { path: "play/better-than", element: <BetterThanPage /> },
       { path: "play/auction", element: <AuctionPage /> },
       { path: "picks", element: <PicksPage /> },
