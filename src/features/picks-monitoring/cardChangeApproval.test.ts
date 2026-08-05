@@ -119,8 +119,8 @@ describe("monitoring card-change approval proposals", () => {
       }],
     });
     expect(ambiguousReplacement.map((item) => item.summary)).toEqual(expect.arrayContaining([
-      "Removed Alpha vs. Beta.",
-      "Added Replacement Red vs. Replacement Blue.",
+      "Removed main event: Alpha vs. Beta.",
+      "Added main event: Replacement Red vs. Replacement Blue.",
     ]));
     expect(ambiguousReplacement.some((item) => item.source_details?.approval_proposal)).toBe(false);
 
