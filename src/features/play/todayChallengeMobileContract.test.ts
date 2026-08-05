@@ -14,6 +14,13 @@ describe("Today’s Challenge 390×844 presentation contract", () => {
     expect(`${gameCss}\n${hubCss}`).not.toMatch(/^\s*min-width:\s*(?:4\d\d|[5-9]\d\d|\d{4,})px/m);
   });
 
+  it("keeps the swipe frame content-sized instead of forcing an empty 320px card", () => {
+    expect(hubCss).toContain(".today-hub-card,\n.today-hub-leaderboard {\n  min-height: 0;");
+    expect(hubCss).toContain("max-height: 132px");
+    expect(hubCss).toContain("min-height: 96px");
+    expect(hubCss).not.toMatch(/\.today-hub-card,\s*\n\.today-hub-leaderboard\s*\{[^}]*min-height:\s*(?:3\d{2}|[4-9]\d{2})px/s);
+  });
+
   it("defines the phone layout used by all five deterministic official fixtures", () => {
     expect(gameCss).toMatch(/@media\s*\(max-width:\s*390px\)/);
     expect(hubCss).toMatch(/@media\s*\(max-width:\s*520px\)/);
