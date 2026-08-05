@@ -58,6 +58,13 @@ function normalizeExactSha(value, label) {
   return normalized;
 }
 
+function defaultAllowedDeploymentShas() {
+  return process.env.GITHUB_EVENT_NAME === "pull_request"
+    && process.env.EXPECTED_SYNC_SOURCE_SHA
+    ? [process.env.EXPECTED_SYNC_SOURCE_SHA]
+    : [];
+}
+
 export function resolveAcceptedDeploymentSha({
   markerSha,
   expectedSha,
@@ -275,7 +282,7 @@ async function verifyAttempt({
 export async function verifyLiveFrontendDelivery({
   origin = DEFAULT_ORIGIN,
   expectedSha,
-  allowedDeployedShas = [],
+  allowedDeployedShas = defaultAllowedDeploymentShas(),
   attempts = DEFAULT_ATTEMPTS,
   delayMs = DEFAULT_DELAY_MS,
   fetchFn = fetch,
@@ -311,14 +318,9 @@ export async function verifyLiveFrontendDelivery({
 }
 
 if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
-  const allowedDeployedShas = process.env.GITHUB_EVENT_NAME === "pull_request"
-    && process.env.EXPECTED_SYNC_SOURCE_SHA
-    ? [process.env.EXPECTED_SYNC_SOURCE_SHA]
-    : [];
   const result = await verifyLiveFrontendDelivery({
     origin: process.env.OCTAGON_PRODUCTION_ORIGIN ?? DEFAULT_ORIGIN,
     expectedSha: process.env.EXPECTED_SOURCE_SHA ?? process.env.SOURCE_SHA,
-    allowedDeployedShas,
     attempts: Number(process.env.FRONTEND_DELIVERY_ATTEMPTS ?? DEFAULT_ATTEMPTS),
     delayMs: Number(process.env.FRONTEND_DELIVERY_DELAY_MS ?? DEFAULT_DELAY_MS),
   });
