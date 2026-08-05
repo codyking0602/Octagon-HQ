@@ -47,11 +47,17 @@ describe("Unified Picks Control Center architecture", () => {
     expect(setupPage).toContain('navigate("/picks/control")');
   });
 
-  it("keeps technical evidence collapsed and card changes review-only", () => {
-    expect(monitoringPage).toContain('<details className="surface-card monitoring-history monitoring-system-details">');
-    expect(monitoringPage).toContain("SYSTEM DETAILS");
-    expect(monitoringPage).toContain("RAW DIAGNOSTICS");
-    expect(monitoringPage).toContain("card-change findings stay here for owner review and are never published automatically");
+  it("keeps technical evidence out of the owner workflow and card changes review-only", () => {
+    expect(monitoringPage).not.toContain("SYSTEM DETAILS");
+    expect(monitoringPage).not.toContain("RAW DIAGNOSTICS");
+    expect(monitoringPage).not.toContain("RECENT CHECKS");
+    expect(monitoringPage).not.toContain("REVIEWED FINDINGS");
+    expect(monitoringPage).toContain("PENDING CHANGES");
+    expect(monitoringPage).toContain("Review only what changed");
+    expect(monitoringPage).toContain(
+      "Eligible pre-lock odds apply automatically. Event-card changes stay review-only and are never published automatically.",
+    );
+    expect(monitoringPage).toContain('repository.reviewFinding(finding.findingId, status)');
   });
 
   it("adds mobile-first layout without browser polling or per-fight locks", () => {
