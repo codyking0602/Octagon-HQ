@@ -2,10 +2,26 @@ import { createClient, type SupabaseClient } from "npm:@supabase/supabase-js@2.1
 import {
   advanceOfficialDailyRuntime,
   buildOfficialDailySetup,
-  type OfficialDailyGameType,
-  type OfficialDailyRuntimeContext,
-} from "../../../src/features/play/todaysChallengeRuntime.ts";
+} from "./runtime.generated.mjs";
 import { DEPLOYED_SOURCE_SHA } from "./deployment.ts";
+
+type OfficialDailyGameType =
+  | "find_leader"
+  | "blind_resume"
+  | "wavelength"
+  | "blind_rank_5"
+  | "keep_4_cut_4";
+
+interface OfficialDailyRuntimeContext {
+  gameType: OfficialDailyGameType;
+  setupKey: string;
+  publicSetup: Record<string, unknown>;
+  revealSetup: Record<string, unknown>;
+  privateSetupEvidence: Record<string, unknown>;
+  privateGradingEvidence: Record<string, unknown>;
+  submissionState: Record<string, unknown>;
+  publicState: Record<string, unknown>;
+}
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*",
@@ -173,16 +189,16 @@ Deno.serve(async (request) => {
   if (request.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (request.method !== "POST") return safeError(405, "METHOD_NOT_ALLOWED", "Method not allowed.");
 
+  let body: JsonRecord = {};
+  try { body = asRecord(await request.json()) ?? {}; } catch { /* empty input */ }
+  if (body.mode === "deployment-info") return json({ deployment_sha: DEPLOYED_SOURCE_SHA });
+
   const url = Deno.env.get("SUPABASE_URL");
   const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
   const serviceKey = Deno.env.get("SUPABASE_SECRET_KEY") ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   if (!url || !anonKey || !serviceKey) {
     return safeError(503, "DAILY_RUNTIME_NOT_CONFIGURED", "The official daily runtime is not configured.");
   }
-
-  let body: JsonRecord = {};
-  try { body = asRecord(await request.json()) ?? {}; } catch { /* empty input */ }
-  if (body.mode === "deployment-info") return json({ deployment_sha: DEPLOYED_SOURCE_SHA });
 
   const admin = createClient(url, serviceKey, {
     auth: { autoRefreshToken: false, persistSession: false },
