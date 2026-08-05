@@ -79,7 +79,7 @@ begin
         v_event_id,
         lower(trim(v_proposal->>'bout_id')),
         false,
-        coalesce((v_proposal->>'expected_included_in_picks')::boolean, true),
+        (v_proposal->>'expected_included_in_picks')::boolean,
         lower(trim(v_proposal->>'expected_red_fighter_slug')),
         lower(trim(v_proposal->>'expected_blue_fighter_slug')),
         v_reason
