@@ -154,10 +154,13 @@ export default function KeepCutPage() {
   const kept = lineup.fighters.filter((_fighter, index) => decisions[index] === "keep");
   const cut = lineup.fighters.filter((_fighter, index) => decisions[index] === "cut");
   const current = lineup.fighters[decisions.length];
-  const result = useMemo(
-    () => complete ? scoreKeepCutSelection(lineup.packId, lineup.fighters, kept.map((fighter) => fighter.id)) : null,
-    [complete, kept, lineup],
-  );
+  const result = useMemo(() => {
+    if (decisions.length !== lineup.fighters.length) return null;
+    const keptIds = lineup.fighters
+      .filter((_fighter, index) => decisions[index] === "keep")
+      .map((fighter) => fighter.id);
+    return scoreKeepCutSelection(lineup.packId, lineup.fighters, keptIds);
+  }, [decisions, lineup]);
   const isChallenge = run.identity.type === "curated";
   const groupedPacks = useMemo(() => ["Careers", "Divisions", "Skills"].map((group) => ({
     group,
@@ -201,7 +204,6 @@ export default function KeepCutPage() {
     if (choice === "keep" && kept.length >= 4) return;
     if (choice === "cut" && cut.length >= 4) return;
     setDecisions((rows) => [...rows, choice]);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   async function challengeSomeone() {
@@ -329,8 +331,22 @@ export default function KeepCutPage() {
         </div>
 
         {current ? (
-          <section className="keep-cut-current">
-            <FighterPhoto name={current.name} src={current.thumbUrl} className="keep-cut-current__photo" />
+          <section
+            className="keep-cut-current"
+            style={{ gridTemplateColumns: "96px minmax(0, 1fr)" }}
+          >
+            <FighterPhoto
+              name={current.name}
+              src={current.thumbUrl}
+              className="keep-cut-current__photo"
+              style={{
+                width: "96px",
+                height: "96px",
+                aspectRatio: "1 / 1",
+                objectFit: "cover",
+                objectPosition: "center",
+              }}
+            />
             <div>
               <span>REVEAL {decisions.length + 1} OF 8</span>
               <h2>{current.name}</h2>
