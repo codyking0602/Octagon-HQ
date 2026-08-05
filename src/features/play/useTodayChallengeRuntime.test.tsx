@@ -35,6 +35,13 @@ function wrapper(client: QueryClient) {
   };
 }
 
+const emptyStandings = {
+  playerCount: 0,
+  currentUserRank: null,
+  currentUserWins: 0,
+  entries: [],
+};
+
 describe("useTodayChallengeRuntime", () => {
   it("refreshes canonical cross-device state after a stale optimistic revision", async () => {
     const loadToday = vi.fn()
@@ -49,6 +56,7 @@ describe("useTodayChallengeRuntime", () => {
       advance,
       loadHistory: vi.fn().mockResolvedValue([]),
       loadStreak: vi.fn().mockResolvedValue({ currentStreak: 0, bestStreak: 0 }),
+      loadStandings: vi.fn().mockResolvedValue(emptyStandings),
       loadDailyLeaderboard: vi.fn().mockResolvedValue({ unlocked: false, playerCount: 0, entries: [] }),
     };
     const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -77,6 +85,7 @@ describe("useTodayChallengeRuntime", () => {
       advance: vi.fn(),
       loadHistory: vi.fn(),
       loadStreak: vi.fn(),
+      loadStandings: vi.fn(),
       loadDailyLeaderboard: vi.fn(),
     };
     const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
