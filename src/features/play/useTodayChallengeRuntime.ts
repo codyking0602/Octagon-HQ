@@ -7,9 +7,8 @@ import {
   type TodayChallengeRepository,
 } from "./todayChallengeRepository";
 import {
-  todayChallengeHistoryQueryKey,
   todayChallengeLeaderboardQueryKey,
-  todayChallengeStreakQueryKey,
+  todayChallengeStandingsQueryKey,
 } from "./useTodayChallengeOverview";
 
 export const todayChallengeRuntimeQueryKey = (profileId: string) => [
@@ -61,11 +60,7 @@ export function useTodayChallengeRuntime({
       queryClient.setQueryData(queryKey, projection);
       if (!projection.officialAttempt) return;
       void queryClient.invalidateQueries({
-        queryKey: todayChallengeHistoryQueryKey(profileId),
-        exact: true,
-      });
-      void queryClient.invalidateQueries({
-        queryKey: todayChallengeStreakQueryKey(profileId),
+        queryKey: todayChallengeStandingsQueryKey(profileId),
         exact: true,
       });
       void queryClient.invalidateQueries({
