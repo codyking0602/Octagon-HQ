@@ -107,10 +107,13 @@ where central_day = :'today'::date
   and schedule_version = 'test-daily-runtime-v1'
 \gset
 
+select set_config('octagon.test_daily_id', :'daily_id', true);
+
 do $$
 declare
   v_request jsonb;
   v_context jsonb;
+  v_daily_id uuid := current_setting('octagon.test_daily_id')::uuid;
 begin
   v_request := public.get_daily_challenge_materialization_request(now());
   if v_request->>'required' <> 'false'
@@ -119,7 +122,7 @@ begin
   end if;
 
   v_context := public.get_daily_challenge_runtime_context(
-    :'daily_id'::uuid,
+    v_daily_id,
     '74000000-0000-4000-8000-000000000001'::uuid
   );
   if v_context->>'progress_revision' <> '0'
@@ -151,10 +154,11 @@ select public.save_daily_challenge_runtime_progress(
 do $$
 declare
   v_failed boolean := false;
+  v_daily_id uuid := current_setting('octagon.test_daily_id')::uuid;
 begin
   begin
     perform public.save_daily_challenge_runtime_progress(
-      :'daily_id'::uuid,
+      v_daily_id,
       '74000000-0000-4000-8000-000000000001'::uuid,
       0,
       '{}'::jsonb,
@@ -204,8 +208,9 @@ declare
   v_progress jsonb;
   v_today jsonb;
   v_failed boolean := false;
+  v_daily_id uuid := current_setting('octagon.test_daily_id')::uuid;
 begin
-  v_progress := public.get_my_daily_challenge_progress(:'daily_id'::uuid);
+  v_progress := public.get_my_daily_challenge_progress(v_daily_id);
   if v_progress->>'revision' <> '2'
     or v_progress#>>'{public_state,complete}' <> 'true'
     or v_progress ? 'submission_state'
@@ -227,7 +232,7 @@ begin
 
   begin
     perform public.get_daily_challenge_runtime_context(
-      :'daily_id'::uuid,
+      v_daily_id,
       '74000000-0000-4000-8000-000000000001'::uuid
     );
   exception when others then
@@ -252,6 +257,7 @@ do $$
 declare
   v_today jsonb;
   v_failed boolean := false;
+  v_daily_id uuid := current_setting('octagon.test_daily_id')::uuid;
 begin
   v_today := public.get_today_challenge_public();
   if v_today#>>'{official_attempt,normalized_score}' <> '100'
@@ -262,7 +268,7 @@ begin
   perform set_config('request.jwt.claim.role', 'service_role', true);
   begin
     perform public.save_daily_challenge_runtime_progress(
-      :'daily_id'::uuid,
+      v_daily_id,
       '74000000-0000-4000-8000-000000000001'::uuid,
       2,
       '{}'::jsonb,
