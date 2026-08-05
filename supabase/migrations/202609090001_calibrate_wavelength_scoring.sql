@@ -169,7 +169,7 @@ begin
     );
 
     if jsonb_typeof(p_grading_evidence->'ratings') <> 'object'
-      or jsonb_object_length(p_grading_evidence->'ratings') <> 5 then
+      or private.jsonb_object_length(p_grading_evidence->'ratings') <> 5 then
       raise exception 'Blind Rank ratings are invalid';
     end if;
     if exists (
@@ -218,7 +218,7 @@ begin
     );
 
     if jsonb_typeof(p_grading_evidence->'ratings') <> 'object'
-      or jsonb_object_length(p_grading_evidence->'ratings') <> 8 then
+      or private.jsonb_object_length(p_grading_evidence->'ratings') <> 8 then
       raise exception 'Keep 4 Cut 4 ratings are invalid';
     end if;
     if exists (
