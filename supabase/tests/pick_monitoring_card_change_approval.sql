@@ -31,8 +31,8 @@ begin
       jsonb_build_object('display_name', 'MONITORING APPROVAL OTHER', 'historical_unclaimed', true)
     );
 
-  perform public.register_unclaimed_pin_profile(v_owner, 'Monitoring Approval Owner', 'MAO');
-  perform public.register_unclaimed_pin_profile(v_other, 'Monitoring Approval Other', 'MAZ');
+  perform public.register_unclaimed_pin_profile(v_owner, 'Monitor Owner', 'MO');
+  perform public.register_unclaimed_pin_profile(v_other, 'Monitor Other', 'MX');
   insert into public.pick_control_owners(profile_id) values(v_owner);
 
   insert into public.pick_events(
