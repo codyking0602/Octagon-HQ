@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import { playFighters } from "./playFighterPool";
 
 const publicRoot = resolve(process.cwd(), "public");
+// The exact 46 assets repaired after the initial completeness pass.
 const reframedFighterIds = new Set([
   "al-iaquinta",
   "anthony-smith",
