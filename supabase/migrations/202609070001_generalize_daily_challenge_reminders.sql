@@ -200,7 +200,7 @@ begin
         and not exists (
           select 1
           from public.pick_events event
-          where event.event_id = v_draft.event_id
+          where event.event_id = draft.event_id
             and event.status in ('upcoming', 'locked')
         )
       order by draft.starts_at, draft.draft_id
