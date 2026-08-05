@@ -29,5 +29,12 @@ begin
   if position('daily-challenge-four-hours:' in v_definition) = 0 then
     raise exception 'daily reminder changed its canonical deduplication identity';
   end if;
+
+  -- Replacing this shared function must preserve the later truthful-monitoring repair.
+  if position('run.trigger_kind = ''scheduled''' in v_definition) = 0
+    or position('run.provider_called' in v_definition) = 0
+    or position('run.decision_reason is null' in v_definition) = 0 then
+    raise exception 'daily reminder replacement regressed canonical monitoring failure filtering';
+  end if;
 end;
 $$;
