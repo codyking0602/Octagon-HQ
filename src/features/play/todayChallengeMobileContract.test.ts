@@ -14,14 +14,14 @@ describe("Today’s Challenge 390×844 presentation contract", () => {
   });
 
   it("defines the phone layout used by all five deterministic official fixtures", () => {
-    expect(gameCss).toMatch(/@media\s*\(max-width:\s*520px\)/);
+    expect(gameCss).toMatch(/@media\s*\(max-width:\s*390px\)/);
     expect(hubCss).toMatch(/@media\s*\(max-width:\s*520px\)/);
     for (const selector of [
-      ".official-daily-find",
-      ".official-daily-resume",
-      ".official-daily-wavelength",
-      ".official-daily-rank",
-      ".official-daily-keep",
+      ".official-daily-find-grid",
+      ".official-resume-actions",
+      ".official-wavelength-control",
+      ".official-rank-board",
+      ".official-keep-board",
     ]) {
       expect(gameCss).toContain(selector);
     }
