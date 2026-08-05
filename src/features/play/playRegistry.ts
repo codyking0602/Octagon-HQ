@@ -188,7 +188,7 @@ export const playGames: readonly PlayGameDefinition[] = [
   },
   {
     id: "better-than",
-    icon: ">",
+    icon: "VS",
     title: "Better Than…",
     description: "Build a claim, choose your number, and name the exact fighters you can defend.",
     lineup: {
