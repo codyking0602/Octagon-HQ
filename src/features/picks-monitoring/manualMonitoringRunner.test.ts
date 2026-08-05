@@ -106,6 +106,16 @@ describe("card scope and run status", () => {
 
 describe("runtime and storage contracts", () => {
   const edge = readFileSync("supabase/functions/run-pick-monitoring/index.ts", "utf8");
-  it("uses owner reads and the atomic odds boundary without direct inserts or Picks mutations", () => { expect(edge).toContain('owner.rpc("get_pick_event_setup")'); expect(edge).toContain('owner.rpc("get_current_pick_event")'); expect(edge).toContain('admin.rpc("record_pick_monitoring_run_and_apply_odds"'); expect(edge).toContain('admin.rpc("record_scheduled_pick_monitoring_run"'); expect(edge).toContain('admin.rpc("claim_pick_monitoring_schedule"'); expect(edge).not.toMatch(/\.from\(|stage_pick|publish_pick|update_pick|submit_pick|record_pick_result|setInterval/); });
+  it("uses one canonical event projection for scheduled and owner-authorized manual checks", () => {
+    expect(edge).toContain('owner.rpc("get_pick_event_setup")');
+    expect(edge).toContain('admin.rpc("get_pick_monitoring_event_state")');
+    expect(edge).not.toContain('owner.rpc("get_current_pick_event")');
+    expect(edge).toContain('mode: "monitoring-preview"');
+    expect(edge).toContain('source_url: sourceUrl');
+    expect(edge).toContain('admin.rpc("record_pick_monitoring_run_and_apply_odds"');
+    expect(edge).toContain('admin.rpc("record_scheduled_pick_monitoring_run"');
+    expect(edge).toContain('admin.rpc("claim_pick_monitoring_schedule"');
+    expect(edge).not.toMatch(/\.from\(|stage_pick|publish_pick|update_pick|submit_pick|record_pick_result|setInterval/);
+  });
   it("allows Supabase browser invocation headers and keeps provider credentials backend-only", () => { expect(edge).toContain('"Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type"'); expect(edge).toContain('Deno.env.get("THE_ODDS_API_KEY")'); expect(edge).not.toContain("input.THE_ODDS_API_KEY"); expect(edge).toContain("OWNER_ACCESS_REQUIRED"); expect(edge).toContain("SCHEDULER_AUTH_REQUIRED"); });
 });
