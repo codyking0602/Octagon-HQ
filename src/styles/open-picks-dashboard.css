@@ -258,6 +258,103 @@
   outline-offset: -3px;
 }
 
+.monitoring-inbox-page--embedded {
+  gap: 7px;
+  padding-bottom: 0;
+}
+
+.monitoring-inbox-page--embedded .monitoring-status {
+  gap: 7px;
+  padding: 10px 12px;
+}
+
+.monitoring-inbox-page--embedded .monitoring-status__topline {
+  align-items: flex-start;
+}
+
+.monitoring-inbox-page--embedded .monitoring-status__topline > div {
+  gap: 2px;
+}
+
+.monitoring-inbox-page--embedded .monitoring-status h2 {
+  font-size: 15px;
+  line-height: 1.08;
+}
+
+.monitoring-inbox-page--embedded .monitoring-status > p {
+  color: var(--text-secondary);
+  font-size: 10px;
+  line-height: 1.25;
+}
+
+.monitoring-inbox-page--embedded .monitoring-status__topline > span {
+  min-width: 45px;
+  min-height: 23px;
+  padding-inline: 7px;
+  font-size: 7px;
+}
+
+.monitoring-inbox-page--embedded .monitoring-status__grid {
+  gap: 6px;
+}
+
+.monitoring-inbox-page--embedded .monitoring-status__grid > div {
+  gap: 2px;
+  min-height: 0;
+  padding: 6px 8px;
+  border-radius: 9px;
+}
+
+.monitoring-inbox-page--embedded .monitoring-status__grid strong {
+  font-size: 10px;
+}
+
+.monitoring-status__all-clear {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 30px;
+  padding: 6px 8px;
+  border: 1px solid rgba(72, 184, 118, .2);
+  border-radius: 9px;
+  background: rgba(72, 184, 118, .055);
+}
+
+.monitoring-status__all-clear span {
+  flex: 0 0 auto;
+  color: var(--text-muted);
+  font-size: 7px;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.monitoring-status__all-clear strong {
+  min-width: 0;
+  color: var(--text-primary);
+  font-size: 9px;
+  line-height: 1.15;
+}
+
+.monitoring-status__actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.monitoring-status__actions .primary-action,
+.monitoring-status__actions .secondary-action {
+  width: 100%;
+  min-width: 0;
+  min-height: 32px;
+  padding-inline: 6px;
+  font-size: 7px;
+  text-align: center;
+}
+
+.monitoring-inbox-page--embedded .monitoring-section {
+  gap: 8px;
+}
+
 @media (max-width: 640px) {
   .open-picks-toolbar {
     grid-template-columns: 1fr;
@@ -304,5 +401,13 @@
 
   .open-pick-row__state em {
     display: none;
+  }
+
+  .monitoring-status__actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .monitoring-status__actions a:last-child {
+    grid-column: 1 / -1;
   }
 }
