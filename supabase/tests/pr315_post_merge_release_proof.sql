@@ -1,0 +1,2 @@
+-- Read-only release proof for merged PR #315.
+-- This non-executable marker exists only to run the canonical production verifier against main 9ff94141621fcda0a82c121b41ed931e7a74de25.
