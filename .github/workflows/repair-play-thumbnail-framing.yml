@@ -7,6 +7,12 @@ on:
     paths:
       - scripts/repair-play-thumbnail-framing.py
       - .github/workflows/repair-play-thumbnail-framing.yml
+  pull_request:
+    branches:
+      - main
+    paths:
+      - scripts/repair-play-thumbnail-framing.py
+      - .github/workflows/repair-play-thumbnail-framing.yml
 
 permissions:
   contents: write
@@ -17,11 +23,13 @@ jobs:
     timeout-minutes: 10
     env:
       SOURCE_SHA: 1894f3b0a23f58b1a8195ac24525f4df1de5d217
+      TARGET_BRANCH: ${{ github.head_ref || github.ref_name }}
       CONTACT_SHEET: ${{ runner.temp }}/play-thumbnail-framing-comparison.png
     steps:
       - name: Check out repair branch with source history
         uses: actions/checkout@v4
         with:
+          ref: ${{ env.TARGET_BRANCH }}
           fetch-depth: 0
 
       - name: Set up Python
@@ -58,4 +66,4 @@ jobs:
             exit 0
           fi
           git commit -m "Reframe Play fighter thumbnails"
-          git push origin HEAD:${GITHUB_REF_NAME}
+          git push origin HEAD:${TARGET_BRANCH}
