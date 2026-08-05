@@ -5,9 +5,8 @@ import type { TodayChallengeProjection } from "./todayChallengeRepository";
 
 const navigate = vi.fn();
 const openDialog = vi.fn();
-const useFindLeaderHistory = vi.fn();
-const loadDailyLeaderboard = vi.fn();
-const refresh = vi.fn();
+const useTodayChallengeRuntime = vi.fn();
+const useTodayChallengeOverview = vi.fn();
 
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual<typeof import("react-router-dom")>("react-router-dom");
@@ -22,8 +21,12 @@ vi.mock("../identity/IdentityProvider", () => ({
   }),
 }));
 
-vi.mock("./FindLeaderHistoryProvider", () => ({
-  useFindLeaderHistory: () => useFindLeaderHistory(),
+vi.mock("./useTodayChallengeRuntime", () => ({
+  useTodayChallengeRuntime: (...args: unknown[]) => useTodayChallengeRuntime(...args),
+}));
+
+vi.mock("./useTodayChallengeOverview", () => ({
+  useTodayChallengeOverview: (...args: unknown[]) => useTodayChallengeOverview(...args),
 }));
 
 function projection(gameType: TodayChallengeProjection["gameType"]): TodayChallengeProjection {
@@ -54,34 +57,21 @@ function projection(gameType: TodayChallengeProjection["gameType"]): TodayChalle
   };
 }
 
-function providerValue(gameType: TodayChallengeProjection["gameType"]) {
-  return {
-    configured: true,
-    profileBacked: true,
-    loading: false,
-    error: "",
-    rows: [],
-    dailyRows: [],
-    dailyStreak: { currentStreak: 3, bestStreak: 7 },
-    todayChallenge: projection(gameType),
-    dailyLeaderboard: { unlocked: false, playerCount: 0, entries: [] },
-    dailyLeaderboardDay: "2026-08-05",
-    dailyLeaderboardLoading: false,
-    dailyLeaderboardError: "",
-    refresh,
-    loadDailyLeaderboard,
-    recordAttempt: vi.fn(),
-  };
-}
-
 describe("generalized Today’s Challenge hub", () => {
   beforeEach(() => {
     navigate.mockReset();
     openDialog.mockReset();
-    loadDailyLeaderboard.mockReset();
-    refresh.mockReset();
     Object.defineProperty(window, "innerWidth", { configurable: true, value: 390 });
     Object.defineProperty(window, "innerHeight", { configurable: true, value: 844 });
+    useTodayChallengeOverview.mockReturnValue({
+      configured: true,
+      history: [],
+      streak: { currentStreak: 3, bestStreak: 7 },
+      leaderboard: { unlocked: false, playerCount: 0, entries: [] },
+      loading: false,
+      error: null,
+      refresh: vi.fn(),
+    });
   });
 
   it.each([
@@ -91,19 +81,35 @@ describe("generalized Today’s Challenge hub", () => {
     ["blind_rank_5", "Blind Rank 5", "/play/blind-rank?mode=daily"],
     ["keep_4_cut_4", "Keep 4, Cut 4", "/play/keep-cut?mode=daily"],
   ] as const)("renders and opens the canonical %s official route", (gameType, title, route) => {
-    useFindLeaderHistory.mockReturnValue(providerValue(gameType));
+    useTodayChallengeRuntime.mockReturnValue({
+      projection: projection(gameType),
+      loading: false,
+      error: null,
+      busy: false,
+      configured: true,
+      advance: vi.fn(),
+      refresh: vi.fn(),
+    });
 
     render(<TodayChallengeHub />);
     expect(screen.getByRole("heading", { name: title })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: new RegExp(title, "i") }));
     expect(navigate).toHaveBeenCalledWith(route);
-    expect(loadDailyLeaderboard).toHaveBeenCalledWith("2026-08-05", "find-leader-v1");
   });
 
   it("shows generalized streak, history, and guarded leaderboard projections", () => {
-    useFindLeaderHistory.mockReturnValue({
-      ...providerValue("blind_resume"),
-      dailyRows: [{
+    useTodayChallengeRuntime.mockReturnValue({
+      projection: projection("blind_resume"),
+      loading: false,
+      error: null,
+      busy: false,
+      configured: true,
+      advance: vi.fn(),
+      refresh: vi.fn(),
+    });
+    useTodayChallengeOverview.mockReturnValue({
+      configured: true,
+      history: [{
         day: "2026-08-04",
         scheduleVersion: "find-leader-v1",
         gameType: "find_leader",
@@ -112,6 +118,11 @@ describe("generalized Today’s Challenge hub", () => {
         completedAt: "2026-08-04T20:00:00Z",
         publicResult: {},
       }],
+      streak: { currentStreak: 3, bestStreak: 7 },
+      leaderboard: { unlocked: false, playerCount: 0, entries: [] },
+      loading: false,
+      error: null,
+      refresh: vi.fn(),
     });
 
     render(<TodayChallengeHub />);
