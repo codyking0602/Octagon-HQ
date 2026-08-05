@@ -50,6 +50,33 @@ function normalizedAssetPath(value, origin) {
   }
 }
 
+function normalizeExactSha(value, label) {
+  const normalized = String(value ?? "").trim().toLowerCase();
+  if (!SHA_PATTERN.test(normalized)) {
+    throw new Error(`${label} must be an exact 40-character SHA.`);
+  }
+  return normalized;
+}
+
+export function resolveAcceptedDeploymentSha({
+  markerSha,
+  expectedSha,
+  allowedDeployedShas = [],
+} = {}) {
+  const normalizedExpected = normalizeExactSha(expectedSha, "Expected deployment SHA");
+  const normalizedAllowed = allowedDeployedShas.map((sha) => (
+    normalizeExactSha(sha, "Allowed deployed SHA")
+  ));
+  const normalizedMarker = String(markerSha ?? "").trim().toLowerCase();
+  const accepted = [...new Set([normalizedExpected, ...normalizedAllowed])];
+  if (!accepted.includes(normalizedMarker)) {
+    throw new Error(
+      `Live deployment marker is ${normalizedMarker || "missing"}, expected ${accepted.join(" or ")}.`,
+    );
+  }
+  return normalizedMarker;
+}
+
 export function extractShellAssetReferences(html, origin = DEFAULT_ORIGIN) {
   const references = new Set();
   for (const match of html.matchAll(/<(?:script|link)\b[^>]*>/gi)) {
@@ -107,7 +134,13 @@ function webpDimensions(webp) {
   throw new Error("WebP dimensions were unavailable.");
 }
 
-async function verifyAttempt({ origin, expectedSha, attempt, fetchFn }) {
+async function verifyAttempt({
+  origin,
+  expectedSha,
+  allowedDeployedShas,
+  attempt,
+  fetchFn,
+}) {
   const shellUrl = new URL("/", `${origin}/`);
   shellUrl.searchParams.set("delivery", expectedSha);
   shellUrl.searchParams.set("attempt", String(attempt));
@@ -129,9 +162,11 @@ async function verifyAttempt({ origin, expectedSha, attempt, fetchFn }) {
   } catch {
     throw new Error("Live deployment marker did not return valid JSON.");
   }
-  if (marker?.sha !== expectedSha) {
-    throw new Error(`Live deployment marker is ${marker?.sha ?? "missing"}, expected ${expectedSha}.`);
-  }
+  const verifiedSha = resolveAcceptedDeploymentSha({
+    markerSha: marker?.sha,
+    expectedSha,
+    allowedDeployedShas,
+  });
 
   const references = extractShellAssetReferences(shell, origin);
   const javascript = references.filter((path) => path.endsWith(".js"));
@@ -149,7 +184,7 @@ async function verifyAttempt({ origin, expectedSha, attempt, fetchFn }) {
   const stylesheetSources = [];
   for (const path of references) {
     const assetUrl = new URL(path, `${origin}/`);
-    assetUrl.searchParams.set("delivery", expectedSha);
+    assetUrl.searchParams.set("delivery", verifiedSha);
     assetUrl.searchParams.set("attempt", String(attempt));
     const response = await fetchNoCache(assetUrl, fetchFn);
     const source = await responseText(response, `Live asset ${path}`);
@@ -172,8 +207,8 @@ async function verifyAttempt({ origin, expectedSha, attempt, fetchFn }) {
 
   const liveJavascript = javascriptSources.join("\n");
   const liveCss = stylesheetSources.join("\n");
-  if (!liveJavascript.includes(expectedSha)) {
-    throw new Error(`The JavaScript loaded by the live shell does not contain deployment ${expectedSha}.`);
+  if (!liveJavascript.includes(verifiedSha)) {
+    throw new Error(`The JavaScript loaded by the live shell does not contain deployment ${verifiedSha}.`);
   }
   for (const markerValue of REQUIRED_JAVASCRIPT_MARKERS) {
     if (!liveJavascript.includes(markerValue)) {
@@ -188,7 +223,7 @@ async function verifyAttempt({ origin, expectedSha, attempt, fetchFn }) {
   if (liveJavascript.includes(AUCTION_FORMAT_ASSET_PATHS[0])) {
     for (const path of AUCTION_FORMAT_ASSET_PATHS) {
       const assetUrl = new URL(path, `${origin}/`);
-      assetUrl.searchParams.set("delivery", expectedSha);
+      assetUrl.searchParams.set("delivery", verifiedSha);
       assetUrl.searchParams.set("attempt", String(attempt));
       const response = await fetchNoCache(assetUrl, fetchFn);
       if (!response.ok) throw new Error(`Live Auction asset ${path} returned HTTP ${response.status}.`);
@@ -228,7 +263,8 @@ async function verifyAttempt({ origin, expectedSha, attempt, fetchFn }) {
   }
 
   return {
-    expectedSha,
+    expectedSha: verifiedSha,
+    requestedSha: expectedSha,
     javascriptAssets: javascript.length,
     stylesheetAssets: stylesheets.length,
     auctionFormatAssets,
@@ -239,15 +275,16 @@ async function verifyAttempt({ origin, expectedSha, attempt, fetchFn }) {
 export async function verifyLiveFrontendDelivery({
   origin = DEFAULT_ORIGIN,
   expectedSha,
+  allowedDeployedShas = [],
   attempts = DEFAULT_ATTEMPTS,
   delayMs = DEFAULT_DELAY_MS,
   fetchFn = fetch,
 } = {}) {
   const normalizedOrigin = origin.replace(/\/$/, "");
-  const normalizedSha = String(expectedSha ?? "").trim().toLowerCase();
-  if (!SHA_PATTERN.test(normalizedSha)) {
-    throw new Error("An exact 40-character deployment SHA is required.");
-  }
+  const normalizedSha = normalizeExactSha(expectedSha, "Expected deployment SHA");
+  const normalizedAllowedShas = allowedDeployedShas.map((sha) => (
+    normalizeExactSha(sha, "Allowed deployed SHA")
+  ));
 
   let lastError;
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
@@ -255,6 +292,7 @@ export async function verifyLiveFrontendDelivery({
       return await verifyAttempt({
         origin: normalizedOrigin,
         expectedSha: normalizedSha,
+        allowedDeployedShas: normalizedAllowedShas,
         attempt,
         fetchFn,
       });
@@ -273,16 +311,24 @@ export async function verifyLiveFrontendDelivery({
 }
 
 if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
+  const allowedDeployedShas = process.env.GITHUB_EVENT_NAME === "pull_request"
+    && process.env.EXPECTED_SYNC_SOURCE_SHA
+    ? [process.env.EXPECTED_SYNC_SOURCE_SHA]
+    : [];
   const result = await verifyLiveFrontendDelivery({
     origin: process.env.OCTAGON_PRODUCTION_ORIGIN ?? DEFAULT_ORIGIN,
     expectedSha: process.env.EXPECTED_SOURCE_SHA ?? process.env.SOURCE_SHA,
+    allowedDeployedShas,
     attempts: Number(process.env.FRONTEND_DELIVERY_ATTEMPTS ?? DEFAULT_ATTEMPTS),
     delayMs: Number(process.env.FRONTEND_DELIVERY_DELAY_MS ?? DEFAULT_DELAY_MS),
   });
   const auctionProof = result.auctionFormatAssets
     ? `; verified ${result.auctionFormatAssets} Auction format WebPs`
     : "";
+  const requestedProof = result.requestedSha !== result.expectedSha
+    ? ` (authorized PR deployment; main verifier requested ${result.requestedSha})`
+    : "";
   console.log(
-    `PASS: live shell loads deployment ${result.expectedSha} through ${result.javascriptAssets} JavaScript and ${result.stylesheetAssets} CSS assets${auctionProof}.`,
+    `PASS: live shell loads deployment ${result.expectedSha}${requestedProof} through ${result.javascriptAssets} JavaScript and ${result.stylesheetAssets} CSS assets${auctionProof}.`,
   );
 }
