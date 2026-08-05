@@ -57,10 +57,15 @@ export function useTodayChallengeOverview({
     ),
     enabled: ready && Boolean(projection),
   });
+  const currentEntry = standings.data?.entries.find((entry) => entry.isCurrentUser) ?? null;
 
   return {
     configured: Boolean(repository),
     standings: standings.data ?? null,
+    streak: {
+      currentStreak: currentEntry?.currentStreak ?? 0,
+      bestStreak: currentEntry?.bestStreak ?? 0,
+    },
     leaderboard: leaderboard.data ?? null,
     standingsLoading: standings.isLoading,
     leaderboardLoading: leaderboard.isLoading,
