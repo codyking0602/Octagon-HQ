@@ -9,9 +9,9 @@ import {
   pickRecord,
 } from "../picks/picksModel";
 import { usePicks } from "../picks/PicksProvider";
-import { useFindLeaderHistory } from "../play/FindLeaderHistoryProvider";
-import { centralDay } from "../play/findLeaderEngine";
-import { findLeaderStreaks } from "../play/findLeaderStorage";
+import { todayChallengeAdapter } from "../play/todaysChallengeAdapters";
+import { useTodayChallengeOverview } from "../play/useTodayChallengeOverview";
+import { useTodayChallengeRuntime } from "../play/useTodayChallengeRuntime";
 import { useProfilePreferences } from "../profile/ProfilePreferencesProvider";
 import { FighterPhoto } from "../rankings/FighterPhoto";
 import { allTime } from "../rankings/rankingModel";
@@ -34,23 +34,41 @@ function eventDate(value: string) {
   }).format(new Date(value));
 }
 
+function readableError(error: unknown) {
+  return error instanceof Error && error.message ? error.message : "";
+}
+
 export default function HomePage() {
   const identity = useIdentity();
-  const history = useFindLeaderHistory();
   const preferences = useProfilePreferences();
   const picks = usePicks();
   const challengeState = usePlayChallenges();
-  const today = useMemo(() => centralDay(), []);
+  const profileId = identity.profile?.id ?? "signed-out";
+  const signedIn = Boolean(identity.profile?.id);
+  const dailyRuntime = useTodayChallengeRuntime({ profileId, enabled: signedIn });
+  const dailyOverview = useTodayChallengeOverview({
+    profileId,
+    enabled: signedIn,
+    projection: dailyRuntime.projection,
+  });
+  const dailyAdapter = todayChallengeAdapter(dailyRuntime.projection?.gameType);
   const sortedFighters = useMemo(
     () => allTime.slice().sort((left, right) => left.displayName.localeCompare(right.displayName)),
     [],
   );
-  const spotlight = useMemo(() => dailyRankingSpotlight(allTime, today), [today]);
+  const spotlight = useMemo(() => dailyRankingSpotlight(allTime, new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Chicago",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date())), []);
   const favorite = preferences.favoriteFighterSlug
     ? allTime.find((fighter) => fighter.slug === preferences.favoriteFighterSlug) ?? null
     : null;
-  const streak = findLeaderStreaks(history.rows, today);
-  const playedToday = history.rows.some((row) => row.day === today);
+  const dailyLoading = dailyRuntime.loading || dailyOverview.loading;
+  const dailyError = readableError(dailyRuntime.error) || readableError(dailyOverview.error);
+  const playedToday = Boolean(dailyRuntime.projection?.officialAttempt);
+  const currentStreak = dailyOverview.streak.currentStreak;
   const openChallenges = identity.profile
     ? meaningfulOpenChallenges(challengeState.challenges, identity.profile.id)
     : [];
@@ -60,7 +78,9 @@ export default function HomePage() {
         profiles: challengeState.profiles,
         profileId: identity.profile.id,
         playedToday,
-        currentStreak: streak.current,
+        currentStreak,
+        dailyChallengeTitle: dailyAdapter?.title,
+        dailyChallengeRoute: dailyAdapter?.dailyRoute,
       })
     : null;
   const currentEvent = picks.event;
@@ -99,9 +119,9 @@ export default function HomePage() {
           <>
             <div className="hq-card__grid">
               <article className="hq-stat">
-                <strong>{history.loading ? "…" : streak.current}</strong>
+                <strong>{dailyLoading ? "…" : currentStreak}</strong>
                 <span>Daily streak</span>
-                <small>FIND THE LEADER</small>
+                <small>TODAY’S CHALLENGE</small>
               </article>
 
               <article className="hq-stat">
@@ -151,9 +171,9 @@ export default function HomePage() {
               </article>
             </div>
 
-            {history.error || preferences.error || picks.error || challengeState.error ? (
+            {dailyError || preferences.error || picks.error || challengeState.error ? (
               <p className="hq-card__error" role="status">
-                {history.error || preferences.error || picks.error || challengeState.error}
+                {dailyError || preferences.error || picks.error || challengeState.error}
               </p>
             ) : null}
 

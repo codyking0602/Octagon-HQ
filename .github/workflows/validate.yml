@@ -53,6 +53,21 @@ jobs:
           path: test.log
           retention-days: 7
 
+      - name: Verify all five Today’s Challenge phone layouts
+        timeout-minutes: 2
+        run: node scripts/verify-todays-challenge-phone.mjs 2>&1 | tee todays-challenge-phone.log
+
+      - name: Upload Today’s Challenge phone proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: todays-challenge-phone-proof
+          path: |
+            todays-challenge-phone.log
+            ${{ runner.temp }}/todays-challenge-phone-proof/*.png
+          if-no-files-found: warn
+          retention-days: 7
+
       - name: Build
         run: npm run build 2>&1 | tee build.log
 

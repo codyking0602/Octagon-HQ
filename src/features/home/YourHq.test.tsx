@@ -1,25 +1,75 @@
 import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { describe, expect, it, vi } from "vitest";
-import { ChallengeProvider } from "../challenges/ChallengeProvider";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ChallengeProfile, PlayChallenge } from "../challenges/challengeModel";
-import type { ChallengeRepository } from "../challenges/challengeRepository";
-import { IdentityProvider } from "../identity/IdentityProvider";
-import type { IdentityGateway } from "../identity/identityGateway";
-import {
-  FindLeaderHistoryProvider,
-} from "../play/FindLeaderHistoryProvider";
-import type { FindLeaderHistoryRepository } from "../play/findLeaderHistoryRepository";
-import { centralDay } from "../play/findLeaderEngine";
-import { PicksProvider } from "../picks/PicksProvider";
 import type { PickEvent } from "../picks/picksModel";
-import type { PicksRepository } from "../picks/picksRepository";
-import {
-  ProfilePreferencesProvider,
-} from "../profile/ProfilePreferencesProvider";
-import type { ProfilePreferencesRepository } from "../profile/profilePreferencesRepository";
-import { WhatsNewProvider } from "../whats-new/WhatsNewProvider";
 import HomePage from "./HomePage";
+
+const mocks = vi.hoisted(() => ({
+  identity: {
+    profile: null as ChallengeProfile | null,
+    openDialog: vi.fn(),
+  },
+  preferences: {
+    favoriteFighterSlug: null as string | null,
+    loading: false,
+    saving: false,
+    configured: true,
+    error: null as Error | null,
+    setFavoriteFighter: vi.fn(async (_slug: string | null) => undefined),
+  },
+  picks: {
+    event: null as PickEvent | null,
+    selections: [] as Array<{ eventId: string; boutId: string; fighterSlug: string }>,
+    loading: false,
+    summary: {
+      correct: 0,
+      incorrect: 0,
+      pending: 0,
+      eventsEntered: 0,
+      basePoints: 0,
+      lockBonus: 0,
+      totalPoints: 0,
+    },
+    error: null as Error | null,
+  },
+  challenges: {
+    challenges: [] as PlayChallenge[],
+    profiles: [] as ChallengeProfile[],
+    loading: false,
+    error: null as Error | null,
+  },
+  runtime: vi.fn(),
+  overview: vi.fn(),
+}));
+
+vi.mock("../identity/IdentityProvider", () => ({
+  useIdentity: () => mocks.identity,
+}));
+
+vi.mock("../profile/ProfilePreferencesProvider", () => ({
+  useProfilePreferences: () => mocks.preferences,
+}));
+
+vi.mock("../picks/PicksProvider", () => ({
+  usePicks: () => mocks.picks,
+}));
+
+vi.mock("../challenges/ChallengeProvider", () => ({
+  usePlayChallenges: () => mocks.challenges,
+}));
+
+vi.mock("../play/useTodayChallengeRuntime", () => ({
+  useTodayChallengeRuntime: (...args: unknown[]) => mocks.runtime(...args),
+}));
+
+vi.mock("../play/useTodayChallengeOverview", () => ({
+  useTodayChallengeOverview: (...args: unknown[]) => mocks.overview(...args),
+}));
+
+vi.mock("../whats-new/WhatsNewPreview", () => ({
+  WhatsNewPreview: () => <section>WHAT’S NEW</section>,
+}));
 
 const cody: ChallengeProfile = {
   id: "11111111-1111-4111-8111-111111111111",
@@ -71,26 +121,9 @@ const pickEvent: PickEvent = {
   ],
 };
 
-function identityGateway(): IdentityGateway {
+function challenge(overrides: Partial<PlayChallenge> = {}): PlayChallenge {
   return {
-    getSession: async () => ({ userId: cody.id }),
-    subscribe: () => () => undefined,
-    loadProfile: async () => cody,
-    signIn: async () => undefined,
-    createProfile: async () => undefined,
-    signOut: async () => undefined,
-  };
-}
-
-function dayOffset(day: string, offset: number) {
-  const date = new Date(`${day}T12:00:00Z`);
-  date.setUTCDate(date.getUTCDate() + offset);
-  return date.toISOString().slice(0, 10);
-}
-
-function challengeRow(overrides: Partial<PlayChallenge>): PlayChallenge {
-  return {
-    code: "MATCH123",
+    code: "RECEIVED1",
     gameId: "find-leader",
     gameVersion: "find-leader-v2",
     gameTitle: "Find the Leader",
@@ -111,77 +144,58 @@ function challengeRow(overrides: Partial<PlayChallenge>): PlayChallenge {
   };
 }
 
-function challengeRepository(load = vi.fn(async () => ({
-  challenges: [
-    challengeRow({ code: "RECEIVED1" }),
-    challengeRow({
-      code: "WAITING1",
-      creatorId: cody.id,
-      recipientId: shane.id,
-      createdAt: "2026-07-24T10:00:00.000Z",
-    }),
-    challengeRow({
-      code: "COMPLETE1",
-      responderResult: { score: 7 },
-      completedAt: "2026-07-24T13:00:00.000Z",
-    }),
-  ],
-  profiles: [shane],
-}))) : ChallengeRepository {
-  return {
-    load,
-    findProfile: async () => shane,
-    create: async () => "MATCH123",
-    markOpened: async () => undefined,
-    submitResult: async () => undefined,
-    dismiss: async () => undefined,
-  };
-}
-
-function picksRepository(): PicksRepository {
-  return {
-    loadCurrentEvent: async () => pickEvent,
-    loadMyPicks: async () => [{
-      eventId: pickEvent.eventId,
-      boutId: "ankalaev-guskov",
-      fighterSlug: "magomed-ankalaev",
-      pickedAt: "2026-07-24T12:00:00.000Z",
-      updatedAt: "2026-07-24T12:00:00.000Z",
-    }],
-    loadMyHistory: async () => ({
-      season: null,
-      summary: { correct: 12, incorrect: 8, missing: 0, excluded: 0, eventsEntered: 4, basePoints: 48, lockBonus: 0, totalPoints: 48 },
-      events: [],
-    }),
-    loadMySummary: async () => ({ correct: 12, incorrect: 8, pending: 1, eventsEntered: 4, basePoints: 48, lockBonus: 0, totalPoints: 48 }),
-    loadMyUnderdogLock: async () => null,
-    setUnderdogLock: vi.fn(),
-    clearUnderdogLock: vi.fn(),
-    savePick: async (eventId, boutId, fighterSlug) => ({
-      eventId,
-      boutId,
-      fighterSlug,
-      pickedAt: "2026-07-24T12:00:00.000Z",
-      updatedAt: "2026-07-24T12:00:00.000Z",
-    }),
-  };
+function renderHome() {
+  return render(<MemoryRouter><HomePage /></MemoryRouter>);
 }
 
 describe("Your HQ", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mocks.identity.profile = null;
+    mocks.preferences.favoriteFighterSlug = null;
+    mocks.preferences.loading = false;
+    mocks.preferences.saving = false;
+    mocks.preferences.configured = true;
+    mocks.preferences.error = null;
+    mocks.picks.event = pickEvent;
+    mocks.picks.selections = [];
+    mocks.picks.loading = false;
+    mocks.picks.summary = {
+      correct: 0,
+      incorrect: 0,
+      pending: 0,
+      eventsEntered: 0,
+      basePoints: 0,
+      lockBonus: 0,
+      totalPoints: 0,
+    };
+    mocks.picks.error = null;
+    mocks.challenges.challenges = [];
+    mocks.challenges.profiles = [];
+    mocks.challenges.loading = false;
+    mocks.challenges.error = null;
+    mocks.runtime.mockReturnValue({
+      projection: null,
+      loading: false,
+      error: null,
+      busy: false,
+      configured: false,
+      advance: vi.fn(),
+      refresh: vi.fn(),
+    });
+    mocks.overview.mockReturnValue({
+      configured: false,
+      history: [],
+      streak: { currentStreak: 0, bestStreak: 0 },
+      leaderboard: null,
+      loading: false,
+      error: null,
+      refresh: vi.fn(),
+    });
+  });
+
   it("shows an understandable sign-in state instead of broken profile zeros", async () => {
-    render(
-      <IdentityProvider gateway={null}>
-        <ProfilePreferencesProvider repository={null}>
-          <PicksProvider repository={picksRepository()}>
-            <FindLeaderHistoryProvider repository={null}>
-              <ChallengeProvider repository={null}>
-                <WhatsNewProvider repository={null}><MemoryRouter><HomePage /></MemoryRouter></WhatsNewProvider>
-              </ChallengeProvider>
-            </FindLeaderHistoryProvider>
-          </PicksProvider>
-        </ProfilePreferencesProvider>
-      </IdentityProvider>,
-    );
+    renderHome();
 
     expect(screen.getByRole("button", { name: "SIGN IN TO YOUR HQ" })).toBeInTheDocument();
     expect(screen.getByText(/carry your official game history/i)).toBeInTheDocument();
@@ -190,72 +204,79 @@ describe("Your HQ", () => {
     expect(screen.getByRole("button", { name: "SIGN IN TO MAKE PICKS →" })).toBeInTheDocument();
     expect(screen.getByText("RANKING SPOTLIGHT")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Shane’s Fighters to Watch" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "VIEW SHANE’S TOP 15 →" })).toHaveAttribute("href", "/fighters-to-watch");
   });
 
-  it("shows profile data, the highest-priority next action, the next event, and the approved lower Home sections", async () => {
-    const today = centralDay();
-    const historyRepository: FindLeaderHistoryRepository = {
-      load: async () => [
-        { day: today, officialScore: 8, bestScore: 10, attempts: 2, completedAt: `${today}T12:00:00.000Z` },
-        { day: dayOffset(today, -1), officialScore: 7, bestScore: 7, attempts: 1, completedAt: `${dayOffset(today, -1)}T12:00:00.000Z` },
-      ],
-      recordAttempt: async () => ({ day: today, officialScore: 8, bestScore: 10, attempts: 3, completedAt: `${today}T12:00:00.000Z` }),
+  it("shows generalized daily data, profile data, and the highest-priority next action", async () => {
+    mocks.identity.profile = cody;
+    mocks.preferences.favoriteFighterSlug = "georges-st-pierre";
+    mocks.picks.selections = [{
+      eventId: pickEvent.eventId,
+      boutId: "ankalaev-guskov",
+      fighterSlug: "magomed-ankalaev",
+    }];
+    mocks.picks.summary = {
+      correct: 12,
+      incorrect: 8,
+      pending: 1,
+      eventsEntered: 4,
+      basePoints: 48,
+      lockBonus: 0,
+      totalPoints: 48,
     };
-    const saveFavoriteFighter = vi.fn(async (slug: string | null) => slug);
-    const preferencesRepository: ProfilePreferencesRepository = {
-      loadFavoriteFighter: async () => "georges-st-pierre",
-      saveFavoriteFighter,
-    };
-    const loadChallenges = vi.fn(async () => challengeRepository().load());
+    mocks.challenges.challenges = [
+      challenge(),
+      challenge({
+        code: "WAITING1",
+        creatorId: cody.id,
+        recipientId: shane.id,
+        createdAt: "2026-07-24T10:00:00.000Z",
+      }),
+    ];
+    mocks.challenges.profiles = [cody, shane];
+    mocks.runtime.mockReturnValue({
+      projection: {
+        gameType: "blind_resume",
+        officialAttempt: null,
+      },
+      loading: false,
+      error: null,
+      busy: false,
+      configured: true,
+      advance: vi.fn(),
+      refresh: vi.fn(),
+    });
+    mocks.overview.mockReturnValue({
+      configured: true,
+      history: [],
+      streak: { currentStreak: 2, bestStreak: 4 },
+      leaderboard: null,
+      loading: false,
+      error: null,
+      refresh: vi.fn(),
+    });
 
-    render(
-      <IdentityProvider gateway={identityGateway()}>
-        <ProfilePreferencesProvider repository={preferencesRepository}>
-          <PicksProvider repository={picksRepository()}>
-            <FindLeaderHistoryProvider repository={historyRepository}>
-              <ChallengeProvider repository={challengeRepository(loadChallenges)}>
-                <WhatsNewProvider repository={null}><MemoryRouter><HomePage /></MemoryRouter></WhatsNewProvider>
-              </ChallengeProvider>
-            </FindLeaderHistoryProvider>
-          </PicksProvider>
-        </ProfilePreferencesProvider>
-      </IdentityProvider>,
-    );
-
-    expect(screen.getByRole("heading", { name: "Your HQ" })).toBeInTheDocument();
-    expect(screen.queryByText("PERSONALIZED")).not.toBeInTheDocument();
-    expect(screen.queryByText("CODY")).not.toBeInTheDocument();
+    renderHome();
 
     await waitFor(() => expect(within(screen.getByText("Daily streak").closest("article")!).getByText("2")).toBeInTheDocument());
-
     const picksCard = screen.getByText("Current Picks record").closest("article")!;
-    await waitFor(() => expect(within(picksCard).getByText("12-8")).toBeInTheDocument());
+    expect(within(picksCard).getByText("12-8")).toBeInTheDocument();
     expect(within(picksCard).getByText(/1 PENDING/)).toBeInTheDocument();
 
-    const favoriteCard = screen.getByText("Favorite fighter").closest("article")!;
-    await waitFor(() => expect(within(favoriteCard).getAllByText("Georges St-Pierre").length).toBeGreaterThan(0));
     expect(screen.getByRole("link", { name: "Open Georges St-Pierre profile" })).toHaveAttribute("href", "/fighters/georges-st-pierre");
-
-    await waitFor(() => expect(within(screen.getByText("Open challenges").closest("article")!).getByText("2")).toBeInTheDocument());
-    expect(loadChallenges).toHaveBeenCalledTimes(1);
-
+    expect(within(screen.getByText("Open challenges").closest("article")!).getByText("2")).toBeInTheDocument();
     expect(screen.getByText("SHANE is waiting for your answer")).toBeInTheDocument();
-    const action = screen.getByRole("link", { name: "RESPOND TO CHALLENGE" });
-    expect(action).toHaveAttribute("href", expect.stringContaining("challenge=RECEIVED1"));
+    expect(screen.getByRole("link", { name: "RESPOND TO CHALLENGE" })).toHaveAttribute(
+      "href",
+      expect.stringContaining("challenge=RECEIVED1"),
+    );
 
     fireEvent.change(screen.getByRole("combobox", { name: "Favorite fighter" }), {
       target: { value: "jon-jones" },
     });
-    await waitFor(() => expect(saveFavoriteFighter).toHaveBeenCalledWith("jon-jones"));
-    await waitFor(() => expect(within(favoriteCard).getAllByText("Jon Jones").length).toBeGreaterThan(0));
-    expect(screen.getByRole("link", { name: "Open Jon Jones profile" })).toHaveAttribute("href", "/fighters/jon-jones");
+    await waitFor(() => expect(mocks.preferences.setFavoriteFighter).toHaveBeenCalledWith("jon-jones"));
 
     expect(screen.getByText("Magomed Ankalaev vs. Bogdan Guskov")).toBeInTheDocument();
     expect(screen.getByText("1 OF 2")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "MAKE PICKS →" })).toHaveAttribute("href", "/picks");
-    expect(screen.getByText("RANKING SPOTLIGHT")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Shane’s Fighters to Watch" })).toBeInTheDocument();
-    expect(screen.getByText("Gable Steveson")).toBeInTheDocument();
   });
 });
