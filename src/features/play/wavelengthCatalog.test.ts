@@ -142,10 +142,10 @@ describe("Wavelength official privacy projection", () => {
     const round = { target: 75, clues: wavelengthClues.slice(0, 4) };
     const reveal = projectWavelengthReveal(materializeWavelengthOfficialSetup(round), 68);
     expect(reveal.target).toBe(75);
-    expect(reveal.finalScore).toBe(93);
+    expect(reveal.finalScore).toBe(86);
     expect(JSON.stringify(reveal)).not.toContain("rating");
-    expect(wavelengthScore(0, 75)).toBe(25);
-    expect(wavelengthScore(68, 75)).toBe(adaptWavelengthOfficialScore(93).score);
+    expect(wavelengthScore(0, 75)).toBe(0);
+    expect(wavelengthScore(68, 75)).toBe(adaptWavelengthOfficialScore(86).score);
   });
 
   it("preserves Wavelength privacy while joining the five-game official daily lineup", () => {

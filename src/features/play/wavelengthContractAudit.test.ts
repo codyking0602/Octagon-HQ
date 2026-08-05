@@ -128,8 +128,8 @@ describe("Wavelength sequence and score contracts", () => {
   it("scores only the fourth locked guess", () => {
     const firstPath = [1, 100, 1, 68];
     const secondPath = [100, 1, 100, 68];
-    expect(wavelengthScore(firstPath[3], 75)).toBe(93);
-    expect(wavelengthScore(secondPath[3], 75)).toBe(93);
+    expect(wavelengthScore(firstPath[3], 75)).toBe(86);
+    expect(wavelengthScore(secondPath[3], 75)).toBe(86);
   });
 });
 
@@ -169,7 +169,7 @@ describe("Wavelength official wire privacy", () => {
       "finalScore", "gameId", "revealedClues", "target", "versions",
     ]);
     expect(payload.target).toBe(73);
-    expect(payload.finalScore).toBe(97);
+    expect(payload.finalScore).toBe(94);
     expect(wire).not.toContain("rating");
   });
 
