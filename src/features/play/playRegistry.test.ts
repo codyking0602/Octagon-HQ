@@ -12,6 +12,14 @@ const expectedIds: PlayGameId[] = [
   "better-than",
 ];
 
+const officialDailyIds: PlayGameId[] = [
+  "find-leader",
+  "wavelength",
+  "blind-resume",
+  "blind-rank",
+  "keep-cut",
+];
+
 describe("Play game lineup contracts", () => {
   it("requires an intentional complete contract for every live game", () => {
     expect(playGames.map((game) => game.id)).toEqual(expectedIds);
@@ -30,39 +38,31 @@ describe("Play game lineup contracts", () => {
     }
   });
 
-  it("keeps Find the Leader as the sole official daily, streak, and reminder-eligible game", () => {
+  it("declares the five canonical official daily, streak, and reminder-eligible games", () => {
     const dailyGames = playGames.filter((game) => game.lineup.dailyEligible);
     const streakGames = playGames.filter((game) => game.lineup.streakEligible);
     const reminderGames = playGames.filter((game) => game.lineup.reminderEligible);
-    expect(dailyGames.map((game) => game.id)).toEqual(["find-leader"]);
-    expect(streakGames.map((game) => game.id)).toEqual(["find-leader"]);
-    expect(reminderGames.map((game) => game.id)).toEqual(["find-leader"]);
-    expect(dailyGames[0]?.lineup).toMatchObject({
-      defaultType: "replayable",
-      supportedTypes: ["daily", "replayable", "curated"],
-      replayBehavior: "new-lineup",
-      newLineupControl: "result-replay",
-      repetitionPolicy: "recent-fighters-deprioritized",
-      historyRecording: "official-daily-and-casual",
-      streakEligible: true,
-      reminderEligible: true,
-    });
+    expect(dailyGames.map((game) => game.id)).toEqual(officialDailyIds);
+    expect(streakGames.map((game) => game.id)).toEqual(officialDailyIds);
+    expect(reminderGames.map((game) => game.id)).toEqual(officialDailyIds);
+
+    for (const gameId of officialDailyIds) {
+      expect(playGameDefinition(gameId).lineup).toMatchObject({
+        supportedTypes: ["daily", "replayable", "curated"],
+        historyRecording: "official-daily-and-casual",
+        dailyEligible: true,
+        streakEligible: true,
+        reminderEligible: true,
+      });
+    }
   });
 
-  it("gives every casual game a new lineup and exact challenges fixed replay behavior", () => {
-    for (const gameId of ["find-leader", "wavelength", "blind-resume", "blind-rank", "keep-cut"] as const) {
+  it("preserves casual new-lineup play and exact direct challenges", () => {
+    for (const gameId of officialDailyIds) {
       const contract = playGameDefinition(gameId).lineup;
       expect(contract.defaultType).toBe("replayable");
       expect(contract.supportedTypes).toContain("curated");
       expect(contract.replayBehavior).toBe("new-lineup");
-    }
-
-    expect(playGameDefinition("find-leader").lineup.historyRecording).toBe("official-daily-and-casual");
-    for (const gameId of ["wavelength", "blind-resume", "blind-rank", "keep-cut"] as const) {
-      const contract = playGameDefinition(gameId).lineup;
-      expect(contract.historyRecording).toBe("casual-and-challenge");
-      expect(contract.streakEligible).toBe(false);
-      expect(contract.reminderEligible).toBe(false);
     }
 
     expect(playGameDefinition("better-than").lineup).toMatchObject({
