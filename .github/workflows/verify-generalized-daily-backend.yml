@@ -90,6 +90,13 @@ jobs:
             ! -name _shared \
             -exec mv {} "$isolated_functions"/ \;
 
+          cat > supabase/config.toml <<'EOF'
+          project_id = "octagon-hq"
+
+          [functions.daily-challenge-runtime]
+          verify_jwt = false
+          EOF
+
           log_file="$RUNNER_TEMP/daily-runtime-local.log"
           response_file="$RUNNER_TEMP/daily-runtime-local.json"
           supabase functions serve daily-challenge-runtime --no-verify-jwt >"$log_file" 2>&1 &
