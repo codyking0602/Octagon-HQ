@@ -85,8 +85,8 @@ describe("Your HQ next action", () => {
     });
 
     expect(action.title).toBe("Keep your 4-day streak alive");
-    expect(action.label).toBe("PLAY TODAY’S FIND THE LEADER");
-    expect(action.to).toBe("/play/find-leader");
+    expect(action.label).toBe("PLAY TODAY’S CHALLENGE");
+    expect(action.to).toBe("/play");
   });
 
   it("moves to another game after today's challenge is complete", () => {
