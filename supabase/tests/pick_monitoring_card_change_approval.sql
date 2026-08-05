@@ -10,6 +10,11 @@ declare
   v_old_lock timestamptz := now() + interval '4 days';
   v_new_lock timestamptz := now() + interval '3 days';
 begin
+  update public.pick_events
+  set status = 'complete',
+      completed_at = coalesce(completed_at, now())
+  where status in ('upcoming', 'locked');
+
   insert into auth.users(
     id, instance_id, aud, role, email, encrypted_password,
     email_confirmed_at, created_at, updated_at, raw_user_meta_data
