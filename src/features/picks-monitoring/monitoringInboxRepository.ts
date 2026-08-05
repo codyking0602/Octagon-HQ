@@ -78,6 +78,39 @@ const findingSchema = z.object({
   reviewed_at: z.string().nullable(),
 });
 
+const approvalProposalSchema = z.discriminatedUnion("action", [
+  z.object({
+    action: z.literal("adjust_event_lock"),
+    event_id: z.string(),
+    expected_locks_at: z.string(),
+    proposed_locks_at: z.string(),
+  }),
+  z.object({
+    action: z.literal("remove_bout"),
+    event_id: z.string(),
+    bout_id: z.string(),
+    expected_included_in_picks: z.literal(true),
+    expected_red_fighter_slug: z.string(),
+    expected_blue_fighter_slug: z.string(),
+  }),
+  z.object({
+    action: z.literal("replace_fighter"),
+    event_id: z.string(),
+    bout_id: z.string(),
+    corner: z.enum(["red", "blue"]),
+    expected_red_fighter_slug: z.string(),
+    expected_blue_fighter_slug: z.string(),
+    replacement_fighter_slug: z.string(),
+    replacement_fighter_name: z.string(),
+  }),
+  z.object({
+    action: z.literal("reorder_card"),
+    event_id: z.string(),
+    expected_bout_ids: z.array(z.string()).min(1),
+    proposed_bout_ids: z.array(z.string()).min(1),
+  }),
+]);
+
 const decisionSchema = z.object({
   outcome: z.enum(["completed", "partial", "failed", "skipped"]),
   reason: z.string().nullable(),
@@ -101,6 +134,7 @@ const inboxSchema = z.object({
 export interface MonitoringInboxRepository {
   loadInbox: () => Promise<MonitoringInbox>;
   runManualCheck: () => Promise<void>;
+  approveFinding?: (findingId: string, reason: string) => Promise<void>;
   reviewFinding: (findingId: string, status: Exclude<MonitoringFindingReviewStatus, "new">) => Promise<void>;
 }
 
@@ -174,6 +208,7 @@ function mapRun(value: z.infer<typeof runSchema>): MonitoringRun {
 }
 
 function mapFinding(value: z.infer<typeof findingSchema>): MonitoringFinding {
+  const proposal = approvalProposalSchema.safeParse(value.source_details.approval_proposal);
   return {
     findingId: value.finding_id,
     runId: value.run_id,
@@ -189,6 +224,7 @@ function mapFinding(value: z.infer<typeof findingSchema>): MonitoringFinding {
     beforeValue: value.before_value,
     afterValue: value.after_value,
     sourceDetails: value.source_details,
+    approvalProposal: proposal.success ? proposal.data : null,
     detectedAt: value.detected_at,
     reviewedAt: value.reviewed_at,
   };
@@ -254,6 +290,13 @@ export function createMonitoringInboxRepository(): MonitoringInboxRepository | n
     async runManualCheck() {
       const { error } = await client.functions.invoke("run-pick-monitoring", { body: {} });
       if (error) throw new Error(await functionErrorMessage(error));
+    },
+
+    async approveFinding(findingId, reason) {
+      await requireRpcSuccess(client.rpc("approve_pick_monitoring_finding", {
+        p_finding_id: findingId,
+        p_reason: reason,
+      }));
     },
 
     async reviewFinding(findingId, status) {
