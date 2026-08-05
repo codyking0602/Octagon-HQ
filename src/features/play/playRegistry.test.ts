@@ -77,6 +77,10 @@ describe("Play game lineup contracts", () => {
     });
   });
 
+  it("uses the canonical centered VS icon for Better Than", () => {
+    expect(playGameDefinition("better-than").icon).toBe("VS");
+  });
+
   it("keeps every game challenge eligible with defined completion states", () => {
     expect(playGames.every((game) => game.lineup.challengeEligible)).toBe(true);
     expect(playGameDefinition("find-leader").lineup.completionState).toBe("leader-eliminated-or-nine-safe");
