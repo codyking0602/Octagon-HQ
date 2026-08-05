@@ -52,6 +52,7 @@ jobs:
       SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
       OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
       EXPECTED_LIVE_MAIN_SHA: ${{ github.event.pull_request.base.sha || github.event.workflow_run.head_sha || inputs.expected_sha }}
+      EXPECTED_SYNC_SOURCE_SHA: ${{ github.event.pull_request.head.sha || '' }}
       GITHUB_TOKEN: ${{ github.token }}
 
     steps:
@@ -67,21 +68,28 @@ jobs:
         uses: actions/github-script@v7
         env:
           EXPECTED_LIVE_MAIN_SHA: ${{ env.EXPECTED_LIVE_MAIN_SHA }}
+          EXPECTED_SYNC_SOURCE_SHA: ${{ env.EXPECTED_SYNC_SOURCE_SHA }}
         with:
           script: |
-            const { data } = await github.rest.actions.listWorkflowRunsForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              head_sha: process.env.EXPECTED_LIVE_MAIN_SHA,
-              per_page: 100,
-            });
-            const relevant = data.workflow_runs.filter((run) =>
-              run.name === "Deploy Cloudflare Frontend" ||
-              run.name === "Verify Live Frontend Delivery"
-            );
-            if (!relevant.length) core.info("No exact-SHA frontend workflow runs found.");
-            for (const run of relevant) {
-              core.info(`${run.name}: id=${run.id} event=${run.event} status=${run.status} conclusion=${run.conclusion ?? "none"} url=${run.html_url}`);
+            const expectedShas = [
+              process.env.EXPECTED_LIVE_MAIN_SHA,
+              process.env.EXPECTED_SYNC_SOURCE_SHA,
+            ].filter(Boolean);
+            for (const sha of expectedShas) {
+              const { data } = await github.rest.actions.listWorkflowRunsForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                head_sha: sha,
+                per_page: 100,
+              });
+              const relevant = data.workflow_runs.filter((run) =>
+                run.name === "Deploy Cloudflare Frontend" ||
+                run.name === "Verify Live Frontend Delivery"
+              );
+              if (!relevant.length) core.info(`No direct exact-SHA frontend workflow runs found for ${sha}.`);
+              for (const run of relevant) {
+                core.info(`${sha} ${run.name}: id=${run.id} event=${run.event} status=${run.status} conclusion=${run.conclusion ?? "none"} url=${run.html_url}`);
+              }
             }
 
       - name: Set up Node
@@ -156,10 +164,13 @@ jobs:
         run: |
           {
             echo "### Live notification flow verified"
-            echo "- Exact production main SHA: \`$EXPECTED_LIVE_MAIN_SHA\`"
-            echo "- Deploy Cloudflare Frontend passed for that exact SHA"
-            echo "- Verify Live Frontend Delivery passed for that exact SHA"
-            echo "- The live shell loaded fingerprinted JavaScript and CSS containing that exact SHA"
+            echo "- Current main remained at exact SHA: \`$EXPECTED_LIVE_MAIN_SHA\`"
+            if [ -n "$EXPECTED_SYNC_SOURCE_SHA" ]; then
+              echo "- Exact authorized PR deployment verified: \`$EXPECTED_SYNC_SOURCE_SHA\`"
+            else
+              echo "- Exact production main deployment verified: \`$EXPECTED_LIVE_MAIN_SHA\`"
+            fi
+            echo "- The live shell loaded fingerprinted JavaScript and CSS containing the exact verified deployment SHA"
             echo "- The canonical Find the Leader challenge transition persisted one unread recipient notification"
             echo "- The live Notification Center rendered the correct account, copy, and route"
             echo "- Opening the notification marked it read, opened the exact challenge destination, and produced the creator acceptance notification"
