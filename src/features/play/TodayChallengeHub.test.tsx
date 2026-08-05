@@ -126,7 +126,7 @@ describe("generalized Today’s Challenge hub", () => {
     });
 
     render(<TodayChallengeHub />);
-    expect(screen.getByText(/3-day current/i)).toBeInTheDocument();
+    expect(screen.getByText("Official challenge record").closest("summary")).toHaveTextContent("3-day current");
     fireEvent.click(screen.getByRole("button", { name: "LEADERBOARD" }));
     expect(screen.getByText(/finish today’s official game/i)).toBeInTheDocument();
     expect(screen.queryByText("hidden-rating-99")).not.toBeInTheDocument();
