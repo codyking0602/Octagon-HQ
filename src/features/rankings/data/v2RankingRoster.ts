@@ -363,6 +363,24 @@ const israelAdesanya = {
   },
 };
 
+const alexPereiraBaseline = historicalMigrationSeedJson.fighters.find(
+  (fighter) => fighter.fighter === "Alex Pereira",
+);
+
+if (!alexPereiraBaseline) {
+  throw new Error("Alex Pereira is missing from the sealed ranking baseline.");
+}
+
+const alexPereira = {
+  ...alexPereiraBaseline,
+  presentation: {
+    ...alexPereiraBaseline.presentation,
+    oneLiner: "Pereira was a patient pressure striker with terrifying composure. Calf kicks and feints narrowed the cage, his left hook punished bad reactions, and once opponents became predictable, he could end an elite fight in a single exchange.",
+    whyRankedHere: "Pereira built an extraordinary UFC resume. He stopped Israel Adesanya for middleweight gold, moved up to win the light heavyweight title, then added championship victories over Jiri Prochazka twice, Jamahal Hill, Khalil Rountree Jr., and Magomed Ankalaev. That two-division success and concentration of elite wins clearly separate him from fighters with shorter peaks or thinner title resumes.",
+    whyNotHigher: "Pereira still lacks the longevity and sustained control of the fighters above him. His elite UFC window is compact, he lost the first Ankalaev fight decisively before avenging it, and Adesanya and Ciryl Gane both stopped him. The Gane loss came at heavyweight, but it still interrupted the run.",
+  },
+};
+
 export const v2RankingRoster: V2RankingRosterOverlay = {
   additions: [rafaelDosAnjos],
   replacements: {
@@ -372,6 +390,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     "Jon Jones": jonJones,
     "Randy Couture": randyCouture,
     "Israel Adesanya": israelAdesanya,
+    "Alex Pereira": alexPereira,
   },
   eraMembership: {
     "Rafael dos Anjos": {
@@ -380,7 +399,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     },
   },
   factsVersion: "octagon-hq-v2-rda-20260730",
-  judgmentVersion: "octagon-hq-v2-daniel-cormier-profile-20260804",
+  judgmentVersion: "octagon-hq-v2-alex-pereira-profile-20260805",
   eraDepthVersion: "octagon-hq-v2-rda-20260730",
   eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
 };
