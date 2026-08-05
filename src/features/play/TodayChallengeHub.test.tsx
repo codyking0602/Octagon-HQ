@@ -105,23 +105,25 @@ const standings = {
   ],
 };
 
+const overviewDefaults = {
+  configured: true,
+  standings,
+  streak: { currentStreak: 6, bestStreak: 13 },
+  leaderboard: { unlocked: false, playerCount: 0, entries: [] },
+  standingsLoading: false,
+  leaderboardLoading: false,
+  loading: false,
+  error: null,
+  refresh: vi.fn(),
+};
+
 describe("generalized Today’s Challenge hub", () => {
   beforeEach(() => {
     navigate.mockReset();
     openDialog.mockReset();
     Object.defineProperty(window, "innerWidth", { configurable: true, value: 390 });
     Object.defineProperty(window, "innerHeight", { configurable: true, value: 844 });
-    useTodayChallengeOverview.mockReturnValue({
-      configured: true,
-      standings,
-      streak: { currentStreak: 6, bestStreak: 13 },
-      leaderboard: { unlocked: false, playerCount: 0, entries: [] },
-      standingsLoading: false,
-      leaderboardLoading: false,
-      loading: false,
-      error: null,
-      refresh: vi.fn(),
-    });
+    useTodayChallengeOverview.mockReturnValue(overviewDefaults);
   });
 
   it.each([
@@ -142,7 +144,7 @@ describe("generalized Today’s Challenge hub", () => {
     });
 
     render(<TodayChallengeHub />);
-    expect(screen.getByRole("heading", { name: title })).toBeInTheDocument();
+    expect(screen.getAllByRole("heading", { name: title })).toHaveLength(2);
     fireEvent.click(screen.getByRole("button", { name: new RegExp(title, "i") }));
     expect(navigate).toHaveBeenCalledWith(route);
   });
@@ -179,14 +181,17 @@ describe("generalized Today’s Challenge hub", () => {
     fireEvent.click(codyRow!);
     expect(codyRow).toHaveAttribute("aria-expanded", "true");
     expect(screen.getByText("Average Score by Game")).toBeInTheDocument();
-    expect(screen.getByText("Find the Leader").parentElement).toHaveTextContent("84.1");
+    const findLeaderAverage = screen
+      .getAllByText("Find the Leader")
+      .find((element) => element.tagName === "SMALL");
+    expect(findLeaderAverage?.parentElement).toHaveTextContent("84.1");
     const blindResumeAverage = screen
       .getAllByText("Blind Resume")
       .find((element) => element.tagName === "SMALL");
     expect(blindResumeAverage?.parentElement).toHaveTextContent("90.6");
   });
 
-  it("keeps today’s leaderboard guarded until the current member finishes", () => {
+  it("keeps today’s leaderboard inside the swipeable challenge card and guarded until completion", () => {
     useTodayChallengeRuntime.mockReturnValue({
       projection: projection("blind_resume"),
       loading: false,
@@ -198,8 +203,47 @@ describe("generalized Today’s Challenge hub", () => {
     });
 
     render(<TodayChallengeHub />);
-    fireEvent.click(screen.getByRole("button", { name: "LEADERBOARD" }));
+
+    const carousel = document.querySelector(".today-hub__carousel");
+    expect(carousel?.children).toHaveLength(2);
+    expect(carousel?.children[0]).toHaveTextContent("Blind Resume");
+    expect(carousel?.children[1]).toHaveTextContent("TODAY’S LEADERBOARD");
+    expect(screen.queryByText("Across devices")).not.toBeInTheDocument();
+    expect(screen.queryByText("NEW")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Show today’s leaderboard" }));
     expect(screen.getByText(/finish today’s official game/i)).toBeInTheDocument();
     expect(screen.queryByText("hidden-rating-99")).not.toBeInTheDocument();
+  });
+
+  it("shows every official finisher and normalized score on today’s leaderboard", () => {
+    useTodayChallengeRuntime.mockReturnValue({
+      projection: projection("find_leader"),
+      loading: false,
+      error: null,
+      busy: false,
+      configured: true,
+      advance: vi.fn(),
+      refresh: vi.fn(),
+    });
+    const entries = Array.from({ length: 10 }, (_, index) => ({
+      rank: index + 1,
+      profileId: `00000000-0000-4000-8000-${String(index + 1).padStart(12, "0")}`,
+      displayName: `Player ${index + 1}`,
+      initials: `P${index + 1}`,
+      avatarPhotoData: null,
+      nativeScore: 10 - index,
+      normalizedScore: 100 - index,
+      isCurrentUser: index === 0,
+    }));
+    useTodayChallengeOverview.mockReturnValue({
+      ...overviewDefaults,
+      leaderboard: { unlocked: true, playerCount: entries.length, entries },
+    });
+
+    render(<TodayChallengeHub />);
+
+    expect(document.querySelectorAll(".today-hub-leaderboard__rows article")).toHaveLength(entries.length);
+    expect(screen.getByText("Player 10").closest("article")).toHaveTextContent("91");
   });
 });
