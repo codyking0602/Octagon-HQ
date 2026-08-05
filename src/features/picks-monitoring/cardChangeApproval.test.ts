@@ -104,9 +104,25 @@ describe("monitoring card-change approval proposals", () => {
     });
   });
 
-  it("fails closed for staged cards and ambiguous event-time changes", () => {
+  it("fails closed for staged cards and ambiguous source changes", () => {
     const staged = findings({ ...source, bouts: [second, first] }, "staged");
     expect(staged.some((item) => item.source_details?.approval_proposal)).toBe(false);
+
+    const ambiguousReplacement = findings({
+      ...source,
+      bouts: [second, {
+        ...first,
+        red_fighter_slug: "replacement-red",
+        red_fighter_name: "Replacement Red",
+        blue_fighter_slug: "replacement-blue",
+        blue_fighter_name: "Replacement Blue",
+      }],
+    });
+    expect(ambiguousReplacement.map((item) => item.summary)).toEqual(expect.arrayContaining([
+      "Removed Alpha vs. Beta.",
+      "Added Replacement Red vs. Replacement Blue.",
+    ]));
+    expect(ambiguousReplacement.some((item) => item.source_details?.approval_proposal)).toBe(false);
 
     const movedEvent = findings({
       ...source,
