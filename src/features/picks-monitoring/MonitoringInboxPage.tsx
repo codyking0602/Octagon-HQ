@@ -123,20 +123,34 @@ export default function MonitoringInboxPage({ repository: suppliedRepository }: 
   }
 
   const schedulerReady = Boolean(inbox?.scheduler.active && inbox.scheduler.tokenConfigured);
-  const latestRun = inbox?.latestRun ?? null;
   const decision = inbox?.latestScheduledDecision ?? null;
-  const providerWorked = Boolean(decision?.providerCalled && latestRun);
-  const automationNeedsAttention = !schedulerReady || decision?.outcome === "failed";
-  const automationTitle = automationNeedsAttention
+  const scheduledProviderWorked = Boolean(
+    decision?.providerCalled && (decision.outcome === "completed" || decision.outcome === "partial"),
+  );
+  const partialCoverage = decision?.outcome === "partial";
+  const scheduledFailure = decision?.outcome === "failed";
+  const automationNeedsAttention = !schedulerReady || scheduledFailure || partialCoverage;
+  const automationTitle = !schedulerReady || scheduledFailure
     ? "AUTO-SYNC NEEDS ATTENTION"
-    : providerWorked
-      ? "AUTO-SYNC CHECKED THE EVENT"
-      : "AUTO-SYNC IS WAITING FOR ITS NEXT CHECK";
-  const automationDetail = automationNeedsAttention
-    ? "The scheduler or monitoring run failed. Run a check now and review the result."
-    : providerWorked
-      ? `Last real provider check ${displayTime(latestRun?.completedAt ?? latestRun?.startedAt)}.`
-      : `Scheduler woke ${displayTime(inbox?.scheduler.lastWakeStartedAt)}, but no provider check was due.`;
+    : partialCoverage
+      ? "AUTO-SYNC HAS PARTIAL COVERAGE"
+      : scheduledProviderWorked
+        ? "AUTO-SYNC CHECKED THE EVENT"
+        : "AUTO-SYNC IS WAITING FOR ITS NEXT CHECK";
+  const skippedReason = decision?.reason === "no_event"
+    ? "there is no event to monitor"
+    : decision?.reason === "already_claimed"
+      ? "another monitoring run already claimed this check"
+      : "no provider check was due";
+  const automationDetail = !schedulerReady
+    ? "Automatic monitoring is not fully configured. Run a check now and review the result."
+    : scheduledFailure
+      ? `Scheduled monitoring failed ${displayTime(decision?.attemptedAt)}. Run a check now and review the result.`
+      : partialCoverage
+        ? `The scheduled provider check at ${displayTime(decision?.attemptedAt)} returned partial coverage.`
+        : scheduledProviderWorked
+          ? `Last scheduled provider check ${displayTime(decision?.attemptedAt)}.`
+          : `Scheduler woke ${displayTime(inbox?.scheduler.lastWakeStartedAt)}, but ${skippedReason}.`;
 
   return (
     <div className="page monitoring-inbox-page">
