@@ -1,0 +1,106 @@
+name: Verify Automatic Picks Monitoring
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/verify-picks-monitoring-automatic.yml"
+      - ".github/workflows/verify-live-notification-flow.yml"
+      - "scripts/verify-live-notification-flow.mjs"
+      - "src/app/liveNotificationFlow.contract.test.ts"
+      - "src/app/automaticMonitoringDeployment.test.ts"
+      - "src/app/automaticMonitoringLifecycle.test.ts"
+      - "src/features/picks-monitoring/**"
+      - "supabase/functions/run-pick-monitoring/**"
+      - "supabase/migrations/202609120001_repair_pick_monitoring_source_context.sql"
+      - "supabase/tests/pick_monitoring_automatic_lifecycle.sql"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-head-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
+
+    steps:
+      - name: Check out exact source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 0
+
+      - name: Verify exact checkout and clean patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          if [ -n "$BASE_SHA" ]; then
+            git diff --check "$BASE_SHA...$SOURCE_SHA"
+          else
+            git diff --check HEAD^..HEAD
+          fi
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install dependencies
+        run: npm install --silent
+
+      - name: Execute focused monitoring lifecycle tests
+        run: |
+          npm test -- \
+            src/app/automaticMonitoringDeployment.test.ts \
+            src/app/automaticMonitoringLifecycle.test.ts \
+            src/features/picks-monitoring/scheduledMonitoring.test.ts \
+            src/features/picks-monitoring/manualMonitoringRunner.test.ts
+
+      - name: Set up Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start fresh Supabase database
+        shell: bash
+        run: |
+          set -euo pipefail
+          supabase db start
+          db_url=$(supabase status -o env | sed -n 's/^DB_URL=//p' | tr -d '"')
+          if [ -z "$db_url" ]; then
+            echo "::error title=Local database unavailable::Supabase did not report DB_URL."
+            exit 1
+          fi
+          echo "DB_URL=$db_url" >> "$GITHUB_ENV"
+
+      - name: Execute automatic monitoring database proof
+        shell: bash
+        run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/pick_monitoring_automatic_lifecycle.sql
+
+      - name: Stop local Supabase database
+        if: always()
+        shell: bash
+        run: |
+          if command -v supabase >/dev/null 2>&1; then
+            supabase stop --no-backup
+          fi
+
+      - name: Record exact-head proof
+        if: success()
+        shell: bash
+        run: |
+          {
+            echo "### Automatic Picks monitoring verified"
+            echo "- Exact source SHA: \`$SOURCE_SHA\`"
+            echo "- Due and not-due cadence: passed"
+            echo "- Atomic one-run claim: passed"
+            echo "- Published source context: passed"
+            echo "- Manual and scheduled canonical runner: passed"
+            echo "- Completed, partial, and failed evidence semantics: passed"
+            echo "- Existing odds and owner-review boundaries: passed"
+            echo "- Pre-provider failure truthfulness: passed"
+          } >> "$GITHUB_STEP_SUMMARY"
