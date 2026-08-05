@@ -24,12 +24,12 @@ describe("current Octagon HQ handoff and monitoring copy", () => {
     expect(handoff).toContain("### 4. Audited post-lock corrections");
   });
 
-  it("distinguishes automatic odds from owner-reviewed card changes", () => {
+  it("distinguishes automatic odds, explicit approvals, and review-only findings", () => {
     expect(monitoringInbox).toContain(
-      "Eligible pre-lock odds apply automatically. Event-card changes stay review-only and are never published automatically.",
+      "Eligible pre-lock odds apply automatically. Supported event-card changes apply only after your explicit approval; everything else remains review-only.",
     );
     expect(monitoringInbox).not.toContain(
-      "Findings stay here for review; nothing is applied or published automatically.",
+      "Event-card changes stay review-only and are never published automatically.",
     );
   });
 });
