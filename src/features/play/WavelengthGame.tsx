@@ -171,7 +171,7 @@ export default function WavelengthGame({
     setChallengeStatus("");
     const status = await beginChallenge({
       gameId: "wavelength",
-      gameVersion: "wavelength-v2",
+      gameVersion: "wavelength-v3",
       gameTitle: "Wavelength",
       summary: `Find hidden rating ${round.target} through four adaptive clues`,
       setup: asJson({ seed: run.seed, round: run.initialRound, target: round.target }),

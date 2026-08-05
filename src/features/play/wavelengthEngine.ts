@@ -59,7 +59,7 @@ export function clampWavelength(value: number) {
 }
 
 export function wavelengthScore(guess: number, target: number) {
-  return Math.max(0, 100 - Math.abs(guess - target));
+  return Math.max(0, 100 - (Math.abs(guess - target) * 2));
 }
 
 export function wavelengthDistanceCopy(distance: number) {

@@ -23,6 +23,10 @@ import {
   type PlayFighter,
 } from "./playFighterPool";
 import {
+  OFFICIAL_SCORE_CONTRACT_VERSION,
+  WAVELENGTH_OFFICIAL_SCORE_CONTRACT_VERSION,
+} from "./officialScoreContract";
+import {
   WAVELENGTH_CONTRACT_VERSIONS,
   createWavelengthRound,
   nextWavelengthClue,
@@ -39,12 +43,15 @@ export type OfficialDailyGameType =
   | "keep_4_cut_4";
 
 export const OFFICIAL_DAILY_RUNTIME_VERSION = "official-daily-runtime-v1";
-export const OFFICIAL_DAILY_SCORING_VERSION = "play-official-score-v1";
+export const OFFICIAL_DAILY_SCORING_VERSION = OFFICIAL_SCORE_CONTRACT_VERSION;
+export const WAVELENGTH_OFFICIAL_DAILY_SCORING_VERSION = WAVELENGTH_OFFICIAL_SCORE_CONTRACT_VERSION;
 
 export interface OfficialDailySetupPublication {
   setupKey: string;
   contentVersion: string;
-  scoringVersion: typeof OFFICIAL_DAILY_SCORING_VERSION;
+  scoringVersion:
+    | typeof OFFICIAL_DAILY_SCORING_VERSION
+    | typeof WAVELENGTH_OFFICIAL_DAILY_SCORING_VERSION;
   publicSetup: Record<string, unknown>;
   revealSetup: Record<string, unknown>;
   privateSetupEvidence: Record<string, unknown>;
@@ -203,7 +210,7 @@ function buildWavelengthSetup(day: string, scheduleVersion: string): OfficialDai
   return {
     setupKey: `${WAVELENGTH_CONTRACT_VERSIONS.generator}:${scheduleVersion}:${day}`,
     contentVersion: WAVELENGTH_CONTRACT_VERSIONS.generator,
-    scoringVersion: OFFICIAL_DAILY_SCORING_VERSION,
+    scoringVersion: WAVELENGTH_OFFICIAL_DAILY_SCORING_VERSION,
     publicSetup: {
       runtime_version: OFFICIAL_DAILY_RUNTIME_VERSION,
       versions: WAVELENGTH_CONTRACT_VERSIONS,

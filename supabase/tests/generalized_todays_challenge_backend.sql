@@ -360,3 +360,5 @@ end
 $$;
 
 rollback;
+
+\ir wavelength_score_calibration.sql
