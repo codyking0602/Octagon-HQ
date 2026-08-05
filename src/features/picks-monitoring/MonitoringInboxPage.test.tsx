@@ -149,26 +149,23 @@ afterEach(() => {
 });
 
 describe("Monitoring Inbox", () => {
-  it("renders compact scheduler, event, quota, coverage, and finding information for the owner", async () => {
+  it("shows one compact automation state, current event, and pending changes", async () => {
     renderPage(repository(inbox));
 
-    expect(await screen.findByRole("heading", { name: "Monitoring Inbox" })).toBeInTheDocument();
-    expect(await screen.findByRole("heading", { name: "AUTOMATION READY" })).toBeInTheDocument();
-    expect(screen.getByText("CHECKED SUCCESSFULLY")).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "AUTO-SYNC CHECKED THE EVENT" })).toBeInTheDocument();
+    expect(screen.getByText(/last scheduled provider check/i)).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "UFC Fight Night" })).toBeInTheDocument();
-    expect(screen.getByText("Red Fighter vs. Blue Fighter")).toBeInTheDocument();
-    expect(screen.getAllByText("Fight order changed.").length).toBeGreaterThan(0);
-    expect(screen.getByText("42")).toBeInTheDocument();
-    expect(screen.getByText("1", { selector: ".monitoring-summary strong" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "EVENT SETUP" })).toHaveAttribute("href", "/picks/setup");
-    expect(screen.getByRole("link", { name: "FIGHT NIGHT RESULTS" })).toHaveAttribute("href", "/picks/control");
-    expect(screen.getByRole("link", { name: "PLAYER PICKS" })).toHaveAttribute("href", "/picks");
+    expect(screen.getByRole("heading", { name: "Review only what changed" })).toBeInTheDocument();
+    expect(screen.getByText(/eligible pre-lock odds apply automatically/i)).toBeInTheDocument();
+    expect(screen.getByText("Fight order changed.")).toBeInTheDocument();
+    expect(screen.queryByText("SYSTEM DETAILS")).not.toBeInTheDocument();
+    expect(screen.queryByText("RECENT CHECKS")).not.toBeInTheDocument();
+    expect(screen.queryByText("REVIEWED FINDINGS")).not.toBeInTheDocument();
   });
 
-  it("does not present a successful scheduler wake as provider work", async () => {
+  it("does not describe a scheduler wake as a provider check", async () => {
     renderPage(repository({
       ...inbox,
-      latestRun: null,
       latestScheduledDecision: {
         outcome: "skipped",
         reason: "not_due",
@@ -176,23 +173,38 @@ describe("Monitoring Inbox", () => {
         providerCalled: false,
       },
     }));
-    expect(await screen.findByText("SKIPPED — NOT DUE")).toBeInTheDocument();
-    expect(screen.getByText(/scheduler wake proves infrastructure only/i)).toBeInTheDocument();
-    expect(screen.getByText("NO RUN")).toBeInTheDocument();
+
+    expect(await screen.findByRole("heading", { name: "AUTO-SYNC IS WAITING FOR ITS NEXT CHECK" })).toBeInTheDocument();
+    expect(screen.getByText(/no provider check was due/i)).toBeInTheDocument();
   });
 
-  it("uses the existing manual runner and refreshes the ledger after success", async () => {
+  it("surfaces partial scheduled coverage as needing attention", async () => {
+    renderPage(repository({
+      ...inbox,
+      latestScheduledDecision: {
+        outcome: "partial",
+        reason: "partial_coverage",
+        attemptedAt: "2026-08-01T12:07:00.000Z",
+        providerCalled: true,
+      },
+    }));
+
+    expect(await screen.findByRole("heading", { name: "AUTO-SYNC HAS PARTIAL COVERAGE" })).toBeInTheDocument();
+    expect(screen.getByText(/returned partial coverage/i)).toBeInTheDocument();
+  });
+
+  it("runs the canonical manual check and refreshes the same inbox", async () => {
     const repo = repository(inbox);
     renderPage(repo);
 
-    fireEvent.click(await screen.findByRole("button", { name: "RUN CHECK NOW" }));
+    fireEvent.click(await screen.findByRole("button", { name: "CHECK NOW" }));
 
     await waitFor(() => expect(repo.runManualCheck).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(repo.loadInbox).toHaveBeenCalledTimes(2));
     expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("42 requests remaining"));
   });
 
-  it("marks or dismisses a new finding through the canonical review owner", async () => {
+  it("keeps both existing review mutations", async () => {
     const reviewRepo = repository(inbox);
     renderPage(reviewRepo);
 
@@ -212,9 +224,9 @@ describe("Monitoring Inbox", () => {
     vi.mocked(repo.runManualCheck).mockImplementation(() => new Promise<void>((resolve) => { finish = resolve; }));
     renderPage(repo);
 
-    fireEvent.click(await screen.findByRole("button", { name: "RUN CHECK NOW" }));
-    expect(await screen.findByRole("button", { name: "RUNNING CHECK…" })).toBeDisabled();
-    expect(screen.getByRole("button", { name: "REFRESH INBOX" })).toBeDisabled();
+    fireEvent.click(await screen.findByRole("button", { name: "CHECK NOW" }));
+    expect(await screen.findByRole("button", { name: "CHECKING NOW…" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "REFRESH STATUS" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "MARK REVIEWED" })).toBeDisabled();
     finish();
     await waitFor(() => expect(repo.loadInbox).toHaveBeenCalledTimes(2));
@@ -224,7 +236,7 @@ describe("Monitoring Inbox", () => {
     const repo = repository(inbox);
     renderPage(repo, signedOutGateway());
 
-    expect(await screen.findByRole("heading", { name: "Sign in to open Monitoring Inbox." })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Sign in to manage Picks monitoring." })).toBeInTheDocument();
     expect(repo.loadInbox).not.toHaveBeenCalled();
     expect(screen.queryByText("UFC Fight Night")).not.toBeInTheDocument();
   });
@@ -239,7 +251,7 @@ describe("Monitoring Inbox", () => {
     expect(screen.queryByText("Fight order changed.")).not.toBeInTheDocument();
   });
 
-  it("explains the no-event, no-run, and no-finding state", async () => {
+  it("explains the no-event and no-finding state", async () => {
     renderPage(repository({
       ...inbox,
       monitoredEvent: null,
@@ -249,11 +261,16 @@ describe("Monitoring Inbox", () => {
       newFindings: [],
       reviewedFindings: [],
       recentRuns: [],
+      latestScheduledDecision: {
+        outcome: "skipped",
+        reason: "no_event",
+        attemptedAt: "2026-08-01T12:07:00.000Z",
+        providerCalled: false,
+      },
     }));
 
     expect(await screen.findByRole("heading", { name: "Stage or publish the next UFC card." })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "No unresolved monitoring findings." })).toBeInTheDocument();
-    expect(screen.getByText("NO RUN")).toBeInTheDocument();
-    expect(screen.getByText("No monitoring runs have been recorded yet.")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "No event changes need your attention." })).toBeInTheDocument();
+    expect(screen.getByText(/there is no event to monitor/i)).toBeInTheDocument();
   });
 });
