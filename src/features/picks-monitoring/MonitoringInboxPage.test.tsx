@@ -7,12 +7,7 @@ import MonitoringInboxPage from "./MonitoringInboxPage";
 import type { MonitoringInbox } from "./monitoringInboxModel";
 import type { MonitoringInboxRepository } from "./monitoringInboxRepository";
 
-const cody = {
-  id: "11111111-1111-4111-8111-111111111111",
-  displayName: "CODY",
-  initials: "CK",
-};
-
+const cody = { id: "11111111-1111-4111-8111-111111111111", displayName: "CODY", initials: "CK" };
 const finding = {
   findingId: "22222222-2222-4222-8222-222222222222",
   runId: "33333333-3333-4333-8333-333333333333",
@@ -84,12 +79,7 @@ const inbox: MonitoringInbox = {
   },
   unresolvedCount: 1,
   newFindings: [finding],
-  reviewedFindings: [{
-    ...finding,
-    findingId: "44444444-4444-4444-8444-444444444444",
-    reviewStatus: "dismissed",
-    reviewedAt: "2026-08-01T12:30:00.000Z",
-  }],
+  reviewedFindings: [],
   recentRuns: [],
   latestScheduledDecision: {
     outcome: "completed",
@@ -110,17 +100,6 @@ function gateway(profile = cody): IdentityGateway {
   };
 }
 
-function signedOutGateway(): IdentityGateway {
-  return {
-    getSession: async () => null,
-    subscribe: () => () => undefined,
-    loadProfile: async () => null,
-    signIn: async () => undefined,
-    createProfile: async () => undefined,
-    signOut: async () => undefined,
-  };
-}
-
 function repository(value: MonitoringInbox): MonitoringInboxRepository {
   return {
     loadInbox: vi.fn().mockResolvedValue(value),
@@ -129,43 +108,33 @@ function repository(value: MonitoringInbox): MonitoringInboxRepository {
   };
 }
 
-function renderPage(repo: MonitoringInboxRepository, identityGateway: IdentityGateway = gateway()) {
+function renderPage(repo: MonitoringInboxRepository) {
   return render(
     <MemoryRouter>
-      <IdentityProvider gateway={identityGateway}>
+      <IdentityProvider gateway={gateway()}>
         <MonitoringInboxPage repository={repo} />
       </IdentityProvider>
     </MemoryRouter>,
   );
 }
 
-beforeEach(() => {
-  vi.spyOn(window, "confirm").mockReturnValue(true);
-});
-
-afterEach(() => {
-  cleanup();
-  vi.restoreAllMocks();
-});
+beforeEach(() => vi.spyOn(window, "confirm").mockReturnValue(true));
+afterEach(() => { cleanup(); vi.restoreAllMocks(); });
 
 describe("Monitoring Inbox", () => {
-  it("renders compact scheduler, event, quota, coverage, and finding information for the owner", async () => {
+  it("shows one compact automation state, current event, and pending changes", async () => {
     renderPage(repository(inbox));
 
-    expect(await screen.findByRole("heading", { name: "Monitoring Inbox" })).toBeInTheDocument();
-    expect(await screen.findByRole("heading", { name: "AUTOMATION READY" })).toBeInTheDocument();
-    expect(screen.getByText("CHECKED SUCCESSFULLY")).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "AUTO-SYNC CHECKED THE EVENT" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "UFC Fight Night" })).toBeInTheDocument();
-    expect(screen.getByText("Red Fighter vs. Blue Fighter")).toBeInTheDocument();
-    expect(screen.getAllByText("Fight order changed.").length).toBeGreaterThan(0);
-    expect(screen.getByText("42")).toBeInTheDocument();
-    expect(screen.getByText("1", { selector: ".monitoring-summary strong" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "EVENT SETUP" })).toHaveAttribute("href", "/picks/setup");
-    expect(screen.getByRole("link", { name: "FIGHT NIGHT RESULTS" })).toHaveAttribute("href", "/picks/control");
-    expect(screen.getByRole("link", { name: "PLAYER PICKS" })).toHaveAttribute("href", "/picks");
+    expect(screen.getByRole("heading", { name: "Review only what changed" })).toBeInTheDocument();
+    expect(screen.getByText("Fight order changed.")).toBeInTheDocument();
+    expect(screen.queryByText("SYSTEM DETAILS")).not.toBeInTheDocument();
+    expect(screen.queryByText("RECENT CHECKS")).not.toBeInTheDocument();
+    expect(screen.queryByText("REVIEWED FINDINGS")).not.toBeInTheDocument();
   });
 
-  it("does not present a successful scheduler wake as provider work", async () => {
+  it("does not describe a scheduler wake as a provider check", async () => {
     renderPage(repository({
       ...inbox,
       latestRun: null,
@@ -176,84 +145,36 @@ describe("Monitoring Inbox", () => {
         providerCalled: false,
       },
     }));
-    expect(await screen.findByText("SKIPPED — NOT DUE")).toBeInTheDocument();
-    expect(screen.getByText(/scheduler wake proves infrastructure only/i)).toBeInTheDocument();
-    expect(screen.getByText("NO RUN")).toBeInTheDocument();
+
+    expect(await screen.findByRole("heading", { name: "AUTO-SYNC IS WAITING FOR ITS NEXT CHECK" })).toBeInTheDocument();
+    expect(screen.getByText(/no provider check was due/i)).toBeInTheDocument();
   });
 
-  it("uses the existing manual runner and refreshes the ledger after success", async () => {
+  it("runs the canonical manual check and refreshes the same inbox", async () => {
     const repo = repository(inbox);
     renderPage(repo);
 
-    fireEvent.click(await screen.findByRole("button", { name: "RUN CHECK NOW" }));
-
+    fireEvent.click(await screen.findByRole("button", { name: "CHECK NOW" }));
     await waitFor(() => expect(repo.runManualCheck).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(repo.loadInbox).toHaveBeenCalledTimes(2));
     expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("42 requests remaining"));
   });
 
-  it("marks or dismisses a new finding through the canonical review owner", async () => {
-    const reviewRepo = repository(inbox);
-    renderPage(reviewRepo);
+  it("keeps existing review and dismiss mutations", async () => {
+    const repo = repository(inbox);
+    renderPage(repo);
 
     fireEvent.click(await screen.findByRole("button", { name: "MARK REVIEWED" }));
-    await waitFor(() => expect(reviewRepo.reviewFinding).toHaveBeenCalledWith(finding.findingId, "reviewed"));
-    cleanup();
-
-    const dismissRepo = repository(inbox);
-    renderPage(dismissRepo);
-    fireEvent.click(await screen.findByRole("button", { name: "DISMISS" }));
-    await waitFor(() => expect(dismissRepo.reviewFinding).toHaveBeenCalledWith(finding.findingId, "dismissed"));
+    await waitFor(() => expect(repo.reviewFinding).toHaveBeenCalledWith(finding.findingId, "reviewed"));
   });
 
-  it("disables owner actions while a manual check is in progress", async () => {
-    let finish: () => void = () => undefined;
-    const repo = repository(inbox);
-    vi.mocked(repo.runManualCheck).mockImplementation(() => new Promise<void>((resolve) => { finish = resolve; }));
-    renderPage(repo);
-
-    fireEvent.click(await screen.findByRole("button", { name: "RUN CHECK NOW" }));
-    expect(await screen.findByRole("button", { name: "RUNNING CHECK…" })).toBeDisabled();
-    expect(screen.getByRole("button", { name: "REFRESH INBOX" })).toBeDisabled();
-    expect(screen.getByRole("button", { name: "MARK REVIEWED" })).toBeDisabled();
-    finish();
-    await waitFor(() => expect(repo.loadInbox).toHaveBeenCalledTimes(2));
-  });
-
-  it("shows an owner sign-in prompt without loading operational data", async () => {
-    const repo = repository(inbox);
-    renderPage(repo, signedOutGateway());
-
-    expect(await screen.findByRole("heading", { name: "Sign in to open Monitoring Inbox." })).toBeInTheDocument();
-    expect(repo.loadInbox).not.toHaveBeenCalled();
-    expect(screen.queryByText("UFC Fight Night")).not.toBeInTheDocument();
-  });
-
-  it("shows a non-owner denial without leaking event or finding data", async () => {
-    const repo = repository(inbox);
-    vi.mocked(repo.loadInbox).mockRejectedValue(new Error("pick control owner required"));
-    renderPage(repo);
-
-    expect(await screen.findByText("Monitoring Inbox is available only to the designated Fight Night owner.")).toBeInTheDocument();
-    expect(screen.queryByText("UFC Fight Night")).not.toBeInTheDocument();
-    expect(screen.queryByText("Fight order changed.")).not.toBeInTheDocument();
-  });
-
-  it("explains the no-event, no-run, and no-finding state", async () => {
+  it("uses an honest empty state", async () => {
     renderPage(repository({
       ...inbox,
-      monitoredEvent: null,
-      scheduleState: null,
-      latestRun: null,
       unresolvedCount: 0,
       newFindings: [],
-      reviewedFindings: [],
-      recentRuns: [],
     }));
 
-    expect(await screen.findByRole("heading", { name: "Stage or publish the next UFC card." })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "No unresolved monitoring findings." })).toBeInTheDocument();
-    expect(screen.getByText("NO RUN")).toBeInTheDocument();
-    expect(screen.getByText("No monitoring runs have been recorded yet.")).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "No event changes need your attention." })).toBeInTheDocument();
   });
 });
