@@ -56,7 +56,7 @@ Every official daily game must follow the same contract:
 | Daily game | Native result | Official score |
 | --- | ---: | ---: |
 | Find the Leader | 1–10 | Native score × 10 |
-| Wavelength | 0–100 | Existing distance score |
+| Wavelength | 0–100 | `max(0, 100 − 2 × final distance)` |
 | Blind Resume | 0–5 | Correct picks × 20 |
 | Blind Rank 5 | Ten pairwise ordering comparisons | Correct comparisons × 10 |
 | Keep 4, Cut 4 | Sixteen kept-versus-cut comparisons | Correct comparison percentage, rounded consistently |

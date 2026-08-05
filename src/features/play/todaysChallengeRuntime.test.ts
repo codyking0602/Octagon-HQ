@@ -65,7 +65,9 @@ describe("official Today’s Challenge runtime", () => {
       expect(second).toEqual(first);
       expect(first.setupKey).toBeTruthy();
       expect(first.contentVersion).toBeTruthy();
-      expect(first.scoringVersion).toBe("play-official-score-v1");
+      expect(first.scoringVersion).toBe(
+        game === "wavelength" ? "play-official-score-v2" : "play-official-score-v1",
+      );
       expect(first.publicSetup.runtime_version).toBe("official-daily-runtime-v1");
       expect(record(first.publicSetup.initial_state).complete).toBe(false);
     }

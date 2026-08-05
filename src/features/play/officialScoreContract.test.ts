@@ -30,7 +30,7 @@ describe("official Play score contract", () => {
 
   it("keeps the existing Wavelength score on the shared 0–100 scale", () => {
     expect(adaptWavelengthOfficialScore(0)).toMatchObject({
-      contractVersion: "play-official-score-v1",
+      contractVersion: "play-official-score-v2",
       gameId: "wavelength",
       score: 0,
       native: { value: 0, max: 100, display: "0/100" },

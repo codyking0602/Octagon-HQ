@@ -1,6 +1,11 @@
 import type { PlayGameId } from "./playRegistry";
 
 export const OFFICIAL_SCORE_CONTRACT_VERSION = "play-official-score-v1" as const;
+export const WAVELENGTH_OFFICIAL_SCORE_CONTRACT_VERSION = "play-official-score-v2" as const;
+
+export type OfficialScoreContractVersion =
+  | typeof OFFICIAL_SCORE_CONTRACT_VERSION
+  | typeof WAVELENGTH_OFFICIAL_SCORE_CONTRACT_VERSION;
 
 export type OfficialDailyGameId = Extract<
   PlayGameId,
@@ -34,7 +39,7 @@ export interface OfficialNativeScoreByGame {
 }
 
 export interface OfficialScoreResult<GameId extends ExistingOfficialScoreGameId> {
-  contractVersion: typeof OFFICIAL_SCORE_CONTRACT_VERSION;
+  contractVersion: OfficialScoreContractVersion;
   gameId: GameId;
   score: number;
   native: OfficialNativeScoreByGame[GameId];
@@ -97,7 +102,7 @@ export function adaptWavelengthOfficialScore(nativeScore: number): OfficialScore
   const value = requireIntegerInRange(nativeScore, 0, 100, "Wavelength score");
 
   return {
-    contractVersion: OFFICIAL_SCORE_CONTRACT_VERSION,
+    contractVersion: WAVELENGTH_OFFICIAL_SCORE_CONTRACT_VERSION,
     gameId: "wavelength",
     score: value,
     native: {

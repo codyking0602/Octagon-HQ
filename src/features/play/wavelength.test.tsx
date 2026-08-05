@@ -50,7 +50,9 @@ describe("Wavelength engine", () => {
 
   it("scores only distance from the final guess", () => {
     expect(wavelengthScore(75, 75)).toBe(100);
-    expect(wavelengthScore(68, 75)).toBe(93);
+    expect(wavelengthScore(68, 75)).toBe(86);
+    expect(wavelengthScore(55, 75)).toBe(60);
+    expect(wavelengthScore(25, 75)).toBe(0);
     expect(desiredWavelengthCorrection(80, 40, 2, () => 0)).toBeGreaterThan(80);
   });
 
