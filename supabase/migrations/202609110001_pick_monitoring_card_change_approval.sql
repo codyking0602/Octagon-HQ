@@ -58,7 +58,9 @@ begin
     select latest.run_id
     from public.pick_monitoring_runs latest
     where latest.event_id = v_run.event_id
-    order by latest.created_at desc, latest.run_id desc
+    order by coalesce(latest.completed_at, latest.started_at) desc,
+      latest.created_at desc,
+      latest.run_id desc
     limit 1
   ) then
     raise exception 'newer monitoring evidence exists; run a fresh check';
