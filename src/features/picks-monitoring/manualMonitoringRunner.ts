@@ -1,5 +1,5 @@
-import { sourceChanges } from "../../../supabase/functions/sync-next-ufc-event/cardChanges.ts";
 import { matchCanonicalEventIdentity } from "../../../supabase/functions/sync-next-ufc-event/eventIdentity.ts";
+import { buildCardChangeFindings } from "./cardChangeApproval.ts";
 import { fightOddsMatchupIdentity, fighterOddsIdentity, type OddsAdapterResult } from "./oddsModel.ts";
 import { buildMonitoringRunPayload, type MonitoringFindingInput, type MonitoringRunPayload, type MonitoringTriggerKind } from "./monitoringStorageModel.ts";
 
@@ -19,6 +19,9 @@ export interface SourcePreview extends MonitoringEvent { source: string; source_
 export interface ResolvedMonitoringEvent { selected: MonitoringEvent; kind: "staged" | "current"; storageEventId?: string; identity: string; ignoredMatchupIdentities: string[] }
 
 function stableEventMatch(left: MonitoringEvent, right: MonitoringEvent) {
+  const leftKey = left.source_event_key?.trim().toLowerCase();
+  const rightKey = right.source_event_key?.trim().toLowerCase();
+  if (leftKey && rightKey) return leftKey === rightKey;
   return matchCanonicalEventIdentity(
     { name: left.name, subtitle: left.subtitle, venue: "", location: "", starts_at: left.starts_at },
     { name: right.name, subtitle: right.subtitle, venue: "", location: "", starts_at: right.starts_at },
@@ -106,8 +109,15 @@ export function buildManualMonitoringPayload(input: {
     : source;
   const odds = filterOddsToMonitoredEvent(input.odds, canonical);
   const canonicalByMatchup = new Map(canonical.bouts.map((bout) => [matchupIdentity(bout), bout]));
-  const cardReference = input.scope === "main" ? { ...canonical, bouts: canonical.bouts.filter((bout) => !/^(?:early-)?prelim-/.test(bout.bout_id)) } : canonical;
-  const findings: MonitoringFindingInput[] = sourceChanges(cardReference, comparisonSource as never, input.scope).map((summary) => ({ finding_key: stableKey(resolved.identity, "card_change", summary), finding_type: "card_change", severity: "warning", summary, detected_at: completedAt, source_details: { source_event_identity: resolved.identity, monitored_event_kind: resolved.kind } }));
+  const findings: MonitoringFindingInput[] = buildCardChangeFindings({
+    identity: resolved.identity,
+    kind: resolved.kind,
+    eventId: resolved.storageEventId,
+    canonical,
+    source: comparisonSource,
+    scope,
+    detectedAt: completedAt,
+  });
   const matchedMatchups = new Set(odds.snapshots.map((snapshot) => snapshot.matchupIdentity));
   for (const snapshot of odds.snapshots) {
     const bout = canonicalByMatchup.get(snapshot.matchupIdentity);
