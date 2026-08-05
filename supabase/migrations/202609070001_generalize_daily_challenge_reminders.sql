@@ -1,5 +1,5 @@
--- Keep the canonical shared notification dispatcher and make its one daily reminder
--- follow the server-owned official challenge instead of the legacy Find the Leader table.
+-- Preserve the latest canonical shared notification dispatcher and change only its
+-- one daily reminder to follow the server-owned official challenge.
 create or replace function public.dispatch_due_in_app_notifications(
   p_now timestamptz default now()
 )
@@ -189,6 +189,8 @@ begin
   end if;
 
   if v_owner_profile_id is not null then
+    -- A staged upcoming event with no matching published card is one clear owner action,
+    -- not separate "draft ready" and "missing card" noise.
     for v_draft in
       select draft.draft_id, draft.event_id, draft.name, draft.starts_at
       from public.pick_event_drafts draft
@@ -198,7 +200,7 @@ begin
         and not exists (
           select 1
           from public.pick_events event
-          where event.event_id = draft.event_id
+          where event.event_id = v_draft.event_id
             and event.status in ('upcoming', 'locked')
         )
       order by draft.starts_at, draft.draft_id
@@ -218,6 +220,8 @@ begin
       v_owner_operations := v_owner_operations + 1;
     end loop;
 
+    -- Escalate only after three recent consecutive failed automatic provider runs.
+    -- Manual checks and decision-only scheduler evidence cannot create this notification.
     for v_failure in
       with ranked_runs as (
         select run.run_id,
@@ -229,7 +233,10 @@ begin
                  order by coalesce(run.completed_at, run.started_at) desc, run.created_at desc
                ) as recent_rank
         from public.pick_monitoring_runs run
-        where coalesce(run.completed_at, run.started_at) >= p_now - interval '6 hours'
+        where run.trigger_kind = 'scheduled'
+          and run.provider_called
+          and run.decision_reason is null
+          and coalesce(run.completed_at, run.started_at) >= p_now - interval '6 hours'
       )
       select source_event_identity,
              max(run_id::text) filter (where recent_rank = 1) as latest_run_id,
@@ -247,7 +254,7 @@ begin
         )), 140),
         'monitoring_repeatedly_failed',
         'Monitoring repeatedly failed',
-        'Three consecutive monitoring runs failed for the current UFC event. Review the Monitoring Inbox.',
+        'Three consecutive automatic monitoring runs failed for the current UFC event. Review the Monitoring Inbox.',
         '/picks/monitoring',
         'REVIEW',
         v_failure.latest_occurred_at
@@ -255,6 +262,8 @@ begin
       v_owner_operations := v_owner_operations + 1;
     end loop;
 
+    -- Once every included result is final, Cody receives one completion action rather
+    -- than separate "all results entered" and "ready to complete" notifications.
     for v_event in
       select event.event_id, event.name
       from public.pick_events event
