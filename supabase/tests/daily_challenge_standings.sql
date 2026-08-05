@@ -133,7 +133,7 @@ begin
     raise exception 'standing summary did not return the complete ranked member set';
   end if;
 
-  if v_cody_row->>'display_name' <> 'Cody'
+  if v_cody_row->>'display_name' <> 'CODY'
     or (v_cody_row->>'rank')::integer <> 1
     or (v_cody_row->>'wins')::integer <> 4
     or (v_cody_row->>'played')::integer <> 5
@@ -148,7 +148,7 @@ begin
     raise exception 'current member standings or game averages are incorrect: %', v_cody_row;
   end if;
 
-  if v_shane_row->>'display_name' <> 'Shane'
+  if v_shane_row->>'display_name' <> 'SHANE'
     or (v_shane_row->>'rank')::integer <> 2
     or (v_shane_row->>'wins')::integer <> 2
     or (v_shane_row->>'played')::integer <> 4
@@ -158,7 +158,7 @@ begin
     raise exception 'tied daily wins or yesterday-current streak were calculated incorrectly';
   end if;
 
-  if v_tony_row->>'display_name' <> 'Tony'
+  if v_tony_row->>'display_name' <> 'TONY'
     or (v_tony_row->>'rank')::integer <> 3
     or (v_tony_row->>'wins')::integer <> 0
     or (v_tony_row->>'played')::integer <> 0
