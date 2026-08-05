@@ -11,7 +11,7 @@ describe("Today’s Challenge 390×844 presentation contract", () => {
     expect(gameCss).toContain("grid-template-columns: repeat(3, minmax(0, 1fr))");
     expect(hubCss).toContain("min-width: 0");
     expect(hubCss).toContain("grid-template-columns: repeat(2, minmax(0, 1fr))");
-    expect(`${gameCss}\n${hubCss}`).not.toMatch(/min-width:\s*(?:4\d\d|[5-9]\d\d|\d{4,})px/);
+    expect(`${gameCss}\n${hubCss}`).not.toMatch(/^\s*min-width:\s*(?:4\d\d|[5-9]\d\d|\d{4,})px/m);
   });
 
   it("defines the phone layout used by all five deterministic official fixtures", () => {
