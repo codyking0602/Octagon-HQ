@@ -13,6 +13,16 @@ describe("live notification flow proof", () => {
     expect(workflow).toContain("actions: read");
   });
 
+  it("allows only the explicit same-repository PR head as an alternate live deployment", () => {
+    expect(workflow).toContain("EXPECTED_SYNC_SOURCE_SHA: ${{ github.event.pull_request.head.sha || '' }}");
+    expect(proof).toContain('process.env.GITHUB_EVENT_NAME === "pull_request"');
+    expect(proof).toContain("allowedDeployedShas");
+    expect(proof).toContain("expectedSyncSourceSha");
+    expect(proof).toContain("An alternate live SHA is allowed only for an exact same-repository pull-request head.");
+    expect(proof).toContain("current main ${expectedMainSha}");
+    expect(proof).toContain("exact live deployment ${liveDelivery.expectedSha}");
+  });
+
   it("creates the event only through the canonical challenge transition", () => {
     expect(proof).toContain('/rest/v1/rpc/create_play_challenge');
     expect(proof).toContain('p_game_id: "find-leader"');
