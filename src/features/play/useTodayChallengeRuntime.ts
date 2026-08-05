@@ -6,11 +6,14 @@ import {
   type TodayChallengeProjection,
   type TodayChallengeRepository,
 } from "./todayChallengeRepository";
+import {
+  todayChallengeHistoryQueryKey,
+  todayChallengeLeaderboardQueryKey,
+  todayChallengeRuntimeQueryKey,
+  todayChallengeStreakQueryKey,
+} from "./todayChallengeQueryKeys";
 
-export const todayChallengeRuntimeQueryKey = (profileId: string) => [
-  "today-challenge-runtime",
-  profileId,
-] as const;
+export { todayChallengeRuntimeQueryKey } from "./todayChallengeQueryKeys";
 
 export function useTodayChallengeRuntime({
   profileId,
@@ -55,12 +58,22 @@ export function useTodayChallengeRuntime({
     onSuccess: (projection) => {
       queryClient.setQueryData(queryKey, projection);
       if (projection.officialAttempt) {
-        window.dispatchEvent(new Event("focus"));
-      }
-    },
-    onError: (error) => {
-      if (error instanceof TodayChallengeRepositoryError && error.stale) {
-        void queryClient.invalidateQueries({ queryKey, exact: true });
+        void queryClient.invalidateQueries({
+          queryKey: todayChallengeHistoryQueryKey(profileId),
+          exact: true,
+        });
+        void queryClient.invalidateQueries({
+          queryKey: todayChallengeStreakQueryKey(profileId),
+          exact: true,
+        });
+        void queryClient.invalidateQueries({
+          queryKey: todayChallengeLeaderboardQueryKey(
+            profileId,
+            projection.centralDay,
+            projection.scheduleVersion,
+          ),
+          exact: true,
+        });
       }
     },
   });
@@ -73,9 +86,19 @@ export function useTodayChallengeRuntime({
     configured: Boolean(repository),
     advance: async (action: Record<string, unknown>) => {
       if (!query.data) throw new Error("Today’s Challenge is still loading.");
-      return mutation.mutateAsync({ projection: query.data, action });
+      try {
+        return await mutation.mutateAsync({ projection: query.data, action });
+      } catch (error) {
+        if (error instanceof TodayChallengeRepositoryError && error.stale) {
+          await queryClient.refetchQueries({ queryKey, exact: true });
+          mutation.reset();
+          return queryClient.getQueryData<TodayChallengeProjection>(queryKey) ?? null;
+        }
+        return null;
+      }
     },
     refresh: async () => {
+      mutation.reset();
       await query.refetch();
     },
   };
