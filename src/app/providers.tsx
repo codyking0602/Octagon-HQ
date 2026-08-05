@@ -3,7 +3,6 @@ import { useState, type PropsWithChildren } from "react";
 import { ChallengeProvider } from "../features/challenges/ChallengeProvider";
 import { IdentityProvider } from "../features/identity/IdentityProvider";
 import { NotificationProvider } from "../features/notifications/NotificationProvider";
-import { FindLeaderHistoryProvider } from "../features/play/FindLeaderHistoryProvider";
 import { PicksProvider } from "../features/picks/PicksProvider";
 import { ProfilePreferencesProvider } from "../features/profile/ProfilePreferencesProvider";
 import { WarRoomProvider } from "../features/war-room/WarRoomProvider";
@@ -31,9 +30,7 @@ export function AppProviders({ children }: PropsWithChildren) {
             <WarRoomProvider>
               <ProfilePreferencesProvider>
                 <PicksProvider>
-                  <FindLeaderHistoryProvider>
-                    <ChallengeProvider>{children}</ChallengeProvider>
-                  </FindLeaderHistoryProvider>
+                  <ChallengeProvider>{children}</ChallengeProvider>
                 </PicksProvider>
               </ProfilePreferencesProvider>
             </WarRoomProvider>
