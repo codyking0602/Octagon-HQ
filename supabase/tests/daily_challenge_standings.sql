@@ -119,8 +119,8 @@ begin
     (v_daily_ids[3], v_shane, 'official_first', 4, 80, now() - interval '2 days', 'standings-content-v1', 'play-official-score-v1'),
     (v_daily_ids[4], v_shane, 'official_first', 7, 70, now() - interval '1 day', 'standings-content-v1', 'play-official-score-v1');
 
-  select set_config('request.jwt.claim.role', 'authenticated', true);
-  select set_config('request.jwt.claim.sub', v_cody::text, true);
+  perform set_config('request.jwt.claim.role', 'authenticated', true);
+  perform set_config('request.jwt.claim.sub', v_cody::text, true);
 
   v_standings := public.get_daily_challenge_standings();
   v_cody_row := v_standings->'entries'->0;
