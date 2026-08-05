@@ -11,7 +11,7 @@ const IntelligencePage = lazy(() => import("../features/intelligence/Intelligenc
 const MemberDirectoryPage = lazy(() => import("../features/members/MemberDirectoryPage"));
 const MemberProfilePage = lazy(() => import("../features/members/MemberProfilePage"));
 const NotificationCenterPage = lazy(() => import("../features/notifications/NotificationCenterPage"));
-const PlayPage = lazy(() => import("../features/play/PlayPage"));
+const TodayChallengeHubPage = lazy(() => import("../features/play/TodayChallengeHubPage"));
 const FindLeaderChallengeRoute = lazy(() => import("../features/challenges/FindLeaderChallengeRoute"));
 const TodayChallengeGameRoute = lazy(() => import("../features/play/TodayChallengeGameRoute"));
 const WavelengthPage = lazy(() => import("../features/play/WavelengthPage"));
@@ -40,7 +40,7 @@ export const appRoutes: RouteObject[] = [
       { path: "members", element: <MemberDirectoryPage /> },
       { path: "members/:memberName", element: <MemberProfilePage /> },
       { path: "notifications", element: <NotificationCenterPage /> },
-      { path: "play", element: <PlayPage /> },
+      { path: "play", element: <TodayChallengeHubPage /> },
       { path: "play/find-leader", element: <TodayChallengeGameRoute gameType="find_leader" casual={<FindLeaderChallengeRoute />} /> },
       { path: "play/wavelength", element: <TodayChallengeGameRoute gameType="wavelength" casual={<WavelengthPage />} /> },
       { path: "play/blind-resume", element: <TodayChallengeGameRoute gameType="blind_resume" casual={<BlindResumePage />} /> },
