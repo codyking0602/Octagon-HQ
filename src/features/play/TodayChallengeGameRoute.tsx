@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import OfficialTodayChallengePage from "./OfficialTodayChallengePage";
 import type { DailyGameType } from "./todaysChallengeAdapters";
 
-function isOfficialDailyRoute(gameType: DailyGameType, search: string) {
+export function isOfficialDailyRoute(gameType: DailyGameType, search: string) {
   const params = new URLSearchParams(search);
   if (params.get("mode") === "daily") return true;
   if (gameType !== "find_leader") return false;
