@@ -221,6 +221,9 @@ export default function MonitoringInboxPage({ repository: suppliedRepository }: 
               <div><p className="eyebrow">PENDING CHANGES</p><h2 id="monitoring-findings-title">Review only what changed</h2></div>
               <span>{inbox.newFindings.length}</span>
             </div>
+            <p className="monitoring-section__note">
+              Eligible pre-lock odds apply automatically. Event-card changes stay review-only and are never published automatically.
+            </p>
             {inbox.newFindings.length ? inbox.newFindings.map((finding) => {
               const busy = busyAction === `finding:${finding.findingId}`;
               return (
