@@ -6,13 +6,8 @@ import {
   type TodayChallengeRepository,
 } from "./todayChallengeRepository";
 
-export const todayChallengeHistoryQueryKey = (profileId: string) => [
-  "today-challenge-history",
-  profileId,
-] as const;
-
-export const todayChallengeStreakQueryKey = (profileId: string) => [
-  "today-challenge-streak",
+export const todayChallengeStandingsQueryKey = (profileId: string) => [
+  "daily-challenge-standings",
   profileId,
 ] as const;
 
@@ -45,14 +40,9 @@ export function useTodayChallengeOverview({
     [suppliedRepository],
   );
   const ready = enabled && Boolean(profileId) && Boolean(repository);
-  const history = useQuery({
-    queryKey: todayChallengeHistoryQueryKey(profileId),
-    queryFn: () => repository!.loadHistory(),
-    enabled: ready,
-  });
-  const streak = useQuery({
-    queryKey: todayChallengeStreakQueryKey(profileId),
-    queryFn: () => repository!.loadStreak(),
+  const standings = useQuery({
+    queryKey: todayChallengeStandingsQueryKey(profileId),
+    queryFn: () => repository!.loadStandings(),
     enabled: ready,
   });
   const leaderboard = useQuery({
@@ -67,18 +57,23 @@ export function useTodayChallengeOverview({
     ),
     enabled: ready && Boolean(projection),
   });
+  const currentEntry = standings.data?.entries.find((entry) => entry.isCurrentUser) ?? null;
 
   return {
     configured: Boolean(repository),
-    history: history.data ?? [],
-    streak: streak.data ?? { currentStreak: 0, bestStreak: 0 },
+    standings: standings.data ?? null,
+    streak: {
+      currentStreak: currentEntry?.currentStreak ?? 0,
+      bestStreak: currentEntry?.bestStreak ?? 0,
+    },
     leaderboard: leaderboard.data ?? null,
-    loading: history.isLoading || streak.isLoading || leaderboard.isLoading,
-    error: history.error ?? streak.error ?? leaderboard.error ?? null,
+    standingsLoading: standings.isLoading,
+    leaderboardLoading: leaderboard.isLoading,
+    loading: standings.isLoading || leaderboard.isLoading,
+    error: standings.error ?? leaderboard.error ?? null,
     refresh: async () => {
       await Promise.all([
-        history.refetch(),
-        streak.refetch(),
+        standings.refetch(),
         projection ? leaderboard.refetch() : Promise.resolve(),
       ]);
     },

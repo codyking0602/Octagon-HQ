@@ -1,0 +1,202 @@
+.daily-standings {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(145deg, var(--surface-raised), var(--surface));
+}
+
+.daily-standings > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  cursor: pointer;
+  list-style: none;
+}
+
+.daily-standings > summary::-webkit-details-marker {
+  display: none;
+}
+
+.daily-standings > summary strong {
+  display: block;
+  margin-top: 3px;
+}
+
+.daily-standings > summary > span {
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-align: right;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.daily-standings > summary > span b {
+  color: var(--text-primary);
+}
+
+.daily-standings__body {
+  display: grid;
+  gap: 6px;
+  padding: 0 var(--space-3) var(--space-3);
+}
+
+.daily-standings__header,
+.daily-standings__row {
+  display: grid;
+  grid-template-columns: 24px minmax(86px, 1fr) 28px 34px 40px 44px 46px;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+
+.daily-standings__header {
+  padding: 0 7px 5px;
+  color: var(--text-muted);
+  font-size: 0.5rem;
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: 0.035em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.daily-standings__header span:nth-child(2) {
+  text-align: left;
+}
+
+.daily-standings__member {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--surface-raised) 70%, transparent);
+}
+
+.daily-standings__member.is-current {
+  border-color: color-mix(in srgb, var(--ufc-red) 65%, var(--border));
+}
+
+.daily-standings__row {
+  width: 100%;
+  min-height: 46px;
+  padding: 6px 7px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.64rem;
+  text-align: center;
+  cursor: pointer;
+}
+
+.daily-standings__row > b {
+  color: var(--ufc-red-strong);
+}
+
+.daily-standings__row > strong,
+.daily-standings__row > span {
+  white-space: nowrap;
+}
+
+.daily-standings__identity {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  text-align: left;
+}
+
+.daily-standings__identity img,
+.daily-standings__identity > span {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--surface);
+  object-fit: cover;
+  font-size: 0.58rem;
+  font-weight: 900;
+}
+
+.daily-standings__identity strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.daily-standings__games {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.daily-standings__games > strong {
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.daily-standings__games > div {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.daily-standings__games span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 8px;
+  border-radius: 7px;
+  background: var(--surface);
+}
+
+.daily-standings__games small {
+  color: var(--text-muted);
+}
+
+.daily-standings__games b {
+  color: var(--ufc-red-strong);
+}
+
+.daily-standings__refresh {
+  min-height: 42px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--ufc-red);
+  color: #fff;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+@media (max-width: 380px) {
+  .daily-standings__body {
+    padding-inline: 7px;
+  }
+
+  .daily-standings__header,
+  .daily-standings__row {
+    grid-template-columns: 22px minmax(78px, 1fr) 26px 31px 36px 40px 42px;
+    gap: 3px;
+  }
+
+  .daily-standings__row {
+    padding-inline: 5px;
+    font-size: 0.59rem;
+  }
+
+  .daily-standings__header {
+    padding-inline: 5px;
+    font-size: 0.46rem;
+  }
+}

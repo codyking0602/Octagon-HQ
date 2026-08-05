@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
+import { DailyChallengeStandings } from "./DailyChallengeStandings";
 import { todayChallengeAdapter, type DailyGameType } from "./todaysChallengeAdapters";
 import type {
-  TodayChallengeHistoryRow,
   TodayChallengeLeaderboard,
   TodayChallengeProjection,
 } from "./todayChallengeRepository";
@@ -38,15 +38,6 @@ function gameProgress(projection: TodayChallengeProjection) {
   }
 }
 
-function nativeResult(row: Pick<TodayChallengeHistoryRow, "gameType" | "nativeScore" | "publicResult">) {
-  const adapter = todayChallengeAdapter(row.gameType);
-  return adapter?.nativeDisplay({ nativeScore: row.nativeScore, publicResult: row.publicResult })
-    ?? `${row.nativeScore}`;
-}
-
-function gameTitle(gameType: DailyGameType) {
-  return todayChallengeAdapter(gameType)?.title ?? "Today’s Challenge";
-}
 
 function LeaderboardAvatar({ entry }: { entry: TodayChallengeLeaderboard["entries"][number] }) {
   return entry.avatarPhotoData ? (
@@ -150,7 +141,6 @@ export default function TodayChallengeHub() {
   }
 
   const completed = Boolean(projection.officialAttempt);
-  const history = overview.history.slice(0, 6);
   return (
     <section className="today-hub" data-game={projection.gameType}>
       <div className="today-hub__tabs" aria-label="Today’s Challenge panels">
@@ -197,31 +187,17 @@ export default function TodayChallengeHub() {
           <DailyLeaderboard
             leaderboard={overview.leaderboard}
             gameType={projection.gameType}
-            loading={overview.loading}
+            loading={overview.leaderboardLoading}
           />
         </div>
       )}
 
-      <details className="today-hub-history">
-        <summary>
-          <div><p className="eyebrow">DAILY HISTORY</p><strong>Official challenge record</strong></div>
-          <span><b>{overview.streak.currentStreak}</b>-day current · <b>{overview.streak.bestStreak}</b>-day best</span>
-        </summary>
-        <div className="today-hub-history__body">
-          {history.length ? history.map((row) => (
-            <article key={`${row.day}-${row.scheduleVersion}`}>
-              <span><strong>{dayLabel(row.day)}</strong><small>{gameTitle(row.gameType)}</small></span>
-              <em>{nativeResult(row)}</em>
-              <b>{row.normalizedScore}</b>
-            </article>
-          )) : (
-            <p className="today-hub-empty">Complete an official daily to begin your history.</p>
-          )}
-          {overview.error ? (
-            <button type="button" onClick={() => void overview.refresh()}>REFRESH HISTORY</button>
-          ) : null}
-        </div>
-      </details>
+<DailyChallengeStandings
+  standings={overview.standings}
+  loading={overview.standingsLoading}
+  error={overview.error instanceof Error ? overview.error : null}
+  onRefresh={() => { void overview.refresh(); }}
+/>
     </section>
   );
 }
