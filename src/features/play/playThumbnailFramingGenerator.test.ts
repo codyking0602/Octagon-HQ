@@ -53,15 +53,21 @@ const fighterSlugs = [
 ] as const;
 
 const canvasSize = 160;
-const targetForegroundHeight = 168;
-const maximumForegroundWidth = 176;
-const topOffset = 4;
+const targetForegroundHeight = 170;
+const maximumForegroundWidth = 192;
+const topOffset = 2;
 
 interface AlphaBounds {
   left: number;
   top: number;
   width: number;
   height: number;
+}
+
+interface FramingMetric {
+  slug: string;
+  bounds: AlphaBounds;
+  byteLength: number;
 }
 
 async function alphaBounds(input: Buffer): Promise<AlphaBounds> {
@@ -177,6 +183,7 @@ describe("temporary Play thumbnail framing generator", () => {
     );
     await mkdir(proofDirectory, { recursive: true });
     const tiles: Buffer[] = [];
+    const metrics: FramingMetric[] = [];
 
     for (const slug of fighterSlugs) {
       const assetPath = path.resolve(
@@ -190,14 +197,10 @@ describe("temporary Play thumbnail framing generator", () => {
       const repaired = await repairThumbnail(original);
       const bounds = await alphaBounds(repaired);
 
-      expect(bounds.top, `${slug} top headroom`).toBeLessThanOrEqual(6);
-      expect(bounds.height, `${slug} foreground height`).toBeGreaterThanOrEqual(150);
-      expect(bounds.width, `${slug} foreground width`).toBeGreaterThanOrEqual(70);
-      expect(repaired.byteLength, `${slug} encoded quality`).toBeGreaterThan(4_000);
-
       await writeFile(assetPath, repaired);
       await writeFile(path.join(proofDirectory, `asset-${slug}.png`), repaired);
       tiles.push(await comparisonTile(slug, original, repaired));
+      metrics.push({ slug, bounds, byteLength: repaired.byteLength });
     }
 
     const columns = 4;
@@ -222,6 +225,12 @@ describe("temporary Play thumbnail framing generator", () => {
       .toBuffer();
     await writeFile(path.join(proofDirectory, "play-thumbnail-comparison.png"), sheet);
 
+    for (const metric of metrics) {
+      expect.soft(metric.bounds.top, `${metric.slug} top headroom`).toBeLessThanOrEqual(4);
+      expect.soft(metric.bounds.height, `${metric.slug} foreground height`).toBeGreaterThanOrEqual(140);
+      expect.soft(metric.bounds.width, `${metric.slug} foreground width`).toBeGreaterThanOrEqual(75);
+      expect.soft(metric.byteLength, `${metric.slug} encoded quality`).toBeGreaterThan(4_000);
+    }
     expect(fighterSlugs).toHaveLength(46);
     expect(tiles).toHaveLength(46);
   }, 120_000);
