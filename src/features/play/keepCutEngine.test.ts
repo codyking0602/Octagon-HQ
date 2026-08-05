@@ -10,7 +10,14 @@ import {
   resolveKeepCutChallenge,
   scoreKeepCutSelection,
 } from "./keepCutEngine";
-import { rankedPlayFighters } from "./playFighterPool";
+import { rankedPlayFighters, type PlayFighter } from "./playFighterPool";
+
+function strongestBoardFirst(packId: (typeof KEEP_CUT_PACKS)[number]["id"], fighters: readonly PlayFighter[]) {
+  return [...fighters].sort((left, right) => {
+    const ratingDifference = keepCutRating(packId, right) - keepCutRating(packId, left);
+    return ratingDifference || left.id.localeCompare(right.id);
+  });
+}
 
 describe("Keep 4, Cut 4 engine", () => {
   it("generates eight unique category-valid competitive fighters through canonical owners", () => {
@@ -44,10 +51,7 @@ describe("Keep 4, Cut 4 engine", () => {
   it("gives 100 when the player keeps the board's four strongest fighters", () => {
     for (const pack of KEEP_CUT_PACKS) {
       const lineup = createKeepCutLineup(pack.id, `perfect-${pack.id}`);
-      const sorted = [...lineup.fighters].sort((left, right) => {
-        const ratingDifference = keepCutRating(pack.id, right) - keepCutRating(pack.id, left);
-        return ratingDifference || left.id.localeCompare(right.id);
-      });
+      const sorted = strongestBoardFirst(pack.id, lineup.fighters);
       const result = scoreKeepCutSelection(pack.id, lineup.fighters, sorted.slice(0, 4).map((fighter) => fighter.id));
       expect(result.correctComparisons).toBe(16);
       expect(result.modelTopFourKept).toBe(4);
@@ -59,7 +63,7 @@ describe("Keep 4, Cut 4 engine", () => {
   it("scores the blind board through sixteen kept-versus-cut comparisons", () => {
     const packId = "all-careers";
     const lineup = createKeepCutLineup(packId, "comparison-proof");
-    const sorted = [...lineup.fighters].sort((left, right) => keepCutRating(packId, right) - keepCutRating(packId, left));
+    const sorted = strongestBoardFirst(packId, lineup.fighters);
     const keptIds = [sorted[0]!, sorted[2]!, sorted[4]!, sorted[6]!].map((fighter) => fighter.id);
     const result = scoreKeepCutSelection(packId, lineup.fighters, keptIds);
     const keptSet = new Set(keptIds);
@@ -77,7 +81,7 @@ describe("Keep 4, Cut 4 engine", () => {
 
   it("scores deterministically, independently of selection order and display-only fields", () => {
     const lineup = createKeepCutLineup("all-careers", "score-proof");
-    const sorted = [...lineup.fighters].sort((a, b) => keepCutRating("all-careers", b) - keepCutRating("all-careers", a));
+    const sorted = strongestBoardFirst("all-careers", lineup.fighters);
     const strongIds = sorted.slice(0, 4).map((fighter) => fighter.id);
     const weakIds = sorted.slice(4).map((fighter) => fighter.id);
     const strong = scoreKeepCutSelection("all-careers", lineup.fighters, strongIds);
@@ -160,7 +164,7 @@ describe("Keep 4, Cut 4 engine", () => {
       categoryBoards[pack.id] = (categoryBoards[pack.id] ?? 0) + 1;
       boardSignatures.add([...ids].sort().join("|"));
 
-      const sorted = [...lineup.fighters].sort((a, b) => keepCutRating(pack.id, b) - keepCutRating(pack.id, a));
+      const sorted = strongestBoardFirst(pack.id, lineup.fighters);
       const strongResult = scoreKeepCutSelection(pack.id, lineup.fighters, sorted.slice(0, 4).map((fighter) => fighter.id));
       const weakResult = scoreKeepCutSelection(pack.id, lineup.fighters, sorted.slice(4).map((fighter) => fighter.id));
       const mixedResult = scoreKeepCutSelection(pack.id, lineup.fighters, [sorted[0]!, sorted[2]!, sorted[4]!, sorted[6]!].map((fighter) => fighter.id));
