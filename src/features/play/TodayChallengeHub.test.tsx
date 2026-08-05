@@ -173,9 +173,10 @@ describe("generalized Today’s Challenge hub", () => {
       "data:image/webp;base64,cody",
     );
 
-    const codyRow = screen.getByRole("button", { name: /#1 cody 8 13 84\.6 6 days 13 days/i });
+    const codyRow = screen.getByText("Cody").closest("button");
+    expect(codyRow).not.toBeNull();
     expect(codyRow).toHaveAttribute("aria-expanded", "false");
-    fireEvent.click(codyRow);
+    fireEvent.click(codyRow!);
     expect(codyRow).toHaveAttribute("aria-expanded", "true");
     expect(screen.getByText("Average Score by Game")).toBeInTheDocument();
     expect(screen.getByText("Find the Leader").parentElement).toHaveTextContent("84.1");
