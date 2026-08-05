@@ -12,6 +12,7 @@ import {
   createPickSetupRepository,
   type PickSetupRepository,
 } from "../picks-setup/pickSetupRepository";
+import OpenPicksDashboard from "./OpenPicksDashboard";
 import type { PickControlEvent } from "./pickControlModel";
 import PicksControlPage from "./PicksControlPage";
 import {
@@ -196,9 +197,8 @@ export default function PicksControlCenterPage({
         {activeEvent?.subtitle || staged?.subtitle ? <p>{activeEvent?.subtitle ?? staged?.subtitle}</p> : null}
 
         <div className="picks-control-center__facts" aria-label="Picks event status">
-          <div><span>EVENT</span><strong>{eventName}</strong></div>
-          <div><span>DATE & LOCAL TIME</span><strong>{displayTime(eventDate)}</strong></div>
-          <div><span>PICKS LOCK</span><strong>{lockStatus}</strong></div>
+          <div><span>EVENT TIME</span><strong>{displayTime(eventDate)}</strong></div>
+          <div><span>MASTER LOCK</span><strong>{lockStatus}</strong></div>
           <div><span>FIGHTS</span><strong>{fightCount}</strong></div>
         </div>
 
@@ -226,20 +226,24 @@ export default function PicksControlCenterPage({
         </section>
       ) : null}
 
+      {activeEvent?.status === "upcoming" ? (
+        <section id="monitoring" className="picks-control-center__section" aria-label="Automatic monitoring and card review">
+          <MonitoringInboxPage repository={monitoringRepository} embedded />
+        </section>
+      ) : null}
+
       <section
         id="fight-night"
         className="picks-control-center__section"
         aria-label="Event and fight-night control"
         hidden={!identity.profile || event === null}
       >
-        <PicksControlPage key={controlRevision} repository={ownedControlRepository} now={now} />
+        {activeEvent?.status === "locked" || event?.status === "complete" ? (
+          <PicksControlPage key={controlRevision} repository={ownedControlRepository} now={now} />
+        ) : (
+          <OpenPicksDashboard key={controlRevision} repository={ownedControlRepository} now={now} />
+        )}
       </section>
-
-      {activeEvent?.status === "upcoming" ? (
-        <section id="monitoring" className="picks-control-center__section" aria-label="Automatic monitoring and card review">
-          <MonitoringInboxPage repository={monitoringRepository} />
-        </section>
-      ) : null}
     </div>
   );
 }
