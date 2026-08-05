@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { playFighters } from "./playFighterPool";
 
-const projectRoot = process.cwd();
+const publicRoot = resolve(process.cwd(), "public");
 
 describe("Play fighter thumbnail completeness", () => {
   it("keeps one valid local WebP thumbnail for every eligible fighter", () => {
@@ -12,7 +12,7 @@ describe("Play fighter thumbnail completeness", () => {
 
     for (const fighter of playFighters) {
       const relativePath = fighter.thumbUrl.replace(/^\//, "");
-      const absolutePath = resolve(projectRoot, relativePath);
+      const absolutePath = resolve(publicRoot, relativePath);
       if (!existsSync(absolutePath)) {
         missing.push(`${fighter.id}: ${relativePath}`);
         continue;
