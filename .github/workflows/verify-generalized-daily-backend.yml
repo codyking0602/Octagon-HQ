@@ -5,9 +5,15 @@ on:
     paths:
       - ".github/workflows/verify-generalized-daily-backend.yml"
       - "scripts/verify-generalized-daily-concurrency.sh"
+      - "src/features/play/todaysChallengeRuntime.ts"
+      - "src/features/play/todaysChallengeRuntime.test.ts"
+      - "supabase/config.toml"
+      - "supabase/functions/daily-challenge-runtime/**"
       - "supabase/migrations/202609050001_generalized_todays_challenge_backend.sql"
       - "supabase/migrations/202609050002_generalized_todays_challenge_grader_compat.sql"
+      - "supabase/migrations/202609060001_daily_challenge_runtime_progress.sql"
       - "supabase/tests/generalized_todays_challenge_backend.sql"
+      - "supabase/tests/daily_challenge_runtime_progress.sql"
       - "supabase/tests/generalized_todays_challenge_legacy_seed.sql"
       - "supabase/tests/generalized_todays_challenge_legacy_assert.sql"
   workflow_dispatch:
@@ -68,6 +74,10 @@ jobs:
         shell: bash
         run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/generalized_todays_challenge_backend.sql
 
+      - name: Execute progressive reveal, cross-device progress, and scheduler proof
+        shell: bash
+        run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/daily_challenge_runtime_progress.sql
+
       - name: Execute realistic legacy-data migration and idempotency proof
         shell: bash
         run: |
@@ -77,6 +87,7 @@ jobs:
             echo "Reapplying generalized daily migrations for idempotency pass $pass"
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202609050001_generalized_todays_challenge_backend.sql
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202609050002_generalized_todays_challenge_grader_compat.sql
+            psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202609060001_daily_challenge_runtime_progress.sql
           done
           psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/generalized_todays_challenge_legacy_assert.sql
 
@@ -97,6 +108,10 @@ jobs:
             echo "- Exact source SHA: \`$SOURCE_SHA\`"
             echo "- Fresh database migrations: passed"
             echo "- Five server-owned graders: passed"
+            echo "- Five deterministic runtime setup adapters: passed"
+            echo "- Progressive reveal and hidden-evidence boundaries: passed"
+            echo "- Cross-device optimistic progress restoration: passed"
+            echo "- Shared hourly materialization wake-up: passed"
             echo "- Central-time DST boundaries: passed"
             echo "- Immutable first attempt and replay isolation: passed"
             echo "- Real concurrent submissions: passed"
@@ -169,6 +184,7 @@ jobs:
 
           require_remote_migration "202609050001"
           require_remote_migration "202609050002"
+          require_remote_migration "202609060001"
           supabase db push --linked --dry-run
 
       - name: Record exact deployed backend proof
@@ -178,6 +194,7 @@ jobs:
             echo "### Generalized Today’s Challenge backend deployment verified"
             echo "- Canonical deploy workflow run: ${{ github.event.workflow_run.html_url }}"
             echo "- Exact deployed source SHA: \`$SOURCE_SHA\`"
-            echo "- Remote migrations: \`202609050001\`, \`202609050002\`"
+            echo "- Remote migrations: \`202609050001\`, \`202609050002\`, \`202609060001\`"
+            echo "- Daily runtime Edge Function exact-head marker verified by the canonical deploy workflow"
             echo "- Linked dry run: no unapplied database changes"
           } >> "$GITHUB_STEP_SUMMARY"
