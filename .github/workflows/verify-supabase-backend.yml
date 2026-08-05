@@ -30,7 +30,7 @@ jobs:
       SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
       OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
-      EXPECTED_LIVE_MAIN_SHA: ${{ github.event.pull_request.base.sha || github.sha }}
+      EXPECTED_LIVE_MAIN_REF: ${{ github.event.repository.default_branch || 'main' }}
       EXPECTED_SYNC_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
 
     steps:
@@ -41,10 +41,18 @@ jobs:
         id: live_frontend
         uses: actions/github-script@v7
         env:
-          EXPECTED_LIVE_MAIN_SHA: ${{ env.EXPECTED_LIVE_MAIN_SHA }}
+          EXPECTED_LIVE_MAIN_REF: ${{ env.EXPECTED_LIVE_MAIN_REF }}
         with:
           script: |
-            const expectedSha = process.env.EXPECTED_LIVE_MAIN_SHA.toLowerCase();
+            const mainRef = process.env.EXPECTED_LIVE_MAIN_REF;
+            const { data: mainBranch } = await github.rest.repos.getBranch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              branch: mainRef,
+            });
+            const expectedSha = mainBranch.commit.sha.toLowerCase();
+            core.info(`Resolved current ${mainRef} tip: ${expectedSha}`);
+            core.setOutput("current_main_sha", expectedSha);
             const required = [
               "Deploy Cloudflare Frontend",
               "Verify Live Frontend Delivery",
@@ -491,11 +499,12 @@ jobs:
       - name: Record verification boundary
         shell: bash
         env:
+          CURRENT_MAIN_SHA: ${{ steps.live_frontend.outputs.current_main_sha }}
           VERIFIED_LIVE_FRONTEND_SHA: ${{ steps.live_frontend.outputs.sha }}
         run: |
           {
             echo "### Supabase backend verification"
-            echo "- Current main considered for verification: $EXPECTED_LIVE_MAIN_SHA"
+            echo "- Current main considered for verification: $CURRENT_MAIN_SHA"
             echo "- Verified live frontend SHA: $VERIFIED_LIVE_FRONTEND_SHA"
             echo "- Any commits between those SHAs changed no frontend runtime-owned paths"
             echo "- Deploy Cloudflare Frontend and Verify Live Frontend Delivery: successful for the verified live frontend SHA"

@@ -148,13 +148,21 @@ describe("Wavelength official privacy projection", () => {
     expect(wavelengthScore(68, 75)).toBe(adaptWavelengthOfficialScore(93).score);
   });
 
-  it("does not make another game daily eligible", () => {
-    expect(playGames.filter((game) => game.lineup.dailyEligible).map((game) => game.id)).toEqual(["find-leader"]);
+  it("preserves Wavelength privacy while joining the five-game official daily lineup", () => {
+    expect(playGames.filter((game) => game.lineup.dailyEligible).map((game) => game.id)).toEqual([
+      "find-leader",
+      "wavelength",
+      "blind-resume",
+      "blind-rank",
+      "keep-cut",
+    ]);
     expect(playGameDefinition("wavelength").lineup).toMatchObject({
       defaultType: "replayable",
-      supportedTypes: ["replayable", "curated"],
-      historyRecording: "casual-and-challenge",
-      dailyEligible: false,
+      supportedTypes: ["daily", "replayable", "curated"],
+      historyRecording: "official-daily-and-casual",
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
     });
   });
 });

@@ -51,12 +51,16 @@ export function buildYourHqNextAction({
   profileId,
   playedToday,
   currentStreak,
+  dailyChallengeTitle = "Today’s Challenge",
+  dailyChallengeRoute = "/play",
 }: {
   openChallenges: readonly PlayChallenge[];
   profiles: readonly ChallengeProfile[];
   profileId: string;
   playedToday: boolean;
   currentStreak: number;
+  dailyChallengeTitle?: string;
+  dailyChallengeRoute?: string;
 }): YourHqNextAction {
   const relevant = mostRelevantOpenChallenge(openChallenges, profileId);
 
@@ -84,15 +88,15 @@ export function buildYourHqNextAction({
     return currentStreak > 0
       ? {
           title: `Keep your ${currentStreak}-day streak alive`,
-          description: "Today’s Find the Leader is ready.",
-          label: "PLAY TODAY’S FIND THE LEADER",
-          to: "/play/find-leader",
+          description: `${dailyChallengeTitle} is ready.`,
+          label: "PLAY TODAY’S CHALLENGE",
+          to: dailyChallengeRoute,
         }
       : {
           title: "Start today’s UFC challenge",
-          description: "Find the verified stat leader.",
-          label: "PLAY TODAY’S FIND THE LEADER",
-          to: "/play/find-leader",
+          description: `${dailyChallengeTitle} is ready.`,
+          label: "PLAY TODAY’S CHALLENGE",
+          to: dailyChallengeRoute,
         };
   }
 

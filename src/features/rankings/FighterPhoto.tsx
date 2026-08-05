@@ -13,7 +13,7 @@ function isThumbnailAsset(src: string) {
 }
 
 export function FighterPhoto({ name, src, className = "", style }: FighterPhotoProps) {
-  const [failed, setFailed] = useState(false);
+  const [failed, setFailed] = useState(!src);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const processThumbnail = isThumbnailAsset(src);
   const initials = name
@@ -23,8 +23,8 @@ export function FighterPhoto({ name, src, className = "", style }: FighterPhotoP
     .slice(0, 2);
 
   useEffect(() => {
-    setFailed(false);
-    if (!processThumbnail) return;
+    setFailed(!src);
+    if (!src || !processThumbnail) return;
 
     let active = true;
     const image = new Image();
@@ -55,7 +55,7 @@ export function FighterPhoto({ name, src, className = "", style }: FighterPhotoP
     };
   }, [processThumbnail, src]);
 
-  if (failed) {
+  if (failed || !src) {
     return <span className={`fighter-photo fighter-photo--fallback ${className}`} style={style}>{initials}</span>;
   }
 
