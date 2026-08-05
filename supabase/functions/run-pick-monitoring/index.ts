@@ -111,11 +111,16 @@ Deno.serve(async (request) => {
     const auth = await admin.auth.getUser(token);
     if (auth.error || !auth.data.user) return safeError(401, "OWNER_AUTH_REQUIRED", "Owner sign-in required.");
     const owner = createClient(url, anonKey, { auth: { autoRefreshToken: false, persistSession: false }, global: { headers: { Authorization: authorization } } });
-    const [setup, current] = await Promise.all([owner.rpc("get_pick_event_setup"), owner.rpc("get_current_pick_event")]);
-    if (setup.error) return safeError(403, "OWNER_ACCESS_REQUIRED", "Fight Night owner access required.");
-    if (current.error) return safeError(503, "DATABASE_READ_FAILED", "Canonical Picks state is unavailable.");
-    setupData = asEvent(setup.data);
-    currentData = asEvent(current.data);
+    const ownerProbe = await owner.rpc("get_pick_event_setup");
+    if (ownerProbe.error) return safeError(403, "OWNER_ACCESS_REQUIRED", "Fight Night owner access required.");
+
+    // Manual CHECK NOW and the scheduler resolve the same canonical monitoring state.
+    // The owner probe above authorizes the request; it is not a second event query path.
+    const eventState = await admin.rpc("get_pick_monitoring_event_state");
+    if (eventState.error) return safeError(503, "DATABASE_READ_FAILED", "Canonical Picks state is unavailable.");
+    const state = asRecord(eventState.data);
+    setupData = asEvent(state?.staged);
+    currentData = asEvent(state?.current);
   }
 
   let resolved;
@@ -214,13 +219,17 @@ Deno.serve(async (request) => {
   }
 
   const startedAt = new Date().toISOString();
-  const previewHeaders: Record<string, string> = { "Content-Type": "application/json" };
-  if (scheduled) previewHeaders.apikey = serviceKey;
-  else previewHeaders.Authorization = authorization;
+  const selectedEvent = asRecord(resolved.selected);
+  const sourceUrl = typeof selectedEvent?.source_url === "string"
+    ? selectedEvent.source_url.trim()
+    : "";
   const previewResponse = await fetch(`${url}/functions/v1/sync-next-ufc-event`, {
     method: "POST",
-    headers: previewHeaders,
-    body: JSON.stringify({ mode: scheduled ? "monitoring-preview" : "preview" }),
+    headers: { "Content-Type": "application/json", apikey: serviceKey },
+    body: JSON.stringify({
+      mode: "monitoring-preview",
+      ...(sourceUrl ? { source_url: sourceUrl } : {}),
+    }),
   });
   const previewBody = await previewResponse.json().catch(() => null) as { event_preview?: SourcePreview; effective_scope?: CardScope } | null;
   if (!previewResponse.ok || !previewBody?.event_preview || !previewBody.effective_scope) {
@@ -231,7 +240,7 @@ Deno.serve(async (request) => {
       reason: "source_preview_failed",
       identity: resolved.identity,
       nextEligibleAt: retryAt,
-      providerCalled: true,
+      providerCalled: false,
       response: safeError(502, "SOURCE_PREVIEW_FAILED", "The UFC source preview failed safely."),
     });
   }
