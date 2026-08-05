@@ -54,6 +54,24 @@ async function waitForJson(url, attempts = 120) {
   return response.json();
 }
 
+async function terminate(child) {
+  if (!child || child.exitCode !== null || child.signalCode !== null) return;
+  const signal = (name) => {
+    try {
+      if (process.platform !== "win32" && child.pid) process.kill(-child.pid, name);
+      else child.kill(name);
+    } catch (error) {
+      if (error?.code !== "ESRCH") throw error;
+    }
+  };
+  signal("SIGTERM");
+  await Promise.race([
+    new Promise((resolve) => child.once("exit", resolve)),
+    new Promise((resolve) => setTimeout(resolve, 1_500)),
+  ]);
+  if (child.exitCode === null && child.signalCode === null) signal("SIGKILL");
+}
+
 class CdpClient {
   constructor(url) {
     this.socket = new WebSocket(url);
@@ -88,7 +106,11 @@ class CdpClient {
   }
 
   close() {
-    this.socket.close();
+    try {
+      this.socket.close();
+    } catch {
+      // The browser process may already have closed the debug socket.
+    }
   }
 }
 
@@ -128,12 +150,13 @@ mkdirSync(proofDir, { recursive: true });
 
 let viteLog = "";
 let browserLog = "";
+const spawnOptions = { stdio: ["ignore", "pipe", "pipe"], detached: process.platform !== "win32" };
 const vite = spawn(process.execPath, [
   "node_modules/vite/bin/vite.js",
   "--host", "127.0.0.1",
   "--port", String(vitePort),
   "--strictPort",
-], { stdio: ["ignore", "pipe", "pipe"] });
+], spawnOptions);
 vite.stdout.on("data", (chunk) => { viteLog += String(chunk); });
 vite.stderr.on("data", (chunk) => { viteLog += String(chunk); });
 
@@ -147,7 +170,7 @@ const browser = spawn(chrome, [
   `--user-data-dir=${profileDir}`,
   "--window-size=390,844",
   "about:blank",
-], { stdio: ["ignore", "pipe", "pipe"] });
+], spawnOptions);
 browser.stdout.on("data", (chunk) => { browserLog += String(chunk); });
 browser.stderr.on("data", (chunk) => { browserLog += String(chunk); });
 
@@ -201,7 +224,6 @@ try {
   throw new Error(`${error instanceof Error ? error.message : String(error)}\nVite:\n${viteLog}\nChrome:\n${browserLog}`);
 } finally {
   client?.close();
-  browser.kill("SIGTERM");
-  vite.kill("SIGTERM");
+  await Promise.all([terminate(browser), terminate(vite)]);
   rmSync(profileDir, { recursive: true, force: true });
 }
