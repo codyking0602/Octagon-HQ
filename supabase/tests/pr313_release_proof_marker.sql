@@ -1,0 +1,4 @@
+-- Read-only release proof marker for merged PR #313.
+-- This file intentionally contains no executable database statements.
+-- The disposable verification PR exists only to run canonical production verifiers
+-- against base main 2e0e247dc9a83074fa5ac150ba0f9c979d76c39d and will close without merge.
