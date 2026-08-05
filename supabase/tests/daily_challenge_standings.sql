@@ -145,7 +145,7 @@ begin
     or (v_cody_row->'game_averages'->>'blind_resume')::numeric <> 100.0
     or (v_cody_row->'game_averages'->>'blind_rank_5')::numeric <> 80.0
     or (v_cody_row->'game_averages'->>'keep_4_cut_4')::numeric <> 90.0 then
-    raise exception 'current member standings or game averages are incorrect';
+    raise exception 'current member standings or game averages are incorrect: %', v_cody_row;
   end if;
 
   if v_shane_row->>'display_name' <> 'Shane'
