@@ -9,6 +9,7 @@ import {
   pickRecord,
 } from "../picks/picksModel";
 import { usePicks } from "../picks/PicksProvider";
+import { todayChallengeAdapter } from "../play/todaysChallengeAdapters";
 import { useTodayChallengeOverview } from "../play/useTodayChallengeOverview";
 import { useTodayChallengeRuntime } from "../play/useTodayChallengeRuntime";
 import { useProfilePreferences } from "../profile/ProfilePreferencesProvider";
@@ -50,6 +51,7 @@ export default function HomePage() {
     enabled: signedIn,
     projection: dailyRuntime.projection,
   });
+  const dailyAdapter = todayChallengeAdapter(dailyRuntime.projection?.gameType);
   const sortedFighters = useMemo(
     () => allTime.slice().sort((left, right) => left.displayName.localeCompare(right.displayName)),
     [],
@@ -77,6 +79,8 @@ export default function HomePage() {
         profileId: identity.profile.id,
         playedToday,
         currentStreak,
+        dailyChallengeTitle: dailyAdapter?.title,
+        dailyChallengeRoute: dailyAdapter?.dailyRoute,
       })
     : null;
   const currentEvent = picks.event;
