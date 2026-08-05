@@ -20,7 +20,7 @@ const mocks = vi.hoisted(() => ({
   },
   picks: {
     event: null as PickEvent | null,
-    selections: [] as Array<{ eventId: string; boutId: string; fighterSlug: string }>,
+    selections: {} as Record<string, string>,
     loading: false,
     summary: {
       correct: 0,
@@ -158,7 +158,7 @@ describe("Your HQ", () => {
     mocks.preferences.configured = true;
     mocks.preferences.error = null;
     mocks.picks.event = pickEvent;
-    mocks.picks.selections = [];
+    mocks.picks.selections = {};
     mocks.picks.loading = false;
     mocks.picks.summary = {
       correct: 0,
@@ -209,11 +209,9 @@ describe("Your HQ", () => {
   it("shows generalized daily data, profile data, and the highest-priority next action", async () => {
     mocks.identity.profile = cody;
     mocks.preferences.favoriteFighterSlug = "georges-st-pierre";
-    mocks.picks.selections = [{
-      eventId: pickEvent.eventId,
-      boutId: "ankalaev-guskov",
-      fighterSlug: "magomed-ankalaev",
-    }];
+    mocks.picks.selections = {
+      "ankalaev-guskov": "magomed-ankalaev",
+    };
     mocks.picks.summary = {
       correct: 12,
       incorrect: 8,
