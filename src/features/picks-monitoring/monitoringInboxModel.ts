@@ -1,3 +1,5 @@
+import type { CardChangeApprovalProposal } from "./cardChangeApproval";
+
 export type MonitoringTriggerKind = "scheduled" | "manual";
 export type MonitoringRunStatus = "completed" | "partial" | "failed";
 export type MonitoringFindingSeverity = "info" | "warning" | "error";
@@ -71,6 +73,7 @@ export interface MonitoringFinding {
   beforeValue: unknown;
   afterValue: unknown;
   sourceDetails: Record<string, unknown>;
+  approvalProposal?: CardChangeApprovalProposal | null;
   detectedAt: string;
   reviewedAt: string | null;
 }

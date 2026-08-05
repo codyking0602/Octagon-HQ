@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
+import type { CardChangeApprovalProposal } from "./cardChangeApproval";
 import {
   monitoringFindingTypeLabel,
   type MonitoringFinding,
@@ -48,6 +49,13 @@ function FindingEvidence({ finding }: { finding: MonitoringFinding }) {
       </div>
     </details>
   );
+}
+
+function approvalActionLabel(proposal: CardChangeApprovalProposal) {
+  if (proposal.action === "adjust_event_lock") return "APPROVE DEADLINE";
+  if (proposal.action === "remove_bout") return "APPROVE REMOVAL";
+  if (proposal.action === "replace_fighter") return "APPROVE REPLACEMENT";
+  return "APPROVE ORDER";
 }
 
 interface MonitoringInboxPageProps {
@@ -115,6 +123,22 @@ export default function MonitoringInboxPage({ repository: suppliedRepository }: 
       : `The last provider response reported ${remaining} requests remaining.`;
     if (!window.confirm(`Run a live monitoring check now? ${quotaNote}`)) return;
     void runAction("manual", repository.runManualCheck);
+  }
+
+  function approveFinding(finding: MonitoringFinding) {
+    if (!repository?.approveFinding || !finding.approvalProposal) return;
+    const reason = window.prompt("Why are you approving this detected UFC card change?")?.trim();
+    if (!reason) return;
+    if (reason.length < 3) {
+      setError("Approval requires a reason of at least 3 characters.");
+      return;
+    }
+    if (!window.confirm(
+      `Approve and apply this detected change?\n\n${finding.summary}\n\nThe backend will reject it if the live card changed since this check.`,
+    )) return;
+    void runAction(`finding:${finding.findingId}`, () => (
+      repository.approveFinding!(finding.findingId, reason)
+    ));
   }
 
   function reviewFinding(finding: MonitoringFinding, status: "reviewed" | "dismissed") {
@@ -222,7 +246,7 @@ export default function MonitoringInboxPage({ repository: suppliedRepository }: 
               <span>{inbox.newFindings.length}</span>
             </div>
             <p className="monitoring-section__note">
-              Eligible pre-lock odds apply automatically. Event-card changes stay review-only and are never published automatically.
+              Eligible pre-lock odds apply automatically. Supported event-card changes apply only after your explicit approval; everything else remains review-only.
             </p>
             {inbox.newFindings.length ? inbox.newFindings.map((finding) => {
               const busy = busyAction === `finding:${finding.findingId}`;
@@ -235,8 +259,19 @@ export default function MonitoringInboxPage({ repository: suppliedRepository }: 
                   <h3>{finding.summary}</h3>
                   {finding.matchupIdentity ? <p>{finding.matchupIdentity.replaceAll("|", " vs. ")}</p> : null}
                   <FindingEvidence finding={finding} />
+                  {finding.approvalProposal?.action === "replace_fighter" ? (
+                    <p className="monitoring-section__note">REPICK REQUIRED FOR AFFECTED MEMBERS</p>
+                  ) : null}
                   <div className="monitoring-finding__actions">
-                    <button type="button" disabled={Boolean(busyAction)} onClick={() => reviewFinding(finding, "reviewed")}>{busy ? "SAVING…" : "MARK REVIEWED"}</button>
+                    {finding.approvalProposal ? (
+                      <button type="button" disabled={Boolean(busyAction)} onClick={() => approveFinding(finding)}>
+                        {busy ? "APPLYING…" : approvalActionLabel(finding.approvalProposal)}
+                      </button>
+                    ) : (
+                      <button type="button" disabled={Boolean(busyAction)} onClick={() => reviewFinding(finding, "reviewed")}>
+                        {busy ? "SAVING…" : "MARK REVIEWED"}
+                      </button>
+                    )}
                     <button type="button" disabled={Boolean(busyAction)} onClick={() => reviewFinding(finding, "dismissed")}>DISMISS</button>
                   </div>
                 </article>

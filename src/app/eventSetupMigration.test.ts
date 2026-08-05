@@ -98,7 +98,7 @@ describe("Phase 2B event setup backend", () => {
     expect(webkitVerifier).toContain("expectedDeploymentSha && liveDeploymentSha !== expectedDeploymentSha");
     expect(webkitVerifier).toContain("previewBody?.deployment_sha !== expectedSyncSourceSha");
     expect(webkitVerifier).toContain('name: "Automatic monitoring and card review"');
-    expect(webkitVerifier).toContain('monitoringRegion.getByRole("heading", { name: "Check now or refresh the ledger" })');
+    expect(webkitVerifier).toContain('monitoringRegion.getByRole("heading", { name: "Review only what changed" })');
     expect(webkitVerifier).not.toContain('name: "Monitoring Inbox", exact: true }).waitFor');
     expect(webkitVerifier).not.toContain('page.getByText("ACTIVE", { exact: true })');
     expect(deployWorkflow).toContain("verify-monitoring-function-deployment.mjs");

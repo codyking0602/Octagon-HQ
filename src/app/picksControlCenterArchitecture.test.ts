@@ -47,7 +47,7 @@ describe("Unified Picks Control Center architecture", () => {
     expect(setupPage).toContain('navigate("/picks/control")');
   });
 
-  it("keeps technical evidence out of the owner workflow and card changes review-only", () => {
+  it("keeps technical evidence out while explicit supported approvals remain owner-only", () => {
     expect(monitoringPage).not.toContain("SYSTEM DETAILS");
     expect(monitoringPage).not.toContain("RAW DIAGNOSTICS");
     expect(monitoringPage).not.toContain("RECENT CHECKS");
@@ -55,12 +55,13 @@ describe("Unified Picks Control Center architecture", () => {
     expect(monitoringPage).toContain("PENDING CHANGES");
     expect(monitoringPage).toContain("Review only what changed");
     expect(monitoringPage).toContain(
-      "Eligible pre-lock odds apply automatically. Event-card changes stay review-only and are never published automatically.",
+      "Supported event-card changes apply only after your explicit approval; everything else remains review-only.",
     );
+    expect(monitoringPage).toContain("repository.approveFinding!");
     expect(monitoringPage).toContain('repository.reviewFinding(finding.findingId, status)');
   });
 
-  it("adds mobile-first layout without browser polling or per-fight locks", () => {
+  it("adds mobile-first layout without browser polling or a competing lock owner", () => {
     expect(main.match(/styles\/picks-control-center\.css/g)).toHaveLength(1);
     expect(styles).toContain("@media (max-width: 480px)");
     expect(styles).toContain("grid-template-columns: 1fr");
