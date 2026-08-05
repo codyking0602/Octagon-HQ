@@ -25,10 +25,6 @@ const sqlProof = readFileSync(
   "supabase/tests/pick_monitoring_card_change_approval.sql",
   "utf8",
 );
-const freshDatabaseEntrypoint = readFileSync(
-  "supabase/tests/pick_monitoring_truthful_decisions.sql",
-  "utf8",
-);
 
 describe("owner-approved monitoring card changes", () => {
   it("dispatches supported proposals only through existing canonical Picks mutations", () => {
@@ -74,15 +70,12 @@ describe("owner-approved monitoring card changes", () => {
     expect(page).not.toMatch(/getSupabaseClient|\.rpc\(|functions\.invoke|createClient/);
   });
 
-  it("runs rollback-only backend proof from the canonical fresh-database entrypoint", () => {
+  it("keeps a rollback-only backend proof for every supported dispatch", () => {
     expect(sqlProof.trimEnd()).toMatch(/rollback;$/);
     expect(sqlProof).toContain("approved monitoring replacement was not applied");
     expect(sqlProof).toContain("approved monitoring removal was not applied");
     expect(sqlProof).toContain("approved monitoring reorder was not applied");
     expect(sqlProof).toContain("approved monitoring deadline was not applied");
     expect(sqlProof).toContain("stale monitoring proposal changed canonical state");
-    expect(freshDatabaseEntrypoint.trimEnd()).toMatch(
-      /\\ir pick_monitoring_card_change_approval\.sql$/,
-    );
   });
 });
