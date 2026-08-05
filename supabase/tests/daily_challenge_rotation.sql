@@ -81,8 +81,8 @@ begin
     raise exception 'rotation activation crossed an already-materialized historical day';
   end if;
 
-  select candidate.day,
-         private.daily_challenge_expected_game(v_schedule.version, candidate.day)
+  select candidate.day::date,
+         private.daily_challenge_expected_game(v_schedule.version, candidate.day::date)
   into v_fallback_day, v_fallback_expected
   from generate_series(
     v_schedule.starts_on,
