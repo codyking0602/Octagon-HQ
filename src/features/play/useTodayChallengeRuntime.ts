@@ -54,6 +54,9 @@ export function useTodayChallengeRuntime({
     },
     onSuccess: (projection) => {
       queryClient.setQueryData(queryKey, projection);
+      if (projection.officialAttempt) {
+        window.dispatchEvent(new Event("focus"));
+      }
     },
     onError: (error) => {
       if (error instanceof TodayChallengeRepositoryError && error.stale) {
