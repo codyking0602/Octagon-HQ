@@ -126,6 +126,8 @@
   height: 46px;
   border-radius: 13px;
   font-size: 19px;
+  line-height: 1;
+  text-align: center;
 }
 
 .play-game-card__status {
@@ -150,17 +152,6 @@
 .play-game-card > small {
   font-size: 11px;
   line-height: 1.32;
-}
-
-.play-games__grid > .play-game-card:last-child .play-game-card__icon {
-  font-size: 0;
-}
-
-.play-games__grid > .play-game-card:last-child .play-game-card__icon::after {
-  content: "1+";
-  font-size: 19px;
-  font-weight: 1000;
-  letter-spacing: -.06em;
 }
 
 @media (max-width: 420px) {
