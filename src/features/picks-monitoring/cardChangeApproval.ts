@@ -27,6 +27,18 @@ export type CardChangeApprovalProposal =
       expected_blue_fighter_slug: string;
     }
   | {
+      action: "add_bout";
+      event_id: string;
+      expected_bout_ids: string[];
+      red_fighter_slug: string;
+      red_fighter_name: string;
+      blue_fighter_slug: string;
+      blue_fighter_name: string;
+      weight_class: string;
+      card_segment: "main" | "prelim";
+      position: number;
+    }
+  | {
       action: "remove_bout";
       event_id: string;
       bout_id: string;
@@ -78,7 +90,7 @@ interface ApprovalSourceEvent extends ApprovalMonitoringEvent {
   source_url: string;
 }
 
-type ChangeField = "venue" | "location" | "weight_class" | "locks_at" | "fight_order" | "fighters" | "included_in_picks" | "other";
+type ChangeField = "venue" | "location" | "weight_class" | "locks_at" | "fight_order" | "fighters" | "included_in_picks" | "added_bout" | "other";
 
 function stableKey(...values: unknown[]) {
   return values
@@ -228,6 +240,7 @@ export function buildCardChangeFindings(input: {
   const consumedCurrent = new Set<string>();
   const consumedSource = new Set<string>();
   const handledSummaries = new Set<string>();
+  const expectedOrder = canonicalBouts.map((bout) => bout.bout_id);
 
   if (unmatchedCurrent.length === 1 && unmatchedSource.length === 1
     && canonicalBouts.indexOf(unmatchedCurrent[0]) === sourceBouts.indexOf(unmatchedSource[0])) {
@@ -289,7 +302,46 @@ export function buildCardChangeFindings(input: {
     }
   }
 
-  const expectedOrder = canonicalBouts.map((bout) => bout.bout_id);
+  const additionsAreUnambiguous = unmatchedCurrent.every((bout) => consumedCurrent.has(matchup(bout)));
+  if (additionsAreUnambiguous) {
+    for (const sourceBout of unmatchedSource) {
+      if (consumedSource.has(matchup(sourceBout))) continue;
+      const weightClass = textValue(sourceBout.weight_class);
+      if (!weightClass) continue;
+      const position = sourceBouts.indexOf(sourceBout) + 1;
+      const cardSegment = /^prelim-/.test(sourceBout.bout_id) ? "prelim" : "main";
+      consumedSource.add(matchup(sourceBout));
+      result.push(finding({
+        identity: input.identity,
+        kind: input.kind,
+        detectedAt: input.detectedAt,
+        summary: `Add ${sourceBout.red_fighter_name} vs. ${sourceBout.blue_fighter_name} to Picks.`,
+        subjectKey: `bout:add:${matchup(sourceBout)}`,
+        field: "added_bout",
+        beforeValue: null,
+        afterValue: {
+          position,
+          weight_class: weightClass,
+          red_fighter_name: sourceBout.red_fighter_name,
+          blue_fighter_name: sourceBout.blue_fighter_name,
+        },
+        matchupIdentity: matchup(sourceBout),
+        proposal: {
+          action: "add_bout",
+          event_id: input.eventId,
+          expected_bout_ids: expectedOrder,
+          red_fighter_slug: sourceBout.red_fighter_slug,
+          red_fighter_name: sourceBout.red_fighter_name,
+          blue_fighter_slug: sourceBout.blue_fighter_slug,
+          blue_fighter_name: sourceBout.blue_fighter_name,
+          weight_class: weightClass,
+          card_segment: cardSegment,
+          position,
+        },
+      }));
+    }
+  }
+
   const proposedOrder = sourceBouts
     .map((bout) => currentByMatchup.get(matchup(bout))?.bout_id ?? null)
     .filter((boutId): boutId is string => Boolean(boutId));
