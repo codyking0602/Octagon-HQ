@@ -9,7 +9,7 @@ const integrationSql = readFileSync(
   "supabase/tests/approved_live_fight_removals.sql",
   "utf8",
 );
-const controlPage = readFileSync("src/features/picks-control/PicksControlPage.tsx", "utf8");
+const openDashboard = readFileSync("src/features/picks-control/OpenPicksDashboard.tsx", "utf8");
 const picksPage = readFileSync("src/features/picks/PicksPage.tsx", "utf8");
 const seasonHub = readFileSync("src/features/picks/PicksSeasonHub.tsx", "utf8");
 const monitoring = readFileSync("src/features/picks-monitoring/manualMonitoringRunner.ts", "utf8");
@@ -43,12 +43,11 @@ describe("approved pre-lock live fight removal", () => {
     expect(sql).toContain("all included bout results must be resolved before completion");
   });
 
-  it("keeps control and player presentation explicit rather than silently hiding the bout", () => {
-    expect(controlPage).toContain("REMOVE FROM PICKS");
-    expect(controlPage).toContain("RESTORE TO PICKS");
-    expect(controlPage).toContain("submitted picks stay preserved");
-    expect(picksPage).toContain("REMOVED FROM PICKS · EXCLUDED FROM SCORING");
-    expect(picksPage).toContain("bout.includedInPicks === false");
+  it("removes the fight from ordinary owner and player cards while retaining private audit state", () => {
+    expect(openDashboard).toContain("REMOVE FROM PICKS");
+    expect(openDashboard).toContain(".filter((bout) => bout.includedInPicks)");
+    expect(openDashboard).toContain("Submitted picks remain only in the private audit history");
+    expect(picksPage).toContain(".filter((bout) => bout.includedInPicks !== false)");
     expect(seasonHub).toContain("Excluded from scoring");
   });
 
