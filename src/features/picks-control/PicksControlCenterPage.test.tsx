@@ -338,7 +338,8 @@ describe("Unified Picks Control Center", () => {
 
     expect(await screen.findByText("1 FIGHT NEED RESULTS")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "ENTER RESULTS" })).toHaveAttribute("href", "#fight-night");
-    fireEvent.click(screen.getByRole("button", { name: "RED WINNER Red Fighter" }));
+    const redWinner = await screen.findByRole("button", { name: "RED WINNER Red Fighter" });
+    fireEvent.click(redWinner);
     await waitFor(() => expect(control.recordResult).toHaveBeenCalledWith("ufc-control", "red-blue-1", "red_win"));
   });
 
