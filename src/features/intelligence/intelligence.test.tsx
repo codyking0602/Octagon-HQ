@@ -40,7 +40,7 @@ describe("Octagon Verdict Intelligence flow", () => {
     expect(await screen.findByRole("heading", { name: "Compare fighters" })).toBeInTheDocument();
     expect(screen.getByLabelText("First fighter")).toHaveDisplayValue("Matt Hughes");
     expect(screen.getByLabelText("Second fighter")).toHaveDisplayValue("Choose opponent");
-    expect(screen.getByLabelText("Second fighter")).toHaveFocus();
+    await waitFor(() => expect(screen.getByLabelText("Second fighter")).toHaveFocus());
     expect(router.state.location.pathname).toBe("/intelligence");
     expect(router.state.location.search).toBe("?mode=compare&fighter=matt-hughes");
   });
