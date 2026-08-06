@@ -67,7 +67,7 @@ describe("Unified Picks Control Center architecture", () => {
     expect(setupPage).toContain('navigate("/picks/control")');
   });
 
-  it("keeps technical evidence out while explicit supported approvals remain owner-only", () => {
+  it("keeps technical evidence out while supported changes remain confirmation-only and owner-only", () => {
     expect(monitoringPage).not.toContain("SYSTEM DETAILS");
     expect(monitoringPage).not.toContain("RAW DIAGNOSTICS");
     expect(monitoringPage).not.toContain("RECENT CHECKS");
@@ -75,7 +75,7 @@ describe("Unified Picks Control Center architecture", () => {
     expect(monitoringPage).toContain("PENDING CHANGES");
     expect(monitoringPage).toContain("Review only what changed");
     expect(monitoringPage).toContain(
-      "Supported event-card changes apply only after your explicit approval; everything else remains review-only.",
+      "Supported event-card changes apply only after your confirmation; everything else remains review-only.",
     );
     expect(monitoringPage).toContain("repository.approveFinding!");
     expect(monitoringPage).toContain('repository.reviewFinding(finding.findingId, status)');
