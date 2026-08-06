@@ -45,7 +45,7 @@ describe("production Picks Control Center WebKit verification", () => {
     expect(verifier).toContain('getByRole("button", { name: "CHECK NOW" })');
     expect(verifier).toContain('getByRole("button", { name: "REFRESH STATUS" })');
     expect(verifier).toContain('getByLabel("Pending changes all clear")');
-    expect(verifier).toContain('getByRole("heading", { name: "Review only what changed" })');
+    expect(verifier).toContain('getByRole("heading", { name: "One finding, one clear decision" })');
     expect(verifier).toContain('getByRole("region", { name: /compact fight controls$/ })');
     expect(verifier).toContain('fightRegion.locator(".open-pick-row__summary")');
     expect(verifier).toContain("Manage Open Picks rendered ${fightRowCount} compact fight rows; expected multiple rows.");

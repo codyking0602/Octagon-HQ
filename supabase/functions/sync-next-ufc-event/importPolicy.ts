@@ -89,6 +89,34 @@ function timeAfterLabel(text: string, label: "Main Card" | "Prelims") {
   return Array.from(new Set(values));
 }
 
+function offsetMinutes(value: string) {
+  const zone = value.match(/\b([A-Z]{2,5})$/)?.[1] ?? "";
+  const offset = fixedOffsets[zone];
+  const match = offset?.match(/^([+-])(\d{2}):(\d{2})$/);
+  if (!match) return null;
+  const minutes = Number(match[2]) * 60 + Number(match[3]);
+  return match[1] === "-" ? -minutes : minutes;
+}
+
+function localDateFromOfficialTimestamp(referenceIso: string, text: string) {
+  const reference = new Date(referenceIso);
+  if (!Number.isFinite(reference.getTime())) return null;
+  const offsets = Array.from(new Set(
+    timeAfterLabel(text, "Main Card")
+      .map(offsetMinutes)
+      .filter((value): value is number => value !== null),
+  ));
+  if (offsets.length !== 1) return null;
+  const local = new Date(reference.getTime() + offsets[0]! * 60_000);
+  return {
+    localEventDate: [
+      local.getUTCFullYear(),
+      String(local.getUTCMonth() + 1).padStart(2, "0"),
+      String(local.getUTCDate()).padStart(2, "0"),
+    ].join("-"),
+  };
+}
+
 function toIso(localEventDate: string, value: string) {
   const match = value.match(/^(\d{1,2}):(\d{2})\s+([AP]M)\s+([A-Z]{2,5})$/);
   if (!match) return "";
@@ -122,7 +150,8 @@ export function parseOfficialUfcSegmentTimes(
   now = new Date(),
 ): OfficialUfcSegmentTimes {
   const text = clean(visibleText);
-  const date = localDateParts(text, referenceYear(referenceIso, now));
+  const date = localDateParts(text, referenceYear(referenceIso, now))
+    ?? localDateFromOfficialTimestamp(referenceIso, text);
   if (!date) throw new Error("Official UFC event date was not labeled safely.");
 
   const labeledMain = singleLabeledTime(text, "Main Card", date.localEventDate);

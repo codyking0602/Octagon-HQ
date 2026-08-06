@@ -39,6 +39,39 @@ describe("Picks event import policy", () => {
     });
   });
 
+  it("uses the official structured timestamp only to recover a hidden local date", () => {
+    expect(parseOfficialUfcSegmentTimes(
+      "UFC Fight Night Gamrot vs Salkilld Start Times Main Card 5:00 PM EDT",
+      "2026-08-08T21:00:00.000Z",
+      false,
+      new Date("2026-08-03T12:00:00Z"),
+    )).toEqual({
+      mainCardStartsAt: "2026-08-08T21:00:00.000Z",
+      prelimsStartsAt: "",
+      localEventDate: "2026-08-08",
+    });
+
+    expect(parseOfficialUfcSegmentTimes(
+      "UFC Fight Night Gamrot vs Salkilld Start Times Prelims 2:00 PM EDT Main Card 5:00 PM EDT",
+      "2026-08-08T18:00:00.000Z",
+      false,
+      new Date("2026-08-03T12:00:00Z"),
+    )).toEqual({
+      mainCardStartsAt: "2026-08-08T21:00:00.000Z",
+      prelimsStartsAt: "",
+      localEventDate: "2026-08-08",
+    });
+  });
+
+  it("still fails closed without official date or timestamp-zone evidence", () => {
+    expect(() => parseOfficialUfcSegmentTimes(
+      "UFC Fight Night Start Times Main Card 5:00 PM XYZ",
+      "not-a-timestamp",
+      false,
+      new Date("2026-08-03T12:00:00Z"),
+    )).toThrow("Official UFC event date was not labeled safely");
+  });
+
   it("stores both numbered-event anchors and rejects contradictory official times", () => {
     expect(parseOfficialUfcSegmentTimes(
       "UFC 330 Sat, Aug 15 / 9:00 PM EDT / Main Card Start Times Early Prelims 5:00 PM EDT Prelims 7:00 PM EDT Main Card 9:00 PM EDT",

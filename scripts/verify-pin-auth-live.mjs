@@ -292,15 +292,15 @@ try {
         name: /^AUTO-SYNC (CHECKED THE EVENT|IS WAITING FOR ITS NEXT CHECK|HAS PARTIAL COVERAGE|NEEDS ATTENTION)$/,
       }).waitFor({ state: "visible", timeout: 15_000 });
       await monitoringRegion.getByRole("button", { name: "CHECK NOW" }).waitFor({ state: "visible", timeout: 15_000 });
-      if (await monitoringRegion.getByText("CURRENT EVENT", { exact: true }).count()) {
-        throw new Error("The unified dashboard repeated the current event inside monitoring.");
+      if (await monitoringRegion.locator(".monitoring-event").count()) {
+        throw new Error("The unified dashboard repeated the standalone current event card inside monitoring.");
       }
       if (await monitoringRegion.getByRole("link", { name: "OPEN UFC EVENT SOURCE" }).count() > 1) {
         throw new Error("The unified dashboard rendered more than one event source link.");
       }
 
       const allClear = monitoringRegion.getByLabel("Pending changes all clear");
-      const pendingChanges = monitoringRegion.getByRole("heading", { name: "Review only what changed" });
+      const pendingChanges = monitoringRegion.getByRole("heading", { name: "One finding, one clear decision" });
       if (!await allClear.count() && !await pendingChanges.count()) {
         throw new Error("Monitoring rendered neither its compact all-clear state nor its pending findings workflow.");
       }
@@ -343,7 +343,7 @@ try {
 
       monitoringOutcome = `loaded visible truthful automation, a compact review state, and ${fightRowCount} collapsed fight rows with one-detail-at-a-time controls`;
     } else {
-      await monitoringRegion.getByRole("heading", { name: "Review only what changed" }).waitFor({ state: "visible", timeout: 15_000 });
+      await monitoringRegion.getByRole("heading", { name: "One finding, one clear decision" }).waitFor({ state: "visible", timeout: 15_000 });
       monitoringOutcome = "confirmed the currently deployed main frontend still satisfies its legacy monitoring contract before this exact UI head is deployed";
     }
   } else if (isSetupLifecycle(controlStatus) || isActiveEventLifecycle(controlStatus)) {
