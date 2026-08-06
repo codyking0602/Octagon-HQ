@@ -104,9 +104,48 @@ describe("monitoring card-change approval proposals", () => {
     });
   });
 
+  it("stores exact before and after values while ignoring cosmetic text differences", () => {
+    const changed = findings({
+      ...source,
+      venue: "New Arena",
+      location: "Austin, Texas",
+      bouts: [{ ...first, weight_class: "Catchweight" }, second],
+    });
+
+    expect(changed).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        summary: "Venue changed.",
+        before_value: "Test Arena",
+        after_value: "New Arena",
+      }),
+      expect.objectContaining({
+        summary: "Location changed.",
+        before_value: "Dallas, Texas",
+        after_value: "Austin, Texas",
+      }),
+      expect.objectContaining({
+        summary: "Weight class changed for Alpha vs. Beta.",
+        before_value: "Lightweight",
+        after_value: "Catchweight",
+      }),
+    ]));
+
+    expect(findings({
+      ...source,
+      venue: "  TEST   ARENA ",
+      location: "DALLAS TEXAS",
+      bouts: [{ ...first, weight_class: "LIGHTWEIGHT" }, second],
+    })).toEqual([]);
+  });
+
   it("fails closed for staged cards and ambiguous source changes", () => {
     const staged = findings({ ...source, bouts: [second, first] }, "staged");
     expect(staged.some((item) => item.source_details?.approval_proposal)).toBe(false);
+    expect(staged[0]).toMatchObject({
+      summary: "Fight order changed.",
+      before_value: ["Alpha vs. Beta", "Gamma vs. Delta"],
+      after_value: ["Gamma vs. Delta", "Alpha vs. Beta"],
+    });
 
     const ambiguousReplacement = findings({
       ...source,
