@@ -1,104 +1,98 @@
--- Preserve the exact selections invalidated by the canonical fighter-replacement
--- owner without adding a second mutation path. The existing current-event
--- projection continues to read before_state.invalidated_picks.
+-- Preserve exact invalidated selections inside the canonical fight-change owner.
+-- The existing player projection continues to read before_state.invalidated_picks.
 
-create or replace function private.capture_invalidated_pick_evidence()
-returns trigger
-language plpgsql
-security definer
-set search_path = ''
-as $$
-declare
-  v_evidence jsonb := coalesce(
-    nullif(current_setting('octagon.pick_invalidated_evidence', true), '')::jsonb,
-    '[]'::jsonb
-  );
-begin
-  perform set_config(
-    'octagon.pick_invalidated_evidence',
-    (v_evidence || jsonb_build_array(to_jsonb(old)))::text,
-    true
-  );
-  return old;
-end;
-$$;
-revoke all on function private.capture_invalidated_pick_evidence()
+alter function private.apply_pick_fight_change(text,text,jsonb,text)
+  rename to apply_pick_fight_change_repick_evidence_core;
+revoke all on function private.apply_pick_fight_change_repick_evidence_core(text,text,jsonb,text)
   from public, anon, authenticated, service_role;
 
-drop trigger if exists capture_invalidated_pick_evidence
-  on public.profile_event_picks;
-create trigger capture_invalidated_pick_evidence
-before delete on public.profile_event_picks
-for each row execute function private.capture_invalidated_pick_evidence();
-
-create or replace function private.attach_pick_replacement_evidence()
-returns trigger
+create function private.apply_pick_fight_change(
+  p_action text,
+  p_event_id text,
+  p_payload jsonb,
+  p_reason text
+)
+returns jsonb
 language plpgsql
 security definer
 set search_path = ''
 as $$
 declare
-  v_evidence jsonb := '[]'::jsonb;
-  v_matches jsonb := '[]'::jsonb;
+  v_action text := lower(trim(coalesce(p_action, '')));
+  v_event_id text := lower(trim(coalesce(p_event_id, '')));
+  v_bout_id text := lower(trim(coalesce(p_payload->>'bout_id', '')));
+  v_invalidated_picks jsonb := '[]'::jsonb;
+  v_before jsonb;
+  v_after jsonb;
+  v_receipt jsonb;
+  v_audit_id bigint;
 begin
-  if new.action_type <> 'replace_fighter' then
-    return new;
-  end if;
-
-  if tg_op = 'INSERT' then
-    v_evidence := coalesce(
-      nullif(current_setting('octagon.pick_invalidated_evidence', true), '')::jsonb,
-      '[]'::jsonb
-    );
-
+  if v_action = 'replace_fighter' then
     select coalesce(
-      jsonb_agg(entry.value order by entry.value->>'profile_id'),
+      jsonb_agg(to_jsonb(pick) order by pick.profile_id),
       '[]'::jsonb
     )
-    into v_matches
-    from jsonb_array_elements(v_evidence) as entry(value)
-    where entry.value->>'event_id' = new.event_id
-      and entry.value->>'bout_id' = new.bout_id;
-
-    new.before_state := coalesce(new.before_state, '{}'::jsonb)
-      || jsonb_build_object('invalidated_picks', v_matches);
-    new.after_state := coalesce(new.after_state, '{}'::jsonb)
-      || jsonb_build_object('invalidated_picks', v_matches);
-
-    perform set_config('octagon.pick_invalidated_evidence', '[]', true);
-    return new;
+    into v_invalidated_picks
+    from public.profile_event_picks pick
+    where pick.event_id = v_event_id
+      and pick.bout_id = v_bout_id;
   end if;
 
-  v_matches := coalesce(new.before_state->'invalidated_picks', '[]'::jsonb);
-  if jsonb_typeof(v_matches) <> 'array' then
-    raise exception 'replacement invalidated-pick evidence must be an array';
+  v_receipt := private.apply_pick_fight_change_repick_evidence_core(
+    p_action,
+    p_event_id,
+    p_payload,
+    p_reason
+  );
+
+  if v_action <> 'replace_fighter' then
+    return v_receipt;
   end if;
 
-  new.receipt := coalesce(new.receipt, '{}'::jsonb)
+  v_audit_id := nullif(v_receipt->>'audit_id', '')::bigint;
+  if v_audit_id is null then
+    raise exception 'replacement audit receipt required';
+  end if;
+
+  update public.pick_card_change_actions action
+  set before_state = coalesce(action.before_state, '{}'::jsonb)
+        || jsonb_build_object('invalidated_picks', v_invalidated_picks),
+      after_state = coalesce(action.after_state, '{}'::jsonb)
+        || jsonb_build_object('invalidated_picks', v_invalidated_picks)
+  where action.action_id = v_audit_id
+  returning action.before_state, action.after_state
+  into v_before, v_after;
+
+  if not found then
+    raise exception 'replacement audit action not found';
+  end if;
+
+  v_receipt := coalesce(v_receipt, '{}'::jsonb)
     || jsonb_build_object(
-      'invalidated_picks', v_matches,
-      'before_value', new.before_state,
-      'after_value', new.after_state
+      'invalidated_picks', v_invalidated_picks,
+      'before_value', v_before,
+      'after_value', v_after
     );
-  return new;
+
+  update public.pick_card_change_actions
+  set receipt = v_receipt
+  where action_id = v_audit_id;
+
+  return v_receipt;
 end;
 $$;
-revoke all on function private.attach_pick_replacement_evidence()
+revoke all on function private.apply_pick_fight_change(text,text,jsonb,text)
   from public, anon, authenticated, service_role;
+comment on function private.apply_pick_fight_change(text,text,jsonb,text) is
+  'Sole transactional owner for approved fight changes, including exact fighter-replacement invalidation evidence.';
 
-drop trigger if exists attach_pick_replacement_evidence
-  on public.pick_card_change_actions;
-create trigger attach_pick_replacement_evidence
-before insert or update of receipt on public.pick_card_change_actions
-for each row execute function private.attach_pick_replacement_evidence();
-
--- Keep the existing dispatcher as the sole approval core. This public adapter
--- only normalizes the final receipt after that core has completed its mutation.
+-- Keep the existing approval dispatcher as the sole mutation core. This public
+-- adapter only makes the final finding receipt identical to its audit receipt.
 alter function public.approve_pick_monitoring_finding(uuid,text)
-  rename to approve_pick_monitoring_finding_repick_evidence_core;
-alter function public.approve_pick_monitoring_finding_repick_evidence_core(uuid,text)
+  rename to approve_pick_monitoring_finding_receipt_core;
+alter function public.approve_pick_monitoring_finding_receipt_core(uuid,text)
   set schema private;
-revoke all on function private.approve_pick_monitoring_finding_repick_evidence_core(uuid,text)
+revoke all on function private.approve_pick_monitoring_finding_receipt_core(uuid,text)
   from public, anon, authenticated, service_role;
 
 create function public.approve_pick_monitoring_finding(
@@ -116,9 +110,8 @@ declare
   v_final_receipt jsonb;
   v_audit_id bigint;
 begin
-  -- The private core remains the dispatcher that delegates fight changes to
-  -- private.apply_pick_fight_change.
-  v_receipt := private.approve_pick_monitoring_finding_repick_evidence_core(
+  -- The private core delegates fight mutations to private.apply_pick_fight_change.
+  v_receipt := private.approve_pick_monitoring_finding_receipt_core(
     p_finding_id,
     p_reason
   );
@@ -155,8 +148,7 @@ revoke all on function public.approve_pick_monitoring_finding(uuid,text)
   from public, anon;
 grant execute on function public.approve_pick_monitoring_finding(uuid,text)
   to authenticated;
-
 comment on function public.approve_pick_monitoring_finding(uuid,text) is
-  'Public approval adapter that returns and persists the exact canonical audit receipt.';
+  'Returns and persists the exact canonical audit receipt for an approved monitoring finding.';
 
 notify pgrst, 'reload schema';
