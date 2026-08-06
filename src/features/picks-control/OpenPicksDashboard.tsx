@@ -299,7 +299,8 @@ export default function OpenPicksDashboard({
   }
 
   function addFight() {
-    if (!event?.canReorder || !repository) return;
+    const addBout = repository?.addBout;
+    if (!event?.canReorder || !addBout) return;
     const redFighterName = window.prompt("Enter the first fighter’s canonical display name:")?.trim();
     if (!redFighterName) return;
     const blueFighterName = window.prompt("Enter the second fighter’s canonical display name:")?.trim();
@@ -326,7 +327,7 @@ export default function OpenPicksDashboard({
     )) return;
     void runAction(
       "add",
-      () => repository.addBout(event.eventId, canonicalOrder, {
+      () => addBout(event.eventId, canonicalOrder, {
         redFighterName,
         blueFighterName,
         weightClass,
@@ -419,7 +420,7 @@ export default function OpenPicksDashboard({
           </div>
           <div className="open-picks-reorder__actions">
             {event.hasReorderHistory ? <small>PRIOR ORDER CHANGE AUDITED</small> : null}
-            {event.canReorder ? (
+            {event.canReorder && repository?.addBout ? (
               <button className="secondary-action" type="button" disabled={Boolean(busyAction)} onClick={addFight}>
                 {busyAction === "add" ? "ADDING…" : "ADD FIGHT"}
               </button>
