@@ -134,7 +134,7 @@ describe("compact monitoring change values", () => {
     renderInbox(inbox("UFC Apex", "UFC APEX"));
 
     expect(await screen.findByLabelText("Pending changes all clear")).toBeInTheDocument();
-    expect(screen.getByLabelText("Automation status")).toHaveTextContent("CHANGES TO REVIEW0");
+    expect(screen.getByLabelText("Automation status")).toHaveTextContent("OWNER FINDINGS0");
     expect(screen.queryByText("Venue changed.")).not.toBeInTheDocument();
   });
 });

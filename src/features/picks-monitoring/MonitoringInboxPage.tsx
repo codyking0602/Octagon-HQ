@@ -8,20 +8,51 @@ import {
 import {
   monitoringFindingTypeLabel,
   type MonitoringFinding,
+  type MonitoringRun,
 } from "./monitoringInboxModel";
 import {
   createMonitoringInboxRepository,
   type MonitoringInboxRepository,
 } from "./monitoringInboxRepository";
 
+function validTimestamp(value: string | null | undefined) {
+  return Boolean(value && Number.isFinite(Date.parse(value)));
+}
+
 function displayTime(value: string | null | undefined) {
-  if (!value) return "NOT YET";
+  if (!validTimestamp(value)) return "NOT YET";
   return new Intl.DateTimeFormat(undefined, {
     month: "short",
     day: "numeric",
     hour: "numeric",
     minute: "2-digit",
-  }).format(new Date(value));
+  }).format(new Date(value!));
+}
+
+function displayDate(value: string | null | undefined) {
+  if (!validTimestamp(value)) return "UNKNOWN";
+  return new Intl.DateTimeFormat(undefined, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date(value!));
+}
+
+function nextSchedulerWake(schedule: string | null, generatedAt: string) {
+  const match = schedule?.trim().match(/^(\d{1,2}) \* \* \* \*$/);
+  if (!match || !validTimestamp(generatedAt)) return null;
+  const minute = Number(match[1]);
+  if (!Number.isInteger(minute) || minute < 0 || minute > 59) return null;
+  const next = new Date(generatedAt);
+  next.setUTCSeconds(0, 0);
+  next.setUTCMinutes(minute);
+  if (next.getTime() <= Date.parse(generatedAt)) next.setUTCHours(next.getUTCHours() + 1);
+  return next.toISOString();
+}
+
+function monthlyResetDate(reference: string) {
+  const date = validTimestamp(reference) ? new Date(reference) : new Date();
+  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + 1, 1)).toISOString();
 }
 
 function readableError(error: unknown) {
@@ -76,6 +107,39 @@ function FindingEvidence({ finding }: { finding: MonitoringFinding }) {
       <span title={after}>{after}</span>
     </p>
   );
+}
+
+function providerWasCalled(run: MonitoringRun | null | undefined) {
+  return Boolean(run && (
+    run.oddsProvider
+    || run.providerRequestsUsed !== null
+    || run.providerLastRequestCost !== null
+    || run.providerEventCount > 0
+  ));
+}
+
+function uniqueRuns(latestRun: MonitoringRun | null, recentRuns: MonitoringRun[]) {
+  const runs = new Map<string, MonitoringRun>();
+  if (latestRun) runs.set(latestRun.runId, latestRun);
+  recentRuns.forEach((run) => {
+    if (!runs.has(run.runId)) runs.set(run.runId, run);
+  });
+  return [...runs.values()].sort((left, right) => (
+    Date.parse(right.completedAt ?? right.startedAt) - Date.parse(left.completedAt ?? left.startedAt)
+  ));
+}
+
+function runFailureDetail(run: MonitoringRun | null, findings: MonitoringFinding[]) {
+  if (!run) return "NONE RECORDED";
+  const providerFinding = findings.find((finding) => (
+    finding.runId === run.runId && finding.findingType === "provider_error"
+  ));
+  if (providerFinding) return `${displayTime(providerFinding.detectedAt)} · ${providerFinding.summary}`;
+  const diagnostic = run.diagnostics.find((value) => typeof value === "string" && value.trim());
+  if (typeof diagnostic === "string") {
+    return `${displayTime(run.completedAt ?? run.startedAt)} · ${diagnostic}`;
+  }
+  return `${displayTime(run.completedAt ?? run.startedAt)} · Provider call failed.`;
 }
 
 interface MonitoringInboxPageProps {
@@ -150,9 +214,9 @@ export default function MonitoringInboxPage({
     if (!repository) return;
     const remaining = inbox?.latestRun?.providerRequestsRemaining;
     const quotaNote = remaining === null || remaining === undefined
-      ? "This will use the configured monitoring provider."
-      : `The last provider response reported ${remaining} requests remaining.`;
-    if (!window.confirm(`Run a live monitoring check now? ${quotaNote}`)) return;
+      ? "This explicitly requested check will use one provider request."
+      : `This explicitly requested check will use one provider request. ${remaining} requests remaining after the last provider call.`;
+    if (!window.confirm(`Run the complete UFC card and odds monitoring operation now? ${quotaNote}`)) return;
     void runAction("manual", repository.runManualCheck);
   }
 
@@ -202,14 +266,74 @@ export default function MonitoringInboxPage({
   const automationDetail = !schedulerReady
     ? "Automatic monitoring is not fully configured. Run a check now and review the result."
     : scheduledFailure
-      ? `Auto-sync could not complete its scheduled event check ${displayTime(decision?.attemptedAt)}. Run a check now and review the result.`
+      ? decision?.providerCalled
+        ? `The scheduled provider check failed ${displayTime(decision.attemptedAt)}.`
+        : `Auto-sync failed before a provider call ${displayTime(decision?.attemptedAt)}.`
       : partialCoverage
         ? `The scheduled provider check at ${displayTime(decision?.attemptedAt)} returned partial coverage.`
         : scheduledProviderWorked
           ? `Last scheduled provider check ${displayTime(decision?.attemptedAt)}.`
           : `Auto-sync reviewed its schedule ${displayTime(inbox?.scheduler.lastWakeStartedAt)}, but ${skippedReason}.`;
-  const sourceUrl = inbox?.latestRun?.cardSourceUrl ?? null;
+
   const pendingFindings = inbox?.newFindings.filter((finding) => !isEquivalentFinding(finding)) ?? [];
+  const allFindings = [...(inbox?.newFindings ?? []), ...(inbox?.reviewedFindings ?? [])]
+    .filter((finding, index, findings) => findings.findIndex((item) => item.findingId === finding.findingId) === index);
+  const runs = inbox ? uniqueRuns(inbox.latestRun, inbox.recentRuns) : [];
+  const latestRun = inbox?.latestRun ?? null;
+  const latestRunFindings = latestRun ? allFindings.filter((finding) => finding.runId === latestRun.runId) : [];
+  const latestCardCheck = runs.find((run) => Boolean(run.cardSource || run.cardSourceUrl)) ?? null;
+  const latestProviderCall = runs.find(providerWasCalled) ?? null;
+  const lastSuccessfulProviderCall = runs.find((run) => (
+    providerWasCalled(run) && (run.status === "completed" || run.status === "partial")
+  )) ?? null;
+  const lastProviderFailure = runs.find((run) => providerWasCalled(run) && run.status === "failed") ?? null;
+  const coverageMatched = latestRun?.completeSnapshotCount ?? 0;
+  const coverageMissing = latestRun?.missingSnapshotCount ?? 0;
+  const coverageTotal = coverageMatched + coverageMissing;
+  const oddsUpdated = latestRunFindings.filter((finding) => (
+    (finding.findingType === "odds_available" || finding.findingType === "odds_change")
+    && finding.sourceDetails.automatically_applied === true
+  )).length;
+  const oddsUnchanged = Math.max(0, coverageMatched - oddsUpdated);
+  const unmatched = latestRunFindings.filter((finding) => finding.findingType === "unmatched_fight").length;
+  const cardChanges = latestRunFindings.filter((finding) => finding.findingType === "card_change").length;
+  const providerFailures = latestRunFindings.filter((finding) => finding.findingType === "provider_error");
+  const sourceFailures = latestRun?.status === "failed" && !providerWasCalled(latestRun);
+  const schedulerWake = inbox ? nextSchedulerWake(inbox.scheduler.schedule, inbox.generatedAt) : null;
+  const nextProviderCall = inbox?.scheduleState?.nextEligibleAt ?? null;
+  const nextWakeConsumesRequest = Boolean(
+    schedulerWake && nextProviderCall && Date.parse(nextProviderCall) <= Date.parse(schedulerWake),
+  );
+  const quotaUsed = latestProviderCall?.providerRequestsUsed ?? null;
+  const quotaRemaining = latestProviderCall?.providerRequestsRemaining ?? null;
+  const quotaReset = monthlyResetDate(
+    latestProviderCall?.completedAt ?? latestProviderCall?.startedAt ?? inbox?.generatedAt ?? "",
+  );
+  const monitoredSource = latestCardCheck?.cardSource ?? "NOT RECORDED";
+  const sourceUrl = latestCardCheck?.cardSourceUrl ?? null;
+  const latestRunAt = latestRun?.completedAt ?? latestRun?.startedAt ?? null;
+  const latestProviderCalled = providerWasCalled(latestRun);
+  const latestOutcome = latestRun?.status === "completed"
+    ? "checked successfully"
+    : latestRun?.status === "partial"
+      ? "completed with partial coverage"
+      : latestRun?.status === "failed"
+        ? "failed"
+        : "has not run";
+  const latestReceipt = latestRun
+    ? [
+        `${displayTime(latestRunAt)} — UFC card ${latestOutcome}.`,
+        latestProviderCalled ? "Odds provider called." : "Odds provider not called.",
+        latestProviderCalled
+          ? `${coverageMatched}/${coverageTotal || inbox?.monitoredEvent?.boutCount || 0} fights matched, ${oddsUpdated} odds updated, ${oddsUnchanged} unchanged, ${unmatched} unmatched.`
+          : null,
+        `${cardChanges} card ${cardChanges === 1 ? "change" : "changes"} found.`,
+        quotaRemaining === null ? null : `${quotaRemaining} monthly requests remain.`,
+      ].filter(Boolean).join(" ")
+    : "No authoritative monitoring execution receipt has been recorded yet.";
+  const unmatchedWarning = unmatched === 1
+    ? "1 monitored fight is unmatched and needs review."
+    : `${unmatched} monitored fights are unmatched and need review.`;
 
   return (
     <div className={`page monitoring-inbox-page${embedded ? " monitoring-inbox-page--embedded" : ""}`}>
@@ -243,17 +367,48 @@ export default function MonitoringInboxPage({
                 <p className="eyebrow">AUTOMATION</p>
                 <h2>{automationTitle}</h2>
               </div>
-              <span>{automationNeedsAttention ? "CHECK" : "ACTIVE"}</span>
+              <span>{schedulerReady ? "ENABLED" : "DISABLED"}</span>
             </div>
             <p>{automationDetail}</p>
+
             <div className="monitoring-status__grid" aria-label="Automation status">
-              <div><span>NEXT CHECK</span><strong>{displayTime(inbox.scheduleState?.nextEligibleAt)}</strong></div>
-              <div><span>CHANGES TO REVIEW</span><strong>{pendingFindings.length}</strong></div>
+              <div><span>NEXT SCHEDULER WAKE</span><strong>{displayTime(schedulerWake)}</strong></div>
+              <div><span>NEXT PROVIDER CALL</span><strong>{displayTime(nextProviderCall)}</strong></div>
+              <div><span>LAST SCHEDULER WAKE</span><strong>{displayTime(inbox.scheduler.lastWakeStartedAt)}</strong><small>{inbox.scheduler.lastWakeStatus ?? "NO STATUS"}</small></div>
+              <div><span>LAST UFC CARD CHECK</span><strong>{displayTime(latestCardCheck?.completedAt ?? latestCardCheck?.startedAt)}</strong></div>
+              <div><span>LAST ODDS CHECK</span><strong>{displayTime(latestProviderCall?.completedAt ?? latestProviderCall?.startedAt)}</strong></div>
+              <div><span>LAST SUCCESSFUL PROVIDER CALL</span><strong>{displayTime(lastSuccessfulProviderCall?.completedAt ?? lastSuccessfulProviderCall?.startedAt)}</strong></div>
+              <div><span>LAST PROVIDER FAILURE</span><strong>{runFailureDetail(lastProviderFailure, allFindings)}</strong></div>
+              <div><span>MONITORED UFC EVENT</span><strong>{inbox.monitoredEvent ? `${inbox.monitoredEvent.name} · ${inbox.monitoredEvent.subtitle}` : "NONE"}</strong></div>
+              <div><span>EXACT UFC EVENT SOURCE</span><strong>{monitoredSource}</strong></div>
+              <div><span>FIGHT MATCHING</span><strong>{latestProviderCalled ? `${coverageMatched} OF ${coverageTotal || inbox.monitoredEvent?.boutCount || 0} MATCHED` : "PROVIDER NOT CALLED"}</strong></div>
+              <div><span>ODDS APPLICATION</span><strong>{latestProviderCalled ? `${oddsUpdated} UPDATED · ${oddsUnchanged} UNCHANGED · ${unmatched} UNMATCHED` : "PROVIDER NOT CALLED"}</strong></div>
+              <div><span>CARD COMPARISON</span><strong>{cardChanges ? `${cardChanges} NEED CONFIRMATION` : latestRun ? "0 CHANGES FOUND" : "NOT CHECKED"}</strong></div>
+              <div><span>OWNER FINDINGS</span><strong>{pendingFindings.length}</strong></div>
+              <div><span>MONTHLY REQUESTS USED</span><strong>{quotaUsed ?? "UNKNOWN"}</strong></div>
+              <div><span>MONTHLY REQUESTS REMAINING</span><strong>{quotaRemaining ?? "UNKNOWN"}</strong></div>
+              <div><span>MONTHLY RESET</span><strong>{displayDate(quotaReset)}</strong></div>
+              <div><span>NEXT WAKE USES REQUEST</span><strong>{nextWakeConsumesRequest ? "YES" : "NO"}</strong><small>CHECK NOW ALWAYS USES 1</small></div>
             </div>
+
+            <div className="monitoring-status__all-clear" aria-label="Latest automatic monitoring receipt">
+              <span>LATEST RECEIPT</span>
+              <strong>{latestReceipt}</strong>
+            </div>
+
+            {sourceUrl ? <small>UFC EVENT SOURCE · {sourceUrl}</small> : null}
+            {sourceFailures ? <p className="picks-error" role="status">The UFC event source failed before an odds-provider call.</p> : null}
+            {providerFailures.map((finding) => (
+              <p className="picks-error" role="status" key={finding.findingId}>{finding.summary}</p>
+            ))}
+            {unmatched ? <p className="picks-error" role="status">{unmatchedWarning}</p> : null}
+            {quotaRemaining === 0 ? <p className="picks-error" role="status">The monthly provider quota is exhausted.</p> : null}
+            {!inbox.scheduler.tokenConfigured ? <p className="picks-error" role="status">The scheduler credential is missing or stale.</p> : null}
+
             {pendingFindings.length === 0 ? (
               <div className="monitoring-status__all-clear" aria-label="Pending changes all clear">
-                <span>ALL CLEAR</span>
-                <strong>No event changes need your attention.</strong>
+                <span>OWNER REVIEW</span>
+                <strong>No event changes need your attention. No current card changes need confirmation.</strong>
               </div>
             ) : null}
             <div className="monitoring-status__actions">

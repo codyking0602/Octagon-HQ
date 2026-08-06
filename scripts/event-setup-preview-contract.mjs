@@ -84,13 +84,25 @@ function normalizedIdentityFingerprint(value) {
   });
 }
 
+function hasCombinedVenueAndLocation(value) {
+  const parts = clean(value).split(/\s*,\s*/).filter(Boolean);
+  return parts.length >= 2 && parts.every((part) => part.length >= 2);
+}
+
 export function assertCurrentEventPreview(event, now = new Date()) {
   if (!event || typeof event !== "object") {
     throw new Error("Preview is missing the event payload.");
   }
 
-  for (const field of ["name", "subtitle", "venue", "location"]) {
+  for (const field of ["name", "subtitle"]) {
     if (!clean(event[field])) throw new Error(`Preview is missing ${field}.`);
+  }
+
+  const venue = clean(event.venue);
+  const location = clean(event.location);
+  if (!venue) throw new Error("Preview is missing venue.");
+  if (!location && !hasCombinedVenueAndLocation(venue)) {
+    throw new Error("Preview is missing location.");
   }
 
   const startsAt = Date.parse(clean(event.starts_at));

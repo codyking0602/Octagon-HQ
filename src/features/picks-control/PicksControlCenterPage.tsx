@@ -161,7 +161,9 @@ export default function PicksControlCenterPage({
   const heading = activeEvent || staged ? eventName : "Event Setup";
   const eventDate = activeEvent?.startsAt ?? staged?.startsAt ?? null;
   const lockTime = activeEvent?.locksAt ?? staged?.locksAt ?? null;
-  const fightCount = activeEvent?.bouts.length ?? staged?.bouts.filter((bout) => bout.included).length ?? 0;
+  const fightCount = activeEvent?.bouts.filter((bout) => bout.includedInPicks).length
+    ?? staged?.bouts.filter((bout) => bout.included).length
+    ?? 0;
   const lifecycle = activeEvent
     ? activeEvent.status === "upcoming" ? "PUBLISHED" : "LOCKED / LIVE"
     : staged ? "STAGED" : "NO ACTIVE EVENT";
@@ -175,7 +177,7 @@ export default function PicksControlCenterPage({
     : primaryStatus(eventState, draftState);
   const primaryAction = activeEvent
     ? activeEvent.status === "upcoming"
-      ? { href: "#fight-night", label: "MANAGE OPEN PICKS" }
+      ? null
       : { href: "#fight-night", label: unresolved ? "ENTER RESULTS" : "COMPLETE EVENT" }
     : { href: "#setup", label: staged ? "REVIEW & PUBLISH" : "OPEN EVENT SETUP" };
 
@@ -205,9 +207,9 @@ export default function PicksControlCenterPage({
         <div className="picks-control-center__actions">
           {identity.ready && !identity.profile ? (
             <button className="primary-action" type="button" onClick={identity.openDialog}>SIGN IN</button>
-          ) : (
+          ) : primaryAction ? (
             <a className={activeEvent ? "primary-action" : "secondary-action"} href={primaryAction.href}>{primaryAction.label}</a>
-          )}
+          ) : null}
           <Link className="secondary-action" to="/picks">OPEN PLAYER PICKS</Link>
         </div>
       </header>

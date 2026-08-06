@@ -201,10 +201,18 @@ begin
   if v_inbox #>> '{monitored_event,kind}' <> 'current'
     or v_inbox #>> '{monitored_event,event_id}' <> 'pick-monitoring-future'
     or v_inbox #>> '{latest_run,run_id}' <> v_provider_run_id::text
+    or v_inbox #>> '{latest_run,card_source}' <> 'MMA Mania'
+    or v_inbox #>> '{latest_run,card_source_url}' <> 'https://www.mmamania.com/test'
+    or v_inbox #>> '{latest_run,odds_provider}' <> 'the-odds-api'
+    or v_inbox #>> '{latest_run,provider_requests_remaining}' <> '42'
+    or v_inbox #>> '{latest_run,provider_requests_used}' <> '1'
+    or v_inbox #>> '{latest_run,complete_snapshot_count}' <> '1'
+    or v_inbox #>> '{latest_run,missing_snapshot_count}' <> '0'
+    or v_inbox #>> '{schedule_state,next_eligible_at}' is null
     or v_inbox #>> '{latest_scheduled_decision,outcome}' <> 'skipped'
     or v_inbox #>> '{latest_scheduled_decision,reason}' <> 'not_due'
     or v_inbox #>> '{latest_scheduled_decision,provider_called}' <> 'false' then
-    raise exception 'owner inbox mixed scheduler decisions with provider runs: %', v_inbox;
+    raise exception 'owner inbox mixed scheduler decisions with provider runs or omitted operational evidence: %', v_inbox;
   end if;
 
   perform set_config('request.jwt.claim.sub', v_member_id::text, true);
