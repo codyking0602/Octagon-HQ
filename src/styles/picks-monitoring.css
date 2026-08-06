@@ -133,8 +133,6 @@
 .monitoring-event__facts span,
 .monitoring-finding__topline span,
 .monitoring-finding__topline small,
-.monitoring-evidence summary,
-.monitoring-evidence section > span,
 .monitoring-history summary span,
 .monitoring-history summary small,
 .monitoring-history article span,
@@ -250,41 +248,38 @@
 }
 
 .monitoring-evidence {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 8px 10px;
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: 10px;
+  background: rgba(255, 255, 255, .025);
 }
 
-.monitoring-evidence summary {
-  padding: 10px;
-  cursor: pointer;
-  list-style: none;
-}
-
-.monitoring-evidence summary::-webkit-details-marker,
-.monitoring-history summary::-webkit-details-marker {
-  display: none;
-}
-
-.monitoring-evidence > div {
-  display: grid;
-  gap: 8px;
-  padding: 0 10px 10px;
-}
-
-.monitoring-evidence section {
-  display: grid;
-  gap: 5px;
-}
-
-.monitoring-evidence pre {
-  max-height: 180px;
-  margin: 0;
-  overflow: auto;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
+.monitoring-evidence span {
+  min-width: 0;
+  overflow: hidden;
   color: var(--text-secondary);
-  font: 10px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px;
+  font-weight: 850;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.monitoring-evidence span:last-child {
+  color: var(--text-primary);
+  text-align: right;
+}
+
+.monitoring-evidence b {
+  color: var(--ufc-red);
+  font-size: 12px;
+  line-height: 1;
 }
 
 .monitoring-finding__actions {
@@ -325,6 +320,10 @@
   padding: 0 15px;
   cursor: pointer;
   list-style: none;
+}
+
+.monitoring-history summary::-webkit-details-marker {
+  display: none;
 }
 
 .monitoring-history > div {

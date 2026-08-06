@@ -1,4 +1,4 @@
-import { sourceChanges } from "../../../supabase/functions/sync-next-ufc-event/cardChanges.ts";
+import { sourceChangeDetails } from "../../../supabase/functions/sync-next-ufc-event/cardChanges.ts";
 import { canonicalFightPair } from "../../../supabase/functions/sync-next-ufc-event/normalization.ts";
 import { fighterOddsIdentity } from "./oddsModel.ts";
 import type { MonitoringFindingInput } from "./monitoringStorageModel.ts";
@@ -159,18 +159,20 @@ export function buildCardChangeFindings(input: {
   const canonicalBouts = input.canonical.bouts.filter((bout) => inScope(bout, input.scope));
   const sourceBouts = input.source.bouts.filter((bout) => inScope(bout, input.scope));
   const cardReference = { ...input.canonical, bouts: canonicalBouts };
-  const summaries = sourceChanges(
+  const changes = sourceChangeDetails(
     cardReference,
     { ...input.source, bouts: sourceBouts } as never,
     input.scope,
   );
 
   if (input.kind !== "current" || !input.eventId) {
-    return summaries.map((summary) => finding({
+    return changes.map((change) => finding({
       identity: input.identity,
       kind: input.kind,
       detectedAt: input.detectedAt,
-      summary,
+      summary: change.summary,
+      beforeValue: change.beforeValue,
+      afterValue: change.afterValue,
     }));
   }
 
@@ -281,7 +283,8 @@ export function buildCardChangeFindings(input: {
     }));
   }
 
-  for (const summary of summaries) {
+  for (const change of changes) {
+    const summary = change.summary;
     if (summary === "Fight order changed." && canReorder) continue;
     if (summary === "Picks lock changed." && canonicalStart === sourceStart) continue;
     if (summary.startsWith("Removed ")) {
@@ -303,6 +306,8 @@ export function buildCardChangeFindings(input: {
       kind: input.kind,
       detectedAt: input.detectedAt,
       summary,
+      beforeValue: change.beforeValue,
+      afterValue: change.afterValue,
     }));
   }
 

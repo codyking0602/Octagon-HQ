@@ -55,7 +55,8 @@ describe("Phase 2B event setup backend", () => {
     expect(syncFunction).toContain("fetchExactMmaManiaCard");
     expect(syncFunction).toContain('"ARTICLE_SOURCE_REJECTED"');
     expect(syncFunction).toContain("The supplied source must be a specific MMA Mania fight-card article URL.");
-    expect(cardChanges).toContain('["Card source", current.source_url, event.source_url]');
+    expect(cardChanges).toContain('["Card source", current.source_url, event.source_url, "exact"]');
+    expect(cardChanges).toContain('["Venue", current.venue, event.venue, "semantic"]');
   });
 
   it("previews source changes before replacing a staged draft", () => {
