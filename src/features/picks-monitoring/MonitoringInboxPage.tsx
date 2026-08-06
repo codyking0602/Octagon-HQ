@@ -218,7 +218,9 @@ export default function MonitoringInboxPage({
   const automationDetail = !schedulerReady
     ? "Automatic monitoring is not fully configured. Run a check now and review the receipt below."
     : scheduledFailure
-      ? `The scheduled event check failed ${displayTime(decision?.attemptedAt)}. Run a check now and review the receipt below.`
+      ? decision?.providerCalled
+        ? `The scheduled check called the provider but failed ${displayTime(decision.attemptedAt)}. Review the receipt below.`
+        : `The scheduled check failed before calling the provider ${displayTime(decision?.attemptedAt)}. Run a check now and review the receipt below.`
       : partialCoverage
         ? `The scheduled provider call at ${displayTime(decision?.attemptedAt)} completed with missing fight coverage.`
         : scheduledProviderWorked
@@ -242,8 +244,30 @@ export default function MonitoringInboxPage({
   const oddsUnchanged = Math.max(0, coverageMatched - oddsUpdated);
   const cardChangesFound = latestFindings.filter((finding) => finding.findingType === "card_change").length;
   const quotaRemaining = latestRun?.providerRequestsRemaining ?? null;
+  const latestRunAt = latestRun?.completedAt ?? latestRun?.startedAt ?? null;
+  const latestRunCardChecked = Boolean(latestRun?.cardSource && latestRun?.cardSourceUrl);
+  const latestRunProviderCalled = Boolean(
+    latestRun?.oddsProvider
+    || latestRun?.providerRequestsUsed !== null && latestRun?.providerRequestsUsed !== undefined
+    || latestRun?.providerLastRequestCost !== null && latestRun?.providerLastRequestCost !== undefined
+    || (latestRun?.providerEventCount ?? 0) > 0,
+  );
+  const runOutcome = latestRun?.status === "completed"
+    ? "Check completed."
+    : latestRun?.status === "partial"
+      ? "Check completed with partial coverage."
+      : "Check failed.";
   const receipt = latestRun
-    ? `${displayTime(latestRun.completedAt ?? latestRun.startedAt)} · ${latestRun.status === "failed" ? "Check failed" : "UFC card checked"}. Odds provider called. ${coverageMatched}/${coverageTotal || inbox?.monitoredEvent?.boutCount || 0} fights matched, ${oddsUpdated} odds updated, ${oddsUnchanged} unchanged, ${cardChangesFound} card ${cardChangesFound === 1 ? "change" : "changes"} found.${quotaRemaining === null ? "" : ` ${quotaRemaining} requests remain.`}`
+    ? [
+        `${displayTime(latestRunAt)} · ${runOutcome}`,
+        latestRunCardChecked ? "UFC card source checked." : "UFC card source was not confirmed.",
+        latestRunProviderCalled ? "Odds provider called." : "Odds provider was not called.",
+        latestRunProviderCalled
+          ? `${coverageMatched}/${coverageTotal || inbox?.monitoredEvent?.boutCount || 0} fights matched, ${oddsUpdated} odds updated, ${oddsUnchanged} unchanged.`
+          : null,
+        `${cardChangesFound} card ${cardChangesFound === 1 ? "change" : "changes"} found.`,
+        quotaRemaining === null ? null : `${quotaRemaining} requests remain.`,
+      ].filter(Boolean).join(" ")
     : "No completed UFC card and odds provider check has been recorded yet.";
 
   return (
@@ -284,11 +308,11 @@ export default function MonitoringInboxPage({
             <div className="monitoring-status__grid monitoring-status__grid--proof" aria-label="Automation status">
               <div><span>NEXT SCHEDULER WAKE</span><strong>{displayTime(nextHourlyWake(inbox.scheduler.lastWakeStartedAt))}</strong></div>
               <div><span>NEXT PROVIDER CALL</span><strong>{displayTime(inbox.scheduleState?.nextEligibleAt)}</strong></div>
-              <div><span>LAST CARD CHECK</span><strong>{displayTime(latestRun?.completedAt ?? latestRun?.startedAt)}</strong></div>
-              <div><span>LAST ODDS CALL</span><strong>{displayTime(latestRun?.completedAt ?? latestRun?.startedAt)}</strong></div>
+              <div><span>LAST CARD CHECK</span><strong>{latestRunCardChecked ? displayTime(latestRunAt) : "NOT CONFIRMED"}</strong></div>
+              <div><span>LAST ODDS CALL</span><strong>{latestRunProviderCalled ? displayTime(latestRunAt) : "NOT CALLED"}</strong></div>
               <div><span>MONTHLY REQUESTS LEFT</span><strong>{quotaRemaining ?? "UNKNOWN"}</strong><small>RESET {displayTime(nextQuotaReset())}</small></div>
-              <div><span>FIGHT COVERAGE</span><strong>{coverageMatched}/{coverageTotal || inbox.monitoredEvent?.boutCount || 0} MATCHED</strong></div>
-              <div><span>ODDS RESULT</span><strong>{oddsUpdated} UPDATED · {oddsUnchanged} SAME</strong></div>
+              <div><span>FIGHT COVERAGE</span><strong>{latestRunProviderCalled ? `${coverageMatched}/${coverageTotal || inbox.monitoredEvent?.boutCount || 0} MATCHED` : "NOT CHECKED"}</strong></div>
+              <div><span>ODDS RESULT</span><strong>{latestRunProviderCalled ? `${oddsUpdated} UPDATED · ${oddsUnchanged} SAME` : "NOT CALLED"}</strong></div>
               <div><span>CARD RESULT</span><strong>{pendingFindings.length ? `${pendingFindings.length} TO REVIEW` : "ALL CLEAR"}</strong></div>
             </div>
             <div className="monitoring-status__receipt" aria-label="Latest automatic monitoring receipt">
