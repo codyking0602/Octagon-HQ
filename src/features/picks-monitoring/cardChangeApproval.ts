@@ -11,6 +11,22 @@ export type CardChangeApprovalProposal =
       proposed_locks_at: string;
     }
   | {
+      action: "update_event_metadata";
+      event_id: string;
+      field: "venue" | "location";
+      expected_value: string | null;
+      proposed_value: string;
+    }
+  | {
+      action: "update_bout_weight_class";
+      event_id: string;
+      bout_id: string;
+      expected_weight_class: string | null;
+      proposed_weight_class: string;
+      expected_red_fighter_slug: string;
+      expected_blue_fighter_slug: string;
+    }
+  | {
       action: "remove_bout";
       event_id: string;
       bout_id: string;
@@ -62,6 +78,8 @@ interface ApprovalSourceEvent extends ApprovalMonitoringEvent {
   source_url: string;
 }
 
+type ChangeField = "venue" | "location" | "weight_class" | "locks_at" | "fight_order" | "fighters" | "included_in_picks" | "other";
+
 function stableKey(...values: unknown[]) {
   return values
     .map((value) => JSON.stringify(value))
@@ -79,26 +97,36 @@ function inScope(bout: ApprovalMonitoringBout, scope: "main" | "full") {
   return scope === "full" || !/^(?:early-)?prelim-/.test(bout.bout_id);
 }
 
+function textValue(value: unknown) {
+  const text = typeof value === "string" ? value.trim() : "";
+  return text || null;
+}
+
+function changeField(summary: string): ChangeField {
+  if (/^Venue (?:found|changed)\./.test(summary)) return "venue";
+  if (/^Location (?:found|changed)\./.test(summary)) return "location";
+  if (/^Weight class (?:found|changed) for /.test(summary)) return "weight_class";
+  if (summary === "Picks lock changed." || summary === "Picks lock found.") return "locks_at";
+  if (summary === "Fight order changed.") return "fight_order";
+  return "other";
+}
+
 function finding(input: {
   identity: string;
   kind: "staged" | "current";
   detectedAt: string;
   summary: string;
+  subjectKey: string;
+  field: ChangeField;
   beforeValue?: unknown;
   afterValue?: unknown;
   boutId?: string;
   matchupIdentity?: string;
   proposal?: CardChangeApprovalProposal;
 }): MonitoringFindingInput {
+  const findingIdentity = stableKey(input.identity, "card_change", input.subjectKey, input.field);
   return {
-    finding_key: stableKey(
-      input.identity,
-      "card_change",
-      input.proposal?.action ?? "review_only",
-      input.summary,
-      input.beforeValue ?? null,
-      input.afterValue ?? null,
-    ),
+    finding_key: stableKey(findingIdentity, input.afterValue ?? null),
     finding_type: "card_change",
     severity: "warning",
     summary: input.summary,
@@ -110,6 +138,8 @@ function finding(input: {
     source_details: {
       source_event_identity: input.identity,
       monitored_event_kind: input.kind,
+      finding_identity: findingIdentity,
+      change_field: input.field,
       ...(input.proposal ? { approval_proposal: input.proposal } : {}),
     },
   };
@@ -147,6 +177,15 @@ function replacementProposal(
   };
 }
 
+function genericSubject(summary: string, boutId?: string) {
+  const field = changeField(summary);
+  if (field === "venue" || field === "location" || field === "locks_at" || field === "fight_order") {
+    return `event:${field}`;
+  }
+  if (field === "weight_class") return `bout:${boutId ?? summary}:weight_class`;
+  return `review:${summary.replace(/\.$/, "")}`;
+}
+
 export function buildCardChangeFindings(input: {
   identity: string;
   kind: "staged" | "current";
@@ -166,14 +205,19 @@ export function buildCardChangeFindings(input: {
   );
 
   if (input.kind !== "current" || !input.eventId) {
-    return changes.map((change) => finding({
-      identity: input.identity,
-      kind: input.kind,
-      detectedAt: input.detectedAt,
-      summary: change.summary,
-      beforeValue: change.beforeValue,
-      afterValue: change.afterValue,
-    }));
+    return changes.map((change) => {
+      const field = changeField(change.summary);
+      return finding({
+        identity: input.identity,
+        kind: input.kind,
+        detectedAt: input.detectedAt,
+        summary: change.summary,
+        subjectKey: genericSubject(change.summary),
+        field,
+        beforeValue: change.beforeValue,
+        afterValue: change.afterValue,
+      });
+    });
   }
 
   const result: MonitoringFindingInput[] = [];
@@ -183,6 +227,7 @@ export function buildCardChangeFindings(input: {
   const unmatchedSource = sourceBouts.filter((bout) => !currentByMatchup.has(matchup(bout)));
   const consumedCurrent = new Set<string>();
   const consumedSource = new Set<string>();
+  const handledSummaries = new Set<string>();
 
   if (unmatchedCurrent.length === 1 && unmatchedSource.length === 1
     && canonicalBouts.indexOf(unmatchedCurrent[0]) === sourceBouts.indexOf(unmatchedSource[0])) {
@@ -200,6 +245,8 @@ export function buildCardChangeFindings(input: {
         kind: input.kind,
         detectedAt: input.detectedAt,
         summary: `Replace ${beforeName} with ${proposal.replacement_fighter_name}.`,
+        subjectKey: `bout:${current.bout_id}:fighters`,
+        field: "fighters",
         beforeValue: {
           red_fighter_name: current.red_fighter_name,
           blue_fighter_name: current.blue_fighter_name,
@@ -224,6 +271,8 @@ export function buildCardChangeFindings(input: {
         kind: input.kind,
         detectedAt: input.detectedAt,
         summary: `Remove ${current.red_fighter_name} vs. ${current.blue_fighter_name} from Picks.`,
+        subjectKey: `bout:${current.bout_id}:included_in_picks`,
+        field: "included_in_picks",
         beforeValue: { included_in_picks: true },
         afterValue: { included_in_picks: false },
         boutId: current.bout_id,
@@ -252,6 +301,8 @@ export function buildCardChangeFindings(input: {
       kind: input.kind,
       detectedAt: input.detectedAt,
       summary: "Apply the detected fight order.",
+      subjectKey: "event:fight_order",
+      field: "fight_order",
       beforeValue: expectedOrder,
       afterValue: proposedOrder,
       proposal: {
@@ -272,6 +323,8 @@ export function buildCardChangeFindings(input: {
       kind: input.kind,
       detectedAt: input.detectedAt,
       summary: "Update the event-wide Picks deadline.",
+      subjectKey: "event:locks_at",
+      field: "locks_at",
       beforeValue: input.canonical.locks_at,
       afterValue: input.source.locks_at,
       proposal: {
@@ -283,10 +336,70 @@ export function buildCardChangeFindings(input: {
     }));
   }
 
+  for (const field of ["venue", "location"] as const) {
+    const label = field === "venue" ? "Venue" : "Location";
+    const change = changes.find((item) => item.summary === `${label} changed.` || item.summary === `${label} found.`);
+    const proposedValue = textValue(change?.afterValue);
+    if (!change || !proposedValue) continue;
+    handledSummaries.add(change.summary);
+    result.push(finding({
+      identity: input.identity,
+      kind: input.kind,
+      detectedAt: input.detectedAt,
+      summary: change.summary,
+      subjectKey: `event:${field}`,
+      field,
+      beforeValue: change.beforeValue,
+      afterValue: change.afterValue,
+      proposal: {
+        action: "update_event_metadata",
+        event_id: input.eventId,
+        field,
+        expected_value: textValue(change.beforeValue),
+        proposed_value: proposedValue,
+      },
+    }));
+  }
+
+  for (const sourceBout of sourceBouts) {
+    const currentBout = currentByMatchup.get(matchup(sourceBout));
+    if (!currentBout) continue;
+    const label = `${sourceBout.red_fighter_name} vs. ${sourceBout.blue_fighter_name}`;
+    const change = changes.find((item) => (
+      item.summary === `Weight class changed for ${label}.`
+      || item.summary === `Weight class found for ${label}.`
+    ));
+    const proposedWeightClass = textValue(change?.afterValue);
+    if (!change || !proposedWeightClass) continue;
+    handledSummaries.add(change.summary);
+    result.push(finding({
+      identity: input.identity,
+      kind: input.kind,
+      detectedAt: input.detectedAt,
+      summary: change.summary,
+      subjectKey: `bout:${currentBout.bout_id}:weight_class`,
+      field: "weight_class",
+      beforeValue: change.beforeValue,
+      afterValue: change.afterValue,
+      boutId: currentBout.bout_id,
+      matchupIdentity: matchup(currentBout),
+      proposal: {
+        action: "update_bout_weight_class",
+        event_id: input.eventId,
+        bout_id: currentBout.bout_id,
+        expected_weight_class: textValue(change.beforeValue),
+        proposed_weight_class: proposedWeightClass,
+        expected_red_fighter_slug: currentBout.red_fighter_slug,
+        expected_blue_fighter_slug: currentBout.blue_fighter_slug,
+      },
+    }));
+  }
+
   for (const change of changes) {
     const summary = change.summary;
+    if (handledSummaries.has(summary)) continue;
     if (summary === "Fight order changed." && canReorder) continue;
-    if (summary === "Picks lock changed." && canonicalStart === sourceStart) continue;
+    if ((summary === "Picks lock changed." || summary === "Picks lock found.") && canonicalStart === sourceStart) continue;
     if (summary.startsWith("Removed ")) {
       const consumed = unmatchedCurrent.some((bout) => (
         consumedCurrent.has(matchup(bout))
@@ -301,11 +414,14 @@ export function buildCardChangeFindings(input: {
       consumedSource.has(matchup(bout))
       && summary.includes(`${bout.red_fighter_name} vs. ${bout.blue_fighter_name}`)
     ))) continue;
+    const field = changeField(summary);
     result.push(finding({
       identity: input.identity,
       kind: input.kind,
       detectedAt: input.detectedAt,
       summary,
+      subjectKey: genericSubject(summary),
+      field,
       beforeValue: change.beforeValue,
       afterValue: change.afterValue,
     }));
