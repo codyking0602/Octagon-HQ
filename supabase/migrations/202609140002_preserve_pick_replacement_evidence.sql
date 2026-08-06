@@ -111,10 +111,17 @@ declare
   v_audit_id bigint;
 begin
   -- The private core delegates fight mutations to private.apply_pick_fight_change.
-  v_receipt := private.approve_pick_monitoring_finding_receipt_core(
-    p_finding_id,
-    p_reason
-  );
+  begin
+    v_receipt := private.approve_pick_monitoring_finding_receipt_core(
+      p_finding_id,
+      p_reason
+    );
+  exception when others then
+    if sqlerrm = 'STALE_STATE: newer monitoring evidence exists; refresh Picks control' then
+      raise exception 'STALE_STATE: newer monitoring evidence exists; refresh Manage Open Picks';
+    end if;
+    raise;
+  end;
 
   v_audit_id := nullif(v_receipt->>'audit_id', '')::bigint;
   if v_audit_id is not null then
