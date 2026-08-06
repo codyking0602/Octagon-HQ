@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import { IdentityProvider } from "../identity/IdentityProvider";
@@ -36,8 +36,8 @@ const replacementFinding: MonitoringFinding = {
   matchupIdentity: "alpha|beta",
   boutId: "main-event-alpha-beta",
   summary: "Replace Beta with Replacement.",
-  beforeValue: { blue_fighter_name: "Beta" },
-  afterValue: { blue_fighter_name: "Replacement" },
+  beforeValue: { red_fighter_name: "Alpha", blue_fighter_name: "Beta" },
+  afterValue: { red_fighter_name: "Alpha", blue_fighter_name: "Replacement" },
   sourceDetails: { change_field: "fighters" },
   approvalProposal: {
     action: "replace_fighter",
@@ -81,6 +81,19 @@ const oddsFinding: MonitoringFinding = {
   beforeValue: [{ fighter_identity: "alpha", american_odds: -120 }],
   afterValue: [{ fighter_identity: "alpha", american_odds: -135 }],
   sourceDetails: { change_field: "odds", automatically_applied: true },
+  approvalProposal: null,
+};
+
+const operationalFinding: MonitoringFinding = {
+  ...replacementFinding,
+  findingId: "66666666-6666-4666-8666-666666666666",
+  findingKey: "provider-error",
+  findingType: "provider_error",
+  severity: "error",
+  summary: "Odds provider rejected the configured credential.",
+  beforeValue: null,
+  afterValue: null,
+  sourceDetails: {},
   approvalProposal: null,
 };
 
@@ -157,7 +170,7 @@ function renderPage(repo: MonitoringInboxRepository, onAppliedChange = vi.fn()) 
 }
 
 beforeEach(() => {
-  vi.spyOn(window, "prompt").mockReturnValue("Official source confirmed");
+  vi.spyOn(window, "prompt").mockReturnValue("This must never be used");
   vi.spyOn(window, "confirm").mockReturnValue(true);
 });
 
@@ -166,71 +179,105 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("Monitoring Inbox approval actions", () => {
-  it("renders the shared APPROVE CHANGE action for supported findings", async () => {
-    const repo = repository({ ...inbox, newFindings: [venueFinding] });
+describe("structured Monitoring Inbox decisions", () => {
+  it("shows current and UFC-source values before the canonical mutation can run", async () => {
+    const repo = repository({ ...inbox, newFindings: [venueFinding] }, emptyInbox);
     renderPage(repo);
 
-    expect(await screen.findByRole("button", { name: "APPROVE CHANGE" })).toBeInTheDocument();
-    expect(screen.getByLabelText("Set venue to Meta APEX")).toBeInTheDocument();
-    expect(screen.queryByText(/Not set/i)).not.toBeInTheDocument();
+    fireEvent.click(await screen.findByRole("button", { name: "CONFIRM CHANGE" }));
+
+    const confirmation = screen.getByLabelText(`Confirm ${venueFinding.summary}`);
+    expect(within(confirmation).getByText(/confirm this change/i, { selector: "h4" })).toBeInTheDocument();
+    expect(within(confirmation).getByText("NOT SET")).toBeInTheDocument();
+    expect(within(confirmation).getByText("Meta APEX")).toBeInTheDocument();
+    expect(within(confirmation).getByText(/No player action is required/i)).toBeInTheDocument();
+    expect(repo.approveFinding).not.toHaveBeenCalled();
+    expect(window.prompt).not.toHaveBeenCalled();
   });
 
-  it("approves through the canonical repository exactly once, refreshes control state, and removes the finding", async () => {
-    const repo = repository(inbox, emptyInbox);
+  it("applies only after final confirmation, invokes the repository once, and refreshes persisted state", async () => {
+    const repo = repository({ ...inbox, newFindings: [venueFinding] }, emptyInbox);
     const onAppliedChange = vi.fn().mockResolvedValue(undefined);
     renderPage(repo, onAppliedChange);
 
-    expect(await screen.findByText("REPICK REQUIRED FOR AFFECTED MEMBERS")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "APPROVE CHANGE" }));
+    fireEvent.click(await screen.findByRole("button", { name: "CONFIRM CHANGE" }));
+    expect(repo.approveFinding).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "APPLY CONFIRMED CHANGE" }));
 
     await waitFor(() => expect(repo.approveFinding).toHaveBeenCalledTimes(1));
     expect(repo.approveFinding).toHaveBeenCalledWith(
-      replacementFinding.findingId,
-      "Official source confirmed",
+      venueFinding.findingId,
+      "Owner confirmed the UFC-source event venue.",
     );
     await waitFor(() => expect(onAppliedChange).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(repo.loadInbox).toHaveBeenCalledTimes(2));
-    await waitFor(() => expect(screen.queryByText(replacementFinding.summary)).not.toBeInTheDocument());
-    expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining(
-      "The backend will reject it if the live card changed since this check.",
-    ));
+    expect(await screen.findByText("CHANGE APPLIED")).toBeInTheDocument();
+    expect(screen.getByLabelText("Owner decision receipt")).toHaveTextContent("0 owner findings remain");
+    expect(window.prompt).not.toHaveBeenCalled();
   });
 
-  it("keeps informational findings acknowledgment-only", async () => {
-    const repo = repository({
-      ...inbox,
-      newFindings: [{
-        ...replacementFinding,
-        approvalProposal: null,
-        findingType: "unmatched_fight",
-        summary: "A monitored bout did not confidently match a provider snapshot.",
-      }],
-    });
+  it("requires explicit acknowledgment before a player-impacting replacement", async () => {
+    const repo = repository(inbox, emptyInbox);
     renderPage(repo);
 
-    expect(await screen.findByRole("button", { name: "MARK REVIEWED" })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "APPROVE CHANGE" })).not.toBeInTheDocument();
+    fireEvent.click(await screen.findByRole("button", { name: "CONFIRM CHANGE" }));
+    const apply = screen.getByRole("button", { name: "APPLY CONFIRMED CHANGE" });
+    expect(apply).toBeDisabled();
+    expect(screen.getByText("REPICK REQUIRED")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("checkbox", { name: /understand the player or card impact/i }));
+    expect(apply).toBeEnabled();
+    fireEvent.click(apply);
+
+    await waitFor(() => expect(repo.approveFinding).toHaveBeenCalledTimes(1));
+    expect(await screen.findByText("CHANGE APPLIED")).toBeInTheDocument();
+    expect(screen.getByLabelText("Owner decision receipt")).toHaveTextContent("Affected members must repick");
   });
 
-  it("labels automatically applied odds and never offers approval", async () => {
-    const repo = repository({ ...inbox, newFindings: [oddsFinding] });
+  it("keeps the current value without applying the proposal", async () => {
+    const repo = repository({ ...inbox, newFindings: [venueFinding] }, emptyInbox);
     renderPage(repo);
 
-    expect(await screen.findByText("ALREADY APPLIED AUTOMATICALLY")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "MARK REVIEWED" })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "APPROVE CHANGE" })).not.toBeInTheDocument();
+    fireEvent.click(await screen.findByRole("button", { name: "KEEP CURRENT" }));
+
+    await waitFor(() => expect(repo.reviewFinding).toHaveBeenCalledTimes(1));
+    expect(repo.reviewFinding).toHaveBeenCalledWith(venueFinding.findingId, "reviewed");
+    expect(repo.approveFinding).not.toHaveBeenCalled();
+    expect(await screen.findByText("CURRENT VALUE KEPT")).toBeInTheDocument();
+    expect(screen.getByLabelText("Owner decision receipt")).toHaveTextContent("No live Picks mutation occurred");
   });
 
-  it("uses the unique visible finding count", async () => {
-    const repo = repository({
-      ...inbox,
-      unresolvedCount: 2,
-      newFindings: [venueFinding, oddsFinding],
-    });
+  it("keeps operational findings review-only with no fake application control", async () => {
+    const repo = repository({ ...inbox, newFindings: [operationalFinding] }, emptyInbox);
     renderPage(repo);
 
-    const counts = await screen.findAllByText("2");
-    expect(counts.length).toBeGreaterThanOrEqual(2);
+    expect(await screen.findByRole("button", { name: "DISMISS NOTICE" })).toBeInTheDocument();
+    expect(screen.getByText("REVIEW ONLY · NO LIVE APPLICATION CONTROL EXISTS")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "CONFIRM CHANGE" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "APPLY CONFIRMED CHANGE" })).not.toBeInTheDocument();
+  });
+
+  it("keeps automatic odds receipts distinct from owner-confirmed card changes", async () => {
+    const repo = repository({ ...inbox, newFindings: [oddsFinding] }, emptyInbox);
+    renderPage(repo);
+
+    expect(await screen.findByText("AUTOMATIC ODDS RECEIPT")).toBeInTheDocument();
+    expect(screen.getByText("ALREADY APPLIED AUTOMATICALLY · NO OWNER CONFIRMATION REQUIRED")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "DISMISS RECEIPT" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "CONFIRM CHANGE" })).not.toBeInTheDocument();
+  });
+
+  it("leaves a failed mutation visible and never shows a false success receipt", async () => {
+    const repo = repository(inbox);
+    vi.mocked(repo.approveFinding!).mockRejectedValueOnce(new Error("Canonical mutation rejected stale evidence."));
+    renderPage(repo);
+
+    fireEvent.click(await screen.findByRole("button", { name: "CONFIRM CHANGE" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /understand the player or card impact/i }));
+    fireEvent.click(screen.getByRole("button", { name: "APPLY CONFIRMED CHANGE" }));
+
+    expect(await screen.findByText("Canonical mutation rejected stale evidence.")).toBeInTheDocument();
+    expect(screen.getByText(replacementFinding.summary)).toBeInTheDocument();
+    expect(screen.queryByLabelText("Owner decision receipt")).not.toBeInTheDocument();
+    expect(repo.loadInbox).toHaveBeenCalledTimes(1);
   });
 });

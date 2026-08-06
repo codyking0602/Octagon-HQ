@@ -13,6 +13,7 @@ on:
       - "supabase/migrations/202609130003_fix_pick_monitoring_inbox_typed_projection.sql"
       - "supabase/tests/pick_monitoring_card_change_approval.sql"
       - "supabase/tests/pick_monitoring_equivalent_resolution.sql"
+      - "supabase/tests/pick_monitoring_structured_confirmation_contract.sql"
   workflow_dispatch:
 
 permissions:
@@ -69,6 +70,10 @@ jobs:
         shell: bash
         run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/pick_monitoring_equivalent_resolution.sql
 
+      - name: Execute structured confirmation contract proof
+        shell: bash
+        run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/pick_monitoring_structured_confirmation_contract.sql
+
       - name: Stop local Supabase database
         if: always()
         run: supabase stop --no-backup
@@ -82,6 +87,7 @@ jobs:
             echo "- Exact source SHA: \`$SOURCE_SHA\`"
             echo "- Fresh migrations: passed"
             echo "- Owner authorization: passed"
+            echo "- Structured finite audit reason contract: passed"
             echo "- Deadline approval: passed"
             echo "- Venue and location approval: passed"
             echo "- Weight-class approval: passed"

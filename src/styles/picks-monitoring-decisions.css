@@ -1,0 +1,343 @@
+.monitoring-status--compact {
+  gap: 10px;
+  padding: 12px;
+}
+
+.monitoring-status--compact .monitoring-summary > div {
+  min-height: 54px;
+  padding: 8px 9px;
+}
+
+.monitoring-status--compact .monitoring-summary strong {
+  font-size: 10px;
+  line-height: 1.2;
+}
+
+.monitoring-decision-receipt {
+  display: grid;
+  gap: 5px;
+  padding: 12px 14px;
+  border-color: rgba(255, 255, 255, .22);
+  box-shadow: inset 3px 0 0 var(--text-primary);
+}
+
+.monitoring-decision-receipt.is-applied {
+  box-shadow: inset 3px 0 0 rgba(72, 184, 118, .9);
+}
+
+.monitoring-decision-receipt.is-kept,
+.monitoring-decision-receipt.is-dismissed {
+  box-shadow: inset 3px 0 0 rgba(255, 255, 255, .38);
+}
+
+.monitoring-decision-receipt > span,
+.monitoring-decision__comparison span,
+.monitoring-decision__result > span,
+.monitoring-decision__impacts span,
+.monitoring-confirmation > div:first-child > span,
+.monitoring-confirmation dt,
+.monitoring-operations summary span,
+.monitoring-operations summary small {
+  color: var(--text-muted);
+  font-size: 7px;
+  font-weight: 950;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.monitoring-decision-receipt h2,
+.monitoring-decision-receipt p {
+  margin: 0;
+}
+
+.monitoring-decision-receipt h2 {
+  font-size: 14px;
+}
+
+.monitoring-decision-receipt > strong,
+.monitoring-decision-receipt p {
+  color: var(--text-secondary);
+  font-size: 10px;
+  line-height: 1.3;
+}
+
+.monitoring-decision {
+  gap: 9px;
+  padding: 12px;
+  border-left-color: var(--ufc-red);
+}
+
+.monitoring-decision__comparison {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: stretch;
+  gap: 7px;
+}
+
+.monitoring-decision__comparison > div {
+  display: grid;
+  align-content: center;
+  gap: 3px;
+  min-width: 0;
+  min-height: 58px;
+  padding: 8px 9px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .025);
+}
+
+.monitoring-decision__comparison > div:last-child {
+  border-color: rgba(214, 31, 38, .42);
+  background: rgba(214, 31, 38, .06);
+}
+
+.monitoring-decision__comparison > b {
+  align-self: center;
+  color: var(--ufc-red);
+  font-size: 15px;
+}
+
+.monitoring-decision__comparison strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--text-primary);
+  font-size: 10px;
+  line-height: 1.22;
+}
+
+.monitoring-decision__result {
+  display: grid;
+  gap: 4px;
+  padding: 9px 10px;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .02);
+}
+
+.monitoring-decision__result strong {
+  color: var(--text-primary);
+  font-size: 10px;
+  line-height: 1.3;
+}
+
+.monitoring-decision__result p {
+  color: var(--text-secondary);
+  font-size: 9px;
+  line-height: 1.3;
+}
+
+.monitoring-decision__impacts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.monitoring-decision__impacts > div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  min-height: 43px;
+  padding: 7px 8px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, .02);
+}
+
+.monitoring-decision__impacts > div.is-affected {
+  border-color: rgba(214, 31, 38, .38);
+  background: rgba(214, 31, 38, .055);
+}
+
+.monitoring-decision__impacts strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--text-primary);
+  font-size: 8px;
+  line-height: 1.15;
+}
+
+.monitoring-finding__actions .monitoring-confirm-action {
+  border-color: rgba(214, 31, 38, .65);
+  background: var(--ufc-red);
+  color: #fff;
+}
+
+.monitoring-finding__actions--single {
+  grid-template-columns: 1fr;
+}
+
+.monitoring-confirmation {
+  display: grid;
+  gap: 9px;
+  padding: 11px;
+  border: 1px solid rgba(214, 31, 38, .55);
+  border-radius: 11px;
+  background: rgba(214, 31, 38, .07);
+}
+
+.monitoring-confirmation > div:first-child {
+  display: grid;
+  gap: 2px;
+}
+
+.monitoring-confirmation h4 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.monitoring-confirmation dl {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  border: 1px solid rgba(255, 255, 255, .13);
+  border-radius: 9px;
+  overflow: hidden;
+}
+
+.monitoring-confirmation dl > div {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 8px;
+  padding: 7px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+
+.monitoring-confirmation dl > div:last-child {
+  border-bottom: 0;
+}
+
+.monitoring-confirmation dt,
+.monitoring-confirmation dd {
+  margin: 0;
+}
+
+.monitoring-confirmation dd {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--text-primary);
+  font-size: 9px;
+  line-height: 1.25;
+}
+
+.monitoring-confirmation__acknowledgment {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 7px 8px;
+  border: 1px solid rgba(255, 255, 255, .15);
+  border-radius: 9px;
+  color: var(--text-primary);
+  font-size: 9px;
+  font-weight: 850;
+  line-height: 1.25;
+}
+
+.monitoring-confirmation__acknowledgment input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--ufc-red);
+}
+
+.monitoring-confirmation__actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, .8fr);
+  gap: 7px;
+}
+
+.monitoring-confirmation__actions .primary-action,
+.monitoring-confirmation__actions .secondary-action {
+  min-width: 0;
+  min-height: 44px;
+  padding-inline: 8px;
+  font-size: 8px;
+  text-align: center;
+}
+
+.monitoring-operations {
+  overflow: hidden;
+  padding: 0;
+}
+
+.monitoring-operations summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 48px;
+  padding: 9px 12px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.monitoring-operations summary::-webkit-details-marker {
+  display: none;
+}
+
+.monitoring-operations summary > div {
+  display: grid;
+  gap: 2px;
+}
+
+.monitoring-operations summary strong {
+  color: var(--text-primary);
+  font-size: 10px;
+}
+
+.monitoring-operations__body {
+  display: grid;
+  gap: 9px;
+  padding: 0 10px 10px;
+}
+
+.monitoring-operations__body > small {
+  overflow-wrap: anywhere;
+  color: var(--text-muted);
+  font-size: 8px;
+  line-height: 1.35;
+}
+
+@media (max-width: 390px) {
+  .monitoring-inbox-page {
+    gap: 8px;
+  }
+
+  .monitoring-status--compact,
+  .monitoring-decision,
+  .monitoring-finding {
+    padding: 10px;
+  }
+
+  .monitoring-status--compact .monitoring-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .monitoring-decision__comparison {
+    gap: 5px;
+  }
+
+  .monitoring-decision__comparison > div {
+    min-height: 54px;
+    padding: 7px;
+  }
+
+  .monitoring-decision__impacts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .monitoring-finding__actions button,
+  .monitoring-confirmation__actions .primary-action,
+  .monitoring-confirmation__actions .secondary-action {
+    min-height: 44px;
+  }
+
+  .monitoring-confirmation dl > div {
+    grid-template-columns: 76px minmax(0, 1fr);
+    gap: 6px;
+  }
+}

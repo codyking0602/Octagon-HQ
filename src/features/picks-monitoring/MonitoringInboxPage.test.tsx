@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import { IdentityProvider } from "../identity/IdentityProvider";
 import type { IdentityGateway } from "../identity/identityGateway";
 import MonitoringInboxPage from "./MonitoringInboxPage";
-import type { MonitoringInbox } from "./monitoringInboxModel";
+import type { MonitoringFinding, MonitoringInbox } from "./monitoringInboxModel";
 import type { MonitoringInboxRepository } from "./monitoringInboxRepository";
 
 const cody = {
@@ -13,23 +13,42 @@ const cody = {
   initials: "CK",
 };
 
-const finding = {
+const finding: MonitoringFinding = {
   findingId: "22222222-2222-4222-8222-222222222222",
   runId: "33333333-3333-4333-8333-333333333333",
-  triggerKind: "scheduled" as const,
-  runStatus: "completed" as const,
+  triggerKind: "scheduled",
+  runStatus: "completed",
   findingKey: "ufc:event-test:card-change:test",
-  findingType: "card_change" as const,
-  severity: "warning" as const,
-  reviewStatus: "new" as const,
+  findingType: "card_change",
+  severity: "warning",
+  reviewStatus: "new",
   matchupIdentity: "red-fighter|blue-fighter",
   boutId: "main-event-red-fighter-blue-fighter",
   summary: "Fight order changed.",
-  beforeValue: { position: 2 },
-  afterValue: { position: 1 },
+  beforeValue: ["main-event-red-fighter-blue-fighter", "co-main"],
+  afterValue: ["co-main", "main-event-red-fighter-blue-fighter"],
   sourceDetails: { source: "MMA Mania" },
+  approvalProposal: {
+    action: "reorder_card",
+    event_id: "ufc-event-test",
+    expected_bout_ids: ["main-event-red-fighter-blue-fighter", "co-main"],
+    proposed_bout_ids: ["co-main", "main-event-red-fighter-blue-fighter"],
+  },
   detectedAt: "2026-08-01T12:00:05.000Z",
   reviewedAt: null,
+};
+
+const operationalFinding: MonitoringFinding = {
+  ...finding,
+  findingId: "55555555-5555-4555-8555-555555555555",
+  findingKey: "provider-warning",
+  findingType: "provider_error",
+  severity: "error",
+  summary: "Odds provider rejected the configured credential.",
+  beforeValue: null,
+  afterValue: null,
+  sourceDetails: {},
+  approvalProposal: null,
 };
 
 const inbox: MonitoringInbox = {
@@ -84,12 +103,7 @@ const inbox: MonitoringInbox = {
   },
   unresolvedCount: 1,
   newFindings: [finding],
-  reviewedFindings: [{
-    ...finding,
-    findingId: "44444444-4444-4444-8444-444444444444",
-    reviewStatus: "dismissed",
-    reviewedAt: "2026-08-01T12:30:00.000Z",
-  }],
+  reviewedFindings: [],
   recentRuns: [],
   latestScheduledDecision: {
     outcome: "completed",
@@ -125,6 +139,7 @@ function repository(value: MonitoringInbox): MonitoringInboxRepository {
   return {
     loadInbox: vi.fn().mockResolvedValue(value),
     runManualCheck: vi.fn().mockResolvedValue(undefined),
+    approveFinding: vi.fn().mockResolvedValue(undefined),
     reviewFinding: vi.fn().mockResolvedValue(undefined),
   };
 }
@@ -153,22 +168,24 @@ afterEach(() => {
 });
 
 describe("Monitoring Inbox", () => {
-  it("shows one compact automation state, current event, source, and pending changes", async () => {
+  it("shows one compact automation state, current event, source, and pending owner decision", async () => {
     renderPage(repository(inbox));
 
     expect(await screen.findByRole("heading", { name: "AUTO-SYNC CHECKED THE EVENT" })).toBeInTheDocument();
     expect(screen.getByText(/last scheduled provider check/i)).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "UFC Fight Night" })).toBeInTheDocument();
+    expect(screen.getAllByText(/UFC Fight Night · Red Fighter vs. Blue Fighter/i).length).toBeGreaterThan(0);
     expect(screen.getByRole("link", { name: "OPEN UFC EVENT SOURCE" })).toHaveAttribute("href", "https://www.mmamania.com/test");
-    expect(screen.getByRole("heading", { name: "Review only what changed" })).toBeInTheDocument();
-    expect(screen.getByText(/eligible pre-lock odds apply automatically/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "One finding, one clear decision" })).toBeInTheDocument();
+    expect(screen.getByText(/eligible pre-lock odds continue to apply automatically/i)).toBeInTheDocument();
     expect(screen.getByText("Fight order changed.")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "CONFIRM CHANGE" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "KEEP CURRENT" })).toBeInTheDocument();
     expect(screen.queryByText("SYSTEM DETAILS")).not.toBeInTheDocument();
     expect(screen.queryByText("RECENT CHECKS")).not.toBeInTheDocument();
     expect(screen.queryByText("REVIEWED FINDINGS")).not.toBeInTheDocument();
   });
 
-  it("keeps the embedded event dashboard free of duplicate event cards", async () => {
+  it("keeps the embedded dashboard free of a duplicate standalone event card", async () => {
     renderPage(repository(inbox), gateway(), true);
 
     expect(await screen.findByRole("heading", { name: "AUTO-SYNC CHECKED THE EVENT" })).toBeInTheDocument();
@@ -229,18 +246,17 @@ describe("Monitoring Inbox", () => {
     expect(repo.runManualCheck).not.toHaveBeenCalled();
   });
 
-  it("keeps both existing review mutations", async () => {
-    const reviewRepo = repository(inbox);
-    renderPage(reviewRepo);
-
-    fireEvent.click(await screen.findByRole("button", { name: "MARK REVIEWED" }));
-    await waitFor(() => expect(reviewRepo.reviewFinding).toHaveBeenCalledWith(finding.findingId, "reviewed"));
+  it("keeps current and dismiss notice on the existing review mutation", async () => {
+    const keepRepo = repository(inbox);
+    renderPage(keepRepo);
+    fireEvent.click(await screen.findByRole("button", { name: "KEEP CURRENT" }));
+    await waitFor(() => expect(keepRepo.reviewFinding).toHaveBeenCalledWith(finding.findingId, "reviewed"));
     cleanup();
 
-    const dismissRepo = repository(inbox);
+    const dismissRepo = repository({ ...inbox, newFindings: [operationalFinding] });
     renderPage(dismissRepo);
-    fireEvent.click(await screen.findByRole("button", { name: "DISMISS" }));
-    await waitFor(() => expect(dismissRepo.reviewFinding).toHaveBeenCalledWith(finding.findingId, "dismissed"));
+    fireEvent.click(await screen.findByRole("button", { name: "DISMISS NOTICE" }));
+    await waitFor(() => expect(dismissRepo.reviewFinding).toHaveBeenCalledWith(operationalFinding.findingId, "dismissed"));
   });
 
   it("disables owner actions while a manual check is in progress", async () => {
@@ -252,9 +268,8 @@ describe("Monitoring Inbox", () => {
     fireEvent.click(await screen.findByRole("button", { name: "CHECK NOW" }));
     expect(await screen.findByRole("button", { name: "CHECKING NOW…" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "REFRESH STATUS" })).toBeDisabled();
-    const reviewButtons = screen.getAllByRole("button", { name: "MARK REVIEWED" });
-    expect(reviewButtons).not.toHaveLength(0);
-    for (const button of reviewButtons) expect(button).toBeDisabled();
+    expect(screen.getByRole("button", { name: "CONFIRM CHANGE" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "KEEP CURRENT" })).toBeDisabled();
     finish();
     await waitFor(() => expect(repo.loadInbox).toHaveBeenCalledTimes(2));
   });
@@ -278,7 +293,7 @@ describe("Monitoring Inbox", () => {
     expect(screen.queryByText("Fight order changed.")).not.toBeInTheDocument();
   });
 
-  it("keeps zero findings compact and omits the Pending Changes section", async () => {
+  it("keeps zero findings compact and omits the owner decisions section", async () => {
     renderPage(repository({
       ...inbox,
       unresolvedCount: 0,
@@ -287,8 +302,8 @@ describe("Monitoring Inbox", () => {
     }));
 
     expect(await screen.findByLabelText("Pending changes all clear")).toHaveTextContent("No event changes need your attention.");
-    expect(screen.queryByRole("heading", { name: "Review only what changed" })).not.toBeInTheDocument();
-    expect(screen.queryByText("PENDING CHANGES")).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "One finding, one clear decision" })).not.toBeInTheDocument();
+    expect(screen.queryByText("PENDING OWNER DECISIONS")).not.toBeInTheDocument();
   });
 
   it("explains the no-event state without a large empty findings section", async () => {
@@ -312,6 +327,6 @@ describe("Monitoring Inbox", () => {
     expect(await screen.findByRole("heading", { name: "Stage or publish the next UFC card." })).toBeInTheDocument();
     expect(screen.getByLabelText("Pending changes all clear")).toBeInTheDocument();
     expect(screen.getByText(/there is no event to monitor/i)).toBeInTheDocument();
-    expect(screen.queryByText("PENDING CHANGES")).not.toBeInTheDocument();
+    expect(screen.queryByText("PENDING OWNER DECISIONS")).not.toBeInTheDocument();
   });
 });

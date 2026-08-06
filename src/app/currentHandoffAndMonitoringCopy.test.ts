@@ -24,9 +24,12 @@ describe("current Octagon HQ handoff and monitoring copy", () => {
     expect(handoff).toContain("### 4. Audited post-lock corrections");
   });
 
-  it("distinguishes automatic odds, explicit approvals, and review-only findings", () => {
+  it("distinguishes automatic odds, structured approvals, and review-only findings", () => {
     expect(monitoringInbox).toContain(
-      "Eligible pre-lock odds apply automatically. Supported event-card changes apply only after your explicit approval; everything else remains review-only.",
+      "Eligible pre-lock odds continue to apply automatically. These UFC card changes use the existing owner-approved mutation path only after final confirmation.",
+    );
+    expect(monitoringInbox).toContain(
+      "These findings do not have a supported live-card repair action. Dismissing one records the review without implying a backend fix.",
     );
     expect(monitoringInbox).not.toContain(
       "Event-card changes stay review-only and are never published automatically.",

@@ -11,6 +11,7 @@ const monitoringPage = readFileSync("src/features/picks-monitoring/MonitoringInb
 const monitoringRepository = readFileSync("src/features/picks-monitoring/monitoringInboxRepository.ts", "utf8");
 const centerStyles = readFileSync("src/styles/picks-control-center.css", "utf8");
 const dashboardStyles = readFileSync("src/styles/open-picks-dashboard.css", "utf8");
+const decisionStyles = readFileSync("src/styles/picks-monitoring-decisions.css", "utf8");
 const main = readFileSync("src/main.tsx", "utf8");
 
 function occurrences(value: string, pattern: RegExp) {
@@ -67,18 +68,21 @@ describe("Unified Picks Control Center architecture", () => {
     expect(setupPage).toContain('navigate("/picks/control")');
   });
 
-  it("keeps technical evidence out while explicit supported approvals remain owner-only", () => {
+  it("keeps technical evidence collapsed while supported approvals remain structured and owner-only", () => {
     expect(monitoringPage).not.toContain("SYSTEM DETAILS");
     expect(monitoringPage).not.toContain("RAW DIAGNOSTICS");
     expect(monitoringPage).not.toContain("RECENT CHECKS");
     expect(monitoringPage).not.toContain("REVIEWED FINDINGS");
-    expect(monitoringPage).toContain("PENDING CHANGES");
-    expect(monitoringPage).toContain("Review only what changed");
+    expect(monitoringPage).toContain("PENDING OWNER DECISIONS");
+    expect(monitoringPage).toContain("One finding, one clear decision");
     expect(monitoringPage).toContain(
-      "Supported event-card changes apply only after your explicit approval; everything else remains review-only.",
+      "These UFC card changes use the existing owner-approved mutation path only after final confirmation.",
     );
-    expect(monitoringPage).toContain("repository.approveFinding!");
-    expect(monitoringPage).toContain('repository.reviewFinding(finding.findingId, status)');
+    expect(monitoringPage).toContain("APPLY CONFIRMED CHANGE");
+    expect(monitoringPage).toContain("repository.approveFinding(finding.findingId, presentation.auditReason)");
+    expect(monitoringPage).toContain('repository.reviewFinding(finding.findingId, "reviewed")');
+    expect(monitoringPage).toContain('repository.reviewFinding(finding.findingId, "dismissed")');
+    expect(monitoringPage).not.toMatch(/window\.prompt|<textarea|type="text"/);
   });
 
   it("keeps automation visible, refreshes canonical rows after approval, and protects the 390 pixel compact layout", () => {
@@ -86,6 +90,8 @@ describe("Unified Picks Control Center architecture", () => {
     expect(main.match(/styles\/open-picks-dashboard\.css/g)).toHaveLength(1);
     expect(centerStyles).toContain("@media (max-width: 480px)");
     expect(dashboardStyles).toContain("@media (max-width: 390px)");
+    expect(decisionStyles).toContain("@media (max-width: 390px)");
+    expect(decisionStyles).toContain("min-height: 44px");
     expect(centerStyles).toContain("overflow-wrap: anywhere");
     expect(dashboardStyles).toContain("open-pick-row__summary");
     expect(dashboardStyles).toContain("monitoring-inbox-page--embedded");
