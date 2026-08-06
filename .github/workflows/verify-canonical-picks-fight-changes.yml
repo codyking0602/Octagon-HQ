@@ -6,7 +6,9 @@ on:
     paths:
       - ".github/workflows/verify-canonical-picks-fight-changes.yml"
       - "supabase/migrations/202609140001_canonical_pick_fight_change_semantics.sql"
+      - "supabase/migrations/202609140002_preserve_pick_replacement_evidence.sql"
       - "supabase/tests/pick_monitoring_canonical_fight_changes.sql"
+      - "supabase/tests/pick_monitoring_repick_evidence_repair.sql"
   workflow_dispatch:
 
 permissions:
@@ -42,5 +44,7 @@ jobs:
 
           psql "$db_url" --set ON_ERROR_STOP=on \
             --file supabase/tests/pick_monitoring_canonical_fight_changes.sql
+          psql "$db_url" --set ON_ERROR_STOP=on \
+            --file supabase/tests/pick_monitoring_repick_evidence_repair.sql
 
-          echo "Canonical Picks fight-change semantics passed on a fresh database."
+          echo "Canonical Picks fight-change semantics and repick evidence passed on a fresh database."
