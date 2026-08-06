@@ -5,14 +5,21 @@ on:
     paths:
       - ".github/workflows/verify-picks-monitoring-approval.yml"
       - "src/features/picks-monitoring/**"
-      - "src/features/picks-control/PicksControlCenterPage.tsx"
+      - "src/features/picks-control/**"
+      - "src/features/picks/PicksPage.tsx"
+      - "src/styles/open-picks-dashboard.css"
       - "src/app/pickMonitoringApprovalArchitecture.test.ts"
+      - "src/app/picksOwnerWorkflowArchitecture.test.ts"
       - "supabase/migrations/202609110001_pick_monitoring_card_change_approval.sql"
       - "supabase/migrations/202609130001_actionable_current_pick_monitoring_findings.sql"
       - "supabase/migrations/202609130002_keep_resolved_pick_monitoring_findings_resolved.sql"
       - "supabase/migrations/202609130003_fix_pick_monitoring_inbox_typed_projection.sql"
+      - "supabase/migrations/202609140001_finish_picks_owner_workflow.sql"
+      - "supabase/migrations/202609140002_safe_pick_card_position_reflow.sql"
+      - "supabase/migrations/202609140003_reflow_pick_bout_inclusion.sql"
       - "supabase/tests/pick_monitoring_card_change_approval.sql"
       - "supabase/tests/pick_monitoring_equivalent_resolution.sql"
+      - "supabase/tests/picks_owner_workflow.sql"
   workflow_dispatch:
 
 permissions:
@@ -69,6 +76,10 @@ jobs:
         shell: bash
         run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/pick_monitoring_equivalent_resolution.sql
 
+      - name: Execute complete Picks owner workflow proof
+        shell: bash
+        run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/picks_owner_workflow.sql
+
       - name: Stop local Supabase database
         if: always()
         run: supabase stop --no-backup
@@ -78,16 +89,18 @@ jobs:
         shell: bash
         run: |
           {
-            echo "### Picks monitoring approval verified"
+            echo "### Picks owner workflow verified"
             echo "- Exact source SHA: \`$SOURCE_SHA\`"
             echo "- Fresh migrations: passed"
             echo "- Owner authorization: passed"
             echo "- Deadline approval: passed"
             echo "- Venue and location approval: passed"
             echo "- Weight-class approval: passed"
-            echo "- Fight removal approval: passed"
+            echo "- Fight removal approval and hidden audit row: passed"
+            echo "- Manual and detected fight addition approval: passed"
             echo "- Fighter replacement and repick boundary: passed"
-            echo "- Fight reorder approval: passed"
+            echo "- Fight reorder plus position-owned deadline reflow: passed"
+            echo "- Removal deadline reflow: passed"
             echo "- Duplicate collapse and supersession: passed"
             echo "- Resolved equivalent findings stay resolved: passed"
             echo "- Typed current-state inbox projection: passed"
