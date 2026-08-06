@@ -1,5 +1,6 @@
 name: Verify Canonical Picks Fight Changes
 
+# Focused fresh-database proof for PR 3's canonical mutation owner.
 on:
   pull_request:
     paths:
