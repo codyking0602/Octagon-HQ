@@ -1,9 +1,7 @@
 name: Repair PR 3 Migration Syntax
 
 on:
-  push:
-    branches:
-      - agent/picks-canonical-fight-change-semantics
+  pull_request:
     paths:
       - ".github/workflows/repair-pr3-migration.yml"
 
@@ -12,12 +10,13 @@ permissions:
 
 jobs:
   repair:
+    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
       - name: Check out PR branch
         uses: actions/checkout@v4
         with:
-          ref: agent/picks-canonical-fight-change-semantics
+          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Repair exact declarations and remove helper workflow
         shell: bash
@@ -47,4 +46,4 @@ jobs:
           git add supabase/migrations/202609140001_canonical_pick_fight_change_semantics.sql
           git add -u .github/workflows/repair-pr3-migration.yml
           git commit -m "Fix canonical fight-change normalization syntax"
-          git push origin HEAD:agent/picks-canonical-fight-change-semantics
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
