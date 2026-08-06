@@ -1,8 +1,8 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-const controlPage = readFileSync(
-  "src/features/picks-control/PicksControlPage.tsx",
+const openDashboard = readFileSync(
+  "src/features/picks-control/OpenPicksDashboard.tsx",
   "utf8",
 );
 const controlCenter = readFileSync(
@@ -19,17 +19,17 @@ const timing = readFileSync(
 );
 const styles = readFileSync("src/styles/picks-control.css", "utf8");
 
-const progressiveBoutActions = controlPage.slice(
-  controlPage.indexOf("function extendBoutLockTime"),
-  controlPage.indexOf("function lockEvent"),
+const progressiveBoutActions = openDashboard.slice(
+  openDashboard.indexOf("function extendBoutLockTime"),
+  openDashboard.indexOf("function setCancellation"),
 );
 
 describe("owner progressive-lock controls", () => {
   it("offers the approved compact actions through the one canonical repository owner", () => {
-    expect(controlPage).toContain('"+10 MIN"');
-    expect(controlPage).toContain('"+20 MIN"');
-    expect(controlPage).toContain('"SET TIME"');
-    expect(controlPage.match(/repository\.adjustBoutLockTime!/g)).toHaveLength(2);
+    expect(openDashboard).toContain('"+10 MIN"');
+    expect(openDashboard).toContain('"+20 MIN"');
+    expect(openDashboard).toContain('"SET TIME"');
+    expect(openDashboard.match(/repository\.adjustBoutLockTime!/g)).toHaveLength(2);
     expect(repository.match(/adjust_pick_bout_lock_time/g)).toHaveLength(1);
     expect(repository.match(/adjustBoutLockTime/g)?.length).toBeGreaterThanOrEqual(2);
     expect(progressiveBoutActions).toContain("function extendBoutLockTime");
@@ -43,12 +43,12 @@ describe("owner progressive-lock controls", () => {
     expect(timing).toContain('bout.resultStatus !== "pending"');
     expect(timing).toContain("bout.isLocked === true");
     expect(timing).toContain("now >= deadline");
-    expect(controlPage).toContain("DEADLINE FINAL");
-    expect(controlPage).toContain("Once locked, the deadline is final");
-    expect(controlPage).toContain("await action();");
-    expect(controlPage).toContain("await loadEvent(event?.eventId);");
-    expect(controlPage.indexOf("await action();")).toBeLessThan(
-      controlPage.indexOf("await loadEvent(event?.eventId);"),
+    expect(openDashboard).toContain("DEADLINE FINAL");
+    expect(openDashboard).toContain("Once its effective deadline passes, it cannot reopen");
+    expect(openDashboard).toContain("await action();");
+    expect(openDashboard).toContain("await loadEvent(event?.eventId);");
+    expect(openDashboard.indexOf("await action();")).toBeLessThan(
+      openDashboard.indexOf("await loadEvent(event?.eventId);"),
     );
   });
 
