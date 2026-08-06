@@ -75,6 +75,10 @@ function boutLabel(bout: Pick<SourceBout, "red_fighter_name" | "blue_fighter_nam
   return `${bout.red_fighter_name} vs. ${bout.blue_fighter_name}`;
 }
 
+function discoveredOrChanged(label: string, beforeValue: unknown) {
+  return `${label} ${beforeValue === null ? "found" : "changed"}.`;
+}
+
 function uniqueDetails(changes: SourceChangeDetail[]) {
   const seen = new Set<string>();
   return changes.filter((change) => {
@@ -109,7 +113,11 @@ export function sourceChangeDetails(currentValue: unknown, event: SourceEvent, e
     const matches = comparison === "semantic"
       ? monitoringValuesEquivalent(beforeValue, afterValue)
       : beforeValue === afterValue;
-    if (!matches) changes.push({ summary: `${label} changed.`, beforeValue, afterValue });
+    if (!matches) changes.push({
+      summary: discoveredOrChanged(label, beforeValue),
+      beforeValue,
+      afterValue,
+    });
   }
 
   const timestampFields: Array<[string, unknown, unknown]> = [
@@ -119,9 +127,10 @@ export function sourceChangeDetails(currentValue: unknown, event: SourceEvent, e
   ];
   for (const [label, oldValue, newValue] of timestampFields) {
     if (!timestampsMatch(oldValue, newValue)) {
+      const beforeValue = displayValue(oldValue);
       changes.push({
-        summary: `${label} changed.`,
-        beforeValue: displayValue(oldValue),
+        summary: discoveredOrChanged(label, beforeValue),
+        beforeValue,
         afterValue: displayValue(newValue),
       });
     }
@@ -165,7 +174,9 @@ export function sourceChangeDetails(currentValue: unknown, event: SourceEvent, e
     const afterWeight = displayValue(bout.weight_class);
     if (!monitoringValuesEquivalent(beforeWeight, afterWeight)) {
       changes.push({
-        summary: `Weight class changed for ${boutLabel(bout)}.`,
+        summary: beforeWeight === null
+          ? `Weight class found for ${boutLabel(bout)}.`
+          : `Weight class changed for ${boutLabel(bout)}.`,
         beforeValue: beforeWeight,
         afterValue: afterWeight,
       });

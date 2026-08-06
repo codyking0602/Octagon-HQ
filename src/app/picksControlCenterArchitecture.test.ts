@@ -81,7 +81,7 @@ describe("Unified Picks Control Center architecture", () => {
     expect(monitoringPage).toContain('repository.reviewFinding(finding.findingId, status)');
   });
 
-  it("keeps automation visible and protects the 390 pixel compact layout", () => {
+  it("keeps automation visible, refreshes canonical rows after approval, and protects the 390 pixel compact layout", () => {
     expect(main.match(/styles\/picks-control-center\.css/g)).toHaveLength(1);
     expect(main.match(/styles\/open-picks-dashboard\.css/g)).toHaveLength(1);
     expect(centerStyles).toContain("@media (max-width: 480px)");
@@ -90,6 +90,11 @@ describe("Unified Picks Control Center architecture", () => {
     expect(dashboardStyles).toContain("open-pick-row__summary");
     expect(dashboardStyles).toContain("monitoring-inbox-page--embedded");
     expect(centerStyles).not.toMatch(/#monitoring[^}]+monitoring-status[^}]+display:\s*none/s);
-    expect(center).toContain("<MonitoringInboxPage repository={monitoringRepository} embedded />");
+    expect(center).toContain("<MonitoringInboxPage");
+    expect(center).toContain("repository={monitoringRepository}");
+    expect(center).toContain("embedded");
+    expect(center).toContain("onAppliedChange={() => setControlRevision");
+    expect(center).toContain("<OpenPicksDashboard key={controlRevision}");
+    expect(center).toContain("<PicksControlPage key={controlRevision}");
   });
 });

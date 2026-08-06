@@ -228,7 +228,11 @@ export default function PicksControlCenterPage({
 
       {activeEvent?.status === "upcoming" ? (
         <section id="monitoring" className="picks-control-center__section" aria-label="Automatic monitoring and card review">
-          <MonitoringInboxPage repository={monitoringRepository} embedded />
+          <MonitoringInboxPage
+            repository={monitoringRepository}
+            embedded
+            onAppliedChange={() => setControlRevision((revision) => revision + 1)}
+          />
         </section>
       ) : null}
 

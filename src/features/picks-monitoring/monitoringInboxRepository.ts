@@ -86,6 +86,22 @@ const approvalProposalSchema = z.discriminatedUnion("action", [
     proposed_locks_at: z.string(),
   }),
   z.object({
+    action: z.literal("update_event_metadata"),
+    event_id: z.string(),
+    field: z.enum(["venue", "location"]),
+    expected_value: z.string().nullable(),
+    proposed_value: z.string(),
+  }),
+  z.object({
+    action: z.literal("update_bout_weight_class"),
+    event_id: z.string(),
+    bout_id: z.string(),
+    expected_weight_class: z.string().nullable(),
+    proposed_weight_class: z.string(),
+    expected_red_fighter_slug: z.string(),
+    expected_blue_fighter_slug: z.string(),
+  }),
+  z.object({
     action: z.literal("remove_bout"),
     event_id: z.string(),
     bout_id: z.string(),

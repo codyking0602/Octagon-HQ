@@ -34,12 +34,16 @@ const source = {
   source: "UFC.com + MMA Mania",
 };
 
-function findings(nextSource: typeof source, kind: "current" | "staged" = "current") {
+function findings(
+  nextSource: typeof source,
+  kind: "current" | "staged" = "current",
+  nextCanonical = canonical,
+) {
   return buildCardChangeFindings({
     identity: "ufc:events/ufc-approval",
     kind,
     eventId: kind === "current" ? canonical.event_id : undefined,
-    canonical,
+    canonical: nextCanonical,
     source: nextSource,
     scope: "main",
     detectedAt: "2099-08-01T12:00:00.000Z",
@@ -62,6 +66,7 @@ describe("monitoring card-change approval proposals", () => {
       bout_id: first.bout_id,
       summary: "Replace Beta with Replacement.",
       source_details: {
+        change_field: "fighters",
         approval_proposal: {
           action: "replace_fighter",
           event_id: canonical.event_id,
@@ -104,7 +109,7 @@ describe("monitoring card-change approval proposals", () => {
     });
   });
 
-  it("stores exact before and after values while ignoring cosmetic text differences", () => {
+  it("creates audited venue, location, and weight-class approval proposals", () => {
     const changed = findings({
       ...source,
       venue: "New Arena",
@@ -117,19 +122,89 @@ describe("monitoring card-change approval proposals", () => {
         summary: "Venue changed.",
         before_value: "Test Arena",
         after_value: "New Arena",
+        source_details: expect.objectContaining({
+          change_field: "venue",
+          approval_proposal: {
+            action: "update_event_metadata",
+            event_id: canonical.event_id,
+            field: "venue",
+            expected_value: "Test Arena",
+            proposed_value: "New Arena",
+          },
+        }),
       }),
       expect.objectContaining({
         summary: "Location changed.",
         before_value: "Dallas, Texas",
         after_value: "Austin, Texas",
+        source_details: expect.objectContaining({
+          change_field: "location",
+          approval_proposal: expect.objectContaining({
+            action: "update_event_metadata",
+            field: "location",
+          }),
+        }),
       }),
       expect.objectContaining({
         summary: "Weight class changed for Alpha vs. Beta.",
         before_value: "Lightweight",
         after_value: "Catchweight",
+        bout_id: first.bout_id,
+        source_details: expect.objectContaining({
+          change_field: "weight_class",
+          approval_proposal: expect.objectContaining({
+            action: "update_bout_weight_class",
+            bout_id: first.bout_id,
+            expected_weight_class: "Lightweight",
+            proposed_weight_class: "Catchweight",
+          }),
+        }),
       }),
     ]));
+  });
 
+  it("uses discovery wording and set proposals when prior values are unavailable", () => {
+    const result = findings(source, "current", {
+      ...canonical,
+      venue: "",
+      location: "",
+      bouts: [{ ...first, weight_class: "" }, second],
+    });
+
+    expect(result).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        summary: "Venue found.",
+        before_value: null,
+        after_value: "Test Arena",
+      }),
+      expect.objectContaining({
+        summary: "Location found.",
+        before_value: null,
+        after_value: "Dallas, Texas",
+      }),
+      expect.objectContaining({
+        summary: "Weight class found for Alpha vs. Beta.",
+        before_value: null,
+        after_value: "Lightweight",
+      }),
+    ]));
+    expect(result.every((item) => !item.summary.includes("changed") || item.before_value !== null)).toBe(true);
+  });
+
+  it("collapses equivalent repeated work behind a deterministic proposed-value key", () => {
+    const firstRun = findings({ ...source, venue: "New Arena" });
+    const repeatedRun = findings({ ...source, venue: "New Arena" });
+    const newerProposal = findings({ ...source, venue: "Newest Arena" });
+
+    const venueFirst = firstRun.find((item) => item.source_details?.change_field === "venue");
+    const venueRepeated = repeatedRun.find((item) => item.source_details?.change_field === "venue");
+    const venueNewer = newerProposal.find((item) => item.source_details?.change_field === "venue");
+    expect(venueFirst?.finding_key).toBe(venueRepeated?.finding_key);
+    expect(venueFirst?.source_details?.finding_identity).toBe(venueNewer?.source_details?.finding_identity);
+    expect(venueFirst?.finding_key).not.toBe(venueNewer?.finding_key);
+  });
+
+  it("ignores cosmetic text differences", () => {
     expect(findings({
       ...source,
       venue: "  TEST   ARENA ",

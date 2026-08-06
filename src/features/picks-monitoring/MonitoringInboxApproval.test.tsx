@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import { IdentityProvider } from "../identity/IdentityProvider";
 import type { IdentityGateway } from "../identity/identityGateway";
 import MonitoringInboxPage from "./MonitoringInboxPage";
-import type { MonitoringInbox } from "./monitoringInboxModel";
+import type { MonitoringInbox, MonitoringFinding } from "./monitoringInboxModel";
 import type { MonitoringInboxRepository } from "./monitoringInboxRepository";
 
 const owner = {
@@ -24,26 +24,26 @@ function gateway(): IdentityGateway {
   };
 }
 
-const replacementFinding = {
+const replacementFinding: MonitoringFinding = {
   findingId: "22222222-2222-4222-8222-222222222222",
   runId: "33333333-3333-4333-8333-333333333333",
-  triggerKind: "manual" as const,
-  runStatus: "completed" as const,
+  triggerKind: "manual",
+  runStatus: "completed",
   findingKey: "replacement",
-  findingType: "card_change" as const,
-  severity: "warning" as const,
-  reviewStatus: "new" as const,
+  findingType: "card_change",
+  severity: "warning",
+  reviewStatus: "new",
   matchupIdentity: "alpha|beta",
   boutId: "main-event-alpha-beta",
   summary: "Replace Beta with Replacement.",
   beforeValue: { blue_fighter_name: "Beta" },
   afterValue: { blue_fighter_name: "Replacement" },
-  sourceDetails: {},
+  sourceDetails: { change_field: "fighters" },
   approvalProposal: {
-    action: "replace_fighter" as const,
+    action: "replace_fighter",
     event_id: "ufc-approval",
     bout_id: "main-event-alpha-beta",
-    corner: "blue" as const,
+    corner: "blue",
     expected_red_fighter_slug: "alpha",
     expected_blue_fighter_slug: "beta",
     replacement_fighter_slug: "replacement",
@@ -51,6 +51,37 @@ const replacementFinding = {
   },
   detectedAt: "2099-08-01T12:00:00.000Z",
   reviewedAt: null,
+};
+
+const venueFinding: MonitoringFinding = {
+  ...replacementFinding,
+  findingId: "44444444-4444-4444-8444-444444444444",
+  findingKey: "venue",
+  matchupIdentity: null,
+  boutId: null,
+  summary: "Venue found.",
+  beforeValue: null,
+  afterValue: "Meta APEX",
+  sourceDetails: { change_field: "venue" },
+  approvalProposal: {
+    action: "update_event_metadata",
+    event_id: "ufc-approval",
+    field: "venue",
+    expected_value: null,
+    proposed_value: "Meta APEX",
+  },
+};
+
+const oddsFinding: MonitoringFinding = {
+  ...replacementFinding,
+  findingId: "55555555-5555-4555-8555-555555555555",
+  findingKey: "odds",
+  findingType: "odds_change",
+  summary: "American odds changed and were applied automatically.",
+  beforeValue: [{ fighter_identity: "alpha", american_odds: -120 }],
+  afterValue: [{ fighter_identity: "alpha", american_odds: -135 }],
+  sourceDetails: { change_field: "odds", automatically_applied: true },
+  approvalProposal: null,
 };
 
 const inbox: MonitoringInbox = {
@@ -95,23 +126,34 @@ const inbox: MonitoringInbox = {
   recentRuns: [],
 };
 
-function repository(value: MonitoringInbox = inbox): MonitoringInboxRepository {
+const emptyInbox: MonitoringInbox = {
+  ...inbox,
+  unresolvedCount: 0,
+  newFindings: [],
+};
+
+function repository(...values: MonitoringInbox[]): MonitoringInboxRepository {
   return {
-    loadInbox: vi.fn().mockResolvedValue(value),
+    loadInbox: vi.fn()
+      .mockResolvedValueOnce(values[0] ?? inbox)
+      .mockResolvedValue(values[1] ?? values[0] ?? inbox),
     runManualCheck: vi.fn().mockResolvedValue(undefined),
     approveFinding: vi.fn().mockResolvedValue(undefined),
     reviewFinding: vi.fn().mockResolvedValue(undefined),
   };
 }
 
-function renderPage(repo: MonitoringInboxRepository) {
-  return render(
-    <MemoryRouter>
-      <IdentityProvider gateway={gateway()}>
-        <MonitoringInboxPage repository={repo} />
-      </IdentityProvider>
-    </MemoryRouter>,
-  );
+function renderPage(repo: MonitoringInboxRepository, onAppliedChange = vi.fn()) {
+  return {
+    onAppliedChange,
+    ...render(
+      <MemoryRouter>
+        <IdentityProvider gateway={gateway()}>
+          <MonitoringInboxPage repository={repo} onAppliedChange={onAppliedChange} />
+        </IdentityProvider>
+      </MemoryRouter>,
+    ),
+  };
 }
 
 beforeEach(() => {
@@ -125,31 +167,70 @@ afterEach(() => {
 });
 
 describe("Monitoring Inbox approval actions", () => {
-  it("explicitly approves an applyable replacement through the repository and refreshes", async () => {
-    const repo = repository();
+  it("renders the shared APPROVE CHANGE action for supported findings", async () => {
+    const repo = repository({ ...inbox, newFindings: [venueFinding] });
     renderPage(repo);
 
-    expect(await screen.findByText("REPICK REQUIRED FOR AFFECTED MEMBERS")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "APPROVE REPLACEMENT" }));
+    expect(await screen.findByRole("button", { name: "APPROVE CHANGE" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Set venue to Meta APEX")).toBeInTheDocument();
+    expect(screen.queryByText(/Not set/i)).not.toBeInTheDocument();
+  });
 
-    await waitFor(() => expect(repo.approveFinding).toHaveBeenCalledWith(
+  it("approves through the canonical repository exactly once, refreshes control state, and removes the finding", async () => {
+    const repo = repository(inbox, emptyInbox);
+    const onAppliedChange = vi.fn().mockResolvedValue(undefined);
+    renderPage(repo, onAppliedChange);
+
+    expect(await screen.findByText("REPICK REQUIRED FOR AFFECTED MEMBERS")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "APPROVE CHANGE" }));
+
+    await waitFor(() => expect(repo.approveFinding).toHaveBeenCalledTimes(1));
+    expect(repo.approveFinding).toHaveBeenCalledWith(
       replacementFinding.findingId,
       "Official source confirmed",
-    ));
+    );
+    await waitFor(() => expect(onAppliedChange).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(repo.loadInbox).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(screen.queryByText(replacementFinding.summary)).not.toBeInTheDocument());
     expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining(
       "The backend will reject it if the live card changed since this check.",
     ));
   });
 
-  it("keeps unsupported findings review-only", async () => {
+  it("keeps informational findings acknowledgment-only", async () => {
     const repo = repository({
       ...inbox,
-      newFindings: [{ ...replacementFinding, approvalProposal: null, summary: "Venue changed." }],
+      newFindings: [{
+        ...replacementFinding,
+        approvalProposal: null,
+        findingType: "unmatched_fight",
+        summary: "A monitored bout did not confidently match a provider snapshot.",
+      }],
     });
     renderPage(repo);
 
     expect(await screen.findByRole("button", { name: "MARK REVIEWED" })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /APPROVE/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "APPROVE CHANGE" })).not.toBeInTheDocument();
+  });
+
+  it("labels automatically applied odds and never offers approval", async () => {
+    const repo = repository({ ...inbox, newFindings: [oddsFinding] });
+    renderPage(repo);
+
+    expect(await screen.findByText("ALREADY APPLIED AUTOMATICALLY")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "MARK REVIEWED" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "APPROVE CHANGE" })).not.toBeInTheDocument();
+  });
+
+  it("uses the unique visible finding count", async () => {
+    const repo = repository({
+      ...inbox,
+      unresolvedCount: 2,
+      newFindings: [venueFinding, oddsFinding],
+    });
+    renderPage(repo);
+
+    const counts = await screen.findAllByText("2");
+    expect(counts.length).toBeGreaterThanOrEqual(2);
   });
 });
