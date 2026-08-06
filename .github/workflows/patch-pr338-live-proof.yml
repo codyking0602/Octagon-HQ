@@ -1,0 +1,62 @@
+name: Patch PR 338 live proof
+
+on:
+  push:
+    branches:
+      - agent/repair-current-ufc-event-date-evidence
+    paths:
+      - ".github/workflows/patch-pr338-live-proof.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/repair-current-ufc-event-date-evidence
+          fetch-depth: 0
+
+      - name: Align live owner proof with PR 2 monitoring UI
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("scripts/verify-pin-auth-live.mjs")
+          text = path.read_text()
+
+          old_duplicate = '''      if (await monitoringRegion.getByText("CURRENT EVENT", { exact: true }).count()) {
+                throw new Error("The unified dashboard repeated the current event inside monitoring.");
+              }'''
+          new_duplicate = '''      if (await monitoringRegion.locator(".monitoring-event").count()) {
+                throw new Error("The unified dashboard repeated the standalone current event card inside monitoring.");
+              }'''
+          if old_duplicate not in text:
+              raise SystemExit("Expected stale duplicate-event assertion was not found.")
+          text = text.replace(old_duplicate, new_duplicate, 1)
+
+          old_heading = 'getByRole("heading", { name: "Review only what changed" })'
+          replacement_heading = 'getByRole("heading", { name: "One finding, one clear decision" })'
+          heading_count = text.count(old_heading)
+          if heading_count != 2:
+              raise SystemExit(f"Expected two stale pending-heading assertions, found {heading_count}.")
+          text = text.replace(old_heading, replacement_heading)
+
+          path.write_text(text)
+          PY
+
+      - name: Commit exact proof repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/verify-pin-auth-live.mjs
+          git diff --cached --check
+          git commit -m "Align live Picks proof with PR 2 monitoring UI"
+          git push origin HEAD:agent/repair-current-ufc-event-date-evidence
