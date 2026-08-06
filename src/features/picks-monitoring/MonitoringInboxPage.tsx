@@ -3,6 +3,10 @@ import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import type { CardChangeApprovalProposal } from "./cardChangeApproval";
 import {
+  compactMonitoringValue,
+  monitoringValuesEquivalent,
+} from "./monitoringChangeValues";
+import {
   monitoringFindingTypeLabel,
   type MonitoringFinding,
 } from "./monitoringInboxModel";
@@ -29,25 +33,29 @@ function readableError(error: unknown) {
   return message;
 }
 
-function evidenceLabel(value: unknown) {
-  if (value === null || value === undefined) return null;
-  if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") return String(value);
-  return JSON.stringify(value, null, 2);
+function hasEvidenceValue(value: unknown) {
+  return value !== null && value !== undefined;
+}
+
+function isEquivalentFinding(finding: MonitoringFinding) {
+  return hasEvidenceValue(finding.beforeValue)
+    && hasEvidenceValue(finding.afterValue)
+    && monitoringValuesEquivalent(finding.beforeValue, finding.afterValue);
 }
 
 function FindingEvidence({ finding }: { finding: MonitoringFinding }) {
-  const before = evidenceLabel(finding.beforeValue);
-  const after = evidenceLabel(finding.afterValue);
-  if (!before && !after) return null;
+  const hasBefore = hasEvidenceValue(finding.beforeValue);
+  const hasAfter = hasEvidenceValue(finding.afterValue);
+  if (!hasBefore && !hasAfter) return null;
 
+  const before = compactMonitoringValue(finding.beforeValue);
+  const after = compactMonitoringValue(finding.afterValue);
   return (
-    <details className="monitoring-evidence">
-      <summary>VIEW CHANGE</summary>
-      <div>
-        {before ? <section><span>BEFORE</span><pre>{before}</pre></section> : null}
-        {after ? <section><span>AFTER</span><pre>{after}</pre></section> : null}
-      </div>
-    </details>
+    <p className="monitoring-evidence" aria-label={`${before} changed to ${after}`}>
+      <span title={before}>{before}</span>
+      <b aria-hidden="true">→</b>
+      <span title={after}>{after}</span>
+    </p>
   );
 }
 
@@ -180,6 +188,7 @@ export default function MonitoringInboxPage({
           ? `Last scheduled provider check ${displayTime(decision?.attemptedAt)}.`
           : `Auto-sync reviewed its schedule ${displayTime(inbox?.scheduler.lastWakeStartedAt)}, but ${skippedReason}.`;
   const sourceUrl = inbox?.latestRun?.cardSourceUrl ?? null;
+  const pendingFindings = inbox?.newFindings.filter((finding) => !isEquivalentFinding(finding)) ?? [];
 
   return (
     <div className={`page monitoring-inbox-page${embedded ? " monitoring-inbox-page--embedded" : ""}`}>
@@ -218,9 +227,9 @@ export default function MonitoringInboxPage({
             <p>{automationDetail}</p>
             <div className="monitoring-status__grid" aria-label="Automation status">
               <div><span>NEXT CHECK</span><strong>{displayTime(inbox.scheduleState?.nextEligibleAt)}</strong></div>
-              <div><span>CHANGES TO REVIEW</span><strong>{inbox.unresolvedCount}</strong></div>
+              <div><span>CHANGES TO REVIEW</span><strong>{pendingFindings.length}</strong></div>
             </div>
-            {inbox.newFindings.length === 0 ? (
+            {pendingFindings.length === 0 ? (
               <div className="monitoring-status__all-clear" aria-label="Pending changes all clear">
                 <span>ALL CLEAR</span>
                 <strong>No event changes need your attention.</strong>
@@ -261,16 +270,16 @@ export default function MonitoringInboxPage({
             </section>
           ) : null}
 
-          {inbox.newFindings.length ? (
+          {pendingFindings.length ? (
             <section className="monitoring-section" aria-labelledby="monitoring-findings-title">
               <div className="monitoring-section__heading">
                 <div><p className="eyebrow">PENDING CHANGES</p><h2 id="monitoring-findings-title">Review only what changed</h2></div>
-                <span>{inbox.newFindings.length}</span>
+                <span>{pendingFindings.length}</span>
               </div>
               <p className="monitoring-section__note">
                 Eligible pre-lock odds apply automatically. Supported event-card changes apply only after your explicit approval; everything else remains review-only.
               </p>
-              {inbox.newFindings.map((finding) => {
+              {pendingFindings.map((finding) => {
                 const busy = busyAction === `finding:${finding.findingId}`;
                 return (
                   <article className={`surface-card monitoring-finding monitoring-finding--${finding.severity}`} key={finding.findingId}>
