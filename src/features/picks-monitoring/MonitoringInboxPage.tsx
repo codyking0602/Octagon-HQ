@@ -60,9 +60,13 @@ function approvalActionLabel(proposal: CardChangeApprovalProposal) {
 
 interface MonitoringInboxPageProps {
   repository?: MonitoringInboxRepository | null;
+  embedded?: boolean;
 }
 
-export default function MonitoringInboxPage({ repository: suppliedRepository }: MonitoringInboxPageProps) {
+export default function MonitoringInboxPage({
+  repository: suppliedRepository,
+  embedded = false,
+}: MonitoringInboxPageProps) {
   const identity = useIdentity();
   const [repository] = useState<MonitoringInboxRepository | null>(() => (
     suppliedRepository === undefined ? createMonitoringInboxRepository() : suppliedRepository
@@ -164,20 +168,21 @@ export default function MonitoringInboxPage({ repository: suppliedRepository }: 
   const skippedReason = decision?.reason === "no_event"
     ? "there is no event to monitor"
     : decision?.reason === "already_claimed"
-      ? "another monitoring run already claimed this check"
+      ? "another authorized check was already in progress"
       : "no provider check was due";
   const automationDetail = !schedulerReady
     ? "Automatic monitoring is not fully configured. Run a check now and review the result."
     : scheduledFailure
-      ? `Scheduled monitoring failed ${displayTime(decision?.attemptedAt)}. Run a check now and review the result.`
+      ? `Auto-sync could not complete its scheduled event check ${displayTime(decision?.attemptedAt)}. Run a check now and review the result.`
       : partialCoverage
         ? `The scheduled provider check at ${displayTime(decision?.attemptedAt)} returned partial coverage.`
         : scheduledProviderWorked
           ? `Last scheduled provider check ${displayTime(decision?.attemptedAt)}.`
-          : `Scheduler woke ${displayTime(inbox?.scheduler.lastWakeStartedAt)}, but ${skippedReason}.`;
+          : `Auto-sync reviewed its schedule ${displayTime(inbox?.scheduler.lastWakeStartedAt)}, but ${skippedReason}.`;
+  const sourceUrl = inbox?.latestRun?.cardSourceUrl ?? null;
 
   return (
-    <div className="page monitoring-inbox-page">
+    <div className={`page monitoring-inbox-page${embedded ? " monitoring-inbox-page--embedded" : ""}`}>
       {!identity.ready || loading ? (
         <section className="surface-card monitoring-inbox-state" aria-live="polite">
           <strong>Loading owner monitoring…</strong>
@@ -215,12 +220,26 @@ export default function MonitoringInboxPage({ repository: suppliedRepository }: 
               <div><span>NEXT CHECK</span><strong>{displayTime(inbox.scheduleState?.nextEligibleAt)}</strong></div>
               <div><span>CHANGES TO REVIEW</span><strong>{inbox.unresolvedCount}</strong></div>
             </div>
-            <button className="primary-action" type="button" disabled={Boolean(busyAction)} onClick={runManualCheck}>
-              {busyAction === "manual" ? "CHECKING NOW…" : "CHECK NOW"}
-            </button>
+            {inbox.newFindings.length === 0 ? (
+              <div className="monitoring-status__all-clear" aria-label="Pending changes all clear">
+                <span>ALL CLEAR</span>
+                <strong>No event changes need your attention.</strong>
+              </div>
+            ) : null}
+            <div className="monitoring-status__actions">
+              <button className="primary-action" type="button" disabled={Boolean(busyAction)} onClick={runManualCheck}>
+                {busyAction === "manual" ? "CHECKING NOW…" : "CHECK NOW"}
+              </button>
+              <button className="secondary-action" type="button" disabled={Boolean(busyAction)} onClick={() => void loadInbox()}>
+                REFRESH STATUS
+              </button>
+              {sourceUrl ? (
+                <a className="secondary-action" href={sourceUrl} target="_blank" rel="noreferrer">OPEN UFC EVENT SOURCE</a>
+              ) : null}
+            </div>
           </section>
 
-          {inbox.monitoredEvent ? (
+          {!embedded && inbox.monitoredEvent ? (
             <section className="surface-card monitoring-event">
               <div>
                 <p className="eyebrow">CURRENT EVENT</p>
@@ -232,61 +251,57 @@ export default function MonitoringInboxPage({ repository: suppliedRepository }: 
                 <span>LOCK {displayTime(inbox.monitoredEvent.locksAt)}</span>
               </div>
             </section>
-          ) : (
+          ) : null}
+
+          {!embedded && !inbox.monitoredEvent ? (
             <section className="surface-card monitoring-inbox-state">
               <p className="eyebrow">NO CURRENT EVENT</p>
               <h2>Stage or publish the next UFC card.</h2>
               <Link className="primary-action" to="/picks/setup">OPEN EVENT SETUP</Link>
             </section>
-          )}
+          ) : null}
 
-          <section className="monitoring-section" aria-labelledby="monitoring-findings-title">
-            <div className="monitoring-section__heading">
-              <div><p className="eyebrow">PENDING CHANGES</p><h2 id="monitoring-findings-title">Review only what changed</h2></div>
-              <span>{inbox.newFindings.length}</span>
-            </div>
-            <p className="monitoring-section__note">
-              Eligible pre-lock odds apply automatically. Supported event-card changes apply only after your explicit approval; everything else remains review-only.
-            </p>
-            {inbox.newFindings.length ? inbox.newFindings.map((finding) => {
-              const busy = busyAction === `finding:${finding.findingId}`;
-              return (
-                <article className={`surface-card monitoring-finding monitoring-finding--${finding.severity}`} key={finding.findingId}>
-                  <div className="monitoring-finding__topline">
-                    <span>{monitoringFindingTypeLabel(finding.findingType)}</span>
-                    <small>{displayTime(finding.detectedAt)}</small>
-                  </div>
-                  <h3>{finding.summary}</h3>
-                  {finding.matchupIdentity ? <p>{finding.matchupIdentity.replaceAll("|", " vs. ")}</p> : null}
-                  <FindingEvidence finding={finding} />
-                  {finding.approvalProposal?.action === "replace_fighter" ? (
-                    <p className="monitoring-section__note">REPICK REQUIRED FOR AFFECTED MEMBERS</p>
-                  ) : null}
-                  <div className="monitoring-finding__actions">
-                    {finding.approvalProposal ? (
-                      <button type="button" disabled={Boolean(busyAction)} onClick={() => approveFinding(finding)}>
-                        {busy ? "APPLYING…" : approvalActionLabel(finding.approvalProposal)}
-                      </button>
-                    ) : (
-                      <button type="button" disabled={Boolean(busyAction)} onClick={() => reviewFinding(finding, "reviewed")}>
-                        {busy ? "SAVING…" : "MARK REVIEWED"}
-                      </button>
-                    )}
-                    <button type="button" disabled={Boolean(busyAction)} onClick={() => reviewFinding(finding, "dismissed")}>DISMISS</button>
-                  </div>
-                </article>
-              );
-            }) : (
-              <section className="surface-card monitoring-empty">
-                <p className="eyebrow">ALL CLEAR</p>
-                <h3>No event changes need your attention.</h3>
-              </section>
-            )}
-          </section>
+          {inbox.newFindings.length ? (
+            <section className="monitoring-section" aria-labelledby="monitoring-findings-title">
+              <div className="monitoring-section__heading">
+                <div><p className="eyebrow">PENDING CHANGES</p><h2 id="monitoring-findings-title">Review only what changed</h2></div>
+                <span>{inbox.newFindings.length}</span>
+              </div>
+              <p className="monitoring-section__note">
+                Eligible pre-lock odds apply automatically. Supported event-card changes apply only after your explicit approval; everything else remains review-only.
+              </p>
+              {inbox.newFindings.map((finding) => {
+                const busy = busyAction === `finding:${finding.findingId}`;
+                return (
+                  <article className={`surface-card monitoring-finding monitoring-finding--${finding.severity}`} key={finding.findingId}>
+                    <div className="monitoring-finding__topline">
+                      <span>{monitoringFindingTypeLabel(finding.findingType)}</span>
+                      <small>{displayTime(finding.detectedAt)}</small>
+                    </div>
+                    <h3>{finding.summary}</h3>
+                    {finding.matchupIdentity ? <p>{finding.matchupIdentity.replaceAll("|", " vs. ")}</p> : null}
+                    <FindingEvidence finding={finding} />
+                    {finding.approvalProposal?.action === "replace_fighter" ? (
+                      <p className="monitoring-section__note">REPICK REQUIRED FOR AFFECTED MEMBERS</p>
+                    ) : null}
+                    <div className="monitoring-finding__actions">
+                      {finding.approvalProposal ? (
+                        <button type="button" disabled={Boolean(busyAction)} onClick={() => approveFinding(finding)}>
+                          {busy ? "APPLYING…" : approvalActionLabel(finding.approvalProposal)}
+                        </button>
+                      ) : (
+                        <button type="button" disabled={Boolean(busyAction)} onClick={() => reviewFinding(finding, "reviewed")}>
+                          {busy ? "SAVING…" : "MARK REVIEWED"}
+                        </button>
+                      )}
+                      <button type="button" disabled={Boolean(busyAction)} onClick={() => reviewFinding(finding, "dismissed")}>DISMISS</button>
+                    </div>
+                  </article>
+                );
+              })}
+            </section>
+          ) : null}
 
-          <button className="secondary-action" type="button" disabled={Boolean(busyAction)} onClick={() => void loadInbox()}>
-            REFRESH STATUS
-          </button>
           {error ? <p className="picks-error" role="status">{error}</p> : null}
         </>
       ) : null}

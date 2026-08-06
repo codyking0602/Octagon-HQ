@@ -23,6 +23,7 @@ import "./styles/picks-setup.css";
 import "./styles/picks-setup-source.css";
 import "./styles/picks-monitoring.css";
 import "./styles/picks-control-center.css";
+import "./styles/open-picks-dashboard.css";
 import "./styles/picks-owner-compact.css";
 import "./styles/intelligence.css";
 import "./styles/identity.css";

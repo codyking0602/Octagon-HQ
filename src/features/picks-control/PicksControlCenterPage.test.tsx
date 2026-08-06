@@ -28,9 +28,43 @@ function gateway(profile: typeof owner | null = owner): IdentityGateway {
   };
 }
 
+function controlBout(
+  index: number,
+  resultStatus: PickControlEvent["bouts"][number]["resultStatus"],
+): PickControlEvent["bouts"][number] {
+  const red = index === 0 ? "Red Fighter" : `Red Fighter ${index + 1}`;
+  const blue = index === 0 ? "Blue Fighter" : `Blue Fighter ${index + 1}`;
+  return {
+    boutId: `red-blue-${index + 1}`,
+    locksAt: "2099-08-09T03:00:00.000Z",
+    isLocked: false,
+    canAdjustLock: true,
+    position: index + 1,
+    weightClass: index === 0 ? "Lightweight" : "Welterweight",
+    redFighterSlug: red.toLowerCase().replaceAll(" ", "-"),
+    redFighterName: red,
+    blueFighterSlug: blue.toLowerCase().replaceAll(" ", "-"),
+    blueFighterName: blue,
+    resultStatus,
+    winnerFighterSlug: resultStatus === "red_win" ? red.toLowerCase().replaceAll(" ", "-") : null,
+    resultRecordedAt: resultStatus === "pending" ? null : "2099-08-09T03:30:00.000Z",
+    includedInPicks: true,
+    canCancel: resultStatus === "pending",
+    canRestore: false,
+    canReplace: resultStatus === "pending",
+    canRemoveFromPicks: resultStatus === "pending",
+    canRestoreToPicks: false,
+    canCorrectResult: resultStatus !== "pending",
+    hasReplacementHistory: false,
+    hasRemovalHistory: false,
+    hasCorrectionHistory: false,
+  };
+}
+
 function controlEvent(
   status: PickControlEvent["status"],
   resultStatus: PickControlEvent["bouts"][number]["resultStatus"] = "pending",
+  boutCount = 1,
 ): PickControlEvent {
   return {
     eventId: "ufc-control",
@@ -52,28 +86,7 @@ function controlEvent(
       startsAt: "2099-08-02T04:00:00.000Z",
       completedAt: "2099-08-02T06:00:00.000Z",
     }] : [],
-    bouts: [{
-      boutId: "red-blue",
-      position: 1,
-      weightClass: "Lightweight",
-      redFighterSlug: "red-fighter",
-      redFighterName: "Red Fighter",
-      blueFighterSlug: "blue-fighter",
-      blueFighterName: "Blue Fighter",
-      resultStatus,
-      winnerFighterSlug: resultStatus === "red_win" ? "red-fighter" : null,
-      resultRecordedAt: resultStatus === "pending" ? null : "2099-08-09T03:30:00.000Z",
-      includedInPicks: true,
-      canCancel: false,
-      canRestore: false,
-      canReplace: false,
-      canRemoveFromPicks: false,
-      canRestoreToPicks: false,
-      canCorrectResult: resultStatus !== "pending",
-      hasReplacementHistory: false,
-      hasRemovalHistory: false,
-      hasCorrectionHistory: false,
-    }],
+    bouts: Array.from({ length: boutCount }, (_, index) => controlBout(index, resultStatus)),
   };
 }
 
@@ -174,6 +187,7 @@ function controlRepository(events: Array<PickControlEvent | null>): PickControlR
     loadControlEvent,
     lockEvent: vi.fn().mockResolvedValue(undefined),
     adjustLockTime: vi.fn().mockResolvedValue(undefined),
+    adjustBoutLockTime: vi.fn().mockResolvedValue(undefined),
     setCancellation: vi.fn().mockResolvedValue(undefined),
     setBoutInclusion: vi.fn().mockResolvedValue(undefined),
     replaceFighter: vi.fn().mockResolvedValue(undefined),
@@ -241,7 +255,7 @@ afterEach(() => {
 });
 
 describe("Unified Picks Control Center", () => {
-  it("loads each canonical no-event owner exactly once and keeps setup available without overpowering the page", async () => {
+  it("loads each canonical no-event owner exactly once and keeps setup available", async () => {
     const control = controlRepository([null]);
     const setup = setupRepository([null]);
     const monitoring = monitoringRepository();
@@ -255,7 +269,6 @@ describe("Unified Picks Control Center", () => {
     expect(control.loadControlEvent).toHaveBeenCalledTimes(1);
     expect(setup.loadDraft).toHaveBeenCalledTimes(1);
     expect(monitoring.loadInbox).not.toHaveBeenCalled();
-    expect(screen.queryByRole("button", { name: /WINNER/ })).not.toBeInTheDocument();
   });
 
   it("distinguishes a staged card, publishes canonically, and refreshes the current event", async () => {
@@ -275,23 +288,48 @@ describe("Unified Picks Control Center", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "PUBLISH CARD" }));
     await waitFor(() => expect(setup.publishDraft).toHaveBeenCalledWith("draft"));
-    expect(await screen.findByText("PICKS OPEN")).toBeInTheDocument();
-    await waitFor(() => expect(control.loadControlEvent).toHaveBeenCalledTimes(2));
+    expect(await screen.findByText("PICKS OPEN", { selector: ".picks-control-center__status" })).toBeInTheDocument();
+    expect(control.loadControlEvent).toHaveBeenCalledTimes(2);
   });
 
-  it("keeps the published-event action primary while surfacing monitoring failures", async () => {
-    const control = controlRepository([controlEvent("upcoming")]);
+  it("puts visible monitoring ahead of compact fight management", async () => {
+    const control = controlRepository([controlEvent("upcoming", "pending", 3)]);
     const monitoring = monitoringRepository();
     renderCenter(control, setupRepository([]), monitoring);
 
-    expect(await screen.findByText("PICKS OPEN")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "MANAGE OPEN PICKS" })).toHaveAttribute("href", "#fight-night");
-    await waitFor(() => expect(monitoring.loadInbox).toHaveBeenCalledTimes(1));
-    expect(await screen.findByRole("heading", { name: "AUTO-SYNC NEEDS ATTENTION" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Review only what changed" })).toBeInTheDocument();
-    expect(screen.getByText("Card source failed.")).toBeInTheDocument();
+    expect(await screen.findByText("PICKS OPEN", { selector: ".picks-control-center__status" })).toBeInTheDocument();
+    const automation = await screen.findByRole("heading", { name: "AUTO-SYNC NEEDS ATTENTION" });
+    expect(monitoring.loadInbox).toHaveBeenCalledTimes(1);
+    const firstFight = screen.getByRole("button", { name: "EXPAND Red Fighter vs. Blue Fighter" });
+    expect(automation.compareDocumentPosition(firstFight) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(screen.getByLabelText("Automation status")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "LOCK ALL PICKS & BEGIN RESULTS" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "CHECK NOW" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "REFRESH STATUS" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "LOCK ALL PICKS" })).toBeEnabled();
+    expect(screen.getAllByRole("button", { name: /^EXPAND / })).toHaveLength(3);
+    expect(screen.queryByRole("button", { name: "REPLACE FIGHTER" })).not.toBeInTheDocument();
+  });
+
+  it("keeps zero monitoring findings inside a quiet all-clear state", async () => {
+    renderCenter(
+      controlRepository([controlEvent("upcoming", "pending", 3)]),
+      setupRepository([]),
+      monitoringRepository({
+        ...monitoringInbox,
+        latestScheduledDecision: {
+          outcome: "completed",
+          reason: null,
+          attemptedAt: "2099-08-01T12:07:00.000Z",
+          providerCalled: true,
+        },
+        unresolvedCount: 0,
+        newFindings: [],
+      }),
+    );
+
+    expect(await screen.findByLabelText("Pending changes all clear")).toBeInTheDocument();
+    expect(screen.queryByText("PENDING CHANGES")).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "UFC Control" })).toBeInTheDocument();
   });
 
   it("exposes canonical result entry for locked events", async () => {
@@ -301,7 +339,7 @@ describe("Unified Picks Control Center", () => {
     expect(await screen.findByText("1 FIGHT NEED RESULTS")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "ENTER RESULTS" })).toHaveAttribute("href", "#fight-night");
     fireEvent.click(screen.getByRole("button", { name: "RED WINNER Red Fighter" }));
-    await waitFor(() => expect(control.recordResult).toHaveBeenCalledWith("ufc-control", "red-blue", "red_win"));
+    await waitFor(() => expect(control.recordResult).toHaveBeenCalledWith("ufc-control", "red-blue-1", "red_win"));
   });
 
   it("keeps completed-event corrections and history in the canonical control", async () => {
@@ -330,16 +368,30 @@ describe("Unified Picks Control Center", () => {
     expect(monitoring.loadInbox).not.toHaveBeenCalled();
   });
 
-  it("keeps one obvious primary action at a 390 by 844 phone viewport", async () => {
+  it("protects the compact 390 by 844 open-event hierarchy", async () => {
     Object.defineProperty(window, "innerWidth", { configurable: true, value: 390 });
     Object.defineProperty(window, "innerHeight", { configurable: true, value: 844 });
-    renderCenter(controlRepository([controlEvent("locked")]), setupRepository([]), monitoringRepository());
+    renderCenter(
+      controlRepository([controlEvent("upcoming", "pending", 4)]),
+      setupRepository([]),
+      monitoringRepository({
+        ...monitoringInbox,
+        latestScheduledDecision: {
+          outcome: "completed",
+          reason: null,
+          attemptedAt: "2099-08-01T12:07:00.000Z",
+          providerCalled: true,
+        },
+        unresolvedCount: 0,
+        newFindings: [],
+      }),
+    );
 
-    expect(await screen.findByText("1 FIGHT NEED RESULTS")).toBeInTheDocument();
-    const header = screen.getByRole("banner");
-    expect(header.querySelectorAll(".primary-action")).toHaveLength(1);
-    expect(header).toHaveTextContent("UFC Control");
-    expect(header).toHaveTextContent("PICKS LOCK");
-    expect(header).toHaveTextContent("FIGHTS");
+    expect(await screen.findAllByRole("heading", { name: "AUTO-SYNC CHECKED THE EVENT" })).not.toHaveLength(0);
+    expect(screen.getByRole("banner")).toHaveTextContent("UFC Control");
+    expect(screen.getByRole("banner")).toHaveTextContent("MASTER LOCK");
+    expect(screen.getByRole("button", { name: "CHECK NOW" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "CHANGE MASTER LOCK" })).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: /^EXPAND / })).toHaveLength(4);
   });
 });

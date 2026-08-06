@@ -37,11 +37,21 @@ describe("production Picks Control Center WebKit verification", () => {
     expect(verifier).toContain('/^\\d+ FIGHTS? NEED RESULTS$/.test(status)');
   });
 
-  it("requires monitoring only for a published open card", () => {
+  it("requires truthful monitoring and the compact fight dashboard only for an open card", () => {
     expect(verifier).toContain('const monitoringRegion = page.getByRole("region", {');
     expect(verifier).toContain('name: "Automatic monitoring and card review"');
     expect(verifier).toContain('if (controlStatus === "PICKS OPEN")');
-    expect(verifier).toContain('await monitoringRegion.waitFor({ state: "visible", timeout: 15_000 })');
+    expect(verifier).toContain('name: /^AUTO-SYNC (CHECKED THE EVENT|IS WAITING FOR ITS NEXT CHECK|HAS PARTIAL COVERAGE|NEEDS ATTENTION)$/');
+    expect(verifier).toContain('getByRole("button", { name: "CHECK NOW" })');
+    expect(verifier).toContain('getByRole("button", { name: "REFRESH STATUS" })');
+    expect(verifier).toContain('getByLabel("Pending changes all clear")');
+    expect(verifier).toContain('getByRole("heading", { name: "Review only what changed" })');
+    expect(verifier).toContain('getByRole("region", { name: /compact fight controls$/ })');
+    expect(verifier).toContain('fightRegion.locator(".open-pick-row__summary")');
+    expect(verifier).toContain("Manage Open Picks rendered ${fightRowCount} compact fight rows; expected multiple rows.");
+    expect(verifier).toContain("Collapsed fight rows exposed permanent lock controls.");
+    expect(verifier).toContain("Opening a second fight did not collapse the first fight.");
+    expect(verifier).toContain("Automation status did not render before the compact fight list.");
     expect(verifier).toContain("Monitoring Inbox rendered during the ${controlStatus} lifecycle.");
     expect(verifier).toContain("Picks Control Center did not reach a valid owner lifecycle");
   });

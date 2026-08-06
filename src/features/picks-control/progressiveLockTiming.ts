@@ -1,6 +1,7 @@
 import type { PickControlBout, PickControlEvent } from "./pickControlModel";
 
 export const PICK_LOCK_MINUTE_MS = 60_000;
+const MAX_BROWSER_TIMEOUT_MS = 2_147_000_000;
 
 export function effectivePickControlBoutLock(
   event: PickControlEvent,
@@ -69,5 +70,7 @@ export function nextProgressiveLockClockAt(
       if (next === null || boundary < next) next = boundary;
     }
   }
-  return next;
+
+  if (next === null) return null;
+  return Math.min(next, now + MAX_BROWSER_TIMEOUT_MS);
 }

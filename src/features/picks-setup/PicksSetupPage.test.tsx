@@ -220,13 +220,17 @@ describe("Event Setup and card review", () => {
       expect.objectContaining({ venue: "Updated Arena" }),
     ));
 
-    fireEvent.click(screen.getByRole("button", { name: /Move Red Fighter vs Blue Fighter down/i }));
+    const moveDown = screen.getByRole("button", { name: /Move Red Fighter vs Blue Fighter down/i });
+    await waitFor(() => expect(moveDown).toBeEnabled());
+    fireEvent.click(moveDown);
     await waitFor(() => expect(repo.reorderBouts).toHaveBeenCalledWith(
       stagedDraft.draftId,
       ["main-second-fighter-third-fighter", "main-event-red-fighter-blue-fighter"],
     ));
 
-    fireEvent.click(screen.getByRole("button", { name: "PUBLISH CARD" }));
+    const publish = screen.getByRole("button", { name: "PUBLISH CARD" });
+    await waitFor(() => expect(publish).toBeEnabled());
+    fireEvent.click(publish);
     await waitFor(() => expect(repo.publishDraft).toHaveBeenCalledWith(stagedDraft.draftId));
   });
 

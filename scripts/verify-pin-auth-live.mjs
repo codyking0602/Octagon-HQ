@@ -281,12 +281,71 @@ try {
 
   if (controlStatus === "PICKS OPEN") {
     await monitoringRegion.waitFor({ state: "visible", timeout: 15_000 });
-    await monitoringRegion.getByRole("heading", { name: "Review only what changed" }).waitFor({ state: "visible", timeout: 15_000 });
     await monitoringRegion.getByRole("button", { name: "REFRESH STATUS" }).waitFor({ state: "visible", timeout: 15_000 });
     if (await page.getByText("MONITORING UNAVAILABLE", { exact: true }).count()) {
       throw new Error("Monitoring Inbox rendered its unavailable state for the temporary owner.");
     }
-    monitoringOutcome = "loaded the visible compact owner-only monitoring workflow for the published card";
+
+    const fightRegion = page.getByRole("region", { name: /compact fight controls$/ });
+    if (await fightRegion.count()) {
+      await monitoringRegion.getByRole("heading", {
+        name: /^AUTO-SYNC (CHECKED THE EVENT|IS WAITING FOR ITS NEXT CHECK|HAS PARTIAL COVERAGE|NEEDS ATTENTION)$/,
+      }).waitFor({ state: "visible", timeout: 15_000 });
+      await monitoringRegion.getByRole("button", { name: "CHECK NOW" }).waitFor({ state: "visible", timeout: 15_000 });
+      if (await monitoringRegion.getByText("CURRENT EVENT", { exact: true }).count()) {
+        throw new Error("The unified dashboard repeated the current event inside monitoring.");
+      }
+      if (await monitoringRegion.getByRole("link", { name: "OPEN UFC EVENT SOURCE" }).count() > 1) {
+        throw new Error("The unified dashboard rendered more than one event source link.");
+      }
+
+      const allClear = monitoringRegion.getByLabel("Pending changes all clear");
+      const pendingChanges = monitoringRegion.getByRole("heading", { name: "Review only what changed" });
+      if (!await allClear.count() && !await pendingChanges.count()) {
+        throw new Error("Monitoring rendered neither its compact all-clear state nor its pending findings workflow.");
+      }
+
+      await fightRegion.waitFor({ state: "visible", timeout: 15_000 });
+      const fightRows = fightRegion.locator(".open-pick-row__summary");
+      const fightRowCount = await fightRows.count();
+      if (fightRowCount < 2) {
+        throw new Error(`Manage Open Picks rendered ${fightRowCount} compact fight rows; expected multiple rows.`);
+      }
+      if (await page.getByRole("button", { name: "+10 MIN" }).count()) {
+        throw new Error("Collapsed fight rows exposed permanent lock controls.");
+      }
+      const monitoringBeforeFights = await page.evaluate(() => {
+        const monitoring = document.querySelector('[aria-label="Automatic monitoring and card review"]');
+        const firstFight = document.querySelector(".open-pick-row__summary");
+        return Boolean(
+          monitoring
+          && firstFight
+          && (monitoring.compareDocumentPosition(firstFight) & Node.DOCUMENT_POSITION_FOLLOWING),
+        );
+      });
+      if (!monitoringBeforeFights) {
+        throw new Error("Automation status did not render before the compact fight list.");
+      }
+
+      await fightRows.nth(0).click();
+      await page.getByRole("button", { name: "+10 MIN" }).waitFor({ state: "visible", timeout: 15_000 });
+      if (await page.getByRole("button", { name: "+10 MIN" }).count() !== 1) {
+        throw new Error("Expanding one fight exposed detailed actions for more than one row.");
+      }
+      await fightRows.nth(1).click();
+      if (await fightRows.nth(0).getAttribute("aria-expanded") !== "false") {
+        throw new Error("Opening a second fight did not collapse the first fight.");
+      }
+      if (await page.getByRole("button", { name: "+10 MIN" }).count() !== 1) {
+        throw new Error("The compact card allowed more than one detailed fight panel at a time.");
+      }
+      await fightRows.nth(1).click();
+
+      monitoringOutcome = `loaded visible truthful automation, a compact review state, and ${fightRowCount} collapsed fight rows with one-detail-at-a-time controls`;
+    } else {
+      await monitoringRegion.getByRole("heading", { name: "Review only what changed" }).waitFor({ state: "visible", timeout: 15_000 });
+      monitoringOutcome = "confirmed the currently deployed main frontend still satisfies its legacy monitoring contract before this exact UI head is deployed";
+    }
   } else if (isSetupLifecycle(controlStatus) || isActiveEventLifecycle(controlStatus)) {
     if (await monitoringRegion.count()) {
       throw new Error(`Monitoring Inbox rendered during the ${controlStatus} lifecycle.`);
