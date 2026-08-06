@@ -5,7 +5,10 @@ on:
     paths:
       - ".github/workflows/verify-picks-monitoring-approval.yml"
       - "src/features/picks-monitoring/**"
+      - "src/features/picks-control/PicksControlCenterPage.tsx"
+      - "src/app/pickMonitoringApprovalArchitecture.test.ts"
       - "supabase/migrations/202609110001_pick_monitoring_card_change_approval.sql"
+      - "supabase/migrations/202609130001_actionable_current_pick_monitoring_findings.sql"
       - "supabase/tests/pick_monitoring_card_change_approval.sql"
   workflow_dispatch:
 
@@ -55,7 +58,7 @@ jobs:
           fi
           echo "DB_URL=$db_url" >> "$GITHUB_ENV"
 
-      - name: Execute owner-approved monitoring card-change proof
+      - name: Execute actionable current monitoring proof
         shell: bash
         run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/pick_monitoring_card_change_approval.sql
 
@@ -73,9 +76,13 @@ jobs:
             echo "- Fresh migrations: passed"
             echo "- Owner authorization: passed"
             echo "- Deadline approval: passed"
+            echo "- Venue and location approval: passed"
+            echo "- Weight-class approval: passed"
             echo "- Fight removal approval: passed"
             echo "- Fighter replacement and repick boundary: passed"
             echo "- Fight reorder approval: passed"
-            echo "- Stale-state rejection and atomic rollback: passed"
+            echo "- Duplicate collapse and supersession: passed"
+            echo "- Current-state stale exclusion and unique counts: passed"
+            echo "- Automatically applied odds acknowledgment boundary: passed"
             echo "- Canonical card-change audit ownership: passed"
           } >> "$GITHUB_STEP_SUMMARY"
