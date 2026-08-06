@@ -36,6 +36,7 @@ describe("observable Picks monitoring architecture", () => {
       "FIGHT MATCHING",
       "ODDS APPLICATION",
       "CARD COMPARISON",
+      "OWNER FINDINGS",
       "MONTHLY REQUESTS USED",
       "MONTHLY REQUESTS REMAINING",
       "MONTHLY RESET",
@@ -71,6 +72,6 @@ describe("observable Picks monitoring architecture", () => {
     expect(monitoringPage).toContain("The monthly provider quota is exhausted.");
     expect(monitoringPage).toContain("The scheduler credential is missing or stale.");
     expect(monitoringPage).toContain("is unmatched and needs review.");
-    expect(monitoringPage).toContain("AUTOMATIC MONITORING FAILED");
+    expect(monitoringPage).toContain("AUTO-SYNC NEEDS ATTENTION");
   });
 });
