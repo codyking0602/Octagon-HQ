@@ -13,10 +13,10 @@ function preview(overrides: Record<string, unknown> = {}) {
     locks_at: "2026-08-09T01:00:00.000Z",
     source_url: "https://www.mmamania.com/ufc-fight-cards/ufc-fight-night-gamrot-vs-nguyen",
     bouts: [
-      { bout_id: "main-event-1", red_fighter_name: "Mateusz Gamrot", blue_fighter_name: "Steven Nguyen" },
-      { bout_id: "main-2", red_fighter_name: "Fighter Two", blue_fighter_name: "Opponent Two" },
-      { bout_id: "main-3", red_fighter_name: "Fighter Three", blue_fighter_name: "Opponent Three" },
-      { bout_id: "main-4", red_fighter_name: "Fighter Four", blue_fighter_name: "Opponent Four" },
+      { bout_id: "main-event-1", red_fighter_name: "Mateusz Gamrot", blue_fighter_name: "Steven Nguyen", weight_class: "Lightweight" },
+      { bout_id: "main-2", red_fighter_name: "Fighter Two", blue_fighter_name: "Opponent Two", weight_class: "Welterweight" },
+      { bout_id: "main-3", red_fighter_name: "Fighter Three", blue_fighter_name: "Opponent Three", weight_class: "Middleweight" },
+      { bout_id: "main-4", red_fighter_name: "Fighter Four", blue_fighter_name: "Opponent Four", weight_class: "Bantamweight" },
     ],
     ...overrides,
   };
