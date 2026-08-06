@@ -1,0 +1,45 @@
+name: Verify Canonical Picks Fight Changes
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/verify-canonical-picks-fight-changes.yml"
+      - "supabase/migrations/202609140001_canonical_pick_fight_change_semantics.sql"
+      - "supabase/tests/pick_monitoring_canonical_fight_changes.sql"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out exact source
+        uses: actions/checkout@v4
+
+      - name: Set up Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Verify canonical fight changes on a fresh database
+        shell: bash
+        run: |
+          set -euo pipefail
+          supabase db start
+          trap 'supabase stop --no-backup >/dev/null 2>&1 || true' EXIT
+
+          db_url=$(supabase status -o env | sed -n 's/^DB_URL=//p' | tr -d '"')
+          if [ -z "$db_url" ]; then
+            echo "::error title=Local Supabase database unavailable::The local database started, but its connection URL was not reported."
+            exit 1
+          fi
+
+          psql "$db_url" --set ON_ERROR_STOP=on \
+            --file supabase/tests/pick_monitoring_canonical_fight_changes.sql
+
+          echo "Canonical Picks fight-change semantics passed on a fresh database."
