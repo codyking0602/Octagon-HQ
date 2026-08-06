@@ -1,3 +1,4 @@
+import { monitoringValuesEquivalent } from "../../../src/features/picks-monitoring/monitoringChangeValues.ts";
 import { canonicalFightPair } from "./normalization.ts";
 
 type EffectiveScope = "main" | "full";
@@ -22,8 +23,19 @@ interface SourceEvent {
   bouts: SourceBout[];
 }
 
+export interface SourceChangeDetail {
+  summary: string;
+  beforeValue: unknown;
+  afterValue: unknown;
+}
+
 function clean(value: unknown) {
   return String(value ?? "").replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function displayValue(value: unknown) {
+  const result = clean(value);
+  return result || null;
 }
 
 function timestampsMatch(leftValue: unknown, rightValue: unknown) {
@@ -59,22 +71,45 @@ function cardSectionLabel(section: CardSection) {
   return "prelims";
 }
 
-export function sourceChanges(currentValue: unknown, event: SourceEvent, effectiveScope: EffectiveScope) {
+function boutLabel(bout: Pick<SourceBout, "red_fighter_name" | "blue_fighter_name">) {
+  return `${bout.red_fighter_name} vs. ${bout.blue_fighter_name}`;
+}
+
+function uniqueDetails(changes: SourceChangeDetail[]) {
+  const seen = new Set<string>();
+  return changes.filter((change) => {
+    const key = JSON.stringify([change.summary, change.beforeValue, change.afterValue]);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+export function sourceChangeDetails(currentValue: unknown, event: SourceEvent, effectiveScope: EffectiveScope) {
   const current = asRecord(currentValue);
   if (!current) {
-    return [`Stage a new ${effectiveScope === "full" ? "full" : "main"} card with ${event.bouts.length} fights.`];
+    return [{
+      summary: `Stage a new ${effectiveScope === "full" ? "full" : "main"} card with ${event.bouts.length} fights.`,
+      beforeValue: null,
+      afterValue: `${event.bouts.length} fights`,
+    }];
   }
 
-  const changes: string[] = [];
-  const metadataFields: Array<[string, unknown, unknown]> = [
-    ["Event name", current.name, event.name],
-    ["Main event", current.subtitle, event.subtitle],
-    ["Venue", current.venue, event.venue],
-    ["Location", current.location, event.location],
-    ["Card source", current.source_url, event.source_url],
+  const changes: SourceChangeDetail[] = [];
+  const metadataFields: Array<[string, unknown, unknown, "semantic" | "exact"]> = [
+    ["Event name", current.name, event.name, "semantic"],
+    ["Main event", current.subtitle, event.subtitle, "semantic"],
+    ["Venue", current.venue, event.venue, "semantic"],
+    ["Location", current.location, event.location, "semantic"],
+    ["Card source", current.source_url, event.source_url, "exact"],
   ];
-  for (const [label, oldValue, newValue] of metadataFields) {
-    if (clean(oldValue) !== clean(newValue)) changes.push(`${label} changed.`);
+  for (const [label, oldValue, newValue, comparison] of metadataFields) {
+    const beforeValue = displayValue(oldValue);
+    const afterValue = displayValue(newValue);
+    const matches = comparison === "semantic"
+      ? monitoringValuesEquivalent(beforeValue, afterValue)
+      : beforeValue === afterValue;
+    if (!matches) changes.push({ summary: `${label} changed.`, beforeValue, afterValue });
   }
 
   const timestampFields: Array<[string, unknown, unknown]> = [
@@ -83,7 +118,13 @@ export function sourceChanges(currentValue: unknown, event: SourceEvent, effecti
     ["Picks lock", current.locks_at, event.locks_at],
   ];
   for (const [label, oldValue, newValue] of timestampFields) {
-    if (!timestampsMatch(oldValue, newValue)) changes.push(`${label} changed.`);
+    if (!timestampsMatch(oldValue, newValue)) {
+      changes.push({
+        summary: `${label} changed.`,
+        beforeValue: displayValue(oldValue),
+        afterValue: displayValue(newValue),
+      });
+    }
   }
 
   const currentBouts = Array.isArray(current.bouts)
@@ -104,22 +145,41 @@ export function sourceChanges(currentValue: unknown, event: SourceEvent, effecti
   for (const [key, bout] of sourceMap) {
     const existing = currentMap.get(key);
     if (!existing) {
-      changes.push(`Added ${cardSectionLabel(sectionFromBoutId(bout.bout_id))}: ${bout.red_fighter_name} vs. ${bout.blue_fighter_name}.`);
+      changes.push({
+        summary: `Added ${cardSectionLabel(sectionFromBoutId(bout.bout_id))}: ${boutLabel(bout)}.`,
+        beforeValue: null,
+        afterValue: boutLabel(bout),
+      });
       continue;
     }
     const oldSection = sectionFromBoutId(String(existing.bout_id ?? ""));
     const newSection = sectionFromBoutId(bout.bout_id);
     if (oldSection !== newSection) {
-      changes.push(`Moved ${bout.red_fighter_name} vs. ${bout.blue_fighter_name} from ${cardSectionLabel(oldSection)} to ${cardSectionLabel(newSection)}.`);
+      changes.push({
+        summary: `Moved ${boutLabel(bout)} from ${cardSectionLabel(oldSection)} to ${cardSectionLabel(newSection)}.`,
+        beforeValue: cardSectionLabel(oldSection),
+        afterValue: cardSectionLabel(newSection),
+      });
     }
-    if (clean(existing.weight_class) !== clean(bout.weight_class)) {
-      changes.push(`Weight class changed for ${bout.red_fighter_name} vs. ${bout.blue_fighter_name}.`);
+    const beforeWeight = displayValue(existing.weight_class);
+    const afterWeight = displayValue(bout.weight_class);
+    if (!monitoringValuesEquivalent(beforeWeight, afterWeight)) {
+      changes.push({
+        summary: `Weight class changed for ${boutLabel(bout)}.`,
+        beforeValue: beforeWeight,
+        afterValue: afterWeight,
+      });
     }
   }
 
   for (const [key, bout] of currentMap) {
     if (sourceMap.has(key)) continue;
-    changes.push(`Removed ${cardSectionLabel(sectionFromBoutId(String(bout.bout_id ?? "")))}: ${String(bout.red_fighter_name ?? "")} vs. ${String(bout.blue_fighter_name ?? "")}.`);
+    const label = `${String(bout.red_fighter_name ?? "")} vs. ${String(bout.blue_fighter_name ?? "")}`;
+    changes.push({
+      summary: `Removed ${cardSectionLabel(sectionFromBoutId(String(bout.bout_id ?? "")))}: ${label}.`,
+      beforeValue: label,
+      afterValue: null,
+    });
   }
 
   const oldOrder = currentBouts
@@ -132,8 +192,24 @@ export function sourceChanges(currentValue: unknown, event: SourceEvent, effecti
     .map((bout) => canonicalFightPair(bout.red_fighter_name, bout.blue_fighter_name))
     .filter((key) => currentMap.has(key));
   if (oldOrder.length === newOrder.length && oldOrder.some((key, index) => key !== newOrder[index])) {
-    changes.push("Fight order changed.");
+    const labels = new Map<string, string>();
+    currentBouts.forEach((bout) => labels.set(
+      canonicalFightPair(String(bout.red_fighter_name ?? ""), String(bout.blue_fighter_name ?? "")),
+      `${String(bout.red_fighter_name ?? "")} vs. ${String(bout.blue_fighter_name ?? "")}`,
+    ));
+    event.bouts.forEach((bout) => labels.set(canonicalFightPair(bout.red_fighter_name, bout.blue_fighter_name), boutLabel(bout)));
+    changes.push({
+      summary: "Fight order changed.",
+      beforeValue: oldOrder.map((key) => labels.get(key) ?? key),
+      afterValue: newOrder.map((key) => labels.get(key) ?? key),
+    });
   }
 
-  return Array.from(new Set(changes));
+  return uniqueDetails(changes);
+}
+
+export function sourceChanges(currentValue: unknown, event: SourceEvent, effectiveScope: EffectiveScope) {
+  return Array.from(new Set(
+    sourceChangeDetails(currentValue, event, effectiveScope).map((change) => change.summary),
+  ));
 }
