@@ -10,6 +10,7 @@ on:
       - "supabase/migrations/202609110001_pick_monitoring_card_change_approval.sql"
       - "supabase/migrations/202609130001_actionable_current_pick_monitoring_findings.sql"
       - "supabase/migrations/202609130002_keep_resolved_pick_monitoring_findings_resolved.sql"
+      - "supabase/migrations/202609130003_fix_pick_monitoring_inbox_typed_projection.sql"
       - "supabase/tests/pick_monitoring_card_change_approval.sql"
       - "supabase/tests/pick_monitoring_equivalent_resolution.sql"
   workflow_dispatch:
@@ -89,6 +90,7 @@ jobs:
             echo "- Fight reorder approval: passed"
             echo "- Duplicate collapse and supersession: passed"
             echo "- Resolved equivalent findings stay resolved: passed"
+            echo "- Typed current-state inbox projection: passed"
             echo "- Current-state stale exclusion and unique counts: passed"
             echo "- Automatically applied odds acknowledgment boundary: passed"
             echo "- Canonical card-change audit ownership: passed"
