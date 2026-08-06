@@ -66,27 +66,6 @@ function localDateParts(text: string, year: number) {
   };
 }
 
-function officialUfcUrlDate(sourceUrl: string) {
-  try {
-    const url = new URL(sourceUrl);
-    if (url.protocol !== "https:" || !["ufc.com", "www.ufc.com"].includes(url.hostname)) return null;
-    if (!url.pathname.startsWith("/event/")) return null;
-    const match = url.pathname.match(/(?:^|-)(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?|tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)-(\d{1,2})-(\d{4})(?:$|-)/i);
-    if (!match) return null;
-    const month = monthNumbers[match[1]!.toLowerCase()];
-    const day = Number(match[2]);
-    const year = Number(match[3]);
-    if (!month || !Number.isInteger(day) || day < 1 || day > 31 || year < 2000 || year > 2200) return null;
-    const candidate = new Date(Date.UTC(year, Number(month) - 1, day));
-    if (candidate.getUTCFullYear() !== year
-      || candidate.getUTCMonth() !== Number(month) - 1
-      || candidate.getUTCDate() !== day) return null;
-    return { localEventDate: `${year}-${month}-${String(day).padStart(2, "0")}` };
-  } catch {
-    return null;
-  }
-}
-
 function timeAfterLabel(text: string, label: "Main Card" | "Prelims") {
   const lower = text.toLowerCase();
   const needle = label.toLowerCase();
@@ -108,6 +87,34 @@ function timeAfterLabel(text: string, label: "Main Card" | "Prelims") {
   }
 
   return Array.from(new Set(values));
+}
+
+function offsetMinutes(value: string) {
+  const zone = value.match(/\b([A-Z]{2,5})$/)?.[1] ?? "";
+  const offset = fixedOffsets[zone];
+  const match = offset?.match(/^([+-])(\d{2}):(\d{2})$/);
+  if (!match) return null;
+  const minutes = Number(match[2]) * 60 + Number(match[3]);
+  return match[1] === "-" ? -minutes : minutes;
+}
+
+function localDateFromOfficialTimestamp(referenceIso: string, text: string) {
+  const reference = new Date(referenceIso);
+  if (!Number.isFinite(reference.getTime())) return null;
+  const offsets = Array.from(new Set(
+    timeAfterLabel(text, "Main Card")
+      .map(offsetMinutes)
+      .filter((value): value is number => value !== null),
+  ));
+  if (offsets.length !== 1) return null;
+  const local = new Date(reference.getTime() + offsets[0]! * 60_000);
+  return {
+    localEventDate: [
+      local.getUTCFullYear(),
+      String(local.getUTCMonth() + 1).padStart(2, "0"),
+      String(local.getUTCDate()).padStart(2, "0"),
+    ].join("-"),
+  };
 }
 
 function toIso(localEventDate: string, value: string) {
@@ -141,15 +148,10 @@ export function parseOfficialUfcSegmentTimes(
   referenceIso: string,
   requirePrelims: boolean,
   now = new Date(),
-  sourceUrl = "",
 ): OfficialUfcSegmentTimes {
   const text = clean(visibleText);
-  const labeledDate = localDateParts(text, referenceYear(referenceIso, now));
-  const urlDate = officialUfcUrlDate(sourceUrl);
-  if (labeledDate && urlDate && labeledDate.localEventDate !== urlDate.localEventDate) {
-    throw new Error("Official UFC event dates are contradictory.");
-  }
-  const date = labeledDate ?? urlDate;
+  const date = localDateParts(text, referenceYear(referenceIso, now))
+    ?? localDateFromOfficialTimestamp(referenceIso, text);
   if (!date) throw new Error("Official UFC event date was not labeled safely.");
 
   const labeledMain = singleLabeledTime(text, "Main Card", date.localEventDate);
