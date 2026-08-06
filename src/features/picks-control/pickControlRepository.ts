@@ -62,6 +62,13 @@ export interface PickControlRepository {
   setCancellation: (eventId: string, boutId: string, cancelled: boolean, reason: string) => Promise<void>;
   setBoutInclusion: (eventId: string, bout: PickControlEvent["bouts"][number], includedInPicks: boolean, reason: string) => Promise<void>;
   replaceFighter: (eventId: string, bout: PickControlEvent["bouts"][number], corner: "red" | "blue", slug: string, name: string, reason: string) => Promise<void>;
+  addBout: (eventId: string, expectedBoutIds: string[], input: {
+    redFighterName: string;
+    blueFighterName: string;
+    weightClass: string;
+    cardSegment: "main" | "prelim";
+    position: number;
+  }, reason: string) => Promise<void>;
   reorderCard: (eventId: string, expectedBoutIds: string[], proposedBoutIds: string[], reason: string) => Promise<void>;
   recordResult: (eventId: string, boutId: string, result: PickBoutResultStatus) => Promise<void>;
   correctResult: (eventId: string, bout: PickControlEvent["bouts"][number], result: PickBoutResultStatus, reason: string) => Promise<void>;
@@ -197,6 +204,19 @@ export function createPickControlRepository(): PickControlRepository | null {
         p_expected_blue_fighter_slug: bout.blueFighterSlug,
         p_replacement_fighter_slug: slug,
         p_replacement_fighter_name: name,
+        p_reason: reason,
+      }));
+    },
+
+    async addBout(eventId, expectedBoutIds, input, reason) {
+      await requireRpcSuccess(client.rpc("approve_pick_bout_addition", {
+        p_event_id: eventId,
+        p_expected_bout_ids: expectedBoutIds,
+        p_red_fighter_name: input.redFighterName,
+        p_blue_fighter_name: input.blueFighterName,
+        p_weight_class: input.weightClass,
+        p_card_segment: input.cardSegment,
+        p_position: input.position,
         p_reason: reason,
       }));
     },
