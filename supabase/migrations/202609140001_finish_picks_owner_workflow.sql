@@ -393,7 +393,7 @@ begin
   from public.pick_bouts
   where event_id = v_event_id and included_in_picks;
 
-  v_proposed := array[
+  v_proposed := array(
     select item
     from (
       select p_position as ordinal, v_bout_id as item
@@ -403,7 +403,7 @@ begin
       from unnest(v_current) with ordinality current(value, ordinality)
     ) proposed
     order by ordinal
-  ];
+  );
 
   update public.pick_bouts
   set position = position + v_count + 100
