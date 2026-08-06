@@ -84,6 +84,7 @@ function repository(): PickControlRepository {
     setCancellation: vi.fn().mockResolvedValue(undefined),
     setBoutInclusion: vi.fn().mockResolvedValue(undefined),
     replaceFighter: vi.fn().mockResolvedValue(undefined),
+    addBout: vi.fn().mockResolvedValue(undefined),
     reorderCard: vi.fn().mockResolvedValue(undefined),
     recordResult: vi.fn().mockResolvedValue(undefined),
     correctResult: vi.fn().mockResolvedValue(undefined),
@@ -101,7 +102,7 @@ function renderDashboard(repo: PickControlRepository, identityGateway: IdentityG
 
 beforeEach(() => {
   vi.spyOn(window, "confirm").mockReturnValue(true);
-  vi.spyOn(window, "prompt").mockReturnValue("Official owner reason");
+  vi.spyOn(window, "prompt").mockReturnValue(null);
 });
 
 afterEach(() => {
@@ -117,6 +118,7 @@ describe("Compact Manage Open Picks dashboard", () => {
     expect(screen.getByRole("button", { name: "EXPAND Alpha vs. Bravo" })).toHaveAttribute("aria-expanded", "false");
     expect(screen.getByRole("button", { name: "EXPAND Charlie vs. Delta" })).toHaveAttribute("aria-expanded", "false");
     expect(screen.getByRole("button", { name: "EXPAND Echo vs. Foxtrot" })).toHaveAttribute("aria-expanded", "false");
+    expect(screen.getByRole("button", { name: "ADD FIGHT" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "+10 MIN" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "REPLACE FIGHTER" })).not.toBeInTheDocument();
   });
@@ -148,7 +150,7 @@ describe("Compact Manage Open Picks dashboard", () => {
     ));
   });
 
-  it("moves locally and sends one approved order through the canonical repository", async () => {
+  it("moves locally and applies order plus lock slots with confirmation only", async () => {
     const repo = repository();
     renderDashboard(repo);
 
@@ -158,16 +160,60 @@ describe("Compact Manage Open Picks dashboard", () => {
 
     expect(repo.reorderCard).not.toHaveBeenCalled();
     expect(screen.getByText("NEW ORDER READY")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "APPROVE NEW ORDER" }));
+    fireEvent.click(screen.getByRole("button", { name: "APPLY ORDER + LOCKS" }));
 
     await waitFor(() => expect(repo.reorderCard).toHaveBeenCalledWith(
       "ufc-compact",
       ["alpha-bravo", "charlie-delta", "echo-foxtrot"],
       ["charlie-delta", "alpha-bravo", "echo-foxtrot"],
-      "Official owner reason",
+      "Owner confirmed live fight order change",
     ));
+    expect(window.prompt).not.toHaveBeenCalled();
     expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("BEFORE"));
     expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("AFTER"));
+    expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("position owns its deadline"));
+  });
+
+  it("adds a fight through the one canonical addition owner", async () => {
+    vi.mocked(window.prompt)
+      .mockReturnValueOnce("New Red")
+      .mockReturnValueOnce("New Blue")
+      .mockReturnValueOnce("Featherweight")
+      .mockReturnValueOnce("MAIN")
+      .mockReturnValueOnce("2");
+    const repo = repository();
+    renderDashboard(repo);
+
+    fireEvent.click(await screen.findByRole("button", { name: "ADD FIGHT" }));
+
+    await waitFor(() => expect(repo.addBout).toHaveBeenCalledWith(
+      "ufc-compact",
+      ["alpha-bravo", "charlie-delta", "echo-foxtrot"],
+      {
+        redFighterName: "New Red",
+        blueFighterName: "New Blue",
+        weightClass: "Featherweight",
+        cardSegment: "main",
+        position: 2,
+      },
+      "Owner confirmed fight addition to Picks",
+    ));
+  });
+
+  it("removes a fight with confirmation only and an automatic factual audit description", async () => {
+    const repo = repository();
+    renderDashboard(repo);
+
+    fireEvent.click(await screen.findByRole("button", { name: "EXPAND Alpha vs. Bravo" }));
+    fireEvent.click(screen.getByRole("button", { name: "REMOVE FROM PICKS" }));
+
+    await waitFor(() => expect(repo.setBoutInclusion).toHaveBeenCalledWith(
+      "ufc-compact",
+      expect.objectContaining({ boutId: "alpha-bravo", includedInPicks: true }),
+      false,
+      "Owner confirmed fight removal from Picks",
+    ));
+    expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("disappear from the owner and player cards"));
   });
 
   it("does not load private event data for a signed-out owner", async () => {
