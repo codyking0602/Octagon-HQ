@@ -6,6 +6,7 @@ import { buildMonitoringRunPayload, type MonitoringFindingInput, type Monitoring
 export type CardScope = "main" | "full";
 export interface MonitoringBout {
   bout_id: string;
+  weight_class?: string;
   red_fighter_slug: string;
   red_fighter_name: string;
   blue_fighter_slug: string;
@@ -14,7 +15,19 @@ export interface MonitoringBout {
   blue_american_odds?: number | null;
   included_in_picks?: boolean;
 }
-export interface MonitoringEvent { event_id: string; source_event_key?: string; name: string; subtitle: string; starts_at: string; locks_at: string; bouts: MonitoringBout[] }
+export interface MonitoringEvent {
+  event_id: string;
+  source_event_key?: string;
+  source_url?: string;
+  name: string;
+  subtitle: string;
+  venue?: string;
+  location?: string;
+  prelims_starts_at?: string;
+  starts_at: string;
+  locks_at: string;
+  bouts: MonitoringBout[];
+}
 export interface SourcePreview extends MonitoringEvent { source: string; source_url: string; source_event_key: string; warnings?: string[] }
 export interface ResolvedMonitoringEvent { selected: MonitoringEvent; kind: "staged" | "current"; storageEventId?: string; identity: string; ignoredMatchupIdentities: string[] }
 
@@ -39,8 +52,8 @@ function stableEventMatch(left: MonitoringEvent, right: MonitoringEvent) {
       && Math.abs(leftStart - rightStart) <= 18 * 60 * 60 * 1000;
   }
   return matchCanonicalEventIdentity(
-    { name: left.name, subtitle: left.subtitle, venue: "", location: "", starts_at: left.starts_at },
-    { name: right.name, subtitle: right.subtitle, venue: "", location: "", starts_at: right.starts_at },
+    { name: left.name, subtitle: left.subtitle, venue: left.venue ?? "", location: left.location ?? "", starts_at: left.starts_at },
+    { name: right.name, subtitle: right.subtitle, venue: right.venue ?? "", location: right.location ?? "", starts_at: right.starts_at },
   );
 }
 
@@ -144,17 +157,46 @@ export function buildManualMonitoringPayload(input: {
     const beforeValue = identities.map((fighter_identity) => ({ fighter_identity, american_odds: before.get(fighter_identity) }));
     const afterValue = identities.map((fighter_identity) => ({ fighter_identity, american_odds: after.get(fighter_identity) }));
     const findingType = identities.some((identity) => before.get(identity) === null) ? "odds_available" : identities.some((identity) => before.get(identity) !== after.get(identity)) ? "odds_change" : null;
-    if (findingType) findings.push({ finding_key: stableKey(resolved.identity, findingType, bout.bout_id, snapshot.sportsbook, normalizedValue(beforeValue), normalizedValue(afterValue)), finding_type: findingType, severity: findingType === "odds_available" ? "info" : "warning", summary: findingType === "odds_available" ? "Current odds are available for a monitored bout without stored odds." : "American odds changed for a monitored bout.", detected_at: completedAt, matchup_identity: snapshot.matchupIdentity, bout_id: bout.bout_id, before_value: beforeValue, after_value: afterValue, source_details: { sportsbook: snapshot.sportsbook, source_event_id: snapshot.sourceEventId } });
+    if (findingType) {
+      const findingIdentity = stableKey(resolved.identity, "bout", bout.bout_id, "odds");
+      findings.push({
+        finding_key: stableKey(findingIdentity, snapshot.sportsbook, normalizedValue(afterValue)),
+        finding_type: findingType,
+        severity: findingType === "odds_available" ? "info" : "warning",
+        summary: findingType === "odds_available"
+          ? "Current odds were found and applied automatically."
+          : "American odds changed and were applied automatically.",
+        detected_at: completedAt,
+        matchup_identity: snapshot.matchupIdentity,
+        bout_id: bout.bout_id,
+        before_value: beforeValue,
+        after_value: afterValue,
+        source_details: {
+          sportsbook: snapshot.sportsbook,
+          source_event_id: snapshot.sourceEventId,
+          finding_identity: findingIdentity,
+          change_field: "odds",
+          automatically_applied: true,
+        },
+      });
+    }
   }
   const providerBlocked = odds.diagnostics.some((diagnostic) => diagnostic.severity === "error" && !diagnostic.matchupIdentity);
   if (!providerBlocked) {
     for (const [matchup, bout] of canonicalByMatchup) {
       if (matchedMatchups.has(matchup)) continue;
-      findings.push({ finding_key: stableKey(resolved.identity, "unmatched_fight", matchup), finding_type: "unmatched_fight", severity: "warning", summary: "A monitored bout did not confidently match a provider snapshot.", detected_at: completedAt, matchup_identity: matchup, bout_id: bout.bout_id, source_details: { monitored_event_kind: resolved.kind } });
+      const findingIdentity = stableKey(resolved.identity, "bout", bout.bout_id, "unmatched_fight");
+      findings.push({ finding_key: findingIdentity, finding_type: "unmatched_fight", severity: "warning", summary: "A monitored bout did not confidently match a provider snapshot.", detected_at: completedAt, matchup_identity: matchup, bout_id: bout.bout_id, source_details: { monitored_event_kind: resolved.kind, finding_identity: findingIdentity } });
     }
   }
-  odds.diagnostics.forEach((diagnostic) => findings.push({ finding_key: stableKey(resolved.identity, "provider_error", diagnostic.code, diagnostic.sourceEventId ?? "event", diagnostic.matchupIdentity ?? "event"), finding_type: "provider_error", severity: diagnostic.severity, summary: diagnostic.message, detected_at: completedAt, matchup_identity: diagnostic.matchupIdentity, source_details: { code: diagnostic.code, source_event_id: diagnostic.sourceEventId } }));
-  if (odds.quota.requestsRemaining !== null && odds.quota.requestsRemaining <= 5) findings.push({ finding_key: stableKey(resolved.identity, "quota_warning", odds.quota.requestsRemaining === 0 ? "exhausted" : "low"), finding_type: "quota_warning", severity: odds.quota.requestsRemaining === 0 ? "error" : "warning", summary: odds.quota.requestsRemaining === 0 ? "Odds provider quota is exhausted." : "Odds provider quota is low.", detected_at: completedAt, source_details: { requests_remaining: odds.quota.requestsRemaining } });
+  odds.diagnostics.forEach((diagnostic) => {
+    const findingIdentity = stableKey(resolved.identity, "provider_error", diagnostic.code, diagnostic.sourceEventId ?? "event", diagnostic.matchupIdentity ?? "event");
+    findings.push({ finding_key: findingIdentity, finding_type: "provider_error", severity: diagnostic.severity, summary: diagnostic.message, detected_at: completedAt, matchup_identity: diagnostic.matchupIdentity, source_details: { code: diagnostic.code, source_event_id: diagnostic.sourceEventId, finding_identity: findingIdentity } });
+  });
+  if (odds.quota.requestsRemaining !== null && odds.quota.requestsRemaining <= 5) {
+    const findingIdentity = stableKey(resolved.identity, "quota_warning");
+    findings.push({ finding_key: stableKey(findingIdentity, odds.quota.requestsRemaining === 0 ? "exhausted" : "low"), finding_type: "quota_warning", severity: odds.quota.requestsRemaining === 0 ? "error" : "warning", summary: odds.quota.requestsRemaining === 0 ? "Odds provider quota is exhausted." : "Odds provider quota is low.", detected_at: completedAt, source_details: { requests_remaining: odds.quota.requestsRemaining, finding_identity: findingIdentity } });
+  }
   const retainedFindings = input.suppressFindingKeys
     ? findings.filter((finding) => !input.suppressFindingKeys?.has(finding.finding_key))
     : findings;
