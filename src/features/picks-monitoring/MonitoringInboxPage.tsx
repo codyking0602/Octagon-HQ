@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
-import type { CardChangeApprovalProposal } from "./cardChangeApproval";
 import {
   compactMonitoringValue,
   monitoringValuesEquivalent,
@@ -34,7 +33,8 @@ function readableError(error: unknown) {
 }
 
 function hasEvidenceValue(value: unknown) {
-  return value !== null && value !== undefined;
+  if (value === null || value === undefined) return false;
+  return typeof value !== "string" || value.trim().length > 0;
 }
 
 function isEquivalentFinding(finding: MonitoringFinding) {
@@ -43,13 +43,32 @@ function isEquivalentFinding(finding: MonitoringFinding) {
     && monitoringValuesEquivalent(finding.beforeValue, finding.afterValue);
 }
 
+function discoveryFieldLabel(finding: MonitoringFinding) {
+  const field = finding.sourceDetails.change_field;
+  if (field === "venue") return "venue";
+  if (field === "location") return "location";
+  if (field === "weight_class") return "weight class";
+  return "value";
+}
+
 function FindingEvidence({ finding }: { finding: MonitoringFinding }) {
   const hasBefore = hasEvidenceValue(finding.beforeValue);
   const hasAfter = hasEvidenceValue(finding.afterValue);
   if (!hasBefore && !hasAfter) return null;
 
-  const before = compactMonitoringValue(finding.beforeValue);
   const after = compactMonitoringValue(finding.afterValue);
+  if (!hasBefore && hasAfter) {
+    const field = discoveryFieldLabel(finding);
+    return (
+      <p className="monitoring-evidence" aria-label={`Set ${field} to ${after}`}>
+        <span>Set {field} to</span>
+        <b aria-hidden="true">·</b>
+        <span title={after}>{after}</span>
+      </p>
+    );
+  }
+
+  const before = compactMonitoringValue(finding.beforeValue);
   return (
     <p className="monitoring-evidence" aria-label={`${before} changed to ${after}`}>
       <span title={before}>{before}</span>
@@ -59,21 +78,16 @@ function FindingEvidence({ finding }: { finding: MonitoringFinding }) {
   );
 }
 
-function approvalActionLabel(proposal: CardChangeApprovalProposal) {
-  if (proposal.action === "adjust_event_lock") return "APPROVE DEADLINE";
-  if (proposal.action === "remove_bout") return "APPROVE REMOVAL";
-  if (proposal.action === "replace_fighter") return "APPROVE REPLACEMENT";
-  return "APPROVE ORDER";
-}
-
 interface MonitoringInboxPageProps {
   repository?: MonitoringInboxRepository | null;
   embedded?: boolean;
+  onAppliedChange?: () => void | Promise<void>;
 }
 
 export default function MonitoringInboxPage({
   repository: suppliedRepository,
   embedded = false,
+  onAppliedChange,
 }: MonitoringInboxPageProps) {
   const identity = useIdentity();
   const [repository] = useState<MonitoringInboxRepository | null>(() => (
@@ -114,11 +128,16 @@ export default function MonitoringInboxPage({
     void loadInbox();
   }, [identity.profile, identity.ready, loadInbox, repository]);
 
-  async function runAction(key: string, action: () => Promise<void>) {
+  async function runAction(
+    key: string,
+    action: () => Promise<void>,
+    afterSuccess?: () => void | Promise<void>,
+  ) {
     setBusyAction(key);
     setError("");
     try {
       await action();
+      await afterSuccess?.();
       await loadInbox();
     } catch (nextError) {
       setError(readableError(nextError));
@@ -148,9 +167,11 @@ export default function MonitoringInboxPage({
     if (!window.confirm(
       `Approve and apply this detected change?\n\n${finding.summary}\n\nThe backend will reject it if the live card changed since this check.`,
     )) return;
-    void runAction(`finding:${finding.findingId}`, () => (
-      repository.approveFinding!(finding.findingId, reason)
-    ));
+    void runAction(
+      `finding:${finding.findingId}`,
+      () => repository.approveFinding!(finding.findingId, reason),
+      onAppliedChange,
+    );
   }
 
   function reviewFinding(finding: MonitoringFinding, status: "reviewed" | "dismissed") {
@@ -281,6 +302,7 @@ export default function MonitoringInboxPage({
               </p>
               {pendingFindings.map((finding) => {
                 const busy = busyAction === `finding:${finding.findingId}`;
+                const automaticallyApplied = finding.sourceDetails.automatically_applied === true;
                 return (
                   <article className={`surface-card monitoring-finding monitoring-finding--${finding.severity}`} key={finding.findingId}>
                     <div className="monitoring-finding__topline">
@@ -290,13 +312,16 @@ export default function MonitoringInboxPage({
                     <h3>{finding.summary}</h3>
                     {finding.matchupIdentity ? <p>{finding.matchupIdentity.replaceAll("|", " vs. ")}</p> : null}
                     <FindingEvidence finding={finding} />
+                    {automaticallyApplied ? (
+                      <p className="monitoring-section__note">ALREADY APPLIED AUTOMATICALLY</p>
+                    ) : null}
                     {finding.approvalProposal?.action === "replace_fighter" ? (
                       <p className="monitoring-section__note">REPICK REQUIRED FOR AFFECTED MEMBERS</p>
                     ) : null}
                     <div className="monitoring-finding__actions">
                       {finding.approvalProposal ? (
                         <button type="button" disabled={Boolean(busyAction)} onClick={() => approveFinding(finding)}>
-                          {busy ? "APPLYING…" : approvalActionLabel(finding.approvalProposal)}
+                          {busy ? "APPLYING…" : "APPROVE CHANGE"}
                         </button>
                       ) : (
                         <button type="button" disabled={Boolean(busyAction)} onClick={() => reviewFinding(finding, "reviewed")}>
