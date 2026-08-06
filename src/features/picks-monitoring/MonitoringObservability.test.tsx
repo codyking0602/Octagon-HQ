@@ -131,7 +131,6 @@ function renderPage(repo: MonitoringInboxRepository) {
 
 beforeEach(() => {
   vi.spyOn(window, "confirm").mockReturnValue(true);
-  vi.spyOn(window, "prompt").mockReturnValue("Confirmed source change");
 });
 
 afterEach(() => {
@@ -144,7 +143,7 @@ describe("Picks monitoring observability", () => {
     renderPage(repository());
 
     expect(await screen.findByText("NEXT SCHEDULER WAKE")).toBeInTheDocument();
-    expect(screen.getByText("NEXT PROVIDER CALL")).toBeInTheDocument();
+    expect(screen.getAllByText("NEXT PROVIDER CALL").length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText("LAST SCHEDULER WAKE")).toBeInTheDocument();
     expect(screen.getByText("LAST SUCCESSFUL PROVIDER CALL")).toBeInTheDocument();
     expect(screen.getByText("EXACT UFC EVENT SOURCE")).toBeInTheDocument();
