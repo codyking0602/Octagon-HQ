@@ -13,6 +13,10 @@ const proposalBuilder = readFileSync(
   "src/features/picks-monitoring/cardChangeApproval.ts",
   "utf8",
 );
+const presentation = readFileSync(
+  "src/features/picks-monitoring/monitoringDecisionPresentation.ts",
+  "utf8",
+);
 const runner = readFileSync(
   "src/features/picks-monitoring/manualMonitoringRunner.ts",
   "utf8",
@@ -23,6 +27,10 @@ const repository = readFileSync(
 );
 const page = readFileSync(
   "src/features/picks-monitoring/MonitoringInboxPage.tsx",
+  "utf8",
+);
+const decisionCss = readFileSync(
+  "src/styles/picks-monitoring-decisions.css",
   "utf8",
 );
 const sqlProof = readFileSync(
@@ -97,18 +105,42 @@ describe("owner-approved monitoring card changes", () => {
     );
   });
 
-  it("keeps React on the repository boundary and makes every action truthful", () => {
-    expect(repository.match(/approve_pick_monitoring_finding/g)).toHaveLength(1);
-    expect(page).toContain("APPROVE CHANGE");
-    expect(page).toContain("MARK REVIEWED");
-    expect(page).toContain("ALREADY APPLIED AUTOMATICALLY");
-    expect(page).toContain("Set {field} to");
-    expect(page).toContain("REPICK REQUIRED FOR AFFECTED MEMBERS");
-    expect(page).toContain(
-      "The backend will reject it if the live card changed since this check.",
-    );
-    expect(page).toContain("everything else remains review-only");
+  it("uses structured confirmation-only controls with finite backend audit reasons", () => {
+    expect(page).toContain("CONFIRM CHANGE");
+    expect(page).toContain("APPLY CONFIRMED CHANGE");
+    expect(page).toContain("KEEP CURRENT");
+    expect(page).toContain("DISMISS NOTICE");
+    expect(page).toContain("CURRENT");
+    expect(page).toContain("UFC SOURCE");
+    expect(page).toContain("EXPECTED RESULT");
+    expect(page).toContain("PLAYER PICKS");
+    expect(page).toContain("OWNER DECISION RECEIPT");
+    expect(page).toContain("repository.approveFinding(finding.findingId, presentation.auditReason)");
+    expect(page).not.toMatch(/window\.prompt|\bprompt\s*\(/);
+    expect(page).not.toMatch(/<textarea|type="text"/);
+    expect(presentation).toContain("Owner confirmed the UFC-source event deadline.");
+    expect(presentation).toContain("Owner confirmed the UFC-source fighter replacement.");
+    expect(presentation).toContain("Owner confirmed the UFC-source fight removal.");
+    expect(presentation).toContain("Owner confirmed the UFC-source fight order.");
+  });
+
+  it("keeps review-only diagnostics and automatic odds receipts distinct from live-card mutations", () => {
+    expect(page).toContain("AUTOMATIC ODDS RECEIPT");
+    expect(page).toContain("ALREADY APPLIED AUTOMATICALLY · NO OWNER CONFIRMATION REQUIRED");
+    expect(page).toContain("REVIEW ONLY · NO LIVE APPLICATION CONTROL EXISTS");
+    expect(page).toContain("No owner-applied live event change occurred.");
+    expect(page).toContain("refreshed.newFindings.some");
     expect(page).not.toMatch(/getSupabaseClient|\.rpc\(|functions\.invoke|createClient/);
+    expect(repository.match(/approve_pick_monitoring_finding/g)).toHaveLength(1);
+  });
+
+  it("keeps the 390px owner flow compact, thumb-friendly, and impact-safe", () => {
+    expect(decisionCss).toContain("@media (max-width: 390px)");
+    expect(decisionCss).toContain("min-height: 44px");
+    expect(decisionCss).toContain("monitoring-confirmation__acknowledgment");
+    expect(decisionCss).toContain("monitoring-operations");
+    expect(page.indexOf("PENDING OWNER DECISIONS")).toBeLessThan(page.indexOf("AUTOMATION DETAILS"));
+    expect(page).toContain("presentation.requiresAcknowledgment && !impactAcknowledged");
   });
 
   it("keeps rollback-only backend proof for every existing dispatch", () => {

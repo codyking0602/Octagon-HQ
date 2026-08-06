@@ -1,13 +1,19 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import "../../styles/picks-monitoring-decisions.css";
 import { useIdentity } from "../identity/IdentityProvider";
 import {
   compactMonitoringValue,
   monitoringValuesEquivalent,
 } from "./monitoringChangeValues";
 import {
+  monitoringDecisionPresentation,
+  type MonitoringDecisionPresentation,
+} from "./monitoringDecisionPresentation";
+import {
   monitoringFindingTypeLabel,
   type MonitoringFinding,
+  type MonitoringInbox,
   type MonitoringRun,
 } from "./monitoringInboxModel";
 import {
@@ -109,6 +115,35 @@ function FindingEvidence({ finding }: { finding: MonitoringFinding }) {
   );
 }
 
+function DecisionComparison({ presentation }: { presentation: MonitoringDecisionPresentation }) {
+  return (
+    <div className="monitoring-decision__comparison" aria-label={`${presentation.currentValue} changes to ${presentation.proposedValue}`}>
+      <div>
+        <span>CURRENT</span>
+        <strong>{presentation.currentValue}</strong>
+      </div>
+      <b aria-hidden="true">→</b>
+      <div>
+        <span>UFC SOURCE</span>
+        <strong>{presentation.proposedValue}</strong>
+      </div>
+    </div>
+  );
+}
+
+function DecisionImpacts({ presentation }: { presentation: MonitoringDecisionPresentation }) {
+  return (
+    <div className="monitoring-decision__impacts" aria-label="Expected change impact">
+      {presentation.impacts.map((impact) => (
+        <div className={impact.affected ? "is-affected" : ""} key={impact.label}>
+          <span>{impact.label}</span>
+          <strong>{impact.value}</strong>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function providerWasCalled(run: MonitoringRun | null | undefined) {
   return Boolean(run && (
     run.oddsProvider
@@ -142,6 +177,13 @@ function runFailureDetail(run: MonitoringRun | null, findings: MonitoringFinding
   return `${displayTime(run.completedAt ?? run.startedAt)} · Provider call failed.`;
 }
 
+interface DecisionReceipt {
+  title: string;
+  summary: string;
+  detail: string;
+  kind: "applied" | "kept" | "dismissed";
+}
+
 interface MonitoringInboxPageProps {
   repository?: MonitoringInboxRepository | null;
   embedded?: boolean;
@@ -157,20 +199,25 @@ export default function MonitoringInboxPage({
   const [repository] = useState<MonitoringInboxRepository | null>(() => (
     suppliedRepository === undefined ? createMonitoringInboxRepository() : suppliedRepository
   ));
-  const [inbox, setInbox] = useState<Awaited<ReturnType<MonitoringInboxRepository["loadInbox"]>> | null>(null);
+  const [inbox, setInbox] = useState<MonitoringInbox | null>(null);
   const [loading, setLoading] = useState(true);
   const [busyAction, setBusyAction] = useState("");
   const [error, setError] = useState("");
+  const [confirmingFindingId, setConfirmingFindingId] = useState<string | null>(null);
+  const [impactAcknowledged, setImpactAcknowledged] = useState(false);
+  const [decisionReceipt, setDecisionReceipt] = useState<DecisionReceipt | null>(null);
 
   const loadInbox = useCallback(async () => {
-    if (!repository || !identity.profile) return;
+    if (!repository || !identity.profile) return null;
     setLoading(true);
     try {
-      setInbox(await repository.loadInbox());
+      const nextInbox = await repository.loadInbox();
+      setInbox(nextInbox);
       setError("");
+      return nextInbox;
     } catch (nextError) {
-      setInbox(null);
       setError(readableError(nextError));
+      return null;
     } finally {
       setLoading(false);
     }
@@ -192,16 +239,12 @@ export default function MonitoringInboxPage({
     void loadInbox();
   }, [identity.profile, identity.ready, loadInbox, repository]);
 
-  async function runAction(
-    key: string,
-    action: () => Promise<void>,
-    afterSuccess?: () => void | Promise<void>,
-  ) {
+  async function runAction(key: string, action: () => Promise<void>) {
     setBusyAction(key);
     setError("");
+    setDecisionReceipt(null);
     try {
       await action();
-      await afterSuccess?.();
       await loadInbox();
     } catch (nextError) {
       setError(readableError(nextError));
@@ -220,27 +263,101 @@ export default function MonitoringInboxPage({
     void runAction("manual", repository.runManualCheck);
   }
 
-  function approveFinding(finding: MonitoringFinding) {
-    if (!repository?.approveFinding || !finding.approvalProposal) return;
-    const reason = window.prompt("Why are you approving this detected UFC card change?")?.trim();
-    if (!reason) return;
-    if (reason.length < 3) {
-      setError("Approval requires a reason of at least 3 characters.");
-      return;
-    }
-    if (!window.confirm(
-      `Approve and apply this detected change?\n\n${finding.summary}\n\nThe backend will reject it if the live card changed since this check.`,
-    )) return;
-    void runAction(
-      `finding:${finding.findingId}`,
-      () => repository.approveFinding!(finding.findingId, reason),
-      onAppliedChange,
-    );
+  function beginConfirmation(finding: MonitoringFinding) {
+    setConfirmingFindingId(finding.findingId);
+    setImpactAcknowledged(false);
+    setDecisionReceipt(null);
+    setError("");
   }
 
-  function reviewFinding(finding: MonitoringFinding, status: "reviewed" | "dismissed") {
+  async function applyConfirmedFinding(
+    finding: MonitoringFinding,
+    presentation: MonitoringDecisionPresentation,
+  ) {
+    if (!repository?.approveFinding) return;
+    const key = `finding:${finding.findingId}`;
+    setBusyAction(key);
+    setError("");
+    setDecisionReceipt(null);
+    try {
+      await repository.approveFinding(finding.findingId, presentation.auditReason);
+      const refreshed = await loadInbox();
+      if (!refreshed || refreshed.newFindings.some((item) => item.findingId === finding.findingId)) {
+        throw new Error("The change did not clear from persisted monitoring state. Refresh status before trying again.");
+      }
+      const remaining = refreshed.newFindings.filter((item) => !isEquivalentFinding(item)).length;
+      await onAppliedChange?.();
+      setDecisionReceipt({
+        kind: "applied",
+        title: "CHANGE APPLIED",
+        summary: `${presentation.fieldLabel}: ${presentation.currentValue} → ${presentation.proposedValue}.`,
+        detail: `${presentation.playerResult} ${remaining} owner ${remaining === 1 ? "finding remains" : "findings remain"}.`,
+      });
+      setConfirmingFindingId(null);
+      setImpactAcknowledged(false);
+    } catch (nextError) {
+      setError(readableError(nextError));
+    } finally {
+      setBusyAction("");
+    }
+  }
+
+  async function keepCurrentFinding(
+    finding: MonitoringFinding,
+    presentation: MonitoringDecisionPresentation,
+  ) {
     if (!repository) return;
-    void runAction(`finding:${finding.findingId}`, () => repository.reviewFinding(finding.findingId, status));
+    const key = `finding:${finding.findingId}`;
+    setBusyAction(key);
+    setError("");
+    setDecisionReceipt(null);
+    try {
+      await repository.reviewFinding(finding.findingId, "reviewed");
+      const refreshed = await loadInbox();
+      if (!refreshed || refreshed.newFindings.some((item) => item.findingId === finding.findingId)) {
+        throw new Error("The decision did not clear from persisted monitoring state. Refresh status before trying again.");
+      }
+      const remaining = refreshed.newFindings.filter((item) => !isEquivalentFinding(item)).length;
+      setDecisionReceipt({
+        kind: "kept",
+        title: "CURRENT VALUE KEPT",
+        summary: `${presentation.fieldLabel}: ${presentation.currentValue}. The UFC-source value was not applied.`,
+        detail: `No live Picks mutation occurred. ${remaining} owner ${remaining === 1 ? "finding remains" : "findings remain"}.`,
+      });
+      setConfirmingFindingId(null);
+      setImpactAcknowledged(false);
+    } catch (nextError) {
+      setError(readableError(nextError));
+    } finally {
+      setBusyAction("");
+    }
+  }
+
+  async function dismissFinding(finding: MonitoringFinding) {
+    if (!repository) return;
+    const key = `finding:${finding.findingId}`;
+    const automaticallyApplied = finding.sourceDetails.automatically_applied === true;
+    setBusyAction(key);
+    setError("");
+    setDecisionReceipt(null);
+    try {
+      await repository.reviewFinding(finding.findingId, "dismissed");
+      const refreshed = await loadInbox();
+      if (!refreshed || refreshed.newFindings.some((item) => item.findingId === finding.findingId)) {
+        throw new Error("The notice did not clear from persisted monitoring state. Refresh status before trying again.");
+      }
+      const remaining = refreshed.newFindings.filter((item) => !isEquivalentFinding(item)).length;
+      setDecisionReceipt({
+        kind: "dismissed",
+        title: automaticallyApplied ? "AUTOMATIC ODDS RECEIPT DISMISSED" : "NOTICE DISMISSED",
+        summary: finding.summary,
+        detail: `No owner-applied live event change occurred. ${remaining} owner ${remaining === 1 ? "finding remains" : "findings remain"}.`,
+      });
+    } catch (nextError) {
+      setError(readableError(nextError));
+    } finally {
+      setBusyAction("");
+    }
   }
 
   const schedulerReady = Boolean(inbox?.scheduler.active && inbox.scheduler.tokenConfigured);
@@ -276,6 +393,8 @@ export default function MonitoringInboxPage({
           : `Auto-sync reviewed its schedule ${displayTime(inbox?.scheduler.lastWakeStartedAt)}, but ${skippedReason}.`;
 
   const pendingFindings = inbox?.newFindings.filter((finding) => !isEquivalentFinding(finding)) ?? [];
+  const ownerDecisions = pendingFindings.filter((finding) => Boolean(finding.approvalProposal));
+  const reviewOnlyFindings = pendingFindings.filter((finding) => !finding.approvalProposal);
   const allFindings = [...(inbox?.newFindings ?? []), ...(inbox?.reviewedFindings ?? [])]
     .filter((finding, index, findings) => findings.findIndex((item) => item.findingId === finding.findingId) === index);
   const runs = inbox ? uniqueRuns(inbox.latestRun, inbox.recentRuns) : [];
@@ -334,6 +453,9 @@ export default function MonitoringInboxPage({
   const unmatchedWarning = unmatched === 1
     ? "1 monitored fight is unmatched and needs review."
     : `${unmatched} monitored fights are unmatched and need review.`;
+  const eventLabel = inbox?.monitoredEvent
+    ? `${inbox.monitoredEvent.name} · ${inbox.monitoredEvent.subtitle}`
+    : "NO MONITORED EVENT";
 
   return (
     <div className={`page monitoring-inbox-page${embedded ? " monitoring-inbox-page--embedded" : ""}`}>
@@ -361,50 +483,21 @@ export default function MonitoringInboxPage({
 
       {inbox ? (
         <>
-          <section className={`surface-card monitoring-status${automationNeedsAttention ? " is-paused" : " is-active"}`}>
+          <section className={`surface-card monitoring-status monitoring-status--compact${automationNeedsAttention ? " is-paused" : " is-active"}`}>
             <div className="monitoring-status__topline">
               <div>
-                <p className="eyebrow">AUTOMATION</p>
+                <p className="eyebrow">AUTOMATION · {eventLabel}</p>
                 <h2>{automationTitle}</h2>
               </div>
               <span>{schedulerReady ? "ENABLED" : "DISABLED"}</span>
             </div>
             <p>{automationDetail}</p>
-
-            <div className="monitoring-status__grid" aria-label="Automation status">
-              <div><span>NEXT SCHEDULER WAKE</span><strong>{displayTime(schedulerWake)}</strong></div>
+            <div className="monitoring-summary" aria-label="Owner monitoring summary">
+              <div><span>CURRENT EVENT</span><strong>{eventLabel}</strong></div>
+              <div><span>OWNER DECISIONS</span><strong>{ownerDecisions.length}</strong></div>
+              <div><span>NEXT WAKE</span><strong>{displayTime(schedulerWake)}</strong></div>
               <div><span>NEXT PROVIDER CALL</span><strong>{displayTime(nextProviderCall)}</strong></div>
-              <div><span>LAST SCHEDULER WAKE</span><strong>{displayTime(inbox.scheduler.lastWakeStartedAt)}</strong><small>{inbox.scheduler.lastWakeStatus ?? "NO STATUS"}</small></div>
-              <div><span>LAST UFC CARD CHECK</span><strong>{displayTime(latestCardCheck?.completedAt ?? latestCardCheck?.startedAt)}</strong></div>
-              <div><span>LAST ODDS CHECK</span><strong>{displayTime(latestProviderCall?.completedAt ?? latestProviderCall?.startedAt)}</strong></div>
-              <div><span>LAST SUCCESSFUL PROVIDER CALL</span><strong>{displayTime(lastSuccessfulProviderCall?.completedAt ?? lastSuccessfulProviderCall?.startedAt)}</strong></div>
-              <div><span>LAST PROVIDER FAILURE</span><strong>{runFailureDetail(lastProviderFailure, allFindings)}</strong></div>
-              <div><span>MONITORED UFC EVENT</span><strong>{inbox.monitoredEvent ? `${inbox.monitoredEvent.name} · ${inbox.monitoredEvent.subtitle}` : "NONE"}</strong></div>
-              <div><span>EXACT UFC EVENT SOURCE</span><strong>{monitoredSource}</strong></div>
-              <div><span>FIGHT MATCHING</span><strong>{latestProviderCalled ? `${coverageMatched} OF ${coverageTotal || inbox.monitoredEvent?.boutCount || 0} MATCHED` : "PROVIDER NOT CALLED"}</strong></div>
-              <div><span>ODDS APPLICATION</span><strong>{latestProviderCalled ? `${oddsUpdated} UPDATED · ${oddsUnchanged} UNCHANGED · ${unmatched} UNMATCHED` : "PROVIDER NOT CALLED"}</strong></div>
-              <div><span>CARD COMPARISON</span><strong>{cardChanges ? `${cardChanges} NEED CONFIRMATION` : latestRun ? "0 CHANGES FOUND" : "NOT CHECKED"}</strong></div>
-              <div><span>OWNER FINDINGS</span><strong>{pendingFindings.length}</strong></div>
-              <div><span>MONTHLY REQUESTS USED</span><strong>{quotaUsed ?? "UNKNOWN"}</strong></div>
-              <div><span>MONTHLY REQUESTS REMAINING</span><strong>{quotaRemaining ?? "UNKNOWN"}</strong></div>
-              <div><span>MONTHLY RESET</span><strong>{displayDate(quotaReset)}</strong></div>
-              <div><span>NEXT WAKE USES REQUEST</span><strong>{nextWakeConsumesRequest ? "YES" : "NO"}</strong><small>CHECK NOW ALWAYS USES 1</small></div>
             </div>
-
-            <div className="monitoring-status__all-clear" aria-label="Latest automatic monitoring receipt">
-              <span>LATEST RECEIPT</span>
-              <strong>{latestReceipt}</strong>
-            </div>
-
-            {sourceUrl ? <small>UFC EVENT SOURCE · {sourceUrl}</small> : null}
-            {sourceFailures ? <p className="picks-error" role="status">The UFC event source failed before an odds-provider call.</p> : null}
-            {providerFailures.map((finding) => (
-              <p className="picks-error" role="status" key={finding.findingId}>{finding.summary}</p>
-            ))}
-            {unmatched ? <p className="picks-error" role="status">{unmatchedWarning}</p> : null}
-            {quotaRemaining === 0 ? <p className="picks-error" role="status">The monthly provider quota is exhausted.</p> : null}
-            {!inbox.scheduler.tokenConfigured ? <p className="picks-error" role="status">The scheduler credential is missing or stale.</p> : null}
-
             {pendingFindings.length === 0 ? (
               <div className="monitoring-status__all-clear" aria-label="Pending changes all clear">
                 <span>OWNER REVIEW</span>
@@ -424,17 +517,144 @@ export default function MonitoringInboxPage({
             </div>
           </section>
 
-          {!embedded && inbox.monitoredEvent ? (
-            <section className="surface-card monitoring-event">
-              <div>
-                <p className="eyebrow">CURRENT EVENT</p>
-                <h2>{inbox.monitoredEvent.name}</h2>
-                <strong>{inbox.monitoredEvent.subtitle}</strong>
+          {decisionReceipt ? (
+            <section className={`surface-card monitoring-decision-receipt is-${decisionReceipt.kind}`} aria-live="polite" aria-label="Owner decision receipt">
+              <span>OWNER DECISION RECEIPT</span>
+              <h2>{decisionReceipt.title}</h2>
+              <strong>{decisionReceipt.summary}</strong>
+              <p>{decisionReceipt.detail}</p>
+            </section>
+          ) : null}
+
+          {ownerDecisions.length ? (
+            <section className="monitoring-section monitoring-decisions" aria-labelledby="monitoring-decisions-title">
+              <div className="monitoring-section__heading">
+                <div><p className="eyebrow">PENDING OWNER DECISIONS</p><h2 id="monitoring-decisions-title">One finding, one clear decision</h2></div>
+                <span>{ownerDecisions.length}</span>
               </div>
-              <div className="monitoring-event__facts">
-                <span>{inbox.monitoredEvent.boutCount} FIGHTS</span>
-                <span>LOCK {displayTime(inbox.monitoredEvent.locksAt)}</span>
+              <p className="monitoring-section__note">
+                Eligible pre-lock odds continue to apply automatically. These UFC card changes use the existing owner-approved mutation path only after final confirmation.
+              </p>
+              {ownerDecisions.map((finding) => {
+                const presentation = monitoringDecisionPresentation(finding);
+                if (!presentation) return null;
+                const busy = busyAction === `finding:${finding.findingId}`;
+                const confirming = confirmingFindingId === finding.findingId;
+                const finalDisabled = Boolean(busyAction)
+                  || (presentation.requiresAcknowledgment && !impactAcknowledged);
+                return (
+                  <article className="surface-card monitoring-finding monitoring-finding--warning monitoring-decision" key={finding.findingId}>
+                    <div className="monitoring-finding__topline">
+                      <span>OWNER DECISION · {presentation.fieldLabel}</span>
+                      <small>{displayTime(finding.detectedAt)}</small>
+                    </div>
+                    <h3>{finding.summary}</h3>
+                    <p>{presentation.subject}</p>
+                    <DecisionComparison presentation={presentation} />
+                    <div className="monitoring-decision__result">
+                      <span>CONFIRMING WILL</span>
+                      <strong>{presentation.consequence}</strong>
+                      <p>{presentation.playerResult}</p>
+                    </div>
+                    <DecisionImpacts presentation={presentation} />
+
+                    {!confirming ? (
+                      <div className="monitoring-finding__actions">
+                        <button className="monitoring-confirm-action" type="button" disabled={Boolean(busyAction)} onClick={() => beginConfirmation(finding)}>
+                          CONFIRM CHANGE
+                        </button>
+                        <button type="button" disabled={Boolean(busyAction)} onClick={() => void keepCurrentFinding(finding, presentation)}>
+                          {busy ? "SAVING…" : "KEEP CURRENT"}
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="monitoring-confirmation" role="group" aria-label={`Confirm ${finding.summary}`}>
+                        <div>
+                          <span>FINAL CONFIRMATION</span>
+                          <h4>Confirm this change</h4>
+                        </div>
+                        <dl>
+                          <div><dt>EVENT</dt><dd>{eventLabel}</dd></div>
+                          <div><dt>FIGHT / FIELD</dt><dd>{presentation.subject} · {presentation.fieldLabel}</dd></div>
+                          <div><dt>CURRENT</dt><dd>{presentation.currentValue}</dd></div>
+                          <div><dt>NEW</dt><dd>{presentation.proposedValue}</dd></div>
+                          <div><dt>EXPECTED RESULT</dt><dd>{presentation.consequence}</dd></div>
+                          <div><dt>PLAYER PICKS</dt><dd>{presentation.playerResult}</dd></div>
+                          <div><dt>AUDIT NOTE</dt><dd>{presentation.auditReason}</dd></div>
+                        </dl>
+                        {presentation.requiresAcknowledgment ? (
+                          <label className="monitoring-confirmation__acknowledgment">
+                            <input
+                              type="checkbox"
+                              checked={impactAcknowledged}
+                              onChange={(event) => setImpactAcknowledged(event.currentTarget.checked)}
+                            />
+                            <span>I understand the player or card impact shown above.</span>
+                          </label>
+                        ) : null}
+                        <div className="monitoring-confirmation__actions">
+                          <button
+                            className="primary-action"
+                            type="button"
+                            disabled={finalDisabled}
+                            onClick={() => void applyConfirmedFinding(finding, presentation)}
+                          >
+                            {busy ? "APPLYING…" : "APPLY CONFIRMED CHANGE"}
+                          </button>
+                          <button
+                            className="secondary-action"
+                            type="button"
+                            disabled={Boolean(busyAction)}
+                            onClick={() => {
+                              setConfirmingFindingId(null);
+                              setImpactAcknowledged(false);
+                            }}
+                          >
+                            CANCEL
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </article>
+                );
+              })}
+            </section>
+          ) : null}
+
+          {reviewOnlyFindings.length ? (
+            <section className="monitoring-section monitoring-notices" aria-labelledby="monitoring-notices-title">
+              <div className="monitoring-section__heading">
+                <div><p className="eyebrow">OPERATIONAL NOTICES</p><h2 id="monitoring-notices-title">Review-only monitoring receipts</h2></div>
+                <span>{reviewOnlyFindings.length}</span>
               </div>
+              <p className="monitoring-section__note">
+                These findings do not have a supported live-card repair action. Dismissing one records the review without implying a backend fix.
+              </p>
+              {reviewOnlyFindings.map((finding) => {
+                const busy = busyAction === `finding:${finding.findingId}`;
+                const automaticallyApplied = finding.sourceDetails.automatically_applied === true;
+                return (
+                  <article className={`surface-card monitoring-finding monitoring-finding--${finding.severity}`} key={finding.findingId}>
+                    <div className="monitoring-finding__topline">
+                      <span>{automaticallyApplied ? "AUTOMATIC ODDS RECEIPT" : monitoringFindingTypeLabel(finding.findingType)}</span>
+                      <small>{displayTime(finding.detectedAt)}</small>
+                    </div>
+                    <h3>{finding.summary}</h3>
+                    {finding.matchupIdentity ? <p>{finding.matchupIdentity.replaceAll("|", " vs. ")}</p> : null}
+                    <FindingEvidence finding={finding} />
+                    {automaticallyApplied ? (
+                      <p className="monitoring-section__note">ALREADY APPLIED AUTOMATICALLY · NO OWNER CONFIRMATION REQUIRED</p>
+                    ) : (
+                      <p className="monitoring-section__note">REVIEW ONLY · NO LIVE APPLICATION CONTROL EXISTS</p>
+                    )}
+                    <div className="monitoring-finding__actions monitoring-finding__actions--single">
+                      <button type="button" disabled={Boolean(busyAction)} onClick={() => void dismissFinding(finding)}>
+                        {busy ? "SAVING…" : automaticallyApplied ? "DISMISS RECEIPT" : "DISMISS NOTICE"}
+                      </button>
+                    </div>
+                  </article>
+                );
+              })}
             </section>
           ) : null}
 
@@ -446,50 +666,47 @@ export default function MonitoringInboxPage({
             </section>
           ) : null}
 
-          {pendingFindings.length ? (
-            <section className="monitoring-section" aria-labelledby="monitoring-findings-title">
-              <div className="monitoring-section__heading">
-                <div><p className="eyebrow">PENDING CHANGES</p><h2 id="monitoring-findings-title">Review only what changed</h2></div>
-                <span>{pendingFindings.length}</span>
+          <details className="surface-card monitoring-operations">
+            <summary>
+              <div><span>AUTOMATION DETAILS</span><strong>Source, coverage, quota, and receipts</strong></div>
+              <small>OPEN</small>
+            </summary>
+            <div className="monitoring-operations__body">
+              <div className="monitoring-status__grid" aria-label="Automation status">
+                <div><span>NEXT SCHEDULER WAKE</span><strong>{displayTime(schedulerWake)}</strong></div>
+                <div><span>NEXT PROVIDER CALL</span><strong>{displayTime(nextProviderCall)}</strong></div>
+                <div><span>LAST SCHEDULER WAKE</span><strong>{displayTime(inbox.scheduler.lastWakeStartedAt)}</strong><small>{inbox.scheduler.lastWakeStatus ?? "NO STATUS"}</small></div>
+                <div><span>LAST UFC CARD CHECK</span><strong>{displayTime(latestCardCheck?.completedAt ?? latestCardCheck?.startedAt)}</strong></div>
+                <div><span>LAST ODDS CHECK</span><strong>{displayTime(latestProviderCall?.completedAt ?? latestProviderCall?.startedAt)}</strong></div>
+                <div><span>LAST SUCCESSFUL PROVIDER CALL</span><strong>{displayTime(lastSuccessfulProviderCall?.completedAt ?? lastSuccessfulProviderCall?.startedAt)}</strong></div>
+                <div><span>LAST PROVIDER FAILURE</span><strong>{runFailureDetail(lastProviderFailure, allFindings)}</strong></div>
+                <div><span>MONITORED UFC EVENT</span><strong>{eventLabel}</strong></div>
+                <div><span>EXACT UFC EVENT SOURCE</span><strong>{monitoredSource}</strong></div>
+                <div><span>FIGHT MATCHING</span><strong>{latestProviderCalled ? `${coverageMatched} OF ${coverageTotal || inbox.monitoredEvent?.boutCount || 0} MATCHED` : "PROVIDER NOT CALLED"}</strong></div>
+                <div><span>ODDS APPLICATION</span><strong>{latestProviderCalled ? `${oddsUpdated} UPDATED · ${oddsUnchanged} UNCHANGED · ${unmatched} UNMATCHED` : "PROVIDER NOT CALLED"}</strong></div>
+                <div><span>CARD COMPARISON</span><strong>{cardChanges ? `${cardChanges} NEED CONFIRMATION` : latestRun ? "0 CHANGES FOUND" : "NOT CHECKED"}</strong></div>
+                <div><span>OWNER FINDINGS</span><strong>{pendingFindings.length}</strong></div>
+                <div><span>MONTHLY REQUESTS USED</span><strong>{quotaUsed ?? "UNKNOWN"}</strong></div>
+                <div><span>MONTHLY REQUESTS REMAINING</span><strong>{quotaRemaining ?? "UNKNOWN"}</strong></div>
+                <div><span>MONTHLY RESET</span><strong>{displayDate(quotaReset)}</strong></div>
+                <div><span>NEXT WAKE USES REQUEST</span><strong>{nextWakeConsumesRequest ? "YES" : "NO"}</strong><small>CHECK NOW ALWAYS USES 1</small></div>
               </div>
-              <p className="monitoring-section__note">
-                Eligible pre-lock odds apply automatically. Supported event-card changes apply only after your explicit approval; everything else remains review-only.
-              </p>
-              {pendingFindings.map((finding) => {
-                const busy = busyAction === `finding:${finding.findingId}`;
-                const automaticallyApplied = finding.sourceDetails.automatically_applied === true;
-                return (
-                  <article className={`surface-card monitoring-finding monitoring-finding--${finding.severity}`} key={finding.findingId}>
-                    <div className="monitoring-finding__topline">
-                      <span>{monitoringFindingTypeLabel(finding.findingType)}</span>
-                      <small>{displayTime(finding.detectedAt)}</small>
-                    </div>
-                    <h3>{finding.summary}</h3>
-                    {finding.matchupIdentity ? <p>{finding.matchupIdentity.replaceAll("|", " vs. ")}</p> : null}
-                    <FindingEvidence finding={finding} />
-                    {automaticallyApplied ? (
-                      <p className="monitoring-section__note">ALREADY APPLIED AUTOMATICALLY</p>
-                    ) : null}
-                    {finding.approvalProposal?.action === "replace_fighter" ? (
-                      <p className="monitoring-section__note">REPICK REQUIRED FOR AFFECTED MEMBERS</p>
-                    ) : null}
-                    <div className="monitoring-finding__actions">
-                      {finding.approvalProposal ? (
-                        <button type="button" disabled={Boolean(busyAction)} onClick={() => approveFinding(finding)}>
-                          {busy ? "APPLYING…" : "APPROVE CHANGE"}
-                        </button>
-                      ) : (
-                        <button type="button" disabled={Boolean(busyAction)} onClick={() => reviewFinding(finding, "reviewed")}>
-                          {busy ? "SAVING…" : "MARK REVIEWED"}
-                        </button>
-                      )}
-                      <button type="button" disabled={Boolean(busyAction)} onClick={() => reviewFinding(finding, "dismissed")}>DISMISS</button>
-                    </div>
-                  </article>
-                );
-              })}
-            </section>
-          ) : null}
+
+              <div className="monitoring-status__all-clear" aria-label="Latest automatic monitoring receipt">
+                <span>LATEST RECEIPT</span>
+                <strong>{latestReceipt}</strong>
+              </div>
+
+              {sourceUrl ? <small>UFC EVENT SOURCE · {sourceUrl}</small> : null}
+              {sourceFailures ? <p className="picks-error" role="status">The UFC event source failed before an odds-provider call.</p> : null}
+              {providerFailures.map((finding) => (
+                <p className="picks-error" role="status" key={finding.findingId}>{finding.summary}</p>
+              ))}
+              {unmatched ? <p className="picks-error" role="status">{unmatchedWarning}</p> : null}
+              {quotaRemaining === 0 ? <p className="picks-error" role="status">The monthly provider quota is exhausted.</p> : null}
+              {!inbox.scheduler.tokenConfigured ? <p className="picks-error" role="status">The scheduler credential is missing or stale.</p> : null}
+            </div>
+          </details>
 
           {error ? <p className="picks-error" role="status">{error}</p> : null}
         </>
