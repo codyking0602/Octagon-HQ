@@ -1,6 +1,7 @@
 -- Keep the current/unique inbox projection while passing the original finding
--- composite to the canonical current-state helper. The ranked row also carries
--- run metadata, so passing that enriched row directly is not type-safe.
+-- composite to the canonical current-state helper. Published findings belong to
+-- the canonical event id even if an older monitoring run used a prior source
+-- identity; staged findings still require the exact source identity.
 
 create or replace function public.get_pick_monitoring_inbox()
 returns jsonb
@@ -44,11 +45,14 @@ begin
       ) as identity_rank
     from public.pick_monitoring_findings item
     join public.pick_monitoring_runs run on run.run_id = item.run_id
-    where run.source_event_identity = v_source_event_identity
-      and (
-        (v_kind = 'current' and item.event_id = v_event_id)
-        or (v_kind = 'staged' and item.event_id is null)
+    where (
+      (v_kind = 'current' and item.event_id = v_event_id)
+      or (
+        v_kind = 'staged'
+        and item.event_id is null
+        and run.source_event_identity = v_source_event_identity
       )
+    )
   )
   select count(*)::integer
     into v_pending_count
@@ -72,11 +76,14 @@ begin
       ) as identity_rank
     from public.pick_monitoring_findings item
     join public.pick_monitoring_runs run on run.run_id = item.run_id
-    where run.source_event_identity = v_source_event_identity
-      and (
-        (v_kind = 'current' and item.event_id = v_event_id)
-        or (v_kind = 'staged' and item.event_id is null)
+    where (
+      (v_kind = 'current' and item.event_id = v_event_id)
+      or (
+        v_kind = 'staged'
+        and item.event_id is null
+        and run.source_event_identity = v_source_event_identity
       )
+    )
   ), current_pending as (
     select *
     from ranked item
