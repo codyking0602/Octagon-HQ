@@ -15,13 +15,23 @@ import {
 } from "./monitoringInboxRepository";
 
 function displayTime(value: string | null | undefined) {
-  if (!value) return "NOT YET";
+  if (!value || !Number.isFinite(Date.parse(value))) return "NOT YET";
   return new Intl.DateTimeFormat(undefined, {
     month: "short",
     day: "numeric",
     hour: "numeric",
     minute: "2-digit",
   }).format(new Date(value));
+}
+
+function nextHourlyWake(value: string | null | undefined) {
+  if (!value || !Number.isFinite(Date.parse(value))) return null;
+  return new Date(Date.parse(value) + 60 * 60 * 1000).toISOString();
+}
+
+function nextQuotaReset() {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth() + 1, 1).toISOString();
 }
 
 function readableError(error: unknown) {
@@ -48,7 +58,18 @@ function discoveryFieldLabel(finding: MonitoringFinding) {
   if (field === "venue") return "venue";
   if (field === "location") return "location";
   if (field === "weight_class") return "weight class";
+  if (field === "added_bout") return "fight";
   return "value";
+}
+
+function approvalLabel(finding: MonitoringFinding) {
+  switch (finding.approvalProposal?.action) {
+    case "add_bout": return "ADD FIGHT";
+    case "remove_bout": return "REMOVE FIGHT";
+    case "replace_fighter": return "APPLY REPLACEMENT";
+    case "reorder_card": return "APPLY ORDER";
+    default: return "APPROVE CHANGE";
+  }
 }
 
 function FindingEvidence({ finding }: { finding: MonitoringFinding }) {
@@ -152,24 +173,19 @@ export default function MonitoringInboxPage({
     const quotaNote = remaining === null || remaining === undefined
       ? "This will use the configured monitoring provider."
       : `The last provider response reported ${remaining} requests remaining.`;
-    if (!window.confirm(`Run a live monitoring check now? ${quotaNote}`)) return;
+    if (!window.confirm(`Run a complete UFC card and odds check now? ${quotaNote}`)) return;
     void runAction("manual", repository.runManualCheck);
   }
 
   function approveFinding(finding: MonitoringFinding) {
     if (!repository?.approveFinding || !finding.approvalProposal) return;
-    const reason = window.prompt("Why are you approving this detected UFC card change?")?.trim();
-    if (!reason) return;
-    if (reason.length < 3) {
-      setError("Approval requires a reason of at least 3 characters.");
-      return;
-    }
     if (!window.confirm(
-      `Approve and apply this detected change?\n\n${finding.summary}\n\nThe backend will reject it if the live card changed since this check.`,
+      `Are you sure you want to apply this detected change?\n\n${finding.summary}\n\nThe backend will reject it if the live card changed since this check.`,
     )) return;
+    const auditDescription = `Owner confirmed detected change: ${finding.summary}`;
     void runAction(
       `finding:${finding.findingId}`,
-      () => repository.approveFinding!(finding.findingId, reason),
+      () => repository.approveFinding!(finding.findingId, auditDescription),
       onAppliedChange,
     );
   }
@@ -200,16 +216,35 @@ export default function MonitoringInboxPage({
       ? "another authorized check was already in progress"
       : "no provider check was due";
   const automationDetail = !schedulerReady
-    ? "Automatic monitoring is not fully configured. Run a check now and review the result."
+    ? "Automatic monitoring is not fully configured. Run a check now and review the receipt below."
     : scheduledFailure
-      ? `Auto-sync could not complete its scheduled event check ${displayTime(decision?.attemptedAt)}. Run a check now and review the result.`
+      ? `The scheduled event check failed ${displayTime(decision?.attemptedAt)}. Run a check now and review the receipt below.`
       : partialCoverage
-        ? `The scheduled provider check at ${displayTime(decision?.attemptedAt)} returned partial coverage.`
+        ? `The scheduled provider call at ${displayTime(decision?.attemptedAt)} completed with missing fight coverage.`
         : scheduledProviderWorked
-          ? `Last scheduled provider check ${displayTime(decision?.attemptedAt)}.`
-          : `Auto-sync reviewed its schedule ${displayTime(inbox?.scheduler.lastWakeStartedAt)}, but ${skippedReason}.`;
+          ? `The scheduler called both the UFC card source and odds provider ${displayTime(decision?.attemptedAt)}.`
+          : `The scheduler woke ${displayTime(inbox?.scheduler.lastWakeStartedAt)}, but ${skippedReason}.`;
   const sourceUrl = inbox?.latestRun?.cardSourceUrl ?? null;
   const pendingFindings = inbox?.newFindings.filter((finding) => !isEquivalentFinding(finding)) ?? [];
+  const latestRun = inbox?.latestRun ?? null;
+  const allCurrentFindings = [...(inbox?.newFindings ?? []), ...(inbox?.reviewedFindings ?? [])]
+    .filter((finding, index, values) => values.findIndex((item) => item.findingId === finding.findingId) === index);
+  const latestFindings = latestRun
+    ? allCurrentFindings.filter((finding) => finding.runId === latestRun.runId)
+    : [];
+  const oddsUpdated = latestFindings.filter((finding) => (
+    (finding.findingType === "odds_available" || finding.findingType === "odds_change")
+    && finding.sourceDetails.automatically_applied === true
+  )).length;
+  const coverageMatched = latestRun?.completeSnapshotCount ?? 0;
+  const coverageMissing = latestRun?.missingSnapshotCount ?? 0;
+  const coverageTotal = coverageMatched + coverageMissing;
+  const oddsUnchanged = Math.max(0, coverageMatched - oddsUpdated);
+  const cardChangesFound = latestFindings.filter((finding) => finding.findingType === "card_change").length;
+  const quotaRemaining = latestRun?.providerRequestsRemaining ?? null;
+  const receipt = latestRun
+    ? `${displayTime(latestRun.completedAt ?? latestRun.startedAt)} · ${latestRun.status === "failed" ? "Check failed" : "UFC card checked"}. Odds provider called. ${coverageMatched}/${coverageTotal || inbox?.monitoredEvent?.boutCount || 0} fights matched, ${oddsUpdated} odds updated, ${oddsUnchanged} unchanged, ${cardChangesFound} card ${cardChangesFound === 1 ? "change" : "changes"} found.${quotaRemaining === null ? "" : ` ${quotaRemaining} requests remain.`}`
+    : "No completed UFC card and odds provider check has been recorded yet.";
 
   return (
     <div className={`page monitoring-inbox-page${embedded ? " monitoring-inbox-page--embedded" : ""}`}>
@@ -246,10 +281,23 @@ export default function MonitoringInboxPage({
               <span>{automationNeedsAttention ? "CHECK" : "ACTIVE"}</span>
             </div>
             <p>{automationDetail}</p>
-            <div className="monitoring-status__grid" aria-label="Automation status">
-              <div><span>NEXT CHECK</span><strong>{displayTime(inbox.scheduleState?.nextEligibleAt)}</strong></div>
-              <div><span>CHANGES TO REVIEW</span><strong>{pendingFindings.length}</strong></div>
+            <div className="monitoring-status__grid monitoring-status__grid--proof" aria-label="Automation status">
+              <div><span>NEXT SCHEDULER WAKE</span><strong>{displayTime(nextHourlyWake(inbox.scheduler.lastWakeStartedAt))}</strong></div>
+              <div><span>NEXT PROVIDER CALL</span><strong>{displayTime(inbox.scheduleState?.nextEligibleAt)}</strong></div>
+              <div><span>LAST CARD CHECK</span><strong>{displayTime(latestRun?.completedAt ?? latestRun?.startedAt)}</strong></div>
+              <div><span>LAST ODDS CALL</span><strong>{displayTime(latestRun?.completedAt ?? latestRun?.startedAt)}</strong></div>
+              <div><span>MONTHLY REQUESTS LEFT</span><strong>{quotaRemaining ?? "UNKNOWN"}</strong><small>RESET {displayTime(nextQuotaReset())}</small></div>
+              <div><span>FIGHT COVERAGE</span><strong>{coverageMatched}/{coverageTotal || inbox.monitoredEvent?.boutCount || 0} MATCHED</strong></div>
+              <div><span>ODDS RESULT</span><strong>{oddsUpdated} UPDATED · {oddsUnchanged} SAME</strong></div>
+              <div><span>CARD RESULT</span><strong>{pendingFindings.length ? `${pendingFindings.length} TO REVIEW` : "ALL CLEAR"}</strong></div>
             </div>
+            <div className="monitoring-status__receipt" aria-label="Latest automatic monitoring receipt">
+              <span>LATEST RECEIPT</span>
+              <strong>{receipt}</strong>
+            </div>
+            {sourceUrl ? (
+              <p className="monitoring-status__source">SOURCE · {latestRun?.cardSource ?? "UFC EVENT CARD"} · {sourceUrl}</p>
+            ) : null}
             {pendingFindings.length === 0 ? (
               <div className="monitoring-status__all-clear" aria-label="Pending changes all clear">
                 <span>ALL CLEAR</span>
@@ -298,7 +346,7 @@ export default function MonitoringInboxPage({
                 <span>{pendingFindings.length}</span>
               </div>
               <p className="monitoring-section__note">
-                Eligible pre-lock odds apply automatically. Supported event-card changes apply only after your explicit approval; everything else remains review-only.
+                Eligible pre-lock odds apply automatically. Supported event-card changes apply only after your confirmation; everything else remains review-only.
               </p>
               {pendingFindings.map((finding) => {
                 const busy = busyAction === `finding:${finding.findingId}`;
@@ -321,7 +369,7 @@ export default function MonitoringInboxPage({
                     <div className="monitoring-finding__actions">
                       {finding.approvalProposal ? (
                         <button type="button" disabled={Boolean(busyAction)} onClick={() => approveFinding(finding)}>
-                          {busy ? "APPLYING…" : "APPROVE CHANGE"}
+                          {busy ? "APPLYING…" : approvalLabel(finding)}
                         </button>
                       ) : (
                         <button type="button" disabled={Boolean(busyAction)} onClick={() => reviewFinding(finding, "reviewed")}>
