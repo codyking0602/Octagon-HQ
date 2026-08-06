@@ -17,6 +17,7 @@ on:
       - "supabase/migrations/202609140001_finish_picks_owner_workflow.sql"
       - "supabase/migrations/202609140002_safe_pick_card_position_reflow.sql"
       - "supabase/migrations/202609140003_reflow_pick_bout_inclusion.sql"
+      - "supabase/migrations/202609140004_widen_pick_bout_position.sql"
       - "supabase/tests/pick_monitoring_card_change_approval.sql"
       - "supabase/tests/pick_monitoring_equivalent_resolution.sql"
       - "supabase/tests/picks_owner_workflow.sql"
