@@ -1,6 +1,12 @@
 name: Repair PR 3 Review Findings
 
 on:
+  push:
+    branches:
+      - agent/picks-canonical-fight-change-semantics
+    paths:
+      - '.github/workflows/repair-pr3-review.yml'
+      - 'scripts/repair-pr3-review.py'
   pull_request:
     paths:
       - '.github/workflows/repair-pr3-review.yml'
@@ -11,13 +17,13 @@ permissions:
 
 jobs:
   repair:
-    if: github.event.pull_request.head.ref == 'agent/picks-canonical-fight-change-semantics' && github.actor != 'github-actions[bot]'
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
-      - name: Check out exact PR head
+      - name: Check out exact PR branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
+          ref: agent/picks-canonical-fight-change-semantics
           fetch-depth: 0
 
       - name: Apply reviewed source and proof repair
@@ -30,4 +36,4 @@ jobs:
           git add -A
           git diff --cached --quiet && exit 0
           git commit -m "Preserve canonical repick evidence and receipt parity"
-          git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          git push origin HEAD:agent/picks-canonical-fight-change-semantics
