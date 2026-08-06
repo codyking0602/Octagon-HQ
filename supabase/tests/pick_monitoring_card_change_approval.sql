@@ -154,9 +154,8 @@ begin
   if not (select included_in_picks from public.pick_bouts where event_id = 'monitor-approval' and bout_id = 'approval-a-b') then
     raise exception 'non-owner monitoring approval changed canonical state';
   end if;
-  perform public.review_pick_monitoring_finding(v_finding, 'dismissed');
-
   perform set_config('request.jwt.claim.sub', v_owner::text, true);
+  perform public.review_pick_monitoring_finding(v_finding, 'dismissed');
 
   -- Event-wide deadline approval.
   v_run := pg_temp.monitor_run('monitor-approval', 1);
