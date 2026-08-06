@@ -9,7 +9,9 @@ on:
       - "src/app/pickMonitoringApprovalArchitecture.test.ts"
       - "supabase/migrations/202609110001_pick_monitoring_card_change_approval.sql"
       - "supabase/migrations/202609130001_actionable_current_pick_monitoring_findings.sql"
+      - "supabase/migrations/202609130002_keep_resolved_pick_monitoring_findings_resolved.sql"
       - "supabase/tests/pick_monitoring_card_change_approval.sql"
+      - "supabase/tests/pick_monitoring_equivalent_resolution.sql"
   workflow_dispatch:
 
 permissions:
@@ -62,6 +64,10 @@ jobs:
         shell: bash
         run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/pick_monitoring_card_change_approval.sql
 
+      - name: Execute resolved-equivalent monitoring proof
+        shell: bash
+        run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/pick_monitoring_equivalent_resolution.sql
+
       - name: Stop local Supabase database
         if: always()
         run: supabase stop --no-backup
@@ -82,6 +88,7 @@ jobs:
             echo "- Fighter replacement and repick boundary: passed"
             echo "- Fight reorder approval: passed"
             echo "- Duplicate collapse and supersession: passed"
+            echo "- Resolved equivalent findings stay resolved: passed"
             echo "- Current-state stale exclusion and unique counts: passed"
             echo "- Automatically applied odds acknowledgment boundary: passed"
             echo "- Canonical card-change audit ownership: passed"
