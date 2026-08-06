@@ -40,7 +40,7 @@ function localDateTimeValue(value: string) {
 }
 
 function readableError(error: unknown) {
-  const message = error instanceof Error ? error.message : "Manage Open Picks could not complete that request.";
+  const message = error instanceof Error ? error.message : "Open Picks could not complete that request.";
   if (message.toLowerCase().includes("pick control owner required")) {
     return "This dashboard is available only to the designated Fight Night owner.";
   }
@@ -54,14 +54,12 @@ function sameOrder(left: string[], right: string[]) {
 function boutLockClosedReason(event: PickControlEvent, bout: PickControlBout, now: number) {
   if (event.status !== "upcoming") return "The event-wide master lock is active, so no fight can reopen.";
   if (bout.resultStatus !== "pending") return "Completed, resulted, or cancelled fights cannot be reopened.";
-  if (!bout.includedInPicks) return "Removed fights cannot receive a new Picks deadline.";
   if (pickControlBoutIsFinal(event, bout, now)) return "This deadline is final and cannot be reopened.";
   if (!bout.canAdjustLock) return "This fight’s lock time can no longer be edited.";
   return "Extend this fight while it remains open. Once its effective deadline passes, it cannot reopen.";
 }
 
 function compactBoutStatus(event: PickControlEvent, bout: PickControlBout, now: number) {
-  if (!bout.includedInPicks) return "REMOVED";
   if (bout.resultStatus === "cancelled") return "CANCELLED";
   if (pickControlBoutIsFinal(event, bout, now)) return "LOCKED";
   if (pickControlLockWarning(event, bout, now)) return "LOCKING SOON";
@@ -94,7 +92,9 @@ export default function OpenPicksDashboard({
       setEvent(nextEvent);
       setDraftOrder(null);
       setExpandedBoutId((current) => (
-        current && nextEvent?.bouts.some((bout) => bout.boutId === current) ? current : null
+        current && nextEvent?.bouts.some((bout) => bout.boutId === current && bout.includedInPicks)
+          ? current
+          : null
       ));
       setError("");
     } catch (nextError) {
@@ -116,14 +116,17 @@ export default function OpenPicksDashboard({
     }
     if (!repository) {
       setLoading(false);
-      setError("Manage Open Picks is not connected on this build.");
+      setError("Open Picks is not connected on this build.");
       return;
     }
     void loadEvent();
   }, [identity.profile, identity.ready, loadEvent, repository]);
 
   const orderedBouts = useMemo(
-    () => event?.bouts.slice().sort((left, right) => left.position - right.position) ?? [],
+    () => event?.bouts
+      .filter((bout) => bout.includedInPicks)
+      .slice()
+      .sort((left, right) => left.position - right.position) ?? [],
     [event],
   );
   const canonicalOrder = useMemo(
@@ -152,7 +155,7 @@ export default function OpenPicksDashboard({
       if (successMessage) setNotice(successMessage);
     } catch (nextError) {
       const message = readableError(nextError);
-      if (key === "reorder" && message.toLowerCase().includes("reload")) {
+      if ((key === "reorder" || key === "add") && message.toLowerCase().includes("reload")) {
         setDraftOrder(null);
       }
       setError(message);
@@ -181,26 +184,20 @@ export default function OpenPicksDashboard({
       setError("The Picks deadline cannot be later than the main-card start.");
       return;
     }
-    const reason = window.prompt("Why is the Picks deadline changing?")?.trim();
-    if (!reason) return;
-    if (reason.length < 3) {
-      setError("A Picks deadline change requires a reason of at least 3 characters.");
-      return;
-    }
     if (!window.confirm(
-      `Change the event-wide master deadline from ${eventTime(event.locksAt)} to ${eventTime(proposed.toISOString())}? Fights still synchronized to the old default move with it; individually adjusted fights remain independent.`,
+      `Are you sure you want to change the event-wide master deadline from ${eventTime(event.locksAt)} to ${eventTime(proposed.toISOString())}?`,
     )) return;
     void runAction("lock-time", () => repository!.adjustLockTime(
       event.eventId,
       proposed.toISOString(),
       event.locksAt,
-      reason,
+      "Owner confirmed master Picks deadline change",
     ));
   }
 
   function lockEvent() {
     if (!event || !event.canLock) return;
-    if (!window.confirm("Lock all picks and begin Fight Night result entry? The event-wide master lock closes every remaining open fight.")) return;
+    if (!window.confirm("Are you sure you want to lock all picks and begin Fight Night result entry?")) return;
     void runAction("lock", () => repository!.lockEvent(event.eventId));
   }
 
@@ -233,7 +230,7 @@ export default function OpenPicksDashboard({
       return;
     }
     if (!window.confirm(
-      `Set only ${bout.redFighterName} vs. ${bout.blueFighterName} to ${eventTime(proposed.toISOString())}? Once the effective deadline passes, it cannot reopen.`,
+      `Are you sure you want ${bout.redFighterName} vs. ${bout.blueFighterName} to lock at ${eventTime(proposed.toISOString())}?`,
     )) return;
     void runAction(
       `bout-lock:${bout.boutId}:set`,
@@ -243,49 +240,42 @@ export default function OpenPicksDashboard({
   }
 
   function setCancellation(bout: PickControlBout, nextCancelled: boolean) {
-    if (!event || !bout.includedInPicks) return;
-    const reason = window.prompt(
-      nextCancelled
-        ? `Why is ${bout.redFighterName} vs. ${bout.blueFighterName} being cancelled?`
-        : `Why is ${bout.redFighterName} vs. ${bout.blueFighterName} being restored?`,
-    )?.trim();
-    if (!reason) return;
+    if (!event) return;
     const confirmed = window.confirm(
       nextCancelled
-        ? `Cancel ${bout.redFighterName} vs. ${bout.blueFighterName}? Existing picks will be preserved, the fight will be excluded from scoring, and any Underdog Lock on it will be cleared.`
-        : `Restore ${bout.redFighterName} vs. ${bout.blueFighterName} before Picks lock? Existing picks remain preserved.`,
+        ? `Are you sure you want to cancel ${bout.redFighterName} vs. ${bout.blueFighterName}? Existing picks stay stored and the fight is excluded from scoring.`
+        : `Are you sure you want to restore ${bout.redFighterName} vs. ${bout.blueFighterName}?`,
     );
     if (!confirmed) return;
     void runAction(`card:${bout.boutId}`, () => (
-      repository!.setCancellation(event.eventId, bout.boutId, nextCancelled, reason)
+      repository!.setCancellation(
+        event.eventId,
+        bout.boutId,
+        nextCancelled,
+        nextCancelled ? "Owner confirmed fight cancellation" : "Owner confirmed fight restoration",
+      )
     ));
   }
 
-  function setBoutInclusion(bout: PickControlBout, includedInPicks: boolean) {
+  function removeBout(bout: PickControlBout) {
     if (!event) return;
-    const reason = window.prompt(
-      includedInPicks
-        ? `Why is ${bout.redFighterName} vs. ${bout.blueFighterName} being restored to Picks?`
-        : `Why is ${bout.redFighterName} vs. ${bout.blueFighterName} being removed from Picks?`,
-    )?.trim();
-    if (!reason) return;
-    if (reason.length < 3) {
-      setError("A Picks removal or restoration requires a reason of at least 3 characters.");
-      return;
-    }
-    const confirmed = window.confirm(
-      includedInPicks
-        ? `Restore ${bout.redFighterName} vs. ${bout.blueFighterName} to Picks? Preserved picks become active again. Any previously cleared Underdog Lock will not be restored.`
-        : `Remove ${bout.redFighterName} vs. ${bout.blueFighterName} from Picks? The fight and submitted picks stay preserved, but it will be excluded from progress and scoring. Any mutable Underdog Lock on it will be cleared.`,
+    if (!window.confirm(
+      `Are you sure you want to remove ${bout.redFighterName} vs. ${bout.blueFighterName} from Picks? It will disappear from the owner and player cards. Submitted picks remain only in the private audit history and will not count.`,
+    )) return;
+    void runAction(
+      `include:${bout.boutId}`,
+      () => repository!.setBoutInclusion(
+        event.eventId,
+        bout,
+        false,
+        "Owner confirmed fight removal from Picks",
+      ),
+      `${bout.redFighterName} vs. ${bout.blueFighterName} removed from Picks.`,
     );
-    if (!confirmed) return;
-    void runAction(`include:${bout.boutId}`, () => (
-      repository!.setBoutInclusion(event.eventId, bout, includedInPicks, reason)
-    ));
   }
 
   function replaceFighter(bout: PickControlBout) {
-    if (!event || !bout.canReplace || !bout.includedInPicks) return;
+    if (!event || !bout.canReplace) return;
     const cornerInput = window.prompt(
       `Which corner should be replaced in ${bout.redFighterName} vs. ${bout.blueFighterName}? Enter RED or BLUE.`,
     )?.trim().toLowerCase();
@@ -295,10 +285,8 @@ export default function OpenPicksDashboard({
     const suggestedSlug = name.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
     const slug = window.prompt("Confirm the replacement fighter’s canonical slug:", suggestedSlug)?.trim().toLowerCase();
     if (!slug) return;
-    const reason = window.prompt("Why is this fighter being replaced?")?.trim();
-    if (!reason) return;
     if (!window.confirm(
-      `Approve ${cornerInput.toUpperCase()} corner replacement with ${name}? Every existing pick on this bout will be invalidated and require an active repick. Mutable Underdog Locks and prior odds will be cleared and will not return automatically.`,
+      `Are you sure you want to replace the ${cornerInput.toUpperCase()} corner with ${name}? Affected members must repick.`,
     )) return;
     void runAction(`replace:${bout.boutId}`, () => repository!.replaceFighter(
       event.eventId,
@@ -306,8 +294,47 @@ export default function OpenPicksDashboard({
       cornerInput,
       slug,
       name,
-      reason,
+      "Owner confirmed fighter replacement",
     ));
+  }
+
+  function addFight() {
+    if (!event?.canReorder || !repository) return;
+    const redFighterName = window.prompt("Enter the first fighter’s canonical display name:")?.trim();
+    if (!redFighterName) return;
+    const blueFighterName = window.prompt("Enter the second fighter’s canonical display name:")?.trim();
+    if (!blueFighterName) return;
+    const weightClass = window.prompt("Enter the weight class:")?.trim();
+    if (!weightClass) return;
+    const segmentInput = window.prompt("Enter MAIN or PRELIM:", "MAIN")?.trim().toLowerCase();
+    if (segmentInput !== "main" && segmentInput !== "prelim") {
+      setError("Enter MAIN or PRELIM for the fight segment.");
+      return;
+    }
+    const positionInput = window.prompt(
+      `Enter the card position from 1 to ${canonicalOrder.length + 1}. Position 1 is the main event.`,
+      String(canonicalOrder.length + 1),
+    )?.trim();
+    if (!positionInput) return;
+    const position = Number(positionInput);
+    if (!Number.isInteger(position) || position < 1 || position > canonicalOrder.length + 1) {
+      setError(`Enter a position from 1 to ${canonicalOrder.length + 1}.`);
+      return;
+    }
+    if (!window.confirm(
+      `Are you sure you want to add ${redFighterName} vs. ${blueFighterName} at position ${position}? The complete card order and position-owned lock times will be recalculated together.`,
+    )) return;
+    void runAction(
+      "add",
+      () => repository.addBout(event.eventId, canonicalOrder, {
+        redFighterName,
+        blueFighterName,
+        weightClass,
+        cardSegment: segmentInput,
+        position,
+      }, "Owner confirmed fight addition to Picks"),
+      `${redFighterName} vs. ${blueFighterName} added to Picks.`,
+    );
   }
 
   function moveBout(index: number, offset: -1 | 1) {
@@ -321,27 +348,30 @@ export default function OpenPicksDashboard({
 
   function approveOrder() {
     if (!event?.canReorder || !draftOrder || !orderChanged) return;
-    const reason = window.prompt("Why is the live fight order changing?")?.trim();
-    if (!reason) return;
-    if (reason.length < 3) {
-      setError("A fight-order change requires a reason of at least 3 characters.");
-      return;
-    }
     const numbered = (ids: string[]) => ids.map((id, index) => {
       const bout = event.bouts.find((item) => item.boutId === id)!;
       return `${index + 1}. ${bout.redFighterName} vs. ${bout.blueFighterName}`;
     }).join("\n");
     if (!window.confirm(
-      `Approve this new live fight order?\n\nBEFORE\n${numbered(canonicalOrder)}\n\nAFTER\n${numbered(draftOrder)}\n\nThis changes display order only. Picks and Underdog Locks stay attached to their bouts.`,
+      `Are you sure you want to apply this live fight order?\n\nBEFORE\n${numbered(canonicalOrder)}\n\nAFTER\n${numbered(draftOrder)}\n\nEach position owns its deadline, so the order and all fight lock times will update atomically. Picks and Underdog Locks stay attached to their bouts.`,
     )) return;
-    void runAction("reorder", () => repository!.reorderCard(event.eventId, canonicalOrder, draftOrder, reason));
+    void runAction(
+      "reorder",
+      () => repository!.reorderCard(
+        event.eventId,
+        canonicalOrder,
+        draftOrder,
+        "Owner confirmed live fight order change",
+      ),
+      "Fight order and position-owned deadlines updated.",
+    );
   }
 
   if (!identity.ready || loading) {
     return (
       <div className="page open-picks-dashboard">
         <section className="surface-card picks-control-state" aria-live="polite">
-          <strong>Loading Manage Open Picks…</strong>
+          <strong>Loading Open Picks…</strong>
         </section>
       </div>
     );
@@ -385,21 +415,27 @@ export default function OpenPicksDashboard({
         <div className={`surface-card open-picks-reorder${orderChanged ? " has-pending-order" : ""}`}>
           <div>
             <span>FIGHT ORDER</span>
-            <strong>{orderChanged ? "NEW ORDER READY" : "MOVE LOCALLY · APPROVE ONCE"}</strong>
+            <strong>{orderChanged ? "NEW ORDER READY" : "POSITION OWNS LOCK TIME"}</strong>
           </div>
-          {event.hasReorderHistory ? <small>PRIOR ORDER CHANGE AUDITED</small> : null}
-          {event.canReorder && orderChanged ? (
-            <button className="primary-action" type="button" disabled={Boolean(busyAction)} onClick={approveOrder}>
-              {busyAction === "reorder" ? "APPROVING…" : "APPROVE NEW ORDER"}
-            </button>
-          ) : null}
+          <div className="open-picks-reorder__actions">
+            {event.hasReorderHistory ? <small>PRIOR ORDER CHANGE AUDITED</small> : null}
+            {event.canReorder ? (
+              <button className="secondary-action" type="button" disabled={Boolean(busyAction)} onClick={addFight}>
+                {busyAction === "add" ? "ADDING…" : "ADD FIGHT"}
+              </button>
+            ) : null}
+            {event.canReorder && orderChanged ? (
+              <button className="primary-action" type="button" disabled={Boolean(busyAction)} onClick={approveOrder}>
+                {busyAction === "reorder" ? "APPLYING…" : "APPLY ORDER + LOCKS"}
+              </button>
+            ) : null}
+          </div>
         </div>
 
         <div className="open-picks-list">
           {displayedBouts.map((bout, index) => {
             const expanded = expandedBoutId === bout.boutId;
             const isCancelled = bout.resultStatus === "cancelled";
-            const isRemoved = !bout.includedInPicks;
             const lockFinal = pickControlBoutIsFinal(event, bout, now);
             const canExtend = Boolean(repository?.adjustBoutLockTime)
               && pickControlBoutCanExtend(event, bout, now);
@@ -461,32 +497,28 @@ export default function OpenPicksDashboard({
                     ) : null}
 
                     <p className="open-pick-row__explanation">
-                      {isRemoved
-                        ? "This fight and its submitted picks remain stored, but it is excluded from progress and scoring."
-                        : isCancelled
-                          ? "Original picks remain preserved. The cancelled fight is excluded from scoring and cannot receive new picks."
-                          : lockFinal
-                            ? "Submitted picks are preserved and revealed through the existing fight-specific privacy owner."
-                            : "Use these actions only when the live UFC card or deadline actually changes."}
+                      {isCancelled
+                        ? "Original picks remain preserved. The cancelled fight is excluded from scoring and cannot receive new picks."
+                        : lockFinal
+                          ? "Submitted picks are preserved and revealed through the existing fight-specific privacy owner."
+                          : "Use these actions only when the live UFC card or deadline actually changes."}
                     </p>
 
                     {bout.hasReplacementHistory ? <p className="pick-control-replacement-history"><strong>REPLACEMENT HISTORY EXISTS</strong> · The matchup above is currently stored.</p> : null}
-                    {bout.hasRemovalHistory ? <p className="pick-control-replacement-history"><strong>REMOVAL HISTORY EXISTS</strong> · Prior inclusion actions remain audited.</p> : null}
+                    {bout.hasRemovalHistory ? <p className="pick-control-replacement-history"><strong>REMOVAL HISTORY EXISTS</strong> · Prior inclusion actions remain privately audited.</p> : null}
 
                     <div className="open-pick-row__actions" aria-label={`${bout.redFighterName} vs. ${bout.blueFighterName} uncommon actions`}>
-                      {!isRemoved && !isCancelled ? (
+                      {!isCancelled ? (
                         <button className="secondary-action" type="button" disabled={Boolean(busyAction) || !bout.canReplace} onClick={() => replaceFighter(bout)}>
                           {busyAction === `replace:${bout.boutId}` ? "REPLACING…" : "REPLACE FIGHTER"}
                         </button>
                       ) : null}
-                      {!isRemoved ? (
-                        <button className={isCancelled ? "secondary-action" : "pick-control-clear"} type="button" disabled={Boolean(busyAction) || (isCancelled ? !bout.canRestore : !bout.canCancel)} onClick={() => setCancellation(bout, !isCancelled)}>
-                          {isCancelled ? "RESTORE FIGHT" : "CANCEL FIGHT"}
-                        </button>
-                      ) : null}
+                      <button className={isCancelled ? "secondary-action" : "pick-control-clear"} type="button" disabled={Boolean(busyAction) || (isCancelled ? !bout.canRestore : !bout.canCancel)} onClick={() => setCancellation(bout, !isCancelled)}>
+                        {isCancelled ? "RESTORE FIGHT" : "CANCEL FIGHT"}
+                      </button>
                       {!isCancelled ? (
-                        <button className={isRemoved ? "secondary-action" : "pick-control-clear"} type="button" disabled={Boolean(busyAction) || (isRemoved ? !bout.canRestoreToPicks : !bout.canRemoveFromPicks)} onClick={() => setBoutInclusion(bout, isRemoved)}>
-                          {isRemoved ? "RESTORE TO PICKS" : "REMOVE FROM PICKS"}
+                        <button className="pick-control-clear" type="button" disabled={Boolean(busyAction) || !bout.canRemoveFromPicks} onClick={() => removeBout(bout)}>
+                          REMOVE FROM PICKS
                         </button>
                       ) : null}
                     </div>
