@@ -116,8 +116,8 @@ security definer
 set search_path = ''
 as $$
 declare
-  v_action text := lower(trim(coalesce(p_action, ''));
-  v_event_id text := lower(trim(coalesce(p_event_id, ''));
+  v_action text := lower(trim(coalesce(p_action, '')));
+  v_event_id text := lower(trim(coalesce(p_event_id, '')));
   v_payload jsonb := coalesce(p_payload, '{}'::jsonb);
   v_reason text := trim(coalesce(p_reason, ''));
   v_event public.pick_events;
