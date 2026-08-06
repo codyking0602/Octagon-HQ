@@ -127,6 +127,33 @@ const approvalProposalSchema = z.discriminatedUnion("action", [
   }),
 ]);
 
+export const monitoringApprovalReceiptSchema = z.object({
+  decision: z.literal("applied"),
+  action: z.string().min(1),
+  event_id: z.string().min(1),
+  bout_id: z.string().nullable(),
+  finding_id: z.string().nullable().optional(),
+  before_value: z.unknown().nullable(),
+  after_value: z.unknown().nullable(),
+  mutation_occurred: z.boolean(),
+  finding_resolved: z.boolean(),
+  picks_preserved: z.number().int().nonnegative(),
+  picks_invalidated: z.number().int().nonnegative(),
+  repicks_required: z.boolean(),
+  player_action_required: z.boolean(),
+  required_action: z.string().nullable(),
+  player_action_profile_ids: z.array(z.string()),
+  deadlines_changed: z.boolean(),
+  card_order_changed: z.boolean(),
+  notification_recorded: z.boolean(),
+  notification_count: z.number().int().nonnegative(),
+  remains_pending: z.boolean(),
+  audit_id: z.coerce.number().int().positive(),
+  failure_code: z.string().nullable(),
+});
+
+export type MonitoringApprovalReceipt = z.infer<typeof monitoringApprovalReceiptSchema>;
+
 const decisionSchema = z.object({
   outcome: z.enum(["completed", "partial", "failed", "skipped"]),
   reason: z.string().nullable(),
@@ -150,7 +177,7 @@ const inboxSchema = z.object({
 export interface MonitoringInboxRepository {
   loadInbox: () => Promise<MonitoringInbox>;
   runManualCheck: () => Promise<void>;
-  approveFinding?: (findingId: string, reason: string) => Promise<void>;
+  approveFinding?: (findingId: string, reason: string) => Promise<MonitoringApprovalReceipt>;
   reviewFinding: (findingId: string, status: Exclude<MonitoringFindingReviewStatus, "new">) => Promise<void>;
 }
 
@@ -309,10 +336,12 @@ export function createMonitoringInboxRepository(): MonitoringInboxRepository | n
     },
 
     async approveFinding(findingId, reason) {
-      await requireRpcSuccess(client.rpc("approve_pick_monitoring_finding", {
-        p_finding_id: findingId,
-        p_reason: reason,
-      }));
+      return monitoringApprovalReceiptSchema.parse(
+        await requireRpcSuccess(client.rpc("approve_pick_monitoring_finding", {
+          p_finding_id: findingId,
+          p_reason: reason,
+        })),
+      );
     },
 
     async reviewFinding(findingId, status) {
