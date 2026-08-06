@@ -168,6 +168,7 @@ describe("Picks monitoring observability", () => {
     const repo = repository();
     renderPage(repo);
 
+    await waitFor(() => expect(repo.loadInbox).toHaveBeenCalledTimes(1));
     fireEvent.click(await screen.findByRole("button", { name: "CHECK NOW" }));
 
     await waitFor(() => expect(repo.runManualCheck).toHaveBeenCalledTimes(1));
@@ -180,7 +181,9 @@ describe("Picks monitoring observability", () => {
     const repo = repository();
     renderPage(repo);
 
-    fireEvent.click(await screen.findByRole("button", { name: "REFRESH STATUS" }));
+    await waitFor(() => expect(repo.loadInbox).toHaveBeenCalledTimes(1));
+    expect(await screen.findByText("NEXT SCHEDULER WAKE")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "REFRESH STATUS" }));
 
     await waitFor(() => expect(repo.loadInbox).toHaveBeenCalledTimes(2));
     expect(repo.runManualCheck).not.toHaveBeenCalled();
