@@ -62,7 +62,7 @@ export interface PickControlRepository {
   setCancellation: (eventId: string, boutId: string, cancelled: boolean, reason: string) => Promise<void>;
   setBoutInclusion: (eventId: string, bout: PickControlEvent["bouts"][number], includedInPicks: boolean, reason: string) => Promise<void>;
   replaceFighter: (eventId: string, bout: PickControlEvent["bouts"][number], corner: "red" | "blue", slug: string, name: string, reason: string) => Promise<void>;
-  addBout?: (eventId: string, expectedBoutIds: string[], input: {
+  addBout: (eventId: string, expectedBoutIds: string[], input: {
     redFighterName: string;
     blueFighterName: string;
     weightClass: string;
