@@ -43,10 +43,11 @@ describe("V2 ranking roster overlay", () => {
       "Alex Pereira",
       "Chuck Liddell",
       "Charles Oliveira",
+      "Amanda Nunes",
     ]);
     expect(sourceOverrides).toMatchObject({
       factsVersion: "octagon-hq-v2-rda-20260730",
-      judgmentVersion: "octagon-hq-v2-charles-oliveira-profile-20260807",
+      judgmentVersion: "octagon-hq-v2-amanda-nunes-profile-20260807",
       eraDepthVersion: "octagon-hq-v2-rda-20260730",
       eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
     });
@@ -76,6 +77,25 @@ describe("V2 ranking roster overlay", () => {
       primary: "golden-age",
       secondary: "superstar",
     });
+  });
+
+  it("replaces only Amanda Nunes's approved profile copy", () => {
+    const oneLiner = "Nunes combined crushing power with patience, timing, and complete versatility. She could pressure behind heavy boxing, wrestle when needed, punish mistakes instantly, and turn one clean opening into a finish before opponents could settle into their game plan.";
+    const whyRankedHere = "Nunes built the strongest UFC resume in women's MMA: championships at bantamweight and featherweight, sustained title success, and victories over nearly every defining champion of her era. She stopped Ronda Rousey, Cris Cyborg, Holly Holm, and Miesha Tate, beat Valentina Shevchenko twice, and later reclaimed the bantamweight belt from Julianna Pena.";
+    const whyNotHigher = "Nunes does have real blemishes: she lost the bantamweight title to Julianna Pena in a massive upset, dropped multiple UFC fights before her championship peak, and barely edged Valentina Shevchenko in their second meeting. But she avenged Pena decisively, beat Shevchenko twice, and built enough elite championship work around those setbacks that they never seriously threaten her place at the top.";
+    const historical = historicalRankingMigrationInputs.fighters.find((fighter) => fighter.fighter === "Amanda Nunes");
+    const current = canonicalRankingInputs.fighters.find((fighter) => fighter.fighter === "Amanda Nunes");
+    expect(historical).toBeDefined();
+    expect(current).toBeDefined();
+    expect(current?.presentation.oneLiner).toBe(oneLiner);
+    expect(current?.presentation.whyRankedHere).toBe(whyRankedHere);
+    expect(current?.presentation.whyNotHigher).toBe(whyNotHigher);
+    expect(current?.facts).toEqual(historical?.facts);
+    expect(current?.era).toEqual(historical?.era);
+    expect(current?.judgments).toEqual(historical?.judgments);
+    expect(current?.eraDepth).toEqual(historical?.eraDepth);
+    expect(current?.presentation).toEqual({ ...historical?.presentation, oneLiner, whyRankedHere, whyNotHigher });
+    for (const value of [oneLiner, whyRankedHere, whyNotHigher]) expect(value).toMatch(/^[\x00-\x7F]+$/);
   });
 
   it("replaces only Jose Aldo's approved profile copy", () => {
