@@ -105,7 +105,10 @@ export default function PicksPage() {
   const percent = progress.total ? Math.round((progress.completed / progress.total) * 100) : 0;
   const completeProgress = progress.total > 0 && progress.completed === progress.total;
   const orderedBouts = useMemo(
-    () => activeEvent?.bouts.slice().sort((left, right) => left.position - right.position) ?? [],
+    () => activeEvent?.bouts
+      .filter((bout) => bout.includedInPicks !== false)
+      .slice()
+      .sort((left, right) => left.position - right.position) ?? [],
     [activeEvent],
   );
   const underdogLockName = picks.underdogLock

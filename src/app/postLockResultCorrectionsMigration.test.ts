@@ -63,12 +63,11 @@ describe("post-lock official result corrections", () => {
     expect(repository).toContain('client.rpc("get_pick_control_event", { p_event_id: eventId })');
   });
 
-  it("keeps the owner UI explicit about preserved picks and automatic recalculation", () => {
+  it("keeps the owner UI explicit about correction scope and automatic recalculation", () => {
     expect(controlPage).toContain("CORRECT RESULT");
     expect(controlPage).toContain("Enter RED, BLUE, DRAW, NO CONTEST, or CANCELLED");
     expect(controlPage).not.toContain("or PENDING");
-    expect(controlPage).toContain("Submitted picks and Underdog Locks will not change");
-    expect(controlPage).toContain("Scoring, standings, season totals, and recaps will recalculate");
+    expect(controlPage).toContain("Scoring, standings, season totals, and recaps will recalculate automatically");
     expect(controlPage).toContain("Recap published automatically");
     expect(controlPage).not.toContain("REOPEN EVENT");
   });

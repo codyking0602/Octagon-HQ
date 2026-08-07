@@ -27,6 +27,20 @@ export type CardChangeApprovalProposal =
       expected_blue_fighter_slug: string;
     }
   | {
+      action: "add_bout";
+      event_id: string;
+      bout_id: string;
+      weight_class: string;
+      red_fighter_slug: string;
+      red_fighter_name: string;
+      blue_fighter_slug: string;
+      blue_fighter_name: string;
+      card_segment: "main";
+      segment_sequence: number;
+      locks_at: string;
+      expected_bout_ids: string[];
+    }
+  | {
       action: "remove_bout";
       event_id: string;
       bout_id: string;
@@ -260,6 +274,52 @@ export function buildCardChangeFindings(input: {
         proposal,
       }));
     }
+  }
+
+  const safeAddedFight = input.scope === "main"
+    && unmatchedCurrent.length === 0
+    && unmatchedSource.length === 1
+    ? unmatchedSource[0]
+    : null;
+  const addedWeightClass = textValue(safeAddedFight?.weight_class);
+  if (safeAddedFight && addedWeightClass
+    && safeAddedFight.bout_id.trim()
+    && safeAddedFight.red_fighter_slug.trim()
+    && safeAddedFight.red_fighter_name.trim()
+    && safeAddedFight.blue_fighter_slug.trim()
+    && safeAddedFight.blue_fighter_name.trim()) {
+    consumedSource.add(matchup(safeAddedFight));
+    const expectedBoutIds = canonicalBouts.map((bout) => bout.bout_id);
+    result.push(finding({
+      identity: input.identity,
+      kind: input.kind,
+      detectedAt: input.detectedAt,
+      summary: `Add ${safeAddedFight.red_fighter_name} vs. ${safeAddedFight.blue_fighter_name} to Picks.`,
+      subjectKey: `bout:${safeAddedFight.bout_id}:included_in_picks`,
+      field: "included_in_picks",
+      beforeValue: null,
+      afterValue: {
+        red_fighter_name: safeAddedFight.red_fighter_name,
+        blue_fighter_name: safeAddedFight.blue_fighter_name,
+        weight_class: addedWeightClass,
+      },
+      boutId: safeAddedFight.bout_id,
+      matchupIdentity: matchup(safeAddedFight),
+      proposal: {
+        action: "add_bout",
+        event_id: input.eventId,
+        bout_id: safeAddedFight.bout_id,
+        weight_class: addedWeightClass,
+        red_fighter_slug: safeAddedFight.red_fighter_slug,
+        red_fighter_name: safeAddedFight.red_fighter_name,
+        blue_fighter_slug: safeAddedFight.blue_fighter_slug,
+        blue_fighter_name: safeAddedFight.blue_fighter_name,
+        card_segment: "main",
+        segment_sequence: canonicalBouts.length + 1,
+        locks_at: input.canonical.locks_at,
+        expected_bout_ids: expectedBoutIds,
+      },
+    }));
   }
 
   const hasUnresolvedAddedFight = unmatchedSource.some((bout) => !consumedSource.has(matchup(bout)));
