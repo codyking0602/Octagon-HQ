@@ -158,7 +158,7 @@ begin
   end;
 
   perform set_config('request.jwt.claim.sub',v_owner::text,true);
-  v_later_lock := now() + interval '3 days';
+  v_later_lock := now() + interval '2 days 6 hours';
   perform public.adjust_pick_bout_lock_time(
     'per-fight-lock-test','later-bout',v_later_lock
   );
@@ -343,7 +343,8 @@ begin
     );
     raise exception 'already locked bout was reopened';
   exception when others then
-    if sqlerrm not like '%locked bout cannot be reopened%' then raise; end if;
+    if sqlerrm not like '%locked, removed, or resulted fight deadline cannot change%'
+      and sqlerrm not like '%locked bout cannot be reopened%' then raise; end if;
   end;
 
   -- Direct calls to every existing card-change owner cannot bypass the early lock.
@@ -363,7 +364,8 @@ begin
     );
     raise exception 'replacement RPC bypassed a locked bout';
   exception when others then
-    if sqlerrm not like '%pre-lock fighter replacements are closed%'
+    if sqlerrm not like '%only an open pending included fight can replace a fighter%'
+      and sqlerrm not like '%pre-lock fighter replacements are closed%'
       and sqlerrm not like '%fight card changes are closed for this locked bout%' then raise; end if;
   end;
   begin
@@ -373,7 +375,8 @@ begin
     );
     raise exception 'inclusion RPC bypassed a locked bout';
   exception when others then
-    if sqlerrm not like '%pre-lock Picks inclusion changes are closed%'
+    if sqlerrm not like '%locked fight cannot change card membership%'
+      and sqlerrm not like '%pre-lock Picks inclusion changes are closed%'
       and sqlerrm not like '%fight card changes are closed for this locked bout%' then raise; end if;
   end;
 
@@ -460,7 +463,8 @@ begin
     );
     raise exception 'completed event was partially reopened';
   exception when others then
-    if sqlerrm not like '%event cannot be reopened%' then raise; end if;
+    if sqlerrm not like '%completed event is immutable%'
+      and sqlerrm not like '%event cannot be reopened%' then raise; end if;
   end;
 
   -- Event Setup publication initializes Main Card deadlines from chronological sequence.

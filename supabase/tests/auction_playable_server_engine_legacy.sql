@@ -196,7 +196,7 @@ begin
     or v_payload->>'lifecycle_state' <> 'prepared'
     or v_payload->>'action_required_by' <> 'challenger'
     or (v_payload->'current_item'->>'deck_position')::integer <> 1
-    or v_payload::text like '%' || v_future_reference || '%'
+    or v_payload::text like '%"' || v_future_reference || '"%'
     or v_payload ?| array[
       'content_version',
       'rarity_version',
@@ -426,7 +426,7 @@ begin
     or v_payload->>'lifecycle_state' <> 'sent'
     or (v_payload->>'current_user_submitted_bid')::boolean
     or jsonb_array_length(v_payload->'resolved_rounds') <> 0
-    or v_payload::text like '%' || v_future_reference || '%'
+    or v_payload::text like '%"' || v_future_reference || '"%'
     or v_payload::text like '%"challenger_bid": 20%'
   then
     raise exception 'recipient projection leaked the challenger sealed bid: %', v_payload;

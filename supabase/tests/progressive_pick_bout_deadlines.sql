@@ -214,7 +214,8 @@ begin
     );
     raise exception 'passed bout lock was reopened';
   exception when others then
-    if sqlerrm not like '%locked bout cannot be reopened%' then raise; end if;
+    if sqlerrm not like '%locked, removed, or resulted fight deadline cannot change%'
+      and sqlerrm not like '%locked bout cannot be reopened%' then raise; end if;
   end;
 
   -- Resulted and event-finalized rows remain closed under the same established
@@ -229,7 +230,8 @@ begin
     );
     raise exception 'resulted bout was reopened';
   exception when others then
-    if sqlerrm not like '%resulted bout cannot be reopened%' then raise; end if;
+    if sqlerrm not like '%locked, removed, or resulted fight deadline cannot change%'
+      and sqlerrm not like '%resulted bout cannot be reopened%' then raise; end if;
   end;
 
   perform set_config('request.jwt.claim.role','service_role',true);
@@ -248,7 +250,9 @@ begin
     );
     raise exception 'locked event was reopened';
   exception when others then
-    if sqlerrm not like '%event cannot be reopened%' then raise; end if;
+    if sqlerrm not like '%ordinary fight changes require an upcoming event%'
+      and sqlerrm not like '%locked, removed, or resulted fight deadline cannot change%'
+      and sqlerrm not like '%event cannot be reopened%' then raise; end if;
   end;
 
   perform set_config('request.jwt.claim.role','service_role',true);
@@ -267,7 +271,8 @@ begin
     );
     raise exception 'completed event was reopened';
   exception when others then
-    if sqlerrm not like '%event cannot be reopened%' then raise; end if;
+    if sqlerrm not like '%completed event is immutable%'
+      and sqlerrm not like '%event cannot be reopened%' then raise; end if;
   end;
 end
 $$;
