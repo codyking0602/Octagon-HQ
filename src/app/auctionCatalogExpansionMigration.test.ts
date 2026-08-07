@@ -233,10 +233,17 @@ describe("Auction catalog expansion migration", () => {
       Lightweight: 79, Featherweight: 76, Bantamweight: 72, Flyweight: 68,
       "Women's Bantamweight": 70, "Women's Flyweight": 66, "Women's Strawweight": 62,
     };
-    const immutablePowerOverrides: Record<string, number> = {
-      // The versioned Auction v2 catalog predates RDA's 2026-08-07 factual ledger repair.
-      // Its grading inputs are an immutable snapshot and must not be rewritten retroactively.
-      "Rafael dos Anjos": 78,
+    const immutableRankingSnapshots: Record<string, Record<string, number>> = {
+      // Auction v2 predates RDA's 2026-08-07 factual and judgment repairs.
+      // Released grading inputs are immutable and must not track later live ranking changes.
+      "Rafael dos Anjos": {
+        overall: 90,
+        Striking: 79,
+        Grappling: 84,
+        Frame: 79,
+        Power: 78,
+        Heart: 73,
+      },
     };
     const additions = [...catalogSql.matchAll(/'ultimate-fighter-(\d+)','((?:[^']|'')*)'.*?jsonb_build_object\(([^)]*)\)/g)]
       .filter((match) => Number(match[1]) >= 31);
@@ -249,16 +256,17 @@ describe("Auction catalog expansion migration", () => {
       const inputs = Object.fromEntries([...row[3]!.matchAll(/'([^']+)',(\d+)/g)].map((entry) => [entry[1]!, Number(entry[2])]));
       const expectedPower = Math.min(99, Math.max(55, Math.round(62 + fighter!.model.visibleStats.finishRatePct * 0.36)));
       const expectedHeart = Math.min(99, Math.max(60, Math.round(0.55 * fighter!.model.visibleStats.roundsWonPct + 0.9 * fighter!.model.longevity + 25)));
-      expect(inputs, name).toEqual({
+      const currentRankingInputs = {
         overall: fighter!.ratings.career,
         Striking: fighter!.ratings.striking,
         Grappling: fighter!.ratings.grappling,
         Frame: frameByDivision[fighter!.model.primaryDivision] ?? 78,
-        Power: immutablePowerOverrides[name] ?? expectedPower,
+        Power: expectedPower,
         Heart: expectedHeart,
-      });
+      };
+      expect(inputs, name).toEqual(immutableRankingSnapshots[name] ?? currentRankingInputs);
     }
-    expect(Object.keys(immutablePowerOverrides)).toEqual(["Rafael dos Anjos"]);
+    expect(Object.keys(immutableRankingSnapshots)).toEqual(["Rafael dos Anjos"]);
   });
 
   it("contains current career identities and mode-specific category membership", () => {
