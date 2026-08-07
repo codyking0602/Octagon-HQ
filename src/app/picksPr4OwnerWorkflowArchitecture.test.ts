@@ -32,8 +32,7 @@ describe("Picks PR 4 finished owner workflow", () => {
 
   it("exposes exactly one manual fight addition through the established repository", () => {
     expect(openDashboard).toContain("ADD FIGHT");
-    expect(repository).toContain("approve_pick_bout_addition");
-    expect(repository.match(/approve_pick_bout_addition/g)).toHaveLength(1);
+    expect(repository.match(/\.rpc\(\s*"approve_pick_bout_addition"/g)).toHaveLength(1);
     expect(repository).not.toContain("private.apply_pick_fight_change");
   });
 
@@ -48,6 +47,7 @@ describe("Picks PR 4 finished owner workflow", () => {
     expect(openDashboard).toContain("fight deadlines stay with their bouts");
     expect(openDashboard).not.toMatch(/position owns its deadline|APPLY ORDER \+ LOCKS/i);
     expect(canonicalMigration).toContain("locked or resulted fights must remain in their exact card slots");
+    expect(canonicalMigration).toContain("locked or resulted fights cannot move");
     expect(canonicalMigration).toContain("v_card_order_changed := true");
   });
 });
