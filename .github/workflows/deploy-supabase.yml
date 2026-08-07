@@ -114,7 +114,7 @@ jobs:
       - name: Set up Supabase CLI
         uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: 2.109.1
 
       - name: Link V2 project
         env:
@@ -314,6 +314,15 @@ jobs:
           if [ -f supabase/migrations/202609060001_daily_challenge_runtime_progress.sql ]; then
             require_remote_migration "202609060001"
           fi
+          if [ -f supabase/migrations/202609080001_activate_daily_challenge_rotation.sql ]; then
+            require_remote_migration "202609080001"
+          fi
+          if [ -f supabase/migrations/202609090001_calibrate_wavelength_scoring.sql ]; then
+            require_remote_migration "202609090001"
+          fi
+          if [ -f supabase/migrations/202609140003_allow_wavelength_v2_publication.sql ]; then
+            require_remote_migration "202609140003"
+          fi
 
           function_list=$(supabase functions list --project-ref "$SUPABASE_PROJECT_ID")
           printf '%s\n' "$function_list" | grep -F "pin-auth"
@@ -467,6 +476,9 @@ jobs:
             fi
             if [ -f supabase/migrations/202609030003_auction_launch_notification.sql ]; then
               echo "- One-time Auction launch notification migration 202609030003 verified in linked production history"
+            fi
+            if [ -f supabase/migrations/202609140003_allow_wavelength_v2_publication.sql ]; then
+              echo "- Wavelength calibrated publication migration 202609140003 verified in linked production history"
             fi
             echo "- Canonical production origin: $OCTAGON_PRODUCTION_ORIGIN"
             echo "- Remote migrations, exact deployed function revisions, live authentication contracts, scheduler health, push configuration, and production CORS were verified"
