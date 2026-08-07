@@ -364,7 +364,8 @@ begin
     );
     raise exception 'replacement RPC bypassed a locked bout';
   exception when others then
-    if sqlerrm not like '%pre-lock fighter replacements are closed%'
+    if sqlerrm not like '%only an open pending included fight can replace a fighter%'
+      and sqlerrm not like '%pre-lock fighter replacements are closed%'
       and sqlerrm not like '%fight card changes are closed for this locked bout%' then raise; end if;
   end;
   begin
@@ -374,7 +375,8 @@ begin
     );
     raise exception 'inclusion RPC bypassed a locked bout';
   exception when others then
-    if sqlerrm not like '%pre-lock Picks inclusion changes are closed%'
+    if sqlerrm not like '%locked fight cannot change card membership%'
+      and sqlerrm not like '%pre-lock Picks inclusion changes are closed%'
       and sqlerrm not like '%fight card changes are closed for this locked bout%' then raise; end if;
   end;
 
