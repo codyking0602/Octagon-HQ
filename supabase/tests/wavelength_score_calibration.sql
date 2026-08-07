@@ -5,6 +5,7 @@ do $$
 declare
   v_native integer;
   v_normalized integer;
+  v_published jsonb;
 begin
   select native_score, normalized_score
   into v_native, v_normalized
@@ -115,9 +116,79 @@ begin
         raise;
       end if;
   end;
+
+  insert into private.daily_challenge_schedule_versions (
+    version,
+    time_zone,
+    anchor_day,
+    starts_on,
+    game_cycle
+  ) values (
+    'wavelength-v2-publication-test',
+    'America/Chicago',
+    date '2099-01-01',
+    date '2099-01-01',
+    array['wavelength']::text[]
+  );
+
+  perform set_config('request.jwt.claim.role', 'service_role', true);
+  v_published := public.publish_daily_challenge_setup(
+    date '2099-01-01',
+    'wavelength-v2-publication-test',
+    'wavelength',
+    'wavelength-v2-publication-test:2099-01-01',
+    'wavelength-catalog-v1',
+    'play-official-score-v2',
+    '{}'::jsonb,
+    '{}'::jsonb,
+    '{}'::jsonb,
+    jsonb_build_object('target', 75),
+    null
+  );
+
+  if v_published->>'game_type' <> 'wavelength'
+    or v_published->>'scoring_version' <> 'play-official-score-v2' then
+    raise exception 'calibrated Wavelength setup did not publish with v2 scoring: %', v_published;
+  end if;
+
+  insert into private.daily_challenge_schedule_versions (
+    version,
+    time_zone,
+    anchor_day,
+    starts_on,
+    game_cycle
+  ) values (
+    'blind-resume-v2-publication-test',
+    'America/Chicago',
+    date '2099-01-02',
+    date '2099-01-02',
+    array['blind_resume']::text[]
+  );
+
+  begin
+    perform public.publish_daily_challenge_setup(
+      date '2099-01-02',
+      'blind-resume-v2-publication-test',
+      'blind_resume',
+      'blind-resume-v2-publication-test:2099-01-02',
+      'blind-resume-v1',
+      'play-official-score-v2',
+      '{}'::jsonb,
+      '{}'::jsonb,
+      '{}'::jsonb,
+      '{}'::jsonb,
+      null
+    );
+    raise exception 'Wavelength-only publication version was accepted by Blind Resume';
+  exception
+    when others then
+      if sqlerrm = 'Wavelength-only publication version was accepted by Blind Resume' then
+        raise;
+      end if;
+  end;
 end
 $$;
 
 rollback;
 
-\echo 'Wavelength score calibration proof passed.'
+\echo 'Wavelength score calibration and publication proof passed.'
