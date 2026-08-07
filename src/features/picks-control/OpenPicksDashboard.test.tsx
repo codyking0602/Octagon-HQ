@@ -154,7 +154,9 @@ describe("finished Open Picks owner workflow", () => {
 
     fireEvent.click(await screen.findByRole("button", { name: "EXPAND Charlie vs. Delta" }));
     fireEvent.click(within(screen.getByLabelText("Move Charlie vs. Delta")).getByRole("button", { name: "MOVE UP" }));
-    fireEvent.click(screen.getByRole("button", { name: "APPROVE NEW ORDER" }));
+    const approveOrder = screen.getByRole("button", { name: "APPROVE NEW ORDER" });
+    await waitFor(() => expect(approveOrder).toBeEnabled());
+    fireEvent.click(approveOrder);
 
     await waitFor(() => expect(repo.reorderCard).toHaveBeenCalledWith(
       "ufc-compact",
