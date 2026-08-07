@@ -488,13 +488,25 @@ try {
 } finally {
   if (browser) await browser.close().catch(() => undefined);
   if (userId) {
-    await fetch(`${supabaseOrigin}/rest/v1/pick_control_owners?profile_id=eq.${encodeURIComponent(userId)}`, {
-      method: "DELETE",
-      headers: serviceHeaders,
-    }).catch(() => undefined);
-    await fetch(`${supabaseOrigin}/auth/v1/admin/users/${userId}`, {
-      method: "DELETE",
-      headers: serviceHeaders,
-    }).catch(() => undefined);
+    await request(
+      "Temporary Event Setup owner cleanup",
+      `${supabaseOrigin}/rest/v1/pick_control_owners?profile_id=eq.${encodeURIComponent(userId)}`,
+      { method: "DELETE", headers: serviceHeaders },
+      [200, 204],
+    );
+    await request(
+      "Disposable Auth user cleanup",
+      `${supabaseOrigin}/auth/v1/admin/users/${userId}`,
+      { method: "DELETE", headers: serviceHeaders },
+      [200, 204],
+    );
+    const profileCleanupProof = await request(
+      "Disposable profile cleanup proof",
+      `${supabaseOrigin}/rest/v1/profiles?id=eq.${encodeURIComponent(userId)}&select=id`,
+      { headers: serviceHeaders },
+    );
+    if (!Array.isArray(profileCleanupProof.body) || profileCleanupProof.body.length !== 0) {
+      throw new Error("Disposable profile cleanup proof: HQCHECK profile still exists after Auth cleanup.");
+    }
   }
 }
