@@ -399,6 +399,24 @@ const chuckLiddell = {
   },
 };
 
+const charlesOliveiraBaseline = historicalMigrationSeedJson.fighters.find(
+  (fighter) => fighter.fighter === "Charles Oliveira",
+);
+
+if (!charlesOliveiraBaseline) {
+  throw new Error("Charles Oliveira is missing from the sealed ranking baseline.");
+}
+
+const charlesOliveira = {
+  ...charlesOliveiraBaseline,
+  presentation: {
+    ...charlesOliveiraBaseline.presentation,
+    oneLiner: "Oliveira makes every exchange feel dangerous. His pressure, knees, elbows, opportunistic submissions, and fearless scrambles create constant chaos, while elite jiu-jitsu and sharp striking let him turn a single mistake into an immediate finish.",
+    whyRankedHere: "Oliveira's UFC resume combines championship success with historic finishing production. He stopped Michael Chandler to win the lightweight title, then finished Dustin Poirier and Justin Gaethje in consecutive championship fights. Later wins over Mateusz Gamrot and Max Holloway extended his relevance deep into his career, while his UFC records for finishes and submissions give the resume exceptional depth.",
+    whyNotHigher: "The limitation is consistency across the full UFC career. Oliveira lost eight times before becoming champion, Islam Makhachev decisively ended his title run, and later defeats to Arman Tsarukyan and Ilia Topuria kept him from rebuilding another sustained championship reign. At 36, he has added major late-career wins, but the fighters above him generally sustained elite success with fewer damaging setbacks.",
+  },
+};
+
 export const v2RankingRoster: V2RankingRosterOverlay = {
   additions: [rafaelDosAnjos],
   replacements: {
@@ -410,6 +428,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     "Israel Adesanya": israelAdesanya,
     "Alex Pereira": alexPereira,
     "Chuck Liddell": chuckLiddell,
+    "Charles Oliveira": charlesOliveira,
   },
   eraMembership: {
     "Rafael dos Anjos": {
@@ -418,7 +437,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     },
   },
   factsVersion: "octagon-hq-v2-rda-20260730",
-  judgmentVersion: "octagon-hq-v2-chuck-liddell-profile-20260806",
+  judgmentVersion: "octagon-hq-v2-charles-oliveira-profile-20260807",
   eraDepthVersion: "octagon-hq-v2-rda-20260730",
   eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
 };
