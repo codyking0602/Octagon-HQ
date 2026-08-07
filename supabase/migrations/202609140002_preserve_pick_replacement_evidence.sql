@@ -87,7 +87,8 @@ comment on function private.apply_pick_fight_change(text,text,jsonb,text) is
   'Sole transactional owner for approved fight changes, including exact fighter-replacement invalidation evidence.';
 
 -- Keep the existing approval dispatcher as the sole mutation core. This public
--- adapter only makes the final finding receipt identical to its audit receipt.
+-- adapter validates the owner reason and makes the final finding receipt
+-- identical to its audit receipt.
 alter function public.approve_pick_monitoring_finding(uuid,text)
   rename to approve_pick_monitoring_finding_receipt_core;
 alter function public.approve_pick_monitoring_finding_receipt_core(uuid,text)
@@ -105,16 +106,27 @@ security definer
 set search_path = ''
 as $$
 declare
+  v_reason text := trim(coalesce(p_reason, ''));
   v_receipt jsonb;
   v_audit_receipt jsonb;
   v_final_receipt jsonb;
   v_audit_id bigint;
 begin
-  -- The private core delegates fight mutations to private.apply_pick_fight_change.
+  if length(v_reason) < 3 or length(v_reason) > 500 then
+    raise exception 'monitoring approval reason required';
+  end if;
+
+  -- The private core delegates through public.adjust_pick_event_lock_time,
+  -- public.approve_pick_event_metadata_change,
+  -- public.approve_pick_bout_weight_class_change,
+  -- public.approve_pick_bout_inclusion,
+  -- public.approve_pick_fighter_replacement, and
+  -- public.approve_pick_card_reorder without directly mutating Picks tables.
+  -- It also persists review_status = 'reviewed' and reviewed_by = auth.uid().
   begin
     v_receipt := private.approve_pick_monitoring_finding_receipt_core(
       p_finding_id,
-      p_reason
+      v_reason
     );
   exception when others then
     if sqlerrm = 'STALE_STATE: newer monitoring evidence exists; refresh Picks control' then
