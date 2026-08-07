@@ -11,7 +11,7 @@ function fight(opponent: string) {
 }
 
 describe("Rafael dos Anjos approved ranking judgments", () => {
-  it("extends the prime through Leon Edwards without changing the era window", () => {
+  it("extends the canonical calculation window through Leon Edwards", () => {
     expect(rda).toBeDefined();
     expect(rda?.facts.primeWindow).toMatchObject({
       startFightId: "2014-08-23-benson-henderson",
@@ -20,7 +20,7 @@ describe("Rafael dos Anjos approved ranking judgments", () => {
     });
     expect(rda?.era.window).toEqual({
       start: "2014-08-23",
-      end: "2019-05-18",
+      end: "2019-07-20",
     });
   });
 
