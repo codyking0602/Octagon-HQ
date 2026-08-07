@@ -54,6 +54,14 @@ const controlEventSchema = z.object({
   bouts: z.array(controlBoutSchema),
 });
 
+export interface AddPickBoutInput {
+  redFighterName: string;
+  blueFighterName: string;
+  weightClass: string;
+  locksAt: string;
+  segmentSequence: number;
+}
+
 export interface PickControlRepository {
   loadControlEvent: (eventId?: string) => Promise<PickControlEvent | null>;
   lockEvent: (eventId: string) => Promise<void>;
@@ -62,10 +70,19 @@ export interface PickControlRepository {
   setCancellation: (eventId: string, boutId: string, cancelled: boolean, reason: string) => Promise<void>;
   setBoutInclusion: (eventId: string, bout: PickControlEvent["bouts"][number], includedInPicks: boolean, reason: string) => Promise<void>;
   replaceFighter: (eventId: string, bout: PickControlEvent["bouts"][number], corner: "red" | "blue", slug: string, name: string, reason: string) => Promise<void>;
+  addBout?: (eventId: string, expectedBoutIds: string[], input: AddPickBoutInput, reason: string) => Promise<void>;
   reorderCard: (eventId: string, expectedBoutIds: string[], proposedBoutIds: string[], reason: string) => Promise<void>;
   recordResult: (eventId: string, boutId: string, result: PickBoutResultStatus) => Promise<void>;
   correctResult: (eventId: string, bout: PickControlEvent["bouts"][number], result: PickBoutResultStatus, reason: string) => Promise<void>;
   completeEvent: (eventId: string) => Promise<void>;
+}
+
+function pickSlug(value: string) {
+  return value
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 }
 
 async function requireRpcSuccess<T>(request: PromiseLike<{ data: T; error: { message?: string } | null }>) {
@@ -135,8 +152,7 @@ export function createPickControlRepository(): PickControlRepository | null {
       const request = eventId
         ? client.rpc("get_pick_control_event", { p_event_id: eventId })
         : client.rpc("get_pick_control_event");
-      const data = await requireRpcSuccess(request);
-      return mapPickControlEvent(data);
+      return mapPickControlEvent(await requireRpcSuccess(request));
     },
 
     async lockEvent(eventId) {
@@ -197,6 +213,28 @@ export function createPickControlRepository(): PickControlRepository | null {
         p_expected_blue_fighter_slug: bout.blueFighterSlug,
         p_replacement_fighter_slug: slug,
         p_replacement_fighter_name: name,
+        p_reason: reason,
+      }));
+    },
+
+    async addBout(eventId, expectedBoutIds, input, reason) {
+      const redFighterSlug = pickSlug(input.redFighterName);
+      const blueFighterSlug = pickSlug(input.blueFighterName);
+      if (!redFighterSlug || !blueFighterSlug || redFighterSlug === blueFighterSlug) {
+        throw new Error("Enter two valid, different fighter names.");
+      }
+      await requireRpcSuccess(client.rpc("approve_pick_bout_addition", {
+        p_event_id: eventId,
+        p_bout_id: `${redFighterSlug}-vs-${blueFighterSlug}`,
+        p_weight_class: input.weightClass,
+        p_red_fighter_slug: redFighterSlug,
+        p_red_fighter_name: input.redFighterName,
+        p_blue_fighter_slug: blueFighterSlug,
+        p_blue_fighter_name: input.blueFighterName,
+        p_card_segment: "main",
+        p_segment_sequence: input.segmentSequence,
+        p_locks_at: input.locksAt,
+        p_expected_bout_ids: expectedBoutIds,
         p_reason: reason,
       }));
     },
