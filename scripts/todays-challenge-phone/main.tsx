@@ -5,6 +5,7 @@ import type { TodayChallengeProjection } from "../../src/features/play/todayChal
 import "../../src/styles/tokens.css";
 import "../../src/styles/global.css";
 import "../../src/styles/today-challenge.css";
+import "../../src/styles/official-daily-game-parity.css";
 
 function presentedFighter(id: string, name: string) {
   return {
