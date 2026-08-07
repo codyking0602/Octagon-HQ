@@ -158,7 +158,7 @@ begin
   end;
 
   perform set_config('request.jwt.claim.sub',v_owner::text,true);
-  v_later_lock := now() + interval '3 days';
+  v_later_lock := now() + interval '2 days 6 hours';
   perform public.adjust_pick_bout_lock_time(
     'per-fight-lock-test','later-bout',v_later_lock
   );
