@@ -118,6 +118,28 @@ export function monitoringDecisionPresentation(
     };
   }
 
+  if (proposal.action === "add_bout") {
+    const subject = matchupLabel(finding);
+    return {
+      action: proposal.action,
+      fieldLabel: "CARD MEMBERSHIP",
+      subject,
+      currentValue: "NOT IN PICKS",
+      proposedValue: `${subject} · ADDED TO PICKS`,
+      consequence: "Adds this UFC-source fight to active Picks through the canonical fight-change owner. Existing fights, picks, and deadlines remain unchanged.",
+      playerResult: "Members who already submitted must pick the new fight. Their existing picks remain valid.",
+      auditReason: "Owner confirmed the UFC-source fight addition.",
+      requiresAcknowledgment: true,
+      impacts: impacts({
+        "PLAYER PICKS": ["NEW PICK REQUIRED", true],
+        "FIGHT ORDER": ["APPENDS FIRST", true],
+        DEADLINE: ["NEW FIGHT ONLY", true],
+        ODDS: ["AUTOMATIC", false],
+        "CARD MEMBERSHIP": ["ADDED", true],
+      }),
+    };
+  }
+
   if (proposal.action === "remove_bout") {
     const subject = matchupLabel(finding);
     return {

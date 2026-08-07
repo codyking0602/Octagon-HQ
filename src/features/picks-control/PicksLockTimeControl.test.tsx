@@ -22,16 +22,11 @@ const identityGateway: IdentityGateway = {
 afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
-  vi.useRealTimers();
 });
 
 describe("Fight Night event-wide Picks deadline", () => {
-  it("presents the event deadline as the master lock and preserves independent fight adjustments", async () => {
-    vi.useFakeTimers({ toFake: ["Date"] });
-    vi.setSystemTime(new Date("2026-08-01T17:00:00.000Z"));
-    vi.spyOn(window, "prompt")
-      .mockReturnValueOnce("2026-08-01T18:30")
-      .mockReturnValueOnce("Give the group another thirty minutes");
+  it("presents the event deadline as the master lock without a typed audit reason", async () => {
+    vi.spyOn(window, "prompt").mockReturnValue("2026-08-01T18:30");
     vi.spyOn(window, "confirm").mockReturnValue(true);
     const adjustLockTime = vi.fn().mockResolvedValue(undefined);
     const repository: PickControlRepository = {
@@ -66,20 +61,21 @@ describe("Fight Night event-wide Picks deadline", () => {
     render(
       <MemoryRouter>
         <IdentityProvider gateway={identityGateway}>
-          <PicksControlPage repository={repository} />
+          <PicksControlPage repository={repository} now={Date.parse("2026-08-01T17:00:00.000Z")} />
         </IdentityProvider>
       </MemoryRouter>,
     );
 
-    expect(await screen.findByText("EVENT-WIDE MASTER LOCK")).toBeInTheDocument();
+    expect(await screen.findByText("MASTER LOCK")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "CHANGE MASTER LOCK" }));
 
     await waitFor(() => expect(adjustLockTime).toHaveBeenCalledWith(
       "ufc-belgrade",
       new Date("2026-08-01T18:30").toISOString(),
       "2026-08-01T18:00:00.000Z",
-      "Give the group another thirty minutes",
+      "Owner confirmed master Picks deadline change",
     ));
-    expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("individually adjusted fights remain independent"));
+    expect(window.prompt).toHaveBeenCalledTimes(1);
+    expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("already-final fight deadlines stay final"));
   });
 });

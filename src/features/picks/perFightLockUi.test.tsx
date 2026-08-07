@@ -188,14 +188,14 @@ describe("per-fight Picks lock UI", () => {
     expect(within(lockedComparison).queryByText(/STILL OPEN/)).not.toBeInTheDocument();
   });
 
-  it("keeps cancelled and removed bouts non-editable", async () => {
+  it("keeps cancelled bouts non-editable and removed bouts off ordinary player cards", async () => {
     const event = fightEvent();
     event.bouts[0] = { ...event.bouts[0], isLocked: false, resultStatus: "cancelled" };
     event.bouts[1] = { ...event.bouts[1], includedInPicks: false };
     renderPage(repository(event));
     const cancelledFight = fightCardByStatus(await screen.findByText("CANCELLED · EXCLUDED FROM SCORING").then((node) => node.textContent ?? ""));
-    const removedFight = fightCardByStatus("REMOVED FROM PICKS · EXCLUDED FROM SCORING");
     expect(await cancelledFight.findByRole("button", { name: /^First Red/, pressed: true })).toBeDisabled();
-    expect(removedFight.getByRole("button", { name: /^Later Red/, pressed: false })).toBeDisabled();
+    expect(screen.queryByText("Later Red")).not.toBeInTheDocument();
+    expect(screen.queryByText("Later Blue")).not.toBeInTheDocument();
   });
 });

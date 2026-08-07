@@ -28,6 +28,7 @@ function bout(
   position: number,
   redFighterName: string,
   blueFighterName: string,
+  includedInPicks = true,
 ): PickControlEvent["bouts"][number] {
   return {
     boutId,
@@ -43,14 +44,14 @@ function bout(
     resultStatus: "pending",
     winnerFighterSlug: null,
     resultRecordedAt: null,
-    includedInPicks: true,
-    canCancel: true,
+    includedInPicks,
+    canCancel: includedInPicks,
     canRestore: false,
-    canReplace: true,
-    canRemoveFromPicks: true,
-    canRestoreToPicks: false,
+    canReplace: includedInPicks,
+    canRemoveFromPicks: includedInPicks,
+    canRestoreToPicks: !includedInPicks,
     hasReplacementHistory: false,
-    hasRemovalHistory: false,
+    hasRemovalHistory: !includedInPicks,
   };
 }
 
@@ -70,8 +71,9 @@ const event: PickControlEvent = {
   hasReorderHistory: false,
   bouts: [
     bout("alpha-bravo", 1, "Alpha", "Bravo"),
-    bout("charlie-delta", 2, "Charlie", "Delta"),
-    bout("echo-foxtrot", 3, "Echo", "Foxtrot"),
+    bout("hidden-fight", 2, "Hidden", "Fight", false),
+    bout("charlie-delta", 3, "Charlie", "Delta"),
+    bout("echo-foxtrot", 4, "Echo", "Foxtrot"),
   ],
 };
 
@@ -84,6 +86,7 @@ function repository(): PickControlRepository {
     setCancellation: vi.fn().mockResolvedValue(undefined),
     setBoutInclusion: vi.fn().mockResolvedValue(undefined),
     replaceFighter: vi.fn().mockResolvedValue(undefined),
+    addBout: vi.fn().mockResolvedValue(undefined),
     reorderCard: vi.fn().mockResolvedValue(undefined),
     recordResult: vi.fn().mockResolvedValue(undefined),
     correctResult: vi.fn().mockResolvedValue(undefined),
@@ -101,7 +104,7 @@ function renderDashboard(repo: PickControlRepository, identityGateway: IdentityG
 
 beforeEach(() => {
   vi.spyOn(window, "confirm").mockReturnValue(true);
-  vi.spyOn(window, "prompt").mockReturnValue("Official owner reason");
+  vi.spyOn(window, "prompt").mockReturnValue(null);
 });
 
 afterEach(() => {
@@ -109,29 +112,26 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("Compact Manage Open Picks dashboard", () => {
-  it("renders the whole card as compact rows with uncommon actions collapsed", async () => {
+describe("finished Open Picks owner workflow", () => {
+  it("keeps the card compact, exposes Add Fight, and hides removed audit rows", async () => {
     renderDashboard(repository());
 
     expect(await screen.findByRole("region", { name: "UFC Compact compact fight controls" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "ADD FIGHT" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "EXPAND Alpha vs. Bravo" })).toHaveAttribute("aria-expanded", "false");
     expect(screen.getByRole("button", { name: "EXPAND Charlie vs. Delta" })).toHaveAttribute("aria-expanded", "false");
-    expect(screen.getByRole("button", { name: "EXPAND Echo vs. Foxtrot" })).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByText("Hidden")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "+10 MIN" })).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "REPLACE FIGHTER" })).not.toBeInTheDocument();
   });
 
-  it("keeps only the selected fight expanded", async () => {
+  it("keeps only one fight expanded", async () => {
     renderDashboard(repository());
 
     fireEvent.click(await screen.findByRole("button", { name: "EXPAND Alpha vs. Bravo" }));
     expect(screen.getByRole("button", { name: "COLLAPSE Alpha vs. Bravo" })).toHaveAttribute("aria-expanded", "true");
-    expect(screen.getAllByRole("button", { name: "+10 MIN" })).toHaveLength(1);
-
     fireEvent.click(screen.getByRole("button", { name: "EXPAND Charlie vs. Delta" }));
     expect(screen.getByRole("button", { name: "EXPAND Alpha vs. Bravo" })).toHaveAttribute("aria-expanded", "false");
     expect(screen.getByRole("button", { name: "COLLAPSE Charlie vs. Delta" })).toHaveAttribute("aria-expanded", "true");
-    expect(screen.getAllByRole("button", { name: "+10 MIN" })).toHaveLength(1);
   });
 
   it("uses the canonical repository for a fight deadline mutation", async () => {
@@ -148,26 +148,67 @@ describe("Compact Manage Open Picks dashboard", () => {
     ));
   });
 
-  it("moves locally and sends one approved order through the canonical repository", async () => {
+  it("reorders with confirmation only while keeping the complete canonical order", async () => {
     const repo = repository();
     renderDashboard(repo);
 
     fireEvent.click(await screen.findByRole("button", { name: "EXPAND Charlie vs. Delta" }));
-    const moveGroup = screen.getByLabelText("Move Charlie vs. Delta");
-    fireEvent.click(within(moveGroup).getByRole("button", { name: "MOVE UP" }));
-
-    expect(repo.reorderCard).not.toHaveBeenCalled();
-    expect(screen.getByText("NEW ORDER READY")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "APPROVE NEW ORDER" }));
+    fireEvent.click(within(screen.getByLabelText("Move Charlie vs. Delta")).getByRole("button", { name: "MOVE UP" }));
+    const approveOrder = screen.getByRole("button", { name: "APPROVE NEW ORDER" });
+    await waitFor(() => expect(approveOrder).toBeEnabled());
+    fireEvent.click(approveOrder);
 
     await waitFor(() => expect(repo.reorderCard).toHaveBeenCalledWith(
       "ufc-compact",
-      ["alpha-bravo", "charlie-delta", "echo-foxtrot"],
-      ["charlie-delta", "alpha-bravo", "echo-foxtrot"],
-      "Official owner reason",
+      ["alpha-bravo", "hidden-fight", "charlie-delta", "echo-foxtrot"],
+      ["charlie-delta", "hidden-fight", "alpha-bravo", "echo-foxtrot"],
+      "Owner confirmed live fight order change",
     ));
-    expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("BEFORE"));
-    expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("AFTER"));
+    expect(window.prompt).not.toHaveBeenCalled();
+    expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("fight deadlines stay with their bouts"));
+  });
+
+  it("adds a main-card fight through the one canonical repository action", async () => {
+    vi.mocked(window.prompt)
+      .mockReturnValueOnce("New Red")
+      .mockReturnValueOnce("New Blue")
+      .mockReturnValueOnce("Featherweight")
+      .mockReturnValueOnce("2099-08-09T03:30");
+    const repo = repository();
+    renderDashboard(repo);
+
+    fireEvent.click(await screen.findByRole("button", { name: "ADD FIGHT" }));
+
+    await waitFor(() => expect(repo.addBout).toHaveBeenCalledWith(
+      "ufc-compact",
+      ["alpha-bravo", "hidden-fight", "charlie-delta", "echo-foxtrot"],
+      expect.objectContaining({
+        redFighterName: "New Red",
+        blueFighterName: "New Blue",
+        weightClass: "Featherweight",
+        locksAt: expect.any(String),
+        segmentSequence: 5,
+      }),
+      "Owner confirmed fight addition to Picks",
+    ));
+    expect(window.prompt).toHaveBeenCalledTimes(4);
+  });
+
+  it("removes a fight without asking the owner to type an audit reason", async () => {
+    const repo = repository();
+    renderDashboard(repo);
+
+    fireEvent.click(await screen.findByRole("button", { name: "EXPAND Alpha vs. Bravo" }));
+    fireEvent.click(screen.getByRole("button", { name: "REMOVE FROM PICKS" }));
+
+    await waitFor(() => expect(repo.setBoutInclusion).toHaveBeenCalledWith(
+      "ufc-compact",
+      expect.objectContaining({ boutId: "alpha-bravo" }),
+      false,
+      "Owner confirmed fight removal from Picks",
+    ));
+    expect(window.prompt).not.toHaveBeenCalled();
+    expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("disappears from ordinary owner and player cards"));
   });
 
   it("does not load private event data for a signed-out owner", async () => {

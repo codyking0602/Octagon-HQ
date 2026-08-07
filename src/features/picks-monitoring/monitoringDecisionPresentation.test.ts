@@ -78,6 +78,31 @@ describe("monitoring decision presentation", () => {
     expect(reorder.playerResult).toContain("No repick is required");
   });
 
+  it("makes a detected fight addition explicit without invalidating existing picks", () => {
+    const addition = monitoringDecisionPresentation(finding({
+      action: "add_bout",
+      event_id: "ufc-test",
+      bout_id: "epsilon-zeta",
+      weight_class: "Bantamweight",
+      red_fighter_slug: "epsilon",
+      red_fighter_name: "Epsilon",
+      blue_fighter_slug: "zeta",
+      blue_fighter_name: "Zeta",
+      card_segment: "main",
+      segment_sequence: 3,
+      locks_at: "2099-01-01T01:00:00.000Z",
+      expected_bout_ids: ["alpha-beta", "gamma-delta"],
+    }, {
+      matchupIdentity: "epsilon|zeta",
+      boutId: "epsilon-zeta",
+    }))!;
+
+    expect(impactValue(addition, "PLAYER PICKS")).toMatchObject({ value: "NEW PICK REQUIRED", affected: true });
+    expect(impactValue(addition, "CARD MEMBERSHIP")).toMatchObject({ value: "ADDED", affected: true });
+    expect(addition.playerResult).toContain("existing picks remain valid");
+    expect(addition.requiresAcknowledgment).toBe(true);
+  });
+
   it("states the canonical preservation and repick boundaries for removal and replacement", () => {
     const removal = monitoringDecisionPresentation(finding({
       action: "remove_bout",
