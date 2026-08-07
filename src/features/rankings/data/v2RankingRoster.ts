@@ -145,7 +145,7 @@ const rafaelDosAnjos = {
   era: {
     window: {
       start: "2014-08-23",
-      end: "2019-05-18",
+      end: "2019-07-20",
     },
     statusMultiplier: 1.05,
     divisionMultiplier: 1.1,
