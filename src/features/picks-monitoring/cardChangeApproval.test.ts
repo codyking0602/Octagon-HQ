@@ -109,6 +109,41 @@ describe("monitoring card-change approval proposals", () => {
     });
   });
 
+  it("creates one canonical proposal for a single detected main-card addition", () => {
+    const added = {
+      bout_id: "main-epsilon-zeta",
+      red_fighter_slug: "epsilon",
+      red_fighter_name: "Epsilon",
+      blue_fighter_slug: "zeta",
+      blue_fighter_name: "Zeta",
+      weight_class: "Bantamweight",
+    };
+    const result = findings({ ...source, bouts: [first, second, added] });
+
+    expect(result).toHaveLength(1);
+    expect(result[0]!).toMatchObject({
+      bout_id: added.bout_id,
+      summary: "Add Epsilon vs. Zeta to Picks.",
+      source_details: {
+        change_field: "included_in_picks",
+        approval_proposal: {
+          action: "add_bout",
+          event_id: canonical.event_id,
+          bout_id: added.bout_id,
+          weight_class: "Bantamweight",
+          red_fighter_slug: "epsilon",
+          red_fighter_name: "Epsilon",
+          blue_fighter_slug: "zeta",
+          blue_fighter_name: "Zeta",
+          card_segment: "main",
+          segment_sequence: 3,
+          locks_at: canonical.locks_at,
+          expected_bout_ids: [first.bout_id, second.bout_id],
+        },
+      },
+    });
+  });
+
   it("creates audited venue, location, and weight-class approval proposals", () => {
     const changed = findings({
       ...source,
