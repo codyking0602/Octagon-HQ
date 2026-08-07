@@ -93,6 +93,7 @@ describe("owner progressive Fight Night lock controls", () => {
     const repo = repository(initial);
     vi.mocked(repo.loadControlEvent)
       .mockResolvedValueOnce(initial)
+      .mockResolvedValueOnce(initial)
       .mockResolvedValueOnce(updated);
 
     renderPage(repo);
@@ -102,7 +103,7 @@ describe("owner progressive Fight Night lock controls", () => {
     await waitFor(() => expect(repo.adjustBoutLockTime).toHaveBeenCalledWith(
       "ufc-control-locks", "open-fight", "2099-08-09T03:10:00.000Z",
     ));
-    await waitFor(() => expect(repo.loadControlEvent).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(repo.loadControlEvent).toHaveBeenCalledTimes(3));
     expect(await screen.findByText("Open Red vs. Open Blue extended 10 minutes.")).toBeInTheDocument();
   });
 
@@ -148,7 +149,7 @@ describe("owner progressive Fight Night lock controls", () => {
     fireEvent.click(fight.getByRole("button", { name: "+10 MIN" }));
     expect(repo.adjustBoutLockTime).toHaveBeenCalledTimes(1);
     resolveAdjustment?.();
-    await waitFor(() => expect(repo.loadControlEvent).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(repo.loadControlEvent).toHaveBeenCalledTimes(3));
   });
 
   it("shows backend failure without refreshing or displaying an accepted deadline", async () => {
@@ -157,7 +158,7 @@ describe("owner progressive Fight Night lock controls", () => {
     renderPage(repo);
     fireEvent.click((await expandedControlCardByFighter("Open Red")).getByRole("button", { name: "+10 MIN" }));
     expect(await screen.findByText("locked bout cannot be reopened")).toBeInTheDocument();
-    expect(repo.loadControlEvent).toHaveBeenCalledTimes(1);
+    expect(repo.loadControlEvent).toHaveBeenCalledTimes(2);
     expect(screen.queryByText("Open Red vs. Open Blue extended 10 minutes.")).not.toBeInTheDocument();
   });
 
