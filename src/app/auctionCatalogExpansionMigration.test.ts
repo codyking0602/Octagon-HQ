@@ -227,11 +227,16 @@ describe("Auction catalog expansion migration", () => {
     }
   });
 
-  it("reproduces every added Ultimate Fighter field from canonical ranking data", () => {
+  it("keeps immutable Ultimate Fighter inputs aligned with their ranking snapshot", () => {
     const frameByDivision: Record<string, number> = {
       Heavyweight: 96, "Light Heavyweight": 91, Middleweight: 86, Welterweight: 82,
       Lightweight: 79, Featherweight: 76, Bantamweight: 72, Flyweight: 68,
       "Women's Bantamweight": 70, "Women's Flyweight": 66, "Women's Strawweight": 62,
+    };
+    const immutablePowerOverrides: Record<string, number> = {
+      // The versioned Auction v2 catalog predates RDA's 2026-08-07 factual ledger repair.
+      // Its grading inputs are an immutable snapshot and must not be rewritten retroactively.
+      "Rafael dos Anjos": 78,
     };
     const additions = [...catalogSql.matchAll(/'ultimate-fighter-(\d+)','((?:[^']|'')*)'.*?jsonb_build_object\(([^)]*)\)/g)]
       .filter((match) => Number(match[1]) >= 31);
@@ -249,10 +254,11 @@ describe("Auction catalog expansion migration", () => {
         Striking: fighter!.ratings.striking,
         Grappling: fighter!.ratings.grappling,
         Frame: frameByDivision[fighter!.model.primaryDivision] ?? 78,
-        Power: expectedPower,
+        Power: immutablePowerOverrides[name] ?? expectedPower,
         Heart: expectedHeart,
       });
     }
+    expect(Object.keys(immutablePowerOverrides)).toEqual(["Rafael dos Anjos"]);
   });
 
   it("contains current career identities and mode-specific category membership", () => {
