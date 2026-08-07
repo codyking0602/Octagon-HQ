@@ -20,4 +20,17 @@ describe("disposable HQCHECK profile cleanup", () => {
     expect(verifier).toContain('const displayName = `HQCHECK${suffix}`.slice(0, 24);');
     expect(verifier).toContain('const authEmail = `hqcheck-${suffix}@login.octagon-hq.app`;');
   });
+
+  it("fails the live verification if disposable owner or profile cleanup does not finish", () => {
+    expect(verifier).toContain('"Temporary Event Setup owner cleanup"');
+    expect(verifier).toContain('"Disposable Auth user cleanup"');
+    expect(verifier).toContain('"Disposable profile cleanup proof"');
+    expect(verifier).toContain("HQCHECK profile still exists after Auth cleanup");
+    expect(verifier).not.toContain(
+      'await fetch(`${supabaseOrigin}/rest/v1/pick_control_owners?profile_id=eq.${encodeURIComponent(userId)}`',
+    );
+    expect(verifier).not.toContain(
+      'await fetch(`${supabaseOrigin}/auth/v1/admin/users/${userId}`',
+    );
+  });
 });
