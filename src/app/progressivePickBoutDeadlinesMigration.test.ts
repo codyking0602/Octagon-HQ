@@ -30,7 +30,7 @@ const freshDatabaseEntrypoint = readFileSync(
   "utf8",
 );
 const controlPage = readFileSync(
-  "src/features/picks-control/PicksControlPage.tsx",
+  "src/features/picks-control/OpenPicksDashboard.tsx",
   "utf8",
 );
 const controlRepository = readFileSync(
@@ -104,13 +104,13 @@ describe("user-confirmed chronological initial Picks bout deadlines", () => {
     expect(finalMigration).not.toContain("gamrot-vs-quillan");
   });
 
-  it("keeps the established manual mutation and owner controls unchanged", () => {
+  it("keeps the established manual mutation and compact owner controls unchanged", () => {
     expect(progressiveMigration.match(/create or replace function public\.adjust_pick_bout_lock_time/g))
       .toHaveLength(1);
     expect(finalMigration).not.toContain("adjust_pick_bout_lock_time");
-    expect(controlPage).toContain('"+10 MIN"');
-    expect(controlPage).toContain('"+20 MIN"');
-    expect(controlPage).toContain('"SET TIME"');
+    expect(controlPage).toContain("+10 MIN");
+    expect(controlPage).toContain("+20 MIN");
+    expect(controlPage).toContain("SET TIME");
     expect(controlRepository.match(/adjust_pick_bout_lock_time/g)).toHaveLength(1);
     expect(integrationSql).toContain("+10 minute adjustment failed");
     expect(integrationSql).toContain("+20 minute adjustment failed");
