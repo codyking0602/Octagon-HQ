@@ -463,7 +463,8 @@ begin
     );
     raise exception 'completed event was partially reopened';
   exception when others then
-    if sqlerrm not like '%event cannot be reopened%' then raise; end if;
+    if sqlerrm not like '%completed event is immutable%'
+      and sqlerrm not like '%event cannot be reopened%' then raise; end if;
   end;
 
   -- Event Setup publication initializes Main Card deadlines from chronological sequence.
