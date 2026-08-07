@@ -417,6 +417,24 @@ const charlesOliveira = {
   },
 };
 
+const amandaNunesBaseline = historicalMigrationSeedJson.fighters.find(
+  (fighter) => fighter.fighter === "Amanda Nunes",
+);
+
+if (!amandaNunesBaseline) {
+  throw new Error("Amanda Nunes is missing from the sealed ranking baseline.");
+}
+
+const amandaNunes = {
+  ...amandaNunesBaseline,
+  presentation: {
+    ...amandaNunesBaseline.presentation,
+    oneLiner: "Nunes combined crushing power with patience, timing, and complete versatility. She could pressure behind heavy boxing, wrestle when needed, punish mistakes instantly, and turn one clean opening into a finish before opponents could settle into their game plan.",
+    whyRankedHere: "Nunes built the strongest UFC resume in women's MMA: championships at bantamweight and featherweight, sustained title success, and victories over nearly every defining champion of her era. She stopped Ronda Rousey, Cris Cyborg, Holly Holm, and Miesha Tate, beat Valentina Shevchenko twice, and later reclaimed the bantamweight belt from Julianna Pena.",
+    whyNotHigher: "Nunes does have real blemishes: she lost the bantamweight title to Julianna Pena in a massive upset, dropped multiple UFC fights before her championship peak, and barely edged Valentina Shevchenko in their second meeting. But she avenged Pena decisively, beat Shevchenko twice, and built enough elite championship work around those setbacks that they never seriously threaten her place at the top.",
+  },
+};
+
 export const v2RankingRoster: V2RankingRosterOverlay = {
   additions: [rafaelDosAnjos],
   replacements: {
@@ -429,6 +447,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     "Alex Pereira": alexPereira,
     "Chuck Liddell": chuckLiddell,
     "Charles Oliveira": charlesOliveira,
+    "Amanda Nunes": amandaNunes,
   },
   eraMembership: {
     "Rafael dos Anjos": {
@@ -437,7 +456,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     },
   },
   factsVersion: "octagon-hq-v2-rda-20260730",
-  judgmentVersion: "octagon-hq-v2-charles-oliveira-profile-20260807",
+  judgmentVersion: "octagon-hq-v2-amanda-nunes-profile-20260807",
   eraDepthVersion: "octagon-hq-v2-rda-20260730",
   eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
 };
