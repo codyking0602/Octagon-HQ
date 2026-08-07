@@ -381,6 +381,24 @@ const alexPereira = {
   },
 };
 
+const chuckLiddellBaseline = historicalMigrationSeedJson.fighters.find(
+  (fighter) => fighter.fighter === "Chuck Liddell",
+);
+
+if (!chuckLiddellBaseline) {
+  throw new Error("Chuck Liddell is missing from the sealed ranking baseline.");
+}
+
+const chuckLiddell = {
+  ...chuckLiddellBaseline,
+  presentation: {
+    ...chuckLiddellBaseline.presentation,
+    oneLiner: "Liddell was the prototype sprawl-and-brawl destroyer. Elite defensive wrestling kept fights standing, while his awkward counters and right-hand power made every exchange dangerous. He could hurt opponents moving backward, then swarm once they were compromised.",
+    whyRankedHere: "Liddell's UFC resume carries serious championship weight. He took the light heavyweight title from Randy Couture, defended it four times, and added major wins over Couture, Tito Ortiz, Vitor Belfort, Renato Sobral, and Jeremy Horn. His 7-1 prime title stretch, finishing power, and repeated success against elite contenders separate him from fighters with shorter championship peaks.",
+    whyNotHigher: "The case against going higher is the damage around the edges of his reign. Couture stopped him before the title run, Rampage ended it in the first round, and Liddell went 1-5 over his final six UFC fights. Most of that collapse came from ages 37 to 40, but the fighters above him generally sustained elite results longer and finished cleaner.",
+  },
+};
+
 export const v2RankingRoster: V2RankingRosterOverlay = {
   additions: [rafaelDosAnjos],
   replacements: {
@@ -391,6 +409,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     "Randy Couture": randyCouture,
     "Israel Adesanya": israelAdesanya,
     "Alex Pereira": alexPereira,
+    "Chuck Liddell": chuckLiddell,
   },
   eraMembership: {
     "Rafael dos Anjos": {
@@ -399,7 +418,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     },
   },
   factsVersion: "octagon-hq-v2-rda-20260730",
-  judgmentVersion: "octagon-hq-v2-alex-pereira-profile-20260805",
+  judgmentVersion: "octagon-hq-v2-chuck-liddell-profile-20260806",
   eraDepthVersion: "octagon-hq-v2-rda-20260730",
   eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
 };
