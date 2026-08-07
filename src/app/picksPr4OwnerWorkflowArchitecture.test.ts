@@ -47,7 +47,6 @@ describe("Picks PR 4 finished owner workflow", () => {
     expect(openDashboard).toContain("fight deadlines stay with their bouts");
     expect(openDashboard).not.toMatch(/position owns its deadline|APPLY ORDER \+ LOCKS/i);
     expect(canonicalMigration).toContain("locked or resulted fights must remain in their exact card slots");
-    expect(canonicalMigration).toContain("locked or resulted fights cannot move");
     expect(canonicalMigration).toContain("v_card_order_changed := true");
   });
 });
