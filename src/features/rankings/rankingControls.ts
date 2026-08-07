@@ -227,6 +227,10 @@ function evidenceShare(
 function divisionForFight(input: RankingInputFighter, fight?: RankingInputFighter["facts"]["fights"][number]) {
   const direct = canonicalDivision(fight?.division);
   if (direct) return direct;
+  if (normalizedKey(fight?.division) === "catchweight") {
+    const primary = canonicalDivision(input.facts.identity.primaryDivision);
+    return primary === "Heavyweight" ? primary : null;
+  }
   return canonicalDivision(input.facts.identity.primaryDivision);
 }
 

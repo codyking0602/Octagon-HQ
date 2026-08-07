@@ -46,7 +46,7 @@ describe("V2 ranking roster overlay", () => {
       "Amanda Nunes",
     ]);
     expect(sourceOverrides).toMatchObject({
-      factsVersion: "octagon-hq-v2-rda-20260730",
+      factsVersion: "octagon-hq-v2-rda-facts-20260807",
       judgmentVersion: "octagon-hq-v2-amanda-nunes-profile-20260807",
       eraDepthVersion: "octagon-hq-v2-rda-20260730",
       eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
@@ -61,13 +61,33 @@ describe("V2 ranking roster overlay", () => {
       (fighter) => fighter.fighter === "Rafael dos Anjos",
     );
     expect(input).toBeDefined();
-    expect(input?.facts.fights).toHaveLength(34);
+    expect(input?.facts.fights).toHaveLength(36);
     expect(
       input?.facts.fights.filter((fight) => fight.officialResult === "win"),
-    ).toHaveLength(20);
+    ).toHaveLength(21);
     expect(
       input?.facts.fights.filter((fight) => fight.officialResult === "loss"),
-    ).toHaveLength(14);
+    ).toHaveLength(15);
+    expect(input?.facts.fights.find((fight) => fight.opponent === "Clay Guida")).toMatchObject({
+      date: "2010-08-07",
+      officialResult: "loss",
+      division: "Lightweight",
+    });
+    expect(input?.facts.fights.find((fight) => fight.opponent === "Anthony Njokuani")).toMatchObject({
+      date: "2012-07-11",
+      officialResult: "win",
+      division: "Lightweight",
+    });
+    expect(input?.facts.fights.find((fight) => fight.opponent === "Mark Bocek")).toMatchObject({
+      id: "2012-11-17-mark-bocek",
+      date: "2012-11-17",
+    });
+    expect(
+      input?.judgments.opponentQuality.inputs.find((row) => row.opponent === "Mark Bocek"),
+    ).toMatchObject({
+      fightId: "2012-11-17-mark-bocek",
+      date: "2012-11-17",
+    });
     expect(input?.facts.primeWindow).toEqual({
       startFightId: "2014-08-23-benson-henderson",
       endFightId: "2019-05-18-kevin-lee",
@@ -363,7 +383,7 @@ describe("V2 ranking roster overlay", () => {
   it("calculates Rafael dos Anjos through the canonical engine", () => {
     const fighter = getFighter("rafael-dos-anjos");
     expect(fighter).toBeDefined();
-    expect(fighter?.visibleStats.ufcRecord).toBe("20-14");
+    expect(fighter?.visibleStats.ufcRecord).toBe("21-15");
     expect(fighter?.visibleStats.primeRecord).toBe("8-4");
     expect(fighter?.visibleStats.titleFightWins).toBe(2);
     expect(fighter?.rank).toBeGreaterThan(0);
