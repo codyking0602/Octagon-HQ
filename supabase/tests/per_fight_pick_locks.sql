@@ -343,7 +343,8 @@ begin
     );
     raise exception 'already locked bout was reopened';
   exception when others then
-    if sqlerrm not like '%locked bout cannot be reopened%' then raise; end if;
+    if sqlerrm not like '%locked, removed, or resulted fight deadline cannot change%'
+      and sqlerrm not like '%locked bout cannot be reopened%' then raise; end if;
   end;
 
   -- Direct calls to every existing card-change owner cannot bypass the early lock.
