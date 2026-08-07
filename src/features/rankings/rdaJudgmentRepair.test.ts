@@ -25,9 +25,9 @@ describe("Rafael dos Anjos approved ranking judgments", () => {
   });
 
   it("treats the Colby Covington and Kamaru Usman losses as home-division welterweight losses", () => {
-    expect(fight("Colby Covington")?.lossClassification.divisionContext).toBe("home");
-    expect(fight("Kamaru Usman")?.lossClassification.divisionContext).toBe("home");
-    expect(fight("Leon Edwards")?.lossClassification.divisionContext).toBe("home");
+    expect(fight("Colby Covington")?.lossClassification?.divisionContext).toBe("home");
+    expect(fight("Kamaru Usman")?.lossClassification?.divisionContext).toBe("home");
+    expect(fight("Leon Edwards")?.lossClassification?.divisionContext).toBe("home");
   });
 
   it("uses the approved opponent-quality credits", () => {
