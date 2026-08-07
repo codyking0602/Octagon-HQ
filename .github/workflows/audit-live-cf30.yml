@@ -1,0 +1,43 @@
+name: Audit exact live frontend cf30
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/audit-live-cf30.yml
+
+permissions:
+  contents: read
+
+jobs:
+  verify-live-delivery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      EXPECTED_SOURCE_SHA: cf30b1f7ab181155e0589c64b6ea3cf616a039a0
+      OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
+    steps:
+      - name: Check out exact production source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_SOURCE_SHA }}
+          fetch-depth: 1
+          persist-credentials: false
+          show-progress: false
+
+      - name: Verify exact checked-out source
+        shell: bash
+        run: |
+          set -euo pipefail
+          checked_out_sha=$(git rev-parse HEAD)
+          test "$checked_out_sha" = "$EXPECTED_SOURCE_SHA"
+          test -f scripts/verify-live-frontend-delivery.mjs
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Prove exact live frontend delivery
+        run: node scripts/verify-live-frontend-delivery.mjs
