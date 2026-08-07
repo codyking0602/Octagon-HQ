@@ -250,7 +250,8 @@ begin
     );
     raise exception 'locked event was reopened';
   exception when others then
-    if sqlerrm not like '%locked, removed, or resulted fight deadline cannot change%'
+    if sqlerrm not like '%ordinary fight changes require an upcoming event%'
+      and sqlerrm not like '%locked, removed, or resulted fight deadline cannot change%'
       and sqlerrm not like '%event cannot be reopened%' then raise; end if;
   end;
 
