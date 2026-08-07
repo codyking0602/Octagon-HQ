@@ -116,7 +116,8 @@ begin
     raise exception 'monitoring approval reason required';
   end if;
 
-  -- The private core delegates through public.adjust_pick_event_lock_time,
+  -- The private core delegates fight mutations to private.apply_pick_fight_change.
+  -- It continues through public.adjust_pick_event_lock_time,
   -- public.approve_pick_event_metadata_change,
   -- public.approve_pick_bout_weight_class_change,
   -- public.approve_pick_bout_inclusion,
