@@ -81,7 +81,7 @@ describe("Picks odds canonical fighter matching", () => {
     const filtered = filterOddsToMonitoredEvent(oddsResult([
       snapshot("ferreira-provider", "Carlos Diego Ferreira", -180, "Billy Quarantillo", 150),
       snapshot("elkins-provider", "Darren Elkins", 500, "Yadier Delvalle", -700),
-      snapshot("miller-provider", "Billy Ray Goff", 230, "Ty Thriller Miller", -285),
+      snapshot("miller-provider", "Billy Goff", 230, "Ty Thriller Miller", -285),
     ]), event);
 
     expect(filtered.coverage).toEqual({ providerEvents: 3, completeSnapshots: 3, missingSnapshots: 0 });
