@@ -133,20 +133,23 @@ describe("production Event Setup preview contract", () => {
     })).toBe(true);
   });
 
-  it("accepts the current official UFC event-page time shape without requiring a Main Card suffix", () => {
-    expect(syncSource).toContain("(?:\\s*\\/\\s*Main Card)?");
+  it("keeps MMA Mania as the sole operational event metadata and card source", () => {
+    expect(syncSource).toContain('const MMA_MANIA_INDEX_URL = "https://www.mmamania.com/ufc-fight-cards";');
+    expect(syncSource).toContain("parseMmaManiaEventMetadata");
+    expect(syncSource).toContain('source: "MMA Mania event + card"');
+    expect(syncSource).not.toMatch(/https?:\/\/(?:www\.)?ufc\.com/i);
   });
 
-  it("bounds official UFC event discovery within the canonical Edge Function owner", () => {
-    expect(syncSource).toContain("const MAX_UFC_EVENT_PAGE_ATTEMPTS = 4;");
-    expect(syncSource).toContain(".slice(0, MAX_UFC_EVENT_PAGE_ATTEMPTS)");
-    expect(syncSource).toContain("for (const url of urls)");
-    expect(syncSource).not.toContain("Promise.all(urls.map");
+  it("bounds MMA Mania event discovery within the canonical Edge Function owner", () => {
+    expect(syncSource).toContain("const MAX_MMA_MANIA_ARTICLE_ATTEMPTS = 16;");
+    expect(syncSource).toContain(".slice(0, MAX_MMA_MANIA_ARTICLE_ATTEMPTS)");
+    expect(syncSource).toContain("for (const candidate of discovered)");
+    expect(syncSource).not.toContain("Promise.all(discovered.map");
   });
 
   it("preserves typed canonical-source failures and keeps the live verifier red with sanitized details", () => {
     expect(syncSource).toContain("if (error instanceof SyncError) throw error;");
-    expect(syncSource).toContain('"UFC_EVENT_METADATA_REJECTED"');
+    expect(syncSource).toContain('"ARTICLE_METADATA_REJECTED"');
     expect(liveVerifier).toContain("message=${safeMessage(preview.body)}");
     expect(liveVerifier).toContain("details=${safeDetails(preview.body)}");
     expect(liveVerifier).not.toContain('preview.body?.code === "SYNC_UNEXPECTED_ERROR"');
