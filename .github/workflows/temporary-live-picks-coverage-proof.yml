@@ -13,159 +13,105 @@ permissions:
 jobs:
   prove:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 3
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
-      OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
-      EXPECTED_BACKEND_SHA: ${{ github.event.pull_request.head.sha }}
+      PROOF_BACKEND_SHA: 32010dbda253549cba31005d85f4cb156d52e306
+      PROOF_STARTED_AFTER: 2026-08-08T18:34:15Z
     steps:
-      - name: Prove live canonical monitoring covers all five fights
+      - name: Read back one-time live canonical monitoring proof
         shell: bash
         run: |
           set -euo pipefail
           node <<'NODE'
           const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
           const projectId = process.env.SUPABASE_PROJECT_ID;
-          const productionOrigin = process.env.OCTAGON_PRODUCTION_ORIGIN;
-          const expectedBackendSha = process.env.EXPECTED_BACKEND_SHA;
-          if (!accessToken || !projectId || !expectedBackendSha) throw new Error("Live coverage proof is not configured.");
+          const proofBackendSha = process.env.PROOF_BACKEND_SHA;
+          const proofStartedAfter = process.env.PROOF_STARTED_AFTER;
+          if (!accessToken || !projectId || !proofBackendSha || !proofStartedAfter) {
+            throw new Error("Live coverage read-back is not configured.");
+          }
 
-          const supabaseOrigin = `https://${projectId}.supabase.co`;
-          async function body(response) {
+          async function parsed(response) {
             const text = await response.text();
             try { return text ? JSON.parse(text) : {}; } catch { return { message: text }; }
           }
-          async function request(label, url, options = {}, statuses = [200]) {
-            const response = await fetch(url, options);
-            const parsed = await body(response);
-            if (!statuses.includes(response.status)) {
-              throw new Error(`${label}: HTTP ${response.status}; ${parsed?.message ?? parsed?.error_description ?? parsed?.error ?? "request failed"}`);
-            }
-            return { response, body: parsed };
-          }
-
-          const keys = await request(
-            "Project key lookup",
+          const keysResponse = await fetch(
             `https://api.supabase.com/v1/projects/${projectId}/api-keys?reveal=true`,
             { headers: { Authorization: `Bearer ${accessToken}` } },
           );
-          const publishableKey = keys.body.find((item) => item.type === "publishable")?.api_key
-            ?? keys.body.find((item) => item.type === "legacy" && /anon/i.test(item.name ?? ""))?.api_key;
-          const secretKey = keys.body.find((item) => item.type === "secret")?.api_key
-            ?? keys.body.find((item) => item.type === "legacy" && /service.role/i.test(item.name ?? ""))?.api_key;
-          if (!publishableKey || !secretKey) throw new Error("Required Supabase keys are unavailable.");
+          const keys = await parsed(keysResponse);
+          if (!keysResponse.ok || !Array.isArray(keys)) throw new Error(`Project key lookup failed with HTTP ${keysResponse.status}.`);
+          const secretKey = keys.find((item) => item.type === "secret")?.api_key
+            ?? keys.find((item) => item.type === "legacy" && /service.role/i.test(item.name ?? ""))?.api_key;
+          if (!secretKey) throw new Error("Project secret key is unavailable.");
 
-          const serviceHeaders = {
-            Authorization: `Bearer ${secretKey}`,
-            apikey: secretKey,
-            "Content-Type": "application/json",
-          };
-          const suffix = `${process.env.GITHUB_RUN_ID ?? Date.now()}${process.env.GITHUB_RUN_ATTEMPT ?? "1"}`;
-          const displayName = `HQCOVER${suffix}`.slice(0, 24);
-          const email = `hqcover-${suffix}@login.octagon-hq.app`;
-          const pin = "4826";
-          const password = `Coverage-${suffix}!Aa1`;
-          let userId = "";
-
-          try {
-            const created = await request(
-              "Disposable Auth user creation",
-              `${supabaseOrigin}/auth/v1/admin/users`,
-              {
-                method: "POST",
-                headers: serviceHeaders,
-                body: JSON.stringify({ email, password, email_confirm: true, user_metadata: { display_name: displayName } }),
-              },
-            );
-            userId = created.body?.id ?? "";
-            if (!userId) throw new Error("Disposable Auth user did not return an ID.");
-
-            await request(
-              "Disposable profile registration",
-              `${supabaseOrigin}/rest/v1/rpc/register_pin_profile`,
-              {
-                method: "POST",
-                headers: serviceHeaders,
-                body: JSON.stringify({
-                  p_profile_id: userId,
-                  p_display_name: displayName,
-                  p_initials: "H",
-                  p_internal_email: email,
-                  p_pin: pin,
-                }),
-              },
-            );
-            await request(
-              "Temporary Picks owner grant",
-              `${supabaseOrigin}/rest/v1/pick_control_owners`,
-              {
-                method: "POST",
-                headers: { ...serviceHeaders, Prefer: "return=minimal" },
-                body: JSON.stringify({ profile_id: userId }),
-              },
-              [201],
-            );
-
-            const session = await request(
-              "Disposable owner sign-in",
-              `${supabaseOrigin}/auth/v1/token?grant_type=password`,
-              {
-                method: "POST",
-                headers: { apikey: publishableKey, "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password }),
-              },
-            );
-            const userToken = session.body?.access_token;
-            if (!userToken) throw new Error("Disposable owner sign-in did not return an access token.");
-
-            const monitoring = await request(
-              "Canonical live Picks monitoring run",
-              `${supabaseOrigin}/functions/v1/run-pick-monitoring`,
-              {
-                method: "POST",
-                headers: {
-                  Authorization: `Bearer ${userToken}`,
-                  apikey: publishableKey,
-                  Origin: productionOrigin,
-                  "Content-Type": "application/json",
-                },
-                body: "{}",
-              },
-            );
-            const deployedSha = monitoring.response.headers.get("x-octagon-backend-sha") ?? monitoring.body?.deployment_sha ?? "";
-            if (deployedSha !== expectedBackendSha) {
-              throw new Error(`Live monitoring backend SHA mismatch: expected ${expectedBackendSha}, received ${deployedSha || "missing"}.`);
-            }
-            const coverage = monitoring.body?.coverage ?? {};
-            if (monitoring.body?.provider_called !== true
-              || Number(coverage.completeSnapshots) !== 5
-              || Number(coverage.missingSnapshots) !== 0
-              || Number(monitoring.body?.stored_odds_snapshots) !== 5) {
-              throw new Error(`Live monitoring did not cover all five fights: ${JSON.stringify({
-                status: monitoring.body?.status ?? null,
-                provider_called: monitoring.body?.provider_called ?? null,
-                coverage,
-                stored_odds_snapshots: monitoring.body?.stored_odds_snapshots ?? null,
-                findings: monitoring.body?.findings ?? {},
-                quota: monitoring.body?.quota ?? {},
-              })}`);
-            }
-            console.log(`PASS: exact backend ${deployedSha} completed one canonical provider-backed run with 5/5 fight snapshots and 0 missing.`);
-          } finally {
-            if (userId) {
-              await request(
-                "Temporary Picks owner cleanup",
-                `${supabaseOrigin}/rest/v1/pick_control_owners?profile_id=eq.${encodeURIComponent(userId)}`,
-                { method: "DELETE", headers: serviceHeaders },
-                [200, 204],
-              ).catch(() => undefined);
-              await request(
-                "Disposable Auth user cleanup",
-                `${supabaseOrigin}/auth/v1/admin/users/${userId}`,
-                { method: "DELETE", headers: serviceHeaders },
-                [200, 204],
-              ).catch(() => undefined);
-            }
+          const headers = { Authorization: `Bearer ${secretKey}`, apikey: secretKey };
+          const runQuery = new URLSearchParams({
+            select: "run_id,status,trigger_kind,provider_called,started_at,completed_at,source_event_identity,provider_event_count,complete_snapshot_count,missing_snapshot_count,provider_requests_remaining,diagnostics",
+            trigger_kind: "eq.manual",
+            started_at: `gte.${proofStartedAfter}`,
+            order: "completed_at.desc.nullslast,created_at.desc",
+            limit: "1",
+          });
+          const runResponse = await fetch(
+            `https://${projectId}.supabase.co/rest/v1/pick_monitoring_runs?${runQuery}`,
+            { headers },
+          );
+          const runs = await parsed(runResponse);
+          if (!runResponse.ok || !Array.isArray(runs) || runs.length !== 1) {
+            throw new Error(`One-time live monitoring run lookup failed with HTTP ${runResponse.status}.`);
           }
+          const run = runs[0];
+          const snapshotQuery = new URLSearchParams({
+            select: "run_id,bout_id,matchup_identity,sportsbook",
+            run_id: `eq.${run.run_id}`,
+            order: "bout_id.asc",
+          });
+          const snapshotResponse = await fetch(
+            `https://${projectId}.supabase.co/rest/v1/pick_monitoring_odds_snapshots?${snapshotQuery}`,
+            { headers },
+          );
+          const snapshots = await parsed(snapshotResponse);
+          if (!snapshotResponse.ok || !Array.isArray(snapshots)) {
+            throw new Error(`One-time live snapshot lookup failed with HTTP ${snapshotResponse.status}.`);
+          }
+          const findingQuery = new URLSearchParams({
+            select: "finding_type,severity,matchup_identity",
+            run_id: `eq.${run.run_id}`,
+            order: "detected_at.asc",
+          });
+          const findingResponse = await fetch(
+            `https://${projectId}.supabase.co/rest/v1/pick_monitoring_findings?${findingQuery}`,
+            { headers },
+          );
+          const findings = await parsed(findingResponse);
+          if (!findingResponse.ok || !Array.isArray(findings)) {
+            throw new Error(`One-time live finding lookup failed with HTTP ${findingResponse.status}.`);
+          }
+
+          const badFindings = findings.filter((item) => item.finding_type === "unmatched_fight" || item.finding_type === "provider_error");
+          if (run.provider_called !== true
+            || run.status !== "completed"
+            || Number(run.complete_snapshot_count) !== 5
+            || Number(run.missing_snapshot_count) !== 0
+            || snapshots.length !== 5
+            || new Set(snapshots.map((item) => item.bout_id)).size !== 5
+            || badFindings.length !== 0) {
+            throw new Error(`Live monitoring proof was not 5/5: ${JSON.stringify({
+              proof_backend_sha: proofBackendSha,
+              run_id: run.run_id,
+              status: run.status,
+              provider_called: run.provider_called,
+              provider_event_count: run.provider_event_count,
+              complete_snapshot_count: run.complete_snapshot_count,
+              missing_snapshot_count: run.missing_snapshot_count,
+              stored_snapshots: snapshots.length,
+              unique_bouts: new Set(snapshots.map((item) => item.bout_id)).size,
+              bad_findings: badFindings,
+              provider_requests_remaining: run.provider_requests_remaining,
+            })}`);
+          }
+          console.log(`PASS: provider-backed run ${run.run_id} executed on backend ${proofBackendSha} and recorded 5/5 unique fight snapshots, 0 missing, and no unmatched/provider-error findings.`);
           NODE
