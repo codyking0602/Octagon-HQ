@@ -43,12 +43,19 @@ describe("automatic Picks monitoring deployment", () => {
     expect(productionVerifier).not.toContain('process.env.GITHUB_EVENT_NAME !== "pull_request"');
   });
 
-  it("fails production verification when the latest automatic run failed or returned partial coverage", () => {
-    expect(productionVerifier).toContain('const healthyStatuses = new Set(["completed", "skipped"]);');
+  it("fails real automatic failures while allowing only clean supported-bookmaker partial coverage", () => {
+    expect(productionVerifier).toContain('const healthyPartialCoverage = latestDecision.status === "partial"');
+    expect(productionVerifier).toContain('latestDecision.provider_called === true');
+    expect(productionVerifier).toContain('latestDecision.decision_reason === null');
+    expect(productionVerifier).toContain('Number(latestDecision.complete_snapshot_count) > 0');
+    expect(productionVerifier).toContain('Number(latestDecision.missing_snapshot_count) > 0');
+    expect(productionVerifier).toContain('providerDiagnostics.length === 0');
+    expect(productionVerifier).toContain('providerFindings.length === 0');
+    expect(productionVerifier).toContain('Number(latestDecision.provider_requests_remaining) > 5');
+    expect(productionVerifier).toContain('item?.finding_type === "provider_error" || item?.finding_type === "quota_warning"');
     expect(productionVerifier).toContain("Production Picks monitoring is unhealthy");
-    expect(productionVerifier).toContain("decision_reason");
     expect(productionVerifier).toContain("monitoring-scheduler-proof.json");
-    expect(productionVerifier).not.toContain("truthful ${latestDecision.status} decision");
+    expect(productionVerifier).toContain("healthy partial provider check");
   });
 
   it("proves the runtime job command without exposing it or its credential", () => {
