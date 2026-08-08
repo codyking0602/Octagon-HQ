@@ -88,7 +88,7 @@ if (expectedActive) {
   }
 
   const query = new URLSearchParams({
-    select: "run_id,status,decision_reason,provider_called,started_at,completed_at,source_event_identity",
+    select: "run_id,status,decision_reason,provider_called,started_at,completed_at,source_event_identity,provider_event_count,complete_snapshot_count,missing_snapshot_count,diagnostics,provider_requests_remaining",
     trigger_kind: "eq.scheduled",
     order: "completed_at.desc.nullslast,created_at.desc",
     limit: "1",
@@ -103,6 +103,21 @@ if (expectedActive) {
   }
 
   const decision = decisions[0];
+  let findings = [];
+  if (decision?.run_id) {
+    const findingQuery = new URLSearchParams({
+      select: "finding_type,severity,summary,matchup_identity,source_details",
+      run_id: `eq.${decision.run_id}`,
+      order: "detected_at.asc",
+    });
+    const findingResponse = await fetch(
+      `https://${projectId}.supabase.co/rest/v1/pick_monitoring_findings?${findingQuery}`,
+      { headers: serviceHeaders },
+    );
+    const findingBody = await readBody(findingResponse);
+    if (findingResponse.ok && Array.isArray(findingBody)) findings = findingBody;
+  }
+
   latestDecision = {
     run_id: decision?.run_id ?? null,
     status: decision?.status ?? null,
@@ -111,6 +126,12 @@ if (expectedActive) {
     started_at: decision?.started_at ?? null,
     completed_at: decision?.completed_at ?? null,
     source_event_identity: decision?.source_event_identity ?? null,
+    provider_event_count: decision?.provider_event_count ?? null,
+    complete_snapshot_count: decision?.complete_snapshot_count ?? null,
+    missing_snapshot_count: decision?.missing_snapshot_count ?? null,
+    diagnostics: Array.isArray(decision?.diagnostics) ? decision.diagnostics : [],
+    provider_requests_remaining: decision?.provider_requests_remaining ?? null,
+    findings,
   };
   const completedAt = Date.parse(latestDecision.completed_at ?? "");
   const allowedStatuses = new Set(["completed", "partial", "failed", "skipped"]);
