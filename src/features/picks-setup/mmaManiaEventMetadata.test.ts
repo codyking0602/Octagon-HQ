@@ -75,6 +75,15 @@ describe("MMA Mania event metadata", () => {
         blue_fighter_name: "Quillan Salkilld",
       },
     })).toThrow("one explicit event date");
+
+    expect(() => parseMmaManiaEventMetadata({
+      sourceUrl: "https://www.mmamania.com/ufc-fight-cards/458904/ufc-vegas-120-start-time-8-pm-et",
+      articleText: "Event: UFC Vegas 120: Gamrot vs. Salkilld Date: Sat., Aug. 8, 2026 Location: Meta APEX in Las Vegas, Nevada",
+      mainEvent: {
+        red_fighter_name: "Mateusz Gamrot",
+        blue_fighter_name: "Quillan Salkilld",
+      },
+    })).toThrow("labeled card start times");
   });
 
   it("locks the runtime to MMA Mania and does not retain UFC.com as a fallback", () => {
