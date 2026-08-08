@@ -223,12 +223,16 @@ Deno.serve(async (request) => {
   const sourceUrl = typeof selectedEvent?.source_url === "string"
     ? selectedEvent.source_url.trim()
     : "";
+  const sourceEventKey = typeof selectedEvent?.source_event_key === "string"
+    ? selectedEvent.source_event_key.trim()
+    : "";
   const previewResponse = await fetch(`${url}/functions/v1/sync-next-ufc-event`, {
     method: "POST",
     headers: { "Content-Type": "application/json", apikey: serviceKey },
     body: JSON.stringify({
       mode: "monitoring-preview",
       ...(sourceUrl ? { source_url: sourceUrl } : {}),
+      ...(sourceEventKey ? { source_event_key: sourceEventKey } : {}),
     }),
   });
   const previewBody = await previewResponse.json().catch(() => null) as { event_preview?: SourcePreview; effective_scope?: CardScope } | null;
@@ -241,7 +245,7 @@ Deno.serve(async (request) => {
       identity: resolved.identity,
       nextEligibleAt: retryAt,
       providerCalled: false,
-      response: safeError(502, "SOURCE_PREVIEW_FAILED", "The UFC source preview failed safely."),
+      response: safeError(502, "SOURCE_PREVIEW_FAILED", "The event/card source preview failed safely."),
     });
   }
 
