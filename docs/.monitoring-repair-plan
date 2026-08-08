@@ -1,0 +1,1 @@
+Repair the existing automatic Picks monitoring path only. Preserve the canonical scheduler, runner, MMA Mania source owner, The Odds API provider, repositories, Supabase client, and deployment workflows. Remove this temporary file before merge.
