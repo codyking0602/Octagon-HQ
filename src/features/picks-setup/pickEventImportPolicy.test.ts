@@ -125,14 +125,14 @@ describe("Picks event import policy", () => {
   });
 
   it("wires the policy into the sole import owner", () => {
-    expect(syncSource).toContain("parseOfficialUfcSegmentTimes(");
-    expect(syncSource).toContain('sourceNormalized.eventType === "numbered"');
-    expect(syncSource).toContain('"UFC_EVENT_TIME_REJECTED"');
-    expect(syncSource).toContain('error.code === "UFC_EVENT_TIME_REJECTED"');
+    expect(syncSource).toContain("parseMmaManiaEventMetadata({");
+    expect(syncSource).toContain('"ARTICLE_METADATA_REJECTED"');
     expect(syncSource).toContain("resolveImportedCardScope(name, subtitle, requested)");
     expect(syncSource).toContain("selectAndSequenceImportedBouts(card.bouts, scope)");
     expect(syncSource).toContain("prelims_starts_at: metadata.prelims_starts_at");
     expect(syncSource).toContain("card_segment: bout.card_segment");
+    expect(syncSource).not.toContain("parseOfficialUfcSegmentTimes(");
+    expect(syncSource).not.toMatch(/https?:\/\/(?:www\.)?ufc\.com/i);
     expect(syncSource).not.toContain('scope === "full" || bout.section === "main-event"');
     expect(cardChangesSource).toContain('["Prelims time", current.prelims_starts_at, event.prelims_starts_at]');
   });

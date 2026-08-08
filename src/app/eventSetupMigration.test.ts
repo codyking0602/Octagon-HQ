@@ -6,6 +6,7 @@ const sql = readFileSync(
   "utf8",
 );
 const syncFunction = readFileSync("supabase/functions/sync-next-ufc-event/index.ts", "utf8");
+const monitoringFunction = readFileSync("supabase/functions/run-pick-monitoring/index.ts", "utf8");
 const cardChanges = readFileSync("supabase/functions/sync-next-ufc-event/cardChanges.ts", "utf8");
 const config = readFileSync("supabase/config.toml", "utf8");
 const deployWorkflow = readFileSync(".github/workflows/deploy-supabase.yml", "utf8");
@@ -38,25 +39,37 @@ describe("Phase 2B event setup backend", () => {
     expect(sql).toContain("grant execute on function public.get_pick_event_setup() to authenticated");
   });
 
-  it("uses UFC metadata with MMA Mania sections instead of a first-six guess", () => {
-    expect(syncFunction).toContain("https://www.ufc.com/events?language_content_entity=en");
+  it("uses MMA Mania for event metadata and card structure without a first-six guess", () => {
     expect(syncFunction).toContain("https://www.mmamania.com/ufc-fight-cards");
     expect(syncFunction).toContain("parseMmaManiaCard");
+    expect(syncFunction).toContain("parseMmaManiaEventMetadata");
     expect(syncFunction).toContain("resolveCardScope");
     expect(syncFunction).toContain("resolveImportedCardScope(name, subtitle, requested)");
     expect(syncFunction).toContain('"ARTICLE_DISCOVERY_FAILED"');
     expect(syncFunction).toContain('"ARTICLE_DISCOVERY_REJECTED"');
+    expect(syncFunction).toContain('source: "MMA Mania event + card"');
+    expect(syncFunction).not.toContain("ufc.com");
+    expect(syncFunction).not.toContain("UFC_EVENT_INDEX_URL");
+    expect(syncFunction).not.toContain("adaptUfcSource");
+    expect(syncFunction).not.toContain("parseOfficialUfcSegmentTimes");
     expect(syncFunction).not.toContain("bouts.slice(0, 6)");
   });
 
   it("reuses a staged source URL and allows an exact owner-supplied article", () => {
-    expect(syncFunction).toContain("persistedSourceUrl(ownerProbe.data)");
-    expect(syncFunction).toContain("suppliedSourceUrl || persistedSourceUrl(ownerProbe.data)");
-    expect(syncFunction).toContain("fetchExactMmaManiaCard");
+    expect(syncFunction).toContain("const savedSourceUrl = persistedSourceUrl(ownerProbe.data);");
+    expect(syncFunction).toContain("const preferredSourceUrl = suppliedSourceUrl || savedSourceUrl;");
+    expect(syncFunction).toContain("fetchExactMmaManiaEvent");
     expect(syncFunction).toContain('"ARTICLE_SOURCE_REJECTED"');
     expect(syncFunction).toContain("The supplied source must be a specific MMA Mania fight-card article URL.");
     expect(cardChanges).toContain('["Card source", current.source_url, event.source_url, "exact"]');
     expect(cardChanges).toContain('["Venue", current.venue, event.venue, "semantic"]');
+  });
+
+  it("preserves the published event identity while monitoring its saved MMA Mania source", () => {
+    expect(monitoringFunction).toContain("const sourceEventKey = typeof selectedEvent?.source_event_key === \"string\"");
+    expect(monitoringFunction).toContain("...(sourceEventKey ? { source_event_key: sourceEventKey } : {})");
+    expect(syncFunction).toContain('const internalSourceEventKey = internalMonitoring && typeof input.source_event_key === "string"');
+    expect(syncFunction).toContain("const sourceEventKeyOverride = internalSourceEventKey");
   });
 
   it("previews source changes before replacing a staged draft", () => {

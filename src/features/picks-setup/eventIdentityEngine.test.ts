@@ -90,20 +90,18 @@ describe("durable event identity", () => {
     expect(matchSourceIdentity(numbered, { ...article, eventNumber: "998" }).accepted).toBe(false);
   });
 
-
-
-
-  it("wires canonical UFC adapter fields into the final ParsedEvent payload", () => {
+  it("keeps the canonical sync owner on MMA Mania-only runtime evidence", () => {
     const source = readFileSync(resolve(
       process.cwd(),
       "supabase/functions/sync-next-ufc-event/index.ts",
     ), "utf8");
 
-    expect(source).toContain("const canonicalMetadata = canonicalUfcEventFields(metadata.normalized);");
-    expect(source).toMatch(/const event: ParsedEvent = \{[\s\S]*\.\.\.canonicalMetadata,[\s\S]*source_url: card\.sourceUrl/);
+    expect(source).toContain("parseMmaManiaEventMetadata");
+    expect(source).toContain('source: "MMA Mania event + card"');
     expect(source).toMatch(/function cleanFighterName[\s\S]*canonicalFighterDisplay/);
-    expect(source).not.toContain("venue: metadata.venue");
-    expect(source).not.toContain("location: metadata.location");
+    expect(source).not.toContain("canonicalUfcEventFields(metadata.normalized)");
+    expect(source).not.toContain("adaptUfcSource");
+    expect(source).not.toContain("UFC_EVENT_INDEX_URL");
+    expect(source).not.toMatch(/https?:\/\/(?:www\.)?ufc\.com/i);
   });
-
 });

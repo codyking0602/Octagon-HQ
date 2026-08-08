@@ -2,13 +2,10 @@ import { createClient } from "npm:@supabase/supabase-js@2.110.7";
 import * as cheerio from "npm:cheerio@1.0.0";
 import { DEPLOYED_SOURCE_SHA } from "./deployment.ts";
 import { absoluteMmaManiaArticleUrl } from "./sourceUrls.ts";
-import { chooseEventArticle, matchEventIdentity, rankDiscoveryCandidates, type ArticleIdentity } from "./eventIdentity.ts";
-import { hasSourceIdentityConflict, matchSourceIdentity, type NormalizedUfcEvent } from "./identityEngine.ts";
 import { sourceChanges } from "./cardChanges.ts";
-import { canonicalFightPair, canonicalFighterDisplay, fighterMatch } from "./normalization.ts";
-import { adaptMmaManiaSource, adaptUfcSource, canonicalUfcEventFields } from "./sourceAdapters.ts";
+import { canonicalFightPair, canonicalFighterDisplay } from "./normalization.ts";
+import { parseMmaManiaEventMetadata, type MmaManiaEventMetadata } from "./mmaManiaEventMetadata.ts";
 import {
-  parseOfficialUfcSegmentTimes,
   resolveImportedCardScope,
   selectAndSequenceImportedBouts,
   type SequencedBoutMetadata,
@@ -21,23 +18,18 @@ const corsHeaders = {
   "Access-Control-Expose-Headers": "X-Octagon-Backend-Sha",
 };
 
-const UFC_EVENT_INDEX_URL = "https://www.ufc.com/events?language_content_entity=en";
 const MMA_MANIA_INDEX_URL = "https://www.mmamania.com/ufc-fight-cards";
-const MAX_UFC_EVENT_PAGE_ATTEMPTS = 4;
+const MAX_MMA_MANIA_ARTICLE_ATTEMPTS = 16;
 const requestHeaders = {
   "User-Agent": "OctagonHQ/2.0 (+https://octagon.hq-app.workers.dev)",
   Accept: "text/html,application/xhtml+xml",
   "Accept-Language": "en-US,en;q=0.9",
 };
-const monthNumbers: Record<string, string> = {
-  Jan: "01", Feb: "02", Mar: "03", Apr: "04", May: "05", Jun: "06",
-  Jul: "07", Aug: "08", Sep: "09", Oct: "10", Nov: "11", Dec: "12",
-};
 
 type CardScope = "auto" | "main" | "full";
 type EffectiveScope = "main" | "full";
 type CardSection = "main-event" | "main" | "prelim" | "early-prelim";
-type ErrorStage = "authentication" | "ufc-index-fetch" | "ufc-event-fetch" | "ufc-parse" | "mma-fetch" | "mma-parse" | "identity-match" | "preview-build" | "database-read" | "database-write";
+type ErrorStage = "authentication" | "mma-index-fetch" | "mma-fetch" | "mma-parse" | "preview-build" | "database-read" | "database-write";
 
 class SyncError extends Error {
   constructor(readonly code: string, message: string, readonly stage: ErrorStage, readonly safeDetails: Record<string, unknown> = {}) { super(message); }
@@ -55,21 +47,6 @@ function errorJson(error: unknown, requestId: string, fallbackStage: ErrorStage,
     },
     deployment_sha: DEPLOYED_SOURCE_SHA,
   }, status);
-}
-
-interface UfcEventMetadata {
-  source_event_key: string;
-  ufc_source_url: string;
-  event_id: string;
-  name: string;
-  subtitle: string;
-  venue: string;
-  location: string;
-  starts_at: string;
-  prelims_starts_at: string;
-  locks_at: string;
-  season: number;
-  normalized: NormalizedUfcEvent;
 }
 
 interface ParsedCardBout {
@@ -115,6 +92,11 @@ interface MmaManiaCard {
   usedSectionHeadings: boolean;
 }
 
+interface MmaManiaEventCandidate {
+  card: MmaManiaCard;
+  metadata: MmaManiaEventMetadata;
+}
+
 function json(body: Record<string, unknown>, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
@@ -133,152 +115,6 @@ function clean(value: string) {
 function slugify(value: string) {
   return value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
     .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
-}
-
-function absoluteUfcEventUrl(value: string) {
-  try {
-    const url = new URL(value, "https://www.ufc.com");
-    return url.hostname.endsWith("ufc.com") && url.pathname.startsWith("/event/")
-      ? url.toString()
-      : "";
-  } catch {
-    return "";
-  }
-}
-
-function timezoneOffset(zone: string) {
-  const offsets: Record<string, string> = {
-    EDT: "-04:00", EST: "-05:00", CDT: "-05:00", CST: "-06:00",
-    MDT: "-06:00", MST: "-07:00", PDT: "-07:00", PST: "-08:00",
-    GMT: "+00:00", UTC: "+00:00",
-  };
-  return offsets[zone.toUpperCase()] ?? "";
-}
-
-function visibleDate(month: string, day: string, hour: number, minute: string, offset: string, year: number) {
-  const monthNumber = monthNumbers[month];
-  if (!monthNumber) return null;
-  const parsed = new Date(`${year}-${monthNumber}-${day.padStart(2, "0")}T${String(hour).padStart(2, "0")}:${minute}:00${offset}`);
-  return Number.isNaN(parsed.getTime()) ? null : parsed;
-}
-
-function parseVisibleEventTime(text: string, now: Date) {
-  const match = text.match(/(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun),\s+([A-Z][a-z]{2})\s+(\d{1,2})\s*\/\s*(\d{1,2}):(\d{2})\s*([AP]M)\s+([A-Z]{2,4})(?:\s*\/\s*Main Card)?/i);
-  if (!match) return null;
-  const [, month, dayValue, hourValue, minute, meridiem, zone] = match;
-  let hour = Number(hourValue) % 12;
-  if (meridiem.toUpperCase() === "PM") hour += 12;
-  let year = now.getUTCFullYear();
-  const offset = timezoneOffset(zone);
-  if (!offset) return null;
-  const candidate = visibleDate(month, dayValue, hour, minute, offset, year);
-  if (!candidate) return null;
-  if (candidate.getTime() < now.getTime() - 7 * 86400000) {
-    year += 1;
-    return visibleDate(month, dayValue, hour, minute, offset, year);
-  }
-  return candidate;
-}
-
-function eventTime($: cheerio.CheerioAPI, bodyText: string, now: Date) {
-  const candidates = $("time[datetime]").map((_, element) => {
-    const value = $(element).attr("datetime") ?? "";
-    const parsed = new Date(value);
-    return Number.isNaN(parsed.getTime()) ? null : parsed;
-  }).get().filter((value): value is Date => Boolean(value));
-
-  const future = candidates
-    .filter((value) => value.getTime() >= now.getTime() - 6 * 3600000)
-    .sort((left, right) => left.getTime() - right.getTime())[0];
-  return future ?? parseVisibleEventTime(bodyText, now);
-}
-
-function headingText($: cheerio.CheerioAPI, selector: string) {
-  return clean($(selector).map((_, element) => $(element).text()).get().find(Boolean) ?? "");
-}
-
-function extractMetadataLines($: cheerio.CheerioAPI) {
-  const lines = $("body").text().split(/\n+/).map(clean).filter(Boolean);
-  return lines.filter((line, index) => lines.indexOf(line) === index);
-}
-
-function extractVenueAndLocation($: cheerio.CheerioAPI, name: string, subtitle: string) {
-  const explicitVenue = clean($("[class*='venue']").first().text()) || clean($("h5").first().text());
-  const explicitLocation = clean($("[class*='location']").first().text());
-  if (explicitVenue && explicitLocation && explicitVenue !== explicitLocation) {
-    return { venue: explicitVenue, location: explicitLocation };
-  }
-
-  const lines = extractMetadataLines($);
-  const dateIndex = lines.findIndex((line) => /Main Card/i.test(line) && /(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun),/.test(line));
-  const candidates = (dateIndex >= 0 ? lines.slice(dateIndex + 1, dateIndex + 8) : lines).filter((line) => (
-    line !== name
-    && line !== subtitle
-    && !/^(How to Watch|Tickets|Buy Tickets|VIP Experiences|Follow live|Start Times|Prelims|Main Card)$/i.test(line)
-    && !/Watch On|Download|LIVE NOW|Round|Time|Method/i.test(line)
-  ));
-  return {
-    venue: explicitVenue || candidates[0] || "",
-    location: explicitLocation || candidates.slice(explicitVenue ? 0 : 1, explicitVenue ? 3 : 4).join(", "),
-  };
-}
-
-export function parseUfcEventPage(html: string, sourceUrl: string, now = new Date()): UfcEventMetadata | null {
-  const $ = cheerio.load(html);
-  const bodyText = clean($("body").text());
-  const fallbackStart = eventTime($, bodyText, now);
-  if (!fallbackStart || fallbackStart.getTime() < now.getTime() - 6 * 3600000) return null;
-
-  const name = headingText($, "h1") || "UFC Event";
-  const versusHeadings = $("h1,h2,h3").map((_, element) => clean($(element).text())).get()
-    .filter((value) => /\bvs\.?\b/i.test(value) && value !== name);
-  const subtitle = versusHeadings[0] ?? "";
-  const { venue, location } = extractVenueAndLocation($, name, subtitle);
-  const sourceEventKey = new URL(sourceUrl).pathname.replace(/^\/+|\/+$/g, "");
-  const season = fallbackStart.getUTCFullYear();
-
-  const legacy = {
-    source_event_key: sourceEventKey,
-    ufc_source_url: sourceUrl,
-    event_id: slugify(`${name}-${subtitle}-${season}-${fallbackStart.toISOString().slice(0, 10)}`),
-    name,
-    subtitle,
-    venue,
-    location,
-    starts_at: fallbackStart.toISOString(),
-    locks_at: fallbackStart.toISOString(),
-    season,
-  };
-  const sourceNormalized = adaptUfcSource(html, sourceUrl, legacy);
-  let officialTimes;
-  try {
-    officialTimes = parseOfficialUfcSegmentTimes(
-      bodyText,
-      sourceNormalized.startsAt,
-      sourceNormalized.eventType === "numbered",
-      now,
-    );
-  } catch (error) {
-    throw new SyncError(
-      "UFC_EVENT_TIME_REJECTED",
-      error instanceof Error ? error.message : "Official UFC segment times were rejected.",
-      "ufc-parse",
-      { sourceUrl },
-    );
-  }
-  const normalized = {
-    ...sourceNormalized,
-    startsAt: officialTimes.mainCardStartsAt,
-    localEventDate: officialTimes.localEventDate,
-  };
-
-  return {
-    ...legacy,
-    ...canonicalUfcEventFields(normalized),
-    prelims_starts_at: officialTimes.prelimsStartsAt,
-    ufc_source_url: sourceUrl,
-    normalized,
-  };
 }
 
 function classifySection(value: string): CardSection | null {
@@ -407,106 +243,61 @@ function toStagedBouts(bouts: Array<ParsedCardBout & SequencedBoutMetadata>) {
   });
 }
 
-function articleIdentity(html: string, url: string, card: MmaManiaCard): ArticleIdentity {
+function articleText(html: string) {
   const $ = cheerio.load(html);
-  const title = clean($("meta[property='og:title']").attr("content") ?? $("title").text() ?? $("h1").first().text());
-  const metadata = clean([
-    $("meta[property='og:description']").attr("content"),
-    $("meta[name='description']").attr("content"),
-    $("meta[property='article:published_time']").attr("content"),
-  ].filter(Boolean).join(" "));
-  const root = $("article").first().length ? $("article").first() : $("main").first();
-  const body = clean((root.length ? root : $("body")).text()).slice(0, 12000);
-  const dateSentences = `${title}. ${metadata}. ${body.slice(0, 6000)}`.split(/(?<=[.!?])\s+/)
-    .filter((sentence) => /\b(?:20\d{2}|january|february|march|april|may|june|july|august|september|october|november|december)\b/i.test(sentence)
-      && /\b(?:event|card|ufc|takes? place|scheduled|saturday|sunday)\b/i.test(sentence))
-    .slice(0, 8).join(" ");
-  return {
-    url,
-    title,
-    metadata,
-    body,
-    cardDateText: dateSentences,
-    publishedAt: clean($("meta[property='article:published_time']").attr("content") ?? $("time[datetime]").first().attr("datetime") ?? ""),
-    usedSectionHeadings: card.usedSectionHeadings,
-    boutCount: card.bouts.length,
-  };
+  const root = $("article").first().length
+    ? $("article").first()
+    : $(".c-entry-content, .article-body, main").first();
+  return clean((root.length ? root : $("body")).text()).slice(0, 50_000);
 }
 
-function nameTokens(value: string) {
-  return clean(value).toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, " ").trim().split(/\s+/).filter((token) => token.length > 1);
-}
-
-function sameFighter(expected: string, actual: string) {
-  const expectedTokens = nameTokens(expected);
-  const actualTokens = new Set(nameTokens(actual));
-  return expectedTokens.length > 0 && expectedTokens.every((token) => actualTokens.has(token));
-}
-
-function parsedMainEventMatches(metadata: UfcEventMetadata, card: MmaManiaCard) {
-  const expected = metadata.subtitle.split(/\s+(?:vs\.?|versus|v\.?)\s+/i).map(clean).filter(Boolean);
-  if (expected.length !== 2) return false;
-  const mainEvent = card.bouts.find((bout) => bout.section === "main-event") ?? card.bouts[0];
-  if (!mainEvent) return false;
-  return (
-    sameFighter(expected[0], mainEvent.red_fighter_name) && sameFighter(expected[1], mainEvent.blue_fighter_name)
-  ) || (
-    sameFighter(expected[0], mainEvent.blue_fighter_name) && sameFighter(expected[1], mainEvent.red_fighter_name)
-  );
-}
-
-async function fetchText(url: string, sourceLabel: string) {
-  const stage: ErrorStage = sourceLabel === "UFC.com" ? "ufc-event-fetch" : "mma-fetch";
+async function fetchText(url: string, stage: "mma-index-fetch" | "mma-fetch") {
   let response: Response;
   try { response = await fetch(url, { headers: requestHeaders, redirect: "follow", signal: AbortSignal.timeout(8000) }); }
-  catch { throw new SyncError("UPSTREAM_TIMEOUT", `${sourceLabel} did not respond within 8 seconds.`, stage, { source: sourceLabel }); }
-  if (!response.ok) throw new SyncError("UPSTREAM_HTTP_ERROR", `${sourceLabel} returned HTTP ${response.status}.`, stage, { source: sourceLabel, status: response.status });
+  catch { throw new SyncError("UPSTREAM_TIMEOUT", "MMA Mania did not respond within 8 seconds.", stage, { source: "MMA Mania" }); }
+  if (!response.ok) throw new SyncError("UPSTREAM_HTTP_ERROR", `MMA Mania returned HTTP ${response.status}.`, stage, { source: "MMA Mania", status: response.status });
   const declared = Number(response.headers.get("content-length") ?? 0);
-  if (declared > 2_000_000) throw new SyncError("UPSTREAM_RESPONSE_TOO_LARGE", `${sourceLabel} response exceeded the 2 MB safety limit.`, stage, { source: sourceLabel });
+  if (declared > 2_000_000) throw new SyncError("UPSTREAM_RESPONSE_TOO_LARGE", "MMA Mania response exceeded the 2 MB safety limit.", stage, { source: "MMA Mania" });
   const text = await response.text();
-  if (new TextEncoder().encode(text).byteLength > 2_000_000) throw new SyncError("UPSTREAM_RESPONSE_TOO_LARGE", `${sourceLabel} response exceeded the 2 MB safety limit.`, stage, { source: sourceLabel });
+  if (new TextEncoder().encode(text).byteLength > 2_000_000) throw new SyncError("UPSTREAM_RESPONSE_TOO_LARGE", "MMA Mania response exceeded the 2 MB safety limit.", stage, { source: "MMA Mania" });
   return text;
 }
 
-async function findNextUfcEvent(now: Date) {
-  const indexHtml = await fetchText(UFC_EVENT_INDEX_URL, "UFC.com");
-  const $ = cheerio.load(indexHtml);
-  const urls = Array.from(new Set(
-    $("a[href*='/event/']").map((_, element) => absoluteUfcEventUrl($(element).attr("href") ?? "")).get().filter(Boolean),
-  )).slice(0, MAX_UFC_EVENT_PAGE_ATTEMPTS);
-  if (!urls.length) {
+function parseMmaManiaEventCandidate(html: string, sourceUrl: string, sourceEventKeyOverride = ""): MmaManiaEventCandidate {
+  const card = parseMmaManiaCard(html, sourceUrl);
+  if (!card.usedSectionHeadings || card.bouts.length < 4 || card.bouts.length > 20) {
     throw new SyncError(
-      "UFC_EVENT_LINKS_MISSING",
-      "Official UFC event discovery did not return event links.",
-      "ufc-index-fetch",
-      { reason: "no-event-links" },
+      "ARTICLE_CARD_REJECTED",
+      "The MMA Mania article did not contain a plausible sectioned UFC fight card.",
+      "mma-parse",
+      { sourceUrl, boutCount: card.bouts.length, usedSectionHeadings: card.usedSectionHeadings },
     );
   }
-
-  for (const url of urls) {
-    try {
-      const parsed = parseUfcEventPage(await fetchText(url, "UFC.com"), url, now);
-      if (parsed) return parsed;
-    } catch (error) {
-      if (error instanceof SyncError && error.code === "UFC_EVENT_TIME_REJECTED") throw error;
-      // Preserve index order and continue to the next bounded official UFC event candidate.
-    }
+  const mainEvent = card.bouts.find((bout) => bout.section === "main-event") ?? card.bouts[0];
+  if (!mainEvent) {
+    throw new SyncError("ARTICLE_CARD_REJECTED", "The MMA Mania article did not contain a main event.", "mma-parse", { sourceUrl });
   }
-  return null;
+  try {
+    return {
+      card,
+      metadata: parseMmaManiaEventMetadata({
+        sourceUrl,
+        articleText: articleText(html),
+        mainEvent,
+        ...(sourceEventKeyOverride ? { sourceEventKeyOverride } : {}),
+      }),
+    };
+  } catch (error) {
+    throw new SyncError(
+      "ARTICLE_METADATA_REJECTED",
+      error instanceof Error ? error.message : "MMA Mania event metadata could not be parsed safely.",
+      "mma-parse",
+      { sourceUrl },
+    );
+  }
 }
 
-function sourceIdentityDetails(identity: ReturnType<typeof matchSourceIdentity>) {
-  return {
-    confidence: identity.confidence,
-    matchedSignals: identity.matchedSignals,
-    conflicts: identity.conflicts,
-    normalizedUfcEvent: identity.normalizedUfcEvent,
-    normalizedArticleEvent: identity.normalizedArticleEvent,
-  };
-}
-
-async function fetchExactMmaManiaCard(metadata: UfcEventMetadata, requestedUrl: string) {
+async function fetchExactMmaManiaEvent(requestedUrl: string, sourceEventKeyOverride: string) {
   const sourceUrl = absoluteMmaManiaArticleUrl(requestedUrl);
   if (!sourceUrl) {
     throw new SyncError(
@@ -516,67 +307,49 @@ async function fetchExactMmaManiaCard(metadata: UfcEventMetadata, requestedUrl: 
       { reason: "invalid-article-url" },
     );
   }
-  const html = await fetchText(sourceUrl, "MMA Mania");
-  const card = parseMmaManiaCard(html, sourceUrl);
-  const article = adaptMmaManiaSource(html, sourceUrl, card.bouts, Array.from(new Set(card.bouts.map((bout) => bout.section))));
-  const identity = matchSourceIdentity(metadata.normalized, article);
-  const safeDetails = sourceIdentityDetails(identity);
-  if (!card.usedSectionHeadings || card.bouts.length < 4 || card.bouts.length > 20) {
-    if (hasSourceIdentityConflict(identity)) {
-      throw new SyncError("ARTICLE_IDENTITY_REJECTED", identity.reason, "identity-match", safeDetails);
-    }
-    throw new SyncError(
-      "ARTICLE_CARD_REJECTED",
-      "The supplied MMA Mania article did not contain a plausible sectioned fight card.",
-      "mma-parse",
-      safeDetails,
-    );
-  }
-  if (!identity.accepted) {
-    throw new SyncError("ARTICLE_IDENTITY_REJECTED", identity.reason, "identity-match", safeDetails);
-  }
-  return card;
+  return parseMmaManiaEventCandidate(
+    await fetchText(sourceUrl, "mma-fetch"),
+    sourceUrl,
+    sourceEventKeyOverride,
+  );
 }
 
-async function discoverMmaManiaCard(metadata: UfcEventMetadata) {
-  const indexHtml = await fetchText(MMA_MANIA_INDEX_URL, "MMA Mania");
+async function discoverMmaManiaEvent(now: Date) {
+  const indexHtml = await fetchText(MMA_MANIA_INDEX_URL, "mma-index-fetch");
   const $ = cheerio.load(indexHtml);
-  const candidates = new Map<string, { url: string; discoveryText: string; order: number }>();
+  const candidates = new Map<string, { url: string; order: number }>();
   let order = 0;
 
   $("a[href]").each((_, element) => {
     const url = absoluteMmaManiaArticleUrl($(element).attr("href") ?? "");
     if (!url) return;
-    const discoveryText = clean(`${$(element).text()} ${url}`);
-    if (!/\bufc\b|fight[- ]card|fight[- ]night/i.test(discoveryText)) return;
-    const previous = candidates.get(url);
-    if (!previous || discoveryText.length > previous.discoveryText.length) {
-      candidates.set(url, { url, discoveryText, order: previous?.order ?? order++ });
-    }
+    const context = clean(`${$(element).text()} ${$(element).parent().text()} ${url}`);
+    if (!/\bufc\b/i.test(context) || !/(?:fight\s*card|fight\s*night|up\s+next|ufc\s+\d{3,4})/i.test(context)) return;
+    if (!candidates.has(url)) candidates.set(url, { url, order: order++ });
   });
 
-  const discovered = rankDiscoveryCandidates(metadata, Array.from(candidates.values()), 8);
+  const discovered = [...candidates.values()].slice(0, MAX_MMA_MANIA_ARTICLE_ATTEMPTS);
   if (!discovered.length) {
     throw new SyncError(
       "ARTICLE_DISCOVERY_EMPTY",
-      "MMA Mania did not return a current UFC fight-card article candidate.",
-      "mma-fetch",
+      "MMA Mania did not return UFC fight-card article candidates.",
+      "mma-index-fetch",
       { reason: "no-article-links" },
     );
   }
 
-  const evaluated: Array<{ card: MmaManiaCard; match: ReturnType<typeof matchEventIdentity> }> = [];
+  const parsed: Array<{ candidate: MmaManiaEventCandidate; order: number }> = [];
   let fetched = 0;
-  let parsed = 0;
   for (const candidate of discovered) {
     try {
-      const html = await fetchText(candidate.url, "MMA Mania");
+      const html = await fetchText(candidate.url, "mma-fetch");
       fetched += 1;
-      const card = parseMmaManiaCard(html, candidate.url);
-      if (card.usedSectionHeadings && card.bouts.length >= 4) parsed += 1;
-      evaluated.push({ card, match: matchEventIdentity(metadata, articleIdentity(html, candidate.url, card)) });
+      const event = parseMmaManiaEventCandidate(html, candidate.url);
+      if (Date.parse(event.metadata.starts_at) >= now.getTime() - 6 * 60 * 60 * 1000) {
+        parsed.push({ candidate: event, order: candidate.order });
+      }
     } catch {
-      // A failed candidate fetch must not prevent evaluation of the remaining discovered articles.
+      // A malformed or unavailable candidate cannot block the remaining bounded MMA Mania candidates.
     }
   }
 
@@ -588,30 +361,27 @@ async function discoverMmaManiaCard(metadata: UfcEventMetadata) {
       { reason: "no-candidate-fetched" },
     );
   }
-  if (!parsed) {
-    throw new SyncError(
-      "ARTICLE_CARD_REJECTED",
-      "MMA Mania did not return a plausible sectioned fight card.",
-      "mma-parse",
-      { reason: "no-plausible-card" },
-    );
-  }
-  const selected = chooseEventArticle(evaluated);
-  if (!selected.candidate) {
+  if (!parsed.length) {
     throw new SyncError(
       "ARTICLE_DISCOVERY_REJECTED",
-      "MMA Mania article candidates did not match the official UFC event safely.",
-      "identity-match",
-      { reason: "no-deterministic-candidate" },
+      "MMA Mania did not return a safely parsed current or upcoming UFC fight card.",
+      "mma-parse",
+      { reason: "no-current-or-upcoming-card" },
     );
   }
-  return selected.candidate.card;
+
+  parsed.sort((left, right) => (
+    Date.parse(left.candidate.metadata.starts_at) - Date.parse(right.candidate.metadata.starts_at)
+    || right.candidate.card.bouts.length - left.candidate.card.bouts.length
+    || left.order - right.order
+  ));
+  return parsed[0]!.candidate;
 }
 
-async function findMmaManiaCard(metadata: UfcEventMetadata, preferredSourceUrl: string) {
-  if (preferredSourceUrl) return fetchExactMmaManiaCard(metadata, preferredSourceUrl);
+async function findMmaManiaEvent(now: Date, preferredSourceUrl: string, sourceEventKeyOverride: string) {
+  if (preferredSourceUrl) return fetchExactMmaManiaEvent(preferredSourceUrl, sourceEventKeyOverride);
   try {
-    return await discoverMmaManiaCard(metadata);
+    return await discoverMmaManiaEvent(now);
   } catch (error) {
     if (error instanceof SyncError) throw error;
     throw new SyncError(
@@ -623,40 +393,28 @@ async function findMmaManiaCard(metadata: UfcEventMetadata, preferredSourceUrl: 
   }
 }
 
-async function buildNextEvent(now: Date, requestedScope: CardScope, preferredSourceUrl: string) {
-  const metadata = await findNextUfcEvent(now);
-  if (!metadata) {
-    throw new SyncError(
-      "UFC_EVENT_METADATA_REJECTED",
-      "Official UFC event metadata could not be parsed safely.",
-      "ufc-parse",
-      { reason: "no-future-event-metadata" },
-    );
-  }
-  const card = await findMmaManiaCard(metadata, preferredSourceUrl);
-  const canonicalMetadata = canonicalUfcEventFields(metadata.normalized);
-  const effectiveScope = resolveCardScope(canonicalMetadata.name, canonicalMetadata.subtitle, requestedScope);
+async function buildNextEvent(
+  now: Date,
+  requestedScope: CardScope,
+  preferredSourceUrl: string,
+  sourceEventKeyOverride: string,
+) {
+  const { card, metadata } = await findMmaManiaEvent(now, preferredSourceUrl, sourceEventKeyOverride);
+  const effectiveScope = resolveCardScope(metadata.name, metadata.subtitle, requestedScope);
   const selected = selectBouts(card, effectiveScope);
   if (!selected.length) {
     throw new SyncError(
       "ARTICLE_CARD_REJECTED",
-      "The matched MMA Mania article did not contain fights for the selected card scope.",
+      "The MMA Mania article did not contain fights for the selected card scope.",
       "mma-parse",
       { reason: "selected-scope-empty", effectiveScope },
     );
   }
 
   const bouts = toStagedBouts(selected);
-  const cardHeadliners = [bouts[0]!.red_fighter_name, bouts[0]!.blue_fighter_name];
-  const officialHeadliners = metadata.normalized.headliners;
-  const cardMatchesOfficial = officialHeadliners.length === 2
-    && officialHeadliners.every((name) => cardHeadliners.some((candidate) => fighterMatch(name, candidate, true)));
-  const subtitle = cardMatchesOfficial
-    ? `${cardHeadliners[0]} vs. ${cardHeadliners[1]}`
-    : canonicalMetadata.subtitle;
   const warnings = [
-    !canonicalMetadata.venue ? "MISSING VENUE" : "",
-    !canonicalMetadata.location ? "MISSING LOCATION" : "",
+    !metadata.venue ? "MISSING VENUE" : "",
+    !metadata.location ? "MISSING LOCATION" : "",
     !card.usedSectionHeadings ? "MMA MANIA CARD SECTIONS NEED REVIEW" : "",
     effectiveScope === "main" && bouts.length < 4 ? "FEWER THAN FOUR MAIN-CARD FIGHTS FOUND" : "",
     effectiveScope === "full" && bouts.length < 8 ? "FULL CARD HAS FEWER THAN EIGHT FIGHTS" : "",
@@ -664,11 +422,18 @@ async function buildNextEvent(now: Date, requestedScope: CardScope, preferredSou
   ].filter(Boolean);
 
   const event: ParsedEvent = {
-    source: "UFC.com metadata + MMA Mania card",
-    ...canonicalMetadata,
-    prelims_starts_at: metadata.prelims_starts_at,
+    source: "MMA Mania event + card",
+    source_event_key: metadata.source_event_key,
     source_url: card.sourceUrl,
-    subtitle,
+    event_id: metadata.event_id,
+    name: metadata.name,
+    subtitle: metadata.subtitle,
+    venue: metadata.venue,
+    location: metadata.location,
+    starts_at: metadata.starts_at,
+    prelims_starts_at: metadata.prelims_starts_at,
+    locks_at: metadata.locks_at,
+    season: metadata.season,
     bouts,
     warnings,
   };
@@ -682,6 +447,11 @@ function asRecord(value: unknown): Record<string, unknown> | null {
 function persistedSourceUrl(currentValue: unknown) {
   const current = asRecord(currentValue);
   return typeof current?.source_url === "string" ? current.source_url.trim() : "";
+}
+
+function persistedSourceEventKey(currentValue: unknown) {
+  const current = asRecord(currentValue);
+  return typeof current?.source_event_key === "string" ? current.source_event_key.trim() : "";
 }
 
 async function sourceHash(event: ParsedEvent, effectiveScope: EffectiveScope) {
@@ -757,10 +527,22 @@ Deno.serve(async (request) => {
   const requestedScope: CardScope = input.card_scope === "main" || input.card_scope === "full" ? input.card_scope : "auto";
   const expectedHash = typeof input.expected_hash === "string" ? input.expected_hash : "";
   const suppliedSourceUrl = typeof input.source_url === "string" ? input.source_url.trim() : "";
-  const preferredSourceUrl = suppliedSourceUrl || persistedSourceUrl(ownerProbe.data);
+  const savedSourceUrl = persistedSourceUrl(ownerProbe.data);
+  const preferredSourceUrl = suppliedSourceUrl || savedSourceUrl;
+  const internalSourceEventKey = internalMonitoring && typeof input.source_event_key === "string"
+    ? input.source_event_key.trim()
+    : "";
+  const reuseSavedSource = Boolean(savedSourceUrl && preferredSourceUrl === savedSourceUrl);
+  const sourceEventKeyOverride = internalSourceEventKey
+    || (reuseSavedSource ? persistedSourceEventKey(ownerProbe.data) : "");
 
   try {
-    const { event, effectiveScope } = await buildNextEvent(new Date(), requestedScope, preferredSourceUrl);
+    const { event, effectiveScope } = await buildNextEvent(
+      new Date(),
+      requestedScope,
+      preferredSourceUrl,
+      sourceEventKeyOverride,
+    );
     const hash = await sourceHash(event, effectiveScope);
     const changes = sourceChanges(ownerProbe.data, event, effectiveScope);
 
