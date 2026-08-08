@@ -304,8 +304,9 @@ try {
       const allClear = monitoringRegion.getByLabel("Pending changes all clear");
       const pendingChanges = monitoringRegion.getByRole("heading", { name: "One finding, one clear decision" });
       const partialCoverage = syncHeadingText === "AUTO-SYNC HAS PARTIAL COVERAGE";
-      if (!await allClear.count() && !await pendingChanges.count() && !partialCoverage) {
-        throw new Error("Monitoring rendered neither its compact all-clear state, pending findings workflow, nor explicit partial-coverage state.");
+      const waitingForNextCheck = syncHeadingText === "AUTO-SYNC IS WAITING FOR ITS NEXT CHECK";
+      if (!await allClear.count() && !await pendingChanges.count() && !partialCoverage && !waitingForNextCheck) {
+        throw new Error("Monitoring rendered neither its compact all-clear state, pending findings workflow, explicit partial coverage, nor healthy waiting state.");
       }
 
       await fightRegion.waitFor({ state: "visible", timeout: 15_000 });
@@ -344,7 +345,7 @@ try {
       }
       await fightRows.nth(1).click();
 
-      monitoringOutcome = `loaded visible truthful automation, ${partialCoverage ? "an explicit partial-coverage state" : "a compact review state"}, and ${fightRowCount} collapsed fight rows with one-detail-at-a-time controls`;
+      monitoringOutcome = `loaded visible truthful automation, ${partialCoverage ? "an explicit partial-coverage state" : waitingForNextCheck ? "the healthy waiting-for-next-check state" : "a compact review state"}, and ${fightRowCount} collapsed fight rows with one-detail-at-a-time controls`;
     } else {
       await monitoringRegion.getByRole("heading", { name: "One finding, one clear decision" }).waitFor({ state: "visible", timeout: 15_000 });
       monitoringOutcome = "confirmed the currently deployed main frontend still satisfies its legacy monitoring contract before this exact UI head is deployed";
