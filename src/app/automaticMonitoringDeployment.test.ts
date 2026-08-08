@@ -12,6 +12,7 @@ const config = readFileSync("supabase/config.toml", "utf8");
 const deploy = readFileSync(".github/workflows/deploy-supabase.yml", "utf8");
 const verifier = readFileSync("scripts/verify-monitoring-function-deployment.mjs", "utf8");
 const productionVerifier = readFileSync("scripts/verify-production-monitoring-scheduler.mjs", "utf8");
+const browserVerifier = readFileSync("scripts/verify-pin-auth-live.mjs", "utf8");
 
 describe("automatic Picks monitoring deployment", () => {
   it("has one canonically named database scheduler that invokes the existing runner", () => {
@@ -56,6 +57,13 @@ describe("automatic Picks monitoring deployment", () => {
     expect(productionVerifier).toContain("Production Picks monitoring is unhealthy");
     expect(productionVerifier).toContain("monitoring-scheduler-proof.json");
     expect(productionVerifier).toContain("healthy partial provider check");
+  });
+
+  it("accepts the explicit live partial-coverage UI only after the backend health gate proves it", () => {
+    expect(browserVerifier).toContain('const partialCoverage = syncHeadingText === "AUTO-SYNC HAS PARTIAL COVERAGE"');
+    expect(browserVerifier).toContain('!await pendingChanges.count() && !partialCoverage');
+    expect(browserVerifier).toContain("explicit partial-coverage state");
+    expect(browserVerifier).toContain("MONITORING UNAVAILABLE");
   });
 
   it("proves the runtime job command without exposing it or its credential", () => {
