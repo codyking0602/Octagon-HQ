@@ -1,5 +1,5 @@
 -- Repair the one canonical automatic Picks monitoring claim boundary in place.
--- Production cron wakes were reaching run-pick-monitoring but the service-role claim
+-- Production cron wakes were reaching the canonical runner but the service-role claim
 -- RPC failed before the MMA Mania preview or The Odds API could run. Recreate only
 -- that existing RPC, remove the obsolete historical overload if it survives anywhere,
 -- and make the claim independent of a table-column default while preserving the
