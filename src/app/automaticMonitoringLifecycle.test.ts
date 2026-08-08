@@ -50,13 +50,14 @@ describe("automatic Picks monitoring lifecycle", () => {
     );
   });
 
-  it("proves a recent production scheduler wake and its durable decision without forcing due work", () => {
+  it("proves a recent production scheduler wake and rejects unhealthy automatic outcomes without forcing due work", () => {
     expect(productionVerifier).toContain('safeHealth.last_run_status !== "succeeded"');
     expect(productionVerifier).toContain("pick_monitoring_runs");
     expect(productionVerifier).toContain('trigger_kind: "eq.scheduled"');
     expect(productionVerifier).toContain('latestDecision.status === "skipped"');
     expect(productionVerifier).toContain("preProviderFailureReasons.has(latestDecision.decision_reason)");
-    expect(productionVerifier).toContain("without forcing a provider call");
+    expect(productionVerifier).toContain('const healthyStatuses = new Set(["completed", "skipped"]);');
+    expect(productionVerifier).toContain("Production Picks monitoring is unhealthy");
     expect(productionVerifier).not.toContain("run-pick-monitoring`, {");
   });
 
