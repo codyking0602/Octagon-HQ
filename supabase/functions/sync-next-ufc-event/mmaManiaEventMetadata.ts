@@ -205,7 +205,7 @@ export function parseMmaManiaEventMetadata(input: {
   }
   const localEventDate = dates[0]!;
 
-  const timeLabel = labeledField(articleText, "Start\s*times?");
+  const timeLabel = labeledField(articleText, "Start\\s*times?");
   if (!timeLabel) throw new Error("MMA Mania did not provide labeled card start times.");
   const times = segmentTimes(timeLabel, localEventDate);
 
