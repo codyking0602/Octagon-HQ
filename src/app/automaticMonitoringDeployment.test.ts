@@ -41,6 +41,14 @@ describe("automatic Picks monitoring deployment", () => {
     expect(productionVerifier).not.toContain('process.env.GITHUB_EVENT_NAME !== "pull_request"');
   });
 
+  it("fails production verification when the latest automatic run failed or returned partial coverage", () => {
+    expect(productionVerifier).toContain('const healthyStatuses = new Set(["completed", "skipped"]);');
+    expect(productionVerifier).toContain("Production Picks monitoring is unhealthy");
+    expect(productionVerifier).toContain("decision_reason");
+    expect(productionVerifier).toContain("monitoring-scheduler-proof.json");
+    expect(productionVerifier).not.toContain("truthful ${latestDecision.status} decision");
+  });
+
   it("proves the runtime job command without exposing it or its credential", () => {
     expect(runtimeVerificationMigration).toContain("cron.job_run_details");
     expect(runtimeVerificationMigration).toContain("'command_configured'");
