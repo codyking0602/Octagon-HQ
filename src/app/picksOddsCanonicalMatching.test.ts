@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { canonicalFightPair, fighterMatch } from "../../supabase/functions/sync-next-ufc-event/normalization.ts";
 import { filterOddsToMonitoredEvent, type MonitoringEvent } from "../features/picks-monitoring/manualMonitoringRunner.ts";
 import type { NormalizedFightOddsSnapshot, OddsAdapterResult } from "../features/picks-monitoring/oddsModel.ts";
+import { adaptTheOddsApiResponse } from "../features/picks-monitoring/theOddsApi.ts";
 
 const event: MonitoringEvent = {
   event_id: "ufc-fight-night-gamrot-vs-salkilld-2026-08-09",
@@ -98,6 +99,41 @@ describe("Picks odds canonical fighter matching", () => {
       "billy ray goff",
       "ty miller",
     ].sort());
+  });
+
+  it("accepts one provider event when its sportsbook outcomes use a shorter durable fighter name", () => {
+    const adapted = adaptTheOddsApiResponse({
+      status: 200,
+      body: [{
+        id: "ferreira-provider",
+        sport_key: "mma_mixed_martial_arts",
+        commence_time: "2026-08-08T22:00:00Z",
+        home_team: "Carlos Diego Ferreira",
+        away_team: "Billy Quarantillo",
+        bookmakers: [{
+          key: "draftkings",
+          title: "DraftKings",
+          last_update: "2026-08-08T16:00:00Z",
+          markets: [{
+            key: "h2h",
+            outcomes: [
+              { name: "Diego Ferreira", price: -180 },
+              { name: "Billy Quarantillo", price: 150 },
+            ],
+          }],
+        }],
+      }],
+    }, "2026-08-08T16:01:00Z");
+
+    expect(adapted.diagnostics).toEqual([]);
+    expect(adapted.snapshots).toHaveLength(1);
+    const filtered = filterOddsToMonitoredEvent(adapted, event);
+    expect(filtered.coverage.completeSnapshots).toBe(1);
+    expect(filtered.snapshots[0].matchupIdentity).toBe(canonicalFightPair("Diego Ferreira", "Billy Quarantillo"));
+    expect(filtered.snapshots[0].prices).toEqual(expect.arrayContaining([
+      expect.objectContaining({ fighterIdentity: "diego ferreira", americanOdds: -180 }),
+      expect.objectContaining({ fighterIdentity: "billy quarantillo", americanOdds: 150 }),
+    ]));
   });
 
   it("maps provider diagnostics for a name variant back to the canonical monitored bout", () => {
