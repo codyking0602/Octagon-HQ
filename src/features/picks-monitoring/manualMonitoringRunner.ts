@@ -1,6 +1,7 @@
 import { matchCanonicalEventIdentity } from "../../../supabase/functions/sync-next-ufc-event/eventIdentity.ts";
+import { fighterMatch } from "../../../supabase/functions/sync-next-ufc-event/normalization.ts";
 import { buildCardChangeFindings } from "./cardChangeApproval.ts";
-import { fightOddsMatchupIdentity, fighterOddsIdentity, type OddsAdapterResult } from "./oddsModel.ts";
+import { fightOddsMatchupIdentity, fighterOddsIdentity, type NormalizedFightOddsSnapshot, type OddsAdapterResult } from "./oddsModel.ts";
 import { buildMonitoringRunPayload, type MonitoringFindingInput, type MonitoringRunPayload, type MonitoringTriggerKind } from "./monitoringStorageModel.ts";
 
 export type CardScope = "main" | "full";
@@ -60,6 +61,53 @@ function stableEventMatch(left: MonitoringEvent, right: MonitoringEvent) {
 const matchupIdentity = (bout: MonitoringBout) => fightOddsMatchupIdentity(bout.red_fighter_name, bout.blue_fighter_name);
 const includedBouts = (event: MonitoringEvent) => event.bouts.filter((bout) => bout.included_in_picks !== false);
 
+function pairMatchesBout(left: string, right: string, bout: MonitoringBout) {
+  return (
+    fighterMatch(bout.red_fighter_name, left)
+    && fighterMatch(bout.blue_fighter_name, right)
+  ) || (
+    fighterMatch(bout.red_fighter_name, right)
+    && fighterMatch(bout.blue_fighter_name, left)
+  );
+}
+
+function matchingCanonicalBout(left: string, right: string, event: MonitoringEvent) {
+  const matches = includedBouts(event).filter((bout) => pairMatchesBout(left, right, bout));
+  return matches.length === 1 ? matches[0] : null;
+}
+
+function canonicalizeSnapshot(snapshot: NormalizedFightOddsSnapshot, event: MonitoringEvent): NormalizedFightOddsSnapshot | null {
+  const [first, second] = snapshot.prices;
+  const bout = matchingCanonicalBout(first.fighterName, second.fighterName, event);
+  if (!bout) return null;
+  const red = fighterMatch(bout.red_fighter_name, first.fighterName) ? first : second;
+  const blue = red === first ? second : first;
+  if (!fighterMatch(bout.red_fighter_name, red.fighterName) || !fighterMatch(bout.blue_fighter_name, blue.fighterName)) return null;
+  return {
+    ...snapshot,
+    matchupIdentity: matchupIdentity(bout),
+    prices: [
+      {
+        fighterName: bout.red_fighter_name,
+        fighterIdentity: fighterOddsIdentity(bout.red_fighter_name),
+        americanOdds: red.americanOdds,
+      },
+      {
+        fighterName: bout.blue_fighter_name,
+        fighterIdentity: fighterOddsIdentity(bout.blue_fighter_name),
+        americanOdds: blue.americanOdds,
+      },
+    ],
+  };
+}
+
+function canonicalizeDiagnosticMatchup(identity: string, event: MonitoringEvent) {
+  const fighters = identity.split("|").map((fighter) => fighter.trim()).filter(Boolean);
+  if (fighters.length !== 2) return null;
+  const bout = matchingCanonicalBout(fighters[0], fighters[1], event);
+  return bout ? matchupIdentity(bout) : null;
+}
+
 export function resolveMonitoringEvent(staged?: MonitoringEvent | null, current?: MonitoringEvent | null): ResolvedMonitoringEvent {
   const valid = (event: MonitoringEvent | null | undefined) => Boolean(event?.name?.trim() && event?.subtitle?.trim() && Number.isFinite(Date.parse(event.starts_at)) && Number.isFinite(Date.parse(event.locks_at)) && includedBouts(event).length);
   staged = valid(staged) ? staged : null;
@@ -86,17 +134,34 @@ export function sourceMatchesMonitoredEvent(source: SourcePreview, monitored: Mo
 export function filterOddsToMonitoredEvent(odds: OddsAdapterResult, event: MonitoringEvent): OddsAdapterResult {
   const eventTime = Date.parse(event.starts_at);
   const boutIds = new Set(includedBouts(event).map(matchupIdentity));
-  const selected = odds.snapshots.filter((snapshot) => (
-    Math.abs(Date.parse(snapshot.commenceTime) - eventTime) <= 18 * 60 * 60 * 1000
-    && boutIds.has(snapshot.matchupIdentity)
-  ));
+  const candidates = odds.snapshots
+    .filter((snapshot) => Math.abs(Date.parse(snapshot.commenceTime) - eventTime) <= 18 * 60 * 60 * 1000)
+    .map((snapshot) => canonicalizeSnapshot(snapshot, event))
+    .filter((snapshot): snapshot is NormalizedFightOddsSnapshot => Boolean(snapshot));
+  const grouped = new Map<string, NormalizedFightOddsSnapshot[]>();
+  for (const snapshot of candidates) grouped.set(snapshot.matchupIdentity, [...(grouped.get(snapshot.matchupIdentity) ?? []), snapshot]);
+  const selected = [...grouped.values()].filter((snapshots) => snapshots.length === 1).map(([snapshot]) => snapshot);
   const matched = new Set(selected.map((snapshot) => snapshot.matchupIdentity));
   const selectedSourceEventIds = new Set(selected.map((snapshot) => snapshot.sourceEventId));
-  const diagnostics = odds.diagnostics.filter((diagnostic) => {
-    if (diagnostic.matchupIdentity) return boutIds.has(diagnostic.matchupIdentity);
-    if (diagnostic.sourceEventId) return selectedSourceEventIds.has(diagnostic.sourceEventId);
-    return true;
+  const diagnostics = odds.diagnostics.flatMap((diagnostic) => {
+    if (diagnostic.matchupIdentity) {
+      const canonicalIdentity = boutIds.has(diagnostic.matchupIdentity)
+        ? diagnostic.matchupIdentity
+        : canonicalizeDiagnosticMatchup(diagnostic.matchupIdentity, event);
+      return canonicalIdentity ? [{ ...diagnostic, matchupIdentity: canonicalIdentity }] : [];
+    }
+    if (diagnostic.sourceEventId) return selectedSourceEventIds.has(diagnostic.sourceEventId) ? [diagnostic] : [];
+    return [diagnostic];
   });
+  for (const [canonicalIdentity, snapshots] of grouped) {
+    if (snapshots.length <= 1) continue;
+    diagnostics.push({
+      code: "ambiguous_matchup",
+      severity: "error",
+      message: "Multiple provider fights matched one monitored UFC bout.",
+      matchupIdentity: canonicalIdentity,
+    });
+  }
   if (selected.length === 0 && !diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
     diagnostics.push({ code: "invalid_event", severity: "error", message: "No provider fight confidently matched the monitored UFC card." });
   }
