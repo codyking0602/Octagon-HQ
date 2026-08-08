@@ -41,11 +41,12 @@ function clean(value: unknown) {
 
 function labeledField(text: string, labelPattern: string) {
   const boundary = String.raw`(?:Event|Date|Location|Broadcast|Streaming\s+platform|Start\s*times?)\s*:`;
-  const match = text.match(new RegExp(
-    String.raw`\b${labelPattern}\s*:\s*(.{1,420}?)(?=\s+${boundary}|$)`,
-    "i",
-  ));
-  return clean(match?.[1]);
+  const label = text.match(new RegExp(String.raw`\b${labelPattern}\s*:\s*`, "i"));
+  if (!label || label.index === undefined) return "";
+  const remainder = text.slice(label.index + label[0].length);
+  const nextBoundary = remainder.match(new RegExp(String.raw`\s+${boundary}`, "i"));
+  const end = nextBoundary?.index ?? Math.min(remainder.length, 420);
+  return clean(remainder.slice(0, end));
 }
 
 function locationParts(value: string) {
