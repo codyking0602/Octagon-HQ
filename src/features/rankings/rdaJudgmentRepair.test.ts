@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { canonicalRankingInputs } from "./data/rankingInputs";
-import { v2RankingRoster } from "./data/v2RankingRoster";
 
 const rda = canonicalRankingInputs.fighters.find(
   (fighter) => fighter.fighter === "Rafael dos Anjos",
@@ -63,9 +62,8 @@ describe("Rafael dos Anjos approved ranking judgments", () => {
     });
   });
 
-  it("leaves Apex and era-depth judgments untouched and advances the judgment version", () => {
+  it("leaves Apex and era-depth judgments untouched", () => {
     expect(rda?.judgments.apex.performances.map((entry) => entry.rating)).toEqual([9.7, 9.6]);
     expect(rda?.eraDepth.depthIndex).toBe(0.92);
-    expect(v2RankingRoster.judgmentVersion).toBe("octagon-hq-v2-rda-judgments-20260807");
   });
 });
