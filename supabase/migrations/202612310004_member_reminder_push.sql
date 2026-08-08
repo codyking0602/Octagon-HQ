@@ -1,6 +1,7 @@
--- Keep the existing notification publisher, scheduler, and delivery worker as the only owners.
--- This migration only broadens the due-recipient set for the existing Picks reminder and
--- classifies the existing Daily Challenge reminder as a push candidate.
+-- Keep the existing notification publisher, scheduler, daily-challenge projection, and
+-- push delivery worker as the only owners. This migration changes only two behaviors:
+-- the existing Daily Challenge reminder becomes push-eligible, and Finish your Picks
+-- includes claimed members who have not submitted a first pick yet.
 
 create or replace function private.notification_priority_for_kind(p_kind text)
 returns text
@@ -21,6 +22,7 @@ begin
       'picks_repick_required',
       'picks_incomplete_near_lock',
       'picks_recap_ready',
+      'new_game_available',
       'daily_challenge_four_hours'
     )
   then
@@ -47,6 +49,7 @@ declare
   v_recipient record;
   v_draft record;
   v_failure record;
+  v_daily record;
   v_required_bouts integer;
   v_picks_incomplete integer := 0;
   v_event_starting integer := 0;
@@ -162,40 +165,66 @@ begin
     end if;
   end loop;
 
-  -- Find the Leader remains the sole reminder-eligible daily game. This existing
-  -- 8 PM Central reminder is now a push candidate through the canonical priority owner.
+  -- The one reminder follows the exact materialized official daily and its immutable
+  -- first-attempt owner. Rotation remains whatever the canonical schedule selects.
   if v_central_time >= time '20:00'
     and v_central_time < time '21:00'
   then
-    for v_recipient in
-      select profile.id as profile_id
-      from public.profiles profile
-      join private.profile_pin_credentials credential
-        on credential.profile_id = profile.id
-      where not exists (
-        select 1
-        from public.find_leader_history history
-        where history.profile_id = profile.id
-          and history.day = v_central_day
-      )
-      order by profile.id
-    loop
-      perform private.publish_notification_to_profile(
-        v_recipient.profile_id,
-        'daily-challenge-four-hours:' || v_central_day::text,
-        'daily-challenge-four-hours',
-        'daily_challenge_four_hours',
-        'Four hours remain',
-        'Today''s Find the Leader challenge closes at midnight Central.',
-        '/play/find-leader',
-        'PLAY TODAY',
-        p_now
-      );
-      v_daily_challenge := v_daily_challenge + 1;
-    end loop;
+    select challenge.id, challenge.game_type
+      into v_daily
+    from private.daily_challenges challenge
+    where challenge.central_day = v_central_day
+    order by challenge.published_at desc, challenge.id
+    limit 1;
+
+    if v_daily.id is not null then
+      for v_recipient in
+        select profile.id as profile_id
+        from public.profiles profile
+        join private.profile_pin_credentials credential
+          on credential.profile_id = profile.id
+        where not exists (
+          select 1
+          from private.daily_challenge_attempts attempt
+          where attempt.daily_challenge_id = v_daily.id
+            and attempt.profile_id = profile.id
+            and attempt.attempt_kind = 'official_first'
+        )
+        order by profile.id
+      loop
+        perform private.publish_notification_to_profile(
+          v_recipient.profile_id,
+          'daily-challenge-four-hours:' || v_central_day::text,
+          'daily-challenge-four-hours',
+          'daily_challenge_four_hours',
+          'Four hours remain',
+          case v_daily.game_type
+            when 'find_leader' then 'Today''s Find the Leader challenge closes at midnight Central.'
+            when 'blind_resume' then 'Today''s Blind Resume challenge closes at midnight Central.'
+            when 'wavelength' then 'Today''s Wavelength challenge closes at midnight Central.'
+            when 'blind_rank_5' then 'Today''s Blind Rank 5 challenge closes at midnight Central.'
+            when 'keep_4_cut_4' then 'Today''s Keep 4, Cut 4 challenge closes at midnight Central.'
+            else 'Today''s official challenge closes at midnight Central.'
+          end,
+          case v_daily.game_type
+            when 'find_leader' then '/play/find-leader'
+            when 'blind_resume' then '/play/blind-resume?mode=daily'
+            when 'wavelength' then '/play/wavelength?mode=daily'
+            when 'blind_rank_5' then '/play/blind-rank?mode=daily'
+            when 'keep_4_cut_4' then '/play/keep-cut?mode=daily'
+            else '/play'
+          end,
+          'PLAY TODAY',
+          p_now
+        );
+        v_daily_challenge := v_daily_challenge + 1;
+      end loop;
+    end if;
   end if;
 
   if v_owner_profile_id is not null then
+    -- A staged upcoming event with no matching published card is one clear owner action,
+    -- not separate "draft ready" and "missing card" noise.
     for v_draft in
       select draft.draft_id, draft.event_id, draft.name, draft.starts_at
       from public.pick_event_drafts draft
@@ -225,6 +254,8 @@ begin
       v_owner_operations := v_owner_operations + 1;
     end loop;
 
+    -- Escalate only after three recent consecutive failed automatic provider runs.
+    -- Manual checks and decision-only scheduler evidence cannot create this notification.
     for v_failure in
       with ranked_runs as (
         select run.run_id,
@@ -236,7 +267,10 @@ begin
                  order by coalesce(run.completed_at, run.started_at) desc, run.created_at desc
                ) as recent_rank
         from public.pick_monitoring_runs run
-        where coalesce(run.completed_at, run.started_at) >= p_now - interval '6 hours'
+        where run.trigger_kind = 'scheduled'
+          and run.provider_called
+          and run.decision_reason is null
+          and coalesce(run.completed_at, run.started_at) >= p_now - interval '6 hours'
       )
       select source_event_identity,
              max(run_id::text) filter (where recent_rank = 1) as latest_run_id,
@@ -254,7 +288,7 @@ begin
         )), 140),
         'monitoring_repeatedly_failed',
         'Monitoring repeatedly failed',
-        'Three consecutive monitoring runs failed for the current UFC event. Review the Monitoring Inbox.',
+        'Three consecutive automatic monitoring runs failed for the current UFC event. Review the Monitoring Inbox.',
         '/picks/monitoring',
         'REVIEW',
         v_failure.latest_occurred_at
@@ -262,6 +296,8 @@ begin
       v_owner_operations := v_owner_operations + 1;
     end loop;
 
+    -- Once every included result is final, Cody receives one completion action rather
+    -- than separate "all results entered" and "ready to complete" notifications.
     for v_event in
       select event.event_id, event.name
       from public.pick_events event
@@ -313,5 +349,30 @@ grant execute on function public.dispatch_due_in_app_notifications(timestamptz)
 
 revoke all on function private.notification_priority_for_kind(text)
   from public, anon, authenticated;
+
+-- Preserve the deployment-time owner contract after replacing the shared dispatcher.
+do $$
+declare
+  v_definition text;
+begin
+  select pg_get_functiondef(
+    'public.dispatch_due_in_app_notifications(timestamptz)'::regprocedure
+  ) into v_definition;
+
+  if position('private.daily_challenges' in v_definition) = 0
+    or position('private.daily_challenge_attempts' in v_definition) = 0
+    or position('official_first' in v_definition) = 0 then
+    raise exception 'member reminder change regressed canonical Daily Challenge ownership';
+  end if;
+  if position('public.find_leader_history' in v_definition) > 0 then
+    raise exception 'member reminder change restored the legacy Daily Challenge path';
+  end if;
+  if position('run.trigger_kind = ''scheduled''' in v_definition) = 0
+    or position('run.provider_called' in v_definition) = 0
+    or position('run.decision_reason is null' in v_definition) = 0 then
+    raise exception 'member reminder change regressed canonical monitoring failure filtering';
+  end if;
+end;
+$$;
 
 notify pgrst, 'reload schema';
