@@ -16,15 +16,16 @@ This slice connects the remaining worthwhile in-app actions to the existing unif
 
 ### Member Picks timing
 
-- **Finish your Picks** is sent once when a member has started a card, still has missing included fights, and lock is within four hours.
+- **Finish your Picks** is sent once to every claimed member who still has any missing included fight when lock is within four hours. A member with zero saved picks is included; starting the card is no longer required.
 - **UFC event starts soon** is sent once when the event begins within one hour and that member has completed every included fight.
 - A member cannot receive both messages for the same card state. Incomplete members get the actionable lock reminder; completed members may get the event-starting message.
-- Profiles that never started the card receive neither reminder.
+- Unclaimed historical profiles still receive neither reminder.
 
 ### Daily Challenge
 
 - Find the Leader remains the sole daily, streak-eligible, reminder-eligible game.
 - One reminder is sent during the 8 PM Central hour when the claimed member has not completed that Central calendar day.
+- The existing **Four hours remain** reminder is a push candidate, so members with push enabled can receive it on their phone while Octagon HQ is closed.
 - There is no new-daily-game notification and no separate streak-at-risk message in this slice. One useful reminder is enough.
 - Unclaimed historical profiles receive nothing.
 
