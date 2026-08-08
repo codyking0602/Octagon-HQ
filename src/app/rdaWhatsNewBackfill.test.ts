@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const migration = readFileSync(
-  "supabase/migrations/202609059999_backfill_rda_whats_new.sql",
+  "supabase/migrations/202612310001_backfill_rda_whats_new.sql",
   "utf8",
 );
 
