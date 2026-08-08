@@ -45,7 +45,12 @@ describe("member reminder push behavior", () => {
     expect(migration).toContain("private.daily_challenges");
     expect(migration).toContain("private.daily_challenge_attempts");
     expect(migration).toContain("attempt.attempt_kind = 'official_first'");
-    expect(migration).not.toContain("public.find_leader_history");
+    expect(migration).toContain(
+      "if position('public.find_leader_history' in v_definition) > 0 then",
+    );
+    expect(migration).toContain(
+      "raise exception 'member reminder change restored the legacy Daily Challenge path'",
+    );
     expect(migration).toContain("'/play/find-leader'");
     expect(migration).toContain("'/play/blind-resume?mode=daily'");
     expect(migration).toContain("'/play/wavelength?mode=daily'");
