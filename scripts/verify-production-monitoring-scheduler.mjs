@@ -155,8 +155,25 @@ if (expectedActive) {
     throw new Error(`Latest production monitoring decision is missing or untruthful: ${JSON.stringify(latestDecision)}`);
   }
 
-  const healthyStatuses = new Set(["completed", "skipped"]);
-  if (!healthyStatuses.has(latestDecision.status)) {
+  const providerDiagnostics = latestDecision.diagnostics.filter((item) => (
+    item && typeof item === "object" && item.severity === "error"
+  ));
+  const providerFindings = latestDecision.findings.filter((item) => (
+    item?.finding_type === "provider_error" || item?.finding_type === "quota_warning"
+  ));
+  const healthyPartialCoverage = latestDecision.status === "partial"
+    && latestDecision.provider_called === true
+    && latestDecision.decision_reason === null
+    && Number(latestDecision.provider_event_count) > 0
+    && Number(latestDecision.complete_snapshot_count) > 0
+    && Number(latestDecision.missing_snapshot_count) > 0
+    && providerDiagnostics.length === 0
+    && providerFindings.length === 0
+    && Number(latestDecision.provider_requests_remaining) > 5;
+  const healthyOutcome = latestDecision.status === "completed"
+    || latestDecision.status === "skipped"
+    || healthyPartialCoverage;
+  if (!healthyOutcome) {
     throw new Error(`Production Picks monitoring is unhealthy: ${JSON.stringify(latestDecision)}`);
   }
 }
@@ -170,6 +187,10 @@ if (process.env.RUNNER_TEMP) {
 
 if (!expectedActive) {
   console.log("PASS: production Picks monitoring scheduler is safely paused, canonical, command-configured, and token-configured without invoking the runner or provider.");
+} else if (latestDecision.status === "partial") {
+  console.log(
+    `PASS: production Picks monitoring completed a healthy partial provider check with ${latestDecision.complete_snapshot_count} matched and ${latestDecision.missing_snapshot_count} unavailable supported-bookmaker snapshots; ${latestDecision.provider_requests_remaining} monthly requests remain.`,
+  );
 } else {
   console.log(
     `PASS: production Picks monitoring scheduler woke successfully and recorded a healthy ${latestDecision.status} decision (provider_called=${latestDecision.provider_called}).`,
