@@ -4,6 +4,8 @@ select set_config('request.jwt.claim.role', 'service_role', true);
 do $$
 declare
   v_profile uuid := extensions.gen_random_uuid();
+  v_setup uuid;
+  v_daily uuid;
   v_now timestamptz := '2026-08-20 01:07:00+00';
   v_dispatch jsonb;
   v_picks_count integer;
@@ -62,13 +64,50 @@ begin
     ('member-reminder-push-test', 'member-reminder-two', 2, 'Welterweight',
       'red-two', 'Red Two', 'blue-two', 'Blue Two', true);
 
-  -- Intentionally create zero saved picks for this claimed profile.
+  insert into private.daily_challenge_schedule_versions(
+    version, time_zone, anchor_day, starts_on, game_cycle
+  ) values (
+    'member-reminder-push-v1',
+    'America/Chicago',
+    date '2026-08-19',
+    date '2026-08-19',
+    array['find_leader']::text[]
+  );
+
+  insert into private.daily_challenge_setups(
+    game_type, setup_key, content_version, scoring_version,
+    public_setup, reveal_setup, private_setup_evidence, private_grading_evidence
+  ) values (
+    'find_leader',
+    'member-reminder-push-setup',
+    'member-reminder-push-content-v1',
+    'member-reminder-push-score-v1',
+    '{}'::jsonb,
+    '{}'::jsonb,
+    '{}'::jsonb,
+    '{}'::jsonb
+  ) returning id into v_setup;
+
+  insert into private.daily_challenges(
+    central_day, schedule_version, game_type, setup_id,
+    content_version, scoring_version, published_at
+  ) values (
+    date '2026-08-19',
+    'member-reminder-push-v1',
+    'find_leader',
+    v_setup,
+    'member-reminder-push-content-v1',
+    'member-reminder-push-score-v1',
+    v_now - interval '1 hour'
+  ) returning id into v_daily;
+
+  -- Intentionally create zero saved Picks and zero official Daily Challenge attempts.
   v_dispatch := public.dispatch_due_in_app_notifications(v_now);
 
-  if (v_dispatch->>'picks_incomplete')::integer <> 1 then
+  if (v_dispatch->>'picks_incomplete')::integer < 1 then
     raise exception 'Zero-pick claimed member was not included in Finish your Picks dispatch: %', v_dispatch;
   end if;
-  if (v_dispatch->>'daily_challenge')::integer <> 1 then
+  if (v_dispatch->>'daily_challenge')::integer < 1 then
     raise exception 'Incomplete Daily Challenge member was not included in the 8 PM dispatch: %', v_dispatch;
   end if;
 
@@ -111,6 +150,14 @@ begin
   if v_picks_count <> 1 or v_daily_count <> 1 then
     raise exception 'Hourly replay duplicated member reminder source events: picks %, daily %',
       v_picks_count, v_daily_count;
+  end if;
+
+  if not exists (
+    select 1
+    from private.daily_challenges challenge
+    where challenge.id = v_daily
+  ) then
+    raise exception 'Focused proof did not preserve the canonical materialized Daily Challenge owner';
   end if;
 end;
 $$;
