@@ -4,7 +4,8 @@ import { describe, expect, it } from "vitest";
 const schedulerMigration = readFileSync("supabase/migrations/202608090001_automatic_pick_monitoring_scheduler.sql", "utf8");
 const hardeningMigration = readFileSync("supabase/migrations/202608090002_harden_pick_monitoring_schedule_claims.sql", "utf8");
 const runtimeVerificationMigration = readFileSync("supabase/migrations/202608090003_verify_pick_monitoring_scheduler_runtime.sql", "utf8");
-const migration = `${schedulerMigration}\n${hardeningMigration}\n${runtimeVerificationMigration}`;
+const claimRepairMigration = readFileSync("supabase/migrations/202609140006_repair_pick_monitoring_schedule_claim.sql", "utf8");
+const migration = `${schedulerMigration}\n${hardeningMigration}\n${runtimeVerificationMigration}\n${claimRepairMigration}`;
 const runner = readFileSync("supabase/functions/run-pick-monitoring/index.ts", "utf8");
 const sync = readFileSync("supabase/functions/sync-next-ufc-event/index.ts", "utf8");
 const config = readFileSync("supabase/config.toml", "utf8");
@@ -31,6 +32,7 @@ describe("automatic Picks monitoring deployment", () => {
     expect(deploy).not.toContain('if [ "$SOURCE_PR_NUMBER" = "0" ]');
     expect(verifier).toContain("202608090002");
     expect(verifier).toContain("202608090003");
+    expect(verifier).toContain("202609140006");
     expect(verifier).toContain("health?.command_configured !== true");
     expect(verifier).toContain("fakeSchedulerResponse.status !== 401");
     expect(verifier).not.toContain("THE_ODDS_API_KEY=");
@@ -65,14 +67,25 @@ describe("automatic Picks monitoring deployment", () => {
     expect(sync).toContain("get_pick_monitoring_event_state");
   });
 
+  it("repairs the existing claim RPC without adding a second schedule owner", () => {
+    expect(claimRepairMigration).toContain("drop function if exists public.claim_pick_monitoring_schedule(text, timestamptz, timestamptz)");
+    expect(claimRepairMigration).toContain("drop function if exists public.claim_pick_monitoring_schedule(text, timestamptz)");
+    expect(claimRepairMigration.match(/create function public\.claim_pick_monitoring_schedule/g)).toHaveLength(1);
+    expect(claimRepairMigration).toContain("update public.pick_monitoring_schedule_state");
+    expect(claimRepairMigration).toContain("on conflict (source_event_identity) do nothing");
+    expect(claimRepairMigration).toContain("'-infinity'::timestamptz");
+    expect(claimRepairMigration).toContain("to service_role");
+    expect(claimRepairMigration).not.toMatch(/cron\.schedule|run-pick-monitoring|THE_ODDS_API_KEY/);
+  });
+
   it("uses a short claim and completes scheduled evidence and cadence atomically", () => {
-    expect(hardeningMigration).toContain("claim_pick_monitoring_schedule");
     expect(hardeningMigration).toContain("release_pick_monitoring_schedule");
     expect(hardeningMigration).toContain("record_scheduled_pick_monitoring_run");
     expect(hardeningMigration).toContain("v_run_id := public.record_pick_monitoring_run(p_payload)");
     expect(hardeningMigration).toContain("last_claimed_at = p_claimed_at");
     expect(hardeningMigration).toContain("finding.review_status = 'new'");
     expect(hardeningMigration).toContain("timeout_milliseconds := 60000");
+    expect(runner).toContain('admin.rpc("claim_pick_monitoring_schedule"');
     expect(runner).toContain('admin.rpc("record_scheduled_pick_monitoring_run"');
     expect(runner).toContain('admin.rpc("release_pick_monitoring_schedule"');
   });
