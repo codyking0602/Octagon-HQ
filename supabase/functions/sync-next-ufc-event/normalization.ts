@@ -47,10 +47,13 @@ export function sameVersusLabel(left: string, right: string) {
 }
 
 export function fighterMatch(expected: string, actual: string, surnameOnly = false) {
-  const left = normalizeFighter(expected).split(" ").filter(Boolean);
-  const right = new Set(normalizeFighter(actual).split(" ").filter(Boolean));
+  const normalizedExpected = normalizeFighter(expected);
+  const normalizedActual = normalizeFighter(actual);
+  const left = normalizedExpected.split(" ").filter(Boolean);
+  const right = new Set(normalizedActual.split(" ").filter(Boolean));
   if (!left.length || !right.size) return false;
   if (surnameOnly) return right.has(left.at(-1)!);
+  if (normalizedExpected.replace(/\s+/g, "") === normalizedActual.replace(/\s+/g, "")) return true;
   // Initials are deliberately weak; a surname plus every non-initial token is durable
   // without confusing two fully named fighters who happen to share a surname.
   const meaningful = left.filter((token, index) => token.length > 1 || index === left.length - 1);

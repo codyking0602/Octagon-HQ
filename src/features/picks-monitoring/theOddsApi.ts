@@ -1,3 +1,4 @@
+import { fighterMatch } from "../../../supabase/functions/sync-next-ufc-event/normalization.ts";
 import {
   MMA_ODDS_SPORT_KEY,
   MONEYLINE_MARKET_KEY,
@@ -54,6 +55,10 @@ function nonEmptyString(value: unknown) {
 function validIsoTimestamp(value: unknown) {
   const candidate = nonEmptyString(value);
   return candidate && Number.isFinite(Date.parse(candidate)) ? candidate : "";
+}
+
+function sameFighterName(left: string, right: string) {
+  return fighterMatch(left, right) || fighterMatch(right, left);
 }
 
 function headerValue(headers: HeaderSource | undefined, key: string) {
@@ -163,17 +168,17 @@ function completeBookmakerSnapshot(
     : [];
   if (outcomes.length !== 2) return null;
 
-  const fighterNames = new Map([
-    [fighterOddsIdentity(event.homeTeam), event.homeTeam],
-    [fighterOddsIdentity(event.awayTeam), event.awayTeam],
-  ]);
+  const fighterNames = [event.homeTeam, event.awayTeam];
   const prices = new Map<string, ReturnType<typeof normalizedOddsPrice>>();
 
   for (const outcome of outcomes) {
     const outcomeName = nonEmptyString(outcome.name);
-    const identity = fighterOddsIdentity(outcomeName);
-    if (!fighterNames.has(identity) || prices.has(identity) || !isValidAmericanOdds(outcome.price)) return null;
-    prices.set(identity, normalizedOddsPrice(fighterNames.get(identity)!, outcome.price));
+    const matchingNames = fighterNames.filter((fighterName) => sameFighterName(fighterName, outcomeName));
+    if (matchingNames.length !== 1 || !isValidAmericanOdds(outcome.price)) return null;
+    const fighterName = matchingNames[0];
+    const identity = fighterOddsIdentity(fighterName);
+    if (prices.has(identity)) return null;
+    prices.set(identity, normalizedOddsPrice(fighterName, outcome.price));
   }
 
   if (prices.size !== 2) return null;
