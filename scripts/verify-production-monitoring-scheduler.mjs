@@ -133,11 +133,16 @@ if (expectedActive) {
     || (preProviderFailureReasons.has(latestDecision.decision_reason) && latestDecision.provider_called !== false)) {
     throw new Error(`Latest production monitoring decision is missing or untruthful: ${JSON.stringify(latestDecision)}`);
   }
+
+  const healthyStatuses = new Set(["completed", "skipped"]);
+  if (!healthyStatuses.has(latestDecision.status)) {
+    throw new Error(`Production Picks monitoring is unhealthy: ${JSON.stringify(latestDecision)}`);
+  }
 }
 
 if (process.env.RUNNER_TEMP) {
   fs.writeFileSync(
-    `${process.env.RUNNER_TEMP}/event-setup-webkit.log`,
+    `${process.env.RUNNER_TEMP}/monitoring-scheduler-proof.json`,
     `${JSON.stringify({ expected_active: expectedActive, health: safeHealth, latest_decision: latestDecision }, null, 2)}\n`,
   );
 }
@@ -146,6 +151,6 @@ if (!expectedActive) {
   console.log("PASS: production Picks monitoring scheduler is safely paused, canonical, command-configured, and token-configured without invoking the runner or provider.");
 } else {
   console.log(
-    `PASS: production Picks monitoring scheduler woke successfully and recorded a truthful ${latestDecision.status} decision (provider_called=${latestDecision.provider_called}) without forcing a provider call.`,
+    `PASS: production Picks monitoring scheduler woke successfully and recorded a healthy ${latestDecision.status} decision (provider_called=${latestDecision.provider_called}).`,
   );
 }
