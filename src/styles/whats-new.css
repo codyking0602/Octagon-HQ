@@ -74,10 +74,10 @@
 
 .whats-new-preview__heading > span {
   padding: 5px 8px;
-  border: 1px solid rgba(229, 9, 20, .42);
+  border: 1px solid rgba(245, 158, 11, .42);
   border-radius: 999px;
-  background: rgba(229, 9, 20, .1);
-  color: var(--ufc-red-strong);
+  background: rgba(245, 158, 11, .1);
+  color: #f5b942;
   font-size: 8px;
   font-weight: 1000;
   letter-spacing: .08em;
