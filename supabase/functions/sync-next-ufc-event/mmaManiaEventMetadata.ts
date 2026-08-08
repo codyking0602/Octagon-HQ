@@ -139,17 +139,35 @@ function segmentTimes(value: string, localEventDate: string) {
   const main = new Set<string>();
   const prelims = new Set<string>();
 
-  for (const match of text.matchAll(clock)) {
-    if (match.index === undefined) continue;
-    const mainDistance = nearestLabelDistance(text, match.index, /\bmain\s+card\b/gi);
-    const prelimDistance = nearestLabelDistance(text, match.index, /\bprelims?\b/gi);
-    const distance = Math.min(mainDistance, prelimDistance);
-    if (!Number.isFinite(distance) || distance > 110) continue;
-    const instant = clockIso(localEventDate, match);
-    if (!instant) continue;
-    if (mainDistance < prelimDistance) main.add(instant);
-    else if (prelimDistance < mainDistance) prelims.add(instant);
-  }
+  const classify = (segment: string) => {
+    if (/\bearly\s+prelims?\b/i.test(segment)) return;
+    const hasMain = /\bmain\s+card\b/i.test(segment);
+    const hasPrelims = /\bprelims?\b/i.test(segment);
+    const matches = [...segment.matchAll(clock)];
+    for (const match of matches) {
+      if (match.index === undefined) continue;
+      const instant = clockIso(localEventDate, match);
+      if (!instant) continue;
+      if (hasMain && !hasPrelims) {
+        main.add(instant);
+        continue;
+      }
+      if (hasPrelims && !hasMain) {
+        prelims.add(instant);
+        continue;
+      }
+      const mainDistance = nearestLabelDistance(segment, match.index, /\bmain\s+card\b/gi);
+      const prelimDistance = nearestLabelDistance(segment, match.index, /\bprelims?\b/gi);
+      const distance = Math.min(mainDistance, prelimDistance);
+      if (!Number.isFinite(distance) || distance > 110) continue;
+      if (mainDistance < prelimDistance) main.add(instant);
+      else if (prelimDistance < mainDistance) prelims.add(instant);
+    }
+  };
+
+  const sections = text.split(/\s*\|\s*/).map(clean).filter(Boolean);
+  if (sections.length > 1) sections.forEach(classify);
+  else classify(text);
 
   if (main.size !== 1) throw new Error("MMA Mania did not provide one unambiguous Main Card start time.");
   if (prelims.size > 1) throw new Error("MMA Mania returned contradictory Prelims start times.");
