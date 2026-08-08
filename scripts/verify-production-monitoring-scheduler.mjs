@@ -88,7 +88,7 @@ if (expectedActive) {
   }
 
   const query = new URLSearchParams({
-    select: "run_id,status,decision_reason,provider_called,started_at,completed_at,source_event_identity",
+    select: "run_id,status,decision_reason,provider_called,started_at,completed_at,source_event_identity,provider_event_count,complete_snapshot_count,missing_snapshot_count,diagnostics,provider_requests_remaining",
     trigger_kind: "eq.scheduled",
     order: "completed_at.desc.nullslast,created_at.desc",
     limit: "1",
@@ -103,6 +103,21 @@ if (expectedActive) {
   }
 
   const decision = decisions[0];
+  let findings = [];
+  if (decision?.run_id) {
+    const findingQuery = new URLSearchParams({
+      select: "finding_type,severity,summary,matchup_identity,source_details",
+      run_id: `eq.${decision.run_id}`,
+      order: "detected_at.asc",
+    });
+    const findingResponse = await fetch(
+      `https://${projectId}.supabase.co/rest/v1/pick_monitoring_findings?${findingQuery}`,
+      { headers: serviceHeaders },
+    );
+    const findingBody = await readBody(findingResponse);
+    if (findingResponse.ok && Array.isArray(findingBody)) findings = findingBody;
+  }
+
   latestDecision = {
     run_id: decision?.run_id ?? null,
     status: decision?.status ?? null,
@@ -111,6 +126,12 @@ if (expectedActive) {
     started_at: decision?.started_at ?? null,
     completed_at: decision?.completed_at ?? null,
     source_event_identity: decision?.source_event_identity ?? null,
+    provider_event_count: decision?.provider_event_count ?? null,
+    complete_snapshot_count: decision?.complete_snapshot_count ?? null,
+    missing_snapshot_count: decision?.missing_snapshot_count ?? null,
+    diagnostics: Array.isArray(decision?.diagnostics) ? decision.diagnostics : [],
+    provider_requests_remaining: decision?.provider_requests_remaining ?? null,
+    findings,
   };
   const completedAt = Date.parse(latestDecision.completed_at ?? "");
   const allowedStatuses = new Set(["completed", "partial", "failed", "skipped"]);
@@ -133,19 +154,45 @@ if (expectedActive) {
     || (preProviderFailureReasons.has(latestDecision.decision_reason) && latestDecision.provider_called !== false)) {
     throw new Error(`Latest production monitoring decision is missing or untruthful: ${JSON.stringify(latestDecision)}`);
   }
+
+  const providerDiagnostics = latestDecision.diagnostics.filter((item) => (
+    item && typeof item === "object" && item.severity === "error"
+  ));
+  const providerFindings = latestDecision.findings.filter((item) => (
+    item?.finding_type === "provider_error" || item?.finding_type === "quota_warning"
+  ));
+  const healthyPartialCoverage = latestDecision.status === "partial"
+    && latestDecision.provider_called === true
+    && latestDecision.decision_reason === null
+    && Number(latestDecision.provider_event_count) > 0
+    && Number(latestDecision.complete_snapshot_count) > 0
+    && Number(latestDecision.missing_snapshot_count) > 0
+    && providerDiagnostics.length === 0
+    && providerFindings.length === 0
+    && Number(latestDecision.provider_requests_remaining) > 5;
+  const healthyOutcome = latestDecision.status === "completed"
+    || latestDecision.status === "skipped"
+    || healthyPartialCoverage;
+  if (!healthyOutcome) {
+    throw new Error(`Production Picks monitoring is unhealthy: ${JSON.stringify(latestDecision)}`);
+  }
 }
 
 if (process.env.RUNNER_TEMP) {
   fs.writeFileSync(
-    `${process.env.RUNNER_TEMP}/event-setup-webkit.log`,
+    `${process.env.RUNNER_TEMP}/monitoring-scheduler-proof.json`,
     `${JSON.stringify({ expected_active: expectedActive, health: safeHealth, latest_decision: latestDecision }, null, 2)}\n`,
   );
 }
 
 if (!expectedActive) {
   console.log("PASS: production Picks monitoring scheduler is safely paused, canonical, command-configured, and token-configured without invoking the runner or provider.");
+} else if (latestDecision.status === "partial") {
+  console.log(
+    `PASS: production Picks monitoring completed a healthy partial provider check with ${latestDecision.complete_snapshot_count} matched and ${latestDecision.missing_snapshot_count} unavailable supported-bookmaker snapshots; ${latestDecision.provider_requests_remaining} monthly requests remain.`,
+  );
 } else {
   console.log(
-    `PASS: production Picks monitoring scheduler woke successfully and recorded a truthful ${latestDecision.status} decision (provider_called=${latestDecision.provider_called}) without forcing a provider call.`,
+    `PASS: production Picks monitoring scheduler woke successfully and recorded a healthy ${latestDecision.status} decision (provider_called=${latestDecision.provider_called}).`,
   );
 }

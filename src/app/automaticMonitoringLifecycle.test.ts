@@ -50,13 +50,20 @@ describe("automatic Picks monitoring lifecycle", () => {
     );
   });
 
-  it("proves a recent production scheduler wake and its durable decision without forcing due work", () => {
+  it("proves a recent production wake while separating provider-limited partial coverage from system failure", () => {
     expect(productionVerifier).toContain('safeHealth.last_run_status !== "succeeded"');
     expect(productionVerifier).toContain("pick_monitoring_runs");
     expect(productionVerifier).toContain('trigger_kind: "eq.scheduled"');
     expect(productionVerifier).toContain('latestDecision.status === "skipped"');
     expect(productionVerifier).toContain("preProviderFailureReasons.has(latestDecision.decision_reason)");
-    expect(productionVerifier).toContain("without forcing a provider call");
+    expect(productionVerifier).toContain('const healthyPartialCoverage = latestDecision.status === "partial"');
+    expect(productionVerifier).toContain('Number(latestDecision.provider_event_count) > 0');
+    expect(productionVerifier).toContain('Number(latestDecision.complete_snapshot_count) > 0');
+    expect(productionVerifier).toContain('Number(latestDecision.missing_snapshot_count) > 0');
+    expect(productionVerifier).toContain('providerDiagnostics.length === 0');
+    expect(productionVerifier).toContain('providerFindings.length === 0');
+    expect(productionVerifier).toContain('Number(latestDecision.provider_requests_remaining) > 5');
+    expect(productionVerifier).toContain("Production Picks monitoring is unhealthy");
     expect(productionVerifier).not.toContain("run-pick-monitoring`, {");
   });
 
