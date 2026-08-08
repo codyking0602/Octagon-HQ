@@ -50,14 +50,18 @@ export function fighterMatch(expected: string, actual: string, surnameOnly = fal
   const normalizedExpected = normalizeFighter(expected);
   const normalizedActual = normalizeFighter(actual);
   const left = normalizedExpected.split(" ").filter(Boolean);
-  const right = new Set(normalizedActual.split(" ").filter(Boolean));
-  if (!left.length || !right.size) return false;
-  if (surnameOnly) return right.has(left.at(-1)!);
+  const right = normalizedActual.split(" ").filter(Boolean);
+  if (!left.length || !right.length) return false;
+  const rightTokens = new Set(right);
+  if (surnameOnly) return rightTokens.has(left.at(-1)!);
   if (normalizedExpected.replace(/\s+/g, "") === normalizedActual.replace(/\s+/g, "")) return true;
-  // Initials are deliberately weak; a surname plus every non-initial token is durable
-  // without confusing two fully named fighters who happen to share a surname.
-  const meaningful = left.filter((token, index) => token.length > 1 || index === left.length - 1);
-  return meaningful.every((token) => right.has(token));
+  // Initials are deliberately weak. Require every durable token from either complete
+  // name variant to be present in the other so inserted nicknames, compound given
+  // names, and omitted middle names can resolve without surname-only matching.
+  const meaningful = (tokens: string[]) => tokens.filter((token, index) => token.length > 1 || index === tokens.length - 1);
+  const leftTokens = new Set(left);
+  return meaningful(left).every((token) => rightTokens.has(token))
+    || meaningful(right).every((token) => leftTokens.has(token));
 }
 
 export function eventNumber(value: string) {
