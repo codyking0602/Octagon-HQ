@@ -16,16 +16,18 @@ This slice connects the remaining worthwhile in-app actions to the existing unif
 
 ### Member Picks timing
 
-- **Finish your Picks** is sent once when a member has started a card, still has missing included fights, and lock is within four hours.
+- **Finish your Picks** is sent once to every claimed member who still has any missing included fight when lock is within four hours. A member with zero saved picks is included; starting the card is no longer required.
 - **UFC event starts soon** is sent once when the event begins within one hour and that member has completed every included fight.
 - A member cannot receive both messages for the same card state. Incomplete members get the actionable lock reminder; completed members may get the event-starting message.
-- Profiles that never started the card receive neither reminder.
+- Unclaimed historical profiles still receive neither reminder.
 
 ### Daily Challenge
 
-- Find the Leader remains the sole daily, streak-eligible, reminder-eligible game.
-- One reminder is sent during the 8 PM Central hour when the claimed member has not completed that Central calendar day.
-- There is no new-daily-game notification and no separate streak-at-risk message in this slice. One useful reminder is enough.
+- The server-owned official Today's Challenge rotation remains the sole daily reminder source.
+- One **Four hours remain** reminder is sent during the 8 PM Central hour when a claimed member has not completed that day's official first attempt.
+- The reminder follows whichever official game is materialized for the day and deep-links to that game's canonical daily route.
+- The reminder is a push candidate, so members with push enabled can receive it on their phone while Octagon HQ is closed.
+- There is no separate new-daily-game notification or streak-at-risk reminder. One useful reminder is enough.
 - Unclaimed historical profiles receive nothing.
 
 ### Completed-event corrections
@@ -40,7 +42,7 @@ This slice connects the remaining worthwhile in-app actions to the existing unif
 This slice adds three non-overlapping owner actions:
 
 - **Event draft ready for review** when an upcoming staged card has no matching published Picks event. This intentionally covers the missing-card action without creating a second alert.
-- **Monitoring repeatedly failed** only after three recent consecutive failed monitoring runs. A one-off provider failure remains silent.
+- **Monitoring repeatedly failed** only after three recent consecutive failed automatic provider runs. A one-off provider failure remains silent.
 - **Event ready to complete** when every included result is final. There is no duplicate “all results entered” notification.
 
 Existing card-change, fight-order, removed-fight, odds-match, and provider-quota alerts remain unchanged.
@@ -62,7 +64,7 @@ The following defined placeholders remain intentionally unconnected:
 - new Daily Challenge available;
 - daily streak at risk;
 - generic achievement notifications;
-- generic new-game notifications;
+- generic new-game notifications beyond explicitly published launch campaigns;
 - separate fighter-replacement or fight-cancellation detection alerts when the existing card-change review alert already carries the evidence;
 - separate published-card-mismatch and missing-card rows when one staged-draft review action is enough;
 - separate all-results-entered and event-ready-to-complete rows;
@@ -74,7 +76,7 @@ These can be reconsidered later, but they are not required to finish the notific
 
 - `private.publish_notification_to_profile(...)` remains the sole aggregation, idempotency, read-state, unread-count, and Realtime owner.
 - Canonical Picks rows determine card completion and event timing.
-- `find_leader_history` determines daily completion.
+- `private.daily_challenges` and immutable `official_first` attempt rows determine Daily Challenge eligibility.
 - `pick_monitoring_runs` determines repeated failure evidence.
 - `pick_event_drafts` and `pick_events` determine staged-versus-published state.
 - `pick_result_corrections` remains the immutable correction audit.
