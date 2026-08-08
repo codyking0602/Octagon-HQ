@@ -6,9 +6,10 @@ const vegasSource = "https://www.mmamania.com/ufc-fight-cards/458904/ufc-vegas-1
 
 describe("MMA Mania event metadata", () => {
   it("derives the current Fight Night identity, place, and main-card time without UFC.com", () => {
+    const articleTail = ` UFC Vegas 120 Main Event On Paramount+: 155 lbs.: Mateusz Gamrot vs. Quillan Salkilld UFC Vegas 120 Main Card on Paramount+ (8 p.m. ET): 155 lbs.: Billy Quarantillo vs. Diego Ferreira ${"updated fight card detail ".repeat(30)}`;
     const metadata = parseMmaManiaEventMetadata({
       sourceUrl: vegasSource,
-      articleText: "Event: UFC Vegas 120: Gamrot vs. Salkilld Date: Sat., Aug. 8, 2026 Location: Meta APEX in Las Vegas, Nevada Broadcast: Paramount+ Start Time: 5 p.m. ET Prelims Card | 8 p.m. ET Main Card",
+      articleText: `Event: UFC Vegas 120: Gamrot vs. Salkilld Date: Sat., Aug. 8, 2026 Location: Meta APEX in Las Vegas, Nevada Broadcast: Paramount+ Start Time: 5 p.m. ET Prelims Card | 8 p.m. ET Main Card${articleTail}`,
       mainEvent: {
         red_fighter_name: "Mateusz Gamrot",
         blue_fighter_name: "Quillan Salkilld",
