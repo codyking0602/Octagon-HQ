@@ -288,9 +288,11 @@ try {
 
     const fightRegion = page.getByRole("region", { name: /compact fight controls$/ });
     if (await fightRegion.count()) {
-      await monitoringRegion.getByRole("heading", {
+      const syncHeading = monitoringRegion.getByRole("heading", {
         name: /^AUTO-SYNC (CHECKED THE EVENT|IS WAITING FOR ITS NEXT CHECK|HAS PARTIAL COVERAGE|NEEDS ATTENTION)$/,
-      }).waitFor({ state: "visible", timeout: 15_000 });
+      });
+      await syncHeading.waitFor({ state: "visible", timeout: 15_000 });
+      const syncHeadingText = (await syncHeading.textContent())?.trim() ?? "";
       await monitoringRegion.getByRole("button", { name: "CHECK NOW" }).waitFor({ state: "visible", timeout: 15_000 });
       if (await monitoringRegion.locator(".monitoring-event").count()) {
         throw new Error("The unified dashboard repeated the standalone current event card inside monitoring.");
@@ -301,8 +303,9 @@ try {
 
       const allClear = monitoringRegion.getByLabel("Pending changes all clear");
       const pendingChanges = monitoringRegion.getByRole("heading", { name: "One finding, one clear decision" });
-      if (!await allClear.count() && !await pendingChanges.count()) {
-        throw new Error("Monitoring rendered neither its compact all-clear state nor its pending findings workflow.");
+      const partialCoverage = syncHeadingText === "AUTO-SYNC HAS PARTIAL COVERAGE";
+      if (!await allClear.count() && !await pendingChanges.count() && !partialCoverage) {
+        throw new Error("Monitoring rendered neither its compact all-clear state, pending findings workflow, nor explicit partial-coverage state.");
       }
 
       await fightRegion.waitFor({ state: "visible", timeout: 15_000 });
@@ -341,7 +344,7 @@ try {
       }
       await fightRows.nth(1).click();
 
-      monitoringOutcome = `loaded visible truthful automation, a compact review state, and ${fightRowCount} collapsed fight rows with one-detail-at-a-time controls`;
+      monitoringOutcome = `loaded visible truthful automation, ${partialCoverage ? "an explicit partial-coverage state" : "a compact review state"}, and ${fightRowCount} collapsed fight rows with one-detail-at-a-time controls`;
     } else {
       await monitoringRegion.getByRole("heading", { name: "One finding, one clear decision" }).waitFor({ state: "visible", timeout: 15_000 });
       monitoringOutcome = "confirmed the currently deployed main frontend still satisfies its legacy monitoring contract before this exact UI head is deployed";
