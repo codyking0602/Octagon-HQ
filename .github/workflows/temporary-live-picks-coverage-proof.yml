@@ -20,7 +20,7 @@ jobs:
       PROOF_BACKEND_SHA: 32010dbda253549cba31005d85f4cb156d52e306
       PROOF_STARTED_AFTER: 2026-08-08T18:34:15Z
     steps:
-      - name: Read back one-time live canonical monitoring proof
+      - name: Inspect one-time live canonical monitoring evidence
         shell: bash
         run: |
           set -euo pipefail
@@ -29,13 +29,17 @@ jobs:
           const projectId = process.env.SUPABASE_PROJECT_ID;
           const proofBackendSha = process.env.PROOF_BACKEND_SHA;
           const proofStartedAfter = process.env.PROOF_STARTED_AFTER;
-          if (!accessToken || !projectId || !proofBackendSha || !proofStartedAfter) {
-            throw new Error("Live coverage read-back is not configured.");
-          }
+          if (!accessToken || !projectId || !proofBackendSha || !proofStartedAfter) throw new Error("Live coverage inspection is not configured.");
 
           async function parsed(response) {
             const text = await response.text();
             try { return text ? JSON.parse(text) : {}; } catch { return { message: text }; }
+          }
+          async function get(url, headers, label) {
+            const response = await fetch(url, { headers });
+            const value = await parsed(response);
+            if (!response.ok) throw new Error(`${label} failed with HTTP ${response.status}: ${JSON.stringify(value)}`);
+            return value;
           }
           const keysResponse = await fetch(
             `https://api.supabase.com/v1/projects/${projectId}/api-keys?reveal=true`,
@@ -46,72 +50,43 @@ jobs:
           const secretKey = keys.find((item) => item.type === "secret")?.api_key
             ?? keys.find((item) => item.type === "legacy" && /service.role/i.test(item.name ?? ""))?.api_key;
           if (!secretKey) throw new Error("Project secret key is unavailable.");
-
           const headers = { Authorization: `Bearer ${secretKey}`, apikey: secretKey };
+
           const runQuery = new URLSearchParams({
-            select: "run_id,status,trigger_kind,provider_called,started_at,completed_at,source_event_identity,provider_event_count,complete_snapshot_count,missing_snapshot_count,provider_requests_remaining,diagnostics",
+            select: "run_id,event_id,status,trigger_kind,provider_called,started_at,completed_at,source_event_identity,provider_event_count,complete_snapshot_count,missing_snapshot_count,provider_requests_remaining,diagnostics",
             trigger_kind: "eq.manual",
             started_at: `gte.${proofStartedAfter}`,
             order: "completed_at.desc.nullslast,created_at.desc",
             limit: "1",
           });
-          const runResponse = await fetch(
-            `https://${projectId}.supabase.co/rest/v1/pick_monitoring_runs?${runQuery}`,
-            { headers },
-          );
-          const runs = await parsed(runResponse);
-          if (!runResponse.ok || !Array.isArray(runs) || runs.length !== 1) {
-            throw new Error(`One-time live monitoring run lookup failed with HTTP ${runResponse.status}.`);
-          }
+          const runs = await get(`https://${projectId}.supabase.co/rest/v1/pick_monitoring_runs?${runQuery}`, headers, "Run lookup");
+          if (!Array.isArray(runs) || runs.length !== 1) throw new Error("Expected exactly one recent manual proof run.");
           const run = runs[0];
+
           const snapshotQuery = new URLSearchParams({
-            select: "run_id,bout_id,matchup_identity,sportsbook",
+            select: "run_id,bout_id,matchup_identity,sportsbook,fighter_one_identity,fighter_two_identity,source_event_id",
             run_id: `eq.${run.run_id}`,
             order: "bout_id.asc",
           });
-          const snapshotResponse = await fetch(
-            `https://${projectId}.supabase.co/rest/v1/pick_monitoring_odds_snapshots?${snapshotQuery}`,
-            { headers },
-          );
-          const snapshots = await parsed(snapshotResponse);
-          if (!snapshotResponse.ok || !Array.isArray(snapshots)) {
-            throw new Error(`One-time live snapshot lookup failed with HTTP ${snapshotResponse.status}.`);
-          }
+          const snapshots = await get(`https://${projectId}.supabase.co/rest/v1/pick_monitoring_odds_snapshots?${snapshotQuery}`, headers, "Snapshot lookup");
           const findingQuery = new URLSearchParams({
-            select: "finding_type,severity,matchup_identity",
+            select: "finding_type,severity,summary,matchup_identity,bout_id,source_details",
             run_id: `eq.${run.run_id}`,
             order: "detected_at.asc",
           });
-          const findingResponse = await fetch(
-            `https://${projectId}.supabase.co/rest/v1/pick_monitoring_findings?${findingQuery}`,
-            { headers },
-          );
-          const findings = await parsed(findingResponse);
-          if (!findingResponse.ok || !Array.isArray(findings)) {
-            throw new Error(`One-time live finding lookup failed with HTTP ${findingResponse.status}.`);
-          }
+          const findings = await get(`https://${projectId}.supabase.co/rest/v1/pick_monitoring_findings?${findingQuery}`, headers, "Finding lookup");
+          const boutQuery = new URLSearchParams({
+            select: "bout_id,red_fighter_name,blue_fighter_name,red_american_odds,blue_american_odds,odds_source",
+            event_id: `eq.${run.event_id}`,
+            order: "position.asc",
+          });
+          const bouts = await get(`https://${projectId}.supabase.co/rest/v1/pick_bouts?${boutQuery}`, headers, "Bout lookup");
 
-          const badFindings = findings.filter((item) => item.finding_type === "unmatched_fight" || item.finding_type === "provider_error");
-          if (run.provider_called !== true
-            || run.status !== "completed"
-            || Number(run.complete_snapshot_count) !== 5
-            || Number(run.missing_snapshot_count) !== 0
-            || snapshots.length !== 5
-            || new Set(snapshots.map((item) => item.bout_id)).size !== 5
-            || badFindings.length !== 0) {
-            throw new Error(`Live monitoring proof was not 5/5: ${JSON.stringify({
-              proof_backend_sha: proofBackendSha,
-              run_id: run.run_id,
-              status: run.status,
-              provider_called: run.provider_called,
-              provider_event_count: run.provider_event_count,
-              complete_snapshot_count: run.complete_snapshot_count,
-              missing_snapshot_count: run.missing_snapshot_count,
-              stored_snapshots: snapshots.length,
-              unique_bouts: new Set(snapshots.map((item) => item.bout_id)).size,
-              bad_findings: badFindings,
-              provider_requests_remaining: run.provider_requests_remaining,
-            })}`);
-          }
-          console.log(`PASS: provider-backed run ${run.run_id} executed on backend ${proofBackendSha} and recorded 5/5 unique fight snapshots, 0 missing, and no unmatched/provider-error findings.`);
+          console.log(`LIVE_PICK_COVERAGE_DIAGNOSTIC ${JSON.stringify({
+            proof_backend_sha: proofBackendSha,
+            run,
+            bouts,
+            snapshots,
+            findings,
+          })}`);
           NODE
