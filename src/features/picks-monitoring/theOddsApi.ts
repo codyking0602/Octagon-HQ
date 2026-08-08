@@ -57,6 +57,10 @@ function validIsoTimestamp(value: unknown) {
   return candidate && Number.isFinite(Date.parse(candidate)) ? candidate : "";
 }
 
+function sameFighterName(left: string, right: string) {
+  return fighterMatch(left, right) || fighterMatch(right, left);
+}
+
 function headerValue(headers: HeaderSource | undefined, key: string) {
   if (!headers) return "";
   const candidate = headers as { get?: (name: string) => string | null };
@@ -169,7 +173,7 @@ function completeBookmakerSnapshot(
 
   for (const outcome of outcomes) {
     const outcomeName = nonEmptyString(outcome.name);
-    const matchingNames = fighterNames.filter((fighterName) => fighterMatch(fighterName, outcomeName));
+    const matchingNames = fighterNames.filter((fighterName) => sameFighterName(fighterName, outcomeName));
     if (matchingNames.length !== 1 || !isValidAmericanOdds(outcome.price)) return null;
     const fighterName = matchingNames[0];
     const identity = fighterOddsIdentity(fighterName);
