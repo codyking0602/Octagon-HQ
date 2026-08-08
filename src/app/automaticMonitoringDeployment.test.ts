@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 const schedulerMigration = readFileSync("supabase/migrations/202608090001_automatic_pick_monitoring_scheduler.sql", "utf8");
 const hardeningMigration = readFileSync("supabase/migrations/202608090002_harden_pick_monitoring_schedule_claims.sql", "utf8");
 const runtimeVerificationMigration = readFileSync("supabase/migrations/202608090003_verify_pick_monitoring_scheduler_runtime.sql", "utf8");
-const claimRepairMigration = readFileSync("supabase/migrations/202609140006_repair_pick_monitoring_schedule_claim.sql", "utf8");
+const claimRepairMigration = readFileSync("supabase/migrations/202612310002_repair_pick_monitoring_schedule_claim.sql", "utf8");
 const migration = `${schedulerMigration}\n${hardeningMigration}\n${runtimeVerificationMigration}\n${claimRepairMigration}`;
 const runner = readFileSync("supabase/functions/run-pick-monitoring/index.ts", "utf8");
 const sync = readFileSync("supabase/functions/sync-next-ufc-event/index.ts", "utf8");
@@ -32,7 +32,7 @@ describe("automatic Picks monitoring deployment", () => {
     expect(deploy).not.toContain('if [ "$SOURCE_PR_NUMBER" = "0" ]');
     expect(verifier).toContain("202608090002");
     expect(verifier).toContain("202608090003");
-    expect(verifier).toContain("202609140006");
+    expect(verifier).toContain("202612310002");
     expect(verifier).toContain("health?.command_configured !== true");
     expect(verifier).toContain("fakeSchedulerResponse.status !== 401");
     expect(verifier).not.toContain("THE_ODDS_API_KEY=");
