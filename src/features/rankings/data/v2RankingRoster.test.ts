@@ -47,7 +47,7 @@ describe("V2 ranking roster overlay", () => {
     ]);
     expect(sourceOverrides).toMatchObject({
       factsVersion: "octagon-hq-v2-rda-facts-20260807",
-      judgmentVersion: "octagon-hq-v2-amanda-nunes-profile-20260807",
+      judgmentVersion: "octagon-hq-v2-rda-judgments-20260807",
       eraDepthVersion: "octagon-hq-v2-rda-20260730",
       eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
     });
@@ -90,7 +90,7 @@ describe("V2 ranking roster overlay", () => {
     });
     expect(input?.facts.primeWindow).toEqual({
       startFightId: "2014-08-23-benson-henderson",
-      endFightId: "2019-05-18-kevin-lee",
+      endFightId: "2019-07-20-leon-edwards",
       open: false,
     });
     expect(canonicalRankingInputs.filters.eraMembership["Rafael dos Anjos"]).toEqual({
@@ -237,7 +237,6 @@ describe("V2 ranking roster overlay", () => {
     const current = canonicalRankingInputs.fighters.find(
       (fighter) => fighter.fighter === "Randy Couture",
     );
-
     expect(historical).toBeDefined();
     expect(current).toBeDefined();
     expect(current?.presentation.oneLiner).toBe(oneLiner);
@@ -384,7 +383,7 @@ describe("V2 ranking roster overlay", () => {
     const fighter = getFighter("rafael-dos-anjos");
     expect(fighter).toBeDefined();
     expect(fighter?.visibleStats.ufcRecord).toBe("21-15");
-    expect(fighter?.visibleStats.primeRecord).toBe("8-4");
+    expect(fighter?.visibleStats.primeRecord).toBe("8-5");
     expect(fighter?.visibleStats.titleFightWins).toBe(2);
     expect(fighter?.rank).toBeGreaterThan(0);
     expect(fighter?.ovr).toBeLessThanOrEqual(99);
@@ -395,8 +394,12 @@ describe("V2 ranking roster overlay", () => {
     const usman = fighter?.traces.penalty.events.find(
       (event) => event.opponent === "Kamaru Usman",
     );
-    expect(colby).toMatchObject({ phase: "prime", upwardDivision: true });
-    expect(usman).toMatchObject({ phase: "prime", upwardDivision: true });
+    const leon = fighter?.traces.penalty.events.find(
+      (event) => event.opponent === "Leon Edwards",
+    );
+    expect(colby).toMatchObject({ phase: "prime", upwardDivision: false });
+    expect(usman).toMatchObject({ phase: "prime", upwardDivision: false });
+    expect(leon).toMatchObject({ phase: "prime", upwardDivision: false });
   });
 
   it("uses the existing local Rafael dos Anjos assets", () => {
