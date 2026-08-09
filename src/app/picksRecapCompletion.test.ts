@@ -13,6 +13,10 @@ const august8WatchMomentUpdateMigration = readFileSync(
   "supabase/migrations/202612310007_update_august_8_pick_watch_moment.sql",
   "utf8",
 );
+const gamrotSalkilldWatchMomentRepair = readFileSync(
+  "supabase/migrations/202612310008_force_gamrot_salkilld_watch_moment.sql",
+  "utf8",
+);
 const recapSource = readFileSync("src/features/picks/LatestEventRecap.tsx", "utf8");
 const recapCss = readFileSync("src/styles/picks-event-recap.css", "utf8");
 const controlCss = readFileSync("src/styles/picks-control.css", "utf8");
@@ -39,32 +43,32 @@ describe("completed Picks event recaps", () => {
     expect(migration).not.toMatch(/where event_id\s*=\s*'ufc-fight-night-belgrade'/i);
   });
 
-  it("seeds Cody's August 8 Must-Watch Moment onto the existing completed event field only", () => {
+  it("keeps the prior August 8 watch-moment migrations auditable", () => {
     expect(august8WatchMomentMigration).toContain(
       "https://youtu.be/vOnbuPMDJUc?is=pYiX3TKQV0-YEY-f",
     );
-    expect(august8WatchMomentMigration).toContain("status = 'completed'");
-    expect(august8WatchMomentMigration).toContain("2026-08-08 00:00:00+00");
-    expect(august8WatchMomentMigration).toContain("2026-08-10 00:00:00+00");
-    expect(august8WatchMomentMigration).toContain("set watch_moments = case");
-    expect(august8WatchMomentMigration).toContain("jsonb_array_elements(watch_moments)");
-    expect(august8WatchMomentMigration).not.toContain("create function");
-    expect(august8WatchMomentMigration).not.toContain("create trigger");
-    expect(august8WatchMomentMigration).not.toContain("cron.schedule");
-  });
-
-  it("replaces the August 8 Must-Watch Moment with Cody's latest supplied URL only", () => {
     expect(august8WatchMomentUpdateMigration).toContain(
       "https://youtu.be/mLamuYVoc2E?is=XQ3Ozk5j-nUNTj0t",
     );
-    expect(august8WatchMomentUpdateMigration).toContain("status = 'completed'");
-    expect(august8WatchMomentUpdateMigration).toContain("2026-08-08 00:00:00+00");
-    expect(august8WatchMomentUpdateMigration).toContain("2026-08-10 00:00:00+00");
-    expect(august8WatchMomentUpdateMigration).toContain("item->>'title' <> 'UFC Fight Night - Must-Watch Moment'");
-    expect(august8WatchMomentUpdateMigration).toContain("jsonb_build_array(v_moment)");
-    expect(august8WatchMomentUpdateMigration).not.toContain("create function");
+    expect(august8WatchMomentMigration).not.toContain("create trigger");
     expect(august8WatchMomentUpdateMigration).not.toContain("create trigger");
-    expect(august8WatchMomentUpdateMigration).not.toContain("cron.schedule");
+  });
+
+  it("repairs Gamrot Salkilld through the canonical main-event bout and is safe on fresh databases", () => {
+    expect(gamrotSalkilldWatchMomentRepair).toContain(
+      "https://youtu.be/mLamuYVoc2E?is=XQ3Ozk5j-nUNTj0t",
+    );
+    expect(gamrotSalkilldWatchMomentRepair).toContain("join public.pick_bouts bout");
+    expect(gamrotSalkilldWatchMomentRepair).toContain("bout.position = 1");
+    expect(gamrotSalkilldWatchMomentRepair).toContain("bout.red_fighter_slug = 'mateusz-gamrot'");
+    expect(gamrotSalkilldWatchMomentRepair).toContain("bout.blue_fighter_slug = 'quillan-salkilld'");
+    expect(gamrotSalkilldWatchMomentRepair).toContain("if v_match_count = 0 then");
+    expect(gamrotSalkilldWatchMomentRepair).toContain("watch_moments = jsonb_build_array(v_moment)");
+    expect(gamrotSalkilldWatchMomentRepair).not.toContain("status = 'completed'");
+    expect(gamrotSalkilldWatchMomentRepair).not.toContain("starts_at >=");
+    expect(gamrotSalkilldWatchMomentRepair).not.toContain("create function");
+    expect(gamrotSalkilldWatchMomentRepair).not.toContain("create trigger");
+    expect(gamrotSalkilldWatchMomentRepair).not.toContain("cron.schedule");
   });
 
   it("publishes recap input through the existing watch-moment and lifecycle owners", () => {
@@ -80,17 +84,19 @@ describe("completed Picks event recaps", () => {
     expect(controlCss).toContain("border-left: 3px solid var(--ufc-red)");
   });
 
-  it("uses one explicit iPhone-safe scrolling owner", () => {
+  it("uses the recap page as the one iPhone-safe scrolling owner", () => {
     expect(recapCss).toContain("height: 100dvh");
     expect(recapCss).toContain("min-height: 0");
     expect(recapCss).toContain("overflow-y: scroll");
     expect(recapCss).toContain("touch-action: pan-y");
     expect(recapCss).not.toContain("touch-action: none");
     expect(recapCss).toContain("-webkit-overflow-scrolling: touch");
+    expect(recapCss).not.toContain("max-height: min(58dvh, 520px)");
+    expect(recapCss).not.toContain("overflow-y: auto");
     expect(recapSource).toContain('data-testid="picks-event-recap-scroll"');
   });
 
-  it("keeps the poster fully visible and makes expanded fight results independently scrollable", () => {
+  it("keeps the poster visible and makes the matchup the visual hero beneath it", () => {
     expect(recapSource).toContain('import { pickEventPoster } from "./picksEventAssets"');
     expect(recapSource).toContain("const eventPoster = pickEventPoster(event)");
     expect(recapSource).toContain('className="picks-event-recap__poster"');
@@ -103,8 +109,8 @@ describe("completed Picks event recaps", () => {
     expect(eventAssetsSource).toContain("posterByMainEvent");
     expect(recapCss).toContain("--picks-recap-poster");
     expect(recapCss).toContain("background-size: contain");
-    expect(recapCss).toContain("max-height: min(58dvh, 520px)");
-    expect(recapCss).toContain("overflow-y: auto");
+    expect(recapCss).toContain("font-size: clamp(13px, 3.8vw, 17px)");
+    expect(recapCss).toContain("font-size: clamp(20px, 6vw, 27px)");
   });
 
   it("uses restrained UFC-red hierarchy without replacing champion gold", () => {
