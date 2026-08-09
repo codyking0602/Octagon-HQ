@@ -14,7 +14,7 @@ function event(status: "locked" | "complete" = "locked", resultStatus: PickContr
   return { eventId: "ufc-control", name: "UFC Control", subtitle: "Alpha vs. Bravo", venue: "Arena", location: "Dallas", startsAt: "2099-08-09T04:00:00.000Z", locksAt: "2099-08-09T03:00:00.000Z", season: 2099, status, canLock: false, canComplete: status === "locked" && resultStatus !== "pending", canReorder: false, hasReorderHistory: false, recentCompletedEvents: [], bouts: [{ boutId: "alpha-bravo", locksAt: "2099-08-09T03:00:00.000Z", isLocked: true, canAdjustLock: false, position: 1, weightClass: "Lightweight", redFighterSlug: "alpha", redFighterName: "Alpha", blueFighterSlug: "bravo", blueFighterName: "Bravo", resultStatus, winnerFighterSlug: resultStatus === "red_win" ? "alpha" : resultStatus === "blue_win" ? "bravo" : null, resultRecordedAt: resultStatus === "pending" ? null : "2099-08-09T05:00:00.000Z", includedInPicks: true, canCancel: false, canRestore: false, canReplace: false, canRemoveFromPicks: false, canRestoreToPicks: false, canCorrectResult: resultStatus !== "pending", hasReplacementHistory: false, hasRemovalHistory: false, hasCorrectionHistory: false }] };
 }
 
-function repository(first: PickControlEvent, refreshed = first): PickControlRepository { return { loadControlEvent: vi.fn().mockResolvedValueOnce(first).mockResolvedValue(refreshed), lockEvent: vi.fn(), adjustLockTime: vi.fn(), adjustBoutLockTime: vi.fn(), setCancellation: vi.fn(), setBoutInclusion: vi.fn(), replaceFighter: vi.fn(), addBout: vi.fn(), reorderCard: vi.fn(), recordResult: vi.fn().mockResolvedValue(undefined), correctResult: vi.fn().mockResolvedValue(undefined), completeEvent: vi.fn().mockResolvedValue(undefined) }; }
+function repository(first: PickControlEvent, refreshed = first): PickControlRepository { return { loadControlEvent: vi.fn().mockResolvedValueOnce(first).mockResolvedValue(refreshed), lockEvent: vi.fn(), adjustLockTime: vi.fn(), adjustBoutLockTime: vi.fn(), setCancellation: vi.fn(), setBoutInclusion: vi.fn(), replaceFighter: vi.fn(), addBout: vi.fn(), reorderCard: vi.fn(), recordResult: vi.fn().mockResolvedValue(undefined), correctResult: vi.fn().mockResolvedValue(undefined), setWatchMoments: vi.fn().mockResolvedValue(undefined), completeEvent: vi.fn().mockResolvedValue(undefined) }; }
 function renderPage(repo: PickControlRepository, profile: typeof owner | null = owner) { return render(<MemoryRouter><IdentityProvider gateway={gateway(profile)}><PicksControlPage repository={repo} now={Date.parse("2099-08-09T04:30:00.000Z")} /></IdentityProvider></MemoryRouter>); }
 
 beforeEach(() => { vi.spyOn(window, "confirm").mockReturnValue(true); vi.spyOn(window, "prompt").mockReturnValue(null); });
@@ -39,11 +39,33 @@ describe("Fight Night Control results lifecycle", () => {
     expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("recalculate automatically"));
   });
 
-  it("completes a fully resolved locked event after confirmation", async () => {
+  it("publishes the supplied recap URL before completing the event", async () => {
     const repo = repository(event("locked", "red_win"), event("complete", "red_win"));
     renderPage(repo);
-    fireEvent.click(await screen.findByRole("button", { name: "COMPLETE EVENT" }));
+    fireEvent.change(await screen.findByRole("textbox", { name: "RECAP URL" }), { target: { value: "https://youtu.be/example" } });
+    fireEvent.click(screen.getByRole("button", { name: "PUBLISH EVENT RECAP" }));
     await waitFor(() => expect(repo.completeEvent).toHaveBeenCalledWith("ufc-control"));
+    expect(repo.setWatchMoments).toHaveBeenCalledWith("ufc-control", [{ title: "Alpha vs. Bravo", url: "https://youtu.be/example" }]);
+    expect(vi.mocked(repo.setWatchMoments!).mock.invocationCallOrder[0]).toBeLessThan(vi.mocked(repo.completeEvent).mock.invocationCallOrder[0]);
+    expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("sends the recap notification to members"));
+  });
+
+  it("allows an intentional publish without a recap URL", async () => {
+    const repo = repository(event("locked", "red_win"), event("complete", "red_win"));
+    renderPage(repo);
+    fireEvent.click(await screen.findByRole("button", { name: "PUBLISH EVENT RECAP" }));
+    await waitFor(() => expect(repo.completeEvent).toHaveBeenCalledWith("ufc-control"));
+    expect(repo.setWatchMoments).not.toHaveBeenCalled();
+  });
+
+  it("rejects an invalid recap URL before publishing", async () => {
+    const repo = repository(event("locked", "red_win"), event("complete", "red_win"));
+    renderPage(repo);
+    fireEvent.change(await screen.findByRole("textbox", { name: "RECAP URL" }), { target: { value: "not-a-url" } });
+    fireEvent.click(screen.getByRole("button", { name: "PUBLISH EVENT RECAP" }));
+    expect(await screen.findByText("Enter a valid http or https recap URL, or leave the field blank.")).toBeInTheDocument();
+    expect(repo.setWatchMoments).not.toHaveBeenCalled();
+    expect(repo.completeEvent).not.toHaveBeenCalled();
   });
 
   it("keeps the owner surface private when signed out", async () => {

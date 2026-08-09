@@ -74,6 +74,7 @@ export interface PickControlRepository {
   reorderCard: (eventId: string, expectedBoutIds: string[], proposedBoutIds: string[], reason: string) => Promise<void>;
   recordResult: (eventId: string, boutId: string, result: PickBoutResultStatus) => Promise<void>;
   correctResult: (eventId: string, bout: PickControlEvent["bouts"][number], result: PickBoutResultStatus, reason: string) => Promise<void>;
+  setWatchMoments?: (eventId: string, moments: { title: string; url: string }[]) => Promise<void>;
   completeEvent: (eventId: string) => Promise<void>;
 }
 
@@ -265,6 +266,13 @@ export function createPickControlRepository(): PickControlRepository | null {
         p_expected_winner_fighter_slug: bout.winnerFighterSlug,
         p_expected_result_recorded_at: bout.resultRecordedAt,
         p_reason: reason,
+      }));
+    },
+
+    async setWatchMoments(eventId, moments) {
+      await requireRpcSuccess(client.rpc("set_pick_event_watch_moments", {
+        p_event_id: eventId,
+        p_watch_moments: moments,
       }));
     },
 

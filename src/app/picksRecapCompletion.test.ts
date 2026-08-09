@@ -13,6 +13,8 @@ const recapSource = readFileSync("src/features/picks/LatestEventRecap.tsx", "utf
 const recapCss = readFileSync("src/styles/picks-event-recap.css", "utf8");
 const eventAssetsSource = readFileSync("src/features/picks/picksEventAssets.ts", "utf8");
 const shareImageSource = readFileSync("src/features/picks/picksRecapShareImage.ts", "utf8");
+const controlSource = readFileSync("src/features/picks-control/PicksControlPage.tsx", "utf8");
+const controlRepositorySource = readFileSync("src/features/picks-control/pickControlRepository.ts", "utf8");
 
 describe("completed Picks event recaps", () => {
   it("keeps watch moments on the canonical event and existing projection owners", () => {
@@ -44,6 +46,16 @@ describe("completed Picks event recaps", () => {
     expect(august8WatchMomentMigration).not.toContain("create function");
     expect(august8WatchMomentMigration).not.toContain("create trigger");
     expect(august8WatchMomentMigration).not.toContain("cron.schedule");
+  });
+
+  it("publishes recap input through the existing watch-moment and lifecycle owners", () => {
+    expect(controlSource).toContain("RECAP URL");
+    expect(controlSource).toContain("PUBLISH EVENT RECAP");
+    expect(controlSource).toContain("sends the recap notification to members");
+    expect(controlSource.indexOf("setWatchMoments!")).toBeLessThan(controlSource.indexOf("completeEvent(event.eventId)"));
+    expect(controlRepositorySource).toContain('client.rpc("set_pick_event_watch_moments"');
+    expect(controlRepositorySource).toContain('client.rpc("transition_pick_event"');
+    expect(controlRepositorySource).not.toContain("from(\"pick_events\")");
   });
 
   it("uses one explicit iPhone-safe scrolling owner", () => {
