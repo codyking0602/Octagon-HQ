@@ -663,8 +663,8 @@ begin
     raise exception 'failed reorder left a partial audit mutation';
   end if;
 
-  -- 19-21. A future open fight may move earlier or later. A past proposal and
-  -- every locked fight remain fail-closed.
+  -- 19-21. A future open fight may move earlier or later. Past proposals fail
+  -- closed, while the owner may explicitly reopen a passed pending fight.
   perform set_config('request.jwt.claim.role', 'service_role', true);
   v_event := 'canonical-bout-deadline';
   perform pg_temp.create_pick_event(
@@ -706,14 +706,17 @@ begin
   perform public.adjust_pick_bout_lock_time(
     v_event, 'deadline-open', now() + interval '6 hours'
   );
-  begin
-    perform public.adjust_pick_bout_lock_time(
-      v_event, 'deadline-locked', now() + interval '6 hours'
-    );
-    raise exception 'locked bout was reopened';
-  exception when others then
-    if sqlerrm not like '%PROHIBITED:%deadline cannot change%' then raise; end if;
-  end;
+  perform public.adjust_pick_bout_lock_time(
+    v_event, 'deadline-locked', now() + interval '6 hours'
+  );
+  if not exists (
+    select 1 from public.pick_bouts
+    where event_id = v_event
+      and bout_id = 'deadline-locked'
+      and locks_at > now() + interval '5 hours 59 minutes'
+  ) then
+    raise exception 'passed pending bout was not explicitly reopened';
+  end if;
   if not exists (
     select 1
     from public.pick_card_change_actions
