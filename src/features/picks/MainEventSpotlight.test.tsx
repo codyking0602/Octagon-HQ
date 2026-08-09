@@ -16,6 +16,19 @@ const bout: PickBout = {
   winnerFighterSlug: null,
 };
 
+const futureBout: PickBout = {
+  boutId: "main-event-future-red-future-blue",
+  position: 1,
+  weightClass: "Featherweight",
+  redFighterSlug: "future-red",
+  redFighterName: "Future Red",
+  blueFighterSlug: "future-blue",
+  blueFighterName: "Future Blue",
+  redAmericanOdds: null,
+  blueAmericanOdds: null,
+  winnerFighterSlug: null,
+};
+
 afterEach(cleanup);
 
 describe("MainEventSpotlight", () => {
@@ -50,5 +63,29 @@ describe("MainEventSpotlight", () => {
       display: "grid",
       gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
     });
+  });
+
+  it("renders a future matchup from published event Spotlight data without another hard-coded matchup", () => {
+    render(
+      <MainEventSpotlight
+        bout={futureBout}
+        spotlight={{
+          boutId: futureBout.boutId,
+          watchSpotlights: [
+            { fighterSlug: "future-red", url: "https://youtu.be/future-red" },
+            { fighterSlug: "future-blue", url: "https://youtu.be/future-blue" },
+          ],
+        }}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /View matchup breakdown/i }));
+
+    expect(screen.getByRole("dialog", { name: "Future Red vs. Future Blue" })).toBeInTheDocument();
+    expect(screen.getByText("FEATURED FIGHT · FEATHERWEIGHT")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "RED SPOTLIGHT ↗" })).toHaveAttribute("href", "https://youtu.be/future-red");
+    expect(screen.getByRole("link", { name: "BLUE SPOTLIGHT ↗" })).toHaveAttribute("href", "https://youtu.be/future-blue");
+    expect(screen.queryByText("TALE OF THE TAPE")).not.toBeInTheDocument();
+    expect(screen.queryByText("MATCHUP EDGES")).not.toBeInTheDocument();
   });
 });
