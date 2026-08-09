@@ -19,7 +19,7 @@ const corsHeaders = {
 };
 
 const MMA_MANIA_INDEX_URL = "https://www.mmamania.com/ufc-fight-cards";
-const MAX_MMA_MANIA_ARTICLE_ATTEMPTS = 16;
+const MAX_MMA_MANIA_ARTICLE_ATTEMPTS = 6;
 const requestHeaders = {
   "User-Agent": "OctagonHQ/2.0 (+https://octagon.hq-app.workers.dev)",
   Accept: "text/html,application/xhtml+xml",
@@ -177,12 +177,15 @@ function elementLines($: cheerio.CheerioAPI, element: cheerio.Element) {
   return clone.text().split(/\n+/).map(clean).filter(Boolean);
 }
 
-export function parseMmaManiaCard(html: string, sourceUrl: string): MmaManiaCard {
-  const $ = cheerio.load(html);
-  const root = $("article").first().length
-    ? $("article").first()
-    : $(".c-entry-content, .article-body, main").first();
-  const scope = root.length ? root : $("body");
+function mmaManiaArticleRoot($: cheerio.CheerioAPI) {
+  const article = $("article").first();
+  if (article.length) return article;
+  const content = $(".c-entry-content, .article-body, main").first();
+  return content.length ? content : $("body");
+}
+
+function parseMmaManiaCardDocument($: cheerio.CheerioAPI, sourceUrl: string): MmaManiaCard {
+  const scope = mmaManiaArticleRoot($);
   const bouts: ParsedCardBout[] = [];
   const seen = new Set<string>();
   let section: CardSection | null = null;
@@ -216,6 +219,10 @@ export function parseMmaManiaCard(html: string, sourceUrl: string): MmaManiaCard
   return { sourceUrl, bouts, usedSectionHeadings };
 }
 
+export function parseMmaManiaCard(html: string, sourceUrl: string): MmaManiaCard {
+  return parseMmaManiaCardDocument(cheerio.load(html), sourceUrl);
+}
+
 export function resolveCardScope(name: string, subtitle: string, requested: CardScope): EffectiveScope {
   return resolveImportedCardScope(name, subtitle, requested);
 }
@@ -243,12 +250,8 @@ function toStagedBouts(bouts: Array<ParsedCardBout & SequencedBoutMetadata>) {
   });
 }
 
-function articleText(html: string) {
-  const $ = cheerio.load(html);
-  const root = $("article").first().length
-    ? $("article").first()
-    : $(".c-entry-content, .article-body, main").first();
-  return clean((root.length ? root : $("body")).text()).slice(0, 50_000);
+function articleText($: cheerio.CheerioAPI) {
+  return clean(mmaManiaArticleRoot($).text()).slice(0, 50_000);
 }
 
 async function fetchText(url: string, stage: "mma-index-fetch" | "mma-fetch") {
@@ -264,7 +267,8 @@ async function fetchText(url: string, stage: "mma-index-fetch" | "mma-fetch") {
 }
 
 function parseMmaManiaEventCandidate(html: string, sourceUrl: string, sourceEventKeyOverride = ""): MmaManiaEventCandidate {
-  const card = parseMmaManiaCard(html, sourceUrl);
+  const $ = cheerio.load(html);
+  const card = parseMmaManiaCardDocument($, sourceUrl);
   if (!card.usedSectionHeadings || card.bouts.length < 4 || card.bouts.length > 20) {
     throw new SyncError(
       "ARTICLE_CARD_REJECTED",
@@ -282,7 +286,7 @@ function parseMmaManiaEventCandidate(html: string, sourceUrl: string, sourceEven
       card,
       metadata: parseMmaManiaEventMetadata({
         sourceUrl,
-        articleText: articleText(html),
+        articleText: articleText($),
         mainEvent,
         ...(sourceEventKeyOverride ? { sourceEventKeyOverride } : {}),
       }),
