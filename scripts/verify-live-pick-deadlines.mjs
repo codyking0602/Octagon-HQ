@@ -57,11 +57,10 @@ boutsUrl.searchParams.set(
   "bout_id,position,card_segment,segment_sequence,locks_at,red_fighter_name,blue_fighter_name,included_in_picks,result_status",
 );
 boutsUrl.searchParams.set("event_id", `eq.${event.event_id}`);
-boutsUrl.searchParams.set("included_in_picks", "eq.true");
 boutsUrl.searchParams.set("order", "position.asc,bout_id.asc");
 const bouts = await readJson("Current Picks bout lookup", boutsUrl, { headers });
 if (!Array.isArray(bouts) || bouts.length === 0) {
-  throw new Error("Current Picks bout lookup returned no included fights.");
+  throw new Error("Current Picks bout lookup returned no fights.");
 }
 
 const actionsUrl = new URL(`${supabaseOrigin}/rest/v1/pick_card_change_actions`);
