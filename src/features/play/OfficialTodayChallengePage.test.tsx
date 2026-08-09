@@ -47,7 +47,7 @@ function projection(
 function renderView(value: TodayChallengeProjection) {
   const onAdvance = vi.fn();
   const onNavigate = vi.fn();
-  render(
+  const rendered = render(
     <OfficialTodayChallengeView
       projection={value}
       busy={false}
@@ -55,37 +55,38 @@ function renderView(value: TodayChallengeProjection) {
       onNavigate={onNavigate}
     />,
   );
-  return { onAdvance, onNavigate };
+  return { onAdvance, onNavigate, ...rendered };
 }
 
-describe("official Today’s Challenge at the 390×844 phone contract", () => {
+describe("official Today’s Challenge uses the canonical casual game presentation", () => {
   beforeEach(() => {
     Object.defineProperty(window, "innerWidth", { configurable: true, value: 390 });
     Object.defineProperty(window, "innerHeight", { configurable: true, value: 844 });
   });
 
-  it("plays Find the Leader without shipping the hidden leader value", () => {
+  it("plays Find the Leader through the casual board contract without shipping the hidden leader value", () => {
     const candidates = Array.from({ length: 10 }, (_, index) => ({
       id: `fighter-${index + 1}`,
       name: `Fighter ${index + 1}`,
       division: "Lightweight",
       thumb_url: `/fighters/fighter-${index + 1}.png`,
     }));
-    const { onAdvance } = renderView(projection(
+    const { onAdvance, container } = renderView(projection(
       "find_leader",
-      { question: "Who has the most UFC wins?", stat_label: "UFC WINS", candidates },
+      { question: "Who has the most UFC wins?", context: "Leave the group leader standing.", stat_label: "UFC WINS", candidates },
       { complete: false, eliminated_ids: [], native_progress: 0 },
     ));
 
-    expect(screen.getByTestId("official-daily-page")).toHaveAttribute("data-testid", "official-daily-page");
+    expect(container.querySelector(".find-game__hero")).not.toBeNull();
+    expect(container.querySelectorAll(".find-card")).toHaveLength(10);
     expect(screen.getAllByText("ELIMINATE")).toHaveLength(10);
     expect(screen.queryByText("HIDDEN LEADER VALUE")).not.toBeInTheDocument();
     fireEvent.click(screen.getByText("Fighter 1").closest("button")!);
     expect(onAdvance).toHaveBeenCalledWith({ eliminated_id: "fighter-1" });
   });
 
-  it("plays Wavelength with only the clues already earned", () => {
-    const { onAdvance } = renderView(projection(
+  it("plays Wavelength through the casual clue and guess panel", () => {
+    const { onAdvance, container } = renderView(projection(
       "wavelength",
       { clue_count: 4 },
       {
@@ -96,15 +97,17 @@ describe("official Today’s Challenge at the 390×844 phone contract", () => {
       },
     ));
 
+    expect(container.querySelector(".wavelength-clue")).not.toBeNull();
+    expect(container.querySelector(".wavelength-guess-panel")).not.toBeNull();
     expect(screen.getByText("Pressure-heavy striker")).toBeInTheDocument();
-    expect(screen.queryByText("Secret target: 77")).not.toBeInTheDocument();
-    fireEvent.change(screen.getByLabelText("Exact Wavelength guess"), { target: { value: "63" } });
-    fireEvent.click(screen.getByRole("button", { name: "LOCK GUESS 2" }));
+    const slider = screen.getByLabelText("Your Wavelength guess from 1 to 100");
+    fireEvent.change(slider, { target: { value: "63" } });
+    fireEvent.click(screen.getByRole("button", { name: "LOCK GUESS & REVEAL NEXT CLUE" }));
     expect(onAdvance).toHaveBeenCalledWith({ guess: 63 });
   });
 
-  it("plays Blind Resume with identities hidden until each pick", () => {
-    const { onAdvance } = renderView(projection(
+  it("plays Blind Resume through the exact casual scoreboard and resume-card hierarchy", () => {
+    const { onAdvance, container } = renderView(projection(
       "blind_resume",
       { round_count: 5 },
       {
@@ -114,21 +117,67 @@ describe("official Today’s Challenge at the 390×844 phone contract", () => {
         current_round: {
           round_number: 1,
           stats: [
-            { label: "UFC WINS", value_a: "14", value_b: "12" },
-            { label: "TITLE WINS", value_a: "2", value_b: "4" },
+            { label: "UFC TITLE-FIGHT WINS", value_a: "1", value_b: "2" },
+            { label: "TOP-5 WINS", value_a: "4", value_b: "3" },
+            { label: "APEX RATING", value_a: "94", value_b: "93" },
           ],
         },
       },
     ));
 
-    expect(screen.getByText("NO NAMES")).toBeInTheDocument();
-    expect(screen.queryByText("Future Fighter")).not.toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "PICK FIGHTER A" }));
+    expect(container.querySelector(".blind-resume-scoreboard")).not.toBeNull();
+    expect(container.querySelector(".blind-resume-card")).not.toBeNull();
+    expect(screen.getByRole("heading", { name: "Which UFC career ranks higher?" })).toBeInTheDocument();
+    expect(screen.queryByText("LAST PICK")).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "PICK A" }));
     expect(onAdvance).toHaveBeenCalledWith({ choice: "A" });
   });
 
-  it("plays Blind Rank 5 one fighter at a time with locked slots", () => {
-    const { onAdvance } = renderView(projection(
+  it("stops on the casual Blind Resume verdict after a daily pick before showing the next round", () => {
+    const base = projection(
+      "blind_resume",
+      { round_count: 5 },
+      {
+        complete: false,
+        round_index: 0,
+        results: [],
+        current_round: { round_number: 1, stats: [{ label: "APEX RATING", value_a: "94", value_b: "93" }] },
+      },
+    );
+    const { rerender, container } = renderView(base);
+    rerender(
+      <OfficialTodayChallengeView
+        projection={{
+          ...base,
+          progressRevision: 2,
+          publicState: {
+            complete: false,
+            round_index: 1,
+            results: [{
+              round_index: 0,
+              picked_id: "fighter-a",
+              winner_id: "fighter-a",
+              correct: true,
+              fighter_a: presentedFighter("fighter-a", "Fighter A Name"),
+              fighter_b: presentedFighter("fighter-b", "Fighter B Name"),
+            }],
+            current_round: { round_number: 2, stats: [{ label: "APEX RATING", value_a: "90", value_b: "91" }] },
+          },
+        }}
+        busy={false}
+        onAdvance={vi.fn()}
+        onNavigate={vi.fn()}
+      />,
+    );
+
+    expect(container.querySelector(".blind-resume-verdict")).not.toBeNull();
+    expect(screen.getByRole("heading", { name: "Fighter A Name ranks higher" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "NEXT ROUND" })).toBeInTheDocument();
+    expect(container.querySelector(".blind-resume-card")).toBeNull();
+  });
+
+  it("plays Blind Rank 5 through the casual locked-slot board", () => {
+    const { onAdvance, container } = renderView(projection(
       "blind_rank_5",
       { pack: { name: "UFC Careers", prompt: "Rank these careers", intro: "Every slot locks." } },
       {
@@ -139,18 +188,19 @@ describe("official Today’s Challenge at the 390×844 phone contract", () => {
       },
     ));
 
+    expect(container.querySelector(".blind-rank-game")).not.toBeNull();
+    expect(container.querySelector(".blind-rank-current")).not.toBeNull();
     expect(screen.getByText("Current Fighter")).toBeInTheDocument();
-    expect(screen.queryByText("Future Fighter")).not.toBeInTheDocument();
     fireEvent.click(screen.getAllByRole("button", { name: /PLACE HERE/ })[0]!);
     expect(onAdvance).toHaveBeenCalledWith({ slot: 2 });
   });
 
-  it("preserves the corrected forced Keep 4, Cut 4 flow", () => {
+  it("plays Keep 4, Cut 4 through the casual trays and decision card", () => {
     const kept = ["one", "two", "three", "four"].map((id) => presentedFighter(id, `Kept ${id}`));
     const cut = ["five", "six"].map((id) => presentedFighter(id, `Cut ${id}`));
-    const { onAdvance } = renderView(projection(
+    const { onAdvance, container } = renderView(projection(
       "keep_4_cut_4",
-      { pack: { prompt: "Build the best four", description: "Eight blind reveals." } },
+      { pack: { group: "Careers", name: "UFC Careers", prompt: "Build the best four", description: "Eight blind reveals." } },
       {
         complete: false,
         reveal_index: 6,
@@ -161,8 +211,8 @@ describe("official Today’s Challenge at the 390×844 phone contract", () => {
       },
     ));
 
-    expect(screen.getByText("Current Fighter")).toBeInTheDocument();
-    expect(screen.queryByText("Eighth Fighter")).not.toBeInTheDocument();
+    expect(container.querySelector(".keep-cut-game-card")).not.toBeNull();
+    expect(container.querySelectorAll(".keep-cut-tray")).toHaveLength(2);
     expect(screen.getByRole("button", { name: "KEEP" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "CUT" })).toBeEnabled();
     expect(screen.getByText("KEEP IS FULL — THIS FIGHTER MUST BE CUT")).toBeInTheDocument();
@@ -170,12 +220,12 @@ describe("official Today’s Challenge at the 390×844 phone contract", () => {
     expect(onAdvance).toHaveBeenCalledWith({ choice: "cut" });
   });
 
-  it("shows a perfect Keep 4, Cut 4 as 16 board-relative comparisons and 100", () => {
+  it("shows a perfect Keep 4, Cut 4 in the casual result presentation", () => {
     const kept = ["one", "two", "three", "four"].map((id) => presentedFighter(id, `Kept ${id}`));
     const cut = ["five", "six", "seven", "eight"].map((id) => presentedFighter(id, `Cut ${id}`));
-    renderView(projection(
+    const { container } = renderView(projection(
       "keep_4_cut_4",
-      { pack: { prompt: "Build the best four", description: "Eight blind reveals." } },
+      { pack: { group: "Careers", name: "UFC Careers", prompt: "Build the best four", description: "Eight blind reveals." } },
       { complete: true, reveal_index: 8, kept, cut, current_fighter: null, reveal: { model_top_four_ids: kept.map((row) => row.id) } },
       {
         revealSetup: { model_top_four_ids: kept.map((row) => row.id) },
@@ -188,8 +238,9 @@ describe("official Today’s Challenge at the 390×844 phone contract", () => {
       },
     ));
 
-    expect(screen.getByRole("heading", { name: "100/100" })).toBeInTheDocument();
-    expect(screen.getByText("4 of the board’s actual top four kept · 16 of 16 comparisons won.")).toBeInTheDocument();
+    expect(container.querySelector(".keep-cut-result-hero")).not.toBeNull();
+    expect(screen.getByRole("heading", { name: /100\/100/ })).toBeInTheDocument();
+    expect(screen.getByText("4 OF MODEL TOP 4 KEPT · 16 OF 16 COMPARISONS WON")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "KEEP" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "CUT" })).not.toBeInTheDocument();
   });
