@@ -133,7 +133,7 @@ function FindLeaderView({ projection, busy, onAdvance }: OfficialGameViewProps) 
           </div>
           {leader ? (
             <article>
-              <FighterPhoto fighter={undefined as never} name={leader.name} src={leader.thumbUrl} className="find-result-hero__photo" />
+              <FighterPhoto name={leader.name} src={leader.thumbUrl} className="find-result-hero__photo" />
               <span><small>GROUP LEADER</small><strong>{leader.name}</strong><b>{leader.value} {statLabel}</b></span>
             </article>
           ) : null}
