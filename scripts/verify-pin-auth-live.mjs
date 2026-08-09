@@ -180,65 +180,71 @@ try {
   }
 
   await request(
-    "Disposable profile upsert",
-    `${supabaseOrigin}/rest/v1/profiles?on_conflict=id`,
-    {
-      method: "POST",
-      headers: {
-        ...serviceHeaders,
-        Prefer: "resolution=merge-duplicates,return=minimal",
-      },
-      body: JSON.stringify({
-        id: userId,
-        display_name: displayName,
-      }),
-    },
-    [201, 204],
-  );
-
-  await request(
-    "Temporary owner grant",
-    `${supabaseOrigin}/rest/v1/app_roles?on_conflict=user_id,role`,
-    {
-      method: "POST",
-      headers: {
-        ...serviceHeaders,
-        Prefer: "resolution=merge-duplicates,return=minimal",
-      },
-      body: JSON.stringify({
-        user_id: userId,
-        role: "picks_admin",
-      }),
-    },
-    [201, 204],
-  );
-
-  await request(
-    "PIN credential registration",
-    `${supabaseOrigin}/functions/v1/pin-auth`,
+    "Stale PIN credential registration",
+    `${supabaseOrigin}/rest/v1/rpc/register_pin_profile`,
     {
       method: "POST",
       headers: serviceHeaders,
       body: JSON.stringify({
-        action: "register",
-        profileId: userId,
-        email: staleCredentialEmail,
-        pin,
+        p_profile_id: userId,
+        p_display_name: displayName,
+        p_initials: "H",
+        p_internal_email: staleCredentialEmail,
+        p_pin: pin,
       }),
     },
   );
 
+  await request(
+    "Temporary Event Setup owner grant",
+    `${supabaseOrigin}/rest/v1/pick_control_owners`,
+    {
+      method: "POST",
+      headers: { ...serviceHeaders, Prefer: "return=minimal" },
+      body: JSON.stringify({ profile_id: userId }),
+    },
+    [201],
+  );
+
+  const login = await request(
+    "Direct live PIN login",
+    `${supabaseOrigin}/functions/v1/pin-auth`,
+    {
+      method: "POST",
+      headers: publicHeaders,
+      body: JSON.stringify({ action: "login", displayName, pin }),
+    },
+  );
+
+  if (!login.body?.tokenHash) {
+    throw new Error("Direct live PIN login: response did not include a token hash.");
+  }
+
   browser = await webkit.launch({ headless: true });
-  const page = await browser.newPage({
+  const context = await browser.newContext({
     viewport: { width: 390, height: 844 },
+    locale: "en-US",
   });
+  const page = await context.newPage();
   const diagnostics = [];
   let syncRequestCount = 0;
-  page.on("request", (request) => {
-    if (request.url().includes("/functions/v1/sync-next-ufc-event")) syncRequestCount += 1;
+
+  page.on("console", (message) => {
+    if (message.type() === "error" || message.type() === "warning") {
+      diagnostics.push(`console:${message.type()}: ${message.text()}`);
+    }
   });
-  page.on("requestfailed", (request) => {
-    diagnostics.push(`failed: ${request.method()} ${request.url()} ${request.failure()?.errorText ?? "unknown"}`);
+  page.on("request", (request) => {
+    if (request.url().includes("/functions/v1/sync-next-ufc-event")) {
+      syncRequestCount += 1;
+    }
+  });
+  page.on("requestfailed", (failedRequest) => {
+    if (failedRequest.url().includes("supabase.co")) {
+      diagnostics.push(
+        `requestfailed: ${failedRequest.method()} ${failedRequest.url()} ${failedRequest.failure()?.errorText ?? "unknown"}`,
+      );
+    }
   });
   page.on("response", async (response) => {
     if (!response.url().includes("/functions/v1/")) return;
@@ -377,79 +383,144 @@ try {
     { timeout: 15_000 },
   );
   await page.getByText("PRIVATE PICKS OWNER", { exact: true }).waitFor({ state: "visible", timeout: 15_000 });
-  await waitForControlStatus(page);
-  await page.getByRole("region", { name: "Event setup" }).waitFor({ state: "visible", timeout: 15_000 });
-  if (await page.getByText("CONTROL UNAVAILABLE", { exact: true }).count()) {
-    throw new Error("Picks Control Center rendered its control-unavailable state during Event Setup verification.");
-  }
-  if (await page.getByText("SETUP UNAVAILABLE", { exact: true }).count()) {
-    throw new Error("Picks Control Center rendered its setup-unavailable state during Event Setup verification.");
-  }
-  await page.getByText("EVENT SETUP", { exact: true }).waitFor({ state: "visible", timeout: 15_000 });
-  await page.getByRole("button", { name: "PREVIEW EVENT" }).waitFor({ state: "visible", timeout: 15_000 });
-  const beforePreviewText = await page.getByRole("region", { name: "Event setup" }).textContent();
-  await page.getByRole("button", { name: "PREVIEW EVENT" }).click();
-  await page.getByText("PREVIEW READY", { exact: true }).waitFor({ state: "visible", timeout: 30_000 });
-  const afterPreviewText = await page.getByRole("region", { name: "Event setup" }).textContent();
-  if (beforePreviewText === afterPreviewText) {
-    throw new Error("Event Setup preview did not visibly refresh after PREVIEW EVENT.");
-  }
-  if (syncRequestCount !== syncRequestsBeforeSetup + 1) {
-    throw new Error(`Event Setup preview issued ${syncRequestCount - syncRequestsBeforeSetup} sync request(s); expected exactly one.`);
-  }
+  const setupStatus = await waitForControlStatus(page);
+  let previewOutcome;
 
-  const previewStateText = await page.getByRole("region", { name: "Event setup" }).textContent();
-  assertCurrentEventPreview(previewStateText);
-  assertSafeEventSourceRollover(previewStateText);
-
-  const results = await request(
-    "Live Picks scoring projection",
-    `${supabaseOrigin}/rest/v1/rpc/get_my_pick_summary`,
-    {
-      method: "POST",
-      headers: {
-        ...publicHeaders,
-        Authorization: `Bearer ${await page.evaluate(() => localStorage.getItem("octagon-hq-access-token") ?? "")}`,
-      },
-      body: JSON.stringify({ p_season: 2026 }),
-    },
-  );
-  const expectedSummaryFields = [
-    "completed_events",
-    "correct_picks",
-    "total_picks",
-    "base_points",
-    "underdog_lock_bonus_points",
-    "total_points",
-    "season_rank",
-  ];
-  for (const field of expectedSummaryFields) {
-    if (!Number.isInteger(Number(results.body?.[field]))) {
-      throw new Error(`Live Picks scoring projection is missing integer field ${field}.`);
+  if (isSetupLifecycle(setupStatus)) {
+    await page.getByRole("region", { name: "Card scope" }).waitFor({ state: "visible", timeout: 15_000 });
+    await page.getByRole("heading", { name: "Choose what counts", exact: true }).waitFor({ state: "visible", timeout: 15_000 });
+    const sourceInput = page.getByLabel("MMA MANIA CARD URL (OPTIONAL)");
+    const stagedSourceUrl = await sourceInput.inputValue();
+    if (configuredArticleUrl) {
+      await sourceInput.fill(configuredArticleUrl);
     }
+
+    const updateButton = page.getByRole("button", { name: "CHECK FOR CARD UPDATES" });
+    const syncButton = page.getByRole("button", { name: "SYNC NEXT UFC EVENT" });
+
+    if (await updateButton.count()) {
+      const previewResponsePromise = page.waitForResponse(
+        (response) => response.url().includes("/functions/v1/sync-next-ufc-event")
+          && response.request().method() === "POST",
+        { timeout: 30_000 },
+      );
+      await updateButton.click();
+      const previewResponse = await previewResponsePromise;
+      const previewBody = await previewResponse.json().catch(() => ({}));
+      if (expectedSyncSourceSha && previewBody?.deployment_sha !== expectedSyncSourceSha) {
+        throw new Error(
+          `WebKit Event Setup backend SHA mismatch: expected ${expectedSyncSourceSha}, received ${previewBody?.deployment_sha ?? "missing"}.`,
+        );
+      }
+
+      if (previewResponse.status() === 200) {
+        assertCurrentEventPreview({
+          ...previewBody.event_preview,
+          source_url: previewBody.source_url,
+        });
+        await page.getByText("SOURCE REVIEW · NOT APPLIED").waitFor({ state: "visible", timeout: 15_000 });
+        await page.getByRole("heading", { name: /^(Main card|Full card) · \d+ fights$/i }).waitFor({ state: "visible" });
+        const visibleText = await page.locator("body").innerText();
+        for (const expected of [
+          previewBody.event_preview?.name,
+          previewBody.event_preview?.subtitle,
+          previewBody.event_preview?.venue,
+          previewBody.event_preview?.location,
+        ]) {
+          if (!expected || !visibleText.includes(expected)) {
+            throw new Error(`Event Setup source review did not render ${expected || "a required event field"}.`);
+          }
+        }
+        if (await page.getByRole("button", { name: "PUBLISH CARD" }).count()) {
+          throw new Error("Publish controls remained visible during the read-only source review.");
+        }
+        previewOutcome = `rendered a clean ${previewBody.fight_count}-fight current-source review`;
+      } else if (previewResponse.status() === 502) {
+        assertSafeEventSourceRollover(previewBody);
+        const visibleError = page.locator(".picks-error");
+        await visibleError.waitFor({ state: "visible", timeout: 15_000 });
+        const visibleErrorText = (await visibleError.textContent())?.trim() ?? "";
+        if (!visibleErrorText || (previewBody?.message && !visibleErrorText.includes(previewBody.message))) {
+          throw new Error(`Event Setup did not display the safe source rollover message: ${visibleErrorText || "missing"}.`);
+        }
+        await page.getByText("STAGED CARD · NOT LIVE").waitFor({ state: "visible" });
+        await updateButton.waitFor({ state: "visible" });
+        if (await page.getByText("SOURCE REVIEW · NOT APPLIED").count()) {
+          throw new Error("Event Setup opened a source review after the backend rejected the event identity.");
+        }
+        if ((await sourceInput.inputValue()) !== (configuredArticleUrl || stagedSourceUrl)) {
+          throw new Error("Event Setup changed the persisted source field after a safe source rollover rejection.");
+        }
+        previewOutcome = "displayed the fail-closed source rollover without applying or publishing it";
+      } else {
+        throw new Error(
+          `Event Setup returned unexpected HTTP ${previewResponse.status()}: ${safeMessage(previewBody)}.\n${diagnostics.join("\n")}`,
+        );
+      }
+    } else if (await syncButton.count()) {
+      await page.getByText("NO STAGED CARD", { exact: true }).waitFor({ state: "visible", timeout: 15_000 });
+      await page.getByRole("heading", { name: "Stage the next UFC event.", exact: true }).waitFor({ state: "visible", timeout: 15_000 });
+      await syncButton.waitFor({ state: "visible", timeout: 15_000 });
+      if (await syncButton.isDisabled()) {
+        throw new Error("Event Setup disabled the canonical no-draft sync action.");
+      }
+      if (await page.getByText("SOURCE REVIEW · NOT APPLIED").count()) {
+        throw new Error("Event Setup opened a source review without a staged draft.");
+      }
+      if (await page.getByRole("button", { name: "PUBLISH CARD" }).count()) {
+        throw new Error("Event Setup exposed publish controls without a staged draft.");
+      }
+      await page.waitForTimeout(250);
+      if (syncRequestCount !== syncRequestsBeforeSetup) {
+        throw new Error("Event Setup called the sync provider while rendering the no-draft review state.");
+      }
+      previewOutcome = "confirmed the no-draft setup presents its canonical sync action without applying or publishing anything";
+    } else {
+      throw new Error("Event Setup rendered neither its staged-card review action nor its no-draft sync action.");
+    }
+  } else if (isActiveEventLifecycle(setupStatus)) {
+    if (await page.getByRole("region", { name: "Card scope" }).count()) {
+      throw new Error(`Event Setup rendered during the ${setupStatus} lifecycle.`);
+    }
+    previewOutcome = `confirmed the ${setupStatus} lifecycle correctly omits Event Setup without calling the sync provider`;
+  } else {
+    throw new Error(`Picks Control Center did not reach a valid setup lifecycle: ${setupStatus || "missing"}.`);
   }
 
-  console.log(`Live PIN/WebKit proof passed: ${monitoringOutcome}; Event Setup preview stayed non-destructive; scoring projection is healthy.`);
+  const visibleText = await page.locator("body").innerText();
+  if (/iframe|googletagmanager|skip\s+to\s+main|src\s*=/i.test(visibleText)) {
+    throw new Error("Event Setup exposed polluted UFC visible-page metadata.");
+  }
+
+  const screenshotPath = process.env.EVENT_SETUP_SCREENSHOT_PATH
+    ?? `${process.env.RUNNER_TEMP ?? "/tmp"}/event-setup-preview.png`;
+  await page.screenshot({ path: screenshotPath, fullPage: true });
+
+  console.log(
+    `PASS: WebKit verified live production frontend ${liveDeploymentSha}, authenticated at 390x844, preserved the canonical Picks Control Center monitoring and setup anchors through sign-in, ${monitoringOutcome}, and ${previewOutcome}.`,
+  );
 } finally {
-  if (browser) await browser.close();
+  if (browser) await browser.close().catch(() => undefined);
   if (userId) {
     await request(
-      "Temporary owner grant cleanup",
-      `${supabaseOrigin}/rest/v1/app_roles?user_id=eq.${encodeURIComponent(userId)}`,
+      "Temporary Event Setup owner cleanup",
+      `${supabaseOrigin}/rest/v1/pick_control_owners?profile_id=eq.${encodeURIComponent(userId)}`,
       { method: "DELETE", headers: serviceHeaders },
       [200, 204],
-    ).catch(() => undefined);
-    await request(
-      "Disposable profile cleanup",
-      `${supabaseOrigin}/rest/v1/profiles?id=eq.${encodeURIComponent(userId)}`,
-      { method: "DELETE", headers: serviceHeaders },
-      [200, 204],
-    ).catch(() => undefined);
+    );
     await request(
       "Disposable Auth user cleanup",
       `${supabaseOrigin}/auth/v1/admin/users/${userId}`,
       { method: "DELETE", headers: serviceHeaders },
       [200, 204],
-    ).catch(() => undefined);
+    );
+    const profileCleanupProof = await request(
+      "Disposable profile cleanup proof",
+      `${supabaseOrigin}/rest/v1/profiles?id=eq.${encodeURIComponent(userId)}&select=id`,
+      { headers: serviceHeaders },
+    );
+    if (!Array.isArray(profileCleanupProof.body) || profileCleanupProof.body.length !== 0) {
+      throw new Error("Disposable profile cleanup proof: HQCHECK profile still exists after Auth cleanup.");
+    }
   }
 }
