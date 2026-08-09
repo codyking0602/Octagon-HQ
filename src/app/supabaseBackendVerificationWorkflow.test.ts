@@ -13,6 +13,14 @@ const syncDeploymentVerification = readFileSync(
   "scripts/verify-sync-function-deployment.mjs",
   "utf8",
 );
+const eventSetupPreviewVerification = readFileSync(
+  "scripts/verify-event-setup-preview-live.mjs",
+  "utf8",
+);
+const pinAuthVerification = readFileSync(
+  "scripts/verify-pin-auth-live.mjs",
+  "utf8",
+);
 
 describe("Supabase backend verification release boundary", () => {
   it("resolves the last genuinely deployed frontend ancestor for non-runtime main commits", () => {
@@ -125,6 +133,38 @@ describe("Supabase backend verification release boundary", () => {
     );
     expect(syncDeploymentVerification).toContain(
       "PASS: Auction migrations 202608220001 through 202608220004 are recorded in linked remote history.",
+    );
+  });
+
+  it("retries only transient Event Setup compute failures and still fails closed", () => {
+    expect(eventSetupPreviewVerification).toContain("retryStatuses = []");
+    expect(eventSetupPreviewVerification).toContain("retryStatuses.includes(response.status)");
+    expect(eventSetupPreviewVerification).toContain(
+      "{ retryStatuses: [546], attempts: 4, delayMs: 4_000 }",
+    );
+    expect(eventSetupPreviewVerification).toContain("[200, 502],");
+    expect(eventSetupPreviewVerification).not.toContain("[200, 502, 546]");
+    expect(eventSetupPreviewVerification).toContain(
+      "retrying the same canonical request",
+    );
+  });
+
+  it("waits for WebKit to settle on the canonical single detail panel", () => {
+    expect(pinAuthVerification).toContain("async function waitForSingleExpandedFight");
+    expect(pinAuthVerification).toContain(
+      'fightRegion.locator(".open-pick-row__details")',
+    );
+    expect(pinAuthVerification).toContain(
+      'fightRegion.locator(\'.open-pick-row__summary[aria-expanded="true"]\')',
+    );
+    expect(pinAuthVerification).toContain(
+      "await waitForSingleExpandedFight(fightRegion, fightRows, 0);",
+    );
+    expect(pinAuthVerification).toContain(
+      "await waitForSingleExpandedFight(fightRegion, fightRows, 1);",
+    );
+    expect(pinAuthVerification).not.toContain(
+      "The compact card allowed more than one detailed fight panel at a time.",
     );
   });
 
