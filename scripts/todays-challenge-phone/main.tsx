@@ -4,8 +4,11 @@ import type { DailyGameType } from "../../src/features/play/todaysChallengeAdapt
 import type { TodayChallengeProjection } from "../../src/features/play/todayChallengeRepository";
 import "../../src/styles/tokens.css";
 import "../../src/styles/global.css";
+import "../../src/styles/play.css";
 import "../../src/styles/today-challenge.css";
-import "../../src/styles/official-daily-game-parity.css";
+import "../../src/styles/wavelength.css";
+import "../../src/styles/blind-games.css";
+import "../../src/styles/final-play-games.css";
 
 function presentedFighter(id: string, name: string) {
   return {
@@ -53,6 +56,7 @@ const fixtures: Record<DailyGameType, TodayChallengeProjection> = {
     "find_leader",
     {
       question: "Who has the most UFC wins?",
+      context: "Leave the fighter with the most UFC wins among this group.",
       stat_label: "UFC WINS",
       candidates: fighters.map((row) => ({
         id: row.id,
@@ -83,9 +87,14 @@ const fixtures: Record<DailyGameType, TodayChallengeProjection> = {
       current_round: {
         round_number: 2,
         stats: [
-          { label: "UFC WINS", value_a: "14", value_b: "12" },
-          { label: "TITLE WINS", value_a: "2", value_b: "4" },
-          { label: "TOP-10 WINS", value_a: "8", value_b: "7" },
+          { label: "UFC TITLE-FIGHT WINS", value_a: "1", value_b: "2" },
+          { label: "TOP-5 WINS", value_a: "4", value_b: "3" },
+          { label: "PRIME UFC RECORD", value_a: "11-0-1", value_b: "9-2" },
+          { label: "MAIN UFC ERA", value_a: "Tournament Era", value_b: "New Blood Era" },
+          { label: "APEX RATING", value_a: "94", value_b: "93" },
+          { label: "ROUNDS WON", value_a: "95.8%", value_b: "72.2%" },
+          { label: "FINISH RATE", value_a: "100%", value_b: "66.7%" },
+          { label: "ACTIVE ELITE YEARS", value_a: "1.4", value_b: "4.1" },
         ],
       },
     },
@@ -102,7 +111,7 @@ const fixtures: Record<DailyGameType, TodayChallengeProjection> = {
   ),
   keep_4_cut_4: projection(
     "keep_4_cut_4",
-    { pack: { prompt: "Build the best four", description: "Eight blind reveals." } },
+    { pack: { group: "Careers", name: "UFC Careers", prompt: "Build the best four", description: "Eight blind reveals." } },
     {
       complete: false,
       reveal_index: 6,
