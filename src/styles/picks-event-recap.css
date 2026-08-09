@@ -202,12 +202,18 @@ body.picks-recap-open {
 }
 
 .picks-event-recap__hero h2 {
-  font-size: clamp(25px, 7.8vw, 38px);
-  line-height: .98;
-  letter-spacing: -.05em;
+  color: var(--text-secondary);
+  font-size: clamp(13px, 3.8vw, 17px);
+  line-height: 1.05;
+  letter-spacing: .02em;
+  text-transform: uppercase;
 }
 
-.picks-event-recap__hero-copy > strong { font-size: 14px; }
+.picks-event-recap__hero-copy > strong {
+  font-size: clamp(20px, 6vw, 27px);
+  line-height: 1.02;
+  letter-spacing: -.035em;
+}
 .picks-event-recap__hero-copy > p:not(.picks-event-recap__story) { color: var(--text-muted); font-size: 9px; }
 
 .picks-event-recap__champion {
@@ -366,14 +372,7 @@ body.picks-recap-open {
 .picks-event-recap__fight-list {
   display: grid;
   gap: 6px;
-  max-height: min(58dvh, 520px);
   padding: 8px;
-  overflow-x: hidden;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  touch-action: pan-y;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-gutter: stable;
 }
 
 .picks-event-recap__fight-list > article {
