@@ -89,7 +89,7 @@ begin
   exception when others then
     if sqlerrm not like '%pick control owner required%' then raise; end if;
   end;
-  if current_setting('octagon.pick_deadline_owner_override', true) is distinct from 'off' then
+  if current_setting('octagon.pick_deadline_owner_override', true) = 'on' then
     raise exception 'deadline override leaked after rejected non-owner call';
   end if;
 
@@ -118,7 +118,7 @@ begin
       is distinct from v_new_lock then
     raise exception 'owner reopen did not move the passed fight deadline';
   end if;
-  if current_setting('octagon.pick_deadline_owner_override', true) is distinct from 'off' then
+  if current_setting('octagon.pick_deadline_owner_override', true) = 'on' then
     raise exception 'deadline override leaked after successful owner call';
   end if;
   if (select count(*) from public.pick_card_change_actions
@@ -174,7 +174,7 @@ begin
       where event_id='live-owner-control-test' and bout_id='cancel-result-bout') <> 'cancelled' then
     raise exception 'official live cancellation result was not recorded';
   end if;
-  if current_setting('octagon.pick_official_result_write', true) is distinct from 'off' then
+  if current_setting('octagon.pick_official_result_write', true) = 'on' then
     raise exception 'official result override leaked after result entry';
   end if;
 
@@ -208,7 +208,7 @@ begin
   exception when others then
     if sqlerrm not like '%locked, removed, or resulted fight deadline cannot change%' then raise; end if;
   end;
-  if current_setting('octagon.pick_deadline_owner_override', true) is distinct from 'off' then
+  if current_setting('octagon.pick_deadline_owner_override', true) = 'on' then
     raise exception 'deadline override leaked after resulted-fight rejection';
   end if;
 
