@@ -351,7 +351,7 @@ describe("Unified Picks Control Center", () => {
     );
 
     expect(await screen.findAllByText("EVENT COMPLETE")).not.toHaveLength(0);
-    expect(screen.getByText("Recap published automatically")).toBeInTheDocument();
+    expect(screen.getByText("Recap published")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "VIEW UFC OLDER EVENT" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "CORRECT RESULT" })).toBeInTheDocument();
   });
