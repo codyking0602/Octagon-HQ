@@ -337,15 +337,30 @@ begin
     raise exception 'owner cannot adjust a future unlocked bout: %',v_control;
   end if;
 
-  begin
-    perform public.adjust_pick_bout_lock_time(
-      'per-fight-lock-test','early-bout',now()+interval '3 hours'
-    );
-    raise exception 'already locked bout was reopened';
-  exception when others then
-    if sqlerrm not like '%locked, removed, or resulted fight deadline cannot change%'
-      and sqlerrm not like '%locked bout cannot be reopened%' then raise; end if;
-  end;
+  -- A passed pending bout stays locked to members, but the existing owner
+  -- deadline adapter may explicitly reopen it. Restore the expired fixture
+  -- afterward so the remaining locked-card protections are still proven.
+  perform public.adjust_pick_bout_lock_time(
+    'per-fight-lock-test','early-bout',now()+interval '3 hours'
+  );
+  if not exists (
+    select 1 from public.pick_bouts
+    where event_id='per-fight-lock-test'
+      and bout_id='early-bout'
+      and locks_at > now()+interval '2 hours 59 minutes'
+  ) then
+    raise exception 'owner did not explicitly reopen a passed pending bout';
+  end if;
+  perform set_config('request.jwt.claim.role','service_role',true);
+  update public.pick_bouts
+  set locks_at = now() - interval '1 minute'
+  where event_id='per-fight-lock-test' and bout_id='early-bout';
+  v_early_lock := (
+    select locks_at from public.pick_bouts
+    where event_id='per-fight-lock-test' and bout_id='early-bout'
+  );
+  perform set_config('request.jwt.claim.role','authenticated',true);
+  perform set_config('request.jwt.claim.sub',v_owner::text,true);
 
   -- Direct calls to every existing card-change owner cannot bypass the early lock.
   begin

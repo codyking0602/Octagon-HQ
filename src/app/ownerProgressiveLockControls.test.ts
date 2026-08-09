@@ -38,13 +38,15 @@ describe("owner progressive-lock controls", () => {
     expect(progressiveBoutActions).not.toContain("event.startsAt");
   });
 
-  it("keeps finality, pending state, result state, and backend acceptance authoritative", () => {
+  it("keeps event and result finality while making passed pending fights explicitly reopenable", () => {
     expect(timing).toContain('event.status !== "upcoming"');
     expect(timing).toContain('bout.resultStatus !== "pending"');
     expect(timing).toContain("bout.isLocked === true");
     expect(timing).toContain("now >= deadline");
     expect(controlPage).toContain("DEADLINE FINAL");
-    expect(controlPage).toContain("This deadline is final and cannot be reopened.");
+    expect(controlPage).toContain("The event-wide master lock is active, so this deadline is final.");
+    expect(controlPage).toContain("This fight already has an official result, so its deadline is final.");
+    expect(controlPage).toContain("explicitly reopen this fight with a new future deadline");
     expect(controlPage).toContain("await action();");
     expect(controlPage).toContain("await loadEvent(event?.eventId);");
     expect(controlPage.indexOf("await action();")).toBeLessThan(

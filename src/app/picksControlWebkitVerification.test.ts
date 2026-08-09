@@ -37,7 +37,7 @@ describe("production Picks Control Center WebKit verification", () => {
     expect(verifier).toContain('/^\\d+ FIGHTS? NEED RESULTS$/.test(status)');
   });
 
-  it("requires truthful monitoring and the compact fight dashboard only for an open card", () => {
+  it("requires truthful monitoring and a settled single-detail fight dashboard only for an open card", () => {
     expect(verifier).toContain('const monitoringRegion = page.getByRole("region", {');
     expect(verifier).toContain('name: "Automatic monitoring and card review"');
     expect(verifier).toContain('if (controlStatus === "PICKS OPEN")');
@@ -48,9 +48,12 @@ describe("production Picks Control Center WebKit verification", () => {
     expect(verifier).toContain('getByRole("heading", { name: "One finding, one clear decision" })');
     expect(verifier).toContain('getByRole("region", { name: /compact fight controls$/ })');
     expect(verifier).toContain('fightRegion.locator(".open-pick-row__summary")');
+    expect(verifier).toContain('fightRegion.locator(".open-pick-row__details")');
     expect(verifier).toContain("Manage Open Picks rendered ${fightRowCount} compact fight rows; expected multiple rows.");
-    expect(verifier).toContain("Collapsed fight rows exposed permanent lock controls.");
-    expect(verifier).toContain("Opening a second fight did not collapse the first fight.");
+    expect(verifier).toContain("Collapsed fight rows exposed a permanent detail panel.");
+    expect(verifier).toContain("async function waitForSingleExpandedFight");
+    expect(verifier).toContain("await waitForSingleExpandedFight(fightRegion, fightRows, 0);");
+    expect(verifier).toContain("await waitForSingleExpandedFight(fightRegion, fightRows, 1);");
     expect(verifier).toContain("Automation status did not render before the compact fight list.");
     expect(verifier).toContain("Monitoring Inbox rendered during the ${controlStatus} lifecycle.");
     expect(verifier).toContain("Picks Control Center did not reach a valid owner lifecycle");

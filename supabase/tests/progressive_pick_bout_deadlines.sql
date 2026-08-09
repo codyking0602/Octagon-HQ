@@ -196,27 +196,26 @@ begin
     raise exception 'custom-time deadline changed during guarded repair';
   end if;
 
-  -- A passed bout is final through the existing mutation and through the
-  -- guarded initialization helper.
+  -- The guarded initialization helper must never implicitly reopen a passed
+  -- fight. An explicit owner action, however, may now set a new future lock.
   perform set_config('request.jwt.claim.role','service_role',true);
   update public.pick_bouts
   set locks_at = now() - interval '1 minute'
   where event_id=v_event.event_id and bout_id='main-card-4';
   v_applied := private.apply_initial_pick_bout_deadlines(v_event.event_id, true);
   if v_applied then
-    raise exception 'finalized deadline was reopened or overwritten';
+    raise exception 'guarded initialization reopened or overwrote a passed deadline';
   end if;
   perform set_config('request.jwt.claim.role','authenticated',true);
   perform set_config('request.jwt.claim.sub',v_owner::text,true);
-  begin
-    perform public.adjust_pick_bout_lock_time(
-      v_event.event_id,'main-card-4',v_anchor
-    );
-    raise exception 'passed bout lock was reopened';
-  exception when others then
-    if sqlerrm not like '%locked, removed, or resulted fight deadline cannot change%'
-      and sqlerrm not like '%locked bout cannot be reopened%' then raise; end if;
-  end;
+  perform public.adjust_pick_bout_lock_time(
+    v_event.event_id,'main-card-4',v_anchor
+  );
+  if (select locks_at from public.pick_bouts
+      where event_id=v_event.event_id and bout_id='main-card-4')
+      is distinct from v_anchor then
+    raise exception 'explicit owner action did not reopen the passed pending bout';
+  end if;
 
   -- Resulted and event-finalized rows remain closed under the same established
   -- no-reopen boundaries.

@@ -172,15 +172,44 @@ describe("owner progressive Fight Night lock controls", () => {
     expect(screen.queryByRole("button", { name: "SET TIME" })).not.toBeInTheDocument();
   });
 
-  it("makes a passed, resulted, locked, or completed deadline final", async () => {
+  it("lets the owner explicitly reopen a passed pending fight with a new future deadline", async () => {
     const staleOpen = controlEvent("2099-08-09T02:00:00.000Z");
-    renderPage(repository(staleOpen), now);
-    const openFight = await expandedControlCardByFighter("Open Red");
-    expect(openFight.getByText("FIGHT LOCK · FINAL")).toBeInTheDocument();
-    expect(openFight.getByText("DEADLINE FINAL")).toBeInTheDocument();
-    expect(openFight.queryByRole("button", { name: "+10 MIN" })).not.toBeInTheDocument();
+    const repo = repository(staleOpen);
+    renderPage(repo, now);
+    const fight = await expandedControlCardByFighter("Open Red");
+
+    expect(fight.getByText("FIGHT LOCK · PASSED")).toBeInTheDocument();
+    expect(fight.getByRole("button", { name: "EDIT LOCK TIME" })).toBeInTheDocument();
+    expect(fight.queryByRole("button", { name: "+10 MIN" })).not.toBeInTheDocument();
+    expect(fight.queryByRole("button", { name: "+20 MIN" })).not.toBeInTheDocument();
+
+    fireEvent.click(fight.getByRole("button", { name: "EDIT LOCK TIME" }));
+    await waitFor(() => expect(repo.adjustBoutLockTime).toHaveBeenCalledWith(
+      "ufc-control-locks", "open-fight", new Date("2099-08-09T05:30").toISOString(),
+    ));
+    expect(window.confirm).toHaveBeenCalledWith(expect.stringMatching(/already locked[\s\S]*Reopen Open Red vs\. Open Blue/i));
+  });
+
+  it("records an individual result after that fight locks while the event is still upcoming", async () => {
+    const staleOpen = controlEvent("2099-08-09T02:00:00.000Z");
+    const repo = repository(staleOpen);
+    renderPage(repo, now);
+    const fight = await expandedControlCardByFighter("Open Red");
+
+    fireEvent.click(fight.getByRole("button", { name: "RED WINNER Open Red" }));
+    await waitFor(() => expect(repo.recordResult).toHaveBeenCalledWith(
+      "ufc-control-locks", "open-fight", "red_win",
+    ));
+    expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("the event remains live"));
+    expect(await screen.findByText("Open Red vs. Open Blue recorded as Open Red.")).toBeInTheDocument();
+  });
+
+  it("keeps resulted, event-wide locked, and completed deadlines final", async () => {
+    const repo = repository();
+    renderPage(repo);
     const resultedFight = await expandedControlCardByFighter("Locked Red");
     expect(resultedFight.getByText("DEADLINE FINAL")).toBeInTheDocument();
+    expect(resultedFight.queryByRole("button", { name: "EDIT LOCK TIME" })).not.toBeInTheDocument();
 
     cleanup();
     const lockedEvent = { ...controlEvent(), status: "locked" as const, canLock: false };
@@ -188,15 +217,17 @@ describe("owner progressive Fight Night lock controls", () => {
     expect(await screen.findByRole("heading", { name: "Fight Night Control" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "+10 MIN" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "SET TIME" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "EDIT LOCK TIME" })).not.toBeInTheDocument();
 
     cleanup();
     const completedEvent = { ...controlEvent(), status: "complete" as const, canLock: false };
     renderPage(repository(completedEvent));
     expect(await screen.findByRole("heading", { name: "Fight Night Control" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "+20 MIN" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "EDIT LOCK TIME" })).not.toBeInTheDocument();
   });
 
-  it("transitions owner warnings at 10, 5, and 1 minute before final lock", async () => {
+  it("transitions owner warnings at 10, 5, and 1 minute before the passed-fight controls appear", async () => {
     const repo = repository(controlEvent("2099-08-09T02:10:00.000Z"));
     const view = renderPage(repo, Date.parse("2099-08-09T02:00:00.000Z"));
     await expandedControlCardByFighter("Open Red");
@@ -211,8 +242,9 @@ describe("owner progressive Fight Night lock controls", () => {
     expect(screen.queryByText("LOCKS IN 5 MINUTES")).not.toBeInTheDocument();
 
     view.rerender(page(repo, Date.parse("2099-08-09T02:10:00.000Z")));
-    expect(await screen.findAllByText("DEADLINE FINAL")).not.toHaveLength(0);
+    expect(await screen.findByText("FIGHT LOCK · PASSED")).toBeInTheDocument();
     expect(screen.queryByText("LOCKS IN 1 MINUTE")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "+10 MIN" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "EDIT LOCK TIME" })).toBeInTheDocument();
   });
 });

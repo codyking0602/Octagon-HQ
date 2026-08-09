@@ -78,6 +78,23 @@ async function waitForControlStatus(page) {
   return (await statusLocator.textContent())?.trim() ?? "";
 }
 
+async function waitForSingleExpandedFight(fightRegion, fightRows, expectedIndex) {
+  const deadline = Date.now() + 15_000;
+  const detailPanels = fightRegion.locator(".open-pick-row__details");
+  const expandedRows = fightRegion.locator('.open-pick-row__summary[aria-expanded="true"]');
+  while (Date.now() < deadline) {
+    if (
+      await expandedRows.count() === 1
+      && await detailPanels.count() === 1
+      && await fightRows.nth(expectedIndex).getAttribute("aria-expanded") === "true"
+    ) {
+      return;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  throw new Error(`Fight ${expectedIndex + 1} did not settle as the only expanded detail panel.`);
+}
+
 const markerUrl = new URL("/deployment.json", productionOrigin);
 markerUrl.searchParams.set("run", process.env.GITHUB_RUN_ID ?? String(Date.now()));
 if (expectedDeploymentSha) markerUrl.searchParams.set("expected", expectedDeploymentSha);
@@ -311,12 +328,13 @@ try {
 
       await fightRegion.waitFor({ state: "visible", timeout: 15_000 });
       const fightRows = fightRegion.locator(".open-pick-row__summary");
+      const detailPanels = fightRegion.locator(".open-pick-row__details");
       const fightRowCount = await fightRows.count();
       if (fightRowCount < 2) {
         throw new Error(`Manage Open Picks rendered ${fightRowCount} compact fight rows; expected multiple rows.`);
       }
-      if (await page.getByRole("button", { name: "+10 MIN" }).count()) {
-        throw new Error("Collapsed fight rows exposed permanent lock controls.");
+      if (await detailPanels.count()) {
+        throw new Error("Collapsed fight rows exposed a permanent detail panel.");
       }
       const monitoringBeforeFights = await page.evaluate(() => {
         const monitoring = document.querySelector('[aria-label="Automatic monitoring and card review"]');
@@ -332,17 +350,9 @@ try {
       }
 
       await fightRows.nth(0).click();
-      await page.getByRole("button", { name: "+10 MIN" }).waitFor({ state: "visible", timeout: 15_000 });
-      if (await page.getByRole("button", { name: "+10 MIN" }).count() !== 1) {
-        throw new Error("Expanding one fight exposed detailed actions for more than one row.");
-      }
+      await waitForSingleExpandedFight(fightRegion, fightRows, 0);
       await fightRows.nth(1).click();
-      if (await fightRows.nth(0).getAttribute("aria-expanded") !== "false") {
-        throw new Error("Opening a second fight did not collapse the first fight.");
-      }
-      if (await page.getByRole("button", { name: "+10 MIN" }).count() !== 1) {
-        throw new Error("The compact card allowed more than one detailed fight panel at a time.");
-      }
+      await waitForSingleExpandedFight(fightRegion, fightRows, 1);
       await fightRows.nth(1).click();
 
       monitoringOutcome = `loaded visible truthful automation, ${partialCoverage ? "an explicit partial-coverage state" : waitingForNextCheck ? "the healthy waiting-for-next-check state" : "a compact review state"}, and ${fightRowCount} collapsed fight rows with one-detail-at-a-time controls`;

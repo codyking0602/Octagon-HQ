@@ -117,7 +117,7 @@ describe("user-confirmed chronological initial Picks bout deadlines", () => {
     expect(integrationSql).toContain("custom-time adjustment failed");
   });
 
-  it("proves final order, future publication, guarded live repair, and finality", () => {
+  it("proves final order, future publication, guarded repair, explicit reopen, and finality", () => {
     expect(integrationSql).toContain(
       "approved draft reorder did not own the published deadline order",
     );
@@ -140,9 +140,11 @@ describe("user-confirmed chronological initial Picks bout deadlines", () => {
       "manual deadline was overwritten by initial deadline repair",
     );
     expect(integrationSql).toContain(
-      "finalized deadline was reopened or overwritten",
+      "guarded initialization reopened or overwrote a passed deadline",
     );
-    expect(integrationSql).toContain("passed bout lock was reopened");
+    expect(integrationSql).toContain(
+      "explicit owner action did not reopen the passed pending bout",
+    );
     expect(integrationSql).toContain("resulted bout was reopened");
     expect(integrationSql).toContain("locked event was reopened");
     expect(integrationSql).toContain("completed event was reopened");

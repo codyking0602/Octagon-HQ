@@ -24,12 +24,34 @@ export function pickControlBoutIsFinal(
     || now >= deadline;
 }
 
+export function pickControlBoutCanSetDeadline(
+  event: PickControlEvent,
+  bout: PickControlBout,
+) {
+  return event.status === "upcoming"
+    && bout.resultStatus === "pending"
+    && bout.includedInPicks !== false;
+}
+
+export function pickControlBoutCanRecordResult(
+  event: PickControlEvent,
+  bout: PickControlBout,
+  now: number,
+) {
+  if (!pickControlBoutCanSetDeadline(event, bout)) return false;
+  const deadline = Date.parse(effectivePickControlBoutLock(event, bout));
+  return bout.isLocked === true
+    || (Number.isFinite(deadline) && now >= deadline);
+}
+
 export function pickControlBoutCanExtend(
   event: PickControlEvent,
   bout: PickControlBout,
   now: number,
 ) {
-  return bout.canAdjustLock === true && !pickControlBoutIsFinal(event, bout, now);
+  return pickControlBoutCanSetDeadline(event, bout)
+    && bout.canAdjustLock === true
+    && !pickControlBoutIsFinal(event, bout, now);
 }
 
 export function pickControlLockWarning(
