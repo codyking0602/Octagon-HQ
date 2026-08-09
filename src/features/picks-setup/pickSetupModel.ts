@@ -13,6 +13,16 @@ export interface PickSetupBout {
   included: boolean;
 }
 
+export interface PickSetupSpotlightWatch {
+  fighterSlug: string;
+  url: string;
+}
+
+export interface PickSetupSpotlight {
+  boutId: string;
+  watchSpotlights: PickSetupSpotlightWatch[];
+}
+
 export interface PickSetupDraft {
   draftId: string;
   source: string;
@@ -31,6 +41,7 @@ export interface PickSetupDraft {
   updatedAt: string;
   warnings: string[];
   canPublish: boolean;
+  spotlight: PickSetupSpotlight | null;
   bouts: PickSetupBout[];
 }
 
