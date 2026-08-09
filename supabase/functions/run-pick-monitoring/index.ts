@@ -1,7 +1,12 @@
 import { createClient } from "npm:@supabase/supabase-js@2.110.7";
 import { adaptTheOddsApiResponse, buildTheOddsApiRequestUrl } from "../../../src/features/picks-monitoring/theOddsApi.ts";
 import { buildManualMonitoringPayload, monitoringSummary, resolveMonitoringEvent, type CardScope, type MonitoringEvent, type SourcePreview } from "../../../src/features/picks-monitoring/manualMonitoringRunner.ts";
-import { decideScheduledMonitoring, type ScheduledMonitoringState } from "../../../src/features/picks-monitoring/scheduledMonitoring.ts";
+import {
+  decideScheduledMonitoring,
+  eventIsInAutomaticStagingWindow,
+  shouldAttemptAutomaticEventStaging,
+  type ScheduledMonitoringState,
+} from "../../../src/features/picks-monitoring/scheduledMonitoring.ts";
 import { DEPLOYED_SOURCE_SHA } from "./deployment.ts";
 
 const schedulerHeader = "x-octagon-scheduler-token";
@@ -106,6 +111,59 @@ Deno.serve(async (request) => {
     const state = asRecord(eventState.data);
     setupData = asEvent(state?.staged);
     currentData = asEvent(state?.current);
+
+    // When Event Setup is empty, reuse the existing source preview and staging RPC.
+    // Discovery is bounded to Monday/Tuesday checkpoints and the preview must prove
+    // the next event is inside the six-day fight-week horizon. This path stages only;
+    // publishing remains an explicit owner action in Event Setup.
+    const stagingNow = new Date();
+    if (!setupData && !currentData && shouldAttemptAutomaticEventStaging(stagingNow)) {
+      const stagePreviewResponse = await fetch(`${url}/functions/v1/sync-next-ufc-event`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", apikey: serviceKey },
+        body: JSON.stringify({ mode: "monitoring-preview" }),
+      });
+      const stagePreviewBody = await stagePreviewResponse.json().catch(() => null) as {
+        event_preview?: SourcePreview;
+        effective_scope?: CardScope;
+      } | null;
+      if (!stagePreviewResponse.ok || !stagePreviewBody?.event_preview || !stagePreviewBody.effective_scope) {
+        return finishScheduledDecision({
+          outcome: "failed",
+          reason: "automatic_stage_source_failed",
+          providerCalled: false,
+          response: safeError(502, "AUTOMATIC_STAGE_SOURCE_FAILED", "The next UFC event could not be discovered safely for automatic staging."),
+        });
+      }
+
+      const stageEvent = asRecord(stagePreviewBody.event_preview);
+      const stageStartsAt = typeof stageEvent?.starts_at === "string" ? stageEvent.starts_at : null;
+      if (eventIsInAutomaticStagingWindow(stageStartsAt, stagingNow)) {
+        const staged = await admin.rpc("stage_pick_event_draft", {
+          p_payload: stagePreviewBody.event_preview,
+        });
+        if (staged.error) {
+          return finishScheduledDecision({
+            outcome: "failed",
+            reason: "automatic_stage_write_failed",
+            providerCalled: false,
+            response: safeError(503, "AUTOMATIC_STAGE_WRITE_FAILED", "The next UFC event could not be staged safely."),
+          });
+        }
+        const stagedIdentity = typeof stageEvent?.source_event_key === "string"
+          ? stageEvent.source_event_key
+          : typeof stageEvent?.event_id === "string"
+            ? stageEvent.event_id
+            : undefined;
+        return finishScheduledDecision({
+          outcome: "skipped",
+          reason: "event_staged",
+          identity: stagedIdentity,
+          providerCalled: false,
+          response: noOp("event_staged", stagedIdentity, undefined, notificationDispatch),
+        });
+      }
+    }
   } else {
     const token = authorization.replace(/^Bearer\s+/i, "");
     const auth = await admin.auth.getUser(token);
