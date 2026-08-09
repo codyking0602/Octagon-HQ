@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createTodayChallengeRepository,
@@ -26,6 +26,8 @@ export function useTodayChallengeRuntime({
   repository?: TodayChallengeRepository | null;
 }) {
   const queryClient = useQueryClient();
+  const actionLocked = useRef(false);
+  const [actionPending, setActionPending] = useState(false);
   const repository = useMemo(
     () => suppliedRepository === undefined
       ? createTodayChallengeRepository()
@@ -78,10 +80,14 @@ export function useTodayChallengeRuntime({
     projection: query.data ?? null,
     loading: query.isLoading || query.isFetching,
     error: mutation.error ?? query.error ?? null,
-    busy: mutation.isPending,
+    busy: actionPending || mutation.isPending,
     configured: Boolean(repository),
     advance: async (action: Record<string, unknown>) => {
       if (!query.data) throw new Error("Today’s Challenge is still loading.");
+      if (actionLocked.current) return null;
+
+      actionLocked.current = true;
+      setActionPending(true);
       try {
         return await mutation.mutateAsync({ projection: query.data, action });
       } catch (error) {
@@ -91,6 +97,9 @@ export function useTodayChallengeRuntime({
           return queryClient.getQueryData<TodayChallengeProjection>(queryKey) ?? null;
         }
         return null;
+      } finally {
+        actionLocked.current = false;
+        setActionPending(false);
       }
     },
     refresh: async () => {
