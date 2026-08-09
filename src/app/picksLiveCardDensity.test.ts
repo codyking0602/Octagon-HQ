@@ -28,7 +28,7 @@ describe("Picks locked and live fight-card density", () => {
   });
 
   it("keeps every other fight-night detail in the canonical card", () => {
-    expect(page).toContain("<MainEventSpotlight bout={bout} />");
+    expect(page).toContain("<MainEventSpotlight bout={bout} spotlight={activeEvent.spotlight} />");
     expect(page).toContain("<strong>{officialResult(bout)}</strong>");
     expect(page).toContain("★ UNDERDOG LOCK");
   });
