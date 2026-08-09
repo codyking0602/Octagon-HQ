@@ -115,7 +115,10 @@ describe("runtime and storage contracts", () => {
     expect(edge).toContain('admin.rpc("record_pick_monitoring_run_and_apply_odds"');
     expect(edge).toContain('admin.rpc("record_scheduled_pick_monitoring_run"');
     expect(edge).toContain('admin.rpc("claim_pick_monitoring_schedule"');
-    expect(edge).not.toMatch(/\.from\(|stage_pick|publish_pick|update_pick|submit_pick|record_pick_result|setInterval/);
+    expect(edge.match(/stage_pick_event_draft/g)).toHaveLength(1);
+    expect(edge).toContain("shouldAttemptAutomaticEventStaging");
+    expect(edge).toContain("eventIsInAutomaticStagingWindow");
+    expect(edge).not.toMatch(/\.from\(|publish_pick|update_pick|submit_pick|record_pick_result|setInterval/);
   });
   it("allows Supabase browser invocation headers and keeps provider credentials backend-only", () => { expect(edge).toContain('"Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type"'); expect(edge).toContain('Deno.env.get("THE_ODDS_API_KEY")'); expect(edge).not.toContain("input.THE_ODDS_API_KEY"); expect(edge).toContain("OWNER_ACCESS_REQUIRED"); expect(edge).toContain("SCHEDULER_AUTH_REQUIRED"); });
 });
