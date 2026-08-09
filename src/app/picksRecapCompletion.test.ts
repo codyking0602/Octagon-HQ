@@ -9,6 +9,10 @@ const august8WatchMomentMigration = readFileSync(
   "supabase/migrations/202612310006_seed_august_8_pick_watch_moment.sql",
   "utf8",
 );
+const august8WatchMomentUpdateMigration = readFileSync(
+  "supabase/migrations/202612310007_update_august_8_pick_watch_moment.sql",
+  "utf8",
+);
 const recapSource = readFileSync("src/features/picks/LatestEventRecap.tsx", "utf8");
 const recapCss = readFileSync("src/styles/picks-event-recap.css", "utf8");
 const controlCss = readFileSync("src/styles/picks-control.css", "utf8");
@@ -47,6 +51,20 @@ describe("completed Picks event recaps", () => {
     expect(august8WatchMomentMigration).not.toContain("create function");
     expect(august8WatchMomentMigration).not.toContain("create trigger");
     expect(august8WatchMomentMigration).not.toContain("cron.schedule");
+  });
+
+  it("replaces the August 8 Must-Watch Moment with Cody's latest supplied URL only", () => {
+    expect(august8WatchMomentUpdateMigration).toContain(
+      "https://youtu.be/mLamuYVoc2E?is=XQ3Ozk5j-nUNTj0t",
+    );
+    expect(august8WatchMomentUpdateMigration).toContain("status = 'completed'");
+    expect(august8WatchMomentUpdateMigration).toContain("2026-08-08 00:00:00+00");
+    expect(august8WatchMomentUpdateMigration).toContain("2026-08-10 00:00:00+00");
+    expect(august8WatchMomentUpdateMigration).toContain("item->>'title' <> 'UFC Fight Night - Must-Watch Moment'");
+    expect(august8WatchMomentUpdateMigration).toContain("jsonb_build_array(v_moment)");
+    expect(august8WatchMomentUpdateMigration).not.toContain("create function");
+    expect(august8WatchMomentUpdateMigration).not.toContain("create trigger");
+    expect(august8WatchMomentUpdateMigration).not.toContain("cron.schedule");
   });
 
   it("publishes recap input through the existing watch-moment and lifecycle owners", () => {
