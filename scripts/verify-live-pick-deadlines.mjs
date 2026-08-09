@@ -86,6 +86,9 @@ for (const action of actions) {
   }
 }
 const auditedDeadlineBoutIds = new Set();
+const hasLiveOrderMutation = actions.some((action) => (
+  action.action_type === "add_bout" || action.action_type === "reorder_card"
+));
 
 function timestamp(value, label) {
   const parsed = Date.parse(value ?? "");
@@ -113,11 +116,17 @@ function verifySegment(segment, anchorValue) {
   if (segmentBouts.length === 0) return [];
 
   const anchor = timestamp(anchorValue, `${segment} segment anchor`);
-  for (const [index, bout] of segmentBouts.entries()) {
-    if (bout.segment_sequence !== index + 1) {
-      throw new Error(`${segment} segment sequence is not contiguous at ${bout.bout_id}.`);
+  const seenSequences = new Set();
+  for (const bout of segmentBouts) {
+    if (!Number.isInteger(bout.segment_sequence) || bout.segment_sequence < 1) {
+      throw new Error(`${segment} segment sequence is invalid at ${bout.bout_id}.`);
     }
-    const expected = anchor + index * 30 * 60 * 1000;
+    if (seenSequences.has(bout.segment_sequence)) {
+      throw new Error(`${segment} segment sequence is duplicated at ${bout.bout_id}.`);
+    }
+    seenSequences.add(bout.segment_sequence);
+
+    const expected = anchor + (bout.segment_sequence - 1) * 30 * 60 * 1000;
     const actual = timestamp(bout.locks_at, `${bout.bout_id} deadline`);
     if (actual !== expected && !auditedCanonicalDeadlineMatches(bout)) {
       throw new Error(
@@ -143,17 +152,27 @@ const chronologicalMain = [...mainCard].sort(
 const opener = chronologicalMain[0];
 const mainEvent = chronologicalMain.at(-1);
 const positionOne = bouts.find((bout) => bout.position === 1);
-if (!positionOne || positionOne.bout_id !== mainEvent.bout_id) {
+if (!positionOne || positionOne.card_segment !== "main") {
+  throw new Error("The production card does not have a main-card headline fight in position one.");
+}
+
+// On an untouched published card, chronological sequence owns the headline and
+// the initial 30-minute schedule. The canonical live add/reorder owner deliberately
+// moves presentation slots without reassigning existing fight deadlines, so once
+// that audited history exists, current position must not be used to recalculate them.
+if (!hasLiveOrderMutation && positionOne.bout_id !== mainEvent.bout_id) {
   throw new Error("The headline main event is not the latest chronological main-card fight.");
 }
 if (
-  !auditedDeadlineBoutIds.has(opener.bout_id)
+  !hasLiveOrderMutation
+  && !auditedDeadlineBoutIds.has(opener.bout_id)
   && timestamp(opener.locks_at, "main-card opener deadline") !== timestamp(event.starts_at, "main-card start")
 ) {
   throw new Error("The first chronological main-card fight does not lock at the official main-card start.");
 }
 if (
-  !auditedDeadlineBoutIds.has(opener.bout_id)
+  !hasLiveOrderMutation
+  && !auditedDeadlineBoutIds.has(opener.bout_id)
   && !auditedDeadlineBoutIds.has(mainEvent.bout_id)
   && timestamp(mainEvent.locks_at, "main-event deadline") <= timestamp(opener.locks_at, "main-card opener deadline")
 ) {
@@ -175,6 +194,7 @@ const schedule = chronologicalMain.map((bout) => (
 console.log(
   [
     `PASS: ${event.name} · ${event.subtitle} keeps canonical progressive deadlines, with every live deviation explained by the audited fight-change owner.`,
+    hasLiveOrderMutation ? "Audited live add/reorder history detected; stable bout deadlines remain authoritative across presentation-order changes." : "Published chronological order remains authoritative.",
     ...schedule,
     prelims.length ? `Preliminary fights verified: ${prelims.length}.` : "Main-card-only event verified.",
   ].join("\n"),
