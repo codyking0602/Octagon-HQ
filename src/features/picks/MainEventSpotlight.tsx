@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { fighterThumbnailPath } from "./FighterThumbnail";
-import type { PickBout } from "./picksModel";
+import type { PickBout, PickEventSpotlight } from "./picksModel";
 
 const profilePhotoModules = import.meta.glob<{ default: string }>(
   "/public/assets/fighters/*.{webp,png,jpg,jpeg}",
@@ -23,11 +23,11 @@ const profilePhotoBySlug = new Map(
 interface SpotlightFighter {
   slug: string;
   name: string;
-  record: string;
-  age: string;
-  height: string;
-  reach: string;
-  stance: string;
+  record?: string;
+  age?: string;
+  height?: string;
+  reach?: string;
+  stance?: string;
   edges: string[];
 }
 
@@ -38,7 +38,7 @@ interface SpotlightWatch {
 
 interface SpotlightData {
   kicker: string;
-  preview: string;
+  preview?: string;
   red: SpotlightFighter;
   blue: SpotlightFighter;
   watchSpotlights: SpotlightWatch[];
@@ -105,11 +105,50 @@ const gamrotSalkilldSpotlight: SpotlightData = {
   }],
 };
 
-function spotlightForBout(bout: PickBout): SpotlightData | null {
+function staticSpotlightForBout(bout: PickBout): SpotlightData | null {
   const slugs = new Set([bout.redFighterSlug, bout.blueFighterSlug]);
   if (slugs.has("mateusz-gamrot") && slugs.has("quillan-salkilld")) return gamrotSalkilldSpotlight;
   if (slugs.has("uros-medic") && slugs.has("daniel-rodriguez")) return medicRodriguezSpotlight;
   return null;
+}
+
+function fighterDisplayName(bout: PickBout, slug: string) {
+  if (slug === bout.redFighterSlug) return bout.redFighterName;
+  if (slug === bout.blueFighterSlug) return bout.blueFighterName;
+  return slug;
+}
+
+function configuredWatches(bout: PickBout, spotlight?: PickEventSpotlight | null): SpotlightWatch[] {
+  if (!spotlight || spotlight.boutId !== bout.boutId) return [];
+  return spotlight.watchSpotlights.map((watch) => {
+    const name = fighterDisplayName(bout, watch.fighterSlug);
+    const shortName = name.trim().split(/\s+/).at(-1)?.toUpperCase() || name.toUpperCase();
+    return { label: `${shortName} SPOTLIGHT ↗`, url: watch.url };
+  });
+}
+
+function spotlightForBout(bout: PickBout, configured?: PickEventSpotlight | null): SpotlightData | null {
+  const watches = configuredWatches(bout, configured);
+  const staticData = staticSpotlightForBout(bout);
+  if (staticData) {
+    return watches.length ? { ...staticData, watchSpotlights: watches } : staticData;
+  }
+  if (!watches.length) return null;
+
+  return {
+    kicker: `FEATURED FIGHT · ${bout.weightClass.toUpperCase()}`,
+    red: {
+      slug: bout.redFighterSlug,
+      name: bout.redFighterName,
+      edges: [],
+    },
+    blue: {
+      slug: bout.blueFighterSlug,
+      name: bout.blueFighterName,
+      edges: [],
+    },
+    watchSpotlights: watches,
+  };
 }
 
 function fighterPhotoPath(slug: string) {
@@ -142,7 +181,7 @@ function FighterHero({ fighter, corner }: { fighter: SpotlightFighter; corner: "
       <div className="main-event-spotlight__photo"><SpotlightPhoto fighter={fighter} /></div>
       <div className="main-event-spotlight__fighter-copy">
         <h3>{fighter.name}</h3>
-        <span>{fighter.record}</span>
+        {fighter.record ? <span>{fighter.record}</span> : null}
       </div>
     </div>
   );
@@ -167,12 +206,17 @@ function EdgeColumn({ fighter, corner }: { fighter: SpotlightFighter; corner: "r
   );
 }
 
-export function MainEventSpotlight({ bout }: { bout: PickBout }) {
-  const data = spotlightForBout(bout);
+export function MainEventSpotlight({ bout, spotlight }: { bout: PickBout; spotlight?: PickEventSpotlight | null }) {
+  const data = spotlightForBout(bout, spotlight);
   const [open, setOpen] = useState(false);
   const titleId = useId();
   const triggerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const hasTale = Boolean(
+    data?.red.age && data.red.height && data.red.reach && data.red.stance
+    && data.blue.age && data.blue.height && data.blue.reach && data.blue.stance,
+  );
+  const hasEdges = Boolean(data?.red.edges.length || data?.blue.edges.length);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -199,7 +243,7 @@ export function MainEventSpotlight({ bout }: { bout: PickBout }) {
         ref={triggerRef}
         onClick={() => setOpen(true)}
       >
-        <span><b>MAIN EVENT SPOTLIGHT</b><strong>View matchup breakdown</strong></span>
+        <span><b>{data.kicker.startsWith("MAIN EVENT") ? "MAIN EVENT SPOTLIGHT" : "FIGHT SPOTLIGHT"}</b><strong>View matchup breakdown</strong></span>
         <i aria-hidden="true">›</i>
       </button>
 
@@ -240,7 +284,7 @@ export function MainEventSpotlight({ bout }: { bout: PickBout }) {
               <section className="main-event-spotlight__preview">
                 <span>FIGHT PREVIEW</span>
                 <h2 id={titleId}>{data.red.name} vs. {data.blue.name}</h2>
-                <p>{data.preview}</p>
+                {data.preview ? <p>{data.preview}</p> : null}
                 <div
                   className="main-event-spotlight__watch-links"
                   style={{
@@ -249,32 +293,36 @@ export function MainEventSpotlight({ bout }: { bout: PickBout }) {
                     gap: "8px",
                   }}
                 >
-                  {data.watchSpotlights.map((spotlight) => (
-                    <a key={spotlight.url} href={spotlight.url} target="_blank" rel="noopener noreferrer">
-                      {spotlight.label}
+                  {data.watchSpotlights.map((watch) => (
+                    <a key={`${watch.label}:${watch.url}`} href={watch.url} target="_blank" rel="noopener noreferrer">
+                      {watch.label}
                     </a>
                   ))}
                 </div>
               </section>
 
-              <section className="main-event-spotlight__section">
-                <div className="main-event-spotlight__section-title"><span>TALE OF THE TAPE</span></div>
-                <div className="main-event-spotlight__tale">
-                  <TaleRow label="Age" red={data.red.age} blue={data.blue.age} />
-                  <TaleRow label="Height" red={data.red.height} blue={data.blue.height} />
-                  <TaleRow label="Reach" red={data.red.reach} blue={data.blue.reach} />
-                  <TaleRow label="Stance" red={data.red.stance} blue={data.blue.stance} />
-                </div>
-              </section>
+              {hasTale ? (
+                <section className="main-event-spotlight__section">
+                  <div className="main-event-spotlight__section-title"><span>TALE OF THE TAPE</span></div>
+                  <div className="main-event-spotlight__tale">
+                    <TaleRow label="Age" red={data.red.age!} blue={data.blue.age!} />
+                    <TaleRow label="Height" red={data.red.height!} blue={data.blue.height!} />
+                    <TaleRow label="Reach" red={data.red.reach!} blue={data.blue.reach!} />
+                    <TaleRow label="Stance" red={data.red.stance!} blue={data.blue.stance!} />
+                  </div>
+                </section>
+              ) : null}
 
-              <section className="main-event-spotlight__section">
-                <div className="main-event-spotlight__section-title"><span>MATCHUP EDGES</span></div>
-                <div className="main-event-spotlight__edges">
-                  <EdgeColumn fighter={data.red} corner="red" />
-                  <div className="main-event-spotlight__edge-divider" />
-                  <EdgeColumn fighter={data.blue} corner="blue" />
-                </div>
-              </section>
+              {hasEdges ? (
+                <section className="main-event-spotlight__section">
+                  <div className="main-event-spotlight__section-title"><span>MATCHUP EDGES</span></div>
+                  <div className="main-event-spotlight__edges">
+                    <EdgeColumn fighter={data.red} corner="red" />
+                    <div className="main-event-spotlight__edge-divider" />
+                    <EdgeColumn fighter={data.blue} corner="blue" />
+                  </div>
+                </section>
+              ) : null}
             </div>
           </section>
         </div>,
