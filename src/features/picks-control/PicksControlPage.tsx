@@ -46,6 +46,18 @@ function parseCorrectedResult(value: string): PickBoutResultStatus | null {
   return null;
 }
 
+function normalizedRecapUrl(value: string) {
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  try {
+    const url = new URL(trimmed);
+    if (url.protocol !== "https:" && url.protocol !== "http:") return undefined;
+    return url.toString();
+  } catch {
+    return undefined;
+  }
+}
+
 interface PicksControlPageProps {
   repository?: PickControlRepository | null;
   now?: number;
@@ -64,6 +76,7 @@ export default function PicksControlPage({
   const [busyAction, setBusyAction] = useState("");
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const [recapUrl, setRecapUrl] = useState("");
 
   const loadEvent = useCallback(async (eventId?: string) => {
     if (!repository || !identity.profile) return;
@@ -95,6 +108,10 @@ export default function PicksControlPage({
     }
     void loadEvent();
   }, [identity.profile, identity.ready, loadEvent, repository]);
+
+  useEffect(() => {
+    setRecapUrl("");
+  }, [event?.eventId]);
 
   const orderedBouts = useMemo(
     () => event?.bouts
@@ -172,10 +189,27 @@ export default function PicksControlPage({
 
   function completeEvent() {
     if (!event || !event.canComplete) return;
+    const watchUrl = normalizedRecapUrl(recapUrl);
+    if (watchUrl === undefined) {
+      setError("Enter a valid http or https recap URL, or leave the field blank.");
+      return;
+    }
+    if (watchUrl && !repository?.setWatchMoments) {
+      setError("Recap URL publishing is not connected on this build.");
+      return;
+    }
     if (!window.confirm(
-      "Are you sure you want to complete this event and publish the recap? Later official-result corrections remain available through the audited correction action.",
+      "Publish this event recap now? This completes the event and sends the recap notification to members. Later official-result corrections remain available through the audited correction action.",
     )) return;
-    void runAction("complete", () => repository!.completeEvent(event.eventId));
+    const title = event.subtitle.trim().length >= 3
+      ? event.subtitle.trim().slice(0, 120)
+      : "Must-Watch Moment";
+    void runAction("complete", async () => {
+      if (watchUrl) {
+        await repository!.setWatchMoments!(event.eventId, [{ title, url: watchUrl }]);
+      }
+      await repository!.completeEvent(event.eventId);
+    }, "Event recap published.");
   }
 
   if (!identity.ready || loading) {
@@ -353,8 +387,34 @@ export default function PicksControlPage({
         <section className="surface-card picks-control-complete">
           <div>
             <p className="eyebrow">FINAL STEP</p>
-            <h2>Complete event</h2>
-            <p>Every active fight must have a winner, draw, no contest, or cancellation before the recap can publish.</p>
+            <h2>{event.canComplete ? "Publish event recap" : "Complete event"}</h2>
+            {event.canComplete ? (
+              <>
+                <p>All {resolved} active fight results are ready. Add the recap URL now, review the publish summary, then send the finished recap to everyone.</p>
+                <label className="picks-control-recap-url">
+                  <span>RECAP URL</span>
+                  <input
+                    aria-label="RECAP URL"
+                    type="url"
+                    inputMode="url"
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    placeholder="https://youtu.be/..."
+                    value={recapUrl}
+                    disabled={Boolean(busyAction)}
+                    onChange={(inputEvent) => setRecapUrl(inputEvent.target.value)}
+                  />
+                  <small>Optional. Leave blank to publish without a link.</small>
+                </label>
+                <div className="picks-control-recap-preview" aria-label="Recap publish preview">
+                  <span>RECAP PREVIEW</span>
+                  <strong>{event.name}</strong>
+                  <small>{resolved} FIGHTS GRADED · {recapUrl.trim() ? "1 URL READY" : "NO URL"} · MEMBER NOTIFICATION ON PUBLISH</small>
+                </div>
+              </>
+            ) : (
+              <p>Every active fight must have a winner, draw, no contest, or cancellation before the recap can publish.</p>
+            )}
           </div>
           <button
             className="primary-action"
@@ -362,14 +422,14 @@ export default function PicksControlPage({
             disabled={!event.canComplete || Boolean(busyAction)}
             onClick={completeEvent}
           >
-            {busyAction === "complete" ? "COMPLETING EVENT…" : "COMPLETE EVENT"}
+            {busyAction === "complete" ? "PUBLISHING RECAP…" : "PUBLISH EVENT RECAP"}
           </button>
         </section>
       ) : (
         <section className="surface-card picks-control-complete">
           <div>
             <p className="eyebrow">EVENT COMPLETE</p>
-            <h2>Recap published automatically</h2>
+            <h2>Recap published</h2>
             <p>Confirmed corrections recalculate scoring, standings, season totals, and completed recaps without reopening Picks.</p>
           </div>
         </section>
