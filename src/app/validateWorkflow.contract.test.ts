@@ -2,6 +2,10 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const workflow = readFileSync(".github/workflows/validate.yml", "utf8");
+const rankingWorkflow = readFileSync(
+  ".github/workflows/validate-ranking-engine.yml",
+  "utf8",
+);
 
 describe("Validate V2 workflow", () => {
   it("propagates failures from commands piped through tee", () => {
@@ -27,5 +31,19 @@ describe("Validate V2 workflow", () => {
     );
     expect(workflow).not.toContain("SUPABASE_ACCESS_TOKEN");
     expect(workflow).not.toContain("SUPABASE_SERVICE_ROLE_KEY");
+  });
+
+  it("keeps ranking validation on the same public validation-only browser configuration", () => {
+    expect(rankingWorkflow).toContain(
+      "VITE_SUPABASE_URL: https://octagon-validation.supabase.co",
+    );
+    expect(rankingWorkflow).toContain(
+      "VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_octagon_validation_only_00000000000000000000",
+    );
+    expect(rankingWorkflow).toContain(
+      "VITE_EXPECTED_SUPABASE_HOSTNAME: octagon-validation.supabase.co",
+    );
+    expect(rankingWorkflow).not.toContain("SUPABASE_ACCESS_TOKEN");
+    expect(rankingWorkflow).not.toContain("SUPABASE_SERVICE_ROLE_KEY");
   });
 });

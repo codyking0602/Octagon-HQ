@@ -20,6 +20,12 @@ permissions:
   contents: read
   statuses: write
 
+# Match the validation-only Supabase browser environment used by the main V2 CI workflow.
+env:
+  VITE_SUPABASE_URL: https://octagon-validation.supabase.co
+  VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_octagon_validation_only_00000000000000000000
+  VITE_EXPECTED_SUPABASE_HOSTNAME: octagon-validation.supabase.co
+
 jobs:
   validate-ranking-engine:
     runs-on: ubuntu-latest
