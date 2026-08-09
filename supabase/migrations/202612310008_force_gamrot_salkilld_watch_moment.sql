@@ -1,4 +1,4 @@
--- Repair the completed Gamrot vs. Salkilld recap with Cody's supplied Must-Watch Moment.
+-- Repair the Gamrot vs. Salkilld recap with Cody's supplied Must-Watch Moment.
 -- Runtime ownership remains pick_events.watch_moments and set_pick_event_watch_moments.
 do $$
 declare
@@ -10,15 +10,25 @@ declare
     'url', v_url
   );
 begin
-  select count(*), min(event_id)
+  select count(distinct event.event_id), min(event.event_id)
   into v_match_count, v_event_id
-  from public.pick_events
-  where season = 2026
-    and lower(coalesce(subtitle, '')) like '%gamrot%'
-    and lower(coalesce(subtitle, '')) like '%salkilld%';
+  from public.pick_events event
+  join public.pick_bouts bout
+    on bout.event_id = event.event_id
+   and bout.position = 1
+  where event.season = 2026
+    and (
+      (bout.red_fighter_slug = 'mateusz-gamrot' and bout.blue_fighter_slug = 'quillan-salkilld')
+      or (bout.red_fighter_slug = 'quillan-salkilld' and bout.blue_fighter_slug = 'mateusz-gamrot')
+    );
 
-  if v_match_count <> 1 then
-    raise exception 'expected exactly one 2026 Gamrot vs. Salkilld Picks event, found %', v_match_count;
+  if v_match_count > 1 then
+    raise exception 'expected at most one 2026 Gamrot vs. Salkilld Picks event, found %', v_match_count;
+  end if;
+
+  -- Fresh databases do not contain the live-published August event row.
+  if v_match_count = 0 then
+    return;
   end if;
 
   update public.pick_events
