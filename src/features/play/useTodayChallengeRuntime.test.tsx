@@ -121,7 +121,7 @@ describe("useTodayChallengeRuntime", () => {
       rapidAction = result.current.advance({ guess: 61 });
     });
 
-    expect(advance).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(advance).toHaveBeenCalledTimes(1));
     expect(advance).toHaveBeenCalledWith(first, { guess: 60 });
     await expect(rapidAction).resolves.toBeNull();
     await waitFor(() => expect(result.current.busy).toBe(true));
