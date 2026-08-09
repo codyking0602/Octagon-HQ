@@ -6,6 +6,7 @@ import type {
   PickSetupDraft,
   PickSetupMetadataPatch,
   PickSetupSourcePreview,
+  PickSetupSpotlight,
 } from "./pickSetupModel";
 
 const draftBoutSchema = z.object({
@@ -17,6 +18,16 @@ const draftBoutSchema = z.object({
   blue_fighter_slug: z.string(),
   blue_fighter_name: z.string(),
   included: z.boolean(),
+});
+
+const spotlightWatchSchema = z.object({
+  fighter_slug: z.string().min(1),
+  url: z.string().url(),
+});
+
+const spotlightSchema = z.object({
+  bout_id: z.string().min(1),
+  watch_spotlights: z.array(spotlightWatchSchema).min(1).max(2),
 });
 
 const draftSchema = z.object({
@@ -37,6 +48,7 @@ const draftSchema = z.object({
   updated_at: z.string(),
   warnings: z.array(z.string()).default([]),
   can_publish: z.boolean(),
+  spotlight: spotlightSchema.nullable().optional().default(null),
   bouts: z.array(draftBoutSchema),
 });
 
@@ -71,6 +83,7 @@ export interface PickSetupRepository {
   saveBout: (draftId: string, bout: PickSetupBoutInput) => Promise<void>;
   removeBout: (draftId: string, boutId: string) => Promise<void>;
   reorderBouts: (draftId: string, boutIds: string[]) => Promise<void>;
+  saveSpotlight: (draftId: string, spotlight: PickSetupSpotlight | null) => Promise<void>;
   publishDraft: (draftId: string) => Promise<void>;
   discardDraft: (draftId: string) => Promise<void>;
 }
@@ -144,6 +157,27 @@ function mapBout(bout: z.infer<typeof draftBoutSchema>) {
   };
 }
 
+function mapSpotlight(spotlight: z.infer<typeof spotlightSchema>): PickSetupSpotlight {
+  return {
+    boutId: spotlight.bout_id,
+    watchSpotlights: spotlight.watch_spotlights.map((watch) => ({
+      fighterSlug: watch.fighter_slug,
+      url: watch.url,
+    })),
+  };
+}
+
+function spotlightPayload(spotlight: PickSetupSpotlight | null) {
+  if (!spotlight) return null;
+  return {
+    bout_id: spotlight.boutId,
+    watch_spotlights: spotlight.watchSpotlights.map((watch) => ({
+      fighter_slug: watch.fighterSlug,
+      url: watch.url,
+    })),
+  };
+}
+
 export function mapPickSetupDraft(value: unknown): PickSetupDraft | null {
   if (!value) return null;
   const parsed = draftSchema.parse(value);
@@ -165,6 +199,7 @@ export function mapPickSetupDraft(value: unknown): PickSetupDraft | null {
     updatedAt: parsed.updated_at,
     warnings: parsed.warnings,
     canPublish: parsed.can_publish,
+    spotlight: parsed.spotlight ? mapSpotlight(parsed.spotlight) : null,
     bouts: parsed.bouts.map(mapBout),
   };
 }
@@ -251,6 +286,13 @@ export function createPickSetupRepository(): PickSetupRepository | null {
       await requireRpcSuccess(client.rpc("reorder_pick_event_draft_bouts", {
         p_draft_id: draftId,
         p_bout_ids: boutIds,
+      }));
+    },
+
+    async saveSpotlight(draftId, spotlight) {
+      await requireRpcSuccess(client.rpc("set_pick_event_draft_spotlight", {
+        p_draft_id: draftId,
+        p_spotlight: spotlightPayload(spotlight),
       }));
     },
 
