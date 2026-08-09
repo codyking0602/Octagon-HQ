@@ -44,10 +44,11 @@ describe("V2 ranking roster overlay", () => {
       "Chuck Liddell",
       "Charles Oliveira",
       "Amanda Nunes",
+      "Dustin Poirier",
     ]);
     expect(sourceOverrides).toMatchObject({
       factsVersion: "octagon-hq-v2-rda-facts-20260807",
-      judgmentVersion: "octagon-hq-v2-rda-judgments-20260807",
+      judgmentVersion: "octagon-hq-v2-dustin-poirier-profile-20260808",
       eraDepthVersion: "octagon-hq-v2-rda-20260730",
       eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
     });
@@ -116,6 +117,37 @@ describe("V2 ranking roster overlay", () => {
     expect(current?.eraDepth).toEqual(historical?.eraDepth);
     expect(current?.presentation).toEqual({ ...historical?.presentation, oneLiner, whyRankedHere, whyNotHigher });
     for (const value of [oneLiner, whyRankedHere, whyNotHigher]) expect(value).toMatch(/^[\x00-\x7F]+$/);
+  });
+
+  it("replaces only Dustin Poirier's approved profile copy", () => {
+    const oneLiner = "Poirier's peak was built on pressure boxing, durability, and ruthless combination work. He could survive violent exchanges, keep a punishing pace, and break elite lightweights with layered punches, body work, and opportunistic grappling when fights turned chaotic.";
+    const whyRankedHere = "Poirier's 22 UFC wins are backed by unusual opponent quality and longevity. He won the interim lightweight title over Max Holloway, owns two UFC wins over Holloway and Conor McGregor, and beat Justin Gaethje, Eddie Alvarez, Anthony Pettis, Michael Chandler, and Dan Hooker. That depth gives him a stronger case than many fighters with thinner championship resumes.";
+    const whyNotHigher = "The ceiling is championship achievement. Poirier never won the undisputed lightweight title, losing title fights to Khabib Nurmagomedov, Charles Oliveira, and Islam Makhachev. The Gaethje rematch knockout added another major setback during his late prime. His final loss to Max Holloway came post-prime, but the fighters above him generally paired comparable elite wins with sustained undisputed reigns.";
+    const historical = historicalRankingMigrationInputs.fighters.find(
+      (fighter) => fighter.fighter === "Dustin Poirier",
+    );
+    const current = canonicalRankingInputs.fighters.find(
+      (fighter) => fighter.fighter === "Dustin Poirier",
+    );
+
+    expect(historical).toBeDefined();
+    expect(current).toBeDefined();
+    expect(current?.presentation.oneLiner).toBe(oneLiner);
+    expect(current?.presentation.whyRankedHere).toBe(whyRankedHere);
+    expect(current?.presentation.whyNotHigher).toBe(whyNotHigher);
+    expect(current?.facts).toEqual(historical?.facts);
+    expect(current?.era).toEqual(historical?.era);
+    expect(current?.judgments).toEqual(historical?.judgments);
+    expect(current?.eraDepth).toEqual(historical?.eraDepth);
+    expect(current?.presentation).toEqual({
+      ...historical?.presentation,
+      oneLiner,
+      whyRankedHere,
+      whyNotHigher,
+    });
+    for (const value of [oneLiner, whyRankedHere, whyNotHigher]) {
+      expect(value).toMatch(/^[\x00-\x7F]+$/);
+    }
   });
 
   it("replaces only Jose Aldo's approved profile copy", () => {

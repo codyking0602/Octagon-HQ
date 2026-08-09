@@ -438,6 +438,24 @@ const amandaNunes = {
   },
 };
 
+const dustinPoirierBaseline = historicalMigrationSeedJson.fighters.find(
+  (fighter) => fighter.fighter === "Dustin Poirier",
+);
+
+if (!dustinPoirierBaseline) {
+  throw new Error("Dustin Poirier is missing from the sealed ranking baseline.");
+}
+
+const dustinPoirier = {
+  ...dustinPoirierBaseline,
+  presentation: {
+    ...dustinPoirierBaseline.presentation,
+    oneLiner: "Poirier's peak was built on pressure boxing, durability, and ruthless combination work. He could survive violent exchanges, keep a punishing pace, and break elite lightweights with layered punches, body work, and opportunistic grappling when fights turned chaotic.",
+    whyRankedHere: "Poirier's 22 UFC wins are backed by unusual opponent quality and longevity. He won the interim lightweight title over Max Holloway, owns two UFC wins over Holloway and Conor McGregor, and beat Justin Gaethje, Eddie Alvarez, Anthony Pettis, Michael Chandler, and Dan Hooker. That depth gives him a stronger case than many fighters with thinner championship resumes.",
+    whyNotHigher: "The ceiling is championship achievement. Poirier never won the undisputed lightweight title, losing title fights to Khabib Nurmagomedov, Charles Oliveira, and Islam Makhachev. The Gaethje rematch knockout added another major setback during his late prime. His final loss to Max Holloway came post-prime, but the fighters above him generally paired comparable elite wins with sustained undisputed reigns.",
+  },
+};
+
 export const v2RankingRoster: V2RankingRosterOverlay = {
   additions: [rafaelDosAnjos],
   replacements: {
@@ -451,6 +469,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     "Chuck Liddell": chuckLiddell,
     "Charles Oliveira": charlesOliveira,
     "Amanda Nunes": amandaNunes,
+    "Dustin Poirier": dustinPoirier,
   },
   eraMembership: {
     "Rafael dos Anjos": {
@@ -459,7 +478,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     },
   },
   factsVersion: "octagon-hq-v2-rda-facts-20260807",
-  judgmentVersion: "octagon-hq-v2-rda-judgments-20260807",
+  judgmentVersion: "octagon-hq-v2-dustin-poirier-profile-20260808",
   eraDepthVersion: "octagon-hq-v2-rda-20260730",
   eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
 };
