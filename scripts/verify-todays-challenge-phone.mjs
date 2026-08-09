@@ -6,8 +6,8 @@ import { join } from "node:path";
 
 const games = [
   ["find_leader", "ELIMINATE"],
-  ["wavelength", "LOCK GUESS 2"],
-  ["blind_resume", "PICK FIGHTER A"],
+  ["wavelength", "LOCK GUESS & REVEAL NEXT CLUE"],
+  ["blind_resume", "PICK A"],
   ["blind_rank_5", "PLACE HERE"],
   ["keep_4_cut_4", "KEEP IS FULL — THIS FIGHTER MUST BE CUT"],
 ];
@@ -118,10 +118,10 @@ async function waitForFixture(client, expectedGame) {
   for (let attempt = 0; attempt < 120; attempt += 1) {
     const evaluated = await client.send("Runtime.evaluate", {
       expression: `(() => {
-        const page = document.querySelector('[data-testid="official-daily-page"]');
+        const page = document.querySelector('[data-game="${expectedGame}"]');
         return page ? {
           ready: true,
-          game: page.querySelector('[data-game]')?.getAttribute('data-game') ?? '',
+          game: page.getAttribute('data-game') ?? '',
           viewportWidth: window.innerWidth,
           documentWidth: document.documentElement.scrollWidth,
           bodyWidth: document.body.scrollWidth,
