@@ -11,6 +11,7 @@ const august8WatchMomentMigration = readFileSync(
 );
 const recapSource = readFileSync("src/features/picks/LatestEventRecap.tsx", "utf8");
 const recapCss = readFileSync("src/styles/picks-event-recap.css", "utf8");
+const eventAssetsSource = readFileSync("src/features/picks/picksEventAssets.ts", "utf8");
 const shareImageSource = readFileSync("src/features/picks/picksRecapShareImage.ts", "utf8");
 
 describe("completed Picks event recaps", () => {
@@ -53,6 +54,20 @@ describe("completed Picks event recaps", () => {
     expect(recapCss).not.toContain("touch-action: none");
     expect(recapCss).toContain("-webkit-overflow-scrolling: touch");
     expect(recapSource).toContain('data-testid="picks-event-recap-scroll"');
+  });
+
+  it("reuses the one Picks event-poster owner and keeps fight details collapsed by default", () => {
+    expect(recapSource).toContain('import { pickEventPoster } from "./picksEventAssets"');
+    expect(recapSource).toContain("const eventPoster = pickEventPoster(event)");
+    expect(recapSource).toContain('className="picks-event-recap__poster"');
+    expect(recapSource).toContain('<details className="picks-event-recap__fights">');
+    expect(recapSource).toContain("VIEW FIGHTS ›");
+    expect(recapSource).toContain("FINAL RESULTS");
+    expect(recapSource).not.toContain("ARCHIVED EVENT FINAL");
+    expect(recapSource).not.toContain("No lock winner");
+    expect(recapSource).not.toMatch(/\/events\/ufc-fight-night/);
+    expect(eventAssetsSource).toContain("posterByMainEvent");
+    expect(recapCss).toContain("--picks-recap-poster");
   });
 
   it("places watch moments before the final table and shares a universal image", () => {

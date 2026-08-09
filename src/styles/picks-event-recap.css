@@ -1,13 +1,11 @@
 .picks-latest-recap-card {
   display: grid;
-  gap: 12px;
-  padding: 16px;
+  gap: 10px;
+  padding: 15px;
   overflow: hidden;
-  border: 1px solid rgba(255, 138, 31, .42);
+  border: 1px solid var(--border);
   border-radius: 15px;
-  background:
-    radial-gradient(circle at 100% 0%, rgba(210, 10, 10, .18), transparent 42%),
-    linear-gradient(145deg, #181818, #0d0d0d);
+  background: var(--surface-card);
 }
 
 .picks-latest-recap-card > div:first-child,
@@ -18,57 +16,46 @@
 
 .picks-latest-recap-card span,
 .picks-latest-recap-card small {
-  color: #ff8a1f;
+  color: var(--text-muted);
   font-size: 7px;
   font-weight: 950;
   letter-spacing: .1em;
 }
 
-.picks-latest-recap-card h3 {
-  font-size: 22px;
-  line-height: 1;
-  letter-spacing: -.04em;
-}
-
-.picks-latest-recap-card p {
-  color: var(--text-secondary);
-  font-size: 11px;
-}
+.picks-latest-recap-card > div:first-child > span { color: var(--accent); }
+.picks-latest-recap-card h3 { font-size: 21px; line-height: 1; letter-spacing: -.035em; }
+.picks-latest-recap-card p { color: var(--text-secondary); font-size: 11px; }
 
 .picks-latest-recap-card__result {
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: end;
-  padding: 11px 12px;
-  border: 1px solid rgba(255, 204, 60, .35);
-  border-radius: 12px;
-  background: rgba(255, 204, 60, .08);
+  padding: 10px 11px;
+  border: 1px solid rgba(255, 212, 71, .28);
+  border-radius: 11px;
+  background: rgba(255, 212, 71, .055);
 }
 
-.picks-latest-recap-card__result small {
-  grid-column: 1 / -1;
-  color: #ffd447;
-}
-
-.picks-latest-recap-card__result strong { font-size: 16px; }
+.picks-latest-recap-card__result small { grid-column: 1 / -1; color: #ffd447; }
+.picks-latest-recap-card__result strong { font-size: 15px; }
 .picks-latest-recap-card__result b { color: #ffd447; font-size: 16px; }
 
 .picks-latest-recap-card > button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 44px;
-  padding: 0 13px;
+  min-height: 42px;
+  padding: 0 12px;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 11px;
   background: var(--surface-raised);
   color: var(--text-primary);
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 950;
   letter-spacing: .08em;
   cursor: pointer;
 }
 
-.picks-latest-recap-card > button span { color: var(--text-primary); font-size: 20px; }
+.picks-latest-recap-card > button span { color: var(--text-primary); font-size: 19px; }
 
 html.picks-recap-open,
 body.picks-recap-open {
@@ -111,16 +98,16 @@ body.picks-recap-open {
   grid-template-columns: 46px minmax(0, 1fr) auto;
   align-items: center;
   gap: 8px;
-  min-height: 62px;
+  min-height: 60px;
   padding: max(8px, env(safe-area-inset-top)) 12px 8px;
   border-bottom: 1px solid var(--border);
   background: rgba(5, 5, 5, .98);
 }
 
 .picks-event-recap__header > span {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 950;
-  letter-spacing: .12em;
+  letter-spacing: .13em;
   text-align: center;
 }
 
@@ -142,12 +129,12 @@ body.picks-recap-open {
 .picks-event-recap__scroll {
   display: grid;
   align-content: start;
-  gap: 13px;
+  gap: 9px;
   width: 100%;
   height: 100%;
   min-height: 0;
   max-height: 100%;
-  padding: 13px 13px calc(88px + env(safe-area-inset-bottom));
+  padding: 10px 11px calc(70px + env(safe-area-inset-bottom));
   overflow-x: hidden;
   overflow-y: scroll;
   overscroll-behavior-x: none;
@@ -158,182 +145,205 @@ body.picks-recap-open {
 }
 
 .picks-event-recap__hero,
+.picks-event-recap__stories,
 .picks-event-recap__standings,
 .picks-event-recap__fights,
 .picks-event-recap__moments {
-  display: grid;
-  gap: 10px;
-  padding: 16px;
+  overflow: hidden;
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: 14px;
   background: var(--surface-card);
 }
 
-.picks-event-recap__hero {
-  background:
-    radial-gradient(circle at 100% 0%, rgba(210, 10, 10, .24), transparent 40%),
-    linear-gradient(145deg, #1b1b1b, #0d0d0d);
+.picks-event-recap__hero.has-poster { background: #090909; }
+
+.picks-event-recap__poster {
+  width: 100%;
+  aspect-ratio: var(--picks-recap-poster-aspect, 480 / 221);
+  background-image: var(--picks-recap-poster);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-bottom: 1px solid var(--border);
 }
 
-.picks-event-recap__hero > span,
-.picks-event-recap__section-heading span,
+.picks-event-recap__hero-copy {
+  display: grid;
+  gap: 6px;
+  padding: 13px 14px 14px;
+}
+
+.picks-event-recap__hero-copy > span,
+.picks-event-recap__compact-heading > span,
 .picks-event-recap__stories article > span,
-.picks-event-recap__fight-meta span {
-  color: #ff8a1f;
-  font-size: 8px;
+.picks-event-recap__fight-meta > span,
+.picks-event-recap__fights summary > div > span {
+  color: var(--accent);
+  font-size: 7px;
   font-weight: 950;
   letter-spacing: .11em;
 }
 
 .picks-event-recap__hero h2 {
-  font-size: clamp(29px, 9vw, 43px);
-  line-height: .96;
-  letter-spacing: -.055em;
+  font-size: clamp(25px, 7.8vw, 38px);
+  line-height: .98;
+  letter-spacing: -.05em;
 }
 
-.picks-event-recap__hero > strong { font-size: 16px; }
-.picks-event-recap__hero > p { color: var(--text-muted); font-size: 10px; }
-
-.picks-event-recap__hero > em {
-  justify-self: start;
-  padding: 7px 10px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  color: var(--text-secondary);
-  font-size: 8px;
-  font-style: normal;
-  font-weight: 950;
-  letter-spacing: .08em;
-}
+.picks-event-recap__hero-copy > strong { font-size: 14px; }
+.picks-event-recap__hero-copy > p:not(.picks-event-recap__story) { color: var(--text-muted); font-size: 9px; }
 
 .picks-event-recap__champion {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  align-items: end;
-  gap: 4px 10px;
-  padding: 13px;
-  border: 1px solid rgba(255, 212, 71, .38);
-  border-radius: 13px;
-  background: rgba(255, 212, 71, .08);
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+  padding: 9px 10px;
+  border: 1px solid rgba(255, 212, 71, .3);
+  border-radius: 11px;
+  background: rgba(255, 212, 71, .055);
 }
 
-.picks-event-recap__champion span { grid-column: 1 / -1; color: #ffd447; font-size: 8px; font-weight: 950; letter-spacing: .1em; }
-.picks-event-recap__champion strong { font-size: 19px; }
-.picks-event-recap__champion b { color: #ffd447; font-size: 20px; }
+.picks-event-recap__champion > div { display: grid; gap: 1px; }
+.picks-event-recap__champion span { color: #ffd447; font-size: 7px; font-weight: 950; letter-spacing: .09em; }
+.picks-event-recap__champion strong { font-size: 16px; }
+.picks-event-recap__champion > b { display: flex; align-items: baseline; gap: 3px; color: #ffd447; font-size: 22px; }
+.picks-event-recap__champion > b small { color: #ffd447; font-size: 7px; }
 
-.picks-event-recap__metrics,
-.picks-event-recap__stories {
+.picks-event-recap__story {
+  margin: 1px 0 0;
+  color: var(--text-secondary);
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.picks-event-recap__quickline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 10px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border);
+}
+
+.picks-event-recap__quickline span {
+  color: var(--text-muted);
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .06em;
+}
+
+.picks-event-recap__stories,
+.picks-event-recap__standings,
+.picks-event-recap__moments { padding: 10px; }
+
+.picks-event-recap__compact-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 7px;
+}
+
+.picks-event-recap__compact-heading small { color: var(--text-muted); font-size: 7px; font-weight: 900; }
+
+.picks-event-recap__story-strip {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
+  gap: 6px;
 }
 
-.picks-event-recap__metrics > div,
 .picks-event-recap__stories article {
   display: grid;
-  gap: 3px;
-  min-height: 75px;
-  padding: 12px;
+  align-content: start;
+  gap: 2px;
+  min-width: 0;
+  min-height: 66px;
+  padding: 8px 9px;
   border: 1px solid var(--border);
-  border-radius: 13px;
-  background: var(--surface-card);
+  border-radius: 10px;
+  background: var(--surface-raised);
 }
 
-.picks-event-recap__metrics strong { font-size: 22px; }
-.picks-event-recap__metrics span { color: var(--text-muted); font-size: 7px; font-weight: 950; letter-spacing: .09em; }
-.picks-event-recap__metrics .picks-event-recap__not-entered { grid-column: span 2; border-color: rgba(255, 138, 31, .42); }
-.picks-event-recap__metrics .picks-event-recap__not-entered strong { font-size: 16px; }
+.picks-event-recap__stories article strong { overflow: hidden; font-size: 11px; line-height: 1.12; text-overflow: ellipsis; }
+.picks-event-recap__stories article p { color: var(--text-muted); font-size: 7px; line-height: 1.3; }
 
-.picks-event-recap__stories article { min-height: 105px; align-content: start; }
-.picks-event-recap__stories article strong { font-size: 14px; line-height: 1.1; }
-.picks-event-recap__stories article p { color: var(--text-muted); font-size: 9px; line-height: 1.35; }
-
-.picks-event-recap__section-heading {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.picks-event-recap__section-heading h3 { margin-top: 3px; font-size: 21px; }
-.picks-event-recap__section-heading small { color: var(--text-muted); font-size: 7px; font-weight: 900; letter-spacing: .08em; }
-
-.picks-event-recap__moment-list { display: grid; gap: 9px; }
+.picks-event-recap__moment-list { display: grid; gap: 6px; }
 
 .picks-event-recap__moment-list > a {
   display: grid;
-  grid-template-columns: minmax(110px, 38%) minmax(0, 1fr);
-  min-height: 124px;
+  grid-template-columns: 76px minmax(0, 1fr);
+  min-height: 64px;
   overflow: hidden;
-  border: 1px solid rgba(239, 39, 39, .7);
-  border-radius: 13px;
-  background: #0d0d0d;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-raised);
   color: inherit;
   text-decoration: none;
 }
 
 .picks-event-recap__moment-list img,
 .picks-event-recap__moment-placeholder {
-  width: 100%;
-  height: 100%;
-  min-height: 124px;
+  width: 76px;
+  height: 64px;
   object-fit: cover;
-  background: linear-gradient(145deg, #2a0d0d, #090909);
+  background: #111;
 }
 
-.picks-event-recap__moment-placeholder {
-  display: grid;
-  place-items: center;
-  color: #fff;
-  font-size: 36px;
-}
+.picks-event-recap__moment-placeholder { display: grid; place-items: center; font-size: 22px; }
+.picks-event-recap__moment-list > a > div { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; padding: 9px 10px; }
+.picks-event-recap__moment-list strong { overflow: hidden; font-size: 10px; line-height: 1.2; text-overflow: ellipsis; }
+.picks-event-recap__moment-list b { flex: 0 0 auto; color: var(--text-secondary); font-size: 7px; }
 
-.picks-event-recap__moment-list > a > div {
-  display: grid;
-  align-content: center;
-  gap: 7px;
-  min-width: 0;
-  padding: 13px;
-}
-
-.picks-event-recap__moment-list span { color: #ef2727; font-size: 7px; font-weight: 950; letter-spacing: .1em; }
-.picks-event-recap__moment-list strong { font-size: 14px; line-height: 1.15; }
-.picks-event-recap__moment-list b { color: #fff; font-size: 8px; letter-spacing: .07em; }
-
-.picks-event-recap__standing-list,
-.picks-event-recap__fight-list { display: grid; gap: 7px; }
+.picks-event-recap__standing-list { display: grid; gap: 5px; }
 
 .picks-event-recap__standing-list > article {
   display: grid;
-  grid-template-columns: 28px minmax(0, 1fr) auto;
+  grid-template-columns: 25px minmax(0, 1fr) auto;
   align-items: center;
-  gap: 9px;
-  min-height: 58px;
-  padding: 9px 10px;
+  gap: 8px;
+  min-height: 46px;
+  padding: 7px 9px;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 10px;
   background: var(--surface-raised);
 }
 
-.picks-event-recap__standing-list > article.is-current-user {
-  border-color: rgba(255, 138, 31, .7);
-  box-shadow: inset 3px 0 0 #ff8a1f;
+.picks-event-recap__standing-list > article.is-current-user { border-color: rgba(255, 255, 255, .28); }
+.picks-event-recap__standing-list > article > span { color: var(--text-muted); font-size: 10px; font-weight: 950; text-align: center; }
+.picks-event-recap__standing-list > article > div { display: grid; gap: 1px; min-width: 0; }
+.picks-event-recap__standing-list strong { font-size: 12px; }
+.picks-event-recap__standing-list strong em { margin-left: 5px; color: var(--accent); font-size: 6px; font-style: normal; }
+.picks-event-recap__standing-list small { color: var(--text-muted); font-size: 7px; font-weight: 850; text-transform: uppercase; }
+.picks-event-recap__standing-list > article > b { display: grid; justify-items: end; color: #ffd447; font-size: 16px; }
+.picks-event-recap__standing-list > article > b small { font-size: 6px; }
+
+.picks-event-recap__fights summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 54px;
+  padding: 10px 12px;
+  cursor: pointer;
+  list-style: none;
 }
 
-.picks-event-recap__standing-list > article > span { color: var(--text-muted); font-size: 12px; font-weight: 950; text-align: center; }
-.picks-event-recap__standing-list > article > div { display: grid; gap: 2px; min-width: 0; }
-.picks-event-recap__standing-list strong { font-size: 13px; }
-.picks-event-recap__standing-list strong em { margin-left: 6px; color: #ff8a1f; font-size: 7px; font-style: normal; }
-.picks-event-recap__standing-list small { color: var(--text-muted); font-size: 7px; font-weight: 850; text-transform: uppercase; }
-.picks-event-recap__standing-list > article > b { display: grid; justify-items: end; color: #ffd447; font-size: 18px; }
-.picks-event-recap__standing-list > article > b small { color: var(--text-muted); font-size: 6px; }
+.picks-event-recap__fights summary::-webkit-details-marker { display: none; }
+.picks-event-recap__fights summary > div { display: grid; gap: 2px; }
+.picks-event-recap__fights summary strong { font-size: 13px; }
+.picks-event-recap__fights summary > small { color: var(--text-muted); font-size: 7px; font-weight: 900; letter-spacing: .05em; text-align: right; }
+.picks-event-recap__fights[open] summary { border-bottom: 1px solid var(--border); }
+.picks-event-recap__fights[open] summary > small { color: var(--text-secondary); }
+
+.picks-event-recap__fight-list { display: grid; gap: 6px; padding: 8px; }
 
 .picks-event-recap__fight-list > article {
   display: grid;
-  gap: 10px;
-  padding: 12px;
+  gap: 8px;
+  padding: 10px;
   border: 1px solid var(--border);
-  border-radius: 13px;
+  border-radius: 10px;
   background: var(--surface-raised);
 }
 
@@ -343,33 +353,32 @@ body.picks-recap-open {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 9px;
+  gap: 8px;
 }
 
-.picks-event-recap__fight-meta small { color: var(--text-muted); font-size: 8px; font-weight: 850; }
-.picks-event-recap__matchup strong { flex: 1; font-size: 13px; line-height: 1.15; }
+.picks-event-recap__fight-meta small { color: var(--text-muted); font-size: 7px; font-weight: 850; }
+.picks-event-recap__matchup strong { flex: 1; font-size: 12px; line-height: 1.15; }
 .picks-event-recap__matchup strong:last-child { text-align: right; }
-.picks-event-recap__matchup span { color: var(--text-muted); font-size: 8px; font-weight: 950; }
-
+.picks-event-recap__matchup span { color: var(--text-muted); font-size: 7px; font-weight: 950; }
 .picks-event-recap__fight-result { align-items: stretch; }
 
 .picks-event-recap__fight-result > div {
   display: grid;
   flex: 1;
   gap: 2px;
-  padding: 8px;
+  padding: 7px;
   border: 1px solid var(--border);
-  border-radius: 9px;
+  border-radius: 8px;
 }
 
 .picks-event-recap__fight-result span { color: var(--text-muted); font-size: 6px; font-weight: 950; letter-spacing: .08em; }
-.picks-event-recap__fight-result strong { font-size: 10px; }
+.picks-event-recap__fight-result strong { font-size: 9px; }
 .picks-event-recap__fight-result > em { align-self: center; flex: 0 0 auto; }
 
 @media (min-width: 680px) {
   .picks-event-recap__scroll { padding-inline: 18px; }
-  .picks-event-recap__hero,
+  .picks-event-recap__hero-copy { padding: 16px 18px 17px; }
+  .picks-event-recap__stories,
   .picks-event-recap__standings,
-  .picks-event-recap__fights,
-  .picks-event-recap__moments { padding: 20px; }
+  .picks-event-recap__moments { padding: 13px; }
 }

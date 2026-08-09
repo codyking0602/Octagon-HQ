@@ -235,7 +235,8 @@ describe("PicksPage", () => {
     expect(screen.getByRole("heading", { name: "Event Standings" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Fight by Fight" })).toBeInTheDocument();
     expect(screen.getAllByText("SHANE").length).toBeGreaterThan(0);
-    expect(screen.getByText("ROOM NAILED IT")).toBeInTheDocument();
+    expect(screen.getByText("ROOM TRAP")).toBeInTheDocument();
+    expect(screen.queryByText("ROOM NAILED IT")).not.toBeInTheDocument();
     expect(screen.getByText("No contest")).toBeInTheDocument();
     expect(screen.getByText("Excluded")).toBeInTheDocument();
   });

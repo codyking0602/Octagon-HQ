@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import { shareCanonicalDestination } from "../../app/nativeShare";
 import {
@@ -8,6 +8,7 @@ import {
   type PickHistoryBout,
   type PickHistoryEvent,
 } from "./picksModel";
+import { pickEventPoster } from "./picksEventAssets";
 import {
   createPicksRecapShareImage,
   type PicksRecapStory,
@@ -132,6 +133,13 @@ export function LatestEventRecap({
   const closeRef = useRef<HTMLButtonElement | null>(null);
   const scrollRef = useRef<HTMLElement | null>(null);
   const watchMoments = event.watchMoments ?? [];
+  const eventPoster = pickEventPoster(event);
+  const heroStyle = eventPoster
+    ? ({
+        "--picks-recap-poster": `url("${eventPoster.src}")`,
+        "--picks-recap-poster-aspect": eventPoster.aspectRatio,
+      } as CSSProperties)
+    : undefined;
   const recap = useMemo(() => {
     const bouts = event.bouts.slice().sort((left, right) => left.position - right.position);
     const analyses = bouts.map(boutAnalysis).filter((value): value is BoutAnalysis => Boolean(value));
@@ -140,9 +148,11 @@ export function LatestEventRecap({
       .slice()
       .sort((left, right) => left.correctPercentage - right.correctPercentage || right.submitted - left.submitted)[0] ?? null;
     const roomNailed = analyses
+      .filter((analysis) => analysis.correctPercentage >= 75)
       .slice()
       .sort((left, right) => right.correctPercentage - left.correctPercentage || right.submitted - left.submitted)[0] ?? null;
     const roomTrap = analyses
+      .filter((analysis) => analysis.correctPercentage <= 50)
       .slice()
       .sort((left, right) => left.correctPercentage - right.correctPercentage || right.submitted - left.submitted)[0] ?? null;
     const winningPoints = event.groupResults.reduce((high, result) => Math.max(high, result.totalPoints), 0);
@@ -200,33 +210,49 @@ export function LatestEventRecap({
   const championLabel = recap.champions.length > 1 ? "CO-CHAMPIONS" : "CHAMPION";
   const championCopy = joinNames(championNames);
   const gradedFights = recap.bouts.filter((bout) => bout.includedInPicks !== false && bout.verdict !== "excluded").length;
-  const stories: PicksRecapStory[] = [{
-    label: "BEST CALL",
-    title: recap.bestCall ? fighterName(recap.bestCall.bout, recap.bestCall.bout.winnerFighterSlug) : "No pick split available",
-    detail: recap.bestCall
-      ? `${joinNames(recap.bestCall.correctNames)} called it · ${recap.bestCall.correct}/${recap.bestCall.submitted} backed the winner`
-      : "This archived card does not include member pick splits.",
-  }, {
-    label: "ROOM NAILED IT",
-    title: recap.roomNailed ? fighterName(recap.roomNailed.bout, recap.roomNailed.bout.winnerFighterSlug) : "No pick split available",
-    detail: recap.roomNailed
-      ? `${recap.roomNailed.correct}/${recap.roomNailed.submitted} correct · ${Math.round(recap.roomNailed.correctPercentage)}%`
-      : "This archived card does not include member pick splits.",
-  }, {
-    label: "ROOM TRAP",
-    title: recap.roomTrap ? `${recap.roomTrap.bout.redFighterName} vs. ${recap.roomTrap.bout.blueFighterName}` : "No pick split available",
-    detail: recap.roomTrap
-      ? recap.roomTrap.correct
+  const stories: PicksRecapStory[] = [];
+  if (recap.bestCall) {
+    stories.push({
+      label: "BEST CALL",
+      title: fighterName(recap.bestCall.bout, recap.bestCall.bout.winnerFighterSlug),
+      detail: `${joinNames(recap.bestCall.correctNames)} called it · ${recap.bestCall.correct}/${recap.bestCall.submitted} backed the winner`,
+    });
+  }
+  if (recap.roomNailed) {
+    stories.push({
+      label: "ROOM NAILED IT",
+      title: fighterName(recap.roomNailed.bout, recap.roomNailed.bout.winnerFighterSlug),
+      detail: `${recap.roomNailed.correct}/${recap.roomNailed.submitted} correct · ${Math.round(recap.roomNailed.correctPercentage)}%`,
+    });
+  }
+  if (recap.roomTrap) {
+    stories.push({
+      label: "ROOM TRAP",
+      title: `${recap.roomTrap.bout.redFighterName} vs. ${recap.roomTrap.bout.blueFighterName}`,
+      detail: recap.roomTrap.correct
         ? `Only ${recap.roomTrap.correct}/${recap.roomTrap.submitted} picked ${fighterName(recap.roomTrap.bout, recap.roomTrap.bout.winnerFighterSlug)}`
-        : `Nobody picked ${fighterName(recap.roomTrap.bout, recap.roomTrap.bout.winnerFighterSlug)}`
-      : "This archived card does not include member pick splits.",
-  }, {
-    label: "UNDERDOG LOCK",
-    title: recap.lockWinners.length ? `${joinNames(recap.lockWinners.map((result) => result.displayName))} hit` : "No lock winner",
-    detail: recap.lockWinners.length
-      ? recap.lockWinners.map((result) => `${result.displayName} +${result.lockBonus}`).join(" · ")
-      : "Nobody landed the bonus.",
-  }];
+        : `Nobody picked ${fighterName(recap.roomTrap.bout, recap.roomTrap.bout.winnerFighterSlug)}`,
+    });
+  }
+  if (recap.lockWinners.length) {
+    stories.push({
+      label: "UNDERDOG LOCK",
+      title: `${joinNames(recap.lockWinners.map((result) => result.displayName))} hit`,
+      detail: recap.lockWinners.map((result) => `${result.displayName} +${result.lockBonus}`).join(" · "),
+    });
+  }
+
+  const recapStory = [
+    `${championCopy} ${recap.champions.length > 1 ? "shared the win" : "won the night"} with ${recap.winningPoints} points.`,
+    recap.decidedPicks
+      ? `The room went ${recap.correctPicks}-${Math.max(0, recap.decidedPicks - recap.correctPicks)} on graded picks (${recap.groupAccuracy}%).`
+      : null,
+    recap.roomTrap
+      ? recap.roomTrap.correct
+        ? `${fighterName(recap.roomTrap.bout, recap.roomTrap.bout.winnerFighterSlug)} was the toughest call of the card.`
+        : `${fighterName(recap.roomTrap.bout, recap.roomTrap.bout.winnerFighterSlug)} was the result nobody saw coming.`
+      : null,
+  ].filter(Boolean).join(" ");
 
   async function shareRecap() {
     setShareLabel("PREPARING…");
@@ -268,7 +294,7 @@ export function LatestEventRecap({
       className="picks-event-recap-overlay"
       role="dialog"
       aria-modal="true"
-      aria-labelledby={titleId}
+      aria-label={`${event.name} Recap`}
       data-pull-refresh-ignore
     >
       <div className="picks-event-recap">
@@ -279,53 +305,49 @@ export function LatestEventRecap({
         </header>
 
         <main ref={scrollRef} className="picks-event-recap__scroll" data-testid="picks-event-recap-scroll">
-          <section className="picks-event-recap__hero">
-            <span>ARCHIVED EVENT FINAL</span>
-            <h2 id={titleId}>{event.name} Recap</h2>
-            <strong>{recap.subtitle}</strong>
-            <p>{completedDate(event.completedAt)} · {event.venue} · {event.location}</p>
-            <em>{gradedFights} GRADED {gradedFights === 1 ? "FIGHT" : "FIGHTS"}</em>
-            <div className="picks-event-recap__champion">
-              <span>{championLabel}</span>
-              <strong>{championCopy}</strong>
-              <b>{recap.winningPoints} PTS</b>
+          <section
+            className={`picks-event-recap__hero${eventPoster ? " has-poster" : ""}`}
+            style={heroStyle}
+          >
+            {eventPoster ? <div className="picks-event-recap__poster" aria-hidden="true" /> : null}
+            <div className="picks-event-recap__hero-copy">
+              <span>FINAL RESULTS</span>
+              <h2 id={titleId}>{event.name}</h2>
+              <strong>{recap.subtitle}</strong>
+              <p>{completedDate(event.completedAt)} · {event.venue} · {event.location}</p>
+              <div className="picks-event-recap__champion">
+                <div><span>{championLabel}</span><strong>{championCopy}</strong></div>
+                <b>{recap.winningPoints}<small>PTS</small></b>
+              </div>
+              <p className="picks-event-recap__story">{recapStory}</p>
+              <div className="picks-event-recap__quickline" aria-label="Event recap totals">
+                <span>{event.groupResults.length} {event.groupResults.length === 1 ? "PLAYER" : "PLAYERS"}</span>
+                <span>{recap.groupAccuracy}% GROUP ACCURACY</span>
+                {recap.current ? <span>YOU: {recap.current.correct}/{recap.current.correct + recap.current.incorrect} · {recap.current.totalPoints} PTS</span> : <span>DID NOT ENTER</span>}
+              </div>
             </div>
           </section>
 
-          <section className="picks-event-recap__metrics" aria-label="Event recap totals">
-            <div><strong>{event.groupResults.length}</strong><span>PLAYERS</span></div>
-            <div><strong>{recap.groupAccuracy}%</strong><span>GROUP ACCURACY</span></div>
-            {recap.current ? (
-              <>
-                <div><strong>{recap.current.correct}/{recap.current.correct + recap.current.incorrect}</strong><span>YOUR PICKS</span></div>
-                <div><strong>{recap.current.totalPoints}</strong><span>YOUR POINTS</span></div>
-              </>
-            ) : (
-              <div className="picks-event-recap__not-entered">
-                <strong>DID NOT ENTER</strong>
-                <span>YOUR EVENT</span>
+          {stories.length ? (
+            <section className="picks-event-recap__stories" aria-label="Night awards">
+              <div className="picks-event-recap__compact-heading"><span>NIGHT AWARDS</span><small>{stories.length}</small></div>
+              <div className="picks-event-recap__story-strip">
+                {stories.map((story) => (
+                  <article key={story.label}>
+                    <span>{story.label}</span>
+                    <strong>{story.title}</strong>
+                    <p>{story.detail}</p>
+                  </article>
+                ))}
               </div>
-            )}
-          </section>
-
-          <section className="picks-event-recap__stories" aria-label="Story of the card">
-            {stories.map((story) => (
-              <article key={story.label}>
-                <span>{story.label}</span>
-                <strong>{story.title}</strong>
-                <p>{story.detail}</p>
-              </article>
-            ))}
-          </section>
+            </section>
+          ) : null}
 
           {watchMoments.length ? (
             <section className="picks-event-recap__moments" aria-labelledby={`${titleId}-moments`}>
-              <div className="picks-event-recap__section-heading">
-                <div>
-                  <span>{watchMoments.length > 1 ? "MUST-WATCH MOMENTS" : "MUST-WATCH MOMENT"}</span>
-                  <h3 id={`${titleId}-moments`}>Watch the card back</h3>
-                </div>
-                <small>{watchMoments.length} {watchMoments.length === 1 ? "CLIP" : "CLIPS"}</small>
+              <div className="picks-event-recap__compact-heading">
+                <h3 id={`${titleId}-moments`}>Watch the card back</h3>
+                <small>{watchMoments.length > 1 ? `${watchMoments.length} MOMENTS` : "MUST-WATCH MOMENT"}</small>
               </div>
               <div className="picks-event-recap__moment-list">
                 {watchMoments.map((moment) => {
@@ -333,11 +355,7 @@ export function LatestEventRecap({
                   return (
                     <a href={moment.url} target="_blank" rel="noreferrer" key={`${moment.title}:${moment.url}`}>
                       {thumbnail ? <img src={thumbnail} alt="" loading="lazy" /> : <span className="picks-event-recap__moment-placeholder" aria-hidden="true">▶</span>}
-                      <div>
-                        <span>{watchMoments.length > 1 ? "WATCH MOMENT" : "EVENT HIGHLIGHT"}</span>
-                        <strong>{moment.title}</strong>
-                        <b>WATCH ON YOUTUBE ↗</b>
-                      </div>
+                      <div><strong>{moment.title}</strong><b>WATCH ↗</b></div>
                     </a>
                   );
                 })}
@@ -346,27 +364,27 @@ export function LatestEventRecap({
           ) : null}
 
           <section className="picks-event-recap__standings" aria-labelledby={`${titleId}-standings`}>
-            <div className="picks-event-recap__section-heading">
-              <div><span>FINAL TABLE</span><h3 id={`${titleId}-standings`}>Event Standings</h3></div>
-              <small>{event.groupResults.length} PLAYERS</small>
+            <div className="picks-event-recap__compact-heading">
+              <h3 id={`${titleId}-standings`}>Event Standings</h3>
+              <small>{event.groupResults.length} {event.groupResults.length === 1 ? "PLAYER" : "PLAYERS"}</small>
             </div>
             <div className="picks-event-recap__standing-list">
               {recap.standings.map((result) => (
                 <article className={result.isCurrentUser ? "is-current-user" : ""} key={result.profileId ?? result.displayName}>
                   <span>{groupRankLabel(result.rank, event.groupResults)}</span>
-                  <div><strong>{result.displayName}{result.isCurrentUser ? <em>YOU</em> : null}</strong><small>{result.correct}/{result.correct + result.incorrect} correct · {winPercentage(result.correct, result.incorrect)}{result.lockBonus ? ` · +${result.lockBonus} lock` : ""}</small></div>
+                  <div><strong>{result.displayName}{result.isCurrentUser ? <em>YOU</em> : null}</strong><small>{result.correct}/{result.correct + result.incorrect} · {winPercentage(result.correct, result.incorrect)}{result.lockBonus ? ` · +${result.lockBonus} lock` : ""}</small></div>
                   <b>{result.totalPoints}<small>PTS</small></b>
                 </article>
               ))}
             </div>
           </section>
 
-          <section className="picks-event-recap__fights" aria-labelledby={`${titleId}-fights`}>
-            <div className="picks-event-recap__section-heading">
-              <div><span>CARD RESULTS</span><h3 id={`${titleId}-fights`}>Fight by Fight</h3></div>
-              <small>{recap.bouts.length} FIGHTS</small>
-            </div>
-            <div className="picks-event-recap__fight-list">
+          <details className="picks-event-recap__fights">
+            <summary>
+              <div><span>FIGHT RESULTS</span><h3>Fight by Fight</h3></div>
+              <small>{gradedFights} GRADED · VIEW FIGHTS ›</small>
+            </summary>
+            <div className="picks-event-recap__fight-list" id={`${titleId}-fights`}>
               {recap.bouts.map((bout, index) => (
                 <article key={bout.boutId}>
                   <div className="picks-event-recap__fight-meta"><span>{mainCardFightLabel(index)}</span><small>{bout.weightClass}</small></div>
@@ -386,7 +404,7 @@ export function LatestEventRecap({
                 </article>
               ))}
             </div>
-          </section>
+          </details>
         </main>
       </div>
     </div>
@@ -396,7 +414,7 @@ export function LatestEventRecap({
     <>
       <article className="picks-latest-recap-card">
         <div>
-          <span>ARCHIVED EVENT FINAL</span>
+          <span>FINAL RESULTS</span>
           <h3>{event.name} Recap</h3>
           <p>{recap.subtitle}</p>
         </div>
@@ -405,7 +423,7 @@ export function LatestEventRecap({
           <strong>{championCopy}</strong>
           <b>{recap.winningPoints} PTS</b>
         </div>
-        <button type="button" onClick={() => setOpen(true)}>OPEN FULL RECAP <span aria-hidden="true">›</span></button>
+        <button type="button" aria-label="OPEN FULL RECAP" onClick={() => setOpen(true)}>VIEW EVENT RECAP <span aria-hidden="true">›</span></button>
       </article>
 
       {overlay ? createPortal(overlay, document.body) : null}
