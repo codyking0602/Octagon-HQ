@@ -38,15 +38,33 @@ function safeDetails(body) {
     : "{}";
 }
 
-async function request(stage, url, options = {}, acceptedStatuses = [200]) {
-  const response = await fetch(url, options);
-  const body = await readBody(response);
-  if (!acceptedStatuses.includes(response.status)) {
-    throw new Error(
-      `${stage}: HTTP ${response.status}; ${safeMessage(body)}; stage=${body?.stage ?? "unknown"}; details=${safeDetails(body)}`,
+async function request(
+  stage,
+  url,
+  options = {},
+  acceptedStatuses = [200],
+  { retryStatuses = [], attempts = 1, delayMs = 0 } = {},
+) {
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    const response = await fetch(url, options);
+    const body = await readBody(response);
+    if (acceptedStatuses.includes(response.status)) {
+      return { response, body };
+    }
+    const retryable = retryStatuses.includes(response.status) && attempt < attempts;
+    if (!retryable) {
+      throw new Error(
+        `${stage}: HTTP ${response.status}; ${safeMessage(body)}; stage=${body?.stage ?? "unknown"}; details=${safeDetails(body)}`,
+      );
+    }
+    console.warn(
+      `${stage}: transient HTTP ${response.status} on attempt ${attempt}/${attempts}; retrying the same canonical request.`,
     );
+    if (delayMs > 0) {
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+    }
   }
-  return { response, body };
+  throw new Error(`${stage}: exhausted request attempts without a response.`);
 }
 
 const keysResult = await request(
@@ -162,6 +180,7 @@ try {
       body: JSON.stringify(previewPayload),
     },
     [200, 502],
+    { retryStatuses: [546], attempts: 4, delayMs: 4_000 },
   );
 
   let outcome;
