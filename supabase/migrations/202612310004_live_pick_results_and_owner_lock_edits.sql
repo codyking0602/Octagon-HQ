@@ -91,6 +91,44 @@ revoke all on function public.adjust_pick_bout_lock_time(text,text,timestamptz)
 grant execute on function public.adjust_pick_bout_lock_time(text,text,timestamptz)
   to authenticated, service_role;
 
+-- The existing trigger distinguishes owner card cancellations from official
+-- results while an event is upcoming. Keep that guard, but let the established
+-- official-result RPC write a final cancellation after this fight has locked.
+create or replace function private.guard_locked_pick_bout_card_changes()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_event public.pick_events;
+begin
+  select * into v_event
+  from public.pick_events
+  where event_id = old.event_id;
+
+  if private.pick_bout_card_changes_are_closed(v_event, old) and (
+    new.red_fighter_slug is distinct from old.red_fighter_slug
+    or new.red_fighter_name is distinct from old.red_fighter_name
+    or new.blue_fighter_slug is distinct from old.blue_fighter_slug
+    or new.blue_fighter_name is distinct from old.blue_fighter_name
+    or new.included_in_picks is distinct from old.included_in_picks
+    or (
+      v_event.status = 'upcoming'
+      and new.result_status is distinct from old.result_status
+      and (new.result_status = 'cancelled' or old.result_status = 'cancelled')
+      and current_setting('octagon.pick_official_result_write', true) is distinct from 'on'
+    )
+  ) then
+    raise exception 'fight card changes are closed for this locked bout';
+  end if;
+
+  return new;
+end;
+$$;
+revoke all on function private.guard_locked_pick_bout_card_changes()
+  from public, anon, authenticated;
+
 -- Initial result entry remains one canonical RPC, but an individual pending
 -- included fight no longer waits for the whole event to transition to locked.
 -- Its own authoritative per-fight lock boundary is sufficient. Later fights
@@ -151,17 +189,24 @@ begin
     raise exception 'event must be active before recording results';
   end if;
 
-  update public.pick_bouts
-  set result_status = v_result_status,
-      winner_fighter_slug = case v_result_status
-        when 'red_win' then v_bout.red_fighter_slug
-        when 'blue_win' then v_bout.blue_fighter_slug
-        else null
-      end,
-      result_recorded_at = now()
-  where event_id = v_event_id
-    and bout_id = v_bout_id
-  returning * into v_bout;
+  perform set_config('octagon.pick_official_result_write', 'on', true);
+  begin
+    update public.pick_bouts
+    set result_status = v_result_status,
+        winner_fighter_slug = case v_result_status
+          when 'red_win' then v_bout.red_fighter_slug
+          when 'blue_win' then v_bout.blue_fighter_slug
+          else null
+        end,
+        result_recorded_at = now()
+    where event_id = v_event_id
+      and bout_id = v_bout_id
+    returning * into v_bout;
+  exception when others then
+    perform set_config('octagon.pick_official_result_write', 'off', true);
+    raise;
+  end;
+  perform set_config('octagon.pick_official_result_write', 'off', true);
 
   return v_bout;
 end;
