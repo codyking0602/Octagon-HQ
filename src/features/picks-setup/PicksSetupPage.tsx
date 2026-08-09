@@ -309,8 +309,9 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
   }
 
   function saveSpotlight(spotlight: PickSetupSpotlight | null) {
-    if (!draft) return;
-    void runAction("spotlight", () => repository!.saveSpotlight(draft.draftId, spotlight));
+    const save = repository?.saveSpotlight;
+    if (!draft || !save) return;
+    void runAction("spotlight", () => save(draft.draftId, spotlight));
   }
 
   function publishDraft() {
