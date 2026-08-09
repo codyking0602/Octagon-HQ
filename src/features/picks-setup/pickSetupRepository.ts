@@ -83,7 +83,7 @@ export interface PickSetupRepository {
   saveBout: (draftId: string, bout: PickSetupBoutInput) => Promise<void>;
   removeBout: (draftId: string, boutId: string) => Promise<void>;
   reorderBouts: (draftId: string, boutIds: string[]) => Promise<void>;
-  saveSpotlight: (draftId: string, spotlight: PickSetupSpotlight | null) => Promise<void>;
+  saveSpotlight?: (draftId: string, spotlight: PickSetupSpotlight | null) => Promise<void>;
   publishDraft: (draftId: string) => Promise<void>;
   discardDraft: (draftId: string) => Promise<void>;
 }
