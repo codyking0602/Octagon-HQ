@@ -42,14 +42,19 @@ describe("automatic Picks monitoring lifecycle", () => {
     expect(runner).toContain('source_url: sourceUrl');
   });
 
-  it("stages an empty fight-week Event Setup through the existing source and staging owners only", () => {
-    const stageBlock = blockAfter("shouldAttemptAutomaticEventStaging(stagingNow)", 2600);
+  it("stages an empty fight-week Event Setup and immediately surfaces the existing owner review notification", () => {
+    const stageBlock = blockAfter("shouldAttemptAutomaticEventStaging(stagingNow)", 4300);
+    const stagingRpcAt = stageBlock.indexOf('admin.rpc("stage_pick_event_draft"');
+    const ownerDispatchAt = stageBlock.indexOf('admin.rpc("dispatch_due_in_app_notifications"');
     expect(stageBlock).toContain('mode: "monitoring-preview"');
     expect(stageBlock).toContain("eventIsInAutomaticStagingWindow(stageStartsAt, stagingNow)");
-    expect(stageBlock).toContain('admin.rpc("stage_pick_event_draft"');
+    expect(stagingRpcAt).toBeGreaterThanOrEqual(0);
+    expect(ownerDispatchAt).toBeGreaterThan(stagingRpcAt);
+    expect(stageBlock).toContain('reason: "automatic_stage_notification_failed"');
     expect(stageBlock).toContain('reason: "event_staged"');
     expect(stageBlock).toContain("providerCalled: false");
     expect(runner.match(/stage_pick_event_draft/g)).toHaveLength(1);
+    expect(runner.match(/admin\.rpc\("dispatch_due_in_app_notifications"/g)).toHaveLength(2);
     expect(runner).not.toMatch(/publish_pick_event_draft|record_pick_result|setInterval/);
     expect(runner.indexOf('admin.rpc("stage_pick_event_draft"')).toBeLessThan(
       runner.indexOf("buildTheOddsApiRequestUrl(providerKey)"),
