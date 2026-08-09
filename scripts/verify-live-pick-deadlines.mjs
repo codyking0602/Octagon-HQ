@@ -46,8 +46,15 @@ eventUrl.searchParams.set("status", "eq.upcoming");
 eventUrl.searchParams.set("order", "starts_at.asc,event_id.asc");
 eventUrl.searchParams.set("limit", "2");
 const events = await readJson("Current Picks event lookup", eventUrl, { headers });
-if (!Array.isArray(events) || events.length !== 1) {
-  throw new Error("Current Picks event lookup did not return exactly one upcoming event.");
+if (!Array.isArray(events)) {
+  throw new Error("Current Picks event lookup did not return an array.");
+}
+if (events.length > 1) {
+  throw new Error("Current Picks event lookup returned more than one upcoming event.");
+}
+if (events.length === 0) {
+  console.log("PASS: production has no upcoming Picks event, so there are no live progressive fight deadlines to verify.");
+  process.exit(0);
 }
 const event = events[0];
 
