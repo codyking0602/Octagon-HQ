@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import type { MonitoringEvent } from "./manualMonitoringRunner";
-import { decideScheduledMonitoring, scheduledMonitoringIntervalMs } from "./scheduledMonitoring";
+import {
+  decideScheduledMonitoring,
+  eventIsInAutomaticStagingWindow,
+  scheduledMonitoringIntervalMs,
+  shouldAttemptAutomaticEventStaging,
+} from "./scheduledMonitoring";
 
 const now = new Date("2026-08-10T12:00:00Z");
 const event = (startsAt: string, locksAt = startsAt): MonitoringEvent => ({
@@ -17,6 +22,24 @@ const event = (startsAt: string, locksAt = startsAt): MonitoringEvent => ({
     blue_fighter_slug: "daniel-rodriguez",
     blue_fighter_name: "Daniel Rodriguez",
   }],
+});
+
+describe("automatic Event Setup staging cadence", () => {
+  it("attempts only at bounded Monday and Tuesday fight-week checkpoints in Central time", () => {
+    expect(shouldAttemptAutomaticEventStaging(new Date("2026-08-10T13:00:00Z"))).toBe(true); // Mon 8 AM CDT
+    expect(shouldAttemptAutomaticEventStaging(new Date("2026-08-10T17:00:00Z"))).toBe(true); // Mon noon CDT
+    expect(shouldAttemptAutomaticEventStaging(new Date("2026-08-11T21:00:00Z"))).toBe(true); // Tue 4 PM CDT
+    expect(shouldAttemptAutomaticEventStaging(new Date("2026-08-12T13:00:00Z"))).toBe(false); // Wed 8 AM CDT
+    expect(shouldAttemptAutomaticEventStaging(new Date("2026-08-10T14:00:00Z"))).toBe(false); // Mon 9 AM CDT
+  });
+
+  it("stages only a future event inside the six-day fight-week horizon", () => {
+    const mondayMorning = new Date("2026-08-10T13:00:00Z");
+    expect(eventIsInAutomaticStagingWindow("2026-08-15T23:00:00Z", mondayMorning)).toBe(true);
+    expect(eventIsInAutomaticStagingWindow("2026-08-16T13:00:01Z", mondayMorning)).toBe(false);
+    expect(eventIsInAutomaticStagingWindow("2026-08-10T12:59:59Z", mondayMorning)).toBe(false);
+    expect(eventIsInAutomaticStagingWindow("not-a-time", mondayMorning)).toBe(false);
+  });
 });
 
 describe("scheduled monitoring cadence", () => {

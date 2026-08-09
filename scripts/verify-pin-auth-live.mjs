@@ -67,15 +67,15 @@ function isActiveEventLifecycle(status) {
 async function waitForControlStatus(page) {
   const statusLocator = page.locator(".picks-control-center__status");
   await statusLocator.waitFor({ state: "visible", timeout: 15_000 });
-  await page.waitForFunction(() => {
+  const resolvedStatus = await page.waitForFunction(() => {
     const text = document.querySelector(".picks-control-center__status")?.textContent?.trim() ?? "";
-    return Boolean(text && ![
+    return text && ![
       "LOADING CONTROL CENTER",
       "CHECKING NEXT EVENT",
       "OWNER SIGN-IN REQUIRED",
-    ].includes(text));
+    ].includes(text) ? text : "";
   }, undefined, { timeout: 15_000 });
-  return (await statusLocator.textContent())?.trim() ?? "";
+  return String(await resolvedStatus.jsonValue());
 }
 
 async function waitForSingleExpandedFight(fightRegion, fightRows, expectedIndex) {
