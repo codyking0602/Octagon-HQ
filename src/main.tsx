@@ -41,7 +41,6 @@ import "./styles/wavelength.css";
 import "./styles/game-results.css";
 import "./styles/blind-games.css";
 import "./styles/final-play-games.css";
-import "./styles/official-daily-game-parity.css";
 import "./styles/challenge-center.css";
 import "./styles/challenge-profiles.css";
 import "./styles/challenge-matchups.css";
