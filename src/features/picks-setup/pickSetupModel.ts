@@ -41,7 +41,7 @@ export interface PickSetupDraft {
   updatedAt: string;
   warnings: string[];
   canPublish: boolean;
-  spotlight: PickSetupSpotlight | null;
+  spotlight?: PickSetupSpotlight | null;
   bouts: PickSetupBout[];
 }
 
