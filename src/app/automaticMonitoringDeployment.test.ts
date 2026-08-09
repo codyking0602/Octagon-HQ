@@ -68,6 +68,15 @@ describe("automatic Picks monitoring deployment", () => {
     expect(browserVerifier).toContain("MONITORING UNAVAILABLE");
   });
 
+  it("captures the exact lifecycle that resolves the live owner wait without racing a later refresh", () => {
+    expect(browserVerifier).toContain("const resolvedStatus = await page.waitForFunction");
+    expect(browserVerifier).toContain("return String(await resolvedStatus.jsonValue())");
+    expect(browserVerifier).not.toContain('return (await statusLocator.textContent())?.trim() ?? ""');
+    expect(browserVerifier).toContain('"LOADING CONTROL CENTER"');
+    expect(browserVerifier).toContain('"CHECKING NEXT EVENT"');
+    expect(browserVerifier).toContain('"OWNER SIGN-IN REQUIRED"');
+  });
+
   it("proves the runtime job command without exposing it or its credential", () => {
     expect(runtimeVerificationMigration).toContain("cron.job_run_details");
     expect(runtimeVerificationMigration).toContain("'command_configured'");
