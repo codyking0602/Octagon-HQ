@@ -23,6 +23,8 @@ const bout = (bout_id: string, red_fighter_name: string, blue_fighter_name: stri
   weight_class: "Heavyweight",
 });
 
+const previewNow = new Date("2026-08-02T00:00:00.000Z");
+
 const draft = {
   name: "UFC Fight Night",
   subtitle: "Uroš Medić vs. Daniel Rodriguez",
@@ -80,19 +82,22 @@ describe("production Event Setup preview contract", () => {
   });
 
   it("validates whichever current event the canonical sources return", () => {
-    expect(() => assertCurrentEventPreview(
-      currentPreview,
-      new Date("2026-08-02T00:00:00.000Z"),
-    )).not.toThrow();
+    expect(() => assertCurrentEventPreview(currentPreview, previewNow)).not.toThrow();
   });
 
   it("rejects malformed or stale successful previews", () => {
     expect(() => assertCurrentEventPreview(
       { ...currentPreview, starts_at: "2026-07-01T00:00:00.000Z" },
-      new Date("2026-08-02T00:00:00.000Z"),
+      previewNow,
     )).toThrow("more than one day in the past");
-    expect(() => assertCurrentEventPreview({ ...currentPreview, bouts: [] })).toThrow("implausible");
-    expect(() => assertCurrentEventPreview({ ...currentPreview, source_url: "/picks" })).toThrow("specific MMA Mania");
+    expect(() => assertCurrentEventPreview(
+      { ...currentPreview, bouts: [] },
+      previewNow,
+    )).toThrow("implausible");
+    expect(() => assertCurrentEventPreview(
+      { ...currentPreview, source_url: "/picks" },
+      previewNow,
+    )).toThrow("specific MMA Mania");
   });
 
   it("accepts only a structured fail-closed source rollover", () => {
@@ -140,11 +145,14 @@ describe("production Event Setup preview contract", () => {
     expect(syncSource).not.toMatch(/https?:\/\/(?:www\.)?ufc\.com/i);
   });
 
-  it("bounds MMA Mania event discovery within the canonical Edge Function owner", () => {
-    expect(syncSource).toContain("const MAX_MMA_MANIA_ARTICLE_ATTEMPTS = 16;");
+  it("bounds MMA Mania event discovery and parses each article only once", () => {
+    expect(syncSource).toContain("const MAX_MMA_MANIA_ARTICLE_ATTEMPTS = 6;");
     expect(syncSource).toContain(".slice(0, MAX_MMA_MANIA_ARTICLE_ATTEMPTS)");
     expect(syncSource).toContain("for (const candidate of discovered)");
     expect(syncSource).not.toContain("Promise.all(discovered.map");
+    expect(syncSource).toContain("function parseMmaManiaCardDocument");
+    expect(syncSource).toContain("articleText: articleText($)");
+    expect(syncSource).not.toContain("function articleText(html");
   });
 
   it("preserves typed canonical-source failures and keeps the live verifier red with sanitized details", () => {
