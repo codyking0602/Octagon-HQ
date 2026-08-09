@@ -155,6 +155,24 @@ Deno.serve(async (request) => {
           : typeof stageEvent?.event_id === "string"
             ? stageEvent.event_id
             : undefined;
+
+        // The due-notification dispatcher ran before the draft existed. Re-run that
+        // same idempotent canonical owner once after staging so event_draft_ready is
+        // delivered in this wake rather than waiting for the next hourly scheduler run.
+        const stagedDispatch = await admin.rpc("dispatch_due_in_app_notifications", {
+          p_now: stagingNow.toISOString(),
+        });
+        if (stagedDispatch.error) {
+          return finishScheduledDecision({
+            outcome: "failed",
+            reason: "automatic_stage_notification_failed",
+            identity: stagedIdentity,
+            providerCalled: false,
+            response: safeError(503, "AUTOMATIC_STAGE_NOTIFICATION_FAILED", "The event was staged, but its owner review notification could not be dispatched safely."),
+          });
+        }
+        notificationDispatch = stagedDispatch.data;
+
         return finishScheduledDecision({
           outcome: "skipped",
           reason: "event_staged",
