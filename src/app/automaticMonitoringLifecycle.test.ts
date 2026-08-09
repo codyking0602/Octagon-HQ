@@ -42,6 +42,20 @@ describe("automatic Picks monitoring lifecycle", () => {
     expect(runner).toContain('source_url: sourceUrl');
   });
 
+  it("stages an empty fight-week Event Setup through the existing source and staging owners only", () => {
+    const stageBlock = blockAfter("shouldAttemptAutomaticEventStaging(stagingNow)", 2600);
+    expect(stageBlock).toContain('mode: "monitoring-preview"');
+    expect(stageBlock).toContain("eventIsInAutomaticStagingWindow(stageStartsAt, stagingNow)");
+    expect(stageBlock).toContain('admin.rpc("stage_pick_event_draft"');
+    expect(stageBlock).toContain('reason: "event_staged"');
+    expect(stageBlock).toContain("providerCalled: false");
+    expect(runner.match(/stage_pick_event_draft/g)).toHaveLength(1);
+    expect(runner).not.toMatch(/publish_pick_event_draft|record_pick_result|setInterval/);
+    expect(runner.indexOf('admin.rpc("stage_pick_event_draft"')).toBeLessThan(
+      runner.indexOf("buildTheOddsApiRequestUrl(providerKey)"),
+    );
+  });
+
   it("does not claim the odds provider was called when source preview fails first", () => {
     const sourceFailure = blockAfter('reason: "source_preview_failed"');
     expect(sourceFailure).toContain("providerCalled: false");
@@ -67,11 +81,11 @@ describe("automatic Picks monitoring lifecycle", () => {
     expect(productionVerifier).not.toContain("run-pick-monitoring`, {");
   });
 
-  it("keeps outcomes, odds application, and card review on their existing owners", () => {
+  it("keeps outcomes, odds application, card review, and publication on their existing owners", () => {
     expect(runner).toContain('admin.rpc("record_scheduled_pick_monitoring_run"');
     expect(runner).toContain('admin.rpc("record_pick_monitoring_run_and_apply_odds"');
     expect(runner).toContain("buildManualMonitoringPayload");
-    expect(runner).not.toMatch(/stage_pick_event_draft|publish_pick_event_draft|record_pick_result|setInterval/);
+    expect(runner).not.toMatch(/publish_pick_event_draft|record_pick_result|setInterval/);
     expect(sourceContextMigration.match(/create function public\.get_pick_monitoring_event_state/g)).toHaveLength(1);
   });
 });
