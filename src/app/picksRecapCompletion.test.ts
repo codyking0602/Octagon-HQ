@@ -43,35 +43,26 @@ describe("completed Picks event recaps", () => {
     expect(migration).not.toMatch(/where event_id\s*=\s*'ufc-fight-night-belgrade'/i);
   });
 
-  it("seeds Cody's August 8 Must-Watch Moment onto the existing completed event field only", () => {
+  it("keeps the prior August 8 watch-moment migrations auditable", () => {
     expect(august8WatchMomentMigration).toContain(
       "https://youtu.be/vOnbuPMDJUc?is=pYiX3TKQV0-YEY-f",
     );
-    expect(august8WatchMomentMigration).toContain("status = 'completed'");
-    expect(august8WatchMomentMigration).toContain("2026-08-08 00:00:00+00");
-    expect(august8WatchMomentMigration).toContain("2026-08-10 00:00:00+00");
-    expect(august8WatchMomentMigration).toContain("set watch_moments = case");
-    expect(august8WatchMomentMigration).toContain("jsonb_array_elements(watch_moments)");
-    expect(august8WatchMomentMigration).not.toContain("create function");
-    expect(august8WatchMomentMigration).not.toContain("create trigger");
-    expect(august8WatchMomentMigration).not.toContain("cron.schedule");
-  });
-
-  it("keeps the prior August 8 correction migration auditable", () => {
     expect(august8WatchMomentUpdateMigration).toContain(
       "https://youtu.be/mLamuYVoc2E?is=XQ3Ozk5j-nUNTj0t",
     );
-    expect(august8WatchMomentUpdateMigration).toContain("status = 'completed'");
-    expect(august8WatchMomentUpdateMigration).not.toContain("create function");
+    expect(august8WatchMomentMigration).not.toContain("create trigger");
     expect(august8WatchMomentUpdateMigration).not.toContain("create trigger");
   });
 
-  it("repairs the Gamrot Salkilld event by matchup instead of relying on status or date", () => {
+  it("repairs Gamrot Salkilld through the canonical main-event bout and is safe on fresh databases", () => {
     expect(gamrotSalkilldWatchMomentRepair).toContain(
       "https://youtu.be/mLamuYVoc2E?is=XQ3Ozk5j-nUNTj0t",
     );
-    expect(gamrotSalkilldWatchMomentRepair).toContain("lower(coalesce(subtitle, '')) like '%gamrot%'");
-    expect(gamrotSalkilldWatchMomentRepair).toContain("lower(coalesce(subtitle, '')) like '%salkilld%'");
+    expect(gamrotSalkilldWatchMomentRepair).toContain("join public.pick_bouts bout");
+    expect(gamrotSalkilldWatchMomentRepair).toContain("bout.position = 1");
+    expect(gamrotSalkilldWatchMomentRepair).toContain("bout.red_fighter_slug = 'mateusz-gamrot'");
+    expect(gamrotSalkilldWatchMomentRepair).toContain("bout.blue_fighter_slug = 'quillan-salkilld'");
+    expect(gamrotSalkilldWatchMomentRepair).toContain("if v_match_count = 0 then");
     expect(gamrotSalkilldWatchMomentRepair).toContain("watch_moments = jsonb_build_array(v_moment)");
     expect(gamrotSalkilldWatchMomentRepair).not.toContain("status = 'completed'");
     expect(gamrotSalkilldWatchMomentRepair).not.toContain("starts_at >=");
