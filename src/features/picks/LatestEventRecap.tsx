@@ -294,7 +294,7 @@ export function LatestEventRecap({
       className="picks-event-recap-overlay"
       role="dialog"
       aria-modal="true"
-      aria-labelledby={titleId}
+      aria-label={`${event.name} Recap`}
       data-pull-refresh-ignore
     >
       <div className="picks-event-recap">
@@ -346,8 +346,8 @@ export function LatestEventRecap({
           {watchMoments.length ? (
             <section className="picks-event-recap__moments" aria-labelledby={`${titleId}-moments`}>
               <div className="picks-event-recap__compact-heading">
-                <span id={`${titleId}-moments`}>{watchMoments.length > 1 ? "MUST-WATCH MOMENTS" : "MUST-WATCH MOMENT"}</span>
-                <small>{watchMoments.length}</small>
+                <h3 id={`${titleId}-moments`}>Watch the card back</h3>
+                <small>{watchMoments.length > 1 ? `${watchMoments.length} MOMENTS` : "MUST-WATCH MOMENT"}</small>
               </div>
               <div className="picks-event-recap__moment-list">
                 {watchMoments.map((moment) => {
@@ -365,7 +365,7 @@ export function LatestEventRecap({
 
           <section className="picks-event-recap__standings" aria-labelledby={`${titleId}-standings`}>
             <div className="picks-event-recap__compact-heading">
-              <span id={`${titleId}-standings`}>STANDINGS</span>
+              <h3 id={`${titleId}-standings`}>Event Standings</h3>
               <small>{event.groupResults.length} {event.groupResults.length === 1 ? "PLAYER" : "PLAYERS"}</small>
             </div>
             <div className="picks-event-recap__standing-list">
@@ -381,7 +381,7 @@ export function LatestEventRecap({
 
           <details className="picks-event-recap__fights">
             <summary>
-              <div><span>FIGHT RESULTS</span><strong>Fight by fight</strong></div>
+              <div><span>FIGHT RESULTS</span><h3>Fight by Fight</h3></div>
               <small>{gradedFights} GRADED · VIEW FIGHTS ›</small>
             </summary>
             <div className="picks-event-recap__fight-list" id={`${titleId}-fights`}>
@@ -415,7 +415,7 @@ export function LatestEventRecap({
       <article className="picks-latest-recap-card">
         <div>
           <span>FINAL RESULTS</span>
-          <h3>{event.name}</h3>
+          <h3>{event.name} Recap</h3>
           <p>{recap.subtitle}</p>
         </div>
         <div className="picks-latest-recap-card__result">
@@ -423,7 +423,7 @@ export function LatestEventRecap({
           <strong>{championCopy}</strong>
           <b>{recap.winningPoints} PTS</b>
         </div>
-        <button type="button" onClick={() => setOpen(true)}>VIEW EVENT RECAP <span aria-hidden="true">›</span></button>
+        <button type="button" aria-label="OPEN FULL RECAP" onClick={() => setOpen(true)}>VIEW EVENT RECAP <span aria-hidden="true">›</span></button>
       </article>
 
       {overlay ? createPortal(overlay, document.body) : null}
