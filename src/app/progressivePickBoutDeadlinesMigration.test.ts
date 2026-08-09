@@ -25,6 +25,10 @@ const integrationSql = readFileSync(
   "supabase/tests/progressive_pick_bout_deadlines.sql",
   "utf8",
 );
+const spotlightIntegrationSql = readFileSync(
+  "supabase/tests/pick_event_spotlight.sql",
+  "utf8",
+);
 const freshDatabaseEntrypoint = readFileSync(
   "supabase/tests/pick_monitoring_truthful_decisions.sql",
   "utf8",
@@ -148,7 +152,8 @@ describe("user-confirmed chronological initial Picks bout deadlines", () => {
     expect(integrationSql).toContain("resulted bout was reopened");
     expect(integrationSql).toContain("locked event was reopened");
     expect(integrationSql).toContain("completed event was reopened");
-    expect(integrationSql.trimEnd()).toMatch(/rollback;$/);
+    expect(integrationSql.trimEnd()).toMatch(/rollback;\s*\\ir pick_event_spotlight\.sql$/);
+    expect(spotlightIntegrationSql.trimEnd()).toMatch(/rollback;$/);
   });
 
   it("continues to run from the established Picks fresh-database entrypoint", () => {

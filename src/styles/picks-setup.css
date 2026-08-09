@@ -34,6 +34,7 @@
 .picks-setup-ready,
 .picks-setup-metadata,
 .picks-setup-add,
+.picks-setup-spotlight,
 .picks-setup-publish {
   display: grid;
   gap: 12px;
@@ -56,6 +57,8 @@
 .picks-setup-metadata p,
 .picks-setup-add h2,
 .picks-setup-add p,
+.picks-setup-spotlight h2,
+.picks-setup-spotlight p,
 .picks-setup-publish h2,
 .picks-setup-publish p {
   margin: 0;
@@ -67,6 +70,7 @@
 .picks-setup-preview .primary-action,
 .picks-setup-metadata .primary-action,
 .picks-setup-add .secondary-action,
+.picks-setup-spotlight .primary-action,
 .picks-setup-publish .primary-action {
   width: 100%;
   text-align: center;
@@ -193,6 +197,7 @@
 
 .picks-setup-metadata label,
 .picks-setup-add label,
+.picks-setup-spotlight label,
 .pick-setup-bout label {
   display: grid;
   gap: 6px;
@@ -204,6 +209,8 @@
 
 .picks-setup-metadata input,
 .picks-setup-add input,
+.picks-setup-spotlight input,
+.picks-setup-spotlight select,
 .pick-setup-bout input {
   width: 100%;
   min-height: 42px;
@@ -215,6 +222,97 @@
   font: inherit;
   font-size: 13px;
   letter-spacing: 0;
+}
+
+.picks-setup-spotlight select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--text-muted) 50%), linear-gradient(135deg, var(--text-muted) 50%, transparent 50%);
+  background-position: calc(100% - 16px) 18px, calc(100% - 11px) 18px;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 32px;
+}
+
+.picks-setup-spotlight {
+  border-color: rgba(198, 40, 40, .42);
+  background: linear-gradient(145deg, rgba(198, 40, 40, .08), rgba(255,255,255,.025));
+}
+
+.picks-setup-spotlight__heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.picks-setup-spotlight__heading > div {
+  display: grid;
+  gap: 4px;
+}
+
+.picks-setup-spotlight__heading > span {
+  flex: 0 0 auto;
+  padding: 5px 7px;
+  border: 1px solid rgba(198, 40, 40, .45);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  font-size: 7px;
+  font-weight: 950;
+  letter-spacing: .1em;
+}
+
+.picks-setup-spotlight__intro {
+  color: var(--text-secondary);
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.picks-setup-spotlight__matchup {
+  display: grid;
+  gap: 3px;
+  padding: 12px;
+  border-left: 3px solid var(--ufc-red);
+  border-radius: 0 10px 10px 0;
+  background: rgba(0,0,0,.18);
+}
+
+.picks-setup-spotlight__matchup strong {
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.picks-setup-spotlight__matchup span,
+.picks-setup-spotlight__review span,
+.picks-setup-spotlight label small {
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .04em;
+}
+
+.picks-setup-spotlight__urls {
+  display: grid;
+  gap: 10px;
+}
+
+.picks-setup-spotlight input[aria-invalid="true"] {
+  border-color: var(--ufc-red);
+}
+
+.picks-setup-spotlight__review {
+  display: grid;
+  gap: 3px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 10px;
+  background: rgba(0,0,0,.15);
+}
+
+.picks-setup-spotlight__review strong {
+  color: var(--text-primary);
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .09em;
 }
 
 .picks-setup-time-grid {
@@ -327,13 +425,15 @@
 }
 
 .picks-setup-publish .pick-setup-danger,
-.picks-setup-preview .pick-setup-danger {
+.picks-setup-preview .pick-setup-danger,
+.picks-setup-spotlight .pick-setup-danger {
   justify-self: center;
 }
 
 .picks-setup-page button:focus-visible,
 .picks-setup-page a:focus-visible,
 .picks-setup-page input:focus-visible,
+.picks-setup-page select:focus-visible,
 .picks-control-heading__links a:focus-visible {
   outline: 2px solid var(--text-primary);
   outline-offset: 3px;
@@ -349,6 +449,7 @@
   .picks-setup-ready,
   .picks-setup-metadata,
   .picks-setup-add,
+  .picks-setup-spotlight,
   .picks-setup-publish,
   .pick-setup-bout {
     padding: 20px;
@@ -358,7 +459,8 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .picks-setup-time-grid {
+  .picks-setup-time-grid,
+  .picks-setup-spotlight__urls {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

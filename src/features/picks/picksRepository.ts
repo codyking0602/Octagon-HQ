@@ -2,6 +2,7 @@ import { z } from "zod";
 import { getSupabaseClient } from "../../lib/supabase";
 import type {
   PickEvent,
+  PickEventSpotlight,
   PickGroupPick,
   PickHistory,
   PickSummary,
@@ -27,6 +28,16 @@ const groupPickSchema = z.object({
 const watchMomentSchema = z.object({
   title: z.string().min(3).max(120),
   url: z.string().url(),
+});
+
+const spotlightWatchSchema = z.object({
+  fighter_slug: z.string().min(1),
+  url: z.string().url(),
+});
+
+const spotlightSchema = z.object({
+  bout_id: z.string().min(1),
+  watch_spotlights: z.array(spotlightWatchSchema).min(1).max(2),
 });
 
 const boutSchema = z.object({
@@ -62,6 +73,7 @@ const eventSchema = z.object({
   season: z.number().int(),
   status: z.enum(["upcoming", "locked", "complete"]),
   can_control: z.boolean().optional().default(false),
+  spotlight: spotlightSchema.nullable().optional().default(null),
   bouts: z.array(boutSchema),
 });
 
@@ -179,6 +191,16 @@ function mapGroupPick(value: z.infer<typeof groupPickSchema>): PickGroupPick {
   };
 }
 
+function mapSpotlight(value: z.infer<typeof spotlightSchema>): PickEventSpotlight {
+  return {
+    boutId: value.bout_id,
+    watchSpotlights: value.watch_spotlights.map((watch) => ({
+      fighterSlug: watch.fighter_slug,
+      url: watch.url,
+    })),
+  };
+}
+
 export function mapPickEvent(value: unknown): PickEvent | null {
   if (!value) return null;
   const parsed = eventSchema.parse(value);
@@ -193,6 +215,7 @@ export function mapPickEvent(value: unknown): PickEvent | null {
     season: parsed.season,
     status: parsed.status,
     canControl: parsed.can_control,
+    spotlight: parsed.spotlight ? mapSpotlight(parsed.spotlight) : null,
     bouts: parsed.bouts.map((bout) => ({
       boutId: bout.bout_id,
       locksAt: bout.locks_at,

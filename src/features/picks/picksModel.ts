@@ -14,6 +14,16 @@ export interface PickWatchMoment {
   url: string;
 }
 
+export interface PickEventSpotlightWatch {
+  fighterSlug: string;
+  url: string;
+}
+
+export interface PickEventSpotlight {
+  boutId: string;
+  watchSpotlights: PickEventSpotlightWatch[];
+}
+
 export interface PickBout {
   boutId: string;
   /** Backend-projected deadline for the later per-fight lock UI. */
@@ -57,6 +67,7 @@ export interface PickEvent {
   season: number;
   status: PickEventStatus;
   canControl?: boolean;
+  spotlight?: PickEventSpotlight | null;
   bouts: PickBout[];
 }
 

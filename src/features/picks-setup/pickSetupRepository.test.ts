@@ -72,6 +72,7 @@ describe("Event Setup draft mapping", () => {
       updatedAt: payload.updated_at,
       warnings: [],
       canPublish: true,
+      spotlight: null,
       bouts: [mappedBout],
     });
     expect(pickSetupBoutSection(draft!.bouts[0]!.boutId)).toBe("main-event");
@@ -97,6 +98,26 @@ describe("Event Setup draft mapping", () => {
     });
     expect(pickSetupDraftCardLabel(draft!)).toBe("FULL CARD");
     expect(pickSetupBoutSectionLabel(draft!.bouts[1]!.boutId)).toBe("PRELIMS");
+  });
+
+  it("maps reviewed Spotlight data on the same staged-event projection", () => {
+    const draft = mapPickSetupDraft({
+      ...payload,
+      spotlight: {
+        bout_id: payload.bouts[0].bout_id,
+        watch_spotlights: [{
+          fighter_slug: "red-fighter",
+          url: "https://youtu.be/red-fighter",
+        }],
+      },
+    });
+    expect(draft?.spotlight).toEqual({
+      boutId: payload.bouts[0].bout_id,
+      watchSpotlights: [{
+        fighterSlug: "red-fighter",
+        url: "https://youtu.be/red-fighter",
+      }],
+    });
   });
 
   it("maps clean prospective metadata and fights from non-destructive source previews", () => {

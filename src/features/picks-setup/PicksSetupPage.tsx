@@ -9,11 +9,13 @@ import {
   type PickSetupCardScope,
   type PickSetupDraft,
   type PickSetupSourcePreview,
+  type PickSetupSpotlight,
 } from "./pickSetupModel";
 import {
   createPickSetupRepository,
   type PickSetupRepository,
 } from "./pickSetupRepository";
+import { PicksSpotlightSetup } from "./PicksSpotlightSetup";
 
 function readableError(error: unknown) {
   const message = error instanceof Error ? error.message : "Event Setup could not complete that request.";
@@ -306,6 +308,12 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
     });
   }
 
+  function saveSpotlight(spotlight: PickSetupSpotlight | null) {
+    const save = repository?.saveSpotlight;
+    if (!draft || !save) return;
+    void runAction("spotlight", () => save(draft.draftId, spotlight));
+  }
+
   function publishDraft() {
     if (!draft || !draft.canPublish) return;
     if (!window.confirm("Publish this reviewed card? It will become the live upcoming Picks event.")) return;
@@ -325,7 +333,7 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
       <section className="page-heading picks-setup-heading">
         <p className="eyebrow">PRIVATE OWNER TOOL</p>
         <h1>Event Setup</h1>
-        <p>UFC.com supplies event details. MMA Mania supplies the card sections and fight order. Nothing becomes live until you publish it.</p>
+        <p>MMA Mania supplies the event details, card sections, and fight order. Nothing becomes live until you publish it.</p>
         <div className="picks-setup-heading__links">
           <Link to="/picks/control">FIGHT NIGHT RESULTS</Link>
           <Link to="/picks">PLAYER PICKS</Link>
@@ -513,6 +521,14 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
                   {busyAction === "new-bout" ? "ADDING FIGHT…" : "ADD MISSING FIGHT"}
                 </button>
               </section>
+
+              <PicksSpotlightSetup
+                draft={draft}
+                bouts={orderedBouts}
+                busy={Boolean(busyAction)}
+                saving={busyAction === "spotlight"}
+                onSave={saveSpotlight}
+              />
 
               <section className="surface-card picks-setup-publish">
                 <div>

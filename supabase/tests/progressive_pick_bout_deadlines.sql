@@ -277,3 +277,5 @@ end
 $$;
 
 rollback;
+
+\ir pick_event_spotlight.sql

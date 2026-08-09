@@ -111,6 +111,7 @@ export default function PicksPage() {
       .sort((left, right) => left.position - right.position) ?? [],
     [activeEvent],
   );
+  const spotlightBoutId = activeEvent?.spotlight?.boutId ?? orderedBouts[0]?.boutId ?? null;
   const underdogLockName = picks.underdogLock
     ? orderedBouts.flatMap((bout) => [
         [bout.redFighterSlug, bout.redFighterName],
@@ -380,7 +381,9 @@ export default function PicksPage() {
                           </button>
                         </div>
                       ) : null}
-                      {index === 0 ? <MainEventSpotlight bout={bout} /> : null}
+                      {spotlightBoutId === bout.boutId ? (
+                        <MainEventSpotlight bout={bout} spotlight={activeEvent.spotlight} />
+                      ) : null}
                       {saving ? <p className="pick-bout-card__saving" role="status">SAVING PICK…</p> : null}
                       <GroupPickReveal
                         redFighterSlug={bout.redFighterSlug}

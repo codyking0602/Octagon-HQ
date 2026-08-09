@@ -15,7 +15,7 @@ const cody = {
 
 const stagedDraft: PickSetupDraft = {
   draftId: "22222222-2222-4222-8222-222222222222",
-  source: "UFC.com metadata + MMA Mania card",
+  source: "MMA Mania",
   sourceEventKey: "event/ufc-test",
   sourceUrl: "https://www.mmamania.com/ufc-fight-cards/1/ufc-test",
   eventId: "ufc-test-2026-08-01",
@@ -31,6 +31,7 @@ const stagedDraft: PickSetupDraft = {
   updatedAt: "2026-07-26T20:00:00.000Z",
   warnings: [],
   canPublish: true,
+  spotlight: null,
   bouts: [{
     boutId: "main-event-red-fighter-blue-fighter",
     position: 1,
@@ -71,7 +72,7 @@ const sourcePreview: PickSetupSourcePreview = {
   sourceHash: "abc123",
   requestedScope: "auto",
   effectiveScope: "main",
-  source: "UFC.com metadata + MMA Mania card",
+  source: "MMA Mania",
   sourceUrl: "https://www.mmamania.com/ufc-fight-cards/446488/latest-ufc-belgrade-fight-card",
   fightCount: 4,
   changes: ["Venue changed."],
@@ -113,6 +114,7 @@ function repository(draft: PickSetupDraft | null): PickSetupRepository {
     saveBout: vi.fn().mockResolvedValue(undefined),
     removeBout: vi.fn().mockResolvedValue(undefined),
     reorderBouts: vi.fn().mockResolvedValue(undefined),
+    saveSpotlight: vi.fn().mockResolvedValue(undefined),
     publishDraft: vi.fn().mockResolvedValue(undefined),
     discardDraft: vi.fn().mockResolvedValue(undefined),
   };
@@ -201,6 +203,30 @@ describe("Event Setup and card review", () => {
     fireEvent.click((await screen.findByText("FULL CARD")).closest("button")!);
     fireEvent.click(screen.getByRole("button", { name: "CHECK FOR CARD UPDATES" }));
     await waitFor(() => expect(repo.previewSource).toHaveBeenCalledWith("full", stagedDraft.sourceUrl));
+  });
+
+  it("defaults Spotlight setup to the main event and saves the two fighter URLs", async () => {
+    const repo = repository(stagedDraft);
+    renderPage(repo);
+
+    const fight = await screen.findByLabelText("FEATURED FIGHT");
+    expect(fight).toHaveValue("main-event-red-fighter-blue-fighter");
+
+    fireEvent.change(screen.getByLabelText("RED FIGHTER WATCH URL"), {
+      target: { value: "https://youtu.be/red-fighter" },
+    });
+    fireEvent.change(screen.getByLabelText("BLUE FIGHTER WATCH URL"), {
+      target: { value: "https://youtu.be/blue-fighter" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "SAVE SPOTLIGHT" }));
+
+    await waitFor(() => expect(repo.saveSpotlight).toHaveBeenCalledWith(stagedDraft.draftId, {
+      boutId: "main-event-red-fighter-blue-fighter",
+      watchSpotlights: [
+        { fighterSlug: "red-fighter", url: "https://youtu.be/red-fighter" },
+        { fighterSlug: "blue-fighter", url: "https://youtu.be/blue-fighter" },
+      ],
+    }));
   });
 
   it("keeps review edits staged and publishes only after confirmation", async () => {
