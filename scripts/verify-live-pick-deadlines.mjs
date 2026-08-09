@@ -69,20 +69,23 @@ actionsUrl.searchParams.set(
   "action_id,bout_id,action_type,after_state,approved_at",
 );
 actionsUrl.searchParams.set("event_id", `eq.${event.event_id}`);
-actionsUrl.searchParams.set("action_type", "eq.adjust_bout_lock_time");
 actionsUrl.searchParams.set("order", "action_id.desc");
-const actions = await readJson("Current Picks deadline audit lookup", actionsUrl, { headers });
+const actions = await readJson("Current Picks canonical change audit lookup", actionsUrl, { headers });
 if (!Array.isArray(actions)) {
-  throw new Error("Current Picks deadline audit lookup did not return an array.");
+  throw new Error("Current Picks canonical change audit lookup did not return an array.");
 }
 
 const latestDeadlineActionByBout = new Map();
 for (const action of actions) {
-  if (action.bout_id && !latestDeadlineActionByBout.has(action.bout_id)) {
+  if (
+    action.bout_id
+    && (action.action_type === "adjust_bout_lock_time" || action.action_type === "add_bout")
+    && !latestDeadlineActionByBout.has(action.bout_id)
+  ) {
     latestDeadlineActionByBout.set(action.bout_id, action);
   }
 }
-const ownerAdjustedBoutIds = new Set();
+const auditedDeadlineBoutIds = new Set();
 
 function timestamp(value, label) {
   const parsed = Date.parse(value ?? "");
@@ -90,14 +93,16 @@ function timestamp(value, label) {
   return parsed;
 }
 
-function auditedOwnerDeadlineMatches(bout) {
+function auditedCanonicalDeadlineMatches(bout) {
   const action = latestDeadlineActionByBout.get(bout.bout_id);
   if (!action) return false;
-  const audited = action.after_state?.effective_locks_at ?? action.after_state?.locks_at;
+  const audited = action.action_type === "adjust_bout_lock_time"
+    ? action.after_state?.effective_locks_at ?? action.after_state?.locks_at
+    : action.after_state?.locks_at;
   if (timestamp(audited, `${bout.bout_id} audited deadline`) !== timestamp(bout.locks_at, `${bout.bout_id} deadline`)) {
     return false;
   }
-  ownerAdjustedBoutIds.add(bout.bout_id);
+  auditedDeadlineBoutIds.add(bout.bout_id);
   return true;
 }
 
@@ -114,9 +119,9 @@ function verifySegment(segment, anchorValue) {
     }
     const expected = anchor + index * 30 * 60 * 1000;
     const actual = timestamp(bout.locks_at, `${bout.bout_id} deadline`);
-    if (actual !== expected && !auditedOwnerDeadlineMatches(bout)) {
+    if (actual !== expected && !auditedCanonicalDeadlineMatches(bout)) {
       throw new Error(
-        `${bout.red_fighter_name} vs. ${bout.blue_fighter_name} expected ${new Date(expected).toISOString()}, received ${new Date(actual).toISOString()} without a matching canonical owner deadline audit.`,
+        `${bout.red_fighter_name} vs. ${bout.blue_fighter_name} expected ${new Date(expected).toISOString()}, received ${new Date(actual).toISOString()} without a matching canonical deadline audit.`,
       );
     }
   }
@@ -142,14 +147,14 @@ if (!positionOne || positionOne.bout_id !== mainEvent.bout_id) {
   throw new Error("The headline main event is not the latest chronological main-card fight.");
 }
 if (
-  !ownerAdjustedBoutIds.has(opener.bout_id)
+  !auditedDeadlineBoutIds.has(opener.bout_id)
   && timestamp(opener.locks_at, "main-card opener deadline") !== timestamp(event.starts_at, "main-card start")
 ) {
   throw new Error("The first chronological main-card fight does not lock at the official main-card start.");
 }
 if (
-  !ownerAdjustedBoutIds.has(opener.bout_id)
-  && !ownerAdjustedBoutIds.has(mainEvent.bout_id)
+  !auditedDeadlineBoutIds.has(opener.bout_id)
+  && !auditedDeadlineBoutIds.has(mainEvent.bout_id)
   && timestamp(mainEvent.locks_at, "main-event deadline") <= timestamp(opener.locks_at, "main-card opener deadline")
 ) {
   throw new Error("The main event does not hold the latest main-card deadline.");
@@ -164,12 +169,12 @@ const centralFormatter = new Intl.DateTimeFormat("en-US", {
   minute: "2-digit",
 });
 const schedule = chronologicalMain.map((bout) => (
-  `${bout.segment_sequence}. ${bout.red_fighter_name} vs. ${bout.blue_fighter_name} — ${centralFormatter.format(new Date(bout.locks_at))}${ownerAdjustedBoutIds.has(bout.bout_id) ? " (owner-adjusted, audited)" : ""}`
+  `${bout.segment_sequence}. ${bout.red_fighter_name} vs. ${bout.blue_fighter_name} — ${centralFormatter.format(new Date(bout.locks_at))}${auditedDeadlineBoutIds.has(bout.bout_id) ? " (canonical audited change)" : ""}`
 ));
 
 console.log(
   [
-    `PASS: ${event.name} · ${event.subtitle} uses chronological 30-minute production deadlines with only canonical audited owner overrides.`,
+    `PASS: ${event.name} · ${event.subtitle} keeps canonical progressive deadlines, with every live deviation explained by the audited fight-change owner.`,
     ...schedule,
     prelims.length ? `Preliminary fights verified: ${prelims.length}.` : "Main-card-only event verified.",
   ].join("\n"),
