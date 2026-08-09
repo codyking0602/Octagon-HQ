@@ -84,13 +84,15 @@ describe("completed Picks event recaps", () => {
     expect(controlCss).toContain("border-left: 3px solid var(--ufc-red)");
   });
 
-  it("uses the recap page as the one iPhone-safe scrolling owner", () => {
+  it("uses the recap page as the one iPhone-safe scrolling owner without shrinking its sections", () => {
     expect(recapCss).toContain("height: 100dvh");
     expect(recapCss).toContain("min-height: 0");
     expect(recapCss).toContain("overflow-y: scroll");
     expect(recapCss).toContain("touch-action: pan-y");
     expect(recapCss).not.toContain("touch-action: none");
     expect(recapCss).toContain("-webkit-overflow-scrolling: touch");
+    expect(recapCss).toContain(".picks-event-recap__scroll {\n  display: flex;\n  flex-direction: column;");
+    expect(recapCss).toContain(".picks-event-recap__scroll > * {\n  flex: 0 0 auto;");
     expect(recapCss).not.toContain("max-height: min(58dvh, 520px)");
     expect(recapCss).not.toContain("overflow-y: auto");
     expect(recapSource).toContain('data-testid="picks-event-recap-scroll"');
