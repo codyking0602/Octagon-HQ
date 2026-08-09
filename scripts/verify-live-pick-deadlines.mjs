@@ -58,11 +58,10 @@ boutsUrl.searchParams.set(
 );
 boutsUrl.searchParams.set("event_id", `eq.${event.event_id}`);
 boutsUrl.searchParams.set("included_in_picks", "eq.true");
-boutsUrl.searchParams.set("result_status", "eq.pending");
 boutsUrl.searchParams.set("order", "position.asc,bout_id.asc");
 const bouts = await readJson("Current Picks bout lookup", boutsUrl, { headers });
 if (!Array.isArray(bouts) || bouts.length === 0) {
-  throw new Error("Current Picks bout lookup returned no pending included fights.");
+  throw new Error("Current Picks bout lookup returned no included fights.");
 }
 
 const actionsUrl = new URL(`${supabaseOrigin}/rest/v1/pick_card_change_actions`);
@@ -150,7 +149,8 @@ if (
   throw new Error("The first chronological main-card fight does not lock at the official main-card start.");
 }
 if (
-  !ownerAdjustedBoutIds.has(mainEvent.bout_id)
+  !ownerAdjustedBoutIds.has(opener.bout_id)
+  && !ownerAdjustedBoutIds.has(mainEvent.bout_id)
   && timestamp(mainEvent.locks_at, "main-event deadline") <= timestamp(opener.locks_at, "main-card opener deadline")
 ) {
   throw new Error("The main event does not hold the latest main-card deadline.");
