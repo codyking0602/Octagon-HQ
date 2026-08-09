@@ -1,11 +1,19 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useIdentity } from "../identity/IdentityProvider";
-import type { PickControlBout, PickControlEvent } from "./pickControlModel";
+import type { PickBoutResultStatus } from "../picks/picksModel";
+import {
+  pickControlResultLabel,
+  pickControlResultOptions,
+  type PickControlBout,
+  type PickControlEvent,
+} from "./pickControlModel";
 import type { PickControlRepository } from "./pickControlRepository";
 import {
   effectivePickControlBoutLock,
   PICK_LOCK_MINUTE_MS,
   pickControlBoutCanExtend,
+  pickControlBoutCanRecordResult,
+  pickControlBoutCanSetDeadline,
   pickControlBoutIsFinal,
   pickControlLockWarning,
 } from "./progressiveLockTiming";
@@ -63,11 +71,18 @@ function compactBoutStatus(event: PickControlEvent, bout: PickControlBout, now: 
 }
 
 function boutLockClosedReason(event: PickControlEvent, bout: PickControlBout, now: number) {
-  if (event.status !== "upcoming") return "The event-wide master lock is active, so no fight can reopen.";
-  if (bout.resultStatus !== "pending") return "Completed, resulted, or cancelled fights cannot be reopened.";
-  if (pickControlBoutIsFinal(event, bout, now)) return "This deadline is final and cannot be reopened.";
+  if (event.status !== "upcoming") return "The event-wide master lock is active, so this deadline is final.";
+  if (bout.resultStatus !== "pending") return "This fight already has an official result, so its deadline is final.";
+  if (!bout.includedInPicks) return "This fight is removed from Picks and its deadline cannot be edited.";
+  if (pickControlBoutCanRecordResult(event, bout, now)) {
+    return "Picks are locked for members. As owner, you can enter the result now or explicitly reopen this fight with a new future deadline.";
+  }
   if (!bout.canAdjustLock) return "This fight’s lock time can no longer be edited.";
-  return "Extend this fight while it remains open. Once its effective deadline passes, it cannot reopen.";
+  return "Adjust this fight while it remains open. Existing picks stay attached to the fight.";
+}
+
+function resultButtonClass(active: boolean) {
+  return active ? "pick-control-result is-active" : "pick-control-result";
 }
 
 interface OpenPicksDashboardProps {
@@ -203,9 +218,10 @@ export default function OpenPicksDashboard({ repository, now = Date.now() }: Ope
   }
 
   function setBoutLockTime(bout: PickControlBout) {
-    if (!event || !repository?.adjustBoutLockTime || !pickControlBoutCanExtend(event, bout, now)) return;
+    if (!event || !repository?.adjustBoutLockTime || !pickControlBoutCanSetDeadline(event, bout)) return;
+    const reopening = pickControlBoutCanRecordResult(event, bout, now);
     const input = window.prompt(
-      `Set the new lock time for ${bout.redFighterName} vs. ${bout.blueFighterName} in your local time (YYYY-MM-DDTHH:MM).`,
+      `${reopening ? "Reopen" : "Set"} the lock time for ${bout.redFighterName} vs. ${bout.blueFighterName} in your local time (YYYY-MM-DDTHH:MM).`,
       localDateTimeValue(effectivePickControlBoutLock(event, bout)),
     )?.trim();
     if (!input) return;
@@ -214,13 +230,29 @@ export default function OpenPicksDashboard({ repository, now = Date.now() }: Ope
       setError("Enter a valid future fight lock time.");
       return;
     }
-    if (!window.confirm(
-      `Are you sure you want ${bout.redFighterName} vs. ${bout.blueFighterName} to lock at ${eventTime(proposed.toISOString())}?`,
-    )) return;
+    const confirmation = reopening
+      ? `This fight is already locked for members. Reopen ${bout.redFighterName} vs. ${bout.blueFighterName} until ${eventTime(proposed.toISOString())}? Existing picks stay preserved, members can edit this fight again until the new deadline, and group picks may already have been revealed.`
+      : `Are you sure you want ${bout.redFighterName} vs. ${bout.blueFighterName} to lock at ${eventTime(proposed.toISOString())}?`;
+    if (!window.confirm(confirmation)) return;
     void runAction(
       `bout-lock:${bout.boutId}:set`,
       () => repository.adjustBoutLockTime!(event.eventId, bout.boutId, proposed.toISOString()),
-      `${bout.redFighterName} vs. ${bout.blueFighterName} deadline updated.`,
+      reopening
+        ? `${bout.redFighterName} vs. ${bout.blueFighterName} reopened with a new deadline.`
+        : `${bout.redFighterName} vs. ${bout.blueFighterName} deadline updated.`,
+    );
+  }
+
+  function recordResult(bout: PickControlBout, result: PickBoutResultStatus) {
+    if (!event || !repository || !pickControlBoutCanRecordResult(event, bout, now)) return;
+    const label = pickControlResultLabel({ ...bout, resultStatus: result });
+    if (!window.confirm(
+      `Record ${label} as the official result for ${bout.redFighterName} vs. ${bout.blueFighterName}? Later fights stay on their own lock times and the event remains live.`,
+    )) return;
+    void runAction(
+      `result:${bout.boutId}`,
+      () => repository.recordResult(event.eventId, bout.boutId, result),
+      `${bout.redFighterName} vs. ${bout.blueFighterName} recorded as ${label}.`,
     );
   }
 
@@ -399,8 +431,12 @@ export default function OpenPicksDashboard({ repository, now = Date.now() }: Ope
             const cancelled = bout.resultStatus === "cancelled";
             const lockFinal = pickControlBoutIsFinal(event, bout, now);
             const canExtend = Boolean(repository?.adjustBoutLockTime) && pickControlBoutCanExtend(event, bout, now);
+            const canSetDeadline = Boolean(repository?.adjustBoutLockTime) && pickControlBoutCanSetDeadline(event, bout);
+            const canRecordResult = pickControlBoutCanRecordResult(event, bout, now);
             const warning = pickControlLockWarning(event, bout, now);
-            const saving = busyAction === `card:${bout.boutId}` || busyAction === `include:${bout.boutId}`;
+            const saving = busyAction === `card:${bout.boutId}`
+              || busyAction === `include:${bout.boutId}`
+              || busyAction === `result:${bout.boutId}`;
             return (
               <article className={`surface-card open-pick-row${expanded ? " is-expanded" : ""}`} key={bout.boutId}>
                 <button
@@ -420,7 +456,7 @@ export default function OpenPicksDashboard({ repository, now = Date.now() }: Ope
                   <div className="open-pick-row__details" id={`open-pick-details-${bout.boutId}`}>
                     <div className={`picks-control-deadline picks-control-deadline--${lockFinal ? "final" : "open"}`}>
                       <div>
-                        <span>FIGHT LOCK · {lockFinal ? "FINAL" : warning ? "LOCKING SOON" : "OPEN"}</span>
+                        <span>FIGHT LOCK · {canRecordResult ? "PASSED" : lockFinal ? "FINAL" : warning ? "LOCKING SOON" : "OPEN"}</span>
                         <strong>{eventTime(effectivePickControlBoutLock(event, bout))}</strong>
                         {warning ? <b className="picks-control-lock-warning" role="status">{warning}</b> : null}
                         <small>{boutLockClosedReason(event, bout, now)}</small>
@@ -431,8 +467,51 @@ export default function OpenPicksDashboard({ repository, now = Date.now() }: Ope
                           <button className="secondary-action" type="button" disabled={Boolean(busyAction)} onClick={() => extendBoutLockTime(bout, 20)}>+20 MIN</button>
                           <button className="secondary-action" type="button" disabled={Boolean(busyAction)} onClick={() => setBoutLockTime(bout)}>SET TIME</button>
                         </div>
+                      ) : canSetDeadline ? (
+                        <button className="secondary-action" type="button" disabled={Boolean(busyAction)} onClick={() => setBoutLockTime(bout)}>EDIT LOCK TIME</button>
                       ) : <span className="picks-control-lock-final">DEADLINE FINAL</span>}
                     </div>
+
+                    {canRecordResult ? (
+                      <div className="open-pick-row__result-entry" aria-label={`Record ${bout.redFighterName} versus ${bout.blueFighterName} result`}>
+                        <div className="pick-control-winners">
+                          <button
+                            className={resultButtonClass(false)}
+                            type="button"
+                            disabled={Boolean(busyAction)}
+                            aria-label={`RED WINNER ${bout.redFighterName}`}
+                            onClick={() => recordResult(bout, "red_win")}
+                          >
+                            <span>RED WINNER</span>
+                            <strong>{bout.redFighterName}</strong>
+                          </button>
+                          <span>VS</span>
+                          <button
+                            className={resultButtonClass(false)}
+                            type="button"
+                            disabled={Boolean(busyAction)}
+                            aria-label={`BLUE WINNER ${bout.blueFighterName}`}
+                            onClick={() => recordResult(bout, "blue_win")}
+                          >
+                            <span>BLUE WINNER</span>
+                            <strong>{bout.blueFighterName}</strong>
+                          </button>
+                        </div>
+                        <div className="pick-control-exclusions" aria-label="Other official result options">
+                          {pickControlResultOptions.map((option) => (
+                            <button
+                              className={resultButtonClass(false)}
+                              type="button"
+                              key={option.value}
+                              disabled={Boolean(busyAction)}
+                              onClick={() => recordResult(bout, option.value)}
+                            >
+                              {option.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ) : null}
 
                     {event.canReorder ? (
                       <div className="pick-control-move" aria-label={`Move ${bout.redFighterName} vs. ${bout.blueFighterName}`}>
@@ -444,9 +523,11 @@ export default function OpenPicksDashboard({ repository, now = Date.now() }: Ope
                     <p className="open-pick-row__explanation">
                       {cancelled
                         ? "Original picks remain preserved. The cancelled fight is excluded from scoring and cannot receive new picks."
-                        : lockFinal
-                          ? "Submitted picks are preserved and revealed through the existing fight-specific privacy owner."
-                          : "Use these actions only when the live UFC card or deadline actually changes."}
+                        : canRecordResult
+                          ? "This fight is locked for members. Enter the official result now, or explicitly reopen it with a new future lock time."
+                          : lockFinal
+                            ? "Submitted picks are preserved and revealed through the existing fight-specific privacy owner."
+                            : "Use these actions only when the live UFC card or deadline actually changes."}
                     </p>
                     {bout.hasReplacementHistory ? <p className="pick-control-replacement-history"><strong>REPLACEMENT HISTORY EXISTS</strong> · The matchup above is currently stored.</p> : null}
                     <div className="open-pick-row__actions" aria-label={`${bout.redFighterName} vs. ${bout.blueFighterName} uncommon actions`}>
