@@ -5,6 +5,10 @@ const migration = readFileSync(
   "supabase/migrations/202608240002_complete_picks_event_recaps.sql",
   "utf8",
 );
+const august8WatchMomentMigration = readFileSync(
+  "supabase/migrations/202612310006_seed_august_8_pick_watch_moment.sql",
+  "utf8",
+);
 const recapSource = readFileSync("src/features/picks/LatestEventRecap.tsx", "utf8");
 const recapCss = readFileSync("src/styles/picks-event-recap.css", "utf8");
 const shareImageSource = readFileSync("src/features/picks/picksRecapShareImage.ts", "utf8");
@@ -25,6 +29,20 @@ describe("completed Picks event recaps", () => {
     expect(migration).toContain("https://youtu.be/9Gm3-DqFwHU?is=qew5ZTS2wIM1ubK-");
     expect(migration).toContain("lower(subtitle) like '%rodriguez%'");
     expect(migration).not.toMatch(/where event_id\s*=\s*'ufc-fight-night-belgrade'/i);
+  });
+
+  it("seeds Cody's August 8 Must-Watch Moment onto the existing completed event field only", () => {
+    expect(august8WatchMomentMigration).toContain(
+      "https://youtu.be/vOnbuPMDJUc?is=pYiX3TKQV0-YEY-f",
+    );
+    expect(august8WatchMomentMigration).toContain("status = 'completed'");
+    expect(august8WatchMomentMigration).toContain("2026-08-08 00:00:00+00");
+    expect(august8WatchMomentMigration).toContain("2026-08-10 00:00:00+00");
+    expect(august8WatchMomentMigration).toContain("set watch_moments = case");
+    expect(august8WatchMomentMigration).toContain("jsonb_array_elements(watch_moments)");
+    expect(august8WatchMomentMigration).not.toContain("create function");
+    expect(august8WatchMomentMigration).not.toContain("create trigger");
+    expect(august8WatchMomentMigration).not.toContain("cron.schedule");
   });
 
   it("uses one explicit iPhone-safe scrolling owner", () => {
