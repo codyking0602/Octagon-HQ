@@ -35,6 +35,14 @@ function wrapper(client: QueryClient) {
   };
 }
 
+function deferred<T>() {
+  let resolve!: (value: T) => void;
+  const promise = new Promise<T>((resolvePromise) => {
+    resolve = resolvePromise;
+  });
+  return { promise, resolve };
+}
+
 const emptyStandings = {
   playerCount: 0,
   currentUserRank: null,
@@ -77,6 +85,62 @@ describe("useTodayChallengeRuntime", () => {
     expect(loadToday).toHaveBeenCalledTimes(2);
     await waitFor(() => expect(result.current.projection?.progressRevision).toBe(2));
     expect(result.current.error).toBeNull();
+  });
+
+  it("locks immediately so rapid actions cannot double-submit while a save is in flight", async () => {
+    const first = projection(1);
+    const second = projection(2);
+    const third = projection(3);
+    const save = deferred<TodayChallengeProjection>();
+    const advance = vi.fn<TodayChallengeRepository["advance"]>()
+      .mockImplementationOnce(() => save.promise)
+      .mockResolvedValueOnce(third);
+    const repository: TodayChallengeRepository = {
+      loadToday: vi.fn().mockResolvedValue(first),
+      advance,
+      loadHistory: vi.fn().mockResolvedValue([]),
+      loadStreak: vi.fn().mockResolvedValue({ currentStreak: 0, bestStreak: 0 }),
+      loadStandings: vi.fn().mockResolvedValue(emptyStandings),
+      loadDailyLeaderboard: vi.fn().mockResolvedValue({ unlocked: false, playerCount: 0, entries: [] }),
+    };
+    const client = new QueryClient({
+      defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+    });
+    const { result } = renderHook(() => useTodayChallengeRuntime({
+      profileId: "profile-one",
+      enabled: true,
+      repository,
+    }), { wrapper: wrapper(client) });
+
+    await waitFor(() => expect(result.current.projection?.progressRevision).toBe(1));
+
+    let firstAction!: Promise<TodayChallengeProjection | null>;
+    let rapidAction!: Promise<TodayChallengeProjection | null>;
+    act(() => {
+      firstAction = result.current.advance({ guess: 60 });
+      rapidAction = result.current.advance({ guess: 61 });
+    });
+
+    await waitFor(() => expect(advance).toHaveBeenCalledTimes(1));
+    expect(advance).toHaveBeenCalledWith(first, { guess: 60 });
+    await expect(rapidAction).resolves.toBeNull();
+    await waitFor(() => expect(result.current.busy).toBe(true));
+
+    await act(async () => {
+      save.resolve(second);
+      await firstAction;
+    });
+
+    await waitFor(() => expect(result.current.busy).toBe(false));
+    expect(result.current.projection?.progressRevision).toBe(2);
+
+    await act(async () => {
+      await result.current.advance({ guess: 70 });
+    });
+
+    expect(advance).toHaveBeenCalledTimes(2);
+    expect(advance).toHaveBeenLastCalledWith(second, { guess: 70 });
+    expect(result.current.projection?.progressRevision).toBe(3);
   });
 
   it("does not read or mutate official state while disabled", () => {
