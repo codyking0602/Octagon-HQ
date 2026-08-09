@@ -89,15 +89,18 @@ describe("Event Setup draft mapping", () => {
           ...payload.bouts[0],
           bout_id: "prelim-fourth-fighter-fifth-fighter",
           position: 2,
+          red_fighter_slug: "fourth-fighter",
+          red_fighter_name: "Fourth Fighter",
+          blue_fighter_slug: "fifth-fighter",
+          blue_fighter_name: "Fifth Fighter",
         },
       ],
     });
-    expect(pickSetupBoutSection(draft!.bouts[1]!.boutId)).toBe("prelim");
-    expect(pickSetupBoutSectionLabel(draft!.bouts[1]!.boutId)).toBe("PRELIMS");
     expect(pickSetupDraftCardLabel(draft!)).toBe("FULL CARD");
+    expect(pickSetupBoutSectionLabel(draft!.bouts[1]!.boutId)).toBe("PRELIMS");
   });
 
-  it("maps reviewed Spotlight data when the staged draft has it", () => {
+  it("maps reviewed Spotlight data on the same staged-event projection", () => {
     const draft = mapPickSetupDraft({
       ...payload,
       spotlight: {
@@ -108,7 +111,6 @@ describe("Event Setup draft mapping", () => {
         }],
       },
     });
-
     expect(draft?.spotlight).toEqual({
       boutId: payload.bouts[0].bout_id,
       watchSpotlights: [{
@@ -118,59 +120,79 @@ describe("Event Setup draft mapping", () => {
     });
   });
 
-  it("maps source preview data without mutating staged state", () => {
+  it("maps clean prospective metadata and fights from non-destructive source previews", () => {
     expect(mapPickSetupSourcePreview({
       source_hash: "abc123",
       requested_scope: "auto",
       effective_scope: "main",
-      source: "MMA Mania",
-      source_url: "https://www.mmamania.com/ufc-fight-cards/1/ufc-test",
+      source: payload.source,
+      source_url: payload.source_url,
       fight_count: 1,
-      changes: ["Fight order changed."],
+      changes: ["Venue changed."],
       warnings: [],
       event_preview: {
         name: "UFC Fight Night",
-        subtitle: "Red vs. Blue",
-        venue: "Test Arena",
-        location: "Dallas, Texas",
-        starts_at: "2026-08-02T00:00:00.000Z",
-        locks_at: "2026-08-02T00:00:00.000Z",
+        subtitle: "Uroš Medić vs. Daniel Rodriguez",
+        venue: "Belgrade Arena",
+        location: "Belgrade, Serbia",
+        starts_at: "2026-08-01T17:00:00.000Z",
+        locks_at: "2026-08-01T17:00:00.000Z",
         bouts: payload.bouts,
       },
     })).toEqual({
       sourceHash: "abc123",
       requestedScope: "auto",
       effectiveScope: "main",
-      source: "MMA Mania",
-      sourceUrl: "https://www.mmamania.com/ufc-fight-cards/1/ufc-test",
+      source: payload.source,
+      sourceUrl: payload.source_url,
       fightCount: 1,
-      changes: ["Fight order changed."],
+      changes: ["Venue changed."],
       warnings: [],
       event: {
         name: "UFC Fight Night",
-        subtitle: "Red vs. Blue",
-        venue: "Test Arena",
-        location: "Dallas, Texas",
-        startsAt: "2026-08-02T00:00:00.000Z",
-        locksAt: "2026-08-02T00:00:00.000Z",
+        subtitle: "Uroš Medić vs. Daniel Rodriguez",
+        venue: "Belgrade Arena",
+        location: "Belgrade, Serbia",
+        startsAt: "2026-08-01T17:00:00.000Z",
+        locksAt: "2026-08-01T17:00:00.000Z",
         bouts: [mappedBout],
       },
     });
   });
 
-  it("prefers structured Edge Function errors over the generic Functions client message", async () => {
-    expect(await pickSetupFunctionErrorMessage({
+  it("normalizes missing optional metadata without inventing values", () => {
+    const draft = mapPickSetupDraft({
+      ...payload,
+      venue: null,
+      location: null,
+      starts_at: null,
+      locks_at: null,
+      warnings: ["MISSING EVENT START TIME", "MISSING VENUE"],
+      can_publish: false,
+    });
+    expect(draft?.venue).toBe("");
+    expect(draft?.location).toBe("");
+    expect(draft?.startsAt).toBeNull();
+    expect(draft?.canPublish).toBe(false);
+    expect(draft?.warnings).toContain("MISSING VENUE");
+  });
+});
+
+describe("Event Setup sync errors", () => {
+  it("surfaces the Edge Function review error instead of the generic client status", async () => {
+    await expect(pickSetupFunctionErrorMessage({
       message: "Edge Function returned a non-2xx status code",
       context: {
-        clone: () => ({
-          json: async () => ({ message: "MMA Mania discovery did not find an upcoming UFC card." }),
+        json: async () => ({
+          message: "MMA Mania did not return a sectioned fight card matching the next UFC event.",
         }),
       },
-    })).toBe("MMA Mania discovery did not find an upcoming UFC card.");
+    })).resolves.toBe("MMA Mania did not return a sectioned fight card matching the next UFC event.");
   });
 
-  it("falls back to the Functions client message when no structured response is readable", async () => {
-    expect(await pickSetupFunctionErrorMessage(new Error("Edge Function request failed")))
-      .toBe("Edge Function request failed");
+  it("keeps the Functions client message when the response body is unavailable", async () => {
+    await expect(pickSetupFunctionErrorMessage({
+      message: "Edge Function returned a non-2xx status code",
+    })).resolves.toBe("Edge Function returned a non-2xx status code");
   });
 });
