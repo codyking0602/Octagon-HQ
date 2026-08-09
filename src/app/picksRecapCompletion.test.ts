@@ -11,6 +11,7 @@ const august8WatchMomentMigration = readFileSync(
 );
 const recapSource = readFileSync("src/features/picks/LatestEventRecap.tsx", "utf8");
 const recapCss = readFileSync("src/styles/picks-event-recap.css", "utf8");
+const controlCss = readFileSync("src/styles/picks-control.css", "utf8");
 const eventAssetsSource = readFileSync("src/features/picks/picksEventAssets.ts", "utf8");
 const shareImageSource = readFileSync("src/features/picks/picksRecapShareImage.ts", "utf8");
 const controlSource = readFileSync("src/features/picks-control/PicksControlPage.tsx", "utf8");
@@ -56,6 +57,9 @@ describe("completed Picks event recaps", () => {
     expect(controlRepositorySource).toContain('client.rpc("set_pick_event_watch_moments"');
     expect(controlRepositorySource).toContain('client.rpc("transition_pick_event"');
     expect(controlRepositorySource).not.toContain("from(\"pick_events\")");
+    expect(controlCss).toContain(".picks-control-recap-url");
+    expect(controlCss).toContain(".picks-control-recap-preview");
+    expect(controlCss).toContain("border-left: 3px solid var(--ufc-red)");
   });
 
   it("uses one explicit iPhone-safe scrolling owner", () => {
@@ -68,7 +72,7 @@ describe("completed Picks event recaps", () => {
     expect(recapSource).toContain('data-testid="picks-event-recap-scroll"');
   });
 
-  it("reuses the one Picks event-poster owner and keeps fight details collapsed by default", () => {
+  it("keeps the poster fully visible and makes expanded fight results independently scrollable", () => {
     expect(recapSource).toContain('import { pickEventPoster } from "./picksEventAssets"');
     expect(recapSource).toContain("const eventPoster = pickEventPoster(event)");
     expect(recapSource).toContain('className="picks-event-recap__poster"');
@@ -80,6 +84,15 @@ describe("completed Picks event recaps", () => {
     expect(recapSource).not.toMatch(/\/events\/ufc-fight-night/);
     expect(eventAssetsSource).toContain("posterByMainEvent");
     expect(recapCss).toContain("--picks-recap-poster");
+    expect(recapCss).toContain("background-size: contain");
+    expect(recapCss).toContain("max-height: min(58dvh, 520px)");
+    expect(recapCss).toContain("overflow-y: auto");
+  });
+
+  it("uses restrained UFC-red hierarchy without replacing champion gold", () => {
+    expect(recapCss).toContain("var(--ufc-red-strong)");
+    expect(recapCss).toContain("rgba(210, 10, 10, .48)");
+    expect(recapCss).toContain("color: #ffd447");
   });
 
   it("places watch moments before the final table and shares a universal image", () => {
