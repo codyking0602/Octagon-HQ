@@ -2,6 +2,8 @@ import type { MonitoringEvent } from "./manualMonitoringRunner";
 
 const HOUR_MS = 60 * 60 * 1000;
 const DAY_MS = 24 * HOUR_MS;
+const AUTOMATIC_STAGE_MAX_LEAD_MS = 6 * DAY_MS;
+const AUTOMATIC_STAGE_HOURS = new Set([8, 12, 16, 20]);
 
 export type ScheduledMonitoringSkipReason =
   | "monitoring_closed"
@@ -30,6 +32,41 @@ export type ScheduledMonitoringDecision =
 function parsedTime(value: string | null | undefined) {
   const parsed = value ? Date.parse(value) : Number.NaN;
   return Number.isFinite(parsed) ? parsed : null;
+}
+
+function centralWeekdayAndHour(now: Date) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Chicago",
+    weekday: "short",
+    hour: "numeric",
+    hour12: false,
+  }).formatToParts(now);
+  return {
+    weekday: parts.find((part) => part.type === "weekday")?.value ?? "",
+    hour: Number(parts.find((part) => part.type === "hour")?.value ?? Number.NaN),
+  };
+}
+
+/**
+ * The one hourly monitoring wake may attempt Event Setup discovery four times on
+ * Monday and Tuesday of fight week. This bounds upstream discovery while still
+ * allowing a later article publication or a transient morning failure to recover.
+ */
+export function shouldAttemptAutomaticEventStaging(now: Date) {
+  const central = centralWeekdayAndHour(now);
+  return (central.weekday === "Mon" || central.weekday === "Tue")
+    && AUTOMATIC_STAGE_HOURS.has(central.hour);
+}
+
+/**
+ * Automatic staging is only allowed for the next event when it is truly inside
+ * the upcoming fight-week horizon. Events farther out remain manual/un-staged.
+ */
+export function eventIsInAutomaticStagingWindow(startsAt: string | null | undefined, now: Date) {
+  const startsAtMs = parsedTime(startsAt);
+  if (startsAtMs === null) return false;
+  const lead = startsAtMs - now.getTime();
+  return lead > 0 && lead <= AUTOMATIC_STAGE_MAX_LEAD_MS;
 }
 
 /**
