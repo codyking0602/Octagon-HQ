@@ -27,8 +27,9 @@ describe("Picks locked and live fight-card density", () => {
     expect(lifecycleStyles).not.toContain(".picks-group-pick-reveal__members");
   });
 
-  it("keeps every other fight-night detail in the canonical card", () => {
-    expect(page).toContain("<MainEventSpotlight bout={bout} spotlight={activeEvent.spotlight} />");
+  it("keeps every fight-night detail and resolves a Spotlight independently for each fight", () => {
+    expect(page).toContain("spotlightsByBout.get(bout.boutId) ?? null");
+    expect(page).toContain("<MainEventSpotlight bout={bout}");
     expect(page).toContain("<strong>{officialResult(bout)}</strong>");
     expect(page).toContain("★ UNDERDOG LOCK");
   });
