@@ -9,6 +9,7 @@ verify_jwt = false
 [functions.run-pick-monitoring]
 verify_jwt = false
 
+# The function exposes deployment-info without auth and enforces owner auth itself for Spotlight generation.
 [functions.build-pick-spotlight]
 verify_jwt = false
 
