@@ -1,16 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import type {
-  PickSetupBout,
-  PickSetupDraft,
-  PickSetupSpotlight,
-} from "./pickSetupModel";
+import type { PickSetupBout, PickSetupDraft, PickSetupSpotlight } from "./pickSetupModel";
 
 interface PicksSpotlightSetupProps {
   draft: PickSetupDraft;
   bouts: PickSetupBout[];
   busy: boolean;
-  saving: boolean;
-  onSave: (spotlight: PickSetupSpotlight | null) => void;
+  onBuild: (boutId: string) => Promise<PickSetupSpotlight | null>;
+  onSave: (spotlights: PickSetupSpotlight[]) => void;
 }
 
 function validHttpUrl(value: string) {
@@ -23,130 +19,142 @@ function validHttpUrl(value: string) {
   }
 }
 
-function savedUrl(draft: PickSetupDraft, boutId: string, fighterSlug: string) {
-  if (draft.spotlight?.boutId !== boutId) return "";
-  return draft.spotlight.watchSpotlights.find((watch) => watch.fighterSlug === fighterSlug)?.url ?? "";
+function byBout(spotlights: PickSetupSpotlight[]) {
+  return new Map(spotlights.map((spotlight) => [spotlight.boutId, spotlight]));
 }
 
-export function PicksSpotlightSetup({ draft, bouts, busy, saving, onSave }: PicksSpotlightSetupProps) {
+function fighterUrl(spotlight: PickSetupSpotlight, fighterSlug: string) {
+  return spotlight.watchSpotlights.find((watch) => watch.fighterSlug === fighterSlug)?.url ?? "";
+}
+
+export function PicksSpotlightSetup({ draft, bouts, busy, onBuild, onSave }: PicksSpotlightSetupProps) {
   const eligibleBouts = useMemo(
     () => bouts.filter((bout) => bout.included).slice().sort((left, right) => left.position - right.position),
     [bouts],
   );
-  const defaultBoutId = eligibleBouts[0]?.boutId ?? "";
-  const [boutId, setBoutId] = useState(draft.spotlight?.boutId ?? defaultBoutId);
-  const selectedBout = eligibleBouts.find((bout) => bout.boutId === boutId) ?? eligibleBouts[0] ?? null;
-  const [redUrl, setRedUrl] = useState("");
-  const [blueUrl, setBlueUrl] = useState("");
+  const saved = draft.spotlights ?? [];
+  const [working, setWorking] = useState<Map<string, PickSetupSpotlight>>(() => byBout(saved));
+  const [buildingBoutId, setBuildingBoutId] = useState("");
+  const [urls, setUrls] = useState<Record<string, { red: string; blue: string }>>({});
 
   useEffect(() => {
-    const nextBoutId = draft.spotlight?.boutId && eligibleBouts.some((bout) => bout.boutId === draft.spotlight?.boutId)
-      ? draft.spotlight.boutId
-      : defaultBoutId;
-    const nextBout = eligibleBouts.find((bout) => bout.boutId === nextBoutId) ?? null;
-    setBoutId(nextBoutId);
-    setRedUrl(nextBout ? savedUrl(draft, nextBoutId, nextBout.redFighterSlug) : "");
-    setBlueUrl(nextBout ? savedUrl(draft, nextBoutId, nextBout.blueFighterSlug) : "");
-  }, [defaultBoutId, draft, eligibleBouts]);
+    const next = byBout(saved);
+    setWorking(next);
+    setUrls(Object.fromEntries(eligibleBouts.map((bout) => {
+      const spotlight = next.get(bout.boutId);
+      return [bout.boutId, {
+        red: spotlight ? fighterUrl(spotlight, bout.redFighterSlug) : "",
+        blue: spotlight ? fighterUrl(spotlight, bout.blueFighterSlug) : "",
+      }];
+    })));
+  }, [draft.updatedAt, eligibleBouts]);
 
-  function selectBout(nextBoutId: string) {
-    const nextBout = eligibleBouts.find((bout) => bout.boutId === nextBoutId) ?? null;
-    setBoutId(nextBoutId);
-    setRedUrl(nextBout ? savedUrl(draft, nextBoutId, nextBout.redFighterSlug) : "");
-    setBlueUrl(nextBout ? savedUrl(draft, nextBoutId, nextBout.blueFighterSlug) : "");
+  async function build(boutId: string) {
+    setBuildingBoutId(boutId);
+    const spotlight = await onBuild(boutId);
+    setBuildingBoutId("");
+    if (!spotlight) return;
+    setWorking((current) => new Map(current).set(boutId, spotlight));
+    setUrls((current) => ({ ...current, [boutId]: { red: "", blue: "" } }));
   }
 
-  const redValid = validHttpUrl(redUrl);
-  const blueValid = validHttpUrl(blueUrl);
-  const videoCount = Number(Boolean(redUrl.trim())) + Number(Boolean(blueUrl.trim()));
-  const canSave = Boolean(selectedBout && videoCount > 0 && redValid && blueValid && !busy);
+  function saveBout(bout: PickSetupBout) {
+    const spotlight = working.get(bout.boutId);
+    if (!spotlight) return;
+    const row = urls[bout.boutId] ?? { red: "", blue: "" };
+    if (!validHttpUrl(row.red) || !validHttpUrl(row.blue)) return;
+    const updated: PickSetupSpotlight = {
+      ...spotlight,
+      watchSpotlights: [
+        row.red.trim() ? { fighterSlug: bout.redFighterSlug, url: row.red.trim() } : null,
+        row.blue.trim() ? { fighterSlug: bout.blueFighterSlug, url: row.blue.trim() } : null,
+      ].filter((watch): watch is { fighterSlug: string; url: string } => Boolean(watch)),
+    };
+    const collection = saved.filter((item) => item.boutId !== bout.boutId).concat(updated);
+    onSave(collection);
+  }
 
-  function save() {
-    if (!selectedBout || !canSave) return;
-    const watchSpotlights = [
-      redUrl.trim() ? { fighterSlug: selectedBout.redFighterSlug, url: redUrl.trim() } : null,
-      blueUrl.trim() ? { fighterSlug: selectedBout.blueFighterSlug, url: blueUrl.trim() } : null,
-    ].filter((watch): watch is { fighterSlug: string; url: string } => Boolean(watch));
-    onSave({ boutId: selectedBout.boutId, watchSpotlights });
+  function removeBoutSpotlight(boutId: string) {
+    setWorking((current) => {
+      const next = new Map(current);
+      next.delete(boutId);
+      return next;
+    });
+    onSave(saved.filter((item) => item.boutId !== boutId));
   }
 
   return (
-    <section className="surface-card picks-setup-spotlight" aria-label="Featured Spotlight setup">
+    <section className="surface-card picks-setup-spotlight" aria-label="Fight Spotlights setup">
       <div className="picks-setup-spotlight__heading">
         <div>
-          <p className="eyebrow">FEATURED SPOTLIGHT</p>
-          <h2>Pick the fight, paste the videos</h2>
+          <p className="eyebrow">FIGHT SPOTLIGHTS</p>
+          <h2>Build as many as you want</h2>
         </div>
-        <span>{draft.spotlight ? "SAVED" : "OPTIONAL"}</span>
+        <span>{saved.length} SAVED</span>
       </div>
       <p className="picks-setup-spotlight__intro">
-        Defaults to the main event. Confirm the matchup and paste a Watch Spotlight for either or both fighters.
+        Add a Spotlight to any included fight. Octagon HQ builds the preview, Tale of the Tape, and matchup edges from UFCStats; you only add the Watch URLs you want.
       </p>
 
-      <label>
-        FEATURED FIGHT
-        <select value={selectedBout?.boutId ?? ""} onChange={(event) => selectBout(event.target.value)} disabled={busy || !eligibleBouts.length}>
-          {eligibleBouts.map((bout, index) => (
-            <option value={bout.boutId} key={bout.boutId}>
-              {index === 0 ? "MAIN EVENT · " : ""}{bout.redFighterName} vs. {bout.blueFighterName}
-            </option>
-          ))}
-        </select>
-      </label>
+      <div className="picks-setup-spotlight__fight-list">
+        {eligibleBouts.map((bout, index) => {
+          const spotlight = working.get(bout.boutId);
+          const isSaved = saved.some((item) => item.boutId === bout.boutId);
+          const row = urls[bout.boutId] ?? { red: "", blue: "" };
+          const urlsValid = validHttpUrl(row.red) && validHttpUrl(row.blue);
+          return (
+            <article className="picks-setup-spotlight__fight" key={bout.boutId}>
+              <div className="picks-setup-spotlight__matchup">
+                <div>
+                  <small>{index === 0 ? "MAIN EVENT" : `FIGHT ${index + 1}`}</small>
+                  <strong>{bout.redFighterName} vs. {bout.blueFighterName}</strong>
+                  <span>{bout.weightClass || "Weight class TBD"}</span>
+                </div>
+                <em>{isSaved ? "SPOTLIGHT SAVED" : spotlight ? "READY TO SAVE" : "STANDARD FIGHT"}</em>
+              </div>
 
-      {selectedBout ? (
-        <>
-          <div className="picks-setup-spotlight__matchup">
-            <strong>{selectedBout.redFighterName} vs. {selectedBout.blueFighterName}</strong>
-            <span>{selectedBout.weightClass || "Weight class TBD"}</span>
-          </div>
-          <div className="picks-setup-spotlight__urls">
-            <label>
-              {selectedBout.redFighterName.toUpperCase()} WATCH URL
-              <input
-                type="url"
-                value={redUrl}
-                onChange={(event) => setRedUrl(event.target.value)}
-                disabled={busy}
-                placeholder="https://youtu.be/..."
-                autoCapitalize="none"
-                autoCorrect="off"
-                aria-invalid={!redValid}
-              />
-              {!redValid ? <small>Use a valid http/https URL.</small> : null}
-            </label>
-            <label>
-              {selectedBout.blueFighterName.toUpperCase()} WATCH URL
-              <input
-                type="url"
-                value={blueUrl}
-                onChange={(event) => setBlueUrl(event.target.value)}
-                disabled={busy}
-                placeholder="https://youtu.be/..."
-                autoCapitalize="none"
-                autoCorrect="off"
-                aria-invalid={!blueValid}
-              />
-              {!blueValid ? <small>Use a valid http/https URL.</small> : null}
-            </label>
-          </div>
-          <div className="picks-setup-spotlight__review" aria-live="polite">
-            <strong>{videoCount} OF 2 VIDEOS READY</strong>
-            <span>{videoCount ? "These links will appear inside the selected fight's Spotlight when the card is published." : "Paste at least one fighter video to save this Spotlight."}</span>
-          </div>
-        </>
-      ) : (
-        <p>No included fight is available for a Spotlight yet.</p>
-      )}
-
-      <button className="primary-action" type="button" disabled={!canSave} onClick={save}>
-        {saving ? "SAVING SPOTLIGHT…" : draft.spotlight ? "UPDATE SPOTLIGHT" : "SAVE SPOTLIGHT"}
-      </button>
-      {draft.spotlight ? (
-        <button className="pick-setup-danger" type="button" disabled={busy} onClick={() => onSave(null)}>
-          REMOVE SPOTLIGHT
-        </button>
-      ) : null}
+              {!spotlight ? (
+                <button className="secondary-action" type="button" disabled={busy || Boolean(buildingBoutId)} onClick={() => void build(bout.boutId)}>
+                  {buildingBoutId === bout.boutId ? "BUILDING SPOTLIGHT…" : "ADD SPOTLIGHT"}
+                </button>
+              ) : (
+                <div className="picks-setup-spotlight__package">
+                  <div className="picks-setup-spotlight__generated">
+                    <strong>FIGHT PREVIEW</strong>
+                    <p>{spotlight.preview}</p>
+                  </div>
+                  <div className="picks-setup-spotlight__tale">
+                    <span><b>{spotlight.red.record}</b><small>RECORD</small><b>{spotlight.blue.record}</b></span>
+                    <span><b>{spotlight.red.age}</b><small>AGE</small><b>{spotlight.blue.age}</b></span>
+                    <span><b>{spotlight.red.height}</b><small>HEIGHT</small><b>{spotlight.blue.height}</b></span>
+                    <span><b>{spotlight.red.reach}</b><small>REACH</small><b>{spotlight.blue.reach}</b></span>
+                    <span><b>{spotlight.red.stance}</b><small>STANCE</small><b>{spotlight.blue.stance}</b></span>
+                  </div>
+                  <div className="picks-setup-spotlight__edges">
+                    <div><strong>{bout.redFighterName}</strong>{spotlight.red.edges.map((edge) => <span key={edge}>{edge}</span>)}</div>
+                    <div><strong>{bout.blueFighterName}</strong>{spotlight.blue.edges.map((edge) => <span key={edge}>{edge}</span>)}</div>
+                  </div>
+                  <div className="picks-setup-spotlight__urls">
+                    <label>
+                      {bout.redFighterName.toUpperCase()} WATCH URL
+                      <input type="url" value={row.red} onChange={(event) => setUrls((current) => ({ ...current, [bout.boutId]: { ...row, red: event.target.value } }))} disabled={busy} placeholder="https://youtu.be/..." autoCapitalize="none" autoCorrect="off" aria-invalid={!validHttpUrl(row.red)} />
+                    </label>
+                    <label>
+                      {bout.blueFighterName.toUpperCase()} WATCH URL
+                      <input type="url" value={row.blue} onChange={(event) => setUrls((current) => ({ ...current, [bout.boutId]: { ...row, blue: event.target.value } }))} disabled={busy} placeholder="https://youtu.be/..." autoCapitalize="none" autoCorrect="off" aria-invalid={!validHttpUrl(row.blue)} />
+                    </label>
+                  </div>
+                  <div className="picks-setup-spotlight__actions">
+                    <button className="primary-action" type="button" disabled={busy || !urlsValid} onClick={() => saveBout(bout)}>{isSaved ? "UPDATE SPOTLIGHT" : "SAVE SPOTLIGHT"}</button>
+                    <button className="secondary-action" type="button" disabled={busy || Boolean(buildingBoutId)} onClick={() => void build(bout.boutId)}>REBUILD FROM UFCSTATS</button>
+                    <button className="pick-setup-danger" type="button" disabled={busy} onClick={() => removeBoutSpotlight(bout.boutId)}>REMOVE SPOTLIGHT</button>
+                  </div>
+                </div>
+              )}
+            </article>
+          );
+        })}
+      </div>
     </section>
   );
 }
