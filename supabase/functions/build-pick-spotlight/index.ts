@@ -2,18 +2,13 @@ import { createClient } from "npm:@supabase/supabase-js@2.110.7";
 import * as cheerio from "npm:cheerio@1.0.0";
 import { buildPickSpotlightContent, type SpotlightStatsFighter } from "../../../src/features/picks/spotlightContent.ts";
 import { DEPLOYED_SOURCE_SHA } from "./deployment.ts";
+import { fetchUfcStatsHtml, UfcStatsFetchError } from "./ufcStatsFetch.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
   "Access-Control-Expose-Headers": "X-Octagon-Backend-Sha",
-};
-
-const requestHeaders = {
-  "User-Agent": "OctagonHQ/2.0 (+https://octagon.hq-app.workers.dev)",
-  Accept: "text/html,application/xhtml+xml",
-  "Accept-Language": "en-US,en;q=0.9",
 };
 
 class SpotlightBuildError extends Error {
@@ -78,16 +73,14 @@ function profileIndexLetter(name: string) {
 }
 
 async function fetchHtml(url: string, label: string) {
-  let response: Response;
   try {
-    response = await fetch(url, { headers: requestHeaders, redirect: "follow" });
-  } catch {
-    throw new SpotlightBuildError("UFCSTATS_FETCH_FAILED", `${label} could not be loaded from UFCStats.`, 502);
+    return await fetchUfcStatsHtml(url, label);
+  } catch (error) {
+    if (error instanceof UfcStatsFetchError) {
+      throw new SpotlightBuildError("UFCSTATS_FETCH_FAILED", error.message, 502);
+    }
+    throw error;
   }
-  if (!response.ok) {
-    throw new SpotlightBuildError("UFCSTATS_FETCH_FAILED", `${label} could not be loaded from UFCStats.`, 502);
-  }
-  return response.text();
 }
 
 async function resolveProfileUrl(name: string, indexCache: Map<string, Promise<string>>) {
