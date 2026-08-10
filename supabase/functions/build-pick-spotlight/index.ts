@@ -55,7 +55,9 @@ function asRecord(value: unknown): Record<string, unknown> | null {
 }
 
 function numberFrom(value: string) {
-  const parsed = Number(value.replace(/[^0-9.-]/g, ""));
+  const numeric = value.replace(/[^0-9.-]/g, "").trim();
+  if (!numeric) return null;
+  const parsed = Number(numeric);
   return Number.isFinite(parsed) ? parsed : null;
 }
 
@@ -65,8 +67,9 @@ function dateValue(value: string) {
 }
 
 function profileIndexLetter(name: string) {
-  const normalized = normalizeName(name);
-  const last = normalized.split(" ").filter(Boolean).at(-1) ?? normalized;
+  const parts = normalizeName(name).split(" ").filter(Boolean);
+  while (["jr", "sr", "ii", "iii", "iv"].includes(parts.at(-1) ?? "")) parts.pop();
+  const last = parts.at(-1) ?? "";
   const char = last[0] ?? "";
   if (!/^[a-z]$/.test(char)) {
     throw new SpotlightBuildError("UFCSTATS_NAME_UNSUPPORTED", `UFCStats could not resolve ${name} safely.`);
