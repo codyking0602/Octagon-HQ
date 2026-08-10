@@ -1,7 +1,10 @@
+import type { PickSpotlight } from "./spotlightModel";
+
 export type PickEventStatus = "upcoming" | "locked" | "complete";
 export type PickBoutResultStatus = "pending" | "red_win" | "blue_win" | "draw" | "no_contest" | "cancelled";
 export type PickVerdict = "correct" | "incorrect" | "missing" | "excluded" | "pending";
 export type PickEventPresentationState = "upcoming" | "locked" | "awaiting_results" | "complete";
+export type PickEventSpotlight = PickSpotlight;
 
 export interface PickGroupPick {
   displayName: string;
@@ -12,16 +15,6 @@ export interface PickGroupPick {
 export interface PickWatchMoment {
   title: string;
   url: string;
-}
-
-export interface PickEventSpotlightWatch {
-  fighterSlug: string;
-  url: string;
-}
-
-export interface PickEventSpotlight {
-  boutId: string;
-  watchSpotlights: PickEventSpotlightWatch[];
 }
 
 export interface PickBout {
@@ -67,7 +60,7 @@ export interface PickEvent {
   season: number;
   status: PickEventStatus;
   canControl?: boolean;
-  spotlight?: PickEventSpotlight | null;
+  spotlights?: PickEventSpotlight[];
   bouts: PickBout[];
 }
 

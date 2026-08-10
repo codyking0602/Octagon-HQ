@@ -12,7 +12,7 @@ import {
 
 const payload = {
   draft_id: "11111111-1111-4111-8111-111111111111",
-  source: "UFC.com metadata + MMA Mania card",
+  source: "MMA Mania",
   source_event_key: "event/ufc-test",
   source_url: "https://www.mmamania.com/ufc-fight-cards/1/ufc-test",
   event_id: "ufc-test-2026-08-01",
@@ -28,6 +28,7 @@ const payload = {
   updated_at: "2026-07-26T20:00:00.000Z",
   warnings: [],
   can_publish: true,
+  spotlights: [],
   bouts: [{
     bout_id: "main-event-red-fighter-blue-fighter",
     position: 1,
@@ -51,6 +52,32 @@ const mappedBout = {
   included: true,
 };
 
+const fullSpotlight = {
+  bout_id: "main-event-red-fighter-blue-fighter",
+  preview: "Red Fighter brings the higher striking volume while Blue Fighter answers with the stronger wrestling profile.",
+  red: {
+    fighter_slug: "red-fighter",
+    record: "8-1-0",
+    age: "28",
+    height: "6' 0\"",
+    reach: "75\"",
+    stance: "Orthodox",
+    edges: ["5.0 significant strikes landed/min"],
+  },
+  blue: {
+    fighter_slug: "blue-fighter",
+    record: "10-2-0",
+    age: "30",
+    height: "5' 11\"",
+    reach: "73\"",
+    stance: "Southpaw",
+    edges: ["3.1 takedowns per 15 min"],
+  },
+  watch_spotlights: [{ fighter_slug: "red-fighter", url: "https://youtu.be/red-fighter" }],
+  source: "UFCStats",
+  generated_at: "2026-07-27T00:00:00.000Z",
+};
+
 describe("Event Setup draft mapping", () => {
   it("maps private staged metadata and section-aware fight review fields", () => {
     const draft = mapPickSetupDraft(payload);
@@ -72,7 +99,7 @@ describe("Event Setup draft mapping", () => {
       updatedAt: payload.updated_at,
       warnings: [],
       canPublish: true,
-      spotlight: null,
+      spotlights: [],
       bouts: [mappedBout],
     });
     expect(pickSetupBoutSection(draft!.bouts[0]!.boutId)).toBe("main-event");
@@ -100,23 +127,41 @@ describe("Event Setup draft mapping", () => {
     expect(pickSetupBoutSectionLabel(draft!.bouts[1]!.boutId)).toBe("PRELIMS");
   });
 
-  it("maps reviewed Spotlight data on the same staged-event projection", () => {
-    const draft = mapPickSetupDraft({
-      ...payload,
-      spotlight: {
-        bout_id: payload.bouts[0].bout_id,
-        watch_spotlights: [{
-          fighter_slug: "red-fighter",
-          url: "https://youtu.be/red-fighter",
-        }],
-      },
-    });
-    expect(draft?.spotlight).toEqual({
-      boutId: payload.bouts[0].bout_id,
-      watchSpotlights: [{
+  it("maps multiple complete Spotlight packages on the staged-event projection", () => {
+    const second = {
+      ...fullSpotlight,
+      bout_id: "main-second-third",
+      preview: "Second Fighter and Third Fighter present a second independent generated matchup package.",
+      red: { ...fullSpotlight.red, fighter_slug: "second-fighter" },
+      blue: { ...fullSpotlight.blue, fighter_slug: "third-fighter" },
+      watch_spotlights: [],
+    };
+    const draft = mapPickSetupDraft({ ...payload, spotlights: [fullSpotlight, second] });
+    expect(draft?.spotlights).toHaveLength(2);
+    expect(draft?.spotlights?.[0]).toEqual({
+      boutId: fullSpotlight.bout_id,
+      preview: fullSpotlight.preview,
+      red: {
         fighterSlug: "red-fighter",
-        url: "https://youtu.be/red-fighter",
-      }],
+        record: "8-1-0",
+        age: "28",
+        height: "6' 0\"",
+        reach: "75\"",
+        stance: "Orthodox",
+        edges: ["5.0 significant strikes landed/min"],
+      },
+      blue: {
+        fighterSlug: "blue-fighter",
+        record: "10-2-0",
+        age: "30",
+        height: "5' 11\"",
+        reach: "73\"",
+        stance: "Southpaw",
+        edges: ["3.1 takedowns per 15 min"],
+      },
+      watchSpotlights: [{ fighterSlug: "red-fighter", url: "https://youtu.be/red-fighter" }],
+      source: "UFCStats",
+      generatedAt: "2026-07-27T00:00:00.000Z",
     });
   });
 

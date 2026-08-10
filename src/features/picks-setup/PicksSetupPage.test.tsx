@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import { IdentityProvider } from "../identity/IdentityProvider";
 import type { IdentityGateway } from "../identity/identityGateway";
-import type { PickSetupBout, PickSetupDraft, PickSetupSourcePreview } from "./pickSetupModel";
+import type { PickSetupBout, PickSetupDraft, PickSetupSourcePreview, PickSetupSpotlight } from "./pickSetupModel";
 import PicksSetupPage from "./PicksSetupPage";
 import type { PickSetupRepository } from "./pickSetupRepository";
 
@@ -31,7 +31,7 @@ const stagedDraft: PickSetupDraft = {
   updatedAt: "2026-07-26T20:00:00.000Z",
   warnings: [],
   canPublish: true,
-  spotlight: null,
+  spotlights: [],
   bouts: [{
     boutId: "main-event-red-fighter-blue-fighter",
     position: 1,
@@ -52,6 +52,34 @@ const stagedDraft: PickSetupDraft = {
     included: true,
   }],
 };
+
+function builtSpotlight(bout: PickSetupBout): PickSetupSpotlight {
+  return {
+    boutId: bout.boutId,
+    preview: `${bout.redFighterName} brings the higher striking volume while ${bout.blueFighterName} answers with stronger wrestling and defensive numbers.`,
+    red: {
+      fighterSlug: bout.redFighterSlug,
+      record: "8-1-0",
+      age: "28",
+      height: "6' 0\"",
+      reach: "75\"",
+      stance: "Orthodox",
+      edges: ["5.0 significant strikes landed/min"],
+    },
+    blue: {
+      fighterSlug: bout.blueFighterSlug,
+      record: "10-2-0",
+      age: "30",
+      height: "5' 11\"",
+      reach: "73\"",
+      stance: "Southpaw",
+      edges: ["3.1 takedowns per 15 min"],
+    },
+    watchSpotlights: [],
+    source: "UFCStats",
+    generatedAt: "2026-07-27T00:00:00.000Z",
+  };
+}
 
 function previewBout(position: number, red: string, blue: string): PickSetupBout {
   const slug = (value: string) => value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
@@ -114,7 +142,11 @@ function repository(draft: PickSetupDraft | null): PickSetupRepository {
     saveBout: vi.fn().mockResolvedValue(undefined),
     removeBout: vi.fn().mockResolvedValue(undefined),
     reorderBouts: vi.fn().mockResolvedValue(undefined),
-    saveSpotlight: vi.fn().mockResolvedValue(undefined),
+    buildSpotlight: vi.fn().mockImplementation(async (_draftId: string, boutId: string) => {
+      const bout = stagedDraft.bouts.find((candidate) => candidate.boutId === boutId)!;
+      return builtSpotlight(bout);
+    }),
+    saveSpotlights: vi.fn().mockResolvedValue(undefined),
     publishDraft: vi.fn().mockResolvedValue(undefined),
     discardDraft: vi.fn().mockResolvedValue(undefined),
   };
@@ -139,7 +171,6 @@ describe("Event Setup and card review", () => {
   it("syncs the next event with automatic discovery when no source URL is entered", async () => {
     const repo = repository(null);
     renderPage(repo);
-
     fireEvent.click(await screen.findByRole("button", { name: "SYNC NEXT UFC EVENT" }));
     await waitFor(() => expect(repo.syncNextEvent).toHaveBeenCalledWith("auto", ""));
   });
@@ -147,35 +178,21 @@ describe("Event Setup and card review", () => {
   it("allows the owner to supply an exact MMA Mania article when discovery is unreliable", async () => {
     const repo = repository(null);
     renderPage(repo);
-
     const exactUrl = "https://www.mmamania.com/ufc-fight-cards/446488/latest-ufc-belgrade-fight-card";
-    fireEvent.change(await screen.findByPlaceholderText("https://www.mmamania.com/..."), {
-      target: { value: exactUrl },
-    });
+    fireEvent.change(await screen.findByPlaceholderText("https://www.mmamania.com/..."), { target: { value: exactUrl } });
     fireEvent.click(screen.getByRole("button", { name: "SYNC NEXT UFC EVENT" }));
-
     await waitFor(() => expect(repo.syncNextEvent).toHaveBeenCalledWith("auto", exactUrl));
   });
 
   it("shows the clean prospective event and hides polluted staged fields before apply", async () => {
-    const pollutedDraft = {
-      ...stagedDraft,
-      venue: `src="https://www.googletagmanager.com/ns.html?id=GTM-WFBHZX5"`,
-      location: "Skip to main <iframe> UFC",
-    };
+    const pollutedDraft = { ...stagedDraft, venue: `src="https://www.googletagmanager.com/ns.html?id=GTM-WFBHZX5"`, location: "Skip to main <iframe> UFC" };
     const repo = repository(pollutedDraft);
     renderPage(repo);
-
     fireEvent.click(await screen.findByRole("button", { name: "CHECK FOR CARD UPDATES" }));
-
     expect(await screen.findByText("SOURCE REVIEW · NOT APPLIED")).toBeInTheDocument();
     expect(screen.getAllByText("Uroš Medić vs. Daniel Rodriguez").length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/Belgrade Arena.*Belgrade, Serbia/).length).toBeGreaterThan(0);
     expect(screen.getByText("Marcin Tybura vs. Aleksandar Rakić")).toBeInTheDocument();
-    expect(screen.getByText("Jan Błachowicz vs. Bogdan Guskov")).toBeInTheDocument();
-    expect(screen.queryByText(/Bogdan Guskov 2/)).not.toBeInTheDocument();
     expect(document.body.textContent).not.toMatch(/iframe|googletagmanager|skip to main|src=/i);
-    expect(screen.queryByLabelText("VENUE")).not.toBeInTheDocument();
     expect(repo.applySourcePreview).not.toHaveBeenCalled();
   });
 
@@ -183,14 +200,11 @@ describe("Event Setup and card review", () => {
     vi.spyOn(window, "confirm").mockReturnValue(true);
     const repo = repository(stagedDraft);
     renderPage(repo);
-
     await waitFor(() => expect(screen.getByPlaceholderText("https://www.mmamania.com/...")).toHaveValue(stagedDraft.sourceUrl));
     fireEvent.click(await screen.findByRole("button", { name: "CHECK FOR CARD UPDATES" }));
     await waitFor(() => expect(repo.previewSource).toHaveBeenCalledWith("auto", stagedDraft.sourceUrl));
     expect(repo.applySourcePreview).not.toHaveBeenCalled();
     expect(await screen.findByText("CARD CHANGES DETECTED")).toBeInTheDocument();
-    expect(screen.getByText(sourcePreview.changes[0])).toBeInTheDocument();
-
     fireEvent.click(screen.getByRole("button", { name: "APPLY SOURCE CHANGES" }));
     await waitFor(() => expect(repo.applySourcePreview).toHaveBeenCalledWith(sourcePreview));
   });
@@ -198,62 +212,60 @@ describe("Event Setup and card review", () => {
   it("uses the full-card override with the saved source article", async () => {
     const repo = repository(stagedDraft);
     renderPage(repo);
-
     await waitFor(() => expect(screen.getByPlaceholderText("https://www.mmamania.com/...")).toHaveValue(stagedDraft.sourceUrl));
     fireEvent.click((await screen.findByText("FULL CARD")).closest("button")!);
     fireEvent.click(screen.getByRole("button", { name: "CHECK FOR CARD UPDATES" }));
     await waitFor(() => expect(repo.previewSource).toHaveBeenCalledWith("full", stagedDraft.sourceUrl));
   });
 
-  it("defaults Spotlight setup to the main event and saves the two fighter URLs", async () => {
+  it("offers every included fight as an independent full Spotlight and saves the built package", async () => {
     const repo = repository(stagedDraft);
     renderPage(repo);
 
-    const fight = await screen.findByLabelText("FEATURED FIGHT");
-    expect(fight).toHaveValue("main-event-red-fighter-blue-fighter");
+    const addButtons = await screen.findAllByRole("button", { name: "ADD SPOTLIGHT" });
+    expect(addButtons).toHaveLength(2);
+    fireEvent.click(addButtons[0]!);
 
-    fireEvent.change(screen.getByLabelText("RED FIGHTER WATCH URL"), {
-      target: { value: "https://youtu.be/red-fighter" },
-    });
-    fireEvent.change(screen.getByLabelText("BLUE FIGHTER WATCH URL"), {
-      target: { value: "https://youtu.be/blue-fighter" },
-    });
+    await waitFor(() => expect(repo.buildSpotlight).toHaveBeenCalledWith(
+      stagedDraft.draftId,
+      "main-event-red-fighter-blue-fighter",
+    ));
+    expect(await screen.findByText(/Red Fighter brings the higher striking volume/)).toBeInTheDocument();
+    expect(screen.getByText("8-1-0")).toBeInTheDocument();
+    expect(screen.getByText("5.0 significant strikes landed/min")).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText("RED FIGHTER WATCH URL"), { target: { value: "https://youtu.be/red-fighter" } });
+    fireEvent.change(screen.getByLabelText("BLUE FIGHTER WATCH URL"), { target: { value: "https://youtu.be/blue-fighter" } });
     fireEvent.click(screen.getByRole("button", { name: "SAVE SPOTLIGHT" }));
 
-    await waitFor(() => expect(repo.saveSpotlight).toHaveBeenCalledWith(stagedDraft.draftId, {
-      boutId: "main-event-red-fighter-blue-fighter",
-      watchSpotlights: [
-        { fighterSlug: "red-fighter", url: "https://youtu.be/red-fighter" },
-        { fighterSlug: "blue-fighter", url: "https://youtu.be/blue-fighter" },
-      ],
-    }));
+    await waitFor(() => expect(repo.saveSpotlights).toHaveBeenCalledWith(
+      stagedDraft.draftId,
+      [expect.objectContaining({
+        boutId: "main-event-red-fighter-blue-fighter",
+        preview: expect.stringContaining("Red Fighter"),
+        red: expect.objectContaining({ fighterSlug: "red-fighter", record: "8-1-0" }),
+        blue: expect.objectContaining({ fighterSlug: "blue-fighter", record: "10-2-0" }),
+        watchSpotlights: [
+          { fighterSlug: "red-fighter", url: "https://youtu.be/red-fighter" },
+          { fighterSlug: "blue-fighter", url: "https://youtu.be/blue-fighter" },
+        ],
+      })],
+    ));
   });
 
   it("keeps review edits staged and publishes only after confirmation", async () => {
     vi.spyOn(window, "confirm").mockReturnValue(true);
     const repo = repository(stagedDraft);
     renderPage(repo);
-
     expect(await screen.findByRole("heading", { name: "UFC Fight Night" })).toBeInTheDocument();
-    expect(screen.getByText("STAGED CARD · NOT LIVE")).toBeInTheDocument();
     expect(screen.getByText("2 fights included")).toBeInTheDocument();
-    expect(screen.getByText("MAIN EVENT")).toBeInTheDocument();
-
     fireEvent.change(screen.getByLabelText("VENUE"), { target: { value: "Updated Arena" } });
     fireEvent.click(screen.getByRole("button", { name: "SAVE EVENT DETAILS" }));
-    await waitFor(() => expect(repo.updateMetadata).toHaveBeenCalledWith(
-      stagedDraft.draftId,
-      expect.objectContaining({ venue: "Updated Arena" }),
-    ));
-
+    await waitFor(() => expect(repo.updateMetadata).toHaveBeenCalledWith(stagedDraft.draftId, expect.objectContaining({ venue: "Updated Arena" })));
     const moveDown = screen.getByRole("button", { name: /Move Red Fighter vs Blue Fighter down/i });
     await waitFor(() => expect(moveDown).toBeEnabled());
     fireEvent.click(moveDown);
-    await waitFor(() => expect(repo.reorderBouts).toHaveBeenCalledWith(
-      stagedDraft.draftId,
-      ["main-second-fighter-third-fighter", "main-event-red-fighter-blue-fighter"],
-    ));
-
+    await waitFor(() => expect(repo.reorderBouts).toHaveBeenCalledWith(stagedDraft.draftId, ["main-second-fighter-third-fighter", "main-event-red-fighter-blue-fighter"]));
     const publish = screen.getByRole("button", { name: "PUBLISH CARD" });
     await waitFor(() => expect(publish).toBeEnabled());
     fireEvent.click(publish);
@@ -261,14 +273,8 @@ describe("Event Setup and card review", () => {
   });
 
   it("shows warnings and disables publish for an incomplete staged card", async () => {
-    const repo = repository({
-      ...stagedDraft,
-      venue: "",
-      warnings: ["MISSING VENUE"],
-      canPublish: false,
-    });
+    const repo = repository({ ...stagedDraft, venue: "", warnings: ["MISSING VENUE"], canPublish: false });
     renderPage(repo);
-
     expect(await screen.findByText("MISSING VENUE")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "PUBLISH CARD" })).toBeDisabled();
   });

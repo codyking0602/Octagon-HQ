@@ -20,6 +20,7 @@ import "./styles/picks-owner-entry.css";
 import "./styles/picks-control.css";
 import "./styles/picks-lock-time-control.css";
 import "./styles/picks-setup.css";
+import "./styles/picks-multi-spotlight.css";
 import "./styles/picks-setup-source.css";
 import "./styles/picks-monitoring.css";
 import "./styles/picks-control-center.css";
