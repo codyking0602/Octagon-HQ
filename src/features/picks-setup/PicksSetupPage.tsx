@@ -308,10 +308,16 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
     });
   }
 
-  function saveSpotlight(spotlight: PickSetupSpotlight | null) {
-    const save = repository?.saveSpotlight;
+  async function buildSpotlight(boutId: string) {
+    const build = repository?.buildSpotlight;
+    if (!draft || !build) return null;
+    return await runAction(`build-spotlight:${boutId}`, () => build(draft.draftId, boutId), false) ?? null;
+  }
+
+  function saveSpotlights(spotlights: PickSetupSpotlight[]) {
+    const save = repository?.saveSpotlights;
     if (!draft || !save) return;
-    void runAction("spotlight", () => save(draft.draftId, spotlight));
+    void runAction("spotlights", () => save(draft.draftId, spotlights));
   }
 
   function publishDraft() {
@@ -526,8 +532,8 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
                 draft={draft}
                 bouts={orderedBouts}
                 busy={Boolean(busyAction)}
-                saving={busyAction === "spotlight"}
-                onSave={saveSpotlight}
+                onBuild={buildSpotlight}
+                onSave={saveSpotlights}
               />
 
               <section className="surface-card picks-setup-publish">
