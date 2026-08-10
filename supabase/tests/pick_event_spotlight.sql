@@ -9,10 +9,10 @@ declare
   v_starts_at timestamptz := now() + interval '10 days';
   v_setup jsonb;
   v_current jsonb;
+  v_spotlights jsonb;
 begin
   update public.pick_events
-  set status = 'complete',
-      completed_at = coalesce(completed_at, now())
+  set status = 'complete', completed_at = coalesce(completed_at, now())
   where status in ('upcoming', 'locked');
 
   insert into auth.users (
@@ -43,17 +43,65 @@ begin
     'starts_at', v_starts_at,
     'locks_at', v_starts_at - interval '1 hour',
     'season', 2199,
-    'bouts', jsonb_build_array(jsonb_build_object(
-      'bout_id', 'main-event-spotlight-red-spotlight-blue',
-      'position', 1,
-      'weight_class', 'Lightweight',
-      'red_fighter_slug', 'spotlight-red',
-      'red_fighter_name', 'Spotlight Red',
-      'blue_fighter_slug', 'spotlight-blue',
-      'blue_fighter_name', 'Spotlight Blue',
-      'included', true
-    ))
+    'bouts', jsonb_build_array(
+      jsonb_build_object(
+        'bout_id', 'main-event-spotlight-red-spotlight-blue',
+        'position', 1,
+        'weight_class', 'Lightweight',
+        'red_fighter_slug', 'spotlight-red',
+        'red_fighter_name', 'Spotlight Red',
+        'blue_fighter_slug', 'spotlight-blue',
+        'blue_fighter_name', 'Spotlight Blue',
+        'included', true
+      ),
+      jsonb_build_object(
+        'bout_id', 'main-second-red-second-blue',
+        'position', 2,
+        'weight_class', 'Welterweight',
+        'red_fighter_slug', 'second-red',
+        'red_fighter_name', 'Second Red',
+        'blue_fighter_slug', 'second-blue',
+        'blue_fighter_name', 'Second Blue',
+        'included', true
+      )
+    )
   ));
+
+  v_spotlights := jsonb_build_array(
+    jsonb_build_object(
+      'bout_id', 'main-event-spotlight-red-spotlight-blue',
+      'preview', 'Spotlight Red has the stronger striking volume while Spotlight Blue answers with a higher wrestling rate.',
+      'red', jsonb_build_object(
+        'fighter_slug', 'spotlight-red', 'record', '8-1-0', 'age', '28', 'height', '6'' 0"', 'reach', '75"', 'stance', 'Orthodox',
+        'edges', jsonb_build_array('5.0 significant strikes landed/min', '78% takedown defense')
+      ),
+      'blue', jsonb_build_object(
+        'fighter_slug', 'spotlight-blue', 'record', '10-2-0', 'age', '30', 'height', '5'' 11"', 'reach', '73"', 'stance', 'Southpaw',
+        'edges', jsonb_build_array('3.0 takedowns per 15 min')
+      ),
+      'watch_spotlights', jsonb_build_array(
+        jsonb_build_object('fighter_slug', 'spotlight-red', 'url', 'https://youtu.be/spotlight-red'),
+        jsonb_build_object('fighter_slug', 'spotlight-blue', 'url', 'https://youtu.be/spotlight-blue')
+      ),
+      'source', 'UFCStats',
+      'generated_at', now()
+    ),
+    jsonb_build_object(
+      'bout_id', 'main-second-red-second-blue',
+      'preview', 'Second Red carries the longer reach while Second Blue brings the stronger takedown and submission rates.',
+      'red', jsonb_build_object(
+        'fighter_slug', 'second-red', 'record', '7-2-0', 'age', '27', 'height', '6'' 1"', 'reach', '76"', 'stance', 'Orthodox',
+        'edges', jsonb_build_array('4.8 significant strikes landed/min')
+      ),
+      'blue', jsonb_build_object(
+        'fighter_slug', 'second-blue', 'record', '9-3-0', 'age', '31', 'height', '5'' 10"', 'reach', '72"', 'stance', 'Southpaw',
+        'edges', jsonb_build_array('3.4 takedowns per 15 min', '1.1 submission attempts per 15 min')
+      ),
+      'watch_spotlights', '[]'::jsonb,
+      'source', 'UFCStats',
+      'generated_at', now()
+    )
+  );
 
   perform set_config('request.jwt.claim.role', 'authenticated', true);
   perform set_config('request.jwt.claim.sub', v_owner_id::text, true);
@@ -61,78 +109,60 @@ begin
   begin
     perform public.set_pick_event_draft_spotlight(
       v_draft_id,
-      jsonb_build_object(
-        'bout_id', 'main-event-spotlight-red-spotlight-blue',
-        'watch_spotlights', jsonb_build_array(jsonb_build_object(
-          'fighter_slug', 'not-in-this-fight',
-          'url', 'https://youtu.be/not-current'
-        ))
-      )
+      v_spotlights || jsonb_build_array(v_spotlights->0)
+    );
+    raise exception 'duplicate Spotlight fight was accepted';
+  exception when others then
+    if sqlerrm not like '%Fight Spotlights must be complete, unique%' then raise; end if;
+  end;
+
+  begin
+    perform public.set_pick_event_draft_spotlight(
+      v_draft_id,
+      jsonb_set(v_spotlights, '{0,red,fighter_slug}', '"not-current"'::jsonb)
     );
     raise exception 'invalid Spotlight fighter was accepted';
   exception when others then
-    if sqlerrm not like '%Spotlight must reference one included fight%' then
-      raise;
-    end if;
+    if sqlerrm not like '%Fight Spotlights must be complete, unique%' then raise; end if;
   end;
 
-  perform public.set_pick_event_draft_spotlight(
-    v_draft_id,
-    jsonb_build_object(
-      'bout_id', 'main-event-spotlight-red-spotlight-blue',
-      'watch_spotlights', jsonb_build_array(
-        jsonb_build_object(
-          'fighter_slug', 'spotlight-red',
-          'url', 'https://youtu.be/spotlight-red'
-        ),
-        jsonb_build_object(
-          'fighter_slug', 'spotlight-blue',
-          'url', 'https://youtu.be/spotlight-blue'
-        )
-      )
-    )
-  );
+  perform public.set_pick_event_draft_spotlight(v_draft_id, v_spotlights);
 
   v_setup := public.get_pick_event_setup();
-  if v_setup #>> '{spotlight,bout_id}' <> 'main-event-spotlight-red-spotlight-blue'
-    or v_setup #>> '{spotlight,watch_spotlights,0,fighter_slug}' <> 'spotlight-red'
-    or v_setup #>> '{spotlight,watch_spotlights,1,fighter_slug}' <> 'spotlight-blue'
+  if jsonb_array_length(v_setup->'spotlights') <> 2
+    or v_setup #>> '{spotlights,0,bout_id}' <> 'main-event-spotlight-red-spotlight-blue'
+    or v_setup #>> '{spotlights,1,bout_id}' <> 'main-second-red-second-blue'
+    or v_setup #>> '{spotlights,0,preview}' not like '%Spotlight Red%'
     or v_setup #>> '{can_publish}' <> 'true' then
-    raise exception 'owner setup projection did not preserve the reviewed Spotlight: %', v_setup;
+    raise exception 'owner setup projection did not preserve both reviewed Spotlights: %', v_setup;
   end if;
 
   perform public.publish_pick_event_draft(v_draft_id);
 
   v_current := public.get_current_pick_event();
   if v_current #>> '{event_id}' <> 'pick-spotlight-test'
-    or v_current #>> '{spotlight,bout_id}' <> 'main-event-spotlight-red-spotlight-blue'
-    or v_current #>> '{spotlight,watch_spotlights,0,url}' <> 'https://youtu.be/spotlight-red'
-    or v_current #>> '{spotlight,watch_spotlights,1,url}' <> 'https://youtu.be/spotlight-blue' then
-    raise exception 'published current-event projection did not expose the reviewed Spotlight: %', v_current;
+    or jsonb_array_length(v_current->'spotlights') <> 2
+    or v_current #>> '{spotlights,0,watch_spotlights,0,url}' <> 'https://youtu.be/spotlight-red'
+    or v_current #>> '{spotlights,1,red,record}' <> '7-2-0' then
+    raise exception 'published current-event projection did not expose both Spotlights: %', v_current;
   end if;
 
   perform set_config('request.jwt.claim.role', 'service_role', true);
   perform set_config('request.jwt.claim.sub', '', true);
-
   update public.pick_bouts
-  set red_fighter_slug = 'replacement-red',
-      red_fighter_name = 'Replacement Red'
+  set red_fighter_slug = 'replacement-red', red_fighter_name = 'Replacement Red'
   where event_id = 'pick-spotlight-test'
     and bout_id = 'main-event-spotlight-red-spotlight-blue';
 
   perform set_config('request.jwt.claim.role', 'authenticated', true);
   perform set_config('request.jwt.claim.sub', v_owner_id::text, true);
-
   v_current := public.get_current_pick_event();
-  if coalesce(v_current->'spotlight', 'null'::jsonb) <> 'null'::jsonb then
-    raise exception 'stale Spotlight links remained visible after the selected fighter changed: %', v_current;
+  if jsonb_array_length(v_current->'spotlights') <> 1
+    or v_current #>> '{spotlights,0,bout_id}' <> 'main-second-red-second-blue' then
+    raise exception 'one stale fight Spotlight did not fail closed independently: %', v_current;
   end if;
 
-  if has_function_privilege(
-    'anon',
-    'public.set_pick_event_draft_spotlight(uuid,jsonb)',
-    'EXECUTE'
-  ) then
+  if has_function_privilege('anon', 'public.set_pick_event_draft_spotlight(uuid,jsonb)', 'EXECUTE') then
     raise exception 'anonymous role inherited Spotlight setup mutation access';
   end if;
 end;
