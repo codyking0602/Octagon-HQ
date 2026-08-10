@@ -9,5 +9,8 @@ verify_jwt = false
 [functions.run-pick-monitoring]
 verify_jwt = false
 
+[functions.build-pick-spotlight]
+verify_jwt = false
+
 [functions.daily-challenge-runtime]
 verify_jwt = false
