@@ -156,6 +156,20 @@ jobs:
             echo "sync-next-ufc-event is not present in this exact deployment source; skipping."
           fi
 
+      - name: Deploy Picks Spotlight builder when present
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          if [ -f supabase/functions/build-pick-spotlight/index.ts ]; then
+            printf '// Generated only in the deployment workspace.\nexport const DEPLOYED_SOURCE_SHA = "%s";\n' "$SOURCE_SHA" \
+              > supabase/functions/build-pick-spotlight/deployment.ts
+            supabase functions deploy build-pick-spotlight --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt
+          else
+            echo "build-pick-spotlight is not present in this exact deployment source; skipping."
+          fi
+
       - name: Deploy manual Picks monitoring function when present
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
@@ -323,11 +337,17 @@ jobs:
           if [ -f supabase/migrations/202609140003_allow_wavelength_v2_publication.sql ]; then
             require_remote_migration "202609140003"
           fi
+          if [ -f supabase/migrations/202612310010_multi_pick_event_spotlights.sql ]; then
+            require_remote_migration "202612310010"
+          fi
 
           function_list=$(supabase functions list --project-ref "$SUPABASE_PROJECT_ID")
           printf '%s\n' "$function_list" | grep -F "pin-auth"
           if [ -f supabase/functions/sync-next-ufc-event/index.ts ]; then
             printf '%s\n' "$function_list" | grep -F "sync-next-ufc-event"
+          fi
+          if [ -f supabase/functions/build-pick-spotlight/index.ts ]; then
+            printf '%s\n' "$function_list" | grep -F "build-pick-spotlight"
           fi
           if [ -f supabase/functions/run-pick-monitoring/index.ts ]; then
             printf '%s\n' "$function_list" | grep -F "run-pick-monitoring"
@@ -358,6 +378,32 @@ jobs:
 
           grep -Fq "Enter a name and a 4-digit PIN." "$RUNNER_TEMP/pin-auth-response.json"
           grep -Fiq "access-control-allow-origin: $OCTAGON_PRODUCTION_ORIGIN" "$RUNNER_TEMP/pin-auth-headers.txt"
+
+          if [ -f supabase/functions/build-pick-spotlight/index.ts ]; then
+            spotlight_endpoint="https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/build-pick-spotlight"
+            spotlight_status=$(curl --silent --show-error \
+              --dump-header "$RUNNER_TEMP/spotlight-builder-headers.txt" \
+              --output "$RUNNER_TEMP/spotlight-builder-response.json" \
+              --write-out "%{http_code}" \
+              --request POST \
+              --header "Origin: $OCTAGON_PRODUCTION_ORIGIN" \
+              --header "Content-Type: application/json" \
+              --data '{"mode":"deployment-info"}' \
+              "$spotlight_endpoint")
+            test "$spotlight_status" = "200"
+            grep -Fq "\"deployment_sha\":\"$SOURCE_SHA\"" "$RUNNER_TEMP/spotlight-builder-response.json"
+            grep -Fiq "access-control-allow-origin: $OCTAGON_PRODUCTION_ORIGIN" "$RUNNER_TEMP/spotlight-builder-headers.txt"
+
+            spotlight_unauthorized_status=$(curl --silent --show-error \
+              --output "$RUNNER_TEMP/spotlight-builder-unauthorized.json" \
+              --write-out "%{http_code}" \
+              --request POST \
+              --header "Content-Type: application/json" \
+              --data '{"draft_id":"00000000-0000-0000-0000-000000000000","bout_id":"test"}' \
+              "$spotlight_endpoint")
+            test "$spotlight_unauthorized_status" = "401"
+            grep -Fq "OWNER_AUTH_REQUIRED" "$RUNNER_TEMP/spotlight-builder-unauthorized.json"
+          fi
 
           if [ -f supabase/functions/daily-challenge-runtime/index.ts ]; then
             daily_endpoint="https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/daily-challenge-runtime"
@@ -445,6 +491,9 @@ jobs:
             echo "- pin-auth Edge Function deployed"
             if [ -f supabase/functions/sync-next-ufc-event/index.ts ]; then
               echo "- sync-next-ufc-event Edge Function deployed and returned the embedded exact source SHA"
+            fi
+            if [ -f supabase/functions/build-pick-spotlight/index.ts ]; then
+              echo "- build-pick-spotlight Edge Function deployed, returned the embedded exact source SHA, and rejected unauthenticated generation"
             fi
             if [ -f supabase/functions/run-pick-monitoring/index.ts ]; then
               echo "- run-pick-monitoring Edge Function deployed, rejected unauthenticated and fake-scheduler execution without a provider call, and returned the embedded exact source SHA"
