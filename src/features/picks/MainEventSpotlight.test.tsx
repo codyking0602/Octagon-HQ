@@ -70,7 +70,7 @@ describe("MainEventSpotlight", () => {
     const modal = dialog.closest(".main-event-spotlight-modal");
     expect(modal?.parentElement).toBe(document.body);
     expect(container.querySelector(".main-event-spotlight-modal")).toBeNull();
-    expect(screen.getByText("9-4 UFC")).toBeInTheDocument();
+    expect(screen.getAllByText("9-4 UFC")).toHaveLength(2);
     expect(screen.getByText("Chain wrestling and mat returns")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "GAMROT SPOTLIGHT ↗" })).toHaveAttribute(
       "href",
@@ -87,8 +87,8 @@ describe("MainEventSpotlight", () => {
     expect(screen.getByText("FIGHT SPOTLIGHT · FEATHERWEIGHT")).toBeInTheDocument();
     expect(screen.getByText(generated.preview)).toBeInTheDocument();
     expect(screen.getByText("TALE OF THE TAPE")).toBeInTheDocument();
-    expect(screen.getByText("8-1-0")).toBeInTheDocument();
-    expect(screen.getByText("11-3-0")).toBeInTheDocument();
+    expect(screen.getAllByText("8-1-0")).toHaveLength(2);
+    expect(screen.getAllByText("11-3-0")).toHaveLength(2);
     expect(screen.getByText("MATCHUP EDGES")).toBeInTheDocument();
     expect(screen.getByText("5.1 significant strikes landed/min")).toBeInTheDocument();
     expect(screen.getByText("3.2 takedowns per 15 min")).toBeInTheDocument();
