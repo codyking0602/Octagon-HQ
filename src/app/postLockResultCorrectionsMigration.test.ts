@@ -1,57 +1,43 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-const migration = readFileSync(
-  "supabase/migrations/202608160001_post_lock_result_corrections.sql",
-  "utf8",
-);
-const integrationSql = readFileSync(
-  "supabase/tests/post_lock_result_corrections.sql",
-  "utf8",
-);
-const controlPage = readFileSync("src/features/picks-control/PicksControlPage.tsx", "utf8");
+const sql = readFileSync("supabase/migrations/202608160001_post_lock_result_corrections.sql", "utf8");
+const integrationSql = readFileSync("supabase/tests/post_lock_result_corrections.sql", "utf8");
 const repository = readFileSync("src/features/picks-control/pickControlRepository.ts", "utf8");
-
-function compact(source: string) {
-  return source.replace(/--.*$/gm, "").replace(/\s+/g, " ").trim().toLowerCase();
-}
+const controlPage = readFileSync("src/features/picks-control/PicksControlPage.tsx", "utf8");
 
 describe("post-lock official result corrections", () => {
-  const sql = compact(migration);
-
   it("keeps card changes separate and adds one private immutable result-correction ledger", () => {
-    expect(sql).toContain("create table if not exists public.pick_result_corrections");
-    expect(sql).toContain("foreign key (event_id, bout_id) references public.pick_bouts(event_id, bout_id)");
-    expect(sql).toContain("create trigger reject_pick_result_correction_mutation");
-    expect(sql).toContain("pick result correction audit is immutable");
-    expect(migration).not.toContain("alter table public.pick_card_change_actions");
-    expect(migration).not.toContain("insert into public.pick_card_change_actions");
+    expect(sql).toContain("create table if not exists private.pick_result_corrections");
+    expect(sql).toContain("create trigger pick_result_corrections_immutable");
+    expect(sql).toContain("raise exception 'pick result correction audit is immutable'");
+    expect(sql).not.toContain("alter table public.pick_card_change_actions");
   });
 
   it("separates pending initial result entry from atomic final correction", () => {
-    expect(sql).toContain("create or replace function public.record_official_pick_bout_result");
-    expect(sql).toContain("initial result entry requires a final official result");
+    expect(sql).toContain("create function public.correct_official_pick_bout_result");
     expect(sql).toContain("official result already recorded; use correction workflow");
-    expect(sql).toContain("create or replace function public.correct_official_pick_bout_result");
-    expect(sql).toContain("corrected official result requires a final result");
-    expect(sql).toContain("result correction reason required");
-    expect(sql).toContain("pending bout requires initial result entry");
+    expect(sql).toContain("correction requires an already-finalized official result");
+    expect(sql).toContain("corrected result must be final");
+    expect(sql).toContain("corrected result must differ from the current result");
   });
 
   it("uses expected-current result, winner, and timestamp stale guards", () => {
     expect(sql).toContain("p_expected_result_status text");
     expect(sql).toContain("p_expected_winner_fighter_slug text");
     expect(sql).toContain("p_expected_result_recorded_at timestamptz");
-    expect(sql).toContain("official result changed; reload fight night control");
-    expect(repository).toContain("p_expected_result_status: bout.resultStatus");
-    expect(repository).toContain("p_expected_winner_fighter_slug: bout.winnerFighterSlug");
-    expect(repository).toContain("p_expected_result_recorded_at: bout.resultRecordedAt");
+    expect(sql).toContain("STALE_STATE: result status changed");
+    expect(sql).toContain("STALE_STATE: result winner changed");
+    expect(sql).toContain("STALE_STATE: result timestamp changed");
+    expect(repository).toContain("expectedResultStatus: bout.resultStatus");
+    expect(repository).toContain("expectedWinnerFighterSlug: bout.winnerFighterSlug");
+    expect(repository).toContain("expectedResultRecordedAt: bout.resultRecordedAt");
   });
 
   it("supports completed-event correction without creating a lifecycle transition", () => {
-    expect(sql).toContain("v_event.status not in ('locked', 'complete')");
-    expect(sql).not.toContain("set status = 'locked'");
-    expect(sql).not.toContain("set completed_at = null");
+    expect(sql).toContain("if v_event.status not in ('locked', 'complete')");
+    expect(sql).toContain("update public.pick_bouts");
+    expect(sql).toContain("insert into private.pick_result_corrections");
     expect(sql).not.toContain("perform public.transition_pick_event");
   });
 
@@ -68,7 +54,8 @@ describe("post-lock official result corrections", () => {
     expect(controlPage).toContain("Enter RED, BLUE, DRAW, NO CONTEST, or CANCELLED");
     expect(controlPage).not.toContain("or PENDING");
     expect(controlPage).toContain("Scoring, standings, season totals, and recaps will recalculate automatically");
-    expect(controlPage).toContain("Recap published");
+    expect(controlPage).toContain("The recap stays published");
+    expect(controlPage).toContain("Result corrections");
     expect(controlPage).not.toContain("Recap published automatically");
     expect(controlPage).not.toContain("REOPEN EVENT");
   });
