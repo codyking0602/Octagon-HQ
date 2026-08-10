@@ -1,6 +1,9 @@
+import type { PickSpotlight } from "../picks/spotlightModel";
+
 export type PickSetupCardScope = "auto" | "main" | "full";
 export type PickSetupEffectiveScope = "main" | "full";
 export type PickSetupBoutSection = "main-event" | "main" | "prelim" | "early-prelim";
+export type PickSetupSpotlight = PickSpotlight;
 
 export interface PickSetupBout {
   boutId: string;
@@ -11,16 +14,6 @@ export interface PickSetupBout {
   blueFighterSlug: string;
   blueFighterName: string;
   included: boolean;
-}
-
-export interface PickSetupSpotlightWatch {
-  fighterSlug: string;
-  url: string;
-}
-
-export interface PickSetupSpotlight {
-  boutId: string;
-  watchSpotlights: PickSetupSpotlightWatch[];
 }
 
 export interface PickSetupDraft {
@@ -41,7 +34,7 @@ export interface PickSetupDraft {
   updatedAt: string;
   warnings: string[];
   canPublish: boolean;
-  spotlight?: PickSetupSpotlight | null;
+  spotlights?: PickSetupSpotlight[];
   bouts: PickSetupBout[];
 }
 
