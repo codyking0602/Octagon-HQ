@@ -197,7 +197,8 @@ export function expectedSourceChanges(current, event, effectiveScope = "main") {
   }
 
   const timestamps = [
-    ["Event time", current.starts_at, event?.starts_at],
+    ["Main-card time", current.starts_at, event?.starts_at],
+    ["Prelims time", current.prelims_starts_at, event?.prelims_starts_at],
     ["Picks lock", current.locks_at, event?.locks_at],
   ];
   for (const [label, before, after] of timestamps) {
