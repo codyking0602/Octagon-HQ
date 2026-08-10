@@ -5,6 +5,9 @@ const canonicalDisplayNames = new Map([
   ["jan blachowicz", "Jan Błachowicz"],
 ]);
 
+const sourceRankingPrefix = /^(?:(?:no\.?|number)\s*#?\s*\d{1,2}|#\s*\d{1,2})\s+/i;
+const ufcChampionPrefix = /^UFC\s+(?:(?:interim|undisputed)\s+)?(?:women(?:['’]s)?\s+)?(?:strawweight|flyweight|bantamweight|featherweight|lightweight|welterweight|middleweight|light\s+heavyweight|heavyweight)\s+champion\s+/i;
+
 export function normalizeText(value: string) {
   return value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
     .replace(/[’‘`]/g, "'").replace(/[‐‑‒–—]/g, "-")
@@ -13,6 +16,9 @@ export function normalizeText(value: string) {
 
 export function canonicalFighterDisplay(value: string) {
   const cleaned = value.replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim()
+    .replace(/\s*\(\s*not\s+[^)]+\)\s*$/i, "")
+    .replace(sourceRankingPrefix, "")
+    .replace(ufcChampionPrefix, "")
     .replace(/\s*\((?:rematch\s*)?#?2\)\s*$/i, "")
     .replace(/\s+(?:rematch\s*)?#?2\s*$/i, "")
     .replace(/[.,;:]+$/, "")

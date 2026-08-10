@@ -6,6 +6,9 @@ function isRecord(value) {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
 
+const sourceRankingPrefix = /^(?:(?:no\.?|number)\s*#?\s*\d{1,2}|#\s*\d{1,2})\s+/i;
+const ufcChampionPrefix = /^UFC\s+(?:(?:interim|undisputed)\s+)?(?:women(?:['’]s)?\s+)?(?:strawweight|flyweight|bantamweight|featherweight|lightweight|welterweight|middleweight|light\s+heavyweight|heavyweight)\s+champion\s+/i;
+
 function normalizeText(value) {
   return value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
     .replace(/[’‘`]/g, "'").replace(/[‐‑‒–—]/g, "-")
@@ -14,6 +17,9 @@ function normalizeText(value) {
 
 function canonicalFighterDisplay(value) {
   return clean(value)
+    .replace(/\s*\(\s*not\s+[^)]+\)\s*$/i, "")
+    .replace(sourceRankingPrefix, "")
+    .replace(ufcChampionPrefix, "")
     .replace(/\s*\((?:rematch\s*)?#?2\)\s*$/i, "")
     .replace(/\s+(?:rematch\s*)?#?2\s*$/i, "")
     .replace(/[.,;:]+$/, "")
@@ -197,7 +203,8 @@ export function expectedSourceChanges(current, event, effectiveScope = "main") {
   }
 
   const timestamps = [
-    ["Event time", current.starts_at, event?.starts_at],
+    ["Main-card time", current.starts_at, event?.starts_at],
+    ["Prelims time", current.prelims_starts_at, event?.prelims_starts_at],
     ["Picks lock", current.locks_at, event?.locks_at],
   ];
   for (const [label, before, after] of timestamps) {
