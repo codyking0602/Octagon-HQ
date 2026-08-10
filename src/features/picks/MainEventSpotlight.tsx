@@ -118,8 +118,7 @@ function fighterDisplayName(bout: PickBout, slug: string) {
   return slug;
 }
 
-function configuredWatches(bout: PickBout, spotlight?: PickEventSpotlight | null): SpotlightWatch[] {
-  if (!spotlight || spotlight.boutId !== bout.boutId) return [];
+function configuredWatches(bout: PickBout, spotlight: PickEventSpotlight): SpotlightWatch[] {
   return spotlight.watchSpotlights.map((watch) => {
     const name = fighterDisplayName(bout, watch.fighterSlug);
     const shortName = name.trim().split(/\s+/).at(-1)?.toUpperCase() || name.toUpperCase();
@@ -127,28 +126,45 @@ function configuredWatches(bout: PickBout, spotlight?: PickEventSpotlight | null
   });
 }
 
-function spotlightForBout(bout: PickBout, configured?: PickEventSpotlight | null): SpotlightData | null {
-  const watches = configuredWatches(bout, configured);
-  const staticData = staticSpotlightForBout(bout);
-  if (staticData) {
-    return watches.length ? { ...staticData, watchSpotlights: watches } : staticData;
-  }
-  if (!watches.length) return null;
-
+function configuredSpotlightForBout(bout: PickBout, spotlight: PickEventSpotlight): SpotlightData | null {
+  if (spotlight.boutId !== bout.boutId) return null;
+  if (spotlight.red.fighterSlug !== bout.redFighterSlug || spotlight.blue.fighterSlug !== bout.blueFighterSlug) return null;
+  const kicker = bout.position === 1
+    ? `MAIN EVENT · 5 ROUNDS · ${bout.weightClass.toUpperCase()}`
+    : `FIGHT SPOTLIGHT · ${bout.weightClass.toUpperCase()}`;
   return {
-    kicker: `FEATURED FIGHT · ${bout.weightClass.toUpperCase()}`,
+    kicker,
+    preview: spotlight.preview,
     red: {
       slug: bout.redFighterSlug,
       name: bout.redFighterName,
-      edges: [],
+      record: spotlight.red.record,
+      age: spotlight.red.age,
+      height: spotlight.red.height,
+      reach: spotlight.red.reach,
+      stance: spotlight.red.stance,
+      edges: spotlight.red.edges,
     },
     blue: {
       slug: bout.blueFighterSlug,
       name: bout.blueFighterName,
-      edges: [],
+      record: spotlight.blue.record,
+      age: spotlight.blue.age,
+      height: spotlight.blue.height,
+      reach: spotlight.blue.reach,
+      stance: spotlight.blue.stance,
+      edges: spotlight.blue.edges,
     },
-    watchSpotlights: watches,
+    watchSpotlights: configuredWatches(bout, spotlight),
   };
+}
+
+function spotlightForBout(bout: PickBout, configured?: PickEventSpotlight | null): SpotlightData | null {
+  if (configured) {
+    const generated = configuredSpotlightForBout(bout, configured);
+    if (generated) return generated;
+  }
+  return staticSpotlightForBout(bout);
 }
 
 function fighterPhotoPath(slug: string) {
@@ -213,8 +229,8 @@ export function MainEventSpotlight({ bout, spotlight }: { bout: PickBout; spotli
   const triggerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const hasTale = Boolean(
-    data?.red.age && data.red.height && data.red.reach && data.red.stance
-    && data.blue.age && data.blue.height && data.blue.reach && data.blue.stance,
+    data?.red.record && data.red.age && data.red.height && data.red.reach && data.red.stance
+    && data.blue.record && data.blue.age && data.blue.height && data.blue.reach && data.blue.stance,
   );
   const hasEdges = Boolean(data?.red.edges.length || data?.blue.edges.length);
 
@@ -243,7 +259,7 @@ export function MainEventSpotlight({ bout, spotlight }: { bout: PickBout; spotli
         ref={triggerRef}
         onClick={() => setOpen(true)}
       >
-        <span><b>{data.kicker.startsWith("MAIN EVENT") ? "MAIN EVENT SPOTLIGHT" : "FIGHT SPOTLIGHT"}</b><strong>View matchup breakdown</strong></span>
+        <span><b>{bout.position === 1 ? "MAIN EVENT SPOTLIGHT" : "FIGHT SPOTLIGHT"}</b><strong>View matchup breakdown</strong></span>
         <i aria-hidden="true">›</i>
       </button>
 
@@ -252,7 +268,7 @@ export function MainEventSpotlight({ bout, spotlight }: { bout: PickBout; spotli
           <button
             className="main-event-spotlight__backdrop"
             type="button"
-            aria-label="Close main event spotlight"
+            aria-label="Close fight spotlight"
             onClick={() => setOpen(false)}
           />
           <section
@@ -265,7 +281,7 @@ export function MainEventSpotlight({ bout, spotlight }: { bout: PickBout; spotli
               className="main-event-spotlight__close"
               type="button"
               ref={closeRef}
-              aria-label="Close main event spotlight"
+              aria-label="Close fight spotlight"
               onClick={() => setOpen(false)}
             >
               ×
@@ -285,26 +301,29 @@ export function MainEventSpotlight({ bout, spotlight }: { bout: PickBout; spotli
                 <span>FIGHT PREVIEW</span>
                 <h2 id={titleId}>{data.red.name} vs. {data.blue.name}</h2>
                 {data.preview ? <p>{data.preview}</p> : null}
-                <div
-                  className="main-event-spotlight__watch-links"
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: `repeat(${data.watchSpotlights.length}, minmax(0, 1fr))`,
-                    gap: "8px",
-                  }}
-                >
-                  {data.watchSpotlights.map((watch) => (
-                    <a key={`${watch.label}:${watch.url}`} href={watch.url} target="_blank" rel="noopener noreferrer">
-                      {watch.label}
-                    </a>
-                  ))}
-                </div>
+                {data.watchSpotlights.length ? (
+                  <div
+                    className="main-event-spotlight__watch-links"
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: `repeat(${data.watchSpotlights.length}, minmax(0, 1fr))`,
+                      gap: "8px",
+                    }}
+                  >
+                    {data.watchSpotlights.map((watch) => (
+                      <a key={`${watch.label}:${watch.url}`} href={watch.url} target="_blank" rel="noopener noreferrer">
+                        {watch.label}
+                      </a>
+                    ))}
+                  </div>
+                ) : null}
               </section>
 
               {hasTale ? (
                 <section className="main-event-spotlight__section">
                   <div className="main-event-spotlight__section-title"><span>TALE OF THE TAPE</span></div>
                   <div className="main-event-spotlight__tale">
+                    <TaleRow label="Record" red={data.red.record!} blue={data.blue.record!} />
                     <TaleRow label="Age" red={data.red.age!} blue={data.blue.age!} />
                     <TaleRow label="Height" red={data.red.height!} blue={data.blue.height!} />
                     <TaleRow label="Reach" red={data.red.reach!} blue={data.blue.reach!} />
