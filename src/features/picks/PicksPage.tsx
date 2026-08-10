@@ -111,7 +111,10 @@ export default function PicksPage() {
       .sort((left, right) => left.position - right.position) ?? [],
     [activeEvent],
   );
-  const spotlightBoutId = activeEvent?.spotlight?.boutId ?? orderedBouts[0]?.boutId ?? null;
+  const spotlightsByBout = useMemo(
+    () => new Map((activeEvent?.spotlights ?? []).map((spotlight) => [spotlight.boutId, spotlight])),
+    [activeEvent?.spotlights],
+  );
   const underdogLockName = picks.underdogLock
     ? orderedBouts.flatMap((bout) => [
         [bout.redFighterSlug, bout.redFighterName],
@@ -381,9 +384,7 @@ export default function PicksPage() {
                           </button>
                         </div>
                       ) : null}
-                      {spotlightBoutId === bout.boutId ? (
-                        <MainEventSpotlight bout={bout} spotlight={activeEvent.spotlight} />
-                      ) : null}
+                      <MainEventSpotlight bout={bout} spotlight={spotlightsByBout.get(bout.boutId) ?? null} />
                       {saving ? <p className="pick-bout-card__saving" role="status">SAVING PICK…</p> : null}
                       <GroupPickReveal
                         redFighterSlug={bout.redFighterSlug}
