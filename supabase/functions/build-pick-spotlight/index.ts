@@ -11,6 +11,8 @@ const corsHeaders = {
   "Access-Control-Expose-Headers": "X-Octagon-Backend-Sha",
 };
 
+const UFCSTATS_FIGHTER_INDEX_MAX_PAGES = 20;
+
 class SpotlightBuildError extends Error {
   constructor(readonly code: string, message: string, readonly status = 422) {
     super(message);
@@ -83,37 +85,61 @@ async function fetchHtml(url: string, label: string) {
   }
 }
 
-async function resolveProfileUrl(name: string, indexCache: Map<string, Promise<string>>) {
+type IndexPageLoader = (letter: string, page: number) => Promise<string>;
+
+export async function resolveUfcStatsProfileUrl(name: string, loadPage: IndexPageLoader) {
   const letter = profileIndexLetter(name);
-  if (!indexCache.has(letter)) {
-    indexCache.set(letter, fetchHtml(`https://ufcstats.com/statistics/fighters?char=${encodeURIComponent(letter)}&page=all`, `UFCStats ${letter.toUpperCase()} fighter index`));
-  }
-  const html = await indexCache.get(letter)!;
-  const $ = cheerio.load(html);
   const target = normalizeName(name);
-  const candidates: Array<{ name: string; url: string }> = [];
 
-  $(".b-statistics__table-row").each((_, row) => {
-    const cells = $(row).find("td.b-statistics__table-col");
-    if (cells.length < 2) return;
-    const first = clean($(cells[0]).text());
-    const last = clean($(cells[1]).text());
-    const url = $(row).find('a[href*="/fighter-details/"]').first().attr("href")?.trim() ?? "";
-    if (!url) return;
-    const full = clean(`${first} ${last}`);
-    if (normalizeName(full) === target) candidates.push({ name: full, url });
-  });
+  for (let page = 1; page <= UFCSTATS_FIGHTER_INDEX_MAX_PAGES; page += 1) {
+    const html = await loadPage(letter, page);
+    const $ = cheerio.load(html);
+    const candidates: Array<{ name: string; url: string }> = [];
+    let fighterRows = 0;
 
-  const unique = [...new Map(candidates.map((candidate) => [candidate.url, candidate])).values()];
-  if (unique.length !== 1) {
-    throw new SpotlightBuildError(
-      unique.length ? "UFCSTATS_FIGHTER_AMBIGUOUS" : "UFCSTATS_FIGHTER_NOT_FOUND",
-      unique.length
-        ? `UFCStats returned more than one exact match for ${name}.`
-        : `UFCStats could not find an exact fighter match for ${name}.`,
-    );
+    $(".b-statistics__table-row").each((_, row) => {
+      const cells = $(row).find("td.b-statistics__table-col");
+      if (cells.length < 2) return;
+      fighterRows += 1;
+      const first = clean($(cells[0]).text());
+      const last = clean($(cells[1]).text());
+      const url = $(row).find('a[href*="/fighter-details/"]').first().attr("href")?.trim() ?? "";
+      if (!url) return;
+      const full = clean(`${first} ${last}`);
+      if (normalizeName(full) === target) candidates.push({ name: full, url });
+    });
+
+    const unique = [...new Map(candidates.map((candidate) => [candidate.url, candidate])).values()];
+    if (unique.length === 1) return unique[0]!;
+    if (unique.length > 1) {
+      throw new SpotlightBuildError(
+        "UFCSTATS_FIGHTER_AMBIGUOUS",
+        `UFCStats returned more than one exact match for ${name}.`,
+      );
+    }
+    if (fighterRows === 0) break;
   }
-  return unique[0];
+
+  throw new SpotlightBuildError(
+    "UFCSTATS_FIGHTER_NOT_FOUND",
+    `UFCStats could not find an exact fighter match for ${name}.`,
+  );
+}
+
+async function resolveProfileUrl(name: string, indexCache: Map<string, Promise<string>>) {
+  return resolveUfcStatsProfileUrl(name, (letter, page) => {
+    const key = `${letter}:${page}`;
+    if (!indexCache.has(key)) {
+      indexCache.set(
+        key,
+        fetchHtml(
+          `https://ufcstats.com/statistics/fighters?char=${encodeURIComponent(letter)}&page=${page}`,
+          `UFCStats ${letter.toUpperCase()} fighter index page ${page}`,
+        ),
+      );
+    }
+    return indexCache.get(key)!;
+  });
 }
 
 function detailValue($: cheerio.CheerioAPI, label: string) {
