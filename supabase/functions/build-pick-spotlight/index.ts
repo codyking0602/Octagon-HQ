@@ -1,8 +1,7 @@
 import { createClient } from "npm:@supabase/supabase-js@2.110.7";
-import * as cheerio from "npm:cheerio@1.0.0";
 import { buildPickSpotlightContent, type SpotlightStatsFighter } from "../../../src/features/picks/spotlightContent.ts";
 import { DEPLOYED_SOURCE_SHA } from "./deployment.ts";
-import { fetchUfcStatsHtml, UfcStatsFetchError } from "./ufcStatsFetch.ts";
+import { getUfcStatsSnapshotFighter } from "./ufcStatsSnapshot.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*",
@@ -10,8 +9,6 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
   "Access-Control-Expose-Headers": "X-Octagon-Backend-Sha",
 };
-
-const UFCSTATS_FIGHTER_INDEX_MAX_PAGES = 20;
 
 class SpotlightBuildError extends Error {
   constructor(readonly code: string, message: string, readonly status = 422) {
@@ -31,157 +28,21 @@ function json(body: Record<string, unknown>, status = 200) {
   });
 }
 
-function clean(value: string) {
-  return value.replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
-}
-
-function normalizeName(value: string) {
-  return value
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[’']/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, " ")
-    .trim();
-}
-
 function asRecord(value: unknown): Record<string, unknown> | null {
   return value && typeof value === "object" && !Array.isArray(value)
     ? value as Record<string, unknown>
     : null;
 }
 
-function numberFrom(value: string) {
-  const numeric = value.replace(/[^0-9.-]/g, "").trim();
-  if (!numeric) return null;
-  const parsed = Number(numeric);
-  return Number.isFinite(parsed) ? parsed : null;
-}
-
-function dateValue(value: string) {
-  const parsed = Date.parse(value);
-  return Number.isFinite(parsed) ? new Date(parsed).toISOString().slice(0, 10) : null;
-}
-
-function profileIndexLetter(name: string) {
-  const parts = normalizeName(name).split(" ").filter(Boolean);
-  while (["jr", "sr", "ii", "iii", "iv"].includes(parts.at(-1) ?? "")) parts.pop();
-  const last = parts.at(-1) ?? "";
-  const char = last[0] ?? "";
-  if (!/^[a-z]$/.test(char)) {
-    throw new SpotlightBuildError("UFCSTATS_NAME_UNSUPPORTED", `UFCStats could not resolve ${name} safely.`);
+function loadFighter(name: string, fighterSlug: string): SpotlightStatsFighter {
+  const fighter = getUfcStatsSnapshotFighter(name);
+  if (!fighter) {
+    throw new SpotlightBuildError(
+      "UFCSTATS_SNAPSHOT_FIGHTER_NOT_FOUND",
+      `The UFCStats Spotlight snapshot does not contain ${name}.`,
+    );
   }
-  return char;
-}
-
-async function fetchHtml(url: string, label: string) {
-  try {
-    return await fetchUfcStatsHtml(url, label);
-  } catch (error) {
-    if (error instanceof UfcStatsFetchError) {
-      throw new SpotlightBuildError("UFCSTATS_FETCH_FAILED", error.message, 502);
-    }
-    throw error;
-  }
-}
-
-type IndexPageLoader = (letter: string, page: number) => Promise<string>;
-
-export async function resolveUfcStatsProfileUrl(name: string, loadPage: IndexPageLoader) {
-  const letter = profileIndexLetter(name);
-  const target = normalizeName(name);
-
-  for (let page = 1; page <= UFCSTATS_FIGHTER_INDEX_MAX_PAGES; page += 1) {
-    const html = await loadPage(letter, page);
-    const $ = cheerio.load(html);
-    const candidates: Array<{ name: string; url: string }> = [];
-    let fighterRows = 0;
-
-    $(".b-statistics__table-row").each((_, row) => {
-      const cells = $(row).find("td.b-statistics__table-col");
-      if (cells.length < 2) return;
-      fighterRows += 1;
-      const first = clean($(cells[0]).text());
-      const last = clean($(cells[1]).text());
-      const url = $(row).find('a[href*="/fighter-details/"]').first().attr("href")?.trim() ?? "";
-      if (!url) return;
-      const full = clean(`${first} ${last}`);
-      if (normalizeName(full) === target) candidates.push({ name: full, url });
-    });
-
-    const unique = [...new Map(candidates.map((candidate) => [candidate.url, candidate])).values()];
-    if (unique.length === 1) return unique[0]!;
-    if (unique.length > 1) {
-      throw new SpotlightBuildError(
-        "UFCSTATS_FIGHTER_AMBIGUOUS",
-        `UFCStats returned more than one exact match for ${name}.`,
-      );
-    }
-    if (fighterRows === 0) break;
-  }
-
-  throw new SpotlightBuildError(
-    "UFCSTATS_FIGHTER_NOT_FOUND",
-    `UFCStats could not find an exact fighter match for ${name}.`,
-  );
-}
-
-async function resolveProfileUrl(name: string, indexCache: Map<string, Promise<string>>) {
-  return resolveUfcStatsProfileUrl(name, (letter, page) => {
-    const key = `${letter}:${page}`;
-    if (!indexCache.has(key)) {
-      indexCache.set(
-        key,
-        fetchHtml(
-          `https://ufcstats.com/statistics/fighters?char=${encodeURIComponent(letter)}&page=${page}`,
-          `UFCStats ${letter.toUpperCase()} fighter index page ${page}`,
-        ),
-      );
-    }
-    return indexCache.get(key)!;
-  });
-}
-
-function detailValue($: cheerio.CheerioAPI, label: string) {
-  let value = "";
-  $(".b-list__box-list-item").each((_, item) => {
-    if (value) return;
-    const text = clean($(item).text());
-    if (text.toLowerCase().startsWith(label.toLowerCase())) {
-      value = clean(text.slice(label.length));
-    }
-  });
-  return value === "--" ? "" : value;
-}
-
-async function loadFighter(
-  name: string,
-  fighterSlug: string,
-  indexCache: Map<string, Promise<string>>,
-): Promise<SpotlightStatsFighter> {
-  const profile = await resolveProfileUrl(name, indexCache);
-  const html = await fetchHtml(profile.url.replace(/^http:/i, "https:"), `${name} UFCStats profile`);
-  const $ = cheerio.load(html);
-  const record = clean($(".b-content__title-record").first().text()).replace(/^Record:\s*/i, "") || "--";
-  const dob = detailValue($, "DOB:");
-
-  return {
-    fighterSlug,
-    name,
-    record,
-    dob: dob ? dateValue(dob) : null,
-    height: detailValue($, "Height:") || "--",
-    reach: detailValue($, "Reach:") || "--",
-    stance: detailValue($, "STANCE:") || "--",
-    slpm: numberFrom(detailValue($, "SLpM:")),
-    strikingAccuracy: numberFrom(detailValue($, "Str. Acc.:")),
-    sapm: numberFrom(detailValue($, "SApM:")),
-    strikingDefense: numberFrom(detailValue($, "Str. Def:")),
-    takedownAverage: numberFrom(detailValue($, "TD Avg.:")),
-    takedownAccuracy: numberFrom(detailValue($, "TD Acc.:")),
-    takedownDefense: numberFrom(detailValue($, "TD Def.:")),
-    submissionAverage: numberFrom(detailValue($, "Sub. Avg.:")),
-  };
+  return { ...fighter, fighterSlug, name };
 }
 
 Deno.serve(async (request) => {
@@ -243,11 +104,8 @@ Deno.serve(async (request) => {
       throw new SpotlightBuildError("SPOTLIGHT_FIGHTER_IDENTITY_MISSING", "Both staged fighter identities are required before building a Spotlight.");
     }
 
-    const indexCache = new Map<string, Promise<string>>();
-    const [red, blue] = await Promise.all([
-      loadFighter(redName, redSlug, indexCache),
-      loadFighter(blueName, blueSlug, indexCache),
-    ]);
+    const red = loadFighter(redName, redSlug);
+    const blue = loadFighter(blueName, blueSlug);
     const spotlight = buildPickSpotlightContent({
       boutId,
       eventStartsAt: startsAt,
