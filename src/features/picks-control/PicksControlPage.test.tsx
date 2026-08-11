@@ -59,11 +59,11 @@ describe("Fight Night Control results lifecycle", () => {
     renderPage(repo);
 
     expect(await screen.findByText("Result corrections")).toBeInTheDocument();
-    expect(screen.queryByText("Mateusz Gamrot vs. Quillan Salkilld")).not.toBeInTheDocument();
+    expect(screen.queryByText("EVENT · Mateusz Gamrot vs. Quillan Salkilld")).not.toBeInTheDocument();
     expect(screen.queryByText("UFC Fight Night")).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "OPEN PAST EVENT CORRECTIONS" }));
-    expect(await screen.findByText("Mateusz Gamrot vs. Quillan Salkilld")).toBeInTheDocument();
+    expect(await screen.findByText("EVENT · Mateusz Gamrot vs. Quillan Salkilld")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "OPEN AUG 8 COMPLETED EVENT" })).toBeInTheDocument();
     const ppv = screen.getByRole("button", { name: "OPEN UFC 329 COMPLETED EVENT" });
     expect(ppv).toBeInTheDocument();
