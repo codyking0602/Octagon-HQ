@@ -260,3 +260,16 @@ export function pickWinPercentage(correct: number, incorrect: number) {
   const decided = correct + incorrect;
   return decided > 0 ? (correct / decided) * 100 : 0;
 }
+
+export function mainEvent(event: PickEvent | null) {
+  if (!event?.bouts.length) return null;
+  return event.bouts.slice().sort((left, right) => left.position - right.position)[0] ?? null;
+}
+
+export function groupRankLabel(rank: number, results: readonly { rank: number }[]) {
+  return results.filter((result) => result.rank === rank).length > 1 ? `T-${rank}` : `${rank}`;
+}
+
+export function mainCardFightLabel(index: number) {
+  return index === 0 ? "MAIN EVENT" : `MAIN CARD · FIGHT ${index + 1}`;
+}
