@@ -3,14 +3,31 @@ import { createPortal } from "react-dom";
 import { fighterThumbnailPath } from "./FighterThumbnail";
 import type { PickBout, PickEventSpotlight } from "./picksModel";
 
-const profilePhotoModules = import.meta.glob<{ default: string }>(
+const fighterPhotoModules = import.meta.glob<{ default: string }>(
   "/public/assets/fighters/*.{webp,png,jpg,jpeg}",
   { eager: true, query: "?url" },
 );
 
+const spotlightPhotoSlugAliases = new Map([
+  ["ian-garry", "ian-machado-garry"],
+]);
+
+const spotlightPhotoBySlug = new Map(
+  Object.entries(fighterPhotoModules)
+    .filter(([path]) => /-spotlight\.(webp|png|jpe?g)$/i.test(path))
+    .map(([path]) => {
+      const filename = path.split("/").at(-1) ?? "";
+      const assetSlug = filename
+        .replace(/\.(webp|png|jpe?g)$/i, "")
+        .replace(/-spotlight$/i, "");
+      const slug = spotlightPhotoSlugAliases.get(assetSlug) ?? assetSlug;
+      return [slug, path.replace(/^\/public/, "")] as const;
+    }),
+);
+
 const profilePhotoBySlug = new Map(
-  Object.entries(profilePhotoModules)
-    .filter(([path]) => !/-thumb\.(webp|png|jpe?g)$/i.test(path))
+  Object.entries(fighterPhotoModules)
+    .filter(([path]) => !/-(?:thumb|spotlight)\.(webp|png|jpe?g)$/i.test(path))
     .map(([path]) => {
       const filename = path.split("/").at(-1) ?? "";
       const slug = filename
@@ -168,7 +185,9 @@ function spotlightForBout(bout: PickBout, configured?: PickEventSpotlight | null
 }
 
 function fighterPhotoPath(slug: string) {
-  return profilePhotoBySlug.get(slug) ?? fighterThumbnailPath(slug);
+  return spotlightPhotoBySlug.get(slug)
+    ?? profilePhotoBySlug.get(slug)
+    ?? fighterThumbnailPath(slug);
 }
 
 function SpotlightPhoto({ fighter }: { fighter: SpotlightFighter }) {
