@@ -24,6 +24,21 @@ function eventTime(value: string) {
   }).format(new Date(value));
 }
 
+function compactCompletedEventLabel(name: string, startsAt: string) {
+  const numberedEvent = name.trim().match(/^UFC\s+\d+\b/i)?.[0];
+  if (numberedEvent) return numberedEvent.toUpperCase();
+  return new Intl.DateTimeFormat(undefined, {
+    month: "short",
+    day: "numeric",
+  }).format(new Date(startsAt)).toUpperCase();
+}
+
+function completedEventTitle(event: PickControlEvent) {
+  const numberedEvent = event.name.trim().match(/^UFC\s+\d+\b/i)?.[0];
+  if (numberedEvent) return numberedEvent.toUpperCase();
+  return event.subtitle.trim() || compactCompletedEventLabel(event.name, event.startsAt);
+}
+
 function readableError(error: unknown) {
   const message = error instanceof Error ? error.message : "Fight Night Control could not complete that request.";
   if (message.toLowerCase().includes("pick control owner required")) {
@@ -77,6 +92,7 @@ export default function PicksControlPage({
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [recapUrl, setRecapUrl] = useState("");
+  const [completedArchiveOpen, setCompletedArchiveOpen] = useState(false);
 
   const loadEvent = useCallback(async (eventId?: string) => {
     if (!repository || !identity.profile) return;
@@ -253,6 +269,88 @@ export default function PicksControlPage({
     return <OpenPicksDashboard repository={repository} now={now} />;
   }
 
+  if (event.status === "complete") {
+    return (
+      <div className="page picks-control-page picks-control-page--history">
+        <section className="surface-card picks-control-history">
+          <button
+            className="picks-control-history__toggle"
+            type="button"
+            aria-expanded={completedArchiveOpen}
+            aria-label={`${completedArchiveOpen ? "CLOSE" : "OPEN"} PAST EVENT CORRECTIONS`}
+            onClick={() => setCompletedArchiveOpen((open) => !open)}
+          >
+            <span className="picks-control-history__copy">
+              <small>PAST EVENTS</small>
+              <strong>Result corrections</strong>
+              <em>Only open this if an official result needs fixing.</em>
+            </span>
+            <b>{completedArchiveOpen ? "CLOSE" : "OPEN"}</b>
+          </button>
+
+          {completedArchiveOpen ? (
+            <div className="picks-control-history__body">
+              {(event.recentCompletedEvents?.length ?? 0) > 0 ? (
+                <div className="picks-control-history__events" aria-label="Recent completed events">
+                  {event.recentCompletedEvents?.map((item) => {
+                    const label = compactCompletedEventLabel(item.name, item.startsAt);
+                    const selected = item.eventId === event.eventId;
+                    return (
+                      <button
+                        className={`picks-control-history__event${selected ? " is-active" : ""}`}
+                        type="button"
+                        key={item.eventId}
+                        aria-pressed={selected}
+                        aria-label={`OPEN ${label} COMPLETED EVENT`}
+                        disabled={Boolean(busyAction) || selected}
+                        onClick={() => void loadEvent(item.eventId)}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : null}
+
+              <div className="picks-control-history__selected">
+                <span>SELECTED EVENT</span>
+                <strong>EVENT · {completedEventTitle(event)}</strong>
+                <small>{eventTime(event.startsAt)}</small>
+              </div>
+
+              <div className="picks-control-history__bouts" aria-label={`${completedEventTitle(event)} result corrections`}>
+                {orderedBouts.map((bout, index) => (
+                  <article className="pick-control-history-bout" key={bout.boutId}>
+                    <div>
+                      <span>{index === 0 ? "MAIN EVENT" : `FIGHT ${index + 1}`}</span>
+                      <strong>{bout.redFighterName} vs. {bout.blueFighterName}</strong>
+                      <small>RESULT · {pickControlResultLabel(bout)}</small>
+                    </div>
+                    <button
+                      className="secondary-action"
+                      type="button"
+                      disabled={Boolean(busyAction) || !bout.canCorrectResult}
+                      onClick={() => correctResult(bout)}
+                    >
+                      {busyAction === `correct:${bout.boutId}` ? "SAVING…" : "CORRECT RESULT"}
+                    </button>
+                  </article>
+                ))}
+              </div>
+
+              <p className="picks-control-history__note">
+                The recap stays published. Confirmed corrections recalculate scoring, standings, and season totals without reopening Picks.
+              </p>
+            </div>
+          ) : null}
+        </section>
+
+        {notice ? <p className="picks-control-feedback picks-control-feedback--success" role="status">{notice}</p> : null}
+        {error ? <p className="picks-error" role="status">{error}</p> : null}
+      </div>
+    );
+  }
+
   return (
     <div className="page picks-control-page">
       <section className="page-heading picks-control-heading">
@@ -274,22 +372,6 @@ export default function PicksControlPage({
         <h2 id="pick-control-event-title">{event.name}</h2>
         <strong>{event.subtitle}</strong>
         <p>{eventTime(event.startsAt)} · {event.venue} · {event.location}</p>
-
-        {(event.recentCompletedEvents?.length ?? 0) > 0 ? (
-          <div className="picks-control-heading__links" aria-label="Completed event correction access">
-            {event.recentCompletedEvents?.filter((item) => item.eventId !== event.eventId).map((item) => (
-              <button
-                className="secondary-action"
-                type="button"
-                key={item.eventId}
-                disabled={Boolean(busyAction)}
-                onClick={() => void loadEvent(item.eventId)}
-              >
-                VIEW {item.name.toUpperCase()}
-              </button>
-            ))}
-          </div>
-        ) : null}
 
         <div
           className="picks-control-progress"
@@ -383,57 +465,47 @@ export default function PicksControlPage({
         })}
       </section>
 
-      {event.status === "locked" ? (
-        <section className="surface-card picks-control-complete">
-          <div>
-            <p className="eyebrow">FINAL STEP</p>
-            <h2>{event.canComplete ? "Publish event recap" : "Complete event"}</h2>
-            {event.canComplete ? (
-              <>
-                <p>All {resolved} active fight results are ready. Add the recap URL now, review the publish summary, then send the finished recap to everyone.</p>
-                <label className="picks-control-recap-url">
-                  <span>RECAP URL</span>
-                  <input
-                    aria-label="RECAP URL"
-                    type="url"
-                    inputMode="url"
-                    autoCapitalize="none"
-                    autoCorrect="off"
-                    placeholder="https://youtu.be/..."
-                    value={recapUrl}
-                    disabled={Boolean(busyAction)}
-                    onChange={(inputEvent) => setRecapUrl(inputEvent.target.value)}
-                  />
-                  <small>Optional. Leave blank to publish without a link.</small>
-                </label>
-                <div className="picks-control-recap-preview" aria-label="Recap publish preview">
-                  <span>RECAP PREVIEW</span>
-                  <strong>{event.name}</strong>
-                  <small>{resolved} FIGHTS GRADED · {recapUrl.trim() ? "1 URL READY" : "NO URL"} · MEMBER NOTIFICATION ON PUBLISH</small>
-                </div>
-              </>
-            ) : (
-              <p>Every active fight must have a winner, draw, no contest, or cancellation before the recap can publish.</p>
-            )}
-          </div>
-          <button
-            className="primary-action"
-            type="button"
-            disabled={!event.canComplete || Boolean(busyAction)}
-            onClick={completeEvent}
-          >
-            {busyAction === "complete" ? "PUBLISHING RECAP…" : "PUBLISH EVENT RECAP"}
-          </button>
-        </section>
-      ) : (
-        <section className="surface-card picks-control-complete">
-          <div>
-            <p className="eyebrow">EVENT COMPLETE</p>
-            <h2>Recap published</h2>
-            <p>Confirmed corrections recalculate scoring, standings, season totals, and completed recaps without reopening Picks.</p>
-          </div>
-        </section>
-      )}
+      <section className="surface-card picks-control-complete">
+        <div>
+          <p className="eyebrow">FINAL STEP</p>
+          <h2>{event.canComplete ? "Publish event recap" : "Complete event"}</h2>
+          {event.canComplete ? (
+            <>
+              <p>All {resolved} active fight results are ready. Add the recap URL now, review the publish summary, then send the finished recap to everyone.</p>
+              <label className="picks-control-recap-url">
+                <span>RECAP URL</span>
+                <input
+                  aria-label="RECAP URL"
+                  type="url"
+                  inputMode="url"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  placeholder="https://youtu.be/..."
+                  value={recapUrl}
+                  disabled={Boolean(busyAction)}
+                  onChange={(inputEvent) => setRecapUrl(inputEvent.target.value)}
+                />
+                <small>Optional. Leave blank to publish without a link.</small>
+              </label>
+              <div className="picks-control-recap-preview" aria-label="Recap publish preview">
+                <span>RECAP PREVIEW</span>
+                <strong>{event.name}</strong>
+                <small>{resolved} FIGHTS GRADED · {recapUrl.trim() ? "1 URL READY" : "NO URL"} · MEMBER NOTIFICATION ON PUBLISH</small>
+              </div>
+            </>
+          ) : (
+            <p>Every active fight must have a winner, draw, no contest, or cancellation before the recap can publish.</p>
+          )}
+        </div>
+        <button
+          className="primary-action"
+          type="button"
+          disabled={!event.canComplete || Boolean(busyAction)}
+          onClick={completeEvent}
+        >
+          {busyAction === "complete" ? "PUBLISHING RECAP…" : "PUBLISH EVENT RECAP"}
+        </button>
+      </section>
 
       {notice ? <p className="picks-control-feedback picks-control-feedback--success" role="status">{notice}</p> : null}
       {error ? <p className="picks-error" role="status">{error}</p> : null}

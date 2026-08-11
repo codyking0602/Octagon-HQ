@@ -222,9 +222,10 @@ describe("owner progressive Fight Night lock controls", () => {
     cleanup();
     const completedEvent = { ...controlEvent(), status: "complete" as const, canLock: false };
     renderPage(repository(completedEvent));
-    expect(await screen.findByRole("heading", { name: "Fight Night Control" })).toBeInTheDocument();
+    expect(await screen.findByText("Result corrections")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "+20 MIN" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "EDIT LOCK TIME" })).not.toBeInTheDocument();
+    expect(screen.queryByText("DEADLINE FINAL")).not.toBeInTheDocument();
   });
 
   it("transitions owner warnings at 10, 5, and 1 minute before the passed-fight controls appear", async () => {

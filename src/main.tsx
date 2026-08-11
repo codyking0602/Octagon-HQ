@@ -18,6 +18,7 @@ import "./styles/picks-group-progress.css";
 import "./styles/picks-polish.css";
 import "./styles/picks-owner-entry.css";
 import "./styles/picks-control.css";
+import "./styles/picks-control-history.css";
 import "./styles/picks-lock-time-control.css";
 import "./styles/picks-setup.css";
 import "./styles/picks-multi-spotlight.css";

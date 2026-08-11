@@ -29,14 +29,48 @@ describe("Fight Night Control results lifecycle", () => {
     expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("Are you sure"));
   });
 
-  it("corrects a result with a generated factual audit description and no reason prompt", async () => {
+  it("corrects a completed result only after the archived correction tools are opened", async () => {
     vi.mocked(window.prompt).mockReturnValue("BLUE");
     const repo = repository(event("complete", "red_win"), event("complete", "blue_win"));
     renderPage(repo);
+
+    expect(await screen.findByText("Result corrections")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "CORRECT RESULT" })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "OPEN PAST EVENT CORRECTIONS" }));
     fireEvent.click(await screen.findByRole("button", { name: "CORRECT RESULT" }));
+
     await waitFor(() => expect(repo.correctResult).toHaveBeenCalledWith("ufc-control", expect.objectContaining({ boutId: "alpha-bravo" }), "blue_win", "Owner confirmed official result correction from Alpha to Bravo"));
     expect(window.prompt).toHaveBeenCalledTimes(1);
     expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("recalculate automatically"));
+  });
+
+  it("heavily demotes old events and never uses generic Fight Night as an archive label", async () => {
+    const completed: PickControlEvent = {
+      ...event("complete", "red_win"),
+      name: "UFC Fight Night",
+      subtitle: "Mateusz Gamrot vs. Quillan Salkilld",
+      startsAt: "2099-08-08T17:00:00.000Z",
+      recentCompletedEvents: [
+        { eventId: "ufc-control", name: "UFC Fight Night", startsAt: "2099-08-08T17:00:00.000Z", completedAt: "2099-08-08T23:00:00.000Z" },
+        { eventId: "ufc-329", name: "UFC 329", startsAt: "2099-08-01T17:00:00.000Z", completedAt: "2099-08-01T23:00:00.000Z" },
+      ],
+    };
+    const repo = repository(completed);
+    renderPage(repo);
+
+    expect(await screen.findByText("Result corrections")).toBeInTheDocument();
+    expect(screen.queryByText("EVENT · Mateusz Gamrot vs. Quillan Salkilld")).not.toBeInTheDocument();
+    expect(screen.queryByText("UFC Fight Night")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "OPEN PAST EVENT CORRECTIONS" }));
+    expect(await screen.findByText("EVENT · Mateusz Gamrot vs. Quillan Salkilld")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "OPEN AUG 8 COMPLETED EVENT" })).toBeInTheDocument();
+    const ppv = screen.getByRole("button", { name: "OPEN UFC 329 COMPLETED EVENT" });
+    expect(ppv).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /UFC FIGHT NIGHT/i })).not.toBeInTheDocument();
+
+    fireEvent.click(ppv);
+    await waitFor(() => expect(repo.loadControlEvent).toHaveBeenCalledWith("ufc-329"));
   });
 
   it("publishes the supplied recap URL before completing the event", async () => {

@@ -68,7 +68,8 @@ describe("post-lock official result corrections", () => {
     expect(controlPage).toContain("Enter RED, BLUE, DRAW, NO CONTEST, or CANCELLED");
     expect(controlPage).not.toContain("or PENDING");
     expect(controlPage).toContain("Scoring, standings, season totals, and recaps will recalculate automatically");
-    expect(controlPage).toContain("Recap published");
+    expect(controlPage).toContain("The recap stays published");
+    expect(controlPage).toContain("Result corrections");
     expect(controlPage).not.toContain("Recap published automatically");
     expect(controlPage).not.toContain("REOPEN EVENT");
   });
