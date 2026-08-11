@@ -17,6 +17,7 @@ import "./styles/picks-season-hub.css";
 import "./styles/picks-event-recap.css";
 import "./styles/picks-group-progress.css";
 import "./styles/picks-polish.css";
+import "./styles/picks-ufc330-poster.css";
 import "./styles/picks-owner-entry.css";
 import "./styles/picks-control.css";
 import "./styles/picks-control-history.css";
