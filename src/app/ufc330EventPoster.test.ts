@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
@@ -13,6 +14,9 @@ describe("UFC 330 event poster", () => {
     expect(eventAssets.match(/const posterByMainEvent/g)).toHaveLength(1);
     expect(croppedPoster.subarray(0, 4).toString("ascii")).toBe("RIFF");
     expect(croppedPoster.subarray(8, 12).toString("ascii")).toBe("WEBP");
+    expect(croppedPoster).toHaveLength(12344);
+    expect(createHash("sha256").update(croppedPoster).digest("hex"))
+      .toBe("a1bebe8267f877b9a016eca23dbd1eaeb0dd0d99886b4b0f2bde40d781b8aba7");
     expect(main).not.toContain('import "./styles/picks-ufc330-poster.css";');
     expect(existsSync("src/styles/picks-ufc330-poster.css")).toBe(false);
   });
