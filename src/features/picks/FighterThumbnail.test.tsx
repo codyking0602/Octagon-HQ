@@ -16,4 +16,26 @@ describe("fighterThumbnailPath", () => {
     expect(fighterThumbnailPath("jan-błachowicz"))
       .toBe("/assets/fighters/jan-blachowicz-thumb.webp");
   });
+
+  it("resolves every UFC 330 card thumbnail that ships with this asset update", () => {
+    const slugs = [
+      "ian-machado-garry",
+      "gillian-robertson",
+      "mansur-abdul-malik",
+      "dustin-stoltzfus",
+      "esteban-ribovics",
+      "chidi-njokuani",
+      "joel-alvarez",
+      "jalin-turner",
+      "kaue-fernandes",
+      "donte-johnson",
+      "eric-mcconico",
+      "tresean-gore",
+    ];
+
+    for (const slug of slugs) {
+      expect(fighterThumbnailPath(slug))
+        .toBe(`/assets/fighters/${slug}-thumb.webp`);
+    }
+  });
 });
