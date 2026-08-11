@@ -1,4 +1,5 @@
 import { getSupabaseClient } from "../../lib/supabase";
+import type { PickEvent, PickHistoryEvent } from "./picksModel";
 
 export const PICK_EVENT_HEADER_BUCKET = "pick-event-headers";
 
@@ -7,14 +8,7 @@ interface PickEventPoster {
   aspectRatio: string;
 }
 
-interface PickEventHeaderSource {
-  eventId: string;
-  headerStoragePath?: string | null;
-  headerNaturalWidth?: number | null;
-  headerNaturalHeight?: number | null;
-}
-
-export function pickEventPoster(event: PickEventHeaderSource | null): PickEventPoster | null {
+export function pickEventPoster(event: PickEvent | PickHistoryEvent | null): PickEventPoster | null {
   if (
     !event?.headerStoragePath
     || !event.headerNaturalWidth
