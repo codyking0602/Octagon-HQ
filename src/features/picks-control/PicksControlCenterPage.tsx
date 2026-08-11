@@ -114,13 +114,14 @@ export default function PicksControlCenterPage({
     return {
       ...controlRepository,
       async loadControlEvent(eventId) {
-        setEventState({ status: "loading" });
+        const trackLifecycle = eventId === undefined;
+        if (trackLifecycle) setEventState({ status: "loading" });
         try {
           const event = await controlRepository.loadControlEvent(eventId);
-          setEventState({ status: "ready", value: event });
+          if (trackLifecycle) setEventState({ status: "ready", value: event });
           return event;
         } catch (error) {
-          setEventState({ status: "error" });
+          if (trackLifecycle) setEventState({ status: "error" });
           throw error;
         }
       },
