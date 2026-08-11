@@ -1,20 +1,26 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
+import { getUfcStatsSnapshotFighter } from "../../supabase/functions/build-pick-spotlight/ufcStatsSnapshot.ts";
 
 const builder = readFileSync("supabase/functions/build-pick-spotlight/index.ts", "utf8");
 
-describe("UFCStats Spotlight fighter-index lookup", () => {
-  it("uses bounded normal pages instead of the oversized page=all request", () => {
-    expect(builder).toContain("const UFCSTATS_FIGHTER_INDEX_MAX_PAGES = 20;");
-    expect(builder).toContain("page <= UFCSTATS_FIGHTER_INDEX_MAX_PAGES");
-    expect(builder).toContain("&page=${page}");
-    expect(builder).not.toContain("page=all");
+describe("UFCStats Spotlight snapshot", () => {
+  it("does not make a live UFCStats request while the owner is building a Spotlight", () => {
+    expect(builder).toContain('getUfcStatsSnapshotFighter');
+    expect(builder).not.toContain('fetchUfcStatsHtml');
+    expect(builder).not.toContain('ufcstats.com/statistics/fighters');
+    expect(builder).not.toContain('fighter-details');
   });
 
-  it("stops on the exact fighter and shares fetched index pages across both fighters", () => {
-    expect(builder).toContain("if (unique.length === 1) return unique[0]!");
-    expect(builder).toContain("if (fighterRows === 0) break;");
-    expect(builder).toContain("const key = `${letter}:${page}`;");
-    expect(builder).toContain("const indexCache = new Map<string, Promise<string>>();");
+  it("covers both UFC 330 title fights from the canonical UFCStats snapshot", () => {
+    for (const name of ["Islam Makhachev", "Ian Machado Garry", "Mackenzie Dern", "Gillian Robertson"]) {
+      const fighter = getUfcStatsSnapshotFighter(name);
+      expect(fighter?.name).toBe(name);
+      expect(fighter?.record).toMatch(/^\d+-\d+-\d+/);
+      expect(fighter?.height).not.toBe("--");
+      expect(fighter?.reach).not.toBe("--");
+      expect(fighter?.slpm).toBeTypeOf("number");
+      expect(fighter?.takedownDefense).toBeTypeOf("number");
+    }
   });
 });
