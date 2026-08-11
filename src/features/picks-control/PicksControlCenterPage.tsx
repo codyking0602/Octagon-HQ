@@ -13,6 +13,7 @@ import {
   type PickSetupRepository,
 } from "../picks-setup/pickSetupRepository";
 import OpenPicksDashboard from "./OpenPicksDashboard";
+import PickEventHeaderControl from "./PickEventHeaderControl";
 import type { PickControlEvent } from "./pickControlModel";
 import PicksControlPage from "./PicksControlPage";
 import {
@@ -226,6 +227,12 @@ export default function PicksControlCenterPage({
               <PicksSetupPage repository={ownedSetupRepository} />
             </div>
           </details>
+        </section>
+      ) : null}
+
+      {activeEvent?.status === "upcoming" ? (
+        <section className="picks-control-center__section" aria-label="Manage event header">
+          <PickEventHeaderControl eventId={activeEvent.eventId} repository={ownedControlRepository} />
         </section>
       ) : null}
 
