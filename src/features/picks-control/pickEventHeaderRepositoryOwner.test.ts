@@ -17,7 +17,7 @@ describe("Picks event header repository ownership", () => {
     rpc.mockResolvedValue({ data: { event_id: "ufc-330" }, error: null });
     const repository = createPickControlRepository();
 
-    await repository!.setEventHeader(
+    await repository!.setEventHeader!(
       "ufc-330",
       "ufc-330/selected-poster.webp",
       640,
@@ -37,7 +37,7 @@ describe("Picks event header repository ownership", () => {
     rpc.mockResolvedValue({ data: null, error: { message: "Fight Night Control owner access required" } });
     const repository = createPickControlRepository();
 
-    await expect(repository!.setEventHeader("ufc-330", "ufc-330/poster.webp", 640, 313))
+    await expect(repository!.setEventHeader!("ufc-330", "ufc-330/poster.webp", 640, 313))
       .rejects.toThrow("Fight Night Control owner access required");
     expect(rpc).toHaveBeenCalledTimes(1);
   });
