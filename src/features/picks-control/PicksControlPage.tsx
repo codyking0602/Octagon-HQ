@@ -314,7 +314,7 @@ export default function PicksControlPage({
 
               <div className="picks-control-history__selected">
                 <span>SELECTED EVENT</span>
-                <strong>{completedEventTitle(event)}</strong>
+                <strong>EVENT · {completedEventTitle(event)}</strong>
                 <small>{eventTime(event.startsAt)}</small>
               </div>
 
@@ -400,7 +400,7 @@ export default function PicksControlPage({
                 </em>
               </div>
 
-              {isPending ? (
+              {isPending && event.status === "locked" ? (
                 <>
                   <div className="pick-control-winners">
                     <button
