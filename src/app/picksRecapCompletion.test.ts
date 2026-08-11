@@ -5,6 +5,10 @@ const migration = readFileSync(
   "supabase/migrations/202608240002_complete_picks_event_recaps.sql",
   "utf8",
 );
+const headerRuntimeMigration = readFileSync(
+  "supabase/migrations/202612310013_pick_event_header_runtime.sql",
+  "utf8",
+);
 const august8WatchMomentMigration = readFileSync(
   "supabase/migrations/202612310006_seed_august_8_pick_watch_moment.sql",
   "utf8",
@@ -98,7 +102,7 @@ describe("completed Picks event recaps", () => {
     expect(recapSource).toContain('data-testid="picks-event-recap-scroll"');
   });
 
-  it("keeps the poster visible and makes the matchup the visual hero beneath it", () => {
+  it("keeps the persisted event header visible and makes the matchup the visual hero beneath it", () => {
     expect(recapSource).toContain('import { pickEventPoster } from "./picksEventAssets"');
     expect(recapSource).toContain("const eventPoster = pickEventPoster(event)");
     expect(recapSource).toContain('className="picks-event-recap__poster"');
@@ -108,7 +112,10 @@ describe("completed Picks event recaps", () => {
     expect(recapSource).not.toContain("ARCHIVED EVENT FINAL");
     expect(recapSource).not.toContain("No lock winner");
     expect(recapSource).not.toMatch(/\/events\/ufc-fight-night/);
-    expect(eventAssetsSource).toContain("posterByMainEvent");
+    expect(eventAssetsSource).toContain('PICK_EVENT_HEADER_BUCKET = "pick-event-headers"');
+    expect(eventAssetsSource).not.toContain("posterByMainEvent");
+    expect(headerRuntimeMigration).toContain("create or replace function public.get_my_pick_history");
+    expect(headerRuntimeMigration).toContain("'header_storage_path', event.header_storage_path");
     expect(recapCss).toContain("--picks-recap-poster");
     expect(recapCss).toContain("background-size: contain");
     expect(recapCss).toContain("font-size: clamp(13px, 3.8vw, 17px)");

@@ -1,39 +1,31 @@
-export interface PickEventPoster {
+import { getSupabaseClient } from "../../lib/supabase";
+import type { PickEvent, PickHistoryEvent } from "./picksModel";
+
+export const PICK_EVENT_HEADER_BUCKET = "pick-event-headers";
+
+interface PickEventPoster {
   src: string;
   aspectRatio: string;
 }
 
-interface PosterEvent {
-  bouts: readonly {
-    position: number;
-    redFighterSlug: string;
-    blueFighterSlug: string;
-  }[];
-}
+export function pickEventPoster(event: PickEvent | PickHistoryEvent | null): PickEventPoster | null {
+  if (
+    !event?.headerStoragePath
+    || !event.headerNaturalWidth
+    || !event.headerNaturalHeight
+  ) {
+    return null;
+  }
 
-const posterByMainEvent: Readonly<Record<string, PickEventPoster>> = {
-  "daniel-rodriguez:uros-medic": {
-    src: "/events/ufc-fight-night-belgrade.svg",
-    aspectRatio: "480 / 321",
-  },
-  "mateusz-gamrot:quillan-salkilld": {
-    src: "/events/ufc-fight-night-gamrot-salkilld.svg",
-    aspectRatio: "480 / 221",
-  },
-  "ian-machado-garry:islam-makhachev": {
-    src: "/events/ufc-330-cropped.webp",
-    aspectRatio: "640 / 313",
-  },
-};
+  const client = getSupabaseClient();
+  if (!client) return null;
 
-function mainEventKey(event: PosterEvent) {
-  const bout = event.bouts.slice().sort((left, right) => left.position - right.position)[0];
-  if (!bout) return null;
-  return [bout.redFighterSlug, bout.blueFighterSlug].sort().join(":");
-}
+  const { data } = client.storage
+    .from(PICK_EVENT_HEADER_BUCKET)
+    .getPublicUrl(event.headerStoragePath);
 
-export function pickEventPoster(event: PosterEvent | null): PickEventPoster | null {
-  if (!event) return null;
-  const key = mainEventKey(event);
-  return key ? posterByMainEvent[key] ?? null : null;
+  return {
+    src: data.publicUrl,
+    aspectRatio: `${event.headerNaturalWidth} / ${event.headerNaturalHeight}`,
+  };
 }

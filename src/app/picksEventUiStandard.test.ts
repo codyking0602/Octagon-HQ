@@ -20,8 +20,10 @@ describe("Picks event UI standard", () => {
     expect(seasonStyles).not.toContain(".pick-bout-card,");
   });
 
-  it("standardizes the complete event hero and its no-poster fallback", () => {
-    expect(assets).toContain("posterByMainEvent");
+  it("standardizes the complete event hero and its no-header fallback", () => {
+    expect(assets).toContain('PICK_EVENT_HEADER_BUCKET = "pick-event-headers"');
+    expect(assets).toContain("event.headerStoragePath");
+    expect(assets).not.toContain("posterByMainEvent");
     expect(page).toContain("pickEventPoster(activeEvent)");
     expect(page).not.toContain('location.toLowerCase().includes("belgrade")');
     expect(picksStyles).toContain("--picks-event-poster-aspect");

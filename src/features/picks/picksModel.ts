@@ -60,6 +60,9 @@ export interface PickEvent {
   season: number;
   status: PickEventStatus;
   canControl?: boolean;
+  headerStoragePath?: string | null;
+  headerNaturalWidth?: number | null;
+  headerNaturalHeight?: number | null;
   spotlights?: PickEventSpotlight[];
   bouts: PickBout[];
 }
@@ -133,6 +136,9 @@ export interface PickHistoryEvent {
   startsAt: string;
   season: number;
   completedAt: string;
+  headerStoragePath?: string | null;
+  headerNaturalWidth?: number | null;
+  headerNaturalHeight?: number | null;
   record: PickHistoryRecord;
   underdogLock: UnderdogLock | null;
   watchMoments?: PickWatchMoment[];

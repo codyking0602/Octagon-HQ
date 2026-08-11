@@ -44,6 +44,9 @@ const boutSchema = z.object({
 const eventSchema = z.object({
   event_id: z.string(), name: z.string(), subtitle: z.string(), venue: z.string(), location: z.string(), starts_at: z.string(), locks_at: z.string(),
   season: z.number().int(), status: z.enum(["upcoming", "locked", "complete"]), can_control: z.boolean().optional().default(false),
+  header_storage_path: z.string().nullable().optional().default(null),
+  header_natural_width: z.number().int().positive().nullable().optional().default(null),
+  header_natural_height: z.number().int().positive().nullable().optional().default(null),
   spotlights: z.array(spotlightSchema).optional().default([]), bouts: z.array(boutSchema),
 });
 
@@ -60,6 +63,9 @@ const groupResultSchema = historyRecordSchema.extend({ rank: z.number().int().po
 const seasonStandingSchema = groupResultSchema.extend({ events_entered: z.number().int().nonnegative() });
 const historyEventSchema = z.object({
   event_id: z.string(), name: z.string(), subtitle: z.string(), venue: z.string(), location: z.string(), starts_at: z.string(), season: z.number().int(), completed_at: z.string(),
+  header_storage_path: z.string().nullable().optional().default(null),
+  header_natural_width: z.number().int().positive().nullable().optional().default(null),
+  header_natural_height: z.number().int().positive().nullable().optional().default(null),
   record: historyRecordSchema, underdog_lock: lockSchema.nullable(), watch_moments: z.array(watchMomentSchema).optional().default([]), bouts: z.array(historyBoutSchema), group_results: z.array(groupResultSchema),
 });
 const historySchema = z.object({ season: z.number().int().nullable(), summary: historyRecordSchema.extend({ events_entered: z.number().int().nonnegative() }), season_standings: z.array(seasonStandingSchema).optional().default([]), events: z.array(historyEventSchema) });
@@ -99,7 +105,9 @@ export function mapPickEvent(value: unknown): PickEvent | null {
   const parsed = eventSchema.parse(value);
   return {
     eventId: parsed.event_id, name: parsed.name, subtitle: parsed.subtitle, venue: parsed.venue, location: parsed.location, startsAt: parsed.starts_at, locksAt: parsed.locks_at,
-    season: parsed.season, status: parsed.status, canControl: parsed.can_control, spotlights: parsed.spotlights.map(mapSpotlight),
+    season: parsed.season, status: parsed.status, canControl: parsed.can_control,
+    headerStoragePath: parsed.header_storage_path, headerNaturalWidth: parsed.header_natural_width, headerNaturalHeight: parsed.header_natural_height,
+    spotlights: parsed.spotlights.map(mapSpotlight),
     bouts: parsed.bouts.map((bout) => ({
       boutId: bout.bout_id, locksAt: bout.locks_at, isLocked: bout.is_locked, position: bout.position, weightClass: bout.weight_class,
       redFighterSlug: bout.red_fighter_slug, redFighterName: bout.red_fighter_name, blueFighterSlug: bout.blue_fighter_slug, blueFighterName: bout.blue_fighter_name,
@@ -132,6 +140,7 @@ function mapHistory(value: unknown): PickHistory {
     seasonStandings: parsed.season_standings.map((standing) => ({ rank: standing.rank, profileId: standing.profile_id, displayName: standing.display_name, correct: standing.correct, incorrect: standing.incorrect, missing: standing.missing, excluded: standing.excluded, eventsEntered: standing.events_entered, basePoints: standing.base_points, lockBonus: standing.lock_bonus, totalPoints: standing.total_points, isCurrentUser: standing.is_current_user })),
     events: parsed.events.map((event) => ({
       eventId: event.event_id, name: event.name, subtitle: event.subtitle, venue: event.venue, location: event.location, startsAt: event.starts_at, season: event.season, completedAt: event.completed_at,
+      headerStoragePath: event.header_storage_path, headerNaturalWidth: event.header_natural_width, headerNaturalHeight: event.header_natural_height,
       record: { correct: event.record.correct, incorrect: event.record.incorrect, missing: event.record.missing, excluded: event.record.excluded, basePoints: event.record.base_points, lockBonus: event.record.lock_bonus, totalPoints: event.record.total_points },
       underdogLock: event.underdog_lock ? mapLock(event.underdog_lock) : null,
       watchMoments: event.watch_moments.map((moment) => ({ title: moment.title, url: moment.url })),
