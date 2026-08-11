@@ -60,6 +60,9 @@ export interface PickEvent {
   season: number;
   status: PickEventStatus;
   canControl?: boolean;
+  headerStoragePath?: string | null;
+  headerNaturalWidth?: number | null;
+  headerNaturalHeight?: number | null;
   spotlights?: PickEventSpotlight[];
   bouts: PickBout[];
 }
