@@ -46,8 +46,9 @@ describe("MMA Mania event metadata", () => {
       subtitle: "Islam Makhachev vs. Ian Machado Garry",
       venue: "Xfinity Mobile Arena",
       location: "Philadelphia, Pennsylvania",
-      starts_at: "2026-08-16T01:00:00.000Z",
+      starts_at: "2026-08-15T22:00:00.000Z",
       prelims_starts_at: "2026-08-15T22:00:00.000Z",
+      locks_at: "2026-08-15T22:00:00.000Z",
       eventType: "numbered",
       localEventDate: "2026-08-15",
     });
