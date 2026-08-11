@@ -1,5 +1,5 @@
--- Expose the persisted Picks event header through the existing current-event RPC.
--- The current-event RPC remains the single browser read owner; no second header query exists.
+-- Expose the persisted Picks event header through the existing current-event and history RPCs.
+-- Those RPCs remain the browser read owners; no second header query exists.
 
 create or replace function public.get_current_pick_event()
 returns jsonb
@@ -53,5 +53,41 @@ end;
 $$;
 revoke all on function public.get_current_pick_event() from public;
 grant execute on function public.get_current_pick_event() to anon, authenticated;
+
+-- Preserve get_my_pick_history(integer) as the single browser history path while
+-- projecting the same persisted event header into completed-event recaps.
+create or replace function public.get_my_pick_history(p_season integer default null)
+returns jsonb
+language plpgsql
+stable
+security definer
+set search_path = ''
+as $$
+declare
+  v_history jsonb;
+  v_events jsonb;
+begin
+  v_history := private.get_my_pick_history_core(p_season);
+
+  select coalesce(jsonb_agg(
+    item.value || jsonb_build_object(
+      'watch_moments', coalesce(event.watch_moments, '[]'::jsonb),
+      'header_storage_path', event.header_storage_path,
+      'header_natural_width', event.header_natural_width,
+      'header_natural_height', event.header_natural_height
+    )
+    order by item.ordinality
+  ), '[]'::jsonb)
+  into v_events
+  from jsonb_array_elements(coalesce(v_history->'events', '[]'::jsonb))
+    with ordinality as item(value, ordinality)
+  left join public.pick_events event
+    on event.event_id = item.value->>'event_id';
+
+  return jsonb_set(v_history, '{events}', v_events, true);
+end;
+$$;
+revoke all on function public.get_my_pick_history(integer) from public, anon;
+grant execute on function public.get_my_pick_history(integer) to authenticated;
 
 notify pgrst, 'reload schema';
