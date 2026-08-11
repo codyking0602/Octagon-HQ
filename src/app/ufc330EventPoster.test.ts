@@ -1,17 +1,19 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const eventAssets = readFileSync("src/features/picks/picksEventAssets.ts", "utf8");
 const main = readFileSync("src/main.tsx", "utf8");
-const fillStyles = readFileSync("src/styles/picks-ufc330-poster.css", "utf8");
+const croppedPoster = readFileSync("public/events/ufc-330-cropped.webp");
 
 describe("UFC 330 event poster", () => {
-  it("uses the existing Picks event-poster owner and fills the hero with renderable art", () => {
+  it("uses the supplied crop at its native ratio through the existing Picks poster owner", () => {
     expect(eventAssets).toContain('"ian-machado-garry:islam-makhachev"');
-    expect(eventAssets).toContain("https://www.xfinitymobilearena.com/assets/img/1440x535-be7725b165.png");
-    expect(eventAssets).toContain('aspectRatio: "800 / 391"');
+    expect(eventAssets).toContain('src: "/events/ufc-330-cropped.webp"');
+    expect(eventAssets).toContain('aspectRatio: "640 / 313"');
     expect(eventAssets.match(/const posterByMainEvent/g)).toHaveLength(1);
-    expect(main).toContain('import "./styles/picks-ufc330-poster.css";');
-    expect(fillStyles).toContain("background-size: cover, cover, cover");
+    expect(croppedPoster.subarray(0, 4).toString("ascii")).toBe("RIFF");
+    expect(croppedPoster.subarray(8, 12).toString("ascii")).toBe("WEBP");
+    expect(main).not.toContain('import "./styles/picks-ufc330-poster.css";');
+    expect(existsSync("src/styles/picks-ufc330-poster.css")).toBe(false);
   });
 });
