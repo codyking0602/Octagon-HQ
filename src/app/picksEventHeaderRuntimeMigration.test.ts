@@ -24,4 +24,14 @@ describe("Picks event header runtime migration", () => {
     expect(migration).toContain("'{spotlights}'");
     expect(migration).toContain("grant execute on function public.get_current_pick_event() to anon, authenticated");
   });
+
+  it("keeps completed recap headers on the existing history RPC", () => {
+    expect(migration).toContain("create or replace function public.get_my_pick_history(p_season integer default null)");
+    expect(migration).toContain("private.get_my_pick_history_core(p_season)");
+    expect(migration).toContain("'watch_moments', coalesce(event.watch_moments, '[]'::jsonb)");
+    expect(migration).toContain("'header_storage_path', event.header_storage_path");
+    expect(migration).toContain("'header_natural_width', event.header_natural_width");
+    expect(migration).toContain("'header_natural_height', event.header_natural_height");
+    expect(migration).toContain("grant execute on function public.get_my_pick_history(integer) to authenticated");
+  });
 });
