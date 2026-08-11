@@ -114,9 +114,12 @@ export default function PicksControlCenterPage({
     return {
       ...controlRepository,
       async loadControlEvent(eventId) {
+        if (eventId !== undefined) {
+          return controlRepository.loadControlEvent(eventId);
+        }
         setEventState({ status: "loading" });
         try {
-          const event = await controlRepository.loadControlEvent(eventId);
+          const event = await controlRepository.loadControlEvent();
           setEventState({ status: "ready", value: event });
           return event;
         } catch (error) {
