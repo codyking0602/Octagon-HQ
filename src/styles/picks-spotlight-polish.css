@@ -1,0 +1,11 @@
+.main-event-spotlight__watch-links a {
+  min-width: 0;
+  padding-inline: 8px;
+  white-space: nowrap;
+}
+
+@media (max-width: 560px) {
+  .main-event-spotlight__watch-links a {
+    font-size: 9px;
+  }
+}
