@@ -343,16 +343,20 @@ describe("Unified Picks Control Center", () => {
     await waitFor(() => expect(control.recordResult).toHaveBeenCalledWith("ufc-control", "red-blue-1", "red_win"));
   });
 
-  it("keeps completed-event corrections and history in the canonical control", async () => {
+  it("keeps completed-event corrections in the canonical control but collapsed by default", async () => {
     renderCenter(
       controlRepository([controlEvent("complete", "red_win")]),
       setupRepository([]),
       monitoringRepository(),
     );
 
-    expect(await screen.findAllByText("EVENT COMPLETE")).not.toHaveLength(0);
-    expect(screen.getByText("Recap published")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "VIEW UFC OLDER EVENT" })).toBeInTheDocument();
+    expect(await screen.findByText("Result corrections")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "CORRECT RESULT" })).not.toBeInTheDocument();
+    expect(screen.queryByText("Red Fighter vs. Blue Fighter")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "OPEN PAST EVENT CORRECTIONS" }));
+    expect(await screen.findByText("Red Fighter vs. Blue Fighter")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "OPEN AUG 2 COMPLETED EVENT" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "CORRECT RESULT" })).toBeInTheDocument();
   });
 
