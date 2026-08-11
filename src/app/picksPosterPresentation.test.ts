@@ -6,11 +6,13 @@ const assets = readFileSync("src/features/picks/picksEventAssets.ts", "utf8");
 const styles = readFileSync("src/styles/picks-polish.css", "utf8");
 
 describe("Picks event poster presentation", () => {
-  it("shows registered posters at their configured source aspect ratio", () => {
+  it("shows persisted event headers at their stored native aspect ratio", () => {
     expect(page).toContain("pickEventPoster(activeEvent)");
     expect(page).toContain('"--picks-event-poster-aspect": eventPoster.aspectRatio');
-    expect(assets).toContain('src: "/events/ufc-fight-night-belgrade.svg"');
-    expect(assets).toContain('aspectRatio: "480 / 321"');
+    expect(assets).toContain('PICK_EVENT_HEADER_BUCKET = "pick-event-headers"');
+    expect(assets).toContain("event.headerStoragePath");
+    expect(assets).toContain("`${event.headerNaturalWidth} / ${event.headerNaturalHeight}`");
+    expect(assets).not.toContain("posterByMainEvent");
     expect(styles).toContain("aspect-ratio: var(--picks-event-poster-aspect, 480 / 321);");
     expect(styles).toContain("background-size: cover, contain, cover;");
   });
@@ -23,9 +25,10 @@ describe("Picks event poster presentation", () => {
     expect(styles).toContain(".picks-event-hero.has-poster .picks-event-hero__copy > strong {");
   });
 
-  it("provides one standard branded fallback when no poster is registered", () => {
+  it("provides one standard branded fallback when no persisted header exists", () => {
     expect(styles).toContain(".picks-event-hero:not(.has-poster) .picks-event-hero__poster::before {");
     expect(styles).toContain('content: "OCTAGON HQ PICKS";');
     expect(page).not.toContain('location.toLowerCase().includes("belgrade")');
+    expect(assets).not.toContain("/events/");
   });
 });
