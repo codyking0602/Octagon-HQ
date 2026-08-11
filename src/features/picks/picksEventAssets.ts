@@ -20,6 +20,10 @@ const posterByMainEvent: Readonly<Record<string, PickEventPoster>> = {
     src: "/events/ufc-fight-night-gamrot-salkilld.svg",
     aspectRatio: "480 / 221",
   },
+  "ian-machado-garry:islam-makhachev": {
+    src: "https://www.xfinitymobilearena.com/assets/img/1440x535-be7725b165.png",
+    aspectRatio: "760 / 377",
+  },
 };
 
 function mainEventKey(event: PosterEvent) {
