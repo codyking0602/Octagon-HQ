@@ -1,7 +1,7 @@
 import { getSupabaseClient } from "../../lib/supabase";
+import { PICK_EVENT_HEADER_BUCKET } from "../picks/picksEventAssets";
 import type { PickControlRepository } from "./pickControlRepository";
 
-const EVENT_HEADER_BUCKET = "pick-event-headers";
 const EVENT_HEADER_MAX_BYTES = 20 * 1024 * 1024;
 const EVENT_HEADER_TYPES = new Set([
   "image/jpeg",
@@ -70,7 +70,7 @@ export async function uploadPickEventHeader({
 
   const storagePath = `${eventId}/event-header`;
   const { error } = await client.storage
-    .from(EVENT_HEADER_BUCKET)
+    .from(PICK_EVENT_HEADER_BUCKET)
     .upload(storagePath, file, {
       cacheControl: "0",
       contentType: file.type,

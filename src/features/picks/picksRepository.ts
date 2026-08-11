@@ -44,6 +44,9 @@ const boutSchema = z.object({
 const eventSchema = z.object({
   event_id: z.string(), name: z.string(), subtitle: z.string(), venue: z.string(), location: z.string(), starts_at: z.string(), locks_at: z.string(),
   season: z.number().int(), status: z.enum(["upcoming", "locked", "complete"]), can_control: z.boolean().optional().default(false),
+  header_storage_path: z.string().nullable().optional().default(null),
+  header_natural_width: z.number().int().positive().nullable().optional().default(null),
+  header_natural_height: z.number().int().positive().nullable().optional().default(null),
   spotlights: z.array(spotlightSchema).optional().default([]), bouts: z.array(boutSchema),
 });
 
@@ -99,7 +102,9 @@ export function mapPickEvent(value: unknown): PickEvent | null {
   const parsed = eventSchema.parse(value);
   return {
     eventId: parsed.event_id, name: parsed.name, subtitle: parsed.subtitle, venue: parsed.venue, location: parsed.location, startsAt: parsed.starts_at, locksAt: parsed.locks_at,
-    season: parsed.season, status: parsed.status, canControl: parsed.can_control, spotlights: parsed.spotlights.map(mapSpotlight),
+    season: parsed.season, status: parsed.status, canControl: parsed.can_control,
+    headerStoragePath: parsed.header_storage_path, headerNaturalWidth: parsed.header_natural_width, headerNaturalHeight: parsed.header_natural_height,
+    spotlights: parsed.spotlights.map(mapSpotlight),
     bouts: parsed.bouts.map((bout) => ({
       boutId: bout.bout_id, locksAt: bout.locks_at, isLocked: bout.is_locked, position: bout.position, weightClass: bout.weight_class,
       redFighterSlug: bout.red_fighter_slug, redFighterName: bout.red_fighter_name, blueFighterSlug: bout.blue_fighter_slug, blueFighterName: bout.blue_fighter_name,

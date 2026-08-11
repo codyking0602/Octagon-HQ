@@ -1,58 +1,65 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { PickEvent } from "./picksModel";
-import { pickEventPoster } from "./picksEventAssets";
+import { PICK_EVENT_HEADER_BUCKET, pickEventPoster } from "./picksEventAssets";
+
+vi.mock("../../lib/supabase", () => ({
+  getSupabaseClient: () => ({
+    storage: {
+      from: (bucket: string) => ({
+        getPublicUrl: (path: string) => ({
+          data: { publicUrl: `https://storage.test/${bucket}/${path}` },
+        }),
+      }),
+    },
+  }),
+}));
 
 const event: PickEvent = {
   eventId: "ufc-test-event",
   name: "UFC Fight Night",
-  subtitle: "Uroš Medić vs. Daniel Rodriguez",
-  venue: "Belgrade Arena",
-  location: "Belgrade, Serbia",
+  subtitle: "Red Fighter vs. Blue Fighter",
+  venue: "Test Arena",
+  location: "Dallas, Texas",
   startsAt: "2099-08-01T17:00:00.000Z",
   locksAt: "2099-08-01T17:00:00.000Z",
   season: 2026,
   status: "upcoming",
+  headerStoragePath: "ufc-test-event/event-header",
+  headerNaturalWidth: 2400,
+  headerNaturalHeight: 1200,
   bouts: [{
-    boutId: "medic-rodriguez",
+    boutId: "red-blue",
     position: 1,
     weightClass: "Welterweight",
-    redFighterSlug: "uros-medic",
-    redFighterName: "Uroš Medić",
-    blueFighterSlug: "daniel-rodriguez",
-    blueFighterName: "Daniel Rodriguez",
-    redAmericanOdds: -395,
-    blueAmericanOdds: 310,
+    redFighterSlug: "red-fighter",
+    redFighterName: "Red Fighter",
+    blueFighterSlug: "blue-fighter",
+    blueFighterName: "Blue Fighter",
+    redAmericanOdds: -150,
+    blueAmericanOdds: 130,
     winnerFighterSlug: null,
   }],
 };
 
-const gamrotSalkilldEvent: PickEvent = {
-  ...event,
-  eventId: "ufc-gamrot-salkilld",
-  subtitle: "Mateusz Gamrot vs. Quillan Salkilld",
-  bouts: [{
-    ...event.bouts[0],
-    boutId: "gamrot-salkilld",
-    redFighterSlug: "mateusz-gamrot",
-    redFighterName: "Mateusz Gamrot",
-    blueFighterSlug: "quillan-salkilld",
-    blueFighterName: "Quillan Salkilld",
-  }],
-};
-
-describe("Picks event assets", () => {
-  it("resolves posters from canonical main-event fighter identity", () => {
+describe("Picks persisted event header", () => {
+  it("renders the persisted storage object at its stored native ratio", () => {
+    expect(PICK_EVENT_HEADER_BUCKET).toBe("pick-event-headers");
     expect(pickEventPoster(event)).toEqual({
-      src: "/events/ufc-fight-night-belgrade.svg",
-      aspectRatio: "480 / 321",
-    });
-    expect(pickEventPoster(gamrotSalkilldEvent)).toEqual({
-      src: "/events/ufc-fight-night-gamrot-salkilld.svg",
-      aspectRatio: "480 / 221",
+      src: "https://storage.test/pick-event-headers/ufc-test-event/event-header",
+      aspectRatio: "2400 / 1200",
     });
   });
 
-  it("does not infer a poster from location or display copy", () => {
+  it("has no static or inferred poster fallback when header metadata is absent", () => {
+    expect(pickEventPoster({
+      ...event,
+      headerStoragePath: null,
+      headerNaturalWidth: null,
+      headerNaturalHeight: null,
+    })).toBeNull();
+  });
+
+  it("does not choose artwork from main-event fighter identity", () => {
     expect(pickEventPoster({
       ...event,
       bouts: [{
@@ -60,25 +67,6 @@ describe("Picks event assets", () => {
         redFighterSlug: "different-red",
         blueFighterSlug: "different-blue",
       }],
-    })).toBeNull();
-  });
-
-  it("is independent of red and blue corner order", () => {
-    expect(pickEventPoster({
-      ...event,
-      bouts: [{
-        ...event.bouts[0],
-        redFighterSlug: "daniel-rodriguez",
-        blueFighterSlug: "uros-medic",
-      }],
-    })?.src).toBe("/events/ufc-fight-night-belgrade.svg");
-    expect(pickEventPoster({
-      ...gamrotSalkilldEvent,
-      bouts: [{
-        ...gamrotSalkilldEvent.bouts[0],
-        redFighterSlug: "quillan-salkilld",
-        blueFighterSlug: "mateusz-gamrot",
-      }],
-    })?.src).toBe("/events/ufc-fight-night-gamrot-salkilld.svg");
+    })).toEqual(pickEventPoster(event));
   });
 });

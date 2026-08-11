@@ -33,19 +33,37 @@ describe("Picks current-event compatibility", () => {
     expect(event?.bouts[0]?.oddsUpdatedAt).toBeNull();
   });
 
-  it("defaults omitted result, reveal, and control fields safely", () => {
+  it("defaults omitted result, reveal, control, and header fields safely", () => {
     const event = mapPickEvent(eventPayload);
 
     expect(event?.bouts[0]?.resultStatus).toBe("pending");
     expect(event?.bouts[0]?.resultRecordedAt).toBeNull();
     expect(event?.bouts[0]?.groupPicks).toEqual([]);
     expect(event?.canControl).toBe(false);
+    expect(event?.headerStoragePath).toBeNull();
+    expect(event?.headerNaturalWidth).toBeNull();
+    expect(event?.headerNaturalHeight).toBeNull();
   });
 
   it("maps the backend-owned control entry without inferring from the profile name", () => {
     const event = mapPickEvent({ ...eventPayload, can_control: true });
 
     expect(event?.canControl).toBe(true);
+  });
+
+  it("maps persisted event header metadata from the existing current-event payload", () => {
+    const event = mapPickEvent({
+      ...eventPayload,
+      header_storage_path: "ufc-test-event/event-header",
+      header_natural_width: 2400,
+      header_natural_height: 1200,
+    });
+
+    expect(event).toMatchObject({
+      headerStoragePath: "ufc-test-event/event-header",
+      headerNaturalWidth: 2400,
+      headerNaturalHeight: 1200,
+    });
   });
 
   it("maps the existing backend result state without creating another query path", () => {
