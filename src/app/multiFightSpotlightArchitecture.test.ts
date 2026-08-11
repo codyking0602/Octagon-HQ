@@ -14,10 +14,10 @@ describe("multi-fight Picks Spotlight ownership", () => {
     expect(setup).not.toMatch(/slice\(0,\s*[123]\)|maxSpotlight|spotlightLimit/i);
   });
 
-  it("keeps UFCStats enrichment read-only and owner gated", () => {
+  it("keeps UFCStats snapshot enrichment read-only and owner gated", () => {
     expect(builder).toContain('owner.rpc("get_pick_event_setup")');
-    expect(builder).toContain("https://ufcstats.com/statistics/fighters");
-    expect(builder).toContain("UFCSTATS_FIGHTER_NOT_FOUND");
+    expect(builder).toContain("getUfcStatsSnapshotFighter");
+    expect(builder).toContain("UFCSTATS_SNAPSHOT_FIGHTER_NOT_FOUND");
     expect(builder).not.toMatch(/stage_pick_event_draft|publish_pick_event_draft|from\("pick_events"\)|insert\(|update\(/);
   });
 
