@@ -1,10 +1,12 @@
 const UFCSTATS_FETCH_MAX_ATTEMPTS = 3;
 const UFCSTATS_RETRY_DELAYS_MS = [200, 500] as const;
+const UFCSTATS_FETCH_TIMEOUT_MS = 8_000;
 
 const requestHeaders = {
-  "User-Agent": "OctagonHQ/2.0 (+https://octagon.hq-app.workers.dev)",
-  Accept: "text/html,application/xhtml+xml",
+  "User-Agent": "Mozilla/5.0 (compatible; OctagonHQ/2.0; +https://octagon.hq-app.workers.dev)",
+  Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
   "Accept-Language": "en-US,en;q=0.9",
+  "Cache-Control": "no-cache",
 };
 
 type FetchLike = (url: string, init: RequestInit) => Promise<Response>;
@@ -32,7 +34,11 @@ export async function fetchUfcStatsHtml(
 ) {
   for (let attempt = 1; attempt <= UFCSTATS_FETCH_MAX_ATTEMPTS; attempt += 1) {
     try {
-      const response = await fetchImpl(url, { headers: requestHeaders, redirect: "follow" });
+      const response = await fetchImpl(url, {
+        headers: requestHeaders,
+        redirect: "follow",
+        signal: AbortSignal.timeout(UFCSTATS_FETCH_TIMEOUT_MS),
+      });
       if (response.ok) return await response.text();
       if (!isRetryableUfcStatsStatus(response.status)) throw new UfcStatsFetchError(label);
     } catch (error) {

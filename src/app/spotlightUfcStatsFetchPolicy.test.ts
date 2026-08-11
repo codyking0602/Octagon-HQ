@@ -10,8 +10,10 @@ const noDelay = vi.fn(async () => undefined);
 describe("UFCStats Spotlight fetch resilience", () => {
   it("retries bounded transient network failures before succeeding", async () => {
     let attempt = 0;
-    const fetchImpl = vi.fn(async () => {
+    const fetchImpl = vi.fn(async (_url: string, init: RequestInit) => {
       attempt += 1;
+      expect(init.signal).toBeInstanceOf(AbortSignal);
+      expect(new Headers(init.headers).get("user-agent")).toContain("Mozilla/5.0");
       if (attempt < 3) throw new TypeError("temporary network failure");
       return new Response("<html>fighter</html>", { status: 200 });
     });
