@@ -75,7 +75,7 @@ export interface PickControlRepository {
   recordResult: (eventId: string, boutId: string, result: PickBoutResultStatus) => Promise<void>;
   correctResult: (eventId: string, bout: PickControlEvent["bouts"][number], result: PickBoutResultStatus, reason: string) => Promise<void>;
   setWatchMoments?: (eventId: string, moments: { title: string; url: string }[]) => Promise<void>;
-  setEventHeader: (eventId: string, storagePath: string, naturalWidth: number, naturalHeight: number) => Promise<void>;
+  setEventHeader?: (eventId: string, storagePath: string, naturalWidth: number, naturalHeight: number) => Promise<void>;
   completeEvent: (eventId: string) => Promise<void>;
 }
 
