@@ -8,6 +8,18 @@ import { PicksProvider } from "./PicksProvider";
 import type { PickEvent, PickHistory, ProfileEventPick, UnderdogLock } from "./picksModel";
 import type { PicksRepository } from "./picksRepository";
 
+vi.mock("../../lib/supabase", () => ({
+  getSupabaseClient: () => ({
+    storage: {
+      from: (bucket: string) => ({
+        getPublicUrl: (path: string) => ({
+          data: { publicUrl: `https://storage.test/${bucket}/${path}` },
+        }),
+      }),
+    },
+  }),
+}));
+
 const cody = {
   id: "11111111-1111-4111-8111-111111111111",
   displayName: "CODY",
@@ -241,12 +253,15 @@ describe("PicksPage", () => {
     expect(screen.getByText("Excluded")).toBeInTheDocument();
   });
 
-  it("uses the registered event poster without covering the fighters with upcoming labels", async () => {
+  it("uses the persisted event header without covering the fighters with upcoming labels", async () => {
     const belgradeEvent: PickEvent = {
       ...event,
       subtitle: "Uroš Medić vs. Daniel Rodriguez",
       venue: "Belgrade Arena",
       location: "Belgrade, Serbia",
+      headerStoragePath: "ufc-test-event/event-header",
+      headerNaturalWidth: 2400,
+      headerNaturalHeight: 1200,
       bouts: [{
         ...event.bouts[0],
         boutId: "medic-rodriguez",
@@ -266,13 +281,13 @@ describe("PicksPage", () => {
     await screen.findByText("Uroš Medić vs. Daniel Rodriguez");
     const hero = container.querySelector(".picks-event-hero");
     expect(hero).toHaveClass("has-poster");
-    expect(hero).toHaveStyle('--picks-event-poster: url("/events/ufc-fight-night-belgrade.svg")');
-    expect(hero).toHaveStyle("--picks-event-poster-aspect: 480 / 321");
+    expect(hero).toHaveStyle('--picks-event-poster: url("https://storage.test/pick-event-headers/ufc-test-event/event-header")');
+    expect(hero).toHaveStyle("--picks-event-poster-aspect: 2400 / 1200");
     expect(screen.queryByText("NEXT UFC EVENT")).not.toBeInTheDocument();
     expect(screen.queryByText("UPCOMING")).not.toBeInTheDocument();
   });
 
-  it("uses the standard no-poster hero when no event asset is registered", async () => {
+  it("uses the standard no-poster hero when no persisted event header exists", async () => {
     const { container } = render(
       <MemoryRouter><IdentityProvider gateway={gateway()}>
         <PicksProvider repository={repository()}><PicksPage /></PicksProvider>
