@@ -21,7 +21,6 @@ jobs:
       SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
       OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
       EXPECTED_DEPLOYMENT_SHA: ${{ github.event.pull_request.head.sha }}
-      EVENT_SETUP_SCREENSHOT_PATH: ${{ runner.temp }}/event-setup-preview.png
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -41,6 +40,7 @@ jobs:
         continue-on-error: true
         env:
           PUBLIC_CONFIG_PATH: ${{ runner.temp }}/octagon-public-config.env
+          EVENT_SETUP_SCREENSHOT_PATH: ${{ runner.temp }}/event-setup-preview.png
         run: node scripts/verify-pin-auth-live.mjs > "$RUNNER_TEMP/pin-browser.log" 2>&1
 
       - name: Upload concise browser diagnostics
