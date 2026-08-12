@@ -26,8 +26,10 @@ describe("Shane's ranked watchlist", () => {
       previousRank: null,
       proRecord: "13–1",
       ufcRecord: "6–0",
-      photoUrl: null,
+      scoutingNote: "Long, composed and dangerous everywhere, Salkilld looks like a lightweight built to climb the rankings fast.",
+      photoUrl: "/assets/fighters/quillan-salkilld-thumb.webp",
     });
+    expect(existsSync("public/assets/fighters/quillan-salkilld-thumb.webp")).toBe(true);
     expect(watchMovement(shanesWatchlist.fighters[1])).toEqual({ label: "NEW", direction: "new" });
   });
 

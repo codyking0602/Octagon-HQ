@@ -89,9 +89,9 @@ export const shanesWatchlist = {
       winStreak: "13",
       finishes: "10",
       highlight: "Six straight UFC wins · Gamrot submission",
-      scoutingNote: "Second on Shane’s board, just behind Gable Steveson.",
+      scoutingNote: "Long, composed and dangerous everywhere, Salkilld looks like a lightweight built to climb the rankings fast.",
       comparison: "",
-      photoUrl: null,
+      photoUrl: "/assets/fighters/quillan-salkilld-thumb.webp",
       ufcUrl: "https://www.ufc.com/athlete/quillan-salkilld",
     },
     {
