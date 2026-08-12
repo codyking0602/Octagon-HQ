@@ -45,10 +45,11 @@ describe("V2 ranking roster overlay", () => {
       "Charles Oliveira",
       "Amanda Nunes",
       "Dustin Poirier",
+      "Robert Whittaker",
     ]);
     expect(sourceOverrides).toMatchObject({
       factsVersion: "octagon-hq-v2-rda-facts-20260807",
-      judgmentVersion: "octagon-hq-v2-dustin-poirier-profile-20260808",
+      judgmentVersion: "octagon-hq-v2-robert-whittaker-profile-20260812",
       eraDepthVersion: "octagon-hq-v2-rda-20260730",
       eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
     });
@@ -128,6 +129,37 @@ describe("V2 ranking roster overlay", () => {
     );
     const current = canonicalRankingInputs.fighters.find(
       (fighter) => fighter.fighter === "Dustin Poirier",
+    );
+
+    expect(historical).toBeDefined();
+    expect(current).toBeDefined();
+    expect(current?.presentation.oneLiner).toBe(oneLiner);
+    expect(current?.presentation.whyRankedHere).toBe(whyRankedHere);
+    expect(current?.presentation.whyNotHigher).toBe(whyNotHigher);
+    expect(current?.facts).toEqual(historical?.facts);
+    expect(current?.era).toEqual(historical?.era);
+    expect(current?.judgments).toEqual(historical?.judgments);
+    expect(current?.eraDepth).toEqual(historical?.eraDepth);
+    expect(current?.presentation).toEqual({
+      ...historical?.presentation,
+      oneLiner,
+      whyRankedHere,
+      whyNotHigher,
+    });
+    for (const value of [oneLiner, whyRankedHere, whyNotHigher]) {
+      expect(value).toMatch(/^[\x00-\x7F]+$/);
+    }
+  });
+
+  it("replaces only Robert Whittaker's approved profile copy", () => {
+    const oneLiner = "Whittaker's peak combined darting karate footwork, explosive boxing entries, sharp counters, and elite takedown defense, letting him control range while sustaining a punishing pace.";
+    const whyRankedHere = "Whittaker's UFC resume has rare middleweight depth: two wins over Yoel Romero, including the interim-title victory, plus Jacare Souza, Jared Cannonier, Paulo Costa, and Marvin Vettori. Years of ranked wins separate him from the tier below.";
+    const whyNotHigher = "The lack of an official title-defense streak limits Whittaker's ceiling, and Adesanya beat him twice during his championship window. Later finish losses to Dricus du Plessis and Khamzat Chimaev further separate him from fighters with deeper reigns.";
+    const historical = historicalRankingMigrationInputs.fighters.find(
+      (fighter) => fighter.fighter === "Robert Whittaker",
+    );
+    const current = canonicalRankingInputs.fighters.find(
+      (fighter) => fighter.fighter === "Robert Whittaker",
     );
 
     expect(historical).toBeDefined();

@@ -456,6 +456,24 @@ const dustinPoirier = {
   },
 };
 
+const robertWhittakerBaseline = historicalMigrationSeedJson.fighters.find(
+  (fighter) => fighter.fighter === "Robert Whittaker",
+);
+
+if (!robertWhittakerBaseline) {
+  throw new Error("Robert Whittaker is missing from the sealed ranking baseline.");
+}
+
+const robertWhittaker = {
+  ...robertWhittakerBaseline,
+  presentation: {
+    ...robertWhittakerBaseline.presentation,
+    oneLiner: "Whittaker's peak combined darting karate footwork, explosive boxing entries, sharp counters, and elite takedown defense, letting him control range while sustaining a punishing pace.",
+    whyRankedHere: "Whittaker's UFC resume has rare middleweight depth: two wins over Yoel Romero, including the interim-title victory, plus Jacare Souza, Jared Cannonier, Paulo Costa, and Marvin Vettori. Years of ranked wins separate him from the tier below.",
+    whyNotHigher: "The lack of an official title-defense streak limits Whittaker's ceiling, and Adesanya beat him twice during his championship window. Later finish losses to Dricus du Plessis and Khamzat Chimaev further separate him from fighters with deeper reigns.",
+  },
+};
+
 export const v2RankingRoster: V2RankingRosterOverlay = {
   additions: [rafaelDosAnjos],
   replacements: {
@@ -470,6 +488,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     "Charles Oliveira": charlesOliveira,
     "Amanda Nunes": amandaNunes,
     "Dustin Poirier": dustinPoirier,
+    "Robert Whittaker": robertWhittaker,
   },
   eraMembership: {
     "Rafael dos Anjos": {
@@ -478,7 +497,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     },
   },
   factsVersion: "octagon-hq-v2-rda-facts-20260807",
-  judgmentVersion: "octagon-hq-v2-dustin-poirier-profile-20260808",
+  judgmentVersion: "octagon-hq-v2-robert-whittaker-profile-20260812",
   eraDepthVersion: "octagon-hq-v2-rda-20260730",
   eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
 };
