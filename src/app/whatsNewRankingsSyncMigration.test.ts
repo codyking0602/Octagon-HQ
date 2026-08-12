@@ -13,6 +13,10 @@ const previewMigration = readFileSync(
   "supabase/migrations/202608200028_dynamic_rich_preview_data.sql",
   "utf8",
 );
+const trimRepairMigration = readFileSync(
+  "supabase/migrations/202608200029_fix_ranking_whats_new_trim.sql",
+  "utf8",
+);
 const gableBackfillMigration = readFileSync(
   "supabase/migrations/202608200030_backfill_gable_whats_new.sql",
   "utf8",
@@ -51,6 +55,25 @@ describe("What's New Rankings and fighter producers", () => {
     expect(previewMigration).toContain("revoke all on private.rich_preview_major_ranking_updates from public, anon, authenticated");
     expect(previewMigration).toContain("if auth.role() <> 'service_role'");
     expect(previewMigration).toContain("to service_role");
+  });
+
+  it("repairs contract-v3 trim resolution without changing sync ownership", () => {
+    expect(trimRepairMigration).toContain("create or replace function public.sync_ranking_whats_new(");
+    expect(trimRepairMigration).toContain("security definer");
+    expect(trimRepairMigration).toContain("set search_path = ''");
+    expect(trimRepairMigration).toContain("lower(pg_catalog.btrim(p_source_sha))");
+    expect(trimRepairMigration).toContain("lower(pg_catalog.btrim(row_data.slug))");
+    expect(trimRepairMigration).toContain("pg_catalog.btrim(row_data.name)");
+    expect(trimRepairMigration).toContain("lower(pg_catalog.btrim(row_data.board))");
+    expect(trimRepairMigration).not.toContain("pg_catalog.trim(");
+    expect(trimRepairMigration).toContain("private.sync_ranking_whats_new_v2_core(");
+    expect(trimRepairMigration).toContain("p_watchlist_rows");
+    expect(trimRepairMigration).toContain("'sync_contract_version', 3");
+    expect(trimRepairMigration).not.toContain("set schema private");
+    expect(trimRepairMigration).not.toContain("rename to sync_ranking_whats_new_v2_core");
+    expect(trimRepairMigration).toContain("from public, anon, authenticated;");
+    expect(trimRepairMigration).toContain("grant execute on function public.sync_ranking_whats_new(text, jsonb, jsonb)");
+    expect(trimRepairMigration).toContain("to service_role;");
   });
 
   it("uses the existing publisher for approved meaningful updates", () => {
