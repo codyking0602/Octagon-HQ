@@ -14,7 +14,7 @@ const previewMigration = readFileSync(
   "utf8",
 );
 const trimRepairMigration = readFileSync(
-  "supabase/migrations/202608200029_fix_ranking_whats_new_trim.sql",
+  "supabase/migrations/202608200031_fix_ranking_whats_new_trim.sql",
   "utf8",
 );
 const gableBackfillMigration = readFileSync(
@@ -69,6 +69,8 @@ describe("What's New Rankings and fighter producers", () => {
     expect(trimRepairMigration).toContain("private.sync_ranking_whats_new_v2_core(");
     expect(trimRepairMigration).toContain("p_watchlist_rows");
     expect(trimRepairMigration).toContain("'sync_contract_version', 3");
+    expect(trimRepairMigration).toContain("set title = 'The UFC rankings had a major shakeup'");
+    expect(trimRepairMigration).toContain("summary = left(pg_catalog.format(");
     expect(trimRepairMigration).not.toContain("set schema private");
     expect(trimRepairMigration).not.toContain("rename to sync_ranking_whats_new_v2_core");
     expect(trimRepairMigration).toContain("from public, anon, authenticated;");
