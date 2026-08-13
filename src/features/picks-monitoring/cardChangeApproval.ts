@@ -35,7 +35,7 @@ export type CardChangeApprovalProposal =
       red_fighter_name: string;
       blue_fighter_slug: string;
       blue_fighter_name: string;
-      card_segment: "main";
+      card_segment: "prelim" | "main";
       segment_sequence: number;
       locks_at: string;
       expected_bout_ids: string[];
@@ -282,12 +282,15 @@ export function buildCardChangeFindings(input: {
     ? unmatchedSource[0]
     : null;
   const addedWeightClass = textValue(safeAddedFight?.weight_class);
-  const addedSegmentSequence = safeAddedFight?.card_segment === "main"
+  const addedCardSegment = safeAddedFight?.card_segment === "main" || safeAddedFight?.card_segment === "prelim"
+    ? safeAddedFight.card_segment
+    : null;
+  const addedSegmentSequence = safeAddedFight && addedCardSegment
     && Number.isInteger(safeAddedFight.segment_sequence)
     && (safeAddedFight.segment_sequence ?? 0) > 0
     ? safeAddedFight.segment_sequence!
     : null;
-  if (safeAddedFight && addedWeightClass && addedSegmentSequence
+  if (safeAddedFight && addedWeightClass && addedCardSegment && addedSegmentSequence
     && safeAddedFight.bout_id.trim()
     && safeAddedFight.red_fighter_slug.trim()
     && safeAddedFight.red_fighter_name.trim()
@@ -319,7 +322,7 @@ export function buildCardChangeFindings(input: {
         red_fighter_name: safeAddedFight.red_fighter_name,
         blue_fighter_slug: safeAddedFight.blue_fighter_slug,
         blue_fighter_name: safeAddedFight.blue_fighter_name,
-        card_segment: "main",
+        card_segment: addedCardSegment,
         segment_sequence: addedSegmentSequence,
         locks_at: input.canonical.locks_at,
         expected_bout_ids: expectedBoutIds,

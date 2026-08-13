@@ -193,6 +193,58 @@ describe("monitoring card-change approval proposals", () => {
     });
   });
 
+  it("creates one complete add proposal for a missing Late Prelim during full-card monitoring", () => {
+    const existingPrelims = Array.from({ length: 6 }, (_, index) => ({
+      bout_id: `prelim-existing-${index + 1}`,
+      red_fighter_slug: `existing-red-${index + 1}`,
+      red_fighter_name: `Existing Red ${String.fromCharCode(65 + index)}`,
+      blue_fighter_slug: `existing-blue-${index + 1}`,
+      blue_fighter_name: `Existing Blue ${String.fromCharCode(65 + index)}`,
+      weight_class: "Lightweight",
+      card_segment: "prelim" as const,
+      segment_sequence: index + 1,
+    }));
+    const missingLatePrelim = {
+      bout_id: "prelim-late-red-late-blue",
+      red_fighter_slug: "late-red",
+      red_fighter_name: "Late Red",
+      blue_fighter_slug: "late-blue",
+      blue_fighter_name: "Late Blue",
+      weight_class: "Featherweight",
+      card_segment: "prelim" as const,
+      segment_sequence: 7,
+    };
+    const fullCanonical = { ...canonical, bouts: [first, second, ...existingPrelims] };
+    const result = findings(
+      { ...source, bouts: [first, second, ...existingPrelims, missingLatePrelim] },
+      "current",
+      fullCanonical,
+      "full",
+    );
+
+    expect(result).toHaveLength(1);
+    expect(result[0]).toMatchObject({
+      summary: "Add Late Red vs. Late Blue to Picks.",
+      bout_id: missingLatePrelim.bout_id,
+      source_details: {
+        approval_proposal: {
+          action: "add_bout",
+          event_id: canonical.event_id,
+          bout_id: missingLatePrelim.bout_id,
+          weight_class: "Featherweight",
+          red_fighter_slug: "late-red",
+          red_fighter_name: "Late Red",
+          blue_fighter_slug: "late-blue",
+          blue_fighter_name: "Late Blue",
+          card_segment: "prelim",
+          segment_sequence: 7,
+          locks_at: canonical.locks_at,
+          expected_bout_ids: [first.bout_id, second.bout_id, ...existingPrelims.map((bout) => bout.bout_id)],
+        },
+      },
+    });
+  });
+
   it("creates audited venue, location, and weight-class approval proposals", () => {
     const changed = findings({
       ...source,
