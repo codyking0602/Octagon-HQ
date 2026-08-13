@@ -18,6 +18,19 @@ export interface OfficialUfcSegmentTimes {
   localEventDate: string;
 }
 
+/**
+ * MMA Mania fight rows are terse matchup labels.  Sectioned prose can also
+ * contain "vs.", so fail closed on sentence/prompt signals before the card
+ * parser attempts to split fighter names.
+ */
+export function isMmaManiaFightListRow(value: string) {
+  const line = clean(value);
+  if (!line || line.length > 220 || /[?!]/.test(line)) return false;
+  if (/\b(?:poll|vote|voting|prediction|predict|preview|prop|question|odds|over\s+or\s+under)\b/i.test(line)) return false;
+  if (/^(?:who|what|when|where|why|how|will|would|can|could|should|does|do|is|are)\b/i.test(line)) return false;
+  return /\s+(?:vs\.?|v\.)\s+/i.test(line);
+}
+
 const monthNumbers: Record<string, string> = {
   jan: "01", january: "01",
   feb: "02", february: "02",

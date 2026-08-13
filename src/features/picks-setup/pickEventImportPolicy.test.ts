@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
+  isMmaManiaFightListRow,
   parseOfficialUfcSegmentTimes,
   resolveImportedCardScope,
   selectAndSequenceImportedBouts,
@@ -121,6 +122,38 @@ describe("Picks event import policy", () => {
       { id: "main-opener", card_segment: "main", segment_sequence: 1 },
       { id: "prelim-feature", card_segment: "prelim", segment_sequence: 2 },
       { id: "prelim-opener", card_segment: "prelim", segment_sequence: 1 },
+    ]);
+  });
+
+  it("rejects sectioned poll prose while retaining ordered numbered-event fight rows", () => {
+    const html = readFileSync(
+      "supabase/functions/sync-next-ufc-event/fixtures/numbered-card-with-poll.html",
+      "utf8",
+    );
+    const rows = [...html.matchAll(/<(?:p|li)>\s*([^<]+?)\s*<\/(?:p|li)>/gi)]
+      .map((match) => match[1]!.trim());
+    const fightRows = rows.filter(isMmaManiaFightListRow);
+
+    expect(fightRows).toEqual([
+      "170 lbs.: Islam Makhachev vs. Ian Machado Garry",
+      "185 lbs.: Main Fighter One vs. Main Fighter Two",
+      "155 lbs.: Main Fighter Three vs. Main Fighter Four",
+      "135 lbs.: Late Fighter One vs. Late Fighter Two",
+      "145 lbs.: Late Fighter Three vs. Late Fighter Four",
+      "125 lbs.: Early Fighter One vs. Early Fighter Two",
+    ]);
+    expect(fightRows).not.toContain("Will Makhachev vs. Machado Garry go over or under 4.5 rounds?");
+
+    const sectioned = [
+      { section: "main-event" as const, id: "main-event" },
+      { section: "main" as const, id: "main-one" },
+      { section: "main" as const, id: "main-two" },
+      { section: "prelim" as const, id: "late-one" },
+      { section: "prelim" as const, id: "late-two" },
+      { section: "early-prelim" as const, id: "early-one" },
+    ];
+    expect(selectAndSequenceImportedBouts(sectioned, "full").map((bout) => bout.id)).toEqual([
+      "main-event", "main-one", "main-two", "late-one", "late-two",
     ]);
   });
 

@@ -110,7 +110,7 @@ const approvalProposalSchema = z.discriminatedUnion("action", [
     red_fighter_name: z.string(),
     blue_fighter_slug: z.string(),
     blue_fighter_name: z.string(),
-    card_segment: z.literal("main"),
+    card_segment: z.enum(["prelim", "main"]),
     segment_sequence: z.number().int().positive(),
     locks_at: z.string(),
     expected_bout_ids: z.array(z.string()),

@@ -7,6 +7,7 @@ import { canonicalFightPair, canonicalFighterDisplay } from "./normalization.ts"
 import { parseMmaManiaEventMetadata, type MmaManiaEventMetadata } from "./mmaManiaEventMetadata.ts";
 import {
   resolveImportedCardScope,
+  isMmaManiaFightListRow,
   selectAndSequenceImportedBouts,
   type SequencedBoutMetadata,
 } from "./importPolicy.ts";
@@ -147,7 +148,7 @@ function cleanFighterName(value: string) {
 
 function parseFightLine(value: string, section: CardSection): ParsedCardBout | null {
   const line = clean(value);
-  if (!line || line.length > 220 || /cancelled|canceled|scrapped|postponed/i.test(line)) return null;
+  if (!isMmaManiaFightListRow(line) || /cancelled|canceled|scrapped|postponed/i.test(line)) return null;
   const marker = line.match(/\s+(?:vs\.?|v\.)\s+/i);
   if (!marker || marker.index === undefined) return null;
 
