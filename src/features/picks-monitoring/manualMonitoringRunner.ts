@@ -15,6 +15,8 @@ export interface MonitoringBout {
   red_american_odds?: number | null;
   blue_american_odds?: number | null;
   included_in_picks?: boolean;
+  card_segment?: "prelim" | "main";
+  segment_sequence?: number;
 }
 export interface MonitoringEvent {
   event_id: string;
@@ -221,16 +223,13 @@ export function buildManualMonitoringPayload(input: {
     const identities = [...before.keys()].sort();
     const beforeValue = identities.map((fighter_identity) => ({ fighter_identity, american_odds: before.get(fighter_identity) }));
     const afterValue = identities.map((fighter_identity) => ({ fighter_identity, american_odds: after.get(fighter_identity) }));
-    const findingType = identities.some((identity) => before.get(identity) === null) ? "odds_available" : identities.some((identity) => before.get(identity) !== after.get(identity)) ? "odds_change" : null;
-    if (findingType) {
+    if (identities.some((identity) => before.get(identity) === null)) {
       const findingIdentity = stableKey(resolved.identity, "bout", bout.bout_id, "odds");
       findings.push({
         finding_key: stableKey(findingIdentity, snapshot.sportsbook, normalizedValue(afterValue)),
-        finding_type: findingType,
-        severity: findingType === "odds_available" ? "info" : "warning",
-        summary: findingType === "odds_available"
-          ? "Current odds were found and applied automatically."
-          : "American odds changed and were applied automatically.",
+        finding_type: "odds_available",
+        severity: "info",
+        summary: "Current odds were found and applied automatically.",
         detected_at: completedAt,
         matchup_identity: snapshot.matchupIdentity,
         bout_id: bout.bout_id,
