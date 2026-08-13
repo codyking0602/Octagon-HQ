@@ -73,6 +73,8 @@ export interface ApprovalMonitoringBout {
   blue_fighter_name: string;
   included_in_picks?: boolean;
   weight_class?: string;
+  card_segment?: "prelim" | "main";
+  segment_sequence?: number;
 }
 
 export interface ApprovalMonitoringEvent {
@@ -276,13 +278,16 @@ export function buildCardChangeFindings(input: {
     }
   }
 
-  const safeAddedFight = input.scope === "main"
-    && unmatchedCurrent.length === 0
-    && unmatchedSource.length === 1
+  const safeAddedFight = unmatchedCurrent.length === 0 && unmatchedSource.length === 1
     ? unmatchedSource[0]
     : null;
   const addedWeightClass = textValue(safeAddedFight?.weight_class);
-  if (safeAddedFight && addedWeightClass
+  const addedSegmentSequence = safeAddedFight?.card_segment === "main"
+    && Number.isInteger(safeAddedFight.segment_sequence)
+    && (safeAddedFight.segment_sequence ?? 0) > 0
+    ? safeAddedFight.segment_sequence!
+    : null;
+  if (safeAddedFight && addedWeightClass && addedSegmentSequence
     && safeAddedFight.bout_id.trim()
     && safeAddedFight.red_fighter_slug.trim()
     && safeAddedFight.red_fighter_name.trim()
@@ -315,7 +320,7 @@ export function buildCardChangeFindings(input: {
         blue_fighter_slug: safeAddedFight.blue_fighter_slug,
         blue_fighter_name: safeAddedFight.blue_fighter_name,
         card_segment: "main",
-        segment_sequence: canonicalBouts.length + 1,
+        segment_sequence: addedSegmentSequence,
         locks_at: input.canonical.locks_at,
         expected_bout_ids: expectedBoutIds,
       },

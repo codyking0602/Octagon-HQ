@@ -84,6 +84,22 @@ describe("provider selection and deterministic evidence", () => {
   });
   it("keeps keys stable across run timestamps", () => { const first = build(); const second = build({ startedAt: "2026-08-11T00:00:00Z", completedAt: "2026-08-11T00:00:01Z" }); expect(first.findings.map((finding) => finding.finding_key)).toEqual(second.findings.map((finding) => finding.finding_key)); });
   it("aligns prices by identity across red/blue and provider outcome reversal", () => { const reversedEvent = { ...event, bouts: [{ ...event.bouts[0], red_fighter_slug: "daniel-rodriguez", red_fighter_name: "Daniel Rodriguez", blue_fighter_slug: "uros-medic", blue_fighter_name: "Uros Medic", red_american_odds: -130, blue_american_odds: 110 }] }; const reversedProvider = structuredClone(fixture); reversedProvider[0].bookmakers[1].markets[0].outcomes.reverse(); const payload = build({ resolved: resolveMonitoringEvent(null, reversedEvent), odds: odds(reversedProvider), source: { ...source, bouts: reversedEvent.bouts } }); expect(payload.findings.some((finding) => finding.finding_type === "odds_change")).toBe(false); expect(payload.odds_snapshots[0]).toMatchObject({ canonical_red_fighter_slug: "daniel-rodriguez", canonical_red_american_odds: -130, canonical_blue_fighter_slug: "uros-medic", canonical_blue_american_odds: 110 }); });
+  it("stores changed odds without creating odds-change receipts", () => {
+    const staleOddsEvent = {
+      ...event,
+      bouts: [{ ...event.bouts[0], red_american_odds: 105, blue_american_odds: -125 }],
+    };
+    const payload = build({
+      resolved: resolveMonitoringEvent(null, staleOddsEvent),
+      source: { ...source, bouts: staleOddsEvent.bouts },
+    });
+    expect(payload.findings.some((finding) => finding.finding_type === "odds_change")).toBe(false);
+    expect(payload.odds_snapshots).toHaveLength(1);
+    expect(payload.odds_snapshots[0]).toMatchObject({
+      canonical_red_american_odds: 110,
+      canonical_blue_american_odds: -130,
+    });
+  });
   it("uses the same payload builder for scheduled runs and suppresses repeated meaningful findings", () => {
     const first = build({ triggerKind: "scheduled", odds: odds(fixture, "0") });
     const repeated = build({

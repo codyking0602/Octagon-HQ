@@ -38,6 +38,7 @@ function findings(
   nextSource: typeof source,
   kind: "current" | "staged" = "current",
   nextCanonical = canonical,
+  scope: "main" | "full" = "main",
 ) {
   return buildCardChangeFindings({
     identity: "ufc:events/ufc-approval",
@@ -45,7 +46,7 @@ function findings(
     eventId: kind === "current" ? canonical.event_id : undefined,
     canonical: nextCanonical,
     source: nextSource,
-    scope: "main",
+    scope,
     detectedAt: "2099-08-01T12:00:00.000Z",
   });
 }
@@ -117,6 +118,8 @@ describe("monitoring card-change approval proposals", () => {
       blue_fighter_slug: "zeta",
       blue_fighter_name: "Zeta",
       weight_class: "Bantamweight",
+      card_segment: "main" as const,
+      segment_sequence: 3,
     };
     const result = findings({ ...source, bouts: [first, second, added] });
 
@@ -141,6 +144,52 @@ describe("monitoring card-change approval proposals", () => {
           expected_bout_ids: [first.bout_id, second.bout_id],
         },
       },
+    });
+  });
+
+  it("keeps a single main-card addition approvable during numbered full-card monitoring", () => {
+    const prelim = {
+      bout_id: "prelim-eta-theta",
+      red_fighter_slug: "eta",
+      red_fighter_name: "Eta",
+      blue_fighter_slug: "theta",
+      blue_fighter_name: "Theta",
+      weight_class: "Featherweight",
+      card_segment: "prelim" as const,
+      segment_sequence: 1,
+    };
+    const added = {
+      bout_id: "main-epsilon-zeta",
+      red_fighter_slug: "epsilon",
+      red_fighter_name: "Epsilon",
+      blue_fighter_slug: "zeta",
+      blue_fighter_name: "Zeta",
+      weight_class: "Bantamweight",
+      card_segment: "main" as const,
+      segment_sequence: 3,
+    };
+    const fullCanonical = { ...canonical, bouts: [first, second, prelim] };
+    const result = findings(
+      { ...source, bouts: [first, second, added, prelim] },
+      "current",
+      fullCanonical,
+      "full",
+    );
+
+    expect(result).toHaveLength(1);
+    expect(result[0]!.source_details?.approval_proposal).toEqual({
+      action: "add_bout",
+      event_id: canonical.event_id,
+      bout_id: added.bout_id,
+      weight_class: "Bantamweight",
+      red_fighter_slug: "epsilon",
+      red_fighter_name: "Epsilon",
+      blue_fighter_slug: "zeta",
+      blue_fighter_name: "Zeta",
+      card_segment: "main",
+      segment_sequence: 3,
+      locks_at: canonical.locks_at,
+      expected_bout_ids: [first.bout_id, second.bout_id, prelim.bout_id],
     });
   });
 
