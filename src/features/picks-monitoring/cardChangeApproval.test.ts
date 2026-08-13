@@ -245,6 +245,55 @@ describe("monitoring card-change approval proposals", () => {
     });
   });
 
+  it("surfaces the ninth replacement-annotated source fight as one Add Fight decision", () => {
+    const sourceBouts = [
+      ["Max Holloway", "Charles Oliveira", "main", 5],
+      ["Sean O'Malley", "Song Yadong", "main", 4],
+      ["Paulo Costa", "Roman Dolidze", "main", 3],
+      ["Vicente Luque", "Kevin Holland", "main", 2],
+      ["Alexa Grasso", "Maycee Barber", "main", 1],
+      ["Johnny Walker", "Dominick Reyes", "prelim", 4],
+      ["Bryce Mitchell", "Jean Silva", "prelim", 2],
+      ["Rob Font", "Kyler Phillips", "prelim", 1],
+      ["Chidi Njokuani", "Joel Alvarez", "prelim", 3],
+    ].map(([red, blue, segment, sequence]) => ({
+      bout_id: `${segment}-${String(red).toLowerCase().replace(/[^a-z]+/g, "-")}-${String(blue).toLowerCase().replace(/[^a-z]+/g, "-")}`,
+      red_fighter_slug: String(red).toLowerCase().replace(/[^a-z]+/g, "-"),
+      red_fighter_name: String(red),
+      blue_fighter_slug: String(blue).toLowerCase().replace(/[^a-z]+/g, "-"),
+      blue_fighter_name: String(blue),
+      weight_class: "Middleweight",
+      card_segment: segment as "main" | "prelim",
+      segment_sequence: Number(sequence),
+    }));
+    const missing = sourceBouts.at(-1)!;
+    const canonicalEight = { ...canonical, bouts: sourceBouts.slice(0, -1) };
+
+    const result = findings(
+      { ...source, bouts: sourceBouts },
+      "current",
+      canonicalEight,
+      "full",
+    );
+
+    expect(canonicalEight.bouts).toHaveLength(8);
+    expect(sourceBouts).toHaveLength(9);
+    expect(result).toHaveLength(1);
+    expect(result[0]).toMatchObject({
+      finding_type: "card_change",
+      summary: "Add Chidi Njokuani vs. Joel Alvarez to Picks.",
+      bout_id: missing.bout_id,
+      source_details: {
+        approval_proposal: {
+          action: "add_bout",
+          red_fighter_name: "Chidi Njokuani",
+          blue_fighter_name: "Joel Alvarez",
+        },
+      },
+    });
+    expect(JSON.stringify(result)).not.toMatch(/poll|Geoff Neal/i);
+  });
+
   it("creates audited venue, location, and weight-class approval proposals", () => {
     const changed = findings({
       ...source,

@@ -174,6 +174,7 @@ function parseFightLine(value: string, section: CardSection): ParsedCardBout | n
 
 function elementLines($: cheerio.CheerioAPI, element: cheerio.Element) {
   const clone = $(element).clone();
+  clone.find("s,del").remove();
   clone.find("br").replaceWith("\n");
   return clone.text().split(/\n+/).map(clean).filter(Boolean);
 }
@@ -205,7 +206,7 @@ function parseMmaManiaCardDocument($: cheerio.CheerioAPI, sourceUrl: string): Mm
       }
       return;
     }
-    if (!section || $(element).parents("p,li").length || $(element).find("s,del").length) return;
+    if (!section || $(element).parents("p,li").length) return;
 
     for (const line of elementLines($, element)) {
       const parsed = parseFightLine(line, section);
