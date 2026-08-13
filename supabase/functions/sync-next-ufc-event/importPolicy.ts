@@ -19,16 +19,22 @@ export interface OfficialUfcSegmentTimes {
 }
 
 /**
- * MMA Mania fight rows are terse matchup labels.  Sectioned prose can also
+ * MMA Mania fight rows are terse matchup labels. Sectioned prose can also
  * contain "vs.", so fail closed on sentence/prompt signals before the card
- * parser attempts to split fighter names.
+ * parser attempts to split fighter names. Legitimate fight-list rows may carry
+ * odds/preview/prediction suffixes, which the canonical parser already strips.
  */
 export function isMmaManiaFightListRow(value: string) {
   const line = clean(value);
   if (!line || line.length > 220 || /[?!]/.test(line)) return false;
-  if (/\b(?:poll|vote|voting|prediction|predict|preview|prop|question|odds|over\s+or\s+under)\b/i.test(line)) return false;
-  if (/^(?:who|what|when|where|why|how|will|would|can|could|should|does|do|is|are)\b/i.test(line)) return false;
-  return /\s+(?:vs\.?|v\.)\s+/i.test(line);
+  if (!/\s+(?:vs\.?|v\.)\s+/i.test(line)) return false;
+
+  const weightPrefix = /^\d{3}\s*(?:lbs?\.?|pounds?)\s*:\s*/i;
+  const matchupLabel = line.replace(weightPrefix, "");
+  if (/\b(?:poll|vote|voting|prop|question|over\s+or\s+under|pick['’]?em)\b/i.test(matchupLabel)) return false;
+  if (/^(?:who|what|when|where|why|how|will|would|can|could|should|does|do|did|is|are|was|were)\b/i.test(matchupLabel)) return false;
+  if (!weightPrefix.test(line) && /\b(?:prediction|predict|preview|odds|live\s+stream)\b/i.test(matchupLabel)) return false;
+  return true;
 }
 
 const monthNumbers: Record<string, string> = {
