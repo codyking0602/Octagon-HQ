@@ -120,6 +120,50 @@ describe("card scope and run status", () => {
   it("centralizes provider failure and quota semantics without an applyable snapshot", () => { const failure = adaptTheOddsApiResponse({ status: 401, body: { message: "https://bad.test?apiKey=secret" }, headers: { "x-requests-remaining": "0" } }, observed); const failed = build({ odds: failure }); expect(failed.status).toBe("failed"); expect(failed.odds_snapshots).toHaveLength(0); expect(JSON.stringify(failed)).not.toContain("secret"); const partial = build({ odds: odds(fixture, "0") }); expect(partial.status).toBe("partial"); expect(partial.findings.some((finding) => finding.finding_type === "quota_warning")).toBe(true); });
 });
 
+describe("removed-bout comparison identity", () => {
+  it("keeps a fight promoted from Early Prelims when its supported-card bout ID changes", () => {
+    const included = event.bouts[0];
+    const removedEarlyPrelim = {
+      bout_id: "early-prelim-vicente-luque-tresean-gore",
+      red_fighter_slug: "vicente-luque",
+      red_fighter_name: "Vicente Luque",
+      blue_fighter_slug: "tresean-gore",
+      blue_fighter_name: "Tresean Gore",
+      weight_class: "Middleweight",
+      card_segment: "prelim" as const,
+      segment_sequence: 1,
+      included_in_picks: false,
+    };
+    const current = { ...event, bouts: [included, removedEarlyPrelim] };
+    const promoted = {
+      ...removedEarlyPrelim,
+      bout_id: "prelim-vicente-luque-tresean-gore",
+      segment_sequence: 4,
+      included_in_picks: true,
+    };
+    const payload = build({
+      resolved: resolveMonitoringEvent(null, current),
+      source: { ...source, bouts: [included, promoted] },
+    });
+    const cardChanges = payload.findings.filter((finding) => finding.finding_type === "card_change");
+
+    expect(cardChanges).toHaveLength(1);
+    expect(cardChanges[0]).toMatchObject({
+      bout_id: promoted.bout_id,
+      summary: "Add Vicente Luque vs. Tresean Gore to Picks.",
+      source_details: {
+        change_field: "included_in_picks",
+        approval_proposal: {
+          action: "add_bout",
+          card_segment: "prelim",
+          segment_sequence: 4,
+          expected_bout_ids: [included.bout_id],
+        },
+      },
+    });
+  });
+});
+
 describe("runtime and storage contracts", () => {
   const edge = readFileSync("supabase/functions/run-pick-monitoring/index.ts", "utf8");
   it("uses one canonical event projection for scheduled and owner-authorized manual checks", () => {

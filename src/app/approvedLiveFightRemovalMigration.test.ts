@@ -53,7 +53,7 @@ describe("approved pre-lock live fight removal", () => {
 
   it("keeps monitoring advisory and removes only intentional exclusions from active comparison", () => {
     expect(monitoring).toContain("included_in_picks?: boolean");
-    expect(monitoring).toContain("ignoredMatchupIdentities");
+    expect(monitoring).toContain("ignoredBoutIds");
     expect(monitoring).toContain("source.bouts.filter");
     expect(monitoring).not.toContain("approve_pick_bout_inclusion");
   });
