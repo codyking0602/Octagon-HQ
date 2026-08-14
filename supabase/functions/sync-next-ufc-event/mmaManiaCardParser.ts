@@ -97,10 +97,38 @@ function candidatesFromHtml(html: string) {
   return candidates;
 }
 
+function balancedElementHtml(html: string, tagName: "article" | "main" | "body") {
+  const tagPattern = new RegExp(`<\\/?\\s*${tagName}\\b[^>]*>`, "gi");
+  let start = -1;
+  let depth = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = tagPattern.exec(html))) {
+    const token = match[0];
+    const closing = /^<\//.test(token);
+    const selfClosing = /\/\s*>$/.test(token);
+
+    if (start < 0) {
+      if (closing) continue;
+      start = match.index;
+      depth = selfClosing ? 0 : 1;
+      if (depth === 0) return token;
+      continue;
+    }
+
+    if (closing) depth -= 1;
+    else if (!selfClosing) depth += 1;
+
+    if (depth === 0) return html.slice(start, tagPattern.lastIndex);
+  }
+
+  return start >= 0 ? html.slice(start) : null;
+}
+
 function articleHtml(html: string) {
-  return html.match(/<article\b[^>]*>[\s\S]*?<\/article\s*>/i)?.[0]
-    ?? html.match(/<main\b[^>]*>[\s\S]*?<\/main\s*>/i)?.[0]
-    ?? html.match(/<body\b[^>]*>[\s\S]*?<\/body\s*>/i)?.[0]
+  return balancedElementHtml(html, "article")
+    ?? balancedElementHtml(html, "main")
+    ?? balancedElementHtml(html, "body")
     ?? html;
 }
 

@@ -36,6 +36,32 @@ describe("canonical MMA Mania card parser", () => {
     expect(names(html)).toEqual(["Alpha One vs. Beta Two", "Gamma Three vs. Delta Four", "Early One vs. Early Two"]);
   });
 
+  it("keeps parsing the outer card after a nested poll article closes", () => {
+    const html = `<article>
+      <h3>UFC Main Card on Paramount+ (9 p.m. ET)</h3>
+      <p>155 lbs.: Main One vs. Main Two</p>
+      <article class="poll-embed"><p>Who will win Main One vs. Main Two?</p></article>
+      <h3>UFC Late ‘Prelims’ Card on Paramount+ (7 p.m. ET)</h3>
+      <p>170 lbs.: Late One vs. Late Two</p>
+      <p>145 lbs.: Late Three vs. Late Four</p>
+      <h3>UFC Early ‘Prelims’ Card on Paramount+ (5 p.m. ET)</h3>
+      <p>135 lbs.: Early One vs. Early Two</p>
+    </article>`;
+    const card = parseMmaManiaCard(html, "https://www.mmamania.com/nested-poll");
+
+    expect(names(html)).toEqual([
+      "Main One vs. Main Two",
+      "Late One vs. Late Two",
+      "Late Three vs. Late Four",
+      "Early One vs. Early Two",
+    ]);
+    expect(selectAndSequenceImportedBouts(card.bouts, "full").map((bout) => `${bout.red_fighter_name} vs. ${bout.blue_fighter_name}`)).toEqual([
+      "Main One vs. Main Two",
+      "Late One vs. Late Two",
+      "Late Three vs. Late Four",
+    ]);
+  });
+
   it("removes struck and deleted opponents without discarding the current row", () => {
     const html = `<article><h2>Main Card</h2><p>185 lbs.: Chidi Njokuani vs. <a>Joel <strong>Alvarez</strong></a> <s>Geoff Neal</s></p>
       <p>145 lbs.: Current One <del>Old Opponent vs.</del> vs. Current Two — <em>odds</em> | preview</p></article>`;
