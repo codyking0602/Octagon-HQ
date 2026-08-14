@@ -9,9 +9,11 @@ on:
       - "supabase/migrations/202609140001_canonical_pick_fight_change_semantics.sql"
       - "supabase/migrations/202609140002_preserve_pick_replacement_evidence.sql"
       - "supabase/migrations/202612310005_live_pick_results_and_owner_lock_edits.sql"
+      - "supabase/migrations/202612310019_append_added_pick_bouts.sql"
       - "supabase/tests/pick_monitoring_canonical_fight_changes.sql"
       - "supabase/tests/pick_monitoring_repick_evidence_repair.sql"
       - "supabase/tests/live_pick_results_and_owner_lock_edits.sql"
+      - "supabase/tests/pick_add_bout_append_sequence.sql"
   workflow_dispatch:
 
 permissions:
@@ -51,5 +53,7 @@ jobs:
             --file supabase/tests/pick_monitoring_repick_evidence_repair.sql
           psql "$db_url" --set ON_ERROR_STOP=on \
             --file supabase/tests/live_pick_results_and_owner_lock_edits.sql
+          psql "$db_url" --set ON_ERROR_STOP=on \
+            --file supabase/tests/pick_add_bout_append_sequence.sql
 
-          echo "Canonical Picks fight changes, repick evidence, and live owner controls passed on a fresh database."
+          echo "Canonical Picks fight changes, add-bout append semantics, repick evidence, and live owner controls passed on a fresh database."
