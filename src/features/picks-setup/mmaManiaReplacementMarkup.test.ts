@@ -8,13 +8,25 @@ const names = (html: string) => parseMmaManiaCard(html, "https://www.mmamania.co
   .map((bout) => `${bout.red_fighter_name} vs. ${bout.blue_fighter_name}`);
 
 describe("canonical MMA Mania card parser", () => {
-  it("parses the UFC 330 supported scope through the production parser", () => {
-    const card = parseMmaManiaCard(ufc330, "https://www.mmamania.com/ufc-fight-cards/ufc-330");
+  it("parses the current UFC 330 MMA Mania heading and replacement-note shape through the production parser", () => {
+    const card = parseMmaManiaCard(ufc330, "https://www.mmamania.com/ufc-fight-cards/451594/ufc-330-fight-card-start-time-date-location-islam-makhachev-ian-machado-garry");
     const supported = selectAndSequenceImportedBouts(card.bouts, "full");
+
+    expect(card.usedSectionHeadings).toBe(true);
+    expect(supported.map((bout) => `${bout.red_fighter_name} vs. ${bout.blue_fighter_name}`)).toEqual([
+      "Islam Makhachev vs. Ian Machado Garry",
+      "Mackenzie Dern vs. Gillian Robertson",
+      "Charles Johnson vs. Eduardo Henrique",
+      "Edson Barboza vs. Esteban Ribovics",
+      "Mansur Abdul-Malik vs. Dustin Stoltzfus",
+      "Chidi Njokuani vs. Joel Alvarez",
+      "Jalin Turner vs. Kaue Fernandes",
+      "Donte Johnson vs. Eric McConico",
+      "Vicente Luque vs. Tresean Gore",
+    ]);
     expect(supported).toHaveLength(9);
-    expect(supported.map((bout) => `${bout.red_fighter_name} vs. ${bout.blue_fighter_name}`)).toContain("Chidi Njokuani vs. Joel Alvarez");
-    expect(JSON.stringify(supported)).not.toMatch(/Geoff Neal|Early Fighter|Will Holloway/);
     expect(new Set(supported.map((bout) => `${bout.red_fighter_name}:${bout.blue_fighter_name}`))).toHaveLength(9);
+    expect(JSON.stringify(supported)).not.toMatch(/Jose Ochoa|Geoff Neal|Rafael Tobias|Neil Magny|Jeremiah Wells|Mackahev.*over or under/i);
   });
 
   it("rejects poll and preview prose between real card sections", () => {
