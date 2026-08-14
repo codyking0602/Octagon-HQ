@@ -1,9 +1,12 @@
 -- An add_bout proposal carries the UFC source segment sequence as evidence, but
 -- the product contract adds membership first and appends the new fight without
 -- moving any existing fight. A source sequence can therefore already be occupied
--- on the published card. Patch only the canonical fight-change owner so it keeps
--- validating the source sequence, then assigns the next unused sequence in that
--- segment when the addition is applied.
+-- on the published card.
+--
+-- private.apply_pick_fight_change remains the sole canonical entry owner. Its
+-- existing repick-evidence wrapper delegates ordinary mutations to the renamed
+-- canonical core below, so patch that existing core in place rather than adding
+-- another mutation path.
 
 do $repair$
 declare
@@ -39,7 +42,7 @@ $old$;
 $new$;
 begin
   select pg_catalog.pg_get_functiondef(
-    'private.apply_pick_fight_change(text,text,jsonb,text)'::pg_catalog.regprocedure
+    'private.apply_pick_fight_change_repick_evidence_core(text,text,jsonb,text)'::pg_catalog.regprocedure
   ) into v_definition;
 
   if pg_catalog.strpos(v_definition, v_old) = 0 then
@@ -58,6 +61,9 @@ end;
 $repair$;
 
 -- CREATE OR REPLACE preserves ownership and ACLs; reassert the existing private
--- execution boundary explicitly.
+-- execution boundaries explicitly. The public adapters still call only
+-- private.apply_pick_fight_change, which delegates to this core.
+revoke all on function private.apply_pick_fight_change_repick_evidence_core(text, text, jsonb, text)
+  from public, anon, authenticated, service_role;
 revoke all on function private.apply_pick_fight_change(text, text, jsonb, text)
   from public, anon, authenticated, service_role;
