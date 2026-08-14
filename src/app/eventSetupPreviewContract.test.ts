@@ -11,6 +11,10 @@ const syncSource = readFileSync(
   "supabase/functions/sync-next-ufc-event/index.ts",
   "utf8",
 );
+const cardParserSource = readFileSync(
+  "supabase/functions/sync-next-ufc-event/mmaManiaCardParser.ts",
+  "utf8",
+);
 const liveVerifier = readFileSync(
   "scripts/verify-event-setup-preview-live.mjs",
   "utf8",
@@ -150,7 +154,8 @@ describe("production Event Setup preview contract", () => {
     expect(syncSource).toContain(".slice(0, MAX_MMA_MANIA_ARTICLE_ATTEMPTS)");
     expect(syncSource).toContain("for (const candidate of discovered)");
     expect(syncSource).not.toContain("Promise.all(discovered.map");
-    expect(syncSource).toContain("function parseMmaManiaCardDocument");
+    expect(syncSource).toContain("parseMmaManiaCard(html, sourceUrl)");
+    expect(cardParserSource.match(/function parseMmaManiaCard/g)).toHaveLength(1);
     expect(syncSource).toContain("articleText: articleText($)");
     expect(syncSource).not.toContain("function articleText(html");
   });

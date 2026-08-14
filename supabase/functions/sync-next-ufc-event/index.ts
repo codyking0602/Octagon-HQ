@@ -3,11 +3,10 @@ import * as cheerio from "npm:cheerio@1.0.0";
 import { DEPLOYED_SOURCE_SHA } from "./deployment.ts";
 import { absoluteMmaManiaArticleUrl } from "./sourceUrls.ts";
 import { sourceChanges } from "./cardChanges.ts";
-import { canonicalFightPair, canonicalFighterDisplay } from "./normalization.ts";
 import { parseMmaManiaEventMetadata, type MmaManiaEventMetadata } from "./mmaManiaEventMetadata.ts";
+import { parseMmaManiaCard, type MmaManiaCard, type ParsedMmaManiaBout as ParsedCardBout } from "./mmaManiaCardParser.ts";
 import {
   resolveImportedCardScope,
-  isMmaManiaFightListRow,
   selectAndSequenceImportedBouts,
   type SequencedBoutMetadata,
 } from "./importPolicy.ts";
@@ -50,13 +49,6 @@ function errorJson(error: unknown, requestId: string, fallbackStage: ErrorStage,
   }, status);
 }
 
-interface ParsedCardBout {
-  section: CardSection;
-  weight_class: string;
-  red_fighter_name: string;
-  blue_fighter_name: string;
-}
-
 interface StagedBout {
   bout_id: string;
   position: number;
@@ -87,12 +79,6 @@ interface ParsedEvent {
   warnings: string[];
 }
 
-interface MmaManiaCard {
-  sourceUrl: string;
-  bouts: ParsedCardBout[];
-  usedSectionHeadings: boolean;
-}
-
 interface MmaManiaEventCandidate {
   card: MmaManiaCard;
   metadata: MmaManiaEventMetadata;
@@ -118,111 +104,11 @@ function slugify(value: string) {
     .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 }
 
-function classifySection(value: string): CardSection | null {
-  const heading = clean(value).toLowerCase();
-  if (/early\s+prelim/.test(heading)) return "early-prelim";
-  if (/prelim/.test(heading)) return "prelim";
-  if (/main\s+event/.test(heading)) return "main-event";
-  if (/main\s+card/.test(heading)) return "main";
-  return null;
-}
-
-function weightClassFromPounds(value: number | null) {
-  if (value === null) return "";
-  const classes: Record<number, string> = {
-    115: "Strawweight", 125: "Flyweight", 135: "Bantamweight", 145: "Featherweight",
-    155: "Lightweight", 170: "Welterweight", 185: "Middleweight",
-    205: "Light Heavyweight", 265: "Heavyweight",
-  };
-  return classes[value] ?? (value ? `${value} lb. Catchweight` : "");
-}
-
-function cleanFighterName(value: string) {
-  return canonicalFighterDisplay(
-    clean(value)
-      .replace(/^#?\d+\s+/, "")
-      .replace(/\s+(?:[-–—|]\s*)?(?:odds|prediction|preview|live stream)\b.*$/i, "")
-      .replace(/\s*\([^)]*(?:cancelled|canceled|scrapped|replacement|odds)[^)]*\)\s*$/i, ""),
-  );
-}
-
-function parseFightLine(value: string, section: CardSection): ParsedCardBout | null {
-  const line = clean(value);
-  if (!isMmaManiaFightListRow(line) || /cancelled|canceled|scrapped|postponed/i.test(line)) return null;
-  const marker = line.match(/\s+(?:vs\.?|v\.)\s+/i);
-  if (!marker || marker.index === undefined) return null;
-
-  let left = line.slice(0, marker.index).trim();
-  let right = line.slice(marker.index + marker[0].length).trim();
-  const weightMatch = left.match(/^(\d{3})\s*(?:lbs?\.?|pounds?)\s*:\s*/i);
-  const pounds = weightMatch ? Number(weightMatch[1]) : null;
-  if (weightMatch) left = left.slice(weightMatch[0].length);
-  right = right.split(/\s+[–—|]\s+/)[0] ?? right;
-
-  const redName = cleanFighterName(left);
-  const blueName = cleanFighterName(right);
-  if (redName.length < 2 || blueName.length < 2 || redName.length > 70 || blueName.length > 70) return null;
-  if (!/[a-z]/i.test(redName) || !/[a-z]/i.test(blueName)) return null;
-
-  return {
-    section,
-    weight_class: weightClassFromPounds(pounds),
-    red_fighter_name: redName,
-    blue_fighter_name: blueName,
-  };
-}
-
-function elementLines($: cheerio.CheerioAPI, element: cheerio.Element) {
-  const clone = $(element).clone();
-  clone.find("s,del").remove();
-  clone.find("br").replaceWith("\n");
-  return clone.text().split(/\n+/).map(clean).filter(Boolean);
-}
-
 function mmaManiaArticleRoot($: cheerio.CheerioAPI) {
   const article = $("article").first();
   if (article.length) return article;
   const content = $(".c-entry-content, .article-body, main").first();
   return content.length ? content : $("body");
-}
-
-function parseMmaManiaCardDocument($: cheerio.CheerioAPI, sourceUrl: string): MmaManiaCard {
-  const scope = mmaManiaArticleRoot($);
-  const bouts: ParsedCardBout[] = [];
-  const seen = new Set<string>();
-  let section: CardSection | null = null;
-  let usedSectionHeadings = false;
-
-  scope.find("h1,h2,h3,h4,h5,h6,p,li,td").each((_, element) => {
-    const tag = element.tagName?.toLowerCase();
-    const headingSection = classifySection($(element).text());
-    const semanticHeading = /^h[1-6]$/.test(tag ?? "")
-      || (!/\s(?:vs\.?|v\.?|versus)\s/i.test($(element).text()) && clean($(element).text()).length < 60 && Boolean($(element).find("strong,b").length));
-    if (semanticHeading) {
-      const nextSection = headingSection;
-      if (nextSection) {
-        section = nextSection;
-        usedSectionHeadings = true;
-      }
-      return;
-    }
-    if (!section || $(element).parents("p,li").length) return;
-
-    for (const line of elementLines($, element)) {
-      const parsed = parseFightLine(line, section);
-      if (!parsed) continue;
-      const pairKey = canonicalFightPair(parsed.red_fighter_name, parsed.blue_fighter_name);
-      if (seen.has(pairKey)) continue;
-      seen.add(pairKey);
-      bouts.push(parsed);
-    }
-  });
-
-  return { sourceUrl, bouts, usedSectionHeadings };
-}
-
-export function parseMmaManiaCard(html: string, sourceUrl: string): MmaManiaCard {
-  return parseMmaManiaCardDocument(cheerio.load(html), sourceUrl);
 }
 
 export function resolveCardScope(name: string, subtitle: string, requested: CardScope): EffectiveScope {
@@ -270,7 +156,7 @@ async function fetchText(url: string, stage: "mma-index-fetch" | "mma-fetch") {
 
 function parseMmaManiaEventCandidate(html: string, sourceUrl: string, sourceEventKeyOverride = ""): MmaManiaEventCandidate {
   const $ = cheerio.load(html);
-  const card = parseMmaManiaCardDocument($, sourceUrl);
+  const card = parseMmaManiaCard(html, sourceUrl);
   if (!card.usedSectionHeadings || card.bouts.length < 4 || card.bouts.length > 20) {
     throw new SyncError(
       "ARTICLE_CARD_REJECTED",
