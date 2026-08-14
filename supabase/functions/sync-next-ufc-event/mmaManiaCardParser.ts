@@ -17,11 +17,11 @@ export interface MmaManiaCard {
 const clean = (value: string) => value.replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
 
 function classifySection(value: string): CardSection | null {
-  const heading = clean(value).toLowerCase();
-  if (/^(?:ufc\s+)?early\s+prelims?\b(?:\s*[:—-].*)?$/.test(heading)) return "early-prelim";
-  if (/^(?:(?:ufc\s+)?late\s+)?prelims?\b(?:\s*[:—-].*)?$/.test(heading)) return "prelim";
-  if (/^(?:ufc\s+)?main\s+event\b(?:\s*[:—-].*)?$/.test(heading)) return "main-event";
-  if (/^(?:ufc\s+)?main\s+card\b(?:\s*[:—-].*)?$/.test(heading)) return "main";
+  const heading = clean(value).toLowerCase().replace(/[‘’'"“”]/g, "");
+  if (/\bearly\s+prelims?\b/.test(heading)) return "early-prelim";
+  if (/\b(?:late\s+)?prelims?\b/.test(heading)) return "prelim";
+  if (/\bmain\s+event\b/.test(heading)) return "main-event";
+  if (/\bmain\s+card\b/.test(heading)) return "main";
   return null;
 }
 
@@ -106,11 +106,10 @@ export function parseMmaManiaCard(html: string, sourceUrl: string): MmaManiaCard
   let section: CardSection | null = null;
   let usedSectionHeadings = false;
   for (const candidate of candidatesFromHtml(articleHtml(html))) {
-    const text = clean(candidate.text);
     const firstLine = clean(candidate.text.split(/\n+/)[0] ?? "");
     const headingSection = classifySection(firstLine);
     const semanticHeading = /^h[1-6]$/.test(candidate.tag)
-      || (!/\s(?:vs\.?|v\.?|versus)\s/i.test(firstLine) && firstLine.length < 60 && candidate.hasBold && Boolean(headingSection));
+      || (!/\s(?:vs\.?|v\.?|versus)\s/i.test(firstLine) && firstLine.length < 140 && candidate.hasBold && Boolean(headingSection));
     if (semanticHeading) {
       if (headingSection) { section = headingSection; usedSectionHeadings = true; }
       // Real MMA Mania pages sometimes put the section label and the first row
