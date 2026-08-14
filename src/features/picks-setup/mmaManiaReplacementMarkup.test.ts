@@ -51,6 +51,14 @@ describe("canonical MMA Mania card parser", () => {
     ]);
   });
 
+  it("never mistakes a weighted matchup for a section heading because of fighter-name words", () => {
+    const html = `<article><h3>UFC Main Card on Paramount+ (9 p.m. ET)</h3>
+      <p>155 lbs.: Main Eventer vs. Prelim One</p>
+      <h3>UFC Late ‘Prelims’ Card on Paramount+ (7 p.m. ET)</h3>
+      <p>170 lbs.: Main Carder vs. Early Prelim</p></article>`;
+    expect(names(html)).toEqual(["Main Eventer vs. Prelim One", "Main Carder vs. Early Prelim"]);
+  });
+
   it("supports table rows while preserving section ownership", () => {
     const html = `<article><h3>Main Card</h3><table><tr><td><span>170 lbs.: Table One vs. Table Two</span></td></tr></table>
       <h3>Late Prelims</h3><ul><li><strong>145 lbs.:</strong> List One vs. List Two</li></ul>
