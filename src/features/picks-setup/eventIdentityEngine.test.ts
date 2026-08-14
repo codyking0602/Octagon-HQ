@@ -95,10 +95,14 @@ describe("durable event identity", () => {
       process.cwd(),
       "supabase/functions/sync-next-ufc-event/index.ts",
     ), "utf8");
+    const cardParser = readFileSync(resolve(
+      process.cwd(),
+      "supabase/functions/sync-next-ufc-event/mmaManiaCardParser.ts",
+    ), "utf8");
 
     expect(source).toContain("parseMmaManiaEventMetadata");
     expect(source).toContain('source: "MMA Mania event + card"');
-    expect(source).toMatch(/function cleanFighterName[\s\S]*canonicalFighterDisplay/);
+    expect(cardParser).toMatch(/function cleanFighterName[\s\S]*canonicalFighterDisplay/);
     expect(source).not.toContain("canonicalUfcEventFields(metadata.normalized)");
     expect(source).not.toContain("adaptUfcSource");
     expect(source).not.toContain("UFC_EVENT_INDEX_URL");

@@ -1,72 +1,50 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import {
-  isMmaManiaFightListRow,
-  selectAndSequenceImportedBouts,
-} from "../../../supabase/functions/sync-next-ufc-event/importPolicy";
+import { parseMmaManiaCard } from "../../../supabase/functions/sync-next-ufc-event/mmaManiaCardParser";
+import { selectAndSequenceImportedBouts } from "../../../supabase/functions/sync-next-ufc-event/importPolicy";
 
-type Section = "main-event" | "main" | "prelim" | "early-prelim";
+const ufc330 = readFileSync("supabase/functions/sync-next-ufc-event/fixtures/ufc-330-replacement-card.html", "utf8");
+const names = (html: string) => parseMmaManiaCard(html, "https://www.mmamania.com/test").bouts
+  .map((bout) => `${bout.red_fighter_name} vs. ${bout.blue_fighter_name}`);
 
-const fixture = readFileSync(
-  "supabase/functions/sync-next-ufc-event/fixtures/ufc-330-replacement-card.html",
-  "utf8",
-);
-const syncSource = readFileSync("supabase/functions/sync-next-ufc-event/index.ts", "utf8");
-
-function fixtureRows() {
-  const fixtureDocument = document.implementation.createHTMLDocument();
-  fixtureDocument.body.innerHTML = fixture;
-  let section: Section | null = null;
-  const rows: Array<{ section: Section; line: string }> = [];
-
-  for (const element of fixtureDocument.querySelectorAll("h1,h2,h3,h4,h5,h6,p,li,td")) {
-    const heading = element.textContent?.trim().toLowerCase() ?? "";
-    if (element.matches("h1,h2,h3,h4,h5,h6")) {
-      if (/early\s+prelim/.test(heading)) section = "early-prelim";
-      else if (/prelim/.test(heading)) section = "prelim";
-      else if (/main\s+event/.test(heading)) section = "main-event";
-      else if (/main\s+card/.test(heading)) section = "main";
-      continue;
-    }
-    if (!section || element.parentElement?.closest("p,li")) continue;
-    const clone = element.cloneNode(true) as Element;
-    clone.querySelectorAll("s,del").forEach((node) => node.remove());
-    const line = clone.textContent?.replace(/\s+/g, " ").trim() ?? "";
-    if (isMmaManiaFightListRow(line)) rows.push({ section, line });
-  }
-  return rows;
-}
-
-describe("canonical MMA Mania replacement markup regression", () => {
-  it("removes only retracted descendants before parsing the current fight row", () => {
-    expect(syncSource).toContain('clone.find("s,del").remove()');
-    expect(syncSource).not.toContain('$(element).find("s,del").length');
-
-    const replacement = fixtureRows().find(({ line }) => line.includes("Chidi Njokuani"));
-    expect(replacement).toEqual({
-      section: "prelim",
-      line: "185 lbs.: Chidi Njokuani vs. Joel Alvarez",
-    });
-    expect(replacement?.line).not.toContain("Geoff Neal");
+describe("canonical MMA Mania card parser", () => {
+  it("parses the UFC 330 supported scope through the production parser", () => {
+    const card = parseMmaManiaCard(ufc330, "https://www.mmamania.com/ufc-fight-cards/ufc-330");
+    const supported = selectAndSequenceImportedBouts(card.bouts, "full");
+    expect(supported).toHaveLength(9);
+    expect(supported.map((bout) => `${bout.red_fighter_name} vs. ${bout.blue_fighter_name}`)).toContain("Chidi Njokuani vs. Joel Alvarez");
+    expect(JSON.stringify(supported)).not.toMatch(/Geoff Neal|Early Fighter|Will Holloway/);
+    expect(new Set(supported.map((bout) => `${bout.red_fighter_name}:${bout.blue_fighter_name}`))).toHaveLength(9);
   });
 
-  it("retains weighted suffix rows and rejects editorial poll prose containing vs.", () => {
-    const rows = fixtureRows();
-    expect(rows.some(({ line }) => line.includes("Sean O'Malley vs. Song Yadong"))).toBe(true);
-    expect(rows.some(({ line }) => line.includes("Will Holloway vs. Oliveira"))).toBe(false);
+  it("rejects poll and preview prose between real card sections", () => {
+    const html = `<article><h2>Main Event</h2><p>155 lbs.: Alpha One vs. Beta Two</p>
+      <p>Who will win Alpha One vs. Beta Two?</p><p>Alpha One vs. Beta Two Odds, Preview & Prediction</p>
+      <h2>Late Prelims</h2><p>170 lbs.: Gamma Three vs. Delta Four</p><h2>Early Prelims</h2><p>125 lbs.: Early One vs. Early Two</p></article>`;
+    expect(names(html)).toEqual(["Alpha One vs. Beta Two", "Gamma Three vs. Delta Four", "Early One vs. Early Two"]);
   });
 
-  it("selects nine UFC-330-shaped fights without duplicates or Early Prelims", () => {
-    const rows = fixtureRows();
-    const selected = selectAndSequenceImportedBouts(
-      rows.map(({ section, line }) => ({ section, line })),
-      "full",
-    );
+  it("removes struck and deleted opponents without discarding the current row", () => {
+    const html = `<article><h2>Main Card</h2><p>185 lbs.: Chidi Njokuani vs. <a>Joel <strong>Alvarez</strong></a> <s>Geoff Neal</s></p>
+      <p>145 lbs.: Current One <del>Old Opponent vs.</del> vs. Current Two — <em>odds</em> | preview</p></article>`;
+    expect(names(html)).toEqual(["Chidi Njokuani vs. Joel Alvarez", "Current One vs. Current Two"]);
+  });
 
-    expect(rows).toHaveLength(11);
-    expect(selected).toHaveLength(9);
-    expect(new Set(selected.map(({ line }) => line))).toHaveLength(9);
-    expect(selected.every(({ section }) => section !== "early-prelim")).toBe(true);
-    expect(selected.some(({ line }) => line.includes("Geoff Neal"))).toBe(false);
+  it("handles nested editorial markup and br-separated list formatting", () => {
+    const html = `<main><p><strong>Main Event</strong><br><strong>265 lbs.:</strong> <a>Heavy One</a> vs. <span>Heavy Two</span></p>
+      <p><b>Main Card</b><br>155 lbs.: Link One vs. Link Two<br>135 lbs.: Markup One vs. Markup Two — <a>prediction</a></p>
+      <p><strong>Prelims</strong><br>125 lbs.: Prelim One vs. Prelim Two</p></main>`;
+    expect(names(html)).toEqual([
+      "Heavy One vs. Heavy Two", "Link One vs. Link Two", "Markup One vs. Markup Two", "Prelim One vs. Prelim Two",
+    ]);
+  });
+
+  it("supports table rows while preserving section ownership", () => {
+    const html = `<article><h3>Main Card</h3><table><tr><td><span>170 lbs.: Table One vs. Table Two</span></td></tr></table>
+      <h3>Late Prelims</h3><ul><li><strong>145 lbs.:</strong> List One vs. List Two</li></ul>
+      <h3>Early Prelims</h3><table><tr><td>115 lbs.: Early One vs. Early Two</td></tr></table></article>`;
+    const card = parseMmaManiaCard(html, "https://www.mmamania.com/table");
+    expect(names(html)).toEqual(["Table One vs. Table Two", "List One vs. List Two", "Early One vs. Early Two"]);
+    expect(selectAndSequenceImportedBouts(card.bouts, "full").map((bout) => bout.red_fighter_name)).toEqual(["Table One", "List One"]);
   });
 });
