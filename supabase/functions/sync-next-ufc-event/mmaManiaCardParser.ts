@@ -18,6 +18,11 @@ const clean = (value: string) => value.replace(/\u00a0/g, " ").replace(/\s+/g, "
 
 function classifySection(value: string): CardSection | null {
   const heading = clean(value).toLowerCase().replace(/[‘’'"“”]/g, "");
+  // Section labels may contain event numbers, platform names, and start times,
+  // but a weighted matchup row must never become a heading just because a
+  // fighter name happens to contain a word such as "Prelim" or "Main".
+  if (/^\d{3}\s*(?:lbs?\.?|pounds?)\s*:/i.test(heading)
+    || /\s+(?:vs\.?|v\.?|versus)\s+/i.test(heading)) return null;
   if (/\bearly\s+prelims?\b/.test(heading)) return "early-prelim";
   if (/\b(?:late\s+)?prelims?\b/.test(heading)) return "prelim";
   if (/\bmain\s+event\b/.test(heading)) return "main-event";
