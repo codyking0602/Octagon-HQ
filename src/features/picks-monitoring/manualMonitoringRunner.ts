@@ -32,7 +32,7 @@ export interface MonitoringEvent {
   bouts: MonitoringBout[];
 }
 export interface SourcePreview extends MonitoringEvent { source: string; source_url: string; source_event_key: string; warnings?: string[] }
-export interface ResolvedMonitoringEvent { selected: MonitoringEvent; kind: "staged" | "current"; storageEventId?: string; identity: string; ignoredMatchupIdentities: string[] }
+export interface ResolvedMonitoringEvent { selected: MonitoringEvent; kind: "staged" | "current"; storageEventId?: string; identity: string; ignoredBoutIds: string[] }
 
 function normalizedEventName(value: string) {
   return value
@@ -120,13 +120,13 @@ export function resolveMonitoringEvent(staged?: MonitoringEvent | null, current?
     kind: "current",
     storageEventId: current.event_id,
     identity: `ufc:${current.source_event_key || current.starts_at.slice(0, 10)}`,
-    ignoredMatchupIdentities: current.bouts.filter((bout) => bout.included_in_picks === false).map(matchupIdentity),
+    ignoredBoutIds: current.bouts.filter((bout) => bout.included_in_picks === false).map((bout) => bout.bout_id),
   };
   if (staged) return {
     selected: { ...staged, bouts: includedBouts(staged) },
     kind: "staged",
     identity: `ufc:${staged.source_event_key || staged.starts_at.slice(0, 10)}`,
-    ignoredMatchupIdentities: [],
+    ignoredBoutIds: [],
   };
   throw new Error("No monitorable staged or current Picks event exists.");
 }
@@ -199,9 +199,9 @@ export function buildManualMonitoringPayload(input: {
   const { resolved, source, scope, completedAt } = input;
   const canonical = resolved.selected;
   if (!sourceMatchesMonitoredEvent(source, canonical)) throw new Error("Source identity does not match the monitored Picks event.");
-  const ignored = new Set(resolved.ignoredMatchupIdentities);
+  const ignored = new Set(resolved.ignoredBoutIds);
   const comparisonSource = ignored.size
-    ? { ...source, bouts: source.bouts.filter((bout) => !ignored.has(matchupIdentity(bout))) }
+    ? { ...source, bouts: source.bouts.filter((bout) => !ignored.has(bout.bout_id)) }
     : source;
   const odds = filterOddsToMonitoredEvent(input.odds, canonical);
   const canonicalByMatchup = new Map(canonical.bouts.map((bout) => [matchupIdentity(bout), bout]));
