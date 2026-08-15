@@ -160,7 +160,9 @@ begin
   begin
     perform public.claim_notification_push_delivery((v_push_notification->>'id')::uuid);
   exception when others then
-    if position('permission denied' in lower(sqlerrm)) > 0 then
+    if position('permission denied' in lower(sqlerrm)) > 0
+      or position('service role required' in lower(sqlerrm)) > 0
+    then
       v_rejected := true;
     else
       raise;
