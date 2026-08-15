@@ -118,6 +118,14 @@ describe("daily Ranking Spotlight", () => {
     expect(next?.slug).not.toBe(first?.slug);
   });
 
+  it("features Khamzat on August 15 and moves on the next day", () => {
+    const featured = dailyRankingSpotlight(allTime, "2026-08-15");
+    const next = dailyRankingSpotlight(allTime, "2026-08-16");
+
+    expect(featured?.slug).toBe("khamzat-chimaev");
+    expect(next?.slug).not.toBe("khamzat-chimaev");
+  });
+
   it("randomizes the full roster without repeats before reshuffling", () => {
     const firstCycle = Array.from({ length: allTime.length }, (_, offset) =>
       dailyRankingSpotlight(allTime, spotlightDay(offset))?.slug,
