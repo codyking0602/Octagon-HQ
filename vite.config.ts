@@ -20,10 +20,12 @@ function previewImagePath(profileUrl: string, thumbUrl: string) {
 const legacyRankingLabel = new RegExp("\\bG\\.?O\\.?A\\.?T\\.?\\b", "gi");
 const accentedCareerLabel = new RegExp("r(?:é|e)sum(?:é|e)", "gi");
 
-function plainBuildCopy(value: string) {
+export function plainBuildCopy(value: string) {
   return value
     .replace(legacyRankingLabel, "")
-    .replace(accentedCareerLabel, "resume")
+    .replace(accentedCareerLabel, (match) => (
+      match[0] === match[0]?.toUpperCase() ? "Resume" : "resume"
+    ))
     .replace(/\s+/g, " ")
     .trim();
 }
