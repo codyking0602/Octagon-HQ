@@ -6,7 +6,7 @@ const projectId = process.env.SUPABASE_PROJECT_ID?.trim();
 const productionOrigin = (process.env.OCTAGON_PRODUCTION_ORIGIN
   ?? "https://octagon.hq-app.workers.dev").replace(/\/$/, "");
 const screenshotPath = process.env.WHATS_NEW_SCREENSHOT_PATH
-  ?? `${process.env.RUNNER_TEMP ?? "/tmp"}/whats-new-gable-proof.png`;
+  ?? `${process.env.RUNNER_TEMP ?? "/tmp"}/whats-new-live-proof.png`;
 
 if (!accessToken || !projectId) {
   throw new Error("Live What's New verification requires Supabase project credentials.");
@@ -48,6 +48,22 @@ const serviceHeaders = {
   apikey: secretKey,
   "Content-Type": "application/json",
 };
+const canonicalSnapshot = await request(
+  "Canonical What's New snapshot",
+  `${supabaseOrigin}/rest/v1/rpc/get_whats_new_snapshot`,
+  {
+    method: "POST",
+    headers: serviceHeaders,
+    body: JSON.stringify({ p_limit: 1 }),
+  },
+);
+const expectedItem = Array.isArray(canonicalSnapshot?.items)
+  ? canonicalSnapshot.items[0]
+  : undefined;
+if (!expectedItem?.id || !expectedItem?.title || !expectedItem?.summary) {
+  throw new Error("Canonical What's New snapshot did not return a current visible item.");
+}
+
 const suffix = `${process.env.GITHUB_RUN_ID ?? Date.now()}${process.env.GITHUB_RUN_ATTEMPT ?? "1"}`;
 const displayName = `HQNEWS${suffix}`.slice(0, 24);
 const authEmail = `hqnews-${suffix}@login.octagon-hq.app`;
@@ -106,7 +122,7 @@ try {
     }
   });
 
-  await page.goto(`${productionOrigin}/whats-new?gable-proof=${suffix}`, {
+  await page.goto(`${productionOrigin}/whats-new?live-proof=${suffix}`, {
     waitUntil: "domcontentloaded",
     timeout: 30_000,
   });
@@ -118,30 +134,40 @@ try {
   await page.getByRole("button", { name: `Open ${displayName} profile menu` })
     .waitFor({ state: "visible", timeout: 15_000 });
 
-  const gableTitle = page.getByText("Gable Steveson added to Fighters to Watch", { exact: true });
+  const expectedTitle = page.getByText(expectedItem.title, { exact: true });
   try {
-    await gableTitle.waitFor({ state: "visible", timeout: 15_000 });
+    await expectedTitle.waitFor({ state: "visible", timeout: 15_000 });
   } catch {
     const body = await page.locator("body").innerText().catch(() => "");
     throw new Error([
-      "The signed-in live What's New feed did not render Gable Steveson's automatic item.",
+      `The signed-in live What's New feed did not render canonical item ${expectedItem.id}: ${expectedItem.title}`,
       `Visible feed text: ${body.slice(0, 1800)}`,
       ...diagnostics,
     ].join("\n"));
   }
 
-  const itemLink = gableTitle.locator("xpath=ancestor::a[contains(@class,'whats-new-item')][1]");
-  await itemLink.getByText("VIEW WATCHLIST", { exact: false }).waitFor({ state: "visible" });
-  const href = await itemLink.getAttribute("href");
-  if (href !== "/fighters-to-watch") {
-    throw new Error(`Gable What's New item links to ${href ?? "no route"}, expected /fighters-to-watch.`);
+  const item = expectedTitle.locator("xpath=ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' whats-new-item ')][1]");
+  await item.getByText(expectedItem.summary, { exact: true }).waitFor({ state: "visible" });
+
+  const expectedRoute = typeof expectedItem.route === "string" ? expectedItem.route : "";
+  const expectedAction = typeof expectedItem.action_label === "string" ? expectedItem.action_label : "";
+  if (expectedRoute) {
+    const href = await item.getAttribute("href");
+    if (href !== expectedRoute) {
+      throw new Error(`Canonical What's New item links to ${href ?? "no route"}, expected ${expectedRoute}.`);
+    }
+    if (expectedAction) {
+      await item.getByText(expectedAction, { exact: false }).waitFor({ state: "visible" });
+    }
+  } else if (await item.getAttribute("href")) {
+    throw new Error("Canonical What's New item unexpectedly rendered a route when its snapshot route is null.");
   }
 
   await page.screenshot({ path: screenshotPath, fullPage: true });
   if (!fs.existsSync(screenshotPath) || fs.statSync(screenshotPath).size < 5_000) {
     throw new Error("The signed-in What's New screenshot was not created correctly.");
   }
-  console.log("PASS: signed-in live What's New renders the canonical Gable Steveson Fighters to Watch item.");
+  console.log(`PASS: signed-in live What's New renders canonical item ${expectedItem.id}: ${expectedItem.title}.`);
 } finally {
   if (browser) await browser.close();
   if (userId) {
