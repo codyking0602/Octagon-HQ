@@ -28,8 +28,11 @@ describe("feature deployment workflow contract", () => {
   });
 
   it("keeps Supabase deployment in its canonical exact-SHA owner", () => {
+    const pushTrigger = supabaseWorkflow.match(/  push:\n([\s\S]*?)\npermissions:/)?.[1] ?? "";
+
     expect(supabaseWorkflow).toContain("workflow_call:");
-    expect(supabaseWorkflow).toContain("branches:\n      - main");
+    expect(pushTrigger).toContain("    branches:\n      - main");
+    expect(pushTrigger).not.toContain("paths:");
     expect(supabaseWorkflow).toContain("ref: ${{ env.SOURCE_SHA }}");
     expect(supabaseWorkflow).toContain("checked_out_sha=$(git rev-parse HEAD)");
     expect(supabaseWorkflow).toContain("pr.head.sha !== expectedSha");
