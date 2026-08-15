@@ -3,6 +3,9 @@ import type { RankingFighter } from "../rankings/rankingModel";
 const DAY_MS = 86_400_000;
 const ROTATION_EPOCH = "2026-08-06";
 const ROTATION_SEED_VERSION = "octagon-hq-ranking-spotlight-v1";
+const SPOTLIGHT_OVERRIDES = [
+  { day: "2026-08-15", fighterSlug: "khamzat-chimaev" },
+] as const;
 
 function rankingDayNumber(day: string) {
   const timestamp = Date.parse(`${day}T12:00:00Z`);
@@ -63,6 +66,31 @@ function spotlightCycle(
   return current;
 }
 
+function spotlightCycleWithOverrides(
+  fighters: readonly RankingFighter[],
+  cycle: number,
+) {
+  const current = spotlightCycle(fighters, cycle);
+  if (!current.length) return current;
+
+  for (const override of SPOTLIGHT_OVERRIDES) {
+    const relativeDay = rankingDayNumber(override.day) - rankingDayNumber(ROTATION_EPOCH);
+    const overrideCycle = Math.floor(relativeDay / current.length);
+    if (overrideCycle !== cycle) continue;
+
+    const overridePosition = ((relativeDay % current.length) + current.length) % current.length;
+    const fighterPosition = current.findIndex((fighter) => fighter.slug === override.fighterSlug);
+    if (fighterPosition < 0 || fighterPosition === overridePosition) continue;
+
+    [current[overridePosition], current[fighterPosition]] = [
+      current[fighterPosition],
+      current[overridePosition],
+    ];
+  }
+
+  return current;
+}
+
 export function dailyRankingSpotlight(
   fighters: readonly RankingFighter[],
   day: string,
@@ -72,5 +100,5 @@ export function dailyRankingSpotlight(
   const relativeDay = rankingDayNumber(day) - rankingDayNumber(ROTATION_EPOCH);
   const cycle = Math.floor(relativeDay / fighters.length);
   const position = ((relativeDay % fighters.length) + fighters.length) % fighters.length;
-  return spotlightCycle(fighters, cycle)[position] ?? null;
+  return spotlightCycleWithOverrides(fighters, cycle)[position] ?? null;
 }
