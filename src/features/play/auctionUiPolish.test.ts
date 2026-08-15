@@ -59,19 +59,24 @@ describe("Auction release polish", () => {
     );
   });
 
-  it("reuses canonical artwork in the live hero and keeps the selected format fully visible", () => {
+  it("keeps the full selected format visible while tightening the live auction hierarchy", () => {
     expect(page).toContain('<AuctionArtworkImage modeId={state.mode_id} className="auction-board__image" />');
     expect(page).toContain('<Link className="auction-board__back" to="/play">');
     expect(page).toContain('<p className="eyebrow">AUCTION</p>');
     expect(page).toContain("<h1>{mode.displayName}</h1>");
     expect(page).toContain(">REFRESH</button>");
     expect(page).not.toContain("SELECTED AUCTION · {mode.displayName}");
-    expect(styles).toMatch(/\.auction-board__header\s*\{[\s\S]*?min-height:\s*158px;[\s\S]*?overflow:\s*hidden;/);
-    expect(styles).toContain(".auction-board__image");
+    expect(styles).toMatch(/\.auction-board__header\s*\{[\s\S]*?min-height:\s*142px;[\s\S]*?gap:\s*10px;[\s\S]*?overflow:\s*hidden;/);
+    expect(styles).toMatch(/\.auction-board__image\s*\{[\s\S]*?object-position:\s*50% 38% !important;/);
+    expect(styles).toMatch(/\.auction-board__back strong\s*\{[\s\S]*?font-size:\s*12px;/);
     expect(styles).toMatch(/\.auction-board__title h1\s*\{[\s\S]*?white-space:\s*normal;/);
     expect(styles).toMatch(/\.auction-scoreboard\s*\{[\s\S]*?padding:\s*11px 12px/);
-    expect(styles).toMatch(/\.auction-current__item\s*\{[\s\S]*?min-height:\s*112px/);
-    expect(styles).toMatch(/\.auction-current__item h2\s*\{[\s\S]*?clamp\(22px, 6vw, 34px\)/);
+    expect(styles).toMatch(/\.auction-current__meta\s*\{[\s\S]*?padding:\s*7px 10px/);
+    expect(styles).toMatch(/\.auction-current__item\s*\{[\s\S]*?min-height:\s*90px;[\s\S]*?padding:\s*12px/);
+    expect(styles).toMatch(/\.auction-current__item small\s*\{[\s\S]*?font-size:\s*7px;[\s\S]*?opacity:\s*\.82;/);
+    expect(styles).toMatch(/\.auction-current__status\s*\{[\s\S]*?padding:\s*8px 10px/);
+    expect(styles).toMatch(/\.auction-collections__header\s*\{[\s\S]*?display:\s*none;/);
+    expect(styles).toMatch(/\.auction-collections__rows article:first-child\s*\{[\s\S]*?border-top:\s*0;/);
   });
 
   it("publishes one idempotent Auction release through the canonical What's New owner", () => {
