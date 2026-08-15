@@ -59,15 +59,16 @@ describe("Auction release polish", () => {
     );
   });
 
-  it("keeps manual refresh in a substantially shorter text-only live header with the full format name", () => {
+  it("reuses canonical artwork in the live hero and keeps the selected format fully visible", () => {
+    expect(page).toContain('<AuctionArtworkImage modeId={state.mode_id} className="auction-board__image" />');
+    expect(page).toContain('<Link className="auction-board__back" to="/play">');
+    expect(page).toContain('<p className="eyebrow">AUCTION</p>');
+    expect(page).toContain("<h1>{mode.displayName}</h1>");
     expect(page).toContain(">REFRESH</button>");
-    expect(page).toContain("auction-board__header");
-    expect(page).toContain("SELECTED AUCTION · {mode.displayName}");
-    expect(page).not.toContain("auction-board__image");
-    expect(styles).toMatch(/\.auction-board__header\s*\{[\s\S]*?min-height:\s*78px/);
-    expect(styles).not.toContain(".auction-board__image");
-    expect(styles).toMatch(/\.auction-board__title \.eyebrow\s*\{[\s\S]*?white-space:\s*normal;/);
-    expect(styles).not.toMatch(/\.auction-board__title \.eyebrow\s*\{[^}]*text-overflow:\s*ellipsis/);
+    expect(page).not.toContain("SELECTED AUCTION · {mode.displayName}");
+    expect(styles).toMatch(/\.auction-board__header\s*\{[\s\S]*?min-height:\s*158px;[\s\S]*?overflow:\s*hidden;/);
+    expect(styles).toContain(".auction-board__image");
+    expect(styles).toMatch(/\.auction-board__title h1\s*\{[\s\S]*?white-space:\s*normal;/);
     expect(styles).toMatch(/\.auction-scoreboard\s*\{[\s\S]*?padding:\s*11px 12px/);
     expect(styles).toMatch(/\.auction-current__item\s*\{[\s\S]*?min-height:\s*112px/);
     expect(styles).toMatch(/\.auction-current__item h2\s*\{[\s\S]*?clamp\(22px, 6vw, 34px\)/);
