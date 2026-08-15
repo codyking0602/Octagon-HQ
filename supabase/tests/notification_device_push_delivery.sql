@@ -12,9 +12,13 @@ declare
   v_status jsonb;
   v_push_notification jsonb;
   v_in_app_notification jsonb;
+  v_deadline_notification jsonb;
+  v_near_lock_notification jsonb;
   v_claim jsonb;
   v_repeated_claim jsonb;
   v_in_app_claim jsonb;
+  v_deadline_claim jsonb;
+  v_near_lock_claim jsonb;
   v_delivery_id uuid;
   v_recorded jsonb;
   v_removed jsonb;
@@ -112,6 +116,65 @@ begin
     or jsonb_array_length(v_in_app_claim->'deliveries') <> 0
   then
     raise exception 'an in-app-only notification became push eligible: %', v_in_app_claim;
+  end if;
+
+  v_deadline_notification := public.publish_notification(
+    v_member,
+    'push-proof:picks-deadline-changed:1',
+    'picks-deadline-changed:test-event:' || v_member,
+    'picks_incomplete_near_lock',
+    'Picks deadline changed',
+    'A changed fight deadline should remain in-app without reaching a device.',
+    '/picks',
+    'OPEN PICKS',
+    now()
+  );
+  if not exists (
+    select 1
+    from private.notification_groups notification
+    where notification.id = (v_deadline_notification->>'id')::uuid
+      and notification.kind = 'picks_incomplete_near_lock'
+      and notification.aggregation_key like 'picks-deadline-changed:%'
+  ) then
+    raise exception 'the Picks deadline-change notification was not retained in-app';
+  end if;
+
+  v_deadline_claim := public.claim_notification_push_delivery(
+    (v_deadline_notification->>'id')::uuid
+  );
+  if v_deadline_claim->'notification' <> 'null'::jsonb
+    or jsonb_array_length(v_deadline_claim->'deliveries') <> 0
+    or exists (
+      select 1
+      from private.notification_push_deliveries delivery
+      where delivery.notification_id = (v_deadline_notification->>'id')::uuid
+    )
+  then
+    raise exception 'the Picks deadline-change notification produced device push work: %', v_deadline_claim;
+  end if;
+
+  v_near_lock_notification := public.publish_notification(
+    v_member,
+    'push-proof:picks-near-lock:1',
+    'picks-near-lock:test-event:' || v_member,
+    'picks_incomplete_near_lock',
+    'Finish your Picks',
+    'A legitimate near-lock reminder should still reach the connected device.',
+    '/picks',
+    'OPEN PICKS',
+    now()
+  );
+  v_near_lock_claim := public.claim_notification_push_delivery(
+    (v_near_lock_notification->>'id')::uuid
+  );
+  if jsonb_array_length(v_near_lock_claim->'deliveries') <> 1
+    or not exists (
+      select 1
+      from private.notification_push_deliveries delivery
+      where delivery.notification_id = (v_near_lock_notification->>'id')::uuid
+    )
+  then
+    raise exception 'a normal Picks near-lock reminder did not produce device push work: %', v_near_lock_claim;
   end if;
 
   v_recorded := public.record_notification_push_delivery(
