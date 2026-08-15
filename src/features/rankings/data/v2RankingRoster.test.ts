@@ -46,10 +46,11 @@ describe("V2 ranking roster overlay", () => {
       "Amanda Nunes",
       "Dustin Poirier",
       "Robert Whittaker",
+      "Kayla Harrison",
     ]);
     expect(sourceOverrides).toMatchObject({
       factsVersion: "octagon-hq-v2-rda-facts-20260807",
-      judgmentVersion: "octagon-hq-v2-robert-whittaker-profile-20260812",
+      judgmentVersion: "octagon-hq-v2-kayla-harrison-profile-20260815",
       eraDepthVersion: "octagon-hq-v2-rda-20260730",
       eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
     });
@@ -160,6 +161,37 @@ describe("V2 ranking roster overlay", () => {
     );
     const current = canonicalRankingInputs.fighters.find(
       (fighter) => fighter.fighter === "Robert Whittaker",
+    );
+
+    expect(historical).toBeDefined();
+    expect(current).toBeDefined();
+    expect(current?.presentation.oneLiner).toBe(oneLiner);
+    expect(current?.presentation.whyRankedHere).toBe(whyRankedHere);
+    expect(current?.presentation.whyNotHigher).toBe(whyNotHigher);
+    expect(current?.facts).toEqual(historical?.facts);
+    expect(current?.era).toEqual(historical?.era);
+    expect(current?.judgments).toEqual(historical?.judgments);
+    expect(current?.eraDepth).toEqual(historical?.eraDepth);
+    expect(current?.presentation).toEqual({
+      ...historical?.presentation,
+      oneLiner,
+      whyRankedHere,
+      whyNotHigher,
+    });
+    for (const value of [oneLiner, whyRankedHere, whyNotHigher]) {
+      expect(value).toMatch(/^[\x00-\x7F]+$/);
+    }
+  });
+
+  it("replaces only Kayla Harrison's approved profile copy", () => {
+    const oneLiner = "Harrison's UFC peak has been built on suffocating grappling control, relentless takedown pressure, heavy top positioning, and submission danger that lets her dictate rounds from start to finish.";
+    const whyRankedHere = "A perfect 3-0 UFC run already includes taking the bantamweight title from reigning champion Julianna Pena, plus wins over former champion Holly Holm and top contender Ketlen Vieira. Few fighters have built that much quality in three appearances.";
+    const whyNotHigher = "The limitation is simple: three UFC fights, one title-fight win, and no defenses. The women above Harrison built longer elite runs and deeper championship resumes, and her late UFC arrival leaves little time to match that volume.";
+    const historical = historicalRankingMigrationInputs.fighters.find(
+      (fighter) => fighter.fighter === "Kayla Harrison",
+    );
+    const current = canonicalRankingInputs.fighters.find(
+      (fighter) => fighter.fighter === "Kayla Harrison",
     );
 
     expect(historical).toBeDefined();
