@@ -254,6 +254,7 @@ async function verifyAttempt({
       ".auction-catalog__image",
       ".auction-opponents__summary",
       ".auction-board__header",
+      ".auction-board__image",
     ]) {
       if (!liveCss.includes(markerValue)) {
         throw new Error(`The live CSS is missing ${markerValue}.`);
@@ -261,7 +262,6 @@ async function verifyAttempt({
     }
     for (const legacyMarker of [
       ".auction-opponents__image",
-      ".auction-board__image",
     ]) {
       if (liveCss.includes(legacyMarker)) {
         throw new Error(`The live CSS still contains retired Auction artwork marker ${legacyMarker}.`);

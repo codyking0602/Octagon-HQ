@@ -36,4 +36,11 @@ describe("live frontend exact-SHA verification", () => {
     expect(verifierSource).toContain("process.env.EXPECTED_SYNC_SOURCE_SHA");
     expect(verifierSource).not.toMatch(/allowedDeployedShas\s*=\s*\[process\.env\.SOURCE_SHA/);
   });
+
+  it("requires the live Auction hero artwork marker without reviving the opponent artwork", () => {
+    expect(verifierSource).toContain('".auction-board__image",');
+    expect(verifierSource).toContain('".auction-opponents__image",');
+    expect(verifierSource).toMatch(/for \(const markerValue of \[[\s\S]*?"\.auction-board__image",[\s\S]*?\]\) \{/);
+    expect(verifierSource).toMatch(/for \(const legacyMarker of \[[\s\S]*?"\.auction-opponents__image",[\s\S]*?\]\) \{/);
+  });
 });

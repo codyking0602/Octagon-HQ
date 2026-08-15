@@ -60,14 +60,14 @@ describe("Auction mode artwork", () => {
     }
   });
 
-  it("uses the one artwork mapping only in the format-selection catalog", () => {
+  it("reuses the one artwork mapping in the format catalog and live Auction hero", () => {
     expect(page).toContain("auctionModeArtwork");
-    expect(page).toContain("auction-catalog__image");
+    expect(page).toContain('<AuctionArtworkImage modeId={item.id} className="auction-catalog__image" />');
+    expect(page).toContain('<AuctionArtworkImage modeId={state.mode_id} className="auction-board__image" />');
     expect(page).toContain("auction-opponents__summary");
     expect(page).toContain("auction-board__header");
     expect(page).not.toContain("auction-opponents__image");
-    expect(page).not.toContain("auction-board__image");
     expect(page).not.toContain("auction-format-sprite");
-    expect(page.match(/<AuctionArtworkImage/g)).toHaveLength(1);
+    expect(page.match(/<AuctionArtworkImage/g)).toHaveLength(2);
   });
 });

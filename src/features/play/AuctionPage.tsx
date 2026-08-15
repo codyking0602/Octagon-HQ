@@ -324,11 +324,17 @@ function AuctionBoard({
   return (
     <div className="auction-board">
       <header className="auction-board__header">
-        <div className="auction-board__title">
-          <p className="eyebrow">SELECTED AUCTION · {mode.displayName}</p>
-          <h1>Auction</h1>
+        <AuctionArtworkImage modeId={state.mode_id} className="auction-board__image" />
+        <div className="auction-board__nav">
+          <Link className="auction-board__back" to="/play">
+            <span>‹</span><span><small>PLAY</small><strong>All Games</strong></span>
+          </Link>
+          <button type="button" onClick={onReload} disabled={busy}>REFRESH</button>
         </div>
-        <button type="button" onClick={onReload} disabled={busy}>REFRESH</button>
+        <div className="auction-board__title">
+          <p className="eyebrow">AUCTION</p>
+          <h1>{mode.displayName}</h1>
+        </div>
       </header>
       <section className="auction-scoreboard surface-card">
         <article>
@@ -656,7 +662,6 @@ export default function AuctionPage() {
   if (state && identity.profile) {
     return (
       <div className="page-stack auction-page">
-        {backLink}
         {error ? <p className="auction-error" role="status">{error}</p> : null}
         <AuctionBoard
           state={state}
