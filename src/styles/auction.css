@@ -285,10 +285,8 @@
 }
 
 .auction-board__title .eyebrow {
-  overflow: hidden;
   margin: 0;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .auction-board__header h1 {
