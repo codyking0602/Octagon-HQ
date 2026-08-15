@@ -474,6 +474,24 @@ const robertWhittaker = {
   },
 };
 
+const kaylaHarrisonBaseline = historicalMigrationSeedJson.fighters.find(
+  (fighter) => fighter.fighter === "Kayla Harrison",
+);
+
+if (!kaylaHarrisonBaseline) {
+  throw new Error("Kayla Harrison is missing from the sealed ranking baseline.");
+}
+
+const kaylaHarrison = {
+  ...kaylaHarrisonBaseline,
+  presentation: {
+    ...kaylaHarrisonBaseline.presentation,
+    oneLiner: "Harrison's UFC peak has been built on suffocating grappling control, relentless takedown pressure, heavy top positioning, and submission danger that lets her dictate rounds from start to finish.",
+    whyRankedHere: "A perfect 3-0 UFC run already includes taking the bantamweight title from reigning champion Julianna Pena, plus wins over former champion Holly Holm and top contender Ketlen Vieira. Few fighters have built that much quality in three appearances.",
+    whyNotHigher: "The limitation is simple: three UFC fights, one title-fight win, and no defenses. The women above Harrison built longer elite runs and deeper championship resumes, and her late UFC arrival leaves little time to match that volume.",
+  },
+};
+
 export const v2RankingRoster: V2RankingRosterOverlay = {
   additions: [rafaelDosAnjos],
   replacements: {
@@ -489,6 +507,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     "Amanda Nunes": amandaNunes,
     "Dustin Poirier": dustinPoirier,
     "Robert Whittaker": robertWhittaker,
+    "Kayla Harrison": kaylaHarrison,
   },
   eraMembership: {
     "Rafael dos Anjos": {
@@ -497,7 +516,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     },
   },
   factsVersion: "octagon-hq-v2-rda-facts-20260807",
-  judgmentVersion: "octagon-hq-v2-robert-whittaker-profile-20260812",
+  judgmentVersion: "octagon-hq-v2-kayla-harrison-profile-20260815",
   eraDepthVersion: "octagon-hq-v2-rda-20260730",
   eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
 };
