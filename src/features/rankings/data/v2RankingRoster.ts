@@ -492,6 +492,24 @@ const kaylaHarrison = {
   },
 };
 
+const khamzatChimaevBaseline = historicalMigrationSeedJson.fighters.find(
+  (fighter) => fighter.fighter === "Khamzat Chimaev",
+);
+
+if (!khamzatChimaevBaseline) {
+  throw new Error("Khamzat Chimaev is missing from the sealed ranking baseline.");
+}
+
+const khamzatChimaev = {
+  ...khamzatChimaevBaseline,
+  presentation: {
+    ...khamzatChimaevBaseline.presentation,
+    oneLiner: "Chimaev overwhelmed opponents with relentless wrestling pressure, physical control, and submission danger, turning early takedowns into long stretches of dominance and fast finishes.",
+    whyRankedHere: "The UFC title win over Dricus du Plessis gives his resume championship weight. Wins over Robert Whittaker and Gilbert Burns, plus Kamaru Usman, back the peak with elite names, while a nine-fight UFC winning streak and four top-five wins separate him from shorter contender resumes.",
+    whyNotHigher: "One UFC title win with no successful defense is still a thin championship case. The Sean Strickland title loss ended the unbeaten run, and Chimaev's elite window is much shorter than the sustained title-fight volume and longevity of the fighters above him.",
+  },
+};
+
 export const v2RankingRoster: V2RankingRosterOverlay = {
   additions: [rafaelDosAnjos],
   replacements: {
@@ -508,6 +526,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     "Dustin Poirier": dustinPoirier,
     "Robert Whittaker": robertWhittaker,
     "Kayla Harrison": kaylaHarrison,
+    "Khamzat Chimaev": khamzatChimaev,
   },
   eraMembership: {
     "Rafael dos Anjos": {
@@ -516,7 +535,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     },
   },
   factsVersion: "octagon-hq-v2-rda-facts-20260807",
-  judgmentVersion: "octagon-hq-v2-kayla-harrison-profile-20260815",
+  judgmentVersion: "octagon-hq-v2-khamzat-chimaev-profile-20260815",
   eraDepthVersion: "octagon-hq-v2-rda-20260730",
   eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
 };
