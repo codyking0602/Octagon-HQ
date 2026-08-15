@@ -47,10 +47,11 @@ describe("V2 ranking roster overlay", () => {
       "Dustin Poirier",
       "Robert Whittaker",
       "Kayla Harrison",
+      "Khamzat Chimaev",
     ]);
     expect(sourceOverrides).toMatchObject({
       factsVersion: "octagon-hq-v2-rda-facts-20260807",
-      judgmentVersion: "octagon-hq-v2-kayla-harrison-profile-20260815",
+      judgmentVersion: "octagon-hq-v2-khamzat-chimaev-profile-20260815",
       eraDepthVersion: "octagon-hq-v2-rda-20260730",
       eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
     });
@@ -192,6 +193,37 @@ describe("V2 ranking roster overlay", () => {
     );
     const current = canonicalRankingInputs.fighters.find(
       (fighter) => fighter.fighter === "Kayla Harrison",
+    );
+
+    expect(historical).toBeDefined();
+    expect(current).toBeDefined();
+    expect(current?.presentation.oneLiner).toBe(oneLiner);
+    expect(current?.presentation.whyRankedHere).toBe(whyRankedHere);
+    expect(current?.presentation.whyNotHigher).toBe(whyNotHigher);
+    expect(current?.facts).toEqual(historical?.facts);
+    expect(current?.era).toEqual(historical?.era);
+    expect(current?.judgments).toEqual(historical?.judgments);
+    expect(current?.eraDepth).toEqual(historical?.eraDepth);
+    expect(current?.presentation).toEqual({
+      ...historical?.presentation,
+      oneLiner,
+      whyRankedHere,
+      whyNotHigher,
+    });
+    for (const value of [oneLiner, whyRankedHere, whyNotHigher]) {
+      expect(value).toMatch(/^[\x00-\x7F]+$/);
+    }
+  });
+
+  it("replaces only Khamzat Chimaev's approved profile copy", () => {
+    const oneLiner = "Chimaev overwhelmed opponents with relentless wrestling pressure, physical control, and submission danger, turning early takedowns into long stretches of dominance and fast finishes.";
+    const whyRankedHere = "The UFC title win over Dricus du Plessis gives his resume championship weight. Wins over Robert Whittaker and Gilbert Burns, plus Kamaru Usman, back the peak with elite names, while a nine-fight UFC winning streak and four top-five wins separate him from shorter contender resumes.";
+    const whyNotHigher = "One UFC title win with no successful defense is still a thin championship case. The Sean Strickland title loss ended the unbeaten run, and Chimaev's elite window is much shorter than the sustained title-fight volume and longevity of the fighters above him.";
+    const historical = historicalRankingMigrationInputs.fighters.find(
+      (fighter) => fighter.fighter === "Khamzat Chimaev",
+    );
+    const current = canonicalRankingInputs.fighters.find(
+      (fighter) => fighter.fighter === "Khamzat Chimaev",
     );
 
     expect(historical).toBeDefined();
