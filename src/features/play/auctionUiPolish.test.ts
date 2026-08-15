@@ -59,13 +59,15 @@ describe("Auction release polish", () => {
     );
   });
 
-  it("keeps manual refresh in a substantially shorter text-only live header", () => {
+  it("keeps manual refresh in a substantially shorter text-only live header with the full format name", () => {
     expect(page).toContain(">REFRESH</button>");
     expect(page).toContain("auction-board__header");
     expect(page).toContain("SELECTED AUCTION · {mode.displayName}");
     expect(page).not.toContain("auction-board__image");
     expect(styles).toMatch(/\.auction-board__header\s*\{[\s\S]*?min-height:\s*78px/);
     expect(styles).not.toContain(".auction-board__image");
+    expect(styles).toMatch(/\.auction-board__title \.eyebrow\s*\{[\s\S]*?white-space:\s*normal;/);
+    expect(styles).not.toMatch(/\.auction-board__title \.eyebrow\s*\{[^}]*text-overflow:\s*ellipsis/);
     expect(styles).toMatch(/\.auction-scoreboard\s*\{[\s\S]*?padding:\s*11px 12px/);
     expect(styles).toMatch(/\.auction-current__item\s*\{[\s\S]*?min-height:\s*112px/);
     expect(styles).toMatch(/\.auction-current__item h2\s*\{[\s\S]*?clamp\(22px, 6vw, 34px\)/);
