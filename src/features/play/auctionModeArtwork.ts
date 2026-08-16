@@ -12,7 +12,7 @@ function artwork(src: string, objectPosition: string): AuctionModeArtwork {
 export const auctionModeArtworks = {
   "ultimate-fighter": artwork("/auction/ultimate-fighter.webp", "50% 50%"),
   "jon-jones-performances": artwork("/auction/jon-jones-performances.webp", "50% 42%"),
-  "conor-mcgregor-performances": artwork("/auction/conor-mcgregor-performances.webp", "50% 45%"),
+  "conor-mcgregor-performances": artwork("/auction/conor-mcgregor-performances.webp", "50% 20%"),
   "charles-oliveira-performances": artwork("/auction/charles-oliveira-performances.webp", "50% 38%"),
   "fighter-performances": artwork("/auction/fighter-performances.webp", "50% 50%"),
   strikers: artwork("/auction/strikers.webp", "50% 50%"),
