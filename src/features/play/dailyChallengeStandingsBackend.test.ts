@@ -99,9 +99,12 @@ describe("Daily Challenge Standings backend contract", () => {
     );
     expect(weeklyMigration).toContain("rank() over");
     expect(weeklyMigration).not.toMatch(/weekly\.display_name|weekly\.profile_id\s+(asc|desc)/);
-    expect(weeklySqlTest).toContain("exact-tie outcomes");
-    expect(weeklySqlTest).toContain("active week proves");
-    expect(weeklySqlTest).toContain("v_week_start - 28");
+    expect(weeklySqlTest).toContain("exact-tie/co-champion rules");
+    expect(weeklySqlTest).toContain("launch week itself is still active");
+    expect(weeklySqlTest).toContain("v_championship_start - 7");
+    expect(weeklySqlTest).toContain(
+      "\\ir ../migrations/202612310022_reset_daily_challenge_championship_era.sql",
+    );
     expect(generalizedSuite).toContain("\\ir daily_challenge_weekly_standings.sql");
     expect(generalizedSuite).toContain(
       "\\ir ../migrations/202612310021_daily_challenge_weekly_championship_standings.sql",
