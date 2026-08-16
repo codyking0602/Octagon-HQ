@@ -1,6 +1,7 @@
 import cloudflareWorkflow from "../../.github/workflows/deploy-cloudflare.yml?raw";
 import brokerWorkflow from "../../.github/workflows/deploy-pr-head.yml?raw";
 import supabaseWorkflow from "../../.github/workflows/deploy-supabase.yml?raw";
+import generalizedBackendWorkflow from "../../.github/workflows/verify-generalized-daily-backend.yml?raw";
 import { describe, expect, it } from "vitest";
 
 function workflowJob(source: string, start: string, end?: string) {
@@ -39,19 +40,47 @@ describe("feature deployment workflow contract", () => {
     expect(brokerWorkflow).toContain("Validate V2 exact-head gate: green.");
   });
 
-  it("keeps Supabase deployment in its canonical exact-SHA owner", () => {
+  it("keeps Supabase deployment in its canonical exact-SHA owner while skipping unchanged backend work", () => {
     const pushTrigger = supabaseWorkflow.match(/  push:\n([\s\S]*?)\npermissions:/)?.[1] ?? "";
+    const scopeJob = workflowJob(supabaseWorkflow, "release-scope", "backend-unchanged");
+    const unchangedJob = workflowJob(supabaseWorkflow, "backend-unchanged", "deploy");
+    const deployJob = workflowJob(supabaseWorkflow, "deploy");
 
     expect(supabaseWorkflow).toContain("workflow_call:");
     expect(pushTrigger).toContain("    branches:\n      - main");
     expect(pushTrigger).not.toContain("paths:");
-    expect(supabaseWorkflow).toContain("ref: ${{ env.SOURCE_SHA }}");
-    expect(supabaseWorkflow).toContain("checked_out_sha=$(git rev-parse HEAD)");
-    expect(supabaseWorkflow).toContain("pr.head.sha !== expectedSha");
-    expect(supabaseWorkflow).toContain("supabase db push --linked");
-    expect(supabaseWorkflow).toContain(
+    expect(scopeJob).toContain("node scripts/backend-release-scope.mjs");
+    expect(scopeJob).toContain("BACKEND_RELEASE_BEFORE_SHA: ${{ github.event.before || '' }}");
+    expect(scopeJob).toContain("BACKEND_RELEASE_SOURCE_SHA: ${{ inputs.source_sha || github.sha }}");
+    expect(unchangedJob).toContain("needs: release-scope");
+    expect(unchangedJob).toContain("needs.release-scope.outputs.should_deploy != 'true'");
+    expect(unchangedJob).not.toContain("SUPABASE_ACCESS_TOKEN");
+    expect(unchangedJob).not.toContain("supabase ");
+    expect(deployJob).toContain("needs: release-scope");
+    expect(deployJob).toContain("needs.release-scope.outputs.should_deploy == 'true'");
+    expect(deployJob).toContain("ref: ${{ env.SOURCE_SHA }}");
+    expect(deployJob).toContain("checked_out_sha=$(git rev-parse HEAD)");
+    expect(deployJob).toContain("pr.head.sha !== expectedSha");
+    expect(deployJob).toContain("supabase db push --linked");
+    expect(deployJob).toContain(
       "Remote migrations, exact deployed function revisions, live authentication contracts, scheduler health, push configuration, and production CORS were verified",
     );
+  });
+
+  it("runs the post-deploy Supabase proof only after a real backend deployment", () => {
+    const classifyJob = workflowJob(
+      generalizedBackendWorkflow,
+      "classify-backend-deployment",
+      "exact-deployment-proof",
+    );
+    const exactProofJob = workflowJob(generalizedBackendWorkflow, "exact-deployment-proof");
+
+    expect(generalizedBackendWorkflow).toContain("actions: read");
+    expect(classifyJob).toContain("github.rest.actions.listJobsForWorkflowRun");
+    expect(classifyJob).toContain('job.name === "deploy"');
+    expect(classifyJob).toContain('job.conclusion === "success"');
+    expect(exactProofJob).toContain("needs: classify-backend-deployment");
+    expect(exactProofJob).toContain("needs.classify-backend-deployment.outputs.deployed == 'true'");
   });
 
   it("builds the PR frontend without administrative credentials", () => {
