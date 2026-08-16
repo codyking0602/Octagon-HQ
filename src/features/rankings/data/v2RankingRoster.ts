@@ -528,6 +528,24 @@ const islamMakhachev = {
   },
 };
 
+const robbieLawlerBaseline = historicalMigrationSeedJson.fighters.find(
+  (fighter) => fighter.fighter === "Robbie Lawler",
+);
+
+if (!robbieLawlerBaseline) {
+  throw new Error("Robbie Lawler is missing from the sealed ranking baseline.");
+}
+
+const robbieLawler = {
+  ...robbieLawlerBaseline,
+  presentation: {
+    ...robbieLawlerBaseline.presentation,
+    oneLiner: "Lawler's peak paired a crushing southpaw left with sharp counters, elite durability, savage pocket work, and late-round surges that could turn momentum into a finish.",
+    whyRankedHere: "Lawler earned this tier by winning the UFC welterweight title from Johny Hendricks, stopping Rory MacDonald in the fifth round of a title defense, and beating Carlos Condit. Two successful defenses separate him from thinner championship resumes.",
+    whyNotHigher: "The limit is the short reign: Hendricks and Condit were split-decision wins, then Woodley took the belt by first-round knockout. Fighters above Lawler sustained championship control longer and stacked more elite UFC results.",
+  },
+};
+
 export const v2RankingRoster: V2RankingRosterOverlay = {
   additions: [rafaelDosAnjos],
   replacements: {
@@ -546,6 +564,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     "Kayla Harrison": kaylaHarrison,
     "Khamzat Chimaev": khamzatChimaev,
     "Islam Makhachev": islamMakhachev,
+    "Robbie Lawler": robbieLawler,
   },
   eraMembership: {
     "Rafael dos Anjos": {
@@ -554,7 +573,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     },
   },
   factsVersion: "octagon-hq-v2-rda-facts-20260807",
-  judgmentVersion: "octagon-hq-v2-islam-makhachev-profile-20260815",
+  judgmentVersion: "octagon-hq-v2-robbie-lawler-profile-20260816",
   eraDepthVersion: "octagon-hq-v2-rda-20260730",
   eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
 };
