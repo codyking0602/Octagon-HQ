@@ -79,11 +79,22 @@ const standingsEntrySchema = z.object({
     keep_4_cut_4: z.coerce.number().nullable(),
   }),
   is_current_user: z.boolean(),
+  weekly_rank: z.coerce.number().int().positive(),
+  weekly_wins: z.coerce.number().int().nonnegative(),
+  weekly_played: z.coerce.number().int().nonnegative(),
+  weekly_average_score: z.coerce.number().nonnegative(),
+  total_wins: z.coerce.number().int().nonnegative(),
+  all_time_played: z.coerce.number().int().nonnegative(),
+  all_time_average_score: z.coerce.number().nonnegative(),
+  longest_streak: z.coerce.number().int().nonnegative(),
+  weekly_titles: z.coerce.number().int().nonnegative(),
 });
 const standingsSchema = z.object({
   player_count: z.coerce.number().int().nonnegative(),
   current_user_rank: z.coerce.number().int().positive().nullable(),
   current_user_wins: z.coerce.number().int().nonnegative(),
+  current_week_start: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  current_week_end: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   entries: z.array(standingsEntrySchema),
 });
 
@@ -154,12 +165,19 @@ export interface TodayChallengeStandingsEntry {
     keep4Cut4: number | null;
   };
   isCurrentUser: boolean;
+  weeklyRank: number;
+  weeklyWins: number;
+  weeklyPlayed: number;
+  weeklyAverageScore: number;
+  weeklyTitles: number;
 }
 
 export interface TodayChallengeStandings {
   playerCount: number;
   currentUserRank: number | null;
   currentUserWins: number;
+  currentWeekStart: string;
+  currentWeekEnd: string;
   entries: TodayChallengeStandingsEntry[];
 }
 
@@ -329,17 +347,24 @@ export function createTodayChallengeRepository(
         playerCount: row.player_count,
         currentUserRank: row.current_user_rank,
         currentUserWins: row.current_user_wins,
+        currentWeekStart: row.current_week_start,
+        currentWeekEnd: row.current_week_end,
         entries: row.entries.map((entry) => ({
           rank: entry.rank,
           profileId: entry.profile_id,
           displayName: entry.display_name,
           initials: entry.initials,
           avatarPhotoData: entry.avatar_photo_data ?? null,
-          wins: entry.wins,
-          played: entry.played,
-          averageScore: entry.average_score,
+          wins: entry.total_wins,
+          played: entry.all_time_played,
+          averageScore: entry.all_time_average_score,
           currentStreak: entry.current_streak,
-          bestStreak: entry.best_streak,
+          bestStreak: entry.longest_streak,
+          weeklyRank: entry.weekly_rank,
+          weeklyWins: entry.weekly_wins,
+          weeklyPlayed: entry.weekly_played,
+          weeklyAverageScore: entry.weekly_average_score,
+          weeklyTitles: entry.weekly_titles,
           gameAverages: {
             findLeader: entry.game_averages.find_leader,
             wavelength: entry.game_averages.wavelength,

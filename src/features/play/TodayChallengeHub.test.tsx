@@ -61,6 +61,8 @@ const standings = {
   playerCount: 2,
   currentUserRank: 1,
   currentUserWins: 8,
+  currentWeekStart: "2026-08-17",
+  currentWeekEnd: "2026-08-23",
   entries: [
     {
       rank: 1,
@@ -81,6 +83,7 @@ const standings = {
         keep4Cut4: 87.5,
       },
       isCurrentUser: true,
+      weeklyRank: 1, weeklyWins: 4, weeklyPlayed: 6, weeklyAverageScore: 88.2, weeklyTitles: 2,
     },
     {
       rank: 2,
@@ -101,6 +104,7 @@ const standings = {
         keep4Cut4: null,
       },
       isCurrentUser: false,
+      weeklyRank: 2, weeklyWins: 2, weeklyPlayed: 5, weeklyAverageScore: 82.1, weeklyTitles: 1,
     },
   ],
 };
@@ -162,20 +166,20 @@ describe("generalized Today’s Challenge hub", () => {
 
     render(<TodayChallengeHub />);
 
-    const summary = screen.getByText("Daily Challenge Standings").closest("summary");
-    expect(summary).toHaveTextContent("YOUR RANK #1 · 8 WINS");
+    const summary = screen.getByText("Championship Standings").closest("summary");
+    expect(summary).toHaveTextContent("YOUR RANK #1 · 2 WEEKLY TITLES");
     expect(summary?.parentElement).not.toHaveAttribute("open");
 
     fireEvent.click(summary!);
     const header = document.querySelector(".daily-standings__header");
     expect(header).toHaveTextContent("CurrentStreak");
     expect(header).toHaveTextContent("LongestStreak");
-    expect(screen.getByText("Cody").parentElement?.querySelector("img")).toHaveAttribute(
+    expect(screen.getAllByText("Cody").find((node) => node.closest("button"))?.parentElement?.querySelector("img")).toHaveAttribute(
       "src",
       "data:image/webp;base64,cody",
     );
 
-    const codyRow = screen.getByText("Cody").closest("button");
+    const codyRow = screen.getAllByText("Cody").find((node) => node.closest("button"))?.closest("button");
     expect(codyRow).not.toBeNull();
     expect(codyRow).toHaveAttribute("aria-expanded", "false");
     fireEvent.click(codyRow!);

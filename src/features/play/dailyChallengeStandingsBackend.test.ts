@@ -112,7 +112,7 @@ describe("Daily Challenge Standings backend contract", () => {
     expect(hub).toContain("<DailyChallengeStandings");
     expect(hub).not.toContain("Official challenge record");
     expect(hub).not.toContain("today-hub-history");
-    expect(component).toContain("Daily Challenge Standings");
+    expect(component).toContain("Championship Standings");
     expect(component).toContain("Current");
     expect(component).toContain("Longest");
     expect(component).toContain("Average Score by Game");
