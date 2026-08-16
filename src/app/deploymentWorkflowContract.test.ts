@@ -27,6 +27,18 @@ describe("feature deployment workflow contract", () => {
     expect(brokerWorkflow).not.toContain("wrangler deploy");
   });
 
+  it("requires the latest exact-head Validate V2 gate before a labeled PR can deploy", () => {
+    expect(brokerWorkflow).toContain("checks: read");
+    expect(brokerWorkflow).toContain("github.rest.checks.listForRef");
+    expect(brokerWorkflow).toContain('.filter((check) => check.name === "validate")');
+    expect(brokerWorkflow).toContain('latestValidation.status !== "completed"');
+    expect(brokerWorkflow).toContain('latestValidation.conclusion !== "success"');
+    expect(brokerWorkflow).toContain(
+      "must pass the Validate V2 'validate' gate before ${triggerLabel} can deploy it",
+    );
+    expect(brokerWorkflow).toContain("Validate V2 exact-head gate: green.");
+  });
+
   it("keeps Supabase deployment in its canonical exact-SHA owner", () => {
     const pushTrigger = supabaseWorkflow.match(/  push:\n([\s\S]*?)\npermissions:/)?.[1] ?? "";
 

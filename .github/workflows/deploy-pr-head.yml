@@ -11,6 +11,7 @@ on:
       - ".github/workflows/deploy-pr-head.yml"
 
 permissions:
+  checks: read
   contents: read
   issues: write
   pull-requests: write
@@ -85,7 +86,7 @@ jobs:
       source_sha: ${{ steps.authorize.outputs.source_sha }}
       pr_number: ${{ steps.authorize.outputs.pr_number }}
     steps:
-      - name: Authorize exact same-repository PR head
+      - name: Authorize exact validated same-repository PR head
         id: authorize
         uses: actions/github-script@v7
         env:
@@ -134,6 +135,35 @@ jobs:
               return;
             }
 
+            const { data: checkData } = await github.rest.checks.listForRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: expectedSha,
+              per_page: 100,
+            });
+            const validationChecks = checkData.check_runs
+              .filter((check) => check.name === "validate")
+              .sort((left, right) => {
+                const leftTime = Date.parse(left.completed_at ?? left.started_at ?? left.created_at ?? "1970-01-01");
+                const rightTime = Date.parse(right.completed_at ?? right.started_at ?? right.created_at ?? "1970-01-01");
+                return rightTime - leftTime;
+              });
+            const latestValidation = validationChecks[0];
+
+            if (
+              !latestValidation
+              || latestValidation.status !== "completed"
+              || latestValidation.conclusion !== "success"
+            ) {
+              const state = latestValidation
+                ? `${latestValidation.status}/${latestValidation.conclusion ?? "pending"}`
+                : "missing";
+              core.setFailed(
+                `Exact head ${expectedSha} must pass the Validate V2 'validate' gate before ${triggerLabel} can deploy it. Current gate: ${state}.`,
+              );
+              return;
+            }
+
             core.setOutput("deployment", deployment);
             core.setOutput("source_sha", pr.head.sha);
             core.setOutput("pr_number", String(prNumber));
@@ -142,6 +172,7 @@ jobs:
               .addHeading(`Authorized ${deployment} deployment`)
               .addRaw(`PR #${prNumber} is open, targets main, and is owned by ${repository}.\n`)
               .addRaw(`Frozen source SHA: \`${pr.head.sha}\`\n`)
+              .addRaw("Validate V2 exact-head gate: green.\n")
               .addRaw("No PR code was checked out by the secret-bearing broker.\n")
               .write();
 
