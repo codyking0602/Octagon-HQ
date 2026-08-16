@@ -67,7 +67,7 @@ describe("Auction release polish", () => {
     expect(page).toContain("<h1>{mode.displayName}</h1>");
     expect(page).toContain(">REFRESH</button>");
     expect(page).not.toContain("SELECTED AUCTION · {mode.displayName}");
-    expect(styles).toMatch(/\.auction-board__header\s*\{[\s\S]*?min-height:\s*160px;[\s\S]*?gap:\s*10px;[\s\S]*?overflow:\s*hidden;/);
+    expect(styles).toMatch(/\.auction-board__header\s*\{[\s\S]*?min-height:\s*clamp\(200px, 54vw, 220px\);[\s\S]*?gap:\s*10px;[\s\S]*?overflow:\s*hidden;/);
     expect(styles).toMatch(/\.auction-board__image\s*\{[\s\S]*?object-fit:\s*cover;/);
     expect(styles).not.toMatch(/\.auction-board__image\s*\{[\s\S]*?object-position:/);
     expect(auctionModeArtwork("conor-mcgregor-performances").objectPosition).toBe("50% 20%");
