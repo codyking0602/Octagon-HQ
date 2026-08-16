@@ -2,6 +2,7 @@ name: Validate V2
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
   push:
     branches: [main]
 
@@ -25,6 +26,7 @@ defaults:
 jobs:
   core:
     name: typecheck + production build
+    if: ${{ github.event_name == 'push' || github.event.pull_request.draft == false }}
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -103,6 +105,7 @@ jobs:
 
   tests:
     name: test shard ${{ matrix.shard }}/8
+    if: ${{ github.event_name == 'push' || github.event.pull_request.draft == false }}
     runs-on: ubuntu-latest
     timeout-minutes: 8
     strategy:
@@ -161,6 +164,7 @@ jobs:
 
   phone-layouts:
     name: Today's Challenge phone layouts
+    if: ${{ github.event_name == 'push' || github.event.pull_request.draft == false }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -219,7 +223,7 @@ jobs:
 
   validate:
     name: validate
-    if: always()
+    if: ${{ always() && (github.event_name == 'push' || github.event.pull_request.draft == false) }}
     needs:
       - core
       - tests
