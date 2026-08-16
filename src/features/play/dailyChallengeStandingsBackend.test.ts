@@ -6,6 +6,10 @@ describe("Daily Challenge Standings backend contract", () => {
     "supabase/migrations/202609100001_daily_challenge_standings.sql",
     "utf8",
   );
+  const weeklyMigration = readFileSync(
+    "supabase/migrations/202609140004_daily_challenge_weekly_standings.sql",
+    "utf8",
+  );
   const sqlTest = readFileSync(
     "supabase/tests/daily_challenge_standings.sql",
     "utf8",
@@ -49,16 +53,40 @@ describe("Daily Challenge Standings backend contract", () => {
     }
   });
 
-  it("proves tied wins, zero-play members, current streak semantics, game averages, and anonymous denial", () => {
+  it("extends the same standings owner with Monday-Sunday weekly competition and completed-week titles", () => {
+    expect(weeklyMigration).toContain(
+      "create or replace function public.get_daily_challenge_standings()",
+    );
+    expect(weeklyMigration).toContain("private.daily_challenge_central_day(now())");
+    expect(weeklyMigration).toContain("extract(isodow from v_today)");
+    expect(weeklyMigration).toContain("current_week_ranked");
+    expect(weeklyMigration).toContain("completed_week_ranked");
+    expect(weeklyMigration).toContain("where history.central_day < v_week_start");
+    expect(weeklyMigration).toContain("where week.weekly_rank = 1");
+    expect(weeklyMigration).toContain("rank() over (\n        partition by week.week_start");
+    expect(weeklyMigration).toContain("week.wins desc");
+    expect(weeklyMigration).toContain("week.average_score desc");
+    expect(weeklyMigration).toContain("week.played desc");
+    expect(weeklyMigration).toContain("'weekly_titles'");
+    expect(weeklyMigration).toContain("'championship_rank'");
+    expect(weeklyMigration).toContain("'weekly_entries'");
+    expect(weeklyMigration).toContain("'last_completed_week'");
+    expect(weeklyMigration).not.toContain("create table");
+  });
+
+  it("proves cumulative compatibility, weekly participation, Central week bounds, and anonymous denial", () => {
     expect(sqlTest).toContain("tied daily wins or yesterday-current streak were calculated incorrectly");
     expect(sqlTest).toContain("members without an official play were omitted or misrepresented");
     expect(sqlTest).toContain("current member standings or game averages are incorrect");
+    expect(sqlTest).toContain("Monday-Sunday current weekly standings were calculated incorrectly");
+    expect(sqlTest).toContain("zero-play members appeared in the active weekly competition");
+    expect(sqlTest).toContain("last completed weekly championship window is incorrect");
     expect(sqlTest).toContain("anonymous role can read Daily Challenge Standings");
     expect(generalizedSuite).toContain("\\ir daily_challenge_standings.sql");
     expect(generalizedSuite.match(/202609100001_daily_challenge_standings\.sql/g)).toHaveLength(2);
   });
 
-  it("replaces the old history accordion with only the approved collapsed standings and member detail", () => {
+  it("leaves the current frontend untouched for the separate weekly UI PR", () => {
     expect(hub).toContain("<DailyChallengeStandings");
     expect(hub).not.toContain("Official challenge record");
     expect(hub).not.toContain("today-hub-history");
