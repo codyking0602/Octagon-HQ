@@ -21,138 +21,99 @@ permissions:
   contents: read
 
 jobs:
-  verify:
+  local_sql:
+    name: local SQL proof
     if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
+      SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+    steps:
+      - name: Check out exact source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+
+      - name: Verify exact checked-out SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          checked_out_sha=$(git rev-parse HEAD)
+          if [ "$checked_out_sha" != "$SOURCE_SHA" ]; then
+            echo "::error title=Exact SHA checkout failed::Expected $SOURCE_SHA but checked out $checked_out_sha."
+            exit 1
+          fi
+          echo "Local SQL proof source verified: $checked_out_sha"
+
+      - name: Set up Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: 2.109.1
+
+      - name: Execute Auction lifecycle SQL tests on a fresh local database
+        shell: bash
+        run: |
+          set -euo pipefail
+          supabase db start
+          trap 'supabase stop --no-backup >/dev/null 2>&1 || true' EXIT
+
+          db_url=$(supabase status -o env | sed -n 's/^DB_URL=//p' | tr -d '"')
+          if [ -z "$db_url" ]; then
+            echo "::error title=Local Supabase database unavailable::The local database started, but its connection URL was not reported."
+            exit 1
+          fi
+
+          for test_file in \
+            supabase/tests/auction_private_lifecycle.sql \
+            supabase/tests/auction_private_lifecycle_hardening.sql \
+            supabase/tests/auction_playable_server_engine.sql \
+            supabase/tests/auction_notifications_share_release.sql \
+            supabase/tests/auction_launch_notification.sql \
+            supabase/tests/auction_catalog_expansion.sql \
+            supabase/tests/pick_monitoring_truthful_decisions.sql
+          do
+            echo "Executing $test_file"
+            psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"
+          done
+
+          echo "Auction lifecycle and launch-notification SQL tests executed successfully against a fresh local database."
+          echo "Truthful Picks monitoring and per-fight lock SQL tests executed successfully against the same fresh local database."
+
+  live_backend:
+    name: live Supabase proof
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
       OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
-      EXPECTED_LIVE_MAIN_REF: ${{ github.event.repository.default_branch || 'main' }}
       EXPECTED_SYNC_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
 
     steps:
-      - name: Check out repository
+      - name: Check out exact source
         uses: actions/checkout@v4
-
-      - name: Resolve verified live frontend SHA for current main
-        id: live_frontend
-        uses: actions/github-script@v7
-        env:
-          EXPECTED_LIVE_MAIN_REF: ${{ env.EXPECTED_LIVE_MAIN_REF }}
         with:
-          script: |
-            const mainRef = process.env.EXPECTED_LIVE_MAIN_REF;
-            const { data: mainBranch } = await github.rest.repos.getBranch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              branch: mainRef,
-            });
-            const expectedSha = mainBranch.commit.sha.toLowerCase();
-            core.info(`Resolved current ${mainRef} tip: ${expectedSha}`);
-            core.setOutput("current_main_sha", expectedSha);
-            const required = [
-              "Deploy Cloudflare Frontend",
-              "Verify Live Frontend Delivery",
-            ];
-            const runtimePathPatterns = [
-              /^\.github\/workflows\/deploy-cloudflare\.yml$/,
-              /^\.github\/workflows\/verify-live-frontend-delivery\.yml$/,
-              /^src\//,
-              /^public\//,
-              /^index\.html$/,
-              /^package\.json$/,
-              /^package-lock\.json$/,
-              /^vite\.config\./,
-              /^wrangler\.jsonc$/,
-            ];
+          ref: ${{ env.SOURCE_SHA }}
 
-            async function findSuccessfulRuns(sha) {
-              const { data } = await github.rest.actions.listWorkflowRunsForRepo({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                head_sha: sha,
-                per_page: 100,
-              });
-              const selected = new Map();
-              for (const workflowName of required) {
-                const runs = data.workflow_runs.filter((run) => (
-                  run.name === workflowName
-                  && run.head_sha?.toLowerCase() === sha
-                ));
-                const passed = runs.find((run) => (
-                  run.status === "completed" && run.conclusion === "success"
-                ));
-                if (!passed) return { passed: false, workflowName, runs };
-                selected.set(workflowName, passed);
-              }
-              return { passed: true, selected };
-            }
-
-            let candidateSha = expectedSha;
-            for (let depth = 0; depth < 20; depth += 1) {
-              const result = await findSuccessfulRuns(candidateSha);
-              if (result.passed) {
-                for (const workflowName of required) {
-                  const run = result.selected.get(workflowName);
-                  core.info(`${workflowName} passed for verified live frontend ${candidateSha}: ${run.html_url}`);
-                }
-                if (candidateSha !== expectedSha) {
-                  core.notice(
-                    `Current main ${expectedSha} differs from verified live frontend ${candidateSha} only by non-runtime files.`,
-                  );
-                }
-                core.setOutput("sha", candidateSha);
-                return;
-              }
-
-              const { data: commit } = await github.rest.repos.getCommit({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                ref: candidateSha,
-                per_page: 100,
-              });
-              const changedPaths = (commit.files ?? []).map((file) => file.filename);
-              const runtimeChanges = changedPaths.filter((path) => (
-                runtimePathPatterns.some((pattern) => pattern.test(path))
-              ));
-              if (runtimeChanges.length > 0) {
-                const observed = result.runs
-                  .map((run) => `${run.id}:${run.status}/${run.conclusion ?? "none"}`)
-                  .join(", ") || "none";
-                core.setFailed(
-                  `${result.workflowName} has no successful exact-SHA run for runtime-changing commit ${candidateSha}. `
-                  + `Runtime paths: ${runtimeChanges.join(", ")}. Observed: ${observed}.`,
-                );
-                return;
-              }
-
-              const parentSha = commit.parents?.[0]?.sha?.toLowerCase();
-              if (!parentSha) {
-                core.setFailed(`Could not resolve a verified live frontend ancestor for ${expectedSha}.`);
-                return;
-              }
-              core.info(
-                `No runtime-owned paths changed in ${candidateSha}; checking parent ${parentSha} for the live frontend proof.`,
-              );
-              candidateSha = parentSha;
-            }
-
-            core.setFailed(`Could not resolve a verified live frontend SHA within 20 ancestors of ${expectedSha}.`);
+      - name: Verify exact checked-out SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          checked_out_sha=$(git rev-parse HEAD)
+          if [ "$checked_out_sha" != "$SOURCE_SHA" ]; then
+            echo "::error title=Exact SHA checkout failed::Expected $SOURCE_SHA but checked out $checked_out_sha."
+            exit 1
+          fi
+          echo "Live Supabase proof source verified: $checked_out_sha"
 
       - name: Set up Node for live production proof
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-
-      - name: Verify exact live shell JavaScript and CSS
-        env:
-          EXPECTED_SOURCE_SHA: ${{ steps.live_frontend.outputs.sha }}
-          FRONTEND_DELIVERY_ATTEMPTS: 6
-          FRONTEND_DELIVERY_DELAY_MS: 5000
-        run: node scripts/verify-live-frontend-delivery.mjs
 
       - name: Verify GitHub secret names are populated
         shell: bash
@@ -205,35 +166,6 @@ jobs:
           fi
 
           echo "Database password and migration connection are valid."
-
-      - name: Execute Auction lifecycle SQL tests on a fresh local database
-        shell: bash
-        run: |
-          set -euo pipefail
-          supabase db start
-          trap 'supabase stop --no-backup >/dev/null 2>&1 || true' EXIT
-
-          db_url=$(supabase status -o env | sed -n 's/^DB_URL=//p' | tr -d '"')
-          if [ -z "$db_url" ]; then
-            echo "::error title=Local Supabase database unavailable::The local database started, but its connection URL was not reported."
-            exit 1
-          fi
-
-          for test_file in \
-            supabase/tests/auction_private_lifecycle.sql \
-            supabase/tests/auction_private_lifecycle_hardening.sql \
-            supabase/tests/auction_playable_server_engine.sql \
-            supabase/tests/auction_notifications_share_release.sql \
-            supabase/tests/auction_launch_notification.sql \
-            supabase/tests/auction_catalog_expansion.sql \
-            supabase/tests/pick_monitoring_truthful_decisions.sql
-          do
-            echo "Executing $test_file"
-            psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"
-          done
-
-          echo "Auction lifecycle and launch-notification SQL tests executed successfully against a fresh local database."
-          echo "Truthful Picks monitoring and per-fight lock SQL tests executed successfully against the same fresh local database."
 
       - name: Verify required Edge Function secret names
         shell: bash
@@ -380,16 +312,6 @@ jobs:
             exit 1
           fi
 
-      - name: Install production WebKit proof harness
-        run: |
-          npm install --no-save --ignore-scripts playwright@1.56.1
-          npx playwright install --with-deps webkit
-
-      - name: Verify signed-in live Gable What's New item
-        env:
-          WHATS_NEW_SCREENSHOT_PATH: ${{ runner.temp }}/whats-new-gable-proof.png
-        run: node scripts/verify-whats-new-live.mjs
-
       - name: Verify production Picks monitoring scheduler is active
         run: node scripts/verify-production-monitoring-scheduler.mjs
 
@@ -402,9 +324,185 @@ jobs:
       - name: Verify live Picks scoring RPCs
         run: node scripts/verify-picks-scoring-live.mjs
 
+  live_webkit:
+    name: live WebKit proof
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+      OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
+      EXPECTED_LIVE_MAIN_REF: ${{ github.event.repository.default_branch || 'main' }}
+      EXPECTED_SYNC_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    outputs:
+      current_main_sha: ${{ steps.live_frontend.outputs.current_main_sha }}
+      verified_live_frontend_sha: ${{ steps.live_frontend.outputs.sha }}
+
+    steps:
+      - name: Check out exact source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+
+      - name: Verify exact checked-out SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          checked_out_sha=$(git rev-parse HEAD)
+          if [ "$checked_out_sha" != "$SOURCE_SHA" ]; then
+            echo "::error title=Exact SHA checkout failed::Expected $SOURCE_SHA but checked out $checked_out_sha."
+            exit 1
+          fi
+          echo "Live WebKit proof source verified: $checked_out_sha"
+
+      - name: Resolve verified live frontend SHA for current main
+        id: live_frontend
+        uses: actions/github-script@v7
+        env:
+          EXPECTED_LIVE_MAIN_REF: ${{ env.EXPECTED_LIVE_MAIN_REF }}
+        with:
+          script: |
+            const mainRef = process.env.EXPECTED_LIVE_MAIN_REF;
+            const { data: mainBranch } = await github.rest.repos.getBranch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              branch: mainRef,
+            });
+            const expectedSha = mainBranch.commit.sha.toLowerCase();
+            core.info(`Resolved current ${mainRef} tip: ${expectedSha}`);
+            core.setOutput("current_main_sha", expectedSha);
+            const required = [
+              "Deploy Cloudflare Frontend",
+              "Verify Live Frontend Delivery",
+            ];
+            const runtimePathPatterns = [
+              /^\.github\/workflows\/deploy-cloudflare\.yml$/,
+              /^\.github\/workflows\/verify-live-frontend-delivery\.yml$/,
+              /^src\//,
+              /^public\//,
+              /^index\.html$/,
+              /^package\.json$/,
+              /^package-lock\.json$/,
+              /^vite\.config\./,
+              /^wrangler\.jsonc$/,
+            ];
+
+            async function findSuccessfulRuns(sha) {
+              const { data } = await github.rest.actions.listWorkflowRunsForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                head_sha: sha,
+                per_page: 100,
+              });
+              const selected = new Map();
+              for (const workflowName of required) {
+                const runs = data.workflow_runs.filter((run) => (
+                  run.name === workflowName
+                  && run.head_sha?.toLowerCase() === sha
+                ));
+                const passed = runs.find((run) => (
+                  run.status === "completed" && run.conclusion === "success"
+                ));
+                if (!passed) return { passed: false, workflowName, runs };
+                selected.set(workflowName, passed);
+              }
+              return { passed: true, selected };
+            }
+
+            let candidateSha = expectedSha;
+            for (let depth = 0; depth < 20; depth += 1) {
+              const result = await findSuccessfulRuns(candidateSha);
+              if (result.passed) {
+                for (const workflowName of required) {
+                  const run = result.selected.get(workflowName);
+                  core.info(`${workflowName} passed for verified live frontend ${candidateSha}: ${run.html_url}`);
+                }
+                if (candidateSha !== expectedSha) {
+                  core.notice(
+                    `Current main ${expectedSha} differs from verified live frontend ${candidateSha} only by non-runtime files.`,
+                  );
+                }
+                core.setOutput("sha", candidateSha);
+                return;
+              }
+
+              const { data: commit } = await github.rest.repos.getCommit({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: candidateSha,
+                per_page: 100,
+              });
+              const changedPaths = (commit.files ?? []).map((file) => file.filename);
+              const runtimeChanges = changedPaths.filter((path) => (
+                runtimePathPatterns.some((pattern) => pattern.test(path))
+              ));
+              if (runtimeChanges.length > 0) {
+                const observed = result.runs
+                  .map((run) => `${run.id}:${run.status}/${run.conclusion ?? "none"}`)
+                  .join(", ") || "none";
+                core.setFailed(
+                  `${result.workflowName} has no successful exact-SHA run for runtime-changing commit ${candidateSha}. `
+                  + `Runtime paths: ${runtimeChanges.join(", ")}. Observed: ${observed}.`,
+                );
+                return;
+              }
+
+              const parentSha = commit.parents?.[0]?.sha?.toLowerCase();
+              if (!parentSha) {
+                core.setFailed(`Could not resolve a verified live frontend ancestor for ${expectedSha}.`);
+                return;
+              }
+              core.info(
+                `No runtime-owned paths changed in ${candidateSha}; checking parent ${parentSha} for the live frontend proof.`,
+              );
+              candidateSha = parentSha;
+            }
+
+            core.setFailed(`Could not resolve a verified live frontend SHA within 20 ancestors of ${expectedSha}.`);
+
+      - name: Set up Node for live production proof
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Verify exact live shell JavaScript and CSS
+        env:
+          EXPECTED_SOURCE_SHA: ${{ steps.live_frontend.outputs.sha }}
+          FRONTEND_DELIVERY_ATTEMPTS: 6
+          FRONTEND_DELIVERY_DELAY_MS: 5000
+        run: node scripts/verify-live-frontend-delivery.mjs
+
+      - name: Verify live proof secret names are populated
+        shell: bash
+        run: |
+          set -euo pipefail
+          missing=0
+          for name in SUPABASE_ACCESS_TOKEN SUPABASE_PROJECT_ID; do
+            if [ -z "${!name:-}" ]; then
+              echo "::error title=Missing GitHub secret::$name is missing or empty."
+              missing=1
+            else
+              echo "$name is present."
+            fi
+          done
+          exit "$missing"
+
+      - name: Install production WebKit proof harness
+        run: |
+          npm install --no-save --ignore-scripts playwright@1.56.1
+          npx playwright install --with-deps webkit
+
+      - name: Verify signed-in live What's New item
+        env:
+          WHATS_NEW_SCREENSHOT_PATH: ${{ runner.temp }}/whats-new-gable-proof.png
+        run: node scripts/verify-whats-new-live.mjs
+
       - name: Verify production Event Setup in WebKit at 390x844
         shell: bash
         env:
+          EXPECTED_DEPLOYMENT_SHA: ${{ steps.live_frontend.outputs.sha }}
           EVENT_SETUP_SCREENSHOT_PATH: ${{ runner.temp }}/event-setup-preview.png
         run: |
           set +e
@@ -496,11 +594,50 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
 
-      - name: Record verification boundary
+  verify:
+    name: verify
+    if: >-
+      always() &&
+      (github.event_name == 'workflow_dispatch' ||
+      github.event.pull_request.head.repo.full_name == github.repository)
+    needs:
+      - local_sql
+      - live_backend
+      - live_webkit
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      CURRENT_MAIN_SHA: ${{ needs.live_webkit.outputs.current_main_sha }}
+      VERIFIED_LIVE_FRONTEND_SHA: ${{ needs.live_webkit.outputs.verified_live_frontend_sha }}
+
+    steps:
+      - name: Require every verification lane
         shell: bash
         env:
-          CURRENT_MAIN_SHA: ${{ steps.live_frontend.outputs.current_main_sha }}
-          VERIFIED_LIVE_FRONTEND_SHA: ${{ steps.live_frontend.outputs.sha }}
+          LOCAL_SQL_RESULT: ${{ needs.local_sql.result }}
+          LIVE_BACKEND_RESULT: ${{ needs.live_backend.result }}
+          LIVE_WEBKIT_RESULT: ${{ needs.live_webkit.result }}
+        run: |
+          set -euo pipefail
+          failed=0
+          for pair in \
+            "local SQL proof:$LOCAL_SQL_RESULT" \
+            "live Supabase proof:$LIVE_BACKEND_RESULT" \
+            "live WebKit proof:$LIVE_WEBKIT_RESULT"
+          do
+            name=${pair%%:*}
+            result=${pair#*:}
+            if [ "$result" != "success" ]; then
+              echo "::error title=Backend verification lane failed::$name finished with $result."
+              failed=1
+            else
+              echo "$name: success"
+            fi
+          done
+          exit "$failed"
+
+      - name: Record verification boundary
+        shell: bash
         run: |
           {
             echo "### Supabase backend verification"
@@ -509,7 +646,7 @@ jobs:
             echo "- Any commits between those SHAs changed no frontend runtime-owned paths"
             echo "- Deploy Cloudflare Frontend and Verify Live Frontend Delivery: successful for the verified live frontend SHA"
             echo "- Live SPA shell: exact JavaScript and CSS assets verified"
-            echo "- Signed-in What's New feed: Gable Steveson's canonical Fighters to Watch item rendered and linked correctly"
+            echo "- Signed-in What's New feed: canonical current item rendered and linked correctly"
             echo "- GitHub deployment secrets: present and accepted"
             echo "- Supabase access token/project pairing: accepted"
             echo "- Database password and migration connection: accepted"
@@ -525,6 +662,7 @@ jobs:
             echo "- Temporary proof profile and Event Setup owner grant: removed and independently verified"
             echo "- Underdog Lock and seven-field scoring summary RPCs: responding in production"
             echo "- pin-auth Edge Function: deployed and responding with the expected contract"
-            echo "- sync-next-ufc-event Edge Function: exact deployed source $EXPECTED_SYNC_SOURCE_SHA verified through its live marker"
-            echo "- Production CORS origin: $OCTAGON_PRODUCTION_ORIGIN"
+            echo "- sync-next-ufc-event Edge Function: production deployment is healthy; exact source is hard-required after merge"
+            echo "- Production CORS origin: https://octagon.hq-app.workers.dev"
+            echo "- Parallel lanes: local SQL, live Supabase/API, and live WebKit all passed"
           } >> "$GITHUB_STEP_SUMMARY"
