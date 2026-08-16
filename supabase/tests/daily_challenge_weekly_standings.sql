@@ -2,6 +2,8 @@ begin;
 
 select set_config('request.jwt.claim.role', 'service_role', true);
 
+\ir ../migrations/202612310022_reset_daily_challenge_championship_era.sql
+
 do $$
 declare
   v_championship_start date := date '2026-08-10';
