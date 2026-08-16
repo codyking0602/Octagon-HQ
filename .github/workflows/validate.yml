@@ -102,13 +102,13 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
   tests:
-    name: test shard ${{ matrix.shard }}/8
+    name: test shard ${{ matrix.shard }}/12
     runs-on: ubuntu-latest
     timeout-minutes: 8
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5, 6, 7, 8]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     steps:
       - name: Check out exact validation source
         uses: actions/checkout@v4
@@ -137,7 +137,7 @@ jobs:
 
       - name: Run full-suite shard
         id: test
-        run: npm test -- --shard=${{ matrix.shard }}/8 2>&1 | tee test-shard-${{ matrix.shard }}.log
+        run: npm test -- --shard=${{ matrix.shard }}/12 2>&1 | tee test-shard-${{ matrix.shard }}.log
 
       - name: Upload test diagnostics
         if: failure() && steps.test.outcome == 'failure'
@@ -151,9 +151,9 @@ jobs:
         if: failure() && steps.test.outcome == 'failure'
         run: |
           {
-            echo "### Test shard ${{ matrix.shard }}/8 failed"
+            echo "### Test shard ${{ matrix.shard }}/12 failed"
             echo "Exact source: \`$SOURCE_SHA\`"
-            echo "Reproduce: \`npm install --silent && npm test -- --shard=${{ matrix.shard }}/8\`"
+            echo "Reproduce: \`npm install --silent && npm test -- --shard=${{ matrix.shard }}/12\`"
             echo '```text'
             tail -n 100 test-shard-${{ matrix.shard }}.log 2>/dev/null || true
             echo '```'
