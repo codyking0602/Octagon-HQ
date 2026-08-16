@@ -10,10 +10,6 @@ on:
 permissions:
   contents: write
 
-defaults:
-  run:
-    shell: bash --noprofile --norc -eo pipefail {0}
-
 jobs:
   patch:
     runs-on: ubuntu-latest
@@ -25,9 +21,12 @@ jobs:
           ref: agent/backend-change-aware-release
 
       - name: Patch canonical backend release workflows
+        shell: bash
         run: |
+          set -euo pipefail
           python - <<'PY'
           from pathlib import Path
+          from textwrap import dedent
 
           expr = lambda body: "$" + "{{ " + body + " }}"
 
@@ -37,54 +36,55 @@ jobs:
           if deploy.count(old_jobs) != 1:
               raise SystemExit(f'Expected one deploy job header, found {deploy.count(old_jobs)}')
 
-          scope_jobs = f'''jobs:
-  release-scope:
-    runs-on: ubuntu-latest
-    timeout-minutes: 3
-    outputs:
-      should_deploy: {expr('steps.scope.outputs.should_deploy')}
-      reason: {expr('steps.scope.outputs.reason')}
-    steps:
-      - name: Check out exact release source
-        uses: actions/checkout@v4
-        with:
-          ref: {expr('inputs.source_sha || github.sha')}
-          fetch-depth: 1
-          persist-credentials: false
-          show-progress: false
+          scope_jobs = dedent(f'''\
+          jobs:
+            release-scope:
+              runs-on: ubuntu-latest
+              timeout-minutes: 3
+              outputs:
+                should_deploy: {expr('steps.scope.outputs.should_deploy')}
+                reason: {expr('steps.scope.outputs.reason')}
+              steps:
+                - name: Check out exact release source
+                  uses: actions/checkout@v4
+                  with:
+                    ref: {expr('inputs.source_sha || github.sha')}
+                    fetch-depth: 1
+                    persist-credentials: false
+                    show-progress: false
 
-      - name: Determine whether Supabase-owned source changed
-        id: scope
-        env:
-          GITHUB_TOKEN: {expr('github.token')}
-          BACKEND_RELEASE_BEFORE_SHA: {expr("github.event.before || ''")}
-          BACKEND_RELEASE_SOURCE_SHA: {expr('inputs.source_sha || github.sha')}
-        run: node scripts/backend-release-scope.mjs
+                - name: Determine whether Supabase-owned source changed
+                  id: scope
+                  env:
+                    GITHUB_TOKEN: {expr('github.token')}
+                    BACKEND_RELEASE_BEFORE_SHA: {expr("github.event.before || ''")}
+                    BACKEND_RELEASE_SOURCE_SHA: {expr('inputs.source_sha || github.sha')}
+                  run: node scripts/backend-release-scope.mjs
 
-  backend-unchanged:
-    needs: release-scope
-    if: {expr("needs.release-scope.outputs.should_deploy != 'true'")}
-    runs-on: ubuntu-latest
-    timeout-minutes: 2
-    steps:
-      - name: Record unchanged backend release
-        env:
-          SOURCE_SHA: {expr('inputs.source_sha || github.sha')}
-          SCOPE_REASON: {expr('needs.release-scope.outputs.reason')}
-        run: |
-          {{
-            echo "### Octagon HQ V2 backend unchanged"
-            echo "- Exact release SHA: `\\`$SOURCE_SHA\\``"
-            echo "- Scope result: $SCOPE_REASON"
-            echo "- No Supabase credentials, CLI, migrations, functions, secrets, or scheduler operations were used"
-            echo "- The last verified backend deployment remains the canonical live backend because no backend-owned source changed"
-          }} >> "$GITHUB_STEP_SUMMARY"
+            backend-unchanged:
+              needs: release-scope
+              if: {expr("needs.release-scope.outputs.should_deploy != 'true'")}
+              runs-on: ubuntu-latest
+              timeout-minutes: 2
+              steps:
+                - name: Record unchanged backend release
+                  env:
+                    SOURCE_SHA: {expr('inputs.source_sha || github.sha')}
+                    SCOPE_REASON: {expr('needs.release-scope.outputs.reason')}
+                  run: |
+                    {{
+                      echo "### Octagon HQ V2 backend unchanged"
+                      echo "- Exact release SHA: $SOURCE_SHA"
+                      echo "- Scope result: $SCOPE_REASON"
+                      echo "- No Supabase credentials, CLI, migrations, functions, secrets, or scheduler operations were used"
+                      echo "- The last verified backend deployment remains the canonical live backend because no backend-owned source changed"
+                    }} >> "$GITHUB_STEP_SUMMARY"
 
-  deploy:
-    needs: release-scope
-    if: {expr("needs.release-scope.outputs.should_deploy == 'true'")}
-    runs-on: ubuntu-latest
-'''
+            deploy:
+              needs: release-scope
+              if: {expr("needs.release-scope.outputs.should_deploy == 'true'")}
+              runs-on: ubuntu-latest
+          ''')
           deploy_path.write_text(deploy.replace(old_jobs, scope_jobs))
 
           generalized_path = Path('.github/workflows/verify-generalized-daily-backend.yml')
@@ -98,46 +98,49 @@ jobs:
           old_proof = "  exact-deployment-proof:\n    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'\n"
           if generalized.count(old_proof) != 1:
               raise SystemExit(f'Expected one exact deployment proof header, found {generalized.count(old_proof)}')
-          new_proof = f'''  classify-backend-deployment:
-    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
-    runs-on: ubuntu-latest
-    timeout-minutes: 3
-    outputs:
-      deployed: {expr('steps.inspect.outputs.deployed')}
-    steps:
-      - name: Check whether the canonical workflow actually deployed Supabase
-        id: inspect
-        uses: actions/github-script@v7
-        env:
-          DEPLOY_RUN_ID: {expr('github.event.workflow_run.id')}
-        with:
-          script: |
-            const runId = Number(process.env.DEPLOY_RUN_ID);
-            const {{ data }} = await github.rest.actions.listJobsForWorkflowRun({{
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              run_id: runId,
-              per_page: 100,
-            }});
-            const deployed = data.jobs.some((job) => (
-              job.name === "deploy"
-              && job.status === "completed"
-              && job.conclusion === "success"
-            ));
-            core.setOutput("deployed", deployed ? "true" : "false");
-            core.info(deployed
-              ? "Canonical Supabase deploy job ran successfully; exact deployment proof is required."
-              : "Backend release was unchanged; skipping Supabase post-deploy proof.");
+          new_proof = dedent(f'''\
+            classify-backend-deployment:
+              if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
+              runs-on: ubuntu-latest
+              timeout-minutes: 3
+              outputs:
+                deployed: {expr('steps.inspect.outputs.deployed')}
+              steps:
+                - name: Check whether the canonical workflow actually deployed Supabase
+                  id: inspect
+                  uses: actions/github-script@v7
+                  env:
+                    DEPLOY_RUN_ID: {expr('github.event.workflow_run.id')}
+                  with:
+                    script: |
+                      const runId = Number(process.env.DEPLOY_RUN_ID);
+                      const {{ data }} = await github.rest.actions.listJobsForWorkflowRun({{
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        run_id: runId,
+                        per_page: 100,
+                      }});
+                      const deployed = data.jobs.some((job) => (
+                        job.name === "deploy"
+                        && job.status === "completed"
+                        && job.conclusion === "success"
+                      ));
+                      core.setOutput("deployed", deployed ? "true" : "false");
+                      core.info(deployed
+                        ? "Canonical Supabase deploy job ran successfully; exact deployment proof is required."
+                        : "Backend release was unchanged; skipping Supabase post-deploy proof.");
 
-  exact-deployment-proof:
-    needs: classify-backend-deployment
-    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && {expr("needs.classify-backend-deployment.outputs.deployed == 'true'")}
-'''
+            exact-deployment-proof:
+              needs: classify-backend-deployment
+              if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && {expr("needs.classify-backend-deployment.outputs.deployed == 'true'")}
+          ''')
           generalized_path.write_text(generalized.replace(old_proof, new_proof))
           PY
 
       - name: Commit narrow release-gate changes
+        shell: bash
         run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add .github/workflows/deploy-supabase.yml .github/workflows/verify-generalized-daily-backend.yml
