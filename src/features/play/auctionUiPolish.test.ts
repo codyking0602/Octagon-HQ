@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { auctionModeGroups, auctionModes } from "./auctionContract";
+import { auctionModeArtwork } from "./auctionModeArtwork";
 import { playGames } from "./playRegistry";
 
 const page = readFileSync("src/features/play/AuctionPage.tsx", "utf8");
@@ -59,15 +60,17 @@ describe("Auction release polish", () => {
     );
   });
 
-  it("keeps the full selected format visible while tightening the live auction hierarchy", () => {
+  it("keeps the full selected format visible while giving live artwork enough room", () => {
     expect(page).toContain('<AuctionArtworkImage modeId={state.mode_id} className="auction-board__image" />');
     expect(page).toContain('<Link className="auction-board__back" to="/play">');
     expect(page).toContain('<p className="eyebrow">AUCTION</p>');
     expect(page).toContain("<h1>{mode.displayName}</h1>");
     expect(page).toContain(">REFRESH</button>");
     expect(page).not.toContain("SELECTED AUCTION · {mode.displayName}");
-    expect(styles).toMatch(/\.auction-board__header\s*\{[\s\S]*?min-height:\s*142px;[\s\S]*?gap:\s*10px;[\s\S]*?overflow:\s*hidden;/);
-    expect(styles).toMatch(/\.auction-board__image\s*\{[\s\S]*?object-position:\s*50% 38% !important;/);
+    expect(styles).toMatch(/\.auction-board__header\s*\{[\s\S]*?min-height:\s*160px;[\s\S]*?gap:\s*10px;[\s\S]*?overflow:\s*hidden;/);
+    expect(styles).toMatch(/\.auction-board__image\s*\{[\s\S]*?object-fit:\s*cover;/);
+    expect(styles).not.toMatch(/\.auction-board__image\s*\{[\s\S]*?object-position:/);
+    expect(auctionModeArtwork("conor-mcgregor-performances").objectPosition).toBe("50% 20%");
     expect(styles).toMatch(/\.auction-board__back strong\s*\{[\s\S]*?font-size:\s*12px;/);
     expect(styles).toMatch(/\.auction-board__title h1\s*\{[\s\S]*?white-space:\s*normal;/);
     expect(styles).toMatch(/\.auction-scoreboard\s*\{[\s\S]*?padding:\s*11px 12px/);
