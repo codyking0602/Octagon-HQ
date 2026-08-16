@@ -1,0 +1,107 @@
+name: Measure Supabase DB Prepull
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/measure-supabase-db-prepull.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  measure:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+    steps:
+      - name: Check out exact source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+
+      - name: Verify exact checked-out SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          checked_out_sha=$(git rev-parse HEAD)
+          test "$checked_out_sha" = "$SOURCE_SHA"
+          echo "Measurement source verified: $checked_out_sha"
+
+      - name: Set up Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: 2.109.1
+
+      - name: Resolve database bootstrap image versions
+        shell: bash
+        run: |
+          set -euo pipefail
+          service_table=$(supabase services)
+          printf '%s\n' "$service_table"
+
+          : > "$RUNNER_TEMP/supabase-db-images.txt"
+          for service in \
+            supabase/postgres \
+            supabase/gotrue \
+            supabase/realtime \
+            supabase/storage-api
+          do
+            version=$(printf '%s\n' "$service_table" | sed 's/│/|/g' | awk -F '|' -v service="$service" '
+              {
+                image = $1
+                version = $2
+                gsub(/^[[:space:]]+|[[:space:]]+$/, "", image)
+                gsub(/^[[:space:]]+|[[:space:]]+$/, "", version)
+                if (image == service) {
+                  print version
+                  exit
+                }
+              }
+            ')
+            if [ -z "$version" ]; then
+              echo "::error title=Supabase service version missing::Could not resolve $service from supabase services."
+              exit 1
+            fi
+            echo "ghcr.io/${service}:${version}" >> "$RUNNER_TEMP/supabase-db-images.txt"
+          done
+
+          echo "Database bootstrap images:"
+          cat "$RUNNER_TEMP/supabase-db-images.txt"
+
+      - name: Pull database bootstrap images in parallel
+        shell: bash
+        run: |
+          set -euo pipefail
+          xargs -r -n 1 -P 4 docker pull < "$RUNNER_TEMP/supabase-db-images.txt"
+
+      - name: Execute the unchanged fresh-database SQL proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          supabase db start
+          trap 'supabase stop --no-backup >/dev/null 2>&1 || true' EXIT
+
+          db_url=$(supabase status -o env | sed -n 's/^DB_URL=//p' | tr -d '"')
+          if [ -z "$db_url" ]; then
+            echo "::error title=Local Supabase database unavailable::The local database started, but its connection URL was not reported."
+            exit 1
+          fi
+
+          for test_file in \
+            supabase/tests/auction_private_lifecycle.sql \
+            supabase/tests/auction_private_lifecycle_hardening.sql \
+            supabase/tests/auction_playable_server_engine.sql \
+            supabase/tests/auction_notifications_share_release.sql \
+            supabase/tests/auction_launch_notification.sql \
+            supabase/tests/auction_catalog_expansion.sql \
+            supabase/tests/pick_monitoring_truthful_decisions.sql
+          do
+            echo "Executing $test_file"
+            psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"
+          done
+
+          echo "Fresh-database SQL proof passed after parallel image prepull."
