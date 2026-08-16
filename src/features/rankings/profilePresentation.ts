@@ -46,6 +46,18 @@ export const profileCategories = [
 
 export type ProfileCategory = (typeof profileCategories)[number];
 
+type ProfileCategoryBoard = ReturnType<typeof categoryBoard>;
+const profileCategoryBoardCache = new Map<string, ProfileCategoryBoard>();
+
+function cachedProfileCategoryBoard(gender: CategoryGender, category: ProfileCategoryKey) {
+  const key = `${gender}:${category}`;
+  const cached = profileCategoryBoardCache.get(key);
+  if (cached) return cached;
+  const board = categoryBoard(gender, category);
+  profileCategoryBoardCache.set(key, board);
+  return board;
+}
+
 export function profileDisplayName(fighter: RankingFighter) {
   return formatFighterDisplayName(fighter.slug, fighter.name, "profile");
 }
@@ -73,7 +85,7 @@ function genderForFighter(fighter: RankingFighter): CategoryGender {
 export function profileCategoryRows(fighter: RankingFighter) {
   const gender = genderForFighter(fighter);
   return profileCategories.map((category) => {
-    const board = categoryBoard(gender, category.key);
+    const board = cachedProfileCategoryBoard(gender, category.key);
     const rank = board.findIndex((row) => row.slug === fighter.slug) + 1;
     const rating = categoryDisplayRating(gender, category.key, fighter);
     return {
