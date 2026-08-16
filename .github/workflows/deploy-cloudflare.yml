@@ -160,13 +160,15 @@ jobs:
           fi
           echo "Exact application source verified: $checked_out_sha"
 
-      - name: Set up Node
+      - name: Set up Node and npm cache
         uses: actions/setup-node@v4
         with:
-          node-version-file: .nvmrc
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
 
-      - name: Install application dependencies
-        run: npm install --silent
+      - name: Install locked application dependencies
+        run: npm ci --silent --no-audit --no-fund
 
       - name: Download verified public browser configuration
         uses: actions/download-artifact@v4
@@ -250,6 +252,7 @@ jobs:
       SOURCE_PR_NUMBER: ${{ inputs.pr_number || '0' }}
       OCTAGON_PRODUCTION_URL: https://octagon.hq-app.workers.dev
       TRUSTED_WORKFLOW_SHA: ${{ github.workflow_sha }}
+      WRANGLER_VERSION: 4.123.0
     steps:
       - name: Revalidate requested PR head before production credentials
         if: env.SOURCE_PR_NUMBER != '0'
@@ -350,7 +353,15 @@ jobs:
         with:
           node-version: 22
 
+      - name: Restore trusted Wrangler cache
+        id: wrangler-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/octagon-wrangler
+          key: octagon-wrangler-${{ runner.os }}-node22-${{ env.WRANGLER_VERSION }}
+
       - name: Install trusted Wrangler outside the application artifact
+        if: steps.wrangler-cache.outputs.cache-hit != 'true'
         shell: bash
         env:
           npm_config_registry: https://registry.npmjs.org/
@@ -360,9 +371,15 @@ jobs:
           mkdir -p "$tool_dir"
           cd "$tool_dir"
           npm init --yes --silent >/dev/null
-          npm install --silent --ignore-scripts wrangler@4
-          wrangler_bin="$tool_dir/node_modules/.bin/wrangler"
+          npm install --silent --ignore-scripts --no-audit --no-fund "wrangler@$WRANGLER_VERSION"
+
+      - name: Verify trusted Wrangler runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          wrangler_bin="$RUNNER_TEMP/octagon-wrangler/node_modules/.bin/wrangler"
           test -x "$wrangler_bin"
+          "$wrangler_bin" --version | grep -Fq "$WRANGLER_VERSION"
           echo "WRANGLER_BIN=$wrangler_bin" >> "$GITHUB_ENV"
 
       - name: Check Cloudflare deployment credentials
