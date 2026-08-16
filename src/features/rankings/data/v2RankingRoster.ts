@@ -330,6 +330,24 @@ const jonJones = {
   },
 };
 
+const georgesStPierreBaseline = historicalMigrationSeedJson.fighters.find(
+  (fighter) => fighter.fighter === "Georges St-Pierre",
+);
+
+if (!georgesStPierreBaseline) {
+  throw new Error("Georges St-Pierre is missing from the sealed ranking baseline.");
+}
+
+const georgesStPierre = {
+  ...georgesStPierreBaseline,
+  presentation: {
+    ...georgesStPierreBaseline.presentation,
+    oneLiner: "St-Pierre controlled fights with a sharp jab, explosive takedowns, suffocating top pressure, and elite defensive awareness. His prime stood out for adaptability, pace, and the ability to dictate where exchanges happened while banking rounds with remarkable consistency.",
+    whyRankedHere: "St-Pierre built one of the UFC's deepest championship resumes at welterweight, beating Matt Hughes, BJ Penn, Jon Fitch, Carlos Condit, and elite contenders across multiple generations. He avenged both UFC losses, then returned after four years away to win the middleweight title, adding two-division success to sustained divisional dominance.",
+    whyNotHigher: "The Serra upset is the clearest blemish on St-Pierre's prime, while Jones built a larger body of championship work and remained at the top for longer. St-Pierre's resume is cleaner than almost anyone else's, but against the strongest case above him, the difference is sustained title-level volume rather than quality of opposition.",
+  },
+};
+
 const randyCoutureBaseline = historicalMigrationSeedJson.fighters.find(
   (fighter) => fighter.fighter === "Randy Couture",
 );
@@ -553,6 +571,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     "Stipe Miocic": stipeMiocic,
     "Daniel Cormier": danielCormier,
     "Jon Jones": jonJones,
+    "Georges St-Pierre": georgesStPierre,
     "Randy Couture": randyCouture,
     "Israel Adesanya": israelAdesanya,
     "Alex Pereira": alexPereira,
@@ -573,7 +592,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     },
   },
   factsVersion: "octagon-hq-v2-rda-facts-20260807",
-  judgmentVersion: "octagon-hq-v2-robbie-lawler-profile-20260816",
+  judgmentVersion: "octagon-hq-v2-georges-st-pierre-profile-20260816",
   eraDepthVersion: "octagon-hq-v2-rda-20260730",
   eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
 };

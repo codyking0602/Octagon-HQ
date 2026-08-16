@@ -38,6 +38,7 @@ describe("V2 ranking roster overlay", () => {
       "Stipe Miocic",
       "Daniel Cormier",
       "Jon Jones",
+      "Georges St-Pierre",
       "Randy Couture",
       "Israel Adesanya",
       "Alex Pereira",
@@ -53,7 +54,7 @@ describe("V2 ranking roster overlay", () => {
     ]);
     expect(sourceOverrides).toMatchObject({
       factsVersion: "octagon-hq-v2-rda-facts-20260807",
-      judgmentVersion: "octagon-hq-v2-robbie-lawler-profile-20260816",
+      judgmentVersion: "octagon-hq-v2-georges-st-pierre-profile-20260816",
       eraDepthVersion: "octagon-hq-v2-rda-20260730",
       eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
     });
@@ -417,6 +418,37 @@ describe("V2 ranking roster overlay", () => {
       whyNotHigher,
     });
     expect(`${oneLiner}${whyRankedHere}${whyNotHigher}`).toMatch(/^[\x00-\x7F]+$/);
+  });
+
+  it("replaces only Georges St-Pierre's approved profile copy", () => {
+    const oneLiner = "St-Pierre controlled fights with a sharp jab, explosive takedowns, suffocating top pressure, and elite defensive awareness. His prime stood out for adaptability, pace, and the ability to dictate where exchanges happened while banking rounds with remarkable consistency.";
+    const whyRankedHere = "St-Pierre built one of the UFC's deepest championship resumes at welterweight, beating Matt Hughes, BJ Penn, Jon Fitch, Carlos Condit, and elite contenders across multiple generations. He avenged both UFC losses, then returned after four years away to win the middleweight title, adding two-division success to sustained divisional dominance.";
+    const whyNotHigher = "The Serra upset is the clearest blemish on St-Pierre's prime, while Jones built a larger body of championship work and remained at the top for longer. St-Pierre's resume is cleaner than almost anyone else's, but against the strongest case above him, the difference is sustained title-level volume rather than quality of opposition.";
+    const historical = historicalRankingMigrationInputs.fighters.find(
+      (fighter) => fighter.fighter === "Georges St-Pierre",
+    );
+    const current = canonicalRankingInputs.fighters.find(
+      (fighter) => fighter.fighter === "Georges St-Pierre",
+    );
+
+    expect(historical).toBeDefined();
+    expect(current).toBeDefined();
+    expect(current?.presentation.oneLiner).toBe(oneLiner);
+    expect(current?.presentation.whyRankedHere).toBe(whyRankedHere);
+    expect(current?.presentation.whyNotHigher).toBe(whyNotHigher);
+    expect(current?.facts).toEqual(historical?.facts);
+    expect(current?.era).toEqual(historical?.era);
+    expect(current?.judgments).toEqual(historical?.judgments);
+    expect(current?.eraDepth).toEqual(historical?.eraDepth);
+    expect(current?.presentation).toEqual({
+      ...historical?.presentation,
+      oneLiner,
+      whyRankedHere,
+      whyNotHigher,
+    });
+    for (const value of [oneLiner, whyRankedHere, whyNotHigher]) {
+      expect(value).toMatch(/^[\x00-\x7F]+$/);
+    }
   });
 
   it("replaces only Randy Couture's approved profile copy", () => {
