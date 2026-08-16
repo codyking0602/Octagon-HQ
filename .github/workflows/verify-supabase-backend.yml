@@ -20,22 +20,102 @@ permissions:
   actions: read
   contents: read
 
+env:
+  SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
 jobs:
-  verify:
+  fresh_database_proof:
     if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 15
+    steps:
+      - name: Check out exact verification source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 1
+          persist-credentials: false
+          show-progress: false
+
+      - name: Verify exact checked-out SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          checked_out_sha=$(git rev-parse HEAD)
+          if [ "$checked_out_sha" != "$SOURCE_SHA" ]; then
+            echo "::error title=Exact SHA checkout failed::Expected $SOURCE_SHA but checked out $checked_out_sha."
+            exit 1
+          fi
+          echo "Exact verification source verified: $checked_out_sha"
+
+      - name: Set up Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: 2.109.1
+
+      - name: Execute Auction lifecycle SQL tests on a fresh local database
+        shell: bash
+        run: |
+          set -euo pipefail
+          supabase db start
+          trap 'supabase stop --no-backup >/dev/null 2>&1 || true' EXIT
+
+          db_url=$(supabase status -o env | sed -n 's/^DB_URL=//p' | tr -d '"')
+          if [ -z "$db_url" ]; then
+            echo "::error title=Local Supabase database unavailable::The local database started, but its connection URL was not reported."
+            exit 1
+          fi
+
+          for test_file in \
+            supabase/tests/auction_private_lifecycle.sql \
+            supabase/tests/auction_private_lifecycle_hardening.sql \
+            supabase/tests/auction_playable_server_engine.sql \
+            supabase/tests/auction_notifications_share_release.sql \
+            supabase/tests/auction_launch_notification.sql \
+            supabase/tests/auction_catalog_expansion.sql \
+            supabase/tests/pick_monitoring_truthful_decisions.sql
+          do
+            echo "Executing $test_file"
+            psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"
+          done
+
+          echo "Auction lifecycle and launch-notification SQL tests executed successfully against a fresh local database."
+          echo "Truthful Picks monitoring and per-fight lock SQL tests executed successfully against the same fresh local database."
+
+  production_proof:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      current_main_sha: ${{ steps.live_frontend.outputs.current_main_sha }}
+      verified_live_frontend_sha: ${{ steps.live_frontend.outputs.sha }}
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
       OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
       EXPECTED_LIVE_MAIN_REF: ${{ github.event.repository.default_branch || 'main' }}
-      EXPECTED_SYNC_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      EXPECTED_SYNC_SOURCE_SHA: ${{ env.SOURCE_SHA }}
 
     steps:
-      - name: Check out repository
+      - name: Check out exact verification source
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 1
+          persist-credentials: false
+          show-progress: false
+
+      - name: Verify exact checked-out SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          checked_out_sha=$(git rev-parse HEAD)
+          if [ "$checked_out_sha" != "$SOURCE_SHA" ]; then
+            echo "::error title=Exact SHA checkout failed::Expected $SOURCE_SHA but checked out $checked_out_sha."
+            exit 1
+          fi
+          echo "Exact verification source verified: $checked_out_sha"
 
       - name: Resolve verified live frontend SHA for current main
         id: live_frontend
@@ -205,35 +285,6 @@ jobs:
           fi
 
           echo "Database password and migration connection are valid."
-
-      - name: Execute Auction lifecycle SQL tests on a fresh local database
-        shell: bash
-        run: |
-          set -euo pipefail
-          supabase db start
-          trap 'supabase stop --no-backup >/dev/null 2>&1 || true' EXIT
-
-          db_url=$(supabase status -o env | sed -n 's/^DB_URL=//p' | tr -d '"')
-          if [ -z "$db_url" ]; then
-            echo "::error title=Local Supabase database unavailable::The local database started, but its connection URL was not reported."
-            exit 1
-          fi
-
-          for test_file in \
-            supabase/tests/auction_private_lifecycle.sql \
-            supabase/tests/auction_private_lifecycle_hardening.sql \
-            supabase/tests/auction_playable_server_engine.sql \
-            supabase/tests/auction_notifications_share_release.sql \
-            supabase/tests/auction_launch_notification.sql \
-            supabase/tests/auction_catalog_expansion.sql \
-            supabase/tests/pick_monitoring_truthful_decisions.sql
-          do
-            echo "Executing $test_file"
-            psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"
-          done
-
-          echo "Auction lifecycle and launch-notification SQL tests executed successfully against a fresh local database."
-          echo "Truthful Picks monitoring and per-fight lock SQL tests executed successfully against the same fresh local database."
 
       - name: Verify required Edge Function secret names
         shell: bash
@@ -496,14 +547,36 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
 
+  verify:
+    if: always() && (github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository)
+    needs: [fresh_database_proof, production_proof]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require both backend verification lanes
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ needs.fresh_database_proof.result }}" != "success" ]; then
+            echo "::error title=Fresh database proof failed::Expected success, received ${{ needs.fresh_database_proof.result }}."
+            exit 1
+          fi
+          if [ "${{ needs.production_proof.result }}" != "success" ]; then
+            echo "::error title=Production backend proof failed::Expected success, received ${{ needs.production_proof.result }}."
+            exit 1
+          fi
+          echo "Fresh database and live production backend proofs both passed."
+
       - name: Record verification boundary
         shell: bash
         env:
-          CURRENT_MAIN_SHA: ${{ steps.live_frontend.outputs.current_main_sha }}
-          VERIFIED_LIVE_FRONTEND_SHA: ${{ steps.live_frontend.outputs.sha }}
+          CURRENT_MAIN_SHA: ${{ needs.production_proof.outputs.current_main_sha }}
+          VERIFIED_LIVE_FRONTEND_SHA: ${{ needs.production_proof.outputs.verified_live_frontend_sha }}
+          EXPECTED_SYNC_SOURCE_SHA: ${{ env.SOURCE_SHA }}
+          OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
         run: |
           {
             echo "### Supabase backend verification"
+            echo "- Exact source verified in both backend proof lanes: $SOURCE_SHA"
             echo "- Current main considered for verification: $CURRENT_MAIN_SHA"
             echo "- Verified live frontend SHA: $VERIFIED_LIVE_FRONTEND_SHA"
             echo "- Any commits between those SHAs changed no frontend runtime-owned paths"
