@@ -31,11 +31,11 @@ describe("Validate V2 workflow", () => {
     );
   });
 
-  it("shards the complete test suite across eight parallel lanes", () => {
+  it("shards the complete test suite across twelve parallel lanes", () => {
     expect(workflow.match(/\n        run: npm install --silent/g)).toHaveLength(3);
-    expect(workflow).toContain("shard: [1, 2, 3, 4, 5, 6, 7, 8]");
+    expect(workflow).toContain("shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]");
     expect(workflow).toContain(
-      "npm test -- --shard=${{ matrix.shard }}/8 2>&1 | tee test-shard-${{ matrix.shard }}.log",
+      "npm test -- --shard=${{ matrix.shard }}/12 2>&1 | tee test-shard-${{ matrix.shard }}.log",
     );
     expect(workflow).toContain("fail-fast: false");
   });
