@@ -1,0 +1,45 @@
+name: Generate Dependency Lock Experiment
+
+on:
+  push:
+    branches:
+      - agent/dependency-lock-cache
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash --noprofile --norc -eo pipefail {0}
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out exact source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Set up project Node version
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Generate package lock from the real npm registry
+        run: |
+          npm --version
+          npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+          test -f package-lock.json
+
+      - name: Prove the generated lock can perform a clean install
+        run: npm ci --no-audit --no-fund
+
+      - name: Upload generated lock
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-package-lock-${{ github.sha }}
+          path: package-lock.json
+          retention-days: 1
