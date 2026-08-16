@@ -25,7 +25,51 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  release-scope:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+      should_deploy: ${{ steps.scope.outputs.should_deploy }}
+      reason: ${{ steps.scope.outputs.reason }}
+    steps:
+      - name: Check out exact release source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha || github.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+          show-progress: false
+
+      - name: Determine whether Supabase-owned source changed
+        id: scope
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          BACKEND_RELEASE_BEFORE_SHA: ${{ github.event.before || '' }}
+          BACKEND_RELEASE_SOURCE_SHA: ${{ inputs.source_sha || github.sha }}
+        run: node scripts/backend-release-scope.mjs
+
+  backend-unchanged:
+    needs: release-scope
+    if: ${{ needs.release-scope.outputs.should_deploy != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Record unchanged backend release
+        env:
+          SOURCE_SHA: ${{ inputs.source_sha || github.sha }}
+          SCOPE_REASON: ${{ needs.release-scope.outputs.reason }}
+        run: |
+          {
+            echo "### Octagon HQ V2 backend unchanged"
+            echo "- Exact release SHA: $SOURCE_SHA"
+            echo "- Scope result: $SCOPE_REASON"
+            echo "- No Supabase credentials, CLI, migrations, functions, secrets, or scheduler operations were used"
+            echo "- The last verified backend deployment remains the canonical live backend because no backend-owned source changed"
+          } >> "$GITHUB_STEP_SUMMARY"
+
   deploy:
+    needs: release-scope
+    if: ${{ needs.release-scope.outputs.should_deploy == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
