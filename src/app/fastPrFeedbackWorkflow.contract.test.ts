@@ -8,6 +8,7 @@ describe("draft fast feedback and final validation", () => {
   it("reserves the full validation lanes for ready PRs and main pushes", () => {
     const readyOrMain = "github.event_name == 'push' || github.event.pull_request.draft == false";
     expect(fullValidation.match(new RegExp(readyOrMain.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"))).toHaveLength(4);
+    expect(fullValidation).toContain("types: [opened, synchronize, reopened, ready_for_review]");
     expect(fullValidation).toContain("shard: [1, 2, 3, 4, 5, 6, 7, 8]");
     expect(fullValidation).toContain("name: validate");
   });
