@@ -183,6 +183,7 @@ describe("PicksPage", () => {
     expect(screen.getByText("SCORING & UNDERDOG LOCK RULES")).toBeInTheDocument();
     expect(screen.getAllByLabelText("Sportsbook odds source")).toHaveLength(1);
     expect(screen.queryByLabelText("Current Picks progress")).not.toBeInTheDocument();
+    expect(await screen.findByText("STANDINGS & EVENTS")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: /Bogdan Guskov/i }));
     await waitFor(() => expect(savePick).toHaveBeenCalledWith(event.eventId, "ankalaev-guskov", "bogdan-guskov"));

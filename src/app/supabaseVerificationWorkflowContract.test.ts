@@ -55,6 +55,26 @@ describe("Supabase backend verification workflow contract", () => {
     expect(liveWebkit).not.toContain("supabase db start");
   });
 
+  it("prepulls only the fresh-database bootstrap images in parallel from dynamic CLI versions", () => {
+    const localSql = workflowJob(backendWorkflow, "local_sql", "live_backend");
+    const liveBackend = workflowJob(backendWorkflow, "live_backend", "live_webkit");
+    const liveWebkit = workflowJob(backendWorkflow, "live_webkit", "verify");
+
+    expect(localSql).toContain("service_table=$(supabase services)");
+    expect(localSql).toContain("supabase/postgres");
+    expect(localSql).toContain("supabase/gotrue");
+    expect(localSql).toContain("supabase/realtime");
+    expect(localSql).toContain("supabase/storage-api");
+    expect(localSql).toContain('echo "ghcr.io/${service}:${version}"');
+    expect(localSql).toContain("xargs -r -n 1 -P 4 docker pull");
+    expect(localSql).not.toMatch(/ghcr\.io\/supabase\/postgres:[0-9]/);
+    expect(localSql).not.toMatch(/ghcr\.io\/supabase\/gotrue:v[0-9]/);
+    expect(localSql).not.toMatch(/ghcr\.io\/supabase\/realtime:v[0-9]/);
+    expect(localSql).not.toMatch(/ghcr\.io\/supabase\/storage-api:v[0-9]/);
+    expect(liveBackend).not.toContain("xargs -r -n 1 -P 4 docker pull");
+    expect(liveWebkit).not.toContain("xargs -r -n 1 -P 4 docker pull");
+  });
+
   it("checks the exact requested source SHA in every lane", () => {
     const localSql = workflowJob(backendWorkflow, "local_sql", "live_backend");
     const liveBackend = workflowJob(backendWorkflow, "live_backend", "live_webkit");
