@@ -54,7 +54,7 @@ jobs:
         run: npm run typecheck 2>&1 | tee typecheck.log
 
       - name: Upload typecheck diagnostics
-        if: steps.typecheck.outcome == 'failure'
+        if: failure() && steps.typecheck.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
           name: typecheck-diagnostics-${{ env.SOURCE_SHA }}
@@ -62,7 +62,7 @@ jobs:
           retention-days: 7
 
       - name: Summarize typecheck failure
-        if: steps.typecheck.outcome == 'failure'
+        if: failure() && steps.typecheck.outcome == 'failure'
         run: |
           {
             echo "### Typecheck failed"
@@ -78,7 +78,7 @@ jobs:
         run: npm run build:artifacts 2>&1 | tee build.log
 
       - name: Upload build diagnostics
-        if: steps.build.outcome == 'failure'
+        if: failure() && steps.build.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
           name: build-diagnostics-${{ env.SOURCE_SHA }}
@@ -86,7 +86,7 @@ jobs:
           retention-days: 7
 
       - name: Summarize build failure
-        if: steps.build.outcome == 'failure'
+        if: failure() && steps.build.outcome == 'failure'
         run: |
           {
             echo "### Production build failed"
@@ -136,7 +136,7 @@ jobs:
         run: npm test -- --shard=${{ matrix.shard }}/4 2>&1 | tee test-shard-${{ matrix.shard }}.log
 
       - name: Upload test diagnostics
-        if: steps.test.outcome == 'failure'
+        if: failure() && steps.test.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
           name: test-diagnostics-shard-${{ matrix.shard }}-${{ env.SOURCE_SHA }}
@@ -144,7 +144,7 @@ jobs:
           retention-days: 7
 
       - name: Summarize test failure
-        if: steps.test.outcome == 'failure'
+        if: failure() && steps.test.outcome == 'failure'
         run: |
           {
             echo "### Test shard ${{ matrix.shard }}/4 failed"
@@ -202,7 +202,7 @@ jobs:
           retention-days: 7
 
       - name: Summarize phone-layout failure
-        if: steps.phone.outcome == 'failure'
+        if: failure() && steps.phone.outcome == 'failure'
         run: |
           {
             echo "### Today's Challenge phone proof failed"
