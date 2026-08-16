@@ -96,6 +96,7 @@ describe("Fight Night Control results lifecycle", () => {
     const repo = repository(event("locked", "red_win"), event("complete", "red_win"));
     renderPage(repo);
     const recapInput = await screen.findByRole("textbox", { name: "RECAP URL" });
+    // Let the event-change reset effect settle before simulating owner input.
     await new Promise((resolve) => setTimeout(resolve, 0));
     fireEvent.change(recapInput, { target: { value: "not-a-url" } });
     expect(recapInput).toHaveValue("not-a-url");
