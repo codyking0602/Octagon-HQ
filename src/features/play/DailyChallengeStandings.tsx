@@ -60,10 +60,15 @@ export function DailyChallengeStandings({ standings, loading, error, onRefresh }
   return (
     <details className="daily-standings">
       <summary>
-        <div><p className="eyebrow">DAILY CHALLENGE</p><strong>Championship Standings</strong></div>
-        <span>{loading && !standings ? "LOADING STANDINGS" : current
-          ? <>YOUR RANK <b>#{championshipRanks.get(current.profileId)}</b> · <b>{current.weeklyTitles}</b> WEEKLY {current.weeklyTitles === 1 ? "TITLE" : "TITLES"}</>
-          : `${active.length} CONTENDERS`}</span>
+        <div className="daily-standings__summary-copy">
+          <p className="eyebrow">DAILY CHALLENGE</p>
+          <strong>Championship Standings</strong>
+          <span className="daily-standings__summary-status">
+            {loading && !standings ? "LOADING STANDINGS" : current
+              ? <>YOUR RANK <b>#{championshipRanks.get(current.profileId)}</b> · <b>{current.weeklyTitles}</b> WEEKLY {current.weeklyTitles === 1 ? "TITLE" : "TITLES"}</>
+              : `${active.length} CONTENDERS`}
+          </span>
+        </div>
       </summary>
 
       <div className="daily-standings__body">
@@ -82,7 +87,7 @@ export function DailyChallengeStandings({ standings, loading, error, onRefresh }
           </section>
         ) : null}
 
-        <div className="daily-standings__career-title"><p className="eyebrow">CAREER</p><strong>CHAMPIONSHIP STANDINGS</strong></div>
+        <div className="daily-standings__career-title"><p className="eyebrow">CAREER STANDINGS</p></div>
         <div className="daily-standings__header" aria-hidden="true">
           <span>Rank</span><span>Member</span><span>Weekly<br />Titles</span><span>Wins</span><span>Avg<br />Score</span><span>Current<br />Streak</span><span>Longest<br />Streak</span>
         </div>

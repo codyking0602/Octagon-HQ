@@ -27,12 +27,14 @@ describe("Daily Challenge championship standings", () => {
     };
     const { container } = render(<DailyChallengeStandings standings={standings} loading={false} error={null} onRefresh={vi.fn()} />);
     fireEvent.click(screen.getByText("Championship Standings"));
-    expect(screen.getByText(/YOUR RANK/).textContent).toContain("#1 · 2 WEEKLY TITLES");
+    expect(container.querySelector(".daily-standings__summary-status")?.textContent).toContain("YOUR RANK #1 · 2 WEEKLY TITLES");
+    expect(container.querySelector(".daily-standings__career-title")?.textContent).toBe("CAREER STANDINGS");
     expect(screen.getByText("THIS WEEK · AUG 17–23")).toBeInTheDocument();
     const week = screen.getByRole("region", { name: "Current week race" });
     expect(within(week).getByText("#2")).toBeInTheDocument();
     expect(within(week).getByText("2 wins")).toBeInTheDocument();
     expect(screen.getAllByText("#1").length).toBeGreaterThan(1);
+    expect(container.querySelectorAll(".daily-standings__titles")).toHaveLength(3);
     expect(screen.getAllByText("6d")).not.toHaveLength(0);
     expect(screen.getAllByText("13d")).not.toHaveLength(0);
     expect(container.querySelector(".daily-standings__header")?.textContent).not.toContain("Played");
