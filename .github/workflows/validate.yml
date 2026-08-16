@@ -8,6 +8,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: validate-v2-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 env:
   SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
   VITE_SUPABASE_URL: https://octagon-validation.supabase.co
@@ -98,13 +102,13 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
   tests:
-    name: test shard ${{ matrix.shard }}/4
+    name: test shard ${{ matrix.shard }}/8
     runs-on: ubuntu-latest
     timeout-minutes: 8
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8]
     steps:
       - name: Check out exact validation source
         uses: actions/checkout@v4
@@ -133,7 +137,7 @@ jobs:
 
       - name: Run full-suite shard
         id: test
-        run: npm test -- --shard=${{ matrix.shard }}/4 2>&1 | tee test-shard-${{ matrix.shard }}.log
+        run: npm test -- --shard=${{ matrix.shard }}/8 2>&1 | tee test-shard-${{ matrix.shard }}.log
 
       - name: Upload test diagnostics
         if: failure() && steps.test.outcome == 'failure'
@@ -147,9 +151,9 @@ jobs:
         if: failure() && steps.test.outcome == 'failure'
         run: |
           {
-            echo "### Test shard ${{ matrix.shard }}/4 failed"
+            echo "### Test shard ${{ matrix.shard }}/8 failed"
             echo "Exact source: \`$SOURCE_SHA\`"
-            echo "Reproduce: \`npm install --silent && npm test -- --shard=${{ matrix.shard }}/4\`"
+            echo "Reproduce: \`npm install --silent && npm test -- --shard=${{ matrix.shard }}/8\`"
             echo '```text'
             tail -n 100 test-shard-${{ matrix.shard }}.log 2>/dev/null || true
             echo '```'

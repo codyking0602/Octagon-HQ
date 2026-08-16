@@ -253,23 +253,46 @@ describe("Event Setup and card review", () => {
     ));
   });
 
-  it("keeps review edits staged and publishes only after confirmation", async () => {
-    vi.spyOn(window, "confirm").mockReturnValue(true);
+  it("keeps review edits staged before publish", async () => {
     const repo = repository(stagedDraft);
     renderPage(repo);
     expect(await screen.findByRole("heading", { name: "UFC Fight Night" })).toBeInTheDocument();
     expect(screen.getByText("2 fights included")).toBeInTheDocument();
+
     fireEvent.change(screen.getByLabelText("VENUE"), { target: { value: "Updated Arena" } });
     fireEvent.click(screen.getByRole("button", { name: "SAVE EVENT DETAILS" }));
-    await waitFor(() => expect(repo.updateMetadata).toHaveBeenCalledWith(stagedDraft.draftId, expect.objectContaining({ venue: "Updated Arena" })));
+    await waitFor(() => expect(repo.updateMetadata).toHaveBeenCalledWith(
+      stagedDraft.draftId,
+      expect.objectContaining({ venue: "Updated Arena" }),
+    ));
+
     const moveDown = screen.getByRole("button", { name: /Move Red Fighter vs Blue Fighter down/i });
     await waitFor(() => expect(moveDown).toBeEnabled());
     fireEvent.click(moveDown);
-    await waitFor(() => expect(repo.reorderBouts).toHaveBeenCalledWith(stagedDraft.draftId, ["main-second-fighter-third-fighter", "main-event-red-fighter-blue-fighter"]));
-    const publish = screen.getByRole("button", { name: "PUBLISH CARD" });
+    await waitFor(() => expect(repo.reorderBouts).toHaveBeenCalledWith(
+      stagedDraft.draftId,
+      ["main-second-fighter-third-fighter", "main-event-red-fighter-blue-fighter"],
+    ));
+    expect(repo.publishDraft).not.toHaveBeenCalled();
+  });
+
+  it("publishes only after owner confirmation", async () => {
+    const confirm = vi.spyOn(window, "confirm")
+      .mockReturnValueOnce(false)
+      .mockReturnValueOnce(true);
+    const repo = repository(stagedDraft);
+    renderPage(repo);
+
+    const publish = await screen.findByRole("button", { name: "PUBLISH CARD" });
     await waitFor(() => expect(publish).toBeEnabled());
+
+    fireEvent.click(publish);
+    expect(confirm).toHaveBeenCalledTimes(1);
+    expect(repo.publishDraft).not.toHaveBeenCalled();
+
     fireEvent.click(publish);
     await waitFor(() => expect(repo.publishDraft).toHaveBeenCalledWith(stagedDraft.draftId));
+    expect(confirm).toHaveBeenCalledTimes(2);
   });
 
   it("shows warnings and disables publish for an incomplete staged card", async () => {
