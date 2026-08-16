@@ -49,10 +49,11 @@ describe("V2 ranking roster overlay", () => {
       "Kayla Harrison",
       "Khamzat Chimaev",
       "Islam Makhachev",
+      "Robbie Lawler",
     ]);
     expect(sourceOverrides).toMatchObject({
       factsVersion: "octagon-hq-v2-rda-facts-20260807",
-      judgmentVersion: "octagon-hq-v2-islam-makhachev-profile-20260815",
+      judgmentVersion: "octagon-hq-v2-robbie-lawler-profile-20260816",
       eraDepthVersion: "octagon-hq-v2-rda-20260730",
       eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
     });
@@ -256,6 +257,37 @@ describe("V2 ranking roster overlay", () => {
     );
     const current = canonicalRankingInputs.fighters.find(
       (fighter) => fighter.fighter === "Islam Makhachev",
+    );
+
+    expect(historical).toBeDefined();
+    expect(current).toBeDefined();
+    expect(current?.presentation.oneLiner).toBe(oneLiner);
+    expect(current?.presentation.whyRankedHere).toBe(whyRankedHere);
+    expect(current?.presentation.whyNotHigher).toBe(whyNotHigher);
+    expect(current?.facts).toEqual(historical?.facts);
+    expect(current?.era).toEqual(historical?.era);
+    expect(current?.judgments).toEqual(historical?.judgments);
+    expect(current?.eraDepth).toEqual(historical?.eraDepth);
+    expect(current?.presentation).toEqual({
+      ...historical?.presentation,
+      oneLiner,
+      whyRankedHere,
+      whyNotHigher,
+    });
+    for (const value of [oneLiner, whyRankedHere, whyNotHigher]) {
+      expect(value).toMatch(/^[\x00-\x7F]+$/);
+    }
+  });
+
+  it("replaces only Robbie Lawler's approved profile copy", () => {
+    const oneLiner = "Lawler's peak paired a crushing southpaw left with sharp counters, elite durability, savage pocket work, and late-round surges that could turn momentum into a finish.";
+    const whyRankedHere = "Lawler earned this tier by winning the UFC welterweight title from Johny Hendricks, stopping Rory MacDonald in the fifth round of a title defense, and beating Carlos Condit. Two successful defenses separate him from thinner championship resumes.";
+    const whyNotHigher = "The limit is the short reign: Hendricks and Condit were split-decision wins, then Woodley took the belt by first-round knockout. Fighters above Lawler sustained championship control longer and stacked more elite UFC results.";
+    const historical = historicalRankingMigrationInputs.fighters.find(
+      (fighter) => fighter.fighter === "Robbie Lawler",
+    );
+    const current = canonicalRankingInputs.fighters.find(
+      (fighter) => fighter.fighter === "Robbie Lawler",
     );
 
     expect(historical).toBeDefined();
