@@ -102,7 +102,7 @@ describe("feature deployment workflow contract", () => {
     expect(buildJob).toContain("ref: ${{ env.SOURCE_SHA }}");
     expect(buildJob).toContain("name: octagon-public-config-${{ github.run_id }}");
     expect(buildJob).toContain('. "$config_file"');
-    expect(buildJob).toContain("npm install --silent");
+    expect(buildJob).toContain("npm ci --silent --no-audit --no-fund");
     expect(buildJob).toContain('"public/deployment.json"');
     expect(buildJob).toContain("actions/upload-artifact@v4");
     expect(buildJob).not.toContain("CLOUDFLARE_API_TOKEN");
