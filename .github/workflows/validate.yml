@@ -47,13 +47,15 @@ jobs:
           fi
           echo "Exact validation source verified: $checked_out_sha"
 
-      - name: Set up Node
+      - name: Set up Node and npm cache
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
 
-      - name: Install dependencies
-        run: npm install --silent
+      - name: Install locked dependencies
+        run: npm ci --silent --no-audit --no-fund
 
       - name: Typecheck
         id: typecheck
@@ -73,7 +75,7 @@ jobs:
           {
             echo "### Typecheck failed"
             echo "Exact source: \`$SOURCE_SHA\`"
-            echo "Reproduce: \`npm install --silent && npm run typecheck\`"
+            echo "Reproduce: \`npm ci --no-audit --no-fund && npm run typecheck\`"
             echo '```text'
             tail -n 80 typecheck.log 2>/dev/null || true
             echo '```'
@@ -97,7 +99,7 @@ jobs:
           {
             echo "### Production build failed"
             echo "Exact source: \`$SOURCE_SHA\`"
-            echo "Reproduce: \`npm install --silent && npm run typecheck && npm run build:artifacts\`"
+            echo "Reproduce: \`npm ci --no-audit --no-fund && npm run typecheck && npm run build:artifacts\`"
             echo '```text'
             tail -n 80 build.log 2>/dev/null || true
             echo '```'
@@ -130,13 +132,15 @@ jobs:
           fi
           echo "Exact validation source verified: $checked_out_sha"
 
-      - name: Set up Node
+      - name: Set up Node and npm cache
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
 
-      - name: Install dependencies
-        run: npm install --silent
+      - name: Install locked dependencies
+        run: npm ci --silent --no-audit --no-fund
 
       - name: Run full-suite shard
         id: test
@@ -156,7 +160,7 @@ jobs:
           {
             echo "### Test shard ${{ matrix.shard }}/8 failed"
             echo "Exact source: \`$SOURCE_SHA\`"
-            echo "Reproduce: \`npm install --silent && npm test -- --shard=${{ matrix.shard }}/8\`"
+            echo "Reproduce: \`npm ci --no-audit --no-fund && npm test -- --shard=${{ matrix.shard }}/8\`"
             echo '```text'
             tail -n 100 test-shard-${{ matrix.shard }}.log 2>/dev/null || true
             echo '```'
@@ -185,13 +189,15 @@ jobs:
           fi
           echo "Exact validation source verified: $checked_out_sha"
 
-      - name: Set up Node
+      - name: Set up Node and npm cache
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
 
-      - name: Install dependencies
-        run: npm install --silent
+      - name: Install locked dependencies
+        run: npm ci --silent --no-audit --no-fund
 
       - name: Verify all five Today’s Challenge phone layouts
         id: phone
@@ -215,7 +221,7 @@ jobs:
           {
             echo "### Today's Challenge phone proof failed"
             echo "Exact source: \`$SOURCE_SHA\`"
-            echo "Reproduce: \`npm install --silent && node scripts/verify-todays-challenge-phone.mjs\`"
+            echo "Reproduce: \`npm ci --no-audit --no-fund && node scripts/verify-todays-challenge-phone.mjs\`"
             echo '```text'
             tail -n 80 todays-challenge-phone.log 2>/dev/null || true
             echo '```'

@@ -47,13 +47,15 @@ jobs:
           git cat-file -e "$BASE_SHA^{commit}"
           echo "Fast feedback source verified: $checked_out_sha against base $BASE_SHA"
 
-      - name: Set up Node
+      - name: Set up Node and npm cache
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
 
-      - name: Install dependencies
-        run: npm install --silent
+      - name: Install locked dependencies
+        run: npm ci --silent --no-audit --no-fund
 
       - name: Typecheck
         run: npm run typecheck
