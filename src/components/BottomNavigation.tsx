@@ -70,30 +70,39 @@ export function BottomNavigation() {
     const viewport = window.visualViewport;
     if (!viewport) return undefined;
 
+    let resumeTimer: number | undefined;
     const syncKeyboardState = () => {
-      const activeElement = document.activeElement;
-      const editing = activeElement instanceof HTMLElement
-        && activeElement.matches("input, textarea, select, [contenteditable='true']");
       const occludedHeight = Math.max(
         0,
         window.innerHeight - viewport.height - viewport.offsetTop,
       );
-      setKeyboardOpen(editing && occludedHeight > 120);
+      setKeyboardOpen(occludedHeight > 120);
     };
     const syncAfterFocus = () => window.setTimeout(syncKeyboardState, 0);
+    const syncAfterResume = () => {
+      if (document.visibilityState !== "visible") return;
+      syncKeyboardState();
+      window.clearTimeout(resumeTimer);
+      resumeTimer = window.setTimeout(syncKeyboardState, 250);
+    };
 
     syncKeyboardState();
     viewport.addEventListener("resize", syncKeyboardState);
     viewport.addEventListener("scroll", syncKeyboardState);
     document.addEventListener("focusin", syncAfterFocus);
     document.addEventListener("focusout", syncAfterFocus);
+    document.addEventListener("visibilitychange", syncAfterResume);
     window.addEventListener("orientationchange", syncAfterFocus);
+    window.addEventListener("pageshow", syncAfterResume);
     return () => {
+      window.clearTimeout(resumeTimer);
       viewport.removeEventListener("resize", syncKeyboardState);
       viewport.removeEventListener("scroll", syncKeyboardState);
       document.removeEventListener("focusin", syncAfterFocus);
       document.removeEventListener("focusout", syncAfterFocus);
+      document.removeEventListener("visibilitychange", syncAfterResume);
       window.removeEventListener("orientationchange", syncAfterFocus);
+      window.removeEventListener("pageshow", syncAfterResume);
     };
   }, []);
 
