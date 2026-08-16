@@ -10,6 +10,14 @@ describe("Daily Challenge Standings backend contract", () => {
     "supabase/tests/daily_challenge_standings.sql",
     "utf8",
   );
+  const weeklyMigration = readFileSync(
+    "supabase/migrations/202612310021_daily_challenge_weekly_championship_standings.sql",
+    "utf8",
+  );
+  const weeklySqlTest = readFileSync(
+    "supabase/tests/daily_challenge_weekly_standings.sql",
+    "utf8",
+  );
   const generalizedSuite = readFileSync(
     "supabase/tests/generalized_todays_challenge_backend.sql",
     "utf8",
@@ -56,6 +64,48 @@ describe("Daily Challenge Standings backend contract", () => {
     expect(sqlTest).toContain("anonymous role can read Daily Challenge Standings");
     expect(generalizedSuite).toContain("\\ir daily_challenge_standings.sql");
     expect(generalizedSuite.match(/202609100001_daily_challenge_standings\.sql/g)).toHaveLength(2);
+  });
+
+  it("extends the canonical RPC with Central Monday-Sunday weekly and career fields", () => {
+    expect(weeklyMigration).toContain("create or replace function public.get_daily_challenge_standings()");
+    expect(weeklyMigration).toContain("private.daily_challenge_central_day(now())");
+    expect(weeklyMigration).toContain("extract(isodow from v_today)");
+    expect(weeklyMigration).toContain("'current_week_start'");
+    expect(weeklyMigration).toContain("'current_week_end'");
+    for (const field of [
+      "weekly_rank",
+      "weekly_wins",
+      "weekly_played",
+      "weekly_average_score",
+      "total_wins",
+      "all_time_played",
+      "all_time_average_score",
+      "current_streak",
+      "longest_streak",
+      "weekly_titles",
+    ]) {
+      expect(weeklyMigration).toContain(`'${field}'`);
+    }
+    expect(weeklyMigration).toContain("'wins', wins");
+    expect(weeklyMigration).toContain("'played', played");
+    expect(weeklyMigration).toContain("'average_score', average_score");
+    expect(weeklyMigration).toContain("'best_streak', best_streak");
+  });
+
+  it("awards only completed weekly titles by wins, average, then games, preserving co-champions", () => {
+    expect(weeklyMigration).toContain("week_start < v_week_start");
+    expect(weeklyMigration).toContain(
+      "order by weekly.wins desc, weekly.average_score desc, weekly.played desc",
+    );
+    expect(weeklyMigration).toContain("rank() over");
+    expect(weeklyMigration).not.toMatch(/weekly\.display_name|weekly\.profile_id\s+(asc|desc)/);
+    expect(weeklySqlTest).toContain("exact-tie outcomes");
+    expect(weeklySqlTest).toContain("active week proves");
+    expect(weeklySqlTest).toContain("v_week_start - 28");
+    expect(generalizedSuite).toContain("\\ir daily_challenge_weekly_standings.sql");
+    expect(generalizedSuite).toContain(
+      "\\ir ../migrations/202612310021_daily_challenge_weekly_championship_standings.sql",
+    );
   });
 
   it("replaces the old history accordion with only the approved collapsed standings and member detail", () => {
