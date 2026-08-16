@@ -31,22 +31,8 @@ jobs:
 
           path = Path('.github/workflows/deploy-supabase.yml')
           text = path.read_text()
-          old = '''                if (local_version == version) {
-                  print remote_version
-                  exit
-                }
-              }
-            ')
-'''
-          new = '''                if (local_version == version) {
-                  matched_remote_version = remote_version
-                }
-              }
-              END {
-                if (matched_remote_version != "") print matched_remote_version
-              }
-            ')
-'''
+          old = "                if (local_version == version) {\n                  print remote_version\n                  exit\n                }\n              }\n            ')\n"
+          new = "                if (local_version == version) {\n                  matched_remote_version = remote_version\n                }\n              }\n              END {\n                if (matched_remote_version != \"\") print matched_remote_version\n              }\n            ')\n"
           if text.count(old) != 1:
               raise SystemExit(f'Expected exactly one migration parser block, found {text.count(old)}')
           path.write_text(text.replace(old, new))
