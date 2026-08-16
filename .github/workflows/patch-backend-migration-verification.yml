@@ -1,0 +1,62 @@
+name: Patch Backend Migration Verification
+
+on:
+  push:
+    branches:
+      - agent/fix-backend-migration-verification
+    paths:
+      - .github/workflows/patch-backend-migration-verification.yml
+
+permissions:
+  contents: write
+
+defaults:
+  run:
+    shell: bash --noprofile --norc -eo pipefail {0}
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/fix-backend-migration-verification
+
+      - name: Replace the early-exit migration parser
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('.github/workflows/deploy-supabase.yml')
+          text = path.read_text()
+          old = '''                if (local_version == version) {
+                  print remote_version
+                  exit
+                }
+              }
+            ')
+'''
+          new = '''                if (local_version == version) {
+                  matched_remote_version = remote_version
+                }
+              }
+              END {
+                if (matched_remote_version != "") print matched_remote_version
+              }
+            ')
+'''
+          if text.count(old) != 1:
+              raise SystemExit(f'Expected exactly one migration parser block, found {text.count(old)}')
+          path.write_text(text.replace(old, new))
+          PY
+
+      - name: Commit the narrow workflow fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/workflows/deploy-supabase.yml
+          git diff --cached --check
+          git commit -m "Fix backend migration verification parser"
+          git push origin HEAD:agent/fix-backend-migration-verification
