@@ -39,7 +39,7 @@ function installVisualViewport() {
 }
 
 describe("BottomNavigation", () => {
-  it("does not float in a stale occluded viewport when the app resumes", () => {
+  it("keeps a resumed stale viewport from floating the nav above the bottom", () => {
     const viewport = installVisualViewport();
     render(
       <MemoryRouter>
@@ -47,18 +47,19 @@ describe("BottomNavigation", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByRole("navigation", { name: "Primary navigation" })).toBeInTheDocument();
+    const navigation = screen.getByRole("navigation", { name: "Primary navigation" });
+    expect(navigation).not.toHaveClass("is-keyboard-open");
 
     act(() => {
       viewport.height = 500;
       document.dispatchEvent(new Event("visibilitychange"));
     });
-    expect(screen.queryByRole("navigation", { name: "Primary navigation" })).not.toBeInTheDocument();
+    expect(navigation).toHaveClass("is-keyboard-open");
 
     act(() => {
       viewport.height = 844;
       viewport.dispatchEvent(new Event("resize"));
     });
-    expect(screen.getByRole("navigation", { name: "Primary navigation" })).toBeInTheDocument();
+    expect(navigation).not.toHaveClass("is-keyboard-open");
   });
 });
