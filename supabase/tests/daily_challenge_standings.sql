@@ -8,6 +8,8 @@ declare
   v_shane uuid := '76000000-0000-4000-8000-000000000002';
   v_tony uuid := '76000000-0000-4000-8000-000000000003';
   v_today date := private.daily_challenge_central_day(now());
+  v_week_start date := v_today - (extract(isodow from v_today)::integer - 1);
+  v_week_end date := v_today - (extract(isodow from v_today)::integer - 1) + 6;
   v_games text[] := array[
     'find_leader',
     'wavelength',
@@ -23,6 +25,7 @@ declare
   v_cody_row jsonb;
   v_shane_row jsonb;
   v_tony_row jsonb;
+  v_cody_week jsonb;
 begin
   insert into auth.users (
     id,
@@ -127,6 +130,11 @@ begin
   v_shane_row := v_standings->'entries'->1;
   v_tony_row := v_standings->'entries'->2;
 
+  select entry.value
+  into v_cody_week
+  from jsonb_array_elements(v_standings->'weekly_entries') entry(value)
+  where entry.value->>'profile_id' = v_cody::text;
+
   if (v_standings->>'player_count')::integer <> 3
     or (v_standings->>'current_user_rank')::integer <> 1
     or (v_standings->>'current_user_wins')::integer <> 4 then
@@ -138,6 +146,8 @@ begin
     or (v_cody_row->>'wins')::integer <> 4
     or (v_cody_row->>'played')::integer <> 5
     or (v_cody_row->>'average_score')::numeric <> 88.0
+    or (v_cody_row->>'weekly_titles')::integer < 0
+    or (v_cody_row->>'championship_rank')::integer < 1
     or (v_cody_row->>'current_streak')::integer <> 5
     or (v_cody_row->>'best_streak')::integer <> 5
     or (v_cody_row->'game_averages'->>'find_leader')::numeric <> 80.0
@@ -166,6 +176,34 @@ begin
     or (v_tony_row->>'current_streak')::integer <> 0
     or (v_tony_row->>'best_streak')::integer <> 0 then
     raise exception 'members without an official play were omitted or misrepresented';
+  end if;
+
+  if (v_standings->>'week_start')::date <> v_week_start
+    or (v_standings->>'week_end')::date <> v_week_end
+    or (v_standings->>'current_user_week_rank')::integer <> 1
+    or (v_standings->>'current_user_week_wins')::integer <> (v_cody_week->>'wins')::integer
+    or (v_standings->>'current_user_weekly_titles')::integer < 0
+    or (v_standings->>'current_user_championship_rank')::integer < 1
+    or v_cody_week is null
+    or (v_cody_week->>'rank')::integer <> 1
+    or (v_cody_week->>'wins')::integer < 1
+    or (v_cody_week->>'played')::integer < 1
+    or (v_cody_week->>'average_score')::numeric <= 0 then
+    raise exception 'Monday-Sunday current weekly standings were calculated incorrectly: %', v_standings;
+  end if;
+
+  if exists (
+    select 1
+    from jsonb_array_elements(v_standings->'weekly_entries') entry(value)
+    where entry.value->>'profile_id' = v_tony::text
+  ) then
+    raise exception 'zero-play members appeared in the active weekly competition';
+  end if;
+
+  if (v_standings->'last_completed_week'->>'week_start')::date <> v_week_start - 7
+    or (v_standings->'last_completed_week'->>'week_end')::date <> v_week_start - 1
+    or jsonb_typeof(v_standings->'last_completed_week'->'champions') <> 'array' then
+    raise exception 'last completed weekly championship window is incorrect';
   end if;
 
   if has_function_privilege('anon', 'public.get_daily_challenge_standings()', 'EXECUTE') then
