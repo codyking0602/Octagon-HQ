@@ -31,8 +31,11 @@ describe("Validate V2 workflow", () => {
     );
   });
 
-  it("shards the complete test suite across eight parallel lanes", () => {
-    expect(workflow.match(/\n        run: npm install --silent/g)).toHaveLength(3);
+  it("shards the complete test suite across eight parallel lanes with locked cached installs", () => {
+    expect(workflow.match(/cache: npm/g)).toHaveLength(3);
+    expect(workflow.match(/cache-dependency-path: package-lock\.json/g)).toHaveLength(3);
+    expect(workflow.match(/npm ci --silent --no-audit --no-fund/g)).toHaveLength(3);
+    expect(workflow).not.toContain("npm install --silent");
     expect(workflow).toContain("shard: [1, 2, 3, 4, 5, 6, 7, 8]");
     expect(workflow).toContain(
       "npm test -- --shard=${{ matrix.shard }}/8 2>&1 | tee test-shard-${{ matrix.shard }}.log",
