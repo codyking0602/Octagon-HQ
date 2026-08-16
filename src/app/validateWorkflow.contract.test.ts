@@ -22,11 +22,20 @@ describe("Validate V2 workflow", () => {
     );
   });
 
-  it("shards the complete test suite across four parallel lanes", () => {
-    expect(workflow.match(/\n        run: npm install --silent/g)).toHaveLength(3);
-    expect(workflow).toContain("shard: [1, 2, 3, 4]");
+  it("cancels superseded pull-request validation without coupling main pushes", () => {
     expect(workflow).toContain(
-      "npm test -- --shard=${{ matrix.shard }}/4 2>&1 | tee test-shard-${{ matrix.shard }}.log",
+      "group: validate-v2-${{ github.event.pull_request.number || github.sha }}",
+    );
+    expect(workflow).toContain(
+      "cancel-in-progress: ${{ github.event_name == 'pull_request' }}",
+    );
+  });
+
+  it("shards the complete test suite across eight parallel lanes", () => {
+    expect(workflow.match(/\n        run: npm install --silent/g)).toHaveLength(3);
+    expect(workflow).toContain("shard: [1, 2, 3, 4, 5, 6, 7, 8]");
+    expect(workflow).toContain(
+      "npm test -- --shard=${{ matrix.shard }}/8 2>&1 | tee test-shard-${{ matrix.shard }}.log",
     );
     expect(workflow).toContain("fail-fast: false");
   });
