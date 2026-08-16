@@ -273,7 +273,7 @@ export function createPickControlRepository(): PickControlRepository | null {
     async setWatchMoments(eventId, moments) {
       await requireRpcSuccess(client.rpc("set_pick_event_watch_moments", {
         p_event_id: eventId,
-        p_watch_moments: moments,
+        p_moments: moments,
       }));
     },
 
