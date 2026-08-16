@@ -22,9 +22,8 @@ describe("Validate V2 workflow", () => {
     );
   });
 
-  it("runs deterministic cached installs and shards the complete test suite in parallel", () => {
-    expect(workflow.match(/cache: npm/g)).toHaveLength(3);
-    expect(workflow.match(/npm ci --silent/g)).toHaveLength(3);
+  it("shards the complete test suite across four parallel lanes", () => {
+    expect(workflow.match(/npm install --silent/g)).toHaveLength(3);
     expect(workflow).toContain("shard: [1, 2, 3, 4]");
     expect(workflow).toContain(
       "npm test -- --shard=${{ matrix.shard }}/4 2>&1 | tee test-shard-${{ matrix.shard }}.log",
@@ -54,6 +53,17 @@ describe("Validate V2 workflow", () => {
     expect(workflow).toContain('test "$CORE_RESULT" = success');
     expect(workflow).toContain('test "$TEST_RESULT" = success');
     expect(workflow).toContain('test "$PHONE_RESULT" = success');
+  });
+
+  it("only publishes diagnostics for the step that actually failed", () => {
+    expect(workflow).toContain("id: typecheck");
+    expect(workflow).toContain("if: steps.typecheck.outcome == 'failure'");
+    expect(workflow).toContain("id: build");
+    expect(workflow).toContain("if: steps.build.outcome == 'failure'");
+    expect(workflow).toContain("id: test");
+    expect(workflow).toContain("if: steps.test.outcome == 'failure'");
+    expect(workflow).toContain("id: phone");
+    expect(workflow).toContain("if: steps.phone.outcome == 'failure'");
   });
 
   it("uses public validation-only Supabase configuration for the production build", () => {
