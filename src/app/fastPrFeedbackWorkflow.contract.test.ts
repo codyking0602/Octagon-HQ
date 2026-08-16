@@ -20,6 +20,10 @@ describe("draft fast feedback and final validation", () => {
     expect(fastFeedback).toContain("BASE_SHA: ${{ github.event.pull_request.base.sha }}");
     expect(fastFeedback).toContain("ref: ${{ env.SOURCE_SHA }}");
     expect(fastFeedback).toContain("fetch-depth: 0");
+    expect(fastFeedback).toContain("cache: npm");
+    expect(fastFeedback).toContain("cache-dependency-path: package-lock.json");
+    expect(fastFeedback).toContain("npm ci --silent --no-audit --no-fund");
+    expect(fastFeedback).not.toContain("npm install --silent");
     expect(fastFeedback).toContain("npm run typecheck");
     expect(fastFeedback).toContain('npm test -- --changed="$BASE_SHA" --passWithNoTests');
   });
