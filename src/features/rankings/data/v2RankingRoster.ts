@@ -510,6 +510,24 @@ const khamzatChimaev = {
   },
 };
 
+const islamMakhachevBaseline = historicalMigrationSeedJson.fighters.find(
+  (fighter) => fighter.fighter === "Islam Makhachev",
+);
+
+if (!islamMakhachevBaseline) {
+  throw new Error("Islam Makhachev is missing from the sealed ranking baseline.");
+}
+
+const islamMakhachev = {
+  ...islamMakhachevBaseline,
+  presentation: {
+    ...islamMakhachevBaseline.presentation,
+    oneLiner: "Islam's peak combines suffocating control with rare finishing efficiency. He dictates where fights happen through pressure, wrestling, and top control, then forces mistakes with submissions or dangerous striking. He can dominate rounds without giving up the threat of a finish.",
+    whyRankedHere: "Islam has a 17-1 UFC record, six title-fight wins, and a 10-0 prime run. He submitted Charles Oliveira for the lightweight belt, defended it four times, including twice against Alexander Volkanovski, then beat Jack Della Maddalena over five rounds to become welterweight champion. That championship volume and elite-win quality separate him from the tier below.",
+    whyNotHigher: "The strongest case against moving Islam higher is career length, not peak quality. His elite run is still shorter than the sustained championship eras of the UFC greats above him. The Adriano Martins knockout is a UFC loss, even if it came well before his prime. He is still active at an elite level, so that longevity deficit can shrink.",
+  },
+};
+
 export const v2RankingRoster: V2RankingRosterOverlay = {
   additions: [rafaelDosAnjos],
   replacements: {
@@ -527,6 +545,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     "Robert Whittaker": robertWhittaker,
     "Kayla Harrison": kaylaHarrison,
     "Khamzat Chimaev": khamzatChimaev,
+    "Islam Makhachev": islamMakhachev,
   },
   eraMembership: {
     "Rafael dos Anjos": {
@@ -535,7 +554,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     },
   },
   factsVersion: "octagon-hq-v2-rda-facts-20260807",
-  judgmentVersion: "octagon-hq-v2-khamzat-chimaev-profile-20260815",
+  judgmentVersion: "octagon-hq-v2-islam-makhachev-profile-20260815",
   eraDepthVersion: "octagon-hq-v2-rda-20260730",
   eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
 };
