@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import { IdentityProvider } from "../identity/IdentityProvider";
@@ -95,7 +95,11 @@ describe("Fight Night Control results lifecycle", () => {
   it("rejects an invalid recap URL before publishing", async () => {
     const repo = repository(event("locked", "red_win"), event("complete", "red_win"));
     renderPage(repo);
-    fireEvent.change(await screen.findByRole("textbox", { name: "RECAP URL" }), { target: { value: "not-a-url" } });
+    const recapInput = await screen.findByRole("textbox", { name: "RECAP URL" });
+    await act(async () => {
+      await Promise.resolve();
+    });
+    fireEvent.change(recapInput, { target: { value: "not-a-url" } });
     fireEvent.click(screen.getByRole("button", { name: "PUBLISH EVENT RECAP" }));
     expect(await screen.findByText("Enter a valid http or https recap URL, or leave the field blank.")).toBeInTheDocument();
     expect(repo.setWatchMoments).not.toHaveBeenCalled();
