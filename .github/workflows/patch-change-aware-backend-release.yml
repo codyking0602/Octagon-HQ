@@ -20,56 +20,10 @@ jobs:
         with:
           ref: agent/backend-change-aware-release
 
-      - name: Repair generalized backend job nesting
-        shell: bash
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
+      - name: Repair generalized backend workflow
+        run: node scripts/repair-backend-release-workflows.mjs
 
-          path = Path('.github/workflows/verify-generalized-daily-backend.yml')
-          text = path.read_text()
-          start = text.index('classify-backend-deployment:\n')
-          end = text.index('    runs-on: ubuntu-latest\n', text.index('exact-deployment-proof:\n', start))
-          replacement = '''  classify-backend-deployment:
-    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
-    runs-on: ubuntu-latest
-    timeout-minutes: 3
-    outputs:
-      deployed: ${{ steps.inspect.outputs.deployed }}
-    steps:
-      - name: Check whether the canonical workflow actually deployed Supabase
-        id: inspect
-        uses: actions/github-script@v7
-        env:
-          DEPLOY_RUN_ID: ${{ github.event.workflow_run.id }}
-        with:
-          script: |
-            const runId = Number(process.env.DEPLOY_RUN_ID);
-            const { data } = await github.rest.actions.listJobsForWorkflowRun({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              run_id: runId,
-              per_page: 100,
-            });
-            const deployed = data.jobs.some((job) => (
-              job.name === "deploy"
-              && job.status === "completed"
-              && job.conclusion === "success"
-            ));
-            core.setOutput("deployed", deployed ? "true" : "false");
-            core.info(deployed
-              ? "Canonical Supabase deploy job ran successfully; exact deployment proof is required."
-              : "Backend release was unchanged; skipping Supabase post-deploy proof.");
-
-  exact-deployment-proof:
-    needs: classify-backend-deployment
-    if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && needs.classify-backend-deployment.outputs.deployed == 'true' }}
-'''
-          path.write_text(text[:start] + replacement + text[end:])
-          PY
-
-      - name: Commit narrow formatting repair
+      - name: Commit narrow workflow repair
         shell: bash
         run: |
           set -euo pipefail
