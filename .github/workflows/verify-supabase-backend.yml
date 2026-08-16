@@ -51,6 +51,43 @@ jobs:
         with:
           version: 2.109.1
 
+      - name: Prepull fresh-database images in parallel
+        shell: bash
+        run: |
+          set -euo pipefail
+          service_table=$(supabase services)
+          printf '%s\n' "$service_table"
+
+          : > "$RUNNER_TEMP/supabase-db-images.txt"
+          for service in \
+            supabase/postgres \
+            supabase/gotrue \
+            supabase/realtime \
+            supabase/storage-api
+          do
+            version=$(printf '%s\n' "$service_table" | sed 's/│/|/g' | awk -F '|' -v service="$service" '
+              {
+                image = $1
+                version = $2
+                gsub(/^[[:space:]]+|[[:space:]]+$/, "", image)
+                gsub(/^[[:space:]]+|[[:space:]]+$/, "", version)
+                if (image == service) {
+                  print version
+                  exit
+                }
+              }
+            ')
+            if [ -z "$version" ]; then
+              echo "::error title=Supabase service version missing::Could not resolve $service from supabase services."
+              exit 1
+            fi
+            echo "ghcr.io/${service}:${version}" >> "$RUNNER_TEMP/supabase-db-images.txt"
+          done
+
+          echo "Fresh-database bootstrap images:"
+          cat "$RUNNER_TEMP/supabase-db-images.txt"
+          xargs -r -n 1 -P 4 docker pull < "$RUNNER_TEMP/supabase-db-images.txt"
+
       - name: Execute Auction lifecycle SQL tests on a fresh local database
         shell: bash
         run: |
