@@ -30,6 +30,7 @@ on:
       - completed
 
 permissions:
+  actions: read
   contents: read
 
 jobs:
@@ -189,8 +190,40 @@ jobs:
             echo "- Migration rerun/idempotency: passed"
           } >> "$GITHUB_STEP_SUMMARY"
 
-  exact-deployment-proof:
+  classify-backend-deployment:
     if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+      deployed: ${{ steps.inspect.outputs.deployed }}
+    steps:
+      - name: Check whether the canonical workflow actually deployed Supabase
+        id: inspect
+        uses: actions/github-script@v7
+        env:
+          DEPLOY_RUN_ID: ${{ github.event.workflow_run.id }}
+        with:
+          script: |
+            const runId = Number(process.env.DEPLOY_RUN_ID);
+            const { data } = await github.rest.actions.listJobsForWorkflowRun({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: runId,
+              per_page: 100,
+            });
+            const deployed = data.jobs.some((job) => (
+              job.name === "deploy"
+              && job.status === "completed"
+              && job.conclusion === "success"
+            ));
+            core.setOutput("deployed", deployed ? "true" : "false");
+            core.info(deployed
+              ? "Canonical Supabase deploy job ran successfully; exact deployment proof is required."
+              : "Backend release was unchanged; skipping Supabase post-deploy proof.");
+
+  exact-deployment-proof:
+    needs: classify-backend-deployment
+    if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && needs.classify-backend-deployment.outputs.deployed == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
