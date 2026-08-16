@@ -95,9 +95,12 @@ describe("Fight Night Control results lifecycle", () => {
   it("rejects an invalid recap URL before publishing", async () => {
     const repo = repository(event("locked", "red_win"), event("complete", "red_win"));
     renderPage(repo);
-    fireEvent.change(await screen.findByRole("textbox", { name: "RECAP URL" }), { target: { value: "not-a-url" } });
+    const recapInput = await screen.findByRole("textbox", { name: "RECAP URL" });
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fireEvent.change(recapInput, { target: { value: "not-a-url" } });
+    expect(recapInput).toHaveValue("not-a-url");
     fireEvent.click(screen.getByRole("button", { name: "PUBLISH EVENT RECAP" }));
-    expect(await screen.findByText("Enter a valid http or https recap URL, or leave the field blank.")).toBeInTheDocument();
+    expect(screen.getByText("Enter a valid http or https recap URL, or leave the field blank.")).toBeInTheDocument();
     expect(repo.setWatchMoments).not.toHaveBeenCalled();
     expect(repo.completeEvent).not.toHaveBeenCalled();
   });
