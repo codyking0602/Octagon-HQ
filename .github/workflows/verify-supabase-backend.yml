@@ -95,7 +95,7 @@ jobs:
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
       OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
       EXPECTED_LIVE_MAIN_REF: ${{ github.event.repository.default_branch || 'main' }}
-      EXPECTED_SYNC_SOURCE_SHA: ${{ env.SOURCE_SHA }}
+      EXPECTED_SYNC_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
 
     steps:
       - name: Check out exact verification source
