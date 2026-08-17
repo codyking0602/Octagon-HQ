@@ -20,6 +20,7 @@ export const notificationKinds = [
   "daily_challenge_available",
   "achievement_unlocked",
   "new_game_available",
+  "ranking_refresh_available",
   "card_change_detected",
   "fighter_replacement_detected",
   "fight_cancellation_detected",
@@ -40,6 +41,7 @@ export const notificationCategories = [
   "social",
   "picks",
   "games",
+  "rankings",
   "operations",
 ] as const;
 
@@ -147,6 +149,7 @@ const categoryLabels: Record<NotificationCategory, string> = {
   social: "Social",
   picks: "Picks",
   games: "Games",
+  rankings: "Rankings",
   operations: "Control",
 };
 
@@ -154,6 +157,7 @@ const categoryMarks: Record<NotificationCategory, string> = {
   social: "@",
   picks: "✓",
   games: "★",
+  rankings: "#",
   operations: "!",
 };
 
