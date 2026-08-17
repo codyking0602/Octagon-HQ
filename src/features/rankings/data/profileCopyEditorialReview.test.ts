@@ -36,6 +36,11 @@ const bandsForRank = (rank: number) => {
 };
 
 const copyFields = ["oneLiner", "whyRankedHere", "whyNotHigher"] as const;
+const forbiddenInternalLanguage =
+  /\b(?:UFC-only|scored era|prime ledger|quality tier|ranking score|model score|scoring model|score|scored|scoring|model|calculation|inputs|ledger|penalty|weighting|adjustment)\b/iu;
+const rejectedTemplateResidue =
+  /\b(?:the lasting image is|its signature is|the career remains|ranks here because|belongs here because|historical comparison|current-table|reviewed prime|GOAT case|division-strength discount|loss cap)\b/iu;
+const otherPromotion = /\b(?:PRIDE|WEC|Strikeforce|Bellator|ONE|Invicta|RINGS)\b/u;
 
 describe("intentional fighter profile-copy review", () => {
   it("covers the complete canonical roster without a fixed fighter count", () => {
@@ -62,18 +67,32 @@ describe("intentional fighter profile-copy review", () => {
     }
   });
 
-  it("keeps consumer copy ASCII-safe and free of obvious internal phrases", () => {
-    const forbidden =
-      /\b(?:UFC-only|scored era|prime ledger|quality tier|ranking score|model score|scoring model|score|scored|scoring|model|calculation|inputs|ledger|penalty|weighting|adjustment)\b/iu;
+  it("keeps consumer copy ASCII-safe and free of ranking-system language", () => {
     for (const fighter of allTime) {
       for (const field of copyFields) {
         expect(fighter[field], `${fighter.fighter} ${field}`).toMatch(
           /^[\x00-\x7F]+$/u,
         );
         expect(fighter[field], `${fighter.fighter} ${field}`).not.toMatch(
-          forbidden,
+          forbiddenInternalLanguage,
         );
       }
+    }
+  });
+
+  it("rejects the templated residue removed by the editorial pass", () => {
+    for (const fighter of allTime) {
+      for (const field of copyFields) {
+        expect(fighter[field], `${fighter.fighter} ${field}`).not.toMatch(
+          rejectedTemplateResidue,
+        );
+      }
+    }
+  });
+
+  it("keeps non-UFC promotion accomplishments out of Why Ranked Here", () => {
+    for (const fighter of allTime) {
+      expect(fighter.whyRankedHere, fighter.fighter).not.toMatch(otherPromotion);
     }
   });
 });
