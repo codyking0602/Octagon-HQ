@@ -244,6 +244,15 @@ describe("Auction catalog expansion migration", () => {
         Power: 78,
         Heart: 73,
       },
+      // Dern's released card also predates her UFC 330 title defense.
+      "Mackenzie Dern": {
+        overall: 85,
+        Striking: 62,
+        Grappling: 95,
+        Frame: 78,
+        Power: 78,
+        Heart: 70,
+      },
     };
     const additions = [...catalogSql.matchAll(/'ultimate-fighter-(\d+)','((?:[^']|'')*)'.*?jsonb_build_object\(([^)]*)\)/g)]
       .filter((match) => Number(match[1]) >= 31);
@@ -266,7 +275,7 @@ describe("Auction catalog expansion migration", () => {
       };
       expect(inputs, name).toEqual(immutableRankingSnapshots[name] ?? currentRankingInputs);
     }
-    expect(Object.keys(immutableRankingSnapshots)).toEqual(["Rafael dos Anjos"]);
+    expect(Object.keys(immutableRankingSnapshots)).toEqual(["Rafael dos Anjos", "Mackenzie Dern"]);
   });
 
   it("contains current career identities and mode-specific category membership", () => {
