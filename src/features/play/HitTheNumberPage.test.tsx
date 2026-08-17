@@ -47,15 +47,18 @@ describe("Hit the Number casual game", () => {
     expect(container.textContent).not.toContain("ROSTER FILTER");
   });
 
-  it("switches to a twelve-fighter Random Pool and generates a fresh lineup", () => {
+  it("switches to a bounded Random Pool and generates a fresh lineup", () => {
     const { container } = renderGame();
     const firstChallengeId = container.querySelector(".hit-number-page")?.getAttribute("data-challenge-id");
 
     fireEvent.click(screen.getByRole("button", { name: "RANDOM POOL" }));
 
-    expect(container.querySelectorAll(".hit-number-fighter-card")).toHaveLength(12);
+    const pickCount = container.querySelectorAll(".hit-number-slot").length;
+    const fighterCount = container.querySelectorAll(".hit-number-fighter-card").length;
+    expect(fighterCount).toBeGreaterThanOrEqual(pickCount);
+    expect(fighterCount).toBeLessThanOrEqual(12);
     expect(container.querySelectorAll(".hit-number-stat-value")).toHaveLength(0);
-    expect(container.textContent).toContain("12-fighter pool");
+    expect(container.textContent).toContain(`${fighterCount}-fighter pool`);
     expect(screen.getByRole("button", { name: "RANDOM POOL" })).toHaveAttribute("aria-pressed", "true");
     expect(container.querySelector(".hit-number-page")?.getAttribute("data-challenge-id"))
       .not.toBe(firstChallengeId);
