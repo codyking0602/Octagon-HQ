@@ -59,7 +59,7 @@ function lowBoardClass(archetypeId: (typeof BLIND_RANK_ARCHETYPES)[number]["id"]
 }
 
 describe("Blind Rank lineup archetype release proof", () => {
-  it("locks the approved global shape mix at 65% low-end boards", () => {
+  it("locks the global shape mix at 69% low-end boards with regular multi-low boards", () => {
     const totalWeight = BLIND_RANK_ARCHETYPES.reduce((sum, row) => sum + row.weight, 0);
     const lowBoardWeight = BLIND_RANK_ARCHETYPES
       .filter((row) => lowBoardClass(row.id) === "requires-low")
@@ -69,8 +69,8 @@ describe("Blind Rank lineup archetype release proof", () => {
       .reduce((sum, row) => sum + row.weight, 0);
 
     expect(totalWeight).toBeCloseTo(1, 10);
-    expect(lowBoardWeight).toBeCloseTo(0.65, 10);
-    expect(multipleLowWeight).toBeCloseTo(0.35, 10);
+    expect(lowBoardWeight).toBeCloseTo(0.69, 10);
+    expect(multipleLowWeight).toBeCloseTo(0.24, 10);
   });
 
   it("builds every broad-pool archetype and preserves the requested low-end class when a narrow pack degrades", () => {
