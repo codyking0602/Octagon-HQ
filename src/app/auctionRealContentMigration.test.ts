@@ -106,15 +106,23 @@ describe("Auction PR 5 private content and grader", () => {
     const ultimate = byMode.get("ultimate-fighter")!;
     expect(ultimate).toHaveLength(30);
 
+    // Released Auction grading inputs are immutable snapshots. Ranking refreshes can
+    // move the live owner without retroactively changing an already-released card.
+    const immutableRankingSnapshots: Record<string, Partial<Record<"overall" | "Striking" | "Grappling", number>>> = {
+      "Islam Makhachev": { overall: 93 },
+      "Dricus du Plessis": { overall: 88, Grappling: 42 },
+    };
     const mismatches: string[] = [];
     for (const item of ultimate) {
       const fighter = playByName.get(item.display_label);
       expect(fighter, item.display_label).toBeDefined();
-      for (const [label, actual, expected] of [
+      const snapshot = immutableRankingSnapshots[item.display_label];
+      for (const [label, actual, current] of [
         ["overall", item.grading_inputs.overall, fighter!.ratings.career],
         ["Striking", item.grading_inputs.Striking, fighter!.ratings.striking],
         ["Grappling", item.grading_inputs.Grappling, fighter!.ratings.grappling],
       ] as const) {
+        const expected = snapshot?.[label] ?? current;
         if (actual !== expected) mismatches.push(`${item.display_label} ${label}: ${actual} -> ${expected}`);
       }
       expect(Object.keys(item.grading_inputs).sort()).toEqual([
