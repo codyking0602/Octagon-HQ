@@ -114,16 +114,15 @@ export interface BlindRankArchetype {
   maxLow?: number;
 }
 
-// Preserve the established shape frequencies while making the shape contracts meaningfully
-// different. Balanced, Bottom-heavy, and Chaos require a low-end fighter, so roughly 69% of
-// seeded boards target at least one below-average/bad fighter. Bottom-heavy and Chaos together
-// make two or more low-end fighters a regular ~24% occurrence. Top-heavy and Middle cluster
-// deliberately remain no-low boards so the game still has real variety instead of a forced recipe.
+// Keep predictable balanced/top-heavy boards uncommon. Chaos owns half the mix, while
+// Middle cluster and Bottom-heavy keep boards centered away from elite-heavy lineups.
+// Balanced, Bottom-heavy, and Chaos require low-end fighters, so 72% of seeded boards
+// target at least one below-average/bad fighter and 62% target multiple low-end fighters.
 export const BLIND_RANK_ARCHETYPES: readonly BlindRankArchetype[] = [
   {
     id: "balanced",
     name: "Balanced",
-    weight: 0.45,
+    weight: 0.1,
     targets: ["elite", "great", "good", "average", "below-average"],
     minRange: 32,
     minHigh: 1,
@@ -135,7 +134,7 @@ export const BLIND_RANK_ARCHETYPES: readonly BlindRankArchetype[] = [
   {
     id: "top-heavy",
     name: "Top-heavy",
-    weight: 0.18,
+    weight: 0.1,
     targets: ["elite", "elite", "great", "good", "average"],
     minRange: 18,
     minHigh: 3,
@@ -147,7 +146,7 @@ export const BLIND_RANK_ARCHETYPES: readonly BlindRankArchetype[] = [
   {
     id: "bottom-heavy",
     name: "Bottom-heavy",
-    weight: 0.16,
+    weight: 0.12,
     targets: ["great", "average", "below-average", "below-average", "bad"],
     minRange: 24,
     minHigh: 1,
@@ -159,7 +158,7 @@ export const BLIND_RANK_ARCHETYPES: readonly BlindRankArchetype[] = [
   {
     id: "middle-cluster",
     name: "Middle cluster",
-    weight: 0.13,
+    weight: 0.18,
     targets: ["great", "good", "good", "average", "average"],
     minRange: 8,
     minHigh: 0,
@@ -172,7 +171,7 @@ export const BLIND_RANK_ARCHETYPES: readonly BlindRankArchetype[] = [
   {
     id: "chaos",
     name: "Chaos",
-    weight: 0.08,
+    weight: 0.5,
     targets: ["elite", "good", "average", "below-average", "bad"],
     minRange: 45,
     minHigh: 1,
