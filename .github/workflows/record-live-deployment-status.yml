@@ -73,15 +73,47 @@ jobs:
           NODE
           )
 
-          curl --fail-with-body --silent --show-error \
-            --retry 5 \
-            --retry-all-errors \
-            --retry-delay 2 \
-            --request POST \
-            --header "Accept: application/vnd.github+json" \
-            --header "Authorization: Bearer $GH_TOKEN" \
-            --header "X-GitHub-Api-Version: 2022-11-28" \
-            "https://api.github.com/repos/$REPOSITORY/statuses/$DEPLOYMENT_SHA" \
-            --data "$payload"
+          status_api="https://api.github.com/repos/$REPOSITORY/statuses/$DEPLOYMENT_SHA"
+          common_curl=(
+            --fail-with-body
+            --silent
+            --show-error
+            --retry 5
+            --retry-all-errors
+            --retry-delay 2
+            --header "Accept: application/vnd.github+json"
+            --header "Authorization: Bearer $GH_TOKEN"
+            --header "X-GitHub-Api-Version: 2022-11-28"
+          )
 
-          echo "$context_name: $state for $DEPLOYMENT_SHA"
+          if curl "${common_curl[@]}" \
+            --request POST \
+            "$status_api" \
+            --data "$payload"; then
+            echo "$context_name: $state for $DEPLOYMENT_SHA"
+            exit 0
+          fi
+
+          echo "::warning title=Status write response unavailable::Confirming whether GitHub recorded the exact status before returning an upstream error."
+          statuses=$(curl "${common_curl[@]}" "$status_api")
+          STATUS_CONTEXT="$context_name" \
+          STATUS_STATE="$state" \
+          STATUS_TARGET_URL="$DEPLOYMENT_URL" \
+          STATUSES_JSON="$statuses" \
+          node --input-type=module <<'NODE'
+          const statuses = JSON.parse(process.env.STATUSES_JSON ?? "[]");
+          const expected = {
+            context: process.env.STATUS_CONTEXT,
+            state: process.env.STATUS_STATE,
+            targetUrl: process.env.STATUS_TARGET_URL,
+          };
+          const exactStatus = statuses.some((status) =>
+            status?.context === expected.context &&
+            status?.state === expected.state &&
+            status?.target_url === expected.targetUrl
+          );
+          if (!exactStatus) {
+            throw new Error(`GitHub did not record the exact ${expected.context} status.`);
+          }
+          console.log(`${expected.context}: ${expected.state} confirmed after an unavailable write response.`);
+          NODE
