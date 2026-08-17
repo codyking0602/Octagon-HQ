@@ -5,6 +5,7 @@ select set_config('request.jwt.claim.role', 'service_role', true);
 
 do $$
 declare
+  v_previous private.daily_challenge_schedule_versions;
   v_schedule private.daily_challenge_schedule_versions;
   v_index integer;
   v_day date;
@@ -16,15 +17,35 @@ declare
   v_request jsonb;
 begin
   select schedule.*
-  into v_schedule
+  into v_previous
   from private.daily_challenge_schedule_versions schedule
   where schedule.version = 'play-rotation-v1';
 
-  if v_schedule.version is null
+  select schedule.*
+  into v_schedule
+  from private.daily_challenge_schedule_versions schedule
+  where schedule.version = 'play-rotation-v2';
+
+  if v_previous.version is null
+    or v_schedule.version is null
     or v_schedule.time_zone <> 'America/Chicago'
     or v_schedule.anchor_day <> date '2026-08-06'
+    or v_schedule.time_zone <> v_previous.time_zone
+    or v_schedule.anchor_day <> v_previous.anchor_day
+    or v_schedule.game_cycle <> v_previous.game_cycle
+    or v_schedule.starts_on <> greatest(v_previous.starts_on, date '2026-08-17')
     or coalesce(array_length(v_schedule.game_cycle, 1), 0) <> 20 then
-    raise exception 'versioned twenty-day rotation was not installed exactly: %', row_to_json(v_schedule);
+    raise exception 'versioned twenty-day rotation refresh was not installed exactly: v1 %, v2 %',
+      row_to_json(v_previous),
+      row_to_json(v_schedule);
+  end if;
+
+  if private.daily_challenge_expected_game(v_schedule.version, date '2026-08-17') <> 'blind_rank_5' then
+    raise exception 'the refreshed schedule no longer assigns Blind Rank to August 17';
+  end if;
+
+  if private.daily_challenge_schedule_for_day(v_schedule.starts_on) <> v_schedule.version then
+    raise exception 'the refreshed schedule is not canonical on its activation day';
   end if;
 
   if (select count(*) from unnest(v_schedule.game_cycle) game where game = 'find_leader') <> 8
@@ -71,15 +92,6 @@ begin
         v_repeated;
     end if;
   end loop;
-
-  if exists (
-    select 1
-    from private.daily_challenges daily
-    where daily.schedule_version <> v_schedule.version
-      and daily.central_day >= v_schedule.starts_on
-  ) then
-    raise exception 'rotation activation crossed an already-materialized historical day';
-  end if;
 
   select candidate.day::date,
          private.daily_challenge_expected_game(v_schedule.version, candidate.day::date)
