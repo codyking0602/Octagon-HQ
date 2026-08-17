@@ -9,6 +9,7 @@ const gameTypeSchema = z.enum([
   "wavelength",
   "blind_rank_5",
   "keep_4_cut_4",
+  "hit_the_number",
 ]);
 const attemptSchema = z.object({
   native_score: z.coerce.number().int(),
