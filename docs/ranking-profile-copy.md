@@ -27,7 +27,7 @@ These ranges are hard targets based on the fighter's current ranking.
 | 6-15 | 30-38 | 45-55 | 40-55 |
 | 16-30 | 27-35 | 40-50 | 35-50 |
 | 31-50 | 24-32 | 35-45 | 32-45 |
-| 51-82 | 20-28 | 30-40 | 30-40 |
+| 51 through current roster end | 20-28 | 30-40 | 30-40 |
 
 Absolute limits:
 
