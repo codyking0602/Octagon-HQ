@@ -1,42 +1,35 @@
 import { describe, expect, it } from "vitest";
-import {
-  canonicalRankingInputs,
-  historicalRankingMigrationInputs,
-} from "./rankingInputs";
+import { canonicalRankingInputs } from "./rankingInputs";
 
 const current = (name: string) => {
-  const fighter = canonicalRankingInputs.fighters.find((candidate) => candidate.fighter === name);
+  const fighter = canonicalRankingInputs.fighters.find(
+    (candidate) => candidate.fighter === name,
+  );
   if (!fighter) throw new Error(`Missing current fighter ${name}.`);
   return fighter;
 };
 
-const historical = (name: string) => {
-  const fighter = historicalRankingMigrationInputs.fighters.find((candidate) => candidate.fighter === name);
-  if (!fighter) throw new Error(`Missing historical fighter ${name}.`);
-  return fighter;
-};
-
 describe("reviewed fighter profile copy protection", () => {
-  it("preserves presentation during data-only ranking refreshes", () => {
-    for (const name of [
-      "Dricus du Plessis",
-      "Kamaru Usman",
-      "Mackenzie Dern",
-      "Conor McGregor",
-    ]) {
-      expect(current(name).presentation).toEqual(historical(name).presentation);
-    }
+  it("preserves presentation during data-only ranking refreshes", async () => {
+    const { rankingDataRefresh } = await import("./v2RankingRoster");
+    const fighter = current("Mackenzie Dern");
+    const refreshed = rankingDataRefresh(fighter, { facts: fighter.facts });
+    expect(refreshed.presentation).toBe(fighter.presentation);
+  });
 
-    const islamHistorical = historical("Islam Makhachev");
-    expect(current("Islam Makhachev").presentation).toEqual({
-      ...islamHistorical.presentation,
-      oneLiner:
-        "Islam's peak combines suffocating control with rare finishing efficiency. He dictates where fights happen through pressure, wrestling, and top control, then forces mistakes with submissions or dangerous striking. He can dominate rounds without giving up the threat of a finish.",
-      whyRankedHere:
-        "Islam has a 17-1 UFC record, six title-fight wins, and a 10-0 prime run. He submitted Charles Oliveira for the lightweight belt, defended it four times, including twice against Alexander Volkanovski, then beat Jack Della Maddalena over five rounds to become welterweight champion. That championship volume and elite-win quality separate him from the tier below.",
-      whyNotHigher:
-        "The strongest case against moving Islam higher is career length, not peak quality. His elite run is still shorter than the sustained championship eras of the UFC greats above him. The Adriano Martins knockout is a UFC loss, even if it came well before his prime. He is still active at an elite level, so that longevity deficit can shrink.",
-    });
+  it("keeps the approved calibration profiles", () => {
+    expect(current("Jon Jones").presentation.oneLiner).toBe(
+      "Jones is the UFC's ultimate problem-solver: freakishly long, creative, ruthless in the clinch, elite in wrestling, and brilliant at adapting mid-fight. His dominance, longevity, aura, and controversies are inseparable from a career that has defined multiple eras.",
+    );
+    expect(current("Glover Teixeira").presentation.oneLiner).toContain(
+      "becoming UFC champion at 42",
+    );
+    expect(current("Conor McGregor").presentation.oneLiner).toContain(
+      "UFC's biggest superstar",
+    );
+    expect(current("Mackenzie Dern").presentation.whyRankedHere).toContain(
+      "12-5 UFC record",
+    );
   });
 
   it("keeps refreshed ranking data while presentation stays locked", () => {
