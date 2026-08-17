@@ -22,7 +22,28 @@ export interface TodayChallengeAdapter {
   nativeDisplay: (attempt: Pick<OfficialAttempt, "nativeScore" | "publicResult">) => string;
 }
 
+function hitTheNumberResult(attempt: Pick<OfficialAttempt, "nativeScore" | "publicResult">) {
+  const status = attempt.publicResult.status;
+  if (status === "perfect") return "PERFECT";
+  if (status === "bust") return "BUST";
+  const distance = attempt.publicResult.distance;
+  return typeof distance === "number" && Number.isFinite(distance)
+    ? `${distance} off`
+    : String(attempt.nativeScore);
+}
+
 export const TODAY_CHALLENGE_ADAPTERS = {
+  hit_the_number: {
+    gameType: "hit_the_number",
+    gameId: "hit-the-number",
+    title: "Hit the Number",
+    dailyRoute: "/play/hit-the-number?mode=daily",
+    casualRoute: "/play/hit-the-number",
+    cta: "Hit today’s target",
+    instructions: "Pick the required UFC fighters and get as close as possible to the target without going over.",
+    nativeResultLabel: "Target result",
+    nativeDisplay: hitTheNumberResult,
+  },
   find_leader: {
     gameType: "find_leader",
     gameId: "find-leader",
