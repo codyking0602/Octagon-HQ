@@ -1,4 +1,4 @@
-import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { act, cleanup, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { BottomNavigation } from "./BottomNavigation";
@@ -76,8 +76,8 @@ describe("BottomNavigation", () => {
     const navigation = screen.getByRole("navigation", { name: "Primary navigation" });
     const input = screen.getByRole("textbox", { name: "Message" });
 
-    fireEvent.focus(input);
     act(() => {
+      input.focus();
       viewport.height = 500;
       viewport.dispatchEvent(new Event("resize"));
     });
