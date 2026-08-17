@@ -564,6 +564,24 @@ const robbieLawler = {
   },
 };
 
+const gloverTeixeiraBaseline = historicalMigrationSeedJson.fighters.find(
+  (fighter) => fighter.fighter === "Glover Teixeira",
+);
+
+if (!gloverTeixeiraBaseline) {
+  throw new Error("Glover Teixeira is missing from the sealed ranking baseline.");
+}
+
+const gloverTeixeira = {
+  ...gloverTeixeiraBaseline,
+  presentation: {
+    ...gloverTeixeiraBaseline.presentation,
+    oneLiner: "Teixeira's peak paired heavy pressure boxing with forceful takedowns, punishing top control, ground-and-pound, and submission threats that turned extended grappling exchanges into finishing opportunities.",
+    whyRankedHere: "Sixteen UFC wins, thirteen against ranked opposition, and seven Top-5 victories give Teixeira rare light-heavyweight depth. He beat contenders across multiple eras, then submitted Jan Blachowicz for the UFC title in his forties, giving that longevity real championship weight.",
+    whyNotHigher: "One title-fight win and no successful defense keep the championship ceiling short. Prime losses to Anthony Johnson, Alexander Gustafsson, Corey Anderson, and Jiri Prochazka also leave more volatility than the longer, steadier title runs above him.",
+  },
+};
+
 const baselineFighter = (fighter: string) => {
   const input = historicalMigrationSeedJson.fighters.find((candidate) => candidate.fighter === fighter);
   if (!input) throw new Error(`${fighter} is missing from the sealed ranking baseline.`);
@@ -837,6 +855,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     "Kayla Harrison": kaylaHarrison,
     "Khamzat Chimaev": khamzatChimaev,
     "Robbie Lawler": robbieLawler,
+    "Glover Teixeira": gloverTeixeira,
     "Dricus du Plessis": dricusDuPlessis,
     "Kamaru Usman": kamaruUsman,
     "Mackenzie Dern": mackenzieDern,
@@ -851,7 +870,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
   },
   modelAsOfDate: "2026-08-16",
   factsVersion: "octagon-hq-v2-rankings-refresh-facts-20260816",
-  judgmentVersion: "octagon-hq-v2-rankings-refresh-judgments-20260816",
+  judgmentVersion: "octagon-hq-v2-glover-teixeira-profile-20260817",
   eraDepthVersion: "octagon-hq-v2-rda-20260730",
   eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
 };

@@ -50,6 +50,7 @@ describe("V2 ranking roster overlay", () => {
       "Kayla Harrison",
       "Khamzat Chimaev",
       "Robbie Lawler",
+      "Glover Teixeira",
       "Dricus du Plessis",
       "Kamaru Usman",
       "Mackenzie Dern",
@@ -59,7 +60,7 @@ describe("V2 ranking roster overlay", () => {
     expect(sourceOverrides).toMatchObject({
       modelAsOfDate: "2026-08-16",
       factsVersion: "octagon-hq-v2-rankings-refresh-facts-20260816",
-      judgmentVersion: "octagon-hq-v2-rankings-refresh-judgments-20260816",
+      judgmentVersion: "octagon-hq-v2-glover-teixeira-profile-20260817",
       eraDepthVersion: "octagon-hq-v2-rda-20260730",
       eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
     });
@@ -263,6 +264,37 @@ describe("V2 ranking roster overlay", () => {
     );
     const current = canonicalRankingInputs.fighters.find(
       (fighter) => fighter.fighter === "Robbie Lawler",
+    );
+
+    expect(historical).toBeDefined();
+    expect(current).toBeDefined();
+    expect(current?.presentation.oneLiner).toBe(oneLiner);
+    expect(current?.presentation.whyRankedHere).toBe(whyRankedHere);
+    expect(current?.presentation.whyNotHigher).toBe(whyNotHigher);
+    expect(current?.facts).toEqual(historical?.facts);
+    expect(current?.era).toEqual(historical?.era);
+    expect(current?.judgments).toEqual(historical?.judgments);
+    expect(current?.eraDepth).toEqual(historical?.eraDepth);
+    expect(current?.presentation).toEqual({
+      ...historical?.presentation,
+      oneLiner,
+      whyRankedHere,
+      whyNotHigher,
+    });
+    for (const value of [oneLiner, whyRankedHere, whyNotHigher]) {
+      expect(value).toMatch(/^[\x00-\x7F]+$/);
+    }
+  });
+
+  it("replaces only Glover Teixeira's approved profile copy", () => {
+    const oneLiner = "Teixeira's peak paired heavy pressure boxing with forceful takedowns, punishing top control, ground-and-pound, and submission threats that turned extended grappling exchanges into finishing opportunities.";
+    const whyRankedHere = "Sixteen UFC wins, thirteen against ranked opposition, and seven Top-5 victories give Teixeira rare light-heavyweight depth. He beat contenders across multiple eras, then submitted Jan Blachowicz for the UFC title in his forties, giving that longevity real championship weight.";
+    const whyNotHigher = "One title-fight win and no successful defense keep the championship ceiling short. Prime losses to Anthony Johnson, Alexander Gustafsson, Corey Anderson, and Jiri Prochazka also leave more volatility than the longer, steadier title runs above him.";
+    const historical = historicalRankingMigrationInputs.fighters.find(
+      (fighter) => fighter.fighter === "Glover Teixeira",
+    );
+    const current = canonicalRankingInputs.fighters.find(
+      (fighter) => fighter.fighter === "Glover Teixeira",
     );
 
     expect(historical).toBeDefined();
