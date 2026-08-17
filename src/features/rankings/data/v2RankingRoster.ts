@@ -645,7 +645,7 @@ const dricusUsmanFight = reviewedFight({
   division: "Middleweight",
   result: "win",
   qualityTier: "top-ten",
-  rounds: [5, 0],
+  rounds: [4, 1],
 });
 const dricusDuPlessis = {
   ...dricusBaseline,
@@ -690,7 +690,7 @@ const usmanDricusFight = reviewedFight({
   division: "Middleweight",
   result: "loss",
   qualityTier: "champion-level",
-  rounds: [0, 5],
+  rounds: [1, 4],
   upward: true,
 });
 const kamaruUsman = {
@@ -725,7 +725,7 @@ const islamGarryFight = reviewedFight({
   qualityTier: "top-five",
   championshipType: "normal",
   championshipManualCredit: 0.95,
-  rounds: [4.33, 0.67],
+  rounds: [3, 2],
 });
 const islamMakhachevAugustRefresh = {
   ...islamMakhachev,
@@ -782,7 +782,7 @@ const dernRobertsonFight = reviewedFight({
   qualityTier: "top-five",
   championshipType: "normal",
   championshipManualCredit: 0.9,
-  rounds: [4.33, 0.67],
+  rounds: [4, 1],
 });
 const mackenzieDern = {
   ...dernBaseline,
