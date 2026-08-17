@@ -588,6 +588,20 @@ const baselineFighter = (fighter: string) => {
   return input;
 };
 
+/**
+ * Ranking/fight refreshes are not editorial reviews. They may update canonical
+ * ranking inputs, but the fighter's full presentation stays exactly as it was
+ * until that fighter receives an intentional profile-copy review.
+ */
+const rankingDataRefresh = <
+  T extends { presentation: unknown },
+  R extends Record<string, unknown> & { presentation?: never },
+>(fighter: T, refresh: R) => ({
+  ...fighter,
+  ...refresh,
+  presentation: fighter.presentation,
+});
+
 const reviewedFight = ({
   id,
   date,
@@ -665,8 +679,7 @@ const dricusUsmanFight = reviewedFight({
   qualityTier: "top-ten",
   rounds: [4, 1],
 });
-const dricusDuPlessis = {
-  ...dricusBaseline,
+const dricusDuPlessis = rankingDataRefresh(dricusBaseline, {
   facts: {
     ...dricusBaseline.facts,
     primeWindow: { ...dricusBaseline.facts.primeWindow, endFightId: null, open: true },
@@ -691,14 +704,7 @@ const dricusDuPlessis = {
       ],
     },
   },
-  presentation: {
-    ...dricusBaseline.presentation,
-    oneLiner: "The modern middleweight chaos champion: elite wins over Whittaker, Adesanya, and Strickland, followed by a five-round Usman rebound that reopened his prime.",
-    whyRankedHere: "Du Plessis paired a championship run over Strickland and Adesanya with a decisive five-round rebound against Kamaru Usman after losing to Khamzat Chimaev. That return to elite relevance reopens an already deep modern middleweight prime.",
-    whyNotHigher: "His reopened elite window is still shorter than the sustained championship eras above him, and the one-sided Chimaev loss remains part of the prime ledger. Usman also entered as a decorated former welterweight champion, not a current top-five middleweight.",
-    finalTakeaway: "Du Plessis answered his first UFC loss with a meaningful five-round win and is again building an active elite middleweight case.",
-  },
-};
+});
 
 const usmanBaseline = baselineFighter("Kamaru Usman");
 const usmanDricusFight = reviewedFight({
@@ -711,8 +717,7 @@ const usmanDricusFight = reviewedFight({
   rounds: [1, 4],
   upward: true,
 });
-const kamaruUsman = {
-  ...usmanBaseline,
+const kamaruUsman = rankingDataRefresh(usmanBaseline, {
   facts: {
     ...usmanBaseline.facts,
     primeWindow: {
@@ -722,17 +727,7 @@ const kamaruUsman = {
     },
     fights: [...usmanBaseline.facts.fights, usmanDricusFight],
   },
-  presentation: {
-    ...usmanBaseline.presentation,
-    whyRankedHere: "Usman's closed welterweight prime remains one of the era's strongest: elite round control, five successful defenses, and wins over Woodley, Covington, Burns, and Masvidal anchor the case.",
-    whyNotHigher: "His scored era closed with the 2023 Edwards rematch. The later Buckley win and middleweight losses to Chimaev and du Plessis add resume context without reopening or damaging the prime-dominance window.",
-    finalTakeaway: "Usman's all-time case remains his focused welterweight reign; multiple later 185-pound excursions are post-prime evidence rather than a new elite era.",
-    keyJudgmentCalls: [
-      ...usmanBaseline.presentation.keyJudgmentCalls.filter((call) => !call.startsWith("Middleweight fight:")),
-      "Middleweight excursions: the Chimaev and du Plessis fights are post-prime context and do not reopen the closed scored era.",
-    ],
-  },
-};
+});
 
 const islamGarryFight = reviewedFight({
   id: "2026-08-15-ian-machado-garry",
@@ -745,8 +740,7 @@ const islamGarryFight = reviewedFight({
   championshipManualCredit: 0.95,
   rounds: [3, 2],
 });
-const islamMakhachevAugustRefresh = {
-  ...islamMakhachev,
+const islamMakhachevAugustRefresh = rankingDataRefresh(islamMakhachev, {
   facts: {
     ...islamMakhachev.facts,
     fights: [...islamMakhachev.facts.fights, islamGarryFight],
@@ -777,18 +771,7 @@ const islamMakhachevAugustRefresh = {
       ],
     },
   },
-  presentation: {
-    ...islamMakhachev.presentation,
-    whyRankedHere: "Islam has an 18-1 UFC record, seven title-fight wins, and 17 consecutive UFC wins. After four lightweight defenses, he won the welterweight title and defended it against number-one challenger Ian Machado Garry, giving his second-division case sustained championship weight.",
-    whyNotHigher: "The remaining case against moving Islam higher is career length rather than peak quality. His active elite run is still shorter than the longest championship eras above him, while the pre-prime Adriano Martins knockout remains on the UFC record.",
-    finalTakeaway: "Islam is now a defending two-division champion whose control, elite-win quality, and still-open prime place him among the strongest UFC resumes ever built.",
-    keyJudgmentCalls: islamMakhachev.presentation.keyJudgmentCalls.map((call) =>
-      call.startsWith("Second division:")
-        ? "Second division: winning and then defending the welterweight title materially strengthens the profile."
-        : call,
-    ),
-  },
-};
+});
 
 const dernBaseline = baselineFighter("Mackenzie Dern");
 const dernRobertsonFight = reviewedFight({
@@ -802,8 +785,7 @@ const dernRobertsonFight = reviewedFight({
   championshipManualCredit: 0.9,
   rounds: [4, 1],
 });
-const mackenzieDern = {
-  ...dernBaseline,
+const mackenzieDern = rankingDataRefresh(dernBaseline, {
   facts: { ...dernBaseline.facts, fights: [...dernBaseline.facts.fights, dernRobertsonFight] },
   judgments: {
     ...dernBaseline.judgments,
@@ -816,25 +798,17 @@ const mackenzieDern = {
       inputs: [...dernBaseline.judgments.opponentQuality.inputs, reviewedQualityWin("Mackenzie Dern", dernRobertsonFight.id, "Gillian Robertson", dernRobertsonFight.date, "Strawweight", 0.85, "Number-five strawweight challenger in Dern's first successful defense.")],
     },
   },
-  presentation: {
-    ...dernBaseline.presentation,
-    oneLiner: "A defending UFC strawweight champion with elite submission danger, a first successful defense, and a volatile contender ledger that keeps the all-time score grounded.",
-    whyRankedHere: "Dern followed the vacant-title win over Virna Jandiroba by defending against number-five challenger Gillian Robertson. Two title-fight wins, submission danger, and long strawweight relevance now give her a stronger UFC-only championship case.",
-    whyNotHigher: "The score is still capped by a vacant-title path, one defense, no win over a reigning champion, and prime contender losses to Marina Rodriguez, Yan Xiaonan, Jessica Andrade, and Amanda Lemos.",
-    finalTakeaway: "Dern's first defense advances her from new-champion status to a proven current titleholder, while the broader prime ledger keeps the case measured.",
-  },
-};
+});
 
 const conorBaseline = baselineFighter("Conor McGregor");
-const conorMcGregor = {
-  ...conorBaseline,
+const conorMcGregor = rankingDataRefresh(conorBaseline, {
   facts: {
     ...conorBaseline.facts,
     fights: conorBaseline.facts.fights.map((fight) =>
       fight.id === "2026-07-11-max-holloway" ? { ...fight, methodCategory: "ko-tko" } : fight,
     ),
   },
-};
+});
 
 export const v2RankingRoster: V2RankingRosterOverlay = {
   additions: [rafaelDosAnjos],
