@@ -1,12 +1,15 @@
 import { describe, expect, it } from "vitest";
 import { canonicalRankingInputs } from "../rankings/data/rankingInputs";
 import {
+  HIT_THE_NUMBER_GENERATION_PROFILE,
   HIT_THE_NUMBER_MAX_PICKS,
   HIT_THE_NUMBER_MIN_PICKS,
   HIT_THE_NUMBER_STATS,
+  createGeneratedHitTheNumberBoard,
   createHitTheNumberBoard,
   gradeHitTheNumberSelection,
   hitTheNumberEligibleFighters,
+  hitTheNumberScore,
   rankedHitTheNumberStatRows,
   type HitTheNumberPublicSetup,
   type HitTheNumberStatId,
@@ -62,6 +65,28 @@ describe("Hit the Number foundation", () => {
     ]);
   });
 
+  it("locks deliberate generation weights for stats, filters, and pick counts", () => {
+    expect(HIT_THE_NUMBER_GENERATION_PROFILE.stats).toEqual([
+      { value: "ufc-wins", weight: 35 },
+      { value: "ufc-finishes", weight: 30 },
+      { value: "ufc-ko-tko-wins", weight: 25 },
+      { value: "ufc-submission-wins", weight: 10 },
+    ]);
+    expect(HIT_THE_NUMBER_GENERATION_PROFILE.filters).toEqual([
+      { value: "all", weight: 55 },
+      { value: "division", weight: 45 },
+    ]);
+    expect(HIT_THE_NUMBER_GENERATION_PROFILE.picks).toEqual([
+      { value: 4, weight: 15 },
+      { value: 5, weight: 35 },
+      { value: 6, weight: 35 },
+      { value: 7, weight: 15 },
+    ]);
+    for (const rows of Object.values(HIT_THE_NUMBER_GENERATION_PROFILE)) {
+      expect(rows.reduce((sum, row) => sum + row.weight, 0)).toBe(100);
+    }
+  });
+
   it("filters the canonical Play roster before building an open-roster board", () => {
     const board = createHitTheNumberBoard({
       seed: "lightweight-open-roster",
@@ -102,6 +127,32 @@ describe("Hit the Number foundation", () => {
     }
 
     expect(observed).toEqual(new Set([4, 5, 6, 7]));
+  });
+
+  it("generates the whole casual challenge from only the seed and chosen board type", () => {
+    const observedStats = new Set<string>();
+    const observedPicks = new Set<number>();
+    const observedFilters = new Set<string>();
+
+    for (let index = 0; index < 160; index += 1) {
+      const boardType = index % 2 === 0 ? "open-roster" : "random-pool";
+      const board = createGeneratedHitTheNumberBoard({
+        seed: `generated-${index}`,
+        boardType,
+      });
+      const setup = board.publicSetup;
+      observedStats.add(setup.statId);
+      observedPicks.add(setup.pickCount);
+      observedFilters.add(setup.filter.division ? "division" : "all");
+      expect(setup.boardType).toBe(boardType);
+      expect(setup.target).toBeGreaterThan(0);
+      expect(board.privateSetup.solutionFighterIds).toHaveLength(setup.pickCount);
+      if (boardType === "random-pool") expect(setup.fighterIds).toHaveLength(12);
+    }
+
+    expect(observedStats).toEqual(new Set(HIT_THE_NUMBER_STATS.map((stat) => stat.id)));
+    expect(observedPicks).toEqual(new Set([4, 5, 6, 7]));
+    expect(observedFilters).toEqual(new Set(["all", "division"]));
   });
 
   it("caps generated pick count to the positive fighter depth in narrow pools", () => {
@@ -175,9 +226,38 @@ describe("Hit the Number foundation", () => {
       filter: { gender: "men" as const },
     };
     expect(createHitTheNumberBoard(options)).toEqual(createHitTheNumberBoard(options));
+    expect(createGeneratedHitTheNumberBoard({ seed: "generated-same", boardType: "open-roster" }))
+      .toEqual(createGeneratedHitTheNumberBoard({ seed: "generated-same", boardType: "open-roster" }));
   });
 
-  it("grades exact, under, and over totals with Price Is Right rules", () => {
+  it("normalizes a good under result near 80 and makes busting meaningfully worse", () => {
+    expect(hitTheNumberScore({
+      status: "under",
+      target: 93,
+      distance: 5,
+      pickCount: 7,
+    })).toBe(81);
+    expect(hitTheNumberScore({
+      status: "under",
+      target: 93,
+      distance: 1,
+      pickCount: 7,
+    })).toBe(96);
+    expect(hitTheNumberScore({
+      status: "bust",
+      target: 93,
+      distance: 1,
+      pickCount: 7,
+    })).toBe(71);
+    expect(hitTheNumberScore({
+      status: "perfect",
+      target: 93,
+      distance: 0,
+      pickCount: 7,
+    })).toBe(100);
+  });
+
+  it("grades exact, under, and over totals with Price Is Right rules and the shared score curve", () => {
     const rows = [
       testStatRow("a", 11),
       testStatRow("b", 12),
@@ -200,11 +280,13 @@ describe("Hit the Number foundation", () => {
       status: "perfect",
       total: 50,
       distance: 0,
+      score: 100,
     });
     expect(gradeHitTheNumberSelection(setup, ["a", "b", "c", "e"], rows)).toMatchObject({
       status: "bust",
       total: 51,
       distance: 1,
+      score: 71,
     });
     expect(() => gradeHitTheNumberSelection(setup, ["a", "b", "c", "a"], rows)).toThrow(
       "Hit the Number selections must be unique.",
@@ -224,6 +306,7 @@ describe("Hit the Number foundation", () => {
       status: "under",
       total: 49,
       distance: 1,
+      score: 96,
     });
   });
 });
