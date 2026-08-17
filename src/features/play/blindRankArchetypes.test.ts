@@ -89,6 +89,38 @@ describe("Blind Rank lineup archetype release proof", () => {
     expect(eliteWeight(2)).toBeCloseTo(0.1, 10);
   });
 
+  it("adds the approved Heavyweight depth batch to the canonical Blind Rank pool", () => {
+    const expected = {
+      "mark-hunt": { career: 64, striking: 82, grappling: 44 },
+      "tai-tuivasa": { career: 60, striking: 79, grappling: 34 },
+      "ben-rothwell": { career: 62, striking: 68, grappling: 69 },
+      "travis-browne": { career: 63, striking: 76, grappling: 52 },
+      "gabriel-gonzaga": { career: 61, striking: 66, grappling: 78 },
+      "marcin-tybura": { career: 67, striking: 62, grappling: 74 },
+      "matt-mitrione": { career: 57, striking: 72, grappling: 43 },
+      "jairzinho-rozenstruik": { career: 64, striking: 81, grappling: 36 },
+      "brendan-schaub": { career: 52, striking: 56, grappling: 61 },
+      "walt-harris": { career: 42, striking: 58, grappling: 35 },
+      "antonio-silva": { career: 54, striking: 62, grappling: 61 },
+      "chase-sherman": { career: 30, striking: 45, grappling: 30 },
+    } as const;
+    const heavyweightPool = blindRankPool("heavyweight");
+    const byId = new Map(heavyweightPool.map((fighter) => [fighter.id, fighter]));
+
+    for (const [id, ratings] of Object.entries(expected)) {
+      const fighter = byId.get(id);
+      expect(fighter, id).toBeDefined();
+      expect(fighter?.ratings, id).toEqual(ratings);
+    }
+
+    const averageCount = heavyweightPool.filter(
+      (fighter) => blindRankTier(blindRankRating(fighter, "heavyweight")) === "average",
+    ).length;
+    expect(averageCount).toBeGreaterThan(0);
+    expect(new Set(heavyweightPool.map((fighter) => fighter.id)).size).toBe(heavyweightPool.length);
+    expect(new Set(heavyweightPool.map((fighter) => fighter.name.toLowerCase())).size).toBe(heavyweightPool.length);
+  });
+
   it("builds every broad-pool archetype and preserves the requested low-end class when a narrow pack degrades", () => {
     for (const archetype of BLIND_RANK_ARCHETYPES) {
       const first = createBlindRankLineup(
