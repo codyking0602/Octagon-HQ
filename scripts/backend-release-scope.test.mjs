@@ -1,7 +1,7 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
-  changedFilesFromPushPayload,
   isBackendReleasePath,
+  resolveChangedFiles,
 } from "./backend-release-scope.mjs";
 
 describe("backend release scope", () => {
@@ -40,40 +40,49 @@ describe("backend release scope", () => {
     }
   });
 
-  it("derives the exact changed-file set from the push payload without a compare API call", () => {
-    expect(
-      changedFilesFromPushPayload({
-        size: 2,
-        commits: [
-          {
-            added: ["docs/ranking-profile-copy.md"],
-            modified: ["src/features/rankings/data/v2RankingRoster.ts"],
-            removed: [],
-          },
-          {
-            added: ["src/features/rankings/data/profileCopyProtection.test.ts"],
-            modified: ["src/features/rankings/data/v2RankingRoster.ts"],
-            removed: ["docs/old-profile-copy.md"],
-          },
+  it("reads the exact single-commit changed-file list without the compare endpoint", async () => {
+    const source = "a".repeat(40);
+    const fetchImpl = vi.fn(async () => ({
+      ok: true,
+      json: async () => ({
+        files: [
+          { filename: "scripts/backend-release-scope.mjs" },
+          { filename: "scripts/backend-release-scope.test.mjs" },
         ],
       }),
-    ).toEqual({
+    }));
+
+    await expect(
+      resolveChangedFiles("codyking0602/Octagon-HQ", source, "token", fetchImpl),
+    ).resolves.toEqual({
       files: [
-        "docs/ranking-profile-copy.md",
-        "src/features/rankings/data/v2RankingRoster.ts",
-        "src/features/rankings/data/profileCopyProtection.test.ts",
-        "docs/old-profile-copy.md",
+        "scripts/backend-release-scope.mjs",
+        "scripts/backend-release-scope.test.mjs",
       ],
       truncated: false,
     });
+    expect(fetchImpl).toHaveBeenCalledWith(
+      `https://api.github.com/repos/codyking0602/Octagon-HQ/commits/${source}?per_page=100`,
+      expect.objectContaining({
+        headers: expect.objectContaining({ Authorization: "Bearer token" }),
+      }),
+    );
   });
 
-  it("deploys conservatively when GitHub truncates the push commit list", () => {
-    expect(
-      changedFilesFromPushPayload({
-        size: 2,
-        commits: [{ added: [], modified: ["src/App.tsx"], removed: [] }],
-      }).truncated,
-    ).toBe(true);
+  it("treats a full commit-files page as truncated so deployment stays conservative", async () => {
+    const fetchImpl = vi.fn(async () => ({
+      ok: true,
+      json: async () => ({
+        files: Array.from({ length: 100 }, (_, index) => ({ filename: `file-${index}.txt` })),
+      }),
+    }));
+
+    const result = await resolveChangedFiles(
+      "codyking0602/Octagon-HQ",
+      "b".repeat(40),
+      "token",
+      fetchImpl,
+    );
+    expect(result.truncated).toBe(true);
   });
 });
