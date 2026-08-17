@@ -19,24 +19,27 @@ export function isBackendReleasePath(path) {
   return backendReleasePatterns.some((pattern) => pattern.test(path));
 }
 
-export function changedFilesFromPushPayload(payload) {
-  const commits = Array.isArray(payload?.commits) ? payload.commits : [];
-  const expectedCommitCount = Number.isInteger(payload?.size) ? payload.size : commits.length;
-  const files = new Set();
-
-  for (const commit of commits) {
-    for (const field of ["added", "modified", "removed"]) {
-      const paths = Array.isArray(commit?.[field]) ? commit[field] : [];
-      for (const path of paths) {
-        if (typeof path === "string" && path) files.add(path);
-      }
-    }
+export async function resolveChangedFiles(repository, source, token, fetchImpl = fetch) {
+  const response = await fetchImpl(
+    `https://api.github.com/repos/${repository}/commits/${source}?per_page=100`,
+    {
+      headers: {
+        Accept: "application/vnd.github+json",
+        Authorization: `Bearer ${token}`,
+        "X-GitHub-Api-Version": "2022-11-28",
+        "User-Agent": "octagon-hq-backend-release-scope/2",
+      },
+    },
+  );
+  if (!response.ok) {
+    throw new Error(`GitHub commit lookup failed with HTTP ${response.status}.`);
   }
-
-  return {
-    files: [...files],
-    truncated: expectedCommitCount > commits.length,
-  };
+  const body = await response.json();
+  if (!Array.isArray(body.files)) {
+    throw new Error("GitHub commit lookup did not return a changed-file list.");
+  }
+  const files = body.files.map((file) => file.filename).filter(Boolean);
+  return { files, truncated: files.length >= 100 };
 }
 
 function writeOutput(shouldDeploy, reason) {
@@ -57,9 +60,11 @@ async function main() {
 
   const before = (process.env.BACKEND_RELEASE_BEFORE_SHA ?? "").trim().toLowerCase();
   const source = (process.env.BACKEND_RELEASE_SOURCE_SHA ?? process.env.GITHUB_SHA ?? "").trim().toLowerCase();
+  const repository = process.env.GITHUB_REPOSITORY ?? "";
+  const token = process.env.GITHUB_TOKEN ?? "";
 
-  if (!/^[0-9a-f]{40}$/.test(source)) {
-    throw new Error("Backend release scope is missing the exact source SHA.");
+  if (!/^[0-9a-f]{40}$/.test(source) || !repository || !token) {
+    throw new Error("Backend release scope is missing the exact source SHA, repository, or GitHub token.");
   }
   if (!/^[0-9a-f]{40}$/.test(before) || /^0{40}$/.test(before)) {
     writeOutput(true, "previous main SHA unavailable; deploy conservatively");
@@ -79,9 +84,19 @@ async function main() {
     );
   }
 
-  const { files, truncated } = changedFilesFromPushPayload(payload);
+  const commitCount = Number.isInteger(payload?.size)
+    ? payload.size
+    : Array.isArray(payload?.commits)
+      ? payload.commits.length
+      : null;
+  if (commitCount !== 1) {
+    writeOutput(true, "push contains multiple or unknown commits; deploy conservatively");
+    return;
+  }
+
+  const { files, truncated } = await resolveChangedFiles(repository, source, token);
   if (truncated) {
-    writeOutput(true, "push payload commit list truncated; deploy conservatively");
+    writeOutput(true, "single commit has at least 100 changed files; deploy conservatively");
     return;
   }
 
