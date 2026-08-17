@@ -124,7 +124,7 @@ export function HitTheNumberGameView({
         </div>
 
         {!result ? (
-          <div className="hit-number-lock-dock">
+          <div className={`hit-number-lock-dock${ready ? " is-ready" : ""}`}>
             <button
               className={`hit-number-lock${ready ? " is-ready" : ""}`}
               type="button"
