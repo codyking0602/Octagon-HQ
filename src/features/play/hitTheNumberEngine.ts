@@ -17,6 +17,25 @@ export const HIT_THE_NUMBER_STATS = [
 export type HitTheNumberStatId = typeof HIT_THE_NUMBER_STATS[number]["id"];
 export type HitTheNumberBoardType = "open-roster" | "random-pool";
 
+export const HIT_THE_NUMBER_GENERATION_PROFILE = {
+  stats: [
+    { value: "ufc-wins", weight: 35 },
+    { value: "ufc-finishes", weight: 30 },
+    { value: "ufc-ko-tko-wins", weight: 25 },
+    { value: "ufc-submission-wins", weight: 10 },
+  ],
+  filters: [
+    { value: "all", weight: 55 },
+    { value: "division", weight: 45 },
+  ],
+  picks: [
+    { value: 4, weight: 15 },
+    { value: 5, weight: 35 },
+    { value: 6, weight: 35 },
+    { value: 7, weight: 15 },
+  ],
+} as const;
+
 export interface HitTheNumberEligibilityFilter {
   gender?: PlayGender;
   division?: string;
@@ -57,6 +76,12 @@ export interface CreateHitTheNumberBoardOptions {
   statRows?: readonly HitTheNumberStatRow[];
 }
 
+export interface CreateGeneratedHitTheNumberBoardOptions {
+  seed: string;
+  boardType: HitTheNumberBoardType;
+  statRows?: readonly HitTheNumberStatRow[];
+}
+
 export type HitTheNumberResultStatus = "perfect" | "under" | "bust";
 
 export interface HitTheNumberResult {
@@ -64,6 +89,7 @@ export interface HitTheNumberResult {
   target: number;
   total: number;
   distance: number;
+  score: number;
   selections: Array<{ fighterId: string; value: number }>;
 }
 
@@ -145,6 +171,43 @@ function validatePickCount(value: number) {
     );
   }
   return value;
+}
+
+function weightedValue<T>(
+  rows: readonly { value: T; weight: number }[],
+  random: () => number,
+): T {
+  const totalWeight = rows.reduce((sum, row) => sum + row.weight, 0);
+  if (!(totalWeight > 0)) throw new Error("Hit the Number generation weights are invalid.");
+  let cursor = random() * totalWeight;
+  for (const row of rows) {
+    cursor -= row.weight;
+    if (cursor < 0) return row.value;
+  }
+  return rows[rows.length - 1]!.value;
+}
+
+function positiveFighterCount(
+  statId: HitTheNumberStatId,
+  filter: HitTheNumberEligibilityFilter,
+  statRows: readonly HitTheNumberStatRow[],
+) {
+  const rowsById = rowMap(statRows);
+  return hitTheNumberEligibleFighters(statId, filter, statRows).filter(
+    (fighter) => valueFor(rowsById, fighter.id, statId) > 0,
+  ).length;
+}
+
+function availableDivisionFilters(
+  statId: HitTheNumberStatId,
+  statRows: readonly HitTheNumberStatRow[],
+) {
+  const divisions = new Set(playFighters.flatMap((fighter) => fighter.divisions));
+  return [...divisions]
+    .filter((division) => (
+      positiveFighterCount(statId, { division }, statRows) >= HIT_THE_NUMBER_MIN_PICKS
+    ))
+    .sort((left, right) => left.localeCompare(right));
 }
 
 function findExactSolution(
@@ -314,6 +377,71 @@ export function createHitTheNumberBoard(options: CreateHitTheNumberBoardOptions)
   };
 }
 
+export function createGeneratedHitTheNumberBoard(
+  options: CreateGeneratedHitTheNumberBoardOptions,
+): HitTheNumberBoard {
+  const statRows = options.statRows ?? hitTheNumberStatRows;
+  const random = seededLineupRandom(
+    "hit-the-number-generated",
+    options.seed,
+    options.boardType,
+  );
+  const statId = weightedValue(HIT_THE_NUMBER_GENERATION_PROFILE.stats, random);
+  const divisions = availableDivisionFilters(statId, statRows);
+  const filterKind = weightedValue(
+    divisions.length > 0
+      ? HIT_THE_NUMBER_GENERATION_PROFILE.filters
+      : [{ value: "all" as const, weight: 100 }],
+    random,
+  );
+  const filter: HitTheNumberEligibilityFilter = filterKind === "division"
+    ? { division: divisions[Math.floor(random() * divisions.length)]! }
+    : {};
+  const maximumPicks = Math.min(
+    HIT_THE_NUMBER_MAX_PICKS,
+    positiveFighterCount(statId, filter, statRows),
+  );
+  const pickOptions = HIT_THE_NUMBER_GENERATION_PROFILE.picks.filter(
+    (row) => row.value <= maximumPicks,
+  );
+  if (!pickOptions.length) {
+    throw new Error("Hit the Number generated challenge does not have enough positive fighters.");
+  }
+  const pickCount = weightedValue(pickOptions, random);
+
+  return createHitTheNumberBoard({
+    seed: options.seed,
+    statId,
+    boardType: options.boardType,
+    filter,
+    pickCount,
+    statRows,
+  });
+}
+
+export function hitTheNumberScore({
+  status,
+  target,
+  distance,
+  pickCount,
+}: {
+  status: HitTheNumberResultStatus;
+  target: number;
+  distance: number;
+  pickCount: number;
+}) {
+  if (!Number.isFinite(target) || target <= 0) throw new Error("Hit the Number score target must be positive.");
+  validatePickCount(pickCount);
+  if (!Number.isFinite(distance) || distance < 0) throw new Error("Hit the Number score distance cannot be negative.");
+  if (status === "perfect") return 100;
+
+  const averageContribution = target / pickCount;
+  const rawScore = status === "bust"
+    ? 75 - (50 * distance / averageContribution)
+    : 100 - (50 * distance / averageContribution);
+  return Math.max(0, Math.min(100, Math.round(rawScore)));
+}
+
 export function gradeHitTheNumberSelection(
   setup: HitTheNumberPublicSetup,
   selectedFighterIds: readonly string[],
@@ -341,12 +469,19 @@ export function gradeHitTheNumberSelection(
     : total > setup.target
       ? "bust"
       : "under";
+  const distance = Math.abs(setup.target - total);
 
   return {
     status,
     target: setup.target,
     total,
-    distance: Math.abs(setup.target - total),
+    distance,
+    score: hitTheNumberScore({
+      status,
+      target: setup.target,
+      distance,
+      pickCount: setup.pickCount,
+    }),
     selections,
   };
 }
