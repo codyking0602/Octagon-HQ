@@ -32,6 +32,33 @@ describe("August 16, 2026 canonical ranking refresh", () => {
     expect(input("Kamaru Usman").era.window.end).toBe("2023-03-18");
   });
 
+  it("stores reviewed round-control audits as whole rounds, not judge-card averages", () => {
+    expect(fightsAgainst("Dricus du Plessis", "Kamaru Usman", "2026-07-18")[0].rounds).toEqual({
+      status: "audited",
+      won: 4,
+      lost: 1,
+      drawn: 0,
+    });
+    expect(fightsAgainst("Kamaru Usman", "Dricus du Plessis", "2026-07-18")[0].rounds).toEqual({
+      status: "audited",
+      won: 1,
+      lost: 4,
+      drawn: 0,
+    });
+    expect(fightsAgainst("Islam Makhachev", "Ian Machado Garry", "2026-08-15")[0].rounds).toEqual({
+      status: "audited",
+      won: 3,
+      lost: 2,
+      drawn: 0,
+    });
+    expect(fightsAgainst("Mackenzie Dern", "Gillian Robertson", "2026-08-15")[0].rounds).toEqual({
+      status: "audited",
+      won: 4,
+      lost: 1,
+      drawn: 0,
+    });
+  });
+
   it("keeps every July 11 result singular and in its approved era context", () => {
     const july = [
       ["Max Holloway", "Conor McGregor"],
