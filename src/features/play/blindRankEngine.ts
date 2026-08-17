@@ -114,16 +114,16 @@ export interface BlindRankArchetype {
   maxLow?: number;
 }
 
-// The five shapes are weighted so the canonical generator owns the full difficulty mix for
-// daily, replayable, and challenge boards. Low-end fighters should appear on about 65% of
-// boards, while the remaining boards stay legitimately top-heavy or tightly clustered rather
-// than becoming the same broad staircase every time. Bottom-heavy and Chaos make two or more
-// low-end fighters a normal occurrence instead of a rare wildcard accident.
+// Preserve the established shape frequencies while making the shape contracts meaningfully
+// different. Balanced, Bottom-heavy, and Chaos require a low-end fighter, so roughly 69% of
+// seeded boards target at least one below-average/bad fighter. Bottom-heavy and Chaos together
+// make two or more low-end fighters a regular ~24% occurrence. Top-heavy and Middle cluster
+// deliberately remain no-low boards so the game still has real variety instead of a forced recipe.
 export const BLIND_RANK_ARCHETYPES: readonly BlindRankArchetype[] = [
   {
     id: "balanced",
     name: "Balanced",
-    weight: 0.30,
+    weight: 0.45,
     targets: ["elite", "great", "good", "average", "below-average"],
     minRange: 32,
     minHigh: 1,
@@ -135,7 +135,7 @@ export const BLIND_RANK_ARCHETYPES: readonly BlindRankArchetype[] = [
   {
     id: "top-heavy",
     name: "Top-heavy",
-    weight: 0.15,
+    weight: 0.18,
     targets: ["elite", "elite", "great", "good", "average"],
     minRange: 18,
     minHigh: 3,
@@ -147,7 +147,7 @@ export const BLIND_RANK_ARCHETYPES: readonly BlindRankArchetype[] = [
   {
     id: "bottom-heavy",
     name: "Bottom-heavy",
-    weight: 0.20,
+    weight: 0.16,
     targets: ["great", "average", "below-average", "below-average", "bad"],
     minRange: 24,
     minHigh: 1,
@@ -159,7 +159,7 @@ export const BLIND_RANK_ARCHETYPES: readonly BlindRankArchetype[] = [
   {
     id: "middle-cluster",
     name: "Middle cluster",
-    weight: 0.20,
+    weight: 0.13,
     targets: ["great", "good", "good", "average", "average"],
     minRange: 8,
     minHigh: 0,
@@ -172,7 +172,7 @@ export const BLIND_RANK_ARCHETYPES: readonly BlindRankArchetype[] = [
   {
     id: "chaos",
     name: "Chaos",
-    weight: 0.15,
+    weight: 0.08,
     targets: ["elite", "good", "average", "below-average", "bad"],
     minRange: 45,
     minHigh: 1,
