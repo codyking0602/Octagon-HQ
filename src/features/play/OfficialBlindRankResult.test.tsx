@@ -68,7 +68,7 @@ function completedBlindRankProjection(): TodayChallengeProjection {
 }
 
 describe("official Blind Rank result details", () => {
-  it("shows the official score, comparison count, canonical order, and broad tiers", () => {
+  it("shows the 100-point score, five-placement grading context, canonical order, and broad tiers", () => {
     const projection = completedBlindRankProjection();
     const { container } = render(
       <>
@@ -78,7 +78,9 @@ describe("official Blind Rank result details", () => {
     );
 
     expect(screen.getByRole("heading", { name: "70/100 · OFFICIAL RESULT" })).toBeInTheDocument();
-    expect(screen.getByText("7 OF 10 COMPARISONS CORRECT")).toBeInTheDocument();
+    expect(screen.getByText("FIVE PLACEMENTS GRADED AGAINST OCTAGON HQ")).toBeInTheDocument();
+    expect(screen.queryByText(/7 OF 10/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/COMPARISONS CORRECT/i)).not.toBeInTheDocument();
     expect(screen.getByText("OCTAGON HQ ORDER")).toBeInTheDocument();
     expect(container.querySelectorAll(".blind-rank-results article")).toHaveLength(5);
     expect(screen.getByText("Heavyweight · ELITE")).toBeInTheDocument();
