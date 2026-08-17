@@ -21,40 +21,67 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Record exact main deployment result
-        uses: actions/github-script@v7
+        shell: bash
         env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
           WORKFLOW_NAME: ${{ github.event.workflow_run.name }}
           DEPLOYMENT_SHA: ${{ github.event.workflow_run.head_sha }}
           DEPLOYMENT_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
           DEPLOYMENT_URL: ${{ github.event.workflow_run.html_url }}
-        with:
-          script: |
-            const contexts = {
-              "Deploy Cloudflare Frontend": "octagon/frontend-live",
-              "Deploy Supabase Backend": "octagon/backend-live",
-            };
-            const workflowName = process.env.WORKFLOW_NAME;
-            const deploymentSha = process.env.DEPLOYMENT_SHA;
-            const conclusion = process.env.DEPLOYMENT_CONCLUSION;
-            const contextName = contexts[workflowName];
-            if (!contextName) {
-              core.setFailed(`Unsupported deployment workflow: ${workflowName}`);
-              return;
-            }
-            const state = conclusion === "success"
-              ? "success"
-              : conclusion === "failure"
-                ? "failure"
-                : "error";
-            await github.rest.repos.createCommitStatus({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              sha: deploymentSha,
-              state,
-              context: contextName,
-              description: conclusion === "success"
-                ? `Exact ${workflowName === "Deploy Cloudflare Frontend" ? "frontend" : "backend"} production proof passed.`
-                : `${workflowName} finished ${conclusion}.`,
-              target_url: process.env.DEPLOYMENT_URL,
-            });
-            core.info(`${contextName}: ${state} for ${deploymentSha}`);
+        run: |
+          set -euo pipefail
+
+          case "$WORKFLOW_NAME" in
+            "Deploy Cloudflare Frontend")
+              context_name="octagon/frontend-live"
+              deployment_kind="frontend"
+              ;;
+            "Deploy Supabase Backend")
+              context_name="octagon/backend-live"
+              deployment_kind="backend"
+              ;;
+            *)
+              echo "::error title=Unsupported deployment workflow::$WORKFLOW_NAME"
+              exit 1
+              ;;
+          esac
+
+          case "$DEPLOYMENT_CONCLUSION" in
+            success)
+              state="success"
+              description="Exact ${deployment_kind} production proof passed."
+              ;;
+            failure)
+              state="failure"
+              description="$WORKFLOW_NAME finished failure."
+              ;;
+            *)
+              state="error"
+              description="$WORKFLOW_NAME finished $DEPLOYMENT_CONCLUSION."
+              ;;
+          esac
+
+          payload=$(node --input-type=module - "$state" "$context_name" "$description" "$DEPLOYMENT_URL" <<'NODE'
+          const [state, context, description, targetUrl] = process.argv.slice(2);
+          process.stdout.write(JSON.stringify({
+            state,
+            context,
+            description,
+            target_url: targetUrl,
+          }));
+          NODE
+          )
+
+          curl --fail-with-body --silent --show-error \
+            --retry 5 \
+            --retry-all-errors \
+            --retry-delay 2 \
+            --request POST \
+            --header "Accept: application/vnd.github+json" \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            --header "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$REPOSITORY/statuses/$DEPLOYMENT_SHA" \
+            --data "$payload"
+
+          echo "$context_name: $state for $DEPLOYMENT_SHA"
