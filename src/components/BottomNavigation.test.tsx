@@ -1,4 +1,4 @@
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { BottomNavigation } from "./BottomNavigation";
@@ -23,14 +23,18 @@ afterEach(() => {
   else Reflect.deleteProperty(window, "visualViewport");
 });
 
+function setInnerHeight(value: number) {
+  Object.defineProperty(window, "innerHeight", {
+    configurable: true,
+    value,
+  });
+}
+
 function installVisualViewport() {
   const viewport = new EventTarget() as MutableVisualViewport;
   viewport.height = 844;
   viewport.offsetTop = 0;
-  Object.defineProperty(window, "innerHeight", {
-    configurable: true,
-    value: 844,
-  });
+  setInnerHeight(844);
   Object.defineProperty(window, "visualViewport", {
     configurable: true,
     value: viewport,
@@ -39,7 +43,7 @@ function installVisualViewport() {
 }
 
 describe("BottomNavigation", () => {
-  it("keeps a resumed stale viewport from floating the nav above the bottom", () => {
+  it("does not mistake a resumed stale shrunken viewport for an open keyboard", () => {
     const viewport = installVisualViewport();
     render(
       <MemoryRouter>
@@ -49,17 +53,55 @@ describe("BottomNavigation", () => {
 
     const navigation = screen.getByRole("navigation", { name: "Primary navigation" });
     expect(navigation).not.toHaveClass("is-keyboard-open");
+    expect(navigation).toHaveStyle({ display: "grid" });
 
     act(() => {
       viewport.height = 500;
       document.dispatchEvent(new Event("visibilitychange"));
     });
-    expect(navigation).toHaveClass("is-keyboard-open");
 
+    expect(navigation).not.toHaveClass("is-keyboard-open");
+    expect(navigation).toHaveStyle({ display: "grid" });
+  });
+
+  it("still hides the navigation when an editor owns a materially occluded viewport", () => {
+    const viewport = installVisualViewport();
+    render(
+      <MemoryRouter>
+        <input aria-label="Message" />
+        <BottomNavigation />
+      </MemoryRouter>,
+    );
+
+    const navigation = screen.getByRole("navigation", { name: "Primary navigation" });
+    const input = screen.getByRole("textbox", { name: "Message" });
+
+    fireEvent.focus(input);
     act(() => {
-      viewport.height = 844;
+      viewport.height = 500;
       viewport.dispatchEvent(new Event("resize"));
     });
-    expect(navigation).not.toHaveClass("is-keyboard-open");
+
+    expect(navigation).toHaveClass("is-keyboard-open");
+    expect(navigation).toHaveStyle({ display: "none" });
+  });
+
+  it("corrects a stale short layout viewport so the nav stays on the visible bottom edge", () => {
+    const viewport = installVisualViewport();
+    render(
+      <MemoryRouter>
+        <BottomNavigation />
+      </MemoryRouter>,
+    );
+
+    const navigation = screen.getByRole("navigation", { name: "Primary navigation" });
+
+    act(() => {
+      setInnerHeight(700);
+      viewport.dispatchEvent(new Event("resize"));
+    });
+
+    expect(navigation).toHaveStyle({ transform: "translateY(144px)" });
+    expect(navigation).toHaveStyle({ display: "grid" });
   });
 });
