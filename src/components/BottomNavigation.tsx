@@ -61,6 +61,7 @@ export function BottomNavigation() {
   const location = useLocation();
   const warRoom = useWarRoom();
   const [keyboardOpen, setKeyboardOpen] = useState(false);
+  const [viewportBottomCorrection, setViewportBottomCorrection] = useState(0);
   const destinations = warRoom.status === "eligible"
     ? [...baseDestinations, warRoomDestination]
     : baseDestinations;
@@ -71,24 +72,30 @@ export function BottomNavigation() {
     if (!viewport) return undefined;
 
     let resumeTimer: number | undefined;
-    const syncKeyboardState = () => {
-      const occludedHeight = Math.max(
-        0,
-        window.innerHeight - viewport.height - viewport.offsetTop,
+    const syncViewportState = () => {
+      const activeElement = document.activeElement;
+      const editing = activeElement instanceof HTMLElement
+        && activeElement.matches("input, textarea, select, [contenteditable='true']");
+      const visualBottom = viewport.height + viewport.offsetTop;
+      const occludedHeight = Math.max(0, window.innerHeight - visualBottom);
+      const nextKeyboardOpen = editing && occludedHeight > 120;
+
+      setKeyboardOpen(nextKeyboardOpen);
+      setViewportBottomCorrection(
+        nextKeyboardOpen ? 0 : Math.max(0, Math.round(visualBottom - window.innerHeight)),
       );
-      setKeyboardOpen(occludedHeight > 120);
     };
-    const syncAfterFocus = () => window.setTimeout(syncKeyboardState, 0);
+    const syncAfterFocus = () => window.setTimeout(syncViewportState, 0);
     const syncAfterResume = () => {
       if (document.visibilityState !== "visible") return;
-      syncKeyboardState();
+      syncViewportState();
       window.clearTimeout(resumeTimer);
-      resumeTimer = window.setTimeout(syncKeyboardState, 250);
+      resumeTimer = window.setTimeout(syncViewportState, 250);
     };
 
-    syncKeyboardState();
-    viewport.addEventListener("resize", syncKeyboardState);
-    viewport.addEventListener("scroll", syncKeyboardState);
+    syncViewportState();
+    viewport.addEventListener("resize", syncViewportState);
+    viewport.addEventListener("scroll", syncViewportState);
     document.addEventListener("focusin", syncAfterFocus);
     document.addEventListener("focusout", syncAfterFocus);
     document.addEventListener("visibilitychange", syncAfterResume);
@@ -96,8 +103,8 @@ export function BottomNavigation() {
     window.addEventListener("pageshow", syncAfterResume);
     return () => {
       window.clearTimeout(resumeTimer);
-      viewport.removeEventListener("resize", syncKeyboardState);
-      viewport.removeEventListener("scroll", syncKeyboardState);
+      viewport.removeEventListener("resize", syncViewportState);
+      viewport.removeEventListener("scroll", syncViewportState);
       document.removeEventListener("focusin", syncAfterFocus);
       document.removeEventListener("focusout", syncAfterFocus);
       document.removeEventListener("visibilitychange", syncAfterResume);
@@ -110,7 +117,13 @@ export function BottomNavigation() {
     <nav
       className={`bottom-nav${keyboardOpen ? " is-keyboard-open" : ""}`}
       aria-label="Primary navigation"
-      style={{ gridTemplateColumns: `repeat(${destinations.length}, minmax(0, 1fr))` }}
+      style={{
+        gridTemplateColumns: `repeat(${destinations.length}, minmax(0, 1fr))`,
+        display: keyboardOpen ? "none" : "grid",
+        transform: viewportBottomCorrection > 0
+          ? `translateY(${viewportBottomCorrection}px)`
+          : undefined,
+      }}
     >
       {destinations.map((destination) => (
         <NavLink
