@@ -195,7 +195,6 @@ const rafaelDosAnjos = {
         rdaQualityWin("2013-05-18", "Evan Dunham", 0.65),
         rdaQualityWin("2017-06-17", "Tarec Saffiedine", 0.65),
         rdaQualityWin("2014-06-07", "Jason High", 0.45),
-        rdaQualityWin("2012-11-17", "Mark Bocek", 0.65),
         rdaQualityWin("2022-12-03", "Bryan Barberena", 0.45),
         rdaQualityWin("2010-04-10", "Terry Etim", 0.45),
         rdaQualityWin("2012-07-11", "Anthony Njokuani", 0.45),
