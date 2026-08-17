@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { requiredApplicationMarkers } from "./verify-production-artifact.mjs";
+import {
+  requiredApplicationMarkers,
+  requiredShareArtwork,
+} from "./verify-production-artifact.mjs";
 
 describe("production artifact Picks control markers", () => {
   it("tracks the compiled compact progressive per-fight lock UI instead of retired lock copy", () => {
@@ -22,5 +25,9 @@ describe("production artifact Picks control markers", () => {
       "LOCK PICKS & BEGIN RESULTS",
       "LOCK ALL PICKS & BEGIN RESULTS",
     ]));
+  });
+
+  it("requires share artwork for every current Play game, including Hit the Number", () => {
+    expect(requiredShareArtwork).toContain("hit-the-number.svg");
   });
 });

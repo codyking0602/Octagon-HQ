@@ -53,6 +53,7 @@ export const requiredShareArtwork = [
   "keep-cut.svg",
   "better-than.svg",
   "auction.svg",
+  "hit-the-number.svg",
   "picks-recap.svg",
   "ranking-update.svg",
 ];
@@ -131,7 +132,7 @@ export async function verifyProductionArtifact({ dist = "dist", env = process.en
     || !Array.isArray(previewCatalog.fighters)
     || previewCatalog.fighters.length < 1
     || !Array.isArray(previewCatalog.games)
-    || previewCatalog.games.length !== 7
+    || previewCatalog.games.length !== 8
     || !previewCatalog.fighterAssets
     || typeof previewCatalog.fighterAssets !== "object"
   ) {
