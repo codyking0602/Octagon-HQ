@@ -354,7 +354,7 @@ describe("profile category and loss audits", () => {
     const usman = getFighter("kamaru-usman")!;
     expect(usman.profileEvidence.primeLosses).toContain("Leon Edwards ×2");
     expect(usman.profileEvidence.primeLosses).not.toContain("Khamzat Chimaev");
-    expect(usman.profileEvidence.postPrimeLosses).toBe(1);
+    expect(usman.profileEvidence.postPrimeLosses).toBe(2);
 
     const gsp = getFighter("georges-st-pierre")!;
     const gspLosses = gsp.traces.penalty.events.map((event) => [event.opponent, event.phase, event.qualityTier, event.finished, event.rawPenalty]);

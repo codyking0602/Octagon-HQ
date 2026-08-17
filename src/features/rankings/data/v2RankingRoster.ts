@@ -564,6 +564,260 @@ const robbieLawler = {
   },
 };
 
+const baselineFighter = (fighter: string) => {
+  const input = historicalMigrationSeedJson.fighters.find((candidate) => candidate.fighter === fighter);
+  if (!input) throw new Error(`${fighter} is missing from the sealed ranking baseline.`);
+  return input;
+};
+
+const reviewedFight = ({
+  id,
+  date,
+  opponent,
+  division,
+  result,
+  method = "decision",
+  qualityTier,
+  championshipType = "none",
+  championshipManualCredit = null,
+  rounds,
+  upward = false,
+}: {
+  id: string;
+  date: string;
+  opponent: string;
+  division: string;
+  result: "win" | "loss";
+  method?: string;
+  qualityTier: string;
+  championshipType?: string;
+  championshipManualCredit?: number | null;
+  rounds: readonly [number, number];
+  upward?: boolean;
+}) => ({
+  id,
+  date,
+  opponent,
+  division,
+  officialResult: result,
+  scoringDisposition: result === "win" ? "count-win" : "count-loss",
+  methodCategory: method,
+  qualityTier,
+  championshipType,
+  championshipEligible: true,
+  championshipOpponentStrength: null,
+  championshipManualCredit,
+  rounds: { status: "audited", won: rounds[0], lost: rounds[1], drawn: 0 },
+  lossClassification: {
+    competitive: true,
+    divisionContext: upward ? "upward" : "home",
+    overrideRule: null,
+  },
+});
+
+const reviewedQualityWin = (
+  fighter: string,
+  fightId: string,
+  opponent: string,
+  date: string,
+  division: string,
+  finalCredit: number,
+  note: string,
+) => ({
+  fighter,
+  fightId,
+  opponent,
+  date,
+  division,
+  finalCredit,
+  reviewStatus: "locked",
+  judgmentSource: "octagon-hq-2026-08-16-refresh",
+  judgmentStatus: "cody-approved",
+  provenance: "canonical UFC fight fact + approved August 16 ranking refresh",
+  note,
+});
+
+const dricusBaseline = baselineFighter("Dricus du Plessis");
+const dricusUsmanFight = reviewedFight({
+  id: "2026-07-18-kamaru-usman",
+  date: "2026-07-18",
+  opponent: "Kamaru Usman",
+  division: "Middleweight",
+  result: "win",
+  qualityTier: "top-ten",
+  rounds: [5, 0],
+});
+const dricusDuPlessis = {
+  ...dricusBaseline,
+  facts: {
+    ...dricusBaseline.facts,
+    primeWindow: { ...dricusBaseline.facts.primeWindow, endFightId: null, open: true },
+    fights: [...dricusBaseline.facts.fights, dricusUsmanFight],
+  },
+  era: { ...dricusBaseline.era, window: { ...dricusBaseline.era.window, end: null } },
+  judgments: {
+    ...dricusBaseline.judgments,
+    opponentQuality: {
+      ...dricusBaseline.judgments.opponentQuality,
+      inputs: [
+        ...dricusBaseline.judgments.opponentQuality.inputs,
+        reviewedQualityWin(
+          "Dricus du Plessis",
+          dricusUsmanFight.id,
+          "Kamaru Usman",
+          dricusUsmanFight.date,
+          "Middleweight",
+          0.65,
+          "Meaningful former-champion win, tempered because Usman was not a current top-five middleweight.",
+        ),
+      ],
+    },
+  },
+  presentation: {
+    ...dricusBaseline.presentation,
+    oneLiner: "The modern middleweight chaos champion: elite wins over Whittaker, Adesanya, and Strickland, followed by a five-round Usman rebound that reopened his prime.",
+    whyRankedHere: "Du Plessis paired a championship run over Strickland and Adesanya with a decisive five-round rebound against Kamaru Usman after losing to Khamzat Chimaev. That return to elite relevance reopens an already deep modern middleweight prime.",
+    whyNotHigher: "His reopened elite window is still shorter than the sustained championship eras above him, and the one-sided Chimaev loss remains part of the prime ledger. Usman also entered as a decorated former welterweight champion, not a current top-five middleweight.",
+    finalTakeaway: "Du Plessis answered his first UFC loss with a meaningful five-round win and is again building an active elite middleweight case.",
+  },
+};
+
+const usmanBaseline = baselineFighter("Kamaru Usman");
+const usmanDricusFight = reviewedFight({
+  id: "2026-07-18-dricus-du-plessis",
+  date: "2026-07-18",
+  opponent: "Dricus du Plessis",
+  division: "Middleweight",
+  result: "loss",
+  qualityTier: "champion-level",
+  rounds: [0, 5],
+  upward: true,
+});
+const kamaruUsman = {
+  ...usmanBaseline,
+  facts: {
+    ...usmanBaseline.facts,
+    primeWindow: {
+      ...usmanBaseline.facts.primeWindow,
+      endFightId: "2023-03-18-leon-edwards",
+      open: false,
+    },
+    fights: [...usmanBaseline.facts.fights, usmanDricusFight],
+  },
+  presentation: {
+    ...usmanBaseline.presentation,
+    whyRankedHere: "Usman's closed welterweight prime remains one of the era's strongest: elite round control, five successful defenses, and wins over Woodley, Covington, Burns, and Masvidal anchor the case.",
+    whyNotHigher: "His scored era closed with the 2023 Edwards rematch. The later Buckley win and middleweight losses to Chimaev and du Plessis add resume context without reopening or damaging the prime-dominance window.",
+    finalTakeaway: "Usman's all-time case remains his focused welterweight reign; multiple later 185-pound excursions are post-prime evidence rather than a new elite era.",
+    keyJudgmentCalls: [
+      ...usmanBaseline.presentation.keyJudgmentCalls.filter((call) => !call.startsWith("Middleweight fight:")),
+      "Middleweight excursions: the Chimaev and du Plessis fights are post-prime context and do not reopen the closed scored era.",
+    ],
+  },
+};
+
+const islamGarryFight = reviewedFight({
+  id: "2026-08-15-ian-machado-garry",
+  date: "2026-08-15",
+  opponent: "Ian Machado Garry",
+  division: "Welterweight",
+  result: "win",
+  qualityTier: "top-five",
+  championshipType: "normal",
+  championshipManualCredit: 0.95,
+  rounds: [4.33, 0.67],
+});
+const islamMakhachevAugustRefresh = {
+  ...islamMakhachev,
+  facts: {
+    ...islamMakhachev.facts,
+    fights: [...islamMakhachev.facts.fights, islamGarryFight],
+  },
+  judgments: {
+    ...islamMakhachev.judgments,
+    championship: {
+      ...islamMakhachev.judgments.championship,
+      inputs: [
+        ...islamMakhachev.judgments.championship.inputs,
+        {
+          fightId: islamGarryFight.id,
+          opponent: "Ian Machado Garry",
+          date: islamGarryFight.date,
+          event: "UFC 330",
+          titleType: "normal",
+          officialTitleFight: true,
+          finalAdjustedCredit: 0.95,
+          notes: "First successful defense of the UFC welterweight title against the number-one challenger.",
+        },
+      ],
+    },
+    opponentQuality: {
+      ...islamMakhachev.judgments.opponentQuality,
+      inputs: [
+        ...islamMakhachev.judgments.opponentQuality.inputs,
+        reviewedQualityWin("Islam Makhachev", islamGarryFight.id, "Ian Machado Garry", islamGarryFight.date, "Welterweight", 1, "Number-one welterweight challenger in a successful title defense."),
+      ],
+    },
+  },
+  presentation: {
+    ...islamMakhachev.presentation,
+    whyRankedHere: "Islam has an 18-1 UFC record, seven title-fight wins, and 17 consecutive UFC wins. After four lightweight defenses, he won the welterweight title and defended it against number-one challenger Ian Machado Garry, giving his second-division case sustained championship weight.",
+    whyNotHigher: "The remaining case against moving Islam higher is career length rather than peak quality. His active elite run is still shorter than the longest championship eras above him, while the pre-prime Adriano Martins knockout remains on the UFC record.",
+    finalTakeaway: "Islam is now a defending two-division champion whose control, elite-win quality, and still-open prime place him among the strongest UFC resumes ever built.",
+    keyJudgmentCalls: islamMakhachev.presentation.keyJudgmentCalls.map((call) =>
+      call.startsWith("Second division:")
+        ? "Second division: winning and then defending the welterweight title materially strengthens the profile."
+        : call,
+    ),
+  },
+};
+
+const dernBaseline = baselineFighter("Mackenzie Dern");
+const dernRobertsonFight = reviewedFight({
+  id: "2026-08-15-gillian-robertson",
+  date: "2026-08-15",
+  opponent: "Gillian Robertson",
+  division: "Strawweight",
+  result: "win",
+  qualityTier: "top-five",
+  championshipType: "normal",
+  championshipManualCredit: 0.9,
+  rounds: [4.33, 0.67],
+});
+const mackenzieDern = {
+  ...dernBaseline,
+  facts: { ...dernBaseline.facts, fights: [...dernBaseline.facts.fights, dernRobertsonFight] },
+  judgments: {
+    ...dernBaseline.judgments,
+    championship: {
+      ...dernBaseline.judgments.championship,
+      inputs: [...dernBaseline.judgments.championship.inputs, { fightId: dernRobertsonFight.id, opponent: "Gillian Robertson", date: dernRobertsonFight.date, event: "UFC 330", titleType: "normal", officialTitleFight: true, finalAdjustedCredit: 0.9, notes: "First strawweight title defense against the number-five challenger." }],
+    },
+    opponentQuality: {
+      ...dernBaseline.judgments.opponentQuality,
+      inputs: [...dernBaseline.judgments.opponentQuality.inputs, reviewedQualityWin("Mackenzie Dern", dernRobertsonFight.id, "Gillian Robertson", dernRobertsonFight.date, "Strawweight", 0.85, "Number-five strawweight challenger in Dern's first successful defense.")],
+    },
+  },
+  presentation: {
+    ...dernBaseline.presentation,
+    oneLiner: "A defending UFC strawweight champion with elite submission danger, a first successful defense, and a volatile contender ledger that keeps the all-time score grounded.",
+    whyRankedHere: "Dern followed the vacant-title win over Virna Jandiroba by defending against number-five challenger Gillian Robertson. Two title-fight wins, submission danger, and long strawweight relevance now give her a stronger UFC-only championship case.",
+    whyNotHigher: "The score is still capped by a vacant-title path, one defense, no win over a reigning champion, and prime contender losses to Marina Rodriguez, Yan Xiaonan, Jessica Andrade, and Amanda Lemos.",
+    finalTakeaway: "Dern's first defense advances her from new-champion status to a proven current titleholder, while the broader prime ledger keeps the case measured.",
+  },
+};
+
+const conorBaseline = baselineFighter("Conor McGregor");
+const conorMcGregor = {
+  ...conorBaseline,
+  facts: {
+    ...conorBaseline.facts,
+    fights: conorBaseline.facts.fights.map((fight) =>
+      fight.id === "2026-07-11-max-holloway" ? { ...fight, methodCategory: "ko-tko" } : fight,
+    ),
+  },
+};
+
 export const v2RankingRoster: V2RankingRosterOverlay = {
   additions: [rafaelDosAnjos],
   replacements: {
@@ -582,8 +836,12 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     "Robert Whittaker": robertWhittaker,
     "Kayla Harrison": kaylaHarrison,
     "Khamzat Chimaev": khamzatChimaev,
-    "Islam Makhachev": islamMakhachev,
     "Robbie Lawler": robbieLawler,
+    "Dricus du Plessis": dricusDuPlessis,
+    "Kamaru Usman": kamaruUsman,
+    "Mackenzie Dern": mackenzieDern,
+    "Conor McGregor": conorMcGregor,
+    "Islam Makhachev": islamMakhachevAugustRefresh,
   },
   eraMembership: {
     "Rafael dos Anjos": {
@@ -591,8 +849,9 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
       secondary: "superstar",
     },
   },
-  factsVersion: "octagon-hq-v2-rda-facts-20260807",
-  judgmentVersion: "octagon-hq-v2-georges-st-pierre-profile-20260816",
+  modelAsOfDate: "2026-08-16",
+  factsVersion: "octagon-hq-v2-rankings-refresh-facts-20260816",
+  judgmentVersion: "octagon-hq-v2-rankings-refresh-judgments-20260816",
   eraDepthVersion: "octagon-hq-v2-rda-20260730",
   eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
 };

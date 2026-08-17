@@ -49,12 +49,17 @@ describe("V2 ranking roster overlay", () => {
       "Robert Whittaker",
       "Kayla Harrison",
       "Khamzat Chimaev",
-      "Islam Makhachev",
       "Robbie Lawler",
+      "Dricus du Plessis",
+      "Kamaru Usman",
+      "Mackenzie Dern",
+      "Conor McGregor",
+      "Islam Makhachev",
     ]);
     expect(sourceOverrides).toMatchObject({
-      factsVersion: "octagon-hq-v2-rda-facts-20260807",
-      judgmentVersion: "octagon-hq-v2-georges-st-pierre-profile-20260816",
+      modelAsOfDate: "2026-08-16",
+      factsVersion: "octagon-hq-v2-rankings-refresh-facts-20260816",
+      judgmentVersion: "octagon-hq-v2-rankings-refresh-judgments-20260816",
       eraDepthVersion: "octagon-hq-v2-rda-20260730",
       eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
     });
@@ -227,37 +232,6 @@ describe("V2 ranking roster overlay", () => {
     );
     const current = canonicalRankingInputs.fighters.find(
       (fighter) => fighter.fighter === "Khamzat Chimaev",
-    );
-
-    expect(historical).toBeDefined();
-    expect(current).toBeDefined();
-    expect(current?.presentation.oneLiner).toBe(oneLiner);
-    expect(current?.presentation.whyRankedHere).toBe(whyRankedHere);
-    expect(current?.presentation.whyNotHigher).toBe(whyNotHigher);
-    expect(current?.facts).toEqual(historical?.facts);
-    expect(current?.era).toEqual(historical?.era);
-    expect(current?.judgments).toEqual(historical?.judgments);
-    expect(current?.eraDepth).toEqual(historical?.eraDepth);
-    expect(current?.presentation).toEqual({
-      ...historical?.presentation,
-      oneLiner,
-      whyRankedHere,
-      whyNotHigher,
-    });
-    for (const value of [oneLiner, whyRankedHere, whyNotHigher]) {
-      expect(value).toMatch(/^[\x00-\x7F]+$/);
-    }
-  });
-
-  it("replaces only Islam Makhachev's approved profile copy", () => {
-    const oneLiner = "Islam's peak combines suffocating control with rare finishing efficiency. He dictates where fights happen through pressure, wrestling, and top control, then forces mistakes with submissions or dangerous striking. He can dominate rounds without giving up the threat of a finish.";
-    const whyRankedHere = "Islam has a 17-1 UFC record, six title-fight wins, and a 10-0 prime run. He submitted Charles Oliveira for the lightweight belt, defended it four times, including twice against Alexander Volkanovski, then beat Jack Della Maddalena over five rounds to become welterweight champion. That championship volume and elite-win quality separate him from the tier below.";
-    const whyNotHigher = "The strongest case against moving Islam higher is career length, not peak quality. His elite run is still shorter than the sustained championship eras of the UFC greats above him. The Adriano Martins knockout is a UFC loss, even if it came well before his prime. He is still active at an elite level, so that longevity deficit can shrink.";
-    const historical = historicalRankingMigrationInputs.fighters.find(
-      (fighter) => fighter.fighter === "Islam Makhachev",
-    );
-    const current = canonicalRankingInputs.fighters.find(
-      (fighter) => fighter.fighter === "Islam Makhachev",
     );
 
     expect(historical).toBeDefined();
