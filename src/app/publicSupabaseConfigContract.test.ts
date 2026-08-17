@@ -46,7 +46,7 @@ describe("production Supabase browser configuration", () => {
     await writeFile(join(dist, "preview-data/rankings.json"), JSON.stringify({
       version: 2,
       fighters: [{ slug: "jon-jones", displayName: "Jon Jones", imagePath: "/jon.webp", rank: 1, ovr: 99 }],
-      games: Array.from({ length: 7 }, (_, index) => ({ id: `game-${index}`, title: "Game", description: "Play", imagePath: "/game.svg" })),
+      games: Array.from({ length: 8 }, (_, index) => ({ id: `game-${index}`, title: "Game", description: "Play", imagePath: "/game.svg" })),
       fighterAssets: { "jon-jones": "/jon.webp" },
     }));
     await Promise.all(requiredShareArtwork.map((name) => writeFile(join(dist, "assets/share", name), "<svg/>")));
