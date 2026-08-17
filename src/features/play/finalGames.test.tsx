@@ -140,9 +140,9 @@ describe("Final Play game presentation", () => {
     Object.defineProperty(window, "scrollTo", { value: vi.fn(), writable: true });
   });
 
-  it("shows all seven live games as routed buttons", () => {
+  it("shows all eight registered games on the legacy Play presentation", () => {
     const { container } = renderAt(<PlayPage />, "/play");
-    expect(container.querySelectorAll(".play-games__grid .play-game-card")).toHaveLength(7);
+    expect(container.querySelectorAll(".play-games__grid .play-game-card")).toHaveLength(8);
     expect(container.querySelectorAll(".play-games__grid button.play-game-card")).toHaveLength(7);
     expect(container.querySelector(".play-game-card__status.is-preview")).toBeNull();
   });
