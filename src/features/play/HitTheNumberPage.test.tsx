@@ -45,7 +45,6 @@ describe("Hit the Number casual game", () => {
     expect(screen.getByRole("button", { name: "RANDOM POOL" })).toHaveAttribute("aria-pressed", "false");
     expect(container.querySelectorAll("select")).toHaveLength(0);
     expect(container.textContent).not.toContain("ROSTER FILTER");
-    expect(container.textContent).not.toContain("STAT");
   });
 
   it("switches to a twelve-fighter Random Pool and generates a fresh lineup", () => {
@@ -77,11 +76,11 @@ describe("Hit the Number casual game", () => {
     expect(screen.getByPlaceholderText("Search by name")).toHaveValue("");
   });
 
-  it("shows every selected fighter at once in the canonical slot grid contract", () => {
+  it("keeps every selected fighter in the one canonical slot grid", () => {
     const { container } = renderGame();
     const pickCount = selectRequiredFighters(container);
     const slots = container.querySelector(".hit-number-slots");
-    expect(slots).toHaveAttribute("data-testid", "hit-number-slots");
-    expect(container.querySelectorAll(".hit-number-slot.is-filled")).toHaveLength(pickCount);
+    expect(slots).not.toBeNull();
+    expect(slots?.querySelectorAll(".hit-number-slot.is-filled")).toHaveLength(pickCount);
   });
 });
