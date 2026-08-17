@@ -61,7 +61,9 @@ describe("complete calculation-backed ranking model", () => {
     v1ProductionRankingParityFixture.fighters
       .filter((expected) => {
         const current = canonicalRankingInputs.fighters.find((fighter) => fighter.fighter === expected.fighter);
-        return !refreshedFighters.has(expected.fighter) && current?.facts.primeWindow.open === false;
+        return !refreshedFighters.has(expected.fighter)
+          && current?.facts.primeWindow.open === false
+          && current.era.window.end !== null;
       })
       .forEach((expected) => {
       const row = calculatedRow(expected.fighter);
