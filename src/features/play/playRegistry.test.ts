@@ -4,6 +4,7 @@ import { playGameDefinition, playGames, type PlayGameId } from "./playRegistry";
 
 const expectedIds: PlayGameId[] = [
   "auction",
+  "hit-the-number",
   "find-leader",
   "wavelength",
   "blind-resume",
@@ -57,7 +58,24 @@ describe("Play game lineup contracts", () => {
     }
   });
 
-  it("preserves casual new-lineup play and exact direct challenges", () => {
+  it("ships Hit the Number as casual replayable play before its official Daily integration", () => {
+    expect(playGameDefinition("hit-the-number").lineup).toMatchObject({
+      defaultType: "replayable",
+      supportedTypes: ["replayable"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "button-and-result-replay",
+      repetitionPolicy: "recent-items-deprioritized",
+      lineupSize: "variable",
+      completionState: "target-selection-locked",
+      challengeEligible: false,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "casual-only",
+    });
+  });
+
+  it("preserves casual new-lineup play and exact direct challenges for the existing challenge games", () => {
     for (const gameId of officialDailyIds) {
       const contract = playGameDefinition(gameId).lineup;
       expect(contract.defaultType).toBe("replayable");
@@ -81,8 +99,8 @@ describe("Play game lineup contracts", () => {
     expect(playGameDefinition("better-than").icon).toBe("VS");
   });
 
-  it("keeps every game challenge eligible with defined completion states", () => {
-    expect(playGames.every((game) => game.lineup.challengeEligible)).toBe(true);
+  it("keeps established games challenge eligible and gives every game a defined completion state", () => {
+    expect(playGames.filter((game) => game.id !== "hit-the-number").every((game) => game.lineup.challengeEligible)).toBe(true);
     expect(playGameDefinition("find-leader").lineup.completionState).toBe("leader-eliminated-or-nine-safe");
     expect(playGameDefinition("wavelength").lineup.completionState).toBe("fourth-guess-locked");
     expect(playGameDefinition("blind-resume").lineup.completionState).toBe("five-picks-complete");
@@ -90,6 +108,7 @@ describe("Play game lineup contracts", () => {
     expect(playGameDefinition("keep-cut").lineup.completionState).toBe("eight-decisions-locked");
     expect(playGameDefinition("better-than").lineup.completionState).toBe("claim-locked");
     expect(playGameDefinition("auction").lineup.completionState).toBe("auction-complete");
+    expect(playGameDefinition("hit-the-number").lineup.completionState).toBe("target-selection-locked");
   });
 
   it("keeps Keep Cut blind and locked instead of exposing the full board", () => {

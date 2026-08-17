@@ -86,9 +86,9 @@ function statValuesForFights(
  * Ranked Hit the Number facts are derived from the existing canonical UFC fight
  * ledgers instead of maintaining another ranked-fighter stat table.
  *
- * Play-only fighters do not have complete canonical fight ledgers yet. Their
- * verified factual rows can extend this same owner before the game is surfaced;
- * missing rows are excluded rather than guessed or silently defaulted.
+ * Play-only fighters without complete canonical fight ledgers stay out of
+ * factual Hit the Number boards until verified rows are owned here. Missing
+ * rows are excluded rather than guessed or silently defaulted.
  */
 export const rankedHitTheNumberStatRows: readonly HitTheNumberStatRow[] =
   canonicalRankingInputs.fighters.map((fighter) => ({
@@ -255,10 +255,17 @@ export function createHitTheNumberBoard(options: CreateHitTheNumberBoardOptions)
       throw new Error(`No exact ${options.statId} solution exists for target ${options.target}.`);
     }
   } else {
+    const positiveCount = eligible.filter(
+      (fighter) => valueFor(rowsById, fighter.id, options.statId) > 0,
+    ).length;
+    const maximumGeneratedPicks = Math.min(HIT_THE_NUMBER_MAX_PICKS, positiveCount);
+    if (maximumGeneratedPicks < HIT_THE_NUMBER_MIN_PICKS) {
+      throw new Error(`Not enough positive ${options.statId} fighters to build a Hit the Number board.`);
+    }
     pickCount = validatePickCount(
       options.pickCount
         ?? HIT_THE_NUMBER_MIN_PICKS
-          + Math.floor(random() * (HIT_THE_NUMBER_MAX_PICKS - HIT_THE_NUMBER_MIN_PICKS + 1)),
+          + Math.floor(random() * (maximumGeneratedPicks - HIT_THE_NUMBER_MIN_PICKS + 1)),
     );
     solutionFighterIds = generatedSolution(
       eligible,

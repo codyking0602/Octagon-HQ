@@ -20,6 +20,7 @@ const BlindRankPage = lazy(() => import("../features/play/BlindRankPage"));
 const KeepCutPage = lazy(() => import("../features/play/KeepCutPage"));
 const BetterThanPage = lazy(() => import("../features/play/BetterThanPage"));
 const AuctionPage = lazy(() => import("../features/play/AuctionPage"));
+const HitTheNumberPage = lazy(() => import("../features/play/HitTheNumberPage"));
 const PicksPage = lazy(() => import("../features/picks/PicksPage"));
 const PicksControlCenterPage = lazy(() => import("../features/picks-control/PicksControlCenterPage"));
 const WarRoomPage = lazy(() => import("../features/war-room/WarRoomPage"));
@@ -48,6 +49,7 @@ export const appRoutes: RouteObject[] = [
       { path: "play/keep-cut", element: <TodayChallengeGameRoute gameType="keep_4_cut_4" casual={<KeepCutPage />} /> },
       { path: "play/better-than", element: <BetterThanPage /> },
       { path: "play/auction", element: <AuctionPage /> },
+      { path: "play/hit-the-number", element: <HitTheNumberPage /> },
       { path: "picks", element: <PicksPage /> },
       { path: "picks/control", element: <PicksControlCenterPage /> },
       { path: "picks/setup", element: <Navigate to="/picks/control#setup" replace /> },

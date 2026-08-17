@@ -11,6 +11,7 @@ const LIVE_GAME_ROUTES: Partial<Record<PlayGameId, string>> = {
   "keep-cut": "/play/keep-cut",
   "better-than": "/play/better-than",
   auction: "/play/auction",
+  "hit-the-number": "/play/hit-the-number",
 };
 
 export default function TodayChallengeHubPage() {

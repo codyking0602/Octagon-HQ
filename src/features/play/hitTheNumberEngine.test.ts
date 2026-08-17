@@ -104,6 +104,20 @@ describe("Hit the Number foundation", () => {
     expect(observed).toEqual(new Set([4, 5, 6, 7]));
   });
 
+  it("caps generated pick count to the positive fighter depth in narrow pools", () => {
+    const fighters = playFighters.slice(0, 6);
+    const rows = fighters.map((fighter, index) => testStatRow(fighter.id, index < 4 ? index + 1 : 0));
+    const board = createHitTheNumberBoard({
+      seed: "four-positive-fighters",
+      statId: "ufc-wins",
+      boardType: "open-roster",
+      statRows: rows,
+    });
+
+    expect(board.publicSetup.pickCount).toBe(4);
+    expect(board.privateSetup.solutionFighterIds).toHaveLength(4);
+  });
+
   it("supports a curated target only when an exact solution exists", () => {
     const fighters = playFighters.slice(0, 8);
     const values = [5, 10, 15, 20, 25, 30, 35, 40];

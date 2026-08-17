@@ -7,7 +7,8 @@ export type PlayGameId =
   | "blind-rank"
   | "keep-cut"
   | "better-than"
-  | "auction";
+  | "auction"
+  | "hit-the-number";
 
 export type PlayNewLineupControl =
   | "none"
@@ -28,7 +29,8 @@ export type PlayCompletionState =
   | "five-slots-locked"
   | "eight-decisions-locked"
   | "claim-locked"
-  | "auction-complete";
+  | "auction-complete"
+  | "target-selection-locked";
 
 export interface PlayGameLineupDefinition {
   defaultType: PlayLineupType;
@@ -46,7 +48,8 @@ export interface PlayGameLineupDefinition {
     | "official-daily"
     | "official-daily-and-casual"
     | "casual-and-challenge"
-    | "challenge-completion";
+    | "challenge-completion"
+    | "casual-only";
   difficultyModel: string;
 }
 
@@ -79,6 +82,27 @@ export const playGames: readonly PlayGameDefinition[] = [
       reminderEligible: false,
       historyRecording: "challenge-completion",
       difficultyModel: "One selected auction mode with fixed public rounds, collection size, and starting bankroll.",
+    },
+  },
+  {
+    id: "hit-the-number",
+    icon: "◎",
+    title: "Hit the Number",
+    description: "Pick 4–7 UFC fighters and hit the target without going over. Use the open roster or a random pool.",
+    lineup: {
+      defaultType: "replayable",
+      supportedTypes: ["replayable"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "button-and-result-replay",
+      repetitionPolicy: "recent-items-deprioritized",
+      lineupSize: "variable",
+      completionState: "target-selection-locked",
+      challengeEligible: false,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "casual-only",
+      difficultyModel: "A verified UFC stat target with 4–7 required picks, optional division filtering, and either the full eligible roster or a 12-fighter random pool.",
     },
   },
   {
