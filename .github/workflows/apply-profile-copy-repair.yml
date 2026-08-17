@@ -59,7 +59,7 @@ jobs:
           standard.write_text(text.replace(old, new))
           PY
           actual_blob="$(git hash-object src/features/rankings/data/v2RankingRoster.ts)"
-          expected_blob="e0d8e29d67a249fb39801407bbf482235cdbf88e"
+          expected_blob="37044ff7956f203d3a17dc2b5bdd54367b2acbc3"
           echo "actual_profile_blob=$actual_blob"
           echo "expected_profile_blob=$expected_blob"
           test "$actual_blob" = "$expected_blob"
