@@ -114,10 +114,11 @@ export interface BlindRankArchetype {
   maxLow?: number;
 }
 
-// Weighted internally so daily, replayable, and challenge boards improve through the same
-// canonical generator without adding user-facing controls. Balanced is intentionally favored
-// as the safest default, while the other archetypes combine for a majority-big-enough variety
-// surface over repeated play without equal 20% odds flattening the experience.
+// Preserve the established shape frequencies while making the shape contracts meaningfully
+// different. Balanced, Bottom-heavy, and Chaos require a low-end fighter, so roughly 69% of
+// seeded boards target at least one below-average/bad fighter. Bottom-heavy and Chaos together
+// make two or more low-end fighters a regular ~24% occurrence. Top-heavy and Middle cluster
+// deliberately remain no-low boards so the game still has real variety instead of a forced recipe.
 export const BLIND_RANK_ARCHETYPES: readonly BlindRankArchetype[] = [
   {
     id: "balanced",
@@ -141,7 +142,7 @@ export const BLIND_RANK_ARCHETYPES: readonly BlindRankArchetype[] = [
     maxHigh: 4,
     minMiddle: 1,
     minLow: 0,
-    maxLow: 1,
+    maxLow: 0,
   },
   {
     id: "bottom-heavy",
@@ -159,22 +160,26 @@ export const BLIND_RANK_ARCHETYPES: readonly BlindRankArchetype[] = [
     id: "middle-cluster",
     name: "Middle cluster",
     weight: 0.13,
-    targets: ["good", "good", "average", "average", "below-average"],
-    minRange: 15,
-    maxHigh: 3,
-    minMiddle: 2,
+    targets: ["great", "good", "good", "average", "average"],
+    minRange: 8,
+    minHigh: 0,
+    maxHigh: 1,
+    minMiddle: 4,
+    maxMiddle: 5,
     minLow: 0,
-    maxLow: 2,
+    maxLow: 0,
   },
   {
     id: "chaos",
     name: "Chaos",
     weight: 0.08,
-    targets: ["elite", "great", "good", "below-average", "bad"],
+    targets: ["elite", "good", "average", "below-average", "bad"],
     minRange: 45,
     minHigh: 1,
-    minMiddle: 1,
-    minLow: 1,
+    maxHigh: 2,
+    minMiddle: 2,
+    minLow: 2,
+    maxLow: 2,
   },
 ] as const;
 
@@ -182,6 +187,14 @@ const HIGH_TIERS = new Set<BlindRankTierId>(["elite", "great"]);
 const MIDDLE_TIERS = new Set<BlindRankTierId>(["good", "average"]);
 const LOW_TIERS = new Set<BlindRankTierId>(["below-average", "bad"]);
 const ARCHETYPE_REROLL_ATTEMPTS = 80;
+
+const BLIND_RANK_ARCHETYPE_FALLBACKS: Record<BlindRankArchetypeId, readonly BlindRankArchetypeId[]> = {
+  balanced: ["chaos", "bottom-heavy"],
+  "top-heavy": ["middle-cluster"],
+  "bottom-heavy": ["chaos", "balanced"],
+  "middle-cluster": ["top-heavy"],
+  chaos: ["bottom-heavy", "balanced"],
+};
 
 function bandCounts(tiers: readonly BlindRankTierId[]) {
   return tiers.reduce((counts, tier) => {
@@ -310,6 +323,10 @@ function buildArchetypeLineup(
   return null;
 }
 
+function archetypeById(id: BlindRankArchetypeId) {
+  return BLIND_RANK_ARCHETYPES.find((row) => row.id === id)!;
+}
+
 export function createBlindRankSeed() {
   return createReplaySeed("blind-rank");
 }
@@ -324,21 +341,18 @@ export function createBlindRankLineup(
     : blindRankArchetypeForSeed(packId, seed);
   if (!requestedArchetype) throw new Error(`Unsupported Blind Rank archetype: ${String(options.archetype)}`);
 
-  const requestedCandidate = buildArchetypeLineup(packId, seed, requestedArchetype);
-  if (requestedCandidate) {
-    return { packId, seed, archetype: requestedArchetype.id, ...requestedCandidate };
-  }
+  const candidateArchetypes = [
+    requestedArchetype,
+    ...BLIND_RANK_ARCHETYPE_FALLBACKS[requestedArchetype.id].map(archetypeById),
+  ];
 
-  const balancedArchetype = BLIND_RANK_ARCHETYPES.find((row) => row.id === "balanced")!;
-  if (requestedArchetype.id !== balancedArchetype.id) {
-    const balancedCandidate = buildArchetypeLineup(packId, seed, balancedArchetype);
-    if (balancedCandidate) {
-      return { packId, seed, archetype: balancedArchetype.id, ...balancedCandidate };
-    }
+  for (const archetype of candidateArchetypes) {
+    const candidate = buildArchetypeLineup(packId, seed, archetype);
+    if (candidate) return { packId, seed, archetype: archetype.id, ...candidate };
   }
 
   throw new Error(
-    `Blind Rank could not build a ${requestedArchetype.name} or Balanced five-fighter lineup for ${packId}.`,
+    `Blind Rank could not build a ${requestedArchetype.name} five-fighter lineup for ${packId} without changing its low-end board class.`,
   );
 }
 

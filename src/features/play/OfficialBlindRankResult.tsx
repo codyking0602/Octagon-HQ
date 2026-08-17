@@ -45,10 +45,6 @@ function revealFighter(value: unknown): BlindRankRevealFighter | null {
   };
 }
 
-function comparisonCount(value: unknown, fallback: number) {
-  return Number.isInteger(value) ? Number(value) : fallback;
-}
-
 export function OfficialBlindRankScoreSummary({
   projection,
 }: {
@@ -56,17 +52,13 @@ export function OfficialBlindRankScoreSummary({
 }) {
   const attempt = projection.officialAttempt;
   if (projection.gameType !== "blind_rank_5" || !attempt) return null;
-  const comparisons = comparisonCount(
-    attempt.publicResult.correct_comparisons,
-    attempt.nativeScore,
-  );
 
   return (
     <section className="keep-cut-result-hero" aria-label="Blind Rank official score">
       <p className="eyebrow">FIVE SLOTS LOCKED</p>
       <h1>{attempt.normalizedScore}/100 · OFFICIAL RESULT</h1>
-      <p>{comparisons} OF 10 COMPARISONS CORRECT</p>
-      <small>Every pair in your locked ranking is graded. Ten correct comparisons scores 100.</small>
+      <p>FIVE PLACEMENTS GRADED AGAINST OCTAGON HQ</p>
+      <small>Your five locked placements are graded by their relative order to produce the 100-point score.</small>
     </section>
   );
 }
