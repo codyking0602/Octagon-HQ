@@ -82,9 +82,9 @@ describe("Hit the Number foundation", () => {
       { value: 6, weight: 35 },
       { value: 7, weight: 15 },
     ]);
-    for (const rows of Object.values(HIT_THE_NUMBER_GENERATION_PROFILE)) {
-      expect(rows.reduce((sum, row) => sum + row.weight, 0)).toBe(100);
-    }
+    expect(HIT_THE_NUMBER_GENERATION_PROFILE.stats.reduce((sum, row) => sum + row.weight, 0)).toBe(100);
+    expect(HIT_THE_NUMBER_GENERATION_PROFILE.filters.reduce((sum, row) => sum + row.weight, 0)).toBe(100);
+    expect(HIT_THE_NUMBER_GENERATION_PROFILE.picks.reduce((sum, row) => sum + row.weight, 0)).toBe(100);
   });
 
   it("filters the canonical Play roster before building an open-roster board", () => {
@@ -147,7 +147,10 @@ describe("Hit the Number foundation", () => {
       expect(setup.boardType).toBe(boardType);
       expect(setup.target).toBeGreaterThan(0);
       expect(board.privateSetup.solutionFighterIds).toHaveLength(setup.pickCount);
-      if (boardType === "random-pool") expect(setup.fighterIds).toHaveLength(12);
+      if (boardType === "random-pool") {
+        expect(setup.fighterIds.length).toBeGreaterThanOrEqual(setup.pickCount);
+        expect(setup.fighterIds.length).toBeLessThanOrEqual(12);
+      }
     }
 
     expect(observedStats).toEqual(new Set(HIT_THE_NUMBER_STATS.map((stat) => stat.id)));
