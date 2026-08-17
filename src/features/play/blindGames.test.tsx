@@ -181,11 +181,11 @@ describe("Blind Rank engine", () => {
 
   it("generates every Blind Rank archetype with documented weights and contract-safe boards", () => {
     expect(BLIND_RANK_ARCHETYPES.map((archetype) => [archetype.id, archetype.weight])).toEqual([
-      ["balanced", 0.45],
-      ["top-heavy", 0.18],
-      ["bottom-heavy", 0.16],
-      ["middle-cluster", 0.13],
-      ["chaos", 0.08],
+      ["balanced", 0.1],
+      ["top-heavy", 0.1],
+      ["bottom-heavy", 0.12],
+      ["middle-cluster", 0.18],
+      ["chaos", 0.5],
     ]);
     expect(BLIND_RANK_ARCHETYPES.reduce((sum, archetype) => sum + archetype.weight, 0)).toBeCloseTo(1, 8);
 
