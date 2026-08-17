@@ -51,8 +51,29 @@ function expectArchetypeContract(
   if (archetype.maxLow !== undefined) expect(bands.low).toBeLessThanOrEqual(archetype.maxLow);
 }
 
+function lowBoardClass(archetypeId: (typeof BLIND_RANK_ARCHETYPES)[number]["id"]) {
+  const archetype = BLIND_RANK_ARCHETYPES.find((row) => row.id === archetypeId)!;
+  if ((archetype.minLow ?? 0) >= 1) return "requires-low" as const;
+  if ((archetype.maxLow ?? 5) === 0) return "forbids-low" as const;
+  throw new Error(`${archetype.id} must explicitly own a low-end board class.`);
+}
+
 describe("Blind Rank lineup archetype release proof", () => {
-  it("builds every broad-pool archetype and uses one deterministic Balanced degradation for narrow pools", () => {
+  it("locks the approved global shape mix at 65% low-end boards", () => {
+    const totalWeight = BLIND_RANK_ARCHETYPES.reduce((sum, row) => sum + row.weight, 0);
+    const lowBoardWeight = BLIND_RANK_ARCHETYPES
+      .filter((row) => lowBoardClass(row.id) === "requires-low")
+      .reduce((sum, row) => sum + row.weight, 0);
+    const multipleLowWeight = BLIND_RANK_ARCHETYPES
+      .filter((row) => (row.minLow ?? 0) >= 2)
+      .reduce((sum, row) => sum + row.weight, 0);
+
+    expect(totalWeight).toBeCloseTo(1, 10);
+    expect(lowBoardWeight).toBeCloseTo(0.65, 10);
+    expect(multipleLowWeight).toBeCloseTo(0.35, 10);
+  });
+
+  it("builds every broad-pool archetype and preserves the requested low-end class when a narrow pack degrades", () => {
     for (const archetype of BLIND_RANK_ARCHETYPES) {
       const first = createBlindRankLineup(
         "all-careers",
@@ -75,21 +96,36 @@ describe("Blind Rank lineup archetype release proof", () => {
         const first = createBlindRankLineup(pack.id, seed, { archetype: archetype.id });
         const second = createBlindRankLineup(pack.id, seed, { archetype: archetype.id });
         expect(first).toEqual(second);
-        expect([archetype.id, "balanced"]).toContain(first.archetype);
+        expect(lowBoardClass(first.archetype)).toBe(lowBoardClass(archetype.id));
         expectArchetypeContract(pack.id, first);
       }
     }
-
-    const degradedHeavyweight = createBlindRankLineup(
-      "heavyweight",
-      "release-proof:heavyweight:middle-cluster",
-      { archetype: "middle-cluster" },
-    );
-    expect(degradedHeavyweight.archetype).toBe("balanced");
-    expectArchetypeContract("heavyweight", degradedHeavyweight);
   });
 
-  it("keeps repeated seeded boards unique with meaningful pool, band, ownership, and gender usage", () => {
+  it("keeps low-end surprise frequency healthy in every Blind Rank category", () => {
+    const sampleSize = 500;
+
+    for (const pack of blindRankPacks) {
+      let lowBoards = 0;
+      let multipleLowBoards = 0;
+
+      for (let index = 0; index < sampleSize; index += 1) {
+        const lineup = createBlindRankLineup(pack.id, `pack-distribution:${pack.id}:${index}`);
+        const bands = boardBands(pack.id, lineup.fighters.map((fighter) => fighter.id));
+        if (bands.low >= 1) lowBoards += 1;
+        if (bands.low >= 2) multipleLowBoards += 1;
+        expectArchetypeContract(pack.id, lineup);
+      }
+
+      const lowBoardShare = lowBoards / sampleSize;
+      const multipleLowBoardShare = multipleLowBoards / sampleSize;
+      expect(lowBoardShare, `${pack.id} low-end board share`).toBeGreaterThanOrEqual(0.58);
+      expect(lowBoardShare, `${pack.id} low-end board share`).toBeLessThanOrEqual(0.72);
+      expect(multipleLowBoardShare, `${pack.id} multiple-low board share`).toBeGreaterThanOrEqual(0.15);
+    }
+  });
+
+  it("keeps repeated broad-pool boards unique with meaningful pool, ownership, and gender usage", () => {
     const sampleSize = 500;
     const validPool = blindRankPool("all-careers");
     const validIds = new Set(validPool.map((fighter) => fighter.id));
