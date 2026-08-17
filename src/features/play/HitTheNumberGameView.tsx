@@ -92,36 +92,53 @@ export function HitTheNumberGameView({
 
       {!result && controls ? controls : null}
 
-      <section className={`hit-number-selection surface-card${result ? " is-complete" : ""}`}>
-        <div className="hit-number-section-heading">
-          <div>
-            <p className="eyebrow">YOUR PICKS</p>
-            <h2>{selectedIds.length} / {setup.pickCount} selected</h2>
+      <div className="hit-number-play-area">
+        <section className={`hit-number-selection surface-card${result ? " is-complete" : ""}`}>
+          <div className="hit-number-section-heading">
+            <div>
+              <p className="eyebrow">YOUR PICKS</p>
+              <h2>{selectedIds.length} / {setup.pickCount} selected</h2>
+            </div>
+            {!result ? <span>Stats stay hidden until you lock.</span> : null}
           </div>
-          {!result ? <span>Stats stay hidden until you lock.</span> : null}
-        </div>
 
-        <div className="hit-number-slots">
-          {Array.from({ length: setup.pickCount }, (_, index) => {
-            const fighterId = selectedIds[index];
-            const fighter = fighterId ? getPlayFighter(fighterId) : null;
-            const value = fighterId ? resultValues.get(fighterId) : undefined;
-            return (
-              <div className={`hit-number-slot${fighter ? " is-filled" : ""}`} key={index}>
-                <b>{index + 1}</b>
-                {fighter ? (
-                  <>
-                    <FighterPhoto name={fighter.name} src={fighter.thumbUrl} className="hit-number-slot__photo" />
-                    <span>{fighter.name}</span>
-                    {result ? <strong className="hit-number-stat-value">{value}</strong> : <small>SELECTED</small>}
-                  </>
-                ) : (
-                  <span className="hit-number-slot__empty">EMPTY</span>
-                )}
+          <div className="hit-number-slots" data-testid="hit-number-slots">
+            {Array.from({ length: setup.pickCount }, (_, index) => {
+              const fighterId = selectedIds[index];
+              const fighter = fighterId ? getPlayFighter(fighterId) : null;
+              const value = fighterId ? resultValues.get(fighterId) : undefined;
+              return (
+                <div className={`hit-number-slot${fighter ? " is-filled" : ""}`} key={index}>
+                  <b>{index + 1}</b>
+                  {fighter ? (
+                    <>
+                      <FighterPhoto name={fighter.name} src={fighter.thumbUrl} className="hit-number-slot__photo" />
+                      <span>{fighter.name}</span>
+                      {result ? <strong className="hit-number-stat-value">{value}</strong> : <small>SELECTED</small>}
+                    </>
+                  ) : (
+                    <span className="hit-number-slot__empty">EMPTY</span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {result ? (
+            <div className={`hit-number-result is-${result.status}`}>
+              <p>{resultLabel(result)}</p>
+              <strong className="hit-number-result__total">{result.total}</strong>
+              <span>TOTAL · TARGET {result.target}</span>
+              <small>{resultDetail(result)}</small>
+              <div className="hit-number-result__score" aria-label={`Score ${result.score} out of 100`}>
+                <span>SCORE</span>
+                <strong>{result.score}</strong>
+                <small>/100</small>
               </div>
-            );
-          })}
-        </div>
+              {resultActions}
+            </div>
+          ) : null}
+        </section>
 
         {!result ? (
           <div className={`hit-number-lock-dock${ready ? " is-ready" : ""}`}>
@@ -134,68 +151,55 @@ export function HitTheNumberGameView({
               {ready ? `${selectedIds.length}/${setup.pickCount} SELECTED · LOCK PICKS` : `${selectedIds.length}/${setup.pickCount} SELECTED`}
             </button>
           </div>
-        ) : (
-          <div className={`hit-number-result is-${result.status}`}>
-            <p>{resultLabel(result)}</p>
-            <strong className="hit-number-result__total">{result.total}</strong>
-            <span>TOTAL · TARGET {result.target}</span>
-            <small>{resultDetail(result)}</small>
-            <div className="hit-number-result__score" aria-label={`Score ${result.score} out of 100`}>
-              <span>SCORE</span>
-              <strong>{result.score}</strong>
-              <small>/100</small>
-            </div>
-            {resultActions}
-          </div>
-        )}
-      </section>
+        ) : null}
 
-      {!result ? (
-        <section className="hit-number-roster surface-card">
-          <div className="hit-number-section-heading">
-            <div>
-              <p className="eyebrow">{poolLabel}</p>
-              <h2>{setup.boardType === "open-roster" ? `${fighters.length} eligible fighters` : `${fighters.length}-fighter pool`}</h2>
+        {!result ? (
+          <section className="hit-number-roster surface-card">
+            <div className="hit-number-section-heading">
+              <div>
+                <p className="eyebrow">{poolLabel}</p>
+                <h2>{setup.boardType === "open-roster" ? `${fighters.length} eligible fighters` : `${fighters.length}-fighter pool`}</h2>
+              </div>
+              <span>{setup.filter.division ? `${setup.filter.division} filter applied` : "Choose any eligible fighter"}</span>
             </div>
-            <span>{setup.filter.division ? `${setup.filter.division} filter applied` : "Choose any eligible fighter"}</span>
-          </div>
-          {setup.boardType === "open-roster" ? (
-            <label className="hit-number-search">
-              <span>SEARCH FIGHTERS</span>
-              <input
-                value={search}
-                onChange={(event) => onSearchChange(event.target.value)}
-                placeholder="Search by name"
-                type="search"
-              />
-            </label>
-          ) : null}
-          <div className="hit-number-fighter-grid">
-            {visibleFighters.map((fighter) => {
-              const selected = selectedSet.has(fighter.id);
-              return (
-                <button
-                  type="button"
-                  className={`hit-number-fighter-card${selected ? " is-selected" : ""}`}
-                  data-divisions={fighter.divisions.join("|")}
-                  aria-pressed={selected}
-                  disabled={busy}
-                  onClick={() => onToggleFighter(fighter.id)}
-                  key={fighter.id}
-                >
-                  <FighterPhoto name={fighter.name} src={fighter.thumbUrl} className="hit-number-fighter-card__photo" />
-                  <span>
-                    <strong>{fighter.name}</strong>
-                    <small>{fighter.divisions.join(" · ")}</small>
-                  </span>
-                  <b>{selected ? "✓" : "+"}</b>
-                </button>
-              );
-            })}
-          </div>
-          {!visibleFighters.length ? <p className="hit-number-empty">No eligible fighters match that search.</p> : null}
-        </section>
-      ) : null}
+            {setup.boardType === "open-roster" ? (
+              <label className="hit-number-search">
+                <span>SEARCH FIGHTERS</span>
+                <input
+                  value={search}
+                  onChange={(event) => onSearchChange(event.target.value)}
+                  placeholder="Search by name"
+                  type="search"
+                />
+              </label>
+            ) : null}
+            <div className="hit-number-fighter-grid">
+              {visibleFighters.map((fighter) => {
+                const selected = selectedSet.has(fighter.id);
+                return (
+                  <button
+                    type="button"
+                    className={`hit-number-fighter-card${selected ? " is-selected" : ""}`}
+                    data-divisions={fighter.divisions.join("|")}
+                    aria-pressed={selected}
+                    disabled={busy}
+                    onClick={() => onToggleFighter(fighter.id)}
+                    key={fighter.id}
+                  >
+                    <FighterPhoto name={fighter.name} src={fighter.thumbUrl} className="hit-number-fighter-card__photo" />
+                    <span>
+                      <strong>{fighter.name}</strong>
+                      <small>{fighter.divisions.join(" · ")}</small>
+                    </span>
+                    <b>{selected ? "✓" : "+"}</b>
+                  </button>
+                );
+              })}
+            </div>
+            {!visibleFighters.length ? <p className="hit-number-empty">No eligible fighters match that search.</p> : null}
+          </section>
+        ) : null}
+      </div>
     </>
   );
 }
