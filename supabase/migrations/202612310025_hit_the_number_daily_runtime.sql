@@ -1,5 +1,5 @@
 -- Add Hit the Number to the canonical generalized Today’s Challenge backend without
--- changing the active rotation. PR5 owns any schedule activation.
+-- changing the active rotation. Rotation activation remains a separate release change.
 do $$
 declare
   v_constraint record;
@@ -11,7 +11,6 @@ begin
     join pg_namespace namespace on namespace.oid = relation.relnamespace
     where namespace.nspname = 'private'
       and relation.relname in (
-        'daily_challenge_schedule_versions',
         'daily_challenge_setups',
         'daily_challenges'
       )
@@ -31,26 +30,6 @@ $$;
 
 do $$
 begin
-  if not exists (
-    select 1
-    from pg_constraint constraint_row
-    where constraint_row.conrelid = 'private.daily_challenge_schedule_versions'::regclass
-      and constraint_row.conname = 'daily_challenge_schedule_versions_supported_games_check'
-  ) then
-    alter table private.daily_challenge_schedule_versions
-      add constraint daily_challenge_schedule_versions_supported_games_check
-      check (
-        game_cycle <@ array[
-          'find_leader',
-          'blind_resume',
-          'wavelength',
-          'blind_rank_5',
-          'keep_4_cut_4',
-          'hit_the_number'
-        ]::text[]
-      );
-  end if;
-
   if not exists (
     select 1
     from pg_constraint constraint_row
