@@ -1,9 +1,15 @@
+import { HIT_THE_NUMBER_STATS } from "../play/hitTheNumberEngine";
 import { getPlayFighter } from "../play/playFighterPool";
 import { resultScore, type ChallengeJson, type PlayChallenge } from "./challengeModel";
 
 interface NamedChoice {
   id: string;
   name: string;
+}
+
+interface HitNumberSelection {
+  fighterId: string;
+  value: number;
 }
 
 function record(value: ChallengeJson): { [key: string]: ChallengeJson } | null {
@@ -24,6 +30,19 @@ function namedChoices(value: ChallengeJson): NamedChoice[] {
     const row = record(item);
     return row && typeof row.id === "string" && typeof row.name === "string"
       ? [{ id: row.id, name: row.name }]
+      : [];
+  });
+}
+
+function hitNumberSelections(value: ChallengeJson): HitNumberSelection[] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((item) => {
+    const row = record(item);
+    return row
+      && typeof row.fighterId === "string"
+      && typeof row.value === "number"
+      && Number.isFinite(row.value)
+      ? [{ fighterId: row.fighterId, value: row.value }]
       : [];
   });
 }
@@ -116,6 +135,10 @@ export function challengeResultScoreLabel(challenge: PlayChallenge, result: Chal
   if (challenge.gameId === "better-than") {
     const count = typeof row?.claimCount === "number" ? row.claimCount : namedChoices(row?.selections ?? null).length;
     return `${count} NAMES`;
+  }
+  if (challenge.gameId === "hit-the-number") {
+    const total = typeof row?.total === "number" && Number.isFinite(row.total) ? row.total : null;
+    return total === null ? (score === null ? "DONE" : `${score}/100`) : String(total);
   }
   return "DONE";
 }
@@ -288,6 +311,65 @@ function BetterThanDetails({ challenge, creatorName, responderName }: DetailProp
   );
 }
 
+function HitTheNumberDetails({ challenge, creatorName, responderName }: DetailProps) {
+  const outerSetup = record(challenge.setup);
+  const setup = record(outerSetup?.publicSetup ?? null) ?? outerSetup;
+  const target = typeof setup?.target === "number" && Number.isFinite(setup.target) ? setup.target : null;
+  const pickCount = typeof setup?.pickCount === "number" && Number.isFinite(setup.pickCount) ? setup.pickCount : null;
+  const statId = typeof setup?.statId === "string" ? setup.statId : "";
+  const statLabel = HIT_THE_NUMBER_STATS.find((stat) => stat.id === statId)?.label ?? "UFC stat";
+
+  function Path({ label, name, result }: { label: string; name: string; result: ChallengeJson }) {
+    const row = record(result);
+    const total = typeof row?.total === "number" && Number.isFinite(row.total) ? row.total : null;
+    const distance = typeof row?.distance === "number" && Number.isFinite(row.distance) ? row.distance : null;
+    const score = resultScore(result);
+    const status = typeof row?.status === "string" ? row.status : "";
+    const selections = hitNumberSelections(row?.selections ?? null);
+    const resultLine = status === "perfect"
+      ? "EXACT HIT"
+      : status === "bust"
+        ? `BUST${distance === null ? "" : ` · ${distance} OVER`}`
+        : distance === null
+          ? "FINAL"
+          : `${distance} AWAY`;
+
+    return (
+      <article className="challenge-detail-card">
+        <header>
+          <span><small>{label}</small><strong>{name}</strong></span>
+          <b>{total ?? "—"}</b>
+        </header>
+        <div className="challenge-detail-label">PICKS · {statLabel.toUpperCase()}</div>
+        <ol className="challenge-choice-list" aria-label={`${name} picks`}>
+          {selections.map((selection, index) => (
+            <li key={`${selection.fighterId}-${index}`}>
+              <span>{index + 1}</span>
+              <strong>{getPlayFighter(selection.fighterId)?.name ?? selection.fighterId}</strong>
+              <em>{selection.value}</em>
+            </li>
+          ))}
+        </ol>
+        <p>{resultLine}{score === null ? "" : ` · GAME SCORE ${score}/100`}</p>
+      </article>
+    );
+  }
+
+  return challenge.responderResult ? (
+    <div className="challenge-better-than-comparison">
+      <section className="challenge-game-banner" aria-label="Hit the Number target">
+        <span>TARGET</span>
+        <strong>{target ?? "—"}</strong>
+        <small>{statLabel.toUpperCase()}{pickCount === null ? "" : ` · PICK ${pickCount}`} · CLOSEST WITHOUT GOING OVER</small>
+      </section>
+      <div className="challenge-detail-columns">
+        <Path label="SENDER" name={creatorName} result={challenge.creatorResult} />
+        <Path label="RESPONDER" name={responderName} result={challenge.responderResult} />
+      </div>
+    </div>
+  ) : null;
+}
+
 interface DetailProps {
   challenge: PlayChallenge;
   creatorName: string;
@@ -302,5 +384,6 @@ export function ChallengeResultDetails(props: DetailProps) {
   if (props.challenge.gameId === "blind-rank") return <BlindRankDetails {...props} />;
   if (props.challenge.gameId === "keep-cut") return <KeepCutDetails {...props} />;
   if (props.challenge.gameId === "better-than") return <BetterThanDetails {...props} />;
+  if (props.challenge.gameId === "hit-the-number") return <HitTheNumberDetails {...props} />;
   return null;
 }
