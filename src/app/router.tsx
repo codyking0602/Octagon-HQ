@@ -49,7 +49,7 @@ export const appRoutes: RouteObject[] = [
       { path: "play/keep-cut", element: <TodayChallengeGameRoute gameType="keep_4_cut_4" casual={<KeepCutPage />} /> },
       { path: "play/better-than", element: <BetterThanPage /> },
       { path: "play/auction", element: <AuctionPage /> },
-      { path: "play/hit-the-number", element: <HitTheNumberPage /> },
+      { path: "play/hit-the-number", element: <TodayChallengeGameRoute gameType="hit_the_number" casual={<HitTheNumberPage />} /> },
       { path: "picks", element: <PicksPage /> },
       { path: "picks/control", element: <PicksControlCenterPage /> },
       { path: "picks/setup", element: <Navigate to="/picks/control#setup" replace /> },
