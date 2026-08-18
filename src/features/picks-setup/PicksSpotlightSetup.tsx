@@ -2,9 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 import type { PickSetupBout, PickSetupDraft, PickSetupSpotlight } from "./pickSetupModel";
 
 interface PicksSpotlightSetupProps {
-  draft: PickSetupDraft;
+  draft?: PickSetupDraft;
+  spotlights?: PickSetupSpotlight[];
+  revision?: string;
   bouts: PickSetupBout[];
   busy: boolean;
+  mode?: "draft" | "published";
   onBuild: (boutId: string) => Promise<PickSetupSpotlight | null>;
   onSave: (spotlights: PickSetupSpotlight[]) => void;
 }
@@ -27,12 +30,21 @@ function fighterUrl(spotlight: PickSetupSpotlight, fighterSlug: string) {
   return spotlight.watchSpotlights.find((watch) => watch.fighterSlug === fighterSlug)?.url ?? "";
 }
 
-export function PicksSpotlightSetup({ draft, bouts, busy, onBuild, onSave }: PicksSpotlightSetupProps) {
+export function PicksSpotlightSetup({
+  draft,
+  spotlights,
+  revision,
+  bouts,
+  busy,
+  mode = "draft",
+  onBuild,
+  onSave,
+}: PicksSpotlightSetupProps) {
   const eligibleBouts = useMemo(
     () => bouts.filter((bout) => bout.included).slice().sort((left, right) => left.position - right.position),
     [bouts],
   );
-  const saved = draft.spotlights ?? [];
+  const saved = useMemo(() => spotlights ?? draft?.spotlights ?? [], [draft?.spotlights, spotlights]);
   const [working, setWorking] = useState<Map<string, PickSetupSpotlight>>(() => byBout(saved));
   const [buildingBoutId, setBuildingBoutId] = useState("");
   const [urls, setUrls] = useState<Record<string, { red: string; blue: string }>>({});
@@ -47,7 +59,7 @@ export function PicksSpotlightSetup({ draft, bouts, busy, onBuild, onSave }: Pic
         blue: spotlight ? fighterUrl(spotlight, bout.blueFighterSlug) : "",
       }];
     })));
-  }, [draft.updatedAt, eligibleBouts]);
+  }, [draft?.updatedAt, eligibleBouts, revision, saved]);
 
   async function build(boutId: string) {
     setBuildingBoutId(boutId);
@@ -88,12 +100,14 @@ export function PicksSpotlightSetup({ draft, bouts, busy, onBuild, onSave }: Pic
       <div className="picks-setup-spotlight__heading">
         <div>
           <p className="eyebrow">FIGHT SPOTLIGHTS</p>
-          <h2>Build as many as you want</h2>
+          <h2>{mode === "published" ? "Update the live card" : "Build as many as you want"}</h2>
         </div>
         <span>{saved.length} SAVED</span>
       </div>
       <p className="picks-setup-spotlight__intro">
-        Add a Spotlight to any included fight. Octagon HQ builds the preview, Tale of the Tape, and matchup edges from UFCStats; you only add the Watch URLs you want.
+        {mode === "published"
+          ? "Rebuild or update any published Spotlight without republishing the card or changing member picks."
+          : "Add a Spotlight to any included fight. Octagon HQ builds the preview, Tale of the Tape, and matchup edges from UFCStats; you only add the Watch URLs you want."}
       </p>
 
       <div className="picks-setup-spotlight__fight-list">
