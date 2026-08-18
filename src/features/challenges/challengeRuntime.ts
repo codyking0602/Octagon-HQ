@@ -4,13 +4,12 @@ import type { PlayGameId } from "../play/playRegistry";
 import { usePlayChallenges } from "./ChallengeProvider";
 import type { PlayChallenge } from "./challengeModel";
 
-export const PLAY_ROUTE_BY_GAME: Record<PlayGameId, string> = {
+export const PLAY_ROUTE_BY_GAME: Partial<Record<PlayGameId, string>> = {
   "find-leader": "/play/find-leader",
   wavelength: "/play/wavelength",
   "blind-resume": "/play/blind-resume",
   "blind-rank": "/play/blind-rank",
   "keep-cut": "/play/keep-cut",
-  "better-than": "/play/better-than",
   auction: "/play/auction",
   "hit-the-number": "/play/hit-the-number",
 };
@@ -24,6 +23,9 @@ function challengeCodeFromSearch(search: string, gameId: PlayGameId) {
 }
 
 export function challengePlayRoute(challenge: PlayChallenge) {
+  const canonicalRoute = PLAY_ROUTE_BY_GAME[challenge.gameId];
+  if (!canonicalRoute) return "/play";
+
   if (challenge.playUrl) {
     try {
       const url = new URL(challenge.playUrl, typeof window === "undefined" ? "https://octagon.invalid" : window.location.origin);
@@ -37,7 +39,7 @@ export function challengePlayRoute(challenge: PlayChallenge) {
   const params = new URLSearchParams({
     [challenge.gameId === "find-leader" ? "challenge" : "match"]: challenge.code,
   });
-  return `${PLAY_ROUTE_BY_GAME[challenge.gameId]}?${params.toString()}`;
+  return `${canonicalRoute}?${params.toString()}`;
 }
 
 export function useProfileChallengeMatch(gameId: PlayGameId) {
