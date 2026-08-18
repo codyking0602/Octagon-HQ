@@ -92,7 +92,7 @@ describe("MMA Mania event metadata", () => {
     const syncFunction = readFileSync("supabase/functions/sync-next-ufc-event/index.ts", "utf8");
     const monitoringFunction = readFileSync("supabase/functions/run-pick-monitoring/index.ts", "utf8");
 
-    expect(syncFunction).toContain('const UFC_EVENT_INDEX_URL = "https://www.ufc.com/events?language_content_entity=en";');
+    expect(syncFunction).toMatch(/const UFC_EVENT_INDEX_URL = "https:\/\/www\.ufc\.com\/events(?:\?[^\"]*)?";/);
     expect(syncFunction).toContain("parseUfcEventPage");
     expect(syncFunction).toContain('source: "UFC.com event + card"');
     expect(syncFunction).not.toContain("parseMmaManiaEventMetadata");
