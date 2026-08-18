@@ -61,7 +61,7 @@ begin
   if v_schedule.version is null
     or v_schedule.time_zone <> 'America/Chicago'
     or v_schedule.anchor_day <> date '2026-08-18'
-    or v_schedule.starts_on <> date '2026-08-18'
+    or v_schedule.starts_on <> greatest(date '2026-08-18', v_previous_schedule.starts_on)
     or coalesce(array_length(v_schedule.game_cycle, 1), 0) <> 60 then
     raise exception 'six-game sixty-day rotation was not installed exactly: %', row_to_json(v_schedule);
   end if;
@@ -100,9 +100,20 @@ begin
     end if;
   end loop;
 
-  if private.daily_challenge_schedule_for_day(date '2026-08-17') <> 'play-rotation-v2'
-    or private.daily_challenge_schedule_for_day(date '2026-08-18') <> 'play-rotation-v3' then
-    raise exception 'rotation handoff is not exactly v2 through August 17 and v3 from August 18';
+  -- Production's V2 starts on August 17. Future fresh replays may intentionally move the
+  -- historical schedules later; in either case V3 must own its first eligible day.
+  if v_previous_schedule.starts_on <= date '2026-08-17'
+    and private.daily_challenge_schedule_for_day(date '2026-08-17') <> 'play-rotation-v2' then
+    raise exception 'production rotation handoff no longer preserves V2 through August 17';
+  end if;
+
+  if private.daily_challenge_schedule_for_day(v_schedule.starts_on) <> 'play-rotation-v3' then
+    raise exception 'V3 is not the active schedule on its first replay-safe eligible day %', v_schedule.starts_on;
+  end if;
+
+  if v_schedule.starts_on = date '2026-08-18'
+    and private.daily_challenge_schedule_for_day(date '2026-08-18') <> 'play-rotation-v3' then
+    raise exception 'production rotation handoff does not activate V3 on August 18';
   end if;
 
   for v_index in -120..120 loop
