@@ -116,6 +116,7 @@ export default function PicksControlCenterPage({
   const [controlRevision, setControlRevision] = useState(0);
   const controlSeed = useRef<SeedState<PickControlEvent | null>>({ status: "empty" });
   const draftSeed = useRef<SeedState<PickSetupDraft | null>>({ status: "empty" });
+  const loadSetupDraft = () => setupRepository!.loadDraft();
 
   useEffect(() => {
     if (!identity.ready) return;
@@ -150,7 +151,7 @@ export default function PicksControlCenterPage({
     } else {
       draftSeed.current = { status: "empty" };
       setDraftState({ status: "loading" });
-      void setupRepository.loadDraft().then((draft) => {
+      void loadSetupDraft().then((draft) => {
         if (!active) return;
         draftSeed.current = { status: "ready", value: draft };
         setDraftState({ status: "ready", value: draft });
@@ -212,7 +213,7 @@ export default function PicksControlCenterPage({
         }
         setDraftState({ status: "loading" });
         try {
-          const draft = await setupRepository.loadDraft();
+          const draft = await loadSetupDraft();
           setDraftState({ status: "ready", value: draft });
           return draft;
         } catch (error) {
