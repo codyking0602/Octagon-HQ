@@ -102,7 +102,14 @@ export function challengeResultScoreLabel(challenge: PlayChallenge, result: Chal
   const row = record(result);
   const score = resultScore(result);
   if (challenge.gameId === "wavelength") return score === null ? "DONE" : String(score);
-  if (challenge.gameId === "blind-resume") return score === null ? "DONE" : `${score}/5`;
+  if (challenge.gameId === "blind-resume") {
+    if (score === null) return "DONE";
+    if (challenge.gameVersion !== "blind-resume-v3") return `${score}/5`;
+    const resultRecord = record(row?.record ?? null);
+    const wins = typeof resultRecord?.wins === "number" ? resultRecord.wins : null;
+    const losses = typeof resultRecord?.losses === "number" ? resultRecord.losses : null;
+    return wins !== null && losses !== null ? `${score}/100 · ${wins}-${losses}` : `${score}/100`;
+  }
   if (challenge.gameId === "find-leader") return score === null ? "DONE" : `${score}/10`;
   if (challenge.gameId === "blind-rank") return `${strings(row?.placements ?? null).length}/5`;
   if (challenge.gameId === "keep-cut") return score === null ? `${strings(row?.decisions ?? null).length}/8` : `${score}/100`;
