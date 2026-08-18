@@ -113,14 +113,15 @@ describe("Phase 2B event setup backend", () => {
     expect(webkitVerifier).not.toContain('name: "Main card · 4 fights"');
   });
 
-  it("keeps live frontend and backend verification on their actual production revisions", () => {
-    expect(webkitVerifier).toContain("EXPECTED_SYNC_SOURCE_SHA");
+  it("keeps live frontend and backend verification with one owner per production revision", () => {
     expect(webkitVerifier).toContain("const liveDeploymentSha");
     expect(webkitVerifier).toContain("expectedDeploymentSha && liveDeploymentSha !== expectedDeploymentSha");
-    expect(webkitVerifier).toContain("previewBody?.deployment_sha !== expectedSyncSourceSha");
+    expect(webkitVerifier).not.toContain("EXPECTED_SYNC_SOURCE_SHA");
+    expect(webkitVerifier).not.toContain("previewBody?.deployment_sha !== expectedSyncSourceSha");
     expect(webkitVerifier).toContain('name: "Automatic monitoring and card review"');
     expect(webkitVerifier).toContain('monitoringRegion.getByRole("heading", { name: "One finding, one clear decision" })');
     expect(webkitVerifier).not.toContain('name: "Monitoring Inbox", exact: true }).waitFor');
+    expect(deployWorkflow).toContain("verify-sync-function-deployment.mjs");
     expect(deployWorkflow).toContain("verify-monitoring-function-deployment.mjs");
     expect(deployWorkflow).toContain("EXPECTED_MONITORING_SCHEDULER_ENABLED");
   });
