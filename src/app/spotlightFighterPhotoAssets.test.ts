@@ -25,4 +25,9 @@ describe("Fight Spotlight fighter photo assets", () => {
     expect(existsSync("public/assets/fighters/ian-garry-spotlight.webp")).toBe(true);
     expect(spotlight).toContain('["ian-garry", "ian-machado-garry"]');
   });
+
+  it("ships dedicated Spotlight cutouts for the Sacramento main event", () => {
+    expect(existsSync("public/assets/fighters/anthony-hernandez-spotlight.webp")).toBe(true);
+    expect(existsSync("public/assets/fighters/gregory-rodrigues-spotlight.webp")).toBe(true);
+  });
 });
