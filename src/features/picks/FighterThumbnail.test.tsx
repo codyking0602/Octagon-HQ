@@ -1,5 +1,6 @@
+import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { fighterThumbnailPath } from "./FighterThumbnail";
+import { FighterThumbnail, fighterThumbnailPath } from "./FighterThumbnail";
 
 describe("fighterThumbnailPath", () => {
   it("resolves Jan Błachowicz's canonical ASCII asset", () => {
@@ -59,5 +60,27 @@ describe("fighterThumbnailPath", () => {
       expect(fighterThumbnailPath(slug))
         .toBe(`/assets/fighters/${slug}-thumb.webp`);
     }
+  });
+});
+
+describe("FighterThumbnail", () => {
+  it("renders an intentional silhouette when no fighter photo is published", () => {
+    render(<FighterThumbnail name="New Fighter" slug="fighter-without-published-photo" />);
+
+    const fallback = screen.getByRole("img", { name: "New Fighter photo unavailable" });
+    expect(fallback).toHaveClass("pick-fighter-thumbnail", "pick-fighter-thumbnail--fallback");
+    expect(fallback.querySelector("svg")).toBeInTheDocument();
+    expect(fallback).toHaveTextContent("");
+  });
+
+  it("falls back to the same silhouette when a published thumbnail fails to load", () => {
+    const { container } = render(<FighterThumbnail name="Anthony Hernandez" slug="anthony-hernandez" />);
+    const image = container.querySelector("img.pick-fighter-thumbnail");
+
+    expect(image).toHaveAttribute("src", "/assets/fighters/anthony-hernandez-thumb.webp");
+    fireEvent.error(image as HTMLImageElement);
+
+    expect(screen.getByRole("img", { name: "Anthony Hernandez photo unavailable" }))
+      .toHaveClass("pick-fighter-thumbnail--fallback");
   });
 });
