@@ -25,10 +25,15 @@ export function fighterThumbnailPath(slug: string) {
 export function FighterThumbnail({ name, slug }: { name: string; slug: string }) {
   const source = fighterThumbnailPath(slug);
   const [failed, setFailed] = useState(false);
-  const initials = name.split(/\s+/).map((part) => part[0]).join("").slice(0, 2).toUpperCase();
 
   if (!source || failed) {
-    return <span className="pick-fighter-thumbnail pick-fighter-thumbnail--fallback" aria-hidden="true">{initials}</span>;
+    return (
+      <span
+        className="pick-fighter-thumbnail pick-fighter-thumbnail--fallback"
+        aria-label={`${name} photo unavailable`}
+        role="img"
+      />
+    );
   }
 
   return (
