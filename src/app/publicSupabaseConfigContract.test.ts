@@ -43,6 +43,7 @@ describe("production Supabase browser configuration", () => {
     );
     await writeFile(join(dist, "_worker.js"), workerMarkers);
     await writeFile(join(dist, ".assetsignore"), "_worker.js\n");
+    await writeFile(join(dist, "game.svg"), "<svg/>");
     await writeFile(join(dist, "preview-data/rankings.json"), JSON.stringify({
       version: 2,
       fighters: [{ slug: "jon-jones", displayName: "Jon Jones", imagePath: "/jon.webp", rank: 1, ovr: 99 }],
