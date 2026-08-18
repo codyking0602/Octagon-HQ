@@ -89,9 +89,9 @@ export interface OfficialDailyAdvanceResult {
 type JsonRecord = Record<string, unknown>;
 type BlindResumeDifficulty = "readable" | "competitive" | "tight" | "nightmare";
 
-export const BLIND_RESUME_V3_REVEAL_COUNTS = [2, 4, 6, 8] as const;
-export const BLIND_RESUME_V3_CORRECT_POINTS = [20, 19, 18, 17] as const;
-export const BLIND_RESUME_V3_MISS_POINTS = [2, 4, 6, 8] as const;
+const BLIND_RESUME_V3_REVEAL_COUNTS = [2, 4, 6, 8] as const;
+const BLIND_RESUME_V3_CORRECT_POINTS = [20, 19, 18, 17] as const;
+const BLIND_RESUME_V3_MISS_POINTS = [2, 4, 6, 8] as const;
 
 function asRecord(value: unknown): JsonRecord {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
@@ -274,7 +274,7 @@ export function blindResumeV3RoundPoints(revealedCount: number, correct: boolean
   return correct ? BLIND_RESUME_V3_CORRECT_POINTS[stage]! : BLIND_RESUME_V3_MISS_POINTS[stage]!;
 }
 
-export function shuffleBlindResumeStats(stats: BlindResumeStat[], seed: string, pairId: string) {
+function shuffleBlindResumeStats(stats: BlindResumeStat[], seed: string, pairId: string) {
   const rows = [...stats];
   const random = seededLineupRandom(OFFICIAL_DAILY_RUNTIME_VERSION, BLIND_RESUME_V3_CONTENT_VERSION, seed, pairId, "stats");
   for (let index = rows.length - 1; index > 0; index -= 1) {
