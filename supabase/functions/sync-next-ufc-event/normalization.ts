@@ -3,6 +3,7 @@ const canonicalDisplayNames = new Map([
   ["uros medic", "Uroš Medić"],
   ["aleksandar rakic", "Aleksandar Rakić"],
   ["jan blachowicz", "Jan Błachowicz"],
+  ["sergey spivak", "Serghei Spivac"],
 ]);
 
 const sourceRankingPrefix = /^(?:(?:no\.?|number)\s*#?\s*\d{1,2}|#\s*\d{1,2})\s+/i;
