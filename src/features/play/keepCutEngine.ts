@@ -75,6 +75,8 @@ const GENERATION_ATTEMPTS = 120;
 const MAX_BAD_FIGHTERS = 2;
 const MAX_ELITE_FIGHTERS = 2;
 const MAX_CUTOFF_GAP = 8;
+const TARGET_ONE_BAD_SHARE = 0.375;
+const TARGET_TWO_BAD_SHARE = 0.05;
 const TIER_ORDER: readonly KeepCutTierId[] = [
   "elite",
   "great",
@@ -150,6 +152,10 @@ function packFor(packId: KeepCutPackId) {
   return KEEP_CUT_PACKS.find((pack) => pack.id === packId) ?? KEEP_CUT_PACKS[0]!;
 }
 
+function styleWeight(styleId: KeepCutBoardStyleId) {
+  return KEEP_CUT_BOARD_STYLES.find((style) => style.id === styleId)?.weight ?? 0;
+}
+
 export function keepCutRating(packId: KeepCutPackId, fighter: PlayFighter) {
   return blindRankRating(fighter, packId);
 }
@@ -200,16 +206,69 @@ function desiredEliteCount(styleId: KeepCutBoardStyleId, random: () => number) {
   }
 }
 
+function availableTierCount(packId: KeepCutPackId, tier: KeepCutTierId) {
+  return keepCutPool(packId).filter((fighter) => keepCutTier(keepCutRating(packId, fighter)) === tier).length;
+}
+
+function badTierSupportShare(minimumCount: number) {
+  return KEEP_CUT_PACKS.filter((pack) => availableTierCount(pack.id, "bad") >= minimumCount).length / KEEP_CUT_PACKS.length;
+}
+
 function desiredBadCount(styleId: KeepCutBoardStyleId, random: () => number) {
+  const oneBadSupport = badTierSupportShare(1);
+  const twoBadSupport = badTierSupportShare(2);
+  const bottomWeight = styleWeight("bottom-grind");
+  const classicWeight = styleWeight("classic-spread");
+
+  if (oneBadSupport <= 0) {
+    throw new Error("Keep 4, Cut 4 canonical pools have no Bad-tier depth for the requested distribution.");
+  }
+  if (twoBadSupport <= 0 || bottomWeight <= 0) {
+    throw new Error("Keep 4, Cut 4 canonical pools cannot support the requested two-Bad distribution.");
+  }
+
+  // Keep two-Bad boards concentrated in Bottom Grind. Then distribute the
+  // one-Bad target across the remaining styles, weighted away from Knife Edge.
+  // The probabilities are derived from current canonical pool support rather
+  // than hard-coded fighter counts, so thin categories degrade inside this owner.
+  const bottomTwoProbability = TARGET_TWO_BAD_SHARE / (bottomWeight * twoBadSupport);
+  if (bottomTwoProbability > 1) {
+    throw new Error("Keep 4, Cut 4 canonical pools are too thin to sustain a 5% two-Bad target.");
+  }
+
+  const bottomOneGlobalShare = bottomWeight * (
+    (oneBadSupport - twoBadSupport)
+    + twoBadSupport * (1 - bottomTwoProbability)
+  );
+  const classicOneGlobalShare = classicWeight * oneBadSupport;
+  const flexibleBias = {
+    "knife-edge": 0.35,
+    "messy-middle": 1,
+    "one-superstar": 1,
+  } as const;
+  const flexibleWeightedSupport = oneBadSupport * (
+    styleWeight("knife-edge") * flexibleBias["knife-edge"]
+    + styleWeight("messy-middle") * flexibleBias["messy-middle"]
+    + styleWeight("one-superstar") * flexibleBias["one-superstar"]
+  );
+  const flexibleScale = (
+    TARGET_ONE_BAD_SHARE - bottomOneGlobalShare - classicOneGlobalShare
+  ) / flexibleWeightedSupport;
+
+  if (flexibleScale < 0 || flexibleScale > 1) {
+    throw new Error("Keep 4, Cut 4 canonical pools are too thin to sustain the requested one-Bad distribution.");
+  }
+
   const roll = random();
   switch (styleId) {
     case "knife-edge":
-      return roll < 0.125 ? 1 : 0;
+      return roll < flexibleScale * flexibleBias["knife-edge"] ? 1 : 0;
     case "messy-middle":
+      return roll < flexibleScale * flexibleBias["messy-middle"] ? 1 : 0;
     case "one-superstar":
-      return roll < 0.5 ? 1 : 0;
+      return roll < flexibleScale * flexibleBias["one-superstar"] ? 1 : 0;
     case "bottom-grind":
-      return roll < 0.5 ? 2 : 1;
+      return roll < bottomTwoProbability ? 2 : 1;
     case "classic-spread":
       return 1;
   }
@@ -235,10 +294,6 @@ function replaceLowestTargets(targets: KeepCutTierId[], tier: KeepCutTierId, cou
     }
     if (replaceAt >= 0) targets[replaceAt] = tier;
   }
-}
-
-function availableTierCount(packId: KeepCutPackId, tier: KeepCutTierId) {
-  return keepCutPool(packId).filter((fighter) => keepCutTier(keepCutRating(packId, fighter)) === tier).length;
 }
 
 function boardProfileForSeed(packId: KeepCutPackId, seed: string): KeepCutBoardProfile {
