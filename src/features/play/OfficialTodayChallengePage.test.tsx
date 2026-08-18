@@ -1,6 +1,8 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { OfficialTodayChallengeView } from "./OfficialTodayChallengePage";
+import { createKeepCutLineup, keepCutRating } from "./keepCutEngine";
+import type { PlayFighter } from "./playFighterPool";
 import type { DailyGameType } from "./todaysChallengeAdapters";
 import type { TodayChallengeProjection } from "./todayChallengeRepository";
 
@@ -15,6 +17,18 @@ function presentedFighter(id: string, name = id) {
     main_era: "Modern",
     thumb_url: `/fighters/${id}.png`,
     profile_url: `/fighters/${id}-profile.png`,
+  };
+}
+
+function presentedCanonicalFighter(fighter: PlayFighter) {
+  return {
+    id: fighter.id,
+    name: fighter.name,
+    gender: fighter.gender,
+    divisions: fighter.divisions,
+    main_era: fighter.mainEra,
+    thumb_url: fighter.thumbUrl,
+    profile_url: fighter.profileUrl,
   };
 }
 
@@ -221,14 +235,19 @@ describe("official Today’s Challenge uses the canonical casual game presentati
   });
 
   it("shows a perfect Keep 4, Cut 4 in the aligned official result presentation", () => {
-    const kept = ["one", "two", "three", "four"].map((id) => presentedFighter(id, `Kept ${id}`));
-    const cut = ["five", "six", "seven", "eight"].map((id) => presentedFighter(id, `Cut ${id}`));
+    const board = createKeepCutLineup("ufc-careers", "official-page-perfect").fighters;
+    const ranked = [...board].sort((left, right) => {
+      const ratingDifference = keepCutRating("ufc-careers", right) - keepCutRating("ufc-careers", left);
+      return ratingDifference || left.id.localeCompare(right.id);
+    });
+    const kept = ranked.slice(0, 4).map(presentedCanonicalFighter);
+    const cut = ranked.slice(4).map(presentedCanonicalFighter);
     const { container } = renderView(projection(
       "keep_4_cut_4",
-      { pack: { group: "Careers", name: "UFC Careers", prompt: "Build the best four", description: "Eight blind reveals." } },
+      { pack: { id: "ufc-careers", group: "Careers", name: "UFC Careers", prompt: "Build the best four", description: "Eight blind reveals." } },
       { complete: true, reveal_index: 8, kept, cut, current_fighter: null, reveal: { model_top_four_ids: kept.map((row) => row.id) } },
       {
-        revealSetup: { model_top_four_ids: kept.map((row) => row.id) },
+        revealSetup: { fighters: [...kept, ...cut], model_top_four_ids: kept.map((row) => row.id) },
         officialAttempt: {
           nativeScore: 16,
           normalizedScore: 100,
@@ -241,7 +260,10 @@ describe("official Today’s Challenge uses the canonical casual game presentati
     expect(container.querySelector(".keep-cut-result-hero")).not.toBeNull();
     expect(screen.getByRole("heading", { name: /100\/100 · OFFICIAL RESULT/ })).toBeInTheDocument();
     expect(screen.getByText("4 OF OCTAGON HQ’S TOP 4 KEPT")).toBeInTheDocument();
-    expect(screen.getByText("Your four keeps are graded against the strongest four fighters on this board.")).toBeInTheDocument();
+    expect(screen.getByText("OCTAGON HQ TOP 4")).toBeInTheDocument();
+    expect(screen.getByText("PERFECT READ")).toBeInTheDocument();
+    expect(screen.getByText("YOUR BOARD")).toBeInTheDocument();
+    expect(container.querySelectorAll(".keep-cut-result-fighter")).toHaveLength(8);
     expect(container.textContent).not.toMatch(/OF 16 COMPARISONS/i);
     expect(container.textContent).not.toMatch(/COMPARISONS WON/i);
     expect(screen.queryByRole("button", { name: "KEEP" })).not.toBeInTheDocument();
