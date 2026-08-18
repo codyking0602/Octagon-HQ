@@ -38,6 +38,15 @@ interface BrowserRunBinding {
       screenshotOptions?: { captureBeyondViewport?: boolean; omitBackground?: boolean };
     },
   ): Promise<Response>;
+  quickAction(
+    action: "content",
+    input: {
+      url: string;
+      gotoOptions?: { waitUntil?: "load" | "domcontentloaded" | "networkidle0" | "networkidle2"; timeout?: number };
+      waitForSelector?: { selector: string; timeout?: number };
+      rejectResourceTypes?: string[];
+    },
+  ): Promise<Response>;
 }
 
 interface Env {
@@ -45,11 +54,15 @@ interface Env {
     fetch(input: Request | URL | string): Promise<Response>;
   };
   BROWSER: BrowserRunBinding;
+  UFC_SOURCE_TRANSPORT_TOKEN?: string;
 }
 
 interface WorkerExecutionContext {
   waitUntil(promise: Promise<unknown>): void;
 }
+
+const UFC_SOURCE_PATH = "/internal/ufc-source";
+const UFC_SOURCE_MAX_BYTES = 3_000_000;
 
 const EMPTY_CATALOG: RichPreviewCatalog = {
   version: 2,
@@ -85,6 +98,97 @@ function escapeAttribute(value: string) {
 
 function absoluteUrl(path: string, origin: string) {
   return new URL(path, `${origin}/`).toString();
+}
+
+function exactUfcSourceUrl(value: unknown) {
+  if (typeof value !== "string") return null;
+  try {
+    const url = new URL(value);
+    const path = url.pathname.replace(/\/+$/, "");
+    if (url.protocol !== "https:" || !/^(?:www\.)?ufc\.com$/i.test(url.hostname)) return null;
+    const isEvents = path === "/events" && [...url.searchParams.keys()].every((key) => key === "page")
+      && (url.searchParams.get("page") === null || /^\d{1,2}$/.test(url.searchParams.get("page")!));
+    const isEvent = /^\/event\/[a-z0-9-]+$/i.test(path) && url.search === "";
+    if (!isEvents && !isEvent) return null;
+    url.protocol = "https:";
+    url.hostname = "www.ufc.com";
+    url.pathname = path;
+    url.hash = "";
+    return url;
+  } catch {
+    return null;
+  }
+}
+
+async function serveUfcSource(request: Request, env: Env) {
+  if (request.method !== "POST") {
+    return new Response("Method not allowed.", { status: 405, headers: { Allow: "POST" } });
+  }
+  const expectedToken = env.UFC_SOURCE_TRANSPORT_TOKEN?.trim() ?? "";
+  if (!expectedToken) return new Response("UFC source transport is unavailable.", { status: 503 });
+  if (request.headers.get("authorization") !== `Bearer ${expectedToken}`) {
+    return new Response("Unauthorized.", { status: 401 });
+  }
+
+  let payload: unknown;
+  try {
+    payload = await request.json();
+  } catch {
+    return new Response("Invalid request.", { status: 400 });
+  }
+  const sourceUrl = exactUfcSourceUrl(
+    payload && typeof payload === "object" && !Array.isArray(payload)
+      ? (payload as Record<string, unknown>).url
+      : "",
+  );
+  if (!sourceUrl) return new Response("Invalid UFC.com source URL.", { status: 400 });
+
+  const isEventPage = sourceUrl.pathname.startsWith("/event/");
+  let rendered: Response;
+  try {
+    rendered = await env.BROWSER.quickAction("content", {
+      url: sourceUrl.toString(),
+      gotoOptions: { waitUntil: "networkidle2", timeout: 30_000 },
+      waitForSelector: {
+        selector: isEventPage
+          ? ".c-listing-fight__corner-name--red, #main-card .l-listing__item"
+          : "a[href*='/event/']",
+        timeout: 30_000,
+      },
+      rejectResourceTypes: ["image", "media", "font"],
+    });
+  } catch {
+    return new Response("UFC.com browser rendering failed.", { status: 502 });
+  }
+  if (!rendered.ok) return new Response("UFC.com browser rendering failed.", { status: 502 });
+
+  let envelope: unknown;
+  try {
+    envelope = await rendered.json();
+  } catch {
+    return new Response("UFC.com browser rendering returned invalid data.", { status: 502 });
+  }
+  const html = envelope && typeof envelope === "object" && !Array.isArray(envelope)
+    && (envelope as Record<string, unknown>).success === true
+    && typeof (envelope as Record<string, unknown>).result === "string"
+    ? (envelope as Record<string, unknown>).result as string
+    : "";
+  const byteLength = new TextEncoder().encode(html).byteLength;
+  if (!html || byteLength > UFC_SOURCE_MAX_BYTES) {
+    return new Response("UFC.com browser rendering returned an invalid page.", { status: 502 });
+  }
+  if (!/<html\b|<!doctype\s+html/i.test(html) || !/\bufc\b/i.test(html)) {
+    return new Response("UFC.com browser rendering did not return a UFC page.", { status: 502 });
+  }
+
+  return new Response(html, {
+    status: 200,
+    headers: {
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "no-store",
+      "X-Octagon-UFC-Source": "ufc.com",
+    },
+  });
 }
 
 function metadataMarkup(
@@ -269,6 +373,7 @@ async function servePreviewPage(request: Request, env: Env) {
 export default {
   async fetch(request: Request, env: Env, context: WorkerExecutionContext): Promise<Response> {
     const requestUrl = new URL(request.url);
+    if (requestUrl.pathname === UFC_SOURCE_PATH) return serveUfcSource(request, env);
     if (request.method !== "GET") return env.ASSETS.fetch(request);
     if (requestUrl.pathname.startsWith("/share-preview/")) {
       return servePreviewImage(request, env, context);
