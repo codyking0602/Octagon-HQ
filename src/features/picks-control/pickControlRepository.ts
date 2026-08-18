@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { getSupabaseClient } from "../../lib/supabase";
 import type { PickBoutResultStatus } from "../picks/picksModel";
+import type { PickSpotlight } from "../picks/spotlightModel";
 import type { PickControlEvent } from "./pickControlModel";
 
 const completedEventOptionSchema = z.object({
@@ -8,6 +9,45 @@ const completedEventOptionSchema = z.object({
   name: z.string(),
   starts_at: z.string(),
   completed_at: z.string(),
+});
+
+const spotlightWatchDbSchema = z.object({ fighter_slug: z.string().min(1), url: z.string().url() });
+const spotlightFighterDbSchema = z.object({
+  fighter_slug: z.string().min(1),
+  record: z.string().min(1),
+  age: z.string().min(1),
+  height: z.string().min(1),
+  reach: z.string().min(1),
+  stance: z.string().min(1),
+  edges: z.array(z.string().min(3)).min(1).max(3),
+});
+const spotlightDbSchema = z.object({
+  bout_id: z.string().min(1),
+  preview: z.string().min(20),
+  red: spotlightFighterDbSchema,
+  blue: spotlightFighterDbSchema,
+  watch_spotlights: z.array(spotlightWatchDbSchema).max(2),
+  source: z.literal("UFCStats"),
+  generated_at: z.string().min(10),
+});
+const spotlightWatchSchema = z.object({ fighterSlug: z.string().min(1), url: z.string().url() });
+const spotlightFighterSchema = z.object({
+  fighterSlug: z.string().min(1),
+  record: z.string().min(1),
+  age: z.string().min(1),
+  height: z.string().min(1),
+  reach: z.string().min(1),
+  stance: z.string().min(1),
+  edges: z.array(z.string().min(3)).min(1).max(3),
+});
+const spotlightSchema = z.object({
+  boutId: z.string().min(1),
+  preview: z.string().min(20),
+  red: spotlightFighterSchema,
+  blue: spotlightFighterSchema,
+  watchSpotlights: z.array(spotlightWatchSchema).max(2),
+  source: z.literal("UFCStats"),
+  generatedAt: z.string().min(10),
 });
 
 const controlBoutSchema = z.object({
@@ -51,6 +91,7 @@ const controlEventSchema = z.object({
   can_reorder: z.boolean().optional().default(false),
   has_reorder_history: z.boolean().optional().default(false),
   recent_completed_events: z.array(completedEventOptionSchema).optional().default([]),
+  spotlights: z.array(spotlightDbSchema).optional().default([]),
   bouts: z.array(controlBoutSchema),
 });
 
@@ -74,6 +115,8 @@ export interface PickControlRepository {
   reorderCard: (eventId: string, expectedBoutIds: string[], proposedBoutIds: string[], reason: string) => Promise<void>;
   recordResult: (eventId: string, boutId: string, result: PickBoutResultStatus) => Promise<void>;
   correctResult: (eventId: string, bout: PickControlEvent["bouts"][number], result: PickBoutResultStatus, reason: string) => Promise<void>;
+  buildSpotlight?: (eventId: string, boutId: string) => Promise<PickSpotlight>;
+  saveSpotlights?: (eventId: string, spotlights: PickSpotlight[]) => Promise<void>;
   setWatchMoments?: (eventId: string, moments: { title: string; url: string }[]) => Promise<void>;
   setEventHeader?: (eventId: string, storagePath: string, naturalWidth: number, naturalHeight: number) => Promise<void>;
   completeEvent: (eventId: string) => Promise<void>;
@@ -91,6 +134,51 @@ async function requireRpcSuccess<T>(request: PromiseLike<{ data: T; error: { mes
   const { data, error } = await request;
   if (error) throw new Error(error.message || "Fight Night Control could not complete that request.");
   return data;
+}
+
+function mapDbFighter(fighter: z.infer<typeof spotlightFighterDbSchema>) {
+  return {
+    fighterSlug: fighter.fighter_slug,
+    record: fighter.record,
+    age: fighter.age,
+    height: fighter.height,
+    reach: fighter.reach,
+    stance: fighter.stance,
+    edges: fighter.edges,
+  };
+}
+
+function mapDbSpotlight(spotlight: z.infer<typeof spotlightDbSchema>): PickSpotlight {
+  return {
+    boutId: spotlight.bout_id,
+    preview: spotlight.preview,
+    red: mapDbFighter(spotlight.red),
+    blue: mapDbFighter(spotlight.blue),
+    watchSpotlights: spotlight.watch_spotlights.map((watch) => ({ fighterSlug: watch.fighter_slug, url: watch.url })),
+    source: spotlight.source,
+    generatedAt: spotlight.generated_at,
+  };
+}
+
+function spotlightPayload(spotlight: PickSpotlight) {
+  const fighter = (value: PickSpotlight["red"]) => ({
+    fighter_slug: value.fighterSlug,
+    record: value.record,
+    age: value.age,
+    height: value.height,
+    reach: value.reach,
+    stance: value.stance,
+    edges: value.edges,
+  });
+  return {
+    bout_id: spotlight.boutId,
+    preview: spotlight.preview,
+    red: fighter(spotlight.red),
+    blue: fighter(spotlight.blue),
+    watch_spotlights: spotlight.watchSpotlights.map((watch) => ({ fighter_slug: watch.fighterSlug, url: watch.url })),
+    source: spotlight.source,
+    generated_at: spotlight.generatedAt,
+  };
 }
 
 export function mapPickControlEvent(value: unknown): PickControlEvent | null {
@@ -116,6 +204,7 @@ export function mapPickControlEvent(value: unknown): PickControlEvent | null {
       startsAt: event.starts_at,
       completedAt: event.completed_at,
     })),
+    spotlights: parsed.spotlights.map(mapDbSpotlight),
     bouts: parsed.bouts.map((bout) => ({
       boutId: bout.bout_id,
       locksAt: bout.locks_at ?? parsed.locks_at,
@@ -267,6 +356,22 @@ export function createPickControlRepository(): PickControlRepository | null {
         p_expected_winner_fighter_slug: bout.winnerFighterSlug,
         p_expected_result_recorded_at: bout.resultRecordedAt,
         p_reason: reason,
+      }));
+    },
+
+    async buildSpotlight(eventId, boutId) {
+      const { data, error } = await client.functions.invoke("build-pick-spotlight", {
+        body: { event_id: eventId, bout_id: boutId },
+      });
+      if (error) throw new Error(error.message || "The published Fight Spotlight could not be rebuilt.");
+      const raw = data && typeof data === "object" ? (data as Record<string, unknown>).spotlight : null;
+      return spotlightSchema.parse(raw);
+    },
+
+    async saveSpotlights(eventId, spotlights) {
+      await requireRpcSuccess(client.rpc("set_pick_event_spotlights", {
+        p_event_id: eventId,
+        p_spotlights: spotlights.map(spotlightPayload),
       }));
     },
 
