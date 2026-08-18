@@ -1,7 +1,10 @@
 import { createClient } from "npm:@supabase/supabase-js@2.110.7";
 import * as cheerio from "npm:cheerio@1.0.0";
 import { DEPLOYED_SOURCE_SHA } from "./deployment.ts";
-import { absoluteUfcEventUrl } from "./sourceUrls.ts";
+import {
+  absoluteUfcEventUrl,
+  resolveUfcSourcePreference,
+} from "./sourceUrls.ts";
 import { sourceChanges } from "./cardChanges.ts";
 import {
   parseUfcEventPage,
@@ -22,16 +25,9 @@ const corsHeaders = {
   "Access-Control-Expose-Headers": "X-Octagon-Backend-Sha",
 };
 
-const UFC_EVENT_INDEX_URL = "https://www.ufc.com/events?language_content_entity=en";
+const UFC_EVENT_INDEX_URL = "https://www.ufc.com/events";
+const UFC_SOURCE_TRANSPORT_PATH = "/picks";
 const MAX_UFC_EVENT_PAGE_ATTEMPTS = 8;
-const requestHeaders = {
-  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-  Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-  "Accept-Language": "en-US,en;q=0.9",
-  "Cache-Control": "no-cache",
-  Pragma: "no-cache",
-  Referer: "https://www.ufc.com/",
-};
 
 type CardScope = "auto" | "main" | "full";
 type EffectiveScope = "main" | "full";
@@ -132,23 +128,78 @@ function toStagedBouts(bouts: Array<ParsedCardBout & SequencedBoutMetadata>) {
   });
 }
 
+async function transportToken() {
+  const secretKey = Deno.env.get("SUPABASE_SECRET_KEY") ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+  if (!secretKey) return "";
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(`octagon-ufc-source-v1:${secretKey}`),
+  );
+  return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+function transportEndpoint(stage: "ufc-index-fetch" | "ufc-event-fetch") {
+  const origin = Deno.env.get("OCTAGON_APP_ORIGIN") ?? "";
+  try {
+    const url = new URL(UFC_SOURCE_TRANSPORT_PATH, origin);
+    if (url.protocol !== "https:") throw new Error("invalid protocol");
+    return url.toString();
+  } catch {
+    throw new SyncError(
+      "UFC_TRANSPORT_NOT_CONFIGURED",
+      "Official UFC source transport is not configured.",
+      stage,
+      { reason: "invalid-app-origin" },
+    );
+  }
+}
+
 async function fetchText(url: string, stage: "ufc-index-fetch" | "ufc-event-fetch") {
+  const authorization = await transportToken();
+  if (!authorization) {
+    throw new SyncError(
+      "UFC_TRANSPORT_NOT_CONFIGURED",
+      "Official UFC source transport is not configured.",
+      stage,
+      { reason: "missing-service-secret" },
+    );
+  }
+
   let response: Response;
   try {
-    response = await fetch(url, {
-      headers: requestHeaders,
-      redirect: "follow",
-      signal: AbortSignal.timeout(10_000),
+    response = await fetch(transportEndpoint(stage), {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${authorization}`,
+        "Content-Type": "application/json",
+        Accept: "text/html",
+        "X-Octagon-Internal-Action": "ufc-source",
+      },
+      body: JSON.stringify({ url }),
+      signal: AbortSignal.timeout(45_000),
     });
   } catch {
-    throw new SyncError("UPSTREAM_TIMEOUT", "UFC.com did not respond within 10 seconds.", stage, { source: "UFC.com" });
+    throw new SyncError(
+      "UPSTREAM_TIMEOUT",
+      "UFC.com browser transport did not respond within 45 seconds.",
+      stage,
+      { source: "UFC.com" },
+    );
   }
   if (!response.ok) {
     throw new SyncError(
       "UPSTREAM_HTTP_ERROR",
-      `UFC.com returned HTTP ${response.status}.`,
+      `UFC.com browser transport returned HTTP ${response.status}.`,
       stage,
       { source: "UFC.com", status: response.status },
+    );
+  }
+  if (response.headers.get("x-octagon-ufc-source") !== "ufc.com") {
+    throw new SyncError(
+      "UFC_TRANSPORT_REJECTED",
+      "Official UFC source transport did not prove UFC.com ownership.",
+      stage,
+      { reason: "missing-source-proof" },
     );
   }
   const declared = Number(response.headers.get("content-length") ?? 0);
@@ -156,8 +207,8 @@ async function fetchText(url: string, stage: "ufc-index-fetch" | "ufc-event-fetc
     throw new SyncError("UPSTREAM_RESPONSE_TOO_LARGE", "UFC.com response exceeded the 3 MB safety limit.", stage, { source: "UFC.com" });
   }
   const text = await response.text();
-  if (new TextEncoder().encode(text).byteLength > 3_000_000) {
-    throw new SyncError("UPSTREAM_RESPONSE_TOO_LARGE", "UFC.com response exceeded the 3 MB safety limit.", stage, { source: "UFC.com" });
+  if (!text || new TextEncoder().encode(text).byteLength > 3_000_000) {
+    throw new SyncError("UPSTREAM_RESPONSE_TOO_LARGE", "UFC.com response was empty or exceeded the 3 MB safety limit.", stage, { source: "UFC.com" });
   }
   return text;
 }
@@ -303,7 +354,7 @@ async function buildNextEvent(
   ].filter(Boolean);
 
   const event: ParsedEvent = {
-    source: "UFC.com event + card",
+    source: "UFC.com official event + card",
     source_event_key: metadata.source_event_key,
     source_url: card.sourceUrl,
     event_id: metadata.event_id,
@@ -414,25 +465,15 @@ Deno.serve(async (request) => {
   const expectedHash = typeof input.expected_hash === "string" ? input.expected_hash : "";
   const suppliedSourceUrl = typeof input.source_url === "string" ? input.source_url.trim() : "";
   const savedSourceUrl = persistedSourceUrl(ownerProbe.data);
-  const suppliedUfcSourceUrl = absoluteUfcEventUrl(suppliedSourceUrl);
-  const savedUfcSourceUrl = absoluteUfcEventUrl(savedSourceUrl);
-  const suppliedMatchesSaved = Boolean(suppliedSourceUrl && savedSourceUrl && suppliedSourceUrl === savedSourceUrl);
-  const invalidExplicitSource = Boolean(
-    suppliedSourceUrl
-    && !suppliedUfcSourceUrl
-    && !suppliedMatchesSaved
-    && !internalMonitoring,
-  );
-  // A saved CBS/MMAmania URL is legacy data, not a runtime provider. Ignore it and
-  // rediscover the same event from UFC.com instead of blocking Event Setup.
-  const preferredSourceUrl = suppliedUfcSourceUrl
-    || (!suppliedSourceUrl || suppliedMatchesSaved ? savedUfcSourceUrl : "");
+  const sourcePreference = resolveUfcSourcePreference(suppliedSourceUrl, savedSourceUrl);
+  const invalidExplicitSource = sourcePreference.invalidExplicitSource && !internalMonitoring;
+  const preferredSourceUrl = sourcePreference.preferredSourceUrl;
   const internalSourceEventKey = internalMonitoring && typeof input.source_event_key === "string"
     ? input.source_event_key.trim()
     : "";
   const sourceEventKeyOverride = /^event\/[a-z0-9-]+$/i.test(internalSourceEventKey)
     ? internalSourceEventKey
-    : ((!suppliedSourceUrl || suppliedMatchesSaved) ? canonicalPersistedUfcEventKey(ownerProbe.data) : "");
+    : ((!suppliedSourceUrl || sourcePreference.suppliedMatchesSaved) ? canonicalPersistedUfcEventKey(ownerProbe.data) : "");
 
   try {
     if (invalidExplicitSource) {
