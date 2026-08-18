@@ -383,6 +383,7 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
             CBS SPORTS UFC EVENT URL (OPTIONAL)
             <input
               type="url"
+              aria-label="CBS SPORTS UFC EVENT URL (OPTIONAL) · MMA MANIA CARD URL (OPTIONAL)"
               value={sourceUrl}
               onChange={(event) => {
                 setSourceUrl(event.target.value);
