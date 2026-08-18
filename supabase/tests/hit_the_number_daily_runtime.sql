@@ -1,30 +1,25 @@
 begin;
 
-do $$
-declare
-  v_rejected boolean := false;
-begin
-  begin
-    insert into private.daily_challenge_schedule_versions (
-      version,
-      time_zone,
-      anchor_day,
-      starts_on,
-      game_cycle
-    )
-    values (
-      'test-hit-the-number-not-rotated-v1',
-      'America/Chicago',
-      date '2100-01-01',
-      date '2100-01-01',
-      array['hit_the_number']::text[]
-    );
-  exception when check_violation then
-    v_rejected := true;
-  end;
+insert into private.daily_challenge_schedule_versions (
+  version,
+  time_zone,
+  anchor_day,
+  starts_on,
+  game_cycle
+)
+values (
+  'test-hit-the-number-rotated-v1',
+  'America/Chicago',
+  date '2100-01-01',
+  date '2100-01-01',
+  array['hit_the_number']::text[]
+);
 
-  if not v_rejected then
-    raise exception 'Hit the Number must not enter the schedule-version contract before rotation activation';
+do $$
+begin
+  if private.daily_challenge_expected_game('test-hit-the-number-rotated-v1', date '2100-01-01') <> 'hit_the_number'
+    or private.daily_challenge_expected_game('test-hit-the-number-rotated-v1', date '2100-01-02') <> 'hit_the_number' then
+    raise exception 'Hit the Number must be accepted by the activated schedule-version contract';
   end if;
 end
 $$;
