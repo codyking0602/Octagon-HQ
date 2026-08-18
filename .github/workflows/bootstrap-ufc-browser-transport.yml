@@ -1,0 +1,105 @@
+name: Bootstrap UFC browser transport
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/bootstrap-ufc-browser-transport.yml"
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: read
+
+jobs:
+  bootstrap:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Verify required GitHub secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          for name in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID SUPABASE_ACCESS_TOKEN SUPABASE_PROJECT_ID; do
+            if [ -z "${!name:-}" ]; then
+              echo "::error title=Missing transport secret::$name is missing or empty."
+              exit 1
+            fi
+          done
+
+      - name: Prove Cloudflare Browser Run can render UFC.com
+        shell: bash
+        run: |
+          set -euo pipefail
+          response="$RUNNER_TEMP/ufc-browser-response.json"
+          status=$(curl --silent --show-error --max-time 60 \
+            --output "$response" \
+            --write-out '%{http_code}' \
+            --request POST \
+            --url "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/browser-rendering/content" \
+            --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            --header 'Content-Type: application/json' \
+            --data '{"url":"https://www.ufc.com/events?language_content_entity=en","gotoOptions":{"waitUntil":"networkidle2","timeout":30000},"waitForSelector":{"selector":"a[href*=\"/event/\"]","timeout":30000},"rejectResourceTypes":["image","media","font"]}')
+          if [ "$status" != "200" ]; then
+            echo "::error title=UFC Browser Run probe failed::Cloudflare Browser Run returned HTTP $status."
+            node - "$response" <<'NODE'
+          const fs = require('fs');
+          const raw = fs.readFileSync(process.argv[2], 'utf8');
+          try {
+            const parsed = JSON.parse(raw);
+            console.error(JSON.stringify({ success: parsed.success, errors: parsed.errors }));
+          } catch {
+            console.error('Cloudflare returned a non-JSON error response.');
+          }
+          NODE
+            exit 1
+          fi
+          node - "$response" <<'NODE'
+          const fs = require('fs');
+          const raw = fs.readFileSync(process.argv[2], 'utf8');
+          let html = raw;
+          try {
+            const parsed = JSON.parse(raw);
+            if (parsed.success === false || typeof parsed.result !== 'string') {
+              throw new Error(`Browser Run unsuccessful: ${JSON.stringify(parsed.errors ?? [])}`);
+            }
+            html = parsed.result;
+          } catch (error) {
+            if (!/^\s*</.test(raw)) throw error;
+          }
+          if (!/\bufc\b/i.test(html) || !/href=["'][^"']*\/event\//i.test(html)) {
+            throw new Error('Rendered UFC events page did not contain UFC event links.');
+          }
+          console.log(`PASS: Browser Run returned ${Buffer.byteLength(html)} bytes of rendered UFC.com HTML with event links.`);
+          NODE
+
+      - name: Publish proven transport credentials to Supabase
+        uses: supabase/setup-cli@v1
+        with:
+          version: 2.109.1
+
+      - name: Store transport credentials without exposing values
+        shell: bash
+        run: |
+          set -euo pipefail
+          supabase secrets set --project-ref "$SUPABASE_PROJECT_ID" \
+            CLOUDFLARE_API_TOKEN="$CLOUDFLARE_API_TOKEN" \
+            CLOUDFLARE_ACCOUNT_ID="$CLOUDFLARE_ACCOUNT_ID"
+          secrets=$(supabase secrets list --project-ref "$SUPABASE_PROJECT_ID" --output json)
+          printf '%s' "$secrets" | grep -Fq 'CLOUDFLARE_API_TOKEN'
+          printf '%s' "$secrets" | grep -Fq 'CLOUDFLARE_ACCOUNT_ID'
+          echo 'PASS: proven Browser Run credentials are configured in the canonical Supabase project.'
+
+      - name: Record bootstrap proof on PR
+        shell: bash
+        run: |
+          gh api "repos/${GITHUB_REPOSITORY}/issues/${{ github.event.pull_request.number }}/comments" \
+            -f body='<!-- ufc-browser-transport-bootstrap --> **UFC browser transport bootstrap: green.** Cloudflare Browser Run rendered the official UFC events page, and the same credentials were stored in Supabase without exposing their values.'
