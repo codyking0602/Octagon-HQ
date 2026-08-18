@@ -53,9 +53,15 @@ function makeKeepCutDecision(container: HTMLElement, choice: "keep" | "cut") {
 }
 
 describe("Keep 4, Cut 4 engine", () => {
-  it("preserves canonical Blind Rank categories and the shared lineup archetype owner", () => {
+  it("preserves canonical Play categories and the Keep/Cut-owned board-style owner", () => {
     expect(KEEP_CUT_PACKS).toHaveLength(8);
-    expect(KEEP_CUT_ROLES.map((role) => role.id)).toContain("middle-cluster");
+    expect(KEEP_CUT_ROLES.map((role) => role.id)).toEqual([
+      "knife-edge",
+      "messy-middle",
+      "one-superstar",
+      "bottom-grind",
+      "classic-spread",
+    ]);
   });
 
   it("builds deterministic unique competitive eight-fighter lineups with no more than two Bad fighters", () => {
