@@ -147,6 +147,33 @@ begin
     raise exception 'published current-event projection did not expose both Spotlights: %', v_current;
   end if;
 
+  perform set_config('request.jwt.claim.sub', extensions.gen_random_uuid()::text, true);
+  begin
+    perform public.set_pick_event_spotlights('pick-spotlight-test', v_spotlights);
+    raise exception 'non-owner updated published Spotlights';
+  exception when others then
+    if sqlerrm not like '%pick control owner required%' then raise; end if;
+  end;
+  perform set_config('request.jwt.claim.sub', v_owner_id::text, true);
+
+  v_spotlights := jsonb_set(
+    jsonb_set(
+      v_spotlights,
+      '{0,preview}',
+      to_jsonb('Updated after publication without republishing the Picks card or touching submitted picks.'::text)
+    ),
+    '{0,watch_spotlights,0,url}',
+    to_jsonb('https://youtu.be/spotlight-red-updated'::text)
+  );
+  perform public.set_pick_event_spotlights('pick-spotlight-test', v_spotlights);
+
+  v_current := public.get_pick_control_event('pick-spotlight-test');
+  if jsonb_array_length(v_current->'spotlights') <> 2
+    or v_current #>> '{spotlights,0,preview}' not like 'Updated after publication%'
+    or v_current #>> '{spotlights,0,watch_spotlights,0,url}' <> 'https://youtu.be/spotlight-red-updated' then
+    raise exception 'Fight Night Control did not expose the updated published Spotlights: %', v_current;
+  end if;
+
   perform set_config('request.jwt.claim.role', 'service_role', true);
   perform set_config('request.jwt.claim.sub', '', true);
   update public.pick_bouts
@@ -162,8 +189,23 @@ begin
     raise exception 'one stale fight Spotlight did not fail closed independently: %', v_current;
   end if;
 
+  perform set_config('request.jwt.claim.role', 'service_role', true);
+  perform set_config('request.jwt.claim.sub', '', true);
+  update public.pick_events set status = 'locked' where event_id = 'pick-spotlight-test';
+  perform set_config('request.jwt.claim.role', 'authenticated', true);
+  perform set_config('request.jwt.claim.sub', v_owner_id::text, true);
+  begin
+    perform public.set_pick_event_spotlights('pick-spotlight-test', v_spotlights);
+    raise exception 'locked event accepted a published Spotlight update';
+  exception when others then
+    if sqlerrm not like '%upcoming published Picks event not found%' then raise; end if;
+  end;
+
   if has_function_privilege('anon', 'public.set_pick_event_draft_spotlight(uuid,jsonb)', 'EXECUTE') then
     raise exception 'anonymous role inherited Spotlight setup mutation access';
+  end if;
+  if has_function_privilege('anon', 'public.set_pick_event_spotlights(text,jsonb)', 'EXECUTE') then
+    raise exception 'anonymous role inherited published Spotlight mutation access';
   end if;
 end;
 $$;
