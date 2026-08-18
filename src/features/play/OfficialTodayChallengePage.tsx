@@ -5,6 +5,7 @@ import {
   OfficialBlindRankCanonicalOrder,
   OfficialBlindRankScoreSummary,
 } from "./OfficialBlindRankResult";
+import { OfficialHitTheNumberDailyView } from "./OfficialHitTheNumberDailyView";
 import { OfficialTodayChallengeView } from "./OfficialTodayChallengePresentation";
 import {
   todayChallengeAdapter,
@@ -116,12 +117,20 @@ export default function OfficialTodayChallengePage({
     <div className="official-daily-page">
       <RuntimeStatus error={runtime.error} onRefresh={() => { void runtime.refresh(); }} />
       <OfficialBlindRankScoreSummary projection={runtime.projection} />
-      <OfficialTodayChallengeView
-        projection={runtime.projection}
-        busy={runtime.busy}
-        onAdvance={(action) => { void runtime.advance(action); }}
-        onNavigate={(route) => navigate(route)}
-      />
+      {runtime.projection.gameType === "hit_the_number" ? (
+        <OfficialHitTheNumberDailyView
+          projection={runtime.projection}
+          busy={runtime.busy}
+          onAdvance={(action) => { void runtime.advance(action); }}
+        />
+      ) : (
+        <OfficialTodayChallengeView
+          projection={runtime.projection}
+          busy={runtime.busy}
+          onAdvance={(action) => { void runtime.advance(action); }}
+          onNavigate={(route) => navigate(route)}
+        />
+      )}
       <OfficialBlindRankCanonicalOrder projection={runtime.projection} />
       {runtime.projection.officialAttempt && adapter ? (
         <OfficialResultActions casualRoute={adapter.casualRoute} onNavigate={(route) => navigate(route)} />
