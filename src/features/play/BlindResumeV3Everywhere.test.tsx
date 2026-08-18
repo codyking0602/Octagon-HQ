@@ -109,7 +109,7 @@ describe("Blind Resume V3 shared contract", () => {
     const pair = card.roundSet.pairs[0]!;
     const { container } = renderBlindResume(`/play/blind-resume?challenge=${seed}&v=3`);
 
-    expect(container.getAttribute("data-version")).toBe("v3");
+    expect(container.querySelector(".blind-resume-page")?.getAttribute("data-version")).toBe("v3");
     expect(container.querySelectorAll(".blind-resume-stats > div")).toHaveLength(8);
     expect([...container.querySelectorAll(".blind-resume-stats strong")].filter((node) => node.textContent === "•••")).toHaveLength(12);
     expect(container.textContent).toContain("2 OF 8 STATS SHOWN · LOCK NOW: CORRECT +20 · MISS +2");
