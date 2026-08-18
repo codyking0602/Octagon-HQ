@@ -142,7 +142,7 @@ describe("production Event Setup preview contract", () => {
   it("keeps UFC.com as the sole operational event metadata and card source", () => {
     expect(syncSource).toMatch(/const UFC_EVENT_INDEX_URL = "https:\/\/www\.ufc\.com\/events(?:\?[^\"]*)?";/);
     expect(syncSource).toContain("parseUfcEventPage");
-    expect(syncSource).toContain('source: "UFC.com official event + card"');
+    expect(syncSource).toContain('source: "UFC.com event + card"');
     expect(syncSource).not.toMatch(/https?:\/\/(?:www\.)?cbssports\.com/i);
     expect(syncSource).not.toMatch(/https?:\/\/(?:www\.)?mmamania\.com/i);
     expect(cardParserSource).toContain("absoluteUfcEventUrl");
