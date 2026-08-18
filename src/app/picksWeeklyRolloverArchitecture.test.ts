@@ -21,7 +21,7 @@ describe("Picks weekly rollover", () => {
     expect(controlCenter).toContain("{activeEvent === null ? (");
     expect(controlCenter).toContain('label: staged ? "REVIEW & PUBLISH" : "OPEN EVENT SETUP"');
     expect(controlCenter).toContain('className={activeEvent ? "primary-action" : "secondary-action"}');
-    expect(controlCenter).toContain('hidden={!identity.profile || event === null}');
+    expect(controlCenter).toContain("{identity.profile && event != null ? (");
   });
 
   it("preserves the canonical repositories and completed-event review path", () => {
