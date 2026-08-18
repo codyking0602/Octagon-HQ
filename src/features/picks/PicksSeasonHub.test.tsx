@@ -97,7 +97,7 @@ const history: PickHistory = {
       incorrect: 7,
       missing: 1,
       excluded: 1,
-      eventsEntered: 3,
+      eventsEntered: 2,
       basePoints: 36,
       lockBonus: 0,
       totalPoints: 36,
@@ -121,17 +121,32 @@ describe("PicksSeasonHub", () => {
     expect(screen.getByText("STANDINGS & EVENTS").closest("details")).not.toHaveAttribute("open");
   });
 
-  it("opens to a fluid standings table and keeps tied point totals tied", () => {
+  it("presents standings as a competitive race without changing the canonical point totals", () => {
     render(<MemoryRouter><PicksSeasonHub history={history} loading={false} /></MemoryRouter>);
 
     fireEvent.click(screen.getByText("STANDINGS & EVENTS"));
 
     expect(screen.getByText("Season leaderboard")).toBeInTheDocument();
     expect(screen.getByText("4 PLAYERS · 3 EVENTS")).toBeInTheDocument();
-    expect(screen.getByText("Cody")).toBeInTheDocument();
-    expect(screen.getByText("Shane")).toBeInTheDocument();
     expect(screen.getAllByText("T-1")).toHaveLength(2);
-    expect(screen.getByText("9-7 · 56.3% WIN · 1 MISSED")).toBeInTheDocument();
+
+    const codyRow = screen.getByText("Cody").closest("article");
+    const shaneRow = screen.getByText("Shane").closest("article");
+    const ashleyRow = screen.getByText("Ashley").closest("article");
+    const michaelRow = screen.getByText("Michael").closest("article");
+
+    expect(codyRow).toHaveClass("is-leader", "is-current-user");
+    expect(codyRow).toHaveTextContent("YOU");
+    expect(codyRow).toHaveTextContent("48 PTS");
+    expect(codyRow).toHaveTextContent("LEADER");
+    expect(shaneRow).toHaveClass("is-leader");
+    expect(shaneRow).toHaveTextContent("+4 LOCK");
+    expect(ashleyRow).toHaveClass("is-third");
+    expect(ashleyRow).toHaveTextContent("6 PTS BACK");
+    expect(ashleyRow?.querySelector(".picks-season-standing__progress > span")).toHaveStyle("width: 88%");
+    expect(michaelRow).toHaveTextContent("9-7 · 56.3% WIN · 1 MISSED");
+    expect(michaelRow).toHaveTextContent("12 PTS BACK");
+    expect(michaelRow).toHaveTextContent("2/3 EVENTS · 1 EVENT MISSED");
   });
 
   it("keeps the rich event recap available for every completed event", () => {
