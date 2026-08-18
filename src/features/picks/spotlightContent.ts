@@ -18,16 +18,10 @@ export interface SpotlightStatsFighter {
   submissionAverage: number | null;
 }
 
+type FightStyle = "striking" | "wrestling" | "submission" | "balanced";
+
 function finite(value: number | null): value is number {
   return value !== null && Number.isFinite(value);
-}
-
-function pct(value: number) {
-  return `${Math.round(value)}%`;
-}
-
-function decimal(value: number) {
-  return value.toFixed(1);
 }
 
 function reachInches(value: string) {
@@ -53,43 +47,94 @@ function advantageEdges(fighter: SpotlightStatsFighter, opponent: SpotlightStats
   const opponentReach = reachInches(opponent.reach);
 
   if (finite(fighterReach) && finite(opponentReach) && fighterReach - opponentReach >= 1.5) {
-    const edge = fighterReach - opponentReach;
-    edges.push({ score: edge / 4, text: `${edge.toFixed(edge % 1 ? 1 : 0)}\" reach advantage` });
+    edges.push({ score: (fighterReach - opponentReach) / 4, text: "Range and length" });
   }
   if (finite(fighter.slpm) && finite(opponent.slpm) && fighter.slpm - opponent.slpm >= 0.45) {
-    edges.push({ score: (fighter.slpm - opponent.slpm) / 2, text: `${decimal(fighter.slpm)} significant strikes landed/min` });
+    edges.push({ score: (fighter.slpm - opponent.slpm) / 2, text: "High-volume striking" });
   }
-  if (finite(fighter.strikingAccuracy) && finite(opponent.strikingAccuracy) && fighter.strikingAccuracy - opponent.strikingAccuracy >= 5) {
-    edges.push({ score: (fighter.strikingAccuracy - opponent.strikingAccuracy) / 20, text: `${pct(fighter.strikingAccuracy)} striking accuracy` });
+  if (
+    finite(fighter.strikingAccuracy)
+    && finite(opponent.strikingAccuracy)
+    && fighter.strikingAccuracy - opponent.strikingAccuracy >= 5
+  ) {
+    edges.push({ score: (fighter.strikingAccuracy - opponent.strikingAccuracy) / 20, text: "Efficient striking" });
   }
-  if (finite(fighter.strikingDefense) && finite(opponent.strikingDefense) && fighter.strikingDefense - opponent.strikingDefense >= 5) {
-    edges.push({ score: (fighter.strikingDefense - opponent.strikingDefense) / 20, text: `${pct(fighter.strikingDefense)} striking defense` });
+  if (
+    finite(fighter.strikingDefense)
+    && finite(opponent.strikingDefense)
+    && fighter.strikingDefense - opponent.strikingDefense >= 5
+  ) {
+    edges.push({ score: (fighter.strikingDefense - opponent.strikingDefense) / 20, text: "Defensive striking" });
   }
-  if (finite(fighter.takedownAverage) && finite(opponent.takedownAverage) && fighter.takedownAverage - opponent.takedownAverage >= 0.6) {
-    edges.push({ score: (fighter.takedownAverage - opponent.takedownAverage) / 2, text: `${decimal(fighter.takedownAverage)} takedowns per 15 min` });
+  if (
+    finite(fighter.takedownAverage)
+    && finite(opponent.takedownAverage)
+    && fighter.takedownAverage - opponent.takedownAverage >= 0.6
+  ) {
+    edges.push({
+      score: (fighter.takedownAverage - opponent.takedownAverage) / 2,
+      text: fighter.takedownAverage >= 4 ? "Relentless takedown pressure" : "Wrestling pressure",
+    });
   }
-  if (finite(fighter.takedownAccuracy) && finite(opponent.takedownAccuracy) && fighter.takedownAccuracy - opponent.takedownAccuracy >= 8) {
-    edges.push({ score: (fighter.takedownAccuracy - opponent.takedownAccuracy) / 25, text: `${pct(fighter.takedownAccuracy)} takedown accuracy` });
+  if (
+    finite(fighter.takedownAccuracy)
+    && finite(opponent.takedownAccuracy)
+    && fighter.takedownAccuracy - opponent.takedownAccuracy >= 8
+  ) {
+    edges.push({ score: (fighter.takedownAccuracy - opponent.takedownAccuracy) / 25, text: "Efficient takedowns" });
   }
-  if (finite(fighter.takedownDefense) && finite(opponent.takedownDefense) && fighter.takedownDefense - opponent.takedownDefense >= 8) {
-    edges.push({ score: (fighter.takedownDefense - opponent.takedownDefense) / 25, text: `${pct(fighter.takedownDefense)} takedown defense` });
+  if (
+    finite(fighter.takedownDefense)
+    && finite(opponent.takedownDefense)
+    && fighter.takedownDefense - opponent.takedownDefense >= 8
+  ) {
+    edges.push({ score: (fighter.takedownDefense - opponent.takedownDefense) / 25, text: "Takedown resistance" });
   }
-  if (finite(fighter.submissionAverage) && finite(opponent.submissionAverage) && fighter.submissionAverage - opponent.submissionAverage >= 0.4) {
-    edges.push({ score: (fighter.submissionAverage - opponent.submissionAverage) / 1.5, text: `${decimal(fighter.submissionAverage)} submission attempts per 15 min` });
+  if (
+    finite(fighter.submissionAverage)
+    && finite(opponent.submissionAverage)
+    && fighter.submissionAverage - opponent.submissionAverage >= 0.4
+  ) {
+    edges.push({ score: (fighter.submissionAverage - opponent.submissionAverage) / 1.5, text: "Submission threat" });
   }
   if (finite(fighter.sapm) && finite(opponent.sapm) && opponent.sapm - fighter.sapm >= 0.6) {
-    edges.push({ score: (opponent.sapm - fighter.sapm) / 2, text: `Absorbs only ${decimal(fighter.sapm)} significant strikes/min` });
+    edges.push({ score: (opponent.sapm - fighter.sapm) / 2, text: "Damage avoidance" });
   }
 
   edges.sort((left, right) => right.score - left.score);
   const selected = edges.slice(0, 3).map((edge) => edge.text);
 
   const fillers = [
-    finite(fighter.takedownDefense) && fighter.takedownDefense >= 70 ? `${pct(fighter.takedownDefense)} takedown defense` : null,
-    finite(fighter.slpm) && fighter.slpm >= 4 ? `${decimal(fighter.slpm)} significant strikes landed/min` : null,
-    finite(fighter.takedownAverage) && fighter.takedownAverage >= 2 ? `${decimal(fighter.takedownAverage)} takedowns per 15 min` : null,
-    finite(fighter.submissionAverage) && fighter.submissionAverage >= 0.8 ? `${decimal(fighter.submissionAverage)} submission attempts per 15 min` : null,
-    finite(fighter.strikingDefense) ? `${pct(fighter.strikingDefense)} striking defense` : null,
+    finite(fighter.takedownDefense)
+      && fighter.takedownDefense >= 70
+      && (!finite(opponent.takedownDefense) || fighter.takedownDefense >= opponent.takedownDefense)
+      ? "Takedown resistance"
+      : null,
+    finite(fighter.slpm)
+      && fighter.slpm >= 4.5
+      && (!finite(opponent.slpm) || fighter.slpm >= opponent.slpm)
+      ? "High-volume striking"
+      : null,
+    finite(fighter.takedownAverage)
+      && fighter.takedownAverage >= 2
+      && (!finite(opponent.takedownAverage) || fighter.takedownAverage >= opponent.takedownAverage)
+      ? fighter.takedownAverage >= 4 ? "Relentless takedown pressure" : "Wrestling pressure"
+      : null,
+    finite(fighter.submissionAverage)
+      && fighter.submissionAverage >= 0.8
+      && (!finite(opponent.submissionAverage) || fighter.submissionAverage >= opponent.submissionAverage)
+      ? "Submission threat"
+      : null,
+    finite(fighter.strikingAccuracy)
+      && fighter.strikingAccuracy >= 50
+      && (!finite(opponent.strikingAccuracy) || fighter.strikingAccuracy >= opponent.strikingAccuracy)
+      ? "Efficient striking"
+      : null,
+    finite(fighter.strikingDefense)
+      && fighter.strikingDefense >= 55
+      && (!finite(opponent.strikingDefense) || fighter.strikingDefense >= opponent.strikingDefense)
+      ? "Defensive striking"
+      : null,
   ].filter((value): value is string => Boolean(value));
 
   for (const filler of fillers) {
@@ -99,43 +144,91 @@ function advantageEdges(fighter: SpotlightStatsFighter, opponent: SpotlightStats
   return selected.slice(0, 3);
 }
 
-function primaryProfile(fighter: SpotlightStatsFighter) {
+function primaryStyle(fighter: SpotlightStatsFighter): FightStyle {
   const striking = finite(fighter.slpm) ? fighter.slpm / 4.5 : 0;
   const wrestling = finite(fighter.takedownAverage) ? fighter.takedownAverage / 2.2 : 0;
   const submission = finite(fighter.submissionAverage) ? fighter.submissionAverage / 0.8 : 0;
-  if (wrestling >= striking && wrestling >= submission && wrestling >= 0.9) {
-    return `a ${decimal(fighter.takedownAverage!)}-takedown-per-15 wrestling pace`;
-  }
-  if (submission > striking && submission >= 1) {
-    return `${decimal(fighter.submissionAverage!)} submission attempts per 15 minutes`;
-  }
-  if (finite(fighter.slpm)) {
-    return `${decimal(fighter.slpm)} significant strikes landed per minute`;
-  }
-  return "a balanced UFCStats profile";
+  const strongest = Math.max(striking, wrestling, submission);
+
+  if (strongest < 0.75) return "balanced";
+  if (wrestling >= striking && wrestling >= submission) return "wrestling";
+  if (submission > striking && submission > wrestling) return "submission";
+  return "striking";
 }
 
-function comparisonSentence(red: SpotlightStatsFighter, blue: SpotlightStatsFighter) {
-  const redReach = reachInches(red.reach);
-  const blueReach = reachInches(blue.reach);
-  const facts: string[] = [];
+function gamePlan(fighter: SpotlightStatsFighter, opponent: SpotlightStatsFighter) {
+  const style = primaryStyle(fighter);
+  const opponentStyle = primaryStyle(opponent);
+  const fighterReach = reachInches(fighter.reach);
+  const opponentReach = reachInches(opponent.reach);
+  const hasReachEdge = finite(fighterReach) && finite(opponentReach) && fighterReach - opponentReach >= 1.5;
 
-  if (finite(redReach) && finite(blueReach) && Math.abs(redReach - blueReach) >= 1.5) {
-    const longer = redReach > blueReach ? red : blue;
-    facts.push(`${longer.name} owns the longer reach at ${longer.reach}`);
-  }
-  if (finite(red.takedownDefense) && finite(blue.takedownDefense)) {
-    const better = red.takedownDefense >= blue.takedownDefense ? red : blue;
-    facts.push(`${better.name} carries the stronger takedown-defense rate at ${pct(better.takedownDefense!)}`);
-  }
-  if (finite(red.strikingAccuracy) && finite(blue.strikingAccuracy)) {
-    const cleaner = red.strikingAccuracy >= blue.strikingAccuracy ? red : blue;
-    facts.push(`${cleaner.name} has the better striking-accuracy mark at ${pct(cleaner.strikingAccuracy!)}`);
+  if (style === "wrestling") {
+    if (finite(fighter.takedownAverage) && fighter.takedownAverage >= 4) {
+      return finite(fighter.submissionAverage) && fighter.submissionAverage >= 0.8
+        ? "turn this into a grinding grappling fight, using relentless takedown pressure to create long scrambles and submission threats"
+        : "turn this into a grinding grappling fight and keep returning to relentless takedown pressure";
+    }
+    return "force a wrestling-heavy fight and keep returning to takedowns whenever the striking opens up";
   }
 
-  return facts.length
-    ? `${facts.slice(0, 2).join(", while ")}.`
-    : "Their UFCStats profiles are close enough that the matchup is more about who imposes the preferred phase first.";
+  if (style === "submission") {
+    return "create scrambles, threaten submissions, and keep the fight from settling into a clean striking rhythm";
+  }
+
+  if (style === "striking") {
+    if (
+      (opponentStyle === "wrestling" || opponentStyle === "submission")
+      && finite(fighter.takedownDefense)
+      && fighter.takedownDefense >= 70
+    ) {
+      return finite(fighter.slpm) && fighter.slpm >= 4.5
+        ? "keep the fight in open space, build a high-output striking pace, and make the takedown defense hold up"
+        : "keep the fight standing, dictate range, and make the takedown defense hold up";
+    }
+    if (hasReachEdge) {
+      return "manage range behind the longer reach and keep the exchanges at striking distance";
+    }
+    if (finite(fighter.slpm) && fighter.slpm >= 4.5) {
+      return "keep the fight in open space and build a high-output striking pace";
+    }
+    if (finite(fighter.strikingAccuracy) && fighter.strikingAccuracy >= 50) {
+      return "keep the fight standing and make the cleaner striking exchanges count";
+    }
+    return "keep the fight standing and dictate the striking range";
+  }
+
+  if (opponentStyle === "wrestling" || opponentStyle === "submission") {
+    return "stay disciplined in the transitions, deny extended grappling exchanges, and make the cleaner moments happen on the feet";
+  }
+  return "stay adaptable, win position first, and force the matchup into the phase that is working best";
+}
+
+function isGrapplingStyle(style: FightStyle) {
+  return style === "wrestling" || style === "submission";
+}
+
+function swingPoint(red: SpotlightStatsFighter, blue: SpotlightStatsFighter) {
+  const redStyle = primaryStyle(red);
+  const blueStyle = primaryStyle(blue);
+
+  if (isGrapplingStyle(redStyle) && blueStyle === "striking") {
+    return `The fight hinges on whether ${red.name} can keep forcing grappling exchanges or ${blue.name} can keep enough separation to make the fight happen at range.`;
+  }
+  if (redStyle === "striking" && isGrapplingStyle(blueStyle)) {
+    return `The fight hinges on whether ${blue.name} can keep forcing grappling exchanges or ${red.name} can keep enough separation to make the fight happen at range.`;
+  }
+  if (isGrapplingStyle(redStyle) && isGrapplingStyle(blueStyle)) {
+    return "The swing point is who wins the first layer of grappling and keeps the other fighter from resetting.";
+  }
+  if (redStyle === "striking" && blueStyle === "striking") {
+    return "The swing point is range: whoever dictates distance and forces the other fighter to react should control the cleaner exchanges.";
+  }
+  return "The swing point is who imposes the preferred phase first and keeps the fight there.";
+}
+
+function editorialPreview(red: SpotlightStatsFighter, blue: SpotlightStatsFighter) {
+  return `${red.name} wants to ${gamePlan(red, blue)}. ${blue.name} counters by trying to ${gamePlan(blue, red)}. ${swingPoint(red, blue)}`;
 }
 
 function fighterPackage(
@@ -161,11 +254,9 @@ export function buildPickSpotlightContent(input: {
   blue: SpotlightStatsFighter;
   generatedAt?: string;
 }): PickSpotlight {
-  const redProfile = primaryProfile(input.red);
-  const blueProfile = primaryProfile(input.blue);
   return {
     boutId: input.boutId,
-    preview: `${input.red.name} enters with ${redProfile}; ${input.blue.name} answers with ${blueProfile}. ${comparisonSentence(input.red, input.blue)}`,
+    preview: editorialPreview(input.red, input.blue),
     red: fighterPackage(input.red, input.blue, input.eventStartsAt),
     blue: fighterPackage(input.blue, input.red, input.eventStartsAt),
     watchSpotlights: [],
