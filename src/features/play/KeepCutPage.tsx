@@ -5,6 +5,7 @@ import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import type { ChallengeJson } from "../challenges/challengeModel";
 import { FighterPhoto } from "../rankings/FighterPhoto";
 import { GameResultActions } from "./GameResultActions";
+import { KeepCutResultSummary } from "./KeepCutResultSummary";
 import {
   KEEP_CUT_PACKS,
   createKeepCutLineup,
@@ -243,21 +244,15 @@ export default function KeepCutPage() {
             <small>Both private scores reveal after all eight locked decisions.</small>
           </section>
         ) : null}
-        <section className="keep-cut-result-hero">
-          <p className="eyebrow">EIGHT CALLS LOCKED</p>
-          <h1>{result.score}/100 · {result.label}</h1>
-          <p>{result.modelTopFourKept} OF OCTAGON HQ’S TOP 4 KEPT</p>
-          <small>Your four keeps are graded against the strongest four fighters on this board.</small>
-        </section>
+        <KeepCutResultSummary
+          board={lineup.fighters}
+          keptIds={result.keptIds}
+          packId={lineup.packId}
+          score={result.score}
+          scoreLabel={result.label}
+          topFourKept={result.modelTopFourKept}
+        />
         <section className="keep-cut-results">
-          <div className="keep-cut-result-group keep-cut-result-group--keep">
-            <header><span>YOUR FOUR</span><strong>KEPT</strong></header>
-            <div>{kept.map((fighter) => <FighterTile fighter={fighter} key={fighter.id} />)}</div>
-          </div>
-          <div className="keep-cut-result-group keep-cut-result-group--cut">
-            <header><span>YOUR FOUR</span><strong>CUT</strong></header>
-            <div>{cut.map((fighter) => <FighterTile fighter={fighter} key={fighter.id} />)}</div>
-          </div>
           <GameResultActions
             onChallenge={() => void challengeSomeone()}
             onReplay={replay}
