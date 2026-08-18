@@ -93,7 +93,7 @@ function hasCombinedVenueAndLocation(value) {
   return parts.length >= 2 && parts.every((part) => part.length >= 2);
 }
 
-export function assertCurrentEventPreview(event, now = new Date(), { requireCbsSource = true } = {}) {
+export function assertCurrentEventPreview(event, now = new Date(), { requireCbsSource = false } = {}) {
   if (!event || typeof event !== "object") {
     throw new Error("Preview is missing the event payload.");
   }
