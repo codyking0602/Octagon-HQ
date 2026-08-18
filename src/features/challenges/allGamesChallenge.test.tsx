@@ -50,14 +50,13 @@ describe("all-game challenge contracts", () => {
     cleanup();
   });
 
-  it("preserves every existing exact-share query while adding the profile challenge code", () => {
+  it("preserves every live exact-share query and sends retired Better Than challenges back to Play", () => {
     const rows = [
       challenge("find-leader", "https://example.test/play/find-leader?day=2026-07-24", {}, { score: 8 }, { score: 9 }),
       challenge("wavelength", "https://example.test/play/wavelength?challenge=wave-seed", {}, { score: 80 }, { score: 82 }),
       challenge("blind-resume", "https://example.test/play/blind-resume?challenge=resume-seed", {}, { score: 4 }, { score: 5 }),
       challenge("blind-rank", "https://example.test/play/blind-rank?pack=ufc-careers&lineup=a,b,c,d,e", {}, {}, {}),
       challenge("keep-cut", "https://example.test/play/keep-cut?pack=ufc-careers&lineup=a,b,c,d,e,f,g,h", {}, {}, {}),
-      challenge("better-than", "https://example.test/play/better-than?target=a&lens=overall&pool=all&count=3&selections=b,c,d", {}, {}, {}),
     ];
 
     for (const row of rows) {
@@ -68,6 +67,15 @@ describe("all-game challenge contracts", () => {
       expect(params.get(codeParam)).toBe(row.code);
       expect(params.size).toBeGreaterThan(1);
     }
+
+    const retired = challenge(
+      "better-than",
+      "https://example.test/play/better-than?target=a&lens=overall&pool=all&count=3&selections=b,c,d",
+      {},
+      { claimCount: 3 },
+      { claimCount: 3 },
+    );
+    expect(challengePlayRoute(retired)).toBe("/play");
   });
 
   it("renders both players’ exact Wavelength paths", () => {
@@ -134,7 +142,7 @@ describe("all-game challenge contracts", () => {
     expect(screen.getByText("KEEP")).toBeInTheDocument();
   });
 
-  it("renders Better Than shared names and both unique lists", () => {
+  it("renders historical Better Than shared names and both unique lists", () => {
     const row = challenge(
       "better-than",
       "/play/better-than?target=x&lens=overall&pool=all&count=3&selections=a,b,c",
