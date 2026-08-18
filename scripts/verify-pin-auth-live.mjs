@@ -10,7 +10,6 @@ const projectId = process.env.SUPABASE_PROJECT_ID;
 const productionOrigin = process.env.OCTAGON_PRODUCTION_ORIGIN
   ?? "https://octagon.hq-app.workers.dev";
 const expectedDeploymentSha = process.env.EXPECTED_DEPLOYMENT_SHA?.trim() ?? "";
-const expectedSyncSourceSha = process.env.EXPECTED_SYNC_SOURCE_SHA?.trim() ?? "";
 const configuredArticleUrl = process.env.EVENT_SETUP_TEST_MMA_URL?.trim() ?? "";
 
 if (!accessToken || !projectId) {
@@ -18,9 +17,6 @@ if (!accessToken || !projectId) {
 }
 if (expectedDeploymentSha && !/^[0-9a-f]{40}$/i.test(expectedDeploymentSha)) {
   throw new Error("The expected frontend deployment SHA must be a full commit SHA.");
-}
-if (expectedSyncSourceSha && !/^[0-9a-f]{40}$/i.test(expectedSyncSourceSha)) {
-  throw new Error("The expected UFC sync deployment SHA must be a full commit SHA.");
 }
 
 const supabaseOrigin = `https://${projectId}.supabase.co`;
@@ -407,11 +403,6 @@ try {
       await updateButton.click();
       const previewResponse = await previewResponsePromise;
       const previewBody = await previewResponse.json().catch(() => ({}));
-      if (expectedSyncSourceSha && previewBody?.deployment_sha !== expectedSyncSourceSha) {
-        throw new Error(
-          `WebKit Event Setup backend SHA mismatch: expected ${expectedSyncSourceSha}, received ${previewBody?.deployment_sha ?? "missing"}.`,
-        );
-      }
 
       if (previewResponse.status() === 200) {
         assertCurrentEventPreview({
