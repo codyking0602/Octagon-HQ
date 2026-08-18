@@ -8,7 +8,10 @@ declare
   v_target_day constant date := date '2026-08-17';
   v_source_version constant text := 'play-rotation-v1';
   v_replacement_version constant text := 'play-rotation-v2';
-  v_central_today date := private.daily_challenge_central_day(now());
+  -- Keep this historical release guard replay-safe without introducing another runtime owner.
+  -- The canonical Daily backend also uses America/Chicago; this inline expression only protects
+  -- fresh migration replay if the helper function is not yet available in that transient stack.
+  v_central_today date := (now() at time zone 'America/Chicago')::date;
   v_source_starts_on date;
   v_replacement_starts_on date;
   v_active_version text;
