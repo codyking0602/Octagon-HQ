@@ -60,7 +60,6 @@ describe("fight Spotlight content", () => {
     expect(spotlight.preview).toContain("Red Fighter");
     expect(spotlight.preview).toContain("Blue Fighter");
     expect(spotlight.preview).toContain("the key is whether");
-    expect(spotlight.preview.split(/\s+/)).toHaveLength(expect.any(Number));
     expect(spotlight.preview.split(/\s+/).length).toBeLessThanOrEqual(40);
     expect(spotlight.preview).not.toContain("significant strikes landed per minute");
     expect(spotlight.preview).not.toContain("per 15");
@@ -82,7 +81,7 @@ describe("fight Spotlight content", () => {
     expectThreeQualitativeEdges(spotlight.blue.edges);
   });
 
-  it("keeps wrestler-versus-striker copy short and gives both fighters three edges", () => {
+  it("keeps Hernandez-Rodrigues copy short and gives both fighters three edges", () => {
     const spotlight = buildPickSpotlightContent({
       boutId: "anthony-hernandez-gregory-rodrigues",
       eventStartsAt: "2026-08-22T23:00:00.000Z",
@@ -90,13 +89,13 @@ describe("fight Spotlight content", () => {
         ...red,
         fighterSlug: "anthony-hernandez",
         name: "Anthony Hernandez",
-        slpm: 4.8,
+        slpm: 4.57,
         strikingAccuracy: 60,
         sapm: 3.1,
-        strikingDefense: 46,
-        takedownAverage: 5.9,
-        takedownAccuracy: 49,
-        takedownDefense: 63,
+        strikingDefense: 51,
+        takedownAverage: 5.88,
+        takedownAccuracy: 48,
+        takedownDefense: 68,
         submissionAverage: 1.6,
       },
       blue: {
@@ -104,14 +103,14 @@ describe("fight Spotlight content", () => {
         fighterSlug: "gregory-rodrigues",
         name: "Gregory Rodrigues",
         reach: "75\"",
-        slpm: 5.5,
-        strikingAccuracy: 52,
-        sapm: 5.0,
+        slpm: 5.53,
+        strikingAccuracy: 51,
+        sapm: 4.78,
         strikingDefense: 50,
-        takedownAverage: 2.2,
-        takedownAccuracy: 40,
+        takedownAverage: 1.9,
+        takedownAccuracy: 34,
         takedownDefense: 75,
-        submissionAverage: 0.5,
+        submissionAverage: 0.4,
       },
       generatedAt: "2026-08-18T17:00:00.000Z",
     });
