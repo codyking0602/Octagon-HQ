@@ -1,0 +1,64 @@
+/* Ambient motion layer for persisted Picks event headers. The canonical layout stays in picks-polish.css. */
+
+.picks-event-hero.has-poster .picks-event-hero__poster {
+  animation: picks-event-header-push 12s ease-in-out infinite alternate;
+  will-change: background-size, background-position;
+}
+
+.picks-event-hero.has-poster .picks-event-hero__poster::before {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  content: "";
+  pointer-events: none;
+  background:
+    linear-gradient(110deg, transparent 0 38%, rgba(255, 255, 255, .11) 48%, transparent 58% 100%),
+    radial-gradient(circle, rgba(255, 255, 255, .12) 0 1px, transparent 1.5px),
+    radial-gradient(circle, rgba(255, 255, 255, .08) 0 1px, transparent 1.4px),
+    radial-gradient(circle at 50% 92%, rgba(255, 255, 255, .08), transparent 42%);
+  background-position: -150% 0, 0 0, 18px 9px, center;
+  background-size: 240% 100%, 47px 47px, 71px 71px, 100% 100%;
+  mix-blend-mode: screen;
+  opacity: .24;
+  animation: picks-event-header-atmosphere 14s ease-in-out infinite;
+}
+
+@keyframes picks-event-header-push {
+  from {
+    background-position: center, center, center;
+    background-size: cover, 100% auto, cover;
+  }
+
+  to {
+    background-position: center, 50% 49.2%, center;
+    background-size: cover, 102.5% auto, cover;
+  }
+}
+
+@keyframes picks-event-header-atmosphere {
+  0% {
+    background-position: -150% 0, 0 0, 18px 9px, center;
+    opacity: .17;
+  }
+
+  45% {
+    opacity: .26;
+  }
+
+  100% {
+    background-position: 150% 0, 30px -22px, -20px 28px, center;
+    opacity: .19;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .picks-event-hero.has-poster .picks-event-hero__poster {
+    animation: none;
+    will-change: auto;
+  }
+
+  .picks-event-hero.has-poster .picks-event-hero__poster::before {
+    animation: none;
+    opacity: .12;
+  }
+}
