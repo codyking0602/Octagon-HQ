@@ -101,6 +101,7 @@ describe("production Event Setup preview contract", () => {
     expect(() => assertCurrentEventPreview(
       { ...currentPreview, source_url: "/picks" },
       previewNow,
+      { requireCbsSource: true },
     )).toThrow("specific CBS Sports UFC event");
   });
 
@@ -114,8 +115,11 @@ describe("production Event Setup preview contract", () => {
       previewNow,
       { requireCbsSource: false },
     )).not.toThrow();
-    expect(() => assertCurrentEventPreview(legacyPreview, previewNow))
-      .toThrow("specific CBS Sports UFC event");
+    expect(() => assertCurrentEventPreview(
+      legacyPreview,
+      previewNow,
+      { requireCbsSource: true },
+    )).toThrow("specific CBS Sports UFC event");
     expect(liveVerifier).toContain("const requireCbsSource = expectedSha === sourceSha;");
     expect(liveVerifier).toContain("{ requireCbsSource },");
     expect(liveVerifier).not.toContain("EVENT_SETUP_TEST_MMA_URL");
