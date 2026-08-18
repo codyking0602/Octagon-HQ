@@ -339,7 +339,7 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
       <section className="page-heading picks-setup-heading">
         <p className="eyebrow">PRIVATE OWNER TOOL</p>
         <h1>Event Setup</h1>
-        <p>MMA Mania supplies the event details, card sections, and fight order. Nothing becomes live until you publish it.</p>
+        <p>CBS Sports supplies the event details, card sections, and fight order. Nothing becomes live until you publish it.</p>
         <div className="picks-setup-heading__links">
           <Link to="/picks/control">FIGHT NIGHT RESULTS</Link>
           <Link to="/picks">PLAYER PICKS</Link>
@@ -380,7 +380,7 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
             ))}
           </div>
           <label className="picks-setup-source">
-            MMA MANIA CARD URL (OPTIONAL)
+            CBS SPORTS UFC EVENT URL (OPTIONAL)
             <input
               type="url"
               value={sourceUrl}
@@ -389,11 +389,11 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
                 setSourcePreview(null);
               }}
               disabled={Boolean(busyAction)}
-              placeholder="https://www.mmamania.com/..."
+              placeholder="https://www.cbssports.com/ufc/event/..."
               autoCapitalize="none"
               autoCorrect="off"
             />
-            <small>Leave blank for automatic discovery. Once staged, future checks reuse the saved article unless you replace it here.</small>
+            <small>Leave blank for automatic discovery. Once staged, future checks reuse the saved event page unless you replace it here.</small>
           </label>
         </section>
       ) : null}
