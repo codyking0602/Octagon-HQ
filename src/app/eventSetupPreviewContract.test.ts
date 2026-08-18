@@ -12,7 +12,7 @@ const syncSource = readFileSync(
   "utf8",
 );
 const cardParserSource = readFileSync(
-  "supabase/functions/sync-next-ufc-event/mmaManiaCardParser.ts",
+  "supabase/functions/sync-next-ufc-event/cbsSportsEventParser.ts",
   "utf8",
 );
 const liveVerifier = readFileSync(
@@ -47,7 +47,7 @@ const currentPreview = {
   location: "Las Vegas, NV, United States",
   starts_at: "2026-08-08T21:00:00.000Z",
   locks_at: "2026-08-08T21:00:00.000Z",
-  source_url: "https://www.mmamania.com/ufc-fight-cards/123456/latest-ufc-fight-card",
+  source_url: "https://www.cbssports.com/ufc/event/31009998/ufc-fight-night-gamrot-vs-salkilld-august-8-2026/",
   bouts: [
     bout("main-event-gamrot-salkilld", "Mateusz Gamrot", "Quillan Salkilld"),
     bout("main-nurgozhay-lopes", "Diyar Nurgozhay", "Bruno Lopes"),
@@ -101,7 +101,28 @@ describe("production Event Setup preview contract", () => {
     expect(() => assertCurrentEventPreview(
       { ...currentPreview, source_url: "/picks" },
       previewNow,
-    )).toThrow("specific MMA Mania");
+      { requireCbsSource: true },
+    )).toThrow("specific CBS Sports UFC event");
+  });
+
+  it("checks the deployed source contract before merge and requires CBS once the checked-out head is live", () => {
+    const legacyPreview = {
+      ...currentPreview,
+      source_url: "https://www.mmamania.com/ufc-fight-cards/legacy-card",
+    };
+    expect(() => assertCurrentEventPreview(
+      legacyPreview,
+      previewNow,
+      { requireCbsSource: false },
+    )).not.toThrow();
+    expect(() => assertCurrentEventPreview(
+      legacyPreview,
+      previewNow,
+      { requireCbsSource: true },
+    )).toThrow("specific CBS Sports UFC event");
+    expect(liveVerifier).toContain("const requireCbsSource = expectedSha === sourceSha;");
+    expect(liveVerifier).toContain("{ requireCbsSource },");
+    expect(liveVerifier).not.toContain("EVENT_SETUP_TEST_MMA_URL");
   });
 
   it("accepts only a structured fail-closed source rollover", () => {
@@ -125,44 +146,37 @@ describe("production Event Setup preview contract", () => {
 
     expect(() => assertSafeEventSourceRollover({
       code: "UPSTREAM_HTTP_ERROR",
-      stage: "mma-fetch",
+      stage: "cbs-fetch",
       safeDetails: {},
     })).toThrow("Expected a safe article identity rejection");
   });
 
   it("distinguishes a real source rollover from card-shape failure alone", () => {
-    expect(hasSourceIdentityConflict({
-      conflicts: ["implausible-or-unsectioned-card"],
-    })).toBe(false);
-    expect(hasSourceIdentityConflict({
-      conflicts: ["implausible-or-unsectioned-card", "event-date:2026-08-01!=2026-08-08"],
-    })).toBe(true);
-    expect(hasSourceIdentityConflict({
-      conflicts: ["neither-headliner-matches"],
-    })).toBe(true);
+    expect(hasSourceIdentityConflict({ conflicts: ["implausible-or-unsectioned-card"] })).toBe(false);
+    expect(hasSourceIdentityConflict({ conflicts: ["implausible-or-unsectioned-card", "event-date:2026-08-01!=2026-08-08"] })).toBe(true);
+    expect(hasSourceIdentityConflict({ conflicts: ["neither-headliner-matches"] })).toBe(true);
   });
 
-  it("keeps MMA Mania as the sole operational event metadata and card source", () => {
-    expect(syncSource).toContain('const MMA_MANIA_INDEX_URL = "https://www.mmamania.com/ufc-fight-cards";');
-    expect(syncSource).toContain("parseMmaManiaEventMetadata");
-    expect(syncSource).toContain('source: "MMA Mania event + card"');
+  it("keeps CBS Sports as the sole operational event metadata and card source", () => {
+    expect(syncSource).toContain('const CBS_UFC_SCHEDULE_URL = "https://www.cbssports.com/ufc/schedule/";');
+    expect(syncSource).toContain("parseCbsSportsEventPage");
+    expect(syncSource).toContain('source: "CBS Sports UFC event + card"');
     expect(syncSource).not.toMatch(/https?:\/\/(?:www\.)?ufc\.com/i);
+    expect(syncSource).not.toMatch(/https?:\/\/(?:www\.)?mmamania\.com/i);
   });
 
-  it("bounds MMA Mania event discovery and parses each article only once", () => {
-    expect(syncSource).toContain("const MAX_MMA_MANIA_ARTICLE_ATTEMPTS = 6;");
-    expect(syncSource).toContain(".slice(0, MAX_MMA_MANIA_ARTICLE_ATTEMPTS)");
+  it("bounds CBS event discovery and parses each event page only once", () => {
+    expect(syncSource).toContain("const MAX_CBS_EVENT_PAGE_ATTEMPTS = 6;");
+    expect(syncSource).toContain(".slice(0, MAX_CBS_EVENT_PAGE_ATTEMPTS)");
     expect(syncSource).toContain("for (const candidate of discovered)");
     expect(syncSource).not.toContain("Promise.all(discovered.map");
-    expect(syncSource).toContain("parseMmaManiaCard(html, sourceUrl)");
-    expect(cardParserSource.match(/function parseMmaManiaCard/g)).toHaveLength(1);
-    expect(syncSource).toContain("articleText: articleText($)");
-    expect(syncSource).not.toContain("function articleText(html");
+    expect(syncSource).toContain("parseCbsEventCandidate(html, candidate.url, sourceEventKeyOverride)");
+    expect(cardParserSource.match(/function parseCbsSportsCard/g)).toHaveLength(1);
   });
 
   it("preserves typed canonical-source failures and keeps the live verifier red with sanitized details", () => {
     expect(syncSource).toContain("if (error instanceof SyncError) throw error;");
-    expect(syncSource).toContain('"ARTICLE_METADATA_REJECTED"');
+    expect(syncSource).toContain('"CBS_EVENT_REJECTED"');
     expect(liveVerifier).toContain("message=${safeMessage(preview.body)}");
     expect(liveVerifier).toContain("details=${safeDetails(preview.body)}");
     expect(liveVerifier).not.toContain('preview.body?.code === "SYNC_UNEXPECTED_ERROR"');

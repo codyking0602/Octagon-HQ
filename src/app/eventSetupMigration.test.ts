@@ -39,33 +39,34 @@ describe("Phase 2B event setup backend", () => {
     expect(sql).toContain("grant execute on function public.get_pick_event_setup() to authenticated");
   });
 
-  it("uses MMA Mania for event metadata and card structure without a first-six guess", () => {
-    expect(syncFunction).toContain("https://www.mmamania.com/ufc-fight-cards");
-    expect(syncFunction).toContain("parseMmaManiaCard");
-    expect(syncFunction).toContain("parseMmaManiaEventMetadata");
+  it("uses CBS Sports as the sole runtime event and sectioned-card source", () => {
+    expect(syncFunction).toContain("https://www.cbssports.com/ufc/schedule/");
+    expect(syncFunction).toContain("parseCbsSportsEventPage");
     expect(syncFunction).toContain("resolveCardScope");
     expect(syncFunction).toContain("resolveImportedCardScope(name, subtitle, requested)");
-    expect(syncFunction).toContain('"ARTICLE_DISCOVERY_FAILED"');
-    expect(syncFunction).toContain('"ARTICLE_DISCOVERY_REJECTED"');
-    expect(syncFunction).toContain('source: "MMA Mania event + card"');
+    expect(syncFunction).toContain('"CBS_DISCOVERY_FAILED"');
+    expect(syncFunction).toContain('"CBS_DISCOVERY_REJECTED"');
+    expect(syncFunction).toContain('source: "CBS Sports UFC event + card"');
     expect(syncFunction).not.toContain("ufc.com");
-    expect(syncFunction).not.toContain("UFC_EVENT_INDEX_URL");
-    expect(syncFunction).not.toContain("adaptUfcSource");
-    expect(syncFunction).not.toContain("parseOfficialUfcSegmentTimes");
+    expect(syncFunction).not.toContain("mmamania.com");
+    expect(syncFunction).not.toContain("parseMmaManiaCard");
+    expect(syncFunction).not.toContain("parseMmaManiaEventMetadata");
     expect(syncFunction).not.toContain("bouts.slice(0, 6)");
   });
 
-  it("reuses a staged source URL and allows an exact owner-supplied article", () => {
+  it("reuses an exact CBS source and migrates an unchanged legacy saved source by discovery", () => {
     expect(syncFunction).toContain("const savedSourceUrl = persistedSourceUrl(ownerProbe.data);");
-    expect(syncFunction).toContain("const preferredSourceUrl = suppliedSourceUrl || savedSourceUrl;");
-    expect(syncFunction).toContain("fetchExactMmaManiaEvent");
-    expect(syncFunction).toContain('"ARTICLE_SOURCE_REJECTED"');
-    expect(syncFunction).toContain("The supplied source must be a specific MMA Mania fight-card article URL.");
+    expect(syncFunction).toContain("const suppliedCbsSourceUrl = absoluteCbsSportsUfcEventUrl(suppliedSourceUrl);");
+    expect(syncFunction).toContain("const savedCbsSourceUrl = absoluteCbsSportsUfcEventUrl(savedSourceUrl);");
+    expect(syncFunction).toContain("const suppliedMatchesSaved = Boolean");
+    expect(syncFunction).toContain("fetchExactCbsEvent");
+    expect(syncFunction).toContain('"CBS_SOURCE_REJECTED"');
+    expect(syncFunction).toContain("The supplied source must be a specific CBS Sports UFC event URL.");
     expect(cardChanges).toContain('["Card source", current.source_url, event.source_url, "exact"]');
     expect(cardChanges).toContain('["Venue", current.venue, event.venue, "semantic"]');
   });
 
-  it("preserves the published event identity while monitoring its saved MMA Mania source", () => {
+  it("preserves the published event identity while monitoring through the source cutover", () => {
     expect(monitoringFunction).toContain("const sourceEventKey = typeof selectedEvent?.source_event_key === \"string\"");
     expect(monitoringFunction).toContain("...(sourceEventKey ? { source_event_key: sourceEventKey } : {})");
     expect(syncFunction).toContain('const internalSourceEventKey = internalMonitoring && typeof input.source_event_key === "string"');

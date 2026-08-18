@@ -7,14 +7,16 @@ import {
 const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
 const projectId = process.env.SUPABASE_PROJECT_ID;
 const expectedSha = process.env.EXPECTED_SYNC_SOURCE_SHA?.trim() ?? "";
+const sourceSha = process.env.SOURCE_SHA?.trim() ?? "";
 const productionOrigin = process.env.OCTAGON_PRODUCTION_ORIGIN
   ?? "https://octagon.hq-app.workers.dev";
-const configuredArticleUrl = process.env.EVENT_SETUP_TEST_MMA_URL?.trim() ?? "";
+const configuredSourceUrl = process.env.EVENT_SETUP_TEST_CBS_URL?.trim() ?? "";
 
 if (!accessToken || !projectId || !/^[0-9a-f]{40}$/i.test(expectedSha)) {
   throw new Error("Live Event Setup preview verification is not configured.");
 }
 
+const requireCbsSource = expectedSha === sourceSha;
 const supabaseOrigin = `https://${projectId}.supabase.co`;
 
 async function readBody(response) {
@@ -163,7 +165,7 @@ try {
   const draftBefore = (await rpc("get_pick_event_setup", userToken)).body;
   const liveBefore = (await rpc("get_current_pick_event", userToken)).body;
   const previewPayload = { mode: "preview", card_scope: "auto" };
-  if (configuredArticleUrl) previewPayload.source_url = configuredArticleUrl;
+  if (configuredSourceUrl) previewPayload.source_url = configuredSourceUrl;
 
   const preview = await request(
     "Production Event Setup preview",
@@ -175,7 +177,7 @@ try {
         apikey: publishableKey,
         "Content-Type": "application/json",
         Origin: productionOrigin,
-        "x-client-info": "octagon-hq-event-preview-check/5",
+        "x-client-info": "octagon-hq-event-preview-check/6",
       },
       body: JSON.stringify(previewPayload),
     },
@@ -191,7 +193,7 @@ try {
     if (preview.body?.requested_scope !== "auto" || !["main", "full"].includes(preview.body?.effective_scope)) {
       throw new Error(`Preview scope mismatch: ${preview.body?.requested_scope ?? "missing"}/${preview.body?.effective_scope ?? "missing"}.`);
     }
-    if (configuredArticleUrl && preview.body?.source_url !== configuredArticleUrl) {
+    if (configuredSourceUrl && preview.body?.source_url !== configuredSourceUrl) {
       throw new Error(`Preview source mismatch: received ${preview.body?.source_url ?? "missing"}.`);
     }
     if (preview.body?.fight_count !== preview.body?.event_preview?.bouts?.length) {
@@ -200,17 +202,23 @@ try {
     if (!preview.body?.source_hash || !Array.isArray(preview.body?.changes)) {
       throw new Error("Preview response is missing its reviewed source hash or change list.");
     }
-    assertCurrentEventPreview({
-      ...preview.body.event_preview,
-      source_url: preview.body.source_url,
-    });
+    assertCurrentEventPreview(
+      {
+        ...preview.body.event_preview,
+        source_url: preview.body.source_url,
+      },
+      new Date(),
+      { requireCbsSource },
+    );
     assertReportedSourceChanges(
       draftBefore,
       preview.body.event_preview,
       preview.body.changes,
       preview.body.effective_scope,
     );
-    outcome = `returned an independently verified ${preview.body.fight_count}-fight current-source change list`;
+    outcome = requireCbsSource
+      ? `returned an independently verified ${preview.body.fight_count}-fight CBS Sports source change list`
+      : `returned an independently verified ${preview.body.fight_count}-fight change list for the currently deployed pre-merge source`;
   } else {
     if (preview.body?.deployment_sha !== expectedSha) {
       throw new Error(`Rejected preview backend SHA mismatch: expected ${expectedSha}, received ${preview.body?.deployment_sha ?? "missing"}.`);

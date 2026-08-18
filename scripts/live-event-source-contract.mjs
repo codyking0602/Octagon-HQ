@@ -1,10 +1,10 @@
-const [articleUrl] = process.argv.slice(2);
-if (!articleUrl) {
-  console.error("Usage: node scripts/live-event-source-contract.mjs <mma-mania-article-url>");
+const [eventUrl] = process.argv.slice(2);
+if (!eventUrl) {
+  console.error("Usage: node scripts/live-event-source-contract.mjs <cbs-sports-ufc-event-url>");
   process.exit(2);
 }
-if (!/^https:\/\/(?:www\.)?mmamania\.com\//.test(articleUrl)) {
-  console.error("An exact MMA Mania article URL is required.");
+if (!/^https:\/\/(?:www\.)?cbssports\.com\/ufc\/event\/\d+\/[a-z0-9-]+\/?$/i.test(eventUrl)) {
+  console.error("An exact CBS Sports UFC event URL is required.");
   process.exit(2);
 }
 const fetchBounded = async (url) => {
@@ -19,11 +19,12 @@ const fetchBounded = async (url) => {
     url,
     status: response.status,
     bytes: Buffer.byteLength(body),
-    structuredData: (body.match(/application\/ld\+json/g) || []).length,
-    semanticArticles: (body.match(/<article\b/gi) || []).length,
+    mainCardSections: (body.match(/>\s*Main Card\s*</gi) || []).length,
+    prelimSections: (body.match(/>\s*(?:Early\s+)?Prelims?\s*</gi) || []).length,
+    fighterLinks: (body.match(/\/ufc\/fighter\//gi) || []).length,
   };
 };
 // This deliberately performs no authentication and has no database client. It is
 // a source availability/evidence probe; deployed preview verification uses the
 // separate authenticated verifier.
-console.log(JSON.stringify({ mmaMania: await fetchBounded(articleUrl), writes: false }, null, 2));
+console.log(JSON.stringify({ cbsSports: await fetchBounded(eventUrl), writes: false }, null, 2));

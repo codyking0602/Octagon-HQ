@@ -22,7 +22,11 @@ export interface SourceRolloverResponse {
   safeDetails?: unknown;
 }
 
-export function assertCurrentEventPreview(event: PreviewEvent, now?: Date): void;
+export interface PreviewSourceOptions {
+  requireCbsSource?: boolean;
+}
+
+export function assertCurrentEventPreview(event: PreviewEvent, now?: Date, options?: PreviewSourceOptions): void;
 export function assertSafeEventSourceRollover(body: SourceRolloverResponse): void;
 export function expectedSourceChanges(current: PreviewEvent, event: PreviewEvent): string[];
 export function assertReportedSourceChanges(current: PreviewEvent, event: PreviewEvent, reported: string[]): void;

@@ -88,17 +88,18 @@ describe("MMA Mania event metadata", () => {
     })).toThrow("labeled card start times");
   });
 
-  it("locks the runtime to MMA Mania and does not retain UFC.com as a fallback", () => {
+  it("locks the runtime to CBS Sports without retaining MMA Mania or UFC.com as a fallback", () => {
     const syncFunction = readFileSync("supabase/functions/sync-next-ufc-event/index.ts", "utf8");
     const monitoringFunction = readFileSync("supabase/functions/run-pick-monitoring/index.ts", "utf8");
 
-    expect(syncFunction).toContain('const MMA_MANIA_INDEX_URL = "https://www.mmamania.com/ufc-fight-cards";');
-    expect(syncFunction).toContain("parseMmaManiaEventMetadata");
-    expect(syncFunction).toContain('source: "MMA Mania event + card"');
+    expect(syncFunction).toContain('const CBS_UFC_SCHEDULE_URL = "https://www.cbssports.com/ufc/schedule/";');
+    expect(syncFunction).toContain("parseCbsSportsEventPage");
+    expect(syncFunction).toContain('source: "CBS Sports UFC event + card"');
+    expect(syncFunction).not.toMatch(/https?:\/\/(?:www\.)?mmamania\.com/i);
+    expect(syncFunction).not.toContain("parseMmaManiaEventMetadata");
     expect(syncFunction).not.toMatch(/https?:\/\/(?:www\.)?ufc\.com/i);
     expect(syncFunction).not.toContain("UFC_EVENT_INDEX_URL");
     expect(syncFunction).not.toContain("adaptUfcSource");
-    expect(syncFunction).not.toContain("parseOfficialUfcSegmentTimes");
     expect(monitoringFunction).toContain("...(sourceEventKey ? { source_event_key: sourceEventKey } : {})");
   });
 });
