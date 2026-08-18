@@ -18,8 +18,19 @@ import {
   clearBlindResumeSession,
   loadBlindResumeSession,
   saveBlindResumeSession,
+  type BlindResumeRevealCount,
   type StoredBlindResumeResult,
 } from "./blindResumeSession";
+import {
+  BLIND_RESUME_V3_GAME_VERSION,
+  blindResumeV3ChallengeUrl,
+  blindResumeV3FirstRevealCount,
+  blindResumeV3NextRevealCount,
+  blindResumeV3RoundPoints,
+  createBlindResumeV3Card,
+  storedBlindResumeV3Card,
+  type BlindResumeV3Card,
+} from "./blindResumeV3";
 import { GameResultActions } from "./GameResultActions";
 import {
   curatedLineupIdentity,
@@ -32,17 +43,23 @@ import {
 } from "./lineupModel";
 import { rankedPlayFighters } from "./playFighterPool";
 
+type BlindResumeVersion = "v2" | "v3";
+
 interface RoundResult {
   roundIndex: number;
   pair: BlindResumePair;
   pickedId: string;
   winnerId: string;
   correct: boolean;
+  revealedCount?: BlindResumeRevealCount;
+  pointsAwarded?: number;
 }
 
 interface BlindResumeRun {
+  version: BlindResumeVersion;
   roundSet: BlindResumeRoundSet;
   identity: PlayLineupIdentity;
+  v3Card: BlindResumeV3Card | null;
 }
 
 function record(value: ChallengeJson | undefined): { [key: string]: ChallengeJson } | null {
@@ -64,13 +81,22 @@ function roundSetIds(roundSet: BlindResumeRoundSet) {
   return roundSet.pairs.flatMap((pair) => [pair.fighterA.id, pair.fighterB.id]);
 }
 
+function asRevealCount(value: number): BlindResumeRevealCount {
+  if (value === 2 || value === 4 || value === 6 || value === 8) return value;
+  throw new Error(`Unsupported Blind Resume V3 reveal count ${value}.`);
+}
+
+function v3OpeningReveal(card: BlindResumeV3Card) {
+  return asRevealCount(blindResumeV3FirstRevealCount(card));
+}
+
 function casualBlindResumeRun(seed?: string): BlindResumeRun {
   if (seed) {
-    const roundSet = createBlindResumeRounds(seed);
-    const ids = roundSetIds(roundSet);
+    const card = createBlindResumeV3Card(seed);
+    const ids = roundSetIds(card.roundSet);
     const identity = replayLineupIdentity("blind-resume", seed);
     rememberLineup(identity, ids, ids);
-    return { roundSet, identity };
+    return { version: "v3", roundSet: card.roundSet, identity, v3Card: card };
   }
 
   const validIds = new Set(rankedPlayFighters.map((fighter) => fighter.id));
@@ -81,15 +107,36 @@ function casualBlindResumeRun(seed?: string): BlindResumeRun {
     validItemIds: validIds,
     validFighterIds: validIds,
     build: (nextSeed) => {
-      const roundSet = createBlindResumeRounds(nextSeed);
-      const ids = roundSetIds(roundSet);
-      return { value: roundSet, itemIds: ids, fighterIds: ids };
+      const card = createBlindResumeV3Card(nextSeed);
+      const ids = roundSetIds(card.roundSet);
+      return { value: card, itemIds: ids, fighterIds: ids };
     },
   });
-  return { roundSet: selected.value, identity: selected.identity };
+  return {
+    version: "v3",
+    roundSet: selected.value.roundSet,
+    identity: selected.identity,
+    v3Card: selected.value,
+  };
 }
 
-function curatedBlindResumeRun(
+function curatedV3BlindResumeRun(
+  seed: string,
+  card: BlindResumeV3Card,
+  challengeId: string,
+): BlindResumeRun {
+  const ids = roundSetIds(card.roundSet);
+  const identity = curatedLineupIdentity("blind-resume", challengeId, ids);
+  rememberLineup(identity, ids, ids);
+  return {
+    version: "v3",
+    roundSet: { ...card.roundSet, seed },
+    identity,
+    v3Card: { ...card, seed, roundSet: { ...card.roundSet, seed } },
+  };
+}
+
+function curatedV2BlindResumeRun(
   seed: string,
   roundSet: BlindResumeRoundSet,
   challengeId: string,
@@ -97,7 +144,7 @@ function curatedBlindResumeRun(
   const ids = roundSetIds(roundSet);
   const identity = curatedLineupIdentity("blind-resume", challengeId, ids);
   rememberLineup(identity, ids, ids);
-  return { roundSet: { ...roundSet, seed }, identity };
+  return { version: "v2", roundSet: { ...roundSet, seed }, identity, v3Card: null };
 }
 
 function rankCopy(pair: BlindResumePair, fighterId: string) {
@@ -122,6 +169,8 @@ function storeResult(result: RoundResult): StoredBlindResumeResult {
     pickedId: result.pickedId,
     winnerId: result.winnerId,
     correct: result.correct,
+    revealedCount: result.revealedCount,
+    pointsAwarded: result.pointsAwarded,
   };
 }
 
@@ -142,21 +191,38 @@ export default function BlindResumePage() {
   const profileSetup = record(profileMatch.challenge?.setup);
   const profileSeed = typeof profileSetup?.seed === "string" ? profileSetup.seed : "";
   const profileRoundSet = storedRoundSet(profileSetup?.roundSet);
+  const profileV3Card = storedBlindResumeV3Card(profileSetup?.v3Card);
+  const profileIsV3 = profileMatch.challenge?.gameVersion === BLIND_RESUME_V3_GAME_VERSION;
   const challengeSeed = searchParams.get("challenge") || "";
+  const directChallengeIsV3 = searchParams.get("v") === "3";
   const runSeed = searchParams.get("run") || "";
   const [run, setRun] = useState<BlindResumeRun>(() => {
     if (profileSeed) {
+      if (profileIsV3) {
+        const card = profileV3Card ?? createBlindResumeV3Card(profileSeed);
+        return curatedV3BlindResumeRun(profileSeed, card, profileMatch.challenge?.code ?? `profile:${profileSeed}`);
+      }
       const roundSet = profileRoundSet ?? createBlindResumeRounds(profileSeed);
-      return curatedBlindResumeRun(profileSeed, roundSet, profileMatch.challenge?.code ?? `profile:${profileSeed}`);
+      return curatedV2BlindResumeRun(profileSeed, roundSet, profileMatch.challenge?.code ?? `profile:${profileSeed}`);
     }
     if (challengeSeed) {
-      const roundSet = createBlindResumeRounds(challengeSeed);
-      return curatedBlindResumeRun(challengeSeed, roundSet, `shared:${challengeSeed}`);
+      if (directChallengeIsV3) {
+        return curatedV3BlindResumeRun(
+          challengeSeed,
+          createBlindResumeV3Card(challengeSeed),
+          `shared:v3:${challengeSeed}`,
+        );
+      }
+      return curatedV2BlindResumeRun(
+        challengeSeed,
+        createBlindResumeRounds(challengeSeed),
+        `shared:${challengeSeed}`,
+      );
     }
     return casualBlindResumeRun(runSeed || undefined);
   });
   const roundSet = run.roundSet;
-  const sessionId = run.identity.challengeId;
+  const sessionId = run.version === "v3" ? `v3:${run.identity.challengeId}` : run.identity.challengeId;
   const returnPath = run.identity.type === "replayable"
     ? `/play/blind-resume?run=${encodeURIComponent(roundSet.seed)}`
     : `/play/blind-resume?${searchParams.toString()}`;
@@ -169,13 +235,21 @@ export default function BlindResumePage() {
     () => restored?.currentResult ? hydrateResult(restored.currentResult, roundSet.pairs) : null,
     [restored, roundSet.pairs],
   );
+  const openingReveal = run.v3Card ? v3OpeningReveal(run.v3Card) : 8;
 
   const [roundIndex, setRoundIndex] = useState(restored?.roundIndex ?? 0);
   const [results, setResults] = useState<RoundResult[]>(restoredResults);
   const [currentResult, setCurrentResult] = useState<RoundResult | null>(restoredCurrent);
+  const [revealedCount, setRevealedCount] = useState<BlindResumeRevealCount>(
+    run.version === "v3" ? restored?.revealedCount ?? openingReveal : 8,
+  );
   const [challengeStatus, setChallengeStatus] = useState("");
   const complete = results.length === BLIND_RESUME_ROUNDS;
-  const score = results.filter((result) => result.correct).length;
+  const correctCount = results.filter((result) => result.correct).length;
+  const lossCount = results.length - correctCount;
+  const pointsScore = run.version === "v3"
+    ? results.reduce((sum, result) => sum + (result.pointsAwarded ?? 0), 0)
+    : correctCount;
   const pair = roundSet.pairs[roundIndex];
 
   useEffect(() => {
@@ -190,27 +264,38 @@ export default function BlindResumePage() {
       roundIndex,
       results: results.map(storeResult),
       currentResult: currentResult ? storeResult(currentResult) : null,
+      revealedCount: run.version === "v3" ? revealedCount : undefined,
     });
-  }, [currentResult, results, roundIndex, sessionId]);
+  }, [currentResult, results, revealedCount, roundIndex, run.version, sessionId]);
 
   useEffect(() => {
     if (!complete) return;
-    const result = { score, picks: results.map(storeResult) };
+    const result = run.version === "v3"
+      ? {
+          version: BLIND_RESUME_V3_GAME_VERSION,
+          score: pointsScore,
+          record: { wins: correctCount, losses: lossCount },
+          picks: results.map(storeResult),
+        }
+      : { score: correctCount, picks: results.map(storeResult) };
     recordLineupCompletion(run.identity, result);
     if (profileMatch.isRecipient && profileMatch.challenge?.responderResult === null) {
       profileMatch.submitResult(asJson(result));
     }
-  }, [complete, profileMatch, results, run.identity, score]);
+  }, [complete, correctCount, lossCount, pointsScore, profileMatch, results, run.identity, run.version]);
 
   function pick(fighterId: string) {
     if (currentResult || complete || !pair) return;
     const winner = blindResumeWinner(pair);
+    const correct = fighterId === winner.id;
     setCurrentResult({
       roundIndex,
       pair,
       pickedId: fighterId,
       winnerId: winner.id,
-      correct: fighterId === winner.id,
+      correct,
+      revealedCount: run.version === "v3" ? revealedCount : undefined,
+      pointsAwarded: run.version === "v3" ? blindResumeV3RoundPoints(revealedCount, correct) : undefined,
     });
   }
 
@@ -219,8 +304,17 @@ export default function BlindResumePage() {
     const nextResults = [...results, currentResult];
     setResults(nextResults);
     setCurrentResult(null);
-    if (nextResults.length < BLIND_RESUME_ROUNDS) setRoundIndex((index) => index + 1);
+    if (nextResults.length < BLIND_RESUME_ROUNDS) {
+      setRoundIndex((index) => index + 1);
+      if (run.v3Card) setRevealedCount(v3OpeningReveal(run.v3Card));
+    }
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function revealMore() {
+    if (!run.v3Card || currentResult) return;
+    const next = blindResumeV3NextRevealCount(run.v3Card, revealedCount);
+    if (next !== null) setRevealedCount(asRevealCount(next));
   }
 
   function resetRun(nextRun: BlindResumeRun) {
@@ -229,6 +323,7 @@ export default function BlindResumePage() {
     setRoundIndex(0);
     setResults([]);
     setCurrentResult(null);
+    setRevealedCount(nextRun.v3Card ? v3OpeningReveal(nextRun.v3Card) : 8);
     setChallengeStatus("");
     if (nextRun.identity.type === "replayable") {
       setSearchParams({ run: nextRun.roundSet.seed }, { replace: true });
@@ -243,16 +338,29 @@ export default function BlindResumePage() {
   async function challengeSomeone() {
     if (!complete) return;
     setChallengeStatus("");
+    const recordCopy = `${correctCount}-${lossCount}`;
+    const v3 = run.version === "v3" && run.v3Card;
     const status = await beginChallenge({
       gameId: "blind-resume",
-      gameVersion: "blind-resume-v2",
+      gameVersion: v3 ? BLIND_RESUME_V3_GAME_VERSION : "blind-resume-v2",
       gameTitle: "Blind Resume",
-      summary: "Five hidden UFC resume matchups",
-      setup: asJson({ seed: roundSet.seed, roundSet, rounds: challengeRounds(roundSet) }),
-      creatorResult: asJson({ score, picks: results.map(storeResult) }),
+      summary: v3 ? "Five staged UFC résumé matchups" : "Five hidden UFC resume matchups",
+      setup: asJson(v3
+        ? { seed: roundSet.seed, roundSet, v3Card: run.v3Card, rounds: challengeRounds(roundSet) }
+        : { seed: roundSet.seed, roundSet, rounds: challengeRounds(roundSet) }),
+      creatorResult: asJson(v3
+        ? {
+            version: BLIND_RESUME_V3_GAME_VERSION,
+            score: pointsScore,
+            record: { wins: correctCount, losses: lossCount },
+            picks: results.map(storeResult),
+          }
+        : { score: correctCount, picks: results.map(storeResult) }),
       shareTitle: "Blind Resume Challenge",
-      shareText: `I challenged you to the same five hidden UFC resume matchups. Beat my ${score}/${BLIND_RESUME_ROUNDS}.`,
-      shareUrl: blindResumeChallengeUrl(roundSet.seed),
+      shareText: v3
+        ? `I scored ${pointsScore}/100 with a ${recordCopy} record in Blind Resume. Beat it on the exact same five matchups.`
+        : `I challenged you to the same five hidden UFC resume matchups. Beat my ${correctCount}/${BLIND_RESUME_ROUNDS}.`,
+      shareUrl: v3 ? blindResumeV3ChallengeUrl(roundSet.seed) : blindResumeChallengeUrl(roundSet.seed),
     });
     setChallengeStatus(status);
   }
@@ -262,6 +370,7 @@ export default function BlindResumePage() {
       roundIndex,
       results: results.map(storeResult),
       currentResult: storeResult(result),
+      revealedCount: run.version === "v3" ? revealedCount : undefined,
     });
     const params = new URLSearchParams({
       mode: "compare",
@@ -281,8 +390,11 @@ export default function BlindResumePage() {
         const rightGap = Math.abs(right.pair.fighterA.model.rank - right.pair.fighterB.model.rank);
         return rightGap - leftGap;
       })[0];
+    const missCopy = biggestMiss
+      ? `Biggest miss: ${biggestMiss.pair.fighterA.id === biggestMiss.pickedId ? biggestMiss.pair.fighterA.name : biggestMiss.pair.fighterB.name} over ${biggestMiss.pair.fighterA.id === biggestMiss.winnerId ? biggestMiss.pair.fighterA.name : biggestMiss.pair.fighterB.name}.`
+      : "Perfect card. You matched the model on every close call.";
     return (
-      <div className="page blind-resume-page blind-resume-page--final">
+      <div className="page blind-resume-page blind-resume-page--final" data-version={run.version}>
         {profileMatch.creator ? (
           <section className="challenge-game-banner">
             <span>PROFILE CHALLENGE</span>
@@ -291,13 +403,22 @@ export default function BlindResumePage() {
           </section>
         ) : null}
         <section className="blind-resume-final">
-          <div><p className="eyebrow">FIVE-ROUND RESULTS</p><strong>{score}/{BLIND_RESUME_ROUNDS}</strong><h1>{blindResumeTier(score)}</h1></div>
-          <p>{biggestMiss ? `Biggest miss: ${biggestMiss.pair.fighterA.id === biggestMiss.pickedId ? biggestMiss.pair.fighterA.name : biggestMiss.pair.fighterB.name} over ${biggestMiss.pair.fighterA.id === biggestMiss.winnerId ? biggestMiss.pair.fighterA.name : biggestMiss.pair.fighterB.name}.` : "Perfect card. You matched the model on every close call."}</p>
+          <div>
+            <p className="eyebrow">FIVE-ROUND RESULTS</p>
+            <strong>{run.version === "v3" ? `${pointsScore}/100` : `${correctCount}/${BLIND_RESUME_ROUNDS}`}</strong>
+            <h1>{blindResumeTier(correctCount)}</h1>
+          </div>
+          <p>{run.version === "v3" ? `${correctCount}-${lossCount} record · ${pointsScore} points. ${missCopy}` : missCopy}</p>
         </section>
         <section className="blind-resume-recap" aria-label="Five-round Blind Resume recap">
           {results.map((result, index) => (
             <article className="blind-resume-recap__round" key={result.pair.id}>
-              <header><span>R{index + 1}</span><b className={result.correct ? "is-correct" : "is-miss"}>{result.correct ? "CORRECT" : "MISS"}</b></header>
+              <header>
+                <span>R{index + 1}</span>
+                <b className={result.correct ? "is-correct" : "is-miss"}>
+                  {result.correct ? "CORRECT" : "MISS"}{run.version === "v3" ? ` · +${result.pointsAwarded ?? 0}` : ""}
+                </b>
+              </header>
               <div>
                 {[result.pair.fighterA, result.pair.fighterB].map((fighter) => (
                   <section className={fighter.id === result.winnerId ? "is-winner" : ""} key={fighter.id}>
@@ -321,12 +442,14 @@ export default function BlindResumePage() {
     );
   }
 
-  const stats = pair ? blindResumeStats(pair) : [];
+  const stats = run.version === "v3"
+    ? run.v3Card?.statsByRound[roundIndex] ?? []
+    : pair ? blindResumeStats(pair) : [];
   if (currentResult) {
     const winner = currentResult.pair.fighterA.id === currentResult.winnerId ? currentResult.pair.fighterA : currentResult.pair.fighterB;
     const loser = currentResult.pair.fighterA.id === currentResult.winnerId ? currentResult.pair.fighterB : currentResult.pair.fighterA;
     return (
-      <div className="page blind-resume-page">
+      <div className="page blind-resume-page" data-version={run.version}>
         {profileMatch.creator ? (
           <section className="challenge-game-banner"><span>PROFILE CHALLENGE</span><strong>{profileMatch.creator.displayName} sent this five-round card.</strong><small>Your picks remain hidden until the card is complete.</small></section>
         ) : null}
@@ -334,6 +457,7 @@ export default function BlindResumePage() {
           <p className="eyebrow">{currentResult.correct ? "YOU PICKED THE MODEL WINNER" : "THE MODEL DISAGREES"}</p>
           <h1>{winner.name} ranks higher</h1>
           <p>{winner.name} is #{winner.model.rank} on the {winner.gender === "women" ? "women’s" : "men’s"} UFC board. {loser.name} is #{loser.model.rank}.</p>
+          {run.version === "v3" ? <strong>+{currentResult.pointsAwarded ?? 0} POINTS</strong> : null}
         </section>
         <section className="blind-resume-reveal-grid">
           {[currentResult.pair.fighterA, currentResult.pair.fighterB].map((fighter, index) => (
@@ -352,25 +476,47 @@ export default function BlindResumePage() {
     );
   }
 
+  const nextReveal = run.v3Card ? blindResumeV3NextRevealCount(run.v3Card, revealedCount) : null;
   return (
-    <div className="page blind-resume-page">
+    <div className="page blind-resume-page" data-version={run.version}>
       {profileMatch.creator ? (
         <section className="challenge-game-banner"><span>PROFILE CHALLENGE</span><strong>{profileMatch.creator.displayName} sent this five-round card.</strong><small>Finish all five to unlock both pick sheets.</small></section>
       ) : null}
       <section className="blind-resume-scoreboard">
         <div><p className="eyebrow">{run.identity.type === "curated" ? "CURATED CHALLENGE" : "REPLAYABLE GAME"}</p><h1>Which UFC career ranks higher?</h1></div>
-        <aside><span>ROUND {roundIndex + 1} OF {BLIND_RESUME_ROUNDS}</span><b>SCORE {score}-{results.length - score}</b></aside>
+        <aside>
+          <span>ROUND {roundIndex + 1} OF {BLIND_RESUME_ROUNDS}</span>
+          <b>{run.version === "v3" ? `${pointsScore} PTS · ${correctCount}-${lossCount}` : `SCORE ${correctCount}-${lossCount}`}</b>
+        </aside>
       </section>
       <section className="blind-resume-card">
         <header><div><span>FIGHTER A</span><strong>?</strong></div><b>RESUME</b><div><span>FIGHTER B</span><strong>?</strong></div></header>
         <div className="blind-resume-stats">
-          {stats.map((stat) => <div key={stat.label}><strong>{stat.valueA}</strong><span>{stat.label}</span><strong>{stat.valueB}</strong></div>)}
+          {stats.map((stat, index) => {
+            const revealed = run.version === "v2" || index < revealedCount;
+            return (
+              <div key={`${stat.label}-${index}`}>
+                <strong>{revealed ? stat.valueA : "•••"}</strong>
+                <span>{stat.label}</span>
+                <strong>{revealed ? stat.valueB : "•••"}</strong>
+              </div>
+            );
+          })}
         </div>
-        <p className="blind-resume-apex-note">Apex rating measures the fighter’s best one-night or short-stretch UFC peak.</p>
+        {run.version === "v3" ? (
+          <p className="blind-resume-apex-note">
+            {revealedCount} OF 8 STATS SHOWN · LOCK NOW: CORRECT +{blindResumeV3RoundPoints(revealedCount, true)} · MISS +{blindResumeV3RoundPoints(revealedCount, false)}
+          </p>
+        ) : (
+          <p className="blind-resume-apex-note">Apex rating measures the fighter’s best one-night or short-stretch UFC peak.</p>
+        )}
         <div className="blind-resume-picks">
           <button type="button" onClick={() => pair && pick(pair.fighterA.id)}>PICK A</button>
           <button type="button" onClick={() => pair && pick(pair.fighterB.id)}>PICK B</button>
         </div>
+        {run.version === "v3" && nextReveal !== null ? (
+          <button className="primary-action" type="button" onClick={revealMore}>REVEAL 2 MORE STATS</button>
+        ) : null}
       </section>
     </div>
   );
