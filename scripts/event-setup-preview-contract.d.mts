@@ -23,7 +23,7 @@ export interface SourceRolloverResponse {
 }
 
 export interface PreviewSourceOptions {
-  requireCbsSource?: boolean;
+  requireUfcSource?: boolean;
 }
 
 export function assertCurrentEventPreview(event: PreviewEvent, now?: Date, options?: PreviewSourceOptions): void;
