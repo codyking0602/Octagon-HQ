@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   advanceOfficialDailyRuntime,
+  blindResumeV3RoundPoints,
   buildOfficialDailySetup,
   initialOfficialDailyPublicState,
   type OfficialDailyGameType,
@@ -58,7 +59,7 @@ function advance(
 }
 
 describe("official Today’s Challenge runtime", () => {
-  it("materializes deterministic immutable setup identities for all five eligible games", () => {
+  it("materializes deterministic immutable setup identities for all five non-Hit-the-Number games", () => {
     for (const game of games) {
       const first = buildOfficialDailySetup(game, day, scheduleVersion);
       const second = buildOfficialDailySetup(game, day, scheduleVersion);
@@ -66,7 +67,11 @@ describe("official Today’s Challenge runtime", () => {
       expect(first.setupKey).toBeTruthy();
       expect(first.contentVersion).toBeTruthy();
       expect(first.scoringVersion).toBe(
-        game === "wavelength" ? "play-official-score-v2" : "play-official-score-v1",
+        game === "wavelength"
+          ? "play-official-score-v2"
+          : game === "blind_resume"
+            ? "play-official-score-v3"
+            : "play-official-score-v1",
       );
       expect(first.publicSetup.runtime_version).toBe("official-daily-runtime-v1");
       expect(record(first.publicSetup.initial_state).complete).toBe(false);
@@ -113,28 +118,111 @@ describe("official Today’s Challenge runtime", () => {
     expect(rows(record(completed.publicState.reveal).clues)).toHaveLength(4);
   });
 
-  it("keeps Blind Resume identities private until each locked pick", () => {
+  it("builds the locked Blind Resume V3 mixed board and reveals only two stat values at first", () => {
     const setup = buildOfficialDailySetup("blind_resume", day, scheduleVersion);
+    expect(setup.contentVersion).toBe("blind-resume-v3");
+    expect(setup.scoringVersion).toBe("play-official-score-v3");
+
     const privateRounds = rows(setup.privateSetupEvidence.rounds);
+    expect(privateRounds).toHaveLength(5);
+    const difficultyCounts = privateRounds.reduce<Record<string, number>>((counts, round) => {
+      const difficulty = String(round.difficulty);
+      counts[difficulty] = (counts[difficulty] ?? 0) + 1;
+      return counts;
+    }, {});
+    expect(difficultyCounts).toEqual({ nightmare: 1, tight: 1, competitive: 2, readable: 1 });
+
+    const redundantOpening = new Set(["UFC title-fight wins", "Top-5 wins"]);
+    for (const round of privateRounds) {
+      const privateStats = rows(round.stats);
+      expect(privateStats).toHaveLength(8);
+      const firstTwo = privateStats.slice(0, 2).map((stat) => String(stat.label));
+      expect(firstTwo.every((label) => redundantOpening.has(label))).toBe(false);
+    }
+
+    const initialState = record(setup.publicSetup.initial_state);
+    const currentRound = record(initialState.current_round);
+    const visibleStats = rows(currentRound.stats);
+    expect(currentRound.revealed_count).toBe(2);
+    expect(visibleStats).toHaveLength(8);
+    visibleStats.forEach((stat, index) => {
+      expect(stat.revealed).toBe(index < 2);
+      if (index >= 2) {
+        expect(stat.value_a).toBeNull();
+        expect(stat.value_b).toBeNull();
+      }
+    });
+
     const initialJson = JSON.stringify(setup.publicSetup);
     for (const round of privateRounds) {
       expect(initialJson).not.toContain(String(round.fighter_a_id));
       expect(initialJson).not.toContain(String(round.fighter_b_id));
     }
+  });
 
+  it("locks Blind Resume V3 scoring economics exactly", () => {
+    expect([2, 4, 6, 8].map((count) => blindResumeV3RoundPoints(count, true))).toEqual([20, 19, 18, 17]);
+    expect([2, 4, 6, 8].map((count) => blindResumeV3RoundPoints(count, false))).toEqual([2, 4, 6, 8]);
+    expect(() => blindResumeV3RoundPoints(3, true)).toThrow("2, 4, 6, or 8");
+  });
+
+  it("progressively reveals Blind Resume V3 stats and persists the reveal count used for every pick", () => {
+    const setup = buildOfficialDailySetup("blind_resume", day, scheduleVersion);
     let runtime = contextFor("blind_resume", setup);
-    for (let index = 0; index < 5; index += 1) {
-      const next = advance(runtime, { choice: index % 2 === 0 ? "A" : "B" });
-      runtime = next.context;
-      expect(rows(next.result.publicState.results)).toHaveLength(index + 1);
-      if (index < 4) {
-        expect(next.result.complete).toBe(false);
-        expect(record(next.result.publicState.current_round).round_index).toBe(index + 1);
+    const revealCounts = [8, 4, 6, 8, 2];
+
+    for (let roundIndex = 0; roundIndex < revealCounts.length; roundIndex += 1) {
+      const desiredCount = revealCounts[roundIndex]!;
+      while (Number(record(runtime.publicState.current_round).revealed_count) < desiredCount) {
+        const revealed = advance(runtime, { reveal: true });
+        runtime = revealed.context;
+        expect(revealed.result.complete).toBe(false);
+        expect(rows(revealed.result.publicState.results)).toHaveLength(roundIndex);
+      }
+
+      expect(record(runtime.publicState.current_round).revealed_count).toBe(desiredCount);
+      const picked = advance(runtime, { choice: roundIndex % 2 === 0 ? "A" : "B" });
+      runtime = picked.context;
+      expect(rows(picked.result.publicState.results)).toHaveLength(roundIndex + 1);
+      expect(record(rows(picked.result.publicState.results)[roundIndex]).revealed_count).toBe(desiredCount);
+      if (roundIndex < 4) {
+        expect(picked.result.complete).toBe(false);
+        expect(record(picked.result.publicState.current_round).round_index).toBe(roundIndex + 1);
+        expect(record(picked.result.publicState.current_round).revealed_count).toBe(2);
       }
     }
+
     const finalSubmission = record(runtime.submissionState.final_submission);
-    expect(finalSubmission.choices).toHaveLength(5);
+    const answers = rows(finalSubmission.answers);
+    expect(answers).toHaveLength(5);
+    expect(answers.map((answer) => answer.revealed_count)).toEqual(revealCounts);
     expect(runtime.publicState.complete).toBe(true);
+  });
+
+  it("keeps the legacy Blind Resume V2 advance path available for already-published setup identities", () => {
+    const v3 = buildOfficialDailySetup("blind_resume", day, scheduleVersion);
+    const sourceRound = rows(v3.privateSetupEvidence.rounds)[0]!;
+    const legacyContext: OfficialDailyRuntimeContext = {
+      gameType: "blind_resume",
+      setupKey: "blind-resume-v2:legacy-test:2026-08-05",
+      publicSetup: {},
+      revealSetup: {},
+      privateSetupEvidence: {
+        rounds: [{
+          fighter_a_id: sourceRound.fighter_a_id,
+          fighter_b_id: sourceRound.fighter_b_id,
+          winner_id: sourceRound.winner_id,
+          hidden_round: { round_index: 0, round_number: 1, stats: [] },
+        }],
+      },
+      privateGradingEvidence: {},
+      submissionState: {},
+      publicState: { results: [] },
+    };
+    const completed = advanceOfficialDailyRuntime(legacyContext, { choice: "A" });
+    expect(completed.complete).toBe(true);
+    expect(record(completed.finalSubmission).choices).toHaveLength(1);
+    expect(rows(completed.publicState.results)).toHaveLength(1);
   });
 
   it("reveals Blind Rank fighters one at a time and locks every slot", () => {

@@ -1,4 +1,5 @@
 import { createRoot } from "react-dom/client";
+import { OfficialBlindResumeV3DailyView } from "../../src/features/play/OfficialBlindResumeV3DailyView";
 import { OfficialTodayChallengeView } from "../../src/features/play/OfficialTodayChallengePage";
 import type { DailyGameType } from "../../src/features/play/todaysChallengeAdapters";
 import type { TodayChallengeProjection } from "../../src/features/play/todayChallengeRepository";
@@ -26,6 +27,7 @@ function projection(
   gameType: DailyGameType,
   publicSetup: Record<string, unknown>,
   publicState: Record<string, unknown>,
+  overrides: Partial<TodayChallengeProjection> = {},
 ): TodayChallengeProjection {
   return {
     available: true,
@@ -43,6 +45,7 @@ function projection(
     revealSetup: null,
     officialAttempt: null,
     deploymentSha: "phone-proof",
+    ...overrides,
   };
 }
 
@@ -79,24 +82,39 @@ const fixtures: Record<DailyGameType, TodayChallengeProjection> = {
   ),
   blind_resume: projection(
     "blind_resume",
-    { round_count: 5 },
+    {
+      round_count: 5,
+      reveal_counts: [2, 4, 6, 8],
+      correct_points: [20, 19, 18, 17],
+      miss_points: [2, 4, 6, 8],
+    },
     {
       complete: false,
       round_index: 1,
       results: [],
       current_round: {
+        round_index: 1,
         round_number: 2,
+        revealed_count: 2,
+        correct_points: 20,
+        miss_points: 2,
         stats: [
-          { label: "UFC TITLE-FIGHT WINS", value_a: "1", value_b: "2" },
-          { label: "TOP-5 WINS", value_a: "4", value_b: "3" },
-          { label: "PRIME UFC RECORD", value_a: "11-0-1", value_b: "9-2" },
-          { label: "MAIN UFC ERA", value_a: "Tournament Era", value_b: "New Blood Era" },
-          { label: "APEX RATING", value_a: "94", value_b: "93" },
-          { label: "ROUNDS WON", value_a: "95.8%", value_b: "72.2%" },
-          { label: "FINISH RATE", value_a: "100%", value_b: "66.7%" },
-          { label: "ACTIVE ELITE YEARS", value_a: "1.4", value_b: "4.1" },
+          { label: "PRIME UFC RECORD", revealed: true, value_a: "11-0-1", value_b: "9-2" },
+          { label: "FINISH RATE", revealed: true, value_a: "100%", value_b: "66.7%" },
+          { label: "UFC TITLE-FIGHT WINS", revealed: false, value_a: null, value_b: null },
+          { label: "TOP-5 WINS", revealed: false, value_a: null, value_b: null },
+          { label: "MAIN UFC ERA", revealed: false, value_a: null, value_b: null },
+          { label: "APEX RATING", revealed: false, value_a: null, value_b: null },
+          { label: "ROUNDS WON", revealed: false, value_a: null, value_b: null },
+          { label: "ACTIVE ELITE YEARS", revealed: false, value_a: null, value_b: null },
         ],
       },
+    },
+    {
+      scheduleVersion: "play-rotation-v3",
+      setupKey: "blind-resume-v3:play-rotation-v3:phone-proof",
+      contentVersion: "blind-resume-v3",
+      scoringVersion: "play-official-score-v3",
     },
   ),
   blind_rank_5: projection(
@@ -125,12 +143,22 @@ const fixtures: Record<DailyGameType, TodayChallengeProjection> = {
 
 const requested = new URLSearchParams(window.location.search).get("game") as DailyGameType | null;
 const gameType = requested && requested in fixtures ? requested : "find_leader";
+const fixture = fixtures[gameType];
 
 createRoot(document.getElementById("root")!).render(
-  <OfficialTodayChallengeView
-    projection={fixtures[gameType]}
-    busy={false}
-    onAdvance={() => undefined}
-    onNavigate={() => undefined}
-  />,
+  gameType === "blind_resume" ? (
+    <OfficialBlindResumeV3DailyView
+      projection={fixture}
+      busy={false}
+      onAdvance={() => undefined}
+      onNavigate={() => undefined}
+    />
+  ) : (
+    <OfficialTodayChallengeView
+      projection={fixture}
+      busy={false}
+      onAdvance={() => undefined}
+      onNavigate={() => undefined}
+    />
+  ),
 );

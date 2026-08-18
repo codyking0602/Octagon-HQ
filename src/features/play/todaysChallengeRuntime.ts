@@ -3,6 +3,8 @@ import {
   blindResumeStats,
   blindResumeWinner,
   createBlindResumeRounds,
+  type BlindResumePair,
+  type BlindResumeStat,
 } from "./blindResumeEngine";
 import {
   blindRankPacks,
@@ -50,13 +52,16 @@ export type OfficialDailyGameType =
 export const OFFICIAL_DAILY_RUNTIME_VERSION = "official-daily-runtime-v1";
 export const OFFICIAL_DAILY_SCORING_VERSION = OFFICIAL_SCORE_CONTRACT_VERSION;
 export const WAVELENGTH_OFFICIAL_DAILY_SCORING_VERSION = WAVELENGTH_OFFICIAL_SCORE_CONTRACT_VERSION;
+export const BLIND_RESUME_V3_CONTENT_VERSION = "blind-resume-v3";
+export const BLIND_RESUME_V3_OFFICIAL_DAILY_SCORING_VERSION = "play-official-score-v3";
 
 export interface OfficialDailySetupPublication {
   setupKey: string;
   contentVersion: string;
   scoringVersion:
     | typeof OFFICIAL_DAILY_SCORING_VERSION
-    | typeof WAVELENGTH_OFFICIAL_DAILY_SCORING_VERSION;
+    | typeof WAVELENGTH_OFFICIAL_DAILY_SCORING_VERSION
+    | typeof BLIND_RESUME_V3_OFFICIAL_DAILY_SCORING_VERSION;
   publicSetup: Record<string, unknown>;
   revealSetup: Record<string, unknown>;
   privateSetupEvidence: Record<string, unknown>;
@@ -82,6 +87,11 @@ export interface OfficialDailyAdvanceResult {
 }
 
 type JsonRecord = Record<string, unknown>;
+type BlindResumeDifficulty = "readable" | "competitive" | "tight" | "nightmare";
+
+const BLIND_RESUME_V3_REVEAL_COUNTS = [2, 4, 6, 8] as const;
+const BLIND_RESUME_V3_CORRECT_POINTS = [20, 19, 18, 17] as const;
+const BLIND_RESUME_V3_MISS_POINTS = [2, 4, 6, 8] as const;
 
 function asRecord(value: unknown): JsonRecord {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
@@ -239,7 +249,7 @@ function buildWavelengthSetup(day: string, scheduleVersion: string): OfficialDai
   };
 }
 
-function hiddenResumeRound(roundIndex: number, stats: ReturnType<typeof blindResumeStats>) {
+function hiddenResumeRoundV2(roundIndex: number, stats: ReturnType<typeof blindResumeStats>) {
   return {
     round_index: roundIndex,
     round_number: roundIndex + 1,
@@ -253,16 +263,80 @@ function hiddenResumeRound(roundIndex: number, stats: ReturnType<typeof blindRes
   };
 }
 
+function blindResumeV3Stage(revealedCount: number) {
+  const stage = BLIND_RESUME_V3_REVEAL_COUNTS.indexOf(revealedCount as 2 | 4 | 6 | 8);
+  if (stage < 0) throw new Error("Blind Resume V3 reveal count must be 2, 4, 6, or 8.");
+  return stage;
+}
+
+export function blindResumeV3RoundPoints(revealedCount: number, correct: boolean) {
+  const stage = blindResumeV3Stage(revealedCount);
+  return correct ? BLIND_RESUME_V3_CORRECT_POINTS[stage]! : BLIND_RESUME_V3_MISS_POINTS[stage]!;
+}
+
+function shuffleBlindResumeStats(stats: BlindResumeStat[], seed: string, pairId: string) {
+  const rows = [...stats];
+  const random = seededLineupRandom(OFFICIAL_DAILY_RUNTIME_VERSION, BLIND_RESUME_V3_CONTENT_VERSION, seed, pairId, "stats");
+  for (let index = rows.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(random() * (index + 1));
+    [rows[index], rows[swapIndex]] = [rows[swapIndex]!, rows[index]!];
+  }
+  const redundantOpening = new Set(["UFC title-fight wins", "Top-5 wins"]);
+  if (rows.length >= 3 && redundantOpening.has(rows[0]!.label) && redundantOpening.has(rows[1]!.label)) {
+    const replacementIndex = rows.findIndex((row, index) => index >= 2 && !redundantOpening.has(row.label));
+    if (replacementIndex >= 2) [rows[1], rows[replacementIndex]] = [rows[replacementIndex]!, rows[1]!];
+  }
+  return rows;
+}
+
+function blindResumeDifficultyMap(pairs: readonly BlindResumePair[]) {
+  const sorted = [...pairs].sort((left, right) => left.scoreGap - right.scoreGap || left.id.localeCompare(right.id));
+  const difficulty = new Map<string, BlindResumeDifficulty>();
+  sorted.forEach((pair, index) => {
+    difficulty.set(
+      pair.id,
+      index === 0 ? "nightmare" : index === 1 ? "tight" : index === sorted.length - 1 ? "readable" : "competitive",
+    );
+  });
+  return difficulty;
+}
+
+function visibleBlindResumeV3Round(round: JsonRecord, revealedCount: number) {
+  const stage = blindResumeV3Stage(revealedCount);
+  const stats = recordArray(round.stats, "Blind Resume V3 stats");
+  return {
+    round_index: integer(round.round_index, "Blind Resume V3 round index", 0, BLIND_RESUME_ROUNDS - 1),
+    round_number: integer(round.round_index, "Blind Resume V3 round index", 0, BLIND_RESUME_ROUNDS - 1) + 1,
+    fighter_a_label: "FIGHTER A",
+    fighter_b_label: "FIGHTER B",
+    revealed_count: revealedCount,
+    correct_points: BLIND_RESUME_V3_CORRECT_POINTS[stage],
+    miss_points: BLIND_RESUME_V3_MISS_POINTS[stage],
+    stats: stats.map((stat, index) => ({
+      label: String(stat.label ?? "STAT"),
+      revealed: index < revealedCount,
+      value_a: index < revealedCount ? String(stat.value_a ?? "") : null,
+      value_b: index < revealedCount ? String(stat.value_b ?? "") : null,
+    })),
+  };
+}
+
 function buildBlindResumeSetup(day: string, scheduleVersion: string): OfficialDailySetupPublication {
-  const seed = `${OFFICIAL_DAILY_RUNTIME_VERSION}|blind-resume|${scheduleVersion}|${day}`;
+  const seed = `${OFFICIAL_DAILY_RUNTIME_VERSION}|${BLIND_RESUME_V3_CONTENT_VERSION}|${scheduleVersion}|${day}`;
   const roundSet = createBlindResumeRounds(seed);
+  const difficulties = blindResumeDifficultyMap(roundSet.pairs);
   const privateRounds = roundSet.pairs.map((pair, roundIndex) => ({
     round_index: roundIndex,
     pair_id: pair.id,
+    difficulty: difficulties.get(pair.id) ?? "competitive",
     fighter_a_id: pair.fighterA.id,
     fighter_b_id: pair.fighterB.id,
     winner_id: blindResumeWinner(pair).id,
-    hidden_round: hiddenResumeRound(roundIndex, blindResumeStats(pair)),
+    stats: shuffleBlindResumeStats(blindResumeStats(pair), seed, pair.id).map((stat) => ({
+      label: stat.label,
+      value_a: stat.valueA,
+      value_b: stat.valueB,
+    })),
   }));
   const revealRounds = privateRounds.map((round) => ({
     round_index: round.round_index,
@@ -272,17 +346,20 @@ function buildBlindResumeSetup(day: string, scheduleVersion: string): OfficialDa
   }));
 
   return {
-    setupKey: `blind-resume-v2:${scheduleVersion}:${day}`,
-    contentVersion: "blind-resume-v2",
-    scoringVersion: OFFICIAL_DAILY_SCORING_VERSION,
+    setupKey: `${BLIND_RESUME_V3_CONTENT_VERSION}:${scheduleVersion}:${day}`,
+    contentVersion: BLIND_RESUME_V3_CONTENT_VERSION,
+    scoringVersion: BLIND_RESUME_V3_OFFICIAL_DAILY_SCORING_VERSION,
     publicSetup: {
       runtime_version: OFFICIAL_DAILY_RUNTIME_VERSION,
       round_count: BLIND_RESUME_ROUNDS,
+      reveal_counts: [...BLIND_RESUME_V3_REVEAL_COUNTS],
+      correct_points: [...BLIND_RESUME_V3_CORRECT_POINTS],
+      miss_points: [...BLIND_RESUME_V3_MISS_POINTS],
       initial_state: {
         complete: false,
         round_index: 0,
         results: [],
-        current_round: privateRounds[0]?.hidden_round ?? null,
+        current_round: privateRounds[0] ? visibleBlindResumeV3Round(privateRounds[0], 2) : null,
       },
     },
     revealSetup: { rounds: revealRounds },
@@ -502,7 +579,7 @@ function advanceWavelength(context: OfficialDailyRuntimeContext, action: JsonRec
   };
 }
 
-function advanceBlindResume(context: OfficialDailyRuntimeContext, action: JsonRecord): OfficialDailyAdvanceResult {
+function advanceBlindResumeV2(context: OfficialDailyRuntimeContext, action: JsonRecord): OfficialDailyAdvanceResult {
   const rounds = recordArray(context.privateSetupEvidence.rounds, "Blind Resume rounds");
   const priorChoices = stringArray(context.submissionState.choices ?? [], "Blind Resume choices");
   if (priorChoices.length >= rounds.length) throw new Error("The official Blind Resume card is already complete.");
@@ -541,6 +618,75 @@ function advanceBlindResume(context: OfficialDailyRuntimeContext, action: JsonRe
     complete,
     finalSubmission,
   };
+}
+
+function advanceBlindResumeV3(context: OfficialDailyRuntimeContext, action: JsonRecord): OfficialDailyAdvanceResult {
+  const rounds = recordArray(context.privateSetupEvidence.rounds, "Blind Resume V3 rounds");
+  const priorAnswers = recordArray(context.submissionState.answers ?? [], "Blind Resume V3 answers");
+  if (priorAnswers.length >= rounds.length) throw new Error("The official Blind Resume card is already complete.");
+
+  const round = rounds[priorAnswers.length]!;
+  const publicRound = asRecord(context.publicState.current_round);
+  const revealedCount = integer(publicRound.revealed_count, "Blind Resume V3 reveal count", 2, 8);
+  blindResumeV3Stage(revealedCount);
+  const priorResults = recordArray(context.publicState.results ?? [], "Blind Resume V3 public results");
+
+  if (action.reveal === true) {
+    if (revealedCount >= 8) throw new Error("All Blind Resume stats are already revealed.");
+    const nextRevealedCount = revealedCount + 2;
+    return {
+      submissionState: { answers: priorAnswers, final_submission: null },
+      publicState: {
+        complete: false,
+        round_index: priorAnswers.length,
+        results: priorResults,
+        current_round: visibleBlindResumeV3Round(round, nextRevealedCount),
+      },
+      complete: false,
+      finalSubmission: null,
+    };
+  }
+
+  const side = String(action.choice ?? "").toUpperCase();
+  if (side !== "A" && side !== "B") throw new Error("Blind Resume choice must be A or B.");
+  const fighterAId = String(round.fighter_a_id ?? "");
+  const fighterBId = String(round.fighter_b_id ?? "");
+  const winnerId = String(round.winner_id ?? "");
+  const pickedId = side === "A" ? fighterAId : fighterBId;
+  const correct = pickedId === winnerId;
+  const pointsAwarded = blindResumeV3RoundPoints(revealedCount, correct);
+  const answers = [...priorAnswers, { choice: pickedId, revealed_count: revealedCount }];
+  const results = [...priorResults, {
+    round_index: priorAnswers.length,
+    picked_side: side,
+    picked_id: pickedId,
+    winner_id: winnerId,
+    correct,
+    revealed_count: revealedCount,
+    points_awarded: pointsAwarded,
+    fighter_a: fighterPresentation(fighterFor(fighterAId)),
+    fighter_b: fighterPresentation(fighterFor(fighterBId)),
+  }];
+  const complete = answers.length === rounds.length;
+  const finalSubmission = complete ? { answers } : null;
+
+  return {
+    submissionState: { answers, final_submission: finalSubmission },
+    publicState: {
+      complete,
+      round_index: complete ? rounds.length : answers.length,
+      results,
+      current_round: complete ? null : visibleBlindResumeV3Round(rounds[answers.length]!, 2),
+    },
+    complete,
+    finalSubmission,
+  };
+}
+
+function advanceBlindResume(context: OfficialDailyRuntimeContext, action: JsonRecord) {
+  return context.setupKey.startsWith(`${BLIND_RESUME_V3_CONTENT_VERSION}:`)
+    ? advanceBlindResumeV3(context, action)
+    : advanceBlindResumeV2(context, action);
 }
 
 function advanceBlindRank(context: OfficialDailyRuntimeContext, action: JsonRecord): OfficialDailyAdvanceResult {

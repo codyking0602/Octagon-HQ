@@ -540,6 +540,7 @@ jobs:
         shell: bash
         env:
           EXPECTED_DEPLOYMENT_SHA: ${{ steps.live_frontend.outputs.sha }}
+          EXPECTED_SYNC_SOURCE_SHA: ${{ steps.live_frontend.outputs.current_main_sha }}
           EVENT_SETUP_SCREENSHOT_PATH: ${{ runner.temp }}/event-setup-preview.png
         run: |
           set +e
