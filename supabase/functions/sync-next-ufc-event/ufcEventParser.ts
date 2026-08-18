@@ -77,7 +77,8 @@ function visibleText(value: string) {
 }
 
 function attrValue(attrs: string, name: string) {
-  return decodeHtml(attrs.match(new RegExp(`\\b${name}\\s*=\\s*["']([^"']*)["']`, "i"))?.[1] ?? "");
+  const match = attrs.match(new RegExp(`\\b${name}\\s*=\\s*(["'])([\\s\\S]*?)\\1`, "i"));
+  return decodeHtml(match?.[2] ?? "");
 }
 
 function metaContent(html: string, key: string) {
