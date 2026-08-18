@@ -1,7 +1,0 @@
-cloudflare_browser_status=401
-response_bytes=104
-current_main_event=missing
-fight_card=missing
-card_sections=missing
-response_preview:
-{"result":null,"success":false,"errors":[{"code":10000,"message":"Authentication error"}],"messages":[]}
