@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-const picksPolish = readFileSync(new URL("../../styles/picks-polish.css", import.meta.url), "utf8");
+const picksPolish = readFileSync("src/styles/picks-polish.css", "utf8");
 
 describe("Picks matchup game board styling", () => {
   it("keeps distinct red and blue corner selection treatments with a central VS board", () => {
