@@ -19,6 +19,7 @@ export interface SpotlightStatsFighter {
 }
 
 type FightStyle = "striking" | "wrestling" | "submission" | "balanced";
+type Edge = { score: number; text: string };
 
 function finite(value: number | null): value is number {
   return value !== null && Number.isFinite(value);
@@ -41,8 +42,45 @@ function ageAt(dob: string | null, eventStartsAt: string) {
   return age >= 18 && age <= 60 ? String(age) : "--";
 }
 
+function strengthEdges(fighter: SpotlightStatsFighter) {
+  const edges: Edge[] = [];
+
+  if (finite(fighter.slpm)) {
+    edges.push({
+      score: fighter.slpm / 6,
+      text: fighter.slpm >= 4.5 ? "High-volume striking" : "Striking volume",
+    });
+  }
+  if (finite(fighter.strikingAccuracy)) {
+    edges.push({ score: fighter.strikingAccuracy / 100, text: "Efficient striking" });
+  }
+  if (finite(fighter.strikingDefense)) {
+    edges.push({ score: fighter.strikingDefense / 100, text: "Defensive striking" });
+  }
+  if (finite(fighter.takedownAverage)) {
+    edges.push({
+      score: fighter.takedownAverage / 4,
+      text: fighter.takedownAverage >= 4 ? "Relentless takedown pressure" : "Wrestling pressure",
+    });
+  }
+  if (finite(fighter.takedownAccuracy)) {
+    edges.push({ score: fighter.takedownAccuracy / 100, text: "Efficient takedowns" });
+  }
+  if (finite(fighter.takedownDefense)) {
+    edges.push({ score: fighter.takedownDefense / 100, text: "Takedown resistance" });
+  }
+  if (finite(fighter.submissionAverage)) {
+    edges.push({ score: fighter.submissionAverage / 1.5, text: "Submission threat" });
+  }
+  if (finite(fighter.sapm)) {
+    edges.push({ score: Math.max(0, (5.5 - fighter.sapm) / 5.5), text: "Damage avoidance" });
+  }
+
+  return edges.sort((left, right) => right.score - left.score);
+}
+
 function advantageEdges(fighter: SpotlightStatsFighter, opponent: SpotlightStatsFighter) {
-  const edges: Array<{ score: number; text: string }> = [];
+  const edges: Edge[] = [];
   const fighterReach = reachInches(fighter.reach);
   const opponentReach = reachInches(opponent.reach);
 
@@ -104,42 +142,9 @@ function advantageEdges(fighter: SpotlightStatsFighter, opponent: SpotlightStats
   edges.sort((left, right) => right.score - left.score);
   const selected = edges.slice(0, 3).map((edge) => edge.text);
 
-  const fillers = [
-    finite(fighter.takedownDefense)
-      && fighter.takedownDefense >= 70
-      && (!finite(opponent.takedownDefense) || fighter.takedownDefense >= opponent.takedownDefense)
-      ? "Takedown resistance"
-      : null,
-    finite(fighter.slpm)
-      && fighter.slpm >= 4.5
-      && (!finite(opponent.slpm) || fighter.slpm >= opponent.slpm)
-      ? "High-volume striking"
-      : null,
-    finite(fighter.takedownAverage)
-      && fighter.takedownAverage >= 2
-      && (!finite(opponent.takedownAverage) || fighter.takedownAverage >= opponent.takedownAverage)
-      ? fighter.takedownAverage >= 4 ? "Relentless takedown pressure" : "Wrestling pressure"
-      : null,
-    finite(fighter.submissionAverage)
-      && fighter.submissionAverage >= 0.8
-      && (!finite(opponent.submissionAverage) || fighter.submissionAverage >= opponent.submissionAverage)
-      ? "Submission threat"
-      : null,
-    finite(fighter.strikingAccuracy)
-      && fighter.strikingAccuracy >= 50
-      && (!finite(opponent.strikingAccuracy) || fighter.strikingAccuracy >= opponent.strikingAccuracy)
-      ? "Efficient striking"
-      : null,
-    finite(fighter.strikingDefense)
-      && fighter.strikingDefense >= 55
-      && (!finite(opponent.strikingDefense) || fighter.strikingDefense >= opponent.strikingDefense)
-      ? "Defensive striking"
-      : null,
-  ].filter((value): value is string => Boolean(value));
-
-  for (const filler of fillers) {
+  for (const edge of strengthEdges(fighter)) {
     if (selected.length >= 3) break;
-    if (!selected.includes(filler)) selected.push(filler);
+    if (!selected.includes(edge.text)) selected.push(edge.text);
   }
   return selected.slice(0, 3);
 }
@@ -166,14 +171,14 @@ function gamePlan(fighter: SpotlightStatsFighter, opponent: SpotlightStatsFighte
   if (style === "wrestling") {
     if (finite(fighter.takedownAverage) && fighter.takedownAverage >= 4) {
       return finite(fighter.submissionAverage) && fighter.submissionAverage >= 0.8
-        ? "turn this into a grinding grappling fight, using relentless takedown pressure to create long scrambles and submission threats"
-        : "turn this into a grinding grappling fight and keep returning to relentless takedown pressure";
+        ? "make this a scramble-heavy wrestling fight"
+        : "grind behind relentless takedown pressure";
     }
-    return "force a wrestling-heavy fight and keep returning to takedowns whenever the striking opens up";
+    return "force a wrestling-heavy fight";
   }
 
   if (style === "submission") {
-    return "create scrambles, threaten submissions, and keep the fight from settling into a clean striking rhythm";
+    return "create scrambles and hunt submissions";
   }
 
   if (style === "striking") {
@@ -183,52 +188,56 @@ function gamePlan(fighter: SpotlightStatsFighter, opponent: SpotlightStatsFighte
       && fighter.takedownDefense >= 70
     ) {
       return finite(fighter.slpm) && fighter.slpm >= 4.5
-        ? "keep the fight in open space, build a high-output striking pace, and make the takedown defense hold up"
-        : "keep the fight standing, dictate range, and make the takedown defense hold up";
+        ? "keep space for a high-volume striking pace and make the takedown defense hold"
+        : "keep it standing and make the takedown defense hold";
     }
     if (hasReachEdge) {
-      return "manage range behind the longer reach and keep the exchanges at striking distance";
+      return "manage range behind the longer reach";
     }
     if (finite(fighter.slpm) && fighter.slpm >= 4.5) {
-      return "keep the fight in open space and build a high-output striking pace";
+      return "keep space and push a high-output striking pace";
     }
     if (finite(fighter.strikingAccuracy) && fighter.strikingAccuracy >= 50) {
-      return "keep the fight standing and make the cleaner striking exchanges count";
+      return "keep it standing and win the cleaner exchanges";
     }
-    return "keep the fight standing and dictate the striking range";
+    return "keep it standing and dictate range";
   }
 
   if (opponentStyle === "wrestling" || opponentStyle === "submission") {
-    return "stay disciplined in the transitions, deny extended grappling exchanges, and make the cleaner moments happen on the feet";
+    return "deny long grappling exchanges and win the cleaner moments";
   }
-  return "stay adaptable, win position first, and force the matchup into the phase that is working best";
+  return "stay adaptable and impose the better phase";
 }
 
 function isGrapplingStyle(style: FightStyle) {
   return style === "wrestling" || style === "submission";
 }
 
-function swingPoint(red: SpotlightStatsFighter, blue: SpotlightStatsFighter) {
+function surname(name: string) {
+  return name.trim().split(/\s+/).at(-1) ?? name;
+}
+
+function matchupKey(red: SpotlightStatsFighter, blue: SpotlightStatsFighter) {
   const redStyle = primaryStyle(red);
   const blueStyle = primaryStyle(blue);
 
   if (isGrapplingStyle(redStyle) && blueStyle === "striking") {
-    return `The fight hinges on whether ${red.name} can keep forcing grappling exchanges or ${blue.name} can keep enough separation to make the fight happen at range.`;
+    return `the key is whether ${surname(blue.name)} can stay separated`;
   }
   if (redStyle === "striking" && isGrapplingStyle(blueStyle)) {
-    return `The fight hinges on whether ${blue.name} can keep forcing grappling exchanges or ${red.name} can keep enough separation to make the fight happen at range.`;
+    return `the key is whether ${surname(red.name)} can stay separated`;
   }
   if (isGrapplingStyle(redStyle) && isGrapplingStyle(blueStyle)) {
-    return "The swing point is who wins the first layer of grappling and keeps the other fighter from resetting.";
+    return "the key is who controls the first scramble";
   }
   if (redStyle === "striking" && blueStyle === "striking") {
-    return "The swing point is range: whoever dictates distance and forces the other fighter to react should control the cleaner exchanges.";
+    return "the key is who owns the range";
   }
-  return "The swing point is who imposes the preferred phase first and keeps the fight there.";
+  return "the key is who imposes the better phase";
 }
 
 function editorialPreview(red: SpotlightStatsFighter, blue: SpotlightStatsFighter) {
-  return `${red.name} wants to ${gamePlan(red, blue)}. ${blue.name} counters by trying to ${gamePlan(blue, red)}. ${swingPoint(red, blue)}`;
+  return `${red.name} wants to ${gamePlan(red, blue)}. ${blue.name} needs to ${gamePlan(blue, red)}; ${matchupKey(red, blue)}.`;
 }
 
 function fighterPackage(
