@@ -66,13 +66,13 @@ function sameTimestamp(left, right) {
     : leftValue === rightValue;
 }
 
-function isCbsSportsUfcEventUrl(value) {
+function isUfcEventUrl(value) {
   try {
     const url = new URL(value);
     const path = url.pathname.replace(/\/+$/, "");
     return url.protocol === "https:"
-      && url.hostname === "www.cbssports.com"
-      && /^\/ufc\/event\/\d+\/[a-z0-9-]+$/i.test(path);
+      && /^(?:www\.)?ufc\.com$/i.test(url.hostname)
+      && /^\/event\/[a-z0-9-]+$/i.test(path);
   } catch {
     return false;
   }
@@ -93,7 +93,7 @@ function hasCombinedVenueAndLocation(value) {
   return parts.length >= 2 && parts.every((part) => part.length >= 2);
 }
 
-export function assertCurrentEventPreview(event, now = new Date(), { requireCbsSource = false } = {}) {
+export function assertCurrentEventPreview(event, now = new Date(), { requireUfcSource = false } = {}) {
   if (!event || typeof event !== "object") {
     throw new Error("Preview is missing the event payload.");
   }
@@ -124,8 +124,8 @@ export function assertCurrentEventPreview(event, now = new Date(), { requireCbsS
   if (!clean(event.source_url)) {
     throw new Error("Preview is missing a specific event source.");
   }
-  if (requireCbsSource && !isCbsSportsUfcEventUrl(event.source_url)) {
-    throw new Error("Preview is missing a specific CBS Sports UFC event source.");
+  if (requireUfcSource && !isUfcEventUrl(event.source_url)) {
+    throw new Error("Preview is missing a specific UFC.com event source.");
   }
 
   const bouts = Array.isArray(event.bouts) ? event.bouts : [];
@@ -161,6 +161,8 @@ export function assertCurrentEventPreview(event, now = new Date(), { requireCbsS
   }
 }
 
+// Kept only so a PR can verify the currently deployed pre-cutover backend before the
+// exact corrective head is deployed. The UFC-only exact-head path must return 200.
 export function assertSafeEventSourceRollover(body) {
   if (body?.code !== "ARTICLE_IDENTITY_REJECTED" || body?.stage !== "identity-match") {
     throw new Error(
