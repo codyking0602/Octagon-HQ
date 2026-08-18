@@ -28,6 +28,15 @@ describe("production artifact verification", () => {
     ]));
   });
 
+  it("tracks the canonical rich Picks recap instead of the retired archive renderer", () => {
+    expect(requiredApplicationMarkers).toEqual(expect.arrayContaining([
+      "OPEN FULL RECAP",
+      "Event Standings",
+      "Fight by Fight",
+    ]));
+    expect(requiredApplicationMarkers).not.toContain("VIEW FIGHT-BY-FIGHT RESULTS");
+  });
+
   it("keeps only non-game share artwork as a static verifier list", () => {
     expect(requiredShareArtwork).toEqual([
       "picks-recap.svg",

@@ -1,8 +1,38 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { MemoryRouter } from "react-router-dom";
-import type { PickHistory } from "./picksModel";
+import type { PickHistory, PickHistoryEvent } from "./picksModel";
 import { PicksSeasonHub } from "./PicksSeasonHub";
+
+function completedEvent(
+  eventId: string,
+  name: string,
+  subtitle: string,
+  completedAt: string,
+): PickHistoryEvent {
+  return {
+    eventId,
+    name,
+    subtitle,
+    venue: "Test Arena",
+    location: "Dallas, Texas",
+    startsAt: completedAt,
+    season: 2026,
+    completedAt,
+    record: {
+      correct: 3,
+      incorrect: 2,
+      missing: 0,
+      excluded: 1,
+      basePoints: 12,
+      lockBonus: 0,
+      totalPoints: 12,
+    },
+    underdogLock: null,
+    bouts: [],
+    groupResults: [],
+  };
+}
 
 const history: PickHistory = {
   season: 2026,
@@ -75,28 +105,9 @@ const history: PickHistory = {
     },
   ],
   events: [
-    {
-      eventId: "ufc-fight-night-test",
-      name: "UFC Fight Night",
-      subtitle: "Ankalaev vs. Guskov",
-      venue: "Test Arena",
-      location: "Dallas, Texas",
-      startsAt: "2026-07-27T00:00:00Z",
-      season: 2026,
-      completedAt: "2026-07-27T05:00:00Z",
-      record: {
-        correct: 3,
-        incorrect: 2,
-        missing: 0,
-        excluded: 1,
-        basePoints: 12,
-        lockBonus: 0,
-        totalPoints: 12,
-      },
-      underdogLock: null,
-      bouts: [],
-      groupResults: [],
-    },
+    completedEvent("ufc-330", "UFC 330", "Makhachev vs. Garry", "2026-08-15T05:00:00Z"),
+    completedEvent("ufc-fight-night-paris", "UFC Fight Night: Paris", "Fighter A vs. Fighter B", "2026-08-08T05:00:00Z"),
+    completedEvent("ufc-fight-night-test", "UFC Fight Night", "Ankalaev vs. Guskov", "2026-07-27T05:00:00Z"),
   ],
 };
 
@@ -116,21 +127,23 @@ describe("PicksSeasonHub", () => {
     fireEvent.click(screen.getByText("STANDINGS & EVENTS"));
 
     expect(screen.getByText("Season leaderboard")).toBeInTheDocument();
-    expect(screen.getByText("4 PLAYERS · 1 EVENTS")).toBeInTheDocument();
+    expect(screen.getByText("4 PLAYERS · 3 EVENTS")).toBeInTheDocument();
     expect(screen.getByText("Cody")).toBeInTheDocument();
     expect(screen.getByText("Shane")).toBeInTheDocument();
     expect(screen.getAllByText("T-1")).toHaveLength(2);
     expect(screen.getByText("9-7 · 56.3% WIN · 1 MISSED")).toBeInTheDocument();
   });
 
-  it("switches to the expandable completed-event archive", () => {
+  it("keeps the rich event recap available for every completed event", () => {
     render(<MemoryRouter><PicksSeasonHub history={history} loading={false} /></MemoryRouter>);
 
     fireEvent.click(screen.getByText("STANDINGS & EVENTS"));
     fireEvent.click(screen.getByRole("tab", { name: "EVENTS" }));
 
-    expect(screen.getByText("1 COMPLETED EVENT")).toBeInTheDocument();
-    expect(screen.getByText("UFC Fight Night Recap")).toBeInTheDocument();
-    expect(screen.getByText("Ankalaev vs. Guskov")).toBeInTheDocument();
+    expect(screen.getByText("3 COMPLETED EVENTS")).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: "OPEN FULL RECAP" })).toHaveLength(3);
+
+    fireEvent.click(screen.getAllByRole("button", { name: "OPEN FULL RECAP" })[1]);
+    expect(screen.getByRole("dialog", { name: "UFC Fight Night: Paris Recap" })).toBeInTheDocument();
   });
 });

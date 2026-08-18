@@ -2,68 +2,12 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
   groupRankLabel,
-  mainCardFightLabel,
   pickWinPercentage,
   type PickHistory,
-  type PickHistoryBout,
-  type PickHistoryEvent,
-  type PickHistoryRecord,
   type PickSeasonStanding,
 } from "./picksModel";
-import { GroupPickReveal } from "./GroupPickReveal";
 import { LatestEventRecap } from "./LatestEventRecap";
 import { resolvePicksDestination } from "./picksDestination";
-
-interface BoutResultView {
-  redFighterSlug: string;
-  redFighterName: string;
-  blueFighterSlug: string;
-  blueFighterName: string;
-  resultStatus?: PickHistoryBout["resultStatus"];
-  winnerFighterSlug: string | null;
-  includedInPicks?: boolean;
-}
-
-function completedDate(value: string) {
-  return new Intl.DateTimeFormat(undefined, {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  }).format(new Date(value));
-}
-
-function fighterName(bout: BoutResultView, slug: string | null) {
-  if (!slug) return "No pick";
-  if (slug === bout.redFighterSlug) return bout.redFighterName;
-  if (slug === bout.blueFighterSlug) return bout.blueFighterName;
-  return "Unknown fighter";
-}
-
-function officialResult(bout: BoutResultView) {
-  if (bout.includedInPicks === false) return "Removed from Picks";
-  if (bout.resultStatus === "red_win" || bout.resultStatus === "blue_win") {
-    return fighterName(bout, bout.winnerFighterSlug);
-  }
-  if (bout.resultStatus === "draw") return "Draw";
-  if (bout.resultStatus === "no_contest") return "No contest";
-  if (bout.resultStatus === "cancelled") return "Cancelled";
-  return "Pending";
-}
-
-function verdictLabel(verdict: PickHistoryBout["verdict"]) {
-  if (verdict === "correct") return "Correct";
-  if (verdict === "incorrect") return "Incorrect";
-  if (verdict === "missing") return "No pick";
-  if (verdict === "excluded") return "Excluded";
-  return "Pending";
-}
-
-function recordNote(record: PickHistoryRecord) {
-  const details = [];
-  if (record.missing) details.push(`${record.missing} missing`);
-  if (record.excluded) details.push(`${record.excluded} excluded`);
-  return details.length ? details.join(" · ") : null;
-}
 
 function winPercentageLabel(correct: number, incorrect: number) {
   return `${pickWinPercentage(correct, incorrect).toFixed(1)}%`;
@@ -119,132 +63,6 @@ function aggregateFallbackStandings(history: PickHistory): PickSeasonStanding[] 
     previousRank = rank;
     return { ...standing, rank };
   });
-}
-
-function EventRecap({
-  event,
-  requestedOpen = false,
-}: {
-  event: PickHistoryEvent;
-  requestedOpen?: boolean;
-}) {
-  const [open, setOpen] = useState(requestedOpen);
-  const orderedBouts = event.bouts.slice().sort((left, right) => left.position - right.position);
-  const currentResult = event.groupResults.find((result) => result.isCurrentUser) ?? null;
-  const finish = currentResult
-    ? `${groupRankLabel(currentResult.rank, event.groupResults)} OF ${event.groupResults.length}`
-    : null;
-  const note = recordNote(event.record);
-
-  useEffect(() => {
-    setOpen(requestedOpen);
-  }, [event.eventId, requestedOpen]);
-
-  if (requestedOpen) {
-    return <LatestEventRecap event={event} requestedOpen />;
-  }
-
-  return (
-    <details
-      className="surface-card picks-recap-card"
-      data-picks-event-id={event.eventId}
-      open={open}
-      onToggle={(toggleEvent) => setOpen(toggleEvent.currentTarget.open)}
-    >
-      <summary className="picks-recap-card__summary">
-        <div>
-          <div className="picks-recap-card__date">
-            <time dateTime={event.completedAt}>{completedDate(event.completedAt)}</time>
-          </div>
-          <h3>{event.name}</h3>
-          <p>{event.subtitle}</p>
-        </div>
-        <div
-          className="picks-recap-card__record"
-          aria-label={finish
-            ? `Your event finish ${finish}. ${event.record.correct} wins and ${event.record.incorrect} losses.`
-            : `${event.record.correct} wins and ${event.record.incorrect} losses`}
-        >
-          <strong>{finish ?? `${event.record.correct}-${event.record.incorrect}`}</strong>
-          <small>{event.record.correct}-{event.record.incorrect} · {winPercentageLabel(event.record.correct, event.record.incorrect)} WIN · {event.record.totalPoints} PTS</small>
-          {note ? <em>{note}</em> : null}
-        </div>
-      </summary>
-
-      <div className="picks-recap-card__body">
-        <section className="picks-recap-group" aria-labelledby={`group-results-${event.eventId}`}>
-          <div className="picks-recap-section-heading">
-            <div>
-              <span>GROUP RESULTS</span>
-              <h4 id={`group-results-${event.eventId}`}>How everyone did</h4>
-            </div>
-            <small>{event.groupResults.length} ENTERED</small>
-          </div>
-          <div className="picks-group-results">
-            {event.groupResults.map((result) => (
-              <div
-                className={result.isCurrentUser ? "picks-group-result is-current-user" : "picks-group-result"}
-                key={result.profileId ?? result.displayName}
-              >
-                <span>{groupRankLabel(result.rank, event.groupResults)}</span>
-                <strong>{result.displayName}</strong>
-                <div>
-                  <b>{result.totalPoints} PTS</b>
-                  <small>{result.correct}-{result.incorrect} · {winPercentageLabel(result.correct, result.incorrect)} · +{result.lockBonus} lock</small>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="picks-recap-points" aria-label="Your scoring totals">
-          <div><span>RECORD</span><strong>{event.record.correct}-{event.record.incorrect}</strong></div>
-          <div><span>WIN %</span><strong>{winPercentageLabel(event.record.correct, event.record.incorrect)}</strong></div>
-          <div><span>LOCK</span><strong>+{event.record.lockBonus}</strong></div>
-          <div><span>TOTAL</span><strong>{event.record.totalPoints}</strong></div>
-        </section>
-
-        <details className="picks-recap-fights">
-          <summary>
-            <span>VIEW FIGHT-BY-FIGHT RESULTS</span>
-            <small>{orderedBouts.length} FIGHTS · {completedDate(event.completedAt)}</small>
-          </summary>
-          <div className="picks-recap-fight-list">
-            {orderedBouts.map((bout, index) => {
-              const removed = bout.includedInPicks === false;
-              return (
-                <article className="picks-recap-fight" key={bout.boutId}>
-                  <div className="picks-recap-fight__topline">
-                    <span>{mainCardFightLabel(index)}</span>
-                    <small>{bout.weightClass}</small>
-                  </div>
-                  <div className="picks-recap-fight__matchup">
-                    <strong>{bout.redFighterName}</strong>
-                    <span>VS</span>
-                    <strong>{bout.blueFighterName}</strong>
-                  </div>
-                  <div className="picks-recap-fight__result">
-                    <div><span>{removed ? "PICKS STATUS" : "OFFICIAL"}</span><b>{officialResult(bout)}</b></div>
-                    <div><span>YOUR PICK</span><b>{fighterName(bout, bout.pickedFighterSlug)}</b></div>
-                    <em className={`picks-verdict picks-verdict--${bout.verdict}`}>
-                      {removed ? "Excluded from scoring" : verdictLabel(bout.verdict)}
-                    </em>
-                  </div>
-                  <GroupPickReveal
-                    redFighterSlug={bout.redFighterSlug}
-                    redFighterName={bout.redFighterName}
-                    blueFighterSlug={bout.blueFighterSlug}
-                    blueFighterName={bout.blueFighterName}
-                    picks={bout.groupPicks ?? []}
-                  />
-                </article>
-              );
-            })}
-          </div>
-        </details>
-      </div>
-    </details>
-  );
 }
 
 export function PicksSeasonHub({ history, loading }: { history: PickHistory; loading: boolean }) {
@@ -409,7 +227,7 @@ export function PicksSeasonHub({ history, loading }: { history: PickHistory; loa
               {olderEvents.length ? (
                 <div className="picks-recap-list">
                   {olderEvents.map((event) => (
-                    <EventRecap
+                    <LatestEventRecap
                       event={event}
                       requestedOpen={recapRequested && event.eventId === targetEventId}
                       key={event.eventId}

@@ -24,7 +24,7 @@ export const requiredApplicationMarkers = [
   "PICKS LOCKED",
   "AWAITING RESULTS",
   "NOT PICKED",
-  "VIEW FIGHT-BY-FIGHT RESULTS",
+  "Fight by Fight",
   "+400+",
   "HOW EVERYONE PICKED",
   "group_picks",

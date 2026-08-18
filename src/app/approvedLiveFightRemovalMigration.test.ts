@@ -11,7 +11,7 @@ const integrationSql = readFileSync(
 );
 const openDashboard = readFileSync("src/features/picks-control/OpenPicksDashboard.tsx", "utf8");
 const picksPage = readFileSync("src/features/picks/PicksPage.tsx", "utf8");
-const seasonHub = readFileSync("src/features/picks/PicksSeasonHub.tsx", "utf8");
+const eventRecap = readFileSync("src/features/picks/LatestEventRecap.tsx", "utf8");
 const monitoring = readFileSync("src/features/picks-monitoring/manualMonitoringRunner.ts", "utf8");
 
 describe("approved pre-lock live fight removal", () => {
@@ -48,7 +48,8 @@ describe("approved pre-lock live fight removal", () => {
     expect(openDashboard).toContain("Submitted picks remain privately preserved and excluded from scoring");
     expect(openDashboard).toContain("Boolean(bout?.includedInPicks)");
     expect(picksPage).toContain(".filter((bout) => bout.includedInPicks !== false)");
-    expect(seasonHub).toContain("Excluded from scoring");
+    expect(eventRecap).toContain('if (bout.includedInPicks === false) return "Removed from Picks"');
+    expect(eventRecap).toContain('bout.includedInPicks === false || bout.verdict === "excluded"');
   });
 
   it("keeps monitoring advisory and removes only intentional exclusions from active comparison", () => {
