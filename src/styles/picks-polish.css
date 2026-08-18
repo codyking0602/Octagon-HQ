@@ -1024,3 +1024,31 @@
     animation: none;
   }
 }
+
+/* Standard fights stay game-like without repeating the main event's vertical scale. */
+.pick-bout-card:not(.is-main-event) {
+  gap: 6px;
+  padding: 9px;
+}
+
+.pick-bout-card:not(.is-main-event) .pick-choice {
+  gap: 4px;
+  min-height: 104px;
+  padding: 8px;
+}
+
+.pick-bout-card:not(.is-main-event) .pick-choice > span {
+  min-height: 16px;
+  -webkit-line-clamp: 1;
+}
+
+.pick-bout-card:not(.is-main-event) .pick-choice > em {
+  margin-top: 0;
+}
+
+@media (min-width: 680px) {
+  .pick-bout-card:not(.is-main-event) .pick-choice {
+    min-height: 118px;
+    padding: 10px;
+  }
+}
