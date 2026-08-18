@@ -11,15 +11,18 @@ describe("fighter thumbnails", () => {
     expect(container.querySelector("img")).toHaveAttribute("loading", "lazy");
   });
 
-  it("uses initials without rendering a broken image when no file exists", () => {
+  it("uses an intentional silhouette without rendering a broken image when no file exists", () => {
     render(<FighterThumbnail name="Unknown Fighter" slug="unknown-fighter" />);
-    expect(screen.getByText("UF")).toBeInTheDocument();
-    expect(screen.queryByRole("img", { hidden: true })).not.toBeInTheDocument();
+    const fallback = screen.getByRole("img", { name: "Unknown Fighter photo unavailable" });
+    expect(fallback).toHaveClass("pick-fighter-thumbnail--fallback");
+    expect(fallback.querySelector("svg")).toBeInTheDocument();
+    expect(fallback).toHaveTextContent("");
   });
 
-  it("falls back to initials if a known image fails to load", () => {
+  it("falls back to the same silhouette if a known image fails to load", () => {
     const { container } = render(<FighterThumbnail name="Bogdan Guskov" slug="bogdan-guskov" />);
     fireEvent.error(container.querySelector("img")!);
-    expect(screen.getByText("BG")).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "Bogdan Guskov photo unavailable" }))
+      .toHaveClass("pick-fighter-thumbnail--fallback");
   });
 });
