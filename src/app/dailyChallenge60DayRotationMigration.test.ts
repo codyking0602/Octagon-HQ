@@ -13,10 +13,13 @@ function cycleEntries() {
 }
 
 describe("60-day Today’s Challenge rotation migration", () => {
-  it("creates one forward schedule identity beginning August 18 without rewriting history", () => {
+  it("creates one forward schedule identity anchored on August 18 without rewriting history", () => {
     expect(migration).toContain("v_source_version constant text := 'play-rotation-v2'");
     expect(migration).toContain("v_version constant text := 'play-rotation-v3'");
     expect(migration).toContain("v_start constant date := date '2026-08-18'");
+    expect(migration).toContain("v_activation_day := greatest(v_start, v_source.starts_on)");
+    expect(migration).toContain("v_existing.anchor_day <> v_start");
+    expect(migration).toContain("v_existing.starts_on <> v_activation_day");
     expect(migration).toContain("insert into private.daily_challenge_schedule_versions");
     expect(migration).not.toContain("delete from private.daily_challenges");
     expect(migration).not.toContain("update private.daily_challenge_schedule_versions");
