@@ -66,15 +66,13 @@ function sameTimestamp(left, right) {
     : leftValue === rightValue;
 }
 
-function isMmaManiaArticleUrl(value) {
+function isCbsSportsUfcEventUrl(value) {
   try {
     const url = new URL(value);
     const path = url.pathname.replace(/\/+$/, "");
     return url.protocol === "https:"
-      && url.hostname === "www.mmamania.com"
-      && path.length > 1
-      && path !== "/ufc-fight-cards"
-      && !path.endsWith("/archives");
+      && url.hostname === "www.cbssports.com"
+      && /^\/ufc\/event\/\d+\/[a-z0-9-]+$/i.test(path);
   } catch {
     return false;
   }
@@ -123,8 +121,8 @@ export function assertCurrentEventPreview(event, now = new Date()) {
     throw new Error("Preview places the Picks lock after the event start.");
   }
 
-  if (!isMmaManiaArticleUrl(event.source_url)) {
-    throw new Error("Preview is missing a specific MMA Mania article source.");
+  if (!isCbsSportsUfcEventUrl(event.source_url)) {
+    throw new Error("Preview is missing a specific CBS Sports UFC event source.");
   }
 
   const bouts = Array.isArray(event.bouts) ? event.bouts : [];

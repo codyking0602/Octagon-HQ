@@ -90,22 +90,23 @@ describe("durable event identity", () => {
     expect(matchSourceIdentity(numbered, { ...article, eventNumber: "998" }).accepted).toBe(false);
   });
 
-  it("keeps the canonical sync owner on MMA Mania-only runtime evidence", () => {
+  it("keeps the canonical sync owner on CBS Sports-only runtime evidence", () => {
     const source = readFileSync(resolve(
       process.cwd(),
       "supabase/functions/sync-next-ufc-event/index.ts",
     ), "utf8");
     const cardParser = readFileSync(resolve(
       process.cwd(),
-      "supabase/functions/sync-next-ufc-event/mmaManiaCardParser.ts",
+      "supabase/functions/sync-next-ufc-event/cbsSportsEventParser.ts",
     ), "utf8");
 
-    expect(source).toContain("parseMmaManiaEventMetadata");
-    expect(source).toContain('source: "MMA Mania event + card"');
-    expect(cardParser).toMatch(/function cleanFighterName[\s\S]*canonicalFighterDisplay/);
+    expect(source).toContain("parseCbsSportsEventPage");
+    expect(source).toContain('source: "CBS Sports UFC event + card"');
+    expect(cardParser).toContain("canonicalFighterDisplay");
     expect(source).not.toContain("canonicalUfcEventFields(metadata.normalized)");
     expect(source).not.toContain("adaptUfcSource");
     expect(source).not.toContain("UFC_EVENT_INDEX_URL");
     expect(source).not.toMatch(/https?:\/\/(?:www\.)?ufc\.com/i);
+    expect(source).not.toMatch(/https?:\/\/(?:www\.)?mmamania\.com/i);
   });
 });
