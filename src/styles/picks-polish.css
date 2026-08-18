@@ -6,9 +6,11 @@
   --picks-surface-radius: 18px;
   --picks-choice-radius: 14px;
   --picks-card-padding: 12px;
-  --picks-choice-min-height: 112px;
-  --picks-thumb-size: 52px;
-  --picks-main-thumb-size: 59px;
+  --picks-choice-min-height: 124px;
+  --picks-thumb-size: 66px;
+  --picks-main-thumb-size: 82px;
+  --picks-red-corner: #dc3038;
+  --picks-blue-corner: #3976ed;
   --picks-disclosure-height: 46px;
   --picks-disclosure-padding: 16px;
   --picks-disclosure-color: var(--text-muted);
@@ -329,7 +331,7 @@
   transform: rotate(-90deg);
 }
 
-/* Fight card separator and list */
+/* Fight card separator and game board */
 .picks-card-zone {
   position: relative;
   display: grid;
@@ -367,26 +369,70 @@
 
 .picks-card-list {
   display: grid;
-  gap: var(--picks-section-gap);
+  gap: 8px;
 }
 
 .pick-bout-card,
 .pick-bout-card.is-main-event {
-  gap: 10px;
-  padding: var(--picks-card-padding);
+  position: relative;
+  gap: 8px;
+  padding: 10px;
+  overflow: hidden;
+  border-color: rgba(255, 255, 255, .11);
   border-radius: var(--picks-surface-radius);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .018), transparent 34%),
+    #0e0e0f;
+}
+
+.pick-bout-card::before {
+  position: absolute;
+  top: 0;
+  right: 12px;
+  left: 12px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(220, 48, 56, .5),
+    rgba(220, 48, 56, .08) 45%,
+    rgba(57, 118, 237, .08) 55%,
+    rgba(57, 118, 237, .5)
+  );
+  content: "";
+  pointer-events: none;
 }
 
 .pick-bout-card.is-main-event {
-  border-color: rgba(255, 255, 255, .17);
+  gap: 10px;
+  padding: 13px;
+  border-color: rgba(255, 255, 255, .2);
   background:
-    radial-gradient(circle at 0% 0%, rgba(210, 10, 10, .1), transparent 38%),
-    var(--surface);
+    radial-gradient(circle at 0% 16%, rgba(220, 48, 56, .13), transparent 37%),
+    radial-gradient(circle at 100% 16%, rgba(57, 118, 237, .13), transparent 37%),
+    linear-gradient(180deg, rgba(255, 255, 255, .035), transparent 40%),
+    #101011;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, .22);
+}
+
+.pick-bout-card.is-main-event::before {
+  right: 14px;
+  left: 14px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--picks-red-corner),
+    rgba(220, 48, 56, .12) 46%,
+    rgba(57, 118, 237, .12) 54%,
+    var(--picks-blue-corner)
+  );
+  opacity: .82;
 }
 
 .pick-bout-card__meta {
   display: grid;
-  gap: 3px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
 }
 
 .pick-bout-card__heading {
@@ -398,6 +444,11 @@
   letter-spacing: .11em;
 }
 
+.pick-bout-card.is-main-event .pick-bout-card__heading > span {
+  color: #fff;
+  font-size: 10px;
+}
+
 .pick-bout-card__heading > small {
   overflow: hidden;
   max-width: 46%;
@@ -406,44 +457,135 @@
   white-space: nowrap;
 }
 
+.pick-bout-card__meta > .picks-status {
+  min-height: 23px;
+  padding: 0 8px;
+  font-size: 7px;
+}
+
 .pick-bout-card__choices {
-  grid-template-columns: minmax(0, 1fr) 18px minmax(0, 1fr);
-  gap: 5px;
+  position: relative;
+  grid-template-columns: minmax(0, 1fr) 36px minmax(0, 1fr);
+  gap: 0;
+}
+
+.pick-bout-card__choices::before {
+  position: absolute;
+  top: 14%;
+  bottom: 14%;
+  left: 50%;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, .13), transparent);
+  content: "";
+  pointer-events: none;
+  transform: translateX(-.5px);
 }
 
 .pick-choice {
+  position: relative;
+  z-index: 1;
   align-content: start;
-  gap: 5px;
+  gap: 6px;
   min-height: var(--picks-choice-min-height);
-  padding: 10px;
-  border-radius: var(--picks-choice-radius);
-  background: #191919;
+  padding: 9px;
+  overflow: hidden;
+  border-color: rgba(255, 255, 255, .11);
+  border-radius: 13px;
+  background: #151516;
+  transition:
+    border-color .16s ease,
+    background .16s ease,
+    box-shadow .16s ease,
+    transform .16s ease;
+}
+
+.pick-choice::before {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  width: 2px;
+  border-radius: 999px;
+  content: "";
+  opacity: .5;
+  pointer-events: none;
+}
+
+.pick-bout-card__choices > .pick-choice:first-child {
+  border-radius: 14px 9px 9px 14px;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(220, 48, 56, .08), transparent 54%),
+    #151516;
+}
+
+.pick-bout-card__choices > .pick-choice:first-child::before {
+  left: 5px;
+  background: var(--picks-red-corner);
+}
+
+.pick-bout-card__choices > .pick-choice:last-child {
+  justify-items: end;
+  border-radius: 9px 14px 14px 9px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(57, 118, 237, .08), transparent 54%),
+    #151516;
+  text-align: right;
+}
+
+.pick-bout-card__choices > .pick-choice:last-child::before {
+  right: 5px;
+  background: var(--picks-blue-corner);
 }
 
 .pick-fighter-thumbnail {
   width: var(--picks-thumb-size);
   height: var(--picks-thumb-size);
   margin-bottom: 1px;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 16px;
+  box-shadow: 0 7px 16px rgba(0, 0, 0, .24);
+}
+
+.pick-bout-card__choices > .pick-choice:first-child .pick-fighter-thumbnail {
+  border-color: rgba(220, 48, 56, .32);
+}
+
+.pick-bout-card__choices > .pick-choice:last-child .pick-fighter-thumbnail {
+  border-color: rgba(57, 118, 237, .32);
 }
 
 .pick-bout-card.is-main-event .pick-fighter-thumbnail {
   width: var(--picks-main-thumb-size);
   height: var(--picks-main-thumb-size);
+  border-radius: 19px;
 }
 
 .pick-choice > span {
-  min-height: 30px;
+  min-height: 31px;
   overflow: hidden;
-  font-size: 14px;
-  line-height: 1.07;
+  font-size: 15px;
+  line-height: 1.04;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
 
+.pick-bout-card.is-main-event .pick-choice > span {
+  min-height: 35px;
+  font-size: 17px;
+}
+
 .pick-choice > small {
+  width: fit-content;
+  max-width: 100%;
+  padding: 4px 6px;
   overflow: hidden;
-  font-size: 7px;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, .24);
+  color: var(--text-secondary);
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .055em;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -451,25 +593,94 @@
 .pick-choice > em {
   width: fit-content;
   margin-top: auto;
-  padding: 4px 6px;
+  padding: 4px 7px;
+  border: 1px solid rgba(255, 255, 255, .08);
   border-radius: 999px;
-  background: rgba(255, 255, 255, .055);
+  background: rgba(255, 255, 255, .045);
   font-size: 7px;
 }
 
 .pick-choice.is-selected {
-  border-color: var(--ufc-red);
-  background: linear-gradient(155deg, rgba(210, 10, 10, .14), #191919 68%);
+  opacity: 1;
+  animation: picks-choice-confirm .22s ease-out;
+}
+
+.pick-bout-card__choices > .pick-choice:first-child.is-selected {
+  border-color: rgba(220, 48, 56, .76);
+  background:
+    radial-gradient(circle at 10% 8%, rgba(220, 48, 56, .22), transparent 56%),
+    #171416;
   box-shadow:
-    inset 0 0 0 1px rgba(210, 10, 10, .18),
-    0 0 18px rgba(210, 10, 10, .07);
+    inset 0 0 0 1px rgba(220, 48, 56, .2),
+    0 0 22px rgba(220, 48, 56, .12);
+}
+
+.pick-bout-card__choices > .pick-choice:last-child.is-selected {
+  border-color: rgba(57, 118, 237, .76);
+  background:
+    radial-gradient(circle at 90% 8%, rgba(57, 118, 237, .23), transparent 56%),
+    #14161a;
+  box-shadow:
+    inset 0 0 0 1px rgba(57, 118, 237, .2),
+    0 0 22px rgba(57, 118, 237, .12);
+}
+
+.pick-choice.is-selected::before {
+  width: 3px;
+  opacity: 1;
+  box-shadow: 0 0 11px currentColor;
 }
 
 .pick-choice.is-selected > em {
-  background: rgba(210, 10, 10, .13);
+  border-color: rgba(255, 255, 255, .16);
+  color: #fff;
+}
+
+.pick-choice.is-selected > em::before {
+  margin-right: 4px;
+  content: "✓";
+}
+
+.pick-bout-card__choices > .pick-choice:first-child.is-selected > em {
+  background: rgba(220, 48, 56, .18);
+}
+
+.pick-bout-card__choices > .pick-choice:last-child.is-selected > em {
+  background: rgba(57, 118, 237, .18);
+}
+
+.pick-choice.is-selected:disabled {
+  opacity: 1;
+}
+
+.pick-choice.is-read-only:not(.is-selected) {
+  opacity: .58;
 }
 
 .pick-bout-card__versus {
+  position: relative;
+  z-index: 2;
+  align-self: center;
+  justify-self: center;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(255, 255, 255, .18);
+  border-radius: 50%;
+  background: #09090a;
+  box-shadow:
+    0 0 0 3px rgba(0, 0, 0, .54),
+    0 7px 14px rgba(0, 0, 0, .3);
+  color: #fff;
+  font-size: 8px;
+  letter-spacing: .08em;
+}
+
+.pick-bout-card.is-main-event .pick-bout-card__versus {
+  width: 34px;
+  height: 34px;
+  border-color: rgba(255, 255, 255, .25);
   font-size: 9px;
 }
 
@@ -521,6 +732,20 @@
 .main-event-spotlight-trigger strong {
   font-size: 14px;
   line-height: 1.15;
+}
+
+@keyframes picks-choice-confirm {
+  0% {
+    transform: scale(.985);
+  }
+
+  65% {
+    transform: scale(1.008);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* Season and recap surfaces */
@@ -776,11 +1001,26 @@
   }
 
   .pick-choice {
-    min-height: 134px;
+    min-height: 138px;
+    padding: 12px;
+  }
+
+  .pick-bout-card.is-main-event .pick-choice {
+    min-height: 158px;
   }
 
   .picks-season-hub__summary {
     min-height: 88px;
     padding: 14px 44px 14px 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pick-choice {
+    transition: none;
+  }
+
+  .pick-choice.is-selected {
+    animation: none;
   }
 }

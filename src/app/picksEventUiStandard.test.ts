@@ -67,9 +67,9 @@ describe("Picks event UI standard", () => {
 
   it("locks the fight-card, selection, lock, spotlight, and season-summary geometry", () => {
     expect(picksStyles).toContain("--picks-surface-radius: 18px;");
-    expect(picksStyles).toContain("--picks-choice-min-height: 112px;");
-    expect(picksStyles).toContain("--picks-thumb-size: 52px;");
-    expect(picksStyles).toContain("--picks-main-thumb-size: 59px;");
+    expect(picksStyles).toContain("--picks-choice-min-height: 124px;");
+    expect(picksStyles).toContain("--picks-thumb-size: 66px;");
+    expect(picksStyles).toContain("--picks-main-thumb-size: 82px;");
     expect(picksStyles).toContain(".pick-choice.is-selected {");
     expect(picksStyles).toContain(".pick-lock-action.is-selected,");
     expect(picksStyles).toContain(".main-event-spotlight-trigger {");
