@@ -6,6 +6,7 @@ select set_config('request.jwt.claim.role', 'service_role', true);
 do $$
 declare
   v_source_schedule private.daily_challenge_schedule_versions;
+  v_previous_schedule private.daily_challenge_schedule_versions;
   v_schedule private.daily_challenge_schedule_versions;
   v_index integer;
   v_day date;
@@ -29,26 +30,49 @@ begin
   end if;
 
   select schedule.*
-  into v_schedule
+  into v_previous_schedule
   from private.daily_challenge_schedule_versions schedule
   where schedule.version = 'play-rotation-v2';
 
-  if v_schedule.version is null
-    or v_schedule.time_zone is distinct from v_source_schedule.time_zone
-    or v_schedule.anchor_day is distinct from v_source_schedule.anchor_day
-    or v_schedule.game_cycle is distinct from v_source_schedule.game_cycle
-    or v_schedule.starts_on < v_source_schedule.starts_on then
-    raise exception 'active reroll rotation does not preserve the source rotation contract: source %, active %',
+  if v_previous_schedule.version is null
+    or v_previous_schedule.time_zone is distinct from v_source_schedule.time_zone
+    or v_previous_schedule.anchor_day is distinct from v_source_schedule.anchor_day
+    or v_previous_schedule.game_cycle is distinct from v_source_schedule.game_cycle
+    or v_previous_schedule.starts_on < v_source_schedule.starts_on then
+    raise exception 'August 17 reroll rotation does not preserve the source rotation contract: source %, reroll %',
       row_to_json(v_source_schedule),
-      row_to_json(v_schedule);
+      row_to_json(v_previous_schedule);
   end if;
 
-  if (select count(*) from unnest(v_schedule.game_cycle) game where game = 'find_leader') <> 8
-    or (select count(*) from unnest(v_schedule.game_cycle) game where game = 'blind_resume') <> 3
-    or (select count(*) from unnest(v_schedule.game_cycle) game where game = 'wavelength') <> 5
-    or (select count(*) from unnest(v_schedule.game_cycle) game where game = 'blind_rank_5') <> 2
-    or (select count(*) from unnest(v_schedule.game_cycle) game where game = 'keep_4_cut_4') <> 2 then
-    raise exception 'rotation weights do not match the approved 8/3/5/2/2 contract: %', v_schedule.game_cycle;
+  if (select count(*) from unnest(v_previous_schedule.game_cycle) game where game = 'find_leader') <> 8
+    or (select count(*) from unnest(v_previous_schedule.game_cycle) game where game = 'blind_resume') <> 3
+    or (select count(*) from unnest(v_previous_schedule.game_cycle) game where game = 'wavelength') <> 5
+    or (select count(*) from unnest(v_previous_schedule.game_cycle) game where game = 'blind_rank_5') <> 2
+    or (select count(*) from unnest(v_previous_schedule.game_cycle) game where game = 'keep_4_cut_4') <> 2
+    or 'hit_the_number' = any(v_previous_schedule.game_cycle) then
+    raise exception 'historical v2 rotation contract drifted: %', v_previous_schedule.game_cycle;
+  end if;
+
+  select schedule.*
+  into v_schedule
+  from private.daily_challenge_schedule_versions schedule
+  where schedule.version = 'play-rotation-v3';
+
+  if v_schedule.version is null
+    or v_schedule.time_zone <> 'America/Chicago'
+    or v_schedule.anchor_day <> date '2026-08-18'
+    or v_schedule.starts_on <> date '2026-08-18'
+    or coalesce(array_length(v_schedule.game_cycle, 1), 0) <> 60 then
+    raise exception 'six-game sixty-day rotation was not installed exactly: %', row_to_json(v_schedule);
+  end if;
+
+  if (select count(*) from unnest(v_schedule.game_cycle) game where game = 'find_leader') <> 12
+    or (select count(*) from unnest(v_schedule.game_cycle) game where game = 'blind_resume') <> 12
+    or (select count(*) from unnest(v_schedule.game_cycle) game where game = 'hit_the_number') <> 12
+    or (select count(*) from unnest(v_schedule.game_cycle) game where game = 'wavelength') <> 10
+    or (select count(*) from unnest(v_schedule.game_cycle) game where game = 'blind_rank_5') <> 7
+    or (select count(*) from unnest(v_schedule.game_cycle) game where game = 'keep_4_cut_4') <> 7 then
+    raise exception 'rotation weights do not match the approved 12/12/12/10/7/7 contract: %', v_schedule.game_cycle;
   end if;
 
   if exists (
@@ -57,31 +81,36 @@ begin
     where game not in (
       'find_leader',
       'blind_resume',
+      'hit_the_number',
       'wavelength',
       'blind_rank_5',
       'keep_4_cut_4'
     )
   )
     or 'auction' = any(v_schedule.game_cycle)
-    or 'better_than' = any(v_schedule.game_cycle)
-    or 'hit_the_number' = any(v_schedule.game_cycle) then
+    or 'better_than' = any(v_schedule.game_cycle) then
     raise exception 'an ineligible game entered the official rotation: %', v_schedule.game_cycle;
   end if;
 
-  for v_index in 1..20 loop
-    if v_schedule.game_cycle[v_index] = v_schedule.game_cycle[(v_index % 20) + 1] then
+  for v_index in 1..60 loop
+    if v_schedule.game_cycle[v_index] = v_schedule.game_cycle[(v_index % 60) + 1] then
       raise exception 'consecutive daily game at cycle position %, including the boundary: %',
         v_index,
         v_schedule.game_cycle;
     end if;
   end loop;
 
-  for v_index in -40..40 loop
+  if private.daily_challenge_schedule_for_day(date '2026-08-17') <> 'play-rotation-v2'
+    or private.daily_challenge_schedule_for_day(date '2026-08-18') <> 'play-rotation-v3' then
+    raise exception 'rotation handoff is not exactly v2 through August 17 and v3 from August 18';
+  end if;
+
+  for v_index in -120..120 loop
     v_day := v_schedule.anchor_day + v_index;
     v_expected := private.daily_challenge_expected_game(v_schedule.version, v_day);
     v_repeated := private.daily_challenge_expected_game(v_schedule.version, v_day);
     if v_expected is distinct from v_repeated
-      or v_expected is distinct from v_schedule.game_cycle[(((v_index % 20) + 20) % 20) + 1] then
+      or v_expected is distinct from v_schedule.game_cycle[(((v_index % 60) + 60) % 60) + 1] then
       raise exception 'schedule version/date resolution was not deterministic for %: %, %',
         v_day,
         v_expected,
@@ -103,7 +132,7 @@ begin
   into v_fallback_day, v_fallback_expected
   from generate_series(
     v_schedule.starts_on,
-    v_schedule.starts_on + 19,
+    v_schedule.starts_on + 59,
     interval '1 day'
   ) as candidate(day)
   where private.daily_challenge_expected_game(v_schedule.version, candidate.day::date) <> 'find_leader'
@@ -173,4 +202,4 @@ $$;
 
 rollback;
 
-\echo 'Today’s Challenge rotation proof passed.'
+\echo 'Today’s Challenge 60-day rotation proof passed.'
