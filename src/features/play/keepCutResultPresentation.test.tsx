@@ -7,7 +7,8 @@ import { IdentityProvider } from "../identity/IdentityProvider";
 import { FindLeaderHistoryProvider } from "./FindLeaderHistoryProvider";
 import KeepCutPage from "./KeepCutPage";
 import { OfficialTodayChallengeView } from "./OfficialTodayChallengePage";
-import { createKeepCutLineup, scoreKeepCutSelection } from "./keepCutEngine";
+import { createKeepCutLineup, keepCutRating, scoreKeepCutSelection } from "./keepCutEngine";
+import type { PlayFighter } from "./playFighterPool";
 import type { TodayChallengeProjection } from "./todayChallengeRepository";
 
 function renderAt(element: ReactNode, path: string) {
@@ -33,21 +34,34 @@ function finishFirstFourKept(container: HTMLElement) {
   for (let index = 0; index < 4; index += 1) makeDecision(container, "cut");
 }
 
-function presentedFighter(id: string) {
+function rankedLineup(seed: string) {
+  const lineup = createKeepCutLineup("ufc-careers", seed);
+  return [...lineup.fighters].sort((left, right) => {
+    const ratingDifference = keepCutRating("ufc-careers", right) - keepCutRating("ufc-careers", left);
+    return ratingDifference || left.id.localeCompare(right.id);
+  });
+}
+
+function threeOfFourBoard(seed: string) {
+  const ranked = rankedLineup(seed);
+  const board = [ranked[0]!, ranked[1]!, ranked[2]!, ranked[7]!, ranked[3]!, ranked[4]!, ranked[5]!, ranked[6]!];
+  return { board, ranked, kept: board.slice(0, 4), cut: board.slice(4) };
+}
+
+function presentedFighter(fighter: PlayFighter) {
   return {
-    id,
-    name: `Fighter ${id}`,
-    gender: "men",
-    divisions: ["Lightweight"],
-    main_era: "Modern",
-    thumb_url: `/fighters/${id}.png`,
-    profile_url: `/fighters/${id}-profile.png`,
+    id: fighter.id,
+    name: fighter.name,
+    gender: fighter.gender,
+    divisions: fighter.divisions,
+    main_era: fighter.mainEra,
+    thumb_url: fighter.thumbUrl,
+    profile_url: fighter.profileUrl,
   };
 }
 
 function officialProjection(): TodayChallengeProjection {
-  const kept = ["one", "two", "three", "four"].map(presentedFighter);
-  const cut = ["five", "six", "seven", "eight"].map(presentedFighter);
+  const { board, ranked, kept, cut } = threeOfFourBoard("result-breakdown-official");
   return {
     available: true,
     id: "11111111-1111-4111-8111-111111111111",
@@ -60,6 +74,7 @@ function officialProjection(): TodayChallengeProjection {
     fallbackReason: null,
     publicSetup: {
       pack: {
+        id: "ufc-careers",
         group: "Careers",
         name: "UFC Careers",
         prompt: "Keep four UFC careers. Cut four.",
@@ -70,12 +85,15 @@ function officialProjection(): TodayChallengeProjection {
     publicState: {
       complete: true,
       reveal_index: 8,
-      kept,
-      cut,
+      kept: kept.map(presentedFighter),
+      cut: cut.map(presentedFighter),
       current_fighter: null,
-      reveal: { model_top_four_ids: ["one", "two", "three", "five"] },
+      reveal: { model_top_four_ids: ranked.slice(0, 4).map((fighter) => fighter.id) },
     },
-    revealSetup: { model_top_four_ids: ["one", "two", "three", "five"] },
+    revealSetup: {
+      fighters: board.map(presentedFighter),
+      model_top_four_ids: ranked.slice(0, 4).map((fighter) => fighter.id),
+    },
     officialAttempt: {
       nativeScore: 12,
       normalizedScore: 75,
@@ -96,7 +114,12 @@ function expectVisibleResultContract(container: HTMLElement, topFourKept?: numbe
   } else {
     expect(container.textContent).toContain(`${topFourKept} OF OCTAGON HQ’S TOP 4 KEPT`);
   }
-  expect(container.textContent).toContain("Your four keeps are graded against the strongest four fighters on this board.");
+  expect(container.textContent).toContain("OCTAGON HQ TOP 4");
+  expect(container.querySelectorAll(".keep-cut-top-four__fighter")).toHaveLength(4);
+  expect(container.textContent).toContain("YOUR BOARD");
+  expect(container.textContent).toContain("FINAL CALLS");
+  expect(container.querySelectorAll(".keep-cut-result-fighter")).toHaveLength(8);
+  expect(container.querySelectorAll(".keep-cut-result-group")).toHaveLength(0);
   expect(container.textContent).not.toMatch(/OF 16 COMPARISONS/i);
   expect(container.textContent).not.toMatch(/COMPARISONS WON/i);
   expect(container.textContent).not.toContain("Every kept fighter is compared with every cut fighter");
@@ -108,31 +131,34 @@ describe("Keep 4, Cut 4 result presentation", () => {
     Object.defineProperty(window, "scrollTo", { value: vi.fn(), writable: true });
   });
 
-  it("keeps the normal result focused on the /100 score and Octagon HQ top four", () => {
+  it("shows the normal result with the actual top four in a compact final board", () => {
     const { container } = renderAt(<KeepCutPage />, "/play/keep-cut?pack=ufc-careers");
     finishFirstFourKept(container);
     expectVisibleResultContract(container);
     expect(container.textContent).not.toContain("OFFICIAL RESULT");
   });
 
-  it("uses the same visible contract for a shared friend challenge while preserving the score math", () => {
-    const lineup = createKeepCutLineup("ufc-careers", "result-copy-friend");
-    const query = lineup.fighters.map((fighter) => fighter.id).join(",");
+  it("explains a friend-challenge miss while preserving the existing score math", () => {
+    const { board, ranked } = threeOfFourBoard("result-breakdown-friend");
+    const query = board.map((fighter) => fighter.id).join(",");
     const expected = scoreKeepCutSelection(
       "ufc-careers",
-      lineup.fighters,
-      lineup.fighters.slice(0, 4).map((fighter) => fighter.id),
+      board,
+      board.slice(0, 4).map((fighter) => fighter.id),
     );
     const { container } = renderAt(<KeepCutPage />, `/play/keep-cut?pack=ufc-careers&lineup=${query}`);
     finishFirstFourKept(container);
     expect(container.textContent).toContain(`${expected.score}/100`);
-    expectVisibleResultContract(container, expected.modelTopFourKept);
+    expectVisibleResultContract(container, 3);
+    expect(container.textContent).toContain(`You kept ${ranked[7]!.name} over ${ranked[3]!.name}.`);
+    expect(container.querySelector(".keep-cut-miss")?.textContent).toMatch(/rating|tiebreak/i);
   });
 
-  it("keeps the official Today’s Challenge result aligned without exposing its hidden comparison count", () => {
+  it("uses the same breakdown for official Today without exposing its hidden comparison count", () => {
+    const projection = officialProjection();
     const { container } = render(
       <OfficialTodayChallengeView
-        projection={officialProjection()}
+        projection={projection}
         busy={false}
         onAdvance={vi.fn()}
         onNavigate={vi.fn()}
