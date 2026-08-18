@@ -1,4 +1,3 @@
-import * as cheerio from "npm:cheerio@1.0.0";
 import {
   canonicalFightPair,
   canonicalFighterDisplay,
@@ -46,8 +45,6 @@ export interface UfcEventCandidate {
   metadata: UfcEventMetadata;
 }
 
-type HtmlElement = unknown;
-
 const monthNumbers: Record<string, string> = {
   january: "01", february: "02", march: "03", april: "04", may: "05", june: "06",
   july: "07", august: "08", september: "09", october: "10", november: "11", december: "12",
@@ -57,12 +54,53 @@ const monthNumbers: Record<string, string> = {
 
 const clean = (value: unknown) => String(value ?? "").replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
 
-function metaContent($: cheerio.CheerioAPI, selector: string) {
-  return clean($(selector).first().attr("content"));
+function decodeHtml(value: string) {
+  const named: Record<string, string> = {
+    amp: "&", apos: "'", quot: '"', nbsp: " ", ndash: "–", mdash: "—", rsquo: "’", lsquo: "‘",
+  };
+  return value.replace(/&(#x[\da-f]+|#\d+|[a-z]+);/gi, (_, entity: string) => {
+    if (entity[0] !== "#") return named[entity.toLowerCase()] ?? `&${entity};`;
+    const hex = entity[1]?.toLowerCase() === "x";
+    const parsed = Number.parseInt(entity.slice(hex ? 2 : 1), hex ? 16 : 10);
+    return Number.isFinite(parsed) ? String.fromCodePoint(parsed) : "";
+  });
 }
 
-function visibleText($: cheerio.CheerioAPI) {
-  return clean($("body").text());
+function visibleText(value: string) {
+  return clean(decodeHtml(
+    value
+      .replace(/<script\b[\s\S]*?<\/script>/gi, " ")
+      .replace(/<style\b[\s\S]*?<\/style>/gi, " ")
+      .replace(/<(?:br|\/p|\/div|\/li|\/h[1-6]|\/section)\b[^>]*>/gi, " ")
+      .replace(/<[^>]+>/g, " "),
+  ));
+}
+
+function attrValue(attrs: string, name: string) {
+  return decodeHtml(attrs.match(new RegExp(`\\b${name}\\s*=\\s*["']([^"']*)["']`, "i"))?.[1] ?? "");
+}
+
+function metaContent(html: string, key: string) {
+  const tags = html.match(/<meta\b[^>]*>/gi) ?? [];
+  for (const tag of tags) {
+    const identity = attrValue(tag, "property") || attrValue(tag, "name");
+    if (identity.toLowerCase() === key.toLowerCase()) return clean(attrValue(tag, "content"));
+  }
+  return "";
+}
+
+function classText(html: string, className: string) {
+  const escaped = className.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const pattern = new RegExp(
+    `<([a-z0-9]+)\\b([^>]*\\bclass\\s*=\\s*["'][^"']*\\b${escaped}\\b[^"']*["'][^>]*)>([\\s\\S]*?)<\\/\\1>`,
+    "i",
+  );
+  return visibleText(pattern.exec(html)?.[3] ?? "");
+}
+
+function firstTagText(html: string, tag: string) {
+  const match = new RegExp(`<${tag}\\b[^>]*>([\\s\\S]*?)<\\/${tag}>`, "i").exec(html);
+  return visibleText(match?.[1] ?? "");
 }
 
 function timestampIso(value: unknown) {
@@ -78,21 +116,40 @@ function timestampIso(value: unknown) {
   return Number.isFinite(parsed.getTime()) ? parsed.toISOString() : "";
 }
 
-function sectionTimestamp($: cheerio.CheerioAPI, selector: string) {
-  const section = $(selector).first();
-  if (!section.length) return "";
-  const candidates = [
-    section.find(".c-event-fight-card-broadcaster__time[data-timestamp]").first().attr("data-timestamp"),
-    section.find("[data-timestamp]").first().attr("data-timestamp"),
-  ];
-  return candidates.map(timestampIso).find(Boolean) ?? "";
+function idStart(html: string, id: string) {
+  const escaped = id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`<[^>]+\\bid\\s*=\\s*["']${escaped}["'][^>]*>`, "i").exec(html)?.index ?? -1;
 }
 
-function referenceTimestamp($: cheerio.CheerioAPI, now: Date) {
+function sectionHtml(html: string, id: string) {
+  const start = idStart(html, id);
+  if (start < 0) return "";
+  const later = ["main-card", "prelims-card", "early-prelims"]
+    .filter((candidate) => candidate !== id)
+    .map((candidate) => idStart(html.slice(start + 1), candidate))
+    .filter((index) => index >= 0)
+    .map((index) => start + 1 + index)
+    .filter((index) => index > start);
+  const end = later.length ? Math.min(...later) : html.length;
+  return html.slice(start, end);
+}
+
+function sectionTimestamp(html: string, id: string) {
+  const section = sectionHtml(html, id);
+  if (!section) return "";
+  const raw = section.match(/\bdata-timestamp\s*=\s*["']([^"']+)["']/i)?.[1] ?? "";
+  return timestampIso(raw);
+}
+
+function referenceTimestamp(html: string, now: Date) {
+  const headlineSuffix = classText(html, "c-hero__headline-suffix");
+  const suffixTag = headlineSuffix
+    ? html.match(/<[^>]+class=["'][^"']*c-hero__headline-suffix[^"']*["'][^>]*>/i)?.[0] ?? ""
+    : "";
   const candidates = [
-    $(".c-hero__headline-suffix[data-timestamp]").first().attr("data-timestamp"),
-    $(".c-hero__bottom-text [data-timestamp]").first().attr("data-timestamp"),
-    $("time[datetime]").first().attr("datetime"),
+    attrValue(suffixTag, "data-timestamp"),
+    html.match(/\bdata-timestamp\s*=\s*["']([^"']+)["']/i)?.[1] ?? "",
+    html.match(/<time\b[^>]*\bdatetime\s*=\s*["']([^"']+)["']/i)?.[1] ?? "",
   ];
   return candidates.map(timestampIso).find(Boolean) ?? now.toISOString();
 }
@@ -120,63 +177,79 @@ function canonicalName(value: unknown) {
   return name.length >= 2 && name.length <= 80 ? name : "";
 }
 
-function namesFromRow($: cheerio.CheerioAPI, row: HtmlElement) {
-  const node = $(row);
-  const red = canonicalName(node.find(".c-listing-fight__corner-name--red").first().text());
-  const blue = canonicalName(node.find(".c-listing-fight__corner-name--blue").first().text());
-  if (red && blue) return [red, blue];
+function classBlockText(html: string, className: string) {
+  return classText(html, className);
+}
 
-  const title = clean(node.find(".field--name-node-title").first().text());
-  const titlePair = splitVersus(title).map(canonicalName).filter(Boolean);
-  if (titlePair.length === 2) return titlePair;
-
-  const linked = node.find(".c-listing-fight__corner-name a, a[href*='/athlete/'], a[href*='/fighter/']")
-    .map((_: number, element: HtmlElement) => canonicalName($(element).text()))
-    .get() as string[];
-  const unique: string[] = [];
+function anchorFighterNames(row: string) {
+  const names: string[] = [];
   const identities = new Set<string>();
-  for (const name of linked) {
+  const pattern = /<a\b([^>]*)>([\s\S]*?)<\/a>/gi;
+  let match: RegExpExecArray | null;
+  while ((match = pattern.exec(row))) {
+    const href = attrValue(match[1] ?? "", "href");
+    if (!/\/(?:athlete|fighter)\//i.test(href)) continue;
+    const name = canonicalName(visibleText(match[2] ?? ""));
     const identity = normalizeText(name);
     if (!identity || identities.has(identity)) continue;
     identities.add(identity);
-    unique.push(name);
+    names.push(name);
   }
-  return unique.length === 2 ? unique : [];
+  return names;
 }
 
-function weightClass($: cheerio.CheerioAPI, row: HtmlElement) {
-  return clean(
-    $(row).find(".c-listing-fight__class-text,[class*='listing-fight__class-text'],[class*='weight-class']")
-      .first().text(),
-  ).replace(/\s+Bout\b.*$/i, "");
+function namesFromRow(row: string) {
+  const red = canonicalName(classBlockText(row, "c-listing-fight__corner-name--red"));
+  const blue = canonicalName(classBlockText(row, "c-listing-fight__corner-name--blue"));
+  if (red && blue) return [red, blue];
+
+  const title = classBlockText(row, "field--name-node-title");
+  const titlePair = splitVersus(title).map(canonicalName).filter(Boolean);
+  if (titlePair.length === 2) return titlePair;
+
+  const linked = anchorFighterNames(row);
+  return linked.length === 2 ? linked : [];
 }
 
-function rowsForSection($: cheerio.CheerioAPI, selector: string) {
-  const section = $(selector).first();
-  if (!section.length) return [] as HtmlElement[];
-  const rows = section.find(".l-listing__item").get() as HtmlElement[];
-  return rows.length ? rows : section.find(".c-listing-fight,[class*='listing-fight']").get() as HtmlElement[];
+function weightClass(row: string) {
+  const value = classBlockText(row, "c-listing-fight__class-text")
+    || classBlockText(row, "weight-class");
+  return clean(value).replace(/\s+Bout\b.*$/i, "");
+}
+
+function rowsForSection(html: string, id: string) {
+  const section = sectionHtml(html, id);
+  if (!section) return [] as string[];
+  const rows: string[] = [];
+  const pattern = /<li\b([^>]*)>([\s\S]*?)<\/li>/gi;
+  let match: RegExpExecArray | null;
+  while ((match = pattern.exec(section))) {
+    const attrs = match[1] ?? "";
+    const classes = attrValue(attrs, "class");
+    if (!/(?:^|\s)(?:l-listing__item|c-listing-fight)(?:\s|$)/i.test(classes)) continue;
+    rows.push(match[0]);
+  }
+  return rows;
 }
 
 function appendSectionBouts(
-  $: cheerio.CheerioAPI,
-  rows: HtmlElement[],
+  rows: string[],
   segment: "main" | "prelim" | "early-prelim",
   bouts: ParsedUfcBout[],
   seen: Set<string>,
 ) {
   let mainIndex = 0;
   for (const row of rows) {
-    const text = clean($(row).text());
+    const text = visibleText(row);
     if (!text || /\b(?:cancelled|canceled|postponed|scrapped)\b/i.test(text)) continue;
-    const fighters = namesFromRow($, row);
+    const fighters = namesFromRow(row);
     if (fighters.length !== 2) continue;
     const pair = canonicalFightPair(fighters[0]!, fighters[1]!);
     if (!pair || seen.has(pair)) continue;
     seen.add(pair);
     bouts.push({
       section: segment === "main" ? (mainIndex++ === 0 ? "main-event" : "main") : segment,
-      weight_class: weightClass($, row),
+      weight_class: weightClass(row),
       red_fighter_name: fighters[0]!,
       blue_fighter_name: fighters[1]!,
     });
@@ -184,22 +257,19 @@ function appendSectionBouts(
 }
 
 export function parseUfcFightCard(html: string, sourceUrl: string): UfcEventCard {
-  const $ = cheerio.load(html);
-  const mainRows = rowsForSection($, "#main-card");
-  const prelimRows = rowsForSection($, "#prelims-card");
-  const earlyRows = rowsForSection($, "#early-prelims");
+  const mainRows = rowsForSection(html, "main-card");
+  const prelimRows = rowsForSection(html, "prelims-card");
+  const earlyRows = rowsForSection(html, "early-prelims");
   const bouts: ParsedUfcBout[] = [];
   const seen = new Set<string>();
 
   if (mainRows.length) {
-    appendSectionBouts($, mainRows, "main", bouts, seen);
-    appendSectionBouts($, prelimRows, "prelim", bouts, seen);
-    appendSectionBouts($, earlyRows, "early-prelim", bouts, seen);
+    appendSectionBouts(mainRows, "main", bouts, seen);
+    appendSectionBouts(prelimRows, "prelim", bouts, seen);
+    appendSectionBouts(earlyRows, "early-prelim", bouts, seen);
     return { sourceUrl, bouts, usedSectionHeadings: true };
   }
 
-  const unsectioned = $(".l-listing__group--bordered .l-listing__item").get() as HtmlElement[];
-  appendSectionBouts($, unsectioned, "main", bouts, seen);
   return { sourceUrl, bouts, usedSectionHeadings: false };
 }
 
@@ -211,33 +281,16 @@ function eventPlaceFromDescription(value: string) {
   return venueOnly ? { venue: clean(venueOnly[1]), location: "" } : { venue: "", location: "" };
 }
 
-function venueLines($: cheerio.CheerioAPI) {
-  const root = $(".field--name-venue").first();
-  if (!root.length) return [] as string[];
-  const descendants = root.find(".field__item,div,p,span").map((_: number, element: HtmlElement) => clean($(element).text())).get() as string[];
-  const candidates = descendants.filter((value) => value && value.length <= 180);
-  const unique = Array.from(new Set(candidates));
-  if (unique.length >= 2) return unique.filter((value) => !unique.some((other) => other !== value && other.includes(value) && other.length > value.length));
-  return clean(root.text()).split(/\s{2,}|\n+/).map(clean).filter(Boolean);
-}
-
-function eventPlace($: cheerio.CheerioAPI, description: string) {
+function eventPlace(html: string, description: string) {
   const descriptionPlace = eventPlaceFromDescription(description);
   if (descriptionPlace.venue) return descriptionPlace;
-  const lines = venueLines($);
-  if (lines.length >= 2) return { venue: lines[0]!, location: lines.slice(1).join(", ") };
-  const hero = clean($(".c-hero__bottom-text").text());
-  return {
-    venue: lines[0] ?? "",
-    location: descriptionPlace.location || (hero.length <= 180 ? hero : ""),
-  };
+  const venue = classBlockText(html, "field--name-venue");
+  return { venue, location: descriptionPlace.location };
 }
 
-function eventName($: cheerio.CheerioAPI, card: UfcEventCard) {
-  const prefix = clean($(".c-hero__headline-prefix").first().text());
-  const pageTitle = clean($(".c-hero__header h1").first().text())
-    || clean($("h1").first().text())
-    || metaContent($, "meta[property='og:title']");
+function eventName(html: string, card: UfcEventCard) {
+  const prefix = classBlockText(html, "c-hero__headline-prefix");
+  const pageTitle = firstTagText(html, "h1") || metaContent(html, "og:title");
   const evidence = `${prefix} ${pageTitle}`;
   const number = eventNumber(evidence);
   if (number) return `UFC ${number}`;
@@ -247,9 +300,9 @@ function eventName($: cheerio.CheerioAPI, card: UfcEventCard) {
   return "";
 }
 
-function orderedSubtitle($: cheerio.CheerioAPI, mainEvent: ParsedUfcBout) {
+function orderedSubtitle(html: string, mainEvent: ParsedUfcBout) {
   const fullNames = [mainEvent.red_fighter_name, mainEvent.blue_fighter_name];
-  const hero = clean($(".c-hero__headline").first().text());
+  const hero = classBlockText(html, "c-hero__headline");
   const abbreviated = splitVersus(hero);
   if (abbreviated.length === 2) {
     const firstMatches = fullNames.filter((name) => fighterMatch(abbreviated[0]!, name));
@@ -261,11 +314,11 @@ function orderedSubtitle($: cheerio.CheerioAPI, mainEvent: ParsedUfcBout) {
   return `${mainEvent.red_fighter_name} vs. ${mainEvent.blue_fighter_name}`;
 }
 
-function segmentTimes($: cheerio.CheerioAPI, eventType: UfcEventMetadata["eventType"], sourceUrl: string, now: Date) {
-  const bodyText = visibleText($);
-  const reference = referenceTimestamp($, now);
-  const mainDirect = sectionTimestamp($, "#main-card") || reference;
-  const prelimDirect = sectionTimestamp($, "#prelims-card");
+function segmentTimes(html: string, eventType: UfcEventMetadata["eventType"], sourceUrl: string, now: Date) {
+  const bodyText = visibleText(html);
+  const reference = referenceTimestamp(html, now);
+  const mainDirect = sectionTimestamp(html, "main-card") || reference;
+  const prelimDirect = sectionTimestamp(html, "prelims-card");
   let parsed: ReturnType<typeof parseOfficialUfcSegmentTimes> | null = null;
   try {
     parsed = parseOfficialUfcSegmentTimes(bodyText, reference, eventType === "numbered", now);
@@ -299,7 +352,6 @@ export function parseUfcEventPage(
   const sourceUrl = absoluteUfcEventUrl(requestedUrl);
   if (!sourceUrl) throw new Error("Official UFC event parsing requires an exact UFC.com event URL.");
 
-  const $ = cheerio.load(html);
   const card = parseUfcFightCard(html, sourceUrl);
   if (!card.usedSectionHeadings || card.bouts.length < 4 || card.bouts.length > 20) {
     throw new Error(`Official UFC did not provide a plausible sectioned fight card (${card.bouts.length} fights).`);
@@ -307,19 +359,18 @@ export function parseUfcEventPage(
   const mainEvent = card.bouts.find((bout) => bout.section === "main-event");
   if (!mainEvent) throw new Error("Official UFC did not provide a main event.");
 
-  const name = eventName($, card);
+  const name = eventName(html, card);
   if (!name) throw new Error("Official UFC did not provide an event name.");
   const number = eventNumber(name);
   const eventType: UfcEventMetadata["eventType"] = number ? "numbered" : "fight-night";
-  const times = segmentTimes($, eventType, sourceUrl, now);
-  const description = metaContent($, "meta[property='og:description']")
-    || metaContent($, "meta[name='description']");
-  const place = eventPlace($, description);
+  const times = segmentTimes(html, eventType, sourceUrl, now);
+  const description = metaContent(html, "og:description") || metaContent(html, "description");
+  const place = eventPlace(html, description);
   const sourceEventKey = /^event\/[a-z0-9-]+$/i.test(clean(sourceEventKeyOverride))
     ? clean(sourceEventKeyOverride)
     : canonicalUfcEventKey(sourceUrl);
   if (!sourceEventKey) throw new Error("Official UFC did not produce a stable event identity.");
-  const subtitle = orderedSubtitle($, mainEvent);
+  const subtitle = orderedSubtitle(html, mainEvent);
   const startsAt = eventType === "numbered" ? times.prelimsStartsAt : times.mainCardStartsAt;
   const eventId = normalizeText(`${name} ${subtitle} ${times.localEventDate}`).replace(/\s+/g, "-");
 
