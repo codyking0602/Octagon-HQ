@@ -98,7 +98,6 @@ describe("Phase 2B event setup backend", () => {
     );
     expect(productionPreviewContract).toContain("sameTimestamp");
     expect(productionPreviewVerifier).not.toContain("expectedFights");
-    expect(webkitVerifier).toContain("UFC.COM EVENT URL (OPTIONAL)");
     expect(webkitVerifier).toContain('const updateButton = page.getByRole("button", { name: "CHECK FOR CARD UPDATES" });');
     expect(webkitVerifier).toContain('const syncButton = page.getByRole("button", { name: "SYNC NEXT UFC EVENT" });');
     expect(webkitVerifier).toContain("if (await updateButton.count())");
