@@ -38,4 +38,26 @@ describe("fighterThumbnailPath", () => {
         .toBe(`/assets/fighters/${slug}-thumb.webp`);
     }
   });
+
+  it("resolves the Sacramento main-card thumbnails", () => {
+    const slugs = [
+      "anthony-hernandez",
+      "gregory-rodrigues",
+      "serghei-spivac",
+      "vitor-petrino",
+      "reinier-de-ridder",
+      "roman-dolidze",
+      "marquel-mederos",
+      "mason-jones",
+      "carli-judice",
+      "jeisla-chaves",
+      "kennedy-nzechukwu",
+      "shamil-gaziev",
+    ];
+
+    for (const slug of slugs) {
+      expect(fighterThumbnailPath(slug))
+        .toBe(`/assets/fighters/${slug}-thumb.webp`);
+    }
+  });
 });
