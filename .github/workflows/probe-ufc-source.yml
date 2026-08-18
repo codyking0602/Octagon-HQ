@@ -1,0 +1,42 @@
+name: Probe UFC source
+
+on:
+  push:
+    branches:
+      - agent/restore-ufc-picks-source
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Probe UFC-owned endpoints
+        shell: bash
+        run: |
+          set -u
+          urls=(
+            "https://ufc-data-api.ufc.com/api/v3/us/events"
+            "http://ufc-data-api.ufc.com/api/v3/us/events"
+            "https://www.ufc.com/events"
+            "https://www.ufc.com/event/ufc-fight-night-august-22-2026"
+            "https://www.ufc.com/event/ufc-fight-night-august-22-2026?language_content_entity=en"
+            "https://www.ufc.com/event/ufc-fight-night-august-22-2026?_format=json"
+            "https://www.ufc.com/event/ufc-fight-night-august-22-2026/amp"
+          )
+          for url in "${urls[@]}"; do
+            echo "===== $url ====="
+            rm -f /tmp/body /tmp/headers
+            status=$(curl -L --silent --show-error --max-time 15 \
+              -A 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile/15E148 Safari/604.1' \
+              -H 'Accept: text/html,application/xhtml+xml,application/json;q=0.9,*/*;q=0.8' \
+              -H 'Accept-Language: en-US,en;q=0.9' \
+              -D /tmp/headers -o /tmp/body -w '%{http_code}' "$url" || true)
+            echo "status=$status"
+            grep -Ei '^(content-type|location|server|via|x-|cf-|akamai-)' /tmp/headers | tail -20 || true
+            echo "bytes=$(wc -c < /tmp/body 2>/dev/null || echo 0)"
+            head -c 500 /tmp/body 2>/dev/null | tr '\n' ' ' || true
+            echo
+          done
