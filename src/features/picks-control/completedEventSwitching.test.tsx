@@ -134,13 +134,13 @@ describe("completed Picks event switching", () => {
     );
 
     expect(await screen.findByText("Result corrections")).toBeInTheDocument();
-    await waitFor(() => expect(loadControlEvent).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(loadControlEvent).toHaveBeenCalledTimes(1));
 
     fireEvent.click(screen.getByRole("button", { name: "OPEN PAST EVENT CORRECTIONS" }));
     fireEvent.click(screen.getByRole("button", { name: "OPEN AUG 2 COMPLETED EVENT" }));
 
     await waitFor(() => expect(loadControlEvent).toHaveBeenCalledWith("older-event"));
-    expect(loadControlEvent).toHaveBeenCalledTimes(3);
+    expect(loadControlEvent).toHaveBeenCalledTimes(2);
 
     await act(async () => {
       resolveOlder?.(older);
@@ -148,6 +148,6 @@ describe("completed Picks event switching", () => {
     });
 
     expect(await screen.findByText("EVENT · Older Headliner vs. Older Opponent")).toBeInTheDocument();
-    expect(loadControlEvent).toHaveBeenCalledTimes(3);
+    expect(loadControlEvent).toHaveBeenCalledTimes(2);
   });
 });
