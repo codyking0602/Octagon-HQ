@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import MonitoringInboxPage from "../picks-monitoring/MonitoringInboxPage";
@@ -25,6 +25,11 @@ import { nextProgressiveLockClockAt } from "./progressiveLockTiming";
 type ResourceState<T> =
   | { status: "idle" | "loading" | "error" }
   | { status: "ready"; value: T };
+
+type SeedState<T> =
+  | { status: "empty" }
+  | { status: "ready"; value: T }
+  | { status: "error"; error: unknown };
 
 function displayTime(value: string | null | undefined) {
   if (!value) return "NOT SET";
@@ -109,6 +114,57 @@ export default function PicksControlCenterPage({
   const [eventState, setEventState] = useState<ResourceState<PickControlEvent | null>>({ status: "idle" });
   const [draftState, setDraftState] = useState<ResourceState<PickSetupDraft | null>>({ status: "idle" });
   const [controlRevision, setControlRevision] = useState(0);
+  const controlSeed = useRef<SeedState<PickControlEvent | null>>({ status: "empty" });
+  const draftSeed = useRef<SeedState<PickSetupDraft | null>>({ status: "empty" });
+
+  useEffect(() => {
+    if (!identity.ready) return;
+    let active = true;
+
+    if (!identity.profile) {
+      controlSeed.current = { status: "empty" };
+      draftSeed.current = { status: "empty" };
+      setEventState({ status: "ready", value: null });
+      setDraftState({ status: "ready", value: null });
+      return;
+    }
+
+    if (!controlRepository) {
+      setEventState({ status: "error" });
+    } else {
+      controlSeed.current = { status: "empty" };
+      setEventState({ status: "loading" });
+      void controlRepository.loadControlEvent().then((event) => {
+        if (!active) return;
+        controlSeed.current = { status: "ready", value: event };
+        setEventState({ status: "ready", value: event });
+      }).catch((error) => {
+        if (!active) return;
+        controlSeed.current = { status: "error", error };
+        setEventState({ status: "error" });
+      });
+    }
+
+    if (!setupRepository) {
+      setDraftState({ status: "error" });
+    } else {
+      draftSeed.current = { status: "empty" };
+      setDraftState({ status: "loading" });
+      void setupRepository.loadDraft().then((draft) => {
+        if (!active) return;
+        draftSeed.current = { status: "ready", value: draft };
+        setDraftState({ status: "ready", value: draft });
+      }).catch((error) => {
+        if (!active) return;
+        draftSeed.current = { status: "error", error };
+        setDraftState({ status: "error" });
+      });
+    }
+
+    return () => {
+      active = false;
+    };
+  }, [controlRepository, identity.profile, identity.ready, setupRepository]);
 
   const ownedControlRepository = useMemo<PickControlRepository | null>(() => {
     if (!controlRepository) return null;
@@ -116,10 +172,21 @@ export default function PicksControlCenterPage({
       ...controlRepository,
       async loadControlEvent(eventId) {
         const trackLifecycle = eventId === undefined;
-        if (trackLifecycle) setEventState({ status: "loading" });
+        if (trackLifecycle) {
+          const seed = controlSeed.current;
+          if (seed.status === "ready") {
+            controlSeed.current = { status: "empty" };
+            return seed.value;
+          }
+          if (seed.status === "error") {
+            controlSeed.current = { status: "empty" };
+            throw seed.error;
+          }
+          setEventState({ status: "loading" });
+        }
         try {
           const event = await controlRepository.loadControlEvent(eventId);
-          if (trackLifecycle) setEventState({ status: "ready", value: event });
+          setEventState({ status: "ready", value: event });
           return event;
         } catch (error) {
           if (trackLifecycle) setEventState({ status: "error" });
@@ -134,6 +201,15 @@ export default function PicksControlCenterPage({
     return {
       ...setupRepository,
       async loadDraft() {
+        const seed = draftSeed.current;
+        if (seed.status === "ready") {
+          draftSeed.current = { status: "empty" };
+          return seed.value;
+        }
+        if (seed.status === "error") {
+          draftSeed.current = { status: "empty" };
+          throw seed.error;
+        }
         setDraftState({ status: "loading" });
         try {
           const draft = await setupRepository.loadDraft();
@@ -146,12 +222,26 @@ export default function PicksControlCenterPage({
       },
       async publishDraft(draftId) {
         await setupRepository.publishDraft(draftId);
+        draftSeed.current = { status: "empty" };
+        controlSeed.current = { status: "empty" };
         setDraftState({ status: "loading" });
         setEventState({ status: "loading" });
+        if (!controlRepository) {
+          setEventState({ status: "error" });
+        } else {
+          try {
+            const event = await controlRepository.loadControlEvent();
+            controlSeed.current = { status: "ready", value: event };
+            setEventState({ status: "ready", value: event });
+          } catch (error) {
+            controlSeed.current = { status: "error", error };
+            setEventState({ status: "error" });
+          }
+        }
         setControlRevision((revision) => revision + 1);
       },
     };
-  }, [setupRepository]);
+  }, [controlRepository, setupRepository]);
 
   const event = eventState.status === "ready" ? eventState.value : undefined;
   const activeEvent = event?.status === "complete" ? null : event;
@@ -177,11 +267,15 @@ export default function PicksControlCenterPage({
   const status = identity.ready && !identity.profile
     ? "OWNER SIGN-IN REQUIRED"
     : primaryStatus(eventState, draftState);
-  const primaryAction = activeEvent
-    ? activeEvent.status === "upcoming"
-      ? null
-      : { href: "#fight-night", label: unresolved ? "ENTER RESULTS" : "COMPLETE EVENT" }
-    : { href: "#setup", label: staged ? "REVIEW & PUBLISH" : "OPEN EVENT SETUP" };
+  const primaryAction = eventState.status !== "ready"
+    ? null
+    : activeEvent
+      ? activeEvent.status === "upcoming"
+        ? null
+        : { href: "#fight-night", label: unresolved ? "ENTER RESULTS" : "COMPLETE EVENT" }
+      : draftState.status === "ready"
+        ? { href: "#setup", label: staged ? "REVIEW & PUBLISH" : "OPEN EVENT SETUP" }
+        : null;
 
   useEffect(() => {
     const sectionId = location.hash.replace(/^#/, "");
@@ -216,7 +310,7 @@ export default function PicksControlCenterPage({
         </div>
       </header>
 
-      {activeEvent === null ? (
+      {eventState.status === "ready" && activeEvent === null && draftState.status === "ready" ? (
         <section id="setup" className="picks-control-center__section" aria-label="Event setup">
           <details className="surface-card picks-control-center__panel" open>
             <summary>
@@ -246,18 +340,19 @@ export default function PicksControlCenterPage({
         </section>
       ) : null}
 
-      <section
-        id="fight-night"
-        className="picks-control-center__section"
-        aria-label="Event and fight-night control"
-        hidden={!identity.profile || event === null}
-      >
-        {activeEvent?.status === "locked" || event?.status === "complete" ? (
-          <PicksControlPage key={controlRevision} repository={ownedControlRepository} now={now} />
-        ) : (
-          <OpenPicksDashboard key={controlRevision} repository={ownedControlRepository} now={now} />
-        )}
-      </section>
+      {identity.profile && eventState.status === "ready" && event !== null ? (
+        <section
+          id="fight-night"
+          className="picks-control-center__section"
+          aria-label="Event and fight-night control"
+        >
+          {activeEvent?.status === "locked" || event.status === "complete" ? (
+            <PicksControlPage key={controlRevision} repository={ownedControlRepository} now={now} />
+          ) : (
+            <OpenPicksDashboard key={controlRevision} repository={ownedControlRepository} now={now} />
+          )}
+        </section>
+      ) : null}
     </div>
   );
 }
