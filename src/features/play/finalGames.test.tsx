@@ -5,18 +5,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ChallengeProvider } from "../challenges/ChallengeProvider";
 import { IdentityProvider } from "../identity/IdentityProvider";
 import { FindLeaderHistoryProvider } from "./FindLeaderHistoryProvider";
-import BetterThanPage from "./BetterThanPage";
 import KeepCutPage from "./KeepCutPage";
 import PlayPage from "./PlayPage";
-import {
-  BETTER_THAN_LENSES,
-  betterThanEligible,
-  betterThanLens,
-  betterThanPool,
-  betterThanStatement,
-  compareBetterThanClaims,
-  resolveBetterThanChallenge,
-} from "./betterThanEngine";
 import {
   KEEP_CUT_PACKS,
   KEEP_CUT_ROLES,
@@ -96,60 +86,16 @@ describe("Keep 4, Cut 4 engine", () => {
   });
 });
 
-describe("Better Than engine", () => {
-  it("preserves all eleven debate lenses and exact frozen challenge claims", () => {
-    expect(BETTER_THAN_LENSES).toHaveLength(11);
-    const target = getPlayFighter("charles-oliveira")!;
-    const selections = betterThanEligible(target.id, "all").slice(0, 3);
-    const resolved = resolveBetterThanChallenge({
-      targetId: target.id,
-      lensId: "overall",
-      poolId: "all",
-      claimCount: "3",
-      selectionIds: selections.map((fighter) => fighter.id).join(","),
-    });
-    expect(resolved?.target.id).toBe(target.id);
-    expect(resolved?.selections.map((fighter) => fighter.id)).toEqual(selections.map((fighter) => fighter.id));
-  });
-
-  it("writes natural debate copy for division-specific claims", () => {
-    const target = getPlayFighter("charles-oliveira")!;
-    expect(betterThanStatement(
-      target,
-      betterThanLens("kickboxing"),
-      betterThanPool(target, "division:Flyweight"),
-      5,
-    )).toBe("I can name 5 UFC flyweights who are better kickboxers than Charles Oliveira.");
-  });
-
-  it("compares shared and split names without creating an official verdict", () => {
-    const target = getPlayFighter("charles-oliveira")!;
-    const eligible = betterThanEligible(target.id, "all");
-    const creator = resolveBetterThanChallenge({
-      targetId: target.id,
-      lensId: "overall",
-      poolId: "all",
-      claimCount: "3",
-      selectionIds: eligible.slice(0, 3).map((fighter) => fighter.id).join(","),
-    })!;
-    const comparison = compareBetterThanClaims(creator, 3, [eligible[0], eligible[2], eligible[3]]);
-    expect(comparison.shared.map((fighter) => fighter.id)).toEqual([eligible[0].id, eligible[2].id]);
-    expect(comparison.creatorOnly).toHaveLength(1);
-    expect(comparison.responderOnly).toHaveLength(1);
-    expect(comparison.narrower).toBe("same");
-  });
-});
-
 describe("Final Play game presentation", () => {
   beforeEach(() => {
     window.localStorage.clear();
     Object.defineProperty(window, "scrollTo", { value: vi.fn(), writable: true });
   });
 
-  it("shows all eight registered games on the legacy Play presentation", () => {
+  it("shows all seven registered games on the legacy Play presentation", () => {
     const { container } = renderAt(<PlayPage />, "/play");
-    expect(container.querySelectorAll(".play-games__grid .play-game-card")).toHaveLength(8);
-    expect(container.querySelectorAll(".play-games__grid button.play-game-card")).toHaveLength(7);
+    expect(container.querySelectorAll(".play-games__grid .play-game-card")).toHaveLength(7);
+    expect(container.querySelectorAll(".play-games__grid button.play-game-card")).toHaveLength(6);
     expect(container.querySelector(".play-game-card__status.is-preview")).toBeNull();
   });
 
@@ -216,25 +162,5 @@ describe("Final Play game presentation", () => {
     expect(container.textContent).toContain("FIGHTER 1 OF 8");
     expect(container.querySelector(".keep-cut-current h2")?.textContent).toBe(lineup.fighters[0]?.name);
     ids.slice(1).forEach((id) => expect(container.textContent).not.toContain(getPlayFighter(id)?.name));
-  });
-
-  it("keeps the original Better Than list hidden until the counterclaim locks", () => {
-    const target = getPlayFighter("charles-oliveira")!;
-    const eligible = betterThanEligible(target.id, "all");
-    const creatorIds = eligible.slice(0, 3).map((fighter) => fighter.id).join(",");
-    const { container } = renderAt(
-      <BetterThanPage />,
-      `/play/better-than?target=${target.id}&lens=overall&pool=all&count=3&selections=${creatorIds}`,
-    );
-    expect(container.textContent).toContain("The original exact list stays hidden");
-    const candidates = [...container.querySelectorAll<HTMLButtonElement>(".better-than-grid .better-than-fighter")].slice(0, 3);
-    candidates.forEach((candidate) => fireEvent.click(candidate));
-    const lockButton = container.querySelector<HTMLButtonElement>(".better-than-lock")!;
-    expect(lockButton.classList.contains("is-ready")).toBe(true);
-    fireEvent.click(lockButton);
-    expect(container.textContent).toContain("CLAIMS REVEALED");
-    expect(container.querySelector(".better-than-result-list")?.textContent).not.toContain("ADD");
-    const actions = [...container.querySelectorAll(".game-result-actions button")].map((button) => button.textContent);
-    expect(actions).toEqual(["CHALLENGE SOMEONE", "REPLAY CHALLENGE", "ALL GAMES"]);
   });
 });

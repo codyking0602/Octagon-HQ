@@ -4,7 +4,8 @@ import {
   requiredShareArtwork,
 } from "./verify-production-artifact.mjs";
 
-describe("production artifact Picks control markers", () => {
+
+describe("production artifact verification", () => {
   it("tracks the compiled compact progressive per-fight lock UI instead of retired lock copy", () => {
     expect(requiredApplicationMarkers).toEqual(expect.arrayContaining([
       "MASTER LOCK",
@@ -27,7 +28,12 @@ describe("production artifact Picks control markers", () => {
     ]));
   });
 
-  it("requires share artwork for every current Play game, including Hit the Number", () => {
-    expect(requiredShareArtwork).toContain("hit-the-number.svg");
+  it("keeps only non-game share artwork as a static verifier list", () => {
+    expect(requiredShareArtwork).toEqual([
+      "picks-recap.svg",
+      "ranking-update.svg",
+    ]);
+    expect(requiredShareArtwork).not.toContain("better-than.svg");
+    expect(requiredShareArtwork).not.toContain("hit-the-number.svg");
   });
 });

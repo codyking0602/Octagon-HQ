@@ -10,10 +10,10 @@ const expectedIds: PlayGameId[] = [
   "blind-resume",
   "blind-rank",
   "keep-cut",
-  "better-than",
 ];
 
 const officialDailyIds: PlayGameId[] = [
+  "hit-the-number",
   "find-leader",
   "wavelength",
   "blind-resume",
@@ -24,6 +24,7 @@ const officialDailyIds: PlayGameId[] = [
 describe("Play game lineup contracts", () => {
   it("requires an intentional complete contract for every live game", () => {
     expect(playGames.map((game) => game.id)).toEqual(expectedIds);
+    expect(playGames.map((game) => game.id)).not.toContain("better-than");
     expect(new Set(playGames.map((game) => game.id)).size).toBe(playGames.length);
 
     for (const game of playGames) {
@@ -39,7 +40,7 @@ describe("Play game lineup contracts", () => {
     }
   });
 
-  it("declares the five canonical official daily, streak, and reminder-eligible games", () => {
+  it("declares the six canonical official daily, streak, and reminder-eligible games", () => {
     const dailyGames = playGames.filter((game) => game.lineup.dailyEligible);
     const streakGames = playGames.filter((game) => game.lineup.streakEligible);
     const reminderGames = playGames.filter((game) => game.lineup.reminderEligible);
@@ -58,55 +59,39 @@ describe("Play game lineup contracts", () => {
     }
   });
 
-  it("ships Hit the Number as replayable play with exact profile challenges", () => {
+  it("declares Hit the Number as the existing replayable game plus official Daily", () => {
     expect(playGameDefinition("hit-the-number").lineup).toMatchObject({
       defaultType: "replayable",
-      supportedTypes: ["replayable", "curated"],
+      supportedTypes: ["daily", "replayable", "curated"],
       replayBehavior: "new-lineup",
       newLineupControl: "button-and-result-replay",
       repetitionPolicy: "recent-items-deprioritized",
       lineupSize: "variable",
       completionState: "target-selection-locked",
       challengeEligible: true,
-      dailyEligible: false,
-      streakEligible: false,
-      reminderEligible: false,
-      historyRecording: "casual-and-challenge",
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily-and-casual",
     });
   });
 
-  it("preserves casual new-lineup play and exact direct challenges for the existing challenge games", () => {
+  it("preserves casual new-lineup play and exact direct challenges for the Daily challenge games", () => {
     for (const gameId of officialDailyIds) {
       const contract = playGameDefinition(gameId).lineup;
       expect(contract.defaultType).toBe("replayable");
       expect(contract.supportedTypes).toContain("curated");
       expect(contract.replayBehavior).toBe("new-lineup");
     }
-
-    expect(playGameDefinition("better-than").lineup).toMatchObject({
-      defaultType: "curated",
-      supportedTypes: ["curated"],
-      replayBehavior: "same-curated-challenge",
-      newLineupControl: "builder-reset",
-      repetitionPolicy: "fixed-curated",
-      historyRecording: "challenge-completion",
-      streakEligible: false,
-      reminderEligible: false,
-    });
   });
 
-  it("uses the canonical centered VS icon for Better Than", () => {
-    expect(playGameDefinition("better-than").icon).toBe("VS");
-  });
-
-  it("keeps every established game challenge eligible and gives every game a defined completion state", () => {
+  it("keeps every live game challenge eligible and gives every live game a defined completion state", () => {
     expect(playGames.every((game) => game.lineup.challengeEligible)).toBe(true);
     expect(playGameDefinition("find-leader").lineup.completionState).toBe("leader-eliminated-or-nine-safe");
     expect(playGameDefinition("wavelength").lineup.completionState).toBe("fourth-guess-locked");
     expect(playGameDefinition("blind-resume").lineup.completionState).toBe("five-picks-complete");
     expect(playGameDefinition("blind-rank").lineup.completionState).toBe("five-slots-locked");
     expect(playGameDefinition("keep-cut").lineup.completionState).toBe("eight-decisions-locked");
-    expect(playGameDefinition("better-than").lineup.completionState).toBe("claim-locked");
     expect(playGameDefinition("auction").lineup.completionState).toBe("auction-complete");
     expect(playGameDefinition("hit-the-number").lineup.completionState).toBe("target-selection-locked");
   });

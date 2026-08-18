@@ -9,7 +9,6 @@ const LIVE_GAME_ROUTES: Partial<Record<PlayGameId, string>> = {
   "blind-resume": "/play/blind-resume",
   "blind-rank": "/play/blind-rank",
   "keep-cut": "/play/keep-cut",
-  "better-than": "/play/better-than",
   auction: "/play/auction",
   "hit-the-number": "/play/hit-the-number",
 };
