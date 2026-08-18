@@ -46,14 +46,6 @@ export const requiredApplicationMarkers = [
 ];
 
 export const requiredShareArtwork = [
-  "find-leader.svg",
-  "wavelength.svg",
-  "blind-resume.svg",
-  "blind-rank.svg",
-  "keep-cut.svg",
-  "better-than.svg",
-  "auction.svg",
-  "hit-the-number.svg",
   "picks-recap.svg",
   "ranking-update.svg",
 ];
@@ -132,7 +124,7 @@ export async function verifyProductionArtifact({ dist = "dist", env = process.en
     || !Array.isArray(previewCatalog.fighters)
     || previewCatalog.fighters.length < 1
     || !Array.isArray(previewCatalog.games)
-    || previewCatalog.games.length !== 8
+    || previewCatalog.games.length < 1
     || !previewCatalog.fighterAssets
     || typeof previewCatalog.fighterAssets !== "object"
   ) {
@@ -143,9 +135,18 @@ export async function verifyProductionArtifact({ dist = "dist", env = process.en
       throw new Error("The rich preview catalog contains an incomplete fighter.");
     }
   }
+
+  const gameIds = new Set();
   for (const game of previewCatalog.games) {
     if (!game.id || !game.title || !game.description || !game.imagePath) {
       throw new Error("The rich preview catalog contains an incomplete game.");
+    }
+    if (gameIds.has(game.id)) throw new Error(`The rich preview catalog contains duplicate game ${game.id}.`);
+    gameIds.add(game.id);
+
+    const artworkPath = join(dist, String(game.imagePath).replace(/^\/+/, ""));
+    if (!files.includes(artworkPath)) {
+      throw new Error(`The rich preview catalog references missing game artwork: ${artworkPath}.`);
     }
   }
 
