@@ -4,6 +4,25 @@ import { getUfcStatsSnapshotFighter } from "../../supabase/functions/build-pick-
 
 const builder = readFileSync("supabase/functions/build-pick-spotlight/index.ts", "utf8");
 
+const sacramentoCardFighters = [
+  "Anthony Hernandez",
+  "Gregory Rodrigues",
+  "Roman Dolidze",
+  "Reinier de Ridder",
+  "Serghei Spivac",
+  "Vitor Petrino",
+  "Kennedy Nzechukwu",
+  "Shamil Gaziev",
+  "Kody Steele",
+  "Gauge Young",
+  "Carli Judice",
+  "Jeisla Chaves",
+  "Wes Schultz",
+  "Jackson McVey",
+  "Shanelle Dyer",
+  "Elise Reed",
+] as const;
+
 describe("UFCStats Spotlight snapshot", () => {
   it("does not make a live UFCStats request while the owner is building a Spotlight", () => {
     expect(builder).toContain('getUfcStatsSnapshotFighter');
@@ -12,8 +31,8 @@ describe("UFCStats Spotlight snapshot", () => {
     expect(builder).not.toContain('fighter-details');
   });
 
-  it("covers both UFC 330 title fights from the canonical UFCStats snapshot", () => {
-    for (const name of ["Islam Makhachev", "Ian Machado Garry", "Mackenzie Dern", "Gillian Robertson"]) {
+  it("covers every fighter on the current owner-authored Sacramento card", () => {
+    for (const name of sacramentoCardFighters) {
       const fighter = getUfcStatsSnapshotFighter(name);
       expect(fighter?.name).toBe(name);
       expect(fighter?.record).toMatch(/^\d+-\d+-\d+/);
@@ -22,5 +41,17 @@ describe("UFCStats Spotlight snapshot", () => {
       expect(fighter?.slpm).toBeTypeOf("number");
       expect(fighter?.takedownDefense).toBeTypeOf("number");
     }
+  });
+
+  it("includes the Anthony Hernandez data that blocked Spotlight creation", () => {
+    expect(getUfcStatsSnapshotFighter("Anthony Hernandez")).toMatchObject({
+      record: "15-3-0 (1 NC)",
+      height: "6' 0\"",
+      reach: "75\"",
+      stance: "Orthodox",
+      slpm: 4.57,
+      takedownAverage: 5.88,
+      takedownDefense: 68,
+    });
   });
 });
