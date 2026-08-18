@@ -5,6 +5,7 @@ select set_config('request.jwt.claim.role', 'service_role', true);
 
 do $$
 declare
+  v_source_schedule private.daily_challenge_schedule_versions;
   v_schedule private.daily_challenge_schedule_versions;
   v_index integer;
   v_day date;
@@ -16,15 +17,30 @@ declare
   v_request jsonb;
 begin
   select schedule.*
-  into v_schedule
+  into v_source_schedule
   from private.daily_challenge_schedule_versions schedule
   where schedule.version = 'play-rotation-v1';
 
+  if v_source_schedule.version is null
+    or v_source_schedule.time_zone <> 'America/Chicago'
+    or v_source_schedule.anchor_day <> date '2026-08-06'
+    or coalesce(array_length(v_source_schedule.game_cycle, 1), 0) <> 20 then
+    raise exception 'source twenty-day rotation was not installed exactly: %', row_to_json(v_source_schedule);
+  end if;
+
+  select schedule.*
+  into v_schedule
+  from private.daily_challenge_schedule_versions schedule
+  where schedule.version = 'play-rotation-v2';
+
   if v_schedule.version is null
-    or v_schedule.time_zone <> 'America/Chicago'
-    or v_schedule.anchor_day <> date '2026-08-06'
-    or coalesce(array_length(v_schedule.game_cycle, 1), 0) <> 20 then
-    raise exception 'versioned twenty-day rotation was not installed exactly: %', row_to_json(v_schedule);
+    or v_schedule.time_zone is distinct from v_source_schedule.time_zone
+    or v_schedule.anchor_day is distinct from v_source_schedule.anchor_day
+    or v_schedule.game_cycle is distinct from v_source_schedule.game_cycle
+    or v_schedule.starts_on < v_source_schedule.starts_on then
+    raise exception 'active reroll rotation does not preserve the source rotation contract: source %, active %',
+      row_to_json(v_source_schedule),
+      row_to_json(v_schedule);
   end if;
 
   if (select count(*) from unnest(v_schedule.game_cycle) game where game = 'find_leader') <> 8
@@ -47,7 +63,8 @@ begin
     )
   )
     or 'auction' = any(v_schedule.game_cycle)
-    or 'better_than' = any(v_schedule.game_cycle) then
+    or 'better_than' = any(v_schedule.game_cycle)
+    or 'hit_the_number' = any(v_schedule.game_cycle) then
     raise exception 'an ineligible game entered the official rotation: %', v_schedule.game_cycle;
   end if;
 
