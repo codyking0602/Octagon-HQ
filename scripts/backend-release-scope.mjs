@@ -10,6 +10,7 @@ const backendReleasePatterns = [
   /^scripts\/configure-monitoring-scheduler\.mjs$/,
   /^scripts\/verify-monitoring-function-deployment\.mjs$/,
   /^scripts\/verify-sync-function-deployment\.mjs$/,
+  /^src\/features\/picks\/spotlightContent\.ts$/,
   /^src\/features\/play\//,
   /^package\.json$/,
   /^package-lock\.json$/,
