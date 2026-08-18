@@ -1,47 +1,57 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-const main = readFileSync(new URL("../main.tsx", import.meta.url), "utf8");
-const page = readFileSync(new URL("../features/picks/PicksPage.tsx", import.meta.url), "utf8");
-const groupStyles = readFileSync(new URL("../styles/picks-group.css", import.meta.url), "utf8");
-const picksStyles = readFileSync(new URL("../styles/picks-polish.css", import.meta.url), "utf8");
+const main = readFileSync("src/main.tsx", "utf8");
+const page = readFileSync("src/features/picks/PicksPage.tsx", "utf8");
+const assets = readFileSync("src/features/picks/picksEventAssets.ts", "utf8");
+const picksStyles = readFileSync("src/styles/picks-polish.css", "utf8");
+const groupStyles = readFileSync("src/styles/picks-group-progress.css", "utf8");
+const seasonStyles = readFileSync("src/styles/picks-season-hub.css", "utf8");
 
 describe("Picks event UI standard", () => {
   it("loads one final player-facing style owner after every Picks sub-style", () => {
-    const polishIndex = main.indexOf('import "./styles/picks-polish.css"');
-    expect(polishIndex).toBeGreaterThan(main.indexOf('import "./styles/picks.css"'));
-    expect(polishIndex).toBeGreaterThan(main.indexOf('import "./styles/picks-group.css"'));
-    expect(polishIndex).toBeGreaterThan(main.indexOf('import "./styles/picks-season.css"'));
-    expect(polishIndex).toBeGreaterThan(main.indexOf('import "./styles/picks-control.css"'));
+    expect(main.indexOf('import "./styles/picks-group-progress.css";')).toBeLessThan(
+      main.indexOf('import "./styles/picks-polish.css";'),
+    );
+    expect(main.indexOf('import "./styles/picks-season-hub.css";')).toBeLessThan(
+      main.indexOf('import "./styles/picks-polish.css";'),
+    );
+    expect(seasonStyles).not.toContain(".picks-card-odds {");
+    expect(seasonStyles).not.toContain(".pick-bout-card,");
   });
 
   it("standardizes the complete event hero and its no-header fallback", () => {
-    expect(page).toContain('className={`surface-card picks-event-hero${eventPoster ? " has-poster" : ""}`}');
-    expect(page).toContain('className="picks-event-hero__poster"');
-    expect(page).toContain('className="picks-event-hero__content"');
-    expect(picksStyles).toContain(".picks-event-hero.has-poster .picks-event-hero__poster {");
-    expect(picksStyles).toContain("aspect-ratio: var(--picks-event-poster-aspect, 480 / 321);");
-    expect(picksStyles).toContain("background-size: cover, contain, cover;");
+    expect(assets).toContain('PICK_EVENT_HEADER_BUCKET = "pick-event-headers"');
+    expect(assets).toContain("event.headerStoragePath");
+    expect(assets).not.toContain("posterByMainEvent");
+    expect(page).toContain("pickEventPoster(activeEvent)");
+    expect(page).not.toContain('location.toLowerCase().includes("belgrade")');
+    expect(picksStyles).toContain("--picks-event-poster-aspect");
     expect(picksStyles).toContain(".picks-event-hero:not(.has-poster) .picks-event-hero__poster::before {");
     expect(picksStyles).toContain('content: "OCTAGON HQ PICKS";');
+    expect(picksStyles).toContain(".picks-event-hero__facts span {");
+    expect(picksStyles).toContain(".picks-event-hero .picks-progress {");
   });
 
   it("keeps every event matchup on one compact line", () => {
-    expect(page).toContain('className="pick-bout-card__choices"');
-    expect(page).toContain('className="pick-bout-card__versus"');
-    expect(picksStyles).toContain("grid-template-columns: minmax(0, 1fr) 36px minmax(0, 1fr);");
+    expect(picksStyles).toContain(".picks-event-hero__copy > strong {");
+    expect(picksStyles).toContain("white-space: nowrap;");
+    expect(picksStyles).toContain("text-overflow: ellipsis;");
+    expect(picksStyles).toContain("font-size: clamp(17px, 4.75vw, 23px);");
   });
 
   it("uses one disclosure header standard for Group Picks and scoring rules", () => {
     expect(picksStyles).toContain("--picks-disclosure-height: 46px;");
-    expect(picksStyles).toContain("--picks-disclosure-padding: 16px;");
+    expect(picksStyles).toContain("--picks-disclosure-color: var(--text-muted);");
     expect(picksStyles).toContain(".picks-group-progress summary,");
-    expect(picksStyles).toContain(".picks-group-progress--static,");
     expect(picksStyles).toContain(".picks-scoring-guide summary {");
+    expect(groupStyles).toContain(".picks-group-progress {\n  display: block;");
+    expect(groupStyles).toContain("min-height: var(--picks-disclosure-height, 46px);");
   });
 
   it("makes Group Picks member rows visibly interactive", () => {
-    expect(groupStyles).toContain(".picks-group-progress__member > button::after");
+    expect(groupStyles).toContain(".picks-group-progress__member > button::after {");
+    expect(groupStyles).toContain('.picks-group-progress__member > button[aria-expanded="true"]::after {');
     expect(groupStyles).toContain('content: "›";');
     expect(groupStyles).toContain("cursor: pointer;");
   });
