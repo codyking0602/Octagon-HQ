@@ -57,6 +57,37 @@
   animation: picks-event-header-sheen 10s ease-in-out infinite;
 }
 
+/* Reuse the persisted event artwork as a blurred, low-opacity light source below the hero.
+   This keeps the dark Picks UI intact while letting each event supply its own atmosphere. */
+.picks-page.has-event-atmosphere .picks-card-zone {
+  isolation: isolate;
+}
+
+.picks-page.has-event-atmosphere .picks-card-zone::before {
+  position: absolute;
+  top: -92px;
+  right: -10vw;
+  left: -10vw;
+  z-index: 0;
+  height: min(820px, 112vh);
+  content: "";
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(5, 5, 7, .18) 0%, rgba(5, 5, 7, .42) 48%, rgba(5, 5, 7, .96) 100%),
+    var(--picks-event-poster);
+  background-position: center top, center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  filter: blur(42px) saturate(1.32);
+  opacity: .2;
+  transform: translate3d(0, 0, 0) scale(1.05);
+}
+
+.picks-page.has-event-atmosphere .picks-card-zone > * {
+  position: relative;
+  z-index: 1;
+}
+
 @keyframes picks-event-header-push {
   from {
     transform: translate3d(0, 0, 0) scale(1);
@@ -123,5 +154,9 @@
     display: none;
     animation: none;
     will-change: auto;
+  }
+
+  .picks-page.has-event-atmosphere .picks-card-zone::before {
+    transform: none;
   }
 }

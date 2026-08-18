@@ -132,7 +132,7 @@ export default function PicksPage() {
     .map((bout) => oddsProvenance(bout.oddsSource, bout.oddsUpdatedAt))
     .find(Boolean) ?? null;
   const eventPoster = pickEventPoster(activeEvent);
-  const heroStyle = eventPoster
+  const eventVisualStyle = eventPoster
     ? ({
         "--picks-event-poster": `url("${eventPoster.src}")`,
         "--picks-event-poster-aspect": eventPoster.aspectRatio,
@@ -140,7 +140,10 @@ export default function PicksPage() {
     : undefined;
 
   return (
-    <div className="page picks-page">
+    <div
+      className={`page picks-page${eventPoster ? " has-event-atmosphere" : ""}`}
+      style={eventVisualStyle}
+    >
       <section className="page-heading picks-page-heading">
         <p className="eyebrow">EVENT PICKS</p>
         <h1>Call the fights</h1>
@@ -176,7 +179,6 @@ export default function PicksPage() {
           <section
             className={`surface-card picks-event-hero${eventPoster ? " has-poster" : ""}`}
             aria-labelledby="picks-event-title"
-            style={heroStyle}
           >
             <div className="picks-event-hero__poster" aria-hidden="true">
               {activeLifecycle.state !== "upcoming" ? (
