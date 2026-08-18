@@ -21,6 +21,7 @@ on:
       - "supabase/migrations/202612310025_hit_the_number_daily_runtime.sql"
       - "supabase/migrations/202612310026_blind_resume_v3_daily_runtime.sql"
       - "supabase/migrations/202612310027_blind_resume_v3_publication.sql"
+      - "supabase/migrations/202612310028_activate_60_day_daily_rotation.sql"
       - "supabase/tests/generalized_todays_challenge_backend.sql"
       - "supabase/tests/daily_challenge_runtime_progress.sql"
       - "supabase/tests/daily_challenge_rotation.sql"
@@ -173,6 +174,7 @@ jobs:
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310025_hit_the_number_daily_runtime.sql
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310026_blind_resume_v3_daily_runtime.sql
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310027_blind_resume_v3_publication.sql
+            psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310028_activate_60_day_daily_rotation.sql
           done
           psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/generalized_todays_challenge_legacy_assert.sql
 
@@ -195,10 +197,10 @@ jobs:
             echo "- Daily runtime Edge Function local bundle and execution: passed"
             echo "- Six server-owned graders: passed"
             echo "- Six deterministic runtime setup adapters: passed"
-            echo "- Hit the Number hidden-value, explicit-lock, and normalized scoring contract: passed"
+            echo "- Hit the Number hidden-value, explicit-lock, normalized scoring, and rotation eligibility: passed"
             echo "- Blind Resume V3 staged reveal, 100-point scoring, and V2 compatibility: passed"
             echo "- Calibrated Wavelength v2 publication: passed"
-            echo "- Versioned 20-day rotation and persisted fallback: passed"
+            echo "- Versioned 60-day six-game rotation and persisted fallback: passed"
             echo "- Progressive reveal and hidden-evidence boundaries: passed"
             echo "- Cross-device optimistic progress restoration: passed"
             echo "- Shared hourly materialization wake-up: passed"
@@ -313,6 +315,7 @@ jobs:
           require_remote_migration "202612310025"
           require_remote_migration "202612310026"
           require_remote_migration "202612310027"
+          require_remote_migration "202612310028"
           supabase db push --linked --dry-run
 
       - name: Record exact deployed backend proof
@@ -322,7 +325,7 @@ jobs:
             echo "### Generalized Today’s Challenge backend deployment verified"
             echo "- Canonical deploy workflow run: ${{ github.event.workflow_run.html_url }}"
             echo "- Exact deployed source SHA: \`$SOURCE_SHA\`"
-            echo "- Remote migrations: \`202609050001\`, \`202609050002\`, \`202609060001\`, \`202609080001\`, \`202609090001\`, \`202609140003\`, \`202612310025\`, \`202612310026\`, \`202612310027\`"
+            echo "- Remote migrations: \`202609050001\`, \`202609050002\`, \`202609060001\`, \`202609080001\`, \`202609090001\`, \`202609140003\`, \`202612310025\`, \`202612310026\`, \`202612310027\`, \`202612310028\`"
             echo "- Daily runtime Edge Function exact-head marker verified by the canonical deploy workflow"
             echo "- Linked dry run: no unapplied database changes"
           } >> "$GITHUB_STEP_SUMMARY"
