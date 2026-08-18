@@ -195,8 +195,10 @@ describe("Final Play game presentation", () => {
     );
     expect(container.textContent).toContain("EIGHT CALLS LOCKED");
     expect(container.textContent).toContain(`${expected.score}/100`);
-    expect(container.textContent).toContain(`${expected.modelTopFourKept} OF MODEL TOP 4 KEPT`);
-    expect(container.textContent).toContain(`${expected.correctComparisons} OF 16 COMPARISONS WON`);
+    expect(container.textContent).toContain(`${expected.modelTopFourKept} OF OCTAGON HQ’S TOP 4 KEPT`);
+    expect(container.textContent).toContain("Your four keeps are graded against the strongest four fighters on this board.");
+    expect(container.textContent).not.toMatch(/OF 16 COMPARISONS/i);
+    expect(container.textContent).not.toMatch(/COMPARISONS WON/i);
     expect(container.querySelectorAll(".keep-cut-result-group--keep .keep-cut-fighter")).toHaveLength(4);
     expect(container.querySelectorAll(".keep-cut-result-group--cut .keep-cut-fighter")).toHaveLength(4);
     const actions = [...container.querySelectorAll(".game-result-actions button")].map((button) => button.textContent);
