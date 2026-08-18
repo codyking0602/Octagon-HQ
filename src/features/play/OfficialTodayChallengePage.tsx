@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
+import { OfficialBlindResumeV3DailyView } from "./OfficialBlindResumeV3DailyView";
 import {
   OfficialBlindRankCanonicalOrder,
   OfficialBlindRankScoreSummary,
@@ -113,11 +114,21 @@ export default function OfficialTodayChallengePage({
     return <Navigate replace to={adapter.dailyRoute} />;
   }
 
+  const blindResumeV3 = runtime.projection.gameType === "blind_resume"
+    && runtime.projection.contentVersion === "blind-resume-v3";
+
   return (
     <div className="official-daily-page">
       <RuntimeStatus error={runtime.error} onRefresh={() => { void runtime.refresh(); }} />
       <OfficialBlindRankScoreSummary projection={runtime.projection} />
-      {runtime.projection.gameType === "hit_the_number" ? (
+      {blindResumeV3 ? (
+        <OfficialBlindResumeV3DailyView
+          projection={runtime.projection}
+          busy={runtime.busy}
+          onAdvance={(action) => { void runtime.advance(action); }}
+          onNavigate={(route) => navigate(route)}
+        />
+      ) : runtime.projection.gameType === "hit_the_number" ? (
         <OfficialHitTheNumberDailyView
           projection={runtime.projection}
           busy={runtime.busy}
