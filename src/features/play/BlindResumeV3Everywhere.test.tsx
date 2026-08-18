@@ -2,6 +2,8 @@ import { fireEvent, render, within } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ChallengeProvider } from "../challenges/ChallengeProvider";
+import { challengeResultScoreLabel } from "../challenges/ChallengeResultDetails";
+import { createPlayChallenge } from "../challenges/challengeModel";
 import { IdentityProvider } from "../identity/IdentityProvider";
 import IntelligencePage from "../intelligence/IntelligencePage";
 import BlindResumePage from "./BlindResumePage";
@@ -71,6 +73,34 @@ describe("Blind Resume V3 shared contract", () => {
     expect(stored?.statsByRound.map((stats) => stats.map((stat) => stat.label))).toEqual(
       card.statsByRound.map((stats) => stats.map((stat) => stat.label)),
     );
+  });
+
+  it("shows V3 score plus record in challenge results while preserving V2 /5 copy", () => {
+    const base = {
+      code: "BRV3",
+      gameId: "blind-resume" as const,
+      gameTitle: "Blind Resume",
+      summary: "Five matchups",
+      creatorId: "sender",
+      recipientId: "recipient",
+      playUrl: "/play/blind-resume",
+      setup: {},
+      now: new Date("2026-08-18T00:00:00Z"),
+    };
+    const v3 = createPlayChallenge({
+      ...base,
+      gameVersion: "blind-resume-v3",
+      creatorResult: { score: 82, record: { wins: 4, losses: 1 } },
+    });
+    const v2 = createPlayChallenge({
+      ...base,
+      code: "BRV2",
+      gameVersion: "blind-resume-v2",
+      creatorResult: { score: 4 },
+    });
+
+    expect(challengeResultScoreLabel(v3, v3.creatorResult)).toBe("82/100 · 4-1");
+    expect(challengeResultScoreLabel(v2, v2.creatorResult)).toBe("4/5");
   });
 
   it("shows all eight rows, reveals 2 → 4 → 6 → 8, and scores the lock stage", () => {
