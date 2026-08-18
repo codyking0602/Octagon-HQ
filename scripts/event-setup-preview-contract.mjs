@@ -93,7 +93,7 @@ function hasCombinedVenueAndLocation(value) {
   return parts.length >= 2 && parts.every((part) => part.length >= 2);
 }
 
-export function assertCurrentEventPreview(event, now = new Date()) {
+export function assertCurrentEventPreview(event, now = new Date(), { requireCbsSource = true } = {}) {
   if (!event || typeof event !== "object") {
     throw new Error("Preview is missing the event payload.");
   }
@@ -121,7 +121,10 @@ export function assertCurrentEventPreview(event, now = new Date()) {
     throw new Error("Preview places the Picks lock after the event start.");
   }
 
-  if (!isCbsSportsUfcEventUrl(event.source_url)) {
+  if (!clean(event.source_url)) {
+    throw new Error("Preview is missing a specific event source.");
+  }
+  if (requireCbsSource && !isCbsSportsUfcEventUrl(event.source_url)) {
     throw new Error("Preview is missing a specific CBS Sports UFC event source.");
   }
 

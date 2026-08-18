@@ -104,6 +104,23 @@ describe("production Event Setup preview contract", () => {
     )).toThrow("specific CBS Sports UFC event");
   });
 
+  it("checks the deployed source contract before merge and requires CBS once the checked-out head is live", () => {
+    const legacyPreview = {
+      ...currentPreview,
+      source_url: "https://www.mmamania.com/ufc-fight-cards/legacy-card",
+    };
+    expect(() => assertCurrentEventPreview(
+      legacyPreview,
+      previewNow,
+      { requireCbsSource: false },
+    )).not.toThrow();
+    expect(() => assertCurrentEventPreview(legacyPreview, previewNow))
+      .toThrow("specific CBS Sports UFC event");
+    expect(liveVerifier).toContain("const requireCbsSource = expectedSha === sourceSha;");
+    expect(liveVerifier).toContain("{ requireCbsSource },");
+    expect(liveVerifier).not.toContain("EVENT_SETUP_TEST_MMA_URL");
+  });
+
   it("accepts only a structured fail-closed source rollover", () => {
     expect(() => assertSafeEventSourceRollover({
       code: "ARTICLE_IDENTITY_REJECTED",
