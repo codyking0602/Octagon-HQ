@@ -10,7 +10,8 @@ type OfficialDailyGameType =
   | "blind_resume"
   | "wavelength"
   | "blind_rank_5"
-  | "keep_4_cut_4";
+  | "keep_4_cut_4"
+  | "hit_the_number";
 
 interface OfficialDailyRuntimeContext {
   gameType: OfficialDailyGameType;
