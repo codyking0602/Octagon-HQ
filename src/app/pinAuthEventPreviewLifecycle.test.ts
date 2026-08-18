@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const verifier = readFileSync("scripts/verify-pin-auth-live.mjs", "utf8");
+const backendWorkflow = readFileSync(".github/workflows/verify-supabase-backend.yml", "utf8");
 
 describe("production WebKit Event Setup lifecycle proof", () => {
   it("observes the actual sync response instead of assuming one completed card", () => {
@@ -27,11 +28,13 @@ describe("production WebKit Event Setup lifecycle proof", () => {
     expect(verifier).toContain("Event Setup changed the persisted source field after a safe source rollover rejection.");
   });
 
-  it("still proves the live owner-only surfaces and exact deployment markers", () => {
+  it("proves the live owner-only surfaces and delegates backend revision identity to the canonical lane", () => {
     expect(verifier).toContain('const monitoringRegion = page.getByRole("region", {');
     expect(verifier).toContain('name: "Automatic monitoring and card review"');
     expect(verifier).toContain("expectedDeploymentSha");
-    expect(verifier).toContain("expectedSyncSourceSha");
+    expect(verifier).not.toContain("expectedSyncSourceSha");
     expect(verifier).toContain("Temporary Event Setup owner grant");
+    expect(backendWorkflow).toContain("Verify exact deployed UFC sync source");
+    expect(backendWorkflow).toContain("node scripts/verify-sync-function-deployment.mjs");
   });
 });
