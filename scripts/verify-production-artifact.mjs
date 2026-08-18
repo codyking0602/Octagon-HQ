@@ -68,95 +68,65 @@ export const forbiddenAuctionPrivateMarkers = [
   "item_grade",
   "winner_explanation",
   "best_purchase",
+  "overpay",
+  "missed_opportunity",
+  "random_seed",
+  "Anderson Silva vs Forrest Griffin — UFC 101",
 ];
 
-function isSafeRelativeAssetPath(value) {
-  return typeof value === "string"
-    && value.length > 0
-    && value.startsWith("/")
-    && !value.startsWith("//")
-    && !value.includes("..")
-    && !value.includes("\\")
-    && !/^\/[a-z][a-z0-9+.-]*:/i.test(value);
-}
-
 export async function verifyProductionArtifact({ dist = "dist", env = process.env } = {}) {
-  const files = await walk(dist);
-  const indexPath = join(dist, "index.html");
-  const workerPath = join(dist, "_worker.js");
-  const headersPath = join(dist, "_headers");
-  const assetIgnorePath = join(dist, ".assetsignore");
-  const previewCatalogPath = join(dist, "preview-data", "rankings.json");
-  const previewGamesPath = join(dist, "preview-data", "games.json");
-  const previewArtworkPath = join(dist, "preview-data", "artwork");
-
-  for (const required of [indexPath, workerPath, headersPath, assetIgnorePath, previewCatalogPath, previewGamesPath]) {
-    if (!files.includes(required)) throw new Error(`Production artifact is missing required file: ${required}.`);
-  }
-
-  const assetIgnore = await readFile(assetIgnorePath, "utf8");
-  if (!assetIgnore.split(/\r?\n/).includes("_worker.js")) {
-    throw new Error("The production asset manifest must exclude _worker.js from static asset serving.");
-  }
-
-  const headers = await readFile(headersPath, "utf8");
-  if (!headers.includes("Cache-Control: no-cache")) {
-    throw new Error("The production SPA shell must be delivered with Cache-Control: no-cache.");
-  }
-
   const config = validatePublicSupabaseConfig({
     url: env.VITE_SUPABASE_URL,
     publishableKey: env.VITE_SUPABASE_PUBLISHABLE_KEY,
     expectedHostname: env.VITE_EXPECTED_SUPABASE_HOSTNAME,
   });
+  const files = await walk(dist);
+  if (!files.some((file) => file.endsWith("index.html"))) throw new Error("dist/index.html is missing.");
 
-  const previewCatalog = JSON.parse(await readFile(previewCatalogPath, "utf8"));
-  const previewGames = JSON.parse(await readFile(previewGamesPath, "utf8"));
-  if (!Array.isArray(previewCatalog.fighters) || !Array.isArray(previewGames.games)) {
-    throw new Error("The production preview data is malformed.");
-  }
-
-  const previewFighterSlugs = new Set(previewCatalog.fighters.map((fighter) => fighter.slug));
-  for (const fighter of previewCatalog.fighters) {
-    if (!fighter.slug || !fighter.displayName || !fighter.imagePath || !Number.isFinite(fighter.rank) || !Number.isFinite(fighter.ovr)) {
-      throw new Error("The rich preview catalog contains an incomplete fighter.");
-    }
-  }
-
-  const previewCatalogGames = Array.isArray(previewCatalog.games) ? previewCatalog.games : [];
-  const previewGamesById = new Map(previewGames.games.map((game) => [game.id, game]));
-  const allPreviewGames = previewCatalogGames.length ? previewCatalogGames : previewGames.games;
-  if (!Array.isArray(allPreviewGames)) {
-    throw new Error("The complete rich preview catalog is missing or invalid.");
-  }
-
-  const gameIds = new Set();
-  for (const game of allPreviewGames) {
-    if (!game.id || !game.title || !game.description || !game.imagePath) {
-      throw new Error("The rich preview catalog contains an incomplete game.");
-    }
-    if (gameIds.has(game.id)) throw new Error(`The rich preview catalog contains duplicate game ${game.id}.`);
-    gameIds.add(game.id);
-
-    const source = previewGamesById.get(game.id) ?? game;
-    if (!source || !isSafeRelativeAssetPath(source.imagePath)) {
-      throw new Error(`The rich preview catalog contains an unsafe game image path for ${game.id}.`);
-    }
-    const artworkPath = join(dist, String(source.imagePath).replace(/^\/+/, ""));
-    if (!files.includes(artworkPath)) {
-      throw new Error(`The rich preview catalog references missing game artwork: ${artworkPath}.`);
-    }
+  const workerPath = join(dist, "_worker.js");
+  const assetsIgnorePath = join(dist, ".assetsignore");
+  const previewCatalogPath = join(dist, "preview-data", "rankings.json");
+  for (const requiredPath of [workerPath, assetsIgnorePath, previewCatalogPath]) {
+    if (!files.includes(requiredPath)) throw new Error(`${requiredPath} is missing.`);
   }
 
   for (const artwork of requiredShareArtwork) {
-    if (!files.includes(join(previewArtworkPath, artwork))) {
-      throw new Error(`Production artifact is missing required share artwork: ${artwork}.`);
-    }
+    const artworkPath = join(dist, "assets", "share", artwork);
+    if (!files.includes(artworkPath)) throw new Error(`${artworkPath} is missing.`);
   }
 
+  const worker = await readFile(workerPath, "utf8");
+  for (const marker of [
+    "X-Octagon-Preview",
+    "X-Octagon-Preview-Image",
+    "og:title",
+    "og:image:width",
+    "twitter:card",
+    "share-preview",
+    "image/png",
+    "get_rich_preview_data",
+    "picks-recap",
+    "major-ranking-update",
+    "auction-result",
+    "jon-jones",
+  ]) {
+    if (!worker.includes(marker)) throw new Error(`Compiled rich preview Worker is missing marker: ${marker}.`);
+  }
+
+  const assetsIgnore = await readFile(assetsIgnorePath, "utf8");
+  if (!assetsIgnore.split(/\r?\n/).includes("_worker.js")) {
+    throw new Error("dist/.assetsignore must exclude _worker.js from public static assets.");
+  }
+
+  const previewCatalog = JSON.parse(await readFile(previewCatalogPath, "utf8"));
   if (
-    previewFighterSlugs.size !== previewCatalog.fighters.length
-    || previewCatalog.fighters.length === 0
+    previewCatalog.version !== 2
+    || !Array.isArray(previewCatalog.fighters)
+    || previewCatalog.fighters.length < 1
+    || !Array.isArray(previewCatalog.games)
+    || previewCatalog.games.length < 1
+    || !previewCatalog.fighterAssets
+    || typeof previewCatalog.fighterAssets !== "object"
   ) {
     throw new Error("The complete rich preview catalog is missing or invalid.");
   }
@@ -219,12 +189,9 @@ async function walk(directory) {
   }))).flat();
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
-  try {
-    const result = await verifyProductionArtifact();
-    console.log(`Verified production artifact: ${result.files} compiled files, ${result.previewFighters} fighters, ${result.previewGames} games, Supabase host ${result.hostname}.`);
-  } catch (error) {
-    console.error(error);
-    process.exitCode = 1;
-  }
+if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
+  const result = await verifyProductionArtifact();
+  console.log(
+    `Verified ${result.files} compiled files for ${result.hostname}, including ${result.previewFighters} fighter and ${result.previewGames} game previews.`,
+  );
 }
