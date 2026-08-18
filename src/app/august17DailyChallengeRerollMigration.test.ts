@@ -11,7 +11,8 @@ describe("August 17 Daily Challenge reroll migration", () => {
     expect(migration).toContain("v_target_day constant date := date '2026-08-17'");
     expect(migration).toContain("v_source_version constant text := 'play-rotation-v1'");
     expect(migration).toContain("v_replacement_version constant text := 'play-rotation-v2'");
-    expect(migration).toContain("private.daily_challenge_central_day(now())");
+    expect(migration).toContain("(now() at time zone 'America/Chicago')::date");
+    expect(migration).not.toContain("private.daily_challenge_central_day(now())");
     expect(migration).toContain("if v_source_starts_on <= v_target_day then");
     expect(migration).toContain("private.daily_challenge_schedule_for_day(v_target_day)");
     expect(migration).toContain("if v_central_today <> v_target_day then");
@@ -29,6 +30,7 @@ describe("August 17 Daily Challenge reroll migration", () => {
     expect(migration).not.toContain("insert into private.daily_challenge_setups");
     expect(migration).not.toContain("setup_key");
     expect(migration).not.toContain("public_setup");
+    expect(migration).not.toContain("create or replace function private.daily_challenge_central_day");
   });
 
   it("preserves the canonical game contract and removes only the superseded live day state", () => {
