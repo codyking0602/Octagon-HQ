@@ -26,9 +26,9 @@ type ResourceState<T> =
   | { status: "idle" | "loading" | "error" }
   | { status: "ready"; value: T };
 
-type SeedState<T> =
+type ControlSeed =
   | { status: "empty" }
-  | { status: "ready"; value: T }
+  | { status: "ready"; value: PickControlEvent | null }
   | { status: "error"; error: unknown };
 
 function displayTime(value: string | null | undefined) {
@@ -114,9 +114,8 @@ export default function PicksControlCenterPage({
   const [eventState, setEventState] = useState<ResourceState<PickControlEvent | null>>({ status: "idle" });
   const [draftState, setDraftState] = useState<ResourceState<PickSetupDraft | null>>({ status: "idle" });
   const [controlRevision, setControlRevision] = useState(0);
-  const controlSeed = useRef<SeedState<PickControlEvent | null>>({ status: "empty" });
-  const draftSeed = useRef<SeedState<PickSetupDraft | null>>({ status: "empty" });
-  const loadSetupDraft = () => setupRepository!.loadDraft();
+  const controlSeed = useRef<ControlSeed>({ status: "empty" });
+  const loadCurrentControlEvent = () => controlRepository!.loadControlEvent(undefined);
 
   useEffect(() => {
     if (!identity.ready) return;
@@ -124,48 +123,32 @@ export default function PicksControlCenterPage({
 
     if (!identity.profile) {
       controlSeed.current = { status: "empty" };
-      draftSeed.current = { status: "empty" };
-      setEventState({ status: "ready", value: null });
-      setDraftState({ status: "ready", value: null });
+      setEventState({ status: "idle" });
+      setDraftState({ status: "idle" });
       return;
     }
 
     if (!controlRepository) {
       setEventState({ status: "error" });
-    } else {
-      controlSeed.current = { status: "empty" };
-      setEventState({ status: "loading" });
-      void controlRepository.loadControlEvent().then((event) => {
-        if (!active) return;
-        controlSeed.current = { status: "ready", value: event };
-        setEventState({ status: "ready", value: event });
-      }).catch((error) => {
-        if (!active) return;
-        controlSeed.current = { status: "error", error };
-        setEventState({ status: "error" });
-      });
+      return;
     }
 
-    if (!setupRepository) {
-      setDraftState({ status: "error" });
-    } else {
-      draftSeed.current = { status: "empty" };
-      setDraftState({ status: "loading" });
-      void loadSetupDraft().then((draft) => {
-        if (!active) return;
-        draftSeed.current = { status: "ready", value: draft };
-        setDraftState({ status: "ready", value: draft });
-      }).catch((error) => {
-        if (!active) return;
-        draftSeed.current = { status: "error", error };
-        setDraftState({ status: "error" });
-      });
-    }
+    controlSeed.current = { status: "empty" };
+    setEventState({ status: "loading" });
+    void loadCurrentControlEvent().then((event) => {
+      if (!active) return;
+      controlSeed.current = { status: "ready", value: event };
+      setEventState({ status: "ready", value: event });
+    }).catch((error) => {
+      if (!active) return;
+      controlSeed.current = { status: "error", error };
+      setEventState({ status: "error" });
+    });
 
     return () => {
       active = false;
     };
-  }, [controlRepository, identity.profile, identity.ready, setupRepository]);
+  }, [controlRepository, identity.profile, identity.ready]);
 
   const ownedControlRepository = useMemo<PickControlRepository | null>(() => {
     if (!controlRepository) return null;
@@ -187,7 +170,7 @@ export default function PicksControlCenterPage({
         }
         try {
           const event = await controlRepository.loadControlEvent(eventId);
-          setEventState({ status: "ready", value: event });
+          if (trackLifecycle) setEventState({ status: "ready", value: event });
           return event;
         } catch (error) {
           if (trackLifecycle) setEventState({ status: "error" });
@@ -202,18 +185,9 @@ export default function PicksControlCenterPage({
     return {
       ...setupRepository,
       async loadDraft() {
-        const seed = draftSeed.current;
-        if (seed.status === "ready") {
-          draftSeed.current = { status: "empty" };
-          return seed.value;
-        }
-        if (seed.status === "error") {
-          draftSeed.current = { status: "empty" };
-          throw seed.error;
-        }
         setDraftState({ status: "loading" });
         try {
-          const draft = await loadSetupDraft();
+          const draft = await setupRepository.loadDraft();
           setDraftState({ status: "ready", value: draft });
           return draft;
         } catch (error) {
@@ -223,15 +197,13 @@ export default function PicksControlCenterPage({
       },
       async publishDraft(draftId) {
         await setupRepository.publishDraft(draftId);
-        draftSeed.current = { status: "empty" };
         controlSeed.current = { status: "empty" };
-        setDraftState({ status: "loading" });
         setEventState({ status: "loading" });
         if (!controlRepository) {
           setEventState({ status: "error" });
         } else {
           try {
-            const event = await controlRepository.loadControlEvent();
+            const event = await loadCurrentControlEvent();
             controlSeed.current = { status: "ready", value: event };
             setEventState({ status: "ready", value: event });
           } catch (error) {
@@ -274,9 +246,7 @@ export default function PicksControlCenterPage({
       ? activeEvent.status === "upcoming"
         ? null
         : { href: "#fight-night", label: unresolved ? "ENTER RESULTS" : "COMPLETE EVENT" }
-      : draftState.status === "ready"
-        ? { href: "#setup", label: staged ? "REVIEW & PUBLISH" : "OPEN EVENT SETUP" }
-        : null;
+      : { href: "#setup", label: staged ? "REVIEW & PUBLISH" : "OPEN EVENT SETUP" };
 
   useEffect(() => {
     const sectionId = location.hash.replace(/^#/, "");
@@ -311,18 +281,20 @@ export default function PicksControlCenterPage({
         </div>
       </header>
 
-      {eventState.status === "ready" && activeEvent === null && draftState.status === "ready" ? (
-        <section id="setup" className="picks-control-center__section" aria-label="Event setup">
-          <details className="surface-card picks-control-center__panel" open>
-            <summary>
-              <span>EVENT SETUP</span>
-              <strong>{staged ? "REVIEW STAGED CARD" : "STAGE THE NEXT CARD"}</strong>
-            </summary>
-            <div className="picks-control-center__panel-body">
-              <PicksSetupPage repository={ownedSetupRepository} />
-            </div>
-          </details>
-        </section>
+      {activeEvent === null ? (
+        identity.profile ? (
+          <section id="setup" className="picks-control-center__section" aria-label="Event setup">
+            <details className="surface-card picks-control-center__panel" open>
+              <summary>
+                <span>EVENT SETUP</span>
+                <strong>{staged ? "REVIEW STAGED CARD" : "STAGE THE NEXT CARD"}</strong>
+              </summary>
+              <div className="picks-control-center__panel-body">
+                <PicksSetupPage repository={ownedSetupRepository} />
+              </div>
+            </details>
+          </section>
+        ) : null
       ) : null}
 
       {activeEvent?.status === "upcoming" ? (
@@ -341,7 +313,7 @@ export default function PicksControlCenterPage({
         </section>
       ) : null}
 
-      {identity.profile && eventState.status === "ready" && event != null ? (
+      {identity.profile && event != null ? (
         <section
           id="fight-night"
           className="picks-control-center__section"
