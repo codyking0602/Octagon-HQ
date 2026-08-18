@@ -3,8 +3,8 @@ import type { SpotlightStatsFighter } from "../../../src/features/picks/spotligh
 export type UfcStatsSnapshotFighter = Omit<SpotlightStatsFighter, "fighterSlug">;
 
 // Canonical checked-in UFCStats snapshot for the fights currently eligible for
-// owner-authored UFC 330 Spotlights. Values are copied from the fighters'
-// UFCStats profiles so Spotlight creation does not depend on UFCStats uptime.
+// owner-authored Spotlights. Values are copied from the fighters' UFCStats
+// profiles so Spotlight creation does not depend on UFCStats uptime.
 const fighters: Record<string, UfcStatsSnapshotFighter> = {
   "islam makhachev": {
     name: "Islam Makhachev",
@@ -69,6 +69,38 @@ const fighters: Record<string, UfcStatsSnapshotFighter> = {
     takedownAccuracy: 40,
     takedownDefense: 38,
     submissionAverage: 0.9,
+  },
+  "anthony hernandez": {
+    name: "Anthony Hernandez",
+    record: "15-3-0 (1 NC)",
+    dob: "1993-10-18",
+    height: "6' 0\"",
+    reach: "75\"",
+    stance: "Orthodox",
+    slpm: 4.57,
+    strikingAccuracy: 60,
+    sapm: 3.1,
+    strikingDefense: 51,
+    takedownAverage: 5.88,
+    takedownAccuracy: 48,
+    takedownDefense: 68,
+    submissionAverage: 1.6,
+  },
+  "gregory rodrigues": {
+    name: "Gregory Rodrigues",
+    record: "19-6-0",
+    dob: "1992-02-17",
+    height: "6' 3\"",
+    reach: "75\"",
+    stance: "Orthodox",
+    slpm: 5.53,
+    strikingAccuracy: 51,
+    sapm: 4.78,
+    strikingDefense: 50,
+    takedownAverage: 1.9,
+    takedownAccuracy: 34,
+    takedownDefense: 75,
+    submissionAverage: 0.4,
   },
 };
 
