@@ -128,7 +128,7 @@ export const KEEP_CUT_BOARD_STYLES: readonly KeepCutBoardStyle[] = [
   },
 ] as const;
 
-// Compatibility export for any existing Keep/Cut-only consumer. These are Keep/Cut
+// Compatibility export for existing Keep/Cut-only consumers. These are Keep/Cut
 // board styles, not Blind Rank archetypes.
 export const KEEP_CUT_ROLES = KEEP_CUT_BOARD_STYLES;
 
@@ -143,6 +143,7 @@ interface KeepCutBoardProfile {
   targets: KeepCutTierId[];
   eliteCount: number;
   badCount: number;
+  degradedForPoolDepth: boolean;
 }
 
 function packFor(packId: KeepCutPackId) {
@@ -236,11 +237,17 @@ function replaceLowestTargets(targets: KeepCutTierId[], tier: KeepCutTierId, cou
   }
 }
 
+function availableTierCount(packId: KeepCutPackId, tier: KeepCutTierId) {
+  return keepCutPool(packId).filter((fighter) => keepCutTier(keepCutRating(packId, fighter)) === tier).length;
+}
+
 function boardProfileForSeed(packId: KeepCutPackId, seed: string): KeepCutBoardProfile {
   const style = keepCutBoardStyleForSeed(packId, seed);
   const random = seededLineupRandom("keep-cut", "board-profile", packId, seed, style.id);
-  const eliteCount = desiredEliteCount(style.id, random);
-  const badCount = desiredBadCount(style.id, random);
+  const requestedEliteCount = desiredEliteCount(style.id, random);
+  const requestedBadCount = desiredBadCount(style.id, random);
+  const eliteCount = Math.min(requestedEliteCount, availableTierCount(packId, "elite"));
+  const badCount = Math.min(requestedBadCount, availableTierCount(packId, "bad"), MAX_BAD_FIGHTERS);
   const targets = [...style.targets];
 
   replaceHighestTargets(targets, "elite", eliteCount);
@@ -255,7 +262,13 @@ function boardProfileForSeed(packId: KeepCutPackId, seed: string): KeepCutBoardP
     targets[index] = "below-average";
   }
 
-  return { style, targets, eliteCount, badCount };
+  return {
+    style,
+    targets,
+    eliteCount,
+    badCount,
+    degradedForPoolDepth: eliteCount !== requestedEliteCount || badCount !== requestedBadCount,
+  };
 }
 
 function chooseRow(
@@ -381,7 +394,7 @@ export function createKeepCutLineup(packId: KeepCutPackId, seed: string): KeepCu
       recentOverlap: 0,
       repeatedShape: false,
       attemptsUsed: attempt + 1,
-      fallbackUsed: candidate.assignments.some((assignment) => assignment.targetTier !== assignment.actualTier),
+      fallbackUsed: profile.degradedForPoolDepth || candidate.assignments.some((assignment) => assignment.targetTier !== assignment.actualTier),
     };
   }
 
