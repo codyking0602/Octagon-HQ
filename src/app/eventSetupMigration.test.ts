@@ -6,6 +6,8 @@ const sql = readFileSync(
   "utf8",
 );
 const syncFunction = readFileSync("supabase/functions/sync-next-ufc-event/index.ts", "utf8");
+const sourceUrlOwner = readFileSync("supabase/functions/sync-next-ufc-event/sourceUrls.ts", "utf8");
+const ufcParser = readFileSync("supabase/functions/sync-next-ufc-event/ufcEventParser.ts", "utf8");
 const monitoringFunction = readFileSync("supabase/functions/run-pick-monitoring/index.ts", "utf8");
 const cardChanges = readFileSync("supabase/functions/sync-next-ufc-event/cardChanges.ts", "utf8");
 const config = readFileSync("supabase/config.toml", "utf8");
@@ -39,38 +41,45 @@ describe("Phase 2B event setup backend", () => {
     expect(sql).toContain("grant execute on function public.get_pick_event_setup() to authenticated");
   });
 
-  it("uses CBS Sports as the sole runtime event and sectioned-card source", () => {
-    expect(syncFunction).toContain("https://www.cbssports.com/ufc/schedule/");
-    expect(syncFunction).toContain("parseCbsSportsEventPage");
+  it("uses UFC.com as the sole runtime event and sectioned-card source", () => {
+    expect(syncFunction).toContain('const UFC_EVENT_INDEX_URL = "https://www.ufc.com/events?language_content_entity=en";');
+    expect(syncFunction).toContain("parseUfcEventPage");
     expect(syncFunction).toContain("resolveCardScope");
     expect(syncFunction).toContain("resolveImportedCardScope(name, subtitle, requested)");
-    expect(syncFunction).toContain('"CBS_DISCOVERY_FAILED"');
-    expect(syncFunction).toContain('"CBS_DISCOVERY_REJECTED"');
-    expect(syncFunction).toContain('source: "CBS Sports UFC event + card"');
-    expect(syncFunction).not.toContain("ufc.com");
-    expect(syncFunction).not.toContain("mmamania.com");
+    expect(syncFunction).toContain('"UFC_DISCOVERY_FAILED"');
+    expect(syncFunction).toContain('"UFC_DISCOVERY_REJECTED"');
+    expect(syncFunction).toContain('source: "UFC.com event + card"');
+    expect(syncFunction).not.toMatch(/https?:\/\/(?:www\.)?cbssports\.com/i);
+    expect(syncFunction).not.toMatch(/https?:\/\/(?:www\.)?mmamania\.com/i);
+    expect(syncFunction).not.toContain("parseCbsSportsEventPage");
     expect(syncFunction).not.toContain("parseMmaManiaCard");
-    expect(syncFunction).not.toContain("parseMmaManiaEventMetadata");
     expect(syncFunction).not.toContain("bouts.slice(0, 6)");
+    expect(ufcParser).toContain("parseOfficialUfcSegmentTimes");
+    expect(ufcParser).toContain("parseUfcFightCard");
   });
 
-  it("reuses an exact CBS source and migrates an unchanged legacy saved source by discovery", () => {
+  it("reuses exact UFC sources and self-heals legacy persisted sources by UFC discovery", () => {
     expect(syncFunction).toContain("const savedSourceUrl = persistedSourceUrl(ownerProbe.data);");
-    expect(syncFunction).toContain("const suppliedCbsSourceUrl = absoluteCbsSportsUfcEventUrl(suppliedSourceUrl);");
-    expect(syncFunction).toContain("const savedCbsSourceUrl = absoluteCbsSportsUfcEventUrl(savedSourceUrl);");
-    expect(syncFunction).toContain("const suppliedMatchesSaved = Boolean");
-    expect(syncFunction).toContain("fetchExactCbsEvent");
-    expect(syncFunction).toContain('"CBS_SOURCE_REJECTED"');
-    expect(syncFunction).toContain("The supplied source must be a specific CBS Sports UFC event URL.");
+    expect(syncFunction).toContain("const sourcePreference = resolveUfcSourcePreference(suppliedSourceUrl, savedSourceUrl);");
+    expect(syncFunction).toContain("sourcePreference.invalidExplicitSource");
+    expect(syncFunction).toContain("sourcePreference.preferredSourceUrl");
+    expect(syncFunction).toContain("fetchExactUfcEvent");
+    expect(syncFunction).toContain('"UFC_SOURCE_REJECTED"');
+    expect(syncFunction).toContain("The supplied source must be a specific UFC.com event URL.");
+    expect(sourceUrlOwner).toContain("const savedUfc = absoluteUfcEventUrl(savedValue);");
+    expect(sourceUrlOwner).toContain("const acceptedSavedLegacyValue = suppliedMatchesSaved && isLegacyEventSourceUrl(savedValue);");
+    expect(sourceUrlOwner).toMatch(/www\.mmamania\.com/);
+    expect(sourceUrlOwner).toMatch(/www\.cbssports\.com/);
     expect(cardChanges).toContain('["Card source", current.source_url, event.source_url, "exact"]');
     expect(cardChanges).toContain('["Venue", current.venue, event.venue, "semantic"]');
   });
 
-  it("preserves the published event identity while monitoring through the source cutover", () => {
+  it("preserves published event identity while monitoring through the source cutover", () => {
     expect(monitoringFunction).toContain("const sourceEventKey = typeof selectedEvent?.source_event_key === \"string\"");
     expect(monitoringFunction).toContain("...(sourceEventKey ? { source_event_key: sourceEventKey } : {})");
     expect(syncFunction).toContain('const internalSourceEventKey = internalMonitoring && typeof input.source_event_key === "string"');
-    expect(syncFunction).toContain("const sourceEventKeyOverride = internalSourceEventKey");
+    expect(syncFunction).toContain("const sourceEventKeyOverride =");
+    expect(syncFunction).toContain("canonicalPersistedUfcEventKey(ownerProbe.data)");
   });
 
   it("previews source changes before replacing a staged draft", () => {
@@ -93,7 +102,6 @@ describe("Phase 2B event setup backend", () => {
     );
     expect(productionPreviewContract).toContain("sameTimestamp");
     expect(productionPreviewVerifier).not.toContain("expectedFights");
-    expect(webkitVerifier).toContain('page.getByLabel("MMA MANIA CARD URL (OPTIONAL)")');
     expect(webkitVerifier).toContain('const updateButton = page.getByRole("button", { name: "CHECK FOR CARD UPDATES" });');
     expect(webkitVerifier).toContain('const syncButton = page.getByRole("button", { name: "SYNC NEXT UFC EVENT" });');
     expect(webkitVerifier).toContain("if (await updateButton.count())");
@@ -101,10 +109,8 @@ describe("Phase 2B event setup backend", () => {
     expect(webkitVerifier).toContain("} else if (await syncButton.count())");
     expect(webkitVerifier).toContain('page.getByText("NO STAGED CARD", { exact: true })');
     expect(webkitVerifier).toContain("syncRequestCount !== syncRequestsBeforeSetup");
-    expect(webkitVerifier).not.toContain("Event Setup has no persisted MMA Mania source to review.");
     expect(webkitVerifier).toContain("/^(Main card|Full card) · \\d+ fights$/i");
     expect(webkitVerifier).not.toContain('name: "Main card · 4 fights"');
-    expect(webkitVerifier).not.toContain("SOURCE MATCHES DRAFT");
   });
 
   it("keeps live frontend and backend verification on their actual production revisions", () => {
@@ -115,7 +121,6 @@ describe("Phase 2B event setup backend", () => {
     expect(webkitVerifier).toContain('name: "Automatic monitoring and card review"');
     expect(webkitVerifier).toContain('monitoringRegion.getByRole("heading", { name: "One finding, one clear decision" })');
     expect(webkitVerifier).not.toContain('name: "Monitoring Inbox", exact: true }).waitFor');
-    expect(webkitVerifier).not.toContain('page.getByText("ACTIVE", { exact: true })');
     expect(deployWorkflow).toContain("verify-monitoring-function-deployment.mjs");
     expect(deployWorkflow).toContain("EXPECTED_MONITORING_SCHEDULER_ENABLED");
   });

@@ -10,13 +10,13 @@ const expectedSha = process.env.EXPECTED_SYNC_SOURCE_SHA?.trim() ?? "";
 const sourceSha = process.env.SOURCE_SHA?.trim() ?? "";
 const productionOrigin = process.env.OCTAGON_PRODUCTION_ORIGIN
   ?? "https://octagon.hq-app.workers.dev";
-const configuredSourceUrl = process.env.EVENT_SETUP_TEST_CBS_URL?.trim() ?? "";
+const configuredSourceUrl = process.env.EVENT_SETUP_TEST_UFC_URL?.trim() ?? "";
 
 if (!accessToken || !projectId || !/^[0-9a-f]{40}$/i.test(expectedSha)) {
   throw new Error("Live Event Setup preview verification is not configured.");
 }
 
-const requireCbsSource = expectedSha === sourceSha;
+const requireUfcSource = expectedSha === sourceSha;
 const supabaseOrigin = `https://${projectId}.supabase.co`;
 
 async function readBody(response) {
@@ -62,9 +62,7 @@ async function request(
     console.warn(
       `${stage}: transient HTTP ${response.status} on attempt ${attempt}/${attempts}; retrying the same canonical request.`,
     );
-    if (delayMs > 0) {
-      await new Promise((resolve) => setTimeout(resolve, delayMs));
-    }
+    if (delayMs > 0) await new Promise((resolve) => setTimeout(resolve, delayMs));
   }
   throw new Error(`${stage}: exhausted request attempts without a response.`);
 }
@@ -177,7 +175,7 @@ try {
         apikey: publishableKey,
         "Content-Type": "application/json",
         Origin: productionOrigin,
-        "x-client-info": "octagon-hq-event-preview-check/6",
+        "x-client-info": "octagon-hq-event-preview-check/7",
       },
       body: JSON.stringify(previewPayload),
     },
@@ -208,7 +206,7 @@ try {
         source_url: preview.body.source_url,
       },
       new Date(),
-      { requireCbsSource },
+      { requireUfcSource },
     );
     assertReportedSourceChanges(
       draftBefore,
@@ -216,23 +214,20 @@ try {
       preview.body.changes,
       preview.body.effective_scope,
     );
-    outcome = requireCbsSource
-      ? `returned an independently verified ${preview.body.fight_count}-fight CBS Sports source change list`
+    outcome = requireUfcSource
+      ? `returned an independently verified ${preview.body.fight_count}-fight UFC.com source change list`
       : `returned an independently verified ${preview.body.fight_count}-fight change list for the currently deployed pre-merge source`;
   } else {
     if (preview.body?.deployment_sha !== expectedSha) {
       throw new Error(`Rejected preview backend SHA mismatch: expected ${expectedSha}, received ${preview.body?.deployment_sha ?? "missing"}.`);
     }
-    if (
-      preview.body?.code !== "ARTICLE_IDENTITY_REJECTED"
-      || preview.body?.stage !== "identity-match"
-    ) {
+    if (requireUfcSource) {
       throw new Error(
-        `Expected a safe article identity rejection, received ${preview.body?.code ?? "missing"}/${preview.body?.stage ?? "missing"}; message=${safeMessage(preview.body)}; details=${safeDetails(preview.body)}`,
+        `Exact UFC.com source head failed its live card preview: ${preview.body?.code ?? "missing"}/${preview.body?.stage ?? "missing"}; message=${safeMessage(preview.body)}; details=${safeDetails(preview.body)}`,
       );
     }
     assertSafeEventSourceRollover(preview.body);
-    outcome = "safely rejected a persisted article after the official UFC event identity rolled forward";
+    outcome = "safely verified the currently deployed pre-cutover source boundary before the exact UFC.com head is deployed";
   }
 
   const draftAfterPreview = (await rpc("get_pick_event_setup", userToken)).body;

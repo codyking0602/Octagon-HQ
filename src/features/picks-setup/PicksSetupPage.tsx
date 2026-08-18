@@ -47,6 +47,21 @@ function isoDateTimeValue(value: string) {
   return value ? new Date(value).toISOString() : "";
 }
 
+function editableUfcSourceUrl(value: string | null) {
+  if (!value) return "";
+  try {
+    const url = new URL(value);
+    const path = url.pathname.replace(/\/+$/, "");
+    return url.protocol === "https:"
+      && /^(?:www\.)?ufc\.com$/i.test(url.hostname)
+      && /^\/event\/[a-z0-9-]+$/i.test(path)
+      ? value
+      : "";
+  } catch {
+    return "";
+  }
+}
+
 const scopeOptions: Array<{ value: PickSetupCardScope; label: string; note: string }> = [
   { value: "auto", label: "AUTO", note: "Fight Night main card · Numbered event full card" },
   { value: "main", label: "MAIN CARD ONLY", note: "Main event and main card" },
@@ -208,7 +223,7 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
       startsAt: localDateTimeValue(draft.startsAt),
       locksAt: localDateTimeValue(draft.locksAt),
     });
-    setSourceUrl(draft.sourceUrl ?? "");
+    setSourceUrl(editableUfcSourceUrl(draft.sourceUrl));
   }, [draft]);
 
   const orderedBouts = useMemo(
@@ -339,7 +354,7 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
       <section className="page-heading picks-setup-heading">
         <p className="eyebrow">PRIVATE OWNER TOOL</p>
         <h1>Event Setup</h1>
-        <p>CBS Sports supplies the event details, card sections, and fight order. Nothing becomes live until you publish it.</p>
+        <p>UFC.com supplies the event details, card sections, and fight order. Nothing becomes live until you publish it.</p>
         <div className="picks-setup-heading__links">
           <Link to="/picks/control">FIGHT NIGHT RESULTS</Link>
           <Link to="/picks">PLAYER PICKS</Link>
@@ -380,21 +395,21 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
             ))}
           </div>
           <label className="picks-setup-source">
-            CBS SPORTS UFC EVENT URL (OPTIONAL)
+            UFC.COM EVENT URL (OPTIONAL)
             <input
               type="url"
-              aria-label="CBS SPORTS UFC EVENT URL (OPTIONAL) · MMA MANIA CARD URL (OPTIONAL)"
+              aria-label="UFC.COM EVENT URL (OPTIONAL)"
               value={sourceUrl}
               onChange={(event) => {
                 setSourceUrl(event.target.value);
                 setSourcePreview(null);
               }}
               disabled={Boolean(busyAction)}
-              placeholder="https://www.cbssports.com/ufc/event/..."
+              placeholder="https://www.ufc.com/event/..."
               autoCapitalize="none"
               autoCorrect="off"
             />
-            <small>Leave blank for automatic discovery. Once staged, future checks reuse the saved event page unless you replace it here.</small>
+            <small>Leave blank for automatic discovery. Once staged, future checks reuse the saved official UFC event page unless you replace it here.</small>
           </label>
         </section>
       ) : null}
