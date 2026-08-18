@@ -6,6 +6,9 @@
 }
 
 .picks-season-hub {
+  --picks-season-gold: #d7b45a;
+  --picks-season-silver: #aeb7c4;
+  --picks-season-bronze: #b87842;
   display: block;
   padding: 0;
   overflow: hidden;
@@ -160,61 +163,200 @@
 
 .picks-season-standing-list {
   display: grid;
-  gap: 5px;
+  gap: 6px;
 }
 
 .picks-season-standing {
+  position: relative;
+  isolation: isolate;
   display: grid;
-  grid-template-columns: 27px minmax(0, 1fr) auto;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
   align-items: center;
-  gap: 8px;
-  min-height: 52px;
-  padding: 8px 9px;
-  border: 1px solid var(--border);
-  border-radius: 11px;
-  background: var(--surface-raised);
+  gap: 7px;
+  min-height: 58px;
+  padding: 9px 10px 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .09);
+  border-radius: 12px;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, .018), transparent 42%),
+    var(--surface-raised);
+}
+
+.picks-season-standing::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, rgba(210, 10, 10, .035), transparent 44%);
+  content: "";
+  pointer-events: none;
+}
+
+.picks-season-standing.is-leader {
+  min-height: 64px;
+  border-color: rgba(215, 180, 90, .48);
+  background:
+    radial-gradient(circle at 0% 50%, rgba(215, 180, 90, .11), transparent 48%),
+    linear-gradient(180deg, rgba(255, 255, 255, .025), transparent 50%),
+    var(--surface-raised);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, .16);
+}
+
+.picks-season-standing.is-second {
+  border-color: rgba(174, 183, 196, .28);
+}
+
+.picks-season-standing.is-third {
+  border-color: rgba(184, 120, 66, .3);
 }
 
 .picks-season-standing.is-current-user {
-  border-color: rgba(210, 10, 10, .65);
-  box-shadow: inset 3px 0 0 var(--ufc-red);
+  box-shadow:
+    inset 3px 0 0 var(--ufc-red),
+    0 8px 20px rgba(0, 0, 0, .12);
 }
 
-.picks-season-standing > span {
+.picks-season-standing__progress {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+  height: 3px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, .035);
+  pointer-events: none;
+}
+
+.picks-season-standing__progress > span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(210, 10, 10, .76), rgba(210, 10, 10, .2));
+}
+
+.picks-season-standing.is-leader .picks-season-standing__progress > span {
+  background: linear-gradient(90deg, rgba(215, 180, 90, .92), rgba(215, 180, 90, .26));
+}
+
+.picks-season-standing.is-second .picks-season-standing__progress > span {
+  background: linear-gradient(90deg, rgba(174, 183, 196, .78), rgba(174, 183, 196, .2));
+}
+
+.picks-season-standing.is-third .picks-season-standing__progress > span {
+  background: linear-gradient(90deg, rgba(184, 120, 66, .82), rgba(184, 120, 66, .2));
+}
+
+.picks-season-standing__rank,
+.picks-season-standing__identity,
+.picks-season-standing__score {
+  position: relative;
+  z-index: 1;
+}
+
+.picks-season-standing__rank {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  min-width: 0;
   color: var(--text-muted);
-  font-size: 10px;
-  font-weight: 950;
   text-align: center;
 }
 
-.picks-season-standing > div {
+.picks-season-standing__rank > b {
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: -.02em;
+}
+
+.picks-season-standing__rank > small {
+  color: var(--text-muted);
+  font-size: 5.5px;
+  font-weight: 950;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.picks-season-standing.is-leader .picks-season-standing__rank > b,
+.picks-season-standing.is-leader .picks-season-standing__rank > small {
+  color: var(--picks-season-gold);
+}
+
+.picks-season-standing.is-second .picks-season-standing__rank > b,
+.picks-season-standing.is-second .picks-season-standing__rank > small {
+  color: var(--picks-season-silver);
+}
+
+.picks-season-standing.is-third .picks-season-standing__rank > b,
+.picks-season-standing.is-third .picks-season-standing__rank > small {
+  color: var(--picks-season-bronze);
+}
+
+.picks-season-standing__identity,
+.picks-season-standing__score {
   display: grid;
   gap: 2px;
   min-width: 0;
 }
 
-.picks-season-standing > div:last-child {
-  justify-items: end;
-  text-align: right;
+.picks-season-standing__name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
 }
 
-.picks-season-standing strong {
+.picks-season-standing__name > strong {
   overflow: hidden;
   font-size: 12px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.picks-season-standing b {
-  font-size: 13px;
+.picks-season-standing__name > em {
+  flex: 0 0 auto;
+  padding: 2px 5px;
+  border: 1px solid rgba(210, 10, 10, .5);
+  border-radius: 999px;
+  background: rgba(210, 10, 10, .12);
+  color: #fff;
+  font-size: 5.5px;
+  font-style: normal;
+  font-weight: 950;
+  letter-spacing: .08em;
 }
 
-.picks-season-standing small {
+.picks-season-standing__identity > small,
+.picks-season-standing__score > small {
   color: var(--text-muted);
   font-size: 6.5px;
   font-weight: 850;
   line-height: 1.25;
   text-transform: uppercase;
+}
+
+.picks-season-standing__score {
+  justify-items: end;
+  max-width: 122px;
+  text-align: right;
+}
+
+.picks-season-standing__score > b {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.picks-season-standing__score > em {
+  color: var(--text-secondary);
+  font-size: 6px;
+  font-style: normal;
+  font-weight: 950;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.picks-season-standing.is-leader .picks-season-standing__score > em {
+  color: var(--picks-season-gold);
 }
 
 .picks-season-events .picks-recap-list {
@@ -234,7 +376,16 @@
   }
 
   .picks-season-standing {
-    min-height: 58px;
-    padding: 10px 12px;
+    grid-template-columns: 40px minmax(0, 1fr) auto;
+    min-height: 64px;
+    padding: 10px 12px 11px;
+  }
+
+  .picks-season-standing.is-leader {
+    min-height: 70px;
+  }
+
+  .picks-season-standing__name > strong {
+    font-size: 13px;
   }
 }
