@@ -15,9 +15,9 @@ const cody = {
 
 const stagedDraft: PickSetupDraft = {
   draftId: "22222222-2222-4222-8222-222222222222",
-  source: "MMA Mania",
+  source: "CBS Sports UFC event + card",
   sourceEventKey: "event/ufc-test",
-  sourceUrl: "https://www.mmamania.com/ufc-fight-cards/1/ufc-test",
+  sourceUrl: "https://www.cbssports.com/ufc/event/31000001/ufc-test-august-1-2026/",
   eventId: "ufc-test-2026-08-01",
   name: "UFC Fight Night",
   subtitle: "Red vs. Blue",
@@ -100,8 +100,8 @@ const sourcePreview: PickSetupSourcePreview = {
   sourceHash: "abc123",
   requestedScope: "auto",
   effectiveScope: "main",
-  source: "MMA Mania",
-  sourceUrl: "https://www.mmamania.com/ufc-fight-cards/446488/latest-ufc-belgrade-fight-card",
+  source: "CBS Sports UFC event + card",
+  sourceUrl: "https://www.cbssports.com/ufc/event/31001523/ufc-fight-night-hernandez-vs-rodrigues-august-22-2026/",
   fightCount: 4,
   changes: ["Venue changed."],
   warnings: [],
@@ -175,11 +175,11 @@ describe("Event Setup and card review", () => {
     await waitFor(() => expect(repo.syncNextEvent).toHaveBeenCalledWith("auto", ""));
   });
 
-  it("allows the owner to supply an exact MMA Mania article when discovery is unreliable", async () => {
+  it("allows the owner to supply an exact CBS Sports UFC event when discovery is unreliable", async () => {
     const repo = repository(null);
     renderPage(repo);
-    const exactUrl = "https://www.mmamania.com/ufc-fight-cards/446488/latest-ufc-belgrade-fight-card";
-    fireEvent.change(await screen.findByPlaceholderText("https://www.mmamania.com/..."), { target: { value: exactUrl } });
+    const exactUrl = "https://www.cbssports.com/ufc/event/31001523/ufc-fight-night-hernandez-vs-rodrigues-august-22-2026/";
+    fireEvent.change(await screen.findByPlaceholderText("https://www.cbssports.com/ufc/event/..."), { target: { value: exactUrl } });
     fireEvent.click(screen.getByRole("button", { name: "SYNC NEXT UFC EVENT" }));
     await waitFor(() => expect(repo.syncNextEvent).toHaveBeenCalledWith("auto", exactUrl));
   });
@@ -196,11 +196,11 @@ describe("Event Setup and card review", () => {
     expect(repo.applySourcePreview).not.toHaveBeenCalled();
   });
 
-  it("checks the saved source article without applying changes until owner confirmation", async () => {
+  it("checks the saved CBS event page without applying changes until owner confirmation", async () => {
     vi.spyOn(window, "confirm").mockReturnValue(true);
     const repo = repository(stagedDraft);
     renderPage(repo);
-    await waitFor(() => expect(screen.getByPlaceholderText("https://www.mmamania.com/...")).toHaveValue(stagedDraft.sourceUrl));
+    await waitFor(() => expect(screen.getByPlaceholderText("https://www.cbssports.com/ufc/event/...")).toHaveValue(stagedDraft.sourceUrl));
     fireEvent.click(await screen.findByRole("button", { name: "CHECK FOR CARD UPDATES" }));
     await waitFor(() => expect(repo.previewSource).toHaveBeenCalledWith("auto", stagedDraft.sourceUrl));
     expect(repo.applySourcePreview).not.toHaveBeenCalled();
@@ -209,10 +209,10 @@ describe("Event Setup and card review", () => {
     await waitFor(() => expect(repo.applySourcePreview).toHaveBeenCalledWith(sourcePreview));
   });
 
-  it("uses the full-card override with the saved source article", async () => {
+  it("uses the full-card override with the saved CBS event page", async () => {
     const repo = repository(stagedDraft);
     renderPage(repo);
-    await waitFor(() => expect(screen.getByPlaceholderText("https://www.mmamania.com/...")).toHaveValue(stagedDraft.sourceUrl));
+    await waitFor(() => expect(screen.getByPlaceholderText("https://www.cbssports.com/ufc/event/...")).toHaveValue(stagedDraft.sourceUrl));
     fireEvent.click((await screen.findByText("FULL CARD")).closest("button")!);
     fireEvent.click(screen.getByRole("button", { name: "CHECK FOR CARD UPDATES" }));
     await waitFor(() => expect(repo.previewSource).toHaveBeenCalledWith("full", stagedDraft.sourceUrl));
