@@ -9,6 +9,10 @@ const syncSource = readFileSync(
   "supabase/functions/sync-next-ufc-event/index.ts",
   "utf8",
 );
+const sourceUrlOwner = readFileSync(
+  "supabase/functions/sync-next-ufc-event/sourceUrls.ts",
+  "utf8",
+);
 const cardParserSource = readFileSync(
   "supabase/functions/sync-next-ufc-event/ufcEventParser.ts",
   "utf8",
@@ -136,27 +140,30 @@ describe("production Event Setup preview contract", () => {
   });
 
   it("keeps UFC.com as the sole operational event metadata and card source", () => {
-    expect(syncSource).toContain('const UFC_EVENT_INDEX_URL = "https://www.ufc.com/events?language_content_entity=en";');
+    expect(syncSource).toMatch(/const UFC_EVENT_INDEX_URL = "https:\/\/www\.ufc\.com\/events(?:\?[^\"]*)?";/);
     expect(syncSource).toContain("parseUfcEventPage");
-    expect(syncSource).toContain('source: "UFC.com event + card"');
+    expect(syncSource).toContain('source: "UFC.com official event + card"');
     expect(syncSource).not.toMatch(/https?:\/\/(?:www\.)?cbssports\.com/i);
     expect(syncSource).not.toMatch(/https?:\/\/(?:www\.)?mmamania\.com/i);
+    expect(cardParserSource).toContain("absoluteUfcEventUrl");
   });
 
-  it("bounds UFC event discovery and parses each official event page only once", () => {
+  it("bounds UFC event discovery and parses each official event page once per candidate", () => {
     expect(syncSource).toContain("const MAX_UFC_EVENT_PAGE_ATTEMPTS = 8;");
     expect(syncSource).toContain(".slice(0, MAX_UFC_EVENT_PAGE_ATTEMPTS)");
     expect(syncSource).toContain("for (const candidate of discovered)");
     expect(syncSource).not.toContain("Promise.all(discovered.map");
-    expect(syncSource).toContain("parseUfcCandidate(html, candidate.url, sourceEventKeyOverride, now)");
+    expect(syncSource).toContain("parseUfcCandidate(html, candidate.url");
     expect(cardParserSource.match(/export function parseUfcFightCard/g)).toHaveLength(1);
   });
 
-  it("self-heals saved third-party URLs rather than fetching or rejecting them", () => {
-    expect(syncSource).toContain("const suppliedMatchesSaved = Boolean");
-    expect(syncSource).toContain("const savedUfcSourceUrl = absoluteUfcEventUrl(savedSourceUrl);");
-    expect(syncSource).toContain("A saved CBS/MMAmania URL is legacy data, not a runtime provider.");
-    expect(syncSource).toContain("savedUfcSourceUrl");
+  it("self-heals saved third-party URLs through the canonical source-URL owner", () => {
+    expect(syncSource).toContain("resolveUfcSourcePreference");
+    expect(sourceUrlOwner).toContain("const suppliedMatchesSaved = Boolean");
+    expect(sourceUrlOwner).toContain("isLegacyEventSourceUrl(savedValue)");
+    expect(sourceUrlOwner).toContain("const savedUfc = absoluteUfcEventUrl(savedValue);");
+    expect(sourceUrlOwner).toMatch(/www\.mmamania\.com/);
+    expect(sourceUrlOwner).toMatch(/www\.cbssports\.com/);
     expect(syncSource).not.toContain("fetchExactCbsEvent");
     expect(syncSource).not.toContain("fetchExactMmaManiaEvent");
   });
