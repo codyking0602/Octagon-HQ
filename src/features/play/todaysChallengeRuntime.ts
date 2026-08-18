@@ -11,6 +11,10 @@ import {
 } from "./blindRankEngine";
 import { dailyFindLeaderBoard } from "./findLeaderEngine";
 import {
+  advanceOfficialHitTheNumberDailyRuntime,
+  buildOfficialHitTheNumberDailySetup,
+} from "./hitTheNumberDailyRuntime";
+import {
   KEEP_CUT_PACKS,
   createKeepCutLineup,
   keepCutRating,
@@ -40,7 +44,8 @@ export type OfficialDailyGameType =
   | "blind_resume"
   | "wavelength"
   | "blind_rank_5"
-  | "keep_4_cut_4";
+  | "keep_4_cut_4"
+  | "hit_the_number";
 
 export const OFFICIAL_DAILY_RUNTIME_VERSION = "official-daily-runtime-v1";
 export const OFFICIAL_DAILY_SCORING_VERSION = OFFICIAL_SCORE_CONTRACT_VERSION;
@@ -405,6 +410,12 @@ export function buildOfficialDailySetup(
     case "blind_resume": return buildBlindResumeSetup(day, scheduleVersion);
     case "blind_rank_5": return buildBlindRankSetup(day, scheduleVersion);
     case "keep_4_cut_4": return buildKeepCutSetup(day, scheduleVersion);
+    case "hit_the_number": return buildOfficialHitTheNumberDailySetup(
+      day,
+      scheduleVersion,
+      OFFICIAL_DAILY_RUNTIME_VERSION,
+      OFFICIAL_DAILY_SCORING_VERSION,
+    ) as OfficialDailySetupPublication;
     default: throw new Error(`Unsupported official daily game ${String(gameType)}.`);
   }
 }
@@ -627,6 +638,7 @@ export function advanceOfficialDailyRuntime(
     case "blind_resume": return advanceBlindResume(context, parsedAction);
     case "blind_rank_5": return advanceBlindRank(context, parsedAction);
     case "keep_4_cut_4": return advanceKeepCut(context, parsedAction);
+    case "hit_the_number": return advanceOfficialHitTheNumberDailyRuntime(context, parsedAction);
     default: throw new Error(`Unsupported official daily game ${String(context.gameType)}.`);
   }
 }
