@@ -1,11 +1,37 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { createGeneratedHitTheNumberBoard } from "./hitTheNumberEngine";
 import HitTheNumberPage from "./HitTheNumberPage";
 
-function renderGame() {
+const challengeHarness = vi.hoisted(() => ({
+  beginChallenge: vi.fn(),
+  submitResult: vi.fn(),
+  match: {
+    challenge: null,
+    creator: null,
+    isRecipient: false,
+  } as {
+    challenge: null | { code: string; responderResult: unknown };
+    creator: null | { displayName: string };
+    isRecipient: boolean;
+  },
+}));
+
+vi.mock("../challenges/ChallengeProvider", () => ({
+  usePlayChallenges: () => ({ beginChallenge: challengeHarness.beginChallenge }),
+}));
+
+vi.mock("../challenges/challengeRuntime", () => ({
+  useProfileChallengeMatch: () => ({
+    ...challengeHarness.match,
+    submitResult: challengeHarness.submitResult,
+  }),
+}));
+
+function renderGame(initialEntry = "/play/hit-the-number") {
   return render(
-    <MemoryRouter initialEntries={["/play/hit-the-number"]}>
+    <MemoryRouter initialEntries={[initialEntry]}>
       <HitTheNumberPage />
     </MemoryRouter>,
   );
@@ -20,7 +46,16 @@ function selectRequiredFighters(container: HTMLElement) {
 }
 
 describe("Hit the Number casual game", () => {
-  beforeEach(() => window.localStorage.clear());
+  beforeEach(() => {
+    window.localStorage.clear();
+    Object.defineProperty(window, "scrollTo", { value: vi.fn(), configurable: true });
+    challengeHarness.beginChallenge.mockReset();
+    challengeHarness.beginChallenge.mockResolvedValue("CHOOSE AN OCTAGON HQ PROFILE");
+    challengeHarness.submitResult.mockReset();
+    challengeHarness.match.challenge = null;
+    challengeHarness.match.creator = null;
+    challengeHarness.match.isRecipient = false;
+  });
 
   it("keeps fighter values hidden until lock, then reveals the result and normalized score", () => {
     const { container } = renderGame();
@@ -35,7 +70,66 @@ describe("Hit the Number casual game", () => {
     expect(container.querySelector(".hit-number-result")?.textContent).toMatch(/PERFECT|BUST|\d+ OFF/);
     expect(container.querySelector(".hit-number-result__score")?.textContent).toMatch(/SCORE\d+\/100/);
     expect(container.querySelector(".hit-number-roster")).toBeNull();
+    expect(screen.getByRole("button", { name: "CHALLENGE SOMEONE" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "NEW LINEUP" })).toBeInTheDocument();
+  });
+
+  it("sends the completed exact board through the canonical profile challenge composer", async () => {
+    const { container } = renderGame();
+    selectRequiredFighters(container);
+    fireEvent.click(screen.getByRole("button", { name: /LOCK PICKS/ }));
+    fireEvent.click(screen.getByRole("button", { name: "CHALLENGE SOMEONE" }));
+
+    await waitFor(() => expect(challengeHarness.beginChallenge).toHaveBeenCalledTimes(1));
+    const draft = challengeHarness.beginChallenge.mock.calls[0]![0] as {
+      gameId: string;
+      gameVersion: string;
+      gameTitle: string;
+      setup: { seed: string; boardType: string; publicSetup: { target: number; fighterIds: string[] } };
+      creatorResult: { score: number; selections: unknown[] };
+      shareUrl: string;
+    };
+    const shareUrl = new URL(draft.shareUrl);
+
+    expect(draft.gameId).toBe("hit-the-number");
+    expect(draft.gameVersion).toBe("hit-the-number-v1");
+    expect(draft.gameTitle).toBe("Hit the Number");
+    expect(draft.setup.seed).not.toBe("");
+    expect(draft.setup.boardType).toBe("open-roster");
+    expect(draft.setup.publicSetup.target).toBeGreaterThan(0);
+    expect(draft.creatorResult.score).toBeGreaterThanOrEqual(0);
+    expect(draft.creatorResult.selections.length).toBeGreaterThanOrEqual(4);
+    expect(shareUrl.pathname).toBe("/play/hit-the-number");
+    expect(shareUrl.searchParams.get("challenge")).toBe(draft.setup.seed);
+    expect(shareUrl.searchParams.get("board")).toBe("open-roster");
+  });
+
+  it("loads the recipient on the exact deterministic board and submits the result", async () => {
+    const seed = "profile-hit-number-exact-board";
+    const expectedBoard = createGeneratedHitTheNumberBoard({ seed, boardType: "random-pool" });
+    challengeHarness.match.challenge = { code: "HTN12345", responderResult: null };
+    challengeHarness.match.creator = { displayName: "SHANE" };
+    challengeHarness.match.isRecipient = true;
+
+    const { container } = renderGame(
+      `/play/hit-the-number?challenge=${encodeURIComponent(seed)}&board=random-pool&match=HTN12345`,
+    );
+
+    expect(screen.getByText(/SHANE sent this exact Hit the Number board/i)).toBeInTheDocument();
+    expect(container.querySelectorAll(".hit-number-fighter-card"))
+      .toHaveLength(expectedBoard.publicSetup.fighterIds.length);
+    expect(container.querySelector(".hit-number-target strong")?.textContent)
+      .toBe(String(expectedBoard.publicSetup.target));
+    expect(screen.queryByRole("button", { name: "OPEN ROSTER" })).not.toBeInTheDocument();
+
+    selectRequiredFighters(container);
+    fireEvent.click(screen.getByRole("button", { name: /LOCK PICKS/ }));
+
+    await waitFor(() => expect(challengeHarness.submitResult).toHaveBeenCalledTimes(1));
+    const submitted = challengeHarness.submitResult.mock.calls[0]![0] as { score: number; target: number };
+    expect(submitted.target).toBe(expectedBoard.publicSetup.target);
+    expect(submitted.score).toBeGreaterThanOrEqual(0);
+    expect(screen.getByRole("button", { name: "REPLAY CHALLENGE" })).toBeInTheDocument();
   });
 
   it("lets the player choose only Open Roster versus Random Pool", () => {

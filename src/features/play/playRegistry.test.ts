@@ -58,20 +58,20 @@ describe("Play game lineup contracts", () => {
     }
   });
 
-  it("ships Hit the Number as casual replayable play before its official Daily integration", () => {
+  it("ships Hit the Number as replayable play with exact profile challenges", () => {
     expect(playGameDefinition("hit-the-number").lineup).toMatchObject({
       defaultType: "replayable",
-      supportedTypes: ["replayable"],
+      supportedTypes: ["replayable", "curated"],
       replayBehavior: "new-lineup",
       newLineupControl: "button-and-result-replay",
       repetitionPolicy: "recent-items-deprioritized",
       lineupSize: "variable",
       completionState: "target-selection-locked",
-      challengeEligible: false,
+      challengeEligible: true,
       dailyEligible: false,
       streakEligible: false,
       reminderEligible: false,
-      historyRecording: "casual-only",
+      historyRecording: "casual-and-challenge",
     });
   });
 
@@ -99,8 +99,8 @@ describe("Play game lineup contracts", () => {
     expect(playGameDefinition("better-than").icon).toBe("VS");
   });
 
-  it("keeps established games challenge eligible and gives every game a defined completion state", () => {
-    expect(playGames.filter((game) => game.id !== "hit-the-number").every((game) => game.lineup.challengeEligible)).toBe(true);
+  it("keeps every established game challenge eligible and gives every game a defined completion state", () => {
+    expect(playGames.every((game) => game.lineup.challengeEligible)).toBe(true);
     expect(playGameDefinition("find-leader").lineup.completionState).toBe("leader-eliminated-or-nine-safe");
     expect(playGameDefinition("wavelength").lineup.completionState).toBe("fourth-guess-locked");
     expect(playGameDefinition("blind-resume").lineup.completionState).toBe("five-picks-complete");
