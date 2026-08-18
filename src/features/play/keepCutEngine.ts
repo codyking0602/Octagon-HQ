@@ -11,18 +11,16 @@ import {
   shuffleLineup,
   validateLineupIds,
 } from "./lineupModel";
-import {
-  BLIND_RANK_ARCHETYPES,
-  blindRankArchetypeForSeed,
-  blindRankTier,
-  createBlindRankLineup,
-  type BlindRankArchetypeId,
-  type BlindRankTierId,
-} from "./blindRankEngine";
 import { OFFICIAL_COMPARISON_GRADING_RULES } from "./officialScoreContract";
 
 export type KeepCutPackId = BlindRankPackId;
-export type KeepCutTierId = BlindRankTierId;
+export type KeepCutTierId = "elite" | "great" | "good" | "average" | "below-average" | "bad";
+export type KeepCutBoardStyleId =
+  | "knife-edge"
+  | "messy-middle"
+  | "one-superstar"
+  | "bottom-grind"
+  | "classic-spread";
 
 export interface KeepCutPack {
   id: KeepCutPackId;
@@ -62,13 +60,29 @@ export interface KeepCutResult {
   label: KeepCutScoreLabel;
 }
 
+export interface KeepCutBoardStyle {
+  id: KeepCutBoardStyleId;
+  name: string;
+  weight: number;
+  targets: readonly KeepCutTierId[];
+}
+
 export type KeepCutScoreLabel = "Legendary four" | "Excellent keeps" | "Solid card" | "Tough cuts" | "Rough room";
 
 const KEEP_COUNT = 4;
 const BOARD_SIZE = 8;
-const PRIMARY_GENERATION_ATTEMPTS = 18;
-const BALANCED_FALLBACK_ATTEMPTS = 18;
+const GENERATION_ATTEMPTS = 120;
 const MAX_BAD_FIGHTERS = 2;
+const MAX_ELITE_FIGHTERS = 2;
+const MAX_CUTOFF_GAP = 8;
+const TIER_ORDER: readonly KeepCutTierId[] = [
+  "elite",
+  "great",
+  "good",
+  "average",
+  "below-average",
+  "bad",
+];
 
 export const KEEP_CUT_PACKS: readonly KeepCutPack[] = [
   { id: "ufc-careers", group: "Careers", name: "UFC Careers", prompt: "Keep four UFC careers. Cut four.", description: "Men's UFC-only career value from the canonical Play rating owner." },
@@ -81,7 +95,55 @@ export const KEEP_CUT_PACKS: readonly KeepCutPack[] = [
   { id: "wrestling-grappling", group: "Skills", name: "Wrestling & Grappling", prompt: "Keep four grapplers. Cut four.", description: "UFC wrestling and grappling ratings from the canonical Play rating owner." },
 ] as const;
 
-export const KEEP_CUT_ROLES = BLIND_RANK_ARCHETYPES;
+export const KEEP_CUT_BOARD_STYLES: readonly KeepCutBoardStyle[] = [
+  {
+    id: "knife-edge",
+    name: "Knife Edge",
+    weight: 0.4,
+    targets: ["great", "good", "good", "good", "average", "average", "average", "below-average"],
+  },
+  {
+    id: "messy-middle",
+    name: "Messy Middle",
+    weight: 0.3,
+    targets: ["great", "good", "good", "average", "average", "average", "below-average", "below-average"],
+  },
+  {
+    id: "one-superstar",
+    name: "One Superstar",
+    weight: 0.15,
+    targets: ["elite", "good", "good", "average", "average", "average", "below-average", "below-average"],
+  },
+  {
+    id: "bottom-grind",
+    name: "Bottom Grind",
+    weight: 0.1,
+    targets: ["good", "average", "average", "average", "below-average", "below-average", "below-average", "bad"],
+  },
+  {
+    id: "classic-spread",
+    name: "Classic Spread",
+    weight: 0.05,
+    targets: ["elite", "great", "good", "average", "average", "below-average", "below-average", "bad"],
+  },
+] as const;
+
+// Compatibility export for any existing Keep/Cut-only consumer. These are Keep/Cut
+// board styles, not Blind Rank archetypes.
+export const KEEP_CUT_ROLES = KEEP_CUT_BOARD_STYLES;
+
+interface RatedRow {
+  fighter: PlayFighter;
+  score: number;
+  tier: KeepCutTierId;
+}
+
+interface KeepCutBoardProfile {
+  style: KeepCutBoardStyle;
+  targets: KeepCutTierId[];
+  eliteCount: number;
+  badCount: number;
+}
 
 function packFor(packId: KeepCutPackId) {
   return KEEP_CUT_PACKS.find((pack) => pack.id === packId) ?? KEEP_CUT_PACKS[0]!;
@@ -96,56 +158,208 @@ export function keepCutPool(packId: KeepCutPackId) {
 }
 
 export function keepCutTier(score: number): KeepCutTierId {
-  return blindRankTier(score);
+  if (score >= 92) return "elite";
+  if (score >= 82) return "great";
+  if (score >= 70) return "good";
+  if (score >= 55) return "average";
+  if (score >= 35) return "below-average";
+  return "bad";
 }
 
 function shapeFor(packId: KeepCutPackId, fighters: readonly PlayFighter[]) {
-  return ["elite", "great", "good", "average", "below-average", "bad"]
+  return TIER_ORDER
     .map((tier) => `${tier}:${fighters.filter((fighter) => keepCutTier(keepCutRating(packId, fighter)) === tier).length}`)
     .join("|");
+}
+
+export function keepCutBoardStyleForSeed(packId: KeepCutPackId, seed: string): KeepCutBoardStyle {
+  const random = seededLineupRandom("keep-cut", "board-style", packId, seed);
+  let cursor = random();
+  for (const style of KEEP_CUT_BOARD_STYLES) {
+    cursor -= style.weight;
+    if (cursor <= 0) return style;
+  }
+  return KEEP_CUT_BOARD_STYLES.at(-1)!;
+}
+
+function desiredEliteCount(styleId: KeepCutBoardStyleId, random: () => number) {
+  const roll = random();
+  switch (styleId) {
+    case "knife-edge":
+      if (roll < 0.125) return 2;
+      if (roll < 0.375) return 1;
+      return 0;
+    case "messy-middle":
+      return roll < (1 / 6) ? 1 : 0;
+    case "one-superstar":
+    case "classic-spread":
+      return 1;
+    case "bottom-grind":
+      return 0;
+  }
+}
+
+function desiredBadCount(styleId: KeepCutBoardStyleId, random: () => number) {
+  const roll = random();
+  switch (styleId) {
+    case "knife-edge":
+      return roll < 0.125 ? 1 : 0;
+    case "messy-middle":
+    case "one-superstar":
+      return roll < 0.5 ? 1 : 0;
+    case "bottom-grind":
+      return roll < 0.5 ? 2 : 1;
+    case "classic-spread":
+      return 1;
+  }
+}
+
+function replaceHighestTargets(targets: KeepCutTierId[], tier: KeepCutTierId, count: number) {
+  const already = targets.filter((target) => target === tier).length;
+  for (let index = 0; index < count - already; index += 1) {
+    const replaceAt = targets.findIndex((target) => target !== tier && target !== "bad");
+    if (replaceAt >= 0) targets[replaceAt] = tier;
+  }
+}
+
+function replaceLowestTargets(targets: KeepCutTierId[], tier: KeepCutTierId, count: number) {
+  const already = targets.filter((target) => target === tier).length;
+  for (let index = 0; index < count - already; index += 1) {
+    let replaceAt = -1;
+    for (let targetIndex = targets.length - 1; targetIndex >= 0; targetIndex -= 1) {
+      if (targets[targetIndex] !== tier && targets[targetIndex] !== "elite") {
+        replaceAt = targetIndex;
+        break;
+      }
+    }
+    if (replaceAt >= 0) targets[replaceAt] = tier;
+  }
+}
+
+function boardProfileForSeed(packId: KeepCutPackId, seed: string): KeepCutBoardProfile {
+  const style = keepCutBoardStyleForSeed(packId, seed);
+  const random = seededLineupRandom("keep-cut", "board-profile", packId, seed, style.id);
+  const eliteCount = desiredEliteCount(style.id, random);
+  const badCount = desiredBadCount(style.id, random);
+  const targets = [...style.targets];
+
+  replaceHighestTargets(targets, "elite", eliteCount);
+  while (targets.filter((target) => target === "elite").length > eliteCount) {
+    const index = targets.lastIndexOf("elite");
+    targets[index] = style.id === "classic-spread" ? "great" : "good";
+  }
+
+  replaceLowestTargets(targets, "bad", badCount);
+  while (targets.filter((target) => target === "bad").length > badCount) {
+    const index = targets.indexOf("bad");
+    targets[index] = "below-average";
+  }
+
+  return { style, targets, eliteCount, badCount };
+}
+
+function chooseRow(
+  rows: readonly RatedRow[],
+  targetTier: KeepCutTierId,
+  used: Set<string>,
+  badCount: number,
+  random: () => number,
+) {
+  const eligible = rows.filter((row) => (
+    !used.has(row.fighter.id)
+    && !(row.tier === "bad" && badCount >= MAX_BAD_FIGHTERS)
+  ));
+  const exact = shuffleLineup(eligible.filter((row) => row.tier === targetTier), random)[0];
+  if (exact) return exact;
+
+  const targetIndex = TIER_ORDER.indexOf(targetTier);
+  const adjacentTiers = shuffleLineup(
+    [targetIndex - 1, targetIndex + 1]
+      .filter((index) => index >= 0 && index < TIER_ORDER.length)
+      .map((index) => TIER_ORDER[index]!),
+    random,
+  );
+  for (const tier of adjacentTiers) {
+    const adjacent = shuffleLineup(eligible.filter((row) => row.tier === tier), random)[0];
+    if (adjacent) return adjacent;
+  }
+
+  return shuffleLineup(eligible, random)
+    .sort((left, right) => {
+      const leftDistance = Math.abs(TIER_ORDER.indexOf(left.tier) - targetIndex);
+      const rightDistance = Math.abs(TIER_ORDER.indexOf(right.tier) - targetIndex);
+      return leftDistance - rightDistance;
+    })[0] ?? null;
+}
+
+function tierCount(packId: KeepCutPackId, fighters: readonly PlayFighter[], tier: KeepCutTierId) {
+  return fighters.filter((fighter) => keepCutTier(keepCutRating(packId, fighter)) === tier).length;
 }
 
 export function keepCutBoardIsCompetitive(packId: KeepCutPackId, fighters: readonly PlayFighter[]) {
   if (fighters.length !== BOARD_SIZE) return false;
   if (new Set(fighters.map((fighter) => fighter.id)).size !== BOARD_SIZE) return false;
+
   const scores = fighters.map((fighter) => keepCutRating(packId, fighter)).sort((a, b) => b - a);
   const tiers = scores.map(keepCutTier);
-  const high = tiers.filter((tier) => tier === "elite" || tier === "great").length;
-  const middle = tiers.filter((tier) => tier === "good" || tier === "average").length;
-  const low = tiers.filter((tier) => tier === "below-average" || tier === "bad").length;
+  const coreChoices = tiers.filter((tier) => (
+    tier === "good" || tier === "average" || tier === "below-average"
+  )).length;
+  const elite = tiers.filter((tier) => tier === "elite").length;
   const bad = tiers.filter((tier) => tier === "bad").length;
-  const finalCutGap = Math.abs(scores[3]! - scores[4]!);
-  return high >= 1 && high <= 4 && middle >= 2 && low >= 1 && bad <= MAX_BAD_FIGHTERS && finalCutGap <= 20;
+  const distinctTiers = new Set(tiers).size;
+  const cutoffGap = Math.abs(scores[3]! - scores[4]!);
+
+  return (
+    coreChoices >= 4
+    && elite <= MAX_ELITE_FIGHTERS
+    && bad <= MAX_BAD_FIGHTERS
+    && distinctTiers >= 3
+    && cutoffGap <= MAX_CUTOFF_GAP
+  );
 }
 
-function combinedBlindRankBoard(
+function attemptBoard(
   packId: KeepCutPackId,
   seed: string,
+  profile: KeepCutBoardProfile,
   attempt: number,
-  forcedArchetype?: BlindRankArchetypeId,
 ) {
-  try {
-    const random = seededLineupRandom("keep-cut", packId, seed, attempt, forcedArchetype ?? "weighted");
-    const firstSeed = `${seed}:keep:${attempt}:a`;
-    const secondSeed = `${seed}:keep:${attempt}:b`;
-    const first = createBlindRankLineup(
-      packId,
-      firstSeed,
-      forcedArchetype ? { archetype: forcedArchetype } : undefined,
-    );
-    const secondArchetype = forcedArchetype ?? blindRankArchetypeForSeed(packId, secondSeed).id;
-    const second = createBlindRankLineup(packId, secondSeed, { archetype: secondArchetype });
-    const rows = shuffleLineup([...first.fighters, ...second.fighters], random);
-    const byId = new Map<string, PlayFighter>();
-    for (const fighter of rows) {
-      if (!byId.has(fighter.id)) byId.set(fighter.id, fighter);
-      if (byId.size === BOARD_SIZE) break;
-    }
-    const fighters = shuffleLineup([...byId.values()], random);
-    return keepCutBoardIsCompetitive(packId, fighters) ? fighters : null;
-  } catch {
-    return null;
+  const random = seededLineupRandom("keep-cut", packId, seed, profile.style.id, attempt);
+  const rows = keepCutPool(packId).map((fighter) => {
+    const score = keepCutRating(packId, fighter);
+    return { fighter, score, tier: keepCutTier(score) };
+  });
+  if (rows.length < BOARD_SIZE) return null;
+
+  const used = new Set<string>();
+  const selected: PlayFighter[] = [];
+  const assignments: KeepCutAssignment[] = [];
+  let badCount = 0;
+
+  for (let index = 0; index < profile.targets.length; index += 1) {
+    const targetTier = profile.targets[index]!;
+    const picked = chooseRow(rows, targetTier, used, badCount, random);
+    if (!picked) return null;
+    used.add(picked.fighter.id);
+    selected.push(picked.fighter);
+    badCount += picked.tier === "bad" ? 1 : 0;
+    assignments.push({
+      roleId: `${profile.style.id}-${index + 1}`,
+      targetTier,
+      actualTier: picked.tier,
+      fighterId: picked.fighter.id,
+    });
   }
+
+  if (tierCount(packId, selected, "elite") !== profile.eliteCount) return null;
+  if (tierCount(packId, selected, "bad") !== profile.badCount) return null;
+  if (!keepCutBoardIsCompetitive(packId, selected)) return null;
+
+  return {
+    fighters: shuffleLineup(selected, random),
+    assignments,
+  };
 }
 
 export function createKeepCutSeed() {
@@ -153,44 +367,27 @@ export function createKeepCutSeed() {
 }
 
 export function createKeepCutLineup(packId: KeepCutPackId, seed: string): KeepCutLineup {
-  for (let attempt = 0; attempt < PRIMARY_GENERATION_ATTEMPTS; attempt += 1) {
-    const candidate = combinedBlindRankBoard(packId, seed, attempt);
-    if (candidate) {
-      return {
-        packId,
-        seed,
-        fighters: candidate,
-        assignments: [],
-        shape: shapeFor(packId, candidate),
-        recentOverlap: 0,
-        repeatedShape: false,
-        attemptsUsed: attempt + 1,
-        fallbackUsed: false,
-      };
-    }
+  const profile = boardProfileForSeed(packId, seed);
+
+  for (let attempt = 0; attempt < GENERATION_ATTEMPTS; attempt += 1) {
+    const candidate = attemptBoard(packId, seed, profile, attempt);
+    if (!candidate) continue;
+    return {
+      packId,
+      seed,
+      fighters: candidate.fighters,
+      assignments: candidate.assignments,
+      shape: shapeFor(packId, candidate.fighters),
+      recentOverlap: 0,
+      repeatedShape: false,
+      attemptsUsed: attempt + 1,
+      fallbackUsed: candidate.assignments.some((assignment) => assignment.targetTier !== assignment.actualTier),
+    };
   }
 
-  // The only degradation path remains inside this owner and reuses PR 5's canonical
-  // Balanced archetype. It is deterministic, separately bounded, and still must pass
-  // the exact same eight-fighter competitive-board contract before it can be returned.
-  for (let attempt = 0; attempt < BALANCED_FALLBACK_ATTEMPTS; attempt += 1) {
-    const candidate = combinedBlindRankBoard(packId, `${seed}:balanced-fallback`, attempt, "balanced");
-    if (candidate) {
-      return {
-        packId,
-        seed,
-        fighters: candidate,
-        assignments: [],
-        shape: shapeFor(packId, candidate),
-        recentOverlap: 0,
-        repeatedShape: false,
-        attemptsUsed: PRIMARY_GENERATION_ATTEMPTS + attempt + 1,
-        fallbackUsed: true,
-      };
-    }
-  }
-
-  throw new Error(`Keep 4, Cut 4 could not build a competitive lineup for ${packFor(packId).name}.`);
+  throw new Error(
+    `Keep 4, Cut 4 could not build a ${profile.style.name} lineup for ${packFor(packId).name} without weakening the board contract.`,
+  );
 }
 
 export function resolveKeepCutChallenge(packId: KeepCutPackId, lineupIds: readonly string[]) {
