@@ -68,7 +68,7 @@ function setupRepository(loadDraft: PickSetupRepository["loadDraft"]): PickSetup
 afterEach(cleanup);
 
 describe("Picks Control Center loading ownership", () => {
-  it("does not mount a hidden Open Picks loader or expose Event Setup before canonical state resolves", async () => {
+  it("does not mount a hidden Open Picks loader or expose Event Setup before control state resolves", async () => {
     const controlLoad = deferred<PickControlEvent | null>();
     const draftLoad = deferred<PickSetupDraft | null>();
     const loadControlEvent = vi.fn(() => controlLoad.promise);
@@ -86,21 +86,21 @@ describe("Picks Control Center loading ownership", () => {
       </MemoryRouter>,
     );
 
-    await waitFor(() => {
-      expect(loadControlEvent).toHaveBeenCalledTimes(1);
-      expect(loadDraft).toHaveBeenCalledTimes(1);
-    });
+    await waitFor(() => expect(loadControlEvent).toHaveBeenCalledTimes(1));
+    expect(loadDraft).not.toHaveBeenCalled();
     expect(screen.getByText("LOADING CONTROL CENTER")).toBeInTheDocument();
     expect(screen.queryByText(/Loading Open Picks/i)).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "OPEN EVENT SETUP" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("region", { name: "Event setup" })).not.toBeInTheDocument();
 
     controlLoad.resolve(null);
     expect(await screen.findByText("CHECKING NEXT EVENT")).toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: "OPEN EVENT SETUP" })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "OPEN EVENT SETUP" })).toHaveAttribute("href", "#setup");
+    expect(screen.getByRole("region", { name: "Event setup" })).toBeInTheDocument();
+    await waitFor(() => expect(loadDraft).toHaveBeenCalledTimes(1));
 
     draftLoad.resolve(null);
-    expect(await screen.findByRole("link", { name: "OPEN EVENT SETUP" })).toHaveAttribute("href", "#setup");
-    expect(screen.getByRole("region", { name: "Event setup" })).toBeInTheDocument();
+    expect(await screen.findByText("SET UP NEXT EVENT")).toBeInTheDocument();
     expect(loadControlEvent).toHaveBeenCalledTimes(1);
     expect(loadDraft).toHaveBeenCalledTimes(1);
   });
