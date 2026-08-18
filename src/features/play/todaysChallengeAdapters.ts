@@ -78,6 +78,17 @@ export const TODAY_CHALLENGE_ADAPTERS = {
     nativeResultLabel: "Correct comparisons",
     nativeDisplay: (attempt) => `${attempt.nativeScore} of 16 comparisons`,
   },
+  hit_the_number: {
+    gameType: "hit_the_number",
+    gameId: "hit-the-number",
+    title: "Hit the Number",
+    dailyRoute: "/play/hit-the-number?mode=daily",
+    casualRoute: "/play/hit-the-number",
+    cta: "Hit today’s target",
+    instructions: "Choose the required fighters and get as close as possible without going over. Lock only when you are ready.",
+    nativeResultLabel: "Fighter total",
+    nativeDisplay: (attempt) => `${attempt.nativeScore}`,
+  },
 } as const satisfies Record<DailyGameType, TodayChallengeAdapter>;
 
 export function todayChallengeAdapter(gameType: DailyGameType | string | undefined) {
