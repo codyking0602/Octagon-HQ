@@ -1,4 +1,5 @@
 import type { PickBoutResultStatus, PickEventStatus } from "../picks/picksModel";
+import type { PickSpotlight } from "../picks/spotlightModel";
 
 export interface PickControlBout {
   boutId: string;
@@ -51,6 +52,7 @@ export interface PickControlEvent {
   canReorder: boolean;
   hasReorderHistory: boolean;
   recentCompletedEvents?: PickControlEventOption[];
+  spotlights?: PickSpotlight[];
   bouts: PickControlBout[];
 }
 

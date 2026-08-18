@@ -16,6 +16,7 @@ import OpenPicksDashboard from "./OpenPicksDashboard";
 import PickEventHeaderControl from "./PickEventHeaderControl";
 import type { PickControlEvent } from "./pickControlModel";
 import PicksControlPage from "./PicksControlPage";
+import PublishedPicksSpotlightControl from "./PublishedPicksSpotlightControl";
 import {
   createPickControlRepository,
   type PickControlRepository,
@@ -114,6 +115,7 @@ export default function PicksControlCenterPage({
   const [eventState, setEventState] = useState<ResourceState<PickControlEvent | null>>({ status: "idle" });
   const [draftState, setDraftState] = useState<ResourceState<PickSetupDraft | null>>({ status: "idle" });
   const [controlRevision, setControlRevision] = useState(0);
+  const [spotlightsOpen, setSpotlightsOpen] = useState(false);
   const controlSeed = useRef<ControlSeed>({ status: "empty" });
   const loadCurrentControlEvent = () => controlRepository!.loadControlEvent(undefined);
 
@@ -251,6 +253,7 @@ export default function PicksControlCenterPage({
   useEffect(() => {
     const sectionId = location.hash.replace(/^#/, "");
     if (!sectionId) return;
+    if (sectionId === "spotlights") setSpotlightsOpen(true);
     document.getElementById(sectionId)?.scrollIntoView?.({ block: "start" });
   }, [draftState.status, eventState.status, location.hash]);
 
@@ -277,6 +280,9 @@ export default function PicksControlCenterPage({
           ) : primaryAction ? (
             <a className={activeEvent ? "primary-action" : "secondary-action"} href={primaryAction.href}>{primaryAction.label}</a>
           ) : null}
+          {activeEvent?.status === "upcoming" ? (
+            <a className="secondary-action" href="#spotlights" onClick={() => setSpotlightsOpen(true)}>MANAGE SPOTLIGHTS</a>
+          ) : null}
           <Link className="secondary-action" to="/picks">OPEN PLAYER PICKS</Link>
         </div>
       </header>
@@ -300,6 +306,24 @@ export default function PicksControlCenterPage({
       {activeEvent?.status === "upcoming" ? (
         <section className="picks-control-center__section" aria-label="Manage event header">
           <PickEventHeaderControl eventId={activeEvent.eventId} repository={ownedControlRepository} />
+        </section>
+      ) : null}
+
+      {activeEvent?.status === "upcoming" && identity.profile ? (
+        <section id="spotlights" className="picks-control-center__section" aria-label="Published Fight Spotlights">
+          <details
+            className="surface-card picks-control-center__panel"
+            open={spotlightsOpen}
+            onToggle={(event) => setSpotlightsOpen(event.currentTarget.open)}
+          >
+            <summary>
+              <span>FIGHT SPOTLIGHTS</span>
+              <strong>ADD OR UPDATE AFTER PUBLISH</strong>
+            </summary>
+            <div className="picks-control-center__panel-body">
+              <PublishedPicksSpotlightControl event={activeEvent} repository={ownedControlRepository} />
+            </div>
+          </details>
         </section>
       ) : null}
 

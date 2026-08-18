@@ -71,27 +71,70 @@ Deno.serve(async (request) => {
     auth: { autoRefreshToken: false, persistSession: false },
     global: { headers: { Authorization: `Bearer ${token}` } },
   });
-  const setup = await owner.rpc("get_pick_event_setup");
-  if (setup.error) {
-    const denied = setup.error.message.toLowerCase().includes("pick control owner required");
-    return json({
-      code: denied ? "OWNER_ACCESS_REQUIRED" : "EVENT_SETUP_UNAVAILABLE",
-      message: denied ? "Fight Night owner access required." : "Event Setup is unavailable.",
-      deployment_sha: DEPLOYED_SOURCE_SHA,
-    }, denied ? 403 : 503);
-  }
 
   try {
-    const draft = asRecord(setup.data);
     const draftId = typeof input.draft_id === "string" ? input.draft_id : "";
+    const eventId = typeof input.event_id === "string" ? input.event_id.trim().toLowerCase() : "";
     const boutId = typeof input.bout_id === "string" ? input.bout_id : "";
-    if (!draft || !draftId || draft.draft_id !== draftId) {
-      throw new SpotlightBuildError("STAGED_DRAFT_CHANGED", "The staged card changed. Reload Event Setup before building this Spotlight.", 409);
+    if ((!draftId && !eventId) || (draftId && eventId)) {
+      throw new SpotlightBuildError(
+        "SPOTLIGHT_BUILD_TARGET_REQUIRED",
+        "Build a Spotlight from exactly one staged draft or published event.",
+        400,
+      );
     }
-    const bouts = Array.isArray(draft.bouts) ? draft.bouts.map(asRecord).filter(Boolean) as Record<string, unknown>[] : [];
-    const bout = bouts.find((candidate) => candidate.bout_id === boutId && candidate.included === true);
-    if (!bout) throw new SpotlightBuildError("SPOTLIGHT_BOUT_NOT_FOUND", "That included fight is no longer on the staged card.", 409);
-    const startsAt = typeof draft.starts_at === "string" ? draft.starts_at : "";
+    if (!boutId) {
+      throw new SpotlightBuildError("SPOTLIGHT_BOUT_REQUIRED", "Choose a fight before building a Spotlight.", 400);
+    }
+
+    let source: Record<string, unknown> | null = null;
+    let bout: Record<string, unknown> | undefined;
+
+    if (draftId) {
+      const setup = await owner.rpc("get_pick_event_setup");
+      if (setup.error) {
+        const denied = setup.error.message.toLowerCase().includes("pick control owner required");
+        return json({
+          code: denied ? "OWNER_ACCESS_REQUIRED" : "EVENT_SETUP_UNAVAILABLE",
+          message: denied ? "Fight Night owner access required." : "Event Setup is unavailable.",
+          deployment_sha: DEPLOYED_SOURCE_SHA,
+        }, denied ? 403 : 503);
+      }
+      source = asRecord(setup.data);
+      if (!source || source.draft_id !== draftId) {
+        throw new SpotlightBuildError("STAGED_DRAFT_CHANGED", "The staged card changed. Reload Event Setup before building this Spotlight.", 409);
+      }
+      const bouts = Array.isArray(source.bouts) ? source.bouts.map(asRecord).filter(Boolean) as Record<string, unknown>[] : [];
+      bout = bouts.find((candidate) => candidate.bout_id === boutId && candidate.included === true);
+      if (!bout) throw new SpotlightBuildError("SPOTLIGHT_BOUT_NOT_FOUND", "That included fight is no longer on the staged card.", 409);
+    } else {
+      const control = await owner.rpc("get_pick_control_event", { p_event_id: eventId });
+      if (control.error) {
+        const denied = control.error.message.toLowerCase().includes("pick control owner required");
+        return json({
+          code: denied ? "OWNER_ACCESS_REQUIRED" : "PUBLISHED_EVENT_UNAVAILABLE",
+          message: denied ? "Fight Night owner access required." : "The published Picks event is unavailable.",
+          deployment_sha: DEPLOYED_SOURCE_SHA,
+        }, denied ? 403 : 503);
+      }
+      source = asRecord(control.data);
+      if (!source || source.event_id !== eventId || source.status !== "upcoming") {
+        throw new SpotlightBuildError(
+          "PUBLISHED_EVENT_CHANGED",
+          "Only the current upcoming published Picks event can rebuild Fight Spotlights.",
+          409,
+        );
+      }
+      const bouts = Array.isArray(source.bouts) ? source.bouts.map(asRecord).filter(Boolean) as Record<string, unknown>[] : [];
+      bout = bouts.find((candidate) => (
+        candidate.bout_id === boutId
+        && candidate.included_in_picks !== false
+        && candidate.result_status !== "cancelled"
+      ));
+      if (!bout) throw new SpotlightBuildError("SPOTLIGHT_BOUT_NOT_FOUND", "That active fight is no longer on the published Picks card.", 409);
+    }
+
+    const startsAt = typeof source.starts_at === "string" ? source.starts_at : "";
     if (!startsAt || !Number.isFinite(Date.parse(startsAt))) {
       throw new SpotlightBuildError("SPOTLIGHT_EVENT_DATE_MISSING", "Set the event start time before building fight Spotlights.");
     }
@@ -101,7 +144,7 @@ Deno.serve(async (request) => {
     const redSlug = typeof bout.red_fighter_slug === "string" ? bout.red_fighter_slug : "";
     const blueSlug = typeof bout.blue_fighter_slug === "string" ? bout.blue_fighter_slug : "";
     if (!redName || !blueName || !redSlug || !blueSlug) {
-      throw new SpotlightBuildError("SPOTLIGHT_FIGHTER_IDENTITY_MISSING", "Both staged fighter identities are required before building a Spotlight.");
+      throw new SpotlightBuildError("SPOTLIGHT_FIGHTER_IDENTITY_MISSING", "Both fighter identities are required before building a Spotlight.");
     }
 
     const red = loadFighter(redName, redSlug);
