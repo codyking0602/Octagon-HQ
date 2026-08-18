@@ -1,4 +1,3 @@
-import { HIT_THE_NUMBER_STATS } from "../play/hitTheNumberEngine";
 import { getPlayFighter } from "../play/playFighterPool";
 import { resultScore, type ChallengeJson, type PlayChallenge } from "./challengeModel";
 
@@ -316,8 +315,7 @@ function HitTheNumberDetails({ challenge, creatorName, responderName }: DetailPr
   const setup = record(outerSetup?.publicSetup ?? null) ?? outerSetup;
   const target = typeof setup?.target === "number" && Number.isFinite(setup.target) ? setup.target : null;
   const pickCount = typeof setup?.pickCount === "number" && Number.isFinite(setup.pickCount) ? setup.pickCount : null;
-  const statId = typeof setup?.statId === "string" ? setup.statId : "";
-  const statLabel = HIT_THE_NUMBER_STATS.find((stat) => stat.id === statId)?.label ?? "UFC stat";
+  const statLabel = challenge.summary.split(" · ")[0]?.trim() || "UFC stat";
 
   function Path({ label, name, result }: { label: string; name: string; result: ChallengeJson }) {
     const row = record(result);
