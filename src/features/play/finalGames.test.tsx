@@ -142,11 +142,13 @@ describe("Final Play game presentation", () => {
     expect(container.textContent).toContain("EIGHT CALLS LOCKED");
     expect(container.textContent).toContain(`${expected.score}/100`);
     expect(container.textContent).toContain(`${expected.modelTopFourKept} OF OCTAGON HQ’S TOP 4 KEPT`);
-    expect(container.textContent).toContain("Your four keeps are graded against the strongest four fighters on this board.");
+    expect(container.textContent).toContain("OCTAGON HQ TOP 4");
+    expect(container.querySelectorAll(".keep-cut-top-four__fighter")).toHaveLength(4);
+    expect(container.textContent).toContain("YOUR BOARD");
+    expect(container.querySelectorAll(".keep-cut-result-fighter")).toHaveLength(8);
     expect(container.textContent).not.toMatch(/OF 16 COMPARISONS/i);
     expect(container.textContent).not.toMatch(/COMPARISONS WON/i);
-    expect(container.querySelectorAll(".keep-cut-result-group--keep .keep-cut-fighter")).toHaveLength(4);
-    expect(container.querySelectorAll(".keep-cut-result-group--cut .keep-cut-fighter")).toHaveLength(4);
+    expect(container.querySelectorAll(".keep-cut-result-group")).toHaveLength(0);
     const actions = [...container.querySelectorAll(".game-result-actions button")].map((button) => button.textContent);
     expect(actions).toEqual(["CHALLENGE SOMEONE", "REPLAY CHALLENGE", "ALL GAMES"]);
   });
