@@ -65,6 +65,23 @@ function aggregateFallbackStandings(history: PickHistory): PickSeasonStanding[] 
   });
 }
 
+function standingClassName(standing: PickSeasonStanding) {
+  return [
+    "picks-season-standing",
+    standing.rank === 1 ? "is-leader" : "",
+    standing.rank === 2 ? "is-second" : "",
+    standing.rank === 3 ? "is-third" : "",
+    standing.isCurrentUser ? "is-current-user" : "",
+  ].filter(Boolean).join(" ");
+}
+
+function rankContext(rank: number) {
+  if (rank === 1) return "LEADER";
+  if (rank === 2) return "2ND";
+  if (rank === 3) return "3RD";
+  return null;
+}
+
 export function PicksSeasonHub({ history, loading }: { history: PickHistory; loading: boolean }) {
   const [searchParams] = useSearchParams();
   const archivedEventIds = useMemo(
@@ -91,6 +108,7 @@ export function PicksSeasonHub({ history, loading }: { history: PickHistory; loa
     return canonicalStandings.length ? canonicalStandings : aggregateFallbackStandings(history);
   }, [history]);
   const currentStanding = standings.find((standing) => standing.isCurrentUser) ?? null;
+  const leaderPoints = standings.reduce((highest, standing) => Math.max(highest, standing.totalPoints), 0);
   const season = history.season ?? new Date().getFullYear();
   const finish = currentStanding
     ? `${groupRankLabel(currentStanding.rank, standings)} OF ${standings.length}`
@@ -189,25 +207,47 @@ export function PicksSeasonHub({ history, loading }: { history: PickHistory; loa
                 <small>{standings.length} PLAYERS · {history.events.length} EVENTS</small>
               </div>
               <div className="picks-season-standing-list">
-                {standings.map((standing) => (
-                  <article
-                    className={standing.isCurrentUser ? "picks-season-standing is-current-user" : "picks-season-standing"}
-                    key={standing.profileId ?? standing.displayName}
-                  >
-                    <span>{groupRankLabel(standing.rank, standings)}</span>
-                    <div>
-                      <strong>{standing.displayName}</strong>
-                      <small>
-                        {standing.correct}-{standing.incorrect} · {winPercentageLabel(standing.correct, standing.incorrect)} WIN
-                        {standing.missing ? ` · ${standing.missing} MISSED` : ""}
-                      </small>
-                    </div>
-                    <div>
-                      <b>{standing.totalPoints} PTS</b>
-                      <small>+{standing.lockBonus} LOCK · {standing.eventsEntered} {standing.eventsEntered === 1 ? "EVENT" : "EVENTS"}</small>
-                    </div>
-                  </article>
-                ))}
+                {standings.map((standing) => {
+                  const pointGap = Math.max(0, leaderPoints - standing.totalPoints);
+                  const progress = leaderPoints > 0
+                    ? Math.round((standing.totalPoints / leaderPoints) * 100)
+                    : 0;
+                  const missedEvents = Math.max(0, history.events.length - standing.eventsEntered);
+                  const podiumLabel = rankContext(standing.rank);
+
+                  return (
+                    <article
+                      className={standingClassName(standing)}
+                      key={standing.profileId ?? standing.displayName}
+                    >
+                      <div className="picks-season-standing__progress" aria-hidden="true">
+                        <span style={{ width: `${progress}%` }} />
+                      </div>
+                      <span className="picks-season-standing__rank">
+                        <b>{groupRankLabel(standing.rank, standings)}</b>
+                        {podiumLabel ? <small>{podiumLabel}</small> : null}
+                      </span>
+                      <div className="picks-season-standing__identity">
+                        <div className="picks-season-standing__name">
+                          <strong>{standing.displayName}</strong>
+                          {standing.isCurrentUser ? <em>YOU</em> : null}
+                        </div>
+                        <small>
+                          {standing.correct}-{standing.incorrect} · {winPercentageLabel(standing.correct, standing.incorrect)} WIN
+                          {standing.missing ? ` · ${standing.missing} MISSED` : ""}
+                        </small>
+                      </div>
+                      <div className="picks-season-standing__score">
+                        <b>{standing.totalPoints} PTS</b>
+                        <em>{pointGap === 0 ? "LEADER" : `${pointGap} PTS BACK`}</em>
+                        <small>
+                          +{standing.lockBonus} LOCK · {standing.eventsEntered}/{history.events.length} EVENTS
+                          {missedEvents ? ` · ${missedEvents} ${missedEvents === 1 ? "EVENT" : "EVENTS"} MISSED` : ""}
+                        </small>
+                      </div>
+                    </article>
+                  );
+                })}
               </div>
             </section>
           ) : (
