@@ -43,7 +43,6 @@ describe("Play registry", () => {
       "blind-resume",
       "blind-rank",
       "keep-cut",
-      "better-than",
     ]);
     expect(playGames.find((game) => game.id === "hit-the-number")?.description).toContain("without going over");
     expect(playGames.find((game) => game.id === "wavelength")?.description).toContain("hidden 1–100 rating");
