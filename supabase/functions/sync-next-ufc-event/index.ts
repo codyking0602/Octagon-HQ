@@ -1,14 +1,17 @@
 import { createClient } from "npm:@supabase/supabase-js@2.110.7";
 import * as cheerio from "npm:cheerio@1.0.0";
 import { DEPLOYED_SOURCE_SHA } from "./deployment.ts";
-import { absoluteCbsSportsUfcEventUrl } from "./sourceUrls.ts";
+import {
+  absoluteUfcEventUrl,
+  resolveUfcSourcePreference,
+} from "./sourceUrls.ts";
 import { sourceChanges } from "./cardChanges.ts";
 import {
-  parseCbsSportsEventPage,
-  type CbsSportsCard,
-  type CbsSportsEventCandidate,
-  type ParsedCbsSportsBout as ParsedCardBout,
-} from "./cbsSportsEventParser.ts";
+  parseUfcEventPage,
+  type ParsedUfcBout as ParsedCardBout,
+  type UfcEventCandidate,
+  type UfcEventCard,
+} from "./ufcEventParser.ts";
 import {
   resolveImportedCardScope,
   selectAndSequenceImportedBouts,
@@ -22,17 +25,20 @@ const corsHeaders = {
   "Access-Control-Expose-Headers": "X-Octagon-Backend-Sha",
 };
 
-const CBS_UFC_SCHEDULE_URL = "https://www.cbssports.com/ufc/schedule/";
-const MAX_CBS_EVENT_PAGE_ATTEMPTS = 6;
+const UFC_EVENT_INDEX_URL = "https://www.ufc.com/events?language_content_entity=en";
+const MAX_UFC_EVENT_PAGE_ATTEMPTS = 8;
 const requestHeaders = {
-  "User-Agent": "OctagonHQ/2.0 (+https://octagon.hq-app.workers.dev)",
-  Accept: "text/html,application/xhtml+xml",
+  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+  Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
   "Accept-Language": "en-US,en;q=0.9",
+  "Cache-Control": "no-cache",
+  Pragma: "no-cache",
+  Referer: "https://www.ufc.com/",
 };
 
 type CardScope = "auto" | "main" | "full";
 type EffectiveScope = "main" | "full";
-type ErrorStage = "authentication" | "cbs-index-fetch" | "cbs-fetch" | "cbs-parse" | "preview-build" | "database-read" | "database-write";
+type ErrorStage = "authentication" | "ufc-index-fetch" | "ufc-event-fetch" | "ufc-parse" | "preview-build" | "database-read" | "database-write";
 
 class SyncError extends Error {
   constructor(readonly code: string, message: string, readonly stage: ErrorStage, readonly safeDetails: Record<string, unknown> = {}) { super(message); }
@@ -106,7 +112,7 @@ export function resolveCardScope(name: string, subtitle: string, requested: Card
   return resolveImportedCardScope(name, subtitle, requested);
 }
 
-function selectBouts(card: CbsSportsCard, scope: EffectiveScope) {
+function selectBouts(card: UfcEventCard, scope: EffectiveScope) {
   return selectAndSequenceImportedBouts(card.bouts, scope);
 }
 
@@ -129,100 +135,136 @@ function toStagedBouts(bouts: Array<ParsedCardBout & SequencedBoutMetadata>) {
   });
 }
 
-async function fetchText(url: string, stage: "cbs-index-fetch" | "cbs-fetch") {
+async function fetchText(url: string, stage: "ufc-index-fetch" | "ufc-event-fetch") {
   let response: Response;
-  try { response = await fetch(url, { headers: requestHeaders, redirect: "follow", signal: AbortSignal.timeout(8000) }); }
-  catch { throw new SyncError("UPSTREAM_TIMEOUT", "CBS Sports did not respond within 8 seconds.", stage, { source: "CBS Sports" }); }
-  if (!response.ok) throw new SyncError("UPSTREAM_HTTP_ERROR", `CBS Sports returned HTTP ${response.status}.`, stage, { source: "CBS Sports", status: response.status });
+  try {
+    response = await fetch(url, {
+      headers: requestHeaders,
+      redirect: "follow",
+      signal: AbortSignal.timeout(10_000),
+    });
+  } catch {
+    throw new SyncError(
+      "UPSTREAM_TIMEOUT",
+      "UFC.com did not respond within 10 seconds.",
+      stage,
+      { source: "UFC.com" },
+    );
+  }
+  if (!response.ok) {
+    throw new SyncError(
+      "UPSTREAM_HTTP_ERROR",
+      `UFC.com returned HTTP ${response.status}.`,
+      stage,
+      { source: "UFC.com", status: response.status },
+    );
+  }
   const declared = Number(response.headers.get("content-length") ?? 0);
-  if (declared > 2_000_000) throw new SyncError("UPSTREAM_RESPONSE_TOO_LARGE", "CBS Sports response exceeded the 2 MB safety limit.", stage, { source: "CBS Sports" });
+  if (declared > 3_000_000) {
+    throw new SyncError(
+      "UPSTREAM_RESPONSE_TOO_LARGE",
+      "UFC.com response exceeded the 3 MB safety limit.",
+      stage,
+      { source: "UFC.com" },
+    );
+  }
   const text = await response.text();
-  if (new TextEncoder().encode(text).byteLength > 2_000_000) throw new SyncError("UPSTREAM_RESPONSE_TOO_LARGE", "CBS Sports response exceeded the 2 MB safety limit.", stage, { source: "CBS Sports" });
+  if (!text || new TextEncoder().encode(text).byteLength > 3_000_000) {
+    throw new SyncError(
+      "UPSTREAM_RESPONSE_TOO_LARGE",
+      "UFC.com response was empty or exceeded the 3 MB safety limit.",
+      stage,
+      { source: "UFC.com" },
+    );
+  }
   return text;
 }
 
-function parseCbsEventCandidate(html: string, sourceUrl: string, sourceEventKeyOverride = ""): CbsSportsEventCandidate {
+function parseUfcCandidate(html: string, sourceUrl: string, sourceEventKeyOverride = "", now = new Date()): UfcEventCandidate {
   try {
-    return parseCbsSportsEventPage(html, sourceUrl, sourceEventKeyOverride);
+    return parseUfcEventPage(html, sourceUrl, sourceEventKeyOverride, now);
   } catch (error) {
     throw new SyncError(
-      "CBS_EVENT_REJECTED",
-      error instanceof Error ? error.message : "CBS Sports event data could not be parsed safely.",
-      "cbs-parse",
+      "UFC_EVENT_REJECTED",
+      error instanceof Error ? error.message : "Official UFC event data could not be parsed safely.",
+      "ufc-parse",
       { sourceUrl },
     );
   }
 }
 
-async function fetchExactCbsEvent(requestedUrl: string, sourceEventKeyOverride: string) {
-  const sourceUrl = absoluteCbsSportsUfcEventUrl(requestedUrl);
+async function fetchExactUfcEvent(requestedUrl: string, sourceEventKeyOverride: string, now: Date) {
+  const sourceUrl = absoluteUfcEventUrl(requestedUrl);
   if (!sourceUrl) {
     throw new SyncError(
-      "CBS_SOURCE_REJECTED",
-      "The supplied source must be a specific CBS Sports UFC event URL.",
-      "cbs-fetch",
+      "UFC_SOURCE_REJECTED",
+      "The supplied source must be a specific UFC.com event URL.",
+      "ufc-event-fetch",
       { reason: "invalid-event-url" },
     );
   }
-  return parseCbsEventCandidate(
-    await fetchText(sourceUrl, "cbs-fetch"),
+  return parseUfcCandidate(
+    await fetchText(sourceUrl, "ufc-event-fetch"),
     sourceUrl,
     sourceEventKeyOverride,
+    now,
   );
 }
 
-async function discoverCbsEvent(now: Date, sourceEventKeyOverride: string) {
-  const scheduleHtml = await fetchText(CBS_UFC_SCHEDULE_URL, "cbs-index-fetch");
-  const $ = cheerio.load(scheduleHtml);
+async function discoverUfcEvent(now: Date, sourceEventKeyOverride: string) {
+  const indexHtml = await fetchText(UFC_EVENT_INDEX_URL, "ufc-index-fetch");
+  const $ = cheerio.load(indexHtml);
   const candidates = new Map<string, { url: string; order: number }>();
   let order = 0;
+  const upcoming = $("#events-list-upcoming, details#events-list-upcoming").first();
+  const scope = upcoming.length ? upcoming : $("body");
 
-  $("a[href]").each((_, element) => {
-    const url = absoluteCbsSportsUfcEventUrl($(element).attr("href") ?? "");
+  scope.find("a[href*='/event/']").each((_, element) => {
+    const url = absoluteUfcEventUrl($(element).attr("href") ?? "");
     if (!url) return;
-    const context = clean(`${$(element).text()} ${$(element).parent().text()}`);
-    if (!/\bufc\b/i.test(context) || /\b(?:DWCS|Road\s+To\s+UFC)\b/i.test(context)) return;
+    const context = clean(`${$(element).text()} ${$(element).closest("article,li,section").text()}`);
+    if (/\b(?:DWCS|Dana White's Contender Series|Road\s+To\s+UFC)\b/i.test(context)) return;
     if (!candidates.has(url)) candidates.set(url, { url, order: order++ });
   });
 
-  const discovered = [...candidates.values()].slice(0, MAX_CBS_EVENT_PAGE_ATTEMPTS);
+  const discovered = [...candidates.values()].slice(0, MAX_UFC_EVENT_PAGE_ATTEMPTS);
   if (!discovered.length) {
     throw new SyncError(
-      "CBS_DISCOVERY_EMPTY",
-      "CBS Sports did not return upcoming UFC event candidates.",
-      "cbs-index-fetch",
+      "UFC_DISCOVERY_EMPTY",
+      "UFC.com did not return upcoming UFC event candidates.",
+      "ufc-index-fetch",
       { reason: "no-event-links" },
     );
   }
 
-  const parsed: Array<{ candidate: CbsSportsEventCandidate; order: number }> = [];
+  const parsed: Array<{ candidate: UfcEventCandidate; order: number }> = [];
   let fetched = 0;
   for (const candidate of discovered) {
     try {
-      const html = await fetchText(candidate.url, "cbs-fetch");
+      const html = await fetchText(candidate.url, "ufc-event-fetch");
       fetched += 1;
-      const event = parseCbsEventCandidate(html, candidate.url, sourceEventKeyOverride);
+      const event = parseUfcCandidate(html, candidate.url, sourceEventKeyOverride, now);
       if (Date.parse(event.metadata.starts_at) >= now.getTime() - 6 * 60 * 60 * 1000) {
         parsed.push({ candidate: event, order: candidate.order });
       }
     } catch {
-      // A malformed or unavailable event cannot block the remaining bounded CBS candidates.
+      // One malformed official event cannot block the remaining bounded official candidates.
     }
   }
 
   if (!fetched) {
     throw new SyncError(
-      "CBS_FETCH_EMPTY",
-      "CBS Sports UFC event candidates could not be fetched safely.",
-      "cbs-fetch",
+      "UFC_FETCH_EMPTY",
+      "UFC.com event candidates could not be fetched safely.",
+      "ufc-event-fetch",
       { reason: "no-candidate-fetched" },
     );
   }
   if (!parsed.length) {
     throw new SyncError(
-      "CBS_DISCOVERY_REJECTED",
-      "CBS Sports did not return a safely parsed current or upcoming UFC fight card.",
-      "cbs-parse",
+      "UFC_DISCOVERY_REJECTED",
+      "UFC.com did not return a safely parsed current or upcoming UFC fight card.",
+      "ufc-parse",
       { reason: "no-current-or-upcoming-card" },
     );
   }
@@ -235,16 +277,16 @@ async function discoverCbsEvent(now: Date, sourceEventKeyOverride: string) {
   return parsed[0]!.candidate;
 }
 
-async function findCbsEvent(now: Date, preferredSourceUrl: string, sourceEventKeyOverride: string) {
-  if (preferredSourceUrl) return fetchExactCbsEvent(preferredSourceUrl, sourceEventKeyOverride);
+async function findUfcEvent(now: Date, preferredSourceUrl: string, sourceEventKeyOverride: string) {
+  if (preferredSourceUrl) return fetchExactUfcEvent(preferredSourceUrl, sourceEventKeyOverride, now);
   try {
-    return await discoverCbsEvent(now, sourceEventKeyOverride);
+    return await discoverUfcEvent(now, sourceEventKeyOverride);
   } catch (error) {
     if (error instanceof SyncError) throw error;
     throw new SyncError(
-      "CBS_DISCOVERY_FAILED",
-      "Automatic CBS Sports UFC event discovery failed safely.",
-      "cbs-fetch",
+      "UFC_DISCOVERY_FAILED",
+      "Automatic UFC.com event discovery failed safely.",
+      "ufc-event-fetch",
       { reason: "unexpected-discovery-failure" },
     );
   }
@@ -256,14 +298,14 @@ async function buildNextEvent(
   preferredSourceUrl: string,
   sourceEventKeyOverride: string,
 ) {
-  const { card, metadata } = await findCbsEvent(now, preferredSourceUrl, sourceEventKeyOverride);
+  const { card, metadata } = await findUfcEvent(now, preferredSourceUrl, sourceEventKeyOverride);
   const effectiveScope = resolveCardScope(metadata.name, metadata.subtitle, requestedScope);
   const selected = selectBouts(card, effectiveScope);
   if (!selected.length) {
     throw new SyncError(
-      "CBS_CARD_REJECTED",
-      "The CBS Sports event did not contain fights for the selected card scope.",
-      "cbs-parse",
+      "UFC_CARD_REJECTED",
+      "The official UFC event did not contain fights for the selected card scope.",
+      "ufc-parse",
       { reason: "selected-scope-empty", effectiveScope },
     );
   }
@@ -272,14 +314,14 @@ async function buildNextEvent(
   const warnings = [
     !metadata.venue ? "MISSING VENUE" : "",
     !metadata.location ? "MISSING LOCATION" : "",
-    !card.usedSectionHeadings ? "CBS SPORTS CARD SECTIONS NEED REVIEW" : "",
+    !card.usedSectionHeadings ? "UFC.COM CARD SECTIONS NEED REVIEW" : "",
     effectiveScope === "main" && bouts.length < 4 ? "FEWER THAN FOUR MAIN-CARD FIGHTS FOUND" : "",
     effectiveScope === "full" && bouts.length < 8 ? "FULL CARD HAS FEWER THAN EIGHT FIGHTS" : "",
     bouts.some((bout) => !bout.weight_class) ? "ONE OR MORE WEIGHT CLASSES NEED REVIEW" : "",
   ].filter(Boolean);
 
   const event: ParsedEvent = {
-    source: "CBS Sports UFC event + card",
+    source: "UFC.com event + card",
     source_event_key: metadata.source_event_key,
     source_url: card.sourceUrl,
     event_id: metadata.event_id,
@@ -309,6 +351,11 @@ function persistedSourceUrl(currentValue: unknown) {
 function persistedSourceEventKey(currentValue: unknown) {
   const current = asRecord(currentValue);
   return typeof current?.source_event_key === "string" ? current.source_event_key.trim() : "";
+}
+
+function canonicalPersistedUfcEventKey(currentValue: unknown) {
+  const key = persistedSourceEventKey(currentValue);
+  return /^event\/[a-z0-9-]+$/i.test(key) ? key : "";
 }
 
 async function sourceHash(event: ParsedEvent, effectiveScope: EffectiveScope) {
@@ -385,28 +432,22 @@ Deno.serve(async (request) => {
   const expectedHash = typeof input.expected_hash === "string" ? input.expected_hash : "";
   const suppliedSourceUrl = typeof input.source_url === "string" ? input.source_url.trim() : "";
   const savedSourceUrl = persistedSourceUrl(ownerProbe.data);
-  const suppliedCbsSourceUrl = absoluteCbsSportsUfcEventUrl(suppliedSourceUrl);
-  const savedCbsSourceUrl = absoluteCbsSportsUfcEventUrl(savedSourceUrl);
-  const suppliedMatchesSaved = Boolean(suppliedSourceUrl && savedSourceUrl && suppliedSourceUrl === savedSourceUrl);
-  const invalidExplicitSource = Boolean(
-    suppliedSourceUrl
-    && !suppliedCbsSourceUrl
-    && !suppliedMatchesSaved
-    && !internalMonitoring,
-  );
-  const preferredSourceUrl = suppliedCbsSourceUrl || (!suppliedSourceUrl || suppliedMatchesSaved ? savedCbsSourceUrl : "");
+  const sourcePreference = resolveUfcSourcePreference(suppliedSourceUrl, savedSourceUrl);
+  const invalidExplicitSource = sourcePreference.invalidExplicitSource && !internalMonitoring;
+  const preferredSourceUrl = sourcePreference.preferredSourceUrl;
   const internalSourceEventKey = internalMonitoring && typeof input.source_event_key === "string"
     ? input.source_event_key.trim()
     : "";
-  const sourceEventKeyOverride = internalSourceEventKey
-    || ((!suppliedSourceUrl || suppliedMatchesSaved) ? persistedSourceEventKey(ownerProbe.data) : "");
+  const sourceEventKeyOverride = /^event\/[a-z0-9-]+$/i.test(internalSourceEventKey)
+    ? internalSourceEventKey
+    : ((!suppliedSourceUrl || sourcePreference.suppliedMatchesSaved) ? canonicalPersistedUfcEventKey(ownerProbe.data) : "");
 
   try {
     if (invalidExplicitSource) {
       throw new SyncError(
-        "CBS_SOURCE_REJECTED",
-        "The supplied source must be a specific CBS Sports UFC event URL.",
-        "cbs-fetch",
+        "UFC_SOURCE_REJECTED",
+        "The supplied source must be a specific UFC.com event URL.",
+        "ufc-event-fetch",
         { reason: "invalid-event-url" },
       );
     }
