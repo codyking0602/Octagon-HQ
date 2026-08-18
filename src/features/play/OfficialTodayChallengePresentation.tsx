@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { FighterPhoto } from "../rankings/FighterPhoto";
-import { getPlayFighter } from "./playFighterPool";
+import { KeepCutResultSummary } from "./KeepCutResultSummary";
+import { KEEP_CUT_PACKS, type KeepCutPackId } from "./keepCutEngine";
+import { getPlayFighter, type PlayFighter } from "./playFighterPool";
 import type { OfficialAttempt } from "./todaysChallengeAdapters";
 import type { TodayChallengeProjection } from "./todayChallengeRepository";
 
@@ -502,6 +504,19 @@ function KeepCutTray({ title, values }: { title: "keep" | "cut"; values: unknown
   );
 }
 
+function officialKeepCutPackId(value: unknown): KeepCutPackId {
+  if (typeof value === "string" && KEEP_CUT_PACKS.some((pack) => pack.id === value)) return value as KeepCutPackId;
+  throw new Error("Official Keep/Cut result is missing its canonical pack.");
+}
+
+function officialKeepCutBoard(rows: readonly FighterPresentation[]) {
+  const board = rows.map((row) => getPlayFighter(row.id)).filter((row): row is PlayFighter => Boolean(row));
+  if (board.length !== 8 || new Set(board.map((row) => row.id)).size !== 8) {
+    throw new Error("Official Keep/Cut result is missing its canonical eight-fighter board.");
+  }
+  return board;
+}
+
 function KeepCutView({ projection, busy, onAdvance }: OfficialGameViewProps) {
   const setup = projection.publicSetup;
   const state = projection.publicState;
@@ -516,18 +531,18 @@ function KeepCutView({ projection, busy, onAdvance }: OfficialGameViewProps) {
     const reveal = record(state.reveal) ?? projection.revealSetup ?? {};
     const modelTopFour = new Set(strings(reveal.model_top_four_ids));
     const modelTopFourKept = kept.filter((row) => modelTopFour.has(row.id)).length;
+    const packId = officialKeepCutPackId(pack.id);
+    const board = officialKeepCutBoard([...kept, ...cut]);
     return (
       <div className="page keep-cut-page" data-game="keep_4_cut_4">
-        <section className="keep-cut-result-hero">
-          <p className="eyebrow">EIGHT CALLS LOCKED</p>
-          <h1>{attempt.normalizedScore}/100 · OFFICIAL RESULT</h1>
-          <p>{modelTopFourKept} OF OCTAGON HQ’S TOP 4 KEPT</p>
-          <small>Your four keeps are graded against the strongest four fighters on this board.</small>
-        </section>
-        <section className="keep-cut-results">
-          <div className="keep-cut-result-group keep-cut-result-group--keep"><header><span>YOUR FOUR</span><strong>KEPT</strong></header><div>{kept.map((row) => <KeepCutFighter row={row} key={row.id} />)}</div></div>
-          <div className="keep-cut-result-group keep-cut-result-group--cut"><header><span>YOUR FOUR</span><strong>CUT</strong></header><div>{cut.map((row) => <KeepCutFighter row={row} key={row.id} />)}</div></div>
-        </section>
+        <KeepCutResultSummary
+          board={board}
+          keptIds={kept.map((row) => row.id)}
+          packId={packId}
+          score={attempt.normalizedScore}
+          scoreLabel="OFFICIAL RESULT"
+          topFourKept={modelTopFourKept}
+        />
       </div>
     );
   }
