@@ -220,7 +220,7 @@ describe("official Today’s Challenge uses the canonical casual game presentati
     expect(onAdvance).toHaveBeenCalledWith({ choice: "cut" });
   });
 
-  it("shows a perfect Keep 4, Cut 4 in the casual result presentation", () => {
+  it("shows a perfect Keep 4, Cut 4 in the aligned official result presentation", () => {
     const kept = ["one", "two", "three", "four"].map((id) => presentedFighter(id, `Kept ${id}`));
     const cut = ["five", "six", "seven", "eight"].map((id) => presentedFighter(id, `Cut ${id}`));
     const { container } = renderView(projection(
@@ -239,8 +239,11 @@ describe("official Today’s Challenge uses the canonical casual game presentati
     ));
 
     expect(container.querySelector(".keep-cut-result-hero")).not.toBeNull();
-    expect(screen.getByRole("heading", { name: /100\/100/ })).toBeInTheDocument();
-    expect(screen.getByText("4 OF MODEL TOP 4 KEPT · 16 OF 16 COMPARISONS WON")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /100\/100 · OFFICIAL RESULT/ })).toBeInTheDocument();
+    expect(screen.getByText("4 OF OCTAGON HQ’S TOP 4 KEPT")).toBeInTheDocument();
+    expect(screen.getByText("Your four keeps are graded against the strongest four fighters on this board.")).toBeInTheDocument();
+    expect(container.textContent).not.toMatch(/OF 16 COMPARISONS/i);
+    expect(container.textContent).not.toMatch(/COMPARISONS WON/i);
     expect(screen.queryByRole("button", { name: "KEEP" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "CUT" })).not.toBeInTheDocument();
   });

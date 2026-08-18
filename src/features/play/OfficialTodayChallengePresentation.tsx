@@ -513,7 +513,6 @@ function KeepCutView({ projection, busy, onAdvance }: OfficialGameViewProps) {
   const attempt = projection.officialAttempt;
 
   if (attempt) {
-    const comparisons = integer(attempt.publicResult.correct_comparisons, attempt.nativeScore);
     const reveal = record(state.reveal) ?? projection.revealSetup ?? {};
     const modelTopFour = new Set(strings(reveal.model_top_four_ids));
     const modelTopFourKept = kept.filter((row) => modelTopFour.has(row.id)).length;
@@ -522,8 +521,8 @@ function KeepCutView({ projection, busy, onAdvance }: OfficialGameViewProps) {
         <section className="keep-cut-result-hero">
           <p className="eyebrow">EIGHT CALLS LOCKED</p>
           <h1>{attempt.normalizedScore}/100 · OFFICIAL RESULT</h1>
-          <p>{modelTopFourKept} OF MODEL TOP 4 KEPT · {comparisons} OF 16 COMPARISONS WON</p>
-          <small>Every kept fighter is compared with every cut fighter. Keeping the board’s best four scores 100.</small>
+          <p>{modelTopFourKept} OF OCTAGON HQ’S TOP 4 KEPT</p>
+          <small>Your four keeps are graded against the strongest four fighters on this board.</small>
         </section>
         <section className="keep-cut-results">
           <div className="keep-cut-result-group keep-cut-result-group--keep"><header><span>YOUR FOUR</span><strong>KEPT</strong></header><div>{kept.map((row) => <KeepCutFighter row={row} key={row.id} />)}</div></div>
