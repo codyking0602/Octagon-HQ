@@ -1,11 +1,49 @@
 begin;
 
+select set_config('request.jwt.claim.role', 'service_role', true);
+
+insert into private.daily_challenge_schedule_versions (
+  version,
+  time_zone,
+  anchor_day,
+  starts_on,
+  game_cycle
+)
+values (
+  'test-blind-resume-v3-publication',
+  'America/Chicago',
+  date '2100-02-01',
+  date '2100-02-01',
+  array['blind_resume']::text[]
+);
+
 do $$
 declare
   v_result record;
+  v_published jsonb;
   v_rejected boolean := false;
   v_evidence jsonb := '{"correct_choices":["a","b","c","d","e"]}'::jsonb;
 begin
+  v_published := public.publish_daily_challenge_setup(
+    date '2100-02-01',
+    'test-blind-resume-v3-publication',
+    'blind_resume',
+    'blind-resume-v3:test-blind-resume-v3-publication:2100-02-01',
+    'blind-resume-v3',
+    'play-official-score-v3',
+    '{"round_count":5,"initial_state":{"complete":false,"round_index":0,"results":[],"current_round":{"round_index":0,"round_number":1,"revealed_count":2,"stats":[]}}}'::jsonb,
+    '{"rounds":[]}'::jsonb,
+    '{"rounds":[]}'::jsonb,
+    v_evidence,
+    null
+  );
+
+  if v_published->>'game_type' <> 'blind_resume'
+    or v_published->>'content_version' <> 'blind-resume-v3'
+    or v_published->>'scoring_version' <> 'play-official-score-v3' then
+    raise exception 'Blind Resume V3 publication identity was rejected or rewritten: %', v_published;
+  end if;
+
   select *
   into v_result
   from private.grade_daily_challenge(
