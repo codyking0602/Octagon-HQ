@@ -340,7 +340,7 @@ export default function PicksControlCenterPage({
         </section>
       ) : null}
 
-      {identity.profile && eventState.status === "ready" && event !== null ? (
+      {identity.profile && eventState.status === "ready" && event != null ? (
         <section
           id="fight-night"
           className="picks-control-center__section"
