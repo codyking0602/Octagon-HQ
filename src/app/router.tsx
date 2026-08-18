@@ -18,7 +18,6 @@ const WavelengthPage = lazy(() => import("../features/play/WavelengthPage"));
 const BlindResumePage = lazy(() => import("../features/play/BlindResumePage"));
 const BlindRankPage = lazy(() => import("../features/play/BlindRankPage"));
 const KeepCutPage = lazy(() => import("../features/play/KeepCutPage"));
-const BetterThanPage = lazy(() => import("../features/play/BetterThanPage"));
 const AuctionPage = lazy(() => import("../features/play/AuctionPage"));
 const HitTheNumberPage = lazy(() => import("../features/play/HitTheNumberPage"));
 const PicksPage = lazy(() => import("../features/picks/PicksPage"));
@@ -47,7 +46,6 @@ export const appRoutes: RouteObject[] = [
       { path: "play/blind-resume", element: <TodayChallengeGameRoute gameType="blind_resume" casual={<BlindResumePage />} /> },
       { path: "play/blind-rank", element: <TodayChallengeGameRoute gameType="blind_rank_5" casual={<BlindRankPage />} /> },
       { path: "play/keep-cut", element: <TodayChallengeGameRoute gameType="keep_4_cut_4" casual={<KeepCutPage />} /> },
-      { path: "play/better-than", element: <BetterThanPage /> },
       { path: "play/auction", element: <AuctionPage /> },
       { path: "play/hit-the-number", element: <TodayChallengeGameRoute gameType="hit_the_number" casual={<HitTheNumberPage />} /> },
       { path: "picks", element: <PicksPage /> },
