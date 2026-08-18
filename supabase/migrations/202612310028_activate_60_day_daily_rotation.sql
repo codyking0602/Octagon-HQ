@@ -119,6 +119,7 @@ declare
   ]::text[];
   v_source private.daily_challenge_schedule_versions;
   v_existing private.daily_challenge_schedule_versions;
+  v_activation_day date;
   v_index integer;
 begin
   if coalesce(array_length(v_cycle, 1), 0) <> 60 then
@@ -166,6 +167,11 @@ begin
     raise exception 'source Daily Challenge schedule % is missing', v_source_version;
   end if;
 
+  -- Production's V2 began on August 17, so this resolves to the approved August 18 start.
+  -- A future fresh-database replay may intentionally move historical V2 later; in that case V3
+  -- follows that replay-safe boundary while retaining August 18 as the deterministic cycle anchor.
+  v_activation_day := greatest(v_start, v_source.starts_on);
+
   select schedule.*
   into v_existing
   from private.daily_challenge_schedule_versions schedule
@@ -174,7 +180,7 @@ begin
   if v_existing.version is not null then
     if v_existing.time_zone <> 'America/Chicago'
       or v_existing.anchor_day <> v_start
-      or v_existing.starts_on <> v_start
+      or v_existing.starts_on <> v_activation_day
       or v_existing.game_cycle is distinct from v_cycle then
       raise exception 'existing Daily rotation v3 does not match the approved contract: %', row_to_json(v_existing);
     end if;
@@ -184,10 +190,10 @@ begin
   if exists (
     select 1
     from private.daily_challenges daily
-    where daily.central_day >= v_start
+    where daily.central_day >= v_activation_day
       and daily.schedule_version <> v_version
   ) then
-    raise exception 'refusing to activate Daily rotation v3 across an already-materialized day on or after %', v_start;
+    raise exception 'refusing to activate Daily rotation v3 across an already-materialized day on or after %', v_activation_day;
   end if;
 
   insert into private.daily_challenge_schedule_versions (
@@ -201,7 +207,7 @@ begin
     v_version,
     'America/Chicago',
     v_start,
-    v_start,
+    v_activation_day,
     v_cycle
   );
 end
