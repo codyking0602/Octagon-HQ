@@ -1,64 +1,127 @@
 /* Ambient motion layer for persisted Picks event headers. The canonical layout stays in picks-polish.css. */
 
 .picks-event-hero.has-poster .picks-event-hero__poster {
-  animation: picks-event-header-push 12s ease-in-out infinite alternate;
-  will-change: background-size, background-position;
+  transform: translate3d(0, 0, 0) scale(1);
+  transform-origin: center center;
+  backface-visibility: hidden;
+  will-change: transform;
+  animation: picks-event-header-push 16s cubic-bezier(.2, .65, .3, 1) infinite alternate;
 }
 
+/* A sparse atmospheric layer that moves independently from the poster image. */
 .picks-event-hero.has-poster .picks-event-hero__poster::before {
   position: absolute;
-  inset: 0;
-  z-index: 0;
+  inset: -12%;
+  z-index: 1;
   content: "";
   pointer-events: none;
   background:
-    linear-gradient(110deg, transparent 0 38%, rgba(255, 255, 255, .11) 48%, transparent 58% 100%),
-    radial-gradient(circle, rgba(255, 255, 255, .12) 0 1px, transparent 1.5px),
-    radial-gradient(circle, rgba(255, 255, 255, .08) 0 1px, transparent 1.4px),
-    radial-gradient(circle at 50% 92%, rgba(255, 255, 255, .08), transparent 42%);
-  background-position: -150% 0, 0 0, 18px 9px, center;
-  background-size: 240% 100%, 47px 47px, 71px 71px, 100% 100%;
+    radial-gradient(circle, rgba(255, 255, 255, .62) 0 1.4px, transparent 1.9px),
+    radial-gradient(circle, rgba(255, 70, 145, .5) 0 1.7px, transparent 2.2px),
+    radial-gradient(circle, rgba(255, 255, 255, .4) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 52% 88%, rgba(255, 55, 135, .13), transparent 38%);
+  background-position: 0 0, 29px 18px, 61px 37px, center;
+  background-size: 104px 104px, 151px 151px, 203px 203px, 100% 100%;
   mix-blend-mode: screen;
-  opacity: .24;
-  animation: picks-event-header-atmosphere 14s ease-in-out infinite;
+  opacity: .32;
+  transform: translate3d(-1.5%, 1.5%, 0) scale(1.03);
+  will-change: transform, opacity;
+  animation: picks-event-header-particles 18s linear infinite;
+}
+
+/* picks-polish intentionally hides the legacy poster fade on persisted artwork.
+   This higher-specificity motion layer reuses ::after only for an occasional sheen. */
+.picks-page .picks-event-hero.has-poster .picks-event-hero__poster::after {
+  display: block;
+  position: absolute;
+  inset: -28% -72%;
+  z-index: 2;
+  width: auto;
+  height: auto;
+  content: "";
+  pointer-events: none;
+  background: linear-gradient(
+    112deg,
+    transparent 0 43%,
+    rgba(255, 255, 255, .02) 46%,
+    rgba(255, 255, 255, .2) 49%,
+    rgba(255, 95, 165, .28) 50.5%,
+    rgba(255, 255, 255, .16) 52%,
+    rgba(255, 255, 255, .02) 55%,
+    transparent 58% 100%
+  );
+  mix-blend-mode: screen;
+  opacity: 0;
+  transform: translate3d(-34%, 0, 0);
+  will-change: transform, opacity;
+  animation: picks-event-header-sheen 10s ease-in-out infinite;
 }
 
 @keyframes picks-event-header-push {
   from {
-    background-position: center, center, center;
-    background-size: cover, 100% auto, cover;
+    transform: translate3d(0, 0, 0) scale(1);
   }
 
   to {
-    background-position: center, 50% 49.2%, center;
-    background-size: cover, 102.5% auto, cover;
+    transform: translate3d(0, 0, 0) scale(1.025);
   }
 }
 
-@keyframes picks-event-header-atmosphere {
+@keyframes picks-event-header-particles {
   0% {
-    background-position: -150% 0, 0 0, 18px 9px, center;
-    opacity: .17;
-  }
-
-  45% {
+    transform: translate3d(-1.5%, 1.5%, 0) scale(1.03);
     opacity: .26;
   }
 
+  50% {
+    opacity: .38;
+  }
+
   100% {
-    background-position: 150% 0, 30px -22px, -20px 28px, center;
-    opacity: .19;
+    transform: translate3d(1.8%, -2.2%, 0) scale(1.03);
+    opacity: .3;
+  }
+}
+
+@keyframes picks-event-header-sheen {
+  0%,
+  68% {
+    opacity: 0;
+    transform: translate3d(-34%, 0, 0);
+  }
+
+  75% {
+    opacity: .36;
+  }
+
+  88% {
+    opacity: .14;
+    transform: translate3d(34%, 0, 0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(34%, 0, 0);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .picks-event-hero.has-poster .picks-event-hero__poster {
     animation: none;
+    transform: none;
     will-change: auto;
   }
 
   .picks-event-hero.has-poster .picks-event-hero__poster::before {
     animation: none;
-    opacity: .12;
+    transform: none;
+    opacity: .14;
+    will-change: auto;
+  }
+
+  .picks-page .picks-event-hero.has-poster .picks-event-hero__poster::after {
+    display: none;
+    animation: none;
+    will-change: auto;
   }
 }
