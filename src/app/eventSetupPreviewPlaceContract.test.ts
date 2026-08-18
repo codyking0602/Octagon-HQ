@@ -11,7 +11,7 @@ function preview(overrides: Record<string, unknown> = {}) {
     location: "Las Vegas, United States",
     starts_at: "2026-08-09T01:00:00.000Z",
     locks_at: "2026-08-09T01:00:00.000Z",
-    source_url: "https://www.mmamania.com/ufc-fight-cards/ufc-fight-night-gamrot-vs-nguyen",
+    source_url: "https://www.cbssports.com/ufc/event/31009998/ufc-fight-night-gamrot-vs-nguyen-august-8-2026/",
     bouts: [
       { bout_id: "main-event-1", red_fighter_name: "Mateusz Gamrot", blue_fighter_name: "Steven Nguyen", weight_class: "Lightweight" },
       { bout_id: "main-2", red_fighter_name: "Fighter Two", blue_fighter_name: "Opponent Two", weight_class: "Welterweight" },
