@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-const migration = readFileSync("supabase/migrations/202612310011_published_pick_spotlight_controls.sql", "utf8");
+const migration = readFileSync("supabase/migrations/209912310001_published_pick_spotlight_controls.sql", "utf8");
 const builder = readFileSync("supabase/functions/build-pick-spotlight/index.ts", "utf8");
 const controlRepository = readFileSync("src/features/picks-control/pickControlRepository.ts", "utf8");
 
