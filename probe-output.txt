@@ -1,76 +1,110 @@
-===== https://ufc-data-api.ufc.com/api/v3/us/events =====
-curl: (60) SSL: no alternative certificate subject name matches target host name 'ufc-data-api.ufc.com'
-More details here: https://curl.se/docs/sslcerts.html
-
-curl failed to verify the legitimacy of the server and therefore could not
-establish a secure connection to it. To learn more about this situation and
-how to fix it, please visit the web page mentioned above.
-status=000
-/home/runner/work/_temp/4db19f5f-d597-4d67-8946-b9d8deb5ebe5.sh: line 23: /tmp/body: No such file or directory
-bytes=0
-
-===== http://ufc-data-api.ufc.com/api/v3/us/events =====
-status=404
-Content-Type: text/html; charset=utf-8
-Server: heroku-router
-X-Cache: Error from cloudfront
-Via: 1.1 ea616b46cffefe382adc8a3aaad64c5c.cloudfront.net (CloudFront)
-X-Amz-Cf-Pop: PHX50-P2
-X-Amz-Cf-Id: V-STDejNk3tzaARWXfOzGUqp5ug8V3wNinRqYPyta8_DgeVkcu4tyA==
-bytes=548
-<!DOCTYPE html> <html>   <head>     <meta name="viewport" content="width=device-width, initial-scale=1">     <meta charset="utf-8">     <title>No such app</title>     <style media="screen">       html,body,iframe {         margin: 0;         padding: 0;       }       html,body {         height: 100%;         overflow: hidden;       }       iframe {         width: 100%;         height: 100%;         border: 0;       }     </style>   </head>   <body>     <iframe src="//www.herokucdn.com/error-pages/no-such-app.html"></iframe>   </body> </html> 
-===== https://www.ufc.com/events =====
+===== https://ufc.com/event/ufc-fight-night-august-22-2026 =====
 status=403
 server: Varnish
 content-type: text/html; charset=utf-8
 via: 1.1 varnish
-x-served-by: cache-hhr-khhr2060048-HHR
+x-served-by: cache-qro-mmqt1070049-QRO
 x-cache: MISS
 x-cache-hits: 0
-x-timer: S1787060489.502352,VS0,VE1
+x-timer: S1787060561.260657,VS0,VE1
 bytes=425
- <?xml version="1.0" encoding="utf-8"?> <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> <html>   <head>     <title>403 Forbidden</title>   </head>   <body>     <h1>Error 403 Forbidden</h1>     <p>Forbidden</p>     <h3>Error 54113</h3>     <p>Details: cache-hhr-khhr2060048-HHR 1787060489 2446317080</p>     <hr>     <p>Varnish cache server</p>   </body> </html> 
+ <?xml version="1.0" encoding="utf-8"?> <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> <html>   <head>     <title>403 Forbidden</title>   </head>   <body>     <h1>Error 403 Forbidden</h1>     <p>Forbidden</p>     <h3>Error 54113</h3>     <p>Details: cache-qro-mmqt1070049-QRO 1787060561 1420956766</p>     <hr>     <p>Varnish cache server</p>   </body> </html> 
 ===== https://www.ufc.com/event/ufc-fight-night-august-22-2026 =====
 status=403
 server: Varnish
 content-type: text/html; charset=utf-8
 via: 1.1 varnish
-x-served-by: cache-hhr-khhr2060034-HHR
+x-served-by: cache-qro-mmqt1070037-QRO
 x-cache: MISS
 x-cache-hits: 0
-x-timer: S1787060489.560068,VS0,VE1
-bytes=425
- <?xml version="1.0" encoding="utf-8"?> <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> <html>   <head>     <title>403 Forbidden</title>   </head>   <body>     <h1>Error 403 Forbidden</h1>     <p>Forbidden</p>     <h3>Error 54113</h3>     <p>Details: cache-hhr-khhr2060034-HHR 1787060489 2439098196</p>     <hr>     <p>Varnish cache server</p>   </body> </html> 
-===== https://www.ufc.com/event/ufc-fight-night-august-22-2026?language_content_entity=en =====
+x-timer: S1787060561.382939,VS0,VE1
+bytes=424
+ <?xml version="1.0" encoding="utf-8"?> <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> <html>   <head>     <title>403 Forbidden</title>   </head>   <body>     <h1>Error 403 Forbidden</h1>     <p>Forbidden</p>     <h3>Error 54113</h3>     <p>Details: cache-qro-mmqt1070037-QRO 1787060561 824681667</p>     <hr>     <p>Varnish cache server</p>   </body> </html> 
+===== https://jp.ufc.com/event/ufc-fight-night-august-22-2026 =====
 status=403
 server: Varnish
 content-type: text/html; charset=utf-8
 via: 1.1 varnish
-x-served-by: cache-hhr-khhr2060034-HHR
+x-served-by: cache-qro-mmqt1070073-QRO
 x-cache: MISS
 x-cache-hits: 0
-x-timer: S1787060489.620310,VS0,VE0
+x-timer: S1787060561.459509,VS0,VE1
 bytes=425
- <?xml version="1.0" encoding="utf-8"?> <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> <html>   <head>     <title>403 Forbidden</title>   </head>   <body>     <h1>Error 403 Forbidden</h1>     <p>Forbidden</p>     <h3>Error 54113</h3>     <p>Details: cache-hhr-khhr2060034-HHR 1787060489 2439099249</p>     <hr>     <p>Varnish cache server</p>   </body> </html> 
-===== https://www.ufc.com/event/ufc-fight-night-august-22-2026?_format=json =====
+ <?xml version="1.0" encoding="utf-8"?> <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> <html>   <head>     <title>403 Forbidden</title>   </head>   <body>     <h1>Error 403 Forbidden</h1>     <p>Forbidden</p>     <h3>Error 54113</h3>     <p>Details: cache-qro-mmqt1070073-QRO 1787060561 1589245895</p>     <hr>     <p>Varnish cache server</p>   </body> </html> 
+===== https://jp.ufc.com/event/ufc-fight-night-august-22-2026?language_content_entity=en =====
 status=403
 server: Varnish
 content-type: text/html; charset=utf-8
 via: 1.1 varnish
-x-served-by: cache-hhr-khhr2060049-HHR
+x-served-by: cache-qro-mmqt1070057-QRO
 x-cache: MISS
 x-cache-hits: 0
-x-timer: S1787060489.680271,VS0,VE1
-bytes=425
- <?xml version="1.0" encoding="utf-8"?> <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> <html>   <head>     <title>403 Forbidden</title>   </head>   <body>     <h1>Error 403 Forbidden</h1>     <p>Forbidden</p>     <h3>Error 54113</h3>     <p>Details: cache-hhr-khhr2060049-HHR 1787060489 1515148495</p>     <hr>     <p>Varnish cache server</p>   </body> </html> 
-===== https://www.ufc.com/event/ufc-fight-night-august-22-2026/amp =====
+x-timer: S1787060561.480374,VS0,VE2
+bytes=424
+ <?xml version="1.0" encoding="utf-8"?> <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> <html>   <head>     <title>403 Forbidden</title>   </head>   <body>     <h1>Error 403 Forbidden</h1>     <p>Forbidden</p>     <h3>Error 54113</h3>     <p>Details: cache-qro-mmqt1070057-QRO 1787060561 221210603</p>     <hr>     <p>Varnish cache server</p>   </body> </html> 
+===== https://kr.ufc.com/event/ufc-fight-night-august-22-2026 =====
 status=403
 server: Varnish
 content-type: text/html; charset=utf-8
 via: 1.1 varnish
-x-served-by: cache-hhr-khhr2060021-HHR
+x-served-by: cache-qro-mmqt1070070-QRO
 x-cache: MISS
 x-cache-hits: 0
-x-timer: S1787060489.741706,VS0,VE1
+x-timer: S1787060562.586695,VS0,VE1
 bytes=425
- <?xml version="1.0" encoding="utf-8"?> <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> <html>   <head>     <title>403 Forbidden</title>   </head>   <body>     <h1>Error 403 Forbidden</h1>     <p>Forbidden</p>     <h3>Error 54113</h3>     <p>Details: cache-hhr-khhr2060021-HHR 1787060489 3639658333</p>     <hr>     <p>Varnish cache server</p>   </body> </html> 
+ <?xml version="1.0" encoding="utf-8"?> <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> <html>   <head>     <title>403 Forbidden</title>   </head>   <body>     <h1>Error 403 Forbidden</h1>     <p>Forbidden</p>     <h3>Error 54113</h3>     <p>Details: cache-qro-mmqt1070070-QRO 1787060562 3917144681</p>     <hr>     <p>Varnish cache server</p>   </body> </html> 
+===== https://fr.ufc.com/event/ufc-fight-night-august-22-2026 =====
+status=403
+server: Varnish
+content-type: text/html; charset=utf-8
+via: 1.1 varnish
+x-served-by: cache-qro-mmqt1070034-QRO
+x-cache: MISS
+x-cache-hits: 0
+x-timer: S1787060562.798237,VS0,VE1
+bytes=425
+ <?xml version="1.0" encoding="utf-8"?> <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> <html>   <head>     <title>403 Forbidden</title>   </head>   <body>     <h1>Error 403 Forbidden</h1>     <p>Forbidden</p>     <h3>Error 54113</h3>     <p>Details: cache-qro-mmqt1070034-QRO 1787060562 2963428468</p>     <hr>     <p>Varnish cache server</p>   </body> </html> 
+===== https://es.ufc.com/event/ufc-fight-night-august-22-2026 =====
+curl: (6) Could not resolve host: es.ufc.com
+status=000
+/home/runner/work/_temp/068913dc-2083-40d8-bf20-ad7d993faa30.sh: line 27: /tmp/body: No such file or directory
+bytes=0
+
+===== https://ru.ufc.com/event/ufc-fight-night-august-22-2026 =====
+status=403
+server: Varnish
+content-type: text/html; charset=utf-8
+via: 1.1 varnish
+x-served-by: cache-qro-mmqt1070024-QRO
+x-cache: MISS
+x-cache-hits: 0
+x-timer: S1787060562.941666,VS0,VE1
+bytes=425
+ <?xml version="1.0" encoding="utf-8"?> <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> <html>   <head>     <title>403 Forbidden</title>   </head>   <body>     <h1>Error 403 Forbidden</h1>     <p>Forbidden</p>     <h3>Error 54113</h3>     <p>Details: cache-qro-mmqt1070024-QRO 1787060562 3254163729</p>     <hr>     <p>Varnish cache server</p>   </body> </html> 
+===== https://br.ufc.com/event/ufc-fight-night-august-22-2026 =====
+curl: (28) Connection timed out after 15002 milliseconds
+status=000
+/home/runner/work/_temp/068913dc-2083-40d8-bf20-ad7d993faa30.sh: line 27: /tmp/body: No such file or directory
+bytes=0
+
+===== https://www.ufc.com.br/event/ufc-fight-night-august-22-2026 =====
+status=403
+server: Varnish
+content-type: text/html; charset=utf-8
+via: 1.1 varnish
+x-served-by: cache-qro-mmqt1070037-QRO
+x-cache: MISS
+x-cache-hits: 0
+x-timer: S1787060577.166900,VS0,VE0
+bytes=424
+ <?xml version="1.0" encoding="utf-8"?> <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> <html>   <head>     <title>403 Forbidden</title>   </head>   <body>     <h1>Error 403 Forbidden</h1>     <p>Forbidden</p>     <h3>Error 54113</h3>     <p>Details: cache-qro-mmqt1070037-QRO 1787060577 824841164</p>     <hr>     <p>Varnish cache server</p>   </body> </html> 
+===== https://ufc-data-api.ufc.com/api/v3/us/events =====
+status=404
+Content-Type: text/html; charset=utf-8
+Server: heroku-router
+X-Cache: Error from cloudfront
+Via: 1.1 5e8c263d902978fea874ef2fa06bae8e.cloudfront.net (CloudFront)
+X-Amz-Cf-Pop: DFW59-P6
+X-Amz-Cf-Id: m8u61oQYhfDpYu4oSewYemL-qG-E5I1toeLjYvJqlvKuwJbKm4zBmg==
+bytes=548
+<!DOCTYPE html> <html>   <head>     <meta name="viewport" content="width=device-width, initial-scale=1">     <meta charset="utf-8">     <title>No such app</title>     <style media="screen">       html,body,iframe {         margin: 0;         padding: 0;       }       html,body {         height: 100%;         overflow: hidden;       }       iframe {         width: 100%;         height: 100%;         border: 0;       }     </style>   </head>   <body>     <iframe src="//www.herokucdn.com/error-pages/no-such-app.html"></iframe>   </body> </html> 
