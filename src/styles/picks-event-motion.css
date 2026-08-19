@@ -5,7 +5,7 @@
   transform-origin: center center;
   backface-visibility: hidden;
   will-change: transform;
-  animation: picks-event-header-push 16s cubic-bezier(.2, .65, .3, 1) infinite alternate;
+  animation: picks-event-header-push 12s cubic-bezier(.2, .65, .3, 1) infinite alternate;
 }
 
 /* A sparse atmospheric layer that moves independently from the poster image. */
@@ -16,17 +16,17 @@
   content: "";
   pointer-events: none;
   background:
-    radial-gradient(circle, rgba(255, 255, 255, .62) 0 1.4px, transparent 1.9px),
-    radial-gradient(circle, rgba(255, 70, 145, .5) 0 1.7px, transparent 2.2px),
-    radial-gradient(circle, rgba(255, 255, 255, .4) 0 1px, transparent 1.5px),
-    radial-gradient(circle at 52% 88%, rgba(255, 55, 135, .13), transparent 38%);
+    radial-gradient(circle, rgba(255, 255, 255, .7) 0 1.5px, transparent 2px),
+    radial-gradient(circle, rgba(255, 70, 145, .58) 0 1.8px, transparent 2.3px),
+    radial-gradient(circle, rgba(255, 255, 255, .46) 0 1.1px, transparent 1.6px),
+    radial-gradient(circle at 52% 88%, rgba(255, 55, 135, .18), transparent 38%);
   background-position: 0 0, 29px 18px, 61px 37px, center;
   background-size: 104px 104px, 151px 151px, 203px 203px, 100% 100%;
   mix-blend-mode: screen;
-  opacity: .32;
+  opacity: .4;
   transform: translate3d(-1.5%, 1.5%, 0) scale(1.03);
   will-change: transform, opacity;
-  animation: picks-event-header-particles 18s linear infinite;
+  animation: picks-event-header-particles 14s linear infinite;
 }
 
 /* picks-polish intentionally hides the legacy poster fade on persisted artwork.
@@ -42,19 +42,19 @@
   pointer-events: none;
   background: linear-gradient(
     112deg,
-    transparent 0 43%,
-    rgba(255, 255, 255, .02) 46%,
-    rgba(255, 255, 255, .2) 49%,
-    rgba(255, 95, 165, .28) 50.5%,
-    rgba(255, 255, 255, .16) 52%,
-    rgba(255, 255, 255, .02) 55%,
-    transparent 58% 100%
+    transparent 0 39%,
+    rgba(255, 255, 255, .04) 43%,
+    rgba(255, 255, 255, .32) 47%,
+    rgba(255, 95, 165, .58) 50%,
+    rgba(255, 255, 255, .3) 53%,
+    rgba(255, 255, 255, .05) 57%,
+    transparent 62% 100%
   );
   mix-blend-mode: screen;
   opacity: 0;
-  transform: translate3d(-34%, 0, 0);
+  transform: translate3d(-38%, 0, 0);
   will-change: transform, opacity;
-  animation: picks-event-header-sheen 10s ease-in-out infinite;
+  animation: picks-event-header-sheen 6.5s ease-in-out infinite;
 }
 
 /* Reuse the persisted event artwork as a blurred, low-opacity light source below the hero.
@@ -94,45 +94,45 @@
   }
 
   to {
-    transform: translate3d(0, 0, 0) scale(1.025);
+    transform: translate3d(0, 0, 0) scale(1.06);
   }
 }
 
 @keyframes picks-event-header-particles {
   0% {
     transform: translate3d(-1.5%, 1.5%, 0) scale(1.03);
-    opacity: .26;
+    opacity: .32;
   }
 
   50% {
-    opacity: .38;
+    opacity: .5;
   }
 
   100% {
     transform: translate3d(1.8%, -2.2%, 0) scale(1.03);
-    opacity: .3;
+    opacity: .38;
   }
 }
 
 @keyframes picks-event-header-sheen {
   0%,
-  68% {
+  34% {
     opacity: 0;
-    transform: translate3d(-34%, 0, 0);
+    transform: translate3d(-38%, 0, 0);
   }
 
-  75% {
-    opacity: .36;
+  48% {
+    opacity: .68;
   }
 
-  88% {
-    opacity: .14;
-    transform: translate3d(34%, 0, 0);
+  66% {
+    opacity: .18;
+    transform: translate3d(38%, 0, 0);
   }
 
   100% {
     opacity: 0;
-    transform: translate3d(34%, 0, 0);
+    transform: translate3d(38%, 0, 0);
   }
 }
 
