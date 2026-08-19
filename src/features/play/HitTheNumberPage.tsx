@@ -8,6 +8,7 @@ import {
   HIT_THE_NUMBER_VERSION,
   createGeneratedHitTheNumberBoard,
   gradeHitTheNumberSelection,
+  hitTheNumberStatRows,
   type HitTheNumberBoard,
   type HitTheNumberBoardType,
   type HitTheNumberResult,
@@ -42,6 +43,9 @@ interface GeneratedHitTheNumberRun {
 }
 
 const DEFAULT_BOARD_TYPE: HitTheNumberBoardType = "open-roster";
+const hitTheNumberStatRowByFighterId = new Map(
+  hitTheNumberStatRows.map((row) => [row.fighterId, row]),
+);
 
 function asJson(value: unknown): ChallengeJson {
   return JSON.parse(JSON.stringify(value)) as ChallengeJson;
@@ -195,6 +199,12 @@ export default function HitTheNumberPage() {
     : selectedIds.length === setup.pickCount
       && hitTheNumberFormatSelectionSatisfies(run.format, selectedIds);
   const formatName = run.format.configurationLabel ?? run.format.label;
+  const revealedPoolValues = result && setup.boardType === "random-pool"
+    ? new Map(setup.fighterIds.map((fighterId) => [
+        fighterId,
+        hitTheNumberStatRowByFighterId.get(fighterId)?.values[setup.statId],
+      ]).filter((entry): entry is [string, number] => Number.isInteger(entry[1])))
+    : undefined;
 
   useEffect(() => {
     if (
@@ -383,6 +393,7 @@ export default function HitTheNumberPage() {
         activeSlotIndex={activeSlotIndex}
         selectionValid={selectionValid}
         result={result}
+        revealedPoolValues={revealedPoolValues}
         search={search}
         onSearchChange={setSearch}
         onToggleFighter={toggleFighter}
