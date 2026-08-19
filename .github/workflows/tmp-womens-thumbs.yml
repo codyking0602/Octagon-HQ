@@ -113,7 +113,7 @@ jobs:
               'virna-jandiroba': '4289516',
               'irene-aldana': '3136286',
               'hannah-cifers': '3115958',
-              'pearl-gonzalez': '3028440',
+              'pearl-gonzalez': '5144319',
               'bec-rawlings': '3019035',
               'rachael-ostovich': '3154908',
               'jessamyn-duke': '3034802',
@@ -121,19 +121,25 @@ jobs:
           }
           out = Path('public/assets/fighters')
           out.mkdir(parents=True, exist_ok=True)
+          errors = []
           for slug, athlete_id in fighters.items():
-              url = f'https://a.espncdn.com/i/headshots/mma/players/full/{athlete_id}.png'
-              req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-              with urlopen(req, timeout=30) as response:
-                  data = response.read()
-              image = Image.open(BytesIO(data)).convert('RGBA')
-              image = ImageOps.fit(image, (160, 160), method=Image.Resampling.LANCZOS, centering=(0.5, 0.38))
-              target = out / f'{slug}-thumb.webp'
-              image.save(target, 'WEBP', quality=95, method=6)
-              check = Image.open(target)
-              assert check.size == (160, 160)
-              assert target.read_bytes()[:4] == b'RIFF'
-              print(slug, len(target.read_bytes()))
+              try:
+                  url = f'https://a.espncdn.com/i/headshots/mma/players/full/{athlete_id}.png'
+                  req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+                  with urlopen(req, timeout=30) as response:
+                      data = response.read()
+                  image = Image.open(BytesIO(data)).convert('RGBA')
+                  image = ImageOps.fit(image, (160, 160), method=Image.Resampling.LANCZOS, centering=(0.5, 0.38))
+                  target = out / f'{slug}-thumb.webp'
+                  image.save(target, 'WEBP', quality=95, method=6)
+                  check = Image.open(target)
+                  assert check.size == (160, 160)
+                  assert target.read_bytes()[:4] == b'RIFF'
+                  print('OK', slug, len(target.read_bytes()))
+              except Exception as error:
+                  errors.append((slug, athlete_id, repr(error)))
+                  print('MISS', slug, athlete_id, repr(error))
+          assert not errors, errors
           PY
       - name: Commit batch and remove temporary workflow
         run: |
