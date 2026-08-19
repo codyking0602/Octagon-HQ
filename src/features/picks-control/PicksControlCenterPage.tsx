@@ -116,6 +116,7 @@ export default function PicksControlCenterPage({
   const [draftState, setDraftState] = useState<ResourceState<PickSetupDraft | null>>({ status: "idle" });
   const [controlRevision, setControlRevision] = useState(0);
   const [spotlightsOpen, setSpotlightsOpen] = useState(false);
+  const [pushState, setPushState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const controlSeed = useRef<ControlSeed>({ status: "empty" });
   const loadCurrentControlEvent = () => controlRepository!.loadControlEvent(undefined);
 
@@ -250,6 +251,19 @@ export default function PicksControlCenterPage({
         : { href: "#fight-night", label: unresolved ? "ENTER RESULTS" : "COMPLETE EVENT" }
       : { href: "#setup", label: staged ? "REVIEW & PUBLISH" : "OPEN EVENT SETUP" };
 
+  const sendPush = async () => {
+    if (!activeEvent || pushState === "sending") return;
+    if (!window.confirm(`Send push notification for ${activeEvent.name}?`)) return;
+    setPushState("sending");
+    try {
+      if (!controlRepository?.sendEventPush) throw new Error("Push publisher unavailable.");
+      await controlRepository.sendEventPush(activeEvent.eventId, activeEvent.name);
+      setPushState("sent");
+    } catch {
+      setPushState("error");
+    }
+  };
+
   useEffect(() => {
     const sectionId = location.hash.replace(/^#/, "");
     if (!sectionId) return;
@@ -283,8 +297,15 @@ export default function PicksControlCenterPage({
           {activeEvent?.status === "upcoming" ? (
             <a className="secondary-action" href="#spotlights" onClick={() => setSpotlightsOpen(true)}>MANAGE SPOTLIGHTS</a>
           ) : null}
+          {activeEvent && identity.profile ? (
+            <button className="secondary-action" type="button" disabled={pushState === "sending"} onClick={() => void sendPush()}>
+              {pushState === "sending" ? "SENDING PUSH…" : "SEND PUSH"}
+            </button>
+          ) : null}
           <Link className="secondary-action" to="/picks">OPEN PLAYER PICKS</Link>
         </div>
+        {pushState === "sent" ? <p role="status">Push notification sent for {activeEvent?.name}.</p> : null}
+        {pushState === "error" ? <p role="alert">Push notification could not be sent. Try again.</p> : null}
       </header>
 
       {activeEvent === null ? (

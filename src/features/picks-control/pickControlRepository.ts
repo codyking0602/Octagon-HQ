@@ -105,6 +105,7 @@ export interface AddPickBoutInput {
 
 export interface PickControlRepository {
   loadControlEvent: (eventId?: string) => Promise<PickControlEvent | null>;
+  sendEventPush?: (eventId: string, eventTitle: string) => Promise<void>;
   lockEvent: (eventId: string) => Promise<void>;
   adjustLockTime: (eventId: string, locksAt: string, expectedLocksAt: string, reason: string) => Promise<void>;
   adjustBoutLockTime?: (eventId: string, boutId: string, locksAt: string) => Promise<void>;
@@ -244,6 +245,13 @@ export function createPickControlRepository(): PickControlRepository | null {
         ? client.rpc("get_pick_control_event", { p_event_id: eventId })
         : client.rpc("get_pick_control_event");
       return mapPickControlEvent(await requireRpcSuccess(request));
+    },
+
+    async sendEventPush(eventId, eventTitle) {
+      await requireRpcSuccess(client.rpc("send_active_pick_event_push", {
+        p_event_id: eventId,
+        p_event_title: eventTitle,
+      }));
     },
 
     async lockEvent(eventId) {

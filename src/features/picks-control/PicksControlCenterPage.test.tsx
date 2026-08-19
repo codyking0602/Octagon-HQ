@@ -185,6 +185,7 @@ function controlRepository(events: Array<PickControlEvent | null>): PickControlR
   loadControlEvent.mockResolvedValue(events.at(-1) ?? null);
   return {
     loadControlEvent,
+    sendEventPush: vi.fn().mockResolvedValue(undefined),
     lockEvent: vi.fn().mockResolvedValue(undefined),
     adjustLockTime: vi.fn().mockResolvedValue(undefined),
     adjustBoutLockTime: vi.fn().mockResolvedValue(undefined),
@@ -290,6 +291,36 @@ describe("Unified Picks Control Center", () => {
     await waitFor(() => expect(setup.publishDraft).toHaveBeenCalledWith("draft"));
     expect(await screen.findByText("PICKS OPEN", { selector: ".picks-control-center__status" })).toBeInTheDocument();
     expect(control.loadControlEvent).toHaveBeenCalledTimes(2);
+    expect(control.sendEventPush).not.toHaveBeenCalled();
+  });
+
+  it("confirms and manually publishes the active event notification with busy and success state", async () => {
+    let finish!: () => void;
+    const control = controlRepository([controlEvent("upcoming")]);
+    vi.mocked(control.sendEventPush!).mockImplementation(() => new Promise<void>((resolve) => { finish = resolve; }));
+    renderCenter(control, setupRepository([]), monitoringRepository());
+
+    const button = await screen.findByRole("button", { name: "SEND PUSH" });
+    fireEvent.click(button);
+
+    expect(window.confirm).toHaveBeenCalledWith("Send push notification for UFC Control?");
+    expect(control.sendEventPush).toHaveBeenCalledWith("ufc-control", "UFC Control");
+    expect(screen.getByRole("button", { name: "SENDING PUSH…" })).toBeDisabled();
+    finish();
+    expect(await screen.findByText("Push notification sent for UFC Control.")).toBeInTheDocument();
+  });
+
+  it("does not send without confirmation and reports publisher errors", async () => {
+    const control = controlRepository([controlEvent("upcoming")]);
+    vi.mocked(window.confirm).mockReturnValueOnce(false).mockReturnValueOnce(true);
+    vi.mocked(control.sendEventPush!).mockRejectedValueOnce(new Error("publisher unavailable"));
+    renderCenter(control, setupRepository([]), monitoringRepository());
+
+    const button = await screen.findByRole("button", { name: "SEND PUSH" });
+    fireEvent.click(button);
+    expect(control.sendEventPush).not.toHaveBeenCalled();
+    fireEvent.click(button);
+    expect(await screen.findByRole("alert")).toHaveTextContent("Push notification could not be sent. Try again.");
   });
 
   it("puts visible monitoring ahead of compact fight management", async () => {
