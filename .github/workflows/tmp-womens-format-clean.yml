@@ -1,0 +1,83 @@
+name: Temporary Women's Blind Rank formatting cleanup
+
+on:
+  push:
+    branches:
+      - codex/womens-blind-rank-depth
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/womens-blind-rank-depth
+      - name: Normalize formatting
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          ratings_path = Path('src/features/play/playFighterRatings.ts')
+          ratings = ratings_path.read_text()
+          slugs = [
+              'manon-fiorot','erin-blanchfield','yan-xiaonan','virna-jandiroba','irene-aldana',
+              'hannah-cifers','pearl-gonzalez','bec-rawlings','rachael-ostovich','jessamyn-duke','alexis-dufresne',
+          ]
+          for slug in slugs:
+              ratings = ratings.replace(f'\ne("{slug}"', f'\n  e("{slug}"')
+          ratings_path.write_text(ratings)
+
+          test_path = Path('src/features/play/blindRankArchetypes.test.ts')
+          test = test_path.read_text()
+          start = test.index('  it("adds Women’s career depth at the missing Good and Bad tiers"')
+          end = test.index('  it("builds every broad-pool archetype', start)
+          block = '''  it("adds Women’s career depth at the missing Good and Bad tiers", () => {
+            const expected = {
+              "tatiana-suarez": { career: 80, striking: 65, grappling: 93 },
+              "manon-fiorot": { career: 81, striking: 88, grappling: 60 },
+              "erin-blanchfield": { career: 78, striking: 70, grappling: 89 },
+              "yan-xiaonan": { career: 79, striking: 86, grappling: 58 },
+              "virna-jandiroba": { career: 78, striking: 58, grappling: 91 },
+              "irene-aldana": { career: 72, striking: 84, grappling: 49 },
+              "hannah-cifers": { career: 31, striking: 58, grappling: 28 },
+              "pearl-gonzalez": { career: 18, striking: 42, grappling: 49 },
+              "bec-rawlings": { career: 32, striking: 57, grappling: 42 },
+              "rachael-ostovich": { career: 25, striking: 43, grappling: 48 },
+              "jessamyn-duke": { career: 27, striking: 53, grappling: 39 },
+              "alexis-dufresne": { career: 16, striking: 34, grappling: 50 },
+            } as const;
+            const womensPool = blindRankPool("womens-careers");
+            const byId = new Map(womensPool.map((fighter) => [fighter.id, fighter]));
+
+            for (const [id, ratings] of Object.entries(expected)) {
+              const fighter = byId.get(id);
+              expect(fighter, id).toBeDefined();
+              expect(fighter?.ratings, id).toEqual(ratings);
+            }
+
+            const tierCounts = womensPool.reduce<Record<string, number>>((counts, fighter) => {
+              const tier = blindRankTier(blindRankRating(fighter, "womens-careers"));
+              counts[tier] = (counts[tier] ?? 0) + 1;
+              return counts;
+            }, {});
+            expect(tierCounts.good).toBe(6);
+            expect(tierCounts.bad).toBe(6);
+            expect(new Set(womensPool.map((fighter) => fighter.id)).size).toBe(womensPool.length);
+            expect(new Set(womensPool.map((fighter) => fighter.name.toLowerCase())).size).toBe(womensPool.length);
+          });
+
+'''
+          test_path.write_text(test[:start] + block + test[end:])
+          PY
+      - name: Commit clean final branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/tmp-womens-format-clean.yml
+          git add src/features/play/playFighterRatings.ts src/features/play/blindRankArchetypes.test.ts
+          git commit -m 'Normalize Women’s Blind Rank batch formatting'
+          git push origin HEAD:codex/womens-blind-rank-depth
