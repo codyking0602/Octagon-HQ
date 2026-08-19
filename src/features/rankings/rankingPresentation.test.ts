@@ -35,6 +35,14 @@ describe("ranking profile watch actions", () => {
     expect(duplicates).toEqual([]);
   });
 
+  it("locks Max Holloway's full-fight destination", () => {
+    expect(resolveProfileWatchAction("max-holloway")).toMatchObject({
+      label: "Watch Signature Fight",
+      source: "signature",
+      url: "https://youtu.be/AgoyvEWTRfA?is=3sqCysAYD4xos1j_",
+    });
+  });
+
   it("locks the corrected Matt Hughes destination separately from Shogun Rua", () => {
     const mattHughes = resolveProfileWatchAction("matt-hughes");
     const shogunRua = resolveProfileWatchAction("shogun-rua");
