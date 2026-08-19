@@ -75,13 +75,26 @@ export function wavelengthDistanceCopy(distance: number) {
   return `${distance} POINTS OFF`;
 }
 
-export function desiredWavelengthCorrection(target: number, guess: number, nextClueIndex: number, random = Math.random) {
+export function desiredWavelengthCorrection(
+  target: number,
+  guess: number,
+  nextClueIndex: number,
+  _random = Math.random,
+) {
   const error = target - guess;
-  if (Math.abs(error) <= 2) return clampWavelength(target + (random() > 0.5 ? 2 : -2));
-  const factors = [0, 0.36, 0.5, 0.62];
-  const factor = factors[nextClueIndex] ?? 0.5;
-  const push = Math.max(4, Math.min(22, Math.round(Math.abs(error) * factor)));
-  return clampWavelength(target + (Math.sign(error) * push));
+  const distance = Math.abs(error);
+  const direction = Math.sign(error);
+
+  if (distance <= 1) return clampWavelength(target);
+  if (distance <= 3) return clampWavelength(target + direction);
+
+  const stageStrength = [0, 0.5, 0.65, 0.8];
+  const strength = stageStrength[nextClueIndex] ?? 0.65;
+  const farOff = distance >= 12;
+  const minPush = farOff ? 6 : 3;
+  const maxPush = farOff ? 14 : 7;
+  const push = Math.max(minPush, Math.min(maxPush, Math.round(distance * strength)));
+  return clampWavelength(target + (direction * push));
 }
 
 function relax<T>(preferred: readonly T[], relaxed: readonly T[]) {
