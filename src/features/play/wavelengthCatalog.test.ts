@@ -94,10 +94,12 @@ describe("canonical Wavelength catalog", () => {
   it("documents explicit calibration and historical version identifiers", () => {
     expect(WAVELENGTH_CATALOG_VERSION).toBe("wavelength-catalog-v2");
     expect(WAVELENGTH_CALIBRATION_VERSION).toBe("wavelength-calibration-v1");
-    expect(WAVELENGTH_GENERATOR_VERSION).toBe("wavelength-generator-v2");
+    expect(WAVELENGTH_GENERATOR_VERSION).toBe("wavelength-generator-v3");
     expect(WAVELENGTH_REVEAL_CONTRACT_VERSION).toBe("wavelength-reveal-privacy-v1");
     expect(WAVELENGTH_HISTORICAL_VERSION_IDS).toContain("wavelength-catalog-v1");
+    expect(WAVELENGTH_HISTORICAL_VERSION_IDS).toContain("wavelength-generator-v2");
     expect(WAVELENGTH_HISTORICAL_VERSION_IDS).toContain(WAVELENGTH_CATALOG_VERSION);
+    expect(WAVELENGTH_HISTORICAL_VERSION_IDS).toContain(WAVELENGTH_GENERATOR_VERSION);
     expect(WAVELENGTH_RATING_BANDS.map((band) => band.label)).toEqual([
       "bottom-tier", "poor", "below average", "average", "strong", "elite", "exceptional",
     ]);
