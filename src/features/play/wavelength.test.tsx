@@ -62,12 +62,35 @@ describe("Wavelength engine", () => {
     expect(next.id).not.toBe(highTarget.clues[0].id);
   });
 
+  it("uses strong, moderate, and confirming adaptive clue calibration", () => {
+    expect(desiredWavelengthCorrection(80, 60, 1, () => 0)).toBe(90);
+    expect(desiredWavelengthCorrection(80, 60, 2, () => 0)).toBe(93);
+    expect(desiredWavelengthCorrection(80, 60, 3, () => 0)).toBe(94);
+    expect(desiredWavelengthCorrection(80, 100, 1, () => 0)).toBe(70);
+
+    expect(desiredWavelengthCorrection(80, 72, 1, () => 0)).toBe(84);
+    expect(desiredWavelengthCorrection(80, 72, 2, () => 0)).toBe(85);
+    expect(desiredWavelengthCorrection(80, 72, 3, () => 0)).toBe(86);
+
+    expect(desiredWavelengthCorrection(80, 77, 1, () => 0)).toBe(81);
+    expect(desiredWavelengthCorrection(80, 78, 2, () => 0)).toBe(81);
+    expect(desiredWavelengthCorrection(80, 79, 3, () => 0)).toBe(80);
+    expect(desiredWavelengthCorrection(80, 80, 3, () => 0)).toBe(80);
+    expect(desiredWavelengthCorrection(80, 81, 3, () => 0)).toBe(80);
+  });
+
+  it("keeps an exact read near the target instead of introducing avoidable doubt", () => {
+    const opening = wavelengthClues.find((clue) => clue.rating === 77)!;
+    const confirming = nextWavelengthClue({ target: 80, clues: [opening] }, 80, 1, () => 0);
+    expect(Math.abs(confirming.rating - 80)).toBeLessThanOrEqual(2);
+    expect(confirming.id).not.toBe(opening.id);
+  });
+
   it("scores only distance from the final guess", () => {
     expect(wavelengthScore(75, 75)).toBe(100);
     expect(wavelengthScore(68, 75)).toBe(86);
     expect(wavelengthScore(55, 75)).toBe(60);
     expect(wavelengthScore(25, 75)).toBe(0);
-    expect(desiredWavelengthCorrection(80, 40, 2, () => 0)).toBeGreaterThan(80);
   });
 
   it("recreates the same challenge and the same adaptive clue for an identical guess path", () => {
