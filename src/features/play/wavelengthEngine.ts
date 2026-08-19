@@ -45,7 +45,12 @@ export interface WavelengthRecentHistory {
   clueSequenceKeys?: readonly string[];
 }
 
-export const wavelengthTargets = [18, 27, 31, 35, 43, 47, 50, 56, 60, 62, 65, 67, 70, 72, 75, 77, 79, 82, 84, 85, 88, 91] as const;
+export const WAVELENGTH_TARGET_MIN = 20;
+export const WAVELENGTH_TARGET_MAX = 95;
+export const wavelengthTargets: readonly number[] = Array.from(
+  { length: WAVELENGTH_TARGET_MAX - WAVELENGTH_TARGET_MIN + 1 },
+  (_, index) => WAVELENGTH_TARGET_MIN + index,
+);
 
 export const wavelengthClues: readonly WavelengthClue[] = approvedWavelengthCatalog.map(({ id, category, text, rating }) => ({
   id,
