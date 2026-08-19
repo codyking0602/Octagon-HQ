@@ -12,10 +12,18 @@ function testRows(values: readonly number[]): HitTheNumberStatRow[] {
   return values.map((value, index) => ({
     fighterId: playFighters[index]!.id,
     values: {
+      "ufc-fights": value,
       "ufc-wins": value,
+      "ufc-decision-wins": value,
+      "ufc-finishes": value,
       "ufc-ko-tko-wins": value,
       "ufc-submission-wins": value,
-      "ufc-finishes": value,
+      "ufc-title-fights": value,
+      "ufc-title-fight-wins": value,
+      "ufc-active-years": value,
+      "ufc-winning-years": value,
+      "ufc-longest-win-streak": value,
+      "ufc-unique-opponents-beaten": value,
     },
   }));
 }
