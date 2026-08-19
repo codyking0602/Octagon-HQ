@@ -56,7 +56,7 @@ describe("Find the Leader entry modes", () => {
     expect(actions).toContain("REPLAY TODAY");
   });
 
-  it("opens the All Games card as replayable and generates a new board on Play Again", () => {
+  it("opens the All Games card as replayable and generates a new board on New Lineup", () => {
     const { container } = renderPlay();
     const allGamesCard = [...container.querySelectorAll<HTMLButtonElement>(".play-games__grid .play-game-card")]
       .find((button) => button.textContent?.includes("Find the Leader"));
@@ -66,9 +66,9 @@ describe("Find the Leader entry modes", () => {
     const firstBoard = boardSignature(container);
     finishCurrentBoard(container);
 
-    const playAgain = [...container.querySelectorAll<HTMLButtonElement>(".game-result-actions button")]
-      .find((button) => button.textContent === "PLAY AGAIN");
-    fireEvent.click(playAgain!);
+    const newLineup = [...container.querySelectorAll<HTMLButtonElement>(".game-result-actions button")]
+      .find((button) => button.textContent === "NEW LINEUP");
+    fireEvent.click(newLineup!);
 
     expect(container.querySelector(".find-game__hero .eyebrow")?.textContent).toBe("REPLAYABLE GAME");
     expect(boardSignature(container)).not.toBe(firstBoard);
