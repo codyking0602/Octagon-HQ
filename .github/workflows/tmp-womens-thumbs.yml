@@ -1,0 +1,68 @@
+name: Temporary Women's Blind Rank thumbnails
+
+on:
+  push:
+    branches:
+      - codex/womens-blind-rank-depth
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/womens-blind-rank-depth
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pillow
+      - name: Download ESPN headshots and build local WebP thumbnails
+        run: |
+          python - <<'PY'
+          from io import BytesIO
+          from pathlib import Path
+          from urllib.request import Request, urlopen
+          from PIL import Image, ImageOps
+
+          fighters = {
+              'tatiana-suarez': '4020435',
+              'manon-fiorot': '4608674',
+              'erin-blanchfield': '4350796',
+              'yan-xiaonan': '4275487',
+              'virna-jandiroba': '4289516',
+              'irene-aldana': '3136286',
+              'hannah-cifers': '3115958',
+              'pearl-gonzalez': '3028440',
+              'bec-rawlings': '3019035',
+              'rachael-ostovich': '3154908',
+              'jessamyn-duke': '3034802',
+              'alexis-dufresne': '3096066',
+          }
+          out = Path('public/assets/fighters')
+          out.mkdir(parents=True, exist_ok=True)
+          for slug, athlete_id in fighters.items():
+              url = f'https://a.espncdn.com/i/headshots/mma/players/full/{athlete_id}.png'
+              req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+              with urlopen(req, timeout=30) as response:
+                  data = response.read()
+              image = Image.open(BytesIO(data)).convert('RGBA')
+              image = ImageOps.fit(image, (160, 160), method=Image.Resampling.LANCZOS, centering=(0.5, 0.38))
+              target = out / f'{slug}-thumb.webp'
+              image.save(target, 'WEBP', quality=95, method=6)
+              check = Image.open(target)
+              assert check.size == (160, 160)
+              assert target.read_bytes()[:4] == b'RIFF'
+              print(slug, len(target.read_bytes()))
+          PY
+      - name: Commit generated thumbnails and remove temporary workflow
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/tmp-womens-thumbs.yml
+          git add public/assets/fighters/*-thumb.webp
+          git commit -m 'Add Women’s Blind Rank thumbnails'
+          git push origin HEAD:codex/womens-blind-rank-depth
