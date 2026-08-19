@@ -118,6 +118,31 @@ describe("official Today’s Challenge runtime", () => {
     expect(rows(record(completed.publicState.reveal).clues)).toHaveLength(4);
   });
 
+  it("uses deterministic prior-day Wavelength history without changing the official same-day setup", () => {
+    const prior = buildOfficialDailySetup("wavelength", "2026-08-19", scheduleVersion);
+    const current = buildOfficialDailySetup("wavelength", "2026-08-20", scheduleVersion);
+    expect(buildOfficialDailySetup("wavelength", "2026-08-20", scheduleVersion)).toEqual(current);
+    expect(current.setupKey).toContain("wavelength-daily-history-v1");
+    expect(current.contentVersion).toContain("wavelength-daily-history-v1");
+
+    const recentTargets = current.privateSetupEvidence.recent_targets as number[];
+    const recentClueIds = current.privateSetupEvidence.recent_clue_ids as string[];
+    expect(recentTargets).toHaveLength(4);
+    expect(recentClueIds).toHaveLength(4);
+    expect(recentTargets).toContain(prior.privateSetupEvidence.target);
+    expect(recentClueIds).toContain(prior.privateSetupEvidence.opening_clue_id);
+    expect(recentTargets).not.toContain(current.privateSetupEvidence.target);
+    expect(recentClueIds).not.toContain(current.privateSetupEvidence.opening_clue_id);
+
+    let runtime = contextFor("wavelength", current);
+    for (let index = 0; index < 3; index += 1) {
+      runtime = advance(runtime, { guess: 50 + index }).context;
+    }
+    const clueIds = runtime.submissionState.clue_ids as string[];
+    expect(clueIds).toHaveLength(4);
+    expect(clueIds.slice(1).every((id) => !recentClueIds.includes(id))).toBe(true);
+  });
+
   it("builds the locked Blind Resume V3 mixed board and reveals only two stat values at first", () => {
     const setup = buildOfficialDailySetup("blind_resume", day, scheduleVersion);
     expect(setup.contentVersion).toBe("blind-resume-v3");
