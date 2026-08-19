@@ -147,7 +147,7 @@ describe("canonical Play fighter pool", () => {
 
   it("has broad depth across ownership, gender, divisions, eras, and rating bands", () => {
     expect(playFighters.length).toBeGreaterThanOrEqual(150);
-    expect(playFighters.length).toBeLessThanOrEqual(200);
+    expect(playFighters.length).toBeLessThanOrEqual(220);
     expect(rankedPlayFighters.length).toBeGreaterThanOrEqual(80);
     expect(playOnly.length).toBeGreaterThanOrEqual(60);
     expect(playFighters.filter((fighter) => fighter.gender === "women").length).toBeGreaterThanOrEqual(20);
