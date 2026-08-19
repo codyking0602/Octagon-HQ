@@ -64,6 +64,7 @@ export function HitTheNumberGameView({
   activeSlotIndex = 0,
   selectionValid = true,
   result,
+  revealedPoolValues,
   search,
   onSearchChange,
   onToggleFighter,
@@ -81,6 +82,7 @@ export function HitTheNumberGameView({
   activeSlotIndex?: number;
   selectionValid?: boolean;
   result: HitTheNumberResult | null;
+  revealedPoolValues?: ReadonlyMap<string, number>;
   search: string;
   onSearchChange: (value: string) => void;
   onToggleFighter: (fighterId: string) => void;
@@ -109,12 +111,17 @@ export function HitTheNumberGameView({
   const activeSlot = slotFormat
     ? format?.slots[activeSlotIndex] ?? format?.slots[0]
     : undefined;
+  const revealRandomPool = Boolean(
+    result && setup.boardType === "random-pool" && revealedPoolValues,
+  );
   const candidateFighters = activeSlot
     ? fighters.filter((fighter) => hitTheNumberSlotAcceptsFighter(activeSlot, fighter.id))
     : fighters;
-  const visibleFighters = candidateFighters.filter((fighter) => (
-    fighter.name.toLowerCase().includes(search.trim().toLowerCase())
-  ));
+  const visibleFighters = revealRandomPool
+    ? fighters
+    : candidateFighters.filter((fighter) => (
+        fighter.name.toLowerCase().includes(search.trim().toLowerCase())
+      ));
   const activeAssignedId = slotFormat ? slotAssignments[activeSlotIndex] ?? null : null;
   const pickedAll = selectedIds.length === setup.pickCount;
   const ready = pickedAll && selectionValid;
@@ -262,26 +269,30 @@ export function HitTheNumberGameView({
           </div>
         ) : null}
 
-        {!result ? (
+        {!result || revealRandomPool ? (
           <section className="hit-number-roster surface-card">
             <div className="hit-number-section-heading">
               <div>
-                <p className="eyebrow">{poolLabel}</p>
+                <p className="eyebrow">{revealRandomPool ? "RANDOM POOL RESULTS" : poolLabel}</p>
                 <h2>
-                  {slotFormat && activeSlot
-                    ? activeSlot.label
-                    : setup.boardType === "open-roster"
-                      ? `${fighters.length} eligible fighters`
-                      : `${fighters.length}-fighter pool`}
+                  {revealRandomPool
+                    ? `${fighters.length}-fighter pool`
+                    : slotFormat && activeSlot
+                      ? activeSlot.label
+                      : setup.boardType === "open-roster"
+                        ? `${fighters.length} eligible fighters`
+                        : `${fighters.length}-fighter pool`}
                 </h2>
               </div>
               <span>
-                {slotFormat
-                  ? `${candidateFighters.length} eligible · choose one for this slot`
-                  : rosterInstruction}
+                {revealRandomPool
+                  ? "All values revealed"
+                  : slotFormat
+                    ? `${candidateFighters.length} eligible · choose one for this slot`
+                    : rosterInstruction}
               </span>
             </div>
-            {setup.boardType === "open-roster" ? (
+            {!result && setup.boardType === "open-roster" ? (
               <label className="hit-number-search">
                 <span>{activeSlot ? `SEARCH ${activeSlot.label.toUpperCase()}` : "SEARCH FIGHTERS"}</span>
                 <input
@@ -294,10 +305,19 @@ export function HitTheNumberGameView({
             ) : null}
             <div className="hit-number-fighter-grid">
               {visibleFighters.map((fighter) => {
-                const selected = slotFormat
-                  ? activeAssignedId === fighter.id
-                  : selectedSet.has(fighter.id);
-                const usedElsewhere = slotFormat && selectedSet.has(fighter.id) && !selected;
+                const selected = revealRandomPool
+                  ? selectedSet.has(fighter.id)
+                  : slotFormat
+                    ? activeAssignedId === fighter.id
+                    : selectedSet.has(fighter.id);
+                const usedElsewhere = !revealRandomPool
+                  && slotFormat
+                  && selectedSet.has(fighter.id)
+                  && !selected;
+                const revealedValue = revealRandomPool
+                  ? revealedPoolValues?.get(fighter.id)
+                  : undefined;
+                const divisionLabel = compactHitTheNumberDivisions(fighter.divisions);
                 return (
                   <button
                     type="button"
@@ -305,7 +325,7 @@ export function HitTheNumberGameView({
                     data-fighter-id={fighter.id}
                     data-divisions={fighter.divisions.join("|")}
                     aria-pressed={selected}
-                    disabled={busy || usedElsewhere}
+                    disabled={busy || usedElsewhere || revealRandomPool}
                     onClick={() => onToggleFighter(fighter.id)}
                     key={fighter.id}
                   >
@@ -313,10 +333,16 @@ export function HitTheNumberGameView({
                     <span>
                       <strong>{fighter.name}</strong>
                       <small title={fighter.divisions.join(" · ")}>
-                        {usedElsewhere ? "Already assigned" : compactHitTheNumberDivisions(fighter.divisions)}
+                        {revealRandomPool && selected
+                          ? `YOUR PICK · ${divisionLabel}`
+                          : usedElsewhere
+                            ? "Already assigned"
+                            : divisionLabel}
                       </small>
                     </span>
-                    <b>{selected ? "✓" : usedElsewhere ? "•" : "+"}</b>
+                    <b className={revealRandomPool ? "hit-number-fighter-card__value" : undefined}>
+                      {revealRandomPool ? revealedValue ?? "—" : selected ? "✓" : usedElsewhere ? "•" : "+"}
+                    </b>
                   </button>
                 );
               })}
