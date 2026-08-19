@@ -21,8 +21,10 @@ import {
   selectReplayLineup,
   type PlayLineupIdentity,
 } from "./lineupModel";
+import { scoreBlindRankOrderedRatings } from "./officialScoreContract";
 import {
   blindRankPool,
+  blindRankRating,
   type BlindRankPackId,
   type PlayFighter,
 } from "./playFighterPool";
@@ -130,6 +132,11 @@ export default function BlindRankPage() {
   const complete = currentIndex >= 5;
   const current = run.lineup[currentIndex];
   const shared = run.identity.type === "curated";
+  const completedScore = complete
+    ? scoreBlindRankOrderedRatings(
+      placements.flatMap((fighter) => fighter ? [blindRankRating(fighter, run.packId)] : []),
+    )
+    : null;
 
   useEffect(() => {
     if (!complete) return;
@@ -240,6 +247,14 @@ export default function BlindRankPage() {
 
         {complete ? (
           <div className="blind-rank-finish">
+            {completedScore ? (
+              <section className="keep-cut-result-hero" aria-label="Blind Rank score">
+                <p className="eyebrow">FIVE SLOTS LOCKED</p>
+                <h1>{completedScore.normalizedScore}/100</h1>
+                <p>FIVE PLACEMENTS GRADED AGAINST OCTAGON HQ</p>
+                <small>Your five locked placements are graded by their relative order to produce the 100-point score.</small>
+              </section>
+            ) : null}
             <p className="eyebrow">YOUR FINAL RANKING</p>
             <div className="blind-rank-results">
               {placements.map((fighter, index) => fighter ? (
