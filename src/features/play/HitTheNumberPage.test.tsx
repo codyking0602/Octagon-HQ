@@ -16,7 +16,7 @@ const challengeHarness = vi.hoisted(() => ({
     creator: null,
     isRecipient: false,
   } as {
-    challenge: null | { code: string; responderResult: unknown };
+    challenge: null | { code: string; responderResult: unknown; setup?: unknown };
     creator: null | { displayName: string };
     isRecipient: boolean;
   },
@@ -140,9 +140,26 @@ describe("Hit the Number casual game", () => {
     expect(shareUrl.searchParams.get("board")).toBe("open-roster");
   });
 
-  it("loads the recipient on the exact deterministic Build the Team board and submits the result", async () => {
+  it("loads the recipient on the exact stored Build the Team board and submits the result", async () => {
     const { seed, plan } = seedForFormat("build-the-team", "random-pool");
-    challengeHarness.match.challenge = { code: "HTN12345", responderResult: null };
+    challengeHarness.match.challenge = {
+      code: "HTN12345",
+      responderResult: null,
+      setup: {
+        seed,
+        boardType: plan.boardType,
+        format: plan.format,
+        publicSetup: {
+          version: "hit-the-number-v1",
+          statId: plan.statId,
+          boardType: plan.boardType,
+          target: plan.target,
+          pickCount: plan.pickCount,
+          filter: {},
+          fighterIds: [...plan.fighterIds],
+        },
+      },
+    };
     challengeHarness.match.creator = { displayName: "SHANE" };
     challengeHarness.match.isRecipient = true;
 

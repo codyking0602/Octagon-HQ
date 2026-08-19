@@ -4,6 +4,8 @@ import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import type { ChallengeJson } from "../challenges/challengeModel";
 import {
+  HIT_THE_NUMBER_MAX_PICKS,
+  HIT_THE_NUMBER_MIN_PICKS,
   HIT_THE_NUMBER_STATS,
   HIT_THE_NUMBER_VERSION,
   createGeneratedHitTheNumberBoard,
@@ -11,6 +13,7 @@ import {
   hitTheNumberStatRows,
   type HitTheNumberBoard,
   type HitTheNumberBoardType,
+  type HitTheNumberPublicSetup,
   type HitTheNumberResult,
 } from "./hitTheNumberEngine";
 import {
@@ -46,9 +49,70 @@ const DEFAULT_BOARD_TYPE: HitTheNumberBoardType = "open-roster";
 const hitTheNumberStatRowByFighterId = new Map(
   hitTheNumberStatRows.map((row) => [row.fighterId, row]),
 );
+const HIT_THE_NUMBER_FORMAT_IDS = new Set(["classic", "themed-lineup", "one-from-each", "build-the-team"]);
 
 function asJson(value: unknown): ChallengeJson {
   return JSON.parse(JSON.stringify(value)) as ChallengeJson;
+}
+
+function record(value: ChallengeJson | undefined): { [key: string]: ChallengeJson } | null {
+  return value && !Array.isArray(value) && typeof value === "object" ? value : null;
+}
+
+function strings(value: ChallengeJson | undefined) {
+  return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
+}
+
+function storedPublicSetup(value: ChallengeJson | undefined): HitTheNumberPublicSetup | null {
+  const row = record(value);
+  if (!row || row.version !== HIT_THE_NUMBER_VERSION) return null;
+  const statId = typeof row.statId === "string"
+    ? HIT_THE_NUMBER_STATS.find((item) => item.id === row.statId)?.id
+    : undefined;
+  const boardType = row.boardType === "open-roster" || row.boardType === "random-pool"
+    ? row.boardType
+    : null;
+  const target = typeof row.target === "number" && Number.isInteger(row.target) && row.target > 0
+    ? row.target
+    : null;
+  const pickCount = typeof row.pickCount === "number"
+    && Number.isInteger(row.pickCount)
+    && row.pickCount >= HIT_THE_NUMBER_MIN_PICKS
+    && row.pickCount <= HIT_THE_NUMBER_MAX_PICKS
+    ? row.pickCount
+    : null;
+  const fighterIds = strings(row.fighterIds);
+  const filter = record(row.filter);
+  const gender = filter?.gender === "men" || filter?.gender === "women" ? filter.gender : undefined;
+  const division = typeof filter?.division === "string" ? filter.division : undefined;
+
+  if (!statId || !boardType || target === null || pickCount === null || fighterIds.length < pickCount) {
+    return null;
+  }
+
+  return {
+    version: HIT_THE_NUMBER_VERSION,
+    statId,
+    boardType,
+    target,
+    pickCount,
+    filter: { gender, division },
+    fighterIds,
+  };
+}
+
+function storedFormat(value: ChallengeJson | undefined): HitTheNumberFormatSetup | null {
+  const row = record(value);
+  if (!row
+    || typeof row.formatId !== "string"
+    || !HIT_THE_NUMBER_FORMAT_IDS.has(row.formatId)
+    || typeof row.label !== "string"
+    || !(row.configurationId === null || typeof row.configurationId === "string")
+    || !(row.configurationLabel === null || typeof row.configurationLabel === "string")
+    || !Array.isArray(row.rules)
+    || !Array.isArray(row.slots)
+  ) return null;
+  return row as unknown as HitTheNumberFormatSetup;
 }
 
 function createGeneratedRun(seed: string, boardType: HitTheNumberBoardType): GeneratedHitTheNumberRun {
@@ -148,6 +212,34 @@ function createSharedRun(searchParams: URLSearchParams): HitTheNumberRun | null 
   }
 }
 
+export function createStoredHitTheNumberProfileRun(
+  setupValue: ChallengeJson | undefined,
+  challengeId: string,
+): HitTheNumberRun | null {
+  const setup = record(setupValue);
+  const seed = typeof setup?.seed === "string" ? setup.seed : "";
+  const publicSetup = storedPublicSetup(setup?.publicSetup);
+  const format = storedFormat(setup?.format);
+  if (!seed || !publicSetup || !format) return null;
+
+  const generated: GeneratedHitTheNumberRun = {
+    board: {
+      publicSetup,
+      privateSetup: { solutionFighterIds: [] },
+    },
+    format,
+  };
+  const signature = boardSignature(generated);
+  const identity = curatedLineupIdentity("hit-the-number", challengeId, [signature], publicSetup.boardType);
+  rememberLineup(identity, [signature], publicSetup.fighterIds);
+  return {
+    board: generated.board,
+    format,
+    identity,
+    seed,
+  };
+}
+
 function hitTheNumberChallengeUrl(seed: string, boardType: HitTheNumberBoardType) {
   const url = new URL("/play/hit-the-number", window.location.origin);
   url.searchParams.set("challenge", seed);
@@ -160,14 +252,21 @@ export default function HitTheNumberPage() {
   const [searchParams] = useSearchParams();
   const { beginChallenge } = usePlayChallenges();
   const profileMatch = useProfileChallengeMatch("hit-the-number");
+  const profileRun = useMemo(
+    () => profileMatch.challenge
+      ? createStoredHitTheNumberProfileRun(profileMatch.challenge.setup, profileMatch.challenge.code)
+      : null,
+    [profileMatch.challenge?.code, profileMatch.challenge?.setup],
+  );
   const searchKey = searchParams.toString();
   const sharedRun = useMemo(
     () => createSharedRun(new URLSearchParams(searchKey)),
     [searchKey],
   );
-  const [run, setRun] = useState<HitTheNumberRun>(() => sharedRun ?? createCasualRun(DEFAULT_BOARD_TYPE));
+  const initialRun = profileRun ?? sharedRun;
+  const [run, setRun] = useState<HitTheNumberRun>(() => initialRun ?? createCasualRun(DEFAULT_BOARD_TYPE));
   const [boardType, setBoardType] = useState<HitTheNumberBoardType>(
-    () => sharedRun?.board.publicSetup.boardType ?? DEFAULT_BOARD_TYPE,
+    () => initialRun?.board.publicSetup.boardType ?? DEFAULT_BOARD_TYPE,
   );
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [slotAssignments, setSlotAssignments] = useState<Array<string | null>>([]);
@@ -334,6 +433,18 @@ export default function HitTheNumberPage() {
       shareUrl: hitTheNumberChallengeUrl(run.seed, setup.boardType),
     });
     setChallengeStatus(status);
+  }
+
+  if (profileMatch.challenge && !profileRun) {
+    return (
+      <div className="page hit-number-page">
+        <section className="surface-card" aria-live="polite">
+          <p className="eyebrow">PROFILE CHALLENGE</p>
+          <h1>Challenge unavailable</h1>
+          <p>This matchup does not contain a valid stored Hit the Number board.</p>
+        </section>
+      </div>
+    );
   }
 
   const controls = !shared ? (
