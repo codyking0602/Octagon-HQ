@@ -121,6 +121,41 @@ describe("Blind Rank lineup archetype release proof", () => {
     expect(new Set(heavyweightPool.map((fighter) => fighter.name.toLowerCase())).size).toBe(heavyweightPool.length);
   });
 
+  it("adds Women’s career depth at the missing Good and Bad tiers", () => {
+  const expected = {
+    "tatiana-suarez": { career: 80, striking: 65, grappling: 93 },
+    "manon-fiorot": { career: 81, striking: 88, grappling: 60 },
+    "erin-blanchfield": { career: 78, striking: 70, grappling: 89 },
+    "yan-xiaonan": { career: 79, striking: 86, grappling: 58 },
+    "virna-jandiroba": { career: 78, striking: 58, grappling: 91 },
+    "irene-aldana": { career: 72, striking: 84, grappling: 49 },
+    "hannah-cifers": { career: 31, striking: 58, grappling: 28 },
+    "pearl-gonzalez": { career: 18, striking: 42, grappling: 49 },
+    "bec-rawlings": { career: 32, striking: 57, grappling: 42 },
+    "rachael-ostovich": { career: 25, striking: 43, grappling: 48 },
+    "jessamyn-duke": { career: 27, striking: 53, grappling: 39 },
+    "alexis-dufresne": { career: 16, striking: 34, grappling: 50 },
+  } as const;
+  const womensPool = blindRankPool("womens-careers");
+  const byId = new Map(womensPool.map((fighter) => [fighter.id, fighter]));
+
+  for (const [id, ratings] of Object.entries(expected)) {
+    const fighter = byId.get(id);
+    expect(fighter, id).toBeDefined();
+    expect(fighter?.ratings, id).toEqual(ratings);
+  }
+
+  const tierCounts = womensPool.reduce<Record<string, number>>((counts, fighter) => {
+    const tier = blindRankTier(blindRankRating(fighter, "womens-careers"));
+    counts[tier] = (counts[tier] ?? 0) + 1;
+    return counts;
+  }, {});
+  expect(tierCounts.good).toBe(6);
+  expect(tierCounts.bad).toBe(6);
+  expect(new Set(womensPool.map((fighter) => fighter.id)).size).toBe(womensPool.length);
+  expect(new Set(womensPool.map((fighter) => fighter.name.toLowerCase())).size).toBe(womensPool.length);
+});
+
   it("builds every broad-pool archetype and preserves the requested low-end class when a narrow pack degrades", () => {
     for (const archetype of BLIND_RANK_ARCHETYPES) {
       const first = createBlindRankLineup(
