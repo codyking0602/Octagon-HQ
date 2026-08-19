@@ -19,11 +19,23 @@ import {
   wavelengthTargets,
 } from "./wavelengthEngine";
 
+const LINEUP_HISTORY_KEY = "octagon-hq:play-lineup-history:v1";
+
 function renderWavelength() {
   return render(
     <IdentityProvider gateway={null}><ChallengeProvider>
       <MemoryRouter initialEntries={["/play/wavelength?challenge=rendered-challenge"]}>
         <WavelengthGame challengeSeed="rendered-challenge" onExit={() => undefined} />
+      </MemoryRouter>
+    </ChallengeProvider></IdentityProvider>,
+  );
+}
+
+function renderCasualWavelength() {
+  return render(
+    <IdentityProvider gateway={null}><ChallengeProvider>
+      <MemoryRouter initialEntries={["/play/wavelength"]}>
+        <WavelengthGame onExit={() => undefined} />
       </MemoryRouter>
     </ChallengeProvider></IdentityProvider>,
   );
@@ -103,6 +115,21 @@ describe("Wavelength engine", () => {
     const secondNext = nextChallengeWavelengthClue(second, 50, 1, seed, []);
     expect(secondNext).toEqual(firstNext);
   });
+
+  it("forwards recent clue history through the seeded adaptive challenge wrapper", () => {
+    const seed = "recent-history-wavelength-challenge";
+    const round = createChallengeWavelengthRound(seed);
+    const baseline = nextChallengeWavelengthClue(round, 50, 1, seed, []);
+    const withRecent = nextChallengeWavelengthClue(
+      round,
+      50,
+      1,
+      seed,
+      [],
+      { clueIds: [baseline.id] },
+    );
+    expect(withRecent.id).not.toBe(baseline.id);
+  });
 });
 
 describe("Wavelength game", () => {
@@ -126,5 +153,29 @@ describe("Wavelength game", () => {
     expect(screen.getByRole("button", { name: "CHALLENGE SOMEONE" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "REPLAY CHALLENGE" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "ALL GAMES" })).toBeInTheDocument();
+  });
+
+  it("stores casual target, opening clue/category, and completed clue sequence in canonical lineup history", () => {
+    renderCasualWavelength();
+    const initialStore = JSON.parse(window.localStorage.getItem(LINEUP_HISTORY_KEY) ?? "{}") as Record<string, Array<Record<string, unknown>>>;
+    const initialEntry = initialStore["wavelength::default"]?.[0];
+    expect(initialEntry).toBeTruthy();
+    const itemIds = initialEntry?.itemIds as string[];
+    expect(itemIds).toHaveLength(3);
+    expect(itemIds.some((id) => id.startsWith("target:"))).toBe(true);
+    expect(itemIds.some((id) => id.startsWith("clue:"))).toBe(true);
+    expect(itemIds.some((id) => id.startsWith("category:"))).toBe(true);
+
+    fireEvent.click(screen.getByRole("button", { name: "LOCK GUESS & REVEAL NEXT CLUE" }));
+    fireEvent.click(screen.getByRole("button", { name: "LOCK GUESS & REVEAL NEXT CLUE" }));
+    fireEvent.click(screen.getByRole("button", { name: "LOCK GUESS & REVEAL NEXT CLUE" }));
+    fireEvent.click(screen.getByRole("button", { name: "LOCK FINAL GUESS" }));
+
+    const completedStore = JSON.parse(window.localStorage.getItem(LINEUP_HISTORY_KEY) ?? "{}") as Record<string, Array<Record<string, unknown>>>;
+    const result = completedStore["wavelength::default"]?.[0]?.result as Record<string, unknown>;
+    const history = result.wavelengthHistory as Record<string, unknown>;
+    expect(history.target).toEqual(expect.any(Number));
+    expect(history.clueIds).toHaveLength(4);
+    expect(String(history.sequenceKey).split("|")).toHaveLength(5);
   });
 });
