@@ -6,13 +6,15 @@ import {
 } from "./findLeaderEngine";
 
 describe("Find the Leader competitive lineups", () => {
-  it("uses the closest possible nine lower stat values instead of loose filler", () => {
+  it("keeps real contenders while avoiding a mechanical next-nine leaderboard", () => {
     const rows = findLeaderCompetitionAudit().filter((row) => row.boardValid);
+    const diversified = rows.filter((row) => row.outsideClosestNineCount > 0);
 
     expect(rows.length).toBeGreaterThanOrEqual(35);
     rows.forEach((row) => {
-      expect(row.boardSpread, row.definitionId).toBe(row.closestPossibleSpread);
+      expect(row.nearContenderCount, row.definitionId).toBeGreaterThanOrEqual(4);
     });
+    expect(diversified.length).toBeGreaterThan(rows.length / 2);
   });
 
   it("keeps the category record holder off the board whenever another valid leader exists", () => {

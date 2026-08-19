@@ -40,8 +40,14 @@ export function buildReplayableFindLeaderBoard(seed: string, day = centralDay())
 }
 
 function lineupItemIds(board: FindLeaderBoard) {
-  const fighterIds = board.candidates.map((fighter) => fighter.id);
-  return [`category:${board.definitionId}`, ...fighterIds.slice(0, 9)];
+  const decoyIds = board.candidates
+    .filter((fighter) => fighter.id !== board.leaderId)
+    .map((fighter) => fighter.id);
+  return [
+    `category:${board.definitionId}`,
+    `leader:${board.leaderId}`,
+    ...decoyIds.slice(0, 8),
+  ];
 }
 
 export function createReplayableFindLeaderRun(day = centralDay()): FindLeaderRun {
@@ -49,7 +55,7 @@ export function createReplayableFindLeaderRun(day = centralDay()): FindLeaderRun
     gameId: "find-leader",
     scopeId: "casual",
     lineupSize: 10,
-    attempts: 14,
+    attempts: 18,
     build: (seed) => {
       const board = buildReplayableFindLeaderBoard(seed, day);
       const fighterIds = board.candidates.map((fighter) => fighter.id);
