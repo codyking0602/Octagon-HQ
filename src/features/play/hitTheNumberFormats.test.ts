@@ -7,6 +7,7 @@ import {
   HIT_THE_NUMBER_THEME_CATALOG,
   createHitTheNumberFormatPlan,
   hitTheNumberFormatSelectionSatisfies,
+  hitTheNumberSlotAcceptsFighter,
 } from "./hitTheNumberFormats";
 
 describe("Hit the Number format foundation", () => {
@@ -72,6 +73,9 @@ describe("Hit the Number format foundation", () => {
       if (plan.format.formatId === "one-from-each" || plan.format.formatId === "build-the-team") {
         expect(plan.pickCount).toBe(5);
         expect(plan.format.slots).toHaveLength(5);
+        plan.format.slots.forEach((slot, slotIndex) => {
+          expect(hitTheNumberSlotAcceptsFighter(slot, plan.solutionFighterIds[slotIndex]!)).toBe(true);
+        });
       }
       if (boardType === "random-pool") {
         expect(plan.fighterIds).toHaveLength(hitTheNumberRandomPoolSize(plan.pickCount));
@@ -89,5 +93,30 @@ describe("Hit the Number format foundation", () => {
       "one-from-each",
       "build-the-team",
     ]));
+  });
+
+  it("treats constrained lineup roles as explicit fighter-to-slot assignments", () => {
+    let foundOrderSensitiveAssignment = false;
+
+    for (let index = 0; index < 400 && !foundOrderSensitiveAssignment; index += 1) {
+      const plan = createHitTheNumberFormatPlan({
+        seed: `slot-order-${index}`,
+        boardType: "open-roster",
+      });
+      if (plan.format.formatId !== "one-from-each" && plan.format.formatId !== "build-the-team") continue;
+
+      for (let left = 0; left < plan.solutionFighterIds.length; left += 1) {
+        for (let right = left + 1; right < plan.solutionFighterIds.length; right += 1) {
+          const swapped = [...plan.solutionFighterIds];
+          [swapped[left], swapped[right]] = [swapped[right]!, swapped[left]!];
+          if (hitTheNumberFormatSelectionSatisfies(plan.format, swapped)) continue;
+          foundOrderSensitiveAssignment = true;
+          break;
+        }
+        if (foundOrderSensitiveAssignment) break;
+      }
+    }
+
+    expect(foundOrderSensitiveAssignment).toBe(true);
   });
 });

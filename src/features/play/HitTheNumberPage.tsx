@@ -15,6 +15,7 @@ import {
 import {
   createHitTheNumberFormatPlan,
   hitTheNumberFormatSelectionSatisfies,
+  hitTheNumberSlotAcceptsFighter,
   type HitTheNumberFormatSetup,
 } from "./hitTheNumberFormats";
 import { HitTheNumberGameView } from "./HitTheNumberGameView";
@@ -165,15 +166,34 @@ export default function HitTheNumberPage() {
     () => sharedRun?.board.publicSetup.boardType ?? DEFAULT_BOARD_TYPE,
   );
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [slotAssignments, setSlotAssignments] = useState<Array<string | null>>([]);
+  const [activeSlotIndex, setActiveSlotIndex] = useState(0);
   const [result, setResult] = useState<HitTheNumberResult | null>(null);
   const [search, setSearch] = useState("");
   const [challengeStatus, setChallengeStatus] = useState("");
   const setup = run.board.publicSetup;
-  const selectedSet = new Set(selectedIds);
+  const slotFormat = run.format.slots.length > 0;
+  const resolvedSlotAssignments = slotFormat
+    ? run.format.slots.map((_, index) => slotAssignments[index] ?? null)
+    : [];
+  const slotSelectedIds = resolvedSlotAssignments.filter(
+    (fighterId): fighterId is string => fighterId != null,
+  );
+  const completedSlotAssignments = slotFormat
+    && slotSelectedIds.length === run.format.slots.length
+    ? resolvedSlotAssignments as string[]
+    : null;
+  const effectiveSelectedIds = slotFormat ? slotSelectedIds : selectedIds;
+  const selectedSet = new Set(effectiveSelectedIds);
   const shared = run.identity.type === "curated";
   const stat = HIT_THE_NUMBER_STATS.find((item) => item.id === setup.statId)!;
-  const selectionValid = selectedIds.length === setup.pickCount
-    && hitTheNumberFormatSelectionSatisfies(run.format, selectedIds);
+  const selectionValid = slotFormat
+    ? Boolean(
+        completedSlotAssignments
+        && hitTheNumberFormatSelectionSatisfies(run.format, completedSlotAssignments),
+      )
+    : selectedIds.length === setup.pickCount
+      && hitTheNumberFormatSelectionSatisfies(run.format, selectedIds);
   const formatName = run.format.configurationLabel ?? run.format.label;
 
   useEffect(() => {
@@ -193,6 +213,8 @@ export default function HitTheNumberPage() {
 
   function resetRound() {
     setSelectedIds([]);
+    setSlotAssignments([]);
+    setActiveSlotIndex(0);
     setResult(null);
     setSearch("");
     setChallengeStatus("");
@@ -218,8 +240,45 @@ export default function HitTheNumberPage() {
     newLineup(nextBoardType);
   }
 
+  function chooseSlot(index: number) {
+    if (result || index < 0 || index >= run.format.slots.length) return;
+    setActiveSlotIndex(index);
+    setSearch("");
+  }
+
   function toggleFighter(fighterId: string) {
     if (result) return;
+
+    if (slotFormat) {
+      const slotIndex = Math.min(activeSlotIndex, run.format.slots.length - 1);
+      const slot = run.format.slots[slotIndex];
+      if (!slot || !hitTheNumberSlotAcceptsFighter(slot, fighterId)) return;
+
+      const nextAssignments = run.format.slots.map(
+        (_, index) => slotAssignments[index] ?? null,
+      );
+      if (nextAssignments[slotIndex] === fighterId) {
+        nextAssignments[slotIndex] = null;
+        setSlotAssignments(nextAssignments);
+        return;
+      }
+      if (nextAssignments.some((assignedId, index) => (
+        index !== slotIndex && assignedId === fighterId
+      ))) return;
+
+      nextAssignments[slotIndex] = fighterId;
+      setSlotAssignments(nextAssignments);
+
+      for (let offset = 1; offset <= run.format.slots.length; offset += 1) {
+        const nextSlotIndex = (slotIndex + offset) % run.format.slots.length;
+        if (nextAssignments[nextSlotIndex] != null) continue;
+        setActiveSlotIndex(nextSlotIndex);
+        setSearch("");
+        break;
+      }
+      return;
+    }
+
     if (selectedSet.has(fighterId)) {
       setSelectedIds((current) => current.filter((id) => id !== fighterId));
       return;
@@ -230,7 +289,8 @@ export default function HitTheNumberPage() {
 
   function lockPicks() {
     if (result || !selectionValid) return;
-    const next = gradeHitTheNumberSelection(setup, selectedIds);
+    const gradingIds = slotFormat ? completedSlotAssignments ?? [] : selectedIds;
+    const next = gradeHitTheNumberSelection(setup, gradingIds);
     setResult(next);
     recordLineupCompletion(run.identity, {
       status: next.status,
@@ -240,7 +300,7 @@ export default function HitTheNumberPage() {
       distance: next.distance,
       formatId: run.format.formatId,
       configurationId: run.format.configurationId,
-      selectedFighterIds: [...selectedIds],
+      selectedFighterIds: [...gradingIds],
     });
   }
 
@@ -318,12 +378,15 @@ export default function HitTheNumberPage() {
       <HitTheNumberGameView
         setup={setup}
         format={run.format}
-        selectedIds={selectedIds}
+        selectedIds={effectiveSelectedIds}
+        slotAssignments={resolvedSlotAssignments}
+        activeSlotIndex={activeSlotIndex}
         selectionValid={selectionValid}
         result={result}
         search={search}
         onSearchChange={setSearch}
         onToggleFighter={toggleFighter}
+        onSelectSlot={chooseSlot}
         onLock={lockPicks}
         onBack={() => navigate("/play")}
         controls={controls}

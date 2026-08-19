@@ -197,6 +197,7 @@
 .hit-number-new-board:focus-visible,
 .hit-number-lock:focus-visible,
 .hit-number-fighter-card:focus-visible,
+.hit-number-role-slot:focus-visible,
 .hit-number-result__actions button:focus-visible,
 .hit-number-back:focus-visible {
   outline: 2px solid currentColor;
@@ -296,6 +297,115 @@
   font-size: 0.58rem;
   font-weight: 900;
   letter-spacing: 0.08em;
+}
+
+.hit-number-role-slots {
+  display: grid;
+  gap: 7px;
+}
+
+.hit-number-role-slot {
+  display: grid;
+  grid-template-columns: 30px 48px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 66px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.025);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.hit-number-role-slot.is-filled {
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.hit-number-role-slot.is-active {
+  border-color: rgba(240, 23, 23, 0.75);
+  background: rgba(210, 10, 10, 0.14);
+  box-shadow: inset 3px 0 0 var(--ufc-red-strong);
+}
+
+.hit-number-role-slot:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+.hit-number-role-slot__index,
+.hit-number-role-slot__empty {
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  font-weight: 950;
+}
+
+.hit-number-role-slot__index {
+  width: 26px;
+  height: 26px;
+  color: var(--muted);
+  font-size: 0.66rem;
+}
+
+.hit-number-role-slot__photo,
+.hit-number-role-slot__empty {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+}
+
+.hit-number-role-slot__photo {
+  object-fit: cover;
+}
+
+.hit-number-role-slot__empty {
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 1.2rem;
+}
+
+.hit-number-role-slot__copy {
+  min-width: 0;
+}
+
+.hit-number-role-slot__copy small,
+.hit-number-role-slot__copy strong {
+  display: block;
+}
+
+.hit-number-role-slot__copy small {
+  margin-bottom: 3px;
+  color: var(--ufc-red-strong);
+  font-size: 0.61rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hit-number-role-slot__copy strong {
+  overflow: hidden;
+  font-size: 0.82rem;
+  font-weight: 900;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hit-number-role-slot__state {
+  color: var(--muted);
+  font-size: 0.59rem;
+  font-weight: 950;
+  letter-spacing: 0.06em;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.hit-number-role-slot.is-active .hit-number-role-slot__state {
+  color: var(--ufc-red-strong);
 }
 
 .hit-number-stat-value {
@@ -443,9 +553,12 @@
   background: rgba(210, 10, 10, 0.14);
 }
 
+.hit-number-fighter-card.is-used {
+  opacity: 0.5;
+}
+
 .hit-number-fighter-card:disabled {
   cursor: default;
-  opacity: 0.76;
 }
 
 .hit-number-fighter-card__photo {
@@ -562,6 +675,27 @@
     height: 46px;
   }
 
+  .hit-number-role-slots {
+    grid-template-columns: 1fr;
+  }
+
+  .hit-number-role-slot {
+    grid-template-columns: 26px 42px minmax(0, 1fr) auto;
+    gap: 8px;
+    min-height: 60px;
+    padding: 7px 8px;
+  }
+
+  .hit-number-role-slot__photo,
+  .hit-number-role-slot__empty {
+    width: 42px;
+    height: 42px;
+  }
+
+  .hit-number-role-slot__state {
+    font-size: 0.54rem;
+  }
+
   .hit-number-lock-dock {
     margin: 10px -3px -2px;
   }
@@ -630,6 +764,26 @@
 
   .hit-number-slot > span:not(.hit-number-slot__empty) {
     font-size: 0.61rem;
+  }
+
+  .hit-number-role-slot {
+    grid-template-columns: 24px 40px minmax(0, 1fr) auto;
+    gap: 7px;
+  }
+
+  .hit-number-role-slot__photo,
+  .hit-number-role-slot__empty {
+    width: 40px;
+    height: 40px;
+  }
+
+  .hit-number-role-slot__copy strong {
+    font-size: 0.76rem;
+  }
+
+  .hit-number-role-slot__state {
+    max-width: 64px;
+    white-space: normal;
   }
 
   .hit-number-result__actions {

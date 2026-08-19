@@ -229,6 +229,16 @@ function fighterMatchesRules(
   return rules.every((rule) => fighterMatchesRule(fighter, rule, rowsById));
 }
 
+export function hitTheNumberSlotAcceptsFighter(
+  slot: HitTheNumberSlotDefinition,
+  fighterId: string,
+  statRows: readonly HitTheNumberStatRow[] = hitTheNumberStatRows,
+) {
+  const fighter = playFighterById.get(fighterId);
+  if (!fighter) return false;
+  return fighterMatchesRules(fighter, slot.rules, rowMap(statRows));
+}
+
 function weightedValue<T>(rows: readonly { value: T; weight: number }[], random: () => number): T {
   const totalWeight = rows.reduce((sum, row) => sum + row.weight, 0);
   let cursor = random() * totalWeight;
@@ -319,23 +329,7 @@ function selectionCanFillSlots(
   rowsById: ReadonlyMap<string, HitTheNumberStatRow>,
 ) {
   if (fighters.length !== slots.length) return false;
-  const used = new Set<string>();
-
-  function visit(slotIndex: number): boolean {
-    if (slotIndex === slots.length) return true;
-    for (const fighter of fighters) {
-      if (
-        used.has(fighter.id)
-        || !fighterMatchesRules(fighter, slots[slotIndex]!.rules, rowsById)
-      ) continue;
-      used.add(fighter.id);
-      if (visit(slotIndex + 1)) return true;
-      used.delete(fighter.id);
-    }
-    return false;
-  }
-
-  return visit(0);
+  return slots.every((slot, index) => fighterMatchesRules(fighters[index]!, slot.rules, rowsById));
 }
 
 function formatSetup(
@@ -515,6 +509,7 @@ export function hitTheNumberFormatSelectionSatisfies(
   statRows: readonly HitTheNumberStatRow[] = hitTheNumberStatRows,
 ) {
   if (format.formatId === "classic") return true;
+  if (new Set(selectedFighterIds).size !== selectedFighterIds.length) return false;
   const rowsById = rowMap(statRows);
   const fighters = selectedFighterIds.map((fighterId) => playFighterById.get(fighterId));
   if (fighters.some((fighter) => !fighter)) return false;

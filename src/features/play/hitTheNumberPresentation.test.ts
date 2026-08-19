@@ -28,6 +28,24 @@ describe("Hit the Number canonical presentation", () => {
     expect(view).not.toContain("Choose from ${format?.configurationLabel}");
   });
 
+  it("makes One From Each and Build the Team explicit slot builders", () => {
+    expect(page).toContain("slotAssignments");
+    expect(page).toContain("activeSlotIndex");
+    expect(page).toContain("hitTheNumberSlotAcceptsFighter(slot, fighterId)");
+    expect(page).toContain("setActiveSlotIndex(nextSlotIndex)");
+    expect(view).toContain("hit-number-role-slots");
+    expect(view).toContain("onSelectSlot");
+    expect(view).toContain("hitTheNumberSlotAcceptsFighter(activeSlot, fighter.id)");
+    expect(view).toContain("Already assigned");
+    expect(view).not.toContain("Required lineup roles");
+  });
+
+  it("keeps slot-builder roles compact and one-column on phones", () => {
+    expect(css).toContain(".hit-number-role-slot.is-active");
+    expect(css).toContain("box-shadow: inset 3px 0 0 var(--ufc-red-strong);");
+    expect(css).toContain(".hit-number-role-slots {\n    grid-template-columns: 1fr;");
+  });
+
   it("keeps all selected fighters visible and the ready lock action reachable on phones", () => {
     expect(css).toContain("grid-template-columns: repeat(4, minmax(0, 1fr));");
     expect(css).not.toContain("overflow-x: auto");

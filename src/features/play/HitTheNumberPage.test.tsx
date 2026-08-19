@@ -3,6 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   createHitTheNumberFormatPlan,
+  hitTheNumberSlotAcceptsFighter,
   type HitTheNumberFormatId,
 } from "./hitTheNumberFormats";
 import HitTheNumberPage from "./HitTheNumberPage";
@@ -61,6 +62,12 @@ function selectFighterIds(container: HTMLElement, fighterIds: readonly string[])
     expect(fighter, fighterId).not.toBeNull();
     fireEvent.click(fighter!);
   }
+}
+
+function visibleFighterIds(container: HTMLElement) {
+  return [...container.querySelectorAll<HTMLElement>(".hit-number-fighter-card")]
+    .map((card) => card.dataset.fighterId)
+    .filter((fighterId): fighterId is string => Boolean(fighterId));
 }
 
 describe("Hit the Number casual game", () => {
@@ -143,7 +150,6 @@ describe("Hit the Number casual game", () => {
 
     expect(screen.getByText(/SHANE sent this exact Hit the Number board/i)).toBeInTheDocument();
     expect(container.querySelector(".hit-number-page")).toHaveAttribute("data-format-id", "build-the-team");
-    expect(container.querySelectorAll(".hit-number-fighter-card")).toHaveLength(plan.fighterIds.length);
     expect(container.querySelector(".hit-number-target strong")?.textContent).toBe(String(plan.target));
     expect(container.textContent).toContain(plan.format.configurationLabel!.toUpperCase());
     expect(screen.queryByRole("button", { name: "OPEN ROSTER" })).not.toBeInTheDocument();
@@ -175,12 +181,15 @@ describe("Hit the Number casual game", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "RANDOM POOL" }));
 
-    const pickCount = container.querySelectorAll(".hit-number-slot").length;
+    const pickCount = Number(container.querySelector(".hit-number-target")?.closest(".hit-number-heading")
+      ?.querySelector(".hit-number-meta span")?.textContent?.replace("PICK ", ""));
     const fighterCount = container.querySelectorAll(".hit-number-fighter-card").length;
-    expect(fighterCount).toBeGreaterThanOrEqual(pickCount);
+    expect(pickCount).toBeGreaterThanOrEqual(4);
+    expect(pickCount).toBeLessThanOrEqual(7);
+    expect(fighterCount).toBeGreaterThan(0);
     expect(fighterCount).toBeLessThanOrEqual(12);
     expect(container.querySelectorAll(".hit-number-stat-value")).toHaveLength(0);
-    expect(container.textContent).toContain(`${fighterCount}-fighter pool`);
+    expect(container.textContent).toContain("RANDOM POOL");
     expect(screen.getByRole("button", { name: "RANDOM POOL" })).toHaveAttribute("aria-pressed", "true");
     expect(container.querySelector(".hit-number-page")?.getAttribute("data-challenge-id"))
       .not.toBe(firstChallengeId);
@@ -201,41 +210,66 @@ describe("Hit the Number casual game", () => {
     expect(screen.getByPlaceholderText("Search by name")).toHaveValue("");
   });
 
-  it("shows and enforces the five One From Each requirements", () => {
+  it("builds One From Each through explicit eligible slots and auto-advances", () => {
     const { seed, plan } = seedForFormat("one-from-each");
     const { container } = renderGame(challengeEntry(seed, "open-roster"));
+    const roleSlots = [...container.querySelectorAll<HTMLButtonElement>(".hit-number-role-slot")];
 
     expect(container.querySelector(".hit-number-page")).toHaveAttribute("data-format-id", "one-from-each");
     expect(container.textContent).toContain("ONE FROM EACH");
     expect(container.textContent).toContain(plan.format.configurationLabel!.toUpperCase());
-    for (const slot of plan.format.slots) {
-      expect(container.textContent).toContain(slot.label.toUpperCase());
-    }
+    expect(roleSlots).toHaveLength(5);
+    plan.format.slots.forEach((slot, index) => {
+      expect(roleSlots[index]?.textContent).toContain(slot.label);
+    });
+    expect(roleSlots[0]).toHaveClass("is-active");
+    expect(visibleFighterIds(container).every(
+      (fighterId) => hitTheNumberSlotAcceptsFighter(plan.format.slots[0]!, fighterId),
+    )).toBe(true);
 
-    selectFighterIds(container, plan.solutionFighterIds);
+    selectFighterIds(container, [plan.solutionFighterIds[0]!]);
+    expect(roleSlots[0]).toHaveClass("is-filled");
+    expect(roleSlots[1]).toHaveClass("is-active");
+    expect(visibleFighterIds(container).every(
+      (fighterId) => hitTheNumberSlotAcceptsFighter(plan.format.slots[1]!, fighterId),
+    )).toBe(true);
+
+    selectFighterIds(container, plan.solutionFighterIds.slice(1));
     expect(screen.getByRole("button", { name: /LOCK PICKS/ })).toBeEnabled();
   });
 
-  it("shows and enforces the five Build the Team roles", () => {
+  it("builds the team through named roles and lets the player choose another unfinished slot", () => {
     const { seed, plan } = seedForFormat("build-the-team");
     const { container } = renderGame(challengeEntry(seed, "open-roster"));
+    const roleSlots = [...container.querySelectorAll<HTMLButtonElement>(".hit-number-role-slot")];
 
     expect(container.querySelector(".hit-number-page")).toHaveAttribute("data-format-id", "build-the-team");
     expect(container.textContent).toContain("BUILD THE TEAM");
-    for (const slot of plan.format.slots) {
-      expect(container.textContent).toContain(slot.label.toUpperCase());
-    }
+    expect(roleSlots).toHaveLength(5);
+    plan.format.slots.forEach((slot, index) => {
+      expect(roleSlots[index]?.textContent).toContain(slot.label);
+    });
 
-    selectFighterIds(container, plan.solutionFighterIds);
-    expect(screen.getByRole("button", { name: /LOCK PICKS/ })).toBeEnabled();
+    fireEvent.click(roleSlots[2]!);
+    expect(roleSlots[2]).toHaveClass("is-active");
+    expect(visibleFighterIds(container).every(
+      (fighterId) => hitTheNumberSlotAcceptsFighter(plan.format.slots[2]!, fighterId),
+    )).toBe(true);
+
+    fireEvent.click(container.querySelector<HTMLButtonElement>(
+      `[data-fighter-id="${plan.solutionFighterIds[2]}"]`,
+    )!);
+    expect(roleSlots[2]).toHaveClass("is-filled");
+    expect(roleSlots[3]).toHaveClass("is-active");
   });
 
-  it("keeps every selected fighter in the one canonical slot grid", () => {
+  it("keeps every assigned fighter in the one canonical named role grid", () => {
     const { seed, plan } = seedForFormat("build-the-team");
     const { container } = renderGame(challengeEntry(seed, "open-roster"));
     selectFighterIds(container, plan.solutionFighterIds);
-    const slots = container.querySelector(".hit-number-slots");
+    const slots = container.querySelector(".hit-number-role-slots");
     expect(slots).not.toBeNull();
-    expect(slots?.querySelectorAll(".hit-number-slot.is-filled")).toHaveLength(plan.pickCount);
+    expect(slots?.querySelectorAll(".hit-number-role-slot.is-filled")).toHaveLength(plan.pickCount);
+    expect(container.querySelector(".hit-number-slots")).toBeNull();
   });
 });
