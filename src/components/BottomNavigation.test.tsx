@@ -62,6 +62,7 @@ describe("BottomNavigation", () => {
 
     expect(navigation).not.toHaveClass("is-keyboard-open");
     expect(navigation).toHaveStyle({ display: "grid" });
+    expect(navigation).toHaveStyle({ transform: "translateY(344px)" });
   });
 
   it("still hides the navigation when an editor owns a materially occluded viewport", () => {
