@@ -31,7 +31,7 @@ function challenge(
     summary: "Stored challenge",
     creatorId: "11111111-1111-4111-8111-111111111111",
     recipientId: "22222222-2222-4222-8222-222222222222",
-    playUrl: null,
+    playUrl: "https://example.test/play/test",
     setup,
     creatorResult: {},
     responderResult: null,
@@ -100,7 +100,7 @@ describe("profile challenge authority", () => {
   }) => {
     mockProfileMatch.mockReturnValue(matchReturn(null));
     const view = render(
-      <MemoryRouter initialEntries={[`/play/test?match=MATCH42`]}>
+      <MemoryRouter initialEntries={["/play/test?match=MATCH42"]}>
         <TodayChallengeGameRoute gameType={gameType} casual={<div>CASUAL {gameId}</div>} />
       </MemoryRouter>,
     );
@@ -111,7 +111,7 @@ describe("profile challenge authority", () => {
     const stored = challenge(gameId, gameVersion, setup);
     mockProfileMatch.mockReturnValue(matchReturn(stored));
     view.rerender(
-      <MemoryRouter initialEntries={[`/play/test?match=MATCH42`]}>
+      <MemoryRouter initialEntries={["/play/test?match=MATCH42"]}>
         <TodayChallengeGameRoute gameType={gameType} casual={<div>CASUAL {gameId}</div>} />
       </MemoryRouter>,
     );
