@@ -74,6 +74,43 @@ export const OFFICIAL_COMPARISON_GRADING_RULES = {
   }
 >;
 
+export interface BlindRankComparisonScore {
+  correctComparisons: number;
+  normalizedScore: number;
+}
+
+/**
+ * Mirrors the immutable server-owned Blind Rank pairwise grader for casual
+ * results. Official Today’s Challenge attempts continue to be graded only by
+ * Supabase; this helper keeps replayable/challenge feedback on the same rule.
+ */
+export function scoreBlindRankOrderedRatings(
+  orderedRatings: readonly number[],
+): BlindRankComparisonScore {
+  if (orderedRatings.length !== 5) {
+    throw new RangeError("Blind Rank scoring requires exactly five ratings.");
+  }
+
+  for (const rating of orderedRatings) {
+    requireIntegerInRange(rating, 0, 100, "Blind Rank rating");
+  }
+
+  const rules = OFFICIAL_COMPARISON_GRADING_RULES["blind-rank"];
+  let correctComparisons = 0;
+  for (let leftIndex = 0; leftIndex < orderedRatings.length - 1; leftIndex += 1) {
+    for (let rightIndex = leftIndex + 1; rightIndex < orderedRatings.length; rightIndex += 1) {
+      if (orderedRatings[leftIndex] >= orderedRatings[rightIndex] - rules.ratingTieTolerance) {
+        correctComparisons += 1;
+      }
+    }
+  }
+
+  return {
+    correctComparisons,
+    normalizedScore: correctComparisons * rules.normalizedPointsPerComparison,
+  };
+}
+
 function requireIntegerInRange(value: number, min: number, max: number, label: string) {
   if (!Number.isInteger(value) || value < min || value > max) {
     throw new RangeError(`${label} must be an integer from ${min} to ${max}.`);
