@@ -66,7 +66,7 @@ const modes: readonly [AuctionModeId, string, AuctionFamily][] = [
   ["nicknames", "Best Nicknames", "nickname-auction"],
 ];
 
-export const auctionModes: readonly PublicAuctionMode[] = modes.map(([id, displayName, family]) => {
+const allAuctionModes: readonly PublicAuctionMode[] = modes.map(([id, displayName, family]) => {
   const ultimateFighter = id === "ultimate-fighter";
   return {
     id,
@@ -79,6 +79,15 @@ export const auctionModes: readonly PublicAuctionMode[] = modes.map(([id, displa
     categories: ultimateFighter ? ULTIMATE_FIGHTER_CATEGORIES : [],
   };
 });
+
+const retiredAuctionModeIds = new Set<AuctionModeId>([
+  "championship-performances",
+  "dominant-performances",
+]);
+
+export const auctionModes: readonly PublicAuctionMode[] = allAuctionModes.filter(
+  (mode) => !retiredAuctionModeIds.has(mode.id),
+);
 
 export type AuctionModeGroupId = "fighters" | "skills" | "performances" | "history";
 
@@ -107,12 +116,7 @@ export const auctionModeGroups: readonly AuctionModeGroup[] = [
   {
     id: "performances",
     label: "Performances",
-    modeIds: [
-      "fighter-performances",
-      "championship-performances",
-      "finishes",
-      "dominant-performances",
-    ],
+    modeIds: ["fighter-performances", "finishes"],
   },
   {
     id: "history",
@@ -121,7 +125,7 @@ export const auctionModeGroups: readonly AuctionModeGroup[] = [
   },
 ];
 
-const auctionModeById = new Map(auctionModes.map((mode) => [mode.id, mode]));
+const auctionModeById = new Map(allAuctionModes.map((mode) => [mode.id, mode]));
 const auctionModeGroupById = new Map(auctionModeGroups.map((group) => [group.id, group]));
 
 export function isAuctionModeId(value: string): value is AuctionModeId {
