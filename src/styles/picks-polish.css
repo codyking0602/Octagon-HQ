@@ -157,8 +157,7 @@
 }
 
 .picks-event-hero.has-poster .picks-event-hero__copy > strong {
-  font-size: clamp(17px, 4.75vw, 23px);
-  line-height: 1.1;
+  display: none;
 }
 
 .picks-event-hero__facts {
