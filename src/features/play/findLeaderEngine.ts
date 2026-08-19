@@ -8,7 +8,7 @@ import {
   stableLineupHash,
 } from "./lineupModel";
 
-const VERSION = "find-leader-v3-20260819-category-depth";
+const VERSION = "find-leader-v4-20260819-competitive-lineups";
 const DAILY_ANCHOR = "2026-07-16";
 const NO_REPEAT_SELECTIONS = 14;
 const FINISH_METHODS = new Set(["ko-tko", "submission", "doctor-stoppage"]);
@@ -448,11 +448,69 @@ function scoreFighter(input: RankingInputFighter, definition: FindLeaderQuestion
   }
 }
 
-function scoredPool(definition: FindLeaderQuestionDefinition) {
+type ScoredFindLeaderRow = { input: RankingInputFighter; value: number };
+
+type CompetitiveLeaderOption = {
+  leader: ScoredFindLeaderRow;
+  lower: ScoredFindLeaderRow[];
+  competitionScore: number;
+};
+
+function scoredPool(definition: FindLeaderQuestionDefinition): ScoredFindLeaderRow[] {
   return canonicalRankingInputs.fighters
     .map((input) => ({ input, value: scoreFighter(input, definition) }))
-    .filter((row): row is { input: RankingInputFighter; value: number } => Number.isFinite(row.value))
+    .filter((row): row is ScoredFindLeaderRow => Number.isFinite(row.value))
     .sort((left, right) => right.value - left.value || left.input.fighter.localeCompare(right.input.fighter));
+}
+
+function viableLeaderRows(pool: readonly ScoredFindLeaderRow[], excludeGlobalMax: boolean) {
+  const globalMax = pool[0]?.value ?? 0;
+  return pool.filter((row) => (
+    row.value > 0
+    && (!excludeGlobalMax || row.value < globalMax)
+    && pool.filter((other) => other.value < row.value).length >= 9
+  ));
+}
+
+function competitiveLeaderOptions(pool: readonly ScoredFindLeaderRow[]) {
+  const nonRecordLeaders = viableLeaderRows(pool, true);
+  const viable = nonRecordLeaders.length ? nonRecordLeaders : viableLeaderRows(pool, false);
+  return viable
+    .map<CompetitiveLeaderOption>((leader) => {
+      const lower = pool.filter((row) => row.value < leader.value);
+      const nearestNine = lower.slice(0, 9);
+      const scale = Math.max(Math.abs(leader.value), 1);
+      const spread = leader.value - nearestNine.at(-1)!.value;
+      const runnerUpGap = leader.value - nearestNine[0].value;
+      return {
+        leader,
+        lower,
+        competitionScore: (spread / scale) + ((runnerUpGap / scale) * 0.35),
+      };
+    })
+    .sort((left, right) => (
+      left.competitionScore - right.competitionScore
+      || right.leader.value - left.leader.value
+      || left.leader.input.fighter.localeCompare(right.leader.input.fighter)
+    ));
+}
+
+function selectCompetitiveLeader(pool: readonly ScoredFindLeaderRow[], random: () => number) {
+  const options = competitiveLeaderOptions(pool);
+  if (!options.length) return null;
+  const bestScore = options[0].competitionScore;
+  const competitiveWindow = options
+    .filter((option) => option.competitionScore <= bestScore + 0.08)
+    .slice(0, 6);
+  return competitiveWindow[Math.floor(random() * competitiveWindow.length)] ?? options[0];
+}
+
+function selectClosestChallengers(lower: readonly ScoredFindLeaderRow[], random: () => number) {
+  if (lower.length < 9) return [];
+  const cutoffValue = lower[8].value;
+  const closer = lower.filter((row) => row.value > cutoffValue);
+  const cutoffTier = shuffleLineup(lower.filter((row) => row.value === cutoffValue), random);
+  return [...closer, ...cutoffTier.slice(0, 9 - closer.length)];
 }
 
 function candidateFor(input: RankingInputFighter, value: number): FindLeaderCandidate {
@@ -474,16 +532,11 @@ export function buildFindLeaderBoard(
   const random = seededLineupRandom(VERSION, seed, definition.id);
   const pool = scoredPool(definition);
   if (pool.length < 10) return null;
-  const possibleLeaders = pool.filter((row) => row.value > 0 && pool.filter((other) => other.value < row.value).length >= 9).slice(0, 10);
-  if (!possibleLeaders.length) return null;
-  const leader = possibleLeaders[Math.floor(random() * possibleLeaders.length)];
-  const lower = pool.filter((row) => row.value < leader.value);
-  if (lower.length < 9) return null;
-  const near = lower.slice(0, Math.min(14, lower.length));
-  const selected = [leader, ...shuffleLineup(near, random).slice(0, Math.min(6, near.length))];
-  const used = new Set(selected.map((row) => row.input.fighter));
-  selected.push(...shuffleLineup(lower.filter((row) => !used.has(row.input.fighter)), random).slice(0, 10 - selected.length));
-  if (selected.length !== 10) return null;
+  const option = selectCompetitiveLeader(pool, random);
+  if (!option) return null;
+  const challengers = selectClosestChallengers(option.lower, random);
+  if (challengers.length !== 9) return null;
+  const selected = [option.leader, ...challengers];
   const candidates = shuffleLineup(selected.map((row) => candidateFor(row.input, row.value)), random);
   return {
     version: VERSION,
@@ -494,10 +547,42 @@ export function buildFindLeaderBoard(
     statLabel: definition.statLabel,
     shortLabel: definition.shortLabel,
     family: definition.family,
-    leaderId: leader.input.presentation.slug,
-    leaderValue: leader.value,
+    leaderId: option.leader.input.presentation.slug,
+    leaderValue: option.leader.value,
     candidates,
   };
+}
+
+export function findLeaderCompetitionAudit() {
+  return findLeaderQuestions.map((definition) => {
+    const pool = scoredPool(definition);
+    const board = buildFindLeaderBoard(definition, `competition-audit|${definition.id}`, DAILY_ANCHOR);
+    const nonRecordLeaderAvailable = viableLeaderRows(pool, true).length > 0;
+    if (!board) {
+      return {
+        definitionId: definition.id,
+        boardValid: false,
+        nonRecordLeaderAvailable,
+        leaderIsGlobalMax: false,
+        boardSpread: null,
+        closestPossibleSpread: null,
+      };
+    }
+    const leader = pool.find((row) => row.input.presentation.slug === board.leaderId);
+    const lower = leader ? pool.filter((row) => row.value < leader.value) : [];
+    const closestPossibleSpread = leader && lower.length >= 9
+      ? leader.value - lower[8].value
+      : null;
+    const boardMinimum = Math.min(...board.candidates.map((candidate) => candidate.value));
+    return {
+      definitionId: definition.id,
+      boardValid: true,
+      nonRecordLeaderAvailable,
+      leaderIsGlobalMax: board.leaderValue === (pool[0]?.value ?? board.leaderValue),
+      boardSpread: board.leaderValue - boardMinimum,
+      closestPossibleSpread,
+    };
+  });
 }
 
 function dayNumber(day: string) {
