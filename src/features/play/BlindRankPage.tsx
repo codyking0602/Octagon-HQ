@@ -137,15 +137,6 @@ export default function BlindRankPage() {
       placements.flatMap((fighter) => fighter ? [blindRankRating(fighter, run.packId)] : []),
     )
     : null;
-  const canonicalOrder = complete
-    ? run.lineup
-      .map((fighter, boardIndex) => ({
-        fighter,
-        boardIndex,
-        rating: blindRankRating(fighter, run.packId),
-      }))
-      .sort((left, right) => right.rating - left.rating || left.boardIndex - right.boardIndex)
-    : [];
 
   useEffect(() => {
     if (!complete) return;
@@ -265,7 +256,7 @@ export default function BlindRankPage() {
               </section>
             ) : null}
             <p className="eyebrow">YOUR FINAL RANKING</p>
-            <div className="blind-rank-results" aria-label="Your final ranking">
+            <div className="blind-rank-results">
               {placements.map((fighter, index) => fighter ? (
                 <article key={fighter.id}>
                   <b>#{index + 1}</b>
@@ -273,16 +264,6 @@ export default function BlindRankPage() {
                   <span><strong>{fighter.name}</strong><small>{compactDivision(fighter)}</small></span>
                 </article>
               ) : null)}
-            </div>
-            <p className="eyebrow">OCTAGON HQ ORDER</p>
-            <div className="blind-rank-results" aria-label="Octagon HQ order">
-              {canonicalOrder.map(({ fighter, rating }, index) => (
-                <article key={fighter.id}>
-                  <b>#{index + 1}</b>
-                  <FighterPhoto className="blind-rank-result__photo" name={fighter.name} src={fighter.thumbUrl} />
-                  <span><strong>{fighter.name}</strong><small>{compactDivision(fighter)} · {rating}</small></span>
-                </article>
-              ))}
             </div>
             <GameResultActions
               onChallenge={() => void challengeSomeone()}
