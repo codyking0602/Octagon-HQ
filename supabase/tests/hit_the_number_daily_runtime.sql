@@ -57,6 +57,7 @@ declare
   v_result record;
   v_rejected boolean := false;
 begin
+  -- Historical Classic grading evidence has no format or slot metadata and must stay valid.
   select *
   into v_result
   from private.grade_daily_challenge(
@@ -125,6 +126,69 @@ begin
 
   if not v_rejected then
     raise exception 'duplicate Hit the Number selections must be rejected';
+  end if;
+end
+$$;
+
+do $$
+declare
+  v_result record;
+  v_rejected boolean := false;
+  v_evidence jsonb := '{
+    "fighter_ids":["a","b","c","d","e","f"],
+    "stat_id":"ufc-wins",
+    "target":50,
+    "pick_count":5,
+    "format_id":"one-from-each",
+    "slot_eligible_ids":[["a","f"],["b"],["c"],["d"],["e"]],
+    "values":{"a":10,"b":10,"c":10,"d":10,"e":10,"f":4}
+  }'::jsonb;
+begin
+  select *
+  into v_result
+  from private.grade_daily_challenge(
+    'hit_the_number',
+    'play-official-score-v1',
+    '{"selected_ids":["a","b","c","d","e"]}'::jsonb,
+    v_evidence
+  );
+
+  if v_result.normalized_score <> 100
+    or v_result.public_result->>'status' <> 'perfect' then
+    raise exception 'valid constrained Hit the Number assignment must grade normally, got %', row_to_json(v_result);
+  end if;
+
+  begin
+    perform *
+    from private.grade_daily_challenge(
+      'hit_the_number',
+      'play-official-score-v1',
+      '{"selected_ids":["b","a","c","d","e"]}'::jsonb,
+      v_evidence
+    );
+  exception when others then
+    v_rejected := position('role assignment' in lower(sqlerrm)) > 0;
+  end;
+
+  if not v_rejected then
+    raise exception 'server grader must reject a fighter in the wrong constrained slot';
+  end if;
+
+  v_rejected := false;
+  begin
+    perform *
+    from private.grade_daily_challenge(
+      'hit_the_number',
+      'play-official-score-v1',
+      '{"selected_ids":["a","b","c","d","e"]}'::jsonb,
+      v_evidence - 'slot_eligible_ids'
+    );
+  exception when others then
+    v_rejected := position('missing slot eligibility' in lower(sqlerrm)) > 0;
+  end;
+
+  if not v_rejected then
+    raise exception 'new constrained grading evidence must fail closed without slot eligibility';
   end if;
 end
 $$;
