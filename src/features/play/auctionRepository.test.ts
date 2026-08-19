@@ -56,4 +56,15 @@ describe("Auction frontend repository", () => {
     expect(validateAuctionBid("20", 46, true, "")).toContain("category");
     expect(validateAuctionBid("20", 46, true, "Heart")).toBe("");
   });
+
+  it("reserves cash for the remaining slots in the standard three-item format", () => {
+    const standard = {
+      ...projection,
+      mode_id: "strikers" as const,
+      challenger_bankroll: 30,
+      challenger_selection_count: 0,
+    };
+    expect(maximumLegalAuctionBid(standard, standard.challenger_id)).toBe(28);
+    expect(maximumLegalAuctionBid({ ...standard, challenger_selection_count: 1 }, standard.challenger_id)).toBe(29);
+  });
 });

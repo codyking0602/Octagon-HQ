@@ -2,6 +2,7 @@ import { z } from "zod";
 import { getSupabaseClient } from "../../lib/supabase";
 import {
   ULTIMATE_FIGHTER_CATEGORIES,
+  auctionModeDefinition,
   isAuctionModeId,
   type AuctionModeId,
   type UltimateFighterCategory,
@@ -130,7 +131,7 @@ export function maximumLegalAuctionBid(state: AuctionProjection, profileId: stri
   const challenger = state.challenger_id === profileId;
   const bankroll = challenger ? state.challenger_bankroll : state.recipient_bankroll;
   const selections = challenger ? state.challenger_selection_count : state.recipient_selection_count;
-  const required = state.mode_id === "ultimate-fighter" ? 5 : 4;
+  const required = auctionModeDefinition(state.mode_id).requiredSelectionsPerPlayer;
   return bankroll - Math.max(0, required - selections - 1);
 }
 
