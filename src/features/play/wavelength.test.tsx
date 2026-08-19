@@ -9,6 +9,8 @@ import {
   nextChallengeWavelengthClue,
 } from "./wavelengthChallenge";
 import {
+  WAVELENGTH_TARGET_MAX,
+  WAVELENGTH_TARGET_MIN,
   createWavelengthRound,
   desiredWavelengthCorrection,
   nextWavelengthClue,
@@ -28,18 +30,30 @@ function renderWavelength() {
 }
 
 describe("Wavelength engine", () => {
-  it("preserves the target bank and uses the expanded approved clue catalog", () => {
-    expect(wavelengthTargets).toHaveLength(22);
+  it("uses every hidden target from 20 through 95 with no learnable gaps", () => {
+    expect(WAVELENGTH_TARGET_MIN).toBe(20);
+    expect(WAVELENGTH_TARGET_MAX).toBe(95);
+    expect(wavelengthTargets).toEqual(Array.from({ length: 76 }, (_, index) => 20 + index));
+    expect(wavelengthTargets.filter((target) => target >= 20 && target <= 39)).toHaveLength(20);
+    expect(wavelengthTargets.filter((target) => target >= 40 && target <= 59)).toHaveLength(20);
+    expect(wavelengthTargets.filter((target) => target >= 60 && target <= 79)).toHaveLength(20);
+    expect(wavelengthTargets.filter((target) => target >= 80 && target <= 95)).toHaveLength(16);
+  });
+
+  it("keeps the expanded approved clue catalog dense around every target", () => {
     expect(wavelengthClues).toHaveLength(500);
     expect(new Set(wavelengthClues.map((clue) => clue.id)).size).toBe(500);
     expect(Math.min(...wavelengthClues.map((clue) => clue.rating))).toBe(2);
     expect(Math.max(...wavelengthClues.map((clue) => clue.rating))).toBe(99);
+    for (const target of wavelengthTargets) {
+      expect(wavelengthClues.some((clue) => Math.abs(clue.rating - target) <= 3)).toBe(true);
+    }
   });
 
   it("avoids the previous target and adjusts later clues toward the hidden number", () => {
     const random = vi.fn(() => 0);
-    const round = createWavelengthRound(18, random);
-    expect(round.target).not.toBe(18);
+    const round = createWavelengthRound(20, random);
+    expect(round.target).not.toBe(20);
     expect(round.clues).toHaveLength(1);
 
     const highTarget = { target: 91, clues: [wavelengthClues.find((clue) => clue.rating === 89)!] };
