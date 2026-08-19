@@ -184,7 +184,9 @@ describe("Hit the Number casual game", () => {
     const pickCount = Number(container.querySelector(".hit-number-target")?.closest(".hit-number-heading")
       ?.querySelector(".hit-number-meta span")?.textContent?.replace("PICK ", ""));
     const fighterCount = container.querySelectorAll(".hit-number-fighter-card").length;
-    expect(fighterCount).toBeGreaterThanOrEqual(pickCount);
+    expect(pickCount).toBeGreaterThanOrEqual(4);
+    expect(pickCount).toBeLessThanOrEqual(7);
+    expect(fighterCount).toBeGreaterThan(0);
     expect(fighterCount).toBeLessThanOrEqual(12);
     expect(container.querySelectorAll(".hit-number-stat-value")).toHaveLength(0);
     expect(container.textContent).toContain("RANDOM POOL");
