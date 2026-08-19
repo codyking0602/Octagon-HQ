@@ -86,6 +86,40 @@ describe("BottomNavigation", () => {
     expect(navigation).toHaveStyle({ display: "none" });
   });
 
+  it("keeps the navigation hidden after blur until the keyboard viewport recovers", () => {
+    const viewport = installVisualViewport();
+    render(
+      <MemoryRouter>
+        <input aria-label="Message" />
+        <BottomNavigation />
+      </MemoryRouter>,
+    );
+
+    const navigation = screen.getByRole("navigation", { name: "Primary navigation" });
+    const input = screen.getByRole("textbox", { name: "Message" });
+
+    act(() => {
+      input.focus();
+      viewport.height = 500;
+      viewport.dispatchEvent(new Event("resize"));
+    });
+    expect(navigation).toHaveStyle({ display: "none" });
+
+    act(() => {
+      input.blur();
+      viewport.dispatchEvent(new Event("resize"));
+    });
+    expect(navigation).toHaveClass("is-keyboard-open");
+    expect(navigation).toHaveStyle({ display: "none" });
+
+    act(() => {
+      viewport.height = 844;
+      viewport.dispatchEvent(new Event("resize"));
+    });
+    expect(navigation).not.toHaveClass("is-keyboard-open");
+    expect(navigation).toHaveStyle({ display: "grid" });
+  });
+
   it("corrects a stale short layout viewport so the nav stays on the visible bottom edge", () => {
     const viewport = installVisualViewport();
     render(
