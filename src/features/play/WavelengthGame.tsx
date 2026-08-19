@@ -9,6 +9,7 @@ import {
   rememberLineup,
   replayLabelFor,
   selectReplayLineup,
+  type PlayLineupHistory,
   type PlayLineupIdentity,
 } from "./lineupModel";
 import {
@@ -16,7 +17,9 @@ import {
   wavelengthDistanceCopy,
   wavelengthScore,
   wavelengthClues,
+  wavelengthSequenceKey,
   type WavelengthClue,
+  type WavelengthRecentHistory,
   type WavelengthRound,
 } from "./wavelengthEngine";
 import {
@@ -29,10 +32,13 @@ interface WavelengthRun {
   seed: string;
   initialRound: WavelengthRound;
   identity: PlayLineupIdentity;
+  recent?: WavelengthRecentHistory;
 }
 
-function record(value: ChallengeJson | undefined): { [key: string]: ChallengeJson } | null {
-  return value && !Array.isArray(value) && typeof value === "object" ? value : null;
+function record(value: unknown): Record<string, unknown> | null {
+  return value && !Array.isArray(value) && typeof value === "object"
+    ? value as Record<string, unknown>
+    : null;
 }
 
 function storedClue(value: ChallengeJson | undefined): WavelengthClue | null {
@@ -66,16 +72,67 @@ function targetId(round: WavelengthRound) {
   return `target:${round.target}`;
 }
 
+function wavelengthLineupItems(round: WavelengthRound) {
+  const opening = round.clues[0];
+  if (!opening) throw new Error("Wavelength round is missing its opening clue.");
+  return [targetId(round), `clue:${opening.id}`, `category:${opening.category}`];
+}
+
+function unique<T>(values: readonly T[]) {
+  return [...new Set(values)];
+}
+
+function recentWavelengthHistory(history: PlayLineupHistory): WavelengthRecentHistory {
+  const targets: number[] = [];
+  const clueIds: string[] = [];
+  const clueSequenceKeys: string[] = [];
+
+  for (const entry of history.entries) {
+    for (const itemId of entry.itemIds) {
+      if (itemId.startsWith("target:")) {
+        const target = Number(itemId.slice("target:".length));
+        if (Number.isInteger(target)) targets.push(target);
+      } else if (itemId.startsWith("clue:")) {
+        clueIds.push(itemId.slice("clue:".length));
+      }
+    }
+
+    const result = record(entry.result);
+    const wavelengthHistory = record(result?.wavelengthHistory);
+    if (!wavelengthHistory) continue;
+    if (typeof wavelengthHistory.target === "number" && Number.isInteger(wavelengthHistory.target)) {
+      targets.push(wavelengthHistory.target);
+    }
+    if (Array.isArray(wavelengthHistory.clueIds)) {
+      clueIds.push(...wavelengthHistory.clueIds.filter((id): id is string => typeof id === "string"));
+    }
+    if (typeof wavelengthHistory.sequenceKey === "string") {
+      clueSequenceKeys.push(wavelengthHistory.sequenceKey);
+    }
+  }
+
+  const canonicalClueIds = unique(clueIds).filter((id) => wavelengthClues.some((clue) => clue.id === id));
+  return {
+    targets: unique(targets),
+    clueIds: canonicalClueIds,
+    categories: unique(canonicalClueIds.flatMap((id) => {
+      const clue = wavelengthClues.find((candidate) => candidate.id === id);
+      return clue ? [clue.category] : [];
+    })),
+    clueSequenceKeys: unique(clueSequenceKeys),
+  };
+}
+
 function casualWavelengthRun(): WavelengthRun {
   const selected = selectReplayLineup({
     gameId: "wavelength",
-    lineupSize: 1,
+    lineupSize: 3,
     attempts: 10,
-    build: (seed) => {
+    build: (seed, _attempt, history) => {
       const initialRound = createChallengeWavelengthRound(seed);
       return {
-        value: { seed, initialRound },
-        itemIds: [targetId(initialRound)],
+        value: { seed, initialRound, recent: recentWavelengthHistory(history) },
+        itemIds: wavelengthLineupItems(initialRound),
       };
     },
   });
@@ -99,7 +156,7 @@ export default function WavelengthGame({
   const profileMatch = useProfileChallengeMatch("wavelength");
   const profileSetup = record(profileMatch.challenge?.setup);
   const profileSeed = typeof profileSetup?.seed === "string" ? profileSetup.seed : undefined;
-  const profileRound = storedRound(profileSetup?.round);
+  const profileRound = storedRound(profileSetup?.round as ChallengeJson | undefined);
   const curatedSeed = profileSeed ?? challengeSeed;
   const curatedRound = useMemo(
     () => curatedSeed ? profileRound ?? createChallengeWavelengthRound(curatedSeed) : null,
@@ -151,7 +208,14 @@ export default function WavelengthGame({
         finalGuess: locked,
         distance: Math.abs(locked - round.target),
       };
-      recordLineupCompletion(run.identity, result);
+      recordLineupCompletion(run.identity, {
+        ...result,
+        wavelengthHistory: {
+          target: round.target,
+          clueIds: round.clues.map((item) => item.id),
+          sequenceKey: wavelengthSequenceKey(round),
+        },
+      });
       if (profileMatch.isRecipient && profileMatch.challenge?.responderResult === null) {
         profileMatch.submitResult(asJson(result));
       }
@@ -159,7 +223,14 @@ export default function WavelengthGame({
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
-    const nextClue = nextChallengeWavelengthClue(round, locked, clueIndex + 1, run.seed, guesses);
+    const nextClue = nextChallengeWavelengthClue(
+      round,
+      locked,
+      clueIndex + 1,
+      run.seed,
+      guesses,
+      run.recent,
+    );
     setRound((current) => ({ ...current, clues: [...current.clues, nextClue] }));
     setClueIndex((current) => current + 1);
   }
