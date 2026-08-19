@@ -137,6 +137,15 @@ export default function BlindRankPage() {
       placements.flatMap((fighter) => fighter ? [blindRankRating(fighter, run.packId)] : []),
     )
     : null;
+  const canonicalOrder = complete
+    ? run.lineup
+      .map((fighter, boardIndex) => ({
+        fighter,
+        boardIndex,
+        rating: blindRankRating(fighter, run.packId),
+      }))
+      .sort((left, right) => right.rating - left.rating || left.boardIndex - right.boardIndex)
+    : [];
 
   useEffect(() => {
     if (!complete) return;
@@ -256,7 +265,7 @@ export default function BlindRankPage() {
               </section>
             ) : null}
             <p className="eyebrow">YOUR FINAL RANKING</p>
-            <div className="blind-rank-results">
+            <div className="blind-rank-results" aria-label="Your final ranking">
               {placements.map((fighter, index) => fighter ? (
                 <article key={fighter.id}>
                   <b>#{index + 1}</b>
@@ -265,6 +274,17 @@ export default function BlindRankPage() {
                 </article>
               ) : null)}
             </div>
+            <p className="eyebrow">OCTAGON HQ ORDER</p>
+            <div className="blind-rank-results" aria-label="Octagon HQ order">
+              {canonicalOrder.map(({ fighter }, index) => (
+                <article key={fighter.id}>
+                  <b>#{index + 1}</b>
+                  <FighterPhoto className="blind-rank-result__photo" name={fighter.name} src={fighter.thumbUrl} />
+                  <span><strong>{fighter.name}</strong><small>{compactDivision(fighter)}</small></span>
+                </article>
+              ))}
+            </div>
+            <small>Fighters within one rating point are treated as tied for scoring.</small>
             <GameResultActions
               onChallenge={() => void challengeSomeone()}
               onReplay={replay}
