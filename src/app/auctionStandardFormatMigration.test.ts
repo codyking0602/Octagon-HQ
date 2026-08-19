@@ -7,7 +7,15 @@ const migration = readFileSync(
 );
 
 describe("Auction standard format migration", () => {
-  it("updates each existing server rule owner in place", () => {
+  it("rotates new preparations onto an immutable v3 format marker", () => {
+    expect(migration).toContain("'ufc-auction-2026-08-v3'");
+    expect(migration).toContain("'balanced-rarity-2026-08-v2'");
+    expect(migration).toContain("'ufc-private-grader-2026-08-v2'");
+    expect(migration).toContain("from private.auction_catalog");
+    expect(migration).toContain("where content_version = 'ufc-auction-2026-08-v2'");
+  });
+
+  it("updates each existing server rule owner in place with drift guards", () => {
     for (const owner of [
       "private.validate_auction_private_row()",
       "public.prepare_auction(uuid,text)",
@@ -17,16 +25,17 @@ describe("Auction standard format migration", () => {
     ]) {
       expect(migration).toContain(`'${owner}'::regprocedure`);
     }
-    expect(migration).toContain("'then 10 else 6'");
-    expect(migration).toContain("'then 5 else 3'");
-    expect(migration).toContain("'then 50 else 30'");
+    expect(migration).toContain("Auction format migration owner drifted");
+    expect(migration).toContain("then 6 else 8");
+    expect(migration).toContain("then 3 else 4");
+    expect(migration).toContain("then 30 else 40");
     expect(migration).not.toMatch(/create(?: or replace)? function/i);
   });
 
-  it("locks active snapshots while retaining terminal historical games", () => {
-    expect(migration).toContain("else 6");
-    expect(migration).toContain("else 3");
-    expect(migration).toContain("else 30");
-    expect(migration).toContain("lifecycle_state in ('completed', 'declined', 'cancelled')");
+  it("locks v3 active snapshots while retaining historical pinned games", () => {
+    expect(migration).toContain("when content_version = 'ufc-auction-2026-08-v3' then 6");
+    expect(migration).toContain("when content_version = 'ufc-auction-2026-08-v3' then 3");
+    expect(migration).toContain("when content_version = 'ufc-auction-2026-08-v3' then 30");
+    expect(migration).toContain("lifecycle_state in ('completed', 'cancelled', 'abandoned')");
   });
 });
