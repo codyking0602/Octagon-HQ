@@ -23,9 +23,9 @@ describe("Auction release polish", () => {
     expect(page).toContain("SEALED BID CHALLENGE");
   });
 
-  it("keeps all sixteen formats under one grouped owner and separates opponent selection", () => {
-    expect(auctionModes).toHaveLength(16);
-    expect(auctionModeGroups.flatMap((group) => group.modeIds)).toHaveLength(16);
+  it("keeps all fourteen current formats under one grouped owner and separates opponent selection", () => {
+    expect(auctionModes).toHaveLength(14);
+    expect(auctionModeGroups.flatMap((group) => group.modeIds)).toHaveLength(14);
     expect(page).toContain('setupStep === "formats"');
     expect(page).toContain("auction-catalog__tabs");
     expect(page).toContain("CHOOSE OPPONENT →");
