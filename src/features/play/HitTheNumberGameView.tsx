@@ -5,6 +5,7 @@ import {
   type HitTheNumberPublicSetup,
   type HitTheNumberResult,
 } from "./hitTheNumberEngine";
+import type { HitTheNumberFormatSetup } from "./hitTheNumberFormats";
 import { getPlayFighter, type PlayFighter } from "./playFighterPool";
 
 function setupFighters(setup: HitTheNumberPublicSetup) {
@@ -30,7 +31,9 @@ function resultDetail(result: HitTheNumberResult) {
 
 export function HitTheNumberGameView({
   setup,
+  format,
   selectedIds,
+  selectionValid = true,
   result,
   search,
   onSearchChange,
@@ -42,7 +45,9 @@ export function HitTheNumberGameView({
   busy = false,
 }: {
   setup: HitTheNumberPublicSetup;
+  format?: HitTheNumberFormatSetup;
   selectedIds: readonly string[];
+  selectionValid?: boolean;
   result: HitTheNumberResult | null;
   search: string;
   onSearchChange: (value: string) => void;
@@ -68,7 +73,19 @@ export function HitTheNumberGameView({
       ? `${setup.filter.gender.toUpperCase()} ONLY`
       : "ALL DIVISIONS";
   const poolLabel = setup.boardType === "open-roster" ? "OPEN ROSTER" : "RANDOM POOL";
-  const ready = selectedIds.length === setup.pickCount;
+  const formatLabel = format?.label.toUpperCase() ?? filterLabel;
+  const configurationLabel = format?.configurationLabel?.toUpperCase() ?? null;
+  const slotFormat = Boolean(format?.slots.length);
+  const pickedAll = selectedIds.length === setup.pickCount;
+  const ready = pickedAll && selectionValid;
+  const fullButInvalid = pickedAll && !selectionValid;
+  const rosterInstruction = slotFormat
+    ? "Fill every required role below"
+    : configurationLabel
+      ? `Choose from ${format?.configurationLabel}`
+      : setup.filter.division
+        ? `${setup.filter.division} filter applied`
+        : "Choose any eligible fighter";
 
   return (
     <>
@@ -86,8 +103,17 @@ export function HitTheNumberGameView({
         <div className="hit-number-meta" aria-label="Current challenge rules">
           <span>PICK {setup.pickCount}</span>
           <span>{poolLabel}</span>
-          <span>{filterLabel}</span>
+          <span>{formatLabel}</span>
+          {configurationLabel ? <span>{configurationLabel}</span> : null}
+          {format?.formatId === "classic" ? <span>{filterLabel}</span> : null}
         </div>
+        {format?.slots.length ? (
+          <div className="hit-number-meta" aria-label="Required lineup roles">
+            {format.slots.map((slot, index) => (
+              <span key={slot.id}>{index + 1}. {slot.label.toUpperCase()}</span>
+            ))}
+          </div>
+        ) : null}
       </section>
 
       {!result && controls ? controls : null}
@@ -148,7 +174,11 @@ export function HitTheNumberGameView({
               disabled={!ready || busy}
               onClick={onLock}
             >
-              {ready ? `${selectedIds.length}/${setup.pickCount} SELECTED · LOCK PICKS` : `${selectedIds.length}/${setup.pickCount} SELECTED`}
+              {ready
+                ? `${selectedIds.length}/${setup.pickCount} SELECTED · LOCK PICKS`
+                : fullButInvalid
+                  ? `${selectedIds.length}/${setup.pickCount} SELECTED · FILL REQUIRED ROLES`
+                  : `${selectedIds.length}/${setup.pickCount} SELECTED`}
             </button>
           </div>
         ) : null}
@@ -160,7 +190,7 @@ export function HitTheNumberGameView({
                 <p className="eyebrow">{poolLabel}</p>
                 <h2>{setup.boardType === "open-roster" ? `${fighters.length} eligible fighters` : `${fighters.length}-fighter pool`}</h2>
               </div>
-              <span>{setup.filter.division ? `${setup.filter.division} filter applied` : "Choose any eligible fighter"}</span>
+              <span>{rosterInstruction}</span>
             </div>
             {setup.boardType === "open-roster" ? (
               <label className="hit-number-search">
@@ -180,6 +210,7 @@ export function HitTheNumberGameView({
                   <button
                     type="button"
                     className={`hit-number-fighter-card${selected ? " is-selected" : ""}`}
+                    data-fighter-id={fighter.id}
                     data-divisions={fighter.divisions.join("|")}
                     aria-pressed={selected}
                     disabled={busy}
