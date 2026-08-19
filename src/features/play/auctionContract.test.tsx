@@ -96,9 +96,9 @@ describe("auction public product contract", () => {
   it("locks the shared structure for every other mode", () => {
     for (const mode of auctionModes.filter((candidate) => candidate.id !== "ultimate-fighter")) {
       expect(mode).toMatchObject({
-        rounds: 8,
-        requiredSelectionsPerPlayer: 4,
-        startingBankroll: 40,
+        rounds: 6,
+        requiredSelectionsPerPlayer: 3,
+        startingBankroll: 30,
         usesUltimateFighterPlacement: false,
         categories: [],
       });

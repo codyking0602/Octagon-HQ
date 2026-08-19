@@ -72,9 +72,9 @@ export const auctionModes: readonly PublicAuctionMode[] = modes.map(([id, displa
     id,
     displayName,
     family,
-    rounds: ultimateFighter ? 10 : 8,
-    requiredSelectionsPerPlayer: ultimateFighter ? 5 : 4,
-    startingBankroll: ultimateFighter ? 50 : 40,
+    rounds: ultimateFighter ? 10 : 6,
+    requiredSelectionsPerPlayer: ultimateFighter ? 5 : 3,
+    startingBankroll: ultimateFighter ? 50 : 30,
     usesUltimateFighterPlacement: ultimateFighter,
     categories: ultimateFighter ? ULTIMATE_FIGHTER_CATEGORIES : [],
   };

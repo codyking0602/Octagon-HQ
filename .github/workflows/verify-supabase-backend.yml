@@ -108,6 +108,7 @@ jobs:
             supabase/tests/auction_notifications_share_release.sql \
             supabase/tests/auction_launch_notification.sql \
             supabase/tests/auction_catalog_expansion.sql \
+            supabase/tests/auction_standard_format.sql \
             supabase/tests/pick_monitoring_truthful_decisions.sql
           do
             echo "Executing $test_file"

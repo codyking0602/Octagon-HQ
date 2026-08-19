@@ -19,7 +19,7 @@ describe("Auction server catalog contract", () => {
     for (const modeId of AUCTION_MODE_IDS) {
       const first = sampleAuctionDeck(modeId, catalog, deterministic(values));
       const second = sampleAuctionDeck(modeId, catalog, deterministic(values));
-      const expectedLength = modeId === "ultimate-fighter" ? 10 : 8;
+      const expectedLength = modeId === "ultimate-fighter" ? 10 : 6;
 
       expect(first).toEqual(second);
       expect(first).toHaveLength(expectedLength);
@@ -37,7 +37,7 @@ describe("Auction server catalog contract", () => {
 
     expect(
       sampleAuctionDeck("strikers", largerCatalog, () => 0.42),
-    ).toHaveLength(8);
+    ).toHaveLength(6);
     expect(
       sampleAuctionDeck("ultimate-fighter", largerCatalog, () => 0.42),
     ).toHaveLength(10);
