@@ -13,11 +13,11 @@ import {
   type HitTheNumberResult,
 } from "./hitTheNumberEngine";
 import {
-  createHitTheNumberFormatPlan,
   hitTheNumberFormatSelectionSatisfies,
   hitTheNumberSlotAcceptsFighter,
   type HitTheNumberFormatSetup,
 } from "./hitTheNumberFormats";
+import { createQualityGatedHitTheNumberFormatPlan } from "./hitTheNumberPoolQuality";
 import { HitTheNumberGameView } from "./HitTheNumberGameView";
 import { GameResultActions } from "./GameResultActions";
 import {
@@ -48,7 +48,7 @@ function asJson(value: unknown): ChallengeJson {
 }
 
 function createGeneratedRun(seed: string, boardType: HitTheNumberBoardType): GeneratedHitTheNumberRun {
-  const plan = createHitTheNumberFormatPlan({ seed, boardType });
+  const plan = createQualityGatedHitTheNumberFormatPlan({ seed, boardType });
   if (plan.format.formatId === "classic") {
     return {
       board: createGeneratedHitTheNumberBoard({ seed, boardType }),
