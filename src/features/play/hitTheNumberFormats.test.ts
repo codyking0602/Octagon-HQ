@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { hitTheNumberStatRows } from "./hitTheNumberEngine";
+import { hitTheNumberRandomPoolSize, hitTheNumberStatRows } from "./hitTheNumberEngine";
 import {
   HIT_THE_NUMBER_BUILD_TEAM_CATALOG,
   HIT_THE_NUMBER_FORMAT_GENERATION_PROFILE,
@@ -74,6 +74,8 @@ describe("Hit the Number format foundation", () => {
         expect(plan.format.slots).toHaveLength(5);
       }
       if (boardType === "random-pool") {
+        expect(plan.fighterIds).toHaveLength(hitTheNumberRandomPoolSize(plan.pickCount));
+        expect(plan.fighterIds.length).toBeGreaterThan(plan.pickCount);
         expect(plan.fighterIds.length).toBeLessThanOrEqual(12);
         for (const fighterId of plan.solutionFighterIds) {
           expect(plan.fighterIds).toContain(fighterId);
