@@ -166,6 +166,6 @@ describe("profile challenge authority", () => {
     expect(run?.seed).toBe("historical-seed-that-may-generate-differently-now");
     expect(run?.board.publicSetup.target).toBe(37);
     expect(run?.format.formatId).toBe("classic");
-    expect(run?.identity.challengeId).toContain("match42");
+    expect(run?.identity.challengeId).toContain("MATCH42");
   });
 });
