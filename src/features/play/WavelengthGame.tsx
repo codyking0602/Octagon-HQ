@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import type { ChallengeJson } from "../challenges/challengeModel";
@@ -157,11 +157,15 @@ export default function WavelengthGame({
   const profileSetup = record(profileMatch.challenge?.setup);
   const profileSeed = typeof profileSetup?.seed === "string" ? profileSetup.seed : undefined;
   const profileRound = storedRound(profileSetup?.round);
-  const curatedSeed = profileSeed ?? challengeSeed;
-  const curatedRound = useMemo(
-    () => curatedSeed ? profileRound ?? createChallengeWavelengthRound(curatedSeed) : null,
-    [curatedSeed, profileRound],
+  const sharedRound = useMemo(
+    () => challengeSeed ? createChallengeWavelengthRound(challengeSeed) : null,
+    [challengeSeed],
   );
+  const curatedSeed = profileMatch.challenge ? profileSeed : challengeSeed;
+  const curatedRound = profileMatch.challenge ? profileRound : sharedRound;
+  const profileChallengeIdentity = profileMatch.challenge && profileRound
+    ? curatedLineupIdentity("wavelength", profileMatch.challenge.code, [targetId(profileRound)])
+    : null;
   const [run, setRun] = useState<WavelengthRun>(() => {
     if (curatedSeed && curatedRound) {
       return curatedWavelengthRun(
@@ -179,6 +183,36 @@ export default function WavelengthGame({
   const [complete, setComplete] = useState(false);
   const [challengeStatus, setChallengeStatus] = useState("");
   const clue = round.clues[clueIndex];
+  const profileOpeningId = profileRound?.clues[0]?.id;
+  const runOpeningId = run.initialRound.clues[0]?.id;
+  const syncingProfileChallenge = Boolean(
+    profileChallengeIdentity
+    && profileRound
+    && (
+      run.identity.challengeId !== profileChallengeIdentity.challengeId
+      || run.initialRound.target !== profileRound.target
+      || runOpeningId !== profileOpeningId
+    )
+  );
+
+  useEffect(() => {
+    if (!profileMatch.challenge || !profileSeed || !profileRound || !profileChallengeIdentity) return;
+    if (
+      run.identity.challengeId === profileChallengeIdentity.challengeId
+      && run.initialRound.target === profileRound.target
+      && runOpeningId === profileOpeningId
+    ) return;
+    resetRound(curatedWavelengthRun(profileSeed, profileRound, profileMatch.challenge.code));
+  }, [
+    profileChallengeIdentity?.challengeId,
+    profileMatch.challenge?.code,
+    profileOpeningId,
+    profileRound?.target,
+    profileSeed,
+    run.identity.challengeId,
+    run.initialRound.target,
+    runOpeningId,
+  ]);
 
   function resetRound(nextRun: WavelengthRun) {
     setRun(nextRun);
@@ -257,6 +291,42 @@ export default function WavelengthGame({
       shareUrl: wavelengthChallengeUrl(run.seed),
     });
     setChallengeStatus(status);
+  }
+
+  if (profileMatch.code && !profileMatch.challenge) {
+    return (
+      <div className="wavelength-page page">
+        <section className="surface-card wavelength-clue" aria-live="polite">
+          <div><span>PROFILE CHALLENGE</span></div>
+          <h1>Loading challenge…</h1>
+          <p>Locking the exact round that was sent to you.</p>
+        </section>
+      </div>
+    );
+  }
+
+  if (profileMatch.challenge && (!profileSeed || !profileRound)) {
+    return (
+      <div className="wavelength-page page">
+        <section className="surface-card wavelength-clue" aria-live="polite">
+          <div><span>PROFILE CHALLENGE</span></div>
+          <h1>Challenge unavailable</h1>
+          <p>This matchup does not contain a valid stored Wavelength round.</p>
+        </section>
+      </div>
+    );
+  }
+
+  if (syncingProfileChallenge) {
+    return (
+      <div className="wavelength-page page">
+        <section className="surface-card wavelength-clue" aria-live="polite">
+          <div><span>PROFILE CHALLENGE</span></div>
+          <h1>Loading challenge…</h1>
+          <p>Locking the exact round that was sent to you.</p>
+        </section>
+      </div>
+    );
   }
 
   if (complete) {

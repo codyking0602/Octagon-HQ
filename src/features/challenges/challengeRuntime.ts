@@ -72,6 +72,7 @@ export function useProfileChallengeMatch(gameId: PlayGameId) {
   }, [challenge, isRecipient, markOpened]);
 
   return {
+    code,
     challenge,
     creator,
     isRecipient,
