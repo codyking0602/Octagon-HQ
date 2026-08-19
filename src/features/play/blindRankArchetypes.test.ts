@@ -121,6 +121,41 @@ describe("Blind Rank lineup archetype release proof", () => {
     expect(new Set(heavyweightPool.map((fighter) => fighter.name.toLowerCase())).size).toBe(heavyweightPool.length);
   });
 
+  it("adds Lightweight depth at the Below Average and Bad tiers", () => {
+  const expected = {
+    "efrain-escudero": { career: 48, striking: 52, grappling: 64 },
+    "mac-danzig": { career: 50, striking: 55, grappling: 61 },
+    "daron-cruickshank": { career: 49, striking: 68, grappling: 38 },
+    "ramsey-nijem": { career: 46, striking: 50, grappling: 62 },
+    "danny-castillo": { career: 53, striking: 55, grappling: 64 },
+    "sam-stout": { career: 54, striking: 69, grappling: 35 },
+    "frank-camacho": { career: 30, striking: 60, grappling: 32 },
+    "marcin-held": { career: 30, striking: 38, grappling: 70 },
+    "justin-jaynes": { career: 27, striking: 58, grappling: 38 },
+    "cody-pfister": { career: 24, striking: 40, grappling: 46 },
+    "rafaello-oliveira": { career: 27, striking: 44, grappling: 48 },
+    "thibault-gouti": { career: 26, striking: 54, grappling: 35 },
+  } as const;
+  const lightweightPool = blindRankPool("lightweight");
+  const byId = new Map(lightweightPool.map((fighter) => [fighter.id, fighter]));
+
+  for (const [id, ratings] of Object.entries(expected)) {
+    const fighter = byId.get(id);
+    expect(fighter, id).toBeDefined();
+    expect(fighter?.ratings, id).toEqual(ratings);
+  }
+
+  const tierCounts = lightweightPool.reduce<Record<string, number>>((counts, fighter) => {
+    const tier = blindRankTier(blindRankRating(fighter, "lightweight"));
+    counts[tier] = (counts[tier] ?? 0) + 1;
+    return counts;
+  }, {});
+  expect(tierCounts["below-average"]).toBe(9);
+  expect(tierCounts.bad).toBe(6);
+  expect(new Set(lightweightPool.map((fighter) => fighter.id)).size).toBe(lightweightPool.length);
+  expect(new Set(lightweightPool.map((fighter) => fighter.name.toLowerCase())).size).toBe(lightweightPool.length);
+});
+
   it("adds Women’s career depth at the missing Good and Bad tiers", () => {
   const expected = {
     "tatiana-suarez": { career: 80, striking: 65, grappling: 93 },
