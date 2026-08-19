@@ -2,7 +2,9 @@ import type { ReactElement } from "react";
 import { useLocation } from "react-router-dom";
 import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
 import type { ChallengeJson, PlayChallenge } from "../challenges/challengeModel";
+import { blindRankPacks, resolveBlindRankChallenge } from "./blindRankEngine";
 import { BLIND_RESUME_V3_GAME_VERSION } from "./blindResumeV3";
+import { KEEP_CUT_PACKS, resolveKeepCutChallenge } from "./keepCutEngine";
 import OfficialTodayChallengePage from "./OfficialTodayChallengePage";
 import type { PlayGameId } from "./playRegistry";
 import type { DailyGameType } from "./todaysChallengeAdapters";
@@ -35,10 +37,18 @@ export function storedProfileChallengeSetupIsUsable(challenge: PlayChallenge) {
       const roundSet = record(setup.roundSet);
       return Boolean(roundSet && Array.isArray(roundSet.pairs) && roundSet.pairs.length === 5);
     }
-    case "blind-rank":
-      return typeof setup.packId === "string" && strings(setup.lineupIds).length === 5;
-    case "keep-cut":
-      return typeof setup.packId === "string" && strings(setup.lineupIds).length === 8;
+    case "blind-rank": {
+      const pack = typeof setup.packId === "string"
+        ? blindRankPacks.find((candidate) => candidate.id === setup.packId)
+        : undefined;
+      return Boolean(pack && resolveBlindRankChallenge(pack.id, strings(setup.lineupIds)));
+    }
+    case "keep-cut": {
+      const pack = typeof setup.packId === "string"
+        ? KEEP_CUT_PACKS.find((candidate) => candidate.id === setup.packId)
+        : undefined;
+      return Boolean(pack && resolveKeepCutChallenge(pack.id, strings(setup.lineupIds)));
+    }
     case "hit-the-number":
       return typeof setup.seed === "string"
         && Boolean(record(setup.publicSetup))
