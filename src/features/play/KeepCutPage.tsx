@@ -17,10 +17,12 @@ import {
   type KeepCutPackId,
 } from "./keepCutEngine";
 import {
+  createReplaySeed,
   curatedLineupIdentity,
   recordLineupCompletion,
   rememberLineup,
   replayLabelFor,
+  seededLineupRandom,
   selectReplayLineup,
   type PlayLineupIdentity,
 } from "./lineupModel";
@@ -35,6 +37,14 @@ interface KeepCutRun {
 
 function validPack(value: string | null): value is KeepCutPackId {
   return KEEP_CUT_PACKS.some((pack) => pack.id === value);
+}
+
+function randomKeepCutPack(exclude?: KeepCutPackId): KeepCutPackId {
+  const candidates = exclude && KEEP_CUT_PACKS.length > 1
+    ? KEEP_CUT_PACKS.filter((pack) => pack.id !== exclude)
+    : KEEP_CUT_PACKS;
+  const random = seededLineupRandom("keep-cut", "category", createReplaySeed("keep-cut-category"));
+  return candidates[Math.floor(random() * candidates.length)]!.id;
 }
 
 function record(value: ChallengeJson | undefined): { [key: string]: ChallengeJson } | null {
@@ -131,14 +141,22 @@ export default function KeepCutPage() {
   const profilePack = validPack(profilePackValue) ? profilePackValue : null;
   const profileLineupIds = strings(profileSetup?.lineupIds);
   const profileLineup = profilePack ? resolveKeepCutChallenge(profilePack, profileLineupIds) : null;
-  const requestedPack = searchParams.get("pack");
-  const initialPack = profilePack ?? (validPack(requestedPack) ? requestedPack : "ufc-careers");
+  const requestedPackValue = searchParams.get("pack");
+  const requestedPack = validPack(requestedPackValue) ? requestedPackValue : null;
   const queryLineup = searchParams.get("lineup") ?? "";
-  const resolvedChallenge = useMemo(() => {
-    if (profileLineup) return profileLineup;
+  const queryResolvedChallenge = useMemo(() => {
+    if (!requestedPack) return null;
     const ids = queryLineup.split(",").map((id) => id.trim()).filter(Boolean);
-    return resolveKeepCutChallenge(initialPack, ids);
-  }, [initialPack, profileLineup, queryLineup]);
+    return resolveKeepCutChallenge(requestedPack, ids);
+  }, [queryLineup, requestedPack]);
+  const resolvedChallenge = profileLineup ?? queryResolvedChallenge;
+  const sharedPack = profileLineup && profilePack
+    ? profilePack
+    : queryResolvedChallenge && requestedPack
+      ? requestedPack
+      : null;
+  const casualInitialPack = useMemo(() => randomKeepCutPack(), []);
+  const initialPack = sharedPack ?? casualInitialPack;
   const challengeId = profileMatch.challenge?.code
     ?? `shared:${initialPack}:${resolvedChallenge?.map((fighter) => fighter.id).join("|") ?? "invalid"}`;
   const [run, setRun] = useState<KeepCutRun>(() =>
@@ -163,10 +181,6 @@ export default function KeepCutPage() {
     return scoreKeepCutSelection(lineup.packId, lineup.fighters, keptIds);
   }, [decisions, lineup]);
   const isChallenge = run.identity.type === "curated";
-  const groupedPacks = useMemo(() => ["Careers", "Divisions", "Skills"].map((group) => ({
-    group,
-    rows: KEEP_CUT_PACKS.filter((row) => row.group === group),
-  })), []);
 
   useEffect(() => {
     if (!result) return;
@@ -190,8 +204,8 @@ export default function KeepCutPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  function startNew(packId: KeepCutPackId = lineup.packId) {
-    setRun(casualKeepCutRun(packId));
+  function startNew() {
+    setRun(casualKeepCutRun(randomKeepCutPack(lineup.packId)));
     resetDecisions();
   }
 
@@ -288,30 +302,11 @@ export default function KeepCutPage() {
           <h1>{pack.prompt}</h1>
           <p>{pack.description} Eight fighters arrive one at a time. Every call locks, and you will not see who comes next.</p>
         </div>
-        <div className="keep-cut-intro__controls">
-          <label>
-            <span>CATEGORY</span>
-            <select
-              value={lineup.packId}
-              onChange={(event) => startNew(event.target.value as KeepCutPackId)}
-              disabled={isChallenge}
-            >
-              {groupedPacks.map(({ group, rows }) => (
-                <optgroup label={group} key={group}>
-                  {rows.map((row) => <option value={row.id} key={row.id}>{row.name}</option>)}
-                </optgroup>
-              ))}
-            </select>
-          </label>
-          <button
-            className="keep-cut-new-lineup"
-            type="button"
-            disabled={isChallenge}
-            onClick={() => startNew()}
-          >
-            {isChallenge ? "SHARED LINEUP" : "NEW LINEUP"}
-          </button>
-        </div>
+        {!isChallenge ? (
+          <div className="keep-cut-intro__controls">
+            <button className="keep-cut-new-lineup" type="button" onClick={startNew}>NEW LINEUP</button>
+          </div>
+        ) : null}
       </section>
 
       <section className="keep-cut-game-card">
