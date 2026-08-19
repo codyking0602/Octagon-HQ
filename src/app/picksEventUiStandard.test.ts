@@ -33,11 +33,13 @@ describe("Picks event UI standard", () => {
     expect(picksStyles).toContain(".picks-event-hero .picks-progress {");
   });
 
-  it("keeps every event matchup on one compact line", () => {
+  it("keeps no-poster matchup copy compact and suppresses duplicate poster copy", () => {
     expect(picksStyles).toContain(".picks-event-hero__copy > strong {");
     expect(picksStyles).toContain("white-space: nowrap;");
     expect(picksStyles).toContain("text-overflow: ellipsis;");
-    expect(picksStyles).toContain("font-size: clamp(17px, 4.75vw, 23px);");
+    expect(picksStyles).toContain(
+      ".picks-event-hero.has-poster .picks-event-hero__copy > strong {\n  display: none;\n}",
+    );
   });
 
   it("uses one disclosure header standard for Group Picks and scoring rules", () => {
