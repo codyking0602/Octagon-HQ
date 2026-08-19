@@ -7,11 +7,25 @@ export const HIT_THE_NUMBER_MIN_PICKS = 4;
 export const HIT_THE_NUMBER_MAX_PICKS = 7;
 export const HIT_THE_NUMBER_DEFAULT_RANDOM_POOL_SIZE = 12;
 
+/**
+ * Factual Hit the Number catalog. Keep this limited to metrics that can be
+ * derived completely from the canonical UFC fight ledger. Main-event status,
+ * bonuses, knockdowns, and finish round stay out until a canonical source owns
+ * those facts.
+ */
 export const HIT_THE_NUMBER_STATS = [
+  { id: "ufc-fights", label: "UFC Fights" },
   { id: "ufc-wins", label: "UFC Wins" },
+  { id: "ufc-decision-wins", label: "UFC Decision Wins" },
+  { id: "ufc-finishes", label: "UFC Finishes" },
   { id: "ufc-ko-tko-wins", label: "UFC KO/TKO Wins" },
   { id: "ufc-submission-wins", label: "UFC Submission Wins" },
-  { id: "ufc-finishes", label: "UFC Finishes" },
+  { id: "ufc-title-fights", label: "UFC Title Fights" },
+  { id: "ufc-title-fight-wins", label: "UFC Title-Fight Wins" },
+  { id: "ufc-active-years", label: "UFC Active Years" },
+  { id: "ufc-winning-years", label: "UFC Winning Years" },
+  { id: "ufc-longest-win-streak", label: "UFC Longest Win Streak" },
+  { id: "ufc-unique-opponents-beaten", label: "UFC Unique Opponents Beaten" },
 ] as const;
 
 export type HitTheNumberStatId = typeof HIT_THE_NUMBER_STATS[number]["id"];
@@ -95,16 +109,63 @@ export interface HitTheNumberResult {
 
 const KO_TKO_METHODS = new Set(["ko-tko", "doctor-stoppage"]);
 const FINISH_METHODS = new Set(["ko-tko", "doctor-stoppage", "submission"]);
+const TITLE_FIGHT_TYPES = new Set([
+  "normal",
+  "interim",
+  "vacant-undisputed",
+  "second-division-undisputed",
+  "vacant-second-division",
+]);
+
+type CanonicalHitTheNumberFight =
+  (typeof canonicalRankingInputs.fighters)[number]["facts"]["fights"][number];
+
+function isTitleFight(fight: CanonicalHitTheNumberFight) {
+  return TITLE_FIGHT_TYPES.has(fight.championshipType) && fight.championshipEligible !== false;
+}
+
+function distinctYears(fights: readonly CanonicalHitTheNumberFight[]) {
+  return new Set(fights.map((fight) => fight.date.slice(0, 4))).size;
+}
+
+function longestWinStreak(fights: readonly CanonicalHitTheNumberFight[]) {
+  let current = 0;
+  let longest = 0;
+  [...fights]
+    .sort((left, right) => left.date.localeCompare(right.date) || left.id.localeCompare(right.id))
+    .forEach((fight) => {
+      if (fight.officialResult === "win") {
+        current += 1;
+        longest = Math.max(longest, current);
+      } else {
+        current = 0;
+      }
+    });
+  return longest;
+}
+
+function normalizedOpponent(value: string) {
+  return value.trim().toLowerCase();
+}
 
 function statValuesForFights(
   fights: (typeof canonicalRankingInputs.fighters)[number]["facts"]["fights"],
 ): HitTheNumberStatRow["values"] {
   const wins = fights.filter((fight) => fight.officialResult === "win");
+  const titleFights = fights.filter(isTitleFight);
   return {
+    "ufc-fights": fights.length,
     "ufc-wins": wins.length,
+    "ufc-decision-wins": wins.filter((fight) => fight.methodCategory === "decision").length,
+    "ufc-finishes": wins.filter((fight) => FINISH_METHODS.has(fight.methodCategory)).length,
     "ufc-ko-tko-wins": wins.filter((fight) => KO_TKO_METHODS.has(fight.methodCategory)).length,
     "ufc-submission-wins": wins.filter((fight) => fight.methodCategory === "submission").length,
-    "ufc-finishes": wins.filter((fight) => FINISH_METHODS.has(fight.methodCategory)).length,
+    "ufc-title-fights": titleFights.length,
+    "ufc-title-fight-wins": titleFights.filter((fight) => fight.officialResult === "win").length,
+    "ufc-active-years": distinctYears(fights),
+    "ufc-winning-years": distinctYears(wins),
+    "ufc-longest-win-streak": longestWinStreak(fights),
+    "ufc-unique-opponents-beaten": new Set(wins.map((fight) => normalizedOpponent(fight.opponent))).size,
   };
 }
 

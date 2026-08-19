@@ -20,15 +20,48 @@ import { playFighters } from "./playFighterPool";
 
 const KO_TKO_METHODS = new Set(["ko-tko", "doctor-stoppage"]);
 const FINISH_METHODS = new Set(["ko-tko", "doctor-stoppage", "submission"]);
+const TITLE_FIGHT_TYPES = new Set([
+  "normal",
+  "interim",
+  "vacant-undisputed",
+  "second-division-undisputed",
+  "vacant-second-division",
+]);
+
+function expectedLongestWinStreak(
+  fights: (typeof canonicalRankingInputs.fighters)[number]["facts"]["fights"],
+) {
+  let current = 0;
+  let longest = 0;
+  [...fights]
+    .sort((left, right) => left.date.localeCompare(right.date) || left.id.localeCompare(right.id))
+    .forEach((fight) => {
+      if (fight.officialResult === "win") {
+        current += 1;
+        longest = Math.max(longest, current);
+      } else {
+        current = 0;
+      }
+    });
+  return longest;
+}
 
 function testStatRow(fighterId: string, wins: number): HitTheNumberStatRow {
   return {
     fighterId,
     values: {
+      "ufc-fights": wins,
       "ufc-wins": wins,
+      "ufc-decision-wins": 0,
+      "ufc-finishes": wins,
       "ufc-ko-tko-wins": wins,
       "ufc-submission-wins": 0,
-      "ufc-finishes": wins,
+      "ufc-title-fights": 0,
+      "ufc-title-fight-wins": 0,
+      "ufc-active-years": wins,
+      "ufc-winning-years": wins,
+      "ufc-longest-win-streak": wins,
+      "ufc-unique-opponents-beaten": wins,
     },
   };
 }
@@ -42,31 +75,53 @@ function statValue(
 }
 
 describe("Hit the Number foundation", () => {
-  it("derives ranked UFC facts from the canonical ranking fight ledgers", () => {
+  it("derives the expanded UFC fact catalog from the canonical ranking fight ledgers", () => {
     expect(rankedHitTheNumberStatRows).toHaveLength(canonicalRankingInputs.fighters.length);
     const byId = new Map(rankedHitTheNumberStatRows.map((row) => [row.fighterId, row]));
 
     for (const fighter of canonicalRankingInputs.fighters) {
-      const wins = fighter.facts.fights.filter((fight) => fight.officialResult === "win");
+      const fights = fighter.facts.fights;
+      const wins = fights.filter((fight) => fight.officialResult === "win");
+      const titleFights = fights.filter((fight) => (
+        TITLE_FIGHT_TYPES.has(fight.championshipType) && fight.championshipEligible !== false
+      ));
       expect(byId.get(fighter.presentation.slug)?.values).toEqual({
+        "ufc-fights": fights.length,
         "ufc-wins": wins.length,
+        "ufc-decision-wins": wins.filter((fight) => fight.methodCategory === "decision").length,
+        "ufc-finishes": wins.filter((fight) => FINISH_METHODS.has(fight.methodCategory)).length,
         "ufc-ko-tko-wins": wins.filter((fight) => KO_TKO_METHODS.has(fight.methodCategory)).length,
         "ufc-submission-wins": wins.filter((fight) => fight.methodCategory === "submission").length,
-        "ufc-finishes": wins.filter((fight) => FINISH_METHODS.has(fight.methodCategory)).length,
+        "ufc-title-fights": titleFights.length,
+        "ufc-title-fight-wins": titleFights.filter((fight) => fight.officialResult === "win").length,
+        "ufc-active-years": new Set(fights.map((fight) => fight.date.slice(0, 4))).size,
+        "ufc-winning-years": new Set(wins.map((fight) => fight.date.slice(0, 4))).size,
+        "ufc-longest-win-streak": expectedLongestWinStreak(fights),
+        "ufc-unique-opponents-beaten": new Set(
+          wins.map((fight) => fight.opponent.trim().toLowerCase()),
+        ).size,
       });
     }
   });
 
-  it("defines the initial UFC-only stat catalog including knockout boards", () => {
+  it("defines twelve ledger-backed UFC-only stats", () => {
     expect(HIT_THE_NUMBER_STATS.map((stat) => stat.id)).toEqual([
+      "ufc-fights",
       "ufc-wins",
+      "ufc-decision-wins",
+      "ufc-finishes",
       "ufc-ko-tko-wins",
       "ufc-submission-wins",
-      "ufc-finishes",
+      "ufc-title-fights",
+      "ufc-title-fight-wins",
+      "ufc-active-years",
+      "ufc-winning-years",
+      "ufc-longest-win-streak",
+      "ufc-unique-opponents-beaten",
     ]);
   });
 
-  it("locks deliberate generation weights for stats, filters, and pick counts", () => {
+  it("keeps the new catalog inactive until the gameplay weighting PR", () => {
     expect(HIT_THE_NUMBER_GENERATION_PROFILE.stats).toEqual([
       { value: "ufc-wins", weight: 35 },
       { value: "ufc-finishes", weight: 30 },
@@ -86,6 +141,21 @@ describe("Hit the Number foundation", () => {
     expect(HIT_THE_NUMBER_GENERATION_PROFILE.stats.reduce((sum, row) => sum + row.weight, 0)).toBe(100);
     expect(HIT_THE_NUMBER_GENERATION_PROFILE.filters.reduce((sum, row) => sum + row.weight, 0)).toBe(100);
     expect(HIT_THE_NUMBER_GENERATION_PROFILE.picks.reduce((sum, row) => sum + row.weight, 0)).toBe(100);
+    expect(HIT_THE_NUMBER_STATS).toHaveLength(12);
+  });
+
+  it("can build exact open-roster boards for every ledger-backed stat", () => {
+    for (const stat of HIT_THE_NUMBER_STATS) {
+      const board = createHitTheNumberBoard({
+        seed: `catalog-${stat.id}`,
+        statId: stat.id,
+        boardType: "open-roster",
+        pickCount: 4,
+      });
+      expect(board.publicSetup.statId).toBe(stat.id);
+      expect(board.publicSetup.target).toBeGreaterThan(0);
+      expect(board.privateSetup.solutionFighterIds).toHaveLength(4);
+    }
   });
 
   it("sizes Random Pool boards with meaningful decoys", () => {
@@ -159,7 +229,7 @@ describe("Hit the Number foundation", () => {
       }
     }
 
-    expect(observedStats).toEqual(new Set(HIT_THE_NUMBER_STATS.map((stat) => stat.id)));
+    expect(observedStats).toEqual(new Set(HIT_THE_NUMBER_GENERATION_PROFILE.stats.map((stat) => stat.value)));
     expect(observedPicks).toEqual(new Set([4, 5, 6, 7]));
     expect(observedFilters).toEqual(new Set(["all", "division"]));
   });
