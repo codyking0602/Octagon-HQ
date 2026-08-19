@@ -121,6 +121,33 @@ describe("Blind Rank lineup archetype release proof", () => {
     expect(new Set(heavyweightPool.map((fighter) => fighter.name.toLowerCase())).size).toBe(heavyweightPool.length);
   });
 
+  it("adds Heavyweight depth at the Good tier", () => {
+    const expected = {
+      "frank-mir": { career: 80, striking: 68, grappling: 91 },
+      "andrei-arlovski": { career: 79, striking: 81, grappling: 52 },
+      "alistair-overeem": { career: 78, striking: 89, grappling: 68 },
+      "tim-sylvia": { career: 77, striking: 78, grappling: 50 },
+      "derrick-lewis": { career: 74, striking: 87, grappling: 34 },
+      "shane-carwin": { career: 73, striking: 88, grappling: 74 },
+      "josh-barnett": { career: 72, striking: 64, grappling: 84 },
+      "antonio-rodrigo-nogueira": { career: 71, striking: 62, grappling: 91 },
+    } as const;
+    const heavyweightPool = blindRankPool("heavyweight");
+    const byId = new Map(heavyweightPool.map((fighter) => [fighter.id, fighter]));
+
+    for (const [id, ratings] of Object.entries(expected)) {
+      const fighter = byId.get(id);
+      expect(fighter, id).toBeDefined();
+      expect(fighter?.ratings, id).toEqual(ratings);
+    }
+
+    const goodCount = heavyweightPool.filter(
+      (fighter) => blindRankTier(blindRankRating(fighter, "heavyweight")) === "good",
+    ).length;
+    expect(goodCount).toBe(10);
+    expect(new Set(heavyweightPool.map((fighter) => fighter.id)).size).toBe(heavyweightPool.length);
+    expect(new Set(heavyweightPool.map((fighter) => fighter.name.toLowerCase())).size).toBe(heavyweightPool.length);
+  });
   it("adds Lightweight depth at the Below Average and Bad tiers", () => {
   const expected = {
     "efrain-escudero": { career: 48, striking: 52, grappling: 64 },
