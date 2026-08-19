@@ -12,6 +12,11 @@ import {
   type HitTheNumberBoardType,
   type HitTheNumberResult,
 } from "./hitTheNumberEngine";
+import {
+  createHitTheNumberFormatPlan,
+  hitTheNumberFormatSelectionSatisfies,
+  type HitTheNumberFormatSetup,
+} from "./hitTheNumberFormats";
 import { HitTheNumberGameView } from "./HitTheNumberGameView";
 import { GameResultActions } from "./GameResultActions";
 import {
@@ -25,8 +30,14 @@ import {
 
 interface HitTheNumberRun {
   board: HitTheNumberBoard;
+  format: HitTheNumberFormatSetup;
   identity: PlayLineupIdentity;
   seed: string;
+}
+
+interface GeneratedHitTheNumberRun {
+  board: HitTheNumberBoard;
+  format: HitTheNumberFormatSetup;
 }
 
 const DEFAULT_BOARD_TYPE: HitTheNumberBoardType = "open-roster";
@@ -35,10 +46,42 @@ function asJson(value: unknown): ChallengeJson {
   return JSON.parse(JSON.stringify(value)) as ChallengeJson;
 }
 
-function boardSignature(board: HitTheNumberBoard) {
-  const setup = board.publicSetup;
+function createGeneratedRun(seed: string, boardType: HitTheNumberBoardType): GeneratedHitTheNumberRun {
+  const plan = createHitTheNumberFormatPlan({ seed, boardType });
+  if (plan.format.formatId === "classic") {
+    return {
+      board: createGeneratedHitTheNumberBoard({ seed, boardType }),
+      format: plan.format,
+    };
+  }
+
+  return {
+    board: {
+      publicSetup: {
+        version: HIT_THE_NUMBER_VERSION,
+        statId: plan.statId,
+        boardType: plan.boardType,
+        target: plan.target,
+        pickCount: plan.pickCount,
+        filter: {},
+        fighterIds: [...plan.fighterIds],
+      },
+      privateSetup: {
+        solutionFighterIds: [...plan.solutionFighterIds],
+      },
+    },
+    format: plan.format,
+  };
+}
+
+function boardSignature(run: GeneratedHitTheNumberRun) {
+  const setup = run.board.publicSetup;
   const pool = setup.boardType === "random-pool" ? setup.fighterIds.join(",") : "open";
+  const slots = run.format.slots.map((slot) => slot.id).join(",");
   return [
+    run.format.formatId,
+    run.format.configurationId ?? "default",
+    slots,
     setup.statId,
     setup.boardType,
     setup.filter.gender ?? "all",
@@ -56,18 +99,23 @@ function createCasualRun(boardType: HitTheNumberBoardType): HitTheNumberRun {
     lineupSize: 1,
     attempts: 12,
     build: (seed) => {
-      const board = createGeneratedHitTheNumberBoard({ seed, boardType });
+      const generated = createGeneratedRun(seed, boardType);
       return {
-        value: board,
-        itemIds: [boardSignature(board)],
-        fighterIds: board.publicSetup.boardType === "random-pool"
-          ? board.publicSetup.fighterIds
+        value: generated,
+        itemIds: [boardSignature(generated)],
+        fighterIds: generated.board.publicSetup.boardType === "random-pool"
+          ? generated.board.publicSetup.fighterIds
           : [],
       };
     },
   });
 
-  return { board: selected.value, identity: selected.identity, seed: selected.identity.seed };
+  return {
+    board: selected.value.board,
+    format: selected.value.format,
+    identity: selected.identity,
+    seed: selected.identity.seed,
+  };
 }
 
 function createSharedRun(searchParams: URLSearchParams): HitTheNumberRun | null {
@@ -79,12 +127,17 @@ function createSharedRun(searchParams: URLSearchParams): HitTheNumberRun | null 
   if (!seed || seed.length > 200 || !boardType) return null;
 
   try {
-    const board = createGeneratedHitTheNumberBoard({ seed, boardType });
-    const signature = boardSignature(board);
+    const generated = createGeneratedRun(seed, boardType);
+    const signature = boardSignature(generated);
     const challengeId = `shared-${stableLineupHash(signature).toString(36)}`;
     const identity = curatedLineupIdentity("hit-the-number", challengeId, [signature], boardType);
-    rememberLineup(identity, [signature], board.publicSetup.fighterIds);
-    return { board, identity, seed };
+    rememberLineup(identity, [signature], generated.board.publicSetup.fighterIds);
+    return {
+      board: generated.board,
+      format: generated.format,
+      identity,
+      seed,
+    };
   } catch {
     return null;
   }
@@ -119,6 +172,9 @@ export default function HitTheNumberPage() {
   const selectedSet = new Set(selectedIds);
   const shared = run.identity.type === "curated";
   const stat = HIT_THE_NUMBER_STATS.find((item) => item.id === setup.statId)!;
+  const selectionValid = selectedIds.length === setup.pickCount
+    && hitTheNumberFormatSelectionSatisfies(run.format, selectedIds);
+  const formatName = run.format.configurationLabel ?? run.format.label;
 
   useEffect(() => {
     if (
@@ -173,7 +229,7 @@ export default function HitTheNumberPage() {
   }
 
   function lockPicks() {
-    if (result || selectedIds.length !== setup.pickCount) return;
+    if (result || !selectionValid) return;
     const next = gradeHitTheNumberSelection(setup, selectedIds);
     setResult(next);
     recordLineupCompletion(run.identity, {
@@ -182,6 +238,8 @@ export default function HitTheNumberPage() {
       target: next.target,
       total: next.total,
       distance: next.distance,
+      formatId: run.format.formatId,
+      configurationId: run.format.configurationId,
       selectedFighterIds: [...selectedIds],
     });
   }
@@ -193,15 +251,16 @@ export default function HitTheNumberPage() {
       gameId: "hit-the-number",
       gameVersion: HIT_THE_NUMBER_VERSION,
       gameTitle: "Hit the Number",
-      summary: `${stat.label} · target ${setup.target} · pick ${setup.pickCount}`,
+      summary: `${formatName} · ${stat.label} · target ${setup.target} · pick ${setup.pickCount}`,
       setup: asJson({
         seed: run.seed,
         boardType: setup.boardType,
+        format: run.format,
         publicSetup: setup,
       }),
       creatorResult: asJson(result),
       shareTitle: "Hit the Number Challenge",
-      shareText: `I challenged you to Hit the Number on the same UFC board: target ${setup.target} ${stat.label}, pick ${setup.pickCount}.`,
+      shareText: `I challenged you to the same ${formatName} Hit the Number board: target ${setup.target} ${stat.label}, pick ${setup.pickCount}.`,
       shareUrl: hitTheNumberChallengeUrl(run.seed, setup.boardType),
     });
     setChallengeStatus(status);
@@ -244,17 +303,23 @@ export default function HitTheNumberPage() {
   ) : null;
 
   return (
-    <div className="page hit-number-page" data-challenge-id={run.identity.challengeId}>
+    <div
+      className="page hit-number-page"
+      data-challenge-id={run.identity.challengeId}
+      data-format-id={run.format.formatId}
+    >
       {profileMatch.creator ? (
         <section className="challenge-game-banner">
           <span>PROFILE CHALLENGE</span>
           <strong>{profileMatch.creator.displayName} sent this exact Hit the Number board.</strong>
-          <small>Play the same target and fighter pool. Both scores reveal after you finish.</small>
+          <small>Play the same format, target, and fighter pool. Both scores reveal after you finish.</small>
         </section>
       ) : null}
       <HitTheNumberGameView
         setup={setup}
+        format={run.format}
         selectedIds={selectedIds}
+        selectionValid={selectionValid}
         result={result}
         search={search}
         onSearchChange={setSearch}
