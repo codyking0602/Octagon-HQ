@@ -11,6 +11,30 @@ import {
 } from "./hitTheNumberFormats";
 import { getPlayFighter, type PlayFighter } from "./playFighterPool";
 
+const HIT_THE_NUMBER_DIVISION_ABBREVIATIONS: Readonly<Record<string, string>> = {
+  Strawweight: "SW",
+  Flyweight: "FLW",
+  Bantamweight: "BW",
+  Featherweight: "FW",
+  Lightweight: "LW",
+  Welterweight: "WW",
+  Middleweight: "MW",
+  "Light Heavyweight": "LHW",
+  Heavyweight: "HW",
+  Openweight: "OW",
+  "Women's Strawweight": "WSW",
+  "Women's Flyweight": "WFLW",
+  "Women's Bantamweight": "WBW",
+  "Women's Featherweight": "WFW",
+};
+
+export function compactHitTheNumberDivisions(divisions: readonly string[]) {
+  return divisions.map((division) => (
+    HIT_THE_NUMBER_DIVISION_ABBREVIATIONS[division]
+      ?? division.split(/\s+/).filter(Boolean).map((word) => word[0]?.toUpperCase() ?? "").join("")
+  )).join(" · ");
+}
+
 function setupFighters(setup: HitTheNumberPublicSetup) {
   const fighters = setup.fighterIds
     .map((fighterId) => getPlayFighter(fighterId))
@@ -288,7 +312,9 @@ export function HitTheNumberGameView({
                     <FighterPhoto name={fighter.name} src={fighter.thumbUrl} className="hit-number-fighter-card__photo" />
                     <span>
                       <strong>{fighter.name}</strong>
-                      <small>{usedElsewhere ? "Already assigned" : fighter.divisions.join(" · ")}</small>
+                      <small title={fighter.divisions.join(" · ")}>
+                        {usedElsewhere ? "Already assigned" : compactHitTheNumberDivisions(fighter.divisions)}
+                      </small>
                     </span>
                     <b>{selected ? "✓" : usedElsewhere ? "•" : "+"}</b>
                   </button>
