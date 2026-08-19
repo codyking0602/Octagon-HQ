@@ -8,7 +8,7 @@ import {
   stableLineupHash,
 } from "./lineupModel";
 
-const VERSION = "find-leader-v4-20260819-competitive-lineups";
+const VERSION = "find-leader-v5-20260819-plausible-decoys";
 const DAILY_ANCHOR = "2026-07-16";
 const NO_REPEAT_SELECTIONS = 14;
 const FINISH_METHODS = new Set(["ko-tko", "submission", "doctor-stoppage"]);
@@ -500,17 +500,45 @@ function selectCompetitiveLeader(pool: readonly ScoredFindLeaderRow[], random: (
   if (!options.length) return null;
   const bestScore = options[0].competitionScore;
   const competitiveWindow = options
-    .filter((option) => option.competitionScore <= bestScore + 0.08)
-    .slice(0, 6);
+    .filter((option) => option.competitionScore <= bestScore + 0.12)
+    .slice(0, 10);
   return competitiveWindow[Math.floor(random() * competitiveWindow.length)] ?? options[0];
 }
 
-function selectClosestChallengers(lower: readonly ScoredFindLeaderRow[], random: () => number) {
+function selectClosestRows(rows: readonly ScoredFindLeaderRow[], count: number, random: () => number) {
+  if (rows.length < count) return [];
+  const cutoffValue = rows[count - 1].value;
+  const closer = rows.filter((row) => row.value > cutoffValue);
+  const cutoffTier = shuffleLineup(rows.filter((row) => row.value === cutoffValue), random);
+  return [...closer, ...cutoffTier.slice(0, count - closer.length)];
+}
+
+function selectPlausibleChallengers(lower: readonly ScoredFindLeaderRow[], random: () => number) {
   if (lower.length < 9) return [];
-  const cutoffValue = lower[8].value;
-  const closer = lower.filter((row) => row.value > cutoffValue);
-  const cutoffTier = shuffleLineup(lower.filter((row) => row.value === cutoffValue), random);
-  return [...closer, ...cutoffTier.slice(0, 9 - closer.length)];
+
+  const core = selectClosestRows(lower, 4, random);
+  const used = new Set(core.map((row) => row.input.fighter));
+
+  const supportPool = lower
+    .slice(4, Math.min(12, lower.length))
+    .filter((row) => !used.has(row.input.fighter));
+  const support = shuffleLineup(supportPool, random).slice(0, 3);
+  support.forEach((row) => used.add(row.input.fighter));
+
+  const wildcardPool = lower
+    .slice(9, Math.min(20, lower.length))
+    .filter((row) => !used.has(row.input.fighter));
+  const wildcards = shuffleLineup(wildcardPool, random).slice(0, 2);
+  wildcards.forEach((row) => used.add(row.input.fighter));
+
+  const selected = [...core, ...support, ...wildcards];
+  if (selected.length < 9) {
+    selected.push(...shuffleLineup(
+      lower.filter((row) => !used.has(row.input.fighter)),
+      random,
+    ).slice(0, 9 - selected.length));
+  }
+  return selected.slice(0, 9);
 }
 
 function candidateFor(input: RankingInputFighter, value: number): FindLeaderCandidate {
@@ -534,7 +562,7 @@ export function buildFindLeaderBoard(
   if (pool.length < 10) return null;
   const option = selectCompetitiveLeader(pool, random);
   if (!option) return null;
-  const challengers = selectClosestChallengers(option.lower, random);
+  const challengers = selectPlausibleChallengers(option.lower, random);
   if (challengers.length !== 9) return null;
   const selected = [option.leader, ...challengers];
   const candidates = shuffleLineup(selected.map((row) => candidateFor(row.input, row.value)), random);
@@ -566,6 +594,8 @@ export function findLeaderCompetitionAudit() {
         leaderIsGlobalMax: false,
         boardSpread: null,
         closestPossibleSpread: null,
+        nearContenderCount: 0,
+        outsideClosestNineCount: 0,
       };
     }
     const leader = pool.find((row) => row.input.presentation.slug === board.leaderId);
@@ -573,6 +603,13 @@ export function findLeaderCompetitionAudit() {
     const closestPossibleSpread = leader && lower.length >= 9
       ? leader.value - lower[8].value
       : null;
+    const closestNineIds = new Set(lower.slice(0, 9).map((row) => row.input.presentation.slug));
+    const nearCutoffValue = lower[3]?.value ?? null;
+    const challengers = board.candidates.filter((candidate) => candidate.id !== board.leaderId);
+    const nearContenderCount = nearCutoffValue === null
+      ? 0
+      : challengers.filter((candidate) => candidate.value >= nearCutoffValue).length;
+    const outsideClosestNineCount = challengers.filter((candidate) => !closestNineIds.has(candidate.id)).length;
     const boardMinimum = Math.min(...board.candidates.map((candidate) => candidate.value));
     return {
       definitionId: definition.id,
@@ -581,6 +618,8 @@ export function findLeaderCompetitionAudit() {
       leaderIsGlobalMax: board.leaderValue === (pool[0]?.value ?? board.leaderValue),
       boardSpread: board.leaderValue - boardMinimum,
       closestPossibleSpread,
+      nearContenderCount,
+      outsideClosestNineCount,
     };
   });
 }
