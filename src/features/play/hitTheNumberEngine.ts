@@ -173,6 +173,11 @@ function validatePickCount(value: number) {
   return value;
 }
 
+export function hitTheNumberRandomPoolSize(pickCount: number) {
+  validatePickCount(pickCount);
+  return Math.min(HIT_THE_NUMBER_DEFAULT_RANDOM_POOL_SIZE, pickCount * 2);
+}
+
 function weightedValue<T>(
   rows: readonly { value: T; weight: number }[],
   random: () => number,
@@ -201,12 +206,16 @@ function positiveFighterCount(
 function availableDivisionFilters(
   statId: HitTheNumberStatId,
   statRows: readonly HitTheNumberStatRow[],
+  boardType: HitTheNumberBoardType,
 ) {
   const divisions = new Set(playFighters.flatMap((fighter) => fighter.divisions));
   return [...divisions]
-    .filter((division) => (
-      positiveFighterCount(statId, { division }, statRows) >= HIT_THE_NUMBER_MIN_PICKS
-    ))
+    .filter((division) => {
+      const filter = { division };
+      const eligible = hitTheNumberEligibleFighters(statId, filter, statRows);
+      return positiveFighterCount(statId, filter, statRows) >= HIT_THE_NUMBER_MIN_PICKS
+        && (boardType === "open-roster" || eligible.length >= hitTheNumberRandomPoolSize(HIT_THE_NUMBER_MIN_PICKS));
+    })
     .sort((left, right) => left.localeCompare(right));
 }
 
@@ -345,16 +354,21 @@ export function createHitTheNumberBoard(options: CreateHitTheNumberBoardOptions)
   if (options.boardType === "open-roster") {
     fighterIds = eligible.map((fighter) => fighter.id);
   } else {
-    const requestedPoolSize = options.randomPoolSize ?? HIT_THE_NUMBER_DEFAULT_RANDOM_POOL_SIZE;
-    if (!Number.isInteger(requestedPoolSize) || requestedPoolSize < pickCount) {
-      throw new Error("Random Hit the Number pool must be at least as large as the pick count.");
+    const requestedPoolSize = options.randomPoolSize ?? hitTheNumberRandomPoolSize(pickCount);
+    if (!Number.isInteger(requestedPoolSize) || requestedPoolSize <= pickCount) {
+      throw new Error("Random Hit the Number pool must include at least one decoy.");
     }
-    const poolSize = Math.min(requestedPoolSize, eligible.length);
+    if (requestedPoolSize > HIT_THE_NUMBER_DEFAULT_RANDOM_POOL_SIZE) {
+      throw new Error(`Random Hit the Number pool cannot exceed ${HIT_THE_NUMBER_DEFAULT_RANDOM_POOL_SIZE} fighters.`);
+    }
+    if (eligible.length < requestedPoolSize) {
+      throw new Error(`Random Hit the Number pool needs ${requestedPoolSize} eligible fighters to preserve decoys.`);
+    }
     const solutionSet = new Set(solutionFighterIds);
     const extras = shuffleLineup(
       eligible.filter((fighter) => !solutionSet.has(fighter.id)),
       random,
-    ).slice(0, poolSize - solutionFighterIds.length);
+    ).slice(0, requestedPoolSize - solutionFighterIds.length);
     fighterIds = shuffleLineup(
       [...solutionFighterIds, ...extras.map((fighter) => fighter.id)],
       random,
@@ -387,7 +401,7 @@ export function createGeneratedHitTheNumberBoard(
     options.boardType,
   );
   const statId = weightedValue(HIT_THE_NUMBER_GENERATION_PROFILE.stats, random);
-  const divisions = availableDivisionFilters(statId, statRows);
+  const divisions = availableDivisionFilters(statId, statRows, options.boardType);
   const filterKind = weightedValue(
     divisions.length > 0
       ? HIT_THE_NUMBER_GENERATION_PROFILE.filters
@@ -397,15 +411,18 @@ export function createGeneratedHitTheNumberBoard(
   const filter: HitTheNumberEligibilityFilter = filterKind === "division"
     ? { division: divisions[Math.floor(random() * divisions.length)]! }
     : {};
-  const maximumPicks = Math.min(
-    HIT_THE_NUMBER_MAX_PICKS,
-    positiveFighterCount(statId, filter, statRows),
-  );
+  const eligible = hitTheNumberEligibleFighters(statId, filter, statRows);
+  const positiveCount = positiveFighterCount(statId, filter, statRows);
+  const maximumPicks = Math.min(HIT_THE_NUMBER_MAX_PICKS, positiveCount);
   const pickOptions = HIT_THE_NUMBER_GENERATION_PROFILE.picks.filter(
-    (row) => row.value <= maximumPicks,
+    (row) => row.value <= maximumPicks
+      && (
+        options.boardType === "open-roster"
+        || eligible.length >= hitTheNumberRandomPoolSize(row.value)
+      ),
   );
   if (!pickOptions.length) {
-    throw new Error("Hit the Number generated challenge does not have enough positive fighters.");
+    throw new Error("Hit the Number generated challenge does not have enough fighter depth.");
   }
   const pickCount = weightedValue(pickOptions, random);
 
