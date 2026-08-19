@@ -36,9 +36,9 @@ jobs:
           e("ramsey-nijem", "Ramsey Nijem", "men", ["Lightweight"], "Fox / PPV Boom", "TUF finalist with a middling UFC lightweight run", { career: 46, striking: 50, grappling: 62 }),
           e("danny-castillo", "Danny Castillo", "men", ["Lightweight"], "Fox / PPV Boom", "UFC lightweight veteran with solid wins but a losing UFC record", { career: 53, striking: 55, grappling: 64 }),
           e("sam-stout", "Sam Stout", "men", ["Lightweight"], "TUF Boom", "Long UFC lightweight veteran with notable striking battles and a sub-.500 UFC record", { career: 54, striking: 69, grappling: 35 }),
-          e("will-brooks", "Will Brooks", "men", ["Lightweight"], "ESPN+ Era", "One-win UFC lightweight run followed by three straight UFC losses", { career: 29, striking: 45, grappling: 55 }),
+          e("frank-camacho", "Frank Camacho", "men", ["Lightweight", "Welterweight"], "ESPN+ Era", "Two-win UFC run with six UFC losses and repeated stoppage defeats", { career: 30, striking: 60, grappling: 32 }),
           e("marcin-held", "Marcin Held", "men", ["Lightweight"], "ESPN+ Era", "One-win UFC lightweight run with limited UFC success despite a dangerous submission game", { career: 30, striking: 38, grappling: 70 }),
-          e("gabe-ruediger", "Gabe Ruediger", "men", ["Lightweight"], "TUF Boom", "Winless UFC lightweight run across multiple UFC appearances", { career: 14, striking: 35, grappling: 40 }),
+          e("justin-jaynes", "Justin Jaynes", "men", ["Lightweight", "Featherweight"], "ESPN+ Era", "One-win UFC run followed by four straight UFC losses", { career: 27, striking: 58, grappling: 38 }),
           e("cody-pfister", "Cody Pfister", "men", ["Lightweight"], "ESPN+ Era", "One-win UFC lightweight run with three UFC losses", { career: 24, striking: 40, grappling: 46 }),
           e("rafaello-oliveira", "Rafaello Oliveira", "men", ["Lightweight"], "TUF Boom", "Two-win UFC lightweight run with six UFC losses", { career: 27, striking: 44, grappling: 48 }),
           e("thibault-gouti", "Thibault Gouti", "men", ["Lightweight"], "ESPN+ Era", "One-win UFC lightweight run with five UFC losses", { career: 26, striking: 54, grappling: 35 }),
@@ -47,7 +47,7 @@ jobs:
           assert marker in ratings
           slugs = [
               'efrain-escudero','mac-danzig','daron-cruickshank','ramsey-nijem','danny-castillo','sam-stout',
-              'will-brooks','marcin-held','gabe-ruediger','cody-pfister','rafaello-oliveira','thibault-gouti',
+              'frank-camacho','marcin-held','justin-jaynes','cody-pfister','rafaello-oliveira','thibault-gouti',
           ]
           for slug in slugs:
               assert f'e("{slug}"' not in ratings, f'duplicate Play-only fighter: {slug}'
@@ -64,9 +64,9 @@ jobs:
               "ramsey-nijem": { career: 46, striking: 50, grappling: 62 },
               "danny-castillo": { career: 53, striking: 55, grappling: 64 },
               "sam-stout": { career: 54, striking: 69, grappling: 35 },
-              "will-brooks": { career: 29, striking: 45, grappling: 55 },
+              "frank-camacho": { career: 30, striking: 60, grappling: 32 },
               "marcin-held": { career: 30, striking: 38, grappling: 70 },
-              "gabe-ruediger": { career: 14, striking: 35, grappling: 40 },
+              "justin-jaynes": { career: 27, striking: 58, grappling: 38 },
               "cody-pfister": { career: 24, striking: 40, grappling: 46 },
               "rafaello-oliveira": { career: 27, striking: 44, grappling: 48 },
               "thibault-gouti": { career: 26, striking: 54, grappling: 35 },
@@ -113,9 +113,9 @@ jobs:
               'ramsey-nijem': '2560086',
               'danny-castillo': '2486967',
               'sam-stout': '2354128',
-              'will-brooks': '3017946',
+              'frank-camacho': '3115841',
               'marcin-held': '2554001',
-              'gabe-ruediger': '2354539',
+              'justin-jaynes': '3112009',
               'cody-pfister': '2517112',
               'rafaello-oliveira': '2504626',
               'thibault-gouti': '3965445',
