@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 import { ChallengeProvider } from "../challenges/ChallengeProvider";
-import type { ChallengeProfile, PlayChallenge } from "../challenges/challengeModel";
+import type { ChallengeJson, ChallengeProfile, PlayChallenge } from "../challenges/challengeModel";
 import type { ChallengeRepository, ChallengeSnapshot } from "../challenges/challengeRepository";
 import { IdentityProvider } from "../identity/IdentityProvider";
 import type { IdentityGateway } from "../identity/identityGateway";
@@ -33,6 +33,10 @@ function shaneIdentityGateway(): IdentityGateway {
   };
 }
 
+function asJson(value: unknown): ChallengeJson {
+  return JSON.parse(JSON.stringify(value)) as ChallengeJson;
+}
+
 function storedChallenge(): PlayChallenge {
   const opening = wavelengthClues[0];
   if (!opening) throw new Error("Wavelength catalog is empty.");
@@ -45,14 +49,14 @@ function storedChallenge(): PlayChallenge {
     creatorId: cody.id,
     recipientId: shane.id,
     playUrl: "https://example.test/play/wavelength?challenge=regression-63",
-    setup: {
+    setup: asJson({
       seed: "regression-63",
       target: 28,
       round: {
         target: 28,
         clues: [opening],
       },
-    },
+    }),
     creatorResult: {
       score: 98,
       guesses: [22, 25, 15, 29],
@@ -73,14 +77,15 @@ describe("Wavelength profile challenge authority", () => {
   it("waits for and plays the stored target instead of regenerating the URL seed", async () => {
     const challenge = storedChallenge();
     const snapshot: ChallengeSnapshot = { challenges: [challenge], profiles: [cody] };
-    let resolveInitialLoad: ((value: ChallengeSnapshot) => void) | null = null;
+    let resolveInitialLoad!: (value: ChallengeSnapshot) => void;
+    const initialLoad = new Promise<ChallengeSnapshot>((resolve) => {
+      resolveInitialLoad = resolve;
+    });
     let firstLoad = true;
     const load = vi.fn(() => {
       if (!firstLoad) return Promise.resolve(snapshot);
       firstLoad = false;
-      return new Promise<ChallengeSnapshot>((resolve) => {
-        resolveInitialLoad = resolve;
-      });
+      return initialLoad;
     });
     const submitResult = vi.fn(async () => undefined);
     const repository: ChallengeRepository = {
@@ -108,7 +113,7 @@ describe("Wavelength profile challenge authority", () => {
     expect(screen.queryByRole("button", { name: "LOCK GUESS & REVEAL NEXT CLUE" })).toBeNull();
 
     await waitFor(() => expect(load).toHaveBeenCalledTimes(1));
-    resolveInitialLoad?.(snapshot);
+    resolveInitialLoad(snapshot);
 
     expect(await screen.findByText("PROFILE CHALLENGE")).toBeInTheDocument();
     expect(await screen.findByText(wavelengthClues[0]!.text)).toBeInTheDocument();
