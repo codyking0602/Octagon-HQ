@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - codex/womens-blind-rank-depth
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write
