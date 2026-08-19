@@ -35,8 +35,7 @@ function seeded(values: number[]) {
 
 describe("canonical Wavelength catalog", () => {
   it("meets approved size, uniqueness, rating, copy, and category-quality gates", () => {
-    expect(approvedWavelengthCatalog.length).toBeGreaterThanOrEqual(250);
-    expect(approvedWavelengthCatalog).toHaveLength(300);
+    expect(approvedWavelengthCatalog).toHaveLength(500);
     expect(new Set(approvedWavelengthCatalog.map((item) => item.id)).size).toBe(approvedWavelengthCatalog.length);
     expect(new Set(approvedWavelengthCatalog.map((item) => item.text.toLowerCase())).size).toBe(approvedWavelengthCatalog.length);
 
@@ -51,11 +50,39 @@ describe("canonical Wavelength catalog", () => {
     }
 
     expect(categories.size).toBe(WAVELENGTH_CATEGORY_ANCHORS.length);
-    expect(Math.max(...categories.values())).toBeLessThanOrEqual(25);
+    expect(categories.size).toBe(16);
+    expect(Math.max(...categories.values())).toBeLessThanOrEqual(45);
     expect(Math.min(...categories.values())).toBeGreaterThanOrEqual(25);
   });
 
-  it("covers low, middle, high, and elite score bands without admitting quarantined clues", () => {
+  it("broadens UFC subject matter beyond fighter-centric anchors", () => {
+    const copy = approvedWavelengthCatalog.map((item) => item.text).join("\n");
+    for (const subject of [
+      "Ariel Helwani",
+      "Brendan Schaub",
+      "Theo Von",
+      "Donald Trump",
+      "White House",
+      "Kimbo Slice",
+      "The Ultimate Fighter Season 33",
+      "The Ultimate Fighter Season 34",
+      "Big John McCarthy",
+      "Keith Peterson",
+    ]) {
+      expect(copy).toContain(subject);
+    }
+
+    for (const category of ["MMA MEDIA", "TUF & REALITY", "COACHES & CAMPS", "CROSSOVER & CELEBRITY"] as const) {
+      expect(approvedWavelengthCatalog.filter((item) => item.category === category)).toHaveLength(25);
+    }
+  });
+
+  it("reduces the top-heavy score clustering while preserving the full scale", () => {
+    const eightyPlus = approvedWavelengthCatalog.filter((item) => item.rating >= 80).length;
+    const belowSeventy = approvedWavelengthCatalog.filter((item) => item.rating < 70).length;
+
+    expect(eightyPlus / approvedWavelengthCatalog.length).toBeLessThan(0.5);
+    expect(belowSeventy / approvedWavelengthCatalog.length).toBeGreaterThan(0.35);
     expect(approvedWavelengthCatalog.some((item) => item.rating <= 10)).toBe(true);
     expect(approvedWavelengthCatalog.some((item) => item.rating >= 40 && item.rating <= 60)).toBe(true);
     expect(approvedWavelengthCatalog.some((item) => item.rating >= 75 && item.rating <= 89)).toBe(true);
@@ -65,10 +92,11 @@ describe("canonical Wavelength catalog", () => {
   });
 
   it("documents explicit calibration and historical version identifiers", () => {
-    expect(WAVELENGTH_CATALOG_VERSION).toBe("wavelength-catalog-v1");
+    expect(WAVELENGTH_CATALOG_VERSION).toBe("wavelength-catalog-v2");
     expect(WAVELENGTH_CALIBRATION_VERSION).toBe("wavelength-calibration-v1");
     expect(WAVELENGTH_GENERATOR_VERSION).toBe("wavelength-generator-v2");
     expect(WAVELENGTH_REVEAL_CONTRACT_VERSION).toBe("wavelength-reveal-privacy-v1");
+    expect(WAVELENGTH_HISTORICAL_VERSION_IDS).toContain("wavelength-catalog-v1");
     expect(WAVELENGTH_HISTORICAL_VERSION_IDS).toContain(WAVELENGTH_CATALOG_VERSION);
     expect(WAVELENGTH_RATING_BANDS.map((band) => band.label)).toEqual([
       "bottom-tier", "poor", "below average", "average", "strong", "elite", "exceptional",
