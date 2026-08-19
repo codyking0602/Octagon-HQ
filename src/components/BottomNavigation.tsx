@@ -87,7 +87,7 @@ export function BottomNavigation() {
 
       setKeyboardOpen(nextKeyboardOpen);
       setViewportBottomCorrection(
-        nextKeyboardOpen ? 0 : Math.max(0, Math.round(visualBottom - window.innerHeight)),
+        nextKeyboardOpen ? 0 : Math.round(Math.abs(visualBottom - window.innerHeight)),
       );
     };
     const syncAfterFocus = () => window.setTimeout(syncViewportState, 0);
