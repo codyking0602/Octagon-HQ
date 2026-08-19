@@ -40,7 +40,7 @@ describe("casual Blind Rank score", () => {
     expect(() => scoreBlindRankOrderedRatings([80, 70, 60, 50])).toThrow(RangeError);
   });
 
-  it("shows the 0–100 score and Octagon HQ order after the fifth casual placement", () => {
+  it("shows the 0–100 score after the fifth casual placement without changing the five-row result", () => {
     const packId = "ufc-careers" as const;
     const lineup = [...createBlindRankLineup(packId, "casual-score-proof").fighters]
       .sort((left, right) => blindRankRating(right, packId) - blindRankRating(left, packId));
@@ -57,8 +57,6 @@ describe("casual Blind Rank score", () => {
     expect(score?.textContent).toContain("100/100");
     expect(score?.textContent).toContain("FIVE PLACEMENTS GRADED AGAINST OCTAGON HQ");
     expect(container.textContent).toContain("YOUR FINAL RANKING");
-    expect(container.textContent).toContain("OCTAGON HQ ORDER");
-    expect(container.querySelectorAll('[aria-label="Your final ranking"] article')).toHaveLength(5);
-    expect(container.querySelectorAll('[aria-label="Octagon HQ order"] article')).toHaveLength(5);
+    expect(container.querySelectorAll(".blind-rank-results article")).toHaveLength(5);
   });
 });
