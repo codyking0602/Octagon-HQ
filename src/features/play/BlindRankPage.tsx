@@ -21,8 +21,10 @@ import {
   selectReplayLineup,
   type PlayLineupIdentity,
 } from "./lineupModel";
+import { scoreBlindRankOrderedRatings } from "./officialScoreContract";
 import {
   blindRankPool,
+  blindRankRating,
   type BlindRankPackId,
   type PlayFighter,
 } from "./playFighterPool";
@@ -130,6 +132,20 @@ export default function BlindRankPage() {
   const complete = currentIndex >= 5;
   const current = run.lineup[currentIndex];
   const shared = run.identity.type === "curated";
+  const completedScore = complete
+    ? scoreBlindRankOrderedRatings(
+      placements.flatMap((fighter) => fighter ? [blindRankRating(fighter, run.packId)] : []),
+    )
+    : null;
+  const canonicalOrder = complete
+    ? run.lineup
+      .map((fighter, boardIndex) => ({
+        fighter,
+        boardIndex,
+        rating: blindRankRating(fighter, run.packId),
+      }))
+      .sort((left, right) => right.rating - left.rating || left.boardIndex - right.boardIndex)
+    : [];
 
   useEffect(() => {
     if (!complete) return;
@@ -240,8 +256,16 @@ export default function BlindRankPage() {
 
         {complete ? (
           <div className="blind-rank-finish">
+            {completedScore ? (
+              <section className="keep-cut-result-hero" aria-label="Blind Rank score">
+                <p className="eyebrow">FIVE SLOTS LOCKED</p>
+                <h1>{completedScore.normalizedScore}/100</h1>
+                <p>FIVE PLACEMENTS GRADED AGAINST OCTAGON HQ</p>
+                <small>Your five locked placements are graded by their relative order to produce the 100-point score.</small>
+              </section>
+            ) : null}
             <p className="eyebrow">YOUR FINAL RANKING</p>
-            <div className="blind-rank-results">
+            <div className="blind-rank-results" aria-label="Your final ranking">
               {placements.map((fighter, index) => fighter ? (
                 <article key={fighter.id}>
                   <b>#{index + 1}</b>
@@ -249,6 +273,16 @@ export default function BlindRankPage() {
                   <span><strong>{fighter.name}</strong><small>{compactDivision(fighter)}</small></span>
                 </article>
               ) : null)}
+            </div>
+            <p className="eyebrow">OCTAGON HQ ORDER</p>
+            <div className="blind-rank-results" aria-label="Octagon HQ order">
+              {canonicalOrder.map(({ fighter, rating }, index) => (
+                <article key={fighter.id}>
+                  <b>#{index + 1}</b>
+                  <FighterPhoto className="blind-rank-result__photo" name={fighter.name} src={fighter.thumbUrl} />
+                  <span><strong>{fighter.name}</strong><small>{compactDivision(fighter)} · {rating}</small></span>
+                </article>
+              ))}
             </div>
             <GameResultActions
               onChallenge={() => void challengeSomeone()}
