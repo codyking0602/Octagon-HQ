@@ -82,7 +82,9 @@ export function HitTheNumberGameView({
   const rosterInstruction = slotFormat
     ? "Fill every required role below"
     : configurationLabel
-      ? `Choose from ${format?.configurationLabel}`
+      ? setup.boardType === "random-pool"
+        ? `Pick ${setup.pickCount} from this pool`
+        : `Pick ${setup.pickCount} from this theme`
       : setup.filter.division
         ? `${setup.filter.division} filter applied`
         : "Choose any eligible fighter";
