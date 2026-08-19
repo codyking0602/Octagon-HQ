@@ -22,6 +22,7 @@ import { playGameDefinition, playGames } from "./playRegistry";
 afterEach(cleanup);
 
 const canonicalChildRoutes = appRoutes.flatMap((route) => route.children ?? []);
+const retiredPerformanceModes = ["championship-performances", "dominant-performances"] as const;
 
 describe("auction public product contract", () => {
   it("registers exactly one playable game with one canonical route owner", () => {
@@ -38,20 +39,26 @@ describe("auction public product contract", () => {
     expect(PLAY_ROUTE_BY_GAME.auction).toBe("/play/auction");
   });
 
-  it("publishes exactly sixteen unique, parseable mode IDs", () => {
-    expect(auctionModes).toHaveLength(16);
-    expect(auctionModes.map((mode) => mode.id)).toEqual(AUCTION_MODE_IDS);
-    expect(new Set(auctionModes.map((mode) => mode.id)).size).toBe(16);
+  it("offers fourteen current modes while retaining all historical mode IDs", () => {
+    expect(AUCTION_MODE_IDS).toHaveLength(16);
+    expect(auctionModes).toHaveLength(14);
+    expect(new Set(auctionModes.map((mode) => mode.id)).size).toBe(14);
     for (const mode of auctionModes) {
       expect(isAuctionModeId(mode.id)).toBe(true);
       expect(parseAuctionModeId(mode.id)).toBe(mode.id);
       expect(mode.displayName.trim()).not.toBe("");
       expect(mode.family).toMatch(/-auction$/);
     }
+    for (const retiredMode of retiredPerformanceModes) {
+      expect(auctionModes.some((mode) => mode.id === retiredMode)).toBe(false);
+      expect(isAuctionModeId(retiredMode)).toBe(true);
+      expect(parseAuctionModeId(retiredMode)).toBe(retiredMode);
+      expect(auctionModeDefinition(retiredMode).displayName).toMatch(/Performances$/);
+    }
     expect(parseAuctionModeId("future-mode")).toBeNull();
   });
 
-  it("groups every approved mode once without forcing a sixteen-row setup list", () => {
+  it("groups every current mode once and keeps the consolidated performance choices focused", () => {
     const groupedIds = auctionModeGroups.flatMap((group) => group.modeIds);
     expect(auctionModeGroups.map((group) => group.id)).toEqual([
       "fighters",
@@ -59,13 +66,28 @@ describe("auction public product contract", () => {
       "performances",
       "history",
     ]);
-    expect(groupedIds).toHaveLength(16);
-    expect(new Set(groupedIds).size).toBe(16);
-    expect([...groupedIds].sort()).toEqual([...AUCTION_MODE_IDS].sort());
+    expect(groupedIds).toHaveLength(14);
+    expect(new Set(groupedIds).size).toBe(14);
+    expect([...groupedIds].sort()).toEqual([...auctionModes.map((mode) => mode.id)].sort());
+    expect(auctionModesForGroup("performances").map((mode) => mode.id)).toEqual([
+      "fighter-performances",
+      "finishes",
+    ]);
     expect(auctionModesForGroup("all")).toEqual(auctionModes);
     for (const group of auctionModeGroups) {
       expect(auctionModesForGroup(group.id).map((mode) => mode.id)).toEqual(group.modeIds);
     }
+  });
+
+  it("preserves Best Finishes and the newer UFC-history modes", () => {
+    expect(auctionModes.map((mode) => mode.id)).toEqual(expect.arrayContaining([
+      "fighter-performances",
+      "finishes",
+      "rivalries",
+      "iconic-moments",
+      "nicknames",
+    ]));
+    expect(auctionModeDefinition("finishes").displayName).toBe("Best Finishes");
   });
 
   it("limits career-performance auctions to the three locked fighter careers", () => {
@@ -93,8 +115,9 @@ describe("auction public product contract", () => {
     expect(usesUltimateFighterPlacement("ultimate-fighter")).toBe(true);
   });
 
-  it("locks the shared structure for every other mode", () => {
-    for (const mode of auctionModes.filter((candidate) => candidate.id !== "ultimate-fighter")) {
+  it("locks the shared structure for every other current and historical mode", () => {
+    for (const modeId of AUCTION_MODE_IDS.filter((candidate) => candidate !== "ultimate-fighter")) {
+      const mode = auctionModeDefinition(modeId);
       expect(mode).toMatchObject({
         rounds: 6,
         requiredSelectionsPerPlayer: 3,
