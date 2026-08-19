@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { NavLink, useLocation } from "react-router-dom";
 import { scrollPageToTop } from "../app/RouteScrollManager";
@@ -60,6 +60,7 @@ function NavigationIcon({ name }: { name: NavigationIconName }) {
 export function BottomNavigation() {
   const location = useLocation();
   const warRoom = useWarRoom();
+  const keyboardSessionRef = useRef(false);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
   const [viewportBottomCorrection, setViewportBottomCorrection] = useState(0);
   const destinations = warRoom.status === "eligible"
@@ -78,7 +79,11 @@ export function BottomNavigation() {
         && activeElement.matches("input, textarea, select, [contenteditable='true']");
       const visualBottom = viewport.height + viewport.offsetTop;
       const occludedHeight = Math.max(0, window.innerHeight - visualBottom);
-      const nextKeyboardOpen = editing && occludedHeight > 120;
+      const materiallyOccluded = occludedHeight > 120;
+
+      if (editing && materiallyOccluded) keyboardSessionRef.current = true;
+      const nextKeyboardOpen = keyboardSessionRef.current && materiallyOccluded;
+      if (keyboardSessionRef.current && !materiallyOccluded) keyboardSessionRef.current = false;
 
       setKeyboardOpen(nextKeyboardOpen);
       setViewportBottomCorrection(
