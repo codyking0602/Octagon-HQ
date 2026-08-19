@@ -4,6 +4,7 @@ import {
   createReplayableFindLeaderRun,
   resolveSeededFindLeaderBoard,
 } from "./findLeaderLineups";
+import { loadLineupHistory } from "./lineupModel";
 
 beforeEach(() => {
   window.localStorage.clear();
@@ -44,6 +45,14 @@ describe("Find the Leader lineup modes", () => {
     expect(first.identity.type).toBe("replayable");
     expect(second.identity.type).toBe("replayable");
     expect(`${second.board.definitionId}:${secondIds}`).not.toBe(`${first.board.definitionId}:${firstIds}`);
+  });
+
+  it("tracks the answer separately so New Lineup can penalize repeated leaders", () => {
+    const first = createReplayableFindLeaderRun("2026-07-29");
+    const history = loadLineupHistory("find-leader", "casual");
+
+    expect(history.entries[0]?.itemIds).toContain(`category:${first.board.definitionId}`);
+    expect(history.entries[0]?.itemIds).toContain(`leader:${first.board.leaderId}`);
   });
 
   it("produces more than one casual category across replay seeds", () => {
