@@ -2,6 +2,7 @@ import {
   createWavelengthRound,
   nextWavelengthClue,
   type WavelengthClue,
+  type WavelengthRecentHistory,
   type WavelengthRound,
 } from "./wavelengthEngine";
 import { createReplaySeed, seededLineupRandom } from "./lineupModel";
@@ -20,6 +21,7 @@ export function nextChallengeWavelengthClue(
   nextClueIndex: number,
   seed: string,
   guesses: readonly number[],
+  recent?: WavelengthRecentHistory,
 ): WavelengthClue {
   const path = [...guesses, lastGuess].join("-");
   return nextWavelengthClue(
@@ -27,6 +29,7 @@ export function nextChallengeWavelengthClue(
     lastGuess,
     nextClueIndex,
     seededLineupRandom("wavelength", "clue", seed, nextClueIndex, path),
+    recent,
   );
 }
 

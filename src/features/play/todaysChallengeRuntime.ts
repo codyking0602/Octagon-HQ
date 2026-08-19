@@ -37,7 +37,9 @@ import {
   createWavelengthRound,
   nextWavelengthClue,
   wavelengthClues,
+  wavelengthSequenceKey,
   type WavelengthClue,
+  type WavelengthRecentHistory,
   type WavelengthRound,
 } from "./wavelengthEngine";
 
@@ -52,6 +54,7 @@ export type OfficialDailyGameType =
 export const OFFICIAL_DAILY_RUNTIME_VERSION = "official-daily-runtime-v1";
 export const OFFICIAL_DAILY_SCORING_VERSION = OFFICIAL_SCORE_CONTRACT_VERSION;
 export const WAVELENGTH_OFFICIAL_DAILY_SCORING_VERSION = WAVELENGTH_OFFICIAL_SCORE_CONTRACT_VERSION;
+export const WAVELENGTH_DAILY_HISTORY_VERSION = "wavelength-daily-history-v1";
 export const BLIND_RESUME_V3_CONTENT_VERSION = "blind-resume-v3";
 export const BLIND_RESUME_V3_OFFICIAL_DAILY_SCORING_VERSION = "play-official-score-v3";
 
@@ -92,6 +95,8 @@ type BlindResumeDifficulty = "readable" | "competitive" | "tight" | "nightmare";
 const BLIND_RESUME_V3_REVEAL_COUNTS = [2, 4, 6, 8] as const;
 const BLIND_RESUME_V3_CORRECT_POINTS = [20, 19, 18, 17] as const;
 const BLIND_RESUME_V3_MISS_POINTS = [2, 4, 6, 8] as const;
+const WAVELENGTH_DAILY_HISTORY_EPOCH = "2026-08-19";
+const WAVELENGTH_DAILY_RECENT_DAYS = 4;
 
 function asRecord(value: unknown): JsonRecord {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
@@ -121,6 +126,11 @@ function integer(value: unknown, label: string, min: number, max: number) {
   return value as number;
 }
 
+function integerArray(value: unknown, label: string, min: number, max: number) {
+  if (!Array.isArray(value)) throw new Error(`${label} must be an integer array.`);
+  return value.map((item) => integer(item, label, min, max));
+}
+
 function fighterPresentation(fighter: PlayFighter) {
   return {
     id: fighter.id,
@@ -141,6 +151,59 @@ function fighterFor(id: string) {
 
 function cluePresentation(clue: WavelengthClue) {
   return { id: clue.id, category: clue.category, text: clue.text };
+}
+
+function isoDayOffset(day: string, offset: number) {
+  const date = new Date(`${day}T00:00:00.000Z`);
+  date.setUTCDate(date.getUTCDate() + offset);
+  return date.toISOString().slice(0, 10);
+}
+
+function wavelengthRecentHistoryFromRounds(rounds: readonly WavelengthRound[]): WavelengthRecentHistory {
+  const recent = [...rounds].slice(-WAVELENGTH_DAILY_RECENT_DAYS).reverse();
+  return {
+    targets: recent.map((round) => round.target),
+    clueIds: recent.flatMap((round) => round.clues.map((clue) => clue.id)),
+    categories: recent.flatMap((round) => round.clues.map((clue) => clue.category)),
+    clueSequenceKeys: recent.map(wavelengthSequenceKey),
+  };
+}
+
+function buildSeededWavelengthDailyRound(
+  day: string,
+  scheduleVersion: string,
+  recent?: WavelengthRecentHistory,
+) {
+  const random = seededLineupRandom(
+    OFFICIAL_DAILY_RUNTIME_VERSION,
+    "wavelength",
+    scheduleVersion,
+    day,
+    "round",
+  );
+  return createWavelengthRound({ recent, random });
+}
+
+function buildWavelengthDailyRecentHistory(day: string, scheduleVersion: string) {
+  if (day < WAVELENGTH_DAILY_HISTORY_EPOCH) return {} as WavelengthRecentHistory;
+
+  let rounds = Array.from({ length: WAVELENGTH_DAILY_RECENT_DAYS }, (_, index) => (
+    buildSeededWavelengthDailyRound(
+      isoDayOffset(WAVELENGTH_DAILY_HISTORY_EPOCH, index - WAVELENGTH_DAILY_RECENT_DAYS),
+      scheduleVersion,
+    )
+  ));
+
+  for (let cursor = WAVELENGTH_DAILY_HISTORY_EPOCH; cursor < day; cursor = isoDayOffset(cursor, 1)) {
+    const round = buildSeededWavelengthDailyRound(
+      cursor,
+      scheduleVersion,
+      wavelengthRecentHistoryFromRounds(rounds),
+    );
+    rounds = [...rounds, round].slice(-WAVELENGTH_DAILY_RECENT_DAYS);
+  }
+
+  return wavelengthRecentHistoryFromRounds(rounds);
 }
 
 function choosePack<T extends { id: string }>(
@@ -211,24 +274,19 @@ function buildFindLeaderSetup(day: string): OfficialDailySetupPublication {
 }
 
 function buildWavelengthSetup(day: string, scheduleVersion: string): OfficialDailySetupPublication {
-  const random = seededLineupRandom(
-    OFFICIAL_DAILY_RUNTIME_VERSION,
-    "wavelength",
-    scheduleVersion,
-    day,
-    "round",
-  );
-  const round = createWavelengthRound({ random });
+  const recent = buildWavelengthDailyRecentHistory(day, scheduleVersion);
+  const round = buildSeededWavelengthDailyRound(day, scheduleVersion, recent);
   const firstClue = round.clues[0];
   if (!firstClue) throw new Error("Wavelength did not create an opening clue.");
 
   return {
-    setupKey: `${WAVELENGTH_CONTRACT_VERSIONS.generator}:${scheduleVersion}:${day}`,
-    contentVersion: WAVELENGTH_CONTRACT_VERSIONS.generator,
+    setupKey: `${WAVELENGTH_CONTRACT_VERSIONS.generator}:${WAVELENGTH_DAILY_HISTORY_VERSION}:${scheduleVersion}:${day}`,
+    contentVersion: `${WAVELENGTH_CONTRACT_VERSIONS.generator}:${WAVELENGTH_DAILY_HISTORY_VERSION}`,
     scoringVersion: WAVELENGTH_OFFICIAL_DAILY_SCORING_VERSION,
     publicSetup: {
       runtime_version: OFFICIAL_DAILY_RUNTIME_VERSION,
       versions: WAVELENGTH_CONTRACT_VERSIONS,
+      history_version: WAVELENGTH_DAILY_HISTORY_VERSION,
       clue_count: 4,
       initial_state: {
         complete: false,
@@ -244,6 +302,9 @@ function buildWavelengthSetup(day: string, scheduleVersion: string): OfficialDai
     privateSetupEvidence: {
       target: round.target,
       opening_clue_id: firstClue.id,
+      recent_targets: [...(recent.targets ?? [])],
+      recent_clue_ids: [...(recent.clueIds ?? [])],
+      recent_clue_sequence_keys: [...(recent.clueSequenceKeys ?? [])],
     },
     privateGradingEvidence: { target: round.target },
   };
@@ -526,6 +587,20 @@ function wavelengthClueFor(id: string) {
   return clue;
 }
 
+function wavelengthRecentHistoryFromEvidence(evidence: JsonRecord): WavelengthRecentHistory {
+  const targets = integerArray(evidence.recent_targets ?? [], "Wavelength recent targets", 1, 100);
+  const clueIds = stringArray(evidence.recent_clue_ids ?? [], "Wavelength recent clue ids");
+  return {
+    targets,
+    clueIds,
+    categories: [...new Set(clueIds.map((id) => wavelengthClueFor(id).category))],
+    clueSequenceKeys: stringArray(
+      evidence.recent_clue_sequence_keys ?? [],
+      "Wavelength recent clue sequence keys",
+    ),
+  };
+}
+
 function advanceWavelength(context: OfficialDailyRuntimeContext, action: JsonRecord): OfficialDailyAdvanceResult {
   const target = integer(context.privateSetupEvidence.target, "Wavelength target", 1, 100);
   const priorGuesses = Array.isArray(context.submissionState.guesses)
@@ -551,7 +626,13 @@ function advanceWavelength(context: OfficialDailyRuntimeContext, action: JsonRec
       guesses.join(","),
       guesses.length,
     );
-    const nextClue = nextWavelengthClue(round, guess, guesses.length, random);
+    const nextClue = nextWavelengthClue(
+      round,
+      guess,
+      guesses.length,
+      random,
+      wavelengthRecentHistoryFromEvidence(context.privateSetupEvidence),
+    );
     clueIds = [...clueIds, nextClue.id];
   }
 
