@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { render } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { HitTheNumberGameView } from "./HitTheNumberGameView";
@@ -76,5 +77,14 @@ describe("Hit the Number Random Pool result reveal", () => {
 
     expect(container.querySelector(".hit-number-roster")).toBeNull();
     expect(container.querySelectorAll(".hit-number-fighter-card__value")).toHaveLength(0);
+  });
+
+  it("keeps factual pool-value lookup in the Casual page instead of the reusable Daily-ready view", () => {
+    const page = readFileSync("src/features/play/HitTheNumberPage.tsx", "utf8");
+    const view = readFileSync("src/features/play/HitTheNumberGameView.tsx", "utf8");
+
+    expect(page).toContain("hitTheNumberStatRows");
+    expect(page).toContain("revealedPoolValues={revealedPoolValues}");
+    expect(view).not.toContain("hitTheNumberStatRows");
   });
 });
