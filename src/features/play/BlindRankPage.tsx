@@ -137,6 +137,15 @@ export default function BlindRankPage() {
       placements.flatMap((fighter) => fighter ? [blindRankRating(fighter, run.packId)] : []),
     )
     : null;
+  const canonicalOrder = complete
+    ? run.lineup
+      .map((fighter, boardIndex) => ({
+        fighter,
+        boardIndex,
+        rating: blindRankRating(fighter, run.packId),
+      }))
+      .sort((left, right) => right.rating - left.rating || left.boardIndex - right.boardIndex)
+    : [];
 
   useEffect(() => {
     if (!complete) return;
@@ -253,6 +262,13 @@ export default function BlindRankPage() {
                 <h1>{completedScore.normalizedScore}/100</h1>
                 <p>FIVE PLACEMENTS GRADED AGAINST OCTAGON HQ</p>
                 <small>Your five locked placements are graded by their relative order to produce the 100-point score.</small>
+                <p>OCTAGON HQ ORDER</p>
+                <p aria-label="Octagon HQ order">
+                  {canonicalOrder.map(({ fighter }, index) => (
+                    <span key={fighter.id}>#{index + 1} {fighter.name}{index < canonicalOrder.length - 1 ? <br /> : null}</span>
+                  ))}
+                </p>
+                <small>Fighters within one rating point are treated as tied for scoring.</small>
               </section>
             ) : null}
             <p className="eyebrow">YOUR FINAL RANKING</p>

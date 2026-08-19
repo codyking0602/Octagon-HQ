@@ -40,23 +40,39 @@ describe("casual Blind Rank score", () => {
     expect(() => scoreBlindRankOrderedRatings([80, 70, 60, 50])).toThrow(RangeError);
   });
 
-  it("shows the 0–100 score after the fifth casual placement without changing the five-row result", () => {
+  it("shows the score and exact Octagon HQ order after the fifth casual placement", () => {
     const packId = "ufc-careers" as const;
-    const lineup = [...createBlindRankLineup(packId, "casual-score-proof").fighters]
-      .sort((left, right) => blindRankRating(right, packId) - blindRankRating(left, packId));
+    const lineup = createBlindRankLineup(packId, "casual-score-proof").fighters;
+    const expectedOrder = lineup
+      .map((fighter, boardIndex) => ({
+        fighter,
+        boardIndex,
+        rating: blindRankRating(fighter, packId),
+      }))
+      .sort((left, right) => right.rating - left.rating || left.boardIndex - right.boardIndex)
+      .map(({ fighter }) => fighter);
+    const expectedScore = scoreBlindRankOrderedRatings(
+      lineup.map((fighter) => blindRankRating(fighter, packId)),
+    ).normalizedScore;
     const query = lineup.map((fighter) => fighter.id).join(",");
     const { container } = renderBlindRank(`/play/blind-rank?pack=${packId}&lineup=${query}`);
 
     expect(container.querySelector('[aria-label="Blind Rank score"]')).toBeNull();
+    expect(container.querySelector('[aria-label="Octagon HQ order"]')).toBeNull();
 
     for (let placement = 0; placement < 5; placement += 1) {
       fireEvent.click(container.querySelector<HTMLButtonElement>(".blind-rank-slot:not(.is-filled)")!);
     }
 
     const score = container.querySelector('[aria-label="Blind Rank score"]');
-    expect(score?.textContent).toContain("100/100");
+    expect(score?.textContent).toContain(`${expectedScore}/100`);
     expect(score?.textContent).toContain("FIVE PLACEMENTS GRADED AGAINST OCTAGON HQ");
     expect(container.textContent).toContain("YOUR FINAL RANKING");
     expect(container.querySelectorAll(".blind-rank-results article")).toHaveLength(5);
+    expect(
+      [...container.querySelectorAll('[aria-label="Octagon HQ order"] span')]
+        .map((row) => row.textContent?.trim()),
+    ).toEqual(expectedOrder.map((fighter, index) => `#${index + 1} ${fighter.name}`));
+    expect(score?.textContent).toContain("Fighters within one rating point are treated as tied for scoring.");
   });
 });
