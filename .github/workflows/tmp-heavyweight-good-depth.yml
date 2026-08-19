@@ -92,7 +92,7 @@ jobs:
           test = test.replace(marker, '\n'.join(lines) + marker, 1)
           test_path.write_text(test)
           PY
-      - name: Add missing ESPN headshots as local 160x160 WebPs
+      - name: Add missing local 160x160 WebP thumbnails
         run: |
           python - <<'PY'
           from io import BytesIO
@@ -100,23 +100,22 @@ jobs:
           from urllib.request import Request, urlopen
           from PIL import Image, ImageOps
 
-          fighters = {
-            'frank-mir': '2335301',
-            'tim-sylvia': '2354048',
-            'shane-carwin': '2335656',
-            'josh-barnett': '2354241',
-            'antonio-rodrigo-nogueira': '2335521',
+          sources = {
+            'frank-mir': 'https://a.espncdn.com/i/headshots/mma/players/full/2335301.png',
+            'tim-sylvia': 'https://staticg.sportskeeda.com/editor/2022/08/b6cf9-16607720811907-1920.jpg',
+            'shane-carwin': 'https://a.espncdn.com/i/headshots/mma/players/full/2335656.png',
+            'josh-barnett': 'https://a.espncdn.com/i/headshots/mma/players/full/2354241.png',
+            'antonio-rodrigo-nogueira': 'https://a.espncdn.com/i/headshots/mma/players/full/2335521.png',
           }
           out = Path('public/assets/fighters')
           errors = []
-          for slug, athlete_id in fighters.items():
+          for slug, url in sources.items():
             try:
-              url = f'https://a.espncdn.com/i/headshots/mma/players/full/{athlete_id}.png'
               req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
               with urlopen(req, timeout=30) as response:
                 data = response.read()
               image = Image.open(BytesIO(data)).convert('RGBA')
-              image = ImageOps.fit(image, (160, 160), method=Image.Resampling.LANCZOS, centering=(0.5, 0.38))
+              image = ImageOps.fit(image, (160, 160), method=Image.Resampling.LANCZOS, centering=(0.5, 0.36))
               target = out / f'{slug}-thumb.webp'
               image.save(target, 'WEBP', quality=95, method=6)
               check = Image.open(target)
@@ -125,8 +124,8 @@ jobs:
               assert raw[:4] == b'RIFF' and raw[8:12] == b'WEBP'
               print('OK', slug, len(raw))
             except Exception as error:
-              errors.append((slug, athlete_id, repr(error)))
-              print('MISS', slug, athlete_id, repr(error))
+              errors.append((slug, repr(error)))
+              print('MISS', slug, repr(error))
           assert not errors, errors
           PY
       - name: Commit clean PR3 branch and remove helper
