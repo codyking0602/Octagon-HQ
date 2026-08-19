@@ -31,6 +31,7 @@ import {
   replayLabelFor,
   type PlayLineupIdentity,
 } from "./lineupModel";
+import { adaptFindLeaderOfficialScore } from "./officialScoreContract";
 import { playGames, type PlayGameId } from "./playRegistry";
 
 interface FindLeaderResult {
@@ -296,6 +297,7 @@ function FindLeaderGame({
 
   if (result) {
     const leader = board.candidates.find((fighter) => fighter.id === board.leaderId)!;
+    const normalizedScore = adaptFindLeaderOfficialScore(result.score);
     const sorted = [...board.candidates].sort((left, right) => right.value - left.value || left.name.localeCompare(right.name));
     const valueCounts = sorted.reduce<Map<number, number>>((counts, fighter) => {
       counts.set(fighter.value, (counts.get(fighter.value) ?? 0) + 1);
@@ -305,7 +307,7 @@ function FindLeaderGame({
     let previousValue: number | null = null;
 
     return (
-      <div className="find-game page">
+      <div className="find-game page" data-challenge-id={identity.challengeId}>
         {challengeFrom ? (
           <section className="challenge-game-banner">
             <span>PROFILE CHALLENGE</span>
@@ -316,8 +318,10 @@ function FindLeaderGame({
         <section className={`find-result-hero ${result.perfect ? "is-perfect" : ""}`}>
           <div>
             <p className="eyebrow">{result.perfect ? "PERFECT RUN" : "RUN ENDED"}</p>
-            <h1>{result.perfect ? "PERFECT 10" : `ROUND ${result.score}`}</h1>
-            <p>{result.perfect ? `You eliminated all nine non-leaders and left ${leader.name} standing.` : `You removed the group leader, ${leader.name}, in Round ${result.score}.`}</p>
+            <h1>{normalizedScore.score}/100</h1>
+            <p>{result.perfect
+              ? `Perfect ${normalizedScore.native.display}. You eliminated all nine non-leaders and left ${leader.name} standing.`
+              : `Native run: ${normalizedScore.native.display}. You removed the group leader, ${leader.name}, in Round ${result.score}.`}</p>
           </div>
           <article>
             <CandidatePhoto fighter={leader} className="find-result-hero__photo" />
@@ -328,7 +332,7 @@ function FindLeaderGame({
         <section className="surface-card find-reveal">
           <header className="section-heading">
             <div><p className="eyebrow">FULL STAT REVEAL</p><h2>{board.question}</h2></div>
-            <strong>{result.score}/10</strong>
+            <strong>{normalizedScore.native.display}</strong>
           </header>
           <div className="find-reveal__grid">
             {sorted.map((fighter, index) => {
@@ -352,7 +356,7 @@ function FindLeaderGame({
             onChallenge={() => void challengeSomeone()}
             onReplay={replay}
             onAllGames={onExit}
-            replayLabel={replayLabelFor(identity.type)}
+            replayLabel={identity.type === "replayable" ? "NEW LINEUP" : replayLabelFor(identity.type)}
             status={challengeStatus}
           />
         </section>
@@ -367,7 +371,7 @@ function FindLeaderGame({
       : "CURATED CHALLENGE";
 
   return (
-    <div className="find-game page">
+    <div className="find-game page" data-challenge-id={identity.challengeId}>
       {challengeFrom ? (
         <section className="challenge-game-banner">
           <span>PROFILE CHALLENGE</span>
@@ -380,6 +384,9 @@ function FindLeaderGame({
           <p className="eyebrow">{eyebrow}</p>
           <h1>{board.question}</h1>
           <p>{objectiveCopy(board)}</p>
+          {identity.type === "replayable" ? (
+            <button className="primary-action" type="button" onClick={onNewLineup}>NEW LINEUP</button>
+          ) : null}
         </div>
         <aside>
           <div><span>ROUND</span><strong>{eliminated.length + 1}</strong></div>
