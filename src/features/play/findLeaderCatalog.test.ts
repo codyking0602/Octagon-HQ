@@ -44,7 +44,9 @@ describe("Find the Leader category depth", () => {
 
     expect(findLeaderQuestions.length).toBeGreaterThanOrEqual(80);
     expect(metrics.size).toBeGreaterThanOrEqual(40);
-    expect(families).toEqual(expect.objectContaining(new Set(["volume", "rivalry", "versatility"])));
+    expect(families.has("volume")).toBe(true);
+    expect(families.has("rivalry")).toBe(true);
+    expect(families.has("versatility")).toBe(true);
   });
 
   it("keeps every new depth category buildable through the canonical board owner", () => {
@@ -67,15 +69,17 @@ describe("Find the Leader category depth", () => {
 
   it("preserves the established categories while adding the deeper ones", () => {
     const ids = new Set(findLeaderQuestions.map((definition) => definition.id));
-
-    expect(ids).toEqual(expect.objectContaining(new Set([
+    const preserved = [
       "ufc-wins-all-time",
       "ufc-finishes-all-time",
       "submission-wins-all-time",
       "title-fight-wins-all-time",
       "women-ufc-wins-all-time",
       "lightweight-ufc-wins-all-time",
-      ...DEPTH_CATEGORY_IDS,
-    ])));
+    ];
+
+    [...preserved, ...DEPTH_CATEGORY_IDS].forEach((id) => {
+      expect(ids.has(id), `missing ${id}`).toBe(true);
+    });
   });
 });
