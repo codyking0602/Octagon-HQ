@@ -1,4 +1,5 @@
 name: Temporary Lightweight Blind Rank formatting
+# sync trigger
 
 on:
   pull_request:
