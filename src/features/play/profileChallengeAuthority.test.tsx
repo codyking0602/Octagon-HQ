@@ -5,6 +5,7 @@ import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
 import type { ChallengeJson, PlayChallenge } from "../challenges/challengeModel";
 import { BLIND_RESUME_V3_GAME_VERSION } from "./blindResumeV3";
 import { createStoredHitTheNumberProfileRun } from "./HitTheNumberPage";
+import { blindRankPool } from "./playFighterPool";
 import TodayChallengeGameRoute, { storedProfileChallengeSetupIsUsable } from "./TodayChallengeGameRoute";
 import type { DailyGameType } from "./todaysChallengeAdapters";
 
@@ -17,6 +18,7 @@ vi.mock("./OfficialTodayChallengePage", () => ({
 }));
 
 const mockProfileMatch = vi.mocked(useProfileChallengeMatch);
+const ufcCareerIds = blindRankPool("ufc-careers").map((fighter) => fighter.id);
 
 function challenge(
   gameId: PlayChallenge["gameId"],
@@ -71,13 +73,13 @@ const routeCases: Array<{
     gameType: "blind_rank_5",
     gameId: "blind-rank",
     gameVersion: "blind-rank-v2",
-    setup: { packId: "all", lineupIds: ["a", "b", "c", "d", "e"] },
+    setup: { packId: "ufc-careers", lineupIds: ufcCareerIds.slice(0, 5) },
   },
   {
     gameType: "keep_4_cut_4",
     gameId: "keep-cut",
     gameVersion: "keep-cut-v3",
-    setup: { packId: "all", lineupIds: ["a", "b", "c", "d", "e", "f", "g", "h"] },
+    setup: { packId: "ufc-careers", lineupIds: ufcCareerIds.slice(0, 8) },
   },
   {
     gameType: "hit_the_number",
@@ -121,7 +123,10 @@ describe("profile challenge authority", () => {
   });
 
   it("fails closed when a profile challenge does not contain its stored setup", () => {
-    const invalid = challenge("blind-rank", "blind-rank-v2", { packId: "all", lineupIds: ["a"] });
+    const invalid = challenge("blind-rank", "blind-rank-v2", {
+      packId: "ufc-careers",
+      lineupIds: ufcCareerIds.slice(0, 1),
+    });
     expect(storedProfileChallengeSetupIsUsable(invalid)).toBe(false);
     mockProfileMatch.mockReturnValue(matchReturn(invalid));
 
