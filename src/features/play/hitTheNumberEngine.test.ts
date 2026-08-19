@@ -9,6 +9,7 @@ import {
   createHitTheNumberBoard,
   gradeHitTheNumberSelection,
   hitTheNumberEligibleFighters,
+  hitTheNumberRandomPoolSize,
   hitTheNumberScore,
   rankedHitTheNumberStatRows,
   type HitTheNumberPublicSetup,
@@ -87,6 +88,10 @@ describe("Hit the Number foundation", () => {
     expect(HIT_THE_NUMBER_GENERATION_PROFILE.picks.reduce((sum, row) => sum + row.weight, 0)).toBe(100);
   });
 
+  it("sizes Random Pool boards with meaningful decoys", () => {
+    expect([4, 5, 6, 7].map((pickCount) => hitTheNumberRandomPoolSize(pickCount))).toEqual([8, 10, 12, 12]);
+  });
+
   it("filters the canonical Play roster before building an open-roster board", () => {
     const board = createHitTheNumberBoard({
       seed: "lightweight-open-roster",
@@ -148,7 +153,8 @@ describe("Hit the Number foundation", () => {
       expect(setup.target).toBeGreaterThan(0);
       expect(board.privateSetup.solutionFighterIds).toHaveLength(setup.pickCount);
       if (boardType === "random-pool") {
-        expect(setup.fighterIds.length).toBeGreaterThanOrEqual(setup.pickCount);
+        expect(setup.fighterIds).toHaveLength(hitTheNumberRandomPoolSize(setup.pickCount));
+        expect(setup.fighterIds.length).toBeGreaterThan(setup.pickCount);
         expect(setup.fighterIds.length).toBeLessThanOrEqual(12);
       }
     }
@@ -219,6 +225,16 @@ describe("Hit the Number foundation", () => {
     }
     expect(Object.keys(board.publicSetup)).not.toContain("solutionFighterIds");
     expect(JSON.stringify(board.publicSetup)).not.toContain("values");
+  });
+
+  it("rejects a Random Pool that would make every fighter mandatory", () => {
+    expect(() => createHitTheNumberBoard({
+      seed: "no-decoys",
+      statId: "ufc-wins",
+      boardType: "random-pool",
+      pickCount: 4,
+      randomPoolSize: 4,
+    })).toThrow("Random Hit the Number pool must include at least one decoy.");
   });
 
   it("is deterministic for the same seed and board contract", () => {
