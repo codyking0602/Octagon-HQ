@@ -2,6 +2,16 @@ begin;
 
 select set_config('request.jwt.claim.role', 'service_role', true);
 
+-- Prior frozen Auction suites deliberately commit their pinned preparation pointer.
+-- Re-establish the current v4 pointer inside this rollback-only focused test.
+update private.auction_catalog_versions
+set is_preparation_version = false
+where is_preparation_version;
+
+update private.auction_catalog_versions
+set is_preparation_version = true
+where content_version = 'ufc-auction-2026-08-v4';
+
 do $$
 declare
   v_v3_fighter_count integer;
@@ -203,7 +213,6 @@ begin
     raise exception 'legacy pinned Auction no longer keeps its four-selection reserve rule';
   end if;
 
-  -- A pinned v3 retired-mode game still generates and grades through the one canonical path.
   insert into public.play_challenges (
     code, game_id, game_version, game_title, summary, creator_id, recipient_id, play_url, setup, creator_result
   ) values (
@@ -241,8 +250,6 @@ begin
     raise exception 'historical v3 retired-mode snapshot did not replay idempotently';
   end if;
 
-  -- Two v4 games receive the exact same six fighter-performance rows and allocation.
-  -- The one grader must produce exactly the same result for both.
   insert into public.play_challenges (
     code, game_id, game_version, game_title, summary, creator_id, recipient_id, play_url, setup, creator_result
   ) values (
