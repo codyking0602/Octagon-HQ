@@ -8,7 +8,7 @@ import {
   stableLineupHash,
 } from "./lineupModel";
 
-const VERSION = "find-leader-v2-20260724";
+const VERSION = "find-leader-v3-20260819-category-depth";
 const DAILY_ANCHOR = "2026-07-16";
 const NO_REPEAT_SELECTIONS = 14;
 const FINISH_METHODS = new Set(["ko-tko", "submission", "doctor-stoppage"]);
@@ -37,7 +37,37 @@ export type FindLeaderMetric =
   | "finish-rate-pct"
   | "prime-wins"
   | "prime-finishes"
-  | "wins-unfinished";
+  | "wins-unfinished"
+  | "fights"
+  | "title-fights"
+  | "title-fight-finishes"
+  | "title-fight-knockouts"
+  | "title-fight-submissions"
+  | "unique-title-opponents-faced"
+  | "unique-title-opponents-beaten"
+  | "unique-opponents-beaten"
+  | "unique-opponents-finished"
+  | "unique-ranked-opponents-beaten"
+  | "unique-top-five-opponents-beaten"
+  | "ranked-finishes"
+  | "top-five-finishes"
+  | "longest-finish-streak"
+  | "longest-ko-streak"
+  | "longest-submission-streak"
+  | "win-years"
+  | "finish-years"
+  | "active-years"
+  | "fight-span-months"
+  | "rematch-wins"
+  | "avenged-loss-wins"
+  | "repeat-opponent-wins"
+  | "wins-after-first-loss"
+  | "bounce-back-wins"
+  | "divisions-with-win"
+  | "divisions-with-finish"
+  | "best-year-wins"
+  | "best-year-finishes"
+  | "max-wins-vs-one-opponent";
 
 export type FindLeaderFamily =
   | "wins"
@@ -49,7 +79,10 @@ export type FindLeaderFamily =
   | "longevity"
   | "durability"
   | "era"
-  | "filtered";
+  | "filtered"
+  | "volume"
+  | "rivalry"
+  | "versatility";
 
 export interface FindLeaderScope {
   board?: "men" | "women";
@@ -118,6 +151,38 @@ export const findLeaderQuestions: readonly FindLeaderQuestionDefinition[] = [
   q("prime-ufc-wins", "Who earned the most UFC wins during their model prime?", "UFC wins during the model prime", "PRIME WINS", "prime-wins", "quality"),
   q("prime-ufc-finishes", "Who earned the most UFC finishes during their model prime?", "UFC finishes during the model prime", "PRIME FINISHES", "prime-finishes", "finishes"),
   q("ufc-wins-unfinished", "Who has the most UFC wins without ever being finished?", "UFC wins without a finish loss", "UNFINISHED WINS", "wins-unfinished", "durability"),
+
+  q("ufc-fights-all-time", "Who has made the most UFC appearances?", "all-time UFC appearances", "UFC FIGHTS", "fights", "volume"),
+  q("title-fights-all-time", "Who has fought in the most UFC title fights?", "all-time UFC title fights", "TITLE FIGHTS", "title-fights", "championship"),
+  q("title-fight-finishes-all-time", "Who has the most UFC title-fight finishes?", "all-time UFC title-fight finishes", "TITLE FINISHES", "title-fight-finishes", "championship"),
+  q("title-fight-kos-all-time", "Which UFC champion has the most title-fight KO/TKO wins?", "UFC title-fight KO/TKO wins", "TITLE KOS", "title-fight-knockouts", "championship", { scope: { championsOnly: true } }),
+  q("title-fight-submissions-all-time", "Which UFC champion has the most title-fight submission wins?", "UFC title-fight submission wins", "TITLE SUBS", "title-fight-submissions", "championship", { scope: { championsOnly: true } }),
+  q("unique-title-opponents-faced", "Which UFC champion has faced the most different title-fight opponents?", "different UFC title-fight opponents faced", "TITLE OPPONENTS", "unique-title-opponents-faced", "championship", { scope: { championsOnly: true } }),
+  q("unique-title-opponents-beaten", "Which UFC champion has beaten the most different title-fight opponents?", "different UFC title-fight opponents beaten", "TITLE WINS", "unique-title-opponents-beaten", "championship", { scope: { championsOnly: true } }),
+  q("unique-opponents-beaten", "Who has beaten the most different UFC opponents?", "different UFC opponents beaten", "UNIQUE WINS", "unique-opponents-beaten", "volume"),
+  q("unique-opponents-finished", "Who has finished the most different UFC opponents?", "different UFC opponents finished", "UNIQUE FINISHES", "unique-opponents-finished", "finishes"),
+  q("unique-ranked-opponents-beaten", "Who has beaten the most different ranked UFC opponents?", "different ranked UFC opponents beaten", "RANKED OPPONENTS", "unique-ranked-opponents-beaten", "quality"),
+  q("unique-top-five-opponents-beaten", "Who has beaten the most different UFC top-five opponents?", "different UFC top-five opponents beaten", "TOP-5 OPPONENTS", "unique-top-five-opponents-beaten", "quality"),
+  q("ranked-finishes-all-time", "Who has the most finishes over ranked UFC opposition?", "UFC finishes over ranked opposition", "RANKED FINISHES", "ranked-finishes", "quality"),
+  q("top-five-finishes-all-time", "Who has the most finishes over UFC top-five opposition?", "UFC finishes over top-five opposition", "TOP-5 FINISHES", "top-five-finishes", "quality"),
+  q("longest-ufc-finish-streak", "Who has the longest streak of consecutive UFC finishes?", "consecutive UFC finishes", "FINISH STREAK", "longest-finish-streak", "streaks"),
+  q("longest-ufc-ko-streak", "Who has the longest streak of consecutive UFC KO/TKO wins?", "consecutive UFC KO/TKO wins", "KO STREAK", "longest-ko-streak", "streaks"),
+  q("longest-ufc-submission-streak", "Who has the longest streak of consecutive UFC submission wins?", "consecutive UFC submission wins", "SUB STREAK", "longest-submission-streak", "streaks"),
+  q("ufc-winning-years", "Who has recorded a UFC win in the most different calendar years?", "calendar years with a UFC win", "WINNING YEARS", "win-years", "longevity"),
+  q("ufc-finishing-years", "Who has recorded a UFC finish in the most different calendar years?", "calendar years with a UFC finish", "FINISH YEARS", "finish-years", "longevity"),
+  q("ufc-active-years", "Who has competed in the UFC in the most different calendar years?", "calendar years with a UFC appearance", "ACTIVE YEARS", "active-years", "longevity"),
+  q("longest-ufc-fight-span", "Who has the longest span between their first and latest UFC appearances?", "months between first and latest UFC appearances", "FIGHT SPAN", "fight-span-months", "longevity"),
+  q("rematch-wins-all-time", "Who has the most UFC wins in rematches?", "UFC rematch wins", "REMATCH WINS", "rematch-wins", "rivalry"),
+  q("avenged-losses-all-time", "Who has avenged the most UFC losses with a later win?", "UFC losses avenged with a later win", "AVENGED LOSSES", "avenged-loss-wins", "rivalry"),
+  q("repeat-opponent-wins-all-time", "Who has the most UFC wins against opponents they fought multiple times?", "UFC wins against repeat opponents", "REPEAT WINS", "repeat-opponent-wins", "rivalry"),
+  q("wins-after-first-loss-all-time", "Who has the most UFC wins after their first UFC loss?", "UFC wins after first UFC loss", "POST-LOSS WINS", "wins-after-first-loss", "durability"),
+  q("bounce-back-wins-all-time", "Who has the most UFC wins immediately following a UFC loss?", "UFC bounce-back wins after a loss", "BOUNCE-BACK WINS", "bounce-back-wins", "durability"),
+  q("divisions-with-ufc-win", "Who has earned UFC wins in the most different divisions?", "UFC divisions with a win", "WIN DIVISIONS", "divisions-with-win", "versatility"),
+  q("divisions-with-ufc-finish", "Who has earned UFC finishes in the most different divisions?", "UFC divisions with a finish", "FINISH DIVISIONS", "divisions-with-finish", "versatility"),
+  q("most-ufc-wins-single-year", "Who has the most UFC wins in their best calendar year?", "most UFC wins in one calendar year", "BEST-YEAR WINS", "best-year-wins", "volume"),
+  q("most-ufc-finishes-single-year", "Who has the most UFC finishes in their best calendar year?", "most UFC finishes in one calendar year", "BEST-YEAR FINISHES", "best-year-finishes", "volume"),
+  q("most-ufc-wins-one-opponent", "Who has the most UFC wins over a single opponent?", "most UFC wins over one opponent", "RIVALRY WINS", "max-wins-vs-one-opponent", "rivalry"),
+
   q("ufc-wins-since-2022", "Who has the most UFC wins since 2022?", "UFC wins since 2022", "UFC WINS", "wins", "wins", { since: "2022-01-01" }),
   q("ufc-finishes-since-2022", "Who has the most UFC finishes since 2022?", "UFC finishes since 2022", "FINISHES", "finishes", "finishes", { since: "2022-01-01" }),
   q("ufc-wins-since-2020", "Who has the most UFC wins since 2020?", "UFC wins since 2020", "UFC WINS", "wins", "wins", { since: "2020-01-01" }),
@@ -204,6 +269,10 @@ function primeFights(input: RankingInputFighter) {
   return start >= 0 && end >= start ? input.facts.fights.slice(start, end + 1) : [];
 }
 
+function sortedFights(fights: readonly CanonicalFight[]) {
+  return [...fights].sort((left, right) => left.date.localeCompare(right.date));
+}
+
 function longestWinningStreak(fights: readonly CanonicalFight[]) {
   let current = 0;
   let longest = 0;
@@ -218,21 +287,104 @@ function longestWinningStreak(fights: readonly CanonicalFight[]) {
   return longest;
 }
 
+function longestMatchingStreak(fights: readonly CanonicalFight[], predicate: (fight: CanonicalFight) => boolean) {
+  let current = 0;
+  let longest = 0;
+  sortedFights(fights).forEach((fight) => {
+    if (predicate(fight)) {
+      current += 1;
+      longest = Math.max(longest, current);
+    } else {
+      current = 0;
+    }
+  });
+  return longest;
+}
+
 function winsBeforeFirstLoss(fights: readonly CanonicalFight[]) {
   let wins = 0;
-  for (const fight of fights) {
+  for (const fight of sortedFights(fights)) {
     if (fight.scoringDisposition === "count-loss") break;
     if (isCountedWin(fight)) wins += 1;
   }
   return wins;
 }
 
-function winSpanMonths(fights: readonly CanonicalFight[]) {
-  const dates = fights.filter(isCountedWin).map((fight) => fight.date).sort();
+function spanMonths(fights: readonly CanonicalFight[]) {
+  const dates = fights.map((fight) => fight.date).sort();
   if (dates.length < 2) return 0;
   const first = Date.parse(`${dates[0]}T00:00:00Z`);
   const last = Date.parse(`${dates.at(-1)}T00:00:00Z`);
   return Math.round((last - first) / (1000 * 60 * 60 * 24 * 30.4375));
+}
+
+function winSpanMonths(fights: readonly CanonicalFight[]) {
+  return spanMonths(fights.filter(isCountedWin));
+}
+
+function countUnique(values: readonly (string | null | undefined)[]) {
+  return new Set(values.map(normalized).filter(Boolean)).size;
+}
+
+function countYears(fights: readonly CanonicalFight[], predicate: (fight: CanonicalFight) => boolean = () => true) {
+  return countUnique(fights.filter(predicate).map((fight) => fight.date.slice(0, 4)));
+}
+
+function maxBucket(values: readonly string[]) {
+  const counts = new Map<string, number>();
+  values.forEach((value) => {
+    const key = normalized(value);
+    if (key) counts.set(key, (counts.get(key) ?? 0) + 1);
+  });
+  return Math.max(0, ...counts.values());
+}
+
+function rematchWins(fights: readonly CanonicalFight[]) {
+  const seen = new Set<string>();
+  let wins = 0;
+  sortedFights(fights).forEach((fight) => {
+    const opponent = normalized(fight.opponent);
+    if (isCountedWin(fight) && seen.has(opponent)) wins += 1;
+    seen.add(opponent);
+  });
+  return wins;
+}
+
+function avengedLossWins(fights: readonly CanonicalFight[]) {
+  const lostTo = new Set<string>();
+  const avenged = new Set<string>();
+  sortedFights(fights).forEach((fight) => {
+    const opponent = normalized(fight.opponent);
+    if (fight.scoringDisposition === "count-loss") lostTo.add(opponent);
+    if (isCountedWin(fight) && lostTo.has(opponent)) avenged.add(opponent);
+  });
+  return avenged.size;
+}
+
+function repeatOpponentWins(fights: readonly CanonicalFight[]) {
+  const opponentCounts = new Map<string, number>();
+  fights.forEach((fight) => {
+    const opponent = normalized(fight.opponent);
+    opponentCounts.set(opponent, (opponentCounts.get(opponent) ?? 0) + 1);
+  });
+  return fights.filter((fight) => isCountedWin(fight) && (opponentCounts.get(normalized(fight.opponent)) ?? 0) > 1).length;
+}
+
+function winsAfterFirstLoss(fights: readonly CanonicalFight[]) {
+  let hasLost = false;
+  let wins = 0;
+  sortedFights(fights).forEach((fight) => {
+    if (hasLost && isCountedWin(fight)) wins += 1;
+    if (fight.scoringDisposition === "count-loss") hasLost = true;
+  });
+  return wins;
+}
+
+function bounceBackWins(fights: readonly CanonicalFight[]) {
+  const ordered = sortedFights(fights);
+  return ordered.filter((fight, index) => (
+    isCountedWin(fight) && index > 0 && ordered[index - 1].scoringDisposition === "count-loss"
+  )).length;
 }
 
 function scoreFighter(input: RankingInputFighter, definition: FindLeaderQuestionDefinition) {
@@ -240,6 +392,8 @@ function scoreFighter(input: RankingInputFighter, definition: FindLeaderQuestion
   const fights = input.facts.fights.filter((fight) => inWindow(fight, definition));
   const wins = fights.filter(isCountedWin);
   const finishWins = wins.filter(isFinish);
+  const titleFights = fights.filter(isTitleFight);
+  const titleWins = wins.filter(isTitleFight);
   if (definition.minimumWins && wins.length < definition.minimumWins) return null;
 
   switch (definition.metric) {
@@ -248,7 +402,7 @@ function scoreFighter(input: RankingInputFighter, definition: FindLeaderQuestion
     case "submissions": return wins.filter((fight) => fight.methodCategory === "submission").length;
     case "knockouts": return wins.filter((fight) => fight.methodCategory === "ko-tko").length;
     case "decision-wins": return wins.filter((fight) => fight.methodCategory === "decision").length;
-    case "title-fight-wins": return wins.filter(isTitleFight).length;
+    case "title-fight-wins": return titleWins.length;
     case "top-five-wins": return wins.filter((fight) => TOP_FIVE_TIERS.has(fight.qualityTier)).length;
     case "ranked-wins": return wins.filter((fight) => RANKED_TIERS.has(fight.qualityTier)).length;
     case "longest-win-streak": return longestWinningStreak(fights);
@@ -261,6 +415,36 @@ function scoreFighter(input: RankingInputFighter, definition: FindLeaderQuestion
       const finishedLoss = fights.some((fight) => fight.scoringDisposition === "count-loss" && isFinish(fight));
       return finishedLoss ? 0 : wins.length;
     }
+    case "fights": return fights.length;
+    case "title-fights": return titleFights.length;
+    case "title-fight-finishes": return titleWins.filter(isFinish).length;
+    case "title-fight-knockouts": return titleWins.filter((fight) => fight.methodCategory === "ko-tko").length;
+    case "title-fight-submissions": return titleWins.filter((fight) => fight.methodCategory === "submission").length;
+    case "unique-title-opponents-faced": return countUnique(titleFights.map((fight) => fight.opponent));
+    case "unique-title-opponents-beaten": return countUnique(titleWins.map((fight) => fight.opponent));
+    case "unique-opponents-beaten": return countUnique(wins.map((fight) => fight.opponent));
+    case "unique-opponents-finished": return countUnique(finishWins.map((fight) => fight.opponent));
+    case "unique-ranked-opponents-beaten": return countUnique(wins.filter((fight) => RANKED_TIERS.has(fight.qualityTier)).map((fight) => fight.opponent));
+    case "unique-top-five-opponents-beaten": return countUnique(wins.filter((fight) => TOP_FIVE_TIERS.has(fight.qualityTier)).map((fight) => fight.opponent));
+    case "ranked-finishes": return finishWins.filter((fight) => RANKED_TIERS.has(fight.qualityTier)).length;
+    case "top-five-finishes": return finishWins.filter((fight) => TOP_FIVE_TIERS.has(fight.qualityTier)).length;
+    case "longest-finish-streak": return longestMatchingStreak(fights, (fight) => isCountedWin(fight) && isFinish(fight));
+    case "longest-ko-streak": return longestMatchingStreak(fights, (fight) => isCountedWin(fight) && fight.methodCategory === "ko-tko");
+    case "longest-submission-streak": return longestMatchingStreak(fights, (fight) => isCountedWin(fight) && fight.methodCategory === "submission");
+    case "win-years": return countYears(fights, isCountedWin);
+    case "finish-years": return countYears(fights, (fight) => isCountedWin(fight) && isFinish(fight));
+    case "active-years": return countYears(fights);
+    case "fight-span-months": return spanMonths(fights);
+    case "rematch-wins": return rematchWins(fights);
+    case "avenged-loss-wins": return avengedLossWins(fights);
+    case "repeat-opponent-wins": return repeatOpponentWins(fights);
+    case "wins-after-first-loss": return winsAfterFirstLoss(fights);
+    case "bounce-back-wins": return bounceBackWins(fights);
+    case "divisions-with-win": return countUnique(wins.map((fight) => fight.division));
+    case "divisions-with-finish": return countUnique(finishWins.map((fight) => fight.division));
+    case "best-year-wins": return maxBucket(wins.map((fight) => fight.date.slice(0, 4)));
+    case "best-year-finishes": return maxBucket(finishWins.map((fight) => fight.date.slice(0, 4)));
+    case "max-wins-vs-one-opponent": return maxBucket(wins.map((fight) => fight.opponent));
   }
 }
 
@@ -322,8 +506,9 @@ function dayNumber(day: string) {
 }
 
 const FAMILY_CYCLE: readonly FindLeaderFamily[] = [
-  "wins", "finishes", "championship", "filtered", "quality", "streaks", "era", "wins",
-  "finishes", "durability", "rates", "longevity", "filtered", "quality", "wins", "finishes",
+  "wins", "finishes", "volume", "championship", "quality", "streaks", "rivalry", "longevity",
+  "versatility", "filtered", "durability", "rates", "era", "wins", "finishes", "quality",
+  "championship", "rivalry",
 ];
 
 export function centralDay(date = new Date()) {

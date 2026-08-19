@@ -86,10 +86,10 @@ describe("Play registry", () => {
 });
 
 describe("Find the Leader engine", () => {
-  it("owns fifty varied UFC-only question definitions", () => {
-    expect(findLeaderQuestions).toHaveLength(50);
-    expect(new Set(findLeaderQuestions.map((question) => question.id)).size).toBe(50);
-    expect(new Set(findLeaderQuestions.map((question) => question.family)).size).toBeGreaterThanOrEqual(8);
+  it("owns at least eighty varied UFC-only question definitions", () => {
+    expect(findLeaderQuestions.length).toBeGreaterThanOrEqual(80);
+    expect(new Set(findLeaderQuestions.map((question) => question.id)).size).toBe(findLeaderQuestions.length);
+    expect(new Set(findLeaderQuestions.map((question) => question.family)).size).toBeGreaterThanOrEqual(11);
   });
 
   it("builds one deterministic ten-fighter daily board with a unique group leader", () => {
