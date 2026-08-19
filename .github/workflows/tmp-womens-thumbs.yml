@@ -1,9 +1,12 @@
-name: Temporary Women's Blind Rank thumbnails
+name: Temporary Women's Blind Rank batch generation
 
 on:
   push:
     branches:
       - codex/womens-blind-rank-depth
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write
@@ -20,6 +23,80 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install pillow
+      - name: Add the approved Women’s Play-only ratings and focused test
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          ratings_path = Path('src/features/play/playFighterRatings.ts')
+          ratings = ratings_path.read_text()
+          additions = '''  e("tatiana-suarez", "Tatiana Suarez", "women", ["Strawweight", "Flyweight"], "ESPN+ Era", "UFC strawweight title challenger with wins over former UFC champions", { career: 80, striking: 65, grappling: 93 }),
+          e("manon-fiorot", "Manon Fiorot", "women", ["Flyweight"], "ESPN+ Era", "UFC flyweight title challenger with a sustained ranked contender run", { career: 81, striking: 88, grappling: 60 }),
+          e("erin-blanchfield", "Erin Blanchfield", "women", ["Flyweight"], "ESPN+ Era", "UFC flyweight contender with wins over former UFC champions", { career: 78, striking: 70, grappling: 89 }),
+          e("yan-xiaonan", "Yan Xiaonan", "women", ["Strawweight"], "ESPN+ Era", "UFC strawweight title challenger and long-ranked contender", { career: 79, striking: 86, grappling: 58 }),
+          e("virna-jandiroba", "Virna Jandiroba", "women", ["Strawweight"], "ESPN+ Era", "UFC strawweight title challenger with a deep ranked contender run", { career: 78, striking: 58, grappling: 91 }),
+          e("irene-aldana", "Irene Aldana", "women", ["Bantamweight"], "ESPN+ Era", "UFC bantamweight title challenger with ranked knockout wins", { career: 72, striking: 84, grappling: 49 }),
+          e("hannah-cifers", "Hannah Cifers", "women", ["Strawweight"], "ESPN+ Era", "UFC strawweight run with two wins and a prolonged losing stretch", { career: 31, striking: 58, grappling: 28 }),
+          e("pearl-gonzalez", "Pearl Gonzalez", "women", ["Strawweight"], "Fox / PPV Boom", "Two-fight UFC strawweight run without a UFC win", { career: 18, striking: 42, grappling: 49 }),
+          e("bec-rawlings", "Bec Rawlings", "women", ["Strawweight", "Flyweight"], "Fox / PPV Boom", "UFC strawweight and flyweight run with two wins and five losses", { career: 32, striking: 57, grappling: 42 }),
+          e("rachael-ostovich", "Rachael Ostovich", "women", ["Flyweight"], "ESPN+ Era", "UFC flyweight run with one win in four UFC appearances", { career: 25, striking: 43, grappling: 48 }),
+          e("jessamyn-duke", "Jessamyn Duke", "women", ["Bantamweight"], "Fox / PPV Boom", "UFC bantamweight run with one win and a four-fight losing stretch", { career: 27, striking: 53, grappling: 39 }),
+          e("alexis-dufresne", "Alexis Dufresne", "women", ["Bantamweight"], "Fox / PPV Boom", "Two-fight UFC bantamweight run without a UFC win", { career: 16, striking: 34, grappling: 50 }),
+          '''
+          marker = '  e("darren-elkins", "Darren Elkins"'
+          assert marker in ratings
+          for slug in [
+              'tatiana-suarez','manon-fiorot','erin-blanchfield','yan-xiaonan','virna-jandiroba','irene-aldana',
+              'hannah-cifers','pearl-gonzalez','bec-rawlings','rachael-ostovich','jessamyn-duke','alexis-dufresne',
+          ]:
+              assert f'e("{slug}"' not in ratings, f'duplicate Play-only fighter: {slug}'
+          ratings = ratings.replace(marker, additions + marker, 1)
+          ratings_path.write_text(ratings)
+
+          test_path = Path('src/features/play/blindRankArchetypes.test.ts')
+          test = test_path.read_text()
+          test_addition = '''  it("adds Women’s career depth at the missing Good and Bad tiers", () => {
+            const expected = {
+              "tatiana-suarez": { career: 80, striking: 65, grappling: 93 },
+              "manon-fiorot": { career: 81, striking: 88, grappling: 60 },
+              "erin-blanchfield": { career: 78, striking: 70, grappling: 89 },
+              "yan-xiaonan": { career: 79, striking: 86, grappling: 58 },
+              "virna-jandiroba": { career: 78, striking: 58, grappling: 91 },
+              "irene-aldana": { career: 72, striking: 84, grappling: 49 },
+              "hannah-cifers": { career: 31, striking: 58, grappling: 28 },
+              "pearl-gonzalez": { career: 18, striking: 42, grappling: 49 },
+              "bec-rawlings": { career: 32, striking: 57, grappling: 42 },
+              "rachael-ostovich": { career: 25, striking: 43, grappling: 48 },
+              "jessamyn-duke": { career: 27, striking: 53, grappling: 39 },
+              "alexis-dufresne": { career: 16, striking: 34, grappling: 50 },
+            } as const;
+            const womensPool = blindRankPool("womens-careers");
+            const byId = new Map(womensPool.map((fighter) => [fighter.id, fighter]));
+
+            for (const [id, ratings] of Object.entries(expected)) {
+              const fighter = byId.get(id);
+              expect(fighter, id).toBeDefined();
+              expect(fighter?.ratings, id).toEqual(ratings);
+            }
+
+            const tierCounts = womensPool.reduce<Record<string, number>>((counts, fighter) => {
+              const tier = blindRankTier(blindRankRating(fighter, "womens-careers"));
+              counts[tier] = (counts[tier] ?? 0) + 1;
+              return counts;
+            }, {});
+            expect(tierCounts.good).toBe(6);
+            expect(tierCounts.bad).toBe(6);
+            expect(new Set(womensPool.map((fighter) => fighter.id)).size).toBe(womensPool.length);
+            expect(new Set(womensPool.map((fighter) => fighter.name.toLowerCase())).size).toBe(womensPool.length);
+          });
+
+          '''
+          marker = '  it("builds every broad-pool archetype'
+          assert marker in test
+          assert 'adds Women’s career depth at the missing Good and Bad tiers' not in test
+          test = test.replace(marker, test_addition + marker, 1)
+          test_path.write_text(test)
+          PY
       - name: Download ESPN headshots and build local WebP thumbnails
         run: |
           python - <<'PY'
@@ -58,11 +135,11 @@ jobs:
               assert target.read_bytes()[:4] == b'RIFF'
               print(slug, len(target.read_bytes()))
           PY
-      - name: Commit generated thumbnails and remove temporary workflow
+      - name: Commit batch and remove temporary workflow
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git rm .github/workflows/tmp-womens-thumbs.yml
-          git add public/assets/fighters/*-thumb.webp
-          git commit -m 'Add Women’s Blind Rank thumbnails'
+          git add src/features/play/playFighterRatings.ts src/features/play/blindRankArchetypes.test.ts public/assets/fighters/*-thumb.webp
+          git commit -m 'Add Women’s Blind Rank fighter depth'
           git push origin HEAD:codex/womens-blind-rank-depth
