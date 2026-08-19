@@ -1,6 +1,6 @@
 import { fireEvent, render } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ChallengeProvider } from "../challenges/ChallengeProvider";
 import { IdentityProvider } from "../identity/IdentityProvider";
 import { FindLeaderHistoryProvider } from "./FindLeaderHistoryProvider";
@@ -32,7 +32,10 @@ function renderPlay(path = "/play") {
 }
 
 describe("Play registry", () => {
-  beforeEach(() => window.localStorage.clear());
+  beforeEach(() => {
+    window.localStorage.clear();
+    window.scrollTo = vi.fn();
+  });
 
   it("preserves the approved game order and explanatory descriptions", () => {
     expect(playGames.map((game) => game.id)).toEqual([
@@ -71,7 +74,7 @@ describe("Play registry", () => {
     expect(container.textContent).toContain("Find the LeaderLeaderboard");
   });
 
-  it("deep-links to an exact dated board and shows the shared result actions", () => {
+  it("deep-links to an exact dated board, shows the normalized score, and preserves shared result actions", () => {
     const day = "2026-07-24";
     const board = dailyFindLeaderBoard(day)!;
     const leaderIndex = board.candidates.findIndex((fighter) => fighter.id === board.leaderId);
@@ -80,8 +83,45 @@ describe("Play registry", () => {
     expect(fighterCards).toHaveLength(10);
     fireEvent.click(fighterCards[leaderIndex]);
 
+    expect(container.querySelector(".find-result-hero h1")?.textContent).toBe("10/100");
+    expect(container.querySelector(".find-reveal .section-heading > strong")?.textContent).toBe("1/10");
+
     const actionLabels = [...container.querySelectorAll(".game-result-actions button")].map((button) => button.textContent);
     expect(actionLabels).toEqual(["CHALLENGE SOMEONE", "REPLAY CHALLENGE", "ALL GAMES"]);
+  });
+
+  it("offers New Lineup during replayable play and regenerates through the existing replay owner", () => {
+    const { container } = renderPlay("/play/find-leader?mode=replayable");
+    const firstGame = container.querySelector<HTMLElement>(".find-game");
+    const firstChallengeId = firstGame?.dataset.challengeId;
+    const newLineup = [...container.querySelectorAll<HTMLButtonElement>(".find-game__hero button")]
+      .find((button) => button.textContent === "NEW LINEUP");
+
+    expect(firstChallengeId).toBeTruthy();
+    expect(newLineup).toBeDefined();
+    fireEvent.click(newLineup!);
+
+    const refreshedGame = container.querySelector<HTMLElement>(".find-game");
+    expect(refreshedGame?.dataset.challengeId).toBeTruthy();
+    expect(refreshedGame?.dataset.challengeId).not.toBe(firstChallengeId);
+    expect(container.querySelectorAll(".find-card")).toHaveLength(10);
+
+    const refreshedCards = [...container.querySelectorAll<HTMLButtonElement>(".find-card")];
+    for (const card of refreshedCards) {
+      fireEvent.click(card);
+      if (container.querySelector(".game-result-actions")) break;
+    }
+
+    expect(container.querySelector(".find-result-hero h1")?.textContent)
+      .toMatch(/^(?:10|20|30|40|50|60|70|80|90|100)\/100$/);
+    const actionLabels = [...container.querySelectorAll(".game-result-actions button")].map((button) => button.textContent);
+    expect(actionLabels).toEqual(["CHALLENGE SOMEONE", "NEW LINEUP", "ALL GAMES"]);
+  });
+
+  it("keeps New Lineup off fixed daily boards", () => {
+    const { container } = renderPlay("/play/find-leader");
+    const labels = [...container.querySelectorAll<HTMLButtonElement>(".find-game__hero button")].map((button) => button.textContent);
+    expect(labels).not.toContain("NEW LINEUP");
   });
 });
 
