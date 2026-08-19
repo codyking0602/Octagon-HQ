@@ -33,12 +33,12 @@ jobs:
             '  e("andrei-arlovski", "Andrei Arlovski", "men", ["Heavyweight"], "TUF Boom", "Former UFC heavyweight champion with exceptional UFC longevity", { career: 79, striking: 81, grappling: 52 }),',
             '  e("alistair-overeem", "Alistair Overeem", "men", ["Heavyweight"], "Fox / PPV Boom", "UFC heavyweight title challenger with a deep UFC contender win ledger", { career: 78, striking: 89, grappling: 68 }),',
             '  e("tim-sylvia", "Tim Sylvia", "men", ["Heavyweight"], "Pre-TUF Era", "Multiple-time UFC heavyweight champion with successful UFC title defenses", { career: 77, striking: 78, grappling: 50 }),',
-            '  e("brock-lesnar", "Brock Lesnar", "men", ["Heavyweight"], "TUF Boom", "UFC heavyweight champion with a short but championship-heavy UFC run", { career: 76, striking: 66, grappling: 86 }),',
             '  e("derrick-lewis", "Derrick Lewis", "men", ["Heavyweight"], "ESPN+ Era", "UFC heavyweight title challenger with historic UFC knockout volume", { career: 74, striking: 87, grappling: 34 }),',
             '  e("shane-carwin", "Shane Carwin", "men", ["Heavyweight"], "TUF Boom", "UFC interim heavyweight champion and title challenger with a short elite UFC peak", { career: 73, striking: 88, grappling: 74 }),',
             '  e("josh-barnett", "Josh Barnett", "men", ["Heavyweight"], "Pre-TUF Era", "Former UFC heavyweight champion with additional UFC contender wins after returning", { career: 72, striking: 64, grappling: 84 }),',
+            '  e("antonio-rodrigo-nogueira", "Antonio Rodrigo Nogueira", "men", ["Heavyweight"], "TUF Boom", "UFC interim heavyweight champion with notable UFC heavyweight wins", { career: 71, striking: 62, grappling: 91 }),',
           ]
-          slugs = ['frank-mir','andrei-arlovski','alistair-overeem','tim-sylvia','brock-lesnar','derrick-lewis','shane-carwin','josh-barnett']
+          slugs = ['frank-mir','andrei-arlovski','alistair-overeem','tim-sylvia','derrick-lewis','shane-carwin','josh-barnett','antonio-rodrigo-nogueira']
           for slug in slugs:
             assert f'e("{slug}"' not in ratings, f'duplicate Play-only fighter: {slug}'
 
@@ -63,10 +63,10 @@ jobs:
             '      "andrei-arlovski": { career: 79, striking: 81, grappling: 52 },',
             '      "alistair-overeem": { career: 78, striking: 89, grappling: 68 },',
             '      "tim-sylvia": { career: 77, striking: 78, grappling: 50 },',
-            '      "brock-lesnar": { career: 76, striking: 66, grappling: 86 },',
             '      "derrick-lewis": { career: 74, striking: 87, grappling: 34 },',
             '      "shane-carwin": { career: 73, striking: 88, grappling: 74 },',
             '      "josh-barnett": { career: 72, striking: 64, grappling: 84 },',
+            '      "antonio-rodrigo-nogueira": { career: 71, striking: 62, grappling: 91 },',
             '    } as const;',
             '    const heavyweightPool = blindRankPool("heavyweight");',
             '    const byId = new Map(heavyweightPool.map((fighter) => [fighter.id, fighter]));',
@@ -105,6 +105,7 @@ jobs:
             'tim-sylvia': '2354048',
             'shane-carwin': '2335656',
             'josh-barnett': '2354241',
+            'antonio-rodrigo-nogueira': '2335521',
           }
           out = Path('public/assets/fighters')
           errors = []
@@ -133,6 +134,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git rm .github/workflows/tmp-heavyweight-good-depth.yml
-          git add src/features/play/playFighterRatings.ts src/features/play/blindRankArchetypes.test.ts public/assets/fighters/frank-mir-thumb.webp public/assets/fighters/tim-sylvia-thumb.webp public/assets/fighters/shane-carwin-thumb.webp public/assets/fighters/josh-barnett-thumb.webp
+          git add src/features/play/playFighterRatings.ts src/features/play/blindRankArchetypes.test.ts public/assets/fighters/frank-mir-thumb.webp public/assets/fighters/tim-sylvia-thumb.webp public/assets/fighters/shane-carwin-thumb.webp public/assets/fighters/josh-barnett-thumb.webp public/assets/fighters/antonio-rodrigo-nogueira-thumb.webp
           git commit -m 'Add Heavyweight Good-tier Blind Rank depth'
           git push origin HEAD:codex/heavyweight-good-tier-depth
