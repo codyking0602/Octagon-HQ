@@ -1,12 +1,13 @@
 export const WAVELENGTH_CATALOG_VERSION = "wavelength-catalog-v2" as const;
 export const WAVELENGTH_CALIBRATION_VERSION = "wavelength-calibration-v1" as const;
-export const WAVELENGTH_GENERATOR_VERSION = "wavelength-generator-v2" as const;
+export const WAVELENGTH_GENERATOR_VERSION = "wavelength-generator-v3" as const;
 export const WAVELENGTH_REVEAL_CONTRACT_VERSION = "wavelength-reveal-privacy-v1" as const;
 
 export const WAVELENGTH_HISTORICAL_VERSION_IDS = [
   "wavelength-catalog-v1",
   WAVELENGTH_CATALOG_VERSION,
   WAVELENGTH_CALIBRATION_VERSION,
+  "wavelength-generator-v2",
   WAVELENGTH_GENERATOR_VERSION,
   WAVELENGTH_REVEAL_CONTRACT_VERSION,
 ] as const;
