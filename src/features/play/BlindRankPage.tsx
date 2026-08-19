@@ -8,16 +8,16 @@ import {
   blindRankChallengeUrl,
   blindRankPacks,
   createBlindRankLineup,
-  loadBlindRankPack,
   resolveBlindRankChallenge,
-  saveBlindRankPack,
 } from "./blindRankEngine";
 import { GameResultActions } from "./GameResultActions";
 import {
+  createReplaySeed,
   curatedLineupIdentity,
   recordLineupCompletion,
   rememberLineup,
   replayLabelFor,
+  seededLineupRandom,
   selectReplayLineup,
   type PlayLineupIdentity,
 } from "./lineupModel";
@@ -37,6 +37,14 @@ interface BlindRankRun {
 
 function packIsValid(value: string | null): value is BlindRankPackId {
   return blindRankPacks.some((pack) => pack.id === value);
+}
+
+function randomBlindRankPack(exclude?: BlindRankPackId): BlindRankPackId {
+  const candidates = exclude && blindRankPacks.length > 1
+    ? blindRankPacks.filter((pack) => pack.id !== exclude)
+    : blindRankPacks;
+  const random = seededLineupRandom("blind-rank", "category", createReplaySeed("blind-rank-category"));
+  return candidates[Math.floor(random() * candidates.length)]!.id;
 }
 
 function record(value: ChallengeJson | undefined): { [key: string]: ChallengeJson } | null {
@@ -110,14 +118,22 @@ export default function BlindRankPage() {
   const profilePack = packIsValid(profilePackValue) ? profilePackValue : null;
   const profileLineupIds = strings(profileSetup?.lineupIds);
   const profileLineup = profilePack ? resolveBlindRankChallenge(profilePack, profileLineupIds) : null;
-  const queryPack = searchParams.get("pack");
-  const initialPack = profilePack ?? (packIsValid(queryPack) ? queryPack : loadBlindRankPack());
+  const queryPackValue = searchParams.get("pack");
+  const queryPack = packIsValid(queryPackValue) ? queryPackValue : null;
   const queryLineup = searchParams.get("lineup") ?? "";
-  const sharedLineup = useMemo(() => {
-    if (profileLineup) return profileLineup;
+  const querySharedLineup = useMemo(() => {
+    if (!queryPack) return null;
     const ids = queryLineup.split(",").map((value) => value.trim()).filter(Boolean);
-    return resolveBlindRankChallenge(initialPack, ids);
-  }, [initialPack, profileLineup, queryLineup]);
+    return resolveBlindRankChallenge(queryPack, ids);
+  }, [queryLineup, queryPack]);
+  const sharedLineup = profileLineup ?? querySharedLineup;
+  const sharedPack = profileLineup && profilePack
+    ? profilePack
+    : querySharedLineup && queryPack
+      ? queryPack
+      : null;
+  const casualInitialPack = useMemo(() => randomBlindRankPack(), []);
+  const initialPack = sharedPack ?? casualInitialPack;
   const sharedChallengeId = profileMatch.challenge?.code
     ?? `shared:${initialPack}:${sharedLineup?.map((fighter) => fighter.id).join("|") ?? "invalid"}`;
   const [run, setRun] = useState<BlindRankRun>(() =>
@@ -163,19 +179,14 @@ export default function BlindRankPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  function startNewLineup(nextPack = run.packId) {
-    saveBlindRankPack(nextPack);
-    setRun(casualBlindRankRun(nextPack));
+  function startNewLineup() {
+    setRun(casualBlindRankRun(randomBlindRankPack(run.packId)));
     resetPlacements();
   }
 
   function replay() {
     if (run.identity.type === "replayable") startNewLineup();
     else resetPlacements();
-  }
-
-  function changePack(nextPack: BlindRankPackId) {
-    startNewLineup(nextPack);
   }
 
   function placeCurrent(slotIndex: number) {
@@ -225,13 +236,7 @@ export default function BlindRankPage() {
         </div>
         {!shared ? (
           <div className="blind-rank-controls">
-            <label>
-              <span>Category</span>
-              <select aria-label="Blind Rank category" value={run.packId} onChange={(event) => changePack(event.target.value as BlindRankPackId)}>
-                {blindRankPacks.map((item) => <option value={item.id} key={item.id}>{item.name}</option>)}
-              </select>
-            </label>
-            <button type="button" onClick={() => startNewLineup()}>NEW LINEUP</button>
+            <button type="button" onClick={startNewLineup}>NEW LINEUP</button>
           </div>
         ) : <span className="blind-rank-shared-pack">{pack.name}</span>}
       </section>
