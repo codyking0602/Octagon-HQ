@@ -262,10 +262,17 @@ export default function BlindRankPage() {
                 <h1>{completedScore.normalizedScore}/100</h1>
                 <p>FIVE PLACEMENTS GRADED AGAINST OCTAGON HQ</p>
                 <small>Your five locked placements are graded by their relative order to produce the 100-point score.</small>
+                <p>OCTAGON HQ ORDER</p>
+                <p aria-label="Octagon HQ order">
+                  {canonicalOrder.map(({ fighter }, index) => (
+                    <span key={fighter.id}>#{index + 1} {fighter.name}{index < canonicalOrder.length - 1 ? <br /> : null}</span>
+                  ))}
+                </p>
+                <small>Fighters within one rating point are treated as tied for scoring.</small>
               </section>
             ) : null}
             <p className="eyebrow">YOUR FINAL RANKING</p>
-            <div className="blind-rank-results" aria-label="Your final ranking">
+            <div className="blind-rank-results">
               {placements.map((fighter, index) => fighter ? (
                 <article key={fighter.id}>
                   <b>#{index + 1}</b>
@@ -274,17 +281,6 @@ export default function BlindRankPage() {
                 </article>
               ) : null)}
             </div>
-            <p className="eyebrow">OCTAGON HQ ORDER</p>
-            <div className="blind-rank-results" aria-label="Octagon HQ order">
-              {canonicalOrder.map(({ fighter }, index) => (
-                <article key={fighter.id}>
-                  <b>#{index + 1}</b>
-                  <FighterPhoto className="blind-rank-result__photo" name={fighter.name} src={fighter.thumbUrl} />
-                  <span><strong>{fighter.name}</strong><small>{compactDivision(fighter)}</small></span>
-                </article>
-              ))}
-            </div>
-            <small>Fighters within one rating point are treated as tied for scoring.</small>
             <GameResultActions
               onChallenge={() => void challengeSomeone()}
               onReplay={replay}
