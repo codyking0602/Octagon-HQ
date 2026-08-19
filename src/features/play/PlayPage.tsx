@@ -85,11 +85,15 @@ function resultStatLabel(board: FindLeaderBoard) {
   return /KO\/TKO/i.test(board.statLabel) ? "KO/TKO WINS" : board.shortLabel;
 }
 
-function objectiveCopy(board: FindLeaderBoard) {
-  const label = board.statLabel.replace(/^all-time\s+/i, "");
-  if (/percentage/i.test(label)) return `Leave the fighter with the highest ${label} among this group.`;
-  if (/span|streak/i.test(label)) return `Leave the fighter with the longest ${label} among this group.`;
-  return `Leave the fighter with the most ${label} among this group.`;
+function questionCopy(board: FindLeaderBoard) {
+  if (board.definitionId === "unique-opponents-finished") {
+    return "Who has finished the most unique UFC opponents?";
+  }
+  return board.question;
+}
+
+function objectiveCopy() {
+  return "Eliminate fighters until only the leader remains.";
 }
 
 function validChallengeDay(value: string | null) {
@@ -285,11 +289,11 @@ function FindLeaderGame({
       gameId: "find-leader",
       gameVersion: board.version,
       gameTitle: "Find the Leader",
-      summary: board.question,
+      summary: questionCopy(board),
       setup: findLeaderChallengeSetup(board),
       creatorResult: findLeaderChallengeResult(result),
       shareTitle: "Find the Leader Challenge",
-      shareText: `I challenged you to the same Find the Leader board: ${board.question} Can you beat my score?`,
+      shareText: `I challenged you to the same Find the Leader board: ${questionCopy(board)} Can you beat my score?`,
       shareUrl: url.toString(),
     });
     setChallengeStatus(status);
@@ -331,7 +335,7 @@ function FindLeaderGame({
 
         <section className="surface-card find-reveal">
           <header className="section-heading">
-            <div><p className="eyebrow">FULL STAT REVEAL</p><h2>{board.question}</h2></div>
+            <div><p className="eyebrow">FULL STAT REVEAL</p><h2>{questionCopy(board)}</h2></div>
             <strong>{normalizedScore.native.display}</strong>
           </header>
           <div className="find-reveal__grid">
@@ -382,8 +386,8 @@ function FindLeaderGame({
       <section className="find-game__hero">
         <div>
           <p className="eyebrow">{eyebrow}</p>
-          <h1>{board.question}</h1>
-          <p>{objectiveCopy(board)}</p>
+          <h1>{questionCopy(board)}</h1>
+          <p>{objectiveCopy()}</p>
           {identity.type === "replayable" ? (
             <button className="primary-action" type="button" onClick={onNewLineup}>NEW LINEUP</button>
           ) : null}
@@ -394,7 +398,7 @@ function FindLeaderGame({
           <div><span>SAFE</span><strong>{eliminated.length}/9</strong></div>
         </aside>
       </section>
-      <section className="find-game__grid" aria-label={board.question}>
+      <section className="find-game__grid" aria-label={questionCopy(board)}>
         {board.candidates.map((fighter, index) => {
           const safe = eliminatedSet.has(fighter.id);
           return (
