@@ -1,6 +1,6 @@
 import { fireEvent, render } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { ChallengeProvider } from "../challenges/ChallengeProvider";
 import { IdentityProvider } from "../identity/IdentityProvider";
 import { FindLeaderHistoryProvider } from "./FindLeaderHistoryProvider";
@@ -32,10 +32,7 @@ function renderPlay(path = "/play") {
 }
 
 describe("Play registry", () => {
-  beforeEach(() => {
-    window.localStorage.clear();
-    window.scrollTo = vi.fn();
-  });
+  beforeEach(() => window.localStorage.clear());
 
   it("preserves the approved game order and explanatory descriptions", () => {
     expect(playGames.map((game) => game.id)).toEqual([
