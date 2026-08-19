@@ -22,6 +22,12 @@ describe("Hit the Number canonical presentation", () => {
     expect(page).not.toContain("ROSTER FILTER");
   });
 
+  it("uses the themed roster instruction for the actual pick decision instead of repeating the theme", () => {
+    expect(view).toContain("Pick ${setup.pickCount} from this pool");
+    expect(view).toContain("Pick ${setup.pickCount} from this theme");
+    expect(view).not.toContain("Choose from ${format?.configurationLabel}");
+  });
+
   it("keeps all selected fighters visible and the ready lock action reachable on phones", () => {
     expect(css).toContain("grid-template-columns: repeat(4, minmax(0, 1fr));");
     expect(css).not.toContain("overflow-x: auto");

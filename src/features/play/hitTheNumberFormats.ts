@@ -1,11 +1,11 @@
 import { canonicalRankingInputs } from "../rankings/data/rankingInputs";
 import {
-  HIT_THE_NUMBER_DEFAULT_RANDOM_POOL_SIZE,
   HIT_THE_NUMBER_GENERATION_PROFILE,
   HIT_THE_NUMBER_MAX_PICKS,
   HIT_THE_NUMBER_MIN_PICKS,
   createGeneratedHitTheNumberBoard,
   hitTheNumberEligibleFighters,
+  hitTheNumberRandomPoolSize,
   hitTheNumberStatRows,
   type HitTheNumberBoardType,
   type HitTheNumberStatId,
@@ -239,8 +239,27 @@ function weightedValue<T>(rows: readonly { value: T; weight: number }[], random:
   return rows[rows.length - 1]!.value;
 }
 
-function generatedPickCount(maximumPicks: number, random: () => number) {
-  const options = HIT_THE_NUMBER_GENERATION_PROFILE.picks.filter((row) => row.value <= maximumPicks);
+function generatedPickOptions(
+  maximumPicks: number,
+  boardType: HitTheNumberBoardType,
+  eligibleCount: number,
+) {
+  return HIT_THE_NUMBER_GENERATION_PROFILE.picks.filter(
+    (row) => row.value <= maximumPicks
+      && (
+        boardType === "open-roster"
+        || eligibleCount >= hitTheNumberRandomPoolSize(row.value)
+      ),
+  );
+}
+
+function generatedPickCount(
+  maximumPicks: number,
+  boardType: HitTheNumberBoardType,
+  eligibleCount: number,
+  random: () => number,
+) {
+  const options = generatedPickOptions(maximumPicks, boardType, eligibleCount);
   return options.length ? weightedValue(options, random) : null;
 }
 
@@ -355,6 +374,16 @@ function formatSetup(
   };
 }
 
+function slotEligibleFighters(
+  slotSet: HitTheNumberSlotSetDefinition,
+  baseEligible: readonly PlayFighter[],
+  rowsById: ReadonlyMap<string, HitTheNumberStatRow>,
+) {
+  return baseEligible.filter((fighter) => (
+    slotSet.slots.some((slot) => fighterMatchesRules(fighter, slot.rules, rowsById))
+  ));
+}
+
 function fighterPool(
   boardType: HitTheNumberBoardType,
   eligible: readonly PlayFighter[],
@@ -362,8 +391,11 @@ function fighterPool(
   random: () => number,
 ) {
   if (boardType === "open-roster") return eligible.map((fighter) => fighter.id);
+  const poolSize = hitTheNumberRandomPoolSize(solutionFighterIds.length);
+  if (eligible.length < poolSize) {
+    throw new Error(`Hit the Number format needs ${poolSize} eligible fighters to preserve decoys.`);
+  }
   const solutionSet = new Set(solutionFighterIds);
-  const poolSize = Math.min(HIT_THE_NUMBER_DEFAULT_RANDOM_POOL_SIZE, eligible.length);
   const extras = shuffleLineup(
     eligible.filter((fighter) => !solutionSet.has(fighter.id)),
     random,
@@ -386,17 +418,26 @@ function buildSpecialPlan(
 
   if (formatId === "themed-lineup") {
     const viableThemes = HIT_THE_NUMBER_THEME_CATALOG.filter((theme) => {
-      const positiveCount = baseEligible.filter(
-        (fighter) => valueFor(rowsById, fighter.id, statId) > 0
-          && fighterMatchesRules(fighter, theme.rules, rowsById),
+      const eligible = baseEligible.filter((fighter) => fighterMatchesRules(fighter, theme.rules, rowsById));
+      const positiveCount = eligible.filter(
+        (fighter) => valueFor(rowsById, fighter.id, statId) > 0,
       ).length;
-      return positiveCount >= HIT_THE_NUMBER_MIN_PICKS;
+      return generatedPickOptions(
+        Math.min(HIT_THE_NUMBER_MAX_PICKS, positiveCount),
+        options.boardType,
+        eligible.length,
+      ).length > 0;
     });
     if (!viableThemes.length) return null;
     const theme = viableThemes[Math.floor(random() * viableThemes.length)]!;
     const eligible = baseEligible.filter((fighter) => fighterMatchesRules(fighter, theme.rules, rowsById));
     const positiveCount = eligible.filter((fighter) => valueFor(rowsById, fighter.id, statId) > 0).length;
-    const pickCount = generatedPickCount(Math.min(HIT_THE_NUMBER_MAX_PICKS, positiveCount), random);
+    const pickCount = generatedPickCount(
+      Math.min(HIT_THE_NUMBER_MAX_PICKS, positiveCount),
+      options.boardType,
+      eligible.length,
+      random,
+    );
     if (pickCount == null) return null;
     const solutionFighterIds = generatedSolution(eligible, statId, pickCount, rowsById, random);
     if (!solutionFighterIds) return null;
@@ -415,16 +456,17 @@ function buildSpecialPlan(
     ? HIT_THE_NUMBER_ONE_FROM_EACH_CATALOG
     : HIT_THE_NUMBER_BUILD_TEAM_CATALOG;
   const viabilityRandom = () => 0.5;
-  const viableSets = catalog.filter(
-    (slotSet) => slotSolution(slotSet.slots, baseEligible, statId, rowsById, viabilityRandom) != null,
-  );
+  const viableSets = catalog.filter((slotSet) => {
+    if (slotSolution(slotSet.slots, baseEligible, statId, rowsById, viabilityRandom) == null) return false;
+    if (options.boardType === "open-roster") return true;
+    return slotEligibleFighters(slotSet, baseEligible, rowsById).length
+      >= hitTheNumberRandomPoolSize(slotSet.slots.length);
+  });
   if (!viableSets.length) return null;
   const slotSet = viableSets[Math.floor(random() * viableSets.length)]!;
   const solutionFighterIds = slotSolution(slotSet.slots, baseEligible, statId, rowsById, random);
   if (!solutionFighterIds) return null;
-  const eligible = baseEligible.filter((fighter) => (
-    slotSet.slots.some((slot) => fighterMatchesRules(fighter, slot.rules, rowsById))
-  ));
+  const eligible = slotEligibleFighters(slotSet, baseEligible, rowsById);
   return {
     boardType: options.boardType,
     statId,
