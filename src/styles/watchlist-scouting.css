@@ -149,14 +149,14 @@
 
 .watchlist-scouting-card__read {
   display: grid;
-  gap: 7px;
+  gap: 9px;
   padding: 12px 13px;
   border-left: 3px solid var(--ufc-red);
   border-radius: 0 12px 12px 0;
   background: rgba(229, 9, 20, .07);
 }
 
-.watchlist-scouting-card__read span,
+.watchlist-scouting-card__read > span,
 .watchlist-scouting-card__intel > span {
   color: var(--ufc-red-strong);
   font-size: 8px;
@@ -164,12 +164,22 @@
   letter-spacing: .1em;
 }
 
-.watchlist-scouting-card__read p {
+.watchlist-scouting-card__read-copy {
+  display: grid;
+}
+
+.watchlist-scouting-card__read-copy p {
   margin: 0;
   color: var(--text-primary);
   font-size: 12px;
   font-weight: 700;
-  line-height: 1.55;
+  line-height: 1.5;
+}
+
+.watchlist-scouting-card__read-copy p + p {
+  margin-top: 9px;
+  padding-top: 9px;
+  border-top: 1px solid rgba(255, 255, 255, .08);
 }
 
 .watchlist-scouting-card__stats {
@@ -219,15 +229,16 @@
 
 .watchlist-scouting-card__actions {
   display: grid;
-  gap: 8px;
   padding-bottom: 2px;
 }
 
-.watchlist-scouting-card__actions .primary-action,
-.watchlist-scouting-card__actions .secondary-action {
+.watchlist-scouting-card__actions .primary-action {
   width: 100%;
-  min-height: 44px;
+  min-height: 40px;
+  padding: 0 14px;
   justify-content: center;
+  font-size: 13px;
+  letter-spacing: .025em;
 }
 
 @media (min-width: 700px) {
