@@ -146,6 +146,7 @@ for (const row of eventRows) {
 }
 
 const fightDetails = new Map();
+const detailRowsByBout = new Map();
 const detailCountByEvent = new Map();
 const skippedDetailEvents = new Set();
 for (const row of detailRows) {
@@ -158,29 +159,42 @@ for (const row of detailRows) {
   const names = boutNames(row.BOUT).sort();
   const fightId = sourceId(row.URL, "fight-details");
   if (names.length !== 2 || !fightId) throw new Error(`Invalid UFCStats fight detail row: ${JSON.stringify(row)}`);
+  if (fightDetails.has(fightId)) throw new Error(`Duplicate UFCStats fight id ${fightId}.`);
   const position = detailCountByEvent.get(event) ?? 0;
   detailCountByEvent.set(event, position + 1);
-  const key = boutKey(row.EVENT, row.BOUT);
-  if (fightDetails.has(key)) throw new Error(`Duplicate UFCStats fight detail ${key}.`);
-  fightDetails.set(key, {
+  const sourceBoutKey = boutKey(row.EVENT, row.BOUT);
+  const detail = {
     ...eventFacts,
     fightId,
     fightUrl: row.URL,
     names,
+    boutKey: sourceBoutKey,
     mainEvent: position === 0,
-  });
+  };
+  fightDetails.set(fightId, detail);
+  const sameBoutRows = detailRowsByBout.get(sourceBoutKey) ?? [];
+  sameBoutRows.push(detail);
+  detailRowsByBout.set(sourceBoutKey, sameBoutRows);
 }
 
 const results = new Map();
 for (const row of resultRows) {
-  const key = boutKey(row.EVENT, row.BOUT);
-  if (results.has(key)) throw new Error(`Duplicate UFCStats fight result ${key}.`);
-  results.set(key, row);
+  const fightId = sourceId(row.URL, "fight-details");
+  if (!fightId) throw new Error(`UFCStats result is missing its fight id: ${JSON.stringify(row)}`);
+  if (results.has(fightId)) throw new Error(`Duplicate UFCStats fight result ${fightId}.`);
+  results.set(fightId, row);
 }
 
+const ambiguousStatBouts = new Set(
+  [...detailRowsByBout.entries()]
+    .filter(([, rows]) => rows.length > 1)
+    .map(([key]) => key),
+);
 const knockdowns = new Map();
 const seenStatRounds = new Set();
 for (const row of statRows) {
+  const sourceBoutKey = boutKey(row.EVENT, row.BOUT);
+  if (ambiguousStatBouts.has(sourceBoutKey)) continue;
   const round = parseInteger(row.ROUND);
   const kd = parseInteger(row.KD);
   const key = fighterKey(row.EVENT, row.BOUT, row.FIGHTER);
@@ -192,9 +206,9 @@ for (const row of statRows) {
 }
 
 const detailRowsByDate = new Map();
-for (const [key, detail] of fightDetails) {
+for (const detail of fightDetails.values()) {
   const rows = detailRowsByDate.get(detail.date) ?? [];
-  rows.push({ key, ...detail });
+  rows.push(detail);
   detailRowsByDate.set(detail.date, rows);
 }
 
@@ -219,8 +233,9 @@ function finishFact(fight, result) {
 }
 
 function knockdownFact(detail, fighterName, opponentName) {
-  const forValue = knockdowns.get(`${detail.key}|${compact(fighterName)}`);
-  const againstValue = knockdowns.get(`${detail.key}|${compact(opponentName)}`);
+  if (ambiguousStatBouts.has(detail.boutKey)) return { status: "unavailable" };
+  const forValue = knockdowns.get(`${detail.boutKey}|${compact(fighterName)}`);
+  const againstValue = knockdowns.get(`${detail.boutKey}|${compact(opponentName)}`);
   return Number.isInteger(forValue) && Number.isInteger(againstValue)
     ? { status: "verified", for: forValue, against: againstValue }
     : { status: "unavailable" };
@@ -230,8 +245,8 @@ const entries = [];
 for (const fighter of canonicalFighters) {
   for (const fight of fighter.fights) {
     const detail = matchDetail(fighter.name, fight);
-    const result = results.get(detail.key);
-    if (!result) throw new Error(`Missing UFCStats result row for ${detail.key}.`);
+    const result = results.get(detail.fightId);
+    if (!result) throw new Error(`Missing UFCStats result row for fight ${detail.fightId}.`);
     entries.push({
       fighterId: fighter.slug,
       canonicalFightId: fight.id,
@@ -266,6 +281,7 @@ const coverage = {
   fights: entries.length,
   events: new Set(entries.map((entry) => entry.supplementalFacts.source.eventId)).size,
   upstreamDetailEventsSkippedWithoutMetadata: skippedDetailEvents.size,
+  upstreamDuplicateBoutKeysWithoutStatIdentity: ambiguousStatBouts.size,
   mainEventVerified: entries.filter((entry) => entry.supplementalFacts.mainEvent.status === "verified").length,
   bonusesVerified: 0,
   bonusesUnavailable: entries.length,
@@ -289,7 +305,7 @@ const snapshot = {
       "ufc_fight_results.csv",
       "ufc_fight_stats.csv",
     ],
-    note: "Pinned checked-in UFCStats extract. Bonus flags are not retained by this transport and remain explicitly unavailable.",
+    note: "Pinned checked-in UFCStats extract. Bonus flags are not retained by this transport and remain explicitly unavailable; round stats without per-fight identity remain unavailable for duplicate same-event bouts.",
   },
   coverage,
   entries,
@@ -300,5 +316,8 @@ await fs.writeFile(outputPath, `${JSON.stringify(snapshot, null, 2)}\n`, "utf8")
 console.log(`Wrote ${path.relative(root, outputPath)} from ${sourceRepository}@${sourceCommit}.`);
 if (skippedDetailEvents.size) {
   console.log(`Skipped ${skippedDetailEvents.size} upstream detail event(s) absent from the pinned event index; canonical fights still require exact matches.`);
+}
+if (ambiguousStatBouts.size) {
+  console.log(`Marked round-stat identity unavailable for ${ambiguousStatBouts.size} duplicate same-event matchup key(s).`);
 }
 console.log(JSON.stringify(coverage));
