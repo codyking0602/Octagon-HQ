@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 import fs from "node:fs/promises";
+import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { JSDOM } from "jsdom";
 import { createServer } from "vite";
 
+const require = createRequire(import.meta.url);
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outputPath = path.join(
   root,
@@ -310,7 +312,8 @@ async function main() {
     throw new Error(`UFCSTATS_CHECKED_AT must be YYYY-MM-DD, received ${checkedAt}.`);
   }
 
-  const { chromium } = await import("playwright");
+  const playwrightModule = process.env.PLAYWRIGHT_MODULE_PATH || "playwright";
+  const { chromium } = require(playwrightModule);
   const browser = await chromium.launch({ headless: true });
   const contexts = [];
   try {
