@@ -34,6 +34,12 @@ export const HIT_THE_NUMBER_STATS = [
 ] as const;
 
 export type HitTheNumberStatId = typeof HIT_THE_NUMBER_STATS[number]["id"];
+type HitTheNumberSupplementalStatId =
+  | "ufc-main-events"
+  | "ufc-bonus-awards"
+  | "ufc-first-round-finishes"
+  | "ufc-knockdowns-landed";
+type HitTheNumberLedgerStatId = Exclude<HitTheNumberStatId, HitTheNumberSupplementalStatId>;
 export type HitTheNumberBoardType = "open-roster" | "random-pool";
 
 export const HIT_THE_NUMBER_GENERATION_PROFILE = {
@@ -74,7 +80,8 @@ export interface HitTheNumberEligibilityFilter {
 
 export interface HitTheNumberStatRow {
   fighterId: string;
-  values: Partial<Record<HitTheNumberStatId, number>>;
+  values: Record<HitTheNumberLedgerStatId, number>
+    & Partial<Record<HitTheNumberSupplementalStatId, number>>;
 }
 
 export interface HitTheNumberPublicSetup {
