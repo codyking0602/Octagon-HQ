@@ -13,7 +13,7 @@ permissions:
 
 concurrency:
   group: ufcstats-supplemental-${{ github.event.pull_request.head.ref || github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   refresh:
