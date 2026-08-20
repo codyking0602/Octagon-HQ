@@ -147,11 +147,15 @@ for (const row of eventRows) {
 
 const fightDetails = new Map();
 const detailCountByEvent = new Map();
+const skippedDetailEvents = new Set();
 for (const row of detailRows) {
   const event = compact(row.EVENT);
   const eventFacts = events.get(event);
-  if (!eventFacts) throw new Error(`Fight detail references unknown event ${row.EVENT}.`);
-  const names = boutNames(row.BOUT);
+  if (!eventFacts) {
+    skippedDetailEvents.add(row.EVENT);
+    continue;
+  }
+  const names = boutNames(row.BOUT).sort();
   const fightId = sourceId(row.URL, "fight-details");
   if (names.length !== 2 || !fightId) throw new Error(`Invalid UFCStats fight detail row: ${JSON.stringify(row)}`);
   const position = detailCountByEvent.get(event) ?? 0;
@@ -261,6 +265,7 @@ const coverage = {
   fighters: canonicalFighters.length,
   fights: entries.length,
   events: new Set(entries.map((entry) => entry.supplementalFacts.source.eventId)).size,
+  upstreamDetailEventsSkippedWithoutMetadata: skippedDetailEvents.size,
   mainEventVerified: entries.filter((entry) => entry.supplementalFacts.mainEvent.status === "verified").length,
   bonusesVerified: 0,
   bonusesUnavailable: entries.length,
@@ -293,4 +298,7 @@ const snapshot = {
 await fs.mkdir(path.dirname(outputPath), { recursive: true });
 await fs.writeFile(outputPath, `${JSON.stringify(snapshot, null, 2)}\n`, "utf8");
 console.log(`Wrote ${path.relative(root, outputPath)} from ${sourceRepository}@${sourceCommit}.`);
+if (skippedDetailEvents.size) {
+  console.log(`Skipped ${skippedDetailEvents.size} upstream detail event(s) absent from the pinned event index; canonical fights still require exact matches.`);
+}
 console.log(JSON.stringify(coverage));
