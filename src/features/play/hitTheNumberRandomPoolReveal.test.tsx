@@ -2,7 +2,11 @@ import { readFileSync } from "node:fs";
 import { render } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { HitTheNumberGameView } from "./HitTheNumberGameView";
-import type { HitTheNumberPublicSetup, HitTheNumberResult } from "./hitTheNumberEngine";
+import {
+  HIT_THE_NUMBER_VERSION,
+  type HitTheNumberPublicSetup,
+  type HitTheNumberResult,
+} from "./hitTheNumberEngine";
 import { playFighters } from "./playFighterPool";
 
 const fighters = playFighters.slice(0, 8);
@@ -24,7 +28,7 @@ const result: HitTheNumberResult = {
 
 function setup(boardType: HitTheNumberPublicSetup["boardType"]): HitTheNumberPublicSetup {
   return {
-    version: "hit-the-number-v1",
+    version: HIT_THE_NUMBER_VERSION,
     statId: "ufc-wins",
     boardType,
     target: 30,
