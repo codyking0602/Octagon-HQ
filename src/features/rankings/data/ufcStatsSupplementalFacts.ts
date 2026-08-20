@@ -11,6 +11,24 @@ const snapshotSourceSchema = z
   })
   .strict();
 
+const unreconciledFightSchema = z
+  .object({
+    reconciliation: z.literal("unavailable"),
+    source: z
+      .object({
+        provider: z.literal("ufcstats"),
+        checkedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+      })
+      .strict(),
+    reason: z.literal("no-unique-source-match"),
+  })
+  .strict();
+
+const snapshotFightSchema = z.union([
+  canonicalFightSupplementalFactsSchema,
+  unreconciledFightSchema,
+]);
+
 const ufcStatsSupplementalFactsSnapshotSchema = z
   .object({
     schemaVersion: z.literal(1),
@@ -23,7 +41,7 @@ const ufcStatsSupplementalFactsSnapshotSchema = z
       .strict(),
     fighters: z.record(
       z.string(),
-      z.record(z.string(), canonicalFightSupplementalFactsSchema),
+      z.record(z.string(), snapshotFightSchema),
     ),
   })
   .strict();
@@ -69,6 +87,8 @@ function supplementalFightOwner(value: unknown): SupplementalFightOwner {
  * Applies the checked-in UFCStats supplemental snapshot to the canonical V2
  * ranking fight ledgers. Unknown fighter/fight keys fail closed so generated
  * evidence can never drift away from the canonical ranking owner silently.
+ * Explicit unreconciled snapshot rows remain unattached instead of pretending
+ * missing source evidence is a verified UFCStats fight.
  */
 export function applyUfcStatsSupplementalFacts(fighters: readonly unknown[]): unknown[] {
   const owners = fighters.map(supplementalFightOwner);
@@ -97,7 +117,8 @@ export function applyUfcStatsSupplementalFacts(fighters: readonly unknown[]): un
         ...fighter.facts,
         fights: fighter.facts.fights.map((fight) => {
           const supplementalFacts = supplementalByFight[fight.id];
-          return supplementalFacts ? { ...fight, supplementalFacts } : fight;
+          if (!supplementalFacts || "reconciliation" in supplementalFacts) return fight;
+          return { ...fight, supplementalFacts };
         }),
       },
     };
