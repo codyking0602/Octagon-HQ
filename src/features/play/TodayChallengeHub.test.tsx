@@ -247,7 +247,7 @@ describe("generalized Today’s Challenge hub", () => {
 
     render(<TodayChallengeHub />);
 
-    expect(document.querySelectorAll(".today-hub-leaderboard__rows article")).toHaveLength(entries.length);
-    expect(screen.getByText("Player 10").closest("article")).toHaveTextContent("91");
+    expect(document.querySelectorAll(".today-hub-leaderboard__row")).toHaveLength(entries.length);
+    expect(screen.getByText("Player 10").closest(".today-hub-leaderboard__row")).toHaveTextContent("91");
   });
 });
