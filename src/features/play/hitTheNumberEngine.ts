@@ -1,6 +1,7 @@
 import { canonicalRankingInputs } from "../rankings/data/rankingInputs";
 import { seededLineupRandom, shuffleLineup } from "./lineupModel";
 import { playFighters, type PlayFighter, type PlayGender } from "./playFighterPool";
+import { deriveUfcCareerStats } from "./ufcCareerStats";
 
 export const HIT_THE_NUMBER_VERSION = "hit-the-number-v1" as const;
 export const HIT_THE_NUMBER_MIN_PICKS = 4;
@@ -8,10 +9,9 @@ export const HIT_THE_NUMBER_MAX_PICKS = 7;
 export const HIT_THE_NUMBER_DEFAULT_RANDOM_POOL_SIZE = 12;
 
 /**
- * Factual Hit the Number catalog. Keep this limited to metrics that can be
- * derived completely from the canonical UFC fight ledger. Main-event status,
- * bonuses, knockdowns, and finish round stay out until a canonical source owns
- * those facts.
+ * Factual Hit the Number catalog. PR2 keeps the visible gameplay catalog stable
+ * while the shared UFC career-stat owner gains the canonical supplemental facts
+ * that later activation can safely expose.
  */
 export const HIT_THE_NUMBER_STATS = [
   { id: "ufc-fights", label: "UFC Fights" },
@@ -107,65 +107,23 @@ export interface HitTheNumberResult {
   selections: Array<{ fighterId: string; value: number }>;
 }
 
-const KO_TKO_METHODS = new Set(["ko-tko", "doctor-stoppage"]);
-const FINISH_METHODS = new Set(["ko-tko", "doctor-stoppage", "submission"]);
-const TITLE_FIGHT_TYPES = new Set([
-  "normal",
-  "interim",
-  "vacant-undisputed",
-  "second-division-undisputed",
-  "vacant-second-division",
-]);
-
-type CanonicalHitTheNumberFight =
-  (typeof canonicalRankingInputs.fighters)[number]["facts"]["fights"][number];
-
-function isTitleFight(fight: CanonicalHitTheNumberFight) {
-  return TITLE_FIGHT_TYPES.has(fight.championshipType) && fight.championshipEligible !== false;
-}
-
-function distinctYears(fights: readonly CanonicalHitTheNumberFight[]) {
-  return new Set(fights.map((fight) => fight.date.slice(0, 4))).size;
-}
-
-function longestWinStreak(fights: readonly CanonicalHitTheNumberFight[]) {
-  let current = 0;
-  let longest = 0;
-  [...fights]
-    .sort((left, right) => left.date.localeCompare(right.date) || left.id.localeCompare(right.id))
-    .forEach((fight) => {
-      if (fight.officialResult === "win") {
-        current += 1;
-        longest = Math.max(longest, current);
-      } else {
-        current = 0;
-      }
-    });
-  return longest;
-}
-
-function normalizedOpponent(value: string) {
-  return value.trim().toLowerCase();
-}
-
 function statValuesForFights(
   fights: (typeof canonicalRankingInputs.fighters)[number]["facts"]["fights"],
 ): HitTheNumberStatRow["values"] {
-  const wins = fights.filter((fight) => fight.officialResult === "win");
-  const titleFights = fights.filter(isTitleFight);
+  const stats = deriveUfcCareerStats(fights, "official");
   return {
-    "ufc-fights": fights.length,
-    "ufc-wins": wins.length,
-    "ufc-decision-wins": wins.filter((fight) => fight.methodCategory === "decision").length,
-    "ufc-finishes": wins.filter((fight) => FINISH_METHODS.has(fight.methodCategory)).length,
-    "ufc-ko-tko-wins": wins.filter((fight) => KO_TKO_METHODS.has(fight.methodCategory)).length,
-    "ufc-submission-wins": wins.filter((fight) => fight.methodCategory === "submission").length,
-    "ufc-title-fights": titleFights.length,
-    "ufc-title-fight-wins": titleFights.filter((fight) => fight.officialResult === "win").length,
-    "ufc-active-years": distinctYears(fights),
-    "ufc-winning-years": distinctYears(wins),
-    "ufc-longest-win-streak": longestWinStreak(fights),
-    "ufc-unique-opponents-beaten": new Set(wins.map((fight) => normalizedOpponent(fight.opponent))).size,
+    "ufc-fights": stats.fights,
+    "ufc-wins": stats.wins,
+    "ufc-decision-wins": stats.decisionWins,
+    "ufc-finishes": stats.finishes,
+    "ufc-ko-tko-wins": stats.koTkoWins,
+    "ufc-submission-wins": stats.submissionWins,
+    "ufc-title-fights": stats.titleFights,
+    "ufc-title-fight-wins": stats.titleFightWins,
+    "ufc-active-years": stats.activeYears,
+    "ufc-winning-years": stats.winningYears,
+    "ufc-longest-win-streak": stats.longestWinStreak,
+    "ufc-unique-opponents-beaten": stats.uniqueOpponentsBeaten,
   };
 }
 
