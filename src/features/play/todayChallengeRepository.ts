@@ -48,12 +48,14 @@ const leaderboardSchema = z.object({
   player_count: z.coerce.number().int().nonnegative(),
   entries: z.array(z.object({
     rank: z.coerce.number().int().positive(),
+    profile_id: z.string().uuid(),
     display_name: z.string(),
     initials: z.string(),
     avatar_photo_data: z.string().nullable().optional(),
     game_type: gameTypeSchema,
     native_score: z.coerce.number().int(),
     normalized_score: z.coerce.number().int(),
+    public_result: jsonRecordSchema.default({}),
     is_current_user: z.boolean(),
   })),
 });
@@ -132,12 +134,14 @@ export interface TodayChallengeLeaderboard {
   playerCount: number;
   entries: Array<{
     rank: number;
+    profileId: string;
     displayName: string;
     initials: string;
     avatarPhotoData: string | null;
     gameType: DailyGameType;
     nativeScore: number;
     normalizedScore: number;
+    publicResult: Record<string, unknown>;
     isCurrentUser: boolean;
   }>;
 }
@@ -388,12 +392,14 @@ export function createTodayChallengeRepository(
         playerCount: row.player_count,
         entries: row.entries.map((entry) => ({
           rank: entry.rank,
+          profileId: entry.profile_id,
           displayName: entry.display_name,
           initials: entry.initials,
           avatarPhotoData: entry.avatar_photo_data ?? null,
           gameType: entry.game_type,
           nativeScore: entry.native_score,
           normalizedScore: entry.normalized_score,
+          publicResult: entry.public_result,
           isCurrentUser: entry.is_current_user,
         })),
       };
