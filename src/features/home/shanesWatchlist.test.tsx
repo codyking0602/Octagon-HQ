@@ -1,5 +1,5 @@
 import { existsSync } from "node:fs";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 import ShanesWatchlistPage from "./ShanesWatchlistPage";
@@ -39,16 +39,30 @@ describe("Shane's ranked watchlist", () => {
     expect(abdul ? watchMovement(abdul) : null).toEqual({ label: "↓1", direction: "down" });
   });
 
-  it("renders the full board, open ranked spots, and permanent former-pick history area", () => {
+  it("renders one compact board without inline scouting dossiers", () => {
     window.history.replaceState({}, "", "/fighters-to-watch");
-    render(<MemoryRouter><ShanesWatchlistPage /></MemoryRouter>);
+    const { container } = render(<MemoryRouter><ShanesWatchlistPage /></MemoryRouter>);
 
     expect(screen.getByRole("heading", { name: "Shane’s Fighters to Watch" })).toBeInTheDocument();
+    expect(screen.getByText("5 OF 15 SPOTS FILLED")).toBeInTheDocument();
     expect(screen.getByText("Gable Steveson")).toBeInTheDocument();
     expect(screen.getByText("Quillan Salkilld")).toBeInTheDocument();
-    expect(screen.getByText("Justin Gaethje")).toBeInTheDocument();
-    expect(screen.getByText("Khamzat Chimaev")).toBeInTheDocument();
-    expect(screen.getAllByText("OPEN SPOT")).toHaveLength(10);
+    expect(screen.getByText("10 SPOTS OPEN")).toBeInTheDocument();
+    expect(screen.getByText("Nobody else has earned a place on Shane’s board yet.")).toBeInTheDocument();
+
+    expect(screen.queryByText("Justin Gaethje")).not.toBeInTheDocument();
+    expect(screen.queryByText("Khamzat Chimaev")).not.toBeInTheDocument();
+    expect(screen.queryByText("TRACKED SINCE")).not.toBeInTheDocument();
+    expect(screen.queryByText("PRO RECORD")).not.toBeInTheDocument();
+    expect(screen.queryByText("OPEN SPOT")).not.toBeInTheDocument();
+    expect(container.querySelectorAll("details")).toHaveLength(0);
+
+    const movementSummary = screen.getByLabelText("August 2026 movement summary");
+    expect(within(movementSummary).getByText("NEW")).toBeInTheDocument();
+    expect(within(movementSummary).getByText("MOVED")).toBeInTheDocument();
+    expect(within(movementSummary).getByText("HELD")).toBeInTheDocument();
+    expect(within(movementSummary).getByText("3")).toBeInTheDocument();
+
     expect(screen.getByRole("heading", { name: "Former Picks" })).toBeInTheDocument();
     expect(screen.getByText(/No former picks yet/i)).toBeInTheDocument();
   });
