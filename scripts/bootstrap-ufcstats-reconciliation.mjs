@@ -23,6 +23,14 @@ function replaceOnce(content, before, after, label) {
   return `${content.slice(0, first)}${after}${content.slice(first + before.length)}`;
 }
 
+function replaceRegexOnce(content, pattern, after, label) {
+  const matches = [...content.matchAll(pattern)];
+  if (matches.length !== 1) {
+    throw new Error(`Expected exactly one ${label} marker; found ${matches.length}.`);
+  }
+  return content.replace(pattern, after);
+}
+
 async function patchV2RankingOwner() {
   const file = "src/features/rankings/data/v2RankingRoster.ts";
   let content = await read(file);
@@ -50,53 +58,11 @@ async function patchV2RankingOwner() {
 async function patchGenerator() {
   const file = "scripts/backfill-ufcstats-supplemental.mjs";
   let content = await read(file);
-  content = replaceOnce(
+  content = replaceRegexOnce(
     content,
-    '["carlosdiegoferreira", "carlosferreira"],',
-    '["carlosdiegoferreira", "diegoferreira"],',
-    "Diego Ferreira alias",
-  );
-  content = replaceOnce(
-    content,
-    '["ulkasasaski", "yutasasaki"],',
-    '["ulkasasaki", "yutasasaki"],',
-    "Yuta Sasaki alias",
-  );
-  content = replaceOnce(
-    content,
-    '  ["zhangweili", "weilizhang"],\n]);\n\nfunction rawUrl',
-    '  ["zhangweili", "weilizhang"],\n  ["antoniorogerionogueira", "rogerionogueira"],\n  ["bubbamcdaniel", "robertmcdaniel"],\n  ["rodrigovargas", "kazulavargas"],\n]);\n\nconst UFCSTATS_EVENT_GAPS = new Map([\n  [\n    "royce-gracie:1993-11-12-art-jimmerson",\n    {\n      source: { provider: "ufcstats", eventId: "6420efac0578988b", fightId: null, checkedAt: "2026-08-19" },\n      mainEvent: { status: "verified", value: false },\n      bonuses: { status: "unavailable" },\n      finish: { status: "verified", round: 1, timeSeconds: 138 },\n      knockdowns: { status: "verified", for: 0, against: 0 },\n    },\n  ],\n  [\n    "royce-gracie:1993-11-12-ken-shamrock",\n    {\n      source: { provider: "ufcstats", eventId: "6420efac0578988b", fightId: null, checkedAt: "2026-08-19" },\n      mainEvent: { status: "verified", value: false },\n      bonuses: { status: "unavailable" },\n      finish: { status: "verified", round: 1, timeSeconds: 57 },\n      knockdowns: { status: "verified", for: 0, against: 0 },\n    },\n  ],\n  [\n    "royce-gracie:1993-11-12-gerard-gordeau",\n    {\n      source: { provider: "ufcstats", eventId: "6420efac0578988b", fightId: null, checkedAt: "2026-08-19" },\n      mainEvent: { status: "verified", value: true },\n      bonuses: { status: "unavailable" },\n      finish: { status: "verified", round: 1, timeSeconds: 104 },\n      knockdowns: { status: "verified", for: 0, against: 0 },\n    },\n  ],\n]);\n\nfunction rawUrl',
-    "aliases and UFC 1 event gap facts",
-  );
-  content = replaceOnce(
-    content,
-    '  const fighters = {}; const unmatched = [];\n  let totalFights = 0;',
-    '  const fighters = {}; const unmatched = []; const usedEventGaps = new Set();\n  let totalFights = 0;',
-    "event gap tracking",
-  );
-  content = replaceOnce(
-    content,
-    '      totalFights += 1;\n      const candidates = candidateDetails(core.detailsByDate, fight.date);',
-    '      totalFights += 1;\n      const gapKey = `${fighter.presentation.slug}:${fight.id}`;\n      const eventGap = UFCSTATS_EVENT_GAPS.get(gapKey);\n      if (eventGap) {\n        usedEventGaps.add(gapKey);\n        unavailableBonuses += 1;\n        verifiedKnockdowns += 1;\n        byFight[fight.id] = eventGap;\n        continue;\n      }\n      const candidates = candidateDetails(core.detailsByDate, fight.date);',
-    "event gap application",
-  );
-  content = replaceOnce(
-    content,
-    '  if (unmatched.length) {',
-    '  if (usedEventGaps.size !== UFCSTATS_EVENT_GAPS.size) {\n    throw new Error(`Only ${usedEventGaps.size}/${UFCSTATS_EVENT_GAPS.size} pinned UFCStats event-gap rows were consumed.`);\n  }\n  if (unmatched.length) {',
-    "event gap completeness",
-  );
-  await write(file, content);
-}
-
-async function patchSchema() {
-  const file = "src/features/rankings/engine/schemas.ts";
-  let content = await read(file);
-  content = replaceOnce(
-    content,
-    '        fightId: z.string().min(1),',
-    '        fightId: z.string().min(1).nullable(),',
-    "nullable UFCStats fight id for explicit transport gaps",
+    /const KNOWN_UNRECONCILED = new Set\(\[\n[\s\S]*?\n\]\);/g,
+    `const KNOWN_UNRECONCILED = new Set([\n  "Royce Gracie|1993-11-12-art-jimmerson",\n  "Royce Gracie|1993-11-12-ken-shamrock",\n  "Royce Gracie|1993-11-12-gerard-gordeau",\n]);`,
+    "known unreconciled UFCStats rows",
   );
   await write(file, content);
 }
@@ -104,22 +70,16 @@ async function patchSchema() {
 async function patchFocusedTest() {
   const file = "src/features/rankings/data/ufcStatsSupplementalFacts.test.ts";
   let content = await read(file);
-  content = replaceOnce(
+  content = replaceRegexOnce(
     content,
-    '        expect(supplemental?.source.fightId).toMatch(/^[a-z0-9]+$/i);\n        expect(supplemental?.source.checkedAt).toBe("2026-08-18");',
-    '        if (supplemental?.source.fightId == null) {\n          expect(fighter.fighter).toBe("Royce Gracie");\n          expect([\n            "1993-11-12-art-jimmerson",\n            "1993-11-12-ken-shamrock",\n            "1993-11-12-gerard-gordeau",\n          ]).toContain(fight.id);\n          expect(supplemental.source.checkedAt).toBe("2026-08-19");\n        } else {\n          expect(supplemental.source.fightId).toMatch(/^[a-z0-9]+$/i);\n          expect(supplemental.source.checkedAt).toBe("2026-08-18");\n        }',
-    "explicit UFC 1 transport gap expectation",
-  );
-  content = replaceOnce(
-    content,
-    '        if (!fight.supplementalFacts) continue;\n        const rows = byUfcStatsFight.get(fight.supplementalFacts.source.fightId) ?? [];\n        rows.push({ fighter: fighter.fighter, facts: fight.supplementalFacts });\n        byUfcStatsFight.set(fight.supplementalFacts.source.fightId, rows);',
-    '        if (!fight.supplementalFacts || fight.supplementalFacts.source.fightId == null) continue;\n        const rows = byUfcStatsFight.get(fight.supplementalFacts.source.fightId) ?? [];\n        rows.push({ fighter: fighter.fighter, facts: fight.supplementalFacts });\n        byUfcStatsFight.set(fight.supplementalFacts.source.fightId, rows);',
-    "nullable fight id symmetry guard",
+    /const EXPECTED_UNRECONCILED = \[\n[\s\S]*?\n\]\.sort\(\);/g,
+    `const EXPECTED_UNRECONCILED = [\n  "Royce Gracie|1993-11-12-art-jimmerson",\n  "Royce Gracie|1993-11-12-gerard-gordeau",\n  "Royce Gracie|1993-11-12-ken-shamrock",\n].sort();`,
+    "expected unreconciled UFCStats rows",
   );
   content = replaceOnce(
     content,
     '  it("keeps shared fight evidence symmetric when two ranked fighters faced each other", () => {',
-    '  it("keeps UFCStats-discovered factual corrections in the V2 canonical owner", () => {\n    const byName = new Map(canonicalRankingInputs.fighters.map((fighter) => [fighter.fighter, fighter]));\n    const sterling = byName.get("Aljamain Sterling");\n    expect(sterling?.facts.fights.some((fight) => fight.id === "2015-04-18-takeya-mizugaki")).toBe(true);\n    expect(sterling?.facts.fights.some((fight) => fight.id === "2014-09-20-takeya-mizugaki")).toBe(false);\n    expect(sterling?.facts.fights.some((fight) => fight.id === "2015-04-18-manny-gamburyan")).toBe(false);\n\n    expect(byName.get("B.J. Penn")?.facts.fights.some((fight) => fight.id === "2003-04-25-duane-ludwig")).toBe(false);\n    expect(byName.get("Robbie Lawler")?.facts.fights.some((fight) => fight.id === "2022-12-10-santiago-ponzinibbio")).toBe(false);\n    expect(byName.get("Tito Ortiz")?.facts.fights.some((fight) => fight.id === "1999-01-08-jerry-bohlander")).toBe(true);\n    expect(byName.get("Lyoto Machida")?.facts.fights.some((fight) => fight.id === "2007-04-21-david-heath")).toBe(true);\n  });\n\n  it("keeps shared fight evidence symmetric when two ranked fighters faced each other", () => {',
+    `  it("keeps UFCStats-discovered factual corrections in the V2 canonical owner", () => {\n    const byName = new Map(canonicalRankingInputs.fighters.map((fighter) => [fighter.fighter, fighter]));\n    const sterling = byName.get("Aljamain Sterling");\n    expect(sterling?.facts.fights.some((fight) => fight.id === "2015-04-18-takeya-mizugaki")).toBe(true);\n    expect(sterling?.facts.fights.some((fight) => fight.id === "2014-09-20-takeya-mizugaki")).toBe(false);\n    expect(sterling?.facts.fights.some((fight) => fight.id === "2015-04-18-manny-gamburyan")).toBe(false);\n\n    expect(byName.get("B.J. Penn")?.facts.fights.some((fight) => fight.id === "2003-04-25-duane-ludwig")).toBe(false);\n    expect(byName.get("Robbie Lawler")?.facts.fights.some((fight) => fight.id === "2022-12-10-santiago-ponzinibbio")).toBe(false);\n    expect(byName.get("Tito Ortiz")?.facts.fights.some((fight) => fight.id === "1999-01-08-jerry-bohlander")).toBe(true);\n    expect(byName.get("Lyoto Machida")?.facts.fights.some((fight) => fight.id === "2007-04-21-david-heath")).toBe(true);\n  });\n\n  it("keeps shared fight evidence symmetric when two ranked fighters faced each other", () => {`,
     "canonical reconciliation regression test",
   );
   await write(file, content);
@@ -133,7 +93,6 @@ async function writeFinalWorkflow() {
 
 await patchV2RankingOwner();
 await patchGenerator();
-await patchSchema();
 await patchFocusedTest();
 await writeFinalWorkflow();
 await fs.unlink(selfPath);
