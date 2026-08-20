@@ -125,7 +125,7 @@ describe("Hit the Number casual game", () => {
     const shareUrl = new URL(draft.shareUrl);
 
     expect(draft.gameId).toBe("hit-the-number");
-    expect(draft.gameVersion).toBe("hit-the-number-v1");
+    expect(draft.gameVersion).toBe("hit-the-number-v2");
     expect(draft.gameTitle).toBe("Hit the Number");
     expect(draft.setup.seed).toBe(seed);
     expect(draft.setup.boardType).toBe("open-roster");
