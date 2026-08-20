@@ -12,7 +12,7 @@ import {
 
 export const HIT_THE_NUMBER_RANDOM_POOL_QUALITY = {
   candidateAttempts: 64,
-  badUnderMaxScore: 45,
+  badUnderMaxScore: 75,
   meaningfulBustMaxScore: 65,
   midScoreMin: 50,
   midScoreMax: 85,
