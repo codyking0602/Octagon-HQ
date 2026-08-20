@@ -33,12 +33,12 @@ begin
   end if;
 
   if (select count(*) from unnest(v_schedule.game_cycle) game where game = 'find_leader') <> 15
-    or (select count(*) from unnest(v_schedule.game_cycle) game where game = 'wavelength') <> 15
+    or (select count(*) from unnest(v_schedule.game_cycle) game where game = 'blind_resume') <> 15
     or (select count(*) from unnest(v_schedule.game_cycle) game where game = 'hit_the_number') <> 12
-    or (select count(*) from unnest(v_schedule.game_cycle) game where game = 'blind_resume') <> 12
+    or (select count(*) from unnest(v_schedule.game_cycle) game where game = 'wavelength') <> 12
     or (select count(*) from unnest(v_schedule.game_cycle) game where game = 'keep_4_cut_4') <> 6
     or (select count(*) from unnest(v_schedule.game_cycle) game where game = 'blind_rank_5') <> 0 then
-    raise exception '60-day rotation weights do not match the approved 15/15/12/12/6 contract: %',
+    raise exception '60-day rotation weights do not match Find 15 / Blind Resume 15 / Hit 12 / Wavelength 12 / Combo 6: %',
       v_schedule.game_cycle;
   end if;
 
