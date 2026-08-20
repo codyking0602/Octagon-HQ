@@ -61,6 +61,7 @@ function RankedFighterRow({
       type="button"
       onClick={() => onOpen(fighter)}
       aria-label={`Open scouting report for ${fighter.name}`}
+      style={{ border: 0 }}
     >
       <strong className="watchlist-rank-row__rank">#{fighter.rank}</strong>
       <WatchFighterPhoto fighter={fighter} />
