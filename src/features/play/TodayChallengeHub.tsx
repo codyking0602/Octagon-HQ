@@ -6,6 +6,7 @@ import {
   dailyRankKeepComboStage,
   isDailyRankKeepCombo,
 } from "./DailyRankKeepComboStatus";
+import { getPlayFighter } from "./playFighterPool";
 import { todayChallengeAdapter, type DailyGameType } from "./todaysChallengeAdapters";
 import type {
   TodayChallengeLeaderboard,
@@ -21,6 +22,39 @@ function dayLabel(day: string) {
     month: "short",
     day: "numeric",
   }).format(new Date(`${day}T12:00:00Z`));
+}
+
+function record(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : null;
+}
+
+function strings(value: unknown) {
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === "string")
+    : [];
+}
+
+function collectNamedIds(value: unknown, names: Map<string, string>) {
+  if (Array.isArray(value)) {
+    value.forEach((item) => collectNamedIds(item, names));
+    return;
+  }
+  const row = record(value);
+  if (!row) return;
+  if (typeof row.id === "string" && typeof row.name === "string") {
+    names.set(row.id, row.name);
+  }
+  Object.values(row).forEach((item) => collectNamedIds(item, names));
+}
+
+function fighterIds(value: unknown) {
+  return Array.isArray(value)
+    ? value.map(record).filter((row): row is Record<string, unknown> => Boolean(row))
+      .map((row) => row.id)
+      .filter((id): id is string => typeof id === "string")
+    : [];
 }
 
 function gameProgress(projection: TodayChallengeProjection) {
@@ -61,17 +95,134 @@ function LeaderboardAvatar({ entry }: { entry: TodayChallengeLeaderboard["entrie
   );
 }
 
+function AnswerSection({
+  title,
+  items,
+  numbered = false,
+}: {
+  title: string;
+  items: string[];
+  numbered?: boolean;
+}) {
+  if (!items.length) return null;
+  return (
+    <section className="today-hub-answer-sheet__section">
+      <small>{title}</small>
+      <div>
+        {items.map((item, index) => (
+          <span key={`${title}-${index}-${item}`}>
+            {numbered ? <b>#{index + 1}</b> : null}
+            <strong>{item}</strong>
+          </span>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function DailyAnswerDetail({
+  entry,
+  projection,
+  onClose,
+}: {
+  entry: TodayChallengeLeaderboard["entries"][number];
+  projection: TodayChallengeProjection;
+  onClose: () => void;
+}) {
+  const names = useMemo(() => {
+    const next = new Map<string, string>();
+    collectNamedIds(projection.publicSetup, next);
+    collectNamedIds(projection.publicState, next);
+    collectNamedIds(projection.revealSetup, next);
+    return next;
+  }, [projection]);
+  const answerName = (id: string) => names.get(id) ?? getPlayFighter(id)?.name ?? id;
+  const result = entry.publicResult;
+  const combo = isDailyRankKeepCombo(projection);
+  const blindRank = combo ? record(result.blind_rank) ?? {} : result;
+  const keepCut = combo ? record(result.keep_cut) ?? {} : result;
+  const blindRankOrder = strings(blindRank.ordered_ids).map(answerName);
+  const keptIds = strings(keepCut.kept_ids);
+  const kept = keptIds.map(answerName);
+  const boardIds = [
+    ...fighterIds(projection.publicState.kept),
+    ...fighterIds(projection.publicState.cut),
+  ];
+  const keptSet = new Set(keptIds);
+  const cut = boardIds.filter((id) => !keptSet.has(id)).map(answerName);
+  const eliminated = strings(result.eliminated_ids).map(answerName);
+  const guesses = Array.isArray(result.guesses)
+    ? result.guesses.map((value) => String(value))
+    : [];
+  const choices = strings(result.choices).map((choice, index) => `R${index + 1} · Fighter ${choice.toUpperCase()}`);
+  const selections = Array.isArray(result.selections)
+    ? result.selections.map(record).filter((row): row is Record<string, unknown> => Boolean(row)).map((row) => {
+      const fighterId = typeof row.fighterId === "string"
+        ? row.fighterId
+        : typeof row.fighter_id === "string" ? row.fighter_id : "";
+      const value = Number.isInteger(row.value) ? Number(row.value) : null;
+      return fighterId ? `${answerName(fighterId)}${value === null ? "" : ` · ${value}`}` : "";
+    }).filter(Boolean)
+    : [];
+
+  return (
+    <div className="today-hub-answer-sheet" role="dialog" aria-label={`${entry.displayName} daily answers`}>
+      <header>
+        <button type="button" onClick={onClose}>← BACK</button>
+        <span>#{entry.rank} · {entry.normalizedScore}/100</span>
+      </header>
+      <div className="today-hub-answer-sheet__body">
+        <p className="eyebrow">OFFICIAL DAILY ANSWERS</p>
+        <h3>{entry.displayName}</h3>
+        {combo ? (
+          <>
+            <AnswerSection title="BLIND RANK 5" items={blindRankOrder} numbered />
+            <AnswerSection title="KEEP 4" items={kept} />
+            <AnswerSection title="CUT 4" items={cut} />
+          </>
+        ) : entry.gameType === "blind_rank_5" ? (
+          <AnswerSection title="FINAL RANKING" items={blindRankOrder} numbered />
+        ) : entry.gameType === "keep_4_cut_4" ? (
+          <>
+            <AnswerSection title="KEEP 4" items={kept} />
+            <AnswerSection title="CUT 4" items={cut} />
+          </>
+        ) : entry.gameType === "find_leader" ? (
+          <AnswerSection title="ELIMINATION ORDER" items={eliminated} numbered />
+        ) : entry.gameType === "wavelength" ? (
+          <AnswerSection title="GUESS PATH" items={guesses} numbered />
+        ) : entry.gameType === "blind_resume" ? (
+          <AnswerSection title="FIVE PICKS" items={choices} />
+        ) : entry.gameType === "hit_the_number" ? (
+          <>
+            <AnswerSection title="FIGHTERS PICKED" items={selections} />
+            <section className="today-hub-answer-sheet__metrics">
+              <span><small>TOTAL</small><strong>{String(result.total ?? "—")}</strong></span>
+              <span><small>TARGET</small><strong>{String(result.target ?? "—")}</strong></span>
+            </section>
+          </>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
 function DailyLeaderboard({
   leaderboard,
+  projection,
   gameType,
   combo,
   loading,
 }: {
   leaderboard: TodayChallengeLeaderboard | null;
+  projection: TodayChallengeProjection;
   gameType: DailyGameType;
   combo: boolean;
   loading: boolean;
 }) {
+  const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null);
+  const selectedEntry = leaderboard?.entries.find((entry) => entry.profileId === selectedProfileId) ?? null;
+
   if (loading && !leaderboard) {
     return <p className="today-hub-empty">Loading today’s leaderboard…</p>;
   }
@@ -85,10 +236,25 @@ function DailyLeaderboard({
   if (!leaderboard.entries.length) {
     return <p className="today-hub-empty">No official finishes yet.</p>;
   }
+  if (selectedEntry) {
+    return (
+      <DailyAnswerDetail
+        entry={selectedEntry}
+        projection={projection}
+        onClose={() => setSelectedProfileId(null)}
+      />
+    );
+  }
   return (
     <div className="today-hub-leaderboard__rows">
       {leaderboard.entries.map((entry) => (
-        <article className={entry.isCurrentUser ? "is-current" : ""} key={`${entry.rank}-${entry.displayName}`}>
+        <button
+          className={`today-hub-leaderboard__row${entry.isCurrentUser ? " is-current" : ""}`}
+          key={entry.profileId}
+          type="button"
+          aria-label={`View ${entry.displayName}'s answers`}
+          onClick={() => setSelectedProfileId(entry.profileId)}
+        >
           <b>#{entry.rank}</b>
           <LeaderboardAvatar entry={entry} />
           <strong>{entry.displayName}</strong>
@@ -99,7 +265,7 @@ function DailyLeaderboard({
               publicResult: {},
             }) ?? entry.nativeScore}</em>
           <small>{entry.normalizedScore}</small>
-        </article>
+        </button>
       ))}
     </div>
   );
@@ -225,6 +391,7 @@ export default function TodayChallengeHub() {
           </header>
           <DailyLeaderboard
             leaderboard={overview.leaderboard}
+            projection={projection}
             gameType={projection.gameType}
             combo={combo}
             loading={overview.leaderboardLoading}
