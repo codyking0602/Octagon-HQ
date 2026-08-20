@@ -1,6 +1,7 @@
 import { z } from "zod";
 import historicalMigrationSeedJson from "./generated/canonical-ranking-inputs-842ba06e.json";
 import { v2RankingRoster } from "./v2RankingRoster";
+import { applyUfcStatsSupplementalFacts } from "./ufcStatsSupplementalFacts";
 import {
   apexInputSchema,
   canonicalFightSchema,
@@ -279,9 +280,12 @@ function composeDataset(useOverlay: boolean) {
   const baselineFighters = historicalRankingMigrationSeed.fighters.map(
     (fighter) => replacements.get(fighter.fighter) ?? fighter,
   );
-  const fighters = useOverlay
+  const rawFighters = useOverlay
     ? [...baselineFighters, ...v2RankingRoster.additions]
     : baselineFighters;
+  const fighters = useOverlay
+    ? applyUfcStatsSupplementalFacts(rawFighters as never[])
+    : rawFighters;
   const eraMembership = useOverlay
     ? {
         ...historicalRankingMigrationSeed.filters.eraMembership,
