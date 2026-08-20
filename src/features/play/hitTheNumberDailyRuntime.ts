@@ -7,6 +7,8 @@ import { hitTheNumberSlotAcceptsFighter } from "./hitTheNumberFormats";
 import { createQualityGatedHitTheNumberFormatPlan } from "./hitTheNumberPoolQuality";
 import { seededLineupRandom } from "./lineupModel";
 
+export const HIT_THE_NUMBER_DAILY_CONTENT_VERSION = "hit-the-number-daily-v2" as const;
+
 type JsonRecord = Record<string, unknown>;
 
 export interface HitTheNumberDailyRuntimeContext {
@@ -62,6 +64,7 @@ function boardTypeForDay(
   scheduleVersion: string,
 ): HitTheNumberBoardType {
   const random = seededLineupRandom(
+    HIT_THE_NUMBER_DAILY_CONTENT_VERSION,
     runtimeVersion,
     "hit-the-number",
     scheduleVersion,
@@ -78,7 +81,7 @@ export function buildOfficialHitTheNumberDailySetup(
   scoringVersion: string,
 ) {
   const boardType = boardTypeForDay(runtimeVersion, day, scheduleVersion);
-  const seed = `${runtimeVersion}|hit-the-number|${scheduleVersion}|${day}`;
+  const seed = `${HIT_THE_NUMBER_DAILY_CONTENT_VERSION}|${runtimeVersion}|hit-the-number|${scheduleVersion}|${day}`;
   const plan = createQualityGatedHitTheNumberFormatPlan({ seed, boardType });
   const statRowsById = new Map(hitTheNumberStatRows.map((row) => [row.fighterId, row]));
   const values = Object.fromEntries(plan.fighterIds.map((fighterId) => {
@@ -118,14 +121,14 @@ export function buildOfficialHitTheNumberDailySetup(
 
   return {
     setupKey: [
-      HIT_THE_NUMBER_VERSION,
+      HIT_THE_NUMBER_DAILY_CONTENT_VERSION,
       scheduleVersion,
       day,
       boardType,
       plan.format.formatId,
       plan.format.configurationId ?? "default",
     ].join(":"),
-    contentVersion: HIT_THE_NUMBER_VERSION,
+    contentVersion: HIT_THE_NUMBER_DAILY_CONTENT_VERSION,
     scoringVersion,
     publicSetup,
     revealSetup: {},
