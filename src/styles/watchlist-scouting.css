@@ -1,0 +1,264 @@
+.watchlist-page button.watchlist-feature,
+.watchlist-page button.watchlist-rank-row {
+  width: 100%;
+  border-left: 0;
+  border-right: 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  appearance: none;
+}
+
+.watchlist-page button.watchlist-feature {
+  border: 1px solid rgba(229, 9, 20, .32);
+}
+
+.watchlist-page button.watchlist-feature:hover,
+.watchlist-page button.watchlist-feature:focus-visible,
+.watchlist-page button.watchlist-rank-row:hover,
+.watchlist-page button.watchlist-rank-row:focus-visible {
+  background-color: rgba(255, 255, 255, .045);
+  outline: none;
+}
+
+.watchlist-page button.watchlist-feature:focus-visible,
+.watchlist-page button.watchlist-rank-row:focus-visible {
+  box-shadow: inset 3px 0 0 var(--ufc-red);
+}
+
+.watchlist-scouting-overlay {
+  position: fixed;
+  z-index: 90;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 12px 12px calc(12px + env(safe-area-inset-bottom));
+  background: rgba(0, 0, 0, .74);
+  backdrop-filter: blur(5px);
+}
+
+.watchlist-scouting-card {
+  position: relative;
+  display: grid;
+  gap: 13px;
+  width: min(100%, 560px);
+  max-height: min(82vh, 760px);
+  padding: 10px 15px 16px;
+  overflow-y: auto;
+  border: 1px solid rgba(229, 9, 20, .34);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(229, 9, 20, .14), transparent 34%),
+    var(--surface);
+  box-shadow: 0 -18px 55px rgba(0, 0, 0, .5);
+  overscroll-behavior: contain;
+}
+
+.watchlist-scouting-card__handle {
+  width: 38px;
+  height: 4px;
+  margin: 0 auto 1px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .22);
+}
+
+.watchlist-scouting-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.watchlist-scouting-card__header > div {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.watchlist-scouting-card__header h2 {
+  margin: 0;
+  font-size: clamp(25px, 7vw, 34px);
+  line-height: .98;
+  letter-spacing: -.045em;
+}
+
+.watchlist-scouting-card__header > div > strong {
+  color: var(--ufc-red-strong);
+  font-size: 11px;
+}
+
+.watchlist-scouting-card__header > button {
+  display: grid;
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface-raised);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.watchlist-scouting-card__header > button:focus-visible {
+  outline: 2px solid rgba(229, 9, 20, .7);
+  outline-offset: 2px;
+}
+
+.watchlist-scouting-card__identity {
+  display: grid;
+  grid-template-columns: 68px minmax(0, 1fr);
+  align-items: center;
+  gap: 11px;
+}
+
+.watchlist-scouting-card__identity .fighter-photo {
+  width: 68px;
+  height: 68px;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+}
+
+.watchlist-scouting-card__identity > div {
+  display: grid;
+  justify-items: start;
+  gap: 4px;
+}
+
+.watchlist-scouting-card__identity > div > strong {
+  font-size: 12px;
+}
+
+.watchlist-scouting-card__identity small {
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: 750;
+}
+
+.watchlist-scouting-card__read {
+  display: grid;
+  gap: 6px;
+  padding: 11px 12px;
+  border-left: 3px solid var(--ufc-red);
+  border-radius: 0 12px 12px 0;
+  background: rgba(229, 9, 20, .07);
+}
+
+.watchlist-scouting-card__read span,
+.watchlist-scouting-card__intel span {
+  color: var(--ufc-red-strong);
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .1em;
+}
+
+.watchlist-scouting-card__read p {
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.45;
+}
+
+.watchlist-scouting-card__stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: var(--border);
+  gap: 1px;
+}
+
+.watchlist-scouting-card__stats > div {
+  display: grid;
+  gap: 3px;
+  place-items: center;
+  min-height: 58px;
+  padding: 7px 2px;
+  background: var(--surface-raised);
+  text-align: center;
+}
+
+.watchlist-scouting-card__stats strong {
+  font-size: 16px;
+}
+
+.watchlist-scouting-card__stats span {
+  color: var(--text-muted);
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .04em;
+}
+
+.watchlist-scouting-card__intel {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.watchlist-scouting-card__intel > div {
+  display: grid;
+  align-content: start;
+  gap: 5px;
+  min-height: 67px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .025);
+}
+
+.watchlist-scouting-card__intel > div:only-child {
+  grid-column: 1 / -1;
+}
+
+.watchlist-scouting-card__intel strong {
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.watchlist-scouting-card__reviewed {
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.watchlist-scouting-card .secondary-action {
+  width: 100%;
+  min-height: 40px;
+  justify-content: center;
+}
+
+@media (min-width: 700px) {
+  .watchlist-scouting-overlay {
+    align-items: center;
+    padding: 24px;
+  }
+
+  .watchlist-scouting-card {
+    max-height: min(86vh, 760px);
+    padding: 14px 18px 18px;
+    border-radius: 20px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, .52);
+  }
+
+  .watchlist-scouting-card__handle {
+    display: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .watchlist-scouting-card__intel {
+    grid-template-columns: 1fr;
+  }
+
+  .watchlist-scouting-card__intel > div:only-child {
+    grid-column: auto;
+  }
+}
