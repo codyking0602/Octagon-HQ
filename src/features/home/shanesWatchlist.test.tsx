@@ -15,6 +15,7 @@ describe("Shane's ranked watchlist", () => {
       id: "gable-steveson",
       rank: 1,
       previousRank: 1,
+      subjectPronoun: "he",
       ufcRecord: "1–0",
       ufcWinStreak: "1",
       ufcFinishes: "1",
@@ -28,6 +29,7 @@ describe("Shane's ranked watchlist", () => {
       id: "quillan-salkilld",
       rank: 2,
       previousRank: null,
+      subjectPronoun: "he",
       ufcRecord: "6–0",
       ufcWinStreak: "6",
       ufcFinishes: "5",
@@ -36,6 +38,12 @@ describe("Shane's ranked watchlist", () => {
     });
     expect(existsSync("public/assets/fighters/quillan-salkilld-thumb.webp")).toBe(true);
     expect(watchMovement(shanesWatchlist.fighters[1])).toEqual({ label: "NEW", direction: "new" });
+
+    expect(shanesWatchlist.fighters[2]).toMatchObject({
+      id: "fatima-kline",
+      subjectPronoun: "she",
+      videoUrl: "https://youtu.be/E3Eat8_BBjM?is=69fExP5AoinR5Xdt",
+    });
 
     expect(shanesWatchlist.fighters.map((fighter) => fighter.videoUrl)).toEqual([
       "https://youtube.com/shorts/2V8eGAiUZaU?is=b2fwdTJ5f9m1LVZ5",
@@ -81,7 +89,7 @@ describe("Shane's ranked watchlist", () => {
     expect(within(movementSummary).getByText("3")).toBeInTheDocument();
   });
 
-  it("opens the real scouting snapshot, UFC-only numbers, and approved video link", () => {
+  it("opens the real scouting snapshot as three readable beats with UFC-only numbers", () => {
     window.history.replaceState({}, "", "/fighters-to-watch");
     const { container } = render(<MemoryRouter><ShanesWatchlistPage /></MemoryRouter>);
 
@@ -98,14 +106,16 @@ describe("Shane's ranked watchlist", () => {
     expect(within(dialog).queryByText("STYLE COMP")).not.toBeInTheDocument();
     expect(within(dialog).queryByText(/Tracked since/i)).not.toBeInTheDocument();
     expect(within(dialog).queryByText("SHANE’S READ")).not.toBeInTheDocument();
+    expect(within(dialog).queryByRole("link", { name: /VIEW UFC PROFILE/i })).not.toBeInTheDocument();
     expect(within(dialog).getByRole("link", { name: "WATCH FIGHT HIGHLIGHT ↗" })).toHaveAttribute(
       "href",
       "https://youtube.com/shorts/ivb3NbPsnYg?is=y2ti4vYuCvUdFroV",
     );
-    expect(within(dialog).getByRole("link", { name: "VIEW UFC PROFILE ↗" })).toHaveAttribute(
-      "href",
-      "https://www.ufc.com/athlete/quillan-salkilld",
-    );
+
+    const snapshotParagraphs = Array.from(dialog.querySelectorAll(".watchlist-scouting-card__read-copy p"));
+    expect(snapshotParagraphs).toHaveLength(3);
+    expect(snapshotParagraphs.map((paragraph) => paragraph.textContent).join(" ")).toBe(shanesWatchlist.fighters[1].scoutingSnapshot);
+
     expect(container.querySelector('[role="dialog"]')).toBeNull();
     expect(document.body.querySelector(".watchlist-scouting-overlay")).not.toBeNull();
     expect(document.body.style.overflow).toBe("hidden");
@@ -115,6 +125,21 @@ describe("Shane's ranked watchlist", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(document.body.style.overflow).toBe("");
     expect(window.location.hash).toBe("");
+  });
+
+  it("uses the correct female board label on Fatima Kline's scouting report", () => {
+    window.history.replaceState({}, "", "/fighters-to-watch");
+    render(<MemoryRouter><ShanesWatchlistPage /></MemoryRouter>);
+
+    fireEvent.click(screen.getByRole("button", { name: "Open scouting report for Fatima Kline" }));
+
+    const dialog = screen.getByRole("dialog", { name: "Fatima Kline" });
+    expect(within(dialog).getByText("WHY SHE’S ON THE BOARD")).toBeInTheDocument();
+    expect(within(dialog).queryByText("WHY HE’S ON THE BOARD")).not.toBeInTheDocument();
+    expect(within(dialog).getByRole("link", { name: "WATCH FIGHT HIGHLIGHT ↗" })).toHaveAttribute(
+      "href",
+      "https://youtu.be/E3Eat8_BBjM?is=69fExP5AoinR5Xdt",
+    );
   });
 
   it("opens a Home deep link directly into Gable's repaired scouting report", () => {
@@ -132,12 +157,15 @@ describe("Shane's ranked watchlist", () => {
     expect(screen.getAllByRole("dialog")).toHaveLength(1);
   });
 
-  it("keeps the portaled scouting sheet above the fixed nav and touch-scrollable on phones", () => {
+  it("keeps the scouting sheet scrollable and makes the highlight action more compact", () => {
     const css = readFileSync("src/styles/watchlist-scouting.css", "utf8");
     expect(css).toContain("z-index: 1000");
     expect(css).toContain("overflow-y: auto");
     expect(css).toContain("touch-action: pan-y");
     expect(css).toContain("-webkit-overflow-scrolling: touch");
     expect(css).toContain("max-height: calc(100dvh - 24px)");
+    expect(css).toContain(".watchlist-scouting-card__read-copy p + p");
+    expect(css).toContain("min-height: 40px");
+    expect(css).toContain("font-size: 13px");
   });
 });
