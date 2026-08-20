@@ -12,11 +12,16 @@ const parityByFighter = new Map(
   v1ProductionRankingParityFixture.fighters.map((fighter) => [fighter.fighter, fighter]),
 );
 const refreshedFighters = new Set([
+  "Aljamain Sterling",
+  "B.J. Penn",
   "Conor McGregor",
   "Dricus du Plessis",
   "Islam Makhachev",
   "Kamaru Usman",
+  "Lyoto Machida",
   "Mackenzie Dern",
+  "Robbie Lawler",
+  "Tito Ortiz",
 ]);
 
 function calculatedRow(fighter: string) {
