@@ -333,6 +333,16 @@ function publicPayload(context: OfficialDailyRuntimeContext & JsonRecord) {
   if (isDailyCombo(context)) {
     const stage = comboStage(context);
     const child = comboChild(context, stage);
+    const activePublicState = requiredRecord(context.publicState[stage], `Daily combo ${stage} public state`);
+    const publicState = attempt && stage === "keep_4_cut_4"
+      ? {
+          ...activePublicState,
+          combo_blind_rank_result: requiredRecord(
+            context.publicState.blind_rank_5,
+            "Completed Blind Rank combo result",
+          ),
+        }
+      : activePublicState;
     return {
       available: true,
       id: context.daily_challenge_id,
@@ -345,7 +355,7 @@ function publicPayload(context: OfficialDailyRuntimeContext & JsonRecord) {
       fallback_reason: context.fallback_reason ?? null,
       public_setup: child.public_setup,
       progress_revision: context.progress_revision,
-      public_state: context.publicState[stage],
+      public_state: publicState,
       reveal_setup: attempt ? child.reveal_setup : null,
       official_attempt: attempt,
       deployment_sha: DEPLOYED_SOURCE_SHA,
