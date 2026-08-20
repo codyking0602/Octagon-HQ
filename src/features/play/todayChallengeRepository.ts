@@ -55,7 +55,10 @@ const leaderboardSchema = z.object({
     game_type: gameTypeSchema,
     native_score: z.coerce.number().int(),
     normalized_score: z.coerce.number().int(),
+    completed_at: z.string(),
     public_result: jsonRecordSchema.default({}),
+    progress_revision: z.coerce.number().int().nonnegative(),
+    public_state: jsonRecordSchema,
     is_current_user: z.boolean(),
   })),
 });
@@ -141,7 +144,10 @@ export interface TodayChallengeLeaderboard {
     gameType: DailyGameType;
     nativeScore: number;
     normalizedScore: number;
+    completedAt: string;
     publicResult: Record<string, unknown>;
+    progressRevision: number;
+    publicState: Record<string, unknown>;
     isCurrentUser: boolean;
   }>;
 }
@@ -399,7 +405,10 @@ export function createTodayChallengeRepository(
           gameType: entry.game_type,
           nativeScore: entry.native_score,
           normalizedScore: entry.normalized_score,
+          completedAt: entry.completed_at,
           publicResult: entry.public_result,
+          progressRevision: entry.progress_revision,
+          publicState: entry.public_state,
           isCurrentUser: entry.is_current_user,
         })),
       };
