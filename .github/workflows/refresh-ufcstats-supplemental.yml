@@ -2,9 +2,8 @@ name: Refresh UFCStats Supplemental Facts
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - agent/ufcstats-supplemental-backfill
+  pull_request:
+    types: [synchronize]
     paths:
       - scripts/bootstrap-ufcstats-reconciliation.mjs
       - .github/workflows/refresh-ufcstats-supplemental.yml
@@ -13,7 +12,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: ufcstats-supplemental-${{ github.ref }}
+  group: ufcstats-supplemental-${{ github.event.pull_request.head.ref || github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -22,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      REFRESH_BRANCH: ${{ github.ref_name }}
+      REFRESH_BRANCH: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref_name }}
     steps:
       - name: Check out exact refresh branch
         uses: actions/checkout@v4
