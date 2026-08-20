@@ -4,6 +4,13 @@ import {
   findLeaderQuestions,
 } from "./findLeaderEngine";
 
+const SUPPLEMENTAL_CATEGORY_IDS = [
+  "ufc-main-events-all-time",
+  "ufc-bonus-awards-all-time",
+  "first-round-ufc-finishes-all-time",
+  "ufc-knockdowns-landed-all-time",
+] as const;
+
 const DEPTH_CATEGORY_IDS = [
   "ufc-fights-all-time",
   "title-fights-all-time",
@@ -35,6 +42,7 @@ const DEPTH_CATEGORY_IDS = [
   "most-ufc-wins-single-year",
   "most-ufc-finishes-single-year",
   "most-ufc-wins-one-opponent",
+  ...SUPPLEMENTAL_CATEGORY_IDS,
 ] as const;
 
 describe("Find the Leader category depth", () => {
@@ -42,11 +50,29 @@ describe("Find the Leader category depth", () => {
     const metrics = new Set(findLeaderQuestions.map((definition) => definition.metric));
     const families = new Set(findLeaderQuestions.map((definition) => definition.family));
 
-    expect(findLeaderQuestions.length).toBeGreaterThanOrEqual(80);
-    expect(metrics.size).toBeGreaterThanOrEqual(40);
+    expect(findLeaderQuestions.length).toBeGreaterThanOrEqual(84);
+    expect(metrics.size).toBeGreaterThanOrEqual(44);
     expect(families.has("volume")).toBe(true);
     expect(families.has("rivalry")).toBe(true);
     expect(families.has("versatility")).toBe(true);
+    expect(families.has("supplemental")).toBe(true);
+  });
+
+  it("activates the UFCStats supplemental categories in the canonical catalog", () => {
+    const definitions = new Map(findLeaderQuestions.map((definition) => [definition.id, definition]));
+    const expectedMetrics = [
+      "main-events",
+      "bonus-awards",
+      "first-round-finishes",
+      "knockdowns-landed",
+    ];
+
+    SUPPLEMENTAL_CATEGORY_IDS.forEach((id, index) => {
+      const definition = definitions.get(id);
+      expect(definition, `missing ${id}`).toBeDefined();
+      expect(definition?.family).toBe("supplemental");
+      expect(definition?.metric).toBe(expectedMetrics[index]);
+    });
   });
 
   it("keeps every new depth category buildable through the canonical board owner", () => {

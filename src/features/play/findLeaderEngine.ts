@@ -36,6 +36,10 @@ export type FindLeaderMetric =
   | "prime-wins"
   | "prime-finishes"
   | "wins-unfinished"
+  | "main-events"
+  | "bonus-awards"
+  | "first-round-finishes"
+  | "knockdowns-landed"
   | "fights"
   | "title-fights"
   | "title-fight-finishes"
@@ -80,7 +84,8 @@ export type FindLeaderFamily =
   | "filtered"
   | "volume"
   | "rivalry"
-  | "versatility";
+  | "versatility"
+  | "supplemental";
 
 export interface FindLeaderScope {
   board?: "men" | "women";
@@ -149,6 +154,10 @@ export const findLeaderQuestions: readonly FindLeaderQuestionDefinition[] = [
   q("prime-ufc-wins", "Who earned the most UFC wins during their model prime?", "UFC wins during the model prime", "PRIME WINS", "prime-wins", "quality"),
   q("prime-ufc-finishes", "Who earned the most UFC finishes during their model prime?", "UFC finishes during the model prime", "PRIME FINISHES", "prime-finishes", "finishes"),
   q("ufc-wins-unfinished", "Who has the most UFC wins without ever being finished?", "UFC wins without a finish loss", "UNFINISHED WINS", "wins-unfinished", "durability"),
+  q("ufc-main-events-all-time", "Who has made the most UFC main-event appearances?", "all-time UFC main-event appearances", "UFC MAIN EVENTS", "main-events", "supplemental"),
+  q("ufc-bonus-awards-all-time", "Who has earned the most UFC bonus awards?", "all-time UFC bonus awards", "UFC BONUS AWARDS", "bonus-awards", "supplemental"),
+  q("first-round-ufc-finishes-all-time", "Who has the most first-round UFC finishes?", "all-time first-round UFC finishes", "FIRST-ROUND FINISHES", "first-round-finishes", "supplemental"),
+  q("ufc-knockdowns-landed-all-time", "Who has landed the most UFC knockdowns?", "all-time UFC knockdowns landed", "UFC KNOCKDOWNS", "knockdowns-landed", "supplemental"),
 
   q("ufc-fights-all-time", "Who has made the most UFC appearances?", "all-time UFC appearances", "UFC FIGHTS", "fights", "volume"),
   q("title-fights-all-time", "Who has fought in the most UFC title fights?", "all-time UFC title fights", "TITLE FIGHTS", "title-fights", "championship"),
@@ -380,6 +389,10 @@ function scoreFighter(input: RankingInputFighter, definition: FindLeaderQuestion
       const finishedLoss = fights.some((fight) => fight.scoringDisposition === "count-loss" && isFinish(fight));
       return finishedLoss ? 0 : stats.wins;
     }
+    case "main-events": return stats.mainEvents;
+    case "bonus-awards": return stats.bonusAwards;
+    case "first-round-finishes": return stats.firstRoundFinishes;
+    case "knockdowns-landed": return stats.knockdownsFor;
     case "fights": return stats.fights;
     case "title-fights": return stats.titleFights;
     case "title-fight-finishes": return stats.titleFightFinishes;

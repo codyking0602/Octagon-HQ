@@ -26,10 +26,17 @@ export function resolveSeededFindLeaderBoard(
 }
 
 export function buildReplayableFindLeaderBoard(seed: string, day = centralDay()) {
-  const definitions = shuffleLineup(
-    findLeaderQuestions,
-    seededLineupRandom("find-leader", "definition", seed),
-  );
+  const families = [...new Set(findLeaderQuestions.map((definition) => definition.family))];
+  const selectedFamily = shuffleLineup(
+    families,
+    seededLineupRandom("find-leader", "family", seed),
+  )[0];
+  const preferred = findLeaderQuestions.filter((definition) => definition.family === selectedFamily);
+  const fallback = findLeaderQuestions.filter((definition) => definition.family !== selectedFamily);
+  const definitions = [
+    ...shuffleLineup(preferred, seededLineupRandom("find-leader", "definition", selectedFamily, seed)),
+    ...shuffleLineup(fallback, seededLineupRandom("find-leader", "fallback", seed)),
+  ];
 
   for (const definition of definitions) {
     const board = buildFindLeaderBoard(definition, seed, day);
