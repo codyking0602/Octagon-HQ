@@ -45,8 +45,13 @@ jobs:
           node-version: 22.13.0
           cache: npm
 
-      - name: Install locked dependencies
+      - name: Install locked app dependencies
         run: npm ci
+
+      - name: Install pinned UFCStats browser tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.54.0
+          npx playwright install --with-deps chromium
 
       - name: Refresh checked-in UFCStats supplemental snapshot
         run: |
