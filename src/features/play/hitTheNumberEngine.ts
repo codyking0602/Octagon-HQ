@@ -503,7 +503,11 @@ export function hitTheNumberScore({
   const rawScore = status === "bust"
     ? 75 - (50 * distance / averageContribution)
     : 100 - (50 * distance / averageContribution);
-  return Math.max(0, Math.min(100, Math.round(rawScore)));
+  const roundedScore = Math.round(rawScore);
+
+  return status === "bust"
+    ? Math.max(0, Math.min(74, roundedScore))
+    : Math.max(75, Math.min(99, roundedScore));
 }
 
 export function gradeHitTheNumberSelection(
