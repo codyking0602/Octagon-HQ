@@ -149,6 +149,7 @@ const fightDetails = new Map();
 const detailRowsByBout = new Map();
 const detailCountByEvent = new Map();
 const skippedDetailEvents = new Set();
+let duplicateDetailRows = 0;
 for (const row of detailRows) {
   const event = compact(row.EVENT);
   const eventFacts = events.get(event);
@@ -159,7 +160,14 @@ for (const row of detailRows) {
   const names = boutNames(row.BOUT).sort();
   const fightId = sourceId(row.URL, "fight-details");
   if (names.length !== 2 || !fightId) throw new Error(`Invalid UFCStats fight detail row: ${JSON.stringify(row)}`);
-  if (fightDetails.has(fightId)) throw new Error(`Duplicate UFCStats fight id ${fightId}.`);
+  if (fightDetails.has(fightId)) {
+    const existing = fightDetails.get(fightId);
+    if (existing.eventId !== eventFacts.eventId || existing.names.join("|") !== names.join("|")) {
+      throw new Error(`Conflicting UFCStats fight detail ${fightId}.`);
+    }
+    duplicateDetailRows += 1;
+    continue;
+  }
   const position = detailCountByEvent.get(event) ?? 0;
   detailCountByEvent.set(event, position + 1);
   const sourceBoutKey = boutKey(row.EVENT, row.BOUT);
@@ -178,10 +186,18 @@ for (const row of detailRows) {
 }
 
 const results = new Map();
+let duplicateResultRows = 0;
 for (const row of resultRows) {
   const fightId = sourceId(row.URL, "fight-details");
   if (!fightId) throw new Error(`UFCStats result is missing its fight id: ${JSON.stringify(row)}`);
-  if (results.has(fightId)) throw new Error(`Duplicate UFCStats fight result ${fightId}.`);
+  const existing = results.get(fightId);
+  if (existing) {
+    if (JSON.stringify(existing) !== JSON.stringify(row)) {
+      throw new Error(`Conflicting UFCStats fight result ${fightId}.`);
+    }
+    duplicateResultRows += 1;
+    continue;
+  }
   results.set(fightId, row);
 }
 
@@ -281,6 +297,8 @@ const coverage = {
   fights: entries.length,
   events: new Set(entries.map((entry) => entry.supplementalFacts.source.eventId)).size,
   upstreamDetailEventsSkippedWithoutMetadata: skippedDetailEvents.size,
+  upstreamDuplicateFightDetailRows: duplicateDetailRows,
+  upstreamDuplicateFightResultRows: duplicateResultRows,
   upstreamDuplicateBoutKeysWithoutStatIdentity: ambiguousStatBouts.size,
   mainEventVerified: entries.filter((entry) => entry.supplementalFacts.mainEvent.status === "verified").length,
   bonusesVerified: 0,
@@ -319,5 +337,8 @@ if (skippedDetailEvents.size) {
 }
 if (ambiguousStatBouts.size) {
   console.log(`Marked round-stat identity unavailable for ${ambiguousStatBouts.size} duplicate same-event matchup key(s).`);
+}
+if (duplicateDetailRows || duplicateResultRows) {
+  console.log(`Ignored ${duplicateDetailRows} identical fight-detail and ${duplicateResultRows} identical fight-result duplicate row(s).`);
 }
 console.log(JSON.stringify(coverage));
