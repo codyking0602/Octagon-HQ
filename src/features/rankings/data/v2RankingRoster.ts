@@ -945,6 +945,148 @@ const baselineFighter = (fighter: string) => {
 };
 
 /**
+ * Factual UFC-only corrections discovered while reconciling the canonical
+ * ledger against the pinned UFCStats export. The sealed migration baseline is
+ * evidence only, so corrections remain in the existing V2 ranking owner.
+ */
+const aljamainSterlingFactsCorrected = (() => {
+  const fighter = baselineFighter("Aljamain Sterling");
+  const duplicateFightId = "2015-04-18-manny-gamburyan";
+  const staleMizugakiFightId = "2014-09-20-takeya-mizugaki";
+  const mizugakiFightId = "2015-04-18-takeya-mizugaki";
+  return {
+    ...fighter,
+    facts: {
+      ...fighter.facts,
+      fights: fighter.facts.fights
+        .filter((fight) => fight.id !== duplicateFightId)
+        .map((fight) =>
+          fight.id === staleMizugakiFightId
+            ? { ...fight, id: mizugakiFightId, date: "2015-04-18" }
+            : fight,
+        ),
+    },
+    judgments: {
+      ...fighter.judgments,
+      opponentQuality: {
+        ...fighter.judgments.opponentQuality,
+        inputs: fighter.judgments.opponentQuality.inputs
+          .filter((input) => input.fightId !== duplicateFightId)
+          .map((input) =>
+            input.fightId === staleMizugakiFightId
+              ? {
+                  ...input,
+                  fightId: mizugakiFightId,
+                  date: "2015-04-18",
+                  event: "UFC on Fox: Machida vs. Rockhold",
+                }
+              : input,
+          ),
+      },
+    },
+  };
+})();
+
+const bjPennFactsCorrected = (() => {
+  const fighter = baselineFighter("B.J. Penn");
+  const nonUfcFightId = "2003-04-25-duane-ludwig";
+  return {
+    ...fighter,
+    facts: {
+      ...fighter.facts,
+      fights: fighter.facts.fights.filter((fight) => fight.id !== nonUfcFightId),
+    },
+    judgments: {
+      ...fighter.judgments,
+      opponentQuality: {
+        ...fighter.judgments.opponentQuality,
+        inputs: fighter.judgments.opponentQuality.inputs.filter(
+          (input) => input.fightId !== nonUfcFightId,
+        ),
+      },
+    },
+  };
+})();
+
+const titoOrtizFactsCorrected = (() => {
+  const fighter = baselineFighter("Tito Ortiz");
+  const staleFightId = "1998-03-13-jerry-bohlander";
+  const correctedFightId = "1999-01-08-jerry-bohlander";
+  return {
+    ...fighter,
+    facts: {
+      ...fighter.facts,
+      fights: fighter.facts.fights.map((fight) =>
+        fight.id === staleFightId
+          ? { ...fight, id: correctedFightId, date: "1999-01-08" }
+          : fight,
+      ),
+    },
+    judgments: {
+      ...fighter.judgments,
+      opponentQuality: {
+        ...fighter.judgments.opponentQuality,
+        inputs: fighter.judgments.opponentQuality.inputs.map((input) =>
+          input.fightId === staleFightId
+            ? {
+                ...input,
+                fightId: correctedFightId,
+                date: "1999-01-08",
+                event: "UFC 18",
+              }
+            : input,
+        ),
+      },
+    },
+  };
+})();
+
+const lyotoMachidaFactsCorrected = (() => {
+  const fighter = baselineFighter("Lyoto Machida");
+  const staleFightId = "2007-05-26-david-heath";
+  const correctedFightId = "2007-04-21-david-heath";
+  return {
+    ...fighter,
+    facts: {
+      ...fighter.facts,
+      fights: fighter.facts.fights.map((fight) =>
+        fight.id === staleFightId
+          ? { ...fight, id: correctedFightId, date: "2007-04-21" }
+          : fight,
+      ),
+    },
+    judgments: {
+      ...fighter.judgments,
+      opponentQuality: {
+        ...fighter.judgments.opponentQuality,
+        inputs: fighter.judgments.opponentQuality.inputs.map((input) =>
+          input.fightId === staleFightId
+            ? {
+                ...input,
+                fightId: correctedFightId,
+                date: "2007-04-21",
+                event: "UFC 70",
+              }
+            : input,
+        ),
+      },
+    },
+  };
+})();
+
+const robbieLawlerFactsCorrected = (() => {
+  const fighter = baselineFighter("Robbie Lawler");
+  const cancelledFightId = "2022-12-10-santiago-ponzinibbio";
+  return {
+    ...fighter,
+    facts: {
+      ...fighter.facts,
+      fights: fighter.facts.fights.filter((fight) => fight.id !== cancelledFightId),
+    },
+  };
+})();
+
+/**
  * Ranking/fight refreshes are not editorial reviews. They may update canonical
  * ranking inputs, but the fighter's full presentation stays exactly as it was
  * until that fighter receives an intentional profile-copy review.
@@ -1505,7 +1647,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
       },
     ),
     "Aljamain Sterling": intentionalEditorialReview(
-      baselineFighter("Aljamain Sterling"),
+      aljamainSterlingFactsCorrected,
       {
         oneLiner:
           "Sterling turned awkward movement, long-range kicking, back takes, and suffocating grappling into one of bantamweight's strangest championship puzzles. His title run was effective, but unusual fight circumstances kept following it.",
@@ -1527,7 +1669,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
       },
     ),
     "B.J. Penn": intentionalEditorialReview(
-      baselineFighter("B.J. Penn"),
+      bjPennFactsCorrected,
       {
         oneLiner:
           "Penn was the natural talent who seemed built for any weight class: slick boxing, elite balance, takedown defense, and world-class jiu-jitsu. At his best, he fought with a technical freedom few early UFC stars possessed.",
@@ -1604,7 +1746,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
       },
     ),
     "Tito Ortiz": intentionalEditorialReview(
-      baselineFighter("Tito Ortiz"),
+      titoOrtizFactsCorrected,
       {
         oneLiner:
           "Ortiz was the UFC's first true light-heavyweight franchise star: relentless takedowns, punishing ground-and-pound, raw conditioning, and a confrontational personality that made his long title reign feel bigger than the promotion around it.",
@@ -1637,7 +1779,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
       },
     ),
     "Robbie Lawler": intentionalEditorialReview(
-      baselineFighter("Robbie Lawler"),
+      robbieLawlerFactsCorrected,
       {
         oneLiner:
           "Lawler's second UFC life became his defining one: a crushing southpaw left, savage pocket exchanges, elite durability, and late-round surges that made five-round fights feel increasingly dangerous instead of safer.",
@@ -1780,7 +1922,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
       },
     ),
     "Lyoto Machida": intentionalEditorialReview(
-      baselineFighter("Lyoto Machida"),
+      lyotoMachidaFactsCorrected,
       {
         oneLiner:
           "Machida made distance feel wrong to opponents, using karate footwork, sudden counters, straight punches, and kicks to create long stretches where chasing him became the trap.",

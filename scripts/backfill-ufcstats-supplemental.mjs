@@ -56,12 +56,6 @@ const NAME_ALIASES = new Map([
 // different UFCStats bout. Ranking-history corrections are deliberately out of
 // scope for this supplemental-data PR.
 const KNOWN_UNRECONCILED = new Set([
-  "Aljamain Sterling|2014-09-20-takeya-mizugaki",
-  "Aljamain Sterling|2015-04-18-manny-gamburyan",
-  "B.J. Penn|2003-04-25-duane-ludwig",
-  "Tito Ortiz|1998-03-13-jerry-bohlander",
-  "Lyoto Machida|2007-05-26-david-heath",
-  "Robbie Lawler|2022-12-10-santiago-ponzinibbio",
   "Royce Gracie|1993-11-12-art-jimmerson",
   "Royce Gracie|1993-11-12-ken-shamrock",
   "Royce Gracie|1993-11-12-gerard-gordeau",

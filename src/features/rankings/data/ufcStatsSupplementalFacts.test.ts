@@ -3,15 +3,9 @@ import { canonicalRankingInputs } from "./rankingInputs";
 import { ufcStatsSupplementalFactsSnapshot } from "./ufcStatsSupplementalFacts";
 
 const EXPECTED_UNRECONCILED = [
-  "Aljamain Sterling|2014-09-20-takeya-mizugaki",
-  "Aljamain Sterling|2015-04-18-manny-gamburyan",
-  "B.J. Penn|2003-04-25-duane-ludwig",
-  "Lyoto Machida|2007-05-26-david-heath",
-  "Robbie Lawler|2022-12-10-santiago-ponzinibbio",
   "Royce Gracie|1993-11-12-art-jimmerson",
   "Royce Gracie|1993-11-12-gerard-gordeau",
   "Royce Gracie|1993-11-12-ken-shamrock",
-  "Tito Ortiz|1998-03-13-jerry-bohlander",
 ].sort();
 
 describe("canonical UFCStats supplemental fight snapshot", () => {
@@ -116,6 +110,19 @@ describe("canonical UFCStats supplemental fight snapshot", () => {
     expect(unavailableFinishRows).toBeGreaterThanOrEqual(0);
     expect(verifiedKnockdownRows).toBeGreaterThan(1000);
     expect(verifiedKnockdownRows + unavailableKnockdownRows).toBe(reconciledRows);
+  });
+
+  it("keeps UFCStats-discovered factual corrections in the V2 canonical owner", () => {
+    const byName = new Map(canonicalRankingInputs.fighters.map((fighter) => [fighter.fighter, fighter]));
+    const sterling = byName.get("Aljamain Sterling");
+    expect(sterling?.facts.fights.some((fight) => fight.id === "2015-04-18-takeya-mizugaki")).toBe(true);
+    expect(sterling?.facts.fights.some((fight) => fight.id === "2014-09-20-takeya-mizugaki")).toBe(false);
+    expect(sterling?.facts.fights.some((fight) => fight.id === "2015-04-18-manny-gamburyan")).toBe(false);
+
+    expect(byName.get("B.J. Penn")?.facts.fights.some((fight) => fight.id === "2003-04-25-duane-ludwig")).toBe(false);
+    expect(byName.get("Robbie Lawler")?.facts.fights.some((fight) => fight.id === "2022-12-10-santiago-ponzinibbio")).toBe(false);
+    expect(byName.get("Tito Ortiz")?.facts.fights.some((fight) => fight.id === "1999-01-08-jerry-bohlander")).toBe(true);
+    expect(byName.get("Lyoto Machida")?.facts.fights.some((fight) => fight.id === "2007-04-21-david-heath")).toBe(true);
   });
 
   it("keeps shared fight evidence symmetric when two ranked fighters faced each other", () => {
