@@ -6,6 +6,7 @@ on:
     types: [synchronize]
     paths:
       - scripts/bootstrap-ufcstats-reconciliation.mjs
+      - scripts/bootstrap-ufcstats-finish-source.mjs
       - .github/workflows/refresh-ufcstats-supplemental.yml
 
 permissions:
@@ -41,6 +42,9 @@ jobs:
       - name: Apply one-time canonical reconciliation
         run: node scripts/bootstrap-ufcstats-reconciliation.mjs
 
+      - name: Move finish ownership to UFCStats result method
+        run: node scripts/bootstrap-ufcstats-finish-source.mjs
+
       - name: Refresh checked-in UFCStats supplemental snapshot
         run: node scripts/backfill-ufcstats-supplemental.mjs
 
@@ -60,6 +64,7 @@ jobs:
             .github/workflows/refresh-ufcstats-supplemental.yml \
             scripts/backfill-ufcstats-supplemental.mjs \
             scripts/bootstrap-ufcstats-reconciliation.mjs \
+            scripts/bootstrap-ufcstats-finish-source.mjs \
             src/features/rankings/data/v2RankingRoster.ts \
             src/features/rankings/engine/schemas.ts \
             src/features/rankings/data/ufcStatsSupplementalFacts.test.ts \
