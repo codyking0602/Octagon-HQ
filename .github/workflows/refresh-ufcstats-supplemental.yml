@@ -53,14 +53,13 @@ jobs:
           npx vitest run src/features/rankings/data/ufcStatsSupplementalFacts.test.ts
           git diff --check
 
-      - name: Commit reconciled snapshot and source-owner changes
+      - name: Commit and push validated data changes
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -- \
-            .github/workflows/refresh-ufcstats-supplemental.yml \
             scripts/backfill-ufcstats-supplemental.mjs \
             scripts/bootstrap-ufcstats-reconciliation.mjs \
             scripts/bootstrap-ufcstats-finish-source.mjs \
