@@ -63,7 +63,7 @@ describe("Hit the Number format foundation", () => {
       expect(new Set(plan.solutionFighterIds).size).toBe(plan.pickCount);
       expect(hitTheNumberFormatSelectionSatisfies(plan.format, plan.solutionFighterIds)).toBe(true);
       expect(plan.solutionFighterIds.reduce(
-        (sum, fighterId) => sum + valuesById.get(fighterId)![plan.statId],
+        (sum, fighterId) => sum + valuesById.get(fighterId)![plan.statId]!,
         0,
       )).toBe(plan.target);
 
