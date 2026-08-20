@@ -14,6 +14,14 @@ function replaceFighterHash(fighterId: string | null) {
   window.history.replaceState({}, "", nextUrl);
 }
 
+function snapshotSentences(snapshot: string) {
+  return snapshot.split(/(?<=[.!?])\s+/);
+}
+
+function whyOnBoardLabel(fighter: ShaneWatchFighter) {
+  return fighter.subjectPronoun === "she" ? "WHY SHE’S ON THE BOARD" : "WHY HE’S ON THE BOARD";
+}
+
 function FeaturedFighter({
   fighter,
   onOpen,
@@ -112,7 +120,11 @@ function ScoutingReport({ fighter, onClose }: { fighter: ShaneWatchFighter; onCl
 
         <section className="watchlist-scouting-card__read" aria-label="Scouting snapshot">
           <span>SCOUTING SNAPSHOT</span>
-          <p>{fighter.scoutingSnapshot}</p>
+          <div className="watchlist-scouting-card__read-copy">
+            {snapshotSentences(fighter.scoutingSnapshot).map((sentence, index) => (
+              <p key={`${fighter.id}-snapshot-${index}`}>{sentence}</p>
+            ))}
+          </div>
         </section>
 
         <div className="watchlist-scouting-card__stats" aria-label={`${fighter.name} UFC statistics`}>
@@ -122,16 +134,13 @@ function ScoutingReport({ fighter, onClose }: { fighter: ShaneWatchFighter; onCl
         </div>
 
         <section className="watchlist-scouting-card__intel" aria-label="Why this fighter is on Shane's board">
-          <span>WHY HE’S ON THE BOARD</span>
+          <span>{whyOnBoardLabel(fighter)}</span>
           <strong>{fighter.whyOnBoard}</strong>
         </section>
 
         <div className="watchlist-scouting-card__actions">
           <a className="primary-action" href={fighter.videoUrl} target="_blank" rel="noopener noreferrer">
             WATCH FIGHT HIGHLIGHT ↗
-          </a>
-          <a className="secondary-action" href={fighter.ufcUrl} target="_blank" rel="noopener noreferrer">
-            VIEW UFC PROFILE ↗
           </a>
         </div>
       </section>
