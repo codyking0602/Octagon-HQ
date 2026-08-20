@@ -19,7 +19,7 @@ const BONUSES = {
   refreshedAt: "2026-03-02",
   files: ["data/raw/ufc_bonuses.csv"],
 };
-const FINISH_METHODS = new Set(["ko-tko", "doctor-stoppage", "submission"]);
+const UFCSTATS_FINISH_METHODS = new Set(["KO/TKO", "SUB"]);
 const BONUS_TYPES = new Map([
   ["FIGHT", "fight-of-the-night"],
   ["PERF", "performance-of-the-night"],
@@ -121,7 +121,12 @@ function timeSeconds(value) {
   const result = Number(match[1]) * 60 + Number(match[2]);
   return Number.isInteger(result) && result >= 0 && result <= 300 ? result : null;
 }
-function integer(value) { const text = clean(value); return /^\d+$/.test(text) ? Number(text) : null; }
+function integer(value) {
+  const text = clean(value);
+  if (!/^\d+(?:\.0+)?$/.test(text)) return null;
+  const result = Number(text);
+  return Number.isInteger(result) ? result : null;
+}
 async function loadCanonicalRankingInputs() {
   const vite = await createServer({ root, appType: "custom", logLevel: "error", server: { middlewareMode: true } });
   try { return (await vite.ssrLoadModule("/src/features/rankings/data/rankingInputs.ts")).canonicalRankingInputs; }
@@ -189,9 +194,10 @@ function matchDetail(details, fighterName, opponentName) {
   });
   return matches.length === 1 ? matches[0] : { matches };
 }
-function finishFact(resultRow, methodCategory) {
-  if (!FINISH_METHODS.has(methodCategory)) return { status: "not-applicable" };
-  const round = integer(resultRow?.ROUND); const seconds = timeSeconds(resultRow?.TIME);
+function finishFact(resultRow) {
+  if (!resultRow) return { status: "unavailable" };
+  if (!UFCSTATS_FINISH_METHODS.has(clean(resultRow.METHOD).toUpperCase())) return { status: "not-applicable" };
+  const round = integer(resultRow.ROUND); const seconds = timeSeconds(resultRow.TIME);
   return round != null && round >= 1 && round <= 5 && seconds != null
     ? { status: "verified", round, timeSeconds: seconds }
     : { status: "unavailable" };
@@ -250,7 +256,7 @@ async function main() {
       byFight[fight.id] = {
         source: { provider: "ufcstats", eventId: matched.eventId, fightId: matched.fightId, checkedAt: CORE.refreshedAt },
         mainEvent: { status: "verified", value: matched.mainEvent }, bonuses: bonus,
-        finish: finishFact(core.resultByFightId.get(matched.fightId), fight.methodCategory), knockdowns,
+        finish: finishFact(core.resultByFightId.get(matched.fightId)), knockdowns,
       };
     }
     fighters[fighter.presentation.slug] = byFight;
