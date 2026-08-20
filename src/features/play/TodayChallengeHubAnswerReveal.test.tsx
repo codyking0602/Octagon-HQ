@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import TodayChallengeHub from "./TodayChallengeHub";
+import { playFighters, type PlayFighter } from "./playFighterPool";
 import type { TodayChallengeProjection } from "./todayChallengeRepository";
 
 const navigate = vi.fn();
@@ -28,9 +29,25 @@ vi.mock("./useTodayChallengeOverview", () => ({
   useTodayChallengeOverview: (...args: unknown[]) => useTodayChallengeOverview(...args),
 }));
 
-function fighter(id: string, name: string) {
-  return { id, name };
+function presentation(fighter: PlayFighter) {
+  return {
+    id: fighter.id,
+    name: fighter.name,
+    gender: fighter.gender,
+    divisions: fighter.divisions,
+    main_era: fighter.mainEra,
+    thumb_url: fighter.thumbUrl,
+    profile_url: fighter.profileUrl,
+    tier: "great",
+  };
 }
+
+const board = playFighters.slice(0, 8);
+const rankFive = playFighters.slice(8, 13);
+const shaneKept = board.slice(4).map(presentation);
+const shaneCut = board.slice(0, 4).map(presentation);
+const shaneRank = [...rankFive].reverse().map(presentation);
+const canonicalRank = rankFive.map(presentation);
 
 const projection: TodayChallengeProjection = {
   available: true,
@@ -42,25 +59,18 @@ const projection: TodayChallengeProjection = {
   contentVersion: "daily-rank-keep-combo-v1",
   scoringVersion: "play-official-score-v4",
   fallbackReason: null,
-  publicSetup: {},
-  progressRevision: 13,
-  publicState: {
-    kept: [
-      fighter("kc1", "Keep One"), fighter("kc2", "Keep Two"),
-      fighter("kc3", "Keep Three"), fighter("kc4", "Keep Four"),
-    ],
-    cut: [
-      fighter("kc5", "Cut Five"), fighter("kc6", "Cut Six"),
-      fighter("kc7", "Cut Seven"), fighter("kc8", "Cut Eight"),
-    ],
-    combo_blind_rank_result: {
-      slots: [
-        fighter("br1", "Rank One"), fighter("br2", "Rank Two"), fighter("br3", "Rank Three"),
-        fighter("br4", "Rank Four"), fighter("br5", "Rank Five"),
-      ],
+  publicSetup: {
+    pack: {
+      id: "all-careers",
+      group: "Careers",
+      name: "All UFC Careers",
+      prompt: "Keep four UFC careers. Cut four.",
+      description: "Men and women together on one UFC-only career scale.",
     },
   },
-  revealSetup: null,
+  progressRevision: 13,
+  publicState: {},
+  revealSetup: {},
   officialAttempt: {
     nativeScore: 87,
     normalizedScore: 87,
@@ -68,6 +78,20 @@ const projection: TodayChallengeProjection = {
     publicResult: {},
   },
   deploymentSha: "test-sha",
+};
+
+const shaneState = {
+  kept: shaneKept,
+  cut: shaneCut,
+  reveal: {
+    model_top_four_ids: board.slice(0, 4).map((fighter) => fighter.id),
+  },
+  combo_blind_rank_result: {
+    slots: shaneRank,
+    reveal: {
+      canonical_order: canonicalRank,
+    },
+  },
 };
 
 describe("Today’s Challenge leaderboard answer reveal", () => {
@@ -99,7 +123,10 @@ describe("Today’s Challenge leaderboard answer reveal", () => {
             gameType: "keep_4_cut_4",
             nativeScore: 87,
             normalizedScore: 87,
+            completedAt: "2026-08-20T15:00:00.000Z",
             publicResult: {},
+            progressRevision: 13,
+            publicState: {},
             isCurrentUser: true,
           },
           {
@@ -111,17 +138,20 @@ describe("Today’s Challenge leaderboard answer reveal", () => {
             gameType: "keep_4_cut_4",
             nativeScore: 80,
             normalizedScore: 80,
+            completedAt: "2026-08-20T15:03:00.000Z",
             publicResult: {
               combo_version: "daily-rank-keep-combo-v1",
               blind_rank: {
-                ordered_ids: ["br2", "br1", "br5", "br3", "br4"],
-                normalized_score: 80,
+                ordered_ids: shaneRank.map((fighter) => fighter.id),
+                normalized_score: 79,
               },
               keep_cut: {
-                kept_ids: ["kc1", "kc3", "kc5", "kc7"],
+                kept_ids: shaneKept.map((fighter) => fighter.id),
                 normalized_score: 81,
               },
             },
+            progressRevision: 13,
+            publicState: shaneState,
             isCurrentUser: false,
           },
         ],
@@ -134,21 +164,21 @@ describe("Today’s Challenge leaderboard answer reveal", () => {
     });
   });
 
-  it("opens another finisher’s actual Daily Double answers and derives the matching cuts", () => {
+  it("opens another finisher in the same graded Daily Double result presentation used for your own result", () => {
     render(<TodayChallengeHub />);
 
     fireEvent.click(screen.getByRole("button", { name: "View Shane's answers" }));
 
-    const dialog = screen.getByRole("dialog", { name: "Shane daily answers" });
-    expect(within(dialog).getByText("Rank Two")).toBeInTheDocument();
-    expect(within(dialog).getByText("Keep One")).toBeInTheDocument();
-    expect(within(dialog).getByText("Cut Eight")).toBeInTheDocument();
-    expect(within(dialog).getByText("BLIND RANK 5")).toBeInTheDocument();
-    expect(within(dialog).getByText("KEEP 4")).toBeInTheDocument();
-    expect(within(dialog).getByText("CUT 4")).toBeInTheDocument();
+    const dialog = screen.getByRole("dialog", { name: "Shane official Daily result" });
+    expect(within(dialog).getByText("DAILY DOUBLE · FINAL RESULT")).toBeInTheDocument();
+    expect(within(dialog).getByText("BLIND RANK 5 · PART 1 RESULT")).toBeInTheDocument();
+    expect(within(dialog).getByText("OCTAGON HQ ORDER")).toBeInTheDocument();
+    expect(within(dialog).getByText("OCTAGON HQ TOP 4")).toBeInTheDocument();
+    expect(within(dialog).getAllByText("MISSED").length).toBeGreaterThan(0);
+    expect(within(dialog).queryByText("OFFICIAL DAILY ANSWERS")).not.toBeInTheDocument();
 
-    fireEvent.click(within(dialog).getByRole("button", { name: /back/i }));
-    expect(screen.queryByRole("dialog", { name: "Shane daily answers" })).not.toBeInTheDocument();
+    fireEvent.click(within(dialog).getByRole("button", { name: /leaderboard/i }));
+    expect(screen.queryByRole("dialog", { name: "Shane official Daily result" })).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "View Shane's answers" })).toBeInTheDocument();
   });
 });
