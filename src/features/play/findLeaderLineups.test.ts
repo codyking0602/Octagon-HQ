@@ -64,4 +64,18 @@ describe("Find the Leader lineup modes", () => {
 
     expect(categories.size).toBeGreaterThan(1);
   });
+
+  it("gives the deeper supplemental family a real path through casual category rotation", () => {
+    const boards = Array.from({ length: 160 }, (_, index) => (
+      buildReplayableFindLeaderBoard(`supplemental-family-proof-${index}`, "2026-08-19")
+    ));
+    const supplemental = boards.filter((board) => board.family === "supplemental");
+
+    expect(supplemental.length).toBeGreaterThan(0);
+    supplemental.forEach((board) => {
+      expect(board.candidates).toHaveLength(10);
+      expect(new Set(board.candidates.map((fighter) => fighter.id)).size).toBe(10);
+      expect(board.candidates.some((fighter) => fighter.id === board.leaderId)).toBe(true);
+    });
+  });
 });
