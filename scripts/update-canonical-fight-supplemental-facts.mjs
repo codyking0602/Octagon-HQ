@@ -18,6 +18,7 @@ const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
 const NAME_ALIASES = new Map([
   ["bobbygreen", "kinggreen"],
+  ["philde fries".replace(/[^a-z0-9]+/g, ""), "philipdefries"],
 ]);
 
 function compact(value) {
@@ -223,18 +224,27 @@ for (const row of statRows) {
   knockdowns.set(key, (knockdowns.get(key) ?? 0) + kd);
 }
 
-function matchDetail(fighterName, fight) {
+function matchingDetails(fighterName, fight) {
   const targetNames = [compact(fighterName), compact(fight.opponent)].sort();
   const canonicalDate = Date.parse(`${fight.date}T00:00:00Z`);
-  const matches = [...fightDetails.values()].filter((detail) => (
+  return [...fightDetails.values()].filter((detail) => (
     detail.names[0] === targetNames[0]
     && detail.names[1] === targetNames[1]
     && Math.abs(Date.parse(`${detail.date}T00:00:00Z`) - canonicalDate) <= ONE_DAY_MS
   ));
-  if (matches.length !== 1) {
-    throw new Error(`${fighterName} ${fight.id} (${fight.date} vs ${fight.opponent}) matched ${matches.length} UFCStats fights within one date-convention day.`);
+}
+
+const matchErrors = [];
+for (const fighter of canonicalFighters) {
+  for (const fight of fighter.fights) {
+    const matches = matchingDetails(fighter.name, fight);
+    if (matches.length !== 1) {
+      matchErrors.push(`${fighter.name} ${fight.id} (${fight.date} vs ${fight.opponent}) matched ${matches.length}`);
+    }
   }
-  return matches[0];
+}
+if (matchErrors.length) {
+  throw new Error(`Canonical UFCStats reconciliation failed for ${matchErrors.length} fight(s):\n${matchErrors.join("\n")}`);
 }
 
 function finishFact(fight, result) {
@@ -258,7 +268,7 @@ function knockdownFact(detail, fighterName, opponentName) {
 const entries = [];
 for (const fighter of canonicalFighters) {
   for (const fight of fighter.fights) {
-    const detail = matchDetail(fighter.name, fight);
+    const [detail] = matchingDetails(fighter.name, fight);
     const result = results.get(detail.fightId);
     if (!result) throw new Error(`Missing UFCStats result row for fight ${detail.fightId}.`);
     entries.push({
