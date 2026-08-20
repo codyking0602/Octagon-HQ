@@ -1,9 +1,32 @@
 import { describe, expect, it } from "vitest";
 import {
+  DAILY_RANK_KEEP_COMBO_BLIND_RESULT_KEY,
   DAILY_RANK_KEEP_COMBO_CONTENT_VERSION,
+  dailyRankKeepComboBlindRankResultState,
+  dailyRankKeepComboComponentScore,
   dailyRankKeepComboStage,
   isDailyRankKeepCombo,
 } from "./DailyRankKeepComboStatus";
+
+const completedCombo = {
+  contentVersion: DAILY_RANK_KEEP_COMBO_CONTENT_VERSION,
+  officialAttempt: {
+    nativeScore: 87,
+    normalizedScore: 87,
+    completedAt: "2026-08-20T10:00:00.000Z",
+    publicResult: {
+      blind_rank: { normalized_score: 80 },
+      keep_cut: { normalized_score: 94 },
+    },
+  },
+  publicState: {
+    [DAILY_RANK_KEEP_COMBO_BLIND_RESULT_KEY]: {
+      complete: true,
+      slots: [{ id: "one", name: "One" }],
+      reveal: { canonical_order: [{ id: "one", name: "One" }] },
+    },
+  },
+};
 
 describe("Daily Rank + Keep/Cut combo presentation", () => {
   it("recognizes only the canonical combo content version", () => {
@@ -26,6 +49,19 @@ describe("Daily Rank + Keep/Cut combo presentation", () => {
     expect(dailyRankKeepComboStage({
       contentVersion: "blind-rank-v3",
       gameType: "blind_rank_5",
+    })).toBeNull();
+  });
+
+  it("keeps the component scores separate from the combined Daily score", () => {
+    expect(dailyRankKeepComboComponentScore(completedCombo, "blind_rank")).toBe(80);
+    expect(dailyRankKeepComboComponentScore(completedCombo, "keep_cut")).toBe(94);
+  });
+
+  it("exposes the completed Blind Rank state only for a finished Daily Double", () => {
+    expect(dailyRankKeepComboBlindRankResultState(completedCombo)?.complete).toBe(true);
+    expect(dailyRankKeepComboBlindRankResultState({
+      ...completedCombo,
+      officialAttempt: null,
     })).toBeNull();
   });
 });

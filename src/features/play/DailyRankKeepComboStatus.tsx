@@ -1,6 +1,9 @@
 import type { TodayChallengeProjection } from "./todayChallengeRepository";
 
 export const DAILY_RANK_KEEP_COMBO_CONTENT_VERSION = "daily-rank-keep-combo-v1";
+export const DAILY_RANK_KEEP_COMBO_BLIND_RESULT_KEY = "combo_blind_rank_result";
+
+type DailyComboScoreKey = "blind_rank" | "keep_cut";
 
 function record(value: unknown): Record<string, unknown> | null {
   return value && typeof value === "object" && !Array.isArray(value)
@@ -22,13 +25,26 @@ export function dailyRankKeepComboStage(projection: Pick<TodayChallengeProjectio
   return projection?.gameType === "keep_4_cut_4" ? 2 : 1;
 }
 
+export function dailyRankKeepComboComponentScore(
+  projection: Pick<TodayChallengeProjection, "contentVersion" | "officialAttempt"> | null | undefined,
+  key: DailyComboScoreKey,
+) {
+  if (!isDailyRankKeepCombo(projection) || !projection?.officialAttempt) return null;
+  return score(projection.officialAttempt.publicResult[key]);
+}
+
+export function dailyRankKeepComboBlindRankResultState(
+  projection: Pick<TodayChallengeProjection, "contentVersion" | "officialAttempt" | "publicState"> | null | undefined,
+) {
+  if (!isDailyRankKeepCombo(projection) || !projection?.officialAttempt) return null;
+  return record(projection.publicState[DAILY_RANK_KEEP_COMBO_BLIND_RESULT_KEY]);
+}
+
 export function DailyRankKeepComboStatus({ projection }: { projection: TodayChallengeProjection }) {
   const stage = dailyRankKeepComboStage(projection);
   if (!stage) return null;
 
   const attempt = projection.officialAttempt;
-  const blindRankScore = score(attempt?.publicResult.blind_rank);
-  const keepCutScore = score(attempt?.publicResult.keep_cut);
 
   if (attempt) {
     return (
@@ -36,10 +52,6 @@ export function DailyRankKeepComboStatus({ projection }: { projection: TodayChal
         <p className="eyebrow">DAILY DOUBLE · FINAL RESULT</p>
         <h2>{attempt.normalizedScore}/100</h2>
         <p>Blind Rank 5 and Keep 4, Cut 4 count equally toward one official Daily score.</p>
-        <div className="today-hub-result-grid">
-          <span><small>BLIND RANK 5</small><strong>{blindRankScore ?? "—"}</strong></span>
-          <span><small>KEEP 4, CUT 4</small><strong>{keepCutScore ?? "—"}</strong></span>
-        </div>
       </section>
     );
   }

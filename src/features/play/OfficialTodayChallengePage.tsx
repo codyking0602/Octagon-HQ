@@ -4,10 +4,14 @@ import { useIdentity } from "../identity/IdentityProvider";
 import { OfficialBlindResumeV3DailyView } from "./OfficialBlindResumeV3DailyView";
 import {
   OfficialBlindRankCanonicalOrder,
+  OfficialBlindRankComboResult,
   OfficialBlindRankScoreSummary,
 } from "./OfficialBlindRankResult";
 import { OfficialHitTheNumberDailyView } from "./OfficialHitTheNumberDailyView";
-import { DailyRankKeepComboStatus } from "./DailyRankKeepComboStatus";
+import {
+  DailyRankKeepComboStatus,
+  dailyRankKeepComboComponentScore,
+} from "./DailyRankKeepComboStatus";
 import { OfficialTodayChallengeView } from "./OfficialTodayChallengePresentation";
 import {
   todayChallengeAdapter,
@@ -117,12 +121,23 @@ export default function OfficialTodayChallengePage({
 
   const blindResumeV3 = runtime.projection.gameType === "blind_resume"
     && runtime.projection.contentVersion === "blind-resume-v3";
+  const keepCutComponentScore = dailyRankKeepComboComponentScore(runtime.projection, "keep_cut");
+  const presentationProjection = keepCutComponentScore !== null && runtime.projection.officialAttempt
+    ? {
+        ...runtime.projection,
+        officialAttempt: {
+          ...runtime.projection.officialAttempt,
+          normalizedScore: keepCutComponentScore,
+        },
+      }
+    : runtime.projection;
 
   return (
     <div className="official-daily-page">
       <RuntimeStatus error={runtime.error} onRefresh={() => { void runtime.refresh(); }} />
       <DailyRankKeepComboStatus projection={runtime.projection} />
       <OfficialBlindRankScoreSummary projection={runtime.projection} />
+      <OfficialBlindRankComboResult projection={runtime.projection} />
       {blindResumeV3 ? (
         <OfficialBlindResumeV3DailyView
           projection={runtime.projection}
@@ -138,7 +153,7 @@ export default function OfficialTodayChallengePage({
         />
       ) : (
         <OfficialTodayChallengeView
-          projection={runtime.projection}
+          projection={presentationProjection}
           busy={runtime.busy}
           onAdvance={(action) => { void runtime.advance(action); }}
           onNavigate={(route) => navigate(route)}
