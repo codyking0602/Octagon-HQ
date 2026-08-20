@@ -12,15 +12,15 @@ export interface ShaneWatchFighter {
   division: string;
   age: number;
   country: string;
-  proRecord: string;
   ufcRecord: string;
-  winStreak: string;
-  finishes: string;
-  highlight: string;
-  scoutingNote: string;
-  comparison: string;
+  ufcWinStreak: string;
+  ufcFinishes: string;
+  whyOnBoard: string;
+  boardNote: string;
+  scoutingSnapshot: string;
   photoUrl: string | null;
   ufcUrl: string;
+  videoUrl: string;
 }
 
 export interface ShaneFormerPick {
@@ -58,19 +58,19 @@ export const shanesWatchlist = {
       nickname: "",
       status: "Rising",
       added: "July 2026",
-      lastReviewed: "July 2026",
+      lastReviewed: "August 2026",
       division: "Heavyweight",
       age: 26,
       country: "United States",
-      proRecord: "4–0",
       ufcRecord: "1–0",
-      winStreak: "4",
-      finishes: "4",
-      highlight: "First-round UFC debut knockout",
-      scoutingNote: "Olympic wrestling with heavyweight explosiveness. He has the highest ceiling on the board.",
-      comparison: "Justin Gaethje",
+      ufcWinStreak: "1",
+      ufcFinishes: "1",
+      whyOnBoard: "Olympic-level wrestling with a first-round knockout in his UFC debut.",
+      boardNote: "Olympic wrestling with heavyweight explosiveness. He has the highest ceiling on the board.",
+      scoutingSnapshot: "Steveson brings an Olympic-level wrestling base and rare explosiveness to heavyweight, but his UFC debut showed he doesn’t need to wrestle just to be dangerous. He overwhelmed Elisha Ellison with offense and scored a first-round knockout at 2:31, moving to 1–0 in the UFC. The upside is obvious, but with only one Octagon appearance, he’s still the biggest projection on Shane’s board.",
       photoUrl: "/assets/fighters/gable-steveson-thumb.webp",
       ufcUrl: "https://www.ufc.com/athlete/gable-steveson",
+      videoUrl: "https://youtube.com/shorts/2V8eGAiUZaU?is=b2fwdTJ5f9m1LVZ5",
     },
     {
       id: "quillan-salkilld",
@@ -84,15 +84,15 @@ export const shanesWatchlist = {
       division: "Lightweight",
       age: 26,
       country: "Australia",
-      proRecord: "13–1",
       ufcRecord: "6–0",
-      winStreak: "13",
-      finishes: "10",
-      highlight: "Six straight UFC wins · Gamrot submission",
-      scoutingNote: "Long, composed and dangerous everywhere, Salkilld looks like a lightweight built to climb the rankings fast.",
-      comparison: "",
+      ufcWinStreak: "6",
+      ufcFinishes: "5",
+      whyOnBoard: "A 6–0 UFC start capped by a first-round submission of Mateusz Gamrot.",
+      boardNote: "Long, composed and dangerous everywhere, Salkilld looks like a lightweight built to climb the rankings fast.",
+      scoutingSnapshot: "Salkilld has quickly shown one of the most complete games among the UFC’s young lightweights, with the ability to hurt opponents standing or take over a grappling exchange. He’s now 6–0 in the UFC with five finishes, including back-to-back wins over Beneil Dariush and Mateusz Gamrot—the latter coming by rear-naked choke against one of the division’s most accomplished grapplers. At this point he’s gone beyond being an interesting prospect; he’s starting to look like a legitimate threat near the top of the division.",
       photoUrl: "/assets/fighters/quillan-salkilld-thumb.webp",
       ufcUrl: "https://www.ufc.com/athlete/quillan-salkilld",
+      videoUrl: "https://youtube.com/shorts/ivb3NbPsnYg?is=y2ti4vYuCvUdFroV",
     },
     {
       id: "fatima-kline",
@@ -102,19 +102,19 @@ export const shanesWatchlist = {
       nickname: "The Archangel",
       status: "Rising",
       added: "July 2026",
-      lastReviewed: "July 2026",
+      lastReviewed: "August 2026",
       division: "Women’s Strawweight",
       age: 26,
       country: "United States",
-      proRecord: "10–1",
       ufcRecord: "4–1",
-      winStreak: "4",
-      finishes: "5",
-      highlight: "Four straight UFC wins",
-      scoutingNote: "Fighter to watch: The Archangel.",
-      comparison: "",
+      ufcWinStreak: "4",
+      ufcFinishes: "2",
+      whyOnBoard: "Four straight UFC wins with victories over Angela Hill and Tabatha Ricci.",
+      boardNote: "A fast-rising strawweight whose game keeps looking more complete against better UFC competition.",
+      scoutingSnapshot: "Kline has developed into a remarkably well-rounded strawweight, blending sharp striking with increasingly effective wrestling and physicality. Since dropping her UFC debut, she has won four straight inside the Octagon, including convincing decisions over experienced contenders Angela Hill and Tabatha Ricci. The most encouraging part is that she keeps finding different ways to control fights, making her look less like a prospect with one standout weapon and more like a future contender.",
       photoUrl: "/assets/fighters/fatima-kline-thumb.webp",
       ufcUrl: "https://www.ufc.com/athlete/fatima-kline",
+      videoUrl: "https://youtu.be/E3Eat8_BBjM?is=69fExP5AoinR5Xdt",
     },
     {
       id: "abdul-rakhman-yakhyaev",
@@ -124,19 +124,19 @@ export const shanesWatchlist = {
       nickname: "The Hunter",
       status: "Rising",
       added: "July 2026",
-      lastReviewed: "July 2026",
+      lastReviewed: "August 2026",
       division: "Light Heavyweight",
       age: 25,
       country: "Türkiye",
-      proRecord: "10–0",
       ufcRecord: "3–0",
-      winStreak: "10",
-      finishes: "9",
-      highlight: "8-second UFC knockout",
-      scoutingNote: "This guy could be the real deal.",
-      comparison: "Khamzat Chimaev",
+      ufcWinStreak: "3",
+      ufcFinishes: "3",
+      whyOnBoard: "Three straight first-round UFC finishes, including an eight-second knockout.",
+      boardNote: "This guy could be the real deal.",
+      scoutingSnapshot: "Yakhyaev has been pure destruction through his first three UFC fights, attacking aggressively without sacrificing the ability to finish on the ground. All three wins have ended in the first round—two by rear-naked choke and his latest by an eight-second knockout of Julius Walker. We still haven’t seen what happens when somebody drags him into a difficult, extended fight, but so far nobody in the UFC has come close to making him show it.",
       photoUrl: "/assets/fighters/abdul-rakhman-yakhyaev-thumb.webp",
       ufcUrl: "https://www.ufc.com/athlete/abdulrakhman-yakhyaev",
+      videoUrl: "https://youtube.com/shorts/k5En_QDBACA?is=KeKmxuwmh7N1yb1N",
     },
     {
       id: "daniil-donchenko",
@@ -146,19 +146,19 @@ export const shanesWatchlist = {
       nickname: "",
       status: "Rising",
       added: "July 2026",
-      lastReviewed: "July 2026",
+      lastReviewed: "August 2026",
       division: "Welterweight",
       age: 24,
       country: "Ukraine",
-      proRecord: "15–2",
       ufcRecord: "3–0",
-      winStreak: "8",
-      finishes: "12",
-      highlight: "10 knockouts · 2 submissions",
-      scoutingNote: "A young welterweight with an unbeaten UFC start and real finishing momentum.",
-      comparison: "",
+      ufcWinStreak: "3",
+      ufcFinishes: "2",
+      whyOnBoard: "A 3–0 UFC start with two finishes and a decision win over Alex Morono.",
+      boardNote: "A young welterweight with an unbeaten UFC start and real finishing momentum.",
+      scoutingSnapshot: "Donchenko is an aggressive, high-output kickboxer who puts opponents under constant pressure without taking nearly as much damage back. He’s opened his UFC career 3–0, finishing Rodrigo Sezinando and Theodor Berggren while also showing he could comfortably go the distance against veteran Alex Morono. The combination of pace, accuracy and finishing ability makes him especially interesting at just 24, with the next step being proving it against the division’s ranked welterweights.",
       photoUrl: "/assets/fighters/daniil-donchenko-thumb.webp",
       ufcUrl: "https://www.ufc.com/athlete/daniil-donchenko",
+      videoUrl: "https://youtube.com/shorts/hAPpKy3ZALk?is=MWDtVBsFxcT0IV2L",
     },
   ] satisfies ShaneWatchFighter[],
   formerFighters: [] as ShaneFormerPick[],
