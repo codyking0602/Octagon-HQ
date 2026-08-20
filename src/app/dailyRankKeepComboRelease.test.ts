@@ -5,6 +5,14 @@ const runtime = readFileSync(
   "supabase/functions/daily-challenge-runtime/index.ts",
   "utf8",
 );
+const dailyPage = readFileSync(
+  "src/features/play/OfficialTodayChallengePage.tsx",
+  "utf8",
+);
+const blindRankResult = readFileSync(
+  "src/features/play/OfficialBlindRankResult.tsx",
+  "utf8",
+);
 const publicationMigration = readFileSync(
   "supabase/migrations/202612310034_allow_daily_rank_keep_combo_publication.sql",
   "utf8",
@@ -35,6 +43,21 @@ describe("bundled Blind Rank + Keep Cut Daily release", () => {
     expect(browserSetup).toContain('combo_stage: "blind_rank_5"');
     expect(browserSetup).not.toContain("keepCutChild.public_setup");
     expect(runtime.slice(privateSetupStart)).toContain("keep_4_cut_4: keepCutChild");
+  });
+
+  it("reveals the completed Blind Rank board only after the combined attempt is final", () => {
+    expect(runtime).toContain('const publicState = attempt && stage === "keep_4_cut_4"');
+    expect(runtime).toContain("combo_blind_rank_result: requiredRecord(");
+    expect(runtime).toContain("context.publicState.blind_rank_5");
+    expect(runtime).toContain("public_state: publicState");
+  });
+
+  it("renders both component result experiences with their own scores", () => {
+    expect(dailyPage).toContain("<OfficialBlindRankComboResult projection={runtime.projection} />");
+    expect(dailyPage).toContain("normalizedScore: keepCutComponentScore");
+    expect(blindRankResult).toContain('title="YOUR FINAL RANKING"');
+    expect(blindRankResult).toContain('title="OCTAGON HQ ORDER"');
+    expect(blindRankResult).toContain("dailyRankKeepComboComponentScore(projection, \"blind_rank\")");
   });
 
   it("admits the combo scoring version through the canonical publication RPC", () => {
