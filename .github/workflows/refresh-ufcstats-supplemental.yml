@@ -29,7 +29,7 @@ jobs:
   refresh:
     if: github.actor != 'github-actions[bot]' && github.ref_name != 'main'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
     env:
       REFRESH_BRANCH: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref_name }}
     steps:
@@ -48,20 +48,8 @@ jobs:
       - name: Install locked app dependencies
         run: npm ci
 
-      - name: Install isolated pinned UFCStats browser tooling
-        shell: bash
-        run: |
-          set -euo pipefail
-          browser_tool_dir="$RUNNER_TEMP/ufcstats-browser"
-          mkdir -p "$browser_tool_dir"
-          npm install --prefix "$browser_tool_dir" --no-save --package-lock=false playwright@1.54.0
-          "$browser_tool_dir/node_modules/.bin/playwright" install --with-deps chromium
-          echo "PLAYWRIGHT_MODULE_PATH=$browser_tool_dir/node_modules/playwright" >> "$GITHUB_ENV"
-
       - name: Refresh checked-in UFCStats supplemental snapshot
-        run: |
-          UFCSTATS_CHECKED_AT="$(TZ=America/Chicago date +%F)" \
-            node scripts/backfill-ufcstats-supplemental.mjs
+        run: node scripts/backfill-ufcstats-supplemental.mjs
 
       - name: Verify supplemental snapshot and TypeScript boundary
         run: |
