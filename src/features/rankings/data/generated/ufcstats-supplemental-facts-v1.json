@@ -1,1 +1,26 @@
-{"schemaVersion":1,"provider":"ufcstats","fighters":{}}
+{
+  "schemaVersion": 1,
+  "provider": "ufcstats",
+  "provenance": {
+    "core": {
+      "repository": "Greco1899/scrape_ufc_stats",
+      "commit": "8e40eb945e1127bf0ef172ab211a34787948f312",
+      "refreshedAt": "2026-08-18",
+      "files": [
+        "ufc_event_details.csv",
+        "ufc_fight_details.csv",
+        "ufc_fight_results.csv",
+        "ufc_fight_stats.csv"
+      ]
+    },
+    "bonuses": {
+      "repository": "manzlerh/MMA-Grid",
+      "commit": "2d363d60b3a3f44e6a8bf83cdcef409f47fb3948",
+      "refreshedAt": "2026-03-02",
+      "files": [
+        "data/raw/ufc_bonuses.csv"
+      ]
+    }
+  },
+  "fighters": {}
+}
