@@ -203,7 +203,7 @@ describe("Your HQ", () => {
     expect(await screen.findByText("Ankalaev vs. Guskov")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "SIGN IN TO MAKE PICKS →" })).toBeInTheDocument();
     expect(screen.getByText("RANKING SPOTLIGHT")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Shane’s Fighters to Watch" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Fighters to Watch" })).toBeInTheDocument();
   });
 
   it("shows generalized daily data, profile data, and the highest-priority next action", async () => {

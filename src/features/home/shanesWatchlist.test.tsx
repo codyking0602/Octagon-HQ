@@ -2,6 +2,7 @@ import { existsSync } from "node:fs";
 import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
+import { ShanesWatchlistCard } from "./ShanesWatchlistCard";
 import ShanesWatchlistPage from "./ShanesWatchlistPage";
 import { shanesWatchlist, watchMovement } from "./shanesWatchlist";
 
@@ -37,6 +38,24 @@ describe("Shane's ranked watchlist", () => {
     const abdul = shanesWatchlist.fighters.find((fighter) => fighter.id === "abdul-rakhman-yakhyaev");
     expect(abdul?.comparison).toBe("Khamzat Chimaev");
     expect(abdul ? watchMovement(abdul) : null).toEqual({ label: "↓1", direction: "down" });
+  });
+
+  it("keeps the Home preview to a compact top-three board", () => {
+    const { container } = render(<MemoryRouter><ShanesWatchlistCard /></MemoryRouter>);
+
+    expect(screen.getByRole("heading", { name: "Fighters to Watch" })).toBeInTheDocument();
+    expect(screen.getByText("Gable Steveson")).toBeInTheDocument();
+    expect(screen.getByText("Quillan Salkilld")).toBeInTheDocument();
+    expect(screen.getByText("Fatima Kline")).toBeInTheDocument();
+    expect(screen.queryByText("Abdul Rakhman Yakhyaev")).not.toBeInTheDocument();
+
+    expect(screen.getByRole("link", { name: /Gable Steveson/i })).toHaveAttribute("href", "/fighters-to-watch#gable-steveson");
+    expect(screen.getByRole("link", { name: "VIEW FULL BOARD →" })).toHaveAttribute("href", "/fighters-to-watch");
+
+    expect(screen.queryByText("Justin Gaethje")).not.toBeInTheDocument();
+    expect(screen.queryByText("First-round UFC debut knockout")).not.toBeInTheDocument();
+    expect(screen.queryByText(shanesWatchlist.fighters[0].scoutingNote)).not.toBeInTheDocument();
+    expect(container.querySelectorAll("blockquote")).toHaveLength(0);
   });
 
   it("renders one compact board without inline scouting dossiers", () => {
