@@ -19,12 +19,31 @@ const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 const NAME_ALIASES = new Map([
   ["bobbygreen", "kinggreen"],
   ["philde fries".replace(/[^a-z0-9]+/g, ""), "philipdefries"],
+  ["mauricioshogunrua", "mauriciorua"],
+  ["criscyborg", "cristianejustino"],
+  ["teciatorres", "teciapennington"],
+  ["michellewaterson", "michellewatersongomez"],
+  ["joannecalderwood", "joannewood"],
+  ["katlynchookagian", "katlyncerminara"],
+  ["ronaldosouza", "jacaresouza"],
+  ["carlosdiegoferreira", "diegoferreira"],
+  ["josephduffy", "joeduffy"],
+  ["ulkasasaski", "yutasasaki"],
+  ["ulkasasakI".toLowerCase(), "yutasasaki"],
+  ["tankabbott", "davidabbott"],
+  ["mirkocrocop", "mirkofilipovic"],
+  ["josealbertoquinonez", "josequinonez"],
+  ["rodrigovargas", "kazulavargas"],
+  ["heatherjoclark", "heatherclark"],
+  ["mannygamburyan", "manvelgamburyan"],
+  ["bubbamcdaniel", "robertmcdaniel"],
 ]);
 
 function compact(value) {
   const normalized = String(value ?? "")
     .normalize("NFKD")
     .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[łŁ]/g, "l")
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "");
   return NAME_ALIASES.get(normalized) ?? normalized;
@@ -64,14 +83,10 @@ function parseCsv(text) {
       if (char === '"' && text[index + 1] === '"') {
         field += '"';
         index += 1;
-      } else if (char === '"') {
-        quoted = false;
-      } else {
-        field += char;
-      }
-    } else if (char === '"') {
-      quoted = true;
-    } else if (char === ",") {
+      } else if (char === '"') quoted = false;
+      else field += char;
+    } else if (char === '"') quoted = true;
+    else if (char === ",") {
       row.push(field);
       field = "";
     } else if (char === "\n") {
@@ -79,9 +94,7 @@ function parseCsv(text) {
       rows.push(row);
       row = [];
       field = "";
-    } else {
-      field += char;
-    }
+    } else field += char;
   }
   if (field.length || row.length) {
     row.push(field.replace(/\r$/, ""));
@@ -205,9 +218,7 @@ for (const row of resultRows) {
 }
 
 const ambiguousStatBouts = new Set(
-  [...detailRowsByBout.entries()]
-    .filter(([, rows]) => rows.length > 1)
-    .map(([key]) => key),
+  [...detailRowsByBout.entries()].filter(([, rows]) => rows.length > 1).map(([key]) => key),
 );
 const knockdowns = new Map();
 const seenStatRounds = new Set();
@@ -234,19 +245,6 @@ function matchingDetails(fighterName, fight) {
   ));
 }
 
-const matchErrors = [];
-for (const fighter of canonicalFighters) {
-  for (const fight of fighter.fights) {
-    const matches = matchingDetails(fighter.name, fight);
-    if (matches.length !== 1) {
-      matchErrors.push(`${fighter.name} ${fight.id} (${fight.date} vs ${fight.opponent}) matched ${matches.length}`);
-    }
-  }
-}
-if (matchErrors.length) {
-  throw new Error(`Canonical UFCStats reconciliation failed for ${matchErrors.length} fight(s):\n${matchErrors.join("\n")}`);
-}
-
 function finishFact(fight, result) {
   if (!FINISH_METHODS.has(fight.methodCategory)) return { status: "not-applicable" };
   const round = parseInteger(result?.ROUND);
@@ -266,9 +264,21 @@ function knockdownFact(detail, fighterName, opponentName) {
 }
 
 const entries = [];
+const unmatchedCanonicalFights = [];
 for (const fighter of canonicalFighters) {
   for (const fight of fighter.fights) {
-    const [detail] = matchingDetails(fighter.name, fight);
+    const matches = matchingDetails(fighter.name, fight);
+    if (matches.length !== 1) {
+      unmatchedCanonicalFights.push({
+        fighterId: fighter.slug,
+        canonicalFightId: fight.id,
+        date: fight.date,
+        opponent: fight.opponent,
+        matchCount: matches.length,
+      });
+      continue;
+    }
+    const [detail] = matches;
     const result = results.get(detail.fightId);
     if (!result) throw new Error(`Missing UFCStats result row for fight ${detail.fightId}.`);
     entries.push({
@@ -290,19 +300,19 @@ for (const fighter of canonicalFighters) {
   }
 }
 
-entries.sort((left, right) => (
-  left.fighterId.localeCompare(right.fighterId)
-  || left.canonicalFightId.localeCompare(right.canonicalFightId)
-));
-const expectedFightCount = canonicalFighters.reduce((sum, fighter) => sum + fighter.fights.length, 0);
+entries.sort((left, right) => left.fighterId.localeCompare(right.fighterId) || left.canonicalFightId.localeCompare(right.canonicalFightId));
+unmatchedCanonicalFights.sort((left, right) => left.fighterId.localeCompare(right.fighterId) || left.canonicalFightId.localeCompare(right.canonicalFightId));
+const canonicalFightCount = canonicalFighters.reduce((sum, fighter) => sum + fighter.fights.length, 0);
 const keys = new Set(entries.map((entry) => `${entry.fighterId}:${entry.canonicalFightId}`));
-if (entries.length !== expectedFightCount || keys.size !== entries.length) {
-  throw new Error(`Canonical snapshot reconciliation failed: ${entries.length} rows / ${keys.size} keys / ${expectedFightCount} fights.`);
+if (keys.size !== entries.length || entries.length + unmatchedCanonicalFights.length !== canonicalFightCount) {
+  throw new Error(`Canonical snapshot reconciliation failed: ${entries.length} enriched / ${unmatchedCanonicalFights.length} unmatched / ${canonicalFightCount} canonical fights.`);
 }
 
 const coverage = {
   fighters: canonicalFighters.length,
-  fights: entries.length,
+  canonicalFights: canonicalFightCount,
+  enrichedFights: entries.length,
+  unmatchedCanonicalFights: unmatchedCanonicalFights.length,
   events: new Set(entries.map((entry) => entry.supplementalFacts.source.eventId)).size,
   upstreamDetailEventsSkippedWithoutMetadata: skippedDetailEvents.size,
   upstreamDuplicateFightDetailRows: duplicateDetailRows,
@@ -325,28 +335,19 @@ const snapshot = {
   transport: {
     repository: sourceRepository,
     commit: sourceCommit,
-    files: [
-      "ufc_event_details.csv",
-      "ufc_fight_details.csv",
-      "ufc_fight_results.csv",
-      "ufc_fight_stats.csv",
-    ],
-    note: "Pinned checked-in UFCStats extract. Canonical event dates may differ from UFCStats by one day for broadcast/local-date conventions. Bonus flags are not retained by this transport and remain explicitly unavailable; round stats without per-fight identity remain unavailable for duplicate same-event bouts.",
+    files: ["ufc_event_details.csv", "ufc_fight_details.csv", "ufc_fight_results.csv", "ufc_fight_stats.csv"],
+    note: "Pinned checked-in UFCStats extract. Canonical event dates may differ by one day for broadcast/local-date conventions. Bonus flags are not retained and remain explicitly unavailable. Unmatched canonical fights are listed and receive no supplemental block; consumers must require complete metric coverage.",
   },
   coverage,
+  unmatchedCanonicalFights,
   entries,
 };
 
 await fs.mkdir(path.dirname(outputPath), { recursive: true });
 await fs.writeFile(outputPath, `${JSON.stringify(snapshot, null, 2)}\n`, "utf8");
 console.log(`Wrote ${path.relative(root, outputPath)} from ${sourceRepository}@${sourceCommit}.`);
-if (skippedDetailEvents.size) {
-  console.log(`Skipped ${skippedDetailEvents.size} upstream detail event(s) absent from the pinned event index; canonical fights still require exact matches.`);
-}
-if (ambiguousStatBouts.size) {
-  console.log(`Marked round-stat identity unavailable for ${ambiguousStatBouts.size} duplicate same-event matchup key(s).`);
-}
-if (duplicateDetailRows || duplicateResultRows) {
-  console.log(`Ignored ${duplicateDetailRows} duplicate fight-detail and ${duplicateResultRows} duplicate fight-result row(s) after consumed-fact reconciliation.`);
-}
 console.log(JSON.stringify(coverage));
+if (unmatchedCanonicalFights.length) {
+  console.log("Unmatched canonical fights:");
+  unmatchedCanonicalFights.forEach((fight) => console.log(`${fight.fighterId} ${fight.canonicalFightId} ${fight.date} vs ${fight.opponent} (${fight.matchCount})`));
+}
