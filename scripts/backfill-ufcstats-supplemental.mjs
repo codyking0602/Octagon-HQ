@@ -29,6 +29,23 @@ const BONUS_TYPES = new Map([
 const NAME_ALIASES = new Map([
   ["bobbygreen", "kinggreen"],
   ["mirkofilipovic", "mirkocrocop"],
+  ["phildefries", "philipdefries"],
+  ["janbachowicz", "janblachowicz"],
+  ["carlosdiegoferreira", "carlosferreira"],
+  ["josephduffy", "joeduffy"],
+  ["ulkasasaski", "yutasasaki"],
+  ["ronaldosouza", "jacaresouza"],
+  ["josealbertoquinonez", "josequinonez"],
+  ["mauricioshogunrua", "mauriciorua"],
+  ["tankabbott", "davidabbott"],
+  ["criscyborg", "cristianejustino"],
+  ["katlynchookagian", "katlyncerminara"],
+  ["teciatorres", "teciapennington"],
+  ["michellewaterson", "michellewatersongomez"],
+  ["joannecalderwood", "joannewood"],
+  ["yanakunitskaya", "yanasantos"],
+  ["heatherjoclark", "heatherclark"],
+  ["zhangweili", "weilizhang"],
 ]);
 
 function rawUrl(repository, commit, file) {
