@@ -3,6 +3,17 @@ import { canonicalRankingInputs } from "./rankingInputs";
 import { ufcStatsSupplementalFactsSnapshot } from "./ufcStatsSupplementalFacts";
 
 const FINISH_METHODS = new Set(["ko-tko", "doctor-stoppage", "submission"]);
+const EXPECTED_UNRECONCILED = [
+  "Aljamain Sterling|2014-09-20-takeya-mizugaki",
+  "Aljamain Sterling|2015-04-18-manny-gamburyan",
+  "B.J. Penn|2003-04-25-duane-ludwig",
+  "Lyoto Machida|2007-05-26-david-heath",
+  "Robbie Lawler|2022-12-10-santiago-ponzinibbio",
+  "Royce Gracie|1993-11-12-art-jimmerson",
+  "Royce Gracie|1993-11-12-gerard-gordeau",
+  "Royce Gracie|1993-11-12-ken-shamrock",
+  "Tito Ortiz|1998-03-13-jerry-bohlander",
+].sort();
 
 describe("canonical UFCStats supplemental fight snapshot", () => {
   it("pins the raw UFCStats export provenance used to build the checked-in snapshot", () => {
@@ -25,12 +36,13 @@ describe("canonical UFCStats supplemental fight snapshot", () => {
     });
   });
 
-  it("covers every canonical ranked UFC fight and never turns missing source coverage into zero", () => {
+  it("covers every canonical ranked UFC fight without inventing source matches or zeroes", () => {
     const expectedSlugs = canonicalRankingInputs.fighters
       .map((fighter) => fighter.presentation.slug)
       .sort();
     expect(Object.keys(ufcStatsSupplementalFactsSnapshot.fighters).sort()).toEqual(expectedSlugs);
 
+    const observedUnreconciled: string[] = [];
     let verifiedBonusRows = 0;
     let unavailableBonusRows = 0;
     let verifiedKnockdownRows = 0;
@@ -44,8 +56,24 @@ describe("canonical UFCStats supplemental fight snapshot", () => {
       );
 
       for (const fight of fighter.facts.fights) {
+        const snapshotRow = snapshotFights?.[fight.id];
+        expect(snapshotRow, `${fighter.fighter} vs ${fight.opponent}`).toBeDefined();
+        if (!snapshotRow) throw new Error(`Missing snapshot row for ${fighter.fighter} vs ${fight.opponent}.`);
+
+        if ("reconciliation" in snapshotRow) {
+          observedUnreconciled.push(`${fighter.fighter}|${fight.id}`);
+          expect(snapshotRow).toEqual({
+            reconciliation: "unavailable",
+            source: { provider: "ufcstats", checkedAt: "2026-08-18" },
+            reason: "no-unique-source-match",
+          });
+          expect(fight.supplementalFacts).toBeUndefined();
+          continue;
+        }
+
         const supplemental = fight.supplementalFacts;
         expect(supplemental, `${fighter.fighter} vs ${fight.opponent}`).toBeDefined();
+        expect(supplemental).toEqual(snapshotRow);
         expect(supplemental?.source.provider).toBe("ufcstats");
         expect(supplemental?.source.eventId).toMatch(/^[a-z0-9]+$/i);
         expect(supplemental?.source.fightId).toMatch(/^[a-z0-9]+$/i);
@@ -68,6 +96,7 @@ describe("canonical UFCStats supplemental fight snapshot", () => {
       }
     }
 
+    expect(observedUnreconciled.sort()).toEqual(EXPECTED_UNRECONCILED);
     expect(verifiedBonusRows).toBeGreaterThan(0);
     expect(unavailableBonusRows).toBeGreaterThan(0);
     expect(verifiedKnockdownRows).toBeGreaterThan(0);
