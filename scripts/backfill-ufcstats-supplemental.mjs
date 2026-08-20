@@ -1,14 +1,10 @@
 #!/usr/bin/env node
-import { execFile } from "node:child_process";
 import fs from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { promisify } from "node:util";
 import { JSDOM } from "jsdom";
 import { createServer } from "vite";
 
-const execFileAsync = promisify(execFile);
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outputPath = path.join(
   root,
@@ -22,8 +18,10 @@ const BONUS_TYPES = [
   "submission-of-the-night",
   "knockout-of-the-night",
 ];
-const CHROME_BIN = process.env.CHROME_BIN || "google-chrome";
 const BROWSER_WORKERS = 6;
+const UFCSTATS_USER_AGENT =
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+  + "(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
 
 const NAME_ALIASES = new Map([
   ["bobbygreen", "kinggreen"],
@@ -129,40 +127,35 @@ async function sleep(ms) {
   await new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function browserHtml(url, profileDir) {
+async function browserHtml(page, url) {
   let lastError = null;
-  for (let attempt = 1; attempt <= 3; attempt += 1) {
+  for (let attempt = 1; attempt <= 4; attempt += 1) {
     try {
-      const { stdout } = await execFileAsync(
-        CHROME_BIN,
-        [
-          "--headless=new",
-          "--no-sandbox",
-          "--disable-gpu",
-          "--disable-dev-shm-usage",
-          "--disable-background-networking",
-          "--disable-default-apps",
-          "--disable-extensions",
-          "--disable-sync",
-          "--metrics-recording-only",
-          "--no-first-run",
-          `--user-data-dir=${profileDir}`,
-          "--virtual-time-budget=10000",
-          "--dump-dom",
-          url,
-        ],
-        { timeout: 45_000, maxBuffer: 16 * 1024 * 1024 },
-      );
-      if (!/<html/i.test(stdout)) {
-        throw new Error("headless Chrome returned no HTML document");
+      await page.goto(url, { waitUntil: "domcontentloaded", timeout: 45_000 });
+      const deadline = Date.now() + 20_000;
+      while (Date.now() < deadline) {
+        const title = await page.title();
+        if (title !== "Loading…" && title !== "Loading...") break;
+        await page.waitForTimeout(500);
       }
-      if (/checking your browser|enable javascript and cookies to continue/i.test(stdout)) {
+      const title = await page.title();
+      if (title === "Loading…" || title === "Loading...") {
         throw new Error("UFCStats browser challenge did not clear");
       }
-      return stdout;
+      try {
+        await page.waitForLoadState("networkidle", { timeout: 8_000 });
+      } catch {
+        // UFCStats occasionally keeps a harmless connection alive after content is ready.
+      }
+      await page.waitForTimeout(750);
+      const html = await page.content();
+      if (/checking your browser|enable javascript and cookies to continue/i.test(html)) {
+        throw new Error("UFCStats browser challenge content remained after navigation");
+      }
+      return html;
     } catch (error) {
       lastError = error;
-      if (attempt < 3) await sleep(1000 * attempt);
+      if (attempt < 4) await sleep(3000 * (2 ** (attempt - 1)));
     }
   }
   throw new Error(`UFCStats browser load failed for ${url}: ${lastError?.message ?? lastError}`);
@@ -317,15 +310,17 @@ async function main() {
     throw new Error(`UFCSTATS_CHECKED_AT must be YYYY-MM-DD, received ${checkedAt}.`);
   }
 
-  const browserRoot = await fs.mkdtemp(path.join(os.tmpdir(), "octagon-ufcstats-"));
+  const { chromium } = await import("playwright");
+  const browser = await chromium.launch({ headless: true });
+  const contexts = [];
   try {
-    const profileDirs = await Promise.all(
-      Array.from({ length: BROWSER_WORKERS }, async (_, index) => {
-        const directory = path.join(browserRoot, `profile-${index}`);
-        await fs.mkdir(directory, { recursive: true });
-        return directory;
-      }),
-    );
+    const pages = [];
+    for (let index = 0; index < BROWSER_WORKERS; index += 1) {
+      const context = await browser.newContext({ userAgent: UFCSTATS_USER_AGENT });
+      contexts.push(context);
+      pages.push(await context.newPage());
+    }
+
     const canonicalRankingInputs = await loadCanonicalRankingInputs();
     const canonicalFights = canonicalRankingInputs.fighters.flatMap((fighter) => (
       fighter.facts.fights.map((fight) => ({
@@ -338,7 +333,7 @@ async function main() {
     const existingSnapshot = await readExistingSnapshot();
 
     console.log(`Loading UFCStats event index for ${canonicalFights.length} canonical fights across ${neededDates.size} dates...`);
-    const eventIndexHtml = await browserHtml(completedEventsUrl, profileDirs[0]);
+    const eventIndexHtml = await browserHtml(pages[0], completedEventsUrl);
     const events = parseCompletedEvents(eventIndexHtml);
     if (!events.length) {
       throw new Error("UFCStats completed-events page did not expose any completed events after the browser challenge.");
@@ -360,7 +355,7 @@ async function main() {
         if (index >= relevantEvents.length) return;
         const event = relevantEvents[index];
         const eventRows = parseEventPage(
-          await browserHtml(event.url, profileDirs[workerIndex]),
+          await browserHtml(pages[workerIndex], event.url),
           event,
         );
         if (!eventRows.length) {
@@ -375,7 +370,7 @@ async function main() {
         }
       }
     }
-    await Promise.all(profileDirs.map((_, index) => loadEventWorker(index)));
+    await Promise.all(pages.map((_, index) => loadEventWorker(index)));
 
     const fighters = {};
     const unmatched = [];
@@ -450,7 +445,8 @@ async function main() {
     console.log(`Bonuses: ${verifiedBonuses} verified, ${unavailableBonuses} unavailable.`);
     console.log(`Knockdowns: ${verifiedKnockdowns} verified, ${unavailableKnockdowns} unavailable.`);
   } finally {
-    await fs.rm(browserRoot, { recursive: true, force: true });
+    await Promise.all(contexts.map((context) => context.close().catch(() => undefined)));
+    await browser.close();
   }
 }
 
