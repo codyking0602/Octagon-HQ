@@ -1,10 +1,14 @@
 #!/usr/bin/env node
+import { execFile } from "node:child_process";
 import fs from "node:fs/promises";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { promisify } from "node:util";
 import { JSDOM } from "jsdom";
 import { createServer } from "vite";
 
+const execFileAsync = promisify(execFile);
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outputPath = path.join(
   root,
@@ -18,14 +22,12 @@ const BONUS_TYPES = [
   "submission-of-the-night",
   "knockout-of-the-night",
 ];
-const REQUEST_HEADERS = {
-  "user-agent": "Mozilla/5.0 (compatible; OctagonHQ-UFCStats-Snapshot/1.0)",
-  accept: "text/html,application/xhtml+xml",
-};
+const CHROME_BIN = process.env.CHROME_BIN || "google-chrome";
+const BROWSER_WORKERS = 6;
 
 const NAME_ALIASES = new Map([
   ["bobbygreen", "kinggreen"],
-  ["mirko filipovic", "mirkocrocop"],
+  ["mirkofilipovic", "mirkocrocop"],
 ]);
 
 function clean(value) {
@@ -127,25 +129,43 @@ async function sleep(ms) {
   await new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function fetchText(url) {
+async function browserHtml(url, profileDir) {
   let lastError = null;
-  for (let attempt = 1; attempt <= 4; attempt += 1) {
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
     try {
-      const response = await fetch(url, {
-        headers: REQUEST_HEADERS,
-        redirect: "follow",
-        signal: AbortSignal.timeout(30_000),
-      });
-      if (!response.ok) {
-        throw new Error(`${response.status} ${response.statusText}`);
+      const { stdout } = await execFileAsync(
+        CHROME_BIN,
+        [
+          "--headless=new",
+          "--no-sandbox",
+          "--disable-gpu",
+          "--disable-dev-shm-usage",
+          "--disable-background-networking",
+          "--disable-default-apps",
+          "--disable-extensions",
+          "--disable-sync",
+          "--metrics-recording-only",
+          "--no-first-run",
+          `--user-data-dir=${profileDir}`,
+          "--virtual-time-budget=10000",
+          "--dump-dom",
+          url,
+        ],
+        { timeout: 45_000, maxBuffer: 16 * 1024 * 1024 },
+      );
+      if (!/<html/i.test(stdout)) {
+        throw new Error("headless Chrome returned no HTML document");
       }
-      return await response.text();
+      if (/checking your browser|enable javascript and cookies to continue/i.test(stdout)) {
+        throw new Error("UFCStats browser challenge did not clear");
+      }
+      return stdout;
     } catch (error) {
       lastError = error;
-      if (attempt < 4) await sleep(500 * attempt);
+      if (attempt < 3) await sleep(1000 * attempt);
     }
   }
-  throw new Error(`UFCStats request failed for ${url}: ${lastError?.message ?? lastError}`);
+  throw new Error(`UFCStats browser load failed for ${url}: ${lastError?.message ?? lastError}`);
 }
 
 export function parseCompletedEvents(html) {
@@ -297,111 +317,141 @@ async function main() {
     throw new Error(`UFCSTATS_CHECKED_AT must be YYYY-MM-DD, received ${checkedAt}.`);
   }
 
-  const canonicalRankingInputs = await loadCanonicalRankingInputs();
-  const canonicalFights = canonicalRankingInputs.fighters.flatMap((fighter) => (
-    fighter.facts.fights.map((fight) => ({
-      fighterName: fighter.fighter,
-      fighterSlug: fighter.presentation.slug,
-      fight,
-    }))
-  ));
-  const neededDates = new Set(canonicalFights.map((entry) => entry.fight.date));
-  const existingSnapshot = await readExistingSnapshot();
+  const browserRoot = await fs.mkdtemp(path.join(os.tmpdir(), "octagon-ufcstats-"));
+  try {
+    const profileDirs = await Promise.all(
+      Array.from({ length: BROWSER_WORKERS }, async (_, index) => {
+        const directory = path.join(browserRoot, `profile-${index}`);
+        await fs.mkdir(directory, { recursive: true });
+        return directory;
+      }),
+    );
+    const canonicalRankingInputs = await loadCanonicalRankingInputs();
+    const canonicalFights = canonicalRankingInputs.fighters.flatMap((fighter) => (
+      fighter.facts.fights.map((fight) => ({
+        fighterName: fighter.fighter,
+        fighterSlug: fighter.presentation.slug,
+        fight,
+      }))
+    ));
+    const neededDates = new Set(canonicalFights.map((entry) => entry.fight.date));
+    const existingSnapshot = await readExistingSnapshot();
 
-  console.log(`Loading UFCStats event index for ${canonicalFights.length} canonical fights across ${neededDates.size} dates...`);
-  const events = parseCompletedEvents(await fetchText(completedEventsUrl));
-  const relevantEvents = events.filter((event) => neededDates.has(event.date));
-  const coveredDates = new Set(relevantEvents.map((event) => event.date));
-  const missingDates = [...neededDates].filter((date) => !coveredDates.has(date)).sort();
-  if (missingDates.length) {
-    throw new Error(`UFCStats event index is missing canonical fight dates: ${missingDates.join(", ")}`);
-  }
-
-  const rowsByDate = new Map();
-  for (let index = 0; index < relevantEvents.length; index += 1) {
-    const event = relevantEvents[index];
-    const eventRows = parseEventPage(await fetchText(event.url), event);
-    const bucket = rowsByDate.get(event.date) ?? [];
-    bucket.push(...eventRows);
-    rowsByDate.set(event.date, bucket);
-    if ((index + 1) % 40 === 0 || index + 1 === relevantEvents.length) {
-      console.log(`Loaded ${index + 1}/${relevantEvents.length} relevant UFCStats events.`);
+    console.log(`Loading UFCStats event index for ${canonicalFights.length} canonical fights across ${neededDates.size} dates...`);
+    const eventIndexHtml = await browserHtml(completedEventsUrl, profileDirs[0]);
+    const events = parseCompletedEvents(eventIndexHtml);
+    if (!events.length) {
+      throw new Error("UFCStats completed-events page did not expose any completed events after the browser challenge.");
     }
-    await sleep(40);
-  }
-
-  const fighters = {};
-  const unmatched = [];
-  const ambiguous = [];
-  let verifiedBonuses = 0;
-  let unavailableBonuses = 0;
-  let verifiedKnockdowns = 0;
-  let unavailableKnockdowns = 0;
-
-  for (const entry of canonicalFights) {
-    const dateRows = rowsByDate.get(entry.fight.date) ?? [];
-    const matched = matchEventRow(dateRows, entry.fighterName, entry.fight.opponent);
-    if (matched.ambiguousMatches) {
-      if (matched.ambiguousMatches.length === 0) unmatched.push(entry);
-      else ambiguous.push({ ...entry, matches: matched.ambiguousMatches });
-      continue;
+    const relevantEvents = events.filter((event) => neededDates.has(event.date));
+    const coveredDates = new Set(relevantEvents.map((event) => event.date));
+    const missingDates = [...neededDates].filter((date) => !coveredDates.has(date)).sort();
+    if (missingDates.length) {
+      throw new Error(`UFCStats event index is missing canonical fight dates: ${missingDates.join(", ")}`);
     }
 
-    const supplementalFacts = {
-      source: {
-        provider: "ufcstats",
-        eventId: matched.eventId,
-        fightId: matched.fightId,
-        checkedAt,
-      },
-      mainEvent: { status: "verified", value: matched.mainEvent },
-      bonuses: bonusFact(matched, entry.fight.officialResult),
-      finish: finishFact(matched, entry.fight.methodCategory),
-      knockdowns: knockdownFact(matched, entry.fighterName),
+    const rowsByDate = new Map();
+    let nextEventIndex = 0;
+    let loadedEvents = 0;
+    async function loadEventWorker(workerIndex) {
+      while (true) {
+        const index = nextEventIndex;
+        nextEventIndex += 1;
+        if (index >= relevantEvents.length) return;
+        const event = relevantEvents[index];
+        const eventRows = parseEventPage(
+          await browserHtml(event.url, profileDirs[workerIndex]),
+          event,
+        );
+        if (!eventRows.length) {
+          throw new Error(`UFCStats event ${event.eventId} exposed no fight rows after the browser challenge.`);
+        }
+        const bucket = rowsByDate.get(event.date) ?? [];
+        bucket.push(...eventRows);
+        rowsByDate.set(event.date, bucket);
+        loadedEvents += 1;
+        if (loadedEvents % 40 === 0 || loadedEvents === relevantEvents.length) {
+          console.log(`Loaded ${loadedEvents}/${relevantEvents.length} relevant UFCStats events.`);
+        }
+      }
+    }
+    await Promise.all(profileDirs.map((_, index) => loadEventWorker(index)));
+
+    const fighters = {};
+    const unmatched = [];
+    const ambiguous = [];
+    let verifiedBonuses = 0;
+    let unavailableBonuses = 0;
+    let verifiedKnockdowns = 0;
+    let unavailableKnockdowns = 0;
+
+    for (const entry of canonicalFights) {
+      const dateRows = rowsByDate.get(entry.fight.date) ?? [];
+      const matched = matchEventRow(dateRows, entry.fighterName, entry.fight.opponent);
+      if (matched.ambiguousMatches) {
+        if (matched.ambiguousMatches.length === 0) unmatched.push(entry);
+        else ambiguous.push({ ...entry, matches: matched.ambiguousMatches });
+        continue;
+      }
+
+      const supplementalFacts = {
+        source: {
+          provider: "ufcstats",
+          eventId: matched.eventId,
+          fightId: matched.fightId,
+          checkedAt,
+        },
+        mainEvent: { status: "verified", value: matched.mainEvent },
+        bonuses: bonusFact(matched, entry.fight.officialResult),
+        finish: finishFact(matched, entry.fight.methodCategory),
+        knockdowns: knockdownFact(matched, entry.fighterName),
+      };
+
+      const previous = existingSnapshot.fighters?.[entry.fighterSlug]?.[entry.fight.id];
+      if (factsEquivalentIgnoringCheckedAt(previous, supplementalFacts)) {
+        supplementalFacts.source.checkedAt = previous.source.checkedAt;
+      }
+
+      fighters[entry.fighterSlug] ??= {};
+      fighters[entry.fighterSlug][entry.fight.id] = supplementalFacts;
+      if (supplementalFacts.bonuses.status === "verified") verifiedBonuses += 1;
+      else unavailableBonuses += 1;
+      if (supplementalFacts.knockdowns.status === "verified") verifiedKnockdowns += 1;
+      else unavailableKnockdowns += 1;
+    }
+
+    if (unmatched.length || ambiguous.length) {
+      for (const entry of unmatched.slice(0, 80)) {
+        console.error(`UNMATCHED ${entry.fighterName} vs ${entry.fight.opponent} on ${entry.fight.date} (${entry.fighterSlug}:${entry.fight.id})`);
+      }
+      for (const entry of ambiguous.slice(0, 20)) {
+        console.error(`AMBIGUOUS ${entry.fighterName} vs ${entry.fight.opponent} on ${entry.fight.date}: ${entry.matches.length} UFCStats rows`);
+      }
+      throw new Error(`UFCStats backfill could not reconcile ${unmatched.length} fights and found ${ambiguous.length} ambiguous fights.`);
+    }
+
+    const sortedFighters = Object.fromEntries(
+      Object.entries(fighters)
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([fighterSlug, fights]) => [
+          fighterSlug,
+          Object.fromEntries(Object.entries(fights).sort(([left], [right]) => left.localeCompare(right))),
+        ]),
+    );
+
+    const output = {
+      schemaVersion: 1,
+      provider: "ufcstats",
+      fighters: sortedFighters,
     };
+    await fs.writeFile(outputPath, `${JSON.stringify(output, null, 2)}\n`, "utf8");
 
-    const previous = existingSnapshot.fighters?.[entry.fighterSlug]?.[entry.fight.id];
-    if (factsEquivalentIgnoringCheckedAt(previous, supplementalFacts)) {
-      supplementalFacts.source.checkedAt = previous.source.checkedAt;
-    }
-
-    fighters[entry.fighterSlug] ??= {};
-    fighters[entry.fighterSlug][entry.fight.id] = supplementalFacts;
-    if (supplementalFacts.bonuses.status === "verified") verifiedBonuses += 1;
-    else unavailableBonuses += 1;
-    if (supplementalFacts.knockdowns.status === "verified") verifiedKnockdowns += 1;
-    else unavailableKnockdowns += 1;
+    console.log(`Wrote ${canonicalFights.length} canonical supplemental fight records for ${canonicalRankingInputs.fighters.length} fighters.`);
+    console.log(`Bonuses: ${verifiedBonuses} verified, ${unavailableBonuses} unavailable.`);
+    console.log(`Knockdowns: ${verifiedKnockdowns} verified, ${unavailableKnockdowns} unavailable.`);
+  } finally {
+    await fs.rm(browserRoot, { recursive: true, force: true });
   }
-
-  if (unmatched.length || ambiguous.length) {
-    for (const entry of unmatched.slice(0, 80)) {
-      console.error(`UNMATCHED ${entry.fighterName} vs ${entry.fight.opponent} on ${entry.fight.date} (${entry.fighterSlug}:${entry.fight.id})`);
-    }
-    for (const entry of ambiguous.slice(0, 20)) {
-      console.error(`AMBIGUOUS ${entry.fighterName} vs ${entry.fight.opponent} on ${entry.fight.date}: ${entry.matches.length} UFCStats rows`);
-    }
-    throw new Error(`UFCStats backfill could not reconcile ${unmatched.length} fights and found ${ambiguous.length} ambiguous fights.`);
-  }
-
-  const sortedFighters = Object.fromEntries(
-    Object.entries(fighters)
-      .sort(([left], [right]) => left.localeCompare(right))
-      .map(([fighterSlug, fights]) => [
-        fighterSlug,
-        Object.fromEntries(Object.entries(fights).sort(([left], [right]) => left.localeCompare(right))),
-      ]),
-  );
-
-  const output = {
-    schemaVersion: 1,
-    provider: "ufcstats",
-    fighters: sortedFighters,
-  };
-  await fs.writeFile(outputPath, `${JSON.stringify(output, null, 2)}\n`, "utf8");
-
-  console.log(`Wrote ${canonicalFights.length} canonical supplemental fight records for ${canonicalRankingInputs.fighters.length} fighters.`);
-  console.log(`Bonuses: ${verifiedBonuses} verified, ${unavailableBonuses} unavailable.`);
-  console.log(`Knockdowns: ${verifiedKnockdowns} verified, ${unavailableKnockdowns} unavailable.`);
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
