@@ -59,7 +59,7 @@ function sourceId(url, segment) {
 }
 
 function parseInteger(value) {
-  const match = String(value ?? "").trim().match(/^(?:Round\s+)?(\d+)$/i);
+  const match = String(value ?? "").trim().match(/^(?:Round\s+)?(\d+)(?:\.0+)?$/i);
   return match ? Number(match[1]) : null;
 }
 
