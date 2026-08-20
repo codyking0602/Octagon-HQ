@@ -5,6 +5,7 @@ import {
   HIT_THE_NUMBER_MAX_PICKS,
   HIT_THE_NUMBER_MIN_PICKS,
   HIT_THE_NUMBER_STATS,
+  HIT_THE_NUMBER_VERSION,
   createGeneratedHitTheNumberBoard,
   createHitTheNumberBoard,
   gradeHitTheNumberSelection,
@@ -17,6 +18,7 @@ import {
   type HitTheNumberStatRow,
 } from "./hitTheNumberEngine";
 import { playFighters } from "./playFighterPool";
+import { deriveUfcCareerStats } from "./ufcCareerStats";
 
 const KO_TKO_METHODS = new Set(["ko-tko", "doctor-stoppage"]);
 const FINISH_METHODS = new Set(["ko-tko", "doctor-stoppage", "submission"]);
@@ -71,7 +73,11 @@ function statValue(
   fighterId: string,
   statId: HitTheNumberStatId,
 ) {
-  return rows.find((row) => row.fighterId === fighterId)!.values[statId];
+  const value = rows.find((row) => row.fighterId === fighterId)?.values[statId];
+  if (!Number.isInteger(value) || value == null) {
+    throw new Error(`Missing ${statId} in test row ${fighterId}.`);
+  }
+  return value;
 }
 
 describe("Hit the Number foundation", () => {
@@ -85,6 +91,7 @@ describe("Hit the Number foundation", () => {
       const titleFights = fights.filter((fight) => (
         TITLE_FIGHT_TYPES.has(fight.championshipType) && fight.championshipEligible !== false
       ));
+      const shared = deriveUfcCareerStats(fights, "official");
       expect(byId.get(fighter.presentation.slug)?.values).toEqual({
         "ufc-fights": fights.length,
         "ufc-wins": wins.length,
@@ -100,12 +107,17 @@ describe("Hit the Number foundation", () => {
         "ufc-unique-opponents-beaten": new Set(
           wins.map((fight) => fight.opponent.trim().toLowerCase()),
         ).size,
+        ...(shared.mainEvents == null ? {} : { "ufc-main-events": shared.mainEvents }),
+        ...(shared.bonusAwards == null ? {} : { "ufc-bonus-awards": shared.bonusAwards }),
+        ...(shared.firstRoundFinishes == null ? {} : { "ufc-first-round-finishes": shared.firstRoundFinishes }),
+        ...(shared.knockdownsFor == null ? {} : { "ufc-knockdowns-landed": shared.knockdownsFor }),
       });
     }
   });
 
-  it("defines twelve ledger-backed UFC-only stats", () => {
-    expect(HIT_THE_NUMBER_STATS.map((stat) => stat.id)).toEqual([
+  it("defines and activates a balanced sixteen-stat UFC-only mix", () => {
+    const statIds = HIT_THE_NUMBER_STATS.map((stat) => stat.id);
+    expect(statIds).toEqual([
       "ufc-fights",
       "ufc-wins",
       "ufc-decision-wins",
@@ -118,16 +130,31 @@ describe("Hit the Number foundation", () => {
       "ufc-winning-years",
       "ufc-longest-win-streak",
       "ufc-unique-opponents-beaten",
+      "ufc-main-events",
+      "ufc-bonus-awards",
+      "ufc-first-round-finishes",
+      "ufc-knockdowns-landed",
     ]);
-  });
-
-  it("keeps the new catalog inactive until the gameplay weighting PR", () => {
     expect(HIT_THE_NUMBER_GENERATION_PROFILE.stats).toEqual([
-      { value: "ufc-wins", weight: 35 },
-      { value: "ufc-finishes", weight: 30 },
-      { value: "ufc-ko-tko-wins", weight: 25 },
-      { value: "ufc-submission-wins", weight: 10 },
+      { value: "ufc-fights", weight: 8 },
+      { value: "ufc-wins", weight: 8 },
+      { value: "ufc-decision-wins", weight: 5 },
+      { value: "ufc-finishes", weight: 8 },
+      { value: "ufc-ko-tko-wins", weight: 7 },
+      { value: "ufc-submission-wins", weight: 5 },
+      { value: "ufc-title-fights", weight: 7 },
+      { value: "ufc-title-fight-wins", weight: 6 },
+      { value: "ufc-active-years", weight: 5 },
+      { value: "ufc-winning-years", weight: 4 },
+      { value: "ufc-longest-win-streak", weight: 6 },
+      { value: "ufc-unique-opponents-beaten", weight: 5 },
+      { value: "ufc-main-events", weight: 7 },
+      { value: "ufc-bonus-awards", weight: 7 },
+      { value: "ufc-first-round-finishes", weight: 5 },
+      { value: "ufc-knockdowns-landed", weight: 7 },
     ]);
+    expect(HIT_THE_NUMBER_GENERATION_PROFILE.stats.map((stat) => stat.value)).toEqual(statIds);
+    expect(Math.max(...HIT_THE_NUMBER_GENERATION_PROFILE.stats.map((stat) => stat.weight))).toBeLessThanOrEqual(8);
     expect(HIT_THE_NUMBER_GENERATION_PROFILE.filters).toEqual([
       { value: "all", weight: 55 },
       { value: "division", weight: 45 },
@@ -141,10 +168,10 @@ describe("Hit the Number foundation", () => {
     expect(HIT_THE_NUMBER_GENERATION_PROFILE.stats.reduce((sum, row) => sum + row.weight, 0)).toBe(100);
     expect(HIT_THE_NUMBER_GENERATION_PROFILE.filters.reduce((sum, row) => sum + row.weight, 0)).toBe(100);
     expect(HIT_THE_NUMBER_GENERATION_PROFILE.picks.reduce((sum, row) => sum + row.weight, 0)).toBe(100);
-    expect(HIT_THE_NUMBER_STATS).toHaveLength(12);
+    expect(HIT_THE_NUMBER_STATS).toHaveLength(16);
   });
 
-  it("can build exact open-roster boards for every ledger-backed stat", () => {
+  it("can build exact open-roster boards for every activated stat", () => {
     for (const stat of HIT_THE_NUMBER_STATS) {
       const board = createHitTheNumberBoard({
         seed: `catalog-${stat.id}`,
@@ -156,6 +183,22 @@ describe("Hit the Number foundation", () => {
       expect(board.publicSetup.target).toBeGreaterThan(0);
       expect(board.privateSetup.solutionFighterIds).toHaveLength(4);
     }
+  });
+
+  it("keeps unavailable supplemental facts out of only the affected stat pool", () => {
+    const fighters = playFighters.slice(0, 5);
+    const rows = fighters.map((fighter, index) => ({
+      ...testStatRow(fighter.id, index + 1),
+      values: {
+        ...testStatRow(fighter.id, index + 1).values,
+        ...(index === 0 ? {} : { "ufc-main-events": index }),
+      },
+    }));
+
+    expect(hitTheNumberEligibleFighters("ufc-wins", {}, rows).map((fighter) => fighter.id))
+      .toEqual(fighters.map((fighter) => fighter.id));
+    expect(hitTheNumberEligibleFighters("ufc-main-events", {}, rows).map((fighter) => fighter.id))
+      .toEqual(fighters.slice(1).map((fighter) => fighter.id));
   });
 
   it("sizes Random Pool boards with meaningful decoys", () => {
@@ -195,7 +238,7 @@ describe("Hit the Number foundation", () => {
       expect(board.publicSetup.pickCount).toBeLessThanOrEqual(HIT_THE_NUMBER_MAX_PICKS);
       expect(new Set(board.privateSetup.solutionFighterIds).size).toBe(board.publicSetup.pickCount);
       const total = board.privateSetup.solutionFighterIds.reduce(
-        (sum, fighterId) => sum + byId.get(fighterId)!.values["ufc-wins"],
+        (sum, fighterId) => sum + statValue(rankedHitTheNumberStatRows, fighterId, "ufc-wins"),
         0,
       );
       expect(total).toBe(board.publicSetup.target);
@@ -209,7 +252,7 @@ describe("Hit the Number foundation", () => {
     const observedPicks = new Set<number>();
     const observedFilters = new Set<string>();
 
-    for (let index = 0; index < 160; index += 1) {
+    for (let index = 0; index < 400; index += 1) {
       const boardType = index % 2 === 0 ? "open-roster" : "random-pool";
       const board = createGeneratedHitTheNumberBoard({
         seed: `generated-${index}`,
@@ -356,7 +399,7 @@ describe("Hit the Number foundation", () => {
       testStatRow("f", 16),
     ];
     const setup: HitTheNumberPublicSetup = {
-      version: "hit-the-number-v1",
+      version: HIT_THE_NUMBER_VERSION,
       statId: "ufc-wins",
       boardType: "open-roster",
       target: 50,
