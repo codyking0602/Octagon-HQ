@@ -5,13 +5,16 @@ const main = readFileSync("src/main.tsx", "utf8");
 const motion = readFileSync("src/styles/picks-event-motion.css", "utf8");
 
 describe("Picks event header motion", () => {
-  it("uses noticeable compositor motion with visible particles and sheen", () => {
+  it("uses noticeable compositor motion with an immediate repeating sheen", () => {
     expect(motion).toContain(".picks-event-hero.has-poster .picks-event-hero__poster");
     expect(motion).toContain("animation: picks-event-header-push 12s");
     expect(motion).toContain("transform: translate3d(0, 0, 0) scale(1.06)");
     expect(motion).toContain("animation: picks-event-header-particles 14s");
     expect(motion).toContain("animation: picks-event-header-sheen 6.5s");
-    expect(motion).toContain("opacity: .68");
+    expect(motion).toContain("Begin the first sweep immediately");
+    expect(motion).toContain("0% {\n    opacity: .18;\n    transform: translate3d(-38%, 0, 0);");
+    expect(motion).toContain("12% {\n    opacity: .68;");
+    expect(motion).toContain("36%,\n  100% {\n    opacity: 0;");
     expect(motion).toContain(".picks-page .picks-event-hero.has-poster .picks-event-hero__poster::after");
     expect(motion).toContain("display: block");
     expect(motion).toContain("@media (prefers-reduced-motion: reduce)");

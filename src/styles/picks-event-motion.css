@@ -114,22 +114,23 @@
   }
 }
 
+/* Begin the first sweep immediately, then stay dark until the next 6.5s cycle. */
 @keyframes picks-event-header-sheen {
-  0%,
-  34% {
-    opacity: 0;
+  0% {
+    opacity: .18;
     transform: translate3d(-38%, 0, 0);
   }
 
-  48% {
+  12% {
     opacity: .68;
   }
 
-  66% {
+  30% {
     opacity: .18;
     transform: translate3d(38%, 0, 0);
   }
 
+  36%,
   100% {
     opacity: 0;
     transform: translate3d(38%, 0, 0);
