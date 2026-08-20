@@ -15,6 +15,7 @@ import {
 } from "./ufcCareerStats";
 
 const VERSION = "find-leader-v5-20260819-plausible-decoys";
+export const FIND_LEADER_DAILY_CONTENT_VERSION = "find-leader-daily-v2" as const;
 const DAILY_ANCHOR = "2026-07-16";
 const NO_REPEAT_SELECTIONS = 14;
 const RANKED_TIERS = new Set(["champion-level", "top-five", "top-ten", "ranked"]);
@@ -608,9 +609,9 @@ function dayNumber(day: string) {
 }
 
 const FAMILY_CYCLE: readonly FindLeaderFamily[] = [
-  "wins", "finishes", "volume", "championship", "quality", "streaks", "rivalry", "longevity",
-  "versatility", "filtered", "durability", "rates", "era", "wins", "finishes", "quality",
-  "championship", "rivalry",
+  "wins", "supplemental", "finishes", "volume", "supplemental", "championship",
+  "quality", "supplemental", "streaks", "rivalry", "supplemental", "longevity",
+  "versatility", "filtered", "durability", "rates", "era",
 ];
 
 export function centralDay(date = new Date()) {
@@ -647,7 +648,8 @@ export function scheduledFindLeaderDefinition(day = centralDay()) {
 
 export function dailyFindLeaderBoard(day = centralDay()) {
   const definition = scheduledFindLeaderDefinition(day);
-  return definition ? buildFindLeaderBoard(definition, dailyLineupSeed(day), day) : null;
+  const board = definition ? buildFindLeaderBoard(definition, dailyLineupSeed(day), day) : null;
+  return board ? { ...board, version: FIND_LEADER_DAILY_CONTENT_VERSION } : null;
 }
 
 export function findLeaderAudit() {

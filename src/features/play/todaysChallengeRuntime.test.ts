@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { FIND_LEADER_DAILY_CONTENT_VERSION } from "./findLeaderEngine";
 import {
   advanceOfficialDailyRuntime,
   blindResumeV3RoundPoints,
@@ -318,6 +319,8 @@ describe("official Today’s Challenge runtime", () => {
     const setup = buildOfficialDailySetup("find_leader", day, scheduleVersion);
     const candidateIds = setup.privateSetupEvidence.candidate_ids as string[];
     const leaderId = String(setup.privateSetupEvidence.leader_id);
+    expect(setup.contentVersion).toBe(FIND_LEADER_DAILY_CONTENT_VERSION);
+    expect(setup.setupKey.startsWith(`${FIND_LEADER_DAILY_CONTENT_VERSION}:`)).toBe(true);
     expect(JSON.stringify(setup.publicSetup)).not.toContain('"leader_id"');
     const safeIds = candidateIds.filter((id) => id !== leaderId);
     let runtime = contextFor("find_leader", setup);
