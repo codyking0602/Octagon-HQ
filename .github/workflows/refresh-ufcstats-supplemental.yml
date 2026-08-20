@@ -1,0 +1,66 @@
+name: Refresh UFCStats Supplemental Facts
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - agent/ufcstats-supplemental-backfill
+    paths:
+      - scripts/backfill-ufcstats-supplemental.mjs
+      - src/features/rankings/data/ufcStatsSupplementalFacts.ts
+      - src/features/rankings/data/generated/ufcstats-supplemental-facts-v1.json
+      - .github/workflows/refresh-ufcstats-supplemental.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ufcstats-supplemental-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    if: github.actor != 'github-actions[bot]' && github.ref_name != 'main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out exact refresh branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 1
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.13.0
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Refresh checked-in UFCStats supplemental snapshot
+        run: |
+          UFCSTATS_CHECKED_AT="$(TZ=America/Chicago date +%F)" \
+            node scripts/backfill-ufcstats-supplemental.mjs
+
+      - name: Verify supplemental snapshot and TypeScript boundary
+        run: |
+          npm run typecheck
+          npx vitest run src/features/rankings/data/ufcStatsSupplementalFacts.test.ts
+          git diff --check
+
+      - name: Commit generated snapshot to this branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          snapshot="src/features/rankings/data/generated/ufcstats-supplemental-facts-v1.json"
+          if git diff --quiet -- "$snapshot"; then
+            echo "UFCStats supplemental snapshot is already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- "$snapshot"
+          git commit -m "Populate UFCStats supplemental fight facts"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
