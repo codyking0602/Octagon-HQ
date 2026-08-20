@@ -1,40 +1,89 @@
 #!/usr/bin/env node
 import fs from "node:fs/promises";
-import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { JSDOM } from "jsdom";
 import { createServer } from "vite";
 
-const require = createRequire(import.meta.url);
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const outputPath = path.join(
-  root,
-  "src/features/rankings/data/generated/ufcstats-supplemental-facts-v1.json",
-);
-const completedEventsUrl = "https://ufcstats.com/statistics/events/completed?page=all";
-const FINISH_METHODS = new Set(["ko-tko", "doctor-stoppage", "submission"]);
-const BONUS_TYPES = [
-  "fight-of-the-night",
-  "performance-of-the-night",
-  "submission-of-the-night",
-  "knockout-of-the-night",
-];
-const BROWSER_WORKERS = 6;
-const UFCSTATS_USER_AGENT =
-  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
-  + "(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
+const outputPath = path.join(root, "src/features/rankings/data/generated/ufcstats-supplemental-facts-v1.json");
 
+const CORE = {
+  repository: "Greco1899/scrape_ufc_stats",
+  commit: "8e40eb945e1127bf0ef172ab211a34787948f312",
+  refreshedAt: "2026-08-18",
+  files: ["ufc_event_details.csv", "ufc_fight_details.csv", "ufc_fight_results.csv", "ufc_fight_stats.csv"],
+};
+const BONUSES = {
+  repository: "manzlerh/MMA-Grid",
+  commit: "2d363d60b3a3f44e6a8bf83cdcef409f47fb3948",
+  refreshedAt: "2026-03-02",
+  files: ["data/raw/ufc_bonuses.csv"],
+};
+const FINISH_METHODS = new Set(["ko-tko", "doctor-stoppage", "submission"]);
+const BONUS_TYPES = new Map([
+  ["FIGHT", "fight-of-the-night"],
+  ["PERF", "performance-of-the-night"],
+  ["SUB", "submission-of-the-night"],
+  ["KO", "knockout-of-the-night"],
+]);
 const NAME_ALIASES = new Map([
   ["bobbygreen", "kinggreen"],
   ["mirkofilipovic", "mirkocrocop"],
 ]);
 
+function rawUrl(repository, commit, file) {
+  return `https://raw.githubusercontent.com/${repository}/${commit}/${file}`;
+}
+
+async function downloadText(repository, commit, file) {
+  const url = rawUrl(repository, commit, file);
+  const response = await fetch(url, { signal: AbortSignal.timeout(60_000) });
+  if (!response.ok) throw new Error(`Could not download ${url}: ${response.status} ${response.statusText}`);
+  return response.text();
+}
+
+function parseCsv(text) {
+  const rows = [];
+  let row = [];
+  let value = "";
+  let quoted = false;
+  const input = text.replace(/^\uFEFF/, "");
+  for (let index = 0; index < input.length; index += 1) {
+    const char = input[index];
+    if (quoted) {
+      if (char === '"' && input[index + 1] === '"') {
+        value += '"';
+        index += 1;
+      } else if (char === '"') quoted = false;
+      else value += char;
+      continue;
+    }
+    if (char === '"') quoted = true;
+    else if (char === ',') {
+      row.push(value);
+      value = "";
+    } else if (char === '\n') {
+      row.push(value.replace(/\r$/, ""));
+      rows.push(row);
+      row = [];
+      value = "";
+    } else value += char;
+  }
+  if (value.length || row.length) {
+    row.push(value.replace(/\r$/, ""));
+    rows.push(row);
+  }
+  const headers = rows.shift()?.map((header) => header.trim()) ?? [];
+  return rows
+    .filter((values) => values.some((entry) => entry.trim().length))
+    .map((values) => Object.fromEntries(headers.map((header, index) => [header, values[index] ?? ""])));
+}
+
 function clean(value) {
   return String(value ?? "").replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
 }
 
-function canonicalNameKey(value) {
+function nameKey(value) {
   let normalized = clean(value)
     .replace(/[“"][^”"]+[”"]/g, " ")
     .normalize("NFKD")
@@ -42,420 +91,227 @@ function canonicalNameKey(value) {
     .replace(/[’']/g, "")
     .toLowerCase()
     .replace(/\b(jr|sr|ii|iii|iv)\b/g, " ")
-    .replace(/[^a-z0-9]+/g, "")
-    .trim();
+    .replace(/[^a-z0-9]+/g, "");
   normalized = NAME_ALIASES.get(normalized) ?? normalized;
   return normalized;
 }
 
-function sameName(left, right) {
-  return canonicalNameKey(left) === canonicalNameKey(right);
+function splitBout(value) {
+  const parts = clean(value).split(/\s+vs\.?\s+/i);
+  return parts.length === 2 ? parts : [];
 }
 
-function isoDateFromText(value) {
-  const text = clean(value);
-  const match = text.match(
-    /\b(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\.?\s+(\d{1,2}),\s+(\d{4})\b/i,
-  );
-  if (!match) return null;
-  const month = {
-    jan: "01",
-    feb: "02",
-    mar: "03",
-    apr: "04",
-    may: "05",
-    jun: "06",
-    jul: "07",
-    aug: "08",
-    sep: "09",
-    oct: "10",
-    nov: "11",
-    dec: "12",
-  }[match[1].slice(0, 3).toLowerCase()];
-  return `${match[3]}-${month}-${String(Number(match[2])).padStart(2, "0")}`;
+function isoDate(value) {
+  const parsed = new Date(`${clean(value)} 00:00:00 UTC`);
+  if (Number.isNaN(parsed.getTime())) return null;
+  return parsed.toISOString().slice(0, 10);
 }
 
 function idFromUrl(value, segment) {
-  const match = String(value ?? "").match(new RegExp(`/${segment}/([a-z0-9]+)`, "i"));
-  return match?.[1] ?? null;
-}
-
-function imageKey(image) {
-  const source = image.getAttribute("src") ?? "";
-  try {
-    return new URL(source, "https://ufcstats.com").pathname.toLowerCase();
-  } catch {
-    return source.toLowerCase();
-  }
-}
-
-function cellLines(cell) {
-  if (!cell) return [];
-  const paragraphs = [...cell.querySelectorAll("p")]
-    .map((node) => clean(node.textContent))
-    .filter(Boolean);
-  if (paragraphs.length) return paragraphs;
-  const text = clean(cell.textContent);
-  return text ? text.split(/\s+/) : [];
-}
-
-function integerPair(cell) {
-  const values = cellLines(cell)
-    .flatMap((value) => value.split(/\s+/))
-    .filter((value) => /^\d+$/.test(value))
-    .map(Number);
-  return values.length >= 2 ? [values[0], values[1]] : null;
+  return clean(value).match(new RegExp(`/${segment}/([a-z0-9]+)`, "i"))?.[1] ?? null;
 }
 
 function timeSeconds(value) {
   const match = clean(value).match(/^(\d+):(\d{2})$/);
   if (!match) return null;
-  const seconds = Number(match[1]) * 60 + Number(match[2]);
-  return Number.isInteger(seconds) && seconds >= 0 && seconds <= 300 ? seconds : null;
+  const result = Number(match[1]) * 60 + Number(match[2]);
+  return Number.isInteger(result) && result >= 0 && result <= 300 ? result : null;
 }
 
-function centralDay() {
-  const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/Chicago",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).formatToParts(new Date());
-  const byType = Object.fromEntries(parts.map((part) => [part.type, part.value]));
-  return `${byType.year}-${byType.month}-${byType.day}`;
-}
-
-async function sleep(ms) {
-  await new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function browserHtml(page, url) {
-  let lastError = null;
-  for (let attempt = 1; attempt <= 4; attempt += 1) {
-    try {
-      await page.goto(url, { waitUntil: "domcontentloaded", timeout: 45_000 });
-      const deadline = Date.now() + 20_000;
-      while (Date.now() < deadline) {
-        const title = await page.title();
-        if (title !== "Loading…" && title !== "Loading...") break;
-        await page.waitForTimeout(500);
-      }
-      const title = await page.title();
-      if (title === "Loading…" || title === "Loading...") {
-        throw new Error("UFCStats browser challenge did not clear");
-      }
-      try {
-        await page.waitForLoadState("networkidle", { timeout: 8_000 });
-      } catch {
-        // UFCStats occasionally keeps a harmless connection alive after content is ready.
-      }
-      await page.waitForTimeout(750);
-      const html = await page.content();
-      if (/checking your browser|enable javascript and cookies to continue/i.test(html)) {
-        throw new Error("UFCStats browser challenge content remained after navigation");
-      }
-      return html;
-    } catch (error) {
-      lastError = error;
-      if (attempt < 4) await sleep(3000 * (2 ** (attempt - 1)));
-    }
-  }
-  throw new Error(`UFCStats browser load failed for ${url}: ${lastError?.message ?? lastError}`);
-}
-
-export function parseCompletedEvents(html) {
-  const document = new JSDOM(html).window.document;
-  const byUrl = new Map();
-  for (const anchor of document.querySelectorAll('a[href*="/event-details/"]')) {
-    const href = anchor.getAttribute("href")?.trim();
-    const row = anchor.closest("tr");
-    const date = isoDateFromText(row?.textContent ?? "");
-    const eventId = idFromUrl(href, "event-details");
-    if (!href || !date || !eventId) continue;
-    const url = href.replace(/^http:/i, "https:");
-    byUrl.set(url, { url, eventId, date, name: clean(anchor.textContent) });
-  }
-  return [...byUrl.values()];
-}
-
-function bonusLegend(document) {
-  const containers = [...document.querySelectorAll("li, p, div")]
-    .filter((element) => /fight,\s*perf,\s*sub,\s*and\s*ko of the night bonuses/i.test(clean(element.textContent)))
-    .sort((left, right) => left.textContent.length - right.textContent.length);
-  const container = containers.find((element) => element.querySelectorAll("img").length >= 4);
-  if (!container) return null;
-  const images = [...container.querySelectorAll("img")].slice(0, 4);
-  if (images.length !== 4) return null;
-  return new Map(images.map((image, index) => [imageKey(image), BONUS_TYPES[index]]));
-}
-
-export function parseEventPage(html, event) {
-  const document = new JSDOM(html).window.document;
-  const legend = bonusLegend(document);
-  const fightRows = [...document.querySelectorAll('tr[data-link*="/fight-details/"]')];
-
-  return fightRows.map((row, index) => {
-    const fightUrl = row.getAttribute("data-link")?.trim() ?? "";
-    const fightId = idFromUrl(fightUrl, "fight-details");
-    const fighterNames = [...row.querySelectorAll('a[href*="/fighter-details/"]')]
-      .map((anchor) => clean(anchor.textContent))
-      .filter(Boolean)
-      .slice(0, 2);
-    const cells = [...row.children].filter((child) => child.tagName === "TD");
-    const kd = integerPair(cells[2]);
-    const round = Number.parseInt(cellLines(cells[8])[0] ?? "", 10);
-    const time = timeSeconds(cellLines(cells[9])[0] ?? "");
-    const bonusTypes = legend
-      ? [...new Set(
-          [...row.querySelectorAll("img")]
-            .map((image) => legend.get(imageKey(image)))
-            .filter(Boolean),
-        )]
-      : null;
-
-    return {
-      eventId: event.eventId,
-      eventUrl: event.url,
-      eventName: event.name,
-      date: event.date,
-      fightId,
-      fightUrl: fightUrl.replace(/^http:/i, "https:"),
-      fighterNames,
-      kd,
-      round: Number.isInteger(round) ? round : null,
-      timeSeconds: time,
-      mainEvent: index === 0,
-      bonusTypes,
-    };
-  }).filter((row) => row.fightId && row.fighterNames.length === 2);
-}
-
-function matchEventRow(rows, fighterName, opponent) {
-  const matches = rows.filter((row) => (
-    (sameName(row.fighterNames[0], fighterName) && sameName(row.fighterNames[1], opponent))
-    || (sameName(row.fighterNames[1], fighterName) && sameName(row.fighterNames[0], opponent))
-  ));
-  return matches.length === 1 ? matches[0] : { ambiguousMatches: matches };
-}
-
-function bonusFact(row, officialResult) {
-  if (!row.bonusTypes) return { status: "unavailable" };
-  const values = row.bonusTypes.filter((bonusType) => (
-    bonusType === "fight-of-the-night" || officialResult === "win"
-  ));
-  return { status: "verified", values };
-}
-
-function finishFact(row, methodCategory) {
-  if (!FINISH_METHODS.has(methodCategory)) return { status: "not-applicable" };
-  if (
-    Number.isInteger(row.round)
-    && row.round >= 1
-    && row.round <= 5
-    && Number.isInteger(row.timeSeconds)
-  ) {
-    return { status: "verified", round: row.round, timeSeconds: row.timeSeconds };
-  }
-  return { status: "unavailable" };
-}
-
-function knockdownFact(row, fighterName) {
-  if (!row.kd) return { status: "unavailable" };
-  const fighterIndex = sameName(row.fighterNames[0], fighterName) ? 0 : 1;
-  const opponentIndex = fighterIndex === 0 ? 1 : 0;
-  return {
-    status: "verified",
-    for: row.kd[fighterIndex],
-    against: row.kd[opponentIndex],
-  };
-}
-
-function factsEquivalentIgnoringCheckedAt(left, right) {
-  if (!left || !right) return false;
-  const withoutCheckedAt = (value) => ({
-    ...value,
-    source: {
-      provider: value.source.provider,
-      eventId: value.source.eventId,
-      fightId: value.source.fightId,
-    },
-  });
-  return JSON.stringify(withoutCheckedAt(left)) === JSON.stringify(withoutCheckedAt(right));
-}
-
-async function readExistingSnapshot() {
-  try {
-    return JSON.parse(await fs.readFile(outputPath, "utf8"));
-  } catch {
-    return { schemaVersion: 1, provider: "ufcstats", fighters: {} };
-  }
+function integer(value) {
+  const text = clean(value);
+  return /^\d+$/.test(text) ? Number(text) : null;
 }
 
 async function loadCanonicalRankingInputs() {
-  const vite = await createServer({
-    root,
-    appType: "custom",
-    logLevel: "error",
-    server: { middlewareMode: true },
-  });
+  const vite = await createServer({ root, appType: "custom", logLevel: "error", server: { middlewareMode: true } });
   try {
-    const rankingInputs = await vite.ssrLoadModule("/src/features/rankings/data/rankingInputs.ts");
-    return rankingInputs.canonicalRankingInputs;
+    return (await vite.ssrLoadModule("/src/features/rankings/data/rankingInputs.ts")).canonicalRankingInputs;
   } finally {
     await vite.close();
   }
 }
 
-async function main() {
-  const checkedAt = process.env.UFCSTATS_CHECKED_AT || centralDay();
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(checkedAt)) {
-    throw new Error(`UFCSTATS_CHECKED_AT must be YYYY-MM-DD, received ${checkedAt}.`);
+function eventBoutKey(event, bout) {
+  return `${clean(event)}\u0000${clean(bout)}`;
+}
+
+function buildCoreIndex(eventRows, detailRows, resultRows, statRows) {
+  const eventByName = new Map();
+  for (const row of eventRows) {
+    const date = isoDate(row.DATE);
+    const eventId = idFromUrl(row.URL, "event-details");
+    if (!row.EVENT || !date || !eventId) continue;
+    eventByName.set(clean(row.EVENT), { name: clean(row.EVENT), date, eventId });
   }
 
-  const playwrightModule = process.env.PLAYWRIGHT_MODULE_PATH || "playwright";
-  const { chromium } = require(playwrightModule);
-  const browser = await chromium.launch({ headless: true });
-  const contexts = [];
-  try {
-    const pages = [];
-    for (let index = 0; index < BROWSER_WORKERS; index += 1) {
-      const context = await browser.newContext({ userAgent: UFCSTATS_USER_AGENT });
-      contexts.push(context);
-      pages.push(await context.newPage());
-    }
+  const detailsByDate = new Map();
+  const detailByEventBout = new Map();
+  const eventPosition = new Map();
+  for (const row of detailRows) {
+    const event = eventByName.get(clean(row.EVENT));
+    const fightId = idFromUrl(row.URL, "fight-details");
+    const names = splitBout(row.BOUT);
+    if (!event || !fightId || names.length !== 2) continue;
+    const position = eventPosition.get(event.name) ?? 0;
+    eventPosition.set(event.name, position + 1);
+    const detail = { ...event, fightId, bout: clean(row.BOUT), names, mainEvent: position === 0 };
+    detailByEventBout.set(eventBoutKey(event.name, detail.bout), detail);
+    const bucket = detailsByDate.get(event.date) ?? [];
+    bucket.push(detail);
+    detailsByDate.set(event.date, bucket);
+  }
 
-    const canonicalRankingInputs = await loadCanonicalRankingInputs();
-    const canonicalFights = canonicalRankingInputs.fighters.flatMap((fighter) => (
-      fighter.facts.fights.map((fight) => ({
-        fighterName: fighter.fighter,
-        fighterSlug: fighter.presentation.slug,
-        fight,
-      }))
-    ));
-    const neededDates = new Set(canonicalFights.map((entry) => entry.fight.date));
-    const existingSnapshot = await readExistingSnapshot();
+  const resultByFightId = new Map();
+  for (const row of resultRows) {
+    const fightId = idFromUrl(row.URL, "fight-details");
+    if (fightId) resultByFightId.set(fightId, row);
+  }
 
-    console.log(`Loading UFCStats event index for ${canonicalFights.length} canonical fights across ${neededDates.size} dates...`);
-    const eventIndexHtml = await browserHtml(pages[0], completedEventsUrl);
-    const events = parseCompletedEvents(eventIndexHtml);
-    if (!events.length) {
-      throw new Error("UFCStats completed-events page did not expose any completed events after the browser challenge.");
-    }
-    const relevantEvents = events.filter((event) => neededDates.has(event.date));
-    const coveredDates = new Set(relevantEvents.map((event) => event.date));
-    const missingDates = [...neededDates].filter((date) => !coveredDates.has(date)).sort();
-    if (missingDates.length) {
-      throw new Error(`UFCStats event index is missing canonical fight dates: ${missingDates.join(", ")}`);
-    }
+  const statsByFightId = new Map();
+  for (const row of statRows) {
+    const detail = detailByEventBout.get(eventBoutKey(row.EVENT, row.BOUT));
+    if (!detail) continue;
+    const fighter = nameKey(row.FIGHTER);
+    const kd = integer(row.KD);
+    const fightStats = statsByFightId.get(detail.fightId) ?? new Map();
+    const current = fightStats.get(fighter) ?? { known: true, total: 0, rows: 0 };
+    current.rows += 1;
+    if (kd == null) current.known = false;
+    else current.total += kd;
+    fightStats.set(fighter, current);
+    statsByFightId.set(detail.fightId, fightStats);
+  }
 
-    const rowsByDate = new Map();
-    let nextEventIndex = 0;
-    let loadedEvents = 0;
-    async function loadEventWorker(workerIndex) {
-      while (true) {
-        const index = nextEventIndex;
-        nextEventIndex += 1;
-        if (index >= relevantEvents.length) return;
-        const event = relevantEvents[index];
-        const eventRows = parseEventPage(
-          await browserHtml(pages[workerIndex], event.url),
-          event,
-        );
-        if (!eventRows.length) {
-          throw new Error(`UFCStats event ${event.eventId} exposed no fight rows after the browser challenge.`);
-        }
-        const bucket = rowsByDate.get(event.date) ?? [];
-        bucket.push(...eventRows);
-        rowsByDate.set(event.date, bucket);
-        loadedEvents += 1;
-        if (loadedEvents % 40 === 0 || loadedEvents === relevantEvents.length) {
-          console.log(`Loaded ${loadedEvents}/${relevantEvents.length} relevant UFCStats events.`);
-        }
-      }
-    }
-    await Promise.all(pages.map((_, index) => loadEventWorker(index)));
+  return { detailsByDate, resultByFightId, statsByFightId };
+}
 
-    const fighters = {};
-    const unmatched = [];
-    const ambiguous = [];
-    let verifiedBonuses = 0;
-    let unavailableBonuses = 0;
-    let verifiedKnockdowns = 0;
-    let unavailableKnockdowns = 0;
+function buildBonusIndex(rows) {
+  const byEvent = new Map();
+  for (const row of rows) {
+    const event = clean(row.event_name);
+    const fighter = nameKey(row.fighter_name);
+    const type = BONUS_TYPES.get(clean(row.bonus_type).toUpperCase());
+    if (!event || !fighter || !type) continue;
+    const fighters = byEvent.get(event) ?? new Map();
+    const values = fighters.get(fighter) ?? new Set();
+    values.add(type);
+    fighters.set(fighter, values);
+    byEvent.set(event, fighters);
+  }
+  return byEvent;
+}
 
-    for (const entry of canonicalFights) {
-      const dateRows = rowsByDate.get(entry.fight.date) ?? [];
-      const matched = matchEventRow(dateRows, entry.fighterName, entry.fight.opponent);
-      if (matched.ambiguousMatches) {
-        if (matched.ambiguousMatches.length === 0) unmatched.push(entry);
-        else ambiguous.push({ ...entry, matches: matched.ambiguousMatches });
+function matchDetail(details, fighterName, opponentName) {
+  const fighter = nameKey(fighterName);
+  const opponent = nameKey(opponentName);
+  const matches = details.filter((detail) => {
+    const [left, right] = detail.names.map(nameKey);
+    return (left === fighter && right === opponent) || (left === opponent && right === fighter);
+  });
+  return matches.length === 1 ? matches[0] : { matches };
+}
+
+function finishFact(resultRow, methodCategory) {
+  if (!FINISH_METHODS.has(methodCategory)) return { status: "not-applicable" };
+  const round = integer(resultRow?.ROUND);
+  const seconds = timeSeconds(resultRow?.TIME);
+  if (round != null && round >= 1 && round <= 5 && seconds != null) {
+    return { status: "verified", round, timeSeconds: seconds };
+  }
+  return { status: "unavailable" };
+}
+
+function knockdownFact(stats, fighterName, opponentName) {
+  if (!stats) return { status: "unavailable" };
+  const fighter = stats.get(nameKey(fighterName));
+  const opponent = stats.get(nameKey(opponentName));
+  if (!fighter?.known || !opponent?.known || fighter.rows === 0 || opponent.rows === 0) {
+    return { status: "unavailable" };
+  }
+  return { status: "verified", for: fighter.total, against: opponent.total };
+}
+
+function bonusFact(bonusByEvent, eventName, fighterName) {
+  const event = bonusByEvent.get(eventName);
+  if (!event) return { status: "unavailable" };
+  return { status: "verified", values: [...(event.get(nameKey(fighterName)) ?? [])].sort() };
+}
+
+async function main() {
+  const canonicalRankingInputs = await loadCanonicalRankingInputs();
+  const modelDate = canonicalRankingInputs.source.modelAsOfDate;
+  if (modelDate > CORE.refreshedAt) {
+    throw new Error(`Pinned UFCStats core export ${CORE.refreshedAt} is older than model date ${modelDate}.`);
+  }
+
+  const [eventText, detailText, resultText, statsText, bonusText] = await Promise.all([
+    downloadText(CORE.repository, CORE.commit, CORE.files[0]),
+    downloadText(CORE.repository, CORE.commit, CORE.files[1]),
+    downloadText(CORE.repository, CORE.commit, CORE.files[2]),
+    downloadText(CORE.repository, CORE.commit, CORE.files[3]),
+    downloadText(BONUSES.repository, BONUSES.commit, BONUSES.files[0]),
+  ]);
+  const core = buildCoreIndex(parseCsv(eventText), parseCsv(detailText), parseCsv(resultText), parseCsv(statsText));
+  const bonuses = buildBonusIndex(parseCsv(bonusText));
+
+  const fighters = {};
+  const unmatched = [];
+  let totalFights = 0;
+  let verifiedBonuses = 0;
+  let unavailableBonuses = 0;
+  let verifiedKnockdowns = 0;
+  let unavailableKnockdowns = 0;
+
+  for (const fighter of canonicalRankingInputs.fighters) {
+    const byFight = {};
+    for (const fight of fighter.facts.fights) {
+      totalFights += 1;
+      const matched = matchDetail(core.detailsByDate.get(fight.date) ?? [], fighter.fighter, fight.opponent);
+      if (matched.matches) {
+        unmatched.push(`${fighter.fighter} vs ${fight.opponent} ${fight.date}: ${matched.matches.length} matches`);
         continue;
       }
-
-      const supplementalFacts = {
+      const bonus = bonusFact(bonuses, matched.name, fighter.fighter);
+      const knockdowns = knockdownFact(core.statsByFightId.get(matched.fightId), fighter.fighter, fight.opponent);
+      if (bonus.status === "verified") verifiedBonuses += 1;
+      else unavailableBonuses += 1;
+      if (knockdowns.status === "verified") verifiedKnockdowns += 1;
+      else unavailableKnockdowns += 1;
+      byFight[fight.id] = {
         source: {
           provider: "ufcstats",
           eventId: matched.eventId,
           fightId: matched.fightId,
-          checkedAt,
+          checkedAt: CORE.refreshedAt,
         },
         mainEvent: { status: "verified", value: matched.mainEvent },
-        bonuses: bonusFact(matched, entry.fight.officialResult),
-        finish: finishFact(matched, entry.fight.methodCategory),
-        knockdowns: knockdownFact(matched, entry.fighterName),
+        bonuses: bonus,
+        finish: finishFact(core.resultByFightId.get(matched.fightId), fight.methodCategory),
+        knockdowns,
       };
-
-      const previous = existingSnapshot.fighters?.[entry.fighterSlug]?.[entry.fight.id];
-      if (factsEquivalentIgnoringCheckedAt(previous, supplementalFacts)) {
-        supplementalFacts.source.checkedAt = previous.source.checkedAt;
-      }
-
-      fighters[entry.fighterSlug] ??= {};
-      fighters[entry.fighterSlug][entry.fight.id] = supplementalFacts;
-      if (supplementalFacts.bonuses.status === "verified") verifiedBonuses += 1;
-      else unavailableBonuses += 1;
-      if (supplementalFacts.knockdowns.status === "verified") verifiedKnockdowns += 1;
-      else unavailableKnockdowns += 1;
     }
-
-    if (unmatched.length || ambiguous.length) {
-      for (const entry of unmatched.slice(0, 80)) {
-        console.error(`UNMATCHED ${entry.fighterName} vs ${entry.fight.opponent} on ${entry.fight.date} (${entry.fighterSlug}:${entry.fight.id})`);
-      }
-      for (const entry of ambiguous.slice(0, 20)) {
-        console.error(`AMBIGUOUS ${entry.fighterName} vs ${entry.fight.opponent} on ${entry.fight.date}: ${entry.matches.length} UFCStats rows`);
-      }
-      throw new Error(`UFCStats backfill could not reconcile ${unmatched.length} fights and found ${ambiguous.length} ambiguous fights.`);
-    }
-
-    const sortedFighters = Object.fromEntries(
-      Object.entries(fighters)
-        .sort(([left], [right]) => left.localeCompare(right))
-        .map(([fighterSlug, fights]) => [
-          fighterSlug,
-          Object.fromEntries(Object.entries(fights).sort(([left], [right]) => left.localeCompare(right))),
-        ]),
-    );
-
-    const output = {
-      schemaVersion: 1,
-      provider: "ufcstats",
-      fighters: sortedFighters,
-    };
-    await fs.writeFile(outputPath, `${JSON.stringify(output, null, 2)}\n`, "utf8");
-
-    console.log(`Wrote ${canonicalFights.length} canonical supplemental fight records for ${canonicalRankingInputs.fighters.length} fighters.`);
-    console.log(`Bonuses: ${verifiedBonuses} verified, ${unavailableBonuses} unavailable.`);
-    console.log(`Knockdowns: ${verifiedKnockdowns} verified, ${unavailableKnockdowns} unavailable.`);
-  } finally {
-    await Promise.all(contexts.map((context) => context.close().catch(() => undefined)));
-    await browser.close();
+    fighters[fighter.presentation.slug] = byFight;
   }
+
+  if (unmatched.length) {
+    unmatched.slice(0, 100).forEach((message) => console.error(`UNMATCHED ${message}`));
+    throw new Error(`Pinned UFCStats exports failed to reconcile ${unmatched.length}/${totalFights} canonical fight rows.`);
+  }
+
+  const output = {
+    schemaVersion: 1,
+    provider: "ufcstats",
+    provenance: { core: CORE, bonuses: BONUSES },
+    fighters: Object.fromEntries(Object.entries(fighters).sort(([a], [b]) => a.localeCompare(b))),
+  };
+  await fs.writeFile(outputPath, `${JSON.stringify(output, null, 2)}\n`, "utf8");
+  console.log(`Wrote ${totalFights} canonical UFCStats supplemental fight rows.`);
+  console.log(`Bonuses: ${verifiedBonuses} verified, ${unavailableBonuses} unavailable from the pinned bonus export.`);
+  console.log(`Knockdowns: ${verifiedKnockdowns} verified, ${unavailableKnockdowns} unavailable in UFCStats.`);
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
-  main().catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
-  });
-}
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
