@@ -6,6 +6,7 @@ on:
     types: [synchronize]
     paths:
       - scripts/bootstrap-ufcstats-reconciliation.mjs
+      - scripts/bootstrap-ufcstats-coverage-lock.mjs
       - .github/workflows/refresh-ufcstats-supplemental.yml
 
 permissions:
@@ -41,6 +42,9 @@ jobs:
       - name: Apply one-time canonical reconciliation
         run: node scripts/bootstrap-ufcstats-reconciliation.mjs
 
+      - name: Lock complete reconciled knockdown coverage
+        run: node scripts/bootstrap-ufcstats-coverage-lock.mjs
+
       - name: Remove temporary finish-source bootstrap
         run: rm -f scripts/bootstrap-ufcstats-finish-source.mjs
 
@@ -64,6 +68,7 @@ jobs:
             scripts/backfill-ufcstats-supplemental.mjs \
             scripts/bootstrap-ufcstats-reconciliation.mjs \
             scripts/bootstrap-ufcstats-finish-source.mjs \
+            scripts/bootstrap-ufcstats-coverage-lock.mjs \
             src/features/rankings/data/v2RankingRoster.ts \
             src/features/rankings/data/ufcStatsSupplementalFacts.test.ts \
             src/features/rankings/data/generated/ufcstats-supplemental-facts-v1.json
