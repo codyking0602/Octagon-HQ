@@ -42,6 +42,7 @@ describe("canonical UFCStats supplemental fight snapshot", () => {
     expect(Object.keys(ufcStatsSupplementalFactsSnapshot.fighters).sort()).toEqual(expectedSlugs);
 
     const observedUnreconciled: string[] = [];
+    let reconciledRows = 0;
     let verifiedBonusRows = 0;
     let unavailableBonusRows = 0;
     let verifiedFinishRows = 0;
@@ -73,6 +74,7 @@ describe("canonical UFCStats supplemental fight snapshot", () => {
           continue;
         }
 
+        reconciledRows += 1;
         const supplemental = fight.supplementalFacts;
         expect(supplemental, `${fighter.fighter} vs ${fight.opponent}`).toBeDefined();
         expect(supplemental).toEqual(snapshotRow);
@@ -113,7 +115,7 @@ describe("canonical UFCStats supplemental fight snapshot", () => {
     expect(notApplicableFinishRows).toBeGreaterThan(0);
     expect(unavailableFinishRows).toBeGreaterThanOrEqual(0);
     expect(verifiedKnockdownRows).toBeGreaterThan(1000);
-    expect(unavailableKnockdownRows).toBeGreaterThan(0);
+    expect(verifiedKnockdownRows + unavailableKnockdownRows).toBe(reconciledRows);
   });
 
   it("keeps shared fight evidence symmetric when two ranked fighters faced each other", () => {
