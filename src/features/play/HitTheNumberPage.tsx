@@ -65,7 +65,7 @@ function strings(value: ChallengeJson | undefined) {
 
 function storedPublicSetup(value: ChallengeJson | undefined): HitTheNumberPublicSetup | null {
   const row = record(value);
-  if (!row || row.version !== HIT_THE_NUMBER_VERSION) return null;
+  if (!row || (row.version !== HIT_THE_NUMBER_VERSION && row.version !== "hit-the-number-v1")) return null;
   const statId = typeof row.statId === "string"
     ? HIT_THE_NUMBER_STATS.find((item) => item.id === row.statId)?.id
     : undefined;
