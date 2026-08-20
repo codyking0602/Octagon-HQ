@@ -24,6 +24,10 @@ interface OfficialDailyRuntimeContext {
   publicState: Record<string, unknown>;
 }
 
+const DAILY_COMBO_SCHEDULE_VERSION = "play-rotation-v4";
+const DAILY_COMBO_CONTENT_VERSION = "daily-rank-keep-combo-v1";
+const DAILY_COMBO_SCORING_VERSION = "play-official-score-v4";
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-octagon-scheduler-token",
@@ -81,6 +85,181 @@ function runtimeContext(value: unknown): OfficialDailyRuntimeContext & JsonRecor
   };
 }
 
+function childPublication(publication: JsonRecord) {
+  return {
+    setup_key: requiredString(publication.setupKey, "Daily child setup key"),
+    public_setup: requiredRecord(publication.publicSetup, "Daily child public setup"),
+    reveal_setup: requiredRecord(publication.revealSetup, "Daily child reveal setup"),
+    private_setup_evidence: requiredRecord(publication.privateSetupEvidence, "Daily child private setup evidence"),
+    private_grading_evidence: requiredRecord(publication.privateGradingEvidence, "Daily child private grading evidence"),
+  };
+}
+
+function buildDailyComboSetup(day: string, scheduleVersion: string) {
+  const blindRank = buildOfficialDailySetup("blind_rank_5", day, scheduleVersion) as JsonRecord;
+  const keepCut = buildOfficialDailySetup("keep_4_cut_4", day, scheduleVersion) as JsonRecord;
+  const blindRankChild = childPublication(blindRank);
+  const keepCutChild = childPublication(keepCut);
+  const blindRankInitial = requiredRecord(blindRankChild.public_setup.initial_state, "Blind Rank initial state");
+
+  return {
+    setupKey: `${DAILY_COMBO_CONTENT_VERSION}:${scheduleVersion}:${day}`,
+    contentVersion: DAILY_COMBO_CONTENT_VERSION,
+    scoringVersion: DAILY_COMBO_SCORING_VERSION,
+    publicSetup: {
+      runtime_version: "official-daily-runtime-v1",
+      combo_version: DAILY_COMBO_CONTENT_VERSION,
+      stage_count: 2,
+      initial_state: {
+        complete: false,
+        combo_stage: "blind_rank_5",
+        blind_rank_5: blindRankInitial,
+      },
+    },
+    revealSetup: {
+      combo_version: DAILY_COMBO_CONTENT_VERSION,
+      blind_rank_5: blindRankChild.reveal_setup,
+      keep_4_cut_4: keepCutChild.reveal_setup,
+    },
+    privateSetupEvidence: {
+      combo_version: DAILY_COMBO_CONTENT_VERSION,
+      blind_rank_5: blindRankChild,
+      keep_4_cut_4: keepCutChild,
+    },
+    privateGradingEvidence: {
+      combo_version: DAILY_COMBO_CONTENT_VERSION,
+      blind_rank: blindRankChild.private_grading_evidence,
+      keep_cut: keepCutChild.private_grading_evidence,
+    },
+  };
+}
+
+function isDailyCombo(context: OfficialDailyRuntimeContext & JsonRecord) {
+  return context.content_version === DAILY_COMBO_CONTENT_VERSION
+    || context.privateSetupEvidence.combo_version === DAILY_COMBO_CONTENT_VERSION;
+}
+
+function comboStage(context: OfficialDailyRuntimeContext & JsonRecord): "blind_rank_5" | "keep_4_cut_4" {
+  const stage = context.publicState.combo_stage ?? context.submissionState.combo_stage;
+  return stage === "keep_4_cut_4" ? "keep_4_cut_4" : "blind_rank_5";
+}
+
+function comboChild(context: OfficialDailyRuntimeContext & JsonRecord, gameType: "blind_rank_5" | "keep_4_cut_4") {
+  return requiredRecord(context.privateSetupEvidence[gameType], `Daily combo ${gameType} evidence`);
+}
+
+function comboChildContext(
+  context: OfficialDailyRuntimeContext & JsonRecord,
+  gameType: "blind_rank_5" | "keep_4_cut_4",
+): OfficialDailyRuntimeContext {
+  const child = comboChild(context, gameType);
+  const childSubmission = asRecord(context.submissionState[gameType]) ?? {};
+  const childPublic = asRecord(context.publicState[gameType])
+    ?? requiredRecord(requiredRecord(child.public_setup, "Daily combo public setup").initial_state, "Daily combo initial state");
+  return {
+    gameType,
+    setupKey: requiredString(child.setup_key, "Daily combo child setup key"),
+    publicSetup: requiredRecord(child.public_setup, "Daily combo child public setup"),
+    revealSetup: requiredRecord(child.reveal_setup, "Daily combo child reveal setup"),
+    privateSetupEvidence: requiredRecord(child.private_setup_evidence, "Daily combo child setup evidence"),
+    privateGradingEvidence: requiredRecord(child.private_grading_evidence, "Daily combo child grading evidence"),
+    submissionState: childSubmission,
+    publicState: childPublic,
+  };
+}
+
+function advanceDailyCombo(context: OfficialDailyRuntimeContext & JsonRecord, action: unknown) {
+  const stage = comboStage(context);
+  const advanced = advanceOfficialDailyRuntime(comboChildContext(context, stage), action);
+
+  if (stage === "blind_rank_5") {
+    if (!advanced.complete) {
+      return {
+        submissionState: {
+          ...context.submissionState,
+          combo_stage: stage,
+          blind_rank_5: advanced.submissionState,
+          final_submission: null,
+        },
+        publicState: {
+          ...context.publicState,
+          complete: false,
+          combo_stage: stage,
+          blind_rank_5: advanced.publicState,
+        },
+        complete: false,
+        finalSubmission: null,
+      };
+    }
+
+    const keepCut = comboChild(context, "keep_4_cut_4");
+    const keepCutInitial = requiredRecord(
+      requiredRecord(keepCut.public_setup, "Daily combo Keep Cut setup").initial_state,
+      "Daily combo Keep Cut initial state",
+    );
+    return {
+      submissionState: {
+        combo_stage: "keep_4_cut_4",
+        blind_rank_5: advanced.submissionState,
+        keep_4_cut_4: {},
+        final_submission: null,
+      },
+      publicState: {
+        complete: false,
+        combo_stage: "keep_4_cut_4",
+        blind_rank_5: advanced.publicState,
+        keep_4_cut_4: keepCutInitial,
+      },
+      complete: false,
+      finalSubmission: null,
+    };
+  }
+
+  if (!advanced.complete) {
+    return {
+      submissionState: {
+        ...context.submissionState,
+        combo_stage: stage,
+        keep_4_cut_4: advanced.submissionState,
+        final_submission: null,
+      },
+      publicState: {
+        ...context.publicState,
+        complete: false,
+        combo_stage: stage,
+        keep_4_cut_4: advanced.publicState,
+      },
+      complete: false,
+      finalSubmission: null,
+    };
+  }
+
+  const blindRankSubmission = requiredRecord(context.submissionState.blind_rank_5, "Completed Blind Rank combo state");
+  const blindRankFinal = requiredRecord(blindRankSubmission.final_submission, "Completed Blind Rank combo submission");
+  const keepCutFinal = requiredRecord(advanced.finalSubmission, "Completed Keep Cut combo submission");
+  const finalSubmission = {
+    blind_rank: blindRankFinal,
+    keep_cut: keepCutFinal,
+  };
+
+  return {
+    submissionState: {
+      ...context.submissionState,
+      combo_stage: stage,
+      keep_4_cut_4: advanced.submissionState,
+      final_submission: finalSubmission,
+    },
+    publicState: {
+      ...context.publicState,
+      complete: true,
+      combo_stage: stage,
+      keep_4_cut_4: advanced.publicState,
+    },
+    complete: true,
+    finalSubmission,
+  };
+}
+
 async function materializeToday(admin: SupabaseClient) {
   const requested = await admin.rpc("get_daily_challenge_materialization_request", {});
   if (requested.error) throw new Error("The official daily materialization request failed.");
@@ -104,7 +283,9 @@ async function materializeToday(admin: SupabaseClient) {
   let fallbackReason: string | null = null;
   let publication;
   try {
-    publication = buildOfficialDailySetup(gameType, day, scheduleVersion);
+    publication = gameType === "keep_4_cut_4" && scheduleVersion === DAILY_COMBO_SCHEDULE_VERSION
+      ? buildDailyComboSetup(day, scheduleVersion)
+      : buildOfficialDailySetup(gameType, day, scheduleVersion);
   } catch {
     if (gameType === "find_leader") throw new Error("The official Find the Leader fallback could not be materialized.");
     fallbackReason = `materialization_failed:${gameType}`;
@@ -149,6 +330,28 @@ async function getContext(admin: SupabaseClient, dailyChallengeId: string, profi
 
 function publicPayload(context: OfficialDailyRuntimeContext & JsonRecord) {
   const attempt = asRecord(context.official_attempt);
+  if (isDailyCombo(context)) {
+    const stage = comboStage(context);
+    const child = comboChild(context, stage);
+    return {
+      available: true,
+      id: context.daily_challenge_id,
+      central_day: context.central_day,
+      schedule_version: context.schedule_version,
+      game_type: stage,
+      setup_key: child.setup_key,
+      content_version: context.content_version,
+      scoring_version: context.scoring_version,
+      fallback_reason: context.fallback_reason ?? null,
+      public_setup: child.public_setup,
+      progress_revision: context.progress_revision,
+      public_state: context.publicState[stage],
+      reveal_setup: attempt ? child.reveal_setup : null,
+      official_attempt: attempt,
+      deployment_sha: DEPLOYED_SOURCE_SHA,
+    };
+  }
+
   return {
     available: true,
     id: context.daily_challenge_id,
@@ -249,7 +452,9 @@ Deno.serve(async (request) => {
       return safeError(409, "STALE_PROGRESS", "Official daily progress changed on another device. Refresh and continue from the latest state.");
     }
 
-    const advanced = advanceOfficialDailyRuntime(context, body.action);
+    const advanced = isDailyCombo(context)
+      ? advanceDailyCombo(context, body.action)
+      : advanceOfficialDailyRuntime(context, body.action);
     const saved = await admin.rpc("save_daily_challenge_runtime_progress", {
       p_daily_challenge_id: materialized.dailyChallengeId,
       p_profile_id: profileId,

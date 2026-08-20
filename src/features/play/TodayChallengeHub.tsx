@@ -2,6 +2,10 @@ import { useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { DailyChallengeStandings } from "./DailyChallengeStandings";
+import {
+  dailyRankKeepComboStage,
+  isDailyRankKeepCombo,
+} from "./DailyRankKeepComboStatus";
 import { todayChallengeAdapter, type DailyGameType } from "./todaysChallengeAdapters";
 import type {
   TodayChallengeLeaderboard,
@@ -21,6 +25,17 @@ function dayLabel(day: string) {
 
 function gameProgress(projection: TodayChallengeProjection) {
   const state = projection.publicState;
+  const comboStage = dailyRankKeepComboStage(projection);
+  if (comboStage === 1) {
+    const placed = Array.isArray(state.slots) ? state.slots.filter(Boolean).length : 0;
+    return `PART 1 OF 2 · ${placed}/5 PLACED`;
+  }
+  if (comboStage === 2) {
+    const kept = Array.isArray(state.kept) ? state.kept.length : 0;
+    const cut = Array.isArray(state.cut) ? state.cut.length : 0;
+    return `PART 2 OF 2 · ${kept + cut}/8 CALLS`;
+  }
+
   switch (projection.gameType) {
     case "find_leader":
       return `${Array.isArray(state.eliminated_ids) ? state.eliminated_ids.length : 0}/9 SAFE`;
@@ -49,10 +64,12 @@ function LeaderboardAvatar({ entry }: { entry: TodayChallengeLeaderboard["entrie
 function DailyLeaderboard({
   leaderboard,
   gameType,
+  combo,
   loading,
 }: {
   leaderboard: TodayChallengeLeaderboard | null;
   gameType: DailyGameType;
+  combo: boolean;
   loading: boolean;
 }) {
   if (loading && !leaderboard) {
@@ -75,10 +92,12 @@ function DailyLeaderboard({
           <b>#{entry.rank}</b>
           <LeaderboardAvatar entry={entry} />
           <strong>{entry.displayName}</strong>
-          <em>{todayChallengeAdapter(gameType)?.nativeDisplay({
-            nativeScore: entry.nativeScore,
-            publicResult: {},
-          }) ?? entry.nativeScore}</em>
+          <em>{combo
+            ? `${entry.normalizedScore}/100`
+            : todayChallengeAdapter(gameType)?.nativeDisplay({
+              nativeScore: entry.nativeScore,
+              publicResult: {},
+            }) ?? entry.nativeScore}</em>
           <small>{entry.normalizedScore}</small>
         </article>
       ))}
@@ -141,6 +160,14 @@ export default function TodayChallengeHub() {
   }
 
   const completed = Boolean(projection.officialAttempt);
+  const combo = isDailyRankKeepCombo(projection);
+  const title = combo ? "Blind Rank + Keep/Cut" : adapter.title;
+  const instructions = combo
+    ? "Blind Rank five, then immediately Keep 4, Cut 4. Both halves count equally toward one official Daily score."
+    : adapter.instructions;
+  const cta = combo
+    ? dailyRankKeepComboStage(projection) === 2 ? "CONTINUE PART 2" : "START PART 1"
+    : adapter.cta.toUpperCase();
 
   const showPanel = (nextPanel: "challenge" | "leaderboard") => {
     const carousel = carouselRef.current;
@@ -170,7 +197,7 @@ export default function TodayChallengeHub() {
       >
         <button className="today-hub-card" type="button" onClick={() => navigate(adapter.dailyRoute)}>
           <div className="today-hub-card__topline">
-            <span>TODAY’S CHALLENGE</span>
+            <span>{combo ? "TODAY’S DAILY DOUBLE" : "TODAY’S CHALLENGE"}</span>
             <b>{dayLabel(projection.centralDay).toUpperCase()}</b>
           </div>
           <div className="today-hub-card__body">
@@ -181,10 +208,10 @@ export default function TodayChallengeHub() {
                   ? `SAVED · ${gameProgress(projection)}`
                   : gameProgress(projection)}
             </small>
-            <h2>{adapter.title}</h2>
-            <p>{adapter.instructions}</p>
+            <h2>{title}</h2>
+            <p>{instructions}</p>
           </div>
-          <em>{completed ? "VIEW OFFICIAL RESULT" : projection.progressRevision > 0 ? "CONTINUE OFFICIAL GAME" : adapter.cta.toUpperCase()} →</em>
+          <em>{completed ? "VIEW OFFICIAL RESULT" : projection.progressRevision > 0 ? "CONTINUE OFFICIAL GAME" : cta} →</em>
           <span className="today-hub-card__swipe">SWIPE FOR TODAY’S LEADERBOARD →</span>
         </button>
 
@@ -192,13 +219,14 @@ export default function TodayChallengeHub() {
           <header>
             <div>
               <p className="eyebrow">TODAY’S LEADERBOARD</p>
-              <h2>{adapter.title}</h2>
+              <h2>{title}</h2>
             </div>
             <span>{overview.leaderboard?.playerCount ?? 0} PLAYERS</span>
           </header>
           <DailyLeaderboard
             leaderboard={overview.leaderboard}
             gameType={projection.gameType}
+            combo={combo}
             loading={overview.leaderboardLoading}
           />
           <small className="today-hub-leaderboard__swipe">← SWIPE FOR TODAY’S GAME</small>

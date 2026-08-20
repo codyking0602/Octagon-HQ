@@ -7,6 +7,7 @@ import {
   OfficialBlindRankScoreSummary,
 } from "./OfficialBlindRankResult";
 import { OfficialHitTheNumberDailyView } from "./OfficialHitTheNumberDailyView";
+import { DailyRankKeepComboStatus } from "./DailyRankKeepComboStatus";
 import { OfficialTodayChallengeView } from "./OfficialTodayChallengePresentation";
 import {
   todayChallengeAdapter,
@@ -120,6 +121,7 @@ export default function OfficialTodayChallengePage({
   return (
     <div className="official-daily-page">
       <RuntimeStatus error={runtime.error} onRefresh={() => { void runtime.refresh(); }} />
+      <DailyRankKeepComboStatus projection={runtime.projection} />
       <OfficialBlindRankScoreSummary projection={runtime.projection} />
       {blindResumeV3 ? (
         <OfficialBlindResumeV3DailyView
