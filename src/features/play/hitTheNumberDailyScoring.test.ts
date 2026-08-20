@@ -24,7 +24,7 @@ describe("Hit the Number authoritative Daily Price Is Right scoring", () => {
       "least(74, round(75 - (50 * v_distance / (v_target::numeric / v_pick_count)))::integer)",
     );
     expect(dailyScoringMigration).toContain(
-      "greatest(75,\n        least(99, round(100 - (50 * v_distance / (v_target::numeric / v_pick_count)))::integer)",
+      "else greatest(\n        75,\n        least(99, round(100 - (50 * v_distance / (v_target::numeric / v_pick_count)))::integer)",
     );
     expect(dailyScoringMigration).toContain("if v_score <> 100 then");
     expect(dailyScoringMigration).toContain("if v_score <> 99 then");
