@@ -107,6 +107,12 @@ function isoDate(value) {
   return parsed.toISOString().slice(0, 10);
 }
 
+function dateOffset(value, days) {
+  const date = new Date(`${value}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
+}
+
 function idFromUrl(value, segment) {
   return clean(value).match(new RegExp(`/${segment}/([a-z0-9]+)`, "i"))?.[1] ?? null;
 }
@@ -238,6 +244,10 @@ function bonusFact(bonusByEvent, eventName, fighterName) {
   return { status: "verified", values: [...(event.get(nameKey(fighterName)) ?? [])].sort() };
 }
 
+function candidateDetails(detailsByDate, canonicalDate) {
+  return [-1, 0, 1].flatMap((offset) => detailsByDate.get(dateOffset(canonicalDate, offset)) ?? []);
+}
+
 async function main() {
   const canonicalRankingInputs = await loadCanonicalRankingInputs();
   const modelDate = canonicalRankingInputs.source.modelAsOfDate;
@@ -267,7 +277,7 @@ async function main() {
     const byFight = {};
     for (const fight of fighter.facts.fights) {
       totalFights += 1;
-      const matched = matchDetail(core.detailsByDate.get(fight.date) ?? [], fighter.fighter, fight.opponent);
+      const matched = matchDetail(candidateDetails(core.detailsByDate, fight.date), fighter.fighter, fight.opponent);
       if (matched.matches) {
         unmatched.push(`${fighter.fighter} vs ${fight.opponent} ${fight.date}: ${matched.matches.length} matches`);
         continue;
