@@ -1,8 +1,6 @@
 .watchlist-page button.watchlist-feature,
 .watchlist-page button.watchlist-rank-row {
   width: 100%;
-  border-left: 0;
-  border-right: 0;
   color: inherit;
   font: inherit;
   text-align: left;
@@ -12,6 +10,10 @@
 
 .watchlist-page button.watchlist-feature {
   border: 1px solid rgba(229, 9, 20, .32);
+}
+
+.watchlist-page button.watchlist-rank-row {
+  border: 0;
 }
 
 .watchlist-page button.watchlist-feature:hover,
@@ -29,14 +31,14 @@
 
 .watchlist-scouting-overlay {
   position: fixed;
-  z-index: 90;
+  z-index: 1000;
   inset: 0;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding: 12px 12px calc(12px + env(safe-area-inset-bottom));
-  background: rgba(0, 0, 0, .74);
-  backdrop-filter: blur(5px);
+  padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
+  background: rgba(0, 0, 0, .78);
+  backdrop-filter: blur(6px);
 }
 
 .watchlist-scouting-card {
@@ -44,16 +46,20 @@
   display: grid;
   gap: 13px;
   width: min(100%, 560px);
-  max-height: min(82vh, 760px);
-  padding: 10px 15px 16px;
+  max-height: calc(100dvh - 24px);
+  min-height: 0;
+  padding: 10px 15px 18px;
+  overflow-x: hidden;
   overflow-y: auto;
   border: 1px solid rgba(229, 9, 20, .34);
   border-radius: 22px;
   background:
     radial-gradient(circle at 100% 0, rgba(229, 9, 20, .14), transparent 34%),
     var(--surface);
-  box-shadow: 0 -18px 55px rgba(0, 0, 0, .5);
-  overscroll-behavior: contain;
+  box-shadow: 0 -18px 55px rgba(0, 0, 0, .55);
+  overscroll-behavior-y: contain;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
 }
 
 .watchlist-scouting-card__handle {
@@ -143,15 +149,15 @@
 
 .watchlist-scouting-card__read {
   display: grid;
-  gap: 6px;
-  padding: 11px 12px;
+  gap: 7px;
+  padding: 12px 13px;
   border-left: 3px solid var(--ufc-red);
   border-radius: 0 12px 12px 0;
   background: rgba(229, 9, 20, .07);
 }
 
 .watchlist-scouting-card__read span,
-.watchlist-scouting-card__intel span {
+.watchlist-scouting-card__intel > span {
   color: var(--ufc-red-strong);
   font-size: 8px;
   font-weight: 950;
@@ -159,15 +165,16 @@
 }
 
 .watchlist-scouting-card__read p {
+  margin: 0;
   color: var(--text-primary);
   font-size: 12px;
-  font-weight: 750;
-  line-height: 1.45;
+  font-weight: 700;
+  line-height: 1.55;
 }
 
 .watchlist-scouting-card__stats {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: 13px;
@@ -179,14 +186,14 @@
   display: grid;
   gap: 3px;
   place-items: center;
-  min-height: 58px;
-  padding: 7px 2px;
+  min-height: 62px;
+  padding: 8px 3px;
   background: var(--surface-raised);
   text-align: center;
 }
 
 .watchlist-scouting-card__stats strong {
-  font-size: 16px;
+  font-size: 18px;
 }
 
 .watchlist-scouting-card__stats span {
@@ -198,40 +205,28 @@
 
 .watchlist-scouting-card__intel {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.watchlist-scouting-card__intel > div {
-  display: grid;
-  align-content: start;
-  gap: 5px;
-  min-height: 67px;
-  padding: 10px;
+  gap: 6px;
+  padding: 11px 12px;
   border: 1px solid var(--border);
   border-radius: 12px;
   background: rgba(255, 255, 255, .025);
 }
 
-.watchlist-scouting-card__intel > div:only-child {
-  grid-column: 1 / -1;
-}
-
 .watchlist-scouting-card__intel strong {
   font-size: 11px;
-  line-height: 1.35;
+  line-height: 1.4;
 }
 
-.watchlist-scouting-card__reviewed {
-  color: var(--text-muted);
-  font-size: 9px;
-  font-weight: 800;
-  text-align: center;
+.watchlist-scouting-card__actions {
+  display: grid;
+  gap: 8px;
+  padding-bottom: 2px;
 }
 
-.watchlist-scouting-card .secondary-action {
+.watchlist-scouting-card__actions .primary-action,
+.watchlist-scouting-card__actions .secondary-action {
   width: 100%;
-  min-height: 40px;
+  min-height: 44px;
   justify-content: center;
 }
 
@@ -242,23 +237,13 @@
   }
 
   .watchlist-scouting-card {
-    max-height: min(86vh, 760px);
-    padding: 14px 18px 18px;
+    max-height: min(86dvh, 760px);
+    padding: 14px 18px 20px;
     border-radius: 20px;
     box-shadow: 0 24px 70px rgba(0, 0, 0, .52);
   }
 
   .watchlist-scouting-card__handle {
     display: none;
-  }
-}
-
-@media (max-width: 420px) {
-  .watchlist-scouting-card__intel {
-    grid-template-columns: 1fr;
-  }
-
-  .watchlist-scouting-card__intel > div:only-child {
-    grid-column: auto;
   }
 }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { WatchFighterPhoto, WatchMovementBadge } from "./ShanesWatchlistCard";
 import { shanesWatchlist, watchMovement, type ShaneWatchFighter } from "./shanesWatchlist";
@@ -42,7 +43,7 @@ function FeaturedFighter({
         </div>
       </div>
 
-      <blockquote>“{fighter.scoutingNote}”</blockquote>
+      <blockquote>“{fighter.boardNote}”</blockquote>
     </button>
   );
 }
@@ -61,7 +62,6 @@ function RankedFighterRow({
       type="button"
       onClick={() => onOpen(fighter)}
       aria-label={`Open scouting report for ${fighter.name}`}
-      style={{ border: 0 }}
     >
       <strong className="watchlist-rank-row__rank">#{fighter.rank}</strong>
       <WatchFighterPhoto fighter={fighter} />
@@ -78,10 +78,13 @@ function RankedFighterRow({
 }
 
 function ScoutingReport({ fighter, onClose }: { fighter: ShaneWatchFighter; onClose: () => void }) {
-  return (
-    <div className="watchlist-scouting-overlay" onMouseDown={(event) => {
-      if (event.currentTarget === event.target) onClose();
-    }}>
+  return createPortal(
+    <div
+      className="watchlist-scouting-overlay"
+      onMouseDown={(event) => {
+        if (event.currentTarget === event.target) onClose();
+      }}
+    >
       <section
         className="watchlist-scouting-card"
         role="dialog"
@@ -91,7 +94,7 @@ function ScoutingReport({ fighter, onClose }: { fighter: ShaneWatchFighter; onCl
         <div className="watchlist-scouting-card__handle" aria-hidden="true" />
         <header className="watchlist-scouting-card__header">
           <div>
-            <p className="eyebrow">SCOUTING REPORT · #{fighter.rank}</p>
+            <p className="eyebrow">SHANE’S RANKING · #{fighter.rank}</p>
             <h2 id="watchlist-scouting-title">{fighter.name}</h2>
             {fighter.nickname ? <strong>“{fighter.nickname}”</strong> : null}
           </div>
@@ -107,40 +110,33 @@ function ScoutingReport({ fighter, onClose }: { fighter: ShaneWatchFighter; onCl
           </div>
         </div>
 
-        <section className="watchlist-scouting-card__read" aria-label="Shane's scouting read">
-          <span>SHANE’S READ</span>
-          <p>“{fighter.scoutingNote}”</p>
+        <section className="watchlist-scouting-card__read" aria-label="Scouting snapshot">
+          <span>SCOUTING SNAPSHOT</span>
+          <p>{fighter.scoutingSnapshot}</p>
         </section>
 
-        <div className="watchlist-scouting-card__stats" aria-label={`${fighter.name} scouting statistics`}>
-          <div><strong>{fighter.proRecord}</strong><span>PRO RECORD</span></div>
+        <div className="watchlist-scouting-card__stats" aria-label={`${fighter.name} UFC statistics`}>
           <div><strong>{fighter.ufcRecord}</strong><span>UFC RECORD</span></div>
-          <div><strong>{fighter.winStreak}</strong><span>WIN STREAK</span></div>
-          <div><strong>{fighter.finishes}</strong><span>FINISHES</span></div>
+          <div><strong>{fighter.ufcWinStreak}</strong><span>UFC WIN STREAK</span></div>
+          <div><strong>{fighter.ufcFinishes}</strong><span>UFC FINISHES</span></div>
         </div>
 
-        <div className="watchlist-scouting-card__intel">
-          <div>
-            <span>WHY HE’S HERE</span>
-            <strong>{fighter.highlight}</strong>
-          </div>
-          {fighter.comparison ? (
-            <div>
-              <span>STYLE COMP</span>
-              <strong>{fighter.comparison}</strong>
-            </div>
-          ) : null}
+        <section className="watchlist-scouting-card__intel" aria-label="Why this fighter is on Shane's board">
+          <span>WHY HE’S ON THE BOARD</span>
+          <strong>{fighter.whyOnBoard}</strong>
+        </section>
+
+        <div className="watchlist-scouting-card__actions">
+          <a className="primary-action" href={fighter.videoUrl} target="_blank" rel="noopener noreferrer">
+            WATCH FIGHT HIGHLIGHT ↗
+          </a>
+          <a className="secondary-action" href={fighter.ufcUrl} target="_blank" rel="noopener noreferrer">
+            VIEW UFC PROFILE ↗
+          </a>
         </div>
-
-        <p className="watchlist-scouting-card__reviewed">
-          Tracked since {fighter.added} · Reviewed {fighter.lastReviewed}
-        </p>
-
-        <a className="secondary-action" href={fighter.ufcUrl} target="_blank" rel="noopener noreferrer">
-          VIEW UFC PROFILE ↗
-        </a>
       </section>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
@@ -183,13 +179,21 @@ export default function ShanesWatchlistPage() {
 
   useEffect(() => {
     if (!selectedFighter) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
       setSelectedFighterId(null);
       replaceFighterHash(null);
     };
+
     document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKeyDown);
+    };
   }, [selectedFighter]);
 
   return (
