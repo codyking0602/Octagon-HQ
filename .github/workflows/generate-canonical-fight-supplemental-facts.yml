@@ -1,0 +1,64 @@
+name: Generate Canonical UFCStats Fight Facts
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - scripts/update-canonical-fight-supplemental-facts.mjs
+      - .github/workflows/generate-canonical-fight-supplemental-facts.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+defaults:
+  run:
+    shell: bash --noprofile --norc -eo pipefail {0}
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out exact source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 1
+          persist-credentials: false
+          show-progress: false
+
+      - name: Verify exact checked-out SHA
+        run: |
+          checked_out_sha=$(git rev-parse HEAD)
+          if [ "$checked_out_sha" != "$SOURCE_SHA" ]; then
+            echo "::error title=Exact SHA checkout failed::Expected $SOURCE_SHA but checked out $checked_out_sha."
+            exit 1
+          fi
+
+      - name: Set up Node and npm cache
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install locked dependencies
+        run: npm ci --silent --no-audit --no-fund
+
+      - name: Generate UFCStats fight-fact snapshot
+        env:
+          CHECKED_AT: "2026-08-19"
+          CANONICAL_SOURCE_SHA: ${{ env.SOURCE_SHA }}
+        run: node scripts/update-canonical-fight-supplemental-facts.mjs "$RUNNER_TEMP/canonical-fight-supplemental-facts.json"
+
+      - name: Upload generated snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: canonical-fight-supplemental-facts-${{ env.SOURCE_SHA }}
+          path: ${{ runner.temp }}/canonical-fight-supplemental-facts.json
+          if-no-files-found: error
+          retention-days: 7
