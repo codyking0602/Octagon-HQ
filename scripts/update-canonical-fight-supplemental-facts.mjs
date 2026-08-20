@@ -190,15 +190,16 @@ let duplicateResultRows = 0;
 for (const row of resultRows) {
   const fightId = sourceId(row.URL, "fight-details");
   if (!fightId) throw new Error(`UFCStats result is missing its fight id: ${JSON.stringify(row)}`);
+  const consumed = { ROUND: String(row.ROUND ?? "").trim(), TIME: String(row.TIME ?? "").trim() };
   const existing = results.get(fightId);
   if (existing) {
-    if (JSON.stringify(existing) !== JSON.stringify(row)) {
-      throw new Error(`Conflicting UFCStats fight result ${fightId}.`);
+    if (existing.ROUND !== consumed.ROUND || existing.TIME !== consumed.TIME) {
+      throw new Error(`Conflicting UFCStats finish timing for fight ${fightId}.`);
     }
     duplicateResultRows += 1;
     continue;
   }
-  results.set(fightId, row);
+  results.set(fightId, consumed);
 }
 
 const ambiguousStatBouts = new Set(
@@ -339,6 +340,6 @@ if (ambiguousStatBouts.size) {
   console.log(`Marked round-stat identity unavailable for ${ambiguousStatBouts.size} duplicate same-event matchup key(s).`);
 }
 if (duplicateDetailRows || duplicateResultRows) {
-  console.log(`Ignored ${duplicateDetailRows} identical fight-detail and ${duplicateResultRows} identical fight-result duplicate row(s).`);
+  console.log(`Ignored ${duplicateDetailRows} duplicate fight-detail and ${duplicateResultRows} duplicate fight-result row(s) after consumed-fact reconciliation.`);
 }
 console.log(JSON.stringify(coverage));
