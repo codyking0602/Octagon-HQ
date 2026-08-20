@@ -1,10 +1,14 @@
--- Align the one authoritative official Daily Hit the Number grader with the
--- canonical Price Is Right score buckets used by the game engine. Patch the
--- existing grader in place so there is still one scoring owner.
+-- Align official Daily Hit the Number with the canonical Price Is Right buckets.
+-- The public Daily scoring entry point remains private.grade_daily_challenge; the
+-- pre-combo delegate is where the historical Hit the Number branch is owned after
+-- the Rank/Keep wrapper migration, so patch that existing branch in place.
 do $$
 declare
-  v_definition text := pg_get_functiondef(
+  v_entry_definition text := pg_get_functiondef(
     'private.grade_daily_challenge(text,text,jsonb,jsonb)'::regprocedure
+  );
+  v_definition text := pg_get_functiondef(
+    'private.grade_daily_challenge_pre_combo(text,text,jsonb,jsonb)'::regprocedure
   );
   v_expected text := $old$
     normalized_score := case
@@ -33,25 +37,29 @@ $old$;
     end;
 $new$;
 begin
+  if position('private.grade_daily_challenge_pre_combo' in v_entry_definition) = 0 then
+    raise exception 'Canonical Daily grader no longer delegates historical scoring to the expected owner.';
+  end if;
+
   if position(v_expected in v_definition) = 0 then
-    raise exception 'Canonical Daily Hit the Number grader no longer matches the expected scoring shape.';
+    raise exception 'Daily Hit the Number scoring owner no longer matches the expected scoring shape.';
   end if;
 
   execute replace(v_definition, v_expected, v_replacement);
 
   v_definition := pg_get_functiondef(
-    'private.grade_daily_challenge(text,text,jsonb,jsonb)'::regprocedure
+    'private.grade_daily_challenge_pre_combo(text,text,jsonb,jsonb)'::regprocedure
   );
   if position(v_replacement in v_definition) = 0
     or position(v_expected in v_definition) > 0
   then
-    raise exception 'Canonical Daily Hit the Number Price Is Right scoring patch did not apply exactly.';
+    raise exception 'Daily Hit the Number Price Is Right scoring patch did not apply exactly.';
   end if;
 end;
 $$;
 
--- Exercise the canonical grader itself at the three bucket boundaries. These
--- assertions fail the migration if server scoring ever stops matching the game.
+-- Exercise the canonical entry point at all three bucket boundaries. This proves
+-- the wrapper still delegates Hit the Number to the patched single scoring owner.
 do $$
 declare
   v_score integer;
