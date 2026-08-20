@@ -2,10 +2,25 @@ import { z } from "zod";
 import supplementalFactsJson from "./generated/ufcstats-supplemental-facts-v1.json";
 import { canonicalFightSupplementalFactsSchema } from "../engine/schemas";
 
+const snapshotSourceSchema = z
+  .object({
+    repository: z.string().min(1),
+    commit: z.string().regex(/^[a-f0-9]{40}$/),
+    refreshedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    files: z.array(z.string().min(1)).min(1),
+  })
+  .strict();
+
 const ufcStatsSupplementalFactsSnapshotSchema = z
   .object({
     schemaVersion: z.literal(1),
     provider: z.literal("ufcstats"),
+    provenance: z
+      .object({
+        core: snapshotSourceSchema,
+        bonuses: snapshotSourceSchema,
+      })
+      .strict(),
     fighters: z.record(
       z.string(),
       z.record(z.string(), canonicalFightSupplementalFactsSchema),
