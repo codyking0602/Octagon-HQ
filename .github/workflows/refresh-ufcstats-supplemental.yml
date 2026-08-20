@@ -6,16 +6,7 @@ on:
     branches:
       - agent/ufcstats-supplemental-backfill
     paths:
-      - scripts/backfill-ufcstats-supplemental.mjs
-      - src/features/rankings/data/ufcStatsSupplementalFacts.ts
-      - src/features/rankings/data/generated/ufcstats-supplemental-facts-v1.json
-      - .github/workflows/refresh-ufcstats-supplemental.yml
-  pull_request:
-    types: [opened, synchronize]
-    paths:
-      - scripts/backfill-ufcstats-supplemental.mjs
-      - src/features/rankings/data/ufcStatsSupplementalFacts.ts
-      - src/features/rankings/data/generated/ufcstats-supplemental-facts-v1.json
+      - scripts/bootstrap-ufcstats-reconciliation.mjs
       - .github/workflows/refresh-ufcstats-supplemental.yml
 
 permissions:
@@ -31,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      REFRESH_BRANCH: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref_name }}
+      REFRESH_BRANCH: ${{ github.ref_name }}
     steps:
       - name: Check out exact refresh branch
         uses: actions/checkout@v4
@@ -48,6 +39,9 @@ jobs:
       - name: Install locked app dependencies
         run: npm ci
 
+      - name: Apply one-time canonical reconciliation
+        run: node scripts/bootstrap-ufcstats-reconciliation.mjs
+
       - name: Refresh checked-in UFCStats supplemental snapshot
         run: node scripts/backfill-ufcstats-supplemental.mjs
 
@@ -57,17 +51,20 @@ jobs:
           npx vitest run src/features/rankings/data/ufcStatsSupplementalFacts.test.ts
           git diff --check
 
-      - name: Commit generated snapshot to this branch
+      - name: Commit reconciled snapshot and source owner changes
         shell: bash
         run: |
           set -euo pipefail
-          snapshot="src/features/rankings/data/generated/ufcstats-supplemental-facts-v1.json"
-          if git diff --quiet -- "$snapshot"; then
-            echo "UFCStats supplemental snapshot is already current."
-            exit 0
-          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- "$snapshot"
+          git add -- \
+            .github/workflows/refresh-ufcstats-supplemental.yml \
+            scripts/backfill-ufcstats-supplemental.mjs \
+            scripts/bootstrap-ufcstats-reconciliation.mjs \
+            src/features/rankings/data/v2RankingRoster.ts \
+            src/features/rankings/engine/schemas.ts \
+            src/features/rankings/data/ufcStatsSupplementalFacts.test.ts \
+            src/features/rankings/data/generated/ufcstats-supplemental-facts-v1.json
+          git diff --cached --check
           git commit -m "Populate UFCStats supplemental fight facts"
           git push origin "HEAD:${REFRESH_BRANCH}"
