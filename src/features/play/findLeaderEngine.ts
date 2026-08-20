@@ -7,18 +7,16 @@ import {
   shuffleLineup,
   stableLineupHash,
 } from "./lineupModel";
+import {
+  deriveUfcCareerStats,
+  isUfcCareerFinish,
+  isUfcCareerTitleFight,
+  isUfcCareerWin,
+} from "./ufcCareerStats";
 
 const VERSION = "find-leader-v5-20260819-plausible-decoys";
 const DAILY_ANCHOR = "2026-07-16";
 const NO_REPEAT_SELECTIONS = 14;
-const FINISH_METHODS = new Set(["ko-tko", "submission", "doctor-stoppage"]);
-const TITLE_TYPES = new Set([
-  "normal",
-  "interim",
-  "vacant-undisputed",
-  "second-division-undisputed",
-  "vacant-second-division",
-]);
 const RANKED_TIERS = new Set(["champion-level", "top-five", "top-ten", "ranked"]);
 const TOP_FIVE_TIERS = new Set(["champion-level", "top-five"]);
 
@@ -233,15 +231,15 @@ function inWindow(fight: CanonicalFight, definition: FindLeaderQuestionDefinitio
 }
 
 function isCountedWin(fight: CanonicalFight) {
-  return fight.scoringDisposition === "count-win";
+  return isUfcCareerWin(fight, "scoring");
 }
 
 function isFinish(fight: CanonicalFight) {
-  return FINISH_METHODS.has(fight.methodCategory);
+  return isUfcCareerFinish(fight);
 }
 
 function isTitleFight(fight: CanonicalFight) {
-  return TITLE_TYPES.has(fight.championshipType) && fight.championshipEligible !== false;
+  return isUfcCareerTitleFight(fight);
 }
 
 function hasTitleWin(input: RankingInputFighter) {
@@ -273,34 +271,6 @@ function sortedFights(fights: readonly CanonicalFight[]) {
   return [...fights].sort((left, right) => left.date.localeCompare(right.date));
 }
 
-function longestWinningStreak(fights: readonly CanonicalFight[]) {
-  let current = 0;
-  let longest = 0;
-  fights.forEach((fight) => {
-    if (isCountedWin(fight)) {
-      current += 1;
-      longest = Math.max(longest, current);
-    } else {
-      current = 0;
-    }
-  });
-  return longest;
-}
-
-function longestMatchingStreak(fights: readonly CanonicalFight[], predicate: (fight: CanonicalFight) => boolean) {
-  let current = 0;
-  let longest = 0;
-  sortedFights(fights).forEach((fight) => {
-    if (predicate(fight)) {
-      current += 1;
-      longest = Math.max(longest, current);
-    } else {
-      current = 0;
-    }
-  });
-  return longest;
-}
-
 function winsBeforeFirstLoss(fights: readonly CanonicalFight[]) {
   let wins = 0;
   for (const fight of sortedFights(fights)) {
@@ -324,10 +294,6 @@ function winSpanMonths(fights: readonly CanonicalFight[]) {
 
 function countUnique(values: readonly (string | null | undefined)[]) {
   return new Set(values.map(normalized).filter(Boolean)).size;
-}
-
-function countYears(fights: readonly CanonicalFight[], predicate: (fight: CanonicalFight) => boolean = () => true) {
-  return countUnique(fights.filter(predicate).map((fight) => fight.date.slice(0, 4)));
 }
 
 function maxBucket(values: readonly string[]) {
@@ -392,48 +358,47 @@ function scoreFighter(input: RankingInputFighter, definition: FindLeaderQuestion
   const fights = input.facts.fights.filter((fight) => inWindow(fight, definition));
   const wins = fights.filter(isCountedWin);
   const finishWins = wins.filter(isFinish);
-  const titleFights = fights.filter(isTitleFight);
-  const titleWins = wins.filter(isTitleFight);
-  if (definition.minimumWins && wins.length < definition.minimumWins) return null;
+  const stats = deriveUfcCareerStats(fights, "scoring");
+  if (definition.minimumWins && stats.wins < definition.minimumWins) return null;
 
   switch (definition.metric) {
-    case "wins": return wins.length;
-    case "finishes": return finishWins.length;
-    case "submissions": return wins.filter((fight) => fight.methodCategory === "submission").length;
-    case "knockouts": return wins.filter((fight) => fight.methodCategory === "ko-tko").length;
-    case "decision-wins": return wins.filter((fight) => fight.methodCategory === "decision").length;
-    case "title-fight-wins": return titleWins.length;
+    case "wins": return stats.wins;
+    case "finishes": return stats.finishes;
+    case "submissions": return stats.submissionWins;
+    case "knockouts": return stats.knockoutWins;
+    case "decision-wins": return stats.decisionWins;
+    case "title-fight-wins": return stats.titleFightWins;
     case "top-five-wins": return wins.filter((fight) => TOP_FIVE_TIERS.has(fight.qualityTier)).length;
     case "ranked-wins": return wins.filter((fight) => RANKED_TIERS.has(fight.qualityTier)).length;
-    case "longest-win-streak": return longestWinningStreak(fights);
+    case "longest-win-streak": return stats.longestWinStreak;
     case "wins-before-first-loss": return winsBeforeFirstLoss(fights);
     case "win-span-months": return winSpanMonths(fights);
-    case "finish-rate-pct": return wins.length ? Math.round((finishWins.length / wins.length) * 100) : 0;
-    case "prime-wins": return primeFights(input).filter(isCountedWin).length;
-    case "prime-finishes": return primeFights(input).filter((fight) => isCountedWin(fight) && isFinish(fight)).length;
+    case "finish-rate-pct": return stats.wins ? Math.round((stats.finishes / stats.wins) * 100) : 0;
+    case "prime-wins": return deriveUfcCareerStats(primeFights(input), "scoring").wins;
+    case "prime-finishes": return deriveUfcCareerStats(primeFights(input), "scoring").finishes;
     case "wins-unfinished": {
       const finishedLoss = fights.some((fight) => fight.scoringDisposition === "count-loss" && isFinish(fight));
-      return finishedLoss ? 0 : wins.length;
+      return finishedLoss ? 0 : stats.wins;
     }
-    case "fights": return fights.length;
-    case "title-fights": return titleFights.length;
-    case "title-fight-finishes": return titleWins.filter(isFinish).length;
-    case "title-fight-knockouts": return titleWins.filter((fight) => fight.methodCategory === "ko-tko").length;
-    case "title-fight-submissions": return titleWins.filter((fight) => fight.methodCategory === "submission").length;
-    case "unique-title-opponents-faced": return countUnique(titleFights.map((fight) => fight.opponent));
-    case "unique-title-opponents-beaten": return countUnique(titleWins.map((fight) => fight.opponent));
-    case "unique-opponents-beaten": return countUnique(wins.map((fight) => fight.opponent));
-    case "unique-opponents-finished": return countUnique(finishWins.map((fight) => fight.opponent));
+    case "fights": return stats.fights;
+    case "title-fights": return stats.titleFights;
+    case "title-fight-finishes": return stats.titleFightFinishes;
+    case "title-fight-knockouts": return stats.titleFightKnockoutWins;
+    case "title-fight-submissions": return stats.titleFightSubmissionWins;
+    case "unique-title-opponents-faced": return stats.uniqueTitleOpponentsFaced;
+    case "unique-title-opponents-beaten": return stats.uniqueTitleOpponentsBeaten;
+    case "unique-opponents-beaten": return stats.uniqueOpponentsBeaten;
+    case "unique-opponents-finished": return stats.uniqueOpponentsFinished;
     case "unique-ranked-opponents-beaten": return countUnique(wins.filter((fight) => RANKED_TIERS.has(fight.qualityTier)).map((fight) => fight.opponent));
     case "unique-top-five-opponents-beaten": return countUnique(wins.filter((fight) => TOP_FIVE_TIERS.has(fight.qualityTier)).map((fight) => fight.opponent));
     case "ranked-finishes": return finishWins.filter((fight) => RANKED_TIERS.has(fight.qualityTier)).length;
     case "top-five-finishes": return finishWins.filter((fight) => TOP_FIVE_TIERS.has(fight.qualityTier)).length;
-    case "longest-finish-streak": return longestMatchingStreak(fights, (fight) => isCountedWin(fight) && isFinish(fight));
-    case "longest-ko-streak": return longestMatchingStreak(fights, (fight) => isCountedWin(fight) && fight.methodCategory === "ko-tko");
-    case "longest-submission-streak": return longestMatchingStreak(fights, (fight) => isCountedWin(fight) && fight.methodCategory === "submission");
-    case "win-years": return countYears(fights, isCountedWin);
-    case "finish-years": return countYears(fights, (fight) => isCountedWin(fight) && isFinish(fight));
-    case "active-years": return countYears(fights);
+    case "longest-finish-streak": return stats.longestFinishStreak;
+    case "longest-ko-streak": return stats.longestKnockoutStreak;
+    case "longest-submission-streak": return stats.longestSubmissionStreak;
+    case "win-years": return stats.winningYears;
+    case "finish-years": return stats.finishYears;
+    case "active-years": return stats.activeYears;
     case "fight-span-months": return spanMonths(fights);
     case "rematch-wins": return rematchWins(fights);
     case "avenged-loss-wins": return avengedLossWins(fights);
