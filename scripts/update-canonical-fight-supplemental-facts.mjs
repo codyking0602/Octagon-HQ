@@ -284,12 +284,7 @@ for (const fighter of canonicalFighters) {
       fighterId: fighter.slug,
       canonicalFightId: fight.id,
       supplementalFacts: {
-        source: {
-          provider: "ufcstats",
-          eventId: detail.eventId,
-          fightId: detail.fightId,
-          checkedAt,
-        },
+        source: { provider: "ufcstats", eventId: detail.eventId, fightId: detail.fightId, checkedAt },
         mainEvent: { status: "verified", value: detail.mainEvent },
         bonuses: { status: "unavailable" },
         finish: finishFact(fight, result),
@@ -327,6 +322,25 @@ const coverage = {
   knockdownsUnavailable: entries.filter((entry) => entry.supplementalFacts.knockdowns.status === "unavailable").length,
 };
 
+function encodeRow(entry) {
+  const facts = entry.supplementalFacts;
+  const finishCode = facts.finish.status === "verified" ? "v" : facts.finish.status === "not-applicable" ? "n" : "u";
+  const kdCode = facts.knockdowns.status === "verified" ? "v" : "u";
+  return [
+    entry.fighterId,
+    entry.canonicalFightId,
+    facts.source.eventId,
+    facts.source.fightId,
+    facts.mainEvent.status === "verified" ? (facts.mainEvent.value ? 1 : 0) : null,
+    finishCode,
+    facts.finish.status === "verified" ? facts.finish.round : null,
+    facts.finish.status === "verified" ? facts.finish.timeSeconds : null,
+    kdCode,
+    facts.knockdowns.status === "verified" ? facts.knockdowns.for : null,
+    facts.knockdowns.status === "verified" ? facts.knockdowns.against : null,
+  ];
+}
+
 const snapshot = {
   schemaVersion: 1,
   provider: "ufcstats",
@@ -339,11 +353,12 @@ const snapshot = {
   },
   coverage,
   unmatchedCanonicalFights,
-  entries,
+  rowFormat: ["fighterId", "canonicalFightId", "eventId", "fightId", "mainEvent", "finishStatus", "finishRound", "finishTimeSeconds", "knockdownStatus", "knockdownsFor", "knockdownsAgainst"],
+  rows: entries.map(encodeRow),
 };
 
 await fs.mkdir(path.dirname(outputPath), { recursive: true });
-await fs.writeFile(outputPath, `${JSON.stringify(snapshot, null, 2)}\n`, "utf8");
+await fs.writeFile(outputPath, `${JSON.stringify(snapshot)}\n`, "utf8");
 console.log(`Wrote ${path.relative(root, outputPath)} from ${sourceRepository}@${sourceCommit}.`);
 console.log(JSON.stringify(coverage));
 if (unmatchedCanonicalFights.length) {
