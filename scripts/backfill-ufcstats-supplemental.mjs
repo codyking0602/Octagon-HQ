@@ -31,9 +31,9 @@ const NAME_ALIASES = new Map([
   ["mirkofilipovic", "mirkocrocop"],
   ["phildefries", "philipdefries"],
   ["janbachowicz", "janblachowicz"],
-  ["carlosdiegoferreira", "carlosferreira"],
+  ["carlosdiegoferreira", "diegoferreira"],
   ["josephduffy", "joeduffy"],
-  ["ulkasasaski", "yutasasaki"],
+  ["ulkasasaki", "yutasasaki"],
   ["ronaldosouza", "jacaresouza"],
   ["josealbertoquinonez", "josequinonez"],
   ["mauricioshogunrua", "mauriciorua"],
@@ -46,6 +46,25 @@ const NAME_ALIASES = new Map([
   ["yanakunitskaya", "yanasantos"],
   ["heatherjoclark", "heatherclark"],
   ["zhangweili", "weilizhang"],
+  ["antoniorogerionogueira", "rogerionogueira"],
+  ["bubbamcdaniel", "robertmcdaniel"],
+  ["rodrigovargas", "kazulavargas"],
+]);
+
+// These rows are known canonical/source reconciliation gaps discovered by the
+// audited backfill. They stay explicit rather than being force-matched to a
+// different UFCStats bout. Ranking-history corrections are deliberately out of
+// scope for this supplemental-data PR.
+const KNOWN_UNRECONCILED = new Set([
+  "Aljamain Sterling|2014-09-20-takeya-mizugaki",
+  "Aljamain Sterling|2015-04-18-manny-gamburyan",
+  "B.J. Penn|2003-04-25-duane-ludwig",
+  "Tito Ortiz|1998-03-13-jerry-bohlander",
+  "Lyoto Machida|2007-05-26-david-heath",
+  "Robbie Lawler|2022-12-10-santiago-ponzinibbio",
+  "Royce Gracie|1993-11-12-art-jimmerson",
+  "Royce Gracie|1993-11-12-ken-shamrock",
+  "Royce Gracie|1993-11-12-gerard-gordeau",
 ]);
 
 function rawUrl(repository, commit, file) {
@@ -202,7 +221,7 @@ async function main() {
   ]);
   const core = buildCoreIndex(parseCsv(eventText), parseCsv(detailText), parseCsv(resultText), parseCsv(statsText));
   const bonuses = buildBonusIndex(parseCsv(bonusText));
-  const fighters = {}; const unmatched = [];
+  const fighters = {}; const unexpectedUnmatched = []; const observedUnreconciled = new Set();
   let totalFights = 0; let verifiedBonuses = 0; let unavailableBonuses = 0; let verifiedKnockdowns = 0; let unavailableKnockdowns = 0;
   for (const fighter of canonicalRankingInputs.fighters) {
     const byFight = {};
@@ -211,7 +230,17 @@ async function main() {
       const candidates = candidateDetails(core.detailsByDate, fight.date);
       const matched = matchDetail(candidates, fighter.fighter, fight.opponent);
       if (matched.matches) {
-        unmatched.push(`${fighter.fighter} vs ${fight.opponent} ${fight.date}: ${matched.matches.length} matches; candidates=${candidates.map((candidate) => `${candidate.date}:${candidate.bout}`).join(" | ")}`);
+        const reconciliationKey = `${fighter.fighter}|${fight.id}`;
+        if (!KNOWN_UNRECONCILED.has(reconciliationKey)) {
+          unexpectedUnmatched.push(`${fighter.fighter} vs ${fight.opponent} ${fight.date}: ${matched.matches.length} matches; candidates=${candidates.map((candidate) => `${candidate.date}:${candidate.bout}`).join(" | ")}`);
+          continue;
+        }
+        observedUnreconciled.add(reconciliationKey);
+        byFight[fight.id] = {
+          reconciliation: "unavailable",
+          source: { provider: "ufcstats", checkedAt: CORE.refreshedAt },
+          reason: "no-unique-source-match",
+        };
         continue;
       }
       const bonus = bonusFact(bonuses, matched.name, fighter.fighter);
@@ -226,13 +255,19 @@ async function main() {
     }
     fighters[fighter.presentation.slug] = byFight;
   }
-  if (unmatched.length) {
-    unmatched.slice(0, 100).forEach((message) => console.error(`UNMATCHED ${message}`));
-    throw new Error(`Pinned UFCStats exports failed to reconcile ${unmatched.length}/${totalFights} canonical fight rows.`);
+  if (unexpectedUnmatched.length) {
+    unexpectedUnmatched.slice(0, 100).forEach((message) => console.error(`UNMATCHED ${message}`));
+    throw new Error(`Pinned UFCStats exports produced ${unexpectedUnmatched.length} unexpected canonical reconciliation gaps.`);
+  }
+  const missingKnown = [...KNOWN_UNRECONCILED].filter((key) => !observedUnreconciled.has(key));
+  if (missingKnown.length) {
+    missingKnown.forEach((key) => console.error(`EXPECTED_UNRECONCILED_MISSING ${key}`));
+    throw new Error(`Known UFCStats reconciliation-gap lock drifted for ${missingKnown.length} canonical fight rows.`);
   }
   const output = { schemaVersion: 1, provider: "ufcstats", provenance: { core: CORE, bonuses: BONUSES }, fighters: Object.fromEntries(Object.entries(fighters).sort(([a], [b]) => a.localeCompare(b))) };
   await fs.writeFile(outputPath, `${JSON.stringify(output, null, 2)}\n`, "utf8");
-  console.log(`Wrote ${totalFights} canonical UFCStats supplemental fight rows.`);
+  console.log(`Wrote ${totalFights} canonical UFCStats supplemental snapshot rows.`);
+  console.log(`Reconciled: ${totalFights - observedUnreconciled.size}; explicit unavailable reconciliation: ${observedUnreconciled.size}.`);
   console.log(`Bonuses: ${verifiedBonuses} verified, ${unavailableBonuses} unavailable from the pinned bonus export.`);
   console.log(`Knockdowns: ${verifiedKnockdowns} verified, ${unavailableKnockdowns} unavailable in UFCStats.`);
 }
