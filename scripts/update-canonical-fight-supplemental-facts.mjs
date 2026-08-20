@@ -29,7 +29,6 @@ const NAME_ALIASES = new Map([
   ["carlosdiegoferreira", "diegoferreira"],
   ["josephduffy", "joeduffy"],
   ["ulkasasaski", "yutasasaki"],
-  ["ulkasasakI".toLowerCase(), "yutasasaki"],
   ["tankabbott", "davidabbott"],
   ["mirkocrocop", "mirkofilipovic"],
   ["josealbertoquinonez", "josequinonez"],
@@ -60,8 +59,8 @@ function sourceId(url, segment) {
 }
 
 function parseInteger(value) {
-  const cleaned = String(value ?? "").trim();
-  return /^\d+$/.test(cleaned) ? Number(cleaned) : null;
+  const match = String(value ?? "").trim().match(/^(?:Round\s+)?(\d+)$/i);
+  return match ? Number(match[1]) : null;
 }
 
 function parseTimeSeconds(value) {
