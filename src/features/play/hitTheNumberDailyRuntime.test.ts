@@ -6,9 +6,16 @@ import {
   OFFICIAL_DAILY_RUNTIME_VERSION,
   type OfficialDailyRuntimeContext,
 } from "./todaysChallengeRuntime";
+import { HIT_THE_NUMBER_DAILY_CONTENT_VERSION } from "./hitTheNumberDailyRuntime";
 import type { HitTheNumberFormatId } from "./hitTheNumberFormats";
 
 const scheduleVersion = "test-hit-number-daily-v1";
+const supplementalStatIds = [
+  "ufc-main-events",
+  "ufc-bonus-awards",
+  "ufc-first-round-finishes",
+  "ufc-knockdowns-landed",
+] as const;
 
 function dayAt(index: number) {
   return new Date(Date.UTC(2027, 0, index + 1)).toISOString().slice(0, 10);
@@ -75,7 +82,8 @@ describe("official Hit the Number daily runtime", () => {
       const first = buildOfficialDailySetup("hit_the_number", day, scheduleVersion);
       const second = buildOfficialDailySetup("hit_the_number", day, scheduleVersion);
       expect(second).toEqual(first);
-      expect(first.contentVersion).toBe("hit-the-number-v2");
+      expect(first.contentVersion).toBe(HIT_THE_NUMBER_DAILY_CONTENT_VERSION);
+      expect(first.setupKey.startsWith(`${HIT_THE_NUMBER_DAILY_CONTENT_VERSION}:`)).toBe(true);
       expect(first.scoringVersion).toBe("play-official-score-v1");
       expect(first.publicSetup.runtime_version).toBe(OFFICIAL_DAILY_RUNTIME_VERSION);
       expect(first.publicSetup.version).toBe("hit-the-number-v2");
@@ -111,6 +119,22 @@ describe("official Hit the Number daily runtime", () => {
       "one-from-each",
       "build-the-team",
     ]));
+  });
+
+  it("releases the expanded UFCStats-backed stat catalog into official Daily boards", () => {
+    const observedSupplementalStats = new Set<string>();
+
+    for (let index = 0; index < 240 && observedSupplementalStats.size < supplementalStatIds.length; index += 1) {
+      const setup = buildOfficialDailySetup("hit_the_number", dayAt(index), scheduleVersion);
+      const statId = String(setup.publicSetup.statId ?? "");
+      if (supplementalStatIds.some((candidate) => candidate === statId)) {
+        observedSupplementalStats.add(statId);
+      }
+    }
+
+    supplementalStatIds.forEach((statId) => {
+      expect(observedSupplementalStats.has(statId), `official Daily never generated ${statId}`).toBe(true);
+    });
   });
 
   it("preserves the existing reversible flat-selection runtime for Classic Daily boards", () => {
