@@ -14,6 +14,7 @@ const checkedAt = process.env.CHECKED_AT || "2026-08-18";
 const sourceRepository = process.env.UFCSTATS_SOURCE_REPOSITORY || "Greco1899/scrape_ufc_stats";
 const sourceCommit = process.env.UFCSTATS_SOURCE_COMMIT || "8e40eb945e1127bf0ef172ab211a34787948f312";
 const FINISH_METHODS = new Set(["ko-tko", "doctor-stoppage", "submission"]);
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
 const NAME_ALIASES = new Map([
   ["bobbygreen", "kinggreen"],
@@ -222,20 +223,16 @@ for (const row of statRows) {
   knockdowns.set(key, (knockdowns.get(key) ?? 0) + kd);
 }
 
-const detailRowsByDate = new Map();
-for (const detail of fightDetails.values()) {
-  const rows = detailRowsByDate.get(detail.date) ?? [];
-  rows.push(detail);
-  detailRowsByDate.set(detail.date, rows);
-}
-
 function matchDetail(fighterName, fight) {
   const targetNames = [compact(fighterName), compact(fight.opponent)].sort();
-  const matches = (detailRowsByDate.get(fight.date) ?? []).filter((detail) => (
-    detail.names[0] === targetNames[0] && detail.names[1] === targetNames[1]
+  const canonicalDate = Date.parse(`${fight.date}T00:00:00Z`);
+  const matches = [...fightDetails.values()].filter((detail) => (
+    detail.names[0] === targetNames[0]
+    && detail.names[1] === targetNames[1]
+    && Math.abs(Date.parse(`${detail.date}T00:00:00Z`) - canonicalDate) <= ONE_DAY_MS
   ));
   if (matches.length !== 1) {
-    throw new Error(`${fighterName} ${fight.id} (${fight.date} vs ${fight.opponent}) matched ${matches.length} UFCStats fights.`);
+    throw new Error(`${fighterName} ${fight.id} (${fight.date} vs ${fight.opponent}) matched ${matches.length} UFCStats fights within one date-convention day.`);
   }
   return matches[0];
 }
@@ -324,7 +321,7 @@ const snapshot = {
       "ufc_fight_results.csv",
       "ufc_fight_stats.csv",
     ],
-    note: "Pinned checked-in UFCStats extract. Bonus flags are not retained by this transport and remain explicitly unavailable; round stats without per-fight identity remain unavailable for duplicate same-event bouts.",
+    note: "Pinned checked-in UFCStats extract. Canonical event dates may differ from UFCStats by one day for broadcast/local-date conventions. Bonus flags are not retained by this transport and remain explicitly unavailable; round stats without per-fight identity remain unavailable for duplicate same-event bouts.",
   },
   coverage,
   entries,
