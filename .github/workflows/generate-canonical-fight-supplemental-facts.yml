@@ -6,6 +6,10 @@ on:
     paths:
       - scripts/update-canonical-fight-supplemental-facts.mjs
       - .github/workflows/generate-canonical-fight-supplemental-facts.yml
+      - src/features/rankings/data/generated/canonical-fight-supplemental-facts.json
+      - src/features/rankings/data/canonicalFightSupplementalFactsSnapshot.ts
+      - src/features/rankings/data/canonicalFightSupplementalFactsSnapshot.test.ts
+      - src/features/rankings/data/rankingInputs.ts
   workflow_dispatch:
 
 permissions:
@@ -13,6 +17,8 @@ permissions:
 
 env:
   SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  UFCSTATS_REPOSITORY: Greco1899/scrape_ufc_stats
+  UFCSTATS_COMMIT: 8e40eb945e1127bf0ef172ab211a34787948f312
 
 defaults:
   run:
@@ -21,7 +27,7 @@ defaults:
 jobs:
   generate:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
     steps:
       - name: Check out exact source
         uses: actions/checkout@v4
@@ -49,11 +55,37 @@ jobs:
       - name: Install locked dependencies
         run: npm ci --silent --no-audit --no-fund
 
+      - name: Download pinned UFCStats extract
+        run: |
+          mkdir -p "$RUNNER_TEMP/ufcstats"
+          base="https://raw.githubusercontent.com/$UFCSTATS_REPOSITORY/$UFCSTATS_COMMIT"
+          for file in \
+            ufc_event_details.csv \
+            ufc_fight_details.csv \
+            ufc_fight_results.csv \
+            ufc_fight_stats.csv
+          do
+            curl --fail --silent --show-error --location \
+              "$base/$file" \
+              --output "$RUNNER_TEMP/ufcstats/$file"
+            test -s "$RUNNER_TEMP/ufcstats/$file"
+          done
+
       - name: Generate UFCStats fight-fact snapshot
         env:
-          CHECKED_AT: "2026-08-19"
-          CANONICAL_SOURCE_SHA: ${{ env.SOURCE_SHA }}
-        run: node scripts/update-canonical-fight-supplemental-facts.mjs "$RUNNER_TEMP/canonical-fight-supplemental-facts.json"
+          CHECKED_AT: "2026-08-18"
+          UFCSTATS_SOURCE_DIR: ${{ runner.temp }}/ufcstats
+          UFCSTATS_SOURCE_REPOSITORY: ${{ env.UFCSTATS_REPOSITORY }}
+          UFCSTATS_SOURCE_COMMIT: ${{ env.UFCSTATS_COMMIT }}
+          UFCSTATS_OUTPUT: ${{ runner.temp }}/canonical-fight-supplemental-facts.json
+        run: node scripts/update-canonical-fight-supplemental-facts.mjs
+
+      - name: Compare committed snapshot
+        if: ${{ hashFiles('src/features/rankings/data/generated/canonical-fight-supplemental-facts.json') != '' }}
+        run: |
+          cmp \
+            src/features/rankings/data/generated/canonical-fight-supplemental-facts.json \
+            "$RUNNER_TEMP/canonical-fight-supplemental-facts.json"
 
       - name: Upload generated snapshot
         uses: actions/upload-artifact@v4
