@@ -33,40 +33,9 @@ insert into private.auction_catalog_versions (
   true
 );
 
--- Clone the complete current catalog first. Content replacements below are deliberately
--- label/description-only so PR3 can own grading calibration independently.
-insert into private.auction_catalog (
-  content_version,
-  mode_id,
-  item_reference,
-  display_label,
-  display_description,
-  rarity_band,
-  generation_weight,
-  private_generation_class,
-  grading_inputs
-)
-select
-  'ufc-auction-2026-08-v5',
-  mode_id,
-  item_reference,
-  display_label,
-  display_description,
-  rarity_band,
-  generation_weight,
-  private_generation_class,
-  grading_inputs
-from private.auction_catalog
-where content_version = 'ufc-auction-2026-08-v4';
-
--- Wars was the only current pool whose weak tail fell below the knowledgeable-fan
--- recognizability floor. Replace deep cuts, duplicate expansion rows, and obvious
--- category mismatches with recognizable fights that still span eras and divisions.
-update private.auction_catalog catalog
-set
-  display_label = replacement.display_label,
-  display_description = replacement.display_label
-from (
+-- Apply the reviewed Wars substitutions while inserting v5. auction_catalog is
+-- immutable after insertion, so this deliberately does not add a mutation path.
+with replacements(item_reference, display_label) as (
   values
     ('wars-25', 'Robbie Lawler vs Johny Hendricks — UFC 171'),
     ('wars-26', 'Robbie Lawler vs Carlos Condit — UFC 195'),
@@ -83,99 +52,168 @@ from (
     ('wars-44', 'Wanderlei Silva vs Brian Stann — UFC on Fuel TV 8'),
     ('wars-46', 'Jim Miller vs Joe Lauzon — UFC 155'),
     ('wars-47', 'Dustin Poirier vs Eddie Alvarez II — UFC on Fox 30')
-) replacement(item_reference, display_label)
-where catalog.content_version = 'ufc-auction-2026-08-v5'
-  and catalog.mode_id = 'wars'
-  and catalog.item_reference = replacement.item_reference;
+)
+insert into private.auction_catalog (
+  content_version,
+  mode_id,
+  item_reference,
+  display_label,
+  display_description,
+  rarity_band,
+  generation_weight,
+  private_generation_class,
+  grading_inputs
+)
+select
+  'ufc-auction-2026-08-v5',
+  source.mode_id,
+  source.item_reference,
+  coalesce(replacement.display_label, source.display_label),
+  case
+    when replacement.display_label is not null then replacement.display_label
+    else source.display_description
+  end,
+  source.rarity_band,
+  source.generation_weight,
+  source.private_generation_class,
+  source.grading_inputs
+from private.auction_catalog source
+left join replacements replacement
+  on source.mode_id = 'wars'
+ and source.item_reference = replacement.item_reference
+where source.content_version = 'ufc-auction-2026-08-v4';
+
+-- Focused migration-time invariants: PR2 may change only the reviewed display content.
+do $$
+declare
+  v_changed_rows integer;
+begin
+  if (select count(*) from private.auction_catalog where content_version = 'ufc-auction-2026-08-v5')
+    <> (select count(*) from private.auction_catalog where content_version = 'ufc-auction-2026-08-v4')
+  then
+    raise exception 'Auction recognizability pass changed catalog row count';
+  end if;
+
+  if exists (
+    select 1
+    from private.auction_catalog v5
+    join private.auction_catalog v4
+      on v4.content_version = 'ufc-auction-2026-08-v4'
+     and v4.mode_id = v5.mode_id
+     and v4.item_reference = v5.item_reference
+    where v5.content_version = 'ufc-auction-2026-08-v5'
+      and (
+        v5.rarity_band is distinct from v4.rarity_band
+        or v5.generation_weight is distinct from v4.generation_weight
+        or v5.private_generation_class is distinct from v4.private_generation_class
+        or v5.grading_inputs is distinct from v4.grading_inputs
+      )
+  ) then
+    raise exception 'PR2 changed scoring, rarity, or generation inputs';
+  end if;
+
+  select count(*) into v_changed_rows
+  from private.auction_catalog v5
+  join private.auction_catalog v4
+    on v4.content_version = 'ufc-auction-2026-08-v4'
+   and v4.mode_id = v5.mode_id
+   and v4.item_reference = v5.item_reference
+  where v5.content_version = 'ufc-auction-2026-08-v5'
+    and (
+      v5.display_label is distinct from v4.display_label
+      or v5.display_description is distinct from v4.display_description
+    );
+
+  if v_changed_rows <> 15 then
+    raise exception 'Auction recognizability pass expected 15 content replacements, found %', v_changed_rows;
+  end if;
+
+  if exists (
+    select 1
+    from private.auction_catalog v5
+    join private.auction_catalog v4
+      on v4.content_version = 'ufc-auction-2026-08-v4'
+     and v4.mode_id = v5.mode_id
+     and v4.item_reference = v5.item_reference
+    where v5.content_version = 'ufc-auction-2026-08-v5'
+      and (v5.display_label is distinct from v4.display_label or v5.display_description is distinct from v4.display_description)
+      and v5.mode_id <> 'wars'
+  ) then
+    raise exception 'Auction recognizability pass changed a non-Wars catalog row';
+  end if;
+
+  if exists (
+    select display_label
+    from private.auction_catalog
+    where content_version = 'ufc-auction-2026-08-v5' and mode_id = 'wars'
+    group by display_label
+    having count(*) > 1
+  ) then
+    raise exception 'Auction Wars v5 contains duplicate display labels';
+  end if;
+end;
+$$;
 
 do $$
 declare
   v_definition text;
   v_expected text;
 begin
-  -- Extend the existing private-row validator to the new immutable snapshot.
   v_definition := pg_get_functiondef('private.validate_auction_private_row()'::regprocedure);
   v_expected := 'v_auction.content_version in (''ufc-auction-2026-08-v3'', ''ufc-auction-2026-08-v4'')';
   if position(v_expected in v_definition) = 0 then
     raise exception 'Auction recognizability owner drifted: validate_auction_private_row';
   end if;
-  v_definition := replace(
-    v_definition,
-    v_expected,
-    'v_auction.content_version in (''ufc-auction-2026-08-v3'', ''ufc-auction-2026-08-v4'', ''ufc-auction-2026-08-v5'')'
-  );
+  v_definition := replace(v_definition, v_expected,
+    'v_auction.content_version in (''ufc-auction-2026-08-v3'', ''ufc-auction-2026-08-v4'', ''ufc-auction-2026-08-v5'')');
   execute v_definition;
 
-  -- Keep one prepare RPC and inherit the exact v3/v4 standard format contract.
   v_definition := pg_get_functiondef('public.prepare_auction(uuid,text)'::regprocedure);
   v_expected := 'v_content_version in (''ufc-auction-2026-08-v3'', ''ufc-auction-2026-08-v4'')';
   if position(v_expected in v_definition) = 0 then
     raise exception 'Auction recognizability owner drifted: prepare_auction format';
   end if;
-  v_definition := replace(
-    v_definition,
-    v_expected,
-    'v_content_version in (''ufc-auction-2026-08-v3'', ''ufc-auction-2026-08-v4'', ''ufc-auction-2026-08-v5'')'
-  );
+  v_definition := replace(v_definition, v_expected,
+    'v_content_version in (''ufc-auction-2026-08-v3'', ''ufc-auction-2026-08-v4'', ''ufc-auction-2026-08-v5'')');
   execute v_definition;
 
-  -- Extend the one bid validator to the same three-selection rule.
-  v_definition := pg_get_functiondef(
-    'private.validate_auction_bid(private.auction_games,uuid,numeric,text)'::regprocedure
-  );
+  v_definition := pg_get_functiondef('private.validate_auction_bid(private.auction_games,uuid,numeric,text)'::regprocedure);
   v_expected := 'p_game.content_version in (''ufc-auction-2026-08-v3'', ''ufc-auction-2026-08-v4'')';
   if position(v_expected in v_definition) = 0 then
     raise exception 'Auction recognizability owner drifted: validate_auction_bid';
   end if;
-  v_definition := replace(
-    v_definition,
-    v_expected,
-    'p_game.content_version in (''ufc-auction-2026-08-v3'', ''ufc-auction-2026-08-v4'', ''ufc-auction-2026-08-v5'')'
-  );
+  v_definition := replace(v_definition, v_expected,
+    'p_game.content_version in (''ufc-auction-2026-08-v3'', ''ufc-auction-2026-08-v4'', ''ufc-auction-2026-08-v5'')');
   execute v_definition;
 
-  -- Extend the one round resolver to the same v3/v4/v5 format rules.
   v_definition := pg_get_functiondef('private.resolve_auction_round(uuid)'::regprocedure);
   v_expected := 'v_game.content_version in (''ufc-auction-2026-08-v3'', ''ufc-auction-2026-08-v4'')';
   if position(v_expected in v_definition) = 0 then
     raise exception 'Auction recognizability owner drifted: resolve_auction_round selections';
   end if;
-  v_definition := replace(
-    v_definition,
-    v_expected,
-    'v_game.content_version in (''ufc-auction-2026-08-v3'', ''ufc-auction-2026-08-v4'', ''ufc-auction-2026-08-v5'')'
-  );
+  v_definition := replace(v_definition, v_expected,
+    'v_game.content_version in (''ufc-auction-2026-08-v3'', ''ufc-auction-2026-08-v4'', ''ufc-auction-2026-08-v5'')');
   v_expected := 'content_version in (''ufc-auction-2026-08-v3'', ''ufc-auction-2026-08-v4'')';
   if position(v_expected in v_definition) = 0 then
     raise exception 'Auction recognizability owner drifted: resolve_auction_round rounds';
   end if;
-  v_definition := replace(
-    v_definition,
-    v_expected,
-    'content_version in (''ufc-auction-2026-08-v3'', ''ufc-auction-2026-08-v4'', ''ufc-auction-2026-08-v5'')'
-  );
+  v_definition := replace(v_definition, v_expected,
+    'content_version in (''ufc-auction-2026-08-v3'', ''ufc-auction-2026-08-v4'', ''ufc-auction-2026-08-v5'')');
   execute v_definition;
 
-  -- Keep the canonical grader and all grading inputs unchanged; only authorize v5.
   v_definition := pg_get_functiondef('private.grade_auction(uuid)'::regprocedure);
   v_expected := 'v_game.content_version in (''ufc-auction-2026-08-v2'', ''ufc-auction-2026-08-v3'', ''ufc-auction-2026-08-v4'')';
   if position(v_expected in v_definition) = 0 then
     raise exception 'Auction recognizability owner drifted: grade_auction versions';
   end if;
-  v_definition := replace(
-    v_definition,
-    v_expected,
-    'v_game.content_version in (''ufc-auction-2026-08-v2'', ''ufc-auction-2026-08-v3'', ''ufc-auction-2026-08-v4'', ''ufc-auction-2026-08-v5'')'
-  );
+  v_definition := replace(v_definition, v_expected,
+    'v_game.content_version in (''ufc-auction-2026-08-v2'', ''ufc-auction-2026-08-v3'', ''ufc-auction-2026-08-v4'', ''ufc-auction-2026-08-v5'')');
   v_expected := 'v_game.content_version in (''ufc-auction-2026-08-v3'', ''ufc-auction-2026-08-v4'')';
   if position(v_expected in v_definition) = 0 then
     raise exception 'Auction recognizability owner drifted: grade_auction selections';
   end if;
-  v_definition := replace(
-    v_definition,
-    v_expected,
-    'v_game.content_version in (''ufc-auction-2026-08-v3'', ''ufc-auction-2026-08-v4'', ''ufc-auction-2026-08-v5'')'
-  );
+  v_definition := replace(v_definition, v_expected,
+    'v_game.content_version in (''ufc-auction-2026-08-v3'', ''ufc-auction-2026-08-v4'', ''ufc-auction-2026-08-v5'')');
   execute v_definition;
 end;
 $$;
