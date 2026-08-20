@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest";
 import { canonicalRankingInputs } from "./rankingInputs";
 import { ufcStatsSupplementalFactsSnapshot } from "./ufcStatsSupplementalFacts";
 
-const FINISH_METHODS = new Set(["ko-tko", "doctor-stoppage", "submission"]);
 const EXPECTED_UNRECONCILED = [
   "Aljamain Sterling|2014-09-20-takeya-mizugaki",
   "Aljamain Sterling|2015-04-18-manny-gamburyan",
@@ -45,6 +44,9 @@ describe("canonical UFCStats supplemental fight snapshot", () => {
     const observedUnreconciled: string[] = [];
     let verifiedBonusRows = 0;
     let unavailableBonusRows = 0;
+    let verifiedFinishRows = 0;
+    let notApplicableFinishRows = 0;
+    let unavailableFinishRows = 0;
     let verifiedKnockdownRows = 0;
     let unavailableKnockdownRows = 0;
 
@@ -84,10 +86,18 @@ describe("canonical UFCStats supplemental fight snapshot", () => {
         else if (supplemental?.bonuses.status === "unavailable") unavailableBonusRows += 1;
         else throw new Error(`Unexpected bonus coverage for ${fighter.fighter} vs ${fight.opponent}.`);
 
-        if (FINISH_METHODS.has(fight.methodCategory)) {
-          expect(supplemental?.finish.status).toBe("verified");
+        if (supplemental?.finish.status === "verified") {
+          verifiedFinishRows += 1;
+          expect(supplemental.finish.round).toBeGreaterThanOrEqual(1);
+          expect(supplemental.finish.round).toBeLessThanOrEqual(5);
+          expect(supplemental.finish.timeSeconds).toBeGreaterThanOrEqual(0);
+          expect(supplemental.finish.timeSeconds).toBeLessThanOrEqual(300);
+        } else if (supplemental?.finish.status === "not-applicable") {
+          notApplicableFinishRows += 1;
+        } else if (supplemental?.finish.status === "unavailable") {
+          unavailableFinishRows += 1;
         } else {
-          expect(supplemental?.finish.status).toBe("not-applicable");
+          throw new Error(`Unexpected finish coverage for ${fighter.fighter} vs ${fight.opponent}.`);
         }
 
         if (supplemental?.knockdowns.status === "verified") verifiedKnockdownRows += 1;
@@ -99,7 +109,10 @@ describe("canonical UFCStats supplemental fight snapshot", () => {
     expect(observedUnreconciled.sort()).toEqual(EXPECTED_UNRECONCILED);
     expect(verifiedBonusRows).toBeGreaterThan(0);
     expect(unavailableBonusRows).toBeGreaterThan(0);
-    expect(verifiedKnockdownRows).toBeGreaterThan(0);
+    expect(verifiedFinishRows).toBeGreaterThan(0);
+    expect(notApplicableFinishRows).toBeGreaterThan(0);
+    expect(unavailableFinishRows).toBeGreaterThanOrEqual(0);
+    expect(verifiedKnockdownRows).toBeGreaterThan(1000);
     expect(unavailableKnockdownRows).toBeGreaterThan(0);
   });
 
