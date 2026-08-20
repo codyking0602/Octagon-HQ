@@ -17,7 +17,10 @@ import {
   todayChallengeAdapter,
   type DailyGameType,
 } from "./todaysChallengeAdapters";
-import type { TodayChallengeRepository } from "./todayChallengeRepository";
+import type {
+  TodayChallengeProjection,
+  TodayChallengeRepository,
+} from "./todayChallengeRepository";
 import { useTodayChallengeRuntime } from "./useTodayChallengeRuntime";
 
 export { OfficialTodayChallengeView } from "./OfficialTodayChallengePresentation";
@@ -50,6 +53,65 @@ function OfficialResultActions({
       <button type="button" onClick={() => onNavigate(casualRoute)}>PLAY CASUAL</button>
       <button type="button" onClick={() => onNavigate("/play")}>ALL GAMES</button>
     </div>
+  );
+}
+
+export function OfficialTodayChallengeContent({
+  projection,
+  busy,
+  onAdvance,
+  onNavigate,
+}: {
+  projection: TodayChallengeProjection;
+  busy: boolean;
+  onAdvance: (action: Record<string, unknown>) => void;
+  onNavigate: (route: string) => void;
+}) {
+  const adapter = todayChallengeAdapter(projection.gameType);
+  const blindResumeV3 = projection.gameType === "blind_resume"
+    && projection.contentVersion === "blind-resume-v3";
+  const keepCutComponentScore = dailyRankKeepComboComponentScore(projection, "keep_cut");
+  const presentationProjection = keepCutComponentScore !== null && projection.officialAttempt
+    ? {
+        ...projection,
+        officialAttempt: {
+          ...projection.officialAttempt,
+          normalizedScore: keepCutComponentScore,
+        },
+      }
+    : projection;
+
+  return (
+    <>
+      <DailyRankKeepComboStatus projection={projection} />
+      <OfficialBlindRankScoreSummary projection={projection} />
+      <OfficialBlindRankComboResult projection={projection} />
+      {blindResumeV3 ? (
+        <OfficialBlindResumeV3DailyView
+          projection={projection}
+          busy={busy}
+          onAdvance={onAdvance}
+          onNavigate={onNavigate}
+        />
+      ) : projection.gameType === "hit_the_number" ? (
+        <OfficialHitTheNumberDailyView
+          projection={projection}
+          busy={busy}
+          onAdvance={onAdvance}
+        />
+      ) : (
+        <OfficialTodayChallengeView
+          projection={presentationProjection}
+          busy={busy}
+          onAdvance={onAdvance}
+          onNavigate={onNavigate}
+        />
+      )}
+      <OfficialBlindRankCanonicalOrder projection={projection} />
+      {projection.officialAttempt && adapter ? (
+        <OfficialResultActions casualRoute={adapter.casualRoute} onNavigate={onNavigate} />
+      ) : null}
+    </>
   );
 }
 
@@ -119,50 +181,15 @@ export default function OfficialTodayChallengePage({
     return <Navigate replace to={adapter.dailyRoute} />;
   }
 
-  const blindResumeV3 = runtime.projection.gameType === "blind_resume"
-    && runtime.projection.contentVersion === "blind-resume-v3";
-  const keepCutComponentScore = dailyRankKeepComboComponentScore(runtime.projection, "keep_cut");
-  const presentationProjection = keepCutComponentScore !== null && runtime.projection.officialAttempt
-    ? {
-        ...runtime.projection,
-        officialAttempt: {
-          ...runtime.projection.officialAttempt,
-          normalizedScore: keepCutComponentScore,
-        },
-      }
-    : runtime.projection;
-
   return (
     <div className="official-daily-page">
       <RuntimeStatus error={runtime.error} onRefresh={() => { void runtime.refresh(); }} />
-      <DailyRankKeepComboStatus projection={runtime.projection} />
-      <OfficialBlindRankScoreSummary projection={runtime.projection} />
-      <OfficialBlindRankComboResult projection={runtime.projection} />
-      {blindResumeV3 ? (
-        <OfficialBlindResumeV3DailyView
-          projection={runtime.projection}
-          busy={runtime.busy}
-          onAdvance={(action) => { void runtime.advance(action); }}
-          onNavigate={(route) => navigate(route)}
-        />
-      ) : runtime.projection.gameType === "hit_the_number" ? (
-        <OfficialHitTheNumberDailyView
-          projection={runtime.projection}
-          busy={runtime.busy}
-          onAdvance={(action) => { void runtime.advance(action); }}
-        />
-      ) : (
-        <OfficialTodayChallengeView
-          projection={presentationProjection}
-          busy={runtime.busy}
-          onAdvance={(action) => { void runtime.advance(action); }}
-          onNavigate={(route) => navigate(route)}
-        />
-      )}
-      <OfficialBlindRankCanonicalOrder projection={runtime.projection} />
-      {runtime.projection.officialAttempt && adapter ? (
-        <OfficialResultActions casualRoute={adapter.casualRoute} onNavigate={(route) => navigate(route)} />
-      ) : null}
+      <OfficialTodayChallengeContent
+        projection={runtime.projection}
+        busy={runtime.busy}
+        onAdvance={(action) => { void runtime.advance(action); }}
+        onNavigate={(route) => navigate(route)}
+      />
     </div>
   );
 }

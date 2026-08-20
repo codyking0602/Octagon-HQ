@@ -53,7 +53,8 @@ describe("bundled Blind Rank + Keep Cut Daily release", () => {
   });
 
   it("renders both component result experiences with their own scores", () => {
-    expect(dailyPage).toContain("<OfficialBlindRankComboResult projection={runtime.projection} />");
+    expect(dailyPage).toContain("export function OfficialTodayChallengeContent");
+    expect(dailyPage).toContain("<OfficialBlindRankComboResult projection={projection} />");
     expect(dailyPage).toContain("normalizedScore: keepCutComponentScore");
     expect(blindRankResult).toContain('title="YOUR FINAL RANKING"');
     expect(blindRankResult).toContain('title="OCTAGON HQ ORDER"');

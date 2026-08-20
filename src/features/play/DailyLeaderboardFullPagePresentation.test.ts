@@ -7,11 +7,12 @@ const css = readFileSync(
   "utf8",
 );
 
-describe("Daily leaderboard answer presentation", () => {
-  it("promotes the answer sheet to a viewport-level result page instead of a nested scroller", () => {
-    expect(css).toMatch(/\.today-hub-answer-sheet\s*\{[^}]*position:\s*fixed;/s);
-    expect(css).toContain("inset: 0 0 calc(62px + var(--safe-bottom));");
-    expect(css).toContain("max-height: none;");
-    expect(css).toMatch(/\.today-hub-answer-sheet__body\s*\{[^}]*overflow:\s*visible;/s);
+describe("Daily leaderboard result presentation", () => {
+  it("gives the canonical Daily result its own viewport-level scroll surface", () => {
+    expect(css).toMatch(/\.today-hub-official-result\s*\{[^}]*position:\s*fixed;/s);
+    expect(css).toMatch(/\.today-hub-official-result\s*\{[^}]*inset:\s*0;/s);
+    expect(css).toMatch(/\.today-hub-official-result\s*\{[^}]*overflow-y:\s*auto;/s);
+    expect(css).toContain(".today-hub-official-result__body");
+    expect(css).not.toContain("today-hub-answer-sheet");
   });
 });
