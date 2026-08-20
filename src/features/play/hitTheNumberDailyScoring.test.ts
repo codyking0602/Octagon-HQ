@@ -3,15 +3,21 @@ import dailyScoringMigration from "../../../supabase/migrations/202612310040_hit
 import { hitTheNumberScore } from "./hitTheNumberEngine";
 
 describe("Hit the Number authoritative Daily Price Is Right scoring", () => {
-  it("patches the one canonical Daily grader in place", () => {
+  it("patches the existing Hit the Number delegate while keeping the canonical Daily entry point", () => {
     expect(dailyScoringMigration).toContain(
-      "private.grade_daily_challenge(text,text,jsonb,jsonb)",
+      "private.grade_daily_challenge_pre_combo(text,text,jsonb,jsonb)",
     );
     expect(dailyScoringMigration).toContain(
-      "Canonical Daily Hit the Number grader no longer matches the expected scoring shape.",
+      "private.grade_daily_challenge(\n    'hit_the_number'",
+    );
+    expect(dailyScoringMigration).toContain(
+      "Canonical Daily grader no longer delegates historical scoring to the expected owner.",
     );
     expect(dailyScoringMigration).not.toContain(
       "create or replace function private.grade_daily_challenge(",
+    );
+    expect(dailyScoringMigration).not.toContain(
+      "create or replace function private.grade_daily_challenge_pre_combo(",
     );
   });
 
