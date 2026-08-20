@@ -1,4 +1,5 @@
 export type ShaneWatchStatus = "Rising" | "Holding" | "Concern" | "Inactive";
+export type ShaneWatchPronoun = "he" | "she";
 
 export interface ShaneWatchFighter {
   id: string;
@@ -7,6 +8,7 @@ export interface ShaneWatchFighter {
   name: string;
   nickname: string;
   status: ShaneWatchStatus;
+  subjectPronoun: ShaneWatchPronoun;
   added: string;
   lastReviewed: string;
   division: string;
@@ -19,7 +21,6 @@ export interface ShaneWatchFighter {
   boardNote: string;
   scoutingSnapshot: string;
   photoUrl: string | null;
-  ufcUrl: string;
   videoUrl: string;
 }
 
@@ -57,6 +58,7 @@ export const shanesWatchlist = {
       name: "Gable Steveson",
       nickname: "",
       status: "Rising",
+      subjectPronoun: "he",
       added: "July 2026",
       lastReviewed: "August 2026",
       division: "Heavyweight",
@@ -69,7 +71,6 @@ export const shanesWatchlist = {
       boardNote: "Olympic wrestling with heavyweight explosiveness. He has the highest ceiling on the board.",
       scoutingSnapshot: "Steveson brings an Olympic-level wrestling base and rare explosiveness to heavyweight, but his UFC debut showed he doesn’t need to wrestle just to be dangerous. He overwhelmed Elisha Ellison with offense and scored a first-round knockout at 2:31, moving to 1–0 in the UFC. The upside is obvious, but with only one Octagon appearance, he’s still the biggest projection on Shane’s board.",
       photoUrl: "/assets/fighters/gable-steveson-thumb.webp",
-      ufcUrl: "https://www.ufc.com/athlete/gable-steveson",
       videoUrl: "https://youtube.com/shorts/2V8eGAiUZaU?is=b2fwdTJ5f9m1LVZ5",
     },
     {
@@ -79,6 +80,7 @@ export const shanesWatchlist = {
       name: "Quillan Salkilld",
       nickname: "",
       status: "Rising",
+      subjectPronoun: "he",
       added: "August 2026",
       lastReviewed: "August 2026",
       division: "Lightweight",
@@ -91,7 +93,6 @@ export const shanesWatchlist = {
       boardNote: "Long, composed and dangerous everywhere, Salkilld looks like a lightweight built to climb the rankings fast.",
       scoutingSnapshot: "Salkilld has quickly shown one of the most complete games among the UFC’s young lightweights, with the ability to hurt opponents standing or take over a grappling exchange. He’s now 6–0 in the UFC with five finishes, including back-to-back wins over Beneil Dariush and Mateusz Gamrot—the latter coming by rear-naked choke against one of the division’s most accomplished grapplers. At this point he’s gone beyond being an interesting prospect; he’s starting to look like a legitimate threat near the top of the division.",
       photoUrl: "/assets/fighters/quillan-salkilld-thumb.webp",
-      ufcUrl: "https://www.ufc.com/athlete/quillan-salkilld",
       videoUrl: "https://youtube.com/shorts/ivb3NbPsnYg?is=y2ti4vYuCvUdFroV",
     },
     {
@@ -101,6 +102,7 @@ export const shanesWatchlist = {
       name: "Fatima Kline",
       nickname: "The Archangel",
       status: "Rising",
+      subjectPronoun: "she",
       added: "July 2026",
       lastReviewed: "August 2026",
       division: "Women’s Strawweight",
@@ -113,7 +115,6 @@ export const shanesWatchlist = {
       boardNote: "A fast-rising strawweight whose game keeps looking more complete against better UFC competition.",
       scoutingSnapshot: "Kline has developed into a remarkably well-rounded strawweight, blending sharp striking with increasingly effective wrestling and physicality. Since dropping her UFC debut, she has won four straight inside the Octagon, including convincing decisions over experienced contenders Angela Hill and Tabatha Ricci. The most encouraging part is that she keeps finding different ways to control fights, making her look less like a prospect with one standout weapon and more like a future contender.",
       photoUrl: "/assets/fighters/fatima-kline-thumb.webp",
-      ufcUrl: "https://www.ufc.com/athlete/fatima-kline",
       videoUrl: "https://youtu.be/E3Eat8_BBjM?is=69fExP5AoinR5Xdt",
     },
     {
@@ -123,6 +124,7 @@ export const shanesWatchlist = {
       name: "Abdul Rakhman Yakhyaev",
       nickname: "The Hunter",
       status: "Rising",
+      subjectPronoun: "he",
       added: "July 2026",
       lastReviewed: "August 2026",
       division: "Light Heavyweight",
@@ -135,7 +137,6 @@ export const shanesWatchlist = {
       boardNote: "This guy could be the real deal.",
       scoutingSnapshot: "Yakhyaev has been pure destruction through his first three UFC fights, attacking aggressively without sacrificing the ability to finish on the ground. All three wins have ended in the first round—two by rear-naked choke and his latest by an eight-second knockout of Julius Walker. We still haven’t seen what happens when somebody drags him into a difficult, extended fight, but so far nobody in the UFC has come close to making him show it.",
       photoUrl: "/assets/fighters/abdul-rakhman-yakhyaev-thumb.webp",
-      ufcUrl: "https://www.ufc.com/athlete/abdulrakhman-yakhyaev",
       videoUrl: "https://youtube.com/shorts/k5En_QDBACA?is=KeKmxuwmh7N1yb1N",
     },
     {
@@ -145,6 +146,7 @@ export const shanesWatchlist = {
       name: "Daniil Donchenko",
       nickname: "",
       status: "Rising",
+      subjectPronoun: "he",
       added: "July 2026",
       lastReviewed: "August 2026",
       division: "Welterweight",
@@ -157,7 +159,6 @@ export const shanesWatchlist = {
       boardNote: "A young welterweight with an unbeaten UFC start and real finishing momentum.",
       scoutingSnapshot: "Donchenko is an aggressive, high-output kickboxer who puts opponents under constant pressure without taking nearly as much damage back. He’s opened his UFC career 3–0, finishing Rodrigo Sezinando and Theodor Berggren while also showing he could comfortably go the distance against veteran Alex Morono. The combination of pace, accuracy and finishing ability makes him especially interesting at just 24, with the next step being proving it against the division’s ranked welterweights.",
       photoUrl: "/assets/fighters/daniil-donchenko-thumb.webp",
-      ufcUrl: "https://www.ufc.com/athlete/daniil-donchenko",
       videoUrl: "https://youtube.com/shorts/hAPpKy3ZALk?is=MWDtVBsFxcT0IV2L",
     },
   ] satisfies ShaneWatchFighter[],
