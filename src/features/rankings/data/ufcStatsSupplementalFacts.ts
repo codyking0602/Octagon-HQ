@@ -16,29 +16,48 @@ const ufcStatsSupplementalFactsSnapshotSchema = z
 export const ufcStatsSupplementalFactsSnapshot =
   ufcStatsSupplementalFactsSnapshotSchema.parse(supplementalFactsJson);
 
+type SupplementalFight = {
+  id: string;
+  supplementalFacts?: unknown;
+  [key: string]: unknown;
+};
+
 type SupplementalFightOwner = {
   fighter: string;
   presentation: { slug: string };
   facts: {
-    fights: readonly Array<{
-      id: string;
-      supplementalFacts?: unknown;
-      [key: string]: unknown;
-    }>;
+    fights: ReadonlyArray<SupplementalFight>;
     [key: string]: unknown;
   };
   [key: string]: unknown;
 };
+
+function supplementalFightOwner(value: unknown): SupplementalFightOwner {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    throw new Error("Canonical ranking fighter must be an object before UFCStats enrichment.");
+  }
+  const fighter = value as Record<string, unknown>;
+  const presentation = fighter.presentation as Record<string, unknown> | undefined;
+  const facts = fighter.facts as Record<string, unknown> | undefined;
+  if (
+    typeof fighter.fighter !== "string"
+    || typeof presentation?.slug !== "string"
+    || !Array.isArray(facts?.fights)
+    || facts.fights.some((fight) => !fight || typeof fight !== "object" || typeof (fight as { id?: unknown }).id !== "string")
+  ) {
+    throw new Error("Canonical ranking fighter is missing the shape required for UFCStats enrichment.");
+  }
+  return value as SupplementalFightOwner;
+}
 
 /**
  * Applies the checked-in UFCStats supplemental snapshot to the canonical V2
  * ranking fight ledgers. Unknown fighter/fight keys fail closed so generated
  * evidence can never drift away from the canonical ranking owner silently.
  */
-export function applyUfcStatsSupplementalFacts<T extends SupplementalFightOwner>(
-  fighters: readonly T[],
-): T[] {
-  const canonicalBySlug = new Map(fighters.map((fighter) => [fighter.presentation.slug, fighter]));
+export function applyUfcStatsSupplementalFacts(fighters: readonly unknown[]): unknown[] {
+  const owners = fighters.map(supplementalFightOwner);
+  const canonicalBySlug = new Map(owners.map((fighter) => [fighter.presentation.slug, fighter]));
 
   for (const [fighterSlug, fights] of Object.entries(ufcStatsSupplementalFactsSnapshot.fighters)) {
     const fighter = canonicalBySlug.get(fighterSlug);
@@ -53,7 +72,7 @@ export function applyUfcStatsSupplementalFacts<T extends SupplementalFightOwner>
     }
   }
 
-  return fighters.map((fighter) => {
+  return owners.map((fighter) => {
     const supplementalByFight = ufcStatsSupplementalFactsSnapshot.fighters[fighter.presentation.slug];
     if (!supplementalByFight) return fighter;
 
@@ -66,6 +85,6 @@ export function applyUfcStatsSupplementalFacts<T extends SupplementalFightOwner>
           return supplementalFacts ? { ...fight, supplementalFacts } : fight;
         }),
       },
-    } as T;
+    };
   });
 }
