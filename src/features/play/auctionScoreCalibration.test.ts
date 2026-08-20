@@ -21,6 +21,11 @@ const preservedFamilies = [
   "grapplers",
 ] as const;
 
+const targetBlock = calibrationMigration.slice(
+  calibrationMigration.indexOf("with targets(mode_id, target_floor) as ("),
+  calibrationMigration.indexOf("),\nstats as (") + 1,
+);
+
 describe("Auction score calibration v6", () => {
   it("rotates v5 to v6 while preserving the canonical grading version", () => {
     expect(calibrationMigration).toContain("'ufc-auction-2026-08-v6'");
@@ -30,10 +35,10 @@ describe("Auction score calibration v6", () => {
 
   it("uses category-specific floors only for the audited compressed families", () => {
     for (const [mode, floor] of calibratedFloors) {
-      expect(calibrationMigration).toContain(`('${mode}', ${floor}::numeric)`);
+      expect(targetBlock).toContain(`('${mode}', ${floor}::numeric)`);
     }
     for (const mode of preservedFamilies) {
-      expect(calibrationMigration).toContain(`v6.mode_id = '${mode}'`);
+      expect(targetBlock).not.toContain(`'${mode}'`);
     }
   });
 
