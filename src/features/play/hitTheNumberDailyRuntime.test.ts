@@ -75,10 +75,10 @@ describe("official Hit the Number daily runtime", () => {
       const first = buildOfficialDailySetup("hit_the_number", day, scheduleVersion);
       const second = buildOfficialDailySetup("hit_the_number", day, scheduleVersion);
       expect(second).toEqual(first);
-      expect(first.contentVersion).toBe("hit-the-number-v1");
+      expect(first.contentVersion).toBe("hit-the-number-v2");
       expect(first.scoringVersion).toBe("play-official-score-v1");
       expect(first.publicSetup.runtime_version).toBe(OFFICIAL_DAILY_RUNTIME_VERSION);
-      expect(first.publicSetup.version).toBe("hit-the-number-v1");
+      expect(first.publicSetup.version).toBe("hit-the-number-v2");
       expect(first.publicSetup.target).toEqual(expect.any(Number));
       expect(first.publicSetup.pickCount).toEqual(expect.any(Number));
       expect(first.publicSetup.fighterIds).toEqual(expect.any(Array));
