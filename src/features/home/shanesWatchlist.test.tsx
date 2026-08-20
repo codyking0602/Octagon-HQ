@@ -1,5 +1,5 @@
 import { existsSync } from "node:fs";
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 import { ShanesWatchlistCard } from "./ShanesWatchlistCard";
@@ -74,6 +74,7 @@ describe("Shane's ranked watchlist", () => {
     expect(screen.queryByText("TRACKED SINCE")).not.toBeInTheDocument();
     expect(screen.queryByText("PRO RECORD")).not.toBeInTheDocument();
     expect(screen.queryByText("OPEN SPOT")).not.toBeInTheDocument();
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(container.querySelectorAll("details")).toHaveLength(0);
 
     const movementSummary = screen.getByLabelText("August 2026 movement summary");
@@ -84,5 +85,42 @@ describe("Shane's ranked watchlist", () => {
 
     expect(screen.getByRole("heading", { name: "Former Picks" })).toBeInTheDocument();
     expect(screen.getByText(/No former picks yet/i)).toBeInTheDocument();
+  });
+
+  it("opens one full scouting report from a compact ranking row", () => {
+    window.history.replaceState({}, "", "/fighters-to-watch");
+    render(<MemoryRouter><ShanesWatchlistPage /></MemoryRouter>);
+
+    fireEvent.click(screen.getByRole("button", { name: "Open scouting report for Quillan Salkilld" }));
+
+    const dialog = screen.getByRole("dialog", { name: "Quillan Salkilld" });
+    expect(within(dialog).getByText("13–1")).toBeInTheDocument();
+    expect(within(dialog).getByText("6–0")).toBeInTheDocument();
+    expect(within(dialog).getByText("WHY HE’S HERE")).toBeInTheDocument();
+    expect(within(dialog).getByText("Six straight UFC wins · Gamrot submission")).toBeInTheDocument();
+    expect(within(dialog).getByText("Tracked since August 2026 · Reviewed August 2026")).toBeInTheDocument();
+    expect(within(dialog).queryByText("STYLE COMP")).not.toBeInTheDocument();
+    expect(within(dialog).getByRole("link", { name: "VIEW UFC PROFILE ↗" })).toHaveAttribute(
+      "href",
+      "https://www.ufc.com/athlete/quillan-salkilld",
+    );
+    expect(window.location.hash).toBe("#quillan-salkilld");
+
+    fireEvent.click(within(dialog).getByRole("button", { name: "Close scouting report" }));
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(window.location.hash).toBe("");
+    expect(screen.getByText("10 SPOTS OPEN")).toBeInTheDocument();
+  });
+
+  it("opens a Home deep link directly into the matching scouting report", () => {
+    window.history.replaceState({}, "", "/fighters-to-watch#gable-steveson");
+    render(<MemoryRouter><ShanesWatchlistPage /></MemoryRouter>);
+
+    const dialog = screen.getByRole("dialog", { name: "Gable Steveson" });
+    expect(within(dialog).getByText("SHANE’S READ")).toBeInTheDocument();
+    expect(within(dialog).getByText("STYLE COMP")).toBeInTheDocument();
+    expect(within(dialog).getByText("Justin Gaethje")).toBeInTheDocument();
+    expect(within(dialog).getByText("First-round UFC debut knockout")).toBeInTheDocument();
+    expect(screen.getAllByRole("dialog")).toHaveLength(1);
   });
 });

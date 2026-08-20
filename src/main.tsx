@@ -8,6 +8,7 @@ import "./styles/pull-to-refresh.css";
 import "./styles/app-error.css";
 import "./styles/home.css";
 import "./styles/watchlist.css";
+import "./styles/watchlist-scouting.css";
 import "./styles/picks.css";
 import "./styles/picks-lifecycle.css";
 import "./styles/picks-underdog-lock.css";
