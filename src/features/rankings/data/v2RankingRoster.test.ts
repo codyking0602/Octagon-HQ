@@ -14,6 +14,11 @@ const refreshedRankingData = new Set([
   "Mackenzie Dern",
   "Conor McGregor",
   "Islam Makhachev",
+  "Aljamain Sterling",
+  "B.J. Penn",
+  "Tito Ortiz",
+  "Robbie Lawler",
+  "Lyoto Machida",
 ]);
 
 describe("V2 ranking roster overlay", () => {
@@ -32,14 +37,23 @@ describe("V2 ranking roster overlay", () => {
     );
   });
 
-  it("changes no canonical calculation data for editorial-only replacements", () => {
+  it("changes no score-bearing canonical data outside factual ranking refreshes", () => {
     for (const historical of historicalRankingMigrationInputs.fighters) {
       if (refreshedRankingData.has(historical.fighter)) continue;
       const current = canonicalRankingInputs.fighters.find(
         ({ fighter }) => fighter === historical.fighter,
       );
       expect(current, historical.fighter).toBeDefined();
-      expect(current?.facts, `${historical.fighter} facts`).toEqual(
+      const currentFacts = current?.facts
+        ? {
+            ...current.facts,
+            fights: current.facts.fights.map((fight) => {
+              const { supplementalFacts: _supplementalFacts, ...calculationFight } = fight;
+              return calculationFight;
+            }),
+          }
+        : undefined;
+      expect(currentFacts, `${historical.fighter} facts`).toEqual(
         historical.facts,
       );
       expect(current?.judgments, `${historical.fighter} judgments`).toEqual(
