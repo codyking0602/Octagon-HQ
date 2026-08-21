@@ -31,8 +31,8 @@ begin
     (v_recipient, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'pending-cancel-b@login.octagon-hq.app', '', now(), now(), now(), '{}'::jsonb);
 
   insert into public.profiles (id, display_name, normalized_name, initials) values
-    (v_challenger, 'Pending Cancel Challenger', 'PENDING CANCEL CHALLENGER', 'PC'),
-    (v_recipient, 'Pending Cancel Recipient', 'PENDING CANCEL RECIPIENT', 'PR');
+    (v_challenger, 'Cancel Sender', 'CANCEL SENDER', 'CS'),
+    (v_recipient, 'Cancel Receiver', 'CANCEL RECEIVER', 'CR');
 
   perform pg_temp.set_pending_cancel_actor(v_challenger);
   v_pending := public.prepare_auction(v_recipient, 'strikers');
