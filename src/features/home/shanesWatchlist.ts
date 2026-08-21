@@ -46,8 +46,8 @@ export function watchMovement(fighter: ShaneWatchFighter) {
 
 export const shanesWatchlist = {
   curator: "Shane",
-  title: "Shane’s Fighters to Watch",
-  subtitle: "A living Top 15 of early prospect calls, updated as their careers progress.",
+  title: "Shane King’s Contender Series",
+  subtitle: "A living Top 15 of UFC prospects to watch as their careers develop.",
   capacity: 15,
   lastUpdated: "August 2026",
   fighters: [
