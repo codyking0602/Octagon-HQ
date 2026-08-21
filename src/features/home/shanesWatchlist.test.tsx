@@ -73,7 +73,8 @@ describe("Shane's ranked watchlist", () => {
     window.history.replaceState({}, "", "/fighters-to-watch");
     const { container } = render(<MemoryRouter><ShanesWatchlistPage /></MemoryRouter>);
 
-    expect(screen.getByRole("heading", { name: "Shane’s Fighters to Watch" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Shane King’s Contender Series" })).toBeInTheDocument();
+    expect(screen.getByText("A living Top 15 of UFC prospects to watch as their careers develop.")).toBeInTheDocument();
     expect(screen.getByText("5 OF 15 SPOTS FILLED")).toBeInTheDocument();
     expect(screen.getByText("Gable Steveson")).toBeInTheDocument();
     expect(screen.getByText("Quillan Salkilld")).toBeInTheDocument();
