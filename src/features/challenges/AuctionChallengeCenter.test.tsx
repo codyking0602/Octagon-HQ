@@ -1,12 +1,27 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { IdentityProvider } from "../identity/IdentityProvider";
 import type { IdentityGateway } from "../identity/identityGateway";
 import { ChallengeCenter } from "./ChallengeCenter";
 import { ChallengeProvider } from "./ChallengeProvider";
 import type { ChallengeProfile, PlayChallenge } from "./challengeModel";
 import type { ChallengeRepository } from "./challengeRepository";
+
+const auctionRepositoryMocks = vi.hoisted(() => ({
+  read: vi.fn(),
+  cancel: vi.fn(),
+}));
+
+vi.mock("../play/auctionRepository", () => ({
+  createAuctionRepository: () => ({
+    prepare: vi.fn(),
+    read: auctionRepositoryMocks.read,
+    bid: vi.fn(),
+    abandon: vi.fn(),
+    cancel: auctionRepositoryMocks.cancel,
+  }),
+}));
 
 const cody: ChallengeProfile = {
   id: "11111111-1111-4111-8111-111111111111",
@@ -65,12 +80,17 @@ function repository(challenge: PlayChallenge, dismiss = vi.fn(async () => undefi
 }
 
 describe("Auction Challenge Center actions", () => {
+  beforeEach(() => {
+    auctionRepositoryMocks.read.mockReset();
+    auctionRepositoryMocks.cancel.mockReset();
+  });
+
   it("keeps recipient acceptance bid-owned while preserving pre-acceptance decline", async () => {
     const dismiss = vi.fn(async () => undefined);
     render(
       <IdentityProvider gateway={gateway()}>
         <ChallengeProvider repository={repository(auctionChallenge(), dismiss)}>
-<MemoryRouter><ChallengeCenter /></MemoryRouter>
+          <MemoryRouter><ChallengeCenter /></MemoryRouter>
         </ChallengeProvider>
       </IdentityProvider>,
     );
@@ -80,15 +100,62 @@ describe("Auction Challenge Center actions", () => {
     await waitFor(() => expect(dismiss).toHaveBeenCalledWith("AUCTION1"));
   });
 
+  it("lets the sender cancel an unopened Auction through the canonical Auction repository", async () => {
+    const dismiss = vi.fn(async () => undefined);
+    const challenge = auctionChallenge({
+      creatorId: cody.id,
+      recipientId: shane.id,
+    });
+    const auctionState = {
+      auction_id: "10000000-0000-4000-8000-000000000001",
+      challenge_code: challenge.code,
+      challenger_id: cody.id,
+      lifecycle_state: "sent",
+      revision: 1,
+    };
+    auctionRepositoryMocks.read.mockResolvedValue(auctionState);
+    auctionRepositoryMocks.cancel.mockResolvedValue({ ...auctionState, lifecycle_state: "cancelled", revision: 2 });
+
+    render(
+      <IdentityProvider gateway={gateway()}>
+        <ChallengeProvider repository={repository(challenge, dismiss)}>
+          <MemoryRouter><ChallengeCenter /></MemoryRouter>
+        </ChallengeProvider>
+      </IdentityProvider>,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: /CANCEL SHANE Auction/i }));
+    await waitFor(() => expect(auctionRepositoryMocks.read).toHaveBeenCalledWith(auctionState.auction_id));
+    expect(auctionRepositoryMocks.cancel).toHaveBeenCalledWith(auctionState);
+    expect(dismiss).not.toHaveBeenCalled();
+  });
+
+  it("hides sender cancellation after the recipient opens the Auction", async () => {
+    render(
+      <IdentityProvider gateway={gateway()}>
+        <ChallengeProvider repository={repository(auctionChallenge({
+          creatorId: cody.id,
+          recipientId: shane.id,
+          openedAt: "2026-08-01T12:05:00.000Z",
+        }))}>
+          <MemoryRouter><ChallengeCenter /></MemoryRouter>
+        </ChallengeProvider>
+      </IdentityProvider>,
+    );
+
+    expect(await screen.findByRole("button", { name: "OPEN" })).toBeTruthy();
+    expect(screen.queryByRole("button", { name: /CANCEL SHANE Auction/i })).toBeNull();
+  });
+
   it("opens completed Auction server state instead of generic placeholder results", async () => {
     render(
       <IdentityProvider gateway={gateway()}>
         <ChallengeProvider repository={repository(auctionChallenge({
-openedAt: "2026-08-01T12:05:00.000Z",
-completedAt: "2026-08-01T12:10:00.000Z",
-responderResult: {},
+          openedAt: "2026-08-01T12:05:00.000Z",
+          completedAt: "2026-08-01T12:10:00.000Z",
+          responderResult: {},
         }))}>
-<MemoryRouter><ChallengeCenter /></MemoryRouter>
+          <MemoryRouter><ChallengeCenter /></MemoryRouter>
         </ChallengeProvider>
       </IdentityProvider>,
     );
