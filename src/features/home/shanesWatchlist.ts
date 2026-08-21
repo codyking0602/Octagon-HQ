@@ -159,7 +159,7 @@ export const shanesWatchlist = {
       boardNote: "New #5. His UFC debut is August 29 against Nilson Rojas, and we’re tracking every UFC fight from day one.",
       scoutingSnapshot: "Hasan enters the UFC at 9–0 after tearing through the regional scene with eight finishes in nine wins. He earned his contract by stopping Mridul Saikia in just 45 seconds on Dana White’s Contender Series, showing the speed, creativity and finishing instinct that built his prospect buzz. His UFC sample starts from zero on August 29 against fellow unbeaten flyweight Nilson Rojas, giving Shane’s board a chance to track his entire Octagon career from the beginning.",
       photoUrl: "/assets/fighters/bilal-hasan-thumb.webp",
-      videoUrl: "https://www.ufc.com/video/159125",
+      videoUrl: "https://youtube.com/shorts/AIW7VVg4N4g?is=Zagfzf_n_J80-Ard",
     },
     {
       id: "daniil-donchenko",
