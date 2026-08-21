@@ -43,7 +43,7 @@ export function ShanesWatchlistCard() {
     <section className="surface-card shane-watchlist-preview" id="shanes-watchlist" aria-labelledby="shanes-watchlist-title">
       <div className="shane-watchlist-preview__heading">
         <div>
-          <p className="eyebrow">SHANE’S SCOUTING BOARD</p>
+          <p className="eyebrow">SHANE KING’S CONTENDER SERIES</p>
           <h2 id="shanes-watchlist-title">Fighters to Watch</h2>
         </div>
         <span>{shanesWatchlist.fighters.length} / {shanesWatchlist.capacity}</span>
