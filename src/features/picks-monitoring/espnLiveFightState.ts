@@ -1,5 +1,5 @@
-import { canonicalFightPair, fighterMatch } from "../../../supabase/functions/sync-next-ufc-event/normalization";
-import type { MonitoringBout, MonitoringEvent } from "./manualMonitoringRunner";
+import { canonicalFightPair, fighterMatch } from "../../../supabase/functions/sync-next-ufc-event/normalization.ts";
+import type { MonitoringBout, MonitoringEvent } from "./manualMonitoringRunner.ts";
 
 export const ESPN_UFC_SCOREBOARD_URL = "https://site.api.espn.com/apis/site/v2/sports/mma/ufc/scoreboard";
 
