@@ -1,6 +1,82 @@
 -- Let the challenger cancel a sent Auction until the recipient opens it.
 -- Keep public.cancel_auction as the sole cancellation owner and preserve the
 -- existing active-game cancellation semantics and optimistic revision guard.
+
+-- The private lifecycle guard is the canonical transition owner. Extend its
+-- sent-state transition set narrowly so cancel_auction can terminate an unopened
+-- sent challenge without weakening any other lifecycle edge.
+create or replace function private.enforce_auction_terminal_state()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  if new.challenger_id is distinct from old.challenger_id
+    or new.recipient_id is distinct from old.recipient_id
+    or new.mode_id is distinct from old.mode_id
+  then
+    raise exception 'Auction participants and mode cannot change';
+  end if;
+
+  if new.content_version is distinct from old.content_version
+    or new.rarity_version is distinct from old.rarity_version
+    or new.grading_version is distinct from old.grading_version
+  then
+    raise exception 'Auction version snapshot cannot change';
+  end if;
+
+  if old.challenge_id is not null and new.challenge_id is distinct from old.challenge_id then
+    raise exception 'Linked Auction challenge cannot change';
+  end if;
+
+  if old.challenge_id is null
+    and new.challenge_id is not null
+    and not (old.lifecycle_state = 'prepared' and new.lifecycle_state = 'sent')
+  then
+    raise exception 'Auction challenge may only be linked when a prepared Auction is sent';
+  end if;
+
+  if old.lifecycle_state in ('cancelled', 'abandoned', 'completed', 'declined') then
+    if new is distinct from old then
+      raise exception 'Auction terminal state cannot change';
+    end if;
+    return new;
+  end if;
+
+  if new.lifecycle_state is distinct from old.lifecycle_state
+    and not (
+      (old.lifecycle_state = 'prepared' and new.lifecycle_state in ('sent', 'abandoned'))
+      or (old.lifecycle_state = 'sent' and new.lifecycle_state in ('active', 'declined', 'cancelled'))
+      or (old.lifecycle_state = 'active' and new.lifecycle_state in ('completed', 'cancelled'))
+    )
+  then
+    raise exception 'Invalid Auction lifecycle transition from % to %', old.lifecycle_state, new.lifecycle_state;
+  end if;
+
+  if new.revision >= 0 and new.revision < old.revision then
+    raise exception 'Auction revision cannot decrease';
+  end if;
+
+  if new.current_round < old.current_round then
+    raise exception 'Auction round cannot decrease';
+  end if;
+
+  if new.challenger_selection_count < old.challenger_selection_count
+    or new.recipient_selection_count < old.recipient_selection_count
+  then
+    raise exception 'Auction selection progress cannot decrease';
+  end if;
+
+  if new.challenger_bankroll > old.challenger_bankroll
+    or new.recipient_bankroll > old.recipient_bankroll
+  then
+    raise exception 'Auction bankroll cannot increase';
+  end if;
+
+  return new;
+end;
+$$;
+
 create or replace function public.cancel_auction(
   p_auction_id uuid,
   p_expected_revision bigint
