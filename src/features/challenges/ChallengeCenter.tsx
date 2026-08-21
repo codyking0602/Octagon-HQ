@@ -85,6 +85,7 @@ export function ChallengeCenter() {
     refresh,
     markOpened,
     dismissChallenge,
+    cancelPendingAuction,
     viewResults,
   } = usePlayChallenges();
   const [filter, setFilter] = useState<ChallengeCenterFilter>("all");
@@ -225,6 +226,7 @@ export function ChallengeCenter() {
               const auction = challenge.gameId === "auction";
               const canPlay = auction ? status !== "declined" : direction === "received" && status !== "completed" && status !== "declined";
               const canView = !auction && status === "completed";
+              const canCancelAuction = auction && direction === "sent" && status === "waiting";
               const canDeclineAuction = auction && direction === "received" && status === "new";
               const canRemoveAuction = auction && (status === "completed" || status === "declined");
               const dismissLabel = direction === "received" && !canView ? "IGNORE" : "REMOVE";
@@ -265,14 +267,16 @@ export function ChallengeCenter() {
                       <span className={`challenge-center__status is-${status}`}>{copy.action}</span>
                     )}
                     {auction ? (
-                      canDeclineAuction || canRemoveAuction ? (
+                      canCancelAuction || canDeclineAuction || canRemoveAuction ? (
                         <button
                           type="button"
                           className="challenge-center__dismiss"
-                          aria-label={`${canDeclineAuction ? "DECLINE" : "REMOVE"} ${counterpart?.displayName ?? "challenge"} ${challenge.gameTitle}`}
-                          onClick={() => void dismissChallenge(challenge.code)}
+                          aria-label={`${canCancelAuction ? "CANCEL" : canDeclineAuction ? "DECLINE" : "REMOVE"} ${counterpart?.displayName ?? "challenge"} ${challenge.gameTitle}`}
+                          onClick={() => canCancelAuction
+                            ? void cancelPendingAuction(challenge)
+                            : void dismissChallenge(challenge.code)}
                         >
-                          {canDeclineAuction ? "DECLINE" : "REMOVE"}
+                          {canCancelAuction ? "CANCEL" : canDeclineAuction ? "DECLINE" : "REMOVE"}
                         </button>
                       ) : null
                     ) : (
