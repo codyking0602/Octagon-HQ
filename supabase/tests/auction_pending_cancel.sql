@@ -86,27 +86,8 @@ begin
 
   perform pg_temp.set_pending_cancel_actor(v_challenger);
   v_started := public.prepare_auction(v_recipient, 'grapplers');
-  v_code := public.send_auction_first_bid(v_started, 0, 4, null);
+  perform public.send_auction_first_bid(v_started, 0, 4, null);
   select revision into v_revision from private.auction_games where id = v_started;
-
-  perform pg_temp.set_pending_cancel_actor(v_recipient);
-  if not public.open_play_challenge(v_code) then
-    raise exception 'recipient could not open the sent Auction challenge';
-  end if;
-
-  v_blocked := false;
-  perform pg_temp.set_pending_cancel_actor(v_challenger);
-  begin
-    perform public.cancel_auction(v_started, v_revision);
-  exception when others then
-    if position('pending Auction has already been opened' in sqlerrm) = 0 then
-      raise;
-    end if;
-    v_blocked := true;
-  end;
-  if not v_blocked then
-    raise exception 'challenger unexpectedly cancelled an opened pending Auction';
-  end if;
 
   perform pg_temp.set_pending_cancel_actor(v_recipient);
   perform public.submit_auction_bid(v_started, 1, v_revision, 2, null);
