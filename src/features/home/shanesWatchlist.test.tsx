@@ -57,6 +57,7 @@ describe("Shane's ranked watchlist", () => {
   it("keeps the Home preview to a compact top-three board", () => {
     const { container } = render(<MemoryRouter><ShanesWatchlistCard /></MemoryRouter>);
 
+    expect(screen.getByText("SHANE KING’S CONTENDER SERIES")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Fighters to Watch" })).toBeInTheDocument();
     expect(screen.getByText("Gable Steveson")).toBeInTheDocument();
     expect(screen.getByText("Quillan Salkilld")).toBeInTheDocument();
