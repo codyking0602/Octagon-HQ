@@ -56,7 +56,7 @@ describe("Shane's ranked watchlist", () => {
       ufcWinStreak: "0",
       ufcFinishes: "0",
       photoUrl: "/assets/fighters/bilal-hasan-thumb.webp",
-      videoUrl: "https://www.ufc.com/video/159125",
+      videoUrl: "https://youtube.com/shorts/AIW7VVg4N4g?is=Zagfzf_n_J80-Ard",
     });
     expect(existsSync("public/assets/fighters/bilal-hasan-thumb.webp")).toBe(true);
     expect(watchMovement(shanesWatchlist.fighters[4])).toEqual({ label: "NEW", direction: "new" });
@@ -73,7 +73,7 @@ describe("Shane's ranked watchlist", () => {
       "https://youtube.com/shorts/ivb3NbPsnYg?is=y2ti4vYuCvUdFroV",
       "https://youtu.be/E3Eat8_BBjM?is=69fExP5AoinR5Xdt",
       "https://youtube.com/shorts/k5En_QDBACA?is=KeKmxuwmh7N1yb1N",
-      "https://www.ufc.com/video/159125",
+      "https://youtube.com/shorts/AIW7VVg4N4g?is=Zagfzf_n_J80-Ard",
       "https://youtube.com/shorts/hAPpKy3ZALk?is=MWDtVBsFxcT0IV2L",
     ]);
   });
@@ -171,7 +171,7 @@ describe("Shane's ranked watchlist", () => {
     expect(within(dialog).queryByText("PRO RECORD")).not.toBeInTheDocument();
     expect(within(dialog).getByRole("link", { name: "WATCH FIGHT HIGHLIGHT ↗" })).toHaveAttribute(
       "href",
-      "https://www.ufc.com/video/159125",
+      "https://youtube.com/shorts/AIW7VVg4N4g?is=Zagfzf_n_J80-Ard",
     );
   });
 
