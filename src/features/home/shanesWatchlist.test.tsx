@@ -55,9 +55,10 @@ describe("Shane's ranked watchlist", () => {
       ufcRecord: "0–0",
       ufcWinStreak: "0",
       ufcFinishes: "0",
-      photoUrl: null,
+      photoUrl: "/assets/fighters/bilal-hasan-thumb.webp",
       videoUrl: "https://www.ufc.com/video/159125",
     });
+    expect(existsSync("public/assets/fighters/bilal-hasan-thumb.webp")).toBe(true);
     expect(watchMovement(shanesWatchlist.fighters[4])).toEqual({ label: "NEW", direction: "new" });
 
     expect(shanesWatchlist.fighters[5]).toMatchObject({
