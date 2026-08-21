@@ -10,7 +10,7 @@ describe("Shane's ranked watchlist", () => {
   it("keeps one ordered Top 15 model and the approved fight-highlight links", () => {
     expect(shanesWatchlist.capacity).toBe(15);
     expect(shanesWatchlist.lastUpdated).toBe("August 2026");
-    expect(shanesWatchlist.fighters.map((fighter) => fighter.rank)).toEqual([1, 2, 3, 4, 5]);
+    expect(shanesWatchlist.fighters.map((fighter) => fighter.rank)).toEqual([1, 2, 3, 4, 5, 6]);
     expect(shanesWatchlist.fighters[0]).toMatchObject({
       id: "gable-steveson",
       rank: 1,
@@ -45,11 +45,35 @@ describe("Shane's ranked watchlist", () => {
       videoUrl: "https://youtu.be/E3Eat8_BBjM?is=69fExP5AoinR5Xdt",
     });
 
+    expect(shanesWatchlist.fighters[4]).toMatchObject({
+      id: "bilal-hasan",
+      rank: 5,
+      previousRank: null,
+      nickname: "The IndoNinja",
+      division: "Flyweight",
+      age: 25,
+      ufcRecord: "0–0",
+      ufcWinStreak: "0",
+      ufcFinishes: "0",
+      photoUrl: null,
+      videoUrl: "https://www.cbssports.com/watch/ufc/video/dwcs-week-1-highlights-bilal-hasan-at-mridul-saikia",
+    });
+    expect(shanesWatchlist.fighters[4].scoutingSnapshot).toContain("Nilson Rojas on August 29");
+    expect(watchMovement(shanesWatchlist.fighters[4])).toEqual({ label: "NEW", direction: "new" });
+
+    expect(shanesWatchlist.fighters[5]).toMatchObject({
+      id: "daniil-donchenko",
+      rank: 6,
+      previousRank: 4,
+    });
+    expect(watchMovement(shanesWatchlist.fighters[5])).toEqual({ label: "↓2", direction: "down" });
+
     expect(shanesWatchlist.fighters.map((fighter) => fighter.videoUrl)).toEqual([
       "https://youtube.com/shorts/2V8eGAiUZaU?is=b2fwdTJ5f9m1LVZ5",
       "https://youtube.com/shorts/ivb3NbPsnYg?is=y2ti4vYuCvUdFroV",
       "https://youtu.be/E3Eat8_BBjM?is=69fExP5AoinR5Xdt",
       "https://youtube.com/shorts/k5En_QDBACA?is=KeKmxuwmh7N1yb1N",
+      "https://www.cbssports.com/watch/ufc/video/dwcs-week-1-highlights-bilal-hasan-at-mridul-saikia",
       "https://youtube.com/shorts/hAPpKy3ZALk?is=MWDtVBsFxcT0IV2L",
     ]);
   });
@@ -76,10 +100,11 @@ describe("Shane's ranked watchlist", () => {
 
     expect(screen.getByRole("heading", { name: "Shane King’s Contender Series" })).toBeInTheDocument();
     expect(screen.getByText("A living Top 15 of UFC prospects to watch as their careers develop.")).toBeInTheDocument();
-    expect(screen.getByText("5 OF 15 SPOTS FILLED")).toBeInTheDocument();
+    expect(screen.getByText("6 OF 15 SPOTS FILLED")).toBeInTheDocument();
     expect(screen.getByText("Gable Steveson")).toBeInTheDocument();
     expect(screen.getByText("Quillan Salkilld")).toBeInTheDocument();
-    expect(screen.getByText("10 SPOTS OPEN")).toBeInTheDocument();
+    expect(screen.getByText("Bilal Hasan")).toBeInTheDocument();
+    expect(screen.getByText("9 SPOTS OPEN")).toBeInTheDocument();
     expect(screen.getByText("Nobody else has earned a place on Shane’s board yet.")).toBeInTheDocument();
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(container.querySelectorAll("details")).toHaveLength(0);
@@ -88,6 +113,7 @@ describe("Shane's ranked watchlist", () => {
     expect(within(movementSummary).getByText("NEW")).toBeInTheDocument();
     expect(within(movementSummary).getByText("MOVED")).toBeInTheDocument();
     expect(within(movementSummary).getByText("HELD")).toBeInTheDocument();
+    expect(within(movementSummary).getByText("2")).toBeInTheDocument();
     expect(within(movementSummary).getByText("3")).toBeInTheDocument();
   });
 
