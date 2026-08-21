@@ -110,6 +110,24 @@ function officialResult(projection: TodayChallengeProjection): HitTheNumberResul
   };
 }
 
+function revealedPoolValues(
+  setup: HitTheNumberPublicSetup,
+  projection: TodayChallengeProjection,
+): ReadonlyMap<string, number> | undefined {
+  if (setup.boardType !== "random-pool" || !projection.officialAttempt) return undefined;
+  const rawValues = projection.officialAttempt.publicResult.poolValues;
+  if (!rawValues || typeof rawValues !== "object" || Array.isArray(rawValues)) return undefined;
+
+  const values = rawValues as Record<string, unknown>;
+  const revealed = new Map<string, number>();
+  for (const fighterId of setup.fighterIds) {
+    const value = values[fighterId];
+    if (typeof value !== "number" || !Number.isFinite(value)) return undefined;
+    revealed.set(fighterId, value);
+  }
+  return revealed;
+}
+
 export function OfficialHitTheNumberDailyView({
   projection,
   busy,
@@ -130,6 +148,7 @@ export function OfficialHitTheNumberDailyView({
   const selectionValid = selectedIds.length === setup.pickCount
     && hitTheNumberFormatSelectionSatisfies(format, selectedIds);
   const result = officialResult(projection);
+  const revealedValues = revealedPoolValues(setup, projection);
 
   function toggleFighter(fighterId: string) {
     if (!format.slots.length) {
@@ -161,6 +180,7 @@ export function OfficialHitTheNumberDailyView({
         activeSlotIndex={activeSlotIndex}
         selectionValid={selectionValid}
         result={result}
+        revealedPoolValues={revealedValues}
         search={search}
         onSearchChange={setSearch}
         onToggleFighter={toggleFighter}

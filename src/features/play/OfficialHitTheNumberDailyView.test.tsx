@@ -23,6 +23,15 @@ function oneFromEachSetup() {
   throw new Error("No deterministic One From Each Daily seed found.");
 }
 
+function randomPoolSetup() {
+  for (let index = 0; index < 180; index += 1) {
+    const day = dayAt(index);
+    const setup = buildOfficialDailySetup("hit_the_number", day, scheduleVersion);
+    if (setup.publicSetup.boardType === "random-pool") return { day, setup };
+  }
+  throw new Error("No deterministic Random Pool Daily seed found.");
+}
+
 function projection(
   day: string,
   setup: ReturnType<typeof buildOfficialDailySetup>,
@@ -88,5 +97,50 @@ describe("OfficialHitTheNumberDailyView formats", () => {
 
     expect(container.querySelector(".hit-number-role-slots")).toBeNull();
     expect(container.querySelector(".hit-number-slots")).not.toBeNull();
+  });
+
+  it("reveals every completed Random Pool value from the official server result", () => {
+    const { day, setup } = randomPoolSetup();
+    const fighterIds = setup.publicSetup.fighterIds as string[];
+    const pickCount = Number(setup.publicSetup.pickCount);
+    const target = Number(setup.publicSetup.target);
+    const poolValues = Object.fromEntries(
+      fighterIds.map((fighterId, index) => [fighterId, index + 3]),
+    );
+    const completed = projection(day, setup);
+    completed.officialAttempt = {
+      nativeScore: 80,
+      normalizedScore: 80,
+      completedAt: `${day}T18:00:00.000Z`,
+      publicResult: {
+        status: "under",
+        target,
+        total: target - 1,
+        distance: 1,
+        score: 80,
+        selections: fighterIds.slice(0, pickCount).map((fighterId) => ({
+          fighterId,
+          value: poolValues[fighterId],
+        })),
+        poolValues,
+      },
+    };
+
+    const { container } = render(
+      <OfficialHitTheNumberDailyView
+        projection={completed}
+        busy={false}
+        onAdvance={vi.fn()}
+      />,
+    );
+    const cards = [...container.querySelectorAll<HTMLElement>(".hit-number-fighter-card")];
+
+    expect(cards).toHaveLength(fighterIds.length);
+    for (const card of cards) {
+      const fighterId = card.dataset.fighterId!;
+      expect(card.querySelector(".hit-number-fighter-card__value")?.textContent)
+        .toBe(String(poolValues[fighterId]));
+    }
+    expect(container.textContent).toContain("All values revealed");
   });
 });
