@@ -15,3 +15,6 @@ begin;
 \ir auction_real_content_private_grading_2.sql
 \ir auction_real_content_private_grading_3.sql
 rollback;
+
+-- Prove the current cancellation owner also handles unopened sent challenges.
+\ir auction_pending_cancel.sql

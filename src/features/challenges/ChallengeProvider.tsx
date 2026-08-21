@@ -12,6 +12,7 @@ import { shareAppLink, shareCanonicalDestination } from "../../app/nativeShare";
 import { useIdentity } from "../identity/IdentityProvider";
 import type { MemberCardSummary } from "../members/memberProfilesModel";
 import { createMemberProfilesRepository } from "../members/memberProfilesRepository";
+import { createAuctionRepository } from "../play/auctionRepository";
 import type { PlayGameId } from "../play/playRegistry";
 import { ChallengeMemberPicker } from "./ChallengeMemberPicker";
 import {
@@ -63,6 +64,7 @@ interface PlayChallengesContextValue {
   markOpened: (code: string) => Promise<void>;
   submitResult: (code: string, result: ChallengeJson) => Promise<void>;
   dismissChallenge: (code: string) => Promise<boolean>;
+  cancelPendingAuction: (challenge: PlayChallenge) => Promise<boolean>;
   viewResults: (code: string) => void;
 }
 
@@ -70,6 +72,18 @@ const PlayChallengesContext = createContext<PlayChallengesContextValue | null>(n
 
 function normalizeProfileName(value: string) {
   return value.trim().replace(/\s+/g, " ").toUpperCase();
+}
+
+function auctionIdFromChallenge(challenge: PlayChallenge) {
+  try {
+    const url = new URL(
+      challenge.playUrl,
+      typeof window === "undefined" ? "https://octagon.invalid" : window.location.origin,
+    );
+    return url.searchParams.get("auction")?.trim() ?? "";
+  } catch {
+    return "";
+  }
 }
 
 async function shareDraft(draft: ChallengeComposerDraft) {
@@ -283,6 +297,7 @@ export function ChallengeProvider({
   const identity = useIdentity();
   const initialRepository = suppliedRepository === undefined ? createChallengeRepository() : suppliedRepository;
   const [repository] = useState<ChallengeRepository | null>(initialRepository);
+  const [auctionRepository] = useState(() => createAuctionRepository());
   const [memberRepository] = useState(() => createMemberProfilesRepository());
   const [rows, setRows] = useState<PlayChallenge[]>([]);
   const [counterparts, setCounterparts] = useState<ChallengeProfile[]>([]);
@@ -477,6 +492,43 @@ export function ChallengeProvider({
     }
   }, [activeProfile, refresh, repository, resultCode]);
 
+  const cancelPendingAuction = useCallback(async (challenge: PlayChallenge) => {
+    if (
+      !auctionRepository
+      || !activeProfile
+      || challenge.gameId !== "auction"
+      || challenge.creatorId !== activeProfile.id
+      || challenge.openedAt
+      || challenge.completedAt
+      || challenge.declinedAt
+    ) return false;
+
+    const auctionId = auctionIdFromChallenge(challenge);
+    if (!auctionId) {
+      setError("Auction could not be cancelled.");
+      return false;
+    }
+
+    try {
+      const auction = await auctionRepository.read(auctionId);
+      if (
+        auction.challenge_code !== challenge.code
+        || auction.challenger_id !== activeProfile.id
+        || auction.lifecycle_state !== "sent"
+      ) {
+        await refresh();
+        return false;
+      }
+      await auctionRepository.cancel(auction);
+      await refresh();
+      return true;
+    } catch (nextError) {
+      setError(nextError instanceof Error ? nextError.message : "Auction could not be cancelled.");
+      await refresh();
+      return false;
+    }
+  }, [activeProfile, auctionRepository, refresh]);
+
   function viewResults(code: string) {
     const challenge = getChallenge(code);
     if (!challenge || !activeProfile || !canViewChallengeResults(challenge, activeProfile.id)) return;
@@ -503,6 +555,7 @@ export function ChallengeProvider({
     markOpened,
     submitResult,
     dismissChallenge,
+    cancelPendingAuction,
     viewResults,
   };
 
