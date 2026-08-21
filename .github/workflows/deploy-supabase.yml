@@ -161,6 +161,54 @@ jobs:
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
         run: supabase link --project-ref "$SUPABASE_PROJECT_ID"
 
+      - name: Reconcile superseded August 8 migration history
+        shell: bash
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+          missing_version="202612310006"
+          superseding_version="202612310007"
+
+          migration_list=$(supabase migration list --linked)
+          printf '%s\n' "$migration_list"
+
+          remote_version() {
+            local version="$1"
+            printf '%s\n' "$migration_list" | sed 's/│/|/g' | awk -F '|' -v version="$version" '
+              {
+                local_version = $1
+                remote_version = $2
+                gsub(/[^0-9]/, "", local_version)
+                gsub(/[^0-9]/, "", remote_version)
+                if (local_version == version) {
+                  print remote_version
+                  exit
+                }
+              }
+            '
+          }
+
+          if [ "$(remote_version "$missing_version")" = "$missing_version" ]; then
+            echo "Migration $missing_version is already recorded remotely; no history repair needed."
+            exit 0
+          fi
+
+          if [ "$(remote_version "$superseding_version")" != "$superseding_version" ]; then
+            echo "::error title=Unsafe migration history repair::Migration $missing_version is missing remotely, but superseding migration $superseding_version is not recorded. Refusing to mark unapplied SQL as applied."
+            exit 1
+          fi
+
+          supabase migration repair "$missing_version" --status applied --linked
+          migration_list=$(supabase migration list --linked)
+          if [ "$(remote_version "$missing_version")" != "$missing_version" ]; then
+            echo "::error title=Migration history repair failed::Migration $missing_version is still missing from linked production history."
+            exit 1
+          fi
+          echo "Reconciled superseded migration $missing_version after confirming $superseding_version is already applied."
+
       - name: Publish canonical production origin
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
