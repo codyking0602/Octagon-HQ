@@ -1,4 +1,5 @@
 import { createClient } from "npm:@supabase/supabase-js@2.110.7";
+import { adaptEspnUfcLiveFightState, ESPN_UFC_SCOREBOARD_URL, shouldPollEspnLiveFightState } from "../../../src/features/picks-monitoring/espnLiveFightState.ts";
 import { adaptTheOddsApiResponse, buildTheOddsApiRequestUrl } from "../../../src/features/picks-monitoring/theOddsApi.ts";
 import { buildManualMonitoringPayload, monitoringSummary, resolveMonitoringEvent, type CardScope, type MonitoringEvent, type SourcePreview } from "../../../src/features/picks-monitoring/manualMonitoringRunner.ts";
 import {
@@ -26,6 +27,7 @@ const noOp = (
   sourceEventIdentity?: string,
   nextEligibleAt?: string,
   notificationDispatch?: unknown,
+  liveStateSync?: unknown,
 ) => json({
   status: "noop",
   reason,
@@ -33,6 +35,7 @@ const noOp = (
   next_eligible_at: nextEligibleAt ?? null,
   provider_called: false,
   notification_dispatch: notificationDispatch ?? null,
+  live_state_sync: liveStateSync ?? null,
   deployment_sha: DEPLOYED_SOURCE_SHA,
 });
 
@@ -218,6 +221,48 @@ Deno.serve(async (request) => {
     });
   }
 
+  let liveStateSync: Record<string, unknown> | null = null;
+  const liveStateNow = new Date();
+  if (
+    resolved.kind === "current"
+    && resolved.storageEventId
+    && shouldPollEspnLiveFightState(resolved.selected, liveStateNow)
+  ) {
+    const observedAt = liveStateNow.toISOString();
+    try {
+      const liveResponse = await fetch(ESPN_UFC_SCOREBOARD_URL, {
+        headers: { Accept: "application/json" },
+        signal: AbortSignal.timeout(10_000),
+      });
+      if (!liveResponse.ok) {
+        liveStateSync = { status: "source_error", http_status: liveResponse.status };
+      } else {
+        const adapted = adaptEspnUfcLiveFightState({
+          body: await liveResponse.json().catch(() => null),
+          event: resolved.selected,
+          observedAt,
+        });
+        liveStateSync = {
+          status: adapted.status,
+          source_event_id: adapted.source_event_id,
+          observations: adapted.observations.length,
+          diagnostics: adapted.diagnostics,
+        };
+        if (adapted.status === "matched" && adapted.observations.length) {
+          const persisted = await admin.rpc("record_pick_bout_live_states", {
+            p_event_id: resolved.storageEventId,
+            p_observations: adapted.observations,
+          });
+          liveStateSync = persisted.error
+            ? { ...liveStateSync, status: "write_error" }
+            : { ...liveStateSync, status: "recorded", persistence: persisted.data };
+        }
+      }
+    } catch {
+      liveStateSync = { status: "source_error" };
+    }
+  }
+
   let suppressFindingKeys = new Set<string>();
   let scheduledClaimedAt: string | null = null;
   let scheduledNextEligibleAt: string | null = null;
@@ -239,7 +284,7 @@ Deno.serve(async (request) => {
         reason: decision.reason,
         identity: resolved.identity,
         nextEligibleAt: decision.next_eligible_at,
-        response: noOp(decision.reason, resolved.identity, decision.next_eligible_at, notificationDispatch),
+        response: noOp(decision.reason, resolved.identity, decision.next_eligible_at, notificationDispatch, liveStateSync),
       });
     }
 
@@ -263,7 +308,7 @@ Deno.serve(async (request) => {
         outcome: "skipped",
         reason: "already_claimed",
         identity: resolved.identity,
-        response: noOp("already_claimed", resolved.identity, undefined, notificationDispatch),
+        response: noOp("already_claimed", resolved.identity, undefined, notificationDispatch, liveStateSync),
       });
     }
     suppressFindingKeys = new Set(Array.isArray(scheduleState?.existing_finding_keys)
@@ -377,5 +422,6 @@ Deno.serve(async (request) => {
     trigger_kind: payload.trigger_kind,
     provider_called: true,
     notification_dispatch: notificationDispatch,
+    live_state_sync: liveStateSync,
   });
 });
