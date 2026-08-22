@@ -2,7 +2,7 @@ name: Verify Canonical Picks Fight Changes
 
 # Focused fresh-database proof for the canonical Picks fight mutation owner,
 # repick evidence, notification delivery eligibility, live fight-by-fight owner controls,
-# and provider-driven Fight Night lock/result automation.
+# provider-driven Fight Night automation, and the owner-facing live-state projection.
 on:
   pull_request:
     paths:
@@ -13,11 +13,13 @@ on:
       - "supabase/migrations/202612310019_append_added_pick_bouts.sql"
       - "supabase/migrations/202612310020_suppress_pick_deadline_change_push.sql"
       - "supabase/migrations/202612310048_fight_night_automation_behavior.sql"
+      - "supabase/migrations/202612310049_fight_night_live_state_presentation.sql"
       - "scripts/configure-monitoring-scheduler.mjs"
       - "supabase/tests/pick_monitoring_canonical_fight_changes.sql"
       - "supabase/tests/pick_monitoring_repick_evidence_repair.sql"
       - "supabase/tests/live_pick_results_and_owner_lock_edits.sql"
       - "supabase/tests/fight_night_automation_behavior.sql"
+      - "supabase/tests/fight_night_live_state_presentation.sql"
       - "supabase/tests/pick_add_bout_append_sequence.sql"
       - "supabase/tests/notification_device_push_delivery.sql"
   workflow_dispatch:
@@ -62,8 +64,10 @@ jobs:
           psql "$db_url" --set ON_ERROR_STOP=on \
             --file supabase/tests/fight_night_automation_behavior.sql
           psql "$db_url" --set ON_ERROR_STOP=on \
+            --file supabase/tests/fight_night_live_state_presentation.sql
+          psql "$db_url" --set ON_ERROR_STOP=on \
             --file supabase/tests/pick_add_bout_append_sequence.sql
           psql "$db_url" --set ON_ERROR_STOP=on \
             --file supabase/tests/notification_device_push_delivery.sql
 
-          echo "Canonical Picks fight changes, Fight Night automation, add-bout append semantics, repick evidence, notification push eligibility, and live owner controls passed on a fresh database."
+          echo "Canonical Picks fight changes, Fight Night automation/presentation, add-bout append semantics, repick evidence, notification push eligibility, and live owner controls passed on a fresh database."
