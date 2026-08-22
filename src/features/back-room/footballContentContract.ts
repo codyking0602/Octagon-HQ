@@ -32,25 +32,21 @@ export type FootballRatingBand =
   | "below-average"
   | "bad";
 
-export const FOOTBALL_RATING_BANDS: readonly {
-  id: FootballRatingBand;
-  min: number;
-  max: number;
-}[] = [
-  { id: "elite", min: 92, max: 100 },
-  { id: "great", min: 82, max: 91.999999 },
-  { id: "good", min: 70, max: 81.999999 },
-  { id: "average", min: 55, max: 69.999999 },
-  { id: "below-average", min: 35, max: 54.999999 },
-  { id: "bad", min: 0, max: 34.999999 },
-] as const;
+export const FOOTBALL_RATING_BANDS = [
+  { id: "elite", min: 92 },
+  { id: "great", min: 82 },
+  { id: "good", min: 70 },
+  { id: "average", min: 55 },
+  { id: "below-average", min: 35 },
+  { id: "bad", min: 0 },
+] as const satisfies readonly { id: FootballRatingBand; min: number }[];
 
 export function getFootballRatingBand(rating: number): FootballRatingBand {
   if (!Number.isFinite(rating) || rating < 0 || rating > 100) {
     throw new Error(`Football comparison ratings must be finite values from 0 through 100. Received: ${rating}`);
   }
 
-  const band = FOOTBALL_RATING_BANDS.find(({ min, max }) => rating >= min && rating <= max);
+  const band = FOOTBALL_RATING_BANDS.find(({ min }) => rating >= min);
   if (!band) throw new Error(`Football comparison rating has no configured band: ${rating}`);
   return band.id;
 }
