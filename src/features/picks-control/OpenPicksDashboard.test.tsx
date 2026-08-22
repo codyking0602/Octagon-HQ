@@ -34,6 +34,7 @@ function bout(
     boutId,
     locksAt: "2099-08-09T02:30:00.000Z",
     isLocked: false,
+    liveStatus: "scheduled",
     canAdjustLock: true,
     position,
     weightClass: position === 1 ? "Lightweight" : "Welterweight",
