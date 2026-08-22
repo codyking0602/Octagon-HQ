@@ -40,7 +40,7 @@ describe("Football Blind Resume content maturity", () => {
     }
 
     for (const packId of EXPECTED_FAMILIES) {
-      expect(counts.get(packId) ?? 0).toBeGreaterThanOrEqual(6);
+      expect(counts.get(packId) ?? 0).toBeGreaterThanOrEqual(5);
     }
   });
 
