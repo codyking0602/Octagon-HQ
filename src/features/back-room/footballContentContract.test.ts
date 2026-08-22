@@ -8,13 +8,6 @@ import {
   getFootballRatingBand,
 } from "./footballContentContract";
 
-const reviewedNflPackIds = [
-  "nfl-quarterbacks",
-  "nfl-running-backs",
-  "nfl-wide-receivers",
-  "nfl-head-coaches",
-] as const;
-
 describe("Football content contract", () => {
   it("keeps factual, comparative, and subjective truth boundaries distinct", () => {
     expect(FOOTBALL_CONTENT_CLASS_RULES.factual).toMatchObject({
@@ -48,7 +41,7 @@ describe("Football content contract", () => {
     expect(() => getFootballRatingBand(101)).toThrow();
   });
 
-  it("requires every current comparison pack to declare a versioned contract", () => {
+  it("requires every comparison pack to have a reviewed versioned 100-point contract", () => {
     const packIds = footballRankFivePacks.map((pack) => pack.id).sort();
     expect(Object.keys(footballComparisonContracts).sort()).toEqual(packIds);
 
@@ -59,6 +52,8 @@ describe("Football content contract", () => {
       expect(contract.methodologyVersion).toMatch(/-v\d+$/);
       expect(contract.question.length).toBeGreaterThan(20);
       expect(contract.scope.length).toBeGreaterThan(40);
+      expect(contract.evidenceStatus).toBe("reviewed");
+      expect(contract.evidenceCutoff).toBe("through-2025-season");
       expect(contract.evidenceRequirements).toEqual([
         "factual-resume",
         "era-and-context",
@@ -66,25 +61,17 @@ describe("Football content contract", () => {
         "pairwise-sanity-check",
       ]);
       expect(contract.evidenceSummary.length).toBeGreaterThan(40);
-    }
-  });
-
-  it("marks the PR2 NFL career packs reviewed with complete 100-point rubrics", () => {
-    for (const packId of reviewedNflPackIds) {
-      const contract = getFootballComparisonContract(packId);
-      expect(contract.evidenceStatus).toBe("reviewed");
-      expect(contract.evidenceCutoff).toBe("through-2025-season");
       expect(contract.rubric).not.toBeNull();
       expect(contract.rubric?.reduce((sum, component) => sum + component.weight, 0)).toBe(100);
       expect(new Set(contract.rubric?.map((component) => component.id)).size).toBe(contract.rubric?.length);
     }
   });
 
-  it("keeps the CFB legacy packs pending until their dedicated review PR", () => {
-    for (const packId of ["college-quarterbacks", "college-programs", "college-team-seasons"] as const) {
-      const contract = getFootballComparisonContract(packId);
-      expect(contract.evidenceStatus).toBe("legacy-authored-pending-review");
-      expect(contract.rubric).toBeNull();
+  it("stores an explanation for every comparison rating", () => {
+    for (const pack of footballRankFivePacks) {
+      for (const item of pack.items) {
+        expect(item.ratingBasis?.length, `${pack.id}/${item.id}`).toBeGreaterThan(30);
+      }
     }
   });
 
