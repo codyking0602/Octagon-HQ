@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
-import { BrandMark } from "../components/BrandMark";
 import { BottomNavigation } from "../components/BottomNavigation";
 import { RouteLoading } from "../components/RouteLoading";
+import { BackRoomLogoLink } from "../features/back-room/BackRoomLogoLink";
 import { useIdentity } from "../features/identity/IdentityProvider";
 import { memberProfilePath } from "../features/members/memberProfilesModel";
 import { NotificationHeaderAction } from "../features/notifications/NotificationHeaderAction";
@@ -38,12 +38,20 @@ export function AppShell() {
   const location = useLocation();
   const gameTitle = PLAY_GAME_TITLES[location.pathname];
   const isPlayGame = Boolean(gameTitle);
+  const isBackRoom = location.pathname === "/back-room" || location.pathname.startsWith("/back-room/");
 
   return (
-    <div className={`app-shell${isPlayGame ? " app-shell--game" : ""}`}>
+    <div className={`app-shell${isPlayGame ? " app-shell--game" : ""}${isBackRoom ? " app-shell--back-room" : ""}`}>
       <RouteScrollManager />
 
-      {isPlayGame ? (
+      {isBackRoom ? (
+        <header className="app-header app-header--back-room">
+          <Link className="back-room-header__exit" to="/play" aria-label="Return to UFC games">
+            <span aria-hidden="true">←</span>
+            <span><small>OCTAGON HQ</small><strong>THE BACK ROOM</strong></span>
+          </Link>
+        </header>
+      ) : isPlayGame ? (
         <header className="app-header app-header--game">
           <Link className="game-header__back" to="/play" aria-label="Return to Play Hub">
             <span aria-hidden="true">←</span>
@@ -52,9 +60,7 @@ export function AppShell() {
         </header>
       ) : (
         <header className="app-header">
-          <Link to="/" aria-label="Return to Home" style={{ textDecoration: "none" }}>
-            <BrandMark size="compact" />
-          </Link>
+          <BackRoomLogoLink enabled={location.pathname === "/play"} />
           <div className="app-header__actions">
             <NotificationHeaderAction />
             <NavLink
@@ -82,7 +88,7 @@ export function AppShell() {
         </main>
       </BrandedPullToRefresh>
 
-      <BottomNavigation />
+      {isBackRoom ? null : <BottomNavigation />}
     </div>
   );
 }
