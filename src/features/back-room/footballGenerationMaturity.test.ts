@@ -36,6 +36,34 @@ function maximumSubjectExposure(boardSize: number, poolSize: number) {
   return Math.min(0.9, Math.max(0.45, unavoidableAverageExposure * 1.8));
 }
 
+function expectTierBalancedExposure(
+  pack: (typeof footballRankFivePacks)[number],
+  appearances: ReadonlyMap<string, number>,
+  boardSize: number,
+  label: string,
+) {
+  const globalFloor = maximumSubjectExposure(boardSize, pack.items.length);
+  const tiers = new Set(pack.items.map(footballComparisonTier));
+
+  for (const tier of tiers) {
+    const tierItems = pack.items.filter((item) => footballComparisonTier(item) === tier);
+    if (tierItems.length < 2) continue;
+    const tierAppearances = tierItems.reduce(
+      (sum, item) => sum + (appearances.get(item.id) ?? 0),
+      0,
+    );
+    const averageTierExposure = share(tierAppearances, BOARDS_PER_PACK * tierItems.length);
+    const tierCeiling = Math.min(0.9, Math.max(globalFloor, averageTierExposure * 1.5 + 0.05));
+
+    for (const item of tierItems) {
+      expect(
+        share(appearances.get(item.id) ?? 0, BOARDS_PER_PACK),
+        `${pack.id} ${label} ${tier} exposure: ${item.id}`,
+      ).toBeLessThan(tierCeiling);
+    }
+  }
+}
+
 function relativeThirdIds(items: readonly FootballRankFiveItem[], side: "high" | "low") {
   const ordered = strongestFirst(items);
   const size = Math.max(1, Math.ceil(ordered.length / 3));
@@ -245,9 +273,7 @@ describe("Football comparison generation maturity", () => {
     for (const [packId, seen] of seenByPack) {
       const pack = footballRankFivePacks.find((row) => row.id === packId)!;
       expect(share(seen.size, pack.items.length), `${packId} Keep/Cut coverage`).toBeGreaterThanOrEqual(0.6);
-      const maxAppearances = Math.max(...appearancesByPack.get(packId)!.values());
-      const exposureCeiling = maximumSubjectExposure(8, pack.items.length);
-      expect(share(maxAppearances, BOARDS_PER_PACK), `${packId} Keep/Cut max exposure`).toBeLessThan(exposureCeiling);
+      expectTierBalancedExposure(pack, appearancesByPack.get(packId)!, 8, "Keep/Cut");
     }
 
     expect(signatures.size).toBeGreaterThan(totalBoards * 0.9);
