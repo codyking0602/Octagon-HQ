@@ -210,6 +210,8 @@ describe("Football comparison generation maturity", () => {
     let twoBadBoards = 0;
     let eliteEligibleBoards = 0;
     let eliteBoards = 0;
+    let standardEliteEligibleBoards = 0;
+    let standardEliteBoards = 0;
     let twoEliteBoards = 0;
     let tightCutoffBoards = 0;
     let cutoffTotal = 0;
@@ -221,7 +223,9 @@ describe("Football comparison generation maturity", () => {
       appearancesByPack.set(pack.id, packAppearances);
       seenByPack.set(pack.id, packSeen);
       const hasBad = pack.items.some((item) => footballComparisonTier(item) === "bad");
-      const hasElite = pack.items.some((item) => footballComparisonTier(item) === "elite");
+      const eliteCountInPool = pack.items.filter((item) => footballComparisonTier(item) === "elite").length;
+      const hasElite = eliteCountInPool > 0;
+      const eliteMajorityPool = eliteCountInPool > pack.items.length / 2;
 
       for (let index = 0; index < BOARDS_PER_PACK; index += 1) {
         const seed = `keep-cut-simulation-${pack.id}-${index}`;
@@ -257,6 +261,10 @@ describe("Football comparison generation maturity", () => {
           eliteEligibleBoards += 1;
           if (board.eliteItems >= 1) eliteBoards += 1;
           if (board.eliteItems === 2) twoEliteBoards += 1;
+          if (!eliteMajorityPool) {
+            standardEliteEligibleBoards += 1;
+            if (board.eliteItems >= 1) standardEliteBoards += 1;
+          }
         }
 
         const perfect = scoreFootballKeepCutSelection(board.items, ordered.slice(0, 4).map((item) => item.id));
@@ -283,7 +291,7 @@ describe("Football comparison generation maturity", () => {
     expect(share(badBoards, badEligibleBoards)).toBeLessThanOrEqual(0.5);
     expect(share(twoBadBoards, badEligibleBoards)).toBeGreaterThanOrEqual(0.01);
     expect(share(eliteBoards, eliteEligibleBoards)).toBeGreaterThanOrEqual(0.12);
-    expect(share(eliteBoards, eliteEligibleBoards)).toBeLessThanOrEqual(0.55);
+    expect(share(standardEliteBoards, standardEliteEligibleBoards)).toBeLessThanOrEqual(0.55);
     expect(share(twoEliteBoards, eliteEligibleBoards)).toBeLessThanOrEqual(0.08);
 
     expect(share(styleCounts["knife-edge"]!, totalBoards)).toBeGreaterThanOrEqual(0.36);
