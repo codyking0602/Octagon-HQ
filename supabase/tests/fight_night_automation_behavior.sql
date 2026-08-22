@@ -6,7 +6,8 @@ declare
   v_owner uuid := extensions.gen_random_uuid();
   v_member uuid := extensions.gen_random_uuid();
   v_live_at timestamptz := now() - interval '2 minutes';
-  v_final_at timestamptz := now() - interval '1 minute';
+  v_final_at timestamptz;
+  v_ambiguous_final_at timestamptz := now() - interval '1 minute';
   v_receipt jsonb;
 begin
   update public.pick_events
@@ -111,6 +112,11 @@ begin
     raise exception 'explicit owner reopen did not restore member editing';
   end if;
 
+  -- Model the final provider observation after the explicit live reopen. The
+  -- recorder should re-lock through the live-state boundary before delegating to
+  -- the canonical result owner.
+  v_final_at := clock_timestamp();
+
   -- A final observation with one unambiguous winner routes through the canonical
   -- official-result owner. Result state is the existing Picks grading input.
   perform set_config('request.jwt.claim.role','service_role',true);
@@ -208,7 +214,7 @@ begin
       'source_event_id','espn-event-1',
       'source_competition_id','espn-bout-2',
       'winner_fighter_slug',null,
-      'observed_at',v_final_at
+      'observed_at',v_ambiguous_final_at
     ))
   );
   if coalesce((v_receipt->>'final_results_unresolved')::integer,0) <> 1
