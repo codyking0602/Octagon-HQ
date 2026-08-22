@@ -512,10 +512,6 @@ export function nextFootballWavelengthClue(
   });
 }
 
-function footballWavelengthDecade(value: number) {
-  return Math.min(9, Math.floor(Math.max(1, value) / 10));
-}
-
 export function createFootballWavelengthRun(): FootballWavelengthRun {
   const selected = selectReplayLineup({
     gameId: FOOTBALL_WAVELENGTH_GAME_ID,
@@ -528,7 +524,6 @@ export function createFootballWavelengthRun(): FootballWavelengthRun {
         value: { seed, initialRound },
         itemIds: [
           `target:${initialRound.target}`,
-          `target-band:${footballWavelengthDecade(initialRound.target)}`,
           `clue:${opening.id}`,
           `category:${opening.category}`,
         ],
