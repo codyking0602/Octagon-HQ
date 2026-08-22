@@ -10,6 +10,7 @@ import {
   scoreFootballKeepCutSelection,
 } from "./footballKeepCutModel";
 import {
+  FOOTBALL_WAVELENGTH_CATEGORY_ANCHORS,
   createFootballWavelengthRound,
   footballWavelengthClues,
   nextFootballWavelengthClue,
@@ -41,14 +42,9 @@ describe("Football Back Room debate games", () => {
 
   it("uses one UFC-style 1-100 scale instead of switching between opposing axes", () => {
     const categories = new Set(footballWavelengthClues.map((clue) => clue.category));
-    expect(categories).toEqual(new Set([
-      "NFL LEGACY",
-      "GUNSLINGER",
-      "QB CARRY JOB",
-      "OFFENSIVE CHAOS",
-      "FANBASE INSANITY",
-      "PROGRAM TRADITION",
-    ]));
+    expect(categories).toEqual(new Set(FOOTBALL_WAVELENGTH_CATEGORY_ANCHORS.map((anchor) => anchor.category)));
+    expect(categories.size).toBe(20);
+    expect(footballWavelengthClues).toHaveLength(300);
     expect(footballWavelengthClues.some((clue) => clue.category === "GUNSLINGER" && clue.text === "Patrick Mahomes")).toBe(true);
     expect(footballWavelengthClues.every((clue) => Number.isInteger(clue.rating) && clue.rating >= 1 && clue.rating <= 100)).toBe(true);
 
