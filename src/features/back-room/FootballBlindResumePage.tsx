@@ -44,6 +44,7 @@ export default function FootballBlindResumePage() {
   const complete = roundIndex >= run.rounds.length;
   const correct = picks.filter((pick) => pick.correct).length;
   const score = picks.reduce((sum, pick) => sum + pick.points, 0);
+  const losses = picks.length - correct;
 
   function reset(nextRun: FootballBlindResumeRun) {
     setRun(nextRun);
@@ -157,7 +158,7 @@ export default function FootballBlindResumePage() {
           <p className="eyebrow">FOOTBALL BLIND RESUME</p>
           <h1>{round.prompt}</h1>
         </div>
-        <aside><span>ROUND {roundIndex + 1} OF 5</span><b>{score} PTS · {correct}-{roundIndex - correct}</b></aside>
+        <aside><span>ROUND {roundIndex + 1} OF 5</span><b>{score} PTS · {correct}-{losses}</b></aside>
       </section>
 
       <div className="football-blind-resume-progress" aria-label="Football Blind Resume progress">
