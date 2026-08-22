@@ -210,8 +210,8 @@ describe("Football comparison generation maturity", () => {
     let twoBadBoards = 0;
     let eliteEligibleBoards = 0;
     let eliteBoards = 0;
-    let standardEliteEligibleBoards = 0;
-    let standardEliteBoards = 0;
+    let optionalEliteEligibleBoards = 0;
+    let optionalEliteBoards = 0;
     let twoEliteBoards = 0;
     let tightCutoffBoards = 0;
     let cutoffTotal = 0;
@@ -222,10 +222,12 @@ describe("Football comparison generation maturity", () => {
       const packSeen = new Set<string>();
       appearancesByPack.set(pack.id, packAppearances);
       seenByPack.set(pack.id, packSeen);
-      const hasBad = pack.items.some((item) => footballComparisonTier(item) === "bad");
       const eliteCountInPool = pack.items.filter((item) => footballComparisonTier(item) === "elite").length;
+      const badCountInPool = pack.items.filter((item) => footballComparisonTier(item) === "bad").length;
+      const nonExtremeCount = pack.items.length - eliteCountInPool - badCountInPool;
+      const hasBad = badCountInPool > 0;
       const hasElite = eliteCountInPool > 0;
-      const eliteMajorityPool = eliteCountInPool > pack.items.length / 2;
+      const canBuildWithoutElite = nonExtremeCount + Math.min(badCountInPool, 2) >= 8;
 
       for (let index = 0; index < BOARDS_PER_PACK; index += 1) {
         const seed = `keep-cut-simulation-${pack.id}-${index}`;
@@ -261,9 +263,9 @@ describe("Football comparison generation maturity", () => {
           eliteEligibleBoards += 1;
           if (board.eliteItems >= 1) eliteBoards += 1;
           if (board.eliteItems === 2) twoEliteBoards += 1;
-          if (!eliteMajorityPool) {
-            standardEliteEligibleBoards += 1;
-            if (board.eliteItems >= 1) standardEliteBoards += 1;
+          if (canBuildWithoutElite) {
+            optionalEliteEligibleBoards += 1;
+            if (board.eliteItems >= 1) optionalEliteBoards += 1;
           }
         }
 
@@ -291,7 +293,7 @@ describe("Football comparison generation maturity", () => {
     expect(share(badBoards, badEligibleBoards)).toBeLessThanOrEqual(0.5);
     expect(share(twoBadBoards, badEligibleBoards)).toBeGreaterThanOrEqual(0.01);
     expect(share(eliteBoards, eliteEligibleBoards)).toBeGreaterThanOrEqual(0.12);
-    expect(share(standardEliteBoards, standardEliteEligibleBoards)).toBeLessThanOrEqual(0.55);
+    expect(share(optionalEliteBoards, optionalEliteEligibleBoards)).toBeLessThanOrEqual(0.55);
     expect(share(twoEliteBoards, eliteEligibleBoards)).toBeLessThanOrEqual(0.08);
 
     expect(share(styleCounts["knife-edge"]!, totalBoards)).toBeGreaterThanOrEqual(0.36);
