@@ -31,6 +31,7 @@ const payload = {
   bouts: [{
     bout_id: "red-blue",
     live_status: "scheduled",
+    live_status_provider: "espn",
     position: 1,
     weight_class: "Lightweight",
     red_fighter_slug: "red-fighter",
@@ -56,7 +57,7 @@ afterEach(() => {
 });
 
 describe("Fight Night control mapping", () => {
-  it("maps the owner-only operational projection and correction state", () => {
+  it("maps the owner-only operational projection, provider attachment, and correction state", () => {
     const event = mapPickControlEvent(payload);
 
     expect(event).toMatchObject({
@@ -71,6 +72,7 @@ describe("Fight Night control mapping", () => {
     expect(event?.bouts[0]).toMatchObject({
       boutId: "red-blue",
       liveStatus: "scheduled",
+      liveStatusProvider: "espn",
       resultStatus: "red_win",
       winnerFighterSlug: "red-fighter",
       includedInPicks: true,
@@ -104,6 +106,7 @@ describe("Fight Night control mapping", () => {
       }],
     });
     expect(controllable?.bouts[0]).toMatchObject({
+      liveStatusProvider: "espn",
       includedInPicks: true,
       canCancel: true,
       canRestore: false,
@@ -115,6 +118,7 @@ describe("Fight Night control mapping", () => {
     });
 
     const {
+      live_status_provider: _liveStatusProvider,
       included_in_picks: _included,
       can_cancel: _canCancel,
       can_restore: _canRestore,
@@ -138,6 +142,7 @@ describe("Fight Night control mapping", () => {
       recentCompletedEvents: [],
     });
     expect(older?.bouts[0]).toMatchObject({
+      liveStatusProvider: null,
       includedInPicks: true,
       canCancel: false,
       canRestore: false,
