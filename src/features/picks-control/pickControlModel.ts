@@ -78,6 +78,17 @@ export function removedBoutCount(event: PickControlEvent | null) {
   return event?.bouts.filter((bout) => !bout.includedInPicks).length ?? 0;
 }
 
+export function pickControlFightNightStatus(bout: PickControlBout) {
+  if (bout.resultStatus === "red_win") return "RED WON";
+  if (bout.resultStatus === "blue_win") return "BLUE WON";
+  if (bout.resultStatus === "draw") return "DRAW";
+  if (bout.resultStatus === "no_contest") return "NO CONTEST";
+  if (bout.resultStatus === "cancelled") return "CANCELLED";
+  if (bout.liveStatus === "live") return "LIVE";
+  if (bout.liveStatus === "final") return "FINAL";
+  return null;
+}
+
 export function pickControlResultLabel(bout: PickControlBout) {
   if (!bout.includedInPicks) return "REMOVED FROM PICKS";
   if (bout.resultStatus === "red_win") return bout.redFighterName;
