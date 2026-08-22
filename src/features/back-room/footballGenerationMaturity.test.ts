@@ -9,6 +9,7 @@ import {
   footballKeepCutBoardIsCompetitive,
   footballKeepCutBoardStyleForSeed,
   footballKeepCutEliteCap,
+  footballKeepCutRequiredDistinctTiers,
 } from "./footballComparisonGeneration";
 import {
   buildFootballKeepCutLineup,
@@ -213,7 +214,7 @@ describe("Football comparison generation maturity", () => {
         expect(footballKeepCutBoardIsCompetitive(board.items, pack.items)).toBe(true);
         expect(board.badItems).toBeLessThanOrEqual(2);
         expect(board.eliteItems).toBeLessThanOrEqual(footballKeepCutEliteCap(pack.items));
-        expect(board.distinctTiers).toBeGreaterThanOrEqual(3);
+        expect(board.distinctTiers).toBeGreaterThanOrEqual(footballKeepCutRequiredDistinctTiers(pack.items));
         expect(board.cutoffGap).toBeLessThanOrEqual(8);
         if (board.cutoffGap <= 4) tightCutoffBoards += 1;
         cutoffTotal += board.cutoffGap;
