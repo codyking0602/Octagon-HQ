@@ -40,7 +40,11 @@ describe("Football Blind Resume content maturity", () => {
       expect(matchup.stats).toHaveLength(5);
       const resolvedMatchup = resolved.find((row) => row.id === matchup.id)!;
       matchup.stats.forEach((stat, index) => {
-        if (!("factMetricId" in stat)) return;
+        if (!("factMetricId" in stat)) {
+          expect(stat.valueA, `${matchup.id}: authored value A`).not.toMatch(/\d/);
+          expect(stat.valueB, `${matchup.id}: authored value B`).not.toMatch(/\d/);
+          return;
+        }
         const left = getFootballFact(matchup.leftId, stat.factMetricId);
         const right = getFootballFact(matchup.rightId, stat.factMetricId);
         expect(left, `${matchup.id}: ${matchup.leftId} ${stat.factMetricId}`).not.toBeNull();
@@ -112,11 +116,12 @@ describe("Football Blind Resume content maturity", () => {
     expect(maxLineupRepeat).toBeLessThanOrEqual(3);
   });
 
-  it("derives every winner from the canonical comparison pack ratings", () => {
+  it("derives every non-tied winner from the canonical comparison pack ratings", () => {
     for (const matchup of resolvedFootballBlindResumeMatchups()) {
       const pack = getFootballRankFivePack(matchup.packId);
       const left = pack.items.find((item) => item.id === matchup.leftId)!;
       const right = pack.items.find((item) => item.id === matchup.rightId)!;
+      expect(left.rating, `${matchup.id}: tied canonical ratings`).not.toBe(right.rating);
       const canonicalWinnerId = left.rating > right.rating ? left.id : right.id;
       expect(matchup.winnerId, matchup.id).toBe(canonicalWinnerId);
     }
