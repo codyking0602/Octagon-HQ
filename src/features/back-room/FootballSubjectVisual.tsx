@@ -1,7 +1,9 @@
+import { useEffect, useState } from "react";
 import type {
   FootballRankFiveItem,
   FootballRankFivePackId,
 } from "./footballRankFiveModel";
+import { footballSubjectAsset } from "./footballSubjectAssets";
 
 export type FootballSubjectVisualKind = "player" | "coach" | "program" | "team-season";
 
@@ -19,15 +21,6 @@ const VISUAL_META_BY_PACK: Record<FootballRankFivePackId, FootballSubjectVisualM
   "college-programs": { kind: "program", shortLabel: "PROGRAM", folder: "programs" },
   "college-team-seasons": { kind: "team-season", shortLabel: "TEAM", folder: "teams" },
 };
-
-/**
- * Canonical Football game-art registry.
- *
- * Add only approved square player/coach headshots or transparent team/program marks here.
- * The filename convention is owned by footballSubjectAssetPath; game pages should never
- * construct alternate image URLs or maintain their own visual registries.
- */
-export const footballSubjectAssets: Readonly<Partial<Record<string, string>>> = {};
 
 export function footballSubjectVisualMeta(packId: FootballRankFivePackId) {
   return VISUAL_META_BY_PACK[packId];
@@ -48,17 +41,30 @@ export function FootballSubjectVisual({
   className?: string;
 }) {
   const meta = footballSubjectVisualMeta(packId);
-  const registered = footballSubjectAssets[item.id];
+  const asset = footballSubjectAsset(item.id);
+  const [assetFailed, setAssetFailed] = useState(false);
   const classes = ["football-subject-visual", `is-${meta.kind}`, className].filter(Boolean).join(" ");
+
+  useEffect(() => {
+    setAssetFailed(false);
+  }, [asset?.src, item.id]);
 
   return (
     <span
       className={classes}
       data-asset-path={footballSubjectAssetPath(item.id, packId)}
+      data-visual-kind={asset?.kind ?? "fallback"}
       aria-label={`${item.name} visual`}
     >
-      {registered ? (
-        <img alt="" src={registered} />
+      {asset && !assetFailed ? (
+        <img
+          alt=""
+          loading="lazy"
+          referrerPolicy="no-referrer"
+          src={asset.src}
+          title={asset.label}
+          onError={() => setAssetFailed(true)}
+        />
       ) : (
         <span className="football-subject-visual__fallback" aria-hidden="true">
           <b>{item.league}</b>
