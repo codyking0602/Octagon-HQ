@@ -3,16 +3,34 @@ import { useNavigate } from "react-router-dom";
 import { recordLineupCompletion } from "../play/lineupModel";
 import {
   createFootballBlindResumeRun,
-  footballBlindResumeScore,
   footballBlindResumeTier,
   type FootballBlindResumeRun,
 } from "./footballBlindResumeModel";
+import { FootballSubjectVisual } from "./FootballSubjectVisual";
 
 type PickSide = "left" | "right";
+type RevealCount = 2 | 4 | 5;
 
 interface RoundPick {
   pickedId: string;
   correct: boolean;
+  revealedCount: RevealCount;
+  points: number;
+}
+
+const OPENING_REVEAL: RevealCount = 2;
+
+function nextRevealCount(value: RevealCount): RevealCount | null {
+  if (value === 2) return 4;
+  if (value === 4) return 5;
+  return null;
+}
+
+function roundPoints(revealedCount: RevealCount, correct: boolean) {
+  if (!correct) return 0;
+  if (revealedCount === 2) return 20;
+  if (revealedCount === 4) return 15;
+  return 10;
 }
 
 export default function FootballBlindResumePage() {
@@ -21,15 +39,18 @@ export default function FootballBlindResumePage() {
   const [roundIndex, setRoundIndex] = useState(0);
   const [picks, setPicks] = useState<RoundPick[]>([]);
   const [pickedSide, setPickedSide] = useState<PickSide | null>(null);
+  const [revealedCount, setRevealedCount] = useState<RevealCount>(OPENING_REVEAL);
   const round = run.rounds[roundIndex];
   const complete = roundIndex >= run.rounds.length;
   const correct = picks.filter((pick) => pick.correct).length;
+  const score = picks.reduce((sum, pick) => sum + pick.points, 0);
 
   function reset(nextRun: FootballBlindResumeRun) {
     setRun(nextRun);
     setRoundIndex(0);
     setPicks([]);
     setPickedSide(null);
+    setRevealedCount(OPENING_REVEAL);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -40,30 +61,44 @@ export default function FootballBlindResumePage() {
   function choose(side: PickSide) {
     if (!round || pickedSide) return;
     const pickedId = side === "left" ? round.leftId : round.rightId;
-    const result = { pickedId, correct: pickedId === round.winnerId };
+    const isCorrect = pickedId === round.winnerId;
     setPickedSide(side);
-    setPicks((current) => [...current, result]);
+    setPicks((current) => [...current, {
+      pickedId,
+      correct: isCorrect,
+      revealedCount,
+      points: roundPoints(revealedCount, isCorrect),
+    }]);
+  }
+
+  function revealMore() {
+    if (pickedSide) return;
+    const next = nextRevealCount(revealedCount);
+    if (next) setRevealedCount(next);
   }
 
   function advance() {
     if (!round || !pickedSide) return;
     const nextIndex = roundIndex + 1;
     if (nextIndex === run.rounds.length) {
-      const finalCorrect = picks.filter((pick) => pick.correct).length;
       recordLineupCompletion(run.identity, {
-        correct: finalCorrect,
-        score: footballBlindResumeScore(finalCorrect),
+        correct,
+        score,
         matchupIds: run.rounds.map((item) => item.id),
-        picks: picks.map((pick) => pick.pickedId),
+        picks: picks.map((pick) => ({
+          pickedId: pick.pickedId,
+          revealedCount: pick.revealedCount,
+          points: pick.points,
+        })),
       });
     }
     setRoundIndex(nextIndex);
     setPickedSide(null);
+    setRevealedCount(OPENING_REVEAL);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   if (complete) {
-    const score = footballBlindResumeScore(correct);
     return (
       <div className="page football-debate-page football-blind-resume-page">
         <section className="football-debate-result-hero">
@@ -89,7 +124,7 @@ export default function FootballBlindResumePage() {
                     <strong>{item.leftName} vs. {item.rightName}</strong>
                   </span>
                   <em className={pick?.correct ? "is-correct" : "is-wrong"}>
-                    {pick?.correct ? "RIGHT" : "MISS"} · {winnerName}
+                    {pick?.correct ? "RIGHT" : "MISS"} · +{pick?.points ?? 0} · {winnerName}
                   </em>
                 </article>
               );
@@ -107,23 +142,22 @@ export default function FootballBlindResumePage() {
 
   if (!round) return null;
 
+  const latestPick = picks[picks.length - 1];
   const pickedId = pickedSide === "left" ? round.leftId : pickedSide === "right" ? round.rightId : null;
   const pickedCorrect = pickedId === round.winnerId;
   const winnerSide: PickSide = round.winnerId === round.leftId ? "left" : "right";
+  const winnerName = winnerSide === "left" ? round.leftName : round.rightName;
+  const winnerSubtitle = winnerSide === "left" ? round.leftSubtitle : round.rightSubtitle;
+  const nextReveal = nextRevealCount(revealedCount);
 
   return (
     <div className="page football-debate-page football-blind-resume-page">
-      <section className="football-debate-intro football-blind-resume-intro">
+      <section className="football-blind-resume-topline">
         <div>
-          <p className="eyebrow">THE BACK ROOM · FOOTBALL BLIND RESUME</p>
+          <p className="eyebrow">FOOTBALL BLIND RESUME</p>
           <h1>{round.prompt}</h1>
-          <p>No names until you commit. Read the résumé, make the call, then see who was hiding behind A and B.</p>
         </div>
-        <div className="football-debate-category">
-          <small>ROUND</small>
-          <strong>{roundIndex + 1} OF 5</strong>
-          <span>{correct} RIGHT SO FAR</span>
-        </div>
+        <aside><span>ROUND {roundIndex + 1} OF 5</span><b>{score} PTS · {correct}-{roundIndex - correct}</b></aside>
       </section>
 
       <div className="football-blind-resume-progress" aria-label="Football Blind Resume progress">
@@ -134,38 +168,71 @@ export default function FootballBlindResumePage() {
 
       <section className="football-blind-resume-card">
         <header>
-          <div><span>RESUME A</span>{pickedSide ? <strong>{round.leftName}</strong> : <strong>IDENTITY HIDDEN</strong>}</div>
-          <b>VS</b>
-          <div><span>RESUME B</span>{pickedSide ? <strong>{round.rightName}</strong> : <strong>IDENTITY HIDDEN</strong>}</div>
+          <div><span>RESUME A</span><strong>{pickedSide ? round.leftName : "?"}</strong></div>
+          <b>RESUME</b>
+          <div><span>RESUME B</span><strong>{pickedSide ? round.rightName : "?"}</strong></div>
         </header>
 
         <div className="football-blind-resume-stats">
-          {round.stats.map((stat) => (
-            <article key={stat.label}>
-              <strong>{stat.valueA}</strong>
-              <span>{stat.label}</span>
-              <strong>{stat.valueB}</strong>
-            </article>
-          ))}
+          {round.stats.map((stat, index) => {
+            const revealed = index < revealedCount;
+            return (
+              <article key={stat.label}>
+                <strong>{revealed ? stat.valueA : "•••"}</strong>
+                <span>{stat.label}</span>
+                <strong>{revealed ? stat.valueB : "•••"}</strong>
+              </article>
+            );
+          })}
         </div>
 
         {!pickedSide ? (
-          <div className="football-blind-resume-picks">
-            <button type="button" onClick={() => choose("left")}>PICK RESUME A</button>
-            <button type="button" onClick={() => choose("right")}>PICK RESUME B</button>
-          </div>
-        ) : (
-          <section className={`football-blind-resume-reveal ${pickedCorrect ? "is-correct" : "is-wrong"}`} aria-live="polite">
-            <p className="eyebrow">{pickedCorrect ? "RIGHT CALL" : "MISSED IT"}</p>
-            <h2>{winnerSide === "left" ? round.leftName : round.rightName}</h2>
-            <p>
-              Back Room rating {winnerSide === "left" ? round.leftRating : round.rightRating} beats {winnerSide === "left" ? round.rightRating : round.leftRating}.
-              {" "}{winnerSide === "left" ? round.leftSubtitle : round.rightSubtitle}.
+          <>
+            <p className="football-blind-resume-lock-note">
+              {revealedCount} OF 5 STATS SHOWN · LOCK NOW: CORRECT +{roundPoints(revealedCount, true)} · MISS +0
             </p>
-            <button type="button" onClick={advance}>{roundIndex === 4 ? "SEE FINAL SCORE" : "NEXT RESUME"}</button>
-          </section>
+            <div className="football-blind-resume-picks">
+              <button type="button" onClick={() => choose("left")}>PICK A</button>
+              <button type="button" onClick={() => choose("right")}>PICK B</button>
+            </div>
+            {nextReveal ? (
+              <button className="football-blind-resume-more" type="button" onClick={revealMore}>
+                {nextReveal === 4 ? "REVEAL 2 MORE STATS" : "REVEAL FINAL STAT"}
+              </button>
+            ) : null}
+          </>
+        ) : (
+          <>
+            <section className="football-blind-resume-identities" aria-label="Football Blind Resume identities">
+              <article className={winnerSide === "left" ? "is-winner" : ""}>
+                <FootballSubjectVisual
+                  item={{ id: round.leftId, name: round.leftName, league: getLeague(round.packId) }}
+                  packId={round.packId}
+                />
+                <span><small>RESUME A</small><strong>{round.leftName}</strong></span>
+              </article>
+              <article className={winnerSide === "right" ? "is-winner" : ""}>
+                <FootballSubjectVisual
+                  item={{ id: round.rightId, name: round.rightName, league: getLeague(round.packId) }}
+                  packId={round.packId}
+                />
+                <span><small>RESUME B</small><strong>{round.rightName}</strong></span>
+              </article>
+            </section>
+            <section className={`football-blind-resume-reveal ${pickedCorrect ? "is-correct" : "is-wrong"}`} aria-live="polite">
+              <p className="eyebrow">{pickedCorrect ? "RIGHT CALL" : "MISSED IT"}</p>
+              <h2>{winnerName}</h2>
+              <p>{winnerSubtitle}. The Back Room has this résumé higher.</p>
+              <strong>+{latestPick?.points ?? 0} POINTS</strong>
+              <button type="button" onClick={advance}>{roundIndex === 4 ? "SEE FINAL SCORE" : "NEXT ROUND"}</button>
+            </section>
+          </>
         )}
       </section>
     </div>
   );
+}
+
+function getLeague(packId: FootballBlindResumeRun["rounds"][number]["packId"]): "NFL" | "CFB" {
+  return packId.startsWith("nfl-") ? "NFL" : "CFB";
 }
