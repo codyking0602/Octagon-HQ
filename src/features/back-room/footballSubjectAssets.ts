@@ -1,3 +1,5 @@
+import { footballComparisonDepthItems } from "./footballComparisonDepthCatalog";
+
 export type FootballSubjectAssetKind = "team-mark" | "program-mark";
 
 export interface FootballSubjectAsset {
@@ -21,6 +23,15 @@ function cfbMark(teamId: number, label: string): FootballSubjectAsset {
     label,
   };
 }
+
+const comparisonDepthAssets = Object.fromEntries(
+  footballComparisonDepthItems.map((item) => [
+    item.id,
+    item.asset.kind === "nfl"
+      ? nflMark(item.asset.team, item.asset.label)
+      : cfbMark(item.asset.teamId, item.asset.label),
+  ]),
+) as Readonly<Record<string, FootballSubjectAsset>>;
 
 /**
  * Canonical visual catalog for the current Football Back Room subjects.
@@ -53,7 +64,7 @@ export const footballSubjectAssets: Readonly<Record<string, FootballSubjectAsset
   "russell-wilson": nflMark("sea", "Seattle Seahawks"),
   "matt-ryan": nflMark("atl", "Atlanta Falcons"),
   "philip-rivers": nflMark("lac", "Chargers"),
-  "matthew-stafford": nflMark("det", "Detroit Lions"),
+  "matthew-stafford": nflMark("lar", "Los Angeles Rams"),
   "cam-newton": nflMark("car", "Carolina Panthers"),
   "donovan-mcnabb": nflMark("phi", "Philadelphia Eagles"),
   "tony-romo": nflMark("dal", "Dallas Cowboys"),
@@ -195,7 +206,7 @@ export const footballSubjectAssets: Readonly<Record<string, FootballSubjectAsset
   "dan-quinn": nflMark("atl", "Atlanta Falcons"),
   "ron-rivera": nflMark("car", "Carolina Panthers"),
   "marvin-lewis": nflMark("cin", "Cincinnati Bengals"),
-  "mike-vrabel": nflMark("ten", "Tennessee Titans"),
+  "mike-vrabel": nflMark("ne", "New England Patriots"),
   "jeff-fisher": nflMark("ten", "Oilers / Titans franchise"),
   "rex-ryan": nflMark("nyj", "New York Jets"),
   "jason-garrett": nflMark("dal", "Dallas Cowboys"),
@@ -257,6 +268,8 @@ export const footballSubjectAssets: Readonly<Record<string, FootballSubjectAsset
   "2009-alabama": cfbMark(333, "Alabama"),
   "2002-ohio-state": cfbMark(194, "Ohio State"),
   "2000-oklahoma": cfbMark(201, "Oklahoma"),
+
+  ...comparisonDepthAssets,
 };
 
 export function footballSubjectAsset(itemId: string) {

@@ -5,9 +5,9 @@ import { footballSubjectAssets } from "./footballSubjectAssets";
 import { FootballSubjectVisual } from "./FootballSubjectVisual";
 
 describe("Football subject visuals", () => {
-  it("covers every current Football Rank 5 subject through the one canonical asset catalog", () => {
+  it("covers every current Football comparison subject through the one canonical asset catalog", () => {
     const subjects = footballRankFivePacks.flatMap((pack) => pack.items.map((item) => ({ item, pack })));
-    expect(subjects.length).toBeGreaterThanOrEqual(200);
+    expect(subjects).toHaveLength(350);
 
     for (const { item } of subjects) {
       const asset = footballSubjectAssets[item.id];
@@ -28,16 +28,16 @@ describe("Football subject visuals", () => {
   });
 
   it("renders the registered mark instead of the generic league/type fallback", () => {
-    const pack = footballRankFivePacks.find((row) => row.id === "nfl-quarterbacks")!;
-    const item = pack.items.find((row) => row.id === "patrick-mahomes")!;
+    const pack = footballRankFivePacks.find((row) => row.id === "nfl-defensive-players")!;
+    const item = pack.items.find((row) => row.id === "lawrence-taylor")!;
 
     render(<FootballSubjectVisual item={item} packId={pack.id} />);
 
-    const visual = screen.getByLabelText("Patrick Mahomes visual");
+    const visual = screen.getByLabelText("Lawrence Taylor visual");
     expect(visual).toHaveAttribute("data-visual-kind", "team-mark");
     expect(visual.querySelector("img")).toHaveAttribute(
       "src",
-      "https://a.espncdn.com/i/teamlogos/nfl/500/kc.png",
+      "https://a.espncdn.com/i/teamlogos/nfl/500/nyg.png",
     );
     expect(visual.querySelector(".football-subject-visual__fallback")).not.toBeInTheDocument();
   });

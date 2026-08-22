@@ -12,6 +12,7 @@ describe("Football NFL reviewed pairwise anchors", () => {
     expect(rating("nfl-quarterbacks", "peyton-manning")).toBeGreaterThan(rating("nfl-quarterbacks", "eli-manning"));
     expect(rating("nfl-quarterbacks", "aaron-rodgers")).toBeGreaterThan(rating("nfl-quarterbacks", "ben-roethlisberger"));
     expect(rating("nfl-quarterbacks", "dan-marino")).toBeGreaterThan(rating("nfl-quarterbacks", "troy-aikman"));
+    expect(rating("nfl-quarterbacks", "matthew-stafford")).toBeGreaterThan(rating("nfl-quarterbacks", "matt-ryan"));
     expect(rating("nfl-quarterbacks", "matt-ryan")).toBeGreaterThan(rating("nfl-quarterbacks", "joe-flacco"));
   });
 
@@ -23,7 +24,8 @@ describe("Football NFL reviewed pairwise anchors", () => {
   });
 
   it("does not let one championship or one playoff run overwhelm the full coaching career", () => {
-    expect(rating("nfl-head-coaches", "marty-schottenheimer")).toBeGreaterThan(rating("nfl-head-coaches", "doug-pederson"));
+    expect(rating("nfl-head-coaches", "marty-schottenheimer")).toBeGreaterThan(rating("nfl-head-coaches", "mike-vrabel"));
+    expect(rating("nfl-head-coaches", "mike-vrabel")).toBeGreaterThan(rating("nfl-head-coaches", "ron-rivera"));
     expect(rating("nfl-head-coaches", "mike-tomlin")).toBeGreaterThan(rating("nfl-head-coaches", "ron-rivera"));
     expect(rating("nfl-head-coaches", "marvin-lewis")).toBeGreaterThan(rating("nfl-head-coaches", "adam-gase"));
   });
