@@ -405,12 +405,20 @@ function minimumCompetitiveEliteCount(items: readonly FootballRankFiveItem[]) {
   return hasEliteBridge ? KEEP_COUNT : 0;
 }
 
+function minimumProportionalEliteCount(items: readonly FootballRankFiveItem[]) {
+  const availableElite = availableTierCount(items, "elite");
+  const eliteShare = availableElite / items.length;
+  if (eliteShare <= 0.5) return 0;
+  return Math.min(availableElite, Math.ceil(KEEP_CUT_BOARD_SIZE * eliteShare));
+}
+
 export function footballKeepCutEliteCap(items: readonly FootballRankFiveItem[]) {
   const availableElite = availableTierCount(items, "elite");
   const availableBad = availableTierCount(items, "bad");
   const nonExtremeCount = items.length - availableElite - availableBad;
   const minimumRequiredElite = Math.max(
     minimumCompetitiveEliteCount(items),
+    minimumProportionalEliteCount(items),
     KEEP_CUT_BOARD_SIZE - nonExtremeCount - Math.min(availableBad, MAX_KEEP_CUT_BAD),
     0,
   );
@@ -512,6 +520,7 @@ function keepCutProfileForSeed(
   const nonExtremeCount = items.length - availableElite - availableBad;
   const minimumRequiredElite = Math.max(
     minimumCompetitiveEliteCount(items),
+    minimumProportionalEliteCount(items),
     KEEP_CUT_BOARD_SIZE - nonExtremeCount - Math.min(availableBad, MAX_KEEP_CUT_BAD),
     0,
   );
