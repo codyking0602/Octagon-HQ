@@ -4,30 +4,36 @@ Football game art is intentionally smaller in scope than the UFC fighter-photo s
 
 ## Canonical owner
 
-`src/features/back-room/FootballSubjectVisual.tsx`
+- Rendering: `src/features/back-room/FootballSubjectVisual.tsx`
+- Asset catalog: `src/features/back-room/footballSubjectAssets.ts`
 
 Game pages must use `FootballSubjectVisual`. Do not construct image URLs or create a second per-game registry.
 
-## Asset types
+## Current production coverage
 
-- NFL and college players: one square headshot thumbnail.
-- Coaches: one square headshot thumbnail.
-- College programs: one transparent athletic/program mark.
-- Team seasons: the program mark plus the year in game UI; no season-specific action photo is required.
-- NFL teams, when team subjects are added: one transparent team mark.
+Every subject in the six current Football Rank 5 packs is registered in `footballSubjectAssets`.
 
-No full-body player cutouts, profile images, stadium photography, or action-photo library is required for the Football Back Room.
+- NFL players and coaches use the team mark most strongly associated with the version of that subject represented by the game data.
+- College quarterbacks use their college program mark.
+- College-program subjects use their program mark directly.
+- Single-season team subjects use the program mark; the year stays in the game copy.
 
-## Paths
+The current mark catalog uses the ESPN static image CDN only as an image host. It is not a football data/query provider and no game owns a second URL path. If an image cannot load, the canonical visual component renders the deliberate NFL/CFB + subject-type fallback.
 
-The canonical path helper is `footballSubjectAssetPath`.
+## Future local headshots
+
+Approved square player/coach headshots can replace team/program marks without changing any game page. The intended local paths remain owned by `footballSubjectAssetPath`:
 
 - `/images/football/players/<subject-id>.webp`
 - `/images/football/coaches/<subject-id>.webp`
 - `/images/football/programs/<subject-id>.webp`
 - `/images/football/teams/<subject-id>.webp`
 
-Approved assets are registered once in `footballSubjectAssets`. Until an asset is registered, the visual owner renders a deliberate NFL/CFB + subject-type fallback rather than player initials.
+When a local asset is approved, update the one canonical asset catalog rather than adding an image path to Blind Rank 5, Keep 4 / Cut 4, Blind Resume, or any future Football game.
+
+## Scope rule
+
+No full-body player cutouts, profile-image library, stadium photography, or action-photo library is required for the Football Back Room. The compact subject visual is the Football analogue to the UFC game thumbnail.
 
 ## Presentation rule
 
