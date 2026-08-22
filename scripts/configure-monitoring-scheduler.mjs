@@ -38,7 +38,7 @@ const response = await fetch(
 const health = await readBody(response);
 if (!response.ok) throw new Error(`Scheduler configuration failed with HTTP ${response.status}.`);
 if (health?.job_name !== "octagon-hq-pick-monitoring"
-  || health?.schedule !== "7 * * * *"
+  || health?.schedule !== "*/5 * * * *"
   || health?.active !== enabled
   || health?.token_configured !== true
   || health?.command_configured !== true
