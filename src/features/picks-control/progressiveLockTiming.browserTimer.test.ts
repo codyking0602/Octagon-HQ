@@ -23,6 +23,7 @@ function event(locksAt: string): PickControlEvent {
       boutId: "red-blue",
       locksAt,
       isLocked: false,
+      liveStatus: "scheduled",
       canAdjustLock: true,
       position: 1,
       weightClass: "Lightweight",

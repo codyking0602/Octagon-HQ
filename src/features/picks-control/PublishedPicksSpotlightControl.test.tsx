@@ -48,6 +48,7 @@ const event: PickControlEvent = {
   spotlights: [spotlight],
   bouts: [{
     boutId: spotlight.boutId,
+    liveStatus: "scheduled",
     position: 1,
     weightClass: "Middleweight",
     redFighterSlug: "anthony-hernandez",

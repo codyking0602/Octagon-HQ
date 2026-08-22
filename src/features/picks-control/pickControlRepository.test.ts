@@ -30,6 +30,7 @@ const payload = {
   }],
   bouts: [{
     bout_id: "red-blue",
+    live_status: "scheduled",
     position: 1,
     weight_class: "Lightweight",
     red_fighter_slug: "red-fighter",
@@ -69,6 +70,7 @@ describe("Fight Night control mapping", () => {
     });
     expect(event?.bouts[0]).toMatchObject({
       boutId: "red-blue",
+      liveStatus: "scheduled",
       resultStatus: "red_win",
       winnerFighterSlug: "red-fighter",
       includedInPicks: true,

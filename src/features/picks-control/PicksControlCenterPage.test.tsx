@@ -38,6 +38,7 @@ function controlBout(
     boutId: `red-blue-${index + 1}`,
     locksAt: "2099-08-09T03:00:00.000Z",
     isLocked: false,
+    liveStatus: "scheduled",
     canAdjustLock: true,
     position: index + 1,
     weightClass: index === 0 ? "Lightweight" : "Welterweight",

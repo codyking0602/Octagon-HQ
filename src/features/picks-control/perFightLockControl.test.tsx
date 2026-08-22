@@ -25,14 +25,14 @@ function controlEvent(openLock = "2099-08-09T03:00:00.000Z"): PickControlEvent {
     locksAt: "2099-08-09T03:30:00.000Z", season: 2026, status: "upcoming",
     canLock: true, canComplete: false, canReorder: false, hasReorderHistory: false,
     bouts: [{
-      boutId: "resulted-fight", locksAt: "2099-08-09T01:00:00.000Z", isLocked: true, canAdjustLock: false,
+      boutId: "resulted-fight", locksAt: "2099-08-09T01:00:00.000Z", isLocked: true, liveStatus: "scheduled", canAdjustLock: false,
       position: 1, weightClass: "Lightweight", redFighterSlug: "locked-red", redFighterName: "Locked Red",
       blueFighterSlug: "locked-blue", blueFighterName: "Locked Blue", resultStatus: "red_win",
       winnerFighterSlug: "locked-red", resultRecordedAt: "2099-08-09T01:30:00.000Z", includedInPicks: true,
       canCancel: false, canRestore: false, canReplace: false, canRemoveFromPicks: false, canRestoreToPicks: false,
       canCorrectResult: false, hasReplacementHistory: false, hasRemovalHistory: false, hasCorrectionHistory: false,
     }, {
-      boutId: "open-fight", locksAt: openLock, isLocked: false, canAdjustLock: true,
+      boutId: "open-fight", locksAt: openLock, isLocked: false, liveStatus: "scheduled", canAdjustLock: true,
       position: 2, weightClass: "Welterweight", redFighterSlug: "open-red", redFighterName: "Open Red",
       blueFighterSlug: "open-blue", blueFighterName: "Open Blue", resultStatus: "pending",
       winnerFighterSlug: null, resultRecordedAt: null, includedInPicks: true,

@@ -1,12 +1,16 @@
 import type { PickBoutResultStatus, PickEventStatus } from "../picks/picksModel";
 import type { PickSpotlight } from "../picks/spotlightModel";
 
+export type PickControlBoutLiveStatus = "scheduled" | "live" | "final";
+
 export interface PickControlBout {
   boutId: string;
   /** Backend-projected effective deadline for this stable bout. */
   locksAt?: string;
   /** Authoritative server lock state; browser time is presentation-only. */
   isLocked?: boolean;
+  /** Trusted provider fight state from the canonical Fight Night monitor. */
+  liveStatus: PickControlBoutLiveStatus;
   /** Server-owned permission to move this still-open deadline. */
   canAdjustLock?: boolean;
   position: number;
@@ -72,6 +76,17 @@ export function cancelledBoutCount(event: PickControlEvent | null) {
 
 export function removedBoutCount(event: PickControlEvent | null) {
   return event?.bouts.filter((bout) => !bout.includedInPicks).length ?? 0;
+}
+
+export function pickControlFightNightStatus(bout: PickControlBout) {
+  if (bout.resultStatus === "red_win") return "RED WON";
+  if (bout.resultStatus === "blue_win") return "BLUE WON";
+  if (bout.resultStatus === "draw") return "DRAW";
+  if (bout.resultStatus === "no_contest") return "NO CONTEST";
+  if (bout.resultStatus === "cancelled") return "CANCELLED";
+  if (bout.liveStatus === "live") return "LIVE";
+  if (bout.liveStatus === "final") return "FINAL";
+  return null;
 }
 
 export function pickControlResultLabel(bout: PickControlBout) {
