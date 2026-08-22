@@ -74,7 +74,7 @@ export default function FootballRankFivePage() {
         <div className="football-rank-five-category">
           <small>CURRENT DEBATE</small>
           <strong>{run.pack.name}</strong>
-          <button type="button" onClick={startNewLineup}>NEW LINEUP</button>
+          {!complete ? <button type="button" onClick={startNewLineup}>NEW LINEUP</button> : null}
         </div>
       </section>
 
