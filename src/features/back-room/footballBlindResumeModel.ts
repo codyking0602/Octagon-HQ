@@ -72,12 +72,12 @@ const MATCHUP_FAMILIES: readonly MatchupFamily[] = [
   { packId: "nfl-defensive-players", league: "NFL", prompt: "Which NFL defensive résumé is greater?" },
   { packId: "nfl-head-coaches", league: "NFL", prompt: "Which NFL head-coaching résumé is greater?" },
   { packId: "nfl-qb-seasons", league: "NFL", prompt: "Which NFL quarterback single-season résumé is greater?" },
-  { packId: "nfl-team-seasons", league: "NFL", prompt: "Which NFL team-season résumé is greater?" },
+  { packId: "nfl-team-seasons", league: "NFL", prompt: "Which single-season team résumé is greater?" },
   { packId: "college-quarterbacks", league: "CFB", prompt: "Which college quarterback résumé is greater?" },
   { packId: "college-head-coaches", league: "CFB", prompt: "Which college head-coaching résumé is greater?" },
   { packId: "college-programs", league: "CFB", prompt: "Which program has the stronger résumé since 2000?" },
   { packId: "college-program-eras", league: "CFB", prompt: "Which defined college program era is greater?" },
-  { packId: "college-team-seasons", league: "CFB", prompt: "Which college team-season résumé is greater?" },
+  { packId: "college-team-seasons", league: "CFB", prompt: "Which single-season team résumé is greater?" },
 ] as const;
 
 const FACT_METRICS_BY_PACK: Partial<Record<FootballRankFivePackId, readonly FootballFactMetricId[]>> = {
