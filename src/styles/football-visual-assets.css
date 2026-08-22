@@ -1,0 +1,35 @@
+.app-shell--football-room .football-subject-visual[data-visual-kind="team-mark"] img,
+.app-shell--football-room .football-subject-visual[data-visual-kind="program-mark"] img {
+  width: 100%;
+  height: 100%;
+  padding: 7px;
+  object-fit: contain;
+  filter: drop-shadow(0 5px 10px rgba(0, 0, 0, .24));
+}
+
+.app-shell--football-room .football-subject-visual[data-visual-kind="team-mark"],
+.app-shell--football-room .football-subject-visual[data-visual-kind="program-mark"] {
+  background:
+    radial-gradient(circle at 50% 40%, rgba(255, 255, 255, .08), transparent 55%),
+    linear-gradient(145deg, rgba(122, 142, 168, .12), transparent 62%),
+    #101b2c;
+}
+
+.app-shell--football-room .football-rank-five-current .football-subject-visual,
+.app-shell--football-room .football-keep-cut-current .football-subject-visual {
+  width: 74px;
+  height: 74px;
+  flex-basis: 74px;
+  border-radius: 20px;
+}
+
+.app-shell--football-room .football-rank-five-current .football-subject-visual img,
+.app-shell--football-room .football-keep-cut-current .football-subject-visual img {
+  padding: 10px;
+}
+
+.app-shell--football-room .football-blind-resume-identities .football-subject-visual {
+  width: 62px;
+  height: 62px;
+  flex-basis: 62px;
+}
