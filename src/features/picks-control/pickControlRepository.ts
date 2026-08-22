@@ -43,8 +43,8 @@ const spotlightFighterSchema = z.object({
 const spotlightSchema = z.object({
   boutId: z.string().min(1),
   preview: z.string().min(20),
-  red: spotlightFighterDbSchema,
-  blue: spotlightFighterDbSchema,
+  red: spotlightFighterSchema,
+  blue: spotlightFighterSchema,
   watchSpotlights: z.array(spotlightWatchSchema).max(2),
   source: z.literal("UFCStats"),
   generatedAt: z.string().min(10),
