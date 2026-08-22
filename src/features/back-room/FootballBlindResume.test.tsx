@@ -19,7 +19,7 @@ describe("Football Blind Resume", () => {
 
   it("keeps the 96-matchup, 13-family catalog and Rank 5 ratings as the single verdict owner", () => {
     expect(footballBlindResumeMatchups).toHaveLength(96);
-    expect(new Set(footballBlindResumeMatchups.map((matchup) => matchup.packId))).toHaveLength(13);
+    expect(new Set(footballBlindResumeMatchups.map((matchup) => matchup.packId)).size).toBe(13);
     for (const matchup of resolvedFootballBlindResumeMatchups()) {
       const pack = getFootballRankFivePack(matchup.packId);
       const left = pack.items.find((item) => item.id === matchup.leftId)!;
