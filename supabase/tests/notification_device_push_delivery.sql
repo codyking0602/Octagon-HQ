@@ -100,15 +100,18 @@ begin
     raise exception 'the same notification version was claimed twice: %', v_repeated_claim;
   end if;
 
+  -- ufc_event_starting became intentionally push-eligible when the owner-triggered
+  -- active-card announcement launched. Keep this negative proof on a kind that is
+  -- still canonically in-app only.
   v_in_app_notification := public.publish_notification(
     v_member,
-    'push-proof:event-starting:1',
-    'push-proof:event-starting',
-    'ufc_event_starting',
-    'UFC event starts soon',
+    'push-proof:streak-risk:1',
+    'push-proof:streak-risk',
+    'daily_streak_at_risk',
+    'Daily streak at risk',
     'An in-app-only notification must never create a device delivery claim.',
-    '/picks',
-    'OPEN PICKS',
+    '/play',
+    'OPEN DAILY',
     now()
   );
   v_in_app_claim := public.claim_notification_push_delivery((v_in_app_notification->>'id')::uuid);

@@ -28,7 +28,7 @@ describe("manual monitoring deployment contract", () => {
     expect(verifier).toContain("fakeSchedulerResponse.status !== 401");
     expect(verifier).toContain("access-control-allow-origin");
     expect(verifier).toContain('cli(["functions", "list"');
-    expect(verifier).toContain('["202608080001", "202608090001", "202608090002", "202608090003", "202609120001", "202612310002"]');
+    expect(verifier).toContain('["202608080001", "202608090001", "202608090002", "202608090003", "202609120001", "202612310002", "202612310047", "202612310048"]');
   });
   it("configures the one scheduler only through the existing trusted backend deploy", () => {
     expect(workflow).toContain("configure-monitoring-scheduler.mjs");
@@ -37,6 +37,7 @@ describe("manual monitoring deployment contract", () => {
     expect(workflow).not.toContain('if [ "$SOURCE_PR_NUMBER" = "0" ]');
     expect(schedulerConfigurator).toContain("set_pick_monitoring_scheduler_enabled");
     expect(schedulerConfigurator).toContain('health?.job_name !== "octagon-hq-pick-monitoring"');
+    expect(schedulerConfigurator).toContain('health?.schedule !== "*/5 * * * *"');
   });
   it("extends the existing canonical backend verifier instead of adding a parallel workflow", () => {
     expect(canonicalVerifier).toContain('existsSync("supabase/functions/run-pick-monitoring/index.ts")');

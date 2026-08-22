@@ -63,7 +63,7 @@ const safeHealth = {
 };
 
 if (safeHealth.job_name !== "octagon-hq-pick-monitoring"
-  || safeHealth.schedule !== "7 * * * *"
+  || safeHealth.schedule !== "*/5 * * * *"
   || safeHealth.active !== expectedActive
   || safeHealth.token_configured !== true
   || safeHealth.command_configured !== true
