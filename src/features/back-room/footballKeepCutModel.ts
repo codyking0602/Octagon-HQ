@@ -5,9 +5,14 @@ import {
   createReplaySeed,
   seededLineupRandom,
   selectReplayLineup,
-  shuffleLineup,
   type PlayLineupIdentity,
 } from "../play/lineupModel";
+import {
+  buildFootballKeepCutBoard,
+  footballKeepCutBoardIsCompetitive,
+  footballKeepCutBoardStyleForSeed,
+  FOOTBALL_KEEP_CUT_BOARD_STYLES,
+} from "./footballComparisonGeneration";
 import {
   footballRankFivePacks,
   getFootballRankFivePack,
@@ -45,7 +50,12 @@ export interface FootballKeepCutResult {
 
 const BOARD_SIZE = 8;
 const KEEP_COUNT = 4;
-const MAX_CUTOFF_GAP = 4;
+
+export {
+  footballKeepCutBoardIsCompetitive,
+  footballKeepCutBoardStyleForSeed,
+  FOOTBALL_KEEP_CUT_BOARD_STYLES,
+};
 
 export const footballKeepCutPacks: readonly FootballKeepCutPack[] = footballRankFivePacks.map((pack) => ({
   id: pack.id,
@@ -61,28 +71,8 @@ export function getFootballKeepCutPack(packId: FootballKeepCutPackId) {
   return pack;
 }
 
-function sortedItems(packId: FootballKeepCutPackId) {
-  return [...getFootballRankFivePack(packId).items]
-    .sort((left, right) => right.rating - left.rating || left.name.localeCompare(right.name));
-}
-
-function competitiveWindows(packId: FootballKeepCutPackId) {
-  const ordered = sortedItems(packId);
-  const windows: FootballRankFiveItem[][] = [];
-  for (let start = 0; start <= ordered.length - BOARD_SIZE; start += 1) {
-    const window = ordered.slice(start, start + BOARD_SIZE);
-    if (Math.abs(window[KEEP_COUNT - 1]!.rating - window[KEEP_COUNT]!.rating) <= MAX_CUTOFF_GAP) {
-      windows.push(window);
-    }
-  }
-  return windows.length ? windows : [ordered.slice(0, BOARD_SIZE)];
-}
-
 export function buildFootballKeepCutLineup(packId: FootballKeepCutPackId, seed: string) {
-  const windows = competitiveWindows(packId);
-  const random = seededLineupRandom(FOOTBALL_KEEP_CUT_GAME_ID, packId, seed);
-  const selected = windows[Math.floor(random() * windows.length)]!;
-  return shuffleLineup(selected, random);
+  return buildFootballKeepCutBoard(getFootballKeepCutPack(packId).items, packId, seed).items;
 }
 
 export function footballKeepCutPackForSeed(seed: string, exclude?: FootballKeepCutPackId) {
