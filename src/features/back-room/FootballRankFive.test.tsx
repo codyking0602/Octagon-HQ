@@ -2,12 +2,13 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import FootballRankFivePage from "./FootballRankFivePage";
+import { footballSubjectAssetPath } from "./FootballSubjectVisual";
 import {
   buildFootballRankFiveLineup,
   footballRankFivePacks,
 } from "./footballRankFiveModel";
 
-describe("Football Rank 5", () => {
+describe("Football Blind Rank 5", () => {
   beforeEach(() => {
     window.localStorage.clear();
   });
@@ -36,6 +37,15 @@ describe("Football Rank 5", () => {
     }
   });
 
+  it("uses one canonical football asset path convention instead of game-specific initials", () => {
+    expect(footballSubjectAssetPath("patrick-mahomes", "nfl-quarterbacks"))
+      .toBe("/images/football/players/patrick-mahomes.webp");
+    expect(footballSubjectAssetPath("alabama-program", "college-programs"))
+      .toBe("/images/football/programs/alabama-program.webp");
+    expect(footballSubjectAssetPath("2019-lsu", "college-team-seasons"))
+      .toBe("/images/football/teams/2019-lsu.webp");
+  });
+
   it("locks all five placements and reveals the final score and canonical order", () => {
     render(
       <MemoryRouter>
@@ -43,12 +53,12 @@ describe("Football Rank 5", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText("RANK 5")).toBeInTheDocument();
+    expect(screen.getByText("BLIND RANK 5")).toBeInTheDocument();
     for (let rank = 1; rank <= 5; rank += 1) {
       fireEvent.click(screen.getByRole("button", { name: `Place current item at rank ${rank}` }));
     }
 
-    expect(screen.getByLabelText("Football Rank 5 score")).toHaveTextContent("/100");
+    expect(screen.getByLabelText("Football Blind Rank 5 score")).toHaveTextContent("/100");
     expect(screen.getByText("YOUR FINAL RANKING")).toBeInTheDocument();
     expect(screen.getByText("BACK ROOM ORDER")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "NEW LINEUP" })).toBeInTheDocument();

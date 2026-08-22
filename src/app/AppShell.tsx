@@ -39,16 +39,25 @@ export function AppShell() {
   const gameTitle = PLAY_GAME_TITLES[location.pathname];
   const isPlayGame = Boolean(gameTitle);
   const isBackRoom = location.pathname === "/back-room" || location.pathname.startsWith("/back-room/");
+  const isFootballRoom = location.pathname === "/back-room/football" || location.pathname.startsWith("/back-room/football/");
+  const isFootballGame = location.pathname.startsWith("/back-room/football/");
 
   return (
-    <div className={`app-shell${isPlayGame ? " app-shell--game" : ""}${isBackRoom ? " app-shell--back-room" : ""}`}>
+    <div className={`app-shell${isPlayGame ? " app-shell--game" : ""}${isBackRoom ? " app-shell--back-room" : ""}${isFootballRoom ? " app-shell--football-room" : ""}`}>
       <RouteScrollManager />
 
       {isBackRoom ? (
         <header className="app-header app-header--back-room">
-          <Link className="back-room-header__exit" to="/play" aria-label="Return to UFC games">
+          <Link
+            className="back-room-header__exit"
+            to={isFootballRoom ? (isFootballGame ? "/back-room/football" : "/back-room") : "/play"}
+            aria-label={isFootballRoom ? "Return from Football Back Room" : "Return to UFC games"}
+          >
             <span aria-hidden="true">←</span>
-            <span><small>OCTAGON HQ</small><strong>THE BACK ROOM</strong></span>
+            <span>
+              <small>{isFootballRoom ? "THE BACK ROOM" : "OCTAGON HQ"}</small>
+              <strong>{isFootballRoom ? "FOOTBALL" : "THE BACK ROOM"}</strong>
+            </span>
           </Link>
         </header>
       ) : isPlayGame ? (

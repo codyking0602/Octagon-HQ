@@ -2,20 +2,11 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { recordLineupCompletion } from "../play/lineupModel";
 import { scoreBlindRankOrderedRatings } from "../play/officialScoreContract";
+import { FootballSubjectVisual } from "./FootballSubjectVisual";
 import {
   createRandomFootballRankFiveRun,
   type FootballRankFiveItem,
 } from "./footballRankFiveModel";
-
-function initials(name: string) {
-  return name
-    .split(/\s+/)
-    .map((part) => part.replace(/[^A-Za-z0-9]/g, "")[0] ?? "")
-    .filter(Boolean)
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
-}
 
 export default function FootballRankFivePage() {
   const navigate = useNavigate();
@@ -72,7 +63,7 @@ export default function FootballRankFivePage() {
           <p>{run.pack.intro}</p>
         </div>
         <div className="football-rank-five-category">
-          <small>CURRENT DEBATE</small>
+          <small>CURRENT CATEGORY</small>
           <strong>{run.pack.name}</strong>
           {!complete ? <button type="button" onClick={startNewLineup}>NEW LINEUP</button> : null}
         </div>
@@ -81,16 +72,16 @@ export default function FootballRankFivePage() {
       <section className={`football-rank-five-board${complete ? " is-complete" : ""}`}>
         <header>
           <span>{complete ? "BOARD LOCKED" : `LOCKED ${currentIndex} OF 5`}</span>
-          <strong>RANK 5</strong>
+          <strong>BLIND RANK 5</strong>
         </header>
 
         {!complete ? (
-          <div className="football-rank-five-slots" aria-label="Football Rank 5 locked slots">
+          <div className="football-rank-five-slots" aria-label="Football Blind Rank 5 locked slots">
             {placements.map((item, index) => item ? (
               <button className="football-rank-five-slot is-filled" type="button" disabled key={index}>
                 <b>#{index + 1}</b>
+                <FootballSubjectVisual className="football-rank-five-slot__visual" item={item} packId={run.pack.id} />
                 <span>{item.name}</span>
-                <small>{item.league}</small>
               </button>
             ) : (
               <button
@@ -109,10 +100,10 @@ export default function FootballRankFivePage() {
 
         {complete ? (
           <div className="football-rank-five-finish">
-            <section className="football-rank-five-score" aria-label="Football Rank 5 score">
+            <section className="football-rank-five-score" aria-label="Football Blind Rank 5 score">
               <p className="eyebrow">FIVE SPOTS. NO TAKEBACKS.</p>
               <h2>{completedScore?.normalizedScore ?? 0}/100</h2>
-              <p>Graded against the Back Room order using the same pairwise Rank 5 scoring as UFC.</p>
+              <p>Graded against the Back Room order using the same pairwise Blind Rank 5 scoring as UFC.</p>
             </section>
 
             <div className="football-rank-five-reveal-grid">
@@ -122,7 +113,7 @@ export default function FootballRankFivePage() {
                   {placements.map((item, index) => item ? (
                     <article key={item.id}>
                       <b>#{index + 1}</b>
-                      <span className="football-rank-five-avatar" aria-hidden="true">{initials(item.name)}</span>
+                      <FootballSubjectVisual item={item} packId={run.pack.id} />
                       <span><strong>{item.name}</strong><small>{item.subtitle}</small></span>
                       <em>{item.league}</em>
                     </article>
@@ -136,7 +127,7 @@ export default function FootballRankFivePage() {
                   {canonicalOrder.map(({ item }, index) => (
                     <article key={item.id}>
                       <b>#{index + 1}</b>
-                      <span className="football-rank-five-avatar" aria-hidden="true">{initials(item.name)}</span>
+                      <FootballSubjectVisual item={item} packId={run.pack.id} />
                       <span><strong>{item.name}</strong><small>{item.subtitle}</small></span>
                       <em>{item.league}</em>
                     </article>
@@ -152,12 +143,12 @@ export default function FootballRankFivePage() {
           </div>
         ) : current ? (
           <article className="football-rank-five-current">
-            <span className="football-rank-five-current__mark" aria-hidden="true">{initials(current.name)}</span>
+            <FootballSubjectVisual className="football-rank-five-current__visual" item={current} packId={run.pack.id} />
             <div>
               <p className="eyebrow">{current.league} · REVEAL {currentIndex + 1} OF 5</p>
               <h2>{current.name}</h2>
               <p>{current.subtitle}</p>
-              <strong>Pick an open slot. Once you place it, it’s locked.</strong>
+              <strong>Choose an open slot. Once placed, it’s locked.</strong>
             </div>
           </article>
         ) : null}

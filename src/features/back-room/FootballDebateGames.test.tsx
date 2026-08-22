@@ -10,7 +10,6 @@ import {
 } from "./footballKeepCutModel";
 import {
   createFootballWavelengthRound,
-  footballWavelengthAxes,
   footballWavelengthClues,
   nextFootballWavelengthClue,
 } from "./footballWavelengthModel";
@@ -39,17 +38,18 @@ describe("Football Back Room debate games", () => {
     }
   });
 
-  it("calibrates Football Wavelength across seven distinct debate axes", () => {
-    expect(footballWavelengthAxes).toHaveLength(7);
-    expect(new Set(footballWavelengthClues.map((clue) => clue.id)).size).toBe(footballWavelengthClues.length);
+  it("uses one UFC-style 1-100 scale instead of switching between opposing axes", () => {
+    const categories = new Set(footballWavelengthClues.map((clue) => clue.category));
+    expect(categories).toEqual(new Set([
+      "NFL LEGACY",
+      "GUNSLINGER",
+      "QB CARRY JOB",
+      "OFFENSIVE CHAOS",
+      "FANBASE INSANITY",
+      "PROGRAM TRADITION",
+    ]));
+    expect(footballWavelengthClues.some((clue) => clue.category === "GUNSLINGER" && clue.text === "Patrick Mahomes")).toBe(true);
     expect(footballWavelengthClues.every((clue) => Number.isInteger(clue.rating) && clue.rating >= 1 && clue.rating <= 100)).toBe(true);
-
-    for (const axis of footballWavelengthAxes) {
-      const ratings = footballWavelengthClues.filter((clue) => clue.axisId === axis.id).map((clue) => clue.rating);
-      expect(ratings.length).toBeGreaterThanOrEqual(9);
-      expect(Math.min(...ratings)).toBeLessThanOrEqual(25);
-      expect(Math.max(...ratings)).toBeGreaterThanOrEqual(90);
-    }
 
     const round = createFootballWavelengthRound("wavelength-proof");
     expect(createFootballWavelengthRound("wavelength-proof")).toEqual(round);
@@ -82,17 +82,18 @@ describe("Football Back Room debate games", () => {
     expect(screen.getByRole("button", { name: "NEW LINEUP" })).toBeInTheDocument();
   });
 
-  it("plays Football Wavelength through four adaptive clues and reveals the hidden number", () => {
+  it("plays Football Wavelength through the same four adaptive guess locks as UFC", () => {
     render(
       <MemoryRouter>
         <FootballWavelengthPage />
       </MemoryRouter>,
     );
 
-    expect(screen.getByText("Find the hidden number.")).toBeInTheDocument();
-    for (let index = 0; index < 4; index += 1) {
-      fireEvent.click(screen.getByRole("button", { name: "LOCK GUESS" }));
+    expect(screen.getByText("REPLAYABLE GAME")).toBeInTheDocument();
+    for (let index = 0; index < 3; index += 1) {
+      fireEvent.click(screen.getByRole("button", { name: "LOCK GUESS & REVEAL NEXT CLUE" }));
     }
+    fireEvent.click(screen.getByRole("button", { name: "LOCK FINAL GUESS" }));
 
     expect(screen.getByText("FOOTBALL WAVELENGTH · FINAL SCORE")).toBeInTheDocument();
     expect(screen.getByText("HIDDEN NUMBER")).toBeInTheDocument();

@@ -1,0 +1,637 @@
+.app-shell--football-room {
+  --football-navy-950: #040912;
+  --football-navy-900: #07111d;
+  --football-navy-850: #0a1624;
+  --football-navy-800: #0d1b2b;
+  --football-navy-700: #14243a;
+  --football-steel-500: #718096;
+  --football-steel-300: #a9b4c2;
+  --football-silver: #d9dee5;
+  --football-white: #f5f7fa;
+  --football-line: rgba(185, 198, 214, .18);
+  --football-line-soft: rgba(185, 198, 214, .1);
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 92% 9%, rgba(88, 112, 143, .2), transparent 26rem),
+    linear-gradient(180deg, #07111d 0, #040912 42rem, #03070d 100%);
+}
+
+.app-shell--football-room .app-header--back-room {
+  border-bottom-color: rgba(180, 193, 210, .2);
+  background: rgba(7, 17, 29, .94);
+  backdrop-filter: blur(18px);
+}
+
+.app-shell--football-room .back-room-header__exit small {
+  color: #8998aa;
+}
+
+.app-shell--football-room .back-room-header__exit strong,
+.app-shell--football-room .back-room-header__exit > span:first-child {
+  color: #f5f7fa;
+}
+
+.app-shell--football-room .app-content {
+  background: transparent;
+}
+
+.app-shell--football-room .eyebrow {
+  color: #9ca9b8;
+}
+
+.football-room-page,
+.football-rank-five-page,
+.football-debate-page {
+  color: var(--football-white, #f5f7fa);
+}
+
+.football-room-hero,
+.football-rank-five-intro,
+.football-debate-intro,
+.football-debate-result-hero,
+.football-rank-five-board,
+.football-keep-cut-board,
+.football-wavelength-clue,
+.football-wavelength-guess-panel,
+.football-wavelength-final-numbers,
+.football-wavelength-reveal,
+.football-wavelength-path,
+.football-blind-resume-card,
+.football-blind-resume-recap,
+.football-blind-resume-topline {
+  border-color: var(--football-line) !important;
+  background:
+    linear-gradient(140deg, rgba(31, 51, 76, .25), transparent 52%),
+    var(--football-navy-850) !important;
+  box-shadow: none !important;
+}
+
+.football-room-hero {
+  background:
+    linear-gradient(118deg, rgba(180, 193, 210, .11), transparent 44%),
+    linear-gradient(160deg, #102239 0%, #091522 72%) !important;
+}
+
+.football-room-hero::after {
+  border-color: rgba(183, 194, 208, .12) !important;
+}
+
+.football-room-tags span,
+.football-debate-category,
+.football-rank-five-category {
+  border-color: var(--football-line) !important;
+  background: rgba(208, 216, 226, .045) !important;
+  color: var(--football-silver) !important;
+}
+
+.football-room-game-grid {
+  gap: .72rem;
+}
+
+.football-room-game-grid .football-room-preview {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: .9rem;
+  min-height: 0 !important;
+  padding: 1rem !important;
+  border-color: var(--football-line) !important;
+  border-radius: 19px !important;
+  background: linear-gradient(135deg, rgba(28, 50, 79, .42), rgba(8, 17, 29, .96)) !important;
+}
+
+.football-room-game-grid .football-room-preview:nth-child(n) {
+  background: linear-gradient(135deg, rgba(28, 50, 79, .42), rgba(8, 17, 29, .96)) !important;
+}
+
+.football-room-preview__mark {
+  display: grid !important;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  align-self: start;
+  border: 1px solid rgba(196, 205, 217, .22);
+  border-radius: 16px;
+  background: linear-gradient(145deg, #192a40, #0d1827);
+  color: #d8dee6 !important;
+  font-size: 1rem !important;
+  font-weight: 950;
+  letter-spacing: -.03em;
+}
+
+.football-room-preview > div {
+  min-width: 0;
+}
+
+.football-room-preview small {
+  color: #8695a8 !important;
+}
+
+.football-room-preview strong {
+  margin-top: .16rem !important;
+  color: #f5f7fa !important;
+  font-size: clamp(1.25rem, 5vw, 1.7rem) !important;
+}
+
+.football-room-preview p {
+  margin: .32rem 0 .55rem !important;
+  color: #9ba8b8 !important;
+  font-size: .78rem !important;
+  line-height: 1.42 !important;
+}
+
+.football-room-preview em {
+  margin-top: 0 !important;
+  color: #d5dbe3 !important;
+}
+
+.football-subject-visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+  border: 1px solid rgba(196, 205, 217, .18);
+  border-radius: 15px;
+  background:
+    linear-gradient(145deg, rgba(122, 142, 168, .14), transparent 60%),
+    #132033;
+}
+
+.football-subject-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.football-subject-visual.is-program img,
+.football-subject-visual.is-team-season img {
+  padding: 8px;
+  object-fit: contain;
+}
+
+.football-subject-visual__fallback {
+  display: grid;
+  place-items: center;
+  gap: .08rem;
+  color: #dbe1e8;
+  text-align: center;
+}
+
+.football-subject-visual__fallback b {
+  font-size: .62rem;
+  letter-spacing: .1em;
+}
+
+.football-subject-visual__fallback small {
+  color: #7f8da0;
+  font-size: .48rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.football-rank-five-intro,
+.football-debate-intro {
+  grid-template-columns: minmax(0, 1fr) auto;
+  margin-bottom: .75rem;
+  padding: 1rem 1.1rem !important;
+  border-radius: 19px !important;
+}
+
+.football-rank-five-intro h1,
+.football-debate-intro h1 {
+  margin: .25rem 0 .35rem !important;
+  font-size: clamp(1.55rem, 6vw, 2.55rem) !important;
+  line-height: 1 !important;
+}
+
+.football-rank-five-intro p:not(.eyebrow),
+.football-debate-intro p:not(.eyebrow) {
+  font-size: .78rem;
+  line-height: 1.4;
+}
+
+.football-rank-five-category,
+.football-debate-category {
+  min-width: 150px !important;
+  padding: .72rem !important;
+  border-radius: 14px !important;
+}
+
+.football-rank-five-board > header,
+.football-keep-cut-board > header {
+  border-bottom-color: var(--football-line-soft) !important;
+}
+
+.football-rank-five-slots {
+  gap: .42rem !important;
+  padding: .72rem !important;
+}
+
+.football-rank-five-slot {
+  min-height: 50px !important;
+  padding: .45rem .65rem !important;
+  border-color: rgba(177, 191, 208, .16) !important;
+  border-radius: 13px !important;
+  background: rgba(214, 222, 232, .025) !important;
+}
+
+.football-rank-five-slot.is-filled {
+  display: grid !important;
+  grid-template-columns: 28px 34px minmax(0, 1fr) !important;
+  gap: .45rem !important;
+  text-align: left !important;
+}
+
+.football-rank-five-slot__visual {
+  width: 34px;
+  height: 34px;
+  flex-basis: 34px;
+  border-radius: 10px;
+}
+
+.football-rank-five-current {
+  grid-template-columns: 62px minmax(0, 1fr) !important;
+  gap: .85rem !important;
+  margin: 0 .72rem .72rem !important;
+  padding: .8rem !important;
+  border-color: var(--football-line) !important;
+  border-radius: 16px !important;
+  background: linear-gradient(120deg, rgba(37, 67, 104, .3), transparent 55%), #0b1624 !important;
+}
+
+.football-rank-five-current__visual {
+  width: 58px;
+  height: 58px;
+  flex-basis: 58px;
+}
+
+.football-rank-five-current h2 {
+  font-size: clamp(1.55rem, 6vw, 2.35rem) !important;
+}
+
+.football-rank-five-results article,
+.football-debate-result-list article,
+.football-wavelength-reveal article,
+.football-blind-resume-recap article {
+  border-color: var(--football-line-soft) !important;
+  background: rgba(211, 219, 230, .028) !important;
+}
+
+.football-keep-cut-trays {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: .6rem !important;
+  padding: .7rem !important;
+}
+
+.football-keep-cut-tray {
+  padding: .62rem !important;
+  border-color: var(--football-line) !important;
+  border-radius: 15px !important;
+  background: rgba(213, 222, 232, .025) !important;
+  box-shadow: none !important;
+}
+
+.football-keep-cut-tray.is-keep {
+  border-top-color: rgba(133, 158, 129, .55) !important;
+}
+
+.football-keep-cut-tray.is-cut {
+  border-top-color: rgba(151, 126, 130, .55) !important;
+}
+
+.football-keep-cut-tray > div {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: .36rem !important;
+}
+
+.football-keep-cut-tray article,
+.football-keep-cut-tray i {
+  min-height: 46px !important;
+  border-radius: 11px !important;
+}
+
+.football-keep-cut-tray article {
+  padding: .34rem !important;
+}
+
+.football-keep-cut-tray__visual {
+  width: 28px;
+  height: 28px;
+  flex-basis: 28px;
+  border-radius: 8px;
+}
+
+.football-keep-cut-current {
+  grid-template-columns: 58px minmax(0, 1fr) auto !important;
+  margin: 0 .7rem .7rem !important;
+  padding: .78rem !important;
+  border-color: var(--football-line) !important;
+  background: linear-gradient(120deg, rgba(37, 67, 104, .28), transparent 55%), #0b1624 !important;
+}
+
+.football-keep-cut-current h2 {
+  font-size: clamp(1.5rem, 6vw, 2.25rem) !important;
+}
+
+.football-keep-cut-current__actions .is-keep {
+  background: #203828 !important;
+}
+
+.football-keep-cut-current__actions .is-cut {
+  background: #392329 !important;
+}
+
+.football-debate-result-hero > p,
+.football-rank-five-score .eyebrow,
+.football-blind-resume-reveal .eyebrow,
+.football-blind-resume-recap .eyebrow {
+  color: #a9b5c4 !important;
+}
+
+.football-wavelength-topline,
+.football-blind-resume-topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: end;
+  margin-bottom: .65rem;
+}
+
+.football-wavelength-topline {
+  padding: 0 .1rem;
+  color: #8d9bad;
+  font-size: .62rem;
+  font-weight: 900;
+  letter-spacing: .1em;
+}
+
+.football-wavelength-topline b {
+  color: #d7dde5;
+}
+
+.football-wavelength-progress i,
+.football-blind-resume-progress i {
+  background: rgba(173, 187, 204, .13) !important;
+}
+
+.football-wavelength-progress i.is-current,
+.football-wavelength-progress i.is-complete,
+.football-blind-resume-progress i.is-current,
+.football-blind-resume-progress i.is-complete {
+  background: #9aa9bb !important;
+}
+
+.football-wavelength-clue {
+  padding: 1rem 1.1rem !important;
+}
+
+.football-wavelength-clue__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: #8e9caf;
+  font-size: .62rem;
+  font-weight: 900;
+  letter-spacing: .1em;
+}
+
+.football-wavelength-clue h1 {
+  margin: .75rem 0 .35rem;
+  color: #f5f7fa;
+  font-size: clamp(2rem, 8vw, 4rem);
+  line-height: .95;
+  letter-spacing: -.055em;
+  text-align: center;
+}
+
+.football-wavelength-clue > p {
+  margin: 0;
+  color: #95a2b2;
+  text-align: center;
+}
+
+.football-wavelength-guess-panel button,
+.football-debate-actions button.is-primary,
+.football-rank-five-primary,
+.football-blind-resume-reveal button {
+  border-color: #d9dee5 !important;
+  background: #d9dee5 !important;
+  color: #07111d !important;
+}
+
+.football-wavelength-guess-panel input[type="range"] {
+  accent-color: #cbd2dc !important;
+}
+
+.football-wavelength-rules {
+  margin: .55rem 0 0;
+  color: #78879a;
+  font-size: .62rem;
+  text-align: center;
+}
+
+.football-blind-resume-topline {
+  padding: .95rem 1rem;
+  border: 1px solid var(--football-line);
+  border-radius: 17px;
+}
+
+.football-blind-resume-topline h1 {
+  margin: .15rem 0 0;
+  font-size: clamp(1.35rem, 5vw, 2rem);
+  line-height: 1.05;
+}
+
+.football-blind-resume-topline aside {
+  flex: 0 0 auto;
+  text-align: right;
+}
+
+.football-blind-resume-topline aside span,
+.football-blind-resume-topline aside b {
+  display: block;
+}
+
+.football-blind-resume-topline aside span {
+  color: #8190a3;
+  font-size: .54rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.football-blind-resume-topline aside b {
+  margin-top: .22rem;
+  color: #d7dde5;
+  font-size: .7rem;
+}
+
+.football-blind-resume-card > header {
+  border-bottom-color: var(--football-line-soft) !important;
+}
+
+.football-blind-resume-stats article {
+  border-color: var(--football-line-soft) !important;
+  background: rgba(214, 222, 232, .025) !important;
+}
+
+.football-blind-resume-lock-note {
+  margin: .8rem 1rem 0;
+  color: #8f9daf;
+  font-size: .58rem;
+  font-weight: 900;
+  letter-spacing: .07em;
+  text-align: center;
+}
+
+.football-blind-resume-picks button {
+  background: #15263c !important;
+  border-color: rgba(190, 201, 215, .23) !important;
+}
+
+.football-blind-resume-more {
+  display: block;
+  width: calc(100% - 2rem);
+  margin: .65rem 1rem 1rem;
+  padding: .78rem 1rem;
+  border: 1px solid rgba(190, 201, 215, .2);
+  border-radius: 999px;
+  background: transparent;
+  color: #d8dee6;
+  font-size: .66rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.football-blind-resume-identities {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .55rem;
+  margin: .8rem 1rem 0;
+}
+
+.football-blind-resume-identities article {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  gap: .55rem;
+  align-items: center;
+  min-width: 0;
+  padding: .55rem;
+  border: 1px solid var(--football-line-soft);
+  border-radius: 13px;
+  background: rgba(214, 222, 232, .025);
+}
+
+.football-blind-resume-identities article.is-winner {
+  border-color: rgba(161, 180, 156, .42);
+}
+
+.football-blind-resume-identities .football-subject-visual {
+  width: 42px;
+  height: 42px;
+  flex-basis: 42px;
+  border-radius: 11px;
+}
+
+.football-blind-resume-identities span,
+.football-blind-resume-identities small,
+.football-blind-resume-identities strong {
+  display: block;
+  min-width: 0;
+}
+
+.football-blind-resume-identities small {
+  color: #77869a;
+  font-size: .5rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.football-blind-resume-identities strong {
+  margin-top: .1rem;
+  overflow: hidden;
+  font-size: .75rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.football-blind-resume-reveal {
+  border-color: var(--football-line) !important;
+  background: #0b1624 !important;
+}
+
+.football-blind-resume-reveal.is-correct {
+  border-top-color: rgba(148, 176, 141, .58) !important;
+}
+
+.football-blind-resume-reveal.is-wrong {
+  border-top-color: rgba(164, 128, 132, .58) !important;
+}
+
+@media (min-width: 820px) {
+  .football-room-game-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .football-rank-five-intro,
+  .football-debate-intro {
+    grid-template-columns: 1fr !important;
+  }
+
+  .football-rank-five-category,
+  .football-debate-category {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: .25rem .55rem;
+    align-items: center;
+  }
+
+  .football-rank-five-category small,
+  .football-debate-category small {
+    grid-column: 1 / -1;
+  }
+
+  .football-rank-five-category button,
+  .football-debate-category button {
+    width: auto !important;
+  }
+
+  .football-keep-cut-current {
+    grid-template-columns: 52px minmax(0, 1fr) !important;
+  }
+
+  .football-keep-cut-current__actions {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 430px) {
+  .football-room-game-grid .football-room-preview {
+    grid-template-columns: 54px minmax(0, 1fr);
+  }
+
+  .football-room-preview__mark {
+    width: 54px;
+    height: 54px;
+    border-radius: 14px;
+  }
+
+  .football-keep-cut-tray > div {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .football-keep-cut-tray article span small {
+    display: none;
+  }
+
+  .football-blind-resume-topline {
+    align-items: start;
+  }
+
+  .football-blind-resume-topline aside {
+    max-width: 96px;
+  }
+}

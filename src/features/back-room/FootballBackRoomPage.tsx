@@ -2,31 +2,31 @@ import { useNavigate } from "react-router-dom";
 
 const footballGames = [
   {
-    id: "05",
+    id: "5",
     kicker: "BLIND RANKING",
-    name: "RANK 5",
-    description: "Six rotating debates across college football and the NFL. Lock five before you know what’s coming.",
+    name: "BLIND RANK 5",
+    description: "Five football names. Five locked slots. Same blind-ranking game as UFC, built from college football and the NFL.",
     path: "/back-room/football/rank-five",
   },
   {
-    id: "44",
-    kicker: "ROSTER KNIFE FIGHT",
+    id: "4/4",
+    kicker: "ROSTER DECISIONS",
     name: "KEEP 4 / CUT 4",
-    description: "Eight names, one at a time. Keep four. Cut four. Every call is permanent until the board is over.",
+    description: "Eight names, one at a time. Keep four. Cut four. Every decision locks before the next reveal.",
     path: "/back-room/football/keep-cut",
   },
   {
-    id: "100",
-    kicker: "READ THE ROOM",
+    id: "~",
+    kicker: "READ THE SCALE",
     name: "WAVELENGTH",
-    description: "Game manager or gunslinger? Normal fanbase or completely insane? Find one hidden football number in four clues.",
+    description: "One hidden 1–100 football number. Four adaptive clues. Same Wavelength rules as the UFC room.",
     path: "/back-room/football/wavelength",
   },
   {
-    id: "A/B",
-    kicker: "NO NAMES. JUST THE RESUME.",
+    id: "?",
+    kicker: "NO NAMES. JUST THE RÉSUMÉ.",
     name: "BLIND RESUME",
-    description: "Two anonymous football résumés. Pick the better one before the names come off. Five rounds across Saturdays and Sundays.",
+    description: "Player careers, single seasons, teams, programs and coaches. Reveal résumé stats in stages, then lock the better one.",
     path: "/back-room/football/blind-resume",
   },
 ] as const;
@@ -39,7 +39,7 @@ export default function FootballBackRoomPage() {
       <section className="back-room-hero football-room-hero">
         <p className="eyebrow">THE BACK ROOM · FOOTBALL</p>
         <h1>Saturday + Sunday.</h1>
-        <p>College football and the NFL together. No feeds. No news. Just games worth arguing about.</p>
+        <p>College football and the NFL together. Same games that work in the Octagon. Different sport. Different room.</p>
         <div className="football-room-tags" aria-label="Football leagues">
           <span>COLLEGE FOOTBALL</span>
           <span>NFL</span>
@@ -50,13 +50,13 @@ export default function FootballBackRoomPage() {
       <section className="football-room-game-grid" aria-label="Football games">
         {footballGames.map((game) => (
           <button className="football-room-preview" type="button" key={game.path} onClick={() => navigate(game.path)}>
+            <span className="football-room-preview__mark" aria-hidden="true">{game.id}</span>
             <div>
               <small>{game.kicker}</small>
               <strong>{game.name}</strong>
               <p>{game.description}</p>
               <em>OPEN GAME →</em>
             </div>
-            <span aria-hidden="true">{game.id}</span>
           </button>
         ))}
       </section>
