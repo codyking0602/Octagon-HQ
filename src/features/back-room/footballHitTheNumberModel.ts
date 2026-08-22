@@ -90,7 +90,7 @@ export interface FootballHitTheNumberQualityResult {
   passes: boolean;
   legalSelectionCount: number;
   hasGoodUnder: boolean;
-  hasMiddlingUnder: boolean;
+  hasMiddlingOutcome: boolean;
   hasMeaningfulBust: boolean;
 }
 
@@ -363,7 +363,7 @@ export function footballHitTheNumberSelectionSatisfies(
 export function footballHitTheNumberPlanQuality(plan: FootballHitTheNumberPlan): FootballHitTheNumberQualityResult {
   let legalSelectionCount = 0;
   let hasGoodUnder = false;
-  let hasMiddlingUnder = false;
+  let hasMiddlingOutcome = false;
   let hasMeaningfulBust = false;
 
   combinations(plan.subjectIds, plan.pickCount, (subjectIds) => {
@@ -379,15 +379,18 @@ export function footballHitTheNumberPlanQuality(plan: FootballHitTheNumberPlan):
       pickCount: plan.pickCount,
     });
     if (status === "under" && score >= 90) hasGoodUnder = true;
-    if (status === "under" && score >= 75 && score <= 89) hasMiddlingUnder = true;
-    if (status === "bust" && score <= 65) hasMeaningfulBust = true;
+    if (
+      (status === "under" && score >= 75 && score <= 89)
+      || (status === "bust" && score >= 66)
+    ) hasMiddlingOutcome = true;
+    if (status === "bust") hasMeaningfulBust = true;
   });
 
   return {
-    passes: legalSelectionCount >= 6 && hasGoodUnder && hasMiddlingUnder && hasMeaningfulBust,
+    passes: legalSelectionCount >= 6 && hasGoodUnder && hasMiddlingOutcome && hasMeaningfulBust,
     legalSelectionCount,
     hasGoodUnder,
-    hasMiddlingUnder,
+    hasMiddlingOutcome,
     hasMeaningfulBust,
   };
 }
