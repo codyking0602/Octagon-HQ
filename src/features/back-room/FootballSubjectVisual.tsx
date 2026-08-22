@@ -17,9 +17,15 @@ const VISUAL_META_BY_PACK: Record<FootballRankFivePackId, FootballSubjectVisualM
   "nfl-quarterbacks": { kind: "player", shortLabel: "QB", folder: "players" },
   "nfl-running-backs": { kind: "player", shortLabel: "RB", folder: "players" },
   "nfl-wide-receivers": { kind: "player", shortLabel: "WR", folder: "players" },
+  "nfl-tight-ends": { kind: "player", shortLabel: "TE", folder: "players" },
+  "nfl-defensive-players": { kind: "player", shortLabel: "DEF", folder: "players" },
   "nfl-head-coaches": { kind: "coach", shortLabel: "HC", folder: "coaches" },
+  "nfl-qb-seasons": { kind: "player", shortLabel: "QB", folder: "players" },
+  "nfl-team-seasons": { kind: "team-season", shortLabel: "TEAM", folder: "teams" },
   "college-quarterbacks": { kind: "player", shortLabel: "QB", folder: "players" },
+  "college-head-coaches": { kind: "coach", shortLabel: "HC", folder: "coaches" },
   "college-programs": { kind: "program", shortLabel: "PROGRAM", folder: "programs" },
+  "college-program-eras": { kind: "program", shortLabel: "ERA", folder: "programs" },
   "college-team-seasons": { kind: "team-season", shortLabel: "TEAM", folder: "teams" },
 };
 
