@@ -341,6 +341,256 @@ button.back-room-sport:focus-visible {
   color: #dfe3e9;
 }
 
+.football-hit-number-page {
+  width: min(100%, 920px);
+  margin: 0 auto;
+  padding-bottom: 3rem;
+}
+
+.football-hit-number-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(180px, .34fr);
+  gap: 1rem;
+  margin-bottom: .85rem;
+  padding: clamp(1.25rem, 5vw, 2.25rem);
+  border: 1px solid rgba(139, 158, 190, .24);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(67, 88, 122, .34), transparent 42%),
+    linear-gradient(135deg, #0d1421, #090d14 65%);
+  color: #f6f8fb;
+}
+
+.football-hit-number-hero .eyebrow,
+.football-hit-number-hero > div > span,
+.football-hit-number-hero > div > strong,
+.football-hit-number-hero aside small {
+  color: #8fa2c2;
+  font-size: .64rem;
+  font-weight: 900;
+  letter-spacing: .13em;
+}
+
+.football-hit-number-hero h1 {
+  margin: .35rem 0 0;
+  font-size: clamp(3.4rem, 13vw, 7rem);
+  line-height: .82;
+  letter-spacing: -.07em;
+}
+
+.football-hit-number-hero > div > p:last-child {
+  max-width: 38rem;
+  margin: .9rem 0 0;
+  color: #aab4c3;
+  line-height: 1.45;
+}
+
+.football-hit-number-hero aside {
+  align-self: stretch;
+  display: grid;
+  align-content: end;
+  gap: .35rem;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .035);
+}
+
+.football-hit-number-hero aside b {
+  font-size: 1.05rem;
+}
+
+.football-hit-number-hero aside em {
+  color: #9da9ba;
+  font-size: .76rem;
+  font-style: normal;
+}
+
+.football-hit-number-rules,
+.football-hit-number-selection {
+  margin-bottom: .85rem;
+  padding: .9rem 1rem;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 18px;
+  background: #0d1118;
+}
+
+.football-hit-number-rules small,
+.football-hit-number-selection span {
+  color: #8fa2c2;
+  font-size: .63rem;
+  font-weight: 900;
+  letter-spacing: .12em;
+}
+
+.football-hit-number-rules div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+  margin-top: .6rem;
+}
+
+.football-hit-number-rules span {
+  padding: .42rem .6rem;
+  border-radius: 999px;
+  background: #192438;
+  color: #dbe3ee;
+  font-size: .7rem;
+  font-weight: 800;
+}
+
+.football-hit-number-selection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+}
+
+.football-hit-number-selection strong {
+  color: #99a3b1;
+  font-size: .72rem;
+}
+
+.football-hit-number-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .7rem;
+}
+
+.football-hit-number-grid button {
+  display: grid;
+  gap: .3rem;
+  min-height: 132px;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, .09);
+  border-radius: 18px;
+  background: #0d1118;
+  color: #f4f6f9;
+  text-align: left;
+}
+
+.football-hit-number-grid button:not(:disabled) {
+  cursor: pointer;
+}
+
+.football-hit-number-grid button.is-selected {
+  border-color: rgba(143, 162, 194, .72);
+  background: #152033;
+  box-shadow: inset 0 0 0 1px rgba(143, 162, 194, .22);
+}
+
+.football-hit-number-grid button small {
+  color: #7f8998;
+  font-size: .62rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.football-hit-number-grid button strong {
+  align-self: end;
+  font-size: clamp(1.05rem, 4vw, 1.4rem);
+  letter-spacing: -.025em;
+}
+
+.football-hit-number-grid button span {
+  color: #8fa2c2;
+  font-size: .67rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.football-hit-number-grid button.is-revealed span {
+  color: #fff;
+  font-size: 1rem;
+  letter-spacing: 0;
+}
+
+.football-hit-number-lock {
+  position: sticky;
+  z-index: 4;
+  bottom: .75rem;
+  margin-top: .85rem;
+  padding: .65rem;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 18px;
+  background: rgba(8, 11, 16, .92);
+  backdrop-filter: blur(16px);
+}
+
+.football-hit-number-lock button {
+  width: 100%;
+  min-height: 52px;
+  border: 0;
+  border-radius: 14px;
+  background: #dbe3ee;
+  color: #0a0f17;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.football-hit-number-lock button:disabled {
+  opacity: .35;
+}
+
+.football-hit-number-result {
+  display: grid;
+  justify-items: center;
+  margin-bottom: .85rem;
+  padding: 1.25rem;
+  border: 1px solid rgba(143, 162, 194, .28);
+  border-radius: 20px;
+  background: #101826;
+  text-align: center;
+}
+
+.football-hit-number-result > p {
+  margin: 0;
+  color: #8fa2c2;
+  font-size: .68rem;
+  font-weight: 950;
+  letter-spacing: .15em;
+}
+
+.football-hit-number-result > strong {
+  margin: .2rem 0;
+  font-size: clamp(2.8rem, 10vw, 5rem);
+  letter-spacing: -.055em;
+}
+
+.football-hit-number-result > span {
+  color: #9ca7b7;
+  font-size: .72rem;
+  font-weight: 800;
+}
+
+.football-hit-number-result > div {
+  display: grid;
+  margin-top: 1rem;
+}
+
+.football-hit-number-result > div small {
+  color: #7f8998;
+  font-size: .6rem;
+  font-weight: 900;
+  letter-spacing: .12em;
+}
+
+.football-hit-number-result > div b {
+  font-size: 2rem;
+}
+
+.football-hit-number-result > div em {
+  color: #8f9bad;
+  font-size: .8rem;
+  font-style: normal;
+}
+
+.football-hit-number-result.is-bust {
+  border-color: rgba(185, 92, 92, .38);
+  background: #201214;
+}
+
 @keyframes back-room-arrive {
   from { opacity: 0; transform: scale(.96); filter: blur(6px); }
   to { opacity: 1; transform: scale(1); filter: blur(0); }
@@ -371,6 +621,27 @@ button.back-room-sport:focus-visible {
 
   .football-room-preview > span {
     display: none;
+  }
+
+  .football-hit-number-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .football-hit-number-hero aside {
+    min-height: 86px;
+  }
+
+  .football-hit-number-selection {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .football-hit-number-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .football-hit-number-grid button {
+    min-height: 108px;
   }
 }
 

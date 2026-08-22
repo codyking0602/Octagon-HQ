@@ -54,8 +54,19 @@ export type FootballFactSourceId =
   | "pfr-john-elway"
   | "pfr-emmitt-smith"
   | "pfr-barry-sanders"
+  | "pfr-pass-yards-career"
+  | "pfr-rush-yards-career"
+  | "cfr-1995-nebraska"
+  | "cfr-2001-miami"
   | "cfr-2005-texas"
-  | "cfr-2013-florida-state";
+  | "cfr-2008-florida"
+  | "cfr-2010-auburn"
+  | "cfr-2013-florida-state"
+  | "cfr-2014-ohio-state"
+  | "cfr-2018-clemson"
+  | "cfr-2019-lsu"
+  | "cfr-2020-alabama"
+  | "cfr-2022-georgia";
 
 export interface FootballFactSource {
   id: FootballFactSourceId;
@@ -108,6 +119,38 @@ export const footballFactSources: readonly FootballFactSource[] = [
     coverage: "Completed NFL career through 1998",
   },
   {
+    id: "pfr-pass-yards-career",
+    publisher: "Pro Football Reference",
+    title: "NFL Passing Yards Career Leaders",
+    url: "https://www.pro-football-reference.com/leaders/pass_yds_career.htm",
+    reviewedOn: "2026-08-22",
+    coverage: "Career passing-yard totals for completed NFL careers used by Football Hit the Number",
+  },
+  {
+    id: "pfr-rush-yards-career",
+    publisher: "Pro Football Reference",
+    title: "NFL Rushing Yards Career Leaders",
+    url: "https://www.pro-football-reference.com/leaders/rush_yds_career.htm",
+    reviewedOn: "2026-08-22",
+    coverage: "Career rushing-yard totals for completed NFL careers used by Football Hit the Number",
+  },
+  {
+    id: "cfr-1995-nebraska",
+    publisher: "College Football at Sports-Reference",
+    title: "1995 Nebraska Cornhuskers team record",
+    url: "https://www.sports-reference.com/cfb/schools/nebraska/1995.html",
+    reviewedOn: "2026-08-22",
+    coverage: "Completed 1995 season",
+  },
+  {
+    id: "cfr-2001-miami",
+    publisher: "College Football at Sports-Reference",
+    title: "2001 Miami (FL) Hurricanes team record",
+    url: "https://www.sports-reference.com/cfb/schools/miami-fl/2001.html",
+    reviewedOn: "2026-08-22",
+    coverage: "Completed 2001 season",
+  },
+  {
     id: "cfr-2005-texas",
     publisher: "College Football at Sports-Reference",
     title: "2005 Texas Longhorns team record",
@@ -116,12 +159,68 @@ export const footballFactSources: readonly FootballFactSource[] = [
     coverage: "Completed 2005 season",
   },
   {
+    id: "cfr-2008-florida",
+    publisher: "College Football at Sports-Reference",
+    title: "2008 Florida Gators team record",
+    url: "https://www.sports-reference.com/cfb/schools/florida/2008.html",
+    reviewedOn: "2026-08-22",
+    coverage: "Completed 2008 season",
+  },
+  {
+    id: "cfr-2010-auburn",
+    publisher: "College Football at Sports-Reference",
+    title: "2010 Auburn Tigers team record",
+    url: "https://www.sports-reference.com/cfb/schools/auburn/2010.html",
+    reviewedOn: "2026-08-22",
+    coverage: "Completed 2010 season",
+  },
+  {
     id: "cfr-2013-florida-state",
     publisher: "College Football at Sports-Reference",
     title: "2013 Florida State Seminoles team record",
     url: "https://www.sports-reference.com/cfb/schools/florida-state/2013.html",
     reviewedOn: "2026-08-22",
     coverage: "Completed 2013 season",
+  },
+  {
+    id: "cfr-2014-ohio-state",
+    publisher: "College Football at Sports-Reference",
+    title: "2014 Ohio State Buckeyes team record",
+    url: "https://www.sports-reference.com/cfb/schools/ohio-state/2014.html",
+    reviewedOn: "2026-08-22",
+    coverage: "Completed 2014 season",
+  },
+  {
+    id: "cfr-2018-clemson",
+    publisher: "College Football at Sports-Reference",
+    title: "2018 Clemson Tigers team record",
+    url: "https://www.sports-reference.com/cfb/schools/clemson/2018.html",
+    reviewedOn: "2026-08-22",
+    coverage: "Completed 2018 season",
+  },
+  {
+    id: "cfr-2019-lsu",
+    publisher: "College Football at Sports-Reference",
+    title: "2019 LSU Fighting Tigers team record",
+    url: "https://www.sports-reference.com/cfb/schools/louisiana-state/2019.html",
+    reviewedOn: "2026-08-22",
+    coverage: "Completed 2019 season",
+  },
+  {
+    id: "cfr-2020-alabama",
+    publisher: "College Football at Sports-Reference",
+    title: "2020 Alabama Crimson Tide team record",
+    url: "https://www.sports-reference.com/cfb/schools/alabama/2020.html",
+    reviewedOn: "2026-08-22",
+    coverage: "Completed 2020 season",
+  },
+  {
+    id: "cfr-2022-georgia",
+    publisher: "College Football at Sports-Reference",
+    title: "2022 Georgia Bulldogs team record",
+    url: "https://www.sports-reference.com/cfb/schools/georgia/2022.html",
+    reviewedOn: "2026-08-22",
+    coverage: "Completed 2022 season",
   },
 ] as const;
 
@@ -151,6 +250,33 @@ const reported = (
   metricId,
   value,
   evidence: { sourceIds: [sourceId], kind: "reported" },
+});
+
+const nflPassingYards = (subjectId: string, value: number): FootballFactualRecord => ({
+  subjectId,
+  scope: "nfl-player-career",
+  facts: [reported("pfr-pass-yards-career", "nfl-career-passing-yards", value)],
+});
+
+const nflRushingYards = (subjectId: string, value: number): FootballFactualRecord => ({
+  subjectId,
+  scope: "nfl-player-career",
+  facts: [reported("pfr-rush-yards-career", "nfl-career-rushing-yards", value)],
+});
+
+const cfbSeason = (
+  sourceId: FootballFactSourceId,
+  subjectId: string,
+  wins: number,
+  pointsPerGame: number,
+): FootballFactualRecord => ({
+  subjectId,
+  scope: "cfb-team-season",
+  facts: [
+    reported(sourceId, "cfb-team-wins", wins),
+    reported(sourceId, "cfb-team-points-per-game", pointsPerGame),
+    reported(sourceId, "cfb-national-title", 1),
+  ],
 });
 
 export const footballFactualRecords: readonly FootballFactualRecord[] = [
@@ -184,6 +310,15 @@ export const footballFactualRecords: readonly FootballFactualRecord[] = [
       reported("pfr-john-elway", "nfl-super-bowl-titles", 2),
     ],
   },
+  nflPassingYards("drew-brees", 80358),
+  nflPassingYards("brett-favre", 71838),
+  nflPassingYards("ben-roethlisberger", 64088),
+  nflPassingYards("matt-ryan", 62792),
+  nflPassingYards("eli-manning", 57023),
+  nflPassingYards("warren-moon", 49325),
+  nflPassingYards("steve-young", 33124),
+  nflPassingYards("troy-aikman", 32942),
+  nflPassingYards("kurt-warner", 32344),
   {
     subjectId: "emmitt-smith",
     scope: "nfl-player-career",
@@ -200,6 +335,18 @@ export const footballFactualRecords: readonly FootballFactualRecord[] = [
       reported("pfr-barry-sanders", "nfl-career-rushing-touchdowns", 99),
     ],
   },
+  nflRushingYards("walter-payton", 16726),
+  nflRushingYards("frank-gore", 16000),
+  nflRushingYards("adrian-peterson", 14918),
+  nflRushingYards("curtis-martin", 14101),
+  nflRushingYards("ladainian-tomlinson", 13684),
+  nflRushingYards("jerome-bettis", 13662),
+  nflRushingYards("eric-dickerson", 13259),
+  nflRushingYards("tony-dorsett", 12739),
+  nflRushingYards("jim-brown", 12312),
+  nflRushingYards("marshall-faulk", 12279),
+  cfbSeason("cfr-1995-nebraska", "1995-nebraska", 12, 52.4),
+  cfbSeason("cfr-2001-miami", "2001-miami", 12, 43.2),
   {
     subjectId: "2005-texas",
     scope: "cfb-team-season",
@@ -214,6 +361,8 @@ export const footballFactualRecords: readonly FootballFactualRecord[] = [
       reported("cfr-2005-texas", "cfb-national-title", 1),
     ],
   },
+  cfbSeason("cfr-2008-florida", "2008-florida", 13, 43.6),
+  cfbSeason("cfr-2010-auburn", "2010-auburn", 14, 41.2),
   {
     subjectId: "2013-florida-state",
     scope: "cfb-team-season",
@@ -228,6 +377,11 @@ export const footballFactualRecords: readonly FootballFactualRecord[] = [
       reported("cfr-2013-florida-state", "cfb-national-title", 1),
     ],
   },
+  cfbSeason("cfr-2014-ohio-state", "2014-ohio-state", 14, 44.8),
+  cfbSeason("cfr-2018-clemson", "2018-clemson", 15, 44.3),
+  cfbSeason("cfr-2019-lsu", "2019-lsu", 15, 48.4),
+  cfbSeason("cfr-2020-alabama", "2020-alabama", 13, 48.5),
+  cfbSeason("cfr-2022-georgia", "2022-georgia", 15, 41.1),
 ] as const;
 
 const recordsBySubjectId = new Map(footballFactualRecords.map((record) => [record.subjectId, record]));

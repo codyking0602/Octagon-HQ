@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { footballHitTheNumberSubjects } from "./footballHitTheNumberModel";
 import { footballRankFivePacks } from "./footballRankFiveModel";
 import {
   footballFactMetricDefinitions,
@@ -9,10 +10,11 @@ import {
 } from "./footballFactualStats";
 
 describe("Football factual stat owner", () => {
-  it("keeps one unique canonical record per comparison subject", () => {
-    const comparisonSubjectIds = new Set(
-      footballRankFivePacks.flatMap((pack) => pack.items.map((item) => item.id)),
-    );
+  it("keeps one unique canonical record per registered Football game subject", () => {
+    const registeredSubjectIds = new Set([
+      ...footballRankFivePacks.flatMap((pack) => pack.items.map((item) => item.id)),
+      ...footballHitTheNumberSubjects.map((subject) => subject.id),
+    ]);
     const recordIds = footballFactualRecords.map((record) => record.subjectId);
 
     expect(new Set(recordIds).size).toBe(recordIds.length);
@@ -20,7 +22,7 @@ describe("Football factual stat owner", () => {
       new Set(["nfl-player-career", "cfb-team-season"]),
     );
     for (const subjectId of recordIds) {
-      expect(comparisonSubjectIds.has(subjectId), `canonical Football subject: ${subjectId}`).toBe(true);
+      expect(registeredSubjectIds.has(subjectId), `canonical Football subject: ${subjectId}`).toBe(true);
     }
   });
 
