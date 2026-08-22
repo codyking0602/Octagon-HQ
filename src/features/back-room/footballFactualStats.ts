@@ -1,6 +1,7 @@
 export type FootballFactScope = "nfl-player-career" | "cfb-team-season";
 
 export type FootballFactMetricId =
+  | "nfl-career-games"
   | "nfl-career-passing-yards"
   | "nfl-career-passing-touchdowns"
   | "nfl-ap-mvp-awards"
@@ -32,6 +33,7 @@ export interface FootballFactMetricDefinition {
 }
 
 export const footballFactMetricDefinitions: readonly FootballFactMetricDefinition[] = [
+  { id: "nfl-career-games", label: "Career games", unit: "count", decimals: 0 },
   { id: "nfl-career-passing-yards", label: "Career passing yards", unit: "yards", decimals: 0 },
   { id: "nfl-career-passing-touchdowns", label: "Career passing TD", unit: "count", decimals: 0 },
   { id: "nfl-ap-mvp-awards", label: "AP MVP awards", unit: "count", decimals: 0 },
@@ -49,13 +51,21 @@ export const footballFactMetricDefinitions: readonly FootballFactMetricDefinitio
 ] as const;
 
 export type FootballFactSourceId =
+  | "pfr-tom-brady"
   | "pfr-peyton-manning"
+  | "pfr-drew-brees"
   | "pfr-dan-marino"
   | "pfr-john-elway"
-  | "pfr-emmitt-smith"
+  | "pfr-joe-montana"
+  | "pfr-jim-brown"
   | "pfr-barry-sanders"
+  | "pfr-walter-payton"
+  | "pfr-emmitt-smith"
   | "cfr-2005-texas"
-  | "cfr-2013-florida-state";
+  | "cfr-2004-usc"
+  | "cfr-2013-florida-state"
+  | "cfr-2019-lsu"
+  | "cfr-2020-alabama";
 
 export interface FootballFactSource {
   id: FootballFactSourceId;
@@ -66,63 +76,50 @@ export interface FootballFactSource {
   coverage: string;
 }
 
+const pfrSource = (
+  id: FootballFactSourceId,
+  title: string,
+  url: string,
+  coverage: string,
+): FootballFactSource => ({
+  id,
+  publisher: "Pro Football Reference",
+  title,
+  url,
+  reviewedOn: "2026-08-22",
+  coverage,
+});
+
+const cfrSource = (
+  id: FootballFactSourceId,
+  title: string,
+  url: string,
+  coverage: string,
+): FootballFactSource => ({
+  id,
+  publisher: "College Football at Sports-Reference",
+  title,
+  url,
+  reviewedOn: "2026-08-22",
+  coverage,
+});
+
 export const footballFactSources: readonly FootballFactSource[] = [
-  {
-    id: "pfr-peyton-manning",
-    publisher: "Pro Football Reference",
-    title: "Peyton Manning player record",
-    url: "https://www.pro-football-reference.com/players/M/MannPe00.htm",
-    reviewedOn: "2026-08-22",
-    coverage: "Completed NFL career through 2015",
-  },
-  {
-    id: "pfr-dan-marino",
-    publisher: "Pro Football Reference",
-    title: "Dan Marino player record",
-    url: "https://www.pro-football-reference.com/players/M/MariDa00.htm",
-    reviewedOn: "2026-08-22",
-    coverage: "Completed NFL career through 1999",
-  },
-  {
-    id: "pfr-john-elway",
-    publisher: "Pro Football Reference",
-    title: "John Elway player record",
-    url: "https://www.pro-football-reference.com/players/E/ElwaJo00.htm",
-    reviewedOn: "2026-08-22",
-    coverage: "Completed NFL career through 1998",
-  },
-  {
-    id: "pfr-emmitt-smith",
-    publisher: "Pro Football Reference",
-    title: "Emmitt Smith player record",
-    url: "https://www.pro-football-reference.com/players/S/SmitEm00.htm",
-    reviewedOn: "2026-08-22",
-    coverage: "Completed NFL career through 2004",
-  },
-  {
-    id: "pfr-barry-sanders",
-    publisher: "Pro Football Reference",
-    title: "Barry Sanders player record",
-    url: "https://www.pro-football-reference.com/players/S/SandBa00.htm",
-    reviewedOn: "2026-08-22",
-    coverage: "Completed NFL career through 1998",
-  },
-  {
-    id: "cfr-2005-texas",
-    publisher: "College Football at Sports-Reference",
-    title: "2005 Texas Longhorns team record",
-    url: "https://www.sports-reference.com/cfb/schools/texas/2005.html",
-    reviewedOn: "2026-08-22",
-    coverage: "Completed 2005 season",
-  },
-  {
-    id: "cfr-2013-florida-state",
-    publisher: "College Football at Sports-Reference",
-    title: "2013 Florida State Seminoles team record",
-    url: "https://www.sports-reference.com/cfb/schools/florida-state/2013.html",
-    reviewedOn: "2026-08-22",
-    coverage: "Completed 2013 season",
-  },
+  pfrSource("pfr-tom-brady", "Tom Brady player record", "https://www.pro-football-reference.com/players/B/BradTo00.htm", "Completed NFL career through 2022"),
+  pfrSource("pfr-peyton-manning", "Peyton Manning player record", "https://www.pro-football-reference.com/players/M/MannPe00.htm", "Completed NFL career through 2015"),
+  pfrSource("pfr-drew-brees", "Drew Brees player record", "https://www.pro-football-reference.com/players/B/BreeDr00.htm", "Completed NFL career through 2020"),
+  pfrSource("pfr-dan-marino", "Dan Marino player record", "https://www.pro-football-reference.com/players/M/MariDa00.htm", "Completed NFL career through 1999"),
+  pfrSource("pfr-john-elway", "John Elway player record", "https://www.pro-football-reference.com/players/E/ElwaJo00.htm", "Completed NFL career through 1998"),
+  pfrSource("pfr-joe-montana", "Joe Montana player record", "https://www.pro-football-reference.com/players/M/MontJo01.htm", "Completed NFL career through 1994"),
+  pfrSource("pfr-jim-brown", "Jim Brown player record", "https://www.pro-football-reference.com/players/B/BrowJi00.htm", "Completed NFL career through 1965"),
+  pfrSource("pfr-barry-sanders", "Barry Sanders player record", "https://www.pro-football-reference.com/players/S/SandBa00.htm", "Completed NFL career through 1998"),
+  pfrSource("pfr-walter-payton", "Walter Payton player record", "https://www.pro-football-reference.com/players/P/PaytWa00.htm", "Completed NFL career through 1987"),
+  pfrSource("pfr-emmitt-smith", "Emmitt Smith player record", "https://www.pro-football-reference.com/players/S/SmitEm00.htm", "Completed NFL career through 2004"),
+  cfrSource("cfr-2005-texas", "2005 Texas Longhorns team record", "https://www.sports-reference.com/cfb/schools/texas/2005.html", "Completed 2005 season"),
+  cfrSource("cfr-2004-usc", "2004 USC Trojans team record", "https://www.sports-reference.com/cfb/schools/southern-california/2004.html", "Completed 2004 season"),
+  cfrSource("cfr-2013-florida-state", "2013 Florida State Seminoles team record", "https://www.sports-reference.com/cfb/schools/florida-state/2013.html", "Completed 2013 season"),
+  cfrSource("cfr-2019-lsu", "2019 LSU Tigers team record", "https://www.sports-reference.com/cfb/schools/louisiana-state/2019.html", "Completed 2019 season"),
+  cfrSource("cfr-2020-alabama", "2020 Alabama Crimson Tide team record", "https://www.sports-reference.com/cfb/schools/alabama/2020.html", "Completed 2020 season"),
 ] as const;
 
 export interface FootballFactEvidence {
@@ -153,81 +150,107 @@ const reported = (
   evidence: { sourceIds: [sourceId], kind: "reported" },
 });
 
+const nflCareer = (
+  subjectId: string,
+  sourceId: FootballFactSourceId,
+  facts: readonly [FootballFactMetricId, number][],
+): FootballFactualRecord => ({
+  subjectId,
+  scope: "nfl-player-career",
+  facts: facts.map(([metricId, value]) => reported(sourceId, metricId, value)),
+});
+
+const cfbTeamSeason = (
+  subjectId: string,
+  sourceId: FootballFactSourceId,
+  wins: number,
+  losses: number,
+  pointsFor: number,
+  pointsAgainst: number,
+  pointsPerGame: number,
+  srs: number,
+  sos: number,
+): FootballFactualRecord => ({
+  subjectId,
+  scope: "cfb-team-season",
+  facts: [
+    reported(sourceId, "cfb-team-wins", wins),
+    reported(sourceId, "cfb-team-losses", losses),
+    reported(sourceId, "cfb-team-points-for", pointsFor),
+    reported(sourceId, "cfb-team-points-against", pointsAgainst),
+    reported(sourceId, "cfb-team-points-per-game", pointsPerGame),
+    reported(sourceId, "cfb-team-srs", srs),
+    reported(sourceId, "cfb-team-sos", sos),
+    reported(sourceId, "cfb-national-title", 1),
+  ],
+});
+
 export const footballFactualRecords: readonly FootballFactualRecord[] = [
-  {
-    subjectId: "peyton-manning",
-    scope: "nfl-player-career",
-    facts: [
-      reported("pfr-peyton-manning", "nfl-career-passing-yards", 71940),
-      reported("pfr-peyton-manning", "nfl-career-passing-touchdowns", 539),
-      reported("pfr-peyton-manning", "nfl-ap-mvp-awards", 5),
-      reported("pfr-peyton-manning", "nfl-super-bowl-titles", 2),
-    ],
-  },
-  {
-    subjectId: "dan-marino",
-    scope: "nfl-player-career",
-    facts: [
-      reported("pfr-dan-marino", "nfl-career-passing-yards", 61361),
-      reported("pfr-dan-marino", "nfl-career-passing-touchdowns", 420),
-      reported("pfr-dan-marino", "nfl-ap-mvp-awards", 1),
-      reported("pfr-dan-marino", "nfl-super-bowl-titles", 0),
-    ],
-  },
-  {
-    subjectId: "john-elway",
-    scope: "nfl-player-career",
-    facts: [
-      reported("pfr-john-elway", "nfl-career-passing-yards", 51475),
-      reported("pfr-john-elway", "nfl-career-passing-touchdowns", 300),
-      reported("pfr-john-elway", "nfl-ap-mvp-awards", 1),
-      reported("pfr-john-elway", "nfl-super-bowl-titles", 2),
-    ],
-  },
-  {
-    subjectId: "emmitt-smith",
-    scope: "nfl-player-career",
-    facts: [
-      reported("pfr-emmitt-smith", "nfl-career-rushing-yards", 18355),
-      reported("pfr-emmitt-smith", "nfl-career-rushing-touchdowns", 164),
-    ],
-  },
-  {
-    subjectId: "barry-sanders",
-    scope: "nfl-player-career",
-    facts: [
-      reported("pfr-barry-sanders", "nfl-career-rushing-yards", 15269),
-      reported("pfr-barry-sanders", "nfl-career-rushing-touchdowns", 99),
-    ],
-  },
-  {
-    subjectId: "2005-texas",
-    scope: "cfb-team-season",
-    facts: [
-      reported("cfr-2005-texas", "cfb-team-wins", 13),
-      reported("cfr-2005-texas", "cfb-team-losses", 0),
-      reported("cfr-2005-texas", "cfb-team-points-for", 652),
-      reported("cfr-2005-texas", "cfb-team-points-against", 213),
-      reported("cfr-2005-texas", "cfb-team-points-per-game", 50.2),
-      reported("cfr-2005-texas", "cfb-team-srs", 24.98),
-      reported("cfr-2005-texas", "cfb-team-sos", 4.98),
-      reported("cfr-2005-texas", "cfb-national-title", 1),
-    ],
-  },
-  {
-    subjectId: "2013-florida-state",
-    scope: "cfb-team-season",
-    facts: [
-      reported("cfr-2013-florida-state", "cfb-team-wins", 14),
-      reported("cfr-2013-florida-state", "cfb-team-losses", 0),
-      reported("cfr-2013-florida-state", "cfb-team-points-for", 723),
-      reported("cfr-2013-florida-state", "cfb-team-points-against", 170),
-      reported("cfr-2013-florida-state", "cfb-team-points-per-game", 51.6),
-      reported("cfr-2013-florida-state", "cfb-team-srs", 23.36),
-      reported("cfr-2013-florida-state", "cfb-team-sos", 1.29),
-      reported("cfr-2013-florida-state", "cfb-national-title", 1),
-    ],
-  },
+  nflCareer("tom-brady", "pfr-tom-brady", [
+    ["nfl-career-passing-yards", 89214],
+    ["nfl-career-passing-touchdowns", 649],
+    ["nfl-ap-mvp-awards", 3],
+    ["nfl-super-bowl-titles", 7],
+  ]),
+  nflCareer("peyton-manning", "pfr-peyton-manning", [
+    ["nfl-career-passing-yards", 71940],
+    ["nfl-career-passing-touchdowns", 539],
+    ["nfl-ap-mvp-awards", 5],
+    ["nfl-super-bowl-titles", 2],
+  ]),
+  nflCareer("drew-brees", "pfr-drew-brees", [
+    ["nfl-career-passing-yards", 80358],
+    ["nfl-career-passing-touchdowns", 571],
+    ["nfl-ap-mvp-awards", 0],
+    ["nfl-super-bowl-titles", 1],
+  ]),
+  nflCareer("dan-marino", "pfr-dan-marino", [
+    ["nfl-career-passing-yards", 61361],
+    ["nfl-career-passing-touchdowns", 420],
+    ["nfl-ap-mvp-awards", 1],
+    ["nfl-super-bowl-titles", 0],
+  ]),
+  nflCareer("john-elway", "pfr-john-elway", [
+    ["nfl-career-passing-yards", 51475],
+    ["nfl-career-passing-touchdowns", 300],
+    ["nfl-ap-mvp-awards", 1],
+    ["nfl-super-bowl-titles", 2],
+  ]),
+  nflCareer("joe-montana", "pfr-joe-montana", [
+    ["nfl-career-passing-yards", 40551],
+    ["nfl-career-passing-touchdowns", 273],
+    ["nfl-ap-mvp-awards", 2],
+    ["nfl-super-bowl-titles", 4],
+  ]),
+  nflCareer("jim-brown", "pfr-jim-brown", [
+    ["nfl-career-games", 118],
+    ["nfl-career-rushing-yards", 12312],
+    ["nfl-career-rushing-touchdowns", 106],
+    ["nfl-ap-mvp-awards", 3],
+  ]),
+  nflCareer("barry-sanders", "pfr-barry-sanders", [
+    ["nfl-career-games", 153],
+    ["nfl-career-rushing-yards", 15269],
+    ["nfl-career-rushing-touchdowns", 99],
+    ["nfl-ap-mvp-awards", 1],
+  ]),
+  nflCareer("walter-payton", "pfr-walter-payton", [
+    ["nfl-career-games", 190],
+    ["nfl-career-rushing-yards", 16726],
+    ["nfl-career-rushing-touchdowns", 110],
+    ["nfl-ap-mvp-awards", 1],
+  ]),
+  nflCareer("emmitt-smith", "pfr-emmitt-smith", [
+    ["nfl-career-games", 226],
+    ["nfl-career-rushing-yards", 18355],
+    ["nfl-career-rushing-touchdowns", 164],
+    ["nfl-ap-mvp-awards", 1],
+  ]),
+  cfbTeamSeason("2005-texas", "cfr-2005-texas", 13, 0, 652, 213, 50.2, 24.98, 4.98),
+  cfbTeamSeason("2004-usc", "cfr-2004-usc", 13, 0, 496, 169, 38.2, 26.06, 8.22),
+  cfbTeamSeason("2013-florida-state", "cfr-2013-florida-state", 14, 0, 723, 170, 51.6, 23.36, 1.29),
+  cfbTeamSeason("2019-lsu", "cfr-2019-lsu", 15, 0, 726, 328, 48.4, 25.8, 6.6),
+  cfbTeamSeason("2020-alabama", "cfr-2020-alabama", 13, 0, 630, 252, 48.5, 30.26, 9.72),
 ] as const;
 
 const recordsBySubjectId = new Map(footballFactualRecords.map((record) => [record.subjectId, record]));
