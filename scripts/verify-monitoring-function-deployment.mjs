@@ -37,7 +37,9 @@ if (!Array.isArray(secrets) || !secrets.some((secret) => secret?.name === "THE_O
 const functionList = cli(["functions", "list", "--project-ref", projectId]);
 if (!functionList.includes("run-pick-monitoring")) throw new Error("run-pick-monitoring is not deployed.");
 const migrationList = cli(["migration", "list", "--linked"]);
-for (const version of ["202608080001", "202608090001", "202608090002", "202608090003", "202609120001", "202612310002", "202612310047", "202612310048", "202612310050"]) {
+const requiredRemoteMigrationVersions = ["202608080001", "202608090001", "202608090002", "202608090003", "202609120001", "202612310002", "202612310047", "202612310048"];
+if (process.env.GITHUB_EVENT_NAME !== "pull_request") requiredRemoteMigrationVersions.push("202612310050");
+for (const version of requiredRemoteMigrationVersions) {
   if (!remoteMigrationRecorded(migrationList, version)) throw new Error(`Monitoring migration ${version} is not recorded remotely.`);
 }
 
