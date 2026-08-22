@@ -2,36 +2,26 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { recordLineupCompletion } from "../play/lineupModel";
 import {
+  FOOTBALL_BLIND_RESUME_REVEAL_COUNTS,
   createFootballBlindResumeRun,
+  footballBlindResumeNextRevealCount,
+  footballBlindResumeRoundPoints,
   footballBlindResumeTier,
+  type FootballBlindResumeRevealCount,
   type FootballBlindResumeRun,
 } from "./footballBlindResumeModel";
 import { FootballSubjectVisual } from "./FootballSubjectVisual";
 
 type PickSide = "left" | "right";
-type RevealCount = 2 | 4 | 5;
 
 interface RoundPick {
   pickedId: string;
   correct: boolean;
-  revealedCount: RevealCount;
+  revealedCount: FootballBlindResumeRevealCount;
   points: number;
 }
 
-const OPENING_REVEAL: RevealCount = 2;
-
-function nextRevealCount(value: RevealCount): RevealCount | null {
-  if (value === 2) return 4;
-  if (value === 4) return 5;
-  return null;
-}
-
-function roundPoints(revealedCount: RevealCount, correct: boolean) {
-  if (!correct) return 0;
-  if (revealedCount === 2) return 20;
-  if (revealedCount === 4) return 15;
-  return 10;
-}
+const OPENING_REVEAL: FootballBlindResumeRevealCount = FOOTBALL_BLIND_RESUME_REVEAL_COUNTS[0];
 
 export default function FootballBlindResumePage() {
   const navigate = useNavigate();
@@ -39,7 +29,7 @@ export default function FootballBlindResumePage() {
   const [roundIndex, setRoundIndex] = useState(0);
   const [picks, setPicks] = useState<RoundPick[]>([]);
   const [pickedSide, setPickedSide] = useState<PickSide | null>(null);
-  const [revealedCount, setRevealedCount] = useState<RevealCount>(OPENING_REVEAL);
+  const [revealedCount, setRevealedCount] = useState<FootballBlindResumeRevealCount>(OPENING_REVEAL);
   const round = run.rounds[roundIndex];
   const complete = roundIndex >= run.rounds.length;
   const correct = picks.filter((pick) => pick.correct).length;
@@ -68,13 +58,13 @@ export default function FootballBlindResumePage() {
       pickedId,
       correct: isCorrect,
       revealedCount,
-      points: roundPoints(revealedCount, isCorrect),
+      points: footballBlindResumeRoundPoints(revealedCount, isCorrect),
     }]);
   }
 
   function revealMore() {
     if (pickedSide) return;
-    const next = nextRevealCount(revealedCount);
+    const next = footballBlindResumeNextRevealCount(revealedCount);
     if (next) setRevealedCount(next);
   }
 
@@ -85,9 +75,11 @@ export default function FootballBlindResumePage() {
       recordLineupCompletion(run.identity, {
         correct,
         score,
+        record: { wins: correct, losses },
         matchupIds: run.rounds.map((item) => item.id),
         picks: picks.map((pick) => ({
           pickedId: pick.pickedId,
+          correct: pick.correct,
           revealedCount: pick.revealedCount,
           points: pick.points,
         })),
@@ -105,7 +97,7 @@ export default function FootballBlindResumePage() {
         <section className="football-debate-result-hero">
           <p className="eyebrow">FOOTBALL BLIND RESUME · FINAL SCORE</p>
           <strong>{score}<small>/100</small></strong>
-          <span>{footballBlindResumeTier(correct)} · {correct}/5 calls right</span>
+          <span>{footballBlindResumeTier(correct)} · {correct}-{losses} record · {score} points</span>
         </section>
 
         <section className="football-blind-resume-recap">
@@ -117,6 +109,7 @@ export default function FootballBlindResumePage() {
             {run.rounds.map((item, index) => {
               const pick = picks[index];
               const winnerName = item.winnerId === item.leftId ? item.leftName : item.rightName;
+              const pickedName = pick?.pickedId === item.leftId ? item.leftName : item.rightName;
               return (
                 <article key={item.id}>
                   <b>{index + 1}</b>
@@ -125,7 +118,7 @@ export default function FootballBlindResumePage() {
                     <strong>{item.leftName} vs. {item.rightName}</strong>
                   </span>
                   <em className={pick?.correct ? "is-correct" : "is-wrong"}>
-                    {pick?.correct ? "RIGHT" : "MISS"} · +{pick?.points ?? 0} · {winnerName}
+                    {pick?.correct ? "RIGHT" : "MISS"} · +{pick?.points ?? 0} · PICK {pickedName} · WINNER {winnerName}
                   </em>
                 </article>
               );
@@ -149,7 +142,7 @@ export default function FootballBlindResumePage() {
   const winnerSide: PickSide = round.winnerId === round.leftId ? "left" : "right";
   const winnerName = winnerSide === "left" ? round.leftName : round.rightName;
   const winnerSubtitle = winnerSide === "left" ? round.leftSubtitle : round.rightSubtitle;
-  const nextReveal = nextRevealCount(revealedCount);
+  const nextReveal = footballBlindResumeNextRevealCount(revealedCount);
 
   return (
     <div className="page football-debate-page football-blind-resume-page">
@@ -178,7 +171,7 @@ export default function FootballBlindResumePage() {
           {round.stats.map((stat, index) => {
             const revealed = index < revealedCount;
             return (
-              <article key={stat.label}>
+              <article key={`${stat.label}-${index}`}>
                 <strong>{revealed ? stat.valueA : "•••"}</strong>
                 <span>{stat.label}</span>
                 <strong>{revealed ? stat.valueB : "•••"}</strong>
@@ -190,7 +183,7 @@ export default function FootballBlindResumePage() {
         {!pickedSide ? (
           <>
             <p className="football-blind-resume-lock-note">
-              {revealedCount} OF 5 STATS SHOWN · LOCK NOW: CORRECT +{roundPoints(revealedCount, true)} · MISS +0
+              {revealedCount} OF 8 STATS SHOWN · LOCK NOW: CORRECT +{footballBlindResumeRoundPoints(revealedCount, true)} · MISS +{footballBlindResumeRoundPoints(revealedCount, false)}
             </p>
             <div className="football-blind-resume-picks">
               <button type="button" onClick={() => choose("left")}>PICK A</button>
@@ -198,7 +191,7 @@ export default function FootballBlindResumePage() {
             </div>
             {nextReveal ? (
               <button className="football-blind-resume-more" type="button" onClick={revealMore}>
-                {nextReveal === 4 ? "REVEAL 2 MORE STATS" : "REVEAL FINAL STAT"}
+                REVEAL 2 MORE STATS
               </button>
             ) : null}
           </>

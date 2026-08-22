@@ -18,8 +18,10 @@ import {
 
 export const FOOTBALL_BLIND_RESUME_GAME_ID = "football-blind-resume";
 export const FOOTBALL_BLIND_RESUME_ROUNDS = 5;
+export const FOOTBALL_BLIND_RESUME_REVEAL_COUNTS = [2, 4, 6, 8] as const;
 
 export type FootballBlindResumeLeague = "NFL" | "CFB";
+export type FootballBlindResumeRevealCount = typeof FOOTBALL_BLIND_RESUME_REVEAL_COUNTS[number];
 
 export interface FootballBlindResumeFactSource {
   owner: "footballFactualStats";
@@ -121,15 +123,32 @@ function trimClause(value: string) {
   return value.trim().replace(/[.]+$/g, "");
 }
 
+function qualitativeText(value: string) {
+  return trimClause(value)
+    .replace(/\d[\d,.]*(?:\.\d+)?(?:%|×)?/g, "")
+    .replace(/\s*[-–—]\s*(?=yard|game|season|year|time)/gi, " ")
+    .replace(/\s+/g, " ")
+    .replace(/^\s*[·/:]+\s*|\s*[·/:]+\s*$/g, "")
+    .trim();
+}
+
 function resumePieces(item: FootballRankFiveItem) {
   const basisPieces = (item.ratingBasis ?? "")
-    .split(/[,;]+|\band\b/gi)
-    .map(trimClause)
+    .split(/[,;]+|\band\b|\bwith\b|\bwithout\b|\bbut\b|\bacross\b|\boffset by\b|\bbalanced by\b|\bdespite\b/gi)
+    .map(qualitativeText)
+    .filter(Boolean);
+  const sourcePieces = [item.subtitle, ...basisPieces, item.ratingBasis ?? ""]
+    .map(qualitativeText)
     .filter(Boolean)
-    .filter((value) => !/\d/.test(value));
-  const unique = basisPieces.filter((value, index) => basisPieces.indexOf(value) === index);
-  while (unique.length < 5) unique.push(unique.at(-1) ?? "Qualitative résumé context");
-  return unique.slice(0, 5);
+    .filter((value, index, rows) => rows.indexOf(value) === index);
+  const combinations = sourcePieces.flatMap((first, firstIndex) =>
+    sourcePieces.flatMap((second, secondIndex) =>
+      firstIndex === secondIndex ? [] : [trimClause(`${first}; ${second}`)]));
+  const unique = [...sourcePieces, ...combinations]
+    .filter(Boolean)
+    .filter((value, index, rows) => rows.indexOf(value) === index);
+  while (unique.length < 8) unique.push(unique.at(-1) ?? "Qualitative résumé context");
+  return unique.slice(0, 8);
 }
 
 function factualStats(
@@ -151,10 +170,13 @@ function factualStats(
 }
 
 const QUALITATIVE_LABELS = [
+  "Résumé headline",
   "Primary résumé marker",
   "Secondary résumé marker",
   "Peak / production case",
   "Longevity / context",
+  "Supporting context",
+  "Additional context",
   "Signature edge",
 ] as const;
 
@@ -171,7 +193,7 @@ function matchupStats(
     valueA: leftPieces[index]!,
     valueB: rightPieces[index]!,
   }));
-  return [...facts, ...qualitative].slice(0, 5);
+  return [...facts, ...qualitative].slice(0, 8);
 }
 
 function makeMatchup(
@@ -339,6 +361,20 @@ export function createFootballBlindResumeRun(): FootballBlindResumeRun {
     },
   });
   return { rounds: selected.value, identity: selected.identity };
+}
+
+export function footballBlindResumeNextRevealCount(value: FootballBlindResumeRevealCount) {
+  const index = FOOTBALL_BLIND_RESUME_REVEAL_COUNTS.indexOf(value);
+  return index >= 0 ? FOOTBALL_BLIND_RESUME_REVEAL_COUNTS[index + 1] ?? null : null;
+}
+
+export function footballBlindResumeRoundPoints(
+  revealedCount: FootballBlindResumeRevealCount,
+  correct: boolean,
+) {
+  const index = FOOTBALL_BLIND_RESUME_REVEAL_COUNTS.indexOf(revealedCount);
+  if (index < 0) throw new Error(`Unsupported Football Blind Resume reveal count ${revealedCount}.`);
+  return correct ? [20, 19, 18, 17][index]! : [2, 4, 6, 8][index]!;
 }
 
 export function footballBlindResumeScore(correct: number) {
