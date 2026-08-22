@@ -56,11 +56,27 @@ begin
   ) then
     raise exception 'new Fight Night bouts did not project scheduled state';
   end if;
+  if exists (
+    select 1
+    from jsonb_array_elements(v_control->'bouts') item
+    where item->>'live_status_provider' is not null
+  ) then
+    raise exception 'unattached Fight Night bouts invented a provider';
+  end if;
 
   perform set_config('request.jwt.claim.role','service_role',true);
   v_receipt := public.record_pick_bout_live_states(
     'fight-night-presentation-test',
     jsonb_build_array(
+      jsonb_build_object(
+        'bout_id','presentation-scheduled',
+        'state','scheduled',
+        'provider','espn',
+        'source_event_id','espn-presentation-event',
+        'source_competition_id','espn-presentation-scheduled',
+        'winner_fighter_slug',null,
+        'observed_at',clock_timestamp()
+      ),
       jsonb_build_object(
         'bout_id','presentation-live',
         'state','live',
@@ -81,7 +97,7 @@ begin
       )
     )
   );
-  if coalesce((v_receipt->>'bouts_updated')::integer,0) <> 2 then
+  if coalesce((v_receipt->>'bouts_updated')::integer,0) <> 3 then
     raise exception 'provider presentation states were not persisted';
   end if;
 
@@ -102,6 +118,13 @@ begin
   if v_scheduled <> 'scheduled' or v_live <> 'live' or v_final <> 'final' then
     raise exception 'control payload did not project scheduled/live/final states: %, %, %',
       v_scheduled, v_live, v_final;
+  end if;
+  if exists (
+    select 1
+    from jsonb_array_elements(v_control->'bouts') item
+    where item->>'live_status_provider' <> 'espn'
+  ) then
+    raise exception 'control payload did not project the trusted ESPN attachment';
   end if;
   if v_control->>'status' <> 'upcoming' then
     raise exception 'Fight Night presentation changed the event lifecycle';
