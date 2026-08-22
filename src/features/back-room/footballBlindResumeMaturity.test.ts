@@ -3,6 +3,7 @@ import {
   FOOTBALL_BLIND_RESUME_ROUNDS,
   buildFootballBlindResumeRounds,
   footballBlindResumeMatchups,
+  footballBlindResumeSubjectIdentityId,
   resolvedFootballBlindResumeMatchups,
 } from "./footballBlindResumeModel";
 import {
@@ -56,15 +57,19 @@ describe("Football Blind Resume content maturity", () => {
     }
   });
 
-  it("resolves configured objective rows from the canonical factual-stat owner", () => {
+  it("resolves objective rows from the canonical factual-stat owner and keeps authored rows qualitative", () => {
     const factualMatchups = footballBlindResumeMatchups.filter((matchup) =>
       matchup.stats.some((stat) => stat.source?.owner === "footballFactualStats"));
 
     expect(factualMatchups.length).toBeGreaterThanOrEqual(3);
 
-    for (const matchup of factualMatchups) {
+    for (const matchup of footballBlindResumeMatchups) {
       for (const stat of matchup.stats) {
-        if (!stat.source) continue;
+        if (!stat.source) {
+          expect(stat.valueA, `${matchup.id}: authored value A`).not.toMatch(/\d/);
+          expect(stat.valueB, `${matchup.id}: authored value B`).not.toMatch(/\d/);
+          continue;
+        }
         const left = getFootballFact(matchup.leftId, stat.source.metricId);
         const right = getFootballFact(matchup.rightId, stat.source.metricId);
         expect(left).not.toBeNull();
@@ -76,7 +81,7 @@ describe("Football Blind Resume content maturity", () => {
     }
   });
 
-  it("builds deterministic five-round cards with unique matchups, unique subjects and a healthy league/category mix", () => {
+  it("builds deterministic five-round cards with five categories and ten real subject identities", () => {
     const first = buildFootballBlindResumeRounds("pr6-deterministic-proof");
     const second = buildFootballBlindResumeRounds("pr6-deterministic-proof");
 
@@ -84,17 +89,20 @@ describe("Football Blind Resume content maturity", () => {
     expect(first).toHaveLength(FOOTBALL_BLIND_RESUME_ROUNDS);
     expect(new Set(first.map((round) => round.id)).size).toBe(FOOTBALL_BLIND_RESUME_ROUNDS);
 
-    const subjects = first.flatMap((round) => [round.leftId, round.rightId]);
+    const subjects = first.flatMap((round) => [
+      footballBlindResumeSubjectIdentityId(round.leftId),
+      footballBlindResumeSubjectIdentityId(round.rightId),
+    ]);
     expect(new Set(subjects).size).toBe(FOOTBALL_BLIND_RESUME_ROUNDS * 2);
 
     const nflRounds = first.filter((round) => round.league === "NFL").length;
     const cfbRounds = first.filter((round) => round.league === "CFB").length;
     expect(nflRounds).toBeGreaterThanOrEqual(2);
     expect(cfbRounds).toBeGreaterThanOrEqual(2);
-    expect(new Set(first.map((round) => round.packId)).size).toBeGreaterThanOrEqual(4);
+    expect(new Set(first.map((round) => round.packId)).size).toBe(FOOTBALL_BLIND_RESUME_ROUNDS);
   });
 
-  it("keeps broad coverage and low matchup/subject overexposure across many seeded runs", () => {
+  it("keeps broad coverage and low matchup/real-subject overexposure across many seeded runs", () => {
     const matchupCounts = new Map<string, number>();
     const subjectCounts = new Map<string, number>();
     const packCounts = new Map<FootballRankFivePackId, number>();
@@ -104,20 +112,25 @@ describe("Football Blind Resume content maturity", () => {
       const rounds = buildFootballBlindResumeRounds(`pr6-simulation-${index}`);
       expect(rounds).toHaveLength(FOOTBALL_BLIND_RESUME_ROUNDS);
 
-      const subjects = rounds.flatMap((round) => [round.leftId, round.rightId]);
+      const subjects = rounds.flatMap((round) => [
+        footballBlindResumeSubjectIdentityId(round.leftId),
+        footballBlindResumeSubjectIdentityId(round.rightId),
+      ]);
       expect(new Set(subjects).size).toBe(subjects.length);
 
       const nflRounds = rounds.filter((round) => round.league === "NFL").length;
       const cfbRounds = rounds.filter((round) => round.league === "CFB").length;
       expect(nflRounds).toBeGreaterThanOrEqual(2);
       expect(cfbRounds).toBeGreaterThanOrEqual(2);
-      expect(new Set(rounds.map((round) => round.packId)).size).toBeGreaterThanOrEqual(4);
+      expect(new Set(rounds.map((round) => round.packId)).size).toBe(FOOTBALL_BLIND_RESUME_ROUNDS);
 
       for (const round of rounds) {
         matchupCounts.set(round.id, (matchupCounts.get(round.id) ?? 0) + 1);
         packCounts.set(round.packId, (packCounts.get(round.packId) ?? 0) + 1);
-        subjectCounts.set(round.leftId, (subjectCounts.get(round.leftId) ?? 0) + 1);
-        subjectCounts.set(round.rightId, (subjectCounts.get(round.rightId) ?? 0) + 1);
+        for (const subjectId of [round.leftId, round.rightId]) {
+          const identityId = footballBlindResumeSubjectIdentityId(subjectId);
+          subjectCounts.set(identityId, (subjectCounts.get(identityId) ?? 0) + 1);
+        }
       }
     }
 
