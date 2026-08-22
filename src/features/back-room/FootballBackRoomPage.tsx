@@ -22,6 +22,13 @@ const footballGames = [
     description: "Game manager or gunslinger? Normal fanbase or completely insane? Find one hidden football number in four clues.",
     path: "/back-room/football/wavelength",
   },
+  {
+    id: "A/B",
+    kicker: "NO NAMES. JUST THE RESUME.",
+    name: "BLIND RESUME",
+    description: "Two anonymous football résumés. Pick the better one before the names come off. Five rounds across Saturdays and Sundays.",
+    path: "/back-room/football/blind-resume",
+  },
 ] as const;
 
 export default function FootballBackRoomPage() {
@@ -36,7 +43,7 @@ export default function FootballBackRoomPage() {
         <div className="football-room-tags" aria-label="Football leagues">
           <span>COLLEGE FOOTBALL</span>
           <span>NFL</span>
-          <span>3 GAMES LIVE</span>
+          <span>4 GAMES LIVE</span>
         </div>
       </section>
 
