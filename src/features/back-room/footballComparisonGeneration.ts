@@ -79,12 +79,12 @@ const BLIND_RANK_ATTEMPTS = 120;
 const KEEP_CUT_ATTEMPTS = 180;
 
 const TARGET_WINDOWS: Record<FootballComparisonTierId, RatingWindow> = {
-  elite: { minPercentile: 0, maxPercentile: 0.22 },
-  great: { minPercentile: 0.12, maxPercentile: 0.42 },
-  good: { minPercentile: 0.28, maxPercentile: 0.6 },
-  average: { minPercentile: 0.42, maxPercentile: 0.72 },
-  "below-average": { minPercentile: 0.58, maxPercentile: 0.86 },
-  bad: { minPercentile: 0.72, maxPercentile: 1 },
+  elite: { minPercentile: 0, maxPercentile: 0.24 },
+  great: { minPercentile: 0.08, maxPercentile: 0.45 },
+  good: { minPercentile: 0.25, maxPercentile: 0.65 },
+  average: { minPercentile: 0.45, maxPercentile: 0.82 },
+  "below-average": { minPercentile: 0.62, maxPercentile: 0.92 },
+  bad: { minPercentile: 0.75, maxPercentile: 1 },
 };
 
 export const FOOTBALL_BLIND_RANK_ARCHETYPES: readonly FootballBlindRankArchetype[] = [
@@ -189,6 +189,7 @@ function selectionCandidates(
   badCount: number,
   maxBad: number,
   forceAbsoluteTier: boolean,
+  includeSparseExact: boolean,
 ) {
   const eligible = pool.filter((item) => {
     if (used.has(item.id)) return false;
@@ -209,7 +210,7 @@ function selectionCandidates(
   const exactDepth = availableTierCount(pool, targetTier);
   const minimumExactDepth = Math.max(2, Math.ceil(pool.length * 0.08));
   const combined = [
-    ...(exactDepth >= minimumExactDepth ? exact : []),
+    ...(includeSparseExact || exactDepth >= minimumExactDepth ? exact : []),
     ...inWindow,
   ].filter((item, index, rows) => rows.findIndex((candidate) => candidate.id === item.id) === index);
   if (combined.length) return combined;
@@ -232,6 +233,7 @@ function chooseItem(
   maxBad: number,
   random: () => number,
   forceAbsoluteTier = false,
+  includeSparseExact = true,
 ) {
   return shuffleLineup(
     selectionCandidates(
@@ -243,6 +245,7 @@ function chooseItem(
       badCount,
       maxBad,
       forceAbsoluteTier,
+      includeSparseExact,
     ),
     random,
   )[0] ?? null;
@@ -252,7 +255,7 @@ function sustainablePoolRange(items: readonly FootballRankFiveItem[]) {
   const ordered = sortedPool(items);
   const highIndex = Math.round((ordered.length - 1) * 0.3);
   const lowIndex = Math.round((ordered.length - 1) * 0.7);
-  return Math.max(8, ordered[highIndex]!.rating - ordered[lowIndex]!.rating);
+  return Math.max(4, ordered[highIndex]!.rating - ordered[lowIndex]!.rating);
 }
 
 function requiredBlindRankRange(
@@ -268,13 +271,14 @@ function requiredBlindRankRange(
     0,
     MAX_BLIND_RANK_BAD,
     false,
+    false,
   ));
   const uniqueReachable = reachable.filter(
     (item, index, rows) => rows.findIndex((candidate) => candidate.id === item.id) === index,
   );
   const ratings = uniqueReachable.map((item) => item.rating);
-  const reachableRange = ratings.length > 1 ? Math.max(...ratings) - Math.min(...ratings) : 8;
-  const repeatableReach = Math.max(8, Math.floor(reachableRange * 0.85));
+  const reachableRange = ratings.length > 1 ? Math.max(...ratings) - Math.min(...ratings) : 4;
+  const repeatableReach = Math.max(4, Math.floor(reachableRange * 0.85));
   return Math.min(archetype.minRange, repeatableReach, sustainablePoolRange(items));
 }
 
@@ -313,6 +317,7 @@ function attemptBlindRankBoard(
       MAX_BLIND_RANK_BAD,
       random,
       forceAbsoluteTier,
+      false,
     );
     if (!picked) return null;
     selected.push(picked);
@@ -604,6 +609,7 @@ function attemptKeepCutBoard(
       badCount,
       random,
       forceAbsoluteTier,
+      true,
     );
     if (!picked) return null;
     selected.push(picked);
