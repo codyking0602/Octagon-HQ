@@ -30,7 +30,7 @@ describe("Football Back Room debate games", () => {
       expect(first.map((item) => item.id)).toEqual(second.map((item) => item.id));
       expect(first).toHaveLength(8);
       expect(new Set(first.map((item) => item.id)).size).toBe(8);
-      expect(footballKeepCutBoardIsCompetitive(first)).toBe(true);
+      expect(footballKeepCutBoardIsCompetitive(first, pack.items)).toBe(true);
 
       const ordered = [...first].sort((left, right) => right.rating - left.rating || left.id.localeCompare(right.id));
       const perfect = scoreFootballKeepCutSelection(first, ordered.slice(0, 4).map((item) => item.id));
