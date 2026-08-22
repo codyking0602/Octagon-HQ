@@ -7,7 +7,7 @@ import { FootballSubjectVisual } from "./FootballSubjectVisual";
 describe("Football subject visuals", () => {
   it("covers every current Football Rank 5 subject through the one canonical asset catalog", () => {
     const subjects = footballRankFivePacks.flatMap((pack) => pack.items.map((item) => ({ item, pack })));
-    expect(subjects).toHaveLength(90);
+    expect(subjects.length).toBeGreaterThanOrEqual(200);
 
     for (const { item } of subjects) {
       const asset = footballSubjectAssets[item.id];

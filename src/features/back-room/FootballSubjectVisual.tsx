@@ -16,6 +16,7 @@ interface FootballSubjectVisualMeta {
 const VISUAL_META_BY_PACK: Record<FootballRankFivePackId, FootballSubjectVisualMeta> = {
   "nfl-quarterbacks": { kind: "player", shortLabel: "QB", folder: "players" },
   "nfl-running-backs": { kind: "player", shortLabel: "RB", folder: "players" },
+  "nfl-wide-receivers": { kind: "player", shortLabel: "WR", folder: "players" },
   "nfl-head-coaches": { kind: "coach", shortLabel: "HC", folder: "coaches" },
   "college-quarterbacks": { kind: "player", shortLabel: "QB", folder: "players" },
   "college-programs": { kind: "program", shortLabel: "PROGRAM", folder: "programs" },
