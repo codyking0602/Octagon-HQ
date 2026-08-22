@@ -160,29 +160,29 @@ const qualitativeProfiles: Readonly<Record<string, QualitativeResumeProfile>> = 
     hardware: "Championship volume transformed an already great résumé",
     signature: "Longevity plus offensive reinvention",
   },
-  "tom-brady-2007": {
-    peak: "An offense that made undefeated feel inevitable every week",
-    body: "Regular-season dominance with one devastating final blemish",
-    hardware: "Individual awards are elite; the title is missing",
-    signature: "Touchdown explosion on a perfect regular season",
-  },
-  "peyton-manning-2013": {
-    peak: "Record-book passing volume from opening week onward",
-    body: "A full season of historic command and scoring",
-    hardware: "MVP-level dominance reached the Super Bowl",
-    signature: "The biggest pure passing production season of the group",
-  },
-  "dan-marino-1984": {
-    peak: "Passing numbers that arrived years before the league was ready",
-    body: "One season that reset the statistical ceiling",
-    hardware: "MVP dominance with a Super Bowl trip",
-    signature: "Era-adjusted shock value is almost impossible to match",
-  },
   "aaron-rodgers-2011": {
     peak: "Efficiency and explosiveness with almost no weekly dip",
     body: "A near-perfect regular-season quarterback campaign",
     hardware: "MVP hardware without the postseason finish",
     signature: "Efficiency peak on a fifteen-win team",
+  },
+  "patrick-mahomes-2022": {
+    peak: "MVP passing dominance survived major receiver turnover",
+    body: "Elite volume and efficiency held from September through February",
+    hardware: "MVP and Super Bowl champion in the same season",
+    signature: "Regular-season command plus the championship finish",
+  },
+  "steve-young-1994": {
+    peak: "Era-leading efficiency with real rushing value",
+    body: "A complete season that removed every remaining postseason question",
+    hardware: "MVP and Super Bowl MVP in the same campaign",
+    signature: "Efficiency, mobility and a dominant title finish",
+  },
+  "lamar-jackson-2019": {
+    peak: "A dual-threat season that forced defenses to redraw the math",
+    body: "Historic rushing value paired with league-leading touchdown production",
+    hardware: "Unanimous MVP on a fourteen-win team",
+    signature: "Transformative rushing impact from the quarterback spot",
   },
   "1972-miami-dolphins": {
     peak: "The one NFL season that finished completely perfect",
@@ -442,7 +442,7 @@ const qualitativeMatchupGroups = [
   qualitativeMatchups(
     "nfl-qb-seasons",
     "Which single-season NFL quarterback résumé is greater?",
-    ["tom-brady-2007", "peyton-manning-2013", "dan-marino-1984", "aaron-rodgers-2011"],
+    ["aaron-rodgers-2011", "patrick-mahomes-2022", "steve-young-1994", "lamar-jackson-2019"],
   ),
   qualitativeMatchups(
     "nfl-team-seasons",
@@ -540,29 +540,10 @@ function distinctPackIds(matchups: readonly FootballBlindResumeRound[], league: 
   return [...new Set(matchups.filter((matchup) => matchup.league === league).map((matchup) => matchup.packId))];
 }
 
-function selectNflPackIds(matchups: readonly FootballBlindResumeRound[], random: () => number) {
-  const shuffled = shuffleLineup(distinctPackIds(matchups, "NFL"), random);
-  const selected: FootballRankFivePackId[] = [];
-
-  for (const packId of shuffled) {
-    const overlapsQuarterbackIdentity =
-      (packId === "nfl-quarterbacks" && selected.includes("nfl-qb-seasons"))
-      || (packId === "nfl-qb-seasons" && selected.includes("nfl-quarterbacks"));
-    if (overlapsQuarterbackIdentity) continue;
-    selected.push(packId);
-    if (selected.length === 3) break;
-  }
-
-  if (selected.length !== 3) {
-    throw new Error("Football Blind Resume catalog cannot build three distinct NFL categories.");
-  }
-  return selected;
-}
-
 export function buildFootballBlindResumeRounds(seed: string) {
   const random = seededLineupRandom(FOOTBALL_BLIND_RESUME_GAME_ID, seed);
   const matchups = resolvedFootballBlindResumeMatchups();
-  const nflPacks = selectNflPackIds(matchups, random);
+  const nflPacks = shuffleLineup(distinctPackIds(matchups, "NFL"), random).slice(0, 3);
   const cfbPacks = shuffleLineup(distinctPackIds(matchups, "CFB"), random).slice(0, 2);
   const packOrder = shuffleLineup([...nflPacks, ...cfbPacks], random);
   const selected: FootballBlindResumeRound[] = [];
