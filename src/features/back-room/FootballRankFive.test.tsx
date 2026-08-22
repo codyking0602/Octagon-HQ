@@ -14,8 +14,8 @@ describe("Football Blind Rank 5", () => {
   });
 
   it("owns a deep football content pool across both leagues", () => {
-    expect(footballRankFivePacks).toHaveLength(6);
-    expect(footballRankFivePacks.filter((pack) => pack.items.every((item) => item.league === "NFL"))).toHaveLength(3);
+    expect(footballRankFivePacks).toHaveLength(7);
+    expect(footballRankFivePacks.filter((pack) => pack.items.every((item) => item.league === "NFL"))).toHaveLength(4);
     expect(footballRankFivePacks.filter((pack) => pack.items.every((item) => item.league === "CFB"))).toHaveLength(3);
 
     for (const pack of footballRankFivePacks) {
@@ -40,6 +40,8 @@ describe("Football Blind Rank 5", () => {
   it("uses one canonical football asset path convention instead of game-specific initials", () => {
     expect(footballSubjectAssetPath("patrick-mahomes", "nfl-quarterbacks"))
       .toBe("/images/football/players/patrick-mahomes.webp");
+    expect(footballSubjectAssetPath("jerry-rice", "nfl-wide-receivers"))
+      .toBe("/images/football/players/jerry-rice.webp");
     expect(footballSubjectAssetPath("alabama-program", "college-programs"))
       .toBe("/images/football/programs/alabama-program.webp");
     expect(footballSubjectAssetPath("2019-lsu", "college-team-seasons"))
