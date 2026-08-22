@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { recordLineupCompletion } from "../play/lineupModel";
+import { FootballSubjectVisual } from "./FootballSubjectVisual";
 import {
   createRandomFootballKeepCutRun,
   scoreFootballKeepCutSelection,
@@ -10,17 +11,15 @@ import type { FootballRankFiveItem } from "./footballRankFiveModel";
 
 type Decision = "keep" | "cut";
 
-function initials(name: string) {
-  return name
-    .split(/\s+/)
-    .map((part) => part.replace(/[^A-Za-z0-9]/g, "")[0] ?? "")
-    .filter(Boolean)
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
-}
-
-function Tray({ title, items }: { title: Decision; items: FootballRankFiveItem[] }) {
+function Tray({
+  title,
+  items,
+  packId,
+}: {
+  title: Decision;
+  items: FootballRankFiveItem[];
+  packId: FootballKeepCutRun["pack"]["id"];
+}) {
   return (
     <section className={`football-keep-cut-tray is-${title}`}>
       <header><strong>{title.toUpperCase()}</strong><span>{items.length}/4</span></header>
@@ -29,7 +28,7 @@ function Tray({ title, items }: { title: Decision; items: FootballRankFiveItem[]
           const item = items[index];
           return item ? (
             <article key={item.id}>
-              <b>{initials(item.name)}</b>
+              <FootballSubjectVisual className="football-keep-cut-tray__visual" item={item} packId={packId} />
               <span><strong>{item.name}</strong><small>{item.league}</small></span>
             </article>
           ) : <i aria-hidden="true" key={index}>{index + 1}</i>;
@@ -39,7 +38,15 @@ function Tray({ title, items }: { title: Decision; items: FootballRankFiveItem[]
   );
 }
 
-function ResultList({ title, items }: { title: string; items: FootballRankFiveItem[] }) {
+function ResultList({
+  title,
+  items,
+  packId,
+}: {
+  title: string;
+  items: FootballRankFiveItem[];
+  packId: FootballKeepCutRun["pack"]["id"];
+}) {
   return (
     <section className="football-debate-result-list">
       <p className="eyebrow">{title}</p>
@@ -47,7 +54,7 @@ function ResultList({ title, items }: { title: string; items: FootballRankFiveIt
         {items.map((item, index) => (
           <article key={item.id}>
             <b>#{index + 1}</b>
-            <span className="football-debate-avatar" aria-hidden="true">{initials(item.name)}</span>
+            <FootballSubjectVisual item={item} packId={packId} />
             <span><strong>{item.name}</strong><small>{item.subtitle}</small></span>
             <em>{item.league}</em>
           </article>
@@ -109,8 +116,8 @@ export default function FootballKeepCutPage() {
         </section>
 
         <div className="football-debate-result-grid">
-          <ResultList title="YOUR FOUR" items={result.kept} />
-          <ResultList title="BACK ROOM FOUR" items={result.topFour} />
+          <ResultList title="YOUR FOUR" items={result.kept} packId={run.pack.id} />
+          <ResultList title="BACK ROOM FOUR" items={result.topFour} packId={run.pack.id} />
         </div>
 
         <div className="football-debate-actions">
@@ -138,7 +145,7 @@ export default function FootballKeepCutPage() {
           <p>{run.pack.intro}</p>
         </div>
         <div className="football-debate-category">
-          <small>CURRENT ROOM</small>
+          <small>CURRENT CATEGORY</small>
           <strong>{run.pack.name}</strong>
           <button type="button" onClick={startNew}>NEW LINEUP</button>
         </div>
@@ -147,13 +154,13 @@ export default function FootballKeepCutPage() {
       <section className="football-keep-cut-board">
         <header><strong>REVEAL {decisions.length + 1} OF 8</strong><span>{run.pack.name}</span></header>
         <div className="football-keep-cut-trays">
-          <Tray title="keep" items={kept} />
-          <Tray title="cut" items={cut} />
+          <Tray title="keep" items={kept} packId={run.pack.id} />
+          <Tray title="cut" items={cut} packId={run.pack.id} />
         </div>
 
         {current ? (
           <article className="football-keep-cut-current">
-            <span className="football-debate-avatar" aria-hidden="true">{initials(current.name)}</span>
+            <FootballSubjectVisual item={current} packId={run.pack.id} />
             <div>
               <p className="eyebrow">{current.league} · LOCKED DECISION</p>
               <h2>{current.name}</h2>
