@@ -29,6 +29,13 @@ const footballGames = [
     description: "Player careers, single seasons, teams, programs and coaches. Reveal résumé stats in stages, then lock the better one.",
     path: "/back-room/football/blind-resume",
   },
+  {
+    id: "#",
+    kicker: "BUILD TO THE TARGET",
+    name: "HIT THE NUMBER",
+    description: "Pick four from eight and chase a factual football target without going over. Classic, themed, era and team-build boards.",
+    path: "/back-room/football/hit-the-number",
+  },
 ] as const;
 
 export default function FootballBackRoomPage() {
@@ -43,7 +50,7 @@ export default function FootballBackRoomPage() {
         <div className="football-room-tags" aria-label="Football leagues">
           <span>COLLEGE FOOTBALL</span>
           <span>NFL</span>
-          <span>4 GAMES LIVE</span>
+          <span>5 GAMES LIVE</span>
         </div>
       </section>
 
