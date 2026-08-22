@@ -15,14 +15,15 @@ export default function FootballBackRoomPage() {
         </div>
       </section>
 
-      <section className="football-room-preview">
+      <button className="football-room-preview" type="button" onClick={() => navigate("/back-room/football/rank-five")}>
         <div>
-          <small>FIRST GAME THROUGH THE DOOR</small>
+          <small>PLAY NOW · FIRST GAME THROUGH THE DOOR</small>
           <strong>RANK 5</strong>
-          <p>Players, programs, seasons, coaches, and impossible football arguments.</p>
+          <p>Six rotating debates across college football and the NFL. Lock five before you know what’s coming.</p>
+          <em>OPEN GAME →</em>
         </div>
         <span aria-hidden="true">05</span>
-      </section>
+      </button>
 
       <button className="back-room-secondary" type="button" onClick={() => navigate("/back-room")}>
         ← BACK TO THE BACK ROOM

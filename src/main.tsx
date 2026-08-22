@@ -54,6 +54,7 @@ import "./styles/challenge-matchups.css";
 import "./styles/challenge-member-picker.css";
 import "./styles/play-hub-polish.css";
 import "./styles/back-room.css";
+import "./styles/football-rank-five.css";
 import "./styles/war-room.css";
 import "./styles/war-room-launch.css";
 import "./styles/war-room-admin-polish.css";
