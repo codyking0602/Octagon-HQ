@@ -5,6 +5,18 @@ import {
   shuffleLineup,
   type PlayLineupIdentity,
 } from "../play/lineupModel";
+import {
+  collegeHeadCoaches,
+  collegeProgramDepth,
+  collegeProgramEras,
+  collegeQuarterbackDepth,
+  collegeTeamSeasonDepth,
+  legacyCfbRatingBasis,
+  nflDefensiveCareers,
+  nflQuarterbackSeasons,
+  nflTeamSeasons,
+  nflTightEnds,
+} from "./footballComparisonDepthCatalog";
 
 export const FOOTBALL_RANK_FIVE_GAME_ID = "football-rank-five";
 
@@ -14,9 +26,15 @@ export type FootballRankFivePackId =
   | "nfl-quarterbacks"
   | "nfl-running-backs"
   | "nfl-wide-receivers"
+  | "nfl-tight-ends"
+  | "nfl-defensive-players"
   | "nfl-head-coaches"
+  | "nfl-qb-seasons"
+  | "nfl-team-seasons"
   | "college-quarterbacks"
+  | "college-head-coaches"
   | "college-programs"
+  | "college-program-eras"
   | "college-team-seasons";
 
 export interface FootballRankFiveItem {
@@ -276,6 +294,13 @@ const collegeTeamSeasons: readonly FootballRankFiveItem[] = [
   { id: "2000-oklahoma", name: "2000 Oklahoma", subtitle: "13–0 · national champion", league: "CFB", rating: 87 },
 ];
 
+function withLegacyCfbRatingBasis(items: readonly FootballRankFiveItem[]) {
+  return items.map((item) => ({
+    ...item,
+    ratingBasis: legacyCfbRatingBasis[item.id] ?? item.ratingBasis,
+  }));
+}
+
 export const footballRankFivePacks: readonly FootballRankFivePack[] = [
   {
     id: "nfl-quarterbacks",
@@ -299,6 +324,20 @@ export const footballRankFivePacks: readonly FootballRankFivePack[] = [
     items: nflWideReceivers,
   },
   {
+    id: "nfl-tight-ends",
+    name: "NFL TE Careers",
+    prompt: "Rank their NFL careers",
+    intro: "Receiving, blocking, peak and longevity all count. Lock each tight end before the next reveal.",
+    items: nflTightEnds,
+  },
+  {
+    id: "nfl-defensive-players",
+    name: "NFL Defensive Careers",
+    prompt: "Rank their NFL defensive careers",
+    intro: "Cross-position defensive greatness. Judge each player against what elite impact looks like at his position.",
+    items: nflDefensiveCareers,
+  },
+  {
     id: "nfl-head-coaches",
     name: "NFL Head Coaches",
     prompt: "Rank their NFL coaching careers",
@@ -306,25 +345,53 @@ export const footballRankFivePacks: readonly FootballRankFivePack[] = [
     items: nflHeadCoaches,
   },
   {
+    id: "nfl-qb-seasons",
+    name: "NFL QB Seasons",
+    prompt: "Rank these quarterback seasons",
+    intro: "Judge only the season shown. Career reputation does not carry over.",
+    items: nflQuarterbackSeasons,
+  },
+  {
+    id: "nfl-team-seasons",
+    name: "NFL Team Seasons",
+    prompt: "Rank these NFL team seasons",
+    intro: "Great champions, near-misses and famous collapses share one season-only scale.",
+    items: nflTeamSeasons,
+  },
+  {
     id: "college-quarterbacks",
     name: "College QBs",
     prompt: "Rank their college careers",
     intro: "College only. Forget the NFL. Lock each quarterback before you see the next one.",
-    items: collegeQuarterbacks,
+    items: [...withLegacyCfbRatingBasis(collegeQuarterbacks), ...collegeQuarterbackDepth],
+  },
+  {
+    id: "college-head-coaches",
+    name: "CFB Head Coaches",
+    prompt: "Rank their college coaching careers",
+    intro: "College head-coaching value only: titles, program building, peak teams and sustained contention.",
+    items: collegeHeadCoaches,
   },
   {
     id: "college-programs",
     name: "Programs Since 2000",
     prompt: "Rank the programs since 2000",
     intro: "Titles, elite seasons, consistency and staying power since 2000. One program at a time.",
-    items: collegePrograms,
+    items: [...withLegacyCfbRatingBasis(collegePrograms), ...collegeProgramDepth],
+  },
+  {
+    id: "college-program-eras",
+    name: "CFB Program Eras",
+    prompt: "Rank these defined program eras",
+    intro: "Judge only the years shown. Dynasties and famous down eras belong on the same bounded-run scale.",
+    items: collegeProgramEras,
   },
   {
     id: "college-team-seasons",
-    name: "Legendary CFB Teams",
+    name: "CFB Team Seasons",
     prompt: "Rank these single-season teams",
-    intro: "Judge only the season shown. Every slot locks before the next national champion appears.",
-    items: collegeTeamSeasons,
+    intro: "Judge only the season shown. Great champions and famous disappointments share one scale.",
+    items: [...withLegacyCfbRatingBasis(collegeTeamSeasons), ...collegeTeamSeasonDepth],
   },
 ] as const;
 
