@@ -1,5 +1,3 @@
-import type { FootballRankFivePackId } from "./footballRankFiveModel";
-
 export type FootballSubjectAssetKind = "team-mark" | "program-mark";
 
 export interface FootballSubjectAsset {
@@ -138,8 +136,4 @@ export const footballSubjectAssets: Readonly<Record<string, FootballSubjectAsset
 
 export function footballSubjectAsset(itemId: string) {
   return footballSubjectAssets[itemId] ?? null;
-}
-
-export function footballSubjectAssetExpected(packId: FootballRankFivePackId) {
-  return packId !== "college-team-seasons" || true;
 }
