@@ -8,7 +8,6 @@ import {
 } from "../play/wavelengthEngine";
 import {
   createFootballWavelengthRun,
-  getFootballWavelengthAxis,
   nextFootballWavelengthClue,
   type FootballWavelengthRound,
   type FootballWavelengthRun,
@@ -23,7 +22,6 @@ export default function FootballWavelengthPage() {
   const [guesses, setGuesses] = useState<number[]>([]);
   const [complete, setComplete] = useState(false);
   const clue = round.clues[clueIndex]!;
-  const axis = getFootballWavelengthAxis(clue.axisId);
 
   function reset(nextRun: FootballWavelengthRun) {
     setRun(nextRun);
@@ -91,22 +89,19 @@ export default function FootballWavelengthPage() {
         <section className="football-wavelength-reveal">
           <header>
             <p className="eyebrow">CLUE REVEAL</p>
-            <h2>How the room moved you.</h2>
+            <h2>How the scale moved.</h2>
           </header>
           <div>
-            {round.clues.map((item, index) => {
-              const revealAxis = getFootballWavelengthAxis(item.axisId);
-              return (
-                <article key={item.id}>
-                  <b>{index + 1}</b>
-                  <span>
-                    <small>{revealAxis.left} ↔ {revealAxis.right}</small>
-                    <strong>{item.text}</strong>
-                  </span>
-                  <em>{item.rating}</em>
-                </article>
-              );
-            })}
+            {round.clues.map((item, index) => (
+              <article key={item.id}>
+                <b>{index + 1}</b>
+                <span>
+                  <small>{item.category}</small>
+                  <strong>{item.text}</strong>
+                </span>
+                <em>{item.rating}</em>
+              </article>
+            ))}
           </div>
         </section>
 
@@ -120,17 +115,9 @@ export default function FootballWavelengthPage() {
 
   return (
     <div className="page football-debate-page football-wavelength-page">
-      <section className="football-debate-intro">
-        <div>
-          <p className="eyebrow">THE BACK ROOM · FOOTBALL WAVELENGTH</p>
-          <h1>Find the hidden number.</h1>
-          <p>Four football arguments. One hidden spot from 1–100. Every clue reacts to your last guess.</p>
-        </div>
-        <div className="football-debate-category">
-          <small>CLUE PROGRESS</small>
-          <strong>{clueIndex + 1} OF 4</strong>
-          <button type="button" onClick={startNew}>NEW WAVELENGTH</button>
-        </div>
+      <section className="football-wavelength-topline">
+        <span>REPLAYABLE GAME</span>
+        <b>CLUE {clueIndex + 1} OF 4</b>
       </section>
 
       <div className="football-wavelength-progress" aria-label="Football Wavelength clue progress">
@@ -140,37 +127,39 @@ export default function FootballWavelengthPage() {
       </div>
 
       <section className="football-wavelength-clue" aria-live="polite">
-        <div className="football-wavelength-axis-head">
-          <span>{axis.name}</span>
+        <div className="football-wavelength-clue__head">
+          <span>{clue.category}</span>
           <b>CLUE {clueIndex + 1}</b>
         </div>
-        <div className="football-wavelength-axis-copy">
-          <span>{axis.left}</span><i>↔</i><span>{axis.right}</span>
-        </div>
-        <h2>{clue.text}</h2>
-        <p>Where is the hidden number relative to this football clue?</p>
+        <h1>{clue.text}</h1>
+        <p>Where does it land on the Back Room’s 1–100 football scale?</p>
       </section>
 
       <section className="football-wavelength-guess-panel">
-        <div className="football-wavelength-guess-value"><small>YOUR GUESS</small><strong>{guess}</strong></div>
+        <div className="football-wavelength-guess-value">
+          <small>{clueIndex === 3 ? "FINAL ANSWER" : "YOUR GUESS"}</small>
+          <strong>{guess}</strong>
+        </div>
         <input
-          aria-label="Football Wavelength guess"
+          aria-label="Football Wavelength guess from 1 to 100"
           type="range"
           min="1"
           max="100"
+          step="1"
           value={guess}
-          onChange={(event) => setGuess(Number(event.target.value))}
+          onChange={(event) => setGuess(clampWavelength(Number(event.target.value)))}
         />
-        <div className="football-wavelength-scale"><span>1</span><span>50</span><span>100</span></div>
-        <button type="button" onClick={lockGuess}>LOCK GUESS</button>
+        <div className="football-wavelength-scale"><span>1 · LOW</span><span>50 · MIDDLE</span><span>100 · HIGH</span></div>
+        <button type="button" onClick={lockGuess}>
+          {clueIndex === 3 ? "LOCK FINAL GUESS" : "LOCK GUESS & REVEAL NEXT CLUE"}
+        </button>
       </section>
 
-      {guesses.length ? (
-        <section className="football-wavelength-path">
-          <small>LOCKED PATH</small>
-          <strong>{guesses.join(" → ")}</strong>
-        </section>
-      ) : null}
+      <div className="football-wavelength-path">
+        <small>YOUR PATH</small>
+        <strong>{[0, 1, 2, 3].map((index) => guesses[index] ?? "—").join(" → ")}</strong>
+      </div>
+      <p className="football-wavelength-rules">Each clue reacts to your last guess. Only the fourth guess determines your score.</p>
     </div>
   );
 }
