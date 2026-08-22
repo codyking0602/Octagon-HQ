@@ -47,6 +47,7 @@ function completedEvent(
       boutId: `${eventId}-main`,
       locksAt: startsAt,
       isLocked: true,
+      liveStatus: "scheduled",
       canAdjustLock: false,
       position: 1,
       weightClass: "Lightweight",
