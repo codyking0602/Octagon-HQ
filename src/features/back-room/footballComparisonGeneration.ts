@@ -245,8 +245,8 @@ function chooseItem(
 
 function sustainablePoolRange(items: readonly FootballRankFiveItem[]) {
   const ordered = sortedPool(items);
-  const highIndex = Math.round((ordered.length - 1) * 0.1);
-  const lowIndex = Math.round((ordered.length - 1) * 0.9);
+  const highIndex = Math.round((ordered.length - 1) * 0.15);
+  const lowIndex = Math.round((ordered.length - 1) * 0.85);
   return Math.max(8, ordered[highIndex]!.rating - ordered[lowIndex]!.rating);
 }
 
@@ -360,9 +360,13 @@ export function footballKeepCutBoardStyleForSeed(scopeId: string, seed: string) 
 }
 
 export function footballKeepCutEliteCap(items: readonly FootballRankFiveItem[]) {
-  const eliteCount = availableTierCount(items, "elite");
-  const nonEliteCount = items.length - eliteCount;
-  const minimumRequiredElite = Math.max(0, KEEP_CUT_BOARD_SIZE - nonEliteCount);
+  const availableElite = availableTierCount(items, "elite");
+  const availableBad = availableTierCount(items, "bad");
+  const nonExtremeCount = items.length - availableElite - availableBad;
+  const minimumRequiredElite = Math.max(
+    0,
+    KEEP_CUT_BOARD_SIZE - nonExtremeCount - Math.min(availableBad, MAX_KEEP_CUT_BAD),
+  );
   return Math.max(DEFAULT_MAX_KEEP_CUT_ELITE, minimumRequiredElite);
 }
 
@@ -457,8 +461,12 @@ function keepCutProfileForSeed(
 ) {
   const random = seededLineupRandom("football-keep-cut", "board-profile", scopeId, seed, style.id);
   const availableElite = availableTierCount(items, "elite");
-  const nonEliteCount = items.length - availableElite;
-  const minimumRequiredElite = Math.max(0, KEEP_CUT_BOARD_SIZE - nonEliteCount);
+  const availableBad = availableTierCount(items, "bad");
+  const nonExtremeCount = items.length - availableElite - availableBad;
+  const minimumRequiredElite = Math.max(
+    0,
+    KEEP_CUT_BOARD_SIZE - nonExtremeCount - Math.min(availableBad, MAX_KEEP_CUT_BAD),
+  );
   const eliteCap = footballKeepCutEliteCap(items);
   const eliteCount = desiredEliteCount(
     style.id,
@@ -467,7 +475,12 @@ function keepCutProfileForSeed(
     eliteCap,
     random,
   );
-  const badCount = desiredBadCount(style.id, availableTierCount(items, "bad"), random);
+  const minimumRequiredBad = Math.max(0, KEEP_CUT_BOARD_SIZE - nonExtremeCount - eliteCount);
+  const badCount = Math.min(
+    availableBad,
+    MAX_KEEP_CUT_BAD,
+    Math.max(minimumRequiredBad, desiredBadCount(style.id, availableBad, random)),
+  );
   const targets = [...style.targets];
 
   replaceHighestTargets(targets, "elite", eliteCount);
