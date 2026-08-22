@@ -540,10 +540,29 @@ function distinctPackIds(matchups: readonly FootballBlindResumeRound[], league: 
   return [...new Set(matchups.filter((matchup) => matchup.league === league).map((matchup) => matchup.packId))];
 }
 
+function selectNflPackIds(matchups: readonly FootballBlindResumeRound[], random: () => number) {
+  const shuffled = shuffleLineup(distinctPackIds(matchups, "NFL"), random);
+  const selected: FootballRankFivePackId[] = [];
+
+  for (const packId of shuffled) {
+    const overlapsQuarterbackIdentity =
+      (packId === "nfl-quarterbacks" && selected.includes("nfl-qb-seasons"))
+      || (packId === "nfl-qb-seasons" && selected.includes("nfl-quarterbacks"));
+    if (overlapsQuarterbackIdentity) continue;
+    selected.push(packId);
+    if (selected.length === 3) break;
+  }
+
+  if (selected.length !== 3) {
+    throw new Error("Football Blind Resume catalog cannot build three distinct NFL categories.");
+  }
+  return selected;
+}
+
 export function buildFootballBlindResumeRounds(seed: string) {
   const random = seededLineupRandom(FOOTBALL_BLIND_RESUME_GAME_ID, seed);
   const matchups = resolvedFootballBlindResumeMatchups();
-  const nflPacks = shuffleLineup(distinctPackIds(matchups, "NFL"), random).slice(0, 3);
+  const nflPacks = selectNflPackIds(matchups, random);
   const cfbPacks = shuffleLineup(distinctPackIds(matchups, "CFB"), random).slice(0, 2);
   const packOrder = shuffleLineup([...nflPacks, ...cfbPacks], random);
   const selected: FootballBlindResumeRound[] = [];
