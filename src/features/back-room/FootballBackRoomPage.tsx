@@ -36,11 +36,17 @@ const footballGames = [
     description: "Pick four from eight and chase a factual football target without going over. Classic, themed, era and team-build boards.",
     path: "/back-room/football/hit-the-number",
   },
+  {
+    id: "↑",
+    kicker: "KNOW THE RECORDS",
+    name: "FIND THE LEADER",
+    description: "Ten NFL or college football names. Eliminate nine decoys without knocking out the hidden statistical leader.",
+    path: "/back-room/football/find-leader",
+  },
 ] as const;
 
 export default function FootballBackRoomPage() {
   const navigate = useNavigate();
-
   return (
     <div className="page back-room-page football-room-page">
       <section className="back-room-hero football-room-hero">
@@ -50,27 +56,18 @@ export default function FootballBackRoomPage() {
         <div className="football-room-tags" aria-label="Football leagues">
           <span>COLLEGE FOOTBALL</span>
           <span>NFL</span>
-          <span>5 GAMES LIVE</span>
+          <span>6 GAMES LIVE</span>
         </div>
       </section>
-
       <section className="football-room-game-grid" aria-label="Football games">
         {footballGames.map((game) => (
           <button className="football-room-preview" type="button" key={game.path} onClick={() => navigate(game.path)}>
             <span className="football-room-preview__mark" aria-hidden="true">{game.id}</span>
-            <div>
-              <small>{game.kicker}</small>
-              <strong>{game.name}</strong>
-              <p>{game.description}</p>
-              <em>OPEN GAME →</em>
-            </div>
+            <div><small>{game.kicker}</small><strong>{game.name}</strong><p>{game.description}</p><em>OPEN GAME →</em></div>
           </button>
         ))}
       </section>
-
-      <button className="back-room-secondary" type="button" onClick={() => navigate("/back-room")}>
-        ← BACK TO THE BACK ROOM
-      </button>
+      <button className="back-room-secondary" type="button" onClick={() => navigate("/back-room")}>← BACK TO THE BACK ROOM</button>
     </div>
   );
 }
