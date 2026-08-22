@@ -72,7 +72,7 @@ const KEEP_CUT_BOARD_SIZE = 8;
 const KEEP_COUNT = 4;
 const MAX_BLIND_RANK_BAD = 1;
 const MAX_KEEP_CUT_BAD = 2;
-const MAX_KEEP_CUT_ELITE = 2;
+const DEFAULT_MAX_KEEP_CUT_ELITE = 2;
 const MAX_KEEP_CUT_CUTOFF_GAP = 8;
 const TIGHT_KEEP_CUT_CUTOFF_GAP = 4;
 const BLIND_RANK_ATTEMPTS = 120;
@@ -243,6 +243,13 @@ function chooseItem(
   )[0] ?? null;
 }
 
+function sustainablePoolRange(items: readonly FootballRankFiveItem[]) {
+  const ordered = sortedPool(items);
+  const highIndex = Math.round((ordered.length - 1) * 0.1);
+  const lowIndex = Math.round((ordered.length - 1) * 0.9);
+  return Math.max(8, ordered[highIndex]!.rating - ordered[lowIndex]!.rating);
+}
+
 function requiredBlindRankRange(
   items: readonly FootballRankFiveItem[],
   archetype: FootballBlindRankArchetype,
@@ -262,7 +269,8 @@ function requiredBlindRankRange(
   );
   const ratings = uniqueReachable.map((item) => item.rating);
   const reachableRange = ratings.length > 1 ? Math.max(...ratings) - Math.min(...ratings) : 8;
-  return Math.min(archetype.minRange, Math.max(8, Math.floor(reachableRange * 0.75)));
+  const repeatableReach = Math.max(8, Math.floor(reachableRange * 0.85));
+  return Math.min(archetype.minRange, repeatableReach, sustainablePoolRange(items));
 }
 
 export function footballBlindRankArchetypeForSeed(scopeId: string, seed: string) {
@@ -351,9 +359,18 @@ export function footballKeepCutBoardStyleForSeed(scopeId: string, seed: string) 
   return FOOTBALL_KEEP_CUT_BOARD_STYLES.at(-1)!;
 }
 
+export function footballKeepCutEliteCap(items: readonly FootballRankFiveItem[]) {
+  const eliteCount = availableTierCount(items, "elite");
+  const nonEliteCount = items.length - eliteCount;
+  const minimumRequiredElite = Math.max(0, KEEP_CUT_BOARD_SIZE - nonEliteCount);
+  return Math.max(DEFAULT_MAX_KEEP_CUT_ELITE, minimumRequiredElite);
+}
+
 function desiredEliteCount(
   styleId: FootballKeepCutBoardStyleId,
   availableElite: number,
+  minimumRequiredElite: number,
+  eliteCap: number,
   random: () => number,
 ) {
   if (availableElite <= 0) return 0;
@@ -374,9 +391,10 @@ function desiredEliteCount(
       requested = 0;
       break;
   }
-  if (requested === 0) return 0;
-  if (availableElite === 1 && random() >= 0.55) return 0;
-  return Math.min(requested, availableElite, MAX_KEEP_CUT_ELITE);
+  if (minimumRequiredElite === 0 && requested > 0 && availableElite === 1 && random() >= 0.55) {
+    requested = 0;
+  }
+  return Math.min(availableElite, eliteCap, Math.max(minimumRequiredElite, requested));
 }
 
 function desiredBadCount(
@@ -438,7 +456,17 @@ function keepCutProfileForSeed(
   style: FootballKeepCutBoardStyle,
 ) {
   const random = seededLineupRandom("football-keep-cut", "board-profile", scopeId, seed, style.id);
-  const eliteCount = desiredEliteCount(style.id, availableTierCount(items, "elite"), random);
+  const availableElite = availableTierCount(items, "elite");
+  const nonEliteCount = items.length - availableElite;
+  const minimumRequiredElite = Math.max(0, KEEP_CUT_BOARD_SIZE - nonEliteCount);
+  const eliteCap = footballKeepCutEliteCap(items);
+  const eliteCount = desiredEliteCount(
+    style.id,
+    availableElite,
+    minimumRequiredElite,
+    eliteCap,
+    random,
+  );
   const badCount = desiredBadCount(style.id, availableTierCount(items, "bad"), random);
   const targets = [...style.targets];
 
@@ -482,7 +510,7 @@ export function footballKeepCutBoardIsCompetitive(
 
   return (
     coreChoices >= 4
-    && elite <= MAX_KEEP_CUT_ELITE
+    && elite <= footballKeepCutEliteCap(pool)
     && bad <= MAX_KEEP_CUT_BAD
     && distinctTiers >= requiredDistinctTiers
     && cutoffGap <= MAX_KEEP_CUT_CUTOFF_GAP
