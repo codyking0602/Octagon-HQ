@@ -80,11 +80,11 @@ const KEEP_CUT_ATTEMPTS = 180;
 
 const TARGET_WINDOWS: Record<FootballComparisonTierId, RatingWindow> = {
   elite: { minPercentile: 0, maxPercentile: 0.22 },
-  great: { minPercentile: 0.08, maxPercentile: 0.4 },
-  good: { minPercentile: 0.2, maxPercentile: 0.6 },
-  average: { minPercentile: 0.4, maxPercentile: 0.8 },
-  "below-average": { minPercentile: 0.6, maxPercentile: 0.94 },
-  bad: { minPercentile: 0.76, maxPercentile: 1 },
+  great: { minPercentile: 0.12, maxPercentile: 0.42 },
+  good: { minPercentile: 0.28, maxPercentile: 0.6 },
+  average: { minPercentile: 0.42, maxPercentile: 0.72 },
+  "below-average": { minPercentile: 0.58, maxPercentile: 0.86 },
+  bad: { minPercentile: 0.72, maxPercentile: 1 },
 };
 
 export const FOOTBALL_BLIND_RANK_ARCHETYPES: readonly FootballBlindRankArchetype[] = [
@@ -206,9 +206,14 @@ function selectionCandidates(
     const percentile = percentiles.get(item.id) ?? 0.5;
     return percentile >= window.minPercentile && percentile <= window.maxPercentile;
   });
-  const combined = [...exact, ...inWindow]
-    .filter((item, index, rows) => rows.findIndex((candidate) => candidate.id === item.id) === index);
+  const exactDepth = availableTierCount(pool, targetTier);
+  const minimumExactDepth = Math.max(2, Math.ceil(pool.length * 0.08));
+  const combined = [
+    ...(exactDepth >= minimumExactDepth ? exact : []),
+    ...inWindow,
+  ].filter((item, index, rows) => rows.findIndex((candidate) => candidate.id === item.id) === index);
   if (combined.length) return combined;
+  if (exact.length) return exact;
   if (!eligible.length) return [];
 
   const minimumDistance = Math.min(...eligible.map((item) => (
@@ -297,6 +302,7 @@ function attemptBlindRankBoard(
   let badCount = 0;
 
   for (const targetTier of archetype.targets) {
+    const forceAbsoluteTier = targetTier === "bad" && availableTierCount(items, "bad") >= 2;
     const picked = chooseItem(
       items,
       targetTier,
@@ -306,6 +312,7 @@ function attemptBlindRankBoard(
       badCount,
       MAX_BLIND_RANK_BAD,
       random,
+      forceAbsoluteTier,
     );
     if (!picked) return null;
     selected.push(picked);
@@ -485,7 +492,7 @@ function keepCutProfileForSeed(
     0,
   );
   const eliteCap = footballKeepCutEliteCap(items);
-  const eliteCount = desiredEliteCount(
+  let eliteCount = desiredEliteCount(
     style.id,
     availableElite,
     minimumRequiredElite,
@@ -493,11 +500,33 @@ function keepCutProfileForSeed(
     random,
   );
   const minimumRequiredBad = Math.max(0, KEEP_CUT_BOARD_SIZE - nonExtremeCount - eliteCount);
-  const badCount = Math.min(
+  let badCount = Math.min(
     availableBad,
     MAX_KEEP_CUT_BAD,
     Math.max(minimumRequiredBad, desiredBadCount(style.id, availableBad, random)),
   );
+  const availableTiers = new Set(items.map(footballComparisonTier)).size;
+  const requiredDistinctTiers = Math.min(3, availableTiers);
+  const nonExtremeTiers = new Set(
+    items
+      .map(footballComparisonTier)
+      .filter((tier) => tier !== "elite" && tier !== "bad"),
+  ).size;
+  let reachableTiers = nonExtremeTiers + Number(eliteCount > 0) + Number(badCount > 0);
+  const prefersBadTexture = style.id === "bottom-grind" || style.id === "classic-spread";
+
+  if (reachableTiers < requiredDistinctTiers && prefersBadTexture && badCount === 0 && availableBad > 0) {
+    badCount = 1;
+    reachableTiers += 1;
+  }
+  if (reachableTiers < requiredDistinctTiers && eliteCount === 0 && availableElite > 0) {
+    eliteCount = Math.min(1, eliteCap);
+    reachableTiers += Number(eliteCount > 0);
+  }
+  if (reachableTiers < requiredDistinctTiers && badCount === 0 && availableBad > 0) {
+    badCount = 1;
+  }
+
   const targets = [...style.targets];
 
   replaceHighestTargets(targets, "elite", eliteCount);
