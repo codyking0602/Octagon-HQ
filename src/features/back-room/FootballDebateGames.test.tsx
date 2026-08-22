@@ -21,7 +21,7 @@ describe("Football Back Room debate games", () => {
   });
 
   it("reuses the Football Rank 5 item owner for all Keep 4 / Cut 4 rooms", () => {
-    expect(footballKeepCutPacks).toHaveLength(6);
+    expect(footballKeepCutPacks).toHaveLength(7);
     for (const pack of footballKeepCutPacks) {
       expect(pack.items).toBe(getFootballRankFivePack(pack.id).items);
       const first = buildFootballKeepCutLineup(pack.id, "keep-cut-proof");
