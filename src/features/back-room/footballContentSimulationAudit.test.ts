@@ -83,19 +83,33 @@ function expectTierAwareExposure(
   }
 }
 
+function relativeThirdIds(
+  items: readonly { id: string; rating: number }[],
+  section: "high" | "middle" | "low",
+) {
+  const ordered = [...items].sort((left, right) => right.rating - left.rating || left.id.localeCompare(right.id));
+  const third = Math.ceil(ordered.length / 3);
+  if (section === "high") return new Set(ordered.slice(0, third).map((item) => item.id));
+  if (section === "low") return new Set(ordered.slice(-third).map((item) => item.id));
+  return new Set(ordered.slice(third, Math.max(third, ordered.length - third)).map((item) => item.id));
+}
+
 function emptyHistory(recentItemIds: string[] = []): PlayLineupHistory {
   return { entries: [], recentItemIds, recentFighterIds: [], lastLineup: [] };
 }
 
 describe("Football PR10 content simulation / replay audit", () => {
-  it("proves Blind Rank and Keep/Cut keep broad coverage, tier texture, board uniqueness, and hard cutoffs at scale", () => {
+  it("proves Blind Rank and Keep/Cut keep broad coverage, relative pool texture, board uniqueness, and hard cutoffs at scale", () => {
     const rankSignatures = new Set<string>();
     const keepCutSignatures = new Set<string>();
     const rankTierAppearances = new Map<string, number>();
     const keepCutTierAppearances = new Map<string, number>();
     let rankTotalItems = 0;
     let keepCutTotalItems = 0;
-    let tightKeepCutBoards = 0;
+    let rankLowBoards = 0;
+    let rankMultipleLowBoards = 0;
+    let rankHighLowBoards = 0;
+    let keepCutTightBoards = 0;
     let keepCutGapTotal = 0;
     let totalBoards = 0;
 
@@ -104,12 +118,16 @@ describe("Football PR10 content simulation / replay audit", () => {
       const keepCutSeen = new Set<string>();
       const rankAppearances = new Map<string, number>();
       const keepCutAppearances = new Map<string, number>();
+      const highIds = relativeThirdIds(pack.items, "high");
+      const lowIds = relativeThirdIds(pack.items, "low");
 
       for (let index = 0; index < COMPARISON_RUNS_PER_PACK; index += 1) {
         const rank = buildFootballBlindRankBoard(pack.items, pack.id, `pr10-rank-${pack.id}-${index}`);
         const keepCut = buildFootballKeepCutBoard(pack.items, pack.id, `pr10-keep-${pack.id}-${index}`);
         const rankIds = rank.items.map((item) => item.id);
         const keepCutIds = keepCut.items.map((item) => item.id);
+        const rankLowCount = rankIds.filter((id) => lowIds.has(id)).length;
+        const rankHighCount = rankIds.filter((id) => highIds.has(id)).length;
 
         totalBoards += 1;
         rankSignatures.add(`${pack.id}:${[...rankIds].sort().join("|")}`);
@@ -119,7 +137,10 @@ describe("Football PR10 content simulation / replay audit", () => {
         expect(rank.badItems).toBeLessThanOrEqual(1);
         expect(keepCut.badItems).toBeLessThanOrEqual(2);
         expect(keepCut.cutoffGap).toBeLessThanOrEqual(8);
-        if (keepCut.cutoffGap <= 4) tightKeepCutBoards += 1;
+        if (rankLowCount >= 1) rankLowBoards += 1;
+        if (rankLowCount >= 2) rankMultipleLowBoards += 1;
+        if (rankLowCount >= 1 && rankHighCount >= 1) rankHighLowBoards += 1;
+        if (keepCut.cutoffGap <= 4) keepCutTightBoards += 1;
         keepCutGapTotal += keepCut.cutoffGap;
 
         for (const item of rank.items) {
@@ -142,42 +163,44 @@ describe("Football PR10 content simulation / replay audit", () => {
       expectTierAwareExposure(pack, keepCutAppearances, 8, "Keep/Cut");
     }
 
-    const rankLowShare = share(
+    const rankAbsoluteLowShare = share(
       (rankTierAppearances.get("below-average") ?? 0) + (rankTierAppearances.get("bad") ?? 0),
       rankTotalItems,
     );
-    const rankMiddleShare = share(
+    const rankAbsoluteMiddleShare = share(
       (rankTierAppearances.get("good") ?? 0) + (rankTierAppearances.get("average") ?? 0),
       rankTotalItems,
     );
-    const keepCutLowShare = share(
+    const keepCutAbsoluteLowShare = share(
       (keepCutTierAppearances.get("below-average") ?? 0) + (keepCutTierAppearances.get("bad") ?? 0),
       keepCutTotalItems,
     );
-    const keepCutMiddleShare = share(
+    const keepCutAbsoluteMiddleShare = share(
       (keepCutTierAppearances.get("good") ?? 0) + (keepCutTierAppearances.get("average") ?? 0),
       keepCutTotalItems,
     );
 
     expect(rankSignatures.size).toBeGreaterThan(totalBoards * 0.94);
     expect(keepCutSignatures.size).toBeGreaterThan(totalBoards * 0.9);
-    expect(rankLowShare).toBeGreaterThanOrEqual(0.12);
-    expect(rankMiddleShare).toBeGreaterThanOrEqual(0.25);
-    expect(keepCutLowShare).toBeGreaterThanOrEqual(0.12);
-    expect(keepCutMiddleShare).toBeGreaterThanOrEqual(0.25);
-    expect(share(tightKeepCutBoards, totalBoards)).toBeGreaterThanOrEqual(0.8);
+    expect(share(rankLowBoards, totalBoards)).toBeGreaterThanOrEqual(0.62);
+    expect(share(rankMultipleLowBoards, totalBoards)).toBeGreaterThanOrEqual(0.32);
+    expect(share(rankHighLowBoards, totalBoards)).toBeGreaterThanOrEqual(0.55);
+    expect(share(keepCutTightBoards, totalBoards)).toBeGreaterThanOrEqual(0.8);
     expect(keepCutGapTotal / totalBoards).toBeLessThanOrEqual(4.2);
 
     console.info("PR10 comparison audit", JSON.stringify({
       packs: footballRankFivePacks.length,
       boardsPerGame: totalBoards,
       blindRankUniqueBoardShare: share(rankSignatures.size, totalBoards),
-      blindRankLowTierAppearanceShare: rankLowShare,
-      blindRankMiddleTierAppearanceShare: rankMiddleShare,
+      blindRankRelativeLowBoardShare: share(rankLowBoards, totalBoards),
+      blindRankMultiLowBoardShare: share(rankMultipleLowBoards, totalBoards),
+      blindRankHighLowContrastShare: share(rankHighLowBoards, totalBoards),
+      blindRankAbsoluteLowTierAppearanceShare: rankAbsoluteLowShare,
+      blindRankAbsoluteMiddleTierAppearanceShare: rankAbsoluteMiddleShare,
       keepCutUniqueBoardShare: share(keepCutSignatures.size, totalBoards),
-      keepCutLowTierAppearanceShare: keepCutLowShare,
-      keepCutMiddleTierAppearanceShare: keepCutMiddleShare,
-      keepCutTightCutoffShare: share(tightKeepCutBoards, totalBoards),
+      keepCutAbsoluteLowTierAppearanceShare: keepCutAbsoluteLowShare,
+      keepCutAbsoluteMiddleTierAppearanceShare: keepCutAbsoluteMiddleShare,
+      keepCutTightCutoffShare: share(keepCutTightBoards, totalBoards),
       keepCutAverageCutoffGap: keepCutGapTotal / totalBoards,
     }));
   });
