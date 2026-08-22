@@ -5,8 +5,8 @@ do $$
 declare
   v_owner uuid := extensions.gen_random_uuid();
   v_member uuid := extensions.gen_random_uuid();
-  v_live_at timestamptz := now();
-  v_final_at timestamptz := now() + interval '1 minute';
+  v_live_at timestamptz := now() - interval '2 minutes';
+  v_final_at timestamptz := now() - interval '1 minute';
   v_receipt jsonb;
 begin
   update public.pick_events
