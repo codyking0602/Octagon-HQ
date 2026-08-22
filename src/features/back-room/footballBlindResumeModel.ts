@@ -122,17 +122,13 @@ function trimClause(value: string) {
 }
 
 function resumePieces(item: FootballRankFiveItem) {
-  const subtitlePieces = item.subtitle
-    .split(" · ")
-    .map(trimClause)
-    .filter(Boolean);
   const basisPieces = (item.ratingBasis ?? "")
-    .split(/[,;]+/)
+    .split(/[,;]+|\band\b/gi)
     .map(trimClause)
-    .filter(Boolean);
-  const candidates = [...subtitlePieces, ...basisPieces, trimClause(item.ratingBasis ?? item.subtitle)];
-  const unique = candidates.filter((value, index) => value && candidates.indexOf(value) === index);
-  while (unique.length < 5) unique.push(unique.at(-1) ?? item.subtitle);
+    .filter(Boolean)
+    .filter((value) => !/\d/.test(value));
+  const unique = basisPieces.filter((value, index) => basisPieces.indexOf(value) === index);
+  while (unique.length < 5) unique.push(unique.at(-1) ?? "Qualitative résumé context");
   return unique.slice(0, 5);
 }
 
@@ -263,14 +259,25 @@ export function resolvedFootballBlindResumeMatchups() {
   return footballBlindResumeMatchups.map(resolveMatchup);
 }
 
+const nflQuarterbackCareerIds = new Set(
+  getFootballRankFivePack("nfl-quarterbacks").items.map((item) => item.id),
+);
+
+export function footballBlindResumeSubjectIdentityId(subjectId: string) {
+  for (const careerId of nflQuarterbackCareerIds) {
+    if (subjectId === careerId || subjectId.startsWith(`${careerId}-`)) return careerId;
+  }
+  return subjectId;
+}
+
 function canUseRound(
   matchup: FootballBlindResumeRound,
   usedMatchupIds: ReadonlySet<string>,
   usedSubjectIds: ReadonlySet<string>,
 ) {
   return !usedMatchupIds.has(matchup.id)
-    && !usedSubjectIds.has(matchup.leftId)
-    && !usedSubjectIds.has(matchup.rightId);
+    && !usedSubjectIds.has(footballBlindResumeSubjectIdentityId(matchup.leftId))
+    && !usedSubjectIds.has(footballBlindResumeSubjectIdentityId(matchup.rightId));
 }
 
 export function buildFootballBlindResumeRounds(seed: string) {
@@ -286,17 +293,16 @@ export function buildFootballBlindResumeRounds(seed: string) {
 
   for (const desiredLeague of leagueOrder) {
     const candidates = shuffled.filter((matchup) => canUseRound(matchup, usedMatchupIds, usedSubjectIds));
-    const matchup =
-      candidates.find((row) => (!desiredLeague || row.league === desiredLeague) && !usedPackIds.has(row.packId))
-      ?? candidates.find((row) => !desiredLeague || row.league === desiredLeague)
-      ?? candidates.find((row) => !usedPackIds.has(row.packId))
-      ?? candidates[0];
+    const matchup = candidates.find((row) =>
+      (!desiredLeague || row.league === desiredLeague) && !usedPackIds.has(row.packId));
 
-    if (!matchup) break;
+    if (!matchup) {
+      throw new Error("Football Blind Resume catalog cannot satisfy its league/category/identity mix.");
+    }
     selected.push(matchup);
     usedMatchupIds.add(matchup.id);
-    usedSubjectIds.add(matchup.leftId);
-    usedSubjectIds.add(matchup.rightId);
+    usedSubjectIds.add(footballBlindResumeSubjectIdentityId(matchup.leftId));
+    usedSubjectIds.add(footballBlindResumeSubjectIdentityId(matchup.rightId));
     usedPackIds.add(matchup.packId);
   }
 
@@ -309,7 +315,10 @@ export function buildFootballBlindResumeRounds(seed: string) {
 export function createFootballBlindResumeRun(): FootballBlindResumeRun {
   const resolved = resolvedFootballBlindResumeMatchups();
   const validMatchupIds = new Set(resolved.map((row) => row.id));
-  const validSubjectIds = new Set(resolved.flatMap((row) => [row.leftId, row.rightId]));
+  const validSubjectIds = new Set(resolved.flatMap((row) => [
+    footballBlindResumeSubjectIdentityId(row.leftId),
+    footballBlindResumeSubjectIdentityId(row.rightId),
+  ]));
   const selected = selectReplayLineup({
     gameId: FOOTBALL_BLIND_RESUME_GAME_ID,
     lineupSize: FOOTBALL_BLIND_RESUME_ROUNDS,
@@ -322,7 +331,10 @@ export function createFootballBlindResumeRun(): FootballBlindResumeRun {
       return {
         value: rounds,
         itemIds: rounds.map((round) => round.id),
-        fighterIds: rounds.flatMap((round) => [round.leftId, round.rightId]),
+        fighterIds: rounds.flatMap((round) => [
+          footballBlindResumeSubjectIdentityId(round.leftId),
+          footballBlindResumeSubjectIdentityId(round.rightId),
+        ]),
       };
     },
   });
