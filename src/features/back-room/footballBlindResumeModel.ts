@@ -6,22 +6,37 @@ import {
   type PlayLineupIdentity,
 } from "../play/lineupModel";
 import {
+  formatFootballFact,
+  getFootballFact,
+  type FootballFactMetricId,
+} from "./footballFactualStats";
+import {
   getFootballRankFivePack,
+  type FootballRankFiveItem,
   type FootballRankFivePackId,
 } from "./footballRankFiveModel";
 
 export const FOOTBALL_BLIND_RESUME_GAME_ID = "football-blind-resume";
 export const FOOTBALL_BLIND_RESUME_ROUNDS = 5;
 
+export type FootballBlindResumeLeague = "NFL" | "CFB";
+
+export interface FootballBlindResumeFactSource {
+  owner: "footballFactualStats";
+  metricId: FootballFactMetricId;
+}
+
 export interface FootballBlindResumeStat {
   label: string;
   valueA: string;
   valueB: string;
+  source?: FootballBlindResumeFactSource;
 }
 
 export interface FootballBlindResumeMatchup {
   id: string;
   packId: FootballRankFivePackId;
+  league: FootballBlindResumeLeague;
   prompt: string;
   leftId: string;
   rightId: string;
@@ -43,260 +58,184 @@ export interface FootballBlindResumeRun {
   identity: PlayLineupIdentity;
 }
 
-export const footballBlindResumeMatchups: readonly FootballBlindResumeMatchup[] = [
-  {
-    id: "peyton-v-rodgers",
-    packId: "nfl-quarterbacks",
-    prompt: "Which NFL quarterback résumé is greater?",
-    leftId: "peyton-manning",
-    rightId: "aaron-rodgers",
-    stats: [
-      { label: "NFL MVPs", valueA: "5", valueB: "4" },
-      { label: "Super Bowl titles", valueA: "2", valueB: "1" },
-      { label: "1st-team All-Pro", valueA: "7", valueB: "4" },
-      { label: "Passing TD titles", valueA: "4", valueB: "2" },
-      { label: "Signature edge", valueA: "5 MVP seasons", valueB: "Elite efficiency peak" },
-    ],
-  },
-  {
-    id: "marino-v-elway",
-    packId: "nfl-quarterbacks",
-    prompt: "Which NFL quarterback résumé is greater?",
-    leftId: "dan-marino",
-    rightId: "john-elway",
-    stats: [
-      { label: "NFL MVPs", valueA: "1", valueB: "1" },
-      { label: "Super Bowl titles", valueA: "0", valueB: "2" },
-      { label: "1st-team All-Pro", valueA: "3", valueB: "0" },
-      { label: "Career pass yards", valueA: "61,361", valueB: "51,475" },
-      { label: "Signature edge", valueA: "Historic passing peak", valueB: "Back-to-back champion" },
-    ],
-  },
-  {
-    id: "favre-v-young",
-    packId: "nfl-quarterbacks",
-    prompt: "Which NFL quarterback résumé is greater?",
-    leftId: "brett-favre",
-    rightId: "steve-young",
-    stats: [
-      { label: "NFL MVPs", valueA: "3", valueB: "2" },
-      { label: "Super Bowl titles as starter", valueA: "1", valueB: "1" },
-      { label: "1st-team All-Pro", valueA: "3", valueB: "3" },
-      { label: "Career starts", valueA: "298", valueB: "143" },
-      { label: "Signature edge", valueA: "Longevity + volume", valueB: "Efficiency + rushing" },
-    ],
-  },
-  {
-    id: "peterson-v-lt",
-    packId: "nfl-running-backs",
-    prompt: "Which NFL running back résumé is greater?",
-    leftId: "adrian-peterson",
-    rightId: "ladainian-tomlinson",
-    stats: [
-      { label: "NFL MVPs", valueA: "1", valueB: "1" },
-      { label: "Rushing titles", valueA: "3", valueB: "2" },
-      { label: "1st-team All-Pro", valueA: "4", valueB: "3" },
-      { label: "Rush TD leader seasons", valueA: "0", valueB: "3" },
-      { label: "Signature edge", valueA: "2,097-yard season", valueB: "31-TD season" },
-    ],
-  },
-  {
-    id: "henry-v-dickerson",
-    packId: "nfl-running-backs",
-    prompt: "Which NFL running back résumé is greater?",
-    leftId: "derrick-henry",
-    rightId: "eric-dickerson",
-    stats: [
-      { label: "2,000-yard seasons", valueA: "1", valueB: "0" },
-      { label: "Rushing titles", valueA: "2", valueB: "4" },
-      { label: "Offensive Player of Year", valueA: "1", valueB: "1" },
-      { label: "Single-season rush record", valueA: "No", valueB: "2,105" },
-      { label: "Signature edge", valueA: "Power + TD dominance", valueB: "Historic volume" },
-    ],
-  },
-  {
-    id: "campbell-v-thomas",
-    packId: "nfl-running-backs",
-    prompt: "Which NFL running back résumé is greater?",
-    leftId: "earl-campbell",
-    rightId: "thurman-thomas",
-    stats: [
-      { label: "NFL MVPs", valueA: "1", valueB: "1" },
-      { label: "Rushing titles", valueA: "3", valueB: "0" },
-      { label: "1st-team All-Pro", valueA: "3", valueB: "2" },
-      { label: "Super Bowl starts", valueA: "0", valueB: "4" },
-      { label: "Signature edge", valueA: "Three-year peak", valueB: "All-purpose longevity" },
-    ],
-  },
-  {
-    id: "reid-v-tomlin",
-    packId: "nfl-head-coaches",
-    prompt: "Which NFL head-coaching résumé is greater?",
-    leftId: "andy-reid",
-    rightId: "mike-tomlin",
-    stats: [
-      { label: "Super Bowl titles", valueA: "3", valueB: "1" },
-      { label: "Conference titles", valueA: "5", valueB: "2" },
-      { label: "Losing seasons", valueA: "3", valueB: "0" },
-      { label: "300-win club", valueA: "Yes", valueB: "No" },
-      { label: "Signature edge", valueA: "Dynasty + longevity", valueB: "Floor never collapses" },
-    ],
-  },
-  {
-    id: "carroll-v-mcvay",
-    packId: "nfl-head-coaches",
-    prompt: "Which NFL head-coaching résumé is greater?",
-    leftId: "pete-carroll",
-    rightId: "sean-mcvay",
-    stats: [
-      { label: "Super Bowl titles", valueA: "1", valueB: "1" },
-      { label: "Conference titles", valueA: "2", valueB: "2" },
-      { label: "Coach of the Year", valueA: "0", valueB: "1" },
-      { label: "10-win seasons", valueA: "8", valueB: "6" },
-      { label: "Signature edge", valueA: "Long elite Seattle run", valueB: "Young offensive peak" },
-    ],
-  },
-  {
-    id: "shanahan-v-cowher",
-    packId: "nfl-head-coaches",
-    prompt: "Which NFL head-coaching résumé is greater?",
-    leftId: "mike-shanahan",
-    rightId: "bill-cowher",
-    stats: [
-      { label: "Super Bowl titles", valueA: "2", valueB: "1" },
-      { label: "Conference titles", valueA: "2", valueB: "2" },
-      { label: "Division titles", valueA: "7", valueB: "8" },
-      { label: "Hall of Fame", valueA: "No", valueB: "Yes" },
-      { label: "Signature edge", valueA: "Back-to-back champion", valueB: "15-year Pittsburgh floor" },
-    ],
-  },
-  {
-    id: "vince-v-tebow",
-    packId: "college-quarterbacks",
-    prompt: "Which college quarterback résumé is greater?",
-    leftId: "vince-young-2005",
-    rightId: "tim-tebow-2007",
-    stats: [
-      { label: "Heisman trophies", valueA: "0", valueB: "1" },
-      { label: "National titles", valueA: "1", valueB: "2" },
-      { label: "Best season record", valueA: "13–0", valueB: "13–1" },
-      { label: "Signature game", valueA: "Rose Bowl title win", valueB: "2008 title game" },
-      { label: "Signature edge", valueA: "All-time title-game carry", valueB: "Career hardware" },
-    ],
-  },
-  {
-    id: "lamar-v-leinart",
-    packId: "college-quarterbacks",
-    prompt: "Which college quarterback résumé is greater?",
-    leftId: "lamar-jackson-2016",
-    rightId: "matt-leinart-2004",
-    stats: [
-      { label: "Heisman trophies", valueA: "1", valueB: "1" },
-      { label: "National titles", valueA: "0", valueB: "1" },
-      { label: "Career total TD", valueA: "119", valueB: "104" },
-      { label: "Best single season", valueA: "51 total TD", valueB: "13–0 champion" },
-      { label: "Signature edge", valueA: "Unique dual-threat peak", valueB: "Title + elite consistency" },
-    ],
-  },
-  {
-    id: "manziel-v-colt",
-    packId: "college-quarterbacks",
-    prompt: "Which college quarterback résumé is greater?",
-    leftId: "johnny-manziel-2012",
-    rightId: "colt-mccoy-2008",
-    stats: [
-      { label: "Heisman trophies", valueA: "1", valueB: "0" },
-      { label: "Career wins as starter", valueA: "20", valueB: "45" },
-      { label: "Best Heisman finish", valueA: "1st", valueB: "2nd" },
-      { label: "National title-game starts", valueA: "0", valueB: "1" },
-      { label: "Signature edge", valueA: "Explosive peak", valueB: "Four-year body of work" },
-    ],
-  },
-  {
-    id: "clemson-v-oklahoma",
-    packId: "college-programs",
-    prompt: "Which program has the stronger résumé since 2000?",
-    leftId: "clemson-program",
-    rightId: "oklahoma-program",
-    stats: [
-      { label: "National titles", valueA: "2", valueB: "1" },
-      { label: "CFP appearances", valueA: "6", valueB: "4" },
-      { label: "Title-game appearances", valueA: "4", valueB: "1" },
-      { label: "Conference dominance", valueA: "ACC dynasty", valueB: "Big 12 dynasty" },
-      { label: "Signature edge", valueA: "Higher playoff peak", valueB: "Longer elite runway" },
-    ],
-  },
-  {
-    id: "texas-v-michigan",
-    packId: "college-programs",
-    prompt: "Which program has the stronger résumé since 2000?",
-    leftId: "texas-program",
-    rightId: "michigan-program",
-    stats: [
-      { label: "National titles", valueA: "1", valueB: "1" },
-      { label: "BCS/CFP title-game trips", valueA: "2", valueB: "1" },
-      { label: "Heisman winners", valueA: "0", valueB: "0" },
-      { label: "Peak unbeaten champion", valueA: "2005", valueB: "2023" },
-      { label: "Signature edge", valueA: "2005 all-time team", valueB: "Recent three-year surge" },
-    ],
-  },
-  {
-    id: "florida-v-fsu",
-    packId: "college-programs",
-    prompt: "Which program has the stronger résumé since 2000?",
-    leftId: "florida-program",
-    rightId: "florida-state-program",
-    stats: [
-      { label: "National titles", valueA: "2", valueB: "1" },
-      { label: "Heisman winners", valueA: "1", valueB: "1" },
-      { label: "Unbeaten title seasons", valueA: "0", valueB: "1" },
-      { label: "Peak title stretch", valueA: "2 in 3 years", valueB: "29-game win streak" },
-      { label: "Signature edge", valueA: "Two-title Meyer peak", valueB: "2013–14 dominance" },
-    ],
-  },
-  {
-    id: "texas05-v-usc04",
-    packId: "college-team-seasons",
-    prompt: "Which single-season team résumé is greater?",
-    leftId: "2005-texas",
-    rightId: "2004-usc",
-    stats: [
-      { label: "Final record", valueA: "13–0", valueB: "13–0" },
-      { label: "National title", valueA: "Yes", valueB: "Yes" },
-      { label: "Heisman winner", valueA: "No", valueB: "Yes" },
-      { label: "Title-game opponent", valueA: "USC", valueB: "Oklahoma" },
-      { label: "Signature edge", valueA: "Won all-time classic", valueB: "Wire-to-wire No. 1" },
-    ],
-  },
-  {
-    id: "fsu13-v-florida08",
-    packId: "college-team-seasons",
-    prompt: "Which single-season team résumé is greater?",
-    leftId: "2013-florida-state",
-    rightId: "2008-florida",
-    stats: [
-      { label: "Final record", valueA: "14–0", valueB: "13–1" },
-      { label: "National title", valueA: "Yes", valueB: "Yes" },
-      { label: "Heisman winner", valueA: "Yes", valueB: "Yes" },
-      { label: "Average margin", valueA: "Historic blowouts", valueB: "Elite SEC slate" },
-      { label: "Signature edge", valueA: "Unbeaten dominance", valueB: "Schedule + championship run" },
-    ],
-  },
-  {
-    id: "auburn10-v-osu14",
-    packId: "college-team-seasons",
-    prompt: "Which single-season team résumé is greater?",
-    leftId: "2010-auburn",
-    rightId: "2014-ohio-state",
-    stats: [
-      { label: "Final record", valueA: "14–0", valueB: "14–1" },
-      { label: "National title", valueA: "Yes", valueB: "Yes" },
-      { label: "Heisman winner", valueA: "Yes", valueB: "No" },
-      { label: "Postseason signature", valueA: "SEC + BCS champ", valueB: "Won first CFP" },
-      { label: "Signature edge", valueA: "Perfect Cam season", valueB: "Three-QB title run" },
-    ],
-  },
+interface MatchupFamily {
+  packId: FootballRankFivePackId;
+  league: FootballBlindResumeLeague;
+  prompt: string;
+}
+
+const MATCHUP_FAMILIES: readonly MatchupFamily[] = [
+  { packId: "nfl-quarterbacks", league: "NFL", prompt: "Which NFL quarterback résumé is greater?" },
+  { packId: "nfl-running-backs", league: "NFL", prompt: "Which NFL running back résumé is greater?" },
+  { packId: "nfl-wide-receivers", league: "NFL", prompt: "Which NFL wide receiver résumé is greater?" },
+  { packId: "nfl-tight-ends", league: "NFL", prompt: "Which NFL tight end résumé is greater?" },
+  { packId: "nfl-defensive-players", league: "NFL", prompt: "Which NFL defensive résumé is greater?" },
+  { packId: "nfl-head-coaches", league: "NFL", prompt: "Which NFL head-coaching résumé is greater?" },
+  { packId: "nfl-qb-seasons", league: "NFL", prompt: "Which NFL quarterback single-season résumé is greater?" },
+  { packId: "nfl-team-seasons", league: "NFL", prompt: "Which NFL team-season résumé is greater?" },
+  { packId: "college-quarterbacks", league: "CFB", prompt: "Which college quarterback résumé is greater?" },
+  { packId: "college-head-coaches", league: "CFB", prompt: "Which college head-coaching résumé is greater?" },
+  { packId: "college-programs", league: "CFB", prompt: "Which program has the stronger résumé since 2000?" },
+  { packId: "college-program-eras", league: "CFB", prompt: "Which defined college program era is greater?" },
+  { packId: "college-team-seasons", league: "CFB", prompt: "Which college team-season résumé is greater?" },
 ] as const;
+
+const FACT_METRICS_BY_PACK: Partial<Record<FootballRankFivePackId, readonly FootballFactMetricId[]>> = {
+  "nfl-quarterbacks": [
+    "nfl-career-passing-yards",
+    "nfl-career-passing-touchdowns",
+    "nfl-ap-mvp-awards",
+    "nfl-super-bowl-titles",
+  ],
+  "nfl-running-backs": [
+    "nfl-career-rushing-yards",
+    "nfl-career-rushing-touchdowns",
+  ],
+  "college-team-seasons": [
+    "cfb-team-wins",
+    "cfb-team-losses",
+    "cfb-team-points-per-game",
+    "cfb-team-srs",
+    "cfb-national-title",
+  ],
+};
+
+const FACT_FIRST_PAIRS: readonly {
+  packId: FootballRankFivePackId;
+  leftId: string;
+  rightId: string;
+}[] = [
+  { packId: "nfl-quarterbacks", leftId: "dan-marino", rightId: "john-elway" },
+  { packId: "nfl-running-backs", leftId: "barry-sanders", rightId: "emmitt-smith" },
+  { packId: "college-team-seasons", leftId: "2005-texas", rightId: "2013-florida-state" },
+];
+
+const AUTO_MATCHUPS_PER_FAMILY = 8;
+const AUTO_SUBJECT_LIMIT = AUTO_MATCHUPS_PER_FAMILY * 2;
+
+function pairKey(packId: FootballRankFivePackId, leftId: string, rightId: string) {
+  return `${packId}:${[leftId, rightId].sort().join("|")}`;
+}
+
+function trimClause(value: string) {
+  return value.trim().replace(/[.]+$/g, "");
+}
+
+function resumePieces(item: FootballRankFiveItem) {
+  const subtitlePieces = item.subtitle
+    .split(" · ")
+    .map(trimClause)
+    .filter(Boolean);
+  const basisPieces = (item.ratingBasis ?? "")
+    .split(/[,;]+/)
+    .map(trimClause)
+    .filter(Boolean);
+  const candidates = [...subtitlePieces, ...basisPieces, trimClause(item.ratingBasis ?? item.subtitle)];
+  const unique = candidates.filter((value, index) => value && candidates.indexOf(value) === index);
+  while (unique.length < 5) unique.push(unique.at(-1) ?? item.subtitle);
+  return unique.slice(0, 5);
+}
+
+function factualStats(
+  packId: FootballRankFivePackId,
+  leftId: string,
+  rightId: string,
+) {
+  return (FACT_METRICS_BY_PACK[packId] ?? []).flatMap((metricId) => {
+    const left = getFootballFact(leftId, metricId);
+    const right = getFootballFact(rightId, metricId);
+    if (!left || !right) return [];
+    return [{
+      label: left.definition.label,
+      valueA: formatFootballFact(metricId, left.fact.value),
+      valueB: formatFootballFact(metricId, right.fact.value),
+      source: { owner: "footballFactualStats", metricId } as const,
+    }];
+  });
+}
+
+const QUALITATIVE_LABELS = [
+  "Primary résumé marker",
+  "Secondary résumé marker",
+  "Peak / production case",
+  "Longevity / context",
+  "Signature edge",
+] as const;
+
+function matchupStats(
+  packId: FootballRankFivePackId,
+  left: FootballRankFiveItem,
+  right: FootballRankFiveItem,
+) {
+  const facts = factualStats(packId, left.id, right.id);
+  const leftPieces = resumePieces(left);
+  const rightPieces = resumePieces(right);
+  const qualitative = QUALITATIVE_LABELS.map((label, index) => ({
+    label,
+    valueA: leftPieces[index]!,
+    valueB: rightPieces[index]!,
+  }));
+  return [...facts, ...qualitative].slice(0, 5);
+}
+
+function makeMatchup(
+  family: MatchupFamily,
+  left: FootballRankFiveItem,
+  right: FootballRankFiveItem,
+): FootballBlindResumeMatchup {
+  if (left.rating === right.rating) {
+    throw new Error(
+      `Football Blind Resume cannot build tied canonical matchup ${family.packId}:${left.id}:${right.id}.`,
+    );
+  }
+  return {
+    id: `${family.packId}-${left.id}-v-${right.id}`,
+    packId: family.packId,
+    league: family.league,
+    prompt: family.prompt,
+    leftId: left.id,
+    rightId: right.id,
+    stats: matchupStats(family.packId, left, right),
+  };
+}
+
+function buildMatchupCatalog() {
+  const matchups: FootballBlindResumeMatchup[] = [];
+  const seenPairs = new Set<string>();
+
+  const add = (
+    family: MatchupFamily,
+    left: FootballRankFiveItem | undefined,
+    right: FootballRankFiveItem | undefined,
+  ) => {
+    if (!left || !right || left.id === right.id || left.rating === right.rating) return;
+    const key = pairKey(family.packId, left.id, right.id);
+    if (seenPairs.has(key)) return;
+    seenPairs.add(key);
+    matchups.push(makeMatchup(family, left, right));
+  };
+
+  for (const preferred of FACT_FIRST_PAIRS) {
+    const family = MATCHUP_FAMILIES.find((row) => row.packId === preferred.packId)!;
+    const pack = getFootballRankFivePack(preferred.packId);
+    add(
+      family,
+      pack.items.find((item) => item.id === preferred.leftId),
+      pack.items.find((item) => item.id === preferred.rightId),
+    );
+  }
+
+  for (const family of MATCHUP_FAMILIES) {
+    const items = getFootballRankFivePack(family.packId).items.slice(0, AUTO_SUBJECT_LIMIT);
+    for (let index = 0; index + 1 < items.length; index += 2) {
+      add(family, items[index], items[index + 1]);
+    }
+  }
+
+  return matchups;
+}
+
+export const footballBlindResumeMatchups: readonly FootballBlindResumeMatchup[] = buildMatchupCatalog();
 
 function resolveMatchup(matchup: FootballBlindResumeMatchup): FootballBlindResumeRound {
   const pack = getFootballRankFivePack(matchup.packId);
@@ -324,18 +263,41 @@ export function resolvedFootballBlindResumeMatchups() {
   return footballBlindResumeMatchups.map(resolveMatchup);
 }
 
+function canUseRound(
+  matchup: FootballBlindResumeRound,
+  usedMatchupIds: ReadonlySet<string>,
+  usedSubjectIds: ReadonlySet<string>,
+) {
+  return !usedMatchupIds.has(matchup.id)
+    && !usedSubjectIds.has(matchup.leftId)
+    && !usedSubjectIds.has(matchup.rightId);
+}
+
 export function buildFootballBlindResumeRounds(seed: string) {
   const random = seededLineupRandom(FOOTBALL_BLIND_RESUME_GAME_ID, seed);
   const shuffled = shuffleLineup(resolvedFootballBlindResumeMatchups(), random);
   const selected: FootballBlindResumeRound[] = [];
-  const usedIds = new Set<string>();
+  const usedMatchupIds = new Set<string>();
+  const usedSubjectIds = new Set<string>();
+  const usedPackIds = new Set<FootballRankFivePackId>();
+  const leagueOrder: readonly (FootballBlindResumeLeague | null)[] = random() < 0.5
+    ? ["NFL", "CFB", "NFL", "CFB", null]
+    : ["CFB", "NFL", "CFB", "NFL", null];
 
-  for (const matchup of shuffled) {
-    if (usedIds.has(matchup.leftId) || usedIds.has(matchup.rightId)) continue;
+  for (const desiredLeague of leagueOrder) {
+    const candidates = shuffled.filter((matchup) => canUseRound(matchup, usedMatchupIds, usedSubjectIds));
+    const matchup =
+      candidates.find((row) => (!desiredLeague || row.league === desiredLeague) && !usedPackIds.has(row.packId))
+      ?? candidates.find((row) => !desiredLeague || row.league === desiredLeague)
+      ?? candidates.find((row) => !usedPackIds.has(row.packId))
+      ?? candidates[0];
+
+    if (!matchup) break;
     selected.push(matchup);
-    usedIds.add(matchup.leftId);
-    usedIds.add(matchup.rightId);
-    if (selected.length === FOOTBALL_BLIND_RESUME_ROUNDS) break;
+    usedMatchupIds.add(matchup.id);
+    usedSubjectIds.add(matchup.leftId);
+    usedSubjectIds.add(matchup.rightId);
+    usedPackIds.add(matchup.packId);
   }
 
   if (selected.length !== FOOTBALL_BLIND_RESUME_ROUNDS) {
@@ -345,18 +307,22 @@ export function buildFootballBlindResumeRounds(seed: string) {
 }
 
 export function createFootballBlindResumeRun(): FootballBlindResumeRun {
-  const validItemIds = new Set(resolvedFootballBlindResumeMatchups().flatMap((row) => [row.leftId, row.rightId]));
+  const resolved = resolvedFootballBlindResumeMatchups();
+  const validMatchupIds = new Set(resolved.map((row) => row.id));
+  const validSubjectIds = new Set(resolved.flatMap((row) => [row.leftId, row.rightId]));
   const selected = selectReplayLineup({
     gameId: FOOTBALL_BLIND_RESUME_GAME_ID,
-    lineupSize: FOOTBALL_BLIND_RESUME_ROUNDS * 2,
+    lineupSize: FOOTBALL_BLIND_RESUME_ROUNDS,
     attempts: 12,
-    validItemIds,
+    validItemIds: validMatchupIds,
+    validFighterIds: validSubjectIds,
     seedFactory: () => createReplaySeed(FOOTBALL_BLIND_RESUME_GAME_ID),
     build: (seed) => {
       const rounds = buildFootballBlindResumeRounds(seed);
       return {
         value: rounds,
-        itemIds: rounds.flatMap((round) => [round.leftId, round.rightId]),
+        itemIds: rounds.map((round) => round.id),
+        fighterIds: rounds.flatMap((round) => [round.leftId, round.rightId]),
       };
     },
   });
