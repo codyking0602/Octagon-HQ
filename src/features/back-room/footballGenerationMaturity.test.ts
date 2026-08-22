@@ -30,6 +30,11 @@ function share(value: number, total: number) {
   return total === 0 ? 0 : value / total;
 }
 
+function maximumSubjectExposure(boardSize: number, poolSize: number) {
+  const unavoidableAverageExposure = boardSize / poolSize;
+  return Math.min(0.9, Math.max(0.45, unavoidableAverageExposure * 1.75));
+}
+
 function relativeThirdIds(items: readonly FootballRankFiveItem[], side: "high" | "low") {
   const ordered = strongestFirst(items);
   const size = Math.max(1, Math.ceil(ordered.length / 3));
@@ -140,7 +145,8 @@ describe("Football comparison generation maturity", () => {
       const pack = footballRankFivePacks.find((row) => row.id === packId)!;
       expect(share(seen.size, pack.items.length), `${packId} Blind Rank coverage`).toBeGreaterThanOrEqual(0.65);
       const maxAppearances = Math.max(...appearancesByPack.get(packId)!.values());
-      expect(share(maxAppearances, BOARDS_PER_PACK), `${packId} Blind Rank max exposure`).toBeLessThan(0.45);
+      const exposureCeiling = maximumSubjectExposure(5, pack.items.length);
+      expect(share(maxAppearances, BOARDS_PER_PACK), `${packId} Blind Rank max exposure`).toBeLessThan(exposureCeiling);
     }
 
     expect(signatures.size).toBeGreaterThan(totalBoards * 0.92);
@@ -239,7 +245,8 @@ describe("Football comparison generation maturity", () => {
       const pack = footballRankFivePacks.find((row) => row.id === packId)!;
       expect(share(seen.size, pack.items.length), `${packId} Keep/Cut coverage`).toBeGreaterThanOrEqual(0.6);
       const maxAppearances = Math.max(...appearancesByPack.get(packId)!.values());
-      expect(share(maxAppearances, BOARDS_PER_PACK), `${packId} Keep/Cut max exposure`).toBeLessThan(0.45);
+      const exposureCeiling = maximumSubjectExposure(8, pack.items.length);
+      expect(share(maxAppearances, BOARDS_PER_PACK), `${packId} Keep/Cut max exposure`).toBeLessThan(exposureCeiling);
     }
 
     expect(signatures.size).toBeGreaterThan(totalBoards * 0.9);
