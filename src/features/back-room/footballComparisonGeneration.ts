@@ -181,8 +181,17 @@ function availableTierCount(items: readonly FootballRankFiveItem[], tier: Footba
 }
 
 function repeatableTierCount(items: readonly FootballRankFiveItem[], tier: FootballComparisonTierId) {
-  const minimumDepth = Math.max(2, Math.ceil(items.length * 0.08));
+  const minimumDepth = Math.max(3, Math.ceil(items.length * 0.1));
   return availableTierCount(items, tier) >= minimumDepth ? 1 : 0;
+}
+
+export function footballKeepCutRequiredDistinctTiers(items: readonly FootballRankFiveItem[]) {
+  const availableTiers = new Set(items.map(footballComparisonTier)).size;
+  const repeatableTiers = TIER_ORDER.reduce(
+    (sum, tier) => sum + repeatableTierCount(items, tier),
+    0,
+  );
+  return Math.min(3, availableTiers, Math.max(2, repeatableTiers));
 }
 
 function selectionCandidates(
@@ -311,7 +320,11 @@ function attemptBlindRankBoard(
   let badCount = 0;
 
   for (const targetTier of archetype.targets) {
-    const forceAbsoluteTier = targetTier === "bad" && availableTierCount(items, "bad") >= 2;
+    const forceAbsoluteTier = (
+      targetTier === "bad"
+      && availableTierCount(items, "bad") >= 2
+      && random() < 0.72
+    );
     const picked = chooseItem(
       items,
       targetTier,
@@ -515,8 +528,7 @@ function keepCutProfileForSeed(
     MAX_KEEP_CUT_BAD,
     Math.max(minimumRequiredBad, desiredBadCount(style.id, availableBad, random)),
   );
-  const availableTiers = new Set(items.map(footballComparisonTier)).size;
-  const requiredDistinctTiers = Math.min(3, availableTiers);
+  const requiredDistinctTiers = footballKeepCutRequiredDistinctTiers(items);
   const nonExtremeTiers = TIER_ORDER
     .filter((tier) => tier !== "elite" && tier !== "bad")
     .reduce((sum, tier) => sum + repeatableTierCount(items, tier), 0);
@@ -571,8 +583,7 @@ export function footballKeepCutBoardIsCompetitive(
   const elite = countTier(items, "elite");
   const bad = countTier(items, "bad");
   const distinctTiers = new Set(items.map(footballComparisonTier)).size;
-  const availableTiers = new Set(pool.map(footballComparisonTier)).size;
-  const requiredDistinctTiers = Math.min(3, availableTiers);
+  const requiredDistinctTiers = footballKeepCutRequiredDistinctTiers(pool);
   const cutoffGap = Math.abs(ordered[KEEP_COUNT - 1]!.rating - ordered[KEEP_COUNT]!.rating);
 
   return (
