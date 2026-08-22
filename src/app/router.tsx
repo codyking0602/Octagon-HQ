@@ -17,6 +17,7 @@ const FootballRankFivePage = lazy(() => import("../features/back-room/FootballRa
 const FootballKeepCutPage = lazy(() => import("../features/back-room/FootballKeepCutPage"));
 const FootballWavelengthPage = lazy(() => import("../features/back-room/FootballWavelengthPage"));
 const FootballBlindResumePage = lazy(() => import("../features/back-room/FootballBlindResumePage"));
+const FootballHitTheNumberPage = lazy(() => import("../features/back-room/FootballHitTheNumberPage"));
 const TodayChallengeHubPage = lazy(() => import("../features/play/TodayChallengeHubPage"));
 const FindLeaderChallengeRoute = lazy(() => import("../features/challenges/FindLeaderChallengeRoute"));
 const TodayChallengeGameRoute = lazy(() => import("../features/play/TodayChallengeGameRoute"));
@@ -60,6 +61,7 @@ export const appRoutes: RouteObject[] = [
       { path: "back-room/football/keep-cut", element: <FootballKeepCutPage /> },
       { path: "back-room/football/wavelength", element: <FootballWavelengthPage /> },
       { path: "back-room/football/blind-resume", element: <FootballBlindResumePage /> },
+      { path: "back-room/football/hit-the-number", element: <FootballHitTheNumberPage /> },
       { path: "picks", element: <PicksPage /> },
       { path: "picks/control", element: <PicksControlCenterPage /> },
       { path: "picks/setup", element: <Navigate to="/picks/control#setup" replace /> },
