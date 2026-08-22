@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useIdentity } from "../identity/IdentityProvider";
 import type { PickBoutResultStatus } from "../picks/picksModel";
 import {
+  pickControlFightNightStatus,
   pickControlResultLabel,
   pickControlResultOptions,
   type PickControlBout,
@@ -64,7 +65,8 @@ function sameOrder(left: string[], right: string[]) {
 }
 
 function compactBoutStatus(event: PickControlEvent, bout: PickControlBout, now: number) {
-  if (bout.resultStatus === "cancelled") return "CANCELLED";
+  const fightNightStatus = pickControlFightNightStatus(bout);
+  if (fightNightStatus) return fightNightStatus;
   if (pickControlBoutIsFinal(event, bout, now)) return "LOCKED";
   if (pickControlLockWarning(event, bout, now)) return "LOCKING SOON";
   return "OPEN";
