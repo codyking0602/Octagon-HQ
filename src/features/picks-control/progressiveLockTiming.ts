@@ -10,6 +10,10 @@ export function effectivePickControlBoutLock(
   return bout.locksAt ?? event.locksAt;
 }
 
+export function pickControlBoutUsesLiveAuthority(bout: PickControlBout) {
+  return bout.liveStatusProvider === "espn";
+}
+
 export function pickControlBoutIsFinal(
   event: PickControlEvent,
   bout: PickControlBout,
@@ -20,8 +24,9 @@ export function pickControlBoutIsFinal(
     || bout.resultStatus !== "pending"
     || bout.includedInPicks === false
     || bout.isLocked === true
-    || !Number.isFinite(deadline)
-    || now >= deadline;
+    || (!pickControlBoutUsesLiveAuthority(bout) && (
+      !Number.isFinite(deadline) || now >= deadline
+    ));
 }
 
 export function pickControlBoutCanSetDeadline(
@@ -39,6 +44,7 @@ export function pickControlBoutCanRecordResult(
   now: number,
 ) {
   if (!pickControlBoutCanSetDeadline(event, bout)) return false;
+  if (pickControlBoutUsesLiveAuthority(bout)) return bout.isLocked === true;
   const deadline = Date.parse(effectivePickControlBoutLock(event, bout));
   return bout.isLocked === true
     || (Number.isFinite(deadline) && now >= deadline);
@@ -49,7 +55,8 @@ export function pickControlBoutCanExtend(
   bout: PickControlBout,
   now: number,
 ) {
-  return pickControlBoutCanSetDeadline(event, bout)
+  return !pickControlBoutUsesLiveAuthority(bout)
+    && pickControlBoutCanSetDeadline(event, bout)
     && bout.canAdjustLock === true
     && !pickControlBoutIsFinal(event, bout, now);
 }
@@ -59,7 +66,7 @@ export function pickControlLockWarning(
   bout: PickControlBout,
   now: number,
 ) {
-  if (pickControlBoutIsFinal(event, bout, now)) return null;
+  if (pickControlBoutUsesLiveAuthority(bout) || pickControlBoutIsFinal(event, bout, now)) return null;
   const remaining = Date.parse(effectivePickControlBoutLock(event, bout)) - now;
   if (remaining <= PICK_LOCK_MINUTE_MS) return "LOCKS IN 1 MINUTE";
   if (remaining <= 5 * PICK_LOCK_MINUTE_MS) return "LOCKS IN 5 MINUTES";
@@ -78,7 +85,8 @@ export function nextProgressiveLockClockAt(
     if (bout.resultStatus !== "pending"
       || bout.includedInPicks === false
       || bout.isLocked === true
-      || bout.canAdjustLock !== true) continue;
+      || bout.canAdjustLock !== true
+      || pickControlBoutUsesLiveAuthority(bout)) continue;
 
     const deadline = Date.parse(effectivePickControlBoutLock(event, bout));
     if (!Number.isFinite(deadline)) continue;

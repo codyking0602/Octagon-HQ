@@ -2,6 +2,7 @@ import type { PickBoutResultStatus, PickEventStatus } from "../picks/picksModel"
 import type { PickSpotlight } from "../picks/spotlightModel";
 
 export type PickControlBoutLiveStatus = "scheduled" | "live" | "final";
+export type PickControlBoutLiveStatusProvider = "espn";
 
 export interface PickControlBout {
   boutId: string;
@@ -11,6 +12,8 @@ export interface PickControlBout {
   isLocked?: boolean;
   /** Trusted provider fight state from the canonical Fight Night monitor. */
   liveStatus: PickControlBoutLiveStatus;
+  /** Present only after this bout is attached to the trusted live-state provider. */
+  liveStatusProvider?: PickControlBoutLiveStatusProvider | null;
   /** Server-owned permission to move this still-open deadline. */
   canAdjustLock?: boolean;
   position: number;

@@ -14,12 +14,14 @@ on:
       - "supabase/migrations/202612310020_suppress_pick_deadline_change_push.sql"
       - "supabase/migrations/202612310048_fight_night_automation_behavior.sql"
       - "supabase/migrations/202612310049_fight_night_live_state_presentation.sql"
+      - "supabase/migrations/202612310050_fight_night_espn_lock_authority.sql"
       - "scripts/configure-monitoring-scheduler.mjs"
       - "supabase/tests/pick_monitoring_canonical_fight_changes.sql"
       - "supabase/tests/pick_monitoring_repick_evidence_repair.sql"
       - "supabase/tests/live_pick_results_and_owner_lock_edits.sql"
       - "supabase/tests/fight_night_automation_behavior.sql"
       - "supabase/tests/fight_night_live_state_presentation.sql"
+      - "supabase/tests/fight_night_espn_lock_authority.sql"
       - "supabase/tests/pick_add_bout_append_sequence.sql"
       - "supabase/tests/notification_device_push_delivery.sql"
   workflow_dispatch:
@@ -66,8 +68,10 @@ jobs:
           psql "$db_url" --set ON_ERROR_STOP=on \
             --file supabase/tests/fight_night_live_state_presentation.sql
           psql "$db_url" --set ON_ERROR_STOP=on \
+            --file supabase/tests/fight_night_espn_lock_authority.sql
+          psql "$db_url" --set ON_ERROR_STOP=on \
             --file supabase/tests/pick_add_bout_append_sequence.sql
           psql "$db_url" --set ON_ERROR_STOP=on \
             --file supabase/tests/notification_device_push_delivery.sql
 
-          echo "Canonical Picks fight changes, Fight Night automation/presentation, add-bout append semantics, repick evidence, notification push eligibility, and live owner controls passed on a fresh database."
+          echo "Canonical Picks fight changes, ESPN Fight Night lock authority, automation/presentation, add-bout append semantics, repick evidence, notification push eligibility, and live owner controls passed on a fresh database."

@@ -28,7 +28,8 @@ describe("manual monitoring deployment contract", () => {
     expect(verifier).toContain("fakeSchedulerResponse.status !== 401");
     expect(verifier).toContain("access-control-allow-origin");
     expect(verifier).toContain('cli(["functions", "list"');
-    expect(verifier).toContain('["202608080001", "202608090001", "202608090002", "202608090003", "202609120001", "202612310002", "202612310047", "202612310048"]');
+    expect(verifier).toContain('const requiredRemoteMigrationVersions = ["202608080001", "202608090001", "202608090002", "202608090003", "202609120001", "202612310002", "202612310047", "202612310048"]');
+    expect(verifier).toContain('if (process.env.GITHUB_EVENT_NAME !== "pull_request") requiredRemoteMigrationVersions.push("202612310050")');
   });
   it("configures the one scheduler only through the existing trusted backend deploy", () => {
     expect(workflow).toContain("configure-monitoring-scheduler.mjs");

@@ -16,6 +16,7 @@ import {
   pickControlBoutCanRecordResult,
   pickControlBoutCanSetDeadline,
   pickControlBoutIsFinal,
+  pickControlBoutUsesLiveAuthority,
   pickControlLockWarning,
 } from "./progressiveLockTiming";
 
@@ -78,6 +79,9 @@ function boutLockClosedReason(event: PickControlEvent, bout: PickControlBout, no
   if (!bout.includedInPicks) return "This fight is removed from Picks and its deadline cannot be edited.";
   if (pickControlBoutCanRecordResult(event, bout, now)) {
     return "Picks are locked for members. As owner, you can enter the result now or explicitly reopen this fight with a new future deadline.";
+  }
+  if (pickControlBoutUsesLiveAuthority(bout)) {
+    return "ESPN live state controls automatic locking. The listed UFC time is schedule guidance only.";
   }
   if (!bout.canAdjustLock) return "This fight’s lock time can no longer be edited.";
   return "Adjust this fight while it remains open. Existing picks stay attached to the fight.";
@@ -153,6 +157,7 @@ export default function OpenPicksDashboard({ repository, now = Date.now() }: Ope
       .filter((bout): bout is PickControlBout => Boolean(bout?.includedInPicks));
   }, [canonicalOrder, draftOrder, orderedBouts]);
   const orderChanged = draftOrder !== null && !sameOrder(draftOrder, canonicalOrder);
+  const espnLockAuthorityActive = visibleBouts.some(pickControlBoutUsesLiveAuthority);
 
   async function runAction(key: string, action: () => Promise<void>, successMessage?: string) {
     if (busyAction) return;
@@ -222,26 +227,33 @@ export default function OpenPicksDashboard({ repository, now = Date.now() }: Ope
   function setBoutLockTime(bout: PickControlBout) {
     if (!event || !repository?.adjustBoutLockTime || !pickControlBoutCanSetDeadline(event, bout)) return;
     const reopening = pickControlBoutCanRecordResult(event, bout, now);
+    const estimateOnly = pickControlBoutUsesLiveAuthority(bout) && bout.liveStatus === "scheduled" && !bout.isLocked;
     const input = window.prompt(
-      `${reopening ? "Reopen" : "Set"} the lock time for ${bout.redFighterName} vs. ${bout.blueFighterName} in your local time (YYYY-MM-DDTHH:MM).`,
+      estimateOnly
+        ? `Set the estimated UFC time for ${bout.redFighterName} vs. ${bout.blueFighterName} in your local time (YYYY-MM-DDTHH:MM). ESPN will still control automatic locking.`
+        : `${reopening ? "Reopen" : "Set"} the lock time for ${bout.redFighterName} vs. ${bout.blueFighterName} in your local time (YYYY-MM-DDTHH:MM).`,
       localDateTimeValue(effectivePickControlBoutLock(event, bout)),
     )?.trim();
     if (!input) return;
     const proposed = new Date(input);
     if (!Number.isFinite(proposed.getTime()) || proposed.getTime() <= now) {
-      setError("Enter a valid future fight lock time.");
+      setError(estimateOnly ? "Enter a valid future estimated fight time." : "Enter a valid future fight lock time.");
       return;
     }
-    const confirmation = reopening
-      ? `This fight is already locked for members. Reopen ${bout.redFighterName} vs. ${bout.blueFighterName} until ${eventTime(proposed.toISOString())}? Existing picks stay preserved, members can edit this fight again until the new deadline, and group picks may already have been revealed.`
-      : `Are you sure you want ${bout.redFighterName} vs. ${bout.blueFighterName} to lock at ${eventTime(proposed.toISOString())}?`;
+    const confirmation = estimateOnly
+      ? `Update the listed UFC estimate for ${bout.redFighterName} vs. ${bout.blueFighterName} to ${eventTime(proposed.toISOString())}? ESPN live state will still control automatic locking.`
+      : reopening
+        ? `This fight is already locked for members. Reopen ${bout.redFighterName} vs. ${bout.blueFighterName} until ${eventTime(proposed.toISOString())}? Existing picks stay preserved, members can edit this fight again until the new deadline, and group picks may already have been revealed.`
+        : `Are you sure you want ${bout.redFighterName} vs. ${bout.blueFighterName} to lock at ${eventTime(proposed.toISOString())}?`;
     if (!window.confirm(confirmation)) return;
     void runAction(
       `bout-lock:${bout.boutId}:set`,
       () => repository.adjustBoutLockTime!(event.eventId, bout.boutId, proposed.toISOString()),
-      reopening
-        ? `${bout.redFighterName} vs. ${bout.blueFighterName} reopened with a new deadline.`
-        : `${bout.redFighterName} vs. ${bout.blueFighterName} deadline updated.`,
+      estimateOnly
+        ? `${bout.redFighterName} vs. ${bout.blueFighterName} UFC estimate updated.`
+        : reopening
+          ? `${bout.redFighterName} vs. ${bout.blueFighterName} reopened with a new deadline.`
+          : `${bout.redFighterName} vs. ${bout.blueFighterName} deadline updated.`,
     );
   }
 
@@ -398,13 +410,22 @@ export default function OpenPicksDashboard({ repository, now = Date.now() }: Ope
     <div className="page open-picks-dashboard">
       <section className="surface-card open-picks-toolbar" aria-label="Open Picks primary controls">
         <div className="open-picks-toolbar__lock">
-          <div><span>MASTER LOCK</span><strong>{compactLockTime(event.locksAt)}</strong></div>
-          <span>{event.canLock ? "PICKS OPEN" : "LOCK PENDING"}</span>
+          {espnLockAuthorityActive ? (
+            <div><span>LIVE LOCKING</span><strong>ESPN</strong></div>
+          ) : (
+            <div><span>MASTER LOCK</span><strong>{compactLockTime(event.locksAt)}</strong></div>
+          )}
+          <span>{espnLockAuthorityActive ? "AUTO LOCK ACTIVE" : event.canLock ? "PICKS OPEN" : "LOCK PENDING"}</span>
         </div>
-        <div className="open-picks-toolbar__actions">
-          <button className="secondary-action" type="button" disabled={Boolean(busyAction) || now >= Date.parse(event.startsAt)} onClick={adjustLockTime}>
-            {busyAction === "lock-time" ? "CHANGING…" : "CHANGE MASTER LOCK"}
-          </button>
+        <div
+          className="open-picks-toolbar__actions"
+          style={espnLockAuthorityActive ? { gridTemplateColumns: "1fr" } : undefined}
+        >
+          {!espnLockAuthorityActive ? (
+            <button className="secondary-action" type="button" disabled={Boolean(busyAction) || now >= Date.parse(event.startsAt)} onClick={adjustLockTime}>
+              {busyAction === "lock-time" ? "CHANGING…" : "CHANGE MASTER LOCK"}
+            </button>
+          ) : null}
           <button className="primary-action" type="button" disabled={!event.canLock || Boolean(busyAction)} onClick={lockEvent}>
             {busyAction === "lock" ? "LOCKING…" : "LOCK ALL PICKS"}
           </button>
@@ -431,6 +452,7 @@ export default function OpenPicksDashboard({ repository, now = Date.now() }: Ope
           {visibleBouts.map((bout, index) => {
             const expanded = expandedBoutId === bout.boutId;
             const cancelled = bout.resultStatus === "cancelled";
+            const usesLiveAuthority = pickControlBoutUsesLiveAuthority(bout);
             const lockFinal = pickControlBoutIsFinal(event, bout, now);
             const canExtend = Boolean(repository?.adjustBoutLockTime) && pickControlBoutCanExtend(event, bout, now);
             const canSetDeadline = Boolean(repository?.adjustBoutLockTime) && pickControlBoutCanSetDeadline(event, bout);
@@ -450,7 +472,7 @@ export default function OpenPicksDashboard({ repository, now = Date.now() }: Ope
                   onClick={() => setExpandedBoutId(expanded ? null : bout.boutId)}
                 >
                   <span className="open-pick-row__position"><strong>{index === 0 ? "MAIN EVENT" : `FIGHT ${index + 1}`}</strong><small>{bout.weightClass}</small></span>
-                  <span className="open-pick-row__matchup"><strong><b>{bout.redFighterName}</b><i>VS</i><b>{bout.blueFighterName}</b></strong><small>LOCK {compactLockTime(effectivePickControlBoutLock(event, bout))}</small></span>
+                  <span className="open-pick-row__matchup"><strong><b>{bout.redFighterName}</b><i>VS</i><b>{bout.blueFighterName}</b></strong><small>{usesLiveAuthority ? "EST." : "LOCK"} {compactLockTime(effectivePickControlBoutLock(event, bout))}</small></span>
                   <span className="open-pick-row__state"><em>{saving ? "SAVING…" : compactBoutStatus(event, bout, now)}</em><b aria-hidden="true">{expanded ? "−" : "+"}</b></span>
                 </button>
 
@@ -458,7 +480,9 @@ export default function OpenPicksDashboard({ repository, now = Date.now() }: Ope
                   <div className="open-pick-row__details" id={`open-pick-details-${bout.boutId}`}>
                     <div className={`picks-control-deadline picks-control-deadline--${lockFinal ? "final" : "open"}`}>
                       <div>
-                        <span>FIGHT LOCK · {canRecordResult ? "PASSED" : lockFinal ? "FINAL" : warning ? "LOCKING SOON" : "OPEN"}</span>
+                        <span>{usesLiveAuthority && bout.liveStatus === "scheduled"
+                          ? "UFC ESTIMATE · ESPN LOCKS LIVE"
+                          : `FIGHT LOCK · ${canRecordResult ? "PASSED" : lockFinal ? "FINAL" : warning ? "LOCKING SOON" : "OPEN"}`}</span>
                         <strong>{eventTime(effectivePickControlBoutLock(event, bout))}</strong>
                         {warning ? <b className="picks-control-lock-warning" role="status">{warning}</b> : null}
                         <small>{boutLockClosedReason(event, bout, now)}</small>
@@ -470,7 +494,7 @@ export default function OpenPicksDashboard({ repository, now = Date.now() }: Ope
                           <button className="secondary-action" type="button" disabled={Boolean(busyAction)} onClick={() => setBoutLockTime(bout)}>SET TIME</button>
                         </div>
                       ) : canSetDeadline ? (
-                        <button className="secondary-action" type="button" disabled={Boolean(busyAction)} onClick={() => setBoutLockTime(bout)}>EDIT LOCK TIME</button>
+                        <button className="secondary-action" type="button" disabled={Boolean(busyAction)} onClick={() => setBoutLockTime(bout)}>{usesLiveAuthority && bout.liveStatus === "scheduled" && !bout.isLocked ? "EDIT ESTIMATE" : "EDIT LOCK TIME"}</button>
                       ) : <span className="picks-control-lock-final">DEADLINE FINAL</span>}
                     </div>
 
@@ -529,7 +553,9 @@ export default function OpenPicksDashboard({ repository, now = Date.now() }: Ope
                           ? "This fight is locked for members. Enter the official result now, or explicitly reopen it with a new future lock time."
                           : lockFinal
                             ? "Submitted picks are preserved and revealed through the existing fight-specific privacy owner."
-                            : "Use these actions only when the live UFC card or deadline actually changes."}
+                            : usesLiveAuthority
+                              ? "ESPN controls automatic locking. Update the listed estimate only if the UFC schedule changes."
+                              : "Use these actions only when the live UFC card or deadline actually changes."}
                     </p>
                     {bout.hasReplacementHistory ? <p className="pick-control-replacement-history"><strong>REPLACEMENT HISTORY EXISTS</strong> · The matchup above is currently stored.</p> : null}
                     <div className="open-pick-row__actions" aria-label={`${bout.redFighterName} vs. ${bout.blueFighterName} uncommon actions`}>
