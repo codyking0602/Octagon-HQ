@@ -2,9 +2,11 @@ import {
   createReplaySeed,
   seededLineupRandom,
   selectReplayLineup,
-  shuffleLineup,
   type PlayLineupIdentity,
 } from "../play/lineupModel";
+import {
+  buildFootballBlindRankBoard,
+} from "./footballComparisonGeneration";
 import {
   collegeHeadCoaches,
   collegeProgramDepth,
@@ -417,20 +419,7 @@ export function buildFootballRankFiveLineup(
   seed: string,
 ) {
   const pack = getFootballRankFivePack(packId);
-  const ordered = [...pack.items].sort((left, right) => right.rating - left.rating || left.name.localeCompare(right.name));
-  const third = Math.floor(ordered.length / 3);
-  const high = ordered.slice(0, third);
-  const middle = ordered.slice(third, third * 2);
-  const low = ordered.slice(third * 2);
-  const random = seededLineupRandom(FOOTBALL_RANK_FIVE_GAME_ID, packId, seed);
-
-  const highPick = shuffleLineup(high, random)[0]!;
-  const middlePicks = shuffleLineup(middle, random).slice(0, 2);
-  const lowPick = shuffleLineup(low, random)[0]!;
-  const used = new Set([highPick.id, ...middlePicks.map((item) => item.id), lowPick.id]);
-  const wildcard = shuffleLineup(ordered.filter((item) => !used.has(item.id)), random)[0]!;
-
-  return shuffleLineup([highPick, ...middlePicks, lowPick, wildcard], random);
+  return buildFootballBlindRankBoard(pack.items, packId, seed).items;
 }
 
 export function createFootballRankFiveRun(packId: FootballRankFivePackId): FootballRankFiveRun {
