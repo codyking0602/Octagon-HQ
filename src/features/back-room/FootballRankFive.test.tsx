@@ -13,10 +13,14 @@ describe("Football Blind Rank 5", () => {
     window.localStorage.clear();
   });
 
-  it("owns a deep football content pool across both leagues", () => {
-    expect(footballRankFivePacks).toHaveLength(7);
-    expect(footballRankFivePacks.filter((pack) => pack.items.every((item) => item.league === "NFL"))).toHaveLength(4);
-    expect(footballRankFivePacks.filter((pack) => pack.items.every((item) => item.league === "CFB"))).toHaveLength(3);
+  it("owns the mature comparison universe across both leagues", () => {
+    expect(footballRankFivePacks).toHaveLength(13);
+    expect(footballRankFivePacks.filter((pack) => pack.items.every((item) => item.league === "NFL"))).toHaveLength(8);
+    expect(footballRankFivePacks.filter((pack) => pack.items.every((item) => item.league === "CFB"))).toHaveLength(5);
+
+    const subjects = footballRankFivePacks.flatMap((pack) => pack.items);
+    expect(subjects).toHaveLength(350);
+    expect(new Set(subjects.map((item) => item.id)).size).toBe(350);
 
     for (const pack of footballRankFivePacks) {
       expect(pack.items.length).toBeGreaterThanOrEqual(15);
@@ -37,15 +41,19 @@ describe("Football Blind Rank 5", () => {
     }
   });
 
-  it("uses one canonical football asset path convention instead of game-specific initials", () => {
+  it("uses one canonical football asset path convention for the expanded packs", () => {
     expect(footballSubjectAssetPath("patrick-mahomes", "nfl-quarterbacks"))
       .toBe("/images/football/players/patrick-mahomes.webp");
     expect(footballSubjectAssetPath("jerry-rice", "nfl-wide-receivers"))
       .toBe("/images/football/players/jerry-rice.webp");
-    expect(footballSubjectAssetPath("alabama-program", "college-programs"))
-      .toBe("/images/football/programs/alabama-program.webp");
-    expect(footballSubjectAssetPath("2019-lsu", "college-team-seasons"))
-      .toBe("/images/football/teams/2019-lsu.webp");
+    expect(footballSubjectAssetPath("lawrence-taylor", "nfl-defensive-players"))
+      .toBe("/images/football/players/lawrence-taylor.webp");
+    expect(footballSubjectAssetPath("1985-chicago-bears", "nfl-team-seasons"))
+      .toBe("/images/football/teams/1985-chicago-bears.webp");
+    expect(footballSubjectAssetPath("nick-saban-cfb", "college-head-coaches"))
+      .toBe("/images/football/coaches/nick-saban-cfb.webp");
+    expect(footballSubjectAssetPath("alabama-2009-2020", "college-program-eras"))
+      .toBe("/images/football/programs/alabama-2009-2020.webp");
   });
 
   it("locks all five placements and reveals the final score and canonical order", () => {
