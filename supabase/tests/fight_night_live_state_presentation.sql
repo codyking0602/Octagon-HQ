@@ -23,7 +23,7 @@ begin
     'fight-night-presentation-owner@login.octagon-hq.app','',now(),now(),now(),
     jsonb_build_object('display_name','FIGHT NIGHT PRESENTATION OWNER','historical_unclaimed',true)
   );
-  perform public.register_unclaimed_pin_profile(v_owner,'Fight Night Presentation Owner','FP');
+  perform public.register_unclaimed_pin_profile(v_owner,'FIGHT NIGHT PRESENTATION OWNER','FP');
   insert into public.pick_control_owners(profile_id) values(v_owner);
 
   insert into public.pick_events(
