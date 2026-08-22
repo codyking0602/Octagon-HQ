@@ -123,25 +123,31 @@ function trimClause(value: string) {
   return value.trim().replace(/[.]+$/g, "");
 }
 
+function qualitativeText(value: string) {
+  return trimClause(value)
+    .replace(/\d[\d,.]*(?:\.\d+)?(?:%|×)?/g, "")
+    .replace(/\s*[-–—]\s*(?=yard|game|season|year|time)/gi, " ")
+    .replace(/\s+/g, " ")
+    .replace(/^\s*[·/:]+\s*|\s*[·/:]+\s*$/g, "")
+    .trim();
+}
+
 function resumePieces(item: FootballRankFiveItem) {
   const basisPieces = (item.ratingBasis ?? "")
     .split(/[,;]+|\band\b|\bwith\b|\bwithout\b|\bbut\b|\bacross\b|\boffset by\b|\bbalanced by\b|\bdespite\b/gi)
-    .map(trimClause)
-    .filter(Boolean)
-    .filter((value) => !/^\d+$/.test(value));
-  const unique = [item.subtitle, ...basisPieces, item.ratingBasis ?? ""]
-    .map(trimClause)
+    .map(qualitativeText)
+    .filter(Boolean);
+  const sourcePieces = [item.subtitle, ...basisPieces, item.ratingBasis ?? ""]
+    .map(qualitativeText)
     .filter(Boolean)
     .filter((value, index, rows) => rows.indexOf(value) === index);
-  let cursor = 0;
-  while (unique.length < 8) {
-    const first = basisPieces[cursor % Math.max(1, basisPieces.length)] ?? item.subtitle;
-    const second = basisPieces[(cursor + 1) % Math.max(1, basisPieces.length)] ?? item.ratingBasis ?? item.subtitle;
-    const combined = trimClause(`${first}; ${second}`);
-    if (combined && !unique.includes(combined)) unique.push(combined);
-    cursor += 1;
-    if (cursor > 16) unique.push(`Résumé context ${unique.length + 1}: ${item.ratingBasis ?? item.subtitle}`);
-  }
+  const combinations = sourcePieces.flatMap((first, firstIndex) =>
+    sourcePieces.flatMap((second, secondIndex) =>
+      firstIndex === secondIndex ? [] : [trimClause(`${first}; ${second}`)]));
+  const unique = [...sourcePieces, ...combinations]
+    .filter(Boolean)
+    .filter((value, index, rows) => rows.indexOf(value) === index);
+  while (unique.length < 8) unique.push(unique.at(-1) ?? "Qualitative résumé context");
   return unique.slice(0, 8);
 }
 
