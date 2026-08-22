@@ -77,6 +77,7 @@ const MAX_KEEP_CUT_CUTOFF_GAP = 8;
 const TIGHT_KEEP_CUT_CUTOFF_GAP = 4;
 const BLIND_RANK_ATTEMPTS = 120;
 const KEEP_CUT_ATTEMPTS = 180;
+const KEEP_CUT_TIGHT_CANDIDATES = 12;
 
 const TARGET_WINDOWS: Record<FootballComparisonTierId, RatingWindow> = {
   elite: { minPercentile: 0, maxPercentile: 0.34 },
@@ -655,6 +656,7 @@ export function buildFootballKeepCutBoard(
   const style = footballKeepCutBoardStyleForSeed(scopeId, seed);
   const profile = keepCutProfileForSeed(items, scopeId, seed, style);
   let best: (Omit<FootballKeepCutBoard, "style" | "attemptsUsed"> & { attempt: number }) | null = null;
+  const tightCandidates: Array<Omit<FootballKeepCutBoard, "style" | "attemptsUsed"> & { attempt: number }> = [];
 
   for (let attempt = 0; attempt < KEEP_CUT_ATTEMPTS; attempt += 1) {
     const board = attemptKeepCutBoard(
@@ -670,8 +672,16 @@ export function buildFootballKeepCutBoard(
     if (!board) continue;
     if (!best || board.cutoffGap < best.cutoffGap) best = { ...board, attempt };
     if (board.cutoffGap <= TIGHT_KEEP_CUT_CUTOFF_GAP) {
-      return { ...board, style: style.id, attemptsUsed: attempt + 1 };
+      tightCandidates.push({ ...board, attempt });
+      if (tightCandidates.length >= KEEP_CUT_TIGHT_CANDIDATES) break;
     }
+  }
+
+  if (tightCandidates.length) {
+    const random = seededLineupRandom("football-keep-cut", "candidate", scopeId, seed, style.id);
+    const selected = shuffleLineup(tightCandidates, random)[0]!;
+    const { attempt, ...board } = selected;
+    return { ...board, style: style.id, attemptsUsed: attempt + 1 };
   }
 
   if (best) {
