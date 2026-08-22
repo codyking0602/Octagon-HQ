@@ -79,12 +79,12 @@ const BLIND_RANK_ATTEMPTS = 120;
 const KEEP_CUT_ATTEMPTS = 180;
 
 const TARGET_WINDOWS: Record<FootballComparisonTierId, RatingWindow> = {
-  elite: { minPercentile: 0, maxPercentile: 0.24 },
-  great: { minPercentile: 0.08, maxPercentile: 0.45 },
-  good: { minPercentile: 0.25, maxPercentile: 0.65 },
-  average: { minPercentile: 0.45, maxPercentile: 0.82 },
-  "below-average": { minPercentile: 0.62, maxPercentile: 0.92 },
-  bad: { minPercentile: 0.75, maxPercentile: 1 },
+  elite: { minPercentile: 0, maxPercentile: 0.34 },
+  great: { minPercentile: 0.04, maxPercentile: 0.5 },
+  good: { minPercentile: 0.16, maxPercentile: 0.68 },
+  average: { minPercentile: 0.32, maxPercentile: 0.84 },
+  "below-average": { minPercentile: 0.48, maxPercentile: 0.96 },
+  bad: { minPercentile: 0.64, maxPercentile: 1 },
 };
 
 export const FOOTBALL_BLIND_RANK_ARCHETYPES: readonly FootballBlindRankArchetype[] = [
@@ -178,6 +178,11 @@ function tierDistance(left: FootballComparisonTierId, right: FootballComparisonT
 
 function availableTierCount(items: readonly FootballRankFiveItem[], tier: FootballComparisonTierId) {
   return items.filter((item) => footballComparisonTier(item) === tier).length;
+}
+
+function repeatableTierCount(items: readonly FootballRankFiveItem[], tier: FootballComparisonTierId) {
+  const minimumDepth = Math.max(2, Math.ceil(items.length * 0.08));
+  return availableTierCount(items, tier) >= minimumDepth ? 1 : 0;
 }
 
 function selectionCandidates(
@@ -512,11 +517,9 @@ function keepCutProfileForSeed(
   );
   const availableTiers = new Set(items.map(footballComparisonTier)).size;
   const requiredDistinctTiers = Math.min(3, availableTiers);
-  const nonExtremeTiers = new Set(
-    items
-      .map(footballComparisonTier)
-      .filter((tier) => tier !== "elite" && tier !== "bad"),
-  ).size;
+  const nonExtremeTiers = TIER_ORDER
+    .filter((tier) => tier !== "elite" && tier !== "bad")
+    .reduce((sum, tier) => sum + repeatableTierCount(items, tier), 0);
   let reachableTiers = nonExtremeTiers + Number(eliteCount > 0) + Number(badCount > 0);
   const prefersBadTexture = style.id === "bottom-grind" || style.id === "classic-spread";
 
@@ -609,7 +612,7 @@ function attemptKeepCutBoard(
       badCount,
       random,
       forceAbsoluteTier,
-      true,
+      false,
     );
     if (!picked) return null;
     selected.push(picked);
