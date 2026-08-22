@@ -33,7 +33,7 @@ function share(value: number, total: number) {
 
 function maximumSubjectExposure(boardSize: number, poolSize: number) {
   const unavoidableAverageExposure = boardSize / poolSize;
-  return Math.min(0.9, Math.max(0.45, unavoidableAverageExposure * 1.75));
+  return Math.min(0.9, Math.max(0.45, unavoidableAverageExposure * 1.8));
 }
 
 function relativeThirdIds(items: readonly FootballRankFiveItem[], side: "high" | "low") {
