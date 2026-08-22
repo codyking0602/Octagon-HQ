@@ -245,8 +245,8 @@ function chooseItem(
 
 function sustainablePoolRange(items: readonly FootballRankFiveItem[]) {
   const ordered = sortedPool(items);
-  const highIndex = Math.round((ordered.length - 1) * 0.15);
-  const lowIndex = Math.round((ordered.length - 1) * 0.85);
+  const highIndex = Math.round((ordered.length - 1) * 0.3);
+  const lowIndex = Math.round((ordered.length - 1) * 0.7);
   return Math.max(8, ordered[highIndex]!.rating - ordered[lowIndex]!.rating);
 }
 
@@ -359,13 +359,29 @@ export function footballKeepCutBoardStyleForSeed(scopeId: string, seed: string) 
   return FOOTBALL_KEEP_CUT_BOARD_STYLES.at(-1)!;
 }
 
+function minimumCompetitiveEliteCount(items: readonly FootballRankFiveItem[]) {
+  const elite = items.filter((item) => footballComparisonTier(item) === "elite");
+  if (elite.length < KEEP_COUNT) return 0;
+  const nonElite = sortedPool(items.filter((item) => footballComparisonTier(item) !== "elite"));
+  const hasTightNonElitePair = nonElite.some((item, index) => (
+    index > 0 && Math.abs(nonElite[index - 1]!.rating - item.rating) <= MAX_KEEP_CUT_CUTOFF_GAP
+  ));
+  if (hasTightNonElitePair || !nonElite.length) return 0;
+  const highestNonElite = nonElite[0]!.rating;
+  const hasEliteBridge = elite.some((item) => (
+    Math.abs(item.rating - highestNonElite) <= MAX_KEEP_CUT_CUTOFF_GAP
+  ));
+  return hasEliteBridge ? KEEP_COUNT : 0;
+}
+
 export function footballKeepCutEliteCap(items: readonly FootballRankFiveItem[]) {
   const availableElite = availableTierCount(items, "elite");
   const availableBad = availableTierCount(items, "bad");
   const nonExtremeCount = items.length - availableElite - availableBad;
   const minimumRequiredElite = Math.max(
-    0,
+    minimumCompetitiveEliteCount(items),
     KEEP_CUT_BOARD_SIZE - nonExtremeCount - Math.min(availableBad, MAX_KEEP_CUT_BAD),
+    0,
   );
   return Math.max(DEFAULT_MAX_KEEP_CUT_ELITE, minimumRequiredElite);
 }
@@ -464,8 +480,9 @@ function keepCutProfileForSeed(
   const availableBad = availableTierCount(items, "bad");
   const nonExtremeCount = items.length - availableElite - availableBad;
   const minimumRequiredElite = Math.max(
-    0,
+    minimumCompetitiveEliteCount(items),
     KEEP_CUT_BOARD_SIZE - nonExtremeCount - Math.min(availableBad, MAX_KEEP_CUT_BAD),
+    0,
   );
   const eliteCap = footballKeepCutEliteCap(items);
   const eliteCount = desiredEliteCount(
