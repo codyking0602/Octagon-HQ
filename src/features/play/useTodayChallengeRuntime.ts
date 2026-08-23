@@ -12,11 +12,9 @@ import {
   todayChallengeStandingsQueryKey,
 } from "./useTodayChallengeOverview";
 
-export const todayChallengeRuntimeQueryKey = (profileId: string, sport: PlaySport = "ufc") => [
-  "today-challenge-runtime",
-  sport,
-  profileId,
-] as const;
+export const todayChallengeRuntimeQueryKey = (profileId: string, sport: PlaySport = "ufc") => sport === "ufc"
+  ? ["today-challenge-runtime", profileId] as const
+  : ["today-challenge-runtime", sport, profileId] as const;
 
 export function useTodayChallengeRuntime({
   profileId,
