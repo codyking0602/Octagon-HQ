@@ -59,6 +59,7 @@ import "./styles/football-debate-games.css";
 import "./styles/football-blind-resume.css";
 import "./styles/football-foundation.css";
 import "./styles/football-visual-assets.css";
+import "./styles/football-universe.css";
 import "./styles/war-room.css";
 import "./styles/war-room-launch.css";
 import "./styles/war-room-admin-polish.css";
