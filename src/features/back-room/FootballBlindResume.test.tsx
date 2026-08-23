@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import FootballBlindResumePage from "./FootballBlindResumePage";
 import {
@@ -11,6 +11,17 @@ import {
   resolvedFootballBlindResumeMatchups,
 } from "./footballBlindResumeModel";
 import { getFootballRankFivePack } from "./footballRankFiveModel";
+
+vi.mock("../challenges/ChallengeProvider", () => ({
+  usePlayChallenges: () => ({
+    beginChallenge: vi.fn().mockResolvedValue(""),
+    activeProfile: null,
+    profiles: [],
+    getChallenge: () => null,
+    markOpened: vi.fn(),
+    submitResult: vi.fn(),
+  }),
+}));
 
 describe("Football Blind Resume", () => {
   beforeEach(() => {
