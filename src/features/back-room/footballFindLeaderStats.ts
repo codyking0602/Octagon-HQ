@@ -176,11 +176,11 @@ const qbRows: readonly QbCareerRow[] = [
   { id: "cam-newton", name: "Cam Newton", games: 148, completions: 2682, attempts: 4474, passingYards: 32382, passingTouchdowns: 194, interceptions: 123 },
   { id: "joe-namath", name: "Joe Namath", games: 140, completions: 1886, attempts: 3762, passingYards: 27663, passingTouchdowns: 173, interceptions: 220 },
   { id: "len-dawson", name: "Len Dawson", games: 211, completions: 2136, attempts: 3741, passingYards: 28711, passingTouchdowns: 239, interceptions: 183 },
-  { id: "jim-everett", name: "Jim Everett", games: 158, completions: 2841, attempts: 4923, passingYards: 34837, passingTouchdowns: 203, interceptions: 175 },
+  { id: "ben-roethlisberger", name: "Ben Roethlisberger", games: 249, completions: 5440, attempts: 8443, passingYards: 64088, passingTouchdowns: 418, interceptions: 211 },
   { id: "jay-cutler", name: "Jay Cutler", games: 153, completions: 3048, attempts: 4920, passingYards: 35133, passingTouchdowns: 227, interceptions: 160 },
-  { id: "danny-white", name: "Danny White", games: 166, completions: 1761, attempts: 2950, passingYards: 21959, passingTouchdowns: 155, interceptions: 132 },
-  { id: "joe-ferguson", name: "Joe Ferguson", games: 186, completions: 2369, attempts: 4519, passingYards: 29817, passingTouchdowns: 196, interceptions: 209 },
-  { id: "chris-chandler", name: "Chris Chandler", games: 180, completions: 2328, attempts: 4005, passingYards: 28484, passingTouchdowns: 170, interceptions: 146 },
+  { id: "matt-ryan", name: "Matt Ryan", games: 234, completions: 5551, attempts: 8464, passingYards: 62792, passingTouchdowns: 381, interceptions: 183 },
+  { id: "steve-young", name: "Steve Young", games: 169, completions: 2667, attempts: 4149, passingYards: 33124, passingTouchdowns: 232, interceptions: 107 },
+  { id: "troy-aikman", name: "Troy Aikman", games: 165, completions: 2898, attempts: 4715, passingYards: 32942, passingTouchdowns: 165, interceptions: 141 },
   { id: "andrew-luck", name: "Andrew Luck", games: 86, completions: 2000, attempts: 3290, passingYards: 23671, passingTouchdowns: 171, interceptions: 83 },
 ] as const;
 
