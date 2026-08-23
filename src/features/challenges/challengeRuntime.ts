@@ -33,12 +33,13 @@ function canonicalChallengeRoute(challenge: PlayChallenge) {
   try {
     return playGameDefinition(challenge.gameId, challengeSport(challenge)).route;
   } catch {
-    return PLAY_ROUTE_BY_GAME[challenge.gameId] ?? "/play";
+    return PLAY_ROUTE_BY_GAME[challenge.gameId] ?? null;
   }
 }
 
 export function challengePlayRoute(challenge: PlayChallenge) {
   const canonicalRoute = canonicalChallengeRoute(challenge);
+  if (!canonicalRoute) return "/play";
 
   if (challenge.playUrl) {
     try {
