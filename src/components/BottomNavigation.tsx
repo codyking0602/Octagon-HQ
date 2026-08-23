@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { scrollPageToTop } from "../app/RouteScrollManager";
 import { useWarRoom } from "../features/war-room/WarRoomProvider";
 
 type NavigationIconName = "home" | "rankings" | "picks" | "play" | "war-room";
+
+export const PLAY_DOUBLE_TAP_MS = 350;
 
 const baseDestinations = [
   { to: "/", label: "Home", icon: "home", end: true },
@@ -59,13 +61,21 @@ function NavigationIcon({ name }: { name: NavigationIconName }) {
 
 export function BottomNavigation() {
   const location = useLocation();
+  const navigate = useNavigate();
   const warRoom = useWarRoom();
   const keyboardSessionRef = useRef(false);
+  const lastPlayTapRef = useRef(0);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
   const [viewportBottomCorrection, setViewportBottomCorrection] = useState(0);
-  const destinations = warRoom.status === "eligible"
-    ? [...baseDestinations, warRoomDestination]
+  const inFootball = location.pathname === "/football" || location.pathname.startsWith("/football/");
+  const sportDestinations = inFootball
+    ? baseDestinations.map((destination) => destination.icon === "play"
+      ? { ...destination, to: "/football" }
+      : destination)
     : baseDestinations;
+  const destinations = warRoom.status === "eligible"
+    ? [...sportDestinations, warRoomDestination]
+    : sportDestinations;
   const unreadLabel = warRoom.unreadCount > 99 ? "99+" : String(warRoom.unreadCount);
 
   useEffect(() => {
@@ -132,12 +142,48 @@ export function BottomNavigation() {
     >
       {destinations.map((destination) => (
         <NavLink
-          key={destination.to}
+          key={`${destination.icon}:${destination.to}`}
           to={destination.to}
           end={destination.end}
           onClick={(event) => {
-            if (location.pathname !== destination.to) return;
+            if (destination.icon !== "play") {
+              lastPlayTapRef.current = 0;
+              if (location.pathname !== destination.to) return;
+              event.preventDefault();
+              scrollPageToTop("smooth");
+              return;
+            }
+
+            const now = Date.now();
+            const doubleTap = now - lastPlayTapRef.current <= PLAY_DOUBLE_TAP_MS;
+
+            if (inFootball) {
+              lastPlayTapRef.current = now;
+              if (doubleTap) {
+                event.preventDefault();
+                lastPlayTapRef.current = 0;
+                navigate("/play");
+                return;
+              }
+              if (location.pathname === "/football") {
+                event.preventDefault();
+                scrollPageToTop("smooth");
+              }
+              return;
+            }
+
+            if (location.pathname !== "/play") {
+              lastPlayTapRef.current = 0;
+              return;
+            }
+
             event.preventDefault();
+            if (doubleTap) {
+              lastPlayTapRef.current = 0;
+              navigate("/football/entry");
+              return;
+            }
+            lastPlayTapRef.current = now;
             scrollPageToTop("smooth");
           }}
           className={({ isActive }) => (isActive ? "bottom-nav__item is-active" : "bottom-nav__item")}
