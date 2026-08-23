@@ -22,6 +22,7 @@ const FOOTBALL_TODAY_CYCLE: readonly OfficialDailyGameType[] = [
 ];
 const FOOTBALL_DAILY_DOUBLE_CONTENT_VERSION = "football-daily-double-v1";
 const SHARED_DAILY_DOUBLE_GRADING_VERSION = "daily-rank-keep-combo-v1";
+const SHARED_DAILY_DOUBLE_SCORING_VERSION = "play-official-score-v4" as const;
 
 type JsonRecord = Record<string, unknown>;
 
@@ -54,8 +55,9 @@ export interface FootballTodayRuntimeSnapshot {
   finalSubmission: JsonRecord | null;
 }
 
-export type FootballTodayPersistenceSetup = OfficialDailySetupPublication & {
+export type FootballTodayPersistenceSetup = Omit<OfficialDailySetupPublication, "scoringVersion"> & {
   gameType: OfficialDailyGameType;
+  scoringVersion: OfficialDailySetupPublication["scoringVersion"] | typeof SHARED_DAILY_DOUBLE_SCORING_VERSION;
 };
 
 function asRecord(value: unknown, label: string): JsonRecord {
@@ -267,7 +269,7 @@ function buildDailyDouble(day: string, actions: readonly JsonRecord[]): Football
     game_type: activeGameType,
     setup_key: activePublication.setupKey,
     content_version: FOOTBALL_DAILY_DOUBLE_CONTENT_VERSION,
-    scoring_version: "play-official-score-v4",
+    scoring_version: SHARED_DAILY_DOUBLE_SCORING_VERSION,
     fallback_reason: null,
     public_setup: activePublication.publicSetup,
     progress_revision: actions.length,
@@ -318,7 +320,7 @@ export function buildFootballTodayPersistenceSetup(day: string): FootballTodayPe
     gameType: "keep_4_cut_4",
     setupKey: `${FOOTBALL_DAILY_DOUBLE_CONTENT_VERSION}:${FOOTBALL_TODAY_SCHEDULE_VERSION}:${day}`,
     contentVersion: FOOTBALL_DAILY_DOUBLE_CONTENT_VERSION,
-    scoringVersion: "play-official-score-v4",
+    scoringVersion: SHARED_DAILY_DOUBLE_SCORING_VERSION,
     publicSetup: {
       runtime_version: "football-official-daily-v1",
       combo_version: SHARED_DAILY_DOUBLE_GRADING_VERSION,
