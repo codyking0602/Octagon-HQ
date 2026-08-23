@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { FOOTBALL_WAVELENGTH_EXPANSION_CLUE_COUNT } from "./footballWavelengthExpansionCatalog";
 import {
   FOOTBALL_WAVELENGTH_CALIBRATION_VERSION,
   FOOTBALL_WAVELENGTH_CATALOG_VERSION,
@@ -31,24 +32,36 @@ function playDeterministicRound(seed: string) {
   return round;
 }
 
+const approvedNewCategories = [
+  "COACHING GENIUS",
+  "HOME-FIELD ADVANTAGE",
+  "FOOTBALL VILLAINY",
+  "FRANCHISE DYSFUNCTION",
+  "OFFENSIVE FIREPOWER",
+  "BIG ARM TALENT",
+  "ATHLETIC FREAK",
+] as const;
+
 describe("Football Wavelength maturity", () => {
-  it("owns one calibrated 300-item catalog across 20 distinct football categories", () => {
-    expect(FOOTBALL_WAVELENGTH_CATALOG_VERSION).toBe("football-wavelength-catalog-v2");
-    expect(FOOTBALL_WAVELENGTH_CALIBRATION_VERSION).toBe("football-wavelength-calibration-v1");
-    expect(footballWavelengthClues).toHaveLength(300);
-    expect(FOOTBALL_WAVELENGTH_CATEGORY_ANCHORS).toHaveLength(20);
+  it("owns one calibrated 540-item catalog across 27 distinct football categories", () => {
+    expect(FOOTBALL_WAVELENGTH_CATALOG_VERSION).toBe("football-wavelength-catalog-v3");
+    expect(FOOTBALL_WAVELENGTH_CALIBRATION_VERSION).toBe("football-wavelength-calibration-v2");
+    expect(FOOTBALL_WAVELENGTH_EXPANSION_CLUE_COUNT).toBe(240);
+    expect(footballWavelengthClues).toHaveLength(540);
+    expect(FOOTBALL_WAVELENGTH_CATEGORY_ANCHORS).toHaveLength(27);
 
     expect(new Set(footballWavelengthClues.map((clue) => clue.id)).size).toBe(footballWavelengthClues.length);
     const anchorCategories = new Set(FOOTBALL_WAVELENGTH_CATEGORY_ANCHORS.map((anchor) => anchor.category));
     const clueCategories = new Set(footballWavelengthClues.map((clue) => clue.category));
     expect(clueCategories).toEqual(anchorCategories);
+    expect(approvedNewCategories.every((category) => clueCategories.has(category))).toBe(true);
 
     for (const anchor of FOOTBALL_WAVELENGTH_CATEGORY_ANCHORS) {
       expect(anchor.ratingQuestion.trim()).not.toBe("");
       expect(anchor.bottomTier.trim()).not.toBe("");
       expect(anchor.average.trim()).not.toBe("");
       expect(anchor.exceptional.trim()).not.toBe("");
-      expect(footballWavelengthClues.filter((clue) => clue.category === anchor.category)).toHaveLength(15);
+      expect(footballWavelengthClues.filter((clue) => clue.category === anchor.category), anchor.category).toHaveLength(20);
     }
   });
 
@@ -65,14 +78,21 @@ describe("Football Wavelength maturity", () => {
 
     const ratings = footballWavelengthClues.map((clue) => clue.rating);
     expect(ratings.every((rating) => Number.isInteger(rating) && rating >= 1 && rating <= 100)).toBe(true);
-    expect(ratings.filter((rating) => rating <= 20).length).toBeGreaterThanOrEqual(30);
-    expect(ratings.filter((rating) => rating >= 21 && rating <= 40).length).toBeGreaterThanOrEqual(20);
-    expect(ratings.filter((rating) => rating >= 41 && rating <= 60).length).toBeGreaterThanOrEqual(25);
-    expect(ratings.filter((rating) => rating >= 61 && rating <= 79).length).toBeGreaterThanOrEqual(25);
-    expect(ratings.filter((rating) => rating >= 80 && rating <= 89).length).toBeGreaterThanOrEqual(25);
+    expect(ratings.filter((rating) => rating <= 20).length).toBeGreaterThanOrEqual(50);
+    expect(ratings.filter((rating) => rating >= 21 && rating <= 40).length).toBeGreaterThanOrEqual(30);
+    expect(ratings.filter((rating) => rating >= 41 && rating <= 60).length).toBeGreaterThanOrEqual(35);
+    expect(ratings.filter((rating) => rating >= 61 && rating <= 79).length).toBeGreaterThanOrEqual(40);
+    expect(ratings.filter((rating) => rating >= 80 && rating <= 89).length).toBeGreaterThanOrEqual(40);
     expect(ratings.some((rating) => rating === 1)).toBe(true);
     expect(ratings.some((rating) => rating === 100)).toBe(true);
     expect(ratings.filter((rating) => rating >= 90).length / ratings.length).toBeLessThan(0.45);
+
+    for (const category of approvedNewCategories) {
+      const categoryRatings = footballWavelengthClues.filter((clue) => clue.category === category).map((clue) => clue.rating);
+      expect(Math.min(...categoryRatings), category).toBeLessThanOrEqual(20);
+      expect(categoryRatings.some((rating) => rating >= 41 && rating <= 79), category).toBe(true);
+      expect(Math.max(...categoryRatings), category).toBeGreaterThanOrEqual(90);
+    }
   });
 
   it("preserves one hidden target while every four-clue sequence avoids clue and category repeats", () => {
@@ -116,7 +136,7 @@ describe("Football Wavelength maturity", () => {
     }
 
     expect(targets.size).toBeGreaterThanOrEqual(70);
-    expect(seenCategories.size).toBeGreaterThanOrEqual(18);
-    expect(seenClues.size).toBeGreaterThanOrEqual(120);
+    expect(seenCategories.size).toBeGreaterThanOrEqual(24);
+    expect(seenClues.size).toBeGreaterThanOrEqual(180);
   });
 });
