@@ -1,5 +1,6 @@
 import { useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { PlaySport } from "./playRegistry";
 import {
   createTodayChallengeRepository,
   TodayChallengeRepositoryError,
@@ -11,8 +12,12 @@ import {
   todayChallengeStandingsQueryKey,
 } from "./useTodayChallengeOverview";
 
-export const todayChallengeRuntimeQueryKey = (profileId: string) => [
+export const todayChallengeRuntimeQueryKey = (
+  profileId: string,
+  sport: PlaySport = "ufc",
+) => [
   "today-challenge-runtime",
+  sport,
   profileId,
 ] as const;
 
@@ -20,21 +25,23 @@ export function useTodayChallengeRuntime({
   profileId,
   enabled,
   repository: suppliedRepository,
+  sport = "ufc",
 }: {
   profileId: string;
   enabled: boolean;
   repository?: TodayChallengeRepository | null;
+  sport?: PlaySport;
 }) {
   const queryClient = useQueryClient();
   const actionLocked = useRef(false);
   const [actionPending, setActionPending] = useState(false);
   const repository = useMemo(
     () => suppliedRepository === undefined
-      ? createTodayChallengeRepository()
+      ? createTodayChallengeRepository(undefined, sport)
       : suppliedRepository,
-    [suppliedRepository],
+    [sport, suppliedRepository],
   );
-  const queryKey = todayChallengeRuntimeQueryKey(profileId);
+  const queryKey = todayChallengeRuntimeQueryKey(profileId, sport);
   const query = useQuery({
     queryKey,
     queryFn: () => {
@@ -62,7 +69,7 @@ export function useTodayChallengeRuntime({
       queryClient.setQueryData(queryKey, projection);
       if (!projection.officialAttempt) return;
       void queryClient.invalidateQueries({
-        queryKey: todayChallengeStandingsQueryKey(profileId),
+        queryKey: todayChallengeStandingsQueryKey(profileId, sport),
         exact: true,
       });
       void queryClient.invalidateQueries({
@@ -70,6 +77,7 @@ export function useTodayChallengeRuntime({
           profileId,
           projection.centralDay,
           projection.scheduleVersion,
+          sport,
         ),
         exact: true,
       });
