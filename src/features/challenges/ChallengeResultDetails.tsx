@@ -8,6 +8,7 @@ interface NamedChoice {
 
 interface HitNumberSelection {
   fighterId: string;
+  name?: string;
   value: number;
 }
 
@@ -41,7 +42,11 @@ function hitNumberSelections(value: ChallengeJson): HitNumberSelection[] {
       && typeof row.fighterId === "string"
       && typeof row.value === "number"
       && Number.isFinite(row.value)
-      ? [{ fighterId: row.fighterId, value: row.value }]
+      ? [{
+        fighterId: row.fighterId,
+        name: typeof row.name === "string" ? row.name : undefined,
+        value: row.value,
+      }]
       : [];
   });
 }
@@ -122,11 +127,12 @@ export function challengeResultScoreLabel(challenge: PlayChallenge, result: Chal
   if (challenge.gameId === "wavelength") return score === null ? "DONE" : String(score);
   if (challenge.gameId === "blind-resume") {
     if (score === null) return "DONE";
-    if (challenge.gameVersion !== "blind-resume-v3") return `${score}/5`;
     const resultRecord = record(row?.record ?? null);
     const wins = typeof resultRecord?.wins === "number" ? resultRecord.wins : null;
     const losses = typeof resultRecord?.losses === "number" ? resultRecord.losses : null;
-    return wins !== null && losses !== null ? `${score}/100 · ${wins}-${losses}` : `${score}/100`;
+    if (wins !== null && losses !== null) return `${score}/100 · ${wins}-${losses}`;
+    if (challenge.gameVersion !== "blind-resume-v3") return `${score}/5`;
+    return `${score}/100`;
   }
   if (challenge.gameId === "find-leader") return score === null ? "DONE" : `${score}/10`;
   if (challenge.gameId === "blind-rank") return `${strings(row?.placements ?? null).length}/5`;
@@ -343,7 +349,7 @@ function HitTheNumberDetails({ challenge, creatorName, responderName }: DetailPr
           {selections.map((selection, index) => (
             <li key={`${selection.fighterId}-${index}`}>
               <span>{index + 1}</span>
-              <strong>{getPlayFighter(selection.fighterId)?.name ?? selection.fighterId}</strong>
+              <strong>{selection.name ?? getPlayFighter(selection.fighterId)?.name ?? selection.fighterId}</strong>
               <em>{selection.value}</em>
             </li>
           ))}
