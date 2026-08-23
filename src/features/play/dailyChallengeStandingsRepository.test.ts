@@ -81,6 +81,6 @@ describe("Daily Challenge Standings repository", () => {
       }],
     });
     expect(rpc).toHaveBeenCalledTimes(1);
-    expect(rpc).toHaveBeenCalledWith("get_daily_challenge_standings", undefined);
+    expect(rpc).toHaveBeenCalledWith("get_daily_challenge_standings", { p_sport: "ufc" });
   });
 });
