@@ -7,7 +7,7 @@ function member(overrides: Partial<TodayChallengeStandingsEntry>): TodayChalleng
   return {
     rank: 1, profileId: "11111111-1111-4111-8111-111111111111", displayName: "Cody", initials: "CK",
     avatarPhotoData: null, wins: 25, played: 30, averageScore: 84.6, currentStreak: 6, bestStreak: 13,
-    gameAverages: { findLeader: 84, wavelength: null, blindResume: 90, blindRank5: 82, keep4Cut4: 87 },
+    gameAverages: { findLeader: 84, wavelength: null, blindResume: 90, blindRank5: 82, keep4Cut4: 87, hitTheNumber: null },
     isCurrentUser: false, weeklyRank: 1, weeklyWins: 4, weeklyPlayed: 6, weeklyAverageScore: 88.2, weeklyTitles: 2,
     ...overrides,
   };
