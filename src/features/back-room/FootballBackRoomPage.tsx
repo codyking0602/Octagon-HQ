@@ -56,9 +56,18 @@ export default function FootballBackRoomPage() {
         <div className="football-room-tags" aria-label="Football leagues">
           <span>COLLEGE FOOTBALL</span>
           <span>NFL</span>
-          <span>6 GAMES LIVE</span>
+          <span>TODAY’S CHALLENGE + 6 GAMES</span>
         </div>
       </section>
+      <button className="football-room-preview football-room-daily" type="button" onClick={() => navigate("/back-room/football/today")}>
+        <span className="football-room-preview__mark" aria-hidden="true">24H</span>
+        <div>
+          <small>SAME BOARD FOR EVERYONE</small>
+          <strong>TODAY’S CHALLENGE</strong>
+          <p>One official football board each day with deliberate NFL/CFB balance. Blind Rank 5 and Keep 4 / Cut 4 combine into one Daily Double.</p>
+          <em>PLAY TODAY →</em>
+        </div>
+      </button>
       <section className="football-room-game-grid" aria-label="Football games">
         {footballGames.map((game) => (
           <button className="football-room-preview" type="button" key={game.path} onClick={() => navigate(game.path)}>

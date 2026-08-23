@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { build } from "vite";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const entry = resolve(repoRoot, "src/features/play/todaysChallengeRuntime.ts");
+const entry = resolve(repoRoot, "src/features/play/dailyRuntimeBundle.ts");
 const outDir = resolve(repoRoot, "supabase/functions/daily-challenge-runtime");
 const output = resolve(outDir, "runtime.generated.mjs");
 
@@ -38,7 +38,11 @@ await build({
 });
 
 const bundled = await readFile(output, "utf8");
-for (const requiredExport of ["advanceOfficialDailyRuntime", "buildOfficialDailySetup"]) {
+for (const requiredExport of [
+  "advanceOfficialDailyRuntime",
+  "buildOfficialDailySetup",
+  "buildFootballTodayProjection",
+]) {
   if (!bundled.includes(requiredExport)) {
     throw new Error(`Daily runtime bundle is missing ${requiredExport}.`);
   }
