@@ -172,7 +172,7 @@ export default function FootballBlindResumePage() {
       creatorResult: asChallengeJson(resultPayload()),
       shareTitle: "Football Blind Resume Challenge",
       shareText: "I challenged you to the same five hidden football résumé matchups. Lock each call before the names reveal.",
-      shareUrl: footballChallengeUrl("/back-room/football/blind-resume", {
+      shareUrl: footballChallengeUrl("/football/blind-resume", {
         matchups: run.rounds.map((item) => item.id).join(","),
       }),
     });
@@ -224,7 +224,7 @@ export default function FootballBlindResumePage() {
         <GameResultActions
           onChallenge={() => void challengeSomeone()}
           onReplay={replay}
-          onAllGames={() => navigate("/back-room/football")}
+          onAllGames={() => navigate("/football")}
           replayLabel={replayLabelFor(run.identity.type)}
           status={challengeStatus}
         />
@@ -321,7 +321,7 @@ export default function FootballBlindResumePage() {
             <section className={`football-blind-resume-reveal ${pickedCorrect ? "is-correct" : "is-wrong"}`} aria-live="polite">
               <p className="eyebrow">{pickedCorrect ? "RIGHT CALL" : "MISSED IT"}</p>
               <h2>{winnerName}</h2>
-              <p>{winnerSubtitle}. The Back Room has this résumé higher.</p>
+              <p>{winnerSubtitle}. Football HQ has this résumé higher.</p>
               <strong>+{latestPick?.points ?? 0} POINTS</strong>
               <button type="button" onClick={advance}>{roundIndex === 4 ? "SEE FINAL SCORE" : "NEXT ROUND"}</button>
             </section>
