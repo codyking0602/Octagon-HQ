@@ -3,4 +3,8 @@ export {
   buildOfficialDailySetup,
 } from "./todaysChallengeRuntime";
 
-export { buildFootballTodayProjection } from "./footballTodayChallengeSession";
+export {
+  buildFootballTodayPersistenceSetup,
+  buildFootballTodayProjection,
+  buildFootballTodayRuntimeSnapshot,
+} from "./footballTodayChallengeSession";
