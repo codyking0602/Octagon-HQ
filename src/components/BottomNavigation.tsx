@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { scrollPageToTop } from "../app/RouteScrollManager";
+import { useProfilePreferences } from "../features/profile/ProfilePreferencesProvider";
 import { useWarRoom } from "../features/war-room/WarRoomProvider";
 
 type NavigationIconName = "home" | "rankings" | "picks" | "play" | "war-room";
@@ -63,6 +64,7 @@ export function BottomNavigation() {
   const location = useLocation();
   const navigate = useNavigate();
   const warRoom = useWarRoom();
+  const { footballTeam } = useProfilePreferences();
   const keyboardSessionRef = useRef(false);
   const lastPlayTapRef = useRef(0);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
@@ -77,6 +79,9 @@ export function BottomNavigation() {
     ? [...sportDestinations, warRoomDestination]
     : sportDestinations;
   const unreadLabel = warRoom.unreadCount > 99 ? "99+" : String(warRoom.unreadCount);
+  const footballNavClass = inFootball
+    ? ` bottom-nav--football${footballTeam ? ` bottom-nav--football-${footballTeam}` : ""}`
+    : "";
 
   useEffect(() => {
     const viewport = window.visualViewport;
@@ -130,7 +135,7 @@ export function BottomNavigation() {
 
   const navigation = (
     <nav
-      className={`bottom-nav${keyboardOpen ? " is-keyboard-open" : ""}`}
+      className={`bottom-nav${footballNavClass}${keyboardOpen ? " is-keyboard-open" : ""}`}
       aria-label="Primary navigation"
       style={{
         gridTemplateColumns: `repeat(${destinations.length}, minmax(0, 1fr))`,
