@@ -13,6 +13,7 @@ const MemberProfilePage = lazy(() => import("../features/members/MemberProfilePa
 const NotificationCenterPage = lazy(() => import("../features/notifications/NotificationCenterPage"));
 const BackRoomPage = lazy(() => import("../features/back-room/BackRoomPage"));
 const FootballBackRoomPage = lazy(() => import("../features/back-room/FootballBackRoomPage"));
+const FootballTodayChallengePage = lazy(() => import("../features/back-room/FootballTodayChallengePage"));
 const FootballRankFivePage = lazy(() => import("../features/back-room/FootballRankFivePage"));
 const FootballKeepCutPage = lazy(() => import("../features/back-room/FootballKeepCutPage"));
 const FootballWavelengthPage = lazy(() => import("../features/back-room/FootballWavelengthPage"));
@@ -58,6 +59,7 @@ export const appRoutes: RouteObject[] = [
       { path: "play/hit-the-number", element: <TodayChallengeGameRoute gameType="hit_the_number" casual={<HitTheNumberPage />} /> },
       { path: "back-room", element: <BackRoomPage /> },
       { path: "back-room/football", element: <FootballBackRoomPage /> },
+      { path: "back-room/football/today", element: <FootballTodayChallengePage /> },
       { path: "back-room/football/rank-five", element: <FootballRankFivePage /> },
       { path: "back-room/football/keep-cut", element: <FootballKeepCutPage /> },
       { path: "back-room/football/wavelength", element: <FootballWavelengthPage /> },
