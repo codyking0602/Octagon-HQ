@@ -1,10 +1,14 @@
-import { act, cleanup, render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { MemoryRouter, useLocation } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { BottomNavigation } from "./BottomNavigation";
 
 vi.mock("../features/war-room/WarRoomProvider", () => ({
   useWarRoom: () => ({ status: "locked", unreadCount: 0 }),
+}));
+
+vi.mock("../features/profile/ProfilePreferencesProvider", () => ({
+  useProfilePreferences: () => ({ footballTeam: "longhorns" }),
 }));
 
 type MutableVisualViewport = EventTarget & {
@@ -40,6 +44,11 @@ function installVisualViewport() {
     value: viewport,
   });
   return viewport;
+}
+
+function LocationProbe() {
+  const location = useLocation();
+  return <span data-testid="location">{location.pathname}</span>;
 }
 
 describe("BottomNavigation", () => {
@@ -138,5 +147,42 @@ describe("BottomNavigation", () => {
 
     expect(navigation).toHaveStyle({ transform: "translateY(144px)" });
     expect(navigation).toHaveStyle({ display: "grid" });
+  });
+
+  it("keeps a single active UFC Play tap normal and enters Football only on the second tap", () => {
+    installVisualViewport();
+    render(
+      <MemoryRouter initialEntries={["/play"]}>
+        <LocationProbe />
+        <BottomNavigation />
+      </MemoryRouter>,
+    );
+
+    const play = screen.getByRole("link", { name: "Play" });
+    fireEvent.click(play);
+    expect(screen.getByTestId("location")).toHaveTextContent("/play");
+    expect(screen.queryByText("Football")).not.toBeInTheDocument();
+
+    fireEvent.click(play);
+    expect(screen.getByTestId("location")).toHaveTextContent("/football/entry");
+  });
+
+  it("returns from Football to UFC when the active Play tab is double-tapped", () => {
+    installVisualViewport();
+    render(
+      <MemoryRouter initialEntries={["/football"]}>
+        <LocationProbe />
+        <BottomNavigation />
+      </MemoryRouter>,
+    );
+
+    const navigation = screen.getByRole("navigation", { name: "Primary navigation" });
+    expect(navigation).toHaveClass("bottom-nav--football-longhorns");
+
+    const play = screen.getByRole("link", { name: "Play" });
+    fireEvent.click(play);
+    expect(screen.getByTestId("location")).toHaveTextContent("/football");
+    fireEvent.click(play);
+    expect(screen.getByTestId("location")).toHaveTextContent("/play");
   });
 });
