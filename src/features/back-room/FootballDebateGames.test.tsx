@@ -91,7 +91,7 @@ describe("Football Back Room debate games", () => {
     expect(screen.getByText("YOUR FOUR")).toBeInTheDocument();
     expect(screen.getByText("BACK ROOM FOUR")).toBeInTheDocument();
     expect(screen.getByText("/100")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "NEW LINEUP" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "PLAY AGAIN" })).toBeInTheDocument();
   });
 
   it("plays Football Wavelength through the same four adaptive guess locks as UFC", () => {
@@ -110,6 +110,6 @@ describe("Football Back Room debate games", () => {
     expect(screen.getByText("FOOTBALL WAVELENGTH · FINAL SCORE")).toBeInTheDocument();
     expect(screen.getByText("HIDDEN NUMBER")).toBeInTheDocument();
     expect(screen.getByText("CLUE REVEAL")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "NEW WAVELENGTH" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "PLAY AGAIN" })).toBeInTheDocument();
   });
 });
