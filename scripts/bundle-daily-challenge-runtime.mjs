@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { build } from "vite";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const entry = resolve(repoRoot, "src/features/play/todaysChallengeRuntime.ts");
+const entry = resolve(repoRoot, "src/features/play/sportAwareTodaysChallengeRuntime.ts");
 const outDir = resolve(repoRoot, "supabase/functions/daily-challenge-runtime");
 const output = resolve(outDir, "runtime.generated.mjs");
 
