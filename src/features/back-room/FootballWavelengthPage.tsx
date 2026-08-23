@@ -142,7 +142,7 @@ export default function FootballWavelengthPage() {
       creatorResult: asChallengeJson(resultPayload(guesses)),
       shareTitle: "Football Wavelength Challenge",
       shareText: "I challenged you to the same hidden Football Wavelength number. Four adaptive clues. Only the final guess scores.",
-      shareUrl: footballChallengeUrl("/back-room/football/wavelength", { seed: run.seed }),
+      shareUrl: footballChallengeUrl("/football/wavelength", { seed: run.seed }),
     });
     setChallengeStatus(status);
   }
@@ -195,7 +195,7 @@ export default function FootballWavelengthPage() {
         <GameResultActions
           onChallenge={() => void challengeSomeone()}
           onReplay={replay}
-          onAllGames={() => navigate("/back-room/football")}
+          onAllGames={() => navigate("/football")}
           replayLabel={replayLabelFor(run.identity.type)}
           status={challengeStatus}
         />
