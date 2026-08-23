@@ -266,7 +266,6 @@ async function rpc(client: TodayChallengeClient, name: string, args?: Record<str
 }
 
 export interface TodayChallengeRepository {
-  sport: PlaySport;
   loadToday(): Promise<TodayChallengeProjection>;
   advance(projection: Pick<TodayChallengeProjection, "id" | "progressRevision">, action: Record<string, unknown>): Promise<TodayChallengeProjection>;
   loadHistory(): Promise<TodayChallengeHistoryRow[]>;
@@ -283,7 +282,6 @@ export function createTodayChallengeRepository(
   if (!client) return null;
   const sportBody = sport === "football" ? { sport } : {};
   return {
-    sport,
     async loadToday() {
       return parseTodayChallengeProjection(await invokeRuntime(client, { mode: "get-today", ...sportBody }));
     },
