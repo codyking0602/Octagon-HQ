@@ -67,7 +67,7 @@ function completedChallenge(): PlayChallenge {
   }, new Date("2026-08-18T06:05:00Z"));
 }
 
-function tiedLegacyScoresChallenge(): PlayChallenge {
+function tiedNormalizedScoresChallenge(): PlayChallenge {
   const challenge = createPlayChallenge({
     code: "HIT032",
     gameId: "hit-the-number",
@@ -133,7 +133,7 @@ describe("Hit the Number challenge results", () => {
 
     expect(screen.getByLabelText("Hit the Number target")).toHaveTextContent("TARGET23");
     expect(screen.getByLabelText("Hit the Number target")).toHaveTextContent("UFC KO/TKO WINS · PICK 5");
-    expect(screen.getByText("1 AWAY · GAME SCORE 99/100")).toBeInTheDocument();
+    expect(screen.getByText("1 AWAY · GAME SCORE 89/100")).toBeInTheDocument();
     expect(screen.getByText("EXACT HIT · GAME SCORE 100/100")).toBeInTheDocument();
     expect(screen.getByLabelText("Cody picks").children).toHaveLength(5);
     expect(screen.getByLabelText("Shane picks").children).toHaveLength(5);
@@ -141,8 +141,8 @@ describe("Hit the Number challenge results", () => {
     expect(screen.getAllByText("7")).toHaveLength(2);
   });
 
-  it("uses raw Hit the Number outcomes and recomputes stale legacy scores", () => {
-    const challenge = tiedLegacyScoresChallenge();
+  it("uses raw Price Is Right outcomes when normalized game scores tie", () => {
+    const challenge = tiedNormalizedScoresChallenge();
 
     expect(challengeResultVerdict(challenge, "Shane", "Cody")).toBe("Shane wins");
 
@@ -154,8 +154,7 @@ describe("Hit the Number challenge results", () => {
       />,
     );
 
-    expect(screen.getByText("5 AWAY · GAME SCORE 96/100")).toBeInTheDocument();
-    expect(screen.getByText("8 AWAY · GAME SCORE 94/100")).toBeInTheDocument();
-    expect(screen.queryByText(/GAME SCORE 75\/100/)).not.toBeInTheDocument();
+    expect(screen.getByText("5 AWAY · GAME SCORE 75/100")).toBeInTheDocument();
+    expect(screen.getByText("8 AWAY · GAME SCORE 75/100")).toBeInTheDocument();
   });
 });
