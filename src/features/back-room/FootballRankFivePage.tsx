@@ -142,7 +142,7 @@ export default function FootballRankFivePage() {
       creatorResult: asChallengeJson(result),
       shareTitle: "Football Blind Rank 5 Challenge",
       shareText: `I challenged you to rank the same five football subjects in ${run.pack.name}. Every slot locks before the next reveal.`,
-      shareUrl: footballChallengeUrl("/back-room/football/rank-five", {
+      shareUrl: footballChallengeUrl("/football/rank-five", {
         pack: run.pack.id,
         lineup: run.lineup.map((item) => item.id).join(","),
       }),
@@ -242,7 +242,7 @@ export default function FootballRankFivePage() {
             <GameResultActions
               onChallenge={() => void challengeSomeone()}
               onReplay={replay}
-              onAllGames={() => navigate("/back-room/football")}
+              onAllGames={() => navigate("/football")}
               replayLabel={replayLabelFor(run.identity.type)}
               status={challengeStatus}
             />
