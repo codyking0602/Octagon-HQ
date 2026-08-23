@@ -134,20 +134,23 @@ try {
   await page.getByRole("button", { name: `Open ${displayName} profile menu` })
     .waitFor({ state: "visible", timeout: 15_000 });
 
-  const expectedTitle = page.getByText(expectedItem.title, { exact: true });
+  const item = page.locator(".whats-new-item")
+    .filter({ has: page.getByText(expectedItem.title, { exact: true }) })
+    .filter({ has: page.getByText(expectedItem.summary, { exact: true }) })
+    .first();
   try {
-    await expectedTitle.waitFor({ state: "visible", timeout: 15_000 });
-  } catch {
+    await item.waitFor({ state: "visible", timeout: 15_000 });
+    await item.getByText(expectedItem.title, { exact: true }).waitFor({ state: "visible" });
+    await item.getByText(expectedItem.summary, { exact: true }).waitFor({ state: "visible" });
+  } catch (error) {
     const body = await page.locator("body").innerText().catch(() => "");
     throw new Error([
       `The signed-in live What's New feed did not render canonical item ${expectedItem.id}: ${expectedItem.title}`,
+      `Locator failure: ${error instanceof Error ? error.message : String(error)}`,
       `Visible feed text: ${body.slice(0, 1800)}`,
       ...diagnostics,
     ].join("\n"));
   }
-
-  const item = expectedTitle.locator("xpath=ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' whats-new-item ')][1]");
-  await item.getByText(expectedItem.summary, { exact: true }).waitFor({ state: "visible" });
 
   const expectedRoute = typeof expectedItem.route === "string" ? expectedItem.route : "";
   const expectedAction = typeof expectedItem.action_label === "string" ? expectedItem.action_label : "";
