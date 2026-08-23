@@ -22,7 +22,7 @@ function challengeCodeFromSearch(search: string, gameId: PlayGameId) {
   return /^[a-z0-9]{4,12}$/i.test(value) ? value.toUpperCase() : "";
 }
 
-function challengeSport(challenge: PlayChallenge): PlaySport {
+export function challengeSport(challenge: PlayChallenge): PlaySport {
   if (challenge.gameVersion.startsWith("football-") || challenge.playUrl.includes("/back-room/football/")) {
     return "football";
   }
