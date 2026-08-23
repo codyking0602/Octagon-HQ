@@ -7,13 +7,15 @@ import {
   type PlayLineupHistory,
   type PlayLineupIdentity,
 } from "../play/lineupModel";
-import { footballHitTheNumberSubjects } from "./footballHitTheNumberModel";
 import {
+  footballFindLeaderLeagueForDomain,
   footballFindLeaderMetricDefinitions,
+  footballFindLeaderSubjects,
   formatFootballFindLeaderFact,
   getFootballFindLeaderFact,
   type FootballFindLeaderDomainId,
   type FootballFindLeaderFamilyId,
+  type FootballFindLeaderLeagueId,
   type FootballFindLeaderMetricDefinition,
   type FootballFindLeaderMetricId,
 } from "./footballFactualStats";
@@ -79,6 +81,20 @@ export const FOOTBALL_FIND_LEADER_FAMILY_CYCLE: readonly FootballFindLeaderFamil
   "cfb-strength",
 ] as const;
 
+const NFL_FAMILIES: readonly FootballFindLeaderFamilyId[] = [
+  "qb-volume",
+  "rb-rushing",
+  "qb-efficiency",
+  "rb-receiving",
+  "rb-scrimmage",
+] as const;
+
+const CFB_FAMILIES: readonly FootballFindLeaderFamilyId[] = [
+  "cfb-offense",
+  "cfb-defense",
+  "cfb-strength",
+] as const;
+
 function questionVariants(definition: FootballFindLeaderMetricDefinition): FootballFindLeaderQuestionDefinition[] {
   return [
     {
@@ -104,17 +120,11 @@ function questionVariants(definition: FootballFindLeaderMetricDefinition): Footb
 
 export const footballFindLeaderQuestions: readonly FootballFindLeaderQuestionDefinition[] = footballFindLeaderMetricDefinitions.flatMap(questionVariants);
 
-function subjectMatchesDomain(subject: (typeof footballHitTheNumberSubjects)[number], domainId: FootballFindLeaderDomainId) {
-  if (domainId === "nfl-qb-career") return subject.domainId === "nfl-qb-passing";
-  if (domainId === "nfl-rb-career") return subject.domainId === "nfl-rb-rushing";
-  return subject.domainId === "cfb-champion-scoring";
-}
-
 export function footballFindLeaderMetricRows(metricId: FootballFindLeaderMetricId): ScoredRow[] {
   const definition = footballFindLeaderMetricDefinitions.find((row) => row.id === metricId);
   if (!definition) return [];
-  return footballHitTheNumberSubjects
-    .filter((subject) => subjectMatchesDomain(subject, definition.domainId))
+  return footballFindLeaderSubjects
+    .filter((subject) => subject.domainId === definition.domainId)
     .flatMap((subject) => {
       const fact = getFootballFindLeaderFact(subject.id, metricId);
       return fact ? [{ id: subject.id, name: subject.name, subtitle: subject.subtitle, value: fact.value }] : [];
@@ -143,7 +153,7 @@ function competitiveLeader(pool: readonly ScoredRow[], random: () => number) {
     return { leader, lower, competitionScore: (spread / scale) + (runnerUpGap / scale * 0.35) };
   }).sort((left, right) => left.competitionScore - right.competitionScore || right.leader.value - left.leader.value);
   const best = ranked[0]!.competitionScore;
-  const window = ranked.filter((row) => row.competitionScore <= best + 0.12).slice(0, 6);
+  const window = ranked.filter((row) => row.competitionScore <= best + 0.12).slice(0, 8);
   return window[Math.floor(random() * window.length)] ?? ranked[0]!;
 }
 
@@ -160,13 +170,14 @@ function plausibleChallengers(lower: readonly ScoredRow[], random: () => number)
   if (lower.length < count) return [];
   const core = closestRows(lower, 4, random);
   const used = new Set(core.map((row) => row.id));
-  const support = shuffleLineup(lower.slice(4, Math.min(12, lower.length)).filter((row) => !used.has(row.id)), random).slice(0, 3);
+  const support = shuffleLineup(lower.slice(4, Math.min(9, lower.length)).filter((row) => !used.has(row.id)), random).slice(0, 3);
   support.forEach((row) => used.add(row.id));
   const wildcards = shuffleLineup(lower.slice(9, Math.min(20, lower.length)).filter((row) => !used.has(row.id)), random).slice(0, 2);
   wildcards.forEach((row) => used.add(row.id));
   const selected = [...core, ...support, ...wildcards];
   if (selected.length < count) {
-    selected.push(...shuffleLineup(lower.filter((row) => !used.has(row.id)), random).slice(0, count - selected.length));
+    const fill = lower.filter((row) => !used.has(row.id));
+    selected.push(...shuffleLineup(fill, random).slice(0, count - selected.length));
   }
   return selected.slice(0, count);
 }
@@ -205,17 +216,42 @@ function recentValues(history: PlayLineupHistory, kind: "question" | "metric" | 
   return new Set(history.recentItemIds.filter((id) => id.startsWith(prefix)).map((id) => id.slice(prefix.length)));
 }
 
+function lastValue(history: PlayLineupHistory, kind: "question" | "metric" | "family") {
+  const prefix = `${kind}:`;
+  return history.lastLineup.find((id) => id.startsWith(prefix))?.slice(prefix.length) ?? null;
+}
+
+function targetLeague(seed: string): FootballFindLeaderLeagueId {
+  return stableLineupHash(`${FOOTBALL_FIND_LEADER_VERSION}|league|${seed}`) % 2 === 0 ? "nfl" : "cfb";
+}
+
+function leagueFamilies(league: FootballFindLeaderLeagueId) {
+  return league === "cfb" ? CFB_FAMILIES : NFL_FAMILIES;
+}
+
 function chooseQuestion(seed: string, history: PlayLineupHistory) {
   const recentQuestions = recentValues(history, "question");
   const recentMetrics = recentValues(history, "metric");
   const recentFamilies = recentValues(history, "family");
-  const start = stableLineupHash(`${FOOTBALL_FIND_LEADER_VERSION}|family|${seed}`) % FOOTBALL_FIND_LEADER_FAMILY_CYCLE.length;
-  const rotated = FOOTBALL_FIND_LEADER_FAMILY_CYCLE.map((_, index) => FOOTBALL_FIND_LEADER_FAMILY_CYCLE[(start + index) % FOOTBALL_FIND_LEADER_FAMILY_CYCLE.length]!);
-  const family = rotated.find((value) => !recentFamilies.has(value)) ?? rotated[0]!;
+  const previousQuestion = lastValue(history, "question");
+  const previousMetric = lastValue(history, "metric");
+  const previousFamily = lastValue(history, "family");
+  const desiredLeague = targetLeague(seed);
+  const families = leagueFamilies(desiredLeague);
+  const start = stableLineupHash(`${FOOTBALL_FIND_LEADER_VERSION}|family|${seed}`) % families.length;
+  const rotated = families.map((_, index) => families[(start + index) % families.length]!);
+  const family = rotated.find((value) => value !== previousFamily && !recentFamilies.has(value))
+    ?? rotated.find((value) => value !== previousFamily)
+    ?? rotated[0]!;
   const familyQuestions = footballFindLeaderQuestions.filter((question) => question.family === family);
-  const freshMetric = familyQuestions.filter((question) => !recentMetrics.has(question.metricId) && !recentQuestions.has(question.id));
-  const freshQuestion = familyQuestions.filter((question) => !recentQuestions.has(question.id));
-  const candidates = freshMetric.length ? freshMetric : freshQuestion.length ? freshQuestion : familyQuestions;
+  const freshMetric = familyQuestions.filter((question) => (
+    question.metricId !== previousMetric
+    && question.id !== previousQuestion
+    && !recentMetrics.has(question.metricId)
+    && !recentQuestions.has(question.id)
+  ));
+  const noImmediateRepeat = familyQuestions.filter((question) => question.metricId !== previousMetric && question.id !== previousQuestion);
+  const candidates = freshMetric.length ? freshMetric : noImmediateRepeat.length ? noImmediateRepeat : familyQuestions;
   const random = seededLineupRandom(FOOTBALL_FIND_LEADER_VERSION, "question", seed);
   return candidates[Math.floor(random() * candidates.length)] ?? footballFindLeaderQuestions[0]!;
 }
@@ -232,7 +268,7 @@ export function createFootballFindLeaderBoard(seed: string, history: PlayLineupH
 }
 
 export function createFootballFindLeaderRun(): FootballFindLeaderRun {
-  const validItemIds = new Set<string>(footballHitTheNumberSubjects.map((subject) => subject.id));
+  const validItemIds = new Set<string>(footballFindLeaderSubjects.map((subject) => subject.id));
   footballFindLeaderQuestions.forEach((question) => {
     validItemIds.add(token("question", question.id));
     validItemIds.add(token("metric", question.metricId));
@@ -284,4 +320,26 @@ export function footballFindLeaderCompetitionAudit() {
       outsideClosestNineCount: challengers.filter((candidate) => !closestNine.has(candidate.id)).length,
     };
   });
+}
+
+export function footballFindLeaderReplayAudit(sampleSize = 1000) {
+  const emptyHistory: PlayLineupHistory = { entries: [], recentItemIds: [], recentFighterIds: [], lastLineup: [] };
+  const unorderedBoards = new Set<string>();
+  const metrics = new Set<FootballFindLeaderMetricId>();
+  const families = new Set<FootballFindLeaderFamilyId>();
+  let cfbBoards = 0;
+  for (let index = 0; index < sampleSize; index += 1) {
+    const board = createFootballFindLeaderBoard(`replay-audit-${index}`, emptyHistory);
+    if (footballFindLeaderLeagueForDomain(board.domainId) === "cfb") cfbBoards += 1;
+    metrics.add(board.metricId);
+    families.add(board.family);
+    unorderedBoards.add(`${board.metricId}|${board.candidates.map((candidate) => candidate.id).sort().join(",")}`);
+  }
+  return {
+    sampleSize,
+    cfbShare: sampleSize ? cfbBoards / sampleSize : 0,
+    uniqueUnorderedBoardShare: sampleSize ? unorderedBoards.size / sampleSize : 0,
+    metricsSeen: metrics.size,
+    familiesSeen: families.size,
+  };
 }
