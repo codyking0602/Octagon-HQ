@@ -56,8 +56,8 @@ begin
     'Past Red vs. Past Blue',
     'Test Arena',
     'Dallas, Texas',
-    now() - interval '1 hour',
-    now() - interval '2 hours',
+    now() - interval '13 hours',
+    now() - interval '14 hours',
     2199,
     'upcoming'
   );
@@ -78,7 +78,7 @@ begin
 
   v_event_state := public.get_pick_monitoring_event_state();
   if coalesce(v_event_state->'current', 'null'::jsonb) <> 'null'::jsonb then
-    raise exception 'boundary-past event remained monitorable: %', v_event_state;
+    raise exception 'event beyond the bounded live window remained monitorable: %', v_event_state;
   end if;
 
   update public.pick_events
