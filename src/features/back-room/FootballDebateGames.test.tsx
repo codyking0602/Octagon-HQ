@@ -32,7 +32,7 @@ vi.mock("../challenges/challengeRuntime", () => ({
   }),
 }));
 
-describe("Football Back Room debate games", () => {
+describe("Football HQ debate games", () => {
   beforeEach(() => {
     window.localStorage.clear();
   });
@@ -89,7 +89,7 @@ describe("Football Back Room debate games", () => {
     }
 
     expect(screen.getByText("YOUR FOUR")).toBeInTheDocument();
-    expect(screen.getByText("BACK ROOM FOUR")).toBeInTheDocument();
+    expect(screen.getByText("FOOTBALL HQ FOUR")).toBeInTheDocument();
     expect(screen.getByText("/100")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "PLAY AGAIN" })).toBeInTheDocument();
   });
