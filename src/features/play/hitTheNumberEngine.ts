@@ -499,10 +499,9 @@ export function hitTheNumberScore({
   if (!Number.isFinite(distance) || distance < 0) throw new Error("Hit the Number score distance cannot be negative.");
   if (status === "perfect") return 100;
 
-  const averageContribution = target / pickCount;
   const rawScore = status === "bust"
-    ? 75 - (50 * distance / averageContribution)
-    : 100 - (50 * distance / averageContribution);
+    ? 75 - (25 * distance / target)
+    : 100 - (25 * distance / target);
   const roundedScore = Math.round(rawScore);
 
   return status === "bust"
