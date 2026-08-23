@@ -4,6 +4,17 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import FootballFindLeaderPage from "./FootballFindLeaderPage";
 import * as model from "./footballFindLeaderModel";
 
+vi.mock("../challenges/ChallengeProvider", () => ({
+  usePlayChallenges: () => ({
+    beginChallenge: vi.fn().mockResolvedValue(""),
+    activeProfile: null,
+    profiles: [],
+    getChallenge: () => null,
+    markOpened: vi.fn(),
+    submitResult: vi.fn(),
+  }),
+}));
+
 const board: model.FootballFindLeaderBoard = {
   version: model.FOOTBALL_FIND_LEADER_VERSION,
   definitionId: "qb-passing-yards:standard",
