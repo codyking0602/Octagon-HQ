@@ -31,12 +31,14 @@ export type FootballHitTheNumberBoardType = "open-roster" | "random-pool";
 export type FootballHitTheNumberLeague = "NFL" | "CFB";
 export type FootballHitTheNumberDomainId = "volume" | "efficiency" | "dominance";
 type FootballHitTheNumberSubjectGroup = "qb" | "rb" | "cfb";
+type FootballHitTheNumberSubjectDomainId = "nfl-qb-passing" | "nfl-rb-rushing" | "cfb-champion-scoring";
 
 export interface FootballHitTheNumberSubject {
   id: string;
   name: string;
   subtitle: string;
   group: FootballHitTheNumberSubjectGroup;
+  domainId: FootballHitTheNumberSubjectDomainId;
   era: string;
 }
 
@@ -110,13 +112,13 @@ export const FOOTBALL_HIT_THE_NUMBER_FORMAT_PROFILE = [
 export const FOOTBALL_HIT_THE_NUMBER_PICK_PROFILE = HIT_THE_NUMBER_GENERATION_PROFILE.picks;
 
 const qb = (id: string, name: string, era: string): FootballHitTheNumberSubject => ({
-  id, name, subtitle: era, group: "qb", era,
+  id, name, subtitle: era, group: "qb", domainId: "nfl-qb-passing", era,
 });
 const rb = (id: string, name: string, era: string): FootballHitTheNumberSubject => ({
-  id, name, subtitle: era, group: "rb", era,
+  id, name, subtitle: era, group: "rb", domainId: "nfl-rb-rushing", era,
 });
 const cfb = (id: string, name: string, era: string): FootballHitTheNumberSubject => ({
-  id, name, subtitle: `${id.slice(0, 4)} national champion`, group: "cfb", era,
+  id, name, subtitle: `${id.slice(0, 4)} national champion`, group: "cfb", domainId: "cfb-champion-scoring", era,
 });
 
 const quarterbackSubjects = [
