@@ -12,7 +12,8 @@ const MemberDirectoryPage = lazy(() => import("../features/members/MemberDirecto
 const MemberProfilePage = lazy(() => import("../features/members/MemberProfilePage"));
 const NotificationCenterPage = lazy(() => import("../features/notifications/NotificationCenterPage"));
 const BackRoomPage = lazy(() => import("../features/back-room/BackRoomPage"));
-const FootballBackRoomPage = lazy(() => import("../features/back-room/FootballBackRoomPage"));
+const FootballEntryPage = lazy(() => import("../features/football/FootballEntryPage"));
+const FootballHomePage = lazy(() => import("../features/football/FootballHomePage"));
 const FootballTodayChallengePage = lazy(() => import("../features/back-room/FootballTodayChallengePage"));
 const FootballRankFivePage = lazy(() => import("../features/back-room/FootballRankFivePage"));
 const FootballKeepCutPage = lazy(() => import("../features/back-room/FootballKeepCutPage"));
@@ -58,14 +59,15 @@ export const appRoutes: RouteObject[] = [
       { path: "play/auction", element: <AuctionPage /> },
       { path: "play/hit-the-number", element: <TodayChallengeGameRoute gameType="hit_the_number" casual={<HitTheNumberPage />} /> },
       { path: "back-room", element: <BackRoomPage /> },
-      { path: "back-room/football", element: <FootballBackRoomPage /> },
-      { path: "back-room/football/today", element: <FootballTodayChallengePage /> },
-      { path: "back-room/football/rank-five", element: <FootballRankFivePage /> },
-      { path: "back-room/football/keep-cut", element: <FootballKeepCutPage /> },
-      { path: "back-room/football/wavelength", element: <FootballWavelengthPage /> },
-      { path: "back-room/football/blind-resume", element: <FootballBlindResumePage /> },
-      { path: "back-room/football/hit-the-number", element: <FootballHitTheNumberPage /> },
-      { path: "back-room/football/find-leader", element: <FootballFindLeaderPage /> },
+      { path: "football/entry", element: <FootballEntryPage /> },
+      { path: "football", element: <FootballHomePage /> },
+      { path: "football/today", element: <FootballTodayChallengePage /> },
+      { path: "football/rank-five", element: <FootballRankFivePage /> },
+      { path: "football/keep-cut", element: <FootballKeepCutPage /> },
+      { path: "football/wavelength", element: <FootballWavelengthPage /> },
+      { path: "football/blind-resume", element: <FootballBlindResumePage /> },
+      { path: "football/hit-the-number", element: <FootballHitTheNumberPage /> },
+      { path: "football/find-leader", element: <FootballFindLeaderPage /> },
       { path: "picks", element: <PicksPage /> },
       { path: "picks/control", element: <PicksControlCenterPage /> },
       { path: "picks/setup", element: <Navigate to="/picks/control#setup" replace /> },
