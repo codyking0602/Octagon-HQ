@@ -42,14 +42,6 @@ export default function BackRoomPage() {
           <em>ENTER →</em>
         </button>
 
-        <button className="back-room-sport back-room-sport--football" type="button" onClick={() => navigate("/back-room/football")}>
-          <span className="back-room-sport__icon" aria-hidden="true">🏈</span>
-          <small>COLLEGE + PRO</small>
-          <strong>FOOTBALL</strong>
-          <p>College football and NFL games under one roof.</p>
-          <em>ENTER →</em>
-        </button>
-
         <article className="back-room-sport back-room-sport--locked" aria-disabled="true">
           <span className="back-room-sport__icon" aria-hidden="true">🏀</span>
           <small>COMING SOON</small>
