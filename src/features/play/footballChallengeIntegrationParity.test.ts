@@ -9,12 +9,12 @@ import type { ChallengeJson, PlayChallenge } from "../challenges/challengeModel"
 import { playGamesForSport, type PlayGameId } from "./playRegistry";
 
 const footballChallengeGames: readonly { id: PlayGameId; route: string }[] = [
-  { id: "blind-rank", route: "/back-room/football/rank-five" },
-  { id: "keep-cut", route: "/back-room/football/keep-cut" },
-  { id: "wavelength", route: "/back-room/football/wavelength" },
-  { id: "blind-resume", route: "/back-room/football/blind-resume" },
-  { id: "hit-the-number", route: "/back-room/football/hit-the-number" },
-  { id: "find-leader", route: "/back-room/football/find-leader" },
+  { id: "blind-rank", route: "/football/rank-five" },
+  { id: "keep-cut", route: "/football/keep-cut" },
+  { id: "wavelength", route: "/football/wavelength" },
+  { id: "blind-resume", route: "/football/blind-resume" },
+  { id: "hit-the-number", route: "/football/hit-the-number" },
+  { id: "find-leader", route: "/football/find-leader" },
 ];
 
 function challenge(
@@ -57,7 +57,7 @@ describe("Football standalone challenge integration parity", () => {
     }
   });
 
-  it("routes every Football profile challenge back into its canonical Football game", () => {
+  it("routes every Football profile challenge back into its canonical Football HQ game", () => {
     for (const game of footballChallengeGames) {
       const routed = challengePlayRoute(challenge(game.id, game.route));
       const expectedParam = game.id === "find-leader" ? "challenge=FB1234" : "match=FB1234";
@@ -65,15 +65,22 @@ describe("Football standalone challenge integration parity", () => {
     }
   });
 
-  it("uses the sport-aware registry route when a stored Football play URL is missing", () => {
-    expect(challengePlayRoute(challenge("wavelength", "/back-room/football/wavelength", {
+  it("uses the sport-aware registry route when a stored play URL is missing", () => {
+    expect(challengePlayRoute(challenge("wavelength", "/football/wavelength", {
       playUrl: "",
-    }))).toBe("/back-room/football/wavelength?match=FB1234");
+    }))).toBe("/football/wavelength?match=FB1234");
 
     expect(challengePlayRoute(challenge("wavelength", "/play/wavelength", {
       gameVersion: "wavelength-v2",
       playUrl: "",
     }))).toBe("/play/wavelength?match=FB1234");
+  });
+
+  it("canonicalizes previously stored Back Room Football URLs without a second route owner", () => {
+    expect(challengePlayRoute(challenge("wavelength", "/back-room/football/wavelength")))
+      .toBe("/football/wavelength?match=FB1234");
+    expect(challengePlayRoute(challenge("find-leader", "/back-room/football/find-leader")))
+      .toBe("/football/find-leader?challenge=FB1234");
   });
 
   it("formats Football Blind Resume scores as the shared 100-point contract", () => {
@@ -82,7 +89,7 @@ describe("Football standalone challenge integration parity", () => {
       record: { wins: 4, losses: 1 },
     } as ChallengeJson;
     expect(challengeResultScoreLabel(
-      challenge("blind-resume", "/back-room/football/blind-resume"),
+      challenge("blind-resume", "/football/blind-resume"),
       result,
     )).toBe("83/100 · 4-1");
   });
