@@ -327,7 +327,7 @@ function advanceWavelength(context: OfficialDailyRuntimeContext, action: JsonRec
   let nextClueIds = [...clueIds];
   if (nextGuesses.length < 4) {
     const round = { target, clues: clueIds.map(clueFor) };
-    const clue = nextFootballWavelengthClue(round, guess, nextGuesses.length, seed, nextGuesses);
+    const clue = nextFootballWavelengthClue(round, guess, nextGuesses.length, seed, guesses);
     nextClueIds = [...nextClueIds, clue.id];
   }
   const complete = nextGuesses.length === 4;
