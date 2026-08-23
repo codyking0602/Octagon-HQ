@@ -422,6 +422,7 @@ declare
   v_today date := private.daily_challenge_central_day(now());
   v_week_start date := v_today - (extract(isodow from v_today)::integer - 1);
   v_week_end date := v_week_start + 6;
+  v_ufc_championship_start date := date '2026-08-10';
   v_result jsonb;
 begin
   if v_profile is null then
@@ -516,7 +517,9 @@ begin
     select
       profile_id,
       count(*) filter (
-        where weekly_rank = 1 and week_start < v_week_start
+        where weekly_rank = 1
+          and week_start < v_week_start
+          and (p_sport <> 'ufc' or week_start >= v_ufc_championship_start)
       )::integer as weekly_titles
     from weekly_ranked
     group by profile_id
