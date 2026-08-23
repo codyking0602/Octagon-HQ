@@ -197,62 +197,40 @@ function token(kind: "question" | "metric" | "family", value: string) {
   return `${kind}:${value}`;
 }
 
-function recentValues(history: PlayLineupHistory, kind: "question" | "metric" | "family") {
+function lastValue(history: PlayLineupHistory, kind: "question" | "metric" | "family") {
   const prefix = `${kind}:`;
-  return new Set(history.recentItemIds.filter((id) => id.startsWith(prefix)).map((id) => id.slice(prefix.length)));
+  return history.lastLineup.find((id) => id.startsWith(prefix))?.slice(prefix.length)
+    ?? history.recentItemIds.find((id) => id.startsWith(prefix))?.slice(prefix.length)
+    ?? null;
 }
 
-function mostRecentValue(history: PlayLineupHistory, kind: "question" | "metric" | "family") {
-  const prefix = `${kind}:`;
-  const fromLastLineup = history.lastLineup.find((id) => id.startsWith(prefix));
-  if (fromLastLineup) return fromLastLineup.slice(prefix.length);
-  return history.recentItemIds.find((id) => id.startsWith(prefix))?.slice(prefix.length) ?? null;
+function seedOrdinal(seed: string) {
+  const tail = seed.split("-").at(-1) ?? "";
+  if (/^\d+$/.test(tail)) return Number.parseInt(tail.slice(-8), 10);
+  if (/^[0-9a-f]+$/i.test(tail)) return Number.parseInt(tail.slice(-8), 16);
+  return stableLineupHash(`${FOOTBALL_FIND_LEADER_VERSION}|ordinal|${seed}`);
 }
 
-function targetLeague(seed: string): FootballFindLeaderLeagueId {
-  return stableLineupHash(`${FOOTBALL_FIND_LEADER_VERSION}|league|${seed}`) % 2 === 0 ? "nfl" : "cfb";
+function targetLeague(ordinal: number): FootballFindLeaderLeagueId {
+  return ordinal % 2 === 0 ? "nfl" : "cfb";
 }
 
 function chooseQuestion(seed: string, history: PlayLineupHistory) {
-  const recentQuestions = recentValues(history, "question");
-  const recentMetrics = recentValues(history, "metric");
-  const recentFamilies = recentValues(history, "family");
-  const previousQuestion = mostRecentValue(history, "question");
-  const previousMetric = mostRecentValue(history, "metric");
-  const previousFamily = mostRecentValue(history, "family");
-  const desiredLeague = targetLeague(seed);
+  const ordinal = seedOrdinal(seed);
+  const desiredLeague = targetLeague(ordinal);
   const leagueQuestions = footballFindLeaderQuestions.filter(
     (question) => footballFindLeaderLeagueForDomain(question.domainId) === desiredLeague,
   );
-  const fresh = leagueQuestions.filter((question) => (
+  const start = Math.floor(ordinal / 2) % leagueQuestions.length;
+  const rotated = leagueQuestions.map((_, index) => leagueQuestions[(start + index) % leagueQuestions.length]!);
+  const previousQuestion = lastValue(history, "question");
+  const previousMetric = lastValue(history, "metric");
+  const previousFamily = lastValue(history, "family");
+  return rotated.find((question) => (
     question.id !== previousQuestion
     && question.metricId !== previousMetric
     && question.family !== previousFamily
-    && !recentQuestions.has(question.id)
-    && !recentMetrics.has(question.metricId)
-    && !recentFamilies.has(question.family)
-  ));
-  const freshQuestionMetric = leagueQuestions.filter((question) => (
-    question.id !== previousQuestion
-    && question.metricId !== previousMetric
-    && question.family !== previousFamily
-    && !recentQuestions.has(question.id)
-    && !recentMetrics.has(question.metricId)
-  ));
-  const noImmediateRepeat = leagueQuestions.filter((question) => (
-    question.id !== previousQuestion
-    && question.metricId !== previousMetric
-    && question.family !== previousFamily
-  ));
-  const candidates = fresh.length
-    ? fresh
-    : freshQuestionMetric.length
-      ? freshQuestionMetric
-      : noImmediateRepeat.length
-        ? noImmediateRepeat
-        : leagueQuestions;
-  const random = seededLineupRandom(FOOTBALL_FIND_LEADER_VERSION, "question", seed);
-  return candidates[Math.floor(random() * candidates.length)] ?? footballFindLeaderQuestions[0]!;
+  )) ?? rotated[0]!;
 }
 
 export function createFootballFindLeaderBoard(seed: string, history: PlayLineupHistory = loadLineupHistory(FOOTBALL_FIND_LEADER_GAME_ID)) {
