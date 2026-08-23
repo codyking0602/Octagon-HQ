@@ -18,7 +18,7 @@ describe("Hit the Number Price Is Right scoring", () => {
     const fartherUnder = hitTheNumberScore({
       status: "under",
       target: 93,
-      distance: 5,
+      distance: 20,
       pickCount: 7,
     });
     const farthestUnder = hitTheNumberScore({
@@ -36,16 +36,27 @@ describe("Hit the Number Price Is Right scoring", () => {
     const fartherBust = hitTheNumberScore({
       status: "bust",
       target: 93,
-      distance: 5,
+      distance: 20,
       pickCount: 7,
     });
 
     expect(perfect).toBe(100);
     expect(closestUnder).toBe(99);
+    expect(fartherUnder).toBe(95);
     expect(farthestUnder).toBe(75);
     expect(closestBust).toBe(74);
+    expect(fartherBust).toBe(70);
     expect(farthestUnder).toBeGreaterThan(closestBust);
     expect(closestUnder).toBeGreaterThan(fartherUnder);
     expect(closestBust).toBeGreaterThan(fartherBust);
+  });
+
+  it("keeps the 27 to 24 challenge result distinct", () => {
+    const shane = hitTheNumberScore({ status: "under", target: 32, distance: 5, pickCount: 5 });
+    const cody = hitTheNumberScore({ status: "under", target: 32, distance: 8, pickCount: 5 });
+
+    expect(shane).toBe(96);
+    expect(cody).toBe(94);
+    expect(shane).toBeGreaterThan(cody);
   });
 });
