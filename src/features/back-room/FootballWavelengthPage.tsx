@@ -1,27 +1,72 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { recordLineupCompletion } from "../play/lineupModel";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
+import { usePlayChallenges } from "../challenges/ChallengeProvider";
+import { GameResultActions } from "../play/GameResultActions";
+import { recordLineupCompletion, replayLabelFor } from "../play/lineupModel";
 import {
   clampWavelength,
   wavelengthDistanceCopy,
   wavelengthScore,
 } from "../play/wavelengthEngine";
 import {
+  FOOTBALL_WAVELENGTH_GAME_ID,
+  createFootballWavelengthRound,
   createFootballWavelengthRun,
   nextFootballWavelengthClue,
   type FootballWavelengthRound,
   type FootballWavelengthRun,
 } from "./footballWavelengthModel";
+import {
+  asChallengeJson,
+  challengeRecord,
+  challengeString,
+  footballChallengeUrl,
+  footballCuratedIdentity,
+} from "./footballChallengeRuntime";
+
+function resolveChallengeRun(seed: string | null, challengeId: string): FootballWavelengthRun | null {
+  if (!seed) return null;
+  const initialRound = createFootballWavelengthRound(seed);
+  return {
+    seed,
+    initialRound,
+    identity: footballCuratedIdentity(
+      FOOTBALL_WAVELENGTH_GAME_ID,
+      challengeId,
+      [`target:${initialRound.target}`, `clue:${initialRound.clues[0]!.id}`],
+      "football-wavelength",
+    ),
+  };
+}
 
 export default function FootballWavelengthPage() {
   const navigate = useNavigate();
-  const [run, setRun] = useState<FootballWavelengthRun>(() => createFootballWavelengthRun());
+  const [searchParams] = useSearchParams();
+  const { beginChallenge } = usePlayChallenges();
+  const profileMatch = useProfileChallengeMatch("wavelength");
+  const profileSetup = challengeRecord(profileMatch.challenge?.setup);
+  const profileSeed = challengeString(profileSetup?.seed);
+  const querySeed = searchParams.get("seed");
+  const sharedChallengeId = profileMatch.challenge?.code ?? `shared:${querySeed ?? "unknown"}`;
+  const sharedRun = useMemo(() => (
+    resolveChallengeRun(profileSeed, sharedChallengeId)
+      ?? resolveChallengeRun(querySeed, sharedChallengeId)
+  ), [profileSeed, querySeed, sharedChallengeId]);
+  const [run, setRun] = useState<FootballWavelengthRun>(() => sharedRun ?? createFootballWavelengthRun());
   const [round, setRound] = useState<FootballWavelengthRound>(run.initialRound);
   const [clueIndex, setClueIndex] = useState(0);
   const [guess, setGuess] = useState(50);
   const [guesses, setGuesses] = useState<number[]>([]);
   const [complete, setComplete] = useState(false);
+  const [challengeStatus, setChallengeStatus] = useState("");
   const clue = round.clues[clueIndex]!;
+  const shared = run.identity.type === "curated";
+
+  useEffect(() => {
+    if (!sharedRun || run.identity.challengeId === sharedRun.identity.challengeId) return;
+    reset(sharedRun);
+  }, [run.identity.challengeId, sharedRun]);
 
   function reset(nextRun: FootballWavelengthRun) {
     setRun(nextRun);
@@ -30,11 +75,27 @@ export default function FootballWavelengthPage() {
     setGuess(50);
     setGuesses([]);
     setComplete(false);
+    setChallengeStatus("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function startNew() {
     reset(createFootballWavelengthRun());
+  }
+
+  function replay() {
+    if (shared) reset(run);
+    else startNew();
+  }
+
+  function resultPayload(nextGuesses: readonly number[]) {
+    const finalGuess = nextGuesses[3]!;
+    return {
+      score: wavelengthScore(finalGuess, round.target),
+      target: round.target,
+      guesses: [...nextGuesses],
+      clueIds: round.clues.map((item) => item.id),
+    };
   }
 
   function lockGuess() {
@@ -44,13 +105,11 @@ export default function FootballWavelengthPage() {
     setGuesses(nextGuesses);
 
     if (clueIndex === 3) {
-      const score = wavelengthScore(locked, round.target);
-      recordLineupCompletion(run.identity, {
-        score,
-        target: round.target,
-        guesses: nextGuesses,
-        clueIds: round.clues.map((item) => item.id),
-      });
+      const payload = resultPayload(nextGuesses);
+      recordLineupCompletion(run.identity, payload);
+      if (profileMatch.isRecipient && profileMatch.challenge?.responderResult === null) {
+        profileMatch.submitResult(asChallengeJson(payload));
+      }
       setComplete(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
@@ -67,6 +126,27 @@ export default function FootballWavelengthPage() {
     setClueIndex((index) => index + 1);
   }
 
+  async function challengeSomeone() {
+    if (!complete) return;
+    setChallengeStatus("");
+    const status = await beginChallenge({
+      gameId: "wavelength",
+      gameVersion: "football-wavelength-v1",
+      gameTitle: "Football Wavelength",
+      summary: `Hidden number ${round.target} · four adaptive clues`,
+      setup: asChallengeJson({
+        seed: run.seed,
+        target: round.target,
+        openingClueId: run.initialRound.clues[0]!.id,
+      }),
+      creatorResult: asChallengeJson(resultPayload(guesses)),
+      shareTitle: "Football Wavelength Challenge",
+      shareText: "I challenged you to the same hidden Football Wavelength number. Four adaptive clues. Only the final guess scores.",
+      shareUrl: footballChallengeUrl("/back-room/football/wavelength", { seed: run.seed }),
+    });
+    setChallengeStatus(status);
+  }
+
   if (complete) {
     const finalGuess = guesses[3]!;
     const distance = Math.abs(finalGuess - round.target);
@@ -74,6 +154,13 @@ export default function FootballWavelengthPage() {
 
     return (
       <div className="page football-debate-page football-wavelength-page">
+        {profileMatch.creator ? (
+          <section className="challenge-game-banner">
+            <span>PROFILE CHALLENGE</span>
+            <strong>{profileMatch.creator.displayName} sent this exact Football Wavelength target.</strong>
+            <small>Both four-guess paths reveal after you finish.</small>
+          </section>
+        ) : null}
         <section className="football-debate-result-hero">
           <p className="eyebrow">FOOTBALL WAVELENGTH · FINAL SCORE</p>
           <strong>{score}<small>/100</small></strong>
@@ -105,18 +192,28 @@ export default function FootballWavelengthPage() {
           </div>
         </section>
 
-        <div className="football-debate-actions">
-          <button className="is-primary" type="button" onClick={startNew}>NEW WAVELENGTH</button>
-          <button type="button" onClick={() => navigate("/back-room/football")}>ALL FOOTBALL GAMES</button>
-        </div>
+        <GameResultActions
+          onChallenge={() => void challengeSomeone()}
+          onReplay={replay}
+          onAllGames={() => navigate("/back-room/football")}
+          replayLabel={replayLabelFor(run.identity.type)}
+          status={challengeStatus}
+        />
       </div>
     );
   }
 
   return (
     <div className="page football-debate-page football-wavelength-page">
+      {profileMatch.creator ? (
+        <section className="challenge-game-banner">
+          <span>PROFILE CHALLENGE</span>
+          <strong>{profileMatch.creator.displayName} sent this exact Football Wavelength target.</strong>
+          <small>Lock all four guesses to reveal the matchup.</small>
+        </section>
+      ) : null}
       <section className="football-wavelength-topline">
-        <span>REPLAYABLE GAME</span>
+        <span>{shared ? "FRIEND CHALLENGE" : "REPLAYABLE GAME"}</span>
         <b>CLUE {clueIndex + 1} OF 4</b>
       </section>
 
