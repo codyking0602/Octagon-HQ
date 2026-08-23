@@ -2,12 +2,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { recordLineupCompletion } from "../play/lineupModel";
 import {
+  FOOTBALL_HIT_THE_NUMBER_DEFAULT_BOARD_TYPE,
   createFootballHitTheNumberRun,
   footballHitTheNumberSelectionSatisfies,
   footballHitTheNumberValue,
   formatFootballHitTheNumberValue,
   getFootballHitTheNumberSubject,
   gradeFootballHitTheNumberSelection,
+  type FootballHitTheNumberBoardType,
   type FootballHitTheNumberResult,
   type FootballHitTheNumberRun,
 } from "./footballHitTheNumberModel";
@@ -24,7 +26,8 @@ function formatDistance(value: number) {
 
 export default function FootballHitTheNumberPage() {
   const navigate = useNavigate();
-  const [run, setRun] = useState<FootballHitTheNumberRun>(() => createFootballHitTheNumberRun());
+  const [boardType, setBoardType] = useState<FootballHitTheNumberBoardType>(FOOTBALL_HIT_THE_NUMBER_DEFAULT_BOARD_TYPE);
+  const [run, setRun] = useState<FootballHitTheNumberRun>(() => createFootballHitTheNumberRun(FOOTBALL_HIT_THE_NUMBER_DEFAULT_BOARD_TYPE));
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [result, setResult] = useState<FootballHitTheNumberResult | null>(null);
   const plan = run.plan;
@@ -44,6 +47,8 @@ export default function FootballHitTheNumberPage() {
     const next = gradeFootballHitTheNumberSelection(plan, selectedIds);
     recordLineupCompletion(run.identity, {
       score: next.score,
+      boardType: plan.boardType,
+      league: plan.league,
       formatId: plan.formatId,
       domainId: plan.domainId,
       metricId: plan.metricId,
@@ -55,11 +60,17 @@ export default function FootballHitTheNumberPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  function startNew() {
-    setRun(createFootballHitTheNumberRun());
+  function startNew(nextBoardType = boardType) {
+    setBoardType(nextBoardType);
+    setRun(createFootballHitTheNumberRun(nextBoardType));
     setSelectedIds([]);
     setResult(null);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function chooseBoardType(nextBoardType: FootballHitTheNumberBoardType) {
+    if (nextBoardType === boardType) return;
+    startNew(nextBoardType);
   }
 
   return (
@@ -67,16 +78,39 @@ export default function FootballHitTheNumberPage() {
       <section className="football-hit-number-hero">
         <div>
           <p className="eyebrow">HIT THE NUMBER · FOOTBALL</p>
-          <span>{plan.formatLabel.toUpperCase()}</span>
+          <span>{plan.formatLabel.toUpperCase()} · {plan.league}</span>
           <h1>{formatFootballHitTheNumberValue(plan, plan.target)}</h1>
           <strong>{plan.metricLabel.toUpperCase()}</strong>
-          <p>Pick four. Get as close as possible without going over. Go over the target and you bust.</p>
+          <p>Pick {plan.pickCount}. Get as close as possible without going over. Go over the target and you bust.</p>
         </div>
         <aside>
           <small>BOARD</small>
           <b>{plan.domainLabel}</b>
+          <em>{plan.boardType === "open-roster" ? "Open Roster" : "Random Pool"}</em>
           {plan.configurationLabel ? <em>{plan.configurationLabel}</em> : null}
         </aside>
+      </section>
+
+      <section className="football-hit-number-rules" aria-label="Football Hit the Number roster mode">
+        <small>ROSTER MODE</small>
+        <div className="hit-number-mode-toggle">
+          <button
+            type="button"
+            className={boardType === "open-roster" ? "is-active" : ""}
+            aria-pressed={boardType === "open-roster"}
+            onClick={() => chooseBoardType("open-roster")}
+          >
+            OPEN ROSTER
+          </button>
+          <button
+            type="button"
+            className={boardType === "random-pool" ? "is-active" : ""}
+            aria-pressed={boardType === "random-pool"}
+            onClick={() => chooseBoardType("random-pool")}
+          >
+            RANDOM POOL
+          </button>
+        </div>
       </section>
 
       {plan.slots.length ? (
@@ -134,7 +168,7 @@ export default function FootballHitTheNumberPage() {
         </div>
       ) : (
         <div className="football-debate-actions">
-          <button className="is-primary" type="button" onClick={startNew}>NEW NUMBER</button>
+          <button className="is-primary" type="button" onClick={() => startNew()}>NEW NUMBER</button>
           <button type="button" onClick={() => navigate("/back-room/football")}>ALL FOOTBALL GAMES</button>
         </div>
       )}
