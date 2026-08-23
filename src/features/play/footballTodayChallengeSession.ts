@@ -21,6 +21,7 @@ const FOOTBALL_TODAY_CYCLE: readonly OfficialDailyGameType[] = [
   "hit_the_number",
 ];
 const FOOTBALL_DAILY_DOUBLE_CONTENT_VERSION = "football-daily-double-v1";
+const SHARED_DAILY_DOUBLE_GRADING_VERSION = "daily-rank-keep-combo-v1";
 
 type JsonRecord = Record<string, unknown>;
 
@@ -47,6 +48,15 @@ export interface FootballTodayProjection {
   } | null;
   action_history: JsonRecord[];
 }
+
+export interface FootballTodayRuntimeSnapshot {
+  projection: FootballTodayProjection;
+  finalSubmission: JsonRecord | null;
+}
+
+export type FootballTodayPersistenceSetup = OfficialDailySetupPublication & {
+  gameType: OfficialDailyGameType;
+};
 
 function asRecord(value: unknown, label: string): JsonRecord {
   if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error(`${label} must be an object.`);
@@ -290,4 +300,72 @@ export function buildFootballTodayProjection(
   return gameType === "keep_4_cut_4"
     ? buildDailyDouble(day, actionHistory)
     : buildSingle(day, gameType, actionHistory);
+}
+
+export function buildFootballTodayPersistenceSetup(day: string): FootballTodayPersistenceSetup {
+  dayNumber(day);
+  const gameType = footballTodayGameForDay(day);
+  if (gameType !== "keep_4_cut_4") {
+    return {
+      gameType,
+      ...buildFootballOfficialDailySetup(gameType, day, FOOTBALL_TODAY_SCHEDULE_VERSION),
+    };
+  }
+
+  const rank = buildFootballOfficialDailySetup("blind_rank_5", day, FOOTBALL_TODAY_SCHEDULE_VERSION);
+  const keep = buildFootballOfficialDailySetup("keep_4_cut_4", day, FOOTBALL_TODAY_SCHEDULE_VERSION);
+  return {
+    gameType: "keep_4_cut_4",
+    setupKey: `${FOOTBALL_DAILY_DOUBLE_CONTENT_VERSION}:${FOOTBALL_TODAY_SCHEDULE_VERSION}:${day}`,
+    contentVersion: FOOTBALL_DAILY_DOUBLE_CONTENT_VERSION,
+    scoringVersion: "play-official-score-v4",
+    publicSetup: {
+      runtime_version: "football-official-daily-v1",
+      combo_version: SHARED_DAILY_DOUBLE_GRADING_VERSION,
+      initial_state: rank.publicSetup.initial_state,
+    },
+    revealSetup: {
+      blind_rank_5: rank.revealSetup,
+      keep_4_cut_4: keep.revealSetup,
+    },
+    privateSetupEvidence: {
+      combo_version: SHARED_DAILY_DOUBLE_GRADING_VERSION,
+      blind_rank_5: rank.privateSetupEvidence,
+      keep_4_cut_4: keep.privateSetupEvidence,
+    },
+    privateGradingEvidence: {
+      combo_version: SHARED_DAILY_DOUBLE_GRADING_VERSION,
+      blind_rank: rank.privateGradingEvidence,
+      keep_cut: keep.privateGradingEvidence,
+    },
+  };
+}
+
+export function buildFootballTodayRuntimeSnapshot(
+  day: string,
+  actionHistory: readonly JsonRecord[] = [],
+): FootballTodayRuntimeSnapshot {
+  const projection = buildFootballTodayProjection(day, actionHistory);
+  const gameType = footballTodayGameForDay(day);
+  if (gameType !== "keep_4_cut_4") {
+    const publication = buildFootballOfficialDailySetup(gameType, day, FOOTBALL_TODAY_SCHEDULE_VERSION);
+    const run = replay(gameType, publication, actionHistory);
+    return {
+      projection,
+      finalSubmission: run.complete ? run.finalSubmission : null,
+    };
+  }
+
+  const rankPublication = buildFootballOfficialDailySetup("blind_rank_5", day, FOOTBALL_TODAY_SCHEDULE_VERSION);
+  const keepPublication = buildFootballOfficialDailySetup("keep_4_cut_4", day, FOOTBALL_TODAY_SCHEDULE_VERSION);
+  const rankActions = actionHistory.slice(0, Math.min(actionHistory.length, 5));
+  const keepActions = actionHistory.slice(5);
+  const rank = replay("blind_rank_5", rankPublication, rankActions);
+  const keep = rank.complete ? replay("keep_4_cut_4", keepPublication, keepActions) : null;
+  return {
+    projection,
+    finalSubmission: rank.complete && rank.finalSubmission && keep?.complete && keep.finalSubmission
+      ? { blind_rank: rank.finalSubmission, keep_cut: keep.finalSubmission }
+      : null,
+  };
 }
