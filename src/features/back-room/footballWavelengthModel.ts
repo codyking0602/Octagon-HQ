@@ -4,10 +4,11 @@ import {
   selectReplayLineup,
   type PlayLineupIdentity,
 } from "../play/lineupModel";
+import { footballWavelengthExpansionCategories } from "./footballWavelengthExpansionCatalog";
 
 export const FOOTBALL_WAVELENGTH_GAME_ID = "football-wavelength";
-export const FOOTBALL_WAVELENGTH_CATALOG_VERSION = "football-wavelength-catalog-v2" as const;
-export const FOOTBALL_WAVELENGTH_CALIBRATION_VERSION = "football-wavelength-calibration-v1" as const;
+export const FOOTBALL_WAVELENGTH_CATALOG_VERSION = "football-wavelength-catalog-v3" as const;
+export const FOOTBALL_WAVELENGTH_CALIBRATION_VERSION = "football-wavelength-calibration-v2" as const;
 
 export type FootballWavelengthCategory =
   | "NFL LEGACY"
@@ -29,7 +30,14 @@ export type FootballWavelengthCategory =
   | "FRANCHISE TRADITION"
   | "FOOTBALL WEIRDNESS"
   | "MEDIA ENERGY"
-  | "TAILGATE CULTURE";
+  | "TAILGATE CULTURE"
+  | "COACHING GENIUS"
+  | "HOME-FIELD ADVANTAGE"
+  | "FOOTBALL VILLAINY"
+  | "FRANCHISE DYSFUNCTION"
+  | "OFFENSIVE FIREPOWER"
+  | "BIG ARM TALENT"
+  | "ATHLETIC FREAK";
 
 export interface FootballWavelengthClue {
   id: string;
@@ -88,6 +96,13 @@ export const FOOTBALL_WAVELENGTH_CATEGORY_ANCHORS: readonly FootballWavelengthCa
   { category: "FOOTBALL WEIRDNESS", ratingQuestion: "How weird is this football moment, rule, or tradition?", bottomTier: "Completely ordinary", average: "Noticeably quirky", exceptional: "Only football could produce this" },
   { category: "MEDIA ENERGY", ratingQuestion: "How much football-media personality energy does this subject create?", bottomTier: "Deliberately low-key", average: "Useful football personality", exceptional: "Content machine" },
   { category: "TAILGATE CULTURE", ratingQuestion: "How strong is the tailgate and pregame culture?", bottomTier: "Minimal ritual", average: "Good parking-lot scene", exceptional: "Destination-level football pilgrimage" },
+  { category: "COACHING GENIUS", ratingQuestion: "How strong is the case that this coach is a football genius?", bottomTier: "Actively outcoached", average: "Credible high-level coach", exceptional: "Changed what elite coaching looks like" },
+  { category: "HOME-FIELD ADVANTAGE", ratingQuestion: "How much real home-field advantage does this environment create?", bottomTier: "Barely feels like home", average: "Useful home edge", exceptional: "The venue changes the game" },
+  { category: "FOOTBALL VILLAINY", ratingQuestion: "How strong is the football-villain aura?", bottomTier: "Almost impossible to hate", average: "Draws real opposing heat", exceptional: "The sport needs them as the bad guy" },
+  { category: "FRANCHISE DYSFUNCTION", ratingQuestion: "How dysfunctional is the NFL franchise or era?", bottomTier: "Model stability", average: "Normal NFL messiness", exceptional: "Organizational chaos is the brand" },
+  { category: "OFFENSIVE FIREPOWER", ratingQuestion: "How overwhelming is the offensive firepower?", bottomTier: "Points feel accidental", average: "Functional scoring offense", exceptional: "Every possession threatens a touchdown" },
+  { category: "BIG ARM TALENT", ratingQuestion: "How freakish is the quarterback's raw arm talent?", bottomTier: "Arm strength is a limitation", average: "Enough arm for every normal throw", exceptional: "The field has almost no arm-strength limit" },
+  { category: "ATHLETIC FREAK", ratingQuestion: "How extreme is the subject's raw football athleticism?", bottomTier: "Wins almost entirely without physical gifts", average: "Normal pro-level athlete", exceptional: "Combine-video-game physical specimen" },
 ] as const;
 
 type FootballWavelengthSeed = readonly [id: string, text: string, rating: number];
@@ -100,7 +115,7 @@ function defineFootballWavelengthCategory(
   return seeds.map(([id, text, rating]) => ({ id: `${prefix}-${id}`, category, text, rating }));
 }
 
-export const footballWavelengthClues: readonly FootballWavelengthClue[] = [
+const baseFootballWavelengthClues: readonly FootballWavelengthClue[] = [
   ...defineFootballWavelengthCategory("NFL LEGACY", "legacy", [
     ["ryan-leaf", "Ryan Leaf", 1],
     ["jamarcus-russell", "JaMarcus Russell", 3],
@@ -442,6 +457,15 @@ export const footballWavelengthClues: readonly FootballWavelengthClue[] = [
     ["texas-am", "Texas A&M game-day tailgate culture", 100],
   ]),
 ] as const;
+
+const expansionFootballWavelengthClues = footballWavelengthExpansionCategories.flatMap(({ category, prefix, seeds }) =>
+  defineFootballWavelengthCategory(category as FootballWavelengthCategory, prefix, seeds),
+);
+
+export const footballWavelengthClues: readonly FootballWavelengthClue[] = [
+  ...baseFootballWavelengthClues,
+  ...expansionFootballWavelengthClues,
+];
 
 function chooseFootballWavelengthClue(
   desiredRating: number,
