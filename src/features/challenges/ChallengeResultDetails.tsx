@@ -1,9 +1,4 @@
-import {
-  HIT_THE_NUMBER_MAX_PICKS,
-  HIT_THE_NUMBER_MIN_PICKS,
-  hitTheNumberScore,
-  type HitTheNumberResultStatus,
-} from "../play/hitTheNumberEngine";
+import { type HitTheNumberResultStatus } from "../play/hitTheNumberEngine";
 import { getPlayFighter } from "../play/playFighterPool";
 import { resultScore, type ChallengeJson, type PlayChallenge } from "./challengeModel";
 
@@ -366,15 +361,7 @@ function HitTheNumberDetails({ challenge, creatorName, responderName }: DetailPr
     const total = typeof row?.total === "number" && Number.isFinite(row.total) ? row.total : null;
     const outcome = hitTheNumberOutcome(result);
     const distance = outcome?.distance ?? null;
-    const score = outcome
-      && target !== null
-      && target > 0
-      && pickCount !== null
-      && Number.isInteger(pickCount)
-      && pickCount >= HIT_THE_NUMBER_MIN_PICKS
-      && pickCount <= HIT_THE_NUMBER_MAX_PICKS
-        ? hitTheNumberScore({ status: outcome.status, target, distance: outcome.distance, pickCount })
-        : null;
+    const score = resultScore(result);
     const status = outcome?.status ?? "";
     const selections = hitNumberSelections(row?.selections ?? null);
     const resultLine = status === "perfect"
