@@ -18,9 +18,9 @@ begin
   ) values (
     v_owner,'00000000-0000-0000-0000-000000000000','authenticated','authenticated',
     'fight-night-live-window-owner@login.octagon-hq.app','',now(),now(),now(),
-    jsonb_build_object('display_name','FIGHT NIGHT LIVE WINDOW OWNER','historical_unclaimed',true)
+    jsonb_build_object('display_name','LIVE WINDOW OWNER','historical_unclaimed',true)
   );
-  perform public.register_unclaimed_pin_profile(v_owner,'Fight Night Live Window Owner','FW');
+  perform public.register_unclaimed_pin_profile(v_owner,'Live Window Owner','FW');
   insert into public.pick_control_owners(profile_id) values(v_owner);
 
   insert into public.pick_events(
