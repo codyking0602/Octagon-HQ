@@ -7,7 +7,7 @@ import {
   type TodayChallengeProjection,
   type TodayChallengeRepository,
 } from "./todayChallengeRepository";
-import { useTodayChallengeRuntime } from "./useTodayChallengeRuntime";
+import { todayChallengeRuntimeQueryKey, useTodayChallengeRuntime } from "./useTodayChallengeRuntime";
 
 function projection(revision: number): TodayChallengeProjection {
   return {
@@ -51,6 +51,19 @@ const emptyStandings = {
 };
 
 describe("useTodayChallengeRuntime", () => {
+  it("keeps UFC and Football daily runtime caches isolated under the shared owner", () => {
+    expect(todayChallengeRuntimeQueryKey("profile-one")).toEqual([
+      "today-challenge-runtime",
+      "ufc",
+      "profile-one",
+    ]);
+    expect(todayChallengeRuntimeQueryKey("profile-one", "football")).toEqual([
+      "today-challenge-runtime",
+      "football",
+      "profile-one",
+    ]);
+  });
+
   it("refreshes canonical cross-device state after a stale optimistic revision", async () => {
     const loadToday = vi.fn()
       .mockResolvedValueOnce(projection(1))
