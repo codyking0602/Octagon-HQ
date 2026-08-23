@@ -72,7 +72,7 @@ describe("truthful automatic Picks monitoring decisions", () => {
   });
 
   it("runs rollback-only SQL proof for event selection, cadence, ownership, and inbox separation", () => {
-    expect(integrationSql).toContain("boundary-past event remained monitorable");
+    expect(integrationSql).toContain("event beyond the bounded live window remained monitorable");
     expect(integrationSql).toContain("decision-only row corrupted provider cadence or quota state");
     expect(integrationSql).toContain("owner inbox mixed scheduler decisions with provider runs");
     expect(integrationSql).toContain("non-owner loaded Monitoring Inbox");
