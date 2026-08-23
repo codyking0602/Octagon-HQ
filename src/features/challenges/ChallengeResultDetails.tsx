@@ -1,3 +1,9 @@
+import {
+  HIT_THE_NUMBER_MAX_PICKS,
+  HIT_THE_NUMBER_MIN_PICKS,
+  hitTheNumberScore,
+  type HitTheNumberResultStatus,
+} from "../play/hitTheNumberEngine";
 import { getPlayFighter } from "../play/playFighterPool";
 import { resultScore, type ChallengeJson, type PlayChallenge } from "./challengeModel";
 
@@ -63,6 +69,34 @@ function scoreVerdict(challenge: PlayChallenge, creatorName: string, responderNa
   return creatorScore > responderScore ? `${creatorName} wins` : `${responderName} wins`;
 }
 
+function hitTheNumberOutcome(result: ChallengeJson) {
+  const row = record(result);
+  const status = row?.status;
+  const distance = row?.distance;
+  if (
+    (status !== "perfect" && status !== "under" && status !== "bust")
+    || typeof distance !== "number"
+    || !Number.isFinite(distance)
+    || distance < 0
+  ) return null;
+  return { status: status as HitTheNumberResultStatus, distance };
+}
+
+function hitTheNumberVerdict(challenge: PlayChallenge, creatorName: string, responderName: string) {
+  const creator = hitTheNumberOutcome(challenge.creatorResult);
+  const responder = hitTheNumberOutcome(challenge.responderResult);
+  if (!creator || !responder) return "Matchup complete";
+
+  const rank = { bust: 0, under: 1, perfect: 2 } as const;
+  const creatorRank = rank[creator.status];
+  const responderRank = rank[responder.status];
+  if (creatorRank !== responderRank) {
+    return creatorRank > responderRank ? `${creatorName} wins` : `${responderName} wins`;
+  }
+  if (creator.distance === responder.distance) return "Tie game";
+  return creator.distance < responder.distance ? `${creatorName} wins` : `${responderName} wins`;
+}
+
 function overlapCount(left: readonly string[], right: readonly string[]) {
   const rightSet = new Set(right);
   return left.filter((value) => rightSet.has(value)).length;
@@ -116,6 +150,10 @@ export function challengeResultVerdict(
     const creatorIds = namedChoices(creator?.selections ?? null).map((item) => item.id);
     const responderIds = namedChoices(responder?.selections ?? null).map((item) => item.id);
     return `${overlapCount(creatorIds, responderIds)} shared names`;
+  }
+
+  if (challenge.gameId === "hit-the-number") {
+    return hitTheNumberVerdict(challenge, creatorName, responderName);
   }
 
   return scoreVerdict(challenge, creatorName, responderName);
@@ -326,9 +364,18 @@ function HitTheNumberDetails({ challenge, creatorName, responderName }: DetailPr
   function Path({ label, name, result }: { label: string; name: string; result: ChallengeJson }) {
     const row = record(result);
     const total = typeof row?.total === "number" && Number.isFinite(row.total) ? row.total : null;
-    const distance = typeof row?.distance === "number" && Number.isFinite(row.distance) ? row.distance : null;
-    const score = resultScore(result);
-    const status = typeof row?.status === "string" ? row.status : "";
+    const outcome = hitTheNumberOutcome(result);
+    const distance = outcome?.distance ?? null;
+    const score = outcome
+      && target !== null
+      && target > 0
+      && pickCount !== null
+      && Number.isInteger(pickCount)
+      && pickCount >= HIT_THE_NUMBER_MIN_PICKS
+      && pickCount <= HIT_THE_NUMBER_MAX_PICKS
+        ? hitTheNumberScore({ status: outcome.status, target, distance: outcome.distance, pickCount })
+        : null;
+    const status = outcome?.status ?? "";
     const selections = hitNumberSelections(row?.selections ?? null);
     const resultLine = status === "perfect"
       ? "EXACT HIT"
