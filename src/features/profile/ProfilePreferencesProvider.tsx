@@ -12,19 +12,24 @@ import {
   createProfilePreferencesRepository,
   type ProfilePreferencesRepository,
 } from "./profilePreferencesRepository";
+import type { FootballTeam } from "./profilePreferencesModel";
 
 interface ProfilePreferencesContextValue {
   configured: boolean;
   avatarConfigured: boolean;
+  footballTeamConfigured: boolean;
   loading: boolean;
   saving: boolean;
   savingAvatar: boolean;
+  savingFootballTeam: boolean;
   error: string;
   favoriteFighterSlug: string | null;
   avatarPhotoData: string | null;
+  footballTeam: FootballTeam | null;
   refresh: () => Promise<void>;
   setFavoriteFighter: (fighterSlug: string | null) => Promise<void>;
   setAvatarPhoto: (photoData: string | null) => Promise<void>;
+  setFootballTeam: (team: FootballTeam) => Promise<boolean>;
 }
 
 const ProfilePreferencesContext = createContext<ProfilePreferencesContextValue | null>(null);
@@ -49,9 +54,11 @@ export function ProfilePreferencesProvider({
   ));
   const [favoriteFighterSlug, setFavoriteFighterSlug] = useState<string | null>(null);
   const [avatarPhotoData, setAvatarPhotoData] = useState<string | null>(null);
+  const [footballTeam, setFootballTeamState] = useState<FootballTeam | null>(null);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [savingAvatar, setSavingAvatar] = useState(false);
+  const [savingFootballTeam, setSavingFootballTeam] = useState(false);
   const [error, setError] = useState("");
 
   const refresh = useCallback(async () => {
@@ -59,6 +66,7 @@ export function ProfilePreferencesProvider({
     if (!expectedProfileId) {
       setFavoriteFighterSlug(null);
       setAvatarPhotoData(null);
+      setFootballTeamState(null);
       setLoading(false);
       setError("");
       return;
@@ -67,6 +75,7 @@ export function ProfilePreferencesProvider({
     if (!repository) {
       setFavoriteFighterSlug(null);
       setAvatarPhotoData(null);
+      setFootballTeamState(null);
       setLoading(false);
       setError("Profile preferences are not connected on this build.");
       return;
@@ -74,13 +83,15 @@ export function ProfilePreferencesProvider({
 
     setLoading(true);
     try {
-      const [favorite, avatar] = await Promise.all([
+      const [favorite, avatar, team] = await Promise.all([
         repository.loadFavoriteFighter(),
         repository.loadAvatarPhoto ? repository.loadAvatarPhoto() : Promise.resolve(null),
+        repository.loadFootballTeam ? repository.loadFootballTeam() : Promise.resolve(null),
       ]);
       if (profileIdRef.current !== expectedProfileId) return;
       setFavoriteFighterSlug(favorite);
       setAvatarPhotoData(avatar);
+      setFootballTeamState(team);
       setError("");
     } catch (nextError) {
       if (profileIdRef.current !== expectedProfileId) return;
@@ -93,6 +104,7 @@ export function ProfilePreferencesProvider({
   useEffect(() => {
     setSaving(false);
     setSavingAvatar(false);
+    setSavingFootballTeam(false);
     void refresh();
   }, [refresh]);
 
@@ -162,19 +174,49 @@ export function ProfilePreferencesProvider({
     }
   }, [identity.openDialog, profileId, repository]);
 
+  const setFootballTeam = useCallback(async (team: FootballTeam) => {
+    const expectedProfileId = profileId;
+    if (!expectedProfileId) {
+      identity.openDialog();
+      return false;
+    }
+    if (!repository?.saveFootballTeam) {
+      setError("Football profile preferences are not connected on this build.");
+      return false;
+    }
+
+    setSavingFootballTeam(true);
+    try {
+      const savedTeam = await repository.saveFootballTeam(team);
+      if (profileIdRef.current !== expectedProfileId || !savedTeam) return false;
+      setFootballTeamState(savedTeam);
+      setError("");
+      return true;
+    } catch (nextError) {
+      if (profileIdRef.current === expectedProfileId) setError(readableError(nextError));
+      return false;
+    } finally {
+      if (profileIdRef.current === expectedProfileId) setSavingFootballTeam(false);
+    }
+  }, [identity.openDialog, profileId, repository]);
+
   return (
     <ProfilePreferencesContext.Provider value={{
       configured: Boolean(repository),
       avatarConfigured: Boolean(repository?.saveAvatarPhoto),
+      footballTeamConfigured: Boolean(repository?.saveFootballTeam),
       loading,
       saving,
       savingAvatar,
+      savingFootballTeam,
       error,
       favoriteFighterSlug,
       avatarPhotoData,
+      footballTeam,
       refresh,
       setFavoriteFighter,
       setAvatarPhoto,
+      setFootballTeam,
     }}>
       {children}
     </ProfilePreferencesContext.Provider>
