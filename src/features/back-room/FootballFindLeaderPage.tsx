@@ -66,6 +66,7 @@ export default function FootballFindLeaderPage() {
   const board = run.board;
   const eliminatedSet = new Set(eliminated);
   const shared = run.identity.type === "curated";
+  const boardSeed = shared ? (profileSeed ?? querySeed ?? run.identity.seed) : run.identity.seed;
 
   useEffect(() => {
     if (!sharedRun || run.identity.challengeId === sharedRun.identity.challengeId) return;
@@ -131,7 +132,7 @@ export default function FootballFindLeaderPage() {
       gameTitle: "Football Find the Leader",
       summary: `${board.statLabel} · same ten-subject board`,
       setup: asChallengeJson({
-        seed: run.identity.seed,
+        seed: boardSeed,
         definitionId: board.definitionId,
         board: {
           leaderId: board.leaderId,
@@ -142,7 +143,7 @@ export default function FootballFindLeaderPage() {
       shareTitle: "Football Find the Leader Challenge",
       shareText: `I challenged you to the same ten-subject Football Find the Leader board for ${board.statLabel}.`,
       shareUrl: footballChallengeUrl("/back-room/football/find-leader", {
-        seed: run.identity.seed,
+        seed: boardSeed,
         definition: board.definitionId,
       }),
     });
