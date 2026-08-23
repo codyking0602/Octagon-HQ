@@ -1,13 +1,26 @@
-import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { recordLineupCompletion } from "../play/lineupModel";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
+import { usePlayChallenges } from "../challenges/ChallengeProvider";
+import { GameResultActions } from "../play/GameResultActions";
+import { recordLineupCompletion, replayLabelFor } from "../play/lineupModel";
 import { FootballSubjectVisual } from "./FootballSubjectVisual";
 import {
+  FOOTBALL_KEEP_CUT_GAME_ID,
   createRandomFootballKeepCutRun,
+  getFootballKeepCutPack,
   scoreFootballKeepCutSelection,
   type FootballKeepCutRun,
 } from "./footballKeepCutModel";
 import type { FootballRankFiveItem } from "./footballRankFiveModel";
+import {
+  asChallengeJson,
+  challengeRecord,
+  challengeString,
+  challengeStrings,
+  footballChallengeUrl,
+  footballCuratedIdentity,
+} from "./footballChallengeRuntime";
 
 type Decision = "keep" | "cut";
 
@@ -64,27 +77,88 @@ function ResultList({
   );
 }
 
+function resolveChallengeRun(
+  packId: string | null,
+  lineupIds: readonly string[],
+  challengeId: string,
+): FootballKeepCutRun | null {
+  if (!packId || lineupIds.length !== 8 || new Set(lineupIds).size !== 8) return null;
+  try {
+    const pack = getFootballKeepCutPack(packId as Parameters<typeof getFootballKeepCutPack>[0]);
+    const items = new Map(pack.items.map((item) => [item.id, item]));
+    const lineup = lineupIds.flatMap((id) => items.get(id) ? [items.get(id)!] : []);
+    if (lineup.length !== 8) return null;
+    return {
+      pack,
+      lineup,
+      identity: footballCuratedIdentity(FOOTBALL_KEEP_CUT_GAME_ID, challengeId, lineupIds, pack.id),
+    };
+  } catch {
+    return null;
+  }
+}
+
 export default function FootballKeepCutPage() {
   const navigate = useNavigate();
-  const [run, setRun] = useState<FootballKeepCutRun>(() => createRandomFootballKeepCutRun());
+  const [searchParams] = useSearchParams();
+  const { beginChallenge } = usePlayChallenges();
+  const profileMatch = useProfileChallengeMatch("keep-cut");
+  const profileSetup = challengeRecord(profileMatch.challenge?.setup);
+  const profilePackId = challengeString(profileSetup?.packId);
+  const profileLineupIds = challengeStrings(profileSetup?.lineupIds);
+  const queryPackId = searchParams.get("pack");
+  const queryLineupIds = (searchParams.get("lineup") ?? "").split(",").map((value) => value.trim()).filter(Boolean);
+  const sharedChallengeId = profileMatch.challenge?.code
+    ?? `shared:${queryPackId ?? "unknown"}:${queryLineupIds.join("|")}`;
+  const sharedRun = useMemo(() => (
+    resolveChallengeRun(profilePackId, profileLineupIds, sharedChallengeId)
+      ?? resolveChallengeRun(queryPackId, queryLineupIds, sharedChallengeId)
+  ), [profilePackId, profileLineupIds.join("|"), queryPackId, queryLineupIds.join("|"), sharedChallengeId]);
+  const [run, setRun] = useState<FootballKeepCutRun>(() => sharedRun ?? createRandomFootballKeepCutRun());
   const [decisions, setDecisions] = useState<Decision[]>([]);
+  const [challengeStatus, setChallengeStatus] = useState("");
   const complete = decisions.length === run.lineup.length;
   const kept = run.lineup.filter((_item, index) => decisions[index] === "keep");
   const cut = run.lineup.filter((_item, index) => decisions[index] === "cut");
   const current = run.lineup[decisions.length];
+  const shared = run.identity.type === "curated";
   const result = useMemo(() => {
     if (!complete) return null;
     return scoreFootballKeepCutSelection(run.lineup, kept.map((item) => item.id));
-  }, [complete, kept, run.lineup]);
+  }, [complete, kept.map((item) => item.id).join("|"), run.lineup]);
+
+  useEffect(() => {
+    if (!sharedRun || run.identity.challengeId === sharedRun.identity.challengeId) return;
+    setRun(sharedRun);
+    setDecisions([]);
+    setChallengeStatus("");
+  }, [run.identity.challengeId, sharedRun]);
 
   function reset(nextRun: FootballKeepCutRun) {
     setRun(nextRun);
     setDecisions([]);
+    setChallengeStatus("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function startNew() {
     reset(createRandomFootballKeepCutRun(run.pack.id));
+  }
+
+  function replay() {
+    if (shared) reset(run);
+    else startNew();
+  }
+
+  function challengeResult(nextDecisions: readonly Decision[], nextKept: readonly FootballRankFiveItem[]) {
+    const graded = scoreFootballKeepCutSelection(run.lineup, nextKept.map((item) => item.id));
+    return {
+      decisions: [...nextDecisions],
+      keptIds: graded.kept.map((item) => item.id),
+      cutIds: graded.cut.map((item) => item.id),
+      score: graded.score,
+      correctComparisons: graded.correctComparisons,
+    };
   }
 
   function decide(decision: Decision) {
@@ -95,20 +169,52 @@ export default function FootballKeepCutPage() {
     setDecisions(next);
     if (next.length === run.lineup.length) {
       const finalKept = run.lineup.filter((_item, index) => next[index] === "keep");
-      const finalResult = scoreFootballKeepCutSelection(run.lineup, finalKept.map((item) => item.id));
+      const finalResult = challengeResult(next, finalKept);
       recordLineupCompletion(run.identity, {
         packId: run.pack.id,
-        keptIds: finalResult.kept.map((item) => item.id),
-        cutIds: finalResult.cut.map((item) => item.id),
-        score: finalResult.score,
-        correctComparisons: finalResult.correctComparisons,
+        ...finalResult,
       });
+      if (profileMatch.isRecipient && profileMatch.challenge?.responderResult === null) {
+        profileMatch.submitResult(asChallengeJson(finalResult));
+      }
     }
+  }
+
+  async function challengeSomeone() {
+    if (!result) return;
+    const creatorResult = challengeResult(decisions, result.kept);
+    setChallengeStatus("");
+    const status = await beginChallenge({
+      gameId: "keep-cut",
+      gameVersion: "football-keep-cut-v1",
+      gameTitle: "Football Keep 4 / Cut 4",
+      summary: `${run.pack.name} · same eight subjects`,
+      setup: asChallengeJson({
+        packId: run.pack.id,
+        lineupIds: run.lineup.map((item) => item.id),
+        lineup: run.lineup.map((item) => ({ id: item.id, name: item.name })),
+      }),
+      creatorResult: asChallengeJson(creatorResult),
+      shareTitle: "Football Keep 4 / Cut 4 Challenge",
+      shareText: `I challenged you to make Keep/Cut calls on the same eight football subjects in ${run.pack.name}.`,
+      shareUrl: footballChallengeUrl("/back-room/football/keep-cut", {
+        pack: run.pack.id,
+        lineup: run.lineup.map((item) => item.id).join(","),
+      }),
+    });
+    setChallengeStatus(status);
   }
 
   if (result) {
     return (
       <div className="page football-debate-page football-keep-cut-page">
+        {profileMatch.creator ? (
+          <section className="challenge-game-banner">
+            <span>PROFILE CHALLENGE</span>
+            <strong>{profileMatch.creator.displayName} sent these exact eight football subjects.</strong>
+            <small>Both Keep/Cut boards reveal after you finish.</small>
+          </section>
+        ) : null}
         <section className="football-debate-result-hero">
           <p className="eyebrow">THE BACK ROOM · KEEP 4 / CUT 4</p>
           <strong>{result.score}<small>/100</small></strong>
@@ -120,10 +226,13 @@ export default function FootballKeepCutPage() {
           <ResultList title="BACK ROOM FOUR" items={result.topFour} packId={run.pack.id} />
         </div>
 
-        <div className="football-debate-actions">
-          <button className="is-primary" type="button" onClick={startNew}>NEW LINEUP</button>
-          <button type="button" onClick={() => navigate("/back-room/football")}>ALL FOOTBALL GAMES</button>
-        </div>
+        <GameResultActions
+          onChallenge={() => void challengeSomeone()}
+          onReplay={replay}
+          onAllGames={() => navigate("/back-room/football")}
+          replayLabel={replayLabelFor(run.identity.type)}
+          status={challengeStatus}
+        />
       </div>
     );
   }
@@ -138,6 +247,13 @@ export default function FootballKeepCutPage() {
 
   return (
     <div className="page football-debate-page football-keep-cut-page">
+      {profileMatch.creator ? (
+        <section className="challenge-game-banner">
+          <span>PROFILE CHALLENGE</span>
+          <strong>{profileMatch.creator.displayName} sent these exact eight football subjects.</strong>
+          <small>Make all eight locked calls to reveal the matchup.</small>
+        </section>
+      ) : null}
       <section className="football-debate-intro">
         <div>
           <p className="eyebrow">THE BACK ROOM · FOOTBALL</p>
@@ -147,7 +263,7 @@ export default function FootballKeepCutPage() {
         <div className="football-debate-category">
           <small>CURRENT CATEGORY</small>
           <strong>{run.pack.name}</strong>
-          <button type="button" onClick={startNew}>NEW LINEUP</button>
+          {!shared ? <button type="button" onClick={startNew}>NEW LINEUP</button> : null}
         </div>
       </section>
 
