@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
-import type { PlayGameId } from "../play/playRegistry";
+import { playGameDefinition, type PlayGameId, type PlaySport } from "../play/playRegistry";
 import { usePlayChallenges } from "./ChallengeProvider";
 import type { PlayChallenge } from "./challengeModel";
 
@@ -22,8 +22,23 @@ function challengeCodeFromSearch(search: string, gameId: PlayGameId) {
   return /^[a-z0-9]{4,12}$/i.test(value) ? value.toUpperCase() : "";
 }
 
+function challengeSport(challenge: PlayChallenge): PlaySport {
+  if (challenge.gameVersion.startsWith("football-") || challenge.playUrl.includes("/back-room/football/")) {
+    return "football";
+  }
+  return "ufc";
+}
+
+function canonicalChallengeRoute(challenge: PlayChallenge) {
+  try {
+    return playGameDefinition(challenge.gameId, challengeSport(challenge)).route;
+  } catch {
+    return PLAY_ROUTE_BY_GAME[challenge.gameId] ?? null;
+  }
+}
+
 export function challengePlayRoute(challenge: PlayChallenge) {
-  const canonicalRoute = PLAY_ROUTE_BY_GAME[challenge.gameId];
+  const canonicalRoute = canonicalChallengeRoute(challenge);
   if (!canonicalRoute) return "/play";
 
   if (challenge.playUrl) {
@@ -32,7 +47,7 @@ export function challengePlayRoute(challenge: PlayChallenge) {
       url.searchParams.set(challenge.gameId === "find-leader" ? "challenge" : "match", challenge.code);
       return `${url.pathname}${url.search}${url.hash}`;
     } catch {
-      // Fall back to the canonical route below.
+      // Fall back to the sport-aware canonical route below.
     }
   }
 

@@ -1,16 +1,28 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { recordLineupCompletion } from "../play/lineupModel";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
+import { usePlayChallenges } from "../challenges/ChallengeProvider";
+import { GameResultActions } from "../play/GameResultActions";
+import { recordLineupCompletion, replayLabelFor } from "../play/lineupModel";
 import {
+  FOOTBALL_BLIND_RESUME_GAME_ID,
   FOOTBALL_BLIND_RESUME_REVEAL_COUNTS,
   createFootballBlindResumeRun,
   footballBlindResumeNextRevealCount,
   footballBlindResumeRoundPoints,
   footballBlindResumeTier,
+  resolvedFootballBlindResumeMatchups,
   type FootballBlindResumeRevealCount,
   type FootballBlindResumeRun,
 } from "./footballBlindResumeModel";
 import { FootballSubjectVisual } from "./FootballSubjectVisual";
+import {
+  asChallengeJson,
+  challengeRecord,
+  challengeStrings,
+  footballChallengeUrl,
+  footballCuratedIdentity,
+} from "./footballChallengeRuntime";
 
 type PickSide = "left" | "right";
 
@@ -23,18 +35,53 @@ interface RoundPick {
 
 const OPENING_REVEAL: FootballBlindResumeRevealCount = FOOTBALL_BLIND_RESUME_REVEAL_COUNTS[0];
 
+function resolveChallengeRun(matchupIds: readonly string[], challengeId: string): FootballBlindResumeRun | null {
+  if (matchupIds.length !== 5 || new Set(matchupIds).size !== 5) return null;
+  const byId = new Map(resolvedFootballBlindResumeMatchups().map((round) => [round.id, round]));
+  const rounds = matchupIds.flatMap((id) => byId.get(id) ? [byId.get(id)!] : []);
+  if (rounds.length !== 5) return null;
+  return {
+    rounds,
+    identity: footballCuratedIdentity(
+      FOOTBALL_BLIND_RESUME_GAME_ID,
+      challengeId,
+      matchupIds,
+      "football-blind-resume",
+      rounds.flatMap((round) => [round.leftId, round.rightId]),
+    ),
+  };
+}
+
 export default function FootballBlindResumePage() {
   const navigate = useNavigate();
-  const [run, setRun] = useState<FootballBlindResumeRun>(() => createFootballBlindResumeRun());
+  const [searchParams] = useSearchParams();
+  const { beginChallenge } = usePlayChallenges();
+  const profileMatch = useProfileChallengeMatch("blind-resume");
+  const profileSetup = challengeRecord(profileMatch.challenge?.setup);
+  const profileMatchupIds = challengeStrings(profileSetup?.matchupIds);
+  const queryMatchupIds = (searchParams.get("matchups") ?? "").split(",").map((value) => value.trim()).filter(Boolean);
+  const sharedChallengeId = profileMatch.challenge?.code ?? `shared:${queryMatchupIds.join("|")}`;
+  const sharedRun = useMemo(() => (
+    resolveChallengeRun(profileMatchupIds, sharedChallengeId)
+      ?? resolveChallengeRun(queryMatchupIds, sharedChallengeId)
+  ), [profileMatchupIds.join("|"), queryMatchupIds.join("|"), sharedChallengeId]);
+  const [run, setRun] = useState<FootballBlindResumeRun>(() => sharedRun ?? createFootballBlindResumeRun());
   const [roundIndex, setRoundIndex] = useState(0);
   const [picks, setPicks] = useState<RoundPick[]>([]);
   const [pickedSide, setPickedSide] = useState<PickSide | null>(null);
   const [revealedCount, setRevealedCount] = useState<FootballBlindResumeRevealCount>(OPENING_REVEAL);
+  const [challengeStatus, setChallengeStatus] = useState("");
   const round = run.rounds[roundIndex];
   const complete = roundIndex >= run.rounds.length;
   const correct = picks.filter((pick) => pick.correct).length;
   const score = picks.reduce((sum, pick) => sum + pick.points, 0);
   const losses = picks.length - correct;
+  const shared = run.identity.type === "curated";
+
+  useEffect(() => {
+    if (!sharedRun || run.identity.challengeId === sharedRun.identity.challengeId) return;
+    reset(sharedRun);
+  }, [run.identity.challengeId, sharedRun]);
 
   function reset(nextRun: FootballBlindResumeRun) {
     setRun(nextRun);
@@ -42,11 +89,17 @@ export default function FootballBlindResumePage() {
     setPicks([]);
     setPickedSide(null);
     setRevealedCount(OPENING_REVEAL);
+    setChallengeStatus("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function startNew() {
     reset(createFootballBlindResumeRun());
+  }
+
+  function replay() {
+    if (shared) reset(run);
+    else startNew();
   }
 
   function choose(side: PickSide) {
@@ -68,22 +121,31 @@ export default function FootballBlindResumePage() {
     if (next) setRevealedCount(next);
   }
 
+  function resultPayload(nextPicks = picks) {
+    const wins = nextPicks.filter((pick) => pick.correct).length;
+    const nextScore = nextPicks.reduce((sum, pick) => sum + pick.points, 0);
+    return {
+      score: nextScore,
+      record: { wins, losses: nextPicks.length - wins },
+      matchupIds: run.rounds.map((item) => item.id),
+      picks: nextPicks.map((pick) => ({
+        pickedId: pick.pickedId,
+        correct: pick.correct,
+        revealedCount: pick.revealedCount,
+        points: pick.points,
+      })),
+    };
+  }
+
   function advance() {
     if (!round || !pickedSide) return;
     const nextIndex = roundIndex + 1;
     if (nextIndex === run.rounds.length) {
-      recordLineupCompletion(run.identity, {
-        correct,
-        score,
-        record: { wins: correct, losses },
-        matchupIds: run.rounds.map((item) => item.id),
-        picks: picks.map((pick) => ({
-          pickedId: pick.pickedId,
-          correct: pick.correct,
-          revealedCount: pick.revealedCount,
-          points: pick.points,
-        })),
-      });
+      const payload = resultPayload();
+      recordLineupCompletion(run.identity, payload);
+      if (profileMatch.isRecipient && profileMatch.challenge?.responderResult === null) {
+        profileMatch.submitResult(asChallengeJson(payload));
+      }
     }
     setRoundIndex(nextIndex);
     setPickedSide(null);
@@ -91,9 +153,42 @@ export default function FootballBlindResumePage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  async function challengeSomeone() {
+    if (!complete) return;
+    setChallengeStatus("");
+    const status = await beginChallenge({
+      gameId: "blind-resume",
+      gameVersion: "football-blind-resume-v1",
+      gameTitle: "Football Blind Resume",
+      summary: "Five rounds · same hidden résumés",
+      setup: asChallengeJson({
+        matchupIds: run.rounds.map((item) => item.id),
+        rounds: run.rounds.map((item) => ({
+          fighterA: { id: item.leftId, name: item.leftName },
+          fighterB: { id: item.rightId, name: item.rightName },
+          winnerId: item.winnerId,
+        })),
+      }),
+      creatorResult: asChallengeJson(resultPayload()),
+      shareTitle: "Football Blind Resume Challenge",
+      shareText: "I challenged you to the same five hidden football résumé matchups. Lock each call before the names reveal.",
+      shareUrl: footballChallengeUrl("/back-room/football/blind-resume", {
+        matchups: run.rounds.map((item) => item.id).join(","),
+      }),
+    });
+    setChallengeStatus(status);
+  }
+
   if (complete) {
     return (
       <div className="page football-debate-page football-blind-resume-page">
+        {profileMatch.creator ? (
+          <section className="challenge-game-banner">
+            <span>PROFILE CHALLENGE</span>
+            <strong>{profileMatch.creator.displayName} sent these exact five football résumés.</strong>
+            <small>Both five-round results reveal after you finish.</small>
+          </section>
+        ) : null}
         <section className="football-debate-result-hero">
           <p className="eyebrow">FOOTBALL BLIND RESUME · FINAL SCORE</p>
           <strong>{score}<small>/100</small></strong>
@@ -126,10 +221,13 @@ export default function FootballBlindResumePage() {
           </div>
         </section>
 
-        <div className="football-debate-actions">
-          <button className="is-primary" type="button" onClick={startNew}>NEW FIVE</button>
-          <button type="button" onClick={() => navigate("/back-room/football")}>ALL FOOTBALL GAMES</button>
-        </div>
+        <GameResultActions
+          onChallenge={() => void challengeSomeone()}
+          onReplay={replay}
+          onAllGames={() => navigate("/back-room/football")}
+          replayLabel={replayLabelFor(run.identity.type)}
+          status={challengeStatus}
+        />
       </div>
     );
   }
@@ -146,6 +244,13 @@ export default function FootballBlindResumePage() {
 
   return (
     <div className="page football-debate-page football-blind-resume-page">
+      {profileMatch.creator ? (
+        <section className="challenge-game-banner">
+          <span>PROFILE CHALLENGE</span>
+          <strong>{profileMatch.creator.displayName} sent these exact five football résumés.</strong>
+          <small>Make all five locked calls to reveal the matchup.</small>
+        </section>
+      ) : null}
       <section className="football-blind-resume-topline">
         <div>
           <p className="eyebrow">FOOTBALL BLIND RESUME</p>

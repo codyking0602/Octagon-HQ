@@ -1,8 +1,13 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { recordLineupCompletion } from "../play/lineupModel";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
+import { usePlayChallenges } from "../challenges/ChallengeProvider";
+import { GameResultActions } from "../play/GameResultActions";
+import { recordLineupCompletion, replayLabelFor } from "../play/lineupModel";
 import {
   FOOTBALL_HIT_THE_NUMBER_DEFAULT_BOARD_TYPE,
+  FOOTBALL_HIT_THE_NUMBER_GAME_ID,
+  createFootballHitTheNumberPlan,
   createFootballHitTheNumberRun,
   footballHitTheNumberSelectionSatisfies,
   footballHitTheNumberValue,
@@ -13,6 +18,13 @@ import {
   type FootballHitTheNumberResult,
   type FootballHitTheNumberRun,
 } from "./footballHitTheNumberModel";
+import {
+  asChallengeJson,
+  challengeRecord,
+  challengeString,
+  footballChallengeUrl,
+  footballCuratedIdentity,
+} from "./footballChallengeRuntime";
 
 function resultTitle(result: FootballHitTheNumberResult) {
   if (result.status === "perfect") return "PERFECT";
@@ -24,14 +36,66 @@ function formatDistance(value: number) {
   return Number.isInteger(value) ? value.toLocaleString("en-US") : value.toFixed(1);
 }
 
+function boardType(value: string | null): FootballHitTheNumberBoardType | null {
+  return value === "open-roster" || value === "random-pool" ? value : null;
+}
+
+function resolveChallengeRun(
+  seed: string | null,
+  requestedBoardType: FootballHitTheNumberBoardType | null,
+  challengeId: string,
+): FootballHitTheNumberRun | null {
+  if (!seed || !requestedBoardType) return null;
+  try {
+    const plan = createFootballHitTheNumberPlan(seed, requestedBoardType);
+    return {
+      plan,
+      identity: footballCuratedIdentity(
+        FOOTBALL_HIT_THE_NUMBER_GAME_ID,
+        challengeId,
+        [`${plan.domainId}:${plan.metricId}:${plan.formatId}:${plan.target}`],
+        requestedBoardType,
+        requestedBoardType === "random-pool" ? plan.subjectIds : [],
+      ),
+    };
+  } catch {
+    return null;
+  }
+}
+
 export default function FootballHitTheNumberPage() {
   const navigate = useNavigate();
-  const [boardType, setBoardType] = useState<FootballHitTheNumberBoardType>(FOOTBALL_HIT_THE_NUMBER_DEFAULT_BOARD_TYPE);
-  const [run, setRun] = useState<FootballHitTheNumberRun>(() => createFootballHitTheNumberRun(FOOTBALL_HIT_THE_NUMBER_DEFAULT_BOARD_TYPE));
+  const [searchParams] = useSearchParams();
+  const { beginChallenge } = usePlayChallenges();
+  const profileMatch = useProfileChallengeMatch("hit-the-number");
+  const profileSetup = challengeRecord(profileMatch.challenge?.setup);
+  const profileSeed = challengeString(profileSetup?.seed);
+  const profileBoardType = boardType(challengeString(profileSetup?.boardType));
+  const querySeed = searchParams.get("seed");
+  const queryBoardType = boardType(searchParams.get("board"));
+  const sharedChallengeId = profileMatch.challenge?.code ?? `shared:${querySeed ?? "unknown"}:${queryBoardType ?? "unknown"}`;
+  const sharedRun = useMemo(() => (
+    resolveChallengeRun(profileSeed, profileBoardType, sharedChallengeId)
+      ?? resolveChallengeRun(querySeed, queryBoardType, sharedChallengeId)
+  ), [profileSeed, profileBoardType, querySeed, queryBoardType, sharedChallengeId]);
+  const initialBoardType = sharedRun?.plan.boardType ?? FOOTBALL_HIT_THE_NUMBER_DEFAULT_BOARD_TYPE;
+  const [activeBoardType, setActiveBoardType] = useState<FootballHitTheNumberBoardType>(initialBoardType);
+  const [run, setRun] = useState<FootballHitTheNumberRun>(() => sharedRun ?? createFootballHitTheNumberRun(initialBoardType));
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [result, setResult] = useState<FootballHitTheNumberResult | null>(null);
+  const [challengeStatus, setChallengeStatus] = useState("");
   const plan = run.plan;
   const selectionValid = footballHitTheNumberSelectionSatisfies(plan, selectedIds);
+  const shared = run.identity.type === "curated";
+
+  useEffect(() => {
+    if (!sharedRun || run.identity.challengeId === sharedRun.identity.challengeId) return;
+    setActiveBoardType(sharedRun.plan.boardType);
+    setRun(sharedRun);
+    setSelectedIds([]);
+    setResult(null);
+    setChallengeStatus("");
+  }, [run.identity.challengeId, sharedRun]);
 
   function toggleSubject(subjectId: string) {
     if (result) return;
@@ -42,39 +106,102 @@ export default function FootballHitTheNumberPage() {
     });
   }
 
+  function challengeResult(next: FootballHitTheNumberResult) {
+    return {
+      score: next.score,
+      status: next.status,
+      target: next.target,
+      total: next.total,
+      distance: next.distance,
+      selections: next.selections.map((selection) => ({
+        fighterId: selection.subjectId,
+        name: getFootballHitTheNumberSubject(selection.subjectId)?.name ?? selection.subjectId,
+        value: selection.value,
+      })),
+    };
+  }
+
   function lockPicks() {
     if (!selectionValid || result) return;
     const next = gradeFootballHitTheNumberSelection(plan, selectedIds);
+    const payload = challengeResult(next);
     recordLineupCompletion(run.identity, {
-      score: next.score,
+      ...payload,
       boardType: plan.boardType,
       league: plan.league,
       formatId: plan.formatId,
       domainId: plan.domainId,
       metricId: plan.metricId,
-      target: plan.target,
-      total: next.total,
       selectedIds,
     });
+    if (profileMatch.isRecipient && profileMatch.challenge?.responderResult === null) {
+      profileMatch.submitResult(asChallengeJson(payload));
+    }
     setResult(next);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  function startNew(nextBoardType = boardType) {
-    setBoardType(nextBoardType);
+  function startNew(nextBoardType = activeBoardType) {
+    setActiveBoardType(nextBoardType);
     setRun(createFootballHitTheNumberRun(nextBoardType));
     setSelectedIds([]);
     setResult(null);
+    setChallengeStatus("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  function replay() {
+    if (shared) {
+      setSelectedIds([]);
+      setResult(null);
+      setChallengeStatus("");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      startNew();
+    }
+  }
+
   function chooseBoardType(nextBoardType: FootballHitTheNumberBoardType) {
-    if (nextBoardType === boardType) return;
+    if (shared || nextBoardType === activeBoardType) return;
     startNew(nextBoardType);
+  }
+
+  async function challengeSomeone() {
+    if (!result) return;
+    setChallengeStatus("");
+    const status = await beginChallenge({
+      gameId: "hit-the-number",
+      gameVersion: "football-hit-the-number-v1",
+      gameTitle: "Football Hit the Number",
+      summary: `${plan.metricLabel} · target ${formatFootballHitTheNumberValue(plan, plan.target)}`,
+      setup: asChallengeJson({
+        seed: plan.seed,
+        boardType: plan.boardType,
+        target: plan.target,
+        pickCount: plan.pickCount,
+        metricId: plan.metricId,
+        subjectIds: plan.subjectIds,
+      }),
+      creatorResult: asChallengeJson(challengeResult(result)),
+      shareTitle: "Football Hit the Number Challenge",
+      shareText: `I challenged you to the same Football Hit the Number board: pick ${plan.pickCount} and chase ${formatFootballHitTheNumberValue(plan, plan.target)} ${plan.metricLabel}.`,
+      shareUrl: footballChallengeUrl("/back-room/football/hit-the-number", {
+        seed: plan.seed,
+        board: plan.boardType,
+      }),
+    });
+    setChallengeStatus(status);
   }
 
   return (
     <div className="page football-debate-page football-hit-number-page">
+      {profileMatch.creator ? (
+        <section className="challenge-game-banner">
+          <span>PROFILE CHALLENGE</span>
+          <strong>{profileMatch.creator.displayName} sent this exact Football Hit the Number board.</strong>
+          <small>Both locked totals reveal after you finish.</small>
+        </section>
+      ) : null}
       <section className="football-hit-number-hero">
         <div>
           <p className="eyebrow">HIT THE NUMBER · FOOTBALL</p>
@@ -96,16 +223,18 @@ export default function FootballHitTheNumberPage() {
         <div className="hit-number-mode-toggle">
           <button
             type="button"
-            className={boardType === "open-roster" ? "is-active" : ""}
-            aria-pressed={boardType === "open-roster"}
+            className={activeBoardType === "open-roster" ? "is-active" : ""}
+            aria-pressed={activeBoardType === "open-roster"}
+            disabled={shared}
             onClick={() => chooseBoardType("open-roster")}
           >
             OPEN ROSTER
           </button>
           <button
             type="button"
-            className={boardType === "random-pool" ? "is-active" : ""}
-            aria-pressed={boardType === "random-pool"}
+            className={activeBoardType === "random-pool" ? "is-active" : ""}
+            aria-pressed={activeBoardType === "random-pool"}
+            disabled={shared}
             onClick={() => chooseBoardType("random-pool")}
           >
             RANDOM POOL
@@ -167,10 +296,13 @@ export default function FootballHitTheNumberPage() {
           </button>
         </div>
       ) : (
-        <div className="football-debate-actions">
-          <button className="is-primary" type="button" onClick={() => startNew()}>NEW NUMBER</button>
-          <button type="button" onClick={() => navigate("/back-room/football")}>ALL FOOTBALL GAMES</button>
-        </div>
+        <GameResultActions
+          onChallenge={() => void challengeSomeone()}
+          onReplay={replay}
+          onAllGames={() => navigate("/back-room/football")}
+          replayLabel={replayLabelFor(run.identity.type)}
+          status={challengeStatus}
+        />
       )}
     </div>
   );

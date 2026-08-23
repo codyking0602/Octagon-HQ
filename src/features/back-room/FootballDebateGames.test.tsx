@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import FootballKeepCutPage from "./FootballKeepCutPage";
 import FootballWavelengthPage from "./FootballWavelengthPage";
@@ -16,6 +16,21 @@ import {
   nextFootballWavelengthClue,
 } from "./footballWavelengthModel";
 import { footballRankFivePacks, getFootballRankFivePack } from "./footballRankFiveModel";
+
+vi.mock("../challenges/ChallengeProvider", () => ({
+  usePlayChallenges: () => ({ beginChallenge: vi.fn(async () => "") }),
+}));
+
+vi.mock("../challenges/challengeRuntime", () => ({
+  useProfileChallengeMatch: () => ({
+    code: "",
+    challenge: null,
+    creator: null,
+    isRecipient: false,
+    activeProfile: null,
+    submitResult: vi.fn(),
+  }),
+}));
 
 describe("Football Back Room debate games", () => {
   beforeEach(() => {
@@ -76,7 +91,7 @@ describe("Football Back Room debate games", () => {
     expect(screen.getByText("YOUR FOUR")).toBeInTheDocument();
     expect(screen.getByText("BACK ROOM FOUR")).toBeInTheDocument();
     expect(screen.getByText("/100")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "NEW LINEUP" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "PLAY AGAIN" })).toBeInTheDocument();
   });
 
   it("plays Football Wavelength through the same four adaptive guess locks as UFC", () => {
@@ -95,6 +110,6 @@ describe("Football Back Room debate games", () => {
     expect(screen.getByText("FOOTBALL WAVELENGTH · FINAL SCORE")).toBeInTheDocument();
     expect(screen.getByText("HIDDEN NUMBER")).toBeInTheDocument();
     expect(screen.getByText("CLUE REVEAL")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "NEW WAVELENGTH" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "PLAY AGAIN" })).toBeInTheDocument();
   });
 });

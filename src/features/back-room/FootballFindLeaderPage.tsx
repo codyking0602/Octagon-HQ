@@ -1,11 +1,24 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { recordLineupCompletion } from "../play/lineupModel";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
+import { usePlayChallenges } from "../challenges/ChallengeProvider";
+import { GameResultActions } from "../play/GameResultActions";
+import { recordLineupCompletion, replayLabelFor } from "../play/lineupModel";
 import {
+  FOOTBALL_FIND_LEADER_GAME_ID,
+  buildFootballFindLeaderBoard,
   createFootballFindLeaderRun,
+  footballFindLeaderQuestions,
   formatFootballFindLeaderValue,
   type FootballFindLeaderRun,
 } from "./footballFindLeaderModel";
+import {
+  asChallengeJson,
+  challengeRecord,
+  challengeString,
+  footballChallengeUrl,
+  footballCuratedIdentity,
+} from "./footballChallengeRuntime";
 import "../../styles/football-find-leader.css";
 
 interface ResultState {
@@ -14,13 +27,68 @@ interface ResultState {
   fatalId: string | null;
 }
 
+function resolveChallengeRun(seed: string | null, definitionId: string | null, challengeId: string): FootballFindLeaderRun | null {
+  if (!seed || !definitionId) return null;
+  const definition = footballFindLeaderQuestions.find((row) => row.id === definitionId);
+  if (!definition) return null;
+  const board = buildFootballFindLeaderBoard(definition, seed);
+  if (!board) return null;
+  return {
+    board,
+    identity: footballCuratedIdentity(
+      FOOTBALL_FIND_LEADER_GAME_ID,
+      challengeId,
+      [`question:${board.definitionId}`, `metric:${board.metricId}`, `family:${board.family}`, ...board.candidates.map((item) => item.id)],
+      "football-find-leader",
+    ),
+  };
+}
+
 export default function FootballFindLeaderPage() {
   const navigate = useNavigate();
-  const [run, setRun] = useState<FootballFindLeaderRun>(() => createFootballFindLeaderRun());
+  const [searchParams] = useSearchParams();
+  const { beginChallenge } = usePlayChallenges();
+  const profileMatch = useProfileChallengeMatch("find-leader");
+  const profileSetup = challengeRecord(profileMatch.challenge?.setup);
+  const profileSeed = challengeString(profileSetup?.seed);
+  const profileDefinitionId = challengeString(profileSetup?.definitionId);
+  const querySeed = searchParams.get("seed");
+  const queryDefinitionId = searchParams.get("definition");
+  const sharedChallengeId = profileMatch.challenge?.code ?? `shared:${querySeed ?? "unknown"}:${queryDefinitionId ?? "unknown"}`;
+  const sharedRun = useMemo(() => (
+    resolveChallengeRun(profileSeed, profileDefinitionId, sharedChallengeId)
+      ?? resolveChallengeRun(querySeed, queryDefinitionId, sharedChallengeId)
+  ), [profileSeed, profileDefinitionId, querySeed, queryDefinitionId, sharedChallengeId]);
+  const [run, setRun] = useState<FootballFindLeaderRun>(() => sharedRun ?? createFootballFindLeaderRun());
   const [eliminated, setEliminated] = useState<string[]>([]);
   const [result, setResult] = useState<ResultState | null>(null);
+  const [challengeStatus, setChallengeStatus] = useState("");
   const board = run.board;
   const eliminatedSet = new Set(eliminated);
+  const shared = run.identity.type === "curated";
+  const boardSeed = shared ? (profileSeed ?? querySeed ?? run.identity.seed) : run.identity.seed;
+
+  useEffect(() => {
+    if (!sharedRun || run.identity.challengeId === sharedRun.identity.challengeId) return;
+    reset(sharedRun);
+  }, [run.identity.challengeId, sharedRun]);
+
+  function reset(nextRun: FootballFindLeaderRun) {
+    setRun(nextRun);
+    setEliminated([]);
+    setResult(null);
+    setChallengeStatus("");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function challengeResult(nextResult: ResultState, nextEliminated: readonly string[]) {
+    return {
+      score: nextResult.score / 10,
+      perfect: nextResult.perfect,
+      fatalId: nextResult.fatalId,
+      eliminated: [...nextEliminated],
+    };
+  }
 
   function eliminate(id: string) {
     if (result || eliminatedSet.has(id)) return;
@@ -31,20 +99,55 @@ export default function FootballFindLeaderPage() {
       const nextResult = { score: round * 10, perfect: false, fatalId: id };
       setResult(nextResult);
       recordLineupCompletion(run.identity, { ...nextResult, eliminated: next });
+      if (profileMatch.isRecipient && profileMatch.challenge?.responderResult === null) {
+        profileMatch.submitResult(asChallengeJson(challengeResult(nextResult, next)));
+      }
       return;
     }
     if (next.length === 9) {
       const nextResult = { score: 100, perfect: true, fatalId: null };
       setResult(nextResult);
       recordLineupCompletion(run.identity, { ...nextResult, eliminated: next });
+      if (profileMatch.isRecipient && profileMatch.challenge?.responderResult === null) {
+        profileMatch.submitResult(asChallengeJson(challengeResult(nextResult, next)));
+      }
     }
   }
 
   function startNew() {
-    setRun(createFootballFindLeaderRun());
-    setEliminated([]);
-    setResult(null);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    reset(createFootballFindLeaderRun());
+  }
+
+  function replay() {
+    if (shared) reset(run);
+    else startNew();
+  }
+
+  async function challengeSomeone() {
+    if (!result) return;
+    setChallengeStatus("");
+    const status = await beginChallenge({
+      gameId: "find-leader",
+      gameVersion: "football-find-leader-v1",
+      gameTitle: "Football Find the Leader",
+      summary: `${board.statLabel} · same ten-subject board`,
+      setup: asChallengeJson({
+        seed: boardSeed,
+        definitionId: board.definitionId,
+        board: {
+          leaderId: board.leaderId,
+          candidates: board.candidates.map((item) => ({ id: item.id, name: item.name })),
+        },
+      }),
+      creatorResult: asChallengeJson(challengeResult(result, eliminated)),
+      shareTitle: "Football Find the Leader Challenge",
+      shareText: `I challenged you to the same ten-subject Football Find the Leader board for ${board.statLabel}.`,
+      shareUrl: footballChallengeUrl("/back-room/football/find-leader", {
+        seed: boardSeed,
+        definition: board.definitionId,
+      }),
+    });
+    setChallengeStatus(status);
   }
 
   if (result) {
@@ -52,6 +155,13 @@ export default function FootballFindLeaderPage() {
     const sorted = [...board.candidates].sort((left, right) => right.value - left.value || left.name.localeCompare(right.name));
     return (
       <div className="page football-find-leader-page">
+        {profileMatch.creator ? (
+          <section className="challenge-game-banner">
+            <span>PROFILE CHALLENGE</span>
+            <strong>{profileMatch.creator.displayName} sent this exact Football Find the Leader board.</strong>
+            <small>Both elimination paths reveal after you finish.</small>
+          </section>
+        ) : null}
         <section className={`football-find-result${result.perfect ? " is-perfect" : ""}`}>
           <p className="eyebrow">{result.perfect ? "PERFECT RUN" : "RUN ENDED"}</p>
           <h1>{result.score}/100</h1>
@@ -74,16 +184,26 @@ export default function FootballFindLeaderPage() {
           </div>
         </section>
 
-        <div className="football-debate-actions">
-          <button className="is-primary" type="button" onClick={startNew}>NEW BOARD</button>
-          <button type="button" onClick={() => navigate("/back-room/football")}>ALL FOOTBALL GAMES</button>
-        </div>
+        <GameResultActions
+          onChallenge={() => void challengeSomeone()}
+          onReplay={replay}
+          onAllGames={() => navigate("/back-room/football")}
+          replayLabel={replayLabelFor(run.identity.type)}
+          status={challengeStatus}
+        />
       </div>
     );
   }
 
   return (
     <div className="page football-find-leader-page">
+      {profileMatch.creator ? (
+        <section className="challenge-game-banner">
+          <span>PROFILE CHALLENGE</span>
+          <strong>{profileMatch.creator.displayName} sent this exact Football Find the Leader board.</strong>
+          <small>Eliminate until the leader falls or only the leader remains.</small>
+        </section>
+      ) : null}
       <section className="football-find-hero">
         <p className="eyebrow">FIND THE LEADER · FOOTBALL</p>
         <h1>{board.question}</h1>
