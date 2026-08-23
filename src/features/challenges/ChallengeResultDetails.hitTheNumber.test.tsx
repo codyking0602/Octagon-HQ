@@ -133,7 +133,7 @@ describe("Hit the Number challenge results", () => {
 
     expect(screen.getByLabelText("Hit the Number target")).toHaveTextContent("TARGET23");
     expect(screen.getByLabelText("Hit the Number target")).toHaveTextContent("UFC KO/TKO WINS · PICK 5");
-    expect(screen.getByText("1 AWAY · GAME SCORE 89/100")).toBeInTheDocument();
+    expect(screen.getByText("1 AWAY · GAME SCORE 96/100")).toBeInTheDocument();
     expect(screen.getByText("EXACT HIT · GAME SCORE 100/100")).toBeInTheDocument();
     expect(screen.getByLabelText("Cody picks").children).toHaveLength(5);
     expect(screen.getByLabelText("Shane picks").children).toHaveLength(5);
