@@ -1,5 +1,6 @@
 import { useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { PlaySport } from "./playRegistry";
 import {
   createTodayChallengeRepository,
   TodayChallengeRepositoryError,
@@ -11,18 +12,21 @@ import {
   todayChallengeStandingsQueryKey,
 } from "./useTodayChallengeOverview";
 
-export const todayChallengeRuntimeQueryKey = (profileId: string) => [
+export const todayChallengeRuntimeQueryKey = (profileId: string, sport: PlaySport = "ufc") => [
   "today-challenge-runtime",
+  sport,
   profileId,
 ] as const;
 
 export function useTodayChallengeRuntime({
   profileId,
   enabled,
+  sport = "ufc",
   repository: suppliedRepository,
 }: {
   profileId: string;
   enabled: boolean;
+  sport?: PlaySport;
   repository?: TodayChallengeRepository | null;
 }) {
   const queryClient = useQueryClient();
@@ -30,11 +34,11 @@ export function useTodayChallengeRuntime({
   const [actionPending, setActionPending] = useState(false);
   const repository = useMemo(
     () => suppliedRepository === undefined
-      ? createTodayChallengeRepository()
+      ? createTodayChallengeRepository(undefined, sport)
       : suppliedRepository,
-    [suppliedRepository],
+    [sport, suppliedRepository],
   );
-  const queryKey = todayChallengeRuntimeQueryKey(profileId);
+  const queryKey = todayChallengeRuntimeQueryKey(profileId, sport);
   const query = useQuery({
     queryKey,
     queryFn: () => {
@@ -48,29 +52,16 @@ export function useTodayChallengeRuntime({
     },
   });
   const mutation = useMutation({
-    mutationFn: async ({
-      projection,
-      action,
-    }: {
-      projection: TodayChallengeProjection;
-      action: Record<string, unknown>;
-    }) => {
+    mutationFn: async ({ projection, action }: { projection: TodayChallengeProjection; action: Record<string, unknown> }) => {
       if (!repository) throw new Error("Today’s Challenge is not connected on this build.");
       return repository.advance(projection, action);
     },
     onSuccess: (projection) => {
       queryClient.setQueryData(queryKey, projection);
-      if (!projection.officialAttempt) return;
+      if (!projection.officialAttempt || sport !== "ufc") return;
+      void queryClient.invalidateQueries({ queryKey: todayChallengeStandingsQueryKey(profileId), exact: true });
       void queryClient.invalidateQueries({
-        queryKey: todayChallengeStandingsQueryKey(profileId),
-        exact: true,
-      });
-      void queryClient.invalidateQueries({
-        queryKey: todayChallengeLeaderboardQueryKey(
-          profileId,
-          projection.centralDay,
-          projection.scheduleVersion,
-        ),
+        queryKey: todayChallengeLeaderboardQueryKey(profileId, projection.centralDay, projection.scheduleVersion),
         exact: true,
       });
     },
@@ -85,7 +76,6 @@ export function useTodayChallengeRuntime({
     advance: async (action: Record<string, unknown>) => {
       if (!query.data) throw new Error("Today’s Challenge is still loading.");
       if (actionLocked.current) return null;
-
       actionLocked.current = true;
       setActionPending(true);
       try {
