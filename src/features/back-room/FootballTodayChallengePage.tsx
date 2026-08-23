@@ -1,19 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
-import { DailyChallengeStandings } from "../play/DailyChallengeStandings";
 import { shareDailyChallengeResult } from "../play/dailyChallengeShare";
 import {
   createTodayChallengeRepository,
   TodayChallengeRepositoryError,
-  type TodayChallengeLeaderboard,
   type TodayChallengeProjection,
 } from "../play/todayChallengeRepository";
-import { useTodayChallengeOverview } from "../play/useTodayChallengeOverview";
 import { FootballSubjectVisual } from "./FootballSubjectVisual";
 import type { FootballRankFiveItem, FootballRankFivePackId } from "./footballRankFiveModel";
-import "../../styles/daily-challenge-standings.css";
-import "../../styles/today-challenge-hub.css";
 import "../../styles/football-today-challenge.css";
 
 const GAME_LABELS = {
@@ -80,49 +75,6 @@ function ScoreCard({ projection }: { projection: TodayChallengeProjection }) {
       <strong>{attempt.normalizedScore}<small>/100</small></strong>
       {typeof result.blind_rank_score === "number" && typeof result.keep_cut_score === "number" ? (
         <span>BLIND RANK {result.blind_rank_score} · KEEP/CUT {result.keep_cut_score}</span>
-      ) : null}
-    </section>
-  );
-}
-
-function FootballDailyLeaderboard({
-  leaderboard,
-  loading,
-}: {
-  leaderboard: TodayChallengeLeaderboard | null;
-  loading: boolean;
-}) {
-  return (
-    <section className="today-hub-leaderboard" aria-label="Football Today’s Challenge leaderboard">
-      <header>
-        <div>
-          <p className="eyebrow">TODAY’S LEADERBOARD</p>
-          <h2>Football Daily</h2>
-        </div>
-        <span>{leaderboard?.playerCount ?? 0} PLAYERS</span>
-      </header>
-      {loading && !leaderboard ? <p className="today-hub-empty">Loading today’s leaderboard…</p> : null}
-      {!loading && !leaderboard?.unlocked ? (
-        <p className="today-hub-empty">Finish today’s official game to unlock the Football leaderboard.</p>
-      ) : null}
-      {leaderboard?.unlocked && !leaderboard.entries.length ? <p className="today-hub-empty">No official finishes yet.</p> : null}
-      {leaderboard?.unlocked && leaderboard.entries.length ? (
-        <div className="today-hub-leaderboard__rows">
-          {leaderboard.entries.map((entry) => (
-            <div
-              className={`today-hub-leaderboard__row${entry.isCurrentUser ? " is-current" : ""}`}
-              key={entry.profileId}
-            >
-              <b>#{entry.rank}</b>
-              {entry.avatarPhotoData
-                ? <img src={entry.avatarPhotoData} alt="" />
-                : <span>{entry.initials}</span>}
-              <strong>{entry.displayName}</strong>
-              <em>{entry.normalizedScore}/100</em>
-              <small>{GAME_LABELS[entry.gameType]}</small>
-            </div>
-          ))}
-        </div>
       ) : null}
     </section>
   );
@@ -317,19 +269,11 @@ export default function FootballTodayChallengePage() {
   const navigate = useNavigate();
   const identity = useIdentity();
   const signedIn = identity.status === "ready" && Boolean(identity.profile?.id);
-  const profileId = identity.profile?.id ?? "signed-out";
   const repository = useMemo(() => createTodayChallengeRepository(undefined, "football"), []);
   const [projection, setProjection] = useState<TodayChallengeProjection | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [shareStatus, setShareStatus] = useState("");
-  const overview = useTodayChallengeOverview({
-    profileId,
-    enabled: signedIn,
-    projection,
-    repository,
-    sport: "football",
-  });
 
   useEffect(() => {
     let active = true;
@@ -359,7 +303,6 @@ export default function FootballTodayChallengePage() {
     try {
       const next = await repository.advance(projection, action);
       setProjection(next);
-      if (next.officialAttempt) void overview.refresh();
     } catch (reason) {
       if (reason instanceof TodayChallengeRepositoryError && reason.stale) {
         setProjection(await repository.loadToday());
@@ -397,7 +340,7 @@ export default function FootballTodayChallengePage() {
   }
 
   if (!projection) {
-    return <div className="page football-today-page"><section className="football-today-shell"><p className="eyebrow">THE BACK ROOM · FOOTBALL</p><h1>{busy ? "Building today’s board…" : "Today’s Challenge"}</h1>{error ? <p>{error}</p> : null}</section></div>;
+    return <div className="page football-today-page"><section className="football-today-shell"><p className="eyebrow">FOOTBALL HQ</p><h1>{busy ? "Building today’s board…" : "Today’s Challenge"}</h1>{error ? <p>{error}</p> : null}</section></div>;
   }
 
   return (
@@ -405,7 +348,7 @@ export default function FootballTodayChallengePage() {
       <section className="football-today-shell">
         <header className="football-today-header">
           <div><p className="eyebrow">TODAY’S CHALLENGE · FOOTBALL</p><h1>{GAME_LABELS[projection.gameType]}</h1><span>{projection.centralDay} · SAME BOARD FOR EVERYONE</span></div>
-          <button type="button" onClick={() => navigate("/back-room/football")}>ALL GAMES</button>
+          <button type="button" onClick={() => navigate("/football")}>ALL GAMES</button>
         </header>
         {error ? <div className="football-today-error">{error}</div> : null}
         {busy ? <div className="football-today-busy">LOCKING…</div> : null}
@@ -413,7 +356,7 @@ export default function FootballTodayChallengePage() {
         {projection.officialAttempt ? (
           <div className="football-today-result-actions">
             <button className="football-today-primary" type="button" onClick={() => void shareResult()}>SHARE RESULT</button>
-            <button type="button" onClick={() => navigate("/back-room/football")}>FOOTBALL HQ</button>
+            <button type="button" onClick={() => navigate("/football")}>FOOTBALL HQ</button>
             {shareStatus ? <span role="status">{shareStatus}</span> : null}
           </div>
         ) : null}
@@ -423,16 +366,6 @@ export default function FootballTodayChallengePage() {
         {projection.gameType === "blind_rank_5" ? <BlindRank projection={projection} advance={advance} /> : null}
         {projection.gameType === "keep_4_cut_4" ? <KeepCut projection={projection} advance={advance} /> : null}
         {projection.gameType === "hit_the_number" ? <HitTheNumber projection={projection} advance={advance} /> : null}
-        <FootballDailyLeaderboard
-          leaderboard={overview.leaderboard}
-          loading={overview.leaderboardLoading}
-        />
-        <DailyChallengeStandings
-          standings={overview.standings}
-          loading={overview.standingsLoading}
-          error={overview.error instanceof Error ? overview.error : null}
-          onRefresh={() => { void overview.refresh(); }}
-        />
       </section>
     </div>
   );
