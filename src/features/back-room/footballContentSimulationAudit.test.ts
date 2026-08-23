@@ -316,7 +316,7 @@ describe("Football PR10 content simulation / replay audit", () => {
     const totalClues = WAVELENGTH_RUNS * 4;
     expect(targetCounts.size).toBeGreaterThanOrEqual(74);
     expect(clueCounts.size).toBeGreaterThanOrEqual(160);
-    expect(categoryCounts.size).toBe(20);
+    expect(categoryCounts.size).toBe(27);
     expect(share(lowTargets, WAVELENGTH_RUNS)).toBeGreaterThanOrEqual(0.2);
     expect(share(middleTargets, WAVELENGTH_RUNS)).toBeGreaterThanOrEqual(0.3);
     expect(share(highTargets, WAVELENGTH_RUNS)).toBeGreaterThanOrEqual(0.25);
