@@ -123,6 +123,6 @@ describe("Football Blind Resume", () => {
     expect(screen.getByText("THE FIVE CALLS")).toBeInTheDocument();
     expect(screen.getByText("/100")).toBeInTheDocument();
     expect(screen.getAllByText(/PICK .* · WINNER /)).toHaveLength(5);
-    expect(screen.getByRole("button", { name: "NEW FIVE" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "PLAY AGAIN" })).toBeInTheDocument();
   });
 });
