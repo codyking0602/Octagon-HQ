@@ -38,7 +38,7 @@ const functionList = cli(["functions", "list", "--project-ref", projectId]);
 if (!functionList.includes("run-pick-monitoring")) throw new Error("run-pick-monitoring is not deployed.");
 const migrationList = cli(["migration", "list", "--linked"]);
 const requiredRemoteMigrationVersions = ["202608080001", "202608090001", "202608090002", "202608090003", "202609120001", "202612310002", "202612310047", "202612310048"];
-if (process.env.GITHUB_EVENT_NAME !== "pull_request") requiredRemoteMigrationVersions.push("202612310050");
+if (process.env.GITHUB_EVENT_NAME !== "pull_request") requiredRemoteMigrationVersions.push("202612310050", "202612310051");
 for (const version of requiredRemoteMigrationVersions) {
   if (!remoteMigrationRecorded(migrationList, version)) throw new Error(`Monitoring migration ${version} is not recorded remotely.`);
 }
@@ -115,4 +115,4 @@ if (expectedSchedulerValue && health.active !== (expectedSchedulerValue === "tru
   throw new Error("Canonical monitoring scheduler active state did not match the trusted deployment mode.");
 }
 
-console.log(`PASS: run-pick-monitoring exact source, live-state/result/lock-authority migrations, scheduler infrastructure, server authorization, quota secret, CORS, and no-provider-call rejection paths verified for ${expectedSha}.`);
+console.log(`PASS: run-pick-monitoring exact source, live-state/result/lock-authority/live-window migrations, scheduler infrastructure, server authorization, quota secret, CORS, and no-provider-call rejection paths verified for ${expectedSha}.`);
