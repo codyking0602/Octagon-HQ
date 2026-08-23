@@ -142,7 +142,7 @@ export default function FootballFindLeaderPage() {
       creatorResult: asChallengeJson(challengeResult(result, eliminated)),
       shareTitle: "Football Find the Leader Challenge",
       shareText: `I challenged you to the same ten-subject Football Find the Leader board for ${board.statLabel}.`,
-      shareUrl: footballChallengeUrl("/back-room/football/find-leader", {
+      shareUrl: footballChallengeUrl("/football/find-leader", {
         seed: boardSeed,
         definition: board.definitionId,
       }),
@@ -187,7 +187,7 @@ export default function FootballFindLeaderPage() {
         <GameResultActions
           onChallenge={() => void challengeSomeone()}
           onReplay={replay}
-          onAllGames={() => navigate("/back-room/football")}
+          onAllGames={() => navigate("/football")}
           replayLabel={replayLabelFor(run.identity.type)}
           status={challengeStatus}
         />
