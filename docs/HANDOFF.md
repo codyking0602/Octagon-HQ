@@ -1,6 +1,6 @@
 # Octagon HQ V2 — Current Handoff
 
-_Last updated: 2026-07-28_
+_Last updated: 2026-08-23_
 
 This is the authoritative cold-start handoff for continuing Octagon HQ V2. Read this file, `docs/product-blueprint.md`, `docs/RANKINGS-MIGRATION.md`, `docs/rankings-parity-contract.md`, `docs/intelligence-verdict-flow.md`, and `docs/octagon-verdict-export.md`, then inspect current `main` before editing.
 
@@ -10,9 +10,10 @@ This is the authoritative cold-start handoff for continuing Octagon HQ V2. Read 
 - Production branch: `main`
 - Live app: `https://octagon.hq-app.workers.dev`
 - `main` is the live source of truth.
-- Resolve the current `main` HEAD from GitHub before every branch. Do not trust a copied SHA in a handoff document.
+- Resolve the current `main` HEAD from GitHub before every branch. Never trust a copied SHA in a handoff document.
 - The legacy V1 repository, `codyking0602/ufc-goat-rankings`, is reference-only.
-- No V1 runtime dependency remains. The completed V1 history migration must never be rerun.
+- The completed V1 history migration must never be rerun.
+- V1 runtime URLs and dependencies must remain absent from production code. Treat any remaining runtime reference as a stabilization defect, not as a fallback.
 
 ## Working standard
 
@@ -22,19 +23,45 @@ Use:
 
 For every production slice:
 
-1. Start from current `main`.
-2. Create one branch for one narrow purpose.
-3. Open a draft PR.
-4. Inspect and preserve the existing canonical owner.
-5. Add focused tests.
-6. Require the exact final PR head to pass typecheck, the full test suite, and the production build.
-7. Deploy the exact PR head when live testing is required.
-8. Phone-test user-facing changes.
-9. Never merge without Cody explicitly approving that PR with the word `merge`.
+1. Resolve current `main` before creating the branch.
+2. Find and preserve the existing canonical owner.
+3. Make one narrow change.
+4. Do not add a fallback, duplicate provider, second query path, competing route owner, or duplicate initialization.
+5. Add focused tests when runtime behavior changes.
+6. Require the exact final head to pass typecheck, the full test suite, and the production build.
+7. Require genuinely green backend verification when backend-owned files change.
+8. Deploy the exact head when live testing is required.
+9. Verify the exact live deployment SHA before calling the change live.
 
-Do not use old branches, temporary workflows, duplicate providers, local fallbacks, competing query paths, broad cleanup, or V1 runtime assumptions.
+Do not use old branches, temporary deployment workflows, duplicate providers, local fallbacks, competing query paths, broad cleanup, or V1 runtime assumptions.
 
-## Canonical application owners
+## Deployment ownership
+
+GitHub Actions is the only deployment owner.
+
+Canonical frontend deployment:
+
+- `.github/workflows/deploy-cloudflare.yml`
+
+Canonical backend deployment:
+
+- `.github/workflows/deploy-supabase.yml`
+
+Supporting verification/handoff workflows may call those canonical owners, but they do not become separate deployment owners.
+
+Cloudflare Workers remains the V2 production host and rich-preview runtime. Cloudflare's native repository/Git deployment integration is not authoritative and must remain disabled so there is no second deployment path.
+
+Never claim a change is live merely because it merged. Confirm the canonical workflow deployed the intended SHA and that the live deployment marker matches it.
+
+## Current architecture
+
+The application is React, TypeScript, and Vite.
+
+Supabase owns authentication, profiles, database state, migrations, RPCs, Edge Functions, scheduled monitoring, Picks, challenges, notifications, push delivery, and cross-device persistence.
+
+Cloudflare Workers owns production frontend delivery, SPA route handling, and server-side rich share previews.
+
+Canonical application owners include:
 
 - `src/main.tsx` — one application entry.
 - `src/app/App.tsx` — one startup/readiness owner.
@@ -42,213 +69,163 @@ Do not use old branches, temporary workflows, duplicate providers, local fallbac
 - `src/lib/supabase.ts` — one Supabase client.
 - `src/features/identity/IdentityProvider.tsx` — identity/session owner.
 - `src/features/challenges/ChallengeProvider.tsx` — challenge state owner.
-- `src/features/play/FindLeaderHistoryProvider.tsx` — Find the Leader history owner.
 - `src/features/profile/ProfilePreferencesProvider.tsx` — profile preferences owner.
-- `src/features/picks/PicksProvider.tsx` — player-facing current event, selections, season summary, and completed history owner.
-- `src/features/picks/picksRepository.ts` — only browser Supabase owner for player Picks.
-- `src/features/picks-control/pickControlRepository.ts` — only browser Supabase owner for Fight Night results.
-- `src/features/picks-setup/pickSetupRepository.ts` — only browser Supabase owner for staged Event Setup.
-- `src/features/picks-monitoring/monitoringInboxRepository.ts` — only browser Supabase/Edge Function owner for the Monitoring Inbox.
+- `src/features/picks/PicksProvider.tsx` — player-facing Picks owner.
+- `src/features/picks/picksRepository.ts` — browser Supabase owner for player Picks.
+- `src/features/picks-control/pickControlRepository.ts` — browser Supabase owner for Fight Night control.
+- `src/features/picks-setup/pickSetupRepository.ts` — browser Supabase owner for staged Event Setup.
+- `src/features/picks-monitoring/monitoringInboxRepository.ts` — browser Supabase/Edge Function owner for the Monitoring Inbox.
 - `src/features/members/memberProfilesRepository.ts` — authenticated member-facing profile projections.
 - The ranking engine and calculated ranking model remain the only ranking-calculation owners.
 
-Consumers use provider state and canonical repository functions. They must not independently resolve identity, duplicate Supabase queries, read a local fallback, publish competing readiness, or write official Picks state outside the existing owner.
+Consumers use provider state and canonical repository functions. They must not independently resolve identity, duplicate Supabase queries, publish competing readiness, or write official state outside the existing owner.
 
 ## Current production product
 
-The following are complete, merged, and live:
+The following major product areas are merged and live:
 
-- React, TypeScript, and Vite V2 application.
-- Branded startup, Home-first launches, route-level lazy loading, stale-chunk recovery, and route-error handling.
+- React/TypeScript/Vite V2 application on Cloudflare Workers.
 - Profile/PIN authentication with cross-device signed-in profiles.
-- Complete 80-fighter UFC-only calculated ranking model.
-- Men’s and Women’s boards, divisions, categories, search, and curated era filtering.
-- Full calculated fighter profiles with local fighter assets and audited Signature Fight links.
-- Intelligence / Octagon Verdict handoff, Compare handoff, and Ask Why handoff.
-- Six Play games.
-- Challenge Center with profile-backed challenges.
-- Profile-backed Find the Leader history, streaks, favorite fighter, and open-challenge count.
-- Your HQ with Daily streak, Current Picks record, Favorite fighter, Open challenges, and one next action.
-- Authenticated Member Profiles directory and individual member pages.
-- Historical V1 member, Picks, and Find the Leader continuity through canonical V2 owners.
-- Profile-backed UFC Picks with cross-device selections.
-- Public current UFC event and main-card Picks data.
-- Database-enforced Picks lock and fighter validation.
-- Underdog Lock with lock-time frozen odds and backend-owned scoring.
-- Fight Night Control for official result entry and event completion.
-- Fight-by-fight group-pick reveal after official resolution.
-- Completed-event recaps with personal verdicts, group standings, event points, and season totals.
-- Event Setup with server-side source staging, owner review, draft editing, and explicit atomic publication.
-- Monitoring Inbox with durable runs, findings, evidence, review status, quota visibility, and manual checks.
-- One quota-aware, server-owned automatic monitoring schedule.
-- Automatic validated pre-lock sportsbook odds applied to the canonical live Picks card.
-- Sportsbook source and odds freshness displayed in Picks.
+- Complete UFC-only calculated ranking model with Men, Women, divisions, categories, search, era filtering, profiles, Compare, and Octagon Verdict handoff.
+- Six mature UFC Play games with shared challenge/result ownership.
+- Profile-backed challenges, Daily Challenge history/competition, Your HQ, member profiles, and Picks history.
+- Profile-backed UFC Picks with database-enforced validation, frozen lock-time Underdog Lock odds, result entry, group reveal, completed-event recaps, and season totals.
+- Event Setup with server-side source staging and explicit owner publication.
+- Monitoring Inbox with durable evidence, manual checks, and the one canonical automatic monitoring scheduler.
+- Automatic validated pre-lock sportsbook odds applied only through the canonical Picks monitoring path.
+- ESPN live-state-aware Fight Night behavior so trusted provider attachment owns automatic fight-by-fight locking while schedule times remain estimates.
+- Monitoring remains active through the existing live-event tail instead of disappearing when an old card deadline passes.
 
-## Picks ownership and scoring rules
+## Football Back Room
 
-- `PicksProvider` remains the only player-facing app owner.
-- Browser code does not administer official event state directly.
-- `record_official_pick_bout_result` remains the official bout-result mutation owner.
-- `transition_pick_event` remains the event-status mutation owner.
-- Completed events and official results are immutable under the current production rules.
-- Correct submitted pick equals a win.
-- Incorrect submitted pick equals a loss.
-- Missing picks remain separate.
-- Draws, no contests, cancelled bouts, and unresolved bouts are excluded.
-- Group picks reveal per bout only after that bout receives an official resolved result.
-- Underdog Lock scoring uses the frozen lock-time odds. Later sportsbook movement cannot change scoring.
+Football is intentionally separate from the UFC ranking product while reusing mature shared game/platform ownership where appropriate.
 
-## Event Setup
+The Football Back Room currently has six live games:
 
-- `supabase/functions/sync-next-ufc-event` is the only official-source staging owner.
-- Imported source data is staged privately; it never silently changes the live Picks card.
-- Cody reviews event metadata, card scope, fight order, fighters, and weight classes before publishing.
-- Source previews may replace only the staged draft after explicit review.
-- Publishing is one explicit, confirmed, atomic backend action.
-- Event Setup and Fight Night Control remain separate owner tools.
+1. Blind Rank 5
+2. Keep 4 / Cut 4
+3. Blind Resume
+4. Wavelength
+5. Hit the Number
+6. Find the Leader
+
+Canonical Football content ownership rules:
+
+- `src/features/back-room/footballRankFiveModel.ts` owns the comparison packs and verdict ratings used by Blind Rank 5, Keep/Cut, and Blind Resume winner resolution.
+- `src/features/back-room/footballFactualStats.ts` is the public factual-stat owner used by factual Football games and résumé rows.
+- `src/features/back-room/footballComparisonGeneration.ts` owns the mature Blind Rank and Keep/Cut board-generation contracts.
+- `src/features/play/lineupModel.ts` remains the shared replay/history identity owner for standalone game generation where used.
+- Do not add a second Football rating catalog, factual provider, route owner, replay owner, or hidden fallback path.
+
+The completed Football content maturity work includes broad NFL/CFB comparison depth, mature Blind Resume, a 27-category/540-clue Wavelength catalog, Hit the Number parity-plus, deeper/balanced Find the Leader, and large-scale replay/content audits.
+
+## Football Today's Challenge
+
+Football Today's Challenge uses the existing shared Daily Challenge platform rather than a Football-only persistence stack.
+
+Canonical route:
+
+- `/back-room/football/today`
+
+Current deterministic Football daily schedule:
+
+1. Find the Leader
+2. Blind Resume
+3. Wavelength
+4. Daily Double — Blind Rank 5 + Keep 4 / Cut 4
+5. Hit the Number
+
+Current platform ownership:
+
+- shared Play registry is sport-aware (`ufc | football`)
+- shared `daily-challenge-runtime` owns private setup/actions/grading
+- shared `todayChallengeRepository` owns browser persistence transport
+- Daily Challenge records, history, streaks, standings, leaderboards, and competition are sport-scoped through the shared backend
+- reminders/notifications are sport-scoped through the canonical notification dispatcher
+- shared result links resolve through canonical destinations so Football daily shares return to `/back-room/football/today`
+
+Do not create a Football-specific attempt table, history repository, standings repository, streak owner, leaderboard, notification path, share path, or second Daily Challenge runtime.
 
 ## Picks monitoring operations
 
-Canonical owners:
+Canonical owners include:
 
-- `supabase/functions/run-pick-monitoring/index.ts` — only manual and scheduled monitoring runner.
+- `supabase/functions/run-pick-monitoring/index.ts` — manual and scheduled monitoring runner.
 - `src/features/picks-monitoring/manualMonitoringRunner.ts` — shared comparison, event resolution, and evidence-payload builder.
 - `src/features/picks-monitoring/monitoringStorageModel.ts` — durable evidence contract.
-- `public.record_pick_monitoring_run(jsonb)` — existing atomic evidence writer.
+- `public.record_pick_monitoring_run(jsonb)` — atomic evidence writer.
 - `public.record_pick_monitoring_run_and_apply_odds(jsonb)` — atomic evidence plus eligible live-odds application boundary.
 - `public.record_scheduled_pick_monitoring_run(...)` — scheduled evidence, eligible odds, and cadence completion transaction.
 - `pick_bouts.red_american_odds`, `blue_american_odds`, `odds_source`, and `odds_updated_at` — canonical player-facing odds storage.
-- `.github/workflows/deploy-supabase.yml` — only deployment and scheduler-activation owner.
+- `.github/workflows/deploy-supabase.yml` — deployment and scheduler-activation owner.
 
 Operational rules:
 
-- The database owns one `octagon-hq-pick-monitoring` cron job at minute 7 of each hour.
-- Event-aware cadence skips provider calls until the monitored event is due and stops at the earliest Picks lock or event start.
-- Every authenticated scheduled decision is durable evidence: due checks remain provider runs, while not-due, no-event, closed-boundary, and failure outcomes are recorded without pretending a provider was called.
-- Scheduler wake health is infrastructure evidence only; the owner inbox reports the latest monitoring outcome separately.
-- Completed or boundary-past events are excluded from monitoring selection and cannot mask the next eligible staged or published UFC event.
-- The published current event is preferred when a matching staged draft also exists, so eligible odds bind to canonical live bouts.
-- A staged draft is monitored only when no current published event exists.
-- Conflicting staged and current identities fail closed.
-- Valid, complete, confidently matched pre-lock odds may update the live Picks card automatically.
-- Odds writes require the exact event, exact canonical bout, exact fighter orientation, complete prices, supported sportsbook, and an append-only recorded snapshot from the same run.
-- Stale data, wrong cards, unmatched fights, partial responses, provider failures, conflicting same-time data, and post-lock movement preserve the last valid odds.
-- Card changes are findings for owner review. Monitoring never silently publishes, replaces, removes, cancels, or reorders a live fight.
-- Manual checks use the same server-owned runner and atomic storage boundary as scheduled checks.
-- Exact-head PR backend deployments leave the scheduler inactive; the canonical `main` backend deployment is the only owner that enables it.
-
-## Historical continuity
-
-The controlled V1 migration is complete and must never be rerun.
-
-Canonical imported group:
-
-- Brock
-- Cody
-- Rhonda
-- Shane
-- Tony
-- Tyler
-
-Cody’s reconciled historical state at migration completion:
-
-- Overall Picks record: **9-3**.
-- UFC 329: **5-2**.
-- UFC Oklahoma City: **4-1**.
-- Missing historical picks: **0**.
-- Find the Leader recorded days: **9**.
-- Best streak: **7**.
-- Perfect 10s: **4**.
-- Best score: **10**.
-
-No V1 PIN, PIN hash, session token, or authentication credential was migrated. Unclaimed historical profiles use the durable canonical claim flow.
+- The database owns exactly one canonical `octagon-hq-pick-monitoring` cron job on the current five-minute cadence (`*/5 * * * *`).
+- ESPN-attached bouts remain open past schedule estimates until trusted live/final state locks them; unattached fights retain the legacy deadline safety path.
+- Monitoring selection keeps a published or locked active card visible through the existing live-event tail so ESPN/result synchronization does not drop out at card start.
+- Every authenticated scheduled decision is durable evidence; provider calls and non-call outcomes are not conflated.
+- Valid, complete, confidently matched pre-lock odds may update the live Picks card automatically only through the canonical monitoring owner.
+- Stale data, wrong cards, unmatched fights, partial responses, provider failures, conflicting data, and post-lock movement preserve the last valid odds.
+- Card changes remain advisory until the owner approves a canonical mutation.
+- Exact-head PR backend deployments leave the production scheduler under canonical `main` ownership.
 
 ## Ranking ownership
 
-- `src/features/rankings/data/generated/canonical-ranking-inputs-842ba06e.json` — complete canonical facts and approved inputs for all 80 fighters; no frozen ranks, totals, category scores, or OVRs.
-- `src/features/rankings/data/rankingInputs.ts` — strict validation and dataset reconciliation.
-- `src/features/rankings/engine/categoryCalculators.ts` — pure category calculations.
-- `src/features/rankings/engine/rankingEngine.ts` — weighting, totals, tie breakers, ranks, and anchored OVR projection.
-- `src/features/rankings/engine/eraWindow.ts` — audited date-window behavior.
-- `src/features/rankings/rankingModel.ts` — one app-facing calculated projection and profile lookup owner.
-- `src/features/rankings/engine/__fixtures__/v1-production-output-842ba06e.json` — pinned parity oracle only; never runtime data.
+- `src/features/rankings/data/rankingInputs.ts` validates and reconciles the canonical ranking inputs.
+- `src/features/rankings/engine/categoryCalculators.ts` owns pure category calculations.
+- `src/features/rankings/engine/rankingEngine.ts` owns weighting, totals, tie breakers, ranks, and anchored OVR projection.
+- `src/features/rankings/engine/eraWindow.ts` owns audited date-window behavior.
+- `src/features/rankings/rankingModel.ts` is the app-facing calculated projection/profile lookup owner.
 
-Never recreate `src/features/rankings/rankingData.ts`, manually reorder fighters, or enter presentation-only ranks and OVRs. Change approved canonical facts or judgment inputs and let the engine recalculate.
+Main ranking rules:
 
-## Product rules
+- UFC-only unless explicitly changed.
+- Do not score Pride, Strikeforce, WEC, ONE, Bellator, or regional accomplishments in the main ranking product.
+- Do not manually enter ranks, OVRs, totals, or category scores.
+- Do not recreate static ranking arrays.
+- Jon Jones remains the 99 OVR benchmark unless the approved ranking philosophy changes.
 
-- UFC-only unless Cody explicitly says otherwise.
-- Fresh launches always open Home, never Picks.
-- War Room remains completely undiscoverable to unauthorized users.
-- No War Room card belongs on Home.
-- Public copy says `Octagon HQ`.
-- True black owns the canvas, safe areas, and navigation.
-- Charcoal owns cards and controls.
-- White owns primary information.
-- Gray owns supporting information.
-- UFC red is restrained emphasis.
-- Home should be personalized and useful, not an endless dashboard.
+## Octagon Verdict
+
+V2 owns the Octagon Verdict export pipeline.
+
+Canonical owners:
+
+- `src/features/intelligence/octagonVerdictExport.ts`
+- `scripts/export-octagon-verdict.mjs`
+- `.github/workflows/export-octagon-verdict.yml`
+- `docs/octagon-verdict-export.md`
+
+Generated artifacts are outputs, not editable source data. Ranking/exporter changes can generate a new GitHub Actions artifact, but the Octagon Verdict Custom GPT knowledge file still requires manual replacement in the GPT editor.
+
+Fighter-count validation must stay synchronized with the canonical ranking dataset; do not hard-code it permanently to a historical count.
+
+## Historical continuity
+
+The controlled V1 data migration is complete and must never be rerun. Historical continuity now flows only through V2 canonical owners.
+
+No V1 PIN, PIN hash, session token, or authentication credential was migrated.
+
+## Stabilization priority
+
+Before broad new feature development, keep this order:
+
+1. Remove any remaining V1 runtime URL or runtime dependency.
+2. Keep the duplicate Cloudflare native Git/repository deployment integration disabled.
+3. Keep required backend verification genuinely green; repair false negatives at their canonical root instead of dismissing them.
+4. Confirm current production `main` and the live deployment SHA match.
+5. Keep this handoff and related operational documentation current.
+6. Prove the complete release path with exact-head frontend and backend deployments when the changed scope requires them.
+
+Recent Football Daily Challenge work exercised both canonical deployment owners and exact live-SHA verification successfully. That does not remove the requirement to re-verify the exact SHA for every future release.
+
+## Product style
+
+- The app should feel like a polished UFC/2K-style product rather than a spreadsheet.
+- Keep visible information clean, intuitive, mobile-first, and group-chat friendly.
 - Avoid duplicate calls to action and oversized cards without dominant content.
-
-## Current major phase — controlled live-card changes
-
-Build this as separate narrow PRs. Do not combine every card-change case into one migration or giant owner screen.
-
-### 1. Approved cancelled-fight handling
-
-- An owner explicitly approves the cancellation.
-- Preserve the original fight and every submitted pick.
-- Mark the bout cancelled; do not delete it.
-- Exclude the bout from scoring.
-- Show the cancellation in the active card and completed recap.
-- Record durable audit evidence for the approved action.
-
-### 2. Fighter-replacement handling
-
-- Preserve the old matchup and original selections in audit history.
-- Mark prior selections invalid for the replacement matchup.
-- Require affected members to make a new pick while the event remains eligible.
-- Never silently transfer a pick to the replacement fighter.
-- Keep the replacement owner-only and explicit.
-
-### 3. Reorder and removal handling
-
-- Reordering preserves picks and changes only canonical display order.
-- Moving a fight off the pickable card preserves the fight and picks historically.
-- Exclusion from scoring is explicit; no silent deletion.
-- Monitoring findings remain advisory until Cody approves an action.
-
-### 4. Audited post-lock corrections
-
-- Do not add a broad V1-style `Reopen Event` action.
-- Require owner authorization, a correction reason, and append-only audit history.
-- Preserve before-and-after values.
-- Recalculate affected event and season projections atomically when permitted.
-- Never change frozen Underdog Lock odds.
-- Never silently correct completed history.
-
-### 5. Safe phone-test scenario
-
-- Use a staged or dedicated safe test event; never experiment destructively on a real active card with member picks.
-- Exercise cancellation, replacement, reorder/removal, and post-lock correction behavior.
-- Verify the player card, affected selections, scoring exclusions, group reveal, recap, audit history, and cross-device refresh.
-- Clean up temporary proof data through the canonical backend owner.
-
-## Later roadmap
-
-- Meaningful activity cards only for new fighters, ranking movement of at least three positions, new games, completed Picks recaps, and new Fighters to Watch entries.
-- Archive temporary activity after seven days and remove it after fifteen days unless durable history owns it elsewhere.
-- Lower Home refinement, compact onboarding reminders, permission-aware War Room, native sharing, deep links, PWA/installability review, and carefully owned notifications.
-- Optional real event media/posters and selective Fight Spotlight content.
-
-## Canonical deployment owners
-
-- `.github/workflows/deploy-supabase.yml` — migrations, Edge Functions, scheduler state, and remote backend verification.
-- `.github/workflows/verify-supabase-backend.yml` — independent backend credentials, migrations, functions, production CORS, scheduler health, scoring RPCs, and WebKit proof.
-- `.github/workflows/deploy-cloudflare.yml` — production frontend build, Worker deployment, exact-SHA marker, and live-bundle verification.
-- `.github/workflows/deploy-pr-head.yml` — trusted label-to-canonical-workflow handoff only.
-
-Pushes to `main` trigger canonical production deploy workflows automatically. Feature PRs use `deploy-backend` and `deploy-frontend` labels only when exact-head live testing is required.
+- Do not expose implementation detail or hidden rating evidence unless the product explicitly needs it.
 
 ## Validation standard
 
@@ -258,11 +235,13 @@ Every production PR requires the exact final head to pass:
 - `npm test`
 - `npm run build`
 
-Relevant Supabase SQL tests, migration-order checks, backend verification, exact deployment verification, live WebKit proof, and temporary-proof cleanup must also pass when applicable. Never describe a PR as deployed, verified, green, or merged without checking the exact current head.
+Relevant Supabase SQL tests, migration-order checks, backend verification, exact deployment verification, live WebKit proof, and temporary-proof cleanup must also pass when applicable.
+
+Never describe a PR as deployed, verified, green, or merged without checking the exact final head and, when applicable, the exact live deployment SHA.
 
 ## Next safe action
 
-1. Complete and merge the documentation/copy correction slice after exact-head validation.
-2. Start approved cancelled-fight handling from the new current `main`.
-3. Use Codex for each behavioral phase because those phases require coordinated migration, backend RPC, repository, UI, and focused test work.
-4. Keep each PR draft and unmerged until Cody explicitly says `merge` for that PR.
+1. Finish the stabilization checklist before starting broad new feature work.
+2. Re-resolve current `main` before every new branch.
+3. Preserve the existing canonical owner for the next product slice; do not revive old V1 or duplicate deployment/data paths.
+4. Use Codex Cloud for multi-file runtime changes that need a real local test/build loop, but keep GitHub Actions as the only production deployment owner.

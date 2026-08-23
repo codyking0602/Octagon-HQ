@@ -13,15 +13,15 @@ describe("current Octagon HQ handoff and monitoring copy", () => {
     expect(handoff).not.toContain("Current production `main` SHA:");
   });
 
-  it("records the merged Picks capabilities and the next controlled-card phase", () => {
+  it("records current Picks, Football Daily, and stabilization ownership", () => {
     expect(handoff).toContain("Automatic validated pre-lock sportsbook odds applied");
-    expect(handoff).toContain("Fight Night Control for official result entry and event completion");
-    expect(handoff).toContain("Completed-event recaps");
-    expect(handoff).toContain("## Current major phase — controlled live-card changes");
-    expect(handoff).toContain("### 1. Approved cancelled-fight handling");
-    expect(handoff).toContain("### 2. Fighter-replacement handling");
-    expect(handoff).toContain("### 3. Reorder and removal handling");
-    expect(handoff).toContain("### 4. Audited post-lock corrections");
+    expect(handoff).toContain("ESPN live-state-aware Fight Night behavior");
+    expect(handoff).toContain("current five-minute cadence (`*/5 * * * *`)");
+    expect(handoff).toContain("## Football Today's Challenge");
+    expect(handoff).toContain("shared `daily-challenge-runtime` owns private setup/actions/grading");
+    expect(handoff).toContain("## Stabilization priority");
+    expect(handoff).not.toContain("## Current major phase — controlled live-card changes");
+    expect(handoff).not.toContain("cron job at minute 7 of each hour");
   });
 
   it("distinguishes automatic odds, structured approvals, and review-only findings", () => {
