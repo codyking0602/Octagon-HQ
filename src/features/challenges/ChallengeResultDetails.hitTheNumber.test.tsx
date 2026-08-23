@@ -67,6 +67,49 @@ function completedChallenge(): PlayChallenge {
   }, new Date("2026-08-18T06:05:00Z"));
 }
 
+function tiedLegacyScoresChallenge(): PlayChallenge {
+  const challenge = createPlayChallenge({
+    code: "HIT032",
+    gameId: "hit-the-number",
+    gameVersion: "hit-the-number-v2",
+    gameTitle: "Hit the Number",
+    summary: "UFC Wins · target 32 · pick 5",
+    creatorId: "shane-profile",
+    recipientId: "cody-profile",
+    playUrl: "/play/hit-the-number?challenge=locked-seed",
+    setup: {
+      seed: "locked-seed",
+      publicSetup: {
+        version: "hit-the-number-v2",
+        statId: "ufc-wins",
+        boardType: "random-pool",
+        target: 32,
+        pickCount: 5,
+        filter: {},
+        fighterIds: ["alpha", "bravo", "charlie", "delta", "echo", "foxtrot"],
+      },
+    },
+    creatorResult: {
+      status: "under",
+      target: 32,
+      total: 27,
+      distance: 5,
+      score: 75,
+      selections: [{ fighterId: "alpha", value: 27 }],
+    },
+    now: new Date("2026-08-23T20:00:00Z"),
+  });
+
+  return submitChallengeResult(challenge, "cody-profile", {
+    status: "under",
+    target: 32,
+    total: 24,
+    distance: 8,
+    score: 75,
+    selections: [{ fighterId: "bravo", value: 24 }],
+  }, new Date("2026-08-23T20:05:00Z"));
+}
+
 describe("Hit the Number challenge results", () => {
   afterEach(cleanup);
 
@@ -90,11 +133,29 @@ describe("Hit the Number challenge results", () => {
 
     expect(screen.getByLabelText("Hit the Number target")).toHaveTextContent("TARGET23");
     expect(screen.getByLabelText("Hit the Number target")).toHaveTextContent("UFC KO/TKO WINS · PICK 5");
-    expect(screen.getByText("1 AWAY · GAME SCORE 96/100")).toBeInTheDocument();
+    expect(screen.getByText("1 AWAY · GAME SCORE 99/100")).toBeInTheDocument();
     expect(screen.getByText("EXACT HIT · GAME SCORE 100/100")).toBeInTheDocument();
     expect(screen.getByLabelText("Cody picks").children).toHaveLength(5);
     expect(screen.getByLabelText("Shane picks").children).toHaveLength(5);
     expect(screen.getAllByText("alpha")).toHaveLength(2);
     expect(screen.getAllByText("7")).toHaveLength(2);
+  });
+
+  it("uses raw Hit the Number outcomes and recomputes stale legacy scores", () => {
+    const challenge = tiedLegacyScoresChallenge();
+
+    expect(challengeResultVerdict(challenge, "Shane", "Cody")).toBe("Shane wins");
+
+    render(
+      <ChallengeResultDetails
+        challenge={challenge}
+        creatorName="Shane"
+        responderName="Cody"
+      />,
+    );
+
+    expect(screen.getByText("5 AWAY · GAME SCORE 96/100")).toBeInTheDocument();
+    expect(screen.getByText("8 AWAY · GAME SCORE 94/100")).toBeInTheDocument();
+    expect(screen.queryByText(/GAME SCORE 75\/100/)).not.toBeInTheDocument();
   });
 });
