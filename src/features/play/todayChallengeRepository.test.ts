@@ -53,7 +53,7 @@ describe("Today’s Challenge runtime repository", () => {
     expect(parsed).not.toHaveProperty("privateGradingEvidence");
   });
 
-  it("uses one Edge Function owner for reads and optimistic progress writes", async () => {
+  it("uses one sport-aware Edge Function owner for reads and optimistic progress writes", async () => {
     const { client, invoke } = clientWithResponses([
       { data: runtimeProjection(), error: null },
       { data: runtimeProjection({ progress_revision: 3, public_state: { eliminated_ids: ["one", "two"] } }), error: null },
@@ -64,11 +64,12 @@ describe("Today’s Challenge runtime repository", () => {
     const advanced = await repository.advance(today, { eliminated_id: "two" });
 
     expect(invoke).toHaveBeenNthCalledWith(1, "daily-challenge-runtime", {
-      body: { mode: "get-today" },
+      body: { mode: "get-today", sport: "ufc" },
     });
     expect(invoke).toHaveBeenNthCalledWith(2, "daily-challenge-runtime", {
       body: {
         mode: "advance",
+        sport: "ufc",
         daily_challenge_id: dailyId,
         revision: 2,
         action: { eliminated_id: "two" },
