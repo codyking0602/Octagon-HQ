@@ -11,8 +11,8 @@ import { playGamesForSport, type PlayGameId } from "./playRegistry";
 const footballChallengeGames: readonly { id: PlayGameId; route: string }[] = [
   { id: "blind-rank", route: "/back-room/football/rank-five" },
   { id: "keep-cut", route: "/back-room/football/keep-cut" },
-  { id: "blind-resume", route: "/back-room/football/blind-resume" },
   { id: "wavelength", route: "/back-room/football/wavelength" },
+  { id: "blind-resume", route: "/back-room/football/blind-resume" },
   { id: "hit-the-number", route: "/back-room/football/hit-the-number" },
   { id: "find-leader", route: "/back-room/football/find-leader" },
 ];
