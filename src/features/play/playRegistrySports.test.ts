@@ -8,12 +8,12 @@ import {
 } from "./playRegistry";
 
 const footballGamesExpected = [
-  { id: "blind-rank", route: "/back-room/football/rank-five" },
-  { id: "keep-cut", route: "/back-room/football/keep-cut" },
-  { id: "wavelength", route: "/back-room/football/wavelength" },
-  { id: "blind-resume", route: "/back-room/football/blind-resume" },
-  { id: "hit-the-number", route: "/back-room/football/hit-the-number" },
-  { id: "find-leader", route: "/back-room/football/find-leader" },
+  { id: "blind-rank", route: "/football/rank-five" },
+  { id: "keep-cut", route: "/football/keep-cut" },
+  { id: "wavelength", route: "/football/wavelength" },
+  { id: "blind-resume", route: "/football/blind-resume" },
+  { id: "hit-the-number", route: "/football/hit-the-number" },
+  { id: "find-leader", route: "/football/find-leader" },
 ] as const;
 
 describe("sport-aware Play registry", () => {
@@ -24,7 +24,7 @@ describe("sport-aware Play registry", () => {
     expect(playGameDefinition("wavelength").route).toBe("/play/wavelength");
   });
 
-  it("registers exactly the six existing Football games on their current standalone routes", () => {
+  it("registers exactly the six existing Football games on their canonical Football HQ routes", () => {
     const footballGames = playGamesForSport("football");
     expect(footballGames.map(({ id, route }) => ({ id, route }))).toEqual(footballGamesExpected);
     expect(footballGames).toHaveLength(6);
