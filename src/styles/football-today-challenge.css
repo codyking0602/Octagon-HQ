@@ -1,0 +1,231 @@
+.football-today-page {
+  --football-navy: #07182d;
+  --football-blue: #17375f;
+  --football-silver: #aeb7c2;
+  --football-line: rgba(174, 183, 194, 0.22);
+  background:
+    radial-gradient(circle at top right, rgba(65, 92, 126, 0.22), transparent 34rem),
+    linear-gradient(180deg, #07101c 0%, #090d13 100%);
+  min-height: 100vh;
+}
+
+.football-today-shell {
+  width: min(980px, calc(100% - 24px));
+  margin: 0 auto;
+  padding: 26px 0 54px;
+}
+
+.football-today-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--football-line);
+  padding-bottom: 18px;
+  margin-bottom: 22px;
+}
+
+.football-today-header h1 {
+  margin: 4px 0 5px;
+  font-size: clamp(2rem, 8vw, 4.4rem);
+  letter-spacing: -0.05em;
+  line-height: 0.92;
+}
+
+.football-today-header span,
+.football-today-copy small,
+.football-today-rank header small,
+.football-today-keep-cut header small,
+.football-today-hit header small,
+.football-today-wavelength > small {
+  color: var(--football-silver);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.football-today-header > button {
+  border: 1px solid var(--football-line);
+  background: rgba(255,255,255,0.04);
+  color: white;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.football-today-error,
+.football-today-busy,
+.football-today-lock-result {
+  border: 1px solid var(--football-line);
+  border-radius: 12px;
+  padding: 11px 13px;
+  margin-bottom: 14px;
+  background: rgba(255,255,255,0.04);
+}
+
+.football-today-busy {
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  color: var(--football-silver);
+}
+
+.football-today-score {
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 18px;
+  padding: 22px;
+  background: linear-gradient(135deg, rgba(23,55,95,.82), rgba(7,24,45,.82));
+  margin-bottom: 20px;
+}
+
+.football-today-score > strong {
+  display: block;
+  font-size: clamp(3.6rem, 15vw, 7rem);
+  line-height: .88;
+  letter-spacing: -.07em;
+}
+
+.football-today-score > strong small { font-size: .22em; color: var(--football-silver); letter-spacing: 0; }
+.football-today-score > span { display: block; margin-top: 10px; font-weight: 800; color: var(--football-silver); }
+
+.football-today-copy h2,
+.football-today-resume h2,
+.football-today-rank h2,
+.football-today-keep-cut h2,
+.football-today-hit h2,
+.football-today-wavelength h2 {
+  margin: 6px 0 8px;
+  font-size: clamp(1.45rem, 5vw, 2.6rem);
+  line-height: 1;
+}
+
+.football-today-copy p,
+.football-today-hit header p { color: #b8c0ca; max-width: 680px; }
+
+.football-today-name-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.football-today-name-grid button,
+.football-today-rank-slots button {
+  text-align: left;
+  border: 1px solid var(--football-line);
+  background: rgba(255,255,255,0.035);
+  color: white;
+  border-radius: 13px;
+  padding: 13px;
+  min-height: 82px;
+}
+
+.football-today-name-grid button strong,
+.football-today-rank-slots button span { display: block; font-size: .98rem; }
+.football-today-name-grid button span { display: block; color: #9ea8b4; font-size: .78rem; margin-top: 3px; }
+.football-today-name-grid button em { display: block; color: #dce3ea; font-style: normal; font-size: .65rem; font-weight: 900; letter-spacing: .1em; margin-top: 11px; }
+.football-today-name-grid button:disabled { opacity: .43; }
+.football-today-name-grid button.is-selected { border-color: rgba(255,255,255,.6); background: rgba(23,55,95,.65); }
+
+.football-today-reveal-list { display: grid; gap: 8px; margin-top: 18px; }
+.football-today-reveal-list > div { display: flex; justify-content: space-between; gap: 16px; padding: 12px 13px; border-bottom: 1px solid var(--football-line); }
+.football-today-reveal-list span strong,
+.football-today-reveal-list span small { display: block; }
+.football-today-reveal-list span small { color: #9ea8b4; }
+.football-today-reveal-list .is-leader { background: rgba(23,55,95,.55); border-radius: 10px; }
+
+.football-today-lock-result { display: flex; justify-content: space-between; gap: 10px; }
+.football-today-lock-result.is-correct strong { color: #83d8a0; }
+.football-today-lock-result.is-wrong strong { color: #ff9b9b; }
+.football-today-lock-result span { color: #b8c0ca; }
+
+.football-today-resume,
+.football-today-rank,
+.football-today-keep-cut,
+.football-today-hit,
+.football-today-wavelength { margin-top: 18px; }
+
+.football-today-resume-head,
+.football-today-resume-stats > div {
+  display: grid;
+  grid-template-columns: 1fr minmax(110px, .9fr) 1fr;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+.football-today-resume-head { margin: 18px 0 8px; color: var(--football-silver); }
+.football-today-resume-head b { font-size: 1.7rem; color: white; }
+.football-today-resume-stats { border: 1px solid var(--football-line); border-radius: 14px; overflow: hidden; }
+.football-today-resume-stats > div { padding: 11px 10px; border-bottom: 1px solid var(--football-line); }
+.football-today-resume-stats > div:last-child { border-bottom: 0; }
+.football-today-resume-stats span { color: #9ea8b4; font-size: .72rem; font-weight: 800; }
+.football-today-resume-actions,
+.football-today-split-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 12px; }
+.football-today-split-actions { grid-template-columns: 1fr 1fr; }
+.football-today-resume-actions button,
+.football-today-split-actions button,
+.football-today-primary {
+  border: 0;
+  border-radius: 12px;
+  background: #e8edf2;
+  color: #07101c;
+  min-height: 48px;
+  font-weight: 950;
+  letter-spacing: .04em;
+}
+.football-today-resume-actions button:nth-child(2) { background: var(--football-blue); color: white; }
+.football-today-resume-actions button:disabled,
+.football-today-split-actions button:disabled,
+.football-today-primary:disabled { opacity: .38; }
+
+.football-today-wavelength { text-align: center; max-width: 720px; margin-inline: auto; }
+.football-today-wavelength > span { display: inline-block; color: var(--football-silver); margin-bottom: 18px; }
+.football-today-guess-number { display: block; font-size: clamp(4rem, 18vw, 8rem); line-height: 1; }
+.football-today-wavelength input { width: 100%; margin: 20px 0; accent-color: #d9e0e7; }
+.football-today-wavelength .football-today-primary { width: 100%; }
+.football-today-target { font-size: 1rem; color: var(--football-silver); }
+.football-today-target b { color: white; font-size: 2rem; margin-left: 8px; }
+
+.football-today-rank-slots { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; margin: 18px 0; }
+.football-today-rank-slots button { min-height: 92px; text-align: center; padding: 10px 6px; }
+.football-today-rank-slots button b { display: block; color: var(--football-silver); margin-bottom: 8px; }
+.football-today-rank-slots button:disabled { opacity: .8; }
+
+.football-today-subject {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid var(--football-line);
+  border-radius: 16px;
+  padding: 13px;
+  background: linear-gradient(135deg, rgba(23,55,95,.55), rgba(255,255,255,.03));
+}
+.football-today-subject .football-subject-visual { width: 78px; height: 78px; flex: 0 0 78px; }
+.football-today-subject small,
+.football-today-subject strong,
+.football-today-subject span { display: block; }
+.football-today-subject small { color: var(--football-silver); font-weight: 900; }
+.football-today-subject strong { font-size: 1.35rem; }
+.football-today-subject span { color: #b0bac5; font-size: .82rem; }
+
+.football-today-trays { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 18px 0 12px; }
+.football-today-trays > div { min-height: 118px; border: 1px solid var(--football-line); border-radius: 13px; padding: 12px; }
+.football-today-trays b { display: block; margin-bottom: 8px; font-size: .72rem; color: var(--football-silver); letter-spacing: .1em; }
+.football-today-trays span { display: block; padding: 4px 0; }
+
+.football-today-hit .football-today-primary { width: 100%; margin-top: 12px; }
+
+@media (max-width: 640px) {
+  .football-today-shell { width: min(100% - 18px, 980px); padding-top: 18px; }
+  .football-today-header { align-items: center; }
+  .football-today-header > button { padding: 8px 10px; font-size: .62rem; }
+  .football-today-name-grid { grid-template-columns: 1fr; }
+  .football-today-resume-actions { grid-template-columns: 1fr 1fr; }
+  .football-today-resume-actions button:nth-child(2) { grid-column: 1 / -1; grid-row: 2; }
+  .football-today-rank-slots { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .football-today-rank-slots button { min-height: 80px; font-size: .68rem; }
+  .football-today-lock-result { display: block; }
+  .football-today-lock-result span { display: block; margin-top: 4px; }
+}
