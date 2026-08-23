@@ -45,7 +45,7 @@ describe("Back Room portal", () => {
     expect(window.localStorage.getItem("octagon-hq.back-room.discovered.v1")).toBe("1");
   });
 
-  it("shows the discovery reveal only when the portal marks the first visit", () => {
+  it("keeps Football completely absent from the discovered Back Room", () => {
     render(
       <MemoryRouter initialEntries={[{ pathname: "/back-room", state: { showDiscovery: true } }]}>
         <Routes>
@@ -58,7 +58,7 @@ describe("Back Room portal", () => {
     fireEvent.click(screen.getByRole("button", { name: "ENTER THE BACK ROOM" }));
 
     expect(screen.getByRole("heading", { name: "The Back Room" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /FOOTBALL/ })).toBeInTheDocument();
+    expect(screen.queryByText("FOOTBALL")).not.toBeInTheDocument();
     expect(screen.getByText("COMING SOON")).toBeInTheDocument();
   });
 });
