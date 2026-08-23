@@ -389,7 +389,7 @@ try {
   if (isSetupLifecycle(setupStatus)) {
     await page.getByRole("region", { name: "Card scope" }).waitFor({ state: "visible", timeout: 15_000 });
     await page.getByRole("heading", { name: "Choose what counts", exact: true }).waitFor({ state: "visible", timeout: 15_000 });
-    const sourceInput = page.getByLabel("MMA MANIA CARD URL (OPTIONAL)");
+    const sourceInput = page.getByLabel("UFC.COM EVENT URL (OPTIONAL)");
     const stagedSourceUrl = await sourceInput.inputValue();
     if (configuredArticleUrl) {
       await sourceInput.fill(configuredArticleUrl);
