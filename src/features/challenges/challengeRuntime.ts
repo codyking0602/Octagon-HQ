@@ -44,10 +44,11 @@ export function challengePlayRoute(challenge: PlayChallenge) {
   if (challenge.playUrl) {
     try {
       const url = new URL(challenge.playUrl, typeof window === "undefined" ? "https://octagon.invalid" : window.location.origin);
+      url.pathname = canonicalRoute;
       url.searchParams.set(challenge.gameId === "find-leader" ? "challenge" : "match", challenge.code);
       return `${url.pathname}${url.search}${url.hash}`;
     } catch {
-      // Fall back to the sport-aware canonical route below.
+      // Use the canonical route with the challenge code below.
     }
   }
 
