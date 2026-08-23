@@ -110,25 +110,13 @@ export const FOOTBALL_HIT_THE_NUMBER_FORMAT_PROFILE = [
 export const FOOTBALL_HIT_THE_NUMBER_PICK_PROFILE = HIT_THE_NUMBER_GENERATION_PROFILE.picks;
 
 const qb = (id: string, name: string, era: string): FootballHitTheNumberSubject => ({
-  id,
-  name,
-  subtitle: era,
-  group: "qb",
-  era,
+  id, name, subtitle: era, group: "qb", era,
 });
 const rb = (id: string, name: string, era: string): FootballHitTheNumberSubject => ({
-  id,
-  name,
-  subtitle: era,
-  group: "rb",
-  era,
+  id, name, subtitle: era, group: "rb", era,
 });
 const cfb = (id: string, name: string, era: string): FootballHitTheNumberSubject => ({
-  id,
-  name,
-  subtitle: `${id.slice(0, 4)} national champion`,
-  group: "cfb",
-  era,
+  id, name, subtitle: `${id.slice(0, 4)} national champion`, group: "cfb", era,
 });
 
 const quarterbackSubjects = [
@@ -471,9 +459,19 @@ function formatLabel(formatId: FootballHitTheNumberFormatId) {
   return "Build the Team";
 }
 
-function pickCountFor(formatId: FootballHitTheNumberFormatId, random: () => number) {
+function pickCountFor(
+  formatId: FootballHitTheNumberFormatId,
+  boardType: FootballHitTheNumberBoardType,
+  metricBoard: FootballHitTheNumberMetricBoard,
+  random: () => number,
+) {
   if (formatId === "one-from-each" || formatId === "build-the-team") return 5;
-  return weightedValue(FOOTBALL_HIT_THE_NUMBER_PICK_PROFILE, random);
+  const eligibleCount = (formatId === "themed-lineup"
+    ? themeSubjects(metricBoard)
+    : subjectsFor(metricBoard.group)).length;
+  const options = FOOTBALL_HIT_THE_NUMBER_PICK_PROFILE.filter((row) =>
+    boardType === "open-roster" || eligibleCount >= footballHitTheNumberRandomPoolSize(row.value));
+  return options.length ? weightedValue(options, random) : null;
 }
 
 function buildCandidate(
@@ -569,7 +567,10 @@ export function createFootballHitTheNumberPlan(
   const league: FootballHitTheNumberLeague = choiceRandom() < 0.5 ? "NFL" : "CFB";
   const leagueMetrics = domain.metrics.filter((row) => row.league === league);
   const metricBoard = leagueMetrics[Math.floor(choiceRandom() * leagueMetrics.length)]!;
-  const pickCount = pickCountFor(formatId, choiceRandom);
+  const pickCount = pickCountFor(formatId, boardType, metricBoard, choiceRandom);
+  if (pickCount == null) {
+    throw new Error(`Football Hit the Number does not have enough ${metricBoard.metricId} depth for ${boardType}.`);
+  }
 
   for (let attempt = 0; attempt < 128; attempt += 1) {
     const candidate = buildCandidate(seed, boardType, formatId, domain, metricBoard, pickCount, attempt);
