@@ -79,7 +79,7 @@ export function canonicalDestinationPath(destination: CanonicalDestination): str
         ["view", "recap"],
       ]);
     case "daily-challenge":
-      return destination.sport === "football" ? "/back-room/football/today" : "/play";
+      return destination.sport === "football" ? "/football/today" : "/play";
     case "war-room": {
       const entries: Array<readonly [string, string]> = [
         ["conversation", destination.conversationId],
