@@ -81,20 +81,6 @@ export const FOOTBALL_FIND_LEADER_FAMILY_CYCLE: readonly FootballFindLeaderFamil
   "cfb-strength",
 ] as const;
 
-const NFL_FAMILIES: readonly FootballFindLeaderFamilyId[] = [
-  "qb-volume",
-  "rb-rushing",
-  "qb-efficiency",
-  "rb-receiving",
-  "rb-scrimmage",
-] as const;
-
-const CFB_FAMILIES: readonly FootballFindLeaderFamilyId[] = [
-  "cfb-offense",
-  "cfb-defense",
-  "cfb-strength",
-] as const;
-
 function questionVariants(definition: FootballFindLeaderMetricDefinition): FootballFindLeaderQuestionDefinition[] {
   return [
     {
@@ -216,42 +202,55 @@ function recentValues(history: PlayLineupHistory, kind: "question" | "metric" | 
   return new Set(history.recentItemIds.filter((id) => id.startsWith(prefix)).map((id) => id.slice(prefix.length)));
 }
 
-function lastValue(history: PlayLineupHistory, kind: "question" | "metric" | "family") {
+function mostRecentValue(history: PlayLineupHistory, kind: "question" | "metric" | "family") {
   const prefix = `${kind}:`;
-  return history.lastLineup.find((id) => id.startsWith(prefix))?.slice(prefix.length) ?? null;
+  const fromLastLineup = history.lastLineup.find((id) => id.startsWith(prefix));
+  if (fromLastLineup) return fromLastLineup.slice(prefix.length);
+  return history.recentItemIds.find((id) => id.startsWith(prefix))?.slice(prefix.length) ?? null;
 }
 
 function targetLeague(seed: string): FootballFindLeaderLeagueId {
   return stableLineupHash(`${FOOTBALL_FIND_LEADER_VERSION}|league|${seed}`) % 2 === 0 ? "nfl" : "cfb";
 }
 
-function leagueFamilies(league: FootballFindLeaderLeagueId) {
-  return league === "cfb" ? CFB_FAMILIES : NFL_FAMILIES;
-}
-
 function chooseQuestion(seed: string, history: PlayLineupHistory) {
   const recentQuestions = recentValues(history, "question");
   const recentMetrics = recentValues(history, "metric");
   const recentFamilies = recentValues(history, "family");
-  const previousQuestion = lastValue(history, "question");
-  const previousMetric = lastValue(history, "metric");
-  const previousFamily = lastValue(history, "family");
+  const previousQuestion = mostRecentValue(history, "question");
+  const previousMetric = mostRecentValue(history, "metric");
+  const previousFamily = mostRecentValue(history, "family");
   const desiredLeague = targetLeague(seed);
-  const families = leagueFamilies(desiredLeague);
-  const start = stableLineupHash(`${FOOTBALL_FIND_LEADER_VERSION}|family|${seed}`) % families.length;
-  const rotated = families.map((_, index) => families[(start + index) % families.length]!);
-  const family = rotated.find((value) => value !== previousFamily && !recentFamilies.has(value))
-    ?? rotated.find((value) => value !== previousFamily)
-    ?? rotated[0]!;
-  const familyQuestions = footballFindLeaderQuestions.filter((question) => question.family === family);
-  const freshMetric = familyQuestions.filter((question) => (
-    question.metricId !== previousMetric
-    && question.id !== previousQuestion
-    && !recentMetrics.has(question.metricId)
+  const leagueQuestions = footballFindLeaderQuestions.filter(
+    (question) => footballFindLeaderLeagueForDomain(question.domainId) === desiredLeague,
+  );
+  const fresh = leagueQuestions.filter((question) => (
+    question.id !== previousQuestion
+    && question.metricId !== previousMetric
+    && question.family !== previousFamily
     && !recentQuestions.has(question.id)
+    && !recentMetrics.has(question.metricId)
+    && !recentFamilies.has(question.family)
   ));
-  const noImmediateRepeat = familyQuestions.filter((question) => question.metricId !== previousMetric && question.id !== previousQuestion);
-  const candidates = freshMetric.length ? freshMetric : noImmediateRepeat.length ? noImmediateRepeat : familyQuestions;
+  const freshQuestionMetric = leagueQuestions.filter((question) => (
+    question.id !== previousQuestion
+    && question.metricId !== previousMetric
+    && question.family !== previousFamily
+    && !recentQuestions.has(question.id)
+    && !recentMetrics.has(question.metricId)
+  ));
+  const noImmediateRepeat = leagueQuestions.filter((question) => (
+    question.id !== previousQuestion
+    && question.metricId !== previousMetric
+    && question.family !== previousFamily
+  ));
+  const candidates = fresh.length
+    ? fresh
+    : freshQuestionMetric.length
+      ? freshQuestionMetric
+      : noImmediateRepeat.length
+        ? noImmediateRepeat
+        : leagueQuestions;
   const random = seededLineupRandom(FOOTBALL_FIND_LEADER_VERSION, "question", seed);
   return candidates[Math.floor(random() * candidates.length)] ?? footballFindLeaderQuestions[0]!;
 }
