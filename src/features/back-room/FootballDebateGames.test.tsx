@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import FootballKeepCutPage from "./FootballKeepCutPage";
 import FootballWavelengthPage from "./FootballWavelengthPage";
@@ -16,6 +16,21 @@ import {
   nextFootballWavelengthClue,
 } from "./footballWavelengthModel";
 import { footballRankFivePacks, getFootballRankFivePack } from "./footballRankFiveModel";
+
+vi.mock("../challenges/ChallengeProvider", () => ({
+  usePlayChallenges: () => ({ beginChallenge: vi.fn(async () => "") }),
+}));
+
+vi.mock("../challenges/challengeRuntime", () => ({
+  useProfileChallengeMatch: () => ({
+    code: "",
+    challenge: null,
+    creator: null,
+    isRecipient: false,
+    activeProfile: null,
+    submitResult: vi.fn(),
+  }),
+}));
 
 describe("Football Back Room debate games", () => {
   beforeEach(() => {
