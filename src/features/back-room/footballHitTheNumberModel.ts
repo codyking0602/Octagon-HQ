@@ -1,4 +1,8 @@
-import { hitTheNumberScore, type HitTheNumberResultStatus } from "../play/hitTheNumberEngine";
+import {
+  HIT_THE_NUMBER_GENERATION_PROFILE,
+  hitTheNumberScore,
+  type HitTheNumberResultStatus,
+} from "../play/hitTheNumberEngine";
 import {
   seededLineupRandom,
   selectReplayLineup,
@@ -6,15 +10,16 @@ import {
   type PlayLineupIdentity,
 } from "../play/lineupModel";
 import {
-  formatFootballFact,
-  getFootballFact,
-  type FootballFactMetricId,
+  formatFootballFindLeaderFact,
+  getFootballFindLeaderFact,
+  type FootballFindLeaderMetricId,
 } from "./footballFactualStats";
 
 export const FOOTBALL_HIT_THE_NUMBER_GAME_ID = "football-hit-the-number";
-export const FOOTBALL_HIT_THE_NUMBER_VERSION = "football-hit-the-number-v1" as const;
-export const FOOTBALL_HIT_THE_NUMBER_PICK_COUNT = 4;
-export const FOOTBALL_HIT_THE_NUMBER_POOL_SIZE = 8;
+export const FOOTBALL_HIT_THE_NUMBER_VERSION = "football-hit-the-number-v2" as const;
+export const FOOTBALL_HIT_THE_NUMBER_MIN_PICKS = 4;
+export const FOOTBALL_HIT_THE_NUMBER_MAX_PICKS = 7;
+export const FOOTBALL_HIT_THE_NUMBER_DEFAULT_BOARD_TYPE = "open-roster" as const;
 
 export type FootballHitTheNumberFormatId =
   | "classic"
@@ -22,16 +27,16 @@ export type FootballHitTheNumberFormatId =
   | "one-from-each"
   | "build-the-team";
 
-export type FootballHitTheNumberDomainId =
-  | "nfl-qb-passing"
-  | "nfl-rb-rushing"
-  | "cfb-champion-scoring";
+export type FootballHitTheNumberBoardType = "open-roster" | "random-pool";
+export type FootballHitTheNumberLeague = "NFL" | "CFB";
+export type FootballHitTheNumberDomainId = "volume" | "efficiency" | "dominance";
+type FootballHitTheNumberSubjectGroup = "qb" | "rb" | "cfb";
 
 export interface FootballHitTheNumberSubject {
   id: string;
   name: string;
   subtitle: string;
-  domainId: FootballHitTheNumberDomainId;
+  group: FootballHitTheNumberSubjectGroup;
   era: string;
 }
 
@@ -41,32 +46,33 @@ export interface FootballHitTheNumberSlot {
   accepts: (subject: FootballHitTheNumberSubject, value: number) => boolean;
 }
 
+interface FootballHitTheNumberMetricBoard {
+  metricId: FootballFindLeaderMetricId;
+  league: FootballHitTheNumberLeague;
+  group: FootballHitTheNumberSubjectGroup;
+  boardLabel: string;
+  themeLabel: string;
+}
+
 interface FootballHitTheNumberDomain {
   id: FootballHitTheNumberDomainId;
-  label: string;
-  metricId: FootballFactMetricId;
-  subjects: readonly FootballHitTheNumberSubject[];
-  theme: {
-    id: string;
-    label: string;
-    subjectIds: readonly string[];
-  };
-  eraSlots: readonly FootballHitTheNumberSlot[];
-  buildSlots: readonly FootballHitTheNumberSlot[];
+  metrics: readonly FootballHitTheNumberMetricBoard[];
 }
 
 export interface FootballHitTheNumberPlan {
   version: typeof FOOTBALL_HIT_THE_NUMBER_VERSION;
   seed: string;
+  boardType: FootballHitTheNumberBoardType;
+  league: FootballHitTheNumberLeague;
   formatId: FootballHitTheNumberFormatId;
   formatLabel: string;
   configurationLabel: string | null;
   domainId: FootballHitTheNumberDomainId;
   domainLabel: string;
-  metricId: FootballFactMetricId;
+  metricId: FootballFindLeaderMetricId;
   metricLabel: string;
   target: number;
-  pickCount: typeof FOOTBALL_HIT_THE_NUMBER_PICK_COUNT;
+  pickCount: number;
   subjectIds: string[];
   solutionSubjectIds: string[];
   slots: readonly Pick<FootballHitTheNumberSlot, "id" | "label">[];
@@ -101,21 +107,29 @@ export const FOOTBALL_HIT_THE_NUMBER_FORMAT_PROFILE = [
   { value: "build-the-team", weight: 15 },
 ] as const satisfies readonly { value: FootballHitTheNumberFormatId; weight: number }[];
 
-const qb = (
-  id: string,
-  name: string,
-  era: string,
-): FootballHitTheNumberSubject => ({ id, name, subtitle: era, domainId: "nfl-qb-passing", era });
-const rb = (
-  id: string,
-  name: string,
-  era: string,
-): FootballHitTheNumberSubject => ({ id, name, subtitle: era, domainId: "nfl-rb-rushing", era });
-const cfb = (
-  id: string,
-  name: string,
-  era: string,
-): FootballHitTheNumberSubject => ({ id, name, subtitle: `${id.slice(0, 4)} national champion`, domainId: "cfb-champion-scoring", era });
+export const FOOTBALL_HIT_THE_NUMBER_PICK_PROFILE = HIT_THE_NUMBER_GENERATION_PROFILE.picks;
+
+const qb = (id: string, name: string, era: string): FootballHitTheNumberSubject => ({
+  id,
+  name,
+  subtitle: era,
+  group: "qb",
+  era,
+});
+const rb = (id: string, name: string, era: string): FootballHitTheNumberSubject => ({
+  id,
+  name,
+  subtitle: era,
+  group: "rb",
+  era,
+});
+const cfb = (id: string, name: string, era: string): FootballHitTheNumberSubject => ({
+  id,
+  name,
+  subtitle: `${id.slice(0, 4)} national champion`,
+  group: "cfb",
+  era,
+});
 
 const quarterbackSubjects = [
   qb("dan-marino", "Dan Marino", "1980s icon"),
@@ -161,89 +175,68 @@ const collegeSubjects = [
   cfb("2022-georgia", "2022 Georgia", "modern CFP"),
 ] as const;
 
-function eraSlot(id: string, label: string, era: string): FootballHitTheNumberSlot {
-  return { id, label, accepts: (subject) => subject.era === era };
-}
+export const footballHitTheNumberSubjects: readonly FootballHitTheNumberSubject[] = [
+  ...quarterbackSubjects,
+  ...runningBackSubjects,
+  ...collegeSubjects,
+];
+const subjectById = new Map(footballHitTheNumberSubjects.map((subject) => [subject.id, subject]));
 
-function rangeSlot(id: string, label: string, min: number, max = Number.POSITIVE_INFINITY): FootballHitTheNumberSlot {
-  return { id, label, accepts: (_subject, value) => value >= min && value < max };
-}
+const metric = (
+  metricId: FootballFindLeaderMetricId,
+  league: FootballHitTheNumberLeague,
+  group: FootballHitTheNumberSubjectGroup,
+  boardLabel: string,
+  themeLabel: string,
+): FootballHitTheNumberMetricBoard => ({ metricId, league, group, boardLabel, themeLabel });
 
 const domains: readonly FootballHitTheNumberDomain[] = [
   {
-    id: "nfl-qb-passing",
-    label: "NFL QB Careers",
-    metricId: "nfl-career-passing-yards",
-    subjects: quarterbackSubjects,
-    theme: {
-      id: "post-1990-passers",
-      label: "Post-1990 Passing Legends",
-      subjectIds: quarterbackSubjects.filter((subject) => subject.era !== "1980s icon").map((subject) => subject.id),
-    },
-    eraSlots: [
-      eraSlot("1980s", "1980s Icon", "1980s icon"),
-      eraSlot("1990s", "1990s Icon", "1990s icon"),
-      eraSlot("2000s", "2000s Icon", "2000s icon"),
-      eraSlot("2010s", "2010s Icon", "2010s icon"),
-    ],
-    buildSlots: [
-      rangeSlot("70k", "70K+ Passer", 70000),
-      rangeSlot("60-70k", "60K–70K Passer", 60000, 70000),
-      rangeSlot("45-60k", "45K–60K Passer", 45000, 60000),
-      rangeSlot("under-45k", "Under 45K Passer", 0, 45000),
+    id: "volume",
+    metrics: [
+      metric("qb-passing-yards", "NFL", "qb", "NFL QB Career Passing Yards", "Post-1990 Passing Legends"),
+      metric("rb-rushing-yards", "NFL", "rb", "NFL RB Career Rushing Yards", "Modern Rushing Legends"),
+      metric("rb-scrimmage-yards", "NFL", "rb", "NFL RB Career Scrimmage Yards", "Modern Scrimmage Legends"),
+      metric("cfb-points-for", "CFB", "cfb", "Champion-Season Points Scored", "BCS + CFP Champions"),
+      metric("cfb-points-against", "CFB", "cfb", "Champion-Season Points Allowed", "BCS + CFP Champions"),
+      metric("cfb-point-differential", "CFB", "cfb", "Champion-Season Point Differential", "BCS + CFP Champions"),
     ],
   },
   {
-    id: "nfl-rb-rushing",
-    label: "NFL RB Careers",
-    metricId: "nfl-career-rushing-yards",
-    subjects: runningBackSubjects,
-    theme: {
-      id: "post-1989-rushers",
-      label: "Modern Rushing Legends",
-      subjectIds: runningBackSubjects.slice(3).map((subject) => subject.id),
-    },
-    eraSlots: [
-      eraSlot("60s-70s", "1960s/70s Icon", "1960s/70s icon"),
-      eraSlot("80s-90s", "1980s/90s Icon", "1980s/90s icon"),
-      eraSlot("90s-00s", "1990s/2000s Icon", "1990s/2000s icon"),
-      eraSlot("00s-10s", "2000s/2010s Icon", "2000s/2010s icon"),
-    ],
-    buildSlots: [
-      rangeSlot("15k", "15K+ Rusher", 15000),
-      rangeSlot("14-15k", "14K–15K Rusher", 14000, 15000),
-      rangeSlot("13-14k", "13K–14K Rusher", 13000, 14000),
-      rangeSlot("under-13k", "Under 13K Rusher", 0, 13000),
+    id: "efficiency",
+    metrics: [
+      metric("qb-passer-rating", "NFL", "qb", "NFL QB Career Passer Rating", "Post-1990 Passing Legends"),
+      metric("qb-completion-pct", "NFL", "qb", "NFL QB Career Completion Rate", "Post-1990 Passing Legends"),
+      metric("qb-td-int-ratio", "NFL", "qb", "NFL QB Career TD:INT Ratio", "Post-1990 Passing Legends"),
+      metric("cfb-points-per-game", "CFB", "cfb", "Champion-Season Points Per Game", "BCS + CFP Champions"),
+      metric("cfb-opponent-points-per-game", "CFB", "cfb", "Champion-Season Opponent PPG", "BCS + CFP Champions"),
+      metric("cfb-scoring-margin-per-game", "CFB", "cfb", "Champion-Season Scoring Margin", "BCS + CFP Champions"),
     ],
   },
   {
-    id: "cfb-champion-scoring",
-    label: "National-Champion Seasons",
-    metricId: "cfb-team-points-per-game",
-    subjects: collegeSubjects,
-    theme: {
-      id: "bcs-cfp-champions",
-      label: "BCS + CFP Champions",
-      subjectIds: collegeSubjects.filter((subject) => subject.id !== "1995-nebraska").map((subject) => subject.id),
-    },
-    eraSlots: [
-      { id: "early", label: "1990s / Early BCS", accepts: (subject) => subject.id === "1995-nebraska" || subject.id === "2001-miami" },
-      { id: "bcs", label: "BCS 2005–10", accepts: (subject) => subject.era === "BCS 2005-10" },
-      { id: "bridge", label: "Late BCS / Early CFP", accepts: (subject) => subject.era === "late BCS/early CFP" },
-      { id: "modern", label: "Modern CFP", accepts: (subject) => subject.era === "modern CFP" },
-    ],
-    buildSlots: [
-      rangeSlot("50", "50+ PPG Offense", 50),
-      rangeSlot("48-50", "48–50 PPG Offense", 48, 50),
-      rangeSlot("43-48", "43–48 PPG Offense", 43, 48),
-      rangeSlot("under-43", "Under 43 PPG Offense", 0, 43),
+    id: "dominance",
+    metrics: [
+      metric("qb-passing-touchdowns", "NFL", "qb", "NFL QB Career Passing TD", "Post-1990 Passing Legends"),
+      metric("rb-rushing-touchdowns", "NFL", "rb", "NFL RB Career Rushing TD", "Modern Rushing Legends"),
+      metric("rb-scrimmage-touchdowns", "NFL", "rb", "NFL RB Career Scrimmage TD", "Modern Scoring Legends"),
+      metric("cfb-srs", "CFB", "cfb", "Champion-Season SRS", "BCS + CFP Champions"),
+      metric("cfb-sos", "CFB", "cfb", "Champion-Season Strength of Schedule", "BCS + CFP Champions"),
+      metric("cfb-points-ratio", "CFB", "cfb", "Champion-Season Points For : Against", "BCS + CFP Champions"),
     ],
   },
 ] as const;
 
-export const footballHitTheNumberSubjects: readonly FootballHitTheNumberSubject[] = domains.flatMap((domain) => domain.subjects);
-const subjectById = new Map(footballHitTheNumberSubjects.map((subject) => [subject.id, subject]));
+export const FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG = domains.flatMap((domain) =>
+  domain.metrics.map((row) => ({
+    domainId: domain.id,
+    metricId: row.metricId,
+    league: row.league,
+    boardLabel: row.boardLabel,
+  })),
+);
+
 const domainById = new Map(domains.map((domain) => [domain.id, domain]));
+const metricBoardById = new Map(domains.flatMap((domain) => domain.metrics).map((row) => [row.metricId, row]));
 
 function weightedValue<T>(rows: readonly { value: T; weight: number }[], random: () => number): T {
   const total = rows.reduce((sum, row) => sum + row.weight, 0);
@@ -255,10 +248,10 @@ function weightedValue<T>(rows: readonly { value: T; weight: number }[], random:
   return rows[rows.length - 1]!.value;
 }
 
-function valueFor(subjectId: string, metricId: FootballFactMetricId) {
-  const resolved = getFootballFact(subjectId, metricId);
+function valueFor(subjectId: string, metricId: FootballFindLeaderMetricId) {
+  const resolved = getFootballFindLeaderFact(subjectId, metricId);
   if (!resolved) throw new Error(`Missing canonical Football fact ${metricId} for ${subjectId}.`);
-  return resolved.fact.value;
+  return resolved.value;
 }
 
 function subjectFor(subjectId: string) {
@@ -267,16 +260,78 @@ function subjectFor(subjectId: string) {
   return subject;
 }
 
-function domainFor(domainId: FootballHitTheNumberDomainId) {
-  const domain = domainById.get(domainId);
-  if (!domain) throw new Error(`Unknown Football Hit the Number domain: ${domainId}`);
-  return domain;
+function subjectsFor(group: FootballHitTheNumberSubjectGroup) {
+  return footballHitTheNumberSubjects.filter((subject) => subject.group === group);
+}
+
+function metricBoardFor(metricId: FootballFindLeaderMetricId) {
+  const board = metricBoardById.get(metricId);
+  if (!board) throw new Error(`Unknown Football Hit the Number metric: ${metricId}`);
+  return board;
+}
+
+function eraSlotsFor(group: FootballHitTheNumberSubjectGroup): readonly FootballHitTheNumberSlot[] {
+  const any = (subject: FootballHitTheNumberSubject) => subject.group === group;
+  if (group === "qb") {
+    return [
+      { id: "1980s", label: "1980s Icon", accepts: (subject) => subject.era === "1980s icon" },
+      { id: "1990s", label: "1990s Icon", accepts: (subject) => subject.era === "1990s icon" },
+      { id: "2000s", label: "2000s Icon", accepts: (subject) => subject.era === "2000s icon" },
+      { id: "2010s", label: "2010s Icon", accepts: (subject) => subject.era === "2010s icon" },
+      { id: "wild-card", label: "Wild Card", accepts: any },
+    ];
+  }
+  if (group === "rb") {
+    return [
+      { id: "60s-70s", label: "1960s/70s Icon", accepts: (subject) => subject.era === "1960s/70s icon" },
+      { id: "80s-90s", label: "1980s/90s Icon", accepts: (subject) => subject.era === "1980s/90s icon" },
+      { id: "90s-00s", label: "1990s/2000s Icon", accepts: (subject) => subject.era === "1990s/2000s icon" },
+      { id: "00s-10s", label: "2000s/2010s Icon", accepts: (subject) => subject.era === "2000s/2010s icon" },
+      { id: "wild-card", label: "Wild Card", accepts: any },
+    ];
+  }
+  return [
+    { id: "early", label: "1990s / Early BCS", accepts: (subject) => subject.id === "1995-nebraska" || subject.id === "2001-miami" },
+    { id: "bcs", label: "BCS 2005–10", accepts: (subject) => subject.era === "BCS 2005-10" },
+    { id: "bridge", label: "Late BCS / Early CFP", accepts: (subject) => subject.era === "late BCS/early CFP" },
+    { id: "modern", label: "Modern CFP", accepts: (subject) => subject.era === "modern CFP" },
+    { id: "wild-card", label: "Wild Card", accepts: any },
+  ];
+}
+
+function buildSlotsFor(
+  subjects: readonly FootballHitTheNumberSubject[],
+  metricId: FootballFindLeaderMetricId,
+): readonly FootballHitTheNumberSlot[] {
+  const ordered = [...subjects].sort((left, right) =>
+    valueFor(right.id, metricId) - valueFor(left.id, metricId) || left.id.localeCompare(right.id));
+  const groups = Array.from({ length: 4 }, (_, index) => {
+    const start = Math.floor(index * ordered.length / 4);
+    const end = Math.floor((index + 1) * ordered.length / 4);
+    return new Set(ordered.slice(start, end).map((subject) => subject.id));
+  });
+  const labels = ["Elite Tier", "High Tier", "Middle Tier", "Value Tier"] as const;
+  return [
+    ...groups.map((ids, index) => ({
+      id: `tier-${index + 1}`,
+      label: labels[index]!,
+      accepts: (subject: FootballHitTheNumberSubject) => ids.has(subject.id),
+    })),
+    { id: "wild-card", label: "Wild Card", accepts: () => true },
+  ];
+}
+
+function themeSubjects(board: FootballHitTheNumberMetricBoard) {
+  const subjects = subjectsFor(board.group);
+  if (board.group === "qb") return subjects.filter((subject) => subject.era !== "1980s icon");
+  if (board.group === "rb") return subjects.filter((subject) => subject.era !== "1960s/70s icon");
+  return subjects.filter((subject) => subject.id !== "1995-nebraska");
 }
 
 function assignSlots(
   slots: readonly FootballHitTheNumberSlot[],
   subjects: readonly FootballHitTheNumberSubject[],
-  metricId: FootballFactMetricId,
+  metricId: FootballFindLeaderMetricId,
 ) {
   if (subjects.length !== slots.length) return false;
   const used = new Set<number>();
@@ -301,13 +356,14 @@ function assignSlots(
 function slotSolution(
   slots: readonly FootballHitTheNumberSlot[],
   subjects: readonly FootballHitTheNumberSubject[],
-  metricId: FootballFactMetricId,
+  metricId: FootballFindLeaderMetricId,
   random: () => number,
 ) {
   const candidates = slots.map((slot) => shuffleLineup(
     subjects.filter((subject) => slot.accepts(subject, valueFor(subject.id, metricId))),
     random,
   ));
+  if (candidates.some((rows) => rows.length === 0)) return null;
   const used = new Set<string>();
   const assigned: FootballHitTheNumberSubject[] = new Array(slots.length);
   const order = candidates
@@ -347,6 +403,21 @@ function combinations<T>(items: readonly T[], count: number, visit: (selection: 
   walk(0);
 }
 
+export function footballHitTheNumberRandomPoolSize(pickCount: number) {
+  if (!Number.isInteger(pickCount) || pickCount < FOOTBALL_HIT_THE_NUMBER_MIN_PICKS || pickCount > FOOTBALL_HIT_THE_NUMBER_MAX_PICKS) {
+    throw new Error(`Football Hit the Number pick count must be ${FOOTBALL_HIT_THE_NUMBER_MIN_PICKS}-${FOOTBALL_HIT_THE_NUMBER_MAX_PICKS}.`);
+  }
+  return Math.min(12, pickCount * 2);
+}
+
+function slotsForPlan(plan: FootballHitTheNumberPlan) {
+  const board = metricBoardFor(plan.metricId);
+  const subjects = subjectsFor(board.group);
+  if (plan.formatId === "one-from-each") return eraSlotsFor(board.group);
+  if (plan.formatId === "build-the-team") return buildSlotsFor(subjects, plan.metricId);
+  return [];
+}
+
 export function footballHitTheNumberSelectionSatisfies(
   plan: FootballHitTheNumberPlan,
   selectedSubjectIds: readonly string[],
@@ -355,9 +426,7 @@ export function footballHitTheNumberSelectionSatisfies(
   if (new Set(selectedSubjectIds).size !== selectedSubjectIds.length) return false;
   if (selectedSubjectIds.some((subjectId) => !plan.subjectIds.includes(subjectId))) return false;
   if (plan.formatId === "classic" || plan.formatId === "themed-lineup") return true;
-  const domain = domainFor(plan.domainId);
-  const slots = plan.formatId === "one-from-each" ? domain.eraSlots : domain.buildSlots;
-  return assignSlots(slots, selectedSubjectIds.map(subjectFor), plan.metricId);
+  return assignSlots(slotsForPlan(plan), selectedSubjectIds.map(subjectFor), plan.metricId);
 }
 
 export function footballHitTheNumberPlanQuality(plan: FootballHitTheNumberPlan): FootballHitTheNumberQualityResult {
@@ -369,7 +438,7 @@ export function footballHitTheNumberPlanQuality(plan: FootballHitTheNumberPlan):
   combinations(plan.subjectIds, plan.pickCount, (subjectIds) => {
     if (!footballHitTheNumberSelectionSatisfies(plan, subjectIds)) return;
     const total = subjectIds.reduce((sum, subjectId) => sum + valueFor(subjectId, plan.metricId), 0);
-    if (total === plan.target) return;
+    if (Math.abs(total - plan.target) < 1e-9) return;
     legalSelectionCount += 1;
     const status: HitTheNumberResultStatus = total > plan.target ? "bust" : "under";
     const score = hitTheNumberScore({
@@ -402,89 +471,141 @@ function formatLabel(formatId: FootballHitTheNumberFormatId) {
   return "Build the Team";
 }
 
+function pickCountFor(formatId: FootballHitTheNumberFormatId, random: () => number) {
+  if (formatId === "one-from-each" || formatId === "build-the-team") return 5;
+  return weightedValue(FOOTBALL_HIT_THE_NUMBER_PICK_PROFILE, random);
+}
+
 function buildCandidate(
   seed: string,
+  boardType: FootballHitTheNumberBoardType,
   formatId: FootballHitTheNumberFormatId,
   domain: FootballHitTheNumberDomain,
+  metricBoard: FootballHitTheNumberMetricBoard,
+  pickCount: number,
   attempt: number,
 ): FootballHitTheNumberPlan | null {
-  const random = seededLineupRandom(FOOTBALL_HIT_THE_NUMBER_GAME_ID, "candidate", seed, formatId, domain.id, attempt);
-  const metricId = domain.metricId;
-  let eligible = [...domain.subjects];
+  const random = seededLineupRandom(
+    FOOTBALL_HIT_THE_NUMBER_GAME_ID,
+    "candidate",
+    seed,
+    boardType,
+    formatId,
+    domain.id,
+    metricBoard.metricId,
+    pickCount,
+    attempt,
+  );
+  const metricId = metricBoard.metricId;
+  let eligible = subjectsFor(metricBoard.group);
   let solution: FootballHitTheNumberSubject[] | null = null;
   let slots: readonly FootballHitTheNumberSlot[] = [];
   let configurationLabel: string | null = null;
 
   if (formatId === "themed-lineup") {
-    const themedIds = new Set(domain.theme.subjectIds);
-    eligible = domain.subjects.filter((subject) => themedIds.has(subject.id));
-    configurationLabel = domain.theme.label;
-    solution = shuffleLineup(eligible, random).slice(0, FOOTBALL_HIT_THE_NUMBER_PICK_COUNT);
+    eligible = themeSubjects(metricBoard);
+    configurationLabel = metricBoard.themeLabel;
+    solution = shuffleLineup(eligible, random).slice(0, pickCount);
   } else if (formatId === "one-from-each") {
-    slots = domain.eraSlots;
-    configurationLabel = "One from every era";
+    slots = eraSlotsFor(metricBoard.group);
+    configurationLabel = "One from every era + wild card";
     solution = slotSolution(slots, eligible, metricId, random);
   } else if (formatId === "build-the-team") {
-    slots = domain.buildSlots;
-    configurationLabel = "Fill every production tier";
+    slots = buildSlotsFor(eligible, metricId);
+    configurationLabel = "Four production tiers + wild card";
     solution = slotSolution(slots, eligible, metricId, random);
   } else {
-    solution = shuffleLineup(eligible, random).slice(0, FOOTBALL_HIT_THE_NUMBER_PICK_COUNT);
+    solution = shuffleLineup(eligible, random).slice(0, pickCount);
   }
 
-  if (!solution || solution.length !== FOOTBALL_HIT_THE_NUMBER_PICK_COUNT) return null;
+  if (!solution || solution.length !== pickCount) return null;
   const solutionIds = solution.map((subject) => subject.id);
   const solutionSet = new Set(solutionIds);
-  const extras = shuffleLineup(
-    eligible.filter((subject) => !solutionSet.has(subject.id)),
-    random,
-  ).slice(0, FOOTBALL_HIT_THE_NUMBER_POOL_SIZE - solutionIds.length);
-  if (extras.length !== FOOTBALL_HIT_THE_NUMBER_POOL_SIZE - solutionIds.length) return null;
-  const subjectIds = shuffleLineup([...solution, ...extras], random).map((subject) => subject.id);
+  let subjectIds: string[];
+
+  if (boardType === "open-roster") {
+    subjectIds = eligible.map((subject) => subject.id);
+  } else {
+    const poolSize = footballHitTheNumberRandomPoolSize(pickCount);
+    const extras = shuffleLineup(
+      eligible.filter((subject) => !solutionSet.has(subject.id)),
+      random,
+    ).slice(0, poolSize - solutionIds.length);
+    if (extras.length !== poolSize - solutionIds.length) return null;
+    subjectIds = shuffleLineup([...solution, ...extras], random).map((subject) => subject.id);
+  }
+
   const target = solutionIds.reduce((sum, subjectId) => sum + valueFor(subjectId, metricId), 0);
-  const metric = getFootballFact(solutionIds[0]!, metricId)?.definition;
-  if (!metric) return null;
+  const fact = getFootballFindLeaderFact(solutionIds[0]!, metricId);
+  if (!fact) return null;
 
   return {
     version: FOOTBALL_HIT_THE_NUMBER_VERSION,
     seed,
+    boardType,
+    league: metricBoard.league,
     formatId,
     formatLabel: formatLabel(formatId),
     configurationLabel,
     domainId: domain.id,
-    domainLabel: domain.label,
+    domainLabel: metricBoard.boardLabel,
     metricId,
-    metricLabel: metric.label,
+    metricLabel: fact.definition.label,
     target,
-    pickCount: FOOTBALL_HIT_THE_NUMBER_PICK_COUNT,
+    pickCount,
     subjectIds,
     solutionSubjectIds: solutionIds,
     slots: slots.map(({ id, label }) => ({ id, label })),
   };
 }
 
-export function createFootballHitTheNumberPlan(seed: string): FootballHitTheNumberPlan {
-  const choiceRandom = seededLineupRandom(FOOTBALL_HIT_THE_NUMBER_GAME_ID, "format", seed);
+export function createFootballHitTheNumberPlan(
+  seed: string,
+  boardType: FootballHitTheNumberBoardType = FOOTBALL_HIT_THE_NUMBER_DEFAULT_BOARD_TYPE,
+): FootballHitTheNumberPlan {
+  const choiceRandom = seededLineupRandom(FOOTBALL_HIT_THE_NUMBER_GAME_ID, "choice", seed, boardType);
   const formatId = weightedValue(FOOTBALL_HIT_THE_NUMBER_FORMAT_PROFILE, choiceRandom);
   const domain = domains[Math.floor(choiceRandom() * domains.length)]!;
+  const league: FootballHitTheNumberLeague = choiceRandom() < 0.5 ? "NFL" : "CFB";
+  const leagueMetrics = domain.metrics.filter((row) => row.league === league);
+  const metricBoard = leagueMetrics[Math.floor(choiceRandom() * leagueMetrics.length)]!;
+  const pickCount = pickCountFor(formatId, choiceRandom);
 
-  for (let attempt = 0; attempt < 96; attempt += 1) {
-    const candidate = buildCandidate(seed, formatId, domain, attempt);
+  for (let attempt = 0; attempt < 128; attempt += 1) {
+    const candidate = buildCandidate(seed, boardType, formatId, domain, metricBoard, pickCount, attempt);
     if (candidate && footballHitTheNumberPlanQuality(candidate).passes) return candidate;
   }
-  throw new Error(`Football Hit the Number could not build a balanced ${formatId} ${domain.id} board.`);
+  throw new Error(`Football Hit the Number could not build a balanced ${formatId} ${metricBoard.metricId} board.`);
 }
 
-export function createFootballHitTheNumberRun(): FootballHitTheNumberRun {
-  const validIds = new Set(footballHitTheNumberSubjects.map((subject) => subject.id));
+function planSignature(plan: FootballHitTheNumberPlan) {
+  const pool = plan.boardType === "random-pool" ? [...plan.subjectIds].sort().join(",") : "open";
+  return [
+    plan.domainId,
+    plan.metricId,
+    plan.formatId,
+    plan.boardType,
+    plan.pickCount,
+    plan.target,
+    pool,
+  ].join("|");
+}
+
+export function createFootballHitTheNumberRun(
+  boardType: FootballHitTheNumberBoardType = FOOTBALL_HIT_THE_NUMBER_DEFAULT_BOARD_TYPE,
+): FootballHitTheNumberRun {
   const selected = selectReplayLineup({
     gameId: FOOTBALL_HIT_THE_NUMBER_GAME_ID,
-    lineupSize: FOOTBALL_HIT_THE_NUMBER_POOL_SIZE,
+    scopeId: boardType,
+    lineupSize: 1,
     attempts: 12,
-    validItemIds: validIds,
     build: (seed) => {
-      const plan = createFootballHitTheNumberPlan(seed);
-      return { value: plan, itemIds: plan.subjectIds };
+      const plan = createFootballHitTheNumberPlan(seed, boardType);
+      return {
+        value: plan,
+        itemIds: [planSignature(plan)],
+        fighterIds: boardType === "random-pool" ? plan.subjectIds : [],
+      };
     },
   });
   return { plan: selected.value, identity: selected.identity };
@@ -502,12 +623,12 @@ export function gradeFootballHitTheNumberSelection(
     value: valueFor(subjectId, plan.metricId),
   }));
   const total = selections.reduce((sum, selection) => sum + selection.value, 0);
-  const status: HitTheNumberResultStatus = total === plan.target
+  const distance = Math.abs(plan.target - total);
+  const status: HitTheNumberResultStatus = distance < 1e-9
     ? "perfect"
     : total > plan.target
       ? "bust"
       : "under";
-  const distance = Math.abs(plan.target - total);
   return {
     status,
     target: plan.target,
@@ -523,9 +644,13 @@ export function getFootballHitTheNumberSubject(subjectId: string) {
 }
 
 export function formatFootballHitTheNumberValue(plan: FootballHitTheNumberPlan, value: number) {
-  return formatFootballFact(plan.metricId, value);
+  return formatFootballFindLeaderFact(plan.metricId, value);
 }
 
-export function footballHitTheNumberValue(subjectId: string, metricId: FootballFactMetricId) {
+export function footballHitTheNumberValue(subjectId: string, metricId: FootballFindLeaderMetricId) {
   return valueFor(subjectId, metricId);
+}
+
+export function getFootballHitTheNumberDomain(domainId: FootballHitTheNumberDomainId) {
+  return domainById.get(domainId) ?? null;
 }
