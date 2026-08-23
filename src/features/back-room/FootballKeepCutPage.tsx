@@ -197,7 +197,7 @@ export default function FootballKeepCutPage() {
       creatorResult: asChallengeJson(creatorResult),
       shareTitle: "Football Keep 4 / Cut 4 Challenge",
       shareText: `I challenged you to make Keep/Cut calls on the same eight football subjects in ${run.pack.name}.`,
-      shareUrl: footballChallengeUrl("/back-room/football/keep-cut", {
+      shareUrl: footballChallengeUrl("/football/keep-cut", {
         pack: run.pack.id,
         lineup: run.lineup.map((item) => item.id).join(","),
       }),
@@ -229,7 +229,7 @@ export default function FootballKeepCutPage() {
         <GameResultActions
           onChallenge={() => void challengeSomeone()}
           onReplay={replay}
-          onAllGames={() => navigate("/back-room/football")}
+          onAllGames={() => navigate("/football")}
           replayLabel={replayLabelFor(run.identity.type)}
           status={challengeStatus}
         />
