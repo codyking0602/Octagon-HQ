@@ -70,6 +70,7 @@ describe("Daily Challenge Standings repository", () => {
           blindResume: 90.6,
           blindRank5: 82,
           keep4Cut4: 87.5,
+          hitTheNumber: null,
         },
         isCurrentUser: true,
         weeklyRank: 1,
