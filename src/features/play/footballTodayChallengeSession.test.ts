@@ -1,7 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
+  createFootballWavelengthRound,
+  nextFootballWavelengthClue,
+} from "../back-room/footballWavelengthModel";
+import { FOOTBALL_DAILY_RUNTIME_VERSION } from "./footballTodayChallengeRuntime";
+import {
   buildFootballTodayProjection,
   footballTodayGameForDay,
+  FOOTBALL_TODAY_SCHEDULE_VERSION,
 } from "./footballTodayChallengeSession";
 
 describe("Football Today’s Challenge session", () => {
@@ -45,6 +51,18 @@ describe("Football Today’s Challenge session", () => {
     expect(round).not.toHaveProperty("left_name");
     expect(round).not.toHaveProperty("right_name");
     expect(projection.reveal_setup).toBeNull();
+  });
+
+  it("keeps daily Wavelength adaptive clue selection identical to the replayable engine", () => {
+    const day = "2026-08-24";
+    const guess = 50;
+    const seed = `${FOOTBALL_DAILY_RUNTIME_VERSION}|wavelength|${FOOTBALL_TODAY_SCHEDULE_VERSION}|${day}`;
+    const replayableRound = createFootballWavelengthRound(seed);
+    const expectedNext = nextFootballWavelengthClue(replayableRound, guess, 1, seed, []);
+    const daily = buildFootballTodayProjection(day, [{ guess }]);
+    const clues = daily.public_state.clues as Array<Record<string, unknown>>;
+
+    expect(clues[1]?.id).toBe(expectedNext.id);
   });
 
   it("makes Daily Double use opposite leagues before Keep/Cut begins", () => {
