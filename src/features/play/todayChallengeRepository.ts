@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { getSupabaseClient } from "../../lib/supabase";
+import type { PlaySport } from "./playRegistry";
 import type { DailyGameType, OfficialAttempt } from "./todaysChallengeAdapters";
 
 const jsonRecordSchema = z.record(z.string(), z.unknown());
@@ -17,9 +18,8 @@ const attemptSchema = z.object({
   completed_at: z.string(),
   public_result: jsonRecordSchema.default({}),
 });
-const projectionSchema = z.object({
+const projectionFields = {
   available: z.literal(true),
-  id: z.string().uuid(),
   central_day: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   schedule_version: z.string().min(1),
   game_type: gameTypeSchema,
@@ -33,6 +33,13 @@ const projectionSchema = z.object({
   reveal_setup: jsonRecordSchema.nullable(),
   official_attempt: attemptSchema.nullable(),
   deployment_sha: z.string().min(1),
+} as const;
+const projectionSchema = z.object({ ...projectionFields, id: z.string().uuid() });
+const footballProjectionSchema = z.object({
+  ...projectionFields,
+  sport: z.literal("football"),
+  id: z.string().min(1),
+  action_history: z.array(jsonRecordSchema).default([]),
 });
 const historySchema = z.object({
   day: z.string(),
@@ -106,6 +113,7 @@ const standingsSchema = z.object({
 
 export interface TodayChallengeProjection {
   available: true;
+  sport?: PlaySport;
   id: string;
   centralDay: string;
   scheduleVersion: string;
@@ -120,6 +128,7 @@ export interface TodayChallengeProjection {
   revealSetup: Record<string, unknown> | null;
   officialAttempt: OfficialAttempt | null;
   deploymentSha: string;
+  actionHistory?: Record<string, unknown>[];
 }
 
 export interface TodayChallengeHistoryRow {
@@ -192,11 +201,7 @@ export interface TodayChallengeStandings {
   entries: TodayChallengeStandingsEntry[];
 }
 
-type FunctionError = {
-  message?: string;
-  context?: unknown;
-};
-
+type FunctionError = { message?: string; context?: unknown };
 type TodayChallengeClient = {
   functions: {
     invoke: (
@@ -219,11 +224,7 @@ function asRecord(value: unknown): Record<string, unknown> | null {
 async function functionErrorPayload(error: FunctionError) {
   const context = error.context;
   if (context instanceof Response) {
-    try {
-      return asRecord(await context.clone().json());
-    } catch {
-      return null;
-    }
+    try { return asRecord(await context.clone().json()); } catch { return null; }
   }
   return asRecord(context);
 }
@@ -251,10 +252,10 @@ function toAttempt(row: z.infer<typeof attemptSchema>): OfficialAttempt {
   };
 }
 
-export function parseTodayChallengeProjection(value: unknown): TodayChallengeProjection {
-  const row = projectionSchema.parse(value);
+function projectionFromRow(row: z.infer<typeof projectionSchema>): TodayChallengeProjection {
   return {
     available: true,
+    sport: "ufc",
     id: row.id,
     centralDay: row.central_day,
     scheduleVersion: row.schedule_version,
@@ -272,13 +273,22 @@ export function parseTodayChallengeProjection(value: unknown): TodayChallengePro
   };
 }
 
-async function invokeRuntime(
-  client: TodayChallengeClient,
-  body: Record<string, unknown>,
-) {
+export function parseTodayChallengeProjection(value: unknown): TodayChallengeProjection {
+  return projectionFromRow(projectionSchema.parse(value));
+}
+
+export function parseFootballTodayChallengeProjection(value: unknown): TodayChallengeProjection {
+  const row = footballProjectionSchema.parse(value);
+  return {
+    ...projectionFromRow({ ...row, id: row.id } as z.infer<typeof projectionSchema>),
+    sport: "football",
+    actionHistory: row.action_history,
+  };
+}
+
+async function invokeRuntime(client: TodayChallengeClient, body: Record<string, unknown>) {
   const { data, error } = await client.functions.invoke("daily-challenge-runtime", { body });
   if (!error) return data;
-
   const payload = await functionErrorPayload(error);
   const code = typeof payload?.code === "string" ? payload.code : "DAILY_RUNTIME_FAILED";
   const message = typeof payload?.message === "string"
@@ -287,11 +297,7 @@ async function invokeRuntime(
   throw new TodayChallengeRepositoryError(code, message);
 }
 
-async function rpc(
-  client: TodayChallengeClient,
-  name: string,
-  args?: Record<string, unknown>,
-) {
+async function rpc(client: TodayChallengeClient, name: string, args?: Record<string, unknown>) {
   const { data, error } = await client.rpc(name, args);
   if (error) {
     throw new TodayChallengeRepositoryError(
@@ -302,10 +308,17 @@ async function rpc(
   return data;
 }
 
+function deferredFootballRecords(): never {
+  throw new TodayChallengeRepositoryError(
+    "FOOTBALL_DAILY_RECORDS_DEFERRED",
+    "Football Today’s Challenge records and standings arrive with the persistence release.",
+  );
+}
+
 export interface TodayChallengeRepository {
   loadToday(): Promise<TodayChallengeProjection>;
   advance(
-    projection: Pick<TodayChallengeProjection, "id" | "progressRevision">,
+    projection: Pick<TodayChallengeProjection, "id" | "progressRevision" | "actionHistory">,
     action: Record<string, unknown>,
   ): Promise<TodayChallengeProjection>;
   loadHistory(): Promise<TodayChallengeHistoryRow[]>;
@@ -316,28 +329,33 @@ export interface TodayChallengeRepository {
 
 export function createTodayChallengeRepository(
   suppliedClient?: TodayChallengeClient | null,
+  sport: PlaySport = "ufc",
 ): TodayChallengeRepository | null {
   const client = suppliedClient === undefined
     ? getSupabaseClient() as unknown as TodayChallengeClient | null
     : suppliedClient;
   if (!client) return null;
+  const parseProjection = sport === "football"
+    ? parseFootballTodayChallengeProjection
+    : parseTodayChallengeProjection;
 
   return {
     async loadToday() {
-      return parseTodayChallengeProjection(await invokeRuntime(client, { mode: "get-today" }));
+      return parseProjection(await invokeRuntime(client, { mode: "get-today", sport }));
     },
     async advance(projection, action) {
-      return parseTodayChallengeProjection(await invokeRuntime(client, {
+      return parseProjection(await invokeRuntime(client, {
         mode: "advance",
+        sport,
         daily_challenge_id: projection.id,
         revision: projection.progressRevision,
+        ...(sport === "football" ? { action_history: projection.actionHistory ?? [] } : {}),
         action,
       }));
     },
     async loadHistory() {
-      const rows = z.array(historySchema).parse(
-        await rpc(client, "list_my_daily_challenge_history") ?? [],
-      );
+      if (sport === "football") return deferredFootballRecords();
+      const rows = z.array(historySchema).parse(await rpc(client, "list_my_daily_challenge_history") ?? []);
       return rows.map((row) => ({
         day: row.day,
         scheduleVersion: row.schedule_version,
@@ -349,10 +367,12 @@ export function createTodayChallengeRepository(
       }));
     },
     async loadStreak() {
+      if (sport === "football") return deferredFootballRecords();
       const row = streakSchema.parse(await rpc(client, "get_my_daily_challenge_streak"));
       return { currentStreak: row.current_streak, bestStreak: row.best_streak };
     },
     async loadStandings() {
+      if (sport === "football") return deferredFootballRecords();
       const row = standingsSchema.parse(await rpc(client, "get_daily_challenge_standings"));
       return {
         playerCount: row.player_count,
@@ -388,6 +408,7 @@ export function createTodayChallengeRepository(
       };
     },
     async loadDailyLeaderboard(day, scheduleVersion) {
+      if (sport === "football") return deferredFootballRecords();
       const row = leaderboardSchema.parse(await rpc(
         client,
         "get_daily_challenge_leaderboard",

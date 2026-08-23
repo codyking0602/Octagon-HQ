@@ -282,11 +282,18 @@ begin
     where (entry->>'rank')::integer = 1
       and (entry->>'normalized_score')::integer = 30
   ) <> 2
-    or v_board::text like '%profile_id%'
-    or v_board::text like '%completed_at%'
+    or (
+      select count(*)
+      from jsonb_array_elements(v_board->'entries') entry
+      where entry ? 'profile_id'
+        and entry ? 'completed_at'
+        and entry ? 'public_result'
+        and entry ? 'public_state'
+        and entry ? 'progress_revision'
+    ) <> 2
     or v_board::text like '%submission_evidence%'
     or v_board::text like '%grading_evidence%' then
-    raise exception 'leaderboard tie/privacy contract failed: %', v_board;
+    raise exception 'leaderboard tie/canonical-public-state/privacy contract failed: %', v_board;
   end if;
 
   perform set_config('request.jwt.claim.sub', v_cody::text, true);

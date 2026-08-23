@@ -295,10 +295,10 @@ declare
 begin
   v_health := public.get_pick_monitoring_scheduler_health();
   if v_health->>'job_name' <> 'octagon-hq-pick-monitoring'
-    or v_health->>'schedule' <> '7 * * * *'
-    or v_health->>'daily_function_name' <> 'daily-challenge-runtime'
+    or v_health->>'schedule' <> '*/5 * * * *'
+    or v_health->>'function_name' <> 'run-pick-monitoring'
     or v_health->>'command_configured' <> 'true' then
-    raise exception 'shared hourly scheduler does not own both canonical calls: %', v_health;
+    raise exception 'canonical five-minute scheduler is not configured: %', v_health;
   end if;
 end
 $$;

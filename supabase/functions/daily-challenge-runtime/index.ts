@@ -1,6 +1,7 @@
 import { createClient, type SupabaseClient } from "npm:@supabase/supabase-js@2.110.7";
 import {
   advanceOfficialDailyRuntime,
+  buildFootballTodayProjection,
   buildOfficialDailySetup,
 } from "./runtime.generated.mjs";
 import { DEPLOYED_SOURCE_SHA } from "./deployment.ts";
@@ -68,6 +69,54 @@ function requiredRecord(value: unknown, label: string) {
 function requiredString(value: unknown, label: string) {
   if (typeof value !== "string" || !value.trim()) throw new Error(`${label} is unavailable.`);
   return value;
+}
+
+function centralDayNow() {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Chicago",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+  const value = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${value.year}-${value.month}-${value.day}`;
+}
+
+function footballHistory(value: unknown) {
+  if (value == null) return [] as JsonRecord[];
+  if (!Array.isArray(value) || value.some((row) => !asRecord(row))) {
+    throw new Error("Football Today’s Challenge action history must be an object array.");
+  }
+  return value as JsonRecord[];
+}
+
+function footballPayload(body: JsonRecord) {
+  const day = centralDayNow();
+  if (body.mode === "get-today" || body.mode === undefined) {
+    return json({ ...buildFootballTodayProjection(day, []), deployment_sha: DEPLOYED_SOURCE_SHA });
+  }
+  if (body.mode !== "advance") {
+    return safeError(400, "INVALID_MODE", "Unsupported Football Today’s Challenge runtime mode.");
+  }
+
+  const history = footballHistory(body.action_history);
+  const current = buildFootballTodayProjection(day, history) as JsonRecord;
+  const requestedId = typeof body.daily_challenge_id === "string" ? body.daily_challenge_id : current.id;
+  if (requestedId !== current.id) {
+    return safeError(409, "DAILY_IDENTITY_CHANGED", "Today’s Football challenge identity has changed.");
+  }
+  if (!Number.isInteger(body.revision) || Number(body.revision) !== history.length) {
+    return safeError(409, "STALE_PROGRESS", "Football Today’s Challenge progress changed. Refresh and continue from the latest state.");
+  }
+  if (asRecord(current.official_attempt)) {
+    return safeError(409, "OFFICIAL_ATTEMPT_COMPLETE", "Today’s Football challenge is already complete.");
+  }
+
+  const action = requiredRecord(body.action, "Football daily action");
+  return json({
+    ...buildFootballTodayProjection(day, [...history, action]),
+    deployment_sha: DEPLOYED_SOURCE_SHA,
+  });
 }
 
 function runtimeContext(value: unknown): OfficialDailyRuntimeContext & JsonRecord {
@@ -406,6 +455,16 @@ Deno.serve(async (request) => {
   let body: JsonRecord = {};
   try { body = asRecord(await request.json()) ?? {}; } catch { /* empty input */ }
   if (body.mode === "deployment-info") return json({ deployment_sha: DEPLOYED_SOURCE_SHA });
+
+  if (body.sport === "football") {
+    try {
+      return footballPayload(body);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Football Today’s Challenge failed safely.";
+      const status = /must|already|not on|unavailable|full|complete|unsupported|invalid|array|object/i.test(message) ? 400 : 503;
+      return safeError(status, status === 400 ? "INVALID_DAILY_ACTION" : "DAILY_RUNTIME_FAILED", message);
+    }
+  }
 
   const url = Deno.env.get("SUPABASE_URL");
   const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
