@@ -52,17 +52,17 @@ describe("sport-aware Play registry", () => {
     expect(new Set(playGameCatalog.map((game) => `${game.sport}:${game.id}`)).size).toBe(playGameCatalog.length);
   });
 
-  it("does not turn on Football daily, challenge, streak, reminder, or curated platform behavior early", () => {
+  it("turns on shared challenge support for Football without duplicating the daily platform", () => {
     for (const game of playGamesForSport("football")) {
       expect(game.lineup).toMatchObject({
         defaultType: "replayable",
-        supportedTypes: ["replayable"],
+        supportedTypes: ["replayable", "curated"],
         replayBehavior: "new-lineup",
-        challengeEligible: false,
+        challengeEligible: true,
         dailyEligible: false,
         streakEligible: false,
         reminderEligible: false,
-        historyRecording: "casual-only",
+        historyRecording: "casual-and-challenge",
       });
     }
   });
