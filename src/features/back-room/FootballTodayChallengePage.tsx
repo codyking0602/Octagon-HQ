@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { DailyChallengeStandings } from "../play/DailyChallengeStandings";
+import { shareDailyChallengeResult } from "../play/dailyChallengeShare";
 import {
   createTodayChallengeRepository,
   TodayChallengeRepositoryError,
@@ -321,6 +322,7 @@ export default function FootballTodayChallengePage() {
   const [projection, setProjection] = useState<TodayChallengeProjection | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [shareStatus, setShareStatus] = useState("");
   const overview = useTodayChallengeOverview({
     profileId,
     enabled: signedIn,
@@ -369,6 +371,16 @@ export default function FootballTodayChallengePage() {
     }
   }
 
+  async function shareResult() {
+    if (!projection?.officialAttempt) return;
+    const outcome = await shareDailyChallengeResult({
+      sport: "football",
+      score: projection.officialAttempt.normalizedScore,
+      centralDay: projection.centralDay,
+    });
+    setShareStatus(outcome === "shared" ? "RESULT SHARED" : outcome === "copied" ? "RESULT LINK COPIED" : outcome === "cancelled" ? "" : "SHARE UNAVAILABLE");
+  }
+
   if (!signedIn) {
     return (
       <div className="page football-today-page">
@@ -398,6 +410,13 @@ export default function FootballTodayChallengePage() {
         {error ? <div className="football-today-error">{error}</div> : null}
         {busy ? <div className="football-today-busy">LOCKING…</div> : null}
         <ScoreCard projection={projection} />
+        {projection.officialAttempt ? (
+          <div className="football-today-result-actions">
+            <button className="football-today-primary" type="button" onClick={() => void shareResult()}>SHARE RESULT</button>
+            <button type="button" onClick={() => navigate("/back-room/football")}>FOOTBALL HQ</button>
+            {shareStatus ? <span role="status">{shareStatus}</span> : null}
+          </div>
+        ) : null}
         {projection.gameType === "find_leader" ? <FindLeader projection={projection} advance={advance} /> : null}
         {projection.gameType === "blind_resume" ? <BlindResume projection={projection} advance={advance} /> : null}
         {projection.gameType === "wavelength" ? <Wavelength projection={projection} advance={advance} /> : null}

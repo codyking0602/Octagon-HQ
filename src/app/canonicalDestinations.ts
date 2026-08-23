@@ -11,6 +11,7 @@ export type DirectCanonicalDestination =
   | { kind: "auction"; auctionId: string }
   | { kind: "picks-event"; eventId: string }
   | { kind: "picks-recap"; eventId: string }
+  | { kind: "daily-challenge"; sport: "ufc" | "football" }
   | {
       kind: "war-room";
       conversationId: string;
@@ -77,6 +78,8 @@ export function canonicalDestinationPath(destination: CanonicalDestination): str
         ["event", destination.eventId],
         ["view", "recap"],
       ]);
+    case "daily-challenge":
+      return destination.sport === "football" ? "/back-room/football/today" : "/play";
     case "war-room": {
       const entries: Array<readonly [string, string]> = [
         ["conversation", destination.conversationId],

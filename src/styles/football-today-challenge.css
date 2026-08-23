@@ -229,3 +229,13 @@
   .football-today-lock-result { display: block; }
   .football-today-lock-result span { display: block; margin-top: 4px; }
 }
+.football-today-result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .65rem;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.football-today-result-actions button { flex: 1 1 10rem; }
+.football-today-result-actions span { flex-basis: 100%; color: var(--muted); font-size: .75rem; font-weight: 800; letter-spacing: .08em; }
