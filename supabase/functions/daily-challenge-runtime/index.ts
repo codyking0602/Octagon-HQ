@@ -1,7 +1,8 @@
 import { createClient, type SupabaseClient } from "npm:@supabase/supabase-js@2.110.7";
 import {
   advanceOfficialDailyRuntime,
-  buildFootballTodayProjection,
+  buildFootballTodayPersistenceSetup,
+  buildFootballTodayRuntimeSnapshot,
   buildOfficialDailySetup,
 } from "./runtime.generated.mjs";
 import { DEPLOYED_SOURCE_SHA } from "./deployment.ts";
@@ -82,41 +83,13 @@ function centralDayNow() {
   return `${value.year}-${value.month}-${value.day}`;
 }
 
-function footballHistory(value: unknown) {
+function footballActionHistory(context: OfficialDailyRuntimeContext & JsonRecord) {
+  const value = context.submissionState.action_history;
   if (value == null) return [] as JsonRecord[];
   if (!Array.isArray(value) || value.some((row) => !asRecord(row))) {
-    throw new Error("Football Today’s Challenge action history must be an object array.");
+    throw new Error("Football Today’s Challenge saved action history is invalid.");
   }
   return value as JsonRecord[];
-}
-
-function footballPayload(body: JsonRecord) {
-  const day = centralDayNow();
-  if (body.mode === "get-today" || body.mode === undefined) {
-    return json({ ...buildFootballTodayProjection(day, []), deployment_sha: DEPLOYED_SOURCE_SHA });
-  }
-  if (body.mode !== "advance") {
-    return safeError(400, "INVALID_MODE", "Unsupported Football Today’s Challenge runtime mode.");
-  }
-
-  const history = footballHistory(body.action_history);
-  const current = buildFootballTodayProjection(day, history) as JsonRecord;
-  const requestedId = typeof body.daily_challenge_id === "string" ? body.daily_challenge_id : current.id;
-  if (requestedId !== current.id) {
-    return safeError(409, "DAILY_IDENTITY_CHANGED", "Today’s Football challenge identity has changed.");
-  }
-  if (!Number.isInteger(body.revision) || Number(body.revision) !== history.length) {
-    return safeError(409, "STALE_PROGRESS", "Football Today’s Challenge progress changed. Refresh and continue from the latest state.");
-  }
-  if (asRecord(current.official_attempt)) {
-    return safeError(409, "OFFICIAL_ATTEMPT_COMPLETE", "Today’s Football challenge is already complete.");
-  }
-
-  const action = requiredRecord(body.action, "Football daily action");
-  return json({
-    ...buildFootballTodayProjection(day, [...history, action]),
-    deployment_sha: DEPLOYED_SOURCE_SHA,
-  });
 }
 
 function runtimeContext(value: unknown): OfficialDailyRuntimeContext & JsonRecord {
@@ -368,6 +341,31 @@ async function materializeToday(admin: SupabaseClient) {
   };
 }
 
+async function materializeFootballToday(admin: SupabaseClient) {
+  const day = centralDayNow();
+  const publication = buildFootballTodayPersistenceSetup(day) as JsonRecord;
+  const published = await admin.rpc("publish_daily_challenge_setup", {
+    p_central_day: day,
+    p_schedule_version: "football-daily-v1",
+    p_game_type: requiredString(publication.gameType, "Football daily game type"),
+    p_setup_key: requiredString(publication.setupKey, "Football daily setup key"),
+    p_content_version: requiredString(publication.contentVersion, "Football daily content version"),
+    p_scoring_version: requiredString(publication.scoringVersion, "Football daily scoring version"),
+    p_public_setup: requiredRecord(publication.publicSetup, "Football daily public setup"),
+    p_reveal_setup: requiredRecord(publication.revealSetup, "Football daily reveal setup"),
+    p_private_setup_evidence: requiredRecord(publication.privateSetupEvidence, "Football daily private setup evidence"),
+    p_private_grading_evidence: requiredRecord(publication.privateGradingEvidence, "Football daily private grading evidence"),
+    p_fallback_reason: null,
+  });
+  if (published.error) throw new Error("The official Football daily setup could not be published safely.");
+  const result = requiredRecord(published.data, "Published Football daily setup");
+  return {
+    dailyChallengeId: requiredString(result.id, "Published Football daily challenge id"),
+    centralDay: day,
+    created: true,
+  };
+}
+
 async function getContext(admin: SupabaseClient, dailyChallengeId: string, profileId: string) {
   const response = await admin.rpc("get_daily_challenge_runtime_context", {
     p_daily_challenge_id: dailyChallengeId,
@@ -430,6 +428,22 @@ function publicPayload(context: OfficialDailyRuntimeContext & JsonRecord) {
   };
 }
 
+function footballPublicPayload(context: OfficialDailyRuntimeContext & JsonRecord, day: string) {
+  const history = footballActionHistory(context);
+  const snapshot = buildFootballTodayRuntimeSnapshot(day, history) as JsonRecord;
+  const projection = requiredRecord(snapshot.projection, "Football daily projection");
+  const attempt = asRecord(context.official_attempt);
+  return {
+    ...projection,
+    id: context.daily_challenge_id,
+    progress_revision: Number(context.progress_revision),
+    reveal_setup: attempt ? projection.reveal_setup : null,
+    official_attempt: attempt,
+    action_history: history,
+    deployment_sha: DEPLOYED_SOURCE_SHA,
+  };
+}
+
 async function finalizePending(
   userClient: SupabaseClient,
   admin: SupabaseClient,
@@ -455,16 +469,6 @@ Deno.serve(async (request) => {
   let body: JsonRecord = {};
   try { body = asRecord(await request.json()) ?? {}; } catch { /* empty input */ }
   if (body.mode === "deployment-info") return json({ deployment_sha: DEPLOYED_SOURCE_SHA });
-
-  if (body.sport === "football") {
-    try {
-      return footballPayload(body);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Football Today’s Challenge failed safely.";
-      const status = /must|already|not on|unavailable|full|complete|unsupported|invalid|array|object/i.test(message) ? 400 : 503;
-      return safeError(status, status === 400 ? "INVALID_DAILY_ACTION" : "DAILY_RUNTIME_FAILED", message);
-    }
-  }
 
   const url = Deno.env.get("SUPABASE_URL");
   const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
@@ -499,6 +503,58 @@ Deno.serve(async (request) => {
       auth: { autoRefreshToken: false, persistSession: false },
       global: { headers: { Authorization: `Bearer ${token}` } },
     });
+
+    if (body.sport === "football") {
+      const materialized = await materializeFootballToday(admin);
+      let context = await getContext(admin, materialized.dailyChallengeId, profileId);
+      context = await finalizePending(userClient, admin, context, profileId);
+
+      if (body.mode === "get-today" || body.mode === undefined) {
+        return json(footballPublicPayload(context, materialized.centralDay));
+      }
+      if (body.mode !== "advance") {
+        return safeError(400, "INVALID_MODE", "Unsupported Football Today’s Challenge runtime mode.");
+      }
+      if (asRecord(context.official_attempt)) {
+        return safeError(409, "OFFICIAL_ATTEMPT_COMPLETE", "The official Football first attempt is already complete.");
+      }
+
+      const requestedDailyId = typeof body.daily_challenge_id === "string" ? body.daily_challenge_id : materialized.dailyChallengeId;
+      if (requestedDailyId !== materialized.dailyChallengeId) {
+        return safeError(409, "DAILY_IDENTITY_CHANGED", "Today’s Football challenge identity has changed.");
+      }
+      if (!Number.isInteger(body.revision) || Number(body.revision) !== Number(context.progress_revision)) {
+        return safeError(409, "STALE_PROGRESS", "Football Today’s Challenge progress changed on another device. Refresh and continue from the latest state.");
+      }
+
+      const history = footballActionHistory(context);
+      const action = requiredRecord(body.action, "Football daily action");
+      const nextHistory = [...history, action];
+      const snapshot = buildFootballTodayRuntimeSnapshot(materialized.centralDay, nextHistory) as JsonRecord;
+      const projection = requiredRecord(snapshot.projection, "Advanced Football daily projection");
+      const finalSubmission = asRecord(snapshot.finalSubmission);
+      const saved = await admin.rpc("save_daily_challenge_runtime_progress", {
+        p_daily_challenge_id: materialized.dailyChallengeId,
+        p_profile_id: profileId,
+        p_expected_revision: Number(context.progress_revision),
+        p_submission_state: {
+          action_history: nextHistory,
+          final_submission: finalSubmission,
+        },
+        p_public_state: requiredRecord(projection.public_state, "Advanced Football public state"),
+      });
+      if (saved.error) {
+        if (saved.error.code === "40001") {
+          return safeError(409, "STALE_PROGRESS", "Football Today’s Challenge progress changed on another device. Refresh and continue from the latest state.");
+        }
+        throw new Error("The official Football daily progress could not be saved.");
+      }
+
+      context = await getContext(admin, materialized.dailyChallengeId, profileId);
+      context = await finalizePending(userClient, admin, context, profileId);
+      return json(footballPublicPayload(context, materialized.centralDay));
+    }
+
     const materialized = await materializeToday(admin);
     let context = await getContext(admin, materialized.dailyChallengeId, profileId);
     context = await finalizePending(userClient, admin, context, profileId);
@@ -543,7 +599,7 @@ Deno.serve(async (request) => {
     return json(publicPayload(context));
   } catch (error) {
     const message = error instanceof Error ? error.message : "The official daily runtime failed safely.";
-    const status = /must|already|not on|unavailable|full|complete|unsupported|integer|array|object/i.test(message) ? 400 : 503;
+    const status = /must|already|not on|unavailable|full|complete|unsupported|invalid|integer|array|object/i.test(message) ? 400 : 503;
     return safeError(status, status === 400 ? "INVALID_DAILY_ACTION" : "DAILY_RUNTIME_FAILED", message);
   }
 });

@@ -6,8 +6,11 @@ on:
       - ".github/workflows/verify-generalized-daily-backend.yml"
       - "scripts/bundle-daily-challenge-runtime.mjs"
       - "scripts/verify-generalized-daily-concurrency.sh"
+      - "src/features/play/dailyRuntimeBundle.ts"
       - "src/features/play/todaysChallengeRuntime.ts"
       - "src/features/play/todaysChallengeRuntime.test.ts"
+      - "src/features/play/footballTodayChallengeRuntime.ts"
+      - "src/features/play/footballTodayChallengeSession.ts"
       - "src/features/play/hitTheNumberDailyRuntime.ts"
       - "src/features/play/hitTheNumberDailyRuntime.test.ts"
       - "supabase/config.toml"
@@ -22,6 +25,7 @@ on:
       - "supabase/migrations/202612310026_blind_resume_v3_daily_runtime.sql"
       - "supabase/migrations/202612310027_blind_resume_v3_publication.sql"
       - "supabase/migrations/202612310028_activate_six_game_daily_rotation.sql"
+      - "supabase/migrations/202612310052_football_daily_challenge_persistence.sql"
       - "supabase/tests/generalized_todays_challenge_backend.sql"
       - "supabase/tests/daily_challenge_runtime_progress.sql"
       - "supabase/tests/daily_challenge_rotation.sql"
@@ -29,6 +33,7 @@ on:
       - "supabase/tests/wavelength_score_calibration.sql"
       - "supabase/tests/hit_the_number_daily_runtime.sql"
       - "supabase/tests/blind_resume_v3_daily_runtime.sql"
+      - "supabase/tests/football_daily_challenge_persistence.sql"
       - "supabase/tests/generalized_todays_challenge_legacy_seed.sql"
       - "supabase/tests/generalized_todays_challenge_legacy_assert.sql"
   workflow_dispatch:
@@ -163,6 +168,10 @@ jobs:
         shell: bash
         run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/daily_challenge_runtime_progress.sql
 
+      - name: Execute Football sport-scoped persistence and competition proof
+        shell: bash
+        run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/football_daily_challenge_persistence.sql
+
       - name: Execute realistic legacy-data migration and idempotency proof
         shell: bash
         run: |
@@ -180,6 +189,7 @@ jobs:
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310026_blind_resume_v3_daily_runtime.sql
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310027_blind_resume_v3_publication.sql
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310028_activate_six_game_daily_rotation.sql
+            psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310052_football_daily_challenge_persistence.sql
           done
           psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/generalized_todays_challenge_legacy_assert.sql
 
@@ -208,6 +218,7 @@ jobs:
             echo "- Legacy 20-day rotation/fallback and new 60-day six-game rotation: passed"
             echo "- Progressive reveal and hidden-evidence boundaries: passed"
             echo "- Cross-device optimistic progress restoration: passed"
+            echo "- Football/UFC same-day sport isolation and shared records RPCs: passed"
             echo "- Shared hourly materialization wake-up: passed"
             echo "- Central-time DST boundaries: passed"
             echo "- Immutable first attempt and replay isolation: passed"
@@ -321,6 +332,7 @@ jobs:
           require_remote_migration "202612310026"
           require_remote_migration "202612310027"
           require_remote_migration "202612310028"
+          require_remote_migration "202612310052"
           supabase db push --linked --dry-run
 
       - name: Record exact deployed backend proof
@@ -330,7 +342,7 @@ jobs:
             echo "### Generalized Today’s Challenge backend deployment verified"
             echo "- Canonical deploy workflow run: ${{ github.event.workflow_run.html_url }}"
             echo "- Exact deployed source SHA: \`$SOURCE_SHA\`"
-            echo "- Remote migrations: \`202609050001\`, \`202609050002\`, \`202609060001\`, \`202609080001\`, \`202609090001\`, \`202609140003\`, \`202612310025\`, \`202612310026\`, \`202612310027\`, \`202612310028\`"
+            echo "- Remote migrations: \`202609050001\`, \`202609050002\`, \`202609060001\`, \`202609080001\`, \`202609090001\`, \`202609140003\`, \`202612310025\`, \`202612310026\`, \`202612310027\`, \`202612310028\`, \`202612310052\`"
             echo "- Daily runtime Edge Function exact-head marker verified by the canonical deploy workflow"
             echo "- Linked dry run: no unapplied database changes"
           } >> "$GITHUB_STEP_SUMMARY"

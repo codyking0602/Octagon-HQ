@@ -1,12 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useIdentity } from "../identity/IdentityProvider";
+import { DailyChallengeStandings } from "../play/DailyChallengeStandings";
 import {
   createTodayChallengeRepository,
   TodayChallengeRepositoryError,
+  type TodayChallengeLeaderboard,
   type TodayChallengeProjection,
 } from "../play/todayChallengeRepository";
+import { useTodayChallengeOverview } from "../play/useTodayChallengeOverview";
 import { FootballSubjectVisual } from "./FootballSubjectVisual";
 import type { FootballRankFiveItem, FootballRankFivePackId } from "./footballRankFiveModel";
+import "../../styles/daily-challenge-standings.css";
+import "../../styles/today-challenge-hub.css";
 import "../../styles/football-today-challenge.css";
 
 const GAME_LABELS = {
@@ -73,6 +79,49 @@ function ScoreCard({ projection }: { projection: TodayChallengeProjection }) {
       <strong>{attempt.normalizedScore}<small>/100</small></strong>
       {typeof result.blind_rank_score === "number" && typeof result.keep_cut_score === "number" ? (
         <span>BLIND RANK {result.blind_rank_score} · KEEP/CUT {result.keep_cut_score}</span>
+      ) : null}
+    </section>
+  );
+}
+
+function FootballDailyLeaderboard({
+  leaderboard,
+  loading,
+}: {
+  leaderboard: TodayChallengeLeaderboard | null;
+  loading: boolean;
+}) {
+  return (
+    <section className="today-hub-leaderboard" aria-label="Football Today’s Challenge leaderboard">
+      <header>
+        <div>
+          <p className="eyebrow">TODAY’S LEADERBOARD</p>
+          <h2>Football Daily</h2>
+        </div>
+        <span>{leaderboard?.playerCount ?? 0} PLAYERS</span>
+      </header>
+      {loading && !leaderboard ? <p className="today-hub-empty">Loading today’s leaderboard…</p> : null}
+      {!loading && !leaderboard?.unlocked ? (
+        <p className="today-hub-empty">Finish today’s official game to unlock the Football leaderboard.</p>
+      ) : null}
+      {leaderboard?.unlocked && !leaderboard.entries.length ? <p className="today-hub-empty">No official finishes yet.</p> : null}
+      {leaderboard?.unlocked && leaderboard.entries.length ? (
+        <div className="today-hub-leaderboard__rows">
+          {leaderboard.entries.map((entry) => (
+            <div
+              className={`today-hub-leaderboard__row${entry.isCurrentUser ? " is-current" : ""}`}
+              key={entry.profileId}
+            >
+              <b>#{entry.rank}</b>
+              {entry.avatarPhotoData
+                ? <img src={entry.avatarPhotoData} alt="" />
+                : <span>{entry.initials}</span>}
+              <strong>{entry.displayName}</strong>
+              <em>{entry.normalizedScore}/100</em>
+              <small>{GAME_LABELS[entry.gameType]}</small>
+            </div>
+          ))}
+        </div>
       ) : null}
     </section>
   );
@@ -265,31 +314,50 @@ type GameProps = {
 
 export default function FootballTodayChallengePage() {
   const navigate = useNavigate();
+  const identity = useIdentity();
+  const signedIn = identity.status === "ready" && Boolean(identity.profile?.id);
+  const profileId = identity.profile?.id ?? "signed-out";
   const repository = useMemo(() => createTodayChallengeRepository(undefined, "football"), []);
   const [projection, setProjection] = useState<TodayChallengeProjection | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const overview = useTodayChallengeOverview({
+    profileId,
+    enabled: signedIn,
+    projection,
+    repository,
+    sport: "football",
+  });
 
   useEffect(() => {
     let active = true;
+    if (!signedIn) {
+      setProjection(null);
+      setBusy(false);
+      setError(null);
+      return () => { active = false; };
+    }
     if (!repository) {
       setError("Football Today’s Challenge is unavailable on this build.");
       return () => { active = false; };
     }
     setBusy(true);
+    setError(null);
     repository.loadToday()
       .then((next) => { if (active) setProjection(next); })
       .catch((reason) => { if (active) setError(reason instanceof Error ? reason.message : "Could not load today’s football board."); })
       .finally(() => { if (active) setBusy(false); });
     return () => { active = false; };
-  }, [repository]);
+  }, [repository, signedIn]);
 
   async function advance(action: JsonRecord) {
     if (!repository || !projection || busy || projection.officialAttempt) return;
     setBusy(true);
     setError(null);
     try {
-      setProjection(await repository.advance(projection, action));
+      const next = await repository.advance(projection, action);
+      setProjection(next);
+      if (next.officialAttempt) void overview.refresh();
     } catch (reason) {
       if (reason instanceof TodayChallengeRepositoryError && reason.stale) {
         setProjection(await repository.loadToday());
@@ -299,6 +367,21 @@ export default function FootballTodayChallengePage() {
     } finally {
       setBusy(false);
     }
+  }
+
+  if (!signedIn) {
+    return (
+      <div className="page football-today-page">
+        <section className="football-today-shell today-hub-gate">
+          <div>
+            <p className="eyebrow">TODAY’S CHALLENGE · FOOTBALL</p>
+            <h1>One official board. One first attempt.</h1>
+            <p>Sign in to save Football Daily progress across devices and join the Football-only standings.</p>
+          </div>
+          <button type="button" onClick={identity.openDialog}>SIGN IN TO PLAY</button>
+        </section>
+      </div>
+    );
   }
 
   if (!projection) {
@@ -321,6 +404,16 @@ export default function FootballTodayChallengePage() {
         {projection.gameType === "blind_rank_5" ? <BlindRank projection={projection} advance={advance} /> : null}
         {projection.gameType === "keep_4_cut_4" ? <KeepCut projection={projection} advance={advance} /> : null}
         {projection.gameType === "hit_the_number" ? <HitTheNumber projection={projection} advance={advance} /> : null}
+        <FootballDailyLeaderboard
+          leaderboard={overview.leaderboard}
+          loading={overview.leaderboardLoading}
+        />
+        <DailyChallengeStandings
+          standings={overview.standings}
+          loading={overview.standingsLoading}
+          error={overview.error instanceof Error ? overview.error : null}
+          onRefresh={() => { void overview.refresh(); }}
+        />
       </section>
     </div>
   );

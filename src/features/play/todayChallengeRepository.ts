@@ -38,7 +38,7 @@ const projectionSchema = z.object({ ...projectionFields, id: z.string().uuid() }
 const footballProjectionSchema = z.object({
   ...projectionFields,
   sport: z.literal("football"),
-  id: z.string().min(1),
+  id: z.string().uuid(),
   action_history: z.array(jsonRecordSchema).default([]),
 });
 const historySchema = z.object({
@@ -90,6 +90,7 @@ const standingsEntrySchema = z.object({
     blind_resume: z.coerce.number().nullable(),
     blind_rank_5: z.coerce.number().nullable(),
     keep_4_cut_4: z.coerce.number().nullable(),
+    hit_the_number: z.coerce.number().nullable().optional(),
   }),
   is_current_user: z.boolean(),
   weekly_rank: z.coerce.number().int().positive(),
@@ -183,6 +184,7 @@ export interface TodayChallengeStandingsEntry {
     blindResume: number | null;
     blindRank5: number | null;
     keep4Cut4: number | null;
+    hitTheNumber: number | null;
   };
   isCurrentUser: boolean;
   weeklyRank: number;
@@ -280,7 +282,7 @@ export function parseTodayChallengeProjection(value: unknown): TodayChallengePro
 export function parseFootballTodayChallengeProjection(value: unknown): TodayChallengeProjection {
   const row = footballProjectionSchema.parse(value);
   return {
-    ...projectionFromRow({ ...row, id: row.id } as z.infer<typeof projectionSchema>),
+    ...projectionFromRow(row),
     sport: "football",
     actionHistory: row.action_history,
   };
@@ -306,13 +308,6 @@ async function rpc(client: TodayChallengeClient, name: string, args?: Record<str
     );
   }
   return data;
-}
-
-function deferredFootballRecords(): never {
-  throw new TodayChallengeRepositoryError(
-    "FOOTBALL_DAILY_RECORDS_DEFERRED",
-    "Football Today’s Challenge records and standings arrive with the persistence release.",
-  );
 }
 
 export interface TodayChallengeRepository {
@@ -349,13 +344,15 @@ export function createTodayChallengeRepository(
         sport,
         daily_challenge_id: projection.id,
         revision: projection.progressRevision,
-        ...(sport === "football" ? { action_history: projection.actionHistory ?? [] } : {}),
         action,
       }));
     },
     async loadHistory() {
-      if (sport === "football") return deferredFootballRecords();
-      const rows = z.array(historySchema).parse(await rpc(client, "list_my_daily_challenge_history") ?? []);
+      const rows = z.array(historySchema).parse(await rpc(
+        client,
+        "list_my_daily_challenge_history",
+        { p_sport: sport },
+      ) ?? []);
       return rows.map((row) => ({
         day: row.day,
         scheduleVersion: row.schedule_version,
@@ -367,13 +364,19 @@ export function createTodayChallengeRepository(
       }));
     },
     async loadStreak() {
-      if (sport === "football") return deferredFootballRecords();
-      const row = streakSchema.parse(await rpc(client, "get_my_daily_challenge_streak"));
+      const row = streakSchema.parse(await rpc(
+        client,
+        "get_my_daily_challenge_streak",
+        { p_sport: sport },
+      ));
       return { currentStreak: row.current_streak, bestStreak: row.best_streak };
     },
     async loadStandings() {
-      if (sport === "football") return deferredFootballRecords();
-      const row = standingsSchema.parse(await rpc(client, "get_daily_challenge_standings"));
+      const row = standingsSchema.parse(await rpc(
+        client,
+        "get_daily_challenge_standings",
+        { p_sport: sport },
+      ));
       return {
         playerCount: row.player_count,
         currentUserRank: row.current_user_rank,
@@ -402,17 +405,17 @@ export function createTodayChallengeRepository(
             blindResume: entry.game_averages.blind_resume,
             blindRank5: entry.game_averages.blind_rank_5,
             keep4Cut4: entry.game_averages.keep_4_cut_4,
+            hitTheNumber: entry.game_averages.hit_the_number ?? null,
           },
           isCurrentUser: entry.is_current_user,
         })),
       };
     },
     async loadDailyLeaderboard(day, scheduleVersion) {
-      if (sport === "football") return deferredFootballRecords();
       const row = leaderboardSchema.parse(await rpc(
         client,
         "get_daily_challenge_leaderboard",
-        { p_day: day, p_schedule_version: scheduleVersion },
+        { p_day: day, p_schedule_version: scheduleVersion, p_sport: sport },
       ));
       return {
         unlocked: row.unlocked,
