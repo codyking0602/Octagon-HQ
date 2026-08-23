@@ -3,10 +3,12 @@ import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { BottomNavigation } from "../components/BottomNavigation";
 import { RouteLoading } from "../components/RouteLoading";
 import { BackRoomLogoLink } from "../features/back-room/BackRoomLogoLink";
+import { FootballHeader } from "../features/football/FootballHeader";
 import { useIdentity } from "../features/identity/IdentityProvider";
 import { memberProfilePath } from "../features/members/memberProfilesModel";
 import { NotificationHeaderAction } from "../features/notifications/NotificationHeaderAction";
 import { NotificationPushSetting } from "../features/notifications/NotificationPushSetting";
+import { useProfilePreferences } from "../features/profile/ProfilePreferencesProvider";
 import { IdentityControl } from "../features/identity/IdentityControl";
 import { BrandedPullToRefresh } from "./BrandedPullToRefresh";
 import { RouteScrollManager } from "./RouteScrollManager";
@@ -36,27 +38,31 @@ function ProfilePushSettingRoute() {
 
 export function AppShell() {
   const location = useLocation();
+  const { footballTeam } = useProfilePreferences();
   const gameTitle = PLAY_GAME_TITLES[location.pathname];
   const isPlayGame = Boolean(gameTitle);
   const isBackRoom = location.pathname === "/back-room" || location.pathname.startsWith("/back-room/");
-  const isFootballRoom = location.pathname === "/back-room/football" || location.pathname.startsWith("/back-room/football/");
-  const isFootballGame = location.pathname.startsWith("/back-room/football/");
+  const isFootball = location.pathname === "/football" || location.pathname.startsWith("/football/");
+  const isFootballEntry = location.pathname === "/football/entry";
+  const footballTeamClass = isFootball && footballTeam ? ` football-team--${footballTeam}` : "";
 
   return (
-    <div className={`app-shell${isPlayGame ? " app-shell--game" : ""}${isBackRoom ? " app-shell--back-room" : ""}${isFootballRoom ? " app-shell--football-room" : ""}`}>
+    <div className={`app-shell${isPlayGame ? " app-shell--game" : ""}${isBackRoom ? " app-shell--back-room" : ""}${isFootball ? " app-shell--football" : ""}${footballTeamClass}`}>
       <RouteScrollManager />
 
-      {isBackRoom ? (
+      {isFootballEntry ? null : isFootball ? (
+        <FootballHeader />
+      ) : isBackRoom ? (
         <header className="app-header app-header--back-room">
           <Link
             className="back-room-header__exit"
-            to={isFootballRoom ? (isFootballGame ? "/back-room/football" : "/back-room") : "/play"}
-            aria-label={isFootballRoom ? "Return from Football Back Room" : "Return to UFC games"}
+            to="/play"
+            aria-label="Return to UFC games"
           >
             <span aria-hidden="true">←</span>
             <span>
-              <small>{isFootballRoom ? "THE BACK ROOM" : "OCTAGON HQ"}</small>
-              <strong>{isFootballRoom ? "FOOTBALL" : "THE BACK ROOM"}</strong>
+              <small>OCTAGON HQ</small>
+              <strong>THE BACK ROOM</strong>
             </span>
           </Link>
         </header>
@@ -89,7 +95,7 @@ export function AppShell() {
       )}
 
       <BrandedPullToRefresh>
-        <main className={`app-content${isPlayGame ? " app-content--game" : ""}`}>
+        <main className={`app-content${isPlayGame ? " app-content--game" : ""}${isFootball ? " app-content--football" : ""}`}>
           <Suspense fallback={<RouteLoading />}>
             <Outlet />
           </Suspense>
@@ -97,7 +103,7 @@ export function AppShell() {
         </main>
       </BrandedPullToRefresh>
 
-      {isBackRoom ? null : <BottomNavigation />}
+      {isBackRoom || isFootballEntry ? null : <BottomNavigation />}
     </div>
   );
 }
