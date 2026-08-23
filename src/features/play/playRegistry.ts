@@ -239,7 +239,7 @@ export const playGameCatalog = [
   {
     sport: "football",
     id: "blind-rank",
-    route: "/back-room/football/rank-five",
+    route: "/football/rank-five",
     icon: "1–5",
     title: "Blind Rank 5",
     description: "Rank five mystery NFL or college football subjects from 1–5 before the next reveal.",
@@ -262,7 +262,7 @@ export const playGameCatalog = [
   {
     sport: "football",
     id: "keep-cut",
-    route: "/back-room/football/keep-cut",
+    route: "/football/keep-cut",
     icon: "4/4",
     title: "Keep 4, Cut 4",
     description: "Reveal eight NFL or college football subjects one at a time and lock four keeps and four cuts.",
@@ -285,7 +285,7 @@ export const playGameCatalog = [
   {
     sport: "football",
     id: "wavelength",
-    route: "/back-room/football/wavelength",
+    route: "/football/wavelength",
     icon: "≈",
     title: "Wavelength",
     description: "Find a hidden 1–100 football number through four adaptive NFL and CFB clues.",
@@ -308,7 +308,7 @@ export const playGameCatalog = [
   {
     sport: "football",
     id: "blind-resume",
-    route: "/back-room/football/blind-resume",
+    route: "/football/blind-resume",
     icon: "?",
     title: "Blind Resume",
     description: "Choose the stronger football résumé across careers, seasons, teams, programs, and coaches without seeing the names.",
@@ -331,7 +331,7 @@ export const playGameCatalog = [
   {
     sport: "football",
     id: "hit-the-number",
-    route: "/back-room/football/hit-the-number",
+    route: "/football/hit-the-number",
     icon: "◎",
     title: "Hit the Number",
     description: "Pick from a football board and chase a factual NFL or CFB target without going over.",
@@ -354,7 +354,7 @@ export const playGameCatalog = [
   {
     sport: "football",
     id: "find-leader",
-    route: "/back-room/football/find-leader",
+    route: "/football/find-leader",
     icon: "#1",
     title: "Find the Leader",
     description: "Eliminate nine NFL or college football decoys without removing the hidden statistical leader.",
