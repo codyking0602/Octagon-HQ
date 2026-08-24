@@ -8,8 +8,8 @@ const TEAM_LABELS: Record<FootballTeam, string> = {
 };
 
 const TEAM_HELMET_ASSETS: Record<FootballTeam, string> = {
-  cowboys: "/assets/football/cowboys-helmet.svg",
-  longhorns: "/assets/football/longhorns-helmet.svg",
+  cowboys: "/assets/football/cowboys-helmet.webp",
+  longhorns: "/assets/football/longhorns-helmet.webp",
 };
 
 export function FootballTeamHelmet({ team }: { team: FootballTeam }) {
