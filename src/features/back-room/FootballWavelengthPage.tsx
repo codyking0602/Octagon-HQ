@@ -213,7 +213,7 @@ export default function FootballWavelengthPage() {
         </section>
       ) : null}
       <section className="football-wavelength-topline">
-        <span>{shared ? "FRIEND CHALLENGE" : "REPLAYABLE GAME"}</span>
+        <span>WAVELENGTH · {shared ? "FRIEND CHALLENGE" : "REPLAYABLE GAME"}</span>
         <b>CLUE {clueIndex + 1} OF 4</b>
       </section>
 
