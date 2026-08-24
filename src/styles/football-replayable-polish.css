@@ -1,0 +1,738 @@
+/* PR3: narrow presentation polish for Football HQ replayable games only. */
+.app-shell--football-room :is(
+  .football-hit-number-page,
+  .football-find-leader-page,
+  .football-rank-five-page,
+  .football-wavelength-page,
+  .football-keep-cut-page
+) {
+  width: min(100%, 980px);
+  margin-inline: auto;
+  padding-top: clamp(.7rem, 2.5vw, 1.15rem);
+  padding-bottom: 4rem;
+}
+
+.app-shell--football-room :is(
+  .football-hit-number-hero,
+  .football-find-hero,
+  .football-rank-five-intro > div:first-child,
+  .football-debate-intro,
+  .football-wavelength-clue
+) {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px !important;
+}
+
+.app-shell--football-room :is(
+  .football-hit-number-hero,
+  .football-find-hero,
+  .football-rank-five-intro > div:first-child,
+  .football-debate-intro,
+  .football-wavelength-clue
+)::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--football-accent), rgba(var(--football-accent-rgb), .08));
+  content: "";
+}
+
+.app-shell--football-room :is(
+  .football-hit-number-page,
+  .football-find-leader-page,
+  .football-rank-five-page,
+  .football-wavelength-page,
+  .football-keep-cut-page
+) .eyebrow {
+  color: var(--football-accent) !important;
+  font-size: .55rem;
+  font-weight: 950;
+  letter-spacing: .12em;
+}
+
+/* Hit the Number */
+.app-shell--football-room .football-hit-number-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(128px, 180px);
+  gap: 1rem;
+  align-items: end;
+  margin-bottom: .7rem;
+  padding: 1rem 1.05rem !important;
+}
+
+.app-shell--football-room .football-hit-number-hero h1 {
+  margin: .2rem 0 0;
+  color: var(--football-text);
+  font-size: clamp(3.2rem, 13vw, 6rem);
+  line-height: .82;
+  letter-spacing: -.075em;
+}
+
+.app-shell--football-room .football-hit-number-hero > div > span,
+.app-shell--football-room .football-hit-number-hero > div > strong {
+  color: var(--football-accent);
+  font-size: .58rem;
+  font-weight: 950;
+  letter-spacing: .09em;
+}
+
+.app-shell--football-room .football-hit-number-hero > div > p:last-child {
+  max-width: 40rem;
+  margin: .55rem 0 0;
+  color: var(--football-muted);
+  font-size: .72rem;
+  line-height: 1.45;
+}
+
+.app-shell--football-room .football-hit-number-hero aside {
+  align-self: stretch;
+  padding: .75rem;
+  border: 1px solid rgba(var(--football-accent-rgb), .2);
+  border-radius: 14px;
+  background: rgba(var(--football-accent-rgb), .045);
+}
+
+.app-shell--football-room .football-hit-number-hero aside :is(small, b, em) {
+  display: block;
+}
+
+.app-shell--football-room .football-hit-number-hero aside small {
+  color: var(--football-muted);
+  font-size: .5rem;
+  font-weight: 950;
+  letter-spacing: .11em;
+}
+
+.app-shell--football-room .football-hit-number-hero aside b {
+  margin: .18rem 0 .4rem;
+  color: var(--football-text);
+  font-size: .82rem;
+}
+
+.app-shell--football-room .football-hit-number-hero aside em {
+  color: #848b94;
+  font-size: .55rem;
+  font-style: normal;
+  font-weight: 850;
+}
+
+.app-shell--football-room .football-hit-number-rules {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  margin-bottom: .55rem;
+  padding: .62rem .72rem !important;
+  border-radius: 14px !important;
+}
+
+.app-shell--football-room .football-hit-number-rules > small {
+  flex: 0 0 auto;
+  color: var(--football-muted);
+  font-size: .5rem;
+  font-weight: 950;
+  letter-spacing: .1em;
+}
+
+.app-shell--football-room .football-hit-number-rules > div:not(.hit-number-mode-toggle) {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: .3rem;
+}
+
+.app-shell--football-room .football-hit-number-rules > div:not(.hit-number-mode-toggle) span {
+  padding: .28rem .42rem;
+  border: 1px solid rgba(var(--football-accent-rgb), .17);
+  border-radius: 999px;
+  color: #b5bbc3;
+  font-size: .5rem;
+  font-weight: 900;
+}
+
+.app-shell--football-room .football-hit-number-rules .hit-number-mode-toggle {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  min-width: min(100%, 260px);
+  padding: 2px;
+  border: 1px solid var(--football-border);
+  border-radius: 10px;
+  background: #090a0c;
+}
+
+.app-shell--football-room .football-hit-number-rules .hit-number-mode-toggle button {
+  min-height: 32px;
+  padding: 0 .55rem;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #747b84;
+  font: inherit;
+  font-size: .5rem;
+  font-weight: 950;
+  letter-spacing: .055em;
+}
+
+.app-shell--football-room .football-hit-number-rules .hit-number-mode-toggle button.is-active {
+  background: rgba(var(--football-accent-rgb), .12);
+  color: var(--football-text);
+}
+
+.app-shell--football-room .football-hit-number-selection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .7rem;
+  margin-bottom: .55rem;
+  padding: .58rem .72rem !important;
+  border-radius: 13px !important;
+}
+
+.app-shell--football-room .football-hit-number-selection span {
+  color: var(--football-accent);
+  font-size: .58rem;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.app-shell--football-room .football-hit-number-selection strong {
+  color: var(--football-muted);
+  font-size: .58rem;
+}
+
+.app-shell--football-room .football-hit-number-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .48rem;
+}
+
+.app-shell--football-room .football-hit-number-grid button {
+  display: grid;
+  min-height: 98px;
+  gap: .2rem;
+  padding: .72rem;
+  border-radius: 14px !important;
+  color: var(--football-text);
+  text-align: left;
+}
+
+.app-shell--football-room .football-hit-number-grid button small {
+  overflow: hidden;
+  color: #757c85;
+  font-size: .52rem;
+  font-weight: 900;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.app-shell--football-room .football-hit-number-grid button strong {
+  align-self: end;
+  font-size: .86rem;
+  line-height: 1.05;
+}
+
+.app-shell--football-room .football-hit-number-grid button span {
+  color: var(--football-accent);
+  font-size: .5rem;
+  font-weight: 950;
+  letter-spacing: .065em;
+}
+
+.app-shell--football-room .football-hit-number-grid button.is-selected {
+  box-shadow: inset 0 0 0 1px rgba(var(--football-accent-rgb), .17);
+}
+
+.app-shell--football-room .football-hit-number-lock {
+  position: sticky;
+  z-index: 12;
+  bottom: calc(72px + env(safe-area-inset-bottom));
+  margin-top: .65rem;
+  padding: .42rem;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 15px;
+  background: rgba(5, 5, 6, .92);
+  backdrop-filter: blur(16px);
+}
+
+.app-shell--football-room .football-hit-number-lock button {
+  width: 100%;
+  min-height: 46px;
+}
+
+.app-shell--football-room .football-hit-number-result {
+  margin-bottom: .65rem;
+  padding: 1rem !important;
+  border-radius: 18px !important;
+}
+
+/* Find the Leader */
+.app-shell--football-room .football-find-hero {
+  margin-bottom: .6rem;
+  padding: 1rem 1.05rem !important;
+}
+
+.app-shell--football-room .football-find-hero h1 {
+  max-width: 760px;
+  margin: .25rem 0 .4rem;
+  color: var(--football-text);
+  font-size: clamp(1.75rem, 6vw, 3rem);
+  line-height: .98;
+  letter-spacing: -.045em;
+}
+
+.app-shell--football-room .football-find-hero > p:last-of-type {
+  max-width: 680px;
+  color: var(--football-muted);
+  font-size: .73rem;
+  line-height: 1.42;
+}
+
+.app-shell--football-room .football-find-hero > div {
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: center;
+  gap: .55rem;
+  margin-top: .75rem;
+  padding-top: .7rem;
+}
+
+.app-shell--football-room .football-find-hero > div strong {
+  grid-row: auto;
+  color: var(--football-text);
+  font-size: 1.9rem;
+}
+
+.app-shell--football-room .football-find-hero > div span {
+  color: var(--football-accent);
+  font-size: .54rem;
+}
+
+.app-shell--football-room .football-find-hero > div small {
+  overflow: hidden;
+  color: #7d848d;
+  font-size: .58rem;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-shell--football-room .football-find-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .48rem;
+}
+
+.app-shell--football-room .football-find-grid button {
+  min-height: 96px;
+  gap: .22rem;
+  padding: .72rem;
+  border-radius: 14px;
+  background: #0d0f11;
+}
+
+.app-shell--football-room .football-find-grid button small {
+  overflow: hidden;
+  color: #747b84;
+  font-size: .5rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-shell--football-room .football-find-grid button strong {
+  font-size: clamp(.85rem, 3.8vw, 1.08rem);
+  line-height: 1.05;
+}
+
+.app-shell--football-room .football-find-grid button span {
+  color: var(--football-accent);
+  font-size: .48rem;
+}
+
+.app-shell--football-room .football-find-grid button.is-eliminated {
+  opacity: .16;
+  filter: grayscale(1);
+}
+
+.app-shell--football-room .football-find-result,
+.app-shell--football-room .football-find-reveal {
+  border-radius: 18px !important;
+}
+
+/* Blind Rank 5 */
+.app-shell--football-room .football-rank-five-intro {
+  gap: .55rem !important;
+  margin-bottom: .55rem !important;
+}
+
+.app-shell--football-room .football-rank-five-intro > div:first-child {
+  padding: .9rem 1rem !important;
+}
+
+.app-shell--football-room .football-rank-five-intro h1 {
+  margin: .2rem 0 .32rem !important;
+  font-size: clamp(1.55rem, 5.6vw, 2.45rem) !important;
+}
+
+.app-shell--football-room .football-rank-five-intro p:not(.eyebrow) {
+  color: var(--football-muted) !important;
+  font-size: .7rem !important;
+}
+
+.app-shell--football-room .football-rank-five-category {
+  align-content: center;
+  min-width: 150px !important;
+  padding: .65rem .72rem !important;
+}
+
+.app-shell--football-room .football-rank-five-board {
+  border-radius: 18px !important;
+}
+
+.app-shell--football-room .football-rank-five-board > header {
+  min-height: 38px;
+  padding: .62rem .78rem !important;
+}
+
+.app-shell--football-room .football-rank-five-slots {
+  gap: .35rem !important;
+  padding: .55rem !important;
+}
+
+.app-shell--football-room .football-rank-five-slot {
+  min-height: 48px !important;
+  padding: .4rem .55rem !important;
+  border-radius: 11px !important;
+}
+
+.app-shell--football-room .football-rank-five-slot:not(.is-filled) {
+  border-style: dashed !important;
+  border-color: rgba(var(--football-accent-rgb), .22) !important;
+}
+
+.app-shell--football-room .football-rank-five-current {
+  min-height: 0 !important;
+  margin: 0 .55rem .55rem !important;
+  padding: .72rem !important;
+  border-radius: 14px !important;
+}
+
+.app-shell--football-room .football-rank-five-current h2 {
+  margin: .08rem 0 .16rem !important;
+  font-size: clamp(1.4rem, 5vw, 2.15rem) !important;
+}
+
+.app-shell--football-room .football-rank-five-current > div > p:not(.eyebrow) {
+  margin: 0 0 .28rem !important;
+  color: var(--football-muted) !important;
+  font-size: .7rem !important;
+}
+
+.app-shell--football-room .football-rank-five-current > div > strong {
+  color: #aeb4bc;
+  font-size: .58rem !important;
+}
+
+.app-shell--football-room .football-rank-five-finish {
+  padding: .65rem !important;
+}
+
+/* Wavelength */
+.app-shell--football-room .football-wavelength-topline {
+  margin-bottom: .4rem;
+  padding: 0 .05rem;
+}
+
+.app-shell--football-room .football-wavelength-progress {
+  gap: .3rem;
+  margin: .4rem 0 .55rem;
+}
+
+.app-shell--football-room .football-wavelength-progress i {
+  height: 3px;
+}
+
+.app-shell--football-room .football-wavelength-clue {
+  padding: .9rem 1rem !important;
+}
+
+.app-shell--football-room .football-wavelength-clue h1 {
+  max-width: 780px;
+  margin: .6rem auto .25rem;
+  font-size: clamp(2rem, 8vw, 4rem);
+}
+
+.app-shell--football-room .football-wavelength-clue > p {
+  color: var(--football-muted);
+  font-size: .68rem;
+}
+
+.app-shell--football-room .football-wavelength-guess-panel {
+  margin-top: .55rem !important;
+  padding: .8rem !important;
+  border-radius: 18px !important;
+}
+
+.app-shell--football-room .football-wavelength-guess-value strong {
+  color: var(--football-text);
+  font-size: clamp(3.4rem, 14vw, 5.8rem);
+  line-height: .88;
+  letter-spacing: -.07em;
+}
+
+.app-shell--football-room .football-wavelength-guess-panel input[type="range"] {
+  width: 100%;
+  min-height: 38px;
+  margin: .45rem 0 .1rem;
+}
+
+.app-shell--football-room .football-wavelength-scale {
+  display: flex;
+  justify-content: space-between;
+  gap: .5rem;
+  color: #727983;
+  font-size: .48rem;
+  font-weight: 900;
+  letter-spacing: .055em;
+}
+
+.app-shell--football-room .football-wavelength-guess-panel button {
+  width: 100%;
+  min-height: 44px;
+  margin-top: .65rem;
+}
+
+.app-shell--football-room .football-wavelength-path {
+  margin-top: .5rem;
+  padding: .65rem .75rem !important;
+  border-radius: 14px !important;
+  text-align: center;
+}
+
+.app-shell--football-room .football-wavelength-path :is(small, strong) {
+  display: block;
+}
+
+.app-shell--football-room .football-wavelength-path small {
+  color: var(--football-muted);
+  font-size: .48rem;
+  font-weight: 950;
+  letter-spacing: .1em;
+}
+
+.app-shell--football-room .football-wavelength-path strong {
+  margin-top: .12rem;
+  color: var(--football-text);
+  font-size: .8rem;
+}
+
+/* Keep 4 / Cut 4 */
+.app-shell--football-room .football-keep-cut-page .football-debate-intro {
+  margin-bottom: .55rem !important;
+  padding: .9rem 1rem !important;
+}
+
+.app-shell--football-room .football-keep-cut-board {
+  border-radius: 18px !important;
+}
+
+.app-shell--football-room .football-keep-cut-board > header {
+  min-height: 38px;
+  padding: .6rem .72rem !important;
+}
+
+.app-shell--football-room .football-keep-cut-trays {
+  gap: .42rem !important;
+  padding: .5rem !important;
+}
+
+.app-shell--football-room .football-keep-cut-tray {
+  padding: .5rem !important;
+  border-radius: 13px !important;
+}
+
+.app-shell--football-room .football-keep-cut-tray header {
+  margin-bottom: .4rem;
+}
+
+.app-shell--football-room .football-keep-cut-tray > div {
+  gap: .3rem !important;
+}
+
+.app-shell--football-room .football-keep-cut-tray article,
+.app-shell--football-room .football-keep-cut-tray i {
+  min-height: 42px !important;
+}
+
+.app-shell--football-room .football-keep-cut-current {
+  margin: 0 .5rem .5rem !important;
+  padding: .65rem !important;
+  border-radius: 14px !important;
+}
+
+.app-shell--football-room .football-keep-cut-current h2 {
+  margin: .08rem 0 .15rem;
+  font-size: clamp(1.35rem, 5vw, 2rem) !important;
+}
+
+.app-shell--football-room .football-keep-cut-current p:not(.eyebrow) {
+  margin-bottom: .2rem;
+  color: var(--football-muted);
+  font-size: .68rem;
+}
+
+.app-shell--football-room .football-keep-cut-current__actions {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  min-width: 210px;
+  gap: .35rem;
+}
+
+.app-shell--football-room .football-keep-cut-current__actions button {
+  min-height: 42px;
+  padding: .55rem .7rem;
+}
+
+/* Shared replay/result finish */
+.app-shell--football-room :is(
+  .football-hit-number-page,
+  .football-find-leader-page,
+  .football-rank-five-page,
+  .football-wavelength-page,
+  .football-keep-cut-page
+) .game-result-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) repeat(2, minmax(0, 1fr));
+  gap: .42rem;
+}
+
+.app-shell--football-room :is(
+  .football-hit-number-page,
+  .football-find-leader-page,
+  .football-rank-five-page,
+  .football-wavelength-page,
+  .football-keep-cut-page
+) .game-result-actions button {
+  min-height: 44px;
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .app-shell--football-room :is(
+    .football-hit-number-page,
+    .football-find-leader-page,
+    .football-rank-five-page,
+    .football-wavelength-page,
+    .football-keep-cut-page
+  ) {
+    padding-top: .5rem;
+  }
+
+  .app-shell--football-room .football-hit-number-hero {
+    grid-template-columns: minmax(0, 1fr) 116px;
+    gap: .55rem;
+  }
+
+  .app-shell--football-room .football-hit-number-hero h1 {
+    font-size: clamp(2.8rem, 17vw, 4.3rem);
+  }
+
+  .app-shell--football-room .football-hit-number-hero > div > p:last-child {
+    display: none;
+  }
+
+  .app-shell--football-room .football-hit-number-rules {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .app-shell--football-room .football-hit-number-rules .hit-number-mode-toggle {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .app-shell--football-room .football-hit-number-selection {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: .16rem;
+  }
+
+  .app-shell--football-room .football-find-hero > div small {
+    display: none;
+  }
+
+  .app-shell--football-room .football-find-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-shell--football-room .football-find-grid button {
+    min-height: 88px;
+    padding: .62rem;
+  }
+
+  .app-shell--football-room .football-rank-five-intro,
+  .app-shell--football-room .football-keep-cut-page .football-debate-intro {
+    grid-template-columns: 1fr !important;
+  }
+
+  .app-shell--football-room .football-rank-five-category,
+  .app-shell--football-room .football-debate-category {
+    grid-template-columns: minmax(0, 1fr) auto !important;
+  }
+
+  .app-shell--football-room .football-rank-five-slots {
+    grid-template-columns: 1fr !important;
+  }
+
+  .app-shell--football-room .football-rank-five-current {
+    grid-template-columns: 52px minmax(0, 1fr) !important;
+  }
+
+  .app-shell--football-room .football-rank-five-current__visual {
+    width: 50px;
+    height: 50px;
+    flex-basis: 50px;
+  }
+
+  .app-shell--football-room .football-keep-cut-current {
+    grid-template-columns: 48px minmax(0, 1fr) !important;
+  }
+
+  .app-shell--football-room .football-keep-cut-current__actions {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+
+  .app-shell--football-room :is(
+    .football-hit-number-page,
+    .football-find-leader-page,
+    .football-rank-five-page,
+    .football-wavelength-page,
+    .football-keep-cut-page
+  ) .game-result-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 390px) {
+  .app-shell--football-room .football-hit-number-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .app-shell--football-room .football-hit-number-hero aside {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: .35rem;
+    align-items: center;
+  }
+
+  .app-shell--football-room .football-hit-number-hero aside small,
+  .app-shell--football-room .football-hit-number-hero aside b,
+  .app-shell--football-room .football-hit-number-hero aside em {
+    margin: 0;
+  }
+
+  .app-shell--football-room .football-find-grid {
+    grid-template-columns: 1fr;
+  }
+}
