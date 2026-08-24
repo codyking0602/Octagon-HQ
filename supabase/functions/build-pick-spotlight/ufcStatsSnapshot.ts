@@ -3,8 +3,9 @@ import type { SpotlightStatsFighter } from "../../../src/features/picks/spotligh
 export type UfcStatsSnapshotFighter = Omit<SpotlightStatsFighter, "fighterSlug">;
 
 // Canonical checked-in UFCStats snapshot for the fights currently eligible for
-// owner-authored Spotlights. Values are copied from the fighters' UFCStats
-// profiles so Spotlight creation does not depend on UFCStats uptime.
+// owner-authored Spotlights. UFCStats values are used when available; UFC
+// newcomers can carry known profile metadata with null rate stats so Spotlight
+// creation stays deterministic and does not depend on UFCStats uptime.
 const fighters: Record<string, UfcStatsSnapshotFighter> = {
   "islam makhachev": {
     name: "Islam Makhachev",
@@ -133,6 +134,38 @@ const fighters: Record<string, UfcStatsSnapshotFighter> = {
     takedownAccuracy: 41,
     takedownDefense: 73,
     submissionAverage: 0.2,
+  },
+  "bilal hasan": {
+    name: "Bilal Hasan",
+    record: "9-0-0",
+    dob: "2001-07-16",
+    height: "5' 7\"",
+    reach: "70\"",
+    stance: "--",
+    slpm: null,
+    strikingAccuracy: null,
+    sapm: null,
+    strikingDefense: null,
+    takedownAverage: null,
+    takedownAccuracy: null,
+    takedownDefense: null,
+    submissionAverage: null,
+  },
+  "nilson rojas": {
+    name: "Nilson Rojas",
+    record: "9-0-0",
+    dob: "1999-04-21",
+    height: "5' 5\"",
+    reach: "--",
+    stance: "--",
+    slpm: null,
+    strikingAccuracy: null,
+    sapm: null,
+    strikingDefense: null,
+    takedownAverage: null,
+    takedownAccuracy: null,
+    takedownDefense: null,
+    submissionAverage: null,
   },
 };
 
