@@ -24,7 +24,7 @@ const watchMomentSchema = z.object({ title: z.string().min(3).max(120), url: z.s
 const spotlightWatchSchema = z.object({ fighter_slug: z.string().min(1), url: z.string().url() });
 const spotlightFighterSchema = z.object({
   fighter_slug: z.string().min(1), record: z.string().min(1), age: z.string().min(1), height: z.string().min(1), reach: z.string().min(1), stance: z.string().min(1),
-  edges: z.array(z.string().min(3)).min(1).max(3),
+  edges: z.array(z.string().min(3)).max(3),
 });
 const spotlightSchema = z.object({
   bout_id: z.string().min(1), preview: z.string().min(20), red: spotlightFighterSchema, blue: spotlightFighterSchema,
