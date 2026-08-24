@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { scrollPageToTop } from "../app/RouteScrollManager";
+import { useProfilePreferences } from "../features/profile/ProfilePreferencesProvider";
 import { useWarRoom } from "../features/war-room/WarRoomProvider";
 
 type NavigationIconName = "home" | "rankings" | "picks" | "play" | "war-room";
@@ -62,11 +63,15 @@ export function BottomNavigation() {
   const location = useLocation();
   const navigate = useNavigate();
   const warRoom = useWarRoom();
+  const { footballTeam } = useProfilePreferences();
   const keyboardSessionRef = useRef(false);
   const lastActivePlayTapRef = useRef(0);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
   const [viewportBottomCorrection, setViewportBottomCorrection] = useState(0);
   const footballMode = location.pathname === "/football" || location.pathname.startsWith("/football/");
+  const footballThemeClass = footballMode
+    ? ` bottom-nav--football${footballTeam ? ` bottom-nav--football-team-${footballTeam}` : ""}`
+    : "";
   const playRoot = footballMode ? "/football" : "/play";
   const standardDestinations = baseDestinations.map((destination) => (
     destination.icon === "play" ? { ...destination, to: playRoot } : destination
@@ -128,7 +133,7 @@ export function BottomNavigation() {
 
   const navigation = (
     <nav
-      className={`bottom-nav${keyboardOpen ? " is-keyboard-open" : ""}`}
+      className={`bottom-nav${footballThemeClass}${keyboardOpen ? " is-keyboard-open" : ""}`}
       aria-label="Primary navigation"
       style={{
         gridTemplateColumns: `repeat(${destinations.length}, minmax(0, 1fr))`,
