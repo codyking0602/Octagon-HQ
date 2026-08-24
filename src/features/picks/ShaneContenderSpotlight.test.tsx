@@ -88,7 +88,7 @@ describe("Shane Contender Fight Spotlight treatment", () => {
     fireEvent.click(screen.getByRole("button", { name: /View matchup breakdown/i }));
 
     expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #5")).toHaveLength(2);
-    expect(screen.getByText(/45-second Contender Series contract win/)).toBeInTheDocument();
+    expect(screen.getAllByText(/45-second Contender Series contract win/)).toHaveLength(2);
     expect(screen.getByText("7 KO/TKO wins in 9 fights")).toBeInTheDocument();
     expect(screen.getByText(bilal!.whyOnBoard)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "VIEW SHANE’S SCOUTING PROFILE →" })).toHaveAttribute(
