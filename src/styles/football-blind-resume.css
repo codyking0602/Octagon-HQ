@@ -21,7 +21,7 @@
 
 .football-blind-resume-progress i.is-current,
 .football-blind-resume-progress i.is-complete {
-  background: rgba(160, 190, 142, .82);
+  background: var(--football-accent, rgba(160, 190, 142, .82));
 }
 
 .football-blind-resume-card,
@@ -40,6 +40,7 @@
   align-items: center;
   padding: 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, .07);
+  background: linear-gradient(180deg, rgba(var(--football-accent-rgb, 160, 190, 142), .08), transparent);
 }
 
 .football-blind-resume-card > header > div {
@@ -68,14 +69,35 @@
 }
 
 .football-blind-resume-card > header > b {
-  color: rgba(255, 255, 255, .32);
+  color: var(--football-accent, rgba(255, 255, 255, .5));
   font-size: .7rem;
   letter-spacing: .12em;
 }
 
+.football-blind-resume-difficulty {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  margin-top: .55rem;
+  padding: .25rem .55rem;
+  border: 1px solid rgba(var(--football-accent-rgb, 160, 190, 142), .26);
+  border-radius: 999px;
+  background: rgba(var(--football-accent-rgb, 160, 190, 142), .08);
+  color: var(--football-accent, #a0be8e);
+  font-size: .55rem;
+  font-weight: 950;
+  letter-spacing: .12em;
+}
+
+.football-blind-resume-difficulty.is-villain {
+  border-color: rgba(206, 128, 92, .34);
+  background: rgba(206, 128, 92, .09);
+  color: #dda27f;
+}
+
 .football-blind-resume-stats {
   display: grid;
-  gap: .55rem;
+  gap: .5rem;
   padding: .9rem;
 }
 
@@ -84,12 +106,23 @@
   grid-template-columns: minmax(0, 1fr) minmax(110px, .9fr) minmax(0, 1fr);
   gap: .75rem;
   align-items: center;
-  min-height: 62px;
-  padding: .65rem .8rem;
+  min-height: 58px;
+  padding: .62rem .8rem;
   border: 1px solid rgba(255, 255, 255, .06);
   border-radius: 15px;
   background: rgba(255, 255, 255, .025);
   text-align: center;
+  transition: border-color 160ms ease, background 160ms ease, opacity 160ms ease;
+}
+
+.football-blind-resume-stats article.is-revealed {
+  border-color: rgba(var(--football-accent-rgb, 160, 190, 142), .18);
+  background: rgba(var(--football-accent-rgb, 160, 190, 142), .045);
+}
+
+.football-blind-resume-stats article.is-locked {
+  min-height: 42px;
+  opacity: .48;
 }
 
 .football-blind-resume-stats article span {
@@ -100,6 +133,11 @@
   text-transform: uppercase;
 }
 
+.football-blind-resume-stats article.is-locked span {
+  color: #676f7b;
+  letter-spacing: .11em;
+}
+
 .football-blind-resume-stats article strong {
   min-width: 0;
   color: #f3f5f7;
@@ -107,11 +145,36 @@
   line-height: 1.25;
 }
 
+.football-blind-resume-stakes {
+  display: grid;
+  gap: .16rem;
+  margin: 0 .9rem .75rem;
+  padding: .75rem .85rem;
+  border: 1px solid rgba(var(--football-accent-rgb, 160, 190, 142), .16);
+  border-radius: 14px;
+  background: rgba(var(--football-accent-rgb, 160, 190, 142), .045);
+  text-align: center;
+}
+
+.football-blind-resume-stakes span,
+.football-blind-resume-stakes small {
+  color: #808996;
+  font-size: .54rem;
+  font-weight: 850;
+  letter-spacing: .08em;
+}
+
+.football-blind-resume-stakes strong {
+  color: var(--football-accent, #a0be8e);
+  font-size: .82rem;
+  letter-spacing: .06em;
+}
+
 .football-blind-resume-picks {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: .7rem;
-  padding: 0 .9rem .9rem;
+  padding: 0 .9rem .7rem;
 }
 
 .football-blind-resume-picks button,
@@ -131,8 +194,28 @@
 
 .football-blind-resume-picks button:hover,
 .football-blind-resume-picks button:focus-visible {
-  border-color: rgba(255, 255, 255, .26);
-  background: rgba(255, 255, 255, .075);
+  border-color: rgba(var(--football-accent-rgb, 160, 190, 142), .34);
+  background: rgba(var(--football-accent-rgb, 160, 190, 142), .08);
+}
+
+.football-blind-resume-more {
+  display: block;
+  width: calc(100% - 1.8rem);
+  min-height: 44px;
+  margin: 0 .9rem .9rem;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, .025);
+  color: #a1a8b2;
+  font-size: .62rem;
+  font-weight: 900;
+  letter-spacing: .09em;
+}
+
+.football-blind-resume-more:hover,
+.football-blind-resume-more:focus-visible {
+  border-color: rgba(var(--football-accent-rgb, 160, 190, 142), .25);
+  color: #fff;
 }
 
 .football-blind-resume-reveal {
@@ -165,11 +248,27 @@
   line-height: 1.45;
 }
 
+.football-blind-resume-reveal > strong {
+  display: block;
+  margin-top: .65rem;
+  color: #d7dce3;
+  font-size: .66rem;
+  letter-spacing: .07em;
+}
+
 .football-blind-resume-reveal button {
   margin-top: .9rem;
   padding: .75rem 1rem;
   background: #f2f4f7;
   color: #080a0e;
+}
+
+.football-blind-resume-final > small {
+  display: block;
+  margin-top: .45rem;
+  color: #838c98;
+  font-size: .62rem;
+  font-weight: 750;
 }
 
 .football-blind-resume-recap {
@@ -244,14 +343,41 @@
 }
 
 @media (max-width: 620px) {
+  .football-blind-resume-stats {
+    gap: .38rem;
+    padding: .72rem;
+  }
+
   .football-blind-resume-stats article {
     grid-template-columns: minmax(0, 1fr) 82px minmax(0, 1fr);
     gap: .4rem;
+    min-height: 52px;
     padding-inline: .55rem;
+  }
+
+  .football-blind-resume-stats article.is-locked {
+    min-height: 36px;
   }
 
   .football-blind-resume-stats article span {
     font-size: .5rem;
+  }
+
+  .football-blind-resume-card > header {
+    padding: .8rem .72rem;
+  }
+
+  .football-blind-resume-stakes {
+    margin-inline: .72rem;
+  }
+
+  .football-blind-resume-picks {
+    padding-inline: .72rem;
+  }
+
+  .football-blind-resume-more {
+    width: calc(100% - 1.44rem);
+    margin-inline: .72rem;
   }
 
   .football-blind-resume-recap article {
@@ -260,5 +386,6 @@
 
   .football-blind-resume-recap article em {
     grid-column: 2;
+    white-space: normal;
   }
 }
