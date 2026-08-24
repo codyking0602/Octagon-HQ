@@ -37,6 +37,15 @@ const GAME_MARKS: Partial<Record<PlayGameId, string>> = {
   "keep-cut": "4/4",
 };
 
+const GAME_META: Partial<Record<PlayGameId, string>> = {
+  "hit-the-number": "NFL + CFB · BUILD",
+  "find-leader": "NFL + CFB · ELIMINATION",
+  wavelength: "NFL + CFB · SCALE",
+  "blind-resume": "NFL + CFB · REVEALS",
+  "blind-rank": "NFL + CFB · RANKING",
+  "keep-cut": "NFL + CFB · FRONT OFFICE",
+};
+
 const DAILY_GAME_LABELS: Record<string, string> = {
   find_leader: "Find the Leader",
   wavelength: "Wavelength",
@@ -157,7 +166,7 @@ export default function FootballBackRoomPage() {
             <p className="eyebrow">TODAY’S CHALLENGE</p>
             <h1 id="football-daily-title">{dailyTitle}</h1>
           </div>
-          <span>24H</span>
+          <span className="football-daily-hq__badge"><b>DAILY</b><small>24H</small></span>
         </div>
 
         <div className="football-daily-hq__tabs" role="tablist" aria-label="Today’s Challenge view">
@@ -167,7 +176,10 @@ export default function FootballBackRoomPage() {
 
         {dailyTab === "game" ? (
           <div className="football-daily-hq__game">
-            <p>One official football board for everyone, built from the shared daily-challenge platform with NFL and college football content.</p>
+            <div className="football-daily-hq__game-copy">
+              <strong>One official board. Same challenge for everyone.</strong>
+              <p>NFL and college football both live here. Your first run is the one that counts.</p>
+            </div>
             <button className="primary-action" type="button" onClick={() => navigate("/football/today")}>PLAY TODAY →</button>
           </div>
         ) : (
@@ -200,18 +212,24 @@ export default function FootballBackRoomPage() {
 
       <section className="football-all-games" aria-labelledby="football-all-games-title">
         <div className="football-all-games__heading">
-          <p className="eyebrow">FOOTBALL HQ</p>
-          <h2 id="football-all-games-title">ALL GAMES</h2>
+          <div>
+            <p className="eyebrow">FOOTBALL HQ</p>
+            <h2 id="football-all-games-title">ALL GAMES</h2>
+          </div>
+          <span>6 GAMES</span>
         </div>
         <div className="football-room-game-grid" aria-label="Football games">
           {footballGames.map((game) => (
             <button className="football-room-preview" type="button" key={game.route} onClick={() => navigate(game.route)}>
               <span className="football-room-preview__mark" aria-hidden="true">{GAME_MARKS[game.id]}</span>
-              <div>
-                <small>{GAME_KICKERS[game.id]}</small>
+              <div className="football-room-preview__copy">
+                <small className="football-room-preview__kicker">{GAME_KICKERS[game.id]}</small>
                 <strong>{game.id === "blind-rank" ? "BLIND RANK FIVE" : game.title.toUpperCase()}</strong>
                 <p>{game.description}</p>
-                <em>OPEN GAME →</em>
+                <div className="football-room-preview__meta">
+                  <span>{GAME_META[game.id]}</span>
+                  <em>PLAY →</em>
+                </div>
               </div>
             </button>
           ))}

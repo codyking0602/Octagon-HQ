@@ -45,7 +45,11 @@ export function FootballHeader() {
           <details className="football-team-switcher">
             <summary aria-label={`Football team: ${TEAM_LABELS[footballTeam]}`}>
               <FootballTeamHelmet team={footballTeam} />
-              <span className="sr-only">Change Football team</span>
+              <span className="football-team-switcher__label">
+                <small>TEAM</small>
+                <strong>{TEAM_LABELS[footballTeam]}</strong>
+              </span>
+              <span className="football-team-switcher__chevron" aria-hidden="true">⌄</span>
             </summary>
             <div className="football-team-switcher__menu">
               {(["cowboys", "longhorns"] as const).map((team) => (
@@ -57,7 +61,10 @@ export function FootballHeader() {
                   onClick={() => chooseTeam(team)}
                 >
                   <FootballTeamHelmet team={team} />
-                  <span>{TEAM_LABELS[team]}</span>
+                  <span>
+                    <strong>{TEAM_LABELS[team]}</strong>
+                    <small>{team === "cowboys" ? "NAVY · SILVER" : "BURNT ORANGE · CREAM"}</small>
+                  </span>
                 </button>
               ))}
             </div>

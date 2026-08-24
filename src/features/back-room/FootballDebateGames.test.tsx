@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import FootballKeepCutPage from "./FootballKeepCutPage";
+import FootballRankFivePage from "./FootballRankFivePage";
 import FootballWavelengthPage from "./FootballWavelengthPage";
 import {
   buildFootballKeepCutLineup,
@@ -71,6 +72,40 @@ describe("Football HQ debate games", () => {
     expect(highCorrection.rating).toBeLessThan(round.target);
     expect(lowCorrection.id).not.toBe(round.clues[0]!.id);
     expect(highCorrection.id).not.toBe(round.clues[0]!.id);
+  });
+
+  it("switches Blind Rank Five to a different category through the existing pack owner", () => {
+    render(
+      <MemoryRouter>
+        <FootballRankFivePage />
+      </MemoryRouter>,
+    );
+
+    const categoryPanel = screen.getByText("CURRENT CATEGORY").parentElement;
+    expect(categoryPanel).not.toBeNull();
+    const initialCategory = categoryPanel?.querySelector("strong")?.textContent;
+    expect(initialCategory).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("button", { name: "SWITCH CATEGORY" }));
+
+    expect(categoryPanel?.querySelector("strong")?.textContent).not.toBe(initialCategory);
+  });
+
+  it("switches Keep Four / Cut Four to a different category through the existing pack owner", () => {
+    render(
+      <MemoryRouter>
+        <FootballKeepCutPage />
+      </MemoryRouter>,
+    );
+
+    const categoryPanel = screen.getByText("CURRENT CATEGORY").parentElement;
+    expect(categoryPanel).not.toBeNull();
+    const initialCategory = categoryPanel?.querySelector("strong")?.textContent;
+    expect(initialCategory).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("button", { name: "SWITCH CATEGORY" }));
+
+    expect(categoryPanel?.querySelector("strong")?.textContent).not.toBe(initialCategory);
   });
 
   it("locks eight Keep/Cut calls and reveals the score against the same football ratings", () => {
