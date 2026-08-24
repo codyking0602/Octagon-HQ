@@ -263,7 +263,7 @@ export default function FootballKeepCutPage() {
         <div className="football-debate-category">
           <small>CURRENT CATEGORY</small>
           <strong>{run.pack.name}</strong>
-          {!shared ? <button type="button" onClick={startNew}>NEW LINEUP</button> : null}
+          {!shared ? <button type="button" onClick={startNew}>SWITCH CATEGORY</button> : null}
         </div>
       </section>
 
