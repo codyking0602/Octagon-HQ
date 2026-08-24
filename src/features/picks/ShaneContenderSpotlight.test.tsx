@@ -18,32 +18,6 @@ const bilalBout: PickBout = {
   winnerFighterSlug: null,
 };
 
-const bilalSpotlight: PickEventSpotlight = {
-  boutId: bilalBout.boutId,
-  preview: "A pair of unbeaten flyweights meet in Shanghai.",
-  red: {
-    fighterSlug: "bilal-hasan",
-    record: "9-0-0",
-    age: "25",
-    height: "5' 6\"",
-    reach: "66\"",
-    stance: "Orthodox",
-    edges: ["Fast finishing pressure"],
-  },
-  blue: {
-    fighterSlug: "nilson-rojas",
-    record: "8-0-0",
-    age: "27",
-    height: "5' 7\"",
-    reach: "67\"",
-    stance: "Orthodox",
-    edges: ["Unbeaten professional record"],
-  },
-  watchSpotlights: [],
-  source: "UFCStats",
-  generatedAt: "2026-08-24T00:00:00.000Z",
-};
-
 const normalBout: PickBout = {
   boutId: "future-red-future-blue",
   position: 3,
@@ -99,20 +73,23 @@ const salkilldBout: PickBout = {
 afterEach(cleanup);
 
 describe("Shane Contender Fight Spotlight treatment", () => {
-  it("automatically gives Bilal Hasan the current Shane rank badge and scouting treatment", () => {
+  it("wires Bilal Hasan directly to an editorial Spotlight with his current Shane rank badge", () => {
     const bilal = shanesWatchlist.fighters.find((fighter) => fighter.id === "bilal-hasan");
     expect(bilal).toBeDefined();
 
     render(
       <MemoryRouter>
-        <MainEventSpotlight bout={bilalBout} spotlight={bilalSpotlight} />
+        <MainEventSpotlight bout={bilalBout} />
       </MemoryRouter>,
     );
 
+    expect(screen.getByText("FIGHT SPOTLIGHT")).toBeInTheDocument();
     expect(screen.getByText("SHANE’S CONTENDER SERIES · #5")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /View matchup breakdown/i }));
 
     expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #5")).toHaveLength(2);
+    expect(screen.getAllByText(/45-second Contender Series contract win/)).toHaveLength(2);
+    expect(screen.getByText("7 KO/TKO wins in 9 fights")).toBeInTheDocument();
     expect(screen.getByText(bilal!.whyOnBoard)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "VIEW SHANE’S SCOUTING PROFILE →" })).toHaveAttribute(
       "href",
