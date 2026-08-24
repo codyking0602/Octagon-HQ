@@ -45,7 +45,8 @@ describe("Football Blind Resume", () => {
   });
 
   it("covers every PR5 archetype with evidence-backed NFL and CFB matchups while Rank 5 stays the verdict owner", () => {
-    expect(footballBlindResumeMatchups.length).toBeGreaterThanOrEqual(18);
+    expect(footballBlindResumeMatchups.length).toBeGreaterThanOrEqual(80);
+    expect(new Set(footballBlindResumeMatchups.map((matchup) => matchup.packId)).size).toBe(13);
     expect(new Set(footballBlindResumeMatchups.map((matchup) => matchup.archetype))).toEqual(new Set([
       "team-season",
       "player-career",
