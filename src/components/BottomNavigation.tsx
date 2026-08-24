@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { scrollPageToTop } from "../app/RouteScrollManager";
-import { useProfilePreferences } from "../features/profile/ProfilePreferencesProvider";
+import type { FootballTeam } from "../features/profile/profilePreferencesRepository";
 import { useWarRoom } from "../features/war-room/WarRoomProvider";
 
 type NavigationIconName = "home" | "rankings" | "picks" | "play" | "war-room";
@@ -59,11 +59,10 @@ function NavigationIcon({ name }: { name: NavigationIconName }) {
   );
 }
 
-export function BottomNavigation() {
+export function BottomNavigation({ footballTeam = null }: { footballTeam?: FootballTeam | null }) {
   const location = useLocation();
   const navigate = useNavigate();
   const warRoom = useWarRoom();
-  const { footballTeam } = useProfilePreferences();
   const keyboardSessionRef = useRef(false);
   const lastActivePlayTapRef = useRef(0);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
