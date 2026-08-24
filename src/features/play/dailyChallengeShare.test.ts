@@ -19,7 +19,7 @@ describe("Daily Challenge sharing", () => {
     expect(share).toHaveBeenCalledWith({
       title: "Football Daily · 2026-08-23",
       text: "Football Daily 2026-08-23\n94/100 · Can you beat my official score?",
-      url: "https://octagon.test/back-room/football/today?share=proof",
+      url: "https://octagon.test/football/today?share=proof",
     });
   });
 });

@@ -85,7 +85,7 @@ describe("Football Blind Rank 5", () => {
 
     expect(screen.getByLabelText("Football Blind Rank 5 score")).toHaveTextContent("/100");
     expect(screen.getByText("YOUR FINAL RANKING")).toBeInTheDocument();
-    expect(screen.getByText("BACK ROOM ORDER")).toBeInTheDocument();
+    expect(screen.getByText("FOOTBALL HQ ORDER")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "PLAY AGAIN" })).toBeInTheDocument();
   });
 });

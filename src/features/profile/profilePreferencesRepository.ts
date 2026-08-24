@@ -1,9 +1,12 @@
 import { z } from "zod";
 import { getSupabaseClient } from "../../lib/supabase";
 
+export type FootballTeam = "cowboys" | "longhorns";
+
 const preferencesRowSchema = z.object({
   favorite_fighter_slug: z.string().nullable(),
   avatar_photo_data: z.string().nullable().optional(),
+  football_team: z.enum(["cowboys", "longhorns"]).nullable().optional(),
 });
 
 export interface ProfilePreferencesRepository {
@@ -11,6 +14,8 @@ export interface ProfilePreferencesRepository {
   saveFavoriteFighter: (fighterSlug: string | null) => Promise<string | null>;
   loadAvatarPhoto?: () => Promise<string | null>;
   saveAvatarPhoto?: (photoData: string | null) => Promise<string | null>;
+  loadFootballTeam?: () => Promise<FootballTeam | null>;
+  saveFootballTeam?: (team: FootballTeam) => Promise<FootballTeam | null>;
 }
 
 async function requireRpcSuccess<T>(request: PromiseLike<{ data: T; error: { message?: string } | null }>) {
@@ -25,12 +30,14 @@ function preferences(value: unknown) {
     return {
       favoriteFighterSlug: null,
       avatarPhotoData: null,
+      footballTeam: null,
     };
   }
   const row = preferencesRowSchema.parse(raw);
   return {
     favoriteFighterSlug: row.favorite_fighter_slug,
     avatarPhotoData: row.avatar_photo_data ?? null,
+    footballTeam: row.football_team ?? null,
   };
 }
 
@@ -65,6 +72,17 @@ export function createProfilePreferencesRepository(): ProfilePreferencesReposito
         p_avatar_photo_data: photoData ?? "",
       }));
       return preferences(data).avatarPhotoData;
+    },
+
+    async loadFootballTeam() {
+      return (await loadPreferences()).footballTeam;
+    },
+
+    async saveFootballTeam(team) {
+      const data = await requireRpcSuccess(client.rpc("set_my_football_team", {
+        p_football_team: team,
+      }));
+      return preferences(data).footballTeam;
     },
   };
 }

@@ -142,7 +142,7 @@ export default function FootballRankFivePage() {
       creatorResult: asChallengeJson(result),
       shareTitle: "Football Blind Rank 5 Challenge",
       shareText: `I challenged you to rank the same five football subjects in ${run.pack.name}. Every slot locks before the next reveal.`,
-      shareUrl: footballChallengeUrl("/back-room/football/rank-five", {
+      shareUrl: footballChallengeUrl("/football/rank-five", {
         pack: run.pack.id,
         lineup: run.lineup.map((item) => item.id).join(","),
       }),
@@ -161,7 +161,7 @@ export default function FootballRankFivePage() {
       ) : null}
       <section className="football-rank-five-intro">
         <div>
-          <p className="eyebrow">THE BACK ROOM · FOOTBALL</p>
+          <p className="eyebrow">FOOTBALL HQ</p>
           <h1>{run.pack.prompt}</h1>
           <p>{run.pack.intro}</p>
         </div>
@@ -206,7 +206,7 @@ export default function FootballRankFivePage() {
             <section className="football-rank-five-score" aria-label="Football Blind Rank 5 score">
               <p className="eyebrow">FIVE SPOTS. NO TAKEBACKS.</p>
               <h2>{completedScore?.normalizedScore ?? 0}/100</h2>
-              <p>Graded against the Back Room order using the same pairwise Blind Rank 5 scoring as UFC.</p>
+              <p>Graded against the Football HQ order using the same pairwise Blind Rank 5 scoring as UFC.</p>
             </section>
 
             <div className="football-rank-five-reveal-grid">
@@ -225,7 +225,7 @@ export default function FootballRankFivePage() {
               </section>
 
               <section>
-                <p className="eyebrow">BACK ROOM ORDER</p>
+                <p className="eyebrow">FOOTBALL HQ ORDER</p>
                 <div className="football-rank-five-results is-canonical">
                   {canonicalOrder.map(({ item }, index) => (
                     <article key={item.id}>
@@ -242,7 +242,7 @@ export default function FootballRankFivePage() {
             <GameResultActions
               onChallenge={() => void challengeSomeone()}
               onReplay={replay}
-              onAllGames={() => navigate("/back-room/football")}
+              onAllGames={() => navigate("/football")}
               replayLabel={replayLabelFor(run.identity.type)}
               status={challengeStatus}
             />

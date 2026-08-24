@@ -197,7 +197,7 @@ export default function FootballKeepCutPage() {
       creatorResult: asChallengeJson(creatorResult),
       shareTitle: "Football Keep 4 / Cut 4 Challenge",
       shareText: `I challenged you to make Keep/Cut calls on the same eight football subjects in ${run.pack.name}.`,
-      shareUrl: footballChallengeUrl("/back-room/football/keep-cut", {
+      shareUrl: footballChallengeUrl("/football/keep-cut", {
         pack: run.pack.id,
         lineup: run.lineup.map((item) => item.id).join(","),
       }),
@@ -216,20 +216,20 @@ export default function FootballKeepCutPage() {
           </section>
         ) : null}
         <section className="football-debate-result-hero">
-          <p className="eyebrow">THE BACK ROOM · KEEP 4 / CUT 4</p>
+          <p className="eyebrow">FOOTBALL HQ · KEEP 4 / CUT 4</p>
           <strong>{result.score}<small>/100</small></strong>
-          <span>{result.label} · {result.topFourKept}/4 Back Room keeps</span>
+          <span>{result.label} · {result.topFourKept}/4 Football HQ keeps</span>
         </section>
 
         <div className="football-debate-result-grid">
           <ResultList title="YOUR FOUR" items={result.kept} packId={run.pack.id} />
-          <ResultList title="BACK ROOM FOUR" items={result.topFour} packId={run.pack.id} />
+          <ResultList title="FOOTBALL HQ FOUR" items={result.topFour} packId={run.pack.id} />
         </div>
 
         <GameResultActions
           onChallenge={() => void challengeSomeone()}
           onReplay={replay}
-          onAllGames={() => navigate("/back-room/football")}
+          onAllGames={() => navigate("/football")}
           replayLabel={replayLabelFor(run.identity.type)}
           status={challengeStatus}
         />
@@ -256,7 +256,7 @@ export default function FootballKeepCutPage() {
       ) : null}
       <section className="football-debate-intro">
         <div>
-          <p className="eyebrow">THE BACK ROOM · FOOTBALL</p>
+          <p className="eyebrow">FOOTBALL HQ</p>
           <h1>{run.pack.prompt}</h1>
           <p>{run.pack.intro}</p>
         </div>

@@ -22,9 +22,15 @@ function challengeCodeFromSearch(search: string, gameId: PlayGameId) {
   return /^[a-z0-9]{4,12}$/i.test(value) ? value.toUpperCase() : "";
 }
 
-function challengeSport(challenge: PlayChallenge): PlaySport {
+export function challengeSport(challenge: PlayChallenge): PlaySport {
   if (challenge.gameVersion.startsWith("football-") || challenge.playUrl.includes("/back-room/football/")) {
     return "football";
+  }
+  try {
+    const pathname = new URL(challenge.playUrl, "https://octagon.invalid").pathname;
+    if (playGameDefinition(challenge.gameId, "football").route === pathname) return "football";
+  } catch {
+    // Missing or malformed stored URLs fall through to UFC unless the version already identifies Football.
   }
   return "ufc";
 }
@@ -37,23 +43,21 @@ function canonicalChallengeRoute(challenge: PlayChallenge) {
   }
 }
 
+function exactShareParams(challenge: PlayChallenge) {
+  try {
+    return new URLSearchParams(new URL(challenge.playUrl, "https://octagon.invalid").search);
+  } catch {
+    return new URLSearchParams();
+  }
+}
+
 export function challengePlayRoute(challenge: PlayChallenge) {
   const canonicalRoute = canonicalChallengeRoute(challenge);
   if (!canonicalRoute) return "/play";
 
-  if (challenge.playUrl) {
-    try {
-      const url = new URL(challenge.playUrl, typeof window === "undefined" ? "https://octagon.invalid" : window.location.origin);
-      url.searchParams.set(challenge.gameId === "find-leader" ? "challenge" : "match", challenge.code);
-      return `${url.pathname}${url.search}${url.hash}`;
-    } catch {
-      // Fall back to the sport-aware canonical route below.
-    }
-  }
-
-  const params = new URLSearchParams({
-    [challenge.gameId === "find-leader" ? "challenge" : "match"]: challenge.code,
-  });
+  const params = exactShareParams(challenge);
+  const codeParam = challenge.gameId === "find-leader" ? "challenge" : "match";
+  params.set(codeParam, challenge.code);
   return `${canonicalRoute}?${params.toString()}`;
 }
 

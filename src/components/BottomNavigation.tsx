@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { scrollPageToTop } from "../app/RouteScrollManager";
 import { useWarRoom } from "../features/war-room/WarRoomProvider";
 
@@ -14,6 +14,7 @@ const baseDestinations = [
 ] as const;
 
 const warRoomDestination = { to: "/war-room", label: "War Room", icon: "war-room", end: false } as const;
+const SECRET_PLAY_TAP_WINDOW_MS = 350;
 
 function NavigationIcon({ name }: { name: NavigationIconName }) {
   const iconPaths = {
@@ -59,13 +60,20 @@ function NavigationIcon({ name }: { name: NavigationIconName }) {
 
 export function BottomNavigation() {
   const location = useLocation();
+  const navigate = useNavigate();
   const warRoom = useWarRoom();
   const keyboardSessionRef = useRef(false);
+  const lastActivePlayTapRef = useRef(0);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
   const [viewportBottomCorrection, setViewportBottomCorrection] = useState(0);
+  const footballMode = location.pathname === "/football" || location.pathname.startsWith("/football/");
+  const playRoot = footballMode ? "/football" : "/play";
+  const standardDestinations = baseDestinations.map((destination) => (
+    destination.icon === "play" ? { ...destination, to: playRoot } : destination
+  ));
   const destinations = warRoom.status === "eligible"
-    ? [...baseDestinations, warRoomDestination]
-    : baseDestinations;
+    ? [...standardDestinations, warRoomDestination]
+    : standardDestinations;
   const unreadLabel = warRoom.unreadCount > 99 ? "99+" : String(warRoom.unreadCount);
 
   useEffect(() => {
@@ -132,10 +140,25 @@ export function BottomNavigation() {
     >
       {destinations.map((destination) => (
         <NavLink
-          key={destination.to}
+          key={`${destination.label}:${destination.to}`}
           to={destination.to}
           end={destination.end}
           onClick={(event) => {
+            if (destination.icon === "play") {
+              const activePlay = location.pathname === playRoot || location.pathname.startsWith(`${playRoot}/`);
+              if (activePlay) {
+                const now = Date.now();
+                if (now - lastActivePlayTapRef.current <= SECRET_PLAY_TAP_WINDOW_MS) {
+                  event.preventDefault();
+                  lastActivePlayTapRef.current = 0;
+                  if (footballMode) navigate("/play");
+                  else navigate("/football", { state: { footballEntry: true } });
+                  return;
+                }
+                lastActivePlayTapRef.current = now;
+              }
+            }
+
             if (location.pathname !== destination.to) return;
             event.preventDefault();
             scrollPageToTop("smooth");

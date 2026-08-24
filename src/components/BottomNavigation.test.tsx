@@ -1,5 +1,5 @@
-import { act, cleanup, render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { MemoryRouter, useLocation } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { BottomNavigation } from "./BottomNavigation";
 
@@ -40,6 +40,12 @@ function installVisualViewport() {
     value: viewport,
   });
   return viewport;
+}
+
+function LocationProbe() {
+  const location = useLocation();
+  const footballEntry = Boolean((location.state as { footballEntry?: boolean } | null)?.footballEntry);
+  return <output data-testid="location">{location.pathname}|{footballEntry ? "entry" : "plain"}</output>;
 }
 
 describe("BottomNavigation", () => {
@@ -138,5 +144,39 @@ describe("BottomNavigation", () => {
 
     expect(navigation).toHaveStyle({ transform: "translateY(144px)" });
     expect(navigation).toHaveStyle({ display: "grid" });
+  });
+
+  it("enters Football only after a second tap on the active Play tab", () => {
+    installVisualViewport();
+    render(
+      <MemoryRouter initialEntries={["/play"]}>
+        <BottomNavigation />
+        <LocationProbe />
+      </MemoryRouter>,
+    );
+
+    const play = screen.getByRole("link", { name: "Play" });
+    fireEvent.click(play);
+    expect(screen.getByTestId("location")).toHaveTextContent("/play|plain");
+
+    fireEvent.click(play);
+    expect(screen.getByTestId("location")).toHaveTextContent("/football|entry");
+  });
+
+  it("double-taps the active Football Play tab back to UFC", () => {
+    installVisualViewport();
+    render(
+      <MemoryRouter initialEntries={["/football"]}>
+        <BottomNavigation />
+        <LocationProbe />
+      </MemoryRouter>,
+    );
+
+    const play = screen.getByRole("link", { name: "Play" });
+    fireEvent.click(play);
+    expect(screen.getByTestId("location")).toHaveTextContent("/football|plain");
+
+    fireEvent.click(play);
+    expect(screen.getByTestId("location")).toHaveTextContent("/play|plain");
   });
 });

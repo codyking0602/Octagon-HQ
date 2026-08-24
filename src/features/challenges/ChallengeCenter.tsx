@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { memberProfilePath } from "../members/memberProfilesModel";
+import type { PlaySport } from "../play/playRegistry";
 import {
   challengeCounterpartId,
   challengeDirection,
@@ -11,7 +12,7 @@ import {
   type PlayChallenge,
 } from "./challengeModel";
 import { usePlayChallenges } from "./ChallengeProvider";
-import { challengePlayRoute } from "./challengeRuntime";
+import { challengePlayRoute, challengeSport } from "./challengeRuntime";
 
 export type ChallengeCenterFilter = "all" | "received" | "sent";
 
@@ -70,7 +71,7 @@ function challengeCounterpart(
   return profiles.find((profile) => profile.id === counterpartId) ?? null;
 }
 
-export function ChallengeCenter() {
+export function ChallengeCenter({ sport = "ufc" }: { sport?: PlaySport }) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const identity = useIdentity();
@@ -93,14 +94,18 @@ export function ChallengeCenter() {
   const centerRef = useRef<HTMLElement | null>(null);
   const handledDestinationRef = useRef("");
   const requestedCode = searchParams.get("challenge")?.trim().toUpperCase() ?? "";
+  const sportChallenges = useMemo(
+    () => challenges.filter((challenge) => challengeSport(challenge) === sport),
+    [challenges, sport],
+  );
 
   const counts = useMemo(() => ({
-    all: challenges.length,
-    received: challenges.filter((row) => challengeDirection(row, activeProfile?.id ?? "") === "received").length,
-    sent: challenges.filter((row) => challengeDirection(row, activeProfile?.id ?? "") === "sent").length,
-  }), [activeProfile?.id, challenges]);
+    all: sportChallenges.length,
+    received: sportChallenges.filter((row) => challengeDirection(row, activeProfile?.id ?? "") === "received").length,
+    sent: sportChallenges.filter((row) => challengeDirection(row, activeProfile?.id ?? "") === "sent").length,
+  }), [activeProfile?.id, sportChallenges]);
 
-  const rows = challenges.filter((row) => {
+  const rows = sportChallenges.filter((row) => {
     if (!activeProfile || filter === "all") return true;
     return challengeDirection(row, activeProfile.id) === filter;
   });
@@ -156,7 +161,9 @@ export function ChallengeCenter() {
         <header className="challenge-center__header">
           <div><p className="eyebrow">CHALLENGE CENTER</p><h2>Play against friends</h2></div>
         </header>
-        <p className="challenge-center__hint">Sign in to send and receive the same locked UFC games across devices.</p>
+        <p className="challenge-center__hint">
+          Sign in to send and receive the same locked {sport === "football" ? "football" : "UFC"} games across devices.
+        </p>
         <button className="primary-action challenge-center__sign-in" type="button" onClick={identity.openDialog}>SIGN IN TO CHALLENGE</button>
       </section>
     );

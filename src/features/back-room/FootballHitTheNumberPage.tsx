@@ -185,7 +185,7 @@ export default function FootballHitTheNumberPage() {
       creatorResult: asChallengeJson(challengeResult(result)),
       shareTitle: "Football Hit the Number Challenge",
       shareText: `I challenged you to the same Football Hit the Number board: pick ${plan.pickCount} and chase ${formatFootballHitTheNumberValue(plan, plan.target)} ${plan.metricLabel}.`,
-      shareUrl: footballChallengeUrl("/back-room/football/hit-the-number", {
+      shareUrl: footballChallengeUrl("/football/hit-the-number", {
         seed: plan.seed,
         board: plan.boardType,
       }),
@@ -299,7 +299,7 @@ export default function FootballHitTheNumberPage() {
         <GameResultActions
           onChallenge={() => void challengeSomeone()}
           onReplay={replay}
-          onAllGames={() => navigate("/back-room/football")}
+          onAllGames={() => navigate("/football")}
           replayLabel={replayLabelFor(run.identity.type)}
           status={challengeStatus}
         />
