@@ -3,6 +3,7 @@ import {
   createFootballWavelengthRound,
   nextFootballWavelengthClue,
 } from "../back-room/footballWavelengthModel";
+import { FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES } from "../back-room/footballBlindResumeModel";
 import { FOOTBALL_DAILY_RUNTIME_VERSION } from "./footballTodayChallengeRuntime";
 import {
   buildFootballTodayProjection,
@@ -41,16 +42,30 @@ describe("Football Today’s Challenge session", () => {
     expect(JSON.stringify(first)).not.toContain("leader_value");
   });
 
-  it("opens Blind Resume with two anonymous stats and no identity evidence", () => {
+  it("opens Daily Blind Resume fully anonymous on the tougher authored difficulty mix", () => {
     const projection = buildFootballTodayProjection("2026-08-23");
     const round = projection.public_state.current_round as Record<string, unknown>;
 
     expect(projection.game_type).toBe("blind_resume");
-    expect(round.revealed_count).toBe(2);
-    expect(round.stats).toHaveLength(2);
+    expect(projection.public_setup.difficulty_mix).toEqual([...FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES]);
+    expect(round.revealed_count).toBe(0);
+    expect(round.stats).toHaveLength(0);
+    expect(["villain", "hard", "medium"]).toContain(round.difficulty);
     expect(round).not.toHaveProperty("left_name");
     expect(round).not.toHaveProperty("right_name");
     expect(projection.reveal_setup).toBeNull();
+  });
+
+  it("reveals Daily Blind Resume in two-row stages and preserves the early-conviction score", () => {
+    const afterReveal = buildFootballTodayProjection("2026-08-23", [{ reveal: true }]);
+    const round = afterReveal.public_state.current_round as Record<string, unknown>;
+    expect(round.revealed_count).toBe(2);
+    expect(round.stats).toHaveLength(2);
+
+    const afterPick = buildFootballTodayProjection("2026-08-23", [{ choice: "A" }]);
+    const result = (afterPick.public_state.results as Array<Record<string, unknown>>)[0]!;
+    expect(result.revealed_count).toBe(0);
+    expect([0, 20]).toContain(result.points_awarded);
   });
 
   it("keeps daily Wavelength adaptive clue selection identical to the replayable engine", () => {
