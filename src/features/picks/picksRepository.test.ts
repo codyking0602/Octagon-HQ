@@ -45,6 +45,40 @@ describe("Picks current-event compatibility", () => {
     expect(event?.headerNaturalHeight).toBeNull();
   });
 
+  it("accepts a persisted rookie spotlight with no statistical matchup edges", () => {
+    const event = mapPickEvent({
+      ...eventPayload,
+      spotlights: [{
+        bout_id: "red-blue",
+        preview: "A valid rookie matchup preview with no UFC rate data yet.",
+        red: {
+          fighter_slug: "red-fighter",
+          record: "0-0-0",
+          age: "--",
+          height: "--",
+          reach: "--",
+          stance: "--",
+          edges: [],
+        },
+        blue: {
+          fighter_slug: "blue-fighter",
+          record: "0-0-0",
+          age: "--",
+          height: "--",
+          reach: "--",
+          stance: "--",
+          edges: [],
+        },
+        watch_spotlights: [],
+        source: "UFCStats",
+        generated_at: "2026-08-24T16:00:00.000Z",
+      }],
+    });
+
+    expect(event?.spotlights[0]?.red.edges).toEqual([]);
+    expect(event?.spotlights[0]?.blue.edges).toEqual([]);
+  });
+
   it("maps the backend-owned control entry without inferring from the profile name", () => {
     const event = mapPickEvent({ ...eventPayload, can_control: true });
 
