@@ -30,7 +30,7 @@ const board: model.FootballFindLeaderBoard = {
   candidates: Array.from({ length: 10 }, (_, index) => ({
     id: index === 0 ? "leader" : `decoy-${index}`,
     name: index === 0 ? "Hidden Leader" : `Decoy ${index}`,
-    subtitle: "NFL QB",
+    subtitle: "Retired NFL quarterback",
     value: 70000 - index * 1000,
   })),
 };
@@ -44,19 +44,42 @@ const identity = {
   replayBehavior: "new-lineup" as const,
 };
 
+function mockBoard(nextBoard: model.FootballFindLeaderBoard) {
+  vi.spyOn(model, "createFootballFindLeaderRun").mockReturnValue({ board: nextBoard, identity });
+}
+
 describe("Football Find the Leader page", () => {
   beforeEach(() => {
     window.localStorage.clear();
-    vi.spyOn(model, "createFootballFindLeaderRun").mockReturnValue({ board, identity });
+    vi.restoreAllMocks();
+    mockBoard(board);
   });
 
-  it("ends immediately when the hidden leader is eliminated and reveals the full table", () => {
+  it("shows the pool once instead of repeating the same descriptor on every candidate", () => {
+    render(<MemoryRouter><FootballFindLeaderPage /></MemoryRouter>);
+    expect(screen.getByText(/NFL QB CAREERS/)).toBeInTheDocument();
+    expect(screen.queryByText("Retired NFL quarterback")).not.toBeInTheDocument();
+    expect(screen.getAllByText("TAP TO ELIMINATE")).toHaveLength(10);
+  });
+
+  it.each([
+    ["nfl-qb-career", "NFL QB CAREERS"],
+    ["nfl-rb-career", "NFL RB CAREERS"],
+    ["cfb-champion-season", "CFB CHAMPION SEASONS"],
+  ] as const)("uses concise category copy for %s boards", (domainId, expectedLabel) => {
+    mockBoard({ ...board, domainId });
+    render(<MemoryRouter><FootballFindLeaderPage /></MemoryRouter>);
+    expect(screen.getByText(new RegExp(expectedLabel))).toBeInTheDocument();
+  });
+
+  it("ends immediately when the hidden leader is eliminated and reveals the full table without descriptor noise", () => {
     render(<MemoryRouter><FootballFindLeaderPage /></MemoryRouter>);
     expect(screen.getByText("10")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /Hidden Leader/i }));
     expect(screen.getByText("RUN ENDED")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "10/100" })).toBeInTheDocument();
     expect(screen.getByText("FULL STAT REVEAL")).toBeInTheDocument();
+    expect(screen.queryByText("Retired NFL quarterback")).not.toBeInTheDocument();
   });
 
   it("awards a perfect run after all nine decoys are eliminated", () => {
