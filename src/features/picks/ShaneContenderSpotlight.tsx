@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { shanesWatchlist, type ShaneWatchFighter } from "../home/shanesWatchlist";
 import type { PickBout } from "./picksModel";
 import "../../styles/picks-shane-contender.css";
@@ -32,7 +31,7 @@ export function ShaneContenderSpotlightSection({ fighters }: { fighters: ShaneWa
           <span>SHANE’S CONTENDER SERIES · #{fighter.rank}</span>
           <h3>{fighter.name}</h3>
           <p>{fighter.whyOnBoard}</p>
-          <Link to={`/fighters-to-watch#${fighter.id}`}>VIEW SHANE’S SCOUTING PROFILE →</Link>
+          <a href={`/fighters-to-watch#${fighter.id}`}>VIEW SHANE’S SCOUTING PROFILE →</a>
         </article>
       ))}
     </section>
