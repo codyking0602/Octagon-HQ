@@ -161,7 +161,7 @@ export default function FootballRankFivePage() {
       ) : null}
       <section className="football-rank-five-intro">
         <div>
-          <p className="eyebrow">FOOTBALL HQ</p>
+          <p className="eyebrow">BLIND RANK 5 · FOOTBALL HQ</p>
           <h1>{run.pack.prompt}</h1>
           <p>{run.pack.intro}</p>
         </div>
