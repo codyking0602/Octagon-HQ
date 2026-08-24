@@ -4,7 +4,14 @@ import {
   nextFootballWavelengthClue,
 } from "../back-room/footballWavelengthModel";
 import { FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES } from "../back-room/footballBlindResumeModel";
-import { FOOTBALL_DAILY_RUNTIME_VERSION } from "./footballTodayChallengeRuntime";
+import {
+  FOOTBALL_BLIND_RESUME_DAILY_CONTENT_VERSION,
+  FOOTBALL_BLIND_RESUME_DAILY_SCORING_VERSION,
+  FOOTBALL_DAILY_RUNTIME_VERSION,
+} from "./footballTodayChallengeRuntime";
+import {
+  BLIND_RESUME_V3_OFFICIAL_DAILY_SCORING_VERSION,
+} from "./todaysChallengeRuntime";
 import {
   buildFootballTodayProjection,
   footballTodayGameForDay,
@@ -42,30 +49,36 @@ describe("Football Today’s Challenge session", () => {
     expect(JSON.stringify(first)).not.toContain("leader_value");
   });
 
-  it("opens Daily Blind Resume fully anonymous on the tougher authored difficulty mix", () => {
+  it("opens Daily Blind Resume anonymous with two evidence rows and the canonical V3 score contract", () => {
     const projection = buildFootballTodayProjection("2026-08-23");
     const round = projection.public_state.current_round as Record<string, unknown>;
 
     expect(projection.game_type).toBe("blind_resume");
+    expect(projection.content_version).toBe(FOOTBALL_BLIND_RESUME_DAILY_CONTENT_VERSION);
+    expect(projection.scoring_version).toBe(BLIND_RESUME_V3_OFFICIAL_DAILY_SCORING_VERSION);
+    expect(FOOTBALL_BLIND_RESUME_DAILY_SCORING_VERSION).toBe(BLIND_RESUME_V3_OFFICIAL_DAILY_SCORING_VERSION);
     expect(projection.public_setup.difficulty_mix).toEqual([...FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES]);
-    expect(round.revealed_count).toBe(0);
-    expect(round.stats).toHaveLength(0);
+    expect(round.revealed_count).toBe(2);
+    expect(round.stats).toHaveLength(2);
     expect(["villain", "hard", "medium"]).toContain(round.difficulty);
     expect(round).not.toHaveProperty("left_name");
     expect(round).not.toHaveProperty("right_name");
     expect(projection.reveal_setup).toBeNull();
   });
 
-  it("reveals Daily Blind Resume in two-row stages and preserves the early-conviction score", () => {
+  it("reveals Daily Blind Resume in two-row stages and resets every round to the UFC V3 opening state", () => {
     const afterReveal = buildFootballTodayProjection("2026-08-23", [{ reveal: true }]);
     const round = afterReveal.public_state.current_round as Record<string, unknown>;
-    expect(round.revealed_count).toBe(2);
-    expect(round.stats).toHaveLength(2);
+    expect(round.revealed_count).toBe(4);
+    expect(round.stats).toHaveLength(4);
 
     const afterPick = buildFootballTodayProjection("2026-08-23", [{ choice: "A" }]);
     const result = (afterPick.public_state.results as Array<Record<string, unknown>>)[0]!;
-    expect(result.revealed_count).toBe(0);
-    expect([0, 20]).toContain(result.points_awarded);
+    const nextRound = afterPick.public_state.current_round as Record<string, unknown>;
+    expect(result.revealed_count).toBe(2);
+    expect([2, 20]).toContain(result.points_awarded);
+    expect(nextRound.revealed_count).toBe(2);
+    expect(nextRound.stats).toHaveLength(2);
   });
 
   it("keeps daily Wavelength adaptive clue selection identical to the replayable engine", () => {
