@@ -102,7 +102,7 @@ export function AppShell() {
         </main>
       </BrandedPullToRefresh>
 
-      {isBackRoom ? null : <BottomNavigation />}
+      {isBackRoom ? null : <BottomNavigation footballTeam={isFootball ? footballTeam : null} />}
     </div>
   );
 }

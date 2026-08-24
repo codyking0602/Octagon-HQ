@@ -33,3 +33,103 @@
   height: 62px;
   flex-basis: 62px;
 }
+
+/* Football HQ final identity polish: shared UFC accent consumers inherit the selected team. */
+.app-shell--football-room {
+  --ufc-red: var(--football-action);
+  --ufc-red-strong: var(--football-accent);
+}
+
+.bottom-nav--football {
+  --ufc-red: #6e8298;
+  --ufc-red-strong: #aebdcb;
+  border-top-color: rgba(174, 189, 203, .16);
+  background: rgba(5, 7, 10, .98);
+}
+
+.bottom-nav--football-team-cowboys {
+  --ufc-red: #163f67;
+  --ufc-red-strong: #829db8;
+  border-top-color: rgba(22, 63, 103, .42);
+  background: rgba(4, 11, 19, .98);
+}
+
+.bottom-nav--football-team-longhorns {
+  --ufc-red: #bf5700;
+  --ufc-red-strong: #d46a15;
+  border-top-color: rgba(191, 87, 0, .34);
+  background: rgba(10, 7, 5, .98);
+}
+
+/* Traditional side-profile helmets replace the generic app-icon silhouette. */
+.app-shell--football-room .football-team-helmet svg {
+  overflow: visible;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, .28));
+}
+
+.app-shell--football-room .football-team-helmet .football-team-helmet__shell,
+.app-shell--football-room .football-team-helmet .football-team-helmet__lower {
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+
+.app-shell--football-room .football-team-helmet .football-team-helmet__facemask {
+  fill: none;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.app-shell--football-room .football-team-helmet .football-team-helmet__earhole {
+  stroke-width: 1.35;
+}
+
+.app-shell--football-room .football-team-helmet .football-team-helmet__mark {
+  stroke: none;
+}
+
+.app-shell--football-room .football-team-helmet--cowboys .football-team-helmet__shell {
+  fill: #c7d0d9;
+  stroke: #f1f4f7;
+}
+
+.app-shell--football-room .football-team-helmet--cowboys .football-team-helmet__lower {
+  fill: #aeb9c4;
+  stroke: #dce2e8;
+}
+
+.app-shell--football-room .football-team-helmet--cowboys .football-team-helmet__facemask {
+  stroke: #6f7f90;
+}
+
+.app-shell--football-room .football-team-helmet--cowboys .football-team-helmet__earhole {
+  fill: #8e9ba8;
+  stroke: #e3e8ed;
+}
+
+.app-shell--football-room .football-team-helmet--cowboys .football-team-helmet__mark--cowboys {
+  fill: #041e42;
+}
+
+.app-shell--football-room .football-team-helmet--longhorns .football-team-helmet__shell {
+  fill: #f4f0e7;
+  stroke: #fffdf8;
+}
+
+.app-shell--football-room .football-team-helmet--longhorns .football-team-helmet__lower {
+  fill: #ddd9d1;
+  stroke: #f4f1eb;
+}
+
+.app-shell--football-room .football-team-helmet--longhorns .football-team-helmet__facemask {
+  stroke: #989b9e;
+}
+
+.app-shell--football-room .football-team-helmet--longhorns .football-team-helmet__earhole {
+  fill: #c8c4bd;
+  stroke: #fffdf8;
+}
+
+.app-shell--football-room .football-team-helmet--longhorns .football-team-helmet__mark--longhorns {
+  fill: #bf5700;
+}

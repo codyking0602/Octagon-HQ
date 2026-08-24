@@ -95,7 +95,7 @@ describe("branded pull-to-refresh", () => {
     const opening = appShell.indexOf("<BrandedPullToRefresh>");
     const closing = appShell.indexOf("</BrandedPullToRefresh>");
     const header = appShell.indexOf("<header");
-    const bottomNavigation = appShell.indexOf("<BottomNavigation />");
+    const bottomNavigation = appShell.indexOf("<BottomNavigation");
 
     expect(header).toBeGreaterThan(-1);
     expect(header).toBeLessThan(opening);
