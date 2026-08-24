@@ -1,5 +1,8 @@
-import { describe, expect, it } from "vitest";
-import { fighterThumbnailPath } from "./FighterThumbnail";
+import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it } from "vitest";
+import { FighterThumbnail, fighterThumbnailPath } from "./FighterThumbnail";
+
+afterEach(cleanup);
 
 describe("fighterThumbnailPath", () => {
   it("resolves Jan Błachowicz's canonical ASCII asset", () => {
@@ -59,5 +62,21 @@ describe("fighterThumbnailPath", () => {
       expect(fighterThumbnailPath(slug))
         .toBe(`/assets/fighters/${slug}-thumb.webp`);
     }
+  });
+});
+
+describe("Shane contender fighter-tile treatment", () => {
+  it("marks Bilal Hasan's thumbnail with the canonical #5 Shane badge", () => {
+    render(<FighterThumbnail name="Bilal Hasan" slug="bilal-hasan" />);
+
+    const badges = screen.getByLabelText("Shane King’s Contender Series fighters");
+    expect(screen.getByText("SHANE’S CONTENDER SERIES · #5")).toBeInTheDocument();
+    expect(badges.closest(".pick-fighter-thumbnail-wrap")).toHaveClass("is-shane-contender");
+  });
+
+  it("does not decorate a fighter who is not on Shane's canonical board", () => {
+    render(<FighterThumbnail name="Alex Perez" slug="alex-perez" />);
+
+    expect(screen.queryByLabelText("Shane King’s Contender Series fighters")).not.toBeInTheDocument();
   });
 });
