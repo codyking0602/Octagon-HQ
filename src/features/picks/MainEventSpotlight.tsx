@@ -1,6 +1,11 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { fighterThumbnailPath } from "./FighterThumbnail";
+import {
+  ShaneContenderBadge,
+  ShaneContenderSpotlightSection,
+  shaneContendersForBout,
+} from "./ShaneContenderSpotlight";
 import type { PickBout, PickEventSpotlight } from "./picksModel";
 
 const fighterPhotoModules = import.meta.glob<{ default: string }>(
@@ -243,6 +248,7 @@ function EdgeColumn({ fighter, corner }: { fighter: SpotlightFighter; corner: "r
 
 export function MainEventSpotlight({ bout, spotlight }: { bout: PickBout; spotlight?: PickEventSpotlight | null }) {
   const data = spotlightForBout(bout, spotlight);
+  const shaneContenders = shaneContendersForBout(bout);
   const [open, setOpen] = useState(false);
   const titleId = useId();
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -278,7 +284,11 @@ export function MainEventSpotlight({ bout, spotlight }: { bout: PickBout; spotli
         ref={triggerRef}
         onClick={() => setOpen(true)}
       >
-        <span><b>{bout.position === 1 ? "MAIN EVENT SPOTLIGHT" : "FIGHT SPOTLIGHT"}</b><strong>View matchup breakdown</strong></span>
+        <span>
+          <b>{bout.position === 1 ? "MAIN EVENT SPOTLIGHT" : "FIGHT SPOTLIGHT"}</b>
+          <strong>View matchup breakdown</strong>
+          <ShaneContenderBadge fighters={shaneContenders} />
+        </span>
         <i aria-hidden="true">›</i>
       </button>
 
@@ -337,6 +347,8 @@ export function MainEventSpotlight({ bout, spotlight }: { bout: PickBout; spotli
                   </div>
                 ) : null}
               </section>
+
+              <ShaneContenderSpotlightSection fighters={shaneContenders} />
 
               {hasTale ? (
                 <section className="main-event-spotlight__section">

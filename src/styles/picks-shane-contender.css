@@ -1,0 +1,69 @@
+.shane-contender-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 4px;
+}
+
+.shane-contender-badge {
+  width: fit-content;
+  padding: 4px 7px;
+  border: 1px solid rgba(255, 198, 72, .66);
+  border-radius: 999px;
+  background: rgba(255, 198, 72, .1);
+  color: #ffd875;
+  font-size: 7px;
+  font-style: normal;
+  font-weight: 950;
+  letter-spacing: .1em;
+  line-height: 1.2;
+}
+
+.main-event-spotlight__shane {
+  display: grid;
+  gap: 10px;
+}
+
+.main-event-spotlight__shane-fighter {
+  padding: 14px;
+  border: 1px solid rgba(255, 198, 72, .42);
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(255, 198, 72, .12), transparent 48%),
+    #151515;
+}
+
+.main-event-spotlight__shane-fighter > span {
+  color: #ffd875;
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .14em;
+}
+
+.main-event-spotlight__shane-fighter h3 {
+  margin: 7px 0 0;
+  font-size: 17px;
+  line-height: 1.1;
+}
+
+.main-event-spotlight__shane-fighter p {
+  margin: 7px 0 0;
+  color: #e4e4e7;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.main-event-spotlight__shane-fighter a {
+  display: inline-flex;
+  margin-top: 10px;
+  color: #ffd875;
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .08em;
+  text-decoration: none;
+}
+
+.main-event-spotlight__shane-fighter a:hover,
+.main-event-spotlight__shane-fighter a:focus-visible {
+  text-decoration: underline;
+}
