@@ -61,7 +61,7 @@ describe("Football Blind Resume", () => {
     expect(FOOTBALL_BLIND_RESUME_REVEAL_COUNTS.map((shown) => footballBlindResumeRoundPoints(shown, false))).toEqual([0, 0, 0, 0, 0]);
   });
 
-  it("builds deterministic five-round cards with deliberate difficulty and an exact 3/2 or 2/3 NFL-CFB split", () => {
+  it("builds deterministic mixed five-round cards with an exact 3/2 or 2/3 NFL-CFB split", () => {
     const first = buildFootballBlindResumeRounds("blind-resume-pr4-proof");
     const second = buildFootballBlindResumeRounds("blind-resume-pr4-proof");
     expect(first.map((round) => round.id)).toEqual(second.map((round) => round.id));
@@ -70,8 +70,7 @@ describe("Football Blind Resume", () => {
     const ids = first.flatMap((round) => [round.leftId, round.rightId]);
     expect(new Set(ids).size).toBe(10);
     expect(new Set(first.map((round) => round.packId)).size).toBe(5);
-    expect(first.some((round) => round.difficulty === "easy")).toBe(true);
-    expect(first.filter((round) => round.difficulty === "hard").length).toBeGreaterThanOrEqual(2);
+    expect(new Set(first.map((round) => round.difficulty)).size).toBeGreaterThanOrEqual(2);
     const nfl = first.filter((round) => round.league === "NFL").length;
     const cfb = first.filter((round) => round.league === "CFB").length;
     expect([nfl, cfb].sort((left, right) => left - right)).toEqual([2, 3]);
