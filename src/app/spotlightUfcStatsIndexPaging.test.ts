@@ -14,6 +14,15 @@ function expectCompleteSpotlightFighter(name: string) {
   expect(fighter?.takedownDefense).toBeTypeOf("number");
 }
 
+function expectNewcomerSpotlightFighter(name: string, record: string) {
+  const fighter = getUfcStatsSnapshotFighter(name);
+  expect(fighter?.name).toBe(name);
+  expect(fighter?.record).toBe(record);
+  expect(fighter?.height).not.toBe("--");
+  expect(fighter?.slpm).toBeNull();
+  expect(fighter?.takedownDefense).toBeNull();
+}
+
 describe("UFCStats Spotlight snapshot", () => {
   it("does not make a live UFCStats request while the owner is building a Spotlight", () => {
     expect(builder).toContain('getUfcStatsSnapshotFighter');
@@ -38,5 +47,10 @@ describe("UFCStats Spotlight snapshot", () => {
     for (const name of ["Umar Nurmagomedov", "Song Yadong"]) {
       expectCompleteSpotlightFighter(name);
     }
+  });
+
+  it("covers Hasan vs Rojas with newcomer-safe snapshot data", () => {
+    expectNewcomerSpotlightFighter("Bilal Hasan", "9-0-0");
+    expectNewcomerSpotlightFighter("Nilson Rojas", "9-0-0");
   });
 });
