@@ -28,7 +28,7 @@ const spotlightFighterDbSchema = z.object({
   height: z.string().min(1),
   reach: z.string().min(1),
   stance: z.string().min(1),
-  edges: z.array(z.string().min(3)).min(1).max(3),
+  edges: z.array(z.string().min(3)).max(3),
 });
 const spotlightDbSchema = z.object({
   bout_id: z.string().min(1),
@@ -48,7 +48,7 @@ const spotlightFighterSchema = z.object({
   height: z.string().min(1),
   reach: z.string().min(1),
   stance: z.string().min(1),
-  edges: z.array(z.string().min(3)).min(1).max(3),
+  edges: z.array(z.string().min(3)).max(3),
 });
 const spotlightSchema = z.object({
   boutId: z.string().min(1),
@@ -162,6 +162,9 @@ export function mapPickSetupSourcePreview(value: unknown): PickSetupSourcePrevie
     event: { name: parsed.event_preview.name, subtitle: parsed.event_preview.subtitle, venue: parsed.event_preview.venue, location: parsed.event_preview.location, startsAt: parsed.event_preview.starts_at, locksAt: parsed.event_preview.locks_at, bouts: parsed.event_preview.bouts.map(mapBout) },
   };
 }
+export function mapBuiltPickSetupSpotlight(value: unknown): PickSetupSpotlight {
+  return spotlightSchema.parse(value);
+}
 
 export function createPickSetupRepository(): PickSetupRepository | null {
   const supabase = getSupabaseClient();
@@ -184,7 +187,7 @@ export function createPickSetupRepository(): PickSetupRepository | null {
     async buildSpotlight(draftId, boutId) {
       const payload = await invoke("build-pick-spotlight", { draft_id: draftId, bout_id: boutId });
       const raw = payload && typeof payload === "object" ? (payload as Record<string, unknown>).spotlight : null;
-      return spotlightSchema.parse(raw);
+      return mapBuiltPickSetupSpotlight(raw);
     },
     async saveSpotlights(draftId, spotlights) {
       await requireRpcSuccess(client.rpc("set_pick_event_draft_spotlight", { p_draft_id: draftId, p_spotlight: spotlights.map(spotlightPayload) }));

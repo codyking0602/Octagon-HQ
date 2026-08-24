@@ -5,6 +5,7 @@ import {
   pickSetupDraftCardLabel,
 } from "./pickSetupModel";
 import {
+  mapBuiltPickSetupSpotlight,
   mapPickSetupDraft,
   mapPickSetupSourcePreview,
   pickSetupFunctionErrorMessage,
@@ -76,6 +77,32 @@ const fullSpotlight = {
   watch_spotlights: [{ fighter_slug: "red-fighter", url: "https://youtu.be/red-fighter" }],
   source: "UFCStats",
   generated_at: "2026-07-27T00:00:00.000Z",
+};
+
+const rookieBuiltSpotlight = {
+  boutId: "main-card-bilal-hasan-nilson-rojas",
+  preview: "Bilal Hasan wants to stay adaptable and impose the better phase. Nilson Rojas needs to stay adaptable and impose the better phase; the key is who imposes the better phase.",
+  red: {
+    fighterSlug: "bilal-hasan",
+    record: "9-0-0",
+    age: "25",
+    height: "5' 7\"",
+    reach: "70\"",
+    stance: "--",
+    edges: [],
+  },
+  blue: {
+    fighterSlug: "nilson-rojas",
+    record: "9-0-0",
+    age: "27",
+    height: "5' 5\"",
+    reach: "--",
+    stance: "--",
+    edges: [],
+  },
+  watchSpotlights: [],
+  source: "UFCStats" as const,
+  generatedAt: "2026-08-24T16:41:40.000Z",
 };
 
 describe("Event Setup draft mapping", () => {
@@ -165,6 +192,38 @@ describe("Event Setup draft mapping", () => {
     });
   });
 
+  it("accepts persisted rookie Spotlight packages without invented matchup edges", () => {
+    const rookieDbSpotlight = {
+      bout_id: rookieBuiltSpotlight.boutId,
+      preview: rookieBuiltSpotlight.preview,
+      red: {
+        fighter_slug: rookieBuiltSpotlight.red.fighterSlug,
+        record: rookieBuiltSpotlight.red.record,
+        age: rookieBuiltSpotlight.red.age,
+        height: rookieBuiltSpotlight.red.height,
+        reach: rookieBuiltSpotlight.red.reach,
+        stance: rookieBuiltSpotlight.red.stance,
+        edges: [],
+      },
+      blue: {
+        fighter_slug: rookieBuiltSpotlight.blue.fighterSlug,
+        record: rookieBuiltSpotlight.blue.record,
+        age: rookieBuiltSpotlight.blue.age,
+        height: rookieBuiltSpotlight.blue.height,
+        reach: rookieBuiltSpotlight.blue.reach,
+        stance: rookieBuiltSpotlight.blue.stance,
+        edges: [],
+      },
+      watch_spotlights: [],
+      source: "UFCStats",
+      generated_at: rookieBuiltSpotlight.generatedAt,
+    };
+    const draft = mapPickSetupDraft({ ...payload, spotlights: [rookieDbSpotlight] });
+
+    expect(draft?.spotlights?.[0]?.red.edges).toEqual([]);
+    expect(draft?.spotlights?.[0]?.blue.edges).toEqual([]);
+  });
+
   it("maps clean prospective metadata and fights from non-destructive source previews", () => {
     expect(mapPickSetupSourcePreview({
       source_hash: "abc123",
@@ -220,6 +279,12 @@ describe("Event Setup draft mapping", () => {
     expect(draft?.startsAt).toBeNull();
     expect(draft?.canPublish).toBe(false);
     expect(draft?.warnings).toContain("MISSING VENUE");
+  });
+});
+
+describe("Event Setup Spotlight build parsing", () => {
+  it("accepts the successful rookie Spotlight response without inventing matchup edges", () => {
+    expect(mapBuiltPickSetupSpotlight(rookieBuiltSpotlight)).toEqual(rookieBuiltSpotlight);
   });
 });
 
