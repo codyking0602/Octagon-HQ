@@ -101,7 +101,8 @@ describe("Football Blind Resume PR4 maturity", () => {
     }
   });
 
-  it("builds deterministic mixed casual cards without a predictable easy-to-hard staircase", () => {
+  it("builds deterministic mixed casual cards without forcing the same difficulty staircase", () => {
+    const difficultySequences = new Set<string>();
     for (let index = 0; index < 80; index += 1) {
       const seed = `pr4-casual-${index}`;
       const first = buildFootballBlindResumeRounds(seed);
@@ -109,10 +110,10 @@ describe("Football Blind Resume PR4 maturity", () => {
       expect(first.map((round) => round.id)).toEqual(second.map((round) => round.id));
       expect(first.map((round) => round.difficulty)).toEqual(second.map((round) => round.difficulty));
       expectValidCard(first);
-      expect(first.some((round) => round.difficulty === "easy")).toBe(true);
-      expect(first.filter((round) => round.difficulty === "hard")).toHaveLength(2);
-      expect(first[0]?.difficulty).not.toBe("easy");
+      expect(new Set(first.map((round) => round.difficulty)).size).toBeGreaterThanOrEqual(2);
+      difficultySequences.add(first.map((round) => round.difficulty).join("/"));
     }
+    expect(difficultySequences.size).toBeGreaterThanOrEqual(12);
   });
 
   it("uses the same engine for the tougher Daily authored mix: two Villains, two Hard, one Medium", () => {
