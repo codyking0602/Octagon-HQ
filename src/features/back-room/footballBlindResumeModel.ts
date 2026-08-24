@@ -1,3 +1,4 @@
+import { blindResumeV3RoundPoints } from "../play/blindResumeV3";
 import {
   createReplaySeed,
   seededLineupRandom,
@@ -18,7 +19,7 @@ import {
 
 export const FOOTBALL_BLIND_RESUME_GAME_ID = "football-blind-resume";
 export const FOOTBALL_BLIND_RESUME_ROUNDS = 5;
-export const FOOTBALL_BLIND_RESUME_REVEAL_COUNTS = [0, 2, 4, 6, 8] as const;
+export const FOOTBALL_BLIND_RESUME_REVEAL_COUNTS = [2, 4, 6, 8] as const;
 export const FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES = ["villain", "hard", "villain", "hard", "medium"] as const;
 
 export type FootballBlindResumeLeague = "NFL" | "CFB";
@@ -431,9 +432,7 @@ export function footballBlindResumeRoundPoints(
   revealedCount: FootballBlindResumeRevealCount,
   correct: boolean,
 ) {
-  const index = FOOTBALL_BLIND_RESUME_REVEAL_COUNTS.indexOf(revealedCount);
-  if (index < 0) throw new Error(`Unsupported Football Blind Resume reveal count ${revealedCount}.`);
-  return correct ? [20, 15, 10, 5, 2][index]! : 0;
+  return blindResumeV3RoundPoints(revealedCount, correct);
 }
 
 export function footballBlindResumeScore(correct: number) {
