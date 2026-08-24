@@ -33,4 +33,10 @@ describe("UFCStats Spotlight snapshot", () => {
       expectCompleteSpotlightFighter(name);
     }
   });
+
+  it("covers the UFC Shanghai main event from the canonical UFCStats snapshot", () => {
+    for (const name of ["Umar Nurmagomedov", "Song Yadong"]) {
+      expectCompleteSpotlightFighter(name);
+    }
+  });
 });
