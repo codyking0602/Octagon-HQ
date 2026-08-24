@@ -9,6 +9,7 @@ import { memberProfilePath } from "../features/members/memberProfilesModel";
 import { NotificationHeaderAction } from "../features/notifications/NotificationHeaderAction";
 import { NotificationPushSetting } from "../features/notifications/NotificationPushSetting";
 import { IdentityControl } from "../features/identity/IdentityControl";
+import { useProfilePreferences } from "../features/profile/ProfilePreferencesProvider";
 import { BrandedPullToRefresh } from "./BrandedPullToRefresh";
 import { RouteScrollManager } from "./RouteScrollManager";
 
@@ -37,13 +38,15 @@ function ProfilePushSettingRoute() {
 
 export function AppShell() {
   const location = useLocation();
+  const { footballTeam } = useProfilePreferences();
   const gameTitle = PLAY_GAME_TITLES[location.pathname];
   const isPlayGame = Boolean(gameTitle);
   const isBackRoom = location.pathname === "/back-room" || location.pathname.startsWith("/back-room/");
   const isFootball = location.pathname === "/football" || location.pathname.startsWith("/football/");
+  const footballTeamClass = isFootball && footballTeam ? ` app-shell--football-team-${footballTeam}` : "";
 
   return (
-    <div className={`app-shell${isPlayGame ? " app-shell--game" : ""}${isBackRoom ? " app-shell--back-room" : ""}${isFootball ? " app-shell--football-room" : ""}`}>
+    <div className={`app-shell${isPlayGame ? " app-shell--game" : ""}${isBackRoom ? " app-shell--back-room" : ""}${isFootball ? " app-shell--football-room" : ""}${footballTeamClass}`}>
       <RouteScrollManager />
 
       {isFootball ? (
