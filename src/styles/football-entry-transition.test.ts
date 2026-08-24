@@ -26,6 +26,6 @@ describe("Football HQ entrance transition", () => {
 
   it("ships a real production clip instead of the tiny placeholder", () => {
     expect(vinceYoungClip.subarray(4, 8).toString("ascii")).toBe("ftyp");
-    expect(vinceYoungClip.byteLength).toBeGreaterThan(60_000);
+    expect(vinceYoungClip.byteLength).toBeGreaterThan(1_000_000);
   });
 });
