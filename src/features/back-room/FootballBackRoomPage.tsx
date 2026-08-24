@@ -10,34 +10,36 @@ import { useTodayChallengeOverview } from "../play/useTodayChallengeOverview";
 import { useTodayChallengeRuntime } from "../play/useTodayChallengeRuntime";
 import { FootballTeamHelmet } from "./FootballHeader";
 
-const FOOTBALL_GAME_ORDER: readonly PlayGameId[] = [
+const FOOTBALL_GAME_ORDER = [
   "hit-the-number",
   "find-leader",
   "wavelength",
   "blind-resume",
   "blind-rank",
   "keep-cut",
-];
+] as const satisfies readonly PlayGameId[];
 
-const GAME_KICKERS: Partial<Record<PlayGameId, string>> = {
+type FootballLibraryGameId = (typeof FOOTBALL_GAME_ORDER)[number];
+
+const GAME_KICKERS: Record<FootballLibraryGameId, string> = {
   "hit-the-number": "BUILD TO THE TARGET",
   "find-leader": "KNOW THE RECORDS",
   wavelength: "READ THE SCALE",
-  "blind-resume": "NO NAMES. JUST THE RÉSUMÉ.",
+  "blind-resume": "NO NAMES. JUST THE RESUME.",
   "blind-rank": "BLIND RANKING",
   "keep-cut": "ROSTER DECISIONS",
 };
 
-const GAME_MARKS: Partial<Record<PlayGameId, string>> = {
-  "hit-the-number": "#",
-  "find-leader": "↑",
-  wavelength: "~",
-  "blind-resume": "?",
-  "blind-rank": "5",
-  "keep-cut": "4/4",
+const GAME_LIBRARY_DESCRIPTIONS: Record<FootballLibraryGameId, string> = {
+  "hit-the-number": "Build a football board and chase the NFL or CFB target without going over.",
+  "find-leader": "Eliminate the decoys and leave the hidden NFL or CFB stat leader standing.",
+  wavelength: "Find the hidden 1–100 football number through four adaptive clues.",
+  "blind-resume": "Pick the stronger football resume as the evidence is revealed.",
+  "blind-rank": "Rank five mystery football subjects before you see who comes next.",
+  "keep-cut": "Reveal eight football subjects and lock four keeps and four cuts.",
 };
 
-const GAME_META: Partial<Record<PlayGameId, string>> = {
+const GAME_META: Record<FootballLibraryGameId, string> = {
   "hit-the-number": "NFL + CFB · BUILD",
   "find-leader": "NFL + CFB · ELIMINATION",
   wavelength: "NFL + CFB · SCALE",
@@ -59,6 +61,81 @@ const TEAM_COPY: Record<FootballTeam, { title: string; subtitle: string }> = {
   cowboys: { title: "Dallas Cowboys", subtitle: "NAVY · SILVER · WHITE" },
   longhorns: { title: "Texas Longhorns", subtitle: "BURNT ORANGE · CREAM" },
 };
+
+function FootballGameLibraryMark({ gameId }: { gameId: FootballLibraryGameId }) {
+  if (gameId === "hit-the-number") {
+    return (
+      <svg viewBox="0 0 48 48" width="42" height="42" fill="none" aria-hidden="true">
+        <rect x="6" y="7" width="36" height="34" rx="7" stroke="currentColor" strokeWidth="2" />
+        <path d="M7 16h34" stroke="currentColor" strokeWidth="2" />
+        <text x="24" y="32" textAnchor="middle" fill="currentColor" fontSize="16" fontWeight="900">32</text>
+        <circle cx="12" cy="11.5" r="1.5" fill="currentColor" />
+        <circle cx="17" cy="11.5" r="1.5" fill="currentColor" opacity=".6" />
+      </svg>
+    );
+  }
+
+  if (gameId === "find-leader") {
+    return (
+      <svg viewBox="0 0 48 48" width="42" height="42" fill="none" aria-hidden="true">
+        <path d="M10 37h28M12 31h8M12 24h14M12 17h20" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+        <circle cx="35" cy="30" r="8" stroke="currentColor" strokeWidth="2" />
+        <text x="35" y="34" textAnchor="middle" fill="currentColor" fontSize="11" fontWeight="900">#1</text>
+      </svg>
+    );
+  }
+
+  if (gameId === "wavelength") {
+    return (
+      <svg viewBox="0 0 48 48" width="42" height="42" fill="none" aria-hidden="true">
+        <path d="M7 30h34" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+        <path d="M9 26v8M17 27v6M24 25v10M31 27v6M39 26v8" stroke="currentColor" strokeWidth="1.5" opacity=".75" />
+        <circle cx="27" cy="30" r="5" fill="currentColor" />
+        <path d="M27 12v9" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+        <path d="m23 17 4 4 4-4" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    );
+  }
+
+  if (gameId === "blind-resume") {
+    return (
+      <svg viewBox="0 0 48 48" width="42" height="42" fill="none" aria-hidden="true">
+        <path d="M11 6h21l7 7v29H11z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M32 6v8h7" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M16 21h17M16 27h13M16 33h16" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" />
+        <circle cx="34.5" cy="34.5" r="7.5" fill="currentColor" />
+        <text x="34.5" y="38" textAnchor="middle" fill="var(--football-card)" fontSize="10" fontWeight="950">?</text>
+      </svg>
+    );
+  }
+
+  if (gameId === "blind-rank") {
+    return (
+      <svg viewBox="0 0 48 48" width="42" height="42" fill="none" aria-hidden="true">
+        {[1, 2, 3, 4, 5].map((rank) => {
+          const x = 5 + ((rank - 1) * 8);
+          return (
+            <g key={rank}>
+              <rect x={x} y={10 + ((rank - 1) % 2) * 5} width="6" height={28 - ((rank - 1) % 2) * 5} rx="2" stroke="currentColor" strokeWidth="1.4" />
+              <text x={x + 3} y="43" textAnchor="middle" fill="currentColor" fontSize="6.5" fontWeight="900">{rank}</text>
+            </g>
+          );
+        })}
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 48 48" width="42" height="42" fill="none" aria-hidden="true">
+      <rect x="5" y="7" width="38" height="34" rx="8" stroke="currentColor" strokeWidth="2" />
+      <path d="M24 8v32" stroke="currentColor" strokeWidth="2" />
+      <text x="14.5" y="23" textAnchor="middle" fill="currentColor" fontSize="7" fontWeight="950">KEEP</text>
+      <text x="33.5" y="23" textAnchor="middle" fill="currentColor" fontSize="7" fontWeight="950">CUT</text>
+      <text x="14.5" y="34" textAnchor="middle" fill="currentColor" fontSize="12" fontWeight="950">4</text>
+      <text x="33.5" y="34" textAnchor="middle" fill="currentColor" fontSize="12" fontWeight="950">4</text>
+    </svg>
+  );
+}
 
 function FootballEntryGate({ onChoose, saving }: {
   onChoose: (team: FootballTeam) => void;
@@ -124,7 +201,10 @@ export default function FootballBackRoomPage() {
     sport: "football",
   });
   const footballGames = useMemo(
-    () => FOOTBALL_GAME_ORDER.map((id) => playGameDefinition(id, "football")),
+    () => FOOTBALL_GAME_ORDER.map((id) => ({
+      id,
+      definition: playGameDefinition(id, "football"),
+    })),
     [],
   );
 
@@ -219,15 +299,17 @@ export default function FootballBackRoomPage() {
           <span>6 GAMES</span>
         </div>
         <div className="football-room-game-grid" aria-label="Football games">
-          {footballGames.map((game) => (
+          {footballGames.map(({ id, definition: game }) => (
             <button className="football-room-preview" type="button" key={game.route} onClick={() => navigate(game.route)}>
-              <span className="football-room-preview__mark" aria-hidden="true">{GAME_MARKS[game.id]}</span>
+              <span className="football-room-preview__mark" aria-hidden="true">
+                <FootballGameLibraryMark gameId={id} />
+              </span>
               <div className="football-room-preview__copy">
-                <small className="football-room-preview__kicker">{GAME_KICKERS[game.id]}</small>
+                <small className="football-room-preview__kicker">{GAME_KICKERS[id]}</small>
                 <strong>{game.id === "blind-rank" ? "BLIND RANK FIVE" : game.title.toUpperCase()}</strong>
-                <p>{game.description}</p>
+                <p>{GAME_LIBRARY_DESCRIPTIONS[id]}</p>
                 <div className="football-room-preview__meta">
-                  <span>{GAME_META[game.id]}</span>
+                  <span>{GAME_META[id]}</span>
                   <em>PLAY →</em>
                 </div>
               </div>
