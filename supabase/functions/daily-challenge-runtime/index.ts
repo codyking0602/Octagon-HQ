@@ -1,8 +1,6 @@
 import { createClient, type SupabaseClient } from "npm:@supabase/supabase-js@2.110.7";
 import {
   advanceOfficialDailyRuntime,
-  buildFootballTodayPersistenceSetup,
-  buildFootballTodayRuntimeSnapshot,
   buildOfficialDailySetup,
 } from "./runtime.generated.mjs";
 import { DEPLOYED_SOURCE_SHA } from "./deployment.ts";
@@ -54,6 +52,20 @@ const safeError = (status: number, code: string, message: string) => json({
 }, status);
 
 type JsonRecord = Record<string, unknown>;
+
+type FootballRuntimeModule = {
+  buildFootballTodayPersistenceSetup: (day: string) => unknown;
+  buildFootballTodayRuntimeSnapshot: (day: string, actionHistory: readonly JsonRecord[]) => unknown;
+};
+
+let footballRuntimePromise: Promise<FootballRuntimeModule> | null = null;
+
+function loadFootballRuntime() {
+  if (!footballRuntimePromise) {
+    footballRuntimePromise = import("./football-runtime.generated.mjs") as Promise<FootballRuntimeModule>;
+  }
+  return footballRuntimePromise;
+}
 
 function asRecord(value: unknown): JsonRecord | null {
   return value && typeof value === "object" && !Array.isArray(value)
@@ -112,8 +124,8 @@ function childPublication(publication: JsonRecord) {
     setup_key: requiredString(publication.setupKey, "Daily child setup key"),
     public_setup: requiredRecord(publication.publicSetup, "Daily child public setup"),
     reveal_setup: requiredRecord(publication.revealSetup, "Daily child reveal setup"),
-    private_setup_evidence: requiredRecord(publication.privateSetupEvidence, "Daily child private setup evidence"),
-    private_grading_evidence: requiredRecord(publication.privateGradingEvidence, "Daily child private grading evidence"),
+    private_setup_evidence: requiredRecord(publication.privateSetupEvidence, "Daily child setup evidence"),
+    private_grading_evidence: requiredRecord(publication.privateGradingEvidence, "Daily child grading evidence"),
   };
 }
 
@@ -341,9 +353,9 @@ async function materializeToday(admin: SupabaseClient) {
   };
 }
 
-async function materializeFootballToday(admin: SupabaseClient) {
+async function materializeFootballToday(admin: SupabaseClient, footballRuntime: FootballRuntimeModule) {
   const day = centralDayNow();
-  const publication = buildFootballTodayPersistenceSetup(day) as JsonRecord;
+  const publication = footballRuntime.buildFootballTodayPersistenceSetup(day) as JsonRecord;
   const published = await admin.rpc("publish_daily_challenge_setup", {
     p_central_day: day,
     p_schedule_version: "football-daily-v1",
@@ -428,9 +440,13 @@ function publicPayload(context: OfficialDailyRuntimeContext & JsonRecord) {
   };
 }
 
-function footballPublicPayload(context: OfficialDailyRuntimeContext & JsonRecord, day: string) {
+function footballPublicPayload(
+  context: OfficialDailyRuntimeContext & JsonRecord,
+  day: string,
+  footballRuntime: FootballRuntimeModule,
+) {
   const history = footballActionHistory(context);
-  const snapshot = buildFootballTodayRuntimeSnapshot(day, history) as JsonRecord;
+  const snapshot = footballRuntime.buildFootballTodayRuntimeSnapshot(day, history) as JsonRecord;
   const projection = requiredRecord(snapshot.projection, "Football daily projection");
   const attempt = asRecord(context.official_attempt);
   return {
@@ -505,12 +521,13 @@ Deno.serve(async (request) => {
     });
 
     if (body.sport === "football") {
-      const materialized = await materializeFootballToday(admin);
+      const footballRuntime = await loadFootballRuntime();
+      const materialized = await materializeFootballToday(admin, footballRuntime);
       let context = await getContext(admin, materialized.dailyChallengeId, profileId);
       context = await finalizePending(userClient, admin, context, profileId);
 
       if (body.mode === "get-today" || body.mode === undefined) {
-        return json(footballPublicPayload(context, materialized.centralDay));
+        return json(footballPublicPayload(context, materialized.centralDay, footballRuntime));
       }
       if (body.mode !== "advance") {
         return safeError(400, "INVALID_MODE", "Unsupported Football Today’s Challenge runtime mode.");
@@ -530,7 +547,7 @@ Deno.serve(async (request) => {
       const history = footballActionHistory(context);
       const action = requiredRecord(body.action, "Football daily action");
       const nextHistory = [...history, action];
-      const snapshot = buildFootballTodayRuntimeSnapshot(materialized.centralDay, nextHistory) as JsonRecord;
+      const snapshot = footballRuntime.buildFootballTodayRuntimeSnapshot(materialized.centralDay, nextHistory) as JsonRecord;
       const projection = requiredRecord(snapshot.projection, "Advanced Football daily projection");
       const finalSubmission = asRecord(snapshot.finalSubmission);
       const saved = await admin.rpc("save_daily_challenge_runtime_progress", {
@@ -552,7 +569,7 @@ Deno.serve(async (request) => {
 
       context = await getContext(admin, materialized.dailyChallengeId, profileId);
       context = await finalizePending(userClient, admin, context, profileId);
-      return json(footballPublicPayload(context, materialized.centralDay));
+      return json(footballPublicPayload(context, materialized.centralDay, footballRuntime));
     }
 
     const materialized = await materializeToday(admin);
