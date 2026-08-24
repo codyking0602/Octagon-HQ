@@ -18,10 +18,12 @@ import {
 
 export const FOOTBALL_BLIND_RESUME_GAME_ID = "football-blind-resume";
 export const FOOTBALL_BLIND_RESUME_ROUNDS = 5;
-export const FOOTBALL_BLIND_RESUME_REVEAL_COUNTS = [2, 4, 6, 8] as const;
+export const FOOTBALL_BLIND_RESUME_REVEAL_COUNTS = [0, 2, 4, 6, 8] as const;
+export const FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES = ["villain", "hard", "villain", "hard", "medium"] as const;
 
 export type FootballBlindResumeLeague = "NFL" | "CFB";
 export type FootballBlindResumeRevealCount = typeof FOOTBALL_BLIND_RESUME_REVEAL_COUNTS[number];
+export type FootballBlindResumeDifficulty = "easy" | "medium" | "hard" | "villain";
 
 export interface FootballBlindResumeFactSource {
   owner: "footballFactualStats";
@@ -42,6 +44,7 @@ export interface FootballBlindResumeMatchup {
   prompt: string;
   leftId: string;
   rightId: string;
+  difficulty: FootballBlindResumeDifficulty;
   stats: readonly FootballBlindResumeStat[];
 }
 
@@ -67,19 +70,19 @@ interface MatchupFamily {
 }
 
 const MATCHUP_FAMILIES: readonly MatchupFamily[] = [
-  { packId: "nfl-quarterbacks", league: "NFL", prompt: "Which NFL quarterback résumé is greater?" },
-  { packId: "nfl-running-backs", league: "NFL", prompt: "Which NFL running back résumé is greater?" },
-  { packId: "nfl-wide-receivers", league: "NFL", prompt: "Which NFL wide receiver résumé is greater?" },
-  { packId: "nfl-tight-ends", league: "NFL", prompt: "Which NFL tight end résumé is greater?" },
-  { packId: "nfl-defensive-players", league: "NFL", prompt: "Which NFL defensive résumé is greater?" },
-  { packId: "nfl-head-coaches", league: "NFL", prompt: "Which NFL head-coaching résumé is greater?" },
-  { packId: "nfl-qb-seasons", league: "NFL", prompt: "Which NFL quarterback single-season résumé is greater?" },
-  { packId: "nfl-team-seasons", league: "NFL", prompt: "Which single-season team résumé is greater?" },
-  { packId: "college-quarterbacks", league: "CFB", prompt: "Which college quarterback résumé is greater?" },
-  { packId: "college-head-coaches", league: "CFB", prompt: "Which college head-coaching résumé is greater?" },
-  { packId: "college-programs", league: "CFB", prompt: "Which program has the stronger résumé since 2000?" },
+  { packId: "nfl-quarterbacks", league: "NFL", prompt: "Which NFL quarterback resume is greater?" },
+  { packId: "nfl-running-backs", league: "NFL", prompt: "Which NFL running back resume is greater?" },
+  { packId: "nfl-wide-receivers", league: "NFL", prompt: "Which NFL wide receiver resume is greater?" },
+  { packId: "nfl-tight-ends", league: "NFL", prompt: "Which NFL tight end resume is greater?" },
+  { packId: "nfl-defensive-players", league: "NFL", prompt: "Which NFL defensive resume is greater?" },
+  { packId: "nfl-head-coaches", league: "NFL", prompt: "Which NFL head-coaching resume is greater?" },
+  { packId: "nfl-qb-seasons", league: "NFL", prompt: "Which NFL quarterback single-season resume is greater?" },
+  { packId: "nfl-team-seasons", league: "NFL", prompt: "Which single-season team resume is greater?" },
+  { packId: "college-quarterbacks", league: "CFB", prompt: "Which college quarterback resume is greater?" },
+  { packId: "college-head-coaches", league: "CFB", prompt: "Which college head-coaching resume is greater?" },
+  { packId: "college-programs", league: "CFB", prompt: "Which program has the stronger resume since 2000?" },
   { packId: "college-program-eras", league: "CFB", prompt: "Which defined college program era is greater?" },
-  { packId: "college-team-seasons", league: "CFB", prompt: "Which single-season team résumé is greater?" },
+  { packId: "college-team-seasons", league: "CFB", prompt: "Which single-season team resume is greater?" },
 ] as const;
 
 const FACT_METRICS_BY_PACK: Partial<Record<FootballRankFivePackId, readonly FootballFactMetricId[]>> = {
@@ -111,6 +114,13 @@ const FACT_FIRST_PAIRS: readonly {
   { packId: "nfl-running-backs", leftId: "barry-sanders", rightId: "emmitt-smith" },
   { packId: "college-team-seasons", leftId: "2005-texas", rightId: "2013-florida-state" },
 ];
+
+const CASUAL_DIFFICULTY_PATTERNS: readonly (readonly FootballBlindResumeDifficulty[])[] = [
+  ["hard", "medium", "easy", "hard", "medium"],
+  ["hard", "medium", "easy", "hard", "villain"],
+  ["medium", "hard", "easy", "villain", "hard"],
+  ["hard", "villain", "easy", "medium", "hard"],
+] as const;
 
 const AUTO_MATCHUPS_PER_FAMILY = 8;
 const AUTO_SUBJECT_LIMIT = AUTO_MATCHUPS_PER_FAMILY * 2;
@@ -147,7 +157,7 @@ function resumePieces(item: FootballRankFiveItem) {
   const unique = [...sourcePieces, ...combinations]
     .filter(Boolean)
     .filter((value, index, rows) => rows.indexOf(value) === index);
-  while (unique.length < 8) unique.push(unique.at(-1) ?? "Qualitative résumé context");
+  while (unique.length < 8) unique.push(unique.at(-1) ?? "Qualitative resume context");
   return unique.slice(0, 8);
 }
 
@@ -170,9 +180,9 @@ function factualStats(
 }
 
 const QUALITATIVE_LABELS = [
-  "Résumé headline",
-  "Primary résumé marker",
-  "Secondary résumé marker",
+  "Resume headline",
+  "Primary resume marker",
+  "Secondary resume marker",
   "Peak / production case",
   "Longevity / context",
   "Supporting context",
@@ -180,10 +190,29 @@ const QUALITATIVE_LABELS = [
   "Signature edge",
 ] as const;
 
+function difficultyFor(
+  family: MatchupFamily,
+  left: FootballRankFiveItem,
+  right: FootballRankFiveItem,
+): FootballBlindResumeDifficulty {
+  const gap = Math.abs(left.rating - right.rating);
+  if (gap >= 3) return "easy";
+  if (gap === 2) return "medium";
+  const villainRoll = seededLineupRandom(
+    FOOTBALL_BLIND_RESUME_GAME_ID,
+    "difficulty",
+    family.packId,
+    left.id,
+    right.id,
+  )();
+  return villainRoll < 0.45 ? "villain" : "hard";
+}
+
 function matchupStats(
   packId: FootballRankFivePackId,
   left: FootballRankFiveItem,
   right: FootballRankFiveItem,
+  difficulty: FootballBlindResumeDifficulty,
 ) {
   const facts = factualStats(packId, left.id, right.id);
   const leftPieces = resumePieces(left);
@@ -193,7 +222,16 @@ function matchupStats(
     valueA: leftPieces[index]!,
     valueB: rightPieces[index]!,
   }));
-  return [...facts, ...qualitative].slice(0, 8);
+
+  const ordered = difficulty === "easy"
+    ? [...facts, ...qualitative]
+    : difficulty === "medium"
+      ? [qualitative[0]!, qualitative[1]!, ...facts, ...qualitative.slice(2)]
+      : difficulty === "hard"
+        ? [qualitative[0]!, qualitative[1]!, qualitative[3]!, qualitative[4]!, ...facts, qualitative[2]!, ...qualitative.slice(5)]
+        : [qualitative[0]!, qualitative[3]!, qualitative[1]!, qualitative[4]!, qualitative[2]!, ...facts, ...qualitative.slice(5)];
+
+  return ordered.slice(0, 8);
 }
 
 function makeMatchup(
@@ -206,6 +244,7 @@ function makeMatchup(
       `Football Blind Resume cannot build tied canonical matchup ${family.packId}:${left.id}:${right.id}.`,
     );
   }
+  const difficulty = difficultyFor(family, left, right);
   return {
     id: `${family.packId}-${left.id}-v-${right.id}`,
     packId: family.packId,
@@ -213,7 +252,8 @@ function makeMatchup(
     prompt: family.prompt,
     leftId: left.id,
     rightId: right.id,
-    stats: matchupStats(family.packId, left, right),
+    difficulty,
+    stats: matchupStats(family.packId, left, right, difficulty),
   };
 }
 
@@ -292,6 +332,11 @@ export function footballBlindResumeSubjectIdentityId(subjectId: string) {
   return subjectId;
 }
 
+export function footballBlindResumeDifficultyLabel(difficulty: FootballBlindResumeDifficulty) {
+  if (difficulty === "villain") return "VILLAIN";
+  return difficulty.toUpperCase();
+}
+
 function canUseRound(
   matchup: FootballBlindResumeRound,
   usedMatchupIds: ReadonlySet<string>,
@@ -302,34 +347,56 @@ function canUseRound(
     && !usedSubjectIds.has(footballBlindResumeSubjectIdentityId(matchup.rightId));
 }
 
-export function buildFootballBlindResumeRounds(seed: string) {
+function casualDifficultyOrder(random: () => number) {
+  return CASUAL_DIFFICULTY_PATTERNS[Math.floor(random() * CASUAL_DIFFICULTY_PATTERNS.length)]!;
+}
+
+export function buildFootballBlindResumeRounds(
+  seed: string,
+  requestedDifficulties?: readonly FootballBlindResumeDifficulty[],
+) {
   const random = seededLineupRandom(FOOTBALL_BLIND_RESUME_GAME_ID, seed);
+  const difficultyOrder = requestedDifficulties ?? casualDifficultyOrder(random);
+  if (difficultyOrder.length !== FOOTBALL_BLIND_RESUME_ROUNDS) {
+    throw new Error("Football Blind Resume difficulty slate must contain exactly five rounds.");
+  }
+
   const shuffled = shuffleLineup(resolvedFootballBlindResumeMatchups(), random);
-  const selected: FootballBlindResumeRound[] = [];
-  const usedMatchupIds = new Set<string>();
-  const usedSubjectIds = new Set<string>();
-  const usedPackIds = new Set<FootballRankFivePackId>();
   const leagueOrder: readonly (FootballBlindResumeLeague | null)[] = random() < 0.5
     ? ["NFL", "CFB", "NFL", "CFB", null]
     : ["CFB", "NFL", "CFB", "NFL", null];
 
-  for (const desiredLeague of leagueOrder) {
-    const candidates = shuffled.filter((matchup) => canUseRound(matchup, usedMatchupIds, usedSubjectIds));
-    const matchup = candidates.find((row) =>
-      (!desiredLeague || row.league === desiredLeague) && !usedPackIds.has(row.packId));
+  const search = (
+    index: number,
+    selected: FootballBlindResumeRound[],
+    usedMatchupIds: Set<string>,
+    usedSubjectIds: Set<string>,
+    usedPackIds: Set<FootballRankFivePackId>,
+  ): FootballBlindResumeRound[] | null => {
+    if (index === FOOTBALL_BLIND_RESUME_ROUNDS) return selected;
+    const desiredDifficulty = difficultyOrder[index]!;
+    const desiredLeague = leagueOrder[index];
+    const candidates = shuffled.filter((matchup) =>
+      matchup.difficulty === desiredDifficulty
+      && (!desiredLeague || matchup.league === desiredLeague)
+      && !usedPackIds.has(matchup.packId)
+      && canUseRound(matchup, usedMatchupIds, usedSubjectIds));
 
-    if (!matchup) {
-      throw new Error("Football Blind Resume catalog cannot satisfy its league/category/identity mix.");
+    for (const matchup of candidates) {
+      const nextMatchupIds = new Set(usedMatchupIds).add(matchup.id);
+      const nextSubjectIds = new Set(usedSubjectIds);
+      nextSubjectIds.add(footballBlindResumeSubjectIdentityId(matchup.leftId));
+      nextSubjectIds.add(footballBlindResumeSubjectIdentityId(matchup.rightId));
+      const nextPackIds = new Set(usedPackIds).add(matchup.packId);
+      const result = search(index + 1, [...selected, matchup], nextMatchupIds, nextSubjectIds, nextPackIds);
+      if (result) return result;
     }
-    selected.push(matchup);
-    usedMatchupIds.add(matchup.id);
-    usedSubjectIds.add(footballBlindResumeSubjectIdentityId(matchup.leftId));
-    usedSubjectIds.add(footballBlindResumeSubjectIdentityId(matchup.rightId));
-    usedPackIds.add(matchup.packId);
-  }
+    return null;
+  };
 
-  if (selected.length !== FOOTBALL_BLIND_RESUME_ROUNDS) {
-    throw new Error("Football Blind Resume catalog cannot build five unique rounds.");
+  const selected = search(0, [], new Set(), new Set(), new Set());
+  if (!selected) {
+    throw new Error(`Football Blind Resume catalog cannot satisfy difficulty slate ${difficultyOrder.join("/")}.`);
   }
   return selected;
 }
@@ -374,7 +441,7 @@ export function footballBlindResumeRoundPoints(
 ) {
   const index = FOOTBALL_BLIND_RESUME_REVEAL_COUNTS.indexOf(revealedCount);
   if (index < 0) throw new Error(`Unsupported Football Blind Resume reveal count ${revealedCount}.`);
-  return correct ? [20, 19, 18, 17][index]! : [2, 4, 6, 8][index]!;
+  return correct ? [20, 15, 10, 5, 2][index]! : 0;
 }
 
 export function footballBlindResumeScore(correct: number) {
