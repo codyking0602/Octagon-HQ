@@ -5,10 +5,11 @@ import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { GameResultActions } from "../play/GameResultActions";
 import { recordLineupCompletion, replayLabelFor } from "../play/lineupModel";
 import {
-  FOOTBALL_HIT_THE_NUMBER_DEFAULT_BOARD_TYPE,
   FOOTBALL_HIT_THE_NUMBER_GAME_ID,
   createFootballHitTheNumberPlan,
   createFootballHitTheNumberRun,
+  footballHitTheNumberActiveBuildSlot,
+  footballHitTheNumberAvailableBuildSubjectIds,
   footballHitTheNumberSelectionSatisfies,
   footballHitTheNumberValue,
   formatFootballHitTheNumberValue,
@@ -78,19 +79,21 @@ export default function FootballHitTheNumberPage() {
     resolveChallengeRun(profileSeed, profileBoardType, sharedChallengeId)
       ?? resolveChallengeRun(querySeed, queryBoardType, sharedChallengeId)
   ), [profileSeed, profileBoardType, querySeed, queryBoardType, sharedChallengeId]);
-  const initialBoardType = sharedRun?.plan.boardType ?? FOOTBALL_HIT_THE_NUMBER_DEFAULT_BOARD_TYPE;
-  const [activeBoardType, setActiveBoardType] = useState<FootballHitTheNumberBoardType>(initialBoardType);
-  const [run, setRun] = useState<FootballHitTheNumberRun>(() => sharedRun ?? createFootballHitTheNumberRun(initialBoardType));
+  const [run, setRun] = useState<FootballHitTheNumberRun>(() => sharedRun ?? createFootballHitTheNumberRun());
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [result, setResult] = useState<FootballHitTheNumberResult | null>(null);
   const [challengeStatus, setChallengeStatus] = useState("");
   const plan = run.plan;
   const selectionValid = footballHitTheNumberSelectionSatisfies(plan, selectedIds);
   const shared = run.identity.type === "curated";
+  const activeBuildSlot = footballHitTheNumberActiveBuildSlot(plan, selectedIds);
+  const availableBuildSubjectIds = footballHitTheNumberAvailableBuildSubjectIds(plan, selectedIds);
+  const displayedSubjectIds = result || plan.formatId !== "build-the-team"
+    ? plan.subjectIds
+    : [...selectedIds, ...availableBuildSubjectIds];
 
   useEffect(() => {
     if (!sharedRun || run.identity.challengeId === sharedRun.identity.challengeId) return;
-    setActiveBoardType(sharedRun.plan.boardType);
     setRun(sharedRun);
     setSelectedIds([]);
     setResult(null);
@@ -100,8 +103,17 @@ export default function FootballHitTheNumberPage() {
   function toggleSubject(subjectId: string) {
     if (result) return;
     setSelectedIds((current) => {
-      if (current.includes(subjectId)) return current.filter((id) => id !== subjectId);
+      if (current.includes(subjectId)) {
+        if (plan.formatId === "build-the-team") {
+          return current[current.length - 1] === subjectId ? current.slice(0, -1) : current;
+        }
+        return current.filter((id) => id !== subjectId);
+      }
       if (current.length >= plan.pickCount) return current;
+      if (
+        plan.formatId === "build-the-team"
+        && !footballHitTheNumberAvailableBuildSubjectIds(plan, current).includes(subjectId)
+      ) return current;
       return [...current, subjectId];
     });
   }
@@ -141,9 +153,8 @@ export default function FootballHitTheNumberPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  function startNew(nextBoardType = activeBoardType) {
-    setActiveBoardType(nextBoardType);
-    setRun(createFootballHitTheNumberRun(nextBoardType));
+  function startNew() {
+    setRun(createFootballHitTheNumberRun());
     setSelectedIds([]);
     setResult(null);
     setChallengeStatus("");
@@ -159,11 +170,6 @@ export default function FootballHitTheNumberPage() {
     } else {
       startNew();
     }
-  }
-
-  function chooseBoardType(nextBoardType: FootballHitTheNumberBoardType) {
-    if (shared || nextBoardType === activeBoardType) return;
-    startNew(nextBoardType);
   }
 
   async function challengeSomeone() {
@@ -213,39 +219,26 @@ export default function FootballHitTheNumberPage() {
         <aside>
           <small>BOARD</small>
           <b>{plan.domainLabel}</b>
-          <em>{plan.boardType === "open-roster" ? "Open Roster" : "Random Pool"}</em>
           {plan.configurationLabel ? <em>{plan.configurationLabel}</em> : null}
         </aside>
-      </section>
-
-      <section className="football-hit-number-rules" aria-label="Football Hit the Number roster mode">
-        <small>ROSTER MODE</small>
-        <div className="hit-number-mode-toggle">
-          <button
-            type="button"
-            className={activeBoardType === "open-roster" ? "is-active" : ""}
-            aria-pressed={activeBoardType === "open-roster"}
-            disabled={shared}
-            onClick={() => chooseBoardType("open-roster")}
-          >
-            OPEN ROSTER
-          </button>
-          <button
-            type="button"
-            className={activeBoardType === "random-pool" ? "is-active" : ""}
-            aria-pressed={activeBoardType === "random-pool"}
-            disabled={shared}
-            onClick={() => chooseBoardType("random-pool")}
-          >
-            RANDOM POOL
-          </button>
-        </div>
       </section>
 
       {plan.slots.length ? (
         <section className="football-hit-number-rules" aria-label="Required lineup roles">
           <small>{plan.formatId === "one-from-each" ? "ONE FROM EACH" : "BUILD REQUIREMENTS"}</small>
-          <div>{plan.slots.map((slot) => <span key={slot.id}>{slot.label}</span>)}</div>
+          <div>
+            {plan.slots.map((slot, index) => {
+              const selectedSubject = selectedIds[index]
+                ? getFootballHitTheNumberSubject(selectedIds[index]!)
+                : null;
+              const active = !result && plan.formatId === "build-the-team" && activeBuildSlot?.id === slot.id;
+              return (
+                <span key={slot.id}>
+                  {active ? "NOW · " : ""}{slot.label}{selectedSubject ? ` · ${selectedSubject.name}` : ""}
+                </span>
+              );
+            })}
+          </div>
         </section>
       ) : null}
 
@@ -259,12 +252,16 @@ export default function FootballHitTheNumberPage() {
       ) : (
         <section className="football-hit-number-selection">
           <span>{selectedIds.length} / {plan.pickCount} SELECTED</span>
-          <strong>Stats stay hidden until you lock.</strong>
+          <strong>
+            {activeBuildSlot
+              ? `NOW: ${activeBuildSlot.label.toUpperCase()}`
+              : "Stats stay hidden until you lock."}
+          </strong>
         </section>
       )}
 
       <section className="football-hit-number-grid" aria-label="Football Hit the Number pool">
-        {plan.subjectIds.map((subjectId) => {
+        {displayedSubjectIds.map((subjectId) => {
           const subject = getFootballHitTheNumberSubject(subjectId)!;
           const selected = selectedIds.includes(subjectId);
           const value = result ? footballHitTheNumberValue(subjectId, plan.metricId) : null;
