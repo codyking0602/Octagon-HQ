@@ -49,8 +49,8 @@ describe("Liu Ce odds alias", () => {
     expect(filtered.snapshots[0]).toMatchObject({
       matchupIdentity: "junior tafa|liu ce",
       prices: [
-        { fighterName: "Junior Tafa", fighterIdentity: "junior tafa", americanOdds: 115 },
         { fighterName: "Liu Ce", fighterIdentity: "liu ce", americanOdds: -135 },
+        { fighterName: "Junior Tafa", fighterIdentity: "junior tafa", americanOdds: 115 },
       ],
     });
     expect(filtered.coverage).toEqual({ providerEvents: 1, completeSnapshots: 1, missingSnapshots: 0 });
