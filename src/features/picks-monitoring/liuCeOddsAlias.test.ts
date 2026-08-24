@@ -3,6 +3,7 @@ import { filterOddsToMonitoredEvent, type MonitoringEvent } from "./manualMonito
 import { adaptTheOddsApiResponse } from "./theOddsApi";
 
 const observed = "2026-08-24T18:00:00Z";
+// The provider reverses Liu Ce's display order, so this guards the canonical matchup identity too.
 const event: MonitoringEvent = {
   event_id: "ufc-shanghai",
   source_event_key: "ufc-shanghai",
