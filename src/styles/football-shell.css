@@ -318,6 +318,559 @@
   padding: 0 .1rem;
 }
 
+/* Football HQ PR2 visual system */
+.app-shell--football-room {
+  --football-accent: #d2d8e0;
+  --football-accent-rgb: 210, 216, 224;
+  --football-accent-contrast: #08090a;
+  --football-card: #111315;
+  --football-card-raised: #15181b;
+  --football-card-soft: #0c0e10;
+  --football-border: rgba(255, 255, 255, .105);
+  --football-muted: #8d949d;
+  --football-text: #f5f6f7;
+  background:
+    radial-gradient(circle at 88% 0%, rgba(var(--football-accent-rgb), .09), transparent 26rem),
+    #050506;
+}
+
+.app-shell--football-team-cowboys {
+  --football-accent: #c8d0da;
+  --football-accent-rgb: 200, 208, 218;
+  --football-accent-contrast: #06111f;
+}
+
+.app-shell--football-team-longhorns {
+  --football-accent: #bf5700;
+  --football-accent-rgb: 191, 87, 0;
+  --football-accent-contrast: #fffaf5;
+}
+
+.app-shell--football-room .app-content {
+  background: transparent;
+}
+
+.app-shell--football-room .app-header--football {
+  border-bottom-color: var(--football-border);
+  background: rgba(5, 5, 6, .94);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, .28);
+}
+
+.app-shell--football-room .football-header__brand small {
+  color: var(--football-muted);
+}
+
+.app-shell--football-room .football-header__brand strong {
+  color: var(--football-text);
+  font-size: 1.08rem;
+  letter-spacing: -.035em;
+}
+
+.app-shell--football-room .football-header__ufc {
+  color: #8d9299;
+}
+
+.app-shell--football-room .football-header__ufc:hover,
+.app-shell--football-room .football-header__ufc:focus-visible {
+  color: var(--football-text);
+}
+
+.app-shell--football-room .football-team-helmet--cowboys {
+  color: #d6dde5;
+}
+
+.app-shell--football-room .football-team-helmet svg path:first-child {
+  fill: #171a1e;
+  stroke-width: 1.7;
+}
+
+.app-shell--football-team-cowboys .football-team-helmet svg path:first-child {
+  fill: #071b31;
+}
+
+.app-shell--football-team-longhorns .football-team-helmet svg path:first-child {
+  fill: #24140b;
+}
+
+.app-shell--football-room .football-team-switcher summary {
+  grid-template-columns: 34px minmax(0, auto) 12px;
+  gap: .38rem;
+  min-width: 116px;
+  min-height: 44px;
+  padding: .28rem .42rem .28rem .34rem;
+  border-color: rgba(var(--football-accent-rgb), .28);
+  border-radius: 14px;
+  background: rgba(var(--football-accent-rgb), .065);
+}
+
+.football-team-switcher__label {
+  min-width: 0;
+  text-align: left;
+}
+
+.football-team-switcher__label small,
+.football-team-switcher__label strong {
+  display: block;
+}
+
+.football-team-switcher__label small {
+  color: var(--football-muted);
+  font-size: .46rem;
+  font-weight: 950;
+  letter-spacing: .12em;
+}
+
+.football-team-switcher__label strong {
+  margin-top: .04rem;
+  color: var(--football-text);
+  font-size: .66rem;
+  font-weight: 950;
+  letter-spacing: -.01em;
+}
+
+.football-team-switcher__chevron {
+  color: var(--football-muted);
+  font-size: .72rem;
+  transform: translateY(-1px);
+}
+
+.app-shell--football-room .football-team-switcher__menu {
+  width: 212px;
+  padding: .45rem;
+  border-color: var(--football-border);
+  background: #0b0c0e;
+  box-shadow: 0 22px 58px rgba(0, 0, 0, .62);
+}
+
+.app-shell--football-room .football-team-switcher__menu button {
+  grid-template-columns: 44px minmax(0, 1fr);
+  min-height: 58px;
+  padding: .42rem .5rem;
+  border: 1px solid transparent;
+}
+
+.app-shell--football-room .football-team-switcher__menu button > span strong,
+.app-shell--football-room .football-team-switcher__menu button > span small {
+  display: block;
+}
+
+.app-shell--football-room .football-team-switcher__menu button > span strong {
+  color: var(--football-text);
+  font-size: .72rem;
+}
+
+.app-shell--football-room .football-team-switcher__menu button > span small {
+  margin-top: .14rem;
+  color: var(--football-muted);
+  font-size: .47rem;
+  letter-spacing: .08em;
+}
+
+.app-shell--football-room .football-team-switcher__menu button[aria-pressed="true"] {
+  border-color: rgba(var(--football-accent-rgb), .24);
+  background: rgba(var(--football-accent-rgb), .1);
+}
+
+.app-shell--football-room .football-entry-gate {
+  position: relative;
+  overflow: hidden;
+  border-color: var(--football-border);
+  background:
+    linear-gradient(135deg, rgba(var(--football-accent-rgb), .11), transparent 48%),
+    var(--football-card);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .35);
+}
+
+.app-shell--football-room .football-entry-gate::before,
+.app-shell--football-room .football-daily-hq::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  background: var(--football-accent);
+  content: "";
+}
+
+.app-shell--football-room .football-entry-gate__choices button {
+  border-color: var(--football-border);
+  background: #0b0d0f;
+  transition: border-color .16s ease, background .16s ease, transform .16s ease;
+}
+
+.app-shell--football-room .football-entry-gate__choices button:hover,
+.app-shell--football-room .football-entry-gate__choices button:focus-visible {
+  border-color: rgba(var(--football-accent-rgb), .42);
+  background: rgba(var(--football-accent-rgb), .085);
+  transform: translateY(-1px);
+}
+
+.app-shell--football-room .football-daily-hq {
+  position: relative;
+  border-color: var(--football-border);
+  background:
+    linear-gradient(132deg, rgba(var(--football-accent-rgb), .13), transparent 45%),
+    var(--football-card);
+  box-shadow: 0 18px 46px rgba(0, 0, 0, .28);
+}
+
+.app-shell--football-room .football-daily-hq__heading {
+  padding: 1.15rem 1rem .92rem;
+}
+
+.app-shell--football-room .football-daily-hq__heading h1 {
+  max-width: 17ch;
+  font-size: clamp(1.85rem, 8vw, 3.1rem);
+  letter-spacing: -.055em;
+}
+
+.football-daily-hq__badge {
+  display: grid;
+  min-width: 58px;
+  justify-items: center;
+  gap: .06rem;
+  padding: .42rem .5rem;
+  border: 1px solid rgba(var(--football-accent-rgb), .26);
+  border-radius: 12px;
+  background: rgba(var(--football-accent-rgb), .08);
+}
+
+.football-daily-hq__badge b,
+.football-daily-hq__badge small {
+  display: block;
+}
+
+.football-daily-hq__badge b {
+  color: var(--football-accent);
+  font-size: .54rem;
+  font-weight: 950;
+  letter-spacing: .1em;
+}
+
+.football-daily-hq__badge small {
+  color: var(--football-muted);
+  font-size: .48rem;
+  font-weight: 900;
+}
+
+.app-shell--football-room .football-daily-hq__tabs {
+  border-color: var(--football-border);
+  background: rgba(0, 0, 0, .18);
+}
+
+.app-shell--football-room .football-daily-hq__tabs button {
+  position: relative;
+  min-height: 46px;
+  color: #747b84;
+}
+
+.app-shell--football-room .football-daily-hq__tabs button.is-active {
+  background: rgba(var(--football-accent-rgb), .055);
+  color: var(--football-text);
+}
+
+.app-shell--football-room .football-daily-hq__tabs button.is-active::after {
+  position: absolute;
+  right: 22%;
+  bottom: 0;
+  left: 22%;
+  height: 2px;
+  border-radius: 999px 999px 0 0;
+  background: var(--football-accent);
+  content: "";
+}
+
+.app-shell--football-room .football-daily-hq__game {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 1rem;
+}
+
+.football-daily-hq__game-copy strong {
+  display: block;
+  color: var(--football-text);
+  font-size: .86rem;
+  line-height: 1.25;
+}
+
+.app-shell--football-room .football-daily-hq__game-copy p {
+  max-width: 42rem;
+  margin: .32rem 0 0;
+  color: var(--football-muted);
+}
+
+.app-shell--football-room .primary-action,
+.app-shell--football-room .football-wavelength-guess-panel button,
+.app-shell--football-room .football-hit-number-lock button {
+  border: 1px solid var(--football-accent) !important;
+  border-radius: 12px !important;
+  background: var(--football-accent) !important;
+  color: var(--football-accent-contrast) !important;
+  font-weight: 950 !important;
+  letter-spacing: .035em;
+  box-shadow: none !important;
+}
+
+.app-shell--football-room .primary-action:disabled,
+.app-shell--football-room .football-hit-number-lock button:disabled {
+  border-color: #2a2d31 !important;
+  background: #202327 !important;
+  color: #777e87 !important;
+}
+
+.app-shell--football-room .find-secondary-action {
+  border: 1px solid var(--football-border) !important;
+  border-radius: 12px !important;
+  background: #111315 !important;
+  color: var(--football-text) !important;
+  font-weight: 900 !important;
+}
+
+.app-shell--football-room .game-result-actions {
+  gap: .48rem;
+}
+
+.app-shell--football-room .game-result-actions-wrap {
+  margin-top: .8rem;
+}
+
+.app-shell--football-room .football-daily-hq__leaderboard li {
+  border: 1px solid rgba(255, 255, 255, .045);
+  background: #0c0e10;
+}
+
+.app-shell--football-room .football-daily-hq__leaderboard li.is-current {
+  border-color: rgba(var(--football-accent-rgb), .34);
+  outline: none;
+  background: rgba(var(--football-accent-rgb), .08);
+}
+
+.football-all-games__heading > span {
+  color: var(--football-muted);
+  font-size: .54rem;
+  font-weight: 950;
+  letter-spacing: .1em;
+}
+
+.app-shell--football-room .football-room-game-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .68rem;
+}
+
+.app-shell--football-room .football-room-game-grid .football-room-preview {
+  position: relative;
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  min-height: 168px !important;
+  gap: .82rem;
+  padding: .9rem !important;
+  overflow: hidden;
+  border: 1px solid var(--football-border) !important;
+  border-radius: 18px !important;
+  background:
+    linear-gradient(138deg, rgba(var(--football-accent-rgb), .065), transparent 48%),
+    var(--football-card) !important;
+  text-align: left;
+  transition: border-color .16s ease, background .16s ease, transform .16s ease;
+}
+
+.app-shell--football-room .football-room-game-grid .football-room-preview:hover,
+.app-shell--football-room .football-room-game-grid .football-room-preview:focus-visible {
+  border-color: rgba(var(--football-accent-rgb), .32) !important;
+  background:
+    linear-gradient(138deg, rgba(var(--football-accent-rgb), .105), transparent 52%),
+    var(--football-card-raised) !important;
+  transform: translateY(-1px);
+}
+
+.app-shell--football-room .football-room-preview__mark {
+  width: 58px;
+  height: 58px;
+  border-color: rgba(var(--football-accent-rgb), .3);
+  border-radius: 15px;
+  background: rgba(var(--football-accent-rgb), .075);
+  color: var(--football-accent) !important;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .15);
+}
+
+.football-room-preview__copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.app-shell--football-room .football-room-preview__kicker {
+  color: var(--football-accent) !important;
+  font-size: .5rem;
+  font-weight: 950;
+  letter-spacing: .09em;
+}
+
+.app-shell--football-room .football-room-preview strong {
+  margin-top: .16rem !important;
+  color: var(--football-text) !important;
+  font-size: clamp(1rem, 3.9vw, 1.36rem) !important;
+  line-height: .98;
+  letter-spacing: -.035em;
+}
+
+.app-shell--football-room .football-room-preview p {
+  display: -webkit-box;
+  margin: .34rem 0 .62rem !important;
+  overflow: hidden;
+  color: var(--football-muted) !important;
+  font-size: .69rem !important;
+  line-height: 1.38 !important;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.football-room-preview__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  margin-top: auto;
+}
+
+.football-room-preview__meta span {
+  overflow: hidden;
+  color: #777e87;
+  font-size: .47rem;
+  font-weight: 900;
+  letter-spacing: .055em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-shell--football-room .football-room-preview__meta em {
+  flex: 0 0 auto;
+  color: var(--football-accent) !important;
+  font-size: .51rem;
+  font-style: normal;
+  font-weight: 950;
+  letter-spacing: .055em;
+}
+
+.app-shell--football-room :is(
+  .surface-card,
+  .football-rank-five-intro,
+  .football-debate-intro,
+  .football-rank-five-board,
+  .football-keep-cut-board,
+  .football-wavelength-clue,
+  .football-wavelength-guess-panel,
+  .football-wavelength-final-numbers,
+  .football-wavelength-reveal,
+  .football-wavelength-path,
+  .football-blind-resume-card,
+  .football-blind-resume-recap,
+  .football-blind-resume-topline,
+  .football-find-hero,
+  .football-find-reveal,
+  .football-hit-number-hero,
+  .football-hit-number-rules,
+  .football-hit-number-selection
+) {
+  border-color: var(--football-border) !important;
+  background:
+    linear-gradient(140deg, rgba(var(--football-accent-rgb), .045), transparent 48%),
+    var(--football-card) !important;
+  box-shadow: none !important;
+}
+
+.app-shell--football-room :is(.football-rank-five-category, .football-debate-category) {
+  border-color: rgba(var(--football-accent-rgb), .21) !important;
+  background: rgba(var(--football-accent-rgb), .055) !important;
+}
+
+.app-shell--football-room :is(.football-rank-five-category, .football-debate-category) > small {
+  color: var(--football-muted) !important;
+}
+
+.app-shell--football-room :is(.football-rank-five-category, .football-debate-category) > strong {
+  color: var(--football-text) !important;
+}
+
+.app-shell--football-room :is(.football-rank-five-category, .football-debate-category) button {
+  min-height: 34px;
+  margin-top: .55rem;
+  padding: .4rem .62rem;
+  border: 1px solid rgba(var(--football-accent-rgb), .35) !important;
+  border-radius: 9px !important;
+  background: transparent !important;
+  color: var(--football-accent) !important;
+  font: inherit;
+  font-size: .52rem !important;
+  font-weight: 950 !important;
+  letter-spacing: .065em;
+}
+
+.app-shell--football-room :is(
+  .football-debate-result-hero,
+  .football-find-result,
+  .football-hit-number-result,
+  .football-rank-five-score
+) {
+  border-color: rgba(var(--football-accent-rgb), .24) !important;
+  background:
+    linear-gradient(135deg, rgba(var(--football-accent-rgb), .12), transparent 55%),
+    var(--football-card) !important;
+  box-shadow: none !important;
+}
+
+.app-shell--football-room :is(
+  .football-rank-five-results article,
+  .football-debate-result-list article,
+  .football-wavelength-reveal article,
+  .football-blind-resume-recap article,
+  .football-find-reveal article,
+  .football-hit-number-grid button
+) {
+  border-color: rgba(255, 255, 255, .075) !important;
+  background: #0d0f11 !important;
+}
+
+.app-shell--football-room .football-hit-number-grid button.is-selected {
+  border-color: rgba(var(--football-accent-rgb), .45) !important;
+  background: rgba(var(--football-accent-rgb), .09) !important;
+}
+
+.app-shell--football-room .football-wavelength-progress i.is-current,
+.app-shell--football-room .football-wavelength-progress i.is-complete,
+.app-shell--football-room .football-blind-resume-progress i.is-current,
+.app-shell--football-room .football-blind-resume-progress i.is-complete {
+  background: var(--football-accent) !important;
+}
+
+.app-shell--football-room .football-wavelength-guess-panel input[type="range"] {
+  accent-color: var(--football-accent) !important;
+}
+
+.app-shell--football-room .football-keep-cut-current__actions .is-keep {
+  border: 1px solid rgba(112, 184, 130, .35) !important;
+  background: #14271a !important;
+  color: #a7ddb3 !important;
+}
+
+.app-shell--football-room .football-keep-cut-current__actions .is-cut {
+  border: 1px solid rgba(194, 111, 121, .35) !important;
+  background: #2b171b !important;
+  color: #e3a8af !important;
+}
+
+@media (max-width: 720px) {
+  .app-shell--football-room .football-room-game-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .app-shell--football-room .football-room-game-grid .football-room-preview {
+    min-height: 0 !important;
+  }
+}
+
 @media (max-width: 560px) {
   .football-header__ufc {
     font-size: .56rem;
@@ -341,5 +894,28 @@
 
   .football-entry-gate__choices .football-team-helmet {
     grid-row: 1 / span 2;
+  }
+
+  .app-shell--football-room .football-header__actions {
+    gap: .42rem;
+  }
+
+  .app-shell--football-room .football-team-switcher summary {
+    min-width: 102px;
+    grid-template-columns: 31px minmax(0, auto) 10px;
+  }
+
+  .app-shell--football-room .football-team-switcher summary .football-team-helmet {
+    width: 32px;
+    height: 28px;
+  }
+
+  .app-shell--football-room .football-daily-hq__game {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .app-shell--football-room .football-daily-hq__game .primary-action {
+    width: 100%;
   }
 }
