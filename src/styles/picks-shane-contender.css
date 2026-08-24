@@ -19,6 +19,29 @@
   line-height: 1.2;
 }
 
+.pick-fighter-thumbnail-wrap.is-shane-contender {
+  display: grid;
+  width: fit-content;
+  gap: 7px;
+  justify-items: start;
+  line-height: 1;
+}
+
+.pick-fighter-thumbnail-wrap.is-shane-contender > .pick-fighter-thumbnail {
+  display: block;
+  outline: 1px solid rgba(255, 198, 72, .82);
+  outline-offset: 2px;
+  box-shadow: 0 0 16px rgba(255, 198, 72, .22);
+}
+
+.pick-fighter-thumbnail-wrap.is-shane-contender .shane-contender-badges {
+  margin-top: 0;
+}
+
+.main-event-spotlight-trigger > span > .shane-contender-badges {
+  display: none;
+}
+
 .main-event-spotlight__shane {
   display: grid;
   gap: 10px;
