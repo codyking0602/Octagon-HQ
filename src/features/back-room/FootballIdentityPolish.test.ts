@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import appShellSource from "../../app/AppShell.tsx?raw";
 import bottomNavigationSource from "../../components/BottomNavigation.tsx?raw";
 import footballVisualCss from "../../styles/football-visual-assets.css?raw";
 import footballHeaderSource from "./FootballHeader.tsx?raw";
@@ -15,12 +16,14 @@ describe("Football HQ final identity polish", () => {
     expect(footballVisualCss).toContain("fill: #bf5700;");
   });
 
-  it("routes shared Football accents away from UFC red", () => {
+  it("routes shared Football accents away from UFC red without adding a navigation provider dependency", () => {
     expect(footballVisualCss).toContain(`.app-shell--football-room {
   --ufc-red: var(--football-action);
   --ufc-red-strong: var(--football-accent);
 }`);
     expect(bottomNavigationSource).toContain("bottom-nav--football-team-${footballTeam}");
+    expect(bottomNavigationSource).not.toContain("useProfilePreferences");
+    expect(appShellSource).toContain("<BottomNavigation footballTeam={isFootball ? footballTeam : null} />");
     expect(footballVisualCss).toContain(".bottom-nav--football-team-cowboys");
     expect(footballVisualCss).toContain("--ufc-red: #163f67;");
     expect(footballVisualCss).toContain(".bottom-nav--football-team-longhorns");
