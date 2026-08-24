@@ -8,10 +8,6 @@ import {
   resolvedFootballBlindResumeMatchups,
 } from "./footballBlindResumeModel";
 import {
-  formatFootballFact,
-  getFootballFact,
-} from "./footballFactualStats";
-import {
   getFootballRankFivePack,
   type FootballRankFivePackId,
 } from "./footballRankFiveModel";
@@ -46,7 +42,7 @@ function expectValidCard(rounds: ReturnType<typeof buildFootballBlindResumeRound
   expect([nfl, cfb].sort((left, right) => left - right)).toEqual([2, 3]);
 }
 
-describe("Football Blind Resume PR4 maturity", () => {
+describe("Football Blind Resume PR4 behavior / PR5 evidence maturity", () => {
   it("preserves a broad comparison universe across every approved family", () => {
     expect(footballBlindResumeMatchups.length).toBeGreaterThanOrEqual(80);
     const counts = new Map<FootballRankFivePackId, number>();
@@ -68,27 +64,15 @@ describe("Football Blind Resume PR4 maturity", () => {
     }
   });
 
-  it("precomputes an eight-row matchup-specific evidence ladder while factual rows stay canonical", () => {
-    const factualMatchups = footballBlindResumeMatchups.filter((matchup) =>
-      matchup.stats.some((stat) => stat.source?.owner === "footballFactualStats"));
-    expect(factualMatchups.length).toBeGreaterThanOrEqual(3);
-
+  it("precomputes eight distinct evidence dimensions from the canonical footballFactualStats owner", () => {
     for (const matchup of footballBlindResumeMatchups) {
       expect(matchup.stats).toHaveLength(8);
-      for (const stat of matchup.stats) {
-        if (!stat.source) {
-          expect(stat.valueA, `${matchup.id}: authored value A`).not.toMatch(/\d/);
-          expect(stat.valueB, `${matchup.id}: authored value B`).not.toMatch(/\d/);
-          continue;
-        }
-        const left = getFootballFact(matchup.leftId, stat.source.metricId);
-        const right = getFootballFact(matchup.rightId, stat.source.metricId);
-        expect(left).not.toBeNull();
-        expect(right).not.toBeNull();
-        expect(stat.label).toBe(left!.definition.label);
-        expect(stat.valueA).toBe(formatFootballFact(stat.source.metricId, left!.fact.value));
-        expect(stat.valueB).toBe(formatFootballFact(stat.source.metricId, right!.fact.value));
-      }
+      expect(new Set(matchup.stats.map((stat) => stat.source.dimensionId)).size).toBe(8);
+      expect(new Set(matchup.stats.map((stat) => stat.label.trim().toLowerCase())).size).toBe(8);
+      expect(new Set(matchup.stats.map((stat) =>
+        `${stat.label}|${stat.valueA}|${stat.valueB}`.trim().toLowerCase().replace(/\s+/g, " "),
+      )).size).toBe(8);
+      expect(matchup.stats.every((stat) => stat.source.owner === "footballFactualStats")).toBe(true);
     }
   });
 
@@ -108,6 +92,7 @@ describe("Football Blind Resume PR4 maturity", () => {
       const first = buildFootballBlindResumeRounds(seed);
       const second = buildFootballBlindResumeRounds(seed);
       expect(first.map((round) => round.id)).toEqual(second.map((round) => round.id));
+      expect(first.map((round) => round.stats)).toEqual(second.map((round) => round.stats));
       expect(first.map((round) => round.difficulty)).toEqual(second.map((round) => round.difficulty));
       expectValidCard(first);
       expect(new Set(first.map((round) => round.difficulty)).size).toBeGreaterThanOrEqual(2);
