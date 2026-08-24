@@ -19,7 +19,7 @@ export const FOOTBALL_HIT_THE_NUMBER_GAME_ID = "football-hit-the-number";
 export const FOOTBALL_HIT_THE_NUMBER_VERSION = "football-hit-the-number-v2" as const;
 export const FOOTBALL_HIT_THE_NUMBER_MIN_PICKS = 4;
 export const FOOTBALL_HIT_THE_NUMBER_MAX_PICKS = 7;
-export const FOOTBALL_HIT_THE_NUMBER_DEFAULT_BOARD_TYPE = "open-roster" as const;
+export const FOOTBALL_HIT_THE_NUMBER_DEFAULT_BOARD_TYPE = "random-pool" as const;
 
 export type FootballHitTheNumberFormatId =
   | "classic"
@@ -406,6 +406,29 @@ function slotsForPlan(plan: FootballHitTheNumberPlan) {
   if (plan.formatId === "one-from-each") return eraSlotsFor(board.group);
   if (plan.formatId === "build-the-team") return buildSlotsFor(subjects, plan.metricId);
   return [];
+}
+
+export function footballHitTheNumberActiveBuildSlot(
+  plan: FootballHitTheNumberPlan,
+  selectedSubjectIds: readonly string[],
+) {
+  if (plan.formatId !== "build-the-team" || selectedSubjectIds.length >= plan.pickCount) return null;
+  return plan.slots[selectedSubjectIds.length] ?? null;
+}
+
+export function footballHitTheNumberAvailableBuildSubjectIds(
+  plan: FootballHitTheNumberPlan,
+  selectedSubjectIds: readonly string[],
+) {
+  if (plan.formatId !== "build-the-team" || selectedSubjectIds.length >= plan.pickCount) return [];
+  const selected = new Set(selectedSubjectIds);
+  const activeSlot = slotsForPlan(plan)[selectedSubjectIds.length];
+  if (!activeSlot) return [];
+  return plan.subjectIds.filter((subjectId) => {
+    if (selected.has(subjectId)) return false;
+    const subject = subjectFor(subjectId);
+    return activeSlot.accepts(subject, valueFor(subject.id, plan.metricId));
+  });
 }
 
 export function footballHitTheNumberSelectionSatisfies(
