@@ -1,6 +1,8 @@
 import {
   buildFootballBlindResumeRounds,
+  footballBlindResumeNextRevealCount,
   footballBlindResumeRoundPoints,
+  FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES,
   FOOTBALL_BLIND_RESUME_REVEAL_COUNTS,
   type FootballBlindResumeRevealCount,
 } from "../back-room/footballBlindResumeModel";
@@ -44,8 +46,8 @@ import type {
 } from "./todaysChallengeRuntime";
 
 export const FOOTBALL_DAILY_RUNTIME_VERSION = "football-official-daily-v1" as const;
-export const FOOTBALL_BLIND_RESUME_DAILY_CONTENT_VERSION = "football-blind-resume-daily-v1" as const;
-export const FOOTBALL_BLIND_RESUME_DAILY_SCORING_VERSION = "play-official-score-v3" as const;
+export const FOOTBALL_BLIND_RESUME_DAILY_CONTENT_VERSION = "football-blind-resume-daily-v2" as const;
+export const FOOTBALL_BLIND_RESUME_DAILY_SCORING_VERSION = OFFICIAL_SCORE_CONTRACT_VERSION;
 export const FOOTBALL_HIT_THE_NUMBER_DAILY_CONTENT_VERSION = "football-hit-the-number-daily-v1" as const;
 
 type JsonRecord = Record<string, unknown>;
@@ -165,11 +167,12 @@ function buildWavelengthSetup(day: string, scheduleVersion: string): OfficialDai
   };
 }
 
-function visibleBlindResumeRound(round: JsonRecord, revealedCount: number) {
+function visibleBlindResumeRound(round: JsonRecord, revealedCount: FootballBlindResumeRevealCount) {
   const stats = recordArray(round.stats, "Football Blind Resume stats").slice(0, revealedCount);
   return {
     prompt: round.prompt,
     league: round.league,
+    difficulty: round.difficulty,
     revealed_count: revealedCount,
     max_revealed_count: 8,
     stats,
@@ -177,11 +180,15 @@ function visibleBlindResumeRound(round: JsonRecord, revealedCount: number) {
 }
 
 function buildBlindResumeSetup(day: string, scheduleVersion: string): OfficialDailySetupPublication {
-  const rounds = buildFootballBlindResumeRounds(`${FOOTBALL_DAILY_RUNTIME_VERSION}|blind-resume|${scheduleVersion}|${day}`);
+  const rounds = buildFootballBlindResumeRounds(
+    `${FOOTBALL_DAILY_RUNTIME_VERSION}|blind-resume|${scheduleVersion}|${day}`,
+    FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES,
+  );
   const privateRounds = rounds.map((round) => ({
     id: round.id,
     prompt: round.prompt,
     league: round.league,
+    difficulty: round.difficulty,
     left_id: round.leftId,
     right_id: round.rightId,
     left_name: round.leftName,
@@ -198,8 +205,9 @@ function buildBlindResumeSetup(day: string, scheduleVersion: string): OfficialDa
     publicSetup: {
       runtime_version: FOOTBALL_DAILY_RUNTIME_VERSION,
       round_count: privateRounds.length,
+      difficulty_mix: [...FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES],
       league_mix: rounds.reduce<Record<string, number>>((acc, round) => ({ ...acc, [round.league]: (acc[round.league] ?? 0) + 1 }), {}),
-      initial_state: { complete: false, round_index: 0, results: [], current_round: visibleBlindResumeRound(privateRounds[0]!, 2) },
+      initial_state: { complete: false, round_index: 0, results: [], current_round: visibleBlindResumeRound(privateRounds[0]!, 0) },
     },
     revealSetup: {},
     privateSetupEvidence: { rounds: privateRounds },
@@ -346,12 +354,12 @@ function advanceBlindResume(context: OfficialDailyRuntimeContext, action: JsonRe
   if (answers.length >= rounds.length) throw new Error("The Football Blind Resume card is complete.");
   const round = rounds[answers.length]!;
   const publicRound = asRecord(context.publicState.current_round);
-  const revealedCount = integer(publicRound.revealed_count, "Football Blind Resume reveal count", 2, 8) as FootballBlindResumeRevealCount;
+  const revealedCount = integer(publicRound.revealed_count, "Football Blind Resume reveal count", 0, 8) as FootballBlindResumeRevealCount;
   if (!FOOTBALL_BLIND_RESUME_REVEAL_COUNTS.includes(revealedCount)) throw new Error("Unsupported Football Blind Resume reveal stage.");
   const priorResults = recordArray(context.publicState.results ?? [], "Football Blind Resume results");
   if (action.reveal === true) {
-    if (revealedCount >= 8) throw new Error("All Football Blind Resume stats are already revealed.");
-    const next = (revealedCount + 2) as FootballBlindResumeRevealCount;
+    const next = footballBlindResumeNextRevealCount(revealedCount);
+    if (next === null) throw new Error("All Football Blind Resume stats are already revealed.");
     return { submissionState: { answers, final_submission: null }, publicState: { complete: false, round_index: answers.length, results: priorResults, current_round: visibleBlindResumeRound(round, next) }, complete: false, finalSubmission: null };
   }
   const side = String(action.choice ?? "").toUpperCase();
@@ -360,10 +368,10 @@ function advanceBlindResume(context: OfficialDailyRuntimeContext, action: JsonRe
   const correct = pickedId === String(round.winner_id);
   const points = footballBlindResumeRoundPoints(revealedCount, correct);
   const nextAnswers = [...answers, { choice: pickedId, revealed_count: revealedCount }];
-  const results = [...priorResults, { round_index: answers.length, picked_side: side, picked_id: pickedId, winner_id: round.winner_id, correct, revealed_count: revealedCount, points_awarded: points, left: { id: round.left_id, name: round.left_name, subtitle: round.left_subtitle }, right: { id: round.right_id, name: round.right_name, subtitle: round.right_subtitle } }];
+  const results = [...priorResults, { round_index: answers.length, difficulty: round.difficulty, picked_side: side, picked_id: pickedId, winner_id: round.winner_id, correct, revealed_count: revealedCount, points_awarded: points, left: { id: round.left_id, name: round.left_name, subtitle: round.left_subtitle }, right: { id: round.right_id, name: round.right_name, subtitle: round.right_subtitle } }];
   const complete = nextAnswers.length === rounds.length;
   const finalSubmission = complete ? { answers: nextAnswers } : null;
-  return { submissionState: { answers: nextAnswers, final_submission: finalSubmission }, publicState: { complete, round_index: complete ? rounds.length : nextAnswers.length, results, current_round: complete ? null : visibleBlindResumeRound(rounds[nextAnswers.length]!, 2) }, complete, finalSubmission };
+  return { submissionState: { answers: nextAnswers, final_submission: finalSubmission }, publicState: { complete, round_index: complete ? rounds.length : nextAnswers.length, results, current_round: complete ? null : visibleBlindResumeRound(rounds[nextAnswers.length]!, 0) }, complete, finalSubmission };
 }
 
 function advanceBlindRank(context: OfficialDailyRuntimeContext, action: JsonRecord): OfficialDailyAdvanceResult {

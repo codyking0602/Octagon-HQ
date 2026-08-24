@@ -8,6 +8,7 @@ import {
   FOOTBALL_BLIND_RESUME_GAME_ID,
   FOOTBALL_BLIND_RESUME_REVEAL_COUNTS,
   createFootballBlindResumeRun,
+  footballBlindResumeDifficultyLabel,
   footballBlindResumeNextRevealCount,
   footballBlindResumeRoundPoints,
   footballBlindResumeTier,
@@ -118,7 +119,7 @@ export default function FootballBlindResumePage() {
   function revealMore() {
     if (pickedSide) return;
     const next = footballBlindResumeNextRevealCount(revealedCount);
-    if (next) setRevealedCount(next);
+    if (next !== null) setRevealedCount(next);
   }
 
   function resultPayload(nextPicks = picks) {
@@ -158,20 +159,21 @@ export default function FootballBlindResumePage() {
     setChallengeStatus("");
     const status = await beginChallenge({
       gameId: "blind-resume",
-      gameVersion: "football-blind-resume-v1",
+      gameVersion: "football-blind-resume-v2",
       gameTitle: "Football Blind Resume",
-      summary: "Five rounds · same hidden résumés",
+      summary: "Five rounds · same hidden resumes",
       setup: asChallengeJson({
         matchupIds: run.rounds.map((item) => item.id),
         rounds: run.rounds.map((item) => ({
           fighterA: { id: item.leftId, name: item.leftName },
           fighterB: { id: item.rightId, name: item.rightName },
           winnerId: item.winnerId,
+          difficulty: item.difficulty,
         })),
       }),
       creatorResult: asChallengeJson(resultPayload()),
       shareTitle: "Football Blind Resume Challenge",
-      shareText: "I challenged you to the same five hidden football résumé matchups. Lock each call before the names reveal.",
+      shareText: "I challenged you to the same five hidden football resume matchups. Lock each call before the names reveal.",
       shareUrl: footballChallengeUrl("/football/blind-resume", {
         matchups: run.rounds.map((item) => item.id).join(","),
       }),
@@ -185,20 +187,21 @@ export default function FootballBlindResumePage() {
         {profileMatch.creator ? (
           <section className="challenge-game-banner">
             <span>PROFILE CHALLENGE</span>
-            <strong>{profileMatch.creator.displayName} sent these exact five football résumés.</strong>
+            <strong>{profileMatch.creator.displayName} sent these exact five football resumes.</strong>
             <small>Both five-round results reveal after you finish.</small>
           </section>
         ) : null}
-        <section className="football-debate-result-hero">
+        <section className="football-debate-result-hero football-blind-resume-final">
           <p className="eyebrow">FOOTBALL BLIND RESUME · FINAL SCORE</p>
           <strong>{score}<small>/100</small></strong>
-          <span>{footballBlindResumeTier(correct)} · {correct}-{losses} record · {score} points</span>
+          <span>{footballBlindResumeTier(correct)} · {correct}-{losses} record</span>
+          <small>Early conviction pays. Every miss is zero.</small>
         </section>
 
         <section className="football-blind-resume-recap">
           <header>
             <p className="eyebrow">THE FIVE CALLS</p>
-            <h2>What was behind the résumés.</h2>
+            <h2>How quickly did you see the better resume?</h2>
           </header>
           <div>
             {run.rounds.map((item, index) => {
@@ -209,7 +212,7 @@ export default function FootballBlindResumePage() {
                 <article key={item.id}>
                   <b>{index + 1}</b>
                   <span>
-                    <small>{item.prompt}</small>
+                    <small>{footballBlindResumeDifficultyLabel(item.difficulty)} · {pick?.revealedCount ?? 0}/8 EVIDENCE</small>
                     <strong>{item.leftName} vs. {item.rightName}</strong>
                   </span>
                   <em className={pick?.correct ? "is-correct" : "is-wrong"}>
@@ -241,13 +244,14 @@ export default function FootballBlindResumePage() {
   const winnerName = winnerSide === "left" ? round.leftName : round.rightName;
   const winnerSubtitle = winnerSide === "left" ? round.leftSubtitle : round.rightSubtitle;
   const nextReveal = footballBlindResumeNextRevealCount(revealedCount);
+  const difficultyLabel = footballBlindResumeDifficultyLabel(round.difficulty);
 
   return (
     <div className="page football-debate-page football-blind-resume-page">
       {profileMatch.creator ? (
         <section className="challenge-game-banner">
           <span>PROFILE CHALLENGE</span>
-          <strong>{profileMatch.creator.displayName} sent these exact five football résumés.</strong>
+          <strong>{profileMatch.creator.displayName} sent these exact five football resumes.</strong>
           <small>Make all five locked calls to reveal the matchup.</small>
         </section>
       ) : null}
@@ -255,6 +259,7 @@ export default function FootballBlindResumePage() {
         <div>
           <p className="eyebrow">FOOTBALL BLIND RESUME</p>
           <h1>{round.prompt}</h1>
+          <span className={`football-blind-resume-difficulty is-${round.difficulty}`}>{difficultyLabel}</span>
         </div>
         <aside><span>ROUND {roundIndex + 1} OF 5</span><b>{score} PTS · {correct}-{losses}</b></aside>
       </section>
@@ -268,17 +273,17 @@ export default function FootballBlindResumePage() {
       <section className="football-blind-resume-card">
         <header>
           <div><span>RESUME A</span><strong>{pickedSide ? round.leftName : "?"}</strong></div>
-          <b>RESUME</b>
+          <b>VS</b>
           <div><span>RESUME B</span><strong>{pickedSide ? round.rightName : "?"}</strong></div>
         </header>
 
-        <div className="football-blind-resume-stats">
+        <div className="football-blind-resume-stats" aria-label="Football Blind Resume evidence ladder">
           {round.stats.map((stat, index) => {
             const revealed = index < revealedCount;
             return (
-              <article key={`${stat.label}-${index}`}>
+              <article className={revealed ? "is-revealed" : "is-locked"} key={`${stat.label}-${index}`}>
                 <strong>{revealed ? stat.valueA : "•••"}</strong>
-                <span>{stat.label}</span>
+                <span>{revealed ? stat.label : `EVIDENCE ${index + 1}`}</span>
                 <strong>{revealed ? stat.valueB : "•••"}</strong>
               </article>
             );
@@ -287,16 +292,18 @@ export default function FootballBlindResumePage() {
 
         {!pickedSide ? (
           <>
-            <p className="football-blind-resume-lock-note">
-              {revealedCount} OF 8 STATS SHOWN · LOCK NOW: CORRECT +{footballBlindResumeRoundPoints(revealedCount, true)} · MISS +{footballBlindResumeRoundPoints(revealedCount, false)}
-            </p>
+            <div className="football-blind-resume-stakes">
+              <span>{revealedCount} OF 8 EVIDENCE SHOWN</span>
+              <strong>RIGHT NOW +{footballBlindResumeRoundPoints(revealedCount, true)}</strong>
+              <small>MISS +0 · every reveal lowers the ceiling</small>
+            </div>
             <div className="football-blind-resume-picks">
               <button type="button" onClick={() => choose("left")}>PICK A</button>
               <button type="button" onClick={() => choose("right")}>PICK B</button>
             </div>
-            {nextReveal ? (
+            {nextReveal !== null ? (
               <button className="football-blind-resume-more" type="button" onClick={revealMore}>
-                REVEAL 2 MORE STATS
+                {revealedCount === 0 ? "REVEAL FIRST 2" : "REVEAL NEXT 2"}
               </button>
             ) : null}
           </>
@@ -321,8 +328,8 @@ export default function FootballBlindResumePage() {
             <section className={`football-blind-resume-reveal ${pickedCorrect ? "is-correct" : "is-wrong"}`} aria-live="polite">
               <p className="eyebrow">{pickedCorrect ? "RIGHT CALL" : "MISSED IT"}</p>
               <h2>{winnerName}</h2>
-              <p>{winnerSubtitle}. Football HQ has this résumé higher.</p>
-              <strong>+{latestPick?.points ?? 0} POINTS</strong>
+              <p>{winnerSubtitle}. Football HQ has this resume higher.</p>
+              <strong>+{latestPick?.points ?? 0} POINTS · LOCKED AT {latestPick?.revealedCount ?? 0}/8</strong>
               <button type="button" onClick={advance}>{roundIndex === 4 ? "SEE FINAL SCORE" : "NEXT ROUND"}</button>
             </section>
           </>

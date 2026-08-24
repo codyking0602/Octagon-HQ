@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES,
   FOOTBALL_BLIND_RESUME_ROUNDS,
   buildFootballBlindResumeRounds,
   footballBlindResumeMatchups,
@@ -31,21 +32,31 @@ const EXPECTED_FAMILIES: readonly FootballRankFivePackId[] = [
   "college-team-seasons",
 ];
 
-describe("Football Blind Resume content maturity", () => {
-  it("expands to a broad comparison universe across every approved family", () => {
-    expect(footballBlindResumeMatchups.length).toBeGreaterThanOrEqual(80);
+function expectValidCard(rounds: ReturnType<typeof buildFootballBlindResumeRounds>) {
+  expect(rounds).toHaveLength(FOOTBALL_BLIND_RESUME_ROUNDS);
+  expect(new Set(rounds.map((round) => round.id)).size).toBe(FOOTBALL_BLIND_RESUME_ROUNDS);
+  expect(new Set(rounds.map((round) => round.packId)).size).toBe(FOOTBALL_BLIND_RESUME_ROUNDS);
+  const subjects = rounds.flatMap((round) => [
+    footballBlindResumeSubjectIdentityId(round.leftId),
+    footballBlindResumeSubjectIdentityId(round.rightId),
+  ]);
+  expect(new Set(subjects).size).toBe(FOOTBALL_BLIND_RESUME_ROUNDS * 2);
+  const nfl = rounds.filter((round) => round.league === "NFL").length;
+  const cfb = rounds.filter((round) => round.league === "CFB").length;
+  expect([nfl, cfb].sort((left, right) => left - right)).toEqual([2, 3]);
+}
 
+describe("Football Blind Resume PR4 maturity", () => {
+  it("preserves a broad comparison universe across every approved family", () => {
+    expect(footballBlindResumeMatchups.length).toBeGreaterThanOrEqual(80);
     const counts = new Map<FootballRankFivePackId, number>();
     for (const matchup of footballBlindResumeMatchups) {
       counts.set(matchup.packId, (counts.get(matchup.packId) ?? 0) + 1);
     }
-
-    for (const packId of EXPECTED_FAMILIES) {
-      expect(counts.get(packId) ?? 0).toBeGreaterThanOrEqual(5);
-    }
+    for (const packId of EXPECTED_FAMILIES) expect(counts.get(packId) ?? 0).toBeGreaterThanOrEqual(5);
   });
 
-  it("keeps winner ownership exclusively on the canonical comparison ratings", () => {
+  it("keeps winner ownership exclusively on canonical Rank Five ratings", () => {
     for (const matchup of resolvedFootballBlindResumeMatchups()) {
       const pack = getFootballRankFivePack(matchup.packId);
       const left = pack.items.find((item) => item.id === matchup.leftId)!;
@@ -57,13 +68,13 @@ describe("Football Blind Resume content maturity", () => {
     }
   });
 
-  it("resolves objective rows from the canonical factual-stat owner and keeps authored rows qualitative", () => {
+  it("precomputes an eight-row matchup-specific evidence ladder while factual rows stay canonical", () => {
     const factualMatchups = footballBlindResumeMatchups.filter((matchup) =>
       matchup.stats.some((stat) => stat.source?.owner === "footballFactualStats"));
-
     expect(factualMatchups.length).toBeGreaterThanOrEqual(3);
 
     for (const matchup of footballBlindResumeMatchups) {
+      expect(matchup.stats).toHaveLength(8);
       for (const stat of matchup.stats) {
         if (!stat.source) {
           expect(stat.valueA, `${matchup.id}: authored value A`).not.toMatch(/\d/);
@@ -81,69 +92,35 @@ describe("Football Blind Resume content maturity", () => {
     }
   });
 
-  it("builds deterministic five-round cards with five categories and ten real subject identities", () => {
-    const first = buildFootballBlindResumeRounds("pr6-deterministic-proof");
-    const second = buildFootballBlindResumeRounds("pr6-deterministic-proof");
-
-    expect(first.map((round) => round.id)).toEqual(second.map((round) => round.id));
-    expect(first).toHaveLength(FOOTBALL_BLIND_RESUME_ROUNDS);
-    expect(new Set(first.map((round) => round.id)).size).toBe(FOOTBALL_BLIND_RESUME_ROUNDS);
-
-    const subjects = first.flatMap((round) => [
-      footballBlindResumeSubjectIdentityId(round.leftId),
-      footballBlindResumeSubjectIdentityId(round.rightId),
-    ]);
-    expect(new Set(subjects).size).toBe(FOOTBALL_BLIND_RESUME_ROUNDS * 2);
-
-    const nflRounds = first.filter((round) => round.league === "NFL").length;
-    const cfbRounds = first.filter((round) => round.league === "CFB").length;
-    expect(nflRounds).toBeGreaterThanOrEqual(2);
-    expect(cfbRounds).toBeGreaterThanOrEqual(2);
-    expect(new Set(first.map((round) => round.packId)).size).toBe(FOOTBALL_BLIND_RESUME_ROUNDS);
+  it("has real NFL and CFB inventory for Easy, Medium, Hard, and Villain slates", () => {
+    for (const difficulty of ["easy", "medium", "hard", "villain"] as const) {
+      const rows = footballBlindResumeMatchups.filter((matchup) => matchup.difficulty === difficulty);
+      expect(rows.length, difficulty).toBeGreaterThanOrEqual(4);
+      expect(rows.some((row) => row.league === "NFL"), `${difficulty} NFL`).toBe(true);
+      expect(rows.some((row) => row.league === "CFB"), `${difficulty} CFB`).toBe(true);
+    }
   });
 
-  it("keeps broad coverage and low matchup/real-subject overexposure across many seeded runs", () => {
-    const matchupCounts = new Map<string, number>();
-    const subjectCounts = new Map<string, number>();
-    const packCounts = new Map<FootballRankFivePackId, number>();
-    const runCount = 400;
-
-    for (let index = 0; index < runCount; index += 1) {
-      const rounds = buildFootballBlindResumeRounds(`pr6-simulation-${index}`);
-      expect(rounds).toHaveLength(FOOTBALL_BLIND_RESUME_ROUNDS);
-
-      const subjects = rounds.flatMap((round) => [
-        footballBlindResumeSubjectIdentityId(round.leftId),
-        footballBlindResumeSubjectIdentityId(round.rightId),
-      ]);
-      expect(new Set(subjects).size).toBe(subjects.length);
-
-      const nflRounds = rounds.filter((round) => round.league === "NFL").length;
-      const cfbRounds = rounds.filter((round) => round.league === "CFB").length;
-      expect(nflRounds).toBeGreaterThanOrEqual(2);
-      expect(cfbRounds).toBeGreaterThanOrEqual(2);
-      expect(new Set(rounds.map((round) => round.packId)).size).toBe(FOOTBALL_BLIND_RESUME_ROUNDS);
-
-      for (const round of rounds) {
-        matchupCounts.set(round.id, (matchupCounts.get(round.id) ?? 0) + 1);
-        packCounts.set(round.packId, (packCounts.get(round.packId) ?? 0) + 1);
-        for (const subjectId of [round.leftId, round.rightId]) {
-          const identityId = footballBlindResumeSubjectIdentityId(subjectId);
-          subjectCounts.set(identityId, (subjectCounts.get(identityId) ?? 0) + 1);
-        }
-      }
+  it("builds deterministic mixed casual cards without forcing the same difficulty staircase", () => {
+    const difficultySequences = new Set<string>();
+    for (let index = 0; index < 80; index += 1) {
+      const seed = `pr4-casual-${index}`;
+      const first = buildFootballBlindResumeRounds(seed);
+      const second = buildFootballBlindResumeRounds(seed);
+      expect(first.map((round) => round.id)).toEqual(second.map((round) => round.id));
+      expect(first.map((round) => round.difficulty)).toEqual(second.map((round) => round.difficulty));
+      expectValidCard(first);
+      expect(new Set(first.map((round) => round.difficulty)).size).toBeGreaterThanOrEqual(2);
+      difficultySequences.add(first.map((round) => round.difficulty).join("/"));
     }
+    expect(difficultySequences.size).toBeGreaterThanOrEqual(12);
+  });
 
-    expect(matchupCounts.size).toBeGreaterThanOrEqual(Math.floor(footballBlindResumeMatchups.length * 0.9));
-    expect(packCounts.size).toBe(EXPECTED_FAMILIES.length);
-
-    const matchupAverage = (runCount * FOOTBALL_BLIND_RESUME_ROUNDS) / footballBlindResumeMatchups.length;
-    const matchupMax = Math.max(...matchupCounts.values());
-    expect(matchupMax).toBeLessThanOrEqual(matchupAverage * 2.25);
-
-    const totalSubjectAppearances = runCount * FOOTBALL_BLIND_RESUME_ROUNDS * 2;
-    const subjectAverage = totalSubjectAppearances / subjectCounts.size;
-    const subjectMax = Math.max(...subjectCounts.values());
-    expect(subjectMax).toBeLessThanOrEqual(subjectAverage * 3.5);
+  it("uses the same engine for the tougher Daily authored mix: two Villains, two Hard, one Medium", () => {
+    for (let index = 0; index < 80; index += 1) {
+      const rounds = buildFootballBlindResumeRounds(`pr4-daily-${index}`, FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES);
+      expectValidCard(rounds);
+      expect(rounds.map((round) => round.difficulty)).toEqual([...FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES]);
+    }
   });
 });

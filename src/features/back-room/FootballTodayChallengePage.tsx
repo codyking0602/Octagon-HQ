@@ -129,7 +129,8 @@ function BlindResume({ projection, advance }: GameProps) {
   const stats = records(round.stats);
   const results = records(state.results);
   const latest = results.at(-1);
-  const revealed = Number(round.revealed_count ?? 2);
+  const revealed = Number(round.revealed_count ?? 0);
+  const difficulty = typeof round.difficulty === "string" ? round.difficulty.toUpperCase() : "";
   return (
     <>
       {latest ? (
@@ -140,7 +141,7 @@ function BlindResume({ projection, advance }: GameProps) {
       ) : null}
       {!projection.officialAttempt ? (
         <section className="football-today-resume">
-          <header><small>{String(round.league ?? "FOOTBALL")} · ROUND {Number(state.round_index ?? 0) + 1} OF 5</small><h2>{String(round.prompt ?? "Who has the better résumé?")}</h2></header>
+          <header><small>{String(round.league ?? "FOOTBALL")}{difficulty ? ` · ${difficulty}` : ""} · ROUND {Number(state.round_index ?? 0) + 1} OF 5</small><h2>{String(round.prompt ?? "Who has the better resume?")}</h2></header>
           <div className="football-today-resume-head"><b>A</b><span>{revealed}/8 STATS</span><b>B</b></div>
           <div className="football-today-resume-stats">
             {stats.map((stat, index) => (
@@ -149,7 +150,7 @@ function BlindResume({ projection, advance }: GameProps) {
           </div>
           <div className="football-today-resume-actions">
             <button type="button" onClick={() => advance({ choice: "A" })}>LOCK A</button>
-            <button type="button" disabled={revealed >= 8} onClick={() => advance({ reveal: true })}>{revealed >= 8 ? "ALL STATS OPEN" : "REVEAL 2 MORE"}</button>
+            <button type="button" disabled={revealed >= 8} onClick={() => advance({ reveal: true })}>{revealed >= 8 ? "ALL STATS OPEN" : revealed === 0 ? "REVEAL FIRST 2" : "REVEAL 2 MORE"}</button>
             <button type="button" onClick={() => advance({ choice: "B" })}>LOCK B</button>
           </div>
         </section>
