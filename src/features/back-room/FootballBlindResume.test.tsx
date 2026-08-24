@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
+import { blindResumeV3RoundPoints, createBlindResumeV3Card } from "../play/blindResumeV3";
 import FootballBlindResumePage from "./FootballBlindResumePage";
 import {
   FOOTBALL_BLIND_RESUME_REVEAL_COUNTS,
@@ -50,15 +51,21 @@ describe("Football Blind Resume", () => {
     expect(footballBlindResumeMatchups.every((matchup) => !matchup.prompt.includes("résumé"))).toBe(true);
   });
 
-  it("uses the locked five-stage early-conviction scoring curve with zero for every miss", () => {
-    expect(FOOTBALL_BLIND_RESUME_REVEAL_COUNTS).toEqual([0, 2, 4, 6, 8]);
-    expect(footballBlindResumeNextRevealCount(0)).toBe(2);
+  it("reuses the canonical UFC V3 reveal ladder and scoring owner", () => {
+    const ufcCard = createBlindResumeV3Card("football-blind-resume-parity-proof");
+    expect([...FOOTBALL_BLIND_RESUME_REVEAL_COUNTS]).toEqual(ufcCard.revealCounts);
+    expect(FOOTBALL_BLIND_RESUME_REVEAL_COUNTS).toEqual([2, 4, 6, 8]);
     expect(footballBlindResumeNextRevealCount(2)).toBe(4);
     expect(footballBlindResumeNextRevealCount(4)).toBe(6);
     expect(footballBlindResumeNextRevealCount(6)).toBe(8);
     expect(footballBlindResumeNextRevealCount(8)).toBeNull();
-    expect(FOOTBALL_BLIND_RESUME_REVEAL_COUNTS.map((shown) => footballBlindResumeRoundPoints(shown, true))).toEqual([20, 15, 10, 5, 2]);
-    expect(FOOTBALL_BLIND_RESUME_REVEAL_COUNTS.map((shown) => footballBlindResumeRoundPoints(shown, false))).toEqual([0, 0, 0, 0, 0]);
+
+    for (const shown of FOOTBALL_BLIND_RESUME_REVEAL_COUNTS) {
+      expect(footballBlindResumeRoundPoints(shown, true)).toBe(blindResumeV3RoundPoints(shown, true));
+      expect(footballBlindResumeRoundPoints(shown, false)).toBe(blindResumeV3RoundPoints(shown, false));
+    }
+    expect(FOOTBALL_BLIND_RESUME_REVEAL_COUNTS.map((shown) => footballBlindResumeRoundPoints(shown, true))).toEqual([20, 19, 18, 17]);
+    expect(FOOTBALL_BLIND_RESUME_REVEAL_COUNTS.map((shown) => footballBlindResumeRoundPoints(shown, false))).toEqual([2, 4, 6, 8]);
   });
 
   it("builds deterministic mixed five-round cards with an exact 3/2 or 2/3 NFL-CFB split", () => {
@@ -76,31 +83,35 @@ describe("Football Blind Resume", () => {
     expect([nfl, cfb].sort((left, right) => left - right)).toEqual([2, 3]);
   });
 
-  it("starts fully blind, reveals two evidence rows at a time, and lowers the scoring ceiling", () => {
-    render(
+  it("starts with two evidence rows, keeps labels visible, and follows UFC V3 lock scoring", () => {
+    const { container } = render(
       <MemoryRouter>
         <FootballBlindResumePage />
       </MemoryRouter>,
     );
 
     expect(screen.getAllByText("?")).toHaveLength(2);
-    expect(screen.getByText("0 OF 8 EVIDENCE SHOWN")).toBeInTheDocument();
-    expect(screen.getByText("RIGHT NOW +20")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "REVEAL FIRST 2" })).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("button", { name: "REVEAL FIRST 2" }));
     expect(screen.getByText("2 OF 8 EVIDENCE SHOWN")).toBeInTheDocument();
-    expect(screen.getByText("RIGHT NOW +15")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "REVEAL NEXT 2" }));
+    expect(screen.getByText("LOCK NOW: CORRECT +20")).toBeInTheDocument();
+    expect(screen.getByText(/MISS \+2/)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "REVEAL 2 MORE EVIDENCE" })).toBeInTheDocument();
+    expect(container.querySelectorAll(".football-blind-resume-stats .is-revealed")).toHaveLength(2);
+    expect(container.querySelectorAll(".football-blind-resume-stats .is-locked")).toHaveLength(6);
+    expect([...container.querySelectorAll(".football-blind-resume-stats .is-locked span")].every((node) => !/^EVIDENCE \d+$/.test(node.textContent ?? ""))).toBe(true);
+
+    fireEvent.click(screen.getByRole("button", { name: "REVEAL 2 MORE EVIDENCE" }));
     expect(screen.getByText("4 OF 8 EVIDENCE SHOWN")).toBeInTheDocument();
-    expect(screen.getByText("RIGHT NOW +10")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "REVEAL NEXT 2" }));
+    expect(screen.getByText("LOCK NOW: CORRECT +19")).toBeInTheDocument();
+    expect(screen.getByText(/MISS \+4/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "REVEAL 2 MORE EVIDENCE" }));
     expect(screen.getByText("6 OF 8 EVIDENCE SHOWN")).toBeInTheDocument();
-    expect(screen.getByText("RIGHT NOW +5")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "REVEAL NEXT 2" }));
+    expect(screen.getByText("LOCK NOW: CORRECT +18")).toBeInTheDocument();
+    expect(screen.getByText(/MISS \+6/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "REVEAL 2 MORE EVIDENCE" }));
     expect(screen.getByText("8 OF 8 EVIDENCE SHOWN")).toBeInTheDocument();
-    expect(screen.getByText("RIGHT NOW +2")).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "REVEAL NEXT 2" })).not.toBeInTheDocument();
+    expect(screen.getByText("LOCK NOW: CORRECT +17")).toBeInTheDocument();
+    expect(screen.getByText(/MISS \+8/)).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "REVEAL 2 MORE EVIDENCE" })).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "PICK A" }));
     expect(screen.queryByText("?")).not.toBeInTheDocument();
@@ -123,6 +134,7 @@ describe("Football Blind Resume", () => {
     expect(screen.getByText("THE FIVE CALLS")).toBeInTheDocument();
     expect(screen.getByText("/100")).toBeInTheDocument();
     expect(screen.getAllByText(/PICK .* · WINNER /)).toHaveLength(5);
+    expect(screen.getByText("Early conviction pays. Later reveals trade upside for miss protection.")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "PLAY AGAIN" })).toBeInTheDocument();
   });
 });
