@@ -46,7 +46,7 @@ describe("Football Hit the Number Build the Team flow", () => {
       expect(footballHitTheNumberActiveBuildSlot(plan, selectedIds)?.label).toBe(plan.slots[index]!.label);
       const available = footballHitTheNumberAvailableBuildSubjectIds(plan, selectedIds);
       expect(available.length).toBeGreaterThan(0);
-      expect(available).not.toEqual(expect.arrayContaining(selectedIds));
+      expect(selectedIds.every((subjectId) => !available.includes(subjectId))).toBe(true);
       expect(available).toContain(plan.solutionSubjectIds[index]);
       selectedIds.push(plan.solutionSubjectIds[index]!);
     }
