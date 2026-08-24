@@ -75,8 +75,8 @@ describe("Picks current-event compatibility", () => {
       }],
     });
 
-    expect(event?.spotlights[0]?.red.edges).toEqual([]);
-    expect(event?.spotlights[0]?.blue.edges).toEqual([]);
+    expect(event?.spotlights?.[0]?.red.edges).toEqual([]);
+    expect(event?.spotlights?.[0]?.blue.edges).toEqual([]);
   });
 
   it("maps the backend-owned control entry without inferring from the profile name", () => {
