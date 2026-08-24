@@ -127,8 +127,27 @@ const gamrotSalkilldSpotlight: SpotlightData = {
   }],
 };
 
+const bilalRojasSpotlight: SpotlightData = {
+  kicker: "FIGHT SPOTLIGHT · FLYWEIGHT",
+  preview: "Two unbeaten 9–0 flyweight finishers hit Shanghai with no meaningful UFC sample to lean on. Hasan arrives 18 days after a 45-second Contender Series contract win, carrying the speed, creativity, and finishing instinct that put him #5 on Shane’s board. Rojas is 9–0 with seven KO/TKO wins and comes in off a July 22 decision. The swing factor is whose finishing danger translates first: Hasan’s explosive prospect upside or Rojas’ proven knockout threat.",
+  red: {
+    slug: "bilal-hasan",
+    name: "Bilal Hasan",
+    record: "9-0",
+    edges: ["8 finishes in 9 pro wins", "45-second Contender Series contract win", "Shane’s #5 prospect"],
+  },
+  blue: {
+    slug: "nilson-rojas",
+    name: "Nilson Rojas",
+    record: "9-0",
+    edges: ["7 KO/TKO wins in 9 fights", "Unbeaten professional record", "Won again on July 22"],
+  },
+  watchSpotlights: [],
+};
+
 function staticSpotlightForBout(bout: PickBout): SpotlightData | null {
   const slugs = new Set([bout.redFighterSlug, bout.blueFighterSlug]);
+  if (slugs.has("bilal-hasan") && slugs.has("nilson-rojas")) return bilalRojasSpotlight;
   if (slugs.has("mateusz-gamrot") && slugs.has("quillan-salkilld")) return gamrotSalkilldSpotlight;
   if (slugs.has("uros-medic") && slugs.has("daniel-rodriguez")) return medicRodriguezSpotlight;
   return null;
