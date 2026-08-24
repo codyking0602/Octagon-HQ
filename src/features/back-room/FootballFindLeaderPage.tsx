@@ -27,6 +27,12 @@ interface ResultState {
   fatalId: string | null;
 }
 
+function categoryLabel(domainId: FootballFindLeaderRun["board"]["domainId"]) {
+  if (domainId === "nfl-qb-career") return "NFL QB CAREERS";
+  if (domainId === "nfl-rb-career") return "NFL RB CAREERS";
+  return "CFB CHAMPION SEASONS";
+}
+
 function resolveChallengeRun(seed: string | null, definitionId: string | null, challengeId: string): FootballFindLeaderRun | null {
   if (!seed || !definitionId) return null;
   const definition = footballFindLeaderQuestions.find((row) => row.id === definitionId);
@@ -177,7 +183,7 @@ export default function FootballFindLeaderPage() {
             {sorted.map((candidate, index) => (
               <article className={`${candidate.id === board.leaderId ? "is-leader" : ""}${candidate.id === result.fatalId ? " is-fatal" : ""}`} key={candidate.id}>
                 <em>#{index + 1}</em>
-                <span><strong>{candidate.name}</strong><small>{candidate.subtitle}</small></span>
+                <span><strong>{candidate.name}</strong></span>
                 <b>{formatFootballFindLeaderValue(board, candidate.value)}<small>{board.shortLabel}</small></b>
               </article>
             ))}
@@ -208,7 +214,7 @@ export default function FootballFindLeaderPage() {
         <p className="eyebrow">FIND THE LEADER · FOOTBALL</p>
         <h1>{board.question}</h1>
         <p>{board.context}</p>
-        <div><strong>{10 - eliminated.length}</strong><span>STILL STANDING</span><small>Eliminate players or teams until only the leader remains.</small></div>
+        <div><strong>{10 - eliminated.length}</strong><span>STILL STANDING</span><small>{categoryLabel(board.domainId)} · Eliminate until only the leader remains.</small></div>
       </section>
 
       <section className="football-find-grid" aria-label="Football Find the Leader candidates">
@@ -216,7 +222,6 @@ export default function FootballFindLeaderPage() {
           const gone = eliminatedSet.has(candidate.id);
           return (
             <button className={gone ? "is-eliminated" : ""} type="button" disabled={gone} onClick={() => eliminate(candidate.id)} key={candidate.id}>
-              <small>{candidate.subtitle}</small>
               <strong>{candidate.name}</strong>
               <span>{gone ? "ELIMINATED" : "TAP TO ELIMINATE"}</span>
             </button>
