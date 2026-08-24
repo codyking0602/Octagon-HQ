@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 88" role="img" aria-labelledby="title">
+  <title id="title">Texas Longhorns white football helmet</title>
+  <defs>
+    <linearGradient id="shell" x1="20" y1="12" x2="88" y2="68" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="0.58" stop-color="#F1EEE8"/>
+      <stop offset="1" stop-color="#D8D4CD"/>
+    </linearGradient>
+  </defs>
+  <path d="M12 51v-8C12 21 30 7 56 7h9c24 0 40 13 45 37l1 6H87c-3-11-11-17-24-17H48v26H30v-8H12Z" fill="url(#shell)" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M48 55h30l5-12h27v8H91l-6 15H59v8H46Z" fill="#E0DDD6" stroke="#F7F4EE" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M84 45h27v9H92m14-4v17H82m5-22-7 22H60" fill="none" stroke="#8C8E91" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="62" cy="46" r="6" fill="#C8C4BC" stroke="#FFFFFF" stroke-width="2"/>
+  <path d="M37 18c3.5 5.8 8.5 9.2 14.6 10.2l4.4-3.8 4.4 3.8C66.5 27.2 71.5 23.8 75 18c-.7 7.5-4.2 13-10.5 16.3l-2.9 8-5.6-5.2-5.6 5.2-2.9-8C41.2 31 37.7 25.5 37 18Z" fill="#BF5700"/>
+</svg>

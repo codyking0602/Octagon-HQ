@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 88" role="img" aria-labelledby="title">
+  <title id="title">Dallas Cowboys silver football helmet</title>
+  <defs>
+    <linearGradient id="shell" x1="20" y1="12" x2="88" y2="68" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F3F6F8"/>
+      <stop offset="0.52" stop-color="#CDD5DD"/>
+      <stop offset="1" stop-color="#AAB5C0"/>
+    </linearGradient>
+  </defs>
+  <path d="M12 51v-8C12 21 30 7 56 7h9c24 0 40 13 45 37l1 6H87c-3-11-11-17-24-17H48v26H30v-8H12Z" fill="url(#shell)" stroke="#F8FAFC" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M48 55h30l5-12h27v8H91l-6 15H59v8H46Z" fill="#B5C0CA" stroke="#E6EBEF" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M84 45h27v9H92m14-4v17H82m5-22-7 22H60" fill="none" stroke="#6D7B8B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="62" cy="46" r="6" fill="#95A2AE" stroke="#F0F3F6" stroke-width="2"/>
+  <path d="m54 17 3.2 8.3 8.9.4-6.9 5.5 2.4 8.6-7.6-4.9-7.6 4.9 2.4-8.6-6.9-5.5 8.9-.4L54 17Z" fill="#041E42" stroke="#FFFFFF" stroke-width="1.2" stroke-linejoin="round"/>
+</svg>

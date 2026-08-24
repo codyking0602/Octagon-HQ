@@ -9,10 +9,11 @@
 
 .app-shell--football-room .football-subject-visual[data-visual-kind="team-mark"],
 .app-shell--football-room .football-subject-visual[data-visual-kind="program-mark"] {
+  border-color: rgba(255, 255, 255, .11);
   background:
-    radial-gradient(circle at 50% 40%, rgba(255, 255, 255, .08), transparent 55%),
-    linear-gradient(145deg, rgba(122, 142, 168, .12), transparent 62%),
-    #101b2c;
+    radial-gradient(circle at 50% 38%, rgba(255, 255, 255, .065), transparent 54%),
+    linear-gradient(145deg, rgba(255, 255, 255, .025), transparent 62%),
+    #101113;
 }
 
 .app-shell--football-room .football-rank-five-current .football-subject-visual,
@@ -32,6 +33,41 @@
   width: 62px;
   height: 62px;
   flex-basis: 62px;
+}
+
+/* Reserve the full visual lane so team marks never sit on top of subject copy. */
+.app-shell--football-room .football-keep-cut-current {
+  grid-template-columns: 74px minmax(0, 1fr) auto !important;
+}
+
+.app-shell--football-room .football-keep-cut-current > div:not(.football-keep-cut-current__actions) {
+  min-width: 0;
+}
+
+.app-shell--football-room .football-debate-result-list article {
+  grid-template-columns: 28px 52px minmax(0, 1fr) auto !important;
+}
+
+.app-shell--football-room .football-rank-five-results article {
+  grid-template-columns: 34px 52px minmax(0, 1fr) auto !important;
+}
+
+.app-shell--football-room .football-blind-resume-identities article {
+  grid-template-columns: 62px minmax(0, 1fr);
+}
+
+/* Longhorns uses burnt orange plus neutral graphite; Cowboys keeps intentional navy identity. */
+.app-shell--football-team-longhorns .football-rank-five-current,
+.app-shell--football-team-longhorns .football-keep-cut-current,
+.app-shell--football-team-longhorns .football-blind-resume-reveal {
+  background:
+    linear-gradient(120deg, rgba(var(--football-accent-rgb), .075), transparent 55%),
+    var(--football-card-raised) !important;
+}
+
+.app-shell--football-team-longhorns .football-blind-resume-picks button {
+  border-color: rgba(var(--football-accent-rgb), .2) !important;
+  background: #111315 !important;
 }
 
 /* Football HQ final identity polish: shared UFC accent consumers inherit the selected team. */
@@ -61,75 +97,31 @@
   background: rgba(10, 7, 5, .98);
 }
 
-/* Traditional side-profile helmets replace the generic app-icon silhouette. */
-.app-shell--football-room .football-team-helmet svg {
-  overflow: visible;
+/* Header and first-entry selectors render the finished helmet art directly. */
+.app-shell--football-room .football-team-helmet img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, .28));
 }
 
-.app-shell--football-room .football-team-helmet .football-team-helmet__shell,
-.app-shell--football-room .football-team-helmet .football-team-helmet__lower {
-  stroke-width: 1.6;
-  stroke-linejoin: round;
+@media (max-width: 700px) {
+  .app-shell--football-room .football-keep-cut-current {
+    grid-template-columns: 74px minmax(0, 1fr) !important;
+  }
+
+  .app-shell--football-room .football-keep-cut-current__actions {
+    grid-column: 1 / -1;
+  }
 }
 
-.app-shell--football-room .football-team-helmet .football-team-helmet__facemask {
-  fill: none;
-  stroke-width: 2.2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
+@media (max-width: 430px) {
+  .app-shell--football-room .football-debate-result-list article {
+    grid-template-columns: 24px 52px minmax(0, 1fr) !important;
+  }
 
-.app-shell--football-room .football-team-helmet .football-team-helmet__earhole {
-  stroke-width: 1.35;
-}
-
-.app-shell--football-room .football-team-helmet .football-team-helmet__mark {
-  stroke: none;
-}
-
-.app-shell--football-room .football-team-helmet--cowboys .football-team-helmet__shell {
-  fill: #c7d0d9;
-  stroke: #f1f4f7;
-}
-
-.app-shell--football-room .football-team-helmet--cowboys .football-team-helmet__lower {
-  fill: #aeb9c4;
-  stroke: #dce2e8;
-}
-
-.app-shell--football-room .football-team-helmet--cowboys .football-team-helmet__facemask {
-  stroke: #6f7f90;
-}
-
-.app-shell--football-room .football-team-helmet--cowboys .football-team-helmet__earhole {
-  fill: #8e9ba8;
-  stroke: #e3e8ed;
-}
-
-.app-shell--football-room .football-team-helmet--cowboys .football-team-helmet__mark--cowboys {
-  fill: #041e42;
-}
-
-.app-shell--football-room .football-team-helmet--longhorns .football-team-helmet__shell {
-  fill: #f4f0e7;
-  stroke: #fffdf8;
-}
-
-.app-shell--football-room .football-team-helmet--longhorns .football-team-helmet__lower {
-  fill: #ddd9d1;
-  stroke: #f4f1eb;
-}
-
-.app-shell--football-room .football-team-helmet--longhorns .football-team-helmet__facemask {
-  stroke: #989b9e;
-}
-
-.app-shell--football-room .football-team-helmet--longhorns .football-team-helmet__earhole {
-  fill: #c8c4bd;
-  stroke: #fffdf8;
-}
-
-.app-shell--football-room .football-team-helmet--longhorns .football-team-helmet__mark--longhorns {
-  fill: #bf5700;
+  .app-shell--football-room .football-debate-result-list article em {
+    display: none;
+  }
 }
