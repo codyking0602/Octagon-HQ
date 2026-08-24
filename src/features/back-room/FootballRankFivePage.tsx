@@ -168,7 +168,7 @@ export default function FootballRankFivePage() {
         <div className="football-rank-five-category">
           <small>CURRENT CATEGORY</small>
           <strong>{run.pack.name}</strong>
-          {!complete && !shared ? <button type="button" onClick={startNewLineup}>NEW LINEUP</button> : null}
+          {!complete && !shared ? <button type="button" onClick={startNewLineup}>SWITCH CATEGORY</button> : null}
         </div>
       </section>
 
