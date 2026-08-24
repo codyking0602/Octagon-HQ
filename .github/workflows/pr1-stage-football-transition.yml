@@ -1,0 +1,41 @@
+name: PR1 Stage Football Transition
+
+on:
+  push:
+    branches:
+      - chatgpt/football-shell-secret-entrance-pr1
+    paths:
+      - .github/workflows/pr1-stage-football-transition.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  reconstruct:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reconstruct exact transition asset
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p public/assets/football
+          cat .tmp/football-transition/*.b64 | tr -d '\r\n' | base64 --decode > public/assets/football/vince-young-championship-run.mp4
+          actual="$(git hash-object public/assets/football/vince-young-championship-run.mp4)"
+          test "$actual" = "f55be5cb66f606a2d413fe1243738e12e17a6c9f"
+
+      - name: Remove staging helpers and commit asset
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .tmp/football-transition
+          rm .github/workflows/pr1-stage-football-transition.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Add Vince Young Football entrance transition"
+          git push origin HEAD:chatgpt/football-shell-secret-entrance-pr1
