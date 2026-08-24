@@ -72,17 +72,6 @@ function requiredString(value: unknown, label: string) {
   return value;
 }
 
-function centralDayNow() {
-  const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/Chicago",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).formatToParts(new Date());
-  const value = Object.fromEntries(parts.map((part) => [part.type, part.value]));
-  return `${value.year}-${value.month}-${value.day}`;
-}
-
 function footballActionHistory(context: OfficialDailyRuntimeContext & JsonRecord) {
   const value = context.submissionState.action_history;
   if (value == null) return [] as JsonRecord[];
@@ -112,8 +101,8 @@ function childPublication(publication: JsonRecord) {
     setup_key: requiredString(publication.setupKey, "Daily child setup key"),
     public_setup: requiredRecord(publication.publicSetup, "Daily child public setup"),
     reveal_setup: requiredRecord(publication.revealSetup, "Daily child reveal setup"),
-    private_setup_evidence: requiredRecord(publication.privateSetupEvidence, "Daily child private setup evidence"),
-    private_grading_evidence: requiredRecord(publication.privateGradingEvidence, "Daily child private grading evidence"),
+    private_setup_evidence: requiredRecord(publication.privateSetupEvidence, "Daily child setup evidence"),
+    private_grading_evidence: requiredRecord(publication.privateGradingEvidence, "Daily child grading evidence"),
   };
 }
 
@@ -283,7 +272,7 @@ function advanceDailyCombo(context: OfficialDailyRuntimeContext & JsonRecord, ac
 }
 
 async function materializeToday(admin: SupabaseClient) {
-  const requested = await admin.rpc("get_daily_challenge_materialization_request", {});
+  const requested = await admin.rpc("get_daily_challenge_materialization_request", { p_sport: "ufc" });
   if (requested.error) throw new Error("The official daily materialization request failed.");
   const request = requiredRecord(requested.data, "Daily materialization request");
   const day = requiredString(request.central_day, "Central day");
@@ -342,11 +331,24 @@ async function materializeToday(admin: SupabaseClient) {
 }
 
 async function materializeFootballToday(admin: SupabaseClient) {
-  const day = centralDayNow();
+  const requested = await admin.rpc("get_daily_challenge_materialization_request", { p_sport: "football" });
+  if (requested.error) throw new Error("The official Football daily materialization request failed.");
+  const request = requiredRecord(requested.data, "Football daily materialization request");
+  const day = requiredString(request.central_day, "Football Central day");
+  const scheduleVersion = requiredString(request.schedule_version, "Football schedule version");
+
+  if (request.required !== true) {
+    return {
+      dailyChallengeId: requiredString(request.daily_challenge_id, "Football daily challenge id"),
+      centralDay: day,
+      created: false,
+    };
+  }
+
   const publication = buildFootballTodayPersistenceSetup(day) as JsonRecord;
   const published = await admin.rpc("publish_daily_challenge_setup", {
     p_central_day: day,
-    p_schedule_version: "football-daily-v1",
+    p_schedule_version: scheduleVersion,
     p_game_type: requiredString(publication.gameType, "Football daily game type"),
     p_setup_key: requiredString(publication.setupKey, "Football daily setup key"),
     p_content_version: requiredString(publication.contentVersion, "Football daily content version"),
