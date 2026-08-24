@@ -256,7 +256,7 @@ export default function FootballKeepCutPage() {
       ) : null}
       <section className="football-debate-intro">
         <div>
-          <p className="eyebrow">FOOTBALL HQ</p>
+          <p className="eyebrow">KEEP 4 / CUT 4 · FOOTBALL HQ</p>
           <h1>{run.pack.prompt}</h1>
           <p>{run.pack.intro}</p>
         </div>
