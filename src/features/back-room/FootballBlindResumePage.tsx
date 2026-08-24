@@ -159,7 +159,7 @@ export default function FootballBlindResumePage() {
     setChallengeStatus("");
     const status = await beginChallenge({
       gameId: "blind-resume",
-      gameVersion: "football-blind-resume-v2",
+      gameVersion: "football-blind-resume-v3",
       gameTitle: "Football Blind Resume",
       summary: "Five rounds · same hidden resumes",
       setup: asChallengeJson({
@@ -195,7 +195,7 @@ export default function FootballBlindResumePage() {
           <p className="eyebrow">FOOTBALL BLIND RESUME · FINAL SCORE</p>
           <strong>{score}<small>/100</small></strong>
           <span>{footballBlindResumeTier(correct)} · {correct}-{losses} record</span>
-          <small>Early conviction pays. Every miss is zero.</small>
+          <small>Early conviction pays. Later reveals trade upside for miss protection.</small>
         </section>
 
         <section className="football-blind-resume-recap">
@@ -283,7 +283,7 @@ export default function FootballBlindResumePage() {
             return (
               <article className={revealed ? "is-revealed" : "is-locked"} key={`${stat.label}-${index}`}>
                 <strong>{revealed ? stat.valueA : "•••"}</strong>
-                <span>{revealed ? stat.label : `EVIDENCE ${index + 1}`}</span>
+                <span>{stat.label}</span>
                 <strong>{revealed ? stat.valueB : "•••"}</strong>
               </article>
             );
@@ -294,8 +294,8 @@ export default function FootballBlindResumePage() {
           <>
             <div className="football-blind-resume-stakes">
               <span>{revealedCount} OF 8 EVIDENCE SHOWN</span>
-              <strong>RIGHT NOW +{footballBlindResumeRoundPoints(revealedCount, true)}</strong>
-              <small>MISS +0 · every reveal lowers the ceiling</small>
+              <strong>LOCK NOW: CORRECT +{footballBlindResumeRoundPoints(revealedCount, true)}</strong>
+              <small>MISS +{footballBlindResumeRoundPoints(revealedCount, false)} · later reveals trade upside for protection</small>
             </div>
             <div className="football-blind-resume-picks">
               <button type="button" onClick={() => choose("left")}>PICK A</button>
@@ -303,7 +303,7 @@ export default function FootballBlindResumePage() {
             </div>
             {nextReveal !== null ? (
               <button className="football-blind-resume-more" type="button" onClick={revealMore}>
-                {revealedCount === 0 ? "REVEAL FIRST 2" : "REVEAL NEXT 2"}
+                REVEAL 2 MORE EVIDENCE
               </button>
             ) : null}
           </>
