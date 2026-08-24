@@ -81,6 +81,7 @@ describe("Football HQ debate games", () => {
       </MemoryRouter>,
     );
 
+    expect(screen.getByText("BLIND RANK 5 · FOOTBALL HQ")).toBeInTheDocument();
     const categoryPanel = screen.getByText("CURRENT CATEGORY").parentElement;
     expect(categoryPanel).not.toBeNull();
     const initialCategory = categoryPanel?.querySelector("strong")?.textContent;
@@ -98,6 +99,7 @@ describe("Football HQ debate games", () => {
       </MemoryRouter>,
     );
 
+    expect(screen.getByText("KEEP 4 / CUT 4 · FOOTBALL HQ")).toBeInTheDocument();
     const categoryPanel = screen.getByText("CURRENT CATEGORY").parentElement;
     expect(categoryPanel).not.toBeNull();
     const initialCategory = categoryPanel?.querySelector("strong")?.textContent;
@@ -136,7 +138,7 @@ describe("Football HQ debate games", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText("REPLAYABLE GAME")).toBeInTheDocument();
+    expect(screen.getByText("WAVELENGTH · REPLAYABLE GAME")).toBeInTheDocument();
     for (let index = 0; index < 3; index += 1) {
       fireEvent.click(screen.getByRole("button", { name: "LOCK GUESS & REVEAL NEXT CLUE" }));
     }
