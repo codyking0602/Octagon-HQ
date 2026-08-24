@@ -7,26 +7,26 @@ import footballVisualCss from "../../styles/football-visual-assets.css?raw";
 import footballHeaderSource from "./FootballHeader.tsx?raw";
 
 const cowboysHelmet = readFileSync(
-  resolve(process.cwd(), "public/assets/football/cowboys-helmet.svg"),
-  "utf8",
+  resolve(process.cwd(), "public/assets/football/cowboys-helmet.webp"),
 );
 const longhornsHelmet = readFileSync(
-  resolve(process.cwd(), "public/assets/football/longhorns-helmet.svg"),
-  "utf8",
+  resolve(process.cwd(), "public/assets/football/longhorns-helmet.webp"),
 );
 
 describe("Football HQ final identity polish", () => {
-  it("renders finished team-specific helmet assets instead of constructing helmets at runtime", () => {
-    expect(footballHeaderSource).toContain('cowboys: "/assets/football/cowboys-helmet.svg"');
-    expect(footballHeaderSource).toContain('longhorns: "/assets/football/longhorns-helmet.svg"');
+  it("renders the approved transparent team helmet photos instead of illustrated SVG helmets", () => {
+    expect(footballHeaderSource).toContain('cowboys: "/assets/football/cowboys-helmet.webp"');
+    expect(footballHeaderSource).toContain('longhorns: "/assets/football/longhorns-helmet.webp"');
     expect(footballHeaderSource).toContain("<img alt=\"\" draggable={false} src={TEAM_HELMET_ASSETS[team]} />");
-    expect(footballHeaderSource).not.toContain("<svg");
-    expect(footballHeaderSource).not.toContain("football-team-helmet__mark");
+    expect(footballHeaderSource).not.toContain("cowboys-helmet.svg");
+    expect(footballHeaderSource).not.toContain("longhorns-helmet.svg");
 
-    expect(cowboysHelmet).toContain('viewBox="0 0 120 88"');
-    expect(cowboysHelmet).toContain("#041E42");
-    expect(longhornsHelmet).toContain('viewBox="0 0 120 88"');
-    expect(longhornsHelmet).toContain("#BF5700");
+    expect(cowboysHelmet.subarray(0, 4).toString("ascii")).toBe("RIFF");
+    expect(cowboysHelmet.subarray(8, 12).toString("ascii")).toBe("WEBP");
+    expect(longhornsHelmet.subarray(0, 4).toString("ascii")).toBe("RIFF");
+    expect(longhornsHelmet.subarray(8, 12).toString("ascii")).toBe("WEBP");
+    expect(cowboysHelmet.byteLength).toBeGreaterThan(8_000);
+    expect(longhornsHelmet.byteLength).toBeGreaterThan(8_000);
     expect(footballVisualCss).toContain(".football-team-helmet img");
   });
 
