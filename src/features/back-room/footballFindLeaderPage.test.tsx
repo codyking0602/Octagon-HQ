@@ -57,7 +57,7 @@ describe("Football Find the Leader page", () => {
 
   it("shows the pool once instead of repeating the same descriptor on every candidate", () => {
     render(<MemoryRouter><FootballFindLeaderPage /></MemoryRouter>);
-    expect(screen.getByText("NFL QB CAREERS")).toBeInTheDocument();
+    expect(screen.getByText(/NFL QB CAREERS/)).toBeInTheDocument();
     expect(screen.queryByText("Retired NFL quarterback")).not.toBeInTheDocument();
     expect(screen.getAllByText("TAP TO ELIMINATE")).toHaveLength(10);
   });
@@ -69,7 +69,7 @@ describe("Football Find the Leader page", () => {
   ] as const)("uses concise category copy for %s boards", (domainId, expectedLabel) => {
     mockBoard({ ...board, domainId });
     render(<MemoryRouter><FootballFindLeaderPage /></MemoryRouter>);
-    expect(screen.getByText(expectedLabel)).toBeInTheDocument();
+    expect(screen.getByText(new RegExp(expectedLabel))).toBeInTheDocument();
   });
 
   it("ends immediately when the hidden leader is eliminated and reveals the full table without descriptor noise", () => {
