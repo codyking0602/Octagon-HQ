@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ChallengeCenter } from "../challenges/ChallengeCenter";
 import { useIdentity } from "../identity/IdentityProvider";
@@ -159,7 +159,7 @@ function FootballEntryGate({ onChoose, saving }: {
   );
 }
 
-function FootballEntryTransition() {
+function FootballEntryTransition({ onComplete }: { onComplete: () => void }) {
   return (
     <div className="football-entry-transition" role="presentation">
       <video
@@ -170,6 +170,7 @@ function FootballEntryTransition() {
         playsInline
         preload="auto"
         aria-hidden="true"
+        onEnded={onComplete}
       />
     </div>
   );
@@ -208,14 +209,6 @@ export default function FootballBackRoomPage() {
     [],
   );
 
-  useEffect(() => {
-    if (!showTransition) return undefined;
-    const timer = window.setTimeout(() => {
-      navigate("/football", { replace: true, state: null });
-    }, 1500);
-    return () => window.clearTimeout(timer);
-  }, [navigate, showTransition]);
-
   if (preferencesLoading && !footballTeam) {
     return <div className="page football-room-page"><p className="football-room-loading">Loading Football HQ…</p></div>;
   }
@@ -238,7 +231,11 @@ export default function FootballBackRoomPage() {
 
   return (
     <div className={`page football-room-page football-room-page--${footballTeam}`}>
-      {showTransition ? <FootballEntryTransition /> : null}
+      {showTransition ? (
+        <FootballEntryTransition
+          onComplete={() => navigate("/football", { replace: true, state: null })}
+        />
+      ) : null}
 
       <section className="football-daily-hq" aria-labelledby="football-daily-title">
         <div className="football-daily-hq__heading">
