@@ -100,8 +100,10 @@ export function validateFootballBlindResumeEvidenceProfile(
       `Football Blind Resume evidence ${profile.packId}:${profile.subjectId} must contain exactly 8 rows.`,
     );
   }
+
   const dimensions = new Set<string>();
   const labels = new Set<string>();
+  const values = new Set<string>();
   for (const row of profile.evidence) {
     if (!row.dimensionId.trim() || !row.label.trim() || !row.value.trim()) {
       throw new Error(
@@ -110,6 +112,7 @@ export function validateFootballBlindResumeEvidenceProfile(
     }
     const dimension = normalize(row.dimensionId);
     const label = normalize(row.label);
+    const value = normalize(row.value);
     if (dimensions.has(dimension)) {
       throw new Error(
         `Football Blind Resume evidence ${profile.packId}:${profile.subjectId} repeats dimension ${row.dimensionId}.`,
@@ -120,8 +123,14 @@ export function validateFootballBlindResumeEvidenceProfile(
         `Football Blind Resume evidence ${profile.packId}:${profile.subjectId} repeats label ${row.label}.`,
       );
     }
+    if (values.has(value)) {
+      throw new Error(
+        `Football Blind Resume evidence ${profile.packId}:${profile.subjectId} repeats evidence value ${row.value}.`,
+      );
+    }
     dimensions.add(dimension);
     labels.add(label);
+    values.add(value);
   }
   return profile;
 }
@@ -148,15 +157,15 @@ function profile(
 }
 
 export const footballBlindResumeEvidenceProfiles: readonly FootballBlindResumeEvidenceProfile[] = [
-  profile("nfl-quarterbacks", "tom-brady", "NFL", "player-career", [
-    "89,214 passing yards · 649 passing TD",
-    "97.2 career passer rating · 64.3% completions",
-    "2007: 4,806 yards · 50 TD · 8 INT · 117.2 rating",
-    "3× AP MVP · 3× first-team All-Pro",
-    "7 championships · 10 title-game starts · 35 playoff wins",
-    "23 seasons · 15 Pro Bowls",
-    "NFL career leader in passing yards and passing TD",
-    "Won championships 18 seasons apart and with two franchises",
+  profile("nfl-quarterbacks", "joe-montana", "NFL", "player-career", [
+    "40,551 passing yards · 273 passing TD",
+    "92.3 career passer rating · 63.2% completions",
+    "1989: 3,521 yards · 26 TD · 8 INT · 112.4 rating",
+    "2× AP MVP · 3× first-team All-Pro",
+    "4 championships · 16 playoff wins",
+    "15 seasons · 8 Pro Bowls",
+    "Championship-game passing line: 11 TD · 0 INT · 127.8 rating",
+    "Went 4–0 as the starter in championship games",
   ]),
   profile("nfl-quarterbacks", "peyton-manning", "NFL", "player-career", [
     "71,940 passing yards · 539 passing TD",
@@ -168,17 +177,36 @@ export const footballBlindResumeEvidenceProfiles: readonly FootballBlindResumeEv
     "Owns the NFL single-season records for passing yards and passing TD",
     "Started championship wins for two different franchises",
   ]),
-  profile("nfl-quarterbacks", "joe-montana", "NFL", "player-career", [
-    "40,551 passing yards · 273 passing TD",
-    "92.3 career passer rating · 63.2% completions",
-    "1989: 3,521 yards · 26 TD · 8 INT · 112.4 rating",
-    "2× AP MVP · 3× first-team All-Pro",
-    "4 championships · 16 playoff wins",
-    "15 seasons · 8 Pro Bowls",
-    "Title-game passing line: 11 TD · 0 INT · 127.8 rating",
-    "Went 4–0 as the starter in championship games",
+  profile("nfl-quarterbacks", "johnny-unitas", "NFL", "player-career", [
+    "40,239 passing yards · 290 passing TD",
+    "7.8 career yards per attempt",
+    "1959: 2,899 yards · 32 TD passes",
+    "3× NFL MVP · 5× first-team All-Pro",
+    "3 NFL championships",
+    "18 seasons · 10 Pro Bowls",
+    "Threw a TD pass in 47 straight games, a record that stood for more than 50 years",
+    "Retired holding virtually every major NFL career passing record",
   ]),
-
+  profile("nfl-quarterbacks", "drew-brees", "NFL", "player-career", [
+    "80,358 passing yards · 571 passing TD",
+    "98.7 career passer rating · 67.7% completions",
+    "2011: 5,476 yards · 46 TD · 110.6 rating",
+    "2× Offensive Player of the Year · 1× first-team All-Pro",
+    "1 championship · championship-game MVP",
+    "20 seasons · 13 Pro Bowls",
+    "Recorded five 5,000-yard passing seasons",
+    "Became the first quarterback to surpass 80,000 career passing yards",
+  ]),
+  profile("nfl-quarterbacks", "dan-marino", "NFL", "player-career", [
+    "61,361 passing yards · 420 passing TD",
+    "86.4 career passer rating · 59.4% completions",
+    "1984: 5,084 yards · 48 TD · 108.9 rating",
+    "1984 AP MVP · 3× first-team All-Pro",
+    "1 championship-game appearance · 8 playoff wins",
+    "17 seasons · 9 Pro Bowls",
+    "First quarterback to throw for 5,000 yards in a season",
+    "Set single-season marks of 5,084 yards and 48 TD that reset the passing ceiling in 1984",
+  ]),
   profile("nfl-running-backs", "barry-sanders", "NFL", "player-career", [
     "15,269 rushing yards · 99 rushing TD",
     "5.0 career yards per carry",
@@ -188,16 +216,6 @@ export const footballBlindResumeEvidenceProfiles: readonly FootballBlindResumeEv
     "10 seasons · 10 Pro Bowls · 10 straight 1,000-yard seasons",
     "4× NFL rushing champion",
     "Retired after a 1,491-yard season while still within range of the career rushing record",
-  ]),
-  profile("nfl-running-backs", "emmitt-smith", "NFL", "player-career", [
-    "18,355 rushing yards · 164 rushing TD",
-    "4.2 career yards per carry",
-    "1995: 1,773 rushing yards · 25 rushing TD",
-    "1993 AP MVP · 4× first-team All-Pro",
-    "3 championships · championship-game MVP · 1,586 playoff rushing yards",
-    "15 seasons · 8 Pro Bowls · 11 straight 1,000-yard seasons",
-    "NFL career leader in rushing yards and rushing TD",
-    "Won a rushing title, league MVP and championship-game MVP in the same season",
   ]),
   profile("nfl-running-backs", "walter-payton", "NFL", "player-career", [
     "16,726 rushing yards · 110 rushing TD",
@@ -209,7 +227,146 @@ export const footballBlindResumeEvidenceProfiles: readonly FootballBlindResumeEv
     "Retired as the NFL career rushing-yards leader",
     "Set a 275-yard single-game rushing record that stood for 23 years",
   ]),
-
+  profile("nfl-running-backs", "emmitt-smith", "NFL", "player-career", [
+    "18,355 rushing yards · 164 rushing TD",
+    "4.2 career yards per carry",
+    "1995: 1,773 rushing yards · 25 rushing TD",
+    "1993 AP MVP · 4× first-team All-Pro",
+    "3 championships · championship-game MVP · 1,586 playoff rushing yards",
+    "15 seasons · 8 Pro Bowls · 11 straight 1,000-yard seasons",
+    "NFL career leader in rushing yards and rushing TD",
+    "Won a rushing title, league MVP and championship-game MVP in the same season",
+  ]),
+  profile("nfl-running-backs", "adrian-peterson", "NFL", "player-career", [
+    "14,918 rushing yards · 120 rushing TD",
+    "4.6 career yards per carry",
+    "2012: 2,097 rushing yards · 6.0 yards per carry",
+    "2012 AP MVP · 4× first-team All-Pro",
+    "1 playoff win across five postseason appearances",
+    "15 seasons · 7 Pro Bowls · 8 1,000-yard seasons",
+    "3× NFL rushing champion",
+    "Set the NFL single-game rushing record with 296 yards",
+  ]),
+  profile("nfl-wide-receivers", "jerry-rice", "NFL", "player-career", [
+    "1,549 catches · 22,895 receiving yards · 197 receiving TD",
+    "14.8 career yards per catch across 303 games",
+    "1995: 122 catches · 1,848 yards · 15 TD",
+    "10× first-team All-Pro · 13× Pro Bowl",
+    "3 championships · championship-game MVP · 22 postseason receiving TD",
+    "20 seasons · 14 1,000-yard receiving seasons",
+    "NFL career leader in receptions, receiving yards and receiving TD",
+    "Scored 22 receiving TD in a 12-game season",
+  ]),
+  profile("nfl-wide-receivers", "randy-moss", "NFL", "player-career", [
+    "982 catches · 15,292 receiving yards · 156 receiving TD",
+    "15.6 career yards per catch",
+    "2007: 98 catches · 1,493 yards · 23 TD",
+    "4× first-team All-Pro · 6× Pro Bowl",
+    "2 championship-game appearances · 10 postseason receiving TD",
+    "14 seasons · 10 1,000-yard receiving seasons",
+    "NFL single-season record: 23 receiving TD",
+    "Set the rookie receiving-TD record with 17",
+  ]),
+  profile("nfl-wide-receivers", "terrell-owens", "NFL", "player-career", [
+    "1,078 catches · 15,934 receiving yards · 153 receiving TD",
+    "14.8 career yards per catch",
+    "2001: 93 catches · 1,412 yards · 16 TD",
+    "5× first-team All-Pro · 6× Pro Bowl",
+    "1 championship-game appearance · 9 catches for 122 yards in that game",
+    "15 seasons · 9 1,000-yard receiving seasons",
+    "Finished career top three all-time in receiving yards and receiving TD",
+    "Produced 1,000-yard receiving seasons for three franchises",
+  ]),
+  profile("nfl-wide-receivers", "calvin-johnson", "NFL", "player-career", [
+    "731 catches · 11,619 receiving yards · 83 receiving TD",
+    "15.9 career yards per catch",
+    "2012: 122 catches · 1,964 receiving yards",
+    "3× first-team All-Pro · 6× Pro Bowl",
+    "296 receiving yards across two playoff games",
+    "9 seasons · 7 1,000-yard receiving seasons",
+    "NFL single-season record: 1,964 receiving yards",
+    "Averaged 122.8 receiving yards per game during the record-setting season",
+  ]),
+  profile("nfl-tight-ends", "tony-gonzalez", "NFL", "player-career", [
+    "1,325 catches · 15,127 receiving yards · 111 receiving TD",
+    "11.4 career yards per catch",
+    "2004: 102 catches · 1,258 yards · 7 TD",
+    "6× first-team All-Pro · 14× Pro Bowl",
+    "1 playoff win · 1 conference-title-game appearance",
+    "17 seasons · played 270 regular-season games",
+    "Retired first among tight ends in career receptions and receiving yards",
+    "Missed only two games across 17 seasons",
+  ]),
+  profile("nfl-tight-ends", "rob-gronkowski", "NFL", "player-career", [
+    "621 catches · 9,286 receiving yards · 92 receiving TD",
+    "15.0 career yards per catch",
+    "2011: 90 catches · 1,327 yards · 17 TD",
+    "4× first-team All-Pro · 5× Pro Bowl",
+    "4 championships · 15 postseason receiving TD",
+    "11 seasons · 143 regular-season games",
+    "NFL tight-end single-season record: 17 receiving TD",
+    "Recorded more than 1,300 postseason receiving yards",
+  ]),
+  profile("nfl-tight-ends", "antonio-gates", "NFL", "player-career", [
+    "955 catches · 11,841 receiving yards · 116 receiving TD",
+    "12.4 career yards per catch",
+    "2005: 89 catches · 1,101 yards · 10 TD",
+    "3× first-team All-Pro · 8× Pro Bowl",
+    "4 playoff wins · 8 postseason receiving TD",
+    "16 seasons · 236 regular-season games",
+    "NFL career record for receiving TD by a tight end",
+    "Reached 100 receiving TD despite entering the league undrafted",
+  ]),
+  profile("nfl-tight-ends", "shannon-sharpe", "NFL", "player-career", [
+    "815 catches · 10,060 receiving yards · 62 receiving TD",
+    "12.3 career yards per catch",
+    "1993–1998: six straight Pro Bowls and four 1,000-yard seasons",
+    "4× first-team All-Pro · 8× Pro Bowl",
+    "3 championships · 62 postseason catches",
+    "14 seasons · 204 regular-season games",
+    "Retired as the tight-end career leader in catches, yards and TD",
+    "Scored on a 96-yard reception in a conference championship game",
+  ]),
+  profile("nfl-defensive-players", "lawrence-taylor", "NFL", "player-career", [
+    "132.5 official career sacks",
+    "Averaged 0.72 sacks per regular-season game after sacks became official",
+    "1986: 20.5 sacks · AP MVP · Defensive Player of the Year",
+    "3× Defensive Player of the Year · 8× first-team All-Pro",
+    "2 championships · 9 postseason wins",
+    "13 seasons · 10 Pro Bowls",
+    "Only defensive player to win AP NFL MVP in the Super Bowl era",
+    "Won Defensive Player of the Year as a rookie",
+  ]),
+  profile("nfl-defensive-players", "reggie-white", "NFL", "player-career", [
+    "198 career sacks",
+    "0.85 sacks per regular-season game",
+    "1987: 21 sacks in 12 games",
+    "2× Defensive Player of the Year · 8× first-team All-Pro",
+    "1 championship · 3 sacks in the championship game",
+    "15 NFL seasons · 13 Pro Bowls",
+    "Finished career second on the official all-time sack list",
+    "Recorded double-digit sacks in 12 seasons",
+  ]),
+  profile("nfl-defensive-players", "ray-lewis", "NFL", "player-career", [
+    "2,000+ combined tackles · 41.5 sacks · 31 interceptions",
+    "Recorded 100+ combined tackles in 13 seasons",
+    "2003: 161 combined tackles · 6 interceptions",
+    "2× Defensive Player of the Year · 7× first-team All-Pro",
+    "2 championships · championship-game MVP",
+    "17 seasons · 13 Pro Bowls",
+    "Career finished with 40+ sacks and 30+ interceptions",
+    "Won a championship 12 seasons after his first title",
+  ]),
+  profile("nfl-defensive-players", "jj-watt", "NFL", "player-career", [
+    "114.5 career sacks · 195 tackles for loss",
+    "0.76 sacks per regular-season game",
+    "2014: 20.5 sacks · 29 tackles for loss · 5 total TD",
+    "3× Defensive Player of the Year · 5× first-team All-Pro",
+    "6 sacks across 8 playoff games",
+    "12 seasons · 5 Pro Bowls",
+    "Only player with two 20.5-sack seasons",
+    "Finished second in AP MVP voting during a Defensive Player of the Year season",
+  ]),
   profile("nfl-head-coaches", "bill-belichick", "NFL", "coach", [
     "302–165 regular season · 31–13 playoffs",
     "6 championships as head coach",
@@ -219,6 +376,16 @@ export const footballBlindResumeEvidenceProfiles: readonly FootballBlindResumeEv
     "All 6 title teams finished top 10 in points allowed",
     "29 seasons as an NFL head coach",
     "Won 6 titles across an 18-season span",
+  ]),
+  profile("nfl-head-coaches", "vince-lombardi", "NFL", "coach", [
+    "96–34–6 regular season · 9–1 playoffs",
+    "5 NFL championships · 2 Super Bowl titles",
+    "6 conference championships",
+    "1961–1967: 5 championships in 7 seasons",
+    "Won the final 9 postseason games of his career",
+    "Built championship teams around Hall-of-Fame talent on both sides of the ball",
+    "10 NFL head-coaching seasons · no losing season",
+    "Finished 5–1 in NFL championship games",
   ]),
   profile("nfl-head-coaches", "don-shula", "NFL", "coach", [
     "328–156–6 regular season · 19–17 playoffs",
@@ -240,7 +407,16 @@ export const footballBlindResumeEvidenceProfiles: readonly FootballBlindResumeEv
     "10 seasons as an NFL head coach · 7 playoff berths",
     "Went 3–0 in championship games",
   ]),
-
+  profile("nfl-qb-seasons", "tom-brady-2007", "NFL", "player-season", [
+    "4,806 passing yards · 50 TD · 8 INT",
+    "117.2 passer rating · 8.3 yards per attempt",
+    "AP MVP · first-team All-Pro · Offensive Player of the Year",
+    "16–0 regular season · 18–1 overall",
+    "737 playoff passing yards · 6 TD · 3 INT",
+    "68.9% completions · 398 completions",
+    "Set a then-NFL record with 50 passing TD",
+    "Quarterbacked the first 16–0 regular season",
+  ]),
   profile("nfl-qb-seasons", "aaron-rodgers-2011", "NFL", "player-season", [
     "4,643 passing yards · 45 TD · 6 INT",
     "122.5 passer rating · 9.2 yards per attempt",
@@ -271,7 +447,6 @@ export const footballBlindResumeEvidenceProfiles: readonly FootballBlindResumeEv
     "Led the NFL in completion rate, passing TD and passer rating",
     "Threw a championship-game record 6 TD passes",
   ]),
-
   profile("nfl-team-seasons", "1972-miami-dolphins", "NFL", "team-season", [
     "17–0 overall · championship winner",
     "27.5 points per game · league-best 2,960 rushing yards",
@@ -302,7 +477,16 @@ export const footballBlindResumeEvidenceProfiles: readonly FootballBlindResumeEv
     "Outscored postseason opponents 102–41",
     "+261 regular-season point differential",
   ]),
-
+  profile("nfl-team-seasons", "1996-green-bay-packers", "NFL", "team-season", [
+    "16–3 overall · championship winner",
+    "28.5 points per game · No. 1 scoring offense",
+    "13.1 points allowed per game · No. 1 scoring defense",
+    "Three playoff opponents combined for a 35–13 regular-season record",
+    "Won each playoff game by at least 14 points",
+    "League MVP at quarterback · elite pass-rush centerpiece on defense",
+    "Postseason scores: 35–14 · 30–13 · 35–21",
+    "Led the NFL in both points scored and fewest points allowed",
+  ]),
   profile("college-quarterbacks", "cam-newton-2010", "CFB", "player-season", [
     "2,854 passing yards · 30 passing TD · 7 INT",
     "182.0 NCAA passer rating · 10.2 yards per attempt",
@@ -333,7 +517,16 @@ export const footballBlindResumeEvidenceProfiles: readonly FootballBlindResumeEv
     "First FBS player to pass for 3,000 and rush for 1,000 yards in one season",
     "Capped an undefeated season with the championship-winning TD in the final minute",
   ]),
-
+  profile("college-quarterbacks", "tim-tebow-2007", "CFB", "player-season", [
+    "3,286 passing yards · 32 passing TD · 6 INT",
+    "172.5 NCAA passer rating · 66.9% completions",
+    "Heisman Trophy · Maxwell Award · consensus All-American",
+    "9–4 overall · bowl appearance",
+    "Bowl line: 154 passing yards · 3 passing TD · 1 rushing TD",
+    "895 rushing yards · 23 rushing TD",
+    "First major-college player with 20 passing TD and 20 rushing TD in one season",
+    "Became the first sophomore to win the Heisman Trophy",
+  ]),
   profile("college-head-coaches", "nick-saban-cfb", "CFB", "coach", [
     "297–71–1 college head-coaching record",
     "7 national championships",
@@ -354,6 +547,16 @@ export const footballBlindResumeEvidenceProfiles: readonly FootballBlindResumeEv
     "17 college head-coaching seasons · no losing season",
     "Won national championships at two different programs",
   ]),
+  profile("college-head-coaches", "kirby-smart-cfb", "CFB", "coach", [
+    "2017–2024: 97–14",
+    "2 national championships",
+    "3 SEC championships through 2024",
+    "2021–2023: 42–2 with back-to-back national titles",
+    "4–0 in CFP games across the two championship seasons",
+    "2022 draft class produced 15 picks, including 5 first-rounders",
+    "Eight straight AP Top-10 finishes from 2017–2024",
+    "First coach to win back-to-back national titles in the CFP era",
+  ]),
   profile("college-head-coaches", "bob-stoops-cfb", "CFB", "coach", [
     "191–48 college head-coaching record",
     "1 national championship",
@@ -364,7 +567,46 @@ export const footballBlindResumeEvidenceProfiles: readonly FootballBlindResumeEv
     "18 seasons at one program · 14 seasons with 10+ wins",
     "Won 10 conference titles in an 18-season tenure",
   ]),
-
+  profile("college-programs", "alabama-program", "CFB", "program-era", [
+    "271–77 from 2000 through 2025",
+    "6 national championships since 2000",
+    "8 SEC championships from 2009–2023",
+    "9 national championship-game appearances from 2009–2021",
+    "16 straight 10-win seasons from 2008–2023",
+    "40+ first-round NFL draft picks during the 2009–2024 run",
+    "Won 6 national-title games from 2009–2020",
+    "Captured 6 national titles in a 12-season span",
+  ]),
+  profile("college-programs", "ohio-state-program", "CFB", "program-era", [
+    "285–52 from 2000 through 2025",
+    "3 national championships since 2000",
+    "Multiple Big Ten title runs across three head-coaching eras",
+    "6 CFP appearances through the 2024 season",
+    "Only one losing season from 2000 through 2025",
+    "Produced first-round NFL talent at quarterback, receiver, offensive line and every defensive level",
+    "7–4 CFP record through the 2024 postseason",
+    "Won national titles in the BCS, four-team CFP and 12-team CFP formats",
+  ]),
+  profile("college-programs", "georgia-program", "CFB", "program-era", [
+    "270–75 from 2000 through 2025",
+    "2 national championships since 2000",
+    "5 SEC championships from 2002–2024",
+    "4 CFP appearances through the 2024 season",
+    "2017–2025: 109–16",
+    "Set a seven-round NFL draft record with 15 selections in 2022",
+    "5–2 CFP record through the 2024 postseason",
+    "Won back-to-back national titles in 2021 and 2022",
+  ]),
+  profile("college-programs", "lsu-program", "CFB", "program-era", [
+    "247–88 from 2000 through 2025",
+    "3 national championships since 2000",
+    "5 SEC championships from 2001–2019",
+    "4 national championship-game appearances since 2000",
+    "Three 13+ win seasons: 2003 · 2011 · 2019",
+    "2020 NFL draft produced 14 selections, including 5 first-rounders",
+    "4–1 in BCS/CFP semifinal-or-title games tied to its four title runs",
+    "Won 3 national titles under 3 different head coaches",
+  ]),
   profile("college-program-eras", "alabama-2009-2020", "CFB", "program-era", [
     "151–15 over 12 seasons",
     "6 national championships",
@@ -374,6 +616,16 @@ export const footballBlindResumeEvidenceProfiles: readonly FootballBlindResumeEv
     "Produced at least one first-round NFL pick in every draft from 2010–2021",
     "6–2 in national championship games",
     "Won 6 national titles in a 12-season span",
+  ]),
+  profile("college-program-eras", "georgia-2021-2024", "CFB", "program-era", [
+    "53–5 over 4 seasons",
+    "2 national championships",
+    "2 SEC championships",
+    "3 CFP appearances",
+    "29-game winning streak spanning the 2021–2023 seasons",
+    "2022 NFL draft produced 15 picks, including 5 first-rounders",
+    "4–1 in CFP games",
+    "Won back-to-back national titles, the first repeat of the CFP era",
   ]),
   profile("college-program-eras", "usc-2002-2008", "CFB", "program-era", [
     "82–9 over 7 seasons",
@@ -395,7 +647,6 @@ export const footballBlindResumeEvidenceProfiles: readonly FootballBlindResumeEv
     "6–4 in CFP games",
     "Only program to reach each of the first six CFPs from 2015–2020",
   ]),
-
   profile("college-team-seasons", "2020-alabama", "CFB", "team-season", [
     "13–0 · national champion",
     "48.5 points per game · 541.6 yards per game",
@@ -416,6 +667,16 @@ export const footballBlindResumeEvidenceProfiles: readonly FootballBlindResumeEv
     "Won the national title game 41–38 after trailing in the fourth quarter",
     "Scored 652 points while finishing undefeated",
   ]),
+  profile("college-team-seasons", "2004-usc", "CFB", "team-season", [
+    "13–0 · national champion",
+    "38.2 points per game · 449.1 yards per game",
+    "13.0 points allowed per game · 2.6 rushing yards allowed per carry",
+    "Schedule rated 5th nationally by Sports-Reference SOS",
+    "Won the national title game 55–19",
+    "Heisman-winning quarterback led a top-six scoring offense",
+    "Only postseason game ended in a 36-point championship victory",
+    "Finished No. 1 in SRS and ended the season on a 22-game winning streak",
+  ]),
   profile("college-team-seasons", "2013-florida-state", "CFB", "team-season", [
     "14–0 · national champion",
     "51.6 points per game · 519.4 yards per game",
@@ -431,6 +692,16 @@ export const footballBlindResumeEvidenceProfiles: readonly FootballBlindResumeEv
 const PROFILE_BY_KEY = new Map(
   footballBlindResumeEvidenceProfiles.map((row) => [`${row.packId}:${row.subjectId}`, row]),
 );
+
+if (PROFILE_BY_KEY.size !== footballBlindResumeEvidenceProfiles.length) {
+  throw new Error("Football Blind Resume factual evidence contains duplicate subject profiles.");
+}
+
+export function getFootballBlindResumeEvidenceProfilesForPack(
+  packId: FootballRankFivePackId,
+) {
+  return footballBlindResumeEvidenceProfiles.filter((row) => row.packId === packId);
+}
 
 export function getFootballBlindResumeEvidenceProfile(
   packId: FootballRankFivePackId,
