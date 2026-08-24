@@ -35,7 +35,15 @@
 }
 
 .pick-fighter-thumbnail-wrap.is-shane-contender .shane-contender-badges {
+  flex-wrap: nowrap;
   margin-top: 0;
+}
+
+.pick-fighter-thumbnail-wrap.is-shane-contender .shane-contender-badge {
+  padding: 4px 6px;
+  font-size: 6px;
+  letter-spacing: .075em;
+  white-space: nowrap;
 }
 
 .main-event-spotlight-trigger > span > .shane-contender-badges {

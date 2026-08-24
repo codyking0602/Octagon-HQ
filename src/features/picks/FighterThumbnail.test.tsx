@@ -74,6 +74,14 @@ describe("Shane contender fighter-tile treatment", () => {
     expect(badges.closest(".pick-fighter-thumbnail-wrap")).toHaveClass("is-shane-contender");
   });
 
+  it("uses the same canonical fighter-tile treatment for other Shane contenders", () => {
+    render(<FighterThumbnail name="Quillan Salkilld" slug="quillan-salkilld" />);
+
+    const badges = screen.getByLabelText("Shane King’s Contender Series fighters");
+    expect(screen.getByText("SHANE’S CONTENDER SERIES · #2")).toBeInTheDocument();
+    expect(badges.closest(".pick-fighter-thumbnail-wrap")).toHaveClass("is-shane-contender");
+  });
+
   it("does not decorate a fighter who is not on Shane's canonical board", () => {
     render(<FighterThumbnail name="Alex Perez" slug="alex-perez" />);
 
