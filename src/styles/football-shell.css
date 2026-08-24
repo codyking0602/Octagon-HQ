@@ -323,6 +323,8 @@
   --football-accent: #d2d8e0;
   --football-accent-rgb: 210, 216, 224;
   --football-accent-contrast: #08090a;
+  --football-action: var(--football-accent);
+  --football-action-contrast: var(--football-accent-contrast);
   --football-card: #111315;
   --football-card-raised: #15181b;
   --football-card-soft: #0c0e10;
@@ -335,9 +337,14 @@
 }
 
 .app-shell--football-team-cowboys {
-  --football-accent: #c8d0da;
-  --football-accent-rgb: 200, 208, 218;
+  --football-accent: #aebdcb;
+  --football-accent-rgb: 4, 30, 66;
   --football-accent-contrast: #06111f;
+  --football-action: #163f67;
+  --football-action-contrast: #f5f7fa;
+  --football-card: #0b1118;
+  --football-card-raised: #0e1822;
+  --football-card-soft: #080d12;
 }
 
 .app-shell--football-team-longhorns {
@@ -603,10 +610,10 @@
 .app-shell--football-room .primary-action,
 .app-shell--football-room .football-wavelength-guess-panel button,
 .app-shell--football-room .football-hit-number-lock button {
-  border: 1px solid var(--football-accent) !important;
+  border: 1px solid var(--football-action) !important;
   border-radius: 12px !important;
-  background: var(--football-accent) !important;
-  color: var(--football-accent-contrast) !important;
+  background: var(--football-action) !important;
+  color: var(--football-action-contrast) !important;
   font-weight: 950 !important;
   letter-spacing: .035em;
   box-shadow: none !important;
