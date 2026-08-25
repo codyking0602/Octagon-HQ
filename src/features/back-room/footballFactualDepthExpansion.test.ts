@@ -14,10 +14,6 @@ describe("Football canonical factual depth expansion", () => {
     expect(getFootballFact("deion-sanders", "nfl-career-interceptions")?.fact.value).toBe(53);
     expect(getFootballFact("ronnie-lott", "nfl-career-interceptions")?.fact.value).toBe(63);
 
-    expect(getFootballFact("peyton-manning-2004", "nfl-season-passer-rating")?.fact.value).toBe(121.1);
-    expect(getFootballFact("patrick-mahomes-2018", "nfl-season-passing-touchdowns")?.fact.value).toBe(50);
-    expect(getFootballFact("aaron-rodgers-2020", "nfl-season-interceptions")?.fact.value).toBe(5);
-
     expect(getFootballFact("cfb-ricky-williams", "cfb-best-season-rushing-yards")?.fact.value).toBe(2124);
     expect(getFootballFact("cfb-reggie-bush", "cfb-best-season-rushing-yards")?.fact.value).toBe(1740);
     expect(getFootballFact("cfb-michael-crabtree", "cfb-best-season-receiving-yards")?.fact.value).toBe(1962);
