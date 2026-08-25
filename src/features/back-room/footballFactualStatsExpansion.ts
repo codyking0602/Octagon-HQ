@@ -350,6 +350,9 @@ export const expandedFootballFactualRecords: readonly FootballFactualRecord[] = 
   cfbPlayer("cfb-bijan-robinson", [
     ["cfb-best-season-rushing-yards", 1580],
     ["cfb-best-season-rushing-touchdowns", 18],
+    ["cfb-best-season-receptions", 26],
+    ["cfb-best-season-receiving-yards", 314],
+    ["cfb-best-season-receiving-touchdowns", 4],
   ]),
   cfbPlayer("cfb-ricky-williams", [
     ["cfb-best-season-rushing-yards", 2124],
@@ -416,6 +419,11 @@ export const expandedFootballFactualRecords: readonly FootballFactualRecord[] = 
     ["cfb-best-season-receiving-yards", 950],
     ["cfb-best-season-receiving-touchdowns", 19],
     ["cfb-heisman-awards", 1],
+  ]),
+  cfbPlayer("cfb-saquon-barkley", [
+    ["cfb-best-season-receptions", 54],
+    ["cfb-best-season-receiving-yards", 632],
+    ["cfb-best-season-receiving-touchdowns", 4],
   ]),
   cfbPlayer("cfb-will-anderson-jr", [
     ["cfb-best-season-sacks", 17.5],
