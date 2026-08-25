@@ -1,21 +1,13 @@
 import {
   footballCanonicalSubjects,
   type FootballCanonicalSubject,
+  type FootballCanonicalSubjectKind,
 } from "./footballFactualStatsCatalog";
-import {
-  footballComparisonCanonicalSubjects,
-  type FootballExpandedSubjectKind,
-} from "./footballCanonicalSubjectExpansion";
 
-export type FootballSubjectKind = FootballExpandedSubjectKind;
+export type FootballSubjectKind = FootballCanonicalSubjectKind;
 export type FootballSubjectLeague = FootballCanonicalSubject["league"];
 export type FootballSubjectPosition = NonNullable<FootballCanonicalSubject["position"]>;
-export type FootballSubjectProfile = Omit<FootballCanonicalSubject, "kind"> & {
-  kind: FootballSubjectKind;
-  aliases?: readonly string[];
-  startSeason?: number;
-  endSeason?: number;
-};
+export type FootballSubjectProfile = FootballCanonicalSubject;
 
 export interface FootballSubjectQuery {
   kind?: FootballSubjectKind;
@@ -37,46 +29,8 @@ export interface FootballSubjectQuery {
   endSeason?: number;
 }
 
-function normalizedPlayerName(value: string) {
-  return value.toLowerCase().replace(/[^a-z0-9]/g, "");
-}
-
-function mergeFootballSubjects(subjects: readonly FootballSubjectProfile[]) {
-  const byKey = new Map<string, FootballSubjectProfile>();
-  for (const subject of subjects) {
-    const key = subject.kind === "player-career"
-      ? `player:${normalizedPlayerName(subject.name)}`
-      : `id:${subject.id}`;
-    const current = byKey.get(key);
-    if (!current) {
-      byKey.set(key, { ...subject, leagues: subject.leagues ?? [subject.league] });
-      continue;
-    }
-
-    const aliases = new Set([...(current.aliases ?? []), ...(subject.aliases ?? [])]);
-    if (subject.id !== current.id) aliases.add(subject.id);
-    const activeDecades = [...new Set([...(current.activeDecades ?? []), ...(subject.activeDecades ?? [])])];
-    const leagues = [...new Set([...(current.leagues ?? [current.league]), ...(subject.leagues ?? [subject.league])])];
-
-    byKey.set(key, {
-      ...current,
-      ...subject,
-      id: current.id,
-      name: current.name,
-      league: current.league,
-      leagues,
-      ...(aliases.size === 0 ? {} : { aliases: [...aliases] }),
-      ...(activeDecades.length === 0 ? {} : { activeDecades }),
-    });
-  }
-  return [...byKey.values()];
-}
-
 /** Public identity/query view of the one canonical Football subject universe. */
-export const footballSubjects: readonly FootballSubjectProfile[] = mergeFootballSubjects([
-  ...footballCanonicalSubjects,
-  ...footballComparisonCanonicalSubjects,
-]);
+export const footballSubjects: readonly FootballSubjectProfile[] = footballCanonicalSubjects;
 
 const footballSubjectById = new Map<string, FootballSubjectProfile>();
 for (const subject of footballSubjects) {
