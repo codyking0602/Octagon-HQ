@@ -98,7 +98,8 @@ describe("Football Hit the Number slot progression", () => {
     expect(footballHitTheNumberPageSource).toContain("oneFromEachSlotAccepts(activeSlot.id, subjectId)");
     expect(footballHitTheNumberPageSource).toContain("rewindToSlot(index)");
     expect(footballHitTheNumberPageSource).toContain("plan.slots.map((slot, index)");
-    expect(footballHitTheNumberPageSource).toContain('active ? "CHOOSING"');
-    expect(footballHitTheNumberPageSource).toContain('subject ? "CHANGE"');
+    expect(footballHitTheNumberPageSource).toContain('"CHOOSING"');
+    expect(footballHitTheNumberPageSource).toContain('"CHANGE"');
+    expect(footballHitTheNumberPageSource).toContain('"UP NEXT"');
   });
 });
