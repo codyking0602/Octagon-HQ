@@ -1,9 +1,10 @@
 import {
   footballCanonicalSubjects,
   type FootballCanonicalSubject,
+  type FootballCanonicalSubjectKind,
 } from "./footballFactualStatsCatalog";
 
-export type FootballSubjectKind = FootballCanonicalSubject["kind"];
+export type FootballSubjectKind = FootballCanonicalSubjectKind;
 export type FootballSubjectLeague = FootballCanonicalSubject["league"];
 export type FootballSubjectPosition = NonNullable<FootballCanonicalSubject["position"]>;
 export type FootballSubjectProfile = FootballCanonicalSubject;
@@ -24,12 +25,20 @@ export interface FootballSubjectQuery {
   undrafted?: boolean;
   heismanWinner?: boolean;
   nationalChampion?: boolean;
+  startSeason?: number;
+  endSeason?: number;
 }
 
-/** Public identity/query view of the one canonical factual catalog. */
+/** Public identity/query view of the one canonical Football subject universe. */
 export const footballSubjects: readonly FootballSubjectProfile[] = footballCanonicalSubjects;
 
-const footballSubjectById = new Map(footballSubjects.map((subject) => [subject.id, subject]));
+const footballSubjectById = new Map<string, FootballSubjectProfile>();
+for (const subject of footballSubjects) {
+  footballSubjectById.set(subject.id, subject);
+  for (const alias of subject.aliases ?? []) {
+    if (!footballSubjectById.has(alias)) footballSubjectById.set(alias, subject);
+  }
+}
 
 export function getFootballSubject(subjectId: string) {
   return footballSubjectById.get(subjectId) ?? null;
@@ -52,6 +61,8 @@ export function queryFootballSubjects(query: FootballSubjectQuery = {}) {
     if (query.undrafted != null && subject.undrafted !== query.undrafted) return false;
     if (query.heismanWinner != null && subject.heismanWinner !== query.heismanWinner) return false;
     if (query.nationalChampion != null && subject.nationalChampion !== query.nationalChampion) return false;
+    if (query.startSeason != null && subject.startSeason !== query.startSeason) return false;
+    if (query.endSeason != null && subject.endSeason !== query.endSeason) return false;
     return true;
   });
 }
