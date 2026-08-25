@@ -5,6 +5,7 @@ import {
   type PlayLineupIdentity,
 } from "../play/lineupModel";
 import { footballWavelengthExpansionCategories } from "./footballWavelengthExpansionCatalog";
+import { footballWavelengthCanonicalSubjectForClue } from "./footballWavelengthSubjectAuthority";
 
 export const FOOTBALL_WAVELENGTH_GAME_ID = "football-wavelength";
 export const FOOTBALL_WAVELENGTH_CATALOG_VERSION = "football-wavelength-catalog-v3" as const;
@@ -38,6 +39,49 @@ export type FootballWavelengthCategory =
   | "OFFENSIVE FIREPOWER"
   | "BIG ARM TALENT"
   | "ATHLETIC FREAK";
+
+export type FootballWavelengthThemeFamily =
+  | "quarterback"
+  | "offense"
+  | "defense-athleticism"
+  | "tradition-organization"
+  | "game-day-culture"
+  | "coaching-media"
+  | "reputation";
+
+const FOOTBALL_WAVELENGTH_THEME_FAMILY_BY_CATEGORY = {
+  "NFL LEGACY": "reputation",
+  GUNSLINGER: "quarterback",
+  "QB CARRY JOB": "quarterback",
+  "OFFENSIVE CHAOS": "offense",
+  "FANBASE INSANITY": "game-day-culture",
+  "PROGRAM TRADITION": "tradition-organization",
+  "UNIFORM QUALITY": "game-day-culture",
+  "STADIUM ATMOSPHERE": "game-day-culture",
+  "RIVALRY HATRED": "game-day-culture",
+  "SYSTEM QB PERCEPTION": "quarterback",
+  "COACHING CHAOS": "coaching-media",
+  "OFFENSIVE INNOVATION": "offense",
+  "DEFENSIVE TERROR": "defense-athleticism",
+  "DRAFT BUST": "reputation",
+  "CLUTCH REPUTATION": "reputation",
+  "CHOKE REPUTATION": "reputation",
+  "FRANCHISE TRADITION": "tradition-organization",
+  "FOOTBALL WEIRDNESS": "game-day-culture",
+  "MEDIA ENERGY": "coaching-media",
+  "TAILGATE CULTURE": "game-day-culture",
+  "COACHING GENIUS": "coaching-media",
+  "HOME-FIELD ADVANTAGE": "game-day-culture",
+  "FOOTBALL VILLAINY": "reputation",
+  "FRANCHISE DYSFUNCTION": "tradition-organization",
+  "OFFENSIVE FIREPOWER": "offense",
+  "BIG ARM TALENT": "quarterback",
+  "ATHLETIC FREAK": "defense-athleticism",
+} as const satisfies Record<FootballWavelengthCategory, FootballWavelengthThemeFamily>;
+
+export function footballWavelengthThemeFamilyForCategory(category: FootballWavelengthCategory) {
+  return FOOTBALL_WAVELENGTH_THEME_FAMILY_BY_CATEGORY[category];
+}
 
 export interface FootballWavelengthClue {
   id: string;
@@ -472,14 +516,26 @@ function chooseFootballWavelengthClue(
   options: {
     target: number;
     direction?: number;
-    usedIds?: readonly string[];
-    usedCategories?: readonly FootballWavelengthCategory[];
+    usedClues?: readonly FootballWavelengthClue[];
     random: () => number;
   },
 ) {
-  const usedIds = new Set(options.usedIds ?? []);
-  const usedCategories = new Set(options.usedCategories ?? []);
-  const base = footballWavelengthClues.filter((clue) => !usedIds.has(clue.id));
+  const usedClues = options.usedClues ?? [];
+  const usedIds = new Set(usedClues.map((clue) => clue.id));
+  const usedCategories = new Set(usedClues.map((clue) => clue.category));
+  const usedCanonicalSubjectIds = new Set(
+    usedClues
+      .map((clue) => footballWavelengthCanonicalSubjectForClue(clue)?.id)
+      .filter((id): id is string => Boolean(id)),
+  );
+  const usedThemeFamilies = new Set(
+    usedClues.map((clue) => footballWavelengthThemeFamilyForCategory(clue.category)),
+  );
+  const base = footballWavelengthClues.filter((clue) => {
+    if (usedIds.has(clue.id)) return false;
+    const canonicalSubjectId = footballWavelengthCanonicalSubjectForClue(clue)?.id;
+    return !canonicalSubjectId || !usedCanonicalSubjectIds.has(canonicalSubjectId);
+  });
   let candidates = base;
   if ((options.direction ?? 0) > 0) {
     const directional = base.filter((clue) => clue.rating > options.target);
@@ -491,6 +547,13 @@ function chooseFootballWavelengthClue(
 
   const unusedCategoryCandidates = candidates.filter((clue) => !usedCategories.has(clue.category));
   if (unusedCategoryCandidates.length) candidates = unusedCategoryCandidates;
+
+  // Diversity is a preference layered after directional and category fit. If no unused
+  // family survives those stricter constraints, relax only this family filter.
+  const unusedFamilyCandidates = candidates.filter(
+    (clue) => !usedThemeFamilies.has(footballWavelengthThemeFamilyForCategory(clue.category)),
+  );
+  if (unusedFamilyCandidates.length) candidates = unusedFamilyCandidates;
 
   return [...candidates]
     .map((clue) => ({
@@ -530,8 +593,7 @@ export function nextFootballWavelengthClue(
   return chooseFootballWavelengthClue(desired, {
     target: round.target,
     direction,
-    usedIds: round.clues.map((clue) => clue.id),
-    usedCategories: round.clues.map((clue) => clue.category),
+    usedClues: round.clues,
     random,
   });
 }
