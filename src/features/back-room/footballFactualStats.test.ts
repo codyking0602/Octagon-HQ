@@ -11,7 +11,7 @@ import {
 describe("Football factual stat owner", () => {
   it("keeps one unique canonical record per factual subject across broad Football scopes", () => {
     const recordIds = footballFactualRecords.map((record) => record.subjectId);
-    const scopes = new Set(footballFactualRecords.map((record) => record.scope));
+    const scopes = new Set(footballFactualRecords.flatMap((record) => record.scopes ?? [record.scope]));
 
     expect(new Set(recordIds).size).toBe(recordIds.length);
     expect(footballFactualRecords.length).toBeGreaterThanOrEqual(140);
@@ -27,7 +27,9 @@ describe("Football factual stat owner", () => {
     ]));
 
     for (const subjectId of recordIds) {
-      expect(getFootballSubject(subjectId), `canonical Football subject: ${subjectId}`).not.toBeNull();
+      const subject = getFootballSubject(subjectId);
+      expect(subject, `canonical Football subject: ${subjectId}`).not.toBeNull();
+      expect(subject?.id, `canonical Football identity: ${subjectId}`).toBe(subjectId);
     }
   });
 
@@ -82,6 +84,15 @@ describe("Football factual stat owner", () => {
     expect(getFootballFact("nfl-ed-reed", "nfl-career-interceptions")?.fact.value).toBe(64);
     expect(getFootballFact("peyton-manning-2013", "nfl-season-passing-touchdowns")?.fact.value).toBe(55);
     expect(getFootballFact("2017-cleveland-browns", "nfl-team-overall-wins")?.fact.value).toBe(0);
+  });
+
+  it("collapses cross-level aliases onto one canonical factual identity", () => {
+    const canonicalLarry = getFootballFact("cfb-larry-fitzgerald", "nfl-career-receiving-yards");
+    const nflAliasLarry = getFootballFact("nfl-larry-fitzgerald", "nfl-career-receiving-yards");
+    expect(canonicalLarry?.record.subjectId).toBe("cfb-larry-fitzgerald");
+    expect(nflAliasLarry?.record).toBe(canonicalLarry?.record);
+    expect(canonicalLarry?.fact.value).toBe(17492);
+    expect(getFootballFact("cfb-larry-fitzgerald", "cfb-best-season-receiving-yards")?.fact.value).toBe(1672);
   });
 
   it("covers modern CFB skill players, defenders, coaches, programs, dynasties and non-title teams", () => {
