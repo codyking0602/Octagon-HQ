@@ -6,18 +6,19 @@ import {
   buildFootballFindLeaderBoard,
   createFootballFindLeaderBoard,
   footballFindLeaderCompetitionAudit,
+  footballFindLeaderCanonicalMetricByMetric,
   footballFindLeaderMetricRows,
   footballFindLeaderQuestions,
   footballFindLeaderReplayAudit,
+  formatFootballFindLeaderValue,
 } from "./footballFindLeaderModel";
 import {
   FOOTBALL_FIND_LEADER_DOMAIN_POOL_SIZE,
   FOOTBALL_FIND_LEADER_METRIC_COUNT,
   FOOTBALL_FIND_LEADER_SUBJECT_COUNT,
   footballFindLeaderMetricDefinitions,
-  footballFindLeaderSources,
   footballFindLeaderSubjects,
-  getFootballFindLeaderFact,
+  getFootballFact,
 } from "./footballFactualStats";
 
 function emptyHistory(): PlayLineupHistory {
@@ -53,14 +54,13 @@ describe("Football Find the Leader maturity", () => {
   });
 
   it("resolves every objective number through the canonical factual facade with reviewed evidence", () => {
-    expect(footballFindLeaderSources.every((source) => source.reviewedOn === "2026-08-22" && source.url.startsWith("https://"))).toBe(true);
     for (const metric of footballFindLeaderMetricDefinitions) {
       const rows = footballFindLeaderMetricRows(metric.id);
       expect(rows, metric.id).toHaveLength(25);
       for (const row of rows) {
-        const fact = getFootballFindLeaderFact(row.id, metric.id);
+        const fact = getFootballFact(row.id, footballFindLeaderCanonicalMetricByMetric[metric.id]);
         expect(fact, `${metric.id}:${row.id}`).not.toBeNull();
-        expect(fact!.value).toBe(row.value);
+        expect(fact!.fact.value).toBe(row.value);
         expect(fact!.sources.length).toBeGreaterThan(0);
       }
     }
@@ -109,6 +109,53 @@ describe("Football Find the Leader maturity", () => {
     expect(second.family).not.toBe(first.family);
     expect(second.definitionId).not.toBe(first.definitionId);
     expect(second.metricId).not.toBe(first.metricId);
+  });
+
+  it("preserves fixed-seed boards and exact formatted values from before the canonical rewire", () => {
+    const fixtures = [
+      {
+        seed: "football-find-leader-deterministic",
+        definitionId: "cfb-points-per-game:group",
+        leaderId: "2000-oklahoma",
+        candidates: ["2009-alabama", "2015-alabama", "1998-tennessee", "2004-usc", "2006-florida", "2000-oklahoma", "2012-alabama", "2021-georgia", "1999-florida-state", "2007-lsu"],
+        formatted: ["32.1", "35.1", "34.0", "38.2", "29.7", "39.0", "38.7", "38.6", "37.5", "38.6"],
+      },
+      {
+        seed: "parity-seed-17",
+        definitionId: "cfb-points-against:standard",
+        leaderId: "2000-oklahoma",
+        candidates: ["2006-florida", "1995-nebraska", "1999-florida-state", "2008-florida", "2004-usc", "2012-alabama", "2009-alabama", "2002-ohio-state", "2000-oklahoma", "2017-alabama"],
+        formatted: ["189", "150", "174", "181", "169", "153", "164", "183", "192", "167"],
+      },
+      {
+        seed: "parity-seed-42",
+        definitionId: "qb-passing-yards-per-game:group",
+        leaderId: "andrew-luck",
+        candidates: ["matt-ryan", "peyton-manning", "eli-manning", "brett-favre", "johnny-unitas", "kurt-warner", "dan-fouts", "tom-brady", "andrew-luck", "cam-newton"],
+        formatted: ["268.3", "270.5", "241.6", "237.9", "190.7", "260.8", "237.8", "266.3", "275.2", "218.8"],
+      },
+    ] as const;
+
+    for (const fixture of fixtures) {
+      const board = createFootballFindLeaderBoard(fixture.seed, emptyHistory());
+      expect(board.definitionId).toBe(fixture.definitionId);
+      expect(board.leaderId).toBe(fixture.leaderId);
+      expect(board.candidates.map(({ id }) => id)).toEqual(fixture.candidates);
+      expect(board.candidates.map(({ value }) => formatFootballFindLeaderValue(board, value))).toEqual(fixture.formatted);
+    }
+  });
+
+  it("preserves legacy display formatting for every factual metric", () => {
+    for (const definition of footballFindLeaderMetricDefinitions) {
+      for (const { value } of footballFindLeaderMetricRows(definition.id)) {
+        const number = value.toLocaleString("en-US", {
+          minimumFractionDigits: definition.decimals,
+          maximumFractionDigits: definition.decimals,
+        });
+        const expected = definition.unit === "percent" ? `${number}%` : number;
+        expect(formatFootballFindLeaderValue({ metricId: definition.id }, value)).toBe(expected);
+      }
+    }
   });
 
   it("balances NFL and CFB near 50/50 and materially expands unordered replay variety", () => {

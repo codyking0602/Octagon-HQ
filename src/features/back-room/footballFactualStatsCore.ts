@@ -158,7 +158,7 @@ export const footballFactMetricDefinitions: readonly FootballFactMetricDefinitio
   metric("cfb-team-point-differential", "Point differential", "points", 0),
   metric("cfb-team-scoring-margin-per-game", "Scoring margin per game", "points-per-game", 1),
   metric("cfb-team-points-for-against-ratio", "Points-for to points-against ratio", "ratio", 2),
-  metric("cfb-team-differential-rate-percentage", "Point differential rate", "percent", 2),
+  metric("cfb-team-differential-rate-percentage", "Point differential rate", "percent", 1),
   metric("cfb-team-total-points", "Total points", "points", 0),
   metric("nfl-career-passing-yards", "Career passing yards", "yards", 0),
   metric("nfl-career-passing-touchdowns", "Career passing TD", "count", 0),
@@ -474,8 +474,9 @@ export function formatFootballFact(metricId: FootballFactMetricId, value: number
   const definition = metricDefinitionsById.get(metricId);
   if (!definition) throw new Error(`Missing Football fact metric definition: ${metricId}`);
   if (definition.unit === "flag") return value === 1 ? "Yes" : "No";
-  return value.toLocaleString("en-US", {
+  const formatted = value.toLocaleString("en-US", {
     minimumFractionDigits: definition.decimals,
     maximumFractionDigits: definition.decimals,
   });
+  return definition.unit === "percent" ? `${formatted}%` : formatted;
 }

@@ -1,30 +1,29 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
 import {
   footballFindLeaderMetricDefinitions as canonicalMetrics,
   footballFindLeaderSubjects as canonicalSubjects,
-  getFootballFindLeaderFact as canonicalGetFact,
 } from "./footballFactualStatsCatalog";
 import {
   footballFindLeaderMetricDefinitions as compatibilityMetrics,
   footballFindLeaderSubjects as compatibilitySubjects,
-  getFootballFindLeaderFact as compatibilityGetFact,
 } from "./footballFindLeaderStats";
 import {
   footballFindLeaderSubjects as barrelSubjects,
-  getFootballFindLeaderFact as barrelGetFact,
 } from "./footballFactualStats";
 
 describe("Football factual ownership", () => {
   it("keeps the factual catalog as the single runtime owner of shared stat data", () => {
     expect(compatibilitySubjects).toBe(canonicalSubjects);
     expect(compatibilityMetrics).toBe(canonicalMetrics);
-    expect(compatibilityGetFact).toBe(canonicalGetFact);
     expect(barrelSubjects).toBe(canonicalSubjects);
-    expect(barrelGetFact).toBe(canonicalGetFact);
   });
 
-  it("preserves Find the Leader fact behavior through the compatibility surface", () => {
-    expect(compatibilityGetFact("peyton-manning", "qb-passing-yards")?.value).toBe(71940);
-    expect(compatibilityGetFact("2005-texas", "cfb-points-for")?.value).toBe(652);
+  it("makes the Find the Leader model consume the canonical ledger directly", () => {
+    const source = readFileSync("src/features/back-room/footballFindLeaderModel.ts", "utf8");
+    expect(source).toContain("getFootballFact");
+    expect(source).toContain("formatFootballFact");
+    expect(source).not.toContain("getFootballFindLeaderFact");
+    expect(source).not.toContain("formatFootballFindLeaderFact");
   });
 });
