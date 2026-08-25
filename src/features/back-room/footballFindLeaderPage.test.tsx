@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import FootballFindLeaderPage from "./FootballFindLeaderPage";
@@ -59,7 +59,7 @@ describe("Football Find the Leader page", () => {
     render(<MemoryRouter><FootballFindLeaderPage /></MemoryRouter>);
     expect(screen.getByText(/NFL QB CAREERS/)).toBeInTheDocument();
     expect(screen.queryByText("Retired NFL quarterback")).not.toBeInTheDocument();
-    expect(screen.getAllByText("TAP TO ELIMINATE")).toHaveLength(10);
+    expect(screen.getAllByText("ELIMINATE")).toHaveLength(10);
   });
 
   it.each([
@@ -74,7 +74,7 @@ describe("Football Find the Leader page", () => {
 
   it("ends immediately when the hidden leader is eliminated and reveals the full table without descriptor noise", () => {
     render(<MemoryRouter><FootballFindLeaderPage /></MemoryRouter>);
-    expect(screen.getByText("10")).toBeInTheDocument();
+    expect(within(screen.getByLabelText("Find the Leader progress")).getByText("10")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /Hidden Leader/i }));
     expect(screen.getByText("RUN ENDED")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "10/100" })).toBeInTheDocument();
