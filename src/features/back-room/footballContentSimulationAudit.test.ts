@@ -445,17 +445,18 @@ describe("Football PR10 content simulation / replay audit", () => {
     }
 
     const uniqueBoardShare = share(signatures.size, FIND_LEADER_RUNS);
+    const enabledMetricCount = new Set(footballFindLeaderQuestions.map((question) => question.metricId)).size;
+    const enabledDomainCount = new Set(footballFindLeaderQuestions.map((question) => question.domainId)).size;
     expect(share(questionCounts.size, footballFindLeaderQuestions.length)).toBeGreaterThanOrEqual(0.95);
-    expect(metricCounts.size).toBe(48);
+    expect(metricCounts.size).toBe(enabledMetricCount);
     expect(familyCounts.size).toBe(new Set(FOOTBALL_FIND_LEADER_FAMILY_CYCLE).size);
-    expect(domainCounts.size).toBe(6);
+    expect(domainCounts.size).toBe(enabledDomainCount);
     expect(immediateQuestionRepeats).toBe(0);
     expect(immediateMetricRepeats).toBe(0);
     expect(immediateFamilyRepeats).toBe(0);
     // Ten-candidate boards drawn from finite objective pools have a finite
-    // unordered candidate-set ceiling. PR10 records that structural limit instead of
-    // treating card-order permutations as new content; broader source pools are the
-    // honest path to materially higher replay uniqueness.
+    // unordered candidate-set ceiling. This audit counts objective lineup
+    // changes, not card-order permutations, as new content.
     expect(uniqueBoardShare).toBeGreaterThanOrEqual(0.18);
 
     const questionAverage = FIND_LEADER_RUNS / questionCounts.size;
