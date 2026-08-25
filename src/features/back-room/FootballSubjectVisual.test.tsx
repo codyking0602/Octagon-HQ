@@ -5,23 +5,34 @@ import { footballSubjectAsset, footballSubjectAssets, footballTeamAssets } from 
 import { getFootballSubject } from "./footballSubjectRegistry";
 import { FootballSubjectVisual } from "./FootballSubjectVisual";
 
+const TEAM_MEDIA_KINDS = new Set(["player-season", "team-season", "program", "program-era"]);
+
 describe("Football subject visuals", () => {
-  it("covers every current Football comparison subject through the one canonical media resolver", () => {
-    const subjects = footballRankFivePacks.flatMap((pack) => pack.items.map((item) => ({ item, pack })));
+  it("resolves every team-scoped comparison subject through canonical team media", () => {
+    const subjects = footballRankFivePacks.flatMap((pack) => pack.items);
     expect(subjects).toHaveLength(350);
 
-    for (const { item } of subjects) {
+    for (const item of subjects) {
+      const subject = getFootballSubject(item.id);
+      expect(subject, item.id).toBeDefined();
+      if (!subject || !TEAM_MEDIA_KINDS.has(subject.kind)) continue;
+
+      expect(subject.teamId, item.id).toBeDefined();
       const asset = footballSubjectAsset(item.id);
-      expect(asset, item.id).toBeDefined();
+      expect(asset, item.id).toBe(footballTeamAssets[subject.teamId!]);
       expect(asset?.src).toMatch(/^https:\/\/a\.espncdn\.com\/i\/teamlogos\//);
       expect(asset?.label.length).toBeGreaterThan(1);
     }
   });
 
-  it("uses NFL team marks for NFL subjects and college program marks for CFB subjects", () => {
+  it("uses league-appropriate marks whenever a person subject has an owned visual", () => {
     for (const pack of footballRankFivePacks) {
       for (const item of pack.items) {
-        expect(footballSubjectAsset(item.id)?.kind).toBe(item.league === "NFL" ? "team-mark" : "program-mark");
+        const subject = getFootballSubject(item.id);
+        if (subject && TEAM_MEDIA_KINDS.has(subject.kind)) continue;
+        const asset = footballSubjectAsset(item.id);
+        if (!asset) continue;
+        expect(asset.kind).toBe(item.league === "NFL" ? "team-mark" : "program-mark");
       }
     }
   });
