@@ -16,6 +16,7 @@ import {
   getFootballHitTheNumberSubject,
   gradeFootballHitTheNumberSelection,
   type FootballHitTheNumberBoardType,
+  type FootballHitTheNumberPlan,
   type FootballHitTheNumberResult,
   type FootballHitTheNumberRun,
 } from "./footballHitTheNumberModel";
@@ -55,6 +56,55 @@ function formatDistance(value: number) {
 
 function boardType(value: string | null): FootballHitTheNumberBoardType | null {
   return value === "open-roster" || value === "random-pool" ? value : null;
+}
+
+function isSlotProgression(plan: FootballHitTheNumberPlan) {
+  return plan.formatId === "one-from-each" || plan.formatId === "build-the-team";
+}
+
+function oneFromEachSlotSeasonRange(slotId: string): readonly [number, number] | null {
+  if (slotId === "wild-card") return null;
+  const decade = slotId.match(/^(\d{4})s$/);
+  if (decade) {
+    const start = Number(decade[1]);
+    return [start, start + 9];
+  }
+  const range = slotId.match(/^(\d{4})-(\d{2}|\d{4})$/);
+  if (!range) return null;
+  const start = Number(range[1]);
+  const end = range[2]!.length === 2
+    ? Math.floor(start / 100) * 100 + Number(range[2])
+    : Number(range[2]);
+  return [start, end];
+}
+
+function oneFromEachSlotAccepts(slotId: string, subjectId: string) {
+  const subject = getFootballHitTheNumberSubject(subjectId);
+  if (!subject || subject.group !== "cfb" || subject.season == null) return false;
+  if (slotId === "wild-card") return true;
+  const range = oneFromEachSlotSeasonRange(slotId);
+  return Boolean(range && subject.season >= range[0] && subject.season <= range[1]);
+}
+
+function activeProgressionSlot(plan: FootballHitTheNumberPlan, selectedSubjectIds: readonly string[]) {
+  if (!isSlotProgression(plan) || selectedSubjectIds.length >= plan.pickCount) return null;
+  if (plan.formatId === "build-the-team") {
+    return footballHitTheNumberActiveBuildSlot(plan, selectedSubjectIds);
+  }
+  return plan.slots[selectedSubjectIds.length] ?? null;
+}
+
+function availableProgressionSubjectIds(plan: FootballHitTheNumberPlan, selectedSubjectIds: readonly string[]) {
+  if (!isSlotProgression(plan) || selectedSubjectIds.length >= plan.pickCount) return [];
+  if (plan.formatId === "build-the-team") {
+    return footballHitTheNumberAvailableBuildSubjectIds(plan, selectedSubjectIds);
+  }
+  const activeSlot = plan.slots[selectedSubjectIds.length];
+  if (!activeSlot) return [];
+  const selected = new Set(selectedSubjectIds);
+  return plan.subjectIds.filter((subjectId) => (
+    !selected.has(subjectId) && oneFromEachSlotAccepts(activeSlot.id, subjectId)
+  ));
 }
 
 function resolveChallengeRun(
@@ -129,11 +179,12 @@ export default function FootballHitTheNumberPage() {
   const plan = run.plan;
   const selectionValid = footballHitTheNumberSelectionSatisfies(plan, selectedIds);
   const shared = run.identity.type === "curated";
-  const activeBuildSlot = footballHitTheNumberActiveBuildSlot(plan, selectedIds);
-  const availableBuildSubjectIds = footballHitTheNumberAvailableBuildSubjectIds(plan, selectedIds);
-  const displayedSubjectIds = result || plan.formatId !== "build-the-team"
+  const slotProgression = isSlotProgression(plan);
+  const activeSlot = activeProgressionSlot(plan, selectedIds);
+  const availableSubjectIds = availableProgressionSubjectIds(plan, selectedIds);
+  const displayedSubjectIds = result || !slotProgression
     ? plan.subjectIds
-    : [...selectedIds, ...availableBuildSubjectIds];
+    : [...selectedIds, ...availableSubjectIds];
   const ready = selectionValid;
   const fullButInvalid = selectedIds.length === plan.pickCount && !selectionValid;
 
@@ -149,18 +200,20 @@ export default function FootballHitTheNumberPage() {
     if (result) return;
     setSelectedIds((current) => {
       if (current.includes(subjectId)) {
-        if (plan.formatId === "build-the-team") {
+        if (slotProgression) {
           return current[current.length - 1] === subjectId ? current.slice(0, -1) : current;
         }
         return current.filter((id) => id !== subjectId);
       }
       if (current.length >= plan.pickCount) return current;
-      if (
-        plan.formatId === "build-the-team"
-        && !footballHitTheNumberAvailableBuildSubjectIds(plan, current).includes(subjectId)
-      ) return current;
+      if (slotProgression && !availableProgressionSubjectIds(plan, current).includes(subjectId)) return current;
       return [...current, subjectId];
     });
+  }
+
+  function rewindToSlot(slotIndex: number) {
+    if (result || !slotProgression || slotIndex >= selectedIds.length) return;
+    setSelectedIds((current) => current.slice(0, slotIndex));
   }
 
   function challengeResult(next: FootballHitTheNumberResult) {
@@ -304,33 +357,75 @@ export default function FootballHitTheNumberPage() {
               <h2>{selectedIds.length} / {plan.pickCount} selected</h2>
             </div>
             {!result ? (
-              <span>{activeBuildSlot ? `NOW: ${activeBuildSlot.label.toUpperCase()}` : "Stats stay hidden until you lock."}</span>
+              <span>{activeSlot ? `NOW: ${activeSlot.label.toUpperCase()}` : "Stats stay hidden until you lock."}</span>
             ) : null}
           </div>
 
-          <div className="hit-number-slots" data-testid="hit-number-slots">
-            {Array.from({ length: plan.pickCount }, (_, index) => {
-              const subjectId = selectedIds[index];
-              const subject = subjectId ? getFootballHitTheNumberSubject(subjectId) : null;
-              const value = result && subjectId ? footballHitTheNumberValue(subjectId, plan.metricId) : null;
-              return (
-                <div className={`hit-number-slot${subject ? " is-filled" : ""}`} key={index}>
-                  <b>{index + 1}</b>
-                  {subject && subjectId ? (
-                    <>
-                      <SubjectMark subjectId={subjectId} className="hit-number-slot__photo" />
-                      <span>{subject.name}</span>
-                      {result && value != null
-                        ? <strong className="hit-number-stat-value">{formatFootballHitTheNumberValue(plan, value)}</strong>
-                        : <small>SELECTED</small>}
-                    </>
-                  ) : (
-                    <span className="hit-number-slot__empty">EMPTY</span>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+          {slotProgression ? (
+            <div className="hit-number-role-slots" data-testid="hit-number-role-slots">
+              {plan.slots.map((slot, index) => {
+                const subjectId = selectedIds[index] ?? null;
+                const subject = subjectId ? getFootballHitTheNumberSubject(subjectId) : null;
+                const value = result && subjectId ? footballHitTheNumberValue(subjectId, plan.metricId) : null;
+                const active = !result && index === selectedIds.length;
+                return (
+                  <button
+                    type="button"
+                    className={`hit-number-role-slot${active ? " is-active" : ""}${subject ? " is-filled" : ""}`}
+                    aria-label={`${slot.label}: ${subject?.name ?? "empty"}`}
+                    aria-pressed={active}
+                    disabled={Boolean(result) || (!subject && !active)}
+                    onClick={() => rewindToSlot(index)}
+                    key={slot.id}
+                  >
+                    <span className="hit-number-role-slot__index">{index + 1}</span>
+                    {subject && subjectId ? (
+                      <SubjectMark subjectId={subjectId} className="hit-number-role-slot__photo" />
+                    ) : (
+                      <span className="hit-number-role-slot__empty">+</span>
+                    )}
+                    <span className="hit-number-role-slot__copy">
+                      <small>{slot.label}</small>
+                      <strong>{subject?.name ?? "Choose player"}</strong>
+                    </span>
+                    <span className="hit-number-role-slot__state">
+                      {result
+                        ? <strong className="hit-number-stat-value">{value != null ? formatFootballHitTheNumberValue(plan, value) : "—"}</strong>
+                        : active
+                          ? "CHOOSING"
+                          : subject
+                            ? "CHANGE"
+                            : "UP NEXT"}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="hit-number-slots" data-testid="hit-number-slots">
+              {Array.from({ length: plan.pickCount }, (_, index) => {
+                const subjectId = selectedIds[index];
+                const subject = subjectId ? getFootballHitTheNumberSubject(subjectId) : null;
+                const value = result && subjectId ? footballHitTheNumberValue(subjectId, plan.metricId) : null;
+                return (
+                  <div className={`hit-number-slot${subject ? " is-filled" : ""}`} key={index}>
+                    <b>{index + 1}</b>
+                    {subject && subjectId ? (
+                      <>
+                        <SubjectMark subjectId={subjectId} className="hit-number-slot__photo" />
+                        <span>{subject.name}</span>
+                        {result && value != null
+                          ? <strong className="hit-number-stat-value">{formatFootballHitTheNumberValue(plan, value)}</strong>
+                          : <small>SELECTED</small>}
+                      </>
+                    ) : (
+                      <span className="hit-number-slot__empty">EMPTY</span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
 
           {result ? (
             <div className={`hit-number-result is-${result.status}`}>
@@ -370,13 +465,13 @@ export default function FootballHitTheNumberPage() {
           <div className="hit-number-section-heading">
             <div>
               <p className="eyebrow">{result ? "POOL RESULTS" : plan.league === "CFB" ? "TEAM POOL" : "PLAYER POOL"}</p>
-              <h2>{activeBuildSlot && !result ? activeBuildSlot.label : `${displayedSubjectIds.length} eligible ${plan.league === "CFB" ? "teams" : "players"}`}</h2>
+              <h2>{activeSlot && !result ? activeSlot.label : `${displayedSubjectIds.length} eligible ${plan.league === "CFB" ? "teams" : "players"}`}</h2>
             </div>
             <span>
               {result
                 ? "All values revealed"
-                : activeBuildSlot
-                  ? "Choose one for this tier"
+                : activeSlot
+                  ? `Choose one for this ${plan.formatId === "one-from-each" ? "era" : "tier"}`
                   : `Pick ${plan.pickCount} from this pool`}
             </span>
           </div>
