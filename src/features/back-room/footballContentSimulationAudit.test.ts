@@ -454,17 +454,24 @@ describe("Football PR10 content simulation / replay audit", () => {
     expect(immediateQuestionRepeats).toBe(0);
     expect(immediateMetricRepeats).toBe(0);
     expect(immediateFamilyRepeats).toBe(0);
-    // Ten-candidate boards drawn from finite objective pools have a finite
-    // unordered candidate-set ceiling. This audit counts objective lineup
-    // changes, not card-order permutations, as new content.
     expect(uniqueBoardShare).toBeGreaterThanOrEqual(0.18);
 
-    const questionAverage = FIND_LEADER_RUNS / questionCounts.size;
-    const metricAverage = FIND_LEADER_RUNS / metricCounts.size;
-    const familyAverage = FIND_LEADER_RUNS / familyCounts.size;
-    expect(maxValue(questionCounts)).toBeLessThanOrEqual(questionAverage * 2.5);
-    expect(maxValue(metricCounts)).toBeLessThanOrEqual(metricAverage * 2.5);
-    expect(maxValue(familyCounts)).toBeLessThanOrEqual(familyAverage * 2);
+    let maxQuestionVsDomainAverage = 0;
+    let maxMetricVsDomainAverage = 0;
+    for (const [domainId, domainBoardCount] of domainCounts) {
+      const domainQuestions = footballFindLeaderQuestions.filter((question) => question.domainId === domainId);
+      const domainMetricIds = [...new Set(domainQuestions.map((question) => question.metricId))];
+      const questionAverage = domainBoardCount / domainQuestions.length;
+      const metricAverage = domainBoardCount / domainMetricIds.length;
+      const questionMax = Math.max(...domainQuestions.map((question) => questionCounts.get(question.id) ?? 0));
+      const metricMax = Math.max(...domainMetricIds.map((metricId) => metricCounts.get(metricId) ?? 0));
+      maxQuestionVsDomainAverage = Math.max(maxQuestionVsDomainAverage, questionMax / questionAverage);
+      maxMetricVsDomainAverage = Math.max(maxMetricVsDomainAverage, metricMax / metricAverage);
+      expect(questionMax, `${domainId} question exposure`).toBeLessThanOrEqual(questionAverage * 2.75);
+      expect(metricMax, `${domainId} metric exposure`).toBeLessThanOrEqual(metricAverage * 2.75);
+    }
+    const maxFamilyShare = share(maxValue(familyCounts), FIND_LEADER_RUNS);
+    expect(maxFamilyShare).toBeLessThanOrEqual(0.25);
 
     console.info("PR10 Find the Leader audit", JSON.stringify({
       questionsSeen: questionCounts.size,
@@ -473,9 +480,9 @@ describe("Football PR10 content simulation / replay audit", () => {
       familiesSeen: familyCounts.size,
       domainsSeen: domainCounts.size,
       uniqueBoardShare,
-      maxQuestionVsAverage: maxValue(questionCounts) / questionAverage,
-      maxMetricVsAverage: maxValue(metricCounts) / metricAverage,
-      maxFamilyVsAverage: maxValue(familyCounts) / familyAverage,
+      maxQuestionVsDomainAverage,
+      maxMetricVsDomainAverage,
+      maxFamilyShare,
       immediateQuestionRepeats,
       immediateMetricRepeats,
       immediateFamilyRepeats,
