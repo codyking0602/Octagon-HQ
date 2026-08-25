@@ -1,7 +1,7 @@
 import {
-  footballFindLeaderSubjects,
-  type FootballFindLeaderDomainId,
-} from "./footballFindLeaderStats";
+  footballFactualCatalogSubjects,
+  type FootballFactualDomainId,
+} from "./footballFactualCatalog";
 
 export type FootballSubjectKind = "player-career" | "team-season";
 export type FootballSubjectLeague = "NFL" | "CFB";
@@ -39,7 +39,7 @@ const domainProfile = {
     league: "CFB",
   },
 } as const satisfies Record<
-  FootballFindLeaderDomainId,
+  FootballFactualDomainId,
   Pick<FootballSubjectProfile, "kind" | "league"> & { position?: FootballSubjectPosition }
 >;
 
@@ -50,7 +50,7 @@ function seasonFromSubjectId(subjectId: string) {
   return Number.isInteger(season) ? season : undefined;
 }
 
-export const footballSubjects: readonly FootballSubjectProfile[] = footballFindLeaderSubjects.map((subject) => {
+export const footballSubjects: readonly FootballSubjectProfile[] = footballFactualCatalogSubjects.map((subject) => {
   const profile = domainProfile[subject.domainId];
   const season = profile.kind === "team-season" ? seasonFromSubjectId(subject.id) : undefined;
 
