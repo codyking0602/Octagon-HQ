@@ -16,6 +16,8 @@ export interface FindLeaderRun {
   identity: PlayLineupIdentity;
 }
 
+const REPLAY_IDENTITY_SIZE = 13;
+
 export function resolveSeededFindLeaderBoard(
   definitionId: string,
   seed: string,
@@ -47,13 +49,13 @@ export function buildReplayableFindLeaderBoard(seed: string, day = centralDay())
 }
 
 function lineupItemIds(board: FindLeaderBoard) {
-  const decoyIds = board.candidates
-    .filter((fighter) => fighter.id !== board.leaderId)
-    .map((fighter) => fighter.id);
+  const definition = findLeaderQuestions.find((row) => row.id === board.definitionId);
+  if (!definition) throw new Error(`Find the Leader definition ${board.definitionId} is not registered.`);
   return [
-    `category:${board.definitionId}`,
-    `leader:${board.leaderId}`,
-    ...decoyIds.slice(0, 8),
+    `question:${definition.id}`,
+    `metric:${definition.metric}`,
+    `family:${definition.family}`,
+    ...board.candidates.map((fighter) => fighter.id),
   ];
 }
 
@@ -61,7 +63,7 @@ export function createReplayableFindLeaderRun(day = centralDay()): FindLeaderRun
   const selected = selectReplayLineup({
     gameId: "find-leader",
     scopeId: "casual",
-    lineupSize: 10,
+    lineupSize: REPLAY_IDENTITY_SIZE,
     attempts: 18,
     build: (seed) => {
       const board = buildReplayableFindLeaderBoard(seed, day);
