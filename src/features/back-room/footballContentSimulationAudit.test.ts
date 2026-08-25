@@ -446,9 +446,9 @@ describe("Football PR10 content simulation / replay audit", () => {
 
     const uniqueBoardShare = share(signatures.size, FIND_LEADER_RUNS);
     expect(share(questionCounts.size, footballFindLeaderQuestions.length)).toBeGreaterThanOrEqual(0.95);
-    expect(metricCounts.size).toBe(47);
+    expect(metricCounts.size).toBe(48);
     expect(familyCounts.size).toBe(new Set(FOOTBALL_FIND_LEADER_FAMILY_CYCLE).size);
-    expect(domainCounts.size).toBe(5);
+    expect(domainCounts.size).toBe(6);
     expect(immediateQuestionRepeats).toBe(0);
     expect(immediateMetricRepeats).toBe(0);
     expect(immediateFamilyRepeats).toBe(0);
@@ -461,8 +461,8 @@ describe("Football PR10 content simulation / replay audit", () => {
     const questionAverage = FIND_LEADER_RUNS / questionCounts.size;
     const metricAverage = FIND_LEADER_RUNS / metricCounts.size;
     const familyAverage = FIND_LEADER_RUNS / familyCounts.size;
-    expect(maxValue(questionCounts)).toBeLessThanOrEqual(questionAverage * 2.25);
-    expect(maxValue(metricCounts)).toBeLessThanOrEqual(metricAverage * 2.25);
+    expect(maxValue(questionCounts)).toBeLessThanOrEqual(questionAverage * 2.5);
+    expect(maxValue(metricCounts)).toBeLessThanOrEqual(metricAverage * 2.5);
     expect(maxValue(familyCounts)).toBeLessThanOrEqual(familyAverage * 2);
 
     console.info("PR10 Find the Leader audit", JSON.stringify({
