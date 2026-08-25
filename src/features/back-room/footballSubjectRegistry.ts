@@ -1,7 +1,7 @@
 import {
   footballFindLeaderSubjects,
   type FootballFindLeaderDomainId,
-} from "./footballFindLeaderStats";
+} from "./footballFactualStatsCatalog";
 
 export type FootballSubjectKind = "player-career" | "team-season";
 export type FootballSubjectLeague = "NFL" | "CFB";
