@@ -27,6 +27,7 @@ export interface FootballSubjectQuery {
   kind?: FootballSubjectKind;
   league?: FootballSubjectLeague;
   position?: FootballSubjectPosition;
+  positions?: readonly FootballSubjectPosition[];
   season?: number;
   decade?: number;
   school?: string;
@@ -114,6 +115,7 @@ export function queryFootballSubjects(query: FootballSubjectQuery = {}) {
     if (query.kind && subject.kind !== query.kind) return false;
     if (query.league && !(subject.leagues ?? [subject.league]).includes(query.league)) return false;
     if (query.position && subject.position !== query.position) return false;
+    if (query.positions && (!subject.position || !query.positions.includes(subject.position))) return false;
     if (query.season != null && subject.season !== query.season) return false;
     if (query.decade != null && !subject.activeDecades?.includes(query.decade)) return false;
     if (query.school && subject.school !== query.school) return false;
