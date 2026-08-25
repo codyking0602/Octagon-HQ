@@ -1,4 +1,10 @@
 import { footballComparisonDepthItems } from "./footballComparisonDepthCatalog";
+import {
+  footballCfbTeamMediaId,
+  footballTeamMediaIdFromComparisonAsset,
+  type FootballTeamMediaId,
+} from "./footballMediaIdentity";
+import { getFootballSubject } from "./footballSubjectRegistry";
 
 export type FootballSubjectAssetKind = "team-mark" | "program-mark";
 
@@ -24,22 +30,64 @@ function cfbMark(teamId: number, label: string): FootballSubjectAsset {
   };
 }
 
-const comparisonDepthAssets = Object.fromEntries(
-  footballComparisonDepthItems.map((item) => [
-    item.id,
+const footballTeamAssetEntries = new Map<FootballTeamMediaId, FootballSubjectAsset>();
+
+function registerFootballTeamAsset(teamId: FootballTeamMediaId, asset: FootballSubjectAsset) {
+  const current = footballTeamAssetEntries.get(teamId);
+  if (current && (current.src !== asset.src || current.kind !== asset.kind)) {
+    throw new Error(`Conflicting Football media owner for ${teamId}`);
+  }
+  if (!current) footballTeamAssetEntries.set(teamId, asset);
+}
+
+// Core CFB teams used by factual Find the Leader seasons. Each program owns one mark.
+[
+  ["nebraska", 158, "Nebraska"],
+  ["tennessee", 2633, "Tennessee"],
+  ["florida-state", 52, "Florida State"],
+  ["oklahoma", 201, "Oklahoma"],
+  ["miami", 2390, "Miami"],
+  ["ohio-state", 194, "Ohio State"],
+  ["lsu", 99, "LSU"],
+  ["usc", 30, "USC"],
+  ["texas", 251, "Texas"],
+  ["florida", 57, "Florida"],
+  ["alabama", 333, "Alabama"],
+  ["auburn", 2, "Auburn"],
+  ["clemson", 228, "Clemson"],
+  ["georgia", 61, "Georgia"],
+] satisfies readonly (readonly [string, number, string])[]
+].forEach(([id, espnId, label]) => registerFootballTeamAsset(footballCfbTeamMediaId(id), cfbMark(espnId, label)));
+
+// Comparison records contribute team relationships, but duplicate seasons collapse onto one team owner.
+for (const item of footballComparisonDepthItems) {
+  const teamId = footballTeamMediaIdFromComparisonAsset(item.asset);
+  registerFootballTeamAsset(
+    teamId,
     item.asset.kind === "nfl"
       ? nflMark(item.asset.team, item.asset.label)
       : cfbMark(item.asset.teamId, item.asset.label),
-  ]),
+  );
+}
+
+export const footballTeamAssets: Readonly<Record<FootballTeamMediaId, FootballSubjectAsset>> = Object.freeze(
+  Object.fromEntries(footballTeamAssetEntries) as Record<FootballTeamMediaId, FootballSubjectAsset>,
+);
+
+const comparisonPersonAssets = Object.fromEntries(
+  footballComparisonDepthItems.flatMap((item) => {
+    const subject = getFootballSubject(item.id);
+    if (subject?.kind !== "player-career" && subject?.kind !== "coach") return [];
+    const asset = item.asset.kind === "nfl"
+      ? nflMark(item.asset.team, item.asset.label)
+      : cfbMark(item.asset.teamId, item.asset.label);
+    return [[item.id, asset] as const];
+  }),
 ) as Readonly<Record<string, FootballSubjectAsset>>;
 
 /**
- * Canonical visual catalog for the current Football Back Room subjects.
- *
- * Player and coach cards use the mark of the team/program most strongly tied to the
- * version of the subject represented by the game data. Program and single-season-team
- * subjects use their program mark directly. If/when approved local headshots are added,
- * this remains the one registry that swaps the source; game pages do not own image URLs.
+ * Canonical person-card media that predates dedicated headshots.
+ * Historical team/program records do not live here; they resolve through teamId.
  */
 export const footballSubjectAssets: Readonly<Record<string, FootballSubjectAsset>> = {
   // NFL quarterbacks
@@ -218,7 +266,7 @@ export const footballSubjectAssets: Readonly<Record<string, FootballSubjectAsset
   "urban-meyer": nflMark("jax", "Jacksonville Jaguars"),
   "hue-jackson": nflMark("cle", "Cleveland Browns"),
 
-  // College quarterbacks
+  // Legacy college player cards remain person-scoped until dedicated headshots replace them.
   "cam-newton-2010": cfbMark(2, "Auburn"),
   "joe-burrow-2019": cfbMark(99, "LSU"),
   "vince-young-2005": cfbMark(251, "Texas"),
@@ -235,43 +283,18 @@ export const footballSubjectAssets: Readonly<Record<string, FootballSubjectAsset
   "bryce-young-2021": cfbMark(333, "Alabama"),
   "jameis-winston-2013": cfbMark(52, "Florida State"),
 
-  // College programs
-  "alabama-program": cfbMark(333, "Alabama"),
-  "ohio-state-program": cfbMark(194, "Ohio State"),
-  "georgia-program": cfbMark(61, "Georgia"),
-  "lsu-program": cfbMark(99, "LSU"),
-  "clemson-program": cfbMark(228, "Clemson"),
-  "oklahoma-program": cfbMark(201, "Oklahoma"),
-  "usc-program": cfbMark(30, "USC"),
-  "florida-program": cfbMark(57, "Florida"),
-  "texas-program": cfbMark(251, "Texas"),
-  "florida-state-program": cfbMark(52, "Florida State"),
-  "michigan-program": cfbMark(130, "Michigan"),
-  "oregon-program": cfbMark(2483, "Oregon"),
-  "auburn-program": cfbMark(2, "Auburn"),
-  "miami-program": cfbMark(2390, "Miami"),
-  "notre-dame-program": cfbMark(87, "Notre Dame"),
-
-  // Single-season teams
-  "2001-miami": cfbMark(2390, "Miami"),
-  "2019-lsu": cfbMark(99, "LSU"),
-  "2020-alabama": cfbMark(333, "Alabama"),
-  "2005-texas": cfbMark(251, "Texas"),
-  "2004-usc": cfbMark(30, "USC"),
-  "2018-clemson": cfbMark(228, "Clemson"),
-  "2013-florida-state": cfbMark(52, "Florida State"),
-  "2022-georgia": cfbMark(61, "Georgia"),
-  "2008-florida": cfbMark(57, "Florida"),
-  "2010-auburn": cfbMark(2, "Auburn"),
-  "2014-ohio-state": cfbMark(194, "Ohio State"),
-  "2023-michigan": cfbMark(130, "Michigan"),
-  "2009-alabama": cfbMark(333, "Alabama"),
-  "2002-ohio-state": cfbMark(194, "Ohio State"),
-  "2000-oklahoma": cfbMark(201, "Oklahoma"),
-
-  ...comparisonDepthAssets,
+  ...comparisonPersonAssets,
 };
 
+function subjectUsesTeamMedia(kind: ReturnType<typeof getFootballSubject>["kind"] | undefined) {
+  return kind === "player-season" || kind === "team-season" || kind === "program" || kind === "program-era";
+}
+
+/** One shared resolver for Football media. Historical records resolve through canonical identity first. */
 export function footballSubjectAsset(itemId: string) {
+  const subject = getFootballSubject(itemId);
+  if (subject && subjectUsesTeamMedia(subject.kind)) {
+    return subject.teamId ? footballTeamAssets[subject.teamId] ?? null : null;
+  }
   return footballSubjectAssets[itemId] ?? null;
 }
