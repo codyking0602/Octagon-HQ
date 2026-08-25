@@ -23,10 +23,15 @@ describe("Football Wavelength canonical subject authority", () => {
   });
 
   it("collapses category-local aliases onto one canonical subject identity", () => {
-    expect(footballWavelengthCanonicalSubjectForClue(clue("NFL LEGACY", "Patrick Mahomes"))?.id).toBe("patrick-mahomes");
-    expect(footballWavelengthCanonicalSubjectForClue(clue("GUNSLINGER", "Patrick Mahomes"))?.id).toBe("patrick-mahomes");
-    expect(footballWavelengthCanonicalSubjectForClue(clue("NFL LEGACY", "Tom Brady"))?.id).toBe("tom-brady");
-    expect(footballWavelengthCanonicalSubjectForClue(clue("GUNSLINGER", "Tom Brady"))?.id).toBe("tom-brady");
+    const mahomes = footballSubjects.find((subject) => subject.name === "Patrick Mahomes");
+    const brady = footballSubjects.find((subject) => subject.name === "Tom Brady");
+    expect(mahomes).toBeDefined();
+    expect(brady).toBeDefined();
+
+    expect(footballWavelengthCanonicalSubjectForClue(clue("NFL LEGACY", "Patrick Mahomes"))?.id).toBe(mahomes!.id);
+    expect(footballWavelengthCanonicalSubjectForClue(clue("GUNSLINGER", "Patrick Mahomes"))?.id).toBe(mahomes!.id);
+    expect(footballWavelengthCanonicalSubjectForClue(clue("NFL LEGACY", "Tom Brady"))?.id).toBe(brady!.id);
+    expect(footballWavelengthCanonicalSubjectForClue(clue("GUNSLINGER", "Tom Brady"))?.id).toBe(brady!.id);
   });
 
   it("keeps Wavelength-only concepts explicit instead of inventing a second canonical roster", () => {
