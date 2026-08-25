@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
-  FOOTBALL_FIND_LEADER_DOMAIN_POOL_SIZE,
+  FOOTBALL_FACTUAL_CATALOG_SUBJECT_COUNT,
+  FOOTBALL_FACTUAL_DOMAIN_POOL_SIZE,
+  footballFactualCatalogSubjects,
   footballFindLeaderSubjects,
   footballSubjects,
   getFootballSubject,
@@ -8,21 +10,28 @@ import {
 } from "./footballFactualStats";
 
 describe("canonical Football subject registry", () => {
-  it("registers every current factual comparison subject exactly once", () => {
-    expect(footballSubjects).toHaveLength(footballFindLeaderSubjects.length);
+  it("registers every canonical factual subject exactly once", () => {
+    expect(footballSubjects).toHaveLength(FOOTBALL_FACTUAL_CATALOG_SUBJECT_COUNT);
+    expect(footballSubjects).toHaveLength(footballFactualCatalogSubjects.length);
     expect(new Set(footballSubjects.map((subject) => subject.id)).size).toBe(footballSubjects.length);
-    expect(footballSubjects).toHaveLength(FOOTBALL_FIND_LEADER_DOMAIN_POOL_SIZE * 3);
+    expect(footballSubjects).toHaveLength(FOOTBALL_FACTUAL_DOMAIN_POOL_SIZE * 3);
+  });
+
+  it("keeps Find the Leader as a consumer of the canonical factual catalog", () => {
+    expect(footballFindLeaderSubjects.map(({ id, name, domainId }) => ({ id, name, domainId }))).toEqual(
+      footballFactualCatalogSubjects,
+    );
   });
 
   it("normalizes the current NFL and CFB subject families for shared game queries", () => {
     expect(queryFootballSubjects({ league: "NFL", position: "QB" })).toHaveLength(
-      FOOTBALL_FIND_LEADER_DOMAIN_POOL_SIZE,
+      FOOTBALL_FACTUAL_DOMAIN_POOL_SIZE,
     );
     expect(queryFootballSubjects({ league: "NFL", position: "RB" })).toHaveLength(
-      FOOTBALL_FIND_LEADER_DOMAIN_POOL_SIZE,
+      FOOTBALL_FACTUAL_DOMAIN_POOL_SIZE,
     );
     expect(queryFootballSubjects({ league: "CFB", kind: "team-season" })).toHaveLength(
-      FOOTBALL_FIND_LEADER_DOMAIN_POOL_SIZE,
+      FOOTBALL_FACTUAL_DOMAIN_POOL_SIZE,
     );
   });
 
