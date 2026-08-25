@@ -32,17 +32,18 @@ describe("Football Find the Leader maturity", () => {
     vi.restoreAllMocks();
   });
 
-  it("owns 94 questions across 47 real comparable metrics and both NFL + CFB", () => {
-    expect(FOOTBALL_FIND_LEADER_METRIC_COUNT).toBe(47);
-    expect(footballFindLeaderQuestions).toHaveLength(94);
-    expect(new Set(footballFindLeaderQuestions.map((question) => question.id)).size).toBe(94);
-    expect(new Set(footballFindLeaderQuestions.map((question) => question.metricId)).size).toBe(47);
+  it("owns 96 questions across 48 real comparable metrics and both NFL + CFB", () => {
+    expect(FOOTBALL_FIND_LEADER_METRIC_COUNT).toBe(48);
+    expect(footballFindLeaderQuestions).toHaveLength(96);
+    expect(new Set(footballFindLeaderQuestions.map((question) => question.id)).size).toBe(96);
+    expect(new Set(footballFindLeaderQuestions.map((question) => question.metricId)).size).toBe(48);
     expect(new Set(footballFindLeaderMetricDefinitions.map((metric) => metric.domainId))).toEqual(new Set([
       "nfl-qb-career",
       "nfl-rb-career",
       "nfl-qb-season",
       "nfl-team-season",
       "cfb-champion-season",
+      "cfb-team-season",
     ]));
     expect(new Set(footballFindLeaderQuestions.map((question) => question.family))).toEqual(new Set(FOOTBALL_FIND_LEADER_FAMILY_CYCLE));
   });
@@ -85,7 +86,7 @@ describe("Football Find the Leader maturity", () => {
 
   it("uses plausible decoys and limits true wildcards even with the deeper pools", () => {
     const audit = footballFindLeaderCompetitionAudit();
-    expect(audit).toHaveLength(94);
+    expect(audit).toHaveLength(96);
     for (const row of audit) {
       expect(row.boardValid, row.definitionId).toBe(true);
       expect(row.nearContenderCount, row.definitionId).toBeGreaterThanOrEqual(4);
@@ -104,6 +105,20 @@ describe("Football Find the Leader maturity", () => {
     expect(seasonIds.filter((id) => teamIds.includes(id))).toHaveLength(0);
     expect(footballFindLeaderPools.find(({ metricId }) => metricId === "qb-season-passing-yards")?.subjectQuery.kind).toBe("player-season");
     expect(footballFindLeaderPools.find(({ metricId }) => metricId === "nfl-team-wins")?.subjectQuery.kind).toBe("team-season");
+  });
+
+  it("adds a canonical broader CFB team-season pool without broadening champions", () => {
+    const championIds = new Set(footballFindLeaderMetricRows("cfb-points-for").map(({ id }) => id));
+    const broaderRows = footballFindLeaderMetricRows("cfb-team-season-wins");
+    const pool = footballFindLeaderPools.find(({ metricId }) => metricId === "cfb-team-season-wins")!;
+    expect(pool).toMatchObject({
+      canonicalMetricId: "cfb-team-wins",
+      factualScope: "cfb-team-season",
+      subjectQuery: { kind: "team-season", league: "CFB" },
+    });
+    expect(broaderRows.length).toBeGreaterThan(25);
+    expect(broaderRows.some(({ id }) => !championIds.has(id))).toBe(true);
+    expect(footballFindLeaderMetricRows("cfb-points-for").every(({ id }) => championIds.has(id))).toBe(true);
   });
 
   it("is deterministic and never immediately repeats question, metric, or family", () => {
@@ -181,11 +196,13 @@ describe("Football Find the Leader maturity", () => {
     expect(audit.cfbShare).toBeGreaterThanOrEqual(0.45);
     expect(audit.cfbShare).toBeLessThanOrEqual(0.55);
     expect(audit.uniqueUnorderedBoardShare).toBeGreaterThan(0.9);
-    expect(audit.metricsSeen).toBe(47);
-    expect(audit.familiesSeen).toBe(10);
-    expect(audit.definitionsSeen).toBe(94);
+    expect(audit.metricsSeen).toBe(48);
+    expect(audit.familiesSeen).toBe(11);
+    expect(audit.definitionsSeen).toBe(96);
     expect(audit.subjectsSeen).toBeGreaterThan(90);
+    expect(audit.cfbSubjectsSeen).toBeGreaterThan(25);
     expect(audit.domainShare["nfl-qb-season"]).toBeGreaterThan(0.05);
     expect(audit.domainShare["nfl-team-season"]).toBeGreaterThan(0.02);
+    expect(audit.domainShare["cfb-team-season"]).toBeGreaterThanOrEqual(0.05);
   });
 });

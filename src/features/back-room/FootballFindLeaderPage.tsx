@@ -8,6 +8,7 @@ import {
   FOOTBALL_FIND_LEADER_GAME_ID,
   buildFootballFindLeaderBoard,
   createFootballFindLeaderRun,
+  footballFindLeaderCategoryLabel,
   footballFindLeaderQuestions,
   formatFootballFindLeaderValue,
   type FootballFindLeaderRun,
@@ -25,12 +26,6 @@ interface ResultState {
   score: number;
   perfect: boolean;
   fatalId: string | null;
-}
-
-function categoryLabel(domainId: FootballFindLeaderRun["board"]["domainId"]) {
-  if (domainId === "nfl-qb-career") return "NFL QB CAREERS";
-  if (domainId === "nfl-rb-career") return "NFL RB CAREERS";
-  return "CFB CHAMPION SEASONS";
 }
 
 export function footballFindLeaderRankLabel(rows: readonly { value: number }[], index: number) {
@@ -239,7 +234,7 @@ export default function FootballFindLeaderPage() {
         <div className="football-find-hero__status">
           <div><strong>{10 - eliminated.length}</strong><span>STANDING</span></div>
           <div><strong>{eliminated.length}</strong><span>SAFE</span></div>
-          <small>{categoryLabel(board.domainId)} · Eliminate until only the leader remains.</small>
+          <small>{footballFindLeaderCategoryLabel(board.domainId)} · Eliminate until only the leader remains.</small>
         </div>
       </section>
 

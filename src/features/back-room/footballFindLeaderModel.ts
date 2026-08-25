@@ -75,6 +75,7 @@ export const footballFindLeaderCanonicalMetricByMetric: Readonly<Record<Football
   "cfb-total-points": "cfb-team-total-points",
   "cfb-srs": "cfb-team-srs",
   "cfb-sos": "cfb-team-sos",
+  "cfb-team-season-wins": "cfb-team-wins",
 };
 
 export const FOOTBALL_FIND_LEADER_GAME_ID = "football-find-leader";
@@ -134,7 +135,17 @@ const domainCopy: Readonly<Record<FootballFindLeaderDomainId, string>> = {
   "nfl-qb-season": "NFL quarterback seasons",
   "nfl-team-season": "NFL team seasons",
   "cfb-champion-season": "national-championship team seasons",
+  "cfb-team-season": "college football team seasons",
 };
+
+export function footballFindLeaderCategoryLabel(domainId: FootballFindLeaderDomainId) {
+  if (domainId === "nfl-qb-career") return "NFL QB CAREERS";
+  if (domainId === "nfl-rb-career") return "NFL RB CAREERS";
+  if (domainId === "nfl-qb-season") return "NFL QB SEASONS";
+  if (domainId === "nfl-team-season") return "NFL TEAM SEASONS";
+  if (domainId === "cfb-team-season") return "CFB TEAM SEASONS";
+  return "CFB CHAMPION SEASONS";
+}
 
 export const FOOTBALL_FIND_LEADER_FAMILY_CYCLE: readonly FootballFindLeaderFamilyId[] = [
   "qb-volume",
@@ -147,6 +158,7 @@ export const FOOTBALL_FIND_LEADER_FAMILY_CYCLE: readonly FootballFindLeaderFamil
   "qb-season",
   "nfl-team-season",
   "cfb-strength",
+  "cfb-team-season",
 ] as const;
 
 function questionVariants(definition: FootballFindLeaderMetricDefinition): FootballFindLeaderQuestionDefinition[] {
@@ -180,6 +192,7 @@ const queryByDomain: Readonly<Record<FootballFindLeaderDomainId, FootballSubject
   "nfl-qb-season": { kind: "player-season", league: "NFL", position: "QB" },
   "nfl-team-season": { kind: "team-season", league: "NFL" },
   "cfb-champion-season": { kind: "team-season", league: "CFB", nationalChampion: true },
+  "cfb-team-season": { kind: "team-season", league: "CFB" },
 };
 
 const scopeByDomain: Readonly<Record<FootballFindLeaderDomainId, FootballFactScope>> = {
@@ -188,6 +201,7 @@ const scopeByDomain: Readonly<Record<FootballFindLeaderDomainId, FootballFactSco
   "nfl-qb-season": "nfl-player-season",
   "nfl-team-season": "nfl-team-season",
   "cfb-champion-season": "cfb-team-season",
+  "cfb-team-season": "cfb-team-season",
 };
 
 /** Declarative bridge from game copy to the canonical registry and factual ledger. */
@@ -278,8 +292,16 @@ function chooseQuestion(seed: string, history: PlayLineupHistory) {
   const leagueQuestions = footballFindLeaderQuestions.filter(
     (question) => footballFindLeaderLeagueForDomain(question.domainId) === desiredLeague,
   );
-  const start = Math.floor(ordinal / 2) % leagueQuestions.length;
-  const rotated = leagueQuestions.map((_, index) => leagueQuestions[(start + index) % leagueQuestions.length]!);
+  const legacyLeagueQuestions = leagueQuestions.filter((question) => question.domainId !== "cfb-team-season");
+  const expandedCfbQuestions = leagueQuestions.filter((question) => question.domainId === "cfb-team-season");
+  const cfbOrdinal = Math.floor(ordinal / 2);
+  const questionCycle = desiredLeague === "cfb" && cfbOrdinal % 10 === 9
+    ? expandedCfbQuestions
+    : legacyLeagueQuestions;
+  const start = questionCycle === expandedCfbQuestions
+    ? Math.floor(cfbOrdinal / 10) % questionCycle.length
+    : cfbOrdinal % questionCycle.length;
+  const rotated = questionCycle.map((_, index) => questionCycle[(start + index) % questionCycle.length]!);
   const previousQuestion = lastValue(history, "question");
   const previousMetric = lastValue(history, "metric");
   const previousFamily = lastValue(history, "family");
@@ -342,7 +364,8 @@ export function footballFindLeaderCompetitionAudit() {
     if (!board) return { definitionId: definition.id, boardValid: false, nonRecordLeaderAvailable, leaderIsGlobalMax: false, nearContenderCount: 0, outsideClosestNineCount: 0 };
     const leader = pool.find((row) => row.id === board.leaderId)!;
     const lower = pool.filter((row) => row.value < leader.value);
-    const closestNine = new Set(lower.slice(0, 9).map((row) => row.id));
+    const closestNineCutoff = lower[8]?.value ?? Number.NEGATIVE_INFINITY;
+    const closestNine = new Set(lower.filter((row) => row.value >= closestNineCutoff).map((row) => row.id));
     const nearCutoff = lower[3]?.value ?? Number.NEGATIVE_INFINITY;
     const challengers = board.candidates.filter((candidate) => candidate.id !== board.leaderId);
     return {
@@ -363,6 +386,7 @@ export function footballFindLeaderReplayAudit(sampleSize = 1000) {
   const families = new Set<FootballFindLeaderFamilyId>();
   const definitions = new Set<string>();
   const subjects = new Set<string>();
+  const cfbSubjects = new Set<string>();
   const domainCounts = new Map<FootballFindLeaderDomainId, number>();
   const familyCounts = new Map<FootballFindLeaderFamilyId, number>();
   let cfbBoards = 0;
@@ -374,7 +398,10 @@ export function footballFindLeaderReplayAudit(sampleSize = 1000) {
     definitions.add(board.definitionId);
     domainCounts.set(board.domainId, (domainCounts.get(board.domainId) ?? 0) + 1);
     familyCounts.set(board.family, (familyCounts.get(board.family) ?? 0) + 1);
-    board.candidates.forEach((candidate) => subjects.add(candidate.id));
+    board.candidates.forEach((candidate) => {
+      subjects.add(candidate.id);
+      if (footballFindLeaderLeagueForDomain(board.domainId) === "cfb") cfbSubjects.add(candidate.id);
+    });
     unorderedBoards.add(`${board.metricId}|${board.candidates.map((candidate) => candidate.id).sort().join(",")}`);
   }
   return {
@@ -385,6 +412,7 @@ export function footballFindLeaderReplayAudit(sampleSize = 1000) {
     familiesSeen: families.size,
     definitionsSeen: definitions.size,
     subjectsSeen: subjects.size,
+    cfbSubjectsSeen: cfbSubjects.size,
     domainShare: Object.fromEntries([...domainCounts].map(([id, count]) => [id, count / sampleSize])),
     familyShare: Object.fromEntries([...familyCounts].map(([id, count]) => [id, count / sampleSize])),
   };

@@ -6,7 +6,8 @@ export type FootballFindLeaderDomainId =
   | "nfl-rb-career"
   | "nfl-qb-season"
   | "nfl-team-season"
-  | "cfb-champion-season";
+  | "cfb-champion-season"
+  | "cfb-team-season";
 export type FootballFindLeaderLeagueId = "nfl" | "cfb";
 
 export type FootballFindLeaderFamilyId =
@@ -17,6 +18,7 @@ export type FootballFindLeaderFamilyId =
   | "rb-scrimmage"
   | "qb-season"
   | "nfl-team-season"
+  | "cfb-team-season"
   | "cfb-offense"
   | "cfb-defense"
   | "cfb-strength";
@@ -68,7 +70,8 @@ export type FootballFindLeaderMetricId =
   | "cfb-differential-rate-pct"
   | "cfb-total-points"
   | "cfb-srs"
-  | "cfb-sos";
+  | "cfb-sos"
+  | "cfb-team-season-wins";
 
 export type FootballFindLeaderUnit = "count" | "yards" | "rating" | "percent" | "per-game" | "per-attempt" | "ratio" | "points";
 
@@ -142,6 +145,7 @@ export const footballFindLeaderMetricDefinitions: readonly FootballFindLeaderMet
   metric("cfb-total-points", "cfb-champion-season", "cfb-strength", "combined points in the season", "TOTAL POINTS", "points", 0, "the most combined points scored and allowed"),
   metric("cfb-srs", "cfb-champion-season", "cfb-strength", "Simple Rating System score", "SRS", "rating", 2, "the highest SRS"),
   metric("cfb-sos", "cfb-champion-season", "cfb-strength", "strength of schedule", "SOS", "rating", 2, "the highest strength of schedule"),
+  metric("cfb-team-season-wins", "cfb-team-season", "cfb-team-season", "season wins", "WINS", "count", 0, "the most wins in the season"),
 ] as const;
 
 export const FOOTBALL_FIND_LEADER_METRIC_COUNT = footballFindLeaderMetricDefinitions.length;
@@ -479,5 +483,5 @@ export const FOOTBALL_FIND_LEADER_SUBJECT_COUNT = footballFindLeaderSubjects.len
 export const FOOTBALL_FIND_LEADER_DOMAIN_POOL_SIZE = 25;
 
 export function footballFindLeaderLeagueForDomain(domainId: FootballFindLeaderDomainId): FootballFindLeaderLeagueId {
-  return domainId === "cfb-champion-season" ? "cfb" : "nfl";
+  return domainId.startsWith("cfb-") ? "cfb" : "nfl";
 }
