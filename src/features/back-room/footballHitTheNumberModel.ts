@@ -198,7 +198,6 @@ const groupOrder: readonly FootballHitTheNumberSubjectGroup[] = [
   "nfl-qb-career",
   "nfl-rb-career",
   "nfl-receiving-career",
-  "nfl-defense-career",
   "nfl-qb-season",
   "cfb",
 ];
@@ -264,8 +263,6 @@ const domains: readonly FootballHitTheNumberDomain[] = [
     metrics: [
       metric("nfl-season-passer-rating", "NFL", "nfl-qb-season", "NFL QB Season Passer Rating"),
       metric("cfb-team-points-per-game", "CFB", "cfb", "CFB Team-Season Points Per Game"),
-      metric("cfb-team-srs", "CFB", "cfb", "CFB Team-Season SRS"),
-      metric("cfb-team-sos", "CFB", "cfb", "CFB Team-Season Strength of Schedule"),
     ],
   },
   {
@@ -278,13 +275,19 @@ const domains: readonly FootballHitTheNumberDomain[] = [
       metric("nfl-season-interceptions", "NFL", "nfl-qb-season", "NFL QB Season Interceptions Thrown"),
       metric("nfl-defensive-player-of-year-awards", "NFL", "nfl-defense-career", "NFL Defensive Player of the Year Awards"),
       metric("nfl-career-sacks", "NFL", "nfl-defense-career", "NFL Career Sacks"),
+      metric("cfb-team-srs", "CFB", "cfb", "CFB Team-Season SRS"),
+      metric("cfb-team-sos", "CFB", "cfb", "CFB Team-Season Strength of Schedule"),
       metric("cfb-team-losses", "CFB", "cfb", "CFB Team-Season Losses"),
     ],
   },
 ] as const;
 
+function metricBoardEnabled(board: FootballHitTheNumberMetricBoard) {
+  return board.group !== "nfl-defense-career" && board.metricId !== "cfb-team-losses";
+}
+
 export const FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG = domains.flatMap((domain) =>
-  domain.metrics.map((row) => ({
+  domain.metrics.filter(metricBoardEnabled).map((row) => ({
     domainId: domain.id,
     metricId: row.metricId,
     league: row.league,
@@ -475,6 +478,7 @@ function pickOptionsFor(
   boardType: FootballHitTheNumberBoardType,
   board: FootballHitTheNumberMetricBoard,
 ) {
+  if (!metricBoardEnabled(board)) return [];
   if (formatId === "one-from-each") {
     if (board.group !== "cfb") return [];
     const subjects = oneFromEachSubjects(board);
@@ -502,7 +506,7 @@ function viableMetricBoards(
   formatId: FootballHitTheNumberFormatId,
   boardType: FootballHitTheNumberBoardType,
 ) {
-  return domain.metrics.filter((board) => board.league === league && pickOptionsFor(formatId, boardType, board).length > 0);
+  return domain.metrics.filter((board) => board.league === league && metricBoardEnabled(board) && pickOptionsFor(formatId, boardType, board).length > 0);
 }
 
 function metricBoardFor(metricId: FootballFactMetricId) {
