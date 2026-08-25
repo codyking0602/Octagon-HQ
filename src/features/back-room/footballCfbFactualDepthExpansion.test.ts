@@ -29,6 +29,8 @@ describe("Football CFB factual depth expansion", () => {
     expect(getFootballFact("cfb-amari-cooper", "cfb-best-season-receiving-yards")?.fact.value).toBe(1727);
     expect(getFootballFact("cfb-christian-mccaffrey", "cfb-best-season-receptions")?.fact.value).toBe(45);
     expect(getFootballFact("cfb-desmond-howard", "cfb-best-season-receiving-touchdowns")?.fact.value).toBe(19);
+    expect(getFootballFact("cfb-bijan-robinson", "cfb-best-season-receiving-yards")?.fact.value).toBe(314);
+    expect(getFootballFact("cfb-saquon-barkley", "cfb-best-season-receptions")?.fact.value).toBe(54);
 
     expect(getFootballFact("cfb-nndamukong-suh", "cfb-best-season-sacks")?.fact.value).toBe(12);
     expect(getFootballFact("cfb-joey-bosa", "cfb-best-season-tackles-for-loss")?.fact.value).toBe(21);
@@ -42,6 +44,7 @@ describe("Football CFB factual depth expansion", () => {
 
     for (const [subjectId, metricId] of [
       ["cfb-amari-cooper", "cfb-best-season-receiving-yards"],
+      ["cfb-saquon-barkley", "cfb-best-season-receptions"],
       ["cfb-nndamukong-suh", "cfb-best-season-sacks"],
       ["dabo-swinney-cfb", "cfb-coach-career-wins"],
     ] as const) {
