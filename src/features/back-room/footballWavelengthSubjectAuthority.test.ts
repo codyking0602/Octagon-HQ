@@ -1,9 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { footballSubjects } from "./footballSubjectRegistry";
-import {
-  footballWavelengthClues,
-  footballWavelengthCanonicalSubjectForClue,
-} from "./footballWavelengthModel";
+import { footballWavelengthClues } from "./footballWavelengthModel";
+import { footballWavelengthCanonicalSubjectForClue } from "./footballWavelengthSubjectAuthority";
 
 function clue(category: string, text: string) {
   const found = footballWavelengthClues.find((row) => row.category === category && row.text === text);
