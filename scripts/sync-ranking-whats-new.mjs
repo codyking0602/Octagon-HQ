@@ -48,7 +48,7 @@ try {
   const watchlistRows = watchlistModel.shanesWatchlist.fighters.map((fighter) => ({
     id: fighter.id,
     name: fighter.name,
-    note: fighter.scoutingNote,
+    note: fighter.boardNote,
   }));
 
   if (!rows.length || new Set(rows.map((row) => row.slug)).size !== rows.length) {
