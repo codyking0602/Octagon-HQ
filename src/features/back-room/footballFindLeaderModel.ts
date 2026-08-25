@@ -87,11 +87,13 @@ export const footballFindLeaderCanonicalMetricByMetric: Readonly<Record<Football
   "nfl-defense-interceptions": "nfl-career-interceptions",
   "cfb-player-rushing-yards": "cfb-best-season-rushing-yards",
   "cfb-player-rushing-touchdowns": "cfb-best-season-rushing-touchdowns",
+  "cfb-team-season-losses": "cfb-team-losses",
 };
 
 export const FOOTBALL_FIND_LEADER_GAME_ID = "football-find-leader";
 export const FOOTBALL_FIND_LEADER_VERSION = "football-find-leader-v2";
 export const FOOTBALL_FIND_LEADER_CANDIDATE_COUNT = 10;
+export const FOOTBALL_FIND_LEADER_MIN_POOL_SIZE = FOOTBALL_FIND_LEADER_CANDIDATE_COUNT + 1;
 const REPLAY_IDENTITY_SIZE = FOOTBALL_FIND_LEADER_CANDIDATE_COUNT + 3;
 
 export interface FootballFindLeaderQuestionDefinition {
@@ -170,7 +172,6 @@ export const FOOTBALL_FIND_LEADER_FAMILY_CYCLE: readonly FootballFindLeaderFamil
   "cfb-offense",
   "nfl-defense",
   "rb-rushing",
-  "cfb-rushing",
   "qb-efficiency",
   "cfb-defense",
   "rb-receiving",
@@ -274,7 +275,7 @@ export function footballFindLeaderMetricQuality(metricId: FootballFindLeaderMetr
   return evaluateFootballFindLeaderQuality({
     unit: factDefinition.unit,
     values: footballFindLeaderMetricRows(metricId).map(({ value }) => value),
-    minCandidates: FOOTBALL_FIND_LEADER_CANDIDATE_COUNT,
+    minCandidates: FOOTBALL_FIND_LEADER_MIN_POOL_SIZE,
   });
 }
 
@@ -361,14 +362,14 @@ const nflDomainCycle: readonly FootballFindLeaderDomainId[] = [
 
 const cfbDomainCycle: readonly FootballFindLeaderDomainId[] = [
   "cfb-champion-season",
-  "cfb-player-rushing",
   "cfb-champion-season",
   "cfb-team-season",
   "cfb-champion-season",
-  "cfb-player-rushing",
   "cfb-champion-season",
   "cfb-champion-season",
-  "cfb-player-rushing",
+  "cfb-champion-season",
+  "cfb-team-season",
+  "cfb-champion-season",
   "cfb-champion-season",
 ] as const;
 
