@@ -371,7 +371,7 @@ try {
   if (outsiderSentState !== null) throw new Error("Unrelated profile discovered the sent Auction.");
 
   const stateB = await loadAuction(auctionId, participantB.token, publishableKey);
-  if (!stateB || stateB.lifecycle_state !== "sent" || stateB.action_required_by !== "current_user") {
+  if (!stateB || stateB.lifecycle_state !== "sent" || stateB.action_required_by !== "recipient") {
     throw new Error(`Recipient sent-state projection was invalid: ${JSON.stringify(stateB)}`);
   }
   await rpc(
