@@ -37,22 +37,24 @@ const BUILD_TEAM_LABELS = [
 ];
 
 describe("Football Hit the Number canonical fact integration", () => {
-  it("moves beyond the old 75-subject / 18-metric compatibility bottleneck", () => {
+  it("moves beyond the old 75-subject compatibility bottleneck without forcing sparse metrics", () => {
     expect(footballHitTheNumberSubjects.length).toBeGreaterThan(100);
     expect(new Set(footballHitTheNumberSubjects.map((subject) => subject.id)).size).toBe(footballHitTheNumberSubjects.length);
-    expect(FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG.length).toBeGreaterThan(18);
+    expect(FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG.length).toBeGreaterThanOrEqual(17);
 
     const groups = new Set(FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG.map((row) => row.group));
     expect(groups).toContain("nfl-receiving-career");
-    expect(groups).toContain("nfl-defense-career");
     expect(groups).toContain("nfl-qb-season");
     expect(groups).toContain("cfb");
+    expect(groups).not.toContain("nfl-defense-career");
 
     const metrics = new Set(FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG.map((row) => row.metricId));
     expect(metrics).toContain("nfl-career-receiving-yards");
     expect(metrics).toContain("nfl-season-passing-yards");
-    expect(metrics).toContain("nfl-career-sacks");
     expect(metrics).toContain("cfb-team-wins");
+    expect(metrics).not.toContain("cfb-team-losses");
+    expect(metrics).not.toContain("nfl-defensive-player-of-year-awards");
+    expect(metrics).not.toContain("nfl-career-sacks");
   });
 
   it("keeps every playable value on the provenance-bearing canonical quantitative owner", () => {
@@ -61,7 +63,6 @@ describe("Football Hit the Number canonical fact integration", () => {
     const newMetrics = new Set([
       "nfl-career-receiving-yards",
       "nfl-season-passing-yards",
-      "nfl-defensive-player-of-year-awards",
       "cfb-team-wins",
     ]);
 
@@ -78,7 +79,7 @@ describe("Football Hit the Number canonical fact integration", () => {
       }
     }
 
-    expect(seenMetrics.size).toBeGreaterThan(18);
+    expect(seenMetrics.size).toBeGreaterThanOrEqual(15);
     expect(seenNewMetrics).toEqual(newMetrics);
   });
 
