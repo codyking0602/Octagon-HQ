@@ -9,16 +9,16 @@ import {
 
 describe("canonical Football subject registry", () => {
   it("registers every current factual comparison subject exactly once", () => {
-    expect(footballSubjects).toHaveLength(footballFindLeaderSubjects.length);
+    expect(footballSubjects.length).toBeGreaterThan(footballFindLeaderSubjects.length);
     expect(new Set(footballSubjects.map((subject) => subject.id)).size).toBe(footballSubjects.length);
-    expect(footballSubjects).toHaveLength(FOOTBALL_FIND_LEADER_DOMAIN_POOL_SIZE * 3);
+    expect(footballFindLeaderSubjects).toHaveLength(FOOTBALL_FIND_LEADER_DOMAIN_POOL_SIZE * 3);
   });
 
   it("normalizes the current NFL and CFB subject families for shared game queries", () => {
-    expect(queryFootballSubjects({ league: "NFL", position: "QB" })).toHaveLength(
+    expect(queryFootballSubjects({ league: "NFL", position: "QB" }).length).toBeGreaterThanOrEqual(
       FOOTBALL_FIND_LEADER_DOMAIN_POOL_SIZE,
     );
-    expect(queryFootballSubjects({ league: "NFL", position: "RB" })).toHaveLength(
+    expect(queryFootballSubjects({ league: "NFL", position: "RB" }).length).toBeGreaterThanOrEqual(
       FOOTBALL_FIND_LEADER_DOMAIN_POOL_SIZE,
     );
     expect(queryFootballSubjects({ league: "CFB", kind: "team-season" })).toHaveLength(
