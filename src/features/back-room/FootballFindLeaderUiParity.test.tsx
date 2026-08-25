@@ -1,7 +1,8 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import FootballFindLeaderPage, {
+  footballFindLeaderCandidateAsset,
   footballFindLeaderRankLabel,
   footballFindLeaderReplayLabel,
 } from "./FootballFindLeaderPage";
@@ -34,6 +35,33 @@ function deterministicBoard() {
 describe("Football Find the Leader UI parity", () => {
   beforeEach(() => {
     window.localStorage.clear();
+  });
+
+  it("uses the UFC-style replay hero and three-part progress module", () => {
+    const { definition, seed } = deterministicBoard();
+    render(
+      <MemoryRouter initialEntries={[`/football/find-leader?seed=${seed}&definition=${encodeURIComponent(definition.id)}`]}>
+        <FootballFindLeaderPage />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText("REPLAYABLE GAME")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "NEW LINEUP" })).toBeInTheDocument();
+    const progress = screen.getByLabelText("Find the Leader progress");
+    expect(within(progress).getByText("ROUND")).toBeInTheDocument();
+    expect(within(progress).getByText("STANDING")).toBeInTheDocument();
+    expect(within(progress).getByText("SAFE")).toBeInTheDocument();
+    expect(progress).toHaveTextContent("1");
+    expect(progress).toHaveTextContent("10");
+    expect(progress).toHaveTextContent("0/9");
+  });
+
+  it("uses canonical team marks for season/team subjects without assigning career players a misleading franchise logo", () => {
+    const seasonAsset = footballFindLeaderCandidateAsset("nfl-qb-season", "peyton-manning-2013");
+    expect(seasonAsset).toMatchObject({ kind: "team-mark", label: "Denver Broncos" });
+    expect(seasonAsset?.src).toContain("/nfl/500/den.png");
+    expect(footballFindLeaderCandidateAsset("nfl-qb-career", "peyton-manning")).toBeNull();
+    expect(footballFindLeaderCandidateAsset("nfl-rb-career", "emmitt-smith")).toBeNull();
   });
 
   it("keeps safe eliminations visible and reveals their stat without repeating generic pool context", () => {
