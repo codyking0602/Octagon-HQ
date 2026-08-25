@@ -5,6 +5,7 @@ export type FootballTeamMediaId = `nfl:${string}` | `cfb:${string}`;
 function slugify(value: string) {
   return value
     .toLowerCase()
+    .replace(/a\s*&\s*m/g, "am")
     .replace(/&/g, "and")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
