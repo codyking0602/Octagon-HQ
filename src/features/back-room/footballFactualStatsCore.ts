@@ -7,6 +7,7 @@ import {
   expandedFootballFactSources,
   expandedFootballFactualRecords,
 } from "./footballFactualStatsExpansion";
+import { getFootballSubject } from "./footballSubjectRegistry";
 
 export type FootballFactScope =
   | "nfl-player-career"
@@ -204,70 +205,14 @@ export interface FootballFactSource {
 }
 
 const seedSources: readonly FootballFactSource[] = [
-  {
-    id: "pfr-peyton-manning",
-    publisher: "Pro Football Reference",
-    title: "Peyton Manning player record",
-    url: "https://www.pro-football-reference.com/players/M/MannPe00.htm",
-    reviewedOn: "2026-08-22",
-    coverage: "Completed NFL career through 2015",
-  },
-  {
-    id: "pfr-dan-marino",
-    publisher: "Pro Football Reference",
-    title: "Dan Marino player record",
-    url: "https://www.pro-football-reference.com/players/M/MariDa00.htm",
-    reviewedOn: "2026-08-22",
-    coverage: "Completed NFL career through 1999",
-  },
-  {
-    id: "pfr-john-elway",
-    publisher: "Pro Football Reference",
-    title: "John Elway player record",
-    url: "https://www.pro-football-reference.com/players/E/ElwaJo00.htm",
-    reviewedOn: "2026-08-22",
-    coverage: "Completed NFL career through 1998",
-  },
-  {
-    id: "pfr-emmitt-smith",
-    publisher: "Pro Football Reference",
-    title: "Emmitt Smith player record",
-    url: "https://www.pro-football-reference.com/players/S/SmitEm00.htm",
-    reviewedOn: "2026-08-22",
-    coverage: "Completed NFL career through 2004",
-  },
-  {
-    id: "pfr-barry-sanders",
-    publisher: "Pro Football Reference",
-    title: "Barry Sanders player record",
-    url: "https://www.pro-football-reference.com/players/S/SandBa00.htm",
-    reviewedOn: "2026-08-22",
-    coverage: "Completed NFL career through 1998",
-  },
-  {
-    id: "pfr-pass-yards-career",
-    publisher: "Pro Football Reference",
-    title: "NFL Passing Yards Career Leaders",
-    url: "https://www.pro-football-reference.com/leaders/pass_yds_career.htm",
-    reviewedOn: "2026-08-22",
-    coverage: "Career passing totals for the canonical 25-quarterback compatibility pool",
-  },
-  {
-    id: "pfr-rush-yards-career",
-    publisher: "Pro Football Reference",
-    title: "NFL Rushing Yards Career Leaders",
-    url: "https://www.pro-football-reference.com/leaders/rush_yds_career.htm",
-    reviewedOn: "2026-08-22",
-    coverage: "Career rushing totals for the canonical 25-running-back compatibility pool",
-  },
-  {
-    id: "cfr-champion-season-stat-lines",
-    publisher: "College Football at Sports-Reference",
-    title: "National-champion season stat lines",
-    url: "https://www.sports-reference.com/cfb/",
-    reviewedOn: "2026-08-25",
-    coverage: "Completed national-champion team seasons retained by the compatibility factual catalog",
-  },
+  { id: "pfr-peyton-manning", publisher: "Pro Football Reference", title: "Peyton Manning player record", url: "https://www.pro-football-reference.com/players/M/MannPe00.htm", reviewedOn: "2026-08-22", coverage: "Completed NFL career through 2015" },
+  { id: "pfr-dan-marino", publisher: "Pro Football Reference", title: "Dan Marino player record", url: "https://www.pro-football-reference.com/players/M/MariDa00.htm", reviewedOn: "2026-08-22", coverage: "Completed NFL career through 1999" },
+  { id: "pfr-john-elway", publisher: "Pro Football Reference", title: "John Elway player record", url: "https://www.pro-football-reference.com/players/E/ElwaJo00.htm", reviewedOn: "2026-08-22", coverage: "Completed NFL career through 1998" },
+  { id: "pfr-emmitt-smith", publisher: "Pro Football Reference", title: "Emmitt Smith player record", url: "https://www.pro-football-reference.com/players/S/SmitEm00.htm", reviewedOn: "2026-08-22", coverage: "Completed NFL career through 2004" },
+  { id: "pfr-barry-sanders", publisher: "Pro Football Reference", title: "Barry Sanders player record", url: "https://www.pro-football-reference.com/players/S/SandBa00.htm", reviewedOn: "2026-08-22", coverage: "Completed NFL career through 1998" },
+  { id: "pfr-pass-yards-career", publisher: "Pro Football Reference", title: "NFL Passing Yards Career Leaders", url: "https://www.pro-football-reference.com/leaders/pass_yds_career.htm", reviewedOn: "2026-08-22", coverage: "Career passing totals for the canonical 25-quarterback compatibility pool" },
+  { id: "pfr-rush-yards-career", publisher: "Pro Football Reference", title: "NFL Rushing Yards Career Leaders", url: "https://www.pro-football-reference.com/leaders/rush_yds_career.htm", reviewedOn: "2026-08-22", coverage: "Career rushing totals for the canonical 25-running-back compatibility pool" },
+  { id: "cfr-champion-season-stat-lines", publisher: "College Football at Sports-Reference", title: "National-champion season stat lines", url: "https://www.sports-reference.com/cfb/", reviewedOn: "2026-08-25", coverage: "Completed national-champion team seasons retained by the compatibility factual catalog" },
   { id: "cfr-1995-nebraska", publisher: "College Football at Sports-Reference", title: "1995 Nebraska team record", url: "https://www.sports-reference.com/cfb/schools/nebraska/1995.html", reviewedOn: "2026-08-22", coverage: "Completed 1995 season" },
   { id: "cfr-2001-miami", publisher: "College Football at Sports-Reference", title: "2001 Miami team record", url: "https://www.sports-reference.com/cfb/schools/miami-fl/2001.html", reviewedOn: "2026-08-22", coverage: "Completed 2001 season" },
   { id: "cfr-2005-texas", publisher: "College Football at Sports-Reference", title: "2005 Texas team record", url: "https://www.sports-reference.com/cfb/schools/texas/2005.html", reviewedOn: "2026-08-22", coverage: "Completed 2005 season" },
@@ -300,15 +245,13 @@ export interface FootballFactValue {
 
 export interface FootballFactualRecord {
   subjectId: string;
+  /** Primary scope retained for compatibility; `scopes` captures cross-level canonical identities. */
   scope: FootballFactScope;
+  scopes?: readonly FootballFactScope[];
   facts: readonly FootballFactValue[];
 }
 
-const reported = (
-  sourceId: FootballFactSourceId,
-  metricId: FootballFactMetricId,
-  value: number,
-): FootballFactValue => ({
+const reported = (sourceId: FootballFactSourceId, metricId: FootballFactMetricId, value: number): FootballFactValue => ({
   metricId,
   value,
   evidence: { sourceIds: [sourceId], kind: "reported" },
@@ -338,33 +281,13 @@ const specificCfbSource: Readonly<Record<string, FootballFactSourceId>> = {
 };
 
 const championRecords: Readonly<Record<string, readonly [wins: number, losses: number]>> = {
-  "1995-nebraska": [12, 0],
-  "1996-florida": [12, 1],
-  "1997-michigan": [12, 0],
-  "1998-tennessee": [13, 0],
-  "1999-florida-state": [12, 0],
-  "2000-oklahoma": [13, 0],
-  "2001-miami": [12, 0],
-  "2002-ohio-state": [14, 0],
-  "2003-lsu": [13, 1],
-  "2004-usc": [13, 0],
-  "2005-texas": [13, 0],
-  "2006-florida": [13, 1],
-  "2007-lsu": [12, 2],
-  "2008-florida": [13, 1],
-  "2009-alabama": [14, 0],
-  "2010-auburn": [14, 0],
-  "2011-alabama": [12, 1],
-  "2012-alabama": [13, 1],
-  "2013-florida-state": [14, 0],
-  "2014-ohio-state": [14, 1],
-  "2015-alabama": [14, 1],
-  "2017-alabama": [13, 1],
-  "2018-clemson": [15, 0],
-  "2019-lsu": [15, 0],
-  "2020-alabama": [13, 0],
-  "2021-georgia": [14, 1],
-  "2022-georgia": [15, 0],
+  "1995-nebraska": [12, 0], "1996-florida": [12, 1], "1997-michigan": [12, 0], "1998-tennessee": [13, 0],
+  "1999-florida-state": [12, 0], "2000-oklahoma": [13, 0], "2001-miami": [12, 0], "2002-ohio-state": [14, 0],
+  "2003-lsu": [13, 1], "2004-usc": [13, 0], "2005-texas": [13, 0], "2006-florida": [13, 1], "2007-lsu": [12, 2],
+  "2008-florida": [13, 1], "2009-alabama": [14, 0], "2010-auburn": [14, 0], "2011-alabama": [12, 1],
+  "2012-alabama": [13, 1], "2013-florida-state": [14, 0], "2014-ohio-state": [14, 1], "2015-alabama": [14, 1],
+  "2017-alabama": [13, 1], "2018-clemson": [15, 0], "2019-lsu": [15, 0], "2020-alabama": [13, 0],
+  "2021-georgia": [14, 1], "2022-georgia": [15, 0],
 };
 
 function requiredCompatibilityValue(subjectId: string, metricId: FootballFindLeaderMetricId) {
@@ -375,20 +298,9 @@ function requiredCompatibilityValue(subjectId: string, metricId: FootballFindLea
 
 function legacyExtras(subjectId: string, sourceId: FootballFactSourceId): FootballFactValue[] {
   switch (subjectId) {
-    case "peyton-manning": return [
-      reported(sourceId, "nfl-ap-mvp-awards", 5),
-      reported(sourceId, "nfl-super-bowl-titles", 2),
-    ];
-    case "dan-marino": return [
-      reported(sourceId, "nfl-ap-mvp-awards", 1),
-      reported(sourceId, "nfl-super-bowl-titles", 0),
-    ];
-    case "john-elway": return [
-      reported(sourceId, "nfl-ap-mvp-awards", 1),
-      reported(sourceId, "nfl-super-bowl-titles", 2),
-    ];
-    case "emmitt-smith": return [reported(sourceId, "nfl-career-rushing-touchdowns", 164)];
-    case "barry-sanders": return [reported(sourceId, "nfl-career-rushing-touchdowns", 99)];
+    case "peyton-manning": return [reported(sourceId, "nfl-ap-mvp-awards", 5), reported(sourceId, "nfl-super-bowl-titles", 2)];
+    case "dan-marino": return [reported(sourceId, "nfl-ap-mvp-awards", 1), reported(sourceId, "nfl-super-bowl-titles", 0)];
+    case "john-elway": return [reported(sourceId, "nfl-ap-mvp-awards", 1), reported(sourceId, "nfl-super-bowl-titles", 2)];
     default: return [];
   }
 }
@@ -414,7 +326,6 @@ const compatibilityFactualRecords: readonly FootballFactualRecord[] = footballFi
       facts: [
         reported(sourceId, "nfl-career-rushing-yards", requiredCompatibilityValue(subject.id, "rb-rushing-yards")),
         reported(sourceId, "nfl-career-rushing-touchdowns", requiredCompatibilityValue(subject.id, "rb-rushing-touchdowns")),
-        ...legacyExtras(subject.id, sourceId).filter((row) => row.metricId !== "nfl-career-rushing-touchdowns"),
       ],
     };
   }
@@ -425,10 +336,7 @@ const compatibilityFactualRecords: readonly FootballFactualRecord[] = footballFi
     subjectId: subject.id,
     scope: "cfb-team-season",
     facts: [
-      ...(record == null ? [] : [
-        reported(sourceId, "cfb-team-wins", record[0]),
-        reported(sourceId, "cfb-team-losses", record[1]),
-      ]),
+      ...(record == null ? [] : [reported(sourceId, "cfb-team-wins", record[0]), reported(sourceId, "cfb-team-losses", record[1])]),
       reported(sourceId, "cfb-team-points-for", requiredCompatibilityValue(subject.id, "cfb-points-for")),
       reported(sourceId, "cfb-team-points-against", requiredCompatibilityValue(subject.id, "cfb-points-against")),
       reported(sourceId, "cfb-team-points-per-game", requiredCompatibilityValue(subject.id, "cfb-points-per-game")),
@@ -439,15 +347,45 @@ const compatibilityFactualRecords: readonly FootballFactualRecord[] = footballFi
   };
 });
 
+function canonicalFactSubjectId(subjectId: string) {
+  return getFootballSubject(subjectId)?.id ?? subjectId;
+}
+
+function mergeCanonicalFactualRecords(records: readonly FootballFactualRecord[]) {
+  const bySubject = new Map<string, FootballFactualRecord>();
+  for (const incoming of records) {
+    const subjectId = canonicalFactSubjectId(incoming.subjectId);
+    const incomingScopes = incoming.scopes ?? [incoming.scope];
+    const current = bySubject.get(subjectId);
+    if (!current) {
+      bySubject.set(subjectId, { ...incoming, subjectId, scopes: [...incomingScopes] });
+      continue;
+    }
+
+    const facts = new Map(current.facts.map((row) => [row.metricId, row]));
+    for (const row of incoming.facts) {
+      const existing = facts.get(row.metricId);
+      if (existing && existing.value !== row.value) {
+        throw new Error(`Conflicting canonical Football fact: ${subjectId}:${row.metricId}`);
+      }
+      if (!existing) facts.set(row.metricId, row);
+    }
+    const scopes = [...new Set([...(current.scopes ?? [current.scope]), ...incomingScopes])];
+    bySubject.set(subjectId, { ...current, scopes, facts: [...facts.values()] });
+  }
+  return [...bySubject.values()];
+}
+
 /**
  * Canonical reusable quantitative Football ledger.
  * Compatibility facts are normalized from the existing factual catalog; broader families live in
  * a data-only expansion partition but use this module's metrics, sources, evidence and lookup owner.
+ * Alias/cross-level rows are collapsed onto the same canonical subject identity here.
  */
-export const footballFactualRecords: readonly FootballFactualRecord[] = [
+export const footballFactualRecords: readonly FootballFactualRecord[] = mergeCanonicalFactualRecords([
   ...compatibilityFactualRecords,
   ...expandedFootballFactualRecords,
-] as const;
+]);
 
 const recordIds = footballFactualRecords.map((record) => record.subjectId);
 if (new Set(recordIds).size !== recordIds.length) {
@@ -459,7 +397,7 @@ const metricDefinitionsById = new Map(footballFactMetricDefinitions.map((row) =>
 const sourcesById = new Map(footballFactSources.map((source) => [source.id, source]));
 
 export function getFootballFactualRecord(subjectId: string) {
-  return recordsBySubjectId.get(subjectId) ?? null;
+  return recordsBySubjectId.get(canonicalFactSubjectId(subjectId)) ?? null;
 }
 
 export function getFootballFact(subjectId: string, metricId: FootballFactMetricId) {
