@@ -40,8 +40,7 @@ function registerFootballTeamAsset(teamId: FootballTeamMediaId, asset: FootballS
   if (!current) footballTeamAssetEntries.set(teamId, asset);
 }
 
-// Core CFB teams used by factual Find the Leader seasons. Each program owns one mark.
-[
+const coreCfbTeamAssets = [
   ["nebraska", 158, "Nebraska"],
   ["tennessee", 2633, "Tennessee"],
   ["florida-state", 52, "Florida State"],
@@ -56,8 +55,12 @@ function registerFootballTeamAsset(teamId: FootballTeamMediaId, asset: FootballS
   ["auburn", 2, "Auburn"],
   ["clemson", 228, "Clemson"],
   ["georgia", 61, "Georgia"],
-] satisfies readonly (readonly [string, number, string])[]
-].forEach(([id, espnId, label]) => registerFootballTeamAsset(footballCfbTeamMediaId(id), cfbMark(espnId, label)));
+] as const;
+
+// Core CFB teams used by factual Find the Leader seasons. Each program owns one mark.
+for (const [id, espnId, label] of coreCfbTeamAssets) {
+  registerFootballTeamAsset(footballCfbTeamMediaId(id), cfbMark(espnId, label));
+}
 
 // Comparison records contribute team relationships, but duplicate seasons collapse onto one team owner.
 for (const item of footballComparisonDepthItems) {
@@ -286,7 +289,7 @@ export const footballSubjectAssets: Readonly<Record<string, FootballSubjectAsset
   ...comparisonPersonAssets,
 };
 
-function subjectUsesTeamMedia(kind: ReturnType<typeof getFootballSubject>["kind"] | undefined) {
+function subjectUsesTeamMedia(kind: string | undefined) {
   return kind === "player-season" || kind === "team-season" || kind === "program" || kind === "program-era";
 }
 
