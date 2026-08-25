@@ -14,6 +14,11 @@ import {
   getFootballFindLeaderFact,
   type FootballFindLeaderMetricId,
 } from "./footballFactualStats";
+import {
+  queryFootballSubjects,
+  type FootballSubjectProfile,
+  type FootballSubjectQuery,
+} from "./footballSubjectRegistry";
 
 export const FOOTBALL_HIT_THE_NUMBER_GAME_ID = "football-hit-the-number";
 export const FOOTBALL_HIT_THE_NUMBER_VERSION = "football-hit-the-number-v2" as const;
@@ -30,16 +35,21 @@ export type FootballHitTheNumberFormatId =
 export type FootballHitTheNumberBoardType = "open-roster" | "random-pool";
 export type FootballHitTheNumberLeague = "NFL" | "CFB";
 export type FootballHitTheNumberDomainId = "volume" | "efficiency" | "dominance";
-type FootballHitTheNumberSubjectGroup = "qb" | "rb" | "cfb";
+export type FootballHitTheNumberSubjectGroup = "qb" | "rb" | "cfb";
 type FootballHitTheNumberSubjectDomainId = "nfl-qb-passing" | "nfl-rb-rushing" | "cfb-champion-scoring";
 
-export interface FootballHitTheNumberSubject {
-  id: string;
-  name: string;
+export interface FootballHitTheNumberSubject extends FootballSubjectProfile {
   subtitle: string;
   group: FootballHitTheNumberSubjectGroup;
   domainId: FootballHitTheNumberSubjectDomainId;
-  era: string;
+}
+
+export interface FootballHitTheNumberThemeDefinition {
+  id: string;
+  label: string;
+  league: FootballHitTheNumberLeague;
+  group: FootballHitTheNumberSubjectGroup;
+  queries: readonly FootballSubjectQuery[];
 }
 
 export interface FootballHitTheNumberSlot {
@@ -111,64 +121,47 @@ export const FOOTBALL_HIT_THE_NUMBER_FORMAT_PROFILE = [
 
 export const FOOTBALL_HIT_THE_NUMBER_PICK_PROFILE = HIT_THE_NUMBER_GENERATION_PROFILE.picks;
 
-const qb = (id: string, name: string, era: string): FootballHitTheNumberSubject => ({
-  id, name, subtitle: era, group: "qb", domainId: "nfl-qb-passing", era,
-});
-const rb = (id: string, name: string, era: string): FootballHitTheNumberSubject => ({
-  id, name, subtitle: era, group: "rb", domainId: "nfl-rb-rushing", era,
-});
-const cfb = (id: string, name: string, era: string): FootballHitTheNumberSubject => ({
-  id, name, subtitle: `${id.slice(0, 4)} national champion`, group: "cfb", domainId: "cfb-champion-scoring", era,
-});
+const decades = (...values: number[]): FootballSubjectQuery[] => values.map((decade) => ({ decade }));
+const seasons = (...values: number[]): FootballSubjectQuery[] => values.map((season) => ({ season }));
 
-const quarterbackSubjects = [
-  qb("dan-marino", "Dan Marino", "1980s icon"),
-  qb("john-elway", "John Elway", "1980s icon"),
-  qb("warren-moon", "Warren Moon", "1980s icon"),
-  qb("brett-favre", "Brett Favre", "1990s icon"),
-  qb("steve-young", "Steve Young", "1990s icon"),
-  qb("troy-aikman", "Troy Aikman", "1990s icon"),
-  qb("peyton-manning", "Peyton Manning", "2000s icon"),
-  qb("drew-brees", "Drew Brees", "2000s icon"),
-  qb("kurt-warner", "Kurt Warner", "2000s icon"),
-  qb("ben-roethlisberger", "Ben Roethlisberger", "2010s icon"),
-  qb("matt-ryan", "Matt Ryan", "2010s icon"),
-  qb("eli-manning", "Eli Manning", "2010s icon"),
+/** Declarative configurations over the canonical registry; never HTN-owned rosters. */
+export const FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG: readonly FootballHitTheNumberThemeDefinition[] = [
+  { id: "nfl-qbs", label: "NFL Quarterbacks", league: "NFL", group: "qb", queries: [{ league: "NFL", position: "QB" }] },
+  { id: "nfl-qbs-2000s-2020s", label: "2000s–2020s QBs", league: "NFL", group: "qb", queries: decades(2000, 2010, 2020) },
+  { id: "nfl-qbs-1990s-2020s", label: "1990s–2020s QBs", league: "NFL", group: "qb", queries: decades(1990, 2000, 2010, 2020) },
+  { id: "nfl-qbs-1960s-1990s", label: "1960s–1990s QBs", league: "NFL", group: "qb", queries: decades(1960, 1970, 1980, 1990) },
+  { id: "nfl-qbs-first-round", label: "First-Round QBs", league: "NFL", group: "qb", queries: [{ league: "NFL", position: "QB", firstRoundPick: true }] },
+  { id: "nfl-qbs-1990s-2000s", label: "1990s–2000s QBs", league: "NFL", group: "qb", queries: decades(1990, 2000) },
+  { id: "nfl-rbs", label: "NFL Running Backs", league: "NFL", group: "rb", queries: [{ league: "NFL", position: "RB" }] },
+  { id: "nfl-rbs-2000s-2020s", label: "2000s–2020s RBs", league: "NFL", group: "rb", queries: decades(2000, 2010, 2020) },
+  { id: "nfl-rbs-1990s-2020s", label: "1990s–2020s RBs", league: "NFL", group: "rb", queries: decades(1990, 2000, 2010, 2020) },
+  { id: "nfl-rbs-1960s-1990s", label: "1960s–1990s RBs", league: "NFL", group: "rb", queries: decades(1960, 1970, 1980, 1990) },
+  { id: "cfb-champions", label: "National Champions", league: "CFB", group: "cfb", queries: [{ league: "CFB", kind: "team-season", nationalChampion: true }] },
+  { id: "cfb-bcs-cfp", label: "BCS + CFP Champions", league: "CFB", group: "cfb", queries: seasons(1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2017,2018,2019,2020,2021,2022) },
+  { id: "cfb-2000s", label: "2000s Champions", league: "CFB", group: "cfb", queries: seasons(2000,2001,2002,2003,2004,2005,2006,2007,2008,2009) },
+  { id: "cfb-2010-2022", label: "2010–2022 Champions", league: "CFB", group: "cfb", queries: seasons(2010,2011,2012,2013,2014,2015,2017,2018,2019,2020,2021,2022) },
+  { id: "cfb-2003-2015", label: "2003–2015 Champions", league: "CFB", group: "cfb", queries: seasons(2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015) },
+  { id: "cfb-pre-cfp", label: "Pre-CFP Champions", league: "CFB", group: "cfb", queries: seasons(1995,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013) },
+  { id: "cfb-21st-century", label: "21st-Century Champions", league: "CFB", group: "cfb", queries: seasons(2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2017,2018,2019,2020,2021,2022) },
+  { id: "cfb-2005-2022", label: "2005–2022 Champions", league: "CFB", group: "cfb", queries: seasons(2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2017,2018,2019,2020,2021,2022) },
+  { id: "cfb-early-bcs", label: "Early BCS Champions", league: "CFB", group: "cfb", queries: seasons(1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009) },
+  { id: "cfb-2004-2022", label: "2004–2022 Champions", league: "CFB", group: "cfb", queries: seasons(2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2017,2018,2019,2020,2021,2022) },
+  { id: "cfb-bcs-to-cfp", label: "BCS-to-CFP Bridge Champions", league: "CFB", group: "cfb", queries: seasons(2008,2009,2010,2011,2012,2013,2014,2015,2017,2018,2019) },
 ] as const;
 
-const runningBackSubjects = [
-  rb("jim-brown", "Jim Brown", "1960s/70s icon"),
-  rb("walter-payton", "Walter Payton", "1960s/70s icon"),
-  rb("tony-dorsett", "Tony Dorsett", "1960s/70s icon"),
-  rb("barry-sanders", "Barry Sanders", "1980s/90s icon"),
-  rb("eric-dickerson", "Eric Dickerson", "1980s/90s icon"),
-  rb("emmitt-smith", "Emmitt Smith", "1980s/90s icon"),
-  rb("curtis-martin", "Curtis Martin", "1990s/2000s icon"),
-  rb("jerome-bettis", "Jerome Bettis", "1990s/2000s icon"),
-  rb("marshall-faulk", "Marshall Faulk", "1990s/2000s icon"),
-  rb("ladainian-tomlinson", "LaDainian Tomlinson", "2000s/2010s icon"),
-  rb("adrian-peterson", "Adrian Peterson", "2000s/2010s icon"),
-  rb("frank-gore", "Frank Gore", "2000s/2010s icon"),
-] as const;
-
-const collegeSubjects = [
-  cfb("1995-nebraska", "1995 Nebraska", "pre-BCS"),
-  cfb("2001-miami", "2001 Miami", "pre-BCS/early BCS"),
-  cfb("2005-texas", "2005 Texas", "BCS 2005-10"),
-  cfb("2008-florida", "2008 Florida", "BCS 2005-10"),
-  cfb("2010-auburn", "2010 Auburn", "BCS 2005-10"),
-  cfb("2013-florida-state", "2013 Florida State", "late BCS/early CFP"),
-  cfb("2014-ohio-state", "2014 Ohio State", "late BCS/early CFP"),
-  cfb("2018-clemson", "2018 Clemson", "late BCS/early CFP"),
-  cfb("2019-lsu", "2019 LSU", "modern CFP"),
-  cfb("2020-alabama", "2020 Alabama", "modern CFP"),
-  cfb("2022-georgia", "2022 Georgia", "modern CFP"),
-] as const;
+function canonicalSubject(subject: FootballSubjectProfile, group: FootballHitTheNumberSubjectGroup): FootballHitTheNumberSubject {
+  return {
+    ...subject,
+    subtitle: subject.kind === "team-season" ? `${subject.season} national champion` : subject.school ?? `${subject.position} career`,
+    group,
+    domainId: group === "qb" ? "nfl-qb-passing" : group === "rb" ? "nfl-rb-rushing" : "cfb-champion-scoring",
+  };
+}
 
 export const footballHitTheNumberSubjects: readonly FootballHitTheNumberSubject[] = [
-  ...quarterbackSubjects,
-  ...runningBackSubjects,
-  ...collegeSubjects,
+  ...queryFootballSubjects({ league: "NFL", position: "QB" }).filter((row) => getFootballFindLeaderFact(row.id, "qb-games")).map((row) => canonicalSubject(row, "qb")),
+  ...queryFootballSubjects({ league: "NFL", position: "RB" }).filter((row) => getFootballFindLeaderFact(row.id, "rb-games")).map((row) => canonicalSubject(row, "rb")),
+  ...queryFootballSubjects({ league: "CFB", kind: "team-season" }).filter((row) => getFootballFindLeaderFact(row.id, "cfb-points-for")).map((row) => canonicalSubject(row, "cfb")),
 ];
 const subjectById = new Map(footballHitTheNumberSubjects.map((subject) => [subject.id, subject]));
 
@@ -260,35 +253,6 @@ function metricBoardFor(metricId: FootballFindLeaderMetricId) {
   return board;
 }
 
-function eraSlotsFor(group: FootballHitTheNumberSubjectGroup): readonly FootballHitTheNumberSlot[] {
-  const any = (subject: FootballHitTheNumberSubject) => subject.group === group;
-  if (group === "qb") {
-    return [
-      { id: "1980s", label: "1980s Icon", accepts: (subject) => subject.era === "1980s icon" },
-      { id: "1990s", label: "1990s Icon", accepts: (subject) => subject.era === "1990s icon" },
-      { id: "2000s", label: "2000s Icon", accepts: (subject) => subject.era === "2000s icon" },
-      { id: "2010s", label: "2010s Icon", accepts: (subject) => subject.era === "2010s icon" },
-      { id: "wild-card", label: "Wild Card", accepts: any },
-    ];
-  }
-  if (group === "rb") {
-    return [
-      { id: "60s-70s", label: "1960s/70s Icon", accepts: (subject) => subject.era === "1960s/70s icon" },
-      { id: "80s-90s", label: "1980s/90s Icon", accepts: (subject) => subject.era === "1980s/90s icon" },
-      { id: "90s-00s", label: "1990s/2000s Icon", accepts: (subject) => subject.era === "1990s/2000s icon" },
-      { id: "00s-10s", label: "2000s/2010s Icon", accepts: (subject) => subject.era === "2000s/2010s icon" },
-      { id: "wild-card", label: "Wild Card", accepts: any },
-    ];
-  }
-  return [
-    { id: "early", label: "1990s / Early BCS", accepts: (subject) => subject.id === "1995-nebraska" || subject.id === "2001-miami" },
-    { id: "bcs", label: "BCS 2005–10", accepts: (subject) => subject.era === "BCS 2005-10" },
-    { id: "bridge", label: "Late BCS / Early CFP", accepts: (subject) => subject.era === "late BCS/early CFP" },
-    { id: "modern", label: "Modern CFP", accepts: (subject) => subject.era === "modern CFP" },
-    { id: "wild-card", label: "Wild Card", accepts: any },
-  ];
-}
-
 function buildSlotsFor(
   subjects: readonly FootballHitTheNumberSubject[],
   metricId: FootballFindLeaderMetricId,
@@ -311,11 +275,38 @@ function buildSlotsFor(
   ];
 }
 
-function themeSubjects(board: FootballHitTheNumberMetricBoard) {
-  const subjects = subjectsFor(board.group);
-  if (board.group === "qb") return subjects.filter((subject) => subject.era !== "1980s icon");
-  if (board.group === "rb") return subjects.filter((subject) => subject.era !== "1960s/70s icon");
-  return subjects.filter((subject) => subject.id !== "1995-nebraska");
+function oneFromEachSlots(): readonly FootballHitTheNumberSlot[] {
+  const season = (subject: FootballHitTheNumberSubject) => subject.group === "cfb" ? subject.season : undefined;
+  return [
+    { id: "1990s", label: "1990s Champion", accepts: (subject) => (season(subject) ?? 0) >= 1990 && (season(subject) ?? 0) <= 1999 },
+    { id: "2000-06", label: "2000–06 Champion", accepts: (subject) => (season(subject) ?? 0) >= 2000 && (season(subject) ?? 0) <= 2006 },
+    { id: "2007-13", label: "2007–13 Champion", accepts: (subject) => (season(subject) ?? 0) >= 2007 && (season(subject) ?? 0) <= 2013 },
+    { id: "2014-22", label: "2014–22 Champion", accepts: (subject) => (season(subject) ?? 0) >= 2014 && (season(subject) ?? 0) <= 2022 },
+    { id: "wild-card", label: "Wild Card", accepts: (subject) => subject.group === "cfb" },
+  ];
+}
+
+export function footballHitTheNumberThemeSubjects(theme: FootballHitTheNumberThemeDefinition) {
+  const canonicalIds = new Set(theme.queries.flatMap((query) => queryFootballSubjects(query).map((subject) => subject.id)));
+  return subjectsFor(theme.group).filter((subject) => canonicalIds.has(subject.id));
+}
+
+export const FOOTBALL_HIT_THE_NUMBER_MIN_THEME_DEPTH = 10;
+
+function themeSignature(theme: FootballHitTheNumberThemeDefinition) {
+  return footballHitTheNumberThemeSubjects(theme).map((subject) => subject.id).sort().join(",");
+}
+
+export function footballHitTheNumberPlayableThemes(group?: FootballHitTheNumberSubjectGroup) {
+  const seen = new Set<string>();
+  return FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG.filter((theme) => group == null || theme.group === group)
+    .filter((theme) => footballHitTheNumberThemeSubjects(theme).length >= FOOTBALL_HIT_THE_NUMBER_MIN_THEME_DEPTH)
+    .filter((theme) => {
+      const signature = themeSignature(theme);
+      if (seen.has(signature)) return false;
+      seen.add(signature);
+      return true;
+    });
 }
 
 function assignSlots(
@@ -376,19 +367,17 @@ function slotSolution(
   return visit(0) ? assigned : null;
 }
 
-function combinations<T>(items: readonly T[], count: number, visit: (selection: readonly T[]) => void) {
+function combinations<T>(items: readonly T[], count: number, visit: (selection: readonly T[]) => boolean | void) {
   const selected: T[] = [];
-  function walk(start: number) {
-    if (selected.length === count) {
-      visit([...selected]);
-      return;
-    }
+  function walk(start: number): boolean {
+    if (selected.length === count) return visit([...selected]) === true;
     const remaining = count - selected.length;
     for (let index = start; index <= items.length - remaining; index += 1) {
       selected.push(items[index]!);
-      walk(index + 1);
+      if (walk(index + 1)) return true;
       selected.pop();
     }
+    return false;
   }
   walk(0);
 }
@@ -403,7 +392,7 @@ export function footballHitTheNumberRandomPoolSize(pickCount: number) {
 function slotsForPlan(plan: FootballHitTheNumberPlan) {
   const board = metricBoardFor(plan.metricId);
   const subjects = subjectsFor(board.group);
-  if (plan.formatId === "one-from-each") return eraSlotsFor(board.group);
+  if (plan.formatId === "one-from-each") return oneFromEachSlots();
   if (plan.formatId === "build-the-team") return buildSlotsFor(subjects, plan.metricId);
   return [];
 }
@@ -466,6 +455,7 @@ export function footballHitTheNumberPlanQuality(plan: FootballHitTheNumberPlan):
       || (status === "bust" && score >= 66)
     ) hasMiddlingOutcome = true;
     if (status === "bust") hasMeaningfulBust = true;
+    return legalSelectionCount >= 6 && hasGoodUnder && hasMiddlingOutcome && hasMeaningfulBust;
   });
 
   return {
@@ -491,9 +481,9 @@ function pickCountFor(
   random: () => number,
 ) {
   if (formatId === "one-from-each" || formatId === "build-the-team") return 5;
-  const eligibleCount = (formatId === "themed-lineup"
-    ? themeSubjects(metricBoard)
-    : subjectsFor(metricBoard.group)).length;
+  const eligibleCount = formatId === "themed-lineup"
+    ? Math.max(0, ...footballHitTheNumberPlayableThemes(metricBoard.group).map((theme) => footballHitTheNumberThemeSubjects(theme).length))
+    : subjectsFor(metricBoard.group).length;
   const options = FOOTBALL_HIT_THE_NUMBER_PICK_PROFILE.filter((row) =>
     boardType === "open-roster" || eligibleCount >= footballHitTheNumberRandomPoolSize(row.value));
   return options.length ? weightedValue(options, random) : null;
@@ -526,12 +516,15 @@ function buildCandidate(
   let configurationLabel: string | null = null;
 
   if (formatId === "themed-lineup") {
-    eligible = themeSubjects(metricBoard);
-    configurationLabel = metricBoard.themeLabel;
+    const themes = footballHitTheNumberPlayableThemes(metricBoard.group);
+    const theme = themes[Math.floor(random() * themes.length)];
+    if (!theme) return null;
+    eligible = footballHitTheNumberThemeSubjects(theme);
+    configurationLabel = theme.label;
     solution = shuffleLineup(eligible, random).slice(0, pickCount);
   } else if (formatId === "one-from-each") {
-    slots = eraSlotsFor(metricBoard.group);
-    configurationLabel = "One from every era + wild card";
+    slots = oneFromEachSlots();
+    configurationLabel = "One champion from each era + wild card";
     solution = slotSolution(slots, eligible, metricId, random);
   } else if (formatId === "build-the-team") {
     slots = buildSlotsFor(eligible, metricId);
@@ -589,7 +582,9 @@ export function createFootballHitTheNumberPlan(
   const choiceRandom = seededLineupRandom(FOOTBALL_HIT_THE_NUMBER_GAME_ID, "choice", seed, boardType);
   const formatId = weightedValue(FOOTBALL_HIT_THE_NUMBER_FORMAT_PROFILE, choiceRandom);
   const domain = domains[Math.floor(choiceRandom() * domains.length)]!;
-  const league: FootballHitTheNumberLeague = choiceRandom() < 0.5 ? "NFL" : "CFB";
+  const league: FootballHitTheNumberLeague = formatId === "one-from-each"
+    ? "CFB"
+    : choiceRandom() < 0.5 ? "NFL" : "CFB";
   const leagueMetrics = domain.metrics.filter((row) => row.league === league);
   const metricBoard = leagueMetrics[Math.floor(choiceRandom() * leagueMetrics.length)]!;
   const pickCount = pickCountFor(formatId, boardType, metricBoard, choiceRandom);
