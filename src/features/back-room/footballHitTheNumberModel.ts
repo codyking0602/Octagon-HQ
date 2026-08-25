@@ -127,29 +127,26 @@ const seasons = (...values: number[]): FootballSubjectQuery[] => values.map((sea
 /** Declarative configurations over the canonical registry; never HTN-owned rosters. */
 export const FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG: readonly FootballHitTheNumberThemeDefinition[] = [
   { id: "nfl-qbs", label: "NFL Quarterbacks", league: "NFL", group: "qb", queries: [{ league: "NFL", position: "QB" }] },
-  { id: "nfl-qbs-modern", label: "Modern NFL QBs", league: "NFL", group: "qb", queries: decades(2000, 2010, 2020) },
-  { id: "nfl-qbs-1990-plus", label: "1990s–Present QBs", league: "NFL", group: "qb", queries: decades(1990, 2000, 2010, 2020) },
-  { id: "nfl-qbs-classic", label: "Classic-Era QBs", league: "NFL", group: "qb", queries: decades(1960, 1970, 1980, 1990) },
+  { id: "nfl-qbs-2000s-2020s", label: "2000s–2020s QBs", league: "NFL", group: "qb", queries: decades(2000, 2010, 2020) },
+  { id: "nfl-qbs-1990s-2020s", label: "1990s–2020s QBs", league: "NFL", group: "qb", queries: decades(1990, 2000, 2010, 2020) },
+  { id: "nfl-qbs-1960s-1990s", label: "1960s–1990s QBs", league: "NFL", group: "qb", queries: decades(1960, 1970, 1980, 1990) },
   { id: "nfl-qbs-first-round", label: "First-Round QBs", league: "NFL", group: "qb", queries: [{ league: "NFL", position: "QB", firstRoundPick: true }] },
-  { id: "nfl-qbs-top-picks", label: "Top-Drafted QBs", league: "NFL", group: "qb", queries: [{ league: "NFL", position: "QB", draftRound: 1 }] },
+  { id: "nfl-qbs-1990s-2000s", label: "1990s–2000s QBs", league: "NFL", group: "qb", queries: decades(1990, 2000) },
   { id: "nfl-rbs", label: "NFL Running Backs", league: "NFL", group: "rb", queries: [{ league: "NFL", position: "RB" }] },
-  { id: "nfl-rbs-modern", label: "Modern NFL RBs", league: "NFL", group: "rb", queries: decades(2000, 2010, 2020) },
-  { id: "nfl-rbs-1990-plus", label: "1990s–Present RBs", league: "NFL", group: "rb", queries: decades(1990, 2000, 2010, 2020) },
-  { id: "nfl-rbs-classic", label: "Classic-Era RBs", league: "NFL", group: "rb", queries: decades(1960, 1970, 1980, 1990) },
-  { id: "nfl-skill-first-round", label: "First-Round Skill Players", league: "NFL", group: "rb", queries: [{ league: "NFL", firstRoundPick: true }] },
-  { id: "nfl-2000s-stars", label: "2000s NFL Stars", league: "NFL", group: "qb", queries: decades(1990, 2000) },
+  { id: "nfl-rbs-2000s-2020s", label: "2000s–2020s RBs", league: "NFL", group: "rb", queries: decades(2000, 2010, 2020) },
+  { id: "nfl-rbs-1990s-2020s", label: "1990s–2020s RBs", league: "NFL", group: "rb", queries: decades(1990, 2000, 2010, 2020) },
+  { id: "nfl-rbs-1960s-1990s", label: "1960s–1990s RBs", league: "NFL", group: "rb", queries: decades(1960, 1970, 1980, 1990) },
   { id: "cfb-champions", label: "National Champions", league: "CFB", group: "cfb", queries: [{ league: "CFB", kind: "team-season", nationalChampion: true }] },
-  { id: "cfb-bcs-cfp", label: "BCS + CFP Champions", league: "CFB", group: "cfb", queries: seasons(2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2017,2018,2019,2020,2021,2022) },
+  { id: "cfb-bcs-cfp", label: "BCS + CFP Champions", league: "CFB", group: "cfb", queries: seasons(1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2017,2018,2019,2020,2021,2022) },
   { id: "cfb-2000s", label: "2000s Champions", league: "CFB", group: "cfb", queries: seasons(2000,2001,2002,2003,2004,2005,2006,2007,2008,2009) },
-  { id: "cfb-modern", label: "Modern College Champions", league: "CFB", group: "cfb", queries: seasons(2010,2011,2012,2013,2014,2015,2017,2018,2019,2020,2021,2022) },
-  { id: "cfb-bcs-prime", label: "BCS Prime Champions", league: "CFB", group: "cfb", queries: seasons(2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015) },
-  { id: "cfb-pre-playoff", label: "Pre-Playoff Champions", league: "CFB", group: "cfb", queries: seasons(1995,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013) },
-  { id: "cfb-title-century", label: "21st-Century Champions", league: "CFB", group: "cfb", queries: seasons(2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2017,2018,2019,2020,2021,2022) },
-  { id: "cfb-2005-plus", label: "2005–Present Champions", league: "CFB", group: "cfb", queries: seasons(2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2017,2018,2019,2020,2021,2022) },
-  { id: "cfb-early-bcs", label: "Early BCS Champions", league: "CFB", group: "cfb", queries: seasons(1995,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009) },
-  { id: "cfb-sec-era", label: "SEC-Era Championship Run", league: "CFB", group: "cfb", queries: seasons(2003,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2017,2018,2019,2020,2021,2022) },
-  { id: "cfb-offensive-era", label: "Modern Scoring Era", league: "CFB", group: "cfb", queries: seasons(2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2017,2018,2019,2020,2021,2022) },
-  { id: "cfb-playoff-bridge", label: "BCS-to-Playoff Bridge", league: "CFB", group: "cfb", queries: seasons(2008,2009,2010,2011,2012,2013,2014,2015,2017,2018,2019) },
+  { id: "cfb-2010-2022", label: "2010–2022 Champions", league: "CFB", group: "cfb", queries: seasons(2010,2011,2012,2013,2014,2015,2017,2018,2019,2020,2021,2022) },
+  { id: "cfb-2003-2015", label: "2003–2015 Champions", league: "CFB", group: "cfb", queries: seasons(2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015) },
+  { id: "cfb-pre-cfp", label: "Pre-CFP Champions", league: "CFB", group: "cfb", queries: seasons(1995,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013) },
+  { id: "cfb-21st-century", label: "21st-Century Champions", league: "CFB", group: "cfb", queries: seasons(2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2017,2018,2019,2020,2021,2022) },
+  { id: "cfb-2005-2022", label: "2005–2022 Champions", league: "CFB", group: "cfb", queries: seasons(2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2017,2018,2019,2020,2021,2022) },
+  { id: "cfb-early-bcs", label: "Early BCS Champions", league: "CFB", group: "cfb", queries: seasons(1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009) },
+  { id: "cfb-2004-2022", label: "2004–2022 Champions", league: "CFB", group: "cfb", queries: seasons(2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2017,2018,2019,2020,2021,2022) },
+  { id: "cfb-bcs-to-cfp", label: "BCS-to-CFP Bridge Champions", league: "CFB", group: "cfb", queries: seasons(2008,2009,2010,2011,2012,2013,2014,2015,2017,2018,2019) },
 ] as const;
 
 function canonicalSubject(subject: FootballSubjectProfile, group: FootballHitTheNumberSubjectGroup): FootballHitTheNumberSubject {
@@ -278,6 +275,17 @@ function buildSlotsFor(
   ];
 }
 
+function oneFromEachSlots(): readonly FootballHitTheNumberSlot[] {
+  const season = (subject: FootballHitTheNumberSubject) => subject.group === "cfb" ? subject.season : undefined;
+  return [
+    { id: "1990s", label: "1990s Champion", accepts: (subject) => (season(subject) ?? 0) >= 1990 && (season(subject) ?? 0) <= 1999 },
+    { id: "2000-06", label: "2000–06 Champion", accepts: (subject) => (season(subject) ?? 0) >= 2000 && (season(subject) ?? 0) <= 2006 },
+    { id: "2007-13", label: "2007–13 Champion", accepts: (subject) => (season(subject) ?? 0) >= 2007 && (season(subject) ?? 0) <= 2013 },
+    { id: "2014-22", label: "2014–22 Champion", accepts: (subject) => (season(subject) ?? 0) >= 2014 && (season(subject) ?? 0) <= 2022 },
+    { id: "wild-card", label: "Wild Card", accepts: (subject) => subject.group === "cfb" },
+  ];
+}
+
 export function footballHitTheNumberThemeSubjects(theme: FootballHitTheNumberThemeDefinition) {
   const canonicalIds = new Set(theme.queries.flatMap((query) => queryFootballSubjects(query).map((subject) => subject.id)));
   return subjectsFor(theme.group).filter((subject) => canonicalIds.has(subject.id));
@@ -285,10 +293,20 @@ export function footballHitTheNumberThemeSubjects(theme: FootballHitTheNumberThe
 
 export const FOOTBALL_HIT_THE_NUMBER_MIN_THEME_DEPTH = 10;
 
+function themeSignature(theme: FootballHitTheNumberThemeDefinition) {
+  return footballHitTheNumberThemeSubjects(theme).map((subject) => subject.id).sort().join(",");
+}
+
 export function footballHitTheNumberPlayableThemes(group?: FootballHitTheNumberSubjectGroup) {
-  return FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG.filter((theme) =>
-    (group == null || theme.group === group)
-    && footballHitTheNumberThemeSubjects(theme).length >= FOOTBALL_HIT_THE_NUMBER_MIN_THEME_DEPTH);
+  const seen = new Set<string>();
+  return FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG.filter((theme) => group == null || theme.group === group)
+    .filter((theme) => footballHitTheNumberThemeSubjects(theme).length >= FOOTBALL_HIT_THE_NUMBER_MIN_THEME_DEPTH)
+    .filter((theme) => {
+      const signature = themeSignature(theme);
+      if (seen.has(signature)) return false;
+      seen.add(signature);
+      return true;
+    });
 }
 
 function assignSlots(
@@ -352,9 +370,7 @@ function slotSolution(
 function combinations<T>(items: readonly T[], count: number, visit: (selection: readonly T[]) => boolean | void) {
   const selected: T[] = [];
   function walk(start: number): boolean {
-    if (selected.length === count) {
-      return visit([...selected]) === true;
-    }
+    if (selected.length === count) return visit([...selected]) === true;
     const remaining = count - selected.length;
     for (let index = start; index <= items.length - remaining; index += 1) {
       selected.push(items[index]!);
@@ -376,7 +392,7 @@ export function footballHitTheNumberRandomPoolSize(pickCount: number) {
 function slotsForPlan(plan: FootballHitTheNumberPlan) {
   const board = metricBoardFor(plan.metricId);
   const subjects = subjectsFor(board.group);
-  if (plan.formatId === "one-from-each") return buildSlotsFor(subjects, plan.metricId);
+  if (plan.formatId === "one-from-each") return oneFromEachSlots();
   if (plan.formatId === "build-the-team") return buildSlotsFor(subjects, plan.metricId);
   return [];
 }
@@ -507,8 +523,8 @@ function buildCandidate(
     configurationLabel = theme.label;
     solution = shuffleLineup(eligible, random).slice(0, pickCount);
   } else if (formatId === "one-from-each") {
-    slots = buildSlotsFor(eligible, metricId);
-    configurationLabel = "One from every production band + wild card";
+    slots = oneFromEachSlots();
+    configurationLabel = "One champion from each era + wild card";
     solution = slotSolution(slots, eligible, metricId, random);
   } else if (formatId === "build-the-team") {
     slots = buildSlotsFor(eligible, metricId);
@@ -566,7 +582,9 @@ export function createFootballHitTheNumberPlan(
   const choiceRandom = seededLineupRandom(FOOTBALL_HIT_THE_NUMBER_GAME_ID, "choice", seed, boardType);
   const formatId = weightedValue(FOOTBALL_HIT_THE_NUMBER_FORMAT_PROFILE, choiceRandom);
   const domain = domains[Math.floor(choiceRandom() * domains.length)]!;
-  const league: FootballHitTheNumberLeague = choiceRandom() < 0.5 ? "NFL" : "CFB";
+  const league: FootballHitTheNumberLeague = formatId === "one-from-each"
+    ? "CFB"
+    : choiceRandom() < 0.5 ? "NFL" : "CFB";
   const leagueMetrics = domain.metrics.filter((row) => row.league === league);
   const metricBoard = leagueMetrics[Math.floor(choiceRandom() * leagueMetrics.length)]!;
   const pickCount = pickCountFor(formatId, boardType, metricBoard, choiceRandom);
