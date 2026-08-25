@@ -264,7 +264,7 @@ export const expandedFootballFactualRecords: readonly FootballFactualRecord[] = 
     ["nfl-career-interceptions", 25],
   ]),
 
-  // NFL player seasons: enough numerical shape for season-level games without conflating careers.
+  // NFL player seasons retained here are the currently enabled compatibility pool; PR3 owns expansion/rebalance.
   qbSeason("tom-brady-2007", 4806, 50, 8, 117.2),
   qbSeason("peyton-manning-2013", 5477, 55, 10, 115.1),
   qbSeason("dan-marino-1984", 5084, 48, 17, 108.9),
@@ -276,12 +276,6 @@ export const expandedFootballFactualRecords: readonly FootballFactualRecord[] = 
   qbSeason("jameis-winston-2019", 5109, 33, 30, 84.3),
   qbSeason("zach-wilson-2022", 1688, 6, 7, 72.8),
   qbSeason("jamarcus-russell-2009", 1287, 3, 11, 50.0),
-  qbSeason("peyton-manning-2004", 4557, 49, 10, 121.1),
-  qbSeason("cam-newton-2015", 3837, 35, 10, 99.4),
-  qbSeason("kurt-warner-1999", 4353, 41, 13, 109.2),
-  qbSeason("matt-ryan-2016", 4944, 38, 7, 117.1),
-  qbSeason("patrick-mahomes-2018", 5097, 50, 12, 113.8),
-  qbSeason("aaron-rodgers-2020", 4299, 48, 5, 121.5),
 
   // NFL team seasons: championship and failure cases share one objective numerical shape.
   nflTeam("1972-miami-dolphins", 17, 0, true, 27.5, 12.2),
