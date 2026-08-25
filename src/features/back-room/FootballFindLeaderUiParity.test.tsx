@@ -63,6 +63,16 @@ describe("Football Find the Leader UI parity", () => {
     expect(footballFindLeaderCandidateAsset("nfl-rb-career", "emmitt-smith")).toBeNull();
   });
 
+  it("gives every Alabama championship season the same canonical Alabama logo", () => {
+    const assets = ["2011-alabama", "2017-alabama", "2020-alabama"].map((id) => (
+      footballFindLeaderCandidateAsset("cfb-champion-season", id)
+    ));
+    expect(assets.map((asset) => asset?.label)).toEqual(["Alabama", "Alabama", "Alabama"]);
+    expect(new Set(assets.map((asset) => asset?.src))).toEqual(new Set([
+      "https://a.espncdn.com/i/teamlogos/ncaa/500/333.png",
+    ]));
+  });
+
   it("keeps safe eliminations visible and reveals their stat without repeating generic pool context", () => {
     const { board, definition, seed } = deterministicBoard();
     const safe = board.candidates.find((candidate) => candidate.id !== board.leaderId)!;
