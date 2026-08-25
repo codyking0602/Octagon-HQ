@@ -20,6 +20,7 @@ import {
   footballChallengeUrl,
   footballCuratedIdentity,
 } from "./footballChallengeRuntime";
+import { footballSubjectAsset } from "./footballSubjectAssets";
 import "../../styles/football-find-leader.css";
 
 interface ResultState {
@@ -27,6 +28,8 @@ interface ResultState {
   perfect: boolean;
   fatalId: string | null;
 }
+
+type FootballFindLeaderDomainId = FootballFindLeaderRun["board"]["domainId"];
 
 export function footballFindLeaderRankLabel(rows: readonly { value: number }[], index: number) {
   const value = rows[index]?.value;
@@ -38,6 +41,56 @@ export function footballFindLeaderRankLabel(rows: readonly { value: number }[], 
 
 export function footballFindLeaderReplayLabel(type: PlayLineupType) {
   return type === "replayable" ? "NEW LINEUP" : replayLabelFor(type);
+}
+
+export function footballFindLeaderCandidateAsset(domainId: FootballFindLeaderDomainId, candidateId: string) {
+  if (domainId === "nfl-qb-career" || domainId === "nfl-rb-career") return null;
+  return footballSubjectAsset(candidateId);
+}
+
+function footballFindLeaderFallbackMark(domainId: FootballFindLeaderDomainId) {
+  if (domainId === "nfl-qb-career" || domainId === "nfl-qb-season") return "QB";
+  if (domainId === "nfl-rb-career") return "RB";
+  return domainId.startsWith("cfb-") ? "CFB" : "NFL";
+}
+
+function FootballFindLeaderVisual({
+  candidateId,
+  candidateName,
+  domainId,
+  compact = false,
+}: {
+  candidateId: string;
+  candidateName: string;
+  domainId: FootballFindLeaderDomainId;
+  compact?: boolean;
+}) {
+  const asset = footballFindLeaderCandidateAsset(domainId, candidateId);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    setFailed(false);
+  }, [asset?.src, candidateId]);
+
+  return (
+    <span
+      className={`football-find-card__visual${asset && !failed ? " has-logo" : ""}${compact ? " is-compact" : ""}`}
+      aria-label={asset && !failed ? `${asset.label} logo for ${candidateName}` : `${candidateName} ${footballFindLeaderFallbackMark(domainId)} mark`}
+    >
+      {asset && !failed ? (
+        <img
+          alt=""
+          loading="lazy"
+          referrerPolicy="no-referrer"
+          src={asset.src}
+          title={asset.label}
+          onError={() => setFailed(true)}
+        />
+      ) : (
+        <b aria-hidden="true">{footballFindLeaderFallbackMark(domainId)}</b>
+      )}
+    </span>
+  );
 }
 
 function resolveChallengeRun(seed: string | null, definitionId: string | null, challengeId: string): FootballFindLeaderRun | null {
@@ -178,17 +231,22 @@ export default function FootballFindLeaderPage() {
           </section>
         ) : null}
         <section className={`football-find-result${result.perfect ? " is-perfect" : ""}`}>
-          <p className="eyebrow">{result.perfect ? "PERFECT RUN" : "RUN ENDED"}</p>
-          <h1>{result.score}/100</h1>
-          <p>{result.perfect
-            ? `You cleared all nine decoys and left ${leader.name} standing.`
-            : `You eliminated the group leader, ${leader.name}, in Round ${fatalRound}.`}</p>
-          <div>
-            <small>GROUP LEADER</small>
-            <strong>{leader.name}</strong>
-            {showCandidateContext ? <span>{leader.subtitle}</span> : null}
-            <b>{formatFootballFindLeaderValue(board, leader.value)} {board.shortLabel}</b>
+          <div className="football-find-result__copy">
+            <p className="eyebrow">{result.perfect ? "PERFECT RUN" : "RUN ENDED"}</p>
+            <h1>{result.score}/100</h1>
+            <p>{result.perfect
+              ? `You cleared all nine decoys and left ${leader.name} standing.`
+              : `You eliminated the group leader, ${leader.name}, in Round ${fatalRound}.`}</p>
           </div>
+          <article className="football-find-result__leader">
+            <FootballFindLeaderVisual candidateId={leader.id} candidateName={leader.name} domainId={board.domainId} compact />
+            <span>
+              <small>GROUP LEADER</small>
+              <strong>{leader.name}</strong>
+              {showCandidateContext ? <em>{leader.subtitle}</em> : null}
+              <b>{formatFootballFindLeaderValue(board, leader.value)} {board.shortLabel}</b>
+            </span>
+          </article>
         </section>
 
         <section className="football-find-reveal">
@@ -228,27 +286,38 @@ export default function FootballFindLeaderPage() {
         </section>
       ) : null}
       <section className="football-find-hero">
-        <p className="eyebrow">FIND THE LEADER · FOOTBALL</p>
-        <h1>{board.question}</h1>
-        <p>{board.context}</p>
-        <div className="football-find-hero__status">
-          <div><strong>{10 - eliminated.length}</strong><span>STANDING</span></div>
-          <div><strong>{eliminated.length}</strong><span>SAFE</span></div>
-          <small>{footballFindLeaderCategoryLabel(board.domainId)} · Eliminate until only the leader remains.</small>
+        <div className="football-find-hero__copy">
+          <p className="eyebrow">{shared ? "CHALLENGE BOARD" : "REPLAYABLE GAME"}</p>
+          <h1>{board.question}</h1>
+          <p>{board.context}</p>
+          <small className="football-find-hero__category">{footballFindLeaderCategoryLabel(board.domainId)}</small>
+          {!shared ? (
+            <button className="primary-action football-find-hero__new-lineup" type="button" onClick={startNew}>
+              NEW LINEUP
+            </button>
+          ) : null}
         </div>
+        <aside className="football-find-hero__status" aria-label="Find the Leader progress">
+          <div><span>ROUND</span><strong>{eliminated.length + 1}</strong></div>
+          <div><span>STANDING</span><strong>{10 - eliminated.length}</strong></div>
+          <div><span>SAFE</span><strong>{eliminated.length}/9</strong></div>
+        </aside>
       </section>
 
       <section className="football-find-grid" aria-label="Football Find the Leader candidates">
-        {board.candidates.map((candidate) => {
+        {board.candidates.map((candidate, index) => {
           const safe = eliminatedSet.has(candidate.id);
-          const className = `${safe ? "is-safe" : ""}${showCandidateContext ? " has-context" : ""}`;
           return (
-            <button className={className} type="button" disabled={safe} onClick={() => eliminate(candidate.id)} key={candidate.id}>
-              {showCandidateContext ? <small>{candidate.subtitle}</small> : null}
-              <strong>{candidate.name}</strong>
-              <span>{safe
+            <button className={`football-find-card${safe ? " is-safe" : ""}`} type="button" disabled={safe} onClick={() => eliminate(candidate.id)} key={candidate.id}>
+              <span className="football-find-card__number">{index + 1}</span>
+              <FootballFindLeaderVisual candidateId={candidate.id} candidateName={candidate.name} domainId={board.domainId} />
+              <span className="football-find-card__copy">
+                {showCandidateContext ? <small>{candidate.subtitle}</small> : null}
+                <strong>{candidate.name}</strong>
+              </span>
+              <em>{safe
                 ? <>SAFE · <b>{formatFootballFindLeaderValue(board, candidate.value)} {board.shortLabel}</b></>
-                : "TAP TO ELIMINATE"}</span>
+                : "ELIMINATE"}</em>
             </button>
           );
         })}
