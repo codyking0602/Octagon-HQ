@@ -1,3 +1,5 @@
+import { footballComparisonCanonicalSubjects } from "./footballCanonicalSubjectExpansion";
+
 export type FootballFindLeaderDomainId = "nfl-qb-career" | "nfl-rb-career" | "cfb-champion-season";
 export type FootballFindLeaderLeagueId = "nfl" | "cfb";
 
@@ -240,7 +242,7 @@ const cfbRows: readonly CfbChampionRow[] = [
   { id: "2022-georgia", name: "2022 Georgia", pointsFor: 616, pointsAgainst: 214, pointsPerGame: 41.1, opponentPointsPerGame: 14.3, srs: 25.48, sos: 6.28 },
 ] as const;
 
-export type FootballCanonicalSubjectKind = "player-career" | "team-season" | "program";
+export type FootballCanonicalSubjectKind = "player-career" | "player-season" | "team-season" | "program" | "program-era" | "coach";
 export type FootballCanonicalLeague = "NFL" | "CFB";
 export type FootballCanonicalPosition = "QB" | "RB" | "WR" | "TE" | "OL" | "DL" | "LB" | "DB" | "K" | "P";
 
@@ -251,8 +253,11 @@ export interface FootballCanonicalSubject {
   league: FootballCanonicalLeague;
   /** Every level represented by this identity; a two-level player remains one subject. */
   leagues?: readonly FootballCanonicalLeague[];
+  aliases?: readonly string[];
   position?: FootballCanonicalPosition;
   season?: number;
+  startSeason?: number;
+  endSeason?: number;
   activeDecades?: readonly number[];
   school?: string;
   conference?: string;
@@ -532,16 +537,21 @@ function mergeCanonicalSubjects(subjects: readonly FootballCanonicalSubject[]) {
     const key = subject.kind === "player-career" ? subject.name.toLowerCase().replace(/[^a-z0-9]/g, "") : subject.id;
     const current = byName.get(key);
     if (!current) {
-      byName.set(key, { ...subject, leagues: [subject.league] });
+      byName.set(key, { ...subject, leagues: subject.leagues ?? [subject.league] });
       continue;
     }
+    const aliases = new Set([...(current.aliases ?? []), ...(subject.aliases ?? [])]);
+    if (subject.id !== current.id) aliases.add(subject.id);
     const activeDecades = [...new Set([...(current.activeDecades ?? []), ...(subject.activeDecades ?? [])])];
+    const leagues = [...new Set([...(current.leagues ?? [current.league]), ...(subject.leagues ?? [subject.league])])];
     byName.set(key, {
       ...current,
       ...subject,
       id: current.id,
+      name: current.name,
       league: current.league,
-      leagues: [...new Set([...(current.leagues ?? [current.league]), subject.league])],
+      leagues,
+      ...(aliases.size === 0 ? {} : { aliases: [...aliases] }),
       ...(activeDecades.length === 0 ? {} : { activeDecades }),
     });
   }
@@ -554,6 +564,7 @@ export const footballCanonicalSubjects: readonly FootballCanonicalSubject[] = me
   ...footballProgramSubjects,
   ...footballCollegePlayerSubjects,
   ...footballNflExpansionSubjects,
+  ...footballComparisonCanonicalSubjects,
 ]);
 
 export const FOOTBALL_FIND_LEADER_SUBJECT_COUNT = footballFindLeaderSubjects.length;
