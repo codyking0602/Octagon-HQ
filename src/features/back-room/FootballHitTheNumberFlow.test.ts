@@ -18,7 +18,7 @@ function buildTheTeamPlan() {
 }
 
 describe("Football Hit the Number Build the Team flow", () => {
-  it("makes the generated candidate pool the only new-game roster mode", () => {
+  it("keeps Football on its single generated-pool mode while using the UFC Hit the Number shell", () => {
     expect(FOOTBALL_HIT_THE_NUMBER_DEFAULT_BOARD_TYPE).toBe("random-pool");
     for (let index = 0; index < 80; index += 1) {
       expect(createFootballHitTheNumberPlan(`football-random-first-${index}`).boardType).toBe("random-pool");
@@ -29,6 +29,12 @@ describe("Football Hit the Number Build the Team flow", () => {
     expect(footballHitTheNumberPageSource).not.toContain("RANDOM POOL");
     expect(footballHitTheNumberPageSource).not.toContain("hit-number-mode-toggle");
     expect(footballHitTheNumberPageSource).not.toContain("chooseBoardType");
+    expect(footballHitTheNumberPageSource).toContain('className="hit-number-heading"');
+    expect(footballHitTheNumberPageSource).toContain('className="hit-number-target"');
+    expect(footballHitTheNumberPageSource).toContain('className="hit-number-slots"');
+    expect(footballHitTheNumberPageSource).toContain('className="hit-number-new-board"');
+    expect(footballHitTheNumberPageSource).toContain("NEW LINEUP");
+    expect(footballHitTheNumberPageSource).toContain("plan.configurationLabel");
   });
 
   it("advances Build the Team through the five canonical tiers in order", () => {
@@ -61,6 +67,6 @@ describe("Football Hit the Number Build the Team flow", () => {
     expect(footballHitTheNumberPageSource).toContain("footballHitTheNumberAvailableBuildSubjectIds");
     expect(footballHitTheNumberPageSource).toContain("displayedSubjectIds");
     expect(footballHitTheNumberPageSource).toContain('plan.formatId === "build-the-team"');
-    expect(footballHitTheNumberPageSource).toContain('"NOW · "');
+    expect(footballHitTheNumberPageSource).toContain("activeBuildSlot.label");
   });
 });
