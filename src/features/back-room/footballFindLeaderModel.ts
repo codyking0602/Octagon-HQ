@@ -15,14 +15,59 @@ import {
   footballFindLeaderLeagueForDomain,
   footballFindLeaderMetricDefinitions,
   footballFindLeaderSubjects,
-  formatFootballFindLeaderFact,
-  getFootballFindLeaderFact,
+  formatFootballFact,
+  getFootballFact,
+  type FootballFactMetricId,
   type FootballFindLeaderDomainId,
   type FootballFindLeaderFamilyId,
   type FootballFindLeaderLeagueId,
   type FootballFindLeaderMetricDefinition,
   type FootballFindLeaderMetricId,
 } from "./footballFactualStats";
+
+export const footballFindLeaderCanonicalMetricByMetric: Readonly<Record<FootballFindLeaderMetricId, FootballFactMetricId>> = {
+  "qb-games": "nfl-career-games",
+  "qb-completions": "nfl-career-passing-completions",
+  "qb-attempts": "nfl-career-passing-attempts",
+  "qb-passing-yards": "nfl-career-passing-yards",
+  "qb-passing-touchdowns": "nfl-career-passing-touchdowns",
+  "qb-interceptions": "nfl-career-interceptions-thrown",
+  "qb-passer-rating": "nfl-career-passer-rating",
+  "qb-completion-pct": "nfl-career-completion-percentage",
+  "qb-yards-per-attempt": "nfl-career-passing-yards-per-attempt",
+  "qb-touchdown-pct": "nfl-career-passing-touchdown-percentage",
+  "qb-passing-yards-per-game": "nfl-career-passing-yards-per-game",
+  "qb-passing-touchdowns-per-game": "nfl-career-passing-touchdowns-per-game",
+  "qb-completions-per-game": "nfl-career-passing-completions-per-game",
+  "qb-attempts-per-game": "nfl-career-passing-attempts-per-game",
+  "qb-td-int-ratio": "nfl-career-passing-touchdown-interception-ratio",
+  "rb-games": "nfl-career-games",
+  "rb-rushing-attempts": "nfl-career-rushing-attempts",
+  "rb-rushing-yards": "nfl-career-rushing-yards",
+  "rb-rushing-touchdowns": "nfl-career-rushing-touchdowns",
+  "rb-receptions": "nfl-career-receptions",
+  "rb-receiving-yards": "nfl-career-receiving-yards",
+  "rb-receiving-touchdowns": "nfl-career-receiving-touchdowns",
+  "rb-rush-yards-per-attempt": "nfl-career-rushing-yards-per-attempt",
+  "rb-rushing-yards-per-game": "nfl-career-rushing-yards-per-game",
+  "rb-rushing-touchdowns-per-game": "nfl-career-rushing-touchdowns-per-game",
+  "rb-receptions-per-game": "nfl-career-receptions-per-game",
+  "rb-receiving-yards-per-game": "nfl-career-receiving-yards-per-game",
+  "rb-scrimmage-yards": "nfl-career-scrimmage-yards",
+  "rb-scrimmage-yards-per-game": "nfl-career-scrimmage-yards-per-game",
+  "rb-scrimmage-touchdowns": "nfl-career-scrimmage-touchdowns",
+  "cfb-points-for": "cfb-team-points-for",
+  "cfb-points-against": "cfb-team-points-against",
+  "cfb-points-per-game": "cfb-team-points-per-game",
+  "cfb-opponent-points-per-game": "cfb-team-opponent-points-per-game",
+  "cfb-point-differential": "cfb-team-point-differential",
+  "cfb-scoring-margin-per-game": "cfb-team-scoring-margin-per-game",
+  "cfb-points-ratio": "cfb-team-points-for-against-ratio",
+  "cfb-differential-rate-pct": "cfb-team-differential-rate-percentage",
+  "cfb-total-points": "cfb-team-total-points",
+  "cfb-srs": "cfb-team-srs",
+  "cfb-sos": "cfb-team-sos",
+};
 
 export const FOOTBALL_FIND_LEADER_GAME_ID = "football-find-leader";
 export const FOOTBALL_FIND_LEADER_VERSION = "football-find-leader-v1";
@@ -116,8 +161,8 @@ export function footballFindLeaderMetricRows(metricId: FootballFindLeaderMetricI
   return footballFindLeaderSubjects
     .filter((subject) => subject.domainId === definition.domainId)
     .flatMap((subject) => {
-      const fact = getFootballFindLeaderFact(subject.id, metricId);
-      return fact ? [{ id: subject.id, name: subject.name, subtitle: subject.subtitle, value: fact.value }] : [];
+      const fact = getFootballFact(subject.id, footballFindLeaderCanonicalMetricByMetric[metricId]);
+      return fact ? [{ id: subject.id, name: subject.name, subtitle: subject.subtitle, value: fact.fact.value }] : [];
     })
     .sort((left, right) => right.value - left.value || left.name.localeCompare(right.name));
 }
@@ -234,7 +279,7 @@ export function createFootballFindLeaderRun(): FootballFindLeaderRun {
 }
 
 export function formatFootballFindLeaderValue(board: Pick<FootballFindLeaderBoard, "metricId">, value: number) {
-  return formatFootballFindLeaderFact(board.metricId, value);
+  return formatFootballFact(footballFindLeaderCanonicalMetricByMetric[board.metricId], value);
 }
 
 export function footballFindLeaderCompetitionAudit() {
