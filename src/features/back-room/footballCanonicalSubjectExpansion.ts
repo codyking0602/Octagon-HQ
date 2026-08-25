@@ -8,17 +8,24 @@ import {
   nflTeamSeasons,
   nflTightEnds,
 } from "./footballComparisonDepthCatalog";
-import type {
-  FootballCanonicalPosition,
-  FootballCanonicalSubject,
-} from "./footballFactualStatsCatalog";
 
-export type FootballExpandedSubjectKind = FootballCanonicalSubject["kind"] | "player-season" | "program-era" | "coach";
-export type FootballExpandedCanonicalSubject = Omit<FootballCanonicalSubject, "kind"> & {
+export type FootballExpandedSubjectKind = "player-career" | "player-season" | "team-season" | "program" | "program-era" | "coach";
+type FootballExpandedLeague = "NFL" | "CFB";
+type FootballExpandedPosition = "QB" | "RB" | "WR" | "TE" | "OL" | "DL" | "LB" | "DB" | "K" | "P";
+
+export interface FootballExpandedCanonicalSubject {
+  id: string;
+  name: string;
   kind: FootballExpandedSubjectKind;
+  league: FootballExpandedLeague;
+  leagues?: readonly FootballExpandedLeague[];
+  position?: FootballExpandedPosition;
+  season?: number;
+  activeDecades?: readonly number[];
+  school?: string;
   startSeason?: number;
   endSeason?: number;
-};
+}
 
 function decadeRange(startSeason: number, endSeason: number) {
   const values: number[] = [];
@@ -38,7 +45,7 @@ function trailingSeason(id: string) {
   return match ? Number(match[1]) : undefined;
 }
 
-const defenderPositions: Readonly<Record<string, FootballCanonicalPosition>> = {
+const defenderPositions: Readonly<Record<string, FootballExpandedPosition>> = {
   "lawrence-taylor": "LB",
   "reggie-white": "DL",
   "aaron-donald": "DL",
