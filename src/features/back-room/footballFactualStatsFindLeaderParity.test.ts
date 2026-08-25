@@ -20,7 +20,7 @@ const derivedLegacyMetrics = new Set<FootballFindLeaderMetricId>([
 describe("Football Find the Leader canonical factual parity", () => {
   it("reproduces every current subject and applicable metric with traceable canonical evidence", () => {
     expect(footballFindLeaderSubjects).toHaveLength(75);
-    expect(footballFindLeaderMetricDefinitions).toHaveLength(41);
+    expect(footballFindLeaderMetricDefinitions).toHaveLength(47);
 
     for (const subject of footballFindLeaderSubjects) {
       const definitions = footballFindLeaderMetricDefinitions.filter(({ domainId }) => domainId === subject.domainId);
