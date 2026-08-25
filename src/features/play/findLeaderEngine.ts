@@ -8,6 +8,10 @@ import {
   stableLineupHash,
 } from "./lineupModel";
 import {
+  selectFindLeaderCompetition,
+  viableCompetitiveLeaders,
+} from "./findLeaderCompetition";
+import {
   deriveUfcCareerStats,
   isUfcCareerFinish,
   isUfcCareerTitleFight,
@@ -429,12 +433,6 @@ function scoreFighter(input: RankingInputFighter, definition: FindLeaderQuestion
 
 type ScoredFindLeaderRow = { input: RankingInputFighter; value: number };
 
-type CompetitiveLeaderOption = {
-  leader: ScoredFindLeaderRow;
-  lower: ScoredFindLeaderRow[];
-  competitionScore: number;
-};
-
 function scoredPool(definition: FindLeaderQuestionDefinition): ScoredFindLeaderRow[] {
   return canonicalRankingInputs.fighters
     .map((input) => ({ input, value: scoreFighter(input, definition) }))
@@ -442,83 +440,14 @@ function scoredPool(definition: FindLeaderQuestionDefinition): ScoredFindLeaderR
     .sort((left, right) => right.value - left.value || left.input.fighter.localeCompare(right.input.fighter));
 }
 
-function viableLeaderRows(pool: readonly ScoredFindLeaderRow[], excludeGlobalMax: boolean) {
-  const globalMax = pool[0]?.value ?? 0;
-  return pool.filter((row) => (
-    row.value > 0
-    && (!excludeGlobalMax || row.value < globalMax)
-    && pool.filter((other) => other.value < row.value).length >= 9
-  ));
-}
-
-function competitiveLeaderOptions(pool: readonly ScoredFindLeaderRow[]) {
-  const nonRecordLeaders = viableLeaderRows(pool, true);
-  const viable = nonRecordLeaders.length ? nonRecordLeaders : viableLeaderRows(pool, false);
-  return viable
-    .map<CompetitiveLeaderOption>((leader) => {
-      const lower = pool.filter((row) => row.value < leader.value);
-      const nearestNine = lower.slice(0, 9);
-      const scale = Math.max(Math.abs(leader.value), 1);
-      const spread = leader.value - nearestNine.at(-1)!.value;
-      const runnerUpGap = leader.value - nearestNine[0].value;
-      return {
-        leader,
-        lower,
-        competitionScore: (spread / scale) + ((runnerUpGap / scale) * 0.35),
-      };
-    })
-    .sort((left, right) => (
-      left.competitionScore - right.competitionScore
-      || right.leader.value - left.leader.value
-      || left.leader.input.fighter.localeCompare(right.leader.input.fighter)
-    ));
-}
-
-function selectCompetitiveLeader(pool: readonly ScoredFindLeaderRow[], random: () => number) {
-  const options = competitiveLeaderOptions(pool);
-  if (!options.length) return null;
-  const bestScore = options[0].competitionScore;
-  const competitiveWindow = options
-    .filter((option) => option.competitionScore <= bestScore + 0.12)
-    .slice(0, 10);
-  return competitiveWindow[Math.floor(random() * competitiveWindow.length)] ?? options[0];
-}
-
-function selectClosestRows(rows: readonly ScoredFindLeaderRow[], count: number, random: () => number) {
-  if (rows.length < count) return [];
-  const cutoffValue = rows[count - 1].value;
-  const closer = rows.filter((row) => row.value > cutoffValue);
-  const cutoffTier = shuffleLineup(rows.filter((row) => row.value === cutoffValue), random);
-  return [...closer, ...cutoffTier.slice(0, count - closer.length)];
-}
-
-function selectPlausibleChallengers(lower: readonly ScoredFindLeaderRow[], random: () => number) {
-  if (lower.length < 9) return [];
-
-  const core = selectClosestRows(lower, 4, random);
-  const used = new Set(core.map((row) => row.input.fighter));
-
-  const supportPool = lower
-    .slice(4, Math.min(12, lower.length))
-    .filter((row) => !used.has(row.input.fighter));
-  const support = shuffleLineup(supportPool, random).slice(0, 3);
-  support.forEach((row) => used.add(row.input.fighter));
-
-  const wildcardPool = lower
-    .slice(9, Math.min(20, lower.length))
-    .filter((row) => !used.has(row.input.fighter));
-  const wildcards = shuffleLineup(wildcardPool, random).slice(0, 2);
-  wildcards.forEach((row) => used.add(row.input.fighter));
-
-  const selected = [...core, ...support, ...wildcards];
-  if (selected.length < 9) {
-    selected.push(...shuffleLineup(
-      lower.filter((row) => !used.has(row.input.fighter)),
-      random,
-    ).slice(0, 9 - selected.length));
-  }
-  return selected.slice(0, 9);
-}
+const ufcCompetitionConfig = {
+  getId: (row: ScoredFindLeaderRow) => row.input.fighter,
+  getValue: (row: ScoredFindLeaderRow) => row.value,
+  competitiveWindowSize: 10,
+  supportEndIndex: 12,
+  isLeaderAllowed: (row: ScoredFindLeaderRow) => row.value > 0,
+  compareLeaderTie: (left: ScoredFindLeaderRow, right: ScoredFindLeaderRow) => left.input.fighter.localeCompare(right.input.fighter),
+};
 
 function candidateFor(input: RankingInputFighter, value: number): FindLeaderCandidate {
   const presentation = fighterPresentation.get(input.fighter);
@@ -539,9 +468,9 @@ export function buildFindLeaderBoard(
   const random = seededLineupRandom(VERSION, seed, definition.id);
   const pool = scoredPool(definition);
   if (pool.length < 10) return null;
-  const option = selectCompetitiveLeader(pool, random);
+  const option = selectFindLeaderCompetition(pool, random, ufcCompetitionConfig);
   if (!option) return null;
-  const challengers = selectPlausibleChallengers(option.lower, random);
+  const challengers = option.challengers;
   if (challengers.length !== 9) return null;
   const selected = [option.leader, ...challengers];
   const candidates = shuffleLineup(selected.map((row) => candidateFor(row.input, row.value)), random);
@@ -564,7 +493,7 @@ export function findLeaderCompetitionAudit() {
   return findLeaderQuestions.map((definition) => {
     const pool = scoredPool(definition);
     const board = buildFindLeaderBoard(definition, `competition-audit|${definition.id}`, DAILY_ANCHOR);
-    const nonRecordLeaderAvailable = viableLeaderRows(pool, true).length > 0;
+    const nonRecordLeaderAvailable = viableCompetitiveLeaders(pool, ufcCompetitionConfig, true).length > 0;
     if (!board) {
       return {
         definitionId: definition.id,

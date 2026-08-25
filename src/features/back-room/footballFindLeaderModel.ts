@@ -8,6 +8,10 @@ import {
   type PlayLineupIdentity,
 } from "../play/lineupModel";
 import {
+  selectFindLeaderCompetition,
+  viableCompetitiveLeaders,
+} from "../play/findLeaderCompetition";
+import {
   footballFindLeaderLeagueForDomain,
   footballFindLeaderMetricDefinitions,
   footballFindLeaderSubjects,
@@ -118,63 +122,20 @@ export function footballFindLeaderMetricRows(metricId: FootballFindLeaderMetricI
     .sort((left, right) => right.value - left.value || left.name.localeCompare(right.name));
 }
 
-function viableLeaders(pool: readonly ScoredRow[], excludeGlobalMax: boolean) {
-  const globalMax = pool[0]?.value ?? 0;
-  return pool.filter((row) => (
-    (!excludeGlobalMax || row.value < globalMax)
-    && pool.filter((other) => other.value < row.value).length >= FOOTBALL_FIND_LEADER_CANDIDATE_COUNT - 1
-  ));
-}
-
-function competitiveLeader(pool: readonly ScoredRow[], random: () => number) {
-  const nonRecord = viableLeaders(pool, true);
-  const options = nonRecord.length ? nonRecord : viableLeaders(pool, false);
-  if (!options.length) return null;
-  const ranked = options.map((leader) => {
-    const lower = pool.filter((row) => row.value < leader.value);
-    const nearest = lower.slice(0, FOOTBALL_FIND_LEADER_CANDIDATE_COUNT - 1);
-    const scale = Math.max(Math.abs(leader.value), 1);
-    const spread = leader.value - nearest.at(-1)!.value;
-    const runnerUpGap = leader.value - nearest[0]!.value;
-    return { leader, lower, competitionScore: (spread / scale) + (runnerUpGap / scale * 0.35) };
-  }).sort((left, right) => left.competitionScore - right.competitionScore || right.leader.value - left.leader.value);
-  const best = ranked[0]!.competitionScore;
-  const window = ranked.filter((row) => row.competitionScore <= best + 0.12).slice(0, 8);
-  return window[Math.floor(random() * window.length)] ?? ranked[0]!;
-}
-
-function closestRows(rows: readonly ScoredRow[], count: number, random: () => number) {
-  if (rows.length < count) return [];
-  const cutoff = rows[count - 1]!.value;
-  const closer = rows.filter((row) => row.value > cutoff);
-  const tied = shuffleLineup(rows.filter((row) => row.value === cutoff), random);
-  return [...closer, ...tied.slice(0, count - closer.length)];
-}
-
-function plausibleChallengers(lower: readonly ScoredRow[], random: () => number) {
-  const count = FOOTBALL_FIND_LEADER_CANDIDATE_COUNT - 1;
-  if (lower.length < count) return [];
-  const core = closestRows(lower, 4, random);
-  const used = new Set(core.map((row) => row.id));
-  const support = shuffleLineup(lower.slice(4, Math.min(9, lower.length)).filter((row) => !used.has(row.id)), random).slice(0, 3);
-  support.forEach((row) => used.add(row.id));
-  const wildcards = shuffleLineup(lower.slice(9, Math.min(20, lower.length)).filter((row) => !used.has(row.id)), random).slice(0, 2);
-  wildcards.forEach((row) => used.add(row.id));
-  const selected = [...core, ...support, ...wildcards];
-  if (selected.length < count) {
-    const fill = lower.filter((row) => !used.has(row.id));
-    selected.push(...shuffleLineup(fill, random).slice(0, count - selected.length));
-  }
-  return selected.slice(0, count);
-}
+const footballCompetitionConfig = {
+  getId: (row: ScoredRow) => row.id,
+  getValue: (row: ScoredRow) => row.value,
+  competitiveWindowSize: 8,
+  supportEndIndex: 9,
+};
 
 export function buildFootballFindLeaderBoard(definition: FootballFindLeaderQuestionDefinition, seed: string): FootballFindLeaderBoard | null {
   const pool = footballFindLeaderMetricRows(definition.metricId);
   if (pool.length < FOOTBALL_FIND_LEADER_CANDIDATE_COUNT) return null;
   const random = seededLineupRandom(FOOTBALL_FIND_LEADER_VERSION, seed, definition.id);
-  const option = competitiveLeader(pool, random);
+  const option = selectFindLeaderCompetition(pool, random, footballCompetitionConfig);
   if (!option) return null;
-  const challengers = plausibleChallengers(option.lower, random);
+  const challengers = option.challengers;
   if (challengers.length !== FOOTBALL_FIND_LEADER_CANDIDATE_COUNT - 1) return null;
   const candidates = shuffleLineup([option.leader, ...challengers], random);
   return {
@@ -280,7 +241,7 @@ export function footballFindLeaderCompetitionAudit() {
   return footballFindLeaderQuestions.map((definition) => {
     const pool = footballFindLeaderMetricRows(definition.metricId);
     const board = buildFootballFindLeaderBoard(definition, `audit|${definition.id}`);
-    const nonRecordLeaderAvailable = viableLeaders(pool, true).length > 0;
+    const nonRecordLeaderAvailable = viableCompetitiveLeaders(pool, footballCompetitionConfig, true).length > 0;
     const globalLeaderId = pool[0]?.id ?? null;
     if (!board) return { definitionId: definition.id, boardValid: false, nonRecordLeaderAvailable, leaderIsGlobalMax: false, nearContenderCount: 0, outsideClosestNineCount: 0 };
     const leader = pool.find((row) => row.id === board.leaderId)!;
