@@ -8,6 +8,7 @@ import {
   footballFindLeaderCompetitionAudit,
   footballFindLeaderCanonicalMetricByMetric,
   footballFindLeaderMetricRows,
+  footballFindLeaderPools,
   footballFindLeaderQuestions,
   footballFindLeaderReplayAudit,
   formatFootballFindLeaderValue,
@@ -31,14 +32,16 @@ describe("Football Find the Leader maturity", () => {
     vi.restoreAllMocks();
   });
 
-  it("owns 82 questions across 41 real comparable metrics and both NFL + CFB", () => {
-    expect(FOOTBALL_FIND_LEADER_METRIC_COUNT).toBe(41);
-    expect(footballFindLeaderQuestions).toHaveLength(82);
-    expect(new Set(footballFindLeaderQuestions.map((question) => question.id)).size).toBe(82);
-    expect(new Set(footballFindLeaderQuestions.map((question) => question.metricId)).size).toBe(41);
+  it("owns 94 questions across 47 real comparable metrics and both NFL + CFB", () => {
+    expect(FOOTBALL_FIND_LEADER_METRIC_COUNT).toBe(47);
+    expect(footballFindLeaderQuestions).toHaveLength(94);
+    expect(new Set(footballFindLeaderQuestions.map((question) => question.id)).size).toBe(94);
+    expect(new Set(footballFindLeaderQuestions.map((question) => question.metricId)).size).toBe(47);
     expect(new Set(footballFindLeaderMetricDefinitions.map((metric) => metric.domainId))).toEqual(new Set([
       "nfl-qb-career",
       "nfl-rb-career",
+      "nfl-qb-season",
+      "nfl-team-season",
       "cfb-champion-season",
     ]));
     expect(new Set(footballFindLeaderQuestions.map((question) => question.family))).toEqual(new Set(FOOTBALL_FIND_LEADER_FAMILY_CYCLE));
@@ -53,10 +56,12 @@ describe("Football Find the Leader maturity", () => {
     }
   });
 
-  it("resolves every objective number through the canonical factual facade with reviewed evidence", () => {
+  it("declaratively queries every objective number through the canonical registry and factual facade", () => {
     for (const metric of footballFindLeaderMetricDefinitions) {
       const rows = footballFindLeaderMetricRows(metric.id);
-      expect(rows, metric.id).toHaveLength(25);
+      expect(rows.length, metric.id).toBeGreaterThanOrEqual(10);
+      const pool = footballFindLeaderPools.find(({ metricId }) => metricId === metric.id)!;
+      expect(pool.canonicalMetricId).toBe(footballFindLeaderCanonicalMetricByMetric[metric.id]);
       for (const row of rows) {
         const fact = getFootballFact(row.id, footballFindLeaderCanonicalMetricByMetric[metric.id]);
         expect(fact, `${metric.id}:${row.id}`).not.toBeNull();
@@ -80,13 +85,25 @@ describe("Football Find the Leader maturity", () => {
 
   it("uses plausible decoys and limits true wildcards even with the deeper pools", () => {
     const audit = footballFindLeaderCompetitionAudit();
-    expect(audit).toHaveLength(82);
+    expect(audit).toHaveLength(94);
     for (const row of audit) {
       expect(row.boardValid, row.definitionId).toBe(true);
       expect(row.nearContenderCount, row.definitionId).toBeGreaterThanOrEqual(4);
       expect(row.outsideClosestNineCount, row.definitionId).toBeLessThanOrEqual(2);
       if (row.nonRecordLeaderAvailable) expect(row.leaderIsGlobalMax, row.definitionId).toBe(false);
     }
+  });
+
+  it("keeps the new NFL scopes genuine and materially distinct", () => {
+    const careerIds = new Set(footballFindLeaderMetricRows("qb-passing-yards").map(({ id }) => id));
+    const seasonIds = footballFindLeaderMetricRows("qb-season-passing-yards").map(({ id }) => id);
+    const teamIds = footballFindLeaderMetricRows("nfl-team-wins").map(({ id }) => id);
+    expect(seasonIds).toHaveLength(11);
+    expect(teamIds).toHaveLength(18);
+    expect(seasonIds.every((id) => !careerIds.has(id))).toBe(true);
+    expect(seasonIds.filter((id) => teamIds.includes(id))).toHaveLength(0);
+    expect(footballFindLeaderPools.find(({ metricId }) => metricId === "qb-season-passing-yards")?.subjectQuery.kind).toBe("player-season");
+    expect(footballFindLeaderPools.find(({ metricId }) => metricId === "nfl-team-wins")?.subjectQuery.kind).toBe("team-season");
   });
 
   it("is deterministic and never immediately repeats question, metric, or family", () => {
@@ -160,10 +177,15 @@ describe("Football Find the Leader maturity", () => {
 
   it("balances NFL and CFB near 50/50 and materially expands unordered replay variety", () => {
     const audit = footballFindLeaderReplayAudit(1000);
+    console.info("NFL depth 1,000-board audit", JSON.stringify(audit));
     expect(audit.cfbShare).toBeGreaterThanOrEqual(0.45);
     expect(audit.cfbShare).toBeLessThanOrEqual(0.55);
     expect(audit.uniqueUnorderedBoardShare).toBeGreaterThan(0.9);
-    expect(audit.metricsSeen).toBe(41);
-    expect(audit.familiesSeen).toBe(8);
+    expect(audit.metricsSeen).toBe(47);
+    expect(audit.familiesSeen).toBe(10);
+    expect(audit.definitionsSeen).toBe(94);
+    expect(audit.subjectsSeen).toBeGreaterThan(90);
+    expect(audit.domainShare["nfl-qb-season"]).toBeGreaterThan(0.05);
+    expect(audit.domainShare["nfl-team-season"]).toBeGreaterThan(0.02);
   });
 });

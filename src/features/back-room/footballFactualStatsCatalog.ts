@@ -1,7 +1,12 @@
 import { footballCfbChampionSeasonRows, footballQbCareerRows, footballRbCareerRows } from "./footballFactualStatsCoverage";
 import { footballComparisonCanonicalSubjects } from "./footballCanonicalSubjectExpansion";
 
-export type FootballFindLeaderDomainId = "nfl-qb-career" | "nfl-rb-career" | "cfb-champion-season";
+export type FootballFindLeaderDomainId =
+  | "nfl-qb-career"
+  | "nfl-rb-career"
+  | "nfl-qb-season"
+  | "nfl-team-season"
+  | "cfb-champion-season";
 export type FootballFindLeaderLeagueId = "nfl" | "cfb";
 
 export type FootballFindLeaderFamilyId =
@@ -10,6 +15,8 @@ export type FootballFindLeaderFamilyId =
   | "rb-rushing"
   | "rb-receiving"
   | "rb-scrimmage"
+  | "qb-season"
+  | "nfl-team-season"
   | "cfb-offense"
   | "cfb-defense"
   | "cfb-strength";
@@ -45,6 +52,12 @@ export type FootballFindLeaderMetricId =
   | "rb-scrimmage-yards"
   | "rb-scrimmage-yards-per-game"
   | "rb-scrimmage-touchdowns"
+  | "qb-season-passing-yards"
+  | "qb-season-passing-touchdowns"
+  | "qb-season-interceptions"
+  | "qb-season-passer-rating"
+  | "nfl-team-wins"
+  | "nfl-team-losses"
   | "cfb-points-for"
   | "cfb-points-against"
   | "cfb-points-per-game"
@@ -112,6 +125,12 @@ export const footballFindLeaderMetricDefinitions: readonly FootballFindLeaderMet
   metric("rb-scrimmage-yards", "nfl-rb-career", "rb-scrimmage", "career scrimmage yards", "SCRIMMAGE YDS", "yards", 0, "the most career yards from scrimmage"),
   metric("rb-scrimmage-yards-per-game", "nfl-rb-career", "rb-scrimmage", "scrimmage yards per game", "SCRIM YDS/G", "per-game", 1, "the most career scrimmage yards per game"),
   metric("rb-scrimmage-touchdowns", "nfl-rb-career", "rb-scrimmage", "career scrimmage touchdowns", "SCRIMMAGE TD", "count", 0, "the most career rushing plus receiving touchdowns"),
+  metric("qb-season-passing-yards", "nfl-qb-season", "qb-season", "season passing yards", "PASS YARDS", "yards", 0, "the most passing yards in the season"),
+  metric("qb-season-passing-touchdowns", "nfl-qb-season", "qb-season", "season passing touchdowns", "PASS TD", "count", 0, "the most passing touchdowns in the season"),
+  metric("qb-season-interceptions", "nfl-qb-season", "qb-season", "season interceptions thrown", "INTERCEPTIONS", "count", 0, "the most interceptions thrown in the season"),
+  metric("qb-season-passer-rating", "nfl-qb-season", "qb-season", "season passer rating", "PASSER RATING", "rating", 1, "the highest passer rating in the season"),
+  metric("nfl-team-wins", "nfl-team-season", "nfl-team-season", "overall wins", "WINS", "count", 0, "the most overall wins"),
+  metric("nfl-team-losses", "nfl-team-season", "nfl-team-season", "overall losses", "LOSSES", "count", 0, "the most overall losses"),
   metric("cfb-points-for", "cfb-champion-season", "cfb-offense", "season points scored", "POINTS FOR", "points", 0, "the most points scored"),
   metric("cfb-points-per-game", "cfb-champion-season", "cfb-offense", "points per game", "PPG", "per-game", 1, "the most points per game"),
   metric("cfb-point-differential", "cfb-champion-season", "cfb-offense", "season point differential", "POINT DIFF", "points", 0, "the largest total point differential"),

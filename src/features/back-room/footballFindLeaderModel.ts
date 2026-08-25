@@ -14,16 +14,18 @@ import {
 import {
   footballFindLeaderLeagueForDomain,
   footballFindLeaderMetricDefinitions,
-  footballFindLeaderSubjects,
   formatFootballFact,
   getFootballFact,
+  getFootballFactualRecord,
   type FootballFactMetricId,
   type FootballFindLeaderDomainId,
   type FootballFindLeaderFamilyId,
   type FootballFindLeaderLeagueId,
   type FootballFindLeaderMetricDefinition,
   type FootballFindLeaderMetricId,
+  type FootballFactScope,
 } from "./footballFactualStats";
+import { footballSubjects, queryFootballSubjects, type FootballSubjectQuery } from "./footballSubjectRegistry";
 
 export const footballFindLeaderCanonicalMetricByMetric: Readonly<Record<FootballFindLeaderMetricId, FootballFactMetricId>> = {
   "qb-games": "nfl-career-games",
@@ -56,6 +58,12 @@ export const footballFindLeaderCanonicalMetricByMetric: Readonly<Record<Football
   "rb-scrimmage-yards": "nfl-career-scrimmage-yards",
   "rb-scrimmage-yards-per-game": "nfl-career-scrimmage-yards-per-game",
   "rb-scrimmage-touchdowns": "nfl-career-scrimmage-touchdowns",
+  "qb-season-passing-yards": "nfl-season-passing-yards",
+  "qb-season-passing-touchdowns": "nfl-season-passing-touchdowns",
+  "qb-season-interceptions": "nfl-season-interceptions",
+  "qb-season-passer-rating": "nfl-season-passer-rating",
+  "nfl-team-wins": "nfl-team-overall-wins",
+  "nfl-team-losses": "nfl-team-overall-losses",
   "cfb-points-for": "cfb-team-points-for",
   "cfb-points-against": "cfb-team-points-against",
   "cfb-points-per-game": "cfb-team-points-per-game",
@@ -82,6 +90,13 @@ export interface FootballFindLeaderQuestionDefinition {
   question: string;
   statLabel: string;
   shortLabel: string;
+}
+
+export interface FootballFindLeaderPoolDefinition {
+  metricId: FootballFindLeaderMetricId;
+  canonicalMetricId: FootballFactMetricId;
+  factualScope: FootballFactScope;
+  subjectQuery: FootballSubjectQuery;
 }
 
 export interface FootballFindLeaderCandidate {
@@ -116,6 +131,8 @@ type ScoredRow = { id: string; name: string; subtitle: string; value: number };
 const domainCopy: Readonly<Record<FootballFindLeaderDomainId, string>> = {
   "nfl-qb-career": "retired NFL quarterbacks",
   "nfl-rb-career": "retired NFL running backs",
+  "nfl-qb-season": "NFL quarterback seasons",
+  "nfl-team-season": "NFL team seasons",
   "cfb-champion-season": "national-championship team seasons",
 };
 
@@ -127,6 +144,8 @@ export const FOOTBALL_FIND_LEADER_FAMILY_CYCLE: readonly FootballFindLeaderFamil
   "cfb-defense",
   "rb-receiving",
   "rb-scrimmage",
+  "qb-season",
+  "nfl-team-season",
   "cfb-strength",
 ] as const;
 
@@ -155,14 +174,46 @@ function questionVariants(definition: FootballFindLeaderMetricDefinition): Footb
 
 export const footballFindLeaderQuestions: readonly FootballFindLeaderQuestionDefinition[] = footballFindLeaderMetricDefinitions.flatMap(questionVariants);
 
+const queryByDomain: Readonly<Record<FootballFindLeaderDomainId, FootballSubjectQuery>> = {
+  "nfl-qb-career": { kind: "player-career", league: "NFL", position: "QB" },
+  "nfl-rb-career": { kind: "player-career", league: "NFL", position: "RB" },
+  "nfl-qb-season": { kind: "player-season", league: "NFL", position: "QB" },
+  "nfl-team-season": { kind: "team-season", league: "NFL" },
+  "cfb-champion-season": { kind: "team-season", league: "CFB", nationalChampion: true },
+};
+
+const scopeByDomain: Readonly<Record<FootballFindLeaderDomainId, FootballFactScope>> = {
+  "nfl-qb-career": "nfl-player-career",
+  "nfl-rb-career": "nfl-player-career",
+  "nfl-qb-season": "nfl-player-season",
+  "nfl-team-season": "nfl-team-season",
+  "cfb-champion-season": "cfb-team-season",
+};
+
+/** Declarative bridge from game copy to the canonical registry and factual ledger. */
+export const footballFindLeaderPools: readonly FootballFindLeaderPoolDefinition[] = footballFindLeaderMetricDefinitions.map((definition) => ({
+  metricId: definition.id,
+  canonicalMetricId: footballFindLeaderCanonicalMetricByMetric[definition.id],
+  factualScope: scopeByDomain[definition.domainId],
+  subjectQuery: queryByDomain[definition.domainId],
+}));
+
 export function footballFindLeaderMetricRows(metricId: FootballFindLeaderMetricId): ScoredRow[] {
   const definition = footballFindLeaderMetricDefinitions.find((row) => row.id === metricId);
   if (!definition) return [];
-  return footballFindLeaderSubjects
-    .filter((subject) => subject.domainId === definition.domainId)
+  const poolDefinition = footballFindLeaderPools.find((row) => row.metricId === metricId);
+  if (!poolDefinition) return [];
+  return queryFootballSubjects(poolDefinition.subjectQuery)
     .flatMap((subject) => {
-      const fact = getFootballFact(subject.id, footballFindLeaderCanonicalMetricByMetric[metricId]);
-      return fact ? [{ id: subject.id, name: subject.name, subtitle: subject.subtitle, value: fact.fact.value }] : [];
+      const fact = getFootballFact(subject.id, poolDefinition.canonicalMetricId);
+      const record = getFootballFactualRecord(subject.id);
+      if (!fact || !record || !(record.scopes ?? [record.scope]).includes(poolDefinition.factualScope)) return [];
+      const subtitle = subject.kind === "player-season"
+        ? `NFL quarterback season${subject.season ? ` · ${subject.season}` : ""}`
+        : subject.kind === "team-season"
+          ? `${subject.league} team season${subject.season ? ` · ${subject.season}` : ""}`
+          : subject.position === "QB" ? "Retired NFL quarterback" : "Retired NFL running back";
+      return [{ id: subject.id, name: subject.name, subtitle, value: fact.fact.value }];
     })
     .sort((left, right) => right.value - left.value || left.name.localeCompare(right.name));
 }
@@ -251,7 +302,7 @@ export function createFootballFindLeaderBoard(seed: string, history: PlayLineupH
 }
 
 export function createFootballFindLeaderRun(): FootballFindLeaderRun {
-  const validItemIds = new Set<string>(footballFindLeaderSubjects.map((subject) => subject.id));
+  const validItemIds = new Set<string>(footballSubjects.map((subject) => subject.id));
   footballFindLeaderQuestions.forEach((question) => {
     validItemIds.add(token("question", question.id));
     validItemIds.add(token("metric", question.metricId));
@@ -310,12 +361,20 @@ export function footballFindLeaderReplayAudit(sampleSize = 1000) {
   const unorderedBoards = new Set<string>();
   const metrics = new Set<FootballFindLeaderMetricId>();
   const families = new Set<FootballFindLeaderFamilyId>();
+  const definitions = new Set<string>();
+  const subjects = new Set<string>();
+  const domainCounts = new Map<FootballFindLeaderDomainId, number>();
+  const familyCounts = new Map<FootballFindLeaderFamilyId, number>();
   let cfbBoards = 0;
   for (let index = 0; index < sampleSize; index += 1) {
     const board = createFootballFindLeaderBoard(`replay-audit-${index}`, emptyHistory);
     if (footballFindLeaderLeagueForDomain(board.domainId) === "cfb") cfbBoards += 1;
     metrics.add(board.metricId);
     families.add(board.family);
+    definitions.add(board.definitionId);
+    domainCounts.set(board.domainId, (domainCounts.get(board.domainId) ?? 0) + 1);
+    familyCounts.set(board.family, (familyCounts.get(board.family) ?? 0) + 1);
+    board.candidates.forEach((candidate) => subjects.add(candidate.id));
     unorderedBoards.add(`${board.metricId}|${board.candidates.map((candidate) => candidate.id).sort().join(",")}`);
   }
   return {
@@ -324,5 +383,9 @@ export function footballFindLeaderReplayAudit(sampleSize = 1000) {
     uniqueUnorderedBoardShare: sampleSize ? unorderedBoards.size / sampleSize : 0,
     metricsSeen: metrics.size,
     familiesSeen: families.size,
+    definitionsSeen: definitions.size,
+    subjectsSeen: subjects.size,
+    domainShare: Object.fromEntries([...domainCounts].map(([id, count]) => [id, count / sampleSize])),
+    familyShare: Object.fromEntries([...familyCounts].map(([id, count]) => [id, count / sampleSize])),
   };
 }
