@@ -54,7 +54,6 @@ describe("Football Find the Leader maturity", () => {
       expect(enabledIds.has(definition.id), definition.id).toBe(footballFindLeaderMetricQuality(definition.id).eligible);
     }
 
-    expect(enabledIds).toEqual(expect.objectContaining ? enabledIds : enabledIds);
     expect(enabledIds.has("nfl-receiving-receptions")).toBe(true);
     expect(enabledIds.has("nfl-receiving-yards")).toBe(true);
     expect(enabledIds.has("nfl-receiving-touchdowns")).toBe(true);
