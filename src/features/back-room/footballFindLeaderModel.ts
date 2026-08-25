@@ -138,6 +138,15 @@ const domainCopy: Readonly<Record<FootballFindLeaderDomainId, string>> = {
   "cfb-team-season": "college football team seasons",
 };
 
+export function footballFindLeaderCategoryLabel(domainId: FootballFindLeaderDomainId) {
+  if (domainId === "nfl-qb-career") return "NFL QB CAREERS";
+  if (domainId === "nfl-rb-career") return "NFL RB CAREERS";
+  if (domainId === "nfl-qb-season") return "NFL QB SEASONS";
+  if (domainId === "nfl-team-season") return "NFL TEAM SEASONS";
+  if (domainId === "cfb-team-season") return "CFB TEAM SEASONS";
+  return "CFB CHAMPION SEASONS";
+}
+
 export const FOOTBALL_FIND_LEADER_FAMILY_CYCLE: readonly FootballFindLeaderFamilyId[] = [
   "qb-volume",
   "cfb-offense",
@@ -285,9 +294,8 @@ function chooseQuestion(seed: string, history: PlayLineupHistory) {
   );
   const legacyLeagueQuestions = leagueQuestions.filter((question) => question.domainId !== "cfb-team-season");
   const expandedCfbQuestions = leagueQuestions.filter((question) => question.domainId === "cfb-team-season");
-  const numericSeed = /^\d+$/.test(seed.split("-").at(-1) ?? "");
   const cfbOrdinal = Math.floor(ordinal / 2);
-  const questionCycle = desiredLeague === "cfb" && numericSeed && cfbOrdinal % 10 === 9
+  const questionCycle = desiredLeague === "cfb" && cfbOrdinal % 10 === 9
     ? expandedCfbQuestions
     : legacyLeagueQuestions;
   const start = questionCycle === expandedCfbQuestions
