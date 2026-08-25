@@ -22,6 +22,10 @@ const PLAY_GAME_TITLES: Record<string, string> = {
   "/play/better-than": "Better Than…",
 };
 
+const FOOTBALL_GAME_TITLES: Record<string, string> = {
+  "/football/find-leader": "Find the Leader",
+};
+
 function ProfilePushSettingRoute() {
   const identity = useIdentity();
   const location = useLocation();
@@ -40,16 +44,26 @@ export function AppShell() {
   const location = useLocation();
   const { footballTeam } = useProfilePreferences();
   const gameTitle = PLAY_GAME_TITLES[location.pathname];
+  const footballGameTitle = FOOTBALL_GAME_TITLES[location.pathname];
   const isPlayGame = Boolean(gameTitle);
+  const isFootballGame = Boolean(footballGameTitle);
+  const isGame = isPlayGame || isFootballGame;
   const isBackRoom = location.pathname === "/back-room" || location.pathname.startsWith("/back-room/");
   const isFootball = location.pathname === "/football" || location.pathname.startsWith("/football/");
   const footballTeamClass = isFootball && footballTeam ? ` app-shell--football-team-${footballTeam}` : "";
 
   return (
-    <div className={`app-shell${isPlayGame ? " app-shell--game" : ""}${isBackRoom ? " app-shell--back-room" : ""}${isFootball ? " app-shell--football-room" : ""}${footballTeamClass}`}>
+    <div className={`app-shell${isGame ? " app-shell--game" : ""}${isBackRoom ? " app-shell--back-room" : ""}${isFootball ? " app-shell--football-room" : ""}${footballTeamClass}`}>
       <RouteScrollManager />
 
-      {isFootball ? (
+      {isFootballGame ? (
+        <header className="app-header app-header--game app-header--football-game">
+          <Link className="game-header__back" to="/football" aria-label="Return to Football HQ">
+            <span aria-hidden="true">←</span>
+            <span><small>FOOTBALL HQ</small><strong>{footballGameTitle}</strong></span>
+          </Link>
+        </header>
+      ) : isFootball ? (
         <FootballHeader />
       ) : isBackRoom ? (
         <header className="app-header app-header--back-room">
@@ -94,7 +108,7 @@ export function AppShell() {
       )}
 
       <BrandedPullToRefresh>
-        <main className={`app-content${isPlayGame ? " app-content--game" : ""}`}>
+        <main className={`app-content${isGame ? " app-content--game" : ""}`}>
           <Suspense fallback={<RouteLoading />}>
             <Outlet />
           </Suspense>
