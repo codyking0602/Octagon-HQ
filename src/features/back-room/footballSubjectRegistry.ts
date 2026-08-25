@@ -1,3 +1,10 @@
+import { footballComparisonDepthItems } from "./footballComparisonDepthCatalog";
+import {
+  footballCfbTeamMediaId,
+  footballCfbTeamMediaIdFromSeasonSubjectId,
+  footballTeamMediaIdFromComparisonAsset,
+  type FootballTeamMediaId,
+} from "./footballMediaIdentity";
 import {
   footballCanonicalSubjects,
   type FootballCanonicalSubject,
@@ -7,7 +14,14 @@ import {
 export type FootballSubjectKind = FootballCanonicalSubjectKind;
 export type FootballSubjectLeague = FootballCanonicalSubject["league"];
 export type FootballSubjectPosition = NonNullable<FootballCanonicalSubject["position"]>;
-export type FootballSubjectProfile = FootballCanonicalSubject;
+export type FootballSubjectProfile = FootballCanonicalSubject & {
+  /** Canonical underlying team/program identity for historical team-scoped records. */
+  teamId?: FootballTeamMediaId;
+  /** Canonical person identity for player records, independent of season/team-at-the-time. */
+  playerId?: string;
+  /** Canonical person identity for coach records. */
+  coachId?: string;
+};
 
 export interface FootballSubjectQuery {
   kind?: FootballSubjectKind;
@@ -29,8 +43,59 @@ export interface FootballSubjectQuery {
   endSeason?: number;
 }
 
+const comparisonItemById = new Map(footballComparisonDepthItems.map((item) => [item.id, item]));
+
+function programAlias(subject: FootballCanonicalSubject) {
+  if (subject.kind !== "program" || !subject.id.startsWith("program-")) return null;
+  return `${subject.id.slice("program-".length)}-program`;
+}
+
+function teamIdForSubject(subject: FootballCanonicalSubject): FootballTeamMediaId | undefined {
+  const comparisonItem = comparisonItemById.get(subject.id);
+  if (comparisonItem) return footballTeamMediaIdFromComparisonAsset(comparisonItem.asset);
+
+  if (subject.kind === "team-season" && subject.league === "CFB") {
+    return footballCfbTeamMediaIdFromSeasonSubjectId(subject.id) ?? undefined;
+  }
+
+  if (subject.kind === "program" && subject.id.startsWith("program-")) {
+    return footballCfbTeamMediaId(subject.id.slice("program-".length));
+  }
+
+  if (subject.kind === "program-era") {
+    const match = /^(.+)-\d{4}-\d{4}$/.exec(subject.id);
+    if (match) return footballCfbTeamMediaId(match[1]);
+  }
+
+  return undefined;
+}
+
+function playerIdForSubject(subject: FootballCanonicalSubject) {
+  if (subject.kind === "player-career") return subject.id;
+  if (subject.kind !== "player-season") return undefined;
+  return subject.id.replace(/-\d{4}$/, "");
+}
+
+function enrichFootballSubject(subject: FootballCanonicalSubject): FootballSubjectProfile {
+  const teamId = teamIdForSubject(subject);
+  const playerId = playerIdForSubject(subject);
+  const coachId = subject.kind === "coach" ? subject.id : undefined;
+  const alias = programAlias(subject);
+  const aliases = alias && !(subject.aliases ?? []).includes(alias)
+    ? [...(subject.aliases ?? []), alias]
+    : subject.aliases;
+
+  return {
+    ...subject,
+    ...(aliases ? { aliases } : {}),
+    ...(teamId ? { teamId } : {}),
+    ...(playerId ? { playerId } : {}),
+    ...(coachId ? { coachId } : {}),
+  };
+}
+
 /** Public identity/query view of the one canonical Football subject universe. */
-export const footballSubjects: readonly FootballSubjectProfile[] = footballCanonicalSubjects;
+export const footballSubjects: readonly FootballSubjectProfile[] = footballCanonicalSubjects.map(enrichFootballSubject);
 
 const footballSubjectById = new Map<string, FootballSubjectProfile>();
 for (const subject of footballSubjects) {
