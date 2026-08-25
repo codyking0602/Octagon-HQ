@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
+import { findLeaderQuestions } from "./findLeaderEngine";
 import {
   buildReplayableFindLeaderBoard,
   createReplayableFindLeaderRun,
@@ -47,12 +48,17 @@ describe("Find the Leader lineup modes", () => {
     expect(`${second.board.definitionId}:${secondIds}`).not.toBe(`${first.board.definitionId}:${firstIds}`);
   });
 
-  it("tracks the answer separately so New Lineup can penalize repeated leaders", () => {
+  it("tracks question, metric, family, and all ten fighters for semantic replay pressure", () => {
     const first = createReplayableFindLeaderRun("2026-07-29");
+    const definition = findLeaderQuestions.find((row) => row.id === first.board.definitionId)!;
     const history = loadLineupHistory("find-leader", "casual");
+    const itemIds = history.entries[0]?.itemIds ?? [];
 
-    expect(history.entries[0]?.itemIds).toContain(`category:${first.board.definitionId}`);
-    expect(history.entries[0]?.itemIds).toContain(`leader:${first.board.leaderId}`);
+    expect(itemIds).toHaveLength(13);
+    expect(itemIds).toContain(`question:${definition.id}`);
+    expect(itemIds).toContain(`metric:${definition.metric}`);
+    expect(itemIds).toContain(`family:${definition.family}`);
+    first.board.candidates.forEach((fighter) => expect(itemIds).toContain(fighter.id));
   });
 
   it("produces more than one casual category across replay seeds", () => {
