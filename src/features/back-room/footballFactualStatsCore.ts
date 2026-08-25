@@ -1,8 +1,4 @@
-import {
-  footballFindLeaderSubjects,
-  getFootballFindLeaderFact,
-  type FootballFindLeaderMetricId,
-} from "./footballFactualStatsCatalog";
+import { footballCfbChampionSeasonRows, footballQbCareerRows, footballRbCareerRows } from "./footballFactualStatsCoverage";
 import {
   expandedFootballFactSources,
   expandedFootballFactualRecords,
@@ -20,6 +16,34 @@ export type FootballFactScope =
   | "cfb-program-era";
 
 export type FootballFactMetricId =
+  | "nfl-career-games"
+  | "nfl-career-passing-completions"
+  | "nfl-career-passing-attempts"
+  | "nfl-career-interceptions-thrown"
+  | "nfl-career-passer-rating"
+  | "nfl-career-completion-percentage"
+  | "nfl-career-passing-yards-per-attempt"
+  | "nfl-career-passing-touchdown-percentage"
+  | "nfl-career-passing-yards-per-game"
+  | "nfl-career-passing-touchdowns-per-game"
+  | "nfl-career-passing-completions-per-game"
+  | "nfl-career-passing-attempts-per-game"
+  | "nfl-career-passing-touchdown-interception-ratio"
+  | "nfl-career-rushing-attempts"
+  | "nfl-career-rushing-yards-per-attempt"
+  | "nfl-career-rushing-yards-per-game"
+  | "nfl-career-rushing-touchdowns-per-game"
+  | "nfl-career-receptions-per-game"
+  | "nfl-career-receiving-yards-per-game"
+  | "nfl-career-scrimmage-yards"
+  | "nfl-career-scrimmage-yards-per-game"
+  | "nfl-career-scrimmage-touchdowns"
+  | "cfb-team-opponent-points-per-game"
+  | "cfb-team-point-differential"
+  | "cfb-team-scoring-margin-per-game"
+  | "cfb-team-points-for-against-ratio"
+  | "cfb-team-differential-rate-percentage"
+  | "cfb-team-total-points"
   | "nfl-career-passing-yards"
   | "nfl-career-passing-touchdowns"
   | "nfl-ap-mvp-awards"
@@ -87,7 +111,11 @@ export type FootballFactUnit =
   | "points"
   | "points-per-game"
   | "rating"
-  | "flag";
+  | "flag"
+  | "percent"
+  | "per-game"
+  | "per-attempt"
+  | "ratio";
 
 export interface FootballFactMetricDefinition {
   id: FootballFactMetricId;
@@ -104,6 +132,34 @@ const metric = (
 ): FootballFactMetricDefinition => ({ id, label, unit, decimals });
 
 export const footballFactMetricDefinitions: readonly FootballFactMetricDefinition[] = [
+  metric("nfl-career-games", "Career games", "count", 0),
+  metric("nfl-career-passing-completions", "Career completions", "count", 0),
+  metric("nfl-career-passing-attempts", "Career pass attempts", "count", 0),
+  metric("nfl-career-interceptions-thrown", "Career interceptions thrown", "count", 0),
+  metric("nfl-career-passer-rating", "Career passer rating", "rating", 1),
+  metric("nfl-career-completion-percentage", "Career completion percentage", "percent", 1),
+  metric("nfl-career-passing-yards-per-attempt", "Career passing yards per attempt", "per-attempt", 2),
+  metric("nfl-career-passing-touchdown-percentage", "Career passing touchdown percentage", "percent", 2),
+  metric("nfl-career-passing-yards-per-game", "Career passing yards per game", "per-game", 1),
+  metric("nfl-career-passing-touchdowns-per-game", "Career passing touchdowns per game", "per-game", 2),
+  metric("nfl-career-passing-completions-per-game", "Career completions per game", "per-game", 1),
+  metric("nfl-career-passing-attempts-per-game", "Career pass attempts per game", "per-game", 1),
+  metric("nfl-career-passing-touchdown-interception-ratio", "Career touchdown-to-interception ratio", "ratio", 2),
+  metric("nfl-career-rushing-attempts", "Career rushing attempts", "count", 0),
+  metric("nfl-career-rushing-yards-per-attempt", "Career rushing yards per attempt", "per-attempt", 2),
+  metric("nfl-career-rushing-yards-per-game", "Career rushing yards per game", "per-game", 1),
+  metric("nfl-career-rushing-touchdowns-per-game", "Career rushing touchdowns per game", "per-game", 2),
+  metric("nfl-career-receptions-per-game", "Career receptions per game", "per-game", 1),
+  metric("nfl-career-receiving-yards-per-game", "Career receiving yards per game", "per-game", 1),
+  metric("nfl-career-scrimmage-yards", "Career scrimmage yards", "yards", 0),
+  metric("nfl-career-scrimmage-yards-per-game", "Career scrimmage yards per game", "per-game", 1),
+  metric("nfl-career-scrimmage-touchdowns", "Career scrimmage touchdowns", "count", 0),
+  metric("cfb-team-opponent-points-per-game", "Opponent points per game", "points-per-game", 1),
+  metric("cfb-team-point-differential", "Point differential", "points", 0),
+  metric("cfb-team-scoring-margin-per-game", "Scoring margin per game", "points-per-game", 1),
+  metric("cfb-team-points-for-against-ratio", "Points-for to points-against ratio", "ratio", 2),
+  metric("cfb-team-differential-rate-percentage", "Point differential rate", "percent", 2),
+  metric("cfb-team-total-points", "Total points", "points", 0),
   metric("nfl-career-passing-yards", "Career passing yards", "yards", 0),
   metric("nfl-career-passing-touchdowns", "Career passing TD", "count", 0),
   metric("nfl-ap-mvp-awards", "AP MVP awards", "count", 0),
@@ -172,6 +228,7 @@ export type FootballFactSourceId =
   | "pfr-john-elway"
   | "pfr-emmitt-smith"
   | "pfr-barry-sanders"
+  | "pfr-career-stat-lines"
   | "pfr-pass-yards-career"
   | "pfr-rush-yards-career"
   | "cfr-champion-season-stat-lines"
@@ -210,6 +267,7 @@ const seedSources: readonly FootballFactSource[] = [
   { id: "pfr-john-elway", publisher: "Pro Football Reference", title: "John Elway player record", url: "https://www.pro-football-reference.com/players/E/ElwaJo00.htm", reviewedOn: "2026-08-22", coverage: "Completed NFL career through 1998" },
   { id: "pfr-emmitt-smith", publisher: "Pro Football Reference", title: "Emmitt Smith player record", url: "https://www.pro-football-reference.com/players/S/SmitEm00.htm", reviewedOn: "2026-08-22", coverage: "Completed NFL career through 2004" },
   { id: "pfr-barry-sanders", publisher: "Pro Football Reference", title: "Barry Sanders player record", url: "https://www.pro-football-reference.com/players/S/SandBa00.htm", reviewedOn: "2026-08-22", coverage: "Completed NFL career through 1998" },
+  { id: "pfr-career-stat-lines", publisher: "Pro Football Reference", title: "NFL retired-player career stat lines", url: "https://www.pro-football-reference.com/", reviewedOn: "2026-08-22", coverage: "Complete career passing, rushing, and receiving stat lines for the canonical retired-player coverage" },
   { id: "pfr-pass-yards-career", publisher: "Pro Football Reference", title: "NFL Passing Yards Career Leaders", url: "https://www.pro-football-reference.com/leaders/pass_yds_career.htm", reviewedOn: "2026-08-22", coverage: "Career passing totals for the canonical 25-quarterback compatibility pool" },
   { id: "pfr-rush-yards-career", publisher: "Pro Football Reference", title: "NFL Rushing Yards Career Leaders", url: "https://www.pro-football-reference.com/leaders/rush_yds_career.htm", reviewedOn: "2026-08-22", coverage: "Career rushing totals for the canonical 25-running-back compatibility pool" },
   { id: "cfr-champion-season-stat-lines", publisher: "College Football at Sports-Reference", title: "National-champion season stat lines", url: "https://www.sports-reference.com/cfb/", reviewedOn: "2026-08-25", coverage: "Completed national-champion team seasons retained by the compatibility factual catalog" },
@@ -257,28 +315,11 @@ const reported = (sourceId: FootballFactSourceId, metricId: FootballFactMetricId
   evidence: { sourceIds: [sourceId], kind: "reported" },
 });
 
-const specificQbSource: Readonly<Record<string, FootballFactSourceId>> = {
-  "peyton-manning": "pfr-peyton-manning",
-  "dan-marino": "pfr-dan-marino",
-  "john-elway": "pfr-john-elway",
-};
-const specificRbSource: Readonly<Record<string, FootballFactSourceId>> = {
-  "emmitt-smith": "pfr-emmitt-smith",
-  "barry-sanders": "pfr-barry-sanders",
-};
-const specificCfbSource: Readonly<Record<string, FootballFactSourceId>> = {
-  "1995-nebraska": "cfr-1995-nebraska",
-  "2001-miami": "cfr-2001-miami",
-  "2005-texas": "cfr-2005-texas",
-  "2008-florida": "cfr-2008-florida",
-  "2010-auburn": "cfr-2010-auburn",
-  "2013-florida-state": "cfr-2013-florida-state",
-  "2014-ohio-state": "cfr-2014-ohio-state",
-  "2018-clemson": "cfr-2018-clemson",
-  "2019-lsu": "cfr-2019-lsu",
-  "2020-alabama": "cfr-2020-alabama",
-  "2022-georgia": "cfr-2022-georgia",
-};
+const derived = (sourceId: FootballFactSourceId, metricId: FootballFactMetricId, value: number, formula: string): FootballFactValue => ({
+  metricId,
+  value,
+  evidence: { sourceIds: [sourceId], kind: "derived", formula },
+});
 
 const championRecords: Readonly<Record<string, readonly [wins: number, losses: number]>> = {
   "1995-nebraska": [12, 0], "1996-florida": [12, 1], "1997-michigan": [12, 0], "1998-tennessee": [13, 0],
@@ -290,62 +331,77 @@ const championRecords: Readonly<Record<string, readonly [wins: number, losses: n
   "2021-georgia": [14, 1], "2022-georgia": [15, 0],
 };
 
-function requiredCompatibilityValue(subjectId: string, metricId: FootballFindLeaderMetricId) {
-  const row = getFootballFindLeaderFact(subjectId, metricId);
-  if (!row) throw new Error(`Missing canonical compatibility fact: ${subjectId}:${metricId}`);
-  return row.value;
+function nflPasserRating(completions: number, attempts: number, yards: number, touchdowns: number, interceptions: number) {
+  const a = Math.min(2.375, Math.max(0, (completions / attempts - 0.3) * 5));
+  const b = Math.min(2.375, Math.max(0, (yards / attempts - 3) * 0.25));
+  const c = Math.min(2.375, Math.max(0, touchdowns / attempts * 20));
+  const d = Math.min(2.375, Math.max(0, 2.375 - interceptions / attempts * 25));
+  return (a + b + c + d) / 6 * 100;
 }
 
-function legacyExtras(subjectId: string, sourceId: FootballFactSourceId): FootballFactValue[] {
-  switch (subjectId) {
-    case "peyton-manning": return [reported(sourceId, "nfl-ap-mvp-awards", 5), reported(sourceId, "nfl-super-bowl-titles", 2)];
-    case "dan-marino": return [reported(sourceId, "nfl-ap-mvp-awards", 1), reported(sourceId, "nfl-super-bowl-titles", 0)];
-    case "john-elway": return [reported(sourceId, "nfl-ap-mvp-awards", 1), reported(sourceId, "nfl-super-bowl-titles", 2)];
-    default: return [];
-  }
-}
-
-const compatibilityFactualRecords: readonly FootballFactualRecord[] = footballFindLeaderSubjects.map((subject) => {
-  if (subject.domainId === "nfl-qb-career") {
-    const sourceId = specificQbSource[subject.id] ?? "pfr-pass-yards-career";
-    return {
-      subjectId: subject.id,
-      scope: "nfl-player-career",
-      facts: [
-        reported(sourceId, "nfl-career-passing-yards", requiredCompatibilityValue(subject.id, "qb-passing-yards")),
-        reported(sourceId, "nfl-career-passing-touchdowns", requiredCompatibilityValue(subject.id, "qb-passing-touchdowns")),
-        ...legacyExtras(subject.id, sourceId),
-      ],
-    };
-  }
-  if (subject.domainId === "nfl-rb-career") {
-    const sourceId = specificRbSource[subject.id] ?? "pfr-rush-yards-career";
-    return {
-      subjectId: subject.id,
-      scope: "nfl-player-career",
-      facts: [
-        reported(sourceId, "nfl-career-rushing-yards", requiredCompatibilityValue(subject.id, "rb-rushing-yards")),
-        reported(sourceId, "nfl-career-rushing-touchdowns", requiredCompatibilityValue(subject.id, "rb-rushing-touchdowns")),
-      ],
-    };
-  }
-
-  const sourceId = specificCfbSource[subject.id] ?? "cfr-champion-season-stat-lines";
-  const record = championRecords[subject.id];
-  return {
-    subjectId: subject.id,
-    scope: "cfb-team-season",
-    facts: [
-      ...(record == null ? [] : [reported(sourceId, "cfb-team-wins", record[0]), reported(sourceId, "cfb-team-losses", record[1])]),
-      reported(sourceId, "cfb-team-points-for", requiredCompatibilityValue(subject.id, "cfb-points-for")),
-      reported(sourceId, "cfb-team-points-against", requiredCompatibilityValue(subject.id, "cfb-points-against")),
-      reported(sourceId, "cfb-team-points-per-game", requiredCompatibilityValue(subject.id, "cfb-points-per-game")),
-      reported(sourceId, "cfb-team-srs", requiredCompatibilityValue(subject.id, "cfb-srs")),
-      reported(sourceId, "cfb-team-sos", requiredCompatibilityValue(subject.id, "cfb-sos")),
-      reported(sourceId, "cfb-national-title", 1),
-    ],
-  };
-});
+const compatibilityFactualRecords: readonly FootballFactualRecord[] = [
+  ...footballQbCareerRows.map((row): FootballFactualRecord => {
+    const sourceId: FootballFactSourceId = ({ "peyton-manning": "pfr-peyton-manning", "dan-marino": "pfr-dan-marino", "john-elway": "pfr-john-elway" } as const)[row.id as "peyton-manning" | "dan-marino" | "john-elway"] ?? "pfr-career-stat-lines";
+    return { subjectId: row.id, scope: "nfl-player-career", facts: [
+      reported(sourceId, "nfl-career-games", row.games),
+      reported(sourceId, "nfl-career-passing-completions", row.completions),
+      reported(sourceId, "nfl-career-passing-attempts", row.attempts),
+      reported(sourceId, "nfl-career-passing-yards", row.passingYards),
+      reported(sourceId, "nfl-career-passing-touchdowns", row.passingTouchdowns),
+      reported(sourceId, "nfl-career-interceptions-thrown", row.interceptions),
+      derived(sourceId, "nfl-career-passer-rating", nflPasserRating(row.completions, row.attempts, row.passingYards, row.passingTouchdowns, row.interceptions), "NFL passer-rating formula from completions, attempts, passing yards, passing touchdowns, and interceptions"),
+      derived(sourceId, "nfl-career-completion-percentage", row.completions / row.attempts * 100, "passing completions / passing attempts * 100"),
+      derived(sourceId, "nfl-career-passing-yards-per-attempt", row.passingYards / row.attempts, "passing yards / passing attempts"),
+      derived(sourceId, "nfl-career-passing-touchdown-percentage", row.passingTouchdowns / row.attempts * 100, "passing touchdowns / passing attempts * 100"),
+      derived(sourceId, "nfl-career-passing-yards-per-game", row.passingYards / row.games, "passing yards / games"),
+      derived(sourceId, "nfl-career-passing-touchdowns-per-game", row.passingTouchdowns / row.games, "passing touchdowns / games"),
+      derived(sourceId, "nfl-career-passing-completions-per-game", row.completions / row.games, "passing completions / games"),
+      derived(sourceId, "nfl-career-passing-attempts-per-game", row.attempts / row.games, "passing attempts / games"),
+      derived(sourceId, "nfl-career-passing-touchdown-interception-ratio", row.passingTouchdowns / row.interceptions, "passing touchdowns / interceptions"),
+      ...(row.id === "peyton-manning" ? [reported(sourceId, "nfl-ap-mvp-awards", 5), reported(sourceId, "nfl-super-bowl-titles", 2)] : []),
+      ...(row.id === "dan-marino" ? [reported(sourceId, "nfl-ap-mvp-awards", 1), reported(sourceId, "nfl-super-bowl-titles", 0)] : []),
+      ...(row.id === "john-elway" ? [reported(sourceId, "nfl-ap-mvp-awards", 1), reported(sourceId, "nfl-super-bowl-titles", 2)] : []),
+    ] };
+  }),
+  ...footballRbCareerRows.map((row): FootballFactualRecord => {
+    const sourceId: FootballFactSourceId = ({ "emmitt-smith": "pfr-emmitt-smith", "barry-sanders": "pfr-barry-sanders" } as const)[row.id as "emmitt-smith" | "barry-sanders"] ?? "pfr-career-stat-lines";
+    const scrimmageYards = row.rushingYards + row.receivingYards;
+    return { subjectId: row.id, scope: "nfl-player-career", facts: [
+      reported(sourceId, "nfl-career-games", row.games), reported(sourceId, "nfl-career-rushing-attempts", row.rushingAttempts),
+      reported(sourceId, "nfl-career-rushing-yards", row.rushingYards), reported(sourceId, "nfl-career-rushing-touchdowns", row.rushingTouchdowns),
+      reported(sourceId, "nfl-career-receptions", row.receptions), reported(sourceId, "nfl-career-receiving-yards", row.receivingYards),
+      reported(sourceId, "nfl-career-receiving-touchdowns", row.receivingTouchdowns),
+      derived(sourceId, "nfl-career-rushing-yards-per-attempt", row.rushingYards / row.rushingAttempts, "rushing yards / rushing attempts"),
+      derived(sourceId, "nfl-career-rushing-yards-per-game", row.rushingYards / row.games, "rushing yards / games"),
+      derived(sourceId, "nfl-career-rushing-touchdowns-per-game", row.rushingTouchdowns / row.games, "rushing touchdowns / games"),
+      derived(sourceId, "nfl-career-receptions-per-game", row.receptions / row.games, "receptions / games"),
+      derived(sourceId, "nfl-career-receiving-yards-per-game", row.receivingYards / row.games, "receiving yards / games"),
+      derived(sourceId, "nfl-career-scrimmage-yards", scrimmageYards, "rushing yards + receiving yards"),
+      derived(sourceId, "nfl-career-scrimmage-yards-per-game", scrimmageYards / row.games, "(rushing yards + receiving yards) / games"),
+      derived(sourceId, "nfl-career-scrimmage-touchdowns", row.rushingTouchdowns + row.receivingTouchdowns, "rushing touchdowns + receiving touchdowns"),
+    ] };
+  }),
+  ...footballCfbChampionSeasonRows.map((row): FootballFactualRecord => {
+    const sourceId: FootballFactSourceId = ({
+      "1995-nebraska": "cfr-1995-nebraska", "2001-miami": "cfr-2001-miami", "2005-texas": "cfr-2005-texas",
+      "2008-florida": "cfr-2008-florida", "2010-auburn": "cfr-2010-auburn", "2013-florida-state": "cfr-2013-florida-state",
+      "2014-ohio-state": "cfr-2014-ohio-state", "2018-clemson": "cfr-2018-clemson", "2019-lsu": "cfr-2019-lsu",
+      "2020-alabama": "cfr-2020-alabama", "2022-georgia": "cfr-2022-georgia",
+    } as Partial<Record<string, FootballFactSourceId>>)[row.id] ?? "cfr-champion-season-stat-lines";
+    const record = championRecords[row.id];
+    return { subjectId: row.id, scope: "cfb-team-season", facts: [
+      ...(record ? [reported(sourceId, "cfb-team-wins", record[0]), reported(sourceId, "cfb-team-losses", record[1])] : []),
+      reported(sourceId, "cfb-team-points-for", row.pointsFor), reported(sourceId, "cfb-team-points-against", row.pointsAgainst),
+      reported(sourceId, "cfb-team-points-per-game", row.pointsPerGame), reported(sourceId, "cfb-team-opponent-points-per-game", row.opponentPointsPerGame),
+      reported(sourceId, "cfb-team-srs", row.srs), reported(sourceId, "cfb-team-sos", row.sos), reported(sourceId, "cfb-national-title", 1),
+      derived(sourceId, "cfb-team-point-differential", row.pointsFor - row.pointsAgainst, "points for - points against"),
+      derived(sourceId, "cfb-team-scoring-margin-per-game", row.pointsPerGame - row.opponentPointsPerGame, "points per game - opponent points per game"),
+      derived(sourceId, "cfb-team-points-for-against-ratio", row.pointsFor / row.pointsAgainst, "points for / points against"),
+      derived(sourceId, "cfb-team-differential-rate-percentage", (row.pointsFor - row.pointsAgainst) / row.pointsFor * 100, "(points for - points against) / points for * 100"),
+      derived(sourceId, "cfb-team-total-points", row.pointsFor + row.pointsAgainst, "points for + points against"),
+    ] };
+  }),
+];
 
 function canonicalFactSubjectId(subjectId: string) {
   return getFootballSubject(subjectId)?.id ?? subjectId;
@@ -378,7 +434,7 @@ function mergeCanonicalFactualRecords(records: readonly FootballFactualRecord[])
 
 /**
  * Canonical reusable quantitative Football ledger.
- * Compatibility facts are normalized from the existing factual catalog; broader families live in
+ * Retired-player and champion-season facts are normalized from canonical source rows; broader families live in
  * a data-only expansion partition but use this module's metrics, sources, evidence and lookup owner.
  * Alias/cross-level rows are collapsed onto the same canonical subject identity here.
  */
