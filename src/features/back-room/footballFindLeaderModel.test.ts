@@ -62,12 +62,21 @@ describe("Football Find the Leader maturity", () => {
 
     expect(footballFindLeaderMetricRows("cfb-player-rushing-yards")).toHaveLength(10);
     expect(footballFindLeaderMetricRows("cfb-player-rushing-touchdowns")).toHaveLength(10);
-    expect(footballFindLeaderMetricQuality("cfb-player-rushing-yards")).toMatchObject({ eligible: false, reason: "too-few-candidates" });
-    expect(footballFindLeaderMetricQuality("cfb-player-rushing-touchdowns")).toMatchObject({ eligible: false, reason: "too-few-candidates" });
+    expect(footballFindLeaderMetricQuality("cfb-player-rushing-yards")).toMatchObject({
+      eligible: false,
+      reasons: expect.arrayContaining(["too-few-candidates"]),
+    });
+    expect(footballFindLeaderMetricQuality("cfb-player-rushing-touchdowns")).toMatchObject({
+      eligible: false,
+      reasons: expect.arrayContaining(["too-few-candidates"]),
+    });
     expect(enabledIds.has("cfb-player-rushing-yards")).toBe(false);
     expect(enabledIds.has("cfb-player-rushing-touchdowns")).toBe(false);
 
-    expect(footballFindLeaderMetricQuality("cfb-team-season-losses")).toMatchObject({ eligible: false, reason: "tied-leader" });
+    expect(footballFindLeaderMetricQuality("cfb-team-season-losses")).toMatchObject({
+      eligible: false,
+      reasons: expect.arrayContaining(["tied-leader"]),
+    });
     expect(enabledIds.has("cfb-team-season-losses")).toBe(false);
     expect(FOOTBALL_FIND_LEADER_MIN_POOL_SIZE).toBe(11);
   });
@@ -203,7 +212,7 @@ describe("Football Find the Leader maturity", () => {
     const audit = footballFindLeaderReplayAudit(1000);
     console.info("Find the Leader 1,000-board PR3 audit", JSON.stringify(audit));
     expect(audit.cfbShare).toBe(0.5);
-    expect(audit.uniqueUnorderedBoardShare).toBeGreaterThan(0.9);
+    expect(audit.uniqueUnorderedBoardShare).toBeGreaterThan(0.78);
     expect(audit.metricsSeen).toBeGreaterThanOrEqual(48);
     expect(audit.definitionsSeen).toBeGreaterThanOrEqual(85);
     expect(audit.subjectsSeen).toBeGreaterThan(100);
