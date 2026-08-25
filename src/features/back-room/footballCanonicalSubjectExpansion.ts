@@ -13,6 +13,13 @@ import type {
   FootballCanonicalSubject,
 } from "./footballFactualStatsCatalog";
 
+export type FootballExpandedSubjectKind = FootballCanonicalSubject["kind"] | "player-season" | "program-era" | "coach";
+export type FootballExpandedCanonicalSubject = Omit<FootballCanonicalSubject, "kind"> & {
+  kind: FootballExpandedSubjectKind;
+  startSeason?: number;
+  endSeason?: number;
+};
+
 function decadeRange(startSeason: number, endSeason: number) {
   const values: number[] = [];
   for (let decade = Math.floor(startSeason / 10) * 10; decade <= Math.floor(endSeason / 10) * 10; decade += 10) {
@@ -66,7 +73,7 @@ const defenderPositions: Readonly<Record<string, FootballCanonicalPosition>> = {
   "vernon-gholston": "DL",
 };
 
-const tightEnds: FootballCanonicalSubject[] = nflTightEnds.map((item) => ({
+const tightEnds: FootballExpandedCanonicalSubject[] = nflTightEnds.map((item) => ({
   id: item.id,
   name: item.name,
   kind: "player-career",
@@ -74,7 +81,7 @@ const tightEnds: FootballCanonicalSubject[] = nflTightEnds.map((item) => ({
   position: "TE",
 }));
 
-const defenders: FootballCanonicalSubject[] = nflDefensiveCareers.map((item) => ({
+const defenders: FootballExpandedCanonicalSubject[] = nflDefensiveCareers.map((item) => ({
   id: item.id,
   name: item.name,
   kind: "player-career",
@@ -82,7 +89,7 @@ const defenders: FootballCanonicalSubject[] = nflDefensiveCareers.map((item) => 
   position: defenderPositions[item.id] ?? "DL",
 }));
 
-const quarterbackSeasons: FootballCanonicalSubject[] = nflQuarterbackSeasons.map((item) => {
+const quarterbackSeasons: FootballExpandedCanonicalSubject[] = nflQuarterbackSeasons.map((item) => {
   const season = trailingSeason(item.id);
   return {
     id: item.id,
@@ -95,7 +102,7 @@ const quarterbackSeasons: FootballCanonicalSubject[] = nflQuarterbackSeasons.map
   };
 });
 
-const nflSeasons: FootballCanonicalSubject[] = nflTeamSeasons.map((item) => {
+const nflSeasons: FootballExpandedCanonicalSubject[] = nflTeamSeasons.map((item) => {
   const season = leadingSeason(item.id);
   return {
     id: item.id,
@@ -107,7 +114,7 @@ const nflSeasons: FootballCanonicalSubject[] = nflTeamSeasons.map((item) => {
   };
 });
 
-const collegeCoaches: FootballCanonicalSubject[] = collegeHeadCoaches.map((item) => ({
+const collegeCoaches: FootballExpandedCanonicalSubject[] = collegeHeadCoaches.map((item) => ({
   id: item.id,
   name: item.name,
   kind: "coach",
@@ -115,7 +122,7 @@ const collegeCoaches: FootballCanonicalSubject[] = collegeHeadCoaches.map((item)
   school: item.asset.label,
 }));
 
-const programEras: FootballCanonicalSubject[] = collegeProgramEras.map((item) => {
+const programEras: FootballExpandedCanonicalSubject[] = collegeProgramEras.map((item) => {
   const match = /-(\d{4})-(\d{4})$/.exec(item.id);
   const startSeason = match ? Number(match[1]) : undefined;
   const endSeason = match ? Number(match[2]) : undefined;
@@ -131,7 +138,7 @@ const programEras: FootballCanonicalSubject[] = collegeProgramEras.map((item) =>
   };
 });
 
-const collegeQuarterbacks: FootballCanonicalSubject[] = collegeQuarterbackDepth.map((item) => ({
+const collegeQuarterbacks: FootballExpandedCanonicalSubject[] = collegeQuarterbackDepth.map((item) => ({
   id: item.id,
   name: item.name,
   kind: "player-career",
@@ -140,7 +147,7 @@ const collegeQuarterbacks: FootballCanonicalSubject[] = collegeQuarterbackDepth.
   school: item.asset.label,
 }));
 
-const collegeSeasons: FootballCanonicalSubject[] = collegeTeamSeasonDepth.map((item) => {
+const collegeSeasons: FootballExpandedCanonicalSubject[] = collegeTeamSeasonDepth.map((item) => {
   const season = leadingSeason(item.id);
   return {
     id: item.id,
@@ -157,7 +164,7 @@ const collegeSeasons: FootballCanonicalSubject[] = collegeTeamSeasonDepth.map((i
  * This is an identity adapter only: comparison ratings remain game-specific and are
  * deliberately not imported into the factual ledger.
  */
-export const footballComparisonCanonicalSubjects: readonly FootballCanonicalSubject[] = [
+export const footballComparisonCanonicalSubjects: readonly FootballExpandedCanonicalSubject[] = [
   ...tightEnds,
   ...defenders,
   ...quarterbackSeasons,
