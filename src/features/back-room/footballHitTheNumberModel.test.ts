@@ -4,26 +4,46 @@ import {
   FOOTBALL_HIT_THE_NUMBER_FORMAT_PROFILE,
   FOOTBALL_HIT_THE_NUMBER_MAX_PICKS,
   FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG,
+  FOOTBALL_HIT_THE_NUMBER_MIN_THEME_DEPTH,
   FOOTBALL_HIT_THE_NUMBER_MIN_PICKS,
   FOOTBALL_HIT_THE_NUMBER_PICK_PROFILE,
+  FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG,
   createFootballHitTheNumberPlan,
   footballHitTheNumberPlanQuality,
+  footballHitTheNumberPlayableThemes,
   footballHitTheNumberRandomPoolSize,
   footballHitTheNumberSelectionSatisfies,
   footballHitTheNumberSubjects,
+  footballHitTheNumberThemeSubjects,
   footballHitTheNumberValue,
   gradeFootballHitTheNumberSelection,
   type FootballHitTheNumberFormatId,
 } from "./footballHitTheNumberModel";
 
 describe("Football Hit the Number parity plus", () => {
-  it("keeps one 35-subject factual roster while exposing 18 meaningful NFL/CFB metric boards", () => {
-    expect(footballHitTheNumberSubjects).toHaveLength(35);
-    expect(new Set(footballHitTheNumberSubjects.map((subject) => subject.id)).size).toBe(35);
+  it("consumes all metric-compatible identities from the canonical 75-subject factual surface", () => {
+    expect(footballHitTheNumberSubjects).toHaveLength(75);
+    expect(new Set(footballHitTheNumberSubjects.map((subject) => subject.id)).size).toBe(75);
     expect(FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG).toHaveLength(18);
     expect(new Set(FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG.map((row) => row.metricId)).size).toBe(18);
     expect(FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG.filter((row) => row.league === "NFL")).toHaveLength(9);
     expect(FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG.filter((row) => row.league === "CFB")).toHaveLength(9);
+  });
+
+  it("offers deep, distinct canonical-query themes across NFL and CFB", () => {
+    const playable = footballHitTheNumberPlayableThemes();
+    expect(FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG.length).toBeGreaterThanOrEqual(20);
+    expect(playable.length).toBeGreaterThanOrEqual(14);
+    expect(playable.filter((theme) => theme.league === "NFL").length).toBeGreaterThanOrEqual(2);
+    expect(playable.filter((theme) => theme.league === "CFB").length).toBeGreaterThanOrEqual(8);
+    for (const theme of playable) {
+      const subjects = footballHitTheNumberThemeSubjects(theme);
+      expect(subjects.length, theme.id).toBeGreaterThanOrEqual(FOOTBALL_HIT_THE_NUMBER_MIN_THEME_DEPTH);
+      expect(new Set(subjects.map((subject) => subject.id)).size).toBe(subjects.length);
+    }
+    const signatures = playable.map((theme) =>
+      footballHitTheNumberThemeSubjects(theme).map((subject) => subject.id).sort().join(","));
+    expect(new Set(signatures).size).toBeGreaterThanOrEqual(Math.floor(playable.length * 0.7));
   });
 
   it("uses the existing audited Football factual owner for every playable objective value", () => {
