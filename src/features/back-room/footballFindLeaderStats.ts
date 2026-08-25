@@ -6,6 +6,8 @@ import {
   type FootballFindLeaderUnit,
 } from "./footballFactualStatsCatalog";
 
+export { footballFindLeaderSubjects } from "./footballFactualStatsCatalog";
+
 /**
  * Canonical game-facing metric catalog for Football Find the Leader.
  * The factual catalog remains the authority for numbers; this layer owns which factual shapes the game may expose.
