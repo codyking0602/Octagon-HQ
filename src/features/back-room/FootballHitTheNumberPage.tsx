@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { GameResultActions } from "../play/GameResultActions";
-import { recordLineupCompletion, replayLabelFor } from "../play/lineupModel";
+import { recordLineupCompletion } from "../play/lineupModel";
 import {
   FOOTBALL_HIT_THE_NUMBER_GAME_ID,
   createFootballHitTheNumberPlan,
@@ -19,6 +19,7 @@ import {
   type FootballHitTheNumberResult,
   type FootballHitTheNumberRun,
 } from "./footballHitTheNumberModel";
+import { footballSubjectAsset } from "./footballSubjectAssets";
 import {
   asChallengeJson,
   challengeRecord,
@@ -27,10 +28,25 @@ import {
   footballCuratedIdentity,
 } from "./footballChallengeRuntime";
 
+const footballHitNumberTheme = {
+  "--ufc-red-strong": "var(--football-accent)",
+} as CSSProperties;
+
+const selectedFootballCardStyle = {
+  borderColor: "rgba(var(--football-accent-rgb), .7)",
+  background: "rgba(var(--football-accent-rgb), .14)",
+} as CSSProperties;
+
 function resultTitle(result: FootballHitTheNumberResult) {
   if (result.status === "perfect") return "PERFECT";
   if (result.status === "bust") return "BUST";
   return `${formatDistance(result.distance)} OFF`;
+}
+
+function resultDetail(result: FootballHitTheNumberResult) {
+  if (result.status === "perfect") return `You hit ${formatDistance(result.target)} exactly.`;
+  if (result.status === "bust") return `You went over by ${formatDistance(result.distance)}.`;
+  return `You finished ${formatDistance(result.distance)} below the target.`;
 }
 
 function formatDistance(value: number) {
@@ -64,6 +80,33 @@ function resolveChallengeRun(
   }
 }
 
+function SubjectMark({ subjectId, className }: { subjectId: string; className: string }) {
+  const asset = footballSubjectAsset(subjectId);
+  const subject = getFootballHitTheNumberSubject(subjectId);
+  if (!asset) {
+    return (
+      <span
+        className={className}
+        aria-hidden="true"
+        style={{ display: "grid", placeItems: "center", background: "rgba(255,255,255,.05)", fontSize: ".58rem", fontWeight: 950 }}
+      >
+        {subject?.group.toUpperCase() ?? "FB"}
+      </span>
+    );
+  }
+  return (
+    <img
+      alt=""
+      className={className}
+      loading="lazy"
+      referrerPolicy="no-referrer"
+      src={asset.src}
+      title={asset.label}
+      style={{ objectFit: "contain", padding: 4, background: "rgba(255,255,255,.04)" }}
+    />
+  );
+}
+
 export default function FootballHitTheNumberPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -91,6 +134,8 @@ export default function FootballHitTheNumberPage() {
   const displayedSubjectIds = result || plan.formatId !== "build-the-team"
     ? plan.subjectIds
     : [...selectedIds, ...availableBuildSubjectIds];
+  const ready = selectionValid;
+  const fullButInvalid = selectedIds.length === plan.pickCount && !selectionValid;
 
   useEffect(() => {
     if (!sharedRun || run.identity.challengeId === sharedRun.identity.challengeId) return;
@@ -199,8 +244,23 @@ export default function FootballHitTheNumberPage() {
     setChallengeStatus(status);
   }
 
+  const resultActions = result ? (
+    <GameResultActions
+      onChallenge={() => void challengeSomeone()}
+      onReplay={replay}
+      onAllGames={() => navigate("/football")}
+      replayLabel={shared ? "REPLAY CHALLENGE" : "NEW LINEUP"}
+      status={challengeStatus}
+    />
+  ) : null;
+
   return (
-    <div className="page football-debate-page football-hit-number-page">
+    <div
+      className="page hit-number-page football-hit-number-page"
+      data-challenge-id={run.identity.challengeId}
+      data-format-id={plan.formatId}
+      style={footballHitNumberTheme}
+    >
       {profileMatch.creator ? (
         <section className="challenge-game-banner">
           <span>PROFILE CHALLENGE</span>
@@ -208,99 +268,145 @@ export default function FootballHitTheNumberPage() {
           <small>Both locked totals reveal after you finish.</small>
         </section>
       ) : null}
-      <section className="football-hit-number-hero">
-        <div>
-          <p className="eyebrow">HIT THE NUMBER · FOOTBALL</p>
-          <span>{plan.formatLabel.toUpperCase()} · {plan.league}</span>
-          <h1>{formatFootballHitTheNumberValue(plan, plan.target)}</h1>
-          <strong>{plan.metricLabel.toUpperCase()}</strong>
-          <p>Pick {plan.pickCount}. Get as close as possible without going over. Go over the target and you bust.</p>
+
+      <section className="hit-number-heading">
+        <button className="hit-number-back" type="button" onClick={() => navigate("/football")}>← ALL GAMES</button>
+        <p className="eyebrow">HIT THE NUMBER</p>
+        <div className="hit-number-target" aria-label={`Target ${formatFootballHitTheNumberValue(plan, plan.target)}`}>
+          <span>TARGET</span>
+          <strong>{formatFootballHitTheNumberValue(plan, plan.target)}</strong>
+          <small>{plan.metricLabel.toUpperCase()}</small>
         </div>
-        <aside>
-          <small>BOARD</small>
-          <b>{plan.domainLabel}</b>
-          {plan.configurationLabel ? <em>{plan.configurationLabel}</em> : null}
-        </aside>
+        <p className="hit-number-rule">Get as close as possible without going over. Go over the target and you bust.</p>
+        <div className="hit-number-meta" aria-label="Current challenge context">
+          <span>{plan.league}</span>
+          {plan.configurationLabel ? <span>{plan.configurationLabel.toUpperCase()}</span> : null}
+        </div>
       </section>
 
-      {plan.slots.length ? (
-        <section className="football-hit-number-rules" aria-label="Required lineup roles">
-          <small>{plan.formatId === "one-from-each" ? "ONE FROM EACH" : "BUILD REQUIREMENTS"}</small>
-          <div>
-            {plan.slots.map((slot, index) => {
-              const selectedSubject = selectedIds[index]
-                ? getFootballHitTheNumberSubject(selectedIds[index]!)
-                : null;
-              const active = !result && plan.formatId === "build-the-team" && activeBuildSlot?.id === slot.id;
+      {!result && !shared ? (
+        <section
+          className="hit-number-controls surface-card"
+          aria-label="Hit the Number lineup controls"
+          style={{ gridTemplateColumns: "1fr" }}
+        >
+          <button className="hit-number-new-board" type="button" onClick={startNew}>
+            NEW LINEUP
+          </button>
+        </section>
+      ) : null}
+
+      <div className="hit-number-play-area">
+        <section className={`hit-number-selection surface-card${result ? " is-complete" : ""}`}>
+          <div className="hit-number-section-heading">
+            <div>
+              <p className="eyebrow">YOUR PICKS</p>
+              <h2>{selectedIds.length} / {plan.pickCount} selected</h2>
+            </div>
+            {!result ? (
+              <span>{activeBuildSlot ? `NOW: ${activeBuildSlot.label.toUpperCase()}` : "Stats stay hidden until you lock."}</span>
+            ) : null}
+          </div>
+
+          <div className="hit-number-slots" data-testid="hit-number-slots">
+            {Array.from({ length: plan.pickCount }, (_, index) => {
+              const subjectId = selectedIds[index];
+              const subject = subjectId ? getFootballHitTheNumberSubject(subjectId) : null;
+              const value = result && subjectId ? footballHitTheNumberValue(subjectId, plan.metricId) : null;
               return (
-                <span key={slot.id}>
-                  {active ? "NOW · " : ""}{slot.label}{selectedSubject ? ` · ${selectedSubject.name}` : ""}
-                </span>
+                <div className={`hit-number-slot${subject ? " is-filled" : ""}`} key={index}>
+                  <b>{index + 1}</b>
+                  {subject && subjectId ? (
+                    <>
+                      <SubjectMark subjectId={subjectId} className="hit-number-slot__photo" />
+                      <span>{subject.name}</span>
+                      {result && value != null
+                        ? <strong className="hit-number-stat-value">{formatFootballHitTheNumberValue(plan, value)}</strong>
+                        : <small>SELECTED</small>}
+                    </>
+                  ) : (
+                    <span className="hit-number-slot__empty">EMPTY</span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {result ? (
+            <div className={`hit-number-result is-${result.status}`}>
+              <p>{resultTitle(result)}</p>
+              <strong className="hit-number-result__total">{formatFootballHitTheNumberValue(plan, result.total)}</strong>
+              <span>TOTAL · TARGET {formatFootballHitTheNumberValue(plan, result.target)}</span>
+              <small>{resultDetail(result)}</small>
+              <div className="hit-number-result__score" aria-label={`Score ${result.score} out of 100`}>
+                <span>SCORE</span>
+                <strong>{result.score}</strong>
+                <small>/100</small>
+              </div>
+              {resultActions}
+            </div>
+          ) : null}
+        </section>
+
+        {!result ? (
+          <div className={`hit-number-lock-dock${ready ? " is-ready" : ""}`}>
+            <button
+              className={`hit-number-lock${ready ? " is-ready" : ""}`}
+              type="button"
+              disabled={!ready}
+              onClick={lockPicks}
+              style={ready ? { boxShadow: "0 8px 24px rgba(var(--football-accent-rgb), .24)" } : undefined}
+            >
+              {ready
+                ? `${selectedIds.length}/${plan.pickCount} SELECTED · LOCK PICKS`
+                : fullButInvalid
+                  ? `${selectedIds.length}/${plan.pickCount} SELECTED · FILL REQUIRED ROLES`
+                  : `${selectedIds.length}/${plan.pickCount} SELECTED`}
+            </button>
+          </div>
+        ) : null}
+
+        <section className="hit-number-roster surface-card">
+          <div className="hit-number-section-heading">
+            <div>
+              <p className="eyebrow">{result ? "POOL RESULTS" : plan.league === "CFB" ? "TEAM POOL" : "PLAYER POOL"}</p>
+              <h2>{activeBuildSlot && !result ? activeBuildSlot.label : `${displayedSubjectIds.length} eligible ${plan.league === "CFB" ? "teams" : "players"}`}</h2>
+            </div>
+            <span>
+              {result
+                ? "All values revealed"
+                : activeBuildSlot
+                  ? "Choose one for this tier"
+                  : `Pick ${plan.pickCount} from this pool`}
+            </span>
+          </div>
+          <div className="hit-number-fighter-grid">
+            {displayedSubjectIds.map((subjectId) => {
+              const subject = getFootballHitTheNumberSubject(subjectId)!;
+              const selected = selectedIds.includes(subjectId);
+              const value = result ? footballHitTheNumberValue(subjectId, plan.metricId) : null;
+              return (
+                <button
+                  type="button"
+                  className={`hit-number-fighter-card${selected ? " is-selected" : ""}`}
+                  aria-pressed={selected}
+                  disabled={Boolean(result)}
+                  onClick={() => toggleSubject(subjectId)}
+                  key={subjectId}
+                  style={selected ? selectedFootballCardStyle : undefined}
+                >
+                  <SubjectMark subjectId={subjectId} className="hit-number-fighter-card__photo" />
+                  <span>
+                    <strong>{subject.name}</strong>
+                    <small>{result && selected ? `YOUR PICK · ${subject.subtitle}` : subject.subtitle}</small>
+                  </span>
+                  <b>{result && value != null ? formatFootballHitTheNumberValue(plan, value) : selected ? "✓" : "+"}</b>
+                </button>
               );
             })}
           </div>
         </section>
-      ) : null}
-
-      {result ? (
-        <section className={`football-hit-number-result is-${result.status}`}>
-          <p>{resultTitle(result)}</p>
-          <strong>{formatFootballHitTheNumberValue(plan, result.total)}</strong>
-          <span>TOTAL · TARGET {formatFootballHitTheNumberValue(plan, result.target)}</span>
-          <div><small>SCORE</small><b>{result.score}<em>/100</em></b></div>
-        </section>
-      ) : (
-        <section className="football-hit-number-selection">
-          <span>{selectedIds.length} / {plan.pickCount} SELECTED</span>
-          <strong>
-            {activeBuildSlot
-              ? `NOW: ${activeBuildSlot.label.toUpperCase()}`
-              : "Stats stay hidden until you lock."}
-          </strong>
-        </section>
-      )}
-
-      <section className="football-hit-number-grid" aria-label="Football Hit the Number pool">
-        {displayedSubjectIds.map((subjectId) => {
-          const subject = getFootballHitTheNumberSubject(subjectId)!;
-          const selected = selectedIds.includes(subjectId);
-          const value = result ? footballHitTheNumberValue(subjectId, plan.metricId) : null;
-          return (
-            <button
-              className={`${selected ? "is-selected" : ""}${result ? " is-revealed" : ""}`}
-              type="button"
-              aria-pressed={selected}
-              disabled={Boolean(result)}
-              onClick={() => toggleSubject(subjectId)}
-              key={subjectId}
-            >
-              <small>{subject.subtitle}</small>
-              <strong>{subject.name}</strong>
-              <span>{result ? formatFootballHitTheNumberValue(plan, value!) : selected ? "SELECTED" : "TAP TO PICK"}</span>
-            </button>
-          );
-        })}
-      </section>
-
-      {!result ? (
-        <div className="football-hit-number-lock">
-          <button type="button" disabled={!selectionValid} onClick={lockPicks}>
-            {selectedIds.length < plan.pickCount
-              ? `${selectedIds.length}/${plan.pickCount} SELECTED`
-              : selectionValid
-                ? "LOCK PICKS"
-                : "FILL EVERY REQUIRED ROLE"}
-          </button>
-        </div>
-      ) : (
-        <GameResultActions
-          onChallenge={() => void challengeSomeone()}
-          onReplay={replay}
-          onAllGames={() => navigate("/football")}
-          replayLabel={replayLabelFor(run.identity.type)}
-          status={challengeStatus}
-        />
-      )}
+      </div>
     </div>
   );
 }
