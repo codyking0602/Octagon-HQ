@@ -10,8 +10,11 @@ import {
 } from "./footballSubjectRegistry";
 
 describe("canonical Football universe", () => {
-  it("owns hundreds of unique NFL and CFB subjects in the factual catalog", () => {
-    expect(footballSubjects).toBe(footballCanonicalSubjects);
+  it("preserves the factual catalog while enriching its canonical identity view", () => {
+    expect(footballSubjects).toHaveLength(footballCanonicalSubjects.length);
+    footballCanonicalSubjects.forEach((subject, index) => {
+      expect(footballSubjects[index], subject.id).toMatchObject(subject);
+    });
     expect(footballSubjects.length).toBeGreaterThanOrEqual(250);
     expect(new Set(footballSubjects.map(({ id }) => id)).size).toBe(footballSubjects.length);
     expect(queryFootballSubjects({ league: "NFL" }).length).toBeGreaterThanOrEqual(75);
