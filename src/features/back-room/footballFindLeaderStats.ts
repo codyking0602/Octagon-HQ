@@ -32,7 +32,8 @@ export type FootballFindLeaderMetricId =
   | "nfl-defense-sacks"
   | "nfl-defense-interceptions"
   | "cfb-player-rushing-yards"
-  | "cfb-player-rushing-touchdowns";
+  | "cfb-player-rushing-touchdowns"
+  | "cfb-team-season-losses";
 
 export type { FootballFindLeaderUnit };
 
@@ -66,6 +67,7 @@ const expandedFootballFindLeaderMetricDefinitions: readonly FootballFindLeaderMe
   metric("nfl-defense-interceptions", "nfl-defense-career", "nfl-defense", "career defensive interceptions", "INTERCEPTIONS", "count", 0, "the most career interceptions"),
   metric("cfb-player-rushing-yards", "cfb-player-rushing", "cfb-rushing", "best-season rushing yards", "RUSH YARDS", "yards", 0, "the most rushing yards in a season"),
   metric("cfb-player-rushing-touchdowns", "cfb-player-rushing", "cfb-rushing", "best-season rushing touchdowns", "RUSH TD", "count", 0, "the most rushing touchdowns in a season"),
+  metric("cfb-team-season-losses", "cfb-team-season", "cfb-team-season", "season losses", "LOSSES", "count", 0, "the most losses in the season"),
 ] as const;
 
 export const footballFindLeaderMetricDefinitions: readonly FootballFindLeaderMetricDefinition[] = [
