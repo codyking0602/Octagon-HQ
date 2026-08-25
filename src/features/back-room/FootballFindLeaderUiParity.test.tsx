@@ -38,9 +38,8 @@ describe("Football Find the Leader UI parity", () => {
   });
 
   it("uses the UFC-style replay hero and three-part progress module", () => {
-    const { definition, seed } = deterministicBoard();
     render(
-      <MemoryRouter initialEntries={[`/football/find-leader?seed=${seed}&definition=${encodeURIComponent(definition.id)}`]}>
+      <MemoryRouter initialEntries={["/football/find-leader"]}>
         <FootballFindLeaderPage />
       </MemoryRouter>,
     );
