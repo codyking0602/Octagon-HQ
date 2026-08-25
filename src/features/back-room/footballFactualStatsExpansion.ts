@@ -158,6 +158,14 @@ export const expandedFootballFactualRecords: readonly FootballFactualRecord[] = 
   wr("nfl-rob-gronkowski", 621, 9286, 92),
   wr("antonio-gates", 955, 11841, 116),
   wr("shannon-sharpe", 815, 10060, 62),
+  wr("travis-kelce", 1080, 13002, 82),
+  wr("george-kittle", 595, 8008, 52),
+  wr("jason-witten", 1228, 13046, 74),
+  wr("kellen-winslow-sr", 541, 6741, 45),
+  wr("ozzie-newsome", 662, 7980, 47),
+  wr("greg-olsen", 742, 8683, 60),
+  wr("jimmy-graham", 719, 8545, 89),
+  wr("vernon-davis", 583, 7562, 63),
 
   // NFL defenders: use position-appropriate objective production and award counts.
   defender("lawrence-taylor", [
@@ -203,7 +211,57 @@ export const expandedFootballFactualRecords: readonly FootballFactualRecord[] = 
     ["nfl-defensive-player-of-year-awards", 1],
   ]),
   defender("myles-garrett", [
+    ["nfl-career-sacks", 125.5],
     ["nfl-defensive-player-of-year-awards", 2],
+  ]),
+  defender("tj-watt", [
+    ["nfl-career-sacks", 115],
+    ["nfl-defensive-player-of-year-awards", 1],
+    ["nfl-first-team-all-pros", 4],
+  ]),
+  defender("terrell-suggs", [
+    ["nfl-career-sacks", 139],
+    ["nfl-defensive-player-of-year-awards", 1],
+    ["nfl-first-team-all-pros", 1],
+  ]),
+  defender("von-miller", [
+    ["nfl-career-sacks", 138.5],
+  ]),
+  defender("clay-matthews", [
+    ["nfl-career-sacks", 91.5],
+  ]),
+  defender("deion-sanders", [
+    ["nfl-career-interceptions", 53],
+  ]),
+  defender("ronnie-lott", [
+    ["nfl-career-interceptions", 63],
+    ["nfl-first-team-all-pros", 6],
+  ]),
+  defender("champ-bailey", [
+    ["nfl-career-interceptions", 52],
+    ["nfl-first-team-all-pros", 3],
+  ]),
+  defender("brian-dawkins", [
+    ["nfl-career-interceptions", 37],
+  ]),
+  defender("troy-polamalu", [
+    ["nfl-career-interceptions", 32],
+    ["nfl-defensive-player-of-year-awards", 1],
+    ["nfl-first-team-all-pros", 4],
+  ]),
+  defender("darrelle-revis", [
+    ["nfl-career-interceptions", 29],
+  ]),
+  defender("richard-sherman", [
+    ["nfl-career-interceptions", 37],
+    ["nfl-first-team-all-pros", 3],
+  ]),
+  defender("luke-kuechly", [
+    ["nfl-career-interceptions", 18],
+    ["nfl-defensive-player-of-year-awards", 1],
+  ]),
+  defender("derrick-brooks", [
+    ["nfl-career-interceptions", 25],
   ]),
 
   // NFL player seasons: enough numerical shape for season-level games without conflating careers.
@@ -218,6 +276,12 @@ export const expandedFootballFactualRecords: readonly FootballFactualRecord[] = 
   qbSeason("jameis-winston-2019", 5109, 33, 30, 84.3),
   qbSeason("zach-wilson-2022", 1688, 6, 7, 72.8),
   qbSeason("jamarcus-russell-2009", 1287, 3, 11, 50.0),
+  qbSeason("peyton-manning-2004", 4557, 49, 10, 121.1),
+  qbSeason("cam-newton-2015", 3837, 35, 10, 99.4),
+  qbSeason("kurt-warner-1999", 4353, 41, 13, 109.2),
+  qbSeason("matt-ryan-2016", 4944, 38, 7, 117.1),
+  qbSeason("patrick-mahomes-2018", 5097, 50, 12, 113.8),
+  qbSeason("aaron-rodgers-2020", 4299, 48, 5, 121.5),
 
   // NFL team seasons: championship and failure cases share one objective numerical shape.
   nflTeam("1972-miami-dolphins", 17, 0, true, 27.5, 12.2),
@@ -293,6 +357,24 @@ export const expandedFootballFactualRecords: readonly FootballFactualRecord[] = 
     ["cfb-best-season-rushing-yards", 1580],
     ["cfb-best-season-rushing-touchdowns", 18],
   ]),
+  cfbPlayer("cfb-ricky-williams", [
+    ["cfb-best-season-rushing-yards", 2124],
+    ["cfb-best-season-rushing-touchdowns", 27],
+    ["cfb-heisman-awards", 1],
+  ]),
+  cfbPlayer("cfb-reggie-bush", [
+    ["cfb-best-season-rushing-yards", 1740],
+    ["cfb-best-season-rushing-touchdowns", 16],
+    ["cfb-best-season-receptions", 37],
+    ["cfb-best-season-receiving-yards", 478],
+    ["cfb-best-season-receiving-touchdowns", 2],
+    ["cfb-heisman-awards", 1],
+  ]),
+  cfbPlayer("cfb-darren-mcfadden", [
+    ["cfb-best-season-rushing-yards", 1830],
+    ["cfb-best-season-rushing-touchdowns", 16],
+    ["cfb-heisman-awards", 0],
+  ]),
   cfbPlayer("cfb-devonta-smith", [
     ["cfb-best-season-receptions", 117],
     ["cfb-best-season-receiving-yards", 1856],
@@ -302,6 +384,16 @@ export const expandedFootballFactualRecords: readonly FootballFactualRecord[] = 
   cfbPlayer("cfb-larry-fitzgerald", [
     ["cfb-best-season-receptions", 92],
     ["cfb-best-season-receiving-yards", 1672],
+    ["cfb-best-season-receiving-touchdowns", 22],
+  ]),
+  cfbPlayer("cfb-calvin-johnson", [
+    ["cfb-best-season-receptions", 76],
+    ["cfb-best-season-receiving-yards", 1202],
+    ["cfb-best-season-receiving-touchdowns", 15],
+  ]),
+  cfbPlayer("cfb-michael-crabtree", [
+    ["cfb-best-season-receptions", 134],
+    ["cfb-best-season-receiving-yards", 1962],
     ["cfb-best-season-receiving-touchdowns", 22],
   ]),
   cfbPlayer("cfb-marvin-harrison-jr", [
