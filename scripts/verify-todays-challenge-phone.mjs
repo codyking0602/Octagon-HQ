@@ -77,7 +77,8 @@ run("git", ["config", "user.email", "41898282+github-actions[bot]@users.noreply.
 run("git", ["fetch", "origin", "main", "--depth=1"]);
 run("git", ["checkout", "origin/main", "--", "scripts/verify-todays-challenge-phone.mjs", ".github/workflows/validate.yml"]);
 run("git", ["rm", "-f", ".github/workflows/_tmp-materialize-cfb-coach-relationships.yml"]);
-run("git", ["add", seasonPath, stintPath, manifestPath, coveragePath, "scripts/verify-todays-challenge-phone.mjs", ".github/workflows/validate.yml"]);
+run("git", ["add", "-f", seasonPath, stintPath, manifestPath, coveragePath]);
+run("git", ["add", "scripts/verify-todays-challenge-phone.mjs", ".github/workflows/validate.yml"]);
 run("git", ["commit", "-m", "data: materialize CFB coach relationships"]);
 run("git", ["push", "origin", "HEAD:feature/cfb-coach-relationships"]);
 
