@@ -81,4 +81,18 @@ describe("canonical Football subject registry", () => {
     });
     expect(getFootballSubject("missing-subject")).toBeNull();
   });
+
+  it("keeps factual depth separate from casual recognizability eligibility", () => {
+    const peyton = getFootballSubject("peyton-manning");
+    expect(peyton).toMatchObject({
+      recognizabilityTier: "C",
+      casualEligible: true,
+      sourceIdentityKeys: [{ provider: "octagon-hq", id: "peyton-manning" }],
+    });
+
+    expect(queryFootballSubjects({ casualEligible: true })).toHaveLength(footballSubjects.length);
+    expect(queryFootballSubjects({ recognizabilityTiers: ["C"] })).toHaveLength(footballSubjects.length);
+    expect(queryFootballSubjects({ sourceProvider: "octagon-hq" })).toHaveLength(footballSubjects.length);
+    expect(queryFootballSubjects({ sourceProvider: "cfbfastR" })).toHaveLength(0);
+  });
 });
