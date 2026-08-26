@@ -11,6 +11,7 @@ import {
   footballFindLeaderCategoryLabel,
   footballFindLeaderQuestions,
   formatFootballFindLeaderValue,
+  sortFootballFindLeaderCandidates,
   type FootballFindLeaderRun,
 } from "./footballFindLeaderModel";
 import {
@@ -219,7 +220,7 @@ export default function FootballFindLeaderPage() {
 
   if (result) {
     const leader = board.candidates.find((candidate) => candidate.id === board.leaderId)!;
-    const sorted = [...board.candidates].sort((left, right) => right.value - left.value || left.name.localeCompare(right.name));
+    const sorted = sortFootballFindLeaderCandidates(board);
     const fatalRound = result.perfect ? null : result.score / 10;
     return (
       <div className="page football-find-leader-page">

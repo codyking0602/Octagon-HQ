@@ -25,6 +25,7 @@ const board: model.FootballFindLeaderBoard = {
   context: "Highest career passing yards among the ten shown. The overall record holder does not have to appear.",
   statLabel: "career passing yards",
   shortLabel: "PASS YARDS",
+  direction: "higher",
   leaderId: "leader",
   leaderValue: 70000,
   candidates: Array.from({ length: 10 }, (_, index) => ({
@@ -66,6 +67,8 @@ describe("Football Find the Leader page", () => {
     ["nfl-qb-career", "NFL QB CAREERS"],
     ["nfl-rb-career", "NFL RB CAREERS"],
     ["cfb-champion-season", "CFB CHAMPION SEASONS"],
+    ["cfb-player-receiving", "CFB RECEIVING SEASONS"],
+    ["cfb-coach-career", "CFB COACH CAREERS"],
   ] as const)("uses concise category copy for %s boards", (domainId, expectedLabel) => {
     mockBoard({ ...board, domainId });
     render(<MemoryRouter><FootballFindLeaderPage /></MemoryRouter>);
@@ -90,5 +93,19 @@ describe("Football Find the Leader page", () => {
     expect(screen.getByText("PERFECT RUN")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "100/100" })).toBeInTheDocument();
     expect(screen.getByText(/left Hidden Leader standing/)).toBeInTheDocument();
+  });
+
+  it("reveals lower-is-better boards from the smallest value upward", () => {
+    mockBoard({
+      ...board,
+      direction: "lower",
+      leaderValue: 1,
+      candidates: board.candidates.map((candidate, index) => ({ ...candidate, value: index + 1 })),
+    });
+    render(<MemoryRouter><FootballFindLeaderPage /></MemoryRouter>);
+    fireEvent.click(screen.getByRole("button", { name: /Hidden Leader/i }));
+    const reveal = screen.getByText("FULL STAT REVEAL").closest("section")!;
+    const rows = within(reveal).getAllByText(/^#\d+$/);
+    expect(rows[0]).toHaveTextContent("#1");
   });
 });
