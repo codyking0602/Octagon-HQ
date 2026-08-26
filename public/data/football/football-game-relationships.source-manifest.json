@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "cfb": {
+    "provider": "cfbfastR",
+    "repository": "sportsdataverse/cfbfastR-data",
+    "commit": "a0f29f9ec6c04952a720905017e74a7b089dc1eb",
+    "license": "CC BY 4.0",
+    "seasonStart": 2002,
+    "seasonEnd": 2025,
+    "seasonCount": 24,
+    "totalSourceBytes": 8376486,
+    "pathTemplate": "schedules/csv/cfb_schedules_<season>.csv",
+    "assets": [
+      { "season": 2002, "path": "schedules/csv/cfb_schedules_2002.csv", "gitBlobSha": "c6d03872602d0156fd494419e5bb7b53e280fad1", "bytes": 145067 },
+      { "season": 2003, "path": "schedules/csv/cfb_schedules_2003.csv", "gitBlobSha": "42c4f48ebc3553f16d3f005f8a4d83de6b43a0ed", "bytes": 145965 },
+      { "season": 2004, "path": "schedules/csv/cfb_schedules_2004.csv", "gitBlobSha": "4224b00d1d11000cb5e0a6e2d527af51bd7c0197", "bytes": 133162 },
+      { "season": 2005, "path": "schedules/csv/cfb_schedules_2005.csv", "gitBlobSha": "f7d416daead3b129c9301fcc2a83bc1372ae1ef0", "bytes": 132830 },
+      { "season": 2006, "path": "schedules/csv/cfb_schedules_2006.csv", "gitBlobSha": "ee470077bb0a576810d5df0e11e946a751cd87cf", "bytes": 149081 },
+      { "season": 2007, "path": "schedules/csv/cfb_schedules_2007.csv", "gitBlobSha": "1399e63b281d0a59d3299869ffafc352de0b3e40", "bytes": 150454 },
+      { "season": 2008, "path": "schedules/csv/cfb_schedules_2008.csv", "gitBlobSha": "9ee3b2c94f8aa2e380e9f1f59a72046ec6959c1f", "bytes": 152172 },
+      { "season": 2009, "path": "schedules/csv/cfb_schedules_2009.csv", "gitBlobSha": "d3985f3b09e98ec3338acca5fbc4b659ef01d701", "bytes": 149628 },
+      { "season": 2010, "path": "schedules/csv/cfb_schedules_2010.csv", "gitBlobSha": "3bc983558504943e115f595759b520219f5be0f5", "bytes": 174248 },
+      { "season": 2011, "path": "schedules/csv/cfb_schedules_2011.csv", "gitBlobSha": "0e1315b9ffdaa050d426e4d21661187476fc91b2", "bytes": 175490 },
+      { "season": 2012, "path": "schedules/csv/cfb_schedules_2012.csv", "gitBlobSha": "1e2cc4c5aca9095080cf71439c9d8ac793f2d1b1", "bytes": 184862 },
+      { "season": 2013, "path": "schedules/csv/cfb_schedules_2013.csv", "gitBlobSha": "d977884539a72e1cd4ce4e15b6c3c17e20bb25f7", "bytes": 187859 },
+      { "season": 2014, "path": "schedules/csv/cfb_schedules_2014.csv", "gitBlobSha": "a038573b225147d8dcb8002686d52ffbab2aa354", "bytes": 362190 },
+      { "season": 2015, "path": "schedules/csv/cfb_schedules_2015.csv", "gitBlobSha": "a39f53238c411f80447f1b03aa6eec045eacd2d1", "bytes": 353251 },
+      { "season": 2016, "path": "schedules/csv/cfb_schedules_2016.csv", "gitBlobSha": "e9fb04de764c84070d606250db38a1cb3d4988b2", "bytes": 379791 },
+      { "season": 2017, "path": "schedules/csv/cfb_schedules_2017.csv", "gitBlobSha": "ef94de72c76c64b0a4a782ad29cf35d3b68c3e97", "bytes": 383955 },
+      { "season": 2018, "path": "schedules/csv/cfb_schedules_2018.csv", "gitBlobSha": "e4fde7bba55bc62e50503ce8c330594ead07e482", "bytes": 388878 },
+      { "season": 2019, "path": "schedules/csv/cfb_schedules_2019.csv", "gitBlobSha": "bb70aab3343cf646d888716fe79990f6495a2322", "bytes": 404815 },
+      { "season": 2020, "path": "schedules/csv/cfb_schedules_2020.csv", "gitBlobSha": "4cbeebe51fd5f1850a286bd2af0735c24b8c485d", "bytes": 166315 },
+      { "season": 2021, "path": "schedules/csv/cfb_schedules_2021.csv", "gitBlobSha": "599be79b44cb58aa2f4bc5aebb12c8c669441ace", "bytes": 561913 },
+      { "season": 2022, "path": "schedules/csv/cfb_schedules_2022.csv", "gitBlobSha": "c9a29feb7537877224fe29cf0216af76787f872b", "bytes": 863335 },
+      { "season": 2023, "path": "schedules/csv/cfb_schedules_2023.csv", "gitBlobSha": "219370abc93233b237f528b998fc08ea1008f875", "bytes": 884855 },
+      { "season": 2024, "path": "schedules/csv/cfb_schedules_2024.csv", "gitBlobSha": "c89eb934c4ebbf8958f6385d4771870d7add6fba", "bytes": 905442 },
+      { "season": 2025, "path": "schedules/csv/cfb_schedules_2025.csv", "gitBlobSha": "d26f9b9c6bcb747df7bbdd4945851de7f215eb08", "bytes": 840928 }
+    ]
+  },
+  "nfl": {
+    "provider": "nflverse",
+    "repository": "nflverse/nfldata",
+    "commit": "13e5420b10ca4e9dca03a3dcb7148f873ab3a301",
+    "license": "CC BY 4.0",
+    "licenseEvidence": "https://nflreadpy.nflverse.com/#license",
+    "nflreadrCommit": "d072c08492067b578f27e562b6cc9c9e3b8589c3",
+    "seasonStart": 1999,
+    "seasonEnd": 2025,
+    "asset": {
+      "name": "games.csv",
+      "path": "data/games.csv",
+      "gitBlobSha": "9d74dcb6a326ad57e6e98f15cfee8142fbadcfed",
+      "bytes": 2177174
+    }
+  }
+}
