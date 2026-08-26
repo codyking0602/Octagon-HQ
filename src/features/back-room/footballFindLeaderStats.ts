@@ -57,7 +57,6 @@ export interface FootballFindLeaderMetricDefinition {
   unit: FootballFindLeaderUnit;
   decimals: 0 | 1 | 2;
   questionLead: string;
-  direction: FootballFindLeaderDirection;
 }
 
 const metric = (
@@ -69,21 +68,23 @@ const metric = (
   unit: FootballFindLeaderUnit,
   decimals: 0 | 1 | 2,
   questionLead: string,
-  direction: FootballFindLeaderDirection = "higher",
-): FootballFindLeaderMetricDefinition => ({ id, domainId, family, label, shortLabel, unit, decimals, questionLead, direction });
+): FootballFindLeaderMetricDefinition => ({ id, domainId, family, label, shortLabel, unit, decimals, questionLead });
 
-const lowerIsBetterOverrides: Readonly<Partial<Record<BaseFootballFindLeaderMetricId, string>>> = {
+const lowerIsBetterQuestionLead: Readonly<Partial<Record<FootballFindLeaderMetricId, string>>> = {
   "qb-season-interceptions": "the fewest interceptions thrown in the season",
   "nfl-team-losses": "the fewest overall losses",
   "cfb-points-against": "the fewest points allowed",
   "cfb-opponent-points-per-game": "the fewest opponent points per game",
+  "cfb-team-season-losses": "the fewest losses in the season",
 };
 
-const gameFacingBaseMetricDefinitions: readonly FootballFindLeaderMetricDefinition[] = baseFootballFindLeaderMetricDefinitions.map((definition) => ({
-  ...definition,
-  direction: lowerIsBetterOverrides[definition.id] ? "lower" : "higher",
-  questionLead: lowerIsBetterOverrides[definition.id] ?? definition.questionLead,
-}));
+export function footballFindLeaderMetricDirection(metricId: FootballFindLeaderMetricId): FootballFindLeaderDirection {
+  return lowerIsBetterQuestionLead[metricId] ? "lower" : "higher";
+}
+
+export function footballFindLeaderQuestionLead(definition: FootballFindLeaderMetricDefinition) {
+  return lowerIsBetterQuestionLead[definition.id] ?? definition.questionLead;
+}
 
 const expandedFootballFindLeaderMetricDefinitions: readonly FootballFindLeaderMetricDefinition[] = [
   metric("nfl-receiving-receptions", "nfl-receiving-career", "nfl-receiving", "career receptions", "RECEPTIONS", "count", 0, "the most career receptions"),
@@ -97,7 +98,7 @@ const expandedFootballFindLeaderMetricDefinitions: readonly FootballFindLeaderMe
   metric("cfb-player-receiving-yards", "cfb-player-receiving", "cfb-receiving", "best-season receiving yards", "REC YARDS", "yards", 0, "the most receiving yards in a season"),
   metric("cfb-player-receiving-touchdowns", "cfb-player-receiving", "cfb-receiving", "best-season receiving touchdowns", "REC TD", "count", 0, "the most receiving touchdowns in a season"),
   metric("cfb-coach-career-wins", "cfb-coach-career", "cfb-coaching", "career wins", "WINS", "count", 0, "the most career wins"),
-  metric("cfb-team-season-losses", "cfb-team-season", "cfb-team-season", "season losses", "LOSSES", "count", 0, "the fewest losses in the season", "lower"),
+  metric("cfb-team-season-losses", "cfb-team-season", "cfb-team-season", "season losses", "LOSSES", "count", 0, "the most losses in the season"),
 ] as const;
 
 /**
@@ -122,7 +123,7 @@ export function footballFindLeaderMetricEditoriallyEligible(metricId: FootballFi
 }
 
 export const footballFindLeaderMetricDefinitions: readonly FootballFindLeaderMetricDefinition[] = [
-  ...gameFacingBaseMetricDefinitions,
+  ...baseFootballFindLeaderMetricDefinitions,
   ...expandedFootballFindLeaderMetricDefinitions,
 ] as const;
 
