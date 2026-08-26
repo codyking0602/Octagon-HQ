@@ -16,6 +16,7 @@ import {
   type FootballSourceProviderId,
   type FootballSubjectKnowledgeMetadata,
 } from "./footballSubjectEligibility";
+import { footballProjectedPlayerSubjects } from "./footballRecognizabilityProjection";
 
 export type FootballSubjectKind = FootballCanonicalSubjectKind;
 export type FootballSubjectLeague = FootballCanonicalSubject["league"];
@@ -108,6 +109,20 @@ function enrichFootballSubject(subject: FootballCanonicalSubject): FootballSubje
 
 /** Public identity/query view of the one canonical Football subject universe. */
 export const footballSubjects: readonly FootballSubjectProfile[] = footballCanonicalSubjects.map(enrichFootballSubject);
+
+/** Review/query surface for promoted source identities; intentionally excluded from legacy game pools. */
+export const footballRecognizabilitySubjects: readonly FootballSubjectProfile[] = footballProjectedPlayerSubjects.map(enrichFootballSubject);
+
+export function queryFootballRecognizabilitySubjects(query: FootballSubjectQuery = {}) {
+  return footballRecognizabilitySubjects.filter((subject) => {
+    if (query.kind && subject.kind !== query.kind) return false;
+    if (query.league && subject.league !== query.league) return false;
+    if (query.position && subject.position !== query.position) return false;
+    if (query.recognizabilityTiers && !query.recognizabilityTiers.includes(subject.recognizabilityTier)) return false;
+    if (query.casualEligible != null && subject.casualEligible !== query.casualEligible) return false;
+    return true;
+  });
+}
 
 const footballSubjectById = new Map<string, FootballSubjectProfile>();
 for (const subject of footballSubjects) {

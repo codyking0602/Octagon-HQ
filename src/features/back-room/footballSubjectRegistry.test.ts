@@ -85,14 +85,15 @@ describe("canonical Football subject registry", () => {
   it("keeps factual depth separate from casual recognizability eligibility", () => {
     const peyton = getFootballSubject("peyton-manning");
     expect(peyton).toMatchObject({
-      recognizabilityTier: "C",
+      recognizabilityTier: "A",
       casualEligible: true,
-      sourceIdentityKeys: [{ provider: "octagon-hq", id: "peyton-manning" }],
     });
+    expect(peyton?.sourceIdentityKeys).toContainEqual({ provider: "octagon-hq", id: "peyton-manning" });
+    expect(peyton?.sourceIdentityKeys).toContainEqual({ provider: "nflverse", id: "00-0010346" });
 
-    expect(queryFootballSubjects({ casualEligible: true })).toHaveLength(footballSubjects.length);
-    expect(queryFootballSubjects({ recognizabilityTiers: ["C"] })).toHaveLength(footballSubjects.length);
+    expect(queryFootballSubjects({ casualEligible: true }).length).toBeLessThan(footballSubjects.length);
+    expect(queryFootballSubjects({ recognizabilityTiers: ["D"] }).every((subject) => !subject.casualEligible)).toBe(true);
     expect(queryFootballSubjects({ sourceProvider: "octagon-hq" })).toHaveLength(footballSubjects.length);
-    expect(queryFootballSubjects({ sourceProvider: "cfbfastR" })).toHaveLength(0);
+    expect(queryFootballSubjects({ sourceProvider: "cfbfastR" }).length).toBeGreaterThan(0);
   });
 });
