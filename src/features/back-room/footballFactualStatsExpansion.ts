@@ -350,6 +350,9 @@ export const expandedFootballFactualRecords: readonly FootballFactualRecord[] = 
   cfbPlayer("cfb-bijan-robinson", [
     ["cfb-best-season-rushing-yards", 1580],
     ["cfb-best-season-rushing-touchdowns", 18],
+    ["cfb-best-season-receptions", 26],
+    ["cfb-best-season-receiving-yards", 314],
+    ["cfb-best-season-receiving-touchdowns", 4],
   ]),
   cfbPlayer("cfb-ricky-williams", [
     ["cfb-best-season-rushing-yards", 2124],
@@ -400,13 +403,46 @@ export const expandedFootballFactualRecords: readonly FootballFactualRecord[] = 
     ["cfb-best-season-receiving-yards", 942],
     ["cfb-best-season-receiving-touchdowns", 13],
   ]),
+  // PR2 expands dormant receiving depth without adding rushing facts; PR3 owns activation.
+  cfbPlayer("cfb-amari-cooper", [
+    ["cfb-best-season-receptions", 124],
+    ["cfb-best-season-receiving-yards", 1727],
+    ["cfb-best-season-receiving-touchdowns", 16],
+  ]),
+  cfbPlayer("cfb-christian-mccaffrey", [
+    ["cfb-best-season-receptions", 45],
+    ["cfb-best-season-receiving-yards", 645],
+    ["cfb-best-season-receiving-touchdowns", 5],
+  ]),
+  cfbPlayer("cfb-desmond-howard", [
+    ["cfb-best-season-receptions", 61],
+    ["cfb-best-season-receiving-yards", 950],
+    ["cfb-best-season-receiving-touchdowns", 19],
+    ["cfb-heisman-awards", 1],
+  ]),
+  cfbPlayer("cfb-saquon-barkley", [
+    ["cfb-best-season-receptions", 54],
+    ["cfb-best-season-receiving-yards", 632],
+    ["cfb-best-season-receiving-touchdowns", 4],
+  ]),
   cfbPlayer("cfb-will-anderson-jr", [
     ["cfb-best-season-sacks", 17.5],
     ["cfb-best-season-tackles-for-loss", 34.5],
   ]),
+  cfbPlayer("cfb-nndamukong-suh", [
+    ["cfb-best-season-sacks", 12],
+    ["cfb-best-season-tackles-for-loss", 20.5],
+  ]),
+  cfbPlayer("cfb-joey-bosa", [
+    ["cfb-best-season-sacks", 13.5],
+    ["cfb-best-season-tackles-for-loss", 21],
+  ]),
   cfbPlayer("cfb-charles-woodson", [
     ["cfb-best-season-defensive-interceptions", 7],
     ["cfb-heisman-awards", 1],
+  ]),
+  cfbPlayer("cfb-minkah-fitzpatrick", [
+    ["cfb-best-season-defensive-interceptions", 6],
   ]),
   cfbPlayer("cfb-travis-hunter", [
     ["cfb-best-season-receptions", 96],
@@ -432,6 +468,9 @@ export const expandedFootballFactualRecords: readonly FootballFactualRecord[] = 
     ["cfb-coach-conference-titles", 7],
   ]),
   cfbCoach("kirby-smart-cfb", [
+    ["cfb-coach-career-wins", 117],
+    ["cfb-coach-career-losses", 21],
+    ["cfb-coach-career-ties", 0],
     ["cfb-coach-national-titles", 2],
     ["cfb-coach-conference-titles", 3],
   ]),
@@ -441,6 +480,42 @@ export const expandedFootballFactualRecords: readonly FootballFactualRecord[] = 
     ["cfb-coach-career-ties", 0],
     ["cfb-coach-national-titles", 1],
     ["cfb-coach-conference-titles", 10],
+  ]),
+  // These dormant coach records make the canonical ledger deep enough for PR3 to judge activation.
+  cfbCoach("dabo-swinney-cfb", [
+    ["cfb-coach-career-wins", 187],
+    ["cfb-coach-career-losses", 53],
+    ["cfb-coach-career-ties", 0],
+  ]),
+  cfbCoach("pete-carroll-cfb", [
+    ["cfb-coach-career-wins", 97],
+    ["cfb-coach-career-losses", 19],
+    ["cfb-coach-career-ties", 0],
+  ]),
+  cfbCoach("mack-brown-cfb", [
+    ["cfb-coach-career-wins", 282],
+    ["cfb-coach-career-losses", 150],
+    ["cfb-coach-career-ties", 1],
+  ]),
+  cfbCoach("jim-tressel-cfb", [
+    ["cfb-coach-career-wins", 106],
+    ["cfb-coach-career-losses", 22],
+    ["cfb-coach-career-ties", 0],
+  ]),
+  cfbCoach("jim-harbaugh-cfb", [
+    ["cfb-coach-career-wins", 115],
+    ["cfb-coach-career-losses", 46],
+    ["cfb-coach-career-ties", 0],
+  ]),
+  cfbCoach("chris-petersen-cfb", [
+    ["cfb-coach-career-wins", 147],
+    ["cfb-coach-career-losses", 38],
+    ["cfb-coach-career-ties", 0],
+  ]),
+  cfbCoach("gary-patterson-cfb", [
+    ["cfb-coach-career-wins", 181],
+    ["cfb-coach-career-losses", 79],
+    ["cfb-coach-career-ties", 0],
   ]),
 
   // Programs use a fixed 2000-through-2025 window rather than a subjective greatness score.
