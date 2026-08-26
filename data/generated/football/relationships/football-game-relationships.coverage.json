@@ -219,6 +219,10 @@
     "franchiseCount": 32,
     "teamSeasonCount": 861,
     "gameCount": 7276,
+    "coachSeasonStopCount": 904,
+    "coachStintCount": 246,
+    "uniqueSourceCoachNameCount": 173,
+    "coachIdentityScope": "source-name-within-franchise",
     "playoffGameCount": 309,
     "superBowlCount": 27,
     "seasons": [

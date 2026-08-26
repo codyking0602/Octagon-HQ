@@ -88,7 +88,7 @@ describe("Football game relationship source adapter", () => {
     });
   });
 
-  it("builds programs, franchises, team results, games and explicit championship relationships without game-specific facts", () => {
+  it("builds programs, franchises, team results, games and coach stops without game-specific factual owners", () => {
     const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "octagon-football-relations-"));
     const sourceDir = path.join(tempRoot, "source");
     const cfbDir = path.join(sourceDir, "cfb");
@@ -109,13 +109,16 @@ describe("Football game relationship source adapter", () => {
       ["cfb-3", 2024, 1, "postseason", "2025-01-20", true, true, false, 194, "Ohio State", "fbs", "Big Ten", 31, 251, "Texas", "fbs", "SEC", 34, "College Football Playoff National Championship"],
     ]));
 
-    const nflHeader = ["game_id", "season", "game_type", "week", "gameday", "away_team", "away_score", "home_team", "home_score", "overtime"];
+    const nflHeader = [
+      "game_id", "season", "game_type", "week", "gameday",
+      "away_team", "away_coach", "away_score", "home_team", "home_coach", "home_score", "overtime",
+    ];
     fs.writeFileSync(path.join(nflDir, "games.csv"), csv([
       nflHeader,
-      ["2024_01_NYG_DAL", 2024, "REG", 1, "2024-09-08", "NYG", 20, "DAL", 30, false],
-      ["2024_19_GB_DAL", 2024, "WC", 19, "2025-01-12", "GB", 21, "DAL", 24, false],
-      ["2024_21_DAL_PHI", 2024, "CON", 21, "2025-01-26", "DAL", 27, "PHI", 24, false],
-      ["2024_22_DAL_KC", 2024, "SB", 22, "2025-02-09", "DAL", 31, "KC", 28, false],
+      ["2024_01_NYG_DAL", 2024, "REG", 1, "2024-09-08", "NYG", "Brian Daboll", 20, "DAL", "Mike McCarthy", 30, false],
+      ["2024_19_GB_DAL", 2024, "WC", 19, "2025-01-12", "GB", "Matt LaFleur", 21, "DAL", "Mike McCarthy", 24, false],
+      ["2024_21_DAL_PHI", 2024, "CON", 21, "2025-01-26", "DAL", "Mike McCarthy", 27, "PHI", "Nick Sirianni", 24, false],
+      ["2024_22_DAL_KC", 2024, "SB", 22, "2025-02-09", "DAL", "Mike McCarthy", 31, "KC", "Andy Reid", 28, false],
     ]));
 
     try {
@@ -133,6 +136,8 @@ describe("Football game relationship source adapter", () => {
       const franchises = readCorpus(outputDir, "nfl-franchises-1999-2025.json");
       const nflTeamSeasons = readCorpus(outputDir, "nfl-team-season-results-1999-2025.json");
       const nflGames = readCorpus(outputDir, "nfl-games-1999-2025.json");
+      const coachSeasons = readCorpus(outputDir, "nfl-coach-seasons-1999-2025.json");
+      const coachStints = readCorpus(outputDir, "nfl-coach-stints-1999-2025.json");
 
       expect(programs.rowCount).toBe(4);
       const texasProgram = programs.rows.map((row) => rowObject(programs, row)).find((row) => row.sourceProgramId === "251");
@@ -159,15 +164,54 @@ describe("Football game relationship source adapter", () => {
         playoffBerth: true, conferenceChampionshipGame: true, superBowlAppearance: true, superBowlChampion: true,
       });
       expect(nflGames.rows.map((row) => rowObject(nflGames, row)).find((row) => row.gameType === "SB")).toMatchObject({
+        awayCoach: "Mike McCarthy", homeCoach: "Andy Reid",
         winnerFranchiseId: "DAL", loserFranchiseId: "KC", superBowl: true,
+      });
+
+      const mccarthySeason = coachSeasons.rows
+        .map((row) => rowObject(coachSeasons, row))
+        .find((row) => row.sourceCoachStopKey === "mike-mccarthy@DAL");
+      expect(mccarthySeason).toMatchObject({
+        season: 2024,
+        sourceCoachNameKey: "mike-mccarthy",
+        coachName: "Mike McCarthy",
+        identityScope: "source-name-within-franchise",
+        franchiseId: "DAL",
+        regularSeasonGames: 1,
+        regularSeasonWins: 1,
+        postseasonGames: 3,
+        postseasonWins: 3,
+        superBowlAppearance: true,
+        superBowlChampion: true,
+      });
+      expect(coachStints.rows.map((row) => rowObject(coachStints, row)).find((row) => row.sourceCoachStintKey === "mike-mccarthy@DAL:2024-2024")).toMatchObject({
+        startSeason: 2024,
+        endSeason: 2024,
+        seasonCount: 1,
+        superBowlAppearances: 1,
+        superBowlChampionships: 1,
       });
 
       const coverage = JSON.parse(fs.readFileSync(path.join(outputDir, "football-game-relationships.coverage.json"), "utf8")) as {
         cfb: { explicitNationalChampionshipGameCount: number };
-        nfl: { playoffGameCount: number; superBowlCount: number };
+        nfl: {
+          playoffGameCount: number;
+          superBowlCount: number;
+          coachSeasonStopCount: number;
+          coachStintCount: number;
+          uniqueSourceCoachNameCount: number;
+          coachIdentityScope: string;
+        };
       };
       expect(coverage.cfb.explicitNationalChampionshipGameCount).toBe(1);
-      expect(coverage.nfl).toMatchObject({ playoffGameCount: 3, superBowlCount: 1 });
+      expect(coverage.nfl).toMatchObject({
+        playoffGameCount: 3,
+        superBowlCount: 1,
+        coachSeasonStopCount: 5,
+        coachStintCount: 5,
+        uniqueSourceCoachNameCount: 5,
+        coachIdentityScope: "source-name-within-franchise",
+      });
     } finally {
       fs.rmSync(tempRoot, { recursive: true, force: true });
     }

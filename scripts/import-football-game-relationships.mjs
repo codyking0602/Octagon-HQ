@@ -35,8 +35,24 @@ const NFL_TEAM_SEASON_COLUMNS = [
 ];
 const NFL_GAME_COLUMNS = [
   "sourceGameId", "season", "gameType", "week", "date",
-  "awayFranchiseId", "awayTeamCode", "awayScore", "homeFranchiseId", "homeTeamCode", "homeScore",
+  "awayFranchiseId", "awayTeamCode", "awayCoach", "awayScore",
+  "homeFranchiseId", "homeTeamCode", "homeCoach", "homeScore",
   "winnerFranchiseId", "loserFranchiseId", "tie", "overtime", "superBowl"
+];
+const NFL_COACH_SEASON_COLUMNS = [
+  "season", "sourceCoachStopKey", "sourceCoachNameKey", "coachName", "identityScope", "franchiseId", "sourceTeamCodes",
+  "regularSeasonGames", "regularSeasonWins", "regularSeasonLosses", "regularSeasonTies",
+  "postseasonGames", "postseasonWins", "postseasonLosses", "postseasonTies",
+  "overallGames", "overallWins", "overallLosses", "overallTies", "pointsFor", "pointsAgainst",
+  "playoffBerth", "conferenceChampionshipGame", "superBowlAppearance", "superBowlChampion"
+];
+const NFL_COACH_STINT_COLUMNS = [
+  "sourceCoachStintKey", "sourceCoachStopKey", "sourceCoachNameKey", "coachName", "identityScope", "franchiseId", "sourceTeamCodes",
+  "startSeason", "endSeason", "seasonCount",
+  "regularSeasonGames", "regularSeasonWins", "regularSeasonLosses", "regularSeasonTies",
+  "postseasonGames", "postseasonWins", "postseasonLosses", "postseasonTies",
+  "overallGames", "overallWins", "overallLosses", "overallTies", "pointsFor", "pointsAgainst",
+  "playoffSeasons", "conferenceChampionshipGameSeasons", "superBowlAppearances", "superBowlChampionships"
 ];
 
 function parseArgs(argv) {
@@ -255,11 +271,152 @@ function canonicalNflFranchiseId(teamCode) {
   return ({ LA: "LAR", STL: "LAR", OAK: "LV", SD: "LAC", WSH: "WAS", JAC: "JAX" })[normalized] ?? normalized;
 }
 
+function normalizeCoachNameKey(name) {
+  return String(name)
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function buildNflCoachRelationships(games) {
+  const index = Object.fromEntries(NFL_GAME_COLUMNS.map((column, columnIndex) => [column, columnIndex]));
+  const seasons = new Map();
+
+  function touchSeason({ season, coachName, franchiseId, sourceTeamCode }) {
+    if (!isPresent(coachName)) return null;
+    const cleanName = String(coachName).trim();
+    const sourceCoachNameKey = normalizeCoachNameKey(cleanName);
+    if (!sourceCoachNameKey) return null;
+    const sourceCoachStopKey = `${sourceCoachNameKey}@${franchiseId}`;
+    const key = `${season}\u0000${sourceCoachStopKey}`;
+    let record = seasons.get(key);
+    if (!record) {
+      record = {
+        ...blankResultRecord({
+          season,
+          sourceCoachStopKey,
+          sourceCoachNameKey,
+          coachName: cleanName,
+          identityScope: "source-name-within-franchise",
+          franchiseId,
+          sourceTeamCodes: new Set(),
+        }),
+        playoffBerth: false,
+        conferenceChampionshipGame: false,
+        superBowlAppearance: false,
+        superBowlChampion: false,
+      };
+      seasons.set(key, record);
+    }
+    record.sourceTeamCodes.add(sourceTeamCode);
+    return record;
+  }
+
+  for (const row of games) {
+    const season = Number(row[index.season]);
+    const gameType = String(row[index.gameType]);
+    const postseason = gameType !== "REG";
+    const awayScore = Number(row[index.awayScore]);
+    const homeScore = Number(row[index.homeScore]);
+    const away = touchSeason({
+      season,
+      coachName: row[index.awayCoach],
+      franchiseId: String(row[index.awayFranchiseId]),
+      sourceTeamCode: String(row[index.awayTeamCode]),
+    });
+    const home = touchSeason({
+      season,
+      coachName: row[index.homeCoach],
+      franchiseId: String(row[index.homeFranchiseId]),
+      sourceTeamCode: String(row[index.homeTeamCode]),
+    });
+
+    for (const [record, pointsFor, pointsAgainst] of [[away, awayScore, homeScore], [home, homeScore, awayScore]]) {
+      if (!record) continue;
+      addGameResult(record, pointsFor, pointsAgainst, postseason);
+      if (postseason) record.playoffBerth = true;
+      if (gameType === "CON") record.conferenceChampionshipGame = true;
+      if (gameType === "SB") {
+        record.superBowlAppearance = true;
+        if (pointsFor > pointsAgainst) record.superBowlChampion = true;
+      }
+    }
+  }
+
+  const seasonRecords = [...seasons.values()].sort((left, right) =>
+    left.season - right.season || left.sourceCoachStopKey.localeCompare(right.sourceCoachStopKey)
+  );
+  const seasonRows = seasonRecords.map((record) => NFL_COACH_SEASON_COLUMNS.map((column) =>
+    column === "sourceTeamCodes" ? [...record.sourceTeamCodes].sort() : (record[column] ?? null)
+  ));
+
+  const byStop = new Map();
+  for (const record of seasonRecords) {
+    const list = byStop.get(record.sourceCoachStopKey) ?? [];
+    list.push(record);
+    byStop.set(record.sourceCoachStopKey, list);
+  }
+
+  const stints = [];
+  for (const [sourceCoachStopKey, records] of byStop) {
+    records.sort((left, right) => left.season - right.season);
+    let current = [];
+    const flush = () => {
+      if (current.length === 0) return;
+      const first = current[0];
+      const last = current[current.length - 1];
+      const aggregate = {
+        sourceCoachStintKey: `${sourceCoachStopKey}:${first.season}-${last.season}`,
+        sourceCoachStopKey,
+        sourceCoachNameKey: first.sourceCoachNameKey,
+        coachName: first.coachName,
+        identityScope: first.identityScope,
+        franchiseId: first.franchiseId,
+        sourceTeamCodes: [...new Set(current.flatMap((record) => [...record.sourceTeamCodes]))].sort(),
+        startSeason: first.season,
+        endSeason: last.season,
+        seasonCount: current.length,
+        regularSeasonGames: 0, regularSeasonWins: 0, regularSeasonLosses: 0, regularSeasonTies: 0,
+        postseasonGames: 0, postseasonWins: 0, postseasonLosses: 0, postseasonTies: 0,
+        overallGames: 0, overallWins: 0, overallLosses: 0, overallTies: 0,
+        pointsFor: 0, pointsAgainst: 0,
+        playoffSeasons: 0, conferenceChampionshipGameSeasons: 0, superBowlAppearances: 0, superBowlChampionships: 0,
+      };
+      for (const record of current) {
+        for (const column of [
+          "regularSeasonGames", "regularSeasonWins", "regularSeasonLosses", "regularSeasonTies",
+          "postseasonGames", "postseasonWins", "postseasonLosses", "postseasonTies",
+          "overallGames", "overallWins", "overallLosses", "overallTies", "pointsFor", "pointsAgainst",
+        ]) aggregate[column] += record[column];
+        if (record.playoffBerth) aggregate.playoffSeasons += 1;
+        if (record.conferenceChampionshipGame) aggregate.conferenceChampionshipGameSeasons += 1;
+        if (record.superBowlAppearance) aggregate.superBowlAppearances += 1;
+        if (record.superBowlChampion) aggregate.superBowlChampionships += 1;
+      }
+      stints.push(aggregate);
+      current = [];
+    };
+
+    for (const record of records) {
+      if (current.length > 0 && record.season !== current[current.length - 1].season + 1) flush();
+      current.push(record);
+    }
+    flush();
+  }
+
+  stints.sort((left, right) => left.startSeason - right.startSeason || left.sourceCoachStintKey.localeCompare(right.sourceCoachStintKey));
+  const stintRows = stints.map((record) => NFL_COACH_STINT_COLUMNS.map((column) => record[column] ?? null));
+  const sourceCoachNameKeys = new Set(seasonRecords.map((record) => record.sourceCoachNameKey));
+  return { seasonRows, stintRows, uniqueSourceCoachNameCount: sourceCoachNameKeys.size };
+}
+
 function processNflGames(csv, selectedSeasons) {
   const parsed = parseCsv(csv).filter((row) => row.some(isPresent));
   if (parsed.length < 2) throw new Error("NFL schedule source did not contain games.");
   const [header, ...rows] = parsed;
-  const get = accessor(header, ["game_id", "season", "game_type", "week", "gameday", "away_team", "away_score", "home_team", "home_score"], "NFL games schedule");
+  const get = accessor(header, ["game_id", "season", "game_type", "week", "gameday", "away_team", "away_score", "away_coach", "home_team", "home_score", "home_coach"], "NFL games schedule");
   const seasonSet = new Set(selectedSeasons);
   const franchises = new Map();
   const teamSeasons = new Map();
@@ -338,8 +495,8 @@ function processNflGames(csv, selectedSeasons) {
     const loserFranchiseId = tie ? null : awayScore > homeScore ? homeFranchise.franchiseId : awayFranchise.franchiseId;
     games.push([
       String(get(row, "game_id")), season, gameType, numberOrNull(get(row, "week")), textOrNull(get(row, "gameday")),
-      awayFranchise.franchiseId, String(awayCode).trim().toUpperCase(), awayScore,
-      homeFranchise.franchiseId, String(homeCode).trim().toUpperCase(), homeScore,
+      awayFranchise.franchiseId, String(awayCode).trim().toUpperCase(), textOrNull(get(row, "away_coach")), awayScore,
+      homeFranchise.franchiseId, String(homeCode).trim().toUpperCase(), textOrNull(get(row, "home_coach")), homeScore,
       winnerFranchiseId, loserFranchiseId, tie, booleanValue(get(row, "overtime")), gameType === "SB"
     ]);
     seasonCoverage.gameCount += 1;
@@ -351,7 +508,8 @@ function processNflGames(csv, selectedSeasons) {
     .sort((a, b) => Number(a[0]) - Number(b[0]) || String(a[1]).localeCompare(String(b[1])));
   games.sort((a, b) => Number(a[1]) - Number(b[1]) || String(a[0]).localeCompare(String(b[0])));
   const coverage = [...coverageBySeason.values()].map((record) => ({ ...record, franchiseCount: record.franchiseCount.size }));
-  return { franchiseRows, teamSeasonRows, games, coverage, sourceRowCount: rows.length };
+  const coaches = buildNflCoachRelationships(games);
+  return { franchiseRows, teamSeasonRows, games, coachSeasonRows: coaches.seasonRows, coachStintRows: coaches.stintRows, uniqueSourceCoachNameCount: coaches.uniqueSourceCoachNameCount, coverage, sourceRowCount: rows.length };
 }
 
 function corpus({ league, recordKind, columns, rows, source, seasonStart, seasonEnd }) {
@@ -421,7 +579,9 @@ const outputs = [
   writeCorpus(args.outputDir, "cfb-games-2002-2025.json", corpus({ league: "CFB", recordKind: "game", columns: CFB_GAME_COLUMNS, rows: cfbGames, source: cfbSource, seasonStart: Math.min(...cfbSeasons), seasonEnd: Math.max(...cfbSeasons) })),
   writeCorpus(args.outputDir, "nfl-franchises-1999-2025.json", corpus({ league: "NFL", recordKind: "franchise", columns: NFL_FRANCHISE_COLUMNS, rows: nfl.franchiseRows, source: nflSource, seasonStart: Math.min(...nflSeasons), seasonEnd: Math.max(...nflSeasons) })),
   writeCorpus(args.outputDir, "nfl-team-season-results-1999-2025.json", corpus({ league: "NFL", recordKind: "team-season-results", columns: NFL_TEAM_SEASON_COLUMNS, rows: nfl.teamSeasonRows, source: nflSource, seasonStart: Math.min(...nflSeasons), seasonEnd: Math.max(...nflSeasons) })),
-  writeCorpus(args.outputDir, "nfl-games-1999-2025.json", corpus({ league: "NFL", recordKind: "game", columns: NFL_GAME_COLUMNS, rows: nfl.games, source: nflSource, seasonStart: Math.min(...nflSeasons), seasonEnd: Math.max(...nflSeasons) }))
+  writeCorpus(args.outputDir, "nfl-games-1999-2025.json", corpus({ league: "NFL", recordKind: "game", columns: NFL_GAME_COLUMNS, rows: nfl.games, source: nflSource, seasonStart: Math.min(...nflSeasons), seasonEnd: Math.max(...nflSeasons) })),
+  writeCorpus(args.outputDir, "nfl-coach-seasons-1999-2025.json", corpus({ league: "NFL", recordKind: "coach-season-stop", columns: NFL_COACH_SEASON_COLUMNS, rows: nfl.coachSeasonRows, source: { ...nflSource, coachIdentityScope: "source-name-within-franchise" }, seasonStart: Math.min(...nflSeasons), seasonEnd: Math.max(...nflSeasons) })),
+  writeCorpus(args.outputDir, "nfl-coach-stints-1999-2025.json", corpus({ league: "NFL", recordKind: "coach-stint", columns: NFL_COACH_STINT_COLUMNS, rows: nfl.coachStintRows, source: { ...nflSource, coachIdentityScope: "source-name-within-franchise" }, seasonStart: Math.min(...nflSeasons), seasonEnd: Math.max(...nflSeasons) }))
 ];
 
 const generatedManifest = {
@@ -441,6 +601,8 @@ const coverage = {
   },
   nfl: {
     seasonStart: Math.min(...nflSeasons), seasonEnd: Math.max(...nflSeasons), franchiseCount: nfl.franchiseRows.length, teamSeasonCount: nfl.teamSeasonRows.length, gameCount: nfl.games.length,
+    coachSeasonStopCount: nfl.coachSeasonRows.length, coachStintCount: nfl.coachStintRows.length, uniqueSourceCoachNameCount: nfl.uniqueSourceCoachNameCount,
+    coachIdentityScope: "source-name-within-franchise",
     playoffGameCount: nfl.coverage.reduce((sum, season) => sum + season.playoffGameCount, 0), superBowlCount: nfl.coverage.reduce((sum, season) => sum + season.superBowlCount, 0),
     seasons: nfl.coverage
   }
@@ -451,4 +613,4 @@ fs.writeFileSync(manifestPath, `${JSON.stringify(generatedManifest, null, 2)}\n`
 fs.writeFileSync(coveragePath, `${JSON.stringify(coverage, null, 2)}\n`);
 
 console.log(`Generated CFB: ${cfbProgramRows.length.toLocaleString()} programs, ${cfbTeamSeasons.length.toLocaleString()} team seasons, ${cfbGames.length.toLocaleString()} games.`);
-console.log(`Generated NFL: ${nfl.franchiseRows.length.toLocaleString()} franchises, ${nfl.teamSeasonRows.length.toLocaleString()} team seasons, ${nfl.games.length.toLocaleString()} games.`);
+console.log(`Generated NFL: ${nfl.franchiseRows.length.toLocaleString()} franchises, ${nfl.teamSeasonRows.length.toLocaleString()} team seasons, ${nfl.games.length.toLocaleString()} games, ${nfl.coachSeasonRows.length.toLocaleString()} coach-season stops, ${nfl.coachStintRows.length.toLocaleString()} coach stints.`);
