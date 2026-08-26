@@ -28,7 +28,7 @@ async function getBytes(url) {
 }
 
 function expectedName(kind, season) {
-  return `stats_${kind}_regpost_${season}.csv`;
+  return `stats_${kind}_reg_${season}.csv`;
 }
 
 function normalizeAsset(asset) {
@@ -66,7 +66,7 @@ async function snapshotRelease(kind, tag) {
     releaseId: release.id,
     releaseName: release.name,
     releaseUpdatedAt: release.updated_at,
-    summaryLevel: "regpost",
+    summaryLevel: "reg",
     format: "csv",
     seasonStart: SEASONS[0],
     seasonEnd: SEASONS.at(-1),
@@ -99,5 +99,5 @@ const manifest = {
 
 fs.mkdirSync(path.dirname(OUTPUT), { recursive: true });
 fs.writeFileSync(OUTPUT, `${JSON.stringify(manifest, null, 2)}\n`);
-console.log(`Pinned ${players.assets.length} NFL player and ${teams.assets.length} NFL team season assets.`);
+console.log(`Pinned ${players.assets.length} NFL player and ${teams.assets.length} NFL team regular-season assets.`);
 console.log(`Player release ${players.releaseId}; team release ${teams.releaseId}.`);
