@@ -17,13 +17,13 @@ const CFB_TEAM_SEASON_COLUMNS = [
   "postseasonGames", "postseasonWins", "postseasonLosses", "postseasonTies",
   "overallGames", "overallWins", "overallLosses", "overallTies", "pointsFor", "pointsAgainst",
   "conferenceGames", "conferenceWins", "conferenceLosses", "conferenceTies",
-  "nationalChampionshipGame", "nationalChampion"
+  "explicitNationalChampionshipGame", "explicitNationalChampion"
 ];
 const CFB_GAME_COLUMNS = [
   "sourceGameId", "season", "week", "seasonType", "date", "neutralSite", "conferenceGame",
   "homeProgramId", "homeTeam", "homeDivision", "homeConference", "homePoints",
   "awayProgramId", "awayTeam", "awayDivision", "awayConference", "awayPoints",
-  "winnerProgramId", "loserProgramId", "tie", "notes", "nationalChampionshipGame"
+  "winnerProgramId", "loserProgramId", "tie", "notes", "explicitNationalChampionshipGame"
 ];
 const NFL_FRANCHISE_COLUMNS = ["franchiseId", "sourceTeamCodes", "firstSeason", "lastSeason", "seasonCount"];
 const NFL_TEAM_SEASON_COLUMNS = [
@@ -139,7 +139,7 @@ function addGameResult(record, pointsFor, pointsAgainst, postseason) {
   return result;
 }
 
-function nationalChampionshipFromNotes(notes) {
+function explicitNationalChampionshipFromNotes(notes) {
   return isPresent(notes) && /national championship/i.test(String(notes));
 }
 
@@ -183,7 +183,7 @@ function processCfbSeason(csv, expectedSeason) {
       record = {
         ...blankResultRecord({ season: expectedSeason, sourceProgramId, programName: name, division, conference }),
         conferenceGames: 0, conferenceWins: 0, conferenceLosses: 0, conferenceTies: 0,
-        nationalChampionshipGame: false, nationalChampion: false
+        explicitNationalChampionshipGame: false, explicitNationalChampion: false
       };
       teamSeasons.set(key, record);
     }
@@ -212,7 +212,7 @@ function processCfbSeason(csv, expectedSeason) {
     const postseason = seasonType !== "regular";
     const conferenceGame = booleanValue(get(row, "conference_game"));
     const notes = textOrNull(get(row, "notes"));
-    const nationalChampionshipGame = postseason && nationalChampionshipFromNotes(notes);
+    const explicitNationalChampionshipGame = postseason && explicitNationalChampionshipFromNotes(notes);
 
     const homeResult = addGameResult(homeSeason, homePoints, awayPoints, postseason);
     const awayResult = addGameResult(awaySeason, awayPoints, homePoints, postseason);
@@ -222,11 +222,11 @@ function processCfbSeason(csv, expectedSeason) {
       homeSeason[`conference${homeResult}`] += 1;
       awaySeason[`conference${awayResult}`] += 1;
     }
-    if (nationalChampionshipGame) {
-      homeSeason.nationalChampionshipGame = true;
-      awaySeason.nationalChampionshipGame = true;
-      if (homePoints > awayPoints) homeSeason.nationalChampion = true;
-      if (awayPoints > homePoints) awaySeason.nationalChampion = true;
+    if (explicitNationalChampionshipGame) {
+      homeSeason.explicitNationalChampionshipGame = true;
+      awaySeason.explicitNationalChampionshipGame = true;
+      if (homePoints > awayPoints) homeSeason.explicitNationalChampion = true;
+      if (awayPoints > homePoints) awaySeason.explicitNationalChampion = true;
     }
 
     const tie = homePoints === awayPoints;
@@ -237,7 +237,7 @@ function processCfbSeason(csv, expectedSeason) {
       textOrNull(get(row, "start_date")), booleanValue(get(row, "neutral_site")), conferenceGame,
       homeId, home.name, home.division, home.conference, homePoints,
       awayId, away.name, away.division, away.conference, awayPoints,
-      winnerProgramId, loserProgramId, tie, notes, nationalChampionshipGame
+      winnerProgramId, loserProgramId, tie, notes, explicitNationalChampionshipGame
     ]);
   });
 
@@ -402,7 +402,7 @@ for (const season of cfbSeasons) {
   });
   cfbTeamSeasons.push(...result.teamSeasonRows);
   cfbGames.push(...result.games);
-  cfbCoverage.push({ season, sourceRowCount: result.sourceRowCount, gameCount: result.games.length, teamSeasonCount: result.teamSeasonRows.length, programCount: result.programRows.length, nationalChampionshipGameCount: result.games.filter((row) => row[CFB_GAME_COLUMNS.indexOf("nationalChampionshipGame")] === true).length });
+  cfbCoverage.push({ season, sourceRowCount: result.sourceRowCount, gameCount: result.games.length, teamSeasonCount: result.teamSeasonRows.length, programCount: result.programRows.length, explicitNationalChampionshipGameCount: result.games.filter((row) => row[CFB_GAME_COLUMNS.indexOf("explicitNationalChampionshipGame")] === true).length });
   cfbSourceVerification.push({ season, path: asset.path, gitBlobSha: asset.gitBlobSha, verifiedPinnedBlob: loaded.verifiedPinnedBlob });
   console.log(`Normalized CFB ${season}: ${result.games.length.toLocaleString()} games, ${result.teamSeasonRows.length.toLocaleString()} team seasons.`);
 }
@@ -413,7 +413,7 @@ const cfbProgramRows = [...cfbPrograms.values()].map(({ row, seasons }) => { row
 cfbTeamSeasons.sort((a, b) => Number(a[0]) - Number(b[0]) || String(a[1]).localeCompare(String(b[1])));
 cfbGames.sort((a, b) => Number(a[1]) - Number(b[1]) || String(a[0]).localeCompare(String(b[0])));
 
-const cfbSource = { provider: sourceManifest.cfb.provider, repository: sourceManifest.cfb.repository, commit: sourceManifest.cfb.commit, license: sourceManifest.cfb.license };
+const cfbSource = { provider: sourceManifest.cfb.provider, repository: sourceManifest.cfb.repository, commit: sourceManifest.cfb.commit, license: sourceManifest.cfb.license, championshipSignal: sourceManifest.cfb.championshipSignal };
 const nflSource = { provider: sourceManifest.nfl.provider, repository: sourceManifest.nfl.repository, commit: sourceManifest.nfl.commit, nflreadrCommit: sourceManifest.nfl.nflreadrCommit, license: sourceManifest.nfl.license };
 const outputs = [
   writeCorpus(args.outputDir, "cfb-programs-2002-2025.json", corpus({ league: "CFB", recordKind: "program", columns: CFB_PROGRAM_COLUMNS, rows: cfbProgramRows, source: cfbSource, seasonStart: Math.min(...cfbSeasons), seasonEnd: Math.max(...cfbSeasons) })),
@@ -434,8 +434,9 @@ const generatedManifest = {
 const coverage = {
   schemaVersion: 1,
   cfb: {
+    championshipSignal: sourceManifest.cfb.championshipSignal,
     seasonStart: Math.min(...cfbSeasons), seasonEnd: Math.max(...cfbSeasons), programCount: cfbProgramRows.length, teamSeasonCount: cfbTeamSeasons.length, gameCount: cfbGames.length,
-    nationalChampionshipGameCount: cfbGames.filter((row) => row[CFB_GAME_COLUMNS.indexOf("nationalChampionshipGame")] === true).length,
+    explicitNationalChampionshipGameCount: cfbGames.filter((row) => row[CFB_GAME_COLUMNS.indexOf("explicitNationalChampionshipGame")] === true).length,
     seasons: cfbCoverage
   },
   nfl: {

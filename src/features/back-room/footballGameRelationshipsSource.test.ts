@@ -144,10 +144,10 @@ describe("Football game relationship source adapter", () => {
         postseasonGames: 1, postseasonWins: 1,
         overallGames: 3, overallWins: 2, overallLosses: 1,
         conferenceGames: 1, conferenceLosses: 1,
-        nationalChampionshipGame: true, nationalChampion: true,
+        explicitNationalChampionshipGame: true, explicitNationalChampion: true,
       });
       expect(cfbGames.rows.map((row) => rowObject(cfbGames, row)).find((row) => row.sourceGameId === "cfb-3")).toMatchObject({
-        winnerProgramId: "251", loserProgramId: "194", nationalChampionshipGame: true,
+        winnerProgramId: "251", loserProgramId: "194", explicitNationalChampionshipGame: true,
       });
 
       expect(franchises.rowCount).toBe(5);
@@ -163,10 +163,10 @@ describe("Football game relationship source adapter", () => {
       });
 
       const coverage = JSON.parse(fs.readFileSync(path.join(outputDir, "football-game-relationships.coverage.json"), "utf8")) as {
-        cfb: { nationalChampionshipGameCount: number };
+        cfb: { explicitNationalChampionshipGameCount: number };
         nfl: { playoffGameCount: number; superBowlCount: number };
       };
-      expect(coverage.cfb.nationalChampionshipGameCount).toBe(1);
+      expect(coverage.cfb.explicitNationalChampionshipGameCount).toBe(1);
       expect(coverage.nfl).toMatchObject({ playoffGameCount: 3, superBowlCount: 1 });
     } finally {
       fs.rmSync(tempRoot, { recursive: true, force: true });
