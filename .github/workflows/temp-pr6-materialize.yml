@@ -1,0 +1,56 @@
+name: TEMP PR6 materialize
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - scripts/generate-football-recognizability.mjs
+      - .github/workflows/temp-pr6-materialize.yml
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+          persist-credentials: true
+      - name: Skip materialization commit
+        id: guard
+        run: |
+          if git log -1 --pretty=%B | grep -Fq '[materialize-pr6]'; then
+            echo 'skip=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'skip=false' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Repair deterministic row fallback and generate
+        if: steps.guard.outputs.skip != 'true'
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('scripts/generate-football-recognizability.mjs')
+          s = p.read_text()
+          s = s.replace('return corpus.rows.map((row) => mapper(row, ix));', 'return corpus.rows.map((row, rowIndex) => mapper(row, ix, rowIndex));')
+          s = s.replace('recordsFromRows(cfbGames, (row, ix) => {', 'recordsFromRows(cfbGames, (row, ix, rowIndex) => {')
+          s = s.replace('?? `${at(row, ix, "season")}:${Math.random()}`', '?? `${at(row, ix, "season")}:${rowIndex}`')
+          p.write_text(s)
+          if 'Math.random' in s:
+              raise SystemExit('nondeterministic Math.random fallback remains')
+          PY
+          node scripts/generate-football-recognizability.mjs
+      - name: Commit materialized artifacts
+        if: steps.guard.outputs.skip != 'true'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add scripts/generate-football-recognizability.mjs data/generated/football/recognizability-projection.json docs/football-recognizability-audit.md
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m 'chore: materialize repaired PR6 recognizability [materialize-pr6]'
+          git push origin HEAD:${{ github.head_ref }}
