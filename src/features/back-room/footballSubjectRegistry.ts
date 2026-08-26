@@ -10,11 +10,17 @@ import {
   type FootballCanonicalSubject,
   type FootballCanonicalSubjectKind,
 } from "./footballFactualStatsCatalog";
+import {
+  buildFootballSubjectKnowledgeMetadata,
+  type FootballRecognizabilityTier,
+  type FootballSourceProviderId,
+  type FootballSubjectKnowledgeMetadata,
+} from "./footballSubjectEligibility";
 
 export type FootballSubjectKind = FootballCanonicalSubjectKind;
 export type FootballSubjectLeague = FootballCanonicalSubject["league"];
 export type FootballSubjectPosition = NonNullable<FootballCanonicalSubject["position"]>;
-export type FootballSubjectProfile = FootballCanonicalSubject & {
+export type FootballSubjectProfile = FootballCanonicalSubject & FootballSubjectKnowledgeMetadata & {
   /** Canonical underlying team/program identity for historical team-scoped records. */
   teamId?: FootballTeamMediaId;
   /** Canonical person identity for player records, independent of season/team-at-the-time. */
@@ -42,6 +48,9 @@ export interface FootballSubjectQuery {
   nationalChampion?: boolean;
   startSeason?: number;
   endSeason?: number;
+  recognizabilityTiers?: readonly FootballRecognizabilityTier[];
+  casualEligible?: boolean;
+  sourceProvider?: FootballSourceProviderId;
 }
 
 const comparisonItemById = new Map(footballComparisonDepthItems.map((item) => [item.id, item]));
@@ -85,9 +94,11 @@ function enrichFootballSubject(subject: FootballCanonicalSubject): FootballSubje
   const aliases = alias && !(subject.aliases ?? []).includes(alias)
     ? [...(subject.aliases ?? []), alias]
     : subject.aliases;
+  const knowledgeMetadata = buildFootballSubjectKnowledgeMetadata(subject);
 
   return {
     ...subject,
+    ...knowledgeMetadata,
     ...(aliases ? { aliases } : {}),
     ...(teamId ? { teamId } : {}),
     ...(playerId ? { playerId } : {}),
@@ -130,6 +141,9 @@ export function queryFootballSubjects(query: FootballSubjectQuery = {}) {
     if (query.nationalChampion != null && subject.nationalChampion !== query.nationalChampion) return false;
     if (query.startSeason != null && subject.startSeason !== query.startSeason) return false;
     if (query.endSeason != null && subject.endSeason !== query.endSeason) return false;
+    if (query.recognizabilityTiers && !query.recognizabilityTiers.includes(subject.recognizabilityTier)) return false;
+    if (query.casualEligible != null && subject.casualEligible !== query.casualEligible) return false;
+    if (query.sourceProvider && !subject.sourceIdentityKeys.some((key) => key.provider === query.sourceProvider)) return false;
     return true;
   });
 }
