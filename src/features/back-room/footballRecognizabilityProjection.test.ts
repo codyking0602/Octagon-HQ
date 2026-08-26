@@ -29,6 +29,21 @@ describe("Football recognizability projection", () => {
     expect(audit).not.toContain("A.J. Epenesa (DB");
   });
 
+  it("keeps NFL fame from overpromoting a separate CFB identity", () => {
+    for (const name of ["Aaron Jones", "Alvin Kamara", "Tyler Lockett"]) {
+      expect(projection.records.find((record) => record.league === "CFB" && record.name === name)?.tier).toBe("C");
+    }
+    expect(projection.records.filter((record) => record.league === "CFB" && record.tier === "A")).toHaveLength(0);
+  });
+
+  it("keeps Tier B reserved for headline stars rather than long-career volume", () => {
+    expect(projection.records.find((record) => record.league === "NFL" && record.name === "Benjamin Watson")?.tier).toBe("C");
+    expect(projection.records.find((record) => record.league === "NFL" && record.name === "Bobby Engram")?.tier).toBe("C");
+    expect(projection.records.find((record) => record.league === "NFL" && record.name === "A.J. Green")?.tier).toBe("B");
+    expect(projection.records.find((record) => record.league === "CFB" && record.name === "Bijan Robinson")?.tier).toBe("B");
+    expect(projection.records.find((record) => record.league === "CFB" && record.name === "C.J. Stroud")?.tier).toBe("B");
+  });
+
   it("does not turn ordinary CFB stat rows or kicker volume into casual filler", () => {
     const promotedCfbNames = new Set(projection.records.filter((record) => record.kind === "player-career" && record.league === "CFB").map((record) => record.name));
     for (const obscureKicker of ["Aaron Beckham", "Aaron Bickerton", "Aaron Blom"]) {
