@@ -147,7 +147,7 @@ end;
 $$;
 
 comment on function public.get_auction_fight_breakdown_packet(uuid) is
-  'Participant-only completed Build the Ultimate Fighter packet for Octagon Verdict. Returns public result data plus opaque private-rating codes; never returns hidden ratings, deltas, advantage labels, or the decoder.';
+  'Participant-only completed Build the Ultimate Fighter packet for Octagon Verdict. Returns public result data plus opaque private-rating codes; never returns hidden ratings, deltas, advantage labels, the decoder, or the separate private matchup-analysis output.';
 
 revoke all on function public.get_auction_fight_breakdown_packet(uuid) from public, anon;
 grant execute on function public.get_auction_fight_breakdown_packet(uuid) to authenticated;
