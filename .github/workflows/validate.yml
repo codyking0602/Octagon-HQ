@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: validate-v2-${{ github.event.pull_request.number || github.sha }}
@@ -28,7 +28,7 @@ jobs:
     name: typecheck + production build
     if: ${{ github.event_name == 'push' || github.event.pull_request.draft == false }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 8
     steps:
       - name: Check out exact validation source
         uses: actions/checkout@v4
@@ -104,28 +104,6 @@ jobs:
             tail -n 80 build.log 2>/dev/null || true
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Check out source branch for one-time coach snapshot
-        if: ${{ github.event_name == 'pull_request' && github.event.action == 'ready_for_review' }}
-        uses: actions/checkout@v4
-        with:
-          ref: feature/cfb-coach-relationships
-          fetch-depth: 1
-
-      - name: Install coach source parser
-        if: ${{ github.event_name == 'pull_request' && github.event.action == 'ready_for_review' }}
-        run: pip install requests mwparserfromhell
-
-      - name: Generate and commit pinned CFB coach source
-        if: ${{ github.event_name == 'pull_request' && github.event.action == 'ready_for_review' }}
-        run: |
-          python scripts/_tmp_generate_cfb_coach_source.py
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/data/football/cfb/cfb-coach-assignments-2002-2025.source.json
-          git diff --cached --quiet && exit 0
-          git commit -m "data: pin CFB coach assignments"
-          git push origin HEAD:feature/cfb-coach-relationships
 
   tests:
     name: test shard ${{ matrix.shard }}/8
