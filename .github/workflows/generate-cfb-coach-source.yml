@@ -1,0 +1,307 @@
+name: Generate pinned CFB coach source snapshot
+
+on:
+  push:
+    branches:
+      - feature/cfb-coach-relationships
+    paths:
+      - .github/workflows/generate-cfb-coach-source.yml
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/cfb-coach-relationships
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests mwparserfromhell
+      - name: Generate source snapshot
+        run: |
+          python - <<'PY'
+          import json, re, time, unicodedata
+          from pathlib import Path
+          import requests, mwparserfromhell
+
+          API='https://en.wikipedia.org/w/api.php'
+          OUT=Path('public/data/football/cfb/cfb-coach-assignments-2002-2025.source.json')
+          S=requests.Session()
+          S.headers['User-Agent']='Octagon-HQ/1.0 historical CFB relationship source research contact=bcking06@gmail.com'
+
+          with open('data/generated/football/relationships/cfb-team-season-results-2002-2025.json') as f:
+              corpus=json.load(f)
+          idx={c:i for i,c in enumerate(corpus['columns'])}
+          targets={}
+          for row in corpus['rows']:
+              if str(row[idx['division']] or '').lower()!='fbs':
+                  continue
+              year=int(row[idx['season']])
+              targets.setdefault(year,[]).append({
+                  'season':year,
+                  'sourceProgramId':str(row[idx['sourceProgramId']]),
+                  'programName':str(row[idx['programName']]),
+                  'conference':str(row[idx['conference']] or '')
+              })
+
+          def get(params):
+              for attempt in range(7):
+                  try:
+                      r=S.get(API,params={**params,'format':'json','formatversion':2,'maxlag':5},timeout=45)
+                      if r.status_code==429 or r.status_code>=500:
+                          time.sleep(min(10,.5*(2**attempt))); continue
+                      r.raise_for_status()
+                      data=r.json()
+                      if data is None:
+                          raise RuntimeError('null MediaWiki response')
+                      return data
+                  except Exception:
+                      if attempt==6: raise
+                      time.sleep(min(10,.5*(2**attempt)))
+
+          def norm(v):
+              s=unicodedata.normalize('NFKD',str(v)).encode('ascii','ignore').decode().lower().replace('&',' and ')
+              return re.sub(r'[^a-z0-9]+',' ',s).strip()
+
+          aliases={
+            'app state':['appalachian state','app state'],
+            'appalachian state':['appalachian state','app state'],
+            'byu':['byu','brigham young'],
+            'brigham young':['byu','brigham young'],
+            'ucf':['ucf','central florida'],
+            'central florida':['ucf','central florida'],
+            'uconn':['uconn','connecticut'],
+            'connecticut':['uconn','connecticut'],
+            'fiu':['fiu','florida international'],
+            'florida international':['fiu','florida international'],
+            'umass':['umass','massachusetts'],
+            'massachusetts':['umass','massachusetts'],
+            'utep':['utep','texas el paso'],
+            'texas el paso':['utep','texas el paso'],
+            'utsa':['utsa','texas san antonio'],
+            'texas san antonio':['utsa','texas san antonio'],
+            'ul monroe':['louisiana monroe','ul monroe'],
+            'louisiana monroe':['louisiana monroe','ul monroe'],
+            'louisiana':['louisiana','louisiana lafayette'],
+            'louisiana lafayette':['louisiana','louisiana lafayette'],
+            'middle tennessee':['middle tennessee','middle tennessee state'],
+            'middle tennessee state':['middle tennessee','middle tennessee state'],
+            'southern miss':['southern miss','southern mississippi'],
+            'southern mississippi':['southern miss','southern mississippi'],
+            'nc state':['nc state','north carolina state'],
+            'north carolina state':['nc state','north carolina state'],
+            'hawai i':['hawaii'],
+            'hawaii':['hawaii']
+          }
+
+          def roots(t):
+              n=norm(t['programName'])
+              if n in ('miami oh','miami ohio'): return ['miami redhawks']
+              if n=='miami': return ['miami hurricanes']
+              return aliases.get(n,[n])
+
+          def confkey(v):
+              n=norm(v).replace(' conference','').strip()
+              mapping=[
+                ('southeastern','sec'),('atlantic coast','acc'),('big ten','big ten'),('big 12','big 12'),
+                ('pac 12','pac 12'),('pac 10','pac 10'),('pacific 12','pac 12'),('pacific 10','pac 10'),
+                ('mountain west','mountain west'),('western athletic','western athletic'),('mid american','mid american'),
+                ('sun belt','sun belt'),('conference usa','conference usa'),('american athletic','american athletic'),
+                ('big east','big east'),('independent','independent')
+              ]
+              for needle,key in mapping:
+                  if needle in n:return key
+              if n in ('sec','acc'):return n
+              return n
+
+          def fetch_pages(titles):
+              out=[]
+              for i in range(0,len(titles),40):
+                  out.extend(get({
+                      'action':'query','titles':'|'.join(titles[i:i+40]),'prop':'revisions',
+                      'rvprop':'ids|content','rvslots':'main','redirects':1
+                  }).get('query',{}).get('pages',[]) or [])
+              return [p for p in out if not p.get('missing')]
+
+          def parse_page(page):
+              revs=page.get('revisions') or []
+              if not revs:return None
+              wt=(((revs[0].get('slots') or {}).get('main') or {}).get('content')) or ''
+              code=mwparserfromhell.parse(wt)
+              box=None
+              for temp in code.filter_templates(recursive=False):
+                  if any(str(p.name).strip().lower()=='head_coach' for p in temp.params):
+                      box=temp; break
+              if box is None:return None
+              conference=''
+              if box.has('conference'):
+                  conference=re.sub(r'\s+',' ',mwparserfromhell.parse(str(box.get('conference').value)).strip_code(normalize=True,collapse=True)).strip()
+              coaches=[]
+              for p in box.params:
+                  key=str(p.name).strip().lower()
+                  m=re.fullmatch(r'head_coach(\d*)',key)
+                  if not m:continue
+                  raw=mwparserfromhell.parse(str(p.value))
+                  name=re.sub(r'\s+',' ',raw.strip_code(normalize=True,collapse=True)).strip()
+                  links=[str(x.title).strip() for x in raw.filter_wikilinks(recursive=True)]
+                  if not name:continue
+                  suffix=m.group(1)
+                  games=None
+                  gk='hc_games'+suffix
+                  if box.has(gk):
+                      games=re.sub(r'\s+',' ',mwparserfromhell.parse(str(box.get(gk).value)).strip_code(normalize=True,collapse=True)).strip() or None
+                  coaches.append({
+                      'slot':1 if suffix=='' else int(suffix),
+                      'displayName':name,
+                      'coachPageTitle':links[0] if links else None,
+                      'linkCount':len(links),
+                      'gamesNote':games
+                  })
+              return {
+                  'pageId':int(page['pageid']),
+                  'revisionId':int(revs[0]['revid']),
+                  'pageTitle':page['title'],
+                  'conference':conference,
+                  'coaches':sorted(coaches,key=lambda x:x['slot']),
+                  'titleNorm':norm(re.sub(r'^\d{4}\s+','',page['title']))
+              }
+
+          def broad_pages(year):
+              search=get({'action':'query','list':'search','srsearch':f'intitle:"{year}" intitle:"football team"','srnamespace':0,'srlimit':500})
+              titles=[h['title'] for h in search.get('query',{}).get('search',[]) if str(year) in h['title'] and h['title'].lower().endswith('football team')]
+              parsed=[]
+              for page in fetch_pages(titles):
+                  pp=parse_page(page)
+                  if pp is not None:parsed.append(pp)
+              return parsed
+
+          def targeted_pages(t):
+              seen={}
+              for root in roots(t):
+                  queries=[f'"{t["season"]}" "{root}" "football team"', f'intitle:"{t["season"]}" "{root}" football']
+                  for query in queries:
+                      search=get({'action':'query','list':'search','srsearch':query,'srnamespace':0,'srlimit':10})
+                      titles=[h['title'] for h in search.get('query',{}).get('search',[]) if str(t['season']) in h['title'] and h['title'].lower().endswith('football team')]
+                      for page in fetch_pages(titles):
+                          pp=parse_page(page)
+                          if pp is not None:seen[pp['pageId']]=pp
+              return list(seen.values())
+
+          def choose(t,candidates):
+              scored=[]
+              for p in candidates:
+                  scores=[len(r) for r in roots(t) if p['titleNorm'].startswith(r+' ')]
+                  if scores:scored.append((max(scores),p))
+              if not scored:return None
+              best=max(s for s,_ in scored)
+              winners=[p for s,p in scored if s==best]
+              if len(winners)>1:
+                  same=[p for p in winners if confkey(p['conference'])==confkey(t['conference'])]
+                  if len(same)==1:winners=same
+              return winners[0] if len(winners)==1 else None
+
+          assignments=[]
+          unresolved=[]
+          known_no_page={(2020,'new mexico state'),(2020,'old dominion')}
+          for year in range(2002,2026):
+              parsed=broad_pages(year)
+              matched=0
+              for t in targets.get(year,[]):
+                  p=choose(t,parsed)
+                  if p is None:
+                      p=choose(t,targeted_pages(t))
+                  if p is None:
+                      if (year,norm(t['programName'])) in known_no_page:
+                          continue
+                      unresolved.append(t)
+                      continue
+                  if not p['coaches']:
+                      unresolved.append({**t,'reason':'no-coach','sourceSeasonPageTitle':p['pageTitle']})
+                      continue
+                  for c in p['coaches']:
+                      if not c['coachPageTitle']:
+                          unresolved.append({**t,'reason':'unlinked-coach','sourceSeasonPageTitle':p['pageTitle'],'coachDisplayName':c['displayName']})
+                          continue
+                      assignments.append({
+                          **t,
+                          'sourceSeasonPageId':p['pageId'],
+                          'sourceSeasonPageRevisionId':p['revisionId'],
+                          'sourceSeasonPageTitle':p['pageTitle'],
+                          'sourceCoachSlot':c['slot'],
+                          'sourceCoachPageTitle':c['coachPageTitle'],
+                          'gamesNote':c['gamesNote']
+                      })
+                  matched+=1
+              print('YEAR',year,'targets',len(targets.get(year,[])),'matched',matched,flush=True)
+
+          if unresolved:
+              print('UNRESOLVED',json.dumps(unresolved,ensure_ascii=False),flush=True)
+              raise SystemExit(f'{len(unresolved)} unresolved coach source rows')
+
+          coach_titles=sorted({a['sourceCoachPageTitle'] for a in assignments})
+          coach_pages={}
+          for i in range(0,len(coach_titles),40):
+              data=get({'action':'query','titles':'|'.join(coach_titles[i:i+40]),'redirects':1})
+              for page in data.get('query',{}).get('pages',[]) or []:
+                  if not page.get('missing'):
+                      coach_pages[page['title']]={'pageId':int(page['pageid']),'title':page['title']}
+              redirects=data.get('query',{}).get('redirects',[]) or []
+              for r in redirects:
+                  dest=next((p for p in data.get('query',{}).get('pages',[]) or [] if p.get('title')==r.get('to')),None)
+                  if dest and not dest.get('missing'):
+                      coach_pages[r['from']]={'pageId':int(dest['pageid']),'title':dest['title']}
+
+          rows=[]
+          unresolved_coaches=[]
+          for a in assignments:
+              resolved=coach_pages.get(a['sourceCoachPageTitle'])
+              if not resolved:
+                  unresolved_coaches.append(a); continue
+              rows.append([
+                  a['season'],a['sourceProgramId'],a['programName'],
+                  a['sourceSeasonPageId'],a['sourceSeasonPageRevisionId'],a['sourceSeasonPageTitle'],
+                  str(resolved['pageId']),resolved['title'],a['sourceCoachSlot'],a['gamesNote']
+              ])
+          if unresolved_coaches:
+              print('UNRESOLVED_COACHES',json.dumps(unresolved_coaches[:20],ensure_ascii=False),flush=True)
+              raise SystemExit(f'{len(unresolved_coaches)} unresolved coach page identities')
+
+          rows.sort(key=lambda r:(r[0],r[1],r[8],r[6]))
+          keys=[(r[0],r[1],r[6]) for r in rows]
+          if len(keys)!=len(set(keys)):
+              raise SystemExit('duplicate season/program/coach identity rows')
+
+          excluded=[
+              {'season':2020,'programName':'New Mexico State','reason':'No standard 2020 season article under the audited source title pattern; no coach assignment inferred.'},
+              {'season':2020,'programName':'Old Dominion','reason':'Program canceled the 2020 season; no coach assignment inferred from adjacent seasons.'}
+          ]
+          payload={
+              'schemaVersion':1,
+              'provider':'Wikipedia',
+              'generatedAt':'2026-08-26',
+              'seasonStart':2002,
+              'seasonEnd':2025,
+              'identityScope':'wikipedia-coach-page-id',
+              'sourceMethod':'Head-coach identities are derived from linked coach pages in each canonical FBS team season Wikipedia infobox. Season-page and revision IDs pin the audited source state; no game splits are inferred.',
+              'columns':['season','sourceProgramId','programName','sourceSeasonPageId','sourceSeasonPageRevisionId','sourceSeasonPageTitle','sourceCoachPageId','coachName','sourceCoachSlot','gamesNote'],
+              'excludedTeamSeasons':excluded,
+              'rowCount':len(rows),
+              'rows':rows
+          }
+          OUT.parent.mkdir(parents=True,exist_ok=True)
+          OUT.write_text(json.dumps(payload,ensure_ascii=False,separators=(',',':'))+'\n')
+          print('WROTE',OUT,'rows',len(rows),'unique coaches',len({r[6] for r in rows}),flush=True)
+          PY
+      - name: Commit snapshot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/data/football/cfb/cfb-coach-assignments-2002-2025.source.json
+          git diff --cached --quiet && exit 0
+          git commit -m "data: pin CFB coach assignments"
+          git push origin HEAD:feature/cfb-coach-relationships
