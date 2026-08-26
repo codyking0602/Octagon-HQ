@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "league": "CFB",
+  "seasonStart": 2002,
+  "seasonEnd": 2025,
+  "seasonCount": 24,
+  "selectionCount": 25,
+  "championProgramCount": 12,
+  "splitTitleSeasons": [2003],
+  "source": {
+    "provider": "NCAA",
+    "title": "FBS Football Championship History",
+    "url": "https://www.ncaa.com/history/football/fbs",
+    "verifiedAt": "2026-08-26",
+    "snapshotPath": "public/data/football/cfb/fbs-championship-history.source.json"
+  },
+  "outputs": {
+    "selections": {
+      "path": "data/generated/football/relationships/cfb-national-championships-2002-2025.json",
+      "sha256": "dfd166ebae19fac97bcf345915ee2632aeac7950a27bacbb703036dbe7427b16",
+      "rowCount": 25
+    },
+    "programSummary": {
+      "path": "data/generated/football/relationships/cfb-program-championship-summary-2002-2025.json",
+      "sha256": "8c31b634947d16f52b929a6dc43829dfffcb79432134699019b6a559735a3e43",
+      "rowCount": 12
+    }
+  },
+  "generatedBy": "scripts/import-football-cfb-championship-relationships.mjs"
+}
