@@ -80,18 +80,11 @@ describe("Football Find the Leader maturity", () => {
       expect(enabledIds.has(muted), muted).toBe(false);
     }
 
-    expect(footballFindLeaderMetricRows("cfb-player-rushing-yards")).toHaveLength(10);
-    expect(footballFindLeaderMetricRows("cfb-player-rushing-touchdowns")).toHaveLength(10);
-    expect(footballFindLeaderMetricQuality("cfb-player-rushing-yards")).toMatchObject({
-      eligible: false,
-      reasons: expect.arrayContaining(["too-few-candidates"]),
-    });
-    expect(footballFindLeaderMetricQuality("cfb-player-rushing-touchdowns")).toMatchObject({
-      eligible: false,
-      reasons: expect.arrayContaining(["too-few-candidates"]),
-    });
-    expect(enabledIds.has("cfb-player-rushing-yards")).toBe(false);
-    expect(enabledIds.has("cfb-player-rushing-touchdowns")).toBe(false);
+    for (const metricId of ["cfb-player-rushing-yards", "cfb-player-rushing-touchdowns"] as const) {
+      expect(footballFindLeaderMetricRows(metricId).length, metricId).toBeGreaterThanOrEqual(20);
+      expect(footballFindLeaderMetricQuality(metricId), metricId).toMatchObject({ eligible: true });
+      expect(enabledIds.has(metricId), metricId).toBe(true);
+    }
 
     expect(footballFindLeaderMetricQuality("cfb-team-season-losses")).toMatchObject({
       eligible: false,
@@ -101,9 +94,11 @@ describe("Football Find the Leader maturity", () => {
     expect(FOOTBALL_FIND_LEADER_MIN_POOL_SIZE).toBe(11);
   });
 
-  it("activates earned CFB receiving and coaching lanes from PR2 depth", () => {
+  it("activates earned CFB rushing, receiving and coaching lanes from canonical depth", () => {
     const enabledIds = new Set(footballFindLeaderEnabledMetricDefinitions.map(({ id }) => id));
     for (const metricId of [
+      "cfb-player-rushing-yards",
+      "cfb-player-rushing-touchdowns",
       "cfb-player-receptions",
       "cfb-player-receiving-yards",
       "cfb-player-receiving-touchdowns",
@@ -114,6 +109,12 @@ describe("Football Find the Leader maturity", () => {
       expect(enabledIds.has(metricId), metricId).toBe(true);
     }
 
+    const rushingPool = footballFindLeaderPools.find(({ metricId }) => metricId === "cfb-player-rushing-yards")!;
+    expect(rushingPool).toMatchObject({
+      canonicalMetricId: "cfb-best-season-rushing-yards",
+      factualScope: "cfb-player-career",
+      subjectQuery: { kind: "player-career", league: "CFB", positions: ["QB", "RB"] },
+    });
     const receivingPool = footballFindLeaderPools.find(({ metricId }) => metricId === "cfb-player-receiving-yards")!;
     expect(receivingPool).toMatchObject({
       canonicalMetricId: "cfb-best-season-receiving-yards",
@@ -142,8 +143,10 @@ describe("Football Find the Leader maturity", () => {
     for (const metric of footballFindLeaderEnabledMetricDefinitions) {
       const rows = footballFindLeaderMetricRows(metric.id);
       expect(rows.length, metric.id).toBeGreaterThanOrEqual(FOOTBALL_FIND_LEADER_MIN_POOL_SIZE);
-      const pool = footballFindLeaderPools.find(({ metricId }) => metricId === metric.id)!;
-      expect(pool.canonicalMetricId).toBe(footballFindLeaderCanonicalMetricByMetric[metric.id]);
+      const pool = footballFindLeaderPools.find(({ metricId }) => metric.id === metric.id && ({ metricId: pool.metricId }));
+      const canonicalPool = footballFindLeaderPools.find(({ metricId }) => metricId === metric.id)!;
+      expect(pool).toBeTruthy();
+      expect(canonicalPool.canonicalMetricId).toBe(footballFindLeaderCanonicalMetricByMetric[metric.id]);
       for (const row of rows) {
         const fact = getFootballFact(row.id, footballFindLeaderCanonicalMetricByMetric[metric.id]);
         expect(fact, `${metric.id}:${row.id}`).not.toBeNull();
@@ -153,12 +156,14 @@ describe("Football Find the Leader maturity", () => {
     }
   });
 
-  it("activates real NFL receiving and defensive depth while leaving shallow college rushing dormant", () => {
+  it("keeps real NFL receiving and defensive depth alongside deep recognizable CFB rushing", () => {
     expect(footballFindLeaderMetricRows("nfl-receiving-receptions")).toHaveLength(17);
     expect(footballFindLeaderMetricRows("nfl-receiving-yards")).toHaveLength(17);
     expect(footballFindLeaderMetricRows("nfl-receiving-touchdowns")).toHaveLength(17);
     expect(footballFindLeaderMetricRows("nfl-defense-sacks").length).toBeGreaterThanOrEqual(12);
     expect(footballFindLeaderMetricRows("nfl-defense-interceptions").length).toBeGreaterThanOrEqual(12);
+    expect(footballFindLeaderMetricRows("cfb-player-rushing-yards").length).toBeGreaterThanOrEqual(20);
+    expect(footballFindLeaderMetricRows("cfb-player-rushing-touchdowns").length).toBeGreaterThanOrEqual(20);
 
     const receivingPool = footballFindLeaderPools.find(({ metricId }) => metricId === "nfl-receiving-yards")!;
     expect(receivingPool).toMatchObject({
@@ -281,11 +286,11 @@ describe("Football Find the Leader maturity", () => {
 
   it("keeps CFB at exactly half while spreading it across player, team and coach gameplay", () => {
     const audit = footballFindLeaderReplayAudit(1000);
-    console.info("Find the Leader 1,000-board PR3 quality audit", JSON.stringify(audit));
+    console.info("Find the Leader 1,000-board recognizable-CFB audit", JSON.stringify(audit));
     expect(audit.cfbShare).toBe(0.5);
     expect(audit.uniqueUnorderedBoardShare).toBeGreaterThan(0.6);
-    expect(audit.metricsSeen).toBeGreaterThanOrEqual(42);
-    expect(audit.definitionsSeen).toBeGreaterThanOrEqual(75);
+    expect(audit.metricsSeen).toBeGreaterThanOrEqual(44);
+    expect(audit.definitionsSeen).toBeGreaterThanOrEqual(79);
     expect(audit.subjectsSeen).toBeGreaterThan(100);
     expect(audit.cfbSubjectsSeen).toBeGreaterThan(35);
 
@@ -296,10 +301,10 @@ describe("Football Find the Leader maturity", () => {
     expect(audit.domainShare["nfl-qb-season"]).toBeGreaterThanOrEqual(0.04);
     expect(audit.domainShare["nfl-team-season"]).toBeGreaterThanOrEqual(0.04);
 
-    expect(audit.domainShare["cfb-player-receiving"]).toBeGreaterThanOrEqual(0.14);
+    expect(audit.domainShare["cfb-player-rushing"]).toBeGreaterThanOrEqual(0.09);
+    expect(audit.domainShare["cfb-player-receiving"]).toBeGreaterThanOrEqual(0.09);
     expect(audit.domainShare["cfb-coach-career"]).toBeGreaterThanOrEqual(0.09);
-    expect(audit.domainShare["cfb-champion-season"]).toBeGreaterThanOrEqual(0.14);
+    expect(audit.domainShare["cfb-champion-season"]).toBeGreaterThanOrEqual(0.09);
     expect(audit.domainShare["cfb-team-season"]).toBeGreaterThanOrEqual(0.09);
-    expect(audit.domainShare["cfb-player-rushing"] ?? 0).toBe(0);
   });
 });
