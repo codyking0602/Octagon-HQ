@@ -44,8 +44,8 @@ function conservativeCanonicalTier(subject: FootballCanonicalSubject): FootballR
 }
 
 /**
- * Existing canonical subjects are already a curated Football game universe, so they remain casual-eligible.
- * Historical source adapters may add far deeper source rows later without automatically promoting those rows here.
+ * Existing canonical subjects stay in the curated registry, but PR6 may conservatively mark some as database-only.
+ * Historical source adapters may add far deeper source rows without automatically exposing those rows to normal game queries.
  */
 export function buildFootballSubjectKnowledgeMetadata(
   subject: FootballCanonicalSubject,
