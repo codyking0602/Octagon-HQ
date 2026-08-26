@@ -183,7 +183,7 @@ const cfbProjected = cfbPeople.map(projectCfbPlayer);
 
 function recordsFromRows(corpus, mapper) {
   const ix = ixFor(corpus);
-  return corpus.rows.map((row) => mapper(row, ix));
+  return corpus.rows.map((row, rowIndex) => mapper(row, ix, rowIndex));
 }
 
 const programRecords = recordsFromRows(cfbPrograms, (row, ix) => {
@@ -251,8 +251,8 @@ const nflGameRecords = recordsFromRows(nflGames, (row, ix) => {
   const tier = iconic ? "A" : superBowl ? "C" : "D";
   return { id: `nfl-game-${sourceId}`, kind: "game", name: sourceId, league: "NFL", tier, sourceProvider: "nflverse", sourceId, startSeason: season, endSeason: season, evidence: [iconic ? "explicit iconic Super Bowl approval" : superBowl ? "Super Bowl" : "ordinary historical game"], manualA: tier === "A" };
 });
-const cfbGameRecords = recordsFromRows(cfbGames, (row, ix) => {
-  const sourceId = String(at(row, ix, "sourceGameId") ?? at(row, ix, "gameId") ?? `${at(row, ix, "season")}:${Math.random()}`);
+const cfbGameRecords = recordsFromRows(cfbGames, (row, ix, rowIndex) => {
+  const sourceId = String(at(row, ix, "sourceGameId") ?? at(row, ix, "gameId") ?? `${at(row, ix, "season")}:${rowIndex}`);
   const season = n(at(row, ix, "season"));
   return { id: `cfb-game-${sourceId}`, kind: "game", name: sourceId, league: "CFB", tier: "D", sourceProvider: "cfbfastR", sourceId, startSeason: season, endSeason: season, evidence: ["no reliable cultural-significance marker in the source relationship row"], manualA: false };
 });
