@@ -64,6 +64,11 @@ describe("Football recognizability projection", () => {
     for (const name of ["Aidan Bouman", "Adrian Hardy", "Ajalen Holley", "Amare Thomas"]) {
       expect(projection.records.find((record) => record.league === "CFB" && record.name === name)).toBeUndefined();
     }
+    const generator = fs.readFileSync("scripts/generate-football-recognizability.mjs", "utf8");
+    expect(generator).toContain('else if (singleMajorProgram && strong)');
+    expect(generator).not.toContain('else if (major && strong)');
+    const audit = fs.readFileSync("docs/football-recognizability-audit.md", "utf8");
+    expect(audit).toContain("Multi-team CFB source identities are not auto-promoted from program reputation");
   });
 
   it("does not turn ordinary CFB stat rows or kicker volume into casual filler", () => {
