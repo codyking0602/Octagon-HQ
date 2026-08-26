@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "league": "CFB",
+  "recordKind": "player-season-team",
+  "seasonStart": 2014,
+  "seasonEnd": 2025,
+  "seasonCount": 12,
+  "rowCount": 113224,
+  "sourceRowCount": 1637447,
+  "uniqueSourcePlayerCount": 40077,
+  "teamCount": 332,
+  "conferenceCount": 51,
+  "columnCount": 29,
+  "sha256": "4581bd4dbaae886e9136e4a81421dc88c6b046dd6ee9a06fd0477dfc133bc71b",
+  "source": {
+    "provider": "cfbfastR",
+    "repository": "sportsdataverse/cfbfastR-data",
+    "commit": "a0f29f9ec6c04952a720905017e74a7b089dc1eb",
+    "license": "CC BY 4.0",
+    "sourcePathTemplate": "player_stats/csv/player_stats_<season>.csv"
+  },
+  "sourceVerification": [
+    {
+      "season": 2014,
+      "path": "player_stats/csv/player_stats_2014.csv",
+      "gitBlobSha": "b9ec5c3da33832cc2abb27c06b27f317b009368e",
+      "bytes": 31499415,
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2015,
+      "path": "player_stats/csv/player_stats_2015.csv",
+      "gitBlobSha": "43b626c9209305a832f5f0ec8da554063e588e12",
+      "bytes": 31953430,
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2016,
+      "path": "player_stats/csv/player_stats_2016.csv",
+      "gitBlobSha": "b8e21dcda46d499f09624c3451337c8adbe59969",
+      "bytes": 32473281,
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2017,
+      "path": "player_stats/csv/player_stats_2017.csv",
+      "gitBlobSha": "9bc5a9a1fc6f157ca68b22c58aa83230ce9085d5",
+      "bytes": 32763345,
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2018,
+      "path": "player_stats/csv/player_stats_2018.csv",
+      "gitBlobSha": "9dd0d11279e72d11c202d77824fe72edeb95698d",
+      "bytes": 32954871,
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2019,
+      "path": "player_stats/csv/player_stats_2019.csv",
+      "gitBlobSha": "1c1445fe283a12331dd4e85a49da963eba7d1a47",
+      "bytes": 33144301,
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2020,
+      "path": "player_stats/csv/player_stats_2020.csv",
+      "gitBlobSha": "07ca3cab8fcb609a58fba11e851b5a41cd8eca06",
+      "bytes": 20328932,
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2021,
+      "path": "player_stats/csv/player_stats_2021.csv",
+      "gitBlobSha": "e66bc4762405ebf83ff4d99182f859f61b1cb20e",
+      "bytes": 29864671,
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2022,
+      "path": "player_stats/csv/player_stats_2022.csv",
+      "gitBlobSha": "33f2a7840409ad29f37c797e643c2ed9d59b23bd",
+      "bytes": 48238345,
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2023,
+      "path": "player_stats/csv/player_stats_2023.csv",
+      "gitBlobSha": "0f227234248480124befa06f99d7f7db56a1299a",
+      "bytes": 51337361,
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2024,
+      "path": "player_stats/csv/player_stats_2024.csv",
+      "gitBlobSha": "404063f4582cba1778e83e1baf30311f758384e9",
+      "bytes": 55543427,
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2025,
+      "path": "player_stats/csv/player_stats_2025.csv",
+      "gitBlobSha": "a8d35781958c2950e9df7607106188297ff7a47c",
+      "bytes": 59644745,
+      "verifiedPinnedBlob": true
+    }
+  ],
+  "generatedBy": "scripts/import-football-cfb-historical-player-stats.mjs"
+}
