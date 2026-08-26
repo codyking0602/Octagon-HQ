@@ -30,32 +30,16 @@ const CFB_ERA_COLUMNS = [
   "splitTitleSelectionCount",
   "sourceAsteriskedSelectionCount",
   "conferences",
-  "regularSeasonGames",
-  "regularSeasonWins",
-  "regularSeasonLosses",
-  "regularSeasonTies",
-  "postseasonGames",
-  "postseasonWins",
-  "postseasonLosses",
-  "postseasonTies",
-  "overallGames",
-  "overallWins",
-  "overallLosses",
-  "overallTies",
-  "pointsFor",
-  "pointsAgainst",
-  "pointDifferential",
+  "sourceObservedGames",
+  "sourceObservedWins",
+  "sourceObservedLosses",
+  "sourceObservedTies",
+  "sourceObservedPointsFor",
+  "sourceObservedPointsAgainst",
+  "sourceObservedPointDifferential",
 ];
 
-const TEAM_SUM_COLUMNS = [
-  "regularSeasonGames",
-  "regularSeasonWins",
-  "regularSeasonLosses",
-  "regularSeasonTies",
-  "postseasonGames",
-  "postseasonWins",
-  "postseasonLosses",
-  "postseasonTies",
+const TEAM_OBSERVED_COLUMNS = [
   "overallGames",
   "overallWins",
   "overallLosses",
@@ -167,11 +151,20 @@ function buildTeamSeasonIndex(teamSeasons) {
   return byProgramSeason;
 }
 
-function sumTeamSeasons(rows, teamSeasons) {
-  return Object.fromEntries(TEAM_SUM_COLUMNS.map((column) => [
+function sumObservedTeamSeasons(rows, teamSeasons) {
+  const totals = Object.fromEntries(TEAM_OBSERVED_COLUMNS.map((column) => [
     column,
     rows.reduce((total, row) => total + numeric(row, teamSeasons.index, column), 0),
   ]));
+  return {
+    sourceObservedGames: totals.overallGames,
+    sourceObservedWins: totals.overallWins,
+    sourceObservedLosses: totals.overallLosses,
+    sourceObservedTies: totals.overallTies,
+    sourceObservedPointsFor: totals.pointsFor,
+    sourceObservedPointsAgainst: totals.pointsAgainst,
+    sourceObservedPointDifferential: totals.pointsFor - totals.pointsAgainst,
+  };
 }
 
 function buildCfbEraRows(championships, teamSeasons, maxTitleGap) {
@@ -197,7 +190,6 @@ function buildCfbEraRows(championships, teamSeasons, maxTitleGap) {
         .map((row) => required(row, teamSeasons.index, "conference"))
         .filter((conference) => conference != null && String(conference).trim() !== "")
         .map(String))].sort();
-      const sums = sumTeamSeasons(seasonRows, teamSeasons);
       const record = {
         sourceEraKey: `cfb:${sourceProgramId}:multi-title:${startSeason}-${endSeason}`,
         eraBasis: "multi-title-championship-cluster",
@@ -213,8 +205,7 @@ function buildCfbEraRows(championships, teamSeasons, maxTitleGap) {
         splitTitleSelectionCount: cluster.filter((selection) => selection.splitTitle).length,
         sourceAsteriskedSelectionCount: cluster.filter((selection) => selection.sourceAsterisked).length,
         conferences,
-        ...sums,
-        pointDifferential: sums.pointsFor - sums.pointsAgainst,
+        ...sumObservedTeamSeasons(seasonRows, teamSeasons),
       };
       records.push(record);
     }
@@ -265,6 +256,11 @@ const cfbCorpus = {
     minimumChampionshipSelections: 2,
     note: "Objective clustering rule only. These rows are not automatically labeled dynasties or made casual-game eligible.",
   },
+  resultSemantics: {
+    metricBasis: "source-observed-team-season-results",
+    postseasonCompleteness: "not-guaranteed",
+    note: "CFB title selections are complete for 2002-2025 through the NCAA relationship owner. Team-season result aggregates preserve only the games present in the existing cfbfastR relationship corpus and must not be presented as guaranteed complete postseason records.",
+  },
   source: {
     championshipRelationships: {
       path: CFB_CHAMPIONSHIP_INPUT,
@@ -299,6 +295,7 @@ const coverage = {
     representedSeasonCount: cfbRows.reduce((total, row) => total + Number(row[cfbSeasonCountIndex]), 0),
     championshipSelectionCount: cfbRows.reduce((total, row) => total + Number(row[cfbTitleCountIndex]), 0),
     maxAdjacentTitleGap: args.maxTitleGap,
+    resultSemantics: cfbCorpus.resultSemantics,
   },
   nfl: {
     recordKind: nflEraReference.recordKind,
@@ -316,6 +313,7 @@ const manifest = {
     rowCount: cfbRows.length,
     sha256: sha256(cfbText),
     eraBasis: cfbCorpus.eraBasis,
+    resultSemantics: cfbCorpus.resultSemantics,
   },
   nfl: nflEraReference,
   generatedBy: "scripts/build-football-era-relationships.mjs",
