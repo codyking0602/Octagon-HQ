@@ -46,7 +46,7 @@ function csvValue(value: string | number | null | undefined) {
   return /[",\n]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
 }
 
-function csv(columns: string[], rows: Array<Record<string, string | number | null>>) {
+function csv(columns: string[], rows: Array<Record<string, string | number | null | undefined>>) {
   return `${columns.join(",")}\n${rows.map((row) => columns.map((column) => csvValue(row[column])).join(",")).join("\n")}\n`;
 }
 
