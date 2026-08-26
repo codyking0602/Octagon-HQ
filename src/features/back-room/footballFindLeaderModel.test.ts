@@ -143,10 +143,8 @@ describe("Football Find the Leader maturity", () => {
     for (const metric of footballFindLeaderEnabledMetricDefinitions) {
       const rows = footballFindLeaderMetricRows(metric.id);
       expect(rows.length, metric.id).toBeGreaterThanOrEqual(FOOTBALL_FIND_LEADER_MIN_POOL_SIZE);
-      const pool = footballFindLeaderPools.find(({ metricId }) => metric.id === metric.id && ({ metricId: pool.metricId }));
-      const canonicalPool = footballFindLeaderPools.find(({ metricId }) => metricId === metric.id)!;
-      expect(pool).toBeTruthy();
-      expect(canonicalPool.canonicalMetricId).toBe(footballFindLeaderCanonicalMetricByMetric[metric.id]);
+      const pool = footballFindLeaderPools.find(({ metricId }) => metricId === metric.id)!;
+      expect(pool.canonicalMetricId).toBe(footballFindLeaderCanonicalMetricByMetric[metric.id]);
       for (const row of rows) {
         const fact = getFootballFact(row.id, footballFindLeaderCanonicalMetricByMetric[metric.id]);
         expect(fact, `${metric.id}:${row.id}`).not.toBeNull();
