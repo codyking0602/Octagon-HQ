@@ -15,7 +15,7 @@ const emptyHistory: PlayLineupHistory = {
 describe("Football Find the Leader expanded-domain regressions", () => {
   it("surfaces the broader CFB team-season pool on its deterministic rebalance slot", () => {
     const board = createFootballFindLeaderBoard(
-      "football-find-leader-aaaaaaaa-aaaa-4aaa-8aaa-abcd00000005",
+      "football-find-leader-aaaaaaaa-aaaa-4aaa-8aaa-abcd00000007",
       emptyHistory,
     );
 
@@ -34,5 +34,7 @@ describe("Football Find the Leader expanded-domain regressions", () => {
     expect(footballFindLeaderCategoryLabel("cfb-champion-season")).toBe("CFB CHAMPION SEASONS");
     expect(footballFindLeaderCategoryLabel("cfb-team-season")).toBe("CFB TEAM SEASONS");
     expect(footballFindLeaderCategoryLabel("cfb-player-rushing")).toBe("CFB RUSHING SEASONS");
+    expect(footballFindLeaderCategoryLabel("cfb-player-receiving")).toBe("CFB RECEIVING SEASONS");
+    expect(footballFindLeaderCategoryLabel("cfb-coach-career")).toBe("CFB COACH CAREERS");
   });
 });
