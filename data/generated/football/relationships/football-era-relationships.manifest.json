@@ -5,12 +5,17 @@
     "relationshipOwner": "generated-championship-clusters",
     "path": "cfb-championship-eras-2002-2025.json",
     "rowCount": 6,
-    "sha256": "d4ac7184e52f8bd032dad205fd41067adef2996fe0478e268a1d7db72c717229",
+    "sha256": "5ae302266ba9c8f8afd472df519dd171d5f068bf91ae05d8ff5730aabb1ff811",
     "eraBasis": {
       "type": "multi-title-championship-cluster",
       "maxAdjacentTitleGap": 4,
       "minimumChampionshipSelections": 2,
       "note": "Objective clustering rule only. These rows are not automatically labeled dynasties or made casual-game eligible."
+    },
+    "resultSemantics": {
+      "metricBasis": "source-observed-team-season-results",
+      "postseasonCompleteness": "not-guaranteed",
+      "note": "CFB title selections are complete for 2002-2025 through the NCAA relationship owner. Team-season result aggregates preserve only the games present in the existing cfbfastR relationship corpus and must not be presented as guaranteed complete postseason records."
     }
   },
   "nfl": {
