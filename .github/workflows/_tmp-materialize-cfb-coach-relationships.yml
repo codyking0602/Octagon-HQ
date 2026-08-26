@@ -1,18 +1,17 @@
 name: Temporary materialize CFB coach relationships
 
 on:
-  push:
+  pull_request:
+    types: [reopened]
     branches:
-      - feature/cfb-coach-relationships
-    paths:
-      - .github/workflows/_tmp-materialize-cfb-coach-relationships.yml
+      - main
 
 permissions:
   contents: write
 
 jobs:
   materialize:
-    if: github.event.head_commit.message == 'chore: trigger CFB coach materialization'
+    if: github.head_ref == 'feature/cfb-coach-relationships'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
