@@ -169,16 +169,13 @@ function normalizeCsv(text, { season, columns, fieldMap, required, identity }) {
     }
     const rowSeason = Number(read(row, "season"));
     if (rowSeason !== season) throw new Error(`NFL ${identity} source season mismatch: expected ${season}, got ${read(row, "season")}.`);
+    const seasonType = String(read(row, "season_type")).trim();
+    if (seasonType !== "REG") {
+      throw new Error(`Dedicated NFL regular-season ${identity} source ${season} contained unexpected season_type ${JSON.stringify(seasonType)}.`);
+    }
   });
 
-  // nflverse's regpost release assets contain separate REG, POST, and REG+POST summaries.
-  // The canonical season-stat corpus uses REG consistently so playoff qualification never changes the comparison scope.
-  const regularRows = rows.filter((row) => String(read(row, "season_type")).trim() === "REG");
-  if (regularRows.length === 0) {
-    throw new Error(`NFL ${identity} ${season} source did not contain REG summary rows.`);
-  }
-
-  const output = regularRows.map((row) => columns.map((column) => {
+  const output = rows.map((row) => columns.map((column) => {
     const value = read(row, fieldMap[column]);
     if (TEXT_FIELDS.has(column)) return isPresent(value) ? String(value).trim() : null;
     return numericOrNull(value);
@@ -208,6 +205,9 @@ const sourceManifest = JSON.parse(fs.readFileSync(args.sourceManifest, "utf8"));
 if (sourceManifest.provider !== "nflverse" || sourceManifest.license !== "CC BY 4.0") {
   throw new Error("NFL source manifest must remain pinned to the licensed nflverse source owner.");
 }
+if (sourceManifest.players?.summaryLevel !== "reg" || sourceManifest.teams?.summaryLevel !== "reg") {
+  throw new Error("NFL historical source manifest must use dedicated nflverse regular-season assets for players and teams.");
+}
 
 const availableSeasons = sourceManifest.players.assets.map((asset) => asset.season);
 const selectedSeasons = args.seasons ?? availableSeasons;
@@ -220,7 +220,7 @@ const source = {
   dataRepositoryCommit: sourceManifest.dataRepositoryCommit,
   nflreadrCommit: sourceManifest.nflreadrCommit,
   license: sourceManifest.license,
-  assetFamily: "regpost",
+  assetFamily: "reg",
   summaryLevel: "regular"
 };
 
