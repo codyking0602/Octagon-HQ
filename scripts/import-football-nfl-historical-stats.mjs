@@ -89,6 +89,7 @@ const TEAM_FIELD_MAP = {
 const PLAYER_REQUIRED = ["player_id", "season", "season_type", "recent_team", "games"];
 const TEAM_REQUIRED = ["season", "season_type", "team", "games"];
 const TEXT_FIELDS = new Set(["sourcePlayerId", "playerName", "playerDisplayName", "position", "positionGroup", "recentTeam", "team"]);
+const SUMMARY_TYPES = new Set(["REG", "POST", "REG+POST"]);
 
 function parseArgs(argv) {
   const args = {
@@ -149,7 +150,7 @@ async function loadAsset(asset, sourceDir) {
   return { text: bytes.toString("utf8"), verifiedPinnedAsset: true };
 }
 
-function normalizeCsv(text, { season, columns, fieldMap, required, identity }) {
+function normalizeCsv(text, { season, columns, fieldMap, required, identity, identityColumn }) {
   const parsed = parseCsv(text).filter((row) => row.some(isPresent));
   if (parsed.length < 2) throw new Error(`NFL ${identity} source ${season} did not contain data rows.`);
   const [header, ...rows] = parsed;
@@ -163,20 +164,37 @@ function normalizeCsv(text, { season, columns, fieldMap, required, identity }) {
     return index == null ? "" : row[index] ?? "";
   };
 
+  const selectedByIdentity = new Map();
   rows.forEach((row, rowIndex) => {
     if (row.length !== header.length) {
       throw new Error(`NFL ${identity} ${season} row ${rowIndex + 2} has ${row.length} columns; expected ${header.length}.`);
     }
     const rowSeason = Number(read(row, "season"));
     if (rowSeason !== season) throw new Error(`NFL ${identity} source season mismatch: expected ${season}, got ${read(row, "season")}.`);
+
+    const summaryType = String(read(row, "season_type")).trim();
+    if (!SUMMARY_TYPES.has(summaryType)) {
+      throw new Error(`NFL ${identity} ${season} source has unsupported season_type ${JSON.stringify(summaryType)}.`);
+    }
+    if (summaryType === "POST") return;
+
+    const identityKey = String(read(row, identityColumn)).trim();
+    if (!identityKey) throw new Error(`NFL ${identity} ${season} source row ${rowIndex + 2} is missing ${identityColumn}.`);
+    const current = selectedByIdentity.get(identityKey);
+    if (!current || (current.summaryType === "REG" && summaryType === "REG+POST")) {
+      selectedByIdentity.set(identityKey, { row, summaryType });
+      return;
+    }
+    if (current.summaryType === summaryType) {
+      throw new Error(`NFL ${identity} ${season} source has duplicate ${summaryType} rows for ${identityKey}.`);
+    }
   });
 
-  const regpostRows = rows.filter((row) => String(read(row, "season_type")).trim() === "REG+POST");
-  if (regpostRows.length === 0) {
-    throw new Error(`NFL ${identity} ${season} source did not contain REG+POST summary rows.`);
+  if (selectedByIdentity.size === 0) {
+    throw new Error(`NFL ${identity} ${season} source did not contain REG or REG+POST full-season summary rows.`);
   }
 
-  const output = regpostRows.map((row) => columns.map((column) => {
+  const output = [...selectedByIdentity.values()].map(({ row }) => columns.map((column) => {
     const value = read(row, fieldMap[column]);
     if (TEXT_FIELDS.has(column)) return isPresent(value) ? String(value).trim() : null;
     return numericOrNull(value);
@@ -218,7 +236,8 @@ const source = {
   dataRepositoryCommit: sourceManifest.dataRepositoryCommit,
   nflreadrCommit: sourceManifest.nflreadrCommit,
   license: sourceManifest.license,
-  summaryLevel: "regpost"
+  summaryLevel: "regpost",
+  summarySelection: "prefer REG+POST, otherwise REG"
 };
 
 const allPlayerRows = [];
@@ -242,14 +261,16 @@ for (const season of selectedSeasons) {
     columns: PLAYER_COLUMNS,
     fieldMap: PLAYER_FIELD_MAP,
     required: PLAYER_REQUIRED,
-    identity: "player"
+    identity: "player",
+    identityColumn: "player_id"
   });
   const teams = normalizeCsv(teamSource.text, {
     season,
     columns: TEAM_COLUMNS,
     fieldMap: TEAM_FIELD_MAP,
     required: TEAM_REQUIRED,
-    identity: "team"
+    identity: "team",
+    identityColumn: "team"
   });
 
   allPlayerRows.push(...players.rows);
