@@ -194,6 +194,7 @@ export const FOOTBALL_FIND_LEADER_FAMILY_CYCLE: readonly FootballFindLeaderFamil
   "nfl-team-season",
   "cfb-strength",
   "cfb-team-season",
+  "cfb-rushing",
   "cfb-receiving",
   "cfb-coaching",
 ] as const;
@@ -400,15 +401,15 @@ const nflDomainCycle: readonly FootballFindLeaderDomainId[] = [
 /** CFB earns its half through distinct player, team and coach lanes instead of champion-team repetition. */
 const cfbDomainCycle: readonly FootballFindLeaderDomainId[] = [
   "cfb-champion-season",
+  "cfb-player-rushing",
   "cfb-player-receiving",
   "cfb-coach-career",
   "cfb-team-season",
+  "cfb-player-rushing",
   "cfb-player-receiving",
   "cfb-champion-season",
-  "cfb-player-receiving",
-  "cfb-team-season",
   "cfb-coach-career",
-  "cfb-champion-season",
+  "cfb-team-season",
 ] as const;
 
 function chooseQuestion(seed: string, history: PlayLineupHistory) {

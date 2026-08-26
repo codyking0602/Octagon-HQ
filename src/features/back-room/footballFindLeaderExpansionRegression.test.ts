@@ -13,9 +13,9 @@ const emptyHistory: PlayLineupHistory = {
 };
 
 describe("Football Find the Leader expanded-domain regressions", () => {
-  it("surfaces the broader CFB team-season pool on its deterministic rebalance slot", () => {
+  it("surfaces the broader CFB team-season pool on its deterministic rotation slot", () => {
     const board = createFootballFindLeaderBoard(
-      "football-find-leader-aaaaaaaa-aaaa-4aaa-8aaa-abcd00000007",
+      "football-find-leader-aaaaaaaa-aaaa-4aaa-8aaa-abcd00000009",
       emptyHistory,
     );
 
@@ -24,7 +24,18 @@ describe("Football Find the Leader expanded-domain regressions", () => {
     expect(board.candidates).toHaveLength(10);
   });
 
-  it("labels every catalog domain accurately, including dormant quality-gated depth", () => {
+  it("surfaces recognizable CFB rushing depth on its deterministic rotation slot", () => {
+    const board = createFootballFindLeaderBoard(
+      "football-find-leader-aaaaaaaa-aaaa-4aaa-8aaa-abcd00000003",
+      emptyHistory,
+    );
+
+    expect(board.domainId).toBe("cfb-player-rushing");
+    expect(["cfb-player-rushing-yards", "cfb-player-rushing-touchdowns"]).toContain(board.metricId);
+    expect(board.candidates).toHaveLength(10);
+  });
+
+  it("labels every catalog domain accurately, including quality-gated depth", () => {
     expect(footballFindLeaderCategoryLabel("nfl-qb-career")).toBe("NFL QB CAREERS");
     expect(footballFindLeaderCategoryLabel("nfl-rb-career")).toBe("NFL RB CAREERS");
     expect(footballFindLeaderCategoryLabel("nfl-qb-season")).toBe("NFL QB SEASONS");

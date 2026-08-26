@@ -297,7 +297,8 @@ export const expandedFootballFactualRecords: readonly FootballFactualRecord[] = 
   nflTeam("2020-jacksonville-jaguars", 1, 15, false),
   nflTeam("2017-cleveland-browns", 0, 16, false),
 
-  // CFB player identities own objective best-season facts so RB/WR/TE/defense can join QBs.
+  // CFB player identities own objective best-season facts. Gameplay can only surface canonical CFB subjects,
+  // so deeper numerical coverage does not admit obscure database-only players into casual boards.
   cfbPlayer("cfb-cam-newton", [
     ["cfb-best-season-passing-yards", 2854],
     ["cfb-best-season-passing-touchdowns", 30],
@@ -330,6 +331,11 @@ export const expandedFootballFactualRecords: readonly FootballFactualRecord[] = 
     ["cfb-best-season-passer-rating", 172.5],
     ["cfb-best-season-rushing-yards", 895],
     ["cfb-best-season-rushing-touchdowns", 23],
+    ["cfb-heisman-awards", 1],
+  ]),
+  cfbPlayer("cfb-lamar-jackson", [
+    ["cfb-best-season-rushing-yards", 1571],
+    ["cfb-best-season-rushing-touchdowns", 21],
     ["cfb-heisman-awards", 1],
   ]),
   cfbPlayer("cfb-derrick-henry", [
@@ -372,6 +378,42 @@ export const expandedFootballFactualRecords: readonly FootballFactualRecord[] = 
     ["cfb-best-season-rushing-touchdowns", 16],
     ["cfb-heisman-awards", 0],
   ]),
+  cfbPlayer("cfb-mark-ingram-ii", [
+    ["cfb-best-season-rushing-yards", 1658],
+    ["cfb-best-season-rushing-touchdowns", 17],
+    ["cfb-heisman-awards", 1],
+  ]),
+  cfbPlayer("cfb-ezekiel-elliott", [
+    ["cfb-best-season-rushing-yards", 1821],
+    ["cfb-best-season-rushing-touchdowns", 23],
+  ]),
+  cfbPlayer("cfb-keenan-reynolds", [
+    ["cfb-best-season-rushing-yards", 1373],
+    ["cfb-best-season-rushing-touchdowns", 31],
+  ]),
+  cfbPlayer("cfb-ashton-jeanty", [
+    ["cfb-best-season-rushing-yards", 2601],
+    ["cfb-best-season-rushing-touchdowns", 29],
+  ]),
+  cfbPlayer("cfb-ron-dayne", [
+    ["cfb-best-season-rushing-yards", 1863],
+    ["cfb-best-season-rushing-touchdowns", 19],
+    ["cfb-heisman-awards", 1],
+  ]),
+  cfbPlayer("cfb-eddie-george", [
+    ["cfb-best-season-rushing-yards", 1826],
+    ["cfb-best-season-rushing-touchdowns", 23],
+    ["cfb-heisman-awards", 1],
+  ]),
+  cfbPlayer("cfb-rashaan-salaam", [
+    ["cfb-best-season-rushing-yards", 2055],
+    ["cfb-best-season-rushing-touchdowns", 24],
+    ["cfb-heisman-awards", 1],
+  ]),
+  cfbPlayer("cfb-braelon-allen", [
+    ["cfb-best-season-rushing-yards", 1268],
+    ["cfb-best-season-rushing-touchdowns", 12],
+  ]),
   cfbPlayer("cfb-devonta-smith", [
     ["cfb-best-season-receptions", 117],
     ["cfb-best-season-receiving-yards", 1856],
@@ -403,13 +445,14 @@ export const expandedFootballFactualRecords: readonly FootballFactualRecord[] = 
     ["cfb-best-season-receiving-yards", 942],
     ["cfb-best-season-receiving-touchdowns", 13],
   ]),
-  // PR2 expands dormant receiving depth without adding rushing facts; PR3 owns activation.
   cfbPlayer("cfb-amari-cooper", [
     ["cfb-best-season-receptions", 124],
     ["cfb-best-season-receiving-yards", 1727],
     ["cfb-best-season-receiving-touchdowns", 16],
   ]),
   cfbPlayer("cfb-christian-mccaffrey", [
+    ["cfb-best-season-rushing-yards", 2019],
+    ["cfb-best-season-rushing-touchdowns", 13],
     ["cfb-best-season-receptions", 45],
     ["cfb-best-season-receiving-yards", 645],
     ["cfb-best-season-receiving-touchdowns", 5],
@@ -421,6 +464,8 @@ export const expandedFootballFactualRecords: readonly FootballFactualRecord[] = 
     ["cfb-heisman-awards", 1],
   ]),
   cfbPlayer("cfb-saquon-barkley", [
+    ["cfb-best-season-rushing-yards", 1496],
+    ["cfb-best-season-rushing-touchdowns", 18],
     ["cfb-best-season-receptions", 54],
     ["cfb-best-season-receiving-yards", 632],
     ["cfb-best-season-receiving-touchdowns", 4],
@@ -481,7 +526,6 @@ export const expandedFootballFactualRecords: readonly FootballFactualRecord[] = 
     ["cfb-coach-national-titles", 1],
     ["cfb-coach-conference-titles", 10],
   ]),
-  // These dormant coach records make the canonical ledger deep enough for PR3 to judge activation.
   cfbCoach("dabo-swinney-cfb", [
     ["cfb-coach-career-wins", 187],
     ["cfb-coach-career-losses", 53],
