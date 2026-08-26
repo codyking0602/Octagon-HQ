@@ -22,6 +22,8 @@ import {
 import {
   footballFindLeaderLeagueForDomain,
   footballFindLeaderMetricDefinitions,
+  footballFindLeaderMetricEditoriallyEligible,
+  type FootballFindLeaderDirection,
   type FootballFindLeaderDomainId,
   type FootballFindLeaderFamilyId,
   type FootballFindLeaderLeagueId,
@@ -87,6 +89,10 @@ export const footballFindLeaderCanonicalMetricByMetric: Readonly<Record<Football
   "nfl-defense-interceptions": "nfl-career-interceptions",
   "cfb-player-rushing-yards": "cfb-best-season-rushing-yards",
   "cfb-player-rushing-touchdowns": "cfb-best-season-rushing-touchdowns",
+  "cfb-player-receptions": "cfb-best-season-receptions",
+  "cfb-player-receiving-yards": "cfb-best-season-receiving-yards",
+  "cfb-player-receiving-touchdowns": "cfb-best-season-receiving-touchdowns",
+  "cfb-coach-career-wins": "cfb-coach-career-wins",
   "cfb-team-season-losses": "cfb-team-losses",
 };
 
@@ -104,6 +110,7 @@ export interface FootballFindLeaderQuestionDefinition {
   question: string;
   statLabel: string;
   shortLabel: string;
+  direction: FootballFindLeaderDirection;
 }
 
 export interface FootballFindLeaderPoolDefinition {
@@ -130,6 +137,7 @@ export interface FootballFindLeaderBoard {
   context: string;
   statLabel: string;
   shortLabel: string;
+  direction: FootballFindLeaderDirection;
   leaderId: string;
   leaderValue: number;
   candidates: FootballFindLeaderCandidate[];
@@ -140,7 +148,7 @@ export interface FootballFindLeaderRun {
   identity: PlayLineupIdentity;
 }
 
-type ScoredRow = { id: string; name: string; subtitle: string; value: number };
+type ScoredRow = { id: string; name: string; subtitle: string; value: number; competitionValue: number };
 
 const domainCopy: Readonly<Record<FootballFindLeaderDomainId, string>> = {
   "nfl-qb-career": "retired NFL quarterbacks",
@@ -152,6 +160,8 @@ const domainCopy: Readonly<Record<FootballFindLeaderDomainId, string>> = {
   "cfb-champion-season": "national-championship team seasons",
   "cfb-team-season": "college football team seasons",
   "cfb-player-rushing": "college quarterbacks and running backs",
+  "cfb-player-receiving": "college football skill players",
+  "cfb-coach-career": "college football head coaches",
 };
 
 export function footballFindLeaderCategoryLabel(domainId: FootballFindLeaderDomainId) {
@@ -163,6 +173,8 @@ export function footballFindLeaderCategoryLabel(domainId: FootballFindLeaderDoma
   if (domainId === "nfl-defense-career") return "NFL DEFENSIVE CAREERS";
   if (domainId === "cfb-team-season") return "CFB TEAM SEASONS";
   if (domainId === "cfb-player-rushing") return "CFB RUSHING SEASONS";
+  if (domainId === "cfb-player-receiving") return "CFB RECEIVING SEASONS";
+  if (domainId === "cfb-coach-career") return "CFB COACH CAREERS";
   return "CFB CHAMPION SEASONS";
 }
 
@@ -180,6 +192,8 @@ export const FOOTBALL_FIND_LEADER_FAMILY_CYCLE: readonly FootballFindLeaderFamil
   "nfl-team-season",
   "cfb-strength",
   "cfb-team-season",
+  "cfb-receiving",
+  "cfb-coaching",
 ] as const;
 
 function questionVariants(definition: FootballFindLeaderMetricDefinition): FootballFindLeaderQuestionDefinition[] {
@@ -192,6 +206,7 @@ function questionVariants(definition: FootballFindLeaderMetricDefinition): Footb
       question: `Who has ${definition.questionLead}?`,
       statLabel: definition.label,
       shortLabel: definition.shortLabel,
+      direction: definition.direction,
     },
     {
       id: `${definition.id}:group`,
@@ -201,6 +216,7 @@ function questionVariants(definition: FootballFindLeaderMetricDefinition): Footb
       question: `Which of these ${domainCopy[definition.domainId]} has ${definition.questionLead}?`,
       statLabel: definition.label,
       shortLabel: definition.shortLabel,
+      direction: definition.direction,
     },
   ];
 }
@@ -215,6 +231,8 @@ const queryByDomain: Readonly<Record<FootballFindLeaderDomainId, FootballSubject
   "cfb-champion-season": { kind: "team-season", league: "CFB", nationalChampion: true },
   "cfb-team-season": { kind: "team-season", league: "CFB" },
   "cfb-player-rushing": { kind: "player-career", league: "CFB", positions: ["QB", "RB"] },
+  "cfb-player-receiving": { kind: "player-career", league: "CFB" },
+  "cfb-coach-career": { kind: "coach", league: "CFB" },
 };
 
 const scopeByDomain: Readonly<Record<FootballFindLeaderDomainId, FootballFactScope>> = {
@@ -227,6 +245,8 @@ const scopeByDomain: Readonly<Record<FootballFindLeaderDomainId, FootballFactSco
   "cfb-champion-season": "cfb-team-season",
   "cfb-team-season": "cfb-team-season",
   "cfb-player-rushing": "cfb-player-career",
+  "cfb-player-receiving": "cfb-player-career",
+  "cfb-coach-career": "cfb-coach-career",
 };
 
 /** All catalog candidates use the same canonical subject query + factual ledger path. */
@@ -238,12 +258,17 @@ const footballFindLeaderCandidatePools: readonly FootballFindLeaderPoolDefinitio
 }));
 
 function playerCareerSubtitle(subject: ReturnType<typeof queryFootballSubjects>[number]) {
+  if (subject.kind === "coach") return "College football head coach";
   if (subject.league === "CFB") {
     return `${subject.school ?? "College football"}${subject.position ? ` · ${subject.position}` : ""}`;
   }
   if (subject.position === "QB") return "Retired NFL quarterback";
   if (subject.position === "RB") return "Retired NFL running back";
   return `NFL ${subject.position ?? "player"} career`;
+}
+
+function competitionValue(direction: FootballFindLeaderDirection, value: number) {
+  return direction === "lower" ? -value : value;
 }
 
 export function footballFindLeaderMetricRows(metricId: FootballFindLeaderMetricId): ScoredRow[] {
@@ -261,9 +286,15 @@ export function footballFindLeaderMetricRows(metricId: FootballFindLeaderMetricI
         : subject.kind === "team-season"
           ? `${subject.league} team season${subject.season ? ` · ${subject.season}` : ""}`
           : playerCareerSubtitle(subject);
-      return [{ id: subject.id, name: subject.name, subtitle, value: fact.fact.value }];
+      return [{
+        id: subject.id,
+        name: subject.name,
+        subtitle,
+        value: fact.fact.value,
+        competitionValue: competitionValue(definition.direction, fact.fact.value),
+      }];
     })
-    .sort((left, right) => right.value - left.value || left.name.localeCompare(right.name));
+    .sort((left, right) => right.competitionValue - left.competitionValue || left.name.localeCompare(right.name));
 }
 
 const factMetricDefinitionById = new Map(footballFactMetricDefinitions.map((definition) => [definition.id, definition]));
@@ -274,14 +305,14 @@ export function footballFindLeaderMetricQuality(metricId: FootballFindLeaderMetr
   if (!factDefinition) throw new Error(`Missing canonical Football fact definition for Find the Leader metric ${metricId}.`);
   return evaluateFootballFindLeaderQuality({
     unit: factDefinition.unit,
-    values: footballFindLeaderMetricRows(metricId).map(({ value }) => value),
+    values: footballFindLeaderMetricRows(metricId).map(({ competitionValue: value }) => value),
     minCandidates: FOOTBALL_FIND_LEADER_MIN_POOL_SIZE,
   });
 }
 
-/** The permanent PR2 quality gate is authoritative for what the game can actually surface. */
+/** Numerical quality and the explicit game-facing editorial gate jointly decide what can surface. */
 export const footballFindLeaderEnabledMetricDefinitions: readonly FootballFindLeaderMetricDefinition[] = footballFindLeaderMetricDefinitions.filter(
-  (definition) => footballFindLeaderMetricQuality(definition.id).eligible,
+  (definition) => footballFindLeaderMetricEditoriallyEligible(definition.id) && footballFindLeaderMetricQuality(definition.id).eligible,
 );
 
 export const footballFindLeaderQuestions: readonly FootballFindLeaderQuestionDefinition[] = footballFindLeaderEnabledMetricDefinitions.flatMap(questionVariants);
@@ -295,7 +326,7 @@ export const footballFindLeaderPools: readonly FootballFindLeaderPoolDefinition[
 
 const footballCompetitionConfig = {
   getId: (row: ScoredRow) => row.id,
-  getValue: (row: ScoredRow) => row.value,
+  getValue: (row: ScoredRow) => row.competitionValue,
   competitiveWindowSize: 8,
   supportEndIndex: 9,
 };
@@ -316,9 +347,10 @@ export function buildFootballFindLeaderBoard(definition: FootballFindLeaderQuest
     domainId: definition.domainId,
     family: definition.family,
     question: definition.question,
-    context: `Highest ${definition.statLabel} among the ten shown. The overall record holder does not have to appear.`,
+    context: `${definition.direction === "lower" ? "Lowest" : "Highest"} ${definition.statLabel} among the ten shown. The overall record holder does not have to appear.`,
     statLabel: definition.statLabel,
     shortLabel: definition.shortLabel,
+    direction: definition.direction,
     leaderId: option.leader.id,
     leaderValue: option.leader.value,
     candidates,
@@ -360,16 +392,17 @@ const nflDomainCycle: readonly FootballFindLeaderDomainId[] = [
   "nfl-rb-career",
 ] as const;
 
+/** CFB earns its half through distinct player, team and coach lanes instead of champion-team repetition. */
 const cfbDomainCycle: readonly FootballFindLeaderDomainId[] = [
   "cfb-champion-season",
-  "cfb-champion-season",
+  "cfb-player-receiving",
+  "cfb-coach-career",
   "cfb-team-season",
+  "cfb-player-receiving",
   "cfb-champion-season",
-  "cfb-champion-season",
-  "cfb-champion-season",
-  "cfb-champion-season",
+  "cfb-player-receiving",
   "cfb-team-season",
-  "cfb-champion-season",
+  "cfb-coach-career",
   "cfb-champion-season",
 ] as const;
 
@@ -443,6 +476,11 @@ export function formatFootballFindLeaderValue(board: Pick<FootballFindLeaderBoar
   return formatFootballFact(footballFindLeaderCanonicalMetricByMetric[board.metricId], value);
 }
 
+export function sortFootballFindLeaderCandidates(board: Pick<FootballFindLeaderBoard, "direction" | "candidates">) {
+  const multiplier = board.direction === "lower" ? 1 : -1;
+  return [...board.candidates].sort((left, right) => multiplier * (left.value - right.value) || left.name.localeCompare(right.name));
+}
+
 export function footballFindLeaderCompetitionAudit() {
   return footballFindLeaderQuestions.map((definition) => {
     const pool = footballFindLeaderMetricRows(definition.metricId);
@@ -451,17 +489,18 @@ export function footballFindLeaderCompetitionAudit() {
     const globalLeaderId = pool[0]?.id ?? null;
     if (!board) return { definitionId: definition.id, boardValid: false, nonRecordLeaderAvailable, leaderIsGlobalMax: false, nearContenderCount: 0, outsideClosestNineCount: 0 };
     const leader = pool.find((row) => row.id === board.leaderId)!;
-    const lower = pool.filter((row) => row.value < leader.value);
-    const closestNineCutoff = lower[8]?.value ?? Number.NEGATIVE_INFINITY;
-    const closestNine = new Set(lower.filter((row) => row.value >= closestNineCutoff).map((row) => row.id));
-    const nearCutoff = lower[3]?.value ?? Number.NEGATIVE_INFINITY;
+    const lower = pool.filter((row) => row.competitionValue < leader.competitionValue);
+    const closestNineCutoff = lower[8]?.competitionValue ?? Number.NEGATIVE_INFINITY;
+    const closestNine = new Set(lower.filter((row) => row.competitionValue >= closestNineCutoff).map((row) => row.id));
+    const nearCutoff = lower[3]?.competitionValue ?? Number.NEGATIVE_INFINITY;
+    const competitionById = new Map(pool.map((row) => [row.id, row.competitionValue]));
     const challengers = board.candidates.filter((candidate) => candidate.id !== board.leaderId);
     return {
       definitionId: definition.id,
       boardValid: true,
       nonRecordLeaderAvailable,
       leaderIsGlobalMax: board.leaderId === globalLeaderId,
-      nearContenderCount: challengers.filter((candidate) => candidate.value >= nearCutoff).length,
+      nearContenderCount: challengers.filter((candidate) => (competitionById.get(candidate.id) ?? Number.NEGATIVE_INFINITY) >= nearCutoff).length,
       outsideClosestNineCount: challengers.filter((candidate) => !closestNine.has(candidate.id)).length,
     };
   });
