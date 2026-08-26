@@ -18,6 +18,7 @@ interface SourceAsset {
 
 interface ReleaseSnapshot {
   releaseId: number;
+  summaryLevel: string;
   seasonStart: number;
   seasonEnd: number;
   seasonCount: number;
@@ -65,7 +66,7 @@ const teamColumns = [
 ];
 
 describe("historical NFL player/team source adapter", () => {
-  it("pins complete closed-season nflverse coverage without promoting source rows into casual eligibility", () => {
+  it("pins complete closed-season nflverse regular assets without promoting source rows into casual eligibility", () => {
     expect(sourceManifest).toMatchObject({
       schemaVersion: 1,
       provider: "nflverse",
@@ -80,7 +81,8 @@ describe("historical NFL player/team source adapter", () => {
     expect(sourceManifest.players.releaseId).toBe(236670328);
     expect(sourceManifest.teams.releaseId).toBe(236670540);
 
-    for (const release of [sourceManifest.players, sourceManifest.teams]) {
+    for (const [kind, release] of [["player", sourceManifest.players], ["team", sourceManifest.teams]] as const) {
+      expect(release.summaryLevel).toBe("reg");
       expect(release.assets).toHaveLength(27);
       expect(release.assets.map((asset) => asset.season)).toEqual(Array.from({ length: 27 }, (_, index) => 1999 + index));
       expect(release.assets.some((asset) => asset.season === 2026)).toBe(false);
@@ -88,7 +90,8 @@ describe("historical NFL player/team source adapter", () => {
         expect(asset.assetId).toBeGreaterThan(0);
         expect(asset.bytes).toBeGreaterThan(0);
         expect(asset.sha256).toMatch(/^[a-f0-9]{64}$/);
-        expect(asset.url).toContain(`/stats_${release === sourceManifest.players ? "player" : "team"}/`);
+        expect(asset.name).toBe(`stats_${kind}_reg_${asset.season}.csv`);
+        expect(asset.url).toContain(`/stats_${kind}/`);
       }
     }
 
@@ -132,9 +135,9 @@ describe("historical NFL player/team source adapter", () => {
       }
     ];
 
-    fs.writeFileSync(path.join(sourceDir, "stats_player_regpost_1999.csv"), csv(playerColumns, player1999));
-    fs.writeFileSync(path.join(sourceDir, "stats_player_regpost_2000.csv"), csv(playerColumns, player2000));
-    fs.writeFileSync(path.join(sourceDir, "stats_team_regpost_1999.csv"), csv(teamColumns, [
+    fs.writeFileSync(path.join(sourceDir, "stats_player_reg_1999.csv"), csv(playerColumns, player1999));
+    fs.writeFileSync(path.join(sourceDir, "stats_player_reg_2000.csv"), csv(playerColumns, player2000));
+    fs.writeFileSync(path.join(sourceDir, "stats_team_reg_1999.csv"), csv(teamColumns, [
       {
         season: 1999, team: "DAL", season_type: "REG", games: 16,
         completions: 310, attempts: 520, passing_yards: 4200, passing_tds: 32, passing_interceptions: 12,
@@ -142,7 +145,7 @@ describe("historical NFL player/team source adapter", () => {
         def_sacks: 42, def_interceptions: 18, fg_made: 24, fg_att: 30, pt_att: 70, pt_yards: 3200
       }
     ]));
-    fs.writeFileSync(path.join(sourceDir, "stats_team_regpost_2000.csv"), csv(teamColumns, [
+    fs.writeFileSync(path.join(sourceDir, "stats_team_reg_2000.csv"), csv(teamColumns, [
       {
         season: 2000, team: "NE", season_type: "REG", games: 16,
         completions: 280, attempts: 470, passing_yards: 3500, passing_tds: 22, passing_interceptions: 14,
@@ -189,7 +192,7 @@ describe("historical NFL player/team source adapter", () => {
         seasons: Array<{ season: number; playerRowCount: number; teamRowCount: number }>;
       };
 
-      expect(players.source).toMatchObject({ provider: "nflverse", license: "CC BY 4.0", assetFamily: "regpost", summaryLevel: "regular" });
+      expect(players.source).toMatchObject({ provider: "nflverse", license: "CC BY 4.0", assetFamily: "reg", summaryLevel: "regular" });
       const playerIndex = Object.fromEntries(players.columns.map((column, index) => [column, index]));
       const qb1999 = players.rows.find((row) => row[playerIndex.season] === 1999 && row[playerIndex.sourcePlayerId] === "qb-1");
       const qb2000 = players.rows.find((row) => row[playerIndex.season] === 2000 && row[playerIndex.sourcePlayerId] === "qb-1");
