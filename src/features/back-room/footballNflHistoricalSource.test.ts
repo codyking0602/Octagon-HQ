@@ -101,7 +101,7 @@ describe("historical NFL player/team source adapter", () => {
     expect(queryFootballSubjects({ sourceProvider: "nflverse" })).toHaveLength(0);
   });
 
-  it("normalizes player and team season summaries while preserving source identity and team labels as source data", () => {
+  it("normalizes regular-season player and team summaries while preserving source identity and team labels as source data", () => {
     const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "octagon-nfl-history-"));
     const sourceDir = path.join(tempRoot, "source");
     fs.mkdirSync(sourceDir, { recursive: true });
@@ -109,25 +109,25 @@ describe("historical NFL player/team source adapter", () => {
     const player1999 = [
       {
         player_id: "qb-1", player_name: "Q. Back", player_display_name: "Quarter Back", position: "QB", position_group: "QB",
-        season: 1999, season_type: "REG+POST", recent_team: "DAL", games: 16,
+        season: 1999, season_type: "REG", recent_team: "DAL", games: 16,
         completions: 300, attempts: 500, passing_yards: 4000, passing_tds: 30, passing_interceptions: 10,
         carries: 40, rushing_yards: 250, rushing_tds: 3
       },
       {
         player_id: "wr-1", player_name: "W. Receiver", player_display_name: "Wide Receiver", position: "WR", position_group: "WR",
-        season: 1999, season_type: "REG+POST", recent_team: "DAL", games: 16,
+        season: 1999, season_type: "REG", recent_team: "DAL", games: 16,
         receptions: 90, targets: 130, receiving_yards: 1300, receiving_tds: 12
       }
     ];
     const player2000 = [
       {
         player_id: "qb-1", player_name: "Q. Back", player_display_name: "Quarter Back", position: "QB", position_group: "QB",
-        season: 2000, season_type: "REG+POST", recent_team: "NE", games: 12,
+        season: 2000, season_type: "REG", recent_team: "NE", games: 12,
         completions: 200, attempts: 320, passing_yards: 2500, passing_tds: 18, passing_interceptions: 8
       },
       {
         player_id: "edge-1", player_name: "E. Rusher", player_display_name: "Edge Rusher", position: "DE", position_group: "DL",
-        season: 2000, season_type: "REG+POST", recent_team: "NE", games: 16,
+        season: 2000, season_type: "REG", recent_team: "NE", games: 16,
         def_tackles_solo: 45, def_tackles_for_loss: 15, def_fumbles_forced: 4, def_sacks: 12.5, def_interceptions: 1, def_pass_defended: 5
       }
     ];
@@ -136,7 +136,7 @@ describe("historical NFL player/team source adapter", () => {
     fs.writeFileSync(path.join(sourceDir, "stats_player_regpost_2000.csv"), csv(playerColumns, player2000));
     fs.writeFileSync(path.join(sourceDir, "stats_team_regpost_1999.csv"), csv(teamColumns, [
       {
-        season: 1999, team: "DAL", season_type: "REG+POST", games: 16,
+        season: 1999, team: "DAL", season_type: "REG", games: 16,
         completions: 310, attempts: 520, passing_yards: 4200, passing_tds: 32, passing_interceptions: 12,
         carries: 450, rushing_yards: 1900, rushing_tds: 16, receptions: 310, targets: 520, receiving_yards: 4200, receiving_tds: 32,
         def_sacks: 42, def_interceptions: 18, fg_made: 24, fg_att: 30, pt_att: 70, pt_yards: 3200
@@ -144,7 +144,7 @@ describe("historical NFL player/team source adapter", () => {
     ]));
     fs.writeFileSync(path.join(sourceDir, "stats_team_regpost_2000.csv"), csv(teamColumns, [
       {
-        season: 2000, team: "NE", season_type: "REG+POST", games: 16,
+        season: 2000, team: "NE", season_type: "REG", games: 16,
         completions: 280, attempts: 470, passing_yards: 3500, passing_tds: 22, passing_interceptions: 14,
         carries: 430, rushing_yards: 1700, rushing_tds: 14, receptions: 280, targets: 470, receiving_yards: 3500, receiving_tds: 22,
         def_sacks: 48, def_interceptions: 20, fg_made: 25, fg_att: 31, pt_att: 65, pt_yards: 3000
@@ -170,7 +170,7 @@ describe("historical NFL player/team source adapter", () => {
       const players = JSON.parse(fs.readFileSync(playerOutput, "utf8")) as {
         columns: string[];
         rows: Array<Array<string | number | null>>;
-        source: { provider: string; license: string; summaryLevel: string };
+        source: { provider: string; license: string; assetFamily: string; summaryLevel: string };
       };
       const teams = JSON.parse(fs.readFileSync(teamOutput, "utf8")) as {
         columns: string[];
@@ -185,11 +185,11 @@ describe("historical NFL player/team source adapter", () => {
         sourceVerification: Array<{ playerVerifiedPinnedAsset: boolean; teamVerifiedPinnedAsset: boolean }>;
       };
       const generatedCoverage = JSON.parse(fs.readFileSync(coverage, "utf8")) as {
-        totals: { playerRowCount: number; teamRowCount: number };
+        totals: { playerRowCount: number; teamRowCount: number; uniqueSourcePlayerCount: number; uniqueTeamCount: number };
         seasons: Array<{ season: number; playerRowCount: number; teamRowCount: number }>;
       };
 
-      expect(players.source).toMatchObject({ provider: "nflverse", license: "CC BY 4.0", summaryLevel: "regpost" });
+      expect(players.source).toMatchObject({ provider: "nflverse", license: "CC BY 4.0", assetFamily: "regpost", summaryLevel: "regular" });
       const playerIndex = Object.fromEntries(players.columns.map((column, index) => [column, index]));
       const qb1999 = players.rows.find((row) => row[playerIndex.season] === 1999 && row[playerIndex.sourcePlayerId] === "qb-1");
       const qb2000 = players.rows.find((row) => row[playerIndex.season] === 2000 && row[playerIndex.sourcePlayerId] === "qb-1");
