@@ -171,12 +171,14 @@ function normalizeCsv(text, { season, columns, fieldMap, required, identity }) {
     if (rowSeason !== season) throw new Error(`NFL ${identity} source season mismatch: expected ${season}, got ${read(row, "season")}.`);
   });
 
-  const regpostRows = rows.filter((row) => String(read(row, "season_type")).trim() === "REG+POST");
-  if (regpostRows.length === 0) {
-    throw new Error(`NFL ${identity} ${season} source did not contain REG+POST summary rows.`);
+  // nflverse's regpost release assets contain separate REG, POST, and REG+POST summaries.
+  // The canonical season-stat corpus uses REG consistently so playoff qualification never changes the comparison scope.
+  const regularRows = rows.filter((row) => String(read(row, "season_type")).trim() === "REG");
+  if (regularRows.length === 0) {
+    throw new Error(`NFL ${identity} ${season} source did not contain REG summary rows.`);
   }
 
-  const output = regpostRows.map((row) => columns.map((column) => {
+  const output = regularRows.map((row) => columns.map((column) => {
     const value = read(row, fieldMap[column]);
     if (TEXT_FIELDS.has(column)) return isPresent(value) ? String(value).trim() : null;
     return numericOrNull(value);
@@ -218,7 +220,8 @@ const source = {
   dataRepositoryCommit: sourceManifest.dataRepositoryCommit,
   nflreadrCommit: sourceManifest.nflreadrCommit,
   license: sourceManifest.license,
-  summaryLevel: "regpost"
+  assetFamily: "regpost",
+  summaryLevel: "regular"
 };
 
 const allPlayerRows = [];
