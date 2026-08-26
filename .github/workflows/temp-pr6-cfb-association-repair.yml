@@ -1,0 +1,44 @@
+name: TEMP PR6 CFB association repair
+
+"on":
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - .github/workflows/temp-pr6-cfb-association-repair.yml
+      - scripts/temp-fix-pr6-cfb-major-association.mjs
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - name: Apply structural CFB association guard
+        run: node scripts/temp-fix-pr6-cfb-major-association.mjs
+      - name: Regenerate projection and audit
+        run: node scripts/generate-football-recognizability.mjs
+      - name: Focused PR6 regression
+        run: |
+          npm ci --silent --no-audit --no-fund
+          npx vitest run src/features/back-room/footballRecognizabilityProjection.test.ts
+      - name: Commit regenerated PR6 artifacts and remove temporary tooling
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add scripts/generate-football-recognizability.mjs docs/football-recognizability-audit.md
+          git add -f data/generated/football/recognizability-projection.json
+          git rm scripts/temp-fix-pr6-cfb-major-association.mjs .github/workflows/temp-pr6-cfb-association-repair.yml
+          git commit -m 'fix: require stable CFB major-program association [pr6-cfb-association]'
+          git push origin HEAD:${{ github.head_ref }}
