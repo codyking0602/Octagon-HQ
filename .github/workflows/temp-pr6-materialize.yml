@@ -35,11 +35,10 @@ jobs:
           from pathlib import Path
           p = Path('scripts/generate-football-recognizability.mjs')
           s = p.read_text()
-          s = s.replace('"Matt Ryan", "Jamaal Charles", "Dez Bryant", "Luke Kuechly", "A.J. Green", "Calvin Johnson", "Andrew Luck",', '"Matt Ryan", "Jamaal Charles", "Dez Bryant", "Luke Kuechly", "Calvin Johnson", "Andrew Luck",')
-          s = s.replace('const p = people.get(sourceId) ?? { sourceId, name: String(name), league, seasons: new Set(), teams: new Set(), position: "", totals: {}, peaks: {} };', 'const personKey = league === "CFB" ? `${sourceId}:${normalize(name)}` : sourceId;\n    const p = people.get(personKey) ?? { sourceId, name: String(name), league, seasons: new Set(), teams: new Set(), position: "", totals: {}, peaks: {} };')
-          s = s.replace('people.set(sourceId, p);', 'people.set(personKey, p);')
-          s = s.replace('(sacks >= 50 || ints >= 20)', '(sacks >= 70 || ints >= 30)')
-          s = s.replace('id: `cfbfast-r-player-${p.sourceId}`', 'id: `cfbfast-r-player-${p.sourceId}-${normalize(p.name)}`')
+          s = s.replace('(sacks >= 70 || ints >= 30)', '(sacks >= 80 || ints >= 35)')
+          s = s.replace('else if (eliteMajorPeak) { tier = "B"; evidence.push("exceptional multi-year production at a nationally prominent program"); }', 'else if (eliteMajorPeak && approvedBPlayers.has(p.name)) { tier = "B"; evidence.push("explicit B approval supported by exceptional major-program production"); }')
+          s = s.replace('else if ((nflMatch && nflMatch.tier === "C" && meaningful) || (strong && (major || extreme)) || extreme)', 'else if ((nflMatch && nflMatch.tier === "C" && meaningful) || (strong && major))')
+          s = s.replace('if (cfbCoachA.has(nameKey)) tier = "A";', 'if (cfbCoachA.has(nameKey) && (seasons >= 5 || ["A", "B"].includes(programTier))) tier = "A";')
           p.write_text(s)
           if 'Math.random' in s:
               raise SystemExit('nondeterministic Math.random fallback remains')
@@ -55,5 +54,5 @@ jobs:
           if git diff --cached --quiet; then
             exit 0
           fi
-          git commit -m 'chore: materialize tightened PR6 recognizability [materialize-pr6]'
+          git commit -m 'chore: materialize recognition-first PR6 tiers [materialize-pr6]'
           git push origin HEAD:${{ github.head_ref }}
