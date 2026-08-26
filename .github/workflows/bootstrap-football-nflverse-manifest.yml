@@ -1,0 +1,32 @@
+name: Bootstrap Football nflverse manifest
+
+on:
+  push:
+    branches:
+      - feature/football-knowledge-nfl-historical-adapter
+    paths:
+      - scripts/snapshot-football-nflverse-source-manifest.mjs
+      - .github/workflows/bootstrap-football-nflverse-manifest.yml
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/football-knowledge-nfl-historical-adapter
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/snapshot-football-nflverse-source-manifest.mjs
+      - name: Commit exact source snapshot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/data/football/nfl/historical-player-team-seasons.source-manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Pin nflverse NFL source assets"
+          git push
