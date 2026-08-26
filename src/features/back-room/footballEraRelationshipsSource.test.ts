@@ -31,6 +31,10 @@ describe("Football objective era relationship sources", () => {
         maxAdjacentTitleGap: 4,
         minimumChampionshipSelections: 2,
       },
+      resultSemantics: {
+        metricBasis: "source-observed-team-season-results",
+        postseasonCompleteness: "not-guaranteed",
+      },
       seasonStart: 2002,
       seasonEnd: 2025,
       rowCount: 6,
@@ -40,6 +44,13 @@ describe("Football objective era relationship sources", () => {
       "dynasty",
       "recognizabilityTier",
       "casualEligible",
+      "postseasonWins",
+      "overallWins",
+    ]));
+    expect(cfb.columns).toEqual(expect.arrayContaining([
+      "sourceObservedGames",
+      "sourceObservedWins",
+      "sourceObservedLosses",
     ]));
 
     const index = Object.fromEntries(cfb.columns.map((column: string, columnIndex: number) => [column, columnIndex]));
@@ -91,6 +102,7 @@ describe("Football objective era relationship sources", () => {
     expect(manifest.nfl.rowCount).toBe(coachStints.rows.length);
     expect(coverage.nfl.stintCount).toBe(246);
     expect(coverage.cfb.clusterCount).toBe(6);
+    expect(coverage.cfb.resultSemantics.postseasonCompleteness).toBe("not-guaranteed");
   });
 
   it("rebuilds byte-identical CFB era, manifest, and coverage outputs", () => {
