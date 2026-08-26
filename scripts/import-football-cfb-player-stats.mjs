@@ -3,6 +3,8 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 
+import { parseCsv } from "./lib/footballCsv.mjs";
+
 const SOURCE_COMMIT = "9789928e911091186bab979cc772e874c47a83f1";
 const SOURCE_URL = `https://raw.githubusercontent.com/Dharit13/NCAA_2025-26-Season-Dataset/${SOURCE_COMMIT}/by_sport/football/stats.csv`;
 const DEFAULT_OUTPUT = "public/data/football/cfb/player-season-2025.json";
@@ -19,47 +21,6 @@ function parseArgs(argv) {
     else throw new Error(`Unknown argument: ${token}`);
   }
   return args;
-}
-
-function parseCsv(text) {
-  const rows = [];
-  let row = [];
-  let field = "";
-  let quoted = false;
-
-  for (let index = 0; index < text.length; index += 1) {
-    const char = text[index];
-    if (quoted) {
-      if (char === '"' && text[index + 1] === '"') {
-        field += '"';
-        index += 1;
-      } else if (char === '"') {
-        quoted = false;
-      } else {
-        field += char;
-      }
-      continue;
-    }
-
-    if (char === '"') quoted = true;
-    else if (char === ",") {
-      row.push(field);
-      field = "";
-    } else if (char === "\n") {
-      row.push(field.replace(/\r$/, ""));
-      rows.push(row);
-      row = [];
-      field = "";
-    } else {
-      field += char;
-    }
-  }
-
-  if (field.length > 0 || row.length > 0) {
-    row.push(field.replace(/\r$/, ""));
-    rows.push(row);
-  }
-  return rows;
 }
 
 async function readSource(sourcePath) {

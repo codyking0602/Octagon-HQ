@@ -1,6 +1,7 @@
 node_modules
 dist
 artifacts
+data/generated/football/
 .env
 .env.local
 .DS_Store
