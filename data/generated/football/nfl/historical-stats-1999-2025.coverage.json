@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "league": "NFL",
+  "source": {
+    "provider": "nflverse",
+    "repository": "nflverse/nflverse-data",
+    "dataRepositoryCommit": "9037aa840b8ff96ab3340d4c8a6daa403eed65f4",
+    "nflreadrCommit": "d072c08492067b578f27e562b6cc9c9e3b8589c3",
+    "license": "CC BY 4.0",
+    "summaryLevel": "regpost"
+  },
+  "seasonStart": 1999,
+  "seasonEnd": 2025,
+  "totals": {
+    "playerRowCount": 11958,
+    "teamRowCount": 336,
+    "uniqueSourcePlayerCount": 5302,
+    "uniqueTeamCount": 32
+  },
+  "seasons": [
+    {
+      "season": 1999,
+      "playerRowCount": 428,
+      "teamRowCount": 12,
+      "playerSourceColumnCount": 148,
+      "teamSourceColumnCount": 136
+    },
+    {
+      "season": 2000,
+      "playerRowCount": 441,
+      "teamRowCount": 12,
+      "playerSourceColumnCount": 148,
+      "teamSourceColumnCount": 136
+    },
+    {
+      "season": 2001,
+      "playerRowCount": 413,
+      "teamRowCount": 12,
+      "playerSourceColumnCount": 148,
+      "teamSourceColumnCount": 136
+    },
+    {
+      "season": 2002,
+      "playerRowCount": 424,
+      "teamRowCount": 12,
+      "playerSourceColumnCount": 148,
+      "teamSourceColumnCount": 136
+    },
+    {
+      "season": 2003,
+      "playerRowCount": 415,
+      "teamRowCount": 12,
+      "playerSourceColumnCount": 148,
+      "teamSourceColumnCount": 136
+    },
+    {
+      "season": 2004,
+      "playerRowCount": 437,
+      "teamRowCount": 12,
+      "playerSourceColumnCount": 148,
+      "teamSourceColumnCount": 136
+    },
+    {
+      "season": 2005,
+      "playerRowCount": 423,
+      "teamRowCount": 12,
+      "playerSourceColumnCount": 148,
+      "teamSourceColumnCount": 136
+    },
+    {
+      "season": 2006,
+      "playerRowCount": 424,
+      "teamRowCount": 12,
+      "playerSourceColumnCount": 148,
+      "teamSourceColumnCount": 136
+    },
+    {
+      "season": 2007,
+      "playerRowCount": 419,
+      "teamRowCount": 12,
+      "playerSourceColumnCount": 148,
+      "teamSourceColumnCount": 136
+    },
+    {
+      "season": 2008,
+      "playerRowCount": 430,
+      "teamRowCount": 12,
+      "playerSourceColumnCount": 148,
+      "teamSourceColumnCount": 136
+    },
+    {
+      "season": 2009,
+      "playerRowCount": 436,
+      "teamRowCount": 12,
+      "playerSourceColumnCount": 148,
+      "teamSourceColumnCount": 136
+    },
+    {
+      "season": 2010,
+      "playerRowCount": 418,
+      "teamRowCount": 12,
+      "playerSourceColumnCount": 148,
+      "teamSourceColumnCount": 136
+    },
+    {
+      "season": 2011,
+      "playerRowCount": 418,
+      "teamRowCount": 12,
+      "playerSourceColumnCount": 148,
+      "teamSourceColumnCount": 136
+    },
+    {
+      "season": 2012,
+      "playerRowCount": 417,
+      "teamRowCount": 12,
+      "playerSourceColumnCount": 148,
+      "teamSourceColumnCount": 136
+    },
+    {
+      "season": 2013,
+      "playerRowCount": 413,
+      "teamRowCount": 12,
+      "playerSourceColumnCount": 148,
+      "teamSourceColumnCount": 136
+    },
+    {
+      "season": 2014,
+      "playerRowCount": 438,
+      "teamRowCount": 12,
+      "playerSourceColumnCount": 148,
+      "teamSourceColumnCount": 136
+    },
+    {
+      "season": 2015,
+      "playerRowCount": 436,
+      "teamRowCount": 12,
+      "playerSourceColumnCount": 148,
+      "teamSourceColumnCount": 136
+    },
+    {
+      "season": 2016,
+      "playerRowCount": 431,
+      "teamRowCount": 12,
+      "playerSourceColumnCount": 148,
+      "teamSourceColumnCount": 136
+    },
+    {
+      "season": 2017,
+      "playerRowCount": 411,
+      "teamRowCount": 12,
+      "playerSourceColumnCount": 148,
+      "teamSourceColumnCount": 136
+    },
+    {
+      "season": 2018,
+      "playerRowCount": 418,
+      "teamRowCount": 12,
+      "playerSourceColumnCount": 148,
+      "teamSourceColumnCount": 136
+    },
+    {
+      "season": 2019,
+      "playerRowCount": 429,
+      "teamRowCount": 12,
+      "playerSourceColumnCount": 148,
+      "teamSourceColumnCount": 136
+    },
+    {
+      "season": 2020,
+      "playerRowCount": 500,
+      "teamRowCount": 14,
+      "playerSourceColumnCount": 148,
+      "teamSourceColumnCount": 136
+    },
+    {
+      "season": 2021,
+      "playerRowCount": 515,
+      "teamRowCount": 14,
+      "playerSourceColumnCount": 148,
+      "teamSourceColumnCount": 136
+    },
+    {
+      "season": 2022,
+      "playerRowCount": 514,
+      "teamRowCount": 14,
+      "playerSourceColumnCount": 148,
+      "teamSourceColumnCount": 136
+    },
+    {
+      "season": 2023,
+      "playerRowCount": 494,
+      "teamRowCount": 14,
+      "playerSourceColumnCount": 148,
+      "teamSourceColumnCount": 136
+    },
+    {
+      "season": 2024,
+      "playerRowCount": 492,
+      "teamRowCount": 14,
+      "playerSourceColumnCount": 148,
+      "teamSourceColumnCount": 136
+    },
+    {
+      "season": 2025,
+      "playerRowCount": 524,
+      "teamRowCount": 14,
+      "playerSourceColumnCount": 148,
+      "teamSourceColumnCount": 136
+    }
+  ]
+}
