@@ -1,0 +1,187 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "scripts/import-football-game-relationships.mjs",
+  "outputs": [
+    {
+      "file": "cfb-programs-2002-2025.json",
+      "sha256": "b01e90f5c9b099bc2b94798d66643eac7b78102e3f50d02c2f252e3f5d25122e",
+      "rowCount": 769
+    },
+    {
+      "file": "cfb-team-season-results-2002-2025.json",
+      "sha256": "1df608394ca377b3c0b97866412e69bdbfe341b8c6d28ca2af7e6a3260212b26",
+      "rowCount": 7468
+    },
+    {
+      "file": "cfb-games-2002-2025.json",
+      "sha256": "7db36f86caf66a48b915cf07d52e27af3b4297043b0f75b16f3cf4dbc5ebf07b",
+      "rowCount": 36217
+    },
+    {
+      "file": "nfl-franchises-1999-2025.json",
+      "sha256": "13b69d9fcff778356dbf0c3bedafa7e163406858e0894a662b83ab3aa5f08636",
+      "rowCount": 32
+    },
+    {
+      "file": "nfl-team-season-results-1999-2025.json",
+      "sha256": "89b3e9f5306832d08f75a50d6170b9d4b7ff92fcd8ebfec1ca5d7015ada317a5",
+      "rowCount": 861
+    },
+    {
+      "file": "nfl-games-1999-2025.json",
+      "sha256": "99ee6bd623f37d4a73224d2a0cb5a309f640b5b3f99eeeada2d5ee6afcaa04ff",
+      "rowCount": 7276
+    }
+  ],
+  "cfbSourceVerification": [
+    {
+      "season": 2002,
+      "path": "schedules/csv/cfb_schedules_2002.csv",
+      "gitBlobSha": "c6d03872602d0156fd494419e5bb7b53e280fad1",
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2003,
+      "path": "schedules/csv/cfb_schedules_2003.csv",
+      "gitBlobSha": "42c4f48ebc3553f16d3f005f8a4d83de6b43a0ed",
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2004,
+      "path": "schedules/csv/cfb_schedules_2004.csv",
+      "gitBlobSha": "4224b00d1d11000cb5e0a6e2d527af51bd7c0197",
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2005,
+      "path": "schedules/csv/cfb_schedules_2005.csv",
+      "gitBlobSha": "f7d416daead3b129c9301fcc2a83bc1372ae1ef0",
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2006,
+      "path": "schedules/csv/cfb_schedules_2006.csv",
+      "gitBlobSha": "ee470077bb0a576810d5df0e11e946a751cd87cf",
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2007,
+      "path": "schedules/csv/cfb_schedules_2007.csv",
+      "gitBlobSha": "1399e63b281d0a59d3299869ffafc352de0b3e40",
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2008,
+      "path": "schedules/csv/cfb_schedules_2008.csv",
+      "gitBlobSha": "9ee3b2c94f8aa2e380e9f1f59a72046ec6959c1f",
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2009,
+      "path": "schedules/csv/cfb_schedules_2009.csv",
+      "gitBlobSha": "d3985f3b09e98ec3338acca5fbc4b659ef01d701",
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2010,
+      "path": "schedules/csv/cfb_schedules_2010.csv",
+      "gitBlobSha": "3bc983558504943e115f595759b520219f5be0f5",
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2011,
+      "path": "schedules/csv/cfb_schedules_2011.csv",
+      "gitBlobSha": "0e1315b9ffdaa050d426e4d21661187476fc91b2",
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2012,
+      "path": "schedules/csv/cfb_schedules_2012.csv",
+      "gitBlobSha": "1e2cc4c5aca9095080cf71439c9d8ac793f2d1b1",
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2013,
+      "path": "schedules/csv/cfb_schedules_2013.csv",
+      "gitBlobSha": "d977884539a72e1cd4ce4e15b6c3c17e20bb25f7",
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2014,
+      "path": "schedules/csv/cfb_schedules_2014.csv",
+      "gitBlobSha": "a038573b225147d8dcb8002686d52ffbab2aa354",
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2015,
+      "path": "schedules/csv/cfb_schedules_2015.csv",
+      "gitBlobSha": "a39f53238c411f80447f1b03aa6eec045eacd2d1",
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2016,
+      "path": "schedules/csv/cfb_schedules_2016.csv",
+      "gitBlobSha": "e9fb04de764c84070d606250db38a1cb3d4988b2",
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2017,
+      "path": "schedules/csv/cfb_schedules_2017.csv",
+      "gitBlobSha": "ef94de72c76c64b0a4a782ad29cf35d3b68c3e97",
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2018,
+      "path": "schedules/csv/cfb_schedules_2018.csv",
+      "gitBlobSha": "e4fde7bba55bc62e50503ce8c330594ead07e482",
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2019,
+      "path": "schedules/csv/cfb_schedules_2019.csv",
+      "gitBlobSha": "bb70aab3343cf646d888716fe79990f6495a2322",
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2020,
+      "path": "schedules/csv/cfb_schedules_2020.csv",
+      "gitBlobSha": "4cbeebe51fd5f1850a286bd2af0735c24b8c485d",
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2021,
+      "path": "schedules/csv/cfb_schedules_2021.csv",
+      "gitBlobSha": "599be79b44cb58aa2f4bc5aebb12c8c669441ace",
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2022,
+      "path": "schedules/csv/cfb_schedules_2022.csv",
+      "gitBlobSha": "c9a29feb7537877224fe29cf0216af76787f872b",
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2023,
+      "path": "schedules/csv/cfb_schedules_2023.csv",
+      "gitBlobSha": "219370abc93233b237f528b998fc08ea1008f875",
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2024,
+      "path": "schedules/csv/cfb_schedules_2024.csv",
+      "gitBlobSha": "c89eb934c4ebbf8958f6385d4771870d7add6fba",
+      "verifiedPinnedBlob": true
+    },
+    {
+      "season": 2025,
+      "path": "schedules/csv/cfb_schedules_2025.csv",
+      "gitBlobSha": "d26f9b9c6bcb747df7bbdd4945851de7f215eb08",
+      "verifiedPinnedBlob": true
+    }
+  ],
+  "nflSourceVerification": {
+    "path": "data/games.csv",
+    "gitBlobSha": "9d74dcb6a326ad57e6e98f15cfee8142fbadcfed",
+    "verifiedPinnedBlob": true
+  }
+}

@@ -1,0 +1,443 @@
+{
+  "schemaVersion": 1,
+  "cfb": {
+    "championshipSignal": {
+      "status": "explicit-source-note-only",
+      "method": "completed postseason game whose source notes contain 'national championship'",
+      "historicalCompleteness": "partial",
+      "knownExplicitSignalSeasons": [
+        2023,
+        2024,
+        2025
+      ],
+      "warning": "Do not use this sparse source-note signal as complete CFB championship history."
+    },
+    "seasonStart": 2002,
+    "seasonEnd": 2025,
+    "programCount": 769,
+    "teamSeasonCount": 7468,
+    "gameCount": 36217,
+    "explicitNationalChampionshipGameCount": 3,
+    "seasons": [
+      {
+        "season": 2002,
+        "sourceRowCount": 744,
+        "gameCount": 744,
+        "teamSeasonCount": 170,
+        "programCount": 170,
+        "explicitNationalChampionshipGameCount": 0
+      },
+      {
+        "season": 2003,
+        "sourceRowCount": 743,
+        "gameCount": 743,
+        "teamSeasonCount": 175,
+        "programCount": 175,
+        "explicitNationalChampionshipGameCount": 0
+      },
+      {
+        "season": 2004,
+        "sourceRowCount": 693,
+        "gameCount": 693,
+        "teamSeasonCount": 166,
+        "programCount": 166,
+        "explicitNationalChampionshipGameCount": 0
+      },
+      {
+        "season": 2005,
+        "sourceRowCount": 690,
+        "gameCount": 690,
+        "teamSeasonCount": 166,
+        "programCount": 166,
+        "explicitNationalChampionshipGameCount": 0
+      },
+      {
+        "season": 2006,
+        "sourceRowCount": 760,
+        "gameCount": 760,
+        "teamSeasonCount": 179,
+        "programCount": 179,
+        "explicitNationalChampionshipGameCount": 0
+      },
+      {
+        "season": 2007,
+        "sourceRowCount": 766,
+        "gameCount": 766,
+        "teamSeasonCount": 186,
+        "programCount": 186,
+        "explicitNationalChampionshipGameCount": 0
+      },
+      {
+        "season": 2008,
+        "sourceRowCount": 771,
+        "gameCount": 771,
+        "teamSeasonCount": 189,
+        "programCount": 189,
+        "explicitNationalChampionshipGameCount": 0
+      },
+      {
+        "season": 2009,
+        "sourceRowCount": 774,
+        "gameCount": 774,
+        "teamSeasonCount": 195,
+        "programCount": 195,
+        "explicitNationalChampionshipGameCount": 0
+      },
+      {
+        "season": 2010,
+        "sourceRowCount": 773,
+        "gameCount": 773,
+        "teamSeasonCount": 195,
+        "programCount": 195,
+        "explicitNationalChampionshipGameCount": 0
+      },
+      {
+        "season": 2011,
+        "sourceRowCount": 777,
+        "gameCount": 777,
+        "teamSeasonCount": 197,
+        "programCount": 197,
+        "explicitNationalChampionshipGameCount": 0
+      },
+      {
+        "season": 2012,
+        "sourceRowCount": 805,
+        "gameCount": 805,
+        "teamSeasonCount": 205,
+        "programCount": 205,
+        "explicitNationalChampionshipGameCount": 0
+      },
+      {
+        "season": 2013,
+        "sourceRowCount": 813,
+        "gameCount": 813,
+        "teamSeasonCount": 207,
+        "programCount": 207,
+        "explicitNationalChampionshipGameCount": 0
+      },
+      {
+        "season": 2014,
+        "sourceRowCount": 1542,
+        "gameCount": 1542,
+        "teamSeasonCount": 318,
+        "programCount": 318,
+        "explicitNationalChampionshipGameCount": 0
+      },
+      {
+        "season": 2015,
+        "sourceRowCount": 1491,
+        "gameCount": 1491,
+        "teamSeasonCount": 300,
+        "programCount": 300,
+        "explicitNationalChampionshipGameCount": 0
+      },
+      {
+        "season": 2016,
+        "sourceRowCount": 1502,
+        "gameCount": 1502,
+        "teamSeasonCount": 302,
+        "programCount": 302,
+        "explicitNationalChampionshipGameCount": 0
+      },
+      {
+        "season": 2017,
+        "sourceRowCount": 1505,
+        "gameCount": 1505,
+        "teamSeasonCount": 296,
+        "programCount": 296,
+        "explicitNationalChampionshipGameCount": 0
+      },
+      {
+        "season": 2018,
+        "sourceRowCount": 1511,
+        "gameCount": 1511,
+        "teamSeasonCount": 305,
+        "programCount": 305,
+        "explicitNationalChampionshipGameCount": 0
+      },
+      {
+        "season": 2019,
+        "sourceRowCount": 1577,
+        "gameCount": 1577,
+        "teamSeasonCount": 310,
+        "programCount": 310,
+        "explicitNationalChampionshipGameCount": 0
+      },
+      {
+        "season": 2020,
+        "sourceRowCount": 563,
+        "gameCount": 563,
+        "teamSeasonCount": 149,
+        "programCount": 149,
+        "explicitNationalChampionshipGameCount": 0
+      },
+      {
+        "season": 2021,
+        "sourceRowCount": 2408,
+        "gameCount": 2408,
+        "teamSeasonCount": 450,
+        "programCount": 450,
+        "explicitNationalChampionshipGameCount": 0
+      },
+      {
+        "season": 2022,
+        "sourceRowCount": 3657,
+        "gameCount": 3657,
+        "teamSeasonCount": 697,
+        "programCount": 697,
+        "explicitNationalChampionshipGameCount": 0
+      },
+      {
+        "season": 2023,
+        "sourceRowCount": 3734,
+        "gameCount": 3724,
+        "teamSeasonCount": 704,
+        "programCount": 704,
+        "explicitNationalChampionshipGameCount": 1
+      },
+      {
+        "season": 2024,
+        "sourceRowCount": 3801,
+        "gameCount": 3799,
+        "teamSeasonCount": 708,
+        "programCount": 708,
+        "explicitNationalChampionshipGameCount": 1
+      },
+      {
+        "season": 2025,
+        "sourceRowCount": 3831,
+        "gameCount": 3829,
+        "teamSeasonCount": 699,
+        "programCount": 699,
+        "explicitNationalChampionshipGameCount": 1
+      }
+    ]
+  },
+  "nfl": {
+    "seasonStart": 1999,
+    "seasonEnd": 2025,
+    "franchiseCount": 32,
+    "teamSeasonCount": 861,
+    "gameCount": 7276,
+    "playoffGameCount": 309,
+    "superBowlCount": 27,
+    "seasons": [
+      {
+        "season": 1999,
+        "sourceRowCount": 259,
+        "gameCount": 259,
+        "franchiseCount": 31,
+        "playoffGameCount": 11,
+        "superBowlCount": 1
+      },
+      {
+        "season": 2000,
+        "sourceRowCount": 259,
+        "gameCount": 259,
+        "franchiseCount": 31,
+        "playoffGameCount": 11,
+        "superBowlCount": 1
+      },
+      {
+        "season": 2001,
+        "sourceRowCount": 259,
+        "gameCount": 259,
+        "franchiseCount": 31,
+        "playoffGameCount": 11,
+        "superBowlCount": 1
+      },
+      {
+        "season": 2002,
+        "sourceRowCount": 267,
+        "gameCount": 267,
+        "franchiseCount": 32,
+        "playoffGameCount": 11,
+        "superBowlCount": 1
+      },
+      {
+        "season": 2003,
+        "sourceRowCount": 267,
+        "gameCount": 267,
+        "franchiseCount": 32,
+        "playoffGameCount": 11,
+        "superBowlCount": 1
+      },
+      {
+        "season": 2004,
+        "sourceRowCount": 267,
+        "gameCount": 267,
+        "franchiseCount": 32,
+        "playoffGameCount": 11,
+        "superBowlCount": 1
+      },
+      {
+        "season": 2005,
+        "sourceRowCount": 267,
+        "gameCount": 267,
+        "franchiseCount": 32,
+        "playoffGameCount": 11,
+        "superBowlCount": 1
+      },
+      {
+        "season": 2006,
+        "sourceRowCount": 267,
+        "gameCount": 267,
+        "franchiseCount": 32,
+        "playoffGameCount": 11,
+        "superBowlCount": 1
+      },
+      {
+        "season": 2007,
+        "sourceRowCount": 267,
+        "gameCount": 267,
+        "franchiseCount": 32,
+        "playoffGameCount": 11,
+        "superBowlCount": 1
+      },
+      {
+        "season": 2008,
+        "sourceRowCount": 267,
+        "gameCount": 267,
+        "franchiseCount": 32,
+        "playoffGameCount": 11,
+        "superBowlCount": 1
+      },
+      {
+        "season": 2009,
+        "sourceRowCount": 267,
+        "gameCount": 267,
+        "franchiseCount": 32,
+        "playoffGameCount": 11,
+        "superBowlCount": 1
+      },
+      {
+        "season": 2010,
+        "sourceRowCount": 267,
+        "gameCount": 267,
+        "franchiseCount": 32,
+        "playoffGameCount": 11,
+        "superBowlCount": 1
+      },
+      {
+        "season": 2011,
+        "sourceRowCount": 267,
+        "gameCount": 267,
+        "franchiseCount": 32,
+        "playoffGameCount": 11,
+        "superBowlCount": 1
+      },
+      {
+        "season": 2012,
+        "sourceRowCount": 267,
+        "gameCount": 267,
+        "franchiseCount": 32,
+        "playoffGameCount": 11,
+        "superBowlCount": 1
+      },
+      {
+        "season": 2013,
+        "sourceRowCount": 267,
+        "gameCount": 267,
+        "franchiseCount": 32,
+        "playoffGameCount": 11,
+        "superBowlCount": 1
+      },
+      {
+        "season": 2014,
+        "sourceRowCount": 267,
+        "gameCount": 267,
+        "franchiseCount": 32,
+        "playoffGameCount": 11,
+        "superBowlCount": 1
+      },
+      {
+        "season": 2015,
+        "sourceRowCount": 267,
+        "gameCount": 267,
+        "franchiseCount": 32,
+        "playoffGameCount": 11,
+        "superBowlCount": 1
+      },
+      {
+        "season": 2016,
+        "sourceRowCount": 267,
+        "gameCount": 267,
+        "franchiseCount": 32,
+        "playoffGameCount": 11,
+        "superBowlCount": 1
+      },
+      {
+        "season": 2017,
+        "sourceRowCount": 267,
+        "gameCount": 267,
+        "franchiseCount": 32,
+        "playoffGameCount": 11,
+        "superBowlCount": 1
+      },
+      {
+        "season": 2018,
+        "sourceRowCount": 267,
+        "gameCount": 267,
+        "franchiseCount": 32,
+        "playoffGameCount": 11,
+        "superBowlCount": 1
+      },
+      {
+        "season": 2019,
+        "sourceRowCount": 267,
+        "gameCount": 267,
+        "franchiseCount": 32,
+        "playoffGameCount": 11,
+        "superBowlCount": 1
+      },
+      {
+        "season": 2020,
+        "sourceRowCount": 269,
+        "gameCount": 269,
+        "franchiseCount": 32,
+        "playoffGameCount": 13,
+        "superBowlCount": 1
+      },
+      {
+        "season": 2021,
+        "sourceRowCount": 285,
+        "gameCount": 285,
+        "franchiseCount": 32,
+        "playoffGameCount": 13,
+        "superBowlCount": 1
+      },
+      {
+        "season": 2022,
+        "sourceRowCount": 284,
+        "gameCount": 284,
+        "franchiseCount": 32,
+        "playoffGameCount": 13,
+        "superBowlCount": 1
+      },
+      {
+        "season": 2023,
+        "sourceRowCount": 285,
+        "gameCount": 285,
+        "franchiseCount": 32,
+        "playoffGameCount": 13,
+        "superBowlCount": 1
+      },
+      {
+        "season": 2024,
+        "sourceRowCount": 285,
+        "gameCount": 285,
+        "franchiseCount": 32,
+        "playoffGameCount": 13,
+        "superBowlCount": 1
+      },
+      {
+        "season": 2025,
+        "sourceRowCount": 285,
+        "gameCount": 285,
+        "franchiseCount": 32,
+        "playoffGameCount": 13,
+        "superBowlCount": 1
+      }
+    ]
+  }
+}
