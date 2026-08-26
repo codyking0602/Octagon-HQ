@@ -4,6 +4,7 @@ import path from "node:path";
 import process from "node:process";
 
 import { gitBlobSha1, parseCsv } from "./lib/footballCsv.mjs";
+import { loadCfbCoachRelationships } from "./lib/cfbCoachRelationships.mjs";
 
 const DEFAULT_SOURCE_MANIFEST = "public/data/football/football-game-relationships.source-manifest.json";
 const DEFAULT_OUTPUT_DIR = "data/generated/football/relationships";
@@ -565,6 +566,7 @@ for (const season of cfbSeasons) {
   console.log(`Normalized CFB ${season}: ${result.games.length.toLocaleString()} games, ${result.teamSeasonRows.length.toLocaleString()} team seasons.`);
 }
 
+const cfbCoaches = loadCfbCoachRelationships();
 const nflLoaded = await loadGitCsv({ repository: sourceManifest.nfl.repository, commit: sourceManifest.nfl.commit, asset: sourceManifest.nfl.asset, sourceDir: args.sourceDir, localFolder: "nfl", userAgent: "Octagon-HQ-Football-relationships" });
 const nfl = processNflGames(nflLoaded.text, nflSeasons);
 const cfbProgramRows = [...cfbPrograms.values()].map(({ row, seasons }) => { row[4] = seasons.size; return row; }).sort((a, b) => String(a[0]).localeCompare(String(b[0])));
@@ -577,6 +579,8 @@ const outputs = [
   writeCorpus(args.outputDir, "cfb-programs-2002-2025.json", corpus({ league: "CFB", recordKind: "program", columns: CFB_PROGRAM_COLUMNS, rows: cfbProgramRows, source: cfbSource, seasonStart: Math.min(...cfbSeasons), seasonEnd: Math.max(...cfbSeasons) })),
   writeCorpus(args.outputDir, "cfb-team-season-results-2002-2025.json", corpus({ league: "CFB", recordKind: "team-season-results", columns: CFB_TEAM_SEASON_COLUMNS, rows: cfbTeamSeasons, source: cfbSource, seasonStart: Math.min(...cfbSeasons), seasonEnd: Math.max(...cfbSeasons) })),
   writeCorpus(args.outputDir, "cfb-games-2002-2025.json", corpus({ league: "CFB", recordKind: "game", columns: CFB_GAME_COLUMNS, rows: cfbGames, source: cfbSource, seasonStart: Math.min(...cfbSeasons), seasonEnd: Math.max(...cfbSeasons) })),
+  writeCorpus(args.outputDir, "cfb-coach-seasons-2002-2025.json", cfbCoaches.coachSeasons),
+  writeCorpus(args.outputDir, "cfb-coach-stints-2002-2025.json", cfbCoaches.coachStints),
   writeCorpus(args.outputDir, "nfl-franchises-1999-2025.json", corpus({ league: "NFL", recordKind: "franchise", columns: NFL_FRANCHISE_COLUMNS, rows: nfl.franchiseRows, source: nflSource, seasonStart: Math.min(...nflSeasons), seasonEnd: Math.max(...nflSeasons) })),
   writeCorpus(args.outputDir, "nfl-team-season-results-1999-2025.json", corpus({ league: "NFL", recordKind: "team-season-results", columns: NFL_TEAM_SEASON_COLUMNS, rows: nfl.teamSeasonRows, source: nflSource, seasonStart: Math.min(...nflSeasons), seasonEnd: Math.max(...nflSeasons) })),
   writeCorpus(args.outputDir, "nfl-games-1999-2025.json", corpus({ league: "NFL", recordKind: "game", columns: NFL_GAME_COLUMNS, rows: nfl.games, source: nflSource, seasonStart: Math.min(...nflSeasons), seasonEnd: Math.max(...nflSeasons) })),
@@ -589,6 +593,7 @@ const generatedManifest = {
   generatedBy: "scripts/import-football-game-relationships.mjs",
   outputs: outputs.map(({ filePath, sha256: digest, rowCount }) => ({ file: path.basename(filePath), sha256: digest, rowCount })),
   cfbSourceVerification,
+  cfbCoachSourceVerification: cfbCoaches.sourceVerification,
   nflSourceVerification: { path: sourceManifest.nfl.asset.path, gitBlobSha: sourceManifest.nfl.asset.gitBlobSha, verifiedPinnedBlob: nflLoaded.verifiedPinnedBlob }
 };
 const coverage = {
@@ -597,6 +602,7 @@ const coverage = {
     championshipSignal: sourceManifest.cfb.championshipSignal,
     seasonStart: Math.min(...cfbSeasons), seasonEnd: Math.max(...cfbSeasons), programCount: cfbProgramRows.length, teamSeasonCount: cfbTeamSeasons.length, gameCount: cfbGames.length,
     explicitNationalChampionshipGameCount: cfbGames.filter((row) => row[CFB_GAME_COLUMNS.indexOf("explicitNationalChampionshipGame")] === true).length,
+    coaches: cfbCoaches.coverage,
     seasons: cfbCoverage
   },
   nfl: {
@@ -613,4 +619,5 @@ fs.writeFileSync(manifestPath, `${JSON.stringify(generatedManifest, null, 2)}\n`
 fs.writeFileSync(coveragePath, `${JSON.stringify(coverage, null, 2)}\n`);
 
 console.log(`Generated CFB: ${cfbProgramRows.length.toLocaleString()} programs, ${cfbTeamSeasons.length.toLocaleString()} team seasons, ${cfbGames.length.toLocaleString()} games.`);
+console.log(`Generated CFB coaches: ${cfbCoaches.coachSeasons.rowCount.toLocaleString()} coach-season stops, ${cfbCoaches.coachStints.rowCount.toLocaleString()} coach stints.`);
 console.log(`Generated NFL: ${nfl.franchiseRows.length.toLocaleString()} franchises, ${nfl.teamSeasonRows.length.toLocaleString()} team seasons, ${nfl.games.length.toLocaleString()} games, ${nfl.coachSeasonRows.length.toLocaleString()} coach-season stops, ${nfl.coachStintRows.length.toLocaleString()} coach stints.`);

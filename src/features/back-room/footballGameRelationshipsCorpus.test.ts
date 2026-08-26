@@ -37,12 +37,15 @@ describe("materialized Football game relationship corpus", () => {
     const manifest = readJson<{
       outputs: Array<{ file: string; sha256: string; rowCount: number }>;
       cfbSourceVerification: Array<{ verifiedPinnedBlob: boolean }>;
+      cfbCoachSourceVerification: Array<{ verifiedPinnedSnapshot: boolean }>;
       nflSourceVerification: { verifiedPinnedBlob: boolean };
     }>("football-game-relationships.manifest.json");
     const expectedCounts = new Map([
       ["cfb-programs-2002-2025.json", 769],
       ["cfb-team-season-results-2002-2025.json", 7_468],
       ["cfb-games-2002-2025.json", 36_217],
+      ["cfb-coach-seasons-2002-2025.json", 3_109],
+      ["cfb-coach-stints-2002-2025.json", 686],
       ["nfl-franchises-1999-2025.json", 32],
       ["nfl-team-season-results-1999-2025.json", 861],
       ["nfl-games-1999-2025.json", 7_276],
@@ -57,6 +60,8 @@ describe("materialized Football game relationship corpus", () => {
     }
     expect(manifest.cfbSourceVerification).toHaveLength(24);
     expect(manifest.cfbSourceVerification.every((asset) => asset.verifiedPinnedBlob)).toBe(true);
+    expect(manifest.cfbCoachSourceVerification).toHaveLength(4);
+    expect(manifest.cfbCoachSourceVerification.every((asset) => asset.verifiedPinnedSnapshot)).toBe(true);
     expect(manifest.nflSourceVerification.verifiedPinnedBlob).toBe(true);
   });
 
