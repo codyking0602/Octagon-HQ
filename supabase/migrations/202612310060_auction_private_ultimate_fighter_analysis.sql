@@ -198,6 +198,6 @@ end;
 $$;
 
 comment on function private.auction_ultimate_fighter_analysis(uuid) is
-  'Builds an internal relational matchup packet for a completed Build the Ultimate Fighter game. Exact category ratings and numeric gaps remain private and are never returned.';
+  'Builds an internal relational matchup packet for a completed Build the Ultimate Fighter game. Exact category ratings, numeric gaps, and rating exchange codes remain private and are never returned.';
 
 revoke all on function private.auction_ultimate_fighter_analysis(uuid) from public, anon, authenticated, service_role;
