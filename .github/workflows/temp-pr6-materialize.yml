@@ -28,21 +28,17 @@ jobs:
           else
             echo 'skip=false' >> "$GITHUB_OUTPUT"
           fi
-      - name: Finalize projection and generate
+      - name: Block unsafe identity merges and generate
         if: steps.guard.outputs.skip != 'true'
         run: |
           python - <<'PY'
           from pathlib import Path
           p = Path('scripts/generate-football-recognizability.mjs')
           s = p.read_text()
-          s = s.replace('const veryRecognizablePrograms = new Set([...majorCfbPrograms, "arkansas", "boise-state", "iowa", "kansas-state", "ole-miss", "south-carolina", "tcu"]);', 'const veryRecognizablePrograms = new Set(["auburn", "clemson", "florida", "florida-state", "georgia", "lsu", "miami", "oregon", "penn-state", "tennessee", "texas-a-m"]);')
-          s = s.replace('else if ((nflMatch && nflMatch.tier === "C" && meaningful) || (strong && major)) { tier = "C";', 'else if (nflMatch && nflMatch.tier === "C" && meaningful) { tier = "C";')
-          s = s.replace('let tier = seasons >= 5 && programTier !== "D" ? "C" : "D"; if (cfbCoachB.has(nameKey) || (seasons >= 8 && ["A", "B"].includes(programTier))) tier = "B"; if (cfbCoachA.has(nameKey) && (seasons >= 5 || ["A", "B"].includes(programTier))) tier = "A";', 'let tier = seasons >= 5 && programTier !== "D" ? "C" : "D"; if ((cfbCoachB.has(nameKey) && (seasons >= 4 || ["A", "B"].includes(programTier))) || (seasons >= 8 && ["A", "B"].includes(programTier))) tier = "B"; const iconicStop = (nameKey === "nick-saban" && normalize(program) === "alabama") || (nameKey === "urban-meyer" && ["florida", "ohio-state"].includes(normalize(program))) || (nameKey === "pete-carroll" && normalize(program) === "usc") || (nameKey === "bobby-bowden" && normalize(program) === "florida-state"); if (iconicStop) tier = "A";')
-          s = s.replace('let tier = seasons >= 5 && (wins >= 40 || playoffs >= 3) ? "C" : "D"; if (nflCoachB.has(nameKey) || (seasons >= 6 && (sbTitles >= 1 || sbApps >= 2))) tier = "B"; if (nflCoachA.has(nameKey) && seasons >= 5) tier = "A";', 'const franchise = String(at(row, ix, "franchiseId")); let tier = seasons >= 5 && (wins >= 40 || playoffs >= 3) ? "C" : "D"; if ((nflCoachB.has(nameKey) && seasons >= 4) || (seasons >= 6 && (sbTitles >= 1 || sbApps >= 2))) tier = "B"; if ((nameKey === "bill-belichick" && franchise === "NE") || (nameKey === "andy-reid" && franchise === "KC")) tier = "A";')
-          old = 'const nflEraRecords = nflCoachRecords.map((coach) => ({ ...coach, id: coach.id.replace("coach-stop", "era"), kind: "era", name: `${coach.name} ${coach.startSeason}–${coach.endSeason}`, tier: coach.tier === "A" ? "A" : coach.tier === "B" ? "B" : coach.tier === "C" ? "C" : "D", evidence: ["objective contiguous coach-within-franchise stint used as NFL era basis"] }));'
-          new = 'const nflEraRecords = nflCoachRecords.map((coach) => { const iconic = coach.sourceId === "bill-belichick@NE:2000-2023" || coach.sourceId === "andy-reid@KC:2013-2025"; const seasons = n(coach.endSeason) - n(coach.startSeason) + 1; const tier = iconic ? "A" : coach.tier === "A" || (coach.tier === "B" && seasons >= 6) ? "B" : coach.tier === "C" && seasons >= 5 ? "C" : "D"; return { ...coach, id: coach.id.replace("coach-stop", "era"), kind: "era", name: `${coach.name} ${coach.startSeason}–${coach.endSeason}`, tier, evidence: [iconic ? "explicit iconic NFL coaching-era approval" : "objective contiguous coach-within-franchise stint used as NFL era basis"] }; });'
-          s = s.replace(old, new)
-          s = s.replace('else if (fbs && wins >= 11) tier = "C";', 'else if (fbs && wins >= 12) tier = "C";')
+          s = s.replace('function projectCfbPlayer(p) {\n  const nflMatch = uniqueNflMatch(p.name);', 'function projectCfbPlayer(p) {\n  const years = yearsFor(p);\n  const collegeEndSeason = years.at(-1);\n  const nflNameMatch = uniqueNflMatch(p.name);\n  const nflMatch = nflNameMatch && collegeEndSeason != null && nflNameMatch.startSeason != null && nflNameMatch.startSeason >= collegeEndSeason && nflNameMatch.startSeason <= collegeEndSeason + 2 ? nflNameMatch : null;')
+          s = s.replace('  const years = yearsFor(p);\n  return { id: `cfbfast-r-player-${p.sourceId}-${normalize(p.name)}`', '  return { id: `cfbfast-r-player-${p.sourceId}-${normalize(p.name)}`')
+          s = s.replace('const cfbPeople = aggregate(cfb, "CFB");\nconst cfbProjected = cfbPeople.map(projectCfbPlayer);', 'const cfbPeople = aggregate(cfb, "CFB");\nconst cfbNameCounts = new Map();\nfor (const person of cfbPeople) { const key = normalize(person.name); cfbNameCounts.set(key, (cfbNameCounts.get(key) ?? 0) + 1); }\nconst cfbProjected = cfbPeople.map(projectCfbPlayer).map((record) => cfbNameCounts.get(normalize(record.name)) > 1 ? { ...record, tier: "D", evidence: ["ambiguous duplicate CFB source name; no safe canonical merge"], manualA: false } : record);')
+          s = s.replace('- CFB defensive players without a unique NFL name reconciliation are deliberately not promoted from ambiguous defensive event stats alone.\\n', '- CFB defensive players without a unique, chronologically plausible NFL name reconciliation are deliberately not promoted from ambiguous defensive event stats alone.\\n- Duplicate CFB source names are left D until a stable identity key can reconcile them safely.\\n')
           p.write_text(s)
           if 'Math.random' in s:
               raise SystemExit('nondeterministic Math.random fallback remains')
@@ -60,5 +56,5 @@ jobs:
           if git diff --cached --quiet; then
             exit 0
           fi
-          git commit -m 'chore: materialize final PR6 recognizability [materialize-pr6]'
+          git commit -m 'chore: materialize safe-identity PR6 projection [materialize-pr6]'
           git push origin HEAD:${{ github.head_ref }}
