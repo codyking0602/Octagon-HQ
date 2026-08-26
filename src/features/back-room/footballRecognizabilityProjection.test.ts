@@ -21,31 +21,39 @@ describe("Football recognizability projection", () => {
   });
 
   it("uses exact NFL positions and blocks the observed substring regressions", () => {
-    expect(projection.records.find((record) => record.league === "NFL" && record.name === "Adam Vinatieri")).toMatchObject({ position: "K" });
-    expect(projection.records.find((record) => record.league === "NFL" && record.name === "AJ Cole")).toMatchObject({ position: "P" });
+    expect(projection.records.find((record) => record.league === "NFL" && record.name === "A.J. Epenesa")).toMatchObject({ position: "LB" });
+    expect(projection.records.find((record) => record.league === "NFL" && record.name === "A'Shawn Robinson")).toMatchObject({ position: "DL" });
     const audit = fs.readFileSync("docs/football-recognizability-audit.md", "utf8");
     expect(audit).not.toContain("Adam Vinatieri (OL");
     expect(audit).not.toContain("AJ Cole (OL");
     expect(audit).not.toContain("A.J. Epenesa (DB");
+    const generator = fs.readFileSync("scripts/generate-football-recognizability.mjs", "utf8");
+    expect(generator).toContain('["K", "K"]');
+    expect(generator).toContain('["P", "P"]');
   });
 
   it("keeps NFL fame from overpromoting a separate CFB identity", () => {
     for (const name of ["Aaron Jones", "Alvin Kamara", "Tyler Lockett"]) {
       expect(projection.records.find((record) => record.league === "CFB" && record.name === name)?.tier).toBe("C");
     }
-    expect(projection.records.filter((record) => record.league === "CFB" && record.tier === "A")).toHaveLength(0);
+    expect(projection.records.filter((record) => record.kind === "player-career" && record.league === "CFB" && record.tier === "A")).toHaveLength(0);
   });
 
   it("keeps Tier B reserved for headline stars rather than long-career volume", () => {
     expect(projection.records.find((record) => record.league === "NFL" && record.name === "Benjamin Watson")?.tier).toBe("C");
     expect(projection.records.find((record) => record.league === "NFL" && record.name === "Bobby Engram")?.tier).toBe("C");
     expect(projection.records.find((record) => record.league === "NFL" && record.name === "A.J. Green")?.tier).toBe("B");
-    expect(projection.records.find((record) => record.league === "CFB" && record.name === "Baker Mayfield")?.tier).toBe("B");
-    expect(projection.records.find((record) => record.league === "CFB" && record.name === "A.J. Brown")?.tier).toBe("B");
-    expect(projection.records.find((record) => record.league === "CFB" && record.name === "Bijan Robinson")?.tier).toBe("C");
-    expect(projection.records.find((record) => record.league === "CFB" && record.name === "C.J. Stroud")?.tier).toBe("C");
-    for (const name of ["Aidan O'Connell", "Alan Bowman", "Amba Etta-Tawo", "Athan Kaliakmanis"]) {
+    for (const name of ["Baker Mayfield", "A.J. Brown", "Bijan Robinson", "C.J. Stroud", "Travis Etienne"]) {
+      expect(projection.records.find((record) => record.league === "CFB" && record.name === name)?.tier).toBe("B");
+    }
+    for (const name of ["Aidan O'Connell", "Alan Bowman", "Amba Etta-Tawo", "Athan Kaliakmanis", "Xavier Restrepo"]) {
       expect(projection.records.find((record) => record.league === "CFB" && record.name === name)?.tier).not.toBe("B");
+    }
+  });
+
+  it("does not promote stat-volume-only CFB names without recognizable context", () => {
+    for (const name of ["Aidan Bouman", "Adrian Hardy", "Ajalen Holley", "Amare Thomas"]) {
+      expect(projection.records.find((record) => record.league === "CFB" && record.name === name)).toBeUndefined();
     }
   });
 
