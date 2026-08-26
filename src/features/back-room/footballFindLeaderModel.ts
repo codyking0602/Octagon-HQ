@@ -22,7 +22,9 @@ import {
 import {
   footballFindLeaderLeagueForDomain,
   footballFindLeaderMetricDefinitions,
+  footballFindLeaderMetricDirection,
   footballFindLeaderMetricEditoriallyEligible,
+  footballFindLeaderQuestionLead,
   type FootballFindLeaderDirection,
   type FootballFindLeaderDomainId,
   type FootballFindLeaderFamilyId,
@@ -197,26 +199,28 @@ export const FOOTBALL_FIND_LEADER_FAMILY_CYCLE: readonly FootballFindLeaderFamil
 ] as const;
 
 function questionVariants(definition: FootballFindLeaderMetricDefinition): FootballFindLeaderQuestionDefinition[] {
+  const direction = footballFindLeaderMetricDirection(definition.id);
+  const questionLead = footballFindLeaderQuestionLead(definition);
   return [
     {
       id: `${definition.id}:standard`,
       metricId: definition.id,
       domainId: definition.domainId,
       family: definition.family,
-      question: `Who has ${definition.questionLead}?`,
+      question: `Who has ${questionLead}?`,
       statLabel: definition.label,
       shortLabel: definition.shortLabel,
-      direction: definition.direction,
+      direction,
     },
     {
       id: `${definition.id}:group`,
       metricId: definition.id,
       domainId: definition.domainId,
       family: definition.family,
-      question: `Which of these ${domainCopy[definition.domainId]} has ${definition.questionLead}?`,
+      question: `Which of these ${domainCopy[definition.domainId]} has ${questionLead}?`,
       statLabel: definition.label,
       shortLabel: definition.shortLabel,
-      direction: definition.direction,
+      direction,
     },
   ];
 }
@@ -276,6 +280,7 @@ export function footballFindLeaderMetricRows(metricId: FootballFindLeaderMetricI
   if (!definition) return [];
   const poolDefinition = footballFindLeaderCandidatePools.find((row) => row.metricId === metricId);
   if (!poolDefinition) return [];
+  const direction = footballFindLeaderMetricDirection(metricId);
   return queryFootballSubjects(poolDefinition.subjectQuery)
     .flatMap((subject) => {
       const fact = getFootballFact(subject.id, poolDefinition.canonicalMetricId);
@@ -291,7 +296,7 @@ export function footballFindLeaderMetricRows(metricId: FootballFindLeaderMetricI
         name: subject.name,
         subtitle,
         value: fact.fact.value,
-        competitionValue: competitionValue(definition.direction, fact.fact.value),
+        competitionValue: competitionValue(direction, fact.fact.value),
       }];
     })
     .sort((left, right) => right.competitionValue - left.competitionValue || left.name.localeCompare(right.name));
