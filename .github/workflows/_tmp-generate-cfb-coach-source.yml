@@ -1,6 +1,7 @@
 name: Temporary generate CFB coach source
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - feature/cfb-coach-relationships
