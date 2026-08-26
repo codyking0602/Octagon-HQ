@@ -1,0 +1,36 @@
+name: Bootstrap Football NFL historical corpus
+
+on:
+  push:
+    branches:
+      - feature/football-knowledge-nfl-historical-corpus-v4
+    paths:
+      - .github/workflows/bootstrap-football-nfl-historical-corpus.yml
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: feature/football-knowledge-nfl-historical-corpus-v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Generate pinned NFL historical corpus
+        run: node scripts/import-football-nfl-historical-stats.mjs
+      - name: Commit generated corpus
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f \
+            data/generated/football/nfl/player-seasons-1999-2025.json \
+            data/generated/football/nfl/team-seasons-1999-2025.json \
+            data/generated/football/nfl/historical-stats-1999-2025.manifest.json \
+            data/generated/football/nfl/historical-stats-1999-2025.coverage.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Materialize historical NFL corpus"
+          git push origin HEAD:feature/football-knowledge-nfl-historical-corpus-v4
