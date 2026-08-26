@@ -31,3 +31,5 @@ jobs:
           git diff --cached --quiet && { echo 'No generated diff'; exit 1; }
           git commit -m "data: pin CFB coach assignment source"
           git push origin HEAD:feature/cfb-coach-relationships
+
+# one-time branch-only generator; delete before merge
