@@ -28,20 +28,26 @@ jobs:
           else
             echo 'skip=false' >> "$GITHUB_OUTPUT"
           fi
-      - name: Repair projection and generate
+      - name: Finalize projection and generate
         if: steps.guard.outputs.skip != 'true'
         run: |
           python - <<'PY'
           from pathlib import Path
           p = Path('scripts/generate-football-recognizability.mjs')
           s = p.read_text()
-          s = s.replace('(sacks >= 70 || ints >= 30)', '(sacks >= 80 || ints >= 35)')
-          s = s.replace('else if (eliteMajorPeak) { tier = "B"; evidence.push("exceptional multi-year production at a nationally prominent program"); }', 'else if (eliteMajorPeak && approvedBPlayers.has(p.name)) { tier = "B"; evidence.push("explicit B approval supported by exceptional major-program production"); }')
-          s = s.replace('else if ((nflMatch && nflMatch.tier === "C" && meaningful) || (strong && (major || extreme)) || extreme)', 'else if ((nflMatch && nflMatch.tier === "C" && meaningful) || (strong && major))')
-          s = s.replace('if (cfbCoachA.has(nameKey)) tier = "A";', 'if (cfbCoachA.has(nameKey) && (seasons >= 5 || ["A", "B"].includes(programTier))) tier = "A";')
+          s = s.replace('const veryRecognizablePrograms = new Set([...majorCfbPrograms, "arkansas", "boise-state", "iowa", "kansas-state", "ole-miss", "south-carolina", "tcu"]);', 'const veryRecognizablePrograms = new Set(["auburn", "clemson", "florida", "florida-state", "georgia", "lsu", "miami", "oregon", "penn-state", "tennessee", "texas-a-m"]);')
+          s = s.replace('else if ((nflMatch && nflMatch.tier === "C" && meaningful) || (strong && major)) { tier = "C";', 'else if (nflMatch && nflMatch.tier === "C" && meaningful) { tier = "C";')
+          s = s.replace('let tier = seasons >= 5 && programTier !== "D" ? "C" : "D"; if (cfbCoachB.has(nameKey) || (seasons >= 8 && ["A", "B"].includes(programTier))) tier = "B"; if (cfbCoachA.has(nameKey) && (seasons >= 5 || ["A", "B"].includes(programTier))) tier = "A";', 'let tier = seasons >= 5 && programTier !== "D" ? "C" : "D"; if ((cfbCoachB.has(nameKey) && (seasons >= 4 || ["A", "B"].includes(programTier))) || (seasons >= 8 && ["A", "B"].includes(programTier))) tier = "B"; const iconicStop = (nameKey === "nick-saban" && normalize(program) === "alabama") || (nameKey === "urban-meyer" && ["florida", "ohio-state"].includes(normalize(program))) || (nameKey === "pete-carroll" && normalize(program) === "usc") || (nameKey === "bobby-bowden" && normalize(program) === "florida-state"); if (iconicStop) tier = "A";')
+          s = s.replace('let tier = seasons >= 5 && (wins >= 40 || playoffs >= 3) ? "C" : "D"; if (nflCoachB.has(nameKey) || (seasons >= 6 && (sbTitles >= 1 || sbApps >= 2))) tier = "B"; if (nflCoachA.has(nameKey) && seasons >= 5) tier = "A";', 'const franchise = String(at(row, ix, "franchiseId")); let tier = seasons >= 5 && (wins >= 40 || playoffs >= 3) ? "C" : "D"; if ((nflCoachB.has(nameKey) && seasons >= 4) || (seasons >= 6 && (sbTitles >= 1 || sbApps >= 2))) tier = "B"; if ((nameKey === "bill-belichick" && franchise === "NE") || (nameKey === "andy-reid" && franchise === "KC")) tier = "A";')
+          old = 'const nflEraRecords = nflCoachRecords.map((coach) => ({ ...coach, id: coach.id.replace("coach-stop", "era"), kind: "era", name: `${coach.name} ${coach.startSeason}–${coach.endSeason}`, tier: coach.tier === "A" ? "A" : coach.tier === "B" ? "B" : coach.tier === "C" ? "C" : "D", evidence: ["objective contiguous coach-within-franchise stint used as NFL era basis"] }));'
+          new = 'const nflEraRecords = nflCoachRecords.map((coach) => { const iconic = coach.sourceId === "bill-belichick@NE:2000-2023" || coach.sourceId === "andy-reid@KC:2013-2025"; const seasons = n(coach.endSeason) - n(coach.startSeason) + 1; const tier = iconic ? "A" : coach.tier === "A" || (coach.tier === "B" && seasons >= 6) ? "B" : coach.tier === "C" && seasons >= 5 ? "C" : "D"; return { ...coach, id: coach.id.replace("coach-stop", "era"), kind: "era", name: `${coach.name} ${coach.startSeason}–${coach.endSeason}`, tier, evidence: [iconic ? "explicit iconic NFL coaching-era approval" : "objective contiguous coach-within-franchise stint used as NFL era basis"] }; });'
+          s = s.replace(old, new)
+          s = s.replace('else if (fbs && wins >= 11) tier = "C";', 'else if (fbs && wins >= 12) tier = "C";')
           p.write_text(s)
           if 'Math.random' in s:
               raise SystemExit('nondeterministic Math.random fallback remains')
+          if '(strong && major)' in s:
+              raise SystemExit('stat-only CFB recognition path remains')
           PY
           node scripts/generate-football-recognizability.mjs
       - name: Commit materialized artifacts
@@ -54,5 +60,5 @@ jobs:
           if git diff --cached --quiet; then
             exit 0
           fi
-          git commit -m 'chore: materialize recognition-first PR6 tiers [materialize-pr6]'
+          git commit -m 'chore: materialize final PR6 recognizability [materialize-pr6]'
           git push origin HEAD:${{ github.head_ref }}
