@@ -1,0 +1,270 @@
+{
+  "schemaVersion": 1,
+  "league": "NFL",
+  "seasonStart": 1999,
+  "seasonEnd": 2025,
+  "seasonCount": 27,
+  "playerRowCount": 37556,
+  "teamRowCount": 526,
+  "uniqueSourcePlayerCount": 11017,
+  "uniqueTeamCount": 33,
+  "playerColumnCount": 30,
+  "teamColumnCount": 21,
+  "playerSha256": "974a302d7d21d90c9fe93c8837cea4fea7ff3a184758fccfccf97b563bcd7624",
+  "teamSha256": "50fa50443fef707ff25ce5b034382c294a2bcf1d533137d6bdbe601f0d59a7e5",
+  "source": {
+    "provider": "nflverse",
+    "repository": "nflverse/nflverse-data",
+    "dataRepositoryCommit": "9037aa840b8ff96ab3340d4c8a6daa403eed65f4",
+    "nflreadrCommit": "d072c08492067b578f27e562b6cc9c9e3b8589c3",
+    "license": "CC BY 4.0",
+    "assetFamily": "regpost",
+    "summaryLevel": "regular"
+  },
+  "sourceVerification": [
+    {
+      "season": 1999,
+      "playerAssetId": 512975147,
+      "playerSha256": "f5532434d566c1fa31bc6c18db33c716941138cb0ff1147130737e323e26a1ef",
+      "playerVerifiedPinnedAsset": true,
+      "teamAssetId": 512975518,
+      "teamSha256": "3397125f4edad714fc4361d62e2f47a4aeaca582496bd2a0608f535b56d5cafc",
+      "teamVerifiedPinnedAsset": true
+    },
+    {
+      "season": 2000,
+      "playerAssetId": 512974929,
+      "playerSha256": "7fffe48ceb60cc7a7467327ed093aae5cf59bd129d1d7911e7d5eae2d15391d2",
+      "playerVerifiedPinnedAsset": true,
+      "teamAssetId": 512975247,
+      "teamSha256": "8f5d4271fa8c8c26615de845746704813796c3570ea8c1ccc9315751a2ea6faa",
+      "teamVerifiedPinnedAsset": true
+    },
+    {
+      "season": 2001,
+      "playerAssetId": 512974581,
+      "playerSha256": "304e858e450c7f3a0b8d87c97623674d657a97411057b75fd0f440751bde6b0a",
+      "playerVerifiedPinnedAsset": true,
+      "teamAssetId": 512975007,
+      "teamSha256": "c8af1c410c5d3d35da0f88de17d06027c1d2c618c81c8125266238b99f0caea0",
+      "teamVerifiedPinnedAsset": true
+    },
+    {
+      "season": 2002,
+      "playerAssetId": 512974707,
+      "playerSha256": "6fa26c0e6ec152186f47711e605cd7392b0b1e25e593f8aedc09857ec323c313",
+      "playerVerifiedPinnedAsset": true,
+      "teamAssetId": 512975120,
+      "teamSha256": "b40f4e938922ac3f18dc214266e6ea3aab5038cdbcbe79dda424c66ffc2e6ff1",
+      "teamVerifiedPinnedAsset": true
+    },
+    {
+      "season": 2003,
+      "playerAssetId": 512974395,
+      "playerSha256": "5c6860fca373d00d5056de1f85aefb0da8dda938c9a991c0694c13ce40f34334",
+      "playerVerifiedPinnedAsset": true,
+      "teamAssetId": 512974797,
+      "teamSha256": "466f64a1ebc27587a96367306d28a079a8311b884c4df160279a1a4006b0cc10",
+      "teamVerifiedPinnedAsset": true
+    },
+    {
+      "season": 2004,
+      "playerAssetId": 512974454,
+      "playerSha256": "d3d63073bed62239b9bcbb9b3a0668d79bf1df0b3d41c0bb43450774a6974871",
+      "playerVerifiedPinnedAsset": true,
+      "teamAssetId": 512974932,
+      "teamSha256": "271ab6765b45b3ebca1bde4dc173c38bb9cd613cba84bd191b765d392b2c5cf0",
+      "teamVerifiedPinnedAsset": true
+    },
+    {
+      "season": 2005,
+      "playerAssetId": 512976730,
+      "playerSha256": "2e4e4c18a522c77d47e7fbea4967bd1b65def1752c0fbfc5d03abba25edc6f45",
+      "playerVerifiedPinnedAsset": true,
+      "teamAssetId": 512977144,
+      "teamSha256": "81b3e67a3ba9b749408b2a55f342830522abe3fce4bdc65278873f7f440160de",
+      "teamVerifiedPinnedAsset": true
+    },
+    {
+      "season": 2006,
+      "playerAssetId": 512977556,
+      "playerSha256": "f25f5a25b67032e9241459d698db9b033a185a280a6bd9bffdbdcd7b4539f76a",
+      "playerVerifiedPinnedAsset": true,
+      "teamAssetId": 512978003,
+      "teamSha256": "30006580f56a986cad22a5125322fad5f9f3167da0920ebc80636081b7407e8f",
+      "teamVerifiedPinnedAsset": true
+    },
+    {
+      "season": 2007,
+      "playerAssetId": 512977447,
+      "playerSha256": "e9de65c31336ca2ccfe3212b319403c6aaa7011b77ae79f0dc7438877ce4a347",
+      "playerVerifiedPinnedAsset": true,
+      "teamAssetId": 512977862,
+      "teamSha256": "2d9b3aafbbfe4f970452fd1a46f95c36ce602d1c9758cc46845685ac4707d551",
+      "teamVerifiedPinnedAsset": true
+    },
+    {
+      "season": 2008,
+      "playerAssetId": 512977353,
+      "playerSha256": "ba470352cdbec29eb273e758be4b7ed1aba90accb53b8c3c51cf1c0cbb86d958",
+      "playerVerifiedPinnedAsset": true,
+      "teamAssetId": 512977645,
+      "teamSha256": "1996cc03a19d0d898fac0fadef3af339d86d1c80ca98f1c81f432eb9fb8f232a",
+      "teamVerifiedPinnedAsset": true
+    },
+    {
+      "season": 2009,
+      "playerAssetId": 512979944,
+      "playerSha256": "aba71b5ed8083c3afd5505a58645e47d832b31ef1ec953c9a2de7ef1854a51a7",
+      "playerVerifiedPinnedAsset": true,
+      "teamAssetId": 512980305,
+      "teamSha256": "14dcc03bc364571c4e95d31a33168707fb2b45db03df0da390c4ba7d703f1d8c",
+      "teamVerifiedPinnedAsset": true
+    },
+    {
+      "season": 2010,
+      "playerAssetId": 512980941,
+      "playerSha256": "77d441f0e928aa076f51819a14c61696d6f4ed7b5ae6a9ea29ce4304a256da5a",
+      "playerVerifiedPinnedAsset": true,
+      "teamAssetId": 512981396,
+      "teamSha256": "0b4ce0f58da130b420c1b255c057de7bb87feb842ea7a785ffd6cf5bc6ff3266",
+      "teamVerifiedPinnedAsset": true
+    },
+    {
+      "season": 2011,
+      "playerAssetId": 512981379,
+      "playerSha256": "a98779bf703bcf6675b5ca632dccb76c865a990029c74b041a173d119ecf3bef",
+      "playerVerifiedPinnedAsset": true,
+      "teamAssetId": 512981767,
+      "teamSha256": "eec2df968a27bfb9126804536d4d0716fc81176089385b34b1b58d52435478ad",
+      "teamVerifiedPinnedAsset": true
+    },
+    {
+      "season": 2012,
+      "playerAssetId": 512980777,
+      "playerSha256": "18d0d3ccbac3ba5489098629b74d58074b5297c8cf2c5de4ec06f809f2dffafc",
+      "playerVerifiedPinnedAsset": true,
+      "teamAssetId": 512981158,
+      "teamSha256": "b84a1e2af5b236fc8ea11fd283626f8e2d9b954a8f1dca8abac815040d37c7a0",
+      "teamVerifiedPinnedAsset": true
+    },
+    {
+      "season": 2013,
+      "playerAssetId": 512983282,
+      "playerSha256": "dbc7804c32c8dbf46120bfe4e724cdd926537509caa8a1bb96cd3b6e159b21f8",
+      "playerVerifiedPinnedAsset": true,
+      "teamAssetId": 512983789,
+      "teamSha256": "05c0905b52e7ed3a3db3069129ef398bc179d146ee070629f7e4c21091efb97a",
+      "teamVerifiedPinnedAsset": true
+    },
+    {
+      "season": 2014,
+      "playerAssetId": 512985320,
+      "playerSha256": "7046a0fd69b979d0649feb679a42f82f6e8e175d19587857d3e9371f09427cd6",
+      "playerVerifiedPinnedAsset": true,
+      "teamAssetId": 512985737,
+      "teamSha256": "269587385a2886a2f56fa3699f6b4d5e6d5a84dc834e7d46eee47dd38c1d69c7",
+      "teamVerifiedPinnedAsset": true
+    },
+    {
+      "season": 2015,
+      "playerAssetId": 512984105,
+      "playerSha256": "b977be5bc8cad6b02dfb755e78974b4486a505fa272f683add499b968878e3eb",
+      "playerVerifiedPinnedAsset": true,
+      "teamAssetId": 512984613,
+      "teamSha256": "7f9189e39b52d271633b95d88fd2c60febe73e74d182183fbf22c237790cc136",
+      "teamVerifiedPinnedAsset": true
+    },
+    {
+      "season": 2016,
+      "playerAssetId": 512985505,
+      "playerSha256": "041473e5860ca6cfcba7a29e98b2ddfc3f01db0df2469d5b44e44135603e2424",
+      "playerVerifiedPinnedAsset": true,
+      "teamAssetId": 512985963,
+      "teamSha256": "2930d1c85fe218e3dcd5445fbb3323b7c2e596dac36c8f0caa6c81d09e973e47",
+      "teamVerifiedPinnedAsset": true
+    },
+    {
+      "season": 2017,
+      "playerAssetId": 513235924,
+      "playerSha256": "88b85ba1a722f9a1cdc25612bdc96a82c8d81b8f2762713f253db4e787a2811b",
+      "playerVerifiedPinnedAsset": true,
+      "teamAssetId": 513236456,
+      "teamSha256": "bada55e505b0cb2e5d7440e2231a81b45290916002d7fa512bc6193a4b5f5932",
+      "teamVerifiedPinnedAsset": true
+    },
+    {
+      "season": 2018,
+      "playerAssetId": 513236180,
+      "playerSha256": "85b55c0455d2afbd09fe7c8bcab31bc16ba2866fff45abec4fadc6b22c15fc4c",
+      "playerVerifiedPinnedAsset": true,
+      "teamAssetId": 513236671,
+      "teamSha256": "9d19bffc2b39cbe7933fffb143b8435c6bc8e40d66529c380eeed1e6195b61ae",
+      "teamVerifiedPinnedAsset": true
+    },
+    {
+      "season": 2019,
+      "playerAssetId": 513237022,
+      "playerSha256": "a5b50ae01b39c4233533a4934e6d0185c256eaa5e2154eab26fa6da3b71f94f6",
+      "playerVerifiedPinnedAsset": true,
+      "teamAssetId": 513237475,
+      "teamSha256": "08ab966aaf9a99aa27d10f407874b390a0549351e3aabcdef64b209282c77b5c",
+      "teamVerifiedPinnedAsset": true
+    },
+    {
+      "season": 2020,
+      "playerAssetId": 513236419,
+      "playerSha256": "401e35fea7665679d5867c758fd80f44fa019662b5cc9d0a6c412d92cb045786",
+      "playerVerifiedPinnedAsset": true,
+      "teamAssetId": 513236944,
+      "teamSha256": "3a589c66d1f15ae33e4445af63722a9d108684cdbecaf0c4587535460343d88c",
+      "teamVerifiedPinnedAsset": true
+    },
+    {
+      "season": 2021,
+      "playerAssetId": 513240014,
+      "playerSha256": "22aa2fb78a3a0e977bbf1dd3613163a69c4298b1daf113ecf3e30cfd319f1eff",
+      "playerVerifiedPinnedAsset": true,
+      "teamAssetId": 513240459,
+      "teamSha256": "86289117c48c8863ad9c8fd7c0d055857078b4a14908d7f67824741e1832d376",
+      "teamVerifiedPinnedAsset": true
+    },
+    {
+      "season": 2022,
+      "playerAssetId": 513240325,
+      "playerSha256": "6f56613e8d3b8531ddf3d00963442c6a0577428b53bcc7688f63b5492beef5eb",
+      "playerVerifiedPinnedAsset": true,
+      "teamAssetId": 513240748,
+      "teamSha256": "ba0ae67cf76101edf057dfe5dc765ac0a01ebfe4954672bcd06d5a53eef16082",
+      "teamVerifiedPinnedAsset": true
+    },
+    {
+      "season": 2023,
+      "playerAssetId": 513240669,
+      "playerSha256": "b55110bdda4b1cb9c4f115991f5c5838824826cd76cfe4c60721af42ed4db766",
+      "playerVerifiedPinnedAsset": true,
+      "teamAssetId": 513241130,
+      "teamSha256": "edbfa61bef0a3af6d0393d16b977aad3356125436896bc4aafb5353646c87284",
+      "teamVerifiedPinnedAsset": true
+    },
+    {
+      "season": 2024,
+      "playerAssetId": 513241318,
+      "playerSha256": "e12c0dd3877e70bd18460f7b03afe83ae0e60aa6aba0c141e6fff9699de7ccb3",
+      "playerVerifiedPinnedAsset": true,
+      "teamAssetId": 513241811,
+      "teamSha256": "00e7a53a620ee6108b1cb715875e564874509cbc2d308f8e8f1182cf07d3b4ef",
+      "teamVerifiedPinnedAsset": true
+    },
+    {
+      "season": 2025,
+      "playerAssetId": 513244170,
+      "playerSha256": "a4cd28b5209608d87967c4e0db9720fc617c3f9aafe0a3a097461586ea90fd6d",
+      "playerVerifiedPinnedAsset": true,
+      "teamAssetId": 513244682,
+      "teamSha256": "52f7848cbf880f7fc034ccfec34c0e612b873f6ba94f62e155454c2c8c1d0077",
+      "teamVerifiedPinnedAsset": true
+    }
+  ],
+  "generatedBy": "scripts/import-football-nfl-historical-stats.mjs"
+}
