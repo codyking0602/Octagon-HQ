@@ -86,8 +86,8 @@ const TEAM_FIELD_MAP = {
   puntingYards: "pt_yards"
 };
 
-const PLAYER_REQUIRED = ["player_id", "season", "recent_team", "games"];
-const TEAM_REQUIRED = ["season", "team", "games"];
+const PLAYER_REQUIRED = ["player_id", "season", "season_type", "recent_team", "games"];
+const TEAM_REQUIRED = ["season", "season_type", "team", "games"];
 const TEXT_FIELDS = new Set(["sourcePlayerId", "playerName", "playerDisplayName", "position", "positionGroup", "recentTeam", "team"]);
 
 function parseArgs(argv) {
@@ -163,22 +163,24 @@ function normalizeCsv(text, { season, columns, fieldMap, required, identity }) {
     return index == null ? "" : row[index] ?? "";
   };
 
-  const output = rows.map((row, rowIndex) => {
+  rows.forEach((row, rowIndex) => {
     if (row.length !== header.length) {
       throw new Error(`NFL ${identity} ${season} row ${rowIndex + 2} has ${row.length} columns; expected ${header.length}.`);
     }
     const rowSeason = Number(read(row, "season"));
     if (rowSeason !== season) throw new Error(`NFL ${identity} source season mismatch: expected ${season}, got ${read(row, "season")}.`);
-    if (indexes.has("season_type") && isPresent(read(row, "season_type")) && read(row, "season_type") !== "REG+POST") {
-      throw new Error(`NFL ${identity} ${season} source is not REG+POST summary data.`);
-    }
-
-    return columns.map((column) => {
-      const value = read(row, fieldMap[column]);
-      if (TEXT_FIELDS.has(column)) return isPresent(value) ? String(value).trim() : null;
-      return numericOrNull(value);
-    });
   });
+
+  const regpostRows = rows.filter((row) => String(read(row, "season_type")).trim() === "REG+POST");
+  if (regpostRows.length === 0) {
+    throw new Error(`NFL ${identity} ${season} source did not contain REG+POST summary rows.`);
+  }
+
+  const output = regpostRows.map((row) => columns.map((column) => {
+    const value = read(row, fieldMap[column]);
+    if (TEXT_FIELDS.has(column)) return isPresent(value) ? String(value).trim() : null;
+    return numericOrNull(value);
+  }));
 
   output.sort((left, right) => String(left[1] ?? "").localeCompare(String(right[1] ?? "")));
   return { header, rows: output };
