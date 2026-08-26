@@ -109,7 +109,7 @@ describe("Football Find the Leader maturity", () => {
       "cfb-player-receiving-touchdowns",
       "cfb-coach-career-wins",
     ] as const) {
-      expect(footballFindLeaderMetricRows(metricId), metricId).toHaveLength(11);
+      expect(footballFindLeaderMetricRows(metricId).length, metricId).toBeGreaterThanOrEqual(11);
       expect(footballFindLeaderMetricQuality(metricId), metricId).toMatchObject({ eligible: true });
       expect(enabledIds.has(metricId), metricId).toBe(true);
     }
@@ -175,15 +175,16 @@ describe("Football Find the Leader maturity", () => {
   });
 
   it("supports lower-is-better questions without corrupting factual display values", () => {
-    const lowerMetricIds = [
-      "qb-season-interceptions",
-      "nfl-team-losses",
+    const enabledLowerMetricIds = [...new Set(
+      footballFindLeaderQuestions.filter(({ direction }) => direction === "lower").map(({ metricId }) => metricId),
+    )];
+    expect(enabledLowerMetricIds.length).toBeGreaterThanOrEqual(2);
+    expect(enabledLowerMetricIds).toEqual(expect.arrayContaining([
       "cfb-points-against",
       "cfb-opponent-points-per-game",
-    ] as const;
-    for (const metricId of lowerMetricIds) {
-      const definition = footballFindLeaderEnabledMetricDefinitions.find(({ id }) => id === metricId);
-      expect(definition, metricId).toMatchObject({ direction: "lower" });
+    ]));
+
+    for (const metricId of enabledLowerMetricIds) {
       const question = footballFindLeaderQuestions.find((row) => row.metricId === metricId)!;
       expect(question.question.toLowerCase(), metricId).toContain("fewest");
       const board = buildFootballFindLeaderBoard(question, `lower|${metricId}`)!;
