@@ -2,31 +2,249 @@ name: Validate V2
 
 on:
   pull_request:
-    types: [synchronize]
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main]
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: validate-v2-${{ github.event.pull_request.number || github.sha }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  VITE_SUPABASE_URL: https://octagon-validation.supabase.co
+  VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_octagon_validation_only_00000000000000000000
+  VITE_EXPECTED_SUPABASE_HOSTNAME: octagon-validation.supabase.co
+
+defaults:
+  run:
+    shell: bash --noprofile --norc -eo pipefail {0}
 
 jobs:
-  materialize-cfb-coaches:
-    if: github.event.pull_request.head.ref == 'feature/cfb-coach-relationships'
+  core:
+    name: typecheck + production build
+    if: ${{ github.event_name == 'push' || github.event.pull_request.draft == false }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Check out exact validation source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 1
+          persist-credentials: false
+          show-progress: false
+
+      - name: Verify exact checked-out SHA
+        run: |
+          checked_out_sha=$(git rev-parse HEAD)
+          if [ "$checked_out_sha" != "$SOURCE_SHA" ]; then
+            echo "::error title=Exact SHA checkout failed::Expected $SOURCE_SHA but checked out $checked_out_sha."
+            exit 1
+          fi
+          echo "Exact validation source verified: $checked_out_sha"
+
+      - name: Set up Node and npm cache
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install locked dependencies
+        run: npm ci --silent --no-audit --no-fund
+
+      - name: Typecheck
+        id: typecheck
+        run: npm run typecheck 2>&1 | tee typecheck.log
+
+      - name: Upload typecheck diagnostics
+        if: failure() && steps.typecheck.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: typecheck-diagnostics-${{ env.SOURCE_SHA }}
+          path: typecheck.log
+          retention-days: 7
+
+      - name: Summarize typecheck failure
+        if: failure() && steps.typecheck.outcome == 'failure'
+        run: |
+          {
+            echo "### Typecheck failed"
+            echo "Exact source: \`$SOURCE_SHA\`"
+            echo "Reproduce: \`npm ci --no-audit --no-fund && npm run typecheck\`"
+            echo '```text'
+            tail -n 80 typecheck.log 2>/dev/null || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Build production artifacts
+        id: build
+        run: npm run build:artifacts 2>&1 | tee build.log
+
+      - name: Upload build diagnostics
+        if: failure() && steps.build.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-diagnostics-${{ env.SOURCE_SHA }}
+          path: build.log
+          retention-days: 7
+
+      - name: Summarize build failure
+        if: failure() && steps.build.outcome == 'failure'
+        run: |
+          {
+            echo "### Production build failed"
+            echo "Exact source: \`$SOURCE_SHA\`"
+            echo "Reproduce: \`npm ci --no-audit --no-fund && npm run typecheck && npm run build:artifacts\`"
+            echo '```text'
+            tail -n 80 build.log 2>/dev/null || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  tests:
+    name: test shard ${{ matrix.shard }}/8
+    if: ${{ github.event_name == 'push' || github.event.pull_request.draft == false }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6, 7, 8]
+    steps:
+      - name: Check out exact validation source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 1
+          persist-credentials: false
+          show-progress: false
+
+      - name: Verify exact checked-out SHA
+        run: |
+          checked_out_sha=$(git rev-parse HEAD)
+          if [ "$checked_out_sha" != "$SOURCE_SHA" ]; then
+            echo "::error title=Exact SHA checkout failed::Expected $SOURCE_SHA but checked out $checked_out_sha."
+            exit 1
+          fi
+          echo "Exact validation source verified: $checked_out_sha"
+
+      - name: Set up Node and npm cache
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install locked dependencies
+        run: npm ci --silent --no-audit --no-fund
+
+      - name: Run full-suite shard
+        id: test
+        run: npm test -- --shard=${{ matrix.shard }}/8 2>&1 | tee test-shard-${{ matrix.shard }}.log
+
+      - name: Upload test diagnostics
+        if: failure() && steps.test.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-diagnostics-shard-${{ matrix.shard }}-${{ env.SOURCE_SHA }}
+          path: test-shard-${{ matrix.shard }}.log
+          retention-days: 7
+
+      - name: Summarize test failure
+        if: failure() && steps.test.outcome == 'failure'
+        run: |
+          {
+            echo "### Test shard ${{ matrix.shard }}/8 failed"
+            echo "Exact source: \`$SOURCE_SHA\`"
+            echo "Reproduce: \`npm ci --no-audit --no-fund && npm test -- --shard=${{ matrix.shard }}/8\`"
+            echo '```text'
+            tail -n 100 test-shard-${{ matrix.shard }}.log 2>/dev/null || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  phone-layouts:
+    name: Today's Challenge phone layouts
+    if: ${{ github.event_name == 'push' || github.event.pull_request.draft == false }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Check out exact PR head
+      - name: Check out exact validation source
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ env.SOURCE_SHA }}
           fetch-depth: 1
-          persist-credentials: true
+          persist-credentials: false
+          show-progress: false
+
       - name: Verify exact checked-out SHA
-        run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
-      - uses: actions/setup-node@v4
+        run: |
+          checked_out_sha=$(git rev-parse HEAD)
+          if [ "$checked_out_sha" != "$SOURCE_SHA" ]; then
+            echo "::error title=Exact SHA checkout failed::Expected $SOURCE_SHA but checked out $checked_out_sha."
+            exit 1
+          fi
+          echo "Exact validation source verified: $checked_out_sha"
+
+      - name: Set up Node and npm cache
+        uses: actions/setup-node@v4
         with:
-          node-version: '22'
-      - name: Materialize, restore temporary files, and push clean head
-        run: node scripts/verify-todays-challenge-phone.mjs
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install locked dependencies
+        run: npm ci --silent --no-audit --no-fund
+
+      - name: Verify all five Today’s Challenge phone layouts
+        id: phone
+        timeout-minutes: 2
+        run: node scripts/verify-todays-challenge-phone.mjs 2>&1 | tee todays-challenge-phone.log
+
+      - name: Upload Today’s Challenge phone proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: todays-challenge-phone-proof-${{ env.SOURCE_SHA }}
+          path: |
+            todays-challenge-phone.log
+            ${{ runner.temp }}/todays-challenge-phone-proof/*.png
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Summarize phone-layout failure
+        if: failure() && steps.phone.outcome == 'failure'
+        run: |
+          {
+            echo "### Today's Challenge phone proof failed"
+            echo "Exact source: \`$SOURCE_SHA\`"
+            echo "Reproduce: \`npm ci --no-audit --no-fund && node scripts/verify-todays-challenge-phone.mjs\`"
+            echo '```text'
+            tail -n 80 todays-challenge-phone.log 2>/dev/null || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  validate:
+    name: validate
+    if: ${{ always() && (github.event_name == 'push' || github.event.pull_request.draft == false) }}
+    needs:
+      - core
+      - tests
+      - phone-layouts
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Require every exact-head validation lane
+        env:
+          CORE_RESULT: ${{ needs.core.result }}
+          TEST_RESULT: ${{ needs.tests.result }}
+          PHONE_RESULT: ${{ needs.phone-layouts.result }}
+        run: |
+          printf 'core=%s\ntests=%s\nphone-layouts=%s\n' "$CORE_RESULT" "$TEST_RESULT" "$PHONE_RESULT"
+          test "$CORE_RESULT" = success
+          test "$TEST_RESULT" = success
+          test "$PHONE_RESULT" = success
+          echo "Exact head $SOURCE_SHA passed typecheck, the complete sharded test suite, the production build, and phone-layout verification."

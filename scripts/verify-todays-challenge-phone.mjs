@@ -1,85 +1,229 @@
-import { createHash } from "node:crypto";
-import { spawnSync } from "node:child_process";
-import fs from "node:fs";
-import path from "node:path";
+import { spawn } from "node:child_process";
+import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { createServer } from "node:net";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
-import { loadCfbCoachRelationships } from "./lib/cfbCoachRelationships.mjs";
-
-const OUTPUT_DIR = "data/generated/football/relationships";
-const sha256 = (text) => createHash("sha256").update(text).digest("hex");
-const run = (command, args) => {
-  const result = spawnSync(command, args, { stdio: "inherit" });
-  if (result.status !== 0) throw new Error(`${command} ${args.join(" ")} failed with status ${result.status}.`);
-};
-
-const coaches = loadCfbCoachRelationships();
-const seasonPath = path.join(OUTPUT_DIR, "cfb-coach-seasons-2002-2025.json");
-const stintPath = path.join(OUTPUT_DIR, "cfb-coach-stints-2002-2025.json");
-const manifestPath = path.join(OUTPUT_DIR, "football-game-relationships.manifest.json");
-const coveragePath = path.join(OUTPUT_DIR, "football-game-relationships.coverage.json");
-
-const seasonText = `${JSON.stringify(coaches.coachSeasons)}\n`;
-const stintText = `${JSON.stringify(coaches.coachStints)}\n`;
-const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
-const coverage = JSON.parse(fs.readFileSync(coveragePath, "utf8"));
-const coachOutputs = [
-  { file: path.basename(seasonPath), sha256: sha256(seasonText), rowCount: coaches.coachSeasons.rowCount },
-  { file: path.basename(stintPath), sha256: sha256(stintText), rowCount: coaches.coachStints.rowCount },
+const games = [
+  ["find_leader", "ELIMINATE"],
+  ["wavelength", "LOCK GUESS & REVEAL NEXT CLUE"],
+  ["blind_resume", "PICK A"],
+  ["blind_rank_5", "PLACE HERE"],
+  ["keep_4_cut_4", "KEEP IS FULL — THIS FIGHTER MUST BE CUT"],
 ];
-const withoutCoachOutputs = manifest.outputs.filter((output) => !coachOutputs.some((coach) => coach.file === output.file));
-const cfbGameIndex = withoutCoachOutputs.findIndex((output) => output.file === "cfb-games-2002-2025.json");
-if (cfbGameIndex < 0) throw new Error("Could not locate canonical CFB game output.");
-const outputs = [
-  ...withoutCoachOutputs.slice(0, cfbGameIndex + 1),
-  ...coachOutputs,
-  ...withoutCoachOutputs.slice(cfbGameIndex + 1),
-];
-const generatedManifest = {
-  schemaVersion: manifest.schemaVersion,
-  generatedBy: manifest.generatedBy,
-  outputs,
-  cfbSourceVerification: manifest.cfbSourceVerification,
-  cfbCoachSourceVerification: coaches.sourceVerification,
-  nflSourceVerification: manifest.nflSourceVerification,
-};
-const { seasons, ...cfbCoverageHead } = coverage.cfb;
-const generatedCoverage = {
-  schemaVersion: coverage.schemaVersion,
-  cfb: { ...cfbCoverageHead, coaches: coaches.coverage, seasons },
-  nfl: coverage.nfl,
-};
-const manifestText = `${JSON.stringify(generatedManifest, null, 2)}\n`;
-const coverageText = `${JSON.stringify(generatedCoverage, null, 2)}\n`;
 
-const expected = {
-  season: "28b5cf9ca75ff674b7645676aaa00c626152f9b286e36e38c136f5b241bdb714",
-  stint: "d3e0fa9d1aa8b13346024532c26c693a862abb2ab06b726e48d6464ba9d0df55",
-  manifest: "4e0f9ea2d507928e04bf53d1e4f403012ea9a628aa705bdf4d2da73dc3a52d93",
-  coverage: "6a630371165f3cc79c874baef34d08584469d155943950ba4b43773c3a82282f",
-};
-const actual = {
-  season: sha256(seasonText),
-  stint: sha256(stintText),
-  manifest: sha256(manifestText),
-  coverage: sha256(coverageText),
-};
-for (const key of Object.keys(expected)) {
-  if (actual[key] !== expected[key]) throw new Error(`${key} hash mismatch: ${actual[key]} !== ${expected[key]}`);
+function chromePath() {
+  return [
+    process.env.OCTAGON_CHROME_PATH,
+    "/usr/bin/google-chrome",
+    "/usr/bin/google-chrome-stable",
+    "/usr/bin/chromium",
+    "/usr/bin/chromium-browser",
+  ].filter(Boolean).find((candidate) => existsSync(candidate)) ?? null;
 }
 
-fs.writeFileSync(seasonPath, seasonText);
-fs.writeFileSync(stintPath, stintText);
-fs.writeFileSync(manifestPath, manifestText);
-fs.writeFileSync(coveragePath, coverageText);
+async function freePort() {
+  return new Promise((resolve, reject) => {
+    const server = createServer();
+    server.once("error", reject);
+    server.listen(0, "127.0.0.1", () => {
+      const address = server.address();
+      const port = typeof address === "object" && address ? address.port : 0;
+      server.close((error) => error ? reject(error) : resolve(port));
+    });
+  });
+}
 
-run("git", ["config", "user.name", "github-actions[bot]"]);
-run("git", ["config", "user.email", "41898282+github-actions[bot]@users.noreply.github.com"]);
-run("git", ["fetch", "origin", "main", "--depth=1"]);
-run("git", ["checkout", "origin/main", "--", "scripts/verify-todays-challenge-phone.mjs", ".github/workflows/validate.yml"]);
-run("git", ["rm", "-f", ".github/workflows/_tmp-materialize-cfb-coach-relationships.yml"]);
-run("git", ["add", "-f", seasonPath, stintPath, manifestPath, coveragePath]);
-run("git", ["add", "scripts/verify-todays-challenge-phone.mjs", ".github/workflows/validate.yml"]);
-run("git", ["commit", "-m", "data: materialize CFB coach relationships"]);
-run("git", ["push", "origin", "HEAD:feature/cfb-coach-relationships"]);
+async function waitForHttp(url, attempts = 120) {
+  let lastError;
+  for (let attempt = 0; attempt < attempts; attempt += 1) {
+    try {
+      const response = await fetch(url, { cache: "no-store" });
+      if (response.ok) return response;
+      lastError = new Error(`${url} returned HTTP ${response.status}`);
+    } catch (error) {
+      lastError = error;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 250));
+  }
+  throw lastError ?? new Error(`${url} did not become ready.`);
+}
 
-console.log(`Materialized and pushed ${coaches.coachSeasons.rowCount} CFB coach-season stops and ${coaches.coachStints.rowCount} coach stints.`);
+async function waitForJson(url, attempts = 120) {
+  const response = await waitForHttp(url, attempts);
+  return response.json();
+}
+
+async function terminate(child) {
+  if (!child || child.exitCode !== null || child.signalCode !== null) return;
+  const signal = (name) => {
+    try {
+      if (process.platform !== "win32" && child.pid) process.kill(-child.pid, name);
+      else child.kill(name);
+    } catch (error) {
+      if (error?.code !== "ESRCH") throw error;
+    }
+  };
+  signal("SIGTERM");
+  await Promise.race([
+    new Promise((resolve) => child.once("exit", resolve)),
+    new Promise((resolve) => setTimeout(resolve, 1_500)),
+  ]);
+  if (child.exitCode === null && child.signalCode === null) signal("SIGKILL");
+}
+
+class CdpClient {
+  constructor(url) {
+    this.socket = new WebSocket(url);
+    this.nextId = 1;
+    this.pending = new Map();
+  }
+
+  async open() {
+    if (this.socket.readyState !== WebSocket.OPEN) {
+      await new Promise((resolve, reject) => {
+        this.socket.addEventListener("open", resolve, { once: true });
+        this.socket.addEventListener("error", reject, { once: true });
+      });
+    }
+    this.socket.addEventListener("message", (event) => {
+      const message = JSON.parse(String(event.data));
+      if (!message.id) return;
+      const pending = this.pending.get(message.id);
+      if (!pending) return;
+      this.pending.delete(message.id);
+      if (message.error) pending.reject(new Error(message.error.message));
+      else pending.resolve(message.result);
+    });
+  }
+
+  send(method, params = {}) {
+    const id = this.nextId++;
+    return new Promise((resolve, reject) => {
+      this.pending.set(id, { resolve, reject });
+      this.socket.send(JSON.stringify({ id, method, params }));
+    });
+  }
+
+  close() {
+    try {
+      this.socket.close();
+    } catch {
+      // The browser process may already have closed the debug socket.
+    }
+  }
+}
+
+async function waitForFixture(client, expectedGame) {
+  for (let attempt = 0; attempt < 120; attempt += 1) {
+    const evaluated = await client.send("Runtime.evaluate", {
+      expression: `(() => {
+        const page = document.querySelector('[data-game="${expectedGame}"]');
+        return page ? {
+          ready: true,
+          game: page.getAttribute('data-game') ?? '',
+          viewportWidth: window.innerWidth,
+          documentWidth: document.documentElement.scrollWidth,
+          bodyWidth: document.body.scrollWidth,
+          text: document.body.innerText,
+        } : { ready: false };
+      })()`,
+      returnByValue: true,
+    });
+    const value = evaluated?.result?.value;
+    if (value?.ready && value.game === expectedGame) return value;
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  throw new Error(`${expectedGame} did not render its official fixture.`);
+}
+
+const chrome = chromePath();
+if (!chrome) throw new Error("Chrome is required for the Today’s Challenge 390x844 proof.");
+
+const vitePort = await freePort();
+const debugPort = await freePort();
+const profileDir = mkdtempSync(join(tmpdir(), "octagon-today-phone-"));
+const proofDir = process.env.RUNNER_TEMP
+  ? join(process.env.RUNNER_TEMP, "todays-challenge-phone-proof")
+  : join(tmpdir(), "todays-challenge-phone-proof");
+mkdirSync(proofDir, { recursive: true });
+
+let viteLog = "";
+let browserLog = "";
+const spawnOptions = { stdio: ["ignore", "pipe", "pipe"], detached: process.platform !== "win32" };
+const vite = spawn(process.execPath, [
+  "node_modules/vite/bin/vite.js",
+  "--host", "127.0.0.1",
+  "--port", String(vitePort),
+  "--strictPort",
+], spawnOptions);
+vite.stdout.on("data", (chunk) => { viteLog += String(chunk); });
+vite.stderr.on("data", (chunk) => { viteLog += String(chunk); });
+
+const browser = spawn(chrome, [
+  "--headless=new",
+  "--no-sandbox",
+  "--disable-dev-shm-usage",
+  "--disable-gpu",
+  "--remote-allow-origins=*",
+  `--remote-debugging-port=${debugPort}`,
+  `--user-data-dir=${profileDir}`,
+  "--window-size=390,844",
+  "about:blank",
+], spawnOptions);
+browser.stdout.on("data", (chunk) => { browserLog += String(chunk); });
+browser.stderr.on("data", (chunk) => { browserLog += String(chunk); });
+
+let client;
+try {
+  await waitForHttp(`http://127.0.0.1:${vitePort}/scripts/todays-challenge-phone/index.html`);
+  const targets = await waitForJson(`http://127.0.0.1:${debugPort}/json/list`);
+  const pageTarget = targets.find((target) => target.type === "page" && target.webSocketDebuggerUrl);
+  if (!pageTarget) throw new Error("Chrome did not expose a debuggable page target.");
+
+  client = new CdpClient(pageTarget.webSocketDebuggerUrl);
+  await client.open();
+  await client.send("Page.enable");
+  await client.send("Runtime.enable");
+  await client.send("Emulation.setDeviceMetricsOverride", {
+    width: 390,
+    height: 844,
+    deviceScaleFactor: 1,
+    mobile: true,
+    screenWidth: 390,
+    screenHeight: 844,
+  });
+
+  for (const [game, expectedText] of games) {
+    await client.send("Page.navigate", {
+      url: `http://127.0.0.1:${vitePort}/scripts/todays-challenge-phone/index.html?game=${game}`,
+    });
+    const result = await waitForFixture(client, game);
+    if (result.viewportWidth !== 390) {
+      throw new Error(`${game} rendered at ${result.viewportWidth}px instead of 390px.`);
+    }
+    if (result.documentWidth > 390 || result.bodyWidth > 390) {
+      throw new Error(`${game} overflowed horizontally: document ${result.documentWidth}px, body ${result.bodyWidth}px.`);
+    }
+    if (!String(result.text).includes(expectedText)) {
+      throw new Error(`${game} did not render its expected progressive control: ${expectedText}`);
+    }
+    if (String(result.text).includes("Future Fighter") || String(result.text).includes("Eighth Fighter")) {
+      throw new Error(`${game} exposed a future hidden fighter.`);
+    }
+
+    const captured = await client.send("Page.captureScreenshot", {
+      format: "png",
+      captureBeyondViewport: true,
+    });
+    const screenshotPath = join(proofDir, `${game}-390x844.png`);
+    writeFileSync(screenshotPath, Buffer.from(captured.data, "base64"));
+    console.log(`PASS: ${game} rendered at 390x844 without horizontal overflow (${screenshotPath}).`);
+  }
+} catch (error) {
+  throw new Error(`${error instanceof Error ? error.message : String(error)}\nVite:\n${viteLog}\nChrome:\n${browserLog}`);
+} finally {
+  client?.close();
+  await Promise.all([terminate(browser), terminate(vite)]);
+  rmSync(profileDir, { recursive: true, force: true });
+}

@@ -18,6 +18,19 @@
     "teamSeasonCount": 7468,
     "gameCount": 36217,
     "explicitNationalChampionshipGameCount": 3,
+    "coaches": {
+      "seasonStart": 2002,
+      "seasonEnd": 2025,
+      "programCount": 137,
+      "coachSeasonStopCount": 3109,
+      "coachStintCount": 686,
+      "uniqueSourceCoachNameCount": 473,
+      "coachIdentityScope": "source-name-within-program",
+      "sourceProgramCount": 136,
+      "sourceSeasonAssignmentCount": 3093,
+      "sourceStintCount": 681,
+      "exceptionProgramCount": 1
+    },
     "seasons": [
       {
         "season": 2002,
