@@ -110,7 +110,7 @@ function projectNflPlayer(p) {
     (position === "QB" && games >= 80 && (passYards >= 25000 || passTds >= 180)) ||
     (position === "RB" && games >= 80 && (rushYards >= 7000 || carries >= 1500)) ||
     ((position === "WR" || position === "TE") && games >= 80 && (recYards >= 7000 || receptions >= 500)) ||
-    (["DL", "LB", "DB"].includes(position) && games >= 100 && (sacks >= 70 || ints >= 30)) ||
+    (["DL", "LB", "DB"].includes(position) && games >= 100 && (sacks >= 80 || ints >= 35)) ||
     (position === "K" && games >= 180 && fgm >= 300);
   const c =
     (position === "QB" && games >= 40 && (passYards >= 10000 || passAttempts >= 1500)) ||
@@ -171,8 +171,8 @@ function projectCfbPlayer(p) {
   const evidence = [];
   let tier = "D";
   if (nflMatch && ["A", "B"].includes(nflMatch.tier) && meaningful) { tier = "B"; evidence.push("recognizable NFL crossover with meaningful college role"); }
-  else if (eliteMajorPeak) { tier = "B"; evidence.push("exceptional multi-year production at a nationally prominent program"); }
-  else if ((nflMatch && nflMatch.tier === "C" && meaningful) || (strong && (major || extreme)) || extreme) { tier = "C"; evidence.push(nflMatch ? "recognized NFL crossover with meaningful college role" : "sustained high-end college production"); }
+  else if (eliteMajorPeak && approvedBPlayers.has(p.name)) { tier = "B"; evidence.push("explicit B approval supported by exceptional major-program production"); }
+  else if ((nflMatch && nflMatch.tier === "C" && meaningful) || (strong && major)) { tier = "C"; evidence.push(nflMatch ? "recognized NFL crossover with meaningful college role" : "sustained high-end college production"); }
   if (approvedBPlayers.has(p.name) && meaningful && tier === "D") { tier = "B"; evidence.push("explicit football-culture B approval"); }
   if (approvedAPlayers.has(p.name) && meaningful) { tier = "A"; evidence.push("explicit iconic-player approval"); }
   const years = yearsFor(p);
@@ -228,7 +228,7 @@ const cfbCoachB = new Set(["bob-stoops", "dabo-swinney", "kirby-smart", "mack-br
 const cfbCoachRecords = recordsFromRows(cfbCoachStints, (row, ix) => {
   const sourceId = String(at(row, ix, "sourceCoachStintKey")); const name = String(at(row, ix, "coachName")); const program = String(at(row, ix, "programName")); const seasons = n(at(row, ix, "seasonCount"));
   const nameKey = normalize(name); const programTier = cfbProgramTier.get(normalize(program)) ?? "D";
-  let tier = seasons >= 5 && programTier !== "D" ? "C" : "D"; if (cfbCoachB.has(nameKey) || (seasons >= 8 && ["A", "B"].includes(programTier))) tier = "B"; if (cfbCoachA.has(nameKey)) tier = "A";
+  let tier = seasons >= 5 && programTier !== "D" ? "C" : "D"; if (cfbCoachB.has(nameKey) || (seasons >= 8 && ["A", "B"].includes(programTier))) tier = "B"; if (cfbCoachA.has(nameKey) && (seasons >= 5 || ["A", "B"].includes(programTier))) tier = "A";
   return { id: `cfb-coach-stop-${sourceId}`, kind: "coach-stop", name, league: "CFB", tier, sourceProvider: "cfb-coaches", sourceId, identityScope: "source-name-within-program", startSeason: n(at(row, ix, "startSeason")), endSeason: n(at(row, ix, "endSeason")), evidence: [tier === "D" ? "short/low-salience FBS coaching stop" : tier === "C" ? "meaningful multi-year FBS head-coach stop" : "prominent coaching identity/stop"], manualA: tier === "A" };
 });
 
