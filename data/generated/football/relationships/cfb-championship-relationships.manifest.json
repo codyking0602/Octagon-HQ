@@ -6,7 +6,9 @@
   "seasonCount": 24,
   "selectionCount": 25,
   "championProgramCount": 12,
-  "splitTitleSeasons": [2003],
+  "splitTitleSeasons": [
+    2003
+  ],
   "source": {
     "provider": "NCAA",
     "title": "FBS Football Championship History",
