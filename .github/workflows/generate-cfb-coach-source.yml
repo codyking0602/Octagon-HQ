@@ -1,9 +1,9 @@
 name: Generate pinned CFB coach source snapshot
 
 on:
-  push:
+  pull_request:
     branches:
-      - feature/cfb-coach-relationships
+      - main
     paths:
       - .github/workflows/generate-cfb-coach-source.yml
 
