@@ -1,0 +1,261 @@
+{
+  "schemaVersion": 1,
+  "league": "CFB",
+  "corpus": "historical-player-seasons",
+  "coverage": {
+    "startSeason": 2004,
+    "endSeason": 2025
+  },
+  "seasonCount": 22,
+  "rowCount": 140007,
+  "uniqueAthleteCount": 65011,
+  "uniqueTeamIdCount": 261,
+  "columnCount": 37,
+  "columns": [
+    "id",
+    "athlete_id",
+    "athlete_name",
+    "team_id",
+    "season",
+    "games",
+    "pass_cmp",
+    "pass_att",
+    "pass_yds",
+    "pass_td",
+    "rush_att",
+    "rush_yds",
+    "rush_td",
+    "rec",
+    "rec_yds",
+    "rec_td",
+    "tackles_tot",
+    "tackles_solo",
+    "sacks",
+    "tfl",
+    "pbu",
+    "def_int",
+    "def_int_yds",
+    "def_int_td",
+    "kick_ret",
+    "kick_ret_yds",
+    "kick_ret_td",
+    "punt_ret",
+    "punt_ret_yds",
+    "punt_ret_td",
+    "fgm",
+    "fga",
+    "xpm",
+    "xpa",
+    "kick_points",
+    "punts",
+    "punt_yds"
+  ],
+  "source": {
+    "provider": "SportsDataverse ESPN CFB player box scores",
+    "repository": "sportsdataverse/sportsdataverse-data",
+    "releaseId": 334089407,
+    "releaseTag": "espn_cfb_player_box",
+    "license": "CC BY 4.0",
+    "lockFile": "scripts/football-cfb-historical-source-lock.json"
+  },
+  "seasons": [
+    {
+      "season": 2004,
+      "rowCount": 3620,
+      "sourceAssetId": 474294279,
+      "sourceAsset": "player_box_2004.csv.gz",
+      "sourceSha256": "3307a75cd07bd4743ff86eb31b3618aeb9fd0f3cd93c9e153d1685a461e63499",
+      "output": "player-season-2004.json",
+      "outputSha256": "90327b8fc68bbba6a4f6271b863aed2362a7d2196fe8240f949b890f6d40244b"
+    },
+    {
+      "season": 2005,
+      "rowCount": 3971,
+      "sourceAssetId": 474294325,
+      "sourceAsset": "player_box_2005.csv.gz",
+      "sourceSha256": "bb2777f27cd129f31b8d49a0af0daa5df464079a523dbe80a84524d0bccbe14f",
+      "output": "player-season-2005.json",
+      "outputSha256": "265221db08c943cbc3cbb9d71579d337d73af5de910655c5e35dbc62da1fb10f"
+    },
+    {
+      "season": 2006,
+      "rowCount": 4167,
+      "sourceAssetId": 474294369,
+      "sourceAsset": "player_box_2006.csv.gz",
+      "sourceSha256": "bb13ad17bc98f1e667e6afa7ca6c4205105694a0311416db8befdc85322ad502",
+      "output": "player-season-2006.json",
+      "outputSha256": "f093117b9fdcdbee2b162e287ec6834c5cf4264bdfbd43e409bc7d1ed0b5d6eb"
+    },
+    {
+      "season": 2007,
+      "rowCount": 4476,
+      "sourceAssetId": 474294405,
+      "sourceAsset": "player_box_2007.csv.gz",
+      "sourceSha256": "f4d46c0b97d679bb9d836a5d556ab4bd387dceddef8874a4b4728af335920214",
+      "output": "player-season-2007.json",
+      "outputSha256": "9715188a25f0852279279caa7bab99eb21b39e04f2a61785b4e8111934effb61"
+    },
+    {
+      "season": 2008,
+      "rowCount": 4612,
+      "sourceAssetId": 474294429,
+      "sourceAsset": "player_box_2008.csv.gz",
+      "sourceSha256": "3f9d6cac31817c562213d03e52e866a97c3d3b4676bfd948f0c9ec04c3e0fb7e",
+      "output": "player-season-2008.json",
+      "outputSha256": "9e54cd2519bebe77a8eac81f08e9e9752c7cf3f9cecb113bfbe6b52c1610523a"
+    },
+    {
+      "season": 2009,
+      "rowCount": 4856,
+      "sourceAssetId": 474294474,
+      "sourceAsset": "player_box_2009.csv.gz",
+      "sourceSha256": "1cd8b10f226b42f3ecf3f6a865c72255edc855d9396ecc0c15e74dc1b66c9c92",
+      "output": "player-season-2009.json",
+      "outputSha256": "358affeeed478d34cb3c4641d409454bb803760fe9d013213c0de08f13338c81"
+    },
+    {
+      "season": 2010,
+      "rowCount": 4839,
+      "sourceAssetId": 474294633,
+      "sourceAsset": "player_box_2010.csv.gz",
+      "sourceSha256": "8d29ab0207bdf0c874e8237a00f9b131527904f5bf7f932742e2762ea86bbed7",
+      "output": "player-season-2010.json",
+      "outputSha256": "5b026499982b0301aba0a13b7a774962a5c4d01d5de1103039a5e75b8d349a83"
+    },
+    {
+      "season": 2011,
+      "rowCount": 4778,
+      "sourceAssetId": 474294677,
+      "sourceAsset": "player_box_2011.csv.gz",
+      "sourceSha256": "e132938884125ee4cd59a278da7a9c3ec98e06e075199b99fb7587930cf8cd3c",
+      "output": "player-season-2011.json",
+      "outputSha256": "1a6fba6c5b85f989b1e3e85f32daff6828caeedd0c47686a8c9f07090cdd4c35"
+    },
+    {
+      "season": 2012,
+      "rowCount": 4943,
+      "sourceAssetId": 474294713,
+      "sourceAsset": "player_box_2012.csv.gz",
+      "sourceSha256": "66463335c645de616e16c19df8c9b0eebc572466ccd9d337e1b89fcb26f4260e",
+      "output": "player-season-2012.json",
+      "outputSha256": "cc1aff889d6a50605719fe085e67cabdf45d003d1debd679092d68f1b3cc7bc3"
+    },
+    {
+      "season": 2013,
+      "rowCount": 5186,
+      "sourceAssetId": 474294744,
+      "sourceAsset": "player_box_2013.csv.gz",
+      "sourceSha256": "afd77ad39cc8283711f84a2042e6ae2941cd09c1a568bf8826ee08ecc4ed662c",
+      "output": "player-season-2013.json",
+      "outputSha256": "7d5b0c1386fdea1c5ef2946c7b189f2102986019e4d6dffff75ae6eef4325dd2"
+    },
+    {
+      "season": 2014,
+      "rowCount": 5343,
+      "sourceAssetId": 474294781,
+      "sourceAsset": "player_box_2014.csv.gz",
+      "sourceSha256": "2ae414d1719e763a3f6282848bf8d480b053596c265e1659497f25a8dfbb898a",
+      "output": "player-season-2014.json",
+      "outputSha256": "10688046a53b62e06e95d1e3fdc590d6885e8b683259d8b9b9d4f8a1166ba450"
+    },
+    {
+      "season": 2015,
+      "rowCount": 5302,
+      "sourceAssetId": 474294816,
+      "sourceAsset": "player_box_2015.csv.gz",
+      "sourceSha256": "0393752ea66ed609f9038b14addc0281086c1c4ae0bed660b718f6f6cf1be6cc",
+      "output": "player-season-2015.json",
+      "outputSha256": "67ee48689f9ce6bbbdc94ab6e8e68781150f334e536d2e16a9b6bf5ac57cb101"
+    },
+    {
+      "season": 2016,
+      "rowCount": 7115,
+      "sourceAssetId": 474294865,
+      "sourceAsset": "player_box_2016.csv.gz",
+      "sourceSha256": "d9923ab5fb1c445e728f11bf0630222b2844aa3bd17446fed62952507bc8c382",
+      "output": "player-season-2016.json",
+      "outputSha256": "3ab618c53f8aff08103e1b40bcdc686c5037192efbe295e27b3431ece09b761d"
+    },
+    {
+      "season": 2017,
+      "rowCount": 6836,
+      "sourceAssetId": 474294897,
+      "sourceAsset": "player_box_2017.csv.gz",
+      "sourceSha256": "125123dc367ddda9decc77488ed8f73a2286918574568e3466808789ed4649d2",
+      "output": "player-season-2017.json",
+      "outputSha256": "832dd95bd740085ad6f086124f027cc5172cf11dcf9413a88ea4d81dd5274e68"
+    },
+    {
+      "season": 2018,
+      "rowCount": 6957,
+      "sourceAssetId": 474294925,
+      "sourceAsset": "player_box_2018.csv.gz",
+      "sourceSha256": "1f67545151835dea5a392b44483625f2dee21f1e86066bed799df1df9e7b70a3",
+      "output": "player-season-2018.json",
+      "outputSha256": "f0a01a6af17da981fba23d42d5d3858ab00c05c19cef6680a3fc61af00ef0a48"
+    },
+    {
+      "season": 2019,
+      "rowCount": 6826,
+      "sourceAssetId": 474294971,
+      "sourceAsset": "player_box_2019.csv.gz",
+      "sourceSha256": "c6a9310d8cac8dec3ceba3823eb64931356d34e3dc7476ef1217e0d17598f44b",
+      "output": "player-season-2019.json",
+      "outputSha256": "0a379be234a6978d31864a1ff46deebc30b1c5bdfe081c13e559b765a9af264d"
+    },
+    {
+      "season": 2020,
+      "rowCount": 5103,
+      "sourceAssetId": 474295049,
+      "sourceAsset": "player_box_2020.csv.gz",
+      "sourceSha256": "175036b637d40519eca7a01b6705c6a490dd6537439685f58798743a919aa9f0",
+      "output": "player-season-2020.json",
+      "outputSha256": "af3145f5f11bdbfc645576d537fd8de8f9fb256ba627482d1cf7157f0c500109"
+    },
+    {
+      "season": 2021,
+      "rowCount": 8618,
+      "sourceAssetId": 474295078,
+      "sourceAsset": "player_box_2021.csv.gz",
+      "sourceSha256": "7a81af63671c34920a7373db1104ffee0d417de9933b3571bf07de3ccfd0ff84",
+      "output": "player-season-2021.json",
+      "outputSha256": "50346c126c87d1284ac5e9e050c9ef279b72fe222060a55e3cdaff0017d46daa"
+    },
+    {
+      "season": 2022,
+      "rowCount": 7668,
+      "sourceAssetId": 474295110,
+      "sourceAsset": "player_box_2022.csv.gz",
+      "sourceSha256": "3137adb4fbe43c3be7fceead35f12695204fa581fc59eda3fdc04a8198a777ee",
+      "output": "player-season-2022.json",
+      "outputSha256": "50d641d0c3aea4fcabf07494ecb5f1da824888e6e27602c675b8dde1fef9d07f"
+    },
+    {
+      "season": 2023,
+      "rowCount": 9562,
+      "sourceAssetId": 474295152,
+      "sourceAsset": "player_box_2023.csv.gz",
+      "sourceSha256": "a47e029983329eaa2f509498b4465defb10a3ea2fd49ffd04a4634e03e97d861",
+      "output": "player-season-2023.json",
+      "outputSha256": "a936782932427814f53dd3e5a3a7db1560d33c34dc6b9551c50ba2dd2f0e9fa5"
+    },
+    {
+      "season": 2024,
+      "rowCount": 12474,
+      "sourceAssetId": 481499677,
+      "sourceAsset": "player_box_2024.csv.gz",
+      "sourceSha256": "a1672ee4eaa60f9fd95b83e55fcb691a7e5acedd9d8e210f394f32d903840220",
+      "output": "player-season-2024.json",
+      "outputSha256": "d0defa1faba8b0aecbce61f0f9ece75226f844097838c3520f2a278d8f0a3209"
+    },
+    {
+      "season": 2025,
+      "rowCount": 12755,
+      "sourceAssetId": 474297141,
+      "sourceAsset": "player_box_2025.csv.gz",
+      "sourceSha256": "b5ba72bfa90d7f4558843c1f9503a10a292e731c81a268e0da20400931552f2c",
+      "output": "player-season-2025.json",
+      "outputSha256": "d619be19be279aa23d8bbec3b8961682a077ba22e7756a14cd0dda4fb9382a91"
+    }
+  ]
+}
