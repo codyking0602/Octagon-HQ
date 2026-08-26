@@ -74,6 +74,9 @@ for (const record of source.records) {
   if (!Number.isInteger(record.season) || record.season < source.seasonStart || record.season > source.seasonEnd) {
     throw new Error(`Invalid CFB championship season ${record.season}.`);
   }
+  if (typeof record.sourceSeasonSelectingOrganizations !== "string" || !record.sourceSeasonSelectingOrganizations.trim()) {
+    throw new Error(`Missing NCAA season-level selector cell for ${record.season}.`);
+  }
   const programName = programNameById.get(String(record.sourceProgramId));
   if (!programName) throw new Error(`Unknown CFB championship program id ${record.sourceProgramId}.`);
   if (programName !== record.programName) {
@@ -93,7 +96,7 @@ const selectionColumns = [
   "sourceProgramId",
   "programName",
   "sourceChampionName",
-  "selectingOrganization",
+  "sourceSeasonSelectingOrganizations",
   "splitTitle",
   "sourceAsterisked",
 ];
@@ -103,7 +106,7 @@ const selectionRows = source.records
     String(record.sourceProgramId),
     record.programName,
     record.sourceChampionName,
-    record.selectingOrganization,
+    record.sourceSeasonSelectingOrganizations,
     (seasons.get(record.season)?.length ?? 0) > 1,
     Boolean(record.sourceAsterisked),
   ])
