@@ -20,9 +20,9 @@ describe("Football CFB factual depth expansion", () => {
     expect(factCount("cfb-coach-career", "cfb-coach-career-wins")).toBe(11);
     expect(factCount("cfb-coach-career", "cfb-coach-career-losses")).toBe(11);
 
-    // PR3 owns Find the Leader activation; PR2 must not auto-enable the existing rushing definitions.
-    expect(factCount("cfb-player-career", "cfb-best-season-rushing-yards")).toBe(10);
-    expect(factCount("cfb-player-career", "cfb-best-season-rushing-touchdowns")).toBe(10);
+    // PR3 owns Find the Leader activation; PR2 must preserve the existing below-threshold rushing pool.
+    expect(factCount("cfb-player-career", "cfb-best-season-rushing-yards")).toBe(7);
+    expect(factCount("cfb-player-career", "cfb-best-season-rushing-touchdowns")).toBe(7);
   });
 
   it("stores the new CFB facts in the canonical ledger with source evidence", () => {
