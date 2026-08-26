@@ -57,10 +57,6 @@ begin
         v_existing_game,
         v_target_day;
     end if;
-  elsif v_central_today = v_target_day then
-    raise exception 'expected an already-published Daily Challenge for % under %',
-      v_target_day,
-      v_source_version;
   end if;
 
   if exists (
