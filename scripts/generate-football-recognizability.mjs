@@ -26,7 +26,7 @@ const approvedAPlayers = new Set([
   "J.J. Watt", "Cam Newton", "Tim Tebow", "Reggie Bush", "Vince Young", "Johnny Manziel",
 ]);
 const approvedBPlayers = new Set([
-  "Matt Ryan", "Jamaal Charles", "Dez Bryant", "Luke Kuechly", "A.J. Green", "Calvin Johnson", "Andrew Luck",
+  "Matt Ryan", "Jamaal Charles", "Dez Bryant", "Luke Kuechly", "Calvin Johnson", "Andrew Luck",
   "Colt McCoy", "Michael Crabtree", "Darren McFadden", "Justin Blackmon", "Baker Mayfield", "Lamar Jackson",
   "Derrick Henry", "Saquon Barkley", "Christian McCaffrey", "Joe Burrow", "Trevor Lawrence", "Bijan Robinson",
   "Ashton Jeanty", "Caleb Williams", "Jayden Daniels", "Travis Hunter", "Bo Nix", "A.J. Brown",
@@ -46,7 +46,8 @@ function aggregate(corpus, league) {
     const sourceId = String(at(row, ix, "sourcePlayerId") ?? "");
     const name = at(row, ix, "playerDisplayName") ?? at(row, ix, "playerName");
     if (!sourceId || sourceId === "0" || !name) continue;
-    const p = people.get(sourceId) ?? { sourceId, name: String(name), league, seasons: new Set(), teams: new Set(), position: "", totals: {}, peaks: {} };
+    const personKey = league === "CFB" ? `${sourceId}:${normalize(name)}` : sourceId;
+    const p = people.get(personKey) ?? { sourceId, name: String(name), league, seasons: new Set(), teams: new Set(), position: "", totals: {}, peaks: {} };
     const season = n(at(row, ix, "season")); if (season) p.seasons.add(season);
     const team = at(row, ix, "recentTeam") ?? at(row, ix, "team"); if (team) p.teams.add(String(team));
     p.position ||= String(at(row, ix, "positionGroup") ?? at(row, ix, "position") ?? "");
@@ -55,7 +56,7 @@ function aggregate(corpus, league) {
       p.totals[field] = n(p.totals[field]) + value;
       p.peaks[field] = Math.max(n(p.peaks[field]), value);
     }
-    people.set(sourceId, p);
+    people.set(personKey, p);
   }
   return [...people.values()];
 }
@@ -109,7 +110,7 @@ function projectNflPlayer(p) {
     (position === "QB" && games >= 80 && (passYards >= 25000 || passTds >= 180)) ||
     (position === "RB" && games >= 80 && (rushYards >= 7000 || carries >= 1500)) ||
     ((position === "WR" || position === "TE") && games >= 80 && (recYards >= 7000 || receptions >= 500)) ||
-    (["DL", "LB", "DB"].includes(position) && games >= 100 && (sacks >= 50 || ints >= 20)) ||
+    (["DL", "LB", "DB"].includes(position) && games >= 100 && (sacks >= 70 || ints >= 30)) ||
     (position === "K" && games >= 180 && fgm >= 300);
   const c =
     (position === "QB" && games >= 40 && (passYards >= 10000 || passAttempts >= 1500)) ||
@@ -175,7 +176,7 @@ function projectCfbPlayer(p) {
   if (approvedBPlayers.has(p.name) && meaningful && tier === "D") { tier = "B"; evidence.push("explicit football-culture B approval"); }
   if (approvedAPlayers.has(p.name) && meaningful) { tier = "A"; evidence.push("explicit iconic-player approval"); }
   const years = yearsFor(p);
-  return { id: `cfbfast-r-player-${p.sourceId}`, kind: "player-career", name: p.name, league: "CFB", position, school, startSeason: years[0], endSeason: years.at(-1), tier, evidence, sourceProvider: "cfbfastR", sourceId: p.sourceId, manualA: tier === "A" };
+  return { id: `cfbfast-r-player-${p.sourceId}-${normalize(p.name)}`, kind: "player-career", name: p.name, league: "CFB", position, school, startSeason: years[0], endSeason: years.at(-1), tier, evidence, sourceProvider: "cfbfastR", sourceId: p.sourceId, manualA: tier === "A" };
 }
 
 const cfbPeople = aggregate(cfb, "CFB");

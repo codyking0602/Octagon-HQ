@@ -13,10 +13,10 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
 ## Totals
 
 - Raw projection records across all entity kinds: 105235
-- Promoted A-C records: 2849 (2.71%)
+- Promoted A-C records: 2848 (2.71%)
 - Raw player identities: 51428
-- Player A-C: 1957 (3.81%)
-- NFL player A-C: 1456 — below the 1,500 health target; thresholds were not weakened.
+- Player A-C: 1956 (3.80%)
+- NFL player A-C: 1455 — below the 1,500 health target; thresholds were not weakened.
 - CFB player A-C: 501 — below the 2,000 health target; thresholds were not weakened.
 - Manual A records: 55
 
@@ -26,14 +26,14 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
 {
   "NFL": {
     "A": 20,
-    "B": 416,
-    "C": 1020,
-    "D": 9895
+    "B": 281,
+    "C": 1154,
+    "D": 9896
   },
   "CFB": {
     "A": 1,
-    "B": 80,
-    "C": 420,
+    "B": 73,
+    "C": 427,
     "D": 39576
   }
 }
@@ -69,9 +69,9 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
   },
   "player-career": {
     "A": 21,
-    "B": 496,
-    "C": 1440,
-    "D": 49471
+    "B": 354,
+    "C": 1581,
+    "D": 49472
   },
   "program": {
     "A": 7,
@@ -107,7 +107,7 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
 
 ## Thin-pool / bias warnings
 
-- NFL player depth is 1456, below the roadmap health target; quality was kept above quota.
+- NFL player depth is 1455, below the roadmap health target; quality was kept above quota.
 - CFB player depth is 501, below the roadmap health target; quality was kept above quota.
 - CFB offensive-line recognition cannot be inferred from the historical player-stat source.
 - CFB defensive players without a unique NFL name reconciliation are deliberately not promoted from ambiguous defensive event stats alone.
@@ -118,18 +118,10 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
 ### NFL tier B
 - A.J. Brown (WR, 2019–2025; sustained nationally prominent NFL career)
 - A.J. Green (WR, 2011–2022; sustained nationally prominent NFL career)
-- A.J. Green (DB, 2021–2025; explicit football-culture B approval)
-- Aaron Glenn (DB, 1999–2008; sustained nationally prominent NFL career)
 - Aaron Jones (RB, 2017–2025; sustained nationally prominent NFL career)
-- Aaron Kampman (DL, 2002–2010; sustained nationally prominent NFL career)
 - Aaron Schobel (DL, 2001–2009; sustained nationally prominent NFL career)
-- Adalius Thomas (LB, 2000–2009; sustained nationally prominent NFL career)
 - Adam Thielen (WR, 2014–2025; sustained nationally prominent NFL career)
-- Adewale Ogunleye (DL, 2001–2010; sustained nationally prominent NFL career)
-- Adrian Wilson (DB, 2001–2012; sustained nationally prominent NFL career)
-- Ahmad Brooks (LB, 2006–2017; sustained nationally prominent NFL career)
 - Ahman Green (RB, 1999–2009; sustained nationally prominent NFL career)
-- Al Harris (DB, 1999–2011; sustained nationally prominent NFL career)
 - Alex Smith (QB, 2005–2020; sustained nationally prominent NFL career)
 - Allen Robinson (WR, 2014–2024; sustained nationally prominent NFL career)
 - Alvin Kamara (RB, 2017–2025; sustained nationally prominent NFL career)
@@ -141,11 +133,19 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
 - Andy Dalton (QB, 2011–2025; sustained nationally prominent NFL career)
 - Anquan Boldin (WR, 2003–2016; sustained nationally prominent NFL career)
 - Anthony Henry (DB, 2001–2009; sustained nationally prominent NFL career)
-- Antoine Bethea (DB, 2006–2019; sustained nationally prominent NFL career)
-- Antoine Winfield (DB, 1999–2012; sustained nationally prominent NFL career)
 - Antonio Brown (WR, 2010–2021; sustained nationally prominent NFL career)
 - Antonio Cromartie (DB, 2006–2016; sustained nationally prominent NFL career)
 - Antonio Gates (TE, 2003–2018; sustained nationally prominent NFL career)
+- Aqib Talib (DB, 2008–2019; sustained nationally prominent NFL career)
+- Asante Samuel (DB, 2003–2013; sustained nationally prominent NFL career)
+- Ashton Jeanty (RB, 2025–2025; explicit football-culture B approval)
+- Baker Mayfield (QB, 2018–2025; sustained nationally prominent NFL career)
+- Ben Roethlisberger (QB, 2004–2021; sustained nationally prominent NFL career)
+- Benjamin Watson (TE, 2004–2019; sustained nationally prominent NFL career)
+- Bo Nix (QB, 2024–2025; explicit football-culture B approval)
+- Bobby Engram (WR, 1999–2009; sustained nationally prominent NFL career)
+- Brandin Cooks (WR, 2014–2025; sustained nationally prominent NFL career)
+- Brandon Graham (DL, 2010–2025; sustained nationally prominent NFL career)
 
 ### NFL tier C (50)
 - A.J. Bouye (DB, 2013–2021; substantial multi-year NFL role)
@@ -154,20 +154,27 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
 - A'Shawn Robinson (DL, 2016–2025; substantial multi-year NFL role)
 - Aaron Beasley (DB, 1999–2004; substantial multi-year NFL role)
 - Aaron Brooks (QB, 2000–2006; substantial multi-year NFL role)
+- Aaron Glenn (DB, 1999–2008; substantial multi-year NFL role)
+- Aaron Kampman (DL, 2002–2010; substantial multi-year NFL role)
 - Aaron Ross (DB, 2007–2013; substantial multi-year NFL role)
 - Aaron Smith (DL, 1999–2011; substantial multi-year NFL role)
+- Adalius Thomas (LB, 2000–2009; substantial multi-year NFL role)
 - Adam Butler (DL, 2017–2025; substantial multi-year NFL role)
 - Adam Humphries (WR, 2015–2021; substantial multi-year NFL role)
 - Adam Jones (DB, 2005–2018; substantial multi-year NFL role)
+- Adewale Ogunleye (DL, 2001–2010; substantial multi-year NFL role)
 - Adrian Amos (DB, 2015–2023; substantial multi-year NFL role)
 - Adrian Clayborn (DL, 2011–2020; substantial multi-year NFL role)
 - Adrian Phillips (DB, 2014–2023; substantial multi-year NFL role)
+- Adrian Wilson (DB, 2001–2012; substantial multi-year NFL role)
 - Aeneas Williams (DB, 1999–2004; substantial multi-year NFL role)
 - Ahkello Witherspoon (DB, 2017–2025; substantial multi-year NFL role)
 - Ahmad Bradshaw (RB, 2007–2015; substantial multi-year NFL role)
+- Ahmad Brooks (LB, 2006–2017; substantial multi-year NFL role)
 - Ahtyba Rubin (DL, 2008–2017; substantial multi-year NFL role)
 - Akiem Hicks (DL, 2012–2022; substantial multi-year NFL role)
 - Akin Ayodele (LB, 2002–2010; substantial multi-year NFL role)
+- Al Harris (DB, 1999–2011; substantial multi-year NFL role)
 - Al Wilson (LB, 1999–2006; substantial multi-year NFL role)
 - Al Woods (DL, 2010–2023; substantial multi-year NFL role)
 - Al-Quadin Muhammad (LB, 2017–2025; substantial multi-year NFL role)
@@ -191,13 +198,6 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
 - Andra Davis (LB, 2002–2011; substantial multi-year NFL role)
 - Andre Branch (DL, 2012–2018; substantial multi-year NFL role)
 - Andre Dyson (DB, 2001–2007; substantial multi-year NFL role)
-- Andre Roberts (WR, 2010–2022; substantial multi-year NFL role)
-- Andre' Goodman (DB, 2002–2011; substantial multi-year NFL role)
-- Andrew Adams (DB, 2016–2022; substantial multi-year NFL role)
-- Andrew Luck (QB, 2012–2018; substantial multi-year NFL role)
-- Andrew Sendejo (DB, 2010–2021; substantial multi-year NFL role)
-- Andrew Van Ginkel (LB, 2019–2025; substantial multi-year NFL role)
-- Anthony Brown (DB, 2016–2022; substantial multi-year NFL role)
 
 ### CFB tier B
 - A.J. Brown (WR, 2016–2018; recognizable NFL crossover with meaningful college role)
@@ -226,10 +226,10 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
 - Evan Engram (TE, 2014–2016; recognizable NFL crossover with meaningful college role)
 - Ezekiel Elliott (RB, 2014–2015; recognizable NFL crossover with meaningful college role)
 - Frank Harris (QB, 2019–2023; exceptional multi-year production at a nationally prominent program)
-- Haason Reddick (LB, 2016–2016; recognizable NFL crossover with meaningful college role)
 - J.K. Dobbins (RB, 2017–2019; exceptional multi-year production at a nationally prominent program)
 - James Proche (WR, 2016–2019; exceptional multi-year production at a nationally prominent program)
 - James Washington (WR, 2014–2017; exceptional multi-year production at a nationally prominent program)
+- Jared Goff (QB, 2014–2015; recognizable NFL crossover with meaningful college role)
 
 ### CFB tier C (50)
 - A.J. Epenesa (LB, 2017–2019; recognized NFL crossover with meaningful college role)
