@@ -13,11 +13,11 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
 ## Totals
 
 - Raw projection records across all entity kinds: 105235
-- Promoted A-C records: 2388 (2.27%)
+- Promoted A-C records: 2369 (2.25%)
 - Raw player identities: 51428
-- Player A-C: 1618 (3.15%)
+- Player A-C: 1599 (3.11%)
 - NFL player A-C: 1455 — below the 1,500 health target; thresholds were not weakened.
-- CFB player A-C: 163 — below the 2,000 health target; thresholds were not weakened.
+- CFB player A-C: 144 — below the 2,000 health target; thresholds were not weakened.
 - Manual A records: 48
 
 ### Player tier by league
@@ -32,9 +32,9 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
   },
   "CFB": {
     "A": 1,
-    "B": 30,
-    "C": 132,
-    "D": 39914
+    "B": 24,
+    "C": 119,
+    "D": 39933
   }
 }
 ```
@@ -69,9 +69,9 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
   },
   "player-career": {
     "A": 21,
-    "B": 273,
-    "C": 1324,
-    "D": 49810
+    "B": 267,
+    "C": 1311,
+    "D": 49829
   },
   "program": {
     "A": 7,
@@ -92,25 +92,26 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
 
 ```json
 {
-  "DB": 3114,
-  "DL": 2181,
-  "K": 1360,
-  "LB": 2293,
-  "OL": 1582,
-  "QB": 2142,
-  "RB": 2924,
-  "TE": 1025,
-  "WR": 7060,
-  "unknown": 27747
+  "DB": 2899,
+  "DL": 2035,
+  "K": 1370,
+  "LB": 2173,
+  "OL": 1500,
+  "QB": 2145,
+  "RB": 2845,
+  "TE": 961,
+  "WR": 7052,
+  "unknown": 28448
 }
 ```
 
 ## Thin-pool / bias warnings
 
 - NFL player depth is 1455, below the roadmap health target; quality was kept above quota.
-- CFB player depth is 163, below the roadmap health target; quality was kept above quota.
+- CFB player depth is 144, below the roadmap health target; quality was kept above quota.
 - CFB offensive-line recognition cannot be inferred from the historical player-stat source.
-- CFB defensive players without a unique NFL name reconciliation are deliberately not promoted from ambiguous defensive event stats alone.
+- CFB defensive players without a unique, chronologically plausible NFL name reconciliation are deliberately not promoted from ambiguous defensive event stats alone.
+- Duplicate CFB source names are left D until a stable identity key can reconcile them safely.
 - CFB historical games remain D because the relationship rows do not carry reliable broad cultural-significance markers; sparse source title flags are not promoted as complete history.
 
 ## Deterministic player review samples
@@ -207,9 +208,6 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
 - Amon-Ra St. Brown (WR, 2018–2020; recognizable NFL crossover with meaningful college role)
 - Ashton Jeanty (RB, 2022–2024; recognizable NFL crossover with meaningful college role)
 - Baker Mayfield (QB, 2015–2017; recognizable NFL crossover with meaningful college role)
-- Bo Nix (QB, 2022–2023; recognizable NFL crossover with meaningful college role)
-- Bo Nix (QB, 2019–2021; recognizable NFL crossover with meaningful college role)
-- Caleb Williams (QB, 2021–2023; recognizable NFL crossover with meaningful college role)
 - CeeDee Lamb (WR, 2017–2019; recognizable NFL crossover with meaningful college role)
 - Christian McCaffrey (RB, 2014–2016; recognizable NFL crossover with meaningful college role)
 - Dak Prescott (QB, 2014–2015; recognizable NFL crossover with meaningful college role)
@@ -220,20 +218,16 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
 - Jayden Daniels (QB, 2019–2023; recognizable NFL crossover with meaningful college role)
 - Joe Mixon (RB, 2015–2016; recognizable NFL crossover with meaningful college role)
 - Jonathan Taylor (RB, 2017–2019; recognizable NFL crossover with meaningful college role)
-- Justin Jefferson (WR, 2017–2019; recognizable NFL crossover with meaningful college role)
 - Kevin Byard (DB, 2014–2015; recognizable NFL crossover with meaningful college role)
-- Lamar Jackson (QB, 2015–2017; explicit football-culture B approval)
 - Melvin Gordon (RB, 2014–2014; recognizable NFL crossover with meaningful college role)
 - Myles Garrett (DL, 2015–2016; recognizable NFL crossover with meaningful college role)
 - Nick Chubb (RB, 2014–2017; recognizable NFL crossover with meaningful college role)
 - Saquon Barkley (RB, 2015–2017; recognizable NFL crossover with meaningful college role)
 - T.J. Watt (LB, 2016–2016; recognizable NFL crossover with meaningful college role)
-- Tyler Boyd (WR, 2014–2015; recognizable NFL crossover with meaningful college role)
 - Tyler Lockett (WR, 2014–2014; recognizable NFL crossover with meaningful college role)
 
 ### CFB tier C (50)
 - A.J. Epenesa (LB, 2017–2019; recognized NFL crossover with meaningful college role)
-- Ahmad Bradshaw (RB, 2015–2017; recognized NFL crossover with meaningful college role)
 - Alex Highsmith (LB, 2016–2019; recognized NFL crossover with meaningful college role)
 - Alexander Mattison (RB, 2016–2018; recognized NFL crossover with meaningful college role)
 - Allen Lazard (WR, 2014–2017; recognized NFL crossover with meaningful college role)
@@ -264,24 +258,25 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
 - D'Andre Swift (RB, 2017–2019; recognized NFL crossover with meaningful college role)
 - Dalvin Cook (RB, 2014–2016; recognized NFL crossover with meaningful college role)
 - Damontae Kazee (DB, 2014–2016; recognized NFL crossover with meaningful college role)
-- Daniel Jones (QB, 2016–2018; recognized NFL crossover with meaningful college role)
 - Darnell Mooney (WR, 2016–2019; recognized NFL crossover with meaningful college role)
 - David Montgomery (RB, 2016–2018; recognized NFL crossover with meaningful college role)
-- Demarcus Robinson (WR, 2014–2015; recognized NFL crossover with meaningful college role)
 - DeMarcus Walker (DL, 2016–2016; recognized NFL crossover with meaningful college role)
 - Derek Barnett (DL, 2016–2016; recognized NFL crossover with meaningful college role)
 - Deshaun Watson (QB, 2014–2016; recognized NFL crossover with meaningful college role)
 - Desmond King (DB, 2014–2016; recognized NFL crossover with meaningful college role)
 - Devin Singletary (RB, 2016–2018; recognized NFL crossover with meaningful college role)
-- DeVonta Smith (WR, 2017–2020; recognized NFL crossover with meaningful college role)
 - Dexter Lawrence (DL, 2016–2018; recognized NFL crossover with meaningful college role)
 - Diontae Johnson (WR, 2015–2018; recognized NFL crossover with meaningful college role)
-- Donovan Wilson (DB, 2015–2018; recognized NFL crossover with meaningful college role)
 - Drake London (WR, 2019–2021; recognized NFL crossover with meaningful college role)
 - Dre'Mont Jones (LB, 2017–2018; recognized NFL crossover with meaningful college role)
 - Ed Oliver (DL, 2016–2018; recognized NFL crossover with meaningful college role)
 - Fred Warner (LB, 2014–2017; recognized NFL crossover with meaningful college role)
 - Gardner Minshew (QB, 2016–2018; recognized NFL crossover with meaningful college role)
+- Garrett Wilson (WR, 2019–2021; recognized NFL crossover with meaningful college role)
+- Germaine Pratt (LB, 2015–2018; recognized NFL crossover with meaningful college role)
+- Gus Edwards (RB, 2014–2017; recognized NFL crossover with meaningful college role)
+- Haason Reddick (LB, 2016–2016; recognized NFL crossover with meaningful college role)
+- Hunter Henry (TE, 2014–2015; recognized NFL crossover with meaningful college role)
 
 ## Non-player A-C samples
 
