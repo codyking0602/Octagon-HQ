@@ -115,17 +115,22 @@ Generated source corpora should not be imported wholesale into the initial React
 
 ### CFB
 
-Historical source family: SportsDataverse `sportsdataverse/cfbfastR-data`.
+Historical player source authority: SportsDataverse ESPN CFB player box scores published in `sportsdataverse/sportsdataverse-data`.
 
-Pinned research baseline for this initiative:
+Canonical source lock for PR 3:
 
-- repository: `sportsdataverse/cfbfastR-data`
-- commit: `a0f29f9ec6c04952a720905017e74a7b089dc1eb`
+- repository: `sportsdataverse/sportsdataverse-data`
+- release ID: `334089407`
+- release tag: `espn_cfb_player_box`
 - license: `CC BY 4.0`
-- player-stat files currently present for 2014-2025 under `player_stats/csv/player_stats_<season>.csv`
-- broader cfbfastR data includes schedules/play-by-play coverage extending earlier than the player-stat files and can support team-season/game enrichment.
+- coverage: 2004-2025 inclusive
+- source lock: `scripts/football-cfb-historical-source-lock.json`
+- every annual compressed source asset is pinned by GitHub asset ID and SHA-256 before import
+- normalized output: 140,007 player-team seasons, 65,011 unique ESPN athlete IDs, 261 ESPN team IDs, 37 identity/stat columns across 22 seasons
 
-The existing 2025 CC0 NCAA corpus from PR #679 is useful source-stage infrastructure, but it is not the historical Football knowledge solution and must not be treated as the game pool.
+The deterministic importer lives at `scripts/import-football-cfb-historical-player-seasons.mjs`. It aggregates ESPN game/category rows into player-team-season records while preserving athlete, team, season, and game-count identity plus passing, rushing, receiving, defense, kicking, punting, and return production.
+
+The existing 2025 CC0 NCAA corpus from PR #679 remains useful source-stage infrastructure, but it is not the historical Football knowledge solution and must not be treated as the game pool.
 
 ### NFL
 
@@ -225,8 +230,8 @@ Deliverables:
 
 Deliverables:
 
-- pinned cfbfastR source adapter
-- 2014-2025 player-stat ingestion
+- pinned SportsDataverse ESPN player-box source adapter
+- 2004-2025 player-team-season ingestion
 - normalized player-season schema
 - identity reconciliation keys for player/team/season
 - compact manifests and coverage report
