@@ -10,7 +10,7 @@ interface Corpus {
   columns: string[];
   rowCount: number;
   rows: Array<Array<string | number | boolean | string[] | null>>;
-  source?: { championshipSignal?: ChampionshipSignal };
+  source?: { championshipSignal?: ChampionshipSignal; coachIdentityScope?: string };
 }
 
 interface ChampionshipSignal {
@@ -46,6 +46,8 @@ describe("materialized Football game relationship corpus", () => {
       ["nfl-franchises-1999-2025.json", 32],
       ["nfl-team-season-results-1999-2025.json", 861],
       ["nfl-games-1999-2025.json", 7_276],
+      ["nfl-coach-seasons-1999-2025.json", 904],
+      ["nfl-coach-stints-1999-2025.json", 246],
     ]);
 
     expect(manifest.outputs).toHaveLength(expectedCounts.size);
@@ -99,6 +101,51 @@ describe("materialized Football game relationship corpus", () => {
       superBowlAppearance: true,
       superBowlChampion: true,
     });
+  });
+
+  it("materializes deep NFL coach stops without pretending source names are canonical person ids", () => {
+    const seasons = readJson<Corpus>("nfl-coach-seasons-1999-2025.json");
+    const stints = readJson<Corpus>("nfl-coach-stints-1999-2025.json");
+    const coverage = readJson<{
+      nfl: {
+        coachSeasonStopCount: number;
+        coachStintCount: number;
+        uniqueSourceCoachNameCount: number;
+        coachIdentityScope: string;
+      };
+    }>("football-game-relationships.coverage.json");
+
+    expect(seasons.source?.coachIdentityScope).toBe("source-name-within-franchise");
+    expect(stints.source?.coachIdentityScope).toBe("source-name-within-franchise");
+    expect(coverage.nfl).toMatchObject({
+      coachSeasonStopCount: 904,
+      coachStintCount: 246,
+      uniqueSourceCoachNameCount: 173,
+      coachIdentityScope: "source-name-within-franchise",
+    });
+
+    const stintRows = stints.rows.map((row) => rowObject(stints, row));
+    const belichick = stintRows.find((row) => row.sourceCoachStintKey === "bill-belichick@NE:2000-2023");
+    expect(belichick).toMatchObject({
+      coachName: "Bill Belichick",
+      franchiseId: "NE",
+      startSeason: 2000,
+      endSeason: 2023,
+      seasonCount: 24,
+      regularSeasonWins: 266,
+      postseasonWins: 30,
+      superBowlAppearances: 9,
+      superBowlChampionships: 6,
+    });
+
+    const reid = stintRows.filter((row) => row.sourceCoachNameKey === "andy-reid");
+    expect(reid).toHaveLength(2);
+    expect(reid.map((row) => row.sourceCoachStopKey).sort()).toEqual(["andy-reid@KC", "andy-reid@PHI"]);
+
+    const mora = stintRows.filter((row) => row.sourceCoachNameKey === "jim-mora");
+    expect(mora).toHaveLength(3);
+    expect(mora.map((row) => row.sourceCoachStopKey).sort()).toEqual(["jim-mora@ATL", "jim-mora@IND", "jim-mora@SEA"]);
+    expect(mora.every((row) => row.identityScope === "source-name-within-franchise")).toBe(true);
   });
 
   it("keeps raw database depth separate from casual Football subject eligibility", () => {

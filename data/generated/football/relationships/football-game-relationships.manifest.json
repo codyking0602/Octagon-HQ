@@ -29,8 +29,18 @@
     },
     {
       "file": "nfl-games-1999-2025.json",
-      "sha256": "99ee6bd623f37d4a73224d2a0cb5a309f640b5b3f99eeeada2d5ee6afcaa04ff",
+      "sha256": "bd01db7f5c2f22c19785a036a66db3f854d2c5879af70819b0a842b8e6d07dc4",
       "rowCount": 7276
+    },
+    {
+      "file": "nfl-coach-seasons-1999-2025.json",
+      "sha256": "62abafcc6fc47242c23e6ec66ce60095d06ebecde084df89d3e04bf4e0aacf7a",
+      "rowCount": 904
+    },
+    {
+      "file": "nfl-coach-stints-1999-2025.json",
+      "sha256": "1d7d51896ba0c732bae1e508bb78afbaa7bde71fd19604f4f5f189fa41ec69dc",
+      "rowCount": 246
     }
   ],
   "cfbSourceVerification": [
