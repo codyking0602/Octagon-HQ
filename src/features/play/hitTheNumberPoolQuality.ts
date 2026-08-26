@@ -119,20 +119,25 @@ export function hitTheNumberRandomPoolQuality(
   };
 }
 
+function hitTheNumberDailyPlanPassesQuality(
+  plan: HitTheNumberFormatPlan,
+  statRows?: readonly HitTheNumberStatRow[],
+) {
+  if (plan.fighterIds.length <= plan.pickCount) return false;
+  if (plan.boardType !== "random-pool" || plan.format.formatId !== "themed-lineup") return true;
+  return hitTheNumberRandomPoolQuality(plan, statRows).passes;
+}
+
 /**
- * The format planner remains the sole board generator. This only rejects weak
- * themed Random Pool candidates until that same canonical planner produces a
- * board with real low, middle, and bust outcomes. Classic and slot-driven
- * formats keep their existing generation path.
+ * The format planner remains the sole board generator. This gate rejects any
+ * official candidate that would force the player to pick the entire eligible
+ * board. Themed Random Pools retain the stronger score-spread quality check.
  */
 export function createQualityGatedHitTheNumberFormatPlan(
   options: CreateHitTheNumberFormatPlanOptions,
 ): HitTheNumberFormatPlan {
   const first = createHitTheNumberFormatPlan(options);
-  if (options.boardType !== "random-pool" || first.format.formatId !== "themed-lineup") {
-    return first;
-  }
-  if (hitTheNumberRandomPoolQuality(first, options.statRows).passes) return first;
+  if (hitTheNumberDailyPlanPassesQuality(first, options.statRows)) return first;
 
   for (let attempt = 1; attempt <= HIT_THE_NUMBER_RANDOM_POOL_QUALITY.candidateAttempts; attempt += 1) {
     const candidate = createHitTheNumberFormatPlan({
@@ -140,8 +145,8 @@ export function createQualityGatedHitTheNumberFormatPlan(
       seed: `${options.seed}|pool-quality|${attempt}`,
     });
     if (candidate.format.formatId !== first.format.formatId) continue;
-    if (hitTheNumberRandomPoolQuality(candidate, options.statRows).passes) return candidate;
+    if (hitTheNumberDailyPlanPassesQuality(candidate, options.statRows)) return candidate;
   }
 
-  throw new Error("Hit the Number themed Random Pool could not produce a balanced score spread.");
+  throw new Error("Hit the Number could not produce a Daily board with real player choice and required pool quality.");
 }
