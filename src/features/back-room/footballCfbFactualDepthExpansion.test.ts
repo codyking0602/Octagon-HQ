@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   footballFactualRecords,
   getFootballFact,
+  getFootballSubject,
   type FootballFactMetricId,
   type FootballFactScope,
 } from "./footballFactualStats";
@@ -11,8 +12,11 @@ const factCount = (scope: FootballFactScope, metricId: FootballFactMetricId) =>
     (record) => record.scope === scope && record.facts.some((fact) => fact.metricId === metricId),
   ).length;
 
+const metricFactCount = (metricId: FootballFactMetricId) =>
+  footballFactualRecords.filter((record) => record.facts.some((fact) => fact.metricId === metricId)).length;
+
 describe("Football CFB factual depth expansion", () => {
-  it("reaches reusable receiving and coach depth without crossing the dormant rushing boundary", () => {
+  it("keeps receiving and coaching depth while making recognizable rushing depth materially reusable", () => {
     expect(factCount("cfb-player-career", "cfb-best-season-receptions")).toBe(11);
     expect(factCount("cfb-player-career", "cfb-best-season-receiving-yards")).toBe(11);
     expect(factCount("cfb-player-career", "cfb-best-season-receiving-touchdowns")).toBe(11);
@@ -20,12 +24,11 @@ describe("Football CFB factual depth expansion", () => {
     expect(factCount("cfb-coach-career", "cfb-coach-career-wins")).toBe(11);
     expect(factCount("cfb-coach-career", "cfb-coach-career-losses")).toBe(11);
 
-    // PR3 owns Find the Leader activation; PR2 must preserve the existing below-threshold rushing pool.
-    expect(factCount("cfb-player-career", "cfb-best-season-rushing-yards")).toBe(7);
-    expect(factCount("cfb-player-career", "cfb-best-season-rushing-touchdowns")).toBe(7);
+    expect(metricFactCount("cfb-best-season-rushing-yards")).toBeGreaterThanOrEqual(20);
+    expect(metricFactCount("cfb-best-season-rushing-touchdowns")).toBeGreaterThanOrEqual(20);
   });
 
-  it("stores the new CFB facts in the canonical ledger with source evidence", () => {
+  it("stores the expanded CFB facts in the canonical ledger with source evidence", () => {
     expect(getFootballFact("cfb-amari-cooper", "cfb-best-season-receiving-yards")?.fact.value).toBe(1727);
     expect(getFootballFact("cfb-christian-mccaffrey", "cfb-best-season-receptions")?.fact.value).toBe(45);
     expect(getFootballFact("cfb-desmond-howard", "cfb-best-season-receiving-touchdowns")?.fact.value).toBe(19);
@@ -47,8 +50,34 @@ describe("Football CFB factual depth expansion", () => {
       ["cfb-saquon-barkley", "cfb-best-season-receptions"],
       ["cfb-nndamukong-suh", "cfb-best-season-sacks"],
       ["dabo-swinney-cfb", "cfb-coach-career-wins"],
+      ["cfb-ashton-jeanty", "cfb-best-season-rushing-yards"],
+      ["cfb-mark-ingram-ii", "cfb-best-season-rushing-touchdowns"],
     ] as const) {
       expect(getFootballFact(subjectId, metricId)?.sources.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("keeps the new rushing depth inside the curated recognizable CFB subject universe", () => {
+    const expectedRecognizableSubjects = [
+      ["cfb-lamar-jackson", "Lamar Jackson"],
+      ["cfb-mark-ingram-ii", "Mark Ingram II"],
+      ["cfb-christian-mccaffrey", "Christian McCaffrey"],
+      ["cfb-saquon-barkley", "Saquon Barkley"],
+      ["cfb-ezekiel-elliott", "Ezekiel Elliott"],
+      ["cfb-keenan-reynolds", "Keenan Reynolds"],
+      ["cfb-ashton-jeanty", "Ashton Jeanty"],
+      ["cfb-ron-dayne", "Ron Dayne"],
+      ["cfb-eddie-george", "Eddie George"],
+      ["cfb-rashaan-salaam", "Rashaan Salaam"],
+      ["cfb-braelon-allen", "Braelon Allen"],
+    ] as const;
+
+    for (const [subjectId, expectedName] of expectedRecognizableSubjects) {
+      const subject = getFootballSubject(subjectId);
+      expect(subject?.name, subjectId).toBe(expectedName);
+      expect(subject && (subject.leagues ?? [subject.league]).includes("CFB"), subjectId).toBe(true);
+      expect(getFootballFact(subjectId, "cfb-best-season-rushing-yards"), subjectId).not.toBeNull();
+      expect(getFootballFact(subjectId, "cfb-best-season-rushing-touchdowns"), subjectId).not.toBeNull();
     }
   });
 });
