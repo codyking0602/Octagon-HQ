@@ -40,8 +40,13 @@ describe("Football recognizability projection", () => {
     expect(projection.records.find((record) => record.league === "NFL" && record.name === "Benjamin Watson")?.tier).toBe("C");
     expect(projection.records.find((record) => record.league === "NFL" && record.name === "Bobby Engram")?.tier).toBe("C");
     expect(projection.records.find((record) => record.league === "NFL" && record.name === "A.J. Green")?.tier).toBe("B");
-    expect(projection.records.find((record) => record.league === "CFB" && record.name === "Bijan Robinson")?.tier).toBe("B");
-    expect(projection.records.find((record) => record.league === "CFB" && record.name === "C.J. Stroud")?.tier).toBe("B");
+    expect(projection.records.find((record) => record.league === "CFB" && record.name === "Baker Mayfield")?.tier).toBe("B");
+    expect(projection.records.find((record) => record.league === "CFB" && record.name === "A.J. Brown")?.tier).toBe("B");
+    expect(projection.records.find((record) => record.league === "CFB" && record.name === "Bijan Robinson")?.tier).toBe("C");
+    expect(projection.records.find((record) => record.league === "CFB" && record.name === "C.J. Stroud")?.tier).toBe("C");
+    for (const name of ["Aidan O'Connell", "Alan Bowman", "Amba Etta-Tawo", "Athan Kaliakmanis"]) {
+      expect(projection.records.find((record) => record.league === "CFB" && record.name === name)?.tier).not.toBe("B");
+    }
   });
 
   it("does not turn ordinary CFB stat rows or kicker volume into casual filler", () => {
