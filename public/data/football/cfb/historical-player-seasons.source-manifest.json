@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "league": "CFB",
+  "provider": "cfbfastR",
+  "repository": "sportsdataverse/cfbfastR-data",
+  "commit": "a0f29f9ec6c04952a720905017e74a7b089dc1eb",
+  "license": "CC BY 4.0",
+  "seasonStart": 2014,
+  "seasonEnd": 2025,
+  "seasonCount": 12,
+  "totalSourceBytes": 459746124,
+  "sourcePathTemplate": "player_stats/csv/player_stats_<season>.csv",
+  "assets": [
+    { "season": 2014, "path": "player_stats/csv/player_stats_2014.csv", "gitBlobSha": "b9ec5c3da33832cc2abb27c06b27f317b009368e", "bytes": 31499415 },
+    { "season": 2015, "path": "player_stats/csv/player_stats_2015.csv", "gitBlobSha": "43b626c9209305a832f5f0ec8da554063e588e12", "bytes": 31953430 },
+    { "season": 2016, "path": "player_stats/csv/player_stats_2016.csv", "gitBlobSha": "b8e21dcda46d499f09624c3451337c8adbe59969", "bytes": 32473281 },
+    { "season": 2017, "path": "player_stats/csv/player_stats_2017.csv", "gitBlobSha": "9bc5a9a1fc6f157ca68b22c58aa83230ce9085d5", "bytes": 32763345 },
+    { "season": 2018, "path": "player_stats/csv/player_stats_2018.csv", "gitBlobSha": "9dd0d11279e72d11c202d77824fe72edeb95698d", "bytes": 32954871 },
+    { "season": 2019, "path": "player_stats/csv/player_stats_2019.csv", "gitBlobSha": "1c1445fe283a12331dd4e85a49da963eba7d1a47", "bytes": 33144301 },
+    { "season": 2020, "path": "player_stats/csv/player_stats_2020.csv", "gitBlobSha": "07ca3cab8fcb609a58fba11e851b5a41cd8eca06", "bytes": 20328932 },
+    { "season": 2021, "path": "player_stats/csv/player_stats_2021.csv", "gitBlobSha": "e66bc4762405ebf83ff4d99182f859f61b1cb20e", "bytes": 29864671 },
+    { "season": 2022, "path": "player_stats/csv/player_stats_2022.csv", "gitBlobSha": "33f2a7840409ad29f37c797e643c2ed9d59b23bd", "bytes": 48238345 },
+    { "season": 2023, "path": "player_stats/csv/player_stats_2023.csv", "gitBlobSha": "0f227234248480124befa06f99d7f7db56a1299a", "bytes": 51337361 },
+    { "season": 2024, "path": "player_stats/csv/player_stats_2024.csv", "gitBlobSha": "404063f4582cba1778e83e1baf30311f758384e9", "bytes": 55543427 },
+    { "season": 2025, "path": "player_stats/csv/player_stats_2025.csv", "gitBlobSha": "a8d35781958c2950e9df7607106188297ff7a47c", "bytes": 59644745 }
+  ],
+  "generatedBy": "scripts/import-football-cfb-historical-player-stats.mjs"
+}
