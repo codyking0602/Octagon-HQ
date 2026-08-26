@@ -1,0 +1,36 @@
+name: Bootstrap Football Era Relationships
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.head_ref }}
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Generate objective era relationships
+        run: node scripts/build-football-era-relationships.mjs
+      - name: Commit generated corpora
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            data/generated/football/relationships/cfb-championship-eras-2002-2025.json \
+            data/generated/football/relationships/football-era-relationships.manifest.json \
+            data/generated/football/relationships/football-era-relationships.coverage.json
+          if git diff --cached --quiet; then
+            echo "No generated changes"
+            exit 0
+          fi
+          git commit -m "Materialize objective Football era relationships [era-bootstrap]"
+          git push origin HEAD:${{ github.head_ref }}
