@@ -14,8 +14,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "verify:artifact": "node scripts/verify-production-artifact.mjs",
-    "export:verdict": "node scripts/export-octagon-verdict.mjs",
-    "import:football-cfb": "node scripts/import-football-cfb-player-stats.mjs"
+    "export:verdict": "node scripts/export-octagon-verdict.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.110.7",
