@@ -37,7 +37,7 @@ const majorCfbPrograms = new Set([
   "penn-state", "tennessee", "texas", "texas-a-m", "usc", "ucla", "virginia-tech", "washington", "wisconsin",
 ]);
 const iconicPrograms = new Set(["alabama", "michigan", "notre-dame", "ohio-state", "oklahoma", "texas", "usc"]);
-const veryRecognizablePrograms = new Set([...majorCfbPrograms, "arkansas", "boise-state", "iowa", "kansas-state", "ole-miss", "south-carolina", "tcu"]);
+const veryRecognizablePrograms = new Set(["auburn", "clemson", "florida", "florida-state", "georgia", "lsu", "miami", "oregon", "penn-state", "tennessee", "texas-a-m"]);
 
 function aggregate(corpus, league) {
   const ix = ixFor(corpus);
@@ -172,7 +172,7 @@ function projectCfbPlayer(p) {
   let tier = "D";
   if (nflMatch && ["A", "B"].includes(nflMatch.tier) && meaningful) { tier = "B"; evidence.push("recognizable NFL crossover with meaningful college role"); }
   else if (eliteMajorPeak && approvedBPlayers.has(p.name)) { tier = "B"; evidence.push("explicit B approval supported by exceptional major-program production"); }
-  else if ((nflMatch && nflMatch.tier === "C" && meaningful) || (strong && major)) { tier = "C"; evidence.push(nflMatch ? "recognized NFL crossover with meaningful college role" : "sustained high-end college production"); }
+  else if (nflMatch && nflMatch.tier === "C" && meaningful) { tier = "C"; evidence.push(nflMatch ? "recognized NFL crossover with meaningful college role" : "sustained high-end college production"); }
   if (approvedBPlayers.has(p.name) && meaningful && tier === "D") { tier = "B"; evidence.push("explicit football-culture B approval"); }
   if (approvedAPlayers.has(p.name) && meaningful) { tier = "A"; evidence.push("explicit iconic-player approval"); }
   const years = yearsFor(p);
@@ -210,7 +210,7 @@ const iconicCfbTeamSeasons = new Set(["2005:251", "2019:99"]);
 const cfbTeamSeasonRecords = recordsFromRows(cfbTeamSeasons, (row, ix) => {
   const season = n(at(row, ix, "season")); const sourceId = String(at(row, ix, "sourceProgramId")); const name = String(at(row, ix, "programName"));
   const key = `${season}:${sourceId}`; const fbs = String(at(row, ix, "division") ?? "").toLowerCase() === "fbs"; const wins = n(at(row, ix, "overallWins"));
-  let tier = "D"; if (championKeys.has(key)) tier = "B"; else if (fbs && wins >= 11) tier = "C"; if (iconicCfbTeamSeasons.has(key)) tier = "A";
+  let tier = "D"; if (championKeys.has(key)) tier = "B"; else if (fbs && wins >= 12) tier = "C"; if (iconicCfbTeamSeasons.has(key)) tier = "A";
   return { id: `cfb-team-season-${key}`, kind: "team-season", name: `${season} ${name}`, league: "CFB", tier, sourceProvider: "cfbfastR", sourceId: key, startSeason: season, endSeason: season, evidence: [tier === "A" ? "explicit iconic team-season approval" : championKeys.has(key) ? "NCAA championship season" : tier === "C" ? "11+ win FBS season" : "ordinary source team season"], manualA: tier === "A" };
 });
 
@@ -228,7 +228,7 @@ const cfbCoachB = new Set(["bob-stoops", "dabo-swinney", "kirby-smart", "mack-br
 const cfbCoachRecords = recordsFromRows(cfbCoachStints, (row, ix) => {
   const sourceId = String(at(row, ix, "sourceCoachStintKey")); const name = String(at(row, ix, "coachName")); const program = String(at(row, ix, "programName")); const seasons = n(at(row, ix, "seasonCount"));
   const nameKey = normalize(name); const programTier = cfbProgramTier.get(normalize(program)) ?? "D";
-  let tier = seasons >= 5 && programTier !== "D" ? "C" : "D"; if (cfbCoachB.has(nameKey) || (seasons >= 8 && ["A", "B"].includes(programTier))) tier = "B"; if (cfbCoachA.has(nameKey) && (seasons >= 5 || ["A", "B"].includes(programTier))) tier = "A";
+  let tier = seasons >= 5 && programTier !== "D" ? "C" : "D"; if ((cfbCoachB.has(nameKey) && (seasons >= 4 || ["A", "B"].includes(programTier))) || (seasons >= 8 && ["A", "B"].includes(programTier))) tier = "B"; const iconicStop = (nameKey === "nick-saban" && normalize(program) === "alabama") || (nameKey === "urban-meyer" && ["florida", "ohio-state"].includes(normalize(program))) || (nameKey === "pete-carroll" && normalize(program) === "usc") || (nameKey === "bobby-bowden" && normalize(program) === "florida-state"); if (iconicStop) tier = "A";
   return { id: `cfb-coach-stop-${sourceId}`, kind: "coach-stop", name, league: "CFB", tier, sourceProvider: "cfb-coaches", sourceId, identityScope: "source-name-within-program", startSeason: n(at(row, ix, "startSeason")), endSeason: n(at(row, ix, "endSeason")), evidence: [tier === "D" ? "short/low-salience FBS coaching stop" : tier === "C" ? "meaningful multi-year FBS head-coach stop" : "prominent coaching identity/stop"], manualA: tier === "A" };
 });
 
@@ -236,7 +236,7 @@ const nflCoachA = new Set(["bill-belichick", "andy-reid", "pete-carroll"]);
 const nflCoachB = new Set(["mike-tomlin", "sean-payton", "john-harbaugh", "tom-coughlin", "tony-dungy", "mike-shanahan", "bill-cowher", "jon-gruden"]);
 const nflCoachRecords = recordsFromRows(nflCoachStints, (row, ix) => {
   const sourceId = String(at(row, ix, "sourceCoachStintKey")); const name = String(at(row, ix, "coachName")); const nameKey = normalize(name); const seasons = n(at(row, ix, "seasonCount")); const wins = n(at(row, ix, "regularSeasonWins")); const playoffs = n(at(row, ix, "playoffSeasons")); const sbApps = n(at(row, ix, "superBowlAppearances")); const sbTitles = n(at(row, ix, "superBowlChampionships"));
-  let tier = seasons >= 5 && (wins >= 40 || playoffs >= 3) ? "C" : "D"; if (nflCoachB.has(nameKey) || (seasons >= 6 && (sbTitles >= 1 || sbApps >= 2))) tier = "B"; if (nflCoachA.has(nameKey) && seasons >= 5) tier = "A";
+  const franchise = String(at(row, ix, "franchiseId")); let tier = seasons >= 5 && (wins >= 40 || playoffs >= 3) ? "C" : "D"; if ((nflCoachB.has(nameKey) && seasons >= 4) || (seasons >= 6 && (sbTitles >= 1 || sbApps >= 2))) tier = "B"; if ((nameKey === "bill-belichick" && franchise === "NE") || (nameKey === "andy-reid" && franchise === "KC")) tier = "A";
   return { id: `nfl-coach-stop-${sourceId}`, kind: "coach-stop", name, league: "NFL", tier, sourceProvider: "nflverse", sourceId, identityScope: "source-name-within-franchise", startSeason: n(at(row, ix, "startSeason")), endSeason: n(at(row, ix, "endSeason")), evidence: [tier === "D" ? "short/low-salience NFL head-coach stop" : tier === "C" ? "meaningful multi-year NFL head-coach stop" : "prominent NFL head-coaching success"], manualA: tier === "A" };
 });
 
@@ -244,7 +244,7 @@ const cfbEraRecords = recordsFromRows(cfbEras, (row, ix) => {
   const sourceId = String(at(row, ix, "sourceEraKey")); const name = String(at(row, ix, "programName")); const startSeason = n(at(row, ix, "startSeason")); const endSeason = n(at(row, ix, "endSeason")); const tier = name === "Alabama" ? "A" : "B";
   return { id: `cfb-era-${sourceId}`, kind: "era", name: `${name} ${startSeason}–${endSeason}`, league: "CFB", tier, sourceProvider: "ncaa", sourceId, startSeason, endSeason, evidence: [tier === "A" ? "explicit iconic multi-title era approval" : "objective multi-title championship cluster"], manualA: tier === "A" };
 });
-const nflEraRecords = nflCoachRecords.map((coach) => ({ ...coach, id: coach.id.replace("coach-stop", "era"), kind: "era", name: `${coach.name} ${coach.startSeason}–${coach.endSeason}`, tier: coach.tier === "A" ? "A" : coach.tier === "B" ? "B" : coach.tier === "C" ? "C" : "D", evidence: ["objective contiguous coach-within-franchise stint used as NFL era basis"] }));
+const nflEraRecords = nflCoachRecords.map((coach) => { const iconic = coach.sourceId === "bill-belichick@NE:2000-2023" || coach.sourceId === "andy-reid@KC:2013-2025"; const seasons = n(coach.endSeason) - n(coach.startSeason) + 1; const tier = iconic ? "A" : coach.tier === "A" || (coach.tier === "B" && seasons >= 6) ? "B" : coach.tier === "C" && seasons >= 5 ? "C" : "D"; return { ...coach, id: coach.id.replace("coach-stop", "era"), kind: "era", name: `${coach.name} ${coach.startSeason}–${coach.endSeason}`, tier, evidence: [iconic ? "explicit iconic NFL coaching-era approval" : "objective contiguous coach-within-franchise stint used as NFL era basis"] }; });
 
 const nflGameRecords = recordsFromRows(nflGames, (row, ix) => {
   const sourceId = String(at(row, ix, "sourceGameId")); const season = n(at(row, ix, "season")); const away = String(at(row, ix, "awayFranchiseId")); const home = String(at(row, ix, "homeFranchiseId")); const superBowl = Boolean(at(row, ix, "superBowl"));

@@ -13,12 +13,12 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
 ## Totals
 
 - Raw projection records across all entity kinds: 105235
-- Promoted A-C records: 2784 (2.65%)
+- Promoted A-C records: 2388 (2.27%)
 - Raw player identities: 51428
-- Player A-C: 1894 (3.68%)
+- Player A-C: 1618 (3.15%)
 - NFL player A-C: 1455 — below the 1,500 health target; thresholds were not weakened.
-- CFB player A-C: 439 — below the 2,000 health target; thresholds were not weakened.
-- Manual A records: 53
+- CFB player A-C: 163 — below the 2,000 health target; thresholds were not weakened.
+- Manual A records: 48
 
 ### Player tier by league
 
@@ -32,9 +32,9 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
   },
   "CFB": {
     "A": 1,
-    "B": 29,
-    "C": 409,
-    "D": 39638
+    "B": 30,
+    "C": 132,
+    "D": 39914
   }
 }
 ```
@@ -44,16 +44,16 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
 ```json
 {
   "coach-stop": {
-    "A": 10,
-    "B": 46,
-    "C": 253,
-    "D": 623
+    "A": 7,
+    "B": 37,
+    "C": 260,
+    "D": 628
   },
   "era": {
-    "A": 5,
-    "B": 24,
-    "C": 36,
-    "D": 187
+    "A": 3,
+    "B": 19,
+    "C": 37,
+    "D": 193
   },
   "franchise": {
     "A": 5,
@@ -69,21 +69,21 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
   },
   "player-career": {
     "A": 21,
-    "B": 272,
-    "C": 1601,
-    "D": 49534
+    "B": 273,
+    "C": 1324,
+    "D": 49810
   },
   "program": {
     "A": 7,
-    "B": 25,
-    "C": 104,
+    "B": 11,
+    "C": 118,
     "D": 633
   },
   "team-season": {
     "A": 3,
     "B": 50,
-    "C": 268,
-    "D": 8008
+    "C": 159,
+    "D": 8117
   }
 }
 ```
@@ -108,7 +108,7 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
 ## Thin-pool / bias warnings
 
 - NFL player depth is 1455, below the roadmap health target; quality was kept above quota.
-- CFB player depth is 439, below the roadmap health target; quality was kept above quota.
+- CFB player depth is 163, below the roadmap health target; quality was kept above quota.
 - CFB offensive-line recognition cannot be inferred from the historical player-stat source.
 - CFB defensive players without a unique NFL name reconciliation are deliberately not promoted from ambiguous defensive event stats alone.
 - CFB historical games remain D because the relationship rows do not carry reliable broad cultural-significance markers; sparse source title flags are not promoted as complete history.
@@ -222,6 +222,7 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
 - Jonathan Taylor (RB, 2017–2019; recognizable NFL crossover with meaningful college role)
 - Justin Jefferson (WR, 2017–2019; recognizable NFL crossover with meaningful college role)
 - Kevin Byard (DB, 2014–2015; recognizable NFL crossover with meaningful college role)
+- Lamar Jackson (QB, 2015–2017; explicit football-culture B approval)
 - Melvin Gordon (RB, 2014–2014; recognizable NFL crossover with meaningful college role)
 - Myles Garrett (DL, 2015–2016; recognizable NFL crossover with meaningful college role)
 - Nick Chubb (RB, 2014–2017; recognizable NFL crossover with meaningful college role)
@@ -232,55 +233,55 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
 
 ### CFB tier C (50)
 - A.J. Epenesa (LB, 2017–2019; recognized NFL crossover with meaningful college role)
-- Adrian Martinez (QB, 2018–2022; recognized NFL crossover with meaningful college role)
 - Ahmad Bradshaw (RB, 2015–2017; recognized NFL crossover with meaningful college role)
-- Aidan O'Connell (QB, 2019–2022; recognized NFL crossover with meaningful college role)
-- Ainias Smith (WR, 2019–2023; recognized NFL crossover with meaningful college role)
-- Ajalen Holley (WR, 2014–2016; sustained high-end college production)
-- Alan Bowman (QB, 2018–2024; sustained high-end college production)
 - Alex Highsmith (LB, 2016–2019; recognized NFL crossover with meaningful college role)
 - Alexander Mattison (RB, 2016–2018; recognized NFL crossover with meaningful college role)
 - Allen Lazard (WR, 2014–2017; recognized NFL crossover with meaningful college role)
-- Amari Rodgers (WR, 2017–2020; recognized NFL crossover with meaningful college role)
 - Andrew Van Ginkel (LB, 2017–2018; recognized NFL crossover with meaningful college role)
-- Anthony Brown (QB, 2017–2021; sustained high-end college production)
-- Anthony Colandrea (QB, 2023–2025; sustained high-end college production)
 - Anthony Nelson (LB, 2016–2018; recognized NFL crossover with meaningful college role)
-- Antonio Gandy-Golden (WR, 2016–2019; recognized NFL crossover with meaningful college role)
 - Arden Key (DL, 2016–2017; recognized NFL crossover with meaningful college role)
-- Artavis Scott (WR, 2014–2016; sustained high-end college production)
-- Athan Kaliakmanis (QB, 2022–2025; sustained high-end college production)
-- Austin Reed (QB, 2022–2023; sustained high-end college production)
-- Barion Brown (WR, 2022–2025; sustained high-end college production)
-- Behren Morton (QB, 2021–2025; sustained high-end college production)
-- Ben Hicks (QB, 2016–2019; sustained high-end college production)
-- Bhayshul Tuten (RB, 2022–2024; recognized NFL crossover with meaningful college role)
 - Bijan Robinson (RB, 2020–2022; recognized NFL crossover with meaningful college role)
-- Billy Kemp (WR, 2019–2023; sustained high-end college production)
-- Blake Corum (RB, 2020–2023; recognized NFL crossover with meaningful college role)
-- Blake Shapen (QB, 2021–2025; sustained high-end college production)
-- Brad Kaaya (QB, 2014–2016; sustained high-end college production)
 - Bradley Chubb (LB, 2015–2017; recognized NFL crossover with meaningful college role)
-- Brady Cook (QB, 2020–2024; recognized NFL crossover with meaningful college role)
-- Braelon Allen (RB, 2021–2023; recognized NFL crossover with meaningful college role)
 - Brandon Aiyuk (WR, 2018–2019; recognized NFL crossover with meaningful college role)
-- Brandon Doughty (QB, 2014–2015; sustained high-end college production)
-- Brandon Silvers (QB, 2014–2017; sustained high-end college production)
 - Breece Hall (RB, 2019–2021; recognized NFL crossover with meaningful college role)
-- Brennan Armstrong (QB, 2018–2023; sustained high-end college production)
-- Brennan Presley (WR, 2020–2024; sustained high-end college production)
-- Brent Stockstill (QB, 2014–2018; sustained high-end college production)
 - Brian Burns (LB, 2016–2018; recognized NFL crossover with meaningful college role)
-- Brian Lewerke (QB, 2016–2019; sustained high-end college production)
-- Brock Bowers (TE, 2021–2023; recognized NFL crossover with meaningful college role)
 - Brock Purdy (QB, 2018–2021; recognized NFL crossover with meaningful college role)
-- Bryan Edwards (WR, 2016–2019; recognized NFL crossover with meaningful college role)
-- Bryce Young (QB, 2020–2022; recognized NFL crossover with meaningful college role)
-- Byrum Brown (QB, 2022–2025; sustained high-end college production)
 - C.J. Stroud (QB, 2021–2022; recognized NFL crossover with meaningful college role)
-- Cade Klubnik (QB, 2022–2025; sustained high-end college production)
-- Caleb Evans (QB, 2016–2019; sustained high-end college production)
 - Calvin Ridley (WR, 2015–2017; recognized NFL crossover with meaningful college role)
+- Carl Granderson (DL, 2016–2018; recognized NFL crossover with meaningful college role)
+- Carl Lawson (DL, 2016–2016; recognized NFL crossover with meaningful college role)
+- Charles Omenihu (DL, 2016–2018; recognized NFL crossover with meaningful college role)
+- Chris Olave (WR, 2018–2021; recognized NFL crossover with meaningful college role)
+- Christian Kirk (WR, 2015–2017; recognized NFL crossover with meaningful college role)
+- Christian Wilkins (DL, 2016–2018; recognized NFL crossover with meaningful college role)
+- Chuba Hubbard (RB, 2018–2020; recognized NFL crossover with meaningful college role)
+- Clelin Ferrell (DL, 2016–2018; recognized NFL crossover with meaningful college role)
+- Cody Barton (LB, 2016–2018; recognized NFL crossover with meaningful college role)
+- Corey Davis (WR, 2014–2016; recognized NFL crossover with meaningful college role)
+- Courtland Sutton (WR, 2014–2017; recognized NFL crossover with meaningful college role)
+- Curtis Samuel (WR, 2014–2016; recognized NFL crossover with meaningful college role)
+- D.J. Wonnum (LB, 2016–2019; recognized NFL crossover with meaningful college role)
+- D'Andre Swift (RB, 2017–2019; recognized NFL crossover with meaningful college role)
+- Dalvin Cook (RB, 2014–2016; recognized NFL crossover with meaningful college role)
+- Damontae Kazee (DB, 2014–2016; recognized NFL crossover with meaningful college role)
+- Daniel Jones (QB, 2016–2018; recognized NFL crossover with meaningful college role)
+- Darnell Mooney (WR, 2016–2019; recognized NFL crossover with meaningful college role)
+- David Montgomery (RB, 2016–2018; recognized NFL crossover with meaningful college role)
+- Demarcus Robinson (WR, 2014–2015; recognized NFL crossover with meaningful college role)
+- DeMarcus Walker (DL, 2016–2016; recognized NFL crossover with meaningful college role)
+- Derek Barnett (DL, 2016–2016; recognized NFL crossover with meaningful college role)
+- Deshaun Watson (QB, 2014–2016; recognized NFL crossover with meaningful college role)
+- Desmond King (DB, 2014–2016; recognized NFL crossover with meaningful college role)
+- Devin Singletary (RB, 2016–2018; recognized NFL crossover with meaningful college role)
+- DeVonta Smith (WR, 2017–2020; recognized NFL crossover with meaningful college role)
+- Dexter Lawrence (DL, 2016–2018; recognized NFL crossover with meaningful college role)
+- Diontae Johnson (WR, 2015–2018; recognized NFL crossover with meaningful college role)
+- Donovan Wilson (DB, 2015–2018; recognized NFL crossover with meaningful college role)
+- Drake London (WR, 2019–2021; recognized NFL crossover with meaningful college role)
+- Dre'Mont Jones (LB, 2017–2018; recognized NFL crossover with meaningful college role)
+- Ed Oliver (DL, 2016–2018; recognized NFL crossover with meaningful college role)
+- Fred Warner (LB, 2014–2017; recognized NFL crossover with meaningful college role)
+- Gardner Minshew (QB, 2016–2018; recognized NFL crossover with meaningful college role)
 
 ## Non-player A-C samples
 
@@ -292,11 +293,11 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
 - A: Oklahoma — explicit program-brand classification
 - A: Texas — explicit program-brand classification
 - A: USC — explicit program-brand classification
-- B: Arkansas — explicit program-brand classification
 - B: Auburn — explicit program-brand classification
-- B: Boise State — explicit program-brand classification
 - B: Clemson — explicit program-brand classification
 - B: Florida — explicit program-brand classification
+- B: Florida State — explicit program-brand classification
+- B: Georgia — explicit program-brand classification
 
 ### Franchises
 - A: DAL — explicit iconic franchise approval
@@ -314,25 +315,25 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
 
 ### Coach stops
 - A: Andy Reid — prominent NFL head-coaching success
-- A: Andy Reid — prominent NFL head-coaching success
 - A: Bill Belichick — prominent NFL head-coaching success
 - A: Bobby Bowden — prominent coaching identity/stop
 - A: Nick Saban — prominent coaching identity/stop
-- A: Nick Saban — prominent coaching identity/stop
 - A: Pete Carroll — prominent coaching identity/stop
-- A: Pete Carroll — prominent NFL head-coaching success
 - A: Urban Meyer — prominent coaching identity/stop
 - A: Urban Meyer — prominent coaching identity/stop
 - B: Bill Cowher — prominent NFL head-coaching success
-- B: Bill Snyder — prominent coaching identity/stop
 - B: Bob Stoops — prominent coaching identity/stop
 - B: Brian Billick — prominent NFL head-coaching success
 - B: Brian Kelly — prominent coaching identity/stop
-- B: Chris Petersen — prominent coaching identity/stop
 - B: Dabo Swinney — prominent coaching identity/stop
 - B: Frank Beamer — prominent coaching identity/stop
 - B: Gary Patterson — prominent coaching identity/stop
 - B: Gus Malzahn — prominent coaching identity/stop
+- B: James Franklin — prominent coaching identity/stop
+- B: Jim Harbaugh — prominent coaching identity/stop
+- B: Jim Harbaugh — prominent coaching identity/stop
+- B: Jim Tressel — prominent coaching identity/stop
+- B: Jimbo Fisher — prominent coaching identity/stop
 
 ### Team seasons
 - A: 2005 Texas — explicit iconic team-season approval
@@ -358,25 +359,25 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
 
 ### Eras
 - A: Alabama 2009–2020 — explicit iconic multi-title era approval
-- A: Andy Reid 1999–2012 — objective contiguous coach-within-franchise stint used as NFL era basis
-- A: Andy Reid 2013–2025 — objective contiguous coach-within-franchise stint used as NFL era basis
-- A: Bill Belichick 2000–2023 — objective contiguous coach-within-franchise stint used as NFL era basis
-- A: Pete Carroll 2010–2023 — objective contiguous coach-within-franchise stint used as NFL era basis
+- A: Andy Reid 2013–2025 — explicit iconic NFL coaching-era approval
+- A: Bill Belichick 2000–2023 — explicit iconic NFL coaching-era approval
 - B: Bill Cowher 1999–2006 — objective contiguous coach-within-franchise stint used as NFL era basis
 - B: Brian Billick 1999–2007 — objective contiguous coach-within-franchise stint used as NFL era basis
 - B: Clemson 2016–2018 — objective multi-title championship cluster
 - B: Florida 2006–2008 — objective multi-title championship cluster
 - B: Georgia 2021–2022 — objective multi-title championship cluster
 - B: John Harbaugh 2008–2025 — objective contiguous coach-within-franchise stint used as NFL era basis
-- B: Jon Gruden 1999–2001 — objective contiguous coach-within-franchise stint used as NFL era basis
 - B: Jon Gruden 2002–2008 — objective contiguous coach-within-franchise stint used as NFL era basis
-- B: Jon Gruden 2018–2021 — objective contiguous coach-within-franchise stint used as NFL era basis
 - B: Kyle Shanahan 2017–2025 — objective contiguous coach-within-franchise stint used as NFL era basis
 - B: LSU 2003–2007 — objective multi-title championship cluster
 - B: Mike McCarthy 2006–2018 — objective contiguous coach-within-franchise stint used as NFL era basis
 - B: Mike Shanahan 1999–2008 — objective contiguous coach-within-franchise stint used as NFL era basis
-- B: Mike Shanahan 2010–2013 — objective contiguous coach-within-franchise stint used as NFL era basis
 - B: Mike Tomlin 2007–2025 — objective contiguous coach-within-franchise stint used as NFL era basis
+- B: Pete Carroll 2010–2023 — objective contiguous coach-within-franchise stint used as NFL era basis
+- B: Sean McVay 2017–2025 — objective contiguous coach-within-franchise stint used as NFL era basis
+- B: Sean Payton 2006–2011 — objective contiguous coach-within-franchise stint used as NFL era basis
+- B: Sean Payton 2013–2021 — objective contiguous coach-within-franchise stint used as NFL era basis
+- B: Tom Coughlin 2004–2015 — objective contiguous coach-within-franchise stint used as NFL era basis
 
 ### Games
 - A: 2007_21_NYG_NE — explicit iconic Super Bowl approval
