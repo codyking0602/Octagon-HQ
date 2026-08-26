@@ -8,16 +8,16 @@ Recognizability is not greatness. A/B/C/D describe the subject; they do **not** 
 
 ## Method and limitations
 
-NFL positions use exact source position tokens, never substring matching. CFB player rows lack a reliable position field, so QB/RB/WR/K are inferred only from role statistics; defensive positions are inherited only through a unique NFL name match and are otherwise left unknown. CFB tiers are college-contextual: NFL recognition may support Tier C but never promotes a merely meaningful college role to Tier B. Because the source does not carry awards, draft profile, or cultural-significance markers, Tier B is reserved for a small explicit set of star identities anchored to their exact observed CFB season window; name-only approvals are not used. Tier C requires meaningful production at a nationally prominent program or a chronologically reconciled recognizable NFL identity. Stat volume alone at an otherwise obscure program does not create casual-game recognizability. Conservative underclassification is preferred to false promotion. Coach records preserve source-name-within-program/franchise stop identity rather than pretending every source name is a canonical person ID. Complete NCAA championship relationships, not partial cfbfastR title notes, own CFB championship-season recognition.
+NFL positions use exact source position tokens, never substring matching. CFB player rows lack a reliable position field, so QB/RB/WR/K are inferred only from role statistics; defensive positions are inherited only through a unique NFL name match and are otherwise left unknown. CFB tiers are college-contextual: NFL recognition may support Tier C but never promotes a merely meaningful college role to Tier B. Because the source does not carry awards, draft profile, or cultural-significance markers, Tier B is reserved for a small explicit set of star identities anchored to their exact observed CFB season window; name-only approvals are not used. Tier C requires sustained high-end production at a nationally prominent program, or a chronologically reconciled recognizable NFL identity plus a meaningful college role. Merely logging meaningful volume at a major program is not enough, and stat volume alone at an otherwise obscure program does not create casual-game recognizability. Conservative underclassification is preferred to false promotion. Coach records preserve source-name-within-program/franchise stop identity rather than pretending every source name is a canonical person ID. Complete NCAA championship relationships, not partial cfbfastR title notes, own CFB championship-season recognition.
 
 ## Totals
 
 - Raw projection records across all entity kinds: 105235
-- Promoted A-C records: 3637 (3.46%)
+- Promoted A-C records: 2638 (2.51%)
 - Raw player identities: 51428
-- Player A-C: 2867 (5.57%)
+- Player A-C: 1868 (3.63%)
 - NFL player A-C: 1455 — below the 1,500 health target; thresholds were not weakened.
-- CFB player A-C: 1412 — below the 2,000 health target; thresholds were not weakened.
+- CFB player A-C: 413 — below the 2,000 health target; thresholds were not weakened.
 - Manual A records: 47
 
 ### Player tier by league
@@ -33,8 +33,8 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
   "CFB": {
     "A": 0,
     "B": 30,
-    "C": 1382,
-    "D": 38665
+    "C": 383,
+    "D": 39664
   }
 }
 ```
@@ -70,8 +70,8 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
   "player-career": {
     "A": 20,
     "B": 181,
-    "C": 2666,
-    "D": 48561
+    "C": 1667,
+    "D": 49560
   },
   "program": {
     "A": 7,
@@ -108,7 +108,7 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
 ## Thin-pool / bias warnings
 
 - NFL player depth is 1455, below the roadmap health target; quality was kept above quota.
-- CFB player depth is 1412, below the roadmap health target; quality was kept above quota.
+- CFB player depth is 413, below the roadmap health target; quality was kept above quota.
 - CFB offensive-line recognition cannot be inferred from the historical player-stat source.
 - CFB defensive players without a unique, chronologically plausible NFL name reconciliation are deliberately not promoted from ambiguous defensive event stats alone.
 - Duplicate CFB source names are left D until a stable identity key can reconcile them safely.
@@ -233,56 +233,56 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
 - Trevor Lawrence (QB, 2018–2020; explicit source-window CFB star approval)
 
 ### CFB tier C (50)
-- A.J. Duffy (QB, 2022–2025; meaningful production at a nationally prominent program)
 - A.J. Epenesa (LB, 2017–2019; recognized NFL crossover with meaningful college role)
-- A.J. Erdely (QB, 2014–2018; meaningful production at a nationally prominent program)
-- A.J. Henning (WR, 2020–2024; meaningful production at a nationally prominent program)
-- Aaron Anderson (WR, 2023–2025; meaningful production at a nationally prominent program)
-- Aaron Burbridge (WR, 2014–2015; meaningful production at a nationally prominent program)
-- Aaron Fuller (WR, 2016–2019; meaningful production at a nationally prominent program)
 - Aaron Jones (RB, 2014–2016; recognized NFL crossover with meaningful college role)
-- Abdul Carter (LB, 2022–2024; meaningful production at a nationally prominent program)
-- Aca'Cedric Ware (RB, 2015–2018; meaningful production at a nationally prominent program)
-- Adin Huntington (DL, 2021–2024; meaningful production at a nationally prominent program)
-- Adisa Isaac (LB, 2019–2023; meaningful production at a nationally prominent program)
-- Adonis Alexander (DB, 2015–2017; meaningful production at a nationally prominent program)
-- Adrian Martinez (QB, 2018–2022; meaningful production at a nationally prominent program)
-- Aidan Chiles (QB, 2023–2025; meaningful production at a nationally prominent program)
-- Aidan O'Connell (QB, 2019–2022; meaningful production at a nationally prominent program)
-- Ainias Smith (WR, 2019–2023; meaningful production at a nationally prominent program)
-- AJ Swann (QB, 2022–2025; meaningful production at a nationally prominent program)
-- Ajalen Holley (WR, 2014–2016; meaningful production at a nationally prominent program)
-- Ajay Allen (RB, 2022–2025; meaningful production at a nationally prominent program)
-- Akeel Lynch (RB, 2014–2016; meaningful production at a nationally prominent program)
-- Al Riles (WR, 2014–2016; meaningful production at a nationally prominent program)
-- Alan Bowman (QB, 2018–2024; meaningful production at a nationally prominent program)
-- Albert Okwuegbunam (TE, 2017–2019; meaningful production at a nationally prominent program)
-- Alex Collins (RB, 2014–2015; meaningful production at a nationally prominent program)
-- Alex Erickson (WR, 2014–2015; meaningful production at a nationally prominent program)
+- Adrian Martinez (QB, 2018–2022; sustained high-end production at a nationally prominent program)
+- Aidan O'Connell (QB, 2019–2022; sustained high-end production at a nationally prominent program)
+- Ainias Smith (WR, 2019–2023; sustained high-end production at a nationally prominent program)
+- Ajalen Holley (WR, 2014–2016; sustained high-end production at a nationally prominent program)
+- Alan Bowman (QB, 2018–2024; sustained high-end production at a nationally prominent program)
 - Alex Highsmith (LB, 2016–2019; recognized NFL crossover with meaningful college role)
-- Alex Hornibrook (QB, 2016–2019; meaningful production at a nationally prominent program)
 - Alexander Mattison (RB, 2016–2018; recognized NFL crossover with meaningful college role)
-- Ali Jennings (WR, 2019–2024; meaningful production at a nationally prominent program)
 - Allen Lazard (WR, 2014–2017; recognized NFL crossover with meaningful college role)
-- Alton Robinson (LB, 2017–2019; meaningful production at a nationally prominent program)
-- Alvin Kamara (RB, 2015–2016; meaningful production at a nationally prominent program)
-- Amad Anderson Jr. (WR, 2019–2023; meaningful production at a nationally prominent program)
-- Amani Oruwariye (DB, 2016–2018; meaningful production at a nationally prominent program)
-- Amara Darboh (WR, 2014–2016; meaningful production at a nationally prominent program)
-- Amari Burney (LB, 2018–2022; meaningful production at a nationally prominent program)
-- Amari Rodgers (WR, 2017–2020; meaningful production at a nationally prominent program)
-- Amba Etta-Tawo (WR, 2014–2016; meaningful production at a nationally prominent program)
-- Ameer Abdullah (RB, 2014–2014; meaningful production at a nationally prominent program)
-- Amon-Ra St. Brown (WR, 2018–2020; meaningful production at a nationally prominent program)
-- Andre Baccellia (WR, 2016–2019; meaningful production at a nationally prominent program)
-- Andre Cisco (DB, 2018–2020; meaningful production at a nationally prominent program)
-- Andre Nunez (QB, 2017–2018; meaningful production at a nationally prominent program)
-- Andre Patton (WR, 2014–2016; meaningful production at a nationally prominent program)
-- Andrew Parchment (WR, 2017–2021; meaningful production at a nationally prominent program)
-- Andrew Van Ginkel (LB, 2017–2018; meaningful production at a nationally prominent program)
-- Andrew Wingard (DB, 2015–2018; meaningful production at a nationally prominent program)
-- Anfernee Jennings (LB, 2017–2019; meaningful production at a nationally prominent program)
-- Anthony Colandrea (QB, 2023–2025; meaningful production at a nationally prominent program)
+- Alvin Kamara (RB, 2015–2016; recognized NFL crossover with meaningful college role)
+- Amari Rodgers (WR, 2017–2020; sustained high-end production at a nationally prominent program)
+- Amon-Ra St. Brown (WR, 2018–2020; sustained high-end production at a nationally prominent program)
+- Andrew Van Ginkel (LB, 2017–2018; recognized NFL crossover with meaningful college role)
+- Anthony Colandrea (QB, 2023–2025; sustained high-end production at a nationally prominent program)
+- Anthony Nelson (LB, 2016–2018; recognized NFL crossover with meaningful college role)
+- Antonio Gandy-Golden (WR, 2016–2019; sustained high-end production at a nationally prominent program)
+- Arden Key (DL, 2016–2017; recognized NFL crossover with meaningful college role)
+- Artavis Scott (WR, 2014–2016; sustained high-end production at a nationally prominent program)
+- Athan Kaliakmanis (QB, 2022–2025; sustained high-end production at a nationally prominent program)
+- Austin Reed (QB, 2022–2023; sustained high-end production at a nationally prominent program)
+- Barion Brown (WR, 2022–2025; sustained high-end production at a nationally prominent program)
+- Behren Morton (QB, 2021–2025; sustained high-end production at a nationally prominent program)
+- Ben Hicks (QB, 2016–2019; sustained high-end production at a nationally prominent program)
+- Bhayshul Tuten (RB, 2022–2024; sustained high-end production at a nationally prominent program)
+- Billy Kemp (WR, 2019–2023; sustained high-end production at a nationally prominent program)
+- Blake Corum (RB, 2020–2023; sustained high-end production at a nationally prominent program)
+- Blake Shapen (QB, 2021–2025; sustained high-end production at a nationally prominent program)
+- Brad Kaaya (QB, 2014–2016; sustained high-end production at a nationally prominent program)
+- Bradley Chubb (LB, 2015–2017; recognized NFL crossover with meaningful college role)
+- Brady Cook (QB, 2020–2024; sustained high-end production at a nationally prominent program)
+- Braelon Allen (RB, 2021–2023; sustained high-end production at a nationally prominent program)
+- Brandon Aiyuk (WR, 2018–2019; recognized NFL crossover with meaningful college role)
+- Brandon Doughty (QB, 2014–2015; sustained high-end production at a nationally prominent program)
+- Brandon Silvers (QB, 2014–2017; sustained high-end production at a nationally prominent program)
+- Breece Hall (RB, 2019–2021; recognized NFL crossover with meaningful college role)
+- Brennan Armstrong (QB, 2018–2023; sustained high-end production at a nationally prominent program)
+- Brennan Presley (WR, 2020–2024; sustained high-end production at a nationally prominent program)
+- Brent Stockstill (QB, 2014–2018; sustained high-end production at a nationally prominent program)
+- Brian Burns (LB, 2016–2018; recognized NFL crossover with meaningful college role)
+- Brian Lewerke (QB, 2016–2019; sustained high-end production at a nationally prominent program)
+- Brock Purdy (QB, 2018–2021; recognized NFL crossover with meaningful college role)
+- Bryan Edwards (WR, 2016–2019; sustained high-end production at a nationally prominent program)
+- Byrum Brown (QB, 2022–2025; sustained high-end production at a nationally prominent program)
+- Cade Klubnik (QB, 2022–2025; sustained high-end production at a nationally prominent program)
+- Caleb Evans (QB, 2016–2019; sustained high-end production at a nationally prominent program)
+- Calvin Ridley (WR, 2015–2017; sustained high-end production at a nationally prominent program)
+- Cam Akers (RB, 2017–2019; sustained high-end production at a nationally prominent program)
+- Cam Serigne (WR, 2014–2017; sustained high-end production at a nationally prominent program)
+- Cameron Ward (QB, 2021–2024; sustained high-end production at a nationally prominent program)
 
 ## Non-player A-C samples
 

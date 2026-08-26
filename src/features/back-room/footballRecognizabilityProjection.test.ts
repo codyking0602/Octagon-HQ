@@ -51,6 +51,15 @@ describe("Football recognizability projection", () => {
     }
   });
 
+  it("does not treat ordinary major-program contributors as football-fan recognizable", () => {
+    for (const name of ["A.J. Duffy", "A.J. Erdely"]) {
+      expect(projection.records.find((record) => record.kind === "player-career" && record.league === "CFB" && record.name === name)).toBeUndefined();
+    }
+    for (const name of ["Aaron Jones", "Alvin Kamara", "Tyler Lockett"]) {
+      expect(projection.records.find((record) => record.kind === "player-career" && record.league === "CFB" && record.name === name)?.tier).toBe("C");
+    }
+  });
+
   it("does not promote stat-volume-only CFB names without recognizable context", () => {
     for (const name of ["Aidan Bouman", "Adrian Hardy", "Ajalen Holley", "Amare Thomas"]) {
       expect(projection.records.find((record) => record.league === "CFB" && record.name === name)).toBeUndefined();
