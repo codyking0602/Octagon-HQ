@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "provider": "SportsDataverse ESPN CFB player box scores",
+  "repository": "sportsdataverse/sportsdataverse-data",
+  "releaseId": 334089407,
+  "releaseTag": "espn_cfb_player_box",
+  "license": "CC BY 4.0",
+  "coverage": { "startSeason": 2004, "endSeason": 2025 },
+  "assets": [
+    { "season": 2004, "assetId": 474294279, "name": "player_box_2004.csv.gz", "sha256": "3307a75cd07bd4743ff86eb31b3618aeb9fd0f3cd93c9e153d1685a461e63499" },
+    { "season": 2005, "assetId": 474294325, "name": "player_box_2005.csv.gz", "sha256": "bb2777f27cd129f31b8d49a0af0daa5df464079a523dbe80a84524d0bccbe14f" },
+    { "season": 2006, "assetId": 474294369, "name": "player_box_2006.csv.gz", "sha256": "bb13ad17bc98f1e667e6afa7ca6c4205105694a0311416db8befdc85322ad502" },
+    { "season": 2007, "assetId": 474294405, "name": "player_box_2007.csv.gz", "sha256": "f4d46c0b97d679bb9d836a5d556ab4bd387dceddef8874a4b4728af335920214" },
+    { "season": 2008, "assetId": 474294429, "name": "player_box_2008.csv.gz", "sha256": "3f9d6cac31817c562213d03e52e866a97c3d3b4676bfd948f0c9ec04c3e0fb7e" },
+    { "season": 2009, "assetId": 474294474, "name": "player_box_2009.csv.gz", "sha256": "1cd8b10f226b42f3ecf3f6a865c72255edc855d9396ecc0c15e74dc1b66c9c92" },
+    { "season": 2010, "assetId": 474294633, "name": "player_box_2010.csv.gz", "sha256": "8d29ab0207bdf0c874e8237a00f9b131527904f5bf7f932742e2762ea86bbed7" },
+    { "season": 2011, "assetId": 474294677, "name": "player_box_2011.csv.gz", "sha256": "e132938884125ee4cd59a278da7a9c3ec98e06e075199b99fb7587930cf8cd3c" },
+    { "season": 2012, "assetId": 474294713, "name": "player_box_2012.csv.gz", "sha256": "66463335c645de616e16c19df8c9b0eebc572466ccd9d337e1b89fcb26f4260e" },
+    { "season": 2013, "assetId": 474294744, "name": "player_box_2013.csv.gz", "sha256": "afd77ad39cc8283711f84a2042e6ae2941cd09c1a568bf8826ee08ecc4ed662c" },
+    { "season": 2014, "assetId": 474294781, "name": "player_box_2014.csv.gz", "sha256": "2ae414d1719e763a3f6282848bf8d480b053596c265e1659497f25a8dfbb898a" },
+    { "season": 2015, "assetId": 474294816, "name": "player_box_2015.csv.gz", "sha256": "0393752ea66ed609f9038b14addc0281086c1c4ae0bed660b718f6f6cf1be6cc" },
+    { "season": 2016, "assetId": 474294865, "name": "player_box_2016.csv.gz", "sha256": "d9923ab5fb1c445e728f11bf0630222b2844aa3bd17446fed62952507bc8c382" },
+    { "season": 2017, "assetId": 474294897, "name": "player_box_2017.csv.gz", "sha256": "125123dc367ddda9decc77488ed8f73a2286918574568e3466808789ed4649d2" },
+    { "season": 2018, "assetId": 474294925, "name": "player_box_2018.csv.gz", "sha256": "1f67545151835dea5a392b44483625f2dee21f1e86066bed799df1df9e7b70a3" },
+    { "season": 2019, "assetId": 474294971, "name": "player_box_2019.csv.gz", "sha256": "c6a9310d8cac8dec3ceba3823eb64931356d34e3dc7476ef1217e0d17598f44b" },
+    { "season": 2020, "assetId": 474295049, "name": "player_box_2020.csv.gz", "sha256": "175036b637d40519eca7a01b6705c6a490dd6537439685f58798743a919aa9f0" },
+    { "season": 2021, "assetId": 474295078, "name": "player_box_2021.csv.gz", "sha256": "7a81af63671c34920a7373db1104ffee0d417de9933b3571bf07de3ccfd0ff84" },
+    { "season": 2022, "assetId": 474295110, "name": "player_box_2022.csv.gz", "sha256": "3137adb4fbe43c3be7fceead35f12695204fa581fc59eda3fdc04a8198a777ee" },
+    { "season": 2023, "assetId": 474295152, "name": "player_box_2023.csv.gz", "sha256": "a47e029983329eaa2f509498b4465defb10a3ea2fd49ffd04a4634e03e97d861" },
+    { "season": 2024, "assetId": 481499677, "name": "player_box_2024.csv.gz", "sha256": "a1672ee4eaa60f9fd95b83e55fcb691a7e5acedd9d8e210f394f32d903840220" },
+    { "season": 2025, "assetId": 474297141, "name": "player_box_2025.csv.gz", "sha256": "b5ba72bfa90d7f4558843c1f9503a10a292e731c81a268e0da20400931552f2c" }
+  ]
+}
