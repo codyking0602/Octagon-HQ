@@ -1,10 +1,11 @@
 name: TEMP PR6 finalize
 
-on:
+"on":
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
       - .github/workflows/temp-pr6-materialize.yml
+      - scripts/temp-finalize-pr6.mjs
 
 permissions:
   contents: write
@@ -19,101 +20,16 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 1
           persist-credentials: true
-      - name: Calibrate recognizability and materialize final artifacts
+      - name: Apply final PR6 calibration
+        run: node scripts/temp-finalize-pr6.mjs
+      - name: Regenerate projection and audit
+        run: node scripts/generate-football-recognizability.mjs
+      - name: Commit final PR6 artifacts and remove temporary tooling
         run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          generator = Path('scripts/generate-football-recognizability.mjs')
-          s = generator.read_text()
-
-          old_nfl_b = '''  const b =
-    (position === "QB" && games >= 80 && (passYards >= 25000 || passTds >= 180)) ||
-    (position === "RB" && games >= 80 && (rushYards >= 7000 || carries >= 1500)) ||
-    ((position === "WR" || position === "TE") && games >= 80 && (recYards >= 7000 || receptions >= 500)) ||
-    (["DL", "LB", "DB"].includes(position) && games >= 100 && (sacks >= 80 || ints >= 35)) ||
-    (position === "K" && games >= 180 && fgm >= 300);'''
-          new_nfl_b = '''  const scrimmageYards = rushYards + recYards;
-  const b =
-    (position === "QB" && games >= 80 && (passYards >= 30000 || passTds >= 220)) ||
-    (position === "RB" && games >= 70 && (rushYards >= 9000 || scrimmageYards >= 11000)) ||
-    ((position === "WR" || position === "TE") && games >= 80 && (recYards >= 10000 || receptions >= 750)) ||
-    ((position === "DL" || position === "LB") && games >= 100 && sacks >= 90) ||
-    (position === "DB" && games >= 100 && ints >= 30) ||
-    (position === "K" && games >= 200 && fgm >= 350);'''
-          if old_nfl_b not in s:
-              raise SystemExit('expected NFL B threshold block not found')
-          s = s.replace(old_nfl_b, new_nfl_b)
-          s = s.replace('if (approvedBPlayers.has(p.name) && tier === "D") { tier = "B"; evidence.push("explicit football-culture B approval"); }', 'if (approvedBPlayers.has(p.name) && tier !== "A") { tier = "B"; evidence.push("explicit football-culture B approval"); }')
-
-          old_peak = '''  const eliteMajorPeak =
-    major && ((position === "QB" && passYards >= 9000 && peak(p, "passYards") >= 3500) ||
-      (position === "RB" && rushYards >= 3500 && peak(p, "rushYards") >= 1500) ||
-      ((position === "WR" || position === "TE") && recYards >= 2800 && peak(p, "receivingYards") >= 1100));'''
-          new_peak = '''  const eliteMajorPeak =
-    major && ((position === "QB" && passYards >= 9000 && peak(p, "passYards") >= 3500) ||
-      (position === "RB" && rushYards >= 3500 && peak(p, "rushYards") >= 1500) ||
-      ((position === "WR" || position === "TE") && recYards >= 2800 && peak(p, "receivingYards") >= 1100));
-  const headlineMajor =
-    major && ((position === "QB" && passYards >= 6500 && peak(p, "passYards") >= 3000) ||
-      (position === "RB" && rushYards >= 2500 && peak(p, "rushYards") >= 1200) ||
-      ((position === "WR" || position === "TE") && recYards >= 1800 && peak(p, "receivingYards") >= 900));'''
-          if old_peak not in s:
-              raise SystemExit('expected CFB peak block not found')
-          s = s.replace(old_peak, new_peak)
-
-          old_cfb_tiers = '''  if (nflMatch && ["A", "B"].includes(nflMatch.tier) && meaningful) { tier = "B"; evidence.push("recognizable NFL crossover with meaningful college role"); }
-  else if (eliteMajorPeak && approvedBPlayers.has(p.name)) { tier = "B"; evidence.push("explicit B approval supported by exceptional major-program production"); }
-  else if (nflMatch && nflMatch.tier === "C" && meaningful) { tier = "C"; evidence.push(nflMatch ? "recognized NFL crossover with meaningful college role" : "sustained high-end college production"); }
-  if (approvedBPlayers.has(p.name) && meaningful && tier === "D") { tier = "B"; evidence.push("explicit football-culture B approval"); }
-  if (approvedAPlayers.has(p.name) && meaningful) { tier = "A"; evidence.push("explicit iconic-player approval"); }'''
-          new_cfb_tiers = '''  if (headlineMajor || eliteMajorPeak) { tier = "B"; evidence.push("headline major-program college production"); }
-  else if (major && meaningful) { tier = "C"; evidence.push("meaningful production at a nationally prominent program"); }
-  else if (strong) { tier = "C"; evidence.push("sustained high-end college production"); }
-  else if (nflMatch && ["A", "B", "C"].includes(nflMatch.tier) && meaningful) { tier = "C"; evidence.push("recognized NFL crossover with meaningful college role"); }
-  if (approvedBPlayers.has(p.name) && nflMatch && meaningful && tier !== "A") { tier = "B"; evidence.push("explicit football-culture B approval on a chronologically reconciled identity"); }
-  if (approvedAPlayers.has(p.name) && nflMatch && meaningful) { tier = "A"; evidence.push("explicit iconic-player approval on a chronologically reconciled identity"); }'''
-          if old_cfb_tiers not in s:
-              raise SystemExit('expected CFB tier block not found')
-          s = s.replace(old_cfb_tiers, new_cfb_tiers)
-
-          s = s.replace(
-            'Program prominence may support a strong college-production case but never independently promotes a player. Awards/draft/cultural-game markers that are absent from the source are not invented.',
-            'CFB tiers are college-contextual: NFL recognition may support Tier C but never promotes a merely meaningful college role to Tier B. Tier B requires headline major-program production or an explicit approval on a chronologically reconciled identity; program prominence never promotes a player without meaningful production. Awards/draft/cultural-game markers that are absent from the source are not invented.'
-          )
-          generator.write_text(s)
-
-          test = Path('src/features/back-room/footballRecognizabilityProjection.test.ts')
-          t = test.read_text()
-          anchor = '''  it("does not turn ordinary CFB stat rows or kicker volume into casual filler", () => {'''
-          regression = '''  it("keeps NFL fame from overpromoting a separate CFB identity", () => {
-    for (const name of ["Aaron Jones", "Alvin Kamara", "Tyler Lockett"]) {
-      expect(projection.records.find((record) => record.league === "CFB" && record.name === name)?.tier).toBe("C");
-    }
-    expect(projection.records.filter((record) => record.league === "CFB" && record.tier === "A")).toHaveLength(0);
-  });
-
-  it("keeps Tier B reserved for headline stars rather than long-career volume", () => {
-    expect(projection.records.find((record) => record.league === "NFL" && record.name === "Benjamin Watson")?.tier).toBe("C");
-    expect(projection.records.find((record) => record.league === "NFL" && record.name === "Bobby Engram")?.tier).toBe("C");
-    expect(projection.records.find((record) => record.league === "NFL" && record.name === "A.J. Green")?.tier).toBe("B");
-    expect(projection.records.find((record) => record.league === "CFB" && record.name === "Bijan Robinson")?.tier).toBe("B");
-    expect(projection.records.find((record) => record.league === "CFB" && record.name === "C.J. Stroud")?.tier).toBe("B");
-  });
-
-'''
-          if regression.strip() not in t:
-              if anchor not in t:
-                  raise SystemExit('test insertion anchor not found')
-              t = t.replace(anchor, regression + anchor)
-          test.write_text(t)
-          PY
-
-          node scripts/generate-football-recognizability.mjs
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add scripts/generate-football-recognizability.mjs src/features/back-room/footballRecognizabilityProjection.test.ts docs/football-recognizability-audit.md
           git add -f data/generated/football/recognizability-projection.json
-          git rm .github/workflows/temp-pr6-materialize.yml
+          git rm scripts/temp-finalize-pr6.mjs .github/workflows/temp-pr6-materialize.yml
           git commit -m 'fix: calibrate PR6 recognizability tiers [finalize-pr6]'
           git push origin HEAD:${{ github.head_ref }}
