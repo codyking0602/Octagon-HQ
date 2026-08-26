@@ -12,8 +12,8 @@ function writeCsv(filePath: string, columns: string[], rows: Array<Record<string
   fs.writeFileSync(filePath, `${lines.join("\n")}\n`);
 }
 
-describe("nflverse REG+POST filtering", () => {
-  it("selects combined season summaries from mixed REG/POST/REG+POST assets", () => {
+describe("nflverse full-season summary selection", () => {
+  it("prefers REG+POST for postseason entities and falls back to REG for everyone else", () => {
     const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "octagon-nfl-regpost-"));
     const sourceDir = path.join(tempRoot, "source");
     fs.mkdirSync(sourceDir, { recursive: true });
@@ -22,9 +22,10 @@ describe("nflverse REG+POST filtering", () => {
       path.join(sourceDir, "stats_player_regpost_1999.csv"),
       ["player_id", "season", "season_type", "recent_team", "games", "passing_yards"],
       [
-        { player_id: "qb-1", season: 1999, season_type: "REG", recent_team: "DAL", games: 16, passing_yards: 3000 },
-        { player_id: "qb-1", season: 1999, season_type: "POST", recent_team: "DAL", games: 2, passing_yards: 500 },
-        { player_id: "qb-1", season: 1999, season_type: "REG+POST", recent_team: "DAL", games: 18, passing_yards: 3500 },
+        { player_id: "qb-playoff", season: 1999, season_type: "REG", recent_team: "DAL", games: 16, passing_yards: 3000 },
+        { player_id: "qb-playoff", season: 1999, season_type: "POST", recent_team: "DAL", games: 2, passing_yards: 500 },
+        { player_id: "qb-playoff", season: 1999, season_type: "REG+POST", recent_team: "DAL", games: 18, passing_yards: 3500 },
+        { player_id: "qb-regular", season: 1999, season_type: "REG", recent_team: "DET", games: 16, passing_yards: 2800 },
       ],
     );
     writeCsv(
@@ -32,7 +33,9 @@ describe("nflverse REG+POST filtering", () => {
       ["season", "team", "season_type", "games", "passing_yards"],
       [
         { season: 1999, team: "DAL", season_type: "REG", games: 16, passing_yards: 3000 },
+        { season: 1999, team: "DAL", season_type: "POST", games: 2, passing_yards: 500 },
         { season: 1999, team: "DAL", season_type: "REG+POST", games: 18, passing_yards: 3500 },
+        { season: 1999, team: "DET", season_type: "REG", games: 16, passing_yards: 2800 },
       ],
     );
 
@@ -55,6 +58,7 @@ describe("nflverse REG+POST filtering", () => {
       const players = JSON.parse(fs.readFileSync(playerOutput, "utf8")) as {
         columns: string[];
         rows: Array<Array<string | number | null>>;
+        source: { summarySelection: string };
       };
       const teams = JSON.parse(fs.readFileSync(teamOutput, "utf8")) as {
         columns: string[];
@@ -63,18 +67,34 @@ describe("nflverse REG+POST filtering", () => {
       const generatedManifest = JSON.parse(fs.readFileSync(manifest, "utf8")) as {
         playerRowCount: number;
         teamRowCount: number;
+        source: { summarySelection: string };
       };
 
       const playerIndex = Object.fromEntries(players.columns.map((column, index) => [column, index]));
       const teamIndex = Object.fromEntries(teams.columns.map((column, index) => [column, index]));
+      const playoffPlayer = players.rows.find((row) => row[playerIndex.sourcePlayerId] === "qb-playoff");
+      const regularPlayer = players.rows.find((row) => row[playerIndex.sourcePlayerId] === "qb-regular");
+      const playoffTeam = teams.rows.find((row) => row[teamIndex.team] === "DAL");
+      const regularTeam = teams.rows.find((row) => row[teamIndex.team] === "DET");
 
-      expect(players.rows).toHaveLength(1);
-      expect(players.rows[0][playerIndex.games]).toBe(18);
-      expect(players.rows[0][playerIndex.passingYards]).toBe(3500);
-      expect(teams.rows).toHaveLength(1);
-      expect(teams.rows[0][teamIndex.games]).toBe(18);
-      expect(teams.rows[0][teamIndex.passingYards]).toBe(3500);
-      expect(generatedManifest).toMatchObject({ playerRowCount: 1, teamRowCount: 1 });
+      expect(players.rows).toHaveLength(2);
+      expect(playoffPlayer?.[playerIndex.games]).toBe(18);
+      expect(playoffPlayer?.[playerIndex.passingYards]).toBe(3500);
+      expect(regularPlayer?.[playerIndex.games]).toBe(16);
+      expect(regularPlayer?.[playerIndex.passingYards]).toBe(2800);
+
+      expect(teams.rows).toHaveLength(2);
+      expect(playoffTeam?.[teamIndex.games]).toBe(18);
+      expect(playoffTeam?.[teamIndex.passingYards]).toBe(3500);
+      expect(regularTeam?.[teamIndex.games]).toBe(16);
+      expect(regularTeam?.[teamIndex.passingYards]).toBe(2800);
+
+      expect(players.source.summarySelection).toBe("prefer REG+POST, otherwise REG");
+      expect(generatedManifest).toMatchObject({
+        playerRowCount: 2,
+        teamRowCount: 2,
+        source: { summarySelection: "prefer REG+POST, otherwise REG" },
+      });
     } finally {
       fs.rmSync(tempRoot, { recursive: true, force: true });
     }
