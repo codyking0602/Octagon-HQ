@@ -28,16 +28,18 @@ jobs:
           else
             echo 'skip=false' >> "$GITHUB_OUTPUT"
           fi
-      - name: Repair deterministic row fallback and generate
+      - name: Repair projection and generate
         if: steps.guard.outputs.skip != 'true'
         run: |
           python - <<'PY'
           from pathlib import Path
           p = Path('scripts/generate-football-recognizability.mjs')
           s = p.read_text()
-          s = s.replace('return corpus.rows.map((row) => mapper(row, ix));', 'return corpus.rows.map((row, rowIndex) => mapper(row, ix, rowIndex));')
-          s = s.replace('recordsFromRows(cfbGames, (row, ix) => {', 'recordsFromRows(cfbGames, (row, ix, rowIndex) => {')
-          s = s.replace('?? `${at(row, ix, "season")}:${Math.random()}`', '?? `${at(row, ix, "season")}:${rowIndex}`')
+          s = s.replace('"Matt Ryan", "Jamaal Charles", "Dez Bryant", "Luke Kuechly", "A.J. Green", "Calvin Johnson", "Andrew Luck",', '"Matt Ryan", "Jamaal Charles", "Dez Bryant", "Luke Kuechly", "Calvin Johnson", "Andrew Luck",')
+          s = s.replace('const p = people.get(sourceId) ?? { sourceId, name: String(name), league, seasons: new Set(), teams: new Set(), position: "", totals: {}, peaks: {} };', 'const personKey = league === "CFB" ? `${sourceId}:${normalize(name)}` : sourceId;\n    const p = people.get(personKey) ?? { sourceId, name: String(name), league, seasons: new Set(), teams: new Set(), position: "", totals: {}, peaks: {} };')
+          s = s.replace('people.set(sourceId, p);', 'people.set(personKey, p);')
+          s = s.replace('(sacks >= 50 || ints >= 20)', '(sacks >= 70 || ints >= 30)')
+          s = s.replace('id: `cfbfast-r-player-${p.sourceId}`', 'id: `cfbfast-r-player-${p.sourceId}-${normalize(p.name)}`')
           p.write_text(s)
           if 'Math.random' in s:
               raise SystemExit('nondeterministic Math.random fallback remains')
@@ -53,5 +55,5 @@ jobs:
           if git diff --cached --quiet; then
             exit 0
           fi
-          git commit -m 'chore: materialize repaired PR6 recognizability [materialize-pr6]'
+          git commit -m 'chore: materialize tightened PR6 recognizability [materialize-pr6]'
           git push origin HEAD:${{ github.head_ref }}
