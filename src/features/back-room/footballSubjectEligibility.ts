@@ -1,4 +1,5 @@
 import type { FootballCanonicalSubject } from "./footballFactualStatsCatalog";
+import { footballRecognitionProjectionFor } from "./footballRecognizabilityProjection";
 
 export type FootballRecognizabilityTier = "A" | "B" | "C" | "D";
 
@@ -28,18 +29,34 @@ export interface FootballSubjectKnowledgeOverride {
   sourceIdentityKeys?: readonly FootballSourceIdentityKey[];
 }
 
+const explicitlyApprovedIconicSubjects = new Set([
+  "program-alabama", "program-michigan", "program-notre-dame", "program-ohio-state", "program-texas",
+  "nick-saban", "bill-belichick", "andy-reid", "pete-carroll", "urban-meyer",
+  "2005-texas", "2019-lsu", "2001-miami", "2007-patriots",
+]);
+
+function conservativeCanonicalTier(subject: FootballCanonicalSubject): FootballRecognizabilityTier {
+  if (explicitlyApprovedIconicSubjects.has(subject.id)) return "A";
+  if (subject.kind === "team-season") return subject.nationalChampion ? "C" : "D";
+  // A relationship existing is not recognition evidence. Era promotion needs a future cultural marker.
+  if (subject.kind === "program-era") return "D";
+  return "C";
+}
+
 /**
- * Existing canonical subjects are already a curated Football game universe, so they remain casual-eligible.
- * Historical source adapters may add far deeper source rows later without automatically promoting those rows here.
+ * Existing canonical subjects stay in the curated registry, but PR6 may conservatively mark some as database-only.
+ * Historical source adapters may add far deeper source rows without automatically exposing those rows to normal game queries.
  */
 export function buildFootballSubjectKnowledgeMetadata(
   subject: FootballCanonicalSubject,
   override: FootballSubjectKnowledgeOverride = {},
 ): FootballSubjectKnowledgeMetadata {
-  const recognizabilityTier = override.recognizabilityTier ?? "C";
+  const projection = footballRecognitionProjectionFor(subject);
+  const recognizabilityTier = override.recognizabilityTier ?? projection?.tier ?? conservativeCanonicalTier(subject);
   const casualEligible = override.casualEligible ?? recognizabilityTier !== "D";
   const sourceIdentityKeys = override.sourceIdentityKeys ?? [
     { provider: "octagon-hq", id: subject.id } as const,
+    ...(projection ? [projection.sourceIdentityKey] : []),
   ];
 
   if (recognizabilityTier === "D" && casualEligible) {

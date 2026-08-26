@@ -16,6 +16,7 @@ import {
   type FootballSourceProviderId,
   type FootballSubjectKnowledgeMetadata,
 } from "./footballSubjectEligibility";
+import { footballProjectedPlayerSubjects } from "./footballRecognizabilityProjection";
 
 export type FootballSubjectKind = FootballCanonicalSubjectKind;
 export type FootballSubjectLeague = FootballCanonicalSubject["league"];
@@ -51,6 +52,8 @@ export interface FootballSubjectQuery {
   recognizabilityTiers?: readonly FootballRecognizabilityTier[];
   casualEligible?: boolean;
   sourceProvider?: FootballSourceProviderId;
+  /** PR6 review/depth opt-in. Normal game queries intentionally remain on the curated canonical projection. */
+  includeProjectedSourceSubjects?: boolean;
 }
 
 const comparisonItemById = new Map(footballComparisonDepthItems.map((item) => [item.id, item]));
@@ -63,20 +66,12 @@ function programAlias(subject: FootballCanonicalSubject) {
 function teamIdForSubject(subject: FootballCanonicalSubject): FootballTeamMediaId | undefined {
   const comparisonItem = comparisonItemById.get(subject.id);
   if (comparisonItem) return footballTeamMediaIdFromComparisonAsset(comparisonItem.asset);
-
-  if (subject.kind === "team-season" && subject.league === "CFB") {
-    return footballCfbTeamMediaIdFromSeasonSubjectId(subject.id) ?? undefined;
-  }
-
-  if (subject.kind === "program" && subject.id.startsWith("program-")) {
-    return footballCfbTeamMediaId(subject.id.slice("program-".length));
-  }
-
+  if (subject.kind === "team-season" && subject.league === "CFB") return footballCfbTeamMediaIdFromSeasonSubjectId(subject.id) ?? undefined;
+  if (subject.kind === "program" && subject.id.startsWith("program-")) return footballCfbTeamMediaId(subject.id.slice("program-".length));
   if (subject.kind === "program-era") {
     const match = /^(.+)-\d{4}-\d{4}$/.exec(subject.id);
     if (match) return footballCfbTeamMediaId(match[1]);
   }
-
   return undefined;
 }
 
@@ -91,59 +86,63 @@ function enrichFootballSubject(subject: FootballCanonicalSubject): FootballSubje
   const playerId = playerIdForSubject(subject);
   const coachId = subject.kind === "coach" ? subject.id : undefined;
   const alias = programAlias(subject);
-  const aliases = alias && !(subject.aliases ?? []).includes(alias)
-    ? [...(subject.aliases ?? []), alias]
-    : subject.aliases;
+  const aliases = alias && !(subject.aliases ?? []).includes(alias) ? [...(subject.aliases ?? []), alias] : subject.aliases;
   const knowledgeMetadata = buildFootballSubjectKnowledgeMetadata(subject);
-
-  return {
-    ...subject,
-    ...knowledgeMetadata,
-    ...(aliases ? { aliases } : {}),
-    ...(teamId ? { teamId } : {}),
-    ...(playerId ? { playerId } : {}),
-    ...(coachId ? { coachId } : {}),
-  };
+  return { ...subject, ...knowledgeMetadata, ...(aliases ? { aliases } : {}), ...(teamId ? { teamId } : {}), ...(playerId ? { playerId } : {}), ...(coachId ? { coachId } : {}) };
 }
 
-/** Public identity/query view of the one canonical Football subject universe. */
+/** Public curated identity/query view used by existing games. */
 export const footballSubjects: readonly FootballSubjectProfile[] = footballCanonicalSubjects.map(enrichFootballSubject);
 
+const canonicalPlayerNameKeys = new Set(
+  footballCanonicalSubjects
+    .filter((subject) => subject.kind === "player-career")
+    .flatMap((subject) => (subject.leagues ?? [subject.league]).map((league) => `${league}:${subject.name.toLowerCase()}`)),
+);
+
+/** Source-projected players that do not already reconcile to a curated canonical player. Opt-in only. */
+const projectedSourceSubjects: readonly FootballSubjectProfile[] = footballProjectedPlayerSubjects
+  .filter((subject) => !canonicalPlayerNameKeys.has(`${subject.league}:${subject.name.toLowerCase()}`))
+  .map(enrichFootballSubject);
+
 const footballSubjectById = new Map<string, FootballSubjectProfile>();
-for (const subject of footballSubjects) {
-  footballSubjectById.set(subject.id, subject);
-  for (const alias of subject.aliases ?? []) {
-    if (!footballSubjectById.has(alias)) footballSubjectById.set(alias, subject);
-  }
+for (const subject of [...footballSubjects, ...projectedSourceSubjects]) {
+  if (!footballSubjectById.has(subject.id)) footballSubjectById.set(subject.id, subject);
+  for (const alias of subject.aliases ?? []) if (!footballSubjectById.has(alias)) footballSubjectById.set(alias, subject);
 }
 
 export function getFootballSubject(subjectId: string) {
   return footballSubjectById.get(subjectId) ?? null;
 }
 
+function matchesFootballSubject(subject: FootballSubjectProfile, query: FootballSubjectQuery) {
+  if (query.kind && subject.kind !== query.kind) return false;
+  if (query.league && !(subject.leagues ?? [subject.league]).includes(query.league)) return false;
+  if (query.position && subject.position !== query.position) return false;
+  if (query.positions && (!subject.position || !query.positions.includes(subject.position))) return false;
+  if (query.season != null && subject.season !== query.season) return false;
+  if (query.decade != null && !subject.activeDecades?.includes(query.decade)) return false;
+  if (query.school && subject.school !== query.school) return false;
+  if (query.conference && subject.conference !== query.conference) return false;
+  if (query.franchise && !subject.franchises?.includes(query.franchise)) return false;
+  if (query.draftYear != null && subject.draftYear !== query.draftYear) return false;
+  if (query.draftRound != null && subject.draftRound !== query.draftRound) return false;
+  if (query.firstRoundPick != null && subject.firstRoundPick !== query.firstRoundPick) return false;
+  if (query.firstOverallPick != null && subject.firstOverallPick !== query.firstOverallPick) return false;
+  if (query.undrafted != null && subject.undrafted !== query.undrafted) return false;
+  if (query.heismanWinner != null && subject.heismanWinner !== query.heismanWinner) return false;
+  if (query.nationalChampion != null && subject.nationalChampion !== query.nationalChampion) return false;
+  if (query.startSeason != null && subject.startSeason !== query.startSeason) return false;
+  if (query.endSeason != null && subject.endSeason !== query.endSeason) return false;
+  if (query.recognizabilityTiers && !query.recognizabilityTiers.includes(subject.recognizabilityTier)) return false;
+  if (query.casualEligible != null && subject.casualEligible !== query.casualEligible) return false;
+  if (query.sourceProvider && !subject.sourceIdentityKeys.some((key) => key.provider === query.sourceProvider)) return false;
+  return true;
+}
+
 export function queryFootballSubjects(query: FootballSubjectQuery = {}) {
-  return footballSubjects.filter((subject) => {
-    if (query.kind && subject.kind !== query.kind) return false;
-    if (query.league && !(subject.leagues ?? [subject.league]).includes(query.league)) return false;
-    if (query.position && subject.position !== query.position) return false;
-    if (query.positions && (!subject.position || !query.positions.includes(subject.position))) return false;
-    if (query.season != null && subject.season !== query.season) return false;
-    if (query.decade != null && !subject.activeDecades?.includes(query.decade)) return false;
-    if (query.school && subject.school !== query.school) return false;
-    if (query.conference && subject.conference !== query.conference) return false;
-    if (query.franchise && !subject.franchises?.includes(query.franchise)) return false;
-    if (query.draftYear != null && subject.draftYear !== query.draftYear) return false;
-    if (query.draftRound != null && subject.draftRound !== query.draftRound) return false;
-    if (query.firstRoundPick != null && subject.firstRoundPick !== query.firstRoundPick) return false;
-    if (query.firstOverallPick != null && subject.firstOverallPick !== query.firstOverallPick) return false;
-    if (query.undrafted != null && subject.undrafted !== query.undrafted) return false;
-    if (query.heismanWinner != null && subject.heismanWinner !== query.heismanWinner) return false;
-    if (query.nationalChampion != null && subject.nationalChampion !== query.nationalChampion) return false;
-    if (query.startSeason != null && subject.startSeason !== query.startSeason) return false;
-    if (query.endSeason != null && subject.endSeason !== query.endSeason) return false;
-    if (query.recognizabilityTiers && !query.recognizabilityTiers.includes(subject.recognizabilityTier)) return false;
-    if (query.casualEligible != null && subject.casualEligible !== query.casualEligible) return false;
-    if (query.sourceProvider && !subject.sourceIdentityKeys.some((key) => key.provider === query.sourceProvider)) return false;
-    return true;
-  });
+  // Preserve the pre-PR6 contract: source-stage depth does not appear in normal queries merely because a provider is named.
+  if (query.sourceProvider && query.sourceProvider !== "octagon-hq" && !query.includeProjectedSourceSubjects) return [];
+  const universe = query.includeProjectedSourceSubjects ? [...footballSubjects, ...projectedSourceSubjects] : footballSubjects;
+  return universe.filter((subject) => matchesFootballSubject(subject, query));
 }
