@@ -12,9 +12,9 @@ function writeCsv(filePath: string, columns: string[], rows: Array<Record<string
   fs.writeFileSync(filePath, `${lines.join("\n")}\n`);
 }
 
-describe("nflverse REG+POST filtering", () => {
-  it("selects combined season summaries from mixed REG/POST/REG+POST assets", () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "octagon-nfl-regpost-"));
+describe("nflverse regular-season authority", () => {
+  it("selects REG summaries from mixed REG/POST/REG+POST assets", () => {
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "octagon-nfl-regular-"));
     const sourceDir = path.join(tempRoot, "source");
     fs.mkdirSync(sourceDir, { recursive: true });
 
@@ -25,6 +25,7 @@ describe("nflverse REG+POST filtering", () => {
         { player_id: "qb-1", season: 1999, season_type: "REG", recent_team: "DAL", games: 16, passing_yards: 3000 },
         { player_id: "qb-1", season: 1999, season_type: "POST", recent_team: "DAL", games: 2, passing_yards: 500 },
         { player_id: "qb-1", season: 1999, season_type: "REG+POST", recent_team: "DAL", games: 18, passing_yards: 3500 },
+        { player_id: "qb-2", season: 1999, season_type: "REG", recent_team: "CLE", games: 16, passing_yards: 2500 },
       ],
     );
     writeCsv(
@@ -33,6 +34,7 @@ describe("nflverse REG+POST filtering", () => {
       [
         { season: 1999, team: "DAL", season_type: "REG", games: 16, passing_yards: 3000 },
         { season: 1999, team: "DAL", season_type: "REG+POST", games: 18, passing_yards: 3500 },
+        { season: 1999, team: "CLE", season_type: "REG", games: 16, passing_yards: 2500 },
       ],
     );
 
@@ -55,6 +57,7 @@ describe("nflverse REG+POST filtering", () => {
       const players = JSON.parse(fs.readFileSync(playerOutput, "utf8")) as {
         columns: string[];
         rows: Array<Array<string | number | null>>;
+        source: { summaryLevel: string };
       };
       const teams = JSON.parse(fs.readFileSync(teamOutput, "utf8")) as {
         columns: string[];
@@ -67,14 +70,17 @@ describe("nflverse REG+POST filtering", () => {
 
       const playerIndex = Object.fromEntries(players.columns.map((column, index) => [column, index]));
       const teamIndex = Object.fromEntries(teams.columns.map((column, index) => [column, index]));
+      const dalPlayer = players.rows.find((row) => row[playerIndex.sourcePlayerId] === "qb-1");
+      const dalTeam = teams.rows.find((row) => row[teamIndex.team] === "DAL");
 
-      expect(players.rows).toHaveLength(1);
-      expect(players.rows[0][playerIndex.games]).toBe(18);
-      expect(players.rows[0][playerIndex.passingYards]).toBe(3500);
-      expect(teams.rows).toHaveLength(1);
-      expect(teams.rows[0][teamIndex.games]).toBe(18);
-      expect(teams.rows[0][teamIndex.passingYards]).toBe(3500);
-      expect(generatedManifest).toMatchObject({ playerRowCount: 1, teamRowCount: 1 });
+      expect(players.source.summaryLevel).toBe("regular");
+      expect(players.rows).toHaveLength(2);
+      expect(dalPlayer?.[playerIndex.games]).toBe(16);
+      expect(dalPlayer?.[playerIndex.passingYards]).toBe(3000);
+      expect(teams.rows).toHaveLength(2);
+      expect(dalTeam?.[teamIndex.games]).toBe(16);
+      expect(dalTeam?.[teamIndex.passingYards]).toBe(3000);
+      expect(generatedManifest).toMatchObject({ playerRowCount: 2, teamRowCount: 2 });
     } finally {
       fs.rmSync(tempRoot, { recursive: true, force: true });
     }
