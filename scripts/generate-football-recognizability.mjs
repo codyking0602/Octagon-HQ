@@ -2,96 +2,295 @@ import fs from "node:fs";
 
 const root = new URL("../", import.meta.url);
 const read = (path) => JSON.parse(fs.readFileSync(new URL(path, root), "utf8"));
+const n = (value) => typeof value === "number" && Number.isFinite(value) ? value : 0;
+const normalize = (value) => String(value ?? "").toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const ixFor = (corpus) => Object.fromEntries(corpus.columns.map((column, index) => [column, index]));
+const at = (row, ix, name) => ix[name] == null ? undefined : row[ix[name]];
+
 const nfl = read("data/generated/football/nfl/player-seasons-1999-2025.json");
 const cfb = read("data/generated/football/cfb/player-seasons-2014-2025.json");
+const cfbPrograms = read("data/generated/football/relationships/cfb-programs-2002-2025.json");
+const cfbTeamSeasons = read("data/generated/football/relationships/cfb-team-season-results-2002-2025.json");
+const cfbChampionships = read("data/generated/football/relationships/cfb-national-championships-2002-2025.json");
+const cfbCoachStints = read("data/generated/football/relationships/cfb-coach-stints-2002-2025.json");
+const cfbEras = read("data/generated/football/relationships/cfb-championship-eras-2002-2025.json");
+const nflFranchises = read("data/generated/football/relationships/nfl-franchises-1999-2025.json");
+const nflTeamSeasons = read("data/generated/football/relationships/nfl-team-season-results-1999-2025.json");
+const nflCoachStints = read("data/generated/football/relationships/nfl-coach-stints-1999-2025.json");
+const nflGames = read("data/generated/football/relationships/nfl-games-1999-2025.json");
+const cfbGames = read("data/generated/football/relationships/cfb-games-2002-2025.json");
 
-const approvedA = new Set([
-  "Tom Brady", "Peyton Manning", "Patrick Mahomes", "Randy Moss", "Adrian Peterson",
-  "Cam Newton", "Tim Tebow", "Reggie Bush", "Vince Young",
+const approvedAPlayers = new Set([
+  "Tom Brady", "Peyton Manning", "Patrick Mahomes", "Aaron Rodgers", "Brett Favre", "Drew Brees",
+  "Randy Moss", "Terrell Owens", "Adrian Peterson", "LaDainian Tomlinson", "Ray Lewis", "Aaron Donald",
+  "J.J. Watt", "Cam Newton", "Tim Tebow", "Reggie Bush", "Vince Young", "Johnny Manziel",
 ]);
-const approvedB = new Set([
-  "Matt Ryan", "Jamaal Charles", "Dez Bryant", "Luke Kuechly", "Colt McCoy",
-  "Michael Crabtree", "Darren McFadden", "Justin Blackmon", "Mike Leach",
+const approvedBPlayers = new Set([
+  "Matt Ryan", "Jamaal Charles", "Dez Bryant", "Luke Kuechly", "A.J. Green", "Calvin Johnson", "Andrew Luck",
+  "Colt McCoy", "Michael Crabtree", "Darren McFadden", "Justin Blackmon", "Baker Mayfield", "Lamar Jackson",
+  "Derrick Henry", "Saquon Barkley", "Christian McCaffrey", "Joe Burrow", "Trevor Lawrence", "Bijan Robinson",
+  "Ashton Jeanty", "Caleb Williams", "Jayden Daniels", "Travis Hunter", "Bo Nix", "A.J. Brown",
 ]);
-const n = (value) => typeof value === "number" && Number.isFinite(value) ? value : 0;
-const slug = (value) => value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const majorCfbPrograms = new Set([
+  "alabama", "auburn", "clemson", "florida", "florida-state", "georgia", "lsu", "miami", "michigan",
+  "michigan-state", "nebraska", "notre-dame", "ohio-state", "oklahoma", "oklahoma-state", "oregon",
+  "penn-state", "tennessee", "texas", "texas-a-m", "usc", "ucla", "virginia-tech", "washington", "wisconsin",
+]);
+const iconicPrograms = new Set(["alabama", "michigan", "notre-dame", "ohio-state", "oklahoma", "texas", "usc"]);
+const veryRecognizablePrograms = new Set([...majorCfbPrograms, "arkansas", "boise-state", "iowa", "kansas-state", "ole-miss", "south-carolina", "tcu"]);
 
 function aggregate(corpus, league) {
-  const ix = Object.fromEntries(corpus.columns.map((column, index) => [column, index]));
+  const ix = ixFor(corpus);
   const people = new Map();
   for (const row of corpus.rows) {
-    const sourceId = String(row[ix.sourcePlayerId] ?? "");
-    const name = row[ix.playerDisplayName] ?? row[ix.playerName];
+    const sourceId = String(at(row, ix, "sourcePlayerId") ?? "");
+    const name = at(row, ix, "playerDisplayName") ?? at(row, ix, "playerName");
     if (!sourceId || sourceId === "0" || !name) continue;
-    const key = sourceId;
-    const p = people.get(key) ?? { sourceId, name, league, seasons: new Set(), teams: new Set(), position: "", totals: {}, peaks: {} };
-    p.seasons.add(n(row[ix.season]));
-    const team = row[ix.recentTeam] ?? row[ix.team]; if (team) p.teams.add(team);
-    p.position ||= row[ix.positionGroup] ?? row[ix.position] ?? "";
+    const p = people.get(sourceId) ?? { sourceId, name: String(name), league, seasons: new Set(), teams: new Set(), position: "", totals: {}, peaks: {} };
+    const season = n(at(row, ix, "season")); if (season) p.seasons.add(season);
+    const team = at(row, ix, "recentTeam") ?? at(row, ix, "team"); if (team) p.teams.add(String(team));
+    p.position ||= String(at(row, ix, "positionGroup") ?? at(row, ix, "position") ?? "");
     for (const field of ["games", "gamesPlayed", "attempts", "passAttempts", "passingYards", "passYards", "passingTouchdowns", "passTouchdowns", "carries", "rushAttempts", "rushingYards", "rushYards", "rushingTouchdowns", "rushTouchdowns", "receptions", "receivingYards", "receivingTouchdowns", "defensiveSacks", "sacks", "defensiveInterceptions", "fieldGoalsMade", "puntingAttempts"]) {
-      const value = n(row[ix[field]]); p.totals[field] = n(p.totals[field]) + value; p.peaks[field] = Math.max(n(p.peaks[field]), value);
+      const value = n(at(row, ix, field));
+      p.totals[field] = n(p.totals[field]) + value;
+      p.peaks[field] = Math.max(n(p.peaks[field]), value);
     }
-    people.set(key, p);
+    people.set(sourceId, p);
   }
   return [...people.values()];
 }
 
-function group(p) {
-  const raw = p.position.toUpperCase();
-  if (raw.includes("QB")) return "QB";
-  if (/RB|FB/.test(raw)) return "RB";
-  if (/WR|TE/.test(raw)) return raw.includes("TE") ? "TE" : "WR";
-  if (/OL|OT|OG|G|C/.test(raw)) return "OL";
-  if (/DL|DE|DT|EDGE/.test(raw)) return "DL";
-  if (/LB/.test(raw)) return "LB";
-  if (/DB|CB|S/.test(raw)) return "DB";
-  if (/P/.test(raw)) return "P";
-  if (/K/.test(raw)) return "K";
-  const t = p.totals;
-  if (n(t.passAttempts) + n(t.attempts) >= 20) return "QB";
-  if (n(t.rushAttempts) + n(t.carries) >= 20) return "RB";
-  if (n(t.receptions) >= 10) return "WR";
-  if (n(t.sacks) + n(t.defensiveSacks) + n(t.defensiveInterceptions) >= 2) return "DB";
-  if (n(t.fieldGoalsMade) >= 2) return "K";
+const exactPositionGroups = new Map([
+  ["QB", "QB"], ["RB", "RB"], ["FB", "RB"], ["HB", "RB"], ["WR", "WR"], ["TE", "TE"],
+  ["OL", "OL"], ["C", "OL"], ["G", "OL"], ["OG", "OL"], ["T", "OL"], ["OT", "OL"],
+  ["DL", "DL"], ["DE", "DL"], ["DT", "DL"], ["NT", "DL"], ["EDGE", "DL"],
+  ["LB", "LB"], ["ILB", "LB"], ["OLB", "LB"], ["DB", "DB"], ["CB", "DB"], ["S", "DB"], ["FS", "DB"], ["SS", "DB"],
+  ["K", "K"], ["PK", "K"], ["P", "P"],
+]);
+
+function exactPosition(p) {
+  const raw = String(p.position ?? "").trim().toUpperCase();
+  if (!raw) return undefined;
+  if (exactPositionGroups.has(raw)) return exactPositionGroups.get(raw);
+  for (const token of raw.split(/[\s/,-]+/).filter(Boolean)) if (exactPositionGroups.has(token)) return exactPositionGroups.get(token);
   return undefined;
 }
 
-function project(p) {
-  const position = group(p); const t = p.totals; const peak = p.peaks; const seasons = p.seasons.size;
-  let score = 0; const evidence = [];
-  const add = (condition, points, label) => { if (condition) { score += points; evidence.push(label); } };
-  if (p.league === "NFL") {
-    const games = n(t.games); add(games >= 48, 2, "multi-season NFL role"); add(games >= 96, 2, "long NFL career");
-    if (position === "QB") { add(n(t.attempts) >= 800, 3, "starting-QB volume"); add(n(t.passingYards) >= 20000, 3, "major QB production"); }
-    else if (position === "RB") { add(n(t.carries) >= 500, 3, "sustained rushing role"); add(n(t.rushingYards) >= 6000, 3, "major rushing production"); }
-    else if (position === "WR" || position === "TE") { add(n(t.receptions) >= 180, 3, "sustained receiving role"); add(n(t.receivingYards) >= 7000, 3, "major receiving production"); }
-    else if (["DL", "LB", "DB"].includes(position)) { add(n(t.defensiveSacks) >= 20 || n(t.defensiveInterceptions) >= 12, 3, "sustained defensive impact"); add(n(t.defensiveSacks) >= 70 || n(t.defensiveInterceptions) >= 30, 3, "major defensive production"); }
-    else if (position === "K") { add(n(t.fieldGoalsMade) >= 100, 3, "sustained kicking role"); }
-    else if (position === "P") { add(n(t.puntingAttempts) >= 300, 3, "sustained punting role"); }
-    else if (position === "OL") add(games >= 80, 3, "sustained offensive-line role");
-  } else {
-    add(seasons >= 2, 1, "multi-season college presence");
-    if (position === "QB") { add(n(t.passAttempts) >= 450, 4, "starting-QB volume"); add(n(peak.passYards) >= 3200 || n(peak.passTouchdowns) >= 30, 2, "national-level QB peak"); }
-    else if (position === "RB") { add(n(t.rushAttempts) >= 300, 4, "featured rushing role"); add(n(peak.rushYards) >= 1400, 2, "national-level rushing peak"); }
-    else if (position === "WR" || position === "TE") { add(n(t.receptions) >= 110, 4, "featured receiving role"); add(n(peak.receivingYards) >= 1000, 2, "national-level receiving peak"); }
-    else if (["DL", "LB", "DB"].includes(position)) { add(n(t.sacks) >= 14 || n(t.defensiveInterceptions) >= 8, 4, "sustained defensive impact"); }
-    else if (position === "K") add(n(t.fieldGoalsMade) >= 35, 4, "sustained kicking role");
-  }
-  let tier = score >= (p.league === "NFL" ? 8 : 7) ? "B" : score >= (p.league === "NFL" ? 5 : 4) ? "C" : "D";
-  if (approvedB.has(p.name) && tier === "D") tier = "B";
-  if (approvedA.has(p.name)) tier = "A"; // A is impossible without this explicit approval set.
-  const years = [...p.seasons].filter(Boolean).sort();
-  return { id: `${p.league === "NFL" ? "nflverse" : "cfbfast-r"}-player-${p.sourceId}`, name: p.name, league: p.league, position, school: p.league === "CFB" ? [...p.teams].sort()[0] : undefined, startSeason: years[0], endSeason: years.at(-1), tier, score, evidence, sourceId: p.sourceId };
+function inferredCollegeSkillPosition(p) {
+  const t = p.totals;
+  if (n(t.fieldGoalsMade) >= 5) return "K";
+  if (n(t.passAttempts) >= 50) return "QB";
+  if (n(t.receptions) >= 20) return "WR";
+  if (n(t.rushAttempts) >= 50) return "RB";
+  return undefined;
 }
 
-const records = [...aggregate(nfl, "NFL"), ...aggregate(cfb, "CFB")].map(project).sort((a, b) => a.id.localeCompare(b.id));
-// Runtime materialization contains only promoted identities. Database-only rows remain in their
-// canonical source corpora; copying them would incorrectly turn the projection into a factual owner.
-const output = { schemaVersion: 1, methodology: "fixed position-aware evidence thresholds; no percentile ranking", manualApprovals: [...approvedA].sort(), records: records.filter((record) => record.tier !== "D") };
+const yearsFor = (p) => [...p.seasons].filter(Boolean).sort((a, b) => a - b);
+const total = (p, ...fields) => fields.reduce((sum, field) => sum + n(p.totals[field]), 0);
+const peak = (p, ...fields) => Math.max(0, ...fields.map((field) => n(p.peaks[field])));
+
+function projectNflPlayer(p) {
+  const position = exactPosition(p);
+  const games = total(p, "games");
+  const passAttempts = total(p, "attempts");
+  const passYards = total(p, "passingYards");
+  const passTds = total(p, "passingTouchdowns");
+  const carries = total(p, "carries");
+  const rushYards = total(p, "rushingYards");
+  const receptions = total(p, "receptions");
+  const recYards = total(p, "receivingYards");
+  const sacks = total(p, "defensiveSacks");
+  const ints = total(p, "defensiveInterceptions");
+  const fgm = total(p, "fieldGoalsMade");
+  const punts = total(p, "puntingAttempts");
+  const evidence = [];
+  let tier = "D";
+  const b =
+    (position === "QB" && games >= 80 && (passYards >= 25000 || passTds >= 180)) ||
+    (position === "RB" && games >= 80 && (rushYards >= 7000 || carries >= 1500)) ||
+    ((position === "WR" || position === "TE") && games >= 80 && (recYards >= 7000 || receptions >= 500)) ||
+    (["DL", "LB", "DB"].includes(position) && games >= 100 && (sacks >= 50 || ints >= 20)) ||
+    (position === "K" && games >= 180 && fgm >= 300);
+  const c =
+    (position === "QB" && games >= 40 && (passYards >= 10000 || passAttempts >= 1500)) ||
+    (position === "RB" && games >= 50 && (rushYards >= 3000 || carries >= 700)) ||
+    ((position === "WR" || position === "TE") && games >= 50 && (recYards >= 3000 || receptions >= 250)) ||
+    (["DL", "LB", "DB"].includes(position) && games >= 70 && (sacks >= 20 || ints >= 8 || games >= 120)) ||
+    (position === "OL" && games >= 120) ||
+    (position === "K" && games >= 120 && fgm >= 150) ||
+    (position === "P" && games >= 120 && punts >= 500);
+  if (b) { tier = "B"; evidence.push("sustained nationally prominent NFL career"); }
+  else if (c) { tier = "C"; evidence.push("substantial multi-year NFL role"); }
+  if (approvedBPlayers.has(p.name) && tier === "D") { tier = "B"; evidence.push("explicit football-culture B approval"); }
+  if (approvedAPlayers.has(p.name)) { tier = "A"; evidence.push("explicit iconic-player approval"); }
+  const years = yearsFor(p);
+  return { id: `nflverse-player-${p.sourceId}`, kind: "player-career", name: p.name, league: "NFL", position, startSeason: years[0], endSeason: years.at(-1), tier, evidence, sourceProvider: "nflverse", sourceId: p.sourceId, manualA: tier === "A" };
+}
+
+const nflPeople = aggregate(nfl, "NFL");
+const nflProjected = nflPeople.map(projectNflPlayer);
+const nflByNormalizedName = new Map();
+for (const record of nflProjected) {
+  const key = normalize(record.name);
+  const list = nflByNormalizedName.get(key) ?? [];
+  list.push(record); nflByNormalizedName.set(key, list);
+}
+const uniqueNflMatch = (name) => {
+  const list = nflByNormalizedName.get(normalize(name)) ?? [];
+  return list.length === 1 ? list[0] : null;
+};
+
+function projectCfbPlayer(p) {
+  const nflMatch = uniqueNflMatch(p.name);
+  const position = nflMatch?.position ?? inferredCollegeSkillPosition(p);
+  const passAttempts = total(p, "passAttempts");
+  const passYards = total(p, "passYards");
+  const rushAttempts = total(p, "rushAttempts");
+  const rushYards = total(p, "rushYards");
+  const receptions = total(p, "receptions");
+  const recYards = total(p, "receivingYards");
+  const defensiveImpact = total(p, "sacks", "defensiveInterceptions");
+  const school = [...p.teams].sort()[0];
+  const major = [...p.teams].some((team) => majorCfbPrograms.has(normalize(team)));
+  const meaningful =
+    (position === "QB" && passAttempts >= 250) || (position === "RB" && rushAttempts >= 180) ||
+    ((position === "WR" || position === "TE") && receptions >= 80) ||
+    (["DL", "LB", "DB"].includes(position) && defensiveImpact >= 8);
+  const strong =
+    (position === "QB" && passAttempts >= 500 && passYards >= 6500) ||
+    (position === "RB" && rushAttempts >= 400 && rushYards >= 2500) ||
+    ((position === "WR" || position === "TE") && receptions >= 150 && recYards >= 1800);
+  const extreme =
+    (position === "QB" && passYards >= 9000) || (position === "RB" && rushYards >= 3500) ||
+    ((position === "WR" || position === "TE") && recYards >= 2800);
+  const eliteMajorPeak =
+    major && ((position === "QB" && passYards >= 9000 && peak(p, "passYards") >= 3500) ||
+      (position === "RB" && rushYards >= 3500 && peak(p, "rushYards") >= 1500) ||
+      ((position === "WR" || position === "TE") && recYards >= 2800 && peak(p, "receivingYards") >= 1100));
+  const evidence = [];
+  let tier = "D";
+  if (nflMatch && ["A", "B"].includes(nflMatch.tier) && meaningful) { tier = "B"; evidence.push("recognizable NFL crossover with meaningful college role"); }
+  else if (eliteMajorPeak) { tier = "B"; evidence.push("exceptional multi-year production at a nationally prominent program"); }
+  else if ((nflMatch && nflMatch.tier === "C" && meaningful) || (strong && (major || extreme)) || extreme) { tier = "C"; evidence.push(nflMatch ? "recognized NFL crossover with meaningful college role" : "sustained high-end college production"); }
+  if (approvedBPlayers.has(p.name) && meaningful && tier === "D") { tier = "B"; evidence.push("explicit football-culture B approval"); }
+  if (approvedAPlayers.has(p.name) && meaningful) { tier = "A"; evidence.push("explicit iconic-player approval"); }
+  const years = yearsFor(p);
+  return { id: `cfbfast-r-player-${p.sourceId}`, kind: "player-career", name: p.name, league: "CFB", position, school, startSeason: years[0], endSeason: years.at(-1), tier, evidence, sourceProvider: "cfbfastR", sourceId: p.sourceId, manualA: tier === "A" };
+}
+
+const cfbPeople = aggregate(cfb, "CFB");
+const cfbProjected = cfbPeople.map(projectCfbPlayer);
+
+function recordsFromRows(corpus, mapper) {
+  const ix = ixFor(corpus);
+  return corpus.rows.map((row) => mapper(row, ix));
+}
+
+const programRecords = recordsFromRows(cfbPrograms, (row, ix) => {
+  const sourceId = String(at(row, ix, "sourceProgramId"));
+  const name = String(at(row, ix, "programName"));
+  const division = String(at(row, ix, "latestDivision") ?? "").toLowerCase();
+  const key = normalize(name);
+  let tier = division === "fbs" ? "C" : "D";
+  if (veryRecognizablePrograms.has(key)) tier = "B";
+  if (iconicPrograms.has(key)) tier = "A";
+  return { id: `cfb-program-${sourceId}`, kind: "program", name, league: "CFB", tier, sourceProvider: "cfbfastR", sourceId, startSeason: n(at(row, ix, "firstSeason")), endSeason: n(at(row, ix, "lastSeason")), evidence: [tier === "D" ? "non-FBS source program" : tier === "C" ? "current FBS program" : "explicit program-brand classification"], manualA: tier === "A" };
+});
+
+const franchiseA = new Set(["DAL", "GB", "NE", "PIT", "SF"]);
+const franchiseRecords = recordsFromRows(nflFranchises, (row, ix) => {
+  const sourceId = String(at(row, ix, "franchiseId"));
+  const tier = franchiseA.has(sourceId) ? "A" : "B";
+  return { id: `nfl-franchise-${sourceId}`, kind: "franchise", name: sourceId, league: "NFL", tier, sourceProvider: "nflverse", sourceId, startSeason: n(at(row, ix, "firstSeason")), endSeason: n(at(row, ix, "lastSeason")), evidence: [tier === "A" ? "explicit iconic franchise approval" : "current NFL franchise"], manualA: tier === "A" };
+});
+
+const championKeys = new Set(recordsFromRows(cfbChampionships, (row, ix) => `${at(row, ix, "season")}:${at(row, ix, "sourceProgramId")}`));
+const iconicCfbTeamSeasons = new Set(["2005:251", "2019:99"]);
+const cfbTeamSeasonRecords = recordsFromRows(cfbTeamSeasons, (row, ix) => {
+  const season = n(at(row, ix, "season")); const sourceId = String(at(row, ix, "sourceProgramId")); const name = String(at(row, ix, "programName"));
+  const key = `${season}:${sourceId}`; const fbs = String(at(row, ix, "division") ?? "").toLowerCase() === "fbs"; const wins = n(at(row, ix, "overallWins"));
+  let tier = "D"; if (championKeys.has(key)) tier = "B"; else if (fbs && wins >= 11) tier = "C"; if (iconicCfbTeamSeasons.has(key)) tier = "A";
+  return { id: `cfb-team-season-${key}`, kind: "team-season", name: `${season} ${name}`, league: "CFB", tier, sourceProvider: "cfbfastR", sourceId: key, startSeason: season, endSeason: season, evidence: [tier === "A" ? "explicit iconic team-season approval" : championKeys.has(key) ? "NCAA championship season" : tier === "C" ? "11+ win FBS season" : "ordinary source team season"], manualA: tier === "A" };
+});
+
+const iconicNflTeamSeasons = new Set(["2007:NE"]);
+const nflTeamSeasonRecords = recordsFromRows(nflTeamSeasons, (row, ix) => {
+  const season = n(at(row, ix, "season")); const franchise = String(at(row, ix, "franchiseId")); const key = `${season}:${franchise}`;
+  const champion = Boolean(at(row, ix, "superBowlChampion")); const appearance = Boolean(at(row, ix, "superBowlAppearance")); const wins = n(at(row, ix, "regularSeasonWins"));
+  let tier = champion ? "B" : appearance || wins >= 13 ? "C" : "D"; if (iconicNflTeamSeasons.has(key)) tier = "A";
+  return { id: `nfl-team-season-${key}`, kind: "team-season", name: `${season} ${franchise}`, league: "NFL", tier, sourceProvider: "nflverse", sourceId: key, startSeason: season, endSeason: season, evidence: [tier === "A" ? "explicit iconic team-season approval" : champion ? "Super Bowl champion" : tier === "C" ? "Super Bowl appearance or exceptional regular season" : "ordinary source team season"], manualA: tier === "A" };
+});
+
+const cfbProgramTier = new Map(programRecords.map((record) => [normalize(record.name), record.tier]));
+const cfbCoachA = new Set(["nick-saban", "urban-meyer", "pete-carroll", "bobby-bowden"]);
+const cfbCoachB = new Set(["bob-stoops", "dabo-swinney", "kirby-smart", "mack-brown", "jim-harbaugh", "gary-patterson", "frank-beamer", "kirk-ferentz", "mike-leach"]);
+const cfbCoachRecords = recordsFromRows(cfbCoachStints, (row, ix) => {
+  const sourceId = String(at(row, ix, "sourceCoachStintKey")); const name = String(at(row, ix, "coachName")); const program = String(at(row, ix, "programName")); const seasons = n(at(row, ix, "seasonCount"));
+  const nameKey = normalize(name); const programTier = cfbProgramTier.get(normalize(program)) ?? "D";
+  let tier = seasons >= 5 && programTier !== "D" ? "C" : "D"; if (cfbCoachB.has(nameKey) || (seasons >= 8 && ["A", "B"].includes(programTier))) tier = "B"; if (cfbCoachA.has(nameKey)) tier = "A";
+  return { id: `cfb-coach-stop-${sourceId}`, kind: "coach-stop", name, league: "CFB", tier, sourceProvider: "cfb-coaches", sourceId, identityScope: "source-name-within-program", startSeason: n(at(row, ix, "startSeason")), endSeason: n(at(row, ix, "endSeason")), evidence: [tier === "D" ? "short/low-salience FBS coaching stop" : tier === "C" ? "meaningful multi-year FBS head-coach stop" : "prominent coaching identity/stop"], manualA: tier === "A" };
+});
+
+const nflCoachA = new Set(["bill-belichick", "andy-reid", "pete-carroll"]);
+const nflCoachB = new Set(["mike-tomlin", "sean-payton", "john-harbaugh", "tom-coughlin", "tony-dungy", "mike-shanahan", "bill-cowher", "jon-gruden"]);
+const nflCoachRecords = recordsFromRows(nflCoachStints, (row, ix) => {
+  const sourceId = String(at(row, ix, "sourceCoachStintKey")); const name = String(at(row, ix, "coachName")); const nameKey = normalize(name); const seasons = n(at(row, ix, "seasonCount")); const wins = n(at(row, ix, "regularSeasonWins")); const playoffs = n(at(row, ix, "playoffSeasons")); const sbApps = n(at(row, ix, "superBowlAppearances")); const sbTitles = n(at(row, ix, "superBowlChampionships"));
+  let tier = seasons >= 5 && (wins >= 40 || playoffs >= 3) ? "C" : "D"; if (nflCoachB.has(nameKey) || (seasons >= 6 && (sbTitles >= 1 || sbApps >= 2))) tier = "B"; if (nflCoachA.has(nameKey) && seasons >= 5) tier = "A";
+  return { id: `nfl-coach-stop-${sourceId}`, kind: "coach-stop", name, league: "NFL", tier, sourceProvider: "nflverse", sourceId, identityScope: "source-name-within-franchise", startSeason: n(at(row, ix, "startSeason")), endSeason: n(at(row, ix, "endSeason")), evidence: [tier === "D" ? "short/low-salience NFL head-coach stop" : tier === "C" ? "meaningful multi-year NFL head-coach stop" : "prominent NFL head-coaching success"], manualA: tier === "A" };
+});
+
+const cfbEraRecords = recordsFromRows(cfbEras, (row, ix) => {
+  const sourceId = String(at(row, ix, "sourceEraKey")); const name = String(at(row, ix, "programName")); const startSeason = n(at(row, ix, "startSeason")); const endSeason = n(at(row, ix, "endSeason")); const tier = name === "Alabama" ? "A" : "B";
+  return { id: `cfb-era-${sourceId}`, kind: "era", name: `${name} ${startSeason}–${endSeason}`, league: "CFB", tier, sourceProvider: "ncaa", sourceId, startSeason, endSeason, evidence: [tier === "A" ? "explicit iconic multi-title era approval" : "objective multi-title championship cluster"], manualA: tier === "A" };
+});
+const nflEraRecords = nflCoachRecords.map((coach) => ({ ...coach, id: coach.id.replace("coach-stop", "era"), kind: "era", name: `${coach.name} ${coach.startSeason}–${coach.endSeason}`, tier: coach.tier === "A" ? "A" : coach.tier === "B" ? "B" : coach.tier === "C" ? "C" : "D", evidence: ["objective contiguous coach-within-franchise stint used as NFL era basis"] }));
+
+const nflGameRecords = recordsFromRows(nflGames, (row, ix) => {
+  const sourceId = String(at(row, ix, "sourceGameId")); const season = n(at(row, ix, "season")); const away = String(at(row, ix, "awayFranchiseId")); const home = String(at(row, ix, "homeFranchiseId")); const superBowl = Boolean(at(row, ix, "superBowl"));
+  const iconic = superBowl && ((season === 2016 && new Set([away, home]).has("NE") && new Set([away, home]).has("ATL")) || (season === 2007 && new Set([away, home]).has("NE") && new Set([away, home]).has("NYG")));
+  const tier = iconic ? "A" : superBowl ? "C" : "D";
+  return { id: `nfl-game-${sourceId}`, kind: "game", name: sourceId, league: "NFL", tier, sourceProvider: "nflverse", sourceId, startSeason: season, endSeason: season, evidence: [iconic ? "explicit iconic Super Bowl approval" : superBowl ? "Super Bowl" : "ordinary historical game"], manualA: tier === "A" };
+});
+const cfbGameRecords = recordsFromRows(cfbGames, (row, ix) => {
+  const sourceId = String(at(row, ix, "sourceGameId") ?? at(row, ix, "gameId") ?? `${at(row, ix, "season")}:${Math.random()}`);
+  const season = n(at(row, ix, "season"));
+  return { id: `cfb-game-${sourceId}`, kind: "game", name: sourceId, league: "CFB", tier: "D", sourceProvider: "cfbfastR", sourceId, startSeason: season, endSeason: season, evidence: ["no reliable cultural-significance marker in the source relationship row"], manualA: false };
+});
+
+const allRecords = [
+  ...nflProjected, ...cfbProjected, ...programRecords, ...franchiseRecords, ...cfbCoachRecords, ...nflCoachRecords,
+  ...cfbTeamSeasonRecords, ...nflTeamSeasonRecords, ...cfbEraRecords, ...nflEraRecords, ...nflGameRecords, ...cfbGameRecords,
+];
+allRecords.sort((a, b) => `${a.kind}:${a.id}`.localeCompare(`${b.kind}:${b.id}`));
+
+const promoted = allRecords.filter((record) => record.tier !== "D").map(({ evidence, manualA, ...record }) => record);
+const countBy = (rows, field) => Object.fromEntries([...new Set(rows.map((r) => r[field] ?? "unknown"))].sort().map((value) => [value, rows.filter((r) => (r[field] ?? "unknown") === value).length]));
+const tierCount = (rows) => Object.fromEntries(["A", "B", "C", "D"].map((tier) => [tier, rows.filter((r) => r.tier === tier).length]));
+const playerRecords = allRecords.filter((record) => record.kind === "player-career");
+const summary = {
+  rawRecordCount: allRecords.length,
+  promotedRecordCount: promoted.length,
+  rawPlayerCount: playerRecords.length,
+  playerTierByLeague: Object.fromEntries(["NFL", "CFB"].map((league) => [league, tierCount(playerRecords.filter((r) => r.league === league))])),
+  tierByEntityKind: Object.fromEntries([...new Set(allRecords.map((r) => r.kind))].sort().map((kind) => [kind, tierCount(allRecords.filter((r) => r.kind === kind))])),
+  promotedByEntityKind: countBy(allRecords.filter((r) => r.tier !== "D"), "kind"),
+  playerPosition: countBy(playerRecords, "position"),
+  manualARecordCount: allRecords.filter((r) => r.manualA).length,
+};
+const output = {
+  schemaVersion: 2,
+  methodology: "recognizability-not-greatness; fixed position-aware player thresholds, conservative non-player rules, explicit A approvals, no percentile ranking",
+  manualApprovals: [...approvedAPlayers].sort(),
+  manualBApprovals: [...approvedBPlayers].sort(),
+  summary,
+  records: promoted,
+};
 fs.writeFileSync(new URL("data/generated/football/recognizability-projection.json", root), `${JSON.stringify(output)}\n`);
 
-const count = (rows, field) => Object.fromEntries([...new Set(rows.map((r) => r[field] ?? "unknown"))].sort().map((v) => [v, rows.filter((r) => (r[field] ?? "unknown") === v).length]));
-const eligible = records.filter((r) => r.tier !== "D");
-const samples = (league, tier, amount) => records.filter((r) => r.league === league && r.tier === tier).sort((a,b) => `${a.name}:${a.id}`.localeCompare(`${b.name}:${b.id}`)).slice(0, amount).map((r) => `- ${r.name} (${r.position ?? "unknown"}, ${r.startSeason}–${r.endSeason}; ${r.evidence.join(", ")})`).join("\n");
-const audit = `# Football recognizability projection audit\n\nGenerated by \`node scripts/generate-football-recognizability.mjs\`. Do not hand-edit.\n\n## Method and limitations\n\nRecognition evidence uses fixed, position-aware volume, persistence, and peak rules—not statistical percentiles. Tier A requires the explicit approval set. Available CFB rows have no position field, so positions are conservatively inferred only from role statistics; offensive linemen cannot be projected from this corpus. Awards, draft history, championship contribution, and reliable historical-game cultural markers are not present in these source rows, so the projection does not invent them. Program prominence never independently promotes a player.\n\n## Totals\n\n- Raw player identities: ${records.length}\n- A-C casual eligible: ${eligible.length} (${(eligible.length / records.length * 100).toFixed(2)}%)\n- D/database only: ${records.length - eligible.length}\n- Manual A classifications: ${records.filter(r=>r.tier==="A").length} (${(records.filter(r=>r.tier==="A").length / records.length * 100).toFixed(3)}%) from ${approvedA.size} explicitly approved names\n- Tier by league: ${JSON.stringify(Object.fromEntries(["NFL","CFB"].map(l => [l,count(records.filter(r=>r.league===l),"tier")])), null, 2)}\n- Position: ${JSON.stringify(count(records,"position"), null, 2)}\n- Entity kind: player-career=${records.length}. Programs, coaches, team seasons, eras, and games retain conservative canonical treatment; source games are not promoted by this player projection.\n\n## Thin-pool warnings\n\n- Raw NFL A-C depth is ${eligible.filter(r=>r.league==="NFL").length}; conservative canonical reconciliation may reduce the distinct-person total below the 1,500 health target. Thresholds were not weakened.\n${eligible.filter(r=>r.league==="CFB").length < 2000 ? "- CFB A-C player depth is below the 2,000 health target; thresholds were not weakened.\n" : "- None for CFB player target.\n"}- CFB OL recognition cannot be safely inferred from the available fields.\n\n## Deterministic review samples\n\nSamples use stable name/id ordering (not runtime randomness), making every regenerated audit reviewable.\n\n### NFL tier B\n${samples("NFL","B",30)}\n\n### NFL tier C (50)\n${samples("NFL","C",50)}\n\n### CFB tier B\n${samples("CFB","B",30)}\n\n### CFB tier C (50)\n${samples("CFB","C",50)}\n`;
+const detailSamples = (league, tier, amount) => allRecords.filter((r) => r.kind === "player-career" && r.league === league && r.tier === tier).sort((a, b) => `${a.name}:${a.id}`.localeCompare(`${b.name}:${b.id}`)).slice(0, amount).map((r) => `- ${r.name} (${r.position ?? "unknown"}, ${r.startSeason}–${r.endSeason}; ${r.evidence.join(", ")})`).join("\n");
+const entitySamples = (kind, amount = 12) => allRecords.filter((r) => r.kind === kind && r.tier !== "D").sort((a, b) => `${a.tier}:${a.name}`.localeCompare(`${b.tier}:${b.name}`)).slice(0, amount).map((r) => `- ${r.tier}: ${r.name} — ${r.evidence.join(", ")}`).join("\n") || "- No A-C records; source evidence is intentionally insufficient for casual promotion.";
+const playerEligible = playerRecords.filter((r) => r.tier !== "D");
+const nflEligible = playerEligible.filter((r) => r.league === "NFL").length;
+const cfbEligible = playerEligible.filter((r) => r.league === "CFB").length;
+const audit = `# Football recognizability projection audit\n\nGenerated by \`node scripts/generate-football-recognizability.mjs\`. Do not hand-edit.\n\n## Product contract\n\nRecognizability is not greatness. A/B/C/D describe the subject; they do **not** prescribe one universal exposure mix across Football games. Game-specific tier weighting belongs to PR7–PR10. Tier A requires explicit approval. Tier D remains database-only.\n\n## Method and limitations\n\nNFL positions use exact source position tokens, never substring matching. CFB player rows lack a reliable position field, so QB/RB/WR/K are inferred only from role statistics; defensive positions are inherited only through a unique NFL name match and are otherwise left unknown. Program prominence may support a strong college-production case but never independently promotes a player. Awards/draft/cultural-game markers that are absent from the source are not invented. Coach records preserve source-name-within-program/franchise stop identity rather than pretending every source name is a canonical person ID. Complete NCAA championship relationships, not partial cfbfastR title notes, own CFB championship-season recognition.\n\n## Totals\n\n- Raw projection records across all entity kinds: ${allRecords.length}\n- Promoted A-C records: ${promoted.length} (${(promoted.length / allRecords.length * 100).toFixed(2)}%)\n- Raw player identities: ${playerRecords.length}\n- Player A-C: ${playerEligible.length} (${(playerEligible.length / playerRecords.length * 100).toFixed(2)}%)\n- NFL player A-C: ${nflEligible}${nflEligible < 1500 ? " — below the 1,500 health target; thresholds were not weakened." : ""}\n- CFB player A-C: ${cfbEligible}${cfbEligible < 2000 ? " — below the 2,000 health target; thresholds were not weakened." : ""}\n- Manual A records: ${summary.manualARecordCount}\n\n### Player tier by league\n\n\`\`\`json\n${JSON.stringify(summary.playerTierByLeague, null, 2)}\n\`\`\`\n\n### Tier by entity kind\n\n\`\`\`json\n${JSON.stringify(summary.tierByEntityKind, null, 2)}\n\`\`\`\n\n### Player position distribution\n\n\`\`\`json\n${JSON.stringify(summary.playerPosition, null, 2)}\n\`\`\`\n\n## Thin-pool / bias warnings\n\n${nflEligible < 1500 ? `- NFL player depth is ${nflEligible}, below the roadmap health target; quality was kept above quota.\n` : ""}${cfbEligible < 2000 ? `- CFB player depth is ${cfbEligible}, below the roadmap health target; quality was kept above quota.\n` : ""}- CFB offensive-line recognition cannot be inferred from the historical player-stat source.\n- CFB defensive players without a unique NFL name reconciliation are deliberately not promoted from ambiguous defensive event stats alone.\n- CFB historical games remain D because the relationship rows do not carry reliable broad cultural-significance markers; sparse source title flags are not promoted as complete history.\n\n## Deterministic player review samples\n\n### NFL tier B\n${detailSamples("NFL", "B", 30)}\n\n### NFL tier C (50)\n${detailSamples("NFL", "C", 50)}\n\n### CFB tier B\n${detailSamples("CFB", "B", 30)}\n\n### CFB tier C (50)\n${detailSamples("CFB", "C", 50)}\n\n## Non-player A-C samples\n\n### Programs\n${entitySamples("program")}\n\n### Franchises\n${entitySamples("franchise")}\n\n### Coach stops\n${entitySamples("coach-stop", 20)}\n\n### Team seasons\n${entitySamples("team-season", 20)}\n\n### Eras\n${entitySamples("era", 20)}\n\n### Games\n${entitySamples("game", 20)}\n`;
 fs.writeFileSync(new URL("docs/football-recognizability-audit.md", root), audit);
