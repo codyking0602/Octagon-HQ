@@ -1,0 +1,35 @@
+name: TEMP PR6 C-tier finalize
+
+"on":
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - .github/workflows/temp-pr6-c-tier-finalize.yml
+      - scripts/temp-finalize-pr6-c-tier.mjs
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+          persist-credentials: true
+      - name: Apply C-tier calibration
+        run: node scripts/temp-finalize-pr6-c-tier.mjs
+      - name: Regenerate projection and audit
+        run: node scripts/generate-football-recognizability.mjs
+      - name: Commit artifacts and remove temporary tooling
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add scripts/generate-football-recognizability.mjs src/features/back-room/footballRecognizabilityProjection.test.ts docs/football-recognizability-audit.md
+          git add -f data/generated/football/recognizability-projection.json
+          git rm scripts/temp-finalize-pr6-c-tier.mjs .github/workflows/temp-pr6-c-tier-finalize.yml
+          git commit -m 'fix: tighten PR6 C-tier recognition [finalize-pr6-c-tier]'
+          git push origin HEAD:${{ github.head_ref }}
