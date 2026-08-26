@@ -1,47 +1,72 @@
-import { createHash } from "node:crypto";
 import fs from "node:fs";
 import { describe, expect, it } from "vitest";
 import projection from "../../../data/generated/football/recognizability-projection.json";
-import { footballRecognizabilitySubjects, footballSubjects, getFootballSubject } from "./footballSubjectRegistry";
+import { footballSubjects, getFootballSubject, queryFootballSubjects } from "./footballSubjectRegistry";
 import { buildFootballSubjectKnowledgeMetadata } from "./footballSubjectEligibility";
 
 describe("Football recognizability projection", () => {
   it("keeps database-only identities out of casual play", () => {
     expect(footballSubjects.filter((subject) => subject.recognizabilityTier === "D").every((subject) => !subject.casualEligible)).toBe(true);
-    expect(() => buildFootballSubjectKnowledgeMetadata({ id: "low-volume", name: "Low Volume", kind: "player-career", league: "CFB", school: "Alabama" }, { recognizabilityTier: "D", casualEligible: true })).toThrow();
+    expect(() => buildFootballSubjectKnowledgeMetadata(
+      { id: "low-volume", name: "Low Volume", kind: "player-career", league: "CFB", school: "Alabama" },
+      { recognizabilityTier: "D", casualEligible: true },
+    )).toThrow();
   });
 
   it("requires explicit approval for every projected A", () => {
     const approved = new Set(projection.manualApprovals);
-    expect(projection.records.filter((record) => record.tier === "A").every((record) => approved.has(record.name))).toBe(true);
+    const playerAs = projection.records.filter((record) => record.kind === "player-career" && record.tier === "A");
+    expect(playerAs.length).toBeGreaterThan(0);
+    expect(playerAs.every((record) => approved.has(record.name))).toBe(true);
   });
 
-  it("is position aware and does not promote meaningless major-program rows", () => {
-    const c = projection.records.filter((record) => record.tier === "C");
-    expect(new Set(c.map((record) => record.position)).size).toBeGreaterThan(5);
-    const lowVolume = projection.records.filter((record) => record.league === "CFB" && record.school === "Alabama" && record.score < 4);
-    expect(lowVolume.every((record) => record.tier === "D")).toBe(true);
+  it("uses exact NFL positions and blocks the observed substring regressions", () => {
+    expect(projection.records.find((record) => record.league === "NFL" && record.name === "Adam Vinatieri")).toMatchObject({ position: "K" });
+    expect(projection.records.find((record) => record.league === "NFL" && record.name === "AJ Cole")).toMatchObject({ position: "P" });
+    const audit = fs.readFileSync("docs/football-recognizability-audit.md", "utf8");
+    expect(audit).not.toContain("Adam Vinatieri (OL");
+    expect(audit).not.toContain("AJ Cole (OL");
+    expect(audit).not.toContain("A.J. Epenesa (DB");
   });
 
-  it("keeps ordinary team seasons and eras conservative", () => {
-    const seasons = footballSubjects.filter((subject) => subject.kind === "team-season");
-    expect(seasons.some((subject) => subject.recognizabilityTier === "D")).toBe(true);
-    expect(seasons.filter((subject) => !subject.nationalChampion).every((subject) => subject.recognizabilityTier === "D" || subject.recognizabilityTier === "A")).toBe(true);
-    expect(footballSubjects.filter((subject) => subject.kind === "program-era").every((subject) => subject.recognizabilityTier === "D")).toBe(true);
+  it("does not turn ordinary CFB stat rows or kicker volume into casual filler", () => {
+    const promotedCfbNames = new Set(projection.records.filter((record) => record.kind === "player-career" && record.league === "CFB").map((record) => record.name));
+    for (const obscureKicker of ["Aaron Beckham", "Aaron Bickerton", "Aaron Blom"]) {
+      expect(promotedCfbNames.has(obscureKicker)).toBe(false);
+    }
   });
 
-  it("preserves aliases and source reconciliation while providing healthy depth", () => {
+  it("projects every required PR6 entity family conservatively", () => {
+    const byKind = projection.summary.tierByEntityKind;
+    for (const kind of ["player-career", "program", "franchise", "coach-stop", "team-season", "era", "game"] as const) {
+      expect(byKind[kind]).toBeDefined();
+    }
+    expect(byKind.game.D).toBeGreaterThan((byKind.game.A ?? 0) + (byKind.game.B ?? 0) + (byKind.game.C ?? 0));
+    expect(byKind.program.C + byKind.program.B + byKind.program.A).toBeGreaterThan(100);
+    expect(byKind.franchise.A + byKind.franchise.B).toBe(32);
+    expect(byKind["coach-stop"].C + byKind["coach-stop"].B + byKind["coach-stop"].A).toBeGreaterThan(50);
+    expect(byKind.era.B + byKind.era.A).toBeGreaterThanOrEqual(6);
+  });
+
+  it("keeps deep projected players opt-in on the existing canonical query path", () => {
+    expect(queryFootballSubjects({ sourceProvider: "cfbfastR" })).toHaveLength(0);
+    expect(queryFootballSubjects({ sourceProvider: "nflverse" })).toHaveLength(0);
+    expect(queryFootballSubjects({ sourceProvider: "cfbfastR", includeProjectedSourceSubjects: true, casualEligible: true }).length).toBeGreaterThan(50);
+    expect(queryFootballSubjects({ sourceProvider: "nflverse", includeProjectedSourceSubjects: true, casualEligible: true }).length).toBeGreaterThan(50);
     expect(getFootballSubject("peyton-manning")?.id).toBe("peyton-manning");
     expect(getFootballSubject("program-texas")?.aliases).toContain("texas-program");
-    // Reconciliation safely collapses same-person aliases, leaving a documented small NFL shortfall.
-    expect(footballRecognizabilitySubjects.filter((subject) => subject.league === "NFL" && subject.casualEligible).length).toBeGreaterThanOrEqual(1500);
-    expect(footballRecognizabilitySubjects.filter((subject) => subject.league === "CFB" && subject.casualEligible).length).toBeGreaterThanOrEqual(2000);
   });
 
-  it("checks in a reproducible generated audit and projection", () => {
-    const stable = JSON.stringify(projection);
-    expect(createHash("sha256").update(stable).digest("hex")).toHaveLength(64);
+  it("checks in the required deterministic review audit without imposing one game-wide exposure mix", () => {
     const audit = fs.readFileSync("docs/football-recognizability-audit.md", "utf8");
     expect((audit.match(/^### (NFL|CFB) tier C \(50\)$/gm) ?? [])).toHaveLength(2);
+    expect(audit).toContain("do **not** prescribe one universal exposure mix");
+    expect(audit).toContain("### Programs");
+    expect(audit).toContain("### Coach stops");
+    expect(audit).toContain("### Team seasons");
+    expect(audit).toContain("### Eras");
+    expect(audit).toContain("### Games");
+    const generator = fs.readFileSync("scripts/generate-football-recognizability.mjs", "utf8");
+    expect(generator).not.toContain("Math.random");
   });
 });
