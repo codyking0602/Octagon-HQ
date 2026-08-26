@@ -1,7 +1,6 @@
 import { createHash } from "node:crypto";
 
-export function parseCsv(text) {
-  const rows = [];
+export function* iterateCsvRows(text) {
   let row = [];
   let field = "";
   let quoted = false;
@@ -26,7 +25,7 @@ export function parseCsv(text) {
       field = "";
     } else if (char === "\n") {
       row.push(field.replace(/\r$/, ""));
-      rows.push(row);
+      yield row;
       row = [];
       field = "";
     } else {
@@ -37,9 +36,12 @@ export function parseCsv(text) {
   if (quoted) throw new Error("CSV ended inside a quoted field.");
   if (field.length > 0 || row.length > 0) {
     row.push(field.replace(/\r$/, ""));
-    rows.push(row);
+    yield row;
   }
-  return rows;
+}
+
+export function parseCsv(text) {
+  return [...iterateCsvRows(text)];
 }
 
 export function gitBlobSha1(text) {
