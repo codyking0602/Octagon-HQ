@@ -66,7 +66,7 @@ describe("CFB national championship relationships", () => {
     }
   });
 
-  it("materializes stable selection and program-summary outputs", () => {
+  it("materializes stable selection and program-summary outputs without inventing per-champion selector attribution", () => {
     const selections = readJson(selectionsPath);
     const summary = readJson(summaryPath);
     const manifest = readJson(manifestPath);
@@ -74,6 +74,8 @@ describe("CFB national championship relationships", () => {
     expect(selections).toMatchObject({ seasonCount: 24, selectionCount: 25 });
     expect(summary.programCount).toBe(12);
     expect(manifest.splitTitleSeasons).toEqual([2003]);
+    expect(selections.columns).not.toContain("selectingOrganization");
+    expect(selections.columns).toContain("sourceSeasonSelectingOrganizations");
 
     const selectionIndex = Object.fromEntries(
       selections.columns.map((column: string, index: number) => [column, index]),
@@ -81,6 +83,9 @@ describe("CFB national championship relationships", () => {
     const season2003 = selections.rows.filter((row: unknown[]) => row[selectionIndex.season] === 2003);
     expect(season2003).toHaveLength(2);
     expect(season2003.every((row: unknown[]) => row[selectionIndex.splitTitle] === true)).toBe(true);
+    expect(season2003.every((row: unknown[]) =>
+      row[selectionIndex.sourceSeasonSelectingOrganizations] === "BCS, AP, FWAA"
+    )).toBe(true);
 
     const summaryIndex = Object.fromEntries(
       summary.columns.map((column: string, index: number) => [column, index]),
