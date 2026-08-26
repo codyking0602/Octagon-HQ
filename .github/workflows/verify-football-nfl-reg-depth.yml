@@ -1,0 +1,37 @@
+name: Verify Football NFL regular depth
+
+on:
+  push:
+    branches:
+      - fix/football-nfl-dedicated-regular-assets
+    paths:
+      - .github/workflows/verify-football-nfl-reg-depth.yml
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: fix/football-nfl-dedicated-regular-assets
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Materialize historical NFL corpus
+        run: node scripts/import-football-nfl-historical-stats.mjs
+      - name: Require complete regular-season team coverage
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const coverage = JSON.parse(fs.readFileSync('data/generated/football/nfl/historical-stats-1999-2025.coverage.json', 'utf8'));
+          if (coverage.totals.playerRowCount < 35000) throw new Error(`NFL player corpus too shallow: ${coverage.totals.playerRowCount}`);
+          for (const season of coverage.seasons) {
+            const minimum = season.season >= 2002 ? 32 : 31;
+            if (season.teamRowCount < minimum) throw new Error(`NFL ${season.season} has ${season.teamRowCount} team rows; expected at least ${minimum}.`);
+          }
+          console.log(JSON.stringify(coverage.totals));
+          console.log(coverage.seasons.map(({season, teamRowCount}) => `${season}:${teamRowCount}`).join(' '));
+          NODE
