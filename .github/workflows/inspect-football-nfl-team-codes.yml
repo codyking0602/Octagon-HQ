@@ -1,0 +1,32 @@
+name: Inspect Football NFL team codes
+
+on:
+  push:
+    branches:
+      - feature/football-knowledge-franchise-identity
+    paths:
+      - .github/workflows/inspect-football-nfl-team-codes.yml
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: feature/football-knowledge-franchise-identity
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Print source team codes
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const corpus = JSON.parse(fs.readFileSync('data/generated/football/nfl/team-seasons-1999-2025.json', 'utf8'));
+          const teamIndex = corpus.columns.indexOf('team');
+          const codes = [...new Set(corpus.rows.map(row => row[teamIndex]))].sort();
+          console.log(`count=${codes.length}`);
+          console.log(codes.join(','));
+          NODE
