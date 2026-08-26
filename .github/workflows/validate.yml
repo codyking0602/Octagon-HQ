@@ -228,7 +228,7 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
   finalize-pr6-team-gate:
-    name: finalize PR6 CFB team gate
+    name: finalize PR6 CFB association guard
     if: ${{ github.event_name == 'pull_request' && github.event.pull_request.number == 699 }}
     permissions:
       contents: write
@@ -248,8 +248,8 @@ jobs:
         with:
           node-version-file: .nvmrc
 
-      - name: Apply CFB Tier C team gate
-        run: node scripts/temp-finalize-pr6-cfb-team-gate.mjs
+      - name: Apply structural CFB association guard
+        run: node scripts/temp-fix-pr6-cfb-major-association.mjs
 
       - name: Regenerate projection and audit
         run: node scripts/generate-football-recognizability.mjs
@@ -269,8 +269,8 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add .github/workflows/validate.yml scripts/generate-football-recognizability.mjs docs/football-recognizability-audit.md
           git add -f data/generated/football/recognizability-projection.json
-          git rm scripts/temp-finalize-pr6-cfb-team-gate.mjs .github/workflows/temp-pr6-cfb-team-gate-finalize.yml
-          git commit -m 'fix: require single-program CFB Tier C evidence [finalize-pr6-team-gate]'
+          git rm scripts/temp-fix-pr6-cfb-major-association.mjs
+          git commit -m 'fix: require stable CFB major-program association [pr6-cfb-association]'
           git push origin HEAD:${{ github.head_ref }}
 
   validate:
