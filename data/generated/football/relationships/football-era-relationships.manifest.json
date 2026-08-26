@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "relationshipFamily": "football-era-support",
+  "cfb": {
+    "relationshipOwner": "generated-championship-clusters",
+    "path": "cfb-championship-eras-2002-2025.json",
+    "rowCount": 6,
+    "sha256": "d4ac7184e52f8bd032dad205fd41067adef2996fe0478e268a1d7db72c717229",
+    "eraBasis": {
+      "type": "multi-title-championship-cluster",
+      "maxAdjacentTitleGap": 4,
+      "minimumChampionshipSelections": 2,
+      "note": "Objective clustering rule only. These rows are not automatically labeled dynasties or made casual-game eligible."
+    }
+  },
+  "nfl": {
+    "relationshipOwner": "existing-coach-stint-corpus",
+    "recordKind": "coach-stint",
+    "path": "nfl-coach-stints-1999-2025.json",
+    "rowCount": 246,
+    "franchiseCount": 32,
+    "sourceCoachNameKeyCount": 173,
+    "sha256": "1d7d51896ba0c732bae1e508bb78afbaa7bde71fd19604f4f5f189fa41ec69dc",
+    "source": {
+      "provider": "nflverse",
+      "repository": "nflverse/nfldata",
+      "commit": "13e5420b10ca4e9dca03a3dcb7148f873ab3a301",
+      "nflreadrCommit": "d072c08492067b578f27e562b6cc9c9e3b8589c3",
+      "license": "CC BY 4.0",
+      "coachIdentityScope": "source-name-within-franchise"
+    },
+    "note": "Contiguous coach-within-franchise stints are already natural objective NFL eras; this initiative references that canonical owner instead of duplicating the rows."
+  },
+  "generatedBy": "scripts/build-football-era-relationships.mjs"
+}

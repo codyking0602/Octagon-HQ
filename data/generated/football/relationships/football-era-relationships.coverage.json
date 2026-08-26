@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "relationshipFamily": "football-era-support",
+  "cfb": {
+    "recordKind": "championship-era",
+    "clusterCount": 6,
+    "programCount": 6,
+    "representedSeasonCount": 27,
+    "championshipSelectionCount": 16,
+    "maxAdjacentTitleGap": 4
+  },
+  "nfl": {
+    "recordKind": "coach-stint",
+    "stintCount": 246,
+    "franchiseCount": 32,
+    "sourceCoachNameKeyCount": 173
+  }
+}
