@@ -340,31 +340,20 @@ function derivedPairs(packId: FootballRankFivePackId, leftId: string, rightId: s
   return [];
 }
 
-function canonicalEvidenceSubjectId(packId: FootballRankFivePackId, subjectId: string) {
-  const subject = getFootballSubject(subjectId);
-  if (packId === "college-quarterbacks" && subject?.kind === "player-season" && subject.playerId) {
-    const player = getFootballSubject(subject.playerId);
-    if (player?.kind === "player-career") return player.id;
-  }
-  return subject?.id ?? subjectId;
-}
-
 function canonicalPair(
   packId: FootballRankFivePackId,
   leftId: string,
   rightId: string,
 ): FootballBlindResumeCanonicalEvidencePair | null {
-  const factualLeftId = canonicalEvidenceSubjectId(packId, leftId);
-  const factualRightId = canonicalEvidenceSubjectId(packId, rightId);
-  const leftSubject = getFootballSubject(factualLeftId);
-  const rightSubject = getFootballSubject(factualRightId);
+  const leftSubject = getFootballSubject(leftId);
+  const rightSubject = getFootballSubject(rightId);
   if (!leftSubject || !rightSubject) return null;
 
   const pairs: RowPair[] = [
     ...METRICS_BY_PACK[packId]
-      .map((metricId) => factPair(factualLeftId, factualRightId, metricId))
+      .map((metricId) => factPair(leftId, rightId, metricId))
       .filter((row): row is RowPair => row != null),
-    ...derivedPairs(packId, factualLeftId, factualRightId),
+    ...derivedPairs(packId, leftId, rightId),
     ...metadataPairs(leftSubject, rightSubject),
   ];
   const unique = pairs.filter(
@@ -403,6 +392,9 @@ export function buildFootballBlindResumeCanonicalEvidencePair(
   leftId: string,
   rightId: string,
   archetype: FootballBlindResumeArchetype,
+  reviewedLeftId = leftId,
+  reviewedRightId = rightId,
 ) {
-  return canonicalPair(packId, leftId, rightId) ?? reviewedPair(packId, leftId, rightId, archetype);
+  return canonicalPair(packId, leftId, rightId)
+    ?? reviewedPair(packId, reviewedLeftId, reviewedRightId, archetype);
 }
