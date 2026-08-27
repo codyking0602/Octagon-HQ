@@ -17,7 +17,10 @@ import {
   type FootballSubjectKnowledgeMetadata,
   type FootballSubjectKnowledgeOverride,
 } from "./footballSubjectEligibility";
-import { footballProjectedPlayerSubjects } from "./footballRecognizabilityProjection";
+import {
+  footballProjectedPlayerSubjects,
+  footballRecognitionProjectionSubjectIdFor,
+} from "./footballRecognizabilityProjection";
 import {
   footballFindLeaderProjectedAdditionalSubjects,
   footballFindLeaderProjectedKnowledgeOverride,
@@ -93,10 +96,18 @@ function enrichFootballSubject(
   const teamId = teamIdForSubject(subject);
   const playerId = playerIdForSubject(subject);
   const coachId = subject.kind === "coach" ? subject.id : undefined;
-  const alias = programAlias(subject);
-  const aliases = alias && !(subject.aliases ?? []).includes(alias) ? [...(subject.aliases ?? []), alias] : subject.aliases;
+  const generatedAliases = [programAlias(subject), footballRecognitionProjectionSubjectIdFor(subject)]
+    .filter((alias): alias is string => Boolean(alias && alias !== subject.id));
+  const aliases = [...new Set([...(subject.aliases ?? []), ...generatedAliases])];
   const knowledgeMetadata = buildFootballSubjectKnowledgeMetadata(subject, knowledgeOverride);
-  return { ...subject, ...knowledgeMetadata, ...(aliases ? { aliases } : {}), ...(teamId ? { teamId } : {}), ...(playerId ? { playerId } : {}), ...(coachId ? { coachId } : {}) };
+  return {
+    ...subject,
+    ...knowledgeMetadata,
+    ...(aliases.length ? { aliases } : {}),
+    ...(teamId ? { teamId } : {}),
+    ...(playerId ? { playerId } : {}),
+    ...(coachId ? { coachId } : {}),
+  };
 }
 
 /** Public curated identity/query view used by existing games. */
