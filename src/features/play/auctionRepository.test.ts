@@ -1,5 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
-import { auctionFightBreakdownPacketSchema, auctionProjectionSchema, createAuctionRepository, maximumLegalAuctionBid, validateAuctionBid } from "./auctionRepository";
+import {
+  auctionFightBreakdownPacketSchema,
+  auctionProjectionSchema,
+  createAuctionRepository,
+  formatOctagonVerdictPrompt,
+  maximumLegalAuctionBid,
+  validateAuctionBid,
+} from "./auctionRepository";
 
 const firstItem = { deck_position: 1, item_reference: "fixture-1", display_label: "Mystery Fighter" };
 const projection = auctionProjectionSchema.parse({
@@ -15,31 +22,27 @@ const projection = auctionProjectionSchema.parse({
   current_item: firstItem, resolved_rounds: [],
 });
 
+const categories = ["Striking", "Grappling", "Frame", "Power", "Heart"] as const;
 const breakdownPacket = auctionFightBreakdownPacketSchema.parse({
-  packet_version: "auction-fight-breakdown-v2",
+  packet_version: "auction-fight-breakdown-v3",
   mode: "ultimate-fighter",
   winner: "challenger",
-  recap: [
-    "CODY's build likely gets the win.",
-    "Fighter A gives CODY the biggest edge in striking, helping the build win the cleaner exchanges on the feet.",
-    "Fighter B gives RIVAL a real answer through the clinch and mat phases, but CODY has the stronger five-category path.",
-  ],
   challenger: {
     name: "CODY",
     score: 88,
-    selections: ["Striking", "Grappling", "Frame", "Power", "Heart"].map((category, index) => ({
+    selections: categories.map((category, index) => ({
       category,
       fighter: `Cody Fighter ${index + 1}`,
-      code: `CODE-${index + 1}`,
+      code: ["ABCDEF", "BCDEFG", "CDEFGH", "DEFGHI", "EFGHIJ"][index],
     })),
   },
   recipient: {
     name: "RIVAL",
     score: 82,
-    selections: ["Striking", "Grappling", "Frame", "Power", "Heart"].map((category, index) => ({
+    selections: categories.map((category, index) => ({
       category,
       fighter: `Rival Fighter ${index + 1}`,
-      code: `RIVAL-${index + 1}`,
+      code: ["FGHIJK", "GHIJKL", "HIJKLM", "IJKLMN", "JKLMNO"][index],
     })),
   },
 });
@@ -73,21 +76,38 @@ describe("Auction frontend repository", () => {
     });
   });
 
-  it("reads fight recap prose only through the existing participant breakdown packet", async () => {
+  it("reads the codes-only participant packet through the existing RPC", async () => {
     const rpc = vi.fn(async () => ({ data: breakdownPacket, error: null }));
     const repository = createAuctionRepository({ rpc })!;
-    await expect(repository.fightRecap(projection.auction_id)).resolves.toEqual(breakdownPacket.recap);
+    await expect(repository.fightBreakdownPacket(projection.auction_id)).resolves.toEqual(breakdownPacket);
     expect(rpc).toHaveBeenCalledTimes(1);
     expect(rpc).toHaveBeenCalledWith("get_auction_fight_breakdown_packet", {
       p_auction_id: projection.auction_id,
     });
   });
 
-  it("rejects extra hidden fields in the fight breakdown packet", () => {
+  it("rejects recap prose and hidden analysis fields in the handoff packet", () => {
+    expect(() => auctionFightBreakdownPacketSchema.parse({
+      ...breakdownPacket,
+      recap: ["The app should not write this fight."],
+    })).toThrow();
     expect(() => auctionFightBreakdownPacketSchema.parse({
       ...breakdownPacket,
       private_analysis: { category_edges: [] },
     })).toThrow();
+  });
+
+  it("formats a copy-paste prompt for Octagon Verdict without doing matchup analysis", () => {
+    const prompt = formatOctagonVerdictPrompt(breakdownPacket);
+    expect(prompt).toContain("OCTAGON HQ — BUILD THE ULTIMATE FIGHTER");
+    expect(prompt).toContain("Winner: CODY");
+    expect(prompt).toContain("CODY 88");
+    expect(prompt).toContain("RIVAL 82");
+    expect(prompt).toContain("Striking: Cody Fighter 1 [ABCDEF]");
+    expect(prompt).toContain("Heart: Rival Fighter 5 [JKLMNO]");
+    expect(prompt.indexOf("Striking: Cody Fighter 1")).toBeLessThan(prompt.indexOf("Grappling: Cody Fighter 2"));
+    expect(prompt).toContain("Do not reveal, print, translate, or list the hidden rating values or the decoder mapping.");
+    expect(prompt).not.toMatch(/biggest edge|stronger five-category path|cleaner exchanges|clinch and mat phases/i);
   });
 
   it("turns stale revisions into understandable reload errors", async () => {

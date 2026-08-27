@@ -32,7 +32,7 @@ const resolvedRoundSchema = z.object({
 const fightBreakdownSelectionSchema = z.object({
   category: categorySchema,
   fighter: z.string().min(1),
-  code: z.string().min(1),
+  code: z.string().regex(/^[A-Z]{6}$/),
 }).strict();
 const fightBreakdownSideSchema = z.object({
   name: z.string().min(1),
@@ -40,10 +40,9 @@ const fightBreakdownSideSchema = z.object({
   selections: z.array(fightBreakdownSelectionSchema).length(5),
 }).strict();
 export const auctionFightBreakdownPacketSchema = z.object({
-  packet_version: z.literal("auction-fight-breakdown-v2"),
+  packet_version: z.literal("auction-fight-breakdown-v3"),
   mode: z.literal("ultimate-fighter"),
   winner: z.enum(["challenger", "recipient", "tie"]),
-  recap: z.array(z.string().min(1)).min(2).max(3),
   challenger: fightBreakdownSideSchema,
   recipient: fightBreakdownSideSchema,
 }).strict();
@@ -83,6 +82,7 @@ export type AuctionLifecycle = z.infer<typeof lifecycleSchema>;
 export type AuctionItem = z.infer<typeof itemSchema>;
 export type AuctionAward = z.infer<typeof awardSchema>;
 export type AuctionResolvedRound = z.infer<typeof resolvedRoundSchema>;
+export type AuctionFightBreakdownPacket = z.infer<typeof auctionFightBreakdownPacketSchema>;
 export type AuctionProjection = Omit<AuctionProjectionRow, "mode_id"> & { mode_id: AuctionModeId };
 
 export class AuctionRepositoryError extends Error {
@@ -106,7 +106,7 @@ async function rpc(client: RpcClient, name: string, args: Record<string, unknown
 export interface AuctionRepository {
   prepare(recipientId: string, modeId: AuctionModeId): Promise<AuctionProjection>;
   read(auctionId: string): Promise<AuctionProjection>;
-  fightRecap(auctionId: string): Promise<string[]>;
+  fightBreakdownPacket(auctionId: string): Promise<AuctionFightBreakdownPacket>;
   bid(state: AuctionProjection, amount: number, category?: UltimateFighterCategory): Promise<AuctionProjection>;
   abandon(state: AuctionProjection): Promise<void>;
   cancel(state: AuctionProjection): Promise<AuctionProjection>;
@@ -127,9 +127,9 @@ export function createAuctionRepository(client: RpcClient | null = getSupabaseCl
       return read(id);
     },
     read,
-    async fightRecap(auctionId) {
+    async fightBreakdownPacket(auctionId) {
       const data = await rpc(client, "get_auction_fight_breakdown_packet", { p_auction_id: auctionId });
-      return auctionFightBreakdownPacketSchema.parse(data).recap;
+      return auctionFightBreakdownPacketSchema.parse(data);
     },
     async bid(state, amount, category) {
       const common = { p_auction_id: state.auction_id, p_expected_revision: state.revision, p_amount: amount, p_category: category ?? null };
@@ -148,6 +148,39 @@ export function createAuctionRepository(client: RpcClient | null = getSupabaseCl
       return read(state.auction_id);
     },
   };
+}
+
+export function formatOctagonVerdictPrompt(packet: AuctionFightBreakdownPacket) {
+  const winnerName = packet.winner === "challenger"
+    ? packet.challenger.name
+    : packet.winner === "recipient"
+      ? packet.recipient.name
+      : "TRUE TIE";
+  const orderedSelections = (side: AuctionFightBreakdownPacket["challenger"]) => ULTIMATE_FIGHTER_CATEGORIES.map((category) => {
+    const selection = side.selections.find((item) => item.category === category);
+    if (!selection) throw new AuctionRepositoryError(`Octagon Verdict packet is missing ${category}.`);
+    return `${category}: ${selection.fighter} [${selection.code}]`;
+  }).join("\n");
+
+  return [
+    "OCTAGON HQ — BUILD THE ULTIMATE FIGHTER",
+    "",
+    "Analyze this completed matchup using the private Auction rating-code decoder in your Octagon Verdict knowledge.",
+    "Treat the recorded Auction winner and scores as authoritative. Use the private codes only to explain how the two five-category builds match up.",
+    "Do not reveal, print, translate, or list the hidden rating values or the decoder mapping.",
+    "Give me a concise fight breakdown of how the matchup likely plays out.",
+    "",
+    "RESULT",
+    `${packet.challenger.name} ${packet.challenger.score}`,
+    `${packet.recipient.name} ${packet.recipient.score}`,
+    `Winner: ${winnerName}`,
+    "",
+    packet.challenger.name,
+    orderedSelections(packet.challenger),
+    "",
+    packet.recipient.name,
+    orderedSelections(packet.recipient),
+  ].join("\n");
 }
 
 export function maximumLegalAuctionBid(state: AuctionProjection, profileId: string) {

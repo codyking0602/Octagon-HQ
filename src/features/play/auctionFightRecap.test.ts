@@ -1,54 +1,56 @@
 import { describe, expect, it } from "vitest";
-import recapMigration from "../../../supabase/migrations/202612310062_auction_fight_recap.sql?raw";
+import handoffMigration from "../../../supabase/migrations/202612310065_auction_octagon_verdict_copy.sql?raw";
+import auctionPageSource from "./AuctionPage.tsx?raw";
 
-describe("Build the Ultimate Fighter fight recap", () => {
-  it("uses the existing private relational analysis as its matchup authority", () => {
-    expect(recapMigration).toContain(
-      "v_analysis := private.auction_ultimate_fighter_analysis(p_auction_id);",
-    );
-    expect(recapMigration).not.toContain("challenger_rating - recipient_rating");
-    expect(recapMigration).not.toContain("private_delta");
-  });
-
-  it("keeps the recap helper private and model-free", () => {
-    expect(recapMigration).toContain(
-      "revoke all on function private.auction_ultimate_fighter_recap(uuid) from public, anon, authenticated, service_role;",
-    );
-    expect(recapMigration).not.toMatch(/openai|anthropic|gemini|fetch\(|https?:\/\//i);
-  });
-
-  it("maps all five canonical categories to MMA-plausible fight language", () => {
-    for (const category of ["Striking", "Grappling", "Frame", "Power", "Heart"]) {
-      expect(recapMigration).toContain(`when '${category}' then`);
-    }
-    expect(recapMigration).toContain("cleaner exchanges on the feet");
-    expect(recapMigration).toContain("clinch and mat phases");
-    expect(recapMigration).toContain("range and shape the exchanges");
-    expect(recapMigration).toContain("fight-changing moments");
-    expect(recapMigration).toContain("fight turns into a grind");
-  });
-
-  it("extends the existing participant-only packet instead of exposing a second client analysis path", () => {
-    expect(recapMigration).toContain(
+describe("Build the Ultimate Fighter Octagon Verdict handoff", () => {
+  it("restores the existing participant packet as a codes-only v3 handoff", () => {
+    expect(handoffMigration).toContain(
       "create or replace function public.get_auction_fight_breakdown_packet(p_auction_id uuid)",
     );
-    expect(recapMigration).toContain("v_user_id uuid := auth.uid()");
-    expect(recapMigration).toContain(
+    expect(handoffMigration).toContain("'packet_version', 'auction-fight-breakdown-v3'");
+    expect(handoffMigration).toContain("v_user_id uuid := auth.uid()");
+    expect(handoffMigration).toContain(
       "v_user_id not in (v_game.challenger_id, v_game.recipient_id)",
     );
-    expect(recapMigration).toContain("v_game.lifecycle_state <> 'completed'");
-    expect(recapMigration).toContain("'packet_version', 'auction-fight-breakdown-v2'");
-    expect(recapMigration).toContain("'recap', v_recap");
-    expect(recapMigration).toContain(
+    expect(handoffMigration).toContain("v_game.lifecycle_state <> 'completed'");
+    expect(handoffMigration).toContain("private.auction_rating_code(");
+    expect(handoffMigration).toContain(
       "grant execute on function public.get_auction_fight_breakdown_packet(uuid) to authenticated;",
     );
   });
 
-  it("does not return the private relational object or numeric matchup gaps", () => {
-    expect(recapMigration).not.toContain("'category_edges',");
-    expect(recapMigration).not.toContain("'strongest_swings',");
-    expect(recapMigration).not.toContain("'closest_swings',");
-    expect(recapMigration).not.toContain("'private_rating',");
-    expect(recapMigration).not.toContain("'numeric_gap',");
+  it("returns no app-generated analysis, narration, or hidden numeric values", () => {
+    expect(handoffMigration).not.toContain("'recap',");
+    expect(handoffMigration).not.toContain("'rating',");
+    expect(handoffMigration).not.toContain("'delta',");
+    expect(handoffMigration).not.toContain("'advantage',");
+    expect(handoffMigration).not.toContain("'category_edges',");
+    expect(handoffMigration).not.toContain("'strongest_swings',");
+    expect(handoffMigration).not.toContain("'closest_swings',");
+  });
+
+  it("removes the mistaken narration owner before its private comparison dependency", () => {
+    const recapDrop = handoffMigration.indexOf(
+      "drop function private.auction_ultimate_fighter_recap(uuid);",
+    );
+    const analysisDrop = handoffMigration.indexOf(
+      "drop function private.auction_ultimate_fighter_analysis(uuid);",
+    );
+    expect(recapDrop).toBeGreaterThan(-1);
+    expect(analysisDrop).toBeGreaterThan(recapDrop);
+    expect(handoffMigration).toContain(
+      "to_regprocedure('private.auction_ultimate_fighter_recap(uuid)')",
+    );
+    expect(handoffMigration).toContain(
+      "to_regprocedure('private.auction_ultimate_fighter_analysis(uuid)')",
+    );
+  });
+
+  it("shows a copy-only Octagon Verdict handoff instead of an in-app fight recap", () => {
+    expect(auctionPageSource).toContain("COPY FOR OCTAGON VERDICT");
+    expect(auctionPageSource).toContain("navigator.clipboard.writeText(formatOctagonVerdictPrompt(packet))");
+    expect(auctionPageSource).toContain("paste it into Octagon Verdict for the fight breakdown");
+    expect(auctionPageSource).not.toContain("HOW IT PLAYS OUT");
+    expect(auctionPageSource).not.toContain("fightRecap");
   });
 });
