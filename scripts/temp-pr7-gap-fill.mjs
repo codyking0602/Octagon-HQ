@@ -18,11 +18,11 @@ const after = `function projectedGapFillRecords(
   owned: readonly FootballFactualRecord[],
 ) {
   const ownedFactKeys = new Set(
-    owned.flatMap((record) => record.facts.map((fact) => \`${record.subjectId}:\${fact.metricId}\`)),
+    owned.flatMap((record) => record.facts.map((fact) => record.subjectId + ":" + fact.metricId)),
   );
   return projected.flatMap((record) => {
     const subjectId = canonicalFactSubjectId(record.subjectId);
-    const facts = record.facts.filter((fact) => !ownedFactKeys.has(\`${subjectId}:\${fact.metricId}\`));
+    const facts = record.facts.filter((fact) => !ownedFactKeys.has(subjectId + ":" + fact.metricId));
     return facts.length ? [{ ...record, subjectId, facts }] : [];
   });
 }
