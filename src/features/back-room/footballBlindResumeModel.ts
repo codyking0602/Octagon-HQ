@@ -433,18 +433,25 @@ function canUseRound(
     && !usedSubjectIds.has(footballBlindResumeSubjectIdentityId(matchup.rightId));
 }
 
-function deterministicScan(
-  rows: readonly FootballBlindResumeRound[],
-  random: () => number,
+interface MatchupSelectionScan {
+  rows: readonly FootballBlindResumeRound[];
+  startFraction: number;
+  stepFraction: number;
+}
+
+function eligibleSelectionOrder(
+  scan: MatchupSelectionScan,
+  predicate: (matchup: FootballBlindResumeRound) => boolean,
 ) {
-  if (rows.length <= 1) return { rows, start: 0, step: 1 };
-  const start = Math.floor(random() * rows.length);
-  let step = 1 + Math.floor(random() * (rows.length - 1));
+  const rows = scan.rows.filter(predicate);
+  if (rows.length <= 1) return rows;
+  const start = Math.floor(scan.startFraction * rows.length);
+  let step = 1 + Math.floor(scan.stepFraction * (rows.length - 1));
   while (greatestCommonDivisor(step, rows.length) !== 1) {
     step += 1;
     if (step >= rows.length) step = 1;
   }
-  return { rows, start, step };
+  return Array.from({ length: rows.length }, (_, offset) => rows[(start + offset * step) % rows.length]!);
 }
 
 export function buildFootballBlindResumeRounds(
@@ -459,13 +466,17 @@ export function buildFootballBlindResumeRounds(
   const leagueOrder: readonly (FootballBlindResumeLeague | null)[] = random() < 0.5
     ? ["NFL", "CFB", "NFL", "CFB", null]
     : ["CFB", "NFL", "CFB", "NFL", null];
-  const scans = leagueOrder.map((league, index) => {
+  const scans: readonly MatchupSelectionScan[] = leagueOrder.map((league, index) => {
     const difficulty = requestedDifficulties?.[index] ?? null;
     const pool = matchupSelectionIndex.get(matchupSelectionKey(league, difficulty)) ?? [];
     if (!pool.length) {
       throw new Error(`Football Blind Resume has no ${league ?? "mixed"} ${difficulty ?? "mixed"} matchup inventory.`);
     }
-    return deterministicScan(pool, random);
+    return {
+      rows: pool,
+      startFraction: random(),
+      stepFraction: random(),
+    };
   });
 
   const search = (
@@ -482,12 +493,13 @@ export function buildFootballBlindResumeRounds(
       && new Set(selected.map((round) => round.difficulty)).size === 1
       ? selected[0]!.difficulty
       : null;
+    const eligible = eligibleSelectionOrder(scan, (matchup) => {
+      if (casualSingleDifficulty && matchup.difficulty === casualSingleDifficulty) return false;
+      if (usedPackIds.has(matchup.packId)) return false;
+      return canUseRound(matchup, usedMatchupIds, usedSubjectIds);
+    });
 
-    for (let offset = 0; offset < scan.rows.length; offset += 1) {
-      const matchup = scan.rows[(scan.start + offset * scan.step) % scan.rows.length]!;
-      if (casualSingleDifficulty && matchup.difficulty === casualSingleDifficulty) continue;
-      if (usedPackIds.has(matchup.packId) || !canUseRound(matchup, usedMatchupIds, usedSubjectIds)) continue;
-
+    for (const matchup of eligible) {
       const nextMatchupIds = new Set(usedMatchupIds).add(matchup.id);
       const nextSubjectIds = new Set(usedSubjectIds);
       nextSubjectIds.add(footballBlindResumeSubjectIdentityId(matchup.leftId));
