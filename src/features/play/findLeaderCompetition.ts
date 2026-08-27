@@ -92,8 +92,15 @@ export function selectFindLeaderCompetition<Row>(
     return selected;
   };
   const support = take(closestCount, config.supportEndIndex, config.supportCount ?? 3);
-  const wildcards = take(config.wildcardStartIndex ?? 9, config.wildcardEndIndex ?? 20, config.wildcardCount ?? 2);
+  const wildcardStartIndex = config.wildcardStartIndex ?? 9;
+  const wildcards = take(wildcardStartIndex, config.wildcardEndIndex ?? 20, config.wildcardCount ?? 2);
   const challengers = [...core, ...support, ...wildcards];
+
+  // Ties can make core/support windows overlap. Fill any resulting hole from the intended competitive top range
+  // before reaching farther down the pool, so fallback behavior cannot silently create extra true wildcards.
+  if (challengers.length < challengerCount) {
+    challengers.push(...take(0, wildcardStartIndex, challengerCount - challengers.length));
+  }
   if (challengers.length < challengerCount) {
     challengers.push(...shuffleLineup(
       option.lower.filter((row) => !used.has(config.getId(row))),

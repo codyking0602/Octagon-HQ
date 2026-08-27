@@ -50,6 +50,12 @@ describe("Football Find the Leader maturity", () => {
     expect(new Set(footballFindLeaderQuestions.map((question) => question.family))).toEqual(new Set(FOOTBALL_FIND_LEADER_FAMILY_CYCLE));
   });
 
+  it("reuses immutable metric rows instead of rebuilding deep projected pools", () => {
+    const first = footballFindLeaderMetricRows("qb-passing-yards");
+    expect(first.length).toBeGreaterThanOrEqual(FOOTBALL_FIND_LEADER_MIN_POOL_SIZE);
+    expect(footballFindLeaderMetricRows("qb-passing-yards")).toBe(first);
+  });
+
   it("requires both numerical quality and explicit fan-interest approval", () => {
     const enabledIds = new Set(footballFindLeaderEnabledMetricDefinitions.map(({ id }) => id));
     for (const definition of footballFindLeaderMetricDefinitions) {
@@ -155,9 +161,9 @@ describe("Football Find the Leader maturity", () => {
   });
 
   it("keeps real NFL receiving and defensive depth alongside deep recognizable CFB rushing", () => {
-    expect(footballFindLeaderMetricRows("nfl-receiving-receptions")).toHaveLength(17);
-    expect(footballFindLeaderMetricRows("nfl-receiving-yards")).toHaveLength(17);
-    expect(footballFindLeaderMetricRows("nfl-receiving-touchdowns")).toHaveLength(17);
+    expect(footballFindLeaderMetricRows("nfl-receiving-receptions").length).toBeGreaterThan(40);
+    expect(footballFindLeaderMetricRows("nfl-receiving-yards").length).toBeGreaterThan(40);
+    expect(footballFindLeaderMetricRows("nfl-receiving-touchdowns").length).toBeGreaterThan(40);
     expect(footballFindLeaderMetricRows("nfl-defense-sacks").length).toBeGreaterThanOrEqual(12);
     expect(footballFindLeaderMetricRows("nfl-defense-interceptions").length).toBeGreaterThanOrEqual(12);
     expect(footballFindLeaderMetricRows("cfb-player-rushing-yards").length).toBeGreaterThanOrEqual(20);
@@ -230,8 +236,8 @@ describe("Football Find the Leader maturity", () => {
     const teamIds = footballFindLeaderMetricRows("nfl-team-wins").map(({ id }) => id);
     const receivingIds = footballFindLeaderMetricRows("nfl-receiving-yards").map(({ id }) => id);
     const defenseIds = footballFindLeaderMetricRows("nfl-defense-sacks").map(({ id }) => id);
-    expect(seasonIds).toHaveLength(11);
-    expect(teamIds).toHaveLength(18);
+    expect(seasonIds.length).toBeGreaterThan(50);
+    expect(teamIds.length).toBeGreaterThan(30);
     expect(seasonIds.every((id) => !careerIds.has(id))).toBe(true);
     expect(seasonIds.filter((id) => teamIds.includes(id))).toHaveLength(0);
     expect(receivingIds.filter((id) => defenseIds.includes(id))).toHaveLength(0);

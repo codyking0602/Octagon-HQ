@@ -99,7 +99,7 @@ export const footballFindLeaderCanonicalMetricByMetric: Readonly<Record<Football
 };
 
 export const FOOTBALL_FIND_LEADER_GAME_ID = "football-find-leader";
-export const FOOTBALL_FIND_LEADER_VERSION = "football-find-leader-v2";
+export const FOOTBALL_FIND_LEADER_VERSION = "football-find-leader-v3";
 export const FOOTBALL_FIND_LEADER_CANDIDATE_COUNT = 10;
 export const FOOTBALL_FIND_LEADER_MIN_POOL_SIZE = FOOTBALL_FIND_LEADER_CANDIDATE_COUNT + 1;
 const REPLAY_IDENTITY_SIZE = FOOTBALL_FIND_LEADER_CANDIDATE_COUNT + 3;
@@ -153,8 +153,8 @@ export interface FootballFindLeaderRun {
 type ScoredRow = { id: string; name: string; subtitle: string; value: number; competitionValue: number };
 
 const domainCopy: Readonly<Record<FootballFindLeaderDomainId, string>> = {
-  "nfl-qb-career": "retired NFL quarterbacks",
-  "nfl-rb-career": "retired NFL running backs",
+  "nfl-qb-career": "NFL quarterbacks",
+  "nfl-rb-career": "NFL running backs",
   "nfl-qb-season": "NFL quarterback seasons",
   "nfl-team-season": "NFL team seasons",
   "nfl-receiving-career": "NFL receivers and tight ends",
@@ -226,17 +226,23 @@ function questionVariants(definition: FootballFindLeaderMetricDefinition): Footb
   ];
 }
 
+const casualProjectedSubjectQuery = {
+  includeProjectedSourceSubjects: true,
+  recognizabilityTiers: ["A", "B", "C"],
+  casualEligible: true,
+} as const satisfies FootballSubjectQuery;
+
 const queryByDomain: Readonly<Record<FootballFindLeaderDomainId, FootballSubjectQuery>> = {
-  "nfl-qb-career": { kind: "player-career", league: "NFL", position: "QB" },
-  "nfl-rb-career": { kind: "player-career", league: "NFL", position: "RB" },
-  "nfl-qb-season": { kind: "player-season", league: "NFL", position: "QB" },
-  "nfl-team-season": { kind: "team-season", league: "NFL" },
-  "nfl-receiving-career": { kind: "player-career", league: "NFL", positions: ["WR", "TE"] },
-  "nfl-defense-career": { kind: "player-career", league: "NFL", positions: ["DL", "LB", "DB"] },
+  "nfl-qb-career": { ...casualProjectedSubjectQuery, kind: "player-career", league: "NFL", position: "QB" },
+  "nfl-rb-career": { ...casualProjectedSubjectQuery, kind: "player-career", league: "NFL", position: "RB" },
+  "nfl-qb-season": { ...casualProjectedSubjectQuery, kind: "player-season", league: "NFL", position: "QB", sourceProvider: "nflverse" },
+  "nfl-team-season": { ...casualProjectedSubjectQuery, kind: "team-season", league: "NFL", sourceProvider: "nflverse" },
+  "nfl-receiving-career": { ...casualProjectedSubjectQuery, kind: "player-career", league: "NFL", positions: ["WR", "TE"] },
+  "nfl-defense-career": { ...casualProjectedSubjectQuery, kind: "player-career", league: "NFL", positions: ["DL", "LB", "DB"] },
   "cfb-champion-season": { kind: "team-season", league: "CFB", nationalChampion: true },
-  "cfb-team-season": { kind: "team-season", league: "CFB" },
-  "cfb-player-rushing": { kind: "player-career", league: "CFB", positions: ["QB", "RB"] },
-  "cfb-player-receiving": { kind: "player-career", league: "CFB" },
+  "cfb-team-season": { ...casualProjectedSubjectQuery, kind: "team-season", league: "CFB", sourceProvider: "cfbfastR" },
+  "cfb-player-rushing": { ...casualProjectedSubjectQuery, kind: "player-career", league: "CFB", positions: ["QB", "RB"] },
+  "cfb-player-receiving": { ...casualProjectedSubjectQuery, kind: "player-career", league: "CFB" },
   "cfb-coach-career": { kind: "coach", league: "CFB" },
 };
 
@@ -267,8 +273,8 @@ function playerCareerSubtitle(subject: ReturnType<typeof queryFootballSubjects>[
   if (subject.league === "CFB") {
     return `${subject.school ?? "College football"}${subject.position ? ` · ${subject.position}` : ""}`;
   }
-  if (subject.position === "QB") return "Retired NFL quarterback";
-  if (subject.position === "RB") return "Retired NFL running back";
+  if (subject.position === "QB") return "NFL quarterback career";
+  if (subject.position === "RB") return "NFL running back career";
   return `NFL ${subject.position ?? "player"} career`;
 }
 
@@ -276,13 +282,17 @@ function competitionValue(direction: FootballFindLeaderDirection, value: number)
   return direction === "lower" ? -value : value;
 }
 
+const footballFindLeaderMetricRowCache = new Map<FootballFindLeaderMetricId, ScoredRow[]>();
+
 export function footballFindLeaderMetricRows(metricId: FootballFindLeaderMetricId): ScoredRow[] {
+  const cached = footballFindLeaderMetricRowCache.get(metricId);
+  if (cached) return cached;
   const definition = footballFindLeaderMetricDefinitions.find((row) => row.id === metricId);
   if (!definition) return [];
   const poolDefinition = footballFindLeaderCandidatePools.find((row) => row.metricId === metricId);
   if (!poolDefinition) return [];
   const direction = footballFindLeaderMetricDirection(metricId);
-  return queryFootballSubjects(poolDefinition.subjectQuery)
+  const rows = queryFootballSubjects(poolDefinition.subjectQuery)
     .flatMap((subject) => {
       const fact = getFootballFact(subject.id, poolDefinition.canonicalMetricId);
       const record = getFootballFactualRecord(subject.id);
@@ -301,6 +311,8 @@ export function footballFindLeaderMetricRows(metricId: FootballFindLeaderMetricI
       }];
     })
     .sort((left, right) => right.competitionValue - left.competitionValue || left.name.localeCompare(right.name));
+  footballFindLeaderMetricRowCache.set(metricId, rows);
+  return rows;
 }
 
 const factMetricDefinitionById = new Map(footballFactMetricDefinitions.map((definition) => [definition.id, definition]));

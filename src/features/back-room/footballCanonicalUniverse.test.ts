@@ -2,7 +2,13 @@ import { describe, expect, it } from "vitest";
 import {
   footballCanonicalSubjects,
   footballFindLeaderSubjects,
+  type FootballCanonicalSubject,
 } from "./footballFactualStatsCatalog";
+import {
+  FOOTBALL_RECOGNITION_SUMMARY,
+  footballProjectedPlayerSubjects,
+  footballRecognitionProjectionSubjectIdFor,
+} from "./footballRecognizabilityProjection";
 import {
   footballSubjects,
   getFootballSubject,
@@ -19,6 +25,31 @@ describe("canonical Football universe", () => {
     expect(new Set(footballSubjects.map(({ id }) => id)).size).toBe(footballSubjects.length);
     expect(queryFootballSubjects({ league: "NFL" }).length).toBeGreaterThanOrEqual(75);
     expect(queryFootballSubjects({ league: "CFB" }).length).toBeGreaterThanOrEqual(150);
+    expect(footballProjectedPlayerSubjects).toHaveLength(FOOTBALL_RECOGNITION_SUMMARY.promotedByEntityKind["player-career"]);
+  });
+
+  it("keeps source reconciliation ids internal while resolving duplicate player names conservatively", () => {
+    const peyton = footballCanonicalSubjects.find(({ id }) => id === "peyton-manning")!;
+    const peytonProjectionId = footballRecognitionProjectionSubjectIdFor(peyton);
+    expect(peytonProjectionId).not.toBeNull();
+    expect(getFootballSubject(peytonProjectionId!)).toBe(getFootballSubject(peyton.id));
+    expect(getFootballSubject(peyton.id)?.aliases ?? []).not.toContain(peytonProjectionId);
+
+    const ambiguousAdrian = {
+      id: "test-adrian-peterson",
+      name: "Adrian Peterson",
+      kind: "player-career",
+      league: "NFL",
+      position: "RB",
+    } satisfies FootballCanonicalSubject;
+    expect(footballRecognitionProjectionSubjectIdFor(ambiguousAdrian)).toBeNull();
+
+    const adrianPeterson = getFootballSubject("nfl-adrian-peterson");
+    expect(adrianPeterson?.name).toBe("Adrian Peterson");
+    const adrianProjectionId = footballRecognitionProjectionSubjectIdFor(adrianPeterson!);
+    expect(adrianProjectionId).not.toBeNull();
+    expect(getFootballSubject(adrianProjectionId!)).toBe(adrianPeterson);
+    expect(adrianPeterson?.aliases ?? []).not.toContain(adrianProjectionId);
   });
 
   it("keeps modern CFB metadata at least half of modern reusable coverage", () => {

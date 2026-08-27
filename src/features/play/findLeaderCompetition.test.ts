@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { selectFindLeaderCompetition } from "./findLeaderCompetition";
 import {
   buildFindLeaderBoard,
   findLeaderCompetitionAudit,
@@ -12,9 +13,32 @@ const SUPPLEMENTAL_CATEGORY_IDS = new Set([
   "ufc-knockdowns-landed-all-time",
 ]);
 
+const competitionAudit = findLeaderCompetitionAudit();
+
 describe("Find the Leader competitive lineups", () => {
+  it("fills overlap holes from the competitive range before adding extra wildcards", () => {
+    const pool = Array.from({ length: 20 }, (_, index) => ({ id: `row-${index}`, value: 20 - index }));
+    const selected = selectFindLeaderCompetition(pool, () => 0.5, {
+      getId: (row) => row.id,
+      getValue: (row) => row.value,
+      competitiveWindowSize: 1,
+      candidateCount: 10,
+      closestCount: 4,
+      supportEndIndex: 6,
+      supportCount: 3,
+      wildcardStartIndex: 9,
+      wildcardEndIndex: 20,
+      wildcardCount: 2,
+    });
+
+    expect(selected).not.toBeNull();
+    expect(selected!.challengers).toHaveLength(9);
+    const closestNine = new Set(selected!.lower.slice(0, 9).map((row) => row.id));
+    expect(selected!.challengers.filter((row) => !closestNine.has(row.id))).toHaveLength(2);
+  });
+
   it("keeps real contenders while avoiding a mechanical next-nine leaderboard", () => {
-    const rows = findLeaderCompetitionAudit().filter((row) => row.boardValid);
+    const rows = competitionAudit.filter((row) => row.boardValid);
     const diversified = rows.filter((row) => row.outsideClosestNineCount > 0);
 
     expect(rows.length).toBeGreaterThanOrEqual(39);
@@ -25,7 +49,7 @@ describe("Find the Leader competitive lineups", () => {
   });
 
   it("keeps the category record holder off the board whenever another valid leader exists", () => {
-    const rows = findLeaderCompetitionAudit()
+    const rows = competitionAudit
       .filter((row) => row.boardValid && row.nonRecordLeaderAvailable);
 
     expect(rows.length).toBeGreaterThan(0);
@@ -35,7 +59,7 @@ describe("Find the Leader competitive lineups", () => {
   });
 
   it("applies the same competitive-leader and plausible-decoy protection to supplemental facts", () => {
-    const rows = findLeaderCompetitionAudit()
+    const rows = competitionAudit
       .filter((row) => SUPPLEMENTAL_CATEGORY_IDS.has(row.definitionId));
 
     expect(rows).toHaveLength(SUPPLEMENTAL_CATEGORY_IDS.size);
