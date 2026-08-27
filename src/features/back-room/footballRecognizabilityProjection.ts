@@ -19,8 +19,9 @@ interface ProjectionRecord {
 const records = projectionJson.records as readonly ProjectionRecord[];
 const playerRecords = records.filter((record) => record.kind === "player-career");
 const promotedPlayerRecords = playerRecords.filter((record) => record.tier !== "D");
+const nonPlayerRecords = records.filter((record) => record.kind !== "player-career");
 
-/** Promoted source-player identities only. Non-player PR6 records remain build-time/audit projections until their consumer migrations. */
+/** Promoted source-player identities only. Non-player PR6 records remain opt-in until their consumer migrations. */
 export const footballProjectedPlayerSubjects: readonly FootballCanonicalSubject[] = promotedPlayerRecords.map((record) => ({
   id: record.id,
   name: record.name,
@@ -95,6 +96,69 @@ export function footballRecognitionProjectionFor(subject: FootballCanonicalSubje
  */
 export function footballRecognitionProjectionSubjectIdFor(subject: FootballCanonicalSubject) {
   return resolveProjectionRecordFor(subject)?.id ?? null;
+}
+
+function normalizedProjectionName(name: string) {
+  return name.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
+}
+
+function nonPlayerProjectionKind(subject: FootballCanonicalSubject) {
+  if (subject.kind === "team-season") return "team-season";
+  if (subject.kind === "program-era") return "era";
+  return null;
+}
+
+const nonPlayerBySourceIdentity = new Map(
+  nonPlayerRecords.map((record) => [`${record.sourceProvider}:${record.sourceId}`, record]),
+);
+const nonPlayerByKindLeagueAndName = new Map<string, ProjectionRecord[]>();
+for (const record of nonPlayerRecords) {
+  const key = `${record.kind}:${record.league}:${normalizedProjectionName(record.name)}`;
+  const values = nonPlayerByKindLeagueAndName.get(key) ?? [];
+  values.push(record);
+  nonPlayerByKindLeagueAndName.set(key, values);
+}
+
+function supportedProjectionProvider(record: ProjectionRecord): FootballSourceProviderId | null {
+  if (record.sourceProvider === "nflverse" || record.sourceProvider === "cfbfastR") return record.sourceProvider;
+  return null;
+}
+
+/**
+ * Opt-in bridge for non-player PR6 recognition records. It intentionally supports only the canonical subject families
+ * already migrated by a consumer and requires either an exact source identity or one unique exact-name/season match.
+ */
+export function footballNonPlayerRecognitionProjectionFor(
+  subject: FootballCanonicalSubject,
+  sourceIdentityKey?: { provider: FootballSourceProviderId; id: string },
+) {
+  const projectionKind = nonPlayerProjectionKind(subject);
+  if (!projectionKind) return null;
+
+  let record: ProjectionRecord | null = null;
+  if (sourceIdentityKey) {
+    const direct = nonPlayerBySourceIdentity.get(`${sourceIdentityKey.provider}:${sourceIdentityKey.id}`);
+    if (direct?.kind === projectionKind && direct.league === subject.league) record = direct;
+  }
+
+  if (!record) {
+    const sameName = nonPlayerByKindLeagueAndName.get(
+      `${projectionKind}:${subject.league}:${normalizedProjectionName(subject.name)}`,
+    ) ?? [];
+    const sameWindow = sameName.filter((candidate) => (
+      (subject.startSeason == null || candidate.startSeason === subject.startSeason)
+      && (subject.endSeason == null || candidate.endSeason === subject.endSeason)
+      && (subject.season == null || (candidate.startSeason === subject.season && candidate.endSeason === subject.season))
+    ));
+    record = uniqueProjectionMatch(sameWindow);
+  }
+
+  if (!record) return null;
+  const provider = supportedProjectionProvider(record);
+  return {
+    tier: record.tier,
+    ...(provider ? { sourceIdentityKey: { provider, id: record.sourceId } as const } : {}),
+  };
 }
 
 export const FOOTBALL_RECOGNITION_MANUAL_APPROVAL_NAMES = projectionJson.manualApprovals as readonly string[];
