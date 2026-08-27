@@ -20,8 +20,7 @@ import {
   type FootballRankFivePackId,
 } from "./footballRankFiveModel";
 import {
-  getFootballSubject,
-  queryFootballSubjects,
+  resolveFootballSubjectReference,
   type FootballSubjectQuery,
 } from "./footballSubjectRegistry";
 
@@ -84,20 +83,22 @@ export function footballKeepCutCategoryQuery(packId: FootballKeepCutPackId): Foo
   return FOOTBALL_KEEP_CUT_CATEGORY_QUERIES[packId];
 }
 
+export function footballKeepCutEligibilityQuery(packId: FootballKeepCutPackId): FootballSubjectQuery {
+  return {
+    ...footballKeepCutCategoryQuery(packId),
+    recognizabilityTiers: KEEP_CUT_RECOGNIZABILITY_TIERS,
+    casualEligible: true,
+    includeProjectedSourceSubjects: true,
+  };
+}
+
 function keepCutItemsFromCanonicalLedger(packId: FootballKeepCutPackId) {
   const ratedPack = getFootballRankFivePack(packId);
-  const eligibleCanonicalIds = new Set(
-    queryFootballSubjects({
-      ...footballKeepCutCategoryQuery(packId),
-      recognizabilityTiers: KEEP_CUT_RECOGNIZABILITY_TIERS,
-      casualEligible: true,
-      includeProjectedSourceSubjects: true,
-    }).map((subject) => subject.id),
-  );
+  const eligibilityQuery = footballKeepCutEligibilityQuery(packId);
   const seenCanonicalIds = new Set<string>();
   const items = ratedPack.items.filter((item) => {
-    const subject = getFootballSubject(item.id);
-    if (!subject || !eligibleCanonicalIds.has(subject.id) || seenCanonicalIds.has(subject.id)) return false;
+    const subject = resolveFootballSubjectReference(item.id, item.name, eligibilityQuery);
+    if (!subject || seenCanonicalIds.has(subject.id)) return false;
     seenCanonicalIds.add(subject.id);
     return true;
   });
