@@ -283,6 +283,8 @@ function derivedPairs(packId: FootballRankFivePackId, leftId: string, rightId: s
       pair("cfb-season-td-int-ratio", "Passing TD-to-INT ratio", ratio("cfb-best-season-passing-touchdowns", "cfb-best-season-interceptions"), "", 2),
       pair("cfb-season-td-int-margin", "Passing TD minus interceptions", difference("cfb-best-season-passing-touchdowns", "cfb-best-season-interceptions"), "", 0),
       pair("cfb-season-yards-per-pass-td", "Passing yards per TD", ratio("cfb-best-season-passing-yards", "cfb-best-season-passing-touchdowns")),
+      pair("cfb-passing-td-per-1000-yards", "Passing TD per 1,000 yards", ratio("cfb-best-season-passing-touchdowns", "cfb-best-season-passing-yards", 1000), "", 2),
+      pair("cfb-interceptions-per-1000-yards", "Interceptions per 1,000 yards", ratio("cfb-best-season-interceptions", "cfb-best-season-passing-yards", 1000), "", 2),
       pair("cfb-total-qb-touchdowns", "Passing + rushing TD", sum("cfb-best-season-passing-touchdowns", "cfb-best-season-rushing-touchdowns"), "", 0),
     ].filter((row): row is RowPair => row != null);
   }
