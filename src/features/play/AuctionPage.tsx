@@ -248,6 +248,7 @@ function AuctionFinalResult({
 function AuctionBoard({
   state,
   participants,
+  repository,
   profileId,
   busy,
   onBid,
@@ -261,6 +262,7 @@ function AuctionBoard({
 }: {
   state: AuctionProjection;
   participants: AuctionParticipantProfiles;
+  repository: ReturnType<typeof createAuctionRepository>;
   profileId: string;
   busy: boolean;
   onBid(amount: number, category?: UltimateFighterCategory): void;
@@ -276,6 +278,7 @@ function AuctionBoard({
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState<UltimateFighterCategory | "">("");
   const [formError, setFormError] = useState("");
+  const [fightRecap, setFightRecap] = useState<string[]>([]);
   const maximum = maximumLegalAuctionBid(state, profileId);
   const ownAwards = state.awarded_collections.filter((item) => item.awarded_to === profileId);
   const usedCategories = new Set(ownAwards.map((item) => item.category));
@@ -308,6 +311,22 @@ function AuctionBoard({
     setCategory("");
     setFormError("");
   }, [state.auction_id, state.current_round, state.revision]);
+
+  useEffect(() => {
+    let active = true;
+    setFightRecap([]);
+    if (!repository || state.lifecycle_state !== "completed" || state.mode_id !== "ultimate-fighter") {
+      return () => { active = false; };
+    }
+    void repository.fightRecap(state.auction_id)
+      .then((recap) => {
+        if (active) setFightRecap(recap);
+      })
+      .catch(() => {
+        if (active) setFightRecap([]);
+      });
+    return () => { active = false; };
+  }, [repository, state.auction_id, state.lifecycle_state, state.mode_id]);
 
   function submit(event: FormEvent) {
     event.preventDefault();
@@ -376,6 +395,12 @@ function AuctionBoard({
       </section>
       <RoundReveal state={state} participants={participants} />
       <AuctionFinalResult state={state} participants={participants} />
+      {fightRecap.length > 0 ? (
+        <section className="auction-result surface-card" aria-label="Fight breakdown">
+          <p className="eyebrow">HOW IT PLAYS OUT</p>
+          {fightRecap.map((sentence) => <p key={sentence}>{sentence}</p>)}
+        </section>
+      ) : null}
       <CollectionComparison state={state} participants={participants} />
       {canBid ? (
         <form className="auction-bid surface-card" onSubmit={submit}>
@@ -666,6 +691,7 @@ export default function AuctionPage() {
         <AuctionBoard
           state={state}
           participants={participantProfiles}
+          repository={repository}
           profileId={identity.profile.id}
           busy={busy || loading}
           onBid={(amount, category) => void command(() => repository!.bid(state, amount, category))}
