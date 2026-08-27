@@ -12,7 +12,7 @@ import {
   getFootballRankFivePack,
   type FootballRankFiveItem,
   type FootballRankFiveRun,
-} from "./footballRankFiveModel";
+} from "./footballRankFivePlayableModel";
 import {
   asChallengeJson,
   challengeRecord,
