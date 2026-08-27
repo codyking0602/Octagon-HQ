@@ -13,6 +13,8 @@ const SUPPLEMENTAL_CATEGORY_IDS = new Set([
   "ufc-knockdowns-landed-all-time",
 ]);
 
+const competitionAudit = findLeaderCompetitionAudit();
+
 describe("Find the Leader competitive lineups", () => {
   it("fills overlap holes from the competitive range before adding extra wildcards", () => {
     const pool = Array.from({ length: 20 }, (_, index) => ({ id: `row-${index}`, value: 20 - index }));
@@ -36,7 +38,7 @@ describe("Find the Leader competitive lineups", () => {
   });
 
   it("keeps real contenders while avoiding a mechanical next-nine leaderboard", () => {
-    const rows = findLeaderCompetitionAudit().filter((row) => row.boardValid);
+    const rows = competitionAudit.filter((row) => row.boardValid);
     const diversified = rows.filter((row) => row.outsideClosestNineCount > 0);
 
     expect(rows.length).toBeGreaterThanOrEqual(39);
@@ -47,7 +49,7 @@ describe("Find the Leader competitive lineups", () => {
   });
 
   it("keeps the category record holder off the board whenever another valid leader exists", () => {
-    const rows = findLeaderCompetitionAudit()
+    const rows = competitionAudit
       .filter((row) => row.boardValid && row.nonRecordLeaderAvailable);
 
     expect(rows.length).toBeGreaterThan(0);
@@ -57,7 +59,7 @@ describe("Find the Leader competitive lineups", () => {
   });
 
   it("applies the same competitive-leader and plausible-decoy protection to supplemental facts", () => {
-    const rows = findLeaderCompetitionAudit()
+    const rows = competitionAudit
       .filter((row) => SUPPLEMENTAL_CATEGORY_IDS.has(row.definitionId));
 
     expect(rows).toHaveLength(SUPPLEMENTAL_CATEGORY_IDS.size);

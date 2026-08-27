@@ -461,22 +461,26 @@ const findLeaderGapFillFactualRecords = projectedGapFillRecords(
 );
 
 /**
- * Canonical reusable quantitative Football ledger.
- * Reviewed/curated facts retain ownership of subject+metric keys they already define. PR7 source projection is an
- * explicit gap-fill only: it may deepen missing facts but cannot compete with an existing canonical fact. The final
- * strict merge still rejects any conflicting facts that survive that ownership boundary.
+ * Stable enumerable quantitative Football ledger used by games that have not explicitly migrated to PR7 depth.
+ * Find the Leader projection remains opt-in exposure: it must not silently enlarge another game's subject pool.
  */
-export const footballFactualRecords: readonly FootballFactualRecord[] = mergeCanonicalFactualRecords([
+export const footballFactualRecords: readonly FootballFactualRecord[] = preFindLeaderFactualRecords;
+
+/**
+ * Canonical lookup ledger. Reviewed/curated facts retain ownership of subject+metric keys they already define, while
+ * PR7 projection gap-fills missing facts behind getFootballFact/getFootballFactualRecord for explicit consumers.
+ */
+const footballFactualLookupRecords: readonly FootballFactualRecord[] = mergeCanonicalFactualRecords([
   ...preFindLeaderFactualRecords,
   ...findLeaderGapFillFactualRecords,
 ]);
 
-const recordIds = footballFactualRecords.map((record) => record.subjectId);
+const recordIds = footballFactualLookupRecords.map((record) => record.subjectId);
 if (new Set(recordIds).size !== recordIds.length) {
-  throw new Error("Canonical Football factual ledger contains duplicate subject records.");
+  throw new Error("Canonical Football factual lookup ledger contains duplicate subject records.");
 }
 
-const recordsBySubjectId = new Map(footballFactualRecords.map((record) => [record.subjectId, record]));
+const recordsBySubjectId = new Map(footballFactualLookupRecords.map((record) => [record.subjectId, record]));
 const metricDefinitionsById = new Map(footballFactMetricDefinitions.map((row) => [row.id, row]));
 const sourcesById = new Map(footballFactSources.map((source) => [source.id, source]));
 

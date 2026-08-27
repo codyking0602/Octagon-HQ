@@ -5,7 +5,9 @@ import {
   footballFindLeaderPools,
 } from "./footballFindLeaderModel";
 import {
+  footballFactualRecords,
   getFootballFact,
+  getFootballFactualRecord,
   getFootballSubject,
   queryFootballSubjects,
 } from "./footballFactualStats";
@@ -47,6 +49,14 @@ describe("Football Find the Leader PR7 runtime projection", () => {
     for (const record of footballFindLeaderProjectedFactualRecords) {
       expect(getFootballSubject(record.subjectId), record.subjectId).not.toBeNull();
     }
+  });
+
+  it("keeps PR7 depth lookup-only for games that have not opted into projected exposure", () => {
+    const enumerableIds = new Set(footballFactualRecords.map((record) => record.subjectId));
+    const projectedOnly = footballFindLeaderProjectedFactualRecords.find((record) => !enumerableIds.has(record.subjectId));
+    expect(projectedOnly).toBeDefined();
+    expect(getFootballFactualRecord(projectedOnly!.subjectId)).not.toBeNull();
+    expect(footballFactualRecords.some((record) => record.subjectId === projectedOnly!.subjectId)).toBe(false);
   });
 
   it("keeps source reconciliation internal and reviewed canonical facts authoritative", () => {
