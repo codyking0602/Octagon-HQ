@@ -81,22 +81,3 @@ if regression.strip() not in test:
         raise SystemExit('metric-row cache test anchor not found')
     test = test.replace(anchor, regression + anchor)
 test_path.write_text(test)
-
-universe_path = Path('src/features/back-room/footballCanonicalUniverse.test.ts')
-universe = universe_path.read_text()
-old_adrian = '''    const adrianPeterson = getFootballSubject("nfl-adrian-peterson");
-    expect(adrianPeterson?.name).toBe("Adrian Peterson");
-    expect(getFootballSubject("nflverse-player-00-0025394")).toBe(adrianPeterson);
-    expect(getFootballSubject("nflverse-player-00-0021306")).toBeNull();
-    expect(adrianPeterson?.aliases ?? []).not.toContain("nflverse-player-00-0025394");'''
-new_adrian = '''    const adrianPeterson = getFootballSubject("nfl-adrian-peterson");
-    expect(adrianPeterson?.name).toBe("Adrian Peterson");
-    const adrianProjectionId = footballRecognitionProjectionSubjectIdFor(adrianPeterson!);
-    expect(adrianProjectionId).not.toBeNull();
-    expect(getFootballSubject(adrianProjectionId!)).toBe(adrianPeterson);
-    expect(getFootballSubject("nflverse-player-00-0025394")).toBeNull();
-    expect(getFootballSubject("nflverse-player-00-0021306")).toBeNull();
-    expect(adrianPeterson?.aliases ?? []).not.toContain(adrianProjectionId);'''
-if old_adrian not in universe:
-    raise SystemExit('expected Adrian Peterson regression block not found')
-universe_path.write_text(universe.replace(old_adrian, new_adrian))
