@@ -509,7 +509,7 @@ export function footballFindLeaderCompetitionAudit() {
     const nonRecordLeaderAvailable = viableCompetitiveLeaders(pool, footballCompetitionConfig, true).length > 0;
     const globalLeaderId = pool[0]?.id ?? null;
     if (!board) return { definitionId: definition.id, boardValid: false, nonRecordLeaderAvailable, leaderIsGlobalMax: false, nearContenderCount: 0, outsideClosestNineCount: 0 };
-    const leader = pool.find((row) => row.competitionValue === board.candidates.find((candidate) => candidate.id === board.leaderId)?.value) ?? pool.find((row) => row.id === board.leaderId)!;
+    const leader = pool.find((row) => row.id === board.leaderId)!;
     const lower = pool.filter((row) => row.competitionValue < leader.competitionValue);
     const closestNineCutoff = lower[8]?.competitionValue ?? Number.NEGATIVE_INFINITY;
     const closestNine = new Set(lower.filter((row) => row.competitionValue >= closestNineCutoff).map((row) => row.id));
