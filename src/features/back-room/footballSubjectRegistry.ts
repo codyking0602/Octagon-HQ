@@ -96,7 +96,7 @@ function enrichFootballSubject(
   const teamId = teamIdForSubject(subject);
   const playerId = playerIdForSubject(subject);
   const coachId = subject.kind === "coach" ? subject.id : undefined;
-  const generatedAliases = [programAlias(subject), footballRecognitionProjectionSubjectIdFor(subject)]
+  const generatedAliases = [programAlias(subject)]
     .filter((alias): alias is string => Boolean(alias && alias !== subject.id));
   const aliases = [...new Set([...(subject.aliases ?? []), ...generatedAliases])];
   const knowledgeMetadata = buildFootballSubjectKnowledgeMetadata(subject, knowledgeOverride);
@@ -134,6 +134,18 @@ const footballSubjectById = new Map<string, FootballSubjectProfile>();
 for (const subject of [...footballSubjects, ...projectedSourceSubjects, ...projectedAdditionalSubjects]) {
   if (!footballSubjectById.has(subject.id)) footballSubjectById.set(subject.id, subject);
   for (const alias of subject.aliases ?? []) if (!footballSubjectById.has(alias)) footballSubjectById.set(alias, subject);
+}
+
+// PR6 source ids are reconciliation keys, not public canonical aliases. Keep the public subject shape unchanged while
+// allowing source-backed facts to collapse onto the already-reviewed canonical player identity.
+for (const subject of footballSubjects) {
+  const projectionId = footballRecognitionProjectionSubjectIdFor(subject);
+  if (!projectionId || projectionId === subject.id) continue;
+  const existing = footballSubjectById.get(projectionId);
+  if (existing && existing.id !== subject.id) {
+    throw new Error(`Conflicting Football source identity: ${projectionId} -> ${existing.id}/${subject.id}`);
+  }
+  footballSubjectById.set(projectionId, subject);
 }
 
 export function getFootballSubject(subjectId: string) {
