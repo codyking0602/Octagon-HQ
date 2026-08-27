@@ -450,7 +450,7 @@ function chooseEligibleMatchup(
     const baselineCount = baselineCounts.get(packId) ?? rows.length;
     return {
       rows,
-      weight: baselineCount * Math.sqrt(baselineCount),
+      weight: baselineCount,
     };
   });
   const totalWeight = weightedPacks.reduce((sum, entry) => sum + entry.weight, 0);
