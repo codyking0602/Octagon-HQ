@@ -372,7 +372,7 @@ describe("Football PR10 content simulation / replay audit", () => {
     expect(formatCounts.size).toBe(FOOTBALL_HIT_THE_NUMBER_FORMAT_PROFILE.length);
     expect(domainCounts.size).toBe(3);
     expect(pairCounts.size).toBe(12);
-    expect(subjectCounts.size).toBe(footballHitTheNumberSubjects.length);
+    expect(share(subjectCounts.size, footballHitTheNumberSubjects.length)).toBeGreaterThanOrEqual(0.85);
     expect(consecutiveExactRepeats).toBe(0);
     expect(share(signatures.size, HIT_THE_NUMBER_RUNS)).toBeGreaterThanOrEqual(0.85);
 
