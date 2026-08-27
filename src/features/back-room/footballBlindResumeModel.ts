@@ -208,6 +208,15 @@ function makeMatchup(
   };
 }
 
+const MATCHUP_RATING_GAPS = [1, 2, 3, 5, 8, 13, 21] as const;
+const MAX_PARTNERS_PER_RATING_GAP = 2;
+
+function shouldFlipPair(key: string) {
+  let parity = 0;
+  for (let index = 0; index < key.length; index += 1) parity ^= key.charCodeAt(index) & 1;
+  return parity === 1;
+}
+
 function buildMatchupCatalog() {
   const matchups: FootballBlindResumeMatchup[] = [];
   const seenPairs = new Set<string>();
@@ -219,17 +228,51 @@ function buildMatchupCatalog() {
     }
 
     const familyStart = matchups.length;
-    for (let leftIndex = 0; leftIndex < items.length - 1; leftIndex += 1) {
-      for (let rightIndex = leftIndex + 1; rightIndex < items.length; rightIndex += 1) {
-        const left = items[leftIndex]!;
-        const right = items[rightIndex]!;
-        if (left.rating === right.rating) continue;
-        const stats = tryBuildFootballBlindResumeEvidence(family.packId, left.id, right.id, family.archetype);
-        if (!stats) continue;
-        const key = pairKey(family.packId, left.id, right.id);
-        if (seenPairs.has(key)) throw new Error(`Football Blind Resume duplicate matchup pair ${key}.`);
-        seenPairs.add(key);
-        matchups.push(makeMatchup(family, left, right, stats));
+    const itemById = new Map(items.map((item) => [item.id, item] as const));
+    const byRating = new Map<number, FootballComparisonCandidate[]>();
+    for (const item of items) {
+      const rows = byRating.get(item.rating) ?? [];
+      rows.push(item);
+      byRating.set(item.rating, rows);
+    }
+
+    const addPair = (first: FootballComparisonCandidate, second: FootballComparisonCandidate) => {
+      if (first.rating === second.rating) return false;
+      const key = pairKey(family.packId, first.id, second.id);
+      if (seenPairs.has(key)) return false;
+      const [left, right] = shouldFlipPair(key) ? [second, first] : [first, second];
+      const stats = tryBuildFootballBlindResumeEvidence(family.packId, left.id, right.id, family.archetype);
+      if (!stats) return false;
+      seenPairs.add(key);
+      matchups.push(makeMatchup(family, left, right, stats));
+      return true;
+    };
+
+    const villainPrefix = `${family.packId}:`;
+    for (const key of VILLAIN_TIGHT_PAIRS) {
+      if (!key.startsWith(villainPrefix)) continue;
+      const [firstId, secondId] = key.slice(villainPrefix.length).split("|");
+      const first = firstId ? itemById.get(firstId) : null;
+      const second = secondId ? itemById.get(secondId) : null;
+      if (first && second) addPair(first, second);
+    }
+
+    for (const first of items) {
+      for (const gap of MATCHUP_RATING_GAPS) {
+        const partners = byRating.get(first.rating - gap) ?? [];
+        let addedAtGap = 0;
+        for (const second of partners) {
+          if (addPair(first, second)) addedAtGap += 1;
+          if (addedAtGap >= MAX_PARTNERS_PER_RATING_GAP) break;
+        }
+      }
+    }
+
+    if (matchups.length - familyStart < 5) {
+      for (let leftIndex = 0; leftIndex < items.length - 1 && matchups.length - familyStart < 5; leftIndex += 1) {
+        for (let rightIndex = leftIndex + 1; rightIndex < items.length && matchups.length - familyStart < 5; rightIndex += 1) {
+          addPair(items[leftIndex]!, items[rightIndex]!);
+        }
       }
     }
 
