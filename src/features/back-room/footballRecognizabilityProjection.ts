@@ -138,6 +138,23 @@ for (const record of nonPlayerRecords.filter((candidate) => candidate.kind === "
   cfbProminentTeamSeasonsByProgram.set(key, values);
 }
 
+/**
+ * Canonical cultural markers that PR6 cannot infer from its promoted source rows alone: pre-nflverse history plus
+ * famous failure/disappointment seasons that achievement-based promotion deliberately leaves at D.
+ */
+const canonicalNonPlayerRecognitionTiers = new Map<string, FootballRecognizabilityTier>([
+  ["1972-miami-dolphins", "C"],
+  ["1985-chicago-bears", "C"],
+  ["1989-san-francisco-49ers", "C"],
+  ["1991-washington", "C"],
+  ["1996-green-bay-packers", "C"],
+  ["1998-denver-broncos", "C"],
+  ["2011-philadelphia-eagles", "C"],
+  ["2022-denver-broncos", "C"],
+  ["2020-jacksonville-jaguars", "C"],
+  ["2017-cleveland-browns", "C"],
+]);
+
 function supportedProjectionProvider(record: ProjectionRecord): FootballSourceProviderId | null {
   if (record.sourceProvider === "nflverse" || record.sourceProvider === "cfbfastR") return record.sourceProvider;
   return null;
@@ -184,6 +201,8 @@ export function footballNonPlayerRecognitionProjectionFor(
   }
 
   if (!record) {
+    const canonicalTier = canonicalNonPlayerRecognitionTiers.get(subject.id);
+    if (canonicalTier) return { tier: canonicalTier };
     const derivedTier = derivedProgramEraTier(subject);
     return derivedTier ? { tier: derivedTier } : null;
   }
