@@ -469,9 +469,10 @@ function chooseEligibleMatchup(
     const baselineCount = baselineCounts.get(packId) ?? rows.length;
     const degrees = subjectDegreesByPack.get(packId);
     const maxSubjectDegree = degrees?.size ? Math.max(...degrees.values()) : 1;
+    const subjectCount = degrees?.size ?? 1;
     return {
       rows,
-      weight: baselineCount / maxSubjectDegree,
+      weight: (baselineCount * Math.sqrt(subjectCount)) / maxSubjectDegree,
     };
   });
   const totalWeight = weightedPacks.reduce((sum, entry) => sum + entry.weight, 0);
