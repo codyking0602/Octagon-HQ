@@ -61,6 +61,18 @@ describe("Football Blind Rank 5", () => {
     }
   });
 
+  it("actually exposes non-legacy canonical receivers in playable Blind Rank boards", () => {
+    const reviewedIds = new Set(
+      getFootballReviewedRankFivePack("nfl-wide-receivers").items.map((item) => item.id),
+    );
+    let exposed = false;
+    for (let index = 0; index < 96 && !exposed; index += 1) {
+      exposed = buildFootballRankFiveLineup("nfl-wide-receivers", `deep-rank-wr-${index}`)
+        .some((item) => !reviewedIds.has(item.id));
+    }
+    expect(exposed).toBe(true);
+  });
+
   it("uses one canonical football asset path convention for the expanded packs", () => {
     expect(footballSubjectAssetPath("patrick-mahomes", "nfl-quarterbacks"))
       .toBe("/images/football/players/patrick-mahomes.webp");
