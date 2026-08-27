@@ -50,8 +50,13 @@ describe("Football Keep 4, Cut 4 canonical ledger authority", () => {
   it("preserves legacy public ids while the registry resolves canonical identities", () => {
     const quarterbacks = footballKeepCutPacks.find((pack) => pack.id === "nfl-quarterbacks")!;
     const mahomes = quarterbacks.items.find((item) => item.id === "patrick-mahomes")!;
+    const mahomesSubject = resolveFootballSubjectReference(
+      mahomes.id,
+      mahomes.name,
+      footballKeepCutEligibilityQuery(quarterbacks.id),
+    );
     expect(mahomes.id).toBe("patrick-mahomes");
-    expect(getFootballSubject(mahomes.id)?.id).toBe("nfl-patrick-mahomes");
+    expect(mahomesSubject?.id).toBe("nfl-patrick-mahomes");
 
     const receivers = footballKeepCutPacks.find((pack) => pack.id === "nfl-wide-receivers")!;
     const rice = receivers.items.find((item) => item.id === "jerry-rice")!;
