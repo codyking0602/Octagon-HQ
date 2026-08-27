@@ -110,7 +110,9 @@ for (const [sourcePlayerId, rows] of nflGrouped.groups) {
   const scrimmageYards = rushingYards + receivingYards;
   const scrimmageTouchdowns = rushingTouchdowns + receivingTouchdowns;
 
-  pushSubject({
+  const careerCoverageComplete = recognized.startSeason >= 1999;
+  if (careerCoverageComplete) {
+    pushSubject({
     id: recognized.id,
     name: recognized.name,
     kind: "player-career",
@@ -176,6 +178,7 @@ for (const [sourcePlayerId, rows] of nflGrouped.groups) {
     );
   }
   pushRecord(recognized.id, "nfl-player-career", careerFacts);
+  }
 
   if (position === "QB") {
     for (const row of rows) {
@@ -218,6 +221,9 @@ for (const [key, rows] of cfbGrouped.groups) {
   if (!recognized) continue;
   const position = recognized.position;
   if (!["QB", "RB", "WR", "TE", "DL", "LB", "DB"].includes(position)) continue;
+  // The normalized player corpus begins in 2014. A career whose first observed row is the source floor may have
+  // earlier seasons outside the corpus, so do not claim a career-wide best season from that left-censored window.
+  if (recognized.startSeason <= 2014) continue;
 
   const bySeason = new Map();
   for (const row of rows) {
@@ -334,6 +340,8 @@ const artifact = {
   },
   eligibility: {
     recognizabilityTiers: ["A", "B", "C"],
+    nflCareerMinimumStartSeason: 1999,
+    cfbCareerMinimumStartSeason: 2015,
     nflQbSeasonMinimumAttempts: 200,
   },
   summary: {
