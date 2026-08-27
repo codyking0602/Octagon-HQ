@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import handoffMigration from "../../../supabase/migrations/202612310065_auction_octagon_verdict_copy.sql?raw";
+import auctionPageSource from "./AuctionPage.tsx?raw";
 
 describe("Build the Ultimate Fighter Octagon Verdict handoff", () => {
   it("restores the existing participant packet as a codes-only v3 handoff", () => {
@@ -43,5 +44,13 @@ describe("Build the Ultimate Fighter Octagon Verdict handoff", () => {
     expect(handoffMigration).toContain(
       "to_regprocedure('private.auction_ultimate_fighter_analysis(uuid)')",
     );
+  });
+
+  it("shows a copy-only Octagon Verdict handoff instead of an in-app fight recap", () => {
+    expect(auctionPageSource).toContain("COPY FOR OCTAGON VERDICT");
+    expect(auctionPageSource).toContain("navigator.clipboard.writeText(formatOctagonVerdictPrompt(packet))");
+    expect(auctionPageSource).toContain("paste it into Octagon Verdict for the fight breakdown");
+    expect(auctionPageSource).not.toContain("HOW IT PLAYS OUT");
+    expect(auctionPageSource).not.toContain("fightRecap");
   });
 });
