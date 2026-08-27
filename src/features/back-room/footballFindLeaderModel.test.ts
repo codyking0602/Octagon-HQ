@@ -50,6 +50,12 @@ describe("Football Find the Leader maturity", () => {
     expect(new Set(footballFindLeaderQuestions.map((question) => question.family))).toEqual(new Set(FOOTBALL_FIND_LEADER_FAMILY_CYCLE));
   });
 
+  it("reuses immutable metric rows instead of rebuilding deep projected pools", () => {
+    const first = footballFindLeaderMetricRows("qb-passing-yards");
+    expect(first.length).toBeGreaterThanOrEqual(FOOTBALL_FIND_LEADER_MIN_POOL_SIZE);
+    expect(footballFindLeaderMetricRows("qb-passing-yards")).toBe(first);
+  });
+
   it("requires both numerical quality and explicit fan-interest approval", () => {
     const enabledIds = new Set(footballFindLeaderEnabledMetricDefinitions.map(({ id }) => id));
     for (const definition of footballFindLeaderMetricDefinitions) {

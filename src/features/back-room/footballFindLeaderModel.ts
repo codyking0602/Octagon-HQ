@@ -282,13 +282,17 @@ function competitionValue(direction: FootballFindLeaderDirection, value: number)
   return direction === "lower" ? -value : value;
 }
 
+const footballFindLeaderMetricRowCache = new Map<FootballFindLeaderMetricId, ScoredRow[]>();
+
 export function footballFindLeaderMetricRows(metricId: FootballFindLeaderMetricId): ScoredRow[] {
+  const cached = footballFindLeaderMetricRowCache.get(metricId);
+  if (cached) return cached;
   const definition = footballFindLeaderMetricDefinitions.find((row) => row.id === metricId);
   if (!definition) return [];
   const poolDefinition = footballFindLeaderCandidatePools.find((row) => row.metricId === metricId);
   if (!poolDefinition) return [];
   const direction = footballFindLeaderMetricDirection(metricId);
-  return queryFootballSubjects(poolDefinition.subjectQuery)
+  const rows = queryFootballSubjects(poolDefinition.subjectQuery)
     .flatMap((subject) => {
       const fact = getFootballFact(subject.id, poolDefinition.canonicalMetricId);
       const record = getFootballFactualRecord(subject.id);
@@ -307,6 +311,8 @@ export function footballFindLeaderMetricRows(metricId: FootballFindLeaderMetricI
       }];
     })
     .sort((left, right) => right.competitionValue - left.competitionValue || left.name.localeCompare(right.name));
+  footballFindLeaderMetricRowCache.set(metricId, rows);
+  return rows;
 }
 
 const factMetricDefinitionById = new Map(footballFactMetricDefinitions.map((definition) => [definition.id, definition]));
