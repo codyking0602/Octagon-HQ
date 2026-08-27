@@ -180,9 +180,7 @@ function difficultyFor(
   if (gap >= 3) return "easy";
   if (gap === 2) return "medium";
   if (gap !== 1) {
-    throw new Error(
-      `Football Blind Resume cannot build tied canonical matchup ${family.packId}:${left.id}:${right.id}.`,
-    );
+    throw new Error(`Football Blind Resume cannot build tied canonical matchup ${family.packId}:${left.id}:${right.id}.`);
   }
   return VILLAIN_TIGHT_PAIRS.has(pairKey(family.packId, left.id, right.id)) ? "villain" : "hard";
 }
@@ -263,14 +261,21 @@ function buildMatchupCatalog() {
     const familyStart = matchups.length;
     const itemById = new Map(items.map((item) => [item.id, item] as const));
     const byRating = new Map<number, FootballComparisonCandidate[]>();
+    const subjectDegrees = new Map<string, number>();
+    const maxSubjectDegree = family.packId === "college-quarterbacks" ? 2 : family.league === "CFB" ? 3 : Number.POSITIVE_INFINITY;
     for (const item of items) {
       const rows = byRating.get(item.rating) ?? [];
       rows.push(item);
       byRating.set(item.rating, rows);
     }
 
-    const addPair = (first: FootballComparisonCandidate, second: FootballComparisonCandidate) => {
+    const addPair = (
+      first: FootballComparisonCandidate,
+      second: FootballComparisonCandidate,
+      degreeCap = maxSubjectDegree,
+    ) => {
       if (first.rating === second.rating) return null;
+      if ((subjectDegrees.get(first.id) ?? 0) >= degreeCap || (subjectDegrees.get(second.id) ?? 0) >= degreeCap) return null;
       const key = pairKey(family.packId, first.id, second.id);
       if (seenPairs.has(key)) return null;
       const [left, right] = shouldFlipPair(key) ? [second, first] : [first, second];
@@ -278,6 +283,8 @@ function buildMatchupCatalog() {
       if (!stats) return null;
       const matchup = makeMatchup(family, left, right, stats);
       seenPairs.add(key);
+      subjectDegrees.set(first.id, (subjectDegrees.get(first.id) ?? 0) + 1);
+      subjectDegrees.set(second.id, (subjectDegrees.get(second.id) ?? 0) + 1);
       matchups.push(matchup);
       return matchup.difficulty;
     };
@@ -331,7 +338,7 @@ function buildMatchupCatalog() {
     if (matchups.length - familyStart < 5) {
       for (let leftIndex = 0; leftIndex < items.length - 1 && matchups.length - familyStart < 5; leftIndex += 1) {
         for (let rightIndex = leftIndex + 1; rightIndex < items.length && matchups.length - familyStart < 5; rightIndex += 1) {
-          addPair(items[leftIndex]!, items[rightIndex]!);
+          addPair(items[leftIndex]!, items[rightIndex]!, 3);
         }
       }
     }
@@ -371,8 +378,7 @@ function resolveMatchup(matchup: FootballBlindResumeMatchup): FootballBlindResum
   };
 }
 
-const resolvedFootballBlindResumeMatchupCatalog: readonly FootballBlindResumeRound[] =
-  footballBlindResumeMatchups.map(resolveMatchup);
+const resolvedFootballBlindResumeMatchupCatalog: readonly FootballBlindResumeRound[] = footballBlindResumeMatchups.map(resolveMatchup);
 
 export function resolvedFootballBlindResumeMatchups() {
   return resolvedFootballBlindResumeMatchupCatalog;
@@ -405,9 +411,7 @@ function buildMatchupSelectionIndex() {
 
 buildMatchupSelectionIndex();
 
-const nflQuarterbackCareerIds = new Set(
-  footballBlindResumeCandidatesForPack("nfl-quarterbacks").map((item) => item.id),
-);
+const nflQuarterbackCareerIds = new Set(footballBlindResumeCandidatesForPack("nfl-quarterbacks").map((item) => item.id));
 
 export function footballBlindResumeSubjectIdentityId(subjectId: string) {
   for (const careerId of nflQuarterbackCareerIds) {
@@ -429,41 +433,6 @@ function canUseRound(
   return !usedMatchupIds.has(matchup.id)
     && !usedSubjectIds.has(footballBlindResumeSubjectIdentityId(matchup.leftId))
     && !usedSubjectIds.has(footballBlindResumeSubjectIdentityId(matchup.rightId));
-}
-
-const subjectDegreesByPool = new WeakMap<readonly FootballBlindResumeRound[], ReadonlyMap<string, number>>();
-
-function subjectDegreesForPool(pool: readonly FootballBlindResumeRound[]) {
-  const existing = subjectDegreesByPool.get(pool);
-  if (existing) return existing;
-  const degrees = new Map<string, number>();
-  for (const matchup of pool) {
-    const leftId = footballBlindResumeSubjectIdentityId(matchup.leftId);
-    const rightId = footballBlindResumeSubjectIdentityId(matchup.rightId);
-    degrees.set(leftId, (degrees.get(leftId) ?? 0) + 1);
-    degrees.set(rightId, (degrees.get(rightId) ?? 0) + 1);
-  }
-  subjectDegreesByPool.set(pool, degrees);
-  return degrees;
-}
-
-function chooseWeightedRow(
-  rows: readonly FootballBlindResumeRound[],
-  degrees: ReadonlyMap<string, number>,
-  random: () => number,
-) {
-  const weighted = rows.map((row) => {
-    const leftDegree = degrees.get(footballBlindResumeSubjectIdentityId(row.leftId)) ?? 1;
-    const rightDegree = degrees.get(footballBlindResumeSubjectIdentityId(row.rightId)) ?? 1;
-    return { row, weight: 1 / Math.sqrt(leftDegree * rightDegree) };
-  });
-  const totalWeight = weighted.reduce((sum, entry) => sum + entry.weight, 0);
-  let roll = random() * totalWeight;
-  for (const entry of weighted) {
-    if (roll < entry.weight) return entry.row;
-    roll -= entry.weight;
-  }
-  return weighted[weighted.length - 1]!.row;
 }
 
 function chooseEligibleMatchup(
@@ -502,7 +471,7 @@ function chooseEligibleMatchup(
     roll -= entry.weight;
   }
 
-  return chooseWeightedRow(chosenRows, subjectDegreesForPool(pool), random);
+  return chosenRows[Math.floor(random() * chosenRows.length)]!;
 }
 
 const ROUND_BUILD_ATTEMPTS = 12;
