@@ -16,7 +16,7 @@ import {
   footballWavelengthClues,
   nextFootballWavelengthClue,
 } from "./footballWavelengthModel";
-import { footballRankFivePacks, getFootballRankFivePack } from "./footballRankFiveModel";
+import { footballRankFivePacks, getFootballRankFivePack } from "./footballRankFivePlayableModel";
 
 vi.mock("../challenges/ChallengeProvider", () => ({
   usePlayChallenges: () => ({ beginChallenge: vi.fn(async () => "") }),
@@ -38,12 +38,12 @@ describe("Football HQ debate games", () => {
     window.localStorage.clear();
   });
 
-  it("reuses the Football Rank 5 item owner for all Keep 4 / Cut 4 rooms", () => {
+  it("reuses the live deep Football Rank 5 pool for all Keep 4 / Cut 4 rooms", () => {
     expect(footballKeepCutPacks).toHaveLength(footballRankFivePacks.length);
     for (const pack of footballKeepCutPacks) {
-      const ratedPack = getFootballRankFivePack(pack.id);
+      const liveRankPack = getFootballRankFivePack(pack.id);
       expect(pack.items.length).toBeGreaterThanOrEqual(8);
-      for (const item of pack.items) expect(ratedPack.items).toContain(item);
+      expect(pack.items.map((item) => item.id)).toEqual(liveRankPack.items.map((item) => item.id));
 
       const first = buildFootballKeepCutLineup(pack.id, "keep-cut-proof");
       const second = buildFootballKeepCutLineup(pack.id, "keep-cut-proof");
