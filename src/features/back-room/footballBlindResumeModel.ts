@@ -204,22 +204,16 @@ function makeMatchup(
   };
 }
 
-const MATCHUP_DIFFICULTY_TARGETS = [
-  { difficulty: "hard", gaps: [1], target: 6 },
-  { difficulty: "medium", gaps: [2], target: 6 },
-  { difficulty: "easy", gaps: [3, 5, 8, 13, 21], target: 12 },
+const NFL_MATCHUP_DIFFICULTY_TARGETS = [
+  { difficulty: "hard", target: 6 },
+  { difficulty: "medium", target: 6 },
+  { difficulty: "easy", target: 12 },
 ] as const;
-
-function greatestCommonDivisor(left: number, right: number) {
-  let a = Math.abs(left);
-  let b = Math.abs(right);
-  while (b !== 0) {
-    const remainder = a % b;
-    a = b;
-    b = remainder;
-  }
-  return a;
-}
+const CFB_MATCHUP_DIFFICULTY_TARGETS = [
+  { difficulty: "hard", target: 2 },
+  { difficulty: "medium", target: 2 },
+  { difficulty: "easy", target: 20 },
+] as const;
 
 function stableCatalogHash(value: string) {
   let hash = 2166136261;
@@ -228,17 +222,6 @@ function stableCatalogHash(value: string) {
     hash = Math.imul(hash, 16777619);
   }
   return hash >>> 0;
-}
-
-function deterministicIndexScan(length: number, key: string) {
-  if (length <= 1) return { start: 0, step: 1 };
-  const start = stableCatalogHash(`${key}|start`) % length;
-  let step = 1 + (stableCatalogHash(`${key}|step`) % (length - 1));
-  while (greatestCommonDivisor(step, length) !== 1) {
-    step += 1;
-    if (step >= length) step = 1;
-  }
-  return { start, step };
 }
 
 function shouldFlipPair(key: string) {
@@ -265,16 +248,12 @@ function buildMatchupCatalog() {
 
     const familyStart = matchups.length;
     const itemById = new Map(items.map((item) => [item.id, item] as const));
-    const byRating = new Map<number, FootballComparisonCandidate[]>();
     const subjectDegrees = new Map<string, number>();
-    for (const item of items) {
-      const rows = byRating.get(item.rating) ?? [];
-      rows.push(item);
-      byRating.set(item.rating, rows);
-    }
+    const maxSubjectDegree = family.league === "CFB" ? 2 : Number.POSITIVE_INFINITY;
 
     const addPair = (first: FootballComparisonCandidate, second: FootballComparisonCandidate) => {
       if (first.rating === second.rating) return null;
+      if ((subjectDegrees.get(first.id) ?? 0) >= maxSubjectDegree || (subjectDegrees.get(second.id) ?? 0) >= maxSubjectDegree) return null;
       const key = pairKey(family.packId, first.id, second.id);
       if (seenPairs.has(key)) return null;
       const [left, right] = shouldFlipPair(key) ? [second, first] : [first, second];
@@ -297,41 +276,37 @@ function buildMatchupCatalog() {
       if (first && second) addPair(first, second);
     }
 
-    for (const plan of MATCHUP_DIFFICULTY_TARGETS) {
+    const plans = family.league === "CFB" ? CFB_MATCHUP_DIFFICULTY_TARGETS : NFL_MATCHUP_DIFFICULTY_TARGETS;
+    for (const plan of plans) {
       let addedForDifficulty = 0;
-      const targetPerGap = Math.ceil(plan.target / plan.gaps.length);
-
-      for (const gap of plan.gaps) {
-        let addedForGap = 0;
-        const options: MatchupOption[] = [];
-        for (const first of items) {
-          const partners = byRating.get(first.rating - gap) ?? [];
-          for (const second of partners) {
-            const key = pairKey(family.packId, first.id, second.id);
-            if (!seenPairs.has(key)) options.push({ first, second, key });
-          }
+      const options: MatchupOption[] = [];
+      for (let leftIndex = 0; leftIndex < items.length - 1; leftIndex += 1) {
+        for (let rightIndex = leftIndex + 1; rightIndex < items.length; rightIndex += 1) {
+          const first = items[leftIndex]!;
+          const second = items[rightIndex]!;
+          if (first.rating === second.rating) continue;
+          const key = pairKey(family.packId, first.id, second.id);
+          if (seenPairs.has(key) || difficultyFor(family, first, second) !== plan.difficulty) continue;
+          options.push({ first, second, key });
         }
+      }
 
-        while (options.length && addedForDifficulty < plan.target && addedForGap < targetPerGap) {
-          options.sort((left, right) => {
-            const leftFirstDegree = subjectDegrees.get(left.first.id) ?? 0;
-            const leftSecondDegree = subjectDegrees.get(left.second.id) ?? 0;
-            const rightFirstDegree = subjectDegrees.get(right.first.id) ?? 0;
-            const rightSecondDegree = subjectDegrees.get(right.second.id) ?? 0;
-            const maxDegreeDelta = Math.max(leftFirstDegree, leftSecondDegree) - Math.max(rightFirstDegree, rightSecondDegree);
-            if (maxDegreeDelta !== 0) return maxDegreeDelta;
-            const totalDegreeDelta = leftFirstDegree + leftSecondDegree - rightFirstDegree - rightSecondDegree;
-            if (totalDegreeDelta !== 0) return totalDegreeDelta;
-            return stableCatalogHash(left.key) - stableCatalogHash(right.key);
-          });
+      while (options.length && addedForDifficulty < plan.target) {
+        options.sort((left, right) => {
+          const leftFirstDegree = subjectDegrees.get(left.first.id) ?? 0;
+          const leftSecondDegree = subjectDegrees.get(left.second.id) ?? 0;
+          const rightFirstDegree = subjectDegrees.get(right.first.id) ?? 0;
+          const rightSecondDegree = subjectDegrees.get(right.second.id) ?? 0;
+          const maxDegreeDelta = Math.max(leftFirstDegree, leftSecondDegree) - Math.max(rightFirstDegree, rightSecondDegree);
+          if (maxDegreeDelta !== 0) return maxDegreeDelta;
+          const totalDegreeDelta = leftFirstDegree + leftSecondDegree - rightFirstDegree - rightSecondDegree;
+          if (totalDegreeDelta !== 0) return totalDegreeDelta;
+          return stableCatalogHash(left.key) - stableCatalogHash(right.key);
+        });
 
-          const option = options.shift()!;
-          const addedDifficulty = addPair(option.first, option.second);
-          if (addedDifficulty === plan.difficulty) {
-            addedForDifficulty += 1;
-            addedForGap += 1;
-          }
-        }
+        const option = options.shift()!;
+        const addedDifficulty = addPair(option.first, option.second);
+        if (addedDifficulty === plan.difficulty) addedForDifficulty += 1;
       }
     }
 
