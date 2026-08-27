@@ -1,14 +1,20 @@
 import { execFileSync } from "node:child_process";
 import { describe, expect, it } from "vitest";
+import runtimeProjectionJson from "../../../data/generated/football/find-leader-runtime-projection.json";
 import {
   footballFindLeaderMetricRows,
   footballFindLeaderPools,
 } from "./footballFindLeaderModel";
 import {
   getFootballFact,
+  getFootballSubject,
   queryFootballSubjects,
 } from "./footballFactualStats";
-import { FOOTBALL_FIND_LEADER_RUNTIME_PROJECTION_SUMMARY } from "./footballFindLeaderRuntimeProjection";
+import {
+  footballFindLeaderProjectedFactualRecords,
+  FOOTBALL_FIND_LEADER_RUNTIME_PROJECTION_ELIGIBILITY,
+  FOOTBALL_FIND_LEADER_RUNTIME_PROJECTION_SUMMARY,
+} from "./footballFindLeaderRuntimeProjection";
 
 const deepMetricIds = [
   "qb-passing-yards",
@@ -39,6 +45,32 @@ describe("Football Find the Leader PR7 runtime projection", () => {
     expect(footballFindLeaderMetricRows("cfb-player-rushing-yards").length).toBeGreaterThan(20);
     expect(footballFindLeaderMetricRows("cfb-player-receiving-yards").length).toBeGreaterThan(20);
     expect(footballFindLeaderMetricRows("cfb-team-season-wins").length).toBeGreaterThan(30);
+  });
+
+  it("reconciles every projected fact subject through the canonical registry", () => {
+    for (const record of footballFindLeaderProjectedFactualRecords) {
+      expect(getFootballSubject(record.subjectId), record.subjectId).not.toBeNull();
+    }
+  });
+
+  it("never presents left-censored source windows as complete career facts", () => {
+    expect(FOOTBALL_FIND_LEADER_RUNTIME_PROJECTION_ELIGIBILITY).toMatchObject({
+      nflCareerMinimumStartSeason: 1999,
+      cfbCareerMinimumStartSeason: 2015,
+      nflQbSeasonMinimumAttempts: 200,
+    });
+
+    const subjectById = new Map(runtimeProjectionJson.subjects.map((subject) => [subject.id, subject]));
+    for (const record of runtimeProjectionJson.records) {
+      const subject = subjectById.get(record.subjectId);
+      expect(subject, record.subjectId).toBeDefined();
+      if (record.scope === "nfl-player-career") {
+        expect(subject!.startSeason, record.subjectId).toBeGreaterThanOrEqual(1999);
+      }
+      if (record.scope === "cfb-player-career") {
+        expect(subject!.startSeason, record.subjectId).toBeGreaterThanOrEqual(2015);
+      }
+    }
   });
 
   it("keeps game rows on A-C casual subjects and the canonical fact facade", () => {
