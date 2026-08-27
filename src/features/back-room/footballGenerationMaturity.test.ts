@@ -13,6 +13,7 @@ import {
 } from "./footballComparisonGeneration";
 import {
   buildFootballKeepCutLineup,
+  footballKeepCutPacks,
   scoreFootballKeepCutSelection,
 } from "./footballKeepCutModel";
 import {
@@ -215,7 +216,7 @@ describe("Football comparison generation maturity", () => {
     let cutoffTotal = 0;
     let totalBoards = 0;
 
-    for (const pack of footballRankFivePacks) {
+    for (const pack of footballKeepCutPacks) {
       const packAppearances = new Map<string, number>();
       const packSeen = new Set<string>();
       appearancesByPack.set(pack.id, packAppearances);
@@ -271,7 +272,7 @@ describe("Football comparison generation maturity", () => {
     }
 
     for (const [packId, seen] of seenByPack) {
-      const pack = footballRankFivePacks.find((row) => row.id === packId)!;
+      const pack = footballKeepCutPacks.find((row) => row.id === packId)!;
       expect(share(seen.size, pack.items.length), `${packId} Keep/Cut coverage`).toBeGreaterThanOrEqual(0.6);
       expectTierBalancedExposure(pack, appearancesByPack.get(packId)!, 8, "Keep/Cut");
     }
