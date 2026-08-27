@@ -111,7 +111,8 @@ function enrichFootballSubject(
 }
 
 /** Public curated identity/query view used by existing games. */
-export const footballSubjects: readonly FootballSubjectProfile[] = footballCanonicalSubjects.map(enrichFootballSubject);
+export const footballSubjects: readonly FootballSubjectProfile[] = footballCanonicalSubjects
+  .map((subject) => enrichFootballSubject(subject));
 
 const canonicalPlayerNameKeys = new Set(
   footballCanonicalSubjects
@@ -122,7 +123,7 @@ const canonicalPlayerNameKeys = new Set(
 /** Source-projected players that do not already reconcile to a curated canonical player. Opt-in only. */
 const projectedSourceSubjects: readonly FootballSubjectProfile[] = footballProjectedPlayerSubjects
   .filter((subject) => !canonicalPlayerNameKeys.has(`${subject.league}:${subject.name.toLowerCase()}`))
-  .map(enrichFootballSubject);
+  .map((subject) => enrichFootballSubject(subject));
 
 const canonicalSubjectIds = new Set(footballSubjects.map((subject) => subject.id));
 const projectedAdditionalSubjects: readonly FootballSubjectProfile[] = footballFindLeaderProjectedAdditionalSubjects
