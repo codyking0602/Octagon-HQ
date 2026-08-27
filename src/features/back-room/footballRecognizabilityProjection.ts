@@ -50,6 +50,10 @@ function uniqueProjectionMatch(records: readonly ProjectionRecord[]) {
 }
 
 function resolveProjectionRecordFor(subject: FootballCanonicalSubject) {
+  // This projection is explicitly player-career-only. A same-name coach (for example Mike Vrabel)
+  // must never inherit or reconcile to that person's historical player source identity.
+  if (subject.kind !== "player-career") return null;
+
   const direct = byId.get(subject.id)
     ?? (subject.aliases ?? []).map((alias) => byId.get(alias)).find((value) => value != null);
   if (direct) return direct;
