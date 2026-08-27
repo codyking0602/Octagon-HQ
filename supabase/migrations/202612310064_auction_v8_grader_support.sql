@@ -4,7 +4,7 @@ do $$
 declare
   v_definition text;
   v_expected text;
-  v_required_tail text;
+  v_required_pattern text;
 begin
   v_definition := pg_get_functiondef('private.grade_auction(uuid)'::regprocedure);
 
@@ -18,13 +18,15 @@ begin
     'v_game.content_version in (''ufc-auction-2026-08-v7'', ''ufc-auction-2026-08-v8'')'
   );
 
-  v_required_tail := E'''ufc-auction-2026-08-v7''\n    ) then 3';
-  if position(v_required_tail in v_definition) = 0 then
+  -- pg_get_functiondef() may normalize indentation. Match the one v7 standard-format
+  -- tail semantically rather than depending on a specific number of spaces/newlines.
+  v_required_pattern := E'(?i)''ufc-auction-2026-08-v7''[[:space:]]*\\)[[:space:]]*then[[:space:]]+3';
+  if v_definition !~ v_required_pattern then
     raise exception 'Auction v8 grader owner drifted: standard selection count';
   end if;
-  v_definition := replace(
+  v_definition := regexp_replace(
     v_definition,
-    v_required_tail,
+    v_required_pattern,
     E'''ufc-auction-2026-08-v7'',\n      ''ufc-auction-2026-08-v8''\n    ) then 3'
   );
 
@@ -37,7 +39,8 @@ begin
     raise exception 'Auction v8 grader did not retain the grader-v3 version pairing';
   end if;
 
-  if position(E'''ufc-auction-2026-08-v8''\n    ) then 3' in v_definition) = 0 then
+  v_required_pattern := E'(?i)''ufc-auction-2026-08-v8''[[:space:]]*\\)[[:space:]]*then[[:space:]]+3';
+  if v_definition !~ v_required_pattern then
     raise exception 'Auction v8 grader did not retain the standard three-selection contract';
   end if;
 end;
