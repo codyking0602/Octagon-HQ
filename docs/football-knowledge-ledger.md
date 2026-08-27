@@ -207,39 +207,40 @@ Find the Leader now starts from the deep A-C canonical projection, checks fact a
 
 ### PR 8 — Keep/Cut canonical identity bridge — COMPLETE BUT NOT DEPTH-COMPLETE
 
-PR #710 correctly moved Keep/Cut identity/category validation onto the canonical registry, but it still starts from the legacy `footballRankFivePacks` rated inventory and filters that list. That was a useful compatibility bridge, not the intended final deep migration.
+PR #710 correctly moved Keep/Cut identity/category validation onto the canonical registry, but it still started from the legacy `footballRankFivePacks` rated inventory and filtered that list. That was a useful compatibility bridge, not the intended final deep migration.
 
-PR8 is therefore not treated as proof that Keep/Cut has consumed the large database. Its deep candidate migration is explicitly owned by PR10 below.
+PR10 supersedes that legacy-list filtering with the shared deep comparison runtime.
 
-### PR 9 — Deep comparison candidate + evaluation authority — CURRENT
+### PR 9 — Deep comparison candidate + evaluation authority — COMPLETE — PR #717
 
-**Purpose:** create one shared authority that can evaluate a deep canonical candidate universe for Blind Rank and Keep/Cut without turning legacy rating tables into membership lists.
+Created one shared comparison authority that starts from canonical A-C category queries and evaluates qualified subjects independently of legacy roster membership.
 
-Deliverables:
+Delivered:
 
-- one shared comparison-category query contract;
-- candidates originate from canonical A-C queries, including projected source subjects;
-- explicit minimum factual/evidence requirements per category;
-- deterministic comparison scoring from canonical facts/relationships for newly surfaced subjects;
-- existing reviewed ratings remain calibration/override data for matching canonical identities only;
-- compact runtime projection where necessary so source corpora are not shipped wholesale;
-- focused tests proving each supported deep category contains qualified subjects outside the legacy rated inventory;
-- no Blind Rank/Keep-Cut UI, replay, route, or scoring-rule rewrite in this authority PR.
+- one shared comparison-category query contract across all 13 packs;
+- canonical A-C/projected subjects as the candidate universe;
+- deterministic fact-based comparison evaluation for qualified non-legacy subjects;
+- reviewed legacy ratings retained only as calibration/override for matching canonical identities;
+- focused proof that supported deep categories include qualified subjects outside the legacy rated inventory;
+- no game UI, route, replay, challenge, or scoring-rule rewrite.
 
-### PR 10 — Blind Rank + Keep/Cut deep migration
+### PR 10 — Blind Rank + Keep/Cut deep migration — COMPLETE — PR #718
 
-**Purpose:** make both comparison games consume PR9’s deep canonical comparison authority.
+Blind Rank and Keep/Cut now consume PR9’s deep canonical comparison authority in actual gameplay instead of deriving membership from the reviewed Rank Five inventory.
 
-Deliverables:
+Delivered:
 
-- Blind Rank board membership comes from the deep evaluated canonical pool, not `footballRankFivePacks` membership;
-- Keep/Cut supersedes PR8’s legacy-list filtering and uses the same deep evaluated pool;
-- preserve existing game-specific board/scoring/replay/presentation owners;
-- preserve reviewed legacy public IDs through canonical reconciliation where needed;
-- exposure/depth simulations prove meaningful use of new canonical subjects across categories;
-- tests explicitly fail if either game regresses to `legacy items -> ledger filter`.
+- `footballRankFivePlayableModel.ts` projects the live Blind Rank pools from the deep canonical comparison authority while preserving reviewed ratings for matching calibrated identities;
+- standalone Blind Rank random, replay, URL-share, and profile-challenge resolution all use the deep playable pool;
+- Keep/Cut consumes the exact same deep evaluated pool and no longer owns a duplicate category map or `legacy items -> canonical filter` membership path;
+- pack-context league presentation is preserved for multi-league canonical identities;
+- official Football Today’s Challenge Blind Rank and Keep/Cut use the same deep runtime through the canonical daily backend source and bundle pipeline;
+- focused tests require playable non-legacy canonical subjects to surface in both standalone and official-daily boards;
+- existing board construction, scoring, replay semantics, challenge schema, routes, and presentation remain unchanged.
 
-### PR 11 — Blind Resume deep factual generation + remaining factual consumers
+The reviewed `footballRankFiveModel.ts` catalog remains calibration/editorial input for matching identities and for PR11’s legacy Blind Resume evidence bridge. It is not the live candidate-membership authority. Obsolete duplicate legacy runtime helpers are deferred to PR12 cleanup after all consumers have migrated.
+
+### PR 11 — Blind Resume deep factual generation + remaining factual consumers — NEXT
 
 **Purpose:** make Blind Resume construct truthful eight-row resumes from the deep canonical factual universe and finish any remaining objective consumer migration.
 

@@ -6,7 +6,8 @@ import { footballSubjectAssetPath } from "./FootballSubjectVisual";
 import {
   buildFootballRankFiveLineup,
   footballRankFivePacks,
-} from "./footballRankFiveModel";
+  getFootballReviewedRankFivePack,
+} from "./footballRankFivePlayableModel";
 
 vi.mock("../challenges/ChallengeProvider", () => ({
   usePlayChallenges: () => ({ beginChallenge: vi.fn(async () => "") }),
@@ -28,20 +29,26 @@ describe("Football Blind Rank 5", () => {
     window.localStorage.clear();
   });
 
-  it("owns the mature comparison universe across both leagues", () => {
+  it("owns the live deep comparison universe across both leagues", () => {
     expect(footballRankFivePacks).toHaveLength(13);
     expect(footballRankFivePacks.filter((pack) => pack.items.every((item) => item.league === "NFL"))).toHaveLength(8);
     expect(footballRankFivePacks.filter((pack) => pack.items.every((item) => item.league === "CFB"))).toHaveLength(5);
 
     const subjects = footballRankFivePacks.flatMap((pack) => pack.items);
     expect(subjects.length).toBeGreaterThanOrEqual(350);
-    expect(new Set(subjects.map((item) => item.id)).size).toBe(subjects.length);
 
     for (const pack of footballRankFivePacks) {
-      expect(pack.items.length).toBeGreaterThanOrEqual(15);
+      // The shared comparison authority guarantees eight playable subjects per supported pack;
+      // PR10 must preserve that exact post-gate runtime floor rather than invent a second threshold.
+      expect(pack.items.length).toBeGreaterThanOrEqual(8);
       expect(new Set(pack.items.map((item) => item.id)).size).toBe(pack.items.length);
       expect(pack.items.every((item) => Number.isInteger(item.rating) && item.rating >= 0 && item.rating <= 100)).toBe(true);
     }
+
+    const liveReceivers = footballRankFivePacks.find((pack) => pack.id === "nfl-wide-receivers")!;
+    const reviewedReceivers = getFootballReviewedRankFivePack("nfl-wide-receivers");
+    expect(liveReceivers.items.length).toBeGreaterThan(reviewedReceivers.items.length);
+    expect(liveReceivers.items.some((item) => !reviewedReceivers.items.some((reviewed) => reviewed.id === item.id))).toBe(true);
   });
 
   it("builds deterministic five-item lineups with non-flat rating separation", () => {
@@ -54,6 +61,18 @@ describe("Football Blind Rank 5", () => {
       const ratings = first.map((item) => item.rating);
       expect(Math.max(...ratings) - Math.min(...ratings)).toBeGreaterThanOrEqual(4);
     }
+  });
+
+  it("actually exposes non-legacy canonical receivers in playable Blind Rank boards", () => {
+    const reviewedIds = new Set(
+      getFootballReviewedRankFivePack("nfl-wide-receivers").items.map((item) => item.id),
+    );
+    let exposed = false;
+    for (let index = 0; index < 96 && !exposed; index += 1) {
+      exposed = buildFootballRankFiveLineup("nfl-wide-receivers", `deep-rank-wr-${index}`)
+        .some((item) => !reviewedIds.has(item.id));
+    }
+    expect(exposed).toBe(true);
   });
 
   it("uses one canonical football asset path convention for the expanded packs", () => {

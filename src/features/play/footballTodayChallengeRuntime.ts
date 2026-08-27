@@ -26,7 +26,7 @@ import {
   type FootballLeague,
   type FootballRankFiveItem,
   type FootballRankFivePackId,
-} from "../back-room/footballRankFiveModel";
+} from "../back-room/footballRankFivePlayableModel";
 import {
   createFootballWavelengthRound,
   footballWavelengthClues,
