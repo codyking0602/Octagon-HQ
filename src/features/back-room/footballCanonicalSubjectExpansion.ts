@@ -20,6 +20,7 @@ export interface FootballExpandedCanonicalSubject {
   kind: FootballExpandedSubjectKind;
   league: FootballExpandedLeague;
   leagues?: readonly FootballExpandedLeague[];
+  aliases?: readonly string[];
   position?: FootballExpandedPosition;
   season?: number;
   activeDecades?: readonly number[];
@@ -44,6 +45,10 @@ function leadingSeason(id: string) {
 function trailingSeason(id: string) {
   const match = /-(\d{4})$/.exec(id);
   return match ? Number(match[1]) : undefined;
+}
+
+function normalizedIdentityName(name: string) {
+  return name.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
 const defenderPositions: Readonly<Record<string, FootballExpandedPosition>> = {
@@ -97,14 +102,26 @@ const defenders: FootballExpandedCanonicalSubject[] = nflDefensiveCareers.map((i
   position: defenderPositions[item.id] ?? "DL",
 }));
 
+const collegeCoachByName = new Map(
+  collegeHeadCoaches.map((item) => [normalizedIdentityName(item.name), item]),
+);
+
 const nflCoaches: FootballExpandedCanonicalSubject[] = (
   footballRankFivePacks.find((pack) => pack.id === "nfl-head-coaches")?.items ?? []
-).map((item) => ({
-  id: item.id,
-  name: item.name,
-  kind: "coach",
-  league: "NFL",
-}));
+).map((item) => {
+  const collegeCoach = collegeCoachByName.get(normalizedIdentityName(item.name));
+  return {
+    id: collegeCoach?.id ?? item.id,
+    name: item.name,
+    kind: "coach",
+    league: "NFL",
+    ...(collegeCoach ? {
+      leagues: ["NFL", "CFB"] as const,
+      aliases: collegeCoach.id === item.id ? undefined : [item.id],
+      school: collegeCoach.asset.label,
+    } : {}),
+  };
+});
 
 const quarterbackSeasons: FootballExpandedCanonicalSubject[] = nflQuarterbackSeasons.map((item) => {
   const season = trailingSeason(item.id);
