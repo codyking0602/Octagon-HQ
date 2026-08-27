@@ -133,7 +133,19 @@ function tryBuildFootballBlindResumeEvidence(
   rightId: string,
   archetype: FootballBlindResumeArchetype,
 ) {
-  const pair = buildFootballBlindResumeCanonicalEvidencePair(packId, leftId, rightId, archetype);
+  const candidates = footballBlindResumeCandidatesForPack(packId);
+  const left = candidates.find((candidate) => candidate.id === leftId);
+  const right = candidates.find((candidate) => candidate.id === rightId);
+  if (!left || !right) return null;
+
+  const pair = buildFootballBlindResumeCanonicalEvidencePair(
+    packId,
+    left.canonicalSubjectId,
+    right.canonicalSubjectId,
+    archetype,
+    left.id,
+    right.id,
+  );
   if (!pair || pair.left.length !== 8 || pair.right.length !== 8) return null;
 
   const stats = pair.left.map((leftRow, index) => {
