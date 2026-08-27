@@ -97,7 +97,6 @@ export interface FindLeaderScope {
   championsOnly?: boolean;
   division?: string;
 }
-
 export interface FindLeaderQuestionDefinition {
   id: string;
   question: string;
@@ -560,12 +559,12 @@ export function centralDay(date = new Date()) {
 
 export function scheduledFindLeaderDefinition(day = centralDay()) {
   const target = Math.max(0, dayNumber(day) - dayNumber(DAILY_ANCHOR));
+  const available = findLeaderQuestions.filter((definition) => buildFindLeaderBoard(definition, `audit-${target}`, day));
   const history: string[] = [];
   let selected: FindLeaderQuestionDefinition | null = null;
   for (let slot = 0; slot <= target; slot += 1) {
     const recent = new Set(history.slice(-NO_REPEAT_SELECTIONS));
     const family = FAMILY_CYCLE[slot % FAMILY_CYCLE.length];
-    const available = findLeaderQuestions.filter((definition) => buildFindLeaderBoard(definition, `audit-${slot}`, day));
     const preferred = available.filter((definition) => definition.family === family && !recent.has(definition.id));
     const fresh = available.filter((definition) => !recent.has(definition.id));
     const candidates = preferred.length ? preferred : fresh.length ? fresh : available;
