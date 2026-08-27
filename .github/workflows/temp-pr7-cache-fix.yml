@@ -1,0 +1,32 @@
+name: TEMP PR7 cache fix
+
+"on":
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - .github/workflows/temp-pr7-cache-fix.yml
+      - scripts/temp-pr7-cache-fix.py
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+          persist-credentials: true
+      - name: Apply PR7 cache and identity regressions
+        run: python scripts/temp-pr7-cache-fix.py
+      - name: Commit permanent changes and remove temporary tooling
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/features/back-room/footballFindLeaderModel.ts src/features/back-room/footballFindLeaderModel.test.ts src/features/back-room/footballCanonicalUniverse.test.ts
+          git rm scripts/temp-pr7-cache-fix.py .github/workflows/temp-pr7-cache-fix.yml
+          git commit -m 'fix: cache deep Find the Leader metric rows [finalize-pr7-cache]'
+          git push origin HEAD:${{ github.head_ref }}
