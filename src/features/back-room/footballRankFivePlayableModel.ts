@@ -9,6 +9,7 @@ import { buildFootballBlindRankBoard } from "./footballComparisonGeneration";
 import {
   FOOTBALL_RANK_FIVE_GAME_ID,
   footballRankFivePacks as footballReviewedRankFivePacks,
+  type FootballLeague,
   type FootballRankFiveItem,
   type FootballRankFivePack,
   type FootballRankFivePackId,
@@ -23,13 +24,20 @@ export {
   type FootballRankFiveRun,
 } from "./footballRankFiveModel";
 
+function runtimeLeagueForPack(packId: FootballRankFivePackId): FootballLeague {
+  return packId.startsWith("nfl-") ? "NFL" : "CFB";
+}
+
 /**
  * Runtime Blind Rank packs. The legacy Rank Five catalog is calibration/editorial input only;
  * actual membership starts from the deep canonical comparison authority.
  */
 export const footballRankFivePacks: readonly FootballRankFivePack[] = footballReviewedRankFivePacks.map((pack) => ({
   ...pack,
-  items: buildFootballComparisonCandidatePool(pack.id, pack.items),
+  items: buildFootballComparisonCandidatePool(pack.id, pack.items).map((item) => ({
+    ...item,
+    league: runtimeLeagueForPack(pack.id),
+  })),
 }));
 
 export function getFootballReviewedRankFivePack(packId: FootballRankFivePackId) {
