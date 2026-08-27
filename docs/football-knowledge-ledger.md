@@ -1,6 +1,6 @@
 # Football Knowledge Ledger
 
-Last reviewed: 2026-08-25
+Last reviewed: 2026-08-27
 
 ## Purpose
 
@@ -19,10 +19,10 @@ Examples:
 - Find the Leader: CFB running backs, 2005-2025, rushing yards, recognizable tiers A-C.
 - Hit the Number: four CFB programs whose combined title/award/stat value can exactly hit a generated target.
 - Blind Resume: coaches or players with objective career/season facts.
-- Blind Rank: programs, franchises, players, coaches, team seasons, or eras ordered by a factual metric.
-- Keep/Cut: recognizable comparable entities selected from the same canonical identity universe.
+- Blind Rank: recognizable canonical players, coaches, programs, seasons, or eras selected from the ledger while the existing comparison-rating owner still decides the ranking verdict.
+- Keep/Cut: recognizable comparable entities selected from the same canonical identity universe while the existing comparison-rating owner still grades the decision.
 
-The games own presentation, rules, randomization, and board construction. They do not own copied factual values.
+The games own presentation, rules, randomization, and board construction. They do not own copied factual values. Subjective comparison ratings remain outside the factual ledger.
 
 ## Canonical layers
 
@@ -198,15 +198,15 @@ For every PR in this initiative:
 
 ## PR buildout
 
-This sequence is intentionally ordered so source scale exists before games are migrated.
+The roadmap remains eleven ordered stages. The execution order below reflects work that landed before the consumer-migration phase and avoids redoing a game that is already canonical.
 
-### PR 1 — Knowledge contract
+### PR 1 — Knowledge contract — completed
 
 **Purpose:** establish this file as the canonical roadmap and architecture contract.
 
 No runtime behavior change.
 
-### PR 2 — Canonical entity + recognizability schema
+### PR 2 — Canonical entity + recognizability schema — completed
 
 **Purpose:** extend the existing subject/query model so every entity family can carry stable source reconciliation and game eligibility metadata without duplicating identities.
 
@@ -219,7 +219,7 @@ Deliverables:
 - query filters for recognizability and expanded entity families
 - regression tests proving existing IDs/aliases still resolve
 
-### PR 3 — Historical CFB player-season source adapter
+### PR 3 — Historical CFB player-season source adapter — completed
 
 **Purpose:** replace “2025-only bulk depth” as the long-term player source with reproducible multi-season CFB ingestion.
 
@@ -232,18 +232,18 @@ Deliverables:
 - compact manifests and coverage report
 - no automatic game eligibility for obscure source rows
 
-### PR 4 — Historical NFL player/team source adapter
+### PR 4 — Historical NFL player/team source adapter — completed
 
 **Purpose:** create the matching nflverse ingestion path.
 
 Deliverables:
 
-- 1999-present player/team season ingestion
+- 1999-2025 player/team season ingestion
 - stable nflverse identity reconciliation
 - season/team/player normalized records
 - compact manifests and coverage report
 
-### PR 5 — Programs, franchises, team seasons, coaches, games, and era relationships
+### PR 5 — Programs, franchises, team seasons, coaches, games, and era relationships — completed
 
 **Purpose:** make non-player pools first-class canonical data.
 
@@ -256,7 +256,7 @@ Deliverables:
 - objective era records that can support dynasty queries
 - championships/postseason relationships
 
-### PR 6 — Recognizability projection + depth audit
+### PR 6 — Recognizability projection + depth audit — completed
 
 **Purpose:** turn deep source data into genuinely usable Football HQ pools without random obscure filler.
 
@@ -264,32 +264,44 @@ Deliverables:
 
 - deterministic A-D recognizability projection inputs/rules
 - explicit manual overrides only for genuine edge cases, not as the primary database
-- target A-C player depth in the thousands across NFL + CFB
+- A-C player projection across NFL + CFB with Tier D kept database-only
 - A-C programs/franchises/seasons/coaches/eras pools
 - coverage audit by league/entity/era/position/metric
-- hard regression preventing a return to 10-20-name category pools
+- regression preventing source depth from silently becoming casual eligibility
 
-### PR 7 — Find the Leader migration
+### PR 7 — Find the Leader migration — completed
 
-**Purpose:** make Find the Leader query the deep canonical projection for all Football entity/metric lanes.
+**Purpose:** make Find the Leader query the deep canonical projection for Football entity/metric lanes.
 
-Remove any remaining game-owned candidate/fact duplication covered by the ledger.
+PR #709 migrated the game to the deep ledger. PR #711 fixed the projected-subject replay contract without adding another candidate owner.
 
-### PR 8 — Hit the Number migration
+### Hit the Number — canonical before the revised PR8 slot
 
-**Purpose:** make Hit the Number use the same authority for exact-solution boards across players and non-player entities.
+Football Hit the Number was already moved onto the canonical provenance-bearing quantitative fact ledger in PR #661. Its exact-solution generator, scoring, challenge determinism, and game shell remain the owners of Hit the Number behavior. Repeating that migration as roadmap PR8 would create redundant work rather than a new ownership boundary.
 
-Preserve its exact-solution invariant and existing canonical game ledger behavior.
+### PR 8 — Keep/Cut migration — completed
 
-### PR 9 — Blind Resume + Blind Rank migration
+**Purpose:** make Keep 4 / Cut 4 obtain category membership and casual eligibility from the canonical Football subject registry while preserving the existing comparison ratings, scoring, generator, replay, challenge, and visual owners.
 
-**Purpose:** move factual resumes/ranking pools to canonical player, coach, program, franchise, season, and era queries.
+PR #710 completed this migration. Legacy public comparison IDs remain compatible while the registry reconciles them to canonical identities.
 
-### PR 10 — Keep/Cut + remaining factual Football consumers
+### PR 9 — Blind Resume + Blind Rank migration — current
 
-**Purpose:** migrate remaining objective candidate pools and remove obsolete duplicate Football factual data.
+**Purpose:** move Blind Resume factual-evidence eligibility and Blind Rank candidate eligibility to canonical player, coach, program, season, and era queries.
 
-Wavelength/opinion content may use canonical identities for selection but remains the owner of subjective prompts/ratings.
+Deliverables:
+
+- one shared comparison-category query owner reused by Blind Rank and Keep/Cut
+- Blind Rank boards restricted to canonical A-C casual-eligible identities without changing comparison ratings or board archetypes
+- Blind Resume evidence profiles restricted to canonical A-C casual-eligible identities while keeping `footballFactualStats` as the evidence owner
+- preserve legacy public IDs, replay identities, scoring, matchup verdicts, and visual behavior
+- focused proof that both games generate only from canonical eligible identities
+
+### PR 10 — Remaining factual/identity consumers + duplicate cleanup
+
+**Purpose:** migrate any remaining Football consumer that still owns objective candidate identity/factual duplication, then remove the obsolete duplicate data paths uncovered by PR7-PR9.
+
+Wavelength/opinion content may use canonical identities for selection, but it remains the owner of subjective prompts/ratings. Do not move subjective truth into the factual ledger.
 
 ### PR 11 — Legacy cleanup + release audit
 
