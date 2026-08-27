@@ -18,9 +18,10 @@ interface ProjectionRecord {
 
 const records = projectionJson.records as readonly ProjectionRecord[];
 const playerRecords = records.filter((record) => record.kind === "player-career");
+const promotedPlayerRecords = playerRecords.filter((record) => record.tier !== "D");
 
 /** Promoted source-player identities only. Non-player PR6 records remain build-time/audit projections until their consumer migrations. */
-export const footballProjectedPlayerSubjects: readonly FootballCanonicalSubject[] = playerRecords.map((record) => ({
+export const footballProjectedPlayerSubjects: readonly FootballCanonicalSubject[] = promotedPlayerRecords.map((record) => ({
   id: record.id,
   name: record.name,
   kind: "player-career",

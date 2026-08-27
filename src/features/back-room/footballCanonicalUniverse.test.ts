@@ -3,7 +3,11 @@ import {
   footballCanonicalSubjects,
   footballFindLeaderSubjects,
 } from "./footballFactualStatsCatalog";
-import { footballRecognitionProjectionSubjectIdFor } from "./footballRecognizabilityProjection";
+import {
+  FOOTBALL_RECOGNITION_SUMMARY,
+  footballProjectedPlayerSubjects,
+  footballRecognitionProjectionSubjectIdFor,
+} from "./footballRecognizabilityProjection";
 import {
   footballSubjects,
   getFootballSubject,
@@ -20,6 +24,7 @@ describe("canonical Football universe", () => {
     expect(new Set(footballSubjects.map(({ id }) => id)).size).toBe(footballSubjects.length);
     expect(queryFootballSubjects({ league: "NFL" }).length).toBeGreaterThanOrEqual(75);
     expect(queryFootballSubjects({ league: "CFB" }).length).toBeGreaterThanOrEqual(150);
+    expect(footballProjectedPlayerSubjects).toHaveLength(FOOTBALL_RECOGNITION_SUMMARY.promotedByEntityKind["player-career"]);
   });
 
   it("keeps source reconciliation ids internal while resolving duplicate player names conservatively", () => {
@@ -31,8 +36,9 @@ describe("canonical Football universe", () => {
 
     const adrianPeterson = getFootballSubject("nfl-adrian-peterson");
     expect(adrianPeterson?.name).toBe("Adrian Peterson");
-    expect(getFootballSubject("nflverse-player-00-0021306")).toBe(adrianPeterson);
-    expect(adrianPeterson?.aliases ?? []).not.toContain("nflverse-player-00-0021306");
+    expect(getFootballSubject("nflverse-player-00-0025394")).toBe(adrianPeterson);
+    expect(getFootballSubject("nflverse-player-00-0021306")).toBeNull();
+    expect(adrianPeterson?.aliases ?? []).not.toContain("nflverse-player-00-0025394");
   });
 
   it("keeps modern CFB metadata at least half of modern reusable coverage", () => {
