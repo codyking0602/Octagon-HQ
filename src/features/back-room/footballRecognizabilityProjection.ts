@@ -19,8 +19,9 @@ interface ProjectionRecord {
 const records = projectionJson.records as readonly ProjectionRecord[];
 const playerRecords = records.filter((record) => record.kind === "player-career");
 const promotedPlayerRecords = playerRecords.filter((record) => record.tier !== "D");
+const nonPlayerRecords = records.filter((record) => record.kind !== "player-career");
 
-/** Promoted source-player identities only. Non-player PR6 records remain build-time/audit projections until their consumer migrations. */
+/** Promoted source-player identities only. Non-player PR6 records remain opt-in until their consumer migrations. */
 export const footballProjectedPlayerSubjects: readonly FootballCanonicalSubject[] = promotedPlayerRecords.map((record) => ({
   id: record.id,
   name: record.name,
@@ -50,6 +51,10 @@ function uniqueProjectionMatch(records: readonly ProjectionRecord[]) {
 }
 
 function resolveProjectionRecordFor(subject: FootballCanonicalSubject) {
+  // This projection is explicitly player-career-only. A same-name coach (for example Mike Vrabel)
+  // must never inherit or reconcile to that person's historical player source identity.
+  if (subject.kind !== "player-career") return null;
+
   const direct = byId.get(subject.id)
     ?? (subject.aliases ?? []).map((alias) => byId.get(alias)).find((value) => value != null);
   if (direct) return direct;
@@ -91,6 +96,121 @@ export function footballRecognitionProjectionFor(subject: FootballCanonicalSubje
  */
 export function footballRecognitionProjectionSubjectIdFor(subject: FootballCanonicalSubject) {
   return resolveProjectionRecordFor(subject)?.id ?? null;
+}
+
+function normalizedProjectionName(name: string) {
+  return name.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
+}
+
+function nonPlayerProjectionKind(subject: FootballCanonicalSubject) {
+  if (subject.kind === "team-season") return "team-season";
+  if (subject.kind === "program-era") return "era";
+  return null;
+}
+
+const nonPlayerBySourceIdentity = new Map(
+  nonPlayerRecords.map((record) => [`${record.sourceProvider}:${record.sourceId}`, record]),
+);
+const nonPlayerByKindLeagueAndName = new Map<string, ProjectionRecord[]>();
+for (const record of nonPlayerRecords) {
+  const key = `${record.kind}:${record.league}:${normalizedProjectionName(record.name)}`;
+  const values = nonPlayerByKindLeagueAndName.get(key) ?? [];
+  values.push(record);
+  nonPlayerByKindLeagueAndName.set(key, values);
+}
+
+const cfbProgramByName = new Map<string, ProjectionRecord[]>();
+for (const record of nonPlayerRecords.filter((candidate) => candidate.kind === "program" && candidate.league === "CFB")) {
+  const key = normalizedProjectionName(record.name);
+  const values = cfbProgramByName.get(key) ?? [];
+  values.push(record);
+  cfbProgramByName.set(key, values);
+}
+
+const cfbProminentTeamSeasonsByProgram = new Map<string, ProjectionRecord[]>();
+for (const record of nonPlayerRecords.filter((candidate) => candidate.kind === "team-season" && candidate.league === "CFB")) {
+  if (record.startSeason == null) continue;
+  const prefix = `${record.startSeason} `;
+  if (!record.name.startsWith(prefix)) continue;
+  const key = normalizedProjectionName(record.name.slice(prefix.length));
+  const values = cfbProminentTeamSeasonsByProgram.get(key) ?? [];
+  values.push(record);
+  cfbProminentTeamSeasonsByProgram.set(key, values);
+}
+
+/**
+ * Canonical cultural markers that PR6 cannot infer from its promoted source rows alone: pre-nflverse history plus
+ * famous failure/disappointment seasons that achievement-based promotion deliberately leaves at D.
+ */
+const canonicalNonPlayerRecognitionTiers = new Map<string, FootballRecognizabilityTier>([
+  ["1972-miami-dolphins", "C"],
+  ["1985-chicago-bears", "C"],
+  ["1989-san-francisco-49ers", "C"],
+  ["1991-washington", "C"],
+  ["1996-green-bay-packers", "C"],
+  ["1998-denver-broncos", "C"],
+  ["2011-philadelphia-eagles", "C"],
+  ["2022-denver-broncos", "C"],
+  ["2020-jacksonville-jaguars", "C"],
+  ["2017-cleveland-browns", "C"],
+]);
+
+function supportedProjectionProvider(record: ProjectionRecord): FootballSourceProviderId | null {
+  if (record.sourceProvider === "nflverse" || record.sourceProvider === "cfbfastR") return record.sourceProvider;
+  return null;
+}
+
+function derivedProgramEraTier(subject: FootballCanonicalSubject): FootballRecognizabilityTier | null {
+  if (subject.kind !== "program-era" || subject.league !== "CFB" || !subject.school) return null;
+  if (subject.startSeason == null || subject.endSeason == null) return null;
+  const schoolKey = normalizedProjectionName(subject.school);
+  if (!uniqueProjectionMatch(cfbProgramByName.get(schoolKey) ?? [])) return null;
+  const prominentSeasons = (cfbProminentTeamSeasonsByProgram.get(schoolKey) ?? [])
+    .filter((record) => record.startSeason! >= subject.startSeason! && record.startSeason! <= subject.endSeason!);
+  // A recognizable FBS program plus repeated PR6-promoted team seasons is the cultural marker needed to expose the era.
+  return prominentSeasons.length >= 2 ? "C" : null;
+}
+
+/**
+ * Opt-in bridge for non-player PR6 recognition records. It intentionally supports only the canonical subject families
+ * already migrated by a consumer and requires either an exact source identity or one unique exact-name/season match.
+ */
+export function footballNonPlayerRecognitionProjectionFor(
+  subject: FootballCanonicalSubject,
+  sourceIdentityKey?: { provider: FootballSourceProviderId; id: string },
+) {
+  const projectionKind = nonPlayerProjectionKind(subject);
+  if (!projectionKind) return null;
+
+  let record: ProjectionRecord | null = null;
+  if (sourceIdentityKey) {
+    const direct = nonPlayerBySourceIdentity.get(`${sourceIdentityKey.provider}:${sourceIdentityKey.id}`);
+    if (direct?.kind === projectionKind && direct.league === subject.league) record = direct;
+  }
+
+  if (!record) {
+    const sameName = nonPlayerByKindLeagueAndName.get(
+      `${projectionKind}:${subject.league}:${normalizedProjectionName(subject.name)}`,
+    ) ?? [];
+    const sameWindow = sameName.filter((candidate) => (
+      (subject.startSeason == null || candidate.startSeason === subject.startSeason)
+      && (subject.endSeason == null || candidate.endSeason === subject.endSeason)
+      && (subject.season == null || (candidate.startSeason === subject.season && candidate.endSeason === subject.season))
+    ));
+    record = uniqueProjectionMatch(sameWindow);
+  }
+
+  if (!record) {
+    const canonicalTier = canonicalNonPlayerRecognitionTiers.get(subject.id);
+    if (canonicalTier) return { tier: canonicalTier };
+    const derivedTier = derivedProgramEraTier(subject);
+    return derivedTier ? { tier: derivedTier } : null;
+  }
+  const provider = supportedProjectionProvider(record);
+  return {
+    tier: record.tier,
+    ...(provider ? { sourceIdentityKey: { provider, id: record.sourceId } as const } : {}),
+  };
 }
 
 export const FOOTBALL_RECOGNITION_MANUAL_APPROVAL_NAMES = projectionJson.manualApprovals as readonly string[];

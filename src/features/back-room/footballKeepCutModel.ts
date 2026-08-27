@@ -19,6 +19,10 @@ import {
   type FootballRankFiveItem,
   type FootballRankFivePackId,
 } from "./footballRankFiveModel";
+import {
+  resolveFootballSubjectReference,
+  type FootballSubjectQuery,
+} from "./footballSubjectRegistry";
 
 export const FOOTBALL_KEEP_CUT_GAME_ID = "football-keep-cut";
 
@@ -50,6 +54,23 @@ export interface FootballKeepCutResult {
 
 const BOARD_SIZE = 8;
 const KEEP_COUNT = 4;
+const KEEP_CUT_RECOGNIZABILITY_TIERS = ["A", "B", "C"] as const;
+
+const FOOTBALL_KEEP_CUT_CATEGORY_QUERIES = {
+  "nfl-quarterbacks": { kind: "player-career", league: "NFL", position: "QB" },
+  "nfl-running-backs": { kind: "player-career", league: "NFL", position: "RB" },
+  "nfl-wide-receivers": { kind: "player-career", league: "NFL", position: "WR" },
+  "nfl-tight-ends": { kind: "player-career", league: "NFL", position: "TE" },
+  "nfl-defensive-players": { kind: "player-career", league: "NFL", positions: ["DL", "LB", "DB"] },
+  "nfl-head-coaches": { kind: "coach", league: "NFL" },
+  "nfl-qb-seasons": { kind: "player-season", league: "NFL", position: "QB" },
+  "nfl-team-seasons": { kind: "team-season", league: "NFL" },
+  "college-quarterbacks": { kind: "player-career", league: "CFB", position: "QB" },
+  "college-head-coaches": { kind: "coach", league: "CFB" },
+  "college-programs": { kind: "program", league: "CFB" },
+  "college-program-eras": { kind: "program-era", league: "CFB" },
+  "college-team-seasons": { kind: "team-season", league: "CFB" },
+} as const satisfies Record<FootballKeepCutPackId, FootballSubjectQuery>;
 
 export {
   footballKeepCutBoardIsCompetitive,
@@ -57,12 +78,44 @@ export {
   FOOTBALL_KEEP_CUT_BOARD_STYLES,
 };
 
+/** Keep/Cut declares category criteria; the canonical registry owns which subjects satisfy them. */
+export function footballKeepCutCategoryQuery(packId: FootballKeepCutPackId): FootballSubjectQuery {
+  return FOOTBALL_KEEP_CUT_CATEGORY_QUERIES[packId];
+}
+
+export function footballKeepCutEligibilityQuery(packId: FootballKeepCutPackId): FootballSubjectQuery {
+  return {
+    ...footballKeepCutCategoryQuery(packId),
+    recognizabilityTiers: KEEP_CUT_RECOGNIZABILITY_TIERS,
+    casualEligible: true,
+    includeProjectedSourceSubjects: true,
+    includeProjectedCanonicalRecognition: true,
+  };
+}
+
+function keepCutItemsFromCanonicalLedger(packId: FootballKeepCutPackId) {
+  const ratedPack = getFootballRankFivePack(packId);
+  const eligibilityQuery = footballKeepCutEligibilityQuery(packId);
+  const seenCanonicalIds = new Set<string>();
+  const items = ratedPack.items.filter((item) => {
+    const subject = resolveFootballSubjectReference(item.id, item.name, eligibilityQuery);
+    if (!subject || seenCanonicalIds.has(subject.id)) return false;
+    seenCanonicalIds.add(subject.id);
+    return true;
+  });
+
+  if (items.length < BOARD_SIZE) {
+    throw new Error(`Football Keep 4, Cut 4 pack ${packId} has only ${items.length} canonical eligible rated subjects.`);
+  }
+  return items;
+}
+
 export const footballKeepCutPacks: readonly FootballKeepCutPack[] = footballRankFivePacks.map((pack) => ({
   id: pack.id,
   name: pack.name,
   prompt: `Keep four from ${pack.name}. Cut four.`,
   intro: "Eight names arrive one at a time. Every Keep/Cut call locks before the next reveal.",
-  items: pack.items,
+  items: keepCutItemsFromCanonicalLedger(pack.id),
 }));
 
 export function getFootballKeepCutPack(packId: FootballKeepCutPackId) {

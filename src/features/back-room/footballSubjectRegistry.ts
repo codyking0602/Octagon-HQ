@@ -18,6 +18,7 @@ import {
   type FootballSubjectKnowledgeOverride,
 } from "./footballSubjectEligibility";
 import {
+  footballNonPlayerRecognitionProjectionFor,
   footballProjectedPlayerSubjects,
   footballRecognitionProjectionSubjectIdFor,
 } from "./footballRecognizabilityProjection";
@@ -60,8 +61,10 @@ export interface FootballSubjectQuery {
   recognizabilityTiers?: readonly FootballRecognizabilityTier[];
   casualEligible?: boolean;
   sourceProvider?: FootballSourceProviderId;
-  /** PR6 review/depth opt-in. Normal game queries intentionally remain on the curated canonical projection. */
+  /** PR6 source-depth opt-in. Preserves the existing curated canonical view unless separately requested below. */
   includeProjectedSourceSubjects?: boolean;
+  /** Consumer-migration opt-in for PR6 non-player recognition on existing canonical identities. */
+  includeProjectedCanonicalRecognition?: boolean;
 }
 
 const comparisonItemById = new Map(footballComparisonDepthItems.map((item) => [item.id, item]));
@@ -110,9 +113,37 @@ function enrichFootballSubject(
   };
 }
 
+function comparisonProjectionSourceIdentity(subject: FootballCanonicalSubject) {
+  if (subject.kind !== "team-season" || subject.season == null) return undefined;
+  const comparisonItem = comparisonItemById.get(subject.id);
+  if (!comparisonItem) return undefined;
+  if (comparisonItem.asset.kind === "nfl") {
+    return { provider: "nflverse", id: `${subject.season}:${comparisonItem.asset.team.toUpperCase()}` } as const;
+  }
+  return { provider: "cfbfastR", id: `${subject.season}:${comparisonItem.asset.teamId}` } as const;
+}
+
+function projectedCanonicalKnowledgeOverride(subject: FootballCanonicalSubject): FootballSubjectKnowledgeOverride | undefined {
+  const projection = footballNonPlayerRecognitionProjectionFor(subject, comparisonProjectionSourceIdentity(subject));
+  if (!projection) return undefined;
+  return {
+    recognizabilityTier: projection.tier,
+    ...(projection.sourceIdentityKey ? {
+      sourceIdentityKeys: [
+        { provider: "octagon-hq", id: subject.id },
+        projection.sourceIdentityKey,
+      ],
+    } : {}),
+  };
+}
+
 /** Public curated identity/query view used by existing games. */
 export const footballSubjects: readonly FootballSubjectProfile[] = footballCanonicalSubjects
   .map((subject) => enrichFootballSubject(subject));
+
+/** Same canonical identities with PR6 non-player recognition applied only for explicitly migrated consumers. */
+const projectedCanonicalSubjects: readonly FootballSubjectProfile[] = footballCanonicalSubjects
+  .map((subject) => enrichFootballSubject(subject, projectedCanonicalKnowledgeOverride(subject)));
 
 const reconciledProjectedPlayerIds = new Set(
   footballCanonicalSubjects
@@ -181,8 +212,38 @@ function matchesFootballSubject(subject: FootballSubjectProfile, query: Football
 export function queryFootballSubjects(query: FootballSubjectQuery = {}) {
   // Preserve the pre-PR6 contract: source-stage depth does not appear in normal queries merely because a provider is named.
   if (query.sourceProvider && query.sourceProvider !== "octagon-hq" && !query.includeProjectedSourceSubjects) return [];
-  const universe = query.includeProjectedSourceSubjects
-    ? [...footballSubjects, ...projectedSourceSubjects, ...projectedAdditionalSubjects]
+  const canonicalUniverse = query.includeProjectedCanonicalRecognition
+    ? projectedCanonicalSubjects
     : footballSubjects;
+  const universe = query.includeProjectedSourceSubjects
+    ? [...canonicalUniverse, ...projectedSourceSubjects, ...projectedAdditionalSubjects]
+    : canonicalUniverse;
   return universe.filter((subject) => matchesFootballSubject(subject, query));
+}
+
+function normalizedFootballSubjectName(name: string) {
+  return name.toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+/**
+ * Resolve a legacy game reference through the canonical registry. Exact ids/aliases win; otherwise a unique
+ * name match inside the caller's canonical query scope may reconcile older public lineup ids to source-backed identities.
+ */
+export function resolveFootballSubjectReference(
+  subjectId: string,
+  name: string,
+  query: FootballSubjectQuery = {},
+) {
+  const scopedSubjects = queryFootballSubjects(query);
+  const direct = getFootballSubject(subjectId);
+  if (direct) {
+    const scopedDirect = scopedSubjects.find((subject) => subject.id === direct.id);
+    if (scopedDirect) return scopedDirect;
+  }
+
+  const normalizedName = normalizedFootballSubjectName(name);
+  const matches = scopedSubjects
+    .filter((subject) => normalizedFootballSubjectName(subject.name) === normalizedName);
+  const uniqueByCanonicalId = new Map(matches.map((subject) => [subject.id, subject]));
+  return uniqueByCanonicalId.size === 1 ? [...uniqueByCanonicalId.values()][0]! : null;
 }
