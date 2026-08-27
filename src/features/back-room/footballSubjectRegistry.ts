@@ -186,3 +186,26 @@ export function queryFootballSubjects(query: FootballSubjectQuery = {}) {
     : footballSubjects;
   return universe.filter((subject) => matchesFootballSubject(subject, query));
 }
+
+function normalizedFootballSubjectName(name: string) {
+  return name.toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+/**
+ * Resolve a legacy game reference through the canonical registry. Exact ids/aliases win; otherwise a unique
+ * name match inside the caller's canonical query scope may reconcile older public lineup ids to source-backed identities.
+ */
+export function resolveFootballSubjectReference(
+  subjectId: string,
+  name: string,
+  query: FootballSubjectQuery = {},
+) {
+  const direct = getFootballSubject(subjectId);
+  if (direct && matchesFootballSubject(direct, query)) return direct;
+
+  const normalizedName = normalizedFootballSubjectName(name);
+  const matches = queryFootballSubjects(query)
+    .filter((subject) => normalizedFootballSubjectName(subject.name) === normalizedName);
+  const uniqueByCanonicalId = new Map(matches.map((subject) => [subject.id, subject]));
+  return uniqueByCanonicalId.size === 1 ? [...uniqueByCanonicalId.values()][0]! : null;
+}
