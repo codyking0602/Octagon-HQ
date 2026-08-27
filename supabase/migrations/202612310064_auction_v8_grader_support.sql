@@ -32,13 +32,12 @@ begin
 
   v_definition := pg_get_functiondef('private.grade_auction(uuid)'::regprocedure);
   if position(
-    'v_game.content_version in (''ufc-auction-2026-08-v7'', ''ufc-auction-2026-08-v8'')',
-    v_definition
+    'v_game.content_version in (''ufc-auction-2026-08-v7'', ''ufc-auction-2026-08-v8'')' in v_definition
   ) = 0 then
     raise exception 'Auction v8 grader did not retain the grader-v3 version pairing';
   end if;
 
-  if position(E'''ufc-auction-2026-08-v8''\n    ) then 3', v_definition) = 0 then
+  if position(E'''ufc-auction-2026-08-v8''\n    ) then 3' in v_definition) = 0 then
     raise exception 'Auction v8 grader did not retain the standard three-selection contract';
   end if;
 end;
