@@ -269,8 +269,11 @@ function resolveMatchup(matchup: FootballBlindResumeMatchup): FootballBlindResum
   };
 }
 
+const resolvedFootballBlindResumeMatchupCatalog: readonly FootballBlindResumeRound[] =
+  footballBlindResumeMatchups.map(resolveMatchup);
+
 export function resolvedFootballBlindResumeMatchups() {
-  return footballBlindResumeMatchups.map(resolveMatchup);
+  return resolvedFootballBlindResumeMatchupCatalog;
 }
 
 const nflQuarterbackCareerIds = new Set(
