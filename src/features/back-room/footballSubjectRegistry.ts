@@ -61,8 +61,10 @@ export interface FootballSubjectQuery {
   recognizabilityTiers?: readonly FootballRecognizabilityTier[];
   casualEligible?: boolean;
   sourceProvider?: FootballSourceProviderId;
-  /** PR6 review/depth opt-in. Normal game queries intentionally remain on the curated canonical projection. */
+  /** PR6 source-depth opt-in. Preserves the existing curated canonical view unless separately requested below. */
   includeProjectedSourceSubjects?: boolean;
+  /** Consumer-migration opt-in for PR6 non-player recognition on existing canonical identities. */
+  includeProjectedCanonicalRecognition?: boolean;
 }
 
 const comparisonItemById = new Map(footballComparisonDepthItems.map((item) => [item.id, item]));
@@ -139,7 +141,7 @@ function projectedCanonicalKnowledgeOverride(subject: FootballCanonicalSubject):
 export const footballSubjects: readonly FootballSubjectProfile[] = footballCanonicalSubjects
   .map((subject) => enrichFootballSubject(subject));
 
-/** Same canonical identities with PR6 non-player recognition applied only for opted-in source-depth consumers. */
+/** Same canonical identities with PR6 non-player recognition applied only for explicitly migrated consumers. */
 const projectedCanonicalSubjects: readonly FootballSubjectProfile[] = footballCanonicalSubjects
   .map((subject) => enrichFootballSubject(subject, projectedCanonicalKnowledgeOverride(subject)));
 
@@ -210,9 +212,12 @@ function matchesFootballSubject(subject: FootballSubjectProfile, query: Football
 export function queryFootballSubjects(query: FootballSubjectQuery = {}) {
   // Preserve the pre-PR6 contract: source-stage depth does not appear in normal queries merely because a provider is named.
   if (query.sourceProvider && query.sourceProvider !== "octagon-hq" && !query.includeProjectedSourceSubjects) return [];
-  const universe = query.includeProjectedSourceSubjects
-    ? [...projectedCanonicalSubjects, ...projectedSourceSubjects, ...projectedAdditionalSubjects]
+  const canonicalUniverse = query.includeProjectedCanonicalRecognition
+    ? projectedCanonicalSubjects
     : footballSubjects;
+  const universe = query.includeProjectedSourceSubjects
+    ? [...canonicalUniverse, ...projectedSourceSubjects, ...projectedAdditionalSubjects]
+    : canonicalUniverse;
   return universe.filter((subject) => matchesFootballSubject(subject, query));
 }
 
