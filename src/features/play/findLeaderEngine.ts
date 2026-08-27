@@ -449,6 +449,13 @@ const ufcCompetitionConfig = {
   compareLeaderTie: (left: ScoredFindLeaderRow, right: ScoredFindLeaderRow) => left.input.fighter.localeCompare(right.input.fighter),
 };
 
+function playableFindLeaderDefinitions() {
+  return findLeaderQuestions.filter((definition) => {
+    const pool = scoredPool(definition);
+    return pool.length >= 10 && viableCompetitiveLeaders(pool, ufcCompetitionConfig, false).length > 0;
+  });
+}
+
 function candidateFor(input: RankingInputFighter, value: number): FindLeaderCandidate {
   const presentation = fighterPresentation.get(input.fighter);
   return {
@@ -561,11 +568,11 @@ export function centralDay(date = new Date()) {
 export function scheduledFindLeaderDefinition(day = centralDay()) {
   const target = Math.max(0, dayNumber(day) - dayNumber(DAILY_ANCHOR));
   const history: string[] = [];
+  const available = playableFindLeaderDefinitions();
   let selected: FindLeaderQuestionDefinition | null = null;
   for (let slot = 0; slot <= target; slot += 1) {
     const recent = new Set(history.slice(-NO_REPEAT_SELECTIONS));
     const family = FAMILY_CYCLE[slot % FAMILY_CYCLE.length];
-    const available = findLeaderQuestions.filter((definition) => buildFindLeaderBoard(definition, `audit-${slot}`, day));
     const preferred = available.filter((definition) => definition.family === family && !recent.has(definition.id));
     const fresh = available.filter((definition) => !recent.has(definition.id));
     const candidates = preferred.length ? preferred : fresh.length ? fresh : available;
