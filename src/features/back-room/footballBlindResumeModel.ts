@@ -441,16 +441,27 @@ function chooseEligibleMatchup(
   }
 
   const baselineCounts = new Map<FootballRankFivePackId, number>();
+  const subjectDegreesByPack = new Map<FootballRankFivePackId, Map<string, number>>();
   for (const matchup of pool) {
     if (!eligibleByPack.has(matchup.packId)) continue;
     baselineCounts.set(matchup.packId, (baselineCounts.get(matchup.packId) ?? 0) + 1);
+    const degrees = subjectDegreesByPack.get(matchup.packId) ?? new Map<string, number>();
+    for (const subjectId of [
+      footballBlindResumeSubjectIdentityId(matchup.leftId),
+      footballBlindResumeSubjectIdentityId(matchup.rightId),
+    ]) {
+      degrees.set(subjectId, (degrees.get(subjectId) ?? 0) + 1);
+    }
+    subjectDegreesByPack.set(matchup.packId, degrees);
   }
 
   const weightedPacks = [...eligibleByPack.entries()].map(([packId, rows]) => {
     const baselineCount = baselineCounts.get(packId) ?? rows.length;
+    const degrees = subjectDegreesByPack.get(packId);
+    const maxSubjectDegree = degrees?.size ? Math.max(...degrees.values()) : 1;
     return {
       rows,
-      weight: baselineCount,
+      weight: baselineCount / maxSubjectDegree,
     };
   });
   const totalWeight = weightedPacks.reduce((sum, entry) => sum + entry.weight, 0);
