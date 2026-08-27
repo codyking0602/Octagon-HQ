@@ -7,7 +7,6 @@ import {
 import {
   getFootballBlindResumeEvidenceProfilesForPack,
   type FootballBlindResumeArchetype,
-  type FootballBlindResumeEvidenceProfile,
   type FootballBlindResumeEvidenceRow,
 } from "./footballBlindResumeEvidence";
 import { getFootballSubject, type FootballSubjectProfile } from "./footballSubjectRegistry";
@@ -140,7 +139,12 @@ function factPair(leftId: string, rightId: string, metricId: FootballFactMetricI
   const right = getFootballFact(rightId, metricId);
   const definition = metricDefinitionById.get(metricId);
   if (!left || !right || !definition) return null;
-  return rowPair(metricId, definition.label, formatFootballFact(metricId, left.value), formatFootballFact(metricId, right.value));
+  return rowPair(
+    metricId,
+    definition.label,
+    formatFootballFact(metricId, left.fact.value),
+    formatFootballFact(metricId, right.fact.value),
+  );
 }
 
 function subjectYears(subject: FootballSubjectProfile) {
@@ -182,7 +186,7 @@ function metadataPairs(left: FootballSubjectProfile, right: FootballSubjectProfi
 function values(subjectId: string, metricIds: readonly FootballFactMetricId[]) {
   return new Map(metricIds.flatMap((metricId) => {
     const fact = getFootballFact(subjectId, metricId);
-    return fact ? [[metricId, fact.value] as const] : [];
+    return fact ? [[metricId, fact.fact.value] as const] : [];
   }));
 }
 
@@ -285,8 +289,10 @@ function derivedPairs(packId: FootballRankFivePackId, leftId: string, rightId: s
       pair("cfb-coach-win-pct", "Career win percentage", (facts) => {
         const wins = facts.get("cfb-coach-career-wins");
         const losses = facts.get("cfb-coach-career-losses");
-        const ties = facts.get("cfb-coach-career-ties") ?? 0;
-        return wins == null || losses == null || wins + losses + ties === 0 ? null : ((wins + ties * 0.5) / (wins + losses + ties)) * 100;
+        const ties = facts.get("cfb-coach-career-ties");
+        return wins == null || losses == null || ties == null || wins + losses + ties === 0
+          ? null
+          : ((wins + ties * 0.5) / (wins + losses + ties)) * 100;
       }, "%"),
       pair("cfb-coach-title-total", "National + conference titles", sum("cfb-coach-national-titles", "cfb-coach-conference-titles"), "", 0),
     ].filter((row): row is RowPair => row != null);
@@ -324,11 +330,15 @@ function canonicalPair(
   if (!leftSubject || !rightSubject) return null;
 
   const pairs: RowPair[] = [
-    ...METRICS_BY_PACK[packId].map((metricId) => factPair(leftId, rightId, metricId)).filter((row): row is RowPair => row != null),
+    ...METRICS_BY_PACK[packId]
+      .map((metricId) => factPair(leftId, rightId, metricId))
+      .filter((row): row is RowPair => row != null),
     ...derivedPairs(packId, leftId, rightId),
     ...metadataPairs(leftSubject, rightSubject),
   ];
-  const unique = pairs.filter((row, index) => pairs.findIndex((candidate) => candidate[0].dimensionId === row[0].dimensionId) === index);
+  const unique = pairs.filter(
+    (row, index) => pairs.findIndex((candidate) => candidate[0].dimensionId === row[0].dimensionId) === index,
+  );
   if (unique.length < 8) return null;
   const selected = unique.slice(0, 8);
   return {
