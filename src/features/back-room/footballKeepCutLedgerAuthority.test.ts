@@ -75,6 +75,22 @@ describe("Football Keep 4, Cut 4 canonical ledger authority", () => {
     expect(vrabelSubject?.kind).toBe("coach");
     expect(vrabelSubject?.sourceIdentityKeys.some((key) => key.provider === "nflverse")).toBe(false);
 
+    const collegeCoaches = footballKeepCutPacks.find((pack) => pack.id === "college-head-coaches")!;
+    const nflMeyer = coaches.items.find((item) => item.name === "Urban Meyer")!;
+    const cfbMeyer = collegeCoaches.items.find((item) => item.name === "Urban Meyer")!;
+    const nflMeyerSubject = resolveFootballSubjectReference(
+      nflMeyer.id,
+      nflMeyer.name,
+      footballKeepCutEligibilityQuery(coaches.id),
+    );
+    const cfbMeyerSubject = resolveFootballSubjectReference(
+      cfbMeyer.id,
+      cfbMeyer.name,
+      footballKeepCutEligibilityQuery(collegeCoaches.id),
+    );
+    expect(nflMeyerSubject?.id).toBe(cfbMeyerSubject?.id);
+    expect(nflMeyerSubject?.leagues).toEqual(expect.arrayContaining(["NFL", "CFB"]));
+
     const teamSeasons = footballKeepCutPacks.find((pack) => pack.id === "nfl-team-seasons")!;
     const dolphins = teamSeasons.items.find((item) => item.id === "1972-miami-dolphins")!;
     expect(getFootballSubject(dolphins.id)?.casualEligible).toBe(false);
