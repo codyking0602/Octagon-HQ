@@ -47,7 +47,7 @@ import {
 } from "./todaysChallengeRuntime";
 
 export const FOOTBALL_DAILY_RUNTIME_VERSION = "football-official-daily-v1" as const;
-export const FOOTBALL_BLIND_RESUME_DAILY_CONTENT_VERSION = "football-blind-resume-daily-v3" as const;
+export const FOOTBALL_BLIND_RESUME_DAILY_CONTENT_VERSION = "football-blind-resume-daily-v4" as const;
 export const FOOTBALL_BLIND_RESUME_DAILY_SCORING_VERSION = BLIND_RESUME_V3_OFFICIAL_DAILY_SCORING_VERSION;
 export const FOOTBALL_HIT_THE_NUMBER_DAILY_CONTENT_VERSION = "football-hit-the-number-daily-v1" as const;
 
