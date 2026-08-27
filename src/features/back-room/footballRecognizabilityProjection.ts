@@ -44,14 +44,27 @@ for (const record of playerRecords) {
   byLeagueAndName.set(key, values);
 }
 
-export function footballRecognitionProjectionFor(subject: FootballCanonicalSubject) {
+function resolveProjectionRecordFor(subject: FootballCanonicalSubject) {
   const direct = byId.get(subject.id)
     ?? (subject.aliases ?? []).map((alias) => byId.get(alias)).find((value) => value != null);
   const sameName = byLeagueAndName.get(`${subject.league}:${subject.name.toLowerCase()}`) ?? [];
-  const record = direct ?? (sameName.length === 1 ? sameName[0] : null);
+  return direct ?? (sameName.length === 1 ? sameName[0] : null);
+}
+
+export function footballRecognitionProjectionFor(subject: FootballCanonicalSubject) {
+  const record = resolveProjectionRecordFor(subject);
   if (!record) return null;
   const provider: FootballSourceProviderId = record.league === "NFL" ? "nflverse" : "cfbfastR";
   return { tier: record.tier, sourceIdentityKey: { provider, id: record.sourceId } as const };
+}
+
+/**
+ * The source-projection subject id is also a stable reconciliation alias when PR6 uniquely matched that row to a
+ * curated canonical player. Consumers can therefore collapse source-backed facts onto the canonical person instead
+ * of retaining an orphan source-only record.
+ */
+export function footballRecognitionProjectionSubjectIdFor(subject: FootballCanonicalSubject) {
+  return resolveProjectionRecordFor(subject)?.id ?? null;
 }
 
 export const FOOTBALL_RECOGNITION_MANUAL_APPROVAL_NAMES = projectionJson.manualApprovals as readonly string[];
