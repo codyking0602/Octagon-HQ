@@ -368,7 +368,7 @@ export function buildFootballFindLeaderBoard(definition: FootballFindLeaderQuest
     context: `${definition.direction === "lower" ? "Lowest" : "Highest"} ${definition.statLabel} among the ten shown. The overall record holder does not have to appear.`,
     statLabel: definition.statLabel,
     shortLabel: definition.shortLabel,
-    direction: definition.direction,
+    direction,
     leaderId: option.leader.id,
     leaderValue: option.leader.value,
     candidates,
@@ -420,7 +420,7 @@ const cfbDomainCycle: readonly FootballFindLeaderDomainId[] = [
   "cfb-player-rushing",
   "cfb-player-receiving",
   "cfb-champion-season",
-  "cfb-coaching",
+  "cfb-coach-career",
   "cfb-team-season",
 ] as const;
 
