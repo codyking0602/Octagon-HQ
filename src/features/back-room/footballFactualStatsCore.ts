@@ -1,4 +1,5 @@
 import { footballCfbChampionSeasonRows, footballQbCareerRows, footballRbCareerRows } from "./footballFactualStatsCoverage";
+import { footballFindLeaderProjectedFactualRecords } from "./footballFindLeaderRuntimeProjection";
 import {
   expandedFootballFactSources,
   expandedFootballFactualRecords,
@@ -250,7 +251,9 @@ export type FootballFactSourceId =
   | "cfr-player-stat-lines"
   | "cfr-coach-records"
   | "cfr-program-records"
-  | "cfr-team-season-records";
+  | "cfr-team-season-records"
+  | "nflverse-find-leader-projection"
+  | "cfbfast-r-find-leader-projection";
 
 export interface FootballFactSource {
   id: FootballFactSourceId;
@@ -282,6 +285,8 @@ const seedSources: readonly FootballFactSource[] = [
   { id: "cfr-2019-lsu", publisher: "College Football at Sports-Reference", title: "2019 LSU team record", url: "https://www.sports-reference.com/cfb/schools/louisiana-state/2019.html", reviewedOn: "2026-08-22", coverage: "Completed 2019 season" },
   { id: "cfr-2020-alabama", publisher: "College Football at Sports-Reference", title: "2020 Alabama team record", url: "https://www.sports-reference.com/cfb/schools/alabama/2020.html", reviewedOn: "2026-08-22", coverage: "Completed 2020 season" },
   { id: "cfr-2022-georgia", publisher: "College Football at Sports-Reference", title: "2022 Georgia team record", url: "https://www.sports-reference.com/cfb/schools/georgia/2022.html", reviewedOn: "2026-08-22", coverage: "Completed 2022 season" },
+  { id: "nflverse-find-leader-projection", publisher: "nflverse", title: "Pinned NFL historical player/team projection for Find the Leader", url: "https://github.com/nflverse/nflverse-data", reviewedOn: "2026-08-26", coverage: "Normalized regular-season NFL source data from 1999 through 2025, compacted to A-C recognizable Find the Leader subjects" },
+  { id: "cfbfast-r-find-leader-projection", publisher: "cfbfastR", title: "Pinned CFB historical player/team projection for Find the Leader", url: "https://github.com/sportsdataverse/cfbfastR-data", reviewedOn: "2026-08-26", coverage: "Normalized CFB player data from 2014 through 2025 and team-season relationships from 2002 through 2025, compacted to A-C recognizable Find the Leader subjects" },
 ] as const;
 
 export const footballFactSources: readonly FootballFactSource[] = [
@@ -441,6 +446,7 @@ function mergeCanonicalFactualRecords(records: readonly FootballFactualRecord[])
 export const footballFactualRecords: readonly FootballFactualRecord[] = mergeCanonicalFactualRecords([
   ...compatibilityFactualRecords,
   ...expandedFootballFactualRecords,
+  ...footballFindLeaderProjectedFactualRecords,
 ]);
 
 const recordIds = footballFactualRecords.map((record) => record.subjectId);

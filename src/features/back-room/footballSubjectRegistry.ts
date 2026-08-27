@@ -15,8 +15,13 @@ import {
   type FootballRecognizabilityTier,
   type FootballSourceProviderId,
   type FootballSubjectKnowledgeMetadata,
+  type FootballSubjectKnowledgeOverride,
 } from "./footballSubjectEligibility";
 import { footballProjectedPlayerSubjects } from "./footballRecognizabilityProjection";
+import {
+  footballFindLeaderProjectedAdditionalSubjects,
+  footballFindLeaderProjectedKnowledgeOverride,
+} from "./footballFindLeaderRuntimeProjection";
 
 export type FootballSubjectKind = FootballCanonicalSubjectKind;
 export type FootballSubjectLeague = FootballCanonicalSubject["league"];
@@ -81,13 +86,16 @@ function playerIdForSubject(subject: FootballCanonicalSubject) {
   return subject.id.replace(/-\d{4}$/, "");
 }
 
-function enrichFootballSubject(subject: FootballCanonicalSubject): FootballSubjectProfile {
+function enrichFootballSubject(
+  subject: FootballCanonicalSubject,
+  knowledgeOverride?: FootballSubjectKnowledgeOverride,
+): FootballSubjectProfile {
   const teamId = teamIdForSubject(subject);
   const playerId = playerIdForSubject(subject);
   const coachId = subject.kind === "coach" ? subject.id : undefined;
   const alias = programAlias(subject);
   const aliases = alias && !(subject.aliases ?? []).includes(alias) ? [...(subject.aliases ?? []), alias] : subject.aliases;
-  const knowledgeMetadata = buildFootballSubjectKnowledgeMetadata(subject);
+  const knowledgeMetadata = buildFootballSubjectKnowledgeMetadata(subject, knowledgeOverride);
   return { ...subject, ...knowledgeMetadata, ...(aliases ? { aliases } : {}), ...(teamId ? { teamId } : {}), ...(playerId ? { playerId } : {}), ...(coachId ? { coachId } : {}) };
 }
 
@@ -105,8 +113,13 @@ const projectedSourceSubjects: readonly FootballSubjectProfile[] = footballProje
   .filter((subject) => !canonicalPlayerNameKeys.has(`${subject.league}:${subject.name.toLowerCase()}`))
   .map(enrichFootballSubject);
 
+const canonicalSubjectIds = new Set(footballSubjects.map((subject) => subject.id));
+const projectedAdditionalSubjects: readonly FootballSubjectProfile[] = footballFindLeaderProjectedAdditionalSubjects
+  .filter((subject) => !canonicalSubjectIds.has(subject.id))
+  .map((subject) => enrichFootballSubject(subject, footballFindLeaderProjectedKnowledgeOverride(subject.id) ?? undefined));
+
 const footballSubjectById = new Map<string, FootballSubjectProfile>();
-for (const subject of [...footballSubjects, ...projectedSourceSubjects]) {
+for (const subject of [...footballSubjects, ...projectedSourceSubjects, ...projectedAdditionalSubjects]) {
   if (!footballSubjectById.has(subject.id)) footballSubjectById.set(subject.id, subject);
   for (const alias of subject.aliases ?? []) if (!footballSubjectById.has(alias)) footballSubjectById.set(alias, subject);
 }
@@ -143,6 +156,8 @@ function matchesFootballSubject(subject: FootballSubjectProfile, query: Football
 export function queryFootballSubjects(query: FootballSubjectQuery = {}) {
   // Preserve the pre-PR6 contract: source-stage depth does not appear in normal queries merely because a provider is named.
   if (query.sourceProvider && query.sourceProvider !== "octagon-hq" && !query.includeProjectedSourceSubjects) return [];
-  const universe = query.includeProjectedSourceSubjects ? [...footballSubjects, ...projectedSourceSubjects] : footballSubjects;
+  const universe = query.includeProjectedSourceSubjects
+    ? [...footballSubjects, ...projectedSourceSubjects, ...projectedAdditionalSubjects]
+    : footballSubjects;
   return universe.filter((subject) => matchesFootballSubject(subject, query));
 }
