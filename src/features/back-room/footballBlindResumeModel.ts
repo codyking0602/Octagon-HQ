@@ -433,26 +433,7 @@ function canUseRound(
     && !usedSubjectIds.has(footballBlindResumeSubjectIdentityId(matchup.rightId));
 }
 
-interface MatchupSelectionScan {
-  rows: readonly FootballBlindResumeRound[];
-  startFraction: number;
-  stepFraction: number;
-}
-
-function eligibleSelectionOrder(
-  scan: MatchupSelectionScan,
-  predicate: (matchup: FootballBlindResumeRound) => boolean,
-) {
-  const rows = scan.rows.filter(predicate);
-  if (rows.length <= 1) return rows;
-  const start = Math.floor(scan.startFraction * rows.length);
-  let step = 1 + Math.floor(scan.stepFraction * (rows.length - 1));
-  while (greatestCommonDivisor(step, rows.length) !== 1) {
-    step += 1;
-    if (step >= rows.length) step = 1;
-  }
-  return Array.from({ length: rows.length }, (_, offset) => rows[(start + offset * step) % rows.length]!);
-}
+const ROUND_BUILD_ATTEMPTS = 12;
 
 export function buildFootballBlindResumeRounds(
   seed: string,
@@ -462,61 +443,52 @@ export function buildFootballBlindResumeRounds(
     throw new Error("Football Blind Resume difficulty slate must contain exactly five rounds.");
   }
 
-  const random = seededLineupRandom(FOOTBALL_BLIND_RESUME_GAME_ID, seed);
-  const leagueOrder: readonly (FootballBlindResumeLeague | null)[] = random() < 0.5
-    ? ["NFL", "CFB", "NFL", "CFB", null]
-    : ["CFB", "NFL", "CFB", "NFL", null];
-  const scans: readonly MatchupSelectionScan[] = leagueOrder.map((league, index) => {
-    const difficulty = requestedDifficulties?.[index] ?? null;
-    const pool = matchupSelectionIndex.get(matchupSelectionKey(league, difficulty)) ?? [];
-    if (!pool.length) {
-      throw new Error(`Football Blind Resume has no ${league ?? "mixed"} ${difficulty ?? "mixed"} matchup inventory.`);
+  for (let attempt = 0; attempt < ROUND_BUILD_ATTEMPTS; attempt += 1) {
+    const random = seededLineupRandom(FOOTBALL_BLIND_RESUME_GAME_ID, seed, attempt);
+    const leagueOrder: readonly (FootballBlindResumeLeague | null)[] = random() < 0.5
+      ? ["NFL", "CFB", "NFL", "CFB", null]
+      : ["CFB", "NFL", "CFB", "NFL", null];
+    const selected: FootballBlindResumeRound[] = [];
+    const usedMatchupIds = new Set<string>();
+    const usedSubjectIds = new Set<string>();
+    const usedPackIds = new Set<FootballRankFivePackId>();
+    let failed = false;
+
+    for (let index = 0; index < FOOTBALL_BLIND_RESUME_ROUNDS; index += 1) {
+      const league = leagueOrder[index]!;
+      const difficulty = requestedDifficulties?.[index] ?? null;
+      const pool = matchupSelectionIndex.get(matchupSelectionKey(league, difficulty)) ?? [];
+      if (!pool.length) {
+        throw new Error(`Football Blind Resume has no ${league ?? "mixed"} ${difficulty ?? "mixed"} matchup inventory.`);
+      }
+      const casualSingleDifficulty = !requestedDifficulties
+        && index === FOOTBALL_BLIND_RESUME_ROUNDS - 1
+        && new Set(selected.map((round) => round.difficulty)).size === 1
+        ? selected[0]!.difficulty
+        : null;
+      const eligible = pool.filter((matchup) => {
+        if (casualSingleDifficulty && matchup.difficulty === casualSingleDifficulty) return false;
+        if (usedPackIds.has(matchup.packId)) return false;
+        return canUseRound(matchup, usedMatchupIds, usedSubjectIds);
+      });
+      if (!eligible.length) {
+        failed = true;
+        break;
+      }
+
+      const matchup = eligible[Math.floor(random() * eligible.length)]!;
+      selected.push(matchup);
+      usedMatchupIds.add(matchup.id);
+      usedSubjectIds.add(footballBlindResumeSubjectIdentityId(matchup.leftId));
+      usedSubjectIds.add(footballBlindResumeSubjectIdentityId(matchup.rightId));
+      usedPackIds.add(matchup.packId);
     }
-    return {
-      rows: pool,
-      startFraction: random(),
-      stepFraction: random(),
-    };
-  });
 
-  const search = (
-    index: number,
-    selected: FootballBlindResumeRound[],
-    usedMatchupIds: Set<string>,
-    usedSubjectIds: Set<string>,
-    usedPackIds: Set<FootballRankFivePackId>,
-  ): FootballBlindResumeRound[] | null => {
-    if (index === FOOTBALL_BLIND_RESUME_ROUNDS) return selected;
-    const scan = scans[index]!;
-    const casualSingleDifficulty = !requestedDifficulties
-      && index === FOOTBALL_BLIND_RESUME_ROUNDS - 1
-      && new Set(selected.map((round) => round.difficulty)).size === 1
-      ? selected[0]!.difficulty
-      : null;
-    const eligible = eligibleSelectionOrder(scan, (matchup) => {
-      if (casualSingleDifficulty && matchup.difficulty === casualSingleDifficulty) return false;
-      if (usedPackIds.has(matchup.packId)) return false;
-      return canUseRound(matchup, usedMatchupIds, usedSubjectIds);
-    });
-
-    for (const matchup of eligible) {
-      const nextMatchupIds = new Set(usedMatchupIds).add(matchup.id);
-      const nextSubjectIds = new Set(usedSubjectIds);
-      nextSubjectIds.add(footballBlindResumeSubjectIdentityId(matchup.leftId));
-      nextSubjectIds.add(footballBlindResumeSubjectIdentityId(matchup.rightId));
-      const nextPackIds = new Set(usedPackIds).add(matchup.packId);
-      const result = search(index + 1, [...selected, matchup], nextMatchupIds, nextSubjectIds, nextPackIds);
-      if (result) return result;
-    }
-    return null;
-  };
-
-  const selected = search(0, [], new Set(), new Set(), new Set());
-  if (!selected) {
-    const requested = requestedDifficulties ? ` difficulty slate ${requestedDifficulties.join("/")}` : " mixed casual slate";
-    throw new Error(`Football Blind Resume catalog cannot satisfy${requested}.`);
+    if (!failed && selected.length === FOOTBALL_BLIND_RESUME_ROUNDS) return selected;
   }
-  return selected;
+
+  const requested = requestedDifficulties ? ` difficulty slate ${requestedDifficulties.join("/")}` : " mixed casual slate";
+  throw new Error(`Football Blind Resume catalog cannot satisfy${requested}.`);
 }
 
 export function createFootballBlindResumeRun(): FootballBlindResumeRun {
