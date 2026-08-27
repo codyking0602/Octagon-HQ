@@ -4,7 +4,9 @@ import {
   nextFootballWavelengthClue,
 } from "../back-room/footballWavelengthModel";
 import { FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES } from "../back-room/footballBlindResumeModel";
+import { getFootballReviewedRankFivePack } from "../back-room/footballRankFivePlayableModel";
 import {
+  buildFootballOfficialDailySetup,
   FOOTBALL_BLIND_RESUME_DAILY_CONTENT_VERSION,
   FOOTBALL_BLIND_RESUME_DAILY_SCORING_VERSION,
   FOOTBALL_DAILY_RUNTIME_VERSION,
@@ -17,6 +19,20 @@ import {
   footballTodayGameForDay,
   FOOTBALL_TODAY_SCHEDULE_VERSION,
 } from "./footballTodayChallengeSession";
+
+function isoDay(offset: number) {
+  const day = new Date(Date.UTC(2026, 0, 1 + offset));
+  return day.toISOString().slice(0, 10);
+}
+
+function setupUsesNonReviewedSubject(gameType: "blind_rank_5" | "keep_4_cut_4", day: string) {
+  const setup = buildFootballOfficialDailySetup(gameType, day, FOOTBALL_TODAY_SCHEDULE_VERSION);
+  const pack = setup.publicSetup.pack as Record<string, unknown>;
+  const packId = String(pack.id) as Parameters<typeof getFootballReviewedRankFivePack>[0];
+  const reviewedIds = new Set(getFootballReviewedRankFivePack(packId).items.map((item) => item.id));
+  const publishedIds = setup.privateSetupEvidence.fighter_ids as string[];
+  return publishedIds.some((id) => !reviewedIds.has(id));
+}
 
 describe("Football Today’s Challenge session", () => {
   it("uses one deterministic five-day rotation with the Daily Double anchor", () => {
@@ -105,6 +121,20 @@ describe("Football Today’s Challenge session", () => {
     expect(rankLeague).not.toBe(keepLeague);
     expect(keep.public_state.combo_blind_rank_result).toBeTruthy();
     expect(keep.reveal_setup).toBeNull();
+  });
+
+  it("publishes non-legacy canonical subjects through the official daily Blind Rank and Keep/Cut runtime", () => {
+    let blindRankExpanded = false;
+    let keepCutExpanded = false;
+
+    for (let offset = 0; offset < 96 && (!blindRankExpanded || !keepCutExpanded); offset += 1) {
+      const day = isoDay(offset);
+      blindRankExpanded ||= setupUsesNonReviewedSubject("blind_rank_5", day);
+      keepCutExpanded ||= setupUsesNonReviewedSubject("keep_4_cut_4", day);
+    }
+
+    expect(blindRankExpanded).toBe(true);
+    expect(keepCutExpanded).toBe(true);
   });
 
   it("keeps Hit the Number subject values private before the final lock", () => {
