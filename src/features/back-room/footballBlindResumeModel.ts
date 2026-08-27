@@ -433,6 +433,45 @@ function canUseRound(
     && !usedSubjectIds.has(footballBlindResumeSubjectIdentityId(matchup.rightId));
 }
 
+function chooseEligibleMatchup(
+  pool: readonly FootballBlindResumeRound[],
+  eligible: readonly FootballBlindResumeRound[],
+  random: () => number,
+) {
+  const eligibleByPack = new Map<FootballRankFivePackId, FootballBlindResumeRound[]>();
+  for (const matchup of eligible) {
+    const rows = eligibleByPack.get(matchup.packId) ?? [];
+    rows.push(matchup);
+    eligibleByPack.set(matchup.packId, rows);
+  }
+
+  const baselineCounts = new Map<FootballRankFivePackId, number>();
+  for (const matchup of pool) {
+    if (!eligibleByPack.has(matchup.packId)) continue;
+    baselineCounts.set(matchup.packId, (baselineCounts.get(matchup.packId) ?? 0) + 1);
+  }
+
+  const weightedPacks = [...eligibleByPack.entries()].map(([packId, rows]) => {
+    const baselineCount = baselineCounts.get(packId) ?? rows.length;
+    return {
+      rows,
+      weight: baselineCount * Math.sqrt(Math.sqrt(baselineCount)),
+    };
+  });
+  const totalWeight = weightedPacks.reduce((sum, entry) => sum + entry.weight, 0);
+  let roll = random() * totalWeight;
+  let chosenRows = weightedPacks[weightedPacks.length - 1]!.rows;
+  for (const entry of weightedPacks) {
+    if (roll < entry.weight) {
+      chosenRows = entry.rows;
+      break;
+    }
+    roll -= entry.weight;
+  }
+
+  return chosenRows[Math.floor(random() * chosenRows.length)]!;
+}
+
 const ROUND_BUILD_ATTEMPTS = 12;
 
 export function buildFootballBlindResumeRounds(
@@ -470,7 +509,7 @@ export function buildFootballBlindResumeRounds(
         break;
       }
 
-      const matchup = eligible[Math.floor(random() * eligible.length)]!;
+      const matchup = chooseEligibleMatchup(pool, eligible, random);
       selected.push(matchup);
       usedMatchupIds.add(matchup.id);
       usedSubjectIds.add(footballBlindResumeSubjectIdentityId(matchup.leftId));
