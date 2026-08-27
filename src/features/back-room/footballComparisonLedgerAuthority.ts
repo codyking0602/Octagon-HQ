@@ -44,9 +44,9 @@ const FOOTBALL_COMPARISON_CATEGORY_QUERIES = {
   "college-team-seasons": { kind: "team-season", league: "CFB" },
 } as const satisfies Record<FootballComparisonPackId, FootballSubjectQuery>;
 
-const FOOTBALL_BLIND_RESUME_QUERY_OVERRIDES = {
+const FOOTBALL_BLIND_RESUME_QUERY_OVERRIDES: Partial<Record<FootballComparisonPackId, FootballSubjectQuery>> = {
   "college-quarterbacks": { kind: "player-season", league: "CFB", position: "QB" },
-} as const satisfies Partial<Record<FootballComparisonPackId, FootballSubjectQuery>>;
+};
 
 export function isFootballComparisonPackId(value: string): value is FootballComparisonPackId {
   return (FOOTBALL_COMPARISON_PACK_IDS as readonly string[]).includes(value);
