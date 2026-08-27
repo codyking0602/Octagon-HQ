@@ -20,6 +20,7 @@ import { auctionModeArtwork } from "./auctionModeArtwork";
 import {
   AuctionRepositoryError,
   createAuctionRepository,
+  formatOctagonVerdictPrompt,
   maximumLegalAuctionBid,
   validateAuctionBid,
   type AuctionProjection,
@@ -278,7 +279,7 @@ function AuctionBoard({
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState<UltimateFighterCategory | "">("");
   const [formError, setFormError] = useState("");
-  const [fightRecap, setFightRecap] = useState<string[]>([]);
+  const [verdictCopyStatus, setVerdictCopyStatus] = useState<"" | "copying" | "copied" | "error">("");
   const maximum = maximumLegalAuctionBid(state, profileId);
   const ownAwards = state.awarded_collections.filter((item) => item.awarded_to === profileId);
   const usedCategories = new Set(ownAwards.map((item) => item.category));
@@ -310,23 +311,20 @@ function AuctionBoard({
     setAmount("");
     setCategory("");
     setFormError("");
+    setVerdictCopyStatus("");
   }, [state.auction_id, state.current_round, state.revision]);
 
-  useEffect(() => {
-    let active = true;
-    setFightRecap([]);
-    if (!repository || state.lifecycle_state !== "completed" || state.mode_id !== "ultimate-fighter") {
-      return () => { active = false; };
+  async function copyForOctagonVerdict() {
+    if (!repository || state.lifecycle_state !== "completed" || state.mode_id !== "ultimate-fighter") return;
+    setVerdictCopyStatus("copying");
+    try {
+      const packet = await repository.fightBreakdownPacket(state.auction_id);
+      await navigator.clipboard.writeText(formatOctagonVerdictPrompt(packet));
+      setVerdictCopyStatus("copied");
+    } catch {
+      setVerdictCopyStatus("error");
     }
-    void repository.fightRecap(state.auction_id)
-      .then((recap) => {
-        if (active) setFightRecap(recap);
-      })
-      .catch(() => {
-        if (active) setFightRecap([]);
-      });
-    return () => { active = false; };
-  }, [repository, state.auction_id, state.lifecycle_state, state.mode_id]);
+  }
 
   function submit(event: FormEvent) {
     event.preventDefault();
@@ -395,10 +393,25 @@ function AuctionBoard({
       </section>
       <RoundReveal state={state} participants={participants} />
       <AuctionFinalResult state={state} participants={participants} />
-      {fightRecap.length > 0 ? (
-        <section className="auction-result surface-card" aria-label="Fight breakdown">
-          <p className="eyebrow">HOW IT PLAYS OUT</p>
-          {fightRecap.map((sentence) => <p key={sentence}>{sentence}</p>)}
+      {state.lifecycle_state === "completed" && state.mode_id === "ultimate-fighter" ? (
+        <section className="auction-result surface-card" aria-label="Octagon Verdict handoff">
+          <p className="eyebrow">OCTAGON VERDICT</p>
+          <p>Copy this completed matchup and paste it into Octagon Verdict for the fight breakdown.</p>
+          <button
+            className="primary-action"
+            type="button"
+            disabled={!repository || verdictCopyStatus === "copying"}
+            onClick={() => void copyForOctagonVerdict()}
+          >
+            {verdictCopyStatus === "copying"
+              ? "COPYING…"
+              : verdictCopyStatus === "copied"
+                ? "COPIED"
+                : "COPY FOR OCTAGON VERDICT"}
+          </button>
+          {verdictCopyStatus === "error" ? (
+            <p role="status">Could not copy the Octagon Verdict matchup.</p>
+          ) : null}
         </section>
       ) : null}
       <CollectionComparison state={state} participants={participants} />
