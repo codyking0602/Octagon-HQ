@@ -34,7 +34,10 @@ interface RuntimeProjectionRecord {
 }
 
 const rawSubjects = projectionJson.subjects as readonly RuntimeProjectionSubject[];
-const rawRecords = projectionJson.records as readonly RuntimeProjectionRecord[];
+// JSON imports widen tuple arrays to `(string | number)[][]`; the generator is the schema owner and its checked-in
+// artifact is covered by `--check`, so narrow through unknown at this single adapter boundary rather than weakening
+// the canonical fact types downstream.
+const rawRecords = projectionJson.records as unknown as readonly RuntimeProjectionRecord[];
 const rawSubjectById = new Map(rawSubjects.map((subject) => [subject.id, subject]));
 
 function activeDecades(startSeason?: number, endSeason?: number) {
@@ -96,3 +99,4 @@ export const footballFindLeaderProjectedFactualRecords: readonly FootballFactual
 });
 
 export const FOOTBALL_FIND_LEADER_RUNTIME_PROJECTION_SUMMARY = projectionJson.summary;
+export const FOOTBALL_FIND_LEADER_RUNTIME_PROJECTION_ELIGIBILITY = projectionJson.eligibility;
