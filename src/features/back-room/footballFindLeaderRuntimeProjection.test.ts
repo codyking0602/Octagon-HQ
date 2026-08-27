@@ -53,6 +53,21 @@ describe("Football Find the Leader PR7 runtime projection", () => {
     }
   });
 
+  it("keeps source reconciliation internal and reviewed canonical facts authoritative", () => {
+    const projectedBurrow = footballFindLeaderProjectedFactualRecords.find((record) =>
+      getFootballSubject(record.subjectId)?.id === "cfb-joe-burrow"
+      && record.facts.some((fact) => fact.metricId === "cfb-best-season-passing-yards"),
+    );
+    expect(projectedBurrow).toBeDefined();
+    const canonicalBurrow = getFootballSubject(projectedBurrow!.subjectId);
+    expect(canonicalBurrow?.id).toBe("cfb-joe-burrow");
+    expect(canonicalBurrow?.aliases ?? []).not.toContain(projectedBurrow!.subjectId);
+
+    const fact = getFootballFact("cfb-joe-burrow", "cfb-best-season-passing-yards");
+    expect(fact).not.toBeNull();
+    expect(fact!.fact.evidence.sourceIds).not.toContain("cfbfast-r-find-leader-projection");
+  });
+
   it("never presents left-censored source windows as complete career facts", () => {
     expect(FOOTBALL_FIND_LEADER_RUNTIME_PROJECTION_ELIGIBILITY).toMatchObject({
       nflCareerMinimumStartSeason: 1999,
