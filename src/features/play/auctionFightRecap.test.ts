@@ -46,10 +46,13 @@ describe("Build the Ultimate Fighter Octagon Verdict handoff", () => {
     );
   });
 
-  it("shows a copy-only Octagon Verdict handoff instead of an in-app fight recap", () => {
-    expect(auctionPageSource).toContain("COPY FOR OCTAGON VERDICT");
+  it("keeps copy and open as separate Octagon Verdict actions", () => {
+    expect(auctionPageSource).toContain('import { OCTAGON_VERDICT_URL } from "../intelligence/intelligence";');
+    expect(auctionPageSource).toContain("COPY PROMPT");
+    expect(auctionPageSource).toContain("OPEN VERDICT");
     expect(auctionPageSource).toContain("navigator.clipboard.writeText(formatOctagonVerdictPrompt(packet))");
-    expect(auctionPageSource).toContain("paste it into Octagon Verdict for the fight breakdown");
+    expect(auctionPageSource).toContain('window.open(OCTAGON_VERDICT_URL, "_blank", "noopener,noreferrer")');
+    expect(auctionPageSource).toContain("Copy the matchup, then open Octagon Verdict for the fight breakdown.");
     expect(auctionPageSource).not.toContain("HOW IT PLAYS OUT");
     expect(auctionPageSource).not.toContain("fightRecap");
   });

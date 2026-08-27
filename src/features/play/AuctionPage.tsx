@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { shareCanonicalDestination } from "../../app/nativeShare";
 import { ChallengeMemberPicker } from "../challenges/ChallengeMemberPicker";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
+import { OCTAGON_VERDICT_URL } from "../intelligence/intelligence";
 import { useIdentity } from "../identity/IdentityProvider";
 import type { MemberCardSummary, MemberProfileSummary } from "../members/memberProfilesModel";
 import { createMemberProfilesRepository } from "../members/memberProfilesRepository";
@@ -326,6 +327,10 @@ function AuctionBoard({
     }
   }
 
+  function openOctagonVerdict() {
+    window.open(OCTAGON_VERDICT_URL, "_blank", "noopener,noreferrer");
+  }
+
   function submit(event: FormEvent) {
     event.preventDefault();
     const nextError = validateAuctionBid(
@@ -396,19 +401,27 @@ function AuctionBoard({
       {state.lifecycle_state === "completed" && state.mode_id === "ultimate-fighter" ? (
         <section className="auction-result surface-card" aria-label="Octagon Verdict handoff">
           <p className="eyebrow">OCTAGON VERDICT</p>
-          <p>Copy this completed matchup and paste it into Octagon Verdict for the fight breakdown.</p>
-          <button
-            className="primary-action"
-            type="button"
-            disabled={!repository || verdictCopyStatus === "copying"}
-            onClick={() => void copyForOctagonVerdict()}
+          <p>Copy the matchup, then open Octagon Verdict for the fight breakdown.</p>
+          <div
+            aria-label="Octagon Verdict actions"
+            style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 8 }}
           >
-            {verdictCopyStatus === "copying"
-              ? "COPYING…"
-              : verdictCopyStatus === "copied"
-                ? "COPIED"
-                : "COPY FOR OCTAGON VERDICT"}
-          </button>
+            <button
+              className="primary-action"
+              type="button"
+              disabled={!repository || verdictCopyStatus === "copying"}
+              onClick={() => void copyForOctagonVerdict()}
+            >
+              {verdictCopyStatus === "copying"
+                ? "COPYING…"
+                : verdictCopyStatus === "copied"
+                  ? "COPIED"
+                  : "COPY PROMPT"}
+            </button>
+            <button className="primary-action" type="button" onClick={openOctagonVerdict}>
+              OPEN VERDICT
+            </button>
+          </div>
           {verdictCopyStatus === "error" ? (
             <p role="status">Could not copy the Octagon Verdict matchup.</p>
           ) : null}
