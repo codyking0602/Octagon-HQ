@@ -31,11 +31,11 @@ describe("Football Blind Resume distribution diagnostic", () => {
         packId: footballBlindResumeMatchups.find((matchup) => matchup.id === id)?.packId ?? "missing",
       }));
 
-    console.info("BLIND_RESUME_DISTRIBUTION_DIAGNOSTIC", JSON.stringify({
+    throw new Error(`BLIND_RESUME_DISTRIBUTION_DIAGNOSTIC ${JSON.stringify({
       catalogSize: footballBlindResumeMatchups.length,
       familyInventory: Object.fromEntries([...familyInventory.entries()].sort()),
       familyAppearances: Object.fromEntries([...familyAppearances.entries()].sort()),
       topMatchups,
-    }));
+    })}`);
   });
 });
