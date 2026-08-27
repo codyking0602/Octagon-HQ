@@ -1,0 +1,37 @@
+name: TEMP PR7 cache materialize
+
+on:
+  push:
+    branches:
+      - codex/football-ledger-pr7-find-leader
+    paths:
+      - .github/workflows/temp-pr7-cache-materialize.yml
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/football-ledger-pr7-find-leader
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci --silent --no-audit --no-fund
+      - name: Apply cache fix
+        run: python scripts/temp-pr7-cache-fix.py
+      - name: Focused PR7 tests
+        run: npx vitest run src/features/back-room/footballFindLeaderModel.test.ts src/features/back-room/footballCanonicalUniverse.test.ts src/features/back-room/footballFindLeaderRuntimeProjection.test.ts src/features/play/findLeaderCompetition.test.ts --reporter=dot
+      - name: Commit materialized fix and remove staging tools
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm scripts/temp-pr7-cache-fix.py .github/workflows/temp-pr7-cache-materialize.yml
+          git add src/features/back-room/footballFindLeaderModel.ts src/features/back-room/footballFindLeaderModel.test.ts
+          git commit -m "fix: cache immutable Find the Leader metric rows"
+          git push origin HEAD:codex/football-ledger-pr7-find-leader
