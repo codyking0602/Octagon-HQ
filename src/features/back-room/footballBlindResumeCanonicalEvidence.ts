@@ -165,7 +165,7 @@ function metadataPairs(left: FootballSubjectProfile, right: FootballSubjectProfi
       "subject-career-seasons",
       "Career seasons",
       subjectYears(left)?.toString() ?? null,
-      subjectYears(right)?.toString() ?? null,
+      right.startSeason != null && right.endSeason != null ? `${right.endSeason - right.startSeason + 1}` : null,
     ),
     rowPair(
       "subject-active-decades",
@@ -281,6 +281,8 @@ function derivedPairs(packId: FootballRankFivePackId, leftId: string, rightId: s
   if (packId === "college-quarterbacks") {
     return [
       pair("cfb-season-td-int-ratio", "Passing TD-to-INT ratio", ratio("cfb-best-season-passing-touchdowns", "cfb-best-season-interceptions"), "", 2),
+      pair("cfb-season-td-int-margin", "Passing TD minus interceptions", difference("cfb-best-season-passing-touchdowns", "cfb-best-season-interceptions"), "", 0),
+      pair("cfb-season-yards-per-pass-td", "Passing yards per TD", ratio("cfb-best-season-passing-yards", "cfb-best-season-passing-touchdowns")),
       pair("cfb-total-qb-touchdowns", "Passing + rushing TD", sum("cfb-best-season-passing-touchdowns", "cfb-best-season-rushing-touchdowns"), "", 0),
     ].filter((row): row is RowPair => row != null);
   }
@@ -315,6 +317,22 @@ function derivedPairs(packId: FootballRankFivePackId, leftId: string, rightId: s
         return wins == null || losses == null || wins + losses === 0 ? null : (wins / (wins + losses)) * 100;
       }, "%"),
       pair("cfb-era-title-total", "Era national + conference titles", sum("cfb-era-national-titles", "cfb-era-conference-titles"), "", 0),
+    ].filter((row): row is RowPair => row != null);
+  }
+  if (packId === "college-team-seasons") {
+    return [
+      pair("cfb-team-win-pct", "Win percentage", (facts) => {
+        const wins = facts.get("cfb-team-wins");
+        const losses = facts.get("cfb-team-losses");
+        return wins == null || losses == null || wins + losses === 0 ? null : (wins / (wins + losses)) * 100;
+      }, "%"),
+      pair("cfb-team-point-differential", "Point differential", difference("cfb-team-points-for", "cfb-team-points-against"), "", 0),
+      rowPair(
+        "cfb-team-record",
+        "Record",
+        left.has("cfb-team-wins") && left.has("cfb-team-losses") ? `${left.get("cfb-team-wins")}-${left.get("cfb-team-losses")}` : null,
+        right.has("cfb-team-wins") && right.has("cfb-team-losses") ? `${right.get("cfb-team-wins")}-${right.get("cfb-team-losses")}` : null,
+      ),
     ].filter((row): row is RowPair => row != null);
   }
   return [];
