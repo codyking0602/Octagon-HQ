@@ -209,9 +209,9 @@ function makeMatchup(
 }
 
 const MATCHUP_DIFFICULTY_TARGETS = [
-  { difficulty: "hard", gaps: [1], target: 60 },
-  { difficulty: "medium", gaps: [2], target: 60 },
-  { difficulty: "easy", gaps: [3, 5, 8, 13, 21], target: 120 },
+  { difficulty: "hard", gaps: [1], target: 6 },
+  { difficulty: "medium", gaps: [2], target: 6 },
+  { difficulty: "easy", gaps: [3, 5, 8, 13, 21], target: 12 },
 ] as const;
 const MAX_PARTNERS_PER_RATING_GAP = 2;
 
