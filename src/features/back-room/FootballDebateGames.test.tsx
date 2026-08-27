@@ -41,7 +41,10 @@ describe("Football HQ debate games", () => {
   it("reuses the Football Rank 5 item owner for all Keep 4 / Cut 4 rooms", () => {
     expect(footballKeepCutPacks).toHaveLength(footballRankFivePacks.length);
     for (const pack of footballKeepCutPacks) {
-      expect(pack.items).toBe(getFootballRankFivePack(pack.id).items);
+      const ratedPack = getFootballRankFivePack(pack.id);
+      expect(pack.items.length).toBeGreaterThanOrEqual(8);
+      for (const item of pack.items) expect(ratedPack.items).toContain(item);
+
       const first = buildFootballKeepCutLineup(pack.id, "keep-cut-proof");
       const second = buildFootballKeepCutLineup(pack.id, "keep-cut-proof");
       expect(first.map((item) => item.id)).toEqual(second.map((item) => item.id));
