@@ -110,9 +110,23 @@ function enrichFootballSubject(
   };
 }
 
+function canonicalNflTeamSeasonKnowledgeOverride(subject: FootballCanonicalSubject): FootballSubjectKnowledgeOverride | undefined {
+  if (subject.kind !== "team-season" || subject.league !== "NFL") return undefined;
+  const projectedKnowledge = footballFindLeaderProjectedKnowledgeOverride(subject.id);
+  if (!projectedKnowledge) return undefined;
+  const canonicalKnowledge = buildFootballSubjectKnowledgeMetadata(subject);
+  return {
+    ...projectedKnowledge,
+    sourceIdentityKeys: [
+      ...canonicalKnowledge.sourceIdentityKeys,
+      ...(projectedKnowledge.sourceIdentityKeys ?? []),
+    ],
+  };
+}
+
 /** Public curated identity/query view used by existing games. */
 export const footballSubjects: readonly FootballSubjectProfile[] = footballCanonicalSubjects
-  .map((subject) => enrichFootballSubject(subject));
+  .map((subject) => enrichFootballSubject(subject, canonicalNflTeamSeasonKnowledgeOverride(subject)));
 
 const reconciledProjectedPlayerIds = new Set(
   footballCanonicalSubjects
