@@ -33,7 +33,7 @@ import {
   type FootballFindLeaderMetricId,
 } from "./footballFindLeaderStats";
 import { evaluateFootballFindLeaderQuality } from "./footballFindLeaderQuality";
-import { footballSubjects, queryFootballSubjects, type FootballSubjectQuery } from "./footballSubjectRegistry";
+import { queryFootballSubjects, type FootballSubjectQuery } from "./footballSubjectRegistry";
 
 export const footballFindLeaderCanonicalMetricByMetric: Readonly<Record<FootballFindLeaderMetricId, FootballFactMetricId>> = {
   "qb-games": "nfl-career-games",
@@ -420,7 +420,7 @@ const cfbDomainCycle: readonly FootballFindLeaderDomainId[] = [
   "cfb-player-rushing",
   "cfb-player-receiving",
   "cfb-champion-season",
-  "cfb-coach-career",
+  "cfb-coaching",
   "cfb-team-season",
 ] as const;
 
@@ -463,7 +463,10 @@ export function createFootballFindLeaderBoard(seed: string, history: PlayLineupH
 }
 
 export function createFootballFindLeaderRun(): FootballFindLeaderRun {
-  const validItemIds = new Set<string>(footballSubjects.map((subject) => subject.id));
+  const validItemIds = new Set<string>();
+  footballFindLeaderEnabledMetricDefinitions.forEach((definition) => {
+    footballFindLeaderMetricRows(definition.id).forEach((row) => validItemIds.add(row.id));
+  });
   footballFindLeaderQuestions.forEach((question) => {
     validItemIds.add(token("question", question.id));
     validItemIds.add(token("metric", question.metricId));
