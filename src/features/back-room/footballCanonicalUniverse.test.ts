@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   footballCanonicalSubjects,
   footballFindLeaderSubjects,
+  type FootballCanonicalSubject,
 } from "./footballFactualStatsCatalog";
 import {
   FOOTBALL_RECOGNITION_SUMMARY,
@@ -34,11 +35,21 @@ describe("canonical Football universe", () => {
     expect(getFootballSubject(peytonProjectionId!)).toBe(getFootballSubject(peyton.id));
     expect(getFootballSubject(peyton.id)?.aliases ?? []).not.toContain(peytonProjectionId);
 
+    const ambiguousAdrian = {
+      id: "test-adrian-peterson",
+      name: "Adrian Peterson",
+      kind: "player-career",
+      league: "NFL",
+      position: "RB",
+    } satisfies FootballCanonicalSubject;
+    expect(footballRecognitionProjectionSubjectIdFor(ambiguousAdrian)).toBeNull();
+
     const adrianPeterson = getFootballSubject("nfl-adrian-peterson");
     expect(adrianPeterson?.name).toBe("Adrian Peterson");
-    expect(getFootballSubject("nflverse-player-00-0025394")).toBe(adrianPeterson);
-    expect(getFootballSubject("nflverse-player-00-0021306")).toBeNull();
-    expect(adrianPeterson?.aliases ?? []).not.toContain("nflverse-player-00-0025394");
+    const adrianProjectionId = footballRecognitionProjectionSubjectIdFor(adrianPeterson!);
+    expect(adrianProjectionId).not.toBeNull();
+    expect(getFootballSubject(adrianProjectionId!)).toBe(adrianPeterson);
+    expect(adrianPeterson?.aliases ?? []).not.toContain(adrianProjectionId);
   });
 
   it("keeps modern CFB metadata at least half of modern reusable coverage", () => {

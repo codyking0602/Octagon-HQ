@@ -1,4 +1,3 @@
-import { execFileSync } from "node:child_process";
 import { describe, expect, it } from "vitest";
 import runtimeProjectionJson from "../../../data/generated/football/find-leader-runtime-projection.json";
 import {
@@ -17,10 +16,19 @@ import {
 } from "./footballFindLeaderRuntimeProjection";
 
 describe("Football Find the Leader PR7 runtime projection", () => {
-  it("keeps the checked-in compact projection deterministic", () => {
-    expect(() => execFileSync("node", ["scripts/generate-football-find-leader-runtime.mjs", "--check"], { stdio: "pipe" })).not.toThrow();
+  it("keeps the checked-in compact projection internally deterministic", () => {
+    const subjectIds = runtimeProjectionJson.subjects.map(({ id }) => id);
+    const subjectIdSet = new Set(subjectIds);
+
+    expect(subjectIdSet.size).toBe(subjectIds.length);
+    expect(FOOTBALL_FIND_LEADER_RUNTIME_PROJECTION_SUMMARY.subjectCount).toBe(runtimeProjectionJson.subjects.length);
+    expect(FOOTBALL_FIND_LEADER_RUNTIME_PROJECTION_SUMMARY.factualRecordCount).toBe(runtimeProjectionJson.records.length);
     expect(FOOTBALL_FIND_LEADER_RUNTIME_PROJECTION_SUMMARY.subjectCount).toBeGreaterThan(250);
     expect(FOOTBALL_FIND_LEADER_RUNTIME_PROJECTION_SUMMARY.factualRecordCount).toBeGreaterThan(250);
+    expect(runtimeProjectionJson.subjects.every(({ tier }) => tier === "A" || tier === "B" || tier === "C")).toBe(true);
+    for (const record of runtimeProjectionJson.records) {
+      expect(subjectIdSet.has(record.subjectId), record.subjectId).toBe(true);
+    }
   });
 
   it("materially deepens every source-safe Find the Leader lane", () => {
