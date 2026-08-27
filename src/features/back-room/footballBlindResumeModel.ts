@@ -193,8 +193,6 @@ function makeMatchup(
   right: FootballComparisonCandidate,
   stats: readonly FootballBlindResumeStat[],
 ): FootballBlindResumeMatchup {
-  // The canonical query is the league gate. Multi-league people can carry a different primary profile league
-  // while still qualifying this pack through their canonical `leagues` membership and pack-specific facts.
   return {
     id: `${family.packId}-${left.id}-v-${right.id}`,
     packId: family.packId,
@@ -433,6 +431,41 @@ function canUseRound(
     && !usedSubjectIds.has(footballBlindResumeSubjectIdentityId(matchup.rightId));
 }
 
+const subjectDegreesByPool = new WeakMap<readonly FootballBlindResumeRound[], ReadonlyMap<string, number>>();
+
+function subjectDegreesForPool(pool: readonly FootballBlindResumeRound[]) {
+  const existing = subjectDegreesByPool.get(pool);
+  if (existing) return existing;
+  const degrees = new Map<string, number>();
+  for (const matchup of pool) {
+    const leftId = footballBlindResumeSubjectIdentityId(matchup.leftId);
+    const rightId = footballBlindResumeSubjectIdentityId(matchup.rightId);
+    degrees.set(leftId, (degrees.get(leftId) ?? 0) + 1);
+    degrees.set(rightId, (degrees.get(rightId) ?? 0) + 1);
+  }
+  subjectDegreesByPool.set(pool, degrees);
+  return degrees;
+}
+
+function chooseWeightedRow(
+  rows: readonly FootballBlindResumeRound[],
+  degrees: ReadonlyMap<string, number>,
+  random: () => number,
+) {
+  const weighted = rows.map((row) => {
+    const leftDegree = degrees.get(footballBlindResumeSubjectIdentityId(row.leftId)) ?? 1;
+    const rightDegree = degrees.get(footballBlindResumeSubjectIdentityId(row.rightId)) ?? 1;
+    return { row, weight: 1 / Math.sqrt(leftDegree * rightDegree) };
+  });
+  const totalWeight = weighted.reduce((sum, entry) => sum + entry.weight, 0);
+  let roll = random() * totalWeight;
+  for (const entry of weighted) {
+    if (roll < entry.weight) return entry.row;
+    roll -= entry.weight;
+  }
+  return weighted[weighted.length - 1]!.row;
+}
+
 function chooseEligibleMatchup(
   pool: readonly FootballBlindResumeRound[],
   eligible: readonly FootballBlindResumeRound[],
@@ -469,7 +502,7 @@ function chooseEligibleMatchup(
     roll -= entry.weight;
   }
 
-  return chosenRows[Math.floor(random() * chosenRows.length)]!;
+  return chooseWeightedRow(chosenRows, subjectDegreesForPool(pool), random);
 }
 
 const ROUND_BUILD_ATTEMPTS = 12;
