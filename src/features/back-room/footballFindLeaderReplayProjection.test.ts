@@ -3,8 +3,8 @@ import type { PlayLineupHistory } from "../play/lineupModel";
 import {
   createFootballFindLeaderBoard,
   createFootballFindLeaderRun,
-  footballFindLeaderLeagueForDomain,
 } from "./footballFindLeaderModel";
+import { footballFindLeaderLeagueForDomain } from "./footballFindLeaderStats";
 import { footballSubjects } from "./footballSubjectRegistry";
 
 const emptyHistory: PlayLineupHistory = {
