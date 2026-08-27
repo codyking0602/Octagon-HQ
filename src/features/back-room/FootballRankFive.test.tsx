@@ -38,7 +38,9 @@ describe("Football Blind Rank 5", () => {
     expect(subjects.length).toBeGreaterThanOrEqual(350);
 
     for (const pack of footballRankFivePacks) {
-      expect(pack.items.length).toBeGreaterThanOrEqual(15);
+      // The shared comparison authority guarantees eight playable subjects per supported pack;
+      // PR10 must preserve that exact post-gate runtime floor rather than invent a second threshold.
+      expect(pack.items.length).toBeGreaterThanOrEqual(8);
       expect(new Set(pack.items.map((item) => item.id)).size).toBe(pack.items.length);
       expect(pack.items.every((item) => Number.isInteger(item.rating) && item.rating >= 0 && item.rating <= 100)).toBe(true);
     }
