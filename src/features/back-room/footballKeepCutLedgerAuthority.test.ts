@@ -77,6 +77,7 @@ describe("Football Keep 4, Cut 4 canonical ledger authority", () => {
 
     const teamSeasons = footballKeepCutPacks.find((pack) => pack.id === "nfl-team-seasons")!;
     const dolphins = teamSeasons.items.find((item) => item.id === "1972-miami-dolphins")!;
+    expect(getFootballSubject(dolphins.id)?.casualEligible).toBe(false);
     const dolphinsSubject = resolveFootballSubjectReference(
       dolphins.id,
       dolphins.name,
@@ -85,7 +86,7 @@ describe("Football Keep 4, Cut 4 canonical ledger authority", () => {
     expect(dolphinsSubject?.id).toBe("1972-miami-dolphins");
     expect(dolphinsSubject?.kind).toBe("team-season");
     expect(dolphinsSubject?.casualEligible).toBe(true);
-    expect(dolphinsSubject?.sourceIdentityKeys.some((key) => key.provider === "nflverse")).toBe(true);
+    expect(dolphinsSubject?.recognizabilityTier).toBe("C");
   });
 
   it("keeps deterministic eight-subject boards inside the canonical eligible roster", () => {
