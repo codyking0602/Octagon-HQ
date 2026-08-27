@@ -16,18 +16,6 @@ import {
   FOOTBALL_FIND_LEADER_RUNTIME_PROJECTION_SUMMARY,
 } from "./footballFindLeaderRuntimeProjection";
 
-const deepMetricIds = [
-  "qb-passing-yards",
-  "rb-rushing-yards",
-  "nfl-receiving-yards",
-  "nfl-defense-sacks",
-  "qb-season-passing-yards",
-  "nfl-team-wins",
-  "cfb-player-rushing-yards",
-  "cfb-player-receiving-yards",
-  "cfb-team-season-wins",
-] as const;
-
 describe("Football Find the Leader PR7 runtime projection", () => {
   it("keeps the checked-in compact projection deterministic", () => {
     expect(() => execFileSync("node", ["scripts/generate-football-find-leader-runtime.mjs", "--check"], { stdio: "pipe" })).not.toThrow();
@@ -88,17 +76,19 @@ describe("Football Find the Leader PR7 runtime projection", () => {
     }
   });
 
-  it("keeps game rows on A-C casual subjects and the canonical fact facade", () => {
-    for (const metricId of deepMetricIds) {
-      const pool = footballFindLeaderPools.find((candidate) => candidate.metricId === metricId)!;
-      const eligibleSubjects = queryFootballSubjects(pool.subjectQuery);
-      expect(eligibleSubjects.length, metricId).toBeGreaterThanOrEqual(11);
-      expect(eligibleSubjects.every((subject) => subject.casualEligible), metricId).toBe(true);
-      expect(eligibleSubjects.every((subject) => subject.recognizabilityTier !== "D"), metricId).toBe(true);
+  it("keeps enabled projected game rows on A-C casual subjects and the canonical fact facade", () => {
+    const projectedPools = footballFindLeaderPools.filter((pool) => pool.subjectQuery.includeProjectedSourceSubjects === true);
+    expect(projectedPools.length).toBeGreaterThan(0);
 
-      for (const row of footballFindLeaderMetricRows(metricId)) {
+    for (const pool of projectedPools) {
+      const eligibleSubjects = queryFootballSubjects(pool.subjectQuery);
+      expect(eligibleSubjects.length, pool.metricId).toBeGreaterThanOrEqual(11);
+      expect(eligibleSubjects.every((subject) => subject.casualEligible), pool.metricId).toBe(true);
+      expect(eligibleSubjects.every((subject) => subject.recognizabilityTier !== "D"), pool.metricId).toBe(true);
+
+      for (const row of footballFindLeaderMetricRows(pool.metricId)) {
         const fact = getFootballFact(row.id, pool.canonicalMetricId);
-        expect(fact, `${metricId}:${row.id}`).not.toBeNull();
+        expect(fact, `${pool.metricId}:${row.id}`).not.toBeNull();
         expect(fact!.fact.value).toBe(row.value);
       }
     }
