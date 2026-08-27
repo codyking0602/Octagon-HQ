@@ -229,11 +229,15 @@ export function resolveFootballSubjectReference(
   name: string,
   query: FootballSubjectQuery = {},
 ) {
+  const scopedSubjects = queryFootballSubjects(query);
   const direct = getFootballSubject(subjectId);
-  if (direct && matchesFootballSubject(direct, query)) return direct;
+  if (direct) {
+    const scopedDirect = scopedSubjects.find((subject) => subject.id === direct.id);
+    if (scopedDirect) return scopedDirect;
+  }
 
   const normalizedName = normalizedFootballSubjectName(name);
-  const matches = queryFootballSubjects(query)
+  const matches = scopedSubjects
     .filter((subject) => normalizedFootballSubjectName(subject.name) === normalizedName);
   const uniqueByCanonicalId = new Map(matches.map((subject) => [subject.id, subject]));
   return uniqueByCanonicalId.size === 1 ? [...uniqueByCanonicalId.values()][0]! : null;
