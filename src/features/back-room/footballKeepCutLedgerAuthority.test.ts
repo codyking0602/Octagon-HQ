@@ -1,37 +1,26 @@
 import { describe, expect, it } from "vitest";
 import {
   buildFootballKeepCutLineup,
-  footballKeepCutCategoryQuery,
+  footballKeepCutEligibilityQuery,
   footballKeepCutPacks,
 } from "./footballKeepCutModel";
 import { footballRankFivePacks } from "./footballRankFiveModel";
 import {
   getFootballSubject,
-  queryFootballSubjects,
+  resolveFootballSubjectReference,
 } from "./footballSubjectRegistry";
 
 const CASUAL_TIERS = ["A", "B", "C"] as const;
-
-function eligibleCanonicalIds(packId: (typeof footballKeepCutPacks)[number]["id"]) {
-  return new Set(
-    queryFootballSubjects({
-      ...footballKeepCutCategoryQuery(packId),
-      recognizabilityTiers: CASUAL_TIERS,
-      casualEligible: true,
-      includeProjectedSourceSubjects: true,
-    }).map((subject) => subject.id),
-  );
-}
 
 describe("Football Keep 4, Cut 4 canonical ledger authority", () => {
   it("uses the registry for category eligibility while preserving the comparison rating owner", () => {
     for (const pack of footballKeepCutPacks) {
       const ratedPack = footballRankFivePacks.find((candidate) => candidate.id === pack.id)!;
-      const eligibleIds = eligibleCanonicalIds(pack.id);
+      const query = footballKeepCutEligibilityQuery(pack.id);
       const seenCanonicalIds = new Set<string>();
       const expected = ratedPack.items.filter((item) => {
-        const subject = getFootballSubject(item.id);
-        if (!subject || !eligibleIds.has(subject.id) || seenCanonicalIds.has(subject.id)) return false;
+        const subject = resolveFootballSubjectReference(item.id, item.name, query);
+        if (!subject || seenCanonicalIds.has(subject.id)) return false;
         seenCanonicalIds.add(subject.id);
         return true;
       });
@@ -42,27 +31,38 @@ describe("Football Keep 4, Cut 4 canonical ledger authority", () => {
       expect(pack.items.length, `${pack.id} board depth`).toBeGreaterThanOrEqual(8);
 
       for (const item of pack.items) {
-        const subject = getFootballSubject(item.id);
+        const subject = resolveFootballSubjectReference(item.id, item.name, query);
         const ratedItem = ratedPack.items.find((candidate) => candidate.id === item.id);
         expect(subject, `${pack.id}:${item.id} canonical subject`).not.toBeNull();
         expect(subject?.casualEligible, `${pack.id}:${item.id} casual eligibility`).toBe(true);
         expect(CASUAL_TIERS, `${pack.id}:${item.id} recognizability`).toContain(subject?.recognizabilityTier);
-        expect(eligibleIds.has(subject!.id), `${pack.id}:${item.id} category query`).toBe(true);
         expect(item.rating, `${pack.id}:${item.id} comparison rating`).toBe(ratedItem?.rating);
         expect(item.ratingBasis, `${pack.id}:${item.id} comparison evidence`).toBe(ratedItem?.ratingBasis);
       }
 
-      const canonicalIds = pack.items.map((item) => getFootballSubject(item.id)!.id);
+      const canonicalIds = pack.items.map((item) => (
+        resolveFootballSubjectReference(item.id, item.name, query)!.id
+      ));
       expect(new Set(canonicalIds).size, `${pack.id} canonical dedupe`).toBe(canonicalIds.length);
     }
   });
 
-  it("preserves public comparison ids while resolving them to canonical subject ids", () => {
+  it("preserves legacy public ids while the registry resolves canonical identities", () => {
     const quarterbacks = footballKeepCutPacks.find((pack) => pack.id === "nfl-quarterbacks")!;
     const mahomes = quarterbacks.items.find((item) => item.id === "patrick-mahomes")!;
-
     expect(mahomes.id).toBe("patrick-mahomes");
     expect(getFootballSubject(mahomes.id)?.id).toBe("nfl-patrick-mahomes");
+
+    const receivers = footballKeepCutPacks.find((pack) => pack.id === "nfl-wide-receivers")!;
+    const rice = receivers.items.find((item) => item.id === "jerry-rice")!;
+    const riceSubject = resolveFootballSubjectReference(
+      rice.id,
+      rice.name,
+      footballKeepCutEligibilityQuery(receivers.id),
+    );
+    expect(rice.id).toBe("jerry-rice");
+    expect(riceSubject?.name).toBe("Jerry Rice");
+    expect(riceSubject?.position).toBe("WR");
   });
 
   it("keeps deterministic eight-subject boards inside the canonical eligible roster", () => {
