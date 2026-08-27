@@ -194,11 +194,8 @@ function makeMatchup(
   right: FootballComparisonCandidate,
   stats: readonly FootballBlindResumeStat[],
 ): FootballBlindResumeMatchup {
-  if (left.league !== family.league || right.league !== family.league) {
-    throw new Error(
-      `Football Blind Resume matchup ${family.packId}:${left.id}:${right.id} has a league mismatch.`,
-    );
-  }
+  // The canonical query is the league gate. Multi-league people can carry a different primary profile league
+  // while still qualifying this pack through their canonical `leagues` membership and pack-specific facts.
   return {
     id: `${family.packId}-${left.id}-v-${right.id}`,
     packId: family.packId,
