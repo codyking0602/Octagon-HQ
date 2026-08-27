@@ -74,6 +74,18 @@ describe("Football Keep 4, Cut 4 canonical ledger authority", () => {
     expect(vrabelSubject?.id).toBe("mike-vrabel");
     expect(vrabelSubject?.kind).toBe("coach");
     expect(vrabelSubject?.sourceIdentityKeys.some((key) => key.provider === "nflverse")).toBe(false);
+
+    const teamSeasons = footballKeepCutPacks.find((pack) => pack.id === "nfl-team-seasons")!;
+    const dolphins = teamSeasons.items.find((item) => item.id === "1972-miami-dolphins")!;
+    const dolphinsSubject = resolveFootballSubjectReference(
+      dolphins.id,
+      dolphins.name,
+      footballKeepCutEligibilityQuery(teamSeasons.id),
+    );
+    expect(dolphinsSubject?.id).toBe("1972-miami-dolphins");
+    expect(dolphinsSubject?.kind).toBe("team-season");
+    expect(dolphinsSubject?.casualEligible).toBe(true);
+    expect(dolphinsSubject?.sourceIdentityKeys.some((key) => key.provider === "nflverse")).toBe(true);
   });
 
   it("keeps deterministic eight-subject boards inside the canonical eligible roster", () => {
