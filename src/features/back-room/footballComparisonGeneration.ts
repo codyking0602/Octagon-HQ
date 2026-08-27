@@ -6,6 +6,9 @@ import {
   getFootballRatingBand,
   type FootballRatingBand,
 } from "./footballContentContract";
+import {
+  footballComparisonItemsFromCanonicalLedger,
+} from "./footballComparisonLedgerAuthority";
 import type { FootballRankFiveItem } from "./footballRankFiveModel";
 
 export type FootballComparisonTierId = FootballRatingBand;
@@ -359,6 +362,7 @@ export function buildFootballBlindRankBoard(
   seed: string,
   requestedArchetypeId?: FootballBlindRankArchetypeId,
 ): FootballBlindRankBoard {
+  items = footballComparisonItemsFromCanonicalLedger(scopeId, items, BLIND_RANK_BOARD_SIZE);
   if (items.length < BLIND_RANK_BOARD_SIZE) {
     throw new Error(`Football Blind Rank needs at least ${BLIND_RANK_BOARD_SIZE} comparison subjects.`);
   }
