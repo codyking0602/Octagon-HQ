@@ -214,6 +214,11 @@ const CFB_MATCHUP_DIFFICULTY_TARGETS = [
   { difficulty: "medium", target: 2 },
   { difficulty: "easy", target: 20 },
 ] as const;
+const CFB_DEEP_MATCHUP_DIFFICULTY_TARGETS = [
+  { difficulty: "hard", target: 4 },
+  { difficulty: "medium", target: 4 },
+  { difficulty: "easy", target: 32 },
+] as const;
 
 function stableCatalogHash(value: string) {
   let hash = 2166136261;
@@ -249,7 +254,10 @@ function buildMatchupCatalog() {
     const familyStart = matchups.length;
     const itemById = new Map(items.map((item) => [item.id, item] as const));
     const subjectDegrees = new Map<string, number>();
-    const maxSubjectDegree = family.league === "CFB" ? 2 : Number.POSITIVE_INFINITY;
+    const isDeepCfbFamily = family.league === "CFB" && items.length >= 12;
+    const maxSubjectDegree = family.league === "CFB"
+      ? (isDeepCfbFamily ? 4 : 2)
+      : Number.POSITIVE_INFINITY;
 
     const addPair = (
       first: FootballComparisonCandidate,
@@ -280,7 +288,9 @@ function buildMatchupCatalog() {
       if (first && second) addPair(first, second);
     }
 
-    const plans = family.league === "CFB" ? CFB_MATCHUP_DIFFICULTY_TARGETS : NFL_MATCHUP_DIFFICULTY_TARGETS;
+    const plans = family.league === "CFB"
+      ? (isDeepCfbFamily ? CFB_DEEP_MATCHUP_DIFFICULTY_TARGETS : CFB_MATCHUP_DIFFICULTY_TARGETS)
+      : NFL_MATCHUP_DIFFICULTY_TARGETS;
     for (const plan of plans) {
       let addedForDifficulty = 0;
       const options: MatchupOption[] = [];
