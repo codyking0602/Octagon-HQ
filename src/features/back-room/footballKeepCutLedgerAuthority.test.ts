@@ -63,6 +63,17 @@ describe("Football Keep 4, Cut 4 canonical ledger authority", () => {
     expect(rice.id).toBe("jerry-rice");
     expect(riceSubject?.name).toBe("Jerry Rice");
     expect(riceSubject?.position).toBe("WR");
+
+    const coaches = footballKeepCutPacks.find((pack) => pack.id === "nfl-head-coaches")!;
+    const vrabel = coaches.items.find((item) => item.id === "mike-vrabel")!;
+    const vrabelSubject = resolveFootballSubjectReference(
+      vrabel.id,
+      vrabel.name,
+      footballKeepCutEligibilityQuery(coaches.id),
+    );
+    expect(vrabelSubject?.id).toBe("mike-vrabel");
+    expect(vrabelSubject?.kind).toBe("coach");
+    expect(vrabelSubject?.sourceIdentityKeys.some((key) => key.provider === "nflverse")).toBe(false);
   });
 
   it("keeps deterministic eight-subject boards inside the canonical eligible roster", () => {
