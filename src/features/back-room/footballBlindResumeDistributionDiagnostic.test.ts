@@ -63,12 +63,12 @@ describe("Football Blind Resume distribution diagnostic", () => {
     );
     const cfbQbFactSignatures = new Map<string, { candidates: number; playable: number; examples: string[] }>();
     for (const candidate of footballBlindResumeCandidatesForPack("college-quarterbacks")) {
-      const known = CFB_QB_RESUME_METRICS.filter((metricId) => getFootballFact(candidate.id, metricId));
+      const known = CFB_QB_RESUME_METRICS.filter((metricId) => getFootballFact(candidate.canonicalSubjectId, metricId));
       const signature = known.join("|") || "no-resume-facts";
       const row = cfbQbFactSignatures.get(signature) ?? { candidates: 0, playable: 0, examples: [] };
       row.candidates += 1;
       if (cfbQbMatchupSubjects.has(candidate.id)) row.playable += 1;
-      if (row.examples.length < 5) row.examples.push(candidate.id);
+      if (row.examples.length < 5) row.examples.push(`${candidate.id}->${candidate.canonicalSubjectId}`);
       cfbQbFactSignatures.set(signature, row);
     }
 
