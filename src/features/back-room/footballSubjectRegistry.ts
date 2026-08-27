@@ -18,6 +18,7 @@ import {
   type FootballSubjectKnowledgeOverride,
 } from "./footballSubjectEligibility";
 import {
+  footballNonPlayerRecognitionProjectionFor,
   footballProjectedPlayerSubjects,
   footballRecognitionProjectionSubjectIdFor,
 } from "./footballRecognizabilityProjection";
@@ -110,23 +111,37 @@ function enrichFootballSubject(
   };
 }
 
-function canonicalNflTeamSeasonKnowledgeOverride(subject: FootballCanonicalSubject): FootballSubjectKnowledgeOverride | undefined {
-  if (subject.kind !== "team-season" || subject.league !== "NFL") return undefined;
-  const projectedKnowledge = footballFindLeaderProjectedKnowledgeOverride(subject.id);
-  if (!projectedKnowledge) return undefined;
-  const canonicalKnowledge = buildFootballSubjectKnowledgeMetadata(subject);
+function comparisonProjectionSourceIdentity(subject: FootballCanonicalSubject) {
+  if (subject.kind !== "team-season" || subject.season == null) return undefined;
+  const comparisonItem = comparisonItemById.get(subject.id);
+  if (!comparisonItem) return undefined;
+  if (comparisonItem.asset.kind === "nfl") {
+    return { provider: "nflverse", id: `${subject.season}:${comparisonItem.asset.team.toUpperCase()}` } as const;
+  }
+  return { provider: "cfbfastR", id: `${subject.season}:${comparisonItem.asset.teamId}` } as const;
+}
+
+function projectedCanonicalKnowledgeOverride(subject: FootballCanonicalSubject): FootballSubjectKnowledgeOverride | undefined {
+  const projection = footballNonPlayerRecognitionProjectionFor(subject, comparisonProjectionSourceIdentity(subject));
+  if (!projection) return undefined;
   return {
-    ...projectedKnowledge,
-    sourceIdentityKeys: [
-      ...canonicalKnowledge.sourceIdentityKeys,
-      ...(projectedKnowledge.sourceIdentityKeys ?? []),
-    ],
+    recognizabilityTier: projection.tier,
+    ...(projection.sourceIdentityKey ? {
+      sourceIdentityKeys: [
+        { provider: "octagon-hq", id: subject.id },
+        projection.sourceIdentityKey,
+      ],
+    } : {}),
   };
 }
 
 /** Public curated identity/query view used by existing games. */
 export const footballSubjects: readonly FootballSubjectProfile[] = footballCanonicalSubjects
-  .map((subject) => enrichFootballSubject(subject, canonicalNflTeamSeasonKnowledgeOverride(subject)));
+  .map((subject) => enrichFootballSubject(subject));
+
+/** Same canonical identities with PR6 non-player recognition applied only for opted-in source-depth consumers. */
+const projectedCanonicalSubjects: readonly FootballSubjectProfile[] = footballCanonicalSubjects
+  .map((subject) => enrichFootballSubject(subject, projectedCanonicalKnowledgeOverride(subject)));
 
 const reconciledProjectedPlayerIds = new Set(
   footballCanonicalSubjects
@@ -196,7 +211,7 @@ export function queryFootballSubjects(query: FootballSubjectQuery = {}) {
   // Preserve the pre-PR6 contract: source-stage depth does not appear in normal queries merely because a provider is named.
   if (query.sourceProvider && query.sourceProvider !== "octagon-hq" && !query.includeProjectedSourceSubjects) return [];
   const universe = query.includeProjectedSourceSubjects
-    ? [...footballSubjects, ...projectedSourceSubjects, ...projectedAdditionalSubjects]
+    ? [...projectedCanonicalSubjects, ...projectedSourceSubjects, ...projectedAdditionalSubjects]
     : footballSubjects;
   return universe.filter((subject) => matchesFootballSubject(subject, query));
 }
