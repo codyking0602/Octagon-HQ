@@ -461,13 +461,7 @@ export function buildFootballBlindResumeRounds(
       if (!pool.length) {
         throw new Error(`Football Blind Resume has no ${league ?? "mixed"} ${difficulty ?? "mixed"} matchup inventory.`);
       }
-      const casualSingleDifficulty = !requestedDifficulties
-        && index === FOOTBALL_BLIND_RESUME_ROUNDS - 1
-        && new Set(selected.map((round) => round.difficulty)).size === 1
-        ? selected[0]!.difficulty
-        : null;
       const eligible = pool.filter((matchup) => {
-        if (casualSingleDifficulty && matchup.difficulty === casualSingleDifficulty) return false;
         if (usedPackIds.has(matchup.packId)) return false;
         return canUseRound(matchup, usedMatchupIds, usedSubjectIds);
       });
@@ -484,7 +478,10 @@ export function buildFootballBlindResumeRounds(
       usedPackIds.add(matchup.packId);
     }
 
-    if (!failed && selected.length === FOOTBALL_BLIND_RESUME_ROUNDS) return selected;
+    if (!failed && selected.length === FOOTBALL_BLIND_RESUME_ROUNDS) {
+      if (!requestedDifficulties && new Set(selected.map((round) => round.difficulty)).size === 1) continue;
+      return selected;
+    }
   }
 
   const requested = requestedDifficulties ? ` difficulty slate ${requestedDifficulties.join("/")}` : " mixed casual slate";
