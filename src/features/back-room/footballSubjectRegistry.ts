@@ -114,15 +114,16 @@ function enrichFootballSubject(
 export const footballSubjects: readonly FootballSubjectProfile[] = footballCanonicalSubjects
   .map((subject) => enrichFootballSubject(subject));
 
-const canonicalPlayerNameKeys = new Set(
+const reconciledProjectedPlayerIds = new Set(
   footballCanonicalSubjects
     .filter((subject) => subject.kind === "player-career")
-    .flatMap((subject) => (subject.leagues ?? [subject.league]).map((league) => `${league}:${subject.name.toLowerCase()}`)),
+    .map((subject) => footballRecognitionProjectionSubjectIdFor(subject))
+    .filter((id): id is string => Boolean(id)),
 );
 
 /** Source-projected players that do not already reconcile to a curated canonical player. Opt-in only. */
 const projectedSourceSubjects: readonly FootballSubjectProfile[] = footballProjectedPlayerSubjects
-  .filter((subject) => !canonicalPlayerNameKeys.has(`${subject.league}:${subject.name.toLowerCase()}`))
+  .filter((subject) => !reconciledProjectedPlayerIds.has(subject.id))
   .map((subject) => enrichFootballSubject(subject));
 
 const canonicalSubjectIds = new Set(footballSubjects.map((subject) => subject.id));
