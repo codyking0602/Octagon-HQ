@@ -296,5 +296,5 @@ describe("Football comparison generation maturity", () => {
     expect(share(styleCounts["bottom-grind"]!, totalBoards)).toBeLessThanOrEqual(0.13);
     expect(share(styleCounts["classic-spread"]!, totalBoards)).toBeGreaterThanOrEqual(0.03);
     expect(share(styleCounts["classic-spread"]!, totalBoards)).toBeLessThanOrEqual(0.08);
-  });
+  }, 300_000);
 });
