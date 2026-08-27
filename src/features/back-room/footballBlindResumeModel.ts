@@ -208,8 +208,43 @@ function makeMatchup(
   };
 }
 
-const MATCHUP_RATING_GAPS = [1, 2, 3, 5, 8, 13, 21] as const;
+const MATCHUP_DIFFICULTY_TARGETS = [
+  { difficulty: "hard", gaps: [1], target: 60 },
+  { difficulty: "medium", gaps: [2], target: 60 },
+  { difficulty: "easy", gaps: [3, 5, 8, 13, 21], target: 120 },
+] as const;
 const MAX_PARTNERS_PER_RATING_GAP = 2;
+
+function greatestCommonDivisor(left: number, right: number) {
+  let a = Math.abs(left);
+  let b = Math.abs(right);
+  while (b !== 0) {
+    const remainder = a % b;
+    a = b;
+    b = remainder;
+  }
+  return a;
+}
+
+function stableCatalogHash(value: string) {
+  let hash = 2166136261;
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+function deterministicIndexScan(length: number, key: string) {
+  if (length <= 1) return { start: 0, step: 1 };
+  const start = stableCatalogHash(`${key}|start`) % length;
+  let step = 1 + (stableCatalogHash(`${key}|step`) % (length - 1));
+  while (greatestCommonDivisor(step, length) !== 1) {
+    step += 1;
+    if (step >= length) step = 1;
+  }
+  return { start, step };
+}
 
 function shouldFlipPair(key: string) {
   let parity = 0;
@@ -237,15 +272,16 @@ function buildMatchupCatalog() {
     }
 
     const addPair = (first: FootballComparisonCandidate, second: FootballComparisonCandidate) => {
-      if (first.rating === second.rating) return false;
+      if (first.rating === second.rating) return null;
       const key = pairKey(family.packId, first.id, second.id);
-      if (seenPairs.has(key)) return false;
+      if (seenPairs.has(key)) return null;
       const [left, right] = shouldFlipPair(key) ? [second, first] : [first, second];
       const stats = tryBuildFootballBlindResumeEvidence(family.packId, left.id, right.id, family.archetype);
-      if (!stats) return false;
+      if (!stats) return null;
+      const matchup = makeMatchup(family, left, right, stats);
       seenPairs.add(key);
-      matchups.push(makeMatchup(family, left, right, stats));
-      return true;
+      matchups.push(matchup);
+      return matchup.difficulty;
     };
 
     const villainPrefix = `${family.packId}:`;
@@ -257,13 +293,39 @@ function buildMatchupCatalog() {
       if (first && second) addPair(first, second);
     }
 
-    for (const first of items) {
-      for (const gap of MATCHUP_RATING_GAPS) {
-        const partners = byRating.get(first.rating - gap) ?? [];
-        let addedAtGap = 0;
-        for (const second of partners) {
-          if (addPair(first, second)) addedAtGap += 1;
-          if (addedAtGap >= MAX_PARTNERS_PER_RATING_GAP) break;
+    for (const plan of MATCHUP_DIFFICULTY_TARGETS) {
+      let addedForDifficulty = 0;
+      const targetPerGap = Math.ceil(plan.target / plan.gaps.length);
+
+      for (const gap of plan.gaps) {
+        let addedForGap = 0;
+        const itemScan = deterministicIndexScan(items.length, `${family.packId}|${plan.difficulty}|${gap}|items`);
+
+        for (let itemOffset = 0; itemOffset < items.length; itemOffset += 1) {
+          if (addedForDifficulty >= plan.target || addedForGap >= targetPerGap) break;
+          const first = items[(itemScan.start + itemOffset * itemScan.step) % items.length]!;
+          const partners = byRating.get(first.rating - gap) ?? [];
+          if (!partners.length) continue;
+
+          const partnerScan = deterministicIndexScan(
+            partners.length,
+            `${family.packId}|${plan.difficulty}|${gap}|${first.id}|partners`,
+          );
+          let addedForFirst = 0;
+          for (let partnerOffset = 0; partnerOffset < partners.length; partnerOffset += 1) {
+            const second = partners[(partnerScan.start + partnerOffset * partnerScan.step) % partners.length]!;
+            const addedDifficulty = addPair(first, second);
+            if (addedDifficulty === plan.difficulty) {
+              addedForDifficulty += 1;
+              addedForGap += 1;
+              addedForFirst += 1;
+            }
+            if (
+              addedForDifficulty >= plan.target
+              || addedForGap >= targetPerGap
+              || addedForFirst >= MAX_PARTNERS_PER_RATING_GAP
+            ) break;
+          }
         }
       }
     }
@@ -369,17 +431,6 @@ function canUseRound(
   return !usedMatchupIds.has(matchup.id)
     && !usedSubjectIds.has(footballBlindResumeSubjectIdentityId(matchup.leftId))
     && !usedSubjectIds.has(footballBlindResumeSubjectIdentityId(matchup.rightId));
-}
-
-function greatestCommonDivisor(left: number, right: number) {
-  let a = Math.abs(left);
-  let b = Math.abs(right);
-  while (b !== 0) {
-    const remainder = a % b;
-    a = b;
-    b = remainder;
-  }
-  return a;
 }
 
 function deterministicScan(
