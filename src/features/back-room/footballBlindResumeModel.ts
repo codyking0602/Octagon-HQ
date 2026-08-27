@@ -475,15 +475,15 @@ function chooseEligibleMatchup(
     subjectDegreesByPack.set(matchup.packId, degrees);
   }
 
-  // Matchup inventory creates variety inside a category; it must not make that category dominate the game.
-  // Weight category selection by real subject breadth while discounting concentrated catalogs.
+  // Deep matchup inventories create variety inside a category, but should not dominate the game by themselves.
+  // Give mature catalogs only a modest sublinear preference, then discount subject concentration.
   const weightedPacks = [...eligibleByPack.entries()].map(([packId, rows]) => {
     const degrees = subjectDegreesByPack.get(packId);
     const maxSubjectDegree = degrees?.size ? Math.max(...degrees.values()) : 1;
     const subjectCount = degrees?.size ?? 1;
     return {
       rows,
-      weight: Math.sqrt(subjectCount) / maxSubjectDegree,
+      weight: Math.pow(rows.length, 0.15) * Math.sqrt(subjectCount) / maxSubjectDegree,
     };
   });
   const totalWeight = weightedPacks.reduce((sum, entry) => sum + entry.weight, 0);
