@@ -462,11 +462,9 @@ function chooseEligibleMatchup(
     eligibleByPack.set(matchup.packId, rows);
   }
 
-  const baselineCounts = new Map<FootballRankFivePackId, number>();
   const subjectDegreesByPack = new Map<FootballRankFivePackId, Map<string, number>>();
   for (const matchup of pool) {
     if (!eligibleByPack.has(matchup.packId)) continue;
-    baselineCounts.set(matchup.packId, (baselineCounts.get(matchup.packId) ?? 0) + 1);
     const degrees = subjectDegreesByPack.get(matchup.packId) ?? new Map<string, number>();
     for (const subjectId of [
       footballBlindResumeSubjectIdentityId(matchup.leftId),
@@ -477,14 +475,15 @@ function chooseEligibleMatchup(
     subjectDegreesByPack.set(matchup.packId, degrees);
   }
 
+  // Matchup inventory creates variety inside a category; it must not make that category dominate the game.
+  // Weight category selection by real subject breadth while discounting concentrated catalogs.
   const weightedPacks = [...eligibleByPack.entries()].map(([packId, rows]) => {
-    const baselineCount = baselineCounts.get(packId) ?? rows.length;
     const degrees = subjectDegreesByPack.get(packId);
     const maxSubjectDegree = degrees?.size ? Math.max(...degrees.values()) : 1;
     const subjectCount = degrees?.size ?? 1;
     return {
       rows,
-      weight: (baselineCount * Math.sqrt(subjectCount)) / maxSubjectDegree,
+      weight: Math.sqrt(subjectCount) / maxSubjectDegree,
     };
   });
   const totalWeight = weightedPacks.reduce((sum, entry) => sum + entry.weight, 0);
