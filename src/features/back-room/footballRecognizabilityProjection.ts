@@ -119,9 +119,39 @@ for (const record of nonPlayerRecords) {
   nonPlayerByKindLeagueAndName.set(key, values);
 }
 
+const cfbProgramByName = new Map<string, ProjectionRecord[]>();
+for (const record of nonPlayerRecords.filter((candidate) => candidate.kind === "program" && candidate.league === "CFB")) {
+  const key = normalizedProjectionName(record.name);
+  const values = cfbProgramByName.get(key) ?? [];
+  values.push(record);
+  cfbProgramByName.set(key, values);
+}
+
+const cfbProminentTeamSeasonsByProgram = new Map<string, ProjectionRecord[]>();
+for (const record of nonPlayerRecords.filter((candidate) => candidate.kind === "team-season" && candidate.league === "CFB")) {
+  if (record.startSeason == null) continue;
+  const prefix = `${record.startSeason} `;
+  if (!record.name.startsWith(prefix)) continue;
+  const key = normalizedProjectionName(record.name.slice(prefix.length));
+  const values = cfbProminentTeamSeasonsByProgram.get(key) ?? [];
+  values.push(record);
+  cfbProminentTeamSeasonsByProgram.set(key, values);
+}
+
 function supportedProjectionProvider(record: ProjectionRecord): FootballSourceProviderId | null {
   if (record.sourceProvider === "nflverse" || record.sourceProvider === "cfbfastR") return record.sourceProvider;
   return null;
+}
+
+function derivedProgramEraTier(subject: FootballCanonicalSubject): FootballRecognizabilityTier | null {
+  if (subject.kind !== "program-era" || subject.league !== "CFB" || !subject.school) return null;
+  if (subject.startSeason == null || subject.endSeason == null) return null;
+  const schoolKey = normalizedProjectionName(subject.school);
+  if (!uniqueProjectionMatch(cfbProgramByName.get(schoolKey) ?? [])) return null;
+  const prominentSeasons = (cfbProminentTeamSeasonsByProgram.get(schoolKey) ?? [])
+    .filter((record) => record.startSeason! >= subject.startSeason! && record.startSeason! <= subject.endSeason!);
+  // A recognizable FBS program plus repeated PR6-promoted team seasons is the cultural marker needed to expose the era.
+  return prominentSeasons.length >= 2 ? "C" : null;
 }
 
 /**
@@ -153,7 +183,10 @@ export function footballNonPlayerRecognitionProjectionFor(
     record = uniqueProjectionMatch(sameWindow);
   }
 
-  if (!record) return null;
+  if (!record) {
+    const derivedTier = derivedProgramEraTier(subject);
+    return derivedTier ? { tier: derivedTier } : null;
+  }
   const provider = supportedProjectionProvider(record);
   return {
     tier: record.tier,
