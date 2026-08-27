@@ -89,6 +89,7 @@ export function footballKeepCutEligibilityQuery(packId: FootballKeepCutPackId): 
     recognizabilityTiers: KEEP_CUT_RECOGNIZABILITY_TIERS,
     casualEligible: true,
     includeProjectedSourceSubjects: true,
+    includeProjectedCanonicalRecognition: true,
   };
 }
 
