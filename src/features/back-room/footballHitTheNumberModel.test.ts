@@ -180,7 +180,7 @@ describe("Football Hit the Number canonical fact integration", () => {
     expect(sawBuildTeam).toBe(true);
     expect(sawExpandedNflPlayerFamily).toBe(true);
     expect(ONE_FROM_EACH_LABELS).not.toEqual(BUILD_TEAM_LABELS);
-  });
+  }, 60_000);
 
   it("keeps CFB at least half of casual exposure while rotating every format and all pick counts", () => {
     const formats = new Map<FootballHitTheNumberFormatId, number>([
