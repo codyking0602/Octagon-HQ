@@ -29,6 +29,24 @@ const resolvedRoundSchema = z.object({
   forced: z.boolean(),
   charged_amount: z.number().int().positive(),
 }).strict();
+const fightBreakdownSelectionSchema = z.object({
+  category: categorySchema,
+  fighter: z.string().min(1),
+  code: z.string().min(1),
+}).strict();
+const fightBreakdownSideSchema = z.object({
+  name: z.string().min(1),
+  score: z.number(),
+  selections: z.array(fightBreakdownSelectionSchema).length(5),
+}).strict();
+export const auctionFightBreakdownPacketSchema = z.object({
+  packet_version: z.literal("auction-fight-breakdown-v2"),
+  mode: z.literal("ultimate-fighter"),
+  winner: z.enum(["challenger", "recipient", "tie"]),
+  recap: z.array(z.string().min(1)).min(2).max(3),
+  challenger: fightBreakdownSideSchema,
+  recipient: fightBreakdownSideSchema,
+}).strict();
 
 export const auctionProjectionSchema = z.object({
   auction_id: uuid,
@@ -88,6 +106,7 @@ async function rpc(client: RpcClient, name: string, args: Record<string, unknown
 export interface AuctionRepository {
   prepare(recipientId: string, modeId: AuctionModeId): Promise<AuctionProjection>;
   read(auctionId: string): Promise<AuctionProjection>;
+  fightRecap(auctionId: string): Promise<string[]>;
   bid(state: AuctionProjection, amount: number, category?: UltimateFighterCategory): Promise<AuctionProjection>;
   abandon(state: AuctionProjection): Promise<void>;
   cancel(state: AuctionProjection): Promise<AuctionProjection>;
@@ -108,6 +127,10 @@ export function createAuctionRepository(client: RpcClient | null = getSupabaseCl
       return read(id);
     },
     read,
+    async fightRecap(auctionId) {
+      const data = await rpc(client, "get_auction_fight_breakdown_packet", { p_auction_id: auctionId });
+      return auctionFightBreakdownPacketSchema.parse(data).recap;
+    },
     async bid(state, amount, category) {
       const common = { p_auction_id: state.auction_id, p_expected_revision: state.revision, p_amount: amount, p_category: category ?? null };
       if (state.lifecycle_state === "prepared") {
