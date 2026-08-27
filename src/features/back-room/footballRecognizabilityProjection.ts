@@ -44,11 +44,36 @@ for (const record of playerRecords) {
   byLeagueAndName.set(key, values);
 }
 
+function uniqueProjectionMatch(records: readonly ProjectionRecord[]) {
+  return records.length === 1 ? records[0]! : null;
+}
+
 function resolveProjectionRecordFor(subject: FootballCanonicalSubject) {
   const direct = byId.get(subject.id)
     ?? (subject.aliases ?? []).map((alias) => byId.get(alias)).find((value) => value != null);
+  if (direct) return direct;
+
   const sameName = byLeagueAndName.get(`${subject.league}:${subject.name.toLowerCase()}`) ?? [];
-  return direct ?? (sameName.length === 1 ? sameName[0] : null);
+  if (sameName.length <= 1) return sameName[0] ?? null;
+
+  // Duplicate-name source rows must remain unresolved unless canonical metadata narrows them to one exact identity.
+  // This is intentionally conservative: no fuzzy matching and no positional fallback after an ambiguous result.
+  if (subject.position) {
+    const samePosition = sameName.filter((record) => record.position === subject.position);
+    const uniquePosition = uniqueProjectionMatch(samePosition);
+    if (uniquePosition) return uniquePosition;
+  }
+  if (subject.school) {
+    const sameSchool = sameName.filter((record) => record.school === subject.school);
+    const uniqueSchool = uniqueProjectionMatch(sameSchool);
+    if (uniqueSchool) return uniqueSchool;
+  }
+  if (subject.league === "NFL" && subject.draftYear != null) {
+    const sameStartSeason = sameName.filter((record) => record.startSeason === subject.draftYear);
+    const uniqueStartSeason = uniqueProjectionMatch(sameStartSeason);
+    if (uniqueStartSeason) return uniqueStartSeason;
+  }
+  return null;
 }
 
 export function footballRecognitionProjectionFor(subject: FootballCanonicalSubject) {
@@ -59,7 +84,7 @@ export function footballRecognitionProjectionFor(subject: FootballCanonicalSubje
 }
 
 /**
- * The source-projection subject id is also a stable reconciliation alias when PR6 uniquely matched that row to a
+ * The source-projection subject id is also a stable reconciliation key when PR6 uniquely matched that row to a
  * curated canonical player. Consumers can therefore collapse source-backed facts onto the canonical person instead
  * of retaining an orphan source-only record.
  */
