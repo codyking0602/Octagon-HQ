@@ -173,7 +173,7 @@ export const findLeaderQuestions: readonly FindLeaderQuestionDefinition[] = [
   q("unique-title-opponents-beaten", "Which UFC champion has beaten the most different title-fight opponents?", "different UFC title-fight opponents beaten", "TITLE WINS", "unique-title-opponents-beaten", "championship", { scope: { championsOnly: true } }),
   q("unique-opponents-beaten", "Who has beaten the most different UFC opponents?", "different UFC opponents beaten", "UNIQUE WINS", "unique-opponents-beaten", "volume"),
   q("unique-opponents-finished", "Who has finished the most different UFC opponents?", "different UFC opponents finished", "UNIQUE FINISHES", "unique-opponents-finished", "finishes"),
-  q("unique-ranked-opponents-beaten", "Who has beaten the most different ranked UFC opponents?", "different ranked UFC opponents beaten", "RANKED OPPONENTS", "unique-opponents-beaten", "quality"),
+  q("unique-ranked-opponents-beaten", "Who has beaten the most different ranked UFC opponents?", "different ranked UFC opponents beaten", "RANKED OPPONENTS", "unique-ranked-opponents-beaten", "quality"),
   q("unique-top-five-opponents-beaten", "Who has beaten the most different UFC top-five opponents?", "different UFC top-five opponents beaten", "TOP-5 OPPONENTS", "unique-top-five-opponents-beaten", "quality"),
   q("ranked-finishes-all-time", "Who has the most finishes over ranked UFC opposition?", "UFC finishes over ranked opposition", "RANKED FINISHES", "ranked-finishes", "quality"),
   q("top-five-finishes-all-time", "Who has the most finishes over UFC top-five opposition?", "UFC finishes over top-five opposition", "TOP-5 FINISHES", "top-five-finishes", "quality"),
