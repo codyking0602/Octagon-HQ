@@ -251,9 +251,13 @@ function buildMatchupCatalog() {
     const subjectDegrees = new Map<string, number>();
     const maxSubjectDegree = family.league === "CFB" ? 2 : Number.POSITIVE_INFINITY;
 
-    const addPair = (first: FootballComparisonCandidate, second: FootballComparisonCandidate) => {
+    const addPair = (
+      first: FootballComparisonCandidate,
+      second: FootballComparisonCandidate,
+      subjectDegreeLimit = maxSubjectDegree,
+    ) => {
       if (first.rating === second.rating) return null;
-      if ((subjectDegrees.get(first.id) ?? 0) >= maxSubjectDegree || (subjectDegrees.get(second.id) ?? 0) >= maxSubjectDegree) return null;
+      if ((subjectDegrees.get(first.id) ?? 0) >= subjectDegreeLimit || (subjectDegrees.get(second.id) ?? 0) >= subjectDegreeLimit) return null;
       const key = pairKey(family.packId, first.id, second.id);
       if (seenPairs.has(key)) return null;
       const [left, right] = shouldFlipPair(key) ? [second, first] : [first, second];
@@ -328,7 +332,7 @@ function buildMatchupCatalog() {
           return leftDegree - rightDegree || stableCatalogHash(left.key) - stableCatalogHash(right.key);
         });
         const option = fallbackOptions.shift()!;
-        addPair(option.first, option.second);
+        addPair(option.first, option.second, Math.max(maxSubjectDegree, 3));
       }
     }
 
@@ -446,7 +450,7 @@ function chooseEligibleMatchup(
     const baselineCount = baselineCounts.get(packId) ?? rows.length;
     return {
       rows,
-      weight: baselineCount * Math.sqrt(Math.sqrt(baselineCount)),
+      weight: baselineCount * Math.sqrt(baselineCount),
     };
   });
   const totalWeight = weightedPacks.reduce((sum, entry) => sum + entry.weight, 0);
