@@ -32,8 +32,8 @@ patch("src/features/back-room/footballSubjectRegistry.ts", [
   ],
   [
     "projected additional subjects",
-    `const projectedSourceSubjects: readonly FootballSubjectProfile[] = footballProjectedPlayerSubjects\n  .filter((subject) => !canonicalPlayerNameKeys.has(\`${subject.league}:\${subject.name.toLowerCase()}\`))\n  .map(enrichFootballSubject);`,
-    `const projectedSourceSubjects: readonly FootballSubjectProfile[] = footballProjectedPlayerSubjects\n  .filter((subject) => !canonicalPlayerNameKeys.has(\`${subject.league}:\${subject.name.toLowerCase()}\`))\n  .map(enrichFootballSubject);\n\nconst canonicalSubjectIds = new Set(footballSubjects.map((subject) => subject.id));\nconst projectedAdditionalSubjects: readonly FootballSubjectProfile[] = footballFindLeaderProjectedAdditionalSubjects\n  .filter((subject) => !canonicalSubjectIds.has(subject.id))\n  .map((subject) => enrichFootballSubject(subject, footballFindLeaderProjectedKnowledgeOverride(subject.id) ?? undefined));`,
+    `const projectedSourceSubjects: readonly FootballSubjectProfile[] = footballProjectedPlayerSubjects\n  .filter((subject) => !canonicalPlayerNameKeys.has(\`\${subject.league}:\${subject.name.toLowerCase()}\`))\n  .map(enrichFootballSubject);`,
+    `const projectedSourceSubjects: readonly FootballSubjectProfile[] = footballProjectedPlayerSubjects\n  .filter((subject) => !canonicalPlayerNameKeys.has(\`\${subject.league}:\${subject.name.toLowerCase()}\`))\n  .map(enrichFootballSubject);\n\nconst canonicalSubjectIds = new Set(footballSubjects.map((subject) => subject.id));\nconst projectedAdditionalSubjects: readonly FootballSubjectProfile[] = footballFindLeaderProjectedAdditionalSubjects\n  .filter((subject) => !canonicalSubjectIds.has(subject.id))\n  .map((subject) => enrichFootballSubject(subject, footballFindLeaderProjectedKnowledgeOverride(subject.id) ?? undefined));`,
   ],
   [
     "registry id universe",
