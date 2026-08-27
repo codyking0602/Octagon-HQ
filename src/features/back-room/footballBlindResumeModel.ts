@@ -209,7 +209,6 @@ const MATCHUP_DIFFICULTY_TARGETS = [
   { difficulty: "medium", gaps: [2], target: 6 },
   { difficulty: "easy", gaps: [3, 5, 8, 13, 21], target: 12 },
 ] as const;
-const MAX_PARTNERS_PER_RATING_GAP = 2;
 
 function greatestCommonDivisor(left: number, right: number) {
   let a = Math.abs(left);
@@ -248,6 +247,12 @@ function shouldFlipPair(key: string) {
   return parity === 1;
 }
 
+interface MatchupOption {
+  first: FootballComparisonCandidate;
+  second: FootballComparisonCandidate;
+  key: string;
+}
+
 function buildMatchupCatalog() {
   const matchups: FootballBlindResumeMatchup[] = [];
   const seenPairs = new Set<string>();
@@ -262,20 +267,14 @@ function buildMatchupCatalog() {
     const itemById = new Map(items.map((item) => [item.id, item] as const));
     const byRating = new Map<number, FootballComparisonCandidate[]>();
     const subjectDegrees = new Map<string, number>();
-    const maxSubjectDegree = family.packId === "college-quarterbacks" ? 2 : family.league === "CFB" ? 3 : Number.POSITIVE_INFINITY;
     for (const item of items) {
       const rows = byRating.get(item.rating) ?? [];
       rows.push(item);
       byRating.set(item.rating, rows);
     }
 
-    const addPair = (
-      first: FootballComparisonCandidate,
-      second: FootballComparisonCandidate,
-      degreeCap = maxSubjectDegree,
-    ) => {
+    const addPair = (first: FootballComparisonCandidate, second: FootballComparisonCandidate) => {
       if (first.rating === second.rating) return null;
-      if ((subjectDegrees.get(first.id) ?? 0) >= degreeCap || (subjectDegrees.get(second.id) ?? 0) >= degreeCap) return null;
       const key = pairKey(family.packId, first.id, second.id);
       if (seenPairs.has(key)) return null;
       const [left, right] = shouldFlipPair(key) ? [second, first] : [first, second];
@@ -304,42 +303,57 @@ function buildMatchupCatalog() {
 
       for (const gap of plan.gaps) {
         let addedForGap = 0;
-        const itemScan = deterministicIndexScan(items.length, `${family.packId}|${plan.difficulty}|${gap}|items`);
-
-        for (let itemOffset = 0; itemOffset < items.length; itemOffset += 1) {
-          if (addedForDifficulty >= plan.target || addedForGap >= targetPerGap) break;
-          const first = items[(itemScan.start + itemOffset * itemScan.step) % items.length]!;
+        const options: MatchupOption[] = [];
+        for (const first of items) {
           const partners = byRating.get(first.rating - gap) ?? [];
-          if (!partners.length) continue;
+          for (const second of partners) {
+            const key = pairKey(family.packId, first.id, second.id);
+            if (!seenPairs.has(key)) options.push({ first, second, key });
+          }
+        }
 
-          const partnerScan = deterministicIndexScan(
-            partners.length,
-            `${family.packId}|${plan.difficulty}|${gap}|${first.id}|partners`,
-          );
-          let addedForFirst = 0;
-          for (let partnerOffset = 0; partnerOffset < partners.length; partnerOffset += 1) {
-            const second = partners[(partnerScan.start + partnerOffset * partnerScan.step) % partners.length]!;
-            const addedDifficulty = addPair(first, second);
-            if (addedDifficulty === plan.difficulty) {
-              addedForDifficulty += 1;
-              addedForGap += 1;
-              addedForFirst += 1;
-            }
-            if (
-              addedForDifficulty >= plan.target
-              || addedForGap >= targetPerGap
-              || addedForFirst >= MAX_PARTNERS_PER_RATING_GAP
-            ) break;
+        while (options.length && addedForDifficulty < plan.target && addedForGap < targetPerGap) {
+          options.sort((left, right) => {
+            const leftFirstDegree = subjectDegrees.get(left.first.id) ?? 0;
+            const leftSecondDegree = subjectDegrees.get(left.second.id) ?? 0;
+            const rightFirstDegree = subjectDegrees.get(right.first.id) ?? 0;
+            const rightSecondDegree = subjectDegrees.get(right.second.id) ?? 0;
+            const maxDegreeDelta = Math.max(leftFirstDegree, leftSecondDegree) - Math.max(rightFirstDegree, rightSecondDegree);
+            if (maxDegreeDelta !== 0) return maxDegreeDelta;
+            const totalDegreeDelta = leftFirstDegree + leftSecondDegree - rightFirstDegree - rightSecondDegree;
+            if (totalDegreeDelta !== 0) return totalDegreeDelta;
+            return stableCatalogHash(left.key) - stableCatalogHash(right.key);
+          });
+
+          const option = options.shift()!;
+          const addedDifficulty = addPair(option.first, option.second);
+          if (addedDifficulty === plan.difficulty) {
+            addedForDifficulty += 1;
+            addedForGap += 1;
           }
         }
       }
     }
 
     if (matchups.length - familyStart < 5) {
-      for (let leftIndex = 0; leftIndex < items.length - 1 && matchups.length - familyStart < 5; leftIndex += 1) {
-        for (let rightIndex = leftIndex + 1; rightIndex < items.length && matchups.length - familyStart < 5; rightIndex += 1) {
-          addPair(items[leftIndex]!, items[rightIndex]!, 3);
+      const fallbackOptions: MatchupOption[] = [];
+      for (let leftIndex = 0; leftIndex < items.length - 1; leftIndex += 1) {
+        for (let rightIndex = leftIndex + 1; rightIndex < items.length; rightIndex += 1) {
+          const first = items[leftIndex]!;
+          const second = items[rightIndex]!;
+          if (first.rating === second.rating) continue;
+          const key = pairKey(family.packId, first.id, second.id);
+          if (!seenPairs.has(key)) fallbackOptions.push({ first, second, key });
         }
+      }
+      while (fallbackOptions.length && matchups.length - familyStart < 5) {
+        fallbackOptions.sort((left, right) => {
+          const leftDegree = (subjectDegrees.get(left.first.id) ?? 0) + (subjectDegrees.get(left.second.id) ?? 0);
+          const rightDegree = (subjectDegrees.get(right.first.id) ?? 0) + (subjectDegrees.get(right.second.id) ?? 0);
+          return leftDegree - rightDegree || stableCatalogHash(left.key) - stableCatalogHash(right.key);
+        });
+        const option = fallbackOptions.shift()!;
+        addPair(option.first, option.second);
       }
     }
 
