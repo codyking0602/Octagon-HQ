@@ -17,6 +17,7 @@ import {
   FOOTBALL_BLIND_RESUME_REVEAL_COUNTS,
   buildFootballBlindResumeEvidence,
   buildFootballBlindResumeRounds,
+  footballBlindResumeCandidatesForPack,
   footballBlindResumeMatchups,
   footballBlindResumeNextRevealCount,
   footballBlindResumeRoundPoints,
@@ -44,7 +45,7 @@ describe("Football Blind Resume", () => {
     window.localStorage.clear();
   });
 
-  it("covers every PR5 archetype with evidence-backed NFL and CFB matchups while Rank 5 stays the verdict owner", () => {
+  it("covers every archetype with eight factual rows while the shared canonical comparison pool owns verdict evaluation", () => {
     expect(footballBlindResumeMatchups.length).toBeGreaterThanOrEqual(80);
     expect(new Set(footballBlindResumeMatchups.map((matchup) => matchup.packId)).size).toBe(13);
     expect(new Set(footballBlindResumeMatchups.map((matchup) => matchup.archetype))).toEqual(new Set([
@@ -57,9 +58,9 @@ describe("Football Blind Resume", () => {
     expect(new Set(footballBlindResumeMatchups.map((matchup) => matchup.league))).toEqual(new Set(["NFL", "CFB"]));
 
     for (const matchup of resolvedFootballBlindResumeMatchups()) {
-      const pack = getFootballRankFivePack(matchup.packId);
-      const left = pack.items.find((item) => item.id === matchup.leftId)!;
-      const right = pack.items.find((item) => item.id === matchup.rightId)!;
+      const candidates = footballBlindResumeCandidatesForPack(matchup.packId);
+      const left = candidates.find((item) => item.id === matchup.leftId)!;
+      const right = candidates.find((item) => item.id === matchup.rightId)!;
       expect(matchup.leftRating).toBe(left.rating);
       expect(matchup.rightRating).toBe(right.rating);
       expect(matchup.winnerId).toBe(left.rating > right.rating ? left.id : right.id);
@@ -76,13 +77,33 @@ describe("Football Blind Resume", () => {
     }
   });
 
-  it("fails loudly when a matchup asks the canonical factual owner for incomplete evidence", () => {
+  it("puts fact-qualified non-legacy canonical wide receivers into real playable matchups and generated cards", () => {
+    const legacyIds = new Set(getFootballRankFivePack("nfl-wide-receivers").items.map((item) => item.id));
+    const candidates = footballBlindResumeCandidatesForPack("nfl-wide-receivers");
+    const nonLegacyCandidates = candidates.filter((candidate) => !legacyIds.has(candidate.id));
+    const wrMatchups = resolvedFootballBlindResumeMatchups().filter((matchup) => matchup.packId === "nfl-wide-receivers");
+    const playableNonLegacyIds = new Set(wrMatchups.flatMap((matchup) => [matchup.leftId, matchup.rightId])
+      .filter((subjectId) => !legacyIds.has(subjectId)));
+
+    expect(nonLegacyCandidates.length).toBeGreaterThan(10);
+    expect(playableNonLegacyIds.size).toBeGreaterThan(4);
+
+    let surfaced = false;
+    for (let index = 0; index < 400 && !surfaced; index += 1) {
+      surfaced = buildFootballBlindResumeRounds(`pr11-non-legacy-wr-${index}`).some((round) =>
+        round.packId === "nfl-wide-receivers"
+        && (!legacyIds.has(round.leftId) || !legacyIds.has(round.rightId)));
+    }
+    expect(surfaced).toBe(true);
+  });
+
+  it("fails loudly instead of inventing evidence when eight truthful aligned rows are unavailable", () => {
     expect(() => buildFootballBlindResumeEvidence(
       "nfl-quarterbacks",
-      "patrick-mahomes",
-      "tom-brady",
+      "not-a-canonical-quarterback",
+      "also-not-a-canonical-quarterback",
       "player-career",
-    )).toThrow(/no factual evidence profile/i);
+    )).toThrow(/eight truthful aligned evidence rows/i);
   });
 
   it("reuses the canonical UFC V3 reveal ladder and scoring owner unchanged", () => {
