@@ -31,7 +31,7 @@ describe("bundled Blind Rank + Keep Cut Daily release", () => {
     expect(runtime).toContain('combo_stage: "keep_4_cut_4"');
     expect(runtime).toContain("blind_rank: blindRankFinal");
     expect(runtime).toContain("keep_cut: keepCutFinal");
-    expect(runtime).toContain("? advanceDailyCombo(context, body.action, ufcRuntime)");
+    expect(runtime).toContain("? advanceDailyCombo(context, body.action)");
   });
 
   it("keeps the second board private until Blind Rank is finished", () => {
