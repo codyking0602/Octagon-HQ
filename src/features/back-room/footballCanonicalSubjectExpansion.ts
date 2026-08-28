@@ -120,6 +120,31 @@ const quarterbackSeasons: FootballExpandedCanonicalSubject[] = nflQuarterbackSea
   };
 });
 
+const cfbRecognizablePlayerSeasons: readonly FootballExpandedCanonicalSubject[] = [
+  ["cfb-marcus-mariota-2014", "Marcus Mariota", "QB", "Oregon", 2014],
+  ["cfb-derrick-henry-2015", "Derrick Henry", "RB", "Alabama", 2015],
+  ["cfb-lamar-jackson-2016", "Lamar Jackson", "QB", "Louisville", 2016],
+  ["cfb-baker-mayfield-2017", "Baker Mayfield", "QB", "Oklahoma", 2017],
+  ["cfb-kyler-murray-2018", "Kyler Murray", "QB", "Oklahoma", 2018],
+  ["cfb-joe-burrow-2019", "Joe Burrow", "QB", "LSU", 2019],
+  ["cfb-devonta-smith-2020", "DeVonta Smith", "WR", "Alabama", 2020],
+  ["cfb-bryce-young-2021", "Bryce Young", "QB", "Alabama", 2021],
+  ["cfb-caleb-williams-2022", "Caleb Williams", "QB", "USC", 2022],
+  ["cfb-jayden-daniels-2023", "Jayden Daniels", "QB", "LSU", 2023],
+  ["cfb-travis-hunter-2024", "Travis Hunter", "DB", "Colorado", 2024],
+].map(([id, name, position, school, season]) => ({
+  id: id as string,
+  name: `${name} ${season}`,
+  kind: "player-season" as const,
+  league: "CFB" as const,
+  position: position as FootballExpandedPosition,
+  school: school as string,
+  season: season as number,
+  startSeason: season as number,
+  endSeason: season as number,
+  activeDecades: [Math.floor((season as number) / 10) * 10],
+}));
+
 const nflSeasons: FootballExpandedCanonicalSubject[] = nflTeamSeasons.map((item) => {
   const season = leadingSeason(item.id);
   return {
@@ -178,15 +203,15 @@ const collegeSeasons: FootballExpandedCanonicalSubject[] = collegeTeamSeasonDept
 });
 
 /**
- * Canonicalized subject families that already existed in Football comparison games.
- * This is an identity adapter only: comparison ratings remain game-specific and are
- * deliberately not imported into the factual ledger.
+ * Canonicalized subject families that already existed in Football comparison games plus reviewed bounded CFB seasons.
+ * This is an identity adapter only: comparison ratings remain game-specific and are deliberately not imported into the factual ledger.
  */
 export const footballComparisonCanonicalSubjects: readonly FootballExpandedCanonicalSubject[] = [
   ...tightEnds,
   ...defenders,
   ...nflCoaches,
   ...quarterbackSeasons,
+  ...cfbRecognizablePlayerSeasons,
   ...nflSeasons,
   ...collegeCoaches,
   ...programEras,
