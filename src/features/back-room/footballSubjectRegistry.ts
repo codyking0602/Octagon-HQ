@@ -19,6 +19,7 @@ import {
 } from "./footballSubjectEligibility";
 import {
   footballNonPlayerRecognitionProjectionFor,
+  footballProjectedNonPlayerRecognitionSubjects,
   footballProjectedPlayerSubjects,
   footballRecognitionProjectionSubjectIdFor,
 } from "./footballRecognizabilityProjection";
@@ -27,10 +28,13 @@ import {
   footballFindLeaderProjectedKnowledgeOverride,
 } from "./footballFindLeaderRuntimeProjection";
 
-export type FootballSubjectKind = FootballCanonicalSubjectKind;
+export type FootballSubjectKind = FootballCanonicalSubjectKind | "franchise" | "game";
 export type FootballSubjectLeague = FootballCanonicalSubject["league"];
 export type FootballSubjectPosition = NonNullable<FootballCanonicalSubject["position"]>;
-export type FootballSubjectProfile = FootballCanonicalSubject & FootballSubjectKnowledgeMetadata & {
+export interface FootballSubjectIdentity extends Omit<FootballCanonicalSubject, "kind"> {
+  kind: FootballSubjectKind;
+}
+export type FootballSubjectProfile = FootballSubjectIdentity & FootballSubjectKnowledgeMetadata & {
   /** Canonical underlying team/program identity for historical team-scoped records. */
   teamId?: FootballTeamMediaId;
   /** Canonical person identity for player records, independent of season/team-at-the-time. */
@@ -61,20 +65,24 @@ export interface FootballSubjectQuery {
   recognizabilityTiers?: readonly FootballRecognizabilityTier[];
   casualEligible?: boolean;
   sourceProvider?: FootballSourceProviderId;
-  /** PR6 source-depth opt-in. Preserves the existing curated canonical view unless separately requested below. */
+  /** Source-depth opt-in. Raw/projected identities never appear merely because a provider is named. */
   includeProjectedSourceSubjects?: boolean;
-  /** Consumer-migration opt-in for PR6 non-player recognition on existing canonical identities. */
+  /** Consumer-migration opt-in for non-player recognition on existing canonical identities. */
   includeProjectedCanonicalRecognition?: boolean;
 }
 
 const comparisonItemById = new Map(footballComparisonDepthItems.map((item) => [item.id, item]));
 
-function programAlias(subject: FootballCanonicalSubject) {
+function normalizedFootballSubjectName(name: string) {
+  return name.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
+}
+
+function programAlias(subject: FootballSubjectIdentity) {
   if (subject.kind !== "program" || !subject.id.startsWith("program-")) return null;
   return `${subject.id.slice("program-".length)}-program`;
 }
 
-function teamIdForSubject(subject: FootballCanonicalSubject): FootballTeamMediaId | undefined {
+function teamIdForSubject(subject: FootballSubjectIdentity): FootballTeamMediaId | undefined {
   const comparisonItem = comparisonItemById.get(subject.id);
   if (comparisonItem) return footballTeamMediaIdFromComparisonAsset(comparisonItem.asset);
   if (subject.kind === "team-season" && subject.league === "CFB") return footballCfbTeamMediaIdFromSeasonSubjectId(subject.id) ?? undefined;
@@ -86,7 +94,7 @@ function teamIdForSubject(subject: FootballCanonicalSubject): FootballTeamMediaI
   return undefined;
 }
 
-function playerIdForSubject(subject: FootballCanonicalSubject) {
+function playerIdForSubject(subject: FootballSubjectIdentity) {
   if (subject.kind === "player-career") return subject.id;
   if (subject.kind !== "player-season") return undefined;
   return subject.id.replace(/-\d{4}$/, "");
@@ -110,6 +118,24 @@ function enrichFootballSubject(
     ...(teamId ? { teamId } : {}),
     ...(playerId ? { playerId } : {}),
     ...(coachId ? { coachId } : {}),
+  };
+}
+
+function enrichProjectedNonPlayerSubject(
+  subject: FootballSubjectIdentity,
+  tier: FootballRecognizabilityTier,
+  sourceIdentityKey?: { provider: FootballSourceProviderId; id: string },
+): FootballSubjectProfile {
+  const canonicalKey = { provider: "octagon-hq", id: subject.id } as const;
+  const sourceIdentityKeys = sourceIdentityKey
+    && !(sourceIdentityKey.provider === canonicalKey.provider && sourceIdentityKey.id === canonicalKey.id)
+    ? [canonicalKey, sourceIdentityKey]
+    : [canonicalKey];
+  return {
+    ...subject,
+    recognizabilityTier: tier,
+    casualEligible: tier !== "D",
+    sourceIdentityKeys,
   };
 }
 
@@ -141,10 +167,11 @@ function projectedCanonicalKnowledgeOverride(subject: FootballCanonicalSubject):
 export const footballSubjects: readonly FootballSubjectProfile[] = footballCanonicalSubjects
   .map((subject) => enrichFootballSubject(subject));
 
-/** Same canonical identities with PR6 non-player recognition applied only for explicitly migrated consumers. */
+/** Same canonical identities with non-player recognition applied only for explicitly migrated consumers. */
 const projectedCanonicalSubjects: readonly FootballSubjectProfile[] = footballCanonicalSubjects
   .map((subject) => enrichFootballSubject(subject, projectedCanonicalKnowledgeOverride(subject)));
 
+const canonicalSubjectIds = new Set(footballSubjects.map((subject) => subject.id));
 const reconciledProjectedPlayerIds = new Set(
   footballCanonicalSubjects
     .filter((subject) => subject.kind === "player-career")
@@ -152,26 +179,45 @@ const reconciledProjectedPlayerIds = new Set(
     .filter((id): id is string => Boolean(id)),
 );
 
-/** Source-projected players that do not already reconcile to a curated canonical player. Opt-in only. */
-const projectedSourceSubjects: readonly FootballSubjectProfile[] = footballProjectedPlayerSubjects
-  .filter((subject) => !reconciledProjectedPlayerIds.has(subject.id))
+/** Projected players survive only when their exact source identity does not already reconcile to a curated subject. */
+const projectedPlayerSourceSubjects: readonly FootballSubjectProfile[] = footballProjectedPlayerSubjects
+  .filter((subject) => {
+    if (canonicalSubjectIds.has(subject.id) || reconciledProjectedPlayerIds.has(subject.id)) return false;
+    const projectionId = footballRecognitionProjectionSubjectIdFor(subject);
+    return projectionId == null || !reconciledProjectedPlayerIds.has(projectionId);
+  })
   .map((subject) => enrichFootballSubject(subject));
 
-const canonicalSubjectIds = new Set(footballSubjects.map((subject) => subject.id));
+/** Stage 12 adds identity-only franchise/game/coach/era families through the same query owner. */
+const projectedNonPlayerSourceSubjects: readonly FootballSubjectProfile[] = footballProjectedNonPlayerRecognitionSubjects
+  .filter(({ subject }) => !canonicalSubjectIds.has(subject.id))
+  .map(({ subject, tier, sourceIdentityKey }) => enrichProjectedNonPlayerSubject(subject, tier, sourceIdentityKey));
+
+const projectedSourceSubjects: readonly FootballSubjectProfile[] = [
+  ...projectedPlayerSourceSubjects,
+  ...projectedNonPlayerSourceSubjects,
+];
+
 const projectedAdditionalSubjects: readonly FootballSubjectProfile[] = footballFindLeaderProjectedAdditionalSubjects
   .filter((subject) => !canonicalSubjectIds.has(subject.id))
   .map((subject) => enrichFootballSubject(subject, footballFindLeaderProjectedKnowledgeOverride(subject.id) ?? undefined));
 
+const allRegisteredSubjects = [...footballSubjects, ...projectedSourceSubjects, ...projectedAdditionalSubjects];
 const footballSubjectById = new Map<string, FootballSubjectProfile>();
-for (const subject of [...footballSubjects, ...projectedSourceSubjects, ...projectedAdditionalSubjects]) {
+// Exact public/source subject IDs own themselves. Legacy aliases fill only unclaimed keys afterwards, so an older
+// cross-level alias can never overwrite a real Stage 12 CFB/NFL career identity with the same id.
+for (const subject of allRegisteredSubjects) {
   if (!footballSubjectById.has(subject.id)) footballSubjectById.set(subject.id, subject);
+}
+for (const subject of allRegisteredSubjects) {
   for (const alias of subject.aliases ?? []) if (!footballSubjectById.has(alias)) footballSubjectById.set(alias, subject);
 }
 
-// PR6 source ids are reconciliation keys, not public canonical aliases. Keep the public subject shape unchanged while
-// allowing source-backed facts to collapse onto the already-reviewed canonical player identity.
-for (const subject of footballSubjects) {
-  const projectionId = footballRecognitionProjectionSubjectIdFor(subject);
+// Source ids are reconciliation keys, not public canonical aliases. Keep the public subject shape unchanged while
+// allowing source-backed facts to collapse onto either a reviewed canonical player or a Stage 12 recognition identity.
+for (const subject of [...footballSubjects, ...projectedPlayerSourceSubjects]) {
+  if (subject.kind !== "player-career") continue;
+  const projectionId = footballRecognitionProjectionSubjectIdFor(subject as FootballCanonicalSubject);
   if (!projectionId || projectionId === subject.id) continue;
   const existing = footballSubjectById.get(projectionId);
   if (existing && existing.id !== subject.id) {
@@ -185,8 +231,10 @@ export function getFootballSubject(subjectId: string) {
 }
 
 function matchesFootballSubject(subject: FootballSubjectProfile, query: FootballSubjectQuery) {
+  // NFL and CFB careers are separate query identities. `leagues` remains compatibility metadata on older factual rows,
+  // but it must not make an NFL career answer a CFB query (or vice versa).
   if (query.kind && subject.kind !== query.kind) return false;
-  if (query.league && !(subject.leagues ?? [subject.league]).includes(query.league)) return false;
+  if (query.league && subject.league !== query.league) return false;
   if (query.position && subject.position !== query.position) return false;
   if (query.positions && (!subject.position || !query.positions.includes(subject.position))) return false;
   if (query.season != null && subject.season !== query.season) return false;
@@ -210,7 +258,7 @@ function matchesFootballSubject(subject: FootballSubjectProfile, query: Football
 }
 
 export function queryFootballSubjects(query: FootballSubjectQuery = {}) {
-  // Preserve the pre-PR6 contract: source-stage depth does not appear in normal queries merely because a provider is named.
+  // Source-depth does not appear in normal queries merely because a provider is named.
   if (query.sourceProvider && query.sourceProvider !== "octagon-hq" && !query.includeProjectedSourceSubjects) return [];
   const canonicalUniverse = query.includeProjectedCanonicalRecognition
     ? projectedCanonicalSubjects
@@ -219,10 +267,6 @@ export function queryFootballSubjects(query: FootballSubjectQuery = {}) {
     ? [...canonicalUniverse, ...projectedSourceSubjects, ...projectedAdditionalSubjects]
     : canonicalUniverse;
   return universe.filter((subject) => matchesFootballSubject(subject, query));
-}
-
-function normalizedFootballSubjectName(name: string) {
-  return name.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
 /**

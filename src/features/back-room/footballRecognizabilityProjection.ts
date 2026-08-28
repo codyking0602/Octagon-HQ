@@ -1,5 +1,10 @@
 import projectionJson from "../../../data/generated/football/recognizability-projection.json";
 import type { FootballCanonicalSubject, FootballCanonicalPosition } from "./footballFactualStatsCatalog";
+import {
+  footballRecognitionEvidenceFor,
+  footballRecognitionEvidenceSubjects,
+  type FootballRecognitionIdentitySubject,
+} from "./footballRecognitionEvidence";
 import type { FootballRecognizabilityTier, FootballSourceProviderId } from "./footballSubjectEligibility";
 
 interface ProjectionRecord {
@@ -16,13 +21,33 @@ interface ProjectionRecord {
   sourceId: string;
 }
 
+type FootballProjectedNonPlayerIdentitySubject = Omit<FootballRecognitionIdentitySubject, "kind"> & {
+  kind: Exclude<FootballRecognitionIdentitySubject["kind"], "era">;
+};
+type FootballEvidenceNewKindSubject = Omit<FootballRecognitionIdentitySubject, "kind"> & {
+  kind: "franchise" | "game" | "era" | "coach";
+};
+
+export interface FootballProjectedNonPlayerRecognitionSubject {
+  subject: FootballProjectedNonPlayerIdentitySubject;
+  tier: FootballRecognizabilityTier;
+  sourceIdentityKey?: { provider: FootballSourceProviderId; id: string };
+}
+
 const records = projectionJson.records as readonly ProjectionRecord[];
 const playerRecords = records.filter((record) => record.kind === "player-career");
 const promotedPlayerRecords = playerRecords.filter((record) => record.tier !== "D");
 const nonPlayerRecords = records.filter((record) => record.kind !== "player-career");
 
-/** Promoted source-player identities only. Non-player PR6 records remain opt-in until their consumer migrations. */
-export const footballProjectedPlayerSubjects: readonly FootballCanonicalSubject[] = promotedPlayerRecords.map((record) => ({
+function activeDecades(startSeason?: number, endSeason?: number) {
+  if (startSeason == null || endSeason == null) return undefined;
+  return Array.from(
+    { length: Math.floor(endSeason / 10) - Math.floor(startSeason / 10) + 1 },
+    (_, index) => (Math.floor(startSeason / 10) + index) * 10,
+  );
+}
+
+const generatedProjectedPlayerSubjects: readonly FootballCanonicalSubject[] = promotedPlayerRecords.map((record) => ({
   id: record.id,
   name: record.name,
   kind: "player-career",
@@ -31,11 +56,29 @@ export const footballProjectedPlayerSubjects: readonly FootballCanonicalSubject[
   school: record.school,
   startSeason: record.startSeason,
   endSeason: record.endSeason,
-  activeDecades: record.startSeason == null || record.endSeason == null ? undefined : Array.from(
-    { length: Math.floor(record.endSeason / 10) - Math.floor(record.startSeason / 10) + 1 },
-    (_, index) => (Math.floor(record.startSeason! / 10) + index) * 10,
-  ),
+  activeDecades: activeDecades(record.startSeason, record.endSeason),
 }));
+
+function normalizedProjectionName(name: string) {
+  return name.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
+}
+
+const evidencePlayerSubjects = footballRecognitionEvidenceSubjects
+  .filter((subject): subject is FootballCanonicalSubject => subject.kind === "player-career");
+const evidencePlayerKeys = new Set(evidencePlayerSubjects.map((subject) => (
+  `${subject.league}:${normalizedProjectionName(subject.name)}:${subject.position ?? ""}`
+)));
+
+/**
+ * One projected player universe. Recognition evidence wins identity/pool conflicts, while the large production
+ * projection remains intact for everyone it already promotes. This is an input to the canonical registry, not a game roster.
+ */
+export const footballProjectedPlayerSubjects: readonly FootballCanonicalSubject[] = [
+  ...generatedProjectedPlayerSubjects.filter((subject) => !evidencePlayerKeys.has(
+    `${subject.league}:${normalizedProjectionName(subject.name)}:${subject.position ?? ""}`,
+  )),
+  ...evidencePlayerSubjects,
+];
 
 const byId = new Map(playerRecords.map((record) => [record.id, record]));
 const byLeagueAndName = new Map<string, ProjectionRecord[]>();
@@ -51,8 +94,7 @@ function uniqueProjectionMatch(records: readonly ProjectionRecord[]) {
 }
 
 function resolveProjectionRecordFor(subject: FootballCanonicalSubject) {
-  // This projection is explicitly player-career-only. A same-name coach (for example Mike Vrabel)
-  // must never inherit or reconcile to that person's historical player source identity.
+  // This production projection is explicitly player-career-only. A same-name coach must never inherit a player row.
   if (subject.kind !== "player-career") return null;
 
   const direct = byId.get(subject.id)
@@ -62,8 +104,6 @@ function resolveProjectionRecordFor(subject: FootballCanonicalSubject) {
   const sameName = byLeagueAndName.get(`${subject.league}:${subject.name.toLowerCase()}`) ?? [];
   if (sameName.length <= 1) return sameName[0] ?? null;
 
-  // Duplicate-name source rows must remain unresolved unless canonical metadata narrows them to one exact identity.
-  // This is intentionally conservative: no fuzzy matching and no positional fallback after an ambiguous result.
   if (subject.position) {
     const samePosition = sameName.filter((record) => record.position === subject.position);
     const uniquePosition = uniqueProjectionMatch(samePosition);
@@ -83,6 +123,13 @@ function resolveProjectionRecordFor(subject: FootballCanonicalSubject) {
 }
 
 export function footballRecognitionProjectionFor(subject: FootballCanonicalSubject) {
+  const evidence = footballRecognitionEvidenceFor(subject);
+  if (evidence) {
+    return {
+      tier: evidence.tier,
+      sourceIdentityKey: { provider: evidence.sourceProvider, id: evidence.sourceId } as const,
+    };
+  }
   const record = resolveProjectionRecordFor(subject);
   if (!record) return null;
   const provider: FootballSourceProviderId = record.league === "NFL" ? "nflverse" : "cfbfastR";
@@ -90,16 +137,11 @@ export function footballRecognitionProjectionFor(subject: FootballCanonicalSubje
 }
 
 /**
- * The source-projection subject id is also a stable reconciliation key when PR6 uniquely matched that row to a
- * curated canonical player. Consumers can therefore collapse source-backed facts onto the canonical person instead
- * of retaining an orphan source-only record.
+ * Keep production-source reconciliation stable even when stronger recognition evidence determines tier. That preserves
+ * the source-backed factual bridge while letting recognition evidence answer only who belongs in A-C.
  */
 export function footballRecognitionProjectionSubjectIdFor(subject: FootballCanonicalSubject) {
-  return resolveProjectionRecordFor(subject)?.id ?? null;
-}
-
-function normalizedProjectionName(name: string) {
-  return name.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
+  return resolveProjectionRecordFor(subject)?.id ?? footballRecognitionEvidenceFor(subject)?.id ?? null;
 }
 
 function nonPlayerProjectionKind(subject: FootballCanonicalSubject) {
@@ -138,10 +180,6 @@ for (const record of nonPlayerRecords.filter((candidate) => candidate.kind === "
   cfbProminentTeamSeasonsByProgram.set(key, values);
 }
 
-/**
- * Canonical cultural markers that PR6 cannot infer from its promoted source rows alone: pre-nflverse history plus
- * famous failure/disappointment seasons that achievement-based promotion deliberately leaves at D.
- */
 const canonicalNonPlayerRecognitionTiers = new Map<string, FootballRecognizabilityTier>([
   ["1972-miami-dolphins", "C"],
   ["1985-chicago-bears", "C"],
@@ -167,14 +205,9 @@ function derivedProgramEraTier(subject: FootballCanonicalSubject): FootballRecog
   if (!uniqueProjectionMatch(cfbProgramByName.get(schoolKey) ?? [])) return null;
   const prominentSeasons = (cfbProminentTeamSeasonsByProgram.get(schoolKey) ?? [])
     .filter((record) => record.startSeason! >= subject.startSeason! && record.startSeason! <= subject.endSeason!);
-  // A recognizable FBS program plus repeated PR6-promoted team seasons is the cultural marker needed to expose the era.
   return prominentSeasons.length >= 2 ? "C" : null;
 }
 
-/**
- * Opt-in bridge for non-player PR6 recognition records. It intentionally supports only the canonical subject families
- * already migrated by a consumer and requires either an exact source identity or one unique exact-name/season match.
- */
 export function footballNonPlayerRecognitionProjectionFor(
   subject: FootballCanonicalSubject,
   sourceIdentityKey?: { provider: FootballSourceProviderId; id: string },
@@ -212,6 +245,52 @@ export function footballNonPlayerRecognitionProjectionFor(
     ...(provider ? { sourceIdentityKey: { provider, id: record.sourceId } as const } : {}),
   };
 }
+
+// Generated relationship sources can safely expose league/franchise and Super Bowl-game identities. Coaching eras and
+// additional coaches use explicit Stage 12 evidence instead of blindly promoting every source coaching stint.
+const generatedNewKindRecords = nonPlayerRecords.filter((record) => (
+  (record.kind === "franchise" || record.kind === "game") && record.tier !== "D"
+));
+const evidenceNewKindSubjects = footballRecognitionEvidenceSubjects.filter(
+  (subject): subject is FootballEvidenceNewKindSubject => (
+    subject.kind === "franchise" || subject.kind === "game" || subject.kind === "era" || subject.kind === "coach"
+  ),
+);
+const evidenceNewKindIds = new Set(evidenceNewKindSubjects.map((subject) => subject.id));
+
+function normalizeEvidenceNonPlayerSubject(subject: FootballEvidenceNewKindSubject): FootballProjectedNonPlayerIdentitySubject {
+  if (subject.kind === "era") return { ...subject, kind: "program-era" };
+  return subject as FootballProjectedNonPlayerIdentitySubject;
+}
+
+export const footballProjectedNonPlayerRecognitionSubjects: readonly FootballProjectedNonPlayerRecognitionSubject[] = [
+  ...generatedNewKindRecords
+    .filter((record) => !evidenceNewKindIds.has(record.id))
+    .map((record) => ({
+      subject: {
+        id: record.id,
+        name: record.name,
+        kind: record.kind as "franchise" | "game",
+        league: record.league,
+        startSeason: record.startSeason,
+        endSeason: record.endSeason,
+        season: record.kind === "game" && record.startSeason === record.endSeason ? record.startSeason : undefined,
+        activeDecades: activeDecades(record.startSeason, record.endSeason),
+      },
+      tier: record.tier,
+      ...(supportedProjectionProvider(record) ? {
+        sourceIdentityKey: { provider: supportedProjectionProvider(record)!, id: record.sourceId },
+      } : {}),
+    })),
+  ...evidenceNewKindSubjects.map((subject) => {
+    const evidence = footballRecognitionEvidenceFor(subject)!;
+    return {
+      subject: normalizeEvidenceNonPlayerSubject(subject),
+      tier: evidence.tier,
+      sourceIdentityKey: { provider: evidence.sourceProvider, id: evidence.sourceId },
+    };
+  }),
+];
 
 export const FOOTBALL_RECOGNITION_MANUAL_APPROVAL_NAMES = projectionJson.manualApprovals as readonly string[];
 export const FOOTBALL_RECOGNITION_SUMMARY = projectionJson.summary;
