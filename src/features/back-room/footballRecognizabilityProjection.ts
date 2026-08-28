@@ -130,8 +130,8 @@ export function footballRecognitionProjectionFor(subject: FootballCanonicalSubje
 }
 
 /**
- * Keep production-source reconciliation stable even when a stronger recognition evidence row determines tier.
- * That preserves the source-backed factual bridge while letting recognition evidence answer only who belongs in A-C.
+ * Keep production-source reconciliation stable even when stronger recognition evidence determines tier. That preserves
+ * the source-backed factual bridge while letting recognition evidence answer only who belongs in A-C.
  */
 export function footballRecognitionProjectionSubjectIdFor(subject: FootballCanonicalSubject) {
   return resolveProjectionRecordFor(subject)?.id ?? footballRecognitionEvidenceFor(subject)?.id ?? null;
@@ -239,11 +239,13 @@ export function footballNonPlayerRecognitionProjectionFor(
   };
 }
 
+// Generated relationship sources can safely expose league/franchise and Super Bowl-game identities. Coaching eras and
+// additional coaches use explicit Stage 12 evidence instead of blindly promoting every source coaching stint.
 const generatedNewKindRecords = nonPlayerRecords.filter((record) => (
   (record.kind === "franchise" || record.kind === "game") && record.tier !== "D"
 ));
 const evidenceNewKindSubjects = footballRecognitionEvidenceSubjects.filter((subject) => (
-  subject.kind === "franchise" || subject.kind === "game"
+  subject.kind === "franchise" || subject.kind === "game" || subject.kind === "era" || subject.kind === "coach"
 ));
 const evidenceNewKindIds = new Set(evidenceNewKindSubjects.map((subject) => subject.id));
 
@@ -259,6 +261,7 @@ export const footballProjectedNonPlayerRecognitionSubjects: readonly FootballPro
         startSeason: record.startSeason,
         endSeason: record.endSeason,
         season: record.kind === "game" && record.startSeason === record.endSeason ? record.startSeason : undefined,
+        activeDecades: activeDecades(record.startSeason, record.endSeason),
       },
       tier: record.tier,
       ...(supportedProjectionProvider(record) ? {
