@@ -3,6 +3,7 @@ export type FootballRecognitionCompletenessKind =
 
 export interface FootballRecognitionCompletenessCandidate {
   name: string;
+  identityAliases?: readonly string[];
   league: "NFL" | "CFB";
   kind: FootballRecognitionCompletenessKind;
   minimumTier: "A" | "B";
@@ -46,6 +47,16 @@ export const footballRecognitionCompletenessCandidates: readonly FootballRecogni
   { name: "Tim Brown", league: "CFB", kind: "player-career", minimumTier: "B", evidenceFamily: "heisman", source: HEISMAN },
   { name: "Keith Jackson", league: "CFB", kind: "player-career", minimumTier: "B", evidenceFamily: "college-football-hall-of-fame", source: CFB_HOF },
 
+  ...[
+    ["Marcus Mariota 2014", 2014], ["Derrick Henry 2015", 2015], ["Lamar Jackson 2016", 2016],
+    ["Baker Mayfield 2017", 2017], ["Kyler Murray 2018", 2018], ["Joe Burrow 2019", 2019],
+    ["DeVonta Smith 2020", 2020], ["Bryce Young 2021", 2021], ["Caleb Williams 2022", 2022],
+    ["Jayden Daniels 2023", 2023], ["Travis Hunter 2024", 2024],
+  ].map(([name, season]) => ({
+    name: name as string, league: "CFB" as const, kind: "player-season" as const, season: season as number,
+    minimumTier: "A" as const, evidenceFamily: "heisman" as const, source: HEISMAN,
+  })),
+
   ...["Vince Lombardi", "Don Shula", "Bill Walsh", "Tom Landry", "Paul Brown"].map((name) => ({
     name, league: "NFL" as const, kind: "coach" as const, minimumTier: "A" as const,
     evidenceFamily: "championship-postseason" as const, source: NFL_HOF,
@@ -64,10 +75,10 @@ export const footballRecognitionCompletenessCandidates: readonly FootballRecogni
   { name: "2005 Texas", league: "CFB", kind: "team-season", season: 2005, minimumTier: "A", evidenceFamily: "championship-postseason", source: CFB_HOF },
   { name: "2019 LSU", league: "CFB", kind: "team-season", season: 2019, minimumTier: "A", evidenceFamily: "championship-postseason", source: CFB_HOF },
 
-  ...["Green Bay Packers", "Dallas Cowboys", "San Francisco 49ers", "New England Patriots"].map((name) => ({
-    name, league: "NFL" as const, kind: "franchise" as const, minimumTier: "B" as const,
-    evidenceFamily: "championship-postseason" as const, source: NFL_HOF,
-  })),
+  { name: "Green Bay Packers", identityAliases: ["GB", "nfl-franchise-GB"], league: "NFL", kind: "franchise", minimumTier: "B", evidenceFamily: "championship-postseason", source: NFL_HOF },
+  { name: "Dallas Cowboys", identityAliases: ["DAL", "nfl-franchise-DAL"], league: "NFL", kind: "franchise", minimumTier: "B", evidenceFamily: "championship-postseason", source: NFL_HOF },
+  { name: "San Francisco 49ers", identityAliases: ["SF", "nfl-franchise-SF"], league: "NFL", kind: "franchise", minimumTier: "B", evidenceFamily: "championship-postseason", source: NFL_HOF },
+  { name: "New England Patriots", identityAliases: ["NE", "nfl-franchise-NE"], league: "NFL", kind: "franchise", minimumTier: "B", evidenceFamily: "championship-postseason", source: NFL_HOF },
   ...["Alabama", "Ohio State", "Notre Dame", "Texas", "USC", "Michigan", "Oklahoma"].map((name) => ({
     name, league: "CFB" as const, kind: "program" as const, minimumTier: "B" as const,
     evidenceFamily: "championship-postseason" as const, source: CFB_HOF,
