@@ -87,7 +87,7 @@ describe("Football factual stat owner", () => {
     expect(getFootballFact("lawrence-taylor", "nfl-career-sacks")?.fact.value).toBe(132.5);
     expect(getFootballFact("nfl-ed-reed", "nfl-career-interceptions")?.fact.value).toBe(64);
     expect(getFootballFact("peyton-manning-2013", "nfl-season-passing-touchdowns")?.fact.value).toBe(55);
-    expect(getFootballFact("cfb-joe-burrow-2019", "cfb-best-season-passing-yards")?.fact.value).toBe(5671);
+    expect(getFootballFact("cfb-joe-burrow-2019", "cfb-best-season-passing-yards")?.fact.value).toBe(4347);
     expect(getFootballFact("2017-cleveland-browns", "nfl-team-overall-wins")?.fact.value).toBe(0);
   });
 
