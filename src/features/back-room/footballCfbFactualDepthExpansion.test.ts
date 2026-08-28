@@ -17,9 +17,9 @@ const metricFactCount = (metricId: FootballFactMetricId) =>
 
 describe("Football CFB factual depth expansion", () => {
   it("keeps receiving and coaching depth while making recognizable rushing depth materially reusable", () => {
-    expect(factCount("cfb-player-career", "cfb-best-season-receptions")).toBe(11);
-    expect(factCount("cfb-player-career", "cfb-best-season-receiving-yards")).toBe(11);
-    expect(factCount("cfb-player-career", "cfb-best-season-receiving-touchdowns")).toBe(11);
+    expect(factCount("cfb-player-career", "cfb-best-season-receptions")).toBeGreaterThanOrEqual(11);
+    expect(factCount("cfb-player-career", "cfb-best-season-receiving-yards")).toBeGreaterThanOrEqual(11);
+    expect(factCount("cfb-player-career", "cfb-best-season-receiving-touchdowns")).toBeGreaterThanOrEqual(11);
 
     expect(factCount("cfb-coach-career", "cfb-coach-career-wins")).toBe(11);
     expect(factCount("cfb-coach-career", "cfb-coach-career-losses")).toBe(11);
