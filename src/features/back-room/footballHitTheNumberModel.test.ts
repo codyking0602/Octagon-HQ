@@ -57,32 +57,6 @@ describe("Football Hit the Number canonical fact integration", () => {
     expect(metrics).not.toContain("nfl-career-sacks");
   });
 
-  it("keeps every playable value on the provenance-bearing canonical quantitative owner", () => {
-    const seenMetrics = new Set<string>();
-    const seenNewMetrics = new Set<string>();
-    const newMetrics = new Set([
-      "nfl-career-receiving-yards",
-      "nfl-season-passing-yards",
-      "cfb-team-wins",
-    ]);
-
-    for (let index = 0; index < 900; index += 1) {
-      const plan = createFootballHitTheNumberPlan(`football-hit-number-facts-${index}`);
-      seenMetrics.add(plan.metricId);
-      if (newMetrics.has(plan.metricId)) seenNewMetrics.add(plan.metricId);
-      for (const subjectId of plan.subjectIds) {
-        const fact = getFootballFact(subjectId, plan.metricId);
-        expect(fact, `${plan.metricId}:${subjectId}`).not.toBeNull();
-        expect(Number.isFinite(fact!.fact.value)).toBe(true);
-        expect(fact!.sources.length).toBeGreaterThan(0);
-        expect(fact!.sources.every((source) => source.reviewedOn === "2026-08-22" || source.reviewedOn === "2026-08-25" || source.reviewedOn === "2026-08-27")).toBe(true);
-      }
-    }
-
-    expect(seenMetrics.size).toBeGreaterThanOrEqual(15);
-    expect(seenNewMetrics).toEqual(newMetrics);
-  });
-
   it("keeps themes deep, unique and honest now that non-champion team seasons are eligible elsewhere", () => {
     const catalogIds = FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG.map((theme) => theme.id);
     expect(catalogIds).not.toContain("nfl-qbs-top-picks");
@@ -182,7 +156,7 @@ describe("Football Hit the Number canonical fact integration", () => {
     expect(ONE_FROM_EACH_LABELS).not.toEqual(BUILD_TEAM_LABELS);
   }, 60_000);
 
-  it("keeps CFB at least half of casual exposure while rotating every format and all pick counts", () => {
+  it("keeps canonical provenance while rotating every format, all pick counts, and CFB casual exposure", () => {
     const formats = new Map<FootballHitTheNumberFormatId, number>([
       ["classic", 0],
       ["themed-lineup", 0],
@@ -190,6 +164,13 @@ describe("Football Hit the Number canonical fact integration", () => {
       ["build-the-team", 0],
     ]);
     const picks = new Set<number>();
+    const seenMetrics = new Set<string>();
+    const seenNewMetrics = new Set<string>();
+    const newMetrics = new Set([
+      "nfl-career-receiving-yards",
+      "nfl-season-passing-yards",
+      "cfb-team-wins",
+    ]);
     let cfb = 0;
     const runs = 1_000;
 
@@ -197,11 +178,23 @@ describe("Football Hit the Number canonical fact integration", () => {
       const plan = createFootballHitTheNumberPlan(`football-hit-number-mix-${index}`);
       formats.set(plan.formatId, formats.get(plan.formatId)! + 1);
       picks.add(plan.pickCount);
+      seenMetrics.add(plan.metricId);
+      if (newMetrics.has(plan.metricId)) seenNewMetrics.add(plan.metricId);
       if (plan.league === "CFB") cfb += 1;
       expect(footballHitTheNumberPlanQuality(plan).passes).toBe(true);
       expect(footballHitTheNumberSelectionSatisfies(plan, plan.solutionSubjectIds)).toBe(true);
+
+      for (const subjectId of plan.subjectIds) {
+        const fact = getFootballFact(subjectId, plan.metricId);
+        expect(fact, `${plan.metricId}:${subjectId}`).not.toBeNull();
+        expect(Number.isFinite(fact!.fact.value)).toBe(true);
+        expect(fact!.sources.length).toBeGreaterThan(0);
+        expect(fact!.sources.every((source) => source.reviewedOn === "2026-08-22" || source.reviewedOn === "2026-08-25" || source.reviewedOn === "2026-08-27")).toBe(true);
+      }
     }
 
+    expect(seenMetrics.size).toBeGreaterThanOrEqual(15);
+    expect(seenNewMetrics).toEqual(newMetrics);
     expect(picks).toEqual(new Set([4, 5, 6, 7]));
     expect(cfb / runs).toBeGreaterThanOrEqual(0.52);
     expect(cfb / runs).toBeLessThanOrEqual(0.68);
