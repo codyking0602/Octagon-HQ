@@ -4,6 +4,7 @@ import { footballLedgerAudit } from "./footballLedgerAudit";
 import {
   FOOTBALL_LEDGER_CENSUS_POOLS,
   footballLedgerCensus,
+  footballLedgerCensusEndingSeasonFor,
 } from "./footballLedgerCensus";
 
 const TIERS = ["A", "B", "C"] as const;
@@ -47,7 +48,22 @@ describe("Football Knowledge Ledger canonical census", () => {
     expect(cfbMiddle.C).toBe(0);
   });
 
-  it("keeps programs/franchises timeless and unresolved dated subjects explicit", () => {
+  it("recovers reviewed identities' existing Stage 12 source windows before calling them unknown", () => {
+    const recovered = footballLedgerAudit.rows.filter((row) => (
+      row.pool !== "Franchises / programs"
+      && row.endSeason == null
+      && row.season == null
+      && footballLedgerCensusEndingSeasonFor(row) != null
+    ));
+    expect(recovered.length).toBeGreaterThan(0);
+
+    const unknownCount = footballLedgerCensus.rows
+      .filter((row) => row.pool !== "Franchises / programs")
+      .reduce((sum, row) => sum + TIERS.reduce((tierSum, tier) => tierSum + row.eras.unknown[tier], 0), 0);
+    expect(unknownCount).toBeLessThan(562);
+  });
+
+  it("keeps programs/franchises timeless and truly unresolved dated subjects explicit", () => {
     for (const league of ["NFL", "CFB"] as const) {
       const organizations = footballLedgerCensus.rows.find((row) => row.league === league && row.pool === "Franchises / programs");
       expect(organizations).toBeDefined();
