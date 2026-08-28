@@ -1,6 +1,7 @@
 import projectionJson from "../../../data/generated/football/recognizability-projection.json";
 import type { FootballCanonicalSubject, FootballCanonicalPosition } from "./footballFactualStatsCatalog";
 import { footballHistoricalRecognitionRepairs } from "./footballHistoricalRecognitionRepairs";
+import { footballProHallRecognitionCandidates } from "./footballProHallRecognitionCompletenessEvidence";
 import {
   footballRecognitionEvidenceFor,
   footballRecognitionEvidenceSubjects,
@@ -30,6 +31,13 @@ type FootballEvidenceNewKindSubject = Omit<FootballRecognitionIdentitySubject, "
   kind: "franchise" | "game" | "era" | "coach";
 };
 
+type FootballRecognitionFloorIdentity = {
+  kind: string;
+  league: "NFL" | "CFB";
+  name: string;
+  aliases?: readonly string[];
+};
+
 export interface FootballProjectedNonPlayerRecognitionSubject {
   subject: FootballProjectedNonPlayerIdentitySubject;
   tier: FootballRecognizabilityTier;
@@ -38,7 +46,6 @@ export interface FootballProjectedNonPlayerRecognitionSubject {
 
 const records = projectionJson.records as readonly ProjectionRecord[];
 const playerRecords = records.filter((record) => record.kind === "player-career");
-const promotedPlayerRecords = playerRecords.filter((record) => record.tier !== "D");
 const nonPlayerRecords = records.filter((record) => record.kind !== "player-career");
 
 function activeDecades(startSeason?: number, endSeason?: number) {
@@ -52,6 +59,48 @@ function activeDecades(startSeason?: number, endSeason?: number) {
 function normalizedProjectionName(name: string) {
   return name.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
 }
+
+const TIER_RANK: Readonly<Record<FootballRecognizabilityTier, number>> = { D: 0, C: 1, B: 2, A: 3 };
+function recognitionTierAtLeast(
+  currentTier: FootballRecognizabilityTier,
+  minimumTier?: "A" | "B" | null,
+): FootballRecognizabilityTier {
+  if (!minimumTier || TIER_RANK[currentTier] >= TIER_RANK[minimumTier]) return currentTier;
+  return minimumTier;
+}
+
+const proHallMinimumTierByKindLeagueAndName = new Map<string, "A" | "B">();
+for (const candidate of footballProHallRecognitionCandidates) {
+  for (const identityName of [candidate.name, ...(candidate.identityAliases ?? [])]) {
+    const key = `${candidate.kind}:${candidate.league}:${normalizedProjectionName(identityName)}`;
+    const current = proHallMinimumTierByKindLeagueAndName.get(key);
+    proHallMinimumTierByKindLeagueAndName.set(
+      key,
+      current ? recognitionTierAtLeast(current, candidate.minimumTier) as "A" | "B" : candidate.minimumTier,
+    );
+  }
+}
+
+function proHallMinimumTierFor(subject: FootballRecognitionFloorIdentity) {
+  if (subject.league !== "NFL" || (subject.kind !== "player-career" && subject.kind !== "coach")) return null;
+  const minimums = [subject.name, ...(subject.aliases ?? [])]
+    .map((identityName) => proHallMinimumTierByKindLeagueAndName.get(
+      `${subject.kind}:${subject.league}:${normalizedProjectionName(identityName)}`,
+    ))
+    .filter((tier): tier is "A" | "B" => tier != null);
+  return minimums.reduce<"A" | "B" | null>((strongest, tier) => {
+    if (!strongest) return tier;
+    return recognitionTierAtLeast(strongest, tier) as "A" | "B";
+  }, null);
+}
+
+function proHallMinimumTierForPlayerRecord(record: ProjectionRecord) {
+  return proHallMinimumTierFor({ kind: "player-career", league: record.league, name: record.name });
+}
+
+const promotedPlayerRecords = playerRecords.filter((record) => (
+  recognitionTierAtLeast(record.tier, proHallMinimumTierForPlayerRecord(record)) !== "D"
+));
 
 const historicalPlayerRepairs = footballHistoricalRecognitionRepairs.filter(
   (repair) => repair.subject.kind === "player-career",
@@ -148,15 +197,17 @@ function resolveProjectionRecordFor(subject: FootballCanonicalSubject) {
 }
 
 export function footballRecognitionProjectionFor(subject: FootballCanonicalSubject) {
+  const proHallMinimumTier = proHallMinimumTierFor(subject);
   const historical = historicalRepairFor(subject);
   if (historical) {
+    const tier = recognitionTierAtLeast(historical.tier, proHallMinimumTier);
     const production = resolveProjectionRecordFor(subject);
     if (production) {
       const provider: FootballSourceProviderId = production.league === "NFL" ? "nflverse" : "cfbfastR";
-      return { tier: historical.tier, sourceIdentityKey: { provider, id: production.sourceId } as const };
+      return { tier, sourceIdentityKey: { provider, id: production.sourceId } as const };
     }
     return {
-      tier: historical.tier,
+      tier,
       sourceIdentityKey: {
         provider: subject.league === "NFL" ? "nfl-honors" : "official-cfb-awards",
         id: `stage13-5:${historical.subject.id}`,
@@ -166,14 +217,26 @@ export function footballRecognitionProjectionFor(subject: FootballCanonicalSubje
   const evidence = footballRecognitionEvidenceFor(subject);
   if (evidence) {
     return {
-      tier: evidence.tier,
+      tier: recognitionTierAtLeast(evidence.tier, proHallMinimumTier),
       sourceIdentityKey: { provider: evidence.sourceProvider, id: evidence.sourceId } as const,
     };
   }
   const record = resolveProjectionRecordFor(subject);
-  if (!record) return null;
-  const provider: FootballSourceProviderId = record.league === "NFL" ? "nflverse" : "cfbfastR";
-  return { tier: record.tier, sourceIdentityKey: { provider, id: record.sourceId } as const };
+  if (record) {
+    const provider: FootballSourceProviderId = record.league === "NFL" ? "nflverse" : "cfbfastR";
+    return {
+      tier: recognitionTierAtLeast(record.tier, proHallMinimumTier),
+      sourceIdentityKey: { provider, id: record.sourceId } as const,
+    };
+  }
+  if (!proHallMinimumTier) return null;
+  return {
+    tier: proHallMinimumTier,
+    sourceIdentityKey: {
+      provider: "nfl-honors" as const,
+      id: `pro-football-hall:${normalizedProjectionName(subject.name)}`,
+    },
+  };
 }
 
 export function footballRecognitionProjectionSubjectIdFor(subject: FootballCanonicalSubject) {
@@ -330,13 +393,19 @@ export const footballProjectedNonPlayerRecognitionSubjects: readonly FootballPro
     .filter((subject) => !repairNonPlayerIds.has(subject.id))
     .map((subject) => {
       const evidence = footballRecognitionEvidenceFor(subject)!;
+      const hallFloor = proHallMinimumTierFor({
+        kind: subject.kind === "era" ? "program-era" : subject.kind,
+        league: subject.league,
+        name: subject.name,
+        aliases: subject.aliases,
+      });
       return {
         subject: normalizeEvidenceNonPlayerSubject(subject),
         tier: applyFootballHistoricalRecognitionPolicy(
           subject.id,
           subject.league,
           subject.endSeason ?? subject.season,
-          evidence.tier,
+          recognitionTierAtLeast(evidence.tier, hallFloor),
         ) as FootballRecognizabilityTier,
         sourceIdentityKey: { provider: evidence.sourceProvider, id: evidence.sourceId },
       };
@@ -344,7 +413,7 @@ export const footballProjectedNonPlayerRecognitionSubjects: readonly FootballPro
     .filter((row) => row.tier !== "D"),
   ...historicalNonPlayerRepairs.map((repair) => ({
     subject: repair.subject as FootballProjectedNonPlayerIdentitySubject,
-    tier: repair.tier,
+    tier: recognitionTierAtLeast(repair.tier, proHallMinimumTierFor(repair.subject)),
     sourceIdentityKey: {
       provider: repair.subject.league === "NFL" ? "nfl-honors" as const : "official-cfb-awards" as const,
       id: `stage13-5:${repair.subject.id}`,
