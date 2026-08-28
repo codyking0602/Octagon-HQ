@@ -24,12 +24,12 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
       - run: npm ci --silent --no-audit --no-fund
-      - name: Show canonical specialist subjects
+      - name: Show canonical CFB specialist subjects
         run: |
           cat > stage13-specialist-diag.ts <<'EOF'
           import { queryFootballSubjects } from "./src/features/back-room/footballSubjectRegistry";
           const rows = queryFootballSubjects({ recognizabilityTiers: ["A", "B", "C"], includeProjectedCanonicalRecognition: true, includeProjectedSourceSubjects: true })
-            .filter((row) => row.kind === "player-career" && row.league === "NFL" && (row.position === "K" || row.position === "P"));
+            .filter((row) => row.kind === "player-career" && row.league === "CFB" && (row.position === "K" || row.position === "P"));
           console.log(JSON.stringify(rows, null, 2));
           EOF
           npx vite-node stage13-specialist-diag.ts
