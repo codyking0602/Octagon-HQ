@@ -114,7 +114,7 @@ A|P|Brett Favre
 D|P|Tom Fears
 D|X|Jim Finks
 A|P|Larry Fitzgerald
-B|C|Ray Flaherty
+D|C|Ray Flaherty
 B|C|Tom Flores
 D|P|Len Ford
 D|P|Dan Fortmann
@@ -260,7 +260,7 @@ A|P|Anthony Muñoz
 D|P|George Musso
 A|P|Bronko Nagurski
 A|P|Joe Namath
-B|C|Earle 'Greasy' Neale
+D|C|Earle 'Greasy' Neale
 D|P|Ernie Nevers
 B|P|Ozzie Newsome
 B|P|Ray Nitschke
@@ -270,7 +270,7 @@ D|X|Bill Nunn
 B|P|Jonathan Ogden
 B|P|Merlin Olsen
 B|P|Jim Otto
-B|C|Steve Owen
+D|C|Steve Owen
 B|P|Terrell Owens
 B|P|Orlando Pace
 A|P|Alan Page
@@ -442,7 +442,9 @@ function hallReason(reviewKind: FootballProHallReviewKind, disposition: Football
       ? "Pro Football Hall of Fame coach remains broadly recognizable enough for the B head-coach pool without requiring A-icon status."
       : "Pro Football Hall of Fame player remains broadly recognizable enough for the B player-career pool without requiring A-icon status.";
   }
-  return "Pro Football Hall of Fame player reviewed against the Stage 13.5 era-sensitive recognizability standard but kept archive-only rather than inflating the canonical A/B career universe.";
+  return reviewKind === "coach"
+    ? "Pro Football Hall of Fame coach reviewed against the Stage 13.5 era-sensitive recognizability standard but kept archive-only rather than weakening the strict historical recognition threshold."
+    : "Pro Football Hall of Fame player reviewed against the Stage 13.5 era-sensitive recognizability standard but kept archive-only rather than inflating the canonical A/B career universe.";
 }
 
 /**
