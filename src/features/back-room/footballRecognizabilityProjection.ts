@@ -258,6 +258,11 @@ const evidenceNewKindSubjects = footballRecognitionEvidenceSubjects.filter(
 );
 const evidenceNewKindIds = new Set(evidenceNewKindSubjects.map((subject) => subject.id));
 
+function normalizeEvidenceNonPlayerSubject(subject: FootballEvidenceNewKindSubject): FootballProjectedNonPlayerIdentitySubject {
+  if (subject.kind === "era") return { ...subject, kind: "program-era" };
+  return subject as FootballProjectedNonPlayerIdentitySubject;
+}
+
 export const footballProjectedNonPlayerRecognitionSubjects: readonly FootballProjectedNonPlayerRecognitionSubject[] = [
   ...generatedNewKindRecords
     .filter((record) => !evidenceNewKindIds.has(record.id))
@@ -279,11 +284,8 @@ export const footballProjectedNonPlayerRecognitionSubjects: readonly FootballPro
     })),
   ...evidenceNewKindSubjects.map((subject) => {
     const evidence = footballRecognitionEvidenceFor(subject)!;
-    const normalizedSubject: FootballProjectedNonPlayerIdentitySubject = subject.kind === "era"
-      ? { ...subject, kind: "program-era" }
-      : subject;
     return {
-      subject: normalizedSubject,
+      subject: normalizeEvidenceNonPlayerSubject(subject),
       tier: evidence.tier,
       sourceIdentityKey: { provider: evidence.sourceProvider, id: evidence.sourceId },
     };
