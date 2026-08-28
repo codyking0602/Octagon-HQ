@@ -10,6 +10,7 @@ import {
   type FootballCanonicalSubject,
   type FootballCanonicalSubjectKind,
 } from "./footballFactualStatsCatalog";
+import { footballHistoricalRecognitionRepairs } from "./footballHistoricalRecognitionRepairs";
 import {
   buildFootballSubjectKnowledgeMetadata,
   type FootballRecognizabilityTier,
@@ -73,6 +74,11 @@ export interface FootballSubjectQuery {
 
 const comparisonItemById = new Map(footballComparisonDepthItems.map((item) => [item.id, item]));
 const projectedPlayerSubjectById = new Map(footballProjectedPlayerSubjects.map((subject) => [subject.id, subject]));
+const reviewedHistoricalPlayerIds = new Set(
+  footballHistoricalRecognitionRepairs
+    .filter((repair) => repair.subject.kind === "player-career")
+    .map((repair) => repair.subject.id),
+);
 
 function normalizedFootballSubjectName(name: string) {
   return name.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
@@ -102,14 +108,14 @@ function playerIdForSubject(subject: FootballSubjectIdentity) {
 }
 
 /**
- * Reviewed/source recognition identities may reconcile to an older curated canonical player id. The canonical id and
- * authored metadata remain authoritative, but missing identity-window fields must not be discarded during that
- * reconciliation or downstream era queries lose information the recognition owner already knows.
+ * Reviewed historical recognition identities may reconcile to an older curated canonical player id. The canonical id
+ * and authored metadata remain authoritative, but missing identity-window fields must not be discarded. Restrict this
+ * merge to the reviewed historical repair owner so ordinary source projection does not silently change public queries.
  */
 function reconcileProjectedPlayerIdentity(subject: FootballCanonicalSubject): FootballCanonicalSubject {
   if (subject.kind !== "player-career") return subject;
   const projectionId = footballRecognitionProjectionSubjectIdFor(subject);
-  if (!projectionId) return subject;
+  if (!projectionId || !reviewedHistoricalPlayerIds.has(projectionId)) return subject;
   const projected = projectedPlayerSubjectById.get(projectionId);
   if (!projected) return subject;
   return {
