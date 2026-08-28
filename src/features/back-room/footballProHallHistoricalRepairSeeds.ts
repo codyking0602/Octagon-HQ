@@ -11,11 +11,11 @@ export interface FootballProHallHistoricalRepairSeed {
 }
 
 /**
- * Official Pro Football Hall of Fame position/profile metadata for reviewed A/B identities that were genuinely
- * absent from the canonical A-C universe after existing canonical/source identities received their Hall tier floor.
- * These are recognition identity seeds only: no factual-stat values or game eligibility live here.
+ * Official Pro Football Hall of Fame position/profile metadata for reviewed historical identities that were absent
+ * from the canonical A-C universe after existing canonical/source identities received their Hall tier floor.
+ * The final repair export below excludes any metadata row archived by the strict historical recognition policy.
  */
-export const footballProHallHistoricalRepairSeeds: readonly FootballProHallHistoricalRepairSeed[] = [
+const footballProHallHistoricalMetadataSeeds: readonly FootballProHallHistoricalRepairSeed[] = [
   { id: "nfl-herb-adderley", name: "Herb Adderley", kind: "player-career", position: "DB", startSeason: 1961, endSeason: 1972, tier: "B" },
   { id: "nfl-eric-allen", name: "Eric Allen", kind: "player-career", position: "DB", startSeason: 1988, endSeason: 2001, tier: "B" },
   { id: "nfl-george-allen", name: "George Allen", kind: "coach", startSeason: 1966, endSeason: 1977, tier: "B" },
@@ -166,3 +166,6 @@ export const footballProHallHistoricalRepairSeeds: readonly FootballProHallHisto
   { id: "nfl-jack-youngblood", name: "Jack Youngblood", kind: "player-career", position: "DL", startSeason: 1971, endSeason: 1984, tier: "B" },
   { id: "nfl-gary-zimmerman", name: "Gary Zimmerman", kind: "player-career", position: "OL", startSeason: 1986, endSeason: 1997, tier: "B" },
 ] as const;
+
+export const footballProHallHistoricalRepairSeeds: readonly FootballProHallHistoricalRepairSeed[] =
+  footballProHallHistoricalMetadataSeeds.filter((seed) => seed.tier === "A" || seed.endSeason >= 1970);
