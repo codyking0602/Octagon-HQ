@@ -1,4 +1,5 @@
 export * from "./footballFactualStatsCore";
+export * from "./footballFactualUniverseProjection";
 export * from "./footballFactualStatsCatalog";
 export * from "./footballBlindResumeEvidence";
 export * from "./footballSubjectRegistry";

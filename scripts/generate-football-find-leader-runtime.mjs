@@ -4,6 +4,7 @@ import path from "node:path";
 import process from "node:process";
 
 import { parseCsv } from "./lib/footballCsv.mjs";
+import { footballRecognitionEvidenceRecords } from "../src/features/back-room/footballRecognitionEvidence.ts";
 
 const root = new URL("../", import.meta.url);
 const DEFAULT_OUTPUT = "data/generated/football/find-leader-runtime-projection.json";
@@ -63,12 +64,37 @@ async function loadPinnedDraftPicks() {
 }
 
 const draftRows = await loadPinnedDraftPicks();
-const recognitionRecords = recognition.records.filter((record) => promoted(record.tier));
+const generatedRecognitionRecords = recognition.records.filter((record) => promoted(record.tier));
+const evidenceRecognitionRecords = footballRecognitionEvidenceRecords.filter((record) => promoted(record.tier));
+const recognitionIdentityKey = (record) => [
+  record.kind,
+  record.league,
+  normalize(record.name),
+  record.position ?? "",
+  normalize(record.school ?? ""),
+  record.season ?? "",
+].join(":");
+const evidenceRecognitionKeys = new Set(evidenceRecognitionRecords.map(recognitionIdentityKey));
+// Mirror the Stage 12 registry exactly: independent recognition evidence wins when it names the same identity.
+// Evidence remains membership-only; every Stage 13 fact still comes from a pinned factual source.
+const recognitionRecords = [
+  ...generatedRecognitionRecords.filter((record) => !evidenceRecognitionKeys.has(recognitionIdentityKey(record))),
+  ...evidenceRecognitionRecords,
+];
 const playerRecognition = recognitionRecords.filter((record) => record.kind === "player-career");
-const nflCareerRecognition = new Map(playerRecognition.filter((record) => record.league === "NFL" && record.sourceProvider === "nflverse").map((record) => [String(record.sourceId), record]));
-const cfbCareerRecognition = new Map(playerRecognition.filter((record) => record.league === "CFB" && record.sourceProvider === "cfbfastR").map((record) => [`${String(record.sourceId)}:${normalize(record.name)}`, record]));
+const playerRecognitionByIdentity = new Map(playerRecognition.map((record) => [recognitionIdentityKey(record), record]));
+// Preserve normalized source identities beneath evidence overrides so hydration stays one-to-one.
+const nflCareerRecognition = new Map(generatedRecognitionRecords.filter((record) => record.kind === "player-career" && record.league === "NFL" && record.sourceProvider === "nflverse").map((record) => [String(record.sourceId), playerRecognitionByIdentity.get(recognitionIdentityKey(record)) ?? record]));
+const cfbCareerRecognition = new Map(generatedRecognitionRecords.filter((record) => record.kind === "player-career" && record.league === "CFB" && record.sourceProvider === "cfbfastR").map((record) => [String(record.sourceId) + ":" + normalize(record.name), playerRecognitionByIdentity.get(recognitionIdentityKey(record)) ?? record]));
 const nflTeamRecognition = new Map(recognitionRecords.filter((record) => record.kind === "team-season" && record.league === "NFL").map((record) => [String(record.sourceId), record]));
 const cfbTeamRecognition = new Map(recognitionRecords.filter((record) => record.kind === "team-season" && record.league === "CFB").map((record) => [String(record.sourceId), record]));
+const evidencePlayerRecognitionByLeagueName = new Map();
+for (const record of evidenceRecognitionRecords.filter((row) => row.kind === "player-career")) {
+  const key = record.league + ":" + normalize(record.name);
+  const values = evidencePlayerRecognitionByLeagueName.get(key) ?? [];
+  values.push(record);
+  evidencePlayerRecognitionByLeagueName.set(key, values);
+}
 
 const draftByGsis = new Map(draftRows.filter((row) => row.gsisId).map((row) => [row.gsisId, row]));
 const draftByName = new Map();
@@ -101,6 +127,25 @@ function draftForRecognition(recognized) {
     if (schoolMatches.length === 1) candidates = schoolMatches;
   }
   return candidates.length === 1 ? candidates[0] : null;
+}
+
+function recognitionForSourceRows(league, rows, ix) {
+  const names = [...new Set(rows.flatMap((row) => [
+    at(row, ix, "playerDisplayName"),
+    at(row, ix, "playerName"),
+  ]).map(normalize).filter(Boolean))];
+  const candidatesById = new Map();
+  for (const name of names) {
+    for (const record of evidencePlayerRecognitionByLeagueName.get(league + ":" + name) ?? []) candidatesById.set(record.id, record);
+  }
+  const candidates = [...candidatesById.values()];
+  if (candidates.length === 1) return candidates[0];
+  if (league === "CFB" && candidates.length > 1) {
+    const teams = new Set(rows.map((row) => normalize(at(row, ix, "team"))).filter(Boolean));
+    const schoolMatches = candidates.filter((record) => record.school && teams.has(normalize(record.school)));
+    if (schoolMatches.length === 1) return schoolMatches[0];
+  }
+  return null;
 }
 
 const subjects = [];
@@ -186,6 +231,9 @@ for (const recognized of playerRecognition) {
     evidenceSource: "nflverse-draft-picks-projection",
   });
   if (recognized.league === "NFL") {
+    // The checksum-pinned nflverse draft/PFR release is the full-career aggregate owner whenever a drafted
+    // player's row supplies the metric. Seasonal nflverse rows remain the owner of season facts and may supply
+    // career aggregates only for undrafted players whose complete recognized career is covered by the corpus.
     setFact(recognized.id, "nfl-career-games", draft.games);
     setFact(recognized.id, "nfl-first-team-all-pros", draft.allPro);
     setFact(recognized.id, "nfl-pro-bowl-selections", draft.proBowls);
@@ -202,15 +250,31 @@ for (const recognized of playerRecognition) {
       setFact(recognized.id, "nfl-career-receptions", ["RB", "WR", "TE"].includes(recognized.position) ? draft.receptions : null);
       setFact(recognized.id, "nfl-career-receiving-yards", ["RB", "WR", "TE"].includes(recognized.position) ? draft.receivingYards : null);
       setFact(recognized.id, "nfl-career-receiving-touchdowns", ["RB", "WR", "TE"].includes(recognized.position) ? draft.receivingTouchdowns : null);
+      if (recognized.position === "QB") {
+        setFact(recognized.id, "nfl-career-passer-rating", nflPasserRating(draft.passCompletions, draft.passAttempts, draft.passYards, draft.passTouchdowns, draft.passInterceptions));
+        setFact(recognized.id, "nfl-career-completion-percentage", safeDivide(draft.passCompletions == null ? null : draft.passCompletions * 100, draft.passAttempts));
+        setFact(recognized.id, "nfl-career-passing-yards-per-attempt", safeDivide(draft.passYards, draft.passAttempts));
+        setFact(recognized.id, "nfl-career-passing-touchdown-percentage", safeDivide(draft.passTouchdowns == null ? null : draft.passTouchdowns * 100, draft.passAttempts));
+      }
+      if (recognized.position === "RB") {
+        setFact(recognized.id, "nfl-career-rushing-yards-per-attempt", safeDivide(draft.rushYards, draft.rushAttempts));
+      }
     }
   }
 }
 
 const nflGrouped = groupRows(nflPlayers, (row, ix) => String(at(row, ix, "sourcePlayerId") ?? ""));
 for (const [sourcePlayerId, rows] of nflGrouped.groups) {
-  const recognized = nflCareerRecognition.get(sourcePlayerId);
-  if (!recognized || recognized.startSeason < 1999) continue;
+  const recognized = nflCareerRecognition.get(sourcePlayerId) ?? recognitionForSourceRows("NFL", rows, nflGrouped.ix);
+  if (!recognized) continue;
   registerPlayer(recognized);
+  const draft = draftForRecognition(recognized);
+  const normalizedSeasons = rows.map((row) => numeric(at(row, nflGrouped.ix, "season"))).filter((season) => season != null);
+  const normalizedCareerCoverageComplete = recognized.startSeason != null
+    && recognized.endSeason != null
+    && normalizedSeasons.length > 0
+    && Math.min(...normalizedSeasons) <= recognized.startSeason
+    && Math.max(...normalizedSeasons) >= recognized.endSeason;
   const position = recognized.position;
   const sum = (column) => completeSum(rows, nflGrouped.ix, column);
   const games = sum("games");
@@ -236,46 +300,52 @@ for (const [sourcePlayerId, rows] of nflGrouped.groups) {
   const puntingAttempts = sum("puntingAttempts");
   const puntingYards = sum("puntingYards");
 
-  setFact(recognized.id, "nfl-career-games", games);
-  if (position === "QB") {
-    setFact(recognized.id, "nfl-career-passing-completions", completions);
-    setFact(recognized.id, "nfl-career-passing-attempts", attempts);
-    setFact(recognized.id, "nfl-career-passing-yards", passingYards);
-    setFact(recognized.id, "nfl-career-passing-touchdowns", passingTouchdowns);
-    setFact(recognized.id, "nfl-career-interceptions-thrown", passingInterceptions);
-    setFact(recognized.id, "nfl-career-passer-rating", nflPasserRating(completions, attempts, passingYards, passingTouchdowns, passingInterceptions));
-    setFact(recognized.id, "nfl-career-completion-percentage", safeDivide(completions == null ? null : completions * 100, attempts));
-    setFact(recognized.id, "nfl-career-passing-yards-per-attempt", safeDivide(passingYards, attempts));
-    setFact(recognized.id, "nfl-career-passing-touchdown-percentage", safeDivide(passingTouchdowns == null ? null : passingTouchdowns * 100, attempts));
-  }
-  if (position === "RB") {
-    setFact(recognized.id, "nfl-career-rushing-attempts", carries);
-    setFact(recognized.id, "nfl-career-rushing-yards", rushingYards);
-    setFact(recognized.id, "nfl-career-rushing-touchdowns", rushingTouchdowns);
-    setFact(recognized.id, "nfl-career-rushing-yards-per-attempt", safeDivide(rushingYards, carries));
-  }
-  if (["RB", "WR", "TE"].includes(position)) {
-    setFact(recognized.id, "nfl-career-receptions", receptions);
-    setFact(recognized.id, "nfl-career-receiving-yards", receivingYards);
-    setFact(recognized.id, "nfl-career-receiving-touchdowns", receivingTouchdowns);
-  }
-  if (["DL", "LB", "DB"].includes(position)) {
-    setFact(recognized.id, "nfl-career-tackles-solo", tacklesSolo);
-    setFact(recognized.id, "nfl-career-tackles-for-loss", tacklesForLoss);
-    setFact(recognized.id, "nfl-career-forced-fumbles", forcedFumbles);
-    setFact(recognized.id, "nfl-career-sacks", defensiveSacks);
-    setFact(recognized.id, "nfl-career-interceptions", defensiveInterceptions);
-    setFact(recognized.id, "nfl-career-passes-defended", passesDefended);
-  }
-  if (position === "K") {
-    setFact(recognized.id, "nfl-career-field-goals-made", fieldGoalsMade);
-    setFact(recognized.id, "nfl-career-field-goals-attempted", fieldGoalsAttempted);
-    setFact(recognized.id, "nfl-career-field-goal-percentage", safeDivide(fieldGoalsMade == null ? null : fieldGoalsMade * 100, fieldGoalsAttempted));
-  }
-  if (position === "P") {
-    setFact(recognized.id, "nfl-career-punts", puntingAttempts);
-    setFact(recognized.id, "nfl-career-punting-yards", puntingYards);
-    setFact(recognized.id, "nfl-career-punting-average", safeDivide(puntingYards, puntingAttempts));
+  if (normalizedCareerCoverageComplete) {
+    // A drafted player's full-career PFR aggregate remains authoritative for the career metrics it supplies.
+    // Undrafted players can use normalized sums only when the observed rows span the whole recognized career.
+    if (!draft) {
+      setFact(recognized.id, "nfl-career-games", games);
+      if (position === "QB") {
+        setFact(recognized.id, "nfl-career-passing-completions", completions);
+        setFact(recognized.id, "nfl-career-passing-attempts", attempts);
+        setFact(recognized.id, "nfl-career-passing-yards", passingYards);
+        setFact(recognized.id, "nfl-career-passing-touchdowns", passingTouchdowns);
+        setFact(recognized.id, "nfl-career-interceptions-thrown", passingInterceptions);
+        setFact(recognized.id, "nfl-career-passer-rating", nflPasserRating(completions, attempts, passingYards, passingTouchdowns, passingInterceptions));
+        setFact(recognized.id, "nfl-career-completion-percentage", safeDivide(completions == null ? null : completions * 100, attempts));
+        setFact(recognized.id, "nfl-career-passing-yards-per-attempt", safeDivide(passingYards, attempts));
+        setFact(recognized.id, "nfl-career-passing-touchdown-percentage", safeDivide(passingTouchdowns == null ? null : passingTouchdowns * 100, attempts));
+      }
+      if (position === "RB") {
+        setFact(recognized.id, "nfl-career-rushing-attempts", carries);
+        setFact(recognized.id, "nfl-career-rushing-yards", rushingYards);
+        setFact(recognized.id, "nfl-career-rushing-touchdowns", rushingTouchdowns);
+        setFact(recognized.id, "nfl-career-rushing-yards-per-attempt", safeDivide(rushingYards, carries));
+      }
+      if (["RB", "WR", "TE"].includes(position)) {
+        setFact(recognized.id, "nfl-career-receptions", receptions);
+        setFact(recognized.id, "nfl-career-receiving-yards", receivingYards);
+        setFact(recognized.id, "nfl-career-receiving-touchdowns", receivingTouchdowns);
+      }
+    }
+    if (["DL", "LB", "DB"].includes(position)) {
+      setFact(recognized.id, "nfl-career-tackles-solo", tacklesSolo);
+      setFact(recognized.id, "nfl-career-tackles-for-loss", tacklesForLoss);
+      setFact(recognized.id, "nfl-career-forced-fumbles", forcedFumbles);
+      setFact(recognized.id, "nfl-career-sacks", defensiveSacks);
+      setFact(recognized.id, "nfl-career-interceptions", defensiveInterceptions);
+      setFact(recognized.id, "nfl-career-passes-defended", passesDefended);
+    }
+    if (position === "K") {
+      setFact(recognized.id, "nfl-career-field-goals-made", fieldGoalsMade);
+      setFact(recognized.id, "nfl-career-field-goals-attempted", fieldGoalsAttempted);
+      setFact(recognized.id, "nfl-career-field-goal-percentage", safeDivide(fieldGoalsMade == null ? null : fieldGoalsMade * 100, fieldGoalsAttempted));
+    }
+    if (position === "P") {
+      setFact(recognized.id, "nfl-career-punts", puntingAttempts);
+      setFact(recognized.id, "nfl-career-punting-yards", puntingYards);
+      setFact(recognized.id, "nfl-career-punting-average", safeDivide(puntingYards, puntingAttempts));
+    }
   }
   const teams = [...new Set(rows.map((row) => String(at(row, nflGrouped.ix, "recentTeam") ?? "")).filter(Boolean))].sort();
   for (const team of teams) pushRelationship({ subjectId: recognized.id, kind: "played-for", targetId: team, targetName: team, evidenceSource: "nflverse-factual-universe-projection" });
@@ -306,8 +376,15 @@ const cfbGrouped = groupRows(cfbPlayers, (row, ix) => {
   return sourcePlayerId && name ? `${sourcePlayerId}:${normalize(name)}` : "";
 });
 for (const [key, rows] of cfbGrouped.groups) {
-  const recognized = cfbCareerRecognition.get(key);
-  if (!recognized || recognized.startSeason <= 2014) continue;
+  const recognized = cfbCareerRecognition.get(key) ?? recognitionForSourceRows("CFB", rows, cfbGrouped.ix);
+  if (!recognized) continue;
+  const normalizedSeasons = rows.map((row) => numeric(at(row, cfbGrouped.ix, "season"))).filter((season) => season != null);
+  const normalizedCareerCoverageComplete = recognized.startSeason != null
+    && recognized.endSeason != null
+    && normalizedSeasons.length > 0
+    && Math.min(...normalizedSeasons) <= recognized.startSeason
+    && Math.max(...normalizedSeasons) >= recognized.endSeason;
+  if (!normalizedCareerCoverageComplete) continue;
   registerPlayer(recognized);
   const bySeason = new Map();
   for (const row of rows) {
@@ -509,6 +586,7 @@ const artifact = {
   purpose: "Shared Stage 13 A/B/C factual universe projection. Find the Leader retains this legacy artifact filename but no longer owns the facts.",
   generatedFrom: {
     recognizabilityVersion: recognition.version,
+    stage12RecognitionEvidence: "src/features/back-room/footballRecognitionEvidence.ts",
     nflPlayerCorpus: "data/generated/football/nfl/player-seasons-1999-2025.json",
     nflTeamCorpus: "data/generated/football/nfl/team-seasons-1999-2025.json",
     cfbPlayerCorpus: "data/generated/football/cfb/player-seasons-2014-2025.json",
@@ -526,8 +604,8 @@ const artifact = {
   eligibility: {
     recognizabilityTiers: ["A", "B", "C"],
     excludesTierD: true,
-    nflCareerMinimumStartSeasonForNormalizedStats: 1999,
-    cfbCareerMinimumStartSeasonForNormalizedStats: 2015,
+    nflCareerNormalizedCoverageRule: "observed player-season endpoints must contain the full recognized career before career aggregates are emitted",
+    cfbCareerNormalizedCoverageRule: "observed player-season endpoints must contain the full recognized career before career-best values are emitted",
     nflQbSeasonMinimumAttempts: 200,
     unknownPolicy: "null-or-absent; never manufacture zero from a missing source value",
   },
@@ -540,7 +618,7 @@ const artifact = {
     byKind: Object.fromEntries([...new Set(subjects.map((subject) => subject.kind))].sort().map((kind) => [kind, subjects.filter((subject) => subject.kind === kind).length])),
   },
   coverageMatrix: {
-    denominator: "Stage 12 recognizability projection after A/B/C gate; Tier D and raw corpus rows are excluded",
+    denominator: "Stage 12 canonical recognizability universe after generated projection + independent evidence reconciliation and the A/B/C gate; Tier D and raw corpus rows are excluded",
     metricFamilies: ["production", "efficiency", "honors", "draft", "relationships"],
     playerPools: coverageRows,
     nonPlayers: nonPlayerCoverage,
