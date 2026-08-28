@@ -24,29 +24,35 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
       - run: npm ci --silent --no-audit --no-fund
-      - name: Show canonical CFB specialist subjects
+      - name: Trace college quarterback Keep/Cut pool
         run: |
-          cat > stage13-specialist-diag.ts <<'EOF'
-          import { queryFootballSubjects } from "./src/features/back-room/footballSubjectRegistry";
-          const rows = queryFootballSubjects({ recognizabilityTiers: ["A", "B", "C"], includeProjectedCanonicalRecognition: true, includeProjectedSourceSubjects: true })
-            .filter((row) => row.kind === "player-career" && row.league === "CFB" && (row.position === "K" || row.position === "P"));
-          console.log(JSON.stringify(rows, null, 2));
+          cat > stage13-keep-cut-diag.ts <<'EOF'
+          import { buildFootballKeepCutBoard, footballComparisonTier } from "./src/features/back-room/footballComparisonGeneration";
+          import { getFootballKeepCutPack } from "./src/features/back-room/footballKeepCutModel";
+          const pack = getFootballKeepCutPack("college-quarterbacks");
+          console.log("POOL", JSON.stringify(pack.items.map((item) => ({ id:item.id, name:item.name, rating:item.rating, tier:footballComparisonTier(item) })), null, 2));
+          const appearances = new Map<string, number>();
+          const styles = new Map<string, number>();
+          const co = new Map<string, number>();
+          const minshewId = "cfbfast-r-player-4038524-gardner-minshew";
+          for (let index=0; index<128; index+=1) {
+            const seed=`keep-cut-simulation-${pack.id}-${index}`;
+            const board=buildFootballKeepCutBoard(pack.items, pack.id, seed);
+            for (const item of board.items) appearances.set(item.id,(appearances.get(item.id)??0)+1);
+            if (board.items.some((item)=>item.id===minshewId)) {
+              styles.set(board.style,(styles.get(board.style)??0)+1);
+              for (const item of board.items) if (item.id!==minshewId) co.set(item.id,(co.get(item.id)??0)+1);
+            }
+          }
+          console.log("APPEARANCES", JSON.stringify([...appearances].sort((a,b)=>b[1]-a[1]), null, 2));
+          console.log("MINSHEW_STYLES", JSON.stringify(Object.fromEntries(styles), null, 2));
+          console.log("MINSHEW_COOCCURRENCE", JSON.stringify([...co].sort((a,b)=>b[1]-a[1]).slice(0,20), null, 2));
           EOF
-          npx vite-node stage13-specialist-diag.ts
-          rm stage13-specialist-diag.ts
-      - name: Apply narrow final repair
+          npx vite-node stage13-keep-cut-diag.ts
+          rm stage13-keep-cut-diag.ts
+      - name: Apply Stage 13 factual repair
         run: node scripts/stage13-final-repair.mjs
       - name: Regenerate Stage 13 artifacts
         run: npm run generate:football-factual-universe
       - name: Validate Stage 13 factual closure
         run: npx vitest run src/features/back-room/footballFactualUniverse.test.ts src/features/back-room/footballFactualStats.test.ts
-      - name: Validate Keep/Cut exposure repair
-        run: npx vitest run src/features/back-room/footballGenerationMaturity.test.ts
-      - name: Commit permanent repair and remove temporary scaffolding
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git rm .github/workflows/temp-stage13-final-repair.yml scripts/stage13-final-repair.mjs
-          git add scripts/generate-football-factual-universe.mjs data/generated/football/factual-universe-projection.json data/generated/football/factual-coverage-matrix.json src/features/back-room/footballFactualUniverseProjection.ts src/features/back-room/footballFactualStatsCore.ts src/features/back-room/footballComparisonGeneration.ts
-          git commit -m "Close Stage 13 factual and exposure gaps"
-          git push origin HEAD:feat/football-ledger-stage13-factual-universe
