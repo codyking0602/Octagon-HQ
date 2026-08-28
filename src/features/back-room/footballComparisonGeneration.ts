@@ -622,7 +622,15 @@ function attemptKeepCutBoard(
   let selectedBad = 0;
 
   for (const targetTier of targets) {
-    const forceAbsoluteTier = targetTier === "elite" || targetTier === "bad";
+    const repeatedTargetDepth = targets.filter((tier) => tier === targetTier).length;
+    const exactTierDepth = availableTierCount(items, targetTier);
+    const preferDeepExactTier = (
+      targetTier !== "elite"
+      && targetTier !== "bad"
+      && exactTierDepth >= Math.max(3, repeatedTargetDepth)
+      && random() < 0.55
+    );
+    const forceAbsoluteTier = targetTier === "elite" || targetTier === "bad" || preferDeepExactTier;
     const picked = chooseItem(
       items,
       targetTier,
