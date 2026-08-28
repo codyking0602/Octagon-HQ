@@ -24,17 +24,22 @@ jobs:
         with:
           node-version-file: .nvmrc
 
+      - name: Materialize Stage 13 source ownership and canonical core
+        run: |
+          node scripts/stage13-fix-generator.mjs
+          node scripts/stage13-patch-core.mjs
+
       - name: Generate factual projection
         run: node scripts/generate-football-find-leader-runtime.mjs
 
-      - name: Commit generated projection
+      - name: Commit materialized Stage 13 files
         run: |
-          if git diff --quiet -- data/generated/football/find-leader-runtime-projection.json; then
-            echo "Projection already current."
+          if git diff --quiet; then
+            echo "Stage 13 files already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/generated/football/find-leader-runtime-projection.json
-          git commit -m "Generate Stage 13 Football factual projection"
+          git add scripts/generate-football-find-leader-runtime.mjs src/features/back-room/footballFactualStatsCore.ts src/features/back-room/footballFactualStats.ts data/generated/football/find-leader-runtime-projection.json
+          git commit -m "Materialize Stage 13 Football factual universe"
           git push origin HEAD:stage13-football-factual-universe
