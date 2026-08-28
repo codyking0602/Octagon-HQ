@@ -562,10 +562,10 @@ export function footballHitTheNumberPlanQuality(plan: FootballHitTheNumberPlan):
   let hasMiddlingOutcome = false;
   let hasMeaningfulBust = false;
 
-  combinations(plan.subjectIds, plan.pickCount, (subjectIds) => {
-    if (!footballHitTheNumberSelectionSatisfies(plan, subjectIds)) return;
+  const inspectSelection = (subjectIds: readonly string[]) => {
+    if (!footballHitTheNumberSelectionSatisfies(plan, subjectIds)) return false;
     const total = subjectIds.reduce((sum, subjectId) => sum + valueFor(subjectId, plan.metricId), 0);
-    if (Math.abs(total - plan.target) < 1e-9) return;
+    if (Math.abs(total - plan.target) < 1e-9) return false;
     legalSelectionCount += 1;
     const status: HitTheNumberResultStatus = total > plan.target ? "bust" : "under";
     const score = hitTheNumberScore({
@@ -581,7 +581,25 @@ export function footballHitTheNumberPlanQuality(plan: FootballHitTheNumberPlan):
     ) hasMiddlingOutcome = true;
     if (status === "bust") hasMeaningfulBust = true;
     return legalSelectionCount >= 6 && hasGoodUnder && hasMiddlingOutcome && hasMeaningfulBust;
-  });
+  };
+
+  if (plan.boardType === "open-roster") {
+    const solutionSet = new Set(plan.solutionSubjectIds);
+    let complete = false;
+    for (let solutionIndex = 0; solutionIndex < plan.solutionSubjectIds.length && !complete; solutionIndex += 1) {
+      for (const replacementId of plan.subjectIds) {
+        if (solutionSet.has(replacementId)) continue;
+        const candidate = [...plan.solutionSubjectIds];
+        candidate[solutionIndex] = replacementId;
+        if (inspectSelection(candidate)) {
+          complete = true;
+          break;
+        }
+      }
+    }
+  } else {
+    combinations(plan.subjectIds, plan.pickCount, inspectSelection);
+  }
 
   return {
     passes: legalSelectionCount >= 6 && hasGoodUnder && hasMiddlingOutcome && hasMeaningfulBust,
