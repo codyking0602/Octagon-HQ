@@ -4,11 +4,11 @@ Baseline: 2026-08-27
 
 ## Purpose
 
-Stage 11 establishes the product specification before more Football data is promoted or enriched. It answers three questions for every NFL and CFB pool:
+Stage 11 establishes the Football HQ product specification before more identities are promoted or facts are enriched. It answers three questions for every NFL and CFB pool:
 
 1. How much source identity depth exists today?
 2. How much of that depth is actually in the canonical A/B/C product universe and fact-ready?
-3. What facts and honors should the ledger ultimately own so every Football game can use the same universe in different ways?
+3. What facts and honors should the ledger ultimately own so every Football game can reuse one universe in different ways?
 
 This is an audit/specification stage. It does **not** create a second factual provider or a game-specific roster. `footballSubjectRegistry.ts` remains the identity/query owner and `footballFactualStats.ts` remains the factual public owner.
 
@@ -36,286 +36,180 @@ Both leagues also require non-player pools:
 - eras / dynasties
 - notable games
 
-## What the census numbers mean
+## Census definitions
 
-`Source raw assignable` is the number of unique identities that the **current normalized source and current position-inference rules** can place into that pool. It is not a claim that the source is a complete historical universe.
+`Source raw assignable` is the number of unique identities the **current normalized source and current position-inference rules** can place into that pool. It is not a claim that the source is historically complete.
 
 `Canonical A-C` is the actual product universe returned through the canonical subject/query path with projected source subjects and projected canonical recognition enabled.
 
-`With any facts` means the canonical factual owner can currently return at least one objective fact for that subject. It does not mean the stat contract is complete.
+`With any facts` means the canonical factual owner can currently return at least one objective fact for the subject. It does not mean the Stage 11 stat contract is complete.
 
-The current recognizability generator contains 51,428 raw player identities overall. Its own generated projection has 1,455 NFL A-C player identities but only 159 CFB A-C player identities. The curated/canonical bridge raises the actual product pool to 1,508 NFL and 223 CFB player identities across the nine pools below.
+The current recognizability generator contains **51,428 raw player identities** overall. Its generated source projection promotes **1,455 NFL** player identities to A-C but only **159 CFB** identities. The canonical/curated bridge raises the actual product pool to **1,508 NFL** and **223 CFB** player identities across the nine permanent player pools below.
 
-### NFL player census
+## Player census
 
-| Pool | Source raw assignable | A | B | C | Canonical A-C | With any facts | Avg. current fact count | Stage 11 read |
+### NFL
+
+| Pool | Source raw assignable | A | B | C | Canonical A-C | With any facts | Avg. current facts | Audit result |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| QB | 411 | 10 | 32 | 80 | 122 | 122 | 14.94 | Identity/fact depth strong; contract still needs honors/team-success parity. |
-| RB | 1,169 | 4 | 30 | 139 | 173 | 173 | 14.85 | Identity/fact depth strong. |
-| WR | 1,445 | 2 | 32 | 198 | 232 | 232 | 3.03 | Plenty of names, but factual menu is too thin. |
-| TE | 745 | 0 | 5 | 66 | 71 | 68 | 2.87 | Identity depth acceptable; factual menu too thin and no Tier A. |
-| OL | 1,471 | 0 | 0 | 0 | **0** | **0** | 0.00 | Missing product pool entirely. |
-| DL / EDGE | 1,654 | 2 | 16 | 280 | 298 | 295 | 2.00 | Many identities, very shallow facts. |
-| LB | 1,701 | 1 | 15 | 204 | 220 | 219 | 2.03 | Many identities, very shallow facts. |
-| Secondary | 2,271 | 1 | 24 | 367 | 392 | 391 | 2.01 | Many identities, very shallow facts. |
-| K / P | 0 under current normalized player import | 0 | 0 | 0 | **0** | **0** | 0.00 | Source/product gap; specialists are not represented as a usable pool. |
+| QB | 411 | 10 | 32 | 80 | 122 | 122 | 14.94 | Strongest current player pool. |
+| RB | 1,169 | 4 | 30 | 139 | 173 | 173 | 14.85 | Strong current identity/fact depth. |
+| WR | 1,445 | 2 | 32 | 198 | 232 | 232 | 3.03 | Names are deep; factual menu is too thin. |
+| TE | 745 | 0 | 5 | 66 | 71 | 68 | 2.87 | Identity depth is useful; facts are thin and Tier A is empty. |
+| OL | 1,471 | 0 | 0 | 0 | **0** | **0** | 0.00 | Product pool is missing entirely. |
+| DL / EDGE | 1,654 | 2 | 16 | 280 | 298 | 295 | 2.00 | Many identities; facts are extremely shallow. |
+| LB | 1,701 | 1 | 15 | 204 | 220 | 219 | 2.03 | Many identities; facts are extremely shallow. |
+| Secondary | 2,271 | 1 | 24 | 367 | 392 | 391 | 2.01 | Many identities; facts are extremely shallow. |
+| K / P | 0 under current normalized player import | 0 | 0 | 0 | **0** | **0** | 0.00 | Specialist product/source path is missing. |
 
-### CFB player census
+### CFB
 
-| Pool | Source raw assignable | A | B | C | Canonical A-C | With any facts | Avg. current fact count | Stage 11 read |
+| Pool | Source raw assignable | A | B | C | Canonical A-C | With any facts | Avg. current facts | Audit result |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| QB | 1,731 | 1 | 10 | 43 | **54** | **19** | 2.09 | Far too shallow; many obvious identities also lack facts. |
-| RB | 1,755 | 1 | 11 | 47 | **59** | **40** | Far too shallow for CFB history. |
-| WR | 5,612 | 0 | 4 | 38 | **42** | **34** | Far too shallow and zero Tier A. |
-| TE | 280 | 0 | 1 | 8 | **9** | **5** | Critical gap; recognizable college TEs are largely absent. |
-| OL | 115 | 0 | 0 | 0 | **0** | **0** | Missing product pool entirely. |
-| DL / EDGE | 528 | 0 | 2 | 19 | **21** | **20** | Critical historical/recognition gap. |
-| LB | 596 | 0 | 1 | 19 | **20** | **19** | Critical historical/recognition gap. |
-| Secondary | 863 | 0 | 1 | 17 | **18** | **9** | Critical identity and factual gap. |
-| K / P | 1,360 | 0 | 0 | 0 | **0** | **0** | Source identities exist but product projection ignores the pool. |
+| QB | 1,731 | 1 | 10 | 43 | **54** | **19** | 2.09 | Far too shallow; recognized identities also lack facts. |
+| RB | 1,755 | 1 | 11 | 47 | **59** | **40** | 4.02 | Far too shallow for CFB history. |
+| WR | 5,612 | 0 | 4 | 38 | **42** | **34** | 2.62 | Far too shallow and Tier A is empty. |
+| TE | 280 | 0 | 1 | 8 | **9** | **5** | 1.67 | Critical missing historical/recognition pool. |
+| OL | 115 | 0 | 0 | 0 | **0** | **0** | 0.00 | Product pool is missing entirely. |
+| DL / EDGE | 528 | 0 | 2 | 19 | **21** | **20** | 1.90 | Critical recognition/history gap. |
+| LB | 596 | 0 | 1 | 19 | **20** | **19** | 1.90 | Critical recognition/history gap. |
+| Secondary | 863 | 0 | 1 | 17 | **18** | **9** | 1.22 | Critical identity and factual gap. |
+| K / P | 1,360 | 0 | 0 | 0 | **0** | **0** | 0.00 | Source identities exist but product projection ignores specialists. |
 
-The current 2014-2025 CFB player source leaves **27,237 raw CFB identities without a trustworthy pool assignment under the current inference rules**. That is a direct reason not to let one stat feed determine recognizability.
+The current 2014-2025 CFB player source leaves **27,237 raw CFB identities without a trustworthy pool assignment under the current inference rules**. That alone is enough to reject one stat feed as the sole recognizability authority.
 
-### Non-player census
+## Non-player census
 
-| League | Pool | Current source rows | Canonical A-C | Factual readiness |
-| --- | --- | ---: | ---: | --- |
-| NFL | Team seasons | 861 | 116 | Strongest NFL non-player factual pool; current stat menu is still too thin. |
-| NFL | Franchises | 32 | **0 canonical product subjects** | Identity owner gap. |
-| NFL | Head-coach stops / coaches | 246 source stops | 38 coaches | No NFL coach fact scope today; factual gap. |
-| NFL | Eras / dynasties | 246 coach-stop rows available as era inputs | **0 canonical product eras** | Identity/relationship gap. |
-| NFL | Games | 7,276 | **0 canonical product games** | Identity/query gap. |
-| CFB | Team seasons | 7,468 | 142 | Strong current non-player pool; needs broader team-stat contract. |
-| CFB | Programs | 769 | 106 | Identity depth exists; only a tiny subset currently owns reusable program facts. |
-| CFB | Head-coach stops / coaches | 686 source stops | 20 coaches | Identity and factual coverage are shallow. |
-| CFB | Eras / dynasties | 6 generated championship-era rows | 12 canonical eras | Small curated/product pool; needs objective era relationship expansion. |
-| CFB | Games | 36,217 | **0 canonical product games** | Identity/query gap despite deep raw history. |
+| League | Pool | Current source rows | Canonical A-C | With any facts | Avg. current facts | Audit result |
+| --- | --- | ---: | ---: | ---: | ---: | --- |
+| NFL | Team seasons | 861 | 116 | 116 | 3.91 | Useful identities; stat menu needs expansion. |
+| NFL | Franchises | 32 | **0 canonical product subjects** | — | — | Identity/query gap. |
+| NFL | Head-coach stops / coaches | 246 source stops | 38 coaches | **2** | **0.21** | Product identities exist but factual coverage is effectively absent. |
+| NFL | Eras / dynasties | 246 coach-stop rows available as inputs | **0 canonical product eras** | 0 | 0 | Identity/relationship gap. |
+| NFL | Games | 7,276 | **0 canonical product games** | — | — | Identity/query gap. |
+| CFB | Team seasons | 7,468 | 142 | 142 | **11.36** | Healthiest current CFB non-player pool. |
+| CFB | Programs | 769 | 106 | **4** | **0.18** | Identity breadth exists; reusable facts almost do not. |
+| CFB | Head-coach stops / coaches | 686 source stops | 20 coaches | **11** | **2.05** | Identity and fact depth are shallow. |
+| CFB | Eras / dynasties | 6 generated championship-era rows | 12 canonical eras | **4** | **1.67** | Small curated pool; needs objective relationship expansion. |
+| CFB | Games | 36,217 | **0 canonical product games** | — | — | Deep raw history but no canonical notable-game product pool. |
 
-The non-player census is not “already good.” Team seasons are the healthiest families. Franchises/programs, coaches, eras, and games all require Stage 12 identity work and/or Stage 13 factual work.
+The non-player universe is **not already finished**. Team seasons are the healthiest families. Franchises/programs, coaches, eras, and notable games require Stage 12 identity work and/or Stage 13 factual work.
 
-## Root-cause finding: recognizability and statistics are different authorities
+## Root cause: recognizability and statistics are different authorities
 
-The current historical stat feeds are valuable factual inputs, but they are not sufficient recognizability authorities.
+The current historical stat feeds are useful factual inputs, but they are not sufficient recognizability authorities.
 
-The current CFB feed is especially unsuitable as the sole A/B/C judge because:
+The current CFB path is especially unsuitable as the sole A/B/C judge because:
 
 - normalized player-stat coverage currently begins in 2014;
-- many older recognizable players therefore cannot be discovered from it;
+- many older recognizable players cannot be discovered from it;
 - the source does not carry enough award/cultural-significance context;
 - current CFB position inference is incomplete, especially OL and defense;
-- 27,237 current CFB raw identities cannot be assigned to one of the nine product pools confidently;
+- 27,237 current CFB raw identities cannot be assigned confidently to one of the nine product pools;
 - a recognizable canonical identity can exist while its source-backed factual row is missing or unreconciled.
 
 Permanent rule:
 
 > **Recognition evidence decides who belongs. Factual/stat sources decide what is true about them. Neither may silently substitute for the other.**
 
-Stage 12 will build recognizability from multiple independent evidence families. Appropriate evidence includes, without being limited to:
+Stage 12 will combine multiple independent recognition evidence families while preserving one canonical identity/query owner. Appropriate evidence includes:
 
-- NCAA consensus/unanimous All-America records and national award records;
-- official conference first-team All-Conference and major conference Player of the Year records;
-- National Football Foundation College Football Hall of Fame records;
+- NCAA consensus/unanimous All-America and national award records;
+- official conference **first-team All-Conference** and major conference Player of the Year records;
+- College Football Hall of Fame records;
 - Heisman winner/finalist history;
-- major position-award winner/finalist history: Davey O'Brien/Maxwell, Doak Walker, Biletnikoff, Mackey, Outland, Rimington, Lombardi, Butkus, Bednarik/Nagurski, Thorpe, Lou Groza, Ray Guy, and other legitimate national position awards;
-- Pro Football Hall of Fame plus NFL AP/PFWA honors for NFL recognition;
-- major championship/postseason participation and historically meaningful production;
-- curated review for edge cases where structured sources cannot encode cultural recognizability cleanly.
+- major position awards: Davey O'Brien/Maxwell, Doak Walker, Biletnikoff, Mackey, Outland, Rimington, Lombardi, Butkus, Bednarik/Nagurski, Thorpe, Lou Groza, Ray Guy, and other legitimate national position awards;
+- Pro Football Hall of Fame plus major AP/PFWA NFL honors;
+- championships/postseason prominence and historically meaningful production;
+- curated review for edge cases structured sources cannot encode cleanly.
 
 Statistical production may support recognition, but no single production threshold or NFL crossover rule is allowed to be the sole reason a college identity exists in A/B/C.
 
-Examples already exposed by this audit:
+Examples already exposed:
 
-- Johnny Manziel is already a recognizable canonical CFB identity, but the current factual path does not provide the resume depth a game expects.
-- Darren McFadden already has useful college factual data, proving that factual presence and recognition exposure can fail independently.
-- Jermaine Gresham and Mark Andrews illustrate the missing CFB TE universe: national-level college tight ends must be discoverable because of their college careers, not because the NFL feed happens to reconcile them.
+- Johnny Manziel is already a recognizable canonical CFB identity but lacks the factual depth the games should expect.
+- Darren McFadden already has useful college facts, proving factual presence and recognition exposure can fail independently.
+- Jermaine Gresham and Mark Andrews illustrate the missing CFB TE universe: recognizable college tight ends must exist because of their college careers, not because an NFL feed happens to reconcile them.
 
 ## Player stat contracts
 
-These are **coverage concepts**, not a second metric database. Stage 13 will map them into canonical `FootballFactMetricId` values owned by `footballFactualStats.ts`.
+These are **coverage concepts**, not a second metric database. Stage 13 maps them into canonical facts/relationships owned by `footballFactualStats.ts`.
 
-### Common identity / relationship facts for every player pool
+### Common player identity / relationship facts
 
-- canonical name and aliases
-- NFL or CFB identity kept distinct when the same person has both careers
-- position / pool
-- franchise(s) or school/program(s)
-- seasons / active range
-- conference for CFB seasons when applicable
-- draft year, round, pick, undrafted status when applicable
-- championships / postseason relationships
-- major individual honors
+Every player pool should support, where applicable:
+
+- canonical name/aliases and separate NFL/CFB career identity;
+- position/pool and detailed position when known;
+- franchises or schools/programs;
+- seasons/active range and CFB conference context;
+- draft year/round/pick/undrafted status;
+- championships/postseason relationships;
+- major individual honors.
 
 ### QB
 
-Core numerical facts:
+Numerical: games/starts; completions/attempts; passing yards/TD/INT; completion %; YPA; NFL passer rating or NCAA passer efficiency; yards/game; TD:INT ratio; rushing attempts/yards/YPC/TD; total TD when derivable.
 
-- games and starts where reliable
-- completions / attempts
-- passing yards / passing TD / interceptions
-- completion percentage
-- yards per attempt
-- passer rating for NFL; NCAA passer efficiency/rating for CFB
-- passing yards per game
-- TD-to-INT ratio
-- rushing attempts / yards / YPC / rushing TD
-- total TD where derivable from owned facts
+NFL honors/context: AP MVP/OPOY, first-team All-Pro, Pro Bowl, Super Bowl/postseason relationships.
 
-NFL honors/context:
-
-- AP MVP / OPOY
-- first-team All-Pro
-- Pro Bowl
-- Super Bowl titles/appearances and playoff success where attributable without fake individual credit
-
-CFB honors/context:
-
-- Heisman winner/finalist
-- Davey O'Brien / Maxwell and other legitimate QB/player awards
-- consensus/unanimous All-America
-- **first-team All-Conference**
-- conference Player of the Year
-- team record, conference title, CFP/bowl/title result for the relevant season
+CFB honors/context: Heisman winner/finalist, Davey O'Brien/Maxwell and legitimate QB awards, consensus/unanimous All-America, **first-team All-Conference**, conference POY, team record/conference title/bowl/CFP/title result.
 
 ### RB
 
-Core numerical facts:
+Numerical: games/starts; carries; rushing yards/TD; YPC; rushing yards/game; receptions; receiving yards/TD; scrimmage yards/TD; fumbles only where historical coverage is reliable.
 
-- games / starts where reliable
-- carries, rushing yards, rushing TD
-- yards per carry and rushing yards per game
-- receptions, receiving yards, receiving TD
-- scrimmage yards and scrimmage TD
-- fumbles only where historical coverage is reliable and comparable
-
-Honors/context:
-
-- NFL: MVP/OPOY, All-Pro, Pro Bowl
-- CFB: Heisman result, Doak Walker, All-America, **All-Conference**, conference POY
-- championships/postseason relationships
+Honors: NFL MVP/OPOY, All-Pro, Pro Bowl; CFB Heisman result, Doak Walker, All-America, **All-Conference**, conference POY; postseason/championship relationships.
 
 ### WR
 
-Core numerical facts:
+Numerical: games/starts; receptions; receiving yards/TD; yards/reception; receptions/game; yards/game. Targets/catch rate are optional only where era/source coverage is comparable.
 
-- games / starts where reliable
-- receptions, receiving yards, receiving TD
-- yards per reception
-- receptions per game / yards per game
-- targets/catch rate only for eras/sources where they are genuinely available and comparable
-
-Honors/context:
-
-- NFL: All-Pro, Pro Bowl, OPOY/MVP where applicable
-- CFB: Biletnikoff, All-America, **All-Conference**, Heisman result when applicable
-- championships/postseason relationships
+Honors: NFL All-Pro, Pro Bowl, OPOY/MVP where applicable; CFB Biletnikoff, All-America, **All-Conference**, Heisman result where applicable; postseason/championship relationships.
 
 ### TE
 
-Core numerical facts:
+Numerical: the same core receiving production/efficiency concepts as WR plus games/starts where reliable.
 
-- same core receiving production/efficiency concepts as WR
-- games / starts where reliable
+Honors: NFL All-Pro/Pro Bowl; CFB **Mackey winner/finalist**, All-America, **All-Conference**; postseason/championship relationships.
 
-Honors/context:
-
-- NFL: All-Pro, Pro Bowl
-- CFB: **Mackey winner/finalist**, All-America, **All-Conference**
-- championships/postseason relationships
-
-TE blocking grades are not a required historical fact unless a reproducible/licensed source with broad era coverage is adopted. Do not invent a blocking statistic simply to fill a resume row.
+Blocking grades are not a required historical fact unless a legitimate reproducible source with broad era coverage is adopted. Do not invent a blocking statistic merely to fill a resume row.
 
 ### OL
 
-OL must exist as a real identity pool even though traditional box-score statistics are weak.
+OL must exist as a real identity pool even though traditional box scores are weak.
 
-Core facts/context:
+Core context: detailed position (OT/G/C), games/starts where reliable, seasons/team/program relationships, draft facts, postseason/championship relationships.
 
-- position detail when known (OT/G/C)
-- games / starts where reliable
-- seasons and team/program relationships
-- draft facts
-- championships/postseason relationships
+Honors are central: NFL first-team All-Pro/Pro Bowl; CFB consensus/unanimous All-America, **first-team All-Conference**, Outland, Rimington for centers, Lombardi when position-appropriate.
 
-Honors are especially important:
-
-- NFL: first-team All-Pro, Pro Bowl, major line-specific honors where legitimate
-- CFB: consensus/unanimous All-America, **first-team All-Conference**, Outland, Rimington for centers, Lombardi when position-appropriate
-
-Do not make proprietary pressure/sack-allowed grades a foundational requirement unless the project has a legitimate broad source/license.
+Do not make proprietary pressure/sack-allowed grades a foundational requirement without a legitimate broad source/license.
 
 ### DL / EDGE
 
-Core numerical facts:
+Numerical: games/starts; sacks; TFL; tackles where broadly available; forced fumbles/recoveries; INT/pass defended where applicable; defensive TD. QB hits/pressures are optional only with consistent source coverage.
 
-- games / starts
-- sacks
-- tackles for loss
-- tackles when broadly available
-- QB hits/pressures only where source coverage is consistent
-- forced fumbles / fumble recoveries
-- interceptions / passes defended where applicable
-- defensive TD
-
-Honors/context:
-
-- NFL: DPOY, All-Pro, Pro Bowl
-- CFB: Bednarik/Nagurski/Lombardi/Outland where applicable, All-America, **All-Conference**, conference DPOY
+Honors: NFL DPOY/All-Pro/Pro Bowl; CFB Bednarik/Nagurski/Lombardi/Outland where applicable, All-America, **All-Conference**, conference DPOY.
 
 ### LB
 
-Core numerical facts:
+Numerical: games/starts; total/solo tackles where reliable; TFL; sacks; INT/pass defended; forced fumbles/recoveries; defensive TD.
 
-- games / starts
-- total/solo tackles where reliable
-- tackles for loss
-- sacks
-- interceptions / passes defended
-- forced fumbles / recoveries
-- defensive TD
-
-Honors/context:
-
-- NFL: DPOY, All-Pro, Pro Bowl
-- CFB: Butkus plus Bednarik/Nagurski where applicable, All-America, **All-Conference**, conference DPOY
+Honors: NFL DPOY/All-Pro/Pro Bowl; CFB Butkus plus Bednarik/Nagurski where applicable, All-America, **All-Conference**, conference DPOY.
 
 ### Secondary
 
-Core numerical facts:
+Numerical: games/starts; INT; passes defended where reliable; tackles; sacks/TFL when meaningful; forced fumbles/recoveries; defensive TD; return production only when useful.
 
-- games / starts
-- interceptions
-- passes defended where reliable
-- tackles
-- sacks/TFL when meaningful
-- forced fumbles / recoveries
-- defensive TD
-- interception-return production only when useful to a game
-
-Honors/context:
-
-- NFL: DPOY, All-Pro, Pro Bowl
-- CFB: Thorpe plus Bednarik/Nagurski where applicable, All-America, **All-Conference**, conference DPOY
+Honors: NFL DPOY/All-Pro/Pro Bowl; CFB Thorpe plus Bednarik/Nagurski where applicable, All-America, **All-Conference**, conference DPOY.
 
 ### K / P
 
-Kicker:
+Kicker: FG made/attempted/%, XP made/attempted/%, long FG, 50+ makes when comparable.
 
-- FG made / attempted / percentage
-- XP made / attempted / percentage
-- long FG
-- 50+ yard makes when source coverage is comparable
+Punter: punts, gross yards/yards per punt, net yards per punt where available, inside-20 punts/touchbacks where available.
 
-Punter:
-
-- punts
-- gross yards / yards per punt
-- net yards per punt where available
-- inside-20 punts and touchbacks where available
-
-Honors/context:
-
-- NFL: All-Pro / Pro Bowl
-- CFB: Lou Groza / Ray Guy, All-America, **All-Conference**
+Honors: NFL All-Pro/Pro Bowl; CFB Lou Groza/Ray Guy, All-America, **All-Conference**.
 
 ## Non-player stat contracts
 
@@ -323,114 +217,68 @@ Honors/context:
 
 Core:
 
-- W-L-T and win percentage
-- points for / points against
-- PPG / opponent PPG
-- point differential / scoring margin
-- total offense and offense per game where available
-- total defense and defense per game where available
-- **turnovers and turnover margin**
-- postseason qualification/result
-- championship result
-- final ranking where meaningful/available
+- W-L-T and win percentage;
+- points for/against and PPG/opponent PPG;
+- point differential/scoring margin;
+- total offense and offense/game where available;
+- total defense and defense/game where available;
+- **turnovers and turnover margin**;
+- postseason qualification/result and championship result;
+- final ranking where meaningful/available.
 
-League-specific:
-
-- NFL: division/conference finish, playoff wins, Super Bowl appearance/title
-- CFB: conference finish/title, AP/Coaches/CFP ranking where applicable, bowl/CFP/title result
+NFL adds division/conference finish, playoff wins, Super Bowl appearance/title. CFB adds conference finish/title, AP/Coaches/CFP ranking where applicable, bowl/CFP/title result.
 
 SRS and SOS may remain legitimate source-backed analytical facts, but they are **secondary/back-end dimensions**, not default visible game stats. Intuitive football facts such as turnover margin, scoring, record, offense/defense, and postseason results take priority in game-facing contracts.
 
 ### Franchises / programs
 
-Use explicit time windows when facts are not all-time.
+Use explicit time windows when facts are not all-time. Core: W-L-T/win %, championships, playoff/CFP/title-game appearances/wins, division/conference titles, major award winners, Hall of Fame/consensus All-America counts where appropriate, and program draft production when useful.
 
-Core:
-
-- W-L-T / win percentage
-- championships
-- playoff/CFP/title-game appearances and wins
-- division/conference titles
-- major award winners
-- Hall of Fame / consensus All-America counts where appropriate
-- draft production for programs when useful
-
-Do not label a `since 2000` total as an all-time franchise/program fact.
+Never label a `since 2000` total as an all-time fact.
 
 ### Head coaches
 
-Core:
+Core: seasons/games coached; W-L-T/win %; postseason/bowl/playoff W-L; championships; conference/division titles; CFP/Super Bowl/title-game appearances; Coach of the Year honors where sourceable.
 
-- seasons / games coached
-- W-L-T / win percentage
-- postseason/bowl/playoff W-L
-- championships
-- conference/division titles
-- CFP/Super Bowl/title-game appearances
-- Coach of the Year honors where sourceable
-
-Coach facts belong to the coach identity, while individual coach stops remain relationships to the program/franchise and season window.
+Coach facts belong to the coach identity; individual coach stops are relationships to the franchise/program and season window.
 
 ### Eras / dynasties
 
-An era is objective first; `dynasty` is a product/evaluation label.
-
-Core:
-
-- program/franchise
-- start/end seasons and season membership
-- primary coach(es)
-- W-L-T / win percentage
-- titles
-- conference/division titles
-- playoff/CFP/Super Bowl/title-game appearances
-- average scoring margin or other derived dominance measures only from owned team-season facts
+An era is objective first; `dynasty` is a product/evaluation label. Core: organization, start/end seasons and season membership, primary coach(es), W-L-T/win %, titles, conference/division titles, playoff/CFP/Super Bowl/title-game appearances. Dominance measures may be derived only from owned team-season facts.
 
 ### Notable games
 
-Notable games need a canonical identity pool for future 20 Questions and other history games.
+Notable games need a canonical identity pool for future history/20 Questions gameplay. Core: date/season, teams/programs, final score/margin, venue/neutral-site where available, postseason/bowl/playoff/championship relationship, entering rankings where sourceable, overtime, rivalry identity when explicitly modeled, and comeback/upset markers only when deterministically supported.
 
-Core:
-
-- date / season
-- teams/programs
-- final score / margin
-- venue / neutral-site flag where available
-- postseason/bowl/playoff/championship relationship
-- rankings entering the game where sourceable
-- overtime
-- rivalry identity where explicitly modeled
-- comeback/upset markers only when deterministically supported by source facts
-
-Raw schedule membership does not make a game Tier C. Stage 12 must supply recognizability evidence for memorable games.
+Raw schedule membership does not make a game Tier C. Stage 12 supplies recognizable-game evidence.
 
 ## Game-use contract
 
-The ledger should be broad enough that different games use **different slices**, not the same shallow stat list with different labels.
+The ledger must be broad enough that different games use **different slices**, not the same shallow stat list with different labels.
 
-- **Blind Resume:** needs many independent, intuitive dimensions across production, efficiency, honors, relationships, and team success; no fake zero/default rows.
-- **Hit the Number:** primarily quantitative totals/rates with exact solvable boards.
-- **Find the Leader:** broad comparable numerical metrics, including categories that are not useful in Blind Resume.
+- **Blind Resume:** many independent intuitive dimensions across production, efficiency, honors, relationships, and team success; no fake zero/default rows.
+- **Hit the Number:** quantitative totals/rates with exact-solvable boards.
+- **Find the Leader:** broad comparable numerical metrics, including categories not useful in Blind Resume.
 - **Blind Rank / Keep-Cut:** canonical identities plus sufficient facts for the shared evaluation authority; reviewed ratings remain calibration only.
-- **Future Draft/Auction:** identity depth, positional grouping, peak production, honors, team success, draft context, and enough variety to build balanced rosters.
-- **Future 20 Questions:** identity/relationship graph is as important as statistics—school/franchise, position, era, awards, draft, championships, teammates/coaches, and notable games all become useful clues.
+- **Future Draft/Auction:** positional depth, peak production, honors, team success, draft context, and enough variety for balanced roster building.
+- **Future 20 Questions:** identity/relationship graph matters as much as statistics—school/franchise, position, era, awards, draft, championships, coaches/teammates, and notable games become clues.
 
 ## Stage 11 conclusions
 
-1. The old “NFL skill players + CFB teams/dynasties” shape is not acceptable.
+1. The old “NFL player depth + CFB teams/dynasties” shape is unacceptable.
 2. NFL and CFB permanently share the same nine player-pool taxonomy.
-3. CFB skill/defensive depth is materially incomplete; TE, OL, DL/EDGE, LB, Secondary, and K/P are the most obvious holes.
-4. NFL is not finished either: OL/K-P are absent and WR/TE/defensive facts are much thinner than QB/RB facts.
-5. Team seasons are healthier than other non-player pools; franchises/programs, coaches, eras, and games still need work.
+3. CFB player depth is materially incomplete; TE, OL, DL/EDGE, LB, Secondary, and K/P are the starkest holes, while QB/RB/WR also need major expansion.
+4. NFL is not finished either: OL/K-P are absent and WR/TE/defensive facts are far thinner than QB/RB facts.
+5. Team seasons are healthier than other non-player pools; organizations, coaches, eras, and notable games remain incomplete.
 6. A giant Tier D/raw corpus does not count as product depth.
-7. Tier D remains the deep/archive layer; Stage 13 enrichment priority is A-C unless a specific feature explicitly needs D facts.
+7. Tier D remains the archive/deep layer; Stage 13 enrichment priority is A-C unless a feature explicitly needs D.
 8. Recognizability must be multi-source and independent from factual-stat ingestion.
-9. First-team All-Conference honors are a required CFB recognition/factual concept, alongside All-America and national/position awards.
-10. Stage 12 must fix the A/B/C universe before Stage 13 fills the factual contracts.
+9. **First-team All-Conference** is a required CFB recognition/factual concept alongside All-America and national/position awards.
+10. Stage 12 fixes the A/B/C universe before Stage 13 fills the factual contracts.
 
 ## Next ownership
 
 - **Stage 12 — Recognizability Universe:** complete/repair A-B-C membership using multi-source recognition evidence across every pool.
-- **Stage 13 — Factual Universe:** hydrate the agreed stat/honor contracts for A-C subjects through the existing factual owner.
-- **Stage 14 — Game Integration:** finish Blind Resume and re-audit all objective Football games against the completed ledger; prepare the same owners for Draft/Auction and 20 Questions.
-- **Stage 15 — Cleanup + final release audit:** remove obsolete providers/rosters/fallbacks, prove simulations/bundle health, and verify exact production deployment ownership/SHA.
+- **Stage 13 — Factual Universe:** hydrate these stat/honor contracts for A-C subjects through the existing factual owner.
+- **Stage 14 — Game Integration:** finish Blind Resume and re-audit all objective Football games; make the same owners ready for Draft/Auction and 20 Questions.
+- **Stage 15 — Cleanup + final release audit:** remove obsolete providers/rosters/fallbacks, prove simulations/bundle health, and verify exact release/deployment ownership.
