@@ -23,7 +23,7 @@ replaceOnce(
 replaceOnce(
   "src/features/back-room/footballFactualUniverseProjection.ts",
   '  {\n    id: "football-relationships-factual-universe",\n',
-  '  {\n    id: "pfr-nfl-specialists-factual-universe",\n    publisher: "Pro Football Reference",\n    title: "Reviewed NFL specialist career records",\n    url: "https://www.pro-football-reference.com/",\n    reviewedOn: "2026-08-28",\n    coverage: "Reviewed career kicking/punting facts for recognizable NFL specialists used to close Stage 13 specialist coverage gaps",\n  },\n  {\n    id: "football-relationships-factual-universe",\n'
+  '  {\n    id: "pfr-nfl-specialists-factual-universe",\n    publisher: "Pro Football Reference",\n    title: "Reviewed NFL specialist career records",\n    url: "https://www.pro-football-reference.com/",\n    reviewedOn: "2026-08-27",\n    coverage: "Reviewed career kicking/punting facts for recognizable NFL specialists used to close Stage 13 specialist coverage gaps",\n  },\n  {\n    id: "football-relationships-factual-universe",\n'
 );
 
 replaceOnce(
