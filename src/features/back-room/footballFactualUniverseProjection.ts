@@ -9,7 +9,7 @@ export const footballFactualUniverseSources: readonly FootballFactSource[] = [
     title: "Pinned NFL factual-universe projection",
     url: "https://github.com/nflverse/nflverse-data",
     reviewedOn: "2026-08-27",
-    coverage: "Normalized NFL player/team facts from 1999 through the completed 2025 season, gated to Stage 12 A-C source identities",
+    coverage: "Normalized NFL player/team facts from 1999 through the completed 2025 season, gated to canonical Stage 12 A-C player identities",
   },
   {
     id: "cfbfast-r-factual-universe",
@@ -17,7 +17,7 @@ export const footballFactualUniverseSources: readonly FootballFactSource[] = [
     title: "Pinned CFB factual-universe projection",
     url: "https://github.com/sportsdataverse/cfbfastR-data",
     reviewedOn: "2026-08-27",
-    coverage: "Normalized CFB player facts from 2014-2025, gated to Stage 12 A-C source identities",
+    coverage: "Normalized CFB player facts from 2014-2025, gated to canonical Stage 12 A-C player identities",
   },
   {
     id: "football-relationships-factual-universe",
