@@ -4,8 +4,13 @@ import type { FootballRecognizabilityTier } from "./footballSubjectEligibility";
 export interface FootballHistoricalRecognitionRepair {
   subject: FootballCanonicalSubject;
   tier: Exclude<FootballRecognizabilityTier, "D">;
-  evidenceFamily: "pro-football-hall-of-fame" | "heisman" | "college-football-hall-of-fame" | "championship-coaching";
+  evidenceFamily: "pro-football-hall-of-fame" | "heisman" | "college-football-hall-of-fame" | "championship-coaching" | "championship-postseason";
 }
+
+const activeDecades = (startSeason: number, endSeason: number) => Array.from(
+  { length: Math.floor(endSeason / 10) - Math.floor(startSeason / 10) + 1 },
+  (_, index) => (Math.floor(startSeason / 10) + index) * 10,
+);
 
 const player = (
   id: string,
@@ -26,14 +31,34 @@ const player = (
     position,
     startSeason,
     endSeason,
-    activeDecades: Array.from(
-      { length: Math.floor(endSeason / 10) - Math.floor(startSeason / 10) + 1 },
-      (_, index) => (Math.floor(startSeason / 10) + index) * 10,
-    ),
+    activeDecades: activeDecades(startSeason, endSeason),
     ...(school ? { school } : {}),
   },
   tier,
   evidenceFamily,
+});
+
+const playerSeason = (
+  id: string,
+  name: string,
+  position: NonNullable<FootballCanonicalSubject["position"]>,
+  school: string,
+  season: number,
+): FootballHistoricalRecognitionRepair => ({
+  subject: {
+    id,
+    name: `${name} ${season}`,
+    kind: "player-season",
+    league: "CFB",
+    position,
+    school,
+    season,
+    startSeason: season,
+    endSeason: season,
+    activeDecades: [Math.floor(season / 10) * 10],
+  },
+  tier: "A",
+  evidenceFamily: "heisman",
 });
 
 const coach = (
@@ -51,14 +76,16 @@ const coach = (
     league,
     startSeason,
     endSeason,
-    activeDecades: Array.from(
-      { length: Math.floor(endSeason / 10) - Math.floor(startSeason / 10) + 1 },
-      (_, index) => (Math.floor(startSeason / 10) + index) * 10,
-    ),
+    activeDecades: activeDecades(startSeason, endSeason),
   },
   tier,
   evidenceFamily: "championship-coaching",
 });
+
+const historicalSubject = (
+  subject: FootballCanonicalSubject,
+  tier: "A" | "B",
+): FootballHistoricalRecognitionRepair => ({ subject, tier, evidenceFamily: "championship-postseason" });
 
 /**
  * Stage 13.5 recognition repairs are reviewed source evidence feeding the existing canonical registry projection.
@@ -101,6 +128,22 @@ export const footballHistoricalRecognitionRepairs: readonly FootballHistoricalRe
   player("cfb-derrick-thomas", "Derrick Thomas", "CFB", "LB", 1985, 1988, "A", "college-football-hall-of-fame", "Alabama"),
   player("cfb-deion-sanders", "Deion Sanders", "CFB", "DB", 1985, 1988, "A", "college-football-hall-of-fame", "Florida State"),
   player("cfb-keith-jackson", "Keith Jackson", "CFB", "TE", 1984, 1987, "B", "college-football-hall-of-fame", "Oklahoma"),
+
+  playerSeason("cfb-marcus-mariota-2014", "Marcus Mariota", "QB", "Oregon", 2014),
+  playerSeason("cfb-derrick-henry-2015", "Derrick Henry", "RB", "Alabama", 2015),
+  playerSeason("cfb-lamar-jackson-2016", "Lamar Jackson", "QB", "Louisville", 2016),
+  playerSeason("cfb-baker-mayfield-2017", "Baker Mayfield", "QB", "Oklahoma", 2017),
+  playerSeason("cfb-kyler-murray-2018", "Kyler Murray", "QB", "Oklahoma", 2018),
+  playerSeason("cfb-joe-burrow-2019", "Joe Burrow", "QB", "LSU", 2019),
+  playerSeason("cfb-devonta-smith-2020", "DeVonta Smith", "WR", "Alabama", 2020),
+  playerSeason("cfb-bryce-young-2021", "Bryce Young", "QB", "Alabama", 2021),
+  playerSeason("cfb-caleb-williams-2022", "Caleb Williams", "QB", "USC", 2022),
+  playerSeason("cfb-jayden-daniels-2023", "Jayden Daniels", "QB", "LSU", 2023),
+  playerSeason("cfb-travis-hunter-2024", "Travis Hunter", "DB", "Colorado", 2024),
+
+  historicalSubject({ id: "program-oklahoma", name: "Oklahoma", kind: "program", league: "CFB" }, "B"),
+  historicalSubject({ id: "program-usc", name: "USC", kind: "program", league: "CFB" }, "B"),
+  historicalSubject({ id: "1995-nebraska", name: "1995 Nebraska", kind: "team-season", league: "CFB", season: 1995, startSeason: 1995, endSeason: 1995, activeDecades: [1990] }, "A"),
 
   coach("vince-lombardi", "Vince Lombardi", "NFL", 1959, 1969, "A"),
   coach("don-shula", "Don Shula", "NFL", 1963, 1995, "A"),
