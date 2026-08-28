@@ -33,8 +33,8 @@ describe("Football Stage 12 recognizability universe", () => {
     }));
     expect(FOOTBALL_STAGE12_RECOGNITION_EVIDENCE_SOURCES.map(({ provider }) => provider))
       .toEqual(expect.arrayContaining(["ncaafb", "sports-reference", "official-cfb-awards", "nfl-honors"]));
-    expect(new Set(footballRecognitionEvidenceRecords.map(({ sourceProvider }) => sourceProvider)))
-      .toEqual(expect.objectContaining(new Set(["sports-reference", "official-cfb-awards", "nfl-honors", "octagon-hq"])));
+    expect([...new Set(footballRecognitionEvidenceRecords.map(({ sourceProvider }) => sourceProvider))])
+      .toEqual(expect.arrayContaining(["sports-reference", "official-cfb-awards", "nfl-honors", "octagon-hq"]));
     expect(footballRecognitionEvidenceRecords.every((record) => !("facts" in record))).toBe(true);
   });
 
