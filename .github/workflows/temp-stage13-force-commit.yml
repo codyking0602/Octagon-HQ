@@ -26,13 +26,15 @@ jobs:
       - name: Reapply proven repair
         run: |
           python - <<'PY'
-          import re, subprocess
+          import subprocess
           from pathlib import Path
           workflow = Path('.github/workflows/temp-stage13-final-repair.yml').read_text()
-          match = re.search(r'      - name: Apply remaining canonical Stage 13 closure\n        run: \|\n(.*?)(?=\n      - name: Regenerate Stage 13 artifacts)', workflow, re.S)
-          if not match:
-              raise SystemExit('validated repair block not found')
-          block = '\n'.join(line[10:] if line.startswith('          ') else line for line in match.group(1).splitlines())
+          marker = '      - name: Apply remaining canonical Stage 13 closure\n'
+          start = workflow.index(marker)
+          start = workflow.index('        run: |\n', start) + len('        run: |\n')
+          end = workflow.index('\n      - name: Regenerate Stage 13 artifacts', start)
+          raw = workflow[start:end]
+          block = '\n'.join(line[10:] if line.startswith('          ') else line for line in raw.splitlines())
           subprocess.run(['bash', '-e', '-c', block], check=True)
           PY
       - name: Regenerate Stage 13 artifacts
