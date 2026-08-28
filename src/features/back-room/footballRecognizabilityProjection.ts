@@ -24,6 +24,9 @@ interface ProjectionRecord {
 type FootballProjectedNonPlayerIdentitySubject = Omit<FootballRecognitionIdentitySubject, "kind"> & {
   kind: Exclude<FootballRecognitionIdentitySubject["kind"], "era">;
 };
+type FootballEvidenceNewKindSubject = Omit<FootballRecognitionIdentitySubject, "kind"> & {
+  kind: "franchise" | "game" | "era" | "coach";
+};
 
 export interface FootballProjectedNonPlayerRecognitionSubject {
   subject: FootballProjectedNonPlayerIdentitySubject;
@@ -248,9 +251,11 @@ export function footballNonPlayerRecognitionProjectionFor(
 const generatedNewKindRecords = nonPlayerRecords.filter((record) => (
   (record.kind === "franchise" || record.kind === "game") && record.tier !== "D"
 ));
-const evidenceNewKindSubjects = footballRecognitionEvidenceSubjects.filter((subject) => (
-  subject.kind === "franchise" || subject.kind === "game" || subject.kind === "era" || subject.kind === "coach"
-));
+const evidenceNewKindSubjects = footballRecognitionEvidenceSubjects.filter(
+  (subject): subject is FootballEvidenceNewKindSubject => (
+    subject.kind === "franchise" || subject.kind === "game" || subject.kind === "era" || subject.kind === "coach"
+  ),
+);
 const evidenceNewKindIds = new Set(evidenceNewKindSubjects.map((subject) => subject.id));
 
 export const footballProjectedNonPlayerRecognitionSubjects: readonly FootballProjectedNonPlayerRecognitionSubject[] = [
