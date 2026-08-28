@@ -70,6 +70,7 @@ function playerPool(position?: string): FootballLedgerAuditPool | null {
 function sourceCoverage(
   subject: FootballSubjectProfile,
   facts: readonly { evidence: { sourceIds: readonly string[] } }[],
+  hasCoreFact: boolean,
 ): FootballLedgerSourceCoverage {
   const earliestNormalizedSeason = subject.league === "NFL" ? 1999 : 2014;
   if (subject.endSeason != null && subject.endSeason < earliestNormalizedSeason) return "before-normalized-player-source";
@@ -86,7 +87,9 @@ function sourceCoverage(
   if (subject.sourceIdentityKeys.some((key) => key.provider === normalizedProvider)) return "inside-normalized-player-source";
 
   const normalizedFactSource = subject.league === "NFL" ? "nflverse-factual-universe" : "cfbfast-r-factual-universe";
-  if (facts.some((fact) => fact.evidence.sourceIds.includes(normalizedFactSource))) return "inside-normalized-player-source";
+  if (hasCoreFact && facts.some((fact) => fact.evidence.sourceIds.includes(normalizedFactSource))) {
+    return "inside-normalized-player-source";
+  }
   return "unknown-career-window";
 }
 
@@ -155,7 +158,7 @@ function auditPlayer(subject: FootballSubjectProfile): FootballLedgerPlayerAudit
     draftYear: subject.draftYear,
     school: subject.school,
     franchises: subject.franchises,
-    sourceCoverage: sourceCoverage(subject, facts),
+    sourceCoverage: sourceCoverage(subject, facts, coreFactCount > 0),
     numericFactCount: facts.length,
     coreFactCount,
     hasRelationship,
