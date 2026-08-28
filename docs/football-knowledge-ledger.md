@@ -1,6 +1,6 @@
 # Football Knowledge Ledger
 
-Last reviewed: 2026-08-27
+Last reviewed: 2026-08-28
 
 ## Purpose
 
@@ -306,11 +306,11 @@ Deliverables:
 - keep D as the deep/archive layer without weakening C to hit an arbitrary count;
 - add durable pool-by-pool coverage/omission tests.
 
-### Stage 13 — Factual Universe — NEXT
+### Stage 13 — Factual Universe — COMPLETE — PR #723
 
 **Purpose:** hydrate the Stage 11 factual/honor contract for the completed Stage 12 A/B/C universe through the existing factual owner.
 
-Deliverables:
+Delivered:
 
 - map Stage 11 concepts into canonical fact metric/relationship types rather than a second stat database;
 - fill meaningful production, efficiency, honors, team-success, draft, and relationship coverage for A-C subjects;
