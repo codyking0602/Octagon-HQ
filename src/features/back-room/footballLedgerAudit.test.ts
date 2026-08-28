@@ -18,19 +18,24 @@ describe("Football Knowledge Ledger Stage 13.5 human audit", () => {
     expect(footballLedgerAudit.recognitionGaps).toEqual([]);
   });
 
-  it("uses existing canonical factual provenance to resolve source coverage when career years are absent", () => {
+  it("uses core canonical factual provenance to resolve source coverage when career years are absent", () => {
     const chaseYoung = footballLedgerAudit.players.find((row) => row.subjectId === "cfb-chase-young");
     expect(chaseYoung).toBeDefined();
     expect(chaseYoung?.startSeason).toBeUndefined();
     expect(chaseYoung?.endSeason).toBeUndefined();
+    expect(chaseYoung?.coreFactCount).toBeGreaterThan(0);
     expect(chaseYoung?.sourceCoverage).toBe("inside-normalized-player-source");
   });
 
-  it("lets known career timing override modern factual provenance for pre-source CFB careers", () => {
+  it("does not let a generic modern-source fact prove an ambiguous CFB career is inside the normalized window", () => {
     const chrisLong = footballLedgerAudit.players.find((row) => row.subjectId === "cfb-chris-long");
     expect(chrisLong).toBeDefined();
-    expect(chrisLong?.draftYear).toBeLessThanOrEqual(2014);
-    expect(chrisLong?.sourceCoverage).toBe("before-normalized-player-source");
+    expect(chrisLong?.startSeason).toBeUndefined();
+    expect(chrisLong?.endSeason).toBeUndefined();
+    expect(chrisLong?.draftYear).toBeUndefined();
+    expect(chrisLong?.numericFactCount).toBeGreaterThan(0);
+    expect(chrisLong?.coreFactCount).toBe(0);
+    expect(chrisLong?.sourceCoverage).toBe("unknown-career-window");
   });
 
   it("keeps the human review queues deterministic and visible", () => {
