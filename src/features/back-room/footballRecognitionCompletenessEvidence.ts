@@ -164,6 +164,7 @@ for (const disposition of footballHeismanWinnerDispositions) {
   if (disposition.disposition !== "A" && disposition.disposition !== "B") continue;
   const candidate: FootballRecognitionCompletenessCandidate = {
     name: disposition.name,
+    ...(disposition.name === "Mark Ingram" ? { identityAliases: ["Mark Ingram II"] } : {}),
     league: "CFB",
     kind: "player-career",
     minimumTier: disposition.disposition,
