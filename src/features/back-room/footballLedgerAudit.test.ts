@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { footballSubjectMeetsFactRequirements } from "./footballFactualEligibility";
 import { formatFootballLedgerAuditMarkdown, footballLedgerAudit } from "./footballLedgerAudit";
 import { queryFootballSubjects } from "./footballSubjectRegistry";
 
@@ -43,6 +44,15 @@ describe("Football Knowledge Ledger Stage 13.5 human audit", () => {
       includeProjectedSourceSubjects: true,
     });
     expect(canonical.some((subject) => subject.name === "Jim Brown")).toBe(true);
+  });
+
+  it("derives numerical game eligibility from facts without creating a private roster", () => {
+    const jimBrown = footballLedgerAudit.rows.find((row) => row.name === "Jim Brown" && row.league === "NFL");
+    expect(jimBrown).toBeDefined();
+    expect(footballSubjectMeetsFactRequirements(jimBrown!.subjectId, [])).toBe(true);
+    expect(footballSubjectMeetsFactRequirements(jimBrown!.subjectId, [
+      { anyOf: ["nfl-career-passing-yards"] },
+    ])).toBe(false);
   });
 
   it("uses position/entity-specific readiness rather than a generic fact threshold", () => {
