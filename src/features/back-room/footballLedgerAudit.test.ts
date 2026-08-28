@@ -18,6 +18,14 @@ describe("Football Knowledge Ledger Stage 13.5 human audit", () => {
     expect(footballLedgerAudit.recognitionGaps).toEqual([]);
   });
 
+  it("uses existing canonical factual provenance to resolve source coverage when career years are absent", () => {
+    const chaseYoung = footballLedgerAudit.players.find((row) => row.subjectId === "cfb-chase-young");
+    expect(chaseYoung).toBeDefined();
+    expect(chaseYoung?.startSeason).toBeUndefined();
+    expect(chaseYoung?.endSeason).toBeUndefined();
+    expect(chaseYoung?.sourceCoverage).toBe("inside-normalized-player-source");
+  });
+
   it("keeps the human review queues deterministic and visible", () => {
     expect(footballLedgerAudit.rosterReview.length).toBeGreaterThan(100);
     expect(footballLedgerAudit.highPriorityFactGaps.length).toBeGreaterThanOrEqual(0);
@@ -44,6 +52,7 @@ describe("Football Knowledge Ledger Stage 13.5 human audit", () => {
         tier: row.tier,
         startSeason: row.startSeason,
         endSeason: row.endSeason,
+        draftYear: row.draftYear,
         facts: row.numericFactCount,
         coreFacts: row.coreFactCount,
         missing: row.missing,
@@ -54,6 +63,7 @@ describe("Football Knowledge Ledger Stage 13.5 human audit", () => {
         league: row.league,
         pool: row.pool,
         tier: row.tier,
+        draftYear: row.draftYear,
         facts: row.numericFactCount,
         coreFacts: row.coreFactCount,
         missing: row.missing,
@@ -65,6 +75,7 @@ describe("Football Knowledge Ledger Stage 13.5 human audit", () => {
         pool: row.pool,
         tier: row.tier,
         sourceCoverage: row.sourceCoverage,
+        draftYear: row.draftYear,
         facts: row.numericFactCount,
         coreFacts: row.coreFactCount,
         missing: row.missing,
