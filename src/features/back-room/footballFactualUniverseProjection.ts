@@ -51,7 +51,9 @@ export interface FootballFactualCoverageRow {
 
 const rawSubjects = projectionJson.subjects as readonly ProjectedSubject[];
 const rawRecords = projectionJson.records as unknown as readonly ProjectedRecord[];
+const rawRelationships = projectionJson.relationships as unknown as readonly FootballFactualRelationship[];
 const subjectById = new Map(rawSubjects.map((subject) => [subject.id, subject]));
+const draftedSubjectIds = new Set(rawRelationships.filter((relationship) => relationship.kind === "draft-selection").map((relationship) => relationship.subjectId));
 
 const sourceIds = projectionJson.sourceIds as {
   NFL: FootballFactSourceId;
@@ -60,7 +62,27 @@ const sourceIds = projectionJson.sourceIds as {
   CFB_HONORS: FootballFactSourceId;
 };
 
-const nflDraftMetrics = new Set<FootballFactMetricId>([
+// For drafted NFL careers, the checksum-pinned nflverse/PFR draft release owns every full-career aggregate it
+// supplies. Normalized nflverse player-season rows still own season facts plus defense/specialist career aggregates,
+// and may own these career aggregates only for undrafted players whose observed rows span the recognized career.
+const nflDraftCareerMetrics = new Set<FootballFactMetricId>([
+  "nfl-career-games",
+  "nfl-career-passing-completions",
+  "nfl-career-passing-attempts",
+  "nfl-career-passing-yards",
+  "nfl-career-passing-touchdowns",
+  "nfl-career-interceptions-thrown",
+  "nfl-career-rushing-attempts",
+  "nfl-career-rushing-yards",
+  "nfl-career-rushing-touchdowns",
+  "nfl-career-receptions",
+  "nfl-career-receiving-yards",
+  "nfl-career-receiving-touchdowns",
+  "nfl-career-passer-rating",
+  "nfl-career-completion-percentage",
+  "nfl-career-passing-yards-per-attempt",
+  "nfl-career-passing-touchdown-percentage",
+  "nfl-career-rushing-yards-per-attempt",
   "nfl-first-team-all-pros",
   "nfl-pro-bowl-selections",
   "nfl-hall-of-fame",
@@ -94,11 +116,13 @@ const derivedFormulaByMetric: Partial<Record<FootballFactMetricId, string>> = {
 };
 
 function evidenceSource(subject: ProjectedSubject, metricId: FootballFactMetricId): FootballFactSourceId {
-  if (nflDraftMetrics.has(metricId)) return sourceIds.NFL_DRAFT;
   if (metricId === "cfb-major-national-award-wins") return sourceIds.CFB_HONORS;
-  // The checksum-pinned PFR draft release supplies pre-1999 career totals retained by the projection; modern
-  // normalized nflverse rows independently reconcile matching values before the generator will emit them.
-  if (subject.league === "NFL" && subject.kind === "player-career" && (subject.startSeason ?? 9999) < 1999) return sourceIds.NFL_DRAFT;
+  if (
+    subject.league === "NFL"
+    && subject.kind === "player-career"
+    && draftedSubjectIds.has(subject.id)
+    && nflDraftCareerMetrics.has(metricId)
+  ) return sourceIds.NFL_DRAFT;
   return subject.league === "NFL" ? sourceIds.NFL : sourceIds.CFB;
 }
 
@@ -125,7 +149,7 @@ export const footballFactualUniverseProjectedRecords: readonly FootballFactualRe
   };
 });
 
-export const footballFactualRelationships = projectionJson.relationships as unknown as readonly FootballFactualRelationship[];
+export const footballFactualRelationships = rawRelationships;
 
 export const footballFactualCoverageMatrix = {
   ...projectionJson.coverageMatrix,
