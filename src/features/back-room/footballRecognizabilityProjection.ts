@@ -31,6 +31,13 @@ type FootballEvidenceNewKindSubject = Omit<FootballRecognitionIdentitySubject, "
   kind: "franchise" | "game" | "era" | "coach";
 };
 
+type FootballRecognitionFloorIdentity = {
+  kind: string;
+  league: "NFL" | "CFB";
+  name: string;
+  aliases?: readonly string[];
+};
+
 export interface FootballProjectedNonPlayerRecognitionSubject {
   subject: FootballProjectedNonPlayerIdentitySubject;
   tier: FootballRecognizabilityTier;
@@ -74,7 +81,7 @@ for (const candidate of footballProHallRecognitionCandidates) {
   }
 }
 
-function proHallMinimumTierFor(subject: Pick<FootballCanonicalSubject, "kind" | "league" | "name" | "aliases">) {
+function proHallMinimumTierFor(subject: FootballRecognitionFloorIdentity) {
   if (subject.league !== "NFL" || (subject.kind !== "player-career" && subject.kind !== "coach")) return null;
   const minimums = [subject.name, ...(subject.aliases ?? [])]
     .map((identityName) => proHallMinimumTierByKindLeagueAndName.get(
