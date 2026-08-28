@@ -1,4 +1,4 @@
-name: TEMP Stage 13 Final Repair
+name: TEMP Stage 13 Specialist Diagnostic
 
 on:
   push:
@@ -7,165 +7,41 @@ on:
       - .github/workflows/temp-stage13-final-repair.yml
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  repair:
+  diagnose:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           ref: feat/football-ledger-stage13-factual-universe
           fetch-depth: 1
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-          cache: npm
-          cache-dependency-path: package-lock.json
-      - run: npm ci --silent --no-audit --no-fund
-      - name: Apply narrow Stage 13 repairs
+      - name: Inspect promoted NFL specialists against source rows
         run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          generator = Path('scripts/generate-football-factual-universe.mjs')
-          text = generator.read_text()
-          old = '''function nflPlayerFacts(subject) {
-            const rows = (nflPlayersById.get(String(subject.sourceId)) ?? []).filter((row) => withinWindow(row, subject));
-            if (!rows.length) return [];
-          '''
-          new = '''function nflPlayerFacts(subject) {
-            let rows = (nflPlayersById.get(String(subject.sourceId)) ?? []).filter((row) => withinWindow(row, subject));
-            if (!rows.length && (subject.position === "K" || subject.position === "P")) {
-              const identityRows = nflPlayers.filter((row) => (
-                row.position === subject.position
-                && normalized(row.playerDisplayName ?? row.playerName) === normalized(subject.name)
-                && withinWindow(row, subject)
-              ));
-              const sourceIds = new Set(identityRows.map((row) => String(row.sourcePlayerId)));
-              if (sourceIds.size === 1) rows = identityRows;
-            }
-            if (!rows.length) return [];
-          '''
-          if old not in text:
-              raise SystemExit('nflPlayerFacts anchor not found')
-          generator.write_text(text.replace(old, new, 1))
-
-          comparison = Path('src/features/back-room/footballComparisonGeneration.ts')
-          text = comparison.read_text()
-          anchor = '''export function buildFootballKeepCutBoard(
-          '''
-          helper = '''function attemptKeepCutProfileFallback(
-            items: readonly FootballRankFiveItem[],
-            scopeId: string,
-            seed: string,
-            style: FootballKeepCutBoardStyle,
-            eliteCount: number,
-            badCount: number,
-            attempt: number,
-          ) {
-            const random = seededLineupRandom(
-              "football-keep-cut",
-              "profile-fallback",
-              scopeId,
-              seed,
-              style.id,
-              attempt,
-            );
-            const elite = shuffleLineup(
-              items.filter((item) => footballComparisonTier(item) === "elite"),
-              random,
-            ).slice(0, eliteCount);
-            const bad = shuffleLineup(
-              items.filter((item) => footballComparisonTier(item) === "bad"),
-              random,
-            ).slice(0, badCount);
-            const middleCount = KEEP_CUT_BOARD_SIZE - eliteCount - badCount;
-            const middle = shuffleLineup(
-              items.filter((item) => {
-                const tier = footballComparisonTier(item);
-                return tier !== "elite" && tier !== "bad";
-              }),
-              random,
-            ).slice(0, middleCount);
-            const selected = [...elite, ...middle, ...bad];
-            if (selected.length !== KEEP_CUT_BOARD_SIZE) return null;
-            if (!footballKeepCutBoardIsCompetitive(selected, items)) return null;
-            const ordered = sortedPool(selected);
-            return {
-              items: shuffleLineup(selected, random),
-              badItems: badCount,
-              eliteItems: eliteCount,
-              cutoffGap: Math.abs(ordered[KEEP_COUNT - 1]!.rating - ordered[KEEP_COUNT]!.rating),
-              distinctTiers: new Set(selected.map(footballComparisonTier)).size,
-            };
+          node <<'NODE'
+          const fs = require('fs');
+          const read = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
+          const rowsOf = (data) => data.rows.map((row) => Object.fromEntries(data.columns.map((name, i) => [name, row[i]])));
+          const norm = (v) => String(v ?? '').toLowerCase().normalize('NFKD').replace(/[^a-z0-9]/g, '');
+          const recognition = read('data/generated/football/recognizability-projection.json');
+          const source = read('data/generated/football/nfl/player-seasons-1999-2025.json');
+          const rows = rowsOf(source);
+          const specialists = recognition.records.filter((r) => r.kind === 'player-career' && r.league === 'NFL' && r.tier !== 'D' && (r.position === 'K' || r.position === 'P'));
+          console.log('COLUMNS', JSON.stringify(source.columns));
+          console.log('SPECIALIST_COUNT', specialists.length);
+          console.log('SPECIALISTS', JSON.stringify(specialists.slice(0, 50), null, 2));
+          const positions = [...new Set(rows.map((r) => r.position).filter(Boolean))].sort();
+          console.log('SOURCE_POSITIONS', JSON.stringify(positions));
+          for (const subject of specialists.slice(0, 30)) {
+            const direct = rows.filter((r) => String(r.sourcePlayerId) === String(subject.sourceId));
+            const nameMatches = rows.filter((r) => [r.playerDisplayName, r.playerName, r.name].some((v) => norm(v) === norm(subject.name)));
+            console.log('MATCH', JSON.stringify({
+              subject: { id: subject.id, name: subject.name, sourceId: subject.sourceId, position: subject.position, startSeason: subject.startSeason, endSeason: subject.endSeason },
+              directCount: direct.length,
+              directSample: direct.slice(0, 2),
+              nameCount: nameMatches.length,
+              nameSample: nameMatches.slice(0, 3),
+            }));
           }
-
-          export function buildFootballKeepCutBoard(
-          '''
-          if anchor not in text:
-              raise SystemExit('Keep/Cut build anchor not found')
-          text = text.replace(anchor, helper, 1)
-
-          old = '''  if (best) {
-            const { attempt, ...board } = best;
-            return { ...board, style: style.id, attemptsUsed: attempt + 1 };
-          }
-          throw new Error(`Football Keep/Cut could not build a ${style.name} eight-subject board for ${scopeId}.`);
-          '''
-          new = '''  if (best) {
-            const { attempt, ...board } = best;
-            return { ...board, style: style.id, attemptsUsed: attempt + 1 };
-          }
-
-          let fallbackBest: (Omit<FootballKeepCutBoard, "style" | "attemptsUsed"> & { attempt: number }) | null = null;
-          const fallbackTight: Array<Omit<FootballKeepCutBoard, "style" | "attemptsUsed"> & { attempt: number }> = [];
-          for (let attempt = 0; attempt < KEEP_CUT_ATTEMPTS; attempt += 1) {
-            const board = attemptKeepCutProfileFallback(
-              items,
-              scopeId,
-              seed,
-              style,
-              profile.eliteCount,
-              profile.badCount,
-              attempt,
-            );
-            if (!board) continue;
-            if (!fallbackBest || board.cutoffGap < fallbackBest.cutoffGap) fallbackBest = { ...board, attempt };
-            if (board.cutoffGap <= TIGHT_KEEP_CUT_CUTOFF_GAP) {
-              fallbackTight.push({ ...board, attempt });
-              if (fallbackTight.length >= KEEP_CUT_TIGHT_CANDIDATES) break;
-            }
-          }
-
-          if (fallbackTight.length) {
-            const random = seededLineupRandom("football-keep-cut", "profile-fallback-candidate", scopeId, seed, style.id);
-            const selected = shuffleLineup(fallbackTight, random)[0]!;
-            const { attempt, ...board } = selected;
-            return { ...board, style: style.id, attemptsUsed: KEEP_CUT_ATTEMPTS + attempt + 1 };
-          }
-          if (fallbackBest) {
-            const { attempt, ...board } = fallbackBest;
-            return { ...board, style: style.id, attemptsUsed: KEEP_CUT_ATTEMPTS + attempt + 1 };
-          }
-          throw new Error(`Football Keep/Cut could not build a ${style.name} eight-subject board for ${scopeId}.`);
-          '''
-          if old not in text:
-              raise SystemExit('Keep/Cut failure anchor not found')
-          comparison.write_text(text.replace(old, new, 1))
-          PY
-      - name: Regenerate Stage 13 artifacts
-        run: npm run generate:football-factual-universe
-      - name: Validate repaired closures
-        run: npx vitest run src/features/back-room/footballFactualUniverse.test.ts src/features/back-room/footballGenerationMaturity.test.ts
-      - name: Commit repair
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add scripts/generate-football-factual-universe.mjs src/features/back-room/footballComparisonGeneration.ts data/generated/football/factual-universe-projection.json data/generated/football/factual-coverage-matrix.json
-          if git diff --cached --quiet; then
-            echo 'No repair changes to commit.'
-            exit 0
-          fi
-          git commit -m 'fix: close Stage 13 specialist and team-season gaps'
-          git push origin HEAD:feat/football-ledger-stage13-factual-universe
+          NODE
