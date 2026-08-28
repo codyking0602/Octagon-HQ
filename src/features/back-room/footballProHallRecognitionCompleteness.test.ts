@@ -11,7 +11,7 @@ import {
 
 const TIER_RANK = { A: 3, B: 2, C: 1 } as const;
 const normalized = (value: string) => value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
-const projectionRecords = projectionJson.records as readonly Array<{
+const projectionRecords = projectionJson.records as ReadonlyArray<{
   id: string;
   kind: string;
   name: string;
