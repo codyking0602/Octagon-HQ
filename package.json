@@ -12,9 +12,10 @@
     "build:artifacts": "vite build && vite build --config vite.worker.config.ts && npm run verify:artifact",
     "preview": "vite preview",
     "generate:football-factual-universe": "node scripts/generate-football-factual-universe.mjs",
-    "pretypecheck": "npm run generate:football-factual-universe",
+    "generate:football-ledger-audit": "node scripts/generate-football-ledger-audit.mjs",
+    "pretypecheck": "npm run generate:football-factual-universe && npm run generate:football-ledger-audit",
     "typecheck": "tsc --noEmit",
-    "pretest": "npm run generate:football-factual-universe",
+    "pretest": "npm run generate:football-factual-universe && npm run generate:football-ledger-audit",
     "test": "vitest run",
     "verify:artifact": "node scripts/verify-production-artifact.mjs",
     "export:verdict": "node scripts/export-octagon-verdict.mjs"
