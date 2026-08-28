@@ -1,4 +1,5 @@
 import type { FootballCanonicalSubject } from "./footballFactualStatsCatalog";
+import { footballProHallHistoricalRepairSeeds } from "./footballProHallHistoricalRepairSeeds";
 import type { FootballRecognizabilityTier } from "./footballSubjectEligibility";
 
 export interface FootballHistoricalRecognitionRepair {
@@ -87,11 +88,28 @@ const historicalSubject = (
   tier: "A" | "B",
 ): FootballHistoricalRecognitionRepair => ({ subject, tier, evidenceFamily: "championship-postseason" });
 
+const proHallHistoricalRepairs: readonly FootballHistoricalRecognitionRepair[] =
+  footballProHallHistoricalRepairSeeds.map((seed) => ({
+    subject: {
+      id: seed.id,
+      name: seed.name,
+      kind: seed.kind,
+      league: "NFL",
+      ...(seed.position ? { position: seed.position } : {}),
+      startSeason: seed.startSeason,
+      endSeason: seed.endSeason,
+      activeDecades: activeDecades(seed.startSeason, seed.endSeason),
+    },
+    tier: seed.tier,
+    evidenceFamily: "pro-football-hall-of-fame",
+  }));
+
 /**
  * Stage 13.5 recognition repairs are reviewed source evidence feeding the existing canonical registry projection.
  * They are not a runtime roster, do not contain factual stats, and never bypass footballSubjectRegistry.ts.
  */
 export const footballHistoricalRecognitionRepairs: readonly FootballHistoricalRecognitionRepair[] = [
+  ...proHallHistoricalRepairs,
   player("nfl-jim-brown", "Jim Brown", "NFL", "RB", 1957, 1965, "A", "pro-football-hall-of-fame"),
   player("nfl-johnny-unitas", "Johnny Unitas", "NFL", "QB", 1956, 1973, "A", "pro-football-hall-of-fame"),
   player("nfl-otto-graham", "Otto Graham", "NFL", "QB", 1946, 1955, "A", "pro-football-hall-of-fame"),
