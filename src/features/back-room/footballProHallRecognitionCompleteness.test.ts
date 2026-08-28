@@ -19,9 +19,9 @@ describe("Stage 13.5 exhaustive Pro Football Hall of Fame recognition review", (
     expect(footballProHallRecognitionDispositions.filter((row) => row.reviewKind === "contributor")).toHaveLength(29);
 
     expect(footballProHallRecognitionDispositions.filter((row) => row.disposition === "A")).toHaveLength(77);
-    expect(footballProHallRecognitionDispositions.filter((row) => row.disposition === "B")).toHaveLength(193);
+    expect(footballProHallRecognitionDispositions.filter((row) => row.disposition === "B")).toHaveLength(190);
     expect(footballProHallRecognitionDispositions.filter((row) => row.disposition === "C")).toHaveLength(0);
-    expect(footballProHallRecognitionDispositions.filter((row) => row.disposition === "D")).toHaveLength(117);
+    expect(footballProHallRecognitionDispositions.filter((row) => row.disposition === "D")).toHaveLength(120);
 
     for (const row of footballProHallRecognitionDispositions) {
       expect(["A", "B", "C", "D"]).toContain(row.disposition);
@@ -56,18 +56,25 @@ describe("Stage 13.5 exhaustive Pro Football Hall of Fame recognition review", (
   });
 
   it("keeps archive-only Hall reviews out of the A/B canonical challenge set", () => {
-    expect(footballProHallRecognitionCandidates).toHaveLength(270);
-    expect(footballProHallRecognitionCandidates.some((candidate) => candidate.name === "Lenny Moore")).toBe(false);
-    expect(footballProHallRecognitionCandidates.some((candidate) => candidate.name === "Tommy McDonald")).toBe(false);
-    expect(footballProHallRecognitionCandidates.some((candidate) => candidate.name === "Bobby Mitchell")).toBe(false);
-    expect(footballProHallRecognitionCandidates.some((candidate) => candidate.name === "Art McNally")).toBe(false);
-    expect(footballProHallRecognitionCandidates.some((candidate) => candidate.name === "Pete Rozelle")).toBe(false);
+    expect(footballProHallRecognitionCandidates).toHaveLength(267);
+    for (const name of [
+      "Lenny Moore",
+      "Tommy McDonald",
+      "Bobby Mitchell",
+      "Art McNally",
+      "Pete Rozelle",
+      "Ray Flaherty",
+      "Earle 'Greasy' Neale",
+      "Steve Owen",
+    ]) {
+      expect(footballProHallRecognitionCandidates.some((candidate) => candidate.name === name), name).toBe(false);
+    }
   });
 
   it("keeps every genuinely missing Hall repair bounded, unique, positioned when a player, and era-policy compliant", () => {
-    expect(footballProHallHistoricalRepairSeeds).toHaveLength(149);
-    expect(new Set(footballProHallHistoricalRepairSeeds.map((seed) => seed.id)).size).toBe(149);
-    expect(new Set(footballProHallHistoricalRepairSeeds.map((seed) => `${seed.kind}:${normalized(seed.name)}`)).size).toBe(149);
+    expect(footballProHallHistoricalRepairSeeds).toHaveLength(146);
+    expect(new Set(footballProHallHistoricalRepairSeeds.map((seed) => seed.id)).size).toBe(146);
+    expect(new Set(footballProHallHistoricalRepairSeeds.map((seed) => `${seed.kind}:${normalized(seed.name)}`)).size).toBe(146);
 
     for (const seed of footballProHallHistoricalRepairSeeds) {
       expect(seed.startSeason, seed.name).toBeLessThanOrEqual(seed.endSeason);
