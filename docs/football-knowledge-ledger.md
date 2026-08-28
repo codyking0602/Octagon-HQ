@@ -209,7 +209,7 @@ For every PR in this initiative:
 
 ## Execution history and corrected roadmap
 
-The roadmap is now **15 stages**. Stages 11-15 deliberately correct the earlier order of operations: the project must first define the complete product universe and its factual contract, then repair recognizability, then hydrate facts, and only then finish game migration/cleanup. This prevents one game’s failing simulation from driving ad-hoc data decisions.
+The roadmap is now **19 stages**. Stages 11-19 deliberately correct the order of operations: define the complete product universe and factual contract, repair recognizability, hydrate facts, build and calibrate one stable ranking authority, then finish game integration and cleanup. Ranking work must consume the completed factual universe rather than compensate for missing facts with ad-hoc weights.
 
 Football Hit the Number was already moved to the canonical quantitative ledger in PR #661 before the later numbered consumer migrations. It is tracked as a completed prerequisite rather than wasting a numbered stage repeating the same migration.
 
@@ -292,7 +292,7 @@ Delivered:
 
 Stage 11 deliberately did **not** bulk-promote identities or bulk-fill missing stats. Those are owned by Stages 12 and 13.
 
-### Stage 12 — Recognizability Universe — NEXT
+### Stage 12 — Recognizability Universe — COMPLETE — PR #721
 
 **Purpose:** make the A/B/C universe genuinely complete enough for Football HQ across every NFL and CFB pool.
 
@@ -306,7 +306,7 @@ Deliverables:
 - keep D as the deep/archive layer without weakening C to hit an arbitrary count;
 - add durable pool-by-pool coverage/omission tests.
 
-### Stage 13 — Factual Universe
+### Stage 13 — Factual Universe — NEXT
 
 **Purpose:** hydrate the Stage 11 factual/honor contract for the completed Stage 12 A/B/C universe through the existing factual owner.
 
@@ -321,32 +321,88 @@ Deliverables:
 - no broad D enrichment unless a specific deep feature requires it;
 - durable factual-coverage matrix by league/pool/metric family.
 
-### Stage 14 — Game Integration
+### Stage 14 — Ranking Philosophy + Scoring Architecture
 
-**Purpose:** make every objective Football game consume the completed recognizable/factual universe in a way that keeps each game distinct.
+**Purpose:** replace the current migration-grade comparison math with one stable ranking framework that defines what greatness means before position- or league-specific models are tuned.
+
+Deliverables:
+
+- preserve `footballComparisonAuthority.ts` as the single shared comparison owner rather than creating a second ranking path;
+- explicitly define career greatness, single-season greatness, coach greatness, program/franchise greatness, bounded-era greatness, and team-season greatness as separate comparison semantics;
+- use anchored/versioned scoring so ratings do not move merely because the current candidate pool expands;
+- support era-adjusted and position-relative inputs where raw totals are not comparable across football history;
+- separate peak, sustained excellence, longevity tail, honors, postseason/team accomplishment, and contextual strength rather than hiding them inside one generic percentile average;
+- define missing-data/confidence behavior explicitly rather than silently reweighting sparse subjects into fake precision;
+- keep recognizability and candidate membership completely separate from ranking score.
+
+### Stage 15 — NFL Ranking Models
+
+**Purpose:** implement NFL-specific greatness models on top of the Stage 14 framework and Stage 13 factual universe.
+
+Deliverables:
+
+- position-specific career models for QB, RB, WR, TE, OL, DL/EDGE, LB, Secondary, and K/P;
+- defensive players are first evaluated relative to their own position family before any cross-position greatness normalization;
+- NFL QB-season and team-season models judge the bounded season rather than importing career reputation;
+- head-coach evaluation covers peak, sustained contention, championships/postseason results, franchise elevation, and longevity without becoming a raw-win-count formula;
+- postseason and awards are meaningful signals but do not double-count the same accomplishment through multiple inputs;
+- reviewed legacy ratings remain calibration/override evidence for matching identities, never candidate membership or the primary model.
+
+### Stage 16 — CFB Ranking Models
+
+**Purpose:** implement college-specific greatness models without importing NFL accomplishment or pro-career reputation.
+
+Deliverables:
+
+- position-specific CFB player-career models using college production, era/position context, honors, opponent/conference strength where defensible, and sustained elite seasons;
+- add or support single-season player comparisons where the product asks for a season rather than a career;
+- CFB head-coach evaluation covers titles, sustained contention, program elevation, conference dominance, quality of competition, and longevity;
+- program-since-2000, bounded program-era, and team-season models remain distinct comparison questions;
+- college career models can value multiple elite seasons without automatically making a one-season peak the greatest career;
+- NFL performance contributes zero to CFB greatness scoring.
+
+### Stage 17 — Ranking Calibration + Stability Audit
+
+**Purpose:** prove the NFL and CFB models produce defensible, stable football judgments before games depend on them broadly.
+
+Deliverables:
+
+- use reputable historical rankings and reviewed expert lists as top-end calibration/sanity evidence, not as the formula or a membership source;
+- use scalable contemporary consensus signals such as MVP, All-Pro, DPOY, Heisman, All-America, and major position awards where appropriate;
+- add pairwise anchor tests for obvious and representative comparisons across the top, middle, and bottom of each supported pool;
+- include explicit season anchors such as Patrick Mahomes 2022 versus Aaron Rodgers 2011 so the intended “greatest complete season” philosophy is tested rather than implied;
+- perturb important weights within a reasonable range and flag unstable close calls instead of pretending tiny score gaps are certain;
+- audit score distributions, historical eras, positions, missing-data confidence, and reviewed calibration for systematic bias;
+- lock a versioned ranking scale before Stage 18 game integration.
+
+### Stage 18 — Game Integration
+
+**Purpose:** make every objective Football game consume the completed recognizable/factual/ranking universe in a way that keeps each game distinct.
 
 Deliverables:
 
 - finish Blind Resume’s truthful canonical eight-row generation and migrate it off hand-authored membership;
 - re-audit Blind Rank, Keep/Cut, Hit the Number, and Find the Leader against the completed universe;
+- Blind Rank and Keep/Cut consume the finished shared ranking authority rather than migration-grade comparison math;
 - Wavelength remains subjective-owned while using canonical subject identity;
 - each game takes a different useful slice of the same ledger rather than presenting the same shallow stats with different labels;
 - reviewed Rank Five ratings and reviewed resume packets remain optional calibration/enrichment for matching canonical subjects, never membership;
 - deterministic large simulations prove depth, variety, board quality, and no material subject/category overexposure;
 - structure the same identity/fact owners so future Football Draft/Auction and 20 Questions can plug in without a new factual database.
 
-### Stage 15 — Cleanup + Final Release Audit
+### Stage 19 — Cleanup + Final Release Audit
 
 **Purpose:** remove superseded ownership paths and prove the complete Football Knowledge Ledger reaches production cleanly.
 
 Deliverables:
 
 - remove duplicate factual providers, legacy authoritative rosters, alternate query paths/fallbacks, and dead Blind Resume membership machinery;
+- remove superseded comparison math only after the finished shared ranking authority owns all migrated comparison consumers;
 - preserve legitimate reviewed calibration/editorial evidence that still enhances matching canonical subjects;
 - assert every objective Football game uses canonical membership/facts and no old inventory silently remains authoritative;
 - static/runtime bundle audit so the D/archive universe does not unnecessarily bloat gameplay;
-- deterministic release simulations and depth/coverage guardrails;
-- one identity/query owner and one factual public owner;
+- deterministic release simulations and depth/coverage/ranking guardrails;
+- one identity/query owner, one factual public owner, and one shared comparison/ranking owner;
 - exact final head passes typecheck, full tests, production build, and relevant backend verification;
 - merge exact green head and verify canonical GitHub Actions deployment/live SHA when runtime behavior changes.
 
@@ -365,6 +421,7 @@ This initiative is done when:
 - **No migrated game starts from a hand-authored roster and merely filters it through the ledger.**
 - **No Football game needs a hand-authored per-subject row merely to make a qualified canonical subject playable.**
 - Legacy ratings/evidence are calibration/enrichment only, never membership authority.
+- One stable, versioned comparison/ranking authority handles the supported NFL and CFB greatness questions without tying scores to current-pool size.
 - All objective Football consumers use the same canonical query/factual path.
 - Game-depth simulations prove that the canonical database materially expands actual gameplay, not just storage.
 - Future Football Draft/Auction and 20 Questions can reuse the same owners rather than requiring a new data universe.
