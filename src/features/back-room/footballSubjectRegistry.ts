@@ -73,6 +73,10 @@ export interface FootballSubjectQuery {
 
 const comparisonItemById = new Map(footballComparisonDepthItems.map((item) => [item.id, item]));
 
+function normalizedFootballSubjectName(name: string) {
+  return name.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
+}
+
 function programAlias(subject: FootballSubjectIdentity) {
   if (subject.kind !== "program" || !subject.id.startsWith("program-")) return null;
   return `${subject.id.slice("program-".length)}-program`;
@@ -168,6 +172,11 @@ const projectedCanonicalSubjects: readonly FootballSubjectProfile[] = footballCa
   .map((subject) => enrichFootballSubject(subject, projectedCanonicalKnowledgeOverride(subject)));
 
 const canonicalSubjectIds = new Set(footballSubjects.map((subject) => subject.id));
+const canonicalPlayerRecognitionKeys = new Set(
+  footballCanonicalSubjects
+    .filter((subject) => subject.kind === "player-career")
+    .map((subject) => `${subject.league}:${normalizedFootballSubjectName(subject.name)}:${subject.position ?? ""}`),
+);
 const reconciledProjectedPlayerIds = new Set(
   footballCanonicalSubjects
     .filter((subject) => subject.kind === "player-career")
@@ -177,10 +186,16 @@ const reconciledProjectedPlayerIds = new Set(
 
 /** Projected players that do not already reconcile to a curated canonical player. Opt-in only. */
 const projectedPlayerSourceSubjects: readonly FootballSubjectProfile[] = footballProjectedPlayerSubjects
-  .filter((subject) => !canonicalSubjectIds.has(subject.id) && !reconciledProjectedPlayerIds.has(subject.id))
+  .filter((subject) => (
+    !canonicalSubjectIds.has(subject.id)
+    && !reconciledProjectedPlayerIds.has(subject.id)
+    && !canonicalPlayerRecognitionKeys.has(
+      `${subject.league}:${normalizedFootballSubjectName(subject.name)}:${subject.position ?? ""}`,
+    )
+  ))
   .map((subject) => enrichFootballSubject(subject));
 
-/** Stage 12 adds identity-only franchise/game families through the same query owner. */
+/** Stage 12 adds identity-only franchise/game/coach/era families through the same query owner. */
 const projectedNonPlayerSourceSubjects: readonly FootballSubjectProfile[] = footballProjectedNonPlayerRecognitionSubjects
   .filter(({ subject }) => !canonicalSubjectIds.has(subject.id))
   .map(({ subject, tier, sourceIdentityKey }) => enrichProjectedNonPlayerSubject(subject, tier, sourceIdentityKey));
@@ -252,10 +267,6 @@ export function queryFootballSubjects(query: FootballSubjectQuery = {}) {
     ? [...canonicalUniverse, ...projectedSourceSubjects, ...projectedAdditionalSubjects]
     : canonicalUniverse;
   return universe.filter((subject) => matchesFootballSubject(subject, query));
-}
-
-function normalizedFootballSubjectName(name: string) {
-  return name.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
 /**
