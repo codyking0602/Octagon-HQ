@@ -210,7 +210,7 @@ function mergeCanonicalFactualRecords(records: readonly FootballFactualRecord[])
 }
 function projectedGapFillRecords(projected: readonly FootballFactualRecord[], owned: readonly FootballFactualRecord[]) {
   const ownedKeys=new Set(owned.flatMap((record)=>record.facts.map((fact)=>`${record.subjectId}:${fact.metricId}`)));
-  return projected.flatMap((record)=>{ const subjectId=canonicalFactSubjectId(record.subjectId); const facts=record.facts.filter((fact)=>!ownedKeys.has(`${subjectId}:${fact.metricId}`)); return facts.length ? [{...record,subjectId,facts}] : []; });
+  return projected.flatMap((record)=>{ const canonicalSubject=getFootballSubject(record.subjectId); if (!canonicalSubject) return []; const subjectId=canonicalSubject.id; const facts=record.facts.filter((fact)=>!ownedKeys.has(`${subjectId}:${fact.metricId}`)); return facts.length ? [{...record,subjectId,facts}] : []; });
 }
 
 const preStage13FactualRecords=mergeCanonicalFactualRecords([...compatibilityFactualRecords,...expandedFootballFactualRecords]);
