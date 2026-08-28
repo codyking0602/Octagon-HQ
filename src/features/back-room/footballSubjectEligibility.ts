@@ -64,15 +64,12 @@ export function buildFootballSubjectKnowledgeMetadata(
     subject.endSeason ?? subject.season,
     proposedTier,
   ) as FootballRecognizabilityTier;
-  const casualEligible = override.casualEligible ?? recognizabilityTier !== "D";
+  // The final canonical tier owns casual eligibility. A stale source override must never keep a newly archived D row live.
+  const casualEligible = recognizabilityTier === "D" ? false : (override.casualEligible ?? true);
   const sourceIdentityKeys = override.sourceIdentityKeys ?? [
     { provider: "octagon-hq", id: subject.id } as const,
     ...(projection?.sourceIdentityKey ? [projection.sourceIdentityKey] : []),
   ];
-
-  if (recognizabilityTier === "D" && casualEligible) {
-    throw new Error(`Database-only Football subject ${subject.id} cannot be casual-eligible.`);
-  }
 
   return { recognizabilityTier, casualEligible, sourceIdentityKeys };
 }
