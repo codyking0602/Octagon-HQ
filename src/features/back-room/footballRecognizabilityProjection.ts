@@ -21,8 +21,12 @@ interface ProjectionRecord {
   sourceId: string;
 }
 
+type FootballProjectedNonPlayerIdentitySubject = Omit<FootballRecognitionIdentitySubject, "kind"> & {
+  kind: Exclude<FootballRecognitionIdentitySubject["kind"], "era">;
+};
+
 export interface FootballProjectedNonPlayerRecognitionSubject {
-  subject: FootballRecognitionIdentitySubject;
+  subject: FootballProjectedNonPlayerIdentitySubject;
   tier: FootballRecognizabilityTier;
   sourceIdentityKey?: { provider: FootballSourceProviderId; id: string };
 }
@@ -270,8 +274,11 @@ export const footballProjectedNonPlayerRecognitionSubjects: readonly FootballPro
     })),
   ...evidenceNewKindSubjects.map((subject) => {
     const evidence = footballRecognitionEvidenceFor(subject)!;
+    const normalizedSubject: FootballProjectedNonPlayerIdentitySubject = subject.kind === "era"
+      ? { ...subject, kind: "program-era" }
+      : subject;
     return {
-      subject,
+      subject: normalizedSubject,
       tier: evidence.tier,
       sourceIdentityKey: { provider: evidence.sourceProvider, id: evidence.sourceId },
     };
