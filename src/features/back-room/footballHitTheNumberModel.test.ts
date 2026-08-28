@@ -75,7 +75,7 @@ describe("Football Hit the Number canonical fact integration", () => {
         expect(fact, `${plan.metricId}:${subjectId}`).not.toBeNull();
         expect(Number.isFinite(fact!.fact.value)).toBe(true);
         expect(fact!.sources.length).toBeGreaterThan(0);
-        expect(fact!.sources.every((source) => source.reviewedOn === "2026-08-22" || source.reviewedOn === "2026-08-25")).toBe(true);
+        expect(fact!.sources.every((source) => source.reviewedOn === "2026-08-22" || source.reviewedOn === "2026-08-25" || source.reviewedOn === "2026-08-27")).toBe(true);
       }
     }
 
