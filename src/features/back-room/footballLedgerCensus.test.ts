@@ -5,6 +5,8 @@ import {
   FOOTBALL_LEDGER_CENSUS_POOLS,
   footballLedgerCensus,
   footballLedgerCensusEndingSeasonFor,
+  footballLedgerCensusEraFor,
+  footballLedgerCensusEraFromActiveDecades,
 } from "./footballLedgerCensus";
 
 const TIERS = ["A", "B", "C"] as const;
@@ -39,6 +41,16 @@ describe("Football Knowledge Ledger canonical census", () => {
     const nflMiddle = footballLedgerCensus.leagueTotals.NFL.eras.middle;
     const cfbHistorical = footballLedgerCensus.leagueTotals.CFB.eras.historical;
     const cfbMiddle = footballLedgerCensus.leagueTotals.CFB.eras.middle;
+    const policyIssues = footballLedgerAudit.rows
+      .map((row) => ({ ...row, censusEra: footballLedgerCensusEraFor(row) }))
+      .filter((row) => (
+        (row.league === "NFL" && row.tier === "C" && (row.censusEra === "historical" || row.censusEra === "middle"))
+        || (row.league === "CFB" && row.tier === "C" && (row.censusEra === "historical" || row.censusEra === "middle"))
+        || (row.league === "NFL" && row.tier === "B" && row.censusEra === "historical")
+        || (row.league === "CFB" && row.tier === "B" && row.censusEra === "historical")
+      ))
+      .map(({ subjectId, name, league, pool, tier, censusEra }) => ({ subjectId, name, league, pool, tier, censusEra }));
+    console.log("FOOTBALL_LEDGER_CENSUS_HISTORICAL_POLICY_ISSUES", JSON.stringify(policyIssues, null, 2));
 
     expect(nflHistorical.B).toBe(0);
     expect(nflHistorical.C).toBe(0);
@@ -61,6 +73,24 @@ describe("Football Knowledge Ledger canonical census", () => {
       .filter((row) => row.pool !== "Franchises / programs")
       .reduce((sum, row) => sum + TIERS.reduce((tierSum, tier) => tierSum + row.eras.unknown[tier], 0), 0);
     expect(unknownCount).toBeLessThan(562);
+  });
+
+  it("uses canonical active decades only when they cannot cross an era boundary", () => {
+    expect(footballLedgerCensusEraFromActiveDecades("NFL", [1960])).toBe("historical");
+    expect(footballLedgerCensusEraFromActiveDecades("NFL", [1970, 1980, 1990])).toBe("middle");
+    expect(footballLedgerCensusEraFromActiveDecades("NFL", [1990, 2000])).toBe("modern");
+    expect(footballLedgerCensusEraFromActiveDecades("CFB", [1970])).toBe("historical");
+    expect(footballLedgerCensusEraFromActiveDecades("CFB", [1980, 1990])).toBe("middle");
+    expect(footballLedgerCensusEraFromActiveDecades("CFB", [2000])).toBeNull();
+    expect(footballLedgerCensusEraFromActiveDecades("CFB", [2000, 2010])).toBe("modern");
+
+    const unresolvedAfterExactWindows = footballLedgerAudit.rows.filter((row) => (
+      row.pool !== "Franchises / programs" && footballLedgerCensusEndingSeasonFor(row) == null
+    )).length;
+    const unresolvedAfterSafeEraMetadata = footballLedgerCensus.rows
+      .filter((row) => row.pool !== "Franchises / programs")
+      .reduce((sum, row) => sum + TIERS.reduce((tierSum, tier) => tierSum + row.eras.unknown[tier], 0), 0);
+    expect(unresolvedAfterSafeEraMetadata).toBeLessThan(unresolvedAfterExactWindows);
   });
 
   it("keeps programs/franchises timeless and truly unresolved dated subjects explicit", () => {
