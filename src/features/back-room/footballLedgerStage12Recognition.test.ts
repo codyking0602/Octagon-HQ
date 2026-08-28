@@ -18,7 +18,7 @@ function playerPool(league: "NFL" | "CFB", position: "QB" | "RB" | "WR" | "TE" |
 }
 
 function names(subjects: readonly { name: string }[]) {
-  return new Set(subjects.map((subject) => subject.name));
+  return subjects.map((subject) => subject.name);
 }
 
 describe("Football Stage 12 recognizability universe", () => {
@@ -41,13 +41,13 @@ describe("Football Stage 12 recognizability universe", () => {
 
   it("repairs the Stage 11 college identity holes instead of relying on NFL crossover", () => {
     expect(names(playerPool("CFB", "RB"))).toContain("Darren McFadden");
-    expect(names(playerPool("CFB", "TE"))).toEqual(expect.setContaining(["Jermaine Gresham", "Mark Andrews", "Brock Bowers"]));
-    expect(names(playerPool("CFB", "OL"))).toEqual(expect.setContaining(["Joe Thomas", "Barrett Jones", "Penei Sewell"]));
+    expect(names(playerPool("CFB", "TE"))).toEqual(expect.arrayContaining(["Jermaine Gresham", "Mark Andrews", "Brock Bowers"]));
+    expect(names(playerPool("CFB", "OL"))).toEqual(expect.arrayContaining(["Joe Thomas", "Barrett Jones", "Penei Sewell"]));
     expect(names(playerPool("CFB", "DL"))).toContain("Ndamukong Suh");
     expect(names(playerPool("CFB", "LB"))).toContain("Luke Kuechly");
     expect(names(playerPool("CFB", "DB"))).toContain("Eric Berry");
-    expect(new Set([...playerPool("CFB", "K"), ...playerPool("CFB", "P")].map((subject) => subject.name)))
-      .toEqual(expect.setContaining(["Roberto Aguayo", "Michael Dickson"]));
+    expect(names([...playerPool("CFB", "K"), ...playerPool("CFB", "P")]))
+      .toEqual(expect.arrayContaining(["Roberto Aguayo", "Michael Dickson"]));
   });
 
   it("materially deepens the weakest CFB A-C pools without an arbitrary total-player quota", () => {
@@ -60,10 +60,10 @@ describe("Football Stage 12 recognizability universe", () => {
   });
 
   it("repairs NFL OL and specialist recognition instead of pretending production stats cover every position", () => {
-    expect(names(playerPool("NFL", "OL"))).toEqual(expect.setContaining(["Joe Thomas", "Trent Williams", "Jason Kelce", "Zack Martin"]));
+    expect(names(playerPool("NFL", "OL"))).toEqual(expect.arrayContaining(["Joe Thomas", "Trent Williams", "Jason Kelce", "Zack Martin"]));
     expect(playerPool("NFL", "OL").length).toBeGreaterThanOrEqual(10);
-    expect(new Set([...playerPool("NFL", "K"), ...playerPool("NFL", "P")].map((subject) => subject.name)))
-      .toEqual(expect.setContaining(["Adam Vinatieri", "Justin Tucker", "Shane Lechler", "Pat McAfee"]));
+    expect(names([...playerPool("NFL", "K"), ...playerPool("NFL", "P")]))
+      .toEqual(expect.arrayContaining(["Adam Vinatieri", "Justin Tucker", "Shane Lechler", "Pat McAfee"]));
     expect(playerPool("NFL", "K").length + playerPool("NFL", "P").length).toBeGreaterThanOrEqual(10);
   });
 
