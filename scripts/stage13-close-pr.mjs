@@ -48,10 +48,5 @@ replaceExact(
   'return projected.flatMap((record)=>{ const subjectId=canonicalFactSubjectId(record.subjectId); const facts=record.facts.filter((fact)=>!ownedKeys.has(`${subjectId}:${fact.metricId}`)); return facts.length ? [{...record,subjectId,facts}] : []; });',
   'return projected.flatMap((record)=>{ const canonicalSubject=getFootballSubject(record.subjectId); if (!canonicalSubject) return []; const subjectId=canonicalSubject.id; const facts=record.facts.filter((fact)=>!ownedKeys.has(`${subjectId}:${fact.metricId}`)); return facts.length ? [{...record,subjectId,facts}] : []; });',
 );
-replaceExact(
-  "src/features/back-room/footballGenerationMaturity.test.ts",
-  'const tierCeiling = Math.min(0.9, Math.max(globalFloor, averageTierExposure * 1.5 + 0.05));',
-  'const tierCeiling = Math.min(0.9, Math.max(globalFloor, averageTierExposure * 1.6 + 0.05));',
-);
 
 console.log("Applied Stage 13 closure repair.");
