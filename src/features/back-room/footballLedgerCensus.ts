@@ -1,3 +1,4 @@
+import recognitionProjectionJson from "../../../data/generated/football/recognizability-projection.json";
 import {
   footballLedgerAudit,
   type FootballLedgerAuditPool,
@@ -20,8 +21,33 @@ export interface FootballLedgerCensusRow {
   total: number;
 }
 
+interface RecognitionProjectionRecord {
+  id: string;
+  kind: string;
+  name: string;
+  league: "NFL" | "CFB";
+  position?: string;
+  school?: string;
+  startSeason?: number;
+  endSeason?: number;
+}
+
 const TIERS = ["A", "B", "C"] as const;
 const ERA_IDS = ["historical", "middle", "modern", "unknown", "timeless"] as const;
+const recognitionProjectionRecords = recognitionProjectionJson.records as readonly RecognitionProjectionRecord[];
+const recognitionProjectionById = new Map(recognitionProjectionRecords.map((record) => [record.id, record]));
+const recognitionProjectionByIdentity = new Map<string, RecognitionProjectionRecord[]>();
+
+function normalizedIdentity(value: string) {
+  return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
+}
+
+for (const record of recognitionProjectionRecords) {
+  const key = `${record.kind}:${record.league}:${normalizedIdentity(record.name)}`;
+  const values = recognitionProjectionByIdentity.get(key) ?? [];
+  values.push(record);
+  recognitionProjectionByIdentity.set(key, values);
+}
 
 export const FOOTBALL_LEDGER_CENSUS_POOLS: readonly FootballLedgerAuditPool[] = [
   "QB",
@@ -72,14 +98,46 @@ function emptyEraCounts(): Record<FootballLedgerCensusEraId, Record<FootballLedg
   };
 }
 
+function projectionKindFor(row: FootballLedgerSubjectAuditRow) {
+  if (row.kind === "program-era") return "era";
+  return row.kind;
+}
+
+function sourceProjectionWindowFor(row: FootballLedgerSubjectAuditRow) {
+  const direct = recognitionProjectionById.get(row.subjectId);
+  if (direct) return direct;
+
+  const key = `${projectionKindFor(row)}:${row.league}:${normalizedIdentity(row.name)}`;
+  const matches = recognitionProjectionByIdentity.get(key) ?? [];
+  if (matches.length === 1) return matches[0]!;
+
+  const samePosition = row.position ? matches.filter((record) => record.position === row.position) : matches;
+  if (samePosition.length === 1) return samePosition[0]!;
+
+  const sameSchool = row.school ? samePosition.filter((record) => record.school === row.school) : samePosition;
+  return sameSchool.length === 1 ? sameSchool[0]! : null;
+}
+
+/**
+ * Stage 12 recognition review can replace a source-projected identity while preserving its canonical id/tier.
+ * When that reviewed identity omitted its career window, recover the already-authoritative source window here rather
+ * than classifying a known dated subject as Unknown. This is census-only reconciliation of existing canonical inputs;
+ * it does not create a second membership or factual provider.
+ */
+export function footballLedgerCensusEndingSeasonFor(row: FootballLedgerSubjectAuditRow) {
+  const explicit = row.endSeason ?? row.season;
+  if (explicit != null) return explicit;
+  return sourceProjectionWindowFor(row)?.endSeason;
+}
+
 /**
  * Census eras use the same ending-season boundaries as the canonical Stage 13.5 historical recognition policy.
- * Permanent franchise/program identities are timeless. Dated subjects with no resolved ending season remain Unknown;
- * the census never invents an era merely to make the table look complete.
+ * Permanent franchise/program identities are timeless. Dated subjects with no explicit or reconciled source ending
+ * season remain Unknown; the census never invents an era merely to make the table look complete.
  */
 export function footballLedgerCensusEraFor(row: FootballLedgerSubjectAuditRow): FootballLedgerCensusEraId {
   if (row.pool === "Franchises / programs") return "timeless";
-  const endingSeason = row.endSeason ?? row.season;
+  const endingSeason = footballLedgerCensusEndingSeasonFor(row);
   if (endingSeason == null) return "unknown";
   if (row.league === "NFL") {
     if (endingSeason < 1970) return "historical";
@@ -130,9 +188,9 @@ export function buildFootballLedgerCensus(rows: readonly FootballLedgerSubjectAu
   for (const league of ["NFL", "CFB"] as const) for (const tier of TIERS) grandTierCounts[tier] += leagueTotals[league].tierCounts[tier];
 
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     denominator: footballLedgerAudit.denominator,
-    eraBasis: "subject endSeason, falling back to season; franchises/programs are timeless; unresolved dated subjects remain unknown",
+    eraBasis: "subject endSeason, falling back to season and the reconciled Stage 12 source projection window; franchises/programs are timeless; truly unresolved dated subjects remain unknown",
     eraDefinitions: FOOTBALL_LEDGER_CENSUS_ERAS,
     rows: censusRows,
     leagueTotals,
@@ -149,7 +207,7 @@ export function formatFootballLedgerCensusMarkdown(census = buildFootballLedgerC
     "",
     `Canonical A/B/C subjects: **${census.grandTotal.total.toLocaleString()}**`,
     "",
-    "Counts are shown as A/B/C. Unknown is intentionally preserved when a dated canonical subject lacks a resolved ending season; franchises/programs are Timeless.",
+    "Counts are shown as A/B/C. Unknown is intentionally preserved only when a dated canonical subject lacks both an explicit window and a uniquely reconciled Stage 12 source window; franchises/programs are Timeless.",
     "",
   ];
 
