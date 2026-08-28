@@ -38,10 +38,4 @@ replaceOnce(
   '  return projected.flatMap((record)=>{ const canonicalSubject=getFootballSubject(record.subjectId); if (!canonicalSubject) return []; const subjectId=canonicalSubject.id; const facts=record.facts.filter((fact)=>!ownedKeys.has(`${subjectId}:${fact.metricId}`)); return facts.length ? [{...record,subjectId,facts}] : []; });\n'
 );
 
-replaceOnce(
-  "src/features/back-room/footballComparisonGeneration.ts",
-  '    const forceAbsoluteTier = targetTier === "elite" || targetTier === "bad";\n',
-  '    const repeatedTargetDepth = targets.filter((tier) => tier === targetTier).length;\n    const forceAbsoluteTier = (\n      targetTier === "elite"\n      || targetTier === "bad"\n      || (targetTier === "great" && availableTierCount(items, targetTier) >= Math.max(3, repeatedTargetDepth))\n    );\n'
-);
-
-console.log("Applied Stage 13 final repair.");
+console.log("Applied Stage 13 factual repair.");
