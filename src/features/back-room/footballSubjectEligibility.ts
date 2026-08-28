@@ -8,6 +8,9 @@ export type FootballSourceProviderId =
   | "cfbfastR"
   | "nflverse"
   | "ncaafb"
+  | "sports-reference"
+  | "official-cfb-awards"
+  | "nfl-honors"
   | "ncaa-2025";
 
 export interface FootballSourceIdentityKey {
@@ -45,8 +48,8 @@ function conservativeCanonicalTier(subject: FootballCanonicalSubject): FootballR
 }
 
 /**
- * Existing canonical subjects stay in the curated registry, but PR6 may conservatively mark some as database-only.
- * Historical source adapters may add far deeper source rows without automatically exposing those rows to normal game queries.
+ * Existing canonical subjects stay in the curated registry, while the generated/source projection may conservatively
+ * mark deeper source rows database-only. Recognition providers are identity evidence only; they never own objective stats.
  */
 export function buildFootballSubjectKnowledgeMetadata(
   subject: FootballCanonicalSubject,
