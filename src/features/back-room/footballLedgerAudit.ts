@@ -12,6 +12,10 @@ import {
 export type FootballLedgerAuditPool =
   | "QB" | "RB" | "WR" | "TE" | "OL" | "DL / EDGE" | "LB" | "Secondary" | "K / P";
 export type FootballLedgerAuditStatus = "green" | "yellow" | "red";
+export type FootballLedgerSourceCoverage =
+  | "inside-normalized-player-source"
+  | "before-normalized-player-source"
+  | "unknown-career-window";
 
 export interface FootballLedgerPlayerAuditRow {
   subjectId: string;
@@ -24,6 +28,7 @@ export interface FootballLedgerPlayerAuditRow {
   endSeason?: number;
   school?: string;
   franchises?: readonly string[];
+  sourceCoverage: FootballLedgerSourceCoverage;
   numericFactCount: number;
   coreFactCount: number;
   hasRelationship: boolean;
@@ -58,6 +63,13 @@ function playerPool(position?: string): FootballLedgerAuditPool | null {
   if (position === "DB") return "Secondary";
   if (position === "K" || position === "P") return "K / P";
   return null;
+}
+
+function sourceCoverage(subject: FootballSubjectProfile): FootballLedgerSourceCoverage {
+  const earliestNormalizedSeason = subject.league === "NFL" ? 1999 : 2014;
+  if (subject.endSeason != null && subject.endSeason < earliestNormalizedSeason) return "before-normalized-player-source";
+  if (subject.startSeason != null || subject.endSeason != null) return "inside-normalized-player-source";
+  return "unknown-career-window";
 }
 
 function hasCanonicalRelationship(subject: FootballSubjectProfile) {
@@ -98,7 +110,7 @@ function auditPlayer(subject: FootballSubjectProfile): FootballLedgerPlayerAudit
   const metricIds = facts.map((fact) => fact.metricId);
   const coreFactCount = metricIds.filter((metricId) => isCoreMetric(pool, metricId)).length;
   const evidence = footballRecognitionEvidenceFor(subject);
-  const expectsHonorFact = evidence?.basis === "major-award-or-hall-of-fame";
+  const expectsHonorFact = evidence?.basis === "major-award-or-hall-of-fame" || evidence?.basis === "first-team-all-america";
   const hasHonorFact = metricIds.some(isHonorMetric);
   const hasRelationship = hasCanonicalRelationship(subject);
   const missing: string[] = [];
@@ -107,7 +119,7 @@ function auditPlayer(subject: FootballSubjectProfile): FootballLedgerPlayerAudit
   if (coreFactCount < minimumCoreFacts(pool)) {
     missing.push(pool === "OL" ? "position-appropriate context" : "core position production");
   }
-  if (expectsHonorFact && !hasHonorFact) missing.push("known major honor/HOF fact");
+  if (expectsHonorFact && !hasHonorFact) missing.push("known major honor/HOF/All-America fact");
 
   let status: FootballLedgerAuditStatus = "green";
   if (!hasRelationship || (pool !== "OL" && coreFactCount === 0)) status = "red";
@@ -124,6 +136,7 @@ function auditPlayer(subject: FootballSubjectProfile): FootballLedgerPlayerAudit
     endSeason: subject.endSeason,
     school: subject.school,
     franchises: subject.franchises,
+    sourceCoverage: sourceCoverage(subject),
     numericFactCount: facts.length,
     coreFactCount,
     hasRelationship,
@@ -136,10 +149,17 @@ function auditPlayer(subject: FootballSubjectProfile): FootballLedgerPlayerAudit
 
 function recognitionGaps(aCSubjects: readonly FootballSubjectProfile[]) {
   const aCIds = new Set(aCSubjects.map((subject) => subject.id));
+  const evidenceResolvedSubjects = new Map<string, FootballSubjectProfile>();
+  for (const subject of aCSubjects) {
+    const evidence = footballRecognitionEvidenceFor(subject);
+    if (evidence) evidenceResolvedSubjects.set(evidence.id, subject);
+  }
+
   const gaps: FootballLedgerRecognitionGap[] = [];
   for (const evidence of footballRecognitionEvidenceRecords) {
     if (evidence.tier === "D") continue;
-    const resolved = getFootballSubject(evidence.id);
+    const direct = getFootballSubject(evidence.id);
+    const resolved = evidenceResolvedSubjects.get(evidence.id) ?? direct;
     const present = resolved && aCIds.has(resolved.id);
     if (!present) {
       gaps.push({
@@ -184,6 +204,8 @@ export function buildFootballLedgerAudit() {
 
   const highPriorityFactGaps = players.filter((row) => row.tier !== "C" && row.status !== "green");
   const allMaterialFactGaps = players.filter((row) => row.status === "red");
+  const sourceEraFactGaps = allMaterialFactGaps.filter((row) => row.sourceCoverage === "before-normalized-player-source");
+  const inSourceWindowFactGaps = allMaterialFactGaps.filter((row) => row.sourceCoverage === "inside-normalized-player-source");
   const rosterReview = players.filter((row) => row.tier !== "C");
   const statusCounts = Object.fromEntries(
     (["NFL", "CFB"] as const).map((league) => [league, Object.fromEntries(
@@ -205,6 +227,8 @@ export function buildFootballLedgerAudit() {
     recognitionGaps: recognitionGaps(uniqueSubjects),
     highPriorityFactGaps,
     allMaterialFactGaps,
+    sourceEraFactGaps,
+    inSourceWindowFactGaps,
     rosterReview,
     players,
   } as const;
