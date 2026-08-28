@@ -76,17 +76,17 @@ function sourceCoverage(
   if (subject.startSeason != null && subject.startSeason < earliestNormalizedSeason) return "partially-overlaps-normalized-player-source";
   if (subject.startSeason != null || subject.endSeason != null) return "inside-normalized-player-source";
 
-  const normalizedProvider = subject.league === "NFL" ? "nflverse" : "cfbfastR";
-  if (subject.sourceIdentityKeys.some((key) => key.provider === normalizedProvider)) return "inside-normalized-player-source";
-
-  const normalizedFactSource = subject.league === "NFL" ? "nflverse-factual-universe" : "cfbfast-r-factual-universe";
-  if (facts.some((fact) => fact.evidence.sourceIds.includes(normalizedFactSource))) return "inside-normalized-player-source";
-
   if (subject.league === "CFB" && subject.draftYear != null) {
     return subject.draftYear <= earliestNormalizedSeason
       ? "before-normalized-player-source"
       : "inside-normalized-player-source";
   }
+
+  const normalizedProvider = subject.league === "NFL" ? "nflverse" : "cfbfastR";
+  if (subject.sourceIdentityKeys.some((key) => key.provider === normalizedProvider)) return "inside-normalized-player-source";
+
+  const normalizedFactSource = subject.league === "NFL" ? "nflverse-factual-universe" : "cfbfast-r-factual-universe";
+  if (facts.some((fact) => fact.evidence.sourceIds.includes(normalizedFactSource))) return "inside-normalized-player-source";
   return "unknown-career-window";
 }
 
