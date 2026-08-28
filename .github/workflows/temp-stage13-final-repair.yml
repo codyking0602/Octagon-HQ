@@ -53,17 +53,105 @@ jobs:
 
           comparison = Path('src/features/back-room/footballComparisonGeneration.ts')
           text = comparison.read_text()
-          old = '''    const preferDeepExactTier = (
-                targetTier !== "elite"
-                && targetTier !== "bad"
+          anchor = '''export function buildFootballKeepCutBoard(
           '''
-          new = '''    const preferDeepExactTier = (
-                scopeId !== "college-team-seasons"
-                && targetTier !== "elite"
-                && targetTier !== "bad"
+          helper = '''function attemptKeepCutProfileFallback(
+            items: readonly FootballRankFiveItem[],
+            scopeId: string,
+            seed: string,
+            style: FootballKeepCutBoardStyle,
+            eliteCount: number,
+            badCount: number,
+            attempt: number,
+          ) {
+            const random = seededLineupRandom(
+              "football-keep-cut",
+              "profile-fallback",
+              scopeId,
+              seed,
+              style.id,
+              attempt,
+            );
+            const elite = shuffleLineup(
+              items.filter((item) => footballComparisonTier(item) === "elite"),
+              random,
+            ).slice(0, eliteCount);
+            const bad = shuffleLineup(
+              items.filter((item) => footballComparisonTier(item) === "bad"),
+              random,
+            ).slice(0, badCount);
+            const middleCount = KEEP_CUT_BOARD_SIZE - eliteCount - badCount;
+            const middle = shuffleLineup(
+              items.filter((item) => {
+                const tier = footballComparisonTier(item);
+                return tier !== "elite" && tier !== "bad";
+              }),
+              random,
+            ).slice(0, middleCount);
+            const selected = [...elite, ...middle, ...bad];
+            if (selected.length !== KEEP_CUT_BOARD_SIZE) return null;
+            if (!footballKeepCutBoardIsCompetitive(selected, items)) return null;
+            const ordered = sortedPool(selected);
+            return {
+              items: shuffleLineup(selected, random),
+              badItems: badCount,
+              eliteItems: eliteCount,
+              cutoffGap: Math.abs(ordered[KEEP_COUNT - 1]!.rating - ordered[KEEP_COUNT]!.rating),
+              distinctTiers: new Set(selected.map(footballComparisonTier)).size,
+            };
+          }
+
+          export function buildFootballKeepCutBoard(
+          '''
+          if anchor not in text:
+              raise SystemExit('Keep/Cut build anchor not found')
+          text = text.replace(anchor, helper, 1)
+
+          old = '''  if (best) {
+            const { attempt, ...board } = best;
+            return { ...board, style: style.id, attemptsUsed: attempt + 1 };
+          }
+          throw new Error(`Football Keep/Cut could not build a ${style.name} eight-subject board for ${scopeId}.`);
+          '''
+          new = '''  if (best) {
+            const { attempt, ...board } = best;
+            return { ...board, style: style.id, attemptsUsed: attempt + 1 };
+          }
+
+          let fallbackBest: (Omit<FootballKeepCutBoard, "style" | "attemptsUsed"> & { attempt: number }) | null = null;
+          const fallbackTight: Array<Omit<FootballKeepCutBoard, "style" | "attemptsUsed"> & { attempt: number }> = [];
+          for (let attempt = 0; attempt < KEEP_CUT_ATTEMPTS; attempt += 1) {
+            const board = attemptKeepCutProfileFallback(
+              items,
+              scopeId,
+              seed,
+              style,
+              profile.eliteCount,
+              profile.badCount,
+              attempt,
+            );
+            if (!board) continue;
+            if (!fallbackBest || board.cutoffGap < fallbackBest.cutoffGap) fallbackBest = { ...board, attempt };
+            if (board.cutoffGap <= TIGHT_KEEP_CUT_CUTOFF_GAP) {
+              fallbackTight.push({ ...board, attempt });
+              if (fallbackTight.length >= KEEP_CUT_TIGHT_CANDIDATES) break;
+            }
+          }
+
+          if (fallbackTight.length) {
+            const random = seededLineupRandom("football-keep-cut", "profile-fallback-candidate", scopeId, seed, style.id);
+            const selected = shuffleLineup(fallbackTight, random)[0]!;
+            const { attempt, ...board } = selected;
+            return { ...board, style: style.id, attemptsUsed: KEEP_CUT_ATTEMPTS + attempt + 1 };
+          }
+          if (fallbackBest) {
+            const { attempt, ...board } = fallbackBest;
+            return { ...board, style: style.id, attemptsUsed: KEEP_CUT_ATTEMPTS + attempt + 1 };
+          }
+          throw new Error(`Football Keep/Cut could not build a ${style.name} eight-subject board for ${scopeId}.`);
           '''
           if old not in text:
-              raise SystemExit('preferDeepExactTier anchor not found')
+              raise SystemExit('Keep/Cut failure anchor not found')
           comparison.write_text(text.replace(old, new, 1))
           PY
       - name: Regenerate Stage 13 artifacts
