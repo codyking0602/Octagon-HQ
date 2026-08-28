@@ -26,6 +26,7 @@ describe("Football Knowledge Ledger Stage 13.5 human audit", () => {
     for (const expected of [
       ["NFL", "Jim Brown"], ["NFL", "Johnny Unitas"], ["NFL", "Vince Lombardi"],
       ["CFB", "Archie Griffin"], ["CFB", "Herschel Walker"], ["CFB", "Bear Bryant"],
+      ["CFB", "1995 Nebraska"], ["CFB", "Joe Burrow 2019"],
     ] as const) {
       expect(footballLedgerAudit.rows.some((row) => row.league === expected[0] && row.name === expected[1]), expected.join(" ")).toBe(true);
     }
@@ -59,6 +60,7 @@ describe("Football Knowledge Ledger Stage 13.5 human audit", () => {
     const olRows = footballLedgerAudit.players.filter((row) => row.pool === "OL");
     expect(olRows.length).toBeGreaterThan(0);
     expect(olRows.some((row) => row.readiness !== "Identity-only" && row.numericFactCount === 0)).toBe(true);
+    expect(footballLedgerAudit.rows.filter((row) => row.kind === "player-season" && row.league === "CFB").some((row) => row.readiness === "Full")).toBe(true);
     expect(footballLedgerAudit.rows.filter((row) => row.kind === "team-season").some((row) => row.readiness === "Full")).toBe(true);
     expect(footballLedgerAudit.rows.filter((row) => row.kind === "coach" && row.league === "CFB").some((row) => row.numericFactCount > 0)).toBe(true);
     expect(footballLedgerAudit.rows.filter((row) => row.kind === "program-era" && row.league === "CFB").some((row) => row.numericFactCount > 0)).toBe(true);
