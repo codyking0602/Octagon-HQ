@@ -4,7 +4,7 @@ import type { FootballRecognizabilityTier } from "./footballSubjectEligibility";
 export interface FootballHistoricalRecognitionRepair {
   subject: FootballCanonicalSubject;
   tier: Exclude<FootballRecognizabilityTier, "D">;
-  evidenceFamily: "pro-football-hall-of-fame" | "heisman" | "college-football-hall-of-fame" | "championship-coaching" | "championship-postseason";
+  evidenceFamily: "pro-football-hall-of-fame" | "heisman" | "college-football-hall-of-fame" | "mvp-all-pro" | "championship-coaching" | "championship-postseason";
 }
 
 const activeDecades = (startSeason: number, endSeason: number) => Array.from(
@@ -115,6 +115,30 @@ export const footballHistoricalRecognitionRepairs: readonly FootballHistoricalRe
   player("earl-campbell", "Earl Campbell", "NFL", "RB", 1978, 1985, "A", "pro-football-hall-of-fame"),
   player("marcus-allen", "Marcus Allen", "NFL", "RB", 1982, 1997, "A", "pro-football-hall-of-fame"),
   player("tony-dorsett", "Tony Dorsett", "NFL", "RB", 1977, 1988, "A", "pro-football-hall-of-fame"),
+
+  player("nfl-paul-hornung", "Paul Hornung", "NFL", "RB", 1957, 1966, "A", "mvp-all-pro"),
+  player("nfl-ya-tittle", "Y.A. Tittle", "NFL", "QB", 1948, 1964, "A", "mvp-all-pro"),
+  player("nfl-bart-starr", "Bart Starr", "NFL", "QB", 1956, 1971, "A", "mvp-all-pro"),
+  player("nfl-oj-simpson", "O.J. Simpson", "NFL", "RB", 1969, 1979, "A", "mvp-all-pro"),
+  player("ken-stabler", "Ken Stabler", "NFL", "QB", 1970, 1984, "B", "mvp-all-pro"),
+  player("nfl-fran-tarkenton", "Fran Tarkenton", "NFL", "QB", 1961, 1978, "A", "mvp-all-pro"),
+  player("nfl-terry-bradshaw", "Terry Bradshaw", "NFL", "QB", 1970, 1983, "A", "mvp-all-pro"),
+  player("ken-anderson", "Ken Anderson", "NFL", "QB", 1971, 1986, "B", "mvp-all-pro"),
+  player("nfl-mark-moseley", "Mark Moseley", "NFL", "K", 1970, 1986, "B", "mvp-all-pro"),
+  player("nfl-joe-theismann", "Joe Theismann", "NFL", "QB", 1974, 1985, "B", "mvp-all-pro"),
+  player("dan-marino", "Dan Marino", "NFL", "QB", 1983, 1999, "A", "mvp-all-pro"),
+  player("john-elway", "John Elway", "NFL", "QB", 1983, 1998, "A", "mvp-all-pro"),
+  player("nfl-boomer-esiason", "Boomer Esiason", "NFL", "QB", 1984, 1997, "B", "mvp-all-pro"),
+  player("thurman-thomas", "Thurman Thomas", "NFL", "RB", 1988, 2000, "B", "mvp-all-pro"),
+  player("steve-young", "Steve Young", "NFL", "QB", 1985, 1999, "A", "mvp-all-pro"),
+  player("emmitt-smith", "Emmitt Smith", "NFL", "RB", 1990, 2004, "A", "mvp-all-pro"),
+  player("terrell-davis", "Terrell Davis", "NFL", "RB", 1995, 2001, "B", "mvp-all-pro"),
+  player("kurt-warner", "Kurt Warner", "NFL", "QB", 1998, 2009, "A", "mvp-all-pro"),
+  player("marshall-faulk", "Marshall Faulk", "NFL", "RB", 1994, 2005, "A", "mvp-all-pro"),
+  player("nflverse-player-00-0005741", "Rich Gannon", "NFL", "QB", 1987, 2004, "B", "mvp-all-pro"),
+  player("nflverse-player-00-0011024", "Steve McNair", "NFL", "QB", 1995, 2007, "B", "mvp-all-pro"),
+  player("nflverse-player-00-0034796", "Lamar Jackson", "NFL", "QB", 2018, 2025, "A", "mvp-all-pro"),
+  player("nfl-josh-allen", "Josh Allen", "NFL", "QB", 2018, 2025, "A", "mvp-all-pro"),
 
   player("cfb-davey-obrien", "Davey O'Brien", "CFB", "QB", 1936, 1938, "A", "heisman", "TCU"),
   player("cfb-doak-walker", "Doak Walker", "CFB", "RB", 1945, 1949, "A", "heisman", "SMU"),
