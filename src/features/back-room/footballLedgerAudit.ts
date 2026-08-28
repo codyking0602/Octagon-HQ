@@ -14,6 +14,7 @@ export type FootballLedgerAuditPool =
 export type FootballLedgerAuditStatus = "green" | "yellow" | "red";
 export type FootballLedgerSourceCoverage =
   | "inside-normalized-player-source"
+  | "partially-overlaps-normalized-player-source"
   | "before-normalized-player-source"
   | "unknown-career-window";
 
@@ -68,6 +69,7 @@ function playerPool(position?: string): FootballLedgerAuditPool | null {
 function sourceCoverage(subject: FootballSubjectProfile): FootballLedgerSourceCoverage {
   const earliestNormalizedSeason = subject.league === "NFL" ? 1999 : 2014;
   if (subject.endSeason != null && subject.endSeason < earliestNormalizedSeason) return "before-normalized-player-source";
+  if (subject.startSeason != null && subject.startSeason < earliestNormalizedSeason) return "partially-overlaps-normalized-player-source";
   if (subject.startSeason != null || subject.endSeason != null) return "inside-normalized-player-source";
   return "unknown-career-window";
 }
@@ -204,7 +206,7 @@ export function buildFootballLedgerAudit() {
 
   const highPriorityFactGaps = players.filter((row) => row.tier !== "C" && row.status !== "green");
   const allMaterialFactGaps = players.filter((row) => row.status === "red");
-  const sourceEraFactGaps = allMaterialFactGaps.filter((row) => row.sourceCoverage === "before-normalized-player-source");
+  const sourceEraFactGaps = allMaterialFactGaps.filter((row) => row.sourceCoverage === "before-normalized-player-source" || row.sourceCoverage === "partially-overlaps-normalized-player-source");
   const inSourceWindowFactGaps = allMaterialFactGaps.filter((row) => row.sourceCoverage === "inside-normalized-player-source");
   const rosterReview = players.filter((row) => row.tier !== "C");
   const statusCounts = Object.fromEntries(
