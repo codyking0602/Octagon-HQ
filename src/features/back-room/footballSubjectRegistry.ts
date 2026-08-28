@@ -10,6 +10,7 @@ import {
   type FootballCanonicalSubject,
   type FootballCanonicalSubjectKind,
 } from "./footballFactualStatsCatalog";
+import { footballHistoricalRecognitionRepairs } from "./footballHistoricalRecognitionRepairs";
 import {
   buildFootballSubjectKnowledgeMetadata,
   type FootballRecognizabilityTier,
@@ -72,6 +73,12 @@ export interface FootballSubjectQuery {
 }
 
 const comparisonItemById = new Map(footballComparisonDepthItems.map((item) => [item.id, item]));
+const projectedPlayerSubjectById = new Map(footballProjectedPlayerSubjects.map((subject) => [subject.id, subject]));
+const reviewedHistoricalPlayerIds = new Set(
+  footballHistoricalRecognitionRepairs
+    .filter((repair) => repair.subject.kind === "player-career")
+    .map((repair) => repair.subject.id),
+);
 
 function normalizedFootballSubjectName(name: string) {
   return name.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
@@ -100,19 +107,41 @@ function playerIdForSubject(subject: FootballSubjectIdentity) {
   return subject.id.replace(/-\d{4}$/, "");
 }
 
+/**
+ * Reviewed historical recognition identities may reconcile to an older curated canonical player id. The canonical id
+ * and authored metadata remain authoritative, but missing identity-window fields must not be discarded. Restrict this
+ * merge to the reviewed historical repair owner so ordinary source projection does not silently change public queries.
+ */
+function reconcileProjectedPlayerIdentity(subject: FootballCanonicalSubject): FootballCanonicalSubject {
+  if (subject.kind !== "player-career") return subject;
+  const projectionId = footballRecognitionProjectionSubjectIdFor(subject);
+  if (!projectionId || !reviewedHistoricalPlayerIds.has(projectionId)) return subject;
+  const projected = projectedPlayerSubjectById.get(projectionId);
+  if (!projected) return subject;
+  return {
+    ...subject,
+    position: subject.position ?? projected.position,
+    school: subject.school ?? projected.school,
+    startSeason: subject.startSeason ?? projected.startSeason,
+    endSeason: subject.endSeason ?? projected.endSeason,
+    activeDecades: subject.activeDecades ?? projected.activeDecades,
+  };
+}
+
 function enrichFootballSubject(
   subject: FootballCanonicalSubject,
   knowledgeOverride?: FootballSubjectKnowledgeOverride,
 ): FootballSubjectProfile {
-  const teamId = teamIdForSubject(subject);
-  const playerId = playerIdForSubject(subject);
-  const coachId = subject.kind === "coach" ? subject.id : undefined;
-  const generatedAliases = [programAlias(subject)]
-    .filter((alias): alias is string => Boolean(alias && alias !== subject.id));
-  const aliases = [...new Set([...(subject.aliases ?? []), ...generatedAliases])];
-  const knowledgeMetadata = buildFootballSubjectKnowledgeMetadata(subject, knowledgeOverride);
+  const reconciledSubject = reconcileProjectedPlayerIdentity(subject);
+  const teamId = teamIdForSubject(reconciledSubject);
+  const playerId = playerIdForSubject(reconciledSubject);
+  const coachId = reconciledSubject.kind === "coach" ? reconciledSubject.id : undefined;
+  const generatedAliases = [programAlias(reconciledSubject)]
+    .filter((alias): alias is string => Boolean(alias && alias !== reconciledSubject.id));
+  const aliases = [...new Set([...(reconciledSubject.aliases ?? []), ...generatedAliases])];
+  const knowledgeMetadata = buildFootballSubjectKnowledgeMetadata(reconciledSubject, knowledgeOverride);
   return {
-    ...subject,
+    ...reconciledSubject,
     ...knowledgeMetadata,
     ...(aliases.length ? { aliases } : {}),
     ...(teamId ? { teamId } : {}),
