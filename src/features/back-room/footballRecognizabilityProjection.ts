@@ -150,6 +150,11 @@ function resolveProjectionRecordFor(subject: FootballCanonicalSubject) {
 export function footballRecognitionProjectionFor(subject: FootballCanonicalSubject) {
   const historical = historicalRepairFor(subject);
   if (historical) {
+    const production = resolveProjectionRecordFor(subject);
+    if (production) {
+      const provider: FootballSourceProviderId = production.league === "NFL" ? "nflverse" : "cfbfastR";
+      return { tier: historical.tier, sourceIdentityKey: { provider, id: production.sourceId } as const };
+    }
     return {
       tier: historical.tier,
       sourceIdentityKey: {
@@ -172,14 +177,15 @@ export function footballRecognitionProjectionFor(subject: FootballCanonicalSubje
 }
 
 export function footballRecognitionProjectionSubjectIdFor(subject: FootballCanonicalSubject) {
-  return historicalRepairFor(subject)?.subject.id
-    ?? resolveProjectionRecordFor(subject)?.id
+  return resolveProjectionRecordFor(subject)?.id
+    ?? historicalRepairFor(subject)?.subject.id
     ?? footballRecognitionEvidenceFor(subject)?.id
     ?? null;
 }
 
 function nonPlayerProjectionKind(subject: FootballCanonicalSubject) {
   if (subject.kind === "team-season") return "team-season";
+  if (subject.kind === "program") return "program";
   if (subject.kind === "program-era") return "era";
   return null;
 }
@@ -220,6 +226,7 @@ const canonicalNonPlayerRecognitionTiers = new Map<string, FootballRecognizabili
   ["1991-washington", "B"],
   ["1996-green-bay-packers", "B"],
   ["1998-denver-broncos", "B"],
+  ["1995-nebraska", "A"],
   ["2011-philadelphia-eagles", "C"],
   ["2022-denver-broncos", "C"],
   ["2020-jacksonville-jaguars", "C"],
@@ -244,6 +251,10 @@ export function footballNonPlayerRecognitionProjectionFor(
   subject: FootballCanonicalSubject,
   sourceIdentityKey?: { provider: FootballSourceProviderId; id: string },
 ) {
+  const historical = historicalRepairFor(subject);
+  if (historical) {
+    return { tier: historical.tier };
+  }
   const projectionKind = nonPlayerProjectionKind(subject);
   if (!projectionKind) return null;
   let record: ProjectionRecord | null = null;
