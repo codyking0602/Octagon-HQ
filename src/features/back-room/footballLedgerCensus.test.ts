@@ -5,6 +5,7 @@ import {
   FOOTBALL_LEDGER_CENSUS_POOLS,
   footballLedgerCensus,
   footballLedgerCensusEndingSeasonFor,
+  footballLedgerCensusEraFor,
   footballLedgerCensusEraFromActiveDecades,
 } from "./footballLedgerCensus";
 
@@ -40,6 +41,16 @@ describe("Football Knowledge Ledger canonical census", () => {
     const nflMiddle = footballLedgerCensus.leagueTotals.NFL.eras.middle;
     const cfbHistorical = footballLedgerCensus.leagueTotals.CFB.eras.historical;
     const cfbMiddle = footballLedgerCensus.leagueTotals.CFB.eras.middle;
+    const policyIssues = footballLedgerAudit.rows
+      .map((row) => ({ ...row, censusEra: footballLedgerCensusEraFor(row) }))
+      .filter((row) => (
+        (row.league === "NFL" && row.tier === "C" && (row.censusEra === "historical" || row.censusEra === "middle"))
+        || (row.league === "CFB" && row.tier === "C" && (row.censusEra === "historical" || row.censusEra === "middle"))
+        || (row.league === "NFL" && row.tier === "B" && row.censusEra === "historical")
+        || (row.league === "CFB" && row.tier === "B" && row.censusEra === "historical")
+      ))
+      .map(({ subjectId, name, league, pool, tier, censusEra }) => ({ subjectId, name, league, pool, tier, censusEra }));
+    console.log("FOOTBALL_LEDGER_CENSUS_HISTORICAL_POLICY_ISSUES", JSON.stringify(policyIssues, null, 2));
 
     expect(nflHistorical.B).toBe(0);
     expect(nflHistorical.C).toBe(0);
