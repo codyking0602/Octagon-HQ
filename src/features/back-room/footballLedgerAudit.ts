@@ -1,4 +1,5 @@
 import { getFootballFactualRecord } from "./footballFactualStatsCore";
+import { footballHistoricalRecognitionRepairs } from "./footballHistoricalRecognitionRepairs";
 import {
   footballRecognitionCompletenessCandidates,
   type FootballRecognitionCompletenessCandidate,
@@ -109,6 +110,32 @@ function normalized(value: string) {
   return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
 }
 
+function historicalRepairFor(subject: FootballSubjectProfile) {
+  return footballHistoricalRecognitionRepairs.find((repair) => (
+    repair.subject.id === subject.id
+    || (
+      repair.subject.kind === subject.kind
+      && repair.subject.league === subject.league
+      && normalized(repair.subject.name) === normalized(subject.name)
+      && (!subject.position || repair.subject.position === subject.position)
+    )
+  ));
+}
+
+function subjectWithHistoricalWindow(subject: FootballSubjectProfile): FootballSubjectProfile {
+  const repair = historicalRepairFor(subject)?.subject;
+  if (!repair) return subject;
+  return {
+    ...subject,
+    startSeason: subject.startSeason ?? repair.startSeason,
+    endSeason: subject.endSeason ?? repair.endSeason,
+    season: subject.season ?? repair.season,
+    school: subject.school ?? repair.school,
+    position: subject.position ?? repair.position,
+    activeDecades: subject.activeDecades ?? repair.activeDecades,
+  };
+}
+
 function sourceCoverage(subject: FootballSubjectProfile, hasCoreFact: boolean): FootballLedgerSourceCoverage {
   if (subject.kind === "player-career" || subject.kind === "player-season") {
     const earliest = subject.league === "NFL" ? 1999 : 2014;
@@ -197,8 +224,9 @@ function readinessGroups(subject: FootballSubjectProfile, pool: FootballLedgerAu
   ] as [string, boolean][];
 }
 
-function auditSubject(subject: FootballSubjectProfile): FootballLedgerSubjectAuditRow | null {
-  if (subject.league !== "NFL" && subject.league !== "CFB") return null;
+function auditSubject(inputSubject: FootballSubjectProfile): FootballLedgerSubjectAuditRow | null {
+  if (inputSubject.league !== "NFL" && inputSubject.league !== "CFB") return null;
+  const subject = subjectWithHistoricalWindow(inputSubject);
   const pool = poolFor(subject);
   if (!pool || !TIERS.includes(subject.recognizabilityTier as typeof TIERS[number])) return null;
   const facts = getFootballFactualRecord(subject.id)?.facts ?? [];
@@ -244,8 +272,12 @@ function auditSubject(subject: FootballSubjectProfile): FootballLedgerSubjectAud
 }
 
 function kindMatches(candidate: FootballRecognitionCompletenessCandidate, subject: FootballSubjectProfile) {
-  if (candidate.kind === subject.kind) return true;
-  return false;
+  return candidate.kind === subject.kind;
+}
+
+function independentIdentityMatches(candidate: FootballRecognitionCompletenessCandidate, subject: FootballSubjectProfile) {
+  const keys = [candidate.name, ...(candidate.identityAliases ?? [])].map(normalized);
+  return keys.includes(normalized(subject.name)) || keys.includes(normalized(subject.id));
 }
 
 function independentRecognitionGaps(subjects: readonly FootballSubjectProfile[]) {
@@ -253,7 +285,7 @@ function independentRecognitionGaps(subjects: readonly FootballSubjectProfile[])
     const matches = subjects.filter((subject) => (
       subject.league === candidate.league
       && kindMatches(candidate, subject)
-      && normalized(subject.name) === normalized(candidate.name)
+      && independentIdentityMatches(candidate, subject)
       && (candidate.season == null || subject.season === candidate.season || subject.startSeason === candidate.season)
     ));
     const resolved = matches.sort((a, b) => TIER_RANK[b.recognizabilityTier] - TIER_RANK[a.recognizabilityTier])[0];
@@ -294,7 +326,7 @@ export function buildFootballLedgerAudit() {
   const recognitionGaps = independentRecognitionGaps(subjects);
   const historicalTierIssues = rows.filter((row) => row.historicalTierIssue != null);
   const highPriorityFactGaps = rows.filter((row) => row.tier !== "C" && row.readiness !== "Full");
-  const allMaterialFactGaps = rows.filter((row) => row.readiness === "Identity-only");
+  const allMaterialFactGaps = rows.filter((row) => row.readiness !== "Full" && row.majorMissingFactCount > 0);
   const sourceEraFactGaps = allMaterialFactGaps.filter((row) => /before-|partially-overlaps/.test(row.sourceCoverage));
   const inSourceWindowFactGaps = allMaterialFactGaps.filter((row) => row.sourceCoverage === "inside-normalized-player-source" || row.sourceCoverage === "inside-relationship-source");
   const unknownCareerWindowFactGaps = allMaterialFactGaps.filter((row) => row.sourceCoverage === "unknown-career-window");
