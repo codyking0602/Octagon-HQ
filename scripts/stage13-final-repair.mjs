@@ -38,4 +38,10 @@ replaceOnce(
   '  return projected.flatMap((record)=>{ const canonicalSubject=getFootballSubject(record.subjectId); if (!canonicalSubject) return []; const subjectId=canonicalSubject.id; const facts=record.facts.filter((fact)=>!ownedKeys.has(`${subjectId}:${fact.metricId}`)); return facts.length ? [{...record,subjectId,facts}] : []; });\n'
 );
 
-console.log("Applied Stage 13 factual repair.");
+replaceOnce(
+  "src/features/back-room/footballComparisonGeneration.ts",
+  '    const forceAbsoluteTier = targetTier === "elite" || targetTier === "bad";\n',
+  '    const repeatedTargetDepth = targets.filter((tier) => tier === targetTier).length;\n    const exactTierDepth = availableTierCount(items, targetTier);\n    const preferDeepExactTier = (\n      targetTier !== "elite"\n      && targetTier !== "bad"\n      && exactTierDepth >= Math.max(3, repeatedTargetDepth)\n      && random() < 0.55\n    );\n    const forceAbsoluteTier = targetTier === "elite" || targetTier === "bad" || preferDeepExactTier;\n'
+);
+
+console.log("Applied Stage 13 factual and Keep/Cut repair.");
