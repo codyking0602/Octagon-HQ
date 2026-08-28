@@ -625,7 +625,8 @@ function attemptKeepCutBoard(
     const repeatedTargetDepth = targets.filter((tier) => tier === targetTier).length;
     const exactTierDepth = availableTierCount(items, targetTier);
     const preferDeepExactTier = (
-      targetTier !== "elite"
+      scopeId !== "college-team-seasons"
+      && targetTier !== "elite"
       && targetTier !== "bad"
       && exactTierDepth >= Math.max(3, repeatedTargetDepth)
       && random() < 0.55

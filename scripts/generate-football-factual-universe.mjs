@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { createServer } from "vite";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const readJson = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), "utf8"));
@@ -37,10 +38,25 @@ const relationshipDerived = (metricId, value, formula) => finite(value) ? { metr
 
 const recognition = readJson("data/generated/football/recognizability-projection.json");
 const promoted = recognition.records.filter((record) => record.tier !== "D");
-const promotedPlayers = promoted.filter((record) => record.kind === "player-career");
 const promotedTeamSeasons = promoted.filter((record) => record.kind === "team-season");
 const promotedOrganizations = promoted.filter((record) => record.kind === "franchise" || record.kind === "program");
 const promotedGames = promoted.filter((record) => record.kind === "game");
+
+// Player membership comes from the same canonical Stage 12 A-C query owner used by Football games.
+// The generator only hydrates those identities from pinned factual sources; it does not own a second roster.
+const gateServer = await createServer({ root, configFile: false, logLevel: "error", server: { middlewareMode: true }, appType: "custom" });
+let promotedPlayers;
+try {
+  const { queryFootballSubjects } = await gateServer.ssrLoadModule("/src/features/back-room/footballSubjectRegistry.ts");
+  promotedPlayers = queryFootballSubjects({
+    kind: "player-career",
+    recognizabilityTiers: ["A", "B", "C"],
+    includeProjectedCanonicalRecognition: true,
+    includeProjectedSourceSubjects: true,
+  });
+} finally {
+  await gateServer.close();
+}
 
 const nflPlayers = rowObjects(readJson("data/generated/football/nfl/player-seasons-1999-2025.json"));
 const cfbPlayers = rowObjects(readJson("data/generated/football/cfb/player-seasons-2014-2025.json"));
@@ -51,10 +67,17 @@ const nflGames = rowObjects(readJson("data/generated/football/relationships/nfl-
 const cfbGames = rowObjects(readJson("data/generated/football/relationships/cfb-games-2002-2025.json"));
 
 const nflPlayersById = new Map();
+const nflPlayersByName = new Map();
 for (const row of nflPlayers) {
   const rows = nflPlayersById.get(String(row.sourcePlayerId)) ?? [];
   rows.push(row);
   nflPlayersById.set(String(row.sourcePlayerId), rows);
+  const nameKey = normalized(row.playerDisplayName ?? row.playerName);
+  if (nameKey) {
+    const namedRows = nflPlayersByName.get(nameKey) ?? [];
+    namedRows.push(row);
+    nflPlayersByName.set(nameKey, namedRows);
+  }
 }
 const cfbPlayersByName = new Map();
 for (const row of cfbPlayers) {
@@ -66,7 +89,16 @@ for (const row of cfbPlayers) {
 const withinWindow = (row, subject) => (subject.startSeason == null || row.season >= subject.startSeason) && (subject.endSeason == null || row.season <= subject.endSeason);
 
 function nflPlayerFacts(subject) {
-  const rows = (nflPlayersById.get(String(subject.sourceId)) ?? []).filter((row) => withinWindow(row, subject));
+  const nflverseIdentity = subject.sourceIdentityKeys?.find((key) => key.provider === "nflverse");
+  let sourceRows = nflPlayersById.get(String(nflverseIdentity?.id ?? subject.sourceId ?? subject.id)) ?? [];
+  if (!sourceRows.length) {
+    const identityRows = (nflPlayersByName.get(normalized(subject.name)) ?? []).filter(
+      (row) => !subject.position || row.position === subject.position,
+    );
+    const sourceIds = new Set(identityRows.map((row) => String(row.sourcePlayerId)));
+    if (sourceIds.size === 1) sourceRows = identityRows;
+  }
+  const rows = sourceRows.filter((row) => withinWindow(row, subject));
   if (!rows.length) return [];
   const p = subject.position;
   const facts = [];
@@ -231,6 +263,6 @@ for (const league of ["NFL", "CFB"]) for (const kind of ["team-season", "franchi
   matrixRows.push({ league, pool: kind, universeSubjects: universe.length, subjectsWithFacts: hydrated.length, readinessPct: Number((hydrated.length / universe.length * 100).toFixed(1)), averageFacts: hydrated.length ? Number((hydrated.reduce((sum, subject) => sum + recordsBySubject.get(subject.id).facts.length, 0) / hydrated.length).toFixed(2)) : 0 });
 }
 
-writeJson("data/generated/football/factual-universe-projection.json", { schemaVersion: 1, methodology: "Stage 12 source-projected A/B/C identities hydrated only from pinned normalized factual/relationship corpora; structural player zeroes are not treated as observed facts; no rankings or greatness weights", gate: { source: "recognizability-projection.json", promotedSourceProjectionCount: promoted.length }, sourceCoverage: { nfl: "1999-2025", cfbPlayers: "2014-2025", cfbRelationships: "2002-2025" }, records });
-writeJson("data/generated/football/factual-coverage-matrix.json", { schemaVersion: 1, scope: "source-projected portion of canonical Stage 12 A/B/C; canonical runtime matrix includes curated/evidence-bridged A/B/C identities", gatePromotedSourceProjectionCount: promoted.length, generatedRecordCount: records.length, rawRecognitionRecordCount: recognition.summary?.rawRecordCount ?? null, rows: matrixRows, notes: ["Denominators are promoted A/B/C source-projection records, never raw database rows.", "Structural player zeroes are omitted unless an attempted/made denominator proves the zero is observed.", "Reviewed canonical honor facts retain ownership and are not inferred from recognition-only evidence.", "Sparse CFB championship note flags are emitted only when explicitly true; false is not asserted as complete historical evidence."] });
-console.log(`Generated ${records.length} Stage 13 factual records from ${promoted.length} promoted source-projection records.`);
+writeJson("data/generated/football/factual-universe-projection.json", { schemaVersion: 1, methodology: "Canonical Stage 12 A/B/C player identities plus promoted non-player source identities hydrated only from pinned normalized factual/relationship corpora; structural player zeroes are not treated as observed facts; no rankings or greatness weights", gate: { playerSource: "queryFootballSubjects", canonicalPromotedPlayerCount: promotedPlayers.length, nonPlayerSource: "recognizability-projection.json", promotedSourceProjectionCount: promoted.length }, sourceCoverage: { nfl: "1999-2025", cfbPlayers: "2014-2025", cfbRelationships: "2002-2025" }, records });
+writeJson("data/generated/football/factual-coverage-matrix.json", { schemaVersion: 1, scope: "canonical Stage 12 A/B/C player query plus promoted non-player source identities", canonicalPromotedPlayerCount: promotedPlayers.length, gatePromotedSourceProjectionCount: promoted.length, generatedRecordCount: records.length, rawRecognitionRecordCount: recognition.summary?.rawRecordCount ?? null, rows: matrixRows, notes: ["Player denominators are the canonical A/B/C query result; non-player denominators are promoted A/B/C source-projection records, never raw database rows.", "Structural player zeroes are omitted unless an attempted/made denominator proves the zero is observed.", "Reviewed canonical honor facts retain ownership and are not inferred from recognition-only evidence.", "Sparse CFB championship note flags are emitted only when explicitly true; false is not asserted as complete historical evidence."] });
+console.log(`Generated ${records.length} Stage 13 factual records from ${promotedPlayers.length} canonical A/B/C players plus promoted non-player source identities.`);
