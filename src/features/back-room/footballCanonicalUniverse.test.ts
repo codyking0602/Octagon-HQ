@@ -70,14 +70,33 @@ describe("canonical Football universe", () => {
       .toEqual(expect.arrayContaining(["Peyton Manning", "Matthew Stafford", "Joe Burrow"]));
   });
 
-  it("lets one identity satisfy several filters without duplicate entries", () => {
+  it("lets one league career satisfy several filters without collapsing its college and NFL identities", () => {
     const mahomes = getFootballSubject("nfl-patrick-mahomes");
     expect(mahomes).toBe(queryFootballSubjects({ franchise: "Kansas City Chiefs" }).find(({ id }) => id === mahomes?.id));
     expect(mahomes).toBe(queryFootballSubjects({ draftRound: 1 }).find(({ id }) => id === mahomes?.id));
     expect(footballSubjects.filter(({ id }) => id === mahomes?.id)).toHaveLength(1);
-    const burrow = queryFootballSubjects({ school: "LSU", heismanWinner: true }).find(({ name }) => name === "Joe Burrow");
-    expect(burrow?.leagues).toEqual(["CFB", "NFL"]);
-    expect(footballSubjects.filter(({ name }) => name === "Joe Burrow")).toHaveLength(1);
+
+    const cfbCam = getFootballSubject("cfb-cam-newton");
+    const nflCam = getFootballSubject("cam-newton");
+    expect(cfbCam).toMatchObject({ id: "cfb-cam-newton", name: "Cam Newton", league: "CFB", school: "Auburn" });
+    expect(nflCam).toMatchObject({ id: "cam-newton", name: "Cam Newton", league: "NFL" });
+    expect(cfbCam).not.toBe(nflCam);
+
+    const projectedCfbCam = queryFootballSubjects({
+      league: "CFB",
+      kind: "player-career",
+      position: "QB",
+      includeProjectedSourceSubjects: true,
+    }).filter(({ name }) => name === "Cam Newton");
+    const projectedNflCam = queryFootballSubjects({
+      league: "NFL",
+      kind: "player-career",
+      position: "QB",
+      includeProjectedSourceSubjects: true,
+    }).filter(({ name }) => name === "Cam Newton");
+    expect(projectedCfbCam).toHaveLength(1);
+    expect(projectedNflCam).toHaveLength(1);
+    expect(projectedCfbCam[0]!.id).not.toBe(projectedNflCam[0]!.id);
   });
 
   it("retains every compatibility-game subject unchanged inside the larger ledger", () => {
