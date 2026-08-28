@@ -1,4 +1,4 @@
-name: TEMP Stage 13 Specialist Diagnostic
+name: TEMP Stage 13 Specialist Registry Diagnostic
 
 on:
   push:
@@ -17,31 +17,34 @@ jobs:
         with:
           ref: feat/football-ledger-stage13-factual-universe
           fetch-depth: 1
-      - name: Inspect promoted NFL specialists against source rows
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci --silent --no-audit --no-fund
+      - name: Inspect canonical Stage 12 NFL specialists
         run: |
-          node <<'NODE'
-          const fs = require('fs');
-          const read = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
-          const rowsOf = (data) => data.rows.map((row) => Object.fromEntries(data.columns.map((name, i) => [name, row[i]])));
-          const norm = (v) => String(v ?? '').toLowerCase().normalize('NFKD').replace(/[^a-z0-9]/g, '');
-          const recognition = read('data/generated/football/recognizability-projection.json');
-          const source = read('data/generated/football/nfl/player-seasons-1999-2025.json');
-          const rows = rowsOf(source);
-          const specialists = recognition.records.filter((r) => r.kind === 'player-career' && r.league === 'NFL' && r.tier !== 'D' && (r.position === 'K' || r.position === 'P'));
-          console.log('COLUMNS', JSON.stringify(source.columns));
-          console.log('SPECIALIST_COUNT', specialists.length);
-          console.log('SPECIALISTS', JSON.stringify(specialists.slice(0, 50), null, 2));
-          const positions = [...new Set(rows.map((r) => r.position).filter(Boolean))].sort();
-          console.log('SOURCE_POSITIONS', JSON.stringify(positions));
-          for (const subject of specialists.slice(0, 30)) {
-            const direct = rows.filter((r) => String(r.sourcePlayerId) === String(subject.sourceId));
-            const nameMatches = rows.filter((r) => [r.playerDisplayName, r.playerName, r.name].some((v) => norm(v) === norm(subject.name)));
-            console.log('MATCH', JSON.stringify({
-              subject: { id: subject.id, name: subject.name, sourceId: subject.sourceId, position: subject.position, startSeason: subject.startSeason, endSeason: subject.endSeason },
-              directCount: direct.length,
-              directSample: direct.slice(0, 2),
-              nameCount: nameMatches.length,
-              nameSample: nameMatches.slice(0, 3),
+          cat > stage13-specialist-diag.ts <<'EOF'
+          import { queryFootballSubjects } from './src/features/back-room/footballSubjectRegistry';
+          import { getFootballFactualRecord } from './src/features/back-room/footballFactualStatsCore';
+          const rows = queryFootballSubjects({
+            league: 'NFL',
+            kind: 'player-career',
+            positions: ['K', 'P'],
+            recognizabilityTiers: ['A','B','C'],
+            includeProjectedCanonicalRecognition: true,
+            includeProjectedSourceSubjects: true,
+          });
+          console.log('REGISTRY_SPECIALIST_COUNT', rows.length);
+          for (const row of rows) {
+            console.log('REGISTRY_SPECIALIST', JSON.stringify({
+              id: row.id, name: row.name, position: row.position,
+              tier: row.recognizabilityTier, startSeason: row.startSeason, endSeason: row.endSeason,
+              sourceIdentityKeys: row.sourceIdentityKeys,
+              existingFacts: getFootballFactualRecord(row.id)?.facts ?? [],
             }));
           }
-          NODE
+          EOF
+          npx vite-node stage13-specialist-diag.ts
+          rm stage13-specialist-diag.ts
