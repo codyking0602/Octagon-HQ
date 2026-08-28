@@ -14,15 +14,10 @@ replaceOnce(
   "recognition evidence import",
 );
 
-replaceOnce(
-`const draftRows = await loadPinnedDraftPicks();
-const recognitionRecords = recognition.records.filter((record) => promoted(record.tier));
-const playerRecognition = recognitionRecords.filter((record) => record.kind === "player-career");
-const nflCareerRecognition = new Map(playerRecognition.filter((record) => record.league === "NFL" && record.sourceProvider === "nflverse").map((record) => [String(record.sourceId), record]));
-const cfbCareerRecognition = new Map(playerRecognition.filter((record) => record.league === "CFB" && record.sourceProvider === "cfbfastR").map((record) => [\`${String(record.sourceId)}:${normalize(record.name)}\`, record]));
-const nflTeamRecognition = new Map(recognitionRecords.filter((record) => record.kind === "team-season" && record.league === "NFL").map((record) => [String(record.sourceId), record]));
-const cfbTeamRecognition = new Map(recognitionRecords.filter((record) => record.kind === "team-season" && record.league === "CFB").map((record) => [String(record.sourceId), record]));`,
-`const draftRows = await loadPinnedDraftPicks();
+const membershipStart = source.indexOf("const draftRows = await loadPinnedDraftPicks();");
+const membershipEnd = source.indexOf("\n\nconst draftByGsis", membershipStart);
+if (membershipStart < 0 || membershipEnd < 0) throw new Error("Stage 13 recognition patch target missing: membership block.");
+source = source.slice(0, membershipStart) + `const draftRows = await loadPinnedDraftPicks();
 const generatedRecognitionRecords = recognition.records.filter((record) => promoted(record.tier));
 const evidenceRecognitionRecords = footballRecognitionEvidenceRecords.filter((record) => promoted(record.tier));
 const recognitionIdentityKey = (record) => [
@@ -42,55 +37,31 @@ const recognitionRecords = [
 ];
 const playerRecognition = recognitionRecords.filter((record) => record.kind === "player-career");
 const nflCareerRecognition = new Map(playerRecognition.filter((record) => record.league === "NFL" && record.sourceProvider === "nflverse").map((record) => [String(record.sourceId), record]));
-const cfbCareerRecognition = new Map(playerRecognition.filter((record) => record.league === "CFB" && record.sourceProvider === "cfbfastR").map((record) => [\`${String(record.sourceId)}:${normalize(record.name)}\`, record]));
+const cfbCareerRecognition = new Map(playerRecognition.filter((record) => record.league === "CFB" && record.sourceProvider === "cfbfastR").map((record) => [String(record.sourceId) + ":" + normalize(record.name), record]));
 const nflTeamRecognition = new Map(recognitionRecords.filter((record) => record.kind === "team-season" && record.league === "NFL").map((record) => [String(record.sourceId), record]));
 const cfbTeamRecognition = new Map(recognitionRecords.filter((record) => record.kind === "team-season" && record.league === "CFB").map((record) => [String(record.sourceId), record]));
 const playerRecognitionByLeagueName = new Map();
 for (const record of playerRecognition) {
-  const key = \`${record.league}:${normalize(record.name)}\`;
+  const key = record.league + ":" + normalize(record.name);
   const values = playerRecognitionByLeagueName.get(key) ?? [];
   values.push(record);
   playerRecognitionByLeagueName.set(key, values);
-}`,
-  "Stage 12 membership universe",
-);
+}` + source.slice(membershipEnd);
 
-replaceOnce(
-`function draftForRecognition(recognized) {
-  if (recognized.league === "NFL" && recognized.sourceProvider === "nflverse") {
-    const byId = draftByGsis.get(String(recognized.sourceId));
-    if (byId) return byId;
-  }
-  let candidates = (draftByName.get(normalize(recognized.name)) ?? []).filter((row) => positionMatches(recognized, row));
-  if (recognized.school && candidates.length > 1) {
-    const school = normalize(recognized.school);
-    const schoolMatches = candidates.filter((row) => normalize(row.college) === school || normalize(row.college).includes(school) || school.includes(normalize(row.college)));
-    if (schoolMatches.length === 1) candidates = schoolMatches;
-  }
-  return candidates.length === 1 ? candidates[0] : null;
-}`,
-`function draftForRecognition(recognized) {
-  if (recognized.league === "NFL" && recognized.sourceProvider === "nflverse") {
-    const byId = draftByGsis.get(String(recognized.sourceId));
-    if (byId) return byId;
-  }
-  let candidates = (draftByName.get(normalize(recognized.name)) ?? []).filter((row) => positionMatches(recognized, row));
-  if (recognized.school && candidates.length > 1) {
-    const school = normalize(recognized.school);
-    const schoolMatches = candidates.filter((row) => normalize(row.college) === school || normalize(row.college).includes(school) || school.includes(normalize(row.college)));
-    if (schoolMatches.length === 1) candidates = schoolMatches;
-  }
-  return candidates.length === 1 ? candidates[0] : null;
-}
+const draftFunctionEnd = source.indexOf("\n\nconst subjects = [];", source.indexOf("function draftForRecognition"));
+if (draftFunctionEnd < 0) throw new Error("Stage 13 recognition patch target missing: draft function end.");
+source = source.slice(0, draftFunctionEnd) + `
 
 function recognitionForSourceRows(league, rows, ix) {
   const names = [...new Set(rows.flatMap((row) => [
     at(row, ix, "playerDisplayName"),
     at(row, ix, "playerName"),
   ]).map(normalize).filter(Boolean))];
-  const candidates = [...new Map(names.flatMap((name) =>
-    (playerRecognitionByLeagueName.get(\`${league}:${name}\`) ?? []).map((record) => [record.id, record])
-  )).values()];
+  const candidatesById = new Map();
+  for (const name of names) {
+    for (const record of playerRecognitionByLeagueName.get(league + ":" + name) ?? []) candidatesById.set(record.id, record);
+  }
+  const candidates = [...candidatesById.values()];
   if (candidates.length === 1) return candidates[0];
   if (league === "CFB" && candidates.length > 1) {
     const teams = new Set(rows.map((row) => normalize(at(row, ix, "team"))).filter(Boolean));
@@ -103,9 +74,7 @@ function recognitionForSourceRows(league, rows, ix) {
 function observedStartSeason(rows, ix) {
   const seasons = rows.map((row) => numeric(at(row, ix, "season"))).filter((season) => season != null);
   return seasons.length ? Math.min(...seasons) : null;
-}`,
-  "source identity reconciliation",
-);
+}` + source.slice(draftFunctionEnd);
 
 replaceOnce(
   '    if ((recognized.startSeason ?? 9999) < 1999) {',
