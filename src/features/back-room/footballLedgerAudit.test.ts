@@ -37,7 +37,7 @@ describe("Football Knowledge Ledger Stage 13.5 human audit", () => {
     const jimBrown = footballLedgerAudit.rows.find((row) => row.name === "Jim Brown" && row.league === "NFL");
     expect(jimBrown?.tier).toBe("A");
     expect(jimBrown?.sourceCoverage).toBe("before-normalized-player-source");
-    expect(["Partial", "Identity-only"]).toContain(jimBrown?.readiness);
+    expect(["Full", "Partial"]).toContain(jimBrown?.readiness);
     const canonical = queryFootballSubjects({
       league: "NFL",
       recognizabilityTiers: ["A"],
@@ -72,7 +72,8 @@ describe("Football Knowledge Ledger Stage 13.5 human audit", () => {
       expect(row.sourceEraLimitations.length).toBeGreaterThan(0);
     }
     const chaseYoung = footballLedgerAudit.players.find((row) => row.subjectId === "cfb-chase-young");
-    expect(chaseYoung?.sourceCoverage).toBe("inside-normalized-player-source");
+    expect(chaseYoung?.numericFactCount).toBeGreaterThan(0);
+    expect(chaseYoung?.sourceCoverage).toBe("unknown-career-window");
     const chrisLong = footballLedgerAudit.players.find((row) => row.subjectId === "cfb-chris-long");
     expect(chrisLong?.sourceCoverage).toBe("unknown-career-window");
   });
