@@ -43,19 +43,23 @@ const explicitlyApprovedIconicSubjects = new Set([
 function conservativeCanonicalTier(subject: FootballCanonicalSubject): FootballRecognizabilityTier {
   if (explicitlyApprovedIconicSubjects.has(subject.id)) return "A";
   if (subject.kind === "team-season") return subject.nationalChampion ? "C" : "D";
+  // A relationship existing is not recognition evidence. Era promotion needs a future cultural marker.
   if (subject.kind === "program-era") return "D";
   return "C";
 }
 
 /**
- * Existing canonical subjects stay in the curated registry, while generated/source recognition evidence may
- * conservatively mark deeper source rows database-only. Historical policy is applied here so every canonical query
- * gets the same age/significance gate; factual coverage never changes recognition.
+ * Existing canonical subjects stay in the curated registry, while the generated/source projection may conservatively
+ * mark deeper source rows database-only. Recognition providers are identity evidence only; they never own objective stats.
  */
 export function buildFootballSubjectKnowledgeMetadata(
   subject: FootballCanonicalSubject,
   override: FootballSubjectKnowledgeOverride = {},
 ): FootballSubjectKnowledgeMetadata {
+  if (override.recognizabilityTier === "D" && override.casualEligible === true) {
+    throw new Error(`Database-only Football subject ${subject.id} cannot be casual-eligible.`);
+  }
+
   const projection = footballRecognitionProjectionFor(subject);
   const proposedTier = override.recognizabilityTier ?? projection?.tier ?? conservativeCanonicalTier(subject);
   const recognizabilityTier = applyFootballHistoricalRecognitionPolicy(
@@ -63,12 +67,11 @@ export function buildFootballSubjectKnowledgeMetadata(
     subject.league,
     subject.endSeason ?? subject.season,
     proposedTier,
-  ) as FootballRecognizabilityTier;
-  // The final canonical tier owns casual eligibility. A stale source override must never keep a newly archived D row live.
+  );
   const casualEligible = recognizabilityTier === "D" ? false : (override.casualEligible ?? true);
   const sourceIdentityKeys = override.sourceIdentityKeys ?? [
     { provider: "octagon-hq", id: subject.id } as const,
-    ...(projection?.sourceIdentityKey ? [projection.sourceIdentityKey] : []),
+    ...(projection ? [projection.sourceIdentityKey] : []),
   ];
 
   return { recognizabilityTier, casualEligible, sourceIdentityKeys };
