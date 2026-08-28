@@ -274,11 +274,11 @@ Delivered:
 
 The reviewed `footballRankFiveModel.ts` catalog remains calibration/editorial input for matching identities. It is not the live candidate-membership authority.
 
-### Stage 11 — Full Ledger Census + Stat Contracts — IN PROGRESS — PR #720
+### Stage 11 — Full Ledger Census + Stat Contracts — COMPLETE — PR #720
 
 **Purpose:** establish the complete NFL/CFB product taxonomy, measure the actual current A/B/C and factual coverage of every pool, and define the factual/honor contract before further content promotion.
 
-Deliverables:
+Delivered:
 
 - identical NFL and CFB player pool taxonomy: QB, RB, WR, TE, OL, DL/EDGE, LB, Secondary, K/P;
 - non-player census for team seasons, franchises/programs, head coaches, eras/dynasties, and notable games;
@@ -290,9 +290,9 @@ Deliverables:
 - no arbitrary A-C quota and no requirement to enrich the full Tier D archive;
 - durable audit contract/tests and `docs/football-ledger-stage11-census-and-stat-contracts.md`.
 
-Stage 11 does **not** bulk-promote identities or bulk-fill missing stats. Those are deliberately owned by Stages 12 and 13.
+Stage 11 deliberately did **not** bulk-promote identities or bulk-fill missing stats. Those are owned by Stages 12 and 13.
 
-### Stage 12 — Recognizability Universe
+### Stage 12 — Recognizability Universe — NEXT
 
 **Purpose:** make the A/B/C universe genuinely complete enough for Football HQ across every NFL and CFB pool.
 
