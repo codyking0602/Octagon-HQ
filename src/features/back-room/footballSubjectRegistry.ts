@@ -201,8 +201,8 @@ for (const subject of [...footballSubjects, ...projectedSourceSubjects, ...proje
 }
 
 // Source ids are reconciliation keys, not public canonical aliases. Keep the public subject shape unchanged while
-// allowing source-backed facts to collapse onto the already-reviewed canonical player identity.
-for (const subject of footballSubjects) {
+// allowing source-backed facts to collapse onto either a reviewed canonical player or a Stage 12 recognition identity.
+for (const subject of [...footballSubjects, ...projectedPlayerSourceSubjects]) {
   if (subject.kind !== "player-career") continue;
   const projectionId = footballRecognitionProjectionSubjectIdFor(subject as FootballCanonicalSubject);
   if (!projectionId || projectionId === subject.id) continue;
