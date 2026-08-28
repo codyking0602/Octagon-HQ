@@ -21,8 +21,10 @@ describe("Football CFB factual depth expansion", () => {
     expect(factCount("cfb-player-career", "cfb-best-season-receiving-yards")).toBeGreaterThanOrEqual(11);
     expect(factCount("cfb-player-career", "cfb-best-season-receiving-touchdowns")).toBeGreaterThanOrEqual(11);
 
-    expect(factCount("cfb-coach-career", "cfb-coach-career-wins")).toBe(11);
-    expect(factCount("cfb-coach-career", "cfb-coach-career-losses")).toBe(11);
+    const coachWins = factCount("cfb-coach-career", "cfb-coach-career-wins");
+    const coachLosses = factCount("cfb-coach-career", "cfb-coach-career-losses");
+    expect(coachWins).toBeGreaterThanOrEqual(40);
+    expect(coachLosses).toBe(coachWins);
 
     expect(metricFactCount("cfb-best-season-rushing-yards")).toBeGreaterThanOrEqual(20);
     expect(metricFactCount("cfb-best-season-rushing-touchdowns")).toBeGreaterThanOrEqual(20);
