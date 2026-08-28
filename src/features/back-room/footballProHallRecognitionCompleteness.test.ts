@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 
+import projectionJson from "../../../data/generated/football/recognizability-projection.json";
 import { footballLedgerAudit } from "./footballLedgerAudit";
+import { footballRecognitionEvidenceSubjects } from "./footballRecognitionEvidence";
 import {
   footballProHallRecognitionCandidates,
   footballProHallRecognitionDispositions,
@@ -9,6 +11,16 @@ import {
 
 const TIER_RANK = { A: 3, B: 2, C: 1 } as const;
 const normalized = (value: string) => value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
+const projectionRecords = projectionJson.records as readonly Array<{
+  id: string;
+  kind: string;
+  name: string;
+  league: "NFL" | "CFB";
+  position?: string;
+  startSeason?: number;
+  endSeason?: number;
+  tier: "A" | "B" | "C" | "D";
+}>;
 
 describe("Stage 13.5 exhaustive Pro Football Hall of Fame recognition review", () => {
   it("reviews all 387 official Hall members after the 2026 class and classifies every identity", () => {
@@ -90,7 +102,54 @@ describe("Stage 13.5 exhaustive Pro Football Hall of Fame recognition review", (
       }
       return [];
     });
-    console.log("FOOTBALL_PRO_HALL_RECOGNITION_GAPS", JSON.stringify(gaps, null, 2));
+
+    const rawProjectionMatches: Array<Record<string, unknown>> = [];
+    const evidenceCoachMatches: Array<Record<string, unknown>> = [];
+    const needsHistoricalSubject: Array<Record<string, unknown>> = [];
+    for (const gap of gaps) {
+      const candidate = footballProHallRecognitionCandidates.find((row) => row.name === gap.name && row.kind === gap.kind)!;
+      const identityKeys = [candidate.name, ...(candidate.identityAliases ?? [])].map(normalized);
+      if (candidate.kind === "player-career") {
+        const raw = projectionRecords.filter((row) => (
+          row.league === "NFL"
+          && row.kind === "player-career"
+          && identityKeys.includes(normalized(row.name))
+        ));
+        if (raw.length === 1) {
+          rawProjectionMatches.push({
+            name: candidate.name,
+            expectedTier: candidate.minimumTier,
+            rawTier: raw[0]!.tier,
+            id: raw[0]!.id,
+            position: raw[0]!.position,
+            startSeason: raw[0]!.startSeason,
+            endSeason: raw[0]!.endSeason,
+          });
+          continue;
+        }
+      } else {
+        const coaches = footballRecognitionEvidenceSubjects.filter((row) => (
+          row.kind === "coach"
+          && row.league === "NFL"
+          && identityKeys.includes(normalized(row.name))
+        ));
+        if (coaches.length === 1) {
+          evidenceCoachMatches.push({ name: candidate.name, expectedTier: candidate.minimumTier, id: coaches[0]!.id });
+          continue;
+        }
+      }
+      needsHistoricalSubject.push({ name: candidate.name, kind: candidate.kind, expectedTier: candidate.minimumTier });
+    }
+
+    console.log("FOOTBALL_PRO_HALL_REPAIR_PATH_COUNTS", JSON.stringify({
+      totalGaps: gaps.length,
+      rawProjectionTierOverrides: rawProjectionMatches.length,
+      evidenceCoachTierOverrides: evidenceCoachMatches.length,
+      needsHistoricalSubject: needsHistoricalSubject.length,
+    }));
+    console.log("FOOTBALL_PRO_HALL_RAW_PROJECTION_OVERRIDES", JSON.stringify(rawProjectionMatches));
+    console.log("FOOTBALL_PRO_HALL_EVIDENCE_COACH_OVERRIDES", JSON.stringify(evidenceCoachMatches));
+    console.log("FOOTBALL_PRO_HALL_NEEDS_HISTORICAL_SUBJECT", JSON.stringify(needsHistoricalSubject));
     expect(gaps).toEqual([]);
   });
 });
