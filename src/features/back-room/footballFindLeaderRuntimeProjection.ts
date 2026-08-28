@@ -1,12 +1,6 @@
 import projectionJson from "../../../data/generated/football/find-leader-runtime-projection.json";
 import type { FootballCanonicalSubject, FootballCanonicalPosition } from "./footballFactualStatsCatalog";
 import type {
-  FootballFactMetricId,
-  FootballFactScope,
-  FootballFactSourceId,
-  FootballFactualRecord,
-} from "./footballFactualStatsCore";
-import type {
   FootballRecognizabilityTier,
   FootballSubjectKnowledgeOverride,
   FootballSourceProviderId,
@@ -27,17 +21,7 @@ interface RuntimeProjectionSubject {
   sourceId: string;
 }
 
-interface RuntimeProjectionRecord {
-  subjectId: string;
-  scope: FootballFactScope;
-  facts: readonly [FootballFactMetricId, number][];
-}
-
 const rawSubjects = projectionJson.subjects as readonly RuntimeProjectionSubject[];
-// JSON imports widen tuple arrays to `(string | number)[][]`; the generator is the schema owner and its checked-in
-// artifact is covered by `--check`, so narrow through unknown at this single adapter boundary rather than weakening
-// the canonical fact types downstream.
-const rawRecords = projectionJson.records as unknown as readonly RuntimeProjectionRecord[];
 const rawSubjectById = new Map(rawSubjects.map((subject) => [subject.id, subject]));
 
 function activeDecades(startSeason?: number, endSeason?: number) {
@@ -48,8 +32,9 @@ function activeDecades(startSeason?: number, endSeason?: number) {
 }
 
 /**
- * Compact source-backed subjects needed by Find the Leader beyond PR6 player-career identities.
- * Player careers continue to enter through footballProjectedPlayerSubjects so the registry keeps one reconciliation path.
+ * Compact source-backed season identities still needed by Find the Leader. Player careers continue to enter through
+ * footballProjectedPlayerSubjects so the registry keeps one reconciliation path. Stage 13 moved all factual rows to
+ * footballFactualUniverseProjection -> footballFactualStatsCore; this module no longer owns or exposes game facts.
  */
 export const footballFindLeaderProjectedAdditionalSubjects: readonly FootballCanonicalSubject[] = rawSubjects
   .filter((subject) => subject.kind !== "player-career")
@@ -77,26 +62,6 @@ export function footballFindLeaderProjectedKnowledgeOverride(subjectId: string):
     sourceIdentityKeys: [{ provider: subject.sourceProvider, id: subject.sourceId }],
   };
 }
-
-const sourceIdByLeague: Readonly<Record<"NFL" | "CFB", FootballFactSourceId>> = {
-  NFL: projectionJson.sourceIds.NFL as FootballFactSourceId,
-  CFB: projectionJson.sourceIds.CFB as FootballFactSourceId,
-};
-
-/** Facts remain canonical: footballFactualStatsCore merges these rows behind getFootballFact/getFootballFactualRecord. */
-export const footballFindLeaderProjectedFactualRecords: readonly FootballFactualRecord[] = rawRecords.map((record) => {
-  const subject = rawSubjectById.get(record.subjectId);
-  if (!subject) throw new Error(`Find the Leader projected fact is missing subject ${record.subjectId}.`);
-  return {
-    subjectId: record.subjectId,
-    scope: record.scope,
-    facts: record.facts.map(([metricId, value]) => ({
-      metricId,
-      value,
-      evidence: { sourceIds: [sourceIdByLeague[subject.league]], kind: "derived" as const, formula: "deterministic projection from pinned normalized source corpus" },
-    })),
-  };
-});
 
 export const FOOTBALL_FIND_LEADER_RUNTIME_PROJECTION_SUMMARY = projectionJson.summary;
 export const FOOTBALL_FIND_LEADER_RUNTIME_PROJECTION_ELIGIBILITY = projectionJson.eligibility;
