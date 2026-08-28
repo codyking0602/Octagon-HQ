@@ -45,14 +45,18 @@ describe("Football Ledger Stage 11 census/stat contract", () => {
     expect(audit).toContain("Mark Andrews");
   });
 
-  it("locks the revised 15-stage roadmap and makes recognizability the next owner", () => {
+  it("locks the revised 19-stage roadmap and makes factual hydration the next owner", () => {
     const roadmap = fs.readFileSync("docs/football-knowledge-ledger.md", "utf8");
-    expect(roadmap).toContain("roadmap is now **15 stages**");
+    expect(roadmap).toContain("roadmap is now **19 stages**");
     expect(roadmap).toContain("Stage 11 — Full Ledger Census + Stat Contracts");
-    expect(roadmap).toContain("Stage 12 — Recognizability Universe");
-    expect(roadmap).toContain("Stage 13 — Factual Universe");
-    expect(roadmap).toContain("Stage 14 — Game Integration");
-    expect(roadmap).toContain("Stage 15 — Cleanup + Final Release Audit");
+    expect(roadmap).toContain("Stage 12 — Recognizability Universe — COMPLETE — PR #721");
+    expect(roadmap).toContain("Stage 13 — Factual Universe — NEXT");
+    expect(roadmap).toContain("Stage 14 — Ranking Philosophy + Scoring Architecture");
+    expect(roadmap).toContain("Stage 15 — NFL Ranking Models");
+    expect(roadmap).toContain("Stage 16 — CFB Ranking Models");
+    expect(roadmap).toContain("Stage 17 — Ranking Calibration + Stability Audit");
+    expect(roadmap).toContain("Stage 18 — Game Integration");
+    expect(roadmap).toContain("Stage 19 — Cleanup + Final Release Audit");
     expect(roadmap).toContain("There is **no arbitrary A-C quota**");
     expect(roadmap).not.toContain("### PR 11 — Blind Resume deep factual generation + remaining factual consumers — NEXT");
   });
