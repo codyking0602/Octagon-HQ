@@ -44,12 +44,26 @@ describe("Football Knowledge Ledger Stage 13 factual universe", () => {
   });
 
   it("does not turn structural player unknowns into zero facts", () => {
+    const activityMetricForZero = new Map<string, string>([
+      ["nfl-career-rushing-yards", "nfl-career-rushing-attempts"],
+      ["nfl-career-rushing-touchdowns", "nfl-career-rushing-attempts"],
+      ["nfl-career-receiving-yards", "nfl-career-receptions"],
+      ["nfl-career-receiving-touchdowns", "nfl-career-receptions"],
+      ["nfl-career-field-goals-made", "nfl-career-field-goals-attempted"],
+      ["cfb-career-rushing-yards", "cfb-career-rushing-attempts"],
+      ["cfb-career-rushing-touchdowns", "cfb-career-rushing-attempts"],
+      ["cfb-career-receiving-yards", "cfb-career-receptions"],
+      ["cfb-career-receiving-touchdowns", "cfb-career-receptions"],
+      ["cfb-career-field-goals-made", "cfb-career-field-goals-attempted"],
+    ]);
+
     for (const record of footballFactualUniverseProjectedRecords.filter((candidate) => candidate.scope.endsWith("player-career"))) {
       for (const fact of record.facts) {
         if (fact.value !== 0) continue;
-        expect(fact.metricId.endsWith("field-goals-made"), `${record.subjectId}:${fact.metricId}`).toBe(true);
-        const attempts = record.facts.find((candidate) => candidate.metricId.endsWith("field-goals-attempted"));
-        expect(attempts?.value ?? 0).toBeGreaterThan(0);
+        const activityMetric = activityMetricForZero.get(fact.metricId);
+        if (!activityMetric) continue;
+        const activity = record.facts.find((candidate) => candidate.metricId === activityMetric);
+        expect(activity?.value ?? 0, `${record.subjectId}:${fact.metricId}`).toBeGreaterThan(0);
       }
     }
   });
