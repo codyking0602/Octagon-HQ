@@ -71,6 +71,8 @@ function sourceCoverage(subject: FootballSubjectProfile): FootballLedgerSourceCo
   if (subject.endSeason != null && subject.endSeason < earliestNormalizedSeason) return "before-normalized-player-source";
   if (subject.startSeason != null && subject.startSeason < earliestNormalizedSeason) return "partially-overlaps-normalized-player-source";
   if (subject.startSeason != null || subject.endSeason != null) return "inside-normalized-player-source";
+  const normalizedProvider = subject.league === "NFL" ? "nflverse" : "cfbfastR";
+  if (subject.sourceIdentityKeys.some((key) => key.provider === normalizedProvider)) return "inside-normalized-player-source";
   return "unknown-career-window";
 }
 
@@ -208,6 +210,7 @@ export function buildFootballLedgerAudit() {
   const allMaterialFactGaps = players.filter((row) => row.status === "red");
   const sourceEraFactGaps = allMaterialFactGaps.filter((row) => row.sourceCoverage === "before-normalized-player-source" || row.sourceCoverage === "partially-overlaps-normalized-player-source");
   const inSourceWindowFactGaps = allMaterialFactGaps.filter((row) => row.sourceCoverage === "inside-normalized-player-source");
+  const unknownCareerWindowFactGaps = allMaterialFactGaps.filter((row) => row.sourceCoverage === "unknown-career-window");
   const rosterReview = players.filter((row) => row.tier !== "C");
   const statusCounts = Object.fromEntries(
     (["NFL", "CFB"] as const).map((league) => [league, Object.fromEntries(
@@ -221,7 +224,7 @@ export function buildFootballLedgerAudit() {
   );
 
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     denominator: "canonical Stage 12 A/B/C player universe after registry/query reconciliation",
     playerCount: players.length,
     statusCounts,
@@ -231,6 +234,7 @@ export function buildFootballLedgerAudit() {
     allMaterialFactGaps,
     sourceEraFactGaps,
     inSourceWindowFactGaps,
+    unknownCareerWindowFactGaps,
     rosterReview,
     players,
   } as const;
