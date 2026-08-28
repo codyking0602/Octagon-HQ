@@ -41,6 +41,9 @@ describe("Validate V2 workflow", () => {
       "npm test -- --shard=${{ matrix.shard }}/8 2>&1 | tee test-shard-${{ matrix.shard }}.log",
     );
     expect(workflow).toContain("fail-fast: false");
+    expect(workflow).toContain(
+      '  tests:\n    name: test shard ${{ matrix.shard }}/8\n    if: ${{ github.event_name == \'push\' || github.event.pull_request.draft == false }}\n    runs-on: ubuntu-latest\n    timeout-minutes: 15',
+    );
   });
 
   it("keeps typecheck and production build coverage without typechecking twice", () => {
