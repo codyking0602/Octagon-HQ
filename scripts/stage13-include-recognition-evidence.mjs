@@ -36,16 +36,18 @@ const recognitionRecords = [
   ...evidenceRecognitionRecords,
 ];
 const playerRecognition = recognitionRecords.filter((record) => record.kind === "player-career");
-const nflCareerRecognition = new Map(playerRecognition.filter((record) => record.league === "NFL" && record.sourceProvider === "nflverse").map((record) => [String(record.sourceId), record]));
-const cfbCareerRecognition = new Map(playerRecognition.filter((record) => record.league === "CFB" && record.sourceProvider === "cfbfastR").map((record) => [String(record.sourceId) + ":" + normalize(record.name), record]));
+const playerRecognitionByIdentity = new Map(playerRecognition.map((record) => [recognitionIdentityKey(record), record]));
+// Preserve the normalized source identity underneath an evidence override so hydration stays one-to-one.
+const nflCareerRecognition = new Map(generatedRecognitionRecords.filter((record) => record.kind === "player-career" && record.league === "NFL" && record.sourceProvider === "nflverse").map((record) => [String(record.sourceId), playerRecognitionByIdentity.get(recognitionIdentityKey(record)) ?? record]));
+const cfbCareerRecognition = new Map(generatedRecognitionRecords.filter((record) => record.kind === "player-career" && record.league === "CFB" && record.sourceProvider === "cfbfastR").map((record) => [String(record.sourceId) + ":" + normalize(record.name), playerRecognitionByIdentity.get(recognitionIdentityKey(record)) ?? record]));
 const nflTeamRecognition = new Map(recognitionRecords.filter((record) => record.kind === "team-season" && record.league === "NFL").map((record) => [String(record.sourceId), record]));
 const cfbTeamRecognition = new Map(recognitionRecords.filter((record) => record.kind === "team-season" && record.league === "CFB").map((record) => [String(record.sourceId), record]));
-const playerRecognitionByLeagueName = new Map();
-for (const record of playerRecognition) {
+const evidencePlayerRecognitionByLeagueName = new Map();
+for (const record of evidenceRecognitionRecords.filter((row) => row.kind === "player-career")) {
   const key = record.league + ":" + normalize(record.name);
-  const values = playerRecognitionByLeagueName.get(key) ?? [];
+  const values = evidencePlayerRecognitionByLeagueName.get(key) ?? [];
   values.push(record);
-  playerRecognitionByLeagueName.set(key, values);
+  evidencePlayerRecognitionByLeagueName.set(key, values);
 }` + source.slice(membershipEnd);
 
 const draftFunctionEnd = source.indexOf("\n\nconst subjects = [];", source.indexOf("function draftForRecognition"));
@@ -59,7 +61,7 @@ function recognitionForSourceRows(league, rows, ix) {
   ]).map(normalize).filter(Boolean))];
   const candidatesById = new Map();
   for (const name of names) {
-    for (const record of playerRecognitionByLeagueName.get(league + ":" + name) ?? []) candidatesById.set(record.id, record);
+    for (const record of evidencePlayerRecognitionByLeagueName.get(league + ":" + name) ?? []) candidatesById.set(record.id, record);
   }
   const candidates = [...candidatesById.values()];
   if (candidates.length === 1) return candidates[0];
