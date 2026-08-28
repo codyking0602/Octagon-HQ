@@ -172,11 +172,6 @@ const projectedCanonicalSubjects: readonly FootballSubjectProfile[] = footballCa
   .map((subject) => enrichFootballSubject(subject, projectedCanonicalKnowledgeOverride(subject)));
 
 const canonicalSubjectIds = new Set(footballSubjects.map((subject) => subject.id));
-const canonicalPlayerRecognitionKeys = new Set(
-  footballCanonicalSubjects
-    .filter((subject) => subject.kind === "player-career")
-    .map((subject) => `${subject.league}:${normalizedFootballSubjectName(subject.name)}:${subject.position ?? ""}`),
-);
 const reconciledProjectedPlayerIds = new Set(
   footballCanonicalSubjects
     .filter((subject) => subject.kind === "player-career")
@@ -184,15 +179,13 @@ const reconciledProjectedPlayerIds = new Set(
     .filter((id): id is string => Boolean(id)),
 );
 
-/** Projected players that do not already reconcile to a curated canonical player. Opt-in only. */
+/** Projected players survive only when their exact source identity does not already reconcile to a curated subject. */
 const projectedPlayerSourceSubjects: readonly FootballSubjectProfile[] = footballProjectedPlayerSubjects
-  .filter((subject) => (
-    !canonicalSubjectIds.has(subject.id)
-    && !reconciledProjectedPlayerIds.has(subject.id)
-    && !canonicalPlayerRecognitionKeys.has(
-      `${subject.league}:${normalizedFootballSubjectName(subject.name)}:${subject.position ?? ""}`,
-    )
-  ))
+  .filter((subject) => {
+    if (canonicalSubjectIds.has(subject.id) || reconciledProjectedPlayerIds.has(subject.id)) return false;
+    const projectionId = footballRecognitionProjectionSubjectIdFor(subject);
+    return projectionId == null || !reconciledProjectedPlayerIds.has(projectionId);
+  })
   .map((subject) => enrichFootballSubject(subject));
 
 /** Stage 12 adds identity-only franchise/game/coach/era families through the same query owner. */
@@ -209,9 +202,14 @@ const projectedAdditionalSubjects: readonly FootballSubjectProfile[] = footballF
   .filter((subject) => !canonicalSubjectIds.has(subject.id))
   .map((subject) => enrichFootballSubject(subject, footballFindLeaderProjectedKnowledgeOverride(subject.id) ?? undefined));
 
+const allRegisteredSubjects = [...footballSubjects, ...projectedSourceSubjects, ...projectedAdditionalSubjects];
 const footballSubjectById = new Map<string, FootballSubjectProfile>();
-for (const subject of [...footballSubjects, ...projectedSourceSubjects, ...projectedAdditionalSubjects]) {
+// Exact public/source subject IDs own themselves. Legacy aliases fill only unclaimed keys afterwards, so an older
+// cross-level alias can never overwrite a real Stage 12 CFB/NFL career identity with the same id.
+for (const subject of allRegisteredSubjects) {
   if (!footballSubjectById.has(subject.id)) footballSubjectById.set(subject.id, subject);
+}
+for (const subject of allRegisteredSubjects) {
   for (const alias of subject.aliases ?? []) if (!footballSubjectById.has(alias)) footballSubjectById.set(alias, subject);
 }
 
@@ -233,8 +231,10 @@ export function getFootballSubject(subjectId: string) {
 }
 
 function matchesFootballSubject(subject: FootballSubjectProfile, query: FootballSubjectQuery) {
+  // NFL and CFB careers are separate query identities. `leagues` remains compatibility metadata on older factual rows,
+  // but it must not make an NFL career answer a CFB query (or vice versa).
   if (query.kind && subject.kind !== query.kind) return false;
-  if (query.league && !(subject.leagues ?? [subject.league]).includes(query.league)) return false;
+  if (query.league && subject.league !== query.league) return false;
   if (query.position && subject.position !== query.position) return false;
   if (query.positions && (!subject.position || !query.positions.includes(subject.position))) return false;
   if (query.season != null && subject.season !== query.season) return false;
