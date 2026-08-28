@@ -1,4 +1,4 @@
-name: TEMP Stage 13 Final Repair
+name: TEMP Stage 13 Canonical Repair
 
 on:
   push:
@@ -23,71 +23,60 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
       - run: npm ci --silent --no-audit --no-fund
-      - name: Apply remaining canonical Stage 13 closure
+      - name: Apply canonical Stage 13 closure
         run: |
           python - <<'PY'
           from pathlib import Path
 
-          def repl(path, before, after):
-              p = Path(path)
-              text = p.read_text()
-              if before not in text:
-                  raise SystemExit(f'missing patch anchor in {path}: {before[:100]!r}')
-              p.write_text(text.replace(before, after, 1))
-
-          generator = 'scripts/generate-football-factual-universe.mjs'
-          repl(
-              generator,
+          generator = Path('scripts/generate-football-factual-universe.mjs')
+          text = generator.read_text()
+          text = text.replace(
               'import { fileURLToPath } from "node:url";\n',
-              'import { fileURLToPath } from "node:url";\nimport { footballRecognitionEvidenceRecords } from "../src/features/back-room/footballRecognitionEvidence.ts";\n',
+              'import { fileURLToPath } from "node:url";\nimport { createServer } from "vite";\n',
+              1,
           )
-          repl(
-              generator,
-              '''const recognition = readJson("data/generated/football/recognizability-projection.json");
+          old = '''const recognition = readJson("data/generated/football/recognizability-projection.json");
           const promoted = recognition.records.filter((record) => record.tier !== "D");
           const promotedPlayers = promoted.filter((record) => record.kind === "player-career");
           const promotedTeamSeasons = promoted.filter((record) => record.kind === "team-season");
           const promotedOrganizations = promoted.filter((record) => record.kind === "franchise" || record.kind === "program");
           const promotedGames = promoted.filter((record) => record.kind === "game");
-          ''',
-              '''const recognition = readJson("data/generated/football/recognizability-projection.json");
-          const sourcePromoted = recognition.records.filter((record) => record.tier !== "D");
-          const looseRecognitionIdentityKey = (record) => [record.kind, record.league, normalized(record.name), record.position ?? ""].join(":");
-          const sourcePromotedByLooseIdentity = new Map();
-          for (const record of sourcePromoted) {
-            const key = looseRecognitionIdentityKey(record);
-            const rows = sourcePromotedByLooseIdentity.get(key) ?? [];
-            rows.push(record);
-            sourcePromotedByLooseIdentity.set(key, rows);
-          }
-          const isAlreadySourcePromotedIdentity = (record) => {
-            const matches = sourcePromotedByLooseIdentity.get(looseRecognitionIdentityKey(record)) ?? [];
-            if (matches.length === 1) return true;
-            if (matches.length > 1 && record.school) return matches.some((match) => normalized(match.school ?? "") === normalized(record.school));
-            return false;
-          };
-          // Stage 12 independent evidence may add A-C identities the production projection cannot discover.
-          // It controls membership only; every Stage 13 number still comes from normalized factual corpora.
-          const evidencePromoted = footballRecognitionEvidenceRecords
-            .filter((record) => record.tier !== "D")
-            .filter((record) => !isAlreadySourcePromotedIdentity(record));
-          const promoted = [...sourcePromoted, ...evidencePromoted];
-          const promotedPlayers = promoted.filter((record) => record.kind === "player-career");
+          '''
+          new = '''const recognition = readJson("data/generated/football/recognizability-projection.json");
+          const promoted = recognition.records.filter((record) => record.tier !== "D");
           const promotedTeamSeasons = promoted.filter((record) => record.kind === "team-season");
           const promotedOrganizations = promoted.filter((record) => record.kind === "franchise" || record.kind === "program");
           const promotedGames = promoted.filter((record) => record.kind === "game");
-          ''',
-          )
-          repl(
-              generator,
-              '''const nflPlayersById = new Map();
+
+          // Player membership comes from the same canonical Stage 12 A-C query owner used by Football games.
+          // The generator only hydrates those identities from pinned factual sources; it does not own a second roster.
+          const gateServer = await createServer({ root, configFile: false, logLevel: "error", server: { middlewareMode: true }, appType: "custom" });
+          let promotedPlayers;
+          try {
+            const { queryFootballSubjects } = await gateServer.ssrLoadModule("/src/features/back-room/footballSubjectRegistry.ts");
+            promotedPlayers = queryFootballSubjects({
+              kind: "player-career",
+              recognizabilityTiers: ["A", "B", "C"],
+              includeProjectedCanonicalRecognition: true,
+              includeProjectedSourceSubjects: true,
+            });
+          } finally {
+            await gateServer.close();
+          }
+          '''
+          if old not in text:
+              raise SystemExit('promotion gate anchor not found')
+          text = text.replace(old, new, 1)
+
+          old = '''const nflPlayersById = new Map();
           for (const row of nflPlayers) {
             const rows = nflPlayersById.get(String(row.sourcePlayerId)) ?? [];
             rows.push(row);
             nflPlayersById.set(String(row.sourcePlayerId), rows);
           }
-          ''',
-              '''const nflPlayersById = new Map();
+          const cfbPlayersByName = new Map();
+          '''
+          new = '''const nflPlayersById = new Map();
           const nflPlayersByName = new Map();
           for (const row of nflPlayers) {
             const rows = nflPlayersById.get(String(row.sourcePlayerId)) ?? [];
@@ -100,112 +89,68 @@ jobs:
               nflPlayersByName.set(nameKey, namedRows);
             }
           }
-          ''',
-          )
-          repl(
-              generator,
-              '  const rows = (nflPlayersById.get(String(subject.sourceId)) ?? []).filter((row) => withinWindow(row, subject));\n',
-              '''  let sourceRows = nflPlayersById.get(String(subject.sourceId)) ?? [];
-            if (!sourceRows.length && (subject.position === "K" || subject.position === "P")) {
+          const cfbPlayersByName = new Map();
+          '''
+          if old not in text:
+              raise SystemExit('NFL player index anchor not found')
+          text = text.replace(old, new, 1)
+
+          old = '''function nflPlayerFacts(subject) {
+            const rows = (nflPlayersById.get(String(subject.sourceId)) ?? []).filter((row) => withinWindow(row, subject));
+            if (!rows.length) return [];
+          '''
+          new = '''function nflPlayerFacts(subject) {
+            const nflverseIdentity = subject.sourceIdentityKeys?.find((key) => key.provider === "nflverse");
+            let sourceRows = nflPlayersById.get(String(nflverseIdentity?.id ?? subject.sourceId ?? subject.id)) ?? [];
+            if (!sourceRows.length) {
               const identityRows = (nflPlayersByName.get(normalized(subject.name)) ?? []).filter(
-                (row) => row.position === subject.position,
+                (row) => !subject.position || row.position === subject.position,
               );
               const sourceIds = new Set(identityRows.map((row) => String(row.sourcePlayerId)));
               if (sourceIds.size === 1) sourceRows = identityRows;
             }
             const rows = sourceRows.filter((row) => withinWindow(row, subject));
-          ''',
-          )
-          repl(
-              generator,
-              '''writeJson("data/generated/football/factual-universe-projection.json", { schemaVersion: 1, methodology: "Stage 12 source-projected A/B/C identities hydrated only from pinned normalized factual/relationship corpora; structural player zeroes are not treated as observed facts; no rankings or greatness weights", gate: { source: "recognizability-projection.json", promotedSourceProjectionCount: promoted.length }, sourceCoverage: { nfl: "1999-2025", cfbPlayers: "2014-2025", cfbRelationships: "2002-2025" }, records });
+            if (!rows.length) return [];
+          '''
+          if old not in text:
+              raise SystemExit('nflPlayerFacts anchor not found')
+          text = text.replace(old, new, 1)
+
+          old = '''writeJson("data/generated/football/factual-universe-projection.json", { schemaVersion: 1, methodology: "Stage 12 source-projected A/B/C identities hydrated only from pinned normalized factual/relationship corpora; structural player zeroes are not treated as observed facts; no rankings or greatness weights", gate: { source: "recognizability-projection.json", promotedSourceProjectionCount: promoted.length }, sourceCoverage: { nfl: "1999-2025", cfbPlayers: "2014-2025", cfbRelationships: "2002-2025" }, records });
           writeJson("data/generated/football/factual-coverage-matrix.json", { schemaVersion: 1, scope: "source-projected portion of canonical Stage 12 A/B/C; canonical runtime matrix includes curated/evidence-bridged A/B/C identities", gatePromotedSourceProjectionCount: promoted.length, generatedRecordCount: records.length, rawRecognitionRecordCount: recognition.summary?.rawRecordCount ?? null, rows: matrixRows, notes: ["Denominators are promoted A/B/C source-projection records, never raw database rows.", "Structural player zeroes are omitted unless an attempted/made denominator proves the zero is observed.", "Reviewed canonical honor facts retain ownership and are not inferred from recognition-only evidence.", "Sparse CFB championship note flags are emitted only when explicitly true; false is not asserted as complete historical evidence."] });
-          console.log(`Generated ${records.length} Stage 13 factual records from ${promoted.length} promoted source-projection records.`);''',
-              '''writeJson("data/generated/football/factual-universe-projection.json", { schemaVersion: 1, methodology: "Canonical Stage 12 A/B/C source-projected plus independent recognition-evidence identities hydrated only from pinned normalized factual/relationship corpora; recognition evidence controls membership only; structural player zeroes are not treated as observed facts; no rankings or greatness weights", gate: { source: "Stage 12 canonical A/B/C union", promotedCanonicalMembershipCount: promoted.length, promotedSourceProjectionCount: sourcePromoted.length, promotedEvidenceOnlyCount: evidencePromoted.length }, sourceCoverage: { nfl: "1999-2025", cfbPlayers: "2014-2025", cfbRelationships: "2002-2025" }, records });
-          writeJson("data/generated/football/factual-coverage-matrix.json", { schemaVersion: 1, scope: "generated factual hydration across the Stage 12 A/B/C source projection plus independent evidence-only identities; canonical runtime matrix remains the full registry audit", gatePromotedCanonicalMembershipCount: promoted.length, gatePromotedSourceProjectionCount: sourcePromoted.length, gatePromotedEvidenceOnlyCount: evidencePromoted.length, generatedRecordCount: records.length, rawRecognitionRecordCount: recognition.summary?.rawRecordCount ?? null, rows: matrixRows, notes: ["Denominators are promoted Stage 12 A/B/C identities, never raw database rows.", "Independent recognition evidence controls membership only; numeric facts still require normalized factual-source rows.", "Structural player zeroes are omitted unless an attempted/made denominator proves the zero is observed.", "Reviewed canonical honor facts retain ownership and are not inferred from recognition-only evidence.", "Sparse CFB championship note flags are emitted only when explicitly true; false is not asserted as complete historical evidence."] });
-          console.log(`Generated ${records.length} Stage 13 factual records from ${promoted.length} canonical promoted identities (${sourcePromoted.length} source-projected + ${evidencePromoted.length} evidence-only).`);''',
-          )
-          repl(
-              'package.json',
-              '"generate:football-factual-universe": "node scripts/generate-football-factual-universe.mjs"',
-              '"generate:football-factual-universe": "node --experimental-strip-types scripts/generate-football-factual-universe.mjs"',
-          )
-          repl(
-              'src/features/back-room/footballFactualUniverse.test.ts',
-              'execFileSync(process.execPath, ["scripts/generate-football-factual-universe.mjs"], { stdio: "pipe" });',
-              'execFileSync(process.execPath, ["--experimental-strip-types", "scripts/generate-football-factual-universe.mjs"], { stdio: "pipe" });',
-          )
+          console.log(`Generated ${records.length} Stage 13 factual records from ${promoted.length} promoted source-projection records.`);'''
+          new = '''writeJson("data/generated/football/factual-universe-projection.json", { schemaVersion: 1, methodology: "Canonical Stage 12 A/B/C player identities plus promoted non-player source identities hydrated only from pinned normalized factual/relationship corpora; structural player zeroes are not treated as observed facts; no rankings or greatness weights", gate: { playerSource: "queryFootballSubjects", canonicalPromotedPlayerCount: promotedPlayers.length, nonPlayerSource: "recognizability-projection.json", promotedSourceProjectionCount: promoted.length }, sourceCoverage: { nfl: "1999-2025", cfbPlayers: "2014-2025", cfbRelationships: "2002-2025" }, records });
+          writeJson("data/generated/football/factual-coverage-matrix.json", { schemaVersion: 1, scope: "canonical Stage 12 A/B/C player query plus promoted non-player source identities", canonicalPromotedPlayerCount: promotedPlayers.length, gatePromotedSourceProjectionCount: promoted.length, generatedRecordCount: records.length, rawRecognitionRecordCount: recognition.summary?.rawRecordCount ?? null, rows: matrixRows, notes: ["Player denominators are the canonical A/B/C query result; non-player denominators are promoted A/B/C source-projection records, never raw database rows.", "Structural player zeroes are omitted unless an attempted/made denominator proves the zero is observed.", "Reviewed canonical honor facts retain ownership and are not inferred from recognition-only evidence.", "Sparse CFB championship note flags are emitted only when explicitly true; false is not asserted as complete historical evidence."] });
+          console.log(`Generated ${records.length} Stage 13 factual records from ${promotedPlayers.length} canonical A/B/C players plus promoted non-player source identities.`);'''
+          if old not in text:
+              raise SystemExit('artifact metadata anchor not found')
+          generator.write_text(text.replace(old, new, 1))
 
           comparison = Path('src/features/back-room/footballComparisonGeneration.ts')
           text = comparison.read_text()
-          anchor = 'export function buildFootballKeepCutBoard(\n'
-          helper = '''function attemptKeepCutProfileFallback(
-            items: readonly FootballRankFiveItem[],
-            scopeId: string,
-            seed: string,
-            style: FootballKeepCutBoardStyle,
-            eliteCount: number,
-            badCount: number,
-            attempt: number,
-          ) {
-            const random = seededLineupRandom("football-keep-cut", "profile-fallback", scopeId, seed, style.id, attempt);
-            const elite = shuffleLineup(items.filter((item) => footballComparisonTier(item) === "elite"), random).slice(0, eliteCount);
-            const bad = shuffleLineup(items.filter((item) => footballComparisonTier(item) === "bad"), random).slice(0, badCount);
-            const middleCount = KEEP_CUT_BOARD_SIZE - eliteCount - badCount;
-            const middle = shuffleLineup(items.filter((item) => {
-              const tier = footballComparisonTier(item);
-              return tier !== "elite" && tier !== "bad";
-            }), random).slice(0, middleCount);
-            const selected = [...elite, ...middle, ...bad];
-            if (selected.length !== KEEP_CUT_BOARD_SIZE || !footballKeepCutBoardIsCompetitive(selected, items)) return null;
-            const ordered = sortedPool(selected);
-            return {
-              items: shuffleLineup(selected, random), badItems: badCount, eliteItems: eliteCount,
-              cutoffGap: Math.abs(ordered[KEEP_COUNT - 1]!.rating - ordered[KEEP_COUNT]!.rating),
-              distinctTiers: new Set(selected.map(footballComparisonTier)).size,
-            };
-          }
-
-          export function buildFootballKeepCutBoard(
+          old = '''    const preferDeepExactTier = (
+                targetTier !== "elite"
+                && targetTier !== "bad"
           '''
-          if anchor not in text:
-              raise SystemExit('Keep/Cut build anchor not found')
-          text = text.replace(anchor, helper, 1)
-          needle = '  throw new Error(`Football Keep/Cut could not build a ${style.name} eight-subject board for ${scopeId}.`);'
-          fallback = '''  let fallbackBest: (Omit<FootballKeepCutBoard, "style" | "attemptsUsed"> & { attempt: number }) | null = null;
-            const fallbackTight: Array<Omit<FootballKeepCutBoard, "style" | "attemptsUsed"> & { attempt: number }> = [];
-            for (let attempt = 0; attempt < KEEP_CUT_ATTEMPTS; attempt += 1) {
-              const board = attemptKeepCutProfileFallback(items, scopeId, seed, style, profile.eliteCount, profile.badCount, attempt);
-              if (!board) continue;
-              if (!fallbackBest || board.cutoffGap < fallbackBest.cutoffGap) fallbackBest = { ...board, attempt };
-              if (board.cutoffGap <= TIGHT_KEEP_CUT_CUTOFF_GAP) {
-                fallbackTight.push({ ...board, attempt });
-                if (fallbackTight.length >= KEEP_CUT_TIGHT_CANDIDATES) break;
-              }
-            }
-            if (fallbackTight.length) {
-              const random = seededLineupRandom("football-keep-cut", "profile-fallback-candidate", scopeId, seed, style.id);
-              const selected = shuffleLineup(fallbackTight, random)[0]!;
-              const { attempt, ...board } = selected;
-              return { ...board, style: style.id, attemptsUsed: KEEP_CUT_ATTEMPTS + attempt + 1 };
-            }
-            if (fallbackBest) {
-              const { attempt, ...board } = fallbackBest;
-              return { ...board, style: style.id, attemptsUsed: KEEP_CUT_ATTEMPTS + attempt + 1 };
-            }
-            throw new Error(`Football Keep/Cut could not build a ${style.name} eight-subject board for ${scopeId}.`);'''
-          if needle not in text:
-              raise SystemExit('Keep/Cut throw anchor not found')
-          comparison.write_text(text.replace(needle, fallback, 1))
+          new = '''    const preferDeepExactTier = (
+                scopeId !== "college-team-seasons"
+                && targetTier !== "elite"
+                && targetTier !== "bad"
+          '''
+          if old not in text:
+              raise SystemExit('Keep/Cut exact-tier anchor not found')
+          comparison.write_text(text.replace(old, new, 1))
           PY
       - name: Regenerate Stage 13 artifacts
         run: npm run generate:football-factual-universe
-      - name: Validate repaired closures
+      - name: Validate focused Stage 13 closure
         run: npx vitest run src/features/back-room/footballFactualUniverse.test.ts src/features/back-room/footballFactualStats.test.ts src/features/back-room/footballGenerationMaturity.test.ts
-      - name: Commit repair
+      - name: Commit repair and remove temporary scaffolding
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add package.json scripts/generate-football-factual-universe.mjs src/features/back-room/footballFactualUniverse.test.ts src/features/back-room/footballComparisonGeneration.ts data/generated/football/factual-universe-projection.json data/generated/football/factual-coverage-matrix.json
+          git rm -f .github/workflows/temp-stage13-final-repair.yml .github/workflows/temp-stage13-close-pr.yml scripts/stage13-close-pr.mjs
+          git add scripts/generate-football-factual-universe.mjs src/features/back-room/footballComparisonGeneration.ts
+          git add -f data/generated/football/factual-universe-projection.json data/generated/football/factual-coverage-matrix.json
           git commit -m 'fix: close Stage 13 canonical factual gaps'
           git push origin HEAD:feat/football-ledger-stage13-factual-universe
