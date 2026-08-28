@@ -85,19 +85,25 @@ const withinWindow = (row, subject) => (
   && (subject.endSeason == null || row.season <= subject.endSeason)
   && (subject.season == null || row.season === subject.season)
 );
+const sourceIdentityId = (subject) => {
+  const provider = subject.league === "NFL" ? "nflverse" : "cfbfastR";
+  return subject.sourceIdentityKeys?.find((key) => key.provider === provider)?.id ?? subject.sourceId ?? null;
+};
 
 function nflRowsFor(subject) {
   const nflverseIdentity = subject.sourceIdentityKeys?.find((key) => key.provider === "nflverse");
   let rows = nflPlayersById.get(String(nflverseIdentity?.id ?? subject.sourceId ?? subject.playerId ?? subject.id)) ?? [];
   if (!rows.length) {
-    const identityRows = (nflPlayersByName.get(normalized(subject.name)) ?? []).filter((row) => !subject.position || row.position === subject.position);
+    const lookupName = subject.kind === "player-season" ? subject.name.replace(/\s+\d{4}$/, "") : subject.name;
+    const identityRows = (nflPlayersByName.get(normalized(lookupName)) ?? []).filter((row) => !subject.position || row.position === subject.position);
     const ids = new Set(identityRows.map((row) => String(row.sourcePlayerId)));
     if (ids.size === 1) rows = identityRows;
   }
   return rows.filter((row) => withinWindow(row, subject));
 }
 function cfbRowsFor(subject) {
-  let rows = (cfbPlayersByName.get(normalized(subject.name)) ?? []).filter((row) => withinWindow(row, subject));
+  const lookupName = subject.kind === "player-season" ? subject.name.replace(/\s+\d{4}$/, "") : subject.name;
+  let rows = (cfbPlayersByName.get(normalized(lookupName)) ?? []).filter((row) => withinWindow(row, subject));
   if (subject.school) {
     const schoolRows = rows.filter((row) => normalized(row.team) === normalized(subject.school));
     if (schoolRows.length) rows = schoolRows;
@@ -171,25 +177,55 @@ function nflPlayerSeasonFacts(subject) {
   return facts;
 }
 
+function cfbPlayerSeasonFacts(subject) {
+  if (subject.season == null) return [];
+  const rows = cfbRowsFor(subject);
+  if (!rows.length) return [];
+  const p = subject.position;
+  const facts = [];
+  if (p === "QB") facts.push(...compact([
+    fact("CFB", "cfb-best-season-passing-yards", sumObserved(rows, "passYards")),
+    fact("CFB", "cfb-best-season-passing-touchdowns", sumObserved(rows, "passTouchdowns")),
+    fact("CFB", "cfb-best-season-interceptions", sumKnown(rows, "interceptionsThrown")),
+  ]));
+  if (["QB", "RB"].includes(p)) facts.push(...compact([
+    fact("CFB", "cfb-best-season-rushing-yards", sumObserved(rows, "rushYards")),
+    fact("CFB", "cfb-best-season-rushing-touchdowns", sumObserved(rows, "rushTouchdowns")),
+  ]));
+  if (["RB", "WR", "TE"].includes(p)) facts.push(...compact([
+    fact("CFB", "cfb-best-season-receptions", sumObserved(rows, "receptions")),
+    fact("CFB", "cfb-best-season-receiving-yards", sumObserved(rows, "receivingYards")),
+    fact("CFB", "cfb-best-season-receiving-touchdowns", sumObserved(rows, "receivingTouchdowns")),
+  ]));
+  if (["DL", "LB", "DB"].includes(p)) facts.push(...compact([
+    fact("CFB", "cfb-best-season-sacks", sumObserved(rows, "sacks")),
+    fact("CFB", "cfb-best-season-tackles-for-loss", sumObserved(rows, "tacklesForLoss")),
+    fact("CFB", "cfb-best-season-defensive-interceptions", sumObserved(rows, "defensiveInterceptions")),
+  ]));
+  return compact(facts);
+}
+
 const nflTeamResultsByKey = new Map(nflTeamResults.map((row) => [`${row.season}:${row.franchiseId}`, row]));
 const cfbTeamResultsByKey = new Map(cfbTeamResults.map((row) => [`${row.season}:${row.sourceProgramId}`, row]));
 const nflTeamStatsByKey = new Map(nflTeamStats.map((row) => [`${row.season}:${row.team}`, row]));
 function teamSeasonFacts(subject) {
+  const subjectSourceId = sourceIdentityId(subject);
   if (subject.league === "NFL") {
-    const row = nflTeamResultsByKey.get(String(subject.sourceId));
+    const row = nflTeamResultsByKey.get(String(subjectSourceId));
     if (!row) return [];
     const stats = nflTeamStatsByKey.get(`${row.season}:${row.sourceTeamCode}`) ?? nflTeamStatsByKey.get(`${row.season}:${row.franchiseId}`);
     const games = row.overallGames;
     return compact([relationshipFact("nfl-team-overall-wins", row.overallWins), relationshipFact("nfl-team-overall-losses", row.overallLosses), relationshipFact("nfl-team-overall-ties", row.overallTies), relationshipFact("nfl-team-points-for", row.pointsFor), relationshipFact("nfl-team-points-against", row.pointsAgainst), finite(games) && games > 0 ? relationshipDerived("nfl-team-points-per-game", row.pointsFor / games, "points for / overall games") : null, finite(games) && games > 0 ? relationshipDerived("nfl-team-opponent-points-per-game", row.pointsAgainst / games, "points against / overall games") : null, relationshipDerived("nfl-team-point-differential", row.pointsFor - row.pointsAgainst, "points for - points against"), relationshipFact("nfl-team-postseason-wins", row.postseasonWins), relationshipFact("nfl-team-playoff-berth", row.playoffBerth ? 1 : 0), relationshipFact("nfl-team-conference-championship-game", row.conferenceChampionshipGame ? 1 : 0), relationshipFact("nfl-team-super-bowl-appearance", row.superBowlAppearance ? 1 : 0), relationshipFact("nfl-super-bowl-title", row.superBowlChampion ? 1 : 0), stats ? fact("NFL", "nfl-team-passing-yards", stats.passingYards) : null, stats ? fact("NFL", "nfl-team-rushing-yards", stats.rushingYards) : null, stats ? fact("NFL", "nfl-team-defensive-sacks", stats.defensiveSacks) : null, stats ? fact("NFL", "nfl-team-defensive-interceptions", stats.defensiveInterceptions) : null]);
   }
-  const row = cfbTeamResultsByKey.get(String(subject.sourceId));
+  const row = cfbTeamResultsByKey.get(String(subjectSourceId));
   if (!row) return [];
   const games = row.overallGames;
   return compact([relationshipFact("cfb-team-wins", row.overallWins), relationshipFact("cfb-team-losses", row.overallLosses), relationshipFact("cfb-team-ties", row.overallTies), relationshipFact("cfb-team-points-for", row.pointsFor), relationshipFact("cfb-team-points-against", row.pointsAgainst), finite(games) && games > 0 ? relationshipDerived("cfb-team-points-per-game", row.pointsFor / games, "points for / overall games") : null, finite(games) && games > 0 ? relationshipDerived("cfb-team-opponent-points-per-game", row.pointsAgainst / games, "points against / overall games") : null, relationshipDerived("cfb-team-point-differential", row.pointsFor - row.pointsAgainst, "points for - points against"), relationshipFact("cfb-team-postseason-wins", row.postseasonWins), relationshipFact("cfb-team-conference-wins", row.conferenceWins), relationshipFact("cfb-team-conference-losses", row.conferenceLosses), row.explicitNationalChampion ? relationshipFact("cfb-national-title", 1) : null]);
 }
 
 function organizationFacts(subject) {
-  const rows = subject.league === "NFL" ? nflTeamResults.filter((row) => String(row.franchiseId) === String(subject.sourceId)) : cfbTeamResults.filter((row) => String(row.sourceProgramId) === String(subject.sourceId));
+  const subjectSourceId = sourceIdentityId(subject);
+  const rows = subject.league === "NFL" ? nflTeamResults.filter((row) => String(row.franchiseId) === String(subjectSourceId)) : cfbTeamResults.filter((row) => String(row.sourceProgramId) === String(subjectSourceId));
   if (!rows.length) return [];
   if (subject.league === "NFL") return compact([relationshipFact("nfl-franchise-wins-since-1999", sumKnown(rows, "overallWins")), relationshipFact("nfl-franchise-losses-since-1999", sumKnown(rows, "overallLosses")), relationshipFact("nfl-franchise-playoff-wins-since-1999", sumKnown(rows, "postseasonWins")), relationshipFact("nfl-franchise-super-bowl-appearances-since-1999", rows.filter((row) => row.superBowlAppearance).length), relationshipFact("nfl-franchise-super-bowl-titles-since-1999", rows.filter((row) => row.superBowlChampion).length)]);
   return compact([relationshipFact("cfb-program-wins-since-2000", sumKnown(rows, "overallWins")), relationshipFact("cfb-program-losses-since-2000", sumKnown(rows, "overallLosses")), relationshipFact("cfb-program-postseason-wins-since-2000", sumKnown(rows, "postseasonWins")), relationshipFact("cfb-program-national-titles-since-2000", rows.filter((row) => row.explicitNationalChampion).length)]);
@@ -213,7 +249,7 @@ function cfbEraFacts(subject) {
 const nflGamesById = new Map(nflGames.map((row) => [String(row.sourceGameId), row]));
 const cfbGamesById = new Map(cfbGames.map((row) => [String(row.sourceGameId), row]));
 function gameFacts(subject) {
-  const row = (subject.league === "NFL" ? nflGamesById : cfbGamesById).get(String(subject.sourceId));
+  const row = (subject.league === "NFL" ? nflGamesById : cfbGamesById).get(String(sourceIdentityId(subject)));
   if (!row) return [];
   const homeScore = subject.league === "NFL" ? row.homeScore : row.homePoints;
   const awayScore = subject.league === "NFL" ? row.awayScore : row.awayPoints;
@@ -222,7 +258,10 @@ function gameFacts(subject) {
 
 const records = [];
 for (const subject of promotedPlayers) { const facts = subject.league === "NFL" ? nflPlayerFacts(subject) : cfbPlayerFacts(subject); if (facts.length) records.push({ subjectId: subject.id, scope: subject.league === "NFL" ? "nfl-player-career" : "cfb-player-career", facts }); }
-for (const subject of promotedPlayerSeasons) { const facts = subject.league === "NFL" ? nflPlayerSeasonFacts(subject) : []; if (facts.length) records.push({ subjectId: subject.id, scope: "nfl-player-season", facts }); }
+for (const subject of promotedPlayerSeasons) {
+  const facts = subject.league === "NFL" ? nflPlayerSeasonFacts(subject) : cfbPlayerSeasonFacts(subject);
+  if (facts.length) records.push({ subjectId: subject.id, scope: subject.league === "NFL" ? "nfl-player-season" : "cfb-player-season", facts });
+}
 for (const subject of promotedTeamSeasons) { const facts = teamSeasonFacts(subject); if (facts.length) records.push({ subjectId: subject.id, scope: subject.league === "NFL" ? "nfl-team-season" : "cfb-team-season", facts }); }
 for (const subject of promotedOrganizations) { const facts = organizationFacts(subject); if (facts.length) records.push({ subjectId: subject.id, scope: subject.league === "NFL" ? "nfl-franchise" : "cfb-program", facts }); }
 for (const subject of promotedCoaches) { const facts = cfbCoachFacts(subject); if (facts.length) records.push({ subjectId: subject.id, scope: "cfb-coach-career", facts }); }
@@ -247,5 +286,5 @@ for (const league of ["NFL", "CFB"]) for (const [kind, label] of permanentKinds)
 
 const recognition = readJson("data/generated/football/recognizability-projection.json");
 writeJson("data/generated/football/factual-universe-projection.json", { schemaVersion: 2, methodology: "Canonical footballSubjectRegistry A/B/C identities hydrated only from pinned normalized factual/relationship corpora; missing facts remain missing; no rankings or greatness weights", gate: { source: "queryFootballSubjects", canonicalPromotedSubjectCount: promotedSubjects.length, canonicalPromotedPlayerCount: promotedPlayers.length }, sourceCoverage: { nfl: "1999-2025", cfbPlayers: "2014-2025", cfbRelationships: "2002-2025" }, records });
-writeJson("data/generated/football/factual-coverage-matrix.json", { schemaVersion: 2, scope: "canonical footballSubjectRegistry A/B/C universe", canonicalPromotedSubjectCount: promotedSubjects.length, canonicalPromotedPlayerCount: promotedPlayers.length, generatedRecordCount: records.length, rawRecognitionRecordCount: recognition.summary?.rawRecordCount ?? null, rows: matrixRows, notes: ["All denominators come from the canonical registry A/B/C query, never private game rosters or raw source rows.", "Structural player zeroes are omitted unless a denominator proves the zero is observed.", "Historical recognition is independent from factual readiness; sparse historical subjects remain canonical.", "CFB coach and era facts are bounded to the trustworthy 2002-2025 relationship source; older portions remain explicitly partial.", "NFL coach/era and non-QB player-season metric contracts remain visible as factual gaps rather than being filled with semantically incorrect substitutes."] });
+writeJson("data/generated/football/factual-coverage-matrix.json", { schemaVersion: 2, scope: "canonical footballSubjectRegistry A/B/C universe", canonicalPromotedSubjectCount: promotedSubjects.length, canonicalPromotedPlayerCount: promotedPlayers.length, generatedRecordCount: records.length, rawRecognitionRecordCount: recognition.summary?.rawRecordCount ?? null, rows: matrixRows, notes: ["All denominators come from the canonical registry A/B/C query, never private game rosters or raw source rows.", "Structural player zeroes are omitted unless a denominator proves the zero is observed.", "Historical recognition is independent from factual readiness; sparse historical subjects remain canonical.", "CFB player-season facts are bounded to reviewed 2014-2025 Heisman-season identities and use only their exact normalized source season.", "CFB coach and era facts are bounded to the trustworthy 2002-2025 relationship source; older portions remain explicitly partial.", "NFL coach/era and non-QB player-season metric contracts remain visible as factual gaps rather than being filled with semantically incorrect substitutes."] });
 console.log(`Generated ${records.length} Stage 13.5 factual records for ${promotedSubjects.length} canonical A/B/C subjects.`);
