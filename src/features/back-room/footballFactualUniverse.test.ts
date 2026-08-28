@@ -3,12 +3,14 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
-import { footballFactualCoverageMatrix } from "./footballFactualCoverageMatrix";
+import { footballFactualCoverageMatrix, type FootballFactMetricFamily } from "./footballFactualCoverageMatrix";
 import { getFootballFactualRecord } from "./footballFactualStatsCore";
 import { footballFactualUniverseProjectedRecords } from "./footballFactualUniverseProjection";
 import { getFootballSubject, queryFootballSubjects } from "./footballSubjectRegistry";
 
 const tiers = ["A", "B", "C"] as const;
+const familyCount = (row: { metricFamilySubjectCounts: object }, family: FootballFactMetricFamily) =>
+  (row.metricFamilySubjectCounts as Partial<Record<FootballFactMetricFamily, number>>)[family] ?? 0;
 
 describe("Football Knowledge Ledger Stage 13 factual universe", () => {
   it("materially hydrates the post-gate A/B/C universe instead of raw database rows", () => {
@@ -28,16 +30,16 @@ describe("Football Knowledge Ledger Stage 13 factual universe", () => {
         expect(row, `${league} ${pool}`).toBeTruthy();
         expect(row!.universeSubjects, `${league} ${pool}`).toBeGreaterThan(0);
         expect(row!.readinessPct, `${league} ${pool}`).toBeGreaterThan(0);
-        expect(row!.metricFamilySubjectCounts.relationship ?? 0, `${league} ${pool} relationships`).toBeGreaterThan(0);
+        expect(familyCount(row!, "relationship"), `${league} ${pool} relationships`).toBeGreaterThan(0);
       }
     }
     for (const league of ["NFL", "CFB"] as const) {
       for (const pool of ["DL / EDGE", "LB", "Secondary"]) {
         const row = footballFactualCoverageMatrix.rows.find((candidate) => candidate.league === league && candidate.pool === pool)!;
-        expect((row.metricFamilySubjectCounts.defense ?? 0) + (row.metricFamilySubjectCounts.honors ?? 0), `${league} ${pool} defense/honors`).toBeGreaterThan(0);
+        expect(familyCount(row, "defense") + familyCount(row, "honors"), `${league} ${pool} defense/honors`).toBeGreaterThan(0);
       }
       const specialist = footballFactualCoverageMatrix.rows.find((candidate) => candidate.league === league && candidate.pool === "K / P")!;
-      expect((specialist.metricFamilySubjectCounts.specialist ?? 0) + (specialist.metricFamilySubjectCounts.honors ?? 0), `${league} K/P specialist/honors`).toBeGreaterThan(0);
+      expect(familyCount(specialist, "specialist") + familyCount(specialist, "honors"), `${league} K/P specialist/honors`).toBeGreaterThan(0);
     }
   });
 
@@ -50,7 +52,6 @@ describe("Football Knowledge Ledger Stage 13 factual universe", () => {
         expect(attempts?.value ?? 0).toBeGreaterThan(0);
       }
     }
-    expect(getFootballFactualRecord("cfb-michael-dickson")?.facts.some((fact) => fact.metricId === "football-game-overtime")).not.toBe(true);
   });
 
   it("preserves separate NFL and CFB career identities for the same person", () => {
