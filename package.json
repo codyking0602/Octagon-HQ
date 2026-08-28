@@ -11,7 +11,10 @@
     "build": "npm run typecheck && npm run build:artifacts",
     "build:artifacts": "vite build && vite build --config vite.worker.config.ts && npm run verify:artifact",
     "preview": "vite preview",
+    "generate:football-factual-universe": "node scripts/generate-football-factual-universe.mjs",
+    "pretypecheck": "npm run generate:football-factual-universe",
     "typecheck": "tsc --noEmit",
+    "pretest": "npm run generate:football-factual-universe",
     "test": "vitest run",
     "verify:artifact": "node scripts/verify-production-artifact.mjs",
     "export:verdict": "node scripts/export-octagon-verdict.mjs"
