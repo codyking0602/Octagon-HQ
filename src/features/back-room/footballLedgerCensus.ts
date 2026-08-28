@@ -4,6 +4,7 @@ import {
   type FootballLedgerAuditPool,
   type FootballLedgerSubjectAuditRow,
 } from "./footballLedgerAudit";
+import { getFootballSubject } from "./footballSubjectRegistry";
 
 export type FootballLedgerCensusTier = "A" | "B" | "C";
 export type FootballLedgerCensusEraId = "historical" | "middle" | "modern" | "unknown" | "timeless";
@@ -131,22 +132,50 @@ export function footballLedgerCensusEndingSeasonFor(row: FootballLedgerSubjectAu
 }
 
 /**
+ * activeDecades is weaker than an exact end season, but it can still identify an era without guessing whenever the
+ * last represented decade sits wholly inside one historical bucket. CFB's 2000s decade straddles the 2005 boundary,
+ * so it deliberately remains unresolved unless a real ending season is available elsewhere.
+ */
+export function footballLedgerCensusEraFromActiveDecades(
+  league: "NFL" | "CFB",
+  activeDecades?: readonly number[],
+): Exclude<FootballLedgerCensusEraId, "unknown" | "timeless"> | null {
+  const decades = (activeDecades ?? []).filter((value) => Number.isInteger(value));
+  if (!decades.length) return null;
+  const lastDecade = Math.max(...decades);
+  if (league === "NFL") {
+    if (lastDecade < 1970) return "historical";
+    if (lastDecade < 2000) return "middle";
+    return "modern";
+  }
+  if (lastDecade < 1980) return "historical";
+  if (lastDecade < 2000) return "middle";
+  if (lastDecade >= 2010) return "modern";
+  return null;
+}
+
+/**
  * Census eras use the same ending-season boundaries as the canonical Stage 13.5 historical recognition policy.
- * Permanent franchise/program identities are timeless. Dated subjects with no explicit or reconciled source ending
- * season remain Unknown; the census never invents an era merely to make the table look complete.
+ * Permanent franchise/program identities are timeless. After exact/reconciled ending seasons, an existing canonical
+ * active-decade window may resolve an era only when that decade cannot cross an era boundary. Everything else stays
+ * Unknown rather than inventing a date merely to make the table look complete.
  */
 export function footballLedgerCensusEraFor(row: FootballLedgerSubjectAuditRow): FootballLedgerCensusEraId {
   if (row.pool === "Franchises / programs") return "timeless";
   const endingSeason = footballLedgerCensusEndingSeasonFor(row);
-  if (endingSeason == null) return "unknown";
-  if (row.league === "NFL") {
-    if (endingSeason < 1970) return "historical";
-    if (endingSeason < 2000) return "middle";
+  if (endingSeason != null) {
+    if (row.league === "NFL") {
+      if (endingSeason < 1970) return "historical";
+      if (endingSeason < 2000) return "middle";
+      return "modern";
+    }
+    if (endingSeason < 1980) return "historical";
+    if (endingSeason < 2005) return "middle";
     return "modern";
   }
-  if (endingSeason < 1980) return "historical";
-  if (endingSeason < 2005) return "middle";
-  return "modern";
+
+  const canonical = getFootballSubject(row.subjectId);
+  return footballLedgerCensusEraFromActiveDecades(row.league, canonical?.activeDecades) ?? "unknown";
 }
 
 export function buildFootballLedgerCensus(rows: readonly FootballLedgerSubjectAuditRow[] = footballLedgerAudit.rows) {
@@ -188,9 +217,9 @@ export function buildFootballLedgerCensus(rows: readonly FootballLedgerSubjectAu
   for (const league of ["NFL", "CFB"] as const) for (const tier of TIERS) grandTierCounts[tier] += leagueTotals[league].tierCounts[tier];
 
   return {
-    schemaVersion: 2,
+    schemaVersion: 3,
     denominator: footballLedgerAudit.denominator,
-    eraBasis: "subject endSeason, falling back to season and the reconciled Stage 12 source projection window; franchises/programs are timeless; truly unresolved dated subjects remain unknown",
+    eraBasis: "subject endSeason, then season, then the reconciled Stage 12 source projection endSeason, then only unambiguous canonical active-decade metadata; franchises/programs are timeless; truly unresolved dated subjects remain unknown",
     eraDefinitions: FOOTBALL_LEDGER_CENSUS_ERAS,
     rows: censusRows,
     leagueTotals,
@@ -207,7 +236,7 @@ export function formatFootballLedgerCensusMarkdown(census = buildFootballLedgerC
     "",
     `Canonical A/B/C subjects: **${census.grandTotal.total.toLocaleString()}**`,
     "",
-    "Counts are shown as A/B/C. Unknown is intentionally preserved only when a dated canonical subject lacks both an explicit window and a uniquely reconciled Stage 12 source window; franchises/programs are Timeless.",
+    "Counts are shown as A/B/C. Unknown is preserved only when explicit/reconciled ending-season data and unambiguous canonical decade metadata cannot place a dated subject honestly; franchises/programs are Timeless.",
     "",
   ];
 
