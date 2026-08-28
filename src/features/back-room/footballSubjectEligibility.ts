@@ -7,6 +7,7 @@ export type FootballSourceProviderId =
   | "octagon-hq"
   | "cfbfastR"
   | "nflverse"
+  | "ncaafb"
   | "ncaa-2025";
 
 export interface FootballSourceIdentityKey {
