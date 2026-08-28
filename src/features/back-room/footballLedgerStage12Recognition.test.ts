@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   FOOTBALL_STAGE12_RECOGNITION_EVIDENCE_SOURCE,
+  FOOTBALL_STAGE12_RECOGNITION_EVIDENCE_SOURCES,
   footballRecognitionEvidenceRecords,
 } from "./footballRecognitionEvidence";
 import { queryFootballSubjects } from "./footballSubjectRegistry";
@@ -22,17 +23,22 @@ function names(subjects: readonly { name: string }[]) {
 }
 
 describe("Football Stage 12 recognizability universe", () => {
-  it("uses pinned independent recognition evidence without turning it into a factual provider", () => {
+  it("uses pinned discovery plus independent row-level recognition authorities without turning any into factual providers", () => {
     expect(FOOTBALL_STAGE12_RECOGNITION_EVIDENCE_SOURCE).toEqual(expect.objectContaining({
+      provider: "ncaafb",
       repository: "lebebr01/ncaafb",
       commit: "21f8bf9070e95e6aa561d7b6d7d4a1c956f4cfd8",
       license: "CC0",
+      role: expect.stringContaining("discovery only"),
     }));
-    expect(footballRecognitionEvidenceRecords.some((record) => record.sourceProvider === "ncaafb")).toBe(true);
+    expect(FOOTBALL_STAGE12_RECOGNITION_EVIDENCE_SOURCES.map(({ provider }) => provider))
+      .toEqual(expect.arrayContaining(["ncaafb", "sports-reference", "official-cfb-awards", "nfl-honors"]));
+    expect(new Set(footballRecognitionEvidenceRecords.map(({ sourceProvider }) => sourceProvider)))
+      .toEqual(expect.objectContaining(new Set(["sports-reference", "official-cfb-awards", "nfl-honors", "octagon-hq"])));
     expect(footballRecognitionEvidenceRecords.every((record) => !("facts" in record))).toBe(true);
   });
 
-  it("gives NFL and CFB the same nine real player-pool families", () => {
+  it("gives NFL and CFB the same ten real player-pool families", () => {
     const positions = ["QB", "RB", "WR", "TE", "OL", "DL", "LB", "DB", "K", "P"] as const;
     for (const league of ["NFL", "CFB"] as const) {
       for (const position of positions) expect(playerPool(league, position).length).toBeGreaterThan(0);
@@ -50,21 +56,24 @@ describe("Football Stage 12 recognizability universe", () => {
       .toEqual(expect.arrayContaining(["Roberto Aguayo", "Michael Dickson"]));
   });
 
-  it("materially deepens the weakest CFB A-C pools without an arbitrary total-player quota", () => {
-    expect(playerPool("CFB", "TE").length).toBeGreaterThanOrEqual(18);
-    expect(playerPool("CFB", "OL").length).toBeGreaterThanOrEqual(12);
-    expect(playerPool("CFB", "DL").length).toBeGreaterThanOrEqual(28);
-    expect(playerPool("CFB", "LB").length).toBeGreaterThanOrEqual(27);
-    expect(playerPool("CFB", "DB").length).toBeGreaterThanOrEqual(25);
-    expect(playerPool("CFB", "K").length + playerPool("CFB", "P").length).toBeGreaterThanOrEqual(9);
+  it("protects the final CFB A-C universe with material position-level health floors instead of one arbitrary total quota", () => {
+    expect(playerPool("CFB", "QB").length).toBeGreaterThanOrEqual(60);
+    expect(playerPool("CFB", "RB").length).toBeGreaterThanOrEqual(70);
+    expect(playerPool("CFB", "WR").length).toBeGreaterThanOrEqual(55);
+    expect(playerPool("CFB", "TE").length).toBeGreaterThanOrEqual(30);
+    expect(playerPool("CFB", "OL").length).toBeGreaterThanOrEqual(50);
+    expect(playerPool("CFB", "DL").length).toBeGreaterThanOrEqual(45);
+    expect(playerPool("CFB", "LB").length).toBeGreaterThanOrEqual(45);
+    expect(playerPool("CFB", "DB").length).toBeGreaterThanOrEqual(45);
+    expect(playerPool("CFB", "K").length + playerPool("CFB", "P").length).toBeGreaterThanOrEqual(25);
   });
 
   it("repairs NFL OL and specialist recognition instead of pretending production stats cover every position", () => {
     expect(names(playerPool("NFL", "OL"))).toEqual(expect.arrayContaining(["Joe Thomas", "Trent Williams", "Jason Kelce", "Zack Martin"]));
-    expect(playerPool("NFL", "OL").length).toBeGreaterThanOrEqual(10);
+    expect(playerPool("NFL", "OL").length).toBeGreaterThanOrEqual(25);
     expect(names([...playerPool("NFL", "K"), ...playerPool("NFL", "P")]))
       .toEqual(expect.arrayContaining(["Adam Vinatieri", "Justin Tucker", "Shane Lechler", "Pat McAfee"]));
-    expect(playerPool("NFL", "K").length + playerPool("NFL", "P").length).toBeGreaterThanOrEqual(10);
+    expect(playerPool("NFL", "K").length + playerPool("NFL", "P").length).toBeGreaterThanOrEqual(14);
   });
 
   it("keeps NFL and CFB careers distinct even for the same person", () => {
