@@ -22,6 +22,11 @@ describe("Football Knowledge Ledger Stage 13.5 human audit", () => {
     expect(footballLedgerAudit.rosterReview.length).toBeGreaterThan(100);
     expect(footballLedgerAudit.highPriorityFactGaps.length).toBeGreaterThanOrEqual(0);
     expect(footballLedgerAudit.allMaterialFactGaps.length).toBeGreaterThanOrEqual(0);
+    expect(
+      footballLedgerAudit.sourceEraFactGaps.length
+      + footballLedgerAudit.inSourceWindowFactGaps.length
+      + footballLedgerAudit.unknownCareerWindowFactGaps.length,
+    ).toBe(footballLedgerAudit.allMaterialFactGaps.length);
     console.log("FOOTBALL_LEDGER_AUDIT_SUMMARY", JSON.stringify({
       playerCount: footballLedgerAudit.playerCount,
       statusCounts: footballLedgerAudit.statusCounts,
@@ -30,6 +35,7 @@ describe("Football Knowledge Ledger Stage 13.5 human audit", () => {
       materialFactGapCount: footballLedgerAudit.allMaterialFactGaps.length,
       sourceEraMaterialGapCount: footballLedgerAudit.sourceEraFactGaps.length,
       inSourceWindowMaterialGapCount: footballLedgerAudit.inSourceWindowFactGaps.length,
+      unknownCareerWindowMaterialGapCount: footballLedgerAudit.unknownCareerWindowFactGaps.length,
       inSourceWindowMaterialFactGaps: footballLedgerAudit.inSourceWindowFactGaps.map((row) => ({
         id: row.subjectId,
         name: row.name,
@@ -38,6 +44,16 @@ describe("Football Knowledge Ledger Stage 13.5 human audit", () => {
         tier: row.tier,
         startSeason: row.startSeason,
         endSeason: row.endSeason,
+        facts: row.numericFactCount,
+        coreFacts: row.coreFactCount,
+        missing: row.missing,
+      })),
+      unknownCareerWindowMaterialFactGaps: footballLedgerAudit.unknownCareerWindowFactGaps.slice(0, 80).map((row) => ({
+        id: row.subjectId,
+        name: row.name,
+        league: row.league,
+        pool: row.pool,
+        tier: row.tier,
         facts: row.numericFactCount,
         coreFacts: row.coreFactCount,
         missing: row.missing,
