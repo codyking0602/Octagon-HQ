@@ -97,6 +97,14 @@ describe("canonical Football universe", () => {
     expect(projectedCfbCam).toHaveLength(1);
     expect(projectedNflCam).toHaveLength(1);
     expect(projectedCfbCam[0]!.id).not.toBe(projectedNflCam[0]!.id);
+
+    const cfbCarroll = getFootballSubject("pete-carroll-cfb");
+    const nflCarroll = getFootballSubject("pete-carroll");
+    expect(cfbCarroll).toMatchObject({ id: "pete-carroll-cfb", name: "Pete Carroll", kind: "coach", league: "CFB" });
+    expect(nflCarroll).toMatchObject({ id: "pete-carroll", name: "Pete Carroll", kind: "coach", league: "NFL" });
+    expect(cfbCarroll).not.toBe(nflCarroll);
+    expect(queryFootballSubjects({ kind: "coach", league: "CFB" }).map(({ id }) => id)).toContain("pete-carroll-cfb");
+    expect(queryFootballSubjects({ kind: "coach", league: "NFL" }).map(({ id }) => id)).toContain("pete-carroll");
   });
 
   it("retains every compatibility-game subject unchanged inside the larger ledger", () => {
