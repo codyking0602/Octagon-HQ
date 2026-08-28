@@ -23,13 +23,13 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
       - run: npm ci --silent --no-audit --no-fund
-      - name: Reapply proven repair
+      - name: Reapply canonical repair proven green
         run: |
           python - <<'PY'
           import subprocess
           from pathlib import Path
           workflow = Path('.github/workflows/temp-stage13-final-repair.yml').read_text()
-          marker = '      - name: Apply remaining canonical Stage 13 closure\n'
+          marker = '      - name: Apply canonical Stage 13 closure\n'
           start = workflow.index(marker)
           start = workflow.index('        run: |\n', start) + len('        run: |\n')
           end = workflow.index('\n      - name: Regenerate Stage 13 artifacts', start)
@@ -39,13 +39,14 @@ jobs:
           PY
       - name: Regenerate Stage 13 artifacts
         run: npm run generate:football-factual-universe
-      - name: Revalidate proven closures
+      - name: Revalidate canonical closure
         run: npx vitest run src/features/back-room/footballFactualUniverse.test.ts src/features/back-room/footballFactualStats.test.ts src/features/back-room/footballGenerationMaturity.test.ts
-      - name: Persist repair
+      - name: Persist repair and remove temporary scaffolding
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add package.json scripts/generate-football-factual-universe.mjs src/features/back-room/footballFactualUniverse.test.ts src/features/back-room/footballComparisonGeneration.ts
+          git rm -f .github/workflows/temp-stage13-force-commit.yml .github/workflows/temp-stage13-final-repair.yml .github/workflows/temp-stage13-close-pr.yml scripts/stage13-close-pr.mjs
+          git add scripts/generate-football-factual-universe.mjs src/features/back-room/footballComparisonGeneration.ts
           git add -f data/generated/football/factual-universe-projection.json data/generated/football/factual-coverage-matrix.json
           git commit -m 'fix: close Stage 13 canonical factual gaps'
           git push origin HEAD:feat/football-ledger-stage13-factual-universe
