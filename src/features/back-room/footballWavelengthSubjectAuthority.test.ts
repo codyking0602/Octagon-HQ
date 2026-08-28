@@ -10,16 +10,27 @@ function clue(category: string, text: string) {
 }
 
 describe("Football Wavelength canonical subject authority", () => {
-  it("resolves exact canonical entity clues through the shared Football subject owner", () => {
-    const canonicalByName = new Map(footballSubjects.map((subject) => [subject.name, subject]));
-    const exactEntityClues = footballWavelengthClues.filter((row) => canonicalByName.has(row.text));
+  it("resolves exact unambiguous canonical entity clues through the shared Football subject owner", () => {
+    const subjectsByName = new Map<string, typeof footballSubjects[number][]>();
+    for (const subject of footballSubjects) {
+      const values = subjectsByName.get(subject.name) ?? [];
+      values.push(subject);
+      subjectsByName.set(subject.name, values);
+    }
+    const exactEntityClues = footballWavelengthClues.filter((row) => subjectsByName.get(row.text)?.length === 1);
 
     expect(exactEntityClues.length).toBeGreaterThan(75);
     for (const row of exactEntityClues) {
       expect(footballWavelengthCanonicalSubjectForClue(row)?.id, `${row.category}:${row.text}`).toBe(
-        canonicalByName.get(row.text)!.id,
+        subjectsByName.get(row.text)![0]!.id,
       );
     }
+  });
+
+  it("does not collapse league-ambiguous career names back into one identity", () => {
+    expect(footballSubjects.filter((subject) => subject.name === "Urban Meyer").map(({ league }) => league).sort())
+      .toEqual(["CFB", "NFL"]);
+    expect(footballWavelengthCanonicalSubjectForClue(clue("COACHING CHAOS", "Urban Meyer"))).toBeNull();
   });
 
   it("collapses category-local aliases onto one canonical subject identity", () => {
