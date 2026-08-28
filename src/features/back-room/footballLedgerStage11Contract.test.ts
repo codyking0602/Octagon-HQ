@@ -45,12 +45,12 @@ describe("Football Ledger Stage 11 census/stat contract", () => {
     expect(audit).toContain("Mark Andrews");
   });
 
-  it("locks the revised 19-stage roadmap and makes factual hydration the next owner", () => {
+  it("locks the revised 19-stage roadmap with completed factual hydration", () => {
     const roadmap = fs.readFileSync("docs/football-knowledge-ledger.md", "utf8");
     expect(roadmap).toContain("roadmap is now **19 stages**");
     expect(roadmap).toContain("Stage 11 — Full Ledger Census + Stat Contracts");
     expect(roadmap).toContain("Stage 12 — Recognizability Universe — COMPLETE — PR #721");
-    expect(roadmap).toContain("Stage 13 — Factual Universe — NEXT");
+    expect(roadmap).toContain("Stage 13 — Factual Universe — COMPLETE — PR #723");
     expect(roadmap).toContain("Stage 14 — Ranking Philosophy + Scoring Architecture");
     expect(roadmap).toContain("Stage 15 — NFL Ranking Models");
     expect(roadmap).toContain("Stage 16 — CFB Ranking Models");
