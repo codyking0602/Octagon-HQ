@@ -1,5 +1,6 @@
 import type { FootballCanonicalSubject } from "./footballFactualStatsCatalog";
 import { footballRecognitionProjectionFor } from "./footballRecognizabilityProjection";
+import { applyFootballHistoricalRecognitionPolicy } from "./footballRecognitionHistoricalPolicy";
 
 export type FootballRecognizabilityTier = "A" | "B" | "C" | "D";
 
@@ -55,17 +56,23 @@ export function buildFootballSubjectKnowledgeMetadata(
   subject: FootballCanonicalSubject,
   override: FootballSubjectKnowledgeOverride = {},
 ): FootballSubjectKnowledgeMetadata {
+  if (override.recognizabilityTier === "D" && override.casualEligible === true) {
+    throw new Error(`Database-only Football subject ${subject.id} cannot be casual-eligible.`);
+  }
+
   const projection = footballRecognitionProjectionFor(subject);
-  const recognizabilityTier = override.recognizabilityTier ?? projection?.tier ?? conservativeCanonicalTier(subject);
-  const casualEligible = override.casualEligible ?? recognizabilityTier !== "D";
+  const proposedTier = override.recognizabilityTier ?? projection?.tier ?? conservativeCanonicalTier(subject);
+  const recognizabilityTier = applyFootballHistoricalRecognitionPolicy(
+    subject.id,
+    subject.league,
+    subject.endSeason ?? subject.season,
+    proposedTier,
+  );
+  const casualEligible = recognizabilityTier === "D" ? false : (override.casualEligible ?? true);
   const sourceIdentityKeys = override.sourceIdentityKeys ?? [
     { provider: "octagon-hq", id: subject.id } as const,
     ...(projection ? [projection.sourceIdentityKey] : []),
   ];
-
-  if (recognizabilityTier === "D" && casualEligible) {
-    throw new Error(`Database-only Football subject ${subject.id} cannot be casual-eligible.`);
-  }
 
   return { recognizabilityTier, casualEligible, sourceIdentityKeys };
 }
