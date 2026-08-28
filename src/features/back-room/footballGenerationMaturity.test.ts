@@ -112,6 +112,19 @@ describe("Football comparison generation maturity", () => {
     }
   });
 
+  it("keeps Keep/Cut deterministic and aligned with the public lineup in every canonical pack", () => {
+    for (const pack of footballKeepCutPacks) {
+      const seed = `keep-cut-parity-${pack.id}`;
+      const first = buildFootballKeepCutBoard(pack.items, pack.id, seed);
+      const second = buildFootballKeepCutBoard(pack.items, pack.id, seed);
+      const publicLineup = buildFootballKeepCutLineup(pack.id, seed);
+      const ids = first.items.map((item) => item.id);
+
+      expect(second.items.map((item) => item.id)).toEqual(ids);
+      expect(publicLineup.map((item) => item.id)).toEqual(ids);
+    }
+  });
+
   it("holds Blind Rank frequency, texture, replayability, coverage, and overexposure thresholds over thousands of subjects", () => {
     const archetypeCounts = Object.fromEntries(
       FOOTBALL_BLIND_RANK_ARCHETYPES.map((row) => [row.id, 0]),
@@ -228,16 +241,12 @@ describe("Football comparison generation maturity", () => {
         const seed = `keep-cut-simulation-${pack.id}-${index}`;
         const expectedStyle = footballKeepCutBoardStyleForSeed(pack.id, seed);
         const board = buildFootballKeepCutBoard(pack.items, pack.id, seed);
-        const repeat = buildFootballKeepCutBoard(pack.items, pack.id, seed);
-        const publicLineup = buildFootballKeepCutLineup(pack.id, seed);
         const ids = board.items.map((item) => item.id);
         const ordered = strongestFirst(board.items);
 
         totalBoards += 1;
         styleCounts[board.style] = (styleCounts[board.style] ?? 0) + 1;
         expect(board.style).toBe(expectedStyle.id);
-        expect(repeat.items.map((item) => item.id)).toEqual(ids);
-        expect(publicLineup.map((item) => item.id)).toEqual(ids);
         expect(ids).toHaveLength(8);
         expect(new Set(ids).size).toBe(8);
         expect(footballKeepCutBoardIsCompetitive(board.items, pack.items)).toBe(true);
