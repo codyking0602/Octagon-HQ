@@ -26,6 +26,13 @@ describe("Football Knowledge Ledger Stage 13.5 human audit", () => {
     expect(chaseYoung?.sourceCoverage).toBe("inside-normalized-player-source");
   });
 
+  it("lets known career timing override modern factual provenance for pre-source CFB careers", () => {
+    const chrisLong = footballLedgerAudit.players.find((row) => row.subjectId === "cfb-chris-long");
+    expect(chrisLong).toBeDefined();
+    expect(chrisLong?.draftYear).toBeLessThanOrEqual(2014);
+    expect(chrisLong?.sourceCoverage).toBe("before-normalized-player-source");
+  });
+
   it("keeps the human review queues deterministic and visible", () => {
     expect(footballLedgerAudit.rosterReview.length).toBeGreaterThan(100);
     expect(footballLedgerAudit.highPriorityFactGaps.length).toBeGreaterThanOrEqual(0);
