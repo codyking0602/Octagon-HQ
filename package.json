@@ -15,9 +15,10 @@
     "generate:football-cfb-player-seasons": "node scripts/generate-football-cfb-player-season-recognition.mjs",
     "generate:football-factual-universe": "node scripts/generate-football-factual-universe.mjs",
     "generate:football-ledger-audit": "node scripts/generate-football-ledger-audit.mjs",
-    "pretypecheck": "npm run generate:football-cfb-player-seasons && npm run generate:football-factual-universe && npm run generate:football-ledger-audit",
+    "verify:football-ledger-audit": "node scripts/verify-football-ledger-audit-artifact.mjs",
+    "pretypecheck": "npm run generate:football-cfb-player-seasons && npm run generate:football-factual-universe && npm run generate:football-ledger-audit && npm run verify:football-ledger-audit",
     "typecheck": "tsc --noEmit",
-    "pretest": "npm run generate:football-cfb-player-seasons && npm run generate:football-factual-universe && npm run generate:football-ledger-audit",
+    "pretest": "npm run generate:football-cfb-player-seasons && npm run generate:football-factual-universe && npm run generate:football-ledger-audit && npm run verify:football-ledger-audit",
     "test": "vitest run",
     "verify:artifact": "node scripts/verify-production-artifact.mjs",
     "export:verdict": "node scripts/export-octagon-verdict.mjs"
