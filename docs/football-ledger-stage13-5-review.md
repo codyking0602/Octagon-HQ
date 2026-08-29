@@ -17,7 +17,7 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 | OL | 59 | 15 | 42 | 2 | 59 | 0 | 0 | 0 | 0 | 0 |
 | DL / EDGE | 322 | 7 | 41 | 274 | 294 | 28 | 0 | 28 | 0 | 0 |
 | LB | 240 | 5 | 38 | 197 | 219 | 21 | 0 | 21 | 0 | 0 |
-| Secondary | 417 | 9 | 49 | 359 | 391 | 26 | 0 | 26 | 0 | 0 |
+| Secondary | 417 | 9 | 49 | 359 | 415 | 2 | 0 | 2 | 0 | 0 |
 | K / P | 19 | 6 | 12 | 1 | 19 | 0 | 0 | 0 | 0 | 0 |
 | Player seasons | 764 | 107 | 318 | 339 | 764 | 0 | 0 | 0 | 0 | 0 |
 | Team seasons | 113 | 4 | 37 | 72 | 113 | 0 | 0 | 0 | 0 | 0 |
@@ -577,29 +577,5 @@ None.
 - NFL Notable games / misc: **2025 Rams at Seahawks — Week 16 overtime comeback** — C, Partial; missing game final score, game context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Notable games / misc: **Super Bowl LIX — Chiefs vs Eagles** — C, Partial; missing game final score, game context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Notable games / misc: **Super Bowl LX — Seahawks vs Patriots** — C, Partial; missing game final score, game context; source limits: normalized NFL relationship coverage begins in 1999.
-- NFL Secondary: **Dick 'Night Train' Lane** — A, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL Secondary: **Emlen Tunnell** — A, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL Secondary: **Cliff Harris** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL Secondary: **Darrell Green** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats cover only part of this career/season; normalized NFL player production begins in 1999.
-- NFL Secondary: **Dick LeBeau** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL Secondary: **Donnie Shell** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL Secondary: **Emmitt Thomas** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL Secondary: **Eric Allen** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats cover only part of this career/season; normalized NFL player production begins in 1999.
-- NFL Secondary: **Herb Adderley** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL Secondary: **Jimmy Johnson** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL Secondary: **Johnny Robinson** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL Secondary: **Ken Houston** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL Secondary: **Ken Riley** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL Secondary: **Kenny Easley** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL Secondary: **Larry Wilson** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL Secondary: **Lem Barney** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL Secondary: **LeRoy Butler** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats cover only part of this career/season; normalized NFL player production begins in 1999.
-- NFL Secondary: **Mel Blount** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL Secondary: **Mel Renfro** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL Secondary: **Mike Haynes** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL Secondary: **Paul Krause** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL Secondary: **Roger Wehrli** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL Secondary: **Steve Atwater** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats cover only part of this career/season; normalized NFL player production begins in 1999.
-- NFL Secondary: **Willie Brown** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL Secondary: **Willie Wood** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL Secondary: **Morris Claiborne** — C, Partial; missing secondary interception/PBU/tackle facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized NFL player production begins in 1999.
