@@ -240,6 +240,20 @@ wr("nfl-steve-largent", 819, 13089, 100),
   wr("jimmy-graham", 719, 8545, 89),
   wr("vernon-davis", 583, 7562, 63),
 
+  record("nfl-bart-starr", "nfl-player-career", "pfr-career-stat-lines", [["nfl-career-passing-yards", 24718], ["nfl-career-passing-touchdowns", 152], ["nfl-career-interceptions-thrown", 138]]),
+  record("nfl-bobby-layne", "nfl-player-career", "pfr-career-stat-lines", [["nfl-career-passing-yards", 26768], ["nfl-career-passing-touchdowns", 196], ["nfl-career-interceptions-thrown", 243]]),
+  record("nfl-fran-tarkenton", "nfl-player-career", "pfr-career-stat-lines", [["nfl-career-passing-yards", 47003], ["nfl-career-passing-touchdowns", 342], ["nfl-career-interceptions-thrown", 266]]),
+  record("nfl-jim-kelly", "nfl-player-career", "pfr-career-stat-lines", [["nfl-career-passing-yards", 35467], ["nfl-career-passing-touchdowns", 237], ["nfl-career-interceptions-thrown", 175]]),
+  record("nfl-otto-graham", "nfl-player-career", "pfr-career-stat-lines", [["nfl-career-passing-yards", 23584], ["nfl-career-passing-touchdowns", 174], ["nfl-career-interceptions-thrown", 135]]),
+  record("nfl-roger-staubach", "nfl-player-career", "pfr-career-stat-lines", [["nfl-career-passing-yards", 22700], ["nfl-career-passing-touchdowns", 153], ["nfl-career-interceptions-thrown", 109]]),
+  record("nfl-sammy-baugh", "nfl-player-career", "pfr-career-stat-lines", [["nfl-career-passing-yards", 21886], ["nfl-career-passing-touchdowns", 187], ["nfl-career-interceptions-thrown", 203]]),
+  record("nfl-sid-luckman", "nfl-player-career", "pfr-career-stat-lines", [["nfl-career-passing-yards", 14686], ["nfl-career-passing-touchdowns", 137], ["nfl-career-interceptions-thrown", 132]]),
+  record("nfl-terry-bradshaw", "nfl-player-career", "pfr-career-stat-lines", [["nfl-career-passing-yards", 27989], ["nfl-career-passing-touchdowns", 212], ["nfl-career-interceptions-thrown", 210]]),
+  record("nfl-y-a-tittle", "nfl-player-career", "pfr-career-stat-lines", [["nfl-career-passing-yards", 33070], ["nfl-career-passing-touchdowns", 242], ["nfl-career-interceptions-thrown", 248]]),
+  record("nfl-boomer-esiason", "nfl-player-career", "pfr-career-stat-lines", [["nfl-career-passing-yards", 37920], ["nfl-career-passing-touchdowns", 247], ["nfl-career-interceptions-thrown", 184]]),
+  record("nfl-george-blanda", "nfl-player-career", "pfr-career-stat-lines", [["nfl-career-passing-yards", 26920], ["nfl-career-passing-touchdowns", 236], ["nfl-career-interceptions-thrown", 277]]),
+  record("nfl-joe-theismann", "nfl-player-career", "pfr-career-stat-lines", [["nfl-career-passing-yards", 25206], ["nfl-career-passing-touchdowns", 160], ["nfl-career-interceptions-thrown", 138]]),
+
   // NFL defenders: use position-appropriate objective production and award counts.
   defender("lawrence-taylor", [
     ["nfl-career-sacks", 132.5],
