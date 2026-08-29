@@ -42,7 +42,7 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 | Player seasons | 316 | 12 | 25 | 279 | 316 | 0 | 0 | 0 | 0 | 0 |
 | Team seasons | 132 | 6 | 42 | 84 | 132 | 0 | 0 | 0 | 0 | 0 |
 | Franchises / programs | 106 | 5 | 13 | 88 | 101 | 5 | 0 | 10 | 0 | 0 |
-| Head coaches | 53 | 14 | 32 | 7 | 49 | 4 | 0 | 8 | 0 | 0 |
+| Head coaches | 53 | 14 | 32 | 7 | 53 | 0 | 0 | 0 | 0 | 0 |
 | Eras / dynasties | 71 | 19 | 24 | 28 | 42 | 29 | 0 | 29 | 0 | 0 |
 | Notable games / misc | 87 | 32 | 47 | 8 | 0 | 87 | 0 | 174 | 0 | 0 |
 
@@ -116,10 +116,6 @@ None.
 - CFB Franchises / programs: **Appalachian State** — C, Partial; missing organization results, organization postseason/championship context; source limits: normalized CFB relationship coverage begins in 2002.
 - CFB Franchises / programs: **FAU** — C, Partial; missing organization results, organization postseason/championship context; source limits: normalized CFB relationship coverage begins in 2002.
 - CFB Franchises / programs: **Louisiana-Monroe** — C, Partial; missing organization results, organization postseason/championship context; source limits: normalized CFB relationship coverage begins in 2002.
-- CFB Head coaches: **Barry Switzer** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: CFB relationship results do not reach this subject's historical window; normalized CFB relationship coverage begins in 2002.
-- CFB Head coaches: **Bear Bryant** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: CFB relationship results do not reach this subject's historical window; normalized CFB relationship coverage begins in 2002.
-- CFB Head coaches: **Tom Osborne** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: CFB relationship results do not reach this subject's historical window; normalized CFB relationship coverage begins in 2002.
-- CFB Head coaches: **Woody Hayes** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: CFB relationship results do not reach this subject's historical window; normalized CFB relationship coverage begins in 2002.
 - CFB K / P: **Dan Bailey** — B, Partial; missing specialist kicking/punting facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB K / P: **Daniel Sepulveda** — B, Partial; missing specialist kicking/punting facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB K / P: **Mason Crosby** — B, Partial; missing specialist kicking/punting facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
