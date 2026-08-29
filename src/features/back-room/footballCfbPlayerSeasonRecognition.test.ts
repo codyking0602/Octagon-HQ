@@ -34,7 +34,7 @@ describe("Stage 13.5 CFB player-season recognition", () => {
 
     const positions = new Set(footballCfbPlayerSeasonRecognitionRecords.map((record) => record.position));
     for (const position of ["QB", "RB", "WR", "TE"] as const) expect(positions.has(position)).toBe(true);
-    expect(["DL", "LB", "DB"].some((position) => positions.has(position))).toBe(true);
+    expect((["DL", "LB", "DB"] as const).some((position) => positions.has(position))).toBe(true);
   });
 
   it("preserves every reviewed iconic Heisman season as Tier A through 2025", () => {
