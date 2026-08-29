@@ -38,7 +38,25 @@ export const footballFactualUniverseSources: readonly FootballFactSource[] = [
   },
 ] as const;
 
-const projectedSourceRecords = factualProjectionJson.records as unknown as readonly FootballFactualRecord[];
+const footballProgramEraSeedById = new Map(footballProgramEraSeeds.map((seed) => [seed.id, seed]));
+const rawProjectedSourceRecords = factualProjectionJson.records as unknown as readonly FootballFactualRecord[];
+const projectedSourceRecords: readonly FootballFactualRecord[] = rawProjectedSourceRecords
+  .map((record) => {
+    if (record.scope !== "cfb-program-era") return record;
+    const seed = footballProgramEraSeedById.get(record.subjectId);
+    if (!seed) return record;
+
+    // The relationship corpus starts in 2002. NCAA championship history therefore owns title counts for every reviewed era,
+    // while relationship W/L survives only when the source covers the era from its first season.
+    const facts = record.facts.filter((fact) => {
+      if (fact.metricId === "cfb-era-national-titles") return false;
+      if (seed.startSeason < 2002 && (fact.metricId === "cfb-era-wins" || fact.metricId === "cfb-era-losses")) return false;
+      return true;
+    });
+    return { ...record, facts };
+  })
+  .filter((record) => record.facts.length > 0);
+
 const footballProgramEraProjectedRecords: readonly FootballFactualRecord[] = footballProgramEraSeeds.map((seed) => ({
   subjectId: seed.id,
   scope: "cfb-program-era",
