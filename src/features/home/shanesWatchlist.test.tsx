@@ -180,7 +180,7 @@ describe("Shane's ranked watchlist", () => {
     expect(within(dialog).getByText(/ended the fight with a clean right hand at 2:28 of Round 2/i)).toBeInTheDocument();
     expect(within(dialog).getByText("1–0")).toBeInTheDocument();
     expect(within(dialog).getByText("UFC RECORD")).toBeInTheDocument();
-    expect(within(dialog).getByText("1", { selector: ".watchlist-scouting-card__stats strong" })).toBeInTheDocument();
+    expect(within(dialog).getAllByText("1", { selector: ".watchlist-scouting-card__stats strong" })).toHaveLength(2);
     expect(within(dialog).queryByText("PRO RECORD")).not.toBeInTheDocument();
     expect(within(dialog).getByRole("link", { name: "WATCH FIGHT HIGHLIGHT ↗" })).toHaveAttribute(
       "href",
