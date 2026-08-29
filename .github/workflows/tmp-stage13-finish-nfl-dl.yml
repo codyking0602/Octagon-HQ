@@ -1,0 +1,83 @@
+name: Temporary Stage 13 Finish NFL DL
+
+on:
+  push:
+    branches:
+      - stage13-6-finish-nfl-dl
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci --silent --no-audit --no-fund
+      - name: Hydrate historical NFL DL facts
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('src/features/back-room/footballFactualStatsExpansion.ts')
+          text = path.read_text()
+          text = text.replace(
+              'coverage: "Completed NFL defensive careers, including sacks, interceptions and major award counts",',
+              'coverage: "Completed NFL defensive careers; sacks before 1982 use Pro Football Reference retrospective unofficial totals, while later sacks and other listed defensive facts use the source\'s reported career records",'
+          )
+          marker = '  // NFL player seasons retained here are the currently enabled compatibility pool; PR3 owns expansion/rebalance.\n'
+          records = [
+              ('nfl-alan-page', 148.5),
+              ('nfl-deacon-jones', 173.5),
+              ('nfl-joe-greene', 77.5),
+              ('nfl-alex-karras', 100.0),
+              ('nfl-bob-lilly', 95.5),
+              ('nfl-carl-eller', 133.5),
+              ('nfl-charles-haley', 100.5),
+              ('nfl-chris-doleman', 150.5),
+              ('nfl-claude-humphrey', 130.0),
+              ('nfl-cortez-kennedy', 58.0),
+              ('nfl-curley-culp', 68.5),
+              ('nfl-dan-hampton', 82.0),
+              ('nfl-elvin-bethea', 105.0),
+              ('nfl-fred-dean', 92.0),
+              ('nfl-howie-long', 91.5),
+              ('nfl-jack-youngblood', 151.5),
+              ('nfl-joe-klecko', 78.0),
+              ('nfl-john-randle', 137.5),
+              ('nfl-buck-buchanan', 70.5),
+              ('nfl-kevin-greene', 160.0),
+              ('nfl-lee-roy-selmon', 78.5),
+              ('nfl-merlin-olsen', 91.0),
+              ('nfl-randy-white', 111.0),
+              ('nfl-richard-dent', 137.5),
+              ('nfl-steve-mcmichael', 95.0),
+              ('nfl-dion-jordan', 13.5),
+              ('nfl-mean-joe-greene', 77.5),
+              ('nfl-vernon-gholston', 0.0),
+          ]
+          rows = ''.join(
+              f'  defender("{sid}", [["nfl-career-sacks", {sacks}]]),\n'
+              for sid, sacks in records
+          ) + '\n'
+          if 'defender("nfl-alan-page"' not in text:
+              text = text.replace(marker, rows + marker, 1)
+          path.write_text(text)
+          PY
+      - run: npm run generate:football-cfb-player-seasons && npm run generate:football-factual-universe && npm run generate:football-ledger-audit
+      - name: Commit canonical source, generated audit, and self-clean
+        run: |
+          rm .github/workflows/tmp-stage13-finish-nfl-dl.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/features/back-room/footballFactualStatsExpansion.ts docs/football-ledger-stage13-5-review.md .github/workflows/tmp-stage13-finish-nfl-dl.yml
+          git commit -m 'Finish Stage 13.6 NFL DL factual hydration'
+          git push origin HEAD:stage13-6-finish-nfl-dl
