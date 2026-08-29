@@ -31,10 +31,8 @@ describe("Football Stage 14 ranking framework", () => {
   it("scores against fixed anchors rather than the current candidate pool", () => {
     const anchors = [10, 20, 30, 40, 50];
     const baseline = scoreFootballAnchoredValue(35, anchors);
-    const unrelatedCandidates = [-1000, 0, 9999, 10000];
     expect(scoreFootballAnchoredValue(35, anchors)).toBe(baseline);
     expect(scoreFootballAnchoredValue(35, [...anchors])).toBe(baseline);
-    expect(unrelatedCandidates).toHaveLength(4);
   });
 
   it("keeps lower-is-better anchors deterministic", () => {
@@ -42,13 +40,14 @@ describe("Football Stage 14 ranking framework", () => {
       .toBeGreaterThan(scoreFootballAnchoredValue(20, [5, 10, 15, 20], "lower"));
   });
 
-  it("reports sparse evidence as low-confidence instead of hiding missing dimensions", () => {
+  it("keeps missing dimensions neutral and marks sparse evidence low-confidence", () => {
     const sparse = rateFootballRankingEvidence("career-greatness", [
       { dimension: "peak", score: 0.95 },
     ]);
     expect(sparse.status).toBe("low-confidence");
     expect(sparse.coverage).toBeCloseTo(0.30);
     expect(sparse.confidence).toBeCloseTo(0.30);
+    expect(sparse.score).toBeCloseTo(0.635);
 
     const fuller = rateFootballRankingEvidence("career-greatness", [
       { dimension: "peak", score: 0.95 },
@@ -58,6 +57,16 @@ describe("Football Stage 14 ranking framework", () => {
     expect(fuller.status).toBe("rated");
     expect(fuller.coverage).toBeCloseTo(0.70);
     expect(fuller.confidence).toBeGreaterThan(sparse.confidence);
+    expect(fuller.score).toBeGreaterThan(sparse.score);
+  });
+
+  it("supports weighted signals inside a shared greatness dimension", () => {
+    const result = rateFootballRankingEvidence("career-greatness", [
+      { dimension: "peak", score: 1, weight: 3 },
+      { dimension: "peak", score: 0, weight: 1 },
+      { dimension: "sustained-excellence", score: 0.5 },
+    ]);
+    expect(result.dimensionScores.peak).toBeCloseTo(0.75);
   });
 
   it("supports bounded era/position context adjustments without candidate-pool dependence", () => {
