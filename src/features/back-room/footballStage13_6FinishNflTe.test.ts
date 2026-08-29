@@ -3,12 +3,12 @@ import { describe, expect, it } from "vitest";
 import { getFootballFact } from "./footballFactualStats";
 import { footballLedgerAudit } from "./footballLedgerAudit";
 
-const HISTORICAL_TIGHT_ENDS = [
-  "nfl-john-mackey",
-  "nfl-charlie-sanders",
-  "nfl-dave-casper",
-  "nfl-jackie-smith",
-  "mike-ditka",
+const HISTORICAL_TIGHT_END_NAMES = [
+  "John Mackey",
+  "Charlie Sanders",
+  "Dave Casper",
+  "Jackie Smith",
+  "Mike Ditka",
 ] as const;
 
 describe("Football Ledger Stage 13.6 NFL TE factual hydration", () => {
@@ -19,9 +19,9 @@ describe("Football Ledger Stage 13.6 NFL TE factual hydration", () => {
     expect(getFootballFact("nfl-jackie-smith", "nfl-career-receiving-yards")?.fact.value).toBe(7918);
     expect(getFootballFact("mike-ditka", "nfl-career-receptions")?.fact.value).toBe(427);
 
-    for (const subjectId of HISTORICAL_TIGHT_ENDS) {
-      const row = footballLedgerAudit.rows.find((candidate) => candidate.subjectId === subjectId);
-      expect(row, subjectId).toBeDefined();
+    for (const name of HISTORICAL_TIGHT_END_NAMES) {
+      const row = footballLedgerAudit.rows.find((candidate) => candidate.league === "NFL" && candidate.name === name);
+      expect(row, name).toBeDefined();
       expect(row?.pool).toBe("TE");
       expect(row?.readiness).toBe("Full");
       expect(row?.missing).toEqual([]);
