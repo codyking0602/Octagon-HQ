@@ -3,18 +3,15 @@ import { describe, expect, it } from "vitest";
 import { getFootballFactualRecord } from "./footballFactualStatsCore";
 import { footballProgramEraSeeds } from "./footballProgramEraSeeds";
 import { footballHistoricalTierIssue } from "./footballRecognitionHistoricalPolicy";
-import { getFootballSubject } from "./footballSubjectRegistry";
+import { getFootballSubject, queryFootballSubjects } from "./footballSubjectRegistry";
 
 const approvedSameCoachSplits = new Set([
   "Oklahoma|Bob Stoops",
   "Texas|Mack Brown",
 ]);
 
-const tierRank = { D: 0, C: 1, B: 2, A: 3 } as const;
-
 describe("Stage 13.5 CFB Program Era recognition", () => {
   it("keeps Program Eras substantial, coach-defined, unique and historically valid", () => {
-    expect(footballProgramEraSeeds.length).toBeGreaterThanOrEqual(40);
     expect(new Set(footballProgramEraSeeds.map((seed) => seed.id)).size).toBe(footballProgramEraSeeds.length);
 
     const bySchoolCoach = new Map<string, string[]>();
@@ -52,6 +49,13 @@ describe("Stage 13.5 CFB Program Era recognition", () => {
     expect(byId.get("georgia-2017-2025")?.eraCoach).toBe("Kirby Smart");
     expect(byId.get("michigan-2015-2023")?.eraCoach).toBe("Jim Harbaugh");
 
+    expect(byId.get("oregon-2009-2012")?.eraCoach).toBe("Chip Kelly");
+    expect(byId.get("oregon-2013-2016")?.eraCoach).toBe("Mark Helfrich");
+    expect(byId.get("ohio-state-2012-2018")?.eraCoach).toBe("Urban Meyer");
+    expect(byId.get("ohio-state-2019-2025")?.eraCoach).toBe("Ryan Day");
+    expect(byId.get("texas-2014-2016")?.tier).toBe("C");
+    expect(byId.get("nebraska-2018-2022")?.tier).toBe("C");
+
     for (const rejectedSplitId of [
       "alabama-2009-2020",
       "alabama-2021-2023",
@@ -66,7 +70,11 @@ describe("Stage 13.5 CFB Program Era recognition", () => {
     }
   });
 
-  it("registers every Program Era at its reviewed recognition tier with NCAA-backed title-count facts", () => {
+  it("registers exactly the reviewed Program Era owner at its reviewed recognition tier", () => {
+    const canonicalEras = queryFootballSubjects({ kind: "program-era", league: "CFB" });
+    expect(canonicalEras.map((subject) => subject.id).sort())
+      .toEqual(footballProgramEraSeeds.map((seed) => seed.id).sort());
+
     for (const seed of footballProgramEraSeeds) {
       const subject = getFootballSubject(seed.id);
       expect(subject, seed.id).not.toBeNull();
@@ -75,8 +83,16 @@ describe("Stage 13.5 CFB Program Era recognition", () => {
       expect(subject?.school, seed.id).toBe(seed.school);
       expect(subject?.startSeason, seed.id).toBe(seed.startSeason);
       expect(subject?.endSeason, seed.id).toBe(seed.endSeason);
-      expect(tierRank[subject!.recognizabilityTier], seed.id).toBeGreaterThanOrEqual(tierRank[seed.tier]);
+      expect(subject?.recognizabilityTier, seed.id).toBe(seed.tier);
+      expect(subject?.casualEligible, seed.id).toBe(true);
 
+      const sourceKeys = subject?.sourceIdentityKeys.map((key) => `${key.provider}:${key.id}`) ?? [];
+      expect(new Set(sourceKeys).size, seed.id).toBe(sourceKeys.length);
+    }
+  });
+
+  it("hydrates every Program Era with NCAA-backed national-title facts", () => {
+    for (const seed of footballProgramEraSeeds) {
       const factual = getFootballFactualRecord(seed.id);
       expect(factual, seed.id).not.toBeNull();
       const titleFact = factual?.facts.find((fact) => fact.metricId === "cfb-era-national-titles");
