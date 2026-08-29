@@ -1,0 +1,27 @@
+name: Temporary Stage 13 Joe Greene Recognition Diagnostic
+
+on:
+  push:
+    branches:
+      - stage13-5-dedupe-joe-greene
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci --silent --no-audit --no-fund
+      - name: Print Joe Greene recognition ownership
+        run: |
+          echo '--- generated projection ---'
+          grep -in -C 2 'joe.greene\|mean joe' data/generated/football/recognizability-projection.json || true
+          echo '--- recognition source files ---'
+          grep -Rin -C 2 --include='*.ts' --include='*.json' 'joe.greene\|mean joe' src/features/back-room data/football data/generated/football | head -200 || true
+          echo '--- projected canonical rows ---'
+          npx tsx -e 'import { footballProjectedPlayerSubjects } from "./src/features/back-room/footballRecognizabilityProjection.ts"; console.log(footballProjectedPlayerSubjects.filter(s => /greene/i.test(s.name) || /joe-greene/i.test(s.id)))'
