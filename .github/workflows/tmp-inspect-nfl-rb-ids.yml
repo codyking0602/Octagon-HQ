@@ -1,0 +1,24 @@
+name: Temporary Inspect NFL RB Identities
+
+on:
+  push:
+    branches:
+      - stage13-6-finish-nfl-rb
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - name: Find canonical RB identities
+        run: |
+          for name in "Bronko Nagurski" "Doak Walker" "Frank Gifford" "Harold Red Grange" "Red Grange" "Jim Thorpe" "O.J. Simpson" "OJ Simpson" "Paul Hornung" "Floyd Little" "Larry Csonka"; do
+            echo "=== $name ==="
+            grep -Rni --exclude='tmp-inspect-nfl-rb-ids.yml' "$name" src data docs | head -20 || true
+          done
