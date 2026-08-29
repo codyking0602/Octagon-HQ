@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { getFootballFact } from "./footballFactualStats";
 import { footballLedgerAudit } from "./footballLedgerAudit";
 
-describe("Football Ledger Stage 13.6 NFL specialist factual hydration", () => {
+describe("Football Ledger Stage 13.6 NFL K/P factual closeout", () => {
   it("closes every NFL K/P factual-readiness gap through the canonical specialist owner", () => {
     expect(getFootballFact("nfl-jan-stenerud", "nfl-career-field-goals-made")?.fact.value).toBe(373);
     expect(getFootballFact("nfl-jan-stenerud", "nfl-career-field-goals-attempted")?.fact.value).toBe(558);
