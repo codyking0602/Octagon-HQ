@@ -20,7 +20,6 @@ describe("Football factual stat owner", () => {
       "nfl-player-season",
       "nfl-team-season",
       "nfl-franchise",
-      "nfl-game",
       "cfb-player-career",
       "cfb-player-season",
       "cfb-team-season",
@@ -28,6 +27,11 @@ describe("Football factual stat owner", () => {
       "cfb-program",
       "cfb-program-era",
     ]));
+
+    // Notable-game membership is recognition-owned. Game facts remain legitimately absent
+    // until Stage 13.6 hydrates reviewed identities from factual source owners.
+    expect(scopes.has("nfl-game")).toBe(false);
+    expect(scopes.has("cfb-game")).toBe(false);
 
     for (const subjectId of recordIds) {
       const subject = getFootballSubject(subjectId);

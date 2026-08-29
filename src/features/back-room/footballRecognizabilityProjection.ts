@@ -1,5 +1,6 @@
 import projectionJson from "../../../data/generated/football/recognizability-projection.json";
 import type { FootballCanonicalSubject, FootballCanonicalPosition } from "./footballFactualStatsCatalog";
+import { footballHistoricalPoolRecognitionRecords } from "./footballHistoricalPoolRecognitionEvidence";
 import { footballHistoricalRecognitionRepairs } from "./footballHistoricalRecognitionRepairs";
 import { footballProHallRecognitionCandidates } from "./footballProHallRecognitionCompletenessEvidence";
 import {
@@ -354,7 +355,7 @@ export function footballNonPlayerRecognitionProjectionFor(
 }
 
 const generatedNewKindRecords = nonPlayerRecords.filter((record) => (
-  (record.kind === "franchise" || record.kind === "game") && record.tier !== "D"
+  record.kind === "franchise" && record.tier !== "D"
 ));
 const evidenceNewKindSubjects = footballRecognitionEvidenceSubjects.filter(
   (subject): subject is FootballEvidenceNewKindSubject => (
@@ -363,10 +364,27 @@ const evidenceNewKindSubjects = footballRecognitionEvidenceSubjects.filter(
 );
 const repairNonPlayerIds = new Set(historicalNonPlayerRepairs.map((repair) => repair.subject.id));
 const evidenceNewKindIds = new Set(evidenceNewKindSubjects.map((subject) => subject.id));
+const historicalPoolRecognitionIds = new Set(
+  footballHistoricalPoolRecognitionRecords.map((record) => record.subject.id),
+);
 function normalizeEvidenceNonPlayerSubject(subject: FootballEvidenceNewKindSubject): FootballProjectedNonPlayerIdentitySubject {
   if (subject.kind === "era") return { ...subject, kind: "program-era" };
   return subject as FootballProjectedNonPlayerIdentitySubject;
 }
+
+const reviewedHistoricalPoolSubjects: readonly FootballProjectedNonPlayerRecognitionSubject[] =
+  footballHistoricalPoolRecognitionRecords
+    .map((record) => ({
+      subject: normalizeEvidenceNonPlayerSubject(record.subject as FootballEvidenceNewKindSubject),
+      tier: applyFootballHistoricalRecognitionPolicy(
+        record.subject.id,
+        record.subject.league,
+        record.subject.endSeason ?? record.subject.season,
+        record.tier,
+      ) as FootballRecognizabilityTier,
+      sourceIdentityKey: record.sourceIdentityKey,
+    }))
+    .filter((row) => row.tier !== "D");
 
 export const footballProjectedNonPlayerRecognitionSubjects: readonly FootballProjectedNonPlayerRecognitionSubject[] = [
   ...generatedNewKindRecords
@@ -377,11 +395,10 @@ export const footballProjectedNonPlayerRecognitionSubjects: readonly FootballPro
       subject: {
         id: record.id,
         name: record.name,
-        kind: record.kind as "franchise" | "game",
+        kind: "franchise" as const,
         league: record.league,
         startSeason: record.startSeason,
         endSeason: record.endSeason,
-        season: record.kind === "game" && record.startSeason === record.endSeason ? record.startSeason : undefined,
         activeDecades: activeDecades(record.startSeason, record.endSeason),
       },
       tier: tier as FootballRecognizabilityTier,
@@ -390,7 +407,7 @@ export const footballProjectedNonPlayerRecognitionSubjects: readonly FootballPro
       } : {}),
     })),
   ...evidenceNewKindSubjects
-    .filter((subject) => !repairNonPlayerIds.has(subject.id))
+    .filter((subject) => !repairNonPlayerIds.has(subject.id) && !historicalPoolRecognitionIds.has(subject.id))
     .map((subject) => {
       const evidence = footballRecognitionEvidenceFor(subject)!;
       const hallFloor = proHallMinimumTierFor({
@@ -411,14 +428,17 @@ export const footballProjectedNonPlayerRecognitionSubjects: readonly FootballPro
       };
     })
     .filter((row) => row.tier !== "D"),
-  ...historicalNonPlayerRepairs.map((repair) => ({
-    subject: repair.subject as FootballProjectedNonPlayerIdentitySubject,
-    tier: recognitionTierAtLeast(repair.tier, proHallMinimumTierFor(repair.subject)),
-    sourceIdentityKey: {
-      provider: repair.subject.league === "NFL" ? "nfl-honors" as const : "official-cfb-awards" as const,
-      id: `stage13-5:${repair.subject.id}`,
-    },
-  })),
+  ...reviewedHistoricalPoolSubjects,
+  ...historicalNonPlayerRepairs
+    .filter((repair) => !historicalPoolRecognitionIds.has(repair.subject.id))
+    .map((repair) => ({
+      subject: repair.subject as FootballProjectedNonPlayerIdentitySubject,
+      tier: recognitionTierAtLeast(repair.tier, proHallMinimumTierFor(repair.subject)),
+      sourceIdentityKey: {
+        provider: repair.subject.league === "NFL" ? "nfl-honors" as const : "official-cfb-awards" as const,
+        id: `stage13-5:${repair.subject.id}`,
+      },
+    })),
 ];
 
 export const FOOTBALL_RECOGNITION_MANUAL_APPROVAL_NAMES = projectionJson.manualApprovals as readonly string[];
