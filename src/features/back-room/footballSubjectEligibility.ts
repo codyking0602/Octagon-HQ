@@ -1,5 +1,6 @@
 import { footballCfbPlayerSeasonRecognitionFor } from "./footballCfbPlayerSeasonRecognition";
 import type { FootballCanonicalSubject } from "./footballFactualStatsCatalog";
+import { footballProgramEraRecognitionFor } from "./footballProgramEraSeeds";
 import { footballRecognitionProjectionFor } from "./footballRecognizabilityProjection";
 import { applyFootballHistoricalRecognitionPolicy } from "./footballRecognitionHistoricalPolicy";
 
@@ -44,7 +45,7 @@ const explicitlyApprovedIconicSubjects = new Set([
 function conservativeCanonicalTier(subject: FootballCanonicalSubject): FootballRecognizabilityTier {
   if (explicitlyApprovedIconicSubjects.has(subject.id)) return "A";
   if (subject.kind === "team-season") return subject.nationalChampion ? "C" : "D";
-  // A relationship existing is not recognition evidence. Era promotion needs a future cultural marker.
+  // A relationship existing is not recognition evidence. Program Era promotion comes only from its reviewed owner.
   if (subject.kind === "program-era") return "D";
   return "C";
 }
@@ -63,9 +64,11 @@ export function buildFootballSubjectKnowledgeMetadata(
 
   const projection = footballRecognitionProjectionFor(subject);
   const generatedPlayerSeason = footballCfbPlayerSeasonRecognitionFor(subject);
+  const reviewedProgramEra = footballProgramEraRecognitionFor(subject);
   const proposedTier = override.recognizabilityTier
     ?? projection?.tier
     ?? generatedPlayerSeason?.tier
+    ?? reviewedProgramEra?.tier
     ?? conservativeCanonicalTier(subject);
   const recognizabilityTier = applyFootballHistoricalRecognitionPolicy(
     subject.id,
@@ -76,7 +79,13 @@ export function buildFootballSubjectKnowledgeMetadata(
   const casualEligible = recognizabilityTier === "D" ? false : (override.casualEligible ?? true);
   const sourceIdentityKeys = override.sourceIdentityKeys ?? [
     { provider: "octagon-hq", id: subject.id } as const,
-    ...(projection ? [projection.sourceIdentityKey] : generatedPlayerSeason ? [generatedPlayerSeason.sourceIdentityKey] : []),
+    ...(projection
+      ? [projection.sourceIdentityKey]
+      : generatedPlayerSeason
+        ? [generatedPlayerSeason.sourceIdentityKey]
+        : reviewedProgramEra
+          ? [reviewedProgramEra.sourceIdentityKey]
+          : []),
   ];
 
   return { recognizabilityTier, casualEligible, sourceIdentityKeys };
