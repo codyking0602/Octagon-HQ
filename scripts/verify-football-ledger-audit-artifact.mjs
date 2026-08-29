@@ -1,6 +1,5 @@
 import fs from "node:fs";
 import path from "node:path";
-import zlib from "node:zlib";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
@@ -19,9 +18,6 @@ const status = execFileSync(
 ).trim();
 
 if (status) {
-  console.error("GENERATED_LEDGER_AUDIT_GZIP_BASE64_BEGIN");
-  console.error(zlib.gzipSync(fs.readFileSync(outputPath)).toString("base64"));
-  console.error("GENERATED_LEDGER_AUDIT_GZIP_BASE64_END");
   throw new Error(`${relativePath} is stale or missing from the repository. Run npm run generate:football-ledger-audit and commit the result.`);
 }
 
