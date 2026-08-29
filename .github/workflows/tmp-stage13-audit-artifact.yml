@@ -6,7 +6,7 @@ on:
       - stage13-6-nfl-historical-receiving
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   generate:
@@ -17,7 +17,6 @@ jobs:
         with:
           ref: ${{ github.sha }}
           fetch-depth: 1
-          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
@@ -25,8 +24,11 @@ jobs:
           cache-dependency-path: package-lock.json
       - run: npm ci --silent --no-audit --no-fund
       - run: npm run generate:football-cfb-player-seasons && npm run generate:football-factual-universe && npm run generate:football-ledger-audit
-      - uses: actions/upload-artifact@v4
-        with:
-          name: stage13-generated-audit-${{ github.sha }}
-          path: docs/football-ledger-stage13-5-review.md
-          retention-days: 1
+      - name: Commit generated audit and self-clean
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/football-ledger-stage13-5-review.md
+          git rm .github/workflows/tmp-stage13-audit-artifact.yml
+          git commit -m "Refresh Stage 13.6 factual readiness artifact"
+          git push origin HEAD:stage13-6-nfl-historical-receiving
