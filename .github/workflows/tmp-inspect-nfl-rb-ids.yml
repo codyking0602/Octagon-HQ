@@ -16,9 +16,5 @@ jobs:
         with:
           ref: ${{ github.sha }}
           fetch-depth: 1
-      - name: Find canonical RB identities
-        run: |
-          for name in "Bronko Nagurski" "Doak Walker" "Frank Gifford" "Harold Red Grange" "Red Grange" "Jim Thorpe" "O.J. Simpson" "OJ Simpson" "Paul Hornung" "Floyd Little" "Larry Csonka"; do
-            echo "=== $name ==="
-            grep -Rni --exclude='tmp-inspect-nfl-rb-ids.yml' "$name" src data docs | head -20 || true
-          done
+      - name: Find Grange canonical identity
+        run: grep -Rni --exclude='tmp-inspect-nfl-rb-ids.yml' 'Grange' src data docs | head -100 || true
