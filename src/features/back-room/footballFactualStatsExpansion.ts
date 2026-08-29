@@ -561,6 +561,30 @@ export const expandedFootballFactualRecords: readonly FootballFactualRecord[] = 
     ["cfb-coach-career-losses", 79],
     ["cfb-coach-career-ties", 0],
   ]),
+  cfbCoach("bear-bryant", [
+    ["cfb-coach-career-wins", 323],
+    ["cfb-coach-career-losses", 85],
+    ["cfb-coach-career-ties", 17],
+    ["cfb-coach-national-titles", 6],
+  ]),
+  cfbCoach("woody-hayes", [
+    ["cfb-coach-career-wins", 205],
+    ["cfb-coach-career-losses", 61],
+    ["cfb-coach-career-ties", 10],
+    ["cfb-coach-national-titles", 5],
+  ]),
+  cfbCoach("tom-osborne", [
+    ["cfb-coach-career-wins", 255],
+    ["cfb-coach-career-losses", 49],
+    ["cfb-coach-career-ties", 3],
+    ["cfb-coach-national-titles", 3],
+  ]),
+  cfbCoach("barry-switzer", [
+    ["cfb-coach-career-wins", 157],
+    ["cfb-coach-career-losses", 29],
+    ["cfb-coach-career-ties", 4],
+    ["cfb-coach-national-titles", 3],
+  ]),
 
   // Programs use a fixed 2000-through-2025 window rather than a subjective greatness score.
   cfbProgram("program-alabama", [
