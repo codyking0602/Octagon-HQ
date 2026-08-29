@@ -96,9 +96,11 @@ Stage 14 deliberately records low-confidence results instead of fabricating fact
 
 Raw totals are not automatically comparable across eras or positions.
 
-The framework exposes an explicit bounded context-adjustment hook. Era- or position-relative adjustments must be supplied by a reviewed NFL/CFB model from reproducible evidence; they are never inferred from the current candidate pool and never from recognizability tier.
+Fixed calibration is therefore position-relative whenever a comparison category spans multiple positions and the reviewed calibration set contains at least two anchors for that position/metric. If a position does not have enough fixed anchors, the same versioned category-wide calibration series is used as the explicit fallback. This remains independent of the current candidate pool.
 
-The adjustment hook is intentionally bounded so context can correct comparability without becoming an uncontrolled subjective override. Stage 15 and Stage 16 own the actual adjustment inputs.
+The framework also exposes an explicit bounded context-adjustment hook. Era- or position-relative adjustments must be supplied by a reviewed NFL/CFB model from reproducible evidence; they are never inferred from the current candidate pool and never from recognizability tier.
+
+The adjustment hook is intentionally bounded so context can correct comparability without becoming an uncontrolled subjective override. Stage 15 and Stage 16 own the final position/era model inputs.
 
 ## Recognizability is not greatness
 
