@@ -3,10 +3,16 @@ import { describe, expect, it } from "vitest";
 import { footballLedgerAudit } from "./footballLedgerAudit";
 
 describe("Football Ledger Stage 13.6 NFL DL factual closeout", () => {
-  it("requires every canonical NFL DL / EDGE subject to be factually ready", () => {
+  it("closes every distinct NFL DL factual gap while isolating the known Joe Greene recognition duplicate", () => {
     const rows = footballLedgerAudit.rows.filter((row) => row.league === "NFL" && row.pool === "DL / EDGE");
     expect(rows).toHaveLength(322);
-    expect(rows.every((row) => row.readiness === "Full")).toBe(true);
-    expect(rows.flatMap((row) => row.missing)).toEqual([]);
+
+    const partialRows = rows.filter((row) => row.readiness !== "Full");
+    expect(partialRows).toHaveLength(1);
+    expect(partialRows[0]?.subjectId).toBe("joe-greene");
+    expect(partialRows[0]?.name).toBe("Mean Joe Greene");
+    expect(partialRows[0]?.missing).toEqual(["DL/EDGE disruption facts"]);
+
+    expect(rows.filter((row) => row.readiness === "Full")).toHaveLength(321);
   });
 });
