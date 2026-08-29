@@ -10,7 +10,7 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 
 | Pool | Universe | A | B | C | Full | Partial | Identity-only | Missing fact groups | Historical review | Omissions |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| QB | 133 | 30 | 41 | 62 | 132 | 1 | 0 | 1 | 0 | 0 |
+| QB | 133 | 30 | 41 | 62 | 133 | 0 | 0 | 0 | 0 | 0 |
 | RB | 179 | 21 | 36 | 122 | 179 | 0 | 0 | 0 | 0 | 0 |
 | WR | 250 | 7 | 51 | 192 | 250 | 0 | 0 | 0 | 0 | 0 |
 | TE | 74 | 1 | 12 | 61 | 74 | 0 | 0 | 0 | 0 | 0 |
@@ -577,7 +577,6 @@ None.
 - NFL Notable games / misc: **2025 Rams at Seahawks — Week 16 overtime comeback** — C, Partial; missing game final score, game context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Notable games / misc: **Super Bowl LIX — Chiefs vs Eagles** — C, Partial; missing game final score, game context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Notable games / misc: **Super Bowl LX — Seahawks vs Patriots** — C, Partial; missing game final score, game context; source limits: normalized NFL relationship coverage begins in 1999.
-- NFL QB: **Y.A. Tittle** — A, Partial; missing QB passing facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL Secondary: **Dick 'Night Train' Lane** — A, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL Secondary: **Emlen Tunnell** — A, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL Secondary: **Cliff Harris** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
