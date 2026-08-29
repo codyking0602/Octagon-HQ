@@ -35,7 +35,7 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 | WR | 62 | 6 | 18 | 38 | 44 | 18 | 0 | 18 | 0 | 0 |
 | TE | 35 | 1 | 20 | 14 | 16 | 19 | 0 | 19 | 0 | 0 |
 | OL | 58 | 2 | 24 | 32 | 58 | 0 | 0 | 0 | 0 | 0 |
-| DL / EDGE | 53 | 8 | 22 | 23 | 29 | 24 | 0 | 24 | 0 | 0 |
+| DL / EDGE | 53 | 8 | 22 | 23 | 31 | 22 | 0 | 22 | 0 | 0 |
 | LB | 51 | 5 | 15 | 31 | 28 | 23 | 0 | 23 | 0 | 0 |
 | Secondary | 51 | 9 | 24 | 18 | 28 | 23 | 0 | 23 | 0 | 0 |
 | K / P | 29 | 0 | 14 | 15 | 5 | 24 | 0 | 24 | 0 | 0 |
@@ -58,9 +58,7 @@ None.
 
 ## Factual-readiness problems
 
-- CFB DL / EDGE: **Aaron Donald** — A, Partial; missing DL/EDGE disruption facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB DL / EDGE: **Bruce Smith** — A, Partial; missing DL/EDGE disruption facts; source limits: CFB normalized player stats do not reach this career/season; normalized CFB player production begins in 2014.
-- CFB DL / EDGE: **Jadeveon Clowney** — A, Partial; missing DL/EDGE disruption facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB DL / EDGE: **Lee Roy Selmon** — A, Partial; missing DL/EDGE disruption facts; source limits: CFB normalized player stats do not reach this career/season; normalized CFB player production begins in 2014.
 - CFB DL / EDGE: **Brian Orakpo** — B, Partial; missing DL/EDGE disruption facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB DL / EDGE: **Chris Long** — B, Partial; missing DL/EDGE disruption facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
