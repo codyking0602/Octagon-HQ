@@ -14,7 +14,7 @@ const REMAINING_HISTORICAL_WR = [
   "nfl-steve-largent",
 ] as const;
 
-describe("Football Ledger Stage 13.6 final NFL WR factual hydration", () => {
+describe("Football Ledger Stage 13.6 NFL WR pool closeout", () => {
   it("closes every remaining NFL WR factual-readiness gap through the canonical PFR owner", () => {
     expect(getFootballFact("nfl-harold-carmichael", "nfl-career-receiving-yards")?.fact.value).toBe(8985);
     expect(getFootballFact("nfl-james-lofton", "nfl-career-receptions")?.fact.value).toBe(764);
