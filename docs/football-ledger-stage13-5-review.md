@@ -11,7 +11,7 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 | Pool | Universe | A | B | C | Full | Partial | Identity-only | Missing fact groups | Historical review | Omissions |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | QB | 133 | 30 | 41 | 62 | 120 | 13 | 0 | 13 | 0 | 0 |
-| RB | 179 | 21 | 36 | 122 | 170 | 9 | 0 | 9 | 0 | 0 |
+| RB | 179 | 21 | 36 | 122 | 179 | 0 | 0 | 0 | 0 | 0 |
 | WR | 250 | 7 | 51 | 192 | 250 | 0 | 0 | 0 | 0 | 0 |
 | TE | 74 | 1 | 12 | 61 | 74 | 0 | 0 | 0 | 0 | 0 |
 | OL | 59 | 15 | 42 | 2 | 59 | 0 | 0 | 0 | 0 | 0 |
@@ -590,15 +590,6 @@ None.
 - NFL QB: **Boomer Esiason** — B, Partial; missing QB passing facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL QB: **George Blanda** — B, Partial; missing QB passing facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL QB: **Joe Theismann** — B, Partial; missing QB passing facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL RB: **Bronko Nagurski** — A, Partial; missing RB rushing/scrimmage facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL RB: **Doak Walker** — A, Partial; missing RB rushing/scrimmage facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL RB: **Frank Gifford** — A, Partial; missing RB rushing/scrimmage facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL RB: **Harold 'Red' Grange** — A, Partial; missing RB rushing/scrimmage facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL RB: **Jim Thorpe** — A, Partial; missing RB rushing/scrimmage facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL RB: **O.J. Simpson** — A, Partial; missing RB rushing/scrimmage facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL RB: **Paul Hornung** — A, Partial; missing RB rushing/scrimmage facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL RB: **Floyd Little** — B, Partial; missing RB rushing/scrimmage facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL RB: **Larry Csonka** — B, Partial; missing RB rushing/scrimmage facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL Secondary: **Dick 'Night Train' Lane** — A, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL Secondary: **Emlen Tunnell** — A, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL Secondary: **Cliff Harris** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
