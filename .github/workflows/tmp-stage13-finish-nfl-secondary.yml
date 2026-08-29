@@ -1,0 +1,77 @@
+name: Temporary Stage 13 Finish NFL Secondary
+
+on:
+  push:
+    branches:
+      - stage13-6-finish-nfl-secondary
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci --silent --no-audit --no-fund
+      - name: Hydrate historical NFL secondary facts
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('src/features/back-room/footballFactualStatsExpansion.ts')
+          text = path.read_text()
+          marker = '  // NFL player seasons retained here are the currently enabled compatibility pool; PR3 owns expansion/rebalance.\n'
+          records = [
+              ('nfl-dick-night-train-lane', 68),
+              ('nfl-emlen-tunnell', 79),
+              ('nfl-cliff-harris', 29),
+              ('nfl-darrell-green', 54),
+              ('nfl-dick-lebeau', 62),
+              ('nfl-donnie-shell', 51),
+              ('nfl-emmitt-thomas', 58),
+              ('nfl-eric-allen', 54),
+              ('nfl-herb-adderley', 48),
+              ('nfl-jimmy-johnson', 47),
+              ('nfl-johnny-robinson', 57),
+              ('nfl-ken-houston', 49),
+              ('nfl-ken-riley', 65),
+              ('nfl-kenny-easley', 32),
+              ('nfl-larry-wilson', 52),
+              ('nfl-lem-barney', 56),
+              ('nfl-leroy-butler', 38),
+              ('nfl-mel-blount', 57),
+              ('nfl-mel-renfro', 52),
+              ('nfl-mike-haynes', 46),
+              ('nfl-paul-krause', 81),
+              ('nfl-roger-wehrli', 40),
+              ('nfl-steve-atwater', 24),
+              ('nfl-willie-brown', 54),
+              ('nfl-willie-wood', 48),
+              ('nfl-morris-claiborne', 7),
+          ]
+          rows = ''.join(
+              f'  defender("{sid}", [["nfl-career-interceptions", {ints}]]),\n'
+              for sid, ints in records
+          ) + '\n'
+          if 'defender("nfl-dick-night-train-lane"' not in text:
+              text = text.replace(marker, rows + marker, 1)
+          path.write_text(text)
+          PY
+      - run: npm run generate:football-cfb-player-seasons && npm run generate:football-factual-universe && npm run generate:football-ledger-audit
+      - name: Commit canonical source, generated audit, and self-clean
+        run: |
+          rm .github/workflows/tmp-stage13-finish-nfl-secondary.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/features/back-room/footballFactualStatsExpansion.ts docs/football-ledger-stage13-5-review.md .github/workflows/tmp-stage13-finish-nfl-secondary.yml
+          git commit -m 'Finish Stage 13.6 NFL secondary factual hydration'
+          git push origin HEAD:stage13-6-finish-nfl-secondary
