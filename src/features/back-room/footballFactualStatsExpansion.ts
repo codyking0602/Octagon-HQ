@@ -33,6 +33,14 @@ export const expandedFootballFactSources: readonly FootballFactSource[] = [
     coverage: "Completed NFL receiver and tight-end career production used by the canonical Football factual ledger",
   },
   {
+    id: "pfr-rushing-career",
+    publisher: "Pro Football Reference",
+    title: "NFL rushing career records",
+    url: "https://www.pro-football-reference.com/players/",
+    reviewedOn: "2026-08-25",
+    coverage: "Completed reviewed historical NFL running-back career rushing production used by the canonical Football factual ledger",
+  },
+  {
     id: "pfr-specialist-career",
     publisher: "Pro Football Reference",
     title: "NFL kicker and punter career records",
@@ -109,6 +117,12 @@ const wr = (
   ["nfl-career-receiving-touchdowns", touchdowns],
 ]);
 
+const rb = (subjectId: string, attempts: number, yards: number, touchdowns: number) =>
+  record(subjectId, "nfl-player-career", "pfr-rushing-career", [
+    ["nfl-career-rushing-attempts", attempts],
+    ["nfl-career-rushing-yards", yards],
+    ["nfl-career-rushing-touchdowns", touchdowns],
+  ]);
 const kicker = (subjectId: string, made: number, attempted: number, percentage: number) =>
   record(subjectId, "nfl-player-career", "pfr-specialist-career", [
     ["nfl-career-field-goals-made", made],
@@ -169,6 +183,16 @@ const cfbTeam = (subjectId: string, wins: number, losses: number, nationalChampi
   ]);
 
 export const expandedFootballFactualRecords: readonly FootballFactualRecord[] = [
+  // NFL running backs: reviewed historical career rushing production.
+  rb("nfl-bronko-nagurski", 633, 2778, 25),
+  rb("nfl-doak-walker", 309, 1520, 12),
+  rb("nfl-frank-gifford", 840, 3609, 34),
+  rb("nfl-harold-red-grange", 170, 569, 21),
+  record("nfl-jim-thorpe", "nfl-player-career", "pfr-rushing-career", [["nfl-career-rushing-touchdowns", 6]]),
+  rb("nfl-oj-simpson", 2404, 11236, 61),
+  rb("nfl-paul-hornung", 893, 3711, 50),
+  rb("nfl-floyd-little", 1641, 6323, 43),
+  rb("nfl-larry-csonka", 1891, 8081, 64),
   // NFL specialists: reviewed career kicking and punting facts.
   kicker("nfl-jan-stenerud", 373, 558, 66.8),
   kicker("nfl-mark-moseley", 300, 457, 65.6),
