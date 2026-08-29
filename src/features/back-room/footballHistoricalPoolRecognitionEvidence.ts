@@ -265,7 +265,6 @@ const nflEraSeeds: readonly EraSeed[] = [
   ["nfl-era-bills-allen-mcdermott", "Buffalo Bills — Allen/McDermott contender era", 2020, 2025, "C", ["BUF"], "nfl-era-review:bills-2020-2025"],
   ["nfl-era-buccaneers-brady", "Tampa Bay Buccaneers — Brady era", 2020, 2022, "C", ["TB"], "nfl-era-review:buccaneers-2020-2022"],
   ["nfl-era-eagles-hurts-sirianni", "Philadelphia Eagles — Hurts/Sirianni contender era", 2022, 2025, "C", ["PHI"], "nfl-era-review:eagles-2022-2025"],
-  ["nfl-era-seahawks-macdonald", "Seattle Seahawks — Macdonald championship rise", 2024, 2025, "C", ["SEA"], "nfl-era-review:seahawks-2024-2025"],
 ];
 
 const gameRecords: readonly FootballHistoricalPoolRecognitionRecord[] = [
