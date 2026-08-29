@@ -12,7 +12,7 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | QB | 133 | 30 | 41 | 62 | 120 | 13 | 0 | 13 | 0 | 0 |
 | RB | 179 | 21 | 36 | 122 | 170 | 9 | 0 | 9 | 0 | 0 |
-| WR | 250 | 7 | 51 | 192 | 242 | 8 | 0 | 8 | 0 | 0 |
+| WR | 250 | 7 | 51 | 192 | 250 | 0 | 0 | 0 | 0 | 0 |
 | TE | 74 | 1 | 12 | 61 | 69 | 5 | 0 | 5 | 0 | 0 |
 | OL | 59 | 15 | 42 | 2 | 59 | 0 | 0 | 0 | 0 | 0 |
 | DL / EDGE | 322 | 7 | 41 | 274 | 294 | 28 | 0 | 28 | 0 | 0 |
@@ -634,11 +634,3 @@ None.
 - NFL TE: **Dave Casper** — B, Partial; missing TE receiving facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL TE: **Jackie Smith** — B, Partial; missing TE receiving facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL TE: **Mike Ditka** — B, Partial; missing TE receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized NFL player production begins in 1999.
-- NFL WR: **Harold Carmichael** — B, Partial; missing WR receiving facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL WR: **James Lofton** — B, Partial; missing WR receiving facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL WR: **John Stallworth** — B, Partial; missing WR receiving facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL WR: **Lance Alworth** — B, Partial; missing WR receiving facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL WR: **Lynn Swann** — B, Partial; missing WR receiving facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL WR: **Paul Warfield** — B, Partial; missing WR receiving facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL WR: **Sterling Sharpe** — B, Partial; missing WR receiving facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL WR: **Steve Largent** — B, Partial; missing WR receiving facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
