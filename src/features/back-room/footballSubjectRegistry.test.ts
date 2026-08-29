@@ -39,12 +39,12 @@ describe("canonical Football subject registry", () => {
     expect(comparisonWatt).toBe(canonicalWatt);
   });
 
-  it("provides stable lookup metadata for seasons, coaches and dynasties", () => {
+  it("provides stable lookup metadata for seasons, coaches and Program Eras", () => {
     expect(getFootballSubject("peyton-manning")).toMatchObject({ id: "peyton-manning", name: "Peyton Manning", kind: "player-career", league: "NFL", position: "QB" });
     expect(getFootballSubject("2005-texas")).toMatchObject({ id: "2005-texas", name: "2005 Texas", kind: "team-season", league: "CFB", season: 2005 });
     expect(getFootballSubject("tom-brady-2007")).toMatchObject({ kind: "player-season", league: "NFL", position: "QB", season: 2007 });
     expect(getFootballSubject("nick-saban-cfb")).toMatchObject({ kind: "coach", league: "CFB", school: "Alabama" });
-    expect(getFootballSubject("alabama-2009-2020")).toMatchObject({ kind: "program-era", league: "CFB", school: "Alabama", startSeason: 2009, endSeason: 2020 });
+    expect(getFootballSubject("alabama-2008-2023")).toMatchObject({ kind: "program-era", league: "CFB", school: "Alabama", startSeason: 2008, endSeason: 2023 });
     expect(getFootballSubject("missing-subject")).toBeNull();
   });
 
