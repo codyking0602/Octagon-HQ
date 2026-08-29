@@ -74,7 +74,7 @@ export const expandedFootballFactSources: readonly FootballFactSource[] = [
   },
   {
     id: "cfr-program-records",
-    publisher: "College Football at Sports-Reference",
+    publisher: "College Football Reference",
     title: "College program historical records",
     url: "https://www.sports-reference.com/cfb/schools/",
     reviewedOn: "2026-08-25",
@@ -595,7 +595,6 @@ export const expandedFootballFactualRecords: readonly FootballFactualRecord[] = 
   cfbEra("usc-2002-2008", [
     ["cfb-era-wins", 82],
     ["cfb-era-losses", 9],
-    ["cfb-era-national-titles", 2],
     ["cfb-era-conference-titles", 7],
   ]),
 
