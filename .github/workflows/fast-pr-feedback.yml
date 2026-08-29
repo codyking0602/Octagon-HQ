@@ -60,6 +60,15 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      - name: Capture generated Stage 13.5 audit
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage13-5-ledger-audit-recovery
+          path: docs/football-ledger-stage13-5-review.md
+          if-no-files-found: error
+          retention-days: 1
+
       - name: Run tests affected by this PR
         run: npm test -- --changed="$BASE_SHA" --passWithNoTests
 
