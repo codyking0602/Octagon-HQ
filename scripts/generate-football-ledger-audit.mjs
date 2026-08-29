@@ -18,12 +18,8 @@ try {
   const { footballLedgerAudit, formatFootballLedgerAuditMarkdown } = await server.ssrLoadModule(
     "/src/features/back-room/footballLedgerAudit.ts",
   );
-  const markdown = formatFootballLedgerAuditMarkdown(footballLedgerAudit);
-  fs.writeFileSync(outputPath, markdown);
+  fs.writeFileSync(outputPath, formatFootballLedgerAuditMarkdown(footballLedgerAudit));
   console.log(`Generated ${path.relative(root, outputPath)} from canonical Football owners.`);
-  console.log("=== FOOTBALL_LEDGER_AUDIT_BEGIN ===");
-  console.log(markdown);
-  console.log("=== FOOTBALL_LEDGER_AUDIT_END ===");
 } finally {
   await server.close();
 }
