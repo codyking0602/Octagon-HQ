@@ -38,6 +38,11 @@ interface FootballComparisonCategorySpec {
   minimumFacts: number;
 }
 
+interface FootballFixedCalibrationValues {
+  overall: ReadonlyMap<FootballFactMetricId, readonly number[]>;
+  byPosition: ReadonlyMap<string, ReadonlyMap<FootballFactMetricId, readonly number[]>>;
+}
+
 export interface FootballComparisonCandidate extends FootballRankFiveItem {
   canonicalSubjectId: string;
   evaluationSource: "reviewed" | "canonical-facts";
@@ -308,16 +313,49 @@ function factsForSubject(subjectId: string, metrics: readonly FootballComparison
   });
 }
 
-function fixedCalibrationValues(packId: FootballRankFivePackId, spec: FootballComparisonCategorySpec) {
-  const calibration = reviewedByCanonicalId(packId, getFootballRankFivePack(packId).items);
+function createMetricValueMap(spec: FootballComparisonCategorySpec) {
   const values = new Map<FootballFactMetricId, number[]>();
   for (const metric of spec.metrics) values.set(metric.metricId, []);
+  return values;
+}
+
+function fixedCalibrationValues(packId: FootballRankFivePackId, spec: FootballComparisonCategorySpec): FootballFixedCalibrationValues {
+  const calibration = reviewedByCanonicalId(packId, getFootballRankFivePack(packId).items);
+  const subjectById = new Map(queryFootballSubjects(spec.query).map((subject) => [subject.id, subject]));
+  const overall = createMetricValueMap(spec);
+  const byPosition = new Map<string, Map<FootballFactMetricId, number[]>>();
+
   for (const subjectId of calibration.keys()) {
+    const position = subjectById.get(subjectId)?.position;
+    let positionValues: Map<FootballFactMetricId, number[]> | undefined;
+    if (position) {
+      positionValues = byPosition.get(position);
+      if (!positionValues) {
+        positionValues = createMetricValueMap(spec);
+        byPosition.set(position, positionValues);
+      }
+    }
+
     for (const fact of factsForSubject(subjectId, spec.metrics)) {
-      values.get(fact.metric.metricId)?.push(fact.value);
+      overall.get(fact.metric.metricId)?.push(fact.value);
+      positionValues?.get(fact.metric.metricId)?.push(fact.value);
     }
   }
-  return values;
+
+  return { overall, byPosition };
+}
+
+function calibrationAnchorsFor(
+  calibration: FootballFixedCalibrationValues,
+  subject: FootballSubjectProfile,
+  metricId: FootballFactMetricId,
+) {
+  const positionAnchors = subject.position
+    ? calibration.byPosition.get(subject.position)?.get(metricId)
+    : undefined;
+  return positionAnchors && positionAnchors.length >= 2
+    ? positionAnchors
+    : (calibration.overall.get(metricId) ?? []);
 }
 
 function scoreSignalsForSpec(spec: FootballComparisonCategorySpec): readonly FootballRankingScoreSignal[] {
@@ -368,7 +406,7 @@ export function buildFootballComparisonCandidatePool(packId: FootballRankFivePac
 
     const evidence = facts.flatMap((row) => {
       const dimension = rankingDimensionByMetric[row.metric.metricId];
-      const anchors = calibrationValues.get(row.metric.metricId) ?? [];
+      const anchors = calibrationAnchorsFor(calibrationValues, subject, row.metric.metricId);
       if (!dimension || anchors.length < 2) return [];
       return [{
         signalId: row.metric.metricId,
