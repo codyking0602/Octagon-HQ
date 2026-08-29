@@ -149,6 +149,16 @@ const cfbTeam = (subjectId: string, wins: number, losses: number, nationalChampi
 
 export const expandedFootballFactualRecords: readonly FootballFactualRecord[] = [
   // NFL receivers and tight ends: real career counting stats, not comparison ratings.
+  wr("nfl-don-hutson", 488, 7991, 99),
+  wr("nfl-raymond-berry", 631, 9275, 68),
+  wr("nfl-art-monk", 940, 12721, 68),
+  wr("nfl-bob-hayes", 371, 7414, 71),
+  wr("nfl-charley-taylor", 649, 9110, 79),
+  wr("nfl-charlie-joiner", 750, 12146, 65),
+  wr("nfl-cliff-branch", 501, 8685, 67),
+  wr("nfl-don-maynard", 633, 11834, 88),
+  wr("nfl-drew-pearson", 489, 7822, 48),
+  wr("nfl-fred-biletnikoff", 589, 8974, 76),
   wr("nfl-jerry-rice", 1549, 22895, 197),
   wr("nfl-randy-moss", 982, 15292, 156),
   wr("nfl-calvin-johnson", 731, 11619, 83),
