@@ -146,9 +146,9 @@ for (const group of grouped.values()) {
   if (iconicHeismanSeasonIds.has(id)) {
     tier = "A";
     evidence = "reviewed Heisman-season identity retained as iconic";
-  } else if (exceptional && tierRank[group.career.recognizabilityTier] >= tierRank.A) {
+  } else if (exceptional && tierRank[group.career.recognizabilityTier] >= tierRank.B) {
     tier = "B";
-    evidence = "iconic career plus exceptional source-backed season production";
+    evidence = "strongly recognizable career plus exceptional source-backed season production";
   } else if (meaningful) {
     tier = "C";
     evidence = "canonical A-C career plus meaningful source-backed season production";
@@ -177,7 +177,7 @@ const positionCounts = Object.fromEntries([...new Set(records.map((row) => row.p
 const seasonCounts = Object.fromEntries([...new Set(records.map((row) => row.season))].sort((a, b) => a - b).map((season) => [season, records.filter((row) => row.season === season).length]));
 const output = {
   schemaVersion: 1,
-  methodology: "CFB player seasons are admitted only from canonical A-C player careers, then must clear fixed position-aware meaningful-season thresholds. Tier A is explicit Heisman-season approval; Tier B requires an iconic Tier-A career plus exceptional source-backed production; Tier C is the recognizable-career variety layer. No percentile ranking and no raw stat leader can enter without career recognition.",
+  methodology: "CFB player seasons are admitted only from canonical A-C player careers, then must clear fixed position-aware meaningful-season thresholds. Tier A is explicit Heisman-season approval; Tier B requires an A/B career plus exceptional source-backed production; Tier C is the recognizable-career variety layer. No percentile ranking and no raw stat leader can enter without career recognition.",
   source: {
     provider: manifest.source.provider,
     repository: manifest.source.repository,
