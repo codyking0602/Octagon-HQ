@@ -4,7 +4,7 @@ import { getFootballFact } from "./footballFactualStats";
 import { footballLedgerAudit } from "./footballLedgerAudit";
 
 describe("Football Ledger Stage 13.6 NFL RB factual closeout", () => {
-  it("closes every NFL RB factual-readiness gap through the canonical PFR rushing owner", () => {
+  it("proves every NFL RB factual-readiness gap is closed through the canonical PFR rushing owner", () => {
     expect(getFootballFact("nfl-bronko-nagurski", "nfl-career-rushing-yards")?.fact.value).toBe(2778);
     expect(getFootballFact("nfl-doak-walker", "nfl-career-rushing-touchdowns")?.fact.value).toBe(12);
     expect(getFootballFact("nfl-frank-gifford", "nfl-career-rushing-attempts")?.fact.value).toBe(840);
