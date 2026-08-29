@@ -74,7 +74,7 @@ export const expandedFootballFactSources: readonly FootballFactSource[] = [
   },
   {
     id: "cfr-program-records",
-    publisher: "College Football Reference",
+    publisher: "College Football at Sports-Reference",
     title: "College program historical records",
     url: "https://www.sports-reference.com/cfb/schools/",
     reviewedOn: "2026-08-25",
