@@ -153,7 +153,7 @@ export const expandedFootballFactualRecords: readonly FootballFactualRecord[] = 
   wr("nfl-charlie-sanders", 336, 4817, 31),
   wr("nfl-dave-casper", 378, 5216, 52),
   wr("nfl-jackie-smith", 480, 7918, 40),
-  wr("nfl-mike-ditka", 427, 5812, 43),
+  wr("mike-ditka", 427, 5812, 43),
   wr("nfl-don-hutson", 488, 7991, 99),
   wr("nfl-raymond-berry", 631, 9275, 68),
   wr("nfl-art-monk", 940, 12721, 68),

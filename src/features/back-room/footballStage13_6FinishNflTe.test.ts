@@ -8,7 +8,7 @@ const HISTORICAL_TIGHT_ENDS = [
   "nfl-charlie-sanders",
   "nfl-dave-casper",
   "nfl-jackie-smith",
-  "nfl-mike-ditka",
+  "mike-ditka",
 ] as const;
 
 describe("Football Ledger Stage 13.6 NFL TE factual hydration", () => {
@@ -17,7 +17,7 @@ describe("Football Ledger Stage 13.6 NFL TE factual hydration", () => {
     expect(getFootballFact("nfl-charlie-sanders", "nfl-career-receptions")?.fact.value).toBe(336);
     expect(getFootballFact("nfl-dave-casper", "nfl-career-receiving-touchdowns")?.fact.value).toBe(52);
     expect(getFootballFact("nfl-jackie-smith", "nfl-career-receiving-yards")?.fact.value).toBe(7918);
-    expect(getFootballFact("nfl-mike-ditka", "nfl-career-receptions")?.fact.value).toBe(427);
+    expect(getFootballFact("mike-ditka", "nfl-career-receptions")?.fact.value).toBe(427);
 
     for (const subjectId of HISTORICAL_TIGHT_ENDS) {
       const row = footballLedgerAudit.rows.find((candidate) => candidate.subjectId === subjectId);
