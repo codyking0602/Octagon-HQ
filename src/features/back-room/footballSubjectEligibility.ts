@@ -1,3 +1,4 @@
+import { footballCfbPlayerSeasonRecognitionFor } from "./footballCfbPlayerSeasonRecognition";
 import type { FootballCanonicalSubject } from "./footballFactualStatsCatalog";
 import { footballRecognitionProjectionFor } from "./footballRecognizabilityProjection";
 import { applyFootballHistoricalRecognitionPolicy } from "./footballRecognitionHistoricalPolicy";
@@ -61,7 +62,11 @@ export function buildFootballSubjectKnowledgeMetadata(
   }
 
   const projection = footballRecognitionProjectionFor(subject);
-  const proposedTier = override.recognizabilityTier ?? projection?.tier ?? conservativeCanonicalTier(subject);
+  const generatedPlayerSeason = footballCfbPlayerSeasonRecognitionFor(subject);
+  const proposedTier = override.recognizabilityTier
+    ?? projection?.tier
+    ?? generatedPlayerSeason?.tier
+    ?? conservativeCanonicalTier(subject);
   const recognizabilityTier = applyFootballHistoricalRecognitionPolicy(
     subject.id,
     subject.league,
@@ -71,7 +76,7 @@ export function buildFootballSubjectKnowledgeMetadata(
   const casualEligible = recognizabilityTier === "D" ? false : (override.casualEligible ?? true);
   const sourceIdentityKeys = override.sourceIdentityKeys ?? [
     { provider: "octagon-hq", id: subject.id } as const,
-    ...(projection ? [projection.sourceIdentityKey] : []),
+    ...(projection ? [projection.sourceIdentityKey] : generatedPlayerSeason ? [generatedPlayerSeason.sourceIdentityKey] : []),
   ];
 
   return { recognizabilityTier, casualEligible, sourceIdentityKeys };
