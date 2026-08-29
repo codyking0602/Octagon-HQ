@@ -3,6 +3,7 @@ import {
   buildFootballComparisonCandidatePool,
   footballComparisonEligibilityQuery,
 } from "./footballComparisonAuthority";
+import { FOOTBALL_RANKING_FRAMEWORK_VERSION } from "./footballRankingFramework";
 import {
   footballRankFivePacks,
   getFootballRankFivePack,
@@ -38,9 +39,16 @@ describe("Football deep comparison authority", () => {
         expect(candidate.canonicalSubjectId).toBe(subject?.id);
         expect(canonicalIds.has(candidate.canonicalSubjectId), `${pack.id}:${candidate.canonicalSubjectId} duplicate`).toBe(false);
         canonicalIds.add(candidate.canonicalSubjectId);
+        expect(candidate.rankingVersion).toBe(FOOTBALL_RANKING_FRAMEWORK_VERSION);
+        expect(candidate.rankingCoverage).toBeGreaterThanOrEqual(0);
+        expect(candidate.rankingCoverage).toBeLessThanOrEqual(1);
+        expect(candidate.rankingConfidence).toBeGreaterThanOrEqual(0);
+        expect(candidate.rankingConfidence).toBeLessThanOrEqual(1);
 
         if (candidate.evaluationSource === "canonical-facts") {
           expect(candidate.factMetricIds.length, `${pack.id}:${candidate.id} fact-backed`).toBeGreaterThan(0);
+          expect(candidate.ratingBasis).toContain("dimension coverage");
+          expect(candidate.ratingBasis).toContain("confidence");
         }
       }
 
@@ -51,6 +59,7 @@ describe("Football deep comparison authority", () => {
         expect(candidate, `${pack.id}:${reviewed.id} reviewed calibration`).toBeDefined();
         expect(candidate?.rating).toBe(reviewed.rating);
         expect(candidate?.ratingBasis).toBe(reviewed.ratingBasis);
+        expect(candidate?.rankingStatus).toBe("rated");
       }
     }
   });
@@ -87,6 +96,30 @@ describe("Football deep comparison authority", () => {
 
     expect(pool.length).toBeGreaterThan(legacyCanonicalIds.size);
     expect(pool.filter((candidate) => !legacyCanonicalIds.has(candidate.canonicalSubjectId)).length).toBeGreaterThan(10);
+  });
+
+  it("keeps a data-derived rating fixed when caller-provided reviewed rows change", () => {
+    const packId = "nfl-wide-receivers" as const;
+    const reviewed = getFootballRankFivePack(packId).items;
+    const withOverrides = buildFootballComparisonCandidatePool(packId, reviewed);
+    const reviewedCanonicalIds = new Set(
+      reviewed.flatMap((item) => {
+        const subject = resolveFootballSubjectReference(item.id, item.name, footballComparisonEligibilityQuery(packId));
+        return subject ? [subject.id] : [];
+      }),
+    );
+    const target = withOverrides.find(
+      (candidate) => candidate.evaluationSource === "canonical-facts" && !reviewedCanonicalIds.has(candidate.canonicalSubjectId),
+    );
+    expect(target).toBeDefined();
+
+    const withoutOverrides = buildFootballComparisonCandidatePool(packId, []);
+    const sameSubject = withoutOverrides.find((candidate) => candidate.canonicalSubjectId === target?.canonicalSubjectId);
+    expect(sameSubject).toBeDefined();
+    expect(sameSubject?.rating).toBe(target?.rating);
+    expect(sameSubject?.rankingSemantic).toBe(target?.rankingSemantic);
+    expect(sameSubject?.rankingCoverage).toBe(target?.rankingCoverage);
+    expect(sameSubject?.rankingConfidence).toBe(target?.rankingConfidence);
   });
 
   it("is deterministic for the same canonical facts and reviewed calibration", () => {
