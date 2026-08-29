@@ -66,11 +66,11 @@ describe("fighterThumbnailPath", () => {
 });
 
 describe("Shane contender fighter-tile treatment", () => {
-  it("marks Bilal Hasan's thumbnail with the canonical #5 Shane badge", () => {
+  it("marks Bilal Hasan's thumbnail with the canonical #4 Shane badge", () => {
     render(<FighterThumbnail name="Bilal Hasan" slug="bilal-hasan" />);
 
     const badges = screen.getByLabelText("Shane King’s Contender Series fighters");
-    expect(screen.getByText("SHANE’S CONTENDER SERIES · #5")).toBeInTheDocument();
+    expect(screen.getByText("SHANE’S CONTENDER SERIES · #4")).toBeInTheDocument();
     expect(badges.closest(".pick-fighter-thumbnail-wrap")).toHaveClass("is-shane-contender");
   });
 
