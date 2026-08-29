@@ -1,0 +1,21 @@
+name: Temporary Stage 13 NFL DL Identity Diagnostic
+
+on:
+  push:
+    branches:
+      - stage13-6-finish-nfl-dl
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci --silent --no-audit --no-fund
+      - name: Print unresolved canonical subject ids
+        run: npx tsx -e 'import { footballLedgerAudit } from "./src/features/back-room/footballLedgerAudit.ts"; console.log(footballLedgerAudit.rows.filter(r => r.league === "NFL" && r.pool === "DL / EDGE" && r.readiness !== "Full").map(r => ({subjectId:r.subjectId,name:r.name,tier:r.tier,missing:r.missing})))'
