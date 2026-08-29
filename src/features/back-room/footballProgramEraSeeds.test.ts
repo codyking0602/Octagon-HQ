@@ -10,10 +10,6 @@ const approvedSameCoachSplits = new Set([
   "Texas|Mack Brown",
 ]);
 
-const approvedLegacyProgramEraTitleEvidence = new Map([
-  ["usc-2002-2008", "cfr-program-records"],
-]);
-
 describe("Stage 13.5 CFB Program Era recognition", () => {
   it("keeps Program Eras substantial, coach-defined, unique and historically valid", () => {
     expect(new Set(footballProgramEraSeeds.map((seed) => seed.id)).size).toBe(footballProgramEraSeeds.length);
@@ -95,19 +91,13 @@ describe("Stage 13.5 CFB Program Era recognition", () => {
     }
   });
 
-  it("hydrates every Program Era with reviewed national-title facts", () => {
+  it("hydrates every Program Era with NCAA-backed national-title facts", () => {
     for (const seed of footballProgramEraSeeds) {
       const factual = getFootballFactualRecord(seed.id);
       expect(factual, seed.id).not.toBeNull();
       const titleFact = factual?.facts.find((fact) => fact.metricId === "cfb-era-national-titles");
       expect(titleFact?.value, seed.id).toBe(seed.titleSelectionSeasons.length);
-
-      const approvedLegacySource = approvedLegacyProgramEraTitleEvidence.get(seed.id);
-      if (approvedLegacySource) {
-        expect(titleFact?.evidence.sourceIds, seed.id).toContain(approvedLegacySource);
-      } else {
-        expect(titleFact?.evidence.sourceIds, seed.id).toContain("ncaa-fbs-championship-history");
-      }
+      expect(titleFact?.evidence.sourceIds, seed.id).toContain("ncaa-fbs-championship-history");
     }
   });
 });
