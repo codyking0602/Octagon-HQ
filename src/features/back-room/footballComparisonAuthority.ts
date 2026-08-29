@@ -290,10 +290,7 @@ export function footballComparisonEligibilityQuery(packId: FootballRankFivePackI
   return footballComparisonCategorySpecs[packId].query;
 }
 
-function reviewedByCanonicalId(
-  packId: FootballRankFivePackId,
-  reviewedItems: readonly FootballRankFiveItem[],
-) {
+function reviewedByCanonicalId(packId: FootballRankFivePackId, reviewedItems: readonly FootballRankFiveItem[]) {
   const query = footballComparisonEligibilityQuery(packId);
   const values = new Map<string, FootballRankFiveItem>();
   for (const item of reviewedItems) {
@@ -324,9 +321,7 @@ function fixedCalibrationValues(packId: FootballRankFivePackId, spec: FootballCo
 
 function subtitleForSubject(subject: FootballSubjectProfile) {
   if (subject.kind === "player-career") {
-    const seasons = subject.startSeason != null && subject.endSeason != null
-      ? `${subject.startSeason}–${subject.endSeason}`
-      : null;
+    const seasons = subject.startSeason != null && subject.endSeason != null ? `${subject.startSeason}–${subject.endSeason}` : null;
     return [subject.position, subject.school, seasons].filter(Boolean).join(" · ") || subject.league;
   }
   if (subject.kind === "player-season") return [subject.position, subject.season].filter(Boolean).join(" · ") || subject.league;
@@ -336,25 +331,14 @@ function subtitleForSubject(subject: FootballSubjectProfile) {
   return subject.school ?? `${subject.league} program`;
 }
 
-/**
- * Builds an evaluated comparison pool from the deep canonical query result.
- * Reviewed rows calibrate matching subjects only; subjects absent from that list remain eligible when canonical facts suffice.
- * Data-derived ratings are anchored to the versioned reviewed calibration set, never to the current candidate pool.
- */
-export function buildFootballComparisonCandidatePool(
-  packId: FootballRankFivePackId,
-  reviewedItems: readonly FootballRankFiveItem[] = [],
-): readonly FootballComparisonCandidate[] {
+export function buildFootballComparisonCandidatePool(packId: FootballRankFivePackId, reviewedItems: readonly FootballRankFiveItem[] = []): readonly FootballComparisonCandidate[] {
   const spec = footballComparisonCategorySpecs[packId];
   const semantic = rankingSemanticByPack[packId];
   const subjects = queryFootballSubjects(spec.query);
   const reviewed = reviewedByCanonicalId(packId, reviewedItems);
   const calibrationValues = fixedCalibrationValues(packId, spec);
-  const raw = subjects.map((subject) => ({
-    subject,
-    reviewed: reviewed.get(subject.id),
-    facts: factsForSubject(subject.id, spec.metrics),
-  })).filter((candidate) => candidate.reviewed || candidate.facts.length >= spec.minimumFacts);
+  const raw = subjects.map((subject) => ({ subject, reviewed: reviewed.get(subject.id), facts: factsForSubject(subject.id, spec.metrics) }))
+    .filter((candidate) => candidate.reviewed || candidate.facts.length >= spec.minimumFacts);
 
   return raw.map(({ subject, reviewed: reviewedItem, facts }) => {
     if (reviewedItem) {
@@ -374,14 +358,12 @@ export function buildFootballComparisonCandidatePool(
 
     const evidence = facts.flatMap((row) => {
       const dimension = rankingDimensionByMetric[row.metric.metricId];
-      if (!dimension) return [];
+      const anchors = calibrationValues.get(row.metric.metricId) ?? [];
+      if (!dimension || anchors.length < 2) return [];
       return [{
         dimension,
-        score: scoreFootballAnchoredValue(
-          row.value,
-          calibrationValues.get(row.metric.metricId) ?? [],
-          row.metric.direction ?? "higher",
-        ),
+        weight: row.metric.weight,
+        score: scoreFootballAnchoredValue(row.value, anchors, row.metric.direction ?? "higher"),
       }];
     });
     const ranking = rateFootballRankingEvidence(semantic, evidence);
