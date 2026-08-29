@@ -40,26 +40,38 @@ describe("Shane's ranked watchlist", () => {
     expect(watchMovement(shanesWatchlist.fighters[1])).toEqual({ label: "NEW", direction: "new" });
 
     expect(shanesWatchlist.fighters[2]).toMatchObject({
-      id: "fatima-kline",
-      subjectPronoun: "she",
-      videoUrl: "https://youtu.be/E3Eat8_BBjM?is=69fExP5AoinR5Xdt",
+      id: "abdul-rakhman-yakhyaev",
+      rank: 3,
+      previousRank: 4,
+      subjectPronoun: "he",
+      videoUrl: "https://youtube.com/shorts/k5En_QDBACA?is=KeKmxuwmh7N1yb1N",
     });
+    expect(watchMovement(shanesWatchlist.fighters[2])).toEqual({ label: "↑1", direction: "up" });
 
-    expect(shanesWatchlist.fighters[4]).toMatchObject({
+    expect(shanesWatchlist.fighters[3]).toMatchObject({
       id: "bilal-hasan",
-      rank: 5,
-      previousRank: null,
+      rank: 4,
+      previousRank: 5,
       nickname: "The IndoNinja",
       division: "Flyweight",
       age: 25,
-      ufcRecord: "0–0",
-      ufcWinStreak: "0",
-      ufcFinishes: "0",
+      ufcRecord: "1–0",
+      ufcWinStreak: "1",
+      ufcFinishes: "1",
       photoUrl: "/assets/fighters/bilal-hasan-thumb.webp",
       videoUrl: "https://youtube.com/shorts/AIW7VVg4N4g?is=Zagfzf_n_J80-Ard",
     });
     expect(existsSync("public/assets/fighters/bilal-hasan-thumb.webp")).toBe(true);
-    expect(watchMovement(shanesWatchlist.fighters[4])).toEqual({ label: "NEW", direction: "new" });
+    expect(watchMovement(shanesWatchlist.fighters[3])).toEqual({ label: "↑1", direction: "up" });
+
+    expect(shanesWatchlist.fighters[4]).toMatchObject({
+      id: "fatima-kline",
+      rank: 5,
+      previousRank: 3,
+      subjectPronoun: "she",
+      videoUrl: "https://youtu.be/E3Eat8_BBjM?is=69fExP5AoinR5Xdt",
+    });
+    expect(watchMovement(shanesWatchlist.fighters[4])).toEqual({ label: "↓2", direction: "down" });
 
     expect(shanesWatchlist.fighters[5]).toMatchObject({
       id: "daniil-donchenko",
@@ -71,9 +83,9 @@ describe("Shane's ranked watchlist", () => {
     expect(shanesWatchlist.fighters.map((fighter) => fighter.videoUrl)).toEqual([
       "https://youtube.com/shorts/2V8eGAiUZaU?is=b2fwdTJ5f9m1LVZ5",
       "https://youtube.com/shorts/ivb3NbPsnYg?is=y2ti4vYuCvUdFroV",
-      "https://youtu.be/E3Eat8_BBjM?is=69fExP5AoinR5Xdt",
       "https://youtube.com/shorts/k5En_QDBACA?is=KeKmxuwmh7N1yb1N",
       "https://youtube.com/shorts/AIW7VVg4N4g?is=Zagfzf_n_J80-Ard",
+      "https://youtu.be/E3Eat8_BBjM?is=69fExP5AoinR5Xdt",
       "https://youtube.com/shorts/hAPpKy3ZALk?is=MWDtVBsFxcT0IV2L",
     ]);
   });
@@ -85,8 +97,8 @@ describe("Shane's ranked watchlist", () => {
     expect(screen.getByRole("heading", { name: "Fighters to Watch" })).toBeInTheDocument();
     expect(screen.getByText("Gable Steveson")).toBeInTheDocument();
     expect(screen.getByText("Quillan Salkilld")).toBeInTheDocument();
-    expect(screen.getByText("Fatima Kline")).toBeInTheDocument();
-    expect(screen.queryByText("Abdul Rakhman Yakhyaev")).not.toBeInTheDocument();
+    expect(screen.getByText("Abdul Rakhman Yakhyaev")).toBeInTheDocument();
+    expect(screen.queryByText("Fatima Kline")).not.toBeInTheDocument();
 
     expect(screen.getByRole("link", { name: /Gable Steveson/i })).toHaveAttribute("href", "/fighters-to-watch#gable-steveson");
     expect(screen.getByRole("link", { name: "VIEW FULL BOARD →" })).toHaveAttribute("href", "/fighters-to-watch");
@@ -113,9 +125,7 @@ describe("Shane's ranked watchlist", () => {
     expect(within(movementSummary).getByText("NEW")).toBeInTheDocument();
     expect(within(movementSummary).getByText("MOVED")).toBeInTheDocument();
     expect(within(movementSummary).getByText("HELD")).toBeInTheDocument();
-    expect(within(movementSummary).getByText("2")).toBeInTheDocument();
-    expect(within(movementSummary).getByText("3")).toBeInTheDocument();
-    expect(within(movementSummary).getByText("1")).toBeInTheDocument();
+    expect(Array.from(movementSummary.querySelectorAll("strong")).map((value) => value.textContent)).toEqual(["1", "4", "1"]);
   });
 
   it("opens the real scouting snapshot as three readable beats with UFC-only numbers", () => {
@@ -156,17 +166,17 @@ describe("Shane's ranked watchlist", () => {
     expect(window.location.hash).toBe("");
   });
 
-  it("wires Bilal Hasan in at #5 before his UFC debut", () => {
+  it("updates Bilal Hasan to #4 after his UFC debut knockout", () => {
     window.history.replaceState({}, "", "/fighters-to-watch");
     render(<MemoryRouter><ShanesWatchlistPage /></MemoryRouter>);
 
     fireEvent.click(screen.getByRole("button", { name: "Open scouting report for Bilal Hasan" }));
 
     const dialog = screen.getByRole("dialog", { name: "Bilal Hasan" });
-    expect(within(dialog).getByText("SHANE’S RANKING · #5")).toBeInTheDocument();
+    expect(within(dialog).getByText("SHANE’S RANKING · #4")).toBeInTheDocument();
     expect(within(dialog).getByText("“The IndoNinja”")).toBeInTheDocument();
-    expect(within(dialog).getByText(/His UFC sample starts from zero on August 29 against fellow unbeaten flyweight Nilson Rojas/i)).toBeInTheDocument();
-    expect(within(dialog).getByText("0–0")).toBeInTheDocument();
+    expect(within(dialog).getByText(/knocking out Nilson Rojas with a right hand at 2:28 of Round 2 in Shanghai/i)).toBeInTheDocument();
+    expect(within(dialog).getByText("1–0")).toBeInTheDocument();
     expect(within(dialog).getByText("UFC RECORD")).toBeInTheDocument();
     expect(within(dialog).queryByText("PRO RECORD")).not.toBeInTheDocument();
     expect(within(dialog).getByRole("link", { name: "WATCH FIGHT HIGHLIGHT ↗" })).toHaveAttribute(
