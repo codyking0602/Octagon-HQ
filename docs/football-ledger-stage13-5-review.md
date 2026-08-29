@@ -15,7 +15,7 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 | WR | 250 | 7 | 51 | 192 | 250 | 0 | 0 | 0 | 0 | 0 |
 | TE | 74 | 1 | 12 | 61 | 74 | 0 | 0 | 0 | 0 | 0 |
 | OL | 59 | 15 | 42 | 2 | 59 | 0 | 0 | 0 | 0 | 0 |
-| DL / EDGE | 322 | 7 | 41 | 274 | 294 | 28 | 0 | 28 | 0 | 0 |
+| DL / EDGE | 322 | 7 | 41 | 274 | 321 | 1 | 0 | 1 | 0 | 0 |
 | LB | 240 | 5 | 38 | 197 | 219 | 21 | 0 | 21 | 0 | 0 |
 | Secondary | 417 | 9 | 49 | 359 | 417 | 0 | 0 | 0 | 0 | 0 |
 | K / P | 19 | 6 | 12 | 1 | 19 | 0 | 0 | 0 | 0 | 0 |
@@ -376,34 +376,7 @@ None.
 - CFB WR: **Golden Tate** — C, Partial; missing WR receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB WR: **Jeff Samardzija** — C, Partial; missing WR receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB WR: **Robert Woods** — C, Partial; missing WR receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
-- NFL DL / EDGE: **Alan Page** — A, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL DL / EDGE: **Deacon Jones** — A, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL DL / EDGE: **Joe Greene** — A, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL DL / EDGE: **Alex Karras** — B, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL DL / EDGE: **Bob Lilly** — B, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL DL / EDGE: **Carl Eller** — B, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL DL / EDGE: **Charles Haley** — B, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats cover only part of this career/season; normalized NFL player production begins in 1999.
-- NFL DL / EDGE: **Chris Doleman** — B, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats cover only part of this career/season; normalized NFL player production begins in 1999.
-- NFL DL / EDGE: **Claude Humphrey** — B, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL DL / EDGE: **Cortez Kennedy** — B, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats cover only part of this career/season; normalized NFL player production begins in 1999.
-- NFL DL / EDGE: **Curley Culp** — B, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL DL / EDGE: **Dan Hampton** — B, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL DL / EDGE: **Elvin Bethea** — B, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL DL / EDGE: **Fred Dean** — B, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL DL / EDGE: **Howie Long** — B, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL DL / EDGE: **Jack Youngblood** — B, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL DL / EDGE: **Joe Klecko** — B, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL DL / EDGE: **John Randle** — B, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats cover only part of this career/season; normalized NFL player production begins in 1999.
-- NFL DL / EDGE: **Junious 'Buck' Buchanan** — B, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL DL / EDGE: **Kevin Greene** — B, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats cover only part of this career/season; normalized NFL player production begins in 1999.
-- NFL DL / EDGE: **Lee Roy Selmon** — B, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL DL / EDGE: **Merlin Olsen** — B, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL DL / EDGE: **Randy White** — B, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL DL / EDGE: **Richard Dent** — B, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL DL / EDGE: **Steve McMichael** — B, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL DL / EDGE: **Dion Jordan** — C, Partial; missing DL/EDGE disruption facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized NFL player production begins in 1999.
 - NFL DL / EDGE: **Mean Joe Greene** — C, Partial; missing DL/EDGE disruption facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized NFL player production begins in 1999.
-- NFL DL / EDGE: **Vernon Gholston** — C, Partial; missing DL/EDGE disruption facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized NFL player production begins in 1999.
 - NFL Eras / dynasties: **Cleveland Browns — Paul Brown NFL dynasty** — A, Partial; missing objective era results, era championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Eras / dynasties: **Dallas Cowboys — Triplets dynasty** — A, Partial; missing objective era results, era championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Eras / dynasties: **Green Bay Packers — Lombardi dynasty** — A, Partial; missing objective era results, era championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
