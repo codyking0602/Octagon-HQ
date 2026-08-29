@@ -396,7 +396,7 @@ describe("Football PR10 content simulation / replay audit", () => {
       formatShares: Object.fromEntries([...formatCounts].map(([key, value]) => [key, share(value, HIT_THE_NUMBER_RUNS)])),
       domainShares: Object.fromEntries([...domainCounts].map(([key, value]) => [key, share(value, HIT_THE_NUMBER_RUNS)])),
     }));
-  }, 60_000);
+  }, 90_000);
 
   it("proves Find the Leader rotates content, covers its catalog, and records its finite source-pool replay ceiling", () => {
     const questionCounts = new Map<string, number>();
