@@ -7,6 +7,7 @@ import {
   rateFootballRankingEvidence,
   scoreFootballAnchoredValue,
   type FootballRankingDimension,
+  type FootballRankingScoreSignal,
   type FootballRankingSemantic,
 } from "./footballRankingFramework";
 import {
@@ -319,6 +320,14 @@ function fixedCalibrationValues(packId: FootballRankFivePackId, spec: FootballCo
   return values;
 }
 
+function scoreSignalsForSpec(spec: FootballComparisonCategorySpec): readonly FootballRankingScoreSignal[] {
+  return spec.metrics.flatMap((metric) => {
+    const dimension = rankingDimensionByMetric[metric.metricId];
+    if (!dimension) return [];
+    return [{ signalId: metric.metricId, dimension, weight: metric.weight }];
+  });
+}
+
 function subtitleForSubject(subject: FootballSubjectProfile) {
   if (subject.kind === "player-career") {
     const seasons = subject.startSeason != null && subject.endSeason != null ? `${subject.startSeason}–${subject.endSeason}` : null;
@@ -337,6 +346,7 @@ export function buildFootballComparisonCandidatePool(packId: FootballRankFivePac
   const subjects = queryFootballSubjects(spec.query);
   const reviewed = reviewedByCanonicalId(packId, reviewedItems);
   const calibrationValues = fixedCalibrationValues(packId, spec);
+  const scoreSignals = scoreSignalsForSpec(spec);
   const raw = subjects.map((subject) => ({ subject, reviewed: reviewed.get(subject.id), facts: factsForSubject(subject.id, spec.metrics) }))
     .filter((candidate) => candidate.reviewed || candidate.facts.length >= spec.minimumFacts);
 
@@ -361,12 +371,13 @@ export function buildFootballComparisonCandidatePool(packId: FootballRankFivePac
       const anchors = calibrationValues.get(row.metric.metricId) ?? [];
       if (!dimension || anchors.length < 2) return [];
       return [{
+        signalId: row.metric.metricId,
         dimension,
         weight: row.metric.weight,
         score: scoreFootballAnchoredValue(row.value, anchors, row.metric.direction ?? "higher"),
       }];
     });
-    const ranking = rateFootballRankingEvidence(semantic, evidence);
+    const ranking = rateFootballRankingEvidence(semantic, evidence, scoreSignals);
 
     return {
       id: subject.id,
