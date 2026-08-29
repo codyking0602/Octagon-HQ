@@ -16,7 +16,7 @@ const HISTORICAL_RECEIVERS = [
   "nfl-fred-biletnikoff",
 ] as const;
 
-describe("Football Ledger Stage 13.6 historical NFL receiving hydration", () => {
+describe("Football Ledger Stage 13.6 historical NFL WR factual hydration", () => {
   it("hydrates the reviewed historical WR batch through the canonical PFR factual owner", () => {
     expect(getFootballFact("nfl-don-hutson", "nfl-career-receiving-yards")?.fact.value).toBe(7991);
     expect(getFootballFact("nfl-raymond-berry", "nfl-career-receptions")?.fact.value).toBe(631);
