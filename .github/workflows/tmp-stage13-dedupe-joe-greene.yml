@@ -1,0 +1,63 @@
+name: Temporary Stage 13 Dedupe Joe Greene
+
+on:
+  push:
+    branches:
+      - stage13-5-dedupe-joe-greene
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci --silent --no-audit --no-fund
+      - name: Reconcile comparison Joe Greene to reviewed canonical identity
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('src/features/back-room/footballCanonicalSubjectExpansion.ts')
+          text = path.read_text()
+          old = '''const defenders: FootballExpandedCanonicalSubject[] = nflDefensiveCareers.map((item) => ({
+  id: item.id,
+  name: item.name,
+  kind: "player-career",
+  league: "NFL",
+  position: defenderPositions[item.id] ?? "DL",
+}));'''
+          new = '''const defenders: FootballExpandedCanonicalSubject[] = nflDefensiveCareers.map((item) => {
+  const canonicalIdentity = item.id === "joe-greene"
+    ? { id: "nfl-joe-greene", name: "Joe Greene", aliases: ["joe-greene", "Mean Joe Greene"] }
+    : { id: item.id, name: item.name };
+  return {
+    ...canonicalIdentity,
+    kind: "player-career",
+    league: "NFL",
+    position: defenderPositions[item.id] ?? "DL",
+  };
+});'''
+          if old not in text:
+              raise SystemExit('canonical defender expansion block not found')
+          path.write_text(text.replace(old, new, 1))
+          PY
+      - run: npm run generate:football-cfb-player-seasons && npm run generate:football-factual-universe && npm run generate:football-ledger-audit
+      - name: Commit canonical repair, generated audit, and self-clean
+        run: |
+          rm .github/workflows/tmp-stage13-dedupe-joe-greene.yml
+          rm .github/workflows/tmp-stage13-joe-greene-diagnostic.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/features/back-room/footballCanonicalSubjectExpansion.ts docs/football-ledger-stage13-5-review.md .github/workflows/tmp-stage13-dedupe-joe-greene.yml .github/workflows/tmp-stage13-joe-greene-diagnostic.yml
+          git commit -m 'Reconcile Joe Greene canonical recognition identity'
+          git push origin HEAD:stage13-5-dedupe-joe-greene
