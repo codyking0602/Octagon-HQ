@@ -591,34 +591,11 @@ export const expandedFootballFactualRecords: readonly FootballFactualRecord[] = 
     ["cfb-program-title-game-appearances-since-2000", 4],
   ]),
 
-  // Explicit program eras make dynasties/countable eras reusable without a subjective dynasty flag.
-  cfbEra("alabama-2009-2020", [
-    ["cfb-era-wins", 151],
-    ["cfb-era-losses", 15],
-    ["cfb-era-national-titles", 6],
-    ["cfb-era-conference-titles", 7],
-    ["cfb-era-title-game-appearances", 8],
-  ]),
-  cfbEra("georgia-2021-2024", [
-    ["cfb-era-wins", 53],
-    ["cfb-era-losses", 5],
-    ["cfb-era-national-titles", 2],
-    ["cfb-era-conference-titles", 2],
-    ["cfb-era-cfp-appearances", 3],
-  ]),
+  // Only legacy era facts whose exact windows remain canonical survive here; wider/current Program Eras are hydrated from source projections.
   cfbEra("usc-2002-2008", [
     ["cfb-era-wins", 82],
     ["cfb-era-losses", 9],
-    ["cfb-era-national-titles", 2],
     ["cfb-era-conference-titles", 7],
-  ]),
-  cfbEra("clemson-2015-2020", [
-    ["cfb-era-wins", 79],
-    ["cfb-era-losses", 7],
-    ["cfb-era-national-titles", 2],
-    ["cfb-era-conference-titles", 6],
-    ["cfb-era-cfp-appearances", 6],
-    ["cfb-era-title-game-appearances", 4],
   ]),
 
   // CFB team seasons beyond champions: strong, disappointing and bottom-end seasons all become factual candidates.

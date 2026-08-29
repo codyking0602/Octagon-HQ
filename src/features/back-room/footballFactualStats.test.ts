@@ -39,7 +39,7 @@ describe("Football factual stat owner", () => {
   it("requires every fact to use one metric definition and reviewed evidence source", () => {
     const metricIds = new Set(footballFactMetricDefinitions.map((metric) => metric.id));
     const sourcesById = new Map(footballFactSources.map((source) => [source.id, source]));
-    const approvedReviewDates = new Set(["2026-08-22", "2026-08-25", "2026-08-26", "2026-08-27"]);
+    const approvedReviewDates = new Set(["2026-08-22", "2026-08-25", "2026-08-26", "2026-08-27", "2026-08-28"]);
 
     expect(new Set(metricIds).size).toBe(footballFactMetricDefinitions.length);
     expect(new Set(footballFactSources.map((source) => source.id)).size).toBe(footballFactSources.length);
@@ -100,7 +100,7 @@ describe("Football factual stat owner", () => {
     expect(getFootballFact("cfb-larry-fitzgerald", "cfb-best-season-receiving-yards")?.fact.value).toBe(1672);
   });
 
-  it("covers modern CFB skill players, defenders, coaches, programs, dynasties and non-title teams", () => {
+  it("covers modern CFB skill players, defenders, coaches, programs, Program Eras and non-title teams", () => {
     expect(getFootballFact("cfb-derrick-henry", "cfb-best-season-rushing-yards")?.fact.value).toBe(2219);
     expect(getFootballFact("cfb-devonta-smith", "cfb-best-season-receiving-yards")?.fact.value).toBe(1856);
     expect(getFootballFact("cfb-brock-bowers", "cfb-best-season-receiving-yards")?.fact.value).toBe(942);
@@ -108,7 +108,7 @@ describe("Football factual stat owner", () => {
     expect(getFootballFact("cfb-travis-hunter", "cfb-best-season-defensive-interceptions")?.fact.value).toBe(4);
     expect(getFootballFact("nick-saban-cfb", "cfb-coach-national-titles")?.fact.value).toBe(7);
     expect(getFootballFact("program-alabama", "cfb-program-national-titles-since-2000")?.fact.value).toBe(6);
-    expect(getFootballFact("alabama-2009-2020", "cfb-era-wins")?.fact.value).toBe(151);
+    expect(getFootballFact("alabama-2008-2023", "cfb-era-national-titles")?.fact.value).toBe(6);
     expect(getFootballFact("2022-tcu", "cfb-team-wins")?.fact.value).toBe(13);
     expect(getFootballFact("2022-tcu", "cfb-national-title")?.fact.value).toBe(0);
   });

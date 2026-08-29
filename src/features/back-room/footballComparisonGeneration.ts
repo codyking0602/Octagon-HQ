@@ -508,6 +508,49 @@ function replaceLowestTargets(
   }
 }
 
+function ensureReachableKeepCutTargets(
+  targets: FootballComparisonTierId[],
+  items: readonly FootballRankFiveItem[],
+  requiredDistinctTiers: number,
+) {
+  const targetedAvailableTiers = new Set(
+    targets.filter((tier) => availableTierCount(items, tier) > 0),
+  );
+  if (targetedAvailableTiers.size >= requiredDistinctTiers) return;
+
+  const missingRepeatableTiers = TIER_ORDER.filter((tier) => (
+    tier !== "elite"
+    && tier !== "bad"
+    && repeatableTierCount(items, tier) > 0
+    && !targetedAvailableTiers.has(tier)
+  ));
+
+  for (const missingTier of missingRepeatableTiers) {
+    if (targetedAvailableTiers.size >= requiredDistinctTiers) break;
+
+    let replaceAt = targets.findIndex((tier) => (
+      tier !== "elite"
+      && tier !== "bad"
+      && availableTierCount(items, tier) === 0
+    ));
+
+    if (replaceAt < 0) {
+      for (let targetIndex = targets.length - 1; targetIndex >= 0; targetIndex -= 1) {
+        const currentTier = targets[targetIndex]!;
+        if (currentTier === "elite" || currentTier === "bad") continue;
+        if (targets.filter((tier) => tier === currentTier).length > 1) {
+          replaceAt = targetIndex;
+          break;
+        }
+      }
+    }
+
+    if (replaceAt < 0) break;
+    targets[replaceAt] = missingTier;
+    targetedAvailableTiers.add(missingTier);
+  }
+}
+
 function keepCutProfileForSeed(
   items: readonly FootballRankFiveItem[],
   scopeId: string,
@@ -570,6 +613,8 @@ function keepCutProfileForSeed(
     const index = targets.indexOf("bad");
     targets[index] = "below-average";
   }
+
+  ensureReachableKeepCutTargets(targets, items, requiredDistinctTiers);
 
   return { targets, eliteCount, badCount };
 }

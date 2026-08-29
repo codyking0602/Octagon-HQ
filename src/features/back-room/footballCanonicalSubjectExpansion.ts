@@ -1,6 +1,5 @@
 import {
   collegeHeadCoaches,
-  collegeProgramEras,
   collegeQuarterbackDepth,
   collegeTeamSeasonDepth,
   nflDefensiveCareers,
@@ -9,6 +8,7 @@ import {
   nflTightEnds,
 } from "./footballComparisonDepthCatalog";
 import { footballCfbPlayerSeasonRecognitionRecords } from "./footballCfbPlayerSeasonRecognition";
+import { footballProgramEraSubjects } from "./footballProgramEraSeeds";
 import { footballRankFivePacks } from "./footballRankFiveModel";
 
 export type FootballExpandedSubjectKind = "player-career" | "player-season" | "team-season" | "program" | "program-era" | "coach";
@@ -28,14 +28,6 @@ export interface FootballExpandedCanonicalSubject {
   school?: string;
   startSeason?: number;
   endSeason?: number;
-}
-
-function decadeRange(startSeason: number, endSeason: number) {
-  const values: number[] = [];
-  for (let decade = Math.floor(startSeason / 10) * 10; decade <= Math.floor(endSeason / 10) * 10; decade += 10) {
-    values.push(decade);
-  }
-  return values;
 }
 
 function leadingSeason(id: string) {
@@ -155,22 +147,6 @@ const collegeCoaches: FootballExpandedCanonicalSubject[] = collegeHeadCoaches.ma
   school: item.asset.label,
 }));
 
-const programEras: FootballExpandedCanonicalSubject[] = collegeProgramEras.map((item) => {
-  const match = /-(\d{4})-(\d{4})$/.exec(item.id);
-  const startSeason = match ? Number(match[1]) : undefined;
-  const endSeason = match ? Number(match[2]) : undefined;
-  return {
-    id: item.id,
-    name: item.name,
-    kind: "program-era",
-    league: "CFB",
-    school: item.asset.label,
-    startSeason,
-    endSeason,
-    activeDecades: startSeason == null || endSeason == null ? undefined : decadeRange(startSeason, endSeason),
-  };
-});
-
 const collegeQuarterbacks: FootballExpandedCanonicalSubject[] = collegeQuarterbackDepth.map((item) => ({
   id: item.id,
   name: item.name,
@@ -193,8 +169,8 @@ const collegeSeasons: FootballExpandedCanonicalSubject[] = collegeTeamSeasonDept
 });
 
 /**
- * Canonicalized subject families that already existed in Football comparison games plus generated recognition-first CFB seasons.
- * This is an identity adapter only: comparison ratings remain game-specific and are deliberately not imported into the factual ledger.
+ * Canonicalized subject families that already existed in Football comparison games plus generated recognition-first CFB seasons
+ * and the reviewed Program Era owner. Comparison ratings remain game-specific and are deliberately not imported into the factual ledger.
  */
 export const footballComparisonCanonicalSubjects: readonly FootballExpandedCanonicalSubject[] = [
   ...tightEnds,
@@ -204,7 +180,7 @@ export const footballComparisonCanonicalSubjects: readonly FootballExpandedCanon
   ...cfbRecognizablePlayerSeasons,
   ...nflSeasons,
   ...collegeCoaches,
-  ...programEras,
+  ...footballProgramEraSubjects,
   ...collegeQuarterbacks,
   ...collegeSeasons,
 ];
