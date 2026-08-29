@@ -1,0 +1,41 @@
+name: Stage 13.6 Regenerate Football Audit
+
+on:
+  push:
+    branches: [stage13-6-cfb-historical-coach-facts]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: stage13-6-regenerate-audit
+  cancel-in-progress: true
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: stage13-6-cfb-historical-coach-facts
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci --silent --no-audit --no-fund
+      - name: Regenerate canonical audit artifact
+        run: |
+          npm run generate:football-cfb-player-seasons
+          npm run generate:football-factual-universe
+          npm run generate:football-ledger-audit
+          git add docs/football-ledger-stage13-5-review.md
+          if git diff --cached --quiet; then
+            echo "Audit artifact already current."
+            exit 0
+          fi
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git commit -m "Regenerate Football ledger audit artifact"
+          git push origin HEAD:stage13-6-cfb-historical-coach-facts
