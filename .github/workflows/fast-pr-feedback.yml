@@ -5,7 +5,7 @@ on:
     types: [opened, synchronize, reopened, converted_to_draft]
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: fast-pr-feedback-${{ github.event.pull_request.number }}
@@ -25,14 +25,27 @@ defaults:
 jobs:
   fast-feedback:
     name: fast feedback
+    if: ${{ github.event.pull_request.draft == true }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Check out repair branch
+      - name: Check out exact draft head with comparison history
         uses: actions/checkout@v4
         with:
-          ref: stage13-6-cfb-historical-coach-facts
-          fetch-depth: 1
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+          show-progress: false
+
+      - name: Verify exact checked-out SHA
+        run: |
+          checked_out_sha=$(git rev-parse HEAD)
+          if [ "$checked_out_sha" != "$SOURCE_SHA" ]; then
+            echo "::error title=Exact SHA checkout failed::Expected $SOURCE_SHA but checked out $checked_out_sha."
+            exit 1
+          fi
+          git cat-file -e "$BASE_SHA^{commit}"
+          echo "Fast feedback source verified: $checked_out_sha against base $BASE_SHA"
 
       - name: Set up Node and npm cache
         uses: actions/setup-node@v4
@@ -44,17 +57,19 @@ jobs:
       - name: Install locked dependencies
         run: npm ci --silent --no-audit --no-fund
 
-      - name: Regenerate and commit canonical Football audit
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Run tests affected by this PR
+        run: npm test -- --changed="$BASE_SHA" --passWithNoTests
+
+      - name: Summarize fast feedback
+        if: success()
         run: |
-          npm run generate:football-cfb-player-seasons
-          npm run generate:football-factual-universe
-          npm run generate:football-ledger-audit
-          git add docs/football-ledger-stage13-5-review.md
-          if git diff --cached --quiet; then
-            echo "Audit artifact already current."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "Regenerate Football ledger audit artifact"
-          git push origin HEAD:stage13-6-cfb-historical-coach-facts
+          {
+            echo "### Fast draft feedback passed"
+            echo "- Exact draft head: \`$SOURCE_SHA\`"
+            echo "- Typecheck passed"
+            echo "- Tests affected by changes since \`$BASE_SHA\` passed"
+            echo "- Full validation still runs when the PR is marked ready"
+          } >> "$GITHUB_STEP_SUMMARY"
