@@ -33,6 +33,14 @@ export const expandedFootballFactSources: readonly FootballFactSource[] = [
     coverage: "Completed NFL receiver and tight-end career production used by the canonical Football factual ledger",
   },
   {
+    id: "pfr-specialist-career",
+    publisher: "Pro Football Reference",
+    title: "NFL kicker and punter career records",
+    url: "https://www.pro-football-reference.com/players/",
+    reviewedOn: "2026-08-29",
+    coverage: "Completed NFL kicker and punter career production used by the canonical Football factual ledger",
+  },
+  {
     id: "pfr-defensive-career",
     publisher: "Pro Football Reference",
     title: "NFL defensive career records",
@@ -101,6 +109,19 @@ const wr = (
   ["nfl-career-receiving-touchdowns", touchdowns],
 ]);
 
+const kicker = (subjectId: string, made: number, attempted: number, percentage: number) =>
+  record(subjectId, "nfl-player-career", "pfr-specialist-career", [
+    ["nfl-career-field-goals-made", made],
+    ["nfl-career-field-goals-attempted", attempted],
+    ["nfl-career-field-goal-percentage", percentage],
+  ]);
+
+const punter = (subjectId: string, punts: number, yards: number, average: number) =>
+  record(subjectId, "nfl-player-career", "pfr-specialist-career", [
+    ["nfl-career-punts", punts],
+    ["nfl-career-punting-yards", yards],
+    ["nfl-career-punting-average", average],
+  ]);
 const defender = (
   subjectId: string,
   values: readonly (readonly [FootballFactMetricId, number])[],
@@ -148,6 +169,11 @@ const cfbTeam = (subjectId: string, wins: number, losses: number, nationalChampi
   ]);
 
 export const expandedFootballFactualRecords: readonly FootballFactualRecord[] = [
+  // NFL specialists: reviewed career kicking and punting facts.
+  kicker("nfl-jan-stenerud", 373, 558, 66.8),
+  kicker("nfl-mark-moseley", 300, 457, 65.6),
+  punter("nfl-ray-guy", 1049, 44493, 42.4),
+  punter("pat-mcafee", 575, 26653, 46.4),
   // NFL receivers and tight ends: real career counting stats, not comparison ratings.
   wr("nfl-john-mackey", 331, 5236, 38),
   wr("nfl-charlie-sanders", 336, 4817, 31),
