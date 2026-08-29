@@ -57,22 +57,28 @@ const projectedSourceRecords: readonly FootballFactualRecord[] = rawProjectedSou
     return facts.length > 0 ? [{ ...record, facts }] : [];
   });
 
-const footballProgramEraProjectedRecords: readonly FootballFactualRecord[] = footballProgramEraSeeds.map((seed) => ({
-  subjectId: seed.id,
-  scope: "cfb-program-era",
-  facts: [{
-    metricId: "cfb-era-national-titles",
+const projectedRecordBySubjectId = new Map(
+  projectedSourceRecords.map((record) => [record.subjectId, record] as const),
+);
+
+for (const seed of footballProgramEraSeeds) {
+  const titleFact = {
+    metricId: "cfb-era-national-titles" as const,
     value: seed.titleSelectionSeasons.length,
     evidence: {
       sourceIds: ["ncaa-fbs-championship-history"],
-      kind: "reported",
+      kind: "reported" as const,
     },
-  }],
-}));
+  };
+  const existing = projectedRecordBySubjectId.get(seed.id);
+  projectedRecordBySubjectId.set(seed.id, existing
+    ? { ...existing, scope: "cfb-program-era", facts: [...existing.facts, titleFact] }
+    : { subjectId: seed.id, scope: "cfb-program-era", facts: [titleFact] });
+}
 
+/** One canonical projected record per subject; Program Era relationship facts and NCAA title facts share that record. */
 export const footballFactualUniverseProjectedRecords: readonly FootballFactualRecord[] = [
-  ...projectedSourceRecords,
-  ...footballProgramEraProjectedRecords,
+  ...projectedRecordBySubjectId.values(),
 ];
 
 /** Source-projection audit artifact. The canonical Stage 13 readiness matrix is computed from the registry post-gate universe. */
