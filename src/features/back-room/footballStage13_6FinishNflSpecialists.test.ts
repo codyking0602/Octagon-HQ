@@ -4,7 +4,7 @@ import { getFootballFact } from "./footballFactualStats";
 import { footballLedgerAudit } from "./footballLedgerAudit";
 
 describe("Football Ledger Stage 13.6 NFL K/P factual closeout", () => {
-  it("closes every NFL K/P factual-readiness gap through the canonical specialist owner", () => {
+  it("proves every NFL K/P factual-readiness gap is closed through the canonical specialist owner", () => {
     expect(getFootballFact("nfl-jan-stenerud", "nfl-career-field-goals-made")?.fact.value).toBe(373);
     expect(getFootballFact("nfl-jan-stenerud", "nfl-career-field-goals-attempted")?.fact.value).toBe(558);
     expect(getFootballFact("nfl-mark-moseley", "nfl-career-field-goals-made")?.fact.value).toBe(300);
