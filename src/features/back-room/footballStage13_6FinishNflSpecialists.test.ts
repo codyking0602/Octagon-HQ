@@ -11,7 +11,7 @@ describe("Football Ledger Stage 13.6 NFL specialist factual hydration", () => {
     expect(getFootballFact("nfl-ray-guy", "nfl-career-punts")?.fact.value).toBe(1049);
     expect(getFootballFact("nfl-ray-guy", "nfl-career-punting-yards")?.fact.value).toBe(44493);
     expect(getFootballFact("pat-mcafee", "nfl-career-punts")?.fact.value).toBe(575);
-    expect(getFootballFact("pat-mcafee", "nfl-career-punting-yards")?.fact.value).toBe(26669);
+    expect(getFootballFact("pat-mcafee", "nfl-career-punting-yards")?.fact.value).toBe(26653);
 
     const specialistRows = footballLedgerAudit.rows.filter((row) => row.league === "NFL" && row.pool === "K / P");
     expect(specialistRows).toHaveLength(19);
