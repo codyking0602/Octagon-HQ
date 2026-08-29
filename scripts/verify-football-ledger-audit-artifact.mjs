@@ -18,8 +18,9 @@ const status = execFileSync(
 ).trim();
 
 if (status) {
-  const diff = execFileSync("git", ["diff", "--", relativePath], { cwd: root, encoding: "utf8" });
-  console.error("Generated ledger audit diff follows:\n" + diff);
+  console.error("GENERATED_LEDGER_AUDIT_BASE64_BEGIN");
+  console.error(fs.readFileSync(outputPath).toString("base64"));
+  console.error("GENERATED_LEDGER_AUDIT_BASE64_END");
   throw new Error(`${relativePath} is stale or missing from the repository. Run npm run generate:football-ledger-audit and commit the result.`);
 }
 
