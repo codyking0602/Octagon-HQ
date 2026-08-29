@@ -1,0 +1,41 @@
+name: Temporary Stage 13 Fix NFL DL Identities
+
+on:
+  push:
+    branches:
+      - stage13-6-finish-nfl-dl
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci --silent --no-audit --no-fund
+      - name: Correct DL canonical subject ids and remove duplicate alias fact
+        run: |
+          sed -i 's/nfl-buck-buchanan"/nfl-junious-buck-buchanan"/g' src/features/back-room/footballFactualStatsExpansion.ts
+          sed -i 's/nfl-dion-jordan"/dion-jordan"/g' src/features/back-room/footballFactualStatsExpansion.ts
+          sed -i 's/nfl-vernon-gholston"/vernon-gholston"/g' src/features/back-room/footballFactualStatsExpansion.ts
+          sed -i '/defender("nfl-mean-joe-greene"/d' src/features/back-room/footballFactualStatsExpansion.ts
+      - run: npm run generate:football-cfb-player-seasons && npm run generate:football-factual-universe && npm run generate:football-ledger-audit
+      - name: Commit canonical corrections, generated audit, and self-clean
+        run: |
+          rm .github/workflows/tmp-stage13-fix-nfl-dl-ids.yml
+          rm .github/workflows/tmp-stage13-dl-id-diagnostic.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/features/back-room/footballFactualStatsExpansion.ts docs/football-ledger-stage13-5-review.md .github/workflows/tmp-stage13-fix-nfl-dl-ids.yml .github/workflows/tmp-stage13-dl-id-diagnostic.yml
+          git commit -m 'Correct NFL DL canonical factual identities'
+          git push origin HEAD:stage13-6-finish-nfl-dl
