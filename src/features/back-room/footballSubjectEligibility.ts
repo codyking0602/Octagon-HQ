@@ -77,15 +77,17 @@ export function buildFootballSubjectKnowledgeMetadata(
     proposedTier,
   );
   const casualEligible = recognizabilityTier === "D" ? false : (override.casualEligible ?? true);
+  const canonicalSourceIdentityKey = { provider: "octagon-hq", id: subject.id } as const;
+  const recognitionSourceIdentityKey = projection?.sourceIdentityKey
+    ?? generatedPlayerSeason?.sourceIdentityKey
+    ?? reviewedProgramEra?.sourceIdentityKey;
   const sourceIdentityKeys = override.sourceIdentityKeys ?? [
-    { provider: "octagon-hq", id: subject.id } as const,
-    ...(projection
-      ? [projection.sourceIdentityKey]
-      : generatedPlayerSeason
-        ? [generatedPlayerSeason.sourceIdentityKey]
-        : reviewedProgramEra
-          ? [reviewedProgramEra.sourceIdentityKey]
-          : []),
+    canonicalSourceIdentityKey,
+    ...(recognitionSourceIdentityKey
+      && (recognitionSourceIdentityKey.provider !== canonicalSourceIdentityKey.provider
+        || recognitionSourceIdentityKey.id !== canonicalSourceIdentityKey.id)
+      ? [recognitionSourceIdentityKey]
+      : []),
   ];
 
   return { recognizabilityTier, casualEligible, sourceIdentityKeys };
