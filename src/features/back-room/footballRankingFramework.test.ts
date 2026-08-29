@@ -69,6 +69,37 @@ describe("Football Stage 14 ranking framework", () => {
     expect(result.dimensionScores.peak).toBeCloseTo(0.75);
   });
 
+  it("uses an explicit score profile without hiding missing semantic dimensions", () => {
+    const result = rateFootballRankingEvidence(
+      "career-greatness",
+      [
+        { signalId: "production", dimension: "sustained-excellence", score: 1, weight: 0.8 },
+        { signalId: "honors", dimension: "honors", score: 0.75, weight: 0.2 },
+      ],
+      [
+        { signalId: "production", dimension: "sustained-excellence", weight: 0.8 },
+        { signalId: "honors", dimension: "honors", weight: 0.2 },
+      ],
+    );
+
+    expect(result.score).toBeCloseTo(0.95);
+    expect(result.coverage).toBeCloseTo(0.40);
+    expect(result.confidence).toBeCloseTo(0.40);
+    expect(result.status).toBe("low-confidence");
+  });
+
+  it("keeps missing score-profile signals neutral instead of reallocating their weight", () => {
+    const result = rateFootballRankingEvidence(
+      "career-greatness",
+      [{ signalId: "production", dimension: "sustained-excellence", score: 1 }],
+      [
+        { signalId: "production", dimension: "sustained-excellence", weight: 0.5 },
+        { signalId: "honors", dimension: "honors", weight: 0.5 },
+      ],
+    );
+    expect(result.score).toBeCloseTo(0.75);
+  });
+
   it("supports bounded era/position context adjustments without candidate-pool dependence", () => {
     expect(applyFootballRankingContextAdjustment(0.60, 0.10)).toBeCloseTo(0.70);
     expect(applyFootballRankingContextAdjustment(0.60, 0.50)).toBeCloseTo(0.75);
