@@ -18,7 +18,7 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 | DL / EDGE | 322 | 7 | 41 | 274 | 294 | 28 | 0 | 28 | 0 | 0 |
 | LB | 240 | 5 | 38 | 197 | 219 | 21 | 0 | 21 | 0 | 0 |
 | Secondary | 417 | 9 | 49 | 359 | 391 | 26 | 0 | 26 | 0 | 0 |
-| K / P | 19 | 6 | 12 | 1 | 18 | 1 | 0 | 1 | 0 | 0 |
+| K / P | 19 | 6 | 12 | 1 | 19 | 0 | 0 | 0 | 0 | 0 |
 | Player seasons | 764 | 107 | 318 | 339 | 764 | 0 | 0 | 0 | 0 | 0 |
 | Team seasons | 113 | 4 | 37 | 72 | 113 | 0 | 0 | 0 | 0 | 0 |
 | Franchises / programs | 32 | 5 | 27 | 0 | 32 | 0 | 0 | 0 | 0 | 0 |
@@ -483,7 +483,6 @@ None.
 - NFL Head coaches: **Sean McVay** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Sean Payton** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Tom Coughlin** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
-- NFL K / P: **Pat McAfee** — A, Partial; missing specialist kicking/punting facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized NFL player production begins in 1999.
 - NFL LB: **Dick Butkus** — A, Partial; missing LB tackle/disruption/turnover facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL LB: **Sam Huff** — A, Partial; missing LB tackle/disruption/turnover facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL LB: **Andre Tippett** — B, Partial; missing LB tackle/disruption/turnover facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
