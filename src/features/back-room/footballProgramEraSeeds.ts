@@ -24,7 +24,8 @@ const activeDecades = (startSeason: number, endSeason: number) => Array.from(
  *
  * Identity rule:
  * - an era is normally at least three completed seasons;
- * - the head coach is the strongest natural boundary, though a long tenure may have distinct performance phases;
+ * - the head coach is the strongest natural boundary; one school/coach normally owns one coherent Program Era;
+ * - only unusually long tenures with clearly distinct football identities may be split;
  * - "dynasty" is deliberately not an identity type here; it is a later evaluation of a Program Era;
  * - modern Tier C is reserved for culturally recognizable rise/decline/rebuild periods, not obscure coaching tenures.
  *
@@ -77,7 +78,6 @@ export const footballProgramEraSeeds: readonly FootballProgramEraSeed[] = [
   { id: "oklahoma-state-2010-2016", name: "Oklahoma State 2010–2016", school: "Oklahoma State", eraCoach: "Mike Gundy", startSeason: 2010, endSeason: 2016, titleSelectionSeasons: [], tier: "B" },
   { id: "stanford-2011-2015", name: "Stanford 2011–2015", school: "Stanford", eraCoach: "David Shaw", startSeason: 2011, endSeason: 2015, titleSelectionSeasons: [], tier: "B" },
   { id: "baylor-2011-2015", name: "Baylor 2011–2015", school: "Baylor", eraCoach: "Art Briles", startSeason: 2011, endSeason: 2015, titleSelectionSeasons: [], tier: "B" },
-  { id: "clemson-2011-2014", name: "Clemson 2011–2014", school: "Clemson", eraCoach: "Dabo Swinney", startSeason: 2011, endSeason: 2014, titleSelectionSeasons: [], tier: "B" },
   { id: "ohio-state-2012-2018", name: "Ohio State 2012–2018", school: "Ohio State", eraCoach: "Urban Meyer", startSeason: 2012, endSeason: 2018, titleSelectionSeasons: [2014], tier: "A" },
   { id: "florida-state-2013-2017", name: "Florida State 2013–2017", school: "Florida State", eraCoach: "Jimbo Fisher", startSeason: 2013, endSeason: 2017, titleSelectionSeasons: [2013], tier: "B" },
   { id: "auburn-2013-2017", name: "Auburn 2013–2017", school: "Auburn", eraCoach: "Gus Malzahn", startSeason: 2013, endSeason: 2017, titleSelectionSeasons: [], tier: "B" },
@@ -86,21 +86,18 @@ export const footballProgramEraSeeds: readonly FootballProgramEraSeed[] = [
   { id: "texas-2014-2016", name: "Texas 2014–2016", school: "Texas", eraCoach: "Charlie Strong", startSeason: 2014, endSeason: 2016, titleSelectionSeasons: [], tier: "C" },
   { id: "nebraska-2008-2014", name: "Nebraska 2008–2014", school: "Nebraska", eraCoach: "Bo Pelini", startSeason: 2008, endSeason: 2014, titleSelectionSeasons: [], tier: "C" },
   { id: "nebraska-2015-2017", name: "Nebraska 2015–2017", school: "Nebraska", eraCoach: "Mike Riley", startSeason: 2015, endSeason: 2017, titleSelectionSeasons: [], tier: "C" },
-  { id: "clemson-2015-2020", name: "Clemson 2015–2020", school: "Clemson", eraCoach: "Dabo Swinney", startSeason: 2015, endSeason: 2020, titleSelectionSeasons: [2016, 2018], tier: "A" },
-  { id: "alabama-2009-2020", name: "Alabama 2009–2020", school: "Alabama", eraCoach: "Nick Saban", startSeason: 2009, endSeason: 2020, titleSelectionSeasons: [2009, 2011, 2012, 2015, 2017, 2020], tier: "A" },
-  { id: "alabama-2021-2023", name: "Alabama 2021–2023", school: "Alabama", eraCoach: "Nick Saban", startSeason: 2021, endSeason: 2023, titleSelectionSeasons: [], tier: "B" },
+  { id: "clemson-2011-2025", name: "Clemson 2011–2025", school: "Clemson", eraCoach: "Dabo Swinney", startSeason: 2011, endSeason: 2025, titleSelectionSeasons: [2016, 2018], tier: "A" },
+  { id: "alabama-2008-2023", name: "Alabama 2008–2023", school: "Alabama", eraCoach: "Nick Saban", startSeason: 2008, endSeason: 2023, titleSelectionSeasons: [2009, 2011, 2012, 2015, 2017, 2020], tier: "A" },
   { id: "oklahoma-2017-2021", name: "Oklahoma 2017–2021", school: "Oklahoma", eraCoach: "Lincoln Riley", startSeason: 2017, endSeason: 2021, titleSelectionSeasons: [], tier: "B" },
-  { id: "georgia-2016-2020", name: "Georgia 2016–2020", school: "Georgia", eraCoach: "Kirby Smart", startSeason: 2016, endSeason: 2020, titleSelectionSeasons: [], tier: "B" },
-  { id: "georgia-2021-2024", name: "Georgia 2021–2024", school: "Georgia", eraCoach: "Kirby Smart", startSeason: 2021, endSeason: 2024, titleSelectionSeasons: [2021, 2022], tier: "A" },
-  { id: "michigan-2015-2020", name: "Michigan 2015–2020", school: "Michigan", eraCoach: "Jim Harbaugh", startSeason: 2015, endSeason: 2020, titleSelectionSeasons: [], tier: "B" },
-  { id: "michigan-2021-2023", name: "Michigan 2021–2023", school: "Michigan", eraCoach: "Jim Harbaugh", startSeason: 2021, endSeason: 2023, titleSelectionSeasons: [2023], tier: "A" },
+  { id: "georgia-2017-2025", name: "Georgia 2017–2025", school: "Georgia", eraCoach: "Kirby Smart", startSeason: 2017, endSeason: 2025, titleSelectionSeasons: [2021, 2022], tier: "A" },
+  { id: "michigan-2015-2023", name: "Michigan 2015–2023", school: "Michigan", eraCoach: "Jim Harbaugh", startSeason: 2015, endSeason: 2023, titleSelectionSeasons: [2023], tier: "A" },
   { id: "nebraska-2018-2022", name: "Nebraska 2018–2022", school: "Nebraska", eraCoach: "Scott Frost", startSeason: 2018, endSeason: 2022, titleSelectionSeasons: [], tier: "C" },
   { id: "notre-dame-2010-2021", name: "Notre Dame 2010–2021", school: "Notre Dame", eraCoach: "Brian Kelly", startSeason: 2010, endSeason: 2021, titleSelectionSeasons: [], tier: "B" },
   { id: "penn-state-2016-2025", name: "Penn State 2016–2025", school: "Penn State", eraCoach: "James Franklin", startSeason: 2016, endSeason: 2025, titleSelectionSeasons: [], tier: "B" },
   { id: "cincinnati-2018-2021", name: "Cincinnati 2018–2021", school: "Cincinnati", eraCoach: "Luke Fickell", startSeason: 2018, endSeason: 2021, titleSelectionSeasons: [], tier: "B" },
   { id: "utah-2018-2023", name: "Utah 2018–2023", school: "Utah", eraCoach: "Kyle Whittingham", startSeason: 2018, endSeason: 2023, titleSelectionSeasons: [], tier: "B" },
   { id: "lsu-2017-2021", name: "LSU 2017–2021", school: "LSU", eraCoach: "Ed Orgeron", startSeason: 2017, endSeason: 2021, titleSelectionSeasons: [2019], tier: "B" },
-  { id: "ohio-state-2019-2024", name: "Ohio State 2019–2024", school: "Ohio State", eraCoach: "Ryan Day", startSeason: 2019, endSeason: 2024, titleSelectionSeasons: [2024], tier: "A" },
+  { id: "ohio-state-2019-2025", name: "Ohio State 2019–2025", school: "Ohio State", eraCoach: "Ryan Day", startSeason: 2019, endSeason: 2025, titleSelectionSeasons: [2024], tier: "A" },
   { id: "oregon-2022-2025", name: "Oregon 2022–2025", school: "Oregon", eraCoach: "Dan Lanning", startSeason: 2022, endSeason: 2025, titleSelectionSeasons: [], tier: "B" },
   { id: "texas-2022-2025", name: "Texas 2022–2025", school: "Texas", eraCoach: "Steve Sarkisian", startSeason: 2022, endSeason: 2025, titleSelectionSeasons: [], tier: "B" },
   { id: "ole-miss-2020-2025", name: "Ole Miss 2020–2025", school: "Ole Miss", eraCoach: "Lane Kiffin", startSeason: 2020, endSeason: 2025, titleSelectionSeasons: [], tier: "C" },
