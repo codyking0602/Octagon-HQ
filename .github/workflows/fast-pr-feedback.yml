@@ -5,7 +5,7 @@ on:
     types: [opened, synchronize, reopened, converted_to_draft]
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: fast-pr-feedback-${{ github.event.pull_request.number }}
@@ -14,7 +14,6 @@ concurrency:
 env:
   SOURCE_SHA: ${{ github.event.pull_request.head.sha }}
   BASE_SHA: ${{ github.event.pull_request.base.sha }}
-  HEAD_REF: ${{ github.event.pull_request.head.ref }}
   VITE_SUPABASE_URL: https://octagon-validation.supabase.co
   VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_octagon_validation_only_00000000000000000000
   VITE_EXPECTED_SUPABASE_HOSTNAME: octagon-validation.supabase.co
@@ -35,7 +34,7 @@ jobs:
         with:
           ref: ${{ env.SOURCE_SHA }}
           fetch-depth: 0
-          persist-credentials: true
+          persist-credentials: false
           show-progress: false
 
       - name: Verify exact checked-out SHA
@@ -47,48 +46,6 @@ jobs:
           fi
           git cat-file -e "$BASE_SHA^{commit}"
           echo "Fast feedback source verified: $checked_out_sha against base $BASE_SHA"
-
-      - name: Materialize Stage 13.5 roadmap closeout
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          path = Path("docs/football-knowledge-ledger.md")
-          text = path.read_text()
-          anchor = "### Stage 14 — Ranking Philosophy + Scoring Architecture\n"
-          header = "### Stage 13.5 — Recognition Completeness + Factual Readiness Audit & Repair — COMPLETE\n"
-          section = """### Stage 13.5 — Recognition Completeness + Factual Readiness Audit & Repair — COMPLETE
-
-**Purpose:** independently verify that Stage 12 recognition evidence did not silently omit important historical identities, mature the bounded player-season and Program Era universes, and leave a durable post-gate factual-readiness census before ranking work begins.
-
-Delivered:
-
-- eliminated accidental dated-subject `Unknown` era leakage without weakening historical A/B/C policy;
-- dispositioned independent major recognition evidence families explicitly into A/B/C/D rather than treating the existing canonical universe as proof of its own completeness;
-- matured CFB player seasons into a permanent 316-season universe spanning positions and eras, with all 316 currently fact-ready for their season-level contract;
-- matured CFB Program Eras to 71 reviewed eras, normally bounded by a coaching tenure, with Mack Brown/Texas and Bob Stoops/Oklahoma retained as the only reviewed same-coach split exceptions;
-- preserved recognition membership separately from factual readiness: Partial subjects remain canonical and are excluded only from games whose required facts they cannot satisfy;
-- generated and checked in `docs/football-ledger-stage13-5-review.md` from the canonical `footballLedgerAudit.ts` owner, with CI freshness verification so the repo-at-rest review cannot silently drift;
-- final audit: **3,890 canonical A/B/C subjects, 0 independent omission candidates, 0 historical tier violations, 316 CFB player seasons, and 71 CFB Program Eras**.
-
-Stage 13.5 is the gate between the factual universe and ranking work. With this audit complete, Stage 14 may now define ranking philosophy and scoring architecture; it must not reopen candidate membership through a ranking-specific roster or compensate for missing facts with invented defaults.
-
-"""
-
-          if header not in text:
-              if anchor not in text:
-                  raise SystemExit("Stage 14 anchor not found")
-              path.write_text(text.replace(anchor, section + anchor, 1))
-          PY
-          if git diff --quiet -- docs/football-knowledge-ledger.md; then
-            echo "Stage 13.5 roadmap closeout already materialized."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/football-knowledge-ledger.md
-          git commit -m "Document Stage 13.5 completion"
-          git push origin HEAD:"$HEAD_REF"
 
       - name: Set up Node and npm cache
         uses: actions/setup-node@v4
