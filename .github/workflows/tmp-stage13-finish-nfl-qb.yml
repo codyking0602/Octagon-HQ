@@ -30,21 +30,25 @@ jobs:
           path = Path('src/features/back-room/footballFactualStatsExpansion.ts')
           text = path.read_text()
           marker = '  // NFL defenders: use position-appropriate objective production and award counts.\n'
-          rows = '''  record("nfl-bart-starr", "nfl-player-career", "pfr-career-stat-lines", [["nfl-career-passing-yards", 24718], ["nfl-career-passing-touchdowns", 152], ["nfl-career-interceptions-thrown", 138]]),
-  record("nfl-bobby-layne", "nfl-player-career", "pfr-career-stat-lines", [["nfl-career-passing-yards", 26768], ["nfl-career-passing-touchdowns", 196], ["nfl-career-interceptions-thrown", 243]]),
-  record("nfl-fran-tarkenton", "nfl-player-career", "pfr-career-stat-lines", [["nfl-career-passing-yards", 47003], ["nfl-career-passing-touchdowns", 342], ["nfl-career-interceptions-thrown", 266]]),
-  record("nfl-jim-kelly", "nfl-player-career", "pfr-career-stat-lines", [["nfl-career-passing-yards", 35467], ["nfl-career-passing-touchdowns", 237], ["nfl-career-interceptions-thrown", 175]]),
-  record("nfl-otto-graham", "nfl-player-career", "pfr-career-stat-lines", [["nfl-career-passing-yards", 23584], ["nfl-career-passing-touchdowns", 174], ["nfl-career-interceptions-thrown", 135]]),
-  record("nfl-roger-staubach", "nfl-player-career", "pfr-career-stat-lines", [["nfl-career-passing-yards", 22700], ["nfl-career-passing-touchdowns", 153], ["nfl-career-interceptions-thrown", 109]]),
-  record("nfl-sammy-baugh", "nfl-player-career", "pfr-career-stat-lines", [["nfl-career-passing-yards", 21886], ["nfl-career-passing-touchdowns", 187], ["nfl-career-interceptions-thrown", 203]]),
-  record("nfl-sid-luckman", "nfl-player-career", "pfr-career-stat-lines", [["nfl-career-passing-yards", 14686], ["nfl-career-passing-touchdowns", 137], ["nfl-career-interceptions-thrown", 132]]),
-  record("nfl-terry-bradshaw", "nfl-player-career", "pfr-career-stat-lines", [["nfl-career-passing-yards", 27989], ["nfl-career-passing-touchdowns", 212], ["nfl-career-interceptions-thrown", 210]]),
-  record("nfl-y-a-tittle", "nfl-player-career", "pfr-career-stat-lines", [["nfl-career-passing-yards", 33070], ["nfl-career-passing-touchdowns", 242], ["nfl-career-interceptions-thrown", 248]]),
-  record("nfl-boomer-esiason", "nfl-player-career", "pfr-career-stat-lines", [["nfl-career-passing-yards", 37920], ["nfl-career-passing-touchdowns", 247], ["nfl-career-interceptions-thrown", 184]]),
-  record("nfl-george-blanda", "nfl-player-career", "pfr-career-stat-lines", [["nfl-career-passing-yards", 26920], ["nfl-career-passing-touchdowns", 236], ["nfl-career-interceptions-thrown", 277]]),
-  record("nfl-joe-theismann", "nfl-player-career", "pfr-career-stat-lines", [["nfl-career-passing-yards", 25206], ["nfl-career-passing-touchdowns", 160], ["nfl-career-interceptions-thrown", 138]]),
-
-'''
+          records = [
+              ('nfl-bart-starr', 24718, 152, 138),
+              ('nfl-bobby-layne', 26768, 196, 243),
+              ('nfl-fran-tarkenton', 47003, 342, 266),
+              ('nfl-jim-kelly', 35467, 237, 175),
+              ('nfl-otto-graham', 23584, 174, 135),
+              ('nfl-roger-staubach', 22700, 153, 109),
+              ('nfl-sammy-baugh', 21886, 187, 203),
+              ('nfl-sid-luckman', 14686, 137, 132),
+              ('nfl-terry-bradshaw', 27989, 212, 210),
+              ('nfl-y-a-tittle', 33070, 242, 248),
+              ('nfl-boomer-esiason', 37920, 247, 184),
+              ('nfl-george-blanda', 26920, 236, 277),
+              ('nfl-joe-theismann', 25206, 160, 138),
+          ]
+          rows = ''.join(
+              f'  record("{sid}", "nfl-player-career", "pfr-career-stat-lines", [["nfl-career-passing-yards", {yards}], ["nfl-career-passing-touchdowns", {tds}], ["nfl-career-interceptions-thrown", {ints}]]),\n'
+              for sid, yards, tds, ints in records
+          ) + '\n'
           if 'record("nfl-bart-starr"' not in text:
               text = text.replace(marker, rows + marker, 1)
           path.write_text(text)
