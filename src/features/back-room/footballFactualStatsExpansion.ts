@@ -482,6 +482,14 @@ export const expandedFootballFactualRecords: readonly FootballFactualRecord[] = 
     ["cfb-best-season-sacks", 13.5],
     ["cfb-best-season-tackles-for-loss", 21],
   ]),
+  cfbPlayer("cfb-aaron-donald", [
+    ["cfb-best-season-sacks", 11],
+    ["cfb-best-season-tackles-for-loss", 28.5],
+  ]),
+  cfbPlayer("cfb-jadeveon-clowney", [
+    ["cfb-best-season-sacks", 13],
+    ["cfb-best-season-tackles-for-loss", 23.5],
+  ]),
   cfbPlayer("cfb-charles-woodson", [
     ["cfb-best-season-defensive-interceptions", 7],
     ["cfb-heisman-awards", 1],
