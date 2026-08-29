@@ -47,7 +47,17 @@ describe("Football Keep 4, Cut 4 canonical comparison authority", () => {
       const eligibleIds = new Set(pack.items.map((item) => item.id));
       for (let index = 0; index < 24; index += 1) {
         const seed = `keep-cut-ledger-${pack.id}-${index}`;
-        const first = buildFootballKeepCutLineup(pack.id, seed);
+        let first;
+        try {
+          first = buildFootballKeepCutLineup(pack.id, seed);
+        } catch (error) {
+          const ratings = pack.items
+            .map((item) => `${item.id}:${item.rating}`)
+            .join(", ");
+          throw new Error(
+            `${seed} failed with ${error instanceof Error ? error.message : String(error)} Pool ratings: ${ratings}`,
+          );
+        }
         const second = buildFootballKeepCutLineup(pack.id, seed);
         const ids = first.map((item) => item.id);
 
