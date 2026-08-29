@@ -1,0 +1,34 @@
+name: Temporary Refresh Specialist Audit
+
+on:
+  push:
+    branches:
+      - stage13-6-finish-nfl-specialists
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci --silent --no-audit --no-fund
+      - run: npm run generate:football-cfb-player-seasons && npm run generate:football-factual-universe && npm run generate:football-ledger-audit
+      - name: Commit generated audit and self-clean
+        run: |
+          rm .github/workflows/tmp-refresh-specialist-audit.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/football-ledger-stage13-5-review.md .github/workflows/tmp-refresh-specialist-audit.yml
+          git commit -m 'Refresh Stage 13.6 specialist audit artifact'
+          git push origin HEAD:stage13-6-finish-nfl-specialists
