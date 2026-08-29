@@ -3,6 +3,10 @@ import {
   FOOTBALL_HISTORICAL_POOL_RECOGNITION_CENSUS,
   footballHistoricalPoolRecognitionRecords,
 } from "./footballHistoricalPoolRecognitionEvidence";
+import {
+  FOOTBALL_ESPN_CFB150_REVIEWED_ARCHIVE_RANKS,
+  FOOTBALL_NFL100_REVIEWED_ARCHIVE_RANKS,
+} from "./footballHistoricalPoolRecognitionDisposition";
 import { footballHistoricalTierIssue } from "./footballRecognitionHistoricalPolicy";
 import { footballProjectedNonPlayerRecognitionSubjects } from "./footballRecognizabilityProjection";
 
@@ -12,6 +16,35 @@ describe("Football historical game and NFL era recognition census", () => {
     expect(FOOTBALL_HISTORICAL_POOL_RECOGNITION_CENSUS.cfbGames.reviewedCandidates).toBe(150);
     expect(FOOTBALL_HISTORICAL_POOL_RECOGNITION_CENSUS.nflGames.refreshThroughSeason).toBe(2025);
     expect(FOOTBALL_HISTORICAL_POOL_RECOGNITION_CENSUS.cfbGames.refreshThroughSeason).toBe(2025);
+  });
+
+  it("durably accounts for every ranked source candidate as admitted or reviewed archive", () => {
+    const assertExhaustiveDisposition = (
+      evidenceFamily: "nfl-100-games" | "espn-cfb150-games",
+      reviewedCandidates: number,
+      archivedRanks: readonly number[],
+    ) => {
+      const admittedRanks = footballHistoricalPoolRecognitionRecords
+        .filter((record) => record.evidenceFamily === evidenceFamily && record.sourceRank != null)
+        .map((record) => record.sourceRank!);
+      expect(new Set(admittedRanks).size).toBe(admittedRanks.length);
+      expect(new Set(archivedRanks).size).toBe(archivedRanks.length);
+
+      const allDispositionRanks = [...admittedRanks, ...archivedRanks].sort((a, b) => a - b);
+      expect(new Set(allDispositionRanks).size).toBe(reviewedCandidates);
+      expect(allDispositionRanks).toEqual(Array.from({ length: reviewedCandidates }, (_, index) => index + 1));
+    };
+
+    assertExhaustiveDisposition(
+      "nfl-100-games",
+      FOOTBALL_HISTORICAL_POOL_RECOGNITION_CENSUS.nflGames.reviewedCandidates,
+      FOOTBALL_NFL100_REVIEWED_ARCHIVE_RANKS,
+    );
+    assertExhaustiveDisposition(
+      "espn-cfb150-games",
+      FOOTBALL_HISTORICAL_POOL_RECOGNITION_CENSUS.cfbGames.reviewedCandidates,
+      FOOTBALL_ESPN_CFB150_REVIEWED_ARCHIVE_RANKS,
+    );
   });
 
   it("keeps reviewed recognition identities unique and historical-policy legal", () => {
