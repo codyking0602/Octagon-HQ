@@ -1,0 +1,32 @@
+name: Temporary Stage 13 Audit Artifact
+
+on:
+  push:
+    branches:
+      - stage13-6-nfl-historical-receiving
+
+permissions:
+  contents: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci --silent --no-audit --no-fund
+      - run: npm run generate:football-cfb-player-seasons && npm run generate:football-factual-universe && npm run generate:football-ledger-audit
+      - uses: actions/upload-artifact@v4
+        with:
+          name: stage13-generated-audit-${{ github.sha }}
+          path: docs/football-ledger-stage13-5-review.md
+          retention-days: 1
