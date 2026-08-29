@@ -51,6 +51,8 @@ Important distinction:
 - canonical A/B/C query results remain the candidate source;
 - expanding the candidate pool does not rewrite the fixed calibration series.
 
+The shared semantic dimensions and the category score profile are deliberately separate. The semantic contract says what a complete greatness case should contain and therefore owns coverage/confidence. The score profile says how the currently available, calibrated factual signals contribute to the transitional rating. In `stage14-v1`, that score profile is the existing metric contract already owned by `footballComparisonAuthority.ts`; Stage 15 and Stage 16 replace/tune those league- and position-specific profiles rather than creating another scoring owner.
+
 Changing anchors, scale semantics, or material scoring behavior requires a ranking-version change and Stage 17 calibration/stability review.
 
 ## Rating scale
@@ -74,12 +76,19 @@ Missing facts are not zeroes and are not silently redistributed into the metrics
 
 For each semantic contract:
 
-- every dimension has an explicit share of the intended score;
-- an uncovered dimension contributes a neutral score rather than donating its weight to covered dimensions;
+- every greatness dimension has an explicit share of the complete semantic case;
 - **coverage** is the share of semantic dimension weight supported by usable evidence;
-- **confidence** combines coverage with the reliability/confidence of the evidence actually used;
+- **confidence** combines semantic coverage with the reliability/confidence of the evidence actually used;
 - results below the semantic minimum coverage are marked `low-confidence` rather than presented as equally precise;
 - a metric without a usable fixed calibration series does not pretend to supply calibrated ranking evidence.
+
+For the category score profile:
+
+- every expected factual signal keeps its explicit model weight;
+- a missing or uncalibratable score-profile signal contributes a neutral score rather than donating its weight to the remaining signals;
+- score-profile weighting does not make an uncovered semantic dimension disappear from coverage/confidence.
+
+This separation prevents two opposite errors: sparse evidence cannot gain fake certainty by reweighting itself to 100%, and an intentionally incomplete transitional model does not have its useful rating spread flattened merely because Stage 15/16 have not yet supplied every final greatness dimension.
 
 Stage 14 deliberately records low-confidence results instead of fabricating facts. Stage 18 game integration may choose stricter eligibility thresholds once the Stage 15/16 models are complete.
 
