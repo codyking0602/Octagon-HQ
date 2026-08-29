@@ -27,8 +27,15 @@ export interface FootballRankingSemanticContract {
 export interface FootballRankingEvidence {
   dimension: FootballRankingDimension;
   score: number;
+  signalId?: string;
   weight?: number;
   confidence?: number;
+}
+
+export interface FootballRankingScoreSignal {
+  signalId: string;
+  dimension: FootballRankingDimension;
+  weight: number;
 }
 
 export interface FootballRankingResult {
@@ -74,7 +81,25 @@ export function applyFootballRankingContextAdjustment(score: number, adjustment 
   return clamp01(score + Math.max(-0.15, Math.min(0.15, adjustment)));
 }
 
-export function rateFootballRankingEvidence(semantic: FootballRankingSemantic, evidence: readonly FootballRankingEvidence[]): FootballRankingResult {
+function scoreFromProfile(
+  evidence: readonly FootballRankingEvidence[],
+  scoreSignals: readonly FootballRankingScoreSignal[],
+) {
+  const totalWeight = scoreSignals.reduce((sum, signal) => sum + Math.max(0, signal.weight), 0);
+  if (totalWeight <= 0) return 0.5;
+
+  const weightedScore = scoreSignals.reduce((sum, signal) => {
+    const row = evidence.find((candidate) => candidate.signalId === signal.signalId);
+    return sum + (row ? clamp01(row.score) : 0.5) * Math.max(0, signal.weight);
+  }, 0);
+  return weightedScore / totalWeight;
+}
+
+export function rateFootballRankingEvidence(
+  semantic: FootballRankingSemantic,
+  evidence: readonly FootballRankingEvidence[],
+  scoreSignals: readonly FootballRankingScoreSignal[] = [],
+): FootballRankingResult {
   const contract = contracts[semantic];
   const dimensionScores: Partial<Record<FootballRankingDimension, number>> = {};
   const dimensionConfidences: Partial<Record<FootballRankingDimension, number>> = {};
@@ -89,24 +114,25 @@ export function rateFootballRankingEvidence(semantic: FootballRankingSemantic, e
   }
 
   const contractRows = Object.entries(contract.dimensionWeights).flatMap(([dimension, weight]) => weight == null ? [] : [{ dimension: dimension as FootballRankingDimension, weight }]);
-  const totalWeight = contractRows.reduce((sum, row) => sum + row.weight, 0);
+  const totalSemanticWeight = contractRows.reduce((sum, row) => sum + row.weight, 0);
   let coveredWeight = 0;
-  let weightedScore = 0;
+  let semanticWeightedScore = 0;
   let weightedConfidence = 0;
 
   for (const { dimension, weight } of contractRows) {
     const dimensionScore = dimensionScores[dimension];
     if (dimensionScore == null) {
-      weightedScore += 0.5 * weight;
+      semanticWeightedScore += 0.5 * weight;
       continue;
     }
     coveredWeight += weight;
-    weightedScore += dimensionScore * weight;
+    semanticWeightedScore += dimensionScore * weight;
     weightedConfidence += (dimensionConfidences[dimension] ?? 1) * weight;
   }
 
-  const coverage = totalWeight > 0 ? coveredWeight / totalWeight : 0;
-  const score = totalWeight > 0 ? weightedScore / totalWeight : 0.5;
+  const coverage = totalSemanticWeight > 0 ? coveredWeight / totalSemanticWeight : 0;
+  const semanticScore = totalSemanticWeight > 0 ? semanticWeightedScore / totalSemanticWeight : 0.5;
+  const score = scoreSignals.length > 0 ? scoreFromProfile(evidence, scoreSignals) : semanticScore;
   const evidenceConfidence = coveredWeight > 0 ? weightedConfidence / coveredWeight : 0;
   const confidence = clamp01(coverage * evidenceConfidence);
   const rating = Math.max(35, Math.min(99, Math.round(35 + score * 64)));
