@@ -149,8 +149,8 @@ export function PicksProvider({
       const [rows, nextLock, nextSummary, nextHistory, progressResult] = await Promise.all([
         nextEvent ? repository.loadMyPicks(nextEvent.eventId) : Promise.resolve([]),
         nextEvent ? repository.loadMyUnderdogLock(nextEvent.eventId) : Promise.resolve(null),
-        repository.loadMySummary(season),
-        repository.loadMyHistory(season),
+        repository.loadMySummary(season, sport),
+        repository.loadMyHistory(season, sport),
         nextEvent
           ? loadPickGroupProgress(nextEvent.eventId)
               .then((value) => ({ value, error: "" }))
@@ -224,7 +224,7 @@ export function PicksProvider({
         : await repository.savePick(event.eventId, boutId, fighterSlug);
       const [nextLock, nextSummary, nextProgress] = await Promise.all([
         repository.loadMyUnderdogLock(event.eventId),
-        repository.loadMySummary(event.season),
+        repository.loadMySummary(event.season, sport),
         loadPickGroupProgress(event.eventId).catch(() => groupProgress),
       ]);
       if (profileIdRef.current !== expectedProfileId) return;
@@ -250,7 +250,7 @@ export function PicksProvider({
     } finally {
       if (profileIdRef.current === expectedProfileId) setSavingBoutId(null);
     }
-  }, [event, footballLocks, groupProgress, identity.openDialog, profileId, refresh, repository]);
+  }, [event, footballLocks, groupProgress, identity.openDialog, profileId, refresh, repository, sport]);
 
   const setFootballLock = useCallback(async (boutId: string, isLock: boolean) => {
     const expectedProfileId = profileId;
