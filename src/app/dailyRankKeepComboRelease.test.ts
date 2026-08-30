@@ -21,6 +21,10 @@ const rotationMigration = readFileSync(
   "supabase/migrations/202612310035_daily_rank_keep_combo_rotation.sql",
   "utf8",
 );
+const august30RerollMigration = readFileSync(
+  "supabase/migrations/202612310069_reroll_august_30_daily_double.sql",
+  "utf8",
+);
 
 describe("bundled Blind Rank + Keep Cut Daily release", () => {
   it("orchestrates both canonical game runtimes as one official attempt across schedule versions", () => {
@@ -77,6 +81,19 @@ describe("bundled Blind Rank + Keep Cut Daily release", () => {
     expect(rotationMigration).toContain("where progress.daily_challenge_id = v_existing_daily_id");
     expect(rotationMigration).toContain("where attempt.daily_challenge_id = v_existing_daily_id");
     expect(rotationMigration).toContain("where daily.id = v_existing_daily_id");
+  });
+
+  it("rerolls only August 30 through a fresh immutable schedule identity", () => {
+    expect(august30RerollMigration).toContain("v_target_day constant date := date '2026-08-30'");
+    expect(august30RerollMigration).toContain("v_source_version constant text := 'play-rotation-v5'");
+    expect(august30RerollMigration).toContain("v_replacement_version constant text := 'play-rotation-v6'");
+    expect(august30RerollMigration).toContain("if v_central_today <> v_target_day then");
+    expect(august30RerollMigration).toContain("source.anchor_day");
+    expect(august30RerollMigration).toContain("source.game_cycle");
+    expect(august30RerollMigration).toContain("private.daily_challenge_expected_game(v_replacement_version, v_target_day)");
+    expect(august30RerollMigration).toContain("where progress.daily_challenge_id = v_existing_daily_id");
+    expect(august30RerollMigration).toContain("where attempt.daily_challenge_id = v_existing_daily_id");
+    expect(august30RerollMigration).toContain("where daily.id = v_existing_daily_id");
   });
 
   it("uses one canonical score with equal weight for the two component scores", () => {
