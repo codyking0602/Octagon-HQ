@@ -21,11 +21,14 @@ async function fetchEspnWeekEvents(weekStart: string, league: "nfl" | "college-f
   return pages.flat();
 }
 
-async function fetchSpreadEvents(oddsSport: "americanfootball_nfl" | "americanfootball_ncaaf") {
-  const response = await fetch(`https://api.the-odds-api.com/v4/sports/${oddsSport}/odds/?apiKey=${Deno.env.get("THE_ODDS_API_KEY")}&regions=us&markets=spreads&oddsFormat=american`);
-  if (!response.ok) throw new Error("football odds request failed");
-  const payload = await response.json();
-  return Array.isArray(payload) ? payload as Json[] : [];
+async function stageFootballEvents(admin: any, events: Json[]) {
+  let draftId: string | null = null;
+  for (const event of events) {
+    const staged = await admin.rpc("stage_pick_event_draft", { p_payload: event });
+    if (staged.error) throw staged.error;
+    draftId = staged.data;
+  }
+  return draftId;
 }
 
 Deno.serve(async (request) => {
@@ -88,13 +91,7 @@ Deno.serve(async (request) => {
         ...selectedNflEvents.map((event) => normalizeFootballEvent(event, nflOdds, "nfl")),
         ...selectedCollegeEvents.map((event) => normalizeFootballEvent(event, collegeOdds, "college-football")),
       ];
-
-      let draftId: string | null = null;
-      for (const event of normalized) {
-        const staged = await admin.rpc("stage_pick_event_draft", { p_payload: event });
-        if (staged.error) throw staged.error;
-        draftId = staged.data;
-      }
+      const draftId = await stageFootballEvents(admin, normalized);
       return json({ draftId, staged_game_count: normalized.length, ...weekPreview });
     }
 
@@ -124,10 +121,16 @@ Deno.serve(async (request) => {
     const oddsEvents = await fetchSpreadEvents(oddsSport);
     const event = normalizeFootballEvent(summary.header, oddsEvents, league);
     if (mode === "preview") return json({ event_preview: event });
-    const staged = await admin.rpc("stage_pick_event_draft", { p_payload: event });
-    if (staged.error) throw staged.error;
-    return json({ draftId: staged.data, event_preview: event });
+    const draftId = await stageFootballEvents(admin, [event]);
+    return json({ draftId, event_preview: event });
   } catch (error) {
     return json({ error: error instanceof Error ? error.message : "football sync failed" }, 502);
   }
 });
+
+async function fetchSpreadEvents(oddsSport: "americanfootball_nfl" | "americanfootball_ncaaf") {
+  const response = await fetch(`https://api.the-odds-api.com/v4/sports/${oddsSport}/odds/?apiKey=${Deno.env.get("THE_ODDS_API_KEY")}&regions=us&markets=spreads&oddsFormat=american`);
+  if (!response.ok) throw new Error("football odds request failed");
+  const payload = await response.json();
+  return Array.isArray(payload) ? payload as Json[] : [];
+}
