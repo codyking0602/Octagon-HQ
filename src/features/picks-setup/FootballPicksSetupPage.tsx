@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import "../../styles/football-picks-setup.css";
 import { useIdentity } from "../identity/IdentityProvider";
-import type { PickSetupDraft, PickSetupFootballLeague } from "./pickSetupModel";
+import type { PickSetupDraft, PickSetupFootballWeekGame, PickSetupFootballWeekPreview } from "./pickSetupModel";
 import { createPickSetupRepository, type PickSetupRepository } from "./pickSetupRepository";
 
 function readableError(error: unknown) {
@@ -27,6 +28,40 @@ function gameLeague(weightClass: string) {
   return weightClass.replace(/\s+ATS$/i, "").replace("COLLEGE-FOOTBALL", "COLLEGE FOOTBALL");
 }
 
+function isoDate(date: Date) {
+  return date.toISOString().slice(0, 10);
+}
+
+export function defaultFootballSetupWeek(date = new Date()) {
+  const cursor = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const day = cursor.getUTCDay();
+  const offset = day === 0 ? 2 : day === 1 ? 1 : -(day - 2);
+  cursor.setUTCDate(cursor.getUTCDate() + offset);
+  return isoDate(cursor);
+}
+
+function shiftWeek(weekStart: string, amount: number) {
+  const date = new Date(`${weekStart}T00:00:00.000Z`);
+  date.setUTCDate(date.getUTCDate() + amount * 7);
+  return isoDate(date);
+}
+
+function weekLabel(preview: PickSetupFootballWeekPreview) {
+  const start = new Date(`${preview.weekStart}T12:00:00.000Z`);
+  const end = new Date(`${preview.weekEnd}T12:00:00.000Z`);
+  const startLabel = new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric" }).format(start);
+  const endLabel = new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric" }).format(end);
+  return `${startLabel}–${endLabel}`;
+}
+
+function rankedTeam(name: string, rank: number | null) {
+  return rank ? `#${rank} ${name}` : name;
+}
+
+function previewMatchup(game: PickSetupFootballWeekGame) {
+  return `${rankedTeam(game.awayTeamName, game.awayRank)} @ ${rankedTeam(game.homeTeamName, game.homeRank)}`;
+}
+
 interface FootballPicksSetupPageProps {
   repository?: PickSetupRepository | null;
 }
@@ -38,9 +73,11 @@ export default function FootballPicksSetupPage({ repository: suppliedRepository 
     suppliedRepository === undefined ? createPickSetupRepository() : suppliedRepository
   ));
   const [draft, setDraft] = useState<PickSetupDraft | null>(null);
-  const [league, setLeague] = useState<PickSetupFootballLeague>("nfl");
-  const [espnEventId, setEspnEventId] = useState("");
+  const [selectedWeek, setSelectedWeek] = useState(() => defaultFootballSetupWeek());
+  const [weekPreview, setWeekPreview] = useState<PickSetupFootballWeekPreview | null>(null);
+  const [selectedCollegeIds, setSelectedCollegeIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [previewLoading, setPreviewLoading] = useState(false);
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
 
@@ -58,6 +95,22 @@ export default function FootballPicksSetupPage({ repository: suppliedRepository 
     }
   }, [identity.profile, repository]);
 
+  const loadWeekPreview = useCallback(async (weekStart: string) => {
+    if (!repository?.previewFootballWeek) return;
+    setPreviewLoading(true);
+    setError("");
+    try {
+      const preview = await repository.previewFootballWeek(weekStart);
+      setWeekPreview(preview);
+      setSelectedCollegeIds([]);
+    } catch (nextError) {
+      setWeekPreview(null);
+      setError(readableError(nextError));
+    } finally {
+      setPreviewLoading(false);
+    }
+  }, [repository]);
+
   useEffect(() => {
     if (!identity.ready) return;
     if (!identity.profile || !repository) {
@@ -67,7 +120,20 @@ export default function FootballPicksSetupPage({ repository: suppliedRepository 
     void loadDraft();
   }, [identity.profile, identity.ready, loadDraft, repository]);
 
+  useEffect(() => {
+    if (!identity.profile || loading || draft || !repository?.previewFootballWeek) return;
+    void loadWeekPreview(selectedWeek);
+  }, [draft, identity.profile, loadWeekPreview, loading, repository, selectedWeek]);
+
   const games = useMemo(() => draft?.bouts.slice().sort((a, b) => a.position - b.position) ?? [], [draft]);
+  const selectedCollege = useMemo(() => new Set(selectedCollegeIds), [selectedCollegeIds]);
+  const requiredCollegeCount = weekPreview?.requiredCollegeCount ?? 0;
+  const stageReady = Boolean(
+    weekPreview
+    && repository?.stageFootballWeek
+    && selectedCollegeIds.length === requiredCollegeCount
+    && weekPreview.nflGames.length + selectedCollegeIds.length > 0
+  );
 
   async function runAction(key: string, action: () => Promise<void>, reload = true) {
     setBusy(key);
@@ -82,18 +148,25 @@ export default function FootballPicksSetupPage({ repository: suppliedRepository 
     }
   }
 
-  function syncGame() {
-    const eventId = espnEventId.trim();
-    if (!repository?.syncFootballGame || !eventId) return;
-    void runAction("sync", async () => {
-      await repository.syncFootballGame!(league, eventId);
-      setEspnEventId("");
+  function moveWeek(amount: number) {
+    if (busy || previewLoading) return;
+    setWeekPreview(null);
+    setSelectedCollegeIds([]);
+    setSelectedWeek((current) => shiftWeek(current, amount));
+  }
+
+  function toggleCollegeGame(eventId: string) {
+    if (!weekPreview || busy) return;
+    setSelectedCollegeIds((current) => {
+      if (current.includes(eventId)) return current.filter((value) => value !== eventId);
+      if (current.length >= weekPreview.requiredCollegeCount) return current;
+      return [...current, eventId];
     });
   }
 
-  function removeGame(boutId: string, matchup: string) {
-    if (!draft || !window.confirm(`Remove ${matchup} from this staged Football slate?`)) return;
-    void runAction(`remove:${boutId}`, () => repository!.removeBout(draft.draftId, boutId));
+  function stageWeek() {
+    if (!weekPreview || !repository?.stageFootballWeek || !stageReady) return;
+    void runAction("stage-week", () => repository.stageFootballWeek!(weekPreview.weekStart, selectedCollegeIds));
   }
 
   function publishDraft() {
@@ -114,7 +187,7 @@ export default function FootballPicksSetupPage({ repository: suppliedRepository 
       <section className="page-heading picks-setup-heading">
         <p className="eyebrow">PRIVATE PICKS OWNER · FOOTBALL</p>
         <h1>Weekly Slate Setup</h1>
-        <p>Add real ESPN games one at a time. The existing Football sync owner supplies identity, kickoff, and ATS lines; spreads freeze only when you publish.</p>
+        <p>Pick the Tuesday–Monday week. Every NFL game is automatic. Choose the college slate, stage once, then review the real ATS lines before publishing.</p>
         <div className="picks-setup-heading__links">
           <Link to="/football/picks">PLAYER FOOTBALL PICKS</Link>
         </div>
@@ -132,29 +205,75 @@ export default function FootballPicksSetupPage({ repository: suppliedRepository 
 
       {identity.profile && !loading ? (
         <>
-          <section className="surface-card picks-setup-scope" aria-label="Add Football game">
-            <div>
-              <p className="eyebrow">ADD / REFRESH REAL GAME</p>
-              <h2>Existing Football sync</h2>
-              <p>Syncing the same ESPN game refreshes its staged line. Syncing another game in the same Tuesday–Monday week adds it to this slate.</p>
-            </div>
-            <label>
-              LEAGUE
-              <select aria-label="Football league" value={league} disabled={Boolean(busy)} onChange={(event) => setLeague(event.target.value as PickSetupFootballLeague)}>
-                <option value="nfl">NFL</option>
-                <option value="college-football">College Football</option>
-              </select>
-            </label>
-            <label>
-              ESPN EVENT ID
-              <input aria-label="ESPN event ID" inputMode="numeric" value={espnEventId} disabled={Boolean(busy)} onChange={(event) => setEspnEventId(event.target.value)} placeholder="e.g. 401772000" />
-            </label>
-            <button className="primary-action" type="button" disabled={Boolean(busy) || !espnEventId.trim() || !repository?.syncFootballGame} onClick={syncGame}>
-              {busy === "sync" ? "SYNCING…" : "ADD / REFRESH GAME"}
-            </button>
-          </section>
+          {!draft ? (
+            <section className="surface-card football-week-builder" aria-label="Football weekly builder">
+              <div className="football-week-builder__heading">
+                <div>
+                  <p className="eyebrow">AUTO-STAGE WEEK</p>
+                  <h2>{weekPreview ? weekLabel(weekPreview) : "Choose week"}</h2>
+                  <p>NFL is automatic. College candidates are ranked from the real ESPN week; ATS lines still come only from The Odds API when you stage.</p>
+                </div>
+                <div className="football-week-builder__nav" aria-label="Football setup week">
+                  <button type="button" disabled={Boolean(busy) || previewLoading} onClick={() => moveWeek(-1)}>←</button>
+                  <button type="button" disabled={Boolean(busy) || previewLoading} onClick={() => moveWeek(1)}>→</button>
+                </div>
+              </div>
 
-          {draft ? (
+              {previewLoading ? <strong>Loading real Football week…</strong> : null}
+
+              {weekPreview && !previewLoading ? (
+                <>
+                  <div className="football-week-builder__section">
+                    <div className="football-week-builder__section-heading">
+                      <div><p className="eyebrow">NFL · AUTOMATIC</p><h3>Every game is in.</h3></div>
+                      <strong>{weekPreview.nflGames.length}/{weekPreview.nflGames.length}</strong>
+                    </div>
+                    <div className="football-week-games">
+                      {weekPreview.nflGames.map((game) => (
+                        <article className="football-week-game is-automatic" key={game.espnEventId}>
+                          <strong>{previewMatchup(game)}</strong>
+                          <small>{displayTime(game.kickoffAt)}</small>
+                        </article>
+                      ))}
+                      {!weekPreview.nflGames.length ? <p>No NFL games this Tuesday–Monday week.</p> : null}
+                    </div>
+                  </div>
+
+                  <div className="football-week-builder__section">
+                    <div className="football-week-builder__section-heading">
+                      <div><p className="eyebrow">COLLEGE · CHOOSE {requiredCollegeCount}</p><h3>Ranked candidate pool</h3></div>
+                      <strong>{selectedCollegeIds.length}/{requiredCollegeCount}</strong>
+                    </div>
+                    <div className="football-week-candidates">
+                      {weekPreview.collegeCandidates.map((game) => {
+                        const selected = selectedCollege.has(game.espnEventId);
+                        return (
+                          <button
+                            className={selected ? "football-week-candidate is-selected" : "football-week-candidate"}
+                            type="button"
+                            aria-pressed={selected}
+                            disabled={Boolean(busy)}
+                            key={game.espnEventId}
+                            onClick={() => toggleCollegeGame(game.espnEventId)}
+                          >
+                            <span>#{game.candidateRank}</span>
+                            <strong>{previewMatchup(game)}</strong>
+                            <small>{displayTime(game.kickoffAt)}</small>
+                          </button>
+                        );
+                      })}
+                      {!weekPreview.collegeCandidates.length ? <p>No college candidates found for this week.</p> : null}
+                    </div>
+                  </div>
+
+                  <button className="primary-action" type="button" disabled={Boolean(busy) || !stageReady} onClick={stageWeek}>
+                    {busy === "stage-week" ? "STAGING WEEK…" : `STAGE ${weekPreview.nflGames.length + requiredCollegeCount}-GAME SLATE`}
+                  </button>
+                  <small className="football-week-builder__note">One stage action loads the selected games through the existing Football sync owner. Spreads do not freeze until publication.</small>
+                </>
+              ) : null}
+            </section>
+          ) : (
             <section className="picks-setup-review" aria-label="Football slate review">
               <div className="surface-card picks-setup-state">
                 <p className="eyebrow">STAGED WEEKLY SLATE</p>
@@ -163,20 +282,16 @@ export default function FootballPicksSetupPage({ repository: suppliedRepository 
                 <small>First kickoff: {displayTime(draft.startsAt)} · ATS spreads are not frozen yet.</small>
               </div>
 
-              {games.map((game) => {
-                const matchup = `${game.blueFighterName} at ${game.redFighterName}`;
-                return (
-                  <article className="surface-card pick-setup-bout" key={game.boutId}>
-                    <div className="pick-setup-bout__heading">
-                      <div><span>{gameLeague(game.weightClass)}</span><small>{displayTime(game.kickoffAt)}</small></div>
-                    </div>
-                    <h3>{game.blueFighterName} <span aria-hidden="true">@</span> {game.redFighterName}</h3>
-                    <p><strong>HOME ATS:</strong> {displaySpread(game.spreadHome)}</p>
-                    <p><strong>SOURCE:</strong> {game.spreadSource ?? "NOT SET"} · updated {displayTime(game.spreadUpdatedAt)}</p>
-                    <button className="pick-setup-danger" type="button" disabled={Boolean(busy)} onClick={() => removeGame(game.boutId, matchup)}>REMOVE GAME</button>
-                  </article>
-                );
-              })}
+              {games.map((game) => (
+                <article className="surface-card pick-setup-bout" key={game.boutId}>
+                  <div className="pick-setup-bout__heading">
+                    <div><span>{gameLeague(game.weightClass)}</span><small>{displayTime(game.kickoffAt)}</small></div>
+                  </div>
+                  <h3>{game.blueFighterName} <span aria-hidden="true">@</span> {game.redFighterName}</h3>
+                  <p><strong>HOME ATS:</strong> {displaySpread(game.spreadHome)}</p>
+                  <p><strong>SOURCE:</strong> {game.spreadSource ?? "NOT SET"} · updated {displayTime(game.spreadUpdatedAt)}</p>
+                </article>
+              ))}
 
               {draft.warnings.length ? (
                 <div className="surface-card picks-setup-state" role="status">
@@ -190,11 +305,6 @@ export default function FootballPicksSetupPage({ repository: suppliedRepository 
                 </button>
                 <button className="pick-setup-danger" type="button" disabled={Boolean(busy)} onClick={discardDraft}>DISCARD STAGED SLATE</button>
               </div>
-            </section>
-          ) : (
-            <section className="surface-card picks-setup-state">
-              <p className="eyebrow">NO FOOTBALL SLATE STAGED</p>
-              <h2>Add the first real game.</h2>
             </section>
           )}
         </>
