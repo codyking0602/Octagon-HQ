@@ -1,0 +1,143 @@
+.football-week-builder {
+  display: grid;
+  gap: 16px;
+  padding: 17px;
+  border-color: rgba(255,255,255,.2);
+}
+
+.football-week-builder h2,
+.football-week-builder h3,
+.football-week-builder p {
+  margin: 0;
+}
+
+.football-week-builder__heading,
+.football-week-builder__section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.football-week-builder__heading > div:first-child,
+.football-week-builder__section-heading > div:first-child {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.football-week-builder__heading p:not(.eyebrow),
+.football-week-builder__note,
+.football-week-game small,
+.football-week-candidate small {
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.football-week-builder__nav {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 6px;
+}
+
+.football-week-builder__nav button {
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(255,255,255,.03);
+  color: var(--text-primary);
+  font-size: 17px;
+}
+
+.football-week-builder__section {
+  display: grid;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.football-week-builder__section-heading > strong {
+  flex: 0 0 auto;
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: .05em;
+}
+
+.football-week-games,
+.football-week-candidates {
+  display: grid;
+  gap: 8px;
+}
+
+.football-week-game,
+.football-week-candidate {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 4px 10px;
+  width: 100%;
+  min-height: 58px;
+  padding: 11px 12px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: rgba(255,255,255,.025);
+  color: var(--text-primary);
+  text-align: left;
+}
+
+.football-week-game strong,
+.football-week-candidate strong {
+  align-self: end;
+  font-size: 10px;
+  font-weight: 950;
+  line-height: 1.3;
+}
+
+.football-week-game small,
+.football-week-candidate small {
+  grid-column: 1 / -1;
+}
+
+.football-week-game.is-automatic {
+  border-left: 3px solid rgba(255,255,255,.45);
+}
+
+.football-week-candidate > span {
+  justify-self: end;
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.football-week-candidate.is-selected {
+  border-color: var(--ufc-red);
+  background: rgba(198,40,40,.12);
+}
+
+.football-week-candidate.is-selected > span {
+  color: var(--ufc-red);
+}
+
+.football-week-builder > .primary-action {
+  width: 100%;
+}
+
+.football-week-builder button:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 3px;
+}
+
+@media (min-width: 640px) {
+  .football-week-builder {
+    padding: 20px;
+  }
+
+  .football-week-games,
+  .football-week-candidates {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

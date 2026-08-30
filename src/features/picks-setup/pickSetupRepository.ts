@@ -5,6 +5,8 @@ import type {
   PickSetupCardScope,
   PickSetupDraft,
   PickSetupFootballLeague,
+  PickSetupFootballWeekGame,
+  PickSetupFootballWeekPreview,
   PickSetupMetadataPatch,
   PickSetupSourcePreview,
   PickSetupSport,
@@ -85,10 +87,32 @@ const sourcePreviewSchema = z.object({
   }),
 });
 
+const footballWeekGameSchema = z.object({
+  espn_event_id: z.string().min(1),
+  league: z.enum(["nfl", "college-football"]),
+  name: z.string().min(1),
+  kickoff_at: z.string().min(1),
+  home_team_name: z.string().min(1),
+  away_team_name: z.string().min(1),
+  home_rank: z.number().int().min(1).max(25).nullable(),
+  away_rank: z.number().int().min(1).max(25).nullable(),
+  candidate_rank: z.number().int().positive().optional(),
+});
+
+const footballWeekPreviewSchema = z.object({
+  week_start: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  week_end: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  required_college_count: z.number().int().nonnegative().max(8),
+  nfl_games: z.array(footballWeekGameSchema),
+  college_candidates: z.array(footballWeekGameSchema).max(12),
+});
+
 export interface PickSetupRepository {
   loadDraft: (sport?: PickSetupSport) => Promise<PickSetupDraft | null>;
   syncNextEvent: (scope: PickSetupCardScope, sourceUrl?: string) => Promise<void>;
   syncFootballGame?: (league: PickSetupFootballLeague, espnEventId: string) => Promise<void>;
+  previewFootballWeek?: (weekStart: string) => Promise<PickSetupFootballWeekPreview>;
+  stageFootballWeek?: (weekStart: string, collegeEventIds: string[]) => Promise<void>;
   previewSource: (scope: PickSetupCardScope, sourceUrl?: string) => Promise<PickSetupSourcePreview>;
   applySourcePreview: (preview: PickSetupSourcePreview) => Promise<void>;
   updateMetadata: (draftId: string, patch: PickSetupMetadataPatch) => Promise<void>;
@@ -163,6 +187,19 @@ function spotlightPayload(spotlight: PickSetupSpotlight) {
     source: spotlight.source, generated_at: spotlight.generatedAt,
   };
 }
+function mapFootballWeekGame(value: z.infer<typeof footballWeekGameSchema>): PickSetupFootballWeekGame {
+  return {
+    espnEventId: value.espn_event_id,
+    league: value.league,
+    name: value.name,
+    kickoffAt: value.kickoff_at,
+    homeTeamName: value.home_team_name,
+    awayTeamName: value.away_team_name,
+    homeRank: value.home_rank,
+    awayRank: value.away_rank,
+    ...(value.candidate_rank !== undefined ? { candidateRank: value.candidate_rank } : {}),
+  };
+}
 
 export function mapPickSetupDraft(value: unknown): PickSetupDraft | null {
   if (!value) return null;
@@ -186,6 +223,16 @@ export function mapPickSetupSourcePreview(value: unknown): PickSetupSourcePrevie
     event: { name: parsed.event_preview.name, subtitle: parsed.event_preview.subtitle, venue: parsed.event_preview.venue, location: parsed.event_preview.location, startsAt: parsed.event_preview.starts_at, locksAt: parsed.event_preview.locks_at, bouts: parsed.event_preview.bouts.map(mapBout) },
   };
 }
+export function mapPickSetupFootballWeekPreview(value: unknown): PickSetupFootballWeekPreview {
+  const parsed = footballWeekPreviewSchema.parse(value);
+  return {
+    weekStart: parsed.week_start,
+    weekEnd: parsed.week_end,
+    requiredCollegeCount: parsed.required_college_count,
+    nflGames: parsed.nfl_games.map(mapFootballWeekGame),
+    collegeCandidates: parsed.college_candidates.map(mapFootballWeekGame),
+  };
+}
 export function mapBuiltPickSetupSpotlight(value: unknown): PickSetupSpotlight {
   return spotlightSchema.parse(value);
 }
@@ -199,6 +246,9 @@ export function createPickSetupRepository(): PickSetupRepository | null {
     if (error) throw new Error(await pickSetupFunctionErrorMessage(error));
     return data;
   }
+  async function syncFootball(body: Record<string, unknown>) {
+    return invoke("sync-next-football-event", body);
+  }
   return {
     async loadDraft(sport = "mma") {
       const request = sport === "football"
@@ -207,7 +257,9 @@ export function createPickSetupRepository(): PickSetupRepository | null {
       return mapPickSetupDraft(await requireRpcSuccess(request));
     },
     async syncNextEvent(scope, sourceUrl) { await invoke("sync-next-ufc-event", { mode: "apply", card_scope: scope, ...sourceUrlBody(sourceUrl) }); },
-    async syncFootballGame(league, espnEventId) { await invoke("sync-next-football-event", { mode: "apply", league, espn_event_id: espnEventId.trim() }); },
+    async syncFootballGame(league, espnEventId) { await syncFootball({ mode: "apply", league, espn_event_id: espnEventId.trim() }); },
+    async previewFootballWeek(weekStart) { return mapPickSetupFootballWeekPreview(await syncFootball({ mode: "week-preview", week_start: weekStart })); },
+    async stageFootballWeek(weekStart, collegeEventIds) { await syncFootball({ mode: "week-apply", week_start: weekStart, college_event_ids: collegeEventIds }); },
     async previewSource(scope, sourceUrl) { return mapPickSetupSourcePreview(await invoke("sync-next-ufc-event", { mode: "preview", card_scope: scope, ...sourceUrlBody(sourceUrl) })); },
     async applySourcePreview(preview) { await invoke("sync-next-ufc-event", { mode: "apply", card_scope: preview.requestedScope, expected_hash: preview.sourceHash, source_url: preview.sourceUrl }); },
     async updateMetadata(draftId, patch) { await requireRpcSuccess(client.rpc("update_pick_event_draft", { p_draft_id: draftId, p_patch: patch })); },
