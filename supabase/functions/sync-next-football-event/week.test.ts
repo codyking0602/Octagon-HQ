@@ -29,13 +29,14 @@ describe("Football weekly owner discovery", () => {
     expect(() => footballWeekRange("2026-09-09")).toThrow(/Tuesday/);
   });
 
-  it("fetches each ESPN weekly schedule as one Tuesday-Monday range request within ESPN's 200-event scoreboard cap", () => {
+  it("keeps the canonical ESPN schedule and summary requests on the Supabase-reachable site host", () => {
     const source = readFileSync("supabase/functions/sync-next-football-event/index.ts", "utf8");
 
     expect(source).toContain('const dateRange = `${range.weekStart.replaceAll("-", "")}-${range.weekEnd.replaceAll("-", "")}`;');
-    expect(source).toContain("scoreboard?dates=${dateRange}&limit=200${group}");
+    expect(source).toContain("https://site.web.api.espn.com/apis/site/v2/sports/${sportPath}/scoreboard?dates=${dateRange}&limit=200${group}");
+    expect(source).toContain("https://site.web.api.espn.com/apis/site/v2/sports/${sportPath}/summary?event=${eventId}");
+    expect(source).not.toContain("https://site.api.espn.com/");
     expect(source).not.toContain("limit=1000");
-    expect(source).not.toContain("Promise.all(range.dates.map");
   });
 
   it("keeps every eligible NFL game and excludes preseason games", () => {
