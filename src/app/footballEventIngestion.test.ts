@@ -33,6 +33,7 @@ describe("Football Picks ingestion", () => {
     expect(normalizeFootballFinalResult(espnGame(true), "nfl")).toMatchObject({
       source: "espn",
       source_event_key: "espn:401",
+      league: "nfl",
       home_team_slug: "philadelphia-eagles",
       away_team_slug: "dallas-cowboys",
       home_final_score: 24,
@@ -53,6 +54,7 @@ describe("Football Picks ingestion", () => {
     expect(finalBranch).toBeGreaterThan(espnFetch);
     expect(oddsFetch).toBeGreaterThan(finalBranch);
     expect(edge.match(/record_football_pick_final/g)).toHaveLength(1);
+    expect(edge).toContain("p_league: finalResult.league");
     expect(edge.match(/stage_pick_event_draft/g)).toHaveLength(1);
   });
 
@@ -67,6 +69,7 @@ describe("Football Picks ingestion", () => {
 
   it("records exactly one active published Football game without mutating its frozen line", () => {
     expect(finalMigration).toContain("event.sport = 'football'");
+    expect(finalMigration).toContain("event.league = v_league");
     expect(finalMigration).toContain("event.status in ('upcoming', 'locked')");
     expect(finalMigration).toContain("if v_match_count <> 1 then");
     expect(finalMigration).toContain("home_final_score = p_home_final_score");
@@ -79,8 +82,8 @@ describe("Football Picks ingestion", () => {
     expect(finalMigration).toContain("pending.result_status = 'pending'");
     expect(finalMigration).toContain("public.transition_pick_event(v_bout.event_id, 'locked')");
     expect(finalMigration).toContain("public.transition_pick_event(v_bout.event_id, 'complete')");
-    expect(finalMigration).toContain("grant execute on function public.record_football_pick_final(text,text,integer,integer) to service_role");
-    expect(finalMigration).not.toContain("grant execute on function public.record_football_pick_final(text,text,integer,integer) to authenticated");
+    expect(finalMigration).toContain("grant execute on function public.record_football_pick_final(text,text,text,integer,integer) to service_role");
+    expect(finalMigration).not.toContain("grant execute on function public.record_football_pick_final(text,text,text,integer,integer) to authenticated");
   });
 
   it("keeps the shared Football event contract compatible with multi-game weekly slates", () => {
