@@ -137,6 +137,9 @@ export interface PickSeasonStanding extends PickHistoryRecord {
   displayName: string;
   isCurrentUser: boolean;
   eventsEntered: number;
+  adjustedPoints?: number;
+  pushes?: number;
+  droppedWeekLabel?: string | null;
 }
 
 export interface PickHistoryEvent {
