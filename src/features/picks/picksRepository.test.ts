@@ -24,6 +24,27 @@ const eventPayload = {
 };
 
 describe("Picks current-event compatibility", () => {
+  it("defaults legacy UFC payloads and maps Football metadata in the same model", () => {
+    expect(mapPickEvent(eventPayload)).toMatchObject({
+      sport: "mma",
+      league: "ufc",
+      eventKind: "fight_card",
+    });
+
+    expect(mapPickEvent({
+      ...eventPayload,
+      event_id: "nfl-week-1",
+      sport: "football",
+      league: "nfl",
+      event_kind: "slate",
+    })).toMatchObject({
+      eventId: "nfl-week-1",
+      sport: "football",
+      league: "nfl",
+      eventKind: "slate",
+    });
+  });
+
   it("treats odds omitted by the prior production RPC as unavailable", () => {
     const event = mapPickEvent(eventPayload);
 

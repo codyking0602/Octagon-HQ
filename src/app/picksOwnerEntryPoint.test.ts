@@ -35,7 +35,7 @@ describe("Picks owner entry point architecture", () => {
     expect(occurrences(identityGateway, /\.rpc\("get_my_identity_profile"\)/g)).toBe(1);
     expect(identityGateway).not.toContain('.from("profiles")');
     expect(identityGateway).not.toContain('.from("pick_control_owners")');
-    expect(occurrences(picksProvider, /repository\.loadCurrentEvent\(\)/g)).toBe(1);
+    expect(occurrences(picksProvider, /repository\.loadCurrentEvent\(sport\)/g)).toBe(1);
     expect(`${identityGateway}\n${identityControl}\n${picksPage}`).not.toMatch(/setInterval|setTimeout/);
   });
 
