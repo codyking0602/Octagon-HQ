@@ -16,9 +16,10 @@ export interface FootballWeekGamePreview {
 export interface FootballWeekPreview {
   week_start: string;
   week_end: string;
-  required_college_count: number;
+  recommended_college_count: number;
   nfl_games: FootballWeekGamePreview[];
   college_candidates: FootballWeekGamePreview[];
+  college_games: FootballWeekGamePreview[];
 }
 
 function isoDate(date: Date) {
@@ -93,7 +94,7 @@ function candidateScore(game: FootballWeekGamePreview) {
   return 0;
 }
 
-export function rankCollegeFootballCandidates(events: Json[], limit = 12) {
+export function rankCollegeFootballCandidates(events: Json[], limit = 20) {
   return summarizeFootballWeekEvents(events, "college-football")
     .sort((a, b) => candidateScore(b) - candidateScore(a) || a.kickoff_at.localeCompare(b.kickoff_at) || a.espn_event_id.localeCompare(b.espn_event_id))
     .slice(0, Math.max(0, limit))
@@ -102,12 +103,14 @@ export function rankCollegeFootballCandidates(events: Json[], limit = 12) {
 
 export function buildFootballWeekPreview(weekStart: string, nflEvents: Json[], collegeEvents: Json[]): FootballWeekPreview {
   const range = footballWeekRange(weekStart);
-  const collegeCandidates = rankCollegeFootballCandidates(collegeEvents, 12);
+  const collegeGames = summarizeFootballWeekEvents(collegeEvents, "college-football");
+  const collegeCandidates = rankCollegeFootballCandidates(collegeEvents, 20);
   return {
     week_start: range.weekStart,
     week_end: range.weekEnd,
-    required_college_count: Math.min(8, collegeCandidates.length),
+    recommended_college_count: Math.min(8, collegeGames.length),
     nfl_games: summarizeFootballWeekEvents(nflEvents, "nfl"),
     college_candidates: collegeCandidates,
+    college_games: collegeGames,
   };
 }
