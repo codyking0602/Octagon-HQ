@@ -128,11 +128,13 @@ describe("PicksProvider", () => {
     };
     const loadCurrentEvent = vi.fn(async () => footballEvent);
     const loadMyPicks = vi.fn(async () => []);
+    const loadMySummary = vi.fn(async () => ({ correct: 0, incorrect: 0, pending: 0, eventsEntered: 0, basePoints: 0, lockBonus: 0, totalPoints: 0 }));
+    const loadMyHistory = vi.fn(async () => ({ ...history, events: [] }));
     const repository: PicksRepository = {
       loadCurrentEvent,
       loadMyPicks,
-      loadMySummary: vi.fn(async () => ({ correct: 0, incorrect: 0, pending: 0, eventsEntered: 0, basePoints: 0, lockBonus: 0, totalPoints: 0 })),
-      loadMyHistory: vi.fn(async () => ({ ...history, events: [] })),
+      loadMySummary,
+      loadMyHistory,
       loadMyUnderdogLock: vi.fn(async () => null),
       setUnderdogLock: vi.fn(),
       clearUnderdogLock: vi.fn(),
@@ -148,6 +150,8 @@ describe("PicksProvider", () => {
     expect(await screen.findByText("NFL Week 1")).toBeInTheDocument();
     expect(loadCurrentEvent).toHaveBeenCalledWith("football");
     await waitFor(() => expect(loadMyPicks).toHaveBeenCalledWith("nfl-week-1"));
+    expect(loadMySummary).toHaveBeenCalledWith(2026, "football");
+    expect(loadMyHistory).toHaveBeenCalledWith(2026, "football");
   });
 
   it("reloads the canonical lock and summary after saving a changed pick", async () => {
@@ -203,7 +207,7 @@ describe("PicksProvider", () => {
     expect(screen.getByText("1 RECAP")).toBeInTheDocument();
     expect(screen.getByText("UFC Oklahoma City")).toBeInTheDocument();
     expect(loadMyPicks).toHaveBeenCalledWith(event.eventId);
-    expect(loadMyHistory).toHaveBeenCalledWith(2026);
+    expect(loadMyHistory).toHaveBeenCalledWith(2026, "mma");
 
     fireEvent.click(screen.getByRole("button", { name: "PICK ANKALAEV" }));
     await waitFor(() => expect(savePick).toHaveBeenCalledWith(event.eventId, "ankalaev-guskov", "magomed-ankalaev"));
@@ -212,6 +216,8 @@ describe("PicksProvider", () => {
     expect(screen.getByText("SCORE 20")).toBeInTheDocument();
     expect(loadMyUnderdogLock).toHaveBeenCalledTimes(2);
     expect(loadMySummary).toHaveBeenCalledTimes(2);
+    expect(loadMySummary).toHaveBeenNthCalledWith(1, 2026, "mma");
+    expect(loadMySummary).toHaveBeenNthCalledWith(2, 2026, "mma");
   });
 
   it("loads completed history even while the next event is not available", async () => {
@@ -237,7 +243,7 @@ describe("PicksProvider", () => {
     expect(await screen.findByText("UFC Oklahoma City")).toBeInTheDocument();
     expect(screen.getByText("NO EVENT")).toBeInTheDocument();
     expect(loadMyPicks).not.toHaveBeenCalled();
-    expect(loadMyHistory).toHaveBeenCalledWith(new Date().getFullYear());
+    expect(loadMyHistory).toHaveBeenCalledWith(new Date().getFullYear(), "mma");
   });
 
   it("loads the public event without requesting profile data while signed out", async () => {

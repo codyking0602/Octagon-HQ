@@ -4,7 +4,7 @@ export type PickEventStatus = "upcoming" | "locked" | "complete";
 export type PickSport = "mma" | "football";
 export type PickEventKind = "fight_card" | "game" | "slate";
 export type PickBoutResultStatus = "pending" | "red_win" | "blue_win" | "draw" | "no_contest" | "cancelled";
-export type PickVerdict = "correct" | "incorrect" | "missing" | "excluded" | "pending";
+export type PickVerdict = "correct" | "incorrect" | "push" | "missing" | "excluded" | "pending";
 export type PickEventPresentationState = "upcoming" | "locked" | "awaiting_results" | "complete";
 export type PickEventSpotlight = PickSpotlight;
 

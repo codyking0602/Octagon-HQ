@@ -62,7 +62,7 @@ const lockSchema = z.object({ event_id: z.string(), bout_id: z.string(), fighter
 const historyRecordSchema = z.object({ correct: z.number().int().nonnegative(), incorrect: z.number().int().nonnegative(), missing: z.number().int().nonnegative(), excluded: z.number().int().nonnegative(), base_points: z.number().nonnegative(), lock_bonus: z.number().nonnegative(), total_points: z.number().nonnegative() });
 const historyBoutSchema = z.object({
   bout_id: z.string(), position: z.number().int().positive(), weight_class: z.string(), red_fighter_slug: z.string(), red_fighter_name: z.string(), blue_fighter_slug: z.string(), blue_fighter_name: z.string(),
-  result_status: z.enum(["pending", "red_win", "blue_win", "draw", "no_contest", "cancelled"]), winner_fighter_slug: z.string().nullable(), picked_fighter_slug: z.string().nullable(), verdict: z.enum(["correct", "incorrect", "missing", "excluded", "pending"]),
+  result_status: z.enum(["pending", "red_win", "blue_win", "draw", "no_contest", "cancelled"]), winner_fighter_slug: z.string().nullable(), picked_fighter_slug: z.string().nullable(), verdict: z.enum(["correct", "incorrect", "push", "missing", "excluded", "pending"]),
   included_in_picks: z.boolean().optional().default(true), group_picks: z.array(groupPickSchema).optional().default([]), repick_required: z.boolean().optional().default(false),
 });
 const groupResultSchema = historyRecordSchema.extend({ rank: z.number().int().positive(), profile_id: z.string().nullable().optional().default(null), display_name: z.string(), is_current_user: z.boolean() });
@@ -83,8 +83,8 @@ export interface PicksRepository {
   loadCurrentEvent: (sport?: PickSport) => Promise<PickEvent | null>;
   loadMyPicks: (eventId: string) => Promise<ProfileEventPick[]>;
   loadMyUnderdogLock: (eventId: string) => Promise<UnderdogLock | null>;
-  loadMySummary: (season: number) => Promise<PickSummary>;
-  loadMyHistory: (season: number | null) => Promise<PickHistory>;
+  loadMySummary: (season: number, sport?: PickSport) => Promise<PickSummary>;
+  loadMyHistory: (season: number | null, sport?: PickSport) => Promise<PickHistory>;
   savePick: (eventId: string, boutId: string, fighterSlug: string, isLock?: boolean) => Promise<ProfileEventPick>;
   setUnderdogLock: (eventId: string, boutId: string, fighterSlug: string) => Promise<UnderdogLock>;
   clearUnderdogLock: (eventId: string) => Promise<void>;
@@ -169,8 +169,8 @@ export function createPicksRepository(): PicksRepository | null {
     async loadCurrentEvent(sport = "mma") { return mapPickEvent(await requireRpcSuccess(client.rpc("get_current_pick_event", { p_sport: sport }))); },
     async loadMyPicks(eventId) { return z.array(pickRowSchema).parse(await requireRpcSuccess(client.rpc("list_my_event_picks", { p_event_id: eventId })) ?? []).map(mapPick); },
     async loadMyUnderdogLock(eventId) { const data = await requireRpcSuccess(client.rpc("get_my_event_underdog_lock", { p_event_id: eventId })); const raw = Array.isArray(data) ? data[0] : data; return raw ? mapLock(raw) : null; },
-    async loadMySummary(season) { return mapSummary(await requireRpcSuccess(client.rpc("get_my_pick_summary", { p_season: season }))); },
-    async loadMyHistory(season) { return mapHistory(await requireRpcSuccess(client.rpc("get_my_pick_history", { p_season: season }))); },
+    async loadMySummary(season, sport = "mma") { return mapSummary(await requireRpcSuccess(client.rpc("get_my_pick_summary", { p_season: season, p_sport: sport }))); },
+    async loadMyHistory(season, sport = "mma") { return mapHistory(await requireRpcSuccess(client.rpc("get_my_pick_history", { p_season: season, p_sport: sport }))); },
     async savePick(eventId, boutId, fighterSlug, isLock) {
       const baseParams = { p_event_id: eventId, p_bout_id: boutId, p_fighter_slug: fighterSlug };
       const params = isLock === undefined ? baseParams : { ...baseParams, p_is_lock: isLock };
