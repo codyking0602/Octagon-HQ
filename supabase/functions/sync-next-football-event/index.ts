@@ -32,6 +32,7 @@ Deno.serve(async (request) => {
     if (finalResult) {
       if (input.mode === "preview") return json({ final_preview: finalResult });
       const recorded = await admin.rpc("record_football_pick_final", {
+        p_league: finalResult.league,
         p_home_team_slug: finalResult.home_team_slug,
         p_away_team_slug: finalResult.away_team_slug,
         p_home_final_score: finalResult.home_final_score,
