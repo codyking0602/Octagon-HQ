@@ -49,6 +49,26 @@ export interface PickSetupDraft {
   bouts: PickSetupBout[];
 }
 
+export interface PickSetupFootballWeekGame {
+  espnEventId: string;
+  league: PickSetupFootballLeague;
+  name: string;
+  kickoffAt: string;
+  homeTeamName: string;
+  awayTeamName: string;
+  homeRank: number | null;
+  awayRank: number | null;
+  candidateRank?: number;
+}
+
+export interface PickSetupFootballWeekPreview {
+  weekStart: string;
+  weekEnd: string;
+  requiredCollegeCount: number;
+  nflGames: PickSetupFootballWeekGame[];
+  collegeCandidates: PickSetupFootballWeekGame[];
+}
+
 export interface PickSetupSourceEventPreview {
   name: string;
   subtitle: string;
