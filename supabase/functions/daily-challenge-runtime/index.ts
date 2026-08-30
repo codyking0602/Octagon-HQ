@@ -364,8 +364,8 @@ async function materializeFootballToday(admin: SupabaseClient, footballRuntime: 
     p_scoring_version: requiredString(publication.scoringVersion, "Football daily scoring version"),
     p_public_setup: requiredRecord(publication.publicSetup, "Football daily public setup"),
     p_reveal_setup: requiredRecord(publication.revealSetup, "Football daily reveal setup"),
-    p_private_setup_evidence: requiredRecord(publication.privateSetupEvidence, "Football daily setup evidence"),
-    p_private_grading_evidence: requiredRecord(publication.privateGradingEvidence, "Football daily grading evidence"),
+    p_private_setup_evidence: requiredRecord(publication.privateSetupEvidence, "Football daily private setup evidence"),
+    p_private_grading_evidence: requiredRecord(publication.privateGradingEvidence, "Football daily private grading evidence"),
     p_fallback_reason: null,
   });
   if (published.error) throw new Error("The official Football daily setup could not be published safely.");
