@@ -20,12 +20,12 @@ const draftBoutSchema = z.object({
   blue_fighter_slug: z.string(),
   blue_fighter_name: z.string(),
   included: z.boolean(),
-  kickoff_at: z.string().nullable().optional().default(null),
-  home_team_slug: z.string().nullable().optional().default(null),
-  away_team_slug: z.string().nullable().optional().default(null),
-  spread_home: z.number().nullable().optional().default(null),
-  spread_source: z.string().nullable().optional().default(null),
-  spread_updated_at: z.string().nullable().optional().default(null),
+  kickoff_at: z.string().nullable().optional(),
+  home_team_slug: z.string().nullable().optional(),
+  away_team_slug: z.string().nullable().optional(),
+  spread_home: z.number().nullable().optional(),
+  spread_source: z.string().nullable().optional(),
+  spread_updated_at: z.string().nullable().optional(),
 });
 
 const spotlightWatchDbSchema = z.object({ fighter_slug: z.string().min(1), url: z.string().url() });
@@ -70,8 +70,8 @@ const spotlightSchema = z.object({
 
 const draftSchema = z.object({
   draft_id: z.string(), source: z.string(), source_event_key: z.string(), source_url: z.string().nullable(),
-  event_id: z.string(), sport: z.enum(["mma", "football"]).optional().default("mma"), league: z.string().nullable().optional().default(null),
-  event_kind: z.string().optional().default("fight_card"), name: z.string(), subtitle: z.string(), venue: z.string().nullable(), location: z.string().nullable(),
+  event_id: z.string(), sport: z.enum(["mma", "football"]).optional(), league: z.string().nullable().optional(),
+  event_kind: z.string().optional(), name: z.string(), subtitle: z.string(), venue: z.string().nullable(), location: z.string().nullable(),
   starts_at: z.string().nullable(), locks_at: z.string().nullable(), season: z.number().int(), state: z.enum(["staged", "published"]),
   synced_at: z.string(), updated_at: z.string(), warnings: z.array(z.string()).default([]), can_publish: z.boolean(),
   spotlights: z.array(spotlightDbSchema).optional().default([]), bouts: z.array(draftBoutSchema),
@@ -137,8 +137,12 @@ function mapBout(bout: z.infer<typeof draftBoutSchema>) {
     boutId: bout.bout_id, position: bout.position, weightClass: bout.weight_class,
     redFighterSlug: bout.red_fighter_slug, redFighterName: bout.red_fighter_name,
     blueFighterSlug: bout.blue_fighter_slug, blueFighterName: bout.blue_fighter_name, included: bout.included,
-    kickoffAt: bout.kickoff_at, homeTeamSlug: bout.home_team_slug, awayTeamSlug: bout.away_team_slug,
-    spreadHome: bout.spread_home, spreadSource: bout.spread_source, spreadUpdatedAt: bout.spread_updated_at,
+    ...(bout.kickoff_at !== undefined ? { kickoffAt: bout.kickoff_at } : {}),
+    ...(bout.home_team_slug !== undefined ? { homeTeamSlug: bout.home_team_slug } : {}),
+    ...(bout.away_team_slug !== undefined ? { awayTeamSlug: bout.away_team_slug } : {}),
+    ...(bout.spread_home !== undefined ? { spreadHome: bout.spread_home } : {}),
+    ...(bout.spread_source !== undefined ? { spreadSource: bout.spread_source } : {}),
+    ...(bout.spread_updated_at !== undefined ? { spreadUpdatedAt: bout.spread_updated_at } : {}),
   };
 }
 function mapDbFighter(fighter: z.infer<typeof spotlightFighterDbSchema>) {
@@ -165,7 +169,10 @@ export function mapPickSetupDraft(value: unknown): PickSetupDraft | null {
   const parsed = draftSchema.parse(value);
   return {
     draftId: parsed.draft_id, source: parsed.source, sourceEventKey: parsed.source_event_key, sourceUrl: parsed.source_url,
-    eventId: parsed.event_id, sport: parsed.sport, league: parsed.league, eventKind: parsed.event_kind,
+    eventId: parsed.event_id,
+    ...(parsed.sport !== undefined ? { sport: parsed.sport } : {}),
+    ...(parsed.league !== undefined ? { league: parsed.league } : {}),
+    ...(parsed.event_kind !== undefined ? { eventKind: parsed.event_kind } : {}),
     name: parsed.name, subtitle: parsed.subtitle, venue: parsed.venue ?? "", location: parsed.location ?? "",
     startsAt: parsed.starts_at, locksAt: parsed.locks_at, season: parsed.season, state: parsed.state, syncedAt: parsed.synced_at, updatedAt: parsed.updated_at,
     warnings: parsed.warnings, canPublish: parsed.can_publish, spotlights: parsed.spotlights.map(mapDbSpotlight), bouts: parsed.bouts.map(mapBout),
