@@ -23,8 +23,9 @@ const rotationMigration = readFileSync(
 );
 
 describe("bundled Blind Rank + Keep Cut Daily release", () => {
-  it("orchestrates both canonical game runtimes as one official attempt", () => {
-    expect(runtime).toContain('const DAILY_COMBO_SCHEDULE_VERSION = "play-rotation-v4"');
+  it("orchestrates both canonical game runtimes as one official attempt across schedule versions", () => {
+    expect(runtime).not.toContain("DAILY_COMBO_SCHEDULE_VERSION");
+    expect(runtime).toContain('publication = gameType === "keep_4_cut_4"\n      ? buildDailyComboSetup(day, scheduleVersion)');
     expect(runtime).toContain('buildOfficialDailySetup("blind_rank_5", day, scheduleVersion)');
     expect(runtime).toContain('buildOfficialDailySetup("keep_4_cut_4", day, scheduleVersion)');
     expect(runtime).toContain('combo_stage: "blind_rank_5"');

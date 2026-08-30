@@ -24,7 +24,6 @@ interface OfficialDailyRuntimeContext {
   publicState: Record<string, unknown>;
 }
 
-const DAILY_COMBO_SCHEDULE_VERSION = "play-rotation-v4";
 const DAILY_COMBO_CONTENT_VERSION = "daily-rank-keep-combo-v1";
 const DAILY_COMBO_SCORING_VERSION = "play-official-score-v4";
 
@@ -317,7 +316,7 @@ async function materializeToday(admin: SupabaseClient) {
   let fallbackReason: string | null = null;
   let publication;
   try {
-    publication = gameType === "keep_4_cut_4" && scheduleVersion === DAILY_COMBO_SCHEDULE_VERSION
+    publication = gameType === "keep_4_cut_4"
       ? buildDailyComboSetup(day, scheduleVersion)
       : buildOfficialDailySetup(gameType, day, scheduleVersion);
   } catch {
