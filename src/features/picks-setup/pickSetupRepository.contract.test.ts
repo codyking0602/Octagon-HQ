@@ -18,4 +18,13 @@ describe("Football Picks setup ownership contract", () => {
     expect(source).toContain('"Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type"');
     expect(source).toContain('"Access-Control-Allow-Methods": "POST, OPTIONS"');
   });
+
+  it("keeps college selection flexible and validates choices against the full FBS week instead of only recommendations", () => {
+    const source = readFileSync("supabase/functions/sync-next-football-event/index.ts", "utf8");
+
+    expect(source).toContain("weekPreview.college_games");
+    expect(source).toContain("college selections must come from this week's FBS schedule");
+    expect(source).not.toContain("choose exactly");
+    expect(source).not.toContain("requestedIds.length !== weekPreview");
+  });
 });
