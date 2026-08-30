@@ -16,8 +16,8 @@ async function fetchEspnWeekEvents(weekStart: string, league: "nfl" | "college-f
   const sportPath = league === "nfl" ? "football/nfl" : "football/college-football";
   const group = league === "college-football" ? "&groups=80" : "";
   const dateRange = `${range.weekStart.replaceAll("-", "")}-${range.weekEnd.replaceAll("-", "")}`;
-  const response = await fetch(`https://site.api.espn.com/apis/site/v2/sports/${sportPath}/scoreboard?dates=${dateRange}&limit=1000${group}`);
-  if (!response.ok) throw new Error(`football ESPN ${league} schedule request failed`);
+  const response = await fetch(`https://site.api.espn.com/apis/site/v2/sports/${sportPath}/scoreboard?dates=${dateRange}&limit=200${group}`);
+  if (!response.ok) throw new Error(`football ESPN ${league} schedule request failed (${response.status})`);
   const payload = await response.json();
   return Array.isArray(payload?.events) ? payload.events as Json[] : [];
 }
