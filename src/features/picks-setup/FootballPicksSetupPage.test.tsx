@@ -37,10 +37,21 @@ const footballDraft: PickSetupDraft = {
   }],
 };
 
+const collegeGames = Array.from({ length: 22 }, (_, index) => ({
+  espnEventId: `5${String(index + 1).padStart(2, "0")}`,
+  league: "college-football" as const,
+  name: `College ${index + 1}`,
+  kickoffAt: new Date(Date.UTC(2026, 8, 12, 12 + index)).toISOString(),
+  homeTeamName: `College Home ${index + 1}`,
+  awayTeamName: `College Away ${index + 1}`,
+  homeRank: index < 4 ? index + 1 : null,
+  awayRank: null,
+}));
+
 const weekPreview: PickSetupFootballWeekPreview = {
   weekStart: "2026-09-08",
   weekEnd: "2026-09-14",
-  requiredCollegeCount: 8,
+  recommendedCollegeCount: 8,
   nflGames: [{
     espnEventId: "401", league: "nfl", name: "NFL One", kickoffAt: "2026-09-10T00:00:00.000Z",
     homeTeamName: "NFL Home One", awayTeamName: "NFL Away One", homeRank: null, awayRank: null,
@@ -48,12 +59,8 @@ const weekPreview: PickSetupFootballWeekPreview = {
     espnEventId: "402", league: "nfl", name: "NFL Two", kickoffAt: "2026-09-13T17:00:00.000Z",
     homeTeamName: "NFL Home Two", awayTeamName: "NFL Away Two", homeRank: null, awayRank: null,
   }],
-  collegeCandidates: Array.from({ length: 8 }, (_, index) => ({
-    espnEventId: `50${index + 1}`, league: "college-football" as const, name: `College ${index + 1}`,
-    kickoffAt: `2026-09-12T${String(12 + index).padStart(2, "0")}:00:00.000Z`,
-    homeTeamName: `College Home ${index + 1}`, awayTeamName: `College Away ${index + 1}`,
-    homeRank: index < 4 ? index + 1 : null, awayRank: null, candidateRank: index + 1,
-  })),
+  collegeCandidates: collegeGames.slice(0, 20).map((game, index) => ({ ...game, candidateRank: index + 1 })),
+  collegeGames,
 };
 
 function repository(
@@ -81,7 +88,7 @@ beforeEach(() => vi.spyOn(window, "confirm").mockReturnValue(true));
 afterEach(() => { cleanup(); vi.restoreAllMocks(); });
 
 describe("Football weekly slate owner setup", () => {
-  it("auto-loads a weekly workspace, includes every NFL game, and stages eight selected college games in one action", async () => {
+  it("auto-loads every NFL game and allows staging fewer than the recommended eight college games", async () => {
     const loadDraft = vi.fn().mockResolvedValueOnce(null).mockResolvedValue(footballDraft);
     const previewFootballWeek = vi.fn().mockResolvedValue(weekPreview);
     const repo = repository(loadDraft, previewFootballWeek);
@@ -91,20 +98,42 @@ describe("Football weekly slate owner setup", () => {
     await waitFor(() => expect(previewFootballWeek).toHaveBeenCalled());
     expect(screen.queryByLabelText("ESPN event ID")).not.toBeInTheDocument();
     expect(screen.getByText("2/2")).toBeInTheDocument();
-    expect(screen.getByText(/NFL Away One/)).toBeInTheDocument();
-    expect(screen.getByText(/NFL Away Two/)).toBeInTheDocument();
+    expect(screen.getByText("0 SELECTED")).toBeInTheDocument();
+    expect(screen.getByText(/Top 20 recommendations/)).toBeInTheDocument();
 
-    for (let index = 1; index <= 8; index += 1) {
+    for (let index = 1; index <= 3; index += 1) {
       fireEvent.click(screen.getByRole("button", { name: new RegExp(`College Away ${index}`) }));
     }
-    fireEvent.click(screen.getByRole("button", { name: "STAGE 10-GAME SLATE" }));
+    fireEvent.click(screen.getByRole("button", { name: "STAGE 5-GAME SLATE" }));
 
     await waitFor(() => expect(repo.stageFootballWeek).toHaveBeenCalledWith(
       "2026-09-08",
-      ["501", "502", "503", "504", "505", "506", "507", "508"],
+      ["501", "502", "503"],
     ));
     await waitFor(() => expect(loadDraft).toHaveBeenLastCalledWith("football"));
     expect(repo.syncFootballGame).not.toHaveBeenCalled();
+  });
+
+  it("opens the full FBS week and allows more than eight college selections, including games outside the recommendations", async () => {
+    const loadDraft = vi.fn().mockResolvedValueOnce(null).mockResolvedValue(footballDraft);
+    const repo = repository(loadDraft);
+    renderPage(repo);
+
+    expect(await screen.findByRole("button", { name: "VIEW ALL FBS GAMES (22)" })).toBeInTheDocument();
+    for (let index = 1; index <= 8; index += 1) {
+      fireEvent.click(screen.getByRole("button", { name: new RegExp(`College Away ${index}`) }));
+    }
+    fireEvent.click(screen.getByRole("button", { name: "VIEW ALL FBS GAMES (22)" }));
+    expect(screen.getByText("All FBS games")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /College Away 21/ }));
+    fireEvent.click(screen.getByRole("button", { name: /College Away 22/ }));
+    expect(screen.getByText("10 SELECTED")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "STAGE 12-GAME SLATE" }));
+    await waitFor(() => expect(repo.stageFootballWeek).toHaveBeenCalledWith(
+      "2026-09-08",
+      ["501", "502", "503", "504", "505", "506", "507", "508", "521", "522"],
+    ));
   });
 
   it("reviews the staged weekly slate with kickoff, league, source, and ATS line", async () => {
