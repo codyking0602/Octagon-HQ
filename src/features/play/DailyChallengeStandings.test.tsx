@@ -7,7 +7,7 @@ function member(overrides: Partial<TodayChallengeStandingsEntry>): TodayChalleng
   return {
     rank: 1, profileId: "11111111-1111-4111-8111-111111111111", displayName: "Cody", initials: "CK",
     avatarPhotoData: null, wins: 25, played: 30, averageScore: 84.6, currentStreak: 6, bestStreak: 13,
-    gameAverages: { findLeader: 84, wavelength: null, blindResume: 90, blindRank5: 82, keep4Cut4: 87, hitTheNumber: null },
+    gameAverages: { findLeader: 84, wavelength: null, blindResume: 90, blindRank5: 82, keep4Cut4: 87, hitTheNumber: 91 },
     isCurrentUser: false, weeklyRank: 1, weeklyWins: 4, weeklyPlayed: 6, weeklyAverageScore: 88.2, weeklyTitles: 2,
     ...overrides,
   };
@@ -41,5 +41,25 @@ describe("Daily Challenge championship standings", () => {
     expect(screen.queryByText("Inactive")).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "SHOW 1 INACTIVE" }));
     expect(screen.getByText("Inactive")).toBeInTheDocument();
+  });
+
+  it("shows one Daily Double average and includes Hit the Number", () => {
+    const standings: TodayChallengeStandings = {
+      playerCount: 1, currentUserRank: 1, currentUserWins: 25,
+      currentWeekStart: "2026-08-24", currentWeekEnd: "2026-08-30",
+      entries: [member({ isCurrentUser: true })],
+    };
+    render(<DailyChallengeStandings standings={standings} loading={false} error={null} onRefresh={vi.fn()} />);
+    fireEvent.click(screen.getByText("Championship Standings"));
+    fireEvent.click(screen.getByRole("button", { name: /Cody/i }));
+
+    const dailyDouble = screen.getByText("Daily Double").closest("span");
+    const hitTheNumber = screen.getByText("Hit the Number").closest("span");
+    expect(dailyDouble).not.toBeNull();
+    expect(hitTheNumber).not.toBeNull();
+    expect(within(dailyDouble as HTMLElement).getByText("84.5")).toBeInTheDocument();
+    expect(within(hitTheNumber as HTMLElement).getByText("91.0")).toBeInTheDocument();
+    expect(screen.queryByText("Blind Rank 5")).not.toBeInTheDocument();
+    expect(screen.queryByText("Keep 4, Cut 4")).not.toBeInTheDocument();
   });
 });
