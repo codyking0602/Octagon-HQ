@@ -11,4 +11,11 @@ describe("Football Picks setup ownership contract", () => {
     expect(source).toContain('mode: "week-apply"');
     expect(source).not.toMatch(/invoke\("(?!sync-next-football-event)[^"]*football[^"]*"/);
   });
+
+  it("allows the Supabase browser headers required by the canonical Football Edge Function invocation", () => {
+    const source = readFileSync("supabase/functions/sync-next-football-event/index.ts", "utf8");
+
+    expect(source).toContain('"Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type"');
+    expect(source).toContain('"Access-Control-Allow-Methods": "POST, OPTIONS"');
+  });
 });
