@@ -1,5 +1,6 @@
 -- Record official Football finals inside the canonical Picks event/bout lifecycle.
 create function public.record_football_pick_final(
+  p_league text,
   p_home_team_slug text,
   p_away_team_slug text,
   p_home_final_score integer,
@@ -11,6 +12,7 @@ security definer
 set search_path = ''
 as $$
 declare
+  v_league text := lower(trim(p_league));
   v_home text := public.slugify_pick_text(p_home_team_slug);
   v_away text := public.slugify_pick_text(p_away_team_slug);
   v_match_count integer;
@@ -21,6 +23,9 @@ declare
 begin
   if auth.role() is distinct from 'service_role' then
     raise exception 'service role required';
+  end if;
+  if v_league not in ('nfl', 'college-football') then
+    raise exception 'football final league is invalid';
   end if;
   if nullif(v_home, '') is null or nullif(v_away, '') is null or v_home = v_away then
     raise exception 'football final teams are invalid';
@@ -34,6 +39,7 @@ begin
   from public.pick_bouts bout
   join public.pick_events event on event.event_id = bout.event_id
   where event.sport = 'football'
+    and event.league = v_league
     and event.status in ('upcoming', 'locked')
     and bout.included_in_picks
     and bout.home_team_slug = v_home
@@ -47,6 +53,7 @@ begin
   from public.pick_bouts bout
   join public.pick_events event on event.event_id = bout.event_id
   where event.sport = 'football'
+    and event.league = v_league
     and event.status in ('upcoming', 'locked')
     and bout.included_in_picks
     and bout.home_team_slug = v_home
@@ -107,7 +114,7 @@ begin
 end;
 $$;
 
-revoke all on function public.record_football_pick_final(text,text,integer,integer) from public, anon, authenticated;
-grant execute on function public.record_football_pick_final(text,text,integer,integer) to service_role;
+revoke all on function public.record_football_pick_final(text,text,text,integer,integer) from public, anon, authenticated;
+grant execute on function public.record_football_pick_final(text,text,text,integer,integer) to service_role;
 
 notify pgrst, 'reload schema';
