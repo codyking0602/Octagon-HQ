@@ -57,16 +57,19 @@ const eventSchema = z.object({
 });
 
 const pickRowSchema = z.object({ event_id: z.string(), bout_id: z.string(), fighter_slug: z.string(), picked_at: z.string(), updated_at: z.string() });
-const summaryRowSchema = z.object({ correct: z.number().int().nonnegative(), incorrect: z.number().int().nonnegative(), pending: z.number().int().nonnegative(), events_entered: z.number().int().nonnegative(), base_points: z.number().int().nonnegative(), lock_bonus: z.number().int().nonnegative(), total_points: z.number().int().nonnegative() });
+const summaryRowSchema = z.object({ correct: z.number().int().nonnegative(), incorrect: z.number().int().nonnegative(), pending: z.number().int().nonnegative(), events_entered: z.number().int().nonnegative(), base_points: z.number().nonnegative(), lock_bonus: z.number().nonnegative(), total_points: z.number().nonnegative() });
 const lockSchema = z.object({ event_id: z.string(), bout_id: z.string(), fighter_slug: z.string(), selected_at: z.string(), frozen_american_odds: z.number().int().nullable() });
-const historyRecordSchema = z.object({ correct: z.number().int().nonnegative(), incorrect: z.number().int().nonnegative(), missing: z.number().int().nonnegative(), excluded: z.number().int().nonnegative(), base_points: z.number().int().nonnegative(), lock_bonus: z.number().int().nonnegative(), total_points: z.number().int().nonnegative() });
+const historyRecordSchema = z.object({ correct: z.number().int().nonnegative(), incorrect: z.number().int().nonnegative(), missing: z.number().int().nonnegative(), excluded: z.number().int().nonnegative(), base_points: z.number().nonnegative(), lock_bonus: z.number().nonnegative(), total_points: z.number().nonnegative() });
 const historyBoutSchema = z.object({
   bout_id: z.string(), position: z.number().int().positive(), weight_class: z.string(), red_fighter_slug: z.string(), red_fighter_name: z.string(), blue_fighter_slug: z.string(), blue_fighter_name: z.string(),
   result_status: z.enum(["pending", "red_win", "blue_win", "draw", "no_contest", "cancelled"]), winner_fighter_slug: z.string().nullable(), picked_fighter_slug: z.string().nullable(), verdict: z.enum(["correct", "incorrect", "missing", "excluded", "pending"]),
   included_in_picks: z.boolean().optional().default(true), group_picks: z.array(groupPickSchema).optional().default([]), repick_required: z.boolean().optional().default(false),
 });
 const groupResultSchema = historyRecordSchema.extend({ rank: z.number().int().positive(), profile_id: z.string().nullable().optional().default(null), display_name: z.string(), is_current_user: z.boolean() });
-const seasonStandingSchema = groupResultSchema.extend({ events_entered: z.number().int().nonnegative() });
+const seasonStandingSchema = groupResultSchema.extend({
+  events_entered: z.number().int().nonnegative(), adjusted_points: z.number().nonnegative().optional(),
+  pushes: z.number().int().nonnegative().optional(), dropped_week_label: z.string().nullable().optional(),
+});
 const historyEventSchema = z.object({
   event_id: z.string(), name: z.string(), subtitle: z.string(), venue: z.string(), location: z.string(), starts_at: z.string(), season: z.number().int(), completed_at: z.string(),
   header_storage_path: z.string().nullable().optional().default(null),
@@ -145,7 +148,7 @@ function mapHistory(value: unknown): PickHistory {
   return {
     season: parsed.season,
     summary: { correct: parsed.summary.correct, incorrect: parsed.summary.incorrect, missing: parsed.summary.missing, excluded: parsed.summary.excluded, eventsEntered: parsed.summary.events_entered, basePoints: parsed.summary.base_points, lockBonus: parsed.summary.lock_bonus, totalPoints: parsed.summary.total_points },
-    seasonStandings: parsed.season_standings.map((standing) => ({ rank: standing.rank, profileId: standing.profile_id, displayName: standing.display_name, correct: standing.correct, incorrect: standing.incorrect, missing: standing.missing, excluded: standing.excluded, eventsEntered: standing.events_entered, basePoints: standing.base_points, lockBonus: standing.lock_bonus, totalPoints: standing.total_points, isCurrentUser: standing.is_current_user })),
+    seasonStandings: parsed.season_standings.map((standing) => ({ rank: standing.rank, profileId: standing.profile_id, displayName: standing.display_name, correct: standing.correct, incorrect: standing.incorrect, missing: standing.missing, excluded: standing.excluded, eventsEntered: standing.events_entered, basePoints: standing.base_points, lockBonus: standing.lock_bonus, totalPoints: standing.total_points, adjustedPoints: standing.adjusted_points, pushes: standing.pushes, droppedWeekLabel: standing.dropped_week_label, isCurrentUser: standing.is_current_user })),
     events: parsed.events.map((event) => ({
       eventId: event.event_id, name: event.name, subtitle: event.subtitle, venue: event.venue, location: event.location, startsAt: event.starts_at, season: event.season, completedAt: event.completed_at,
       headerStoragePath: event.header_storage_path, headerNaturalWidth: event.header_natural_width, headerNaturalHeight: event.header_natural_height,

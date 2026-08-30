@@ -40,4 +40,11 @@
 .football-pick-game > footer strong { color: #e9aa7e; }
 .football-pick-game .picks-group-pick-reveal { border-top: 1px solid #292c2e; }
 .football-picks-group { margin-top: 3px; }
+.football-picks-standings { padding: 16px; }
+.football-picks-standings h2 { margin: 2px 0 6px; text-transform: uppercase; }
+.football-picks-standings > p { color: #9ca1a3; font-size: .75rem; }
+.football-picks-standings [role="row"] { display: grid; grid-template-columns: 28px minmax(90px, 1fr) 45px minmax(95px, auto) 52px; gap: 6px; align-items: center; padding: 9px 4px; border-bottom: 1px solid #292c2e; font-size: .74rem; }
+.football-picks-standings [role="row"]:first-child { color: #858b8d; font-size: .56rem; font-weight: 900; letter-spacing: .08em; }
+.football-picks-standings [role="row"].is-current { background: #d8783820; box-shadow: inset 2px 0 var(--football-picks-accent); }
+.football-picks-standings [role="row"] small { color: #858b8d; }
 @media (min-width: 700px) { .football-picks-page { gap: 18px; padding-top: 22px; } .football-picks-hero { min-height: 360px; } .football-picks-hero__content { inset: auto 28px 26px; } .football-pick-game__teams { grid-template-columns: 1fr 1fr; } .football-pick-game__teams button:first-child { border-right: 1px solid #292c2e; } }
