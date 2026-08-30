@@ -29,11 +29,12 @@ describe("Football weekly owner discovery", () => {
     expect(() => footballWeekRange("2026-09-09")).toThrow(/Tuesday/);
   });
 
-  it("fetches each ESPN weekly schedule as one Tuesday-Monday range request", () => {
+  it("fetches each ESPN weekly schedule as one Tuesday-Monday range request within ESPN's 200-event scoreboard cap", () => {
     const source = readFileSync("supabase/functions/sync-next-football-event/index.ts", "utf8");
 
     expect(source).toContain('const dateRange = `${range.weekStart.replaceAll("-", "")}-${range.weekEnd.replaceAll("-", "")}`;');
-    expect(source).toContain("scoreboard?dates=${dateRange}&limit=1000${group}");
+    expect(source).toContain("scoreboard?dates=${dateRange}&limit=200${group}");
+    expect(source).not.toContain("limit=1000");
     expect(source).not.toContain("Promise.all(range.dates.map");
   });
 
