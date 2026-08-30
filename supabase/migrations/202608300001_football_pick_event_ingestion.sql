@@ -43,8 +43,9 @@ declare
 begin
   if v_sport not in ('mma','football') then raise exception 'unsupported Picks sport'; end if;
   if v_sport = 'football' and (
-    nullif(trim(p_payload->>'league'),'') is null or p_payload->>'event_kind' <> 'game'
-    or jsonb_array_length(coalesce(p_payload->'bouts','[]'::jsonb)) <> 1
+    nullif(trim(p_payload->>'league'),'') is null
+    or p_payload->>'event_kind' not in ('game','slate')
+    or jsonb_array_length(coalesce(p_payload->'bouts','[]'::jsonb)) < 1
   ) then raise exception 'football event metadata is incomplete'; end if;
 
   v_draft_id := private.stage_pick_event_draft_football_core(p_payload);
