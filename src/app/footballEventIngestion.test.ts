@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { normalizeFootballEvent } from "../../supabase/functions/sync-next-football-event/normalize";
 
-const migration = readFileSync("supabase/migrations/202608300001_football_pick_event_ingestion.sql", "utf8");
+const migration = readFileSync("supabase/migrations/202608300002_football_pick_event_ingestion.sql", "utf8");
 const edge = readFileSync("supabase/functions/sync-next-football-event/index.ts", "utf8");
 
 describe("Football Picks ingestion", () => {
