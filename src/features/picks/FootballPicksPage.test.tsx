@@ -10,6 +10,7 @@ vi.mock("./GroupPickProgress", () => ({ GroupPickProgress: () => <div>Who has pi
 vi.mock("./GroupPickReveal", () => ({ GroupPickReveal: () => null }));
 
 const setPick = vi.fn(async () => undefined);
+const setFootballLock = vi.fn(async () => undefined);
 const event = {
   eventId: "football-week-1", sport: "football" as const, league: "mixed", eventKind: "slate" as const,
   name: "Football Week 1", subtitle: "Opening weekend", venue: "Multiple venues", location: "Nationwide",
@@ -26,8 +27,8 @@ const event = {
 function runtime(overrides: Record<string, unknown> = {}) {
   return {
     configured: true, loading: false, groupProgressLoading: false, savingBoutId: null, savingLock: false,
-    error: "", groupProgressError: "", event, selections: {}, groupProgress: [], underdogLock: null,
-    summary: {}, history: { season: null, summary: {}, events: [] }, refresh: vi.fn(), setPick,
+    error: "", groupProgressError: "", event, selections: {}, footballLocks: {}, groupProgress: [], underdogLock: null,
+    summary: {}, history: { season: null, summary: {}, events: [] }, refresh: vi.fn(), setPick, setFootballLock,
     setUnderdogLock: vi.fn(), clearUnderdogLock: vi.fn(), ...overrides,
   };
 }
@@ -35,6 +36,7 @@ function runtime(overrides: Record<string, unknown> = {}) {
 describe("FootballPicksPage", () => {
   beforeEach(() => {
     setPick.mockClear();
+    setFootballLock.mockClear();
     vi.mocked(useIdentity).mockReturnValue({ profile: { id: "me" }, openDialog: vi.fn() } as never);
     vi.mocked(usePicks).mockReturnValue(runtime() as never);
   });
@@ -62,5 +64,21 @@ describe("FootballPicksPage", () => {
     expect(selected).toBeDisabled();
     fireEvent.click(selected);
     expect(setPick).not.toHaveBeenCalled();
+  });
+
+  it("lets a selected team use the canonical slate Lock allowance", () => {
+    const twoGameEvent = {
+      ...event,
+      bouts: [
+        event.bouts[0],
+        { ...event.bouts[0], boutId: "dallas-philadelphia", position: 2, redFighterSlug: "dallas", redFighterName: "Dallas Cowboys", blueFighterSlug: "philadelphia", blueFighterName: "Philadelphia Eagles", homeTeamSlug: "dallas", awayTeamSlug: "philadelphia" },
+      ],
+    };
+    vi.mocked(usePicks).mockReturnValue(runtime({ event: twoGameEvent, selections: { "texas-ohio-state": "texas" } }) as never);
+    render(<FootballPicksPage />);
+    expect(screen.getByText(/LOCKS 0 \/ 1/)).toBeInTheDocument();
+    const lockButton = screen.getByRole("button", { name: "★ MAKE LOCK" });
+    fireEvent.click(lockButton);
+    expect(setFootballLock).toHaveBeenCalledWith("texas-ohio-state", true);
   });
 });
