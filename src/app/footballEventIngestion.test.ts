@@ -20,4 +20,10 @@ describe("Football Picks ingestion", () => {
     expect(migration).toContain("private.publish_pick_event_draft_football_core(p_draft_id)");
     expect(migration).not.toMatch(/create table .*football_picks|footballPicksRepository|FootballPicksProvider/i);
   });
+
+  it("keeps the shared Football event contract compatible with multi-game weekly slates", () => {
+    expect(migration).toContain("p_payload->>'event_kind' not in ('game','slate')");
+    expect(migration).toContain("jsonb_array_length(coalesce(p_payload->'bouts','[]'::jsonb)) < 1");
+    expect(migration).not.toContain("jsonb_array_length(coalesce(p_payload->'bouts','[]'::jsonb)) <> 1");
+  });
 });
