@@ -1,5 +1,5 @@
 import { createClient } from "npm:@supabase/supabase-js@2.110.7";
-import { normalizeFootballEvent } from "./normalize.ts";
+import { normalizeFootballEvent, normalizeFootballFinalResult } from "./normalize.ts";
 
 const headers = { "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*", "Access-Control-Allow-Headers": "authorization, apikey, content-type" };
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { ...headers, "Content-Type": "application/json" } });
@@ -24,12 +24,25 @@ Deno.serve(async (request) => {
     if (!/^\d+$/.test(eventId)) return json({ error: "espn_event_id is required" }, 400);
     const sportPath = league === "nfl" ? "football/nfl" : "football/college-football";
     const oddsSport = league === "nfl" ? "americanfootball_nfl" : "americanfootball_ncaaf";
-    const [espnResponse, oddsResponse] = await Promise.all([
-      fetch(`https://site.api.espn.com/apis/site/v2/sports/${sportPath}/summary?event=${eventId}`),
-      fetch(`https://api.the-odds-api.com/v4/sports/${oddsSport}/odds/?apiKey=${Deno.env.get("THE_ODDS_API_KEY")}&regions=us&markets=spreads&oddsFormat=american`),
-    ]);
-    if (!espnResponse.ok || !oddsResponse.ok) throw new Error("football upstream request failed");
+
+    const espnResponse = await fetch(`https://site.api.espn.com/apis/site/v2/sports/${sportPath}/summary?event=${eventId}`);
+    if (!espnResponse.ok) throw new Error("football ESPN request failed");
     const summary = await espnResponse.json();
+    const finalResult = normalizeFootballFinalResult(summary.header, league);
+    if (finalResult) {
+      if (input.mode === "preview") return json({ final_preview: finalResult });
+      const recorded = await admin.rpc("record_football_pick_final", {
+        p_home_team_slug: finalResult.home_team_slug,
+        p_away_team_slug: finalResult.away_team_slug,
+        p_home_final_score: finalResult.home_final_score,
+        p_away_final_score: finalResult.away_final_score,
+      });
+      if (recorded.error) throw recorded.error;
+      return json({ result: recorded.data, final_preview: finalResult });
+    }
+
+    const oddsResponse = await fetch(`https://api.the-odds-api.com/v4/sports/${oddsSport}/odds/?apiKey=${Deno.env.get("THE_ODDS_API_KEY")}&regions=us&markets=spreads&oddsFormat=american`);
+    if (!oddsResponse.ok) throw new Error("football odds request failed");
     const event = normalizeFootballEvent(summary.header, await oddsResponse.json(), league);
     if (input.mode === "preview") return json({ event_preview: event });
     const staged = await admin.rpc("stage_pick_event_draft", { p_payload: event });
