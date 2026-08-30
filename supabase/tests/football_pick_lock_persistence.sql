@@ -84,7 +84,7 @@ begin
     perform public.save_my_event_pick('football-lock-persistence-test','game-two','home-two',true);
     raise exception 'second Football Lock unexpectedly bypassed the slate allowance';
   exception when others then
-    if sqlerrm not like '%football_lock_limit_reached%' then
+    if sqlerrm not like '%football Lock allowance exceeded%' then
       raise;
     end if;
   end;
