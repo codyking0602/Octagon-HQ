@@ -101,9 +101,8 @@ describe("Football weekly slate owner setup", () => {
     expect(screen.getByText("0 SELECTED")).toBeInTheDocument();
     expect(screen.getByText(/Top 20 recommendations/)).toBeInTheDocument();
 
-    for (let index = 1; index <= 3; index += 1) {
-      fireEvent.click(screen.getByRole("button", { name: new RegExp(`College Away ${index}`) }));
-    }
+    const recommendationButtons = screen.getAllByRole("button", { pressed: false });
+    recommendationButtons.slice(0, 3).forEach((button) => fireEvent.click(button));
     fireEvent.click(screen.getByRole("button", { name: "STAGE 5-GAME SLATE" }));
 
     await waitFor(() => expect(repo.stageFootballWeek).toHaveBeenCalledWith(
@@ -120,13 +119,12 @@ describe("Football weekly slate owner setup", () => {
     renderPage(repo);
 
     expect(await screen.findByRole("button", { name: "VIEW ALL FBS GAMES (22)" })).toBeInTheDocument();
-    for (let index = 1; index <= 8; index += 1) {
-      fireEvent.click(screen.getByRole("button", { name: new RegExp(`College Away ${index}`) }));
-    }
+    const recommendationButtons = screen.getAllByRole("button", { pressed: false });
+    recommendationButtons.slice(0, 8).forEach((button) => fireEvent.click(button));
     fireEvent.click(screen.getByRole("button", { name: "VIEW ALL FBS GAMES (22)" }));
     expect(screen.getByText("All FBS games")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: /College Away 21/ }));
-    fireEvent.click(screen.getByRole("button", { name: /College Away 22/ }));
+    fireEvent.click(screen.getByRole("button", { name: /College Away 21\b/ }));
+    fireEvent.click(screen.getByRole("button", { name: /College Away 22\b/ }));
     expect(screen.getByText("10 SELECTED")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "STAGE 12-GAME SLATE" }));
