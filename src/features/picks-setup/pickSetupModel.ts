@@ -64,9 +64,10 @@ export interface PickSetupFootballWeekGame {
 export interface PickSetupFootballWeekPreview {
   weekStart: string;
   weekEnd: string;
-  requiredCollegeCount: number;
+  recommendedCollegeCount: number;
   nflGames: PickSetupFootballWeekGame[];
   collegeCandidates: PickSetupFootballWeekGame[];
+  collegeGames: PickSetupFootballWeekGame[];
 }
 
 export interface PickSetupSourceEventPreview {
