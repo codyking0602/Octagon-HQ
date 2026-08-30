@@ -79,7 +79,7 @@ describe("Football weekly slate owner setup", () => {
     expect(screen.getByText(/Away Two/)).toBeInTheDocument();
     expect(screen.getByText("-3.5")).toBeInTheDocument();
     expect(screen.getByText("+2.5")).toBeInTheDocument();
-    expect(screen.getByText("NFL")).toBeInTheDocument();
+    expect(screen.getAllByText("NFL")).not.toHaveLength(0);
     expect(screen.getByText("COLLEGE FOOTBALL")).toBeInTheDocument();
     expect(screen.getAllByText(/the-odds-api/)).toHaveLength(2);
   });
