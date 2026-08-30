@@ -4,13 +4,13 @@ import type {
   TodayChallengeStandingsEntry,
 } from "./todayChallengeRepository";
 
-function score(value: number | null) {
-  return value === null ? "—" : value.toFixed(1);
+function score(value: number | null | undefined) {
+  return value == null ? "—" : value.toFixed(1);
 }
 
 function dailyDoubleAverage(entry: TodayChallengeStandingsEntry) {
-  const blindRank = entry.gameAverages.blindRank5;
-  const keepCut = entry.gameAverages.keep4Cut4;
+  const blindRank = entry.gameAverages.blindRank5 ?? null;
+  const keepCut = entry.gameAverages.keep4Cut4 ?? null;
   if (blindRank === null && keepCut === null) return null;
   if (blindRank === null) return keepCut;
   if (keepCut === null) return blindRank;
