@@ -77,8 +77,21 @@ describe("FootballPicksPage", () => {
     vi.mocked(usePicks).mockReturnValue(runtime({ event: twoGameEvent, selections: { "texas-ohio-state": "texas" } }) as never);
     render(<FootballPicksPage />);
     expect(screen.getByText(/LOCKS 0 \/ 1/)).toBeInTheDocument();
-    const lockButton = screen.getByRole("button", { name: "★ MAKE LOCK" });
-    fireEvent.click(lockButton);
+    fireEvent.click(screen.getByRole("button", { name: "Make Lock Texas Longhorns" }));
     expect(setFootballLock).toHaveBeenCalledWith("texas-ohio-state", true);
+  });
+
+  it("excludes cancelled games from the same Lock allowance used by the backend", () => {
+    const oneEligibleGameEvent = {
+      ...event,
+      bouts: [
+        event.bouts[0],
+        { ...event.bouts[0], boutId: "cancelled-game", position: 2, resultStatus: "cancelled" as const },
+      ],
+    };
+    vi.mocked(usePicks).mockReturnValue(runtime({ event: oneEligibleGameEvent, selections: { "texas-ohio-state": "texas" } }) as never);
+    render(<FootballPicksPage />);
+    expect(screen.queryByText(/LOCKS 0 \/ 1/)).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Make Lock Texas Longhorns" })).not.toBeInTheDocument();
   });
 });
