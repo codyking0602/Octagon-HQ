@@ -35,12 +35,14 @@ interface PicksContextValue {
   groupProgressError: string;
   event: PickEvent | null;
   selections: Record<string, string>;
+  footballLocks: Record<string, boolean>;
   groupProgress: PickEventMemberProgress[];
   underdogLock: UnderdogLock | null;
   summary: PickSummary;
   history: PickHistory;
   refresh: () => Promise<void>;
   setPick: (boutId: string, fighterSlug: string) => Promise<void>;
+  setFootballLock: (boutId: string, isLock: boolean) => Promise<void>;
   setUnderdogLock: (boutId: string, fighterSlug: string) => Promise<void>;
   clearUnderdogLock: () => Promise<void>;
 }
@@ -48,8 +50,13 @@ interface PicksContextValue {
 const PicksContext = createContext<PicksContextValue | null>(null);
 
 function readableError(error: unknown) {
-  if (error instanceof Error && error.message) return error.message;
-  return "Octagon HQ could not update Picks.";
+  const message = error instanceof Error && error.message
+    ? error.message
+    : "Octagon HQ could not update Picks.";
+  if (message.toLowerCase().includes("football_lock_limit_reached")) {
+    return "You’ve used all available Locks for this slate.";
+  }
+  return message;
 }
 
 function isFightLockRejection(error: unknown) {
@@ -59,6 +66,10 @@ function isFightLockRejection(error: unknown) {
 
 function selectionsFromRows(rows: Awaited<ReturnType<PicksRepository["loadMyPicks"]>>) {
   return Object.fromEntries(rows.map((row) => [row.boutId, row.fighterSlug]));
+}
+
+function footballLocksFromRows(rows: Awaited<ReturnType<PicksRepository["loadMyPicks"]>>) {
+  return Object.fromEntries(rows.map((row) => [row.boutId, row.isLock === true]));
 }
 
 export function PicksProvider({
@@ -76,6 +87,7 @@ export function PicksProvider({
   ));
   const [event, setEvent] = useState<PickEvent | null>(null);
   const [selections, setSelections] = useState<Record<string, string>>({});
+  const [footballLocks, setFootballLocks] = useState<Record<string, boolean>>({});
   const [groupProgress, setGroupProgress] = useState<PickEventMemberProgress[]>([]);
   const [underdogLock, setUnderdogLockState] = useState<UnderdogLock | null>(null);
   const [summary, setSummary] = useState<PickSummary>(emptyPickSummary);
@@ -102,6 +114,7 @@ export function PicksProvider({
     if (!repository) {
       setEvent(null);
       setSelections({});
+      setFootballLocks({});
       setGroupProgress([]);
       setUnderdogLockState(null);
       setSummary(emptyPickSummary);
@@ -121,6 +134,7 @@ export function PicksProvider({
 
       if (!expectedProfileId) {
         setSelections({});
+        setFootballLocks({});
         setGroupProgress([]);
         setUnderdogLockState(null);
         setSummary(emptyPickSummary);
@@ -145,6 +159,7 @@ export function PicksProvider({
       ]);
       if (revision !== revisionRef.current || profileIdRef.current !== expectedProfileId) return;
       setSelections(selectionsFromRows(rows));
+      setFootballLocks(footballLocksFromRows(rows));
       setGroupProgress(progressResult.value);
       setGroupProgressError(progressResult.error);
       setUnderdogLockState(nextLock);
@@ -204,7 +219,9 @@ export function PicksProvider({
 
     setSavingBoutId(boutId);
     try {
-      const saved = await repository.savePick(event.eventId, boutId, fighterSlug);
+      const saved = event.sport === "football"
+        ? await repository.savePick(event.eventId, boutId, fighterSlug, footballLocks[boutId] === true)
+        : await repository.savePick(event.eventId, boutId, fighterSlug);
       const [nextLock, nextSummary, nextProgress] = await Promise.all([
         repository.loadMyUnderdogLock(event.eventId),
         repository.loadMySummary(event.season),
@@ -212,6 +229,9 @@ export function PicksProvider({
       ]);
       if (profileIdRef.current !== expectedProfileId) return;
       setSelections((current) => ({ ...current, [saved.boutId]: saved.fighterSlug }));
+      if (event.sport === "football") {
+        setFootballLocks((current) => ({ ...current, [saved.boutId]: saved.isLock === true }));
+      }
       setGroupProgress(nextProgress);
       setGroupProgressError("");
       setUnderdogLockState(nextLock);
@@ -230,7 +250,55 @@ export function PicksProvider({
     } finally {
       if (profileIdRef.current === expectedProfileId) setSavingBoutId(null);
     }
-  }, [event, groupProgress, identity.openDialog, profileId, refresh, repository]);
+  }, [event, footballLocks, groupProgress, identity.openDialog, profileId, refresh, repository]);
+
+  const setFootballLock = useCallback(async (boutId: string, isLock: boolean) => {
+    const expectedProfileId = profileId;
+    if (!expectedProfileId) {
+      identity.openDialog();
+      return;
+    }
+    if (!repository || !event || event.sport !== "football") {
+      setError("Football Locks are not available on this Picks card.");
+      return;
+    }
+    const bout = event.bouts.find((item) => item.boutId === boutId);
+    if (!bout) {
+      setError("That game is no longer on the current Picks slate.");
+      return;
+    }
+    if (pickBoutLocked(event, bout)) {
+      setError("This game is locked. Your saved Lock is preserved.");
+      return;
+    }
+    const fighterSlug = selections[boutId];
+    if (!fighterSlug) {
+      setError("Pick a team before making it a Lock.");
+      return;
+    }
+    if ((footballLocks[boutId] === true) === isLock) return;
+
+    setSavingBoutId(boutId);
+    try {
+      const saved = await repository.savePick(event.eventId, boutId, fighterSlug, isLock);
+      if (profileIdRef.current !== expectedProfileId) return;
+      setSelections((current) => ({ ...current, [saved.boutId]: saved.fighterSlug }));
+      setFootballLocks((current) => ({ ...current, [saved.boutId]: saved.isLock === true }));
+      setError("");
+    } catch (nextError) {
+      if (profileIdRef.current !== expectedProfileId) return;
+      if (isFightLockRejection(nextError)) {
+        await refresh();
+        if (profileIdRef.current === expectedProfileId) {
+          setError("This game just locked. Your saved Lock was refreshed.");
+        }
+      } else {
+        setError(readableError(nextError));
+      }
+    } finally {
+      if (profileIdRef.current === expectedProfileId) setSavingBoutId(null);
+    }
+  }, [event, footballLocks, identity.openDialog, profileId, refresh, repository, selections]);
 
   const setUnderdogLock = useCallback(async (boutId: string, fighterSlug: string) => {
     const expectedProfileId = profileId;
@@ -313,12 +381,14 @@ export function PicksProvider({
       groupProgressError,
       event,
       selections,
+      footballLocks,
       groupProgress,
       underdogLock,
       summary,
       history,
       refresh,
       setPick,
+      setFootballLock,
       setUnderdogLock,
       clearUnderdogLock,
     }}>

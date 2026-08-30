@@ -1,5 +1,6 @@
 import { useMemo, type CSSProperties } from "react";
 import { useIdentity } from "../identity/IdentityProvider";
+import { footballLockAllowance } from "./footballPicksScoring";
 import { GroupPickProgress } from "./GroupPickProgress";
 import { GroupPickReveal } from "./GroupPickReveal";
 import { pickBoutLocked, pickProgress, type PickBout } from "./picksModel";
@@ -48,6 +49,9 @@ export default function FootballPicksPage() {
     .sort((a, b) => Date.parse(a.locksAt ?? event.startsAt) - Date.parse(b.locksAt ?? event.startsAt)) ?? [], [event]);
   const progress = pickProgress(event, picks.selections);
   const percentage = progress.total ? Math.round(progress.completed / progress.total * 100) : 0;
+  const lockGameCount = games.filter((game) => game.resultStatus !== "cancelled").length;
+  const lockAllowance = footballLockAllowance(lockGameCount);
+  const usedLocks = games.filter((game) => game.resultStatus !== "cancelled" && picks.footballLocks[game.boutId] === true).length;
   const poster = pickEventPoster(event);
   const visualStyle = poster ? ({
     "--picks-event-poster": `url("${poster.src}")`,
@@ -80,7 +84,7 @@ export default function FootballPicksPage() {
           </section>
 
           <section className="surface-card football-picks-progress" aria-label={`${progress.completed} of ${progress.total} picks completed`}>
-            <div><span>YOUR WEEK</span><strong>{progress.completed} / {progress.total} PICKED</strong></div>
+            <div><span>YOUR WEEK</span><strong>{progress.completed} / {progress.total} PICKED{lockAllowance ? ` · LOCKS ${usedLocks} / ${lockAllowance}` : ""}</strong></div>
             <div className="football-picks-progress__track" aria-hidden="true"><span style={{ width: `${percentage}%` }} /></div>
             <p>{identity.profile ? "Picks save automatically. Each game closes at kickoff." : "Sign in to make your weekly picks."}</p>
             {!identity.profile ? <button type="button" className="primary-action" onClick={identity.openDialog}>SIGN IN TO PICK</button> : null}
@@ -91,16 +95,19 @@ export default function FootballPicksPage() {
               <header><p className="eyebrow">WEEKLY SLATE</p><h2>Pick every game ATS</h2></header>
               {games.map((game) => {
                 const selected = picks.selections[game.boutId] ?? null;
+                const isLock = picks.footballLocks[game.boutId] === true;
                 const locked = pickBoutLocked(event, game);
                 const cancelled = game.resultStatus === "cancelled";
                 const readOnly = locked || cancelled;
+                const lockLimitReached = usedLocks >= lockAllowance && !isLock;
                 const kickoff = game.locksAt ?? event.startsAt;
                 const choices = [
                   { slug: game.blueFighterSlug, name: game.blueFighterName, side: "AWAY" },
                   { slug: game.redFighterSlug, name: game.redFighterName, side: "HOME" },
                 ];
+                const selectedName = choices.find((team) => team.slug === selected)?.name ?? null;
                 return (
-                  <article className={`football-pick-game${locked ? " is-locked" : ""}`} key={game.boutId}>
+                  <article className={`football-pick-game${locked ? " is-locked" : ""}${isLock ? " is-lock" : ""}`} key={game.boutId}>
                     <header>
                       <div><strong>{game.weightClass.replace(/\s*ATS$/i, "")}</strong><span>{kickoffLabel(kickoff)}</span></div>
                       <b className={`football-pick-game__status is-${gameStatus(game, locked).toLowerCase()}`}>{gameStatus(game, locked)}</b>
@@ -123,6 +130,18 @@ export default function FootballPicksPage() {
                         );
                       })}
                     </div>
+                    {lockAllowance > 0 && !cancelled ? (
+                      <div className="football-pick-game__lock">
+                        <button
+                          type="button"
+                          aria-pressed={isLock}
+                          aria-label={selectedName ? `${isLock ? "Remove Lock from" : "Make Lock"} ${selectedName}` : "Pick a team before making a Lock"}
+                          disabled={readOnly || Boolean(picks.savingBoutId) || !selected || lockLimitReached}
+                          onClick={() => void picks.setFootballLock(game.boutId, !isLock)}
+                        >{isLock ? "★ LOCK" : "★ MAKE LOCK"}</button>
+                        <span>{!selected ? "PICK A TEAM FIRST" : lockLimitReached ? "LOCK LIMIT REACHED" : isLock ? "3 PTS FOR ATS WIN · TAP TO REMOVE" : "3 PTS FOR ATS WIN"}</span>
+                      </div>
+                    ) : null}
                     <footer><span>{locked ? "KICKED OFF · PICK LOCKED" : `LOCKS ${kickoffLabel(kickoff)}`}</span>{picks.savingBoutId === game.boutId ? <strong role="status">SAVING…</strong> : null}</footer>
                     {locked ? <GroupPickReveal redFighterSlug={game.redFighterSlug} redFighterName={game.redFighterName} blueFighterSlug={game.blueFighterSlug} blueFighterName={game.blueFighterName} picks={game.groupPicks ?? []} /> : null}
                   </article>

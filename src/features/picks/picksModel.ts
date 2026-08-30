@@ -83,6 +83,7 @@ export interface ProfileEventPick {
   eventId: string;
   boutId: string;
   fighterSlug: string;
+  isLock?: boolean;
   pickedAt: string;
   updatedAt: string;
 }
