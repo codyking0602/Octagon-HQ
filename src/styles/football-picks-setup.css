@@ -27,6 +27,7 @@
 }
 
 .football-week-builder__heading p:not(.eyebrow),
+.football-week-builder__helper,
 .football-week-builder__note,
 .football-week-game small,
 .football-week-candidate small {
@@ -120,6 +121,18 @@
 
 .football-week-candidate.is-selected > span {
   color: var(--ufc-red);
+}
+
+.football-week-builder__browse {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(255,255,255,.03);
+  color: var(--text-primary);
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .08em;
 }
 
 .football-week-builder > .primary-action {
