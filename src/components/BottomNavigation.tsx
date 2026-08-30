@@ -73,7 +73,9 @@ export function BottomNavigation({ footballTeam = null }: { footballTeam?: Footb
     : "";
   const playRoot = footballMode ? "/football" : "/play";
   const standardDestinations = baseDestinations.map((destination) => (
-    destination.icon === "play" ? { ...destination, to: playRoot } : destination
+    destination.icon === "play" ? { ...destination, to: playRoot }
+      : destination.icon === "picks" && footballMode ? { ...destination, to: "/football/picks" }
+      : destination
   ));
   const destinations = warRoom.status === "eligible"
     ? [...standardDestinations, warRoomDestination]

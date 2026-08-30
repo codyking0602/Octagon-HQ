@@ -30,6 +30,7 @@ const KeepCutPage = lazy(() => import("../features/play/KeepCutPage"));
 const AuctionPage = lazy(() => import("../features/play/AuctionPage"));
 const HitTheNumberPage = lazy(() => import("../features/play/HitTheNumberPage"));
 const PicksPage = lazy(() => import("../features/picks/PicksPage"));
+const FootballPicksRoute = lazy(() => import("../features/picks/FootballPicksRoute"));
 const PicksControlCenterPage = lazy(() => import("../features/picks-control/PicksControlCenterPage"));
 const WarRoomPage = lazy(() => import("../features/war-room/WarRoomPage"));
 const WarRoomJoinPage = lazy(() => import("../features/war-room/WarRoomJoinPage"));
@@ -59,6 +60,7 @@ export const appRoutes: RouteObject[] = [
       { path: "play/hit-the-number", element: <TodayChallengeGameRoute gameType="hit_the_number" casual={<HitTheNumberPage />} /> },
       { path: "back-room", element: <BackRoomPage /> },
       { path: "football", element: <FootballBackRoomPage /> },
+      { path: "football/picks", element: <FootballPicksRoute /> },
       { path: "football/today", element: <FootballTodayChallengePage /> },
       { path: "football/rank-five", element: <FootballRankFivePage /> },
       { path: "football/keep-cut", element: <FootballKeepCutPage /> },

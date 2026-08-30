@@ -35,6 +35,8 @@ const spotlightSchema = z.object({
 const boutSchema = z.object({
   bout_id: z.string(), locks_at: z.string().optional(), is_locked: z.boolean().optional(), position: z.number().int().positive(), weight_class: z.string(),
   red_fighter_slug: z.string(), red_fighter_name: z.string(), blue_fighter_slug: z.string(), blue_fighter_name: z.string(),
+  home_team_slug: z.string().nullable().optional().default(null), away_team_slug: z.string().nullable().optional().default(null),
+  frozen_spread_home: z.number().nullable().optional().default(null), spread_source: z.string().nullable().optional().default(null), spread_frozen_at: z.string().nullable().optional().default(null),
   red_american_odds: americanOddsSchema, blue_american_odds: americanOddsSchema,
   odds_source: z.string().nullable().optional().default(null), odds_updated_at: z.string().nullable().optional().default(null),
   winner_fighter_slug: z.string().nullable(), result_status: z.enum(["pending", "red_win", "blue_win", "draw", "no_contest", "cancelled"]).optional().default("pending"),
@@ -116,6 +118,7 @@ export function mapPickEvent(value: unknown): PickEvent | null {
     bouts: parsed.bouts.map((bout) => ({
       boutId: bout.bout_id, locksAt: bout.locks_at, isLocked: bout.is_locked, position: bout.position, weightClass: bout.weight_class,
       redFighterSlug: bout.red_fighter_slug, redFighterName: bout.red_fighter_name, blueFighterSlug: bout.blue_fighter_slug, blueFighterName: bout.blue_fighter_name,
+      homeTeamSlug: bout.home_team_slug, awayTeamSlug: bout.away_team_slug, frozenSpreadHome: bout.frozen_spread_home, spreadSource: bout.spread_source, spreadFrozenAt: bout.spread_frozen_at,
       redAmericanOdds: bout.red_american_odds, blueAmericanOdds: bout.blue_american_odds, oddsSource: bout.odds_source, oddsUpdatedAt: bout.odds_updated_at,
       winnerFighterSlug: bout.winner_fighter_slug, resultStatus: bout.result_status, resultRecordedAt: bout.result_recorded_at, includedInPicks: bout.included_in_picks,
       groupPicks: bout.group_picks.map(mapGroupPick), repickRequired: bout.repick_required,
