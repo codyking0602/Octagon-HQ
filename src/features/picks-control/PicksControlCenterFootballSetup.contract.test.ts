@@ -3,8 +3,8 @@ import { describe, expect, it } from "vitest";
 
 describe("canonical Picks owner Football setup", () => {
   it("keeps /picks/control owned by PicksControlCenterPage and exposes Football setup inside that owner", () => {
-    const control = readFileSync(new URL("./PicksControlCenterPage.tsx", import.meta.url), "utf8");
-    const router = readFileSync(new URL("../../app/router.tsx", import.meta.url), "utf8");
+    const control = readFileSync("src/features/picks-control/PicksControlCenterPage.tsx", "utf8");
+    const router = readFileSync("src/app/router.tsx", "utf8");
 
     expect(router).toContain('path: "picks/control", element: <PicksControlCenterPage />');
     expect(router).not.toContain("PicksOwnerPage");
