@@ -1,6 +1,8 @@
 import type { PickSpotlight } from "./spotlightModel";
 
 export type PickEventStatus = "upcoming" | "locked" | "complete";
+export type PickSport = "mma" | "football";
+export type PickEventKind = "fight_card" | "game" | "slate";
 export type PickBoutResultStatus = "pending" | "red_win" | "blue_win" | "draw" | "no_contest" | "cancelled";
 export type PickVerdict = "correct" | "incorrect" | "missing" | "excluded" | "pending";
 export type PickEventPresentationState = "upcoming" | "locked" | "awaiting_results" | "complete";
@@ -51,6 +53,10 @@ export interface UnderdogLock {
 
 export interface PickEvent {
   eventId: string;
+  /** Canonical product discriminator; legacy UFC fixtures may omit it. */
+  sport?: PickSport;
+  league?: string | null;
+  eventKind?: PickEventKind;
   name: string;
   subtitle: string;
   venue: string;

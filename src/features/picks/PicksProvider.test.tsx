@@ -117,6 +117,39 @@ function Probe() {
 }
 
 describe("PicksProvider", () => {
+  it("selects Football through the same provider and shared profile paths", async () => {
+    const footballEvent: PickEvent = {
+      ...event,
+      eventId: "nfl-week-1",
+      sport: "football",
+      league: "nfl",
+      eventKind: "slate",
+      subtitle: "NFL Week 1",
+    };
+    const loadCurrentEvent = vi.fn(async () => footballEvent);
+    const loadMyPicks = vi.fn(async () => []);
+    const repository: PicksRepository = {
+      loadCurrentEvent,
+      loadMyPicks,
+      loadMySummary: vi.fn(async () => ({ correct: 0, incorrect: 0, pending: 0, eventsEntered: 0, basePoints: 0, lockBonus: 0, totalPoints: 0 })),
+      loadMyHistory: vi.fn(async () => ({ ...history, events: [] })),
+      loadMyUnderdogLock: vi.fn(async () => null),
+      setUnderdogLock: vi.fn(),
+      clearUnderdogLock: vi.fn(),
+      savePick: vi.fn(),
+    };
+
+    render(
+      <IdentityProvider gateway={gateway()}>
+        <PicksProvider sport="football" repository={repository}><Probe /></PicksProvider>
+      </IdentityProvider>,
+    );
+
+    expect(await screen.findByText("NFL Week 1")).toBeInTheDocument();
+    expect(loadCurrentEvent).toHaveBeenCalledWith("football");
+    await waitFor(() => expect(loadMyPicks).toHaveBeenCalledWith("nfl-week-1"));
+  });
+
   it("reloads the canonical lock and summary after saving a changed pick", async () => {
     const loadMyPicks = vi.fn(async () => [{
       eventId: event.eventId,

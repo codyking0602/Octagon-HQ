@@ -14,6 +14,7 @@ import {
   pickBoutLocked,
   type PickEvent,
   type PickHistory,
+  type PickSport,
   type PickSummary,
   type UnderdogLock,
 } from "./picksModel";
@@ -63,7 +64,8 @@ function selectionsFromRows(rows: Awaited<ReturnType<PicksRepository["loadMyPick
 export function PicksProvider({
   children,
   repository: suppliedRepository,
-}: PropsWithChildren<{ repository?: PicksRepository | null }>) {
+  sport = "mma",
+}: PropsWithChildren<{ repository?: PicksRepository | null; sport?: PickSport }>) {
   const identity = useIdentity();
   const profileId = identity.profile?.id ?? null;
   const profileIdRef = useRef(profileId);
@@ -113,7 +115,7 @@ export function PicksProvider({
 
     setLoading(true);
     try {
-      const nextEvent = await repository.loadCurrentEvent();
+      const nextEvent = await repository.loadCurrentEvent(sport);
       if (revision !== revisionRef.current) return;
       setEvent(nextEvent);
 
@@ -158,7 +160,7 @@ export function PicksProvider({
         setGroupProgressLoading(false);
       }
     }
-  }, [profileId, repository]);
+  }, [profileId, repository, sport]);
 
   useEffect(() => {
     setSavingBoutId(null);

@@ -5,6 +5,7 @@ import type {
   PickEventSpotlight,
   PickGroupPick,
   PickHistory,
+  PickSport,
   PickSummary,
   ProfileEventPick,
   UnderdogLock,
@@ -43,6 +44,9 @@ const boutSchema = z.object({
 
 const eventSchema = z.object({
   event_id: z.string(), name: z.string(), subtitle: z.string(), venue: z.string(), location: z.string(), starts_at: z.string(), locks_at: z.string(),
+  sport: z.enum(["mma", "football"]).optional().default("mma"),
+  league: z.string().nullable().optional().default("ufc"),
+  event_kind: z.enum(["fight_card", "game", "slate"]).optional().default("fight_card"),
   season: z.number().int(), status: z.enum(["upcoming", "locked", "complete"]), can_control: z.boolean().optional().default(false),
   header_storage_path: z.string().nullable().optional().default(null),
   header_natural_width: z.number().int().positive().nullable().optional().default(null),
@@ -71,7 +75,7 @@ const historyEventSchema = z.object({
 const historySchema = z.object({ season: z.number().int().nullable(), summary: historyRecordSchema.extend({ events_entered: z.number().int().nonnegative() }), season_standings: z.array(seasonStandingSchema).optional().default([]), events: z.array(historyEventSchema) });
 
 export interface PicksRepository {
-  loadCurrentEvent: () => Promise<PickEvent | null>;
+  loadCurrentEvent: (sport?: PickSport) => Promise<PickEvent | null>;
   loadMyPicks: (eventId: string) => Promise<ProfileEventPick[]>;
   loadMyUnderdogLock: (eventId: string) => Promise<UnderdogLock | null>;
   loadMySummary: (season: number) => Promise<PickSummary>;
@@ -105,6 +109,7 @@ export function mapPickEvent(value: unknown): PickEvent | null {
   const parsed = eventSchema.parse(value);
   return {
     eventId: parsed.event_id, name: parsed.name, subtitle: parsed.subtitle, venue: parsed.venue, location: parsed.location, startsAt: parsed.starts_at, locksAt: parsed.locks_at,
+    sport: parsed.sport, league: parsed.league, eventKind: parsed.event_kind,
     season: parsed.season, status: parsed.status, canControl: parsed.can_control,
     headerStoragePath: parsed.header_storage_path, headerNaturalWidth: parsed.header_natural_width, headerNaturalHeight: parsed.header_natural_height,
     spotlights: parsed.spotlights.map(mapSpotlight),
@@ -155,7 +160,7 @@ export function createPicksRepository(): PicksRepository | null {
   if (!supabase) return null;
   const client = supabase;
   return {
-    async loadCurrentEvent() { return mapPickEvent(await requireRpcSuccess(client.rpc("get_current_pick_event"))); },
+    async loadCurrentEvent(sport = "mma") { return mapPickEvent(await requireRpcSuccess(client.rpc("get_current_pick_event", { p_sport: sport }))); },
     async loadMyPicks(eventId) { return z.array(pickRowSchema).parse(await requireRpcSuccess(client.rpc("list_my_event_picks", { p_event_id: eventId })) ?? []).map(mapPick); },
     async loadMyUnderdogLock(eventId) { const data = await requireRpcSuccess(client.rpc("get_my_event_underdog_lock", { p_event_id: eventId })); const raw = Array.isArray(data) ? data[0] : data; return raw ? mapLock(raw) : null; },
     async loadMySummary(season) { return mapSummary(await requireRpcSuccess(client.rpc("get_my_pick_summary", { p_season: season }))); },
