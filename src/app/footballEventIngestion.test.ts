@@ -47,7 +47,7 @@ describe("Football Picks ingestion", () => {
   });
 
   it("short-circuits completed games before the Odds API and canonical draft staging", () => {
-    const espnFetch = edge.indexOf("site.api.espn.com");
+    const espnFetch = edge.indexOf("site.web.api.espn.com");
     const finalBranch = edge.indexOf("const finalResult = normalizeFootballFinalResult");
     const oddsFetch = edge.indexOf("api.the-odds-api.com");
     expect(espnFetch).toBeGreaterThan(-1);
