@@ -56,7 +56,7 @@ const eventSchema = z.object({
   spotlights: z.array(spotlightSchema).optional().default([]), bouts: z.array(boutSchema),
 });
 
-const pickRowSchema = z.object({ event_id: z.string(), bout_id: z.string(), fighter_slug: z.string(), picked_at: z.string(), updated_at: z.string() });
+const pickRowSchema = z.object({ event_id: z.string(), bout_id: z.string(), fighter_slug: z.string(), is_lock: z.boolean().optional().default(false), picked_at: z.string(), updated_at: z.string() });
 const summaryRowSchema = z.object({ correct: z.number().int().nonnegative(), incorrect: z.number().int().nonnegative(), pending: z.number().int().nonnegative(), events_entered: z.number().int().nonnegative(), base_points: z.number().nonnegative(), lock_bonus: z.number().nonnegative(), total_points: z.number().nonnegative() });
 const lockSchema = z.object({ event_id: z.string(), bout_id: z.string(), fighter_slug: z.string(), selected_at: z.string(), frozen_american_odds: z.number().int().nullable() });
 const historyRecordSchema = z.object({ correct: z.number().int().nonnegative(), incorrect: z.number().int().nonnegative(), missing: z.number().int().nonnegative(), excluded: z.number().int().nonnegative(), base_points: z.number().nonnegative(), lock_bonus: z.number().nonnegative(), total_points: z.number().nonnegative() });
@@ -85,7 +85,7 @@ export interface PicksRepository {
   loadMyUnderdogLock: (eventId: string) => Promise<UnderdogLock | null>;
   loadMySummary: (season: number) => Promise<PickSummary>;
   loadMyHistory: (season: number | null) => Promise<PickHistory>;
-  savePick: (eventId: string, boutId: string, fighterSlug: string) => Promise<ProfileEventPick>;
+  savePick: (eventId: string, boutId: string, fighterSlug: string, isLock?: boolean) => Promise<ProfileEventPick>;
   setUnderdogLock: (eventId: string, boutId: string, fighterSlug: string) => Promise<UnderdogLock>;
   clearUnderdogLock: (eventId: string) => Promise<void>;
 }
@@ -135,7 +135,7 @@ function mapLock(value: unknown): UnderdogLock {
 }
 function mapPick(value: unknown): ProfileEventPick {
   const parsed = pickRowSchema.parse(value);
-  return { eventId: parsed.event_id, boutId: parsed.bout_id, fighterSlug: parsed.fighter_slug, pickedAt: parsed.picked_at, updatedAt: parsed.updated_at };
+  return { eventId: parsed.event_id, boutId: parsed.bout_id, fighterSlug: parsed.fighter_slug, isLock: parsed.is_lock, pickedAt: parsed.picked_at, updatedAt: parsed.updated_at };
 }
 function mapSummary(value: unknown): PickSummary {
   const raw = Array.isArray(value) ? value[0] : value;
@@ -171,7 +171,12 @@ export function createPicksRepository(): PicksRepository | null {
     async loadMyUnderdogLock(eventId) { const data = await requireRpcSuccess(client.rpc("get_my_event_underdog_lock", { p_event_id: eventId })); const raw = Array.isArray(data) ? data[0] : data; return raw ? mapLock(raw) : null; },
     async loadMySummary(season) { return mapSummary(await requireRpcSuccess(client.rpc("get_my_pick_summary", { p_season: season }))); },
     async loadMyHistory(season) { return mapHistory(await requireRpcSuccess(client.rpc("get_my_pick_history", { p_season: season }))); },
-    async savePick(eventId, boutId, fighterSlug) { const data = await requireRpcSuccess(client.rpc("save_my_event_pick", { p_event_id: eventId, p_bout_id: boutId, p_fighter_slug: fighterSlug })); return mapPick(Array.isArray(data) ? data[0] : data); },
+    async savePick(eventId, boutId, fighterSlug, isLock) {
+      const baseParams = { p_event_id: eventId, p_bout_id: boutId, p_fighter_slug: fighterSlug };
+      const params = isLock === undefined ? baseParams : { ...baseParams, p_is_lock: isLock };
+      const data = await requireRpcSuccess(client.rpc("save_my_event_pick", params));
+      return mapPick(Array.isArray(data) ? data[0] : data);
+    },
     async setUnderdogLock(eventId, boutId, fighterSlug) { const data = await requireRpcSuccess(client.rpc("set_my_event_underdog_lock", { p_event_id: eventId, p_bout_id: boutId, p_fighter_slug: fighterSlug })); return mapLock(Array.isArray(data) ? data[0] : data); },
     async clearUnderdogLock(eventId) { await requireRpcSuccess(client.rpc("clear_my_event_underdog_lock", { p_event_id: eventId })); },
   };
