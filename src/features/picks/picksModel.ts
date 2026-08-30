@@ -31,6 +31,12 @@ export interface PickBout {
   redFighterName: string;
   blueFighterSlug: string;
   blueFighterName: string;
+  /** Football-only canonical home/away identity and frozen ATS line. */
+  homeTeamSlug?: string | null;
+  awayTeamSlug?: string | null;
+  frozenSpreadHome?: number | null;
+  spreadSource?: string | null;
+  spreadFrozenAt?: string | null;
   redAmericanOdds: number | null;
   blueAmericanOdds: number | null;
   oddsSource?: string | null;
