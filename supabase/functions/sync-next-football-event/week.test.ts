@@ -58,11 +58,17 @@ describe("Football weekly owner discovery", () => {
     expect(candidates.map((game) => game.candidate_rank)).toEqual([1, 2, 3]);
   });
 
-  it("caps the college pool at 12 and requires eight when available", () => {
-    const college = Array.from({ length: 14 }, (_, index) => event(String(300 + index), `2026-09-12T${String(10 + index).padStart(2, "0")}:00:00Z`, index < 10 ? index + 1 : null, null));
+  it("recommends up to 20 college games while exposing the full FBS week and keeping eight as guidance only", () => {
+    const college = Array.from({ length: 24 }, (_, index) => event(
+      String(300 + index),
+      `2026-09-12T${String(index).padStart(2, "0")}:00:00Z`,
+      index < 20 ? index + 1 : null,
+      null,
+    ));
     const preview = buildFootballWeekPreview("2026-09-08", [event("401", "2026-09-10T00:00:00Z", null, null)], college);
     expect(preview.nfl_games).toHaveLength(1);
-    expect(preview.college_candidates).toHaveLength(12);
-    expect(preview.required_college_count).toBe(8);
+    expect(preview.college_candidates).toHaveLength(20);
+    expect(preview.college_games).toHaveLength(24);
+    expect(preview.recommended_college_count).toBe(8);
   });
 });
