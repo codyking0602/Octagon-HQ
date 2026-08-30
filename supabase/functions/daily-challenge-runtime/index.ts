@@ -24,7 +24,6 @@ interface OfficialDailyRuntimeContext {
   publicState: Record<string, unknown>;
 }
 
-const DAILY_COMBO_SCHEDULE_VERSION = "play-rotation-v4";
 const DAILY_COMBO_CONTENT_VERSION = "daily-rank-keep-combo-v1";
 const DAILY_COMBO_SCORING_VERSION = "play-official-score-v4";
 
@@ -317,7 +316,7 @@ async function materializeToday(admin: SupabaseClient) {
   let fallbackReason: string | null = null;
   let publication;
   try {
-    publication = gameType === "keep_4_cut_4" && scheduleVersion === DAILY_COMBO_SCHEDULE_VERSION
+    publication = gameType === "keep_4_cut_4"
       ? buildDailyComboSetup(day, scheduleVersion)
       : buildOfficialDailySetup(gameType, day, scheduleVersion);
   } catch {
@@ -365,8 +364,8 @@ async function materializeFootballToday(admin: SupabaseClient, footballRuntime: 
     p_scoring_version: requiredString(publication.scoringVersion, "Football daily scoring version"),
     p_public_setup: requiredRecord(publication.publicSetup, "Football daily public setup"),
     p_reveal_setup: requiredRecord(publication.revealSetup, "Football daily reveal setup"),
-    p_private_setup_evidence: requiredRecord(publication.privateSetupEvidence, "Football daily private setup evidence"),
-    p_private_grading_evidence: requiredRecord(publication.privateGradingEvidence, "Football daily private grading evidence"),
+    p_private_setup_evidence: requiredRecord(publication.privateSetupEvidence, "Football daily setup evidence"),
+    p_private_grading_evidence: requiredRecord(publication.privateGradingEvidence, "Football daily grading evidence"),
     p_fallback_reason: null,
   });
   if (published.error) throw new Error("The official Football daily setup could not be published safely.");
