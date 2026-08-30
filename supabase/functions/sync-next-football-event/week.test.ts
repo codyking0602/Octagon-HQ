@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { buildFootballWeekPreview, footballWeekRange, rankCollegeFootballCandidates, summarizeFootballWeekEvents } from "./week";
 
@@ -26,6 +27,14 @@ describe("Football weekly owner discovery", () => {
       dates: ["2026-09-08", "2026-09-09", "2026-09-10", "2026-09-11", "2026-09-12", "2026-09-13", "2026-09-14"],
     });
     expect(() => footballWeekRange("2026-09-09")).toThrow(/Tuesday/);
+  });
+
+  it("fetches each ESPN weekly schedule as one Tuesday-Monday range request", () => {
+    const source = readFileSync("supabase/functions/sync-next-football-event/index.ts", "utf8");
+
+    expect(source).toContain('const dateRange = `${range.weekStart.replaceAll("-", "")}-${range.weekEnd.replaceAll("-", "")}`;');
+    expect(source).toContain("scoreboard?dates=${dateRange}&limit=1000${group}");
+    expect(source).not.toContain("Promise.all(range.dates.map");
   });
 
   it("keeps every eligible NFL game and excludes preseason games", () => {
