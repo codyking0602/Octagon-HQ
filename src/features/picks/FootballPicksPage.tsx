@@ -49,8 +49,9 @@ export default function FootballPicksPage() {
     .sort((a, b) => Date.parse(a.locksAt ?? event.startsAt) - Date.parse(b.locksAt ?? event.startsAt)) ?? [], [event]);
   const progress = pickProgress(event, picks.selections);
   const percentage = progress.total ? Math.round(progress.completed / progress.total * 100) : 0;
-  const lockAllowance = footballLockAllowance(games.length);
-  const usedLocks = games.filter((game) => picks.footballLocks[game.boutId] === true).length;
+  const lockGameCount = games.filter((game) => game.resultStatus !== "cancelled").length;
+  const lockAllowance = footballLockAllowance(lockGameCount);
+  const usedLocks = games.filter((game) => game.resultStatus !== "cancelled" && picks.footballLocks[game.boutId] === true).length;
   const poster = pickEventPoster(event);
   const visualStyle = poster ? ({
     "--picks-event-poster": `url("${poster.src}")`,
@@ -104,6 +105,7 @@ export default function FootballPicksPage() {
                   { slug: game.blueFighterSlug, name: game.blueFighterName, side: "AWAY" },
                   { slug: game.redFighterSlug, name: game.redFighterName, side: "HOME" },
                 ];
+                const selectedName = choices.find((team) => team.slug === selected)?.name ?? null;
                 return (
                   <article className={`football-pick-game${locked ? " is-locked" : ""}${isLock ? " is-lock" : ""}`} key={game.boutId}>
                     <header>
@@ -128,11 +130,12 @@ export default function FootballPicksPage() {
                         );
                       })}
                     </div>
-                    {lockAllowance > 0 ? (
+                    {lockAllowance > 0 && !cancelled ? (
                       <div className="football-pick-game__lock">
                         <button
                           type="button"
                           aria-pressed={isLock}
+                          aria-label={selectedName ? `${isLock ? "Remove Lock from" : "Make Lock"} ${selectedName}` : "Pick a team before making a Lock"}
                           disabled={readOnly || Boolean(picks.savingBoutId) || !selected || lockLimitReached}
                           onClick={() => void picks.setFootballLock(game.boutId, !isLock)}
                         >{isLock ? "★ LOCK" : "★ MAKE LOCK"}</button>
