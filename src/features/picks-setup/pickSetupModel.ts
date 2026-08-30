@@ -30,9 +30,9 @@ export interface PickSetupDraft {
   sourceEventKey: string;
   sourceUrl: string | null;
   eventId: string;
-  sport: PickSetupSport;
-  league: string | null;
-  eventKind: string;
+  sport?: PickSetupSport;
+  league?: string | null;
+  eventKind?: string;
   name: string;
   subtitle: string;
   venue: string;
