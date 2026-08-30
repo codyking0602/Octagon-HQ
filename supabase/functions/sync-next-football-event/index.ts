@@ -4,7 +4,11 @@ import { buildFootballWeekPreview, footballWeekRange } from "./week.ts";
 
 type Json = Record<string, any>;
 
-const headers = { "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*", "Access-Control-Allow-Headers": "authorization, apikey, content-type" };
+const headers = {
+  "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { ...headers, "Content-Type": "application/json" } });
 
 async function fetchEspnWeekEvents(weekStart: string, league: "nfl" | "college-football") {
