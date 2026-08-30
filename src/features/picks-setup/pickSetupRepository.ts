@@ -88,7 +88,7 @@ const sourcePreviewSchema = z.object({
 export interface PickSetupRepository {
   loadDraft: (sport?: PickSetupSport) => Promise<PickSetupDraft | null>;
   syncNextEvent: (scope: PickSetupCardScope, sourceUrl?: string) => Promise<void>;
-  syncFootballGame: (league: PickSetupFootballLeague, espnEventId: string) => Promise<void>;
+  syncFootballGame?: (league: PickSetupFootballLeague, espnEventId: string) => Promise<void>;
   previewSource: (scope: PickSetupCardScope, sourceUrl?: string) => Promise<PickSetupSourcePreview>;
   applySourcePreview: (preview: PickSetupSourcePreview) => Promise<void>;
   updateMetadata: (draftId: string, patch: PickSetupMetadataPatch) => Promise<void>;
