@@ -102,9 +102,10 @@ const footballWeekGameSchema = z.object({
 const footballWeekPreviewSchema = z.object({
   week_start: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   week_end: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  required_college_count: z.number().int().nonnegative().max(8),
+  recommended_college_count: z.number().int().nonnegative().max(8),
   nfl_games: z.array(footballWeekGameSchema),
-  college_candidates: z.array(footballWeekGameSchema).max(12),
+  college_candidates: z.array(footballWeekGameSchema).max(20),
+  college_games: z.array(footballWeekGameSchema).max(200),
 });
 
 export interface PickSetupRepository {
@@ -228,9 +229,10 @@ export function mapPickSetupFootballWeekPreview(value: unknown): PickSetupFootba
   return {
     weekStart: parsed.week_start,
     weekEnd: parsed.week_end,
-    requiredCollegeCount: parsed.required_college_count,
+    recommendedCollegeCount: parsed.recommended_college_count,
     nflGames: parsed.nfl_games.map(mapFootballWeekGame),
     collegeCandidates: parsed.college_candidates.map(mapFootballWeekGame),
+    collegeGames: parsed.college_games.map(mapFootballWeekGame),
   };
 }
 export function mapBuiltPickSetupSpotlight(value: unknown): PickSetupSpotlight {
