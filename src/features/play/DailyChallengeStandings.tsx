@@ -4,15 +4,26 @@ import type {
   TodayChallengeStandingsEntry,
 } from "./todayChallengeRepository";
 
-const GAME_AVERAGES = [
-  ["findLeader", "Find the Leader"], ["wavelength", "Wavelength"],
-  ["blindResume", "Blind Resume"], ["blindRank5", "Blind Rank 5"],
-  ["keep4Cut4", "Keep 4, Cut 4"],
-] as const satisfies ReadonlyArray<[keyof TodayChallengeStandingsEntry["gameAverages"], string]>;
-
-function score(value: number | null) {
-  return value === null ? "—" : value.toFixed(1);
+function score(value: number | null | undefined) {
+  return value == null ? "—" : value.toFixed(1);
 }
+
+function dailyDoubleAverage(entry: TodayChallengeStandingsEntry) {
+  const blindRank = entry.gameAverages.blindRank5 ?? null;
+  const keepCut = entry.gameAverages.keep4Cut4 ?? null;
+  if (blindRank === null && keepCut === null) return null;
+  if (blindRank === null) return keepCut;
+  if (keepCut === null) return blindRank;
+  return (blindRank + keepCut) / 2;
+}
+
+const GAME_AVERAGES = [
+  ["Find the Leader", (entry: TodayChallengeStandingsEntry) => entry.gameAverages.findLeader],
+  ["Wavelength", (entry: TodayChallengeStandingsEntry) => entry.gameAverages.wavelength],
+  ["Blind Resume", (entry: TodayChallengeStandingsEntry) => entry.gameAverages.blindResume],
+  ["Daily Double", dailyDoubleAverage],
+  ["Hit the Number", (entry: TodayChallengeStandingsEntry) => entry.gameAverages.hitTheNumber],
+] as const;
 
 function weekLabel(start: string, end: string) {
   const date = (value: string) => new Date(`${value}T12:00:00Z`);
@@ -101,7 +112,7 @@ export function DailyChallengeStandings({ standings, loading, error, onRefresh }
               <strong className="daily-standings__titles">{entry.weeklyTitles}</strong><span>{entry.wins}</span>
               <span>{entry.played ? entry.averageScore.toFixed(1) : "—"}</span><span>{entry.currentStreak}d</span><span>{entry.bestStreak}d</span>
             </button>
-            {expanded ? <div className="daily-standings__games"><strong>Average Score by Game</strong><div>{GAME_AVERAGES.map(([key, label]) => <span key={key}><small>{label}</small><b>{score(entry.gameAverages[key])}</b></span>)}</div></div> : null}
+            {expanded ? <div className="daily-standings__games"><strong>Average Score by Game</strong><div>{GAME_AVERAGES.map(([label, value]) => <span key={label}><small>{label}</small><b>{score(value(entry))}</b></span>)}</div></div> : null}
           </article>;
         }) : <p className="today-hub-empty">{loading ? "Loading Championship Standings…" : "No contenders are available yet."}</p>}
 
