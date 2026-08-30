@@ -3,6 +3,8 @@ import type { PickSpotlight } from "../picks/spotlightModel";
 export type PickSetupCardScope = "auto" | "main" | "full";
 export type PickSetupEffectiveScope = "main" | "full";
 export type PickSetupBoutSection = "main-event" | "main" | "prelim" | "early-prelim";
+export type PickSetupSport = "mma" | "football";
+export type PickSetupFootballLeague = "nfl" | "college-football";
 export type PickSetupSpotlight = PickSpotlight;
 
 export interface PickSetupBout {
@@ -14,6 +16,12 @@ export interface PickSetupBout {
   blueFighterSlug: string;
   blueFighterName: string;
   included: boolean;
+  kickoffAt?: string | null;
+  homeTeamSlug?: string | null;
+  awayTeamSlug?: string | null;
+  spreadHome?: number | null;
+  spreadSource?: string | null;
+  spreadUpdatedAt?: string | null;
 }
 
 export interface PickSetupDraft {
@@ -22,6 +30,9 @@ export interface PickSetupDraft {
   sourceEventKey: string;
   sourceUrl: string | null;
   eventId: string;
+  sport?: PickSetupSport;
+  league?: string | null;
+  eventKind?: string;
   name: string;
   subtitle: string;
   venue: string;
@@ -98,6 +109,7 @@ export function pickSetupBoutSectionLabel(boutId: string) {
 }
 
 export function pickSetupDraftCardLabel(draft: PickSetupDraft) {
+  if (draft.sport === "football") return "WEEKLY SLATE";
   return draft.bouts.some((bout) => {
     const section = pickSetupBoutSection(bout.boutId);
     return section === "prelim" || section === "early-prelim";

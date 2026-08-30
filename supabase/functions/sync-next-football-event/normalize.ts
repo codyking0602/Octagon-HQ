@@ -28,6 +28,7 @@ export interface NormalizedFootballEvent {
     red_fighter_name: string;
     blue_fighter_slug: string;
     blue_fighter_name: string;
+    kickoff_at: string;
     home_team_slug: string;
     away_team_slug: string;
     spread_home: number;
@@ -123,6 +124,7 @@ export function normalizeFootballEvent(espnEvent: Json, oddsEvents: Json[], leag
   const venue = competition?.venue ?? {};
   const address = venue.address ?? {};
   const season = Number(espnEvent?.season?.year ?? new Date(startsAt).getUTCFullYear());
+  const kickoffAt = new Date(startsAt).toISOString();
   return {
     source: "espn+the-odds-api", source_event_key: `espn:${espnEvent.id}`,
     source_url: String(espnEvent?.links?.[0]?.href ?? "https://www.espn.com/football/"),
@@ -131,11 +133,12 @@ export function normalizeFootballEvent(espnEvent: Json, oddsEvents: Json[], leag
     name: `${away.name} at ${home.name}`, subtitle: String(espnEvent?.shortName ?? ""),
     venue: String(venue.fullName ?? "TBD"),
     location: [address.city, address.state].filter(Boolean).join(", ") || "TBD",
-    starts_at: new Date(startsAt).toISOString(), locks_at: new Date(startsAt).toISOString(), season,
+    starts_at: kickoffAt, locks_at: kickoffAt, season,
     bouts: [{
-      bout_id: gameSlug, position: 1, weight_class: `${league.toUpperCase()} ATS`,
+      bout_id: `football-${league.toLowerCase()}-${espnEvent.id}`, position: 1, weight_class: `${league.toUpperCase()} ATS`,
       red_fighter_slug: slug(home.name), red_fighter_name: home.name,
       blue_fighter_slug: slug(away.name), blue_fighter_name: away.name,
+      kickoff_at: kickoffAt,
       home_team_slug: slug(home.name), away_team_slug: slug(away.name), spread_home: homeLine,
       spread_source: "the-odds-api", spread_updated_at: new Date(usable.updated).toISOString(),
       card_segment: "main", segment_sequence: 1, included: true,

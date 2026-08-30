@@ -6,6 +6,7 @@ import {
   createMonitoringInboxRepository,
   type MonitoringInboxRepository,
 } from "../picks-monitoring/monitoringInboxRepository";
+import FootballPicksSetupPage from "../picks-setup/FootballPicksSetupPage";
 import PicksSetupPage from "../picks-setup/PicksSetupPage";
 import type { PickSetupDraft } from "../picks-setup/pickSetupModel";
 import {
@@ -31,6 +32,8 @@ type ControlSeed =
   | { status: "empty" }
   | { status: "ready"; value: PickControlEvent | null }
   | { status: "error"; error: unknown };
+
+type OwnerSport = "mma" | "football";
 
 function displayTime(value: string | null | undefined) {
   if (!value) return "NOT SET";
@@ -117,6 +120,7 @@ export default function PicksControlCenterPage({
   const [controlRevision, setControlRevision] = useState(0);
   const [spotlightsOpen, setSpotlightsOpen] = useState(false);
   const [pushState, setPushState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [ownerSport, setOwnerSport] = useState<OwnerSport>("mma");
   const controlSeed = useRef<ControlSeed>({ status: "empty" });
   const loadCurrentControlEvent = () => controlRepository!.loadControlEvent(undefined);
 
@@ -271,8 +275,35 @@ export default function PicksControlCenterPage({
     document.getElementById(sectionId)?.scrollIntoView?.({ block: "start" });
   }, [draftState.status, eventState.status, location.hash]);
 
+  const ownerSportSwitch = (
+    <section className="page surface-card picks-setup-scope" aria-label="Picks owner sport">
+      <div>
+        <p className="eyebrow">PICKS OWNER</p>
+        <h2>Choose setup</h2>
+      </div>
+      <div className="picks-setup-scope__options">
+        <button className={ownerSport === "mma" ? "is-active" : ""} type="button" aria-pressed={ownerSport === "mma"} onClick={() => setOwnerSport("mma")}>
+          <strong>UFC</strong><small>Existing fight-card owner</small>
+        </button>
+        <button className={ownerSport === "football" ? "is-active" : ""} type="button" aria-pressed={ownerSport === "football"} onClick={() => setOwnerSport("football")}>
+          <strong>FOOTBALL</strong><small>Weekly ATS slate</small>
+        </button>
+      </div>
+    </section>
+  );
+
+  if (ownerSport === "football") {
+    return (
+      <div className="picks-control-center">
+        {ownerSportSwitch}
+        <FootballPicksSetupPage repository={setupRepository} />
+      </div>
+    );
+  }
+
   return (
     <div className="picks-control-center">
+      {ownerSportSwitch}
       <header className="page picks-control-center__header">
         <div className="picks-control-center__eyebrow-row">
           <p className="eyebrow">PRIVATE PICKS OWNER</p>
