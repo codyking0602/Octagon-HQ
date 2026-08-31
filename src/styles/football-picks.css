@@ -1,10 +1,12 @@
-.football-picks-page { --football-picks-accent: #d06b2b; display: grid; gap: 10px; max-width: 860px; padding-top: 12px; color: #f7f7f5; }
+.football-picks-page { --football-picks-accent: #d06b2b; position: relative; display: grid; gap: 10px; max-width: 860px; padding-top: 12px; color: #f7f7f5; isolation: isolate; }
+.football-picks-page.has-event-atmosphere::after { content: ""; position: fixed; top: -10vh; bottom: -10vh; left: -28vw; width: 18vw; pointer-events: none; z-index: 20; opacity: 0; background-image: var(--picks-event-poster); background-position: center; background-size: 100vw auto; filter: blur(32px) saturate(1.65) brightness(1.18); mix-blend-mode: screen; animation: football-picks-page-sheen 8s ease-in-out infinite; }
 .football-picks-state { padding: 24px; background: #151719; }
 .football-picks-state h1 { margin: 6px 0; font-size: clamp(1.5rem, 7vw, 2.4rem); }
 .football-picks-hero { position: relative; min-height: 260px; overflow: hidden; border: 1px solid #313438; border-radius: 18px; background: radial-gradient(circle at 70% 20%, #384029, transparent 35%), linear-gradient(145deg, #202421, #0a0c0d 72%); isolation: isolate; }
-.football-picks-hero__image { position: absolute; inset: 0; background-image: linear-gradient(0deg, #090b0c 3%, transparent 70%), var(--picks-event-poster); background-size: cover; background-position: center; opacity: .78; z-index: -1; }
-.football-picks-hero__content { position: absolute; inset: auto 18px 18px; text-shadow: 0 2px 18px #000; }
-.football-picks-hero h1 { margin: 4px 0; max-width: 680px; font-size: clamp(2rem, 9vw, 4rem); line-height: .92; letter-spacing: -.055em; text-transform: uppercase; }
+.football-picks-hero__image { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; z-index: 0; transition: opacity .8s ease; }
+.football-picks-hero__image.is-active { opacity: .78; }
+.football-picks-hero__content { position: absolute; inset: auto 18px 18px; z-index: 1; text-shadow: 0 2px 18px #000; }
+.football-picks-hero h1 { margin: 4px 0; max-width: 680px; font-size: clamp(1.75rem, 7vw, 3.25rem); line-height: .94; letter-spacing: -.045em; text-transform: uppercase; }
 .football-picks-hero__content > p:not(.eyebrow) { margin: 7px 0 13px; color: #ced0cf; font-weight: 700; }
 .football-picks-hero__meta { display: flex; flex-wrap: wrap; gap: 6px; }
 .football-picks-hero__meta span { padding: 5px 8px; border: 1px solid #ffffff35; border-radius: 5px; background: #080a0bbd; font-size: .62rem; font-weight: 900; letter-spacing: .08em; }
@@ -34,22 +36,23 @@
 .football-pick-game__status { padding: 3px 5px; border-radius: 3px; background: #263a2d; color: #80d39a; font-size: .49rem; letter-spacing: .1em; }
 .football-pick-game__status.is-locked, .football-pick-game__status.is-final { background: #383838; color: #c9c9c9; }
 .football-pick-game__status.is-cancelled { background: #4a2929; color: #ffadad; }
-.football-pick-game__matchup { display: grid; grid-template-columns: minmax(0, 1fr) 62px minmax(0, 1fr); align-items: stretch; min-height: 70px; }
-.football-pick-team { display: flex; align-items: center; gap: 7px; min-width: 0; padding: 8px; border: 0; background: transparent; color: inherit; text-align: left; }
+.football-pick-game__matchup { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; min-height: 70px; }
+.football-pick-team { display: flex; align-items: center; gap: 7px; min-width: 0; padding: 9px 8px; border: 0; background: transparent; color: inherit; text-align: left; }
 .football-pick-team.is-home { flex-direction: row-reverse; text-align: right; }
 .football-pick-team:disabled { cursor: default; opacity: .68; }
 .football-pick-team.is-selected { background: color-mix(in srgb, var(--football-picks-accent) 20%, #151718); box-shadow: inset 0 -2px var(--football-picks-accent); opacity: 1; }
 .football-pick-team.is-away.is-selected { box-shadow: inset 2px 0 var(--football-picks-accent); }
 .football-pick-team.is-home.is-selected { box-shadow: inset -2px 0 var(--football-picks-accent); }
-.football-pick-team-mark { position: relative; display: grid; flex: 0 0 34px; width: 34px; height: 34px; place-items: center; overflow: hidden; border-radius: 50%; background: #25292b; color: #aeb2b3; font-size: .6rem; font-weight: 950; }
+.football-pick-team-mark { position: relative; display: grid; flex: 0 0 34px; width: 34px; height: 34px; place-items: center; overflow: hidden; border-radius: 50%; background: #25292b; }
+.football-pick-team-mark.is-empty::after { content: ""; width: 13px; height: 13px; border: 1px solid #4c5154; border-radius: 50%; opacity: .55; }
 .football-pick-team-mark img { position: absolute; inset: 2px; width: calc(100% - 4px); height: calc(100% - 4px); object-fit: contain; }
 .football-pick-team-copy { display: grid; gap: 3px; min-width: 0; }
-.football-pick-team-copy strong { overflow: hidden; font-size: clamp(.65rem, 2.8vw, .78rem); line-height: 1.05; text-overflow: ellipsis; }
+.football-pick-team-copy strong { display: -webkit-box; overflow: hidden; font-size: clamp(.64rem, 2.65vw, .79rem); line-height: 1.08; white-space: normal; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
 .football-pick-team-copy small { color: #858b8d; font-size: .48rem; font-weight: 950; letter-spacing: .09em; }
 .football-pick-team.is-selected .football-pick-team-copy small { color: #efb184; }
-.football-pick-game__line { display: grid; align-content: center; justify-items: center; gap: 2px; padding: 5px 2px; border-inline: 1px solid #292c2e; background: #0f1112; text-align: center; }
+.football-pick-game__line { grid-column: 1 / -1; display: flex; min-height: 27px; align-items: center; justify-content: center; gap: 7px; padding: 5px 8px; border-top: 1px solid #292c2e; background: #0f1112; text-align: center; }
 .football-pick-game__line small { color: #747a7c; font-size: .45rem; font-weight: 950; letter-spacing: .12em; }
-.football-pick-game__line strong { font-size: .62rem; line-height: 1.05; }
+.football-pick-game__line strong { font-size: .64rem; line-height: 1.05; }
 .football-pick-game > footer { display: flex; align-items: center; gap: 7px; min-height: 29px; padding: 5px 8px; border-top: 1px solid #292c2e; color: #8e9496; font-size: .52rem; font-weight: 850; letter-spacing: .055em; }
 .football-pick-game > footer > span { flex: 1; }
 .football-pick-game > footer > strong { color: #e9aa7e; }
@@ -69,4 +72,6 @@
 .football-picks-standings [role="row"]:first-child { color: #858b8d; font-size: .53rem; font-weight: 900; letter-spacing: .08em; }
 .football-picks-standings [role="row"].is-current { background: #d8783820; box-shadow: inset 2px 0 var(--football-picks-accent); }
 .football-picks-standings [role="row"] small { color: #858b8d; }
-@media (min-width: 700px) { .football-picks-page { gap: 14px; padding-top: 20px; } .football-picks-hero { min-height: 360px; } .football-picks-hero__content { inset: auto 28px 26px; } .football-pick-game__matchup { grid-template-columns: minmax(0, 1fr) 78px minmax(0, 1fr); min-height: 78px; } .football-pick-team { padding: 10px 14px; } .football-pick-team-mark { flex-basis: 40px; width: 40px; height: 40px; } .football-pick-team-copy strong { font-size: .86rem; } .football-pick-game__line strong { font-size: .7rem; } }
+@keyframes football-picks-page-sheen { 0%, 76% { left: -28vw; opacity: 0; } 80% { opacity: .08; } 92% { opacity: .12; } 98%, 100% { left: 112vw; opacity: 0; } }
+@media (min-width: 700px) { .football-picks-page { gap: 14px; padding-top: 20px; } .football-picks-hero { min-height: 360px; } .football-picks-hero__content { inset: auto 28px 26px; } .football-pick-game__matchup { grid-template-columns: repeat(2, minmax(0, 1fr)); min-height: 78px; } .football-pick-team { padding: 11px 16px; } .football-pick-team-mark { flex-basis: 40px; width: 40px; height: 40px; } .football-pick-team-copy strong { font-size: .86rem; } .football-pick-game__line strong { font-size: .7rem; } }
+@media (prefers-reduced-motion: reduce) { .football-picks-page.has-event-atmosphere::after { animation: none; display: none; } .football-picks-hero__image { transition: none; } }

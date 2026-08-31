@@ -19,8 +19,8 @@ function repository(setEventHeader = vi.fn().mockResolvedValue(undefined)) {
   };
 }
 
-function imageFile(type = "image/webp") {
-  return new File(["header"], "header.webp", { type });
+function imageFile(type = "image/webp", name = "header.webp") {
+  return new File(["header"], name, { type });
 }
 
 const measureImage = vi.fn().mockResolvedValue({ width: 1600, height: 800 });
@@ -59,6 +59,54 @@ describe("Picks event header upload", () => {
     });
     expect(control.setEventHeader).toHaveBeenCalledTimes(1);
     expect(control.setEventHeader).toHaveBeenCalledWith("ufc-330", "ufc-330/event-header", 1600, 800);
+  });
+
+  it("stores a Football gallery through the same bucket and persists only its primary pointer", async () => {
+    const control = repository();
+    const files = [imageFile("image/webp", "one.webp"), imageFile("image/png", "two.png"), imageFile("image/jpeg", "three.jpg")];
+
+    await expect(uploadPickEventHeader({
+      eventId: "football-week-1",
+      file: files[0],
+      files,
+      repository: control.value,
+      measureImage,
+    })).resolves.toEqual({
+      storagePath: "football-week-1/event-header-gallery-3-1",
+      width: 1600,
+      height: 800,
+    });
+
+    expect(from).toHaveBeenCalledTimes(1);
+    expect(upload).toHaveBeenCalledTimes(3);
+    expect(upload.mock.calls.map(([path]) => path)).toEqual([
+      "football-week-1/event-header-gallery-3-1",
+      "football-week-1/event-header-gallery-3-2",
+      "football-week-1/event-header-gallery-3-3",
+    ]);
+    expect(control.setEventHeader).toHaveBeenCalledTimes(1);
+    expect(control.setEventHeader).toHaveBeenCalledWith(
+      "football-week-1",
+      "football-week-1/event-header-gallery-3-1",
+      1600,
+      800,
+    );
+  });
+
+  it("rejects galleries larger than four images before storage or metadata writes", async () => {
+    const control = repository();
+    const files = Array.from({ length: 5 }, (_, index) => imageFile("image/webp", `${index}.webp`));
+
+    await expect(uploadPickEventHeader({
+      eventId: "football-week-1",
+      file: files[0],
+      files,
+      repository: control.value,
+      measureImage,
+    })).rejects.toThrow("Event header supports up to 4 images.");
+
+    expect(from).not.toHaveBeenCalled();
+    expect(control.setEventHeader).not.toHaveBeenCalled();
   });
 
   it("rejects unsupported files before storage or metadata writes", async () => {

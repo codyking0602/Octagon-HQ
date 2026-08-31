@@ -1,5 +1,5 @@
 import { getSupabaseClient } from "../../lib/supabase";
-import { PICK_EVENT_HEADER_BUCKET } from "../picks/picksEventAssets";
+import { PICK_EVENT_HEADER_BUCKET, PICK_EVENT_HEADER_MAX_IMAGES } from "../picks/picksEventAssets";
 import type { PickControlRepository } from "./pickControlRepository";
 
 const EVENT_HEADER_MAX_BYTES = 20 * 1024 * 1024;
@@ -18,6 +18,7 @@ export interface PickEventHeaderDimensions {
 interface UploadPickEventHeaderOptions {
   eventId: string;
   file: File;
+  files?: File[];
   repository: PickControlRepository;
   measureImage?: (file: File) => Promise<PickEventHeaderDimensions>;
 }
@@ -42,18 +43,33 @@ export async function measurePickEventHeader(file: File): Promise<PickEventHeade
   }
 }
 
-export async function uploadPickEventHeader({
-  eventId,
-  file,
-  repository,
-  measureImage = measurePickEventHeader,
-}: UploadPickEventHeaderOptions) {
+function validateHeaderFile(file: File) {
   if (!EVENT_HEADER_TYPES.has(file.type)) {
     throw new Error("Event header must be a JPEG, PNG, WebP, or AVIF image.");
   }
   if (file.size > EVENT_HEADER_MAX_BYTES) {
     throw new Error("Event header must be 20 MB or smaller.");
   }
+}
+
+function headerStoragePaths(eventId: string, count: number) {
+  if (count === 1) return [`${eventId}/event-header`];
+  return Array.from({ length: count }, (_, index) => `${eventId}/event-header-gallery-${count}-${index + 1}`);
+}
+
+export async function uploadPickEventHeader({
+  eventId,
+  file,
+  files,
+  repository,
+  measureImage = measurePickEventHeader,
+}: UploadPickEventHeaderOptions) {
+  const headerFiles = files?.length ? files : [file];
+  if (headerFiles.length > PICK_EVENT_HEADER_MAX_IMAGES) {
+    throw new Error(`Event header supports up to ${PICK_EVENT_HEADER_MAX_IMAGES} images.`);
+  }
+  headerFiles.forEach(validateHeaderFile);
+
   if (!repository.setEventHeader) {
     throw new Error("Event header persistence is not available on this build.");
   }
@@ -63,22 +79,25 @@ export async function uploadPickEventHeader({
     throw new Error("Event header storage is not connected on this build.");
   }
 
-  const { width, height } = await measureImage(file);
+  const { width, height } = await measureImage(headerFiles[0]);
   if (width < 1 || height < 1 || width > 30000 || height > 30000) {
     throw new Error("Event header image dimensions are invalid.");
   }
 
-  const storagePath = `${eventId}/event-header`;
-  const { error } = await client.storage
-    .from(PICK_EVENT_HEADER_BUCKET)
-    .upload(storagePath, file, {
+  const storagePaths = headerStoragePaths(eventId, headerFiles.length);
+  const bucket = client.storage.from(PICK_EVENT_HEADER_BUCKET);
+
+  for (let index = 0; index < headerFiles.length; index += 1) {
+    const currentFile = headerFiles[index];
+    const { error } = await bucket.upload(storagePaths[index], currentFile, {
       cacheControl: "0",
-      contentType: file.type,
+      contentType: currentFile.type,
       upsert: true,
     });
+    if (error) throw new Error(error.message);
+  }
 
-  if (error) throw new Error(error.message);
-
+  const storagePath = storagePaths[0];
   await repository.setEventHeader(eventId, storagePath, width, height);
   return { storagePath, width, height };
 }

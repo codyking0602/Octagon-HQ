@@ -45,19 +45,37 @@ describe("FootballPicksPage", () => {
     vi.mocked(usePicks).mockReturnValue(runtime() as never);
   });
 
-  it("renders a compact left-right matchup with canonical logos and one frozen ATS line", () => {
+  it("renders a compact left-right matchup with canonical logos and the actual favorite ATS line", () => {
     const { container } = render(<FootballPicksPage />);
     expect(screen.getByRole("heading", { name: "Football Week 1" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Ohio State Buckeyes AWAY" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Texas Longhorns HOME" })).toBeInTheDocument();
     expect(screen.getByText("CFB")).toBeInTheDocument();
-    expect(screen.getByText("HOME -3.5")).toBeInTheDocument();
-    expect(screen.queryByText("+3.5")).not.toBeInTheDocument();
+    expect(screen.getByText("Texas Longhorns -3.5")).toBeInTheDocument();
+    expect(screen.queryByText("HOME -3.5")).not.toBeInTheDocument();
     expect(Array.from(container.querySelectorAll<HTMLImageElement>(".football-pick-team-mark img")).map((image) => image.src)).toEqual([
       "https://a.espncdn.com/i/teamlogos/ncaa/500/194.png",
       "https://a.espncdn.com/i/teamlogos/ncaa/500/251.png",
     ]);
     expect(screen.getByText("Who has picked")).toBeInTheDocument();
+  });
+
+  it("names the away team when the stored home spread makes the visitor the favorite", () => {
+    const awayFavoriteEvent = { ...event, bouts: [{ ...event.bouts[0], frozenSpreadHome: 2.5 }] };
+    vi.mocked(usePicks).mockReturnValue(runtime({ event: awayFavoriteEvent }) as never);
+    render(<FootballPicksPage />);
+
+    expect(screen.getByText("Ohio State Buckeyes -2.5")).toBeInTheDocument();
+  });
+
+  it("never falls back to team initials when a logo is unavailable", () => {
+    const missingLogoEvent = { ...event, bouts: [{ ...event.bouts[0], awayTeamLogoUrl: null }] };
+    vi.mocked(usePicks).mockReturnValue(runtime({ event: missingLogoEvent }) as never);
+    const { container } = render(<FootballPicksPage />);
+
+    const awayMark = container.querySelector(".football-pick-team-mark");
+    expect(awayMark).toHaveClass("is-empty");
+    expect(awayMark).toHaveTextContent("");
   });
 
   it("keeps the scoring rubric collapsed with the canonical Football grading rules", () => {

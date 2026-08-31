@@ -16,6 +16,13 @@
     #101113;
 }
 
+/* Ohio State's transparent ESPN mark loses its white/gray detail on Football HQ dark surfaces. */
+.app-shell--football-room img[src*="/teamlogos/ncaa/"][src*="/194.png"] {
+  border-radius: 50%;
+  background: #f4f5f6;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .22), 0 3px 8px rgba(0, 0, 0, .24);
+}
+
 .app-shell--football-room .football-rank-five-current .football-subject-visual,
 .app-shell--football-room .football-keep-cut-current .football-subject-visual {
   width: 74px;

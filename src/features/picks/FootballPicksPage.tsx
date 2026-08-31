@@ -1,4 +1,4 @@
-import { useMemo, type CSSProperties } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { footballLockAllowance } from "./footballPicksScoring";
@@ -6,7 +6,7 @@ import { GroupPickProgress } from "./GroupPickProgress";
 import { GroupPickReveal } from "./GroupPickReveal";
 import { pickBoutLocked, pickProgress, type PickBout } from "./picksModel";
 import { usePicks } from "./PicksProvider";
-import { pickEventPoster } from "./picksEventAssets";
+import { pickEventPosters } from "./picksEventAssets";
 
 function atsPercent(wins: number, losses: number) {
   return wins + losses ? `${(wins / (wins + losses) * 100).toFixed(1)}%` : "—";
@@ -18,18 +18,12 @@ function kickoffLabel(value: string) {
   }).format(new Date(value));
 }
 
-function spreadLabel(value: number) {
-  if (value === 0) return "PK";
-  return value > 0 ? `+${value}` : String(value);
-}
-
 function gameLineLabel(bout: PickBout) {
-  return bout.frozenSpreadHome == null ? "LINE TBD" : `HOME ${spreadLabel(bout.frozenSpreadHome)}`;
-}
-
-function teamMark(name: string) {
-  const words = name.trim().split(/\s+/);
-  return words.length > 1 ? `${words[0][0]}${words.at(-1)?.[0] ?? ""}` : name.slice(0, 2);
+  const spread = bout.frozenSpreadHome;
+  if (spread == null) return "LINE TBD";
+  if (spread === 0) return "PICK’EM";
+  const favorite = spread < 0 ? bout.redFighterName : bout.blueFighterName;
+  return `${favorite} -${Math.abs(spread)}`;
 }
 
 function leagueLabel(weightClass: string) {
@@ -43,10 +37,9 @@ function gameStatus(bout: PickBout, locked: boolean) {
   return locked ? "LOCKED" : "OPEN";
 }
 
-function TeamLogo({ name, logoUrl }: { name: string; logoUrl?: string | null }) {
+function TeamLogo({ logoUrl }: { logoUrl?: string | null }) {
   return (
-    <span className="football-pick-team-mark" aria-hidden="true">
-      <span>{teamMark(name)}</span>
+    <span className={`football-pick-team-mark${logoUrl ? "" : " is-empty"}`} aria-hidden="true">
       {logoUrl ? <img src={logoUrl} alt="" loading="lazy" onError={(event) => event.currentTarget.remove()} /> : null}
     </span>
   );
@@ -65,7 +58,22 @@ export default function FootballPicksPage() {
   const lockGameCount = games.filter((game) => game.resultStatus !== "cancelled").length;
   const lockAllowance = footballLockAllowance(lockGameCount);
   const usedLocks = games.filter((game) => game.resultStatus !== "cancelled" && picks.footballLocks[game.boutId] === true).length;
-  const poster = pickEventPoster(event);
+  const posters = useMemo(() => pickEventPosters(event), [event]);
+  const poster = posters[0] ?? null;
+  const [activePosterIndex, setActivePosterIndex] = useState(0);
+
+  useEffect(() => {
+    setActivePosterIndex(0);
+  }, [event?.eventId, event?.headerStoragePath]);
+
+  useEffect(() => {
+    if (posters.length < 2) return undefined;
+    const intervalId = window.setInterval(() => {
+      setActivePosterIndex((index) => (index + 1) % posters.length);
+    }, 5000);
+    return () => window.clearInterval(intervalId);
+  }, [posters.length]);
+
   const visualStyle = poster ? ({
     "--picks-event-poster": `url("${poster.src}")`,
     "--picks-event-poster-aspect": poster.aspectRatio,
@@ -85,7 +93,14 @@ export default function FootballPicksPage() {
       {event ? (
         <>
           <section className={`football-picks-hero${poster ? " has-poster" : ""}`} aria-labelledby="football-week-title">
-            <div className="football-picks-hero__image" aria-hidden="true" />
+            {posters.map((image, index) => (
+              <div
+                key={image.src}
+                className={`football-picks-hero__image${index === activePosterIndex ? " is-active" : ""}`}
+                style={{ backgroundImage: `linear-gradient(0deg, #090b0c 3%, transparent 70%), url("${image.src}")` }}
+                aria-hidden="true"
+              />
+            ))}
             <div className="football-picks-hero__content">
               <p className="eyebrow">FOOTBALL PICKS · WEEKLY ATS</p>
               <h1 id="football-week-title">{event.name}</h1>
@@ -152,13 +167,13 @@ export default function FootballPicksPage() {
                             disabled={readOnly || Boolean(picks.savingBoutId)}
                             onClick={() => void picks.setPick(game.boutId, team.slug)}
                           >
-                            <TeamLogo name={team.name} logoUrl={team.logoUrl} />
+                            <TeamLogo logoUrl={team.logoUrl} />
                             <span className="football-pick-team-copy"><strong>{team.name}</strong><small>{isSelected ? "✓ YOUR PICK" : team.side}</small></span>
                           </button>
                         );
                       })}
                       <div className="football-pick-game__line" aria-label={`Frozen ATS line ${gameLineLabel(game)}`}>
-                        <small>LINE</small><strong>{gameLineLabel(game)}</strong>
+                        <small>FROZEN LINE</small><strong>{gameLineLabel(game)}</strong>
                       </div>
                     </div>
                     <footer>
