@@ -409,6 +409,44 @@ The architecture above is settled. Implementation should now follow the reposito
 
 Do not implement the whole migration in one giant PR.
 
+### PR Tool Routing — LOCKED
+
+Use the following routing so the rollout does not get trapped between the limited GitHub editing tools available in normal ChatGPT and Codex Cloud's fresh-PR workflow.
+
+**Default rule:**
+
+- **PR 1 may be handled in ChatGPT with the GitHub tools.** It is an audit / documentation PR and should not change runtime behavior.
+- **PRs 2–14 are CODEX CLOUD REQUIRED.** They change runtime code and need a real repository checkout plus focused tests, typecheck, the full test suite, and the production build on the exact final head.
+- ChatGPT's GitHub tools remain useful for reading the repository, reviewing Codex diffs, checking PR state / CI, updating roadmap documentation, and merging verified PRs. Do not use the limited GitHub file-edit path as a substitute for Codex on these implementation PRs.
+
+**Codex fresh-PR rule:**
+
+- One Codex task = one roadmap PR.
+- Before every Codex task, resolve the new current `main` after the previous PR has merged.
+- Start a fresh Codex task / branch from that current `main`; do not ask Codex to continue the prior merged branch for the next roadmap item.
+- Tell Codex to read this roadmap first and implement **only the named PR scope**. It must not opportunistically start the next roadmap PR.
+- Every Codex prompt must repeat the repository rule: preserve the canonical owner; no fallback, duplicate provider, second query path, competing route owner, or duplicate initialization.
+- After Codex opens the PR, review the actual diff and exact-head checks here before merge. Codex is the implementation executor, not the authority for locked product nuance.
+
+| PR | Scope | Execution | Review sensitivity |
+| --- | --- | --- | --- |
+| **1** | Current-state audit + owner inventory | **CHATGPT / GITHUB OK** | High breadth; no runtime edits |
+| **2** | Universal THE HQ header | **CODEX REQUIRED** | Normal |
+| **3** | Bottom navigation: Home / Picks / Play / Ratings; remove War Room nav | **CODEX REQUIRED** | Normal |
+| **4** | Canonical shared UFC / Football sport context + persistence | **CODEX REQUIRED** | **HIGH — ownership / state duplication risk** |
+| **5** | Picks / Play sport-switching UI + sport/section context row | **CODEX REQUIRED** | **HIGH — preserve Ratings / Intelligence UFC-only behavior** |
+| **6** | Universal gold / UFC red / Football blue theme-token path | **CODEX REQUIRED** | Normal; do not add a second theme owner |
+| **7** | Universal Home foundation + locked section order | **CODEX REQUIRED** | **HIGH — compose existing owners, do not recreate logic** |
+| **8** | Up Next priority hero | **CODEX REQUIRED** | **HIGH — cross-product priority logic** |
+| **9** | Today's Challenges + Your HQ | **CODEX REQUIRED** | **HIGH — reuse existing challenge / record data owners** |
+| **10** | UFC HQ Home block | **CODEX REQUIRED** | **HIGH — preserve Ranking Spotlight + Shane's Contender Series** |
+| **11** | Football HQ Home block + What's New integration | **CODEX REQUIRED** | **HIGH — preserve weekly picks + both Game of the Week owners** |
+| **12** | Universal Profile | **CODEX REQUIRED** | Normal; do not reintroduce unused favorites |
+| **13** | Universal Notifications + onboarding cleanup | **CODEX REQUIRED** | **HIGH — deep links, delivery ownership, auth/profile creation** |
+| **14** | Brand migration + War Room / legacy cleanup | **CODEX REQUIRED** | **HIGH — deletion / regression risk; inventory first** |
+
+If PR 13 proves to cross genuinely separate canonical owners, split it into **13A Notifications** and **13B Onboarding**, with each one run as its own fresh Codex PR from then-current `main`. In that case the rollout becomes 15 PRs rather than forcing unrelated ownership into one diff.
+
 ---
 
 ## Phase 0 — Current-State Audit
@@ -624,6 +662,7 @@ Key decisions:
 - College and NFL Game of the Week preserved inside Football HQ
 - Standings stay inline with their relevant products
 - Profile and Notifications become universal
+- Tool routing locked: PR 1 may use ChatGPT GitHub tools; runtime implementation PRs 2–14 require fresh Codex Cloud PRs from current `main`, followed by exact-head review here
 
 ---
 
