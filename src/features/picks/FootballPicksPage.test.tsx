@@ -88,7 +88,7 @@ describe("FootballPicksPage", () => {
     expect(awayMark).toHaveTextContent("");
   });
 
-  it("keeps the scoring rubric collapsed with the canonical Football grading rules", () => {
+  it("keeps the scoring rubric collapsed with weekly and Futures grading rules", () => {
     render(<FootballPicksPage />);
     const details = screen.getByText("SCORING & GRADING").closest("details");
 
@@ -97,6 +97,12 @@ describe("FootballPicksPage", () => {
     expect(details).toHaveTextContent("Lock win 3 points total");
     expect(details).toHaveTextContent("Push 0.5");
     expect(details).toHaveTextContent("lowest-scoring week is dropped");
+    expect(details).toHaveTextContent("Season Futures 78 points total · CFB 38 · NFL 40");
+    expect(details).toHaveTextContent("Power 4 champions 2 each");
+    expect(details).toHaveTextContent("national champion 7");
+    expect(details).toHaveTextContent("division champions 1 each");
+    expect(details).toHaveTextContent("Super Bowl champion 7");
+    expect(details).toHaveTextContent("Futures stay private until the listed lock time");
   });
 
   it("gives the Picks owner a direct manage-event path below the clean Football header", () => {
