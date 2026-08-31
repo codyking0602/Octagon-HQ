@@ -1,5 +1,10 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { normalizeFootballEvent } from "./normalize";
+import {
+  footballSlateUnavailableMessage,
+  normalizeFootballEvent,
+  normalizeFootballSlate,
+} from "./normalize";
 
 function espnGame({
   id = "401",
@@ -76,5 +81,64 @@ describe("Football ATS provider matching", () => {
   it("names the matchup when the provider event exists but has no ATS market", () => {
     expect(() => normalizeFootballEvent(espnGame(), [oddsGame({ withSpread: false })], "college-football"))
       .toThrow("The Odds API has no ATS line for Texas Longhorns at UTSA Roadrunners");
+  });
+
+  it("collects every unavailable ATS matchup instead of stopping at the first missing line", () => {
+    const readyEspn = espnGame({
+      id: "501",
+      home: "Seattle Seahawks",
+      homeAbbreviation: "SEA",
+      away: "New England Patriots",
+      awayAbbreviation: "NE",
+    });
+    const noEventEspn = espnGame({
+      id: "502",
+      kickoff: "2026-09-12T20:00:00.000Z",
+      home: "Kansas Jayhawks",
+      homeAbbreviation: "KU",
+      away: "Missouri Tigers",
+      awayAbbreviation: "MIZ",
+    });
+    const noSpreadEspn = espnGame({
+      id: "503",
+      kickoff: "2026-09-12T20:30:00.000Z",
+      home: "Iowa State Cyclones",
+      homeAbbreviation: "ISU",
+      away: "Iowa Hawkeyes",
+      awayAbbreviation: "IOWA",
+    });
+    const readyOdds = oddsGame({ home: "Seattle Seahawks", away: "New England Patriots", point: -3.5 });
+    const noSpreadOdds = oddsGame({
+      kickoff: "2026-09-12T20:30:00.000Z",
+      home: "Iowa State Cyclones",
+      away: "Iowa Hawkeyes",
+      withSpread: false,
+    });
+
+    const result = normalizeFootballSlate([
+      { espnEvent: readyEspn, oddsEvents: [readyOdds], league: "nfl" },
+      { espnEvent: noEventEspn, oddsEvents: [], league: "college-football" },
+      { espnEvent: noSpreadEspn, oddsEvents: [noSpreadOdds], league: "college-football" },
+    ]);
+
+    expect(result.events).toHaveLength(1);
+    expect(result.unavailable).toEqual([
+      { matchup: "Missouri Tigers at Kansas Jayhawks", reason: "missing-event" },
+      { matchup: "Iowa Hawkeyes at Iowa State Cyclones", reason: "missing-spread" },
+    ]);
+    expect(footballSlateUnavailableMessage(result.unavailable, 3)).toBe(
+      "The Odds API cannot stage 2 of 3 selected games yet. Nothing was staged. Unavailable ATS: Missouri Tigers at Kansas Jayhawks; Iowa Hawkeyes at Iowa State Cyclones. Try again when the lines are posted.",
+    );
+  });
+
+  it("keeps weekly staging behind the complete ATS readiness check", () => {
+    const source = readFileSync("supabase/functions/sync-next-football-event/index.ts", "utf8");
+    const readinessCheck = source.indexOf("if (normalization.unavailable.length)");
+    const stageWrite = source.indexOf("stageFootballEvents(admin, normalization.events)");
+
+    expect(readinessCheck).toBeGreaterThanOrEqual(0);
+    expect(stageWrite).toBeGreaterThan(readinessCheck);
+    expect(source).toContain("unavailable_game_count: normalization.unavailable.length");
+    expect(source).toContain("}, 409);");
   });
 });
