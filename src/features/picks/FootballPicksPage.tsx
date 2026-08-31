@@ -1,4 +1,5 @@
 import { useMemo, type CSSProperties } from "react";
+import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { footballLockAllowance } from "./footballPicksScoring";
 import { GroupPickProgress } from "./GroupPickProgress";
@@ -80,6 +81,14 @@ export default function FootballPicksPage() {
               <div className="football-picks-hero__meta">
                 <span>{games.length} GAMES</span><span>NFL + COLLEGE</span><span>LINES FROZEN</span>
               </div>
+              {event.canControl ? (
+                <Link
+                  className="picks-control-entry"
+                  to={`/picks/control?sport=football&event=${encodeURIComponent(event.eventId)}#header`}
+                >
+                  <span aria-hidden="true">⚙</span> MANAGE EVENT
+                </Link>
+              ) : null}
             </div>
           </section>
 
