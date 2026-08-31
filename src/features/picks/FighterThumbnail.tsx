@@ -19,9 +19,27 @@ const thumbnailSlugAliases = new Map([
   ["jan-błachowicz", "jan-blachowicz"],
 ]);
 
+const remotePhotoBySlug = new Map([
+  ["dan-hooker", "https://a.espncdn.com/i/headshots/mma/players/full/3109135.png"],
+  ["salahdine-parnasse", "https://a.espncdn.com/i/headshots/mma/players/full/4312859.png"],
+  ["fares-ziam", "https://a.espncdn.com/i/headshots/mma/players/full/4083018.png"],
+  ["michael-venom-page", "https://a.espncdn.com/i/headshots/mma/players/full/3022067.png"],
+  ["nursulton-ruziboev", "https://a.espncdn.com/i/headshots/mma/players/full/4422103.png"],
+  ["punahele-soriano", "https://a.espncdn.com/i/headshots/mma/players/full/4423214.png"],
+  ["morgan-charriere", "https://a.espncdn.com/i/headshots/mma/players/full/4324622.png"],
+  ["felipe-lima", "https://a.espncdn.com/i/headshots/mma/players/full/5101694.png"],
+  ["losene-keita", "https://a.espncdn.com/i/headshots/mma/players/full/5192314.png"],
+  ["muhammad-naimov", "https://a.espncdn.com/i/headshots/mma/players/full/4690540.png"],
+]);
+
+export function fighterRemotePhotoPath(slug: string) {
+  const canonicalSlug = thumbnailSlugAliases.get(slug) ?? slug;
+  return remotePhotoBySlug.get(canonicalSlug) ?? null;
+}
+
 export function fighterThumbnailPath(slug: string) {
   const canonicalSlug = thumbnailSlugAliases.get(slug) ?? slug;
-  return thumbnailBySlug.get(canonicalSlug) ?? null;
+  return thumbnailBySlug.get(canonicalSlug) ?? fighterRemotePhotoPath(canonicalSlug);
 }
 
 export function FighterThumbnail({ name, slug }: { name: string; slug: string }) {
