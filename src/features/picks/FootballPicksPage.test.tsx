@@ -45,15 +45,18 @@ describe("FootballPicksPage", () => {
     vi.mocked(usePicks).mockReturnValue(runtime() as never);
   });
 
-  it("keeps event artwork free of overlay copy and shows the ATS source outside the header", () => {
+  it("keeps event artwork clean and makes every Football Picks time explicitly Central", () => {
     const { container } = render(<FootballPicksPage />);
     const hero = screen.getByLabelText("Football Week 1 event artwork");
     const slate = screen.getByLabelText("Football Week 1 football games");
+    const provenance = screen.getByText(/ATS ODDS · THE ODDS API · FROZEN/);
 
     expect(hero).toHaveTextContent("");
     expect(screen.queryByText("FOOTBALL PICKS · WEEKLY ATS")).not.toBeInTheDocument();
     expect(screen.queryByText("Opening weekend")).not.toBeInTheDocument();
-    expect(screen.getByText(/ATS ODDS · THE ODDS API · FROZEN/)).toBeInTheDocument();
+    expect(provenance).toHaveTextContent("Sep 1, 7:00 AM CT");
+    expect(screen.getByText("WEEKLY SLATE · ALL TIMES CT")).toBeInTheDocument();
+    expect(screen.getByText("Thu, Sep 3, 11:00 AM CT")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Pick every game against the spread (ATS)" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Ohio State Buckeyes AWAY" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Texas Longhorns HOME" })).toBeInTheDocument();
