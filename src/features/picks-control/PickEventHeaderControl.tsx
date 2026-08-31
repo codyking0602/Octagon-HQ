@@ -12,12 +12,13 @@ function readableError(error: unknown) {
   return error instanceof Error ? error.message : "Event header could not be uploaded.";
 }
 
-export default function PickEventHeaderControl({ eventId, repository, allowGallery = false }: PickEventHeaderControlProps) {
+export default function PickEventHeaderControl({ eventId, repository, allowGallery }: PickEventHeaderControlProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+  const galleryEnabled = allowGallery ?? new URLSearchParams(window.location.search).get("sport") === "football";
 
   useEffect(() => () => {
     previewUrls.forEach((previewUrl) => URL.revokeObjectURL(previewUrl));
@@ -25,7 +26,7 @@ export default function PickEventHeaderControl({ eventId, repository, allowGalle
 
   async function onFileChange(event: ChangeEvent<HTMLInputElement>) {
     const selectedFiles = Array.from(event.target.files ?? []);
-    const files = allowGallery ? selectedFiles.slice(0, 4) : selectedFiles.slice(0, 1);
+    const files = galleryEnabled ? selectedFiles.slice(0, 4) : selectedFiles.slice(0, 1);
     event.target.value = "";
     if (!files.length || !repository || busy) return;
 
@@ -50,7 +51,7 @@ export default function PickEventHeaderControl({ eventId, repository, allowGalle
       <div className="picks-event-header-control__copy">
         <span>MANAGE EVENT</span>
         <strong>EVENT HEADER</strong>
-        <small>{allowGallery
+        <small>{galleryEnabled
           ? "Upload up to four approved images. Football Picks crossfades through the set automatically."
           : "Upload the approved event artwork after publishing. Uploading again replaces the stored header for this event."}</small>
       </div>
@@ -68,14 +69,14 @@ export default function PickEventHeaderControl({ eventId, repository, allowGalle
           disabled={busy || !repository?.setEventHeader}
           onClick={() => inputRef.current?.click()}
         >
-          {busy ? "UPLOADING…" : previewUrls.length ? "REPLACE HEADER" : allowGallery ? "UPLOAD HEADERS" : "UPLOAD HEADER"}
+          {busy ? "UPLOADING…" : previewUrls.length ? "REPLACE HEADER" : galleryEnabled ? "UPLOAD HEADERS" : "UPLOAD HEADER"}
         </button>
         <input
           ref={inputRef}
           className="picks-event-header-control__input"
           type="file"
           accept="image/jpeg,image/png,image/webp,image/avif"
-          multiple={allowGallery}
+          multiple={galleryEnabled}
           onChange={onFileChange}
           disabled={busy || !repository?.setEventHeader}
         />
