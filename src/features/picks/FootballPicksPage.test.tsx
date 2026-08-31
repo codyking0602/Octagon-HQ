@@ -45,9 +45,14 @@ describe("FootballPicksPage", () => {
     vi.mocked(usePicks).mockReturnValue(runtime() as never);
   });
 
-  it("renders a compact left-right matchup with canonical logos and the actual favorite ATS line", () => {
+  it("keeps event artwork free of overlay copy and shows the ATS source outside the header", () => {
     const { container } = render(<FootballPicksPage />);
-    expect(screen.getByRole("heading", { name: "Football Week 1" })).toBeInTheDocument();
+    const hero = screen.getByLabelText("Football Week 1 event artwork");
+
+    expect(hero).toHaveTextContent("");
+    expect(screen.queryByText("FOOTBALL PICKS · WEEKLY ATS")).not.toBeInTheDocument();
+    expect(screen.queryByText("Opening weekend")).not.toBeInTheDocument();
+    expect(screen.getByText(/ATS ODDS · THE ODDS API · FROZEN/)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Ohio State Buckeyes AWAY" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Texas Longhorns HOME" })).toBeInTheDocument();
     expect(screen.getByText("CFB")).toBeInTheDocument();
@@ -89,11 +94,14 @@ describe("FootballPicksPage", () => {
     expect(details).toHaveTextContent("lowest-scoring week is dropped");
   });
 
-  it("gives the Picks owner a direct manage-event path for this published Football slate", () => {
+  it("gives the Picks owner a direct manage-event path below the clean Football header", () => {
     vi.mocked(usePicks).mockReturnValue(runtime({ event: { ...event, canControl: true } }) as never);
-    render(<MemoryRouter><FootballPicksPage /></MemoryRouter>);
+    const { container } = render(<MemoryRouter><FootballPicksPage /></MemoryRouter>);
+    const hero = container.querySelector(".football-picks-hero");
+    const manageLink = screen.getByRole("link", { name: /MANAGE EVENT \/ HEADERS/ });
 
-    expect(screen.getByRole("link", { name: /MANAGE EVENT/ })).toHaveAttribute(
+    expect(hero).not.toContainElement(manageLink);
+    expect(manageLink).toHaveAttribute(
       "href",
       "/picks/control?sport=football&event=football-week-1#header",
     );
