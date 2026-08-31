@@ -36,8 +36,10 @@ export default function PickEventHeaderControl({ eventId, repository, allowGalle
     try {
       await uploadPickEventHeader({ eventId, file: files[0], files, repository });
       setPreviewUrls(files.map((file) => URL.createObjectURL(file)));
-      setNotice(files.length > 1
-        ? `${files.length} event headers saved. Football Picks will crossfade through them automatically.`
+      setNotice(galleryEnabled
+        ? files.length > 1
+          ? `${files.length} event headers saved. Football Picks will crossfade through them automatically.`
+          : "1 event header saved. To rotate multiple headers, choose 2–4 photos together in the same upload."
         : "Event header saved. Upload another image here any time to replace it.");
     } catch (nextError) {
       setError(readableError(nextError));
@@ -52,7 +54,7 @@ export default function PickEventHeaderControl({ eventId, repository, allowGalle
         <span>MANAGE EVENT</span>
         <strong>EVENT HEADER</strong>
         <small>{galleryEnabled
-          ? "Upload up to four approved images. Football Picks crossfades through the set automatically."
+          ? "Tap Upload Headers, then select 1–4 approved photos together. Football Picks crossfades through the saved set automatically."
           : "Upload the approved event artwork after publishing. Uploading again replaces the stored header for this event."}</small>
       </div>
 
@@ -69,7 +71,7 @@ export default function PickEventHeaderControl({ eventId, repository, allowGalle
           disabled={busy || !repository?.setEventHeader}
           onClick={() => inputRef.current?.click()}
         >
-          {busy ? "UPLOADING…" : previewUrls.length ? "REPLACE HEADER" : galleryEnabled ? "UPLOAD HEADERS" : "UPLOAD HEADER"}
+          {busy ? "UPLOADING…" : galleryEnabled ? "UPLOAD / REPLACE HEADERS" : previewUrls.length ? "REPLACE HEADER" : "UPLOAD HEADER"}
         </button>
         <input
           ref={inputRef}
