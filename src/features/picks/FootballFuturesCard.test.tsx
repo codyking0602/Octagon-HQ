@@ -40,14 +40,14 @@ describe("FootballFuturesCard", () => {
     expect(details).toHaveAttribute("open");
   });
 
-  it("uses searchable team choices while player awards remain typed names", () => {
+  it("commits a searchable team choice on pointer down before mobile focus can blur", () => {
     render(<FootballFuturesCard />);
     fireEvent.click(screen.getByText("SEASON FUTURES").closest("summary")!);
 
     const teamSearches = screen.getAllByRole("combobox");
     fireEvent.focus(teamSearches[0]);
     fireEvent.change(teamSearches[0], { target: { value: "Texas" } });
-    fireEvent.click(screen.getByRole("option", { name: "Texas Longhorns" }));
+    fireEvent.pointerDown(screen.getByRole("option", { name: "Texas Longhorns" }));
 
     expect(screen.getByRole("button", { name: "Remove Texas Longhorns" })).toBeInTheDocument();
     expect(screen.getByText("2 PTS EACH · 1/4 PICKS")).toBeInTheDocument();
