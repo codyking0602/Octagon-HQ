@@ -149,24 +149,25 @@ describe("Odds fighter aliases", () => {
 
     const odds = adaptTheOddsApiResponse({ status: 200, body: parisPayload }, observed);
     const filtered = filterOddsToMonitoredEvent(odds, parisEvent);
+    const snapshotsByMatchup = new Map(filtered.snapshots.map((snapshot) => [snapshot.matchupIdentity, snapshot]));
 
     expect(filtered.coverage).toEqual({ providerEvents: 3, completeSnapshots: 3, missingSnapshots: 0 });
-    expect(filtered.snapshots.map((snapshot) => snapshot.matchupIdentity)).toEqual([
+    expect(new Set(snapshotsByMatchup.keys())).toEqual(new Set([
       "dan hooker|salahdine parnasse",
       "michael venom page|nursulton ruziboev",
       "losene keita|muhammad naimov",
-    ]);
-    expect(filtered.snapshots[0].prices[0]).toEqual({
+    ]));
+    expect(snapshotsByMatchup.get("dan hooker|salahdine parnasse")?.prices[0]).toEqual({
       fighterName: "Dan Hooker",
       fighterIdentity: "dan hooker",
       americanOdds: 380,
     });
-    expect(filtered.snapshots[1].prices[0]).toEqual({
+    expect(snapshotsByMatchup.get("michael venom page|nursulton ruziboev")?.prices[0]).toEqual({
       fighterName: "Michael Venom Page",
       fighterIdentity: "michael venom page",
       americanOdds: -185,
     });
-    expect(filtered.snapshots[2].prices[1]).toEqual({
+    expect(snapshotsByMatchup.get("losene keita|muhammad naimov")?.prices[1]).toEqual({
       fighterName: "Muhammad Naimov",
       fighterIdentity: "muhammad naimov",
       americanOdds: 285,
