@@ -35,13 +35,23 @@ function asRecord(value: unknown): Record<string, unknown> | null {
 }
 
 function loadFighter(name: string, fighterSlug: string): SpotlightStatsFighter {
-  const fighter = getUfcStatsSnapshotFighter(name);
-  if (!fighter) {
-    throw new SpotlightBuildError(
-      "UFCSTATS_SNAPSHOT_FIGHTER_NOT_FOUND",
-      `The UFCStats Spotlight snapshot does not contain ${name}.`,
-    );
-  }
+  const snapshot = getUfcStatsSnapshotFighter(name);
+  const fighter = snapshot ?? {
+    name,
+    record: "--",
+    dob: null,
+    height: "--",
+    reach: "--",
+    stance: "--",
+    slpm: null,
+    strikingAccuracy: null,
+    sapm: null,
+    strikingDefense: null,
+    takedownAverage: null,
+    takedownAccuracy: null,
+    takedownDefense: null,
+    submissionAverage: null,
+  };
   return { ...fighter, fighterSlug, name };
 }
 
