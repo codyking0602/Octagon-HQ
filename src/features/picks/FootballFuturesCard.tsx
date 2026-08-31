@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import "../../styles/football-futures.css";
 import {
   FOOTBALL_FUTURES_MAX_POINTS,
   FOOTBALL_FUTURES_RULES,
@@ -28,49 +29,19 @@ function lockLabel(value: string) {
   }).format(new Date(value));
 }
 
-function FuturesListField({
-  label,
-  points,
-  limit,
-  value,
-  disabled,
-  onChange,
-}: {
-  label: string;
-  points: string;
-  limit: number;
-  value: readonly string[];
-  disabled: boolean;
-  onChange: (value: string[]) => void;
+function FuturesListField({ label, points, limit, value, disabled, onChange }: {
+  label: string; points: string; limit: number; value: readonly string[]; disabled: boolean; onChange: (value: string[]) => void;
 }) {
   return (
     <label className="football-futures-field">
       <span><b>{label}</b><small>{points} · {value.length}/{limit}</small></span>
-      <input
-        type="text"
-        value={listValue(value)}
-        disabled={disabled}
-        placeholder="Team, Team, Team"
-        onChange={(event) => onChange(splitList(event.target.value))}
-      />
+      <input type="text" value={listValue(value)} disabled={disabled} placeholder="Team, Team, Team" onChange={(event) => onChange(splitList(event.target.value))} />
     </label>
   );
 }
 
-function FuturesSingleField({
-  label,
-  points,
-  value,
-  disabled,
-  placeholder,
-  onChange,
-}: {
-  label: string;
-  points: string;
-  value: string;
-  disabled: boolean;
-  placeholder: string;
-  onChange: (value: string) => void;
+function FuturesSingleField({ label, points, value, disabled, placeholder, onChange }: {
+  label: string; points: string; value: string; disabled: boolean; placeholder: string; onChange: (value: string) => void;
 }) {
   return (
     <label className="football-futures-field">
@@ -122,10 +93,7 @@ export function FootballFuturesCard({ onLockedChange }: { onLockedChange?: (lock
 
   async function save() {
     if (locked || saving) return;
-    if (validation.errors.length) {
-      setError(validation.errors[0]);
-      return;
-    }
+    if (validation.errors.length) { setError(validation.errors[0]); return; }
     setSaving(true);
     try {
       const next = await saveFootballFutures(validation.normalized);
@@ -141,9 +109,7 @@ export function FootballFuturesCard({ onLockedChange }: { onLockedChange?: (lock
         setDraft(latest.ownPicks ?? validation.normalized);
         onLockedChange?.(latest.locked);
       } catch { /* preserve the save error */ }
-    } finally {
-      setSaving(false);
-    }
+    } finally { setSaving(false); }
   }
 
   const update = <K extends keyof FootballFuturesPicks>(key: K, value: FootballFuturesPicks[K]) => {
@@ -160,7 +126,6 @@ export function FootballFuturesCard({ onLockedChange }: { onLockedChange?: (lock
         <span>{locked ? "LOCKED · GROUP REVEALED" : "PRIVATE UNTIL LOCK"}</span>
         <b>{snapshot ? lockLabel(snapshot.lockAt) : "FRI · 11:59 PM ET"}</b>
       </div>
-
       {loading ? <p className="football-futures__message">Loading Futures…</p> : null}
       {!loading ? (
         <div className="football-futures__leagues">
@@ -174,7 +139,6 @@ export function FootballFuturesCard({ onLockedChange }: { onLockedChange?: (lock
               <FuturesSingleField label="National champion" points="7 pts" value={draft.cfbNationalChampion} disabled={locked} placeholder="Team" onChange={(value) => update("cfbNationalChampion", value)} />
             </div>
           </section>
-
           <section>
             <header><div><span>NFL</span><small>PRO FUTURES</small></div><strong>{FOOTBALL_FUTURES_MAX_POINTS.nfl} PTS</strong></header>
             <div className="football-futures__fields">
@@ -187,14 +151,12 @@ export function FootballFuturesCard({ onLockedChange }: { onLockedChange?: (lock
           </section>
         </div>
       ) : null}
-
       {!locked && !loading ? (
         <footer className="football-futures__footer">
           <p>Semifinalists/champions must also be inside the playoff field.</p>
           <button type="button" className="primary-action" disabled={saving} onClick={() => void save()}>{saving ? "SAVING…" : "SAVE FUTURES"}</button>
         </footer>
       ) : null}
-
       {locked && snapshot ? (
         <div className="football-futures__group">
           <header><span>GROUP FUTURES</span><strong>{snapshot.groupPicks.length} REVEALED</strong></header>
