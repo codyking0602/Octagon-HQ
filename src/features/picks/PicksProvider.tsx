@@ -8,6 +8,7 @@ import {
   type PropsWithChildren,
 } from "react";
 import { useIdentity } from "../identity/IdentityProvider";
+import type { FootballFuturesPicks, FootballFuturesState } from "./footballPicksScoring";
 import {
   emptyPickHistory,
   emptyPickSummary,
@@ -31,11 +32,13 @@ interface PicksContextValue {
   groupProgressLoading: boolean;
   savingBoutId: string | null;
   savingLock: boolean;
+  savingFutures: boolean;
   error: string;
   groupProgressError: string;
   event: PickEvent | null;
   selections: Record<string, string>;
   footballLocks: Record<string, boolean>;
+  footballFutures: FootballFuturesState | null;
   groupProgress: PickEventMemberProgress[];
   underdogLock: UnderdogLock | null;
   summary: PickSummary;
@@ -43,6 +46,7 @@ interface PicksContextValue {
   refresh: () => Promise<void>;
   setPick: (boutId: string, fighterSlug: string) => Promise<void>;
   setFootballLock: (boutId: string, isLock: boolean) => Promise<void>;
+  saveFootballFutures: (futures: FootballFuturesPicks) => Promise<void>;
   setUnderdogLock: (boutId: string, fighterSlug: string) => Promise<void>;
   clearUnderdogLock: () => Promise<void>;
 }
@@ -88,6 +92,7 @@ export function PicksProvider({
   const [event, setEvent] = useState<PickEvent | null>(null);
   const [selections, setSelections] = useState<Record<string, string>>({});
   const [footballLocks, setFootballLocks] = useState<Record<string, boolean>>({});
+  const [footballFutures, setFootballFutures] = useState<FootballFuturesState | null>(null);
   const [groupProgress, setGroupProgress] = useState<PickEventMemberProgress[]>([]);
   const [underdogLock, setUnderdogLockState] = useState<UnderdogLock | null>(null);
   const [summary, setSummary] = useState<PickSummary>(emptyPickSummary);
@@ -96,6 +101,7 @@ export function PicksProvider({
   const [groupProgressLoading, setGroupProgressLoading] = useState(false);
   const [savingBoutId, setSavingBoutId] = useState<string | null>(null);
   const [savingLock, setSavingLock] = useState(false);
+  const [savingFutures, setSavingFutures] = useState(false);
   const [error, setError] = useState("");
   const [groupProgressError, setGroupProgressError] = useState("");
 
@@ -115,6 +121,7 @@ export function PicksProvider({
       setEvent(null);
       setSelections({});
       setFootballLocks({});
+      setFootballFutures(null);
       setGroupProgress([]);
       setUnderdogLockState(null);
       setSummary(emptyPickSummary);
@@ -135,6 +142,7 @@ export function PicksProvider({
       if (!expectedProfileId) {
         setSelections({});
         setFootballLocks({});
+        setFootballFutures(null);
         setGroupProgress([]);
         setUnderdogLockState(null);
         setSummary(emptyPickSummary);
@@ -146,11 +154,14 @@ export function PicksProvider({
 
       const season = nextEvent?.season ?? new Date().getFullYear();
       setGroupProgressLoading(Boolean(nextEvent));
-      const [rows, nextLock, nextSummary, nextHistory, progressResult] = await Promise.all([
+      const [rows, nextLock, nextSummary, nextHistory, nextFutures, progressResult] = await Promise.all([
         nextEvent ? repository.loadMyPicks(nextEvent.eventId) : Promise.resolve([]),
         nextEvent ? repository.loadMyUnderdogLock(nextEvent.eventId) : Promise.resolve(null),
         repository.loadMySummary(season, sport),
         repository.loadMyHistory(season, sport),
+        sport === "football" && repository.loadFootballFutures
+          ? repository.loadFootballFutures(season)
+          : Promise.resolve(null),
         nextEvent
           ? loadPickGroupProgress(nextEvent.eventId)
               .then((value) => ({ value, error: "" }))
@@ -160,6 +171,7 @@ export function PicksProvider({
       if (revision !== revisionRef.current || profileIdRef.current !== expectedProfileId) return;
       setSelections(selectionsFromRows(rows));
       setFootballLocks(footballLocksFromRows(rows));
+      setFootballFutures(nextFutures);
       setGroupProgress(progressResult.value);
       setGroupProgressError(progressResult.error);
       setUnderdogLockState(nextLock);
@@ -180,6 +192,7 @@ export function PicksProvider({
   useEffect(() => {
     setSavingBoutId(null);
     setSavingLock(false);
+    setSavingFutures(false);
     void refresh();
   }, [refresh]);
 
@@ -300,6 +313,44 @@ export function PicksProvider({
     }
   }, [event, footballLocks, identity.openDialog, profileId, refresh, repository, selections]);
 
+  const saveFootballFutures = useCallback(async (nextFutures: FootballFuturesPicks) => {
+    const expectedProfileId = profileId;
+    if (!expectedProfileId) {
+      identity.openDialog();
+      return;
+    }
+    if (!repository?.saveFootballFutures || !event || event.sport !== "football") {
+      setError("Football Futures are not connected on this build.");
+      return;
+    }
+    if (footballFutures?.isLocked) {
+      setError("Football Futures are locked. Your saved picks are preserved.");
+      return;
+    }
+    setSavingFutures(true);
+    try {
+      const [saved, nextHistory] = await Promise.all([
+        repository.saveFootballFutures(event.season, nextFutures),
+        repository.loadMyHistory(event.season, sport),
+      ]);
+      if (profileIdRef.current !== expectedProfileId) return;
+      setFootballFutures(saved);
+      setHistory(nextHistory);
+      setError("");
+    } catch (nextError) {
+      if (profileIdRef.current !== expectedProfileId) return;
+      const message = readableError(nextError);
+      if (message.toLowerCase().includes("football futures are locked")) {
+        await refresh();
+        if (profileIdRef.current === expectedProfileId) setError("Football Futures just locked. Your saved picks were refreshed.");
+      } else {
+        setError(message);
+      }
+    } finally {
+      if (profileIdRef.current === expectedProfileId) setSavingFutures(false);
+    }
+  }, [event, footballFutures?.isLocked, identity.openDialog, profileId, refresh, repository, sport]);
+
   const setUnderdogLock = useCallback(async (boutId: string, fighterSlug: string) => {
     const expectedProfileId = profileId;
     if (!expectedProfileId) return identity.openDialog();
@@ -377,11 +428,13 @@ export function PicksProvider({
       groupProgressLoading,
       savingBoutId,
       savingLock,
+      savingFutures,
       error,
       groupProgressError,
       event,
       selections,
       footballLocks,
+      footballFutures,
       groupProgress,
       underdogLock,
       summary,
@@ -389,6 +442,7 @@ export function PicksProvider({
       refresh,
       setPick,
       setFootballLock,
+      saveFootballFutures,
       setUnderdogLock,
       clearUnderdogLock,
     }}>
