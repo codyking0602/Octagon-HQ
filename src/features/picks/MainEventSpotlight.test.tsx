@@ -29,6 +29,19 @@ const futureBout: PickBout = {
   winnerFighterSlug: null,
 };
 
+const daniilBout: PickBout = {
+  boutId: "main-daniil-donchenko-punahele-soriano",
+  position: 4,
+  weightClass: "Welterweight",
+  redFighterSlug: "daniil-donchenko",
+  redFighterName: "Daniil Donchenko",
+  blueFighterSlug: "punahele-soriano",
+  blueFighterName: "Punahele Soriano",
+  redAmericanOdds: -258,
+  blueAmericanOdds: 210,
+  winnerFighterSlug: null,
+};
+
 const generated: PickEventSpotlight = {
   boutId: futureBout.boutId,
   preview: "Future Red brings the higher striking volume while Future Blue answers with the stronger wrestling rate and takedown defense.",
@@ -64,7 +77,7 @@ describe("MainEventSpotlight", () => {
   it("keeps the legacy Gamrot-Salkilld breakdown when no generated package exists", () => {
     const { container } = render(<MainEventSpotlight bout={bout} />);
 
-    fireEvent.click(screen.getByRole("button", { name: /View matchup breakdown/i }));
+    fireEvent.click(screen.getByRole("button", { name: /View matchup & scouting/i }));
 
     const dialog = screen.getByRole("dialog", { name: "Mateusz Gamrot vs. Quillan Salkilld" });
     const modal = dialog.closest(".main-event-spotlight-modal");
@@ -94,5 +107,19 @@ describe("MainEventSpotlight", () => {
     expect(screen.getByText("3.2 takedowns per 15 min")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "RED SPOTLIGHT ↗" })).toHaveAttribute("href", "https://youtu.be/future-red");
     expect(screen.getByRole("link", { name: "BLUE SPOTLIGHT ↗" })).toHaveAttribute("href", "https://youtu.be/future-blue");
+  });
+
+  it("opens Daniil's canonical Shane scouting report even without a generated fight Spotlight", () => {
+    render(<MainEventSpotlight bout={daniilBout} />);
+
+    fireEvent.click(screen.getByRole("button", { name: /View Shane’s scouting report/i }));
+
+    expect(screen.getByRole("dialog", { name: "Daniil Donchenko scouting report" })).toBeInTheDocument();
+    expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #6").length).toBeGreaterThan(0);
+    expect(screen.getByText("Daniil Donchenko")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "VIEW SHANE’S SCOUTING PROFILE →" })).toHaveAttribute(
+      "href",
+      "/fighters-to-watch#daniil-donchenko",
+    );
   });
 });
