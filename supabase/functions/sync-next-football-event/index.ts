@@ -37,6 +37,19 @@ async function stageFootballEvents(admin: any, events: Json[]) {
   return draftId;
 }
 
+async function cacheFootballTeamAssets(admin: any, events: Json[]) {
+  const assets = events.flatMap((event) => {
+    const bout = event?.bouts?.[0] ?? {};
+    return [
+      { team_slug: bout.home_team_slug, team_name: bout.red_fighter_name, league: event.league, logo_url: bout.home_team_logo_url },
+      { team_slug: bout.away_team_slug, team_name: bout.blue_fighter_name, league: event.league, logo_url: bout.away_team_logo_url },
+    ];
+  }).filter((asset) => asset.team_slug && asset.team_name && /^https:\/\//.test(String(asset.logo_url ?? "")));
+  if (!assets.length) return;
+  const stored = await admin.rpc("upsert_football_team_assets", { p_assets: assets });
+  if (stored.error) throw stored.error;
+}
+
 Deno.serve(async (request) => {
   if (request.method === "OPTIONS") return new Response(null, { headers });
   if (request.method !== "POST") return json({ error: "method not allowed" }, 405);
@@ -104,6 +117,7 @@ Deno.serve(async (request) => {
         }, 409);
       }
 
+      await cacheFootballTeamAssets(admin, normalization.events);
       const draftId = await stageFootballEvents(admin, normalization.events);
       return json({ draftId, staged_game_count: normalization.events.length, ...weekPreview });
     }
@@ -134,6 +148,7 @@ Deno.serve(async (request) => {
     const oddsEvents = await fetchSpreadEvents(oddsSport);
     const event = normalizeFootballEvent(summary.header, oddsEvents, league);
     if (mode === "preview") return json({ event_preview: event });
+    await cacheFootballTeamAssets(admin, [event]);
     const draftId = await stageFootballEvents(admin, [event]);
     return json({ draftId, event_preview: event });
   } catch (error) {

@@ -54,16 +54,41 @@ describe("Picks current-event compatibility", () => {
     expect(event?.bouts[0]?.oddsUpdatedAt).toBeNull();
   });
 
-  it("defaults omitted result, reveal, control, and header fields safely", () => {
+  it("defaults omitted result, reveal, control, header, and Football asset fields safely", () => {
     const event = mapPickEvent(eventPayload);
 
     expect(event?.bouts[0]?.resultStatus).toBe("pending");
     expect(event?.bouts[0]?.resultRecordedAt).toBeNull();
     expect(event?.bouts[0]?.groupPicks).toEqual([]);
+    expect(event?.bouts[0]?.homeTeamLogoUrl).toBeNull();
+    expect(event?.bouts[0]?.awayTeamLogoUrl).toBeNull();
     expect(event?.canControl).toBe(false);
     expect(event?.headerStoragePath).toBeNull();
     expect(event?.headerNaturalWidth).toBeNull();
     expect(event?.headerNaturalHeight).toBeNull();
+  });
+
+  it("maps Football team logos from the existing current-event payload without another query path", () => {
+    const event = mapPickEvent({
+      ...eventPayload,
+      sport: "football",
+      league: "nfl",
+      event_kind: "slate",
+      bouts: [{
+        ...eventPayload.bouts[0],
+        home_team_slug: "dallas-cowboys",
+        away_team_slug: "new-york-giants",
+        home_team_logo_url: "https://a.espncdn.com/i/teamlogos/nfl/500/dal.png",
+        away_team_logo_url: "https://a.espncdn.com/i/teamlogos/nfl/500/nyg.png",
+      }],
+    });
+
+    expect(event?.bouts[0]).toMatchObject({
+      homeTeamSlug: "dallas-cowboys",
+      awayTeamSlug: "new-york-giants",
+      homeTeamLogoUrl: "https://a.espncdn.com/i/teamlogos/nfl/500/dal.png",
+      awayTeamLogoUrl: "https://a.espncdn.com/i/teamlogos/nfl/500/nyg.png",
+    });
   });
 
   it("accepts a persisted rookie spotlight with no statistical matchup edges", () => {

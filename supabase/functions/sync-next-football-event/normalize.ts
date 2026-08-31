@@ -2,6 +2,7 @@ export interface FootballTeam {
   id: string;
   name: string;
   abbreviation: string;
+  logoUrl: string;
   homeAway: "home" | "away";
 }
 
@@ -31,6 +32,8 @@ export interface NormalizedFootballEvent {
     kickoff_at: string;
     home_team_slug: string;
     away_team_slug: string;
+    home_team_logo_url: string;
+    away_team_logo_url: string;
     spread_home: number;
     spread_source: "the-odds-api";
     spread_updated_at: string;
@@ -84,11 +87,22 @@ function slug(value: string) {
     .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 }
 
+function teamLogo(team: Json) {
+  const value = String(team?.logo ?? team?.logos?.[0]?.href ?? "").trim();
+  return /^https:\/\//.test(value) ? value : "";
+}
+
 function teamOf(competitor: Json): FootballTeam {
   const team = competitor?.team ?? {};
   const name = String(team.displayName ?? team.shortDisplayName ?? "").trim();
   if (!name || !["home", "away"].includes(competitor?.homeAway)) throw new Error("ESPN game has invalid teams");
-  return { id: String(team.id ?? ""), name, abbreviation: String(team.abbreviation ?? ""), homeAway: competitor.homeAway };
+  return {
+    id: String(team.id ?? ""),
+    name,
+    abbreviation: String(team.abbreviation ?? ""),
+    logoUrl: teamLogo(team),
+    homeAway: competitor.homeAway,
+  };
 }
 
 function gameContext(espnEvent: Json) {
@@ -192,7 +206,9 @@ export function normalizeFootballEvent(espnEvent: Json, oddsEvents: Json[], leag
       red_fighter_slug: slug(home.name), red_fighter_name: home.name,
       blue_fighter_slug: slug(away.name), blue_fighter_name: away.name,
       kickoff_at: kickoffAt,
-      home_team_slug: slug(home.name), away_team_slug: slug(away.name), spread_home: homeLine,
+      home_team_slug: slug(home.name), away_team_slug: slug(away.name),
+      home_team_logo_url: home.logoUrl, away_team_logo_url: away.logoUrl,
+      spread_home: homeLine,
       spread_source: "the-odds-api", spread_updated_at: new Date(usable.updated).toISOString(),
       card_segment: "main", segment_sequence: 1, included: true,
     }],

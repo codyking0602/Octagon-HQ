@@ -11,8 +11,10 @@ function espnGame({
   kickoff = "2026-09-12T19:30:00.000Z",
   home = "UTSA Roadrunners",
   homeAbbreviation = "UTSA",
+  homeLogo = "https://a.espncdn.com/i/teamlogos/ncaa/500/2636.png",
   away = "Texas Longhorns",
   awayAbbreviation = "TEX",
+  awayLogo = "https://a.espncdn.com/i/teamlogos/ncaa/500/251.png",
 } = {}) {
   return {
     id,
@@ -22,8 +24,8 @@ function espnGame({
       date: kickoff,
       venue: { fullName: "Test Stadium", address: { city: "Test", state: "TX" } },
       competitors: [
-        { homeAway: "home", team: { displayName: home, abbreviation: homeAbbreviation } },
-        { homeAway: "away", team: { displayName: away, abbreviation: awayAbbreviation } },
+        { homeAway: "home", team: { displayName: home, abbreviation: homeAbbreviation, logo: homeLogo } },
+        { homeAway: "away", team: { displayName: away, abbreviation: awayAbbreviation, logo: awayLogo } },
       ],
     }],
   };
@@ -69,6 +71,13 @@ describe("Football ATS provider matching", () => {
     expect(normalized.bouts[0].home_team_slug).toBe("utsa-roadrunners");
     expect(normalized.bouts[0].spread_home).toBe(-4.5);
     expect(normalized.bouts[0].spread_source).toBe("the-odds-api");
+  });
+
+  it("carries ESPN team logos as presentation assets on the normalized canonical game", () => {
+    const normalized = normalizeFootballEvent(espnGame(), [oddsGame()], "college-football");
+
+    expect(normalized.bouts[0].home_team_logo_url).toBe("https://a.espncdn.com/i/teamlogos/ncaa/500/2636.png");
+    expect(normalized.bouts[0].away_team_logo_url).toBe("https://a.espncdn.com/i/teamlogos/ncaa/500/251.png");
   });
 
   it("does not guess when more than one same-kickoff event shares the one exact team", () => {
@@ -131,13 +140,15 @@ describe("Football ATS provider matching", () => {
     );
   });
 
-  it("keeps weekly staging behind the complete ATS readiness check", () => {
+  it("keeps weekly staging behind ATS readiness and ESPN asset caching", () => {
     const source = readFileSync("supabase/functions/sync-next-football-event/index.ts", "utf8");
     const readinessCheck = source.indexOf("if (normalization.unavailable.length)");
+    const assetWrite = source.indexOf("cacheFootballTeamAssets(admin, normalization.events)");
     const stageWrite = source.indexOf("stageFootballEvents(admin, normalization.events)");
 
     expect(readinessCheck).toBeGreaterThanOrEqual(0);
-    expect(stageWrite).toBeGreaterThan(readinessCheck);
+    expect(assetWrite).toBeGreaterThan(readinessCheck);
+    expect(stageWrite).toBeGreaterThan(assetWrite);
     expect(source).toContain("unavailable_game_count: normalization.unavailable.length");
     expect(source).toContain("}, 409);");
   });

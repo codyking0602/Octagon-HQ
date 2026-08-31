@@ -24,22 +24,25 @@ describe("Picks group progress presentation", () => {
     expect(component).toContain("aria-expanded={isSelected}");
   });
 
-  it("reveals only server-locked fights while later fights stay private", () => {
+  it("reveals only server-locked picks while later games or fights stay private", () => {
     expect(component).toContain("if (!selected) return []");
     expect(component).toContain('const masterLocked = event.status !== "upcoming"');
+    expect(component).toContain('const isFootball = event.sport === "football"');
+    expect(component).toContain('const unit = isFootball ? "game" : "fight"');
     expect(component).toContain('.filter(({ bout }) => masterLocked || bout.isLocked === true)');
     expect(component).toContain("PICKS HIDDEN");
-    expect(component).toContain("Individual picks reveal as each fight locks.");
+    expect(component).toContain("Individual picks reveal as each {unit} locks.");
     expect(component).toContain("hiddenFightCount");
-    expect(component).toContain("Those picks reveal when each fight locks.");
-    expect(component).toContain('{!masterLocked && member.hasUnderdogLock ? <b>UNDERDOG LOCK SET</b> : null}');
+    expect(component).toContain("Those picks reveal when each {unit} locks.");
+    expect(component).toContain('{!isFootball && !masterLocked && member.hasUnderdogLock ? <b>UNDERDOG LOCK SET</b> : null}');
   });
 
-  it("renders reusable revealed comparison rows and marks the exact lock target", () => {
+  it("renders reusable revealed comparison rows and keeps UFC underdog-lock marking out of Football", () => {
     expect(component).toContain('bout.includedInPicks !== false && (bout.resultStatus ?? "pending") !== "cancelled"');
     expect(component).toContain(".sort((left, right) => left.position - right.position)");
     expect(component).toContain("fight: `${bout.redFighterName} vs ${bout.blueFighterName}`");
     expect(component).toContain("same: memberPick === myPick");
+    expect(component).toContain("isUnderdogLock: !isFootball");
     expect(component).toContain("selected.underdogLockBoutId === bout.boutId");
     expect(component).toContain("selected.underdogLockFighterSlug === memberPick");
     expect(component).toContain("★ UNDERDOG LOCK");

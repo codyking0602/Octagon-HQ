@@ -18,9 +18,12 @@ const event = {
   startsAt: "2099-09-03T16:00:00Z", locksAt: "2099-09-03T16:00:00Z", season: 2099, status: "upcoming" as const,
   bouts: [{
     boutId: "texas-ohio-state", locksAt: "2099-09-03T16:00:00Z", isLocked: false, position: 1,
-    weightClass: "CFB ATS", redFighterSlug: "texas", redFighterName: "Texas Longhorns",
+    weightClass: "COLLEGE-FOOTBALL ATS", redFighterSlug: "texas", redFighterName: "Texas Longhorns",
     blueFighterSlug: "ohio-state", blueFighterName: "Ohio State Buckeyes", homeTeamSlug: "texas",
-    awayTeamSlug: "ohio-state", frozenSpreadHome: -3.5, spreadSource: "the-odds-api", spreadFrozenAt: "2099-09-01T12:00:00Z",
+    awayTeamSlug: "ohio-state",
+    homeTeamLogoUrl: "https://a.espncdn.com/i/teamlogos/ncaa/500/251.png",
+    awayTeamLogoUrl: "https://a.espncdn.com/i/teamlogos/ncaa/500/194.png",
+    frozenSpreadHome: -3.5, spreadSource: "the-odds-api", spreadFrozenAt: "2099-09-01T12:00:00Z",
     redAmericanOdds: null, blueAmericanOdds: null, winnerFighterSlug: null, resultStatus: "pending" as const,
   }],
 };
@@ -42,12 +45,30 @@ describe("FootballPicksPage", () => {
     vi.mocked(usePicks).mockReturnValue(runtime() as never);
   });
 
-  it("renders canonical shared Pick bouts as chronological ATS game choices", () => {
-    render(<FootballPicksPage />);
+  it("renders a compact left-right matchup with canonical logos and one frozen ATS line", () => {
+    const { container } = render(<FootballPicksPage />);
     expect(screen.getByRole("heading", { name: "Football Week 1" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Ohio State Buckeyes/ })).toHaveTextContent("+3.5");
-    expect(screen.getByRole("button", { name: /Texas Longhorns/ })).toHaveTextContent("-3.5");
+    expect(screen.getByRole("button", { name: "Ohio State Buckeyes AWAY" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Texas Longhorns HOME" })).toBeInTheDocument();
+    expect(screen.getByText("CFB")).toBeInTheDocument();
+    expect(screen.getByText("HOME -3.5")).toBeInTheDocument();
+    expect(screen.queryByText("+3.5")).not.toBeInTheDocument();
+    expect(Array.from(container.querySelectorAll<HTMLImageElement>(".football-pick-team-mark img")).map((image) => image.src)).toEqual([
+      "https://a.espncdn.com/i/teamlogos/ncaa/500/194.png",
+      "https://a.espncdn.com/i/teamlogos/ncaa/500/251.png",
+    ]);
     expect(screen.getByText("Who has picked")).toBeInTheDocument();
+  });
+
+  it("keeps the scoring rubric collapsed with the canonical Football grading rules", () => {
+    render(<FootballPicksPage />);
+    const details = screen.getByText("SCORING & GRADING").closest("details");
+
+    expect(details).not.toHaveAttribute("open");
+    expect(details).toHaveTextContent("ATS win 1 point");
+    expect(details).toHaveTextContent("Lock win 3 points total");
+    expect(details).toHaveTextContent("Push 0.5");
+    expect(details).toHaveTextContent("lowest-scoring week is dropped");
   });
 
   it("gives the Picks owner a direct manage-event path for this published Football slate", () => {
@@ -62,7 +83,7 @@ describe("FootballPicksPage", () => {
 
   it("saves team selections through the shared Picks setPick path", () => {
     render(<FootballPicksPage />);
-    fireEvent.click(screen.getByRole("button", { name: /Texas Longhorns/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Texas Longhorns HOME" }));
     expect(setPick).toHaveBeenCalledWith("texas-ohio-state", "texas");
   });
 
@@ -70,7 +91,7 @@ describe("FootballPicksPage", () => {
     const lockedEvent = { ...event, bouts: [{ ...event.bouts[0], isLocked: true }] };
     vi.mocked(usePicks).mockReturnValue(runtime({ event: lockedEvent, selections: { "texas-ohio-state": "texas" } }) as never);
     render(<FootballPicksPage />);
-    const selected = screen.getByRole("button", { name: /Texas Longhorns/ });
+    const selected = screen.getByRole("button", { name: "Texas Longhorns HOME" });
     expect(selected).toHaveAttribute("aria-pressed", "true");
     expect(selected).toBeDisabled();
     fireEvent.click(selected);
