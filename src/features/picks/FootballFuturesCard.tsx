@@ -16,11 +16,15 @@ import {
 } from "./footballFuturesRepository";
 
 function splitList(value: string) {
-  return value.split(",").map((item) => item.trim()).filter(Boolean);
+  return value.split(",").map((item) => item.trimStart());
 }
 
 function listValue(value: readonly string[]) {
   return value.join(", ");
+}
+
+function selectedCount(value: readonly string[]) {
+  return value.filter((item) => item.trim()).length;
 }
 
 function lockLabel(value: string) {
@@ -34,7 +38,7 @@ function FuturesListField({ label, points, limit, value, disabled, onChange }: {
 }) {
   return (
     <label className="football-futures-field">
-      <span><b>{label}</b><small>{points} · {value.length}/{limit}</small></span>
+      <span><b>{label}</b><small>{points} · {selectedCount(value)}/{limit}</small></span>
       <input type="text" value={listValue(value)} disabled={disabled} placeholder="Team, Team, Team" onChange={(event) => onChange(splitList(event.target.value))} />
     </label>
   );
@@ -112,7 +116,7 @@ export function FootballFuturesCard({ onLockedChange }: { onLockedChange?: (lock
     } finally { setSaving(false); }
   }
 
-  const update = <K extends keyof FootballFuturesPicks>(key: K, value: FootballFuturesPicks[K]) => {
+  const update = <K extends keyof FootballFuturesPicks,>(key: K, value: FootballFuturesPicks[K]) => {
     setDraft((current) => ({ ...current, [key]: value }));
   };
 
