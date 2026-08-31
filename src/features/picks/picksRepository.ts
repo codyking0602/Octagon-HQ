@@ -118,8 +118,8 @@ export interface PicksRepository {
   loadMyUnderdogLock: (eventId: string) => Promise<UnderdogLock | null>;
   loadMySummary: (season: number, sport?: PickSport) => Promise<PickSummary>;
   loadMyHistory: (season: number | null, sport?: PickSport) => Promise<PickHistory>;
-  loadFootballFutures: (season: number) => Promise<FootballFuturesSnapshot>;
-  saveFootballFutures: (season: number, picks: FootballFuturesPicks) => Promise<FootballFuturesSnapshot>;
+  loadFootballFutures?: (season: number) => Promise<FootballFuturesSnapshot>;
+  saveFootballFutures?: (season: number, picks: FootballFuturesPicks) => Promise<FootballFuturesSnapshot>;
   savePick: (eventId: string, boutId: string, fighterSlug: string, isLock?: boolean) => Promise<ProfileEventPick>;
   setUnderdogLock: (eventId: string, boutId: string, fighterSlug: string) => Promise<UnderdogLock>;
   clearUnderdogLock: (eventId: string) => Promise<void>;
