@@ -1,10 +1,24 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   pickSetupBoutSection,
   pickSetupBoutSectionLabel,
   pickSetupDraftCardLabel,
 } from "./pickSetupModel";
+
+const supabaseMocks = vi.hoisted(() => ({
+  rpc: vi.fn(),
+  invoke: vi.fn(),
+}));
+
+vi.mock("../../lib/supabase", () => ({
+  getSupabaseClient: () => ({
+    rpc: supabaseMocks.rpc,
+    functions: { invoke: supabaseMocks.invoke },
+  }),
+}));
+
 import {
+  createPickSetupRepository,
   mapBuiltPickSetupSpotlight,
   mapPickSetupDraft,
   mapPickSetupSourcePreview,
@@ -104,6 +118,11 @@ const rookieBuiltSpotlight = {
   source: "UFCStats" as const,
   generatedAt: "2026-08-24T16:41:40.000Z",
 };
+
+beforeEach(() => {
+  supabaseMocks.rpc.mockReset();
+  supabaseMocks.invoke.mockReset();
+});
 
 describe("Event Setup draft mapping", () => {
   it("maps private staged metadata and section-aware fight review fields", () => {
@@ -285,6 +304,18 @@ describe("Event Setup draft mapping", () => {
 describe("Event Setup Spotlight build parsing", () => {
   it("accepts the successful rookie Spotlight response without inventing matchup edges", () => {
     expect(mapBuiltPickSetupSpotlight(rookieBuiltSpotlight)).toEqual(rookieBuiltSpotlight);
+  });
+});
+
+describe("Event Setup repository RPC ownership", () => {
+  it("resets the current Football test slate through the single canonical RPC", async () => {
+    supabaseMocks.rpc.mockResolvedValue({ data: { deleted: true }, error: null });
+    const repository = createPickSetupRepository();
+
+    await repository?.resetCurrentFootballSlate?.();
+
+    expect(supabaseMocks.rpc).toHaveBeenCalledTimes(1);
+    expect(supabaseMocks.rpc).toHaveBeenCalledWith("reset_current_football_pick_event");
   });
 });
 

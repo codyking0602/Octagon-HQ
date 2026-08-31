@@ -77,6 +77,7 @@ function repository(
     updateMetadata: vi.fn().mockResolvedValue(undefined), saveBout: vi.fn().mockResolvedValue(undefined),
     removeBout: vi.fn().mockResolvedValue(undefined), reorderBouts: vi.fn().mockResolvedValue(undefined),
     publishDraft: vi.fn().mockResolvedValue(undefined), discardDraft: vi.fn().mockResolvedValue(undefined),
+    resetCurrentFootballSlate: vi.fn().mockResolvedValue(undefined),
   };
 }
 
@@ -152,5 +153,28 @@ describe("Football weekly slate owner setup", () => {
     fireEvent.click(await screen.findByRole("button", { name: "PUBLISH FOOTBALL SLATE" }));
     await waitFor(() => expect(repo.publishDraft).toHaveBeenCalledWith("football-draft"));
     expect(window.confirm).toHaveBeenCalledWith("Publish this reviewed Football slate? ATS spreads freeze at publication.");
+  });
+
+  it("offers an explicit destructive reset only when the current Football slate has picks", async () => {
+    const blockedDraft: PickSetupDraft = {
+      ...footballDraft,
+      canPublish: false,
+      warnings: ["THE CURRENT FOOTBALL SLATE ALREADY HAS PICKS"],
+    };
+    const loadDraft = vi.fn().mockResolvedValueOnce(blockedDraft).mockResolvedValue(footballDraft);
+    const repo = repository(loadDraft);
+    renderPage(repo);
+
+    const reset = await screen.findByRole("button", { name: "DELETE CURRENT TEST SLATE" });
+    expect(screen.getByRole("button", { name: "PUBLISH FOOTBALL SLATE" })).toBeDisabled();
+    fireEvent.click(reset);
+
+    await waitFor(() => expect(repo.resetCurrentFootballSlate).toHaveBeenCalledTimes(1));
+    expect(window.confirm).toHaveBeenCalledWith(
+      "Permanently delete the current Football slate and all picks on it? The staged Football slate will remain.",
+    );
+    await waitFor(() => expect(loadDraft).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(screen.queryByRole("button", { name: "DELETE CURRENT TEST SLATE" })).not.toBeInTheDocument());
+    expect(screen.getByRole("button", { name: "PUBLISH FOOTBALL SLATE" })).toBeEnabled();
   });
 });
