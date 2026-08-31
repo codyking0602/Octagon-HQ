@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useIdentity } from "../identity/IdentityProvider";
@@ -48,6 +48,7 @@ describe("FootballPicksPage", () => {
   it("keeps event artwork free of overlay copy and shows the ATS source outside the header", () => {
     const { container } = render(<FootballPicksPage />);
     const hero = screen.getByLabelText("Football Week 1 event artwork");
+    const slate = screen.getByLabelText("Football Week 1 football games");
 
     expect(hero).toHaveTextContent("");
     expect(screen.queryByText("FOOTBALL PICKS · WEEKLY ATS")).not.toBeInTheDocument();
@@ -56,7 +57,7 @@ describe("FootballPicksPage", () => {
     expect(screen.getByRole("heading", { name: "Pick every game against the spread (ATS)" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Ohio State Buckeyes AWAY" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Texas Longhorns HOME" })).toBeInTheDocument();
-    expect(screen.getByText("CFB")).toBeInTheDocument();
+    expect(within(slate).getByText("CFB")).toBeInTheDocument();
     expect(screen.getByText("Texas Longhorns -3.5")).toBeInTheDocument();
     expect(screen.queryByText("HOME -3.5")).not.toBeInTheDocument();
     expect(Array.from(container.querySelectorAll<HTMLImageElement>(".football-pick-team-mark img")).map((image) => image.src)).toEqual([
