@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { FootballFuturesCard } from "./FootballFuturesCard";
 import { footballLockAllowance } from "./footballPicksScoring";
+import { footballDateTimeLabel } from "./footballTime";
 import { GroupPickProgress } from "./GroupPickProgress";
 import { GroupPickReveal } from "./GroupPickReveal";
 import { pickBoutLocked, pickProgress, type PickBout } from "./picksModel";
@@ -11,18 +12,6 @@ import { pickEventPosters } from "./picksEventAssets";
 
 function atsPercent(wins: number, losses: number) {
   return wins + losses ? `${(wins / (wins + losses) * 100).toFixed(1)}%` : "—";
-}
-
-function kickoffLabel(value: string) {
-  return new Intl.DateTimeFormat(undefined, {
-    weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit",
-  }).format(new Date(value));
-}
-
-function lineFrozenLabel(value: string) {
-  return new Intl.DateTimeFormat(undefined, {
-    month: "short", day: "numeric", hour: "numeric", minute: "2-digit",
-  }).format(new Date(value));
 }
 
 function gameLineLabel(bout: PickBout) {
@@ -154,14 +143,14 @@ export default function FootballPicksPage() {
           </details>
 
           <p className="football-picks-provenance">
-            ATS ODDS · {spreadProvider}{spreadFrozenAt ? ` · FROZEN ${lineFrozenLabel(spreadFrozenAt)}` : ""}
+            ATS ODDS · {spreadProvider}{spreadFrozenAt ? ` · FROZEN ${footballDateTimeLabel(spreadFrozenAt, false)}` : ""}
           </p>
 
           {identity.profile && !futuresLocked ? <FootballFuturesCard /> : null}
 
           {identity.profile ? (
             <section className="football-picks-slate" aria-label={`${event.name} football games`}>
-              <header><p className="eyebrow">WEEKLY SLATE</p><h2>Pick every game against the spread (ATS)</h2></header>
+              <header><p className="eyebrow">WEEKLY SLATE · ALL TIMES CT</p><h2>Pick every game against the spread (ATS)</h2></header>
               {games.map((game) => {
                 const selected = picks.selections[game.boutId] ?? null;
                 const isLock = picks.footballLocks[game.boutId] === true;
@@ -202,7 +191,7 @@ export default function FootballPicksPage() {
                       </div>
                     </div>
                     <footer>
-                      <span>{locked ? "KICKED OFF · PICK LOCKED" : kickoffLabel(kickoff)}</span>
+                      <span>{locked ? "KICKED OFF · PICK LOCKED" : footballDateTimeLabel(kickoff)}</span>
                       {lockAllowance > 0 && !cancelled ? (
                         <button
                           type="button"
