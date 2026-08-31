@@ -117,8 +117,8 @@ Deno.serve(async (request) => {
         }, 409);
       }
 
-      const draftId = await stageFootballEvents(admin, normalization.events);
       await cacheFootballTeamAssets(admin, normalization.events);
+      const draftId = await stageFootballEvents(admin, normalization.events);
       return json({ draftId, staged_game_count: normalization.events.length, ...weekPreview });
     }
 
@@ -148,8 +148,8 @@ Deno.serve(async (request) => {
     const oddsEvents = await fetchSpreadEvents(oddsSport);
     const event = normalizeFootballEvent(summary.header, oddsEvents, league);
     if (mode === "preview") return json({ event_preview: event });
-    const draftId = await stageFootballEvents(admin, [event]);
     await cacheFootballTeamAssets(admin, [event]);
+    const draftId = await stageFootballEvents(admin, [event]);
     return json({ draftId, event_preview: event });
   } catch (error) {
     return json({ error: error instanceof Error ? error.message : "football sync failed" }, 502);
