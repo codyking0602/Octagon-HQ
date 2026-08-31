@@ -18,12 +18,23 @@ function kickoffLabel(value: string) {
   }).format(new Date(value));
 }
 
+function lineFrozenLabel(value: string) {
+  return new Intl.DateTimeFormat(undefined, {
+    month: "short", day: "numeric", hour: "numeric", minute: "2-digit",
+  }).format(new Date(value));
+}
+
 function gameLineLabel(bout: PickBout) {
   const spread = bout.frozenSpreadHome;
   if (spread == null) return "LINE TBD";
   if (spread === 0) return "PICK’EM";
   const favorite = spread < 0 ? bout.redFighterName : bout.blueFighterName;
   return `${favorite} -${Math.abs(spread)}`;
+}
+
+function spreadSourceLabel(value: string) {
+  if (value.toLowerCase() === "the-odds-api") return "THE ODDS API";
+  return value.replace(/[-_]+/g, " ").toUpperCase();
 }
 
 function leagueLabel(weightClass: string) {
@@ -61,6 +72,17 @@ export default function FootballPicksPage() {
   const posters = useMemo(() => pickEventPosters(event), [event]);
   const poster = posters[0] ?? null;
   const [activePosterIndex, setActivePosterIndex] = useState(0);
+  const spreadSources = Array.from(new Set(games
+    .map((game) => game.spreadSource?.trim())
+    .filter((source): source is string => Boolean(source))));
+  const spreadProvider = spreadSources.length === 1
+    ? spreadSourceLabel(spreadSources[0])
+    : spreadSources.length > 1 ? "MULTIPLE SOURCES" : "SOURCE TBD";
+  const spreadFrozenAt = games.reduce<string | null>((latest, game) => {
+    const value = game.spreadFrozenAt;
+    if (!value || !Number.isFinite(Date.parse(value))) return latest;
+    return !latest || Date.parse(value) > Date.parse(latest) ? value : latest;
+  }, null);
 
   useEffect(() => {
     setActivePosterIndex(0);
@@ -92,37 +114,32 @@ export default function FootballPicksPage() {
 
       {event ? (
         <>
-          <section className={`football-picks-hero${poster ? " has-poster" : ""}`} aria-labelledby="football-week-title">
+          <section className={`football-picks-hero${poster ? " has-poster" : ""}`} aria-label={`${event.name} event artwork`}>
             {posters.map((image, index) => (
               <div
                 key={image.src}
                 className={`football-picks-hero__image${index === activePosterIndex ? " is-active" : ""}`}
-                style={{ backgroundImage: `linear-gradient(0deg, #090b0c 3%, transparent 70%), url("${image.src}")` }}
+                style={{ backgroundImage: `url("${image.src}")` }}
                 aria-hidden="true"
               />
             ))}
-            <div className="football-picks-hero__content">
-              <p className="eyebrow">FOOTBALL PICKS · WEEKLY ATS</p>
-              <h1 id="football-week-title">{event.name}</h1>
-              <p>{event.subtitle}</p>
-              <div className="football-picks-hero__meta">
-                <span>{games.length} GAMES</span><span>NFL + CFB</span><span>LINES FROZEN</span>
-              </div>
-              {event.canControl ? (
-                <Link
-                  className="picks-control-entry"
-                  to={`/picks/control?sport=football&event=${encodeURIComponent(event.eventId)}#header`}
-                >
-                  <span aria-hidden="true">⚙</span> MANAGE EVENT
-                </Link>
-              ) : null}
-            </div>
           </section>
+
+          {event.canControl ? (
+            <div className="football-picks-owner-tools">
+              <Link
+                className="picks-control-entry"
+                to={`/picks/control?sport=football&event=${encodeURIComponent(event.eventId)}#header`}
+              >
+                <span aria-hidden="true">⚙</span> MANAGE EVENT / HEADERS
+              </Link>
+            </div>
+          ) : null}
 
           <section className="surface-card football-picks-progress" aria-label={`${progress.completed} of ${progress.total} picks completed`}>
             <div><span>YOUR WEEK</span><strong>{progress.completed} / {progress.total} PICKED{lockAllowance ? ` · LOCKS ${usedLocks} / ${lockAllowance}` : ""}</strong></div>
             <div className="football-picks-progress__track" aria-hidden="true"><span style={{ width: `${percentage}%` }} /></div>
-            <p>{identity.profile ? "Picks save automatically. Each game closes at kickoff." : "Sign in to make your weekly picks."}</p>
+            {!identity.profile ? <p>Sign in to make your weekly picks.</p> : null}
             {!identity.profile ? <button type="button" className="primary-action" onClick={identity.openDialog}>SIGN IN TO PICK</button> : null}
           </section>
 
@@ -133,6 +150,10 @@ export default function FootballPicksPage() {
               <p>Lines are frozen when the slate is published and every result grades against that frozen line. {lockAllowance ? `This slate allows ${lockAllowance} Locks.` : "Locks unlock on larger slates."} Your lowest-scoring week is dropped from the championship total.</p>
             </div>
           </details>
+
+          <p className="football-picks-provenance">
+            ATS ODDS · {spreadProvider}{spreadFrozenAt ? ` · FROZEN ${lineFrozenLabel(spreadFrozenAt)}` : ""}
+          </p>
 
           {identity.profile ? (
             <section className="football-picks-slate" aria-label={`${event.name} football games`}>
