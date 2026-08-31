@@ -31,9 +31,11 @@ export interface PickBout {
   redFighterName: string;
   blueFighterSlug: string;
   blueFighterName: string;
-  /** Football-only canonical home/away identity and frozen ATS line. */
+  /** Football-only canonical home/away identity, ESPN presentation assets, and frozen ATS line. */
   homeTeamSlug?: string | null;
   awayTeamSlug?: string | null;
+  homeTeamLogoUrl?: string | null;
+  awayTeamLogoUrl?: string | null;
   frozenSpreadHome?: number | null;
   spreadSource?: string | null;
   spreadFrozenAt?: string | null;
