@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { FootballFuturesCard } from "./FootballFuturesCard";
-import { footballLockAllowance } from "./footballPicksScoring";
+import { FOOTBALL_FUTURES_MAX_POINTS, FOOTBALL_FUTURES_RULES, footballLockAllowance } from "./footballPicksScoring";
 import { footballDateTimeLabel } from "./footballTime";
 import { GroupPickProgress } from "./GroupPickProgress";
 import { GroupPickReveal } from "./GroupPickReveal";
@@ -139,6 +139,10 @@ export default function FootballPicksPage() {
             <div>
               <p><b>ATS win</b> 1 point · <b>Lock win</b> 3 points total · <b>Push</b> 0.5 · <b>Loss</b> 0.</p>
               <p>Lines are frozen when the slate is published and every result grades against that frozen line. {lockAllowance ? `This slate allows ${lockAllowance} Locks.` : "Locks unlock on larger slates."} Your lowest-scoring week is dropped from the championship total.</p>
+              <p><b>Season Futures</b> {FOOTBALL_FUTURES_MAX_POINTS.total} points total · CFB {FOOTBALL_FUTURES_MAX_POINTS.cfb} · NFL {FOOTBALL_FUTURES_MAX_POINTS.nfl}.</p>
+              <p><b>CFB:</b> Power 4 champions {FOOTBALL_FUTURES_RULES.cfb.power4Champions.pointsEach} each · CFP teams {FOOTBALL_FUTURES_RULES.cfb.playoffTeams.pointsEach} each · semifinalists {FOOTBALL_FUTURES_RULES.cfb.semifinalists.pointsEach} each · Heisman {FOOTBALL_FUTURES_RULES.cfb.heisman.pointsEach} · national champion {FOOTBALL_FUTURES_RULES.cfb.nationalChampion.pointsEach}.</p>
+              <p><b>NFL:</b> division champions {FOOTBALL_FUTURES_RULES.nfl.divisionChampions.pointsEach} each · playoff teams {FOOTBALL_FUTURES_RULES.nfl.playoffTeams.pointsEach} each · conference title teams {FOOTBALL_FUTURES_RULES.nfl.conferenceChampionshipTeams.pointsEach} each · MVP {FOOTBALL_FUTURES_RULES.nfl.mvp.pointsEach} · Super Bowl champion {FOOTBALL_FUTURES_RULES.nfl.superBowlChampion.pointsEach}.</p>
+              <p>Futures stay private until the listed lock time. Champions must also appear in the playoff rounds you picked.</p>
             </div>
           </details>
 
