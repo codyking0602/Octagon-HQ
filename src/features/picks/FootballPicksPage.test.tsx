@@ -53,6 +53,7 @@ describe("FootballPicksPage", () => {
     expect(screen.queryByText("FOOTBALL PICKS · WEEKLY ATS")).not.toBeInTheDocument();
     expect(screen.queryByText("Opening weekend")).not.toBeInTheDocument();
     expect(screen.getByText(/ATS ODDS · THE ODDS API · FROZEN/)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Pick every game against the spread (ATS)" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Ohio State Buckeyes AWAY" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Texas Longhorns HOME" })).toBeInTheDocument();
     expect(screen.getByText("CFB")).toBeInTheDocument();
