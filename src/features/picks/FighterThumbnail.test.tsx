@@ -63,6 +63,35 @@ describe("fighterThumbnailPath", () => {
         .toBe(`/assets/fighters/${slug}-thumb.webp`);
     }
   });
+
+  it("resolves the missing UFC Paris portraits from the canonical thumbnail owner", () => {
+    const slugs = [
+      "salahdine-parnasse",
+      "fares-ziam",
+      "michael-venom-page",
+      "nursulton-ruziboev",
+      "punahele-soriano",
+      "morgan-charriere",
+      "felipe-lima",
+      "losene-keita",
+      "muhammad-naimov",
+    ];
+
+    for (const slug of slugs) {
+      expect(fighterThumbnailPath(slug)).toMatch(
+        /^https:\/\/a\.espncdn\.com\/i\/headshots\/mma\/players\/full\/\d+\.png$/,
+      );
+    }
+  });
+
+  it("uses full-resolution portraits for both Hooker-Parnasse Spotlight fighters", () => {
+    expect(fighterThumbnailPath("dan-hooker")).toBe(
+      "https://a.espncdn.com/i/headshots/mma/players/full/3109135.png",
+    );
+    expect(fighterThumbnailPath("salahdine-parnasse")).toBe(
+      "https://a.espncdn.com/i/headshots/mma/players/full/4312859.png",
+    );
+  });
 });
 
 describe("Shane contender fighter-tile treatment", () => {
