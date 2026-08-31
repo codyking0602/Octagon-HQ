@@ -5,6 +5,9 @@ const canonicalDisplayNames = new Map([
   ["jan blachowicz", "Jan Błachowicz"],
   ["sergey spivak", "Serghei Spivac"],
   ["ce liu", "Liu Ce"],
+  ["daniel hooker", "Dan Hooker"],
+  ["michael page", "Michael Venom Page"],
+  ["muhammadjon naimov", "Muhammad Naimov"],
 ]);
 
 const sourceRankingPrefix = /^(?:(?:no\.?|number)\s*#?\s*\d{1,2}|#\s*\d{1,2})\s+/i;
