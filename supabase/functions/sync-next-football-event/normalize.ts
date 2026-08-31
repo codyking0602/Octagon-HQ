@@ -52,6 +52,31 @@ export interface NormalizedFootballFinalResult {
   away_final_score: number;
 }
 
+export type FootballOddsUnavailableReason = "missing-event" | "missing-spread";
+
+export interface FootballSlateSelection {
+  espnEvent: Record<string, any>;
+  oddsEvents: Record<string, any>[];
+  league: string;
+}
+
+export interface FootballSlateUnavailableGame {
+  matchup: string;
+  reason: FootballOddsUnavailableReason;
+}
+
+export class FootballOddsUnavailableError extends Error {
+  constructor(
+    public readonly matchup: string,
+    public readonly reason: FootballOddsUnavailableReason,
+  ) {
+    super(reason === "missing-event"
+      ? `The Odds API has no matching event for ${matchup}`
+      : `The Odds API has no ATS line for ${matchup}`);
+    this.name = "FootballOddsUnavailableError";
+  }
+}
+
 type Json = Record<string, any>;
 
 function slug(value: string) {
@@ -139,7 +164,7 @@ export function normalizeFootballEvent(espnEvent: Json, oddsEvents: Json[], leag
   const matchup = `${away.name} at ${home.name}`;
 
   const oddsEvent = findOddsEvent(oddsEvents, home, away, startsAt);
-  if (!oddsEvent) throw new Error(`The Odds API has no matching event for ${matchup}`);
+  if (!oddsEvent) throw new FootballOddsUnavailableError(matchup, "missing-event");
 
   const oddsHomeTeam = String(oddsEvent.home_team ?? "").trim();
   const spreads = oddsEvent.bookmakers?.flatMap((book: Json) =>
@@ -147,7 +172,7 @@ export function normalizeFootballEvent(espnEvent: Json, oddsEvents: Json[], leag
       .map((market: Json) => ({ updated: book.last_update, outcomes: market.outcomes }))) ?? [];
   const usable = spreads.find((market: Json) => market.outcomes?.some((outcome: Json) => providerNameMatches(oddsHomeTeam, outcome.name)));
   const homeLine = usable?.outcomes?.find((outcome: Json) => providerNameMatches(oddsHomeTeam, outcome.name))?.point;
-  if (!Number.isFinite(homeLine) || !usable?.updated) throw new Error(`The Odds API has no ATS line for ${matchup}`);
+  if (!Number.isFinite(homeLine) || !usable?.updated) throw new FootballOddsUnavailableError(matchup, "missing-spread");
 
   const venue = competition?.venue ?? {};
   const address = venue.address ?? {};
@@ -172,4 +197,25 @@ export function normalizeFootballEvent(espnEvent: Json, oddsEvents: Json[], leag
       card_segment: "main", segment_sequence: 1, included: true,
     }],
   };
+}
+
+export function normalizeFootballSlate(selections: FootballSlateSelection[]) {
+  const events: NormalizedFootballEvent[] = [];
+  const unavailable: FootballSlateUnavailableGame[] = [];
+
+  for (const selection of selections) {
+    try {
+      events.push(normalizeFootballEvent(selection.espnEvent, selection.oddsEvents, selection.league));
+    } catch (error) {
+      if (!(error instanceof FootballOddsUnavailableError)) throw error;
+      unavailable.push({ matchup: error.matchup, reason: error.reason });
+    }
+  }
+
+  return { events, unavailable };
+}
+
+export function footballSlateUnavailableMessage(unavailable: FootballSlateUnavailableGame[], selectedGameCount: number) {
+  const matchups = unavailable.map((game) => game.matchup).join("; ");
+  return `The Odds API cannot stage ${unavailable.length} of ${selectedGameCount} selected games yet. Nothing was staged. Unavailable ATS: ${matchups}. Try again when the lines are posted.`;
 }
