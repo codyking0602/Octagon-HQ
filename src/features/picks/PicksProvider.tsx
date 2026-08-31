@@ -159,12 +159,15 @@ export function PicksProvider({
 
       const season = nextEvent?.season ?? new Date().getFullYear();
       setGroupProgressLoading(Boolean(nextEvent));
+      const futuresRequest = nextEvent?.sport === "football" && repository.loadFootballFutures
+        ? repository.loadFootballFutures(season)
+        : Promise.resolve(null);
       const [rows, nextLock, nextSummary, nextHistory, nextFutures, progressResult] = await Promise.all([
         nextEvent ? repository.loadMyPicks(nextEvent.eventId) : Promise.resolve([]),
         nextEvent ? repository.loadMyUnderdogLock(nextEvent.eventId) : Promise.resolve(null),
         repository.loadMySummary(season, sport),
         repository.loadMyHistory(season, sport),
-        nextEvent?.sport === "football" ? repository.loadFootballFutures(season) : Promise.resolve(null),
+        futuresRequest,
         nextEvent
           ? loadPickGroupProgress(nextEvent.eventId)
               .then((value) => ({ value, error: "" }))
@@ -319,13 +322,19 @@ export function PicksProvider({
       setError("Football Futures are not available on this Picks card.");
       return;
     }
+    const saveFutures = repository.saveFootballFutures;
+    const loadFutures = repository.loadFootballFutures;
+    if (!saveFutures || !loadFutures) {
+      setError("Football Futures are not connected on this build.");
+      return;
+    }
     if (footballFutures?.locked) {
       setError("Football Futures are locked. Your saved picks are preserved.");
       return;
     }
     setSavingFootballFutures(true);
     try {
-      const saved = await repository.saveFootballFutures(event.season, nextPicks);
+      const saved = await saveFutures(event.season, nextPicks);
       if (profileIdRef.current !== expectedProfileId) return;
       setFootballFutures(saved);
       setError("");
@@ -333,7 +342,7 @@ export function PicksProvider({
       if (profileIdRef.current !== expectedProfileId) return;
       setError(readableError(nextError));
       try {
-        const latest = await repository.loadFootballFutures(event.season);
+        const latest = await loadFutures(event.season);
         if (profileIdRef.current === expectedProfileId) setFootballFutures(latest);
       } catch { /* preserve the save error */ }
     } finally {
