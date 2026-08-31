@@ -3,7 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useIdentity } from "../identity/IdentityProvider";
 import { usePicks } from "./PicksProvider";
-import FootballPicksPage from "./FootballPicksPage";
+import FootballPicksPage, { footballFavoriteLineLabel } from "./FootballPicksPage";
 
 vi.mock("../identity/IdentityProvider", () => ({ useIdentity: vi.fn() }));
 vi.mock("./PicksProvider", () => ({ usePicks: vi.fn() }));
@@ -45,19 +45,29 @@ describe("FootballPicksPage", () => {
     vi.mocked(usePicks).mockReturnValue(runtime() as never);
   });
 
-  it("renders a compact left-right matchup with canonical logos and one frozen ATS line", () => {
+  it("renders equal matchup choices with canonical logos, no initials, and the favorite frozen line", () => {
     const { container } = render(<FootballPicksPage />);
     expect(screen.getByRole("heading", { name: "Football Week 1" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Ohio State Buckeyes AWAY" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Texas Longhorns HOME" })).toBeInTheDocument();
     expect(screen.getByText("CFB")).toBeInTheDocument();
-    expect(screen.getByText("HOME -3.5")).toBeInTheDocument();
-    expect(screen.queryByText("+3.5")).not.toBeInTheDocument();
+    expect(screen.getByText("Texas Longhorns -3.5")).toBeInTheDocument();
+    expect(screen.queryByText("HOME -3.5")).not.toBeInTheDocument();
     expect(Array.from(container.querySelectorAll<HTMLImageElement>(".football-pick-team-mark img")).map((image) => image.src)).toEqual([
       "https://a.espncdn.com/i/teamlogos/ncaa/500/194.png",
       "https://a.espncdn.com/i/teamlogos/ncaa/500/251.png",
     ]);
+    expect(Array.from(container.querySelectorAll<HTMLElement>(".football-pick-team-mark")).every((mark) => mark.textContent === "")).toBe(true);
+    expect(container.querySelector(".football-picks-page")).toHaveClass("has-team-sheen");
     expect(screen.getByText("Who has picked")).toBeInTheDocument();
+  });
+
+  it("labels either favorite and pick'em without home-away betting shorthand", () => {
+    const bout = event.bouts[0];
+    expect(footballFavoriteLineLabel({ ...bout, frozenSpreadHome: -2.5 } as never)).toBe("Texas Longhorns -2.5");
+    expect(footballFavoriteLineLabel({ ...bout, frozenSpreadHome: 4 } as never)).toBe("Ohio State Buckeyes -4");
+    expect(footballFavoriteLineLabel({ ...bout, frozenSpreadHome: 0 } as never)).toBe("PICK’EM");
+    expect(footballFavoriteLineLabel({ ...bout, frozenSpreadHome: null } as never)).toBe("LINE TBD");
   });
 
   it("keeps the scoring rubric collapsed with the canonical Football grading rules", () => {
