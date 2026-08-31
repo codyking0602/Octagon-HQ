@@ -1,4 +1,4 @@
-import { useMemo, type CSSProperties } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { footballLockAllowance } from "./footballPicksScoring";
@@ -18,18 +18,11 @@ function kickoffLabel(value: string) {
   }).format(new Date(value));
 }
 
-function spreadLabel(value: number) {
-  if (value === 0) return "PK";
-  return value > 0 ? `+${value}` : String(value);
-}
-
-function gameLineLabel(bout: PickBout) {
-  return bout.frozenSpreadHome == null ? "LINE TBD" : `HOME ${spreadLabel(bout.frozenSpreadHome)}`;
-}
-
-function teamMark(name: string) {
-  const words = name.trim().split(/\s+/);
-  return words.length > 1 ? `${words[0][0]}${words.at(-1)?.[0] ?? ""}` : name.slice(0, 2);
+export function footballFavoriteLineLabel(bout: PickBout) {
+  if (bout.frozenSpreadHome == null) return "LINE TBD";
+  if (bout.frozenSpreadHome === 0) return "PICK’EM";
+  const favorite = bout.frozenSpreadHome < 0 ? bout.redFighterName : bout.blueFighterName;
+  return `${favorite} -${Math.abs(bout.frozenSpreadHome)}`;
 }
 
 function leagueLabel(weightClass: string) {
@@ -43,11 +36,21 @@ function gameStatus(bout: PickBout, locked: boolean) {
   return locked ? "LOCKED" : "OPEN";
 }
 
-function TeamLogo({ name, logoUrl }: { name: string; logoUrl?: string | null }) {
+function TeamLogo({ logoUrl }: { logoUrl?: string | null }) {
   return (
-    <span className="football-pick-team-mark" aria-hidden="true">
-      <span>{teamMark(name)}</span>
-      {logoUrl ? <img src={logoUrl} alt="" loading="lazy" onError={(event) => event.currentTarget.remove()} /> : null}
+    <span className={`football-pick-team-mark${logoUrl ? "" : " is-missing"}`} aria-hidden="true">
+      <span className="football-pick-team-mark__placeholder" />
+      {logoUrl ? (
+        <img
+          src={logoUrl}
+          alt=""
+          loading="lazy"
+          onError={(event) => {
+            event.currentTarget.hidden = true;
+            event.currentTarget.parentElement?.classList.add("is-missing");
+          }}
+        />
+      ) : null}
     </span>
   );
 }
@@ -60,19 +63,36 @@ export default function FootballPicksPage() {
     .filter((game) => game.includedInPicks !== false)
     .slice()
     .sort((a, b) => Date.parse(a.locksAt ?? event.startsAt) - Date.parse(b.locksAt ?? event.startsAt)) ?? [], [event]);
+  const sheenLogos = useMemo(() => Array.from(new Set(games.flatMap((game) => [game.awayTeamLogoUrl, game.homeTeamLogoUrl])
+    .filter((logo): logo is string => Boolean(logo)))), [games]);
+  const [sheenIndex, setSheenIndex] = useState(0);
+
+  useEffect(() => {
+    setSheenIndex(0);
+    if (sheenLogos.length < 2) return undefined;
+    const timer = window.setInterval(() => {
+      setSheenIndex((current) => (current + 1) % sheenLogos.length);
+    }, 8000);
+    return () => window.clearInterval(timer);
+  }, [sheenLogos]);
+
   const progress = pickProgress(event, picks.selections);
   const percentage = progress.total ? Math.round(progress.completed / progress.total * 100) : 0;
   const lockGameCount = games.filter((game) => game.resultStatus !== "cancelled").length;
   const lockAllowance = footballLockAllowance(lockGameCount);
   const usedLocks = games.filter((game) => game.resultStatus !== "cancelled" && picks.footballLocks[game.boutId] === true).length;
   const poster = pickEventPoster(event);
-  const visualStyle = poster ? ({
-    "--picks-event-poster": `url("${poster.src}")`,
-    "--picks-event-poster-aspect": poster.aspectRatio,
-  } as CSSProperties) : undefined;
+  const sheenLogo = sheenLogos[sheenIndex] ?? sheenLogos[0] ?? null;
+  const visualStyle = ({
+    ...(poster ? {
+      "--picks-event-poster": `url("${poster.src}")`,
+      "--picks-event-poster-aspect": poster.aspectRatio,
+    } : {}),
+    ...(sheenLogo ? { "--football-picks-sheen-art": `url("${sheenLogo}")` } : {}),
+  } as CSSProperties);
 
   return (
-    <div className={`page football-picks-page${poster ? " has-event-atmosphere" : ""}`} style={visualStyle}>
+    <div className={`page football-picks-page${poster ? " has-event-atmosphere" : ""}${sheenLogo ? " has-team-sheen" : ""}`} style={visualStyle}>
       {picks.loading && !event ? <section className="surface-card football-picks-state">Loading this week’s slate…</section> : null}
       {!picks.loading && !event ? (
         <section className="surface-card football-picks-state">
@@ -152,13 +172,13 @@ export default function FootballPicksPage() {
                             disabled={readOnly || Boolean(picks.savingBoutId)}
                             onClick={() => void picks.setPick(game.boutId, team.slug)}
                           >
-                            <TeamLogo name={team.name} logoUrl={team.logoUrl} />
+                            <TeamLogo logoUrl={team.logoUrl} />
                             <span className="football-pick-team-copy"><strong>{team.name}</strong><small>{isSelected ? "✓ YOUR PICK" : team.side}</small></span>
                           </button>
                         );
                       })}
-                      <div className="football-pick-game__line" aria-label={`Frozen ATS line ${gameLineLabel(game)}`}>
-                        <small>LINE</small><strong>{gameLineLabel(game)}</strong>
+                      <div className="football-pick-game__line" aria-label={`Frozen ATS line ${footballFavoriteLineLabel(game)}`}>
+                        <small>FROZEN LINE</small><strong>{footballFavoriteLineLabel(game)}</strong>
                       </div>
                     </div>
                     <footer>
