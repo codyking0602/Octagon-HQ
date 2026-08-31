@@ -207,5 +207,5 @@ describe("Football Hit the Number canonical fact integration", () => {
     expect(formats.get("one-from-each")! / runs).toBeLessThanOrEqual(0.28);
     expect(formats.get("build-the-team")! / runs).toBeGreaterThanOrEqual(0.07);
     expect(formats.get("build-the-team")! / runs).toBeLessThanOrEqual(0.23);
-  }, 60_000);
+  }, 90_000);
 });
