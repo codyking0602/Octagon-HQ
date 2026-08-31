@@ -62,11 +62,13 @@ describe("UFCStats Spotlight snapshot", () => {
     expectNewcomerSpotlightFighter("Salahdine Parnasse", "23-2-0");
   });
 
-  it("keeps a UFC newcomer buildable without inventing UFC rate stats", () => {
+  it("keeps a UFC newcomer's rate stats empty while allowing matchup-specific editorial edges", () => {
     const hooker = getUfcStatsSnapshotFighter("Dan Hooker");
     const parnasse = getUfcStatsSnapshotFighter("Salahdine Parnasse");
     expect(hooker).not.toBeNull();
     expect(parnasse).not.toBeNull();
+    expect(parnasse?.slpm).toBeNull();
+    expect(parnasse?.takedownDefense).toBeNull();
 
     const spotlight = buildPickSpotlightContent({
       boutId: "main-event-dan-hooker-salahdine-parnasse",
@@ -76,8 +78,12 @@ describe("UFCStats Spotlight snapshot", () => {
       generatedAt: "2026-08-31T18:30:00.000Z",
     });
 
-    expect(spotlight.red.edges.length).toBeGreaterThan(0);
-    expect(spotlight.blue.edges).toEqual(["No UFCStats sample yet"]);
+    expect(spotlight.red.edges).toHaveLength(3);
+    expect(spotlight.blue.edges).toEqual([
+      "Dynamic southpaw offense",
+      "Seamless phase changes",
+      "Wrestling and submission threat",
+    ]);
     expect(spotlight.source).toBe("UFCStats");
   });
 });
