@@ -70,6 +70,45 @@ const salkilldBout: PickBout = {
   winnerFighterSlug: null,
 };
 
+const daniilBout: PickBout = {
+  boutId: "main-daniil-donchenko-punahele-soriano",
+  position: 4,
+  weightClass: "Welterweight",
+  redFighterSlug: "daniil-donchenko",
+  redFighterName: "Daniil Donchenko",
+  blueFighterSlug: "punahele-soriano",
+  blueFighterName: "Punahele Soriano",
+  redAmericanOdds: null,
+  blueAmericanOdds: null,
+  winnerFighterSlug: null,
+};
+
+const daniilSpotlight: PickEventSpotlight = {
+  boutId: daniilBout.boutId,
+  preview: "Daniil Donchenko brings elite striking pace into a dangerous welterweight matchup with Punahele Soriano.",
+  red: {
+    fighterSlug: "daniil-donchenko",
+    record: "15-2-0",
+    age: "25",
+    height: "5' 11\"",
+    reach: "71\"",
+    stance: "Orthodox",
+    edges: ["High-volume striking", "Defensive striking", "Efficient striking"],
+  },
+  blue: {
+    fighterSlug: "punahele-soriano",
+    record: "13-4-0",
+    age: "33",
+    height: "5' 11\"",
+    reach: "72\"",
+    stance: "Southpaw",
+    edges: ["Wrestling pressure", "Efficient striking", "Efficient takedowns"],
+  },
+  watchSpotlights: [],
+  source: "UFCStats",
+  generatedAt: "2026-08-31T18:30:00.000Z",
+};
+
 afterEach(cleanup);
 
 describe("Shane Contender Fight Spotlight treatment", () => {
@@ -119,5 +158,25 @@ describe("Shane Contender Fight Spotlight treatment", () => {
     expect(screen.getByText("SHANE’S CONTENDER SERIES · #2")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /View matchup breakdown/i }));
     expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #2")).toHaveLength(2);
+  });
+
+  it("gives Daniil Donchenko the Shane treatment on this week’s configured Fight Spotlight", () => {
+    const daniil = shanesWatchlist.fighters.find((fighter) => fighter.id === "daniil-donchenko");
+    expect(daniil?.rank).toBe(6);
+
+    render(
+      <MemoryRouter>
+        <MainEventSpotlight bout={daniilBout} spotlight={daniilSpotlight} />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText("SHANE’S CONTENDER SERIES · #6")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /View matchup breakdown/i }));
+    expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #6")).toHaveLength(2);
+    expect(screen.getByText(daniil!.whyOnBoard)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "VIEW SHANE’S SCOUTING PROFILE →" })).toHaveAttribute(
+      "href",
+      "/fighters-to-watch#daniil-donchenko",
+    );
   });
 });
