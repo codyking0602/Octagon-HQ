@@ -5,36 +5,39 @@ import { uploadPickEventHeader } from "./pickEventHeaderUpload";
 interface PickEventHeaderControlProps {
   eventId: string;
   repository: PickControlRepository | null;
+  allowGallery?: boolean;
 }
 
 function readableError(error: unknown) {
   return error instanceof Error ? error.message : "Event header could not be uploaded.";
 }
 
-export default function PickEventHeaderControl({ eventId, repository }: PickEventHeaderControlProps) {
+export default function PickEventHeaderControl({ eventId, repository, allowGallery = false }: PickEventHeaderControlProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
-  const [previewUrl, setPreviewUrl] = useState("");
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
 
   useEffect(() => () => {
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
-  }, [previewUrl]);
+    previewUrls.forEach((previewUrl) => URL.revokeObjectURL(previewUrl));
+  }, [previewUrls]);
 
   async function onFileChange(event: ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
+    const selectedFiles = Array.from(event.target.files ?? []);
+    const files = allowGallery ? selectedFiles.slice(0, 4) : selectedFiles.slice(0, 1);
     event.target.value = "";
-    if (!file || !repository || busy) return;
+    if (!files.length || !repository || busy) return;
 
     setBusy(true);
     setError("");
     setNotice("");
     try {
-      await uploadPickEventHeader({ eventId, file, repository });
-      const nextPreviewUrl = URL.createObjectURL(file);
-      setPreviewUrl(nextPreviewUrl);
-      setNotice("Event header saved. Upload another image here any time to replace it.");
+      await uploadPickEventHeader({ eventId, file: files[0], files, repository });
+      setPreviewUrls(files.map((file) => URL.createObjectURL(file)));
+      setNotice(files.length > 1
+        ? `${files.length} event headers saved. Football Picks will crossfade through them automatically.`
+        : "Event header saved. Upload another image here any time to replace it.");
     } catch (nextError) {
       setError(readableError(nextError));
     } finally {
@@ -47,12 +50,14 @@ export default function PickEventHeaderControl({ eventId, repository }: PickEven
       <div className="picks-event-header-control__copy">
         <span>MANAGE EVENT</span>
         <strong>EVENT HEADER</strong>
-        <small>Upload the approved event artwork after publishing. Uploading again replaces the stored header for this event.</small>
+        <small>{allowGallery
+          ? "Upload up to four approved images. Football Picks crossfades through the set automatically."
+          : "Upload the approved event artwork after publishing. Uploading again replaces the stored header for this event."}</small>
       </div>
 
-      {previewUrl ? (
+      {previewUrls.length ? (
         <div className="picks-event-header-control__preview">
-          <img src={previewUrl} alt="New event header preview" />
+          {previewUrls.map((previewUrl, index) => <img key={previewUrl} src={previewUrl} alt={`New event header preview ${index + 1}`} />)}
         </div>
       ) : null}
 
@@ -63,13 +68,14 @@ export default function PickEventHeaderControl({ eventId, repository }: PickEven
           disabled={busy || !repository?.setEventHeader}
           onClick={() => inputRef.current?.click()}
         >
-          {busy ? "UPLOADING…" : previewUrl ? "REPLACE HEADER" : "UPLOAD HEADER"}
+          {busy ? "UPLOADING…" : previewUrls.length ? "REPLACE HEADER" : allowGallery ? "UPLOAD HEADERS" : "UPLOAD HEADER"}
         </button>
         <input
           ref={inputRef}
           className="picks-event-header-control__input"
           type="file"
           accept="image/jpeg,image/png,image/webp,image/avif"
+          multiple={allowGallery}
           onChange={onFileChange}
           disabled={busy || !repository?.setEventHeader}
         />
