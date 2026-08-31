@@ -16,6 +16,16 @@
     #101113;
 }
 
+/* Ohio State's dark inner mark disappears on graphite at small sizes. Keep the canonical
+   ESPN logo, but give that mark a neutral field everywhere Football HQ uses shared team art. */
+.app-shell--football-room .football-subject-visual[data-visual-kind="team-mark"]:has(img[alt*="Ohio State"]),
+.app-shell--football-room .football-subject-visual[data-visual-kind="program-mark"]:has(img[alt*="Ohio State"]),
+.app-shell--football-room .football-subject-visual[data-visual-kind="team-mark"]:has(img[src*="/194.png"]),
+.app-shell--football-room .football-subject-visual[data-visual-kind="program-mark"]:has(img[src*="/194.png"]) {
+  border-color: rgba(255, 255, 255, .42);
+  background: #f4f4f0;
+}
+
 .app-shell--football-room .football-rank-five-current .football-subject-visual,
 .app-shell--football-room .football-keep-cut-current .football-subject-visual {
   width: 74px;
