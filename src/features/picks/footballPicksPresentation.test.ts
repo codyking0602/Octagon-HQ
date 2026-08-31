@@ -2,7 +2,6 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const picksStyles = readFileSync("src/styles/football-picks.css", "utf8");
-const shellStyles = readFileSync("src/styles/football-shell.css", "utf8");
 
 describe("Football Picks presentation", () => {
   it("crossfades header artwork instead of snapping between images", () => {
@@ -15,10 +14,15 @@ describe("Football Picks presentation", () => {
     expect(picksStyles).toMatch(/\.football-picks-grading \{[^}]*gap: 0;[^}]*padding: 0/);
   });
 
-  it("uses the canonical Football identity accent for the stronger full-page sheen", () => {
-    expect(picksStyles).toContain("rgba(var(--football-accent-rgb, 191, 87, 0), .9)");
-    expect(picksStyles).toContain("opacity: .82");
-    expect(shellStyles).toMatch(/\.app-shell--football-team-cowboys \{[\s\S]*?--football-accent-rgb: 4, 30, 66;/);
-    expect(shellStyles).toMatch(/\.app-shell--football-team-longhorns \{[\s\S]*?--football-accent-rgb: 191, 87, 0;/);
+  it("mirrors the UFC Picks artwork-driven atmosphere and sparse sheen cadence", () => {
+    expect(picksStyles).toContain("var(--picks-event-poster)");
+    expect(picksStyles).toContain("linear-gradient(112deg");
+    expect(picksStyles).toContain("animation: football-picks-page-sheen 6.5s ease-in-out infinite");
+    expect(picksStyles).toContain("36%, 100% { opacity: 0");
+  });
+
+  it("keeps the weekly ATS instruction on one line", () => {
+    expect(picksStyles).toMatch(/\.football-picks-slate > header h2 \{[^}]*white-space: nowrap/);
+    expect(picksStyles).toMatch(/\.football-picks-slate > header h2 \{[^}]*font-size: clamp\(\.68rem, 3vw, 1\.15rem\)/);
   });
 });
