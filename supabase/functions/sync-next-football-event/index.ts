@@ -1,5 +1,10 @@
 import { createClient } from "npm:@supabase/supabase-js@2.110.7";
-import { normalizeFootballEvent, normalizeFootballFinalResult } from "./normalize.ts";
+import {
+  footballSlateUnavailableMessage,
+  normalizeFootballEvent,
+  normalizeFootballFinalResult,
+  normalizeFootballSlate,
+} from "./normalize.ts";
 import { buildFootballWeekPreview, footballWeekRange } from "./week.ts";
 
 type Json = Record<string, any>;
@@ -85,12 +90,22 @@ Deno.serve(async (request) => {
         selectedNflEvents.length ? fetchSpreadEvents("americanfootball_nfl") : Promise.resolve([]),
         selectedCollegeEvents.length ? fetchSpreadEvents("americanfootball_ncaaf") : Promise.resolve([]),
       ]);
-      const normalized = [
-        ...selectedNflEvents.map((event) => normalizeFootballEvent(event, nflOdds, "nfl")),
-        ...selectedCollegeEvents.map((event) => normalizeFootballEvent(event, collegeOdds, "college-football")),
+      const selectedGames = [
+        ...selectedNflEvents.map((espnEvent) => ({ espnEvent, oddsEvents: nflOdds, league: "nfl" })),
+        ...selectedCollegeEvents.map((espnEvent) => ({ espnEvent, oddsEvents: collegeOdds, league: "college-football" })),
       ];
-      const draftId = await stageFootballEvents(admin, normalized);
-      return json({ draftId, staged_game_count: normalized.length, ...weekPreview });
+      const normalization = normalizeFootballSlate(selectedGames);
+      if (normalization.unavailable.length) {
+        return json({
+          error: footballSlateUnavailableMessage(normalization.unavailable, selectedGames.length),
+          selected_game_count: selectedGames.length,
+          unavailable_game_count: normalization.unavailable.length,
+          unavailable_games: normalization.unavailable,
+        }, 409);
+      }
+
+      const draftId = await stageFootballEvents(admin, normalization.events);
+      return json({ draftId, staged_game_count: normalization.events.length, ...weekPreview });
     }
 
     const league = input.league === "college-football" ? "college-football" : "nfl";
