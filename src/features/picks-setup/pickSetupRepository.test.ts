@@ -312,7 +312,7 @@ describe("Event Setup repository RPC ownership", () => {
     supabaseMocks.rpc.mockResolvedValue({ data: { deleted: true }, error: null });
     const repository = createPickSetupRepository();
 
-    await repository!.resetCurrentFootballSlate();
+    await repository?.resetCurrentFootballSlate?.();
 
     expect(supabaseMocks.rpc).toHaveBeenCalledTimes(1);
     expect(supabaseMocks.rpc).toHaveBeenCalledWith("reset_current_football_pick_event");
