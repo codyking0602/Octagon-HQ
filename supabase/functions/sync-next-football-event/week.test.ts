@@ -1,6 +1,12 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { buildFootballWeekPreview, footballWeekRange, rankCollegeFootballCandidates, summarizeFootballWeekEvents } from "./week";
+import {
+  buildFootballWeekPreview,
+  footballWeekEspnDateRange,
+  footballWeekRange,
+  rankCollegeFootballCandidates,
+  summarizeFootballWeekEvents,
+} from "./week";
 
 function event(id: string, kickoff: string, homeRank: number | null, awayRank: number | null, seasonType = 2) {
   const competitor = (homeAway: "home" | "away", name: string, rank: number | null) => ({
@@ -29,10 +35,21 @@ describe("Football weekly owner discovery", () => {
     expect(() => footballWeekRange("2026-09-09")).toThrow(/Tuesday/);
   });
 
+  it("fetches one extra ESPN UTC calendar day, then filters by the canonical Eastern football week", () => {
+    expect(footballWeekEspnDateRange("2026-09-08")).toBe("20260908-20260915");
+
+    const preview = buildFootballWeekPreview("2026-09-08", [
+      event("501", "2026-09-15T00:15:00.000Z", null, null),
+      event("502", "2026-09-16T00:15:00.000Z", null, null),
+    ], []);
+
+    expect(preview.nfl_games.map((game) => game.espn_event_id)).toEqual(["501"]);
+  });
+
   it("keeps the canonical ESPN schedule and summary requests on the Supabase-reachable site host", () => {
     const source = readFileSync("supabase/functions/sync-next-football-event/index.ts", "utf8");
 
-    expect(source).toContain('const dateRange = `${range.weekStart.replaceAll("-", "")}-${range.weekEnd.replaceAll("-", "")}`;');
+    expect(source).toContain("const dateRange = footballWeekEspnDateRange(weekStart);");
     expect(source).toContain("https://site.web.api.espn.com/apis/site/v2/sports/${sportPath}/scoreboard?dates=${dateRange}&limit=200${group}");
     expect(source).toContain("https://site.web.api.espn.com/apis/site/v2/sports/${sportPath}/summary?event=${eventId}");
     expect(source).not.toContain("https://site.api.espn.com/");
