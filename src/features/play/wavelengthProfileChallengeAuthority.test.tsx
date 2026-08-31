@@ -115,8 +115,10 @@ describe("Wavelength profile challenge authority", () => {
     await waitFor(() => expect(load).toHaveBeenCalledTimes(1));
     resolveInitialLoad(snapshot);
 
-    expect(await screen.findByText("PROFILE CHALLENGE")).toBeInTheDocument();
-    expect(await screen.findByText(wavelengthClues[0]!.text)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("PROFILE CHALLENGE")).toBeInTheDocument();
+      expect(screen.getByText(wavelengthClues[0]!.text)).toBeInTheDocument();
+    }, { timeout: 2_000 });
 
     fireEvent.click(screen.getByRole("button", { name: "LOCK GUESS & REVEAL NEXT CLUE" }));
     fireEvent.click(screen.getByRole("button", { name: "LOCK GUESS & REVEAL NEXT CLUE" }));
