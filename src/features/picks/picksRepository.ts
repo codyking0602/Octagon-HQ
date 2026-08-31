@@ -1,6 +1,10 @@
 import { z } from "zod";
 import { getSupabaseClient } from "../../lib/supabase";
 import type {
+  FootballFuturesPicks,
+  FootballFuturesState,
+} from "./footballPicksScoring";
+import type {
   PickEvent,
   PickEventSpotlight,
   PickGroupPick,
@@ -80,12 +84,35 @@ const historyEventSchema = z.object({
 });
 const historySchema = z.object({ season: z.number().int().nullable(), summary: historyRecordSchema.extend({ events_entered: z.number().int().nonnegative() }), season_standings: z.array(seasonStandingSchema).optional().default([]), events: z.array(historyEventSchema) });
 
+const futuresPicksSchema = z.object({
+  cfb_power4_champions: z.object({ acc: z.string(), big_ten: z.string(), big_12: z.string(), sec: z.string() }),
+  cfb_playoff_teams: z.array(z.string()),
+  cfb_heisman: z.string(),
+  cfb_national_champion: z.string(),
+  nfl_playoff_teams: z.array(z.string()),
+  nfl_conference_championship_teams: z.array(z.string()),
+  nfl_mvp: z.string(),
+  nfl_super_bowl_champion: z.string(),
+});
+const futuresTeamOptionSchema = z.object({
+  slug: z.string(), name: z.string(), league: z.enum(["nfl", "college-football"]), logo_url: z.string().url().nullable(),
+});
+const futuresGroupEntrySchema = z.object({
+  display_name: z.string(), is_current_user: z.boolean(), picks: futuresPicksSchema.nullable(), points: z.number().int().nonnegative(),
+});
+const futuresStateSchema = z.object({
+  season: z.number().int(), lock_at: z.string(), is_locked: z.boolean(), own_picks: futuresPicksSchema.nullable(),
+  points: z.number().int().nonnegative(), group_entries: z.array(futuresGroupEntrySchema), team_options: z.array(futuresTeamOptionSchema),
+});
+
 export interface PicksRepository {
   loadCurrentEvent: (sport?: PickSport) => Promise<PickEvent | null>;
   loadMyPicks: (eventId: string) => Promise<ProfileEventPick[]>;
   loadMyUnderdogLock: (eventId: string) => Promise<UnderdogLock | null>;
   loadMySummary: (season: number, sport?: PickSport) => Promise<PickSummary>;
   loadMyHistory: (season: number | null, sport?: PickSport) => Promise<PickHistory>;
+  loadFootballFutures: (season: number) => Promise<FootballFuturesState>;
+  saveFootballFutures: (season: number, picks: FootballFuturesPicks) => Promise<FootballFuturesState>;
   savePick: (eventId: string, boutId: string, fighterSlug: string, isLock?: boolean) => Promise<ProfileEventPick>;
   setUnderdogLock: (eventId: string, boutId: string, fighterSlug: string) => Promise<UnderdogLock>;
   clearUnderdogLock: (eventId: string) => Promise<void>;
@@ -163,6 +190,60 @@ function mapHistory(value: unknown): PickHistory {
   };
 }
 
+function mapFootballFuturesPicks(value: z.infer<typeof futuresPicksSchema>): FootballFuturesPicks {
+  return {
+    cfbPower4Champions: {
+      acc: value.cfb_power4_champions.acc,
+      bigTen: value.cfb_power4_champions.big_ten,
+      big12: value.cfb_power4_champions.big_12,
+      sec: value.cfb_power4_champions.sec,
+    },
+    cfbPlayoffTeams: value.cfb_playoff_teams,
+    cfbHeisman: value.cfb_heisman,
+    cfbNationalChampion: value.cfb_national_champion,
+    nflPlayoffTeams: value.nfl_playoff_teams,
+    nflConferenceChampionshipTeams: value.nfl_conference_championship_teams,
+    nflMvp: value.nfl_mvp,
+    nflSuperBowlChampion: value.nfl_super_bowl_champion,
+  };
+}
+
+function serializeFootballFuturesPicks(picks: FootballFuturesPicks) {
+  return {
+    cfb_power4_champions: {
+      acc: picks.cfbPower4Champions.acc,
+      big_ten: picks.cfbPower4Champions.bigTen,
+      big_12: picks.cfbPower4Champions.big12,
+      sec: picks.cfbPower4Champions.sec,
+    },
+    cfb_playoff_teams: [...picks.cfbPlayoffTeams],
+    cfb_heisman: picks.cfbHeisman,
+    cfb_national_champion: picks.cfbNationalChampion,
+    nfl_playoff_teams: [...picks.nflPlayoffTeams],
+    nfl_conference_championship_teams: [...picks.nflConferenceChampionshipTeams],
+    nfl_mvp: picks.nflMvp,
+    nfl_super_bowl_champion: picks.nflSuperBowlChampion,
+  };
+}
+
+function mapFootballFuturesState(value: unknown): FootballFuturesState {
+  const parsed = futuresStateSchema.parse(value);
+  return {
+    season: parsed.season,
+    lockAt: parsed.lock_at,
+    isLocked: parsed.is_locked,
+    ownPicks: parsed.own_picks ? mapFootballFuturesPicks(parsed.own_picks) : null,
+    points: parsed.points,
+    groupEntries: parsed.group_entries.map((entry) => ({
+      displayName: entry.display_name,
+      isCurrentUser: entry.is_current_user,
+      picks: entry.picks ? mapFootballFuturesPicks(entry.picks) : null,
+      points: entry.points,
+    })),
+    teamOptions: parsed.team_options.map((team) => ({ slug: team.slug, name: team.name, league: team.league, logoUrl: team.logo_url })),
+  };
+}
+
 export function createPicksRepository(): PicksRepository | null {
   const supabase = getSupabaseClient();
   if (!supabase) return null;
@@ -173,6 +254,8 @@ export function createPicksRepository(): PicksRepository | null {
     async loadMyUnderdogLock(eventId) { const data = await requireRpcSuccess(client.rpc("get_my_event_underdog_lock", { p_event_id: eventId })); const raw = Array.isArray(data) ? data[0] : data; return raw ? mapLock(raw) : null; },
     async loadMySummary(season, sport = "mma") { return mapSummary(await requireRpcSuccess(client.rpc("get_my_pick_summary", { p_season: season, p_sport: sport }))); },
     async loadMyHistory(season, sport = "mma") { return mapHistory(await requireRpcSuccess(client.rpc("get_my_pick_history", { p_season: season, p_sport: sport }))); },
+    async loadFootballFutures(season) { return mapFootballFuturesState(await requireRpcSuccess(client.rpc("get_football_futures_state", { p_season: season }))); },
+    async saveFootballFutures(season, picks) { return mapFootballFuturesState(await requireRpcSuccess(client.rpc("save_football_futures", { p_season: season, p_picks: serializeFootballFuturesPicks(picks) }))); },
     async savePick(eventId, boutId, fighterSlug, isLock) {
       const baseParams = { p_event_id: eventId, p_bout_id: boutId, p_fighter_slug: fighterSlug };
       const params = isLock === undefined ? baseParams : { ...baseParams, p_is_lock: isLock };
