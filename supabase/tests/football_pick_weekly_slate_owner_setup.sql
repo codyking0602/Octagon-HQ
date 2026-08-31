@@ -23,6 +23,8 @@ declare
   v_cfb_bout text := 'football-college-football-owner-proof-2';
   v_football_event_id text;
   v_frozen_at timestamptz;
+  v_publish_blocked boolean := false;
+  v_non_owner_blocked boolean := false;
 begin
   v_nfl_kickoff := v_week_start + interval '2 days 18 hours';
   v_cfb_kickoff := v_week_start + interval '4 days 19 hours 30 minutes';
@@ -187,6 +189,71 @@ begin
       v_nfl_kickoff + interval '1 minute'
     ) then
     raise exception 'Football game did not lock at its own kickoff';
+  end if;
+
+  -- Recreate the real admin failure mode: a reviewed staged Football slate is
+  -- ready while disposable picks exist on the current published test slate.
+  update public.pick_event_drafts
+  set state='staged', published_at=null, updated_at=now()
+  where draft_id=v_football_draft_two;
+  insert into public.profile_event_picks(profile_id,event_id,bout_id,fighter_slug)
+  values(v_owner_id,v_football_event_id,v_nfl_bout,'home-one');
+
+  begin
+    perform public.publish_pick_event_draft(v_football_draft_two);
+  exception when others then
+    if sqlerrm like '%current upcoming event for this sport already has picks%' then
+      v_publish_blocked := true;
+    else
+      raise;
+    end if;
+  end;
+  if not v_publish_blocked then
+    raise exception 'normal Football publication bypassed the current-picks safeguard';
+  end if;
+
+  perform set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000001',true);
+  begin
+    perform public.reset_current_football_pick_event();
+  exception when others then
+    if sqlerrm = 'pick control owner required' then
+      v_non_owner_blocked := true;
+    else
+      raise;
+    end if;
+  end;
+  if not v_non_owner_blocked then
+    raise exception 'non-owner could reset the current Football slate';
+  end if;
+
+  perform set_config('request.jwt.claim.sub',v_owner_id::text,true);
+  perform public.reset_current_football_pick_event();
+
+  if exists(select 1 from public.pick_events where event_id=v_football_event_id) then
+    raise exception 'Football test slate survived owner reset';
+  end if;
+  if exists(select 1 from public.profile_event_picks where event_id=v_football_event_id) then
+    raise exception 'Football test picks survived owner reset';
+  end if;
+  if not exists(
+    select 1 from public.pick_event_drafts
+    where draft_id=v_football_draft_two and state='staged'
+  ) then
+    raise exception 'Football staged replacement was removed by owner reset';
+  end if;
+
+  v_football_setup := public.get_pick_event_setup('football');
+  if v_football_setup #>> '{draft_id}' <> v_football_draft_two::text
+    or v_football_setup #>> '{can_publish}' <> 'true' then
+    raise exception 'Football staged replacement did not become publishable after reset: %',v_football_setup;
+  end if;
+
+  perform public.publish_pick_event_draft(v_football_draft_two);
+  if not exists(
+    select 1 from public.pick_events
+    where event_id=v_football_event_id and sport='football' and status='upcoming'
+  ) then
+    raise exception 'Football staged replacement did not publish normally after reset';
   end if;
 
   perform set_config('request.jwt.claim.role','service_role',true);
