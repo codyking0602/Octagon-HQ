@@ -17,6 +17,8 @@ export function GroupPickProgress({ event, locked: _locked, mySelections }: Grou
   const selected = members.find((member) => member.displayName === selectedName) ?? null;
   const completedMembers = members.filter((member) => member.completed === member.total && member.total > 0).length;
   const masterLocked = event.status !== "upcoming";
+  const isFootball = event.sport === "football";
+  const unit = isFootball ? "game" : "fight";
   const eligibleBouts = useMemo(() => event.bouts
     .filter((bout) => bout.includedInPicks !== false && (bout.resultStatus ?? "pending") !== "cancelled")
     .slice()
@@ -44,11 +46,12 @@ export function GroupPickProgress({ event, locked: _locked, mySelections }: Grou
           memberPick: fighterName(memberPick),
           myPick: fighterName(myPick),
           same: memberPick === myPick,
-          isUnderdogLock: selected.underdogLockBoutId === bout.boutId
+          isUnderdogLock: !isFootball
+            && selected.underdogLockBoutId === bout.boutId
             && selected.underdogLockFighterSlug === memberPick,
         };
       });
-  }, [eligibleBouts, masterLocked, mySelections, selected]);
+  }, [eligibleBouts, isFootball, masterLocked, mySelections, selected]);
   const hiddenFightCount = selected ? Math.max(eligibleBouts.length - selectedPicks.length, 0) : 0;
 
   if (loading || error || !members.length) {
@@ -95,12 +98,12 @@ export function GroupPickProgress({ event, locked: _locked, mySelections }: Grou
                       <span>{member.displayName}'S PICKS</span>
                       <strong>{member.completed}/{member.total} COMPLETE</strong>
                     </div>
-                    {!masterLocked && member.hasUnderdogLock ? <b>UNDERDOG LOCK SET</b> : null}
+                    {!isFootball && !masterLocked && member.hasUnderdogLock ? <b>UNDERDOG LOCK SET</b> : null}
                   </header>
                   {!selectedPicks.length ? (
                     <div className="picks-group-progress__privacy">
                       <strong>PICKS HIDDEN</strong>
-                      <p>Individual picks reveal as each fight locks.</p>
+                      <p>Individual picks reveal as each {unit} locks.</p>
                     </div>
                   ) : (
                     <>
@@ -133,8 +136,8 @@ export function GroupPickProgress({ event, locked: _locked, mySelections }: Grou
                       </div>
                       {hiddenFightCount ? (
                         <div className="picks-group-progress__privacy">
-                          <strong>{hiddenFightCount} {hiddenFightCount === 1 ? "FIGHT" : "FIGHTS"} STILL OPEN</strong>
-                          <p>Those picks reveal when each fight locks.</p>
+                          <strong>{hiddenFightCount} {unit.toUpperCase()}{hiddenFightCount === 1 ? "" : "S"} STILL OPEN</strong>
+                          <p>Those picks reveal when each {unit} locks.</p>
                         </div>
                       ) : null}
                     </>
