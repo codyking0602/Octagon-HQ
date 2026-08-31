@@ -39,14 +39,18 @@ function futuresRuleMax(rule: { selections: number; pointsEach: number }) {
   return rule.selections * rule.pointsEach;
 }
 
-export const FOOTBALL_FUTURES_MAX_POINTS = {
-  cfb: Object.values(FOOTBALL_FUTURES_RULES.cfb).reduce((sum, rule) => sum + futuresRuleMax(rule), 0),
-  nfl: Object.values(FOOTBALL_FUTURES_RULES.nfl).reduce((sum, rule) => sum + futuresRuleMax(rule), 0),
-  total: 0,
-} as const satisfies { cfb: number; nfl: number; total: number };
+const cfbFuturesMaxPoints = Object.values(FOOTBALL_FUTURES_RULES.cfb)
+  .reduce((sum, rule) => sum + futuresRuleMax(rule), 0);
+const nflFuturesMaxPoints = Object.values(FOOTBALL_FUTURES_RULES.nfl)
+  .reduce((sum, rule) => sum + futuresRuleMax(rule), 0);
 
-// Keep the overall maximum derived from the canonical category rules rather than a second scoring table.
-export const FOOTBALL_FUTURES_TOTAL_POINTS = FOOTBALL_FUTURES_MAX_POINTS.cfb + FOOTBALL_FUTURES_MAX_POINTS.nfl;
+export const FOOTBALL_FUTURES_MAX_POINTS = {
+  cfb: cfbFuturesMaxPoints,
+  nfl: nflFuturesMaxPoints,
+  total: cfbFuturesMaxPoints + nflFuturesMaxPoints,
+} as const;
+
+export const FOOTBALL_FUTURES_TOTAL_POINTS = FOOTBALL_FUTURES_MAX_POINTS.total;
 
 export interface FootballFuturesPicks {
   cfbPower4Champions: readonly string[];
@@ -76,9 +80,7 @@ export interface FootballFuturesResults {
 
 function countUniqueMatches(picks: readonly string[], results: readonly string[]) {
   const resultSet = new Set(results.filter(Boolean));
-  return new Set(picks.filter(Boolean)).size
-    ? [...new Set(picks.filter(Boolean))].filter(pick => resultSet.has(pick)).length
-    : 0;
+  return [...new Set(picks.filter(Boolean))].filter(pick => resultSet.has(pick)).length;
 }
 
 function scoreSingleFuture(pick: string, result: string | null, points: number) {
