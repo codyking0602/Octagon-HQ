@@ -1,0 +1,143 @@
+name: Refine Paris Spotlight Cutouts
+
+on:
+  push:
+    branches:
+      - fix/paris-spotlight-cutouts
+    paths:
+      - .github/workflows/refine-paris-spotlight-cutouts.yml
+
+permissions:
+  contents: write
+
+jobs:
+  refine-cutouts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/paris-spotlight-cutouts
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install image tooling
+        run: python -m pip install --quiet pillow requests beautifulsoup4 "rembg[cpu]"
+
+      - name: Build current UFC Paris cutouts
+        run: |
+          python <<'PY'
+          from __future__ import annotations
+
+          from io import BytesIO
+          from pathlib import Path
+          from urllib.parse import urljoin
+
+          import requests
+          from bs4 import BeautifulSoup
+          from PIL import Image
+          from rembg import remove
+
+          UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/140 Safari/537.36"
+          headers = {"User-Agent": UA, "Accept-Language": "en-US,en;q=0.9"}
+          out_dir = Path("public/assets/fighters")
+          out_dir.mkdir(parents=True, exist_ok=True)
+
+          def fetch_rgba(url: str, referer: str) -> Image.Image:
+              response = requests.get(url, headers={**headers, "Referer": referer}, timeout=45)
+              response.raise_for_status()
+              image = Image.open(BytesIO(response.content))
+              image.load()
+              return image.convert("RGBA")
+
+          def save_800(image: Image.Image, slug: str):
+              bbox = image.getchannel("A").getbbox()
+              if not bbox:
+                  raise RuntimeError(f"{slug}: no visible subject after transparency processing")
+              image = image.crop(bbox)
+              target_height = 800
+              target_width = max(1, round(image.width * target_height / image.height))
+              image = image.resize((target_width, target_height), Image.Resampling.LANCZOS)
+              output = out_dir / f"{slug}-spotlight.webp"
+              image.save(output, "WEBP", quality=92, method=6)
+              print(f"saved {output} {target_width}x{target_height}")
+
+          # Dan: use the current 2026 UFC athlete cutout, not the older 2023 image.
+          hooker_page = "https://www.ufc.com/athlete/dan-hooker"
+          hooker_url = "https://www.ufc.com/images/styles/athlete_bio_full_body/s3/2026-01/HOOKER_DAN_L_01-31.png?itok=GV6BT7Q-"
+          save_800(fetch_rgba(hooker_url, hooker_page), "dan-hooker")
+
+          # Parnasse's athlete page currently serves UFC's generic red silhouette.
+          # Use the official UFC Paris event hero instead, isolate Parnasse, then remove only the background.
+          event_url = "https://www.ufc.com/event/ufc-fight-night-september-05-2026"
+          response = requests.get(event_url, headers=headers, timeout=45)
+          response.raise_for_status()
+          soup = BeautifulSoup(response.text, "html.parser")
+
+          hero_candidates: list[str] = []
+          for meta in soup.find_all("meta"):
+              label = " ".join(str(meta.get(key, "")) for key in ("property", "name", "content"))
+              if "image" in label.lower():
+                  content = meta.get("content")
+                  if isinstance(content, str) and content.startswith(("http://", "https://", "/")):
+                      hero_candidates.append(urljoin(event_url, content))
+
+          for img in soup.find_all("img"):
+              alt = str(img.get("alt", ""))
+              if "Parnasse" not in alt and "Hooker" not in alt:
+                  continue
+              for key in ("src", "data-src"):
+                  value = img.get(key)
+                  if isinstance(value, str) and value:
+                      hero_candidates.append(urljoin(event_url, value))
+              srcset = img.get("srcset")
+              if isinstance(srcset, str):
+                  for entry in srcset.split(","):
+                      value = entry.strip().split(" ")[0]
+                      if value:
+                          hero_candidates.append(urljoin(event_url, value))
+
+          hero_candidates = list(dict.fromkeys(hero_candidates))
+          print("event image candidates:")
+          for candidate in hero_candidates:
+              print(" ", candidate)
+
+          best = None
+          for candidate in hero_candidates:
+              try:
+                  image = fetch_rgba(candidate, event_url)
+              except Exception as exc:
+                  print("skip", candidate, exc)
+                  continue
+              # UFC's Paris event promo is a wide side-by-side Hooker/Parnasse composition.
+              if image.width <= image.height:
+                  continue
+              area = image.width * image.height
+              if best is None or area > best[0]:
+                  best = (area, image, candidate)
+
+          if best is None:
+              raise RuntimeError("Could not resolve the official UFC Paris event hero")
+
+          _, hero, source_url = best
+          print(f"selected UFC Paris hero {hero.width}x{hero.height}: {source_url}")
+
+          # Hooker is left and Parnasse is right in the official UFC event hero.
+          x0 = round(hero.width * 0.50)
+          parnasse_crop = hero.crop((x0, 0, hero.width, hero.height)).convert("RGBA")
+          isolated = remove(parnasse_crop)
+          if not isinstance(isolated, Image.Image):
+              isolated = Image.open(BytesIO(isolated)).convert("RGBA")
+          save_800(isolated.convert("RGBA"), "salahdine-parnasse")
+          PY
+
+      - name: Remove helper workflow and commit canonical assets
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/refine-paris-spotlight-cutouts.yml
+          git add public/assets/fighters/dan-hooker-spotlight.webp public/assets/fighters/salahdine-parnasse-spotlight.webp
+          git commit -m "fix(picks): refine Paris Spotlight cutouts"
+          git push origin HEAD:fix/paris-spotlight-cutouts
