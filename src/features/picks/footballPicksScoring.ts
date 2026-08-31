@@ -22,12 +22,10 @@ export const FOOTBALL_FUTURES_RULES = {
   cfb: {
     power4Champions: { selections: 4, pointsEach: 2 },
     playoffTeams: { selections: 12, pointsEach: 1 },
-    semifinalists: { selections: 4, pointsEach: 2 },
     heisman: { selections: 1, pointsEach: 3 },
     nationalChampion: { selections: 1, pointsEach: 7 },
   },
   nfl: {
-    divisionChampions: { selections: 8, pointsEach: 1 },
     playoffTeams: { selections: 14, pointsEach: 1 },
     conferenceChampionshipTeams: { selections: 4, pointsEach: 2 },
     mvp: { selections: 1, pointsEach: 3 },
@@ -53,12 +51,15 @@ export const FOOTBALL_FUTURES_MAX_POINTS = {
 export const FOOTBALL_FUTURES_TOTAL_POINTS = FOOTBALL_FUTURES_MAX_POINTS.total;
 
 export interface FootballFuturesPicks {
-  cfbPower4Champions: readonly string[];
+  cfbPower4Champions: {
+    acc: string;
+    bigTen: string;
+    big12: string;
+    sec: string;
+  };
   cfbPlayoffTeams: readonly string[];
-  cfbSemifinalists: readonly string[];
   cfbHeisman: string;
   cfbNationalChampion: string;
-  nflDivisionChampions: readonly string[];
   nflPlayoffTeams: readonly string[];
   nflConferenceChampionshipTeams: readonly string[];
   nflMvp: string;
@@ -66,21 +67,48 @@ export interface FootballFuturesPicks {
 }
 
 export interface FootballFuturesResults {
-  cfbPower4Champions: readonly string[];
+  cfbPower4Champions: {
+    acc: string | null;
+    bigTen: string | null;
+    big12: string | null;
+    sec: string | null;
+  };
   cfbPlayoffTeams: readonly string[];
-  cfbSemifinalists: readonly string[];
   cfbHeisman: string | null;
   cfbNationalChampion: string | null;
-  nflDivisionChampions: readonly string[];
   nflPlayoffTeams: readonly string[];
   nflConferenceChampionshipTeams: readonly string[];
   nflMvp: string | null;
   nflSuperBowlChampion: string | null;
 }
 
+export interface FootballFutureTeamOption {
+  slug: string;
+  name: string;
+  league: "nfl" | "college-football";
+  logoUrl: string | null;
+}
+
+export interface FootballFuturesGroupEntry {
+  displayName: string;
+  isCurrentUser: boolean;
+  picks: FootballFuturesPicks | null;
+  points: number;
+}
+
+export interface FootballFuturesState {
+  season: number;
+  lockAt: string;
+  isLocked: boolean;
+  ownPicks: FootballFuturesPicks | null;
+  points: number;
+  groupEntries: FootballFuturesGroupEntry[];
+  teamOptions: FootballFutureTeamOption[];
+}
+
 function countUniqueMatches(picks: readonly string[], results: readonly string[]) {
   const resultSet = new Set(results.filter(Boolean));
-  return [...new Set(picks.filter(Boolean))].filter(pick => resultSet.has(pick)).length;
+  return [...new Set(picks.filter(Boolean))].filter((pick) => resultSet.has(pick)).length;
 }
 
 function scoreSingleFuture(pick: string, result: string | null, points: number) {
@@ -89,12 +117,15 @@ function scoreSingleFuture(pick: string, result: string | null, points: number) 
 
 export function scoreFootballFutures(picks: FootballFuturesPicks, results: FootballFuturesResults) {
   const cfb = {
-    power4Champions: countUniqueMatches(picks.cfbPower4Champions, results.cfbPower4Champions)
-      * FOOTBALL_FUTURES_RULES.cfb.power4Champions.pointsEach,
+    power4Champions: (["acc", "bigTen", "big12", "sec"] as const).reduce((points, conference) => (
+      points + scoreSingleFuture(
+        picks.cfbPower4Champions[conference],
+        results.cfbPower4Champions[conference],
+        FOOTBALL_FUTURES_RULES.cfb.power4Champions.pointsEach,
+      )
+    ), 0),
     playoffTeams: countUniqueMatches(picks.cfbPlayoffTeams, results.cfbPlayoffTeams)
       * FOOTBALL_FUTURES_RULES.cfb.playoffTeams.pointsEach,
-    semifinalists: countUniqueMatches(picks.cfbSemifinalists, results.cfbSemifinalists)
-      * FOOTBALL_FUTURES_RULES.cfb.semifinalists.pointsEach,
     heisman: scoreSingleFuture(picks.cfbHeisman, results.cfbHeisman, FOOTBALL_FUTURES_RULES.cfb.heisman.pointsEach),
     nationalChampion: scoreSingleFuture(
       picks.cfbNationalChampion,
@@ -103,8 +134,6 @@ export function scoreFootballFutures(picks: FootballFuturesPicks, results: Footb
     ),
   };
   const nfl = {
-    divisionChampions: countUniqueMatches(picks.nflDivisionChampions, results.nflDivisionChampions)
-      * FOOTBALL_FUTURES_RULES.nfl.divisionChampions.pointsEach,
     playoffTeams: countUniqueMatches(picks.nflPlayoffTeams, results.nflPlayoffTeams)
       * FOOTBALL_FUTURES_RULES.nfl.playoffTeams.pointsEach,
     conferenceChampionshipTeams: countUniqueMatches(
