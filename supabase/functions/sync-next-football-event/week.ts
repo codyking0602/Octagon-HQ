@@ -22,6 +22,8 @@ export interface FootballWeekPreview {
   college_games: FootballWeekGamePreview[];
 }
 
+const FOOTBALL_WEEK_ZONE = "America/New_York";
+
 function isoDate(date: Date) {
   return date.toISOString().slice(0, 10);
 }
@@ -35,6 +37,12 @@ function parseIsoDate(value: string) {
   return date;
 }
 
+function addIsoDays(value: string, days: number) {
+  const date = parseIsoDate(value);
+  date.setUTCDate(date.getUTCDate() + days);
+  return isoDate(date);
+}
+
 export function footballWeekRange(weekStart: string) {
   const start = parseIsoDate(weekStart);
   const dates = Array.from({ length: 7 }, (_, index) => {
@@ -43,6 +51,36 @@ export function footballWeekRange(weekStart: string) {
     return isoDate(date);
   });
   return { weekStart: dates[0], weekEnd: dates[6], dates };
+}
+
+export function footballWeekEspnDateRange(weekStart: string) {
+  const range = footballWeekRange(weekStart);
+  return `${range.weekStart.replaceAll("-", "")}-${addIsoDays(weekStart, 7).replaceAll("-", "")}`;
+}
+
+function localDateInFootballZone(value: unknown) {
+  const date = new Date(String(value ?? ""));
+  if (!Number.isFinite(date.valueOf())) return null;
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: FOOTBALL_WEEK_ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(date);
+  const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((item) => item.type === type)?.value ?? "";
+  const year = part("year");
+  const month = part("month");
+  const day = part("day");
+  return year && month && day ? `${year}-${month}-${day}` : null;
+}
+
+function eventsInsideFootballWeek(weekStart: string, events: Json[]) {
+  const range = footballWeekRange(weekStart);
+  return events.filter((event) => {
+    const kickoff = event?.competitions?.[0]?.date ?? event?.date;
+    const localDate = localDateInFootballZone(kickoff);
+    return localDate !== null && localDate >= range.weekStart && localDate <= range.weekEnd;
+  });
 }
 
 function teamRank(competitor: Json) {
@@ -103,13 +141,15 @@ export function rankCollegeFootballCandidates(events: Json[], limit = 20) {
 
 export function buildFootballWeekPreview(weekStart: string, nflEvents: Json[], collegeEvents: Json[]): FootballWeekPreview {
   const range = footballWeekRange(weekStart);
-  const collegeGames = summarizeFootballWeekEvents(collegeEvents, "college-football");
-  const collegeCandidates = rankCollegeFootballCandidates(collegeEvents, 20);
+  const nflWeekEvents = eventsInsideFootballWeek(weekStart, nflEvents);
+  const collegeWeekEvents = eventsInsideFootballWeek(weekStart, collegeEvents);
+  const collegeGames = summarizeFootballWeekEvents(collegeWeekEvents, "college-football");
+  const collegeCandidates = rankCollegeFootballCandidates(collegeWeekEvents, 20);
   return {
     week_start: range.weekStart,
     week_end: range.weekEnd,
     recommended_college_count: Math.min(8, collegeGames.length),
-    nfl_games: summarizeFootballWeekEvents(nflEvents, "nfl"),
+    nfl_games: summarizeFootballWeekEvents(nflWeekEvents, "nfl"),
     college_candidates: collegeCandidates,
     college_games: collegeGames,
   };
