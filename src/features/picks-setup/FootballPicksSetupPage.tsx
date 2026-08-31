@@ -139,6 +139,7 @@ export default function FootballPicksSetupPage({ repository: suppliedRepository 
     && repository?.stageFootballWeek
     && weekPreview.nflGames.length + selectedCollegeIds.length > 0
   );
+  const currentSlateHasPicks = draft?.warnings.includes("THE CURRENT FOOTBALL SLATE ALREADY HAS PICKS") ?? false;
 
   async function runAction(key: string, action: () => Promise<void>, reload = true) {
     setBusy(key);
@@ -184,6 +185,13 @@ export default function FootballPicksSetupPage({ repository: suppliedRepository 
   function discardDraft() {
     if (!draft || !window.confirm("Discard this staged Football slate? This does not change published Picks.")) return;
     void runAction("discard", () => repository!.discardDraft(draft.draftId));
+  }
+
+  function resetCurrentFootballSlate() {
+    if (!currentSlateHasPicks || !window.confirm(
+      "Permanently delete the current Football slate and all picks on it? The staged Football slate will remain."
+    )) return;
+    void runAction("reset-current", () => repository!.resetCurrentFootballSlate());
   }
 
   return (
@@ -321,6 +329,11 @@ export default function FootballPicksSetupPage({ repository: suppliedRepository 
                 <button className="primary-action" type="button" disabled={Boolean(busy) || !draft.canPublish} onClick={publishDraft}>
                   {busy === "publish" ? "PUBLISHING…" : "PUBLISH FOOTBALL SLATE"}
                 </button>
+                {currentSlateHasPicks ? (
+                  <button className="pick-setup-danger" type="button" disabled={Boolean(busy)} onClick={resetCurrentFootballSlate}>
+                    {busy === "reset-current" ? "DELETING CURRENT SLATE…" : "DELETE CURRENT TEST SLATE"}
+                  </button>
+                ) : null}
                 <button className="pick-setup-danger" type="button" disabled={Boolean(busy)} onClick={discardDraft}>DISCARD STAGED SLATE</button>
               </div>
             </section>
