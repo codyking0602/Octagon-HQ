@@ -9,11 +9,7 @@ import {
   EMPTY_FOOTBALL_FUTURES_PICKS,
   validateFootballFuturesPicks,
 } from "./footballFuturesDraft";
-import {
-  loadFootballFutures,
-  saveFootballFutures,
-  type FootballFuturesSnapshot,
-} from "./footballFuturesRepository";
+import { usePicks } from "./PicksProvider";
 
 function splitList(value: string) {
   return value.split(",").map((item) => item.trimStart());
@@ -67,53 +63,28 @@ function GroupFuture({ name, picks }: { name: string; picks: FootballFuturesPick
   );
 }
 
-export function FootballFuturesCard({ onLockedChange }: { onLockedChange?: (locked: boolean) => void }) {
-  const [snapshot, setSnapshot] = useState<FootballFuturesSnapshot | null>(null);
-  const [draft, setDraft] = useState<FootballFuturesPicks>(EMPTY_FOOTBALL_FUTURES_PICKS);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+export function FootballFuturesCard() {
+  const picks = usePicks();
+  const snapshot = picks.footballFutures;
+  const [draft, setDraft] = useState<FootballFuturesPicks>(snapshot?.ownPicks ?? EMPTY_FOOTBALL_FUTURES_PICKS);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    let active = true;
-    setLoading(true);
-    loadFootballFutures()
-      .then((next) => {
-        if (!active) return;
-        setSnapshot(next);
-        setDraft(next.ownPicks ?? EMPTY_FOOTBALL_FUTURES_PICKS);
-        setError("");
-        onLockedChange?.(next.locked);
-      })
-      .catch((nextError: unknown) => {
-        if (active) setError(nextError instanceof Error ? nextError.message : "Football Futures are unavailable.");
-      })
-      .finally(() => { if (active) setLoading(false); });
-    return () => { active = false; };
-  }, [onLockedChange]);
+    setDraft(snapshot?.ownPicks ?? EMPTY_FOOTBALL_FUTURES_PICKS);
+  }, [snapshot?.season, snapshot?.ownPicks]);
 
   const validation = useMemo(() => validateFootballFuturesPicks(draft), [draft]);
   const locked = snapshot?.locked === true;
+  const loading = picks.loading && !snapshot;
 
   async function save() {
-    if (locked || saving) return;
-    if (validation.errors.length) { setError(validation.errors[0]); return; }
-    setSaving(true);
-    try {
-      const next = await saveFootballFutures(validation.normalized);
-      setSnapshot(next);
-      setDraft(next.ownPicks ?? validation.normalized);
-      setError("");
-      onLockedChange?.(next.locked);
-    } catch (nextError) {
-      setError(nextError instanceof Error ? nextError.message : "Football Futures could not be saved.");
-      try {
-        const latest = await loadFootballFutures();
-        setSnapshot(latest);
-        setDraft(latest.ownPicks ?? validation.normalized);
-        onLockedChange?.(latest.locked);
-      } catch { /* preserve the save error */ }
-    } finally { setSaving(false); }
+    if (locked || picks.savingFootballFutures) return;
+    if (validation.errors.length) {
+      setError(validation.errors[0]);
+      return;
+    }
+    setError("");
+    await picks.saveFootballFutures(validation.normalized);
   }
 
   const update = <K extends keyof FootballFuturesPicks,>(key: K, value: FootballFuturesPicks[K]) => {
@@ -157,8 +128,8 @@ export function FootballFuturesCard({ onLockedChange }: { onLockedChange?: (lock
       ) : null}
       {!locked && !loading ? (
         <footer className="football-futures__footer">
-          <p>Semifinalists/champions must also be inside the playoff field.</p>
-          <button type="button" className="primary-action" disabled={saving} onClick={() => void save()}>{saving ? "SAVING…" : "SAVE FUTURES"}</button>
+          <p>Champions must advance through the playoff rounds you picked.</p>
+          <button type="button" className="primary-action" disabled={picks.savingFootballFutures} onClick={() => void save()}>{picks.savingFootballFutures ? "SAVING…" : "SAVE FUTURES"}</button>
         </footer>
       ) : null}
       {locked && snapshot ? (
