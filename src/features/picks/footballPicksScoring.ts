@@ -18,6 +18,111 @@ export interface FootballWeekScore {
   pushes: number;
 }
 
+export const FOOTBALL_FUTURES_RULES = {
+  cfb: {
+    power4Champions: { selections: 4, pointsEach: 2 },
+    playoffTeams: { selections: 12, pointsEach: 1 },
+    semifinalists: { selections: 4, pointsEach: 2 },
+    heisman: { selections: 1, pointsEach: 3 },
+    nationalChampion: { selections: 1, pointsEach: 7 },
+  },
+  nfl: {
+    divisionChampions: { selections: 8, pointsEach: 1 },
+    playoffTeams: { selections: 14, pointsEach: 1 },
+    conferenceChampionshipTeams: { selections: 4, pointsEach: 2 },
+    mvp: { selections: 1, pointsEach: 3 },
+    superBowlChampion: { selections: 1, pointsEach: 7 },
+  },
+} as const;
+
+function futuresRuleMax(rule: { selections: number; pointsEach: number }) {
+  return rule.selections * rule.pointsEach;
+}
+
+const cfbFuturesMaxPoints = Object.values(FOOTBALL_FUTURES_RULES.cfb)
+  .reduce((sum, rule) => sum + futuresRuleMax(rule), 0);
+const nflFuturesMaxPoints = Object.values(FOOTBALL_FUTURES_RULES.nfl)
+  .reduce((sum, rule) => sum + futuresRuleMax(rule), 0);
+
+export const FOOTBALL_FUTURES_MAX_POINTS = {
+  cfb: cfbFuturesMaxPoints,
+  nfl: nflFuturesMaxPoints,
+  total: cfbFuturesMaxPoints + nflFuturesMaxPoints,
+} as const;
+
+export const FOOTBALL_FUTURES_TOTAL_POINTS = FOOTBALL_FUTURES_MAX_POINTS.total;
+
+export interface FootballFuturesPicks {
+  cfbPower4Champions: readonly string[];
+  cfbPlayoffTeams: readonly string[];
+  cfbSemifinalists: readonly string[];
+  cfbHeisman: string;
+  cfbNationalChampion: string;
+  nflDivisionChampions: readonly string[];
+  nflPlayoffTeams: readonly string[];
+  nflConferenceChampionshipTeams: readonly string[];
+  nflMvp: string;
+  nflSuperBowlChampion: string;
+}
+
+export interface FootballFuturesResults {
+  cfbPower4Champions: readonly string[];
+  cfbPlayoffTeams: readonly string[];
+  cfbSemifinalists: readonly string[];
+  cfbHeisman: string | null;
+  cfbNationalChampion: string | null;
+  nflDivisionChampions: readonly string[];
+  nflPlayoffTeams: readonly string[];
+  nflConferenceChampionshipTeams: readonly string[];
+  nflMvp: string | null;
+  nflSuperBowlChampion: string | null;
+}
+
+function countUniqueMatches(picks: readonly string[], results: readonly string[]) {
+  const resultSet = new Set(results.filter(Boolean));
+  return [...new Set(picks.filter(Boolean))].filter(pick => resultSet.has(pick)).length;
+}
+
+function scoreSingleFuture(pick: string, result: string | null, points: number) {
+  return result && pick === result ? points : 0;
+}
+
+export function scoreFootballFutures(picks: FootballFuturesPicks, results: FootballFuturesResults) {
+  const cfb = {
+    power4Champions: countUniqueMatches(picks.cfbPower4Champions, results.cfbPower4Champions)
+      * FOOTBALL_FUTURES_RULES.cfb.power4Champions.pointsEach,
+    playoffTeams: countUniqueMatches(picks.cfbPlayoffTeams, results.cfbPlayoffTeams)
+      * FOOTBALL_FUTURES_RULES.cfb.playoffTeams.pointsEach,
+    semifinalists: countUniqueMatches(picks.cfbSemifinalists, results.cfbSemifinalists)
+      * FOOTBALL_FUTURES_RULES.cfb.semifinalists.pointsEach,
+    heisman: scoreSingleFuture(picks.cfbHeisman, results.cfbHeisman, FOOTBALL_FUTURES_RULES.cfb.heisman.pointsEach),
+    nationalChampion: scoreSingleFuture(
+      picks.cfbNationalChampion,
+      results.cfbNationalChampion,
+      FOOTBALL_FUTURES_RULES.cfb.nationalChampion.pointsEach,
+    ),
+  };
+  const nfl = {
+    divisionChampions: countUniqueMatches(picks.nflDivisionChampions, results.nflDivisionChampions)
+      * FOOTBALL_FUTURES_RULES.nfl.divisionChampions.pointsEach,
+    playoffTeams: countUniqueMatches(picks.nflPlayoffTeams, results.nflPlayoffTeams)
+      * FOOTBALL_FUTURES_RULES.nfl.playoffTeams.pointsEach,
+    conferenceChampionshipTeams: countUniqueMatches(
+      picks.nflConferenceChampionshipTeams,
+      results.nflConferenceChampionshipTeams,
+    ) * FOOTBALL_FUTURES_RULES.nfl.conferenceChampionshipTeams.pointsEach,
+    mvp: scoreSingleFuture(picks.nflMvp, results.nflMvp, FOOTBALL_FUTURES_RULES.nfl.mvp.pointsEach),
+    superBowlChampion: scoreSingleFuture(
+      picks.nflSuperBowlChampion,
+      results.nflSuperBowlChampion,
+      FOOTBALL_FUTURES_RULES.nfl.superBowlChampion.pointsEach,
+    ),
+  };
+  const cfbTotal = Object.values(cfb).reduce((sum, points) => sum + points, 0);
+  const nflTotal = Object.values(nfl).reduce((sum, points) => sum + points, 0);
+  return { cfb: { ...cfb, total: cfbTotal }, nfl: { ...nfl, total: nflTotal }, total: cfbTotal + nflTotal };
+}
+
 export function footballLockAllowance(gameCount: number) {
   if (gameCount >= 12) return 3;
   if (gameCount >= 6) return 2;
