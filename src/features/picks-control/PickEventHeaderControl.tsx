@@ -26,7 +26,7 @@ export default function PickEventHeaderControl({ eventId, repository, allowGalle
 
   async function onFileChange(event: ChangeEvent<HTMLInputElement>) {
     const selectedFiles = Array.from(event.target.files ?? []);
-    const files = galleryEnabled ? selectedFiles.slice(0, 4) : selectedFiles.slice(0, 1);
+    const files = galleryEnabled ? selectedFiles : selectedFiles.slice(0, 1);
     event.target.value = "";
     if (!files.length || !repository || busy) return;
 
