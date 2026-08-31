@@ -139,7 +139,8 @@ export default function FootballPicksSetupPage({ repository: suppliedRepository 
     && repository?.stageFootballWeek
     && weekPreview.nflGames.length + selectedCollegeIds.length > 0
   );
-  const currentSlateHasPicks = draft?.warnings.includes("THE CURRENT FOOTBALL SLATE ALREADY HAS PICKS") ?? false;
+  const currentSlateHasPicks = Boolean(repository?.resetCurrentFootballSlate)
+    && (draft?.warnings.includes("THE CURRENT FOOTBALL SLATE ALREADY HAS PICKS") ?? false);
 
   async function runAction(key: string, action: () => Promise<void>, reload = true) {
     setBusy(key);
@@ -188,10 +189,11 @@ export default function FootballPicksSetupPage({ repository: suppliedRepository 
   }
 
   function resetCurrentFootballSlate() {
-    if (!currentSlateHasPicks || !window.confirm(
+    const resetCurrent = repository?.resetCurrentFootballSlate;
+    if (!currentSlateHasPicks || !resetCurrent || !window.confirm(
       "Permanently delete the current Football slate and all picks on it? The staged Football slate will remain."
     )) return;
-    void runAction("reset-current", () => repository!.resetCurrentFootballSlate());
+    void runAction("reset-current", resetCurrent);
   }
 
   return (
