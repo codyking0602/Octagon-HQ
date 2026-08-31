@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useIdentity } from "../identity/IdentityProvider";
 import { usePicks } from "./PicksProvider";
@@ -47,6 +48,16 @@ describe("FootballPicksPage", () => {
     expect(screen.getByRole("button", { name: /Ohio State Buckeyes/ })).toHaveTextContent("+3.5");
     expect(screen.getByRole("button", { name: /Texas Longhorns/ })).toHaveTextContent("-3.5");
     expect(screen.getByText("Who has picked")).toBeInTheDocument();
+  });
+
+  it("gives the Picks owner a direct manage-event path for this published Football slate", () => {
+    vi.mocked(usePicks).mockReturnValue(runtime({ event: { ...event, canControl: true } }) as never);
+    render(<MemoryRouter><FootballPicksPage /></MemoryRouter>);
+
+    expect(screen.getByRole("link", { name: /MANAGE EVENT/ })).toHaveAttribute(
+      "href",
+      "/picks/control?sport=football&event=football-week-1#header",
+    );
   });
 
   it("saves team selections through the shared Picks setPick path", () => {
