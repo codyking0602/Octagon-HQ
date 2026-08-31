@@ -8,6 +8,7 @@ import {
   type PropsWithChildren,
 } from "react";
 import { useIdentity } from "../identity/IdentityProvider";
+import type { FootballFuturesPicks } from "./footballPicksScoring";
 import {
   emptyPickHistory,
   emptyPickSummary,
@@ -22,6 +23,7 @@ import type { PickEventMemberProgress } from "./groupProgressModel";
 import { loadPickGroupProgress } from "./picksGroupProgressRepository";
 import {
   createPicksRepository,
+  type FootballFuturesSnapshot,
   type PicksRepository,
 } from "./picksRepository";
 
@@ -31,11 +33,13 @@ interface PicksContextValue {
   groupProgressLoading: boolean;
   savingBoutId: string | null;
   savingLock: boolean;
+  savingFootballFutures: boolean;
   error: string;
   groupProgressError: string;
   event: PickEvent | null;
   selections: Record<string, string>;
   footballLocks: Record<string, boolean>;
+  footballFutures: FootballFuturesSnapshot | null;
   groupProgress: PickEventMemberProgress[];
   underdogLock: UnderdogLock | null;
   summary: PickSummary;
@@ -43,6 +47,7 @@ interface PicksContextValue {
   refresh: () => Promise<void>;
   setPick: (boutId: string, fighterSlug: string) => Promise<void>;
   setFootballLock: (boutId: string, isLock: boolean) => Promise<void>;
+  saveFootballFutures: (picks: FootballFuturesPicks) => Promise<void>;
   setUnderdogLock: (boutId: string, fighterSlug: string) => Promise<void>;
   clearUnderdogLock: () => Promise<void>;
 }
@@ -53,8 +58,12 @@ function readableError(error: unknown) {
   const message = error instanceof Error && error.message
     ? error.message
     : "Octagon HQ could not update Picks.";
-  if (message.toLowerCase().includes("football_lock_limit_reached")) {
+  const normalized = message.toLowerCase();
+  if (normalized.includes("football_lock_limit_reached")) {
     return "You’ve used all available Locks for this slate.";
+  }
+  if (normalized.includes("football_futures_locked")) {
+    return "Football Futures are locked. Your saved picks are preserved.";
   }
   return message;
 }
@@ -88,6 +97,7 @@ export function PicksProvider({
   const [event, setEvent] = useState<PickEvent | null>(null);
   const [selections, setSelections] = useState<Record<string, string>>({});
   const [footballLocks, setFootballLocks] = useState<Record<string, boolean>>({});
+  const [footballFutures, setFootballFutures] = useState<FootballFuturesSnapshot | null>(null);
   const [groupProgress, setGroupProgress] = useState<PickEventMemberProgress[]>([]);
   const [underdogLock, setUnderdogLockState] = useState<UnderdogLock | null>(null);
   const [summary, setSummary] = useState<PickSummary>(emptyPickSummary);
@@ -96,6 +106,7 @@ export function PicksProvider({
   const [groupProgressLoading, setGroupProgressLoading] = useState(false);
   const [savingBoutId, setSavingBoutId] = useState<string | null>(null);
   const [savingLock, setSavingLock] = useState(false);
+  const [savingFootballFutures, setSavingFootballFutures] = useState(false);
   const [error, setError] = useState("");
   const [groupProgressError, setGroupProgressError] = useState("");
 
@@ -115,6 +126,7 @@ export function PicksProvider({
       setEvent(null);
       setSelections({});
       setFootballLocks({});
+      setFootballFutures(null);
       setGroupProgress([]);
       setUnderdogLockState(null);
       setSummary(emptyPickSummary);
@@ -135,6 +147,7 @@ export function PicksProvider({
       if (!expectedProfileId) {
         setSelections({});
         setFootballLocks({});
+        setFootballFutures(null);
         setGroupProgress([]);
         setUnderdogLockState(null);
         setSummary(emptyPickSummary);
@@ -146,11 +159,15 @@ export function PicksProvider({
 
       const season = nextEvent?.season ?? new Date().getFullYear();
       setGroupProgressLoading(Boolean(nextEvent));
-      const [rows, nextLock, nextSummary, nextHistory, progressResult] = await Promise.all([
+      const futuresRequest = nextEvent?.sport === "football" && repository.loadFootballFutures
+        ? repository.loadFootballFutures(season)
+        : Promise.resolve(null);
+      const [rows, nextLock, nextSummary, nextHistory, nextFutures, progressResult] = await Promise.all([
         nextEvent ? repository.loadMyPicks(nextEvent.eventId) : Promise.resolve([]),
         nextEvent ? repository.loadMyUnderdogLock(nextEvent.eventId) : Promise.resolve(null),
         repository.loadMySummary(season, sport),
         repository.loadMyHistory(season, sport),
+        futuresRequest,
         nextEvent
           ? loadPickGroupProgress(nextEvent.eventId)
               .then((value) => ({ value, error: "" }))
@@ -160,6 +177,7 @@ export function PicksProvider({
       if (revision !== revisionRef.current || profileIdRef.current !== expectedProfileId) return;
       setSelections(selectionsFromRows(rows));
       setFootballLocks(footballLocksFromRows(rows));
+      setFootballFutures(nextFutures);
       setGroupProgress(progressResult.value);
       setGroupProgressError(progressResult.error);
       setUnderdogLockState(nextLock);
@@ -180,6 +198,7 @@ export function PicksProvider({
   useEffect(() => {
     setSavingBoutId(null);
     setSavingLock(false);
+    setSavingFootballFutures(false);
     void refresh();
   }, [refresh]);
 
@@ -241,9 +260,7 @@ export function PicksProvider({
       if (profileIdRef.current !== expectedProfileId) return;
       if (isFightLockRejection(nextError)) {
         await refresh();
-        if (profileIdRef.current === expectedProfileId) {
-          setError("This fight just locked. Your saved pick was refreshed.");
-        }
+        if (profileIdRef.current === expectedProfileId) setError("This fight just locked. Your saved pick was refreshed.");
       } else {
         setError(readableError(nextError));
       }
@@ -289,9 +306,7 @@ export function PicksProvider({
       if (profileIdRef.current !== expectedProfileId) return;
       if (isFightLockRejection(nextError)) {
         await refresh();
-        if (profileIdRef.current === expectedProfileId) {
-          setError("This game just locked. Your saved Lock was refreshed.");
-        }
+        if (profileIdRef.current === expectedProfileId) setError("This game just locked. Your saved Lock was refreshed.");
       } else {
         setError(readableError(nextError));
       }
@@ -299,6 +314,41 @@ export function PicksProvider({
       if (profileIdRef.current === expectedProfileId) setSavingBoutId(null);
     }
   }, [event, footballLocks, identity.openDialog, profileId, refresh, repository, selections]);
+
+  const saveFootballFutures = useCallback(async (nextPicks: FootballFuturesPicks) => {
+    const expectedProfileId = profileId;
+    if (!expectedProfileId) return identity.openDialog();
+    if (!repository || !event || event.sport !== "football") {
+      setError("Football Futures are not available on this Picks card.");
+      return;
+    }
+    const saveFutures = repository.saveFootballFutures;
+    const loadFutures = repository.loadFootballFutures;
+    if (!saveFutures || !loadFutures) {
+      setError("Football Futures are not connected on this build.");
+      return;
+    }
+    if (footballFutures?.locked) {
+      setError("Football Futures are locked. Your saved picks are preserved.");
+      return;
+    }
+    setSavingFootballFutures(true);
+    try {
+      const saved = await saveFutures(event.season, nextPicks);
+      if (profileIdRef.current !== expectedProfileId) return;
+      setFootballFutures(saved);
+      setError("");
+    } catch (nextError) {
+      if (profileIdRef.current !== expectedProfileId) return;
+      setError(readableError(nextError));
+      try {
+        const latest = await loadFutures(event.season);
+        if (profileIdRef.current === expectedProfileId) setFootballFutures(latest);
+      } catch { /* preserve the save error */ }
+    } finally {
+      if (profileIdRef.current === expectedProfileId) setSavingFootballFutures(false);
+    }
+  }, [event, footballFutures?.locked, identity.openDialog, profileId, repository]);
 
   const setUnderdogLock = useCallback(async (boutId: string, fighterSlug: string) => {
     const expectedProfileId = profileId;
@@ -326,9 +376,7 @@ export function PicksProvider({
       if (profileIdRef.current !== expectedProfileId) return;
       if (isFightLockRejection(nextError)) {
         await refresh();
-        if (profileIdRef.current === expectedProfileId) {
-          setError("This fight just locked. Your Underdog Lock was refreshed.");
-        }
+        if (profileIdRef.current === expectedProfileId) setError("This fight just locked. Your Underdog Lock was refreshed.");
       } else {
         setError(readableError(nextError));
       }
@@ -359,9 +407,7 @@ export function PicksProvider({
       if (profileIdRef.current !== expectedProfileId) return;
       if (isFightLockRejection(nextError)) {
         await refresh();
-        if (profileIdRef.current === expectedProfileId) {
-          setError("This fight just locked. Your Underdog Lock was refreshed.");
-        }
+        if (profileIdRef.current === expectedProfileId) setError("This fight just locked. Your Underdog Lock was refreshed.");
       } else {
         setError(readableError(nextError));
       }
@@ -377,11 +423,13 @@ export function PicksProvider({
       groupProgressLoading,
       savingBoutId,
       savingLock,
+      savingFootballFutures,
       error,
       groupProgressError,
       event,
       selections,
       footballLocks,
+      footballFutures,
       groupProgress,
       underdogLock,
       summary,
@@ -389,6 +437,7 @@ export function PicksProvider({
       refresh,
       setPick,
       setFootballLock,
+      saveFootballFutures,
       setUnderdogLock,
       clearUnderdogLock,
     }}>

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
+import { FootballFuturesCard } from "./FootballFuturesCard";
 import { footballLockAllowance } from "./footballPicksScoring";
 import { GroupPickProgress } from "./GroupPickProgress";
 import { GroupPickReveal } from "./GroupPickReveal";
@@ -69,6 +70,7 @@ export default function FootballPicksPage() {
   const lockGameCount = games.filter((game) => game.resultStatus !== "cancelled").length;
   const lockAllowance = footballLockAllowance(lockGameCount);
   const usedLocks = games.filter((game) => game.resultStatus !== "cancelled" && picks.footballLocks[game.boutId] === true).length;
+  const futuresLocked = picks.footballFutures?.locked === true;
   const posters = useMemo(() => pickEventPosters(event), [event]);
   const poster = posters[0] ?? null;
   const [activePosterIndex, setActivePosterIndex] = useState(0);
@@ -155,6 +157,8 @@ export default function FootballPicksPage() {
             ATS ODDS · {spreadProvider}{spreadFrozenAt ? ` · FROZEN ${lineFrozenLabel(spreadFrozenAt)}` : ""}
           </p>
 
+          {identity.profile && !futuresLocked ? <FootballFuturesCard /> : null}
+
           {identity.profile ? (
             <section className="football-picks-slate" aria-label={`${event.name} football games`}>
               <header><p className="eyebrow">WEEKLY SLATE</p><h2>Pick every game against the spread (ATS)</h2></header>
@@ -217,6 +221,8 @@ export default function FootballPicksPage() {
               })}
             </section>
           ) : null}
+
+          {identity.profile && futuresLocked ? <FootballFuturesCard /> : null}
 
           {identity.profile ? <div className="football-picks-group"><GroupPickProgress event={event} locked={event.status !== "upcoming"} mySelections={picks.selections} /></div> : null}
           {identity.profile ? (

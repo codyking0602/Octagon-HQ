@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { getSupabaseClient } from "../../lib/supabase";
+import type { FootballFuturesPicks } from "./footballPicksScoring";
 import type {
   PickEvent,
   PickEventSpotlight,
@@ -80,12 +81,45 @@ const historyEventSchema = z.object({
 });
 const historySchema = z.object({ season: z.number().int().nullable(), summary: historyRecordSchema.extend({ events_entered: z.number().int().nonnegative() }), season_standings: z.array(seasonStandingSchema).optional().default([]), events: z.array(historyEventSchema) });
 
+const futuresPicksSchema = z.object({
+  cfbPower4Champions: z.array(z.string()),
+  cfbPlayoffTeams: z.array(z.string()),
+  cfbSemifinalists: z.array(z.string()),
+  cfbHeisman: z.string(),
+  cfbNationalChampion: z.string(),
+  nflDivisionChampions: z.array(z.string()),
+  nflPlayoffTeams: z.array(z.string()),
+  nflConferenceChampionshipTeams: z.array(z.string()),
+  nflMvp: z.string(),
+  nflSuperBowlChampion: z.string(),
+});
+const futuresGroupEntrySchema = z.object({ profile_id: z.string(), display_name: z.string(), picks: futuresPicksSchema });
+const futuresSnapshotSchema = z.object({
+  season: z.number().int(), locked: z.boolean(), lock_at: z.string(), own_picks: futuresPicksSchema.nullable(), group_picks: z.array(futuresGroupEntrySchema),
+});
+
+export interface FootballFuturesGroupEntry {
+  profileId: string;
+  displayName: string;
+  picks: FootballFuturesPicks;
+}
+
+export interface FootballFuturesSnapshot {
+  season: number;
+  locked: boolean;
+  lockAt: string;
+  ownPicks: FootballFuturesPicks | null;
+  groupPicks: FootballFuturesGroupEntry[];
+}
+
 export interface PicksRepository {
   loadCurrentEvent: (sport?: PickSport) => Promise<PickEvent | null>;
   loadMyPicks: (eventId: string) => Promise<ProfileEventPick[]>;
   loadMyUnderdogLock: (eventId: string) => Promise<UnderdogLock | null>;
   loadMySummary: (season: number, sport?: PickSport) => Promise<PickSummary>;
   loadMyHistory: (season: number | null, sport?: PickSport) => Promise<PickHistory>;
+  loadFootballFutures?: (season: number) => Promise<FootballFuturesSnapshot>;
+  saveFootballFutures?: (season: number, picks: FootballFuturesPicks) => Promise<FootballFuturesSnapshot>;
   savePick: (eventId: string, boutId: string, fighterSlug: string, isLock?: boolean) => Promise<ProfileEventPick>;
   setUnderdogLock: (eventId: string, boutId: string, fighterSlug: string) => Promise<UnderdogLock>;
   clearUnderdogLock: (eventId: string) => Promise<void>;
@@ -162,6 +196,16 @@ function mapHistory(value: unknown): PickHistory {
     })),
   };
 }
+function mapFootballFutures(value: unknown): FootballFuturesSnapshot {
+  const parsed = futuresSnapshotSchema.parse(value);
+  return {
+    season: parsed.season,
+    locked: parsed.locked,
+    lockAt: parsed.lock_at,
+    ownPicks: parsed.own_picks,
+    groupPicks: parsed.group_picks.map((entry) => ({ profileId: entry.profile_id, displayName: entry.display_name, picks: entry.picks })),
+  };
+}
 
 export function createPicksRepository(): PicksRepository | null {
   const supabase = getSupabaseClient();
@@ -173,6 +217,8 @@ export function createPicksRepository(): PicksRepository | null {
     async loadMyUnderdogLock(eventId) { const data = await requireRpcSuccess(client.rpc("get_my_event_underdog_lock", { p_event_id: eventId })); const raw = Array.isArray(data) ? data[0] : data; return raw ? mapLock(raw) : null; },
     async loadMySummary(season, sport = "mma") { return mapSummary(await requireRpcSuccess(client.rpc("get_my_pick_summary", { p_season: season, p_sport: sport }))); },
     async loadMyHistory(season, sport = "mma") { return mapHistory(await requireRpcSuccess(client.rpc("get_my_pick_history", { p_season: season, p_sport: sport }))); },
+    async loadFootballFutures(season) { return mapFootballFutures(await requireRpcSuccess(client.rpc("get_football_futures", { p_season: season }))); },
+    async saveFootballFutures(season, picks) { return mapFootballFutures(await requireRpcSuccess(client.rpc("save_football_futures", { p_season: season, p_picks: picks }))); },
     async savePick(eventId, boutId, fighterSlug, isLock) {
       const baseParams = { p_event_id: eventId, p_bout_id: boutId, p_fighter_slug: fighterSlug };
       const params = isLock === undefined ? baseParams : { ...baseParams, p_is_lock: isLock };
