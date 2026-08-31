@@ -34,8 +34,17 @@ begin
     raise exception 'current Football slate has no picks; publish normally';
   end if;
 
-  -- pick_bouts and profile_event_picks already belong to pick_events through
-  -- ON DELETE CASCADE, so the canonical event owner remains the one delete path.
+  -- Test resets intentionally remove event-owned audit rows that otherwise
+  -- RESTRICT the event delete. Monitoring rows retain their history with the
+  -- event/bout references cleared by their existing ON DELETE SET NULL keys.
+  delete from public.pick_result_corrections correction
+  where correction.event_id = v_event_id;
+
+  delete from public.pick_card_change_actions action
+  where action.event_id = v_event_id;
+
+  -- Bouts, submitted picks, and underdog locks already cascade from the
+  -- canonical event/bout ownership chain. The staged replacement is separate.
   delete from public.pick_events event
   where event.event_id = v_event_id
     and event.sport = 'football'
