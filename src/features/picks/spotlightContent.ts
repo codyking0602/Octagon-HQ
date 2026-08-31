@@ -25,6 +25,19 @@ function finite(value: number | null): value is number {
   return value !== null && Number.isFinite(value);
 }
 
+function hasUfcRateSample(fighter: SpotlightStatsFighter) {
+  return [
+    fighter.slpm,
+    fighter.strikingAccuracy,
+    fighter.sapm,
+    fighter.strikingDefense,
+    fighter.takedownAverage,
+    fighter.takedownAccuracy,
+    fighter.takedownDefense,
+    fighter.submissionAverage,
+  ].some(finite);
+}
+
 function reachInches(value: string) {
   const match = value.match(/([0-9]+(?:\.[0-9]+)?)/);
   return match ? Number(match[1]) : null;
@@ -40,6 +53,11 @@ function ageAt(dob: string | null, eventStartsAt: string) {
     || (event.getUTCMonth() === birth.getUTCMonth() && event.getUTCDate() < birth.getUTCDate());
   if (beforeBirthday) age -= 1;
   return age >= 18 && age <= 60 ? String(age) : "--";
+}
+
+function numericAgeAt(dob: string | null, eventStartsAt: string) {
+  const age = Number(ageAt(dob, eventStartsAt));
+  return Number.isFinite(age) ? age : null;
 }
 
 function strengthEdges(fighter: SpotlightStatsFighter) {
@@ -79,7 +97,62 @@ function strengthEdges(fighter: SpotlightStatsFighter) {
   return edges.sort((left, right) => right.score - left.score);
 }
 
-function advantageEdges(fighter: SpotlightStatsFighter, opponent: SpotlightStatsFighter) {
+function sampleAsymmetryEdges(
+  fighter: SpotlightStatsFighter,
+  opponent: SpotlightStatsFighter,
+  eventStartsAt: string,
+) {
+  const fighterHasSample = hasUfcRateSample(fighter);
+  const opponentHasSample = hasUfcRateSample(opponent);
+  if (fighterHasSample === opponentHasSample) return null;
+
+  const fighterReach = reachInches(fighter.reach);
+  const opponentReach = reachInches(opponent.reach);
+  const fighterAge = numericAgeAt(fighter.dob, eventStartsAt);
+  const opponentAge = numericAgeAt(opponent.dob, eventStartsAt);
+  const selected: string[] = [];
+
+  if (fighterHasSample) {
+    if (finite(fighterReach) && finite(opponentReach) && fighterReach - opponentReach >= 1.5) {
+      selected.push("Range control");
+    }
+    if (finite(fighter.slpm) && fighter.slpm >= 4.5) selected.push("Proven UFC pace");
+    if (finite(fighter.takedownDefense) && fighter.takedownDefense >= 70) selected.push("Takedown defense");
+    if (finite(fighter.strikingAccuracy) && fighter.strikingAccuracy >= 45) selected.push("Striking efficiency");
+    if (finite(fighter.strikingDefense) && fighter.strikingDefense >= 50) selected.push("Defensive striking");
+  } else {
+    if (finite(fighterAge) && finite(opponentAge) && opponentAge - fighterAge >= 5) {
+      selected.push("Clear youth advantage");
+    }
+    if (finite(fighterReach) && finite(opponentReach) && fighterReach - opponentReach >= 1.5) {
+      selected.push("Range and length");
+    }
+    if (
+      fighter.stance.toLowerCase() === "southpaw"
+      && opponent.stance
+      && opponent.stance.toLowerCase() !== "southpaw"
+    ) {
+      selected.push("Southpaw look");
+    }
+    selected.push("No UFCStats sample yet");
+  }
+
+  for (const edge of strengthEdges(fighter)) {
+    if (selected.length >= 3) break;
+    if (!selected.includes(edge.text)) selected.push(edge.text);
+  }
+
+  return selected.slice(0, 3);
+}
+
+function advantageEdges(
+  fighter: SpotlightStatsFighter,
+  opponent: SpotlightStatsFighter,
+  eventStartsAt: string,
+) {
+  const asymmetric = sampleAsymmetryEdges(fighter, opponent, eventStartsAt);
+  if (asymmetric) return asymmetric;
+
   const edges: Edge[] = [];
   const fighterReach = reachInches(fighter.reach);
   const opponentReach = reachInches(opponent.reach);
@@ -168,6 +241,20 @@ function gamePlan(fighter: SpotlightStatsFighter, opponent: SpotlightStatsFighte
   const fighterReach = reachInches(fighter.reach);
   const opponentReach = reachInches(opponent.reach);
   const hasReachEdge = finite(fighterReach) && finite(opponentReach) && fighterReach - opponentReach >= 1.5;
+  const hasReachDisadvantage = finite(fighterReach)
+    && finite(opponentReach)
+    && opponentReach - fighterReach >= 1.5;
+  const fighterHasSample = hasUfcRateSample(fighter);
+  const opponentHasSample = hasUfcRateSample(opponent);
+
+  if (fighterHasSample && !opponentHasSample && style === "striking" && hasReachEdge) {
+    return "work long behind the reach and make every entry costly";
+  }
+  if (!fighterHasSample && opponentHasSample) {
+    return hasReachDisadvantage
+      ? "break the rhythm, close the reach gap, and keep the exchanges varied"
+      : "stay unpredictable and force the fight into unfamiliar phases";
+  }
 
   if (style === "wrestling") {
     if (finite(fighter.takedownAverage) && fighter.takedownAverage >= 4) {
@@ -219,6 +306,14 @@ function surname(name: string) {
 }
 
 function matchupKey(red: SpotlightStatsFighter, blue: SpotlightStatsFighter) {
+  const redHasSample = hasUfcRateSample(red);
+  const blueHasSample = hasUfcRateSample(blue);
+  if (redHasSample !== blueHasSample) {
+    const established = redHasSample ? red : blue;
+    const newcomer = redHasSample ? blue : red;
+    return `the swing is whether ${surname(newcomer.name)} can disrupt ${surname(established.name)}’s established UFC rhythm`;
+  }
+
   const redStyle = primaryStyle(red);
   const blueStyle = primaryStyle(blue);
 
@@ -253,7 +348,7 @@ function fighterPackage(
     height: fighter.height || "--",
     reach: fighter.reach || "--",
     stance: fighter.stance || "--",
-    edges: advantageEdges(fighter, opponent),
+    edges: advantageEdges(fighter, opponent, eventStartsAt),
   };
 }
 
