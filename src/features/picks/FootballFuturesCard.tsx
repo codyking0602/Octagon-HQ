@@ -94,7 +94,19 @@ function FuturesTeamField({ label, points, limit, value, disabled, teams, onChan
         {focused && !disabled && !atLimit ? (
           <div id={listId} className="football-futures-team-picker__options" role="listbox">
             {options.map((team) => (
-              <button key={team} type="button" role="option" aria-selected="false" onClick={() => selectTeam(team)}>{team}</button>
+              <button
+                key={team}
+                type="button"
+                role="option"
+                aria-selected="false"
+                onPointerDown={(event) => {
+                  event.preventDefault();
+                  selectTeam(team);
+                }}
+                onClick={(event) => {
+                  if (event.detail === 0) selectTeam(team);
+                }}
+              >{team}</button>
             ))}
             {!options.length ? <p>No matching teams</p> : null}
           </div>
