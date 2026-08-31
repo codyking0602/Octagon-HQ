@@ -132,6 +132,57 @@ describe("fight Spotlight content", () => {
     expectThreeQualitativeEdges(spotlight.blue.edges);
   });
 
+  it("makes Hooker-Parnasse useful without inventing a UFC sample for Parnasse", () => {
+    const spotlight = buildPickSpotlightContent({
+      boutId: "main-event-dan-hooker-salahdine-parnasse",
+      eventStartsAt: "2026-09-05T19:00:00.000Z",
+      red: {
+        fighterSlug: "dan-hooker",
+        name: "Dan Hooker",
+        record: "24-14-0",
+        dob: "1990-02-13",
+        height: "6' 0\"",
+        reach: "75\"",
+        stance: "Switch",
+        slpm: 4.82,
+        strikingAccuracy: 48,
+        sapm: 4.94,
+        strikingDefense: 49,
+        takedownAverage: 0.68,
+        takedownAccuracy: 33,
+        takedownDefense: 77,
+        submissionAverage: 0.6,
+      },
+      blue: {
+        fighterSlug: "salahdine-parnasse",
+        name: "Salahdine Parnasse",
+        record: "23-2-0",
+        dob: "1997-12-04",
+        height: "5' 10\"",
+        reach: "73\"",
+        stance: "Southpaw",
+        slpm: null,
+        strikingAccuracy: null,
+        sapm: null,
+        strikingDefense: null,
+        takedownAverage: null,
+        takedownAccuracy: null,
+        takedownDefense: null,
+        submissionAverage: null,
+      },
+      generatedAt: "2026-08-31T18:00:00.000Z",
+    });
+
+    expect(spotlight.preview).toBe(
+      "Dan Hooker wants to work long behind the reach and make every entry costly. "
+      + "Salahdine Parnasse needs to break the rhythm, close the reach gap, and keep the exchanges varied; "
+      + "the swing is whether Parnasse can disrupt Hooker’s established UFC rhythm.",
+    );
+    expect(spotlight.preview.split(/\s+/).length).toBeLessThanOrEqual(40);
+    expect(spotlight.red.edges).toEqual(["Range control", "Proven UFC pace", "Takedown defense"]);
+    expect(spotlight.blue.edges).toEqual(["Clear youth advantage", "Southpaw look", "No UFCStats sample yet"]);
+  });
+
   it("uses placeholders only when UFCStats does not publish a tale field", () => {
     const sparse = buildPickSpotlightContent({
       boutId: "sparse-fight",
