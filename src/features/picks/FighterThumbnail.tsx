@@ -39,7 +39,7 @@ export function fighterRemotePhotoPath(slug: string) {
 
 export function fighterThumbnailPath(slug: string) {
   const canonicalSlug = thumbnailSlugAliases.get(slug) ?? slug;
-  return thumbnailBySlug.get(canonicalSlug) ?? fighterRemotePhotoPath(canonicalSlug);
+  return fighterRemotePhotoPath(canonicalSlug) ?? thumbnailBySlug.get(canonicalSlug) ?? null;
 }
 
 export function FighterThumbnail({ name, slug }: { name: string; slug: string }) {
