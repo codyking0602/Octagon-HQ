@@ -124,7 +124,7 @@ export interface PickSetupRepository {
   saveSpotlights?: (draftId: string, spotlights: PickSetupSpotlight[]) => Promise<void>;
   publishDraft: (draftId: string) => Promise<void>;
   discardDraft: (draftId: string) => Promise<void>;
-  resetCurrentFootballSlate: () => Promise<void>;
+  resetCurrentFootballSlate?: () => Promise<void>;
 }
 
 async function requireRpcSuccess<T>(request: PromiseLike<{ data: T; error: { message?: string } | null }>) {
