@@ -20,6 +20,10 @@ export interface SpotlightStatsFighter {
 
 type FightStyle = "striking" | "wrestling" | "submission" | "balanced";
 type Edge = { score: number; text: string };
+type EditorialMatchup = {
+  preview: string;
+  edgesBySlug: ReadonlyMap<string, string[]>;
+};
 
 function finite(value: number | null): value is number {
   return value !== null && Number.isFinite(value);
@@ -237,14 +241,29 @@ function matchupKey(red: SpotlightStatsFighter, blue: SpotlightStatsFighter) {
   return "the key is who imposes the better phase";
 }
 
+function matchupEditorial(red: SpotlightStatsFighter, blue: SpotlightStatsFighter): EditorialMatchup | null {
+  const slugs = new Set([red.fighterSlug, blue.fighterSlug]);
+  if (!slugs.has("dan-hooker") || !slugs.has("salahdine-parnasse")) return null;
+
+  return {
+    preview: "Dan Hooker wants to stretch the fight out with reach, volume, and veteran timing. Salahdine Parnasse needs to stay unpredictable, blend his southpaw striking with level changes, and force Hooker to defend every phase.",
+    edgesBySlug: new Map([
+      ["dan-hooker", ["Reach and range control", "Sustained striking volume", "UFC veteran experience"]],
+      ["salahdine-parnasse", ["Dynamic southpaw offense", "Seamless phase changes", "Wrestling and submission threat"]],
+    ]),
+  };
+}
+
 function editorialPreview(red: SpotlightStatsFighter, blue: SpotlightStatsFighter) {
-  return `${red.name} wants to ${gamePlan(red, blue)}. ${blue.name} needs to ${gamePlan(blue, red)}; ${matchupKey(red, blue)}.`;
+  return matchupEditorial(red, blue)?.preview
+    ?? `${red.name} wants to ${gamePlan(red, blue)}. ${blue.name} needs to ${gamePlan(blue, red)}; ${matchupKey(red, blue)}.`;
 }
 
 function fighterPackage(
   fighter: SpotlightStatsFighter,
   opponent: SpotlightStatsFighter,
   eventStartsAt: string,
+  editorialEdges?: string[],
 ): PickSpotlightFighter {
   return {
     fighterSlug: fighter.fighterSlug,
@@ -253,7 +272,7 @@ function fighterPackage(
     height: fighter.height || "--",
     reach: fighter.reach || "--",
     stance: fighter.stance || "--",
-    edges: advantageEdges(fighter, opponent),
+    edges: editorialEdges ?? advantageEdges(fighter, opponent),
   };
 }
 
@@ -264,11 +283,22 @@ export function buildPickSpotlightContent(input: {
   blue: SpotlightStatsFighter;
   generatedAt?: string;
 }): PickSpotlight {
+  const editorial = matchupEditorial(input.red, input.blue);
   return {
     boutId: input.boutId,
-    preview: editorialPreview(input.red, input.blue),
-    red: fighterPackage(input.red, input.blue, input.eventStartsAt),
-    blue: fighterPackage(input.blue, input.red, input.eventStartsAt),
+    preview: editorial?.preview ?? editorialPreview(input.red, input.blue),
+    red: fighterPackage(
+      input.red,
+      input.blue,
+      input.eventStartsAt,
+      editorial?.edgesBySlug.get(input.red.fighterSlug),
+    ),
+    blue: fighterPackage(
+      input.blue,
+      input.red,
+      input.eventStartsAt,
+      editorial?.edgesBySlug.get(input.blue.fighterSlug),
+    ),
     watchSpotlights: [],
     source: "UFCStats",
     generatedAt: input.generatedAt ?? new Date().toISOString(),
