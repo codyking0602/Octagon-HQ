@@ -1,0 +1,46 @@
+.football-futures-card { display: grid; gap: 12px; padding: 14px; overflow: hidden; border: 1px solid #38322d; border-radius: 14px; background: linear-gradient(145deg, #191715, #111314 72%); }
+.football-futures-card.is-locked { border-color: #34383a; background: #141617; }
+.football-futures-card.is-loading { min-height: 70px; align-content: center; color: #959a9c; font-size: .72rem; }
+.football-futures-card__header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.football-futures-card__header h2 { margin: 2px 0 0; font-size: clamp(1.05rem, 5vw, 1.45rem); text-transform: uppercase; }
+.football-futures-card__deadline { display: grid; flex: 0 0 auto; gap: 2px; text-align: right; }
+.football-futures-card__deadline strong { color: #e9aa7e; font-size: .55rem; letter-spacing: .11em; }
+.football-futures-card__deadline span { max-width: 135px; color: #aeb2b3; font-size: .55rem; font-weight: 850; line-height: 1.2; }
+.football-futures-card__intro { margin: -4px 0 0; color: #999fa1; font-size: .68rem; line-height: 1.4; }
+.football-futures-form { display: grid; gap: 10px; }
+.football-futures-form > section { display: grid; gap: 10px; padding: 11px; border: 1px solid #2b2e30; border-radius: 11px; background: #111314; }
+.football-futures-form > section > header { display: flex; justify-content: space-between; gap: 8px; color: #f5f5f3; font-size: .63rem; letter-spacing: .1em; }
+.football-futures-form > section > header span { color: #e9aa7e; }
+.football-futures-conferences { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+.football-futures-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+.football-futures-form label { display: grid; gap: 4px; min-width: 0; }
+.football-futures-form label > span { color: #888e90; font-size: .48rem; font-weight: 950; letter-spacing: .08em; }
+.football-futures-form input { min-width: 0; width: 100%; padding: 8px 9px; border: 1px solid #34383a; border-radius: 7px; outline: 0; background: #191c1d; color: #f6f6f4; font: inherit; font-size: .68rem; }
+.football-futures-form input:focus { border-color: var(--football-picks-accent); box-shadow: 0 0 0 2px #d06b2b22; }
+.football-futures-list-field { display: grid; gap: 7px; }
+.football-futures-field-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: #f1f2f0; font-size: .57rem; letter-spacing: .075em; }
+.football-futures-field-head span { color: #8f9597; font-size: .5rem; font-weight: 900; }
+.football-futures-chips { display: flex; flex-wrap: wrap; gap: 5px; min-height: 4px; }
+.football-futures-chips button { padding: 5px 7px; border: 1px solid #3b3f41; border-radius: 999px; background: #202324; color: #dfe1e1; font-size: .52rem; font-weight: 800; }
+.football-futures-chips button:not(:disabled) { border-color: #594638; color: #f0c4a3; }
+.football-futures-add-row { display: grid; grid-template-columns: 1fr auto; gap: 6px; }
+.football-futures-add-row button { padding: 0 11px; border: 1px solid #514237; border-radius: 7px; background: #2a211c; color: #edb58e; font-size: .53rem; font-weight: 950; letter-spacing: .08em; }
+.football-futures-add-row button:disabled { opacity: .4; }
+.football-futures-submit { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-top: 2px; }
+.football-futures-submit > span { color: #888e90; font-size: .58rem; line-height: 1.3; }
+.football-futures-submit .primary-action { flex: 0 0 auto; margin: 0; padding: 9px 12px; font-size: .58rem; }
+.football-futures-locked-view { display: grid; gap: 10px; }
+.football-futures-own, .football-futures-group-reveal { display: grid; gap: 8px; padding: 10px; border: 1px solid #2c3032; border-radius: 10px; background: #111314; }
+.football-futures-summary { display: grid; gap: 8px; color: #aeb2b3; font-size: .62rem; line-height: 1.42; }
+.football-futures-summary > div { display: grid; gap: 3px; }
+.football-futures-summary > div > strong { color: #e9aa7e; font-size: .55rem; letter-spacing: .1em; }
+.football-futures-summary p { margin: 0; }
+.football-futures-summary b { color: #e1e3e2; }
+.football-futures-group-reveal details { overflow: hidden; border: 1px solid #292d2f; border-radius: 8px; background: #17191a; }
+.football-futures-group-reveal details.is-current { border-color: #71513d; }
+.football-futures-group-reveal summary { display: flex; justify-content: space-between; gap: 10px; padding: 9px; cursor: pointer; list-style: none; font-size: .62rem; }
+.football-futures-group-reveal summary::-webkit-details-marker { display: none; }
+.football-futures-group-reveal summary span { color: #e9aa7e; font-weight: 900; }
+.football-futures-group-reveal details .football-futures-summary, .football-futures-group-reveal details > p { padding: 0 9px 9px; }
+.football-futures-group-reveal details > p { margin: 0; color: #888e90; font-size: .62rem; }
+@media (min-width: 700px) { .football-futures-card { padding: 17px; } .football-futures-form { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; } .football-futures-submit { grid-column: 1 / -1; } }
