@@ -146,6 +146,7 @@ function advantageEdges(fighter: SpotlightStatsFighter, opponent: SpotlightStats
     if (selected.length >= 3) break;
     if (!selected.includes(edge.text)) selected.push(edge.text);
   }
+  if (!selected.length) selected.push("No UFCStats sample yet");
   return selected.slice(0, 3);
 }
 
