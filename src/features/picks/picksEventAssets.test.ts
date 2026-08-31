@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import type { PickEvent } from "./picksModel";
-import { PICK_EVENT_HEADER_BUCKET, pickEventPoster } from "./picksEventAssets";
+import { PICK_EVENT_HEADER_BUCKET, PICK_EVENT_HEADER_MAX_IMAGES, pickEventPoster, pickEventPosters } from "./picksEventAssets";
 
 vi.mock("../../lib/supabase", () => ({
   getSupabaseClient: () => ({
@@ -44,10 +44,25 @@ const event: PickEvent = {
 describe("Picks persisted event header", () => {
   it("renders the persisted storage object at its stored native ratio", () => {
     expect(PICK_EVENT_HEADER_BUCKET).toBe("pick-event-headers");
+    expect(PICK_EVENT_HEADER_MAX_IMAGES).toBe(4);
     expect(pickEventPoster(event)).toEqual({
       src: "https://storage.test/pick-event-headers/ufc-test-event/event-header",
       aspectRatio: "2400 / 1200",
     });
+  });
+
+  it("derives every image in a persisted gallery from the one canonical header pointer", () => {
+    const galleryEvent = {
+      ...event,
+      sport: "football" as const,
+      headerStoragePath: "football-week-1/event-header-gallery-3-1",
+    };
+
+    expect(pickEventPosters(galleryEvent)).toEqual([
+      { src: "https://storage.test/pick-event-headers/football-week-1/event-header-gallery-3-1", aspectRatio: "2400 / 1200" },
+      { src: "https://storage.test/pick-event-headers/football-week-1/event-header-gallery-3-2", aspectRatio: "2400 / 1200" },
+      { src: "https://storage.test/pick-event-headers/football-week-1/event-header-gallery-3-3", aspectRatio: "2400 / 1200" },
+    ]);
   });
 
   it("has no static or inferred poster fallback when header metadata is absent", () => {
