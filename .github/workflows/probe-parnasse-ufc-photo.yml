@@ -1,0 +1,55 @@
+name: Probe Parnasse UFC Photo
+
+on:
+  push:
+    branches:
+      - fix/paris-spotlight-cutouts
+    paths:
+      - .github/workflows/probe-parnasse-ufc-photo.yml
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --quiet requests beautifulsoup4 pillow
+      - name: Inspect official UFC article photos
+        run: |
+          python <<'PY'
+          from io import BytesIO
+          from urllib.parse import urljoin
+          import requests
+          from bs4 import BeautifulSoup
+          from PIL import Image
+
+          page = "https://www.ufc.com/news/fight-by-fight-preview-ufc-paris-hooker-vs-parnasse"
+          headers = {"User-Agent": "Mozilla/5.0 Chrome/140 Safari/537.36"}
+          response = requests.get(page, headers=headers, timeout=30)
+          response.raise_for_status()
+          soup = BeautifulSoup(response.text, "html.parser")
+          for img in soup.find_all("img"):
+              alt = (img.get("alt") or "").strip()
+              title = (img.get("title") or "").strip()
+              if "parn" not in (alt + " " + title).lower():
+                  continue
+              candidates = []
+              for attr in ("src", "data-src", "data-lazy-src"):
+                  if img.get(attr):
+                      candidates.append(urljoin(page, img.get(attr)))
+              if img.get("srcset"):
+                  candidates.extend(urljoin(page, item.strip().split()[0]) for item in img.get("srcset").split(","))
+              print("ALT:", alt)
+              for url in dict.fromkeys(candidates):
+                  try:
+                      data = requests.get(url, headers={**headers, "Referer": page}, timeout=30).content
+                      image = Image.open(BytesIO(data))
+                      print(f"  {image.width}x{image.height} {image.mode}: {url}")
+                  except Exception as exc:
+                      print("  ERROR", url, exc)
+          PY
