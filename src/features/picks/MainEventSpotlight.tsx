@@ -277,6 +277,10 @@ export function MainEventSpotlight({ bout, spotlight }: { bout: PickBout; spotli
     && data.blue.record && data.blue.age && data.blue.height && data.blue.reach && data.blue.stance,
   );
   const hasEdges = Boolean(data?.red.edges.length || data?.blue.edges.length);
+  const hasScouting = shaneContenders.length > 0;
+  const triggerCopy = data
+    ? (hasScouting ? "View matchup & scouting" : "View matchup breakdown")
+    : "View Shane’s scouting report";
 
   useEffect(() => {
     if (!open) return undefined;
@@ -293,7 +297,7 @@ export function MainEventSpotlight({ bout, spotlight }: { bout: PickBout; spotli
     };
   }, [open]);
 
-  if (!data) return null;
+  if (!data && !hasScouting) return null;
 
   return (
     <>
@@ -304,8 +308,8 @@ export function MainEventSpotlight({ bout, spotlight }: { bout: PickBout; spotli
         onClick={() => setOpen(true)}
       >
         <span>
-          <b>{bout.position === 1 ? "MAIN EVENT SPOTLIGHT" : "FIGHT SPOTLIGHT"}</b>
-          <strong>View matchup breakdown</strong>
+          <b>{data ? (bout.position === 1 ? "MAIN EVENT SPOTLIGHT" : "FIGHT SPOTLIGHT") : "SHANE’S CONTENDER SERIES"}</b>
+          <strong>{triggerCopy}</strong>
           <ShaneContenderBadge fighters={shaneContenders} />
         </span>
         <i aria-hidden="true">›</i>
@@ -323,7 +327,8 @@ export function MainEventSpotlight({ bout, spotlight }: { bout: PickBout; spotli
             className="main-event-spotlight__panel"
             role="dialog"
             aria-modal="true"
-            aria-labelledby={titleId}
+            aria-labelledby={data ? titleId : undefined}
+            aria-label={!data ? `${shaneContenders[0]?.name ?? "Shane contender"} scouting report` : undefined}
           >
             <button
               className="main-event-spotlight__close"
@@ -335,41 +340,45 @@ export function MainEventSpotlight({ bout, spotlight }: { bout: PickBout; spotli
               ×
             </button>
 
-            <div className="main-event-spotlight__hero">
-              <p>{data.kicker}</p>
-              <div className="main-event-spotlight__fighters">
-                <FighterHero fighter={data.red} corner="red" />
-                <div className="main-event-spotlight__vs">VS</div>
-                <FighterHero fighter={data.blue} corner="blue" />
+            {data ? (
+              <div className="main-event-spotlight__hero">
+                <p>{data.kicker}</p>
+                <div className="main-event-spotlight__fighters">
+                  <FighterHero fighter={data.red} corner="red" />
+                  <div className="main-event-spotlight__vs">VS</div>
+                  <FighterHero fighter={data.blue} corner="blue" />
+                </div>
               </div>
-            </div>
+            ) : null}
 
             <div className="main-event-spotlight__body">
-              <section className="main-event-spotlight__preview">
-                <span>FIGHT PREVIEW</span>
-                <h2 id={titleId}>{data.red.name} vs. {data.blue.name}</h2>
-                {data.preview ? <p>{data.preview}</p> : null}
-                {data.watchSpotlights.length ? (
-                  <div
-                    className="main-event-spotlight__watch-links"
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: `repeat(${data.watchSpotlights.length}, minmax(0, 1fr))`,
-                      gap: "8px",
-                    }}
-                  >
-                    {data.watchSpotlights.map((watch) => (
-                      <a key={`${watch.label}:${watch.url}`} href={watch.url} target="_blank" rel="noopener noreferrer">
-                        {watch.label}
-                      </a>
-                    ))}
-                  </div>
-                ) : null}
-              </section>
+              {data ? (
+                <section className="main-event-spotlight__preview">
+                  <span>FIGHT PREVIEW</span>
+                  <h2 id={titleId}>{data.red.name} vs. {data.blue.name}</h2>
+                  {data.preview ? <p>{data.preview}</p> : null}
+                  {data.watchSpotlights.length ? (
+                    <div
+                      className="main-event-spotlight__watch-links"
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: `repeat(${data.watchSpotlights.length}, minmax(0, 1fr))`,
+                        gap: "8px",
+                      }}
+                    >
+                      {data.watchSpotlights.map((watch) => (
+                        <a key={`${watch.label}:${watch.url}`} href={watch.url} target="_blank" rel="noopener noreferrer">
+                          {watch.label}
+                        </a>
+                      ))}
+                    </div>
+                  ) : null}
+                </section>
+              ) : null}
 
               <ShaneContenderSpotlightSection fighters={shaneContenders} />
 
-              {hasTale ? (
+              {data && hasTale ? (
                 <section className="main-event-spotlight__section">
                   <div className="main-event-spotlight__section-title"><span>TALE OF THE TAPE</span></div>
                   <div className="main-event-spotlight__tale">
@@ -382,7 +391,7 @@ export function MainEventSpotlight({ bout, spotlight }: { bout: PickBout; spotli
                 </section>
               ) : null}
 
-              {hasEdges ? (
+              {data && hasEdges ? (
                 <section className="main-event-spotlight__section">
                   <div className="main-event-spotlight__section-title"><span>MATCHUP EDGES</span></div>
                   <div className="main-event-spotlight__edges">
