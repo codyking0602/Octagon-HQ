@@ -89,6 +89,31 @@ function oddsNameMatches(team: FootballTeam, candidate: unknown) {
   return value === slug(team.name) || (!!team.abbreviation && value === slug(team.abbreviation));
 }
 
+function providerNameMatches(left: unknown, right: unknown) {
+  const leftSlug = slug(String(left ?? ""));
+  const rightSlug = slug(String(right ?? ""));
+  return Boolean(leftSlug && rightSlug && leftSlug === rightSlug);
+}
+
+function kickoffMatches(startsAt: string, candidate: unknown) {
+  const espnKickoff = Date.parse(startsAt);
+  const oddsKickoff = Date.parse(String(candidate ?? ""));
+  return Number.isFinite(espnKickoff)
+    && Number.isFinite(oddsKickoff)
+    && Math.abs(espnKickoff - oddsKickoff) <= 30 * 60 * 1000;
+}
+
+function findOddsEvent(oddsEvents: Json[], home: FootballTeam, away: FootballTeam, startsAt: string) {
+  const exact = oddsEvents.find((event) =>
+    oddsNameMatches(home, event.home_team) && oddsNameMatches(away, event.away_team));
+  if (exact) return exact;
+
+  const sameKickoffWithOneExactSide = oddsEvents.filter((event) =>
+    kickoffMatches(startsAt, event.commence_time)
+    && (oddsNameMatches(home, event.home_team) || oddsNameMatches(away, event.away_team)));
+  return sameKickoffWithOneExactSide.length === 1 ? sameKickoffWithOneExactSide[0] : undefined;
+}
+
 export function normalizeFootballFinalResult(espnEvent: Json, league: string): NormalizedFootballFinalResult | null {
   const competition = espnEvent?.competitions?.[0];
   if (competition?.status?.type?.completed !== true) return null;
@@ -111,15 +136,18 @@ export function normalizeFootballEvent(espnEvent: Json, oddsEvents: Json[], leag
   const { competition, startsAt, gameSlug } = context;
   const home = context.home.team;
   const away = context.away.team;
+  const matchup = `${away.name} at ${home.name}`;
 
-  const oddsEvent = oddsEvents.find((event) =>
-    oddsNameMatches(home, event.home_team) && oddsNameMatches(away, event.away_team));
-  const spreads = oddsEvent?.bookmakers?.flatMap((book: Json) =>
+  const oddsEvent = findOddsEvent(oddsEvents, home, away, startsAt);
+  if (!oddsEvent) throw new Error(`The Odds API has no matching event for ${matchup}`);
+
+  const oddsHomeTeam = String(oddsEvent.home_team ?? "").trim();
+  const spreads = oddsEvent.bookmakers?.flatMap((book: Json) =>
     (book.markets ?? []).filter((market: Json) => market.key === "spreads")
       .map((market: Json) => ({ updated: book.last_update, outcomes: market.outcomes }))) ?? [];
-  const usable = spreads.find((market: Json) => market.outcomes?.some((outcome: Json) => oddsNameMatches(home, outcome.name)));
-  const homeLine = usable?.outcomes?.find((outcome: Json) => oddsNameMatches(home, outcome.name))?.point;
-  if (!Number.isFinite(homeLine) || !usable?.updated) throw new Error("The Odds API has no matching ATS line");
+  const usable = spreads.find((market: Json) => market.outcomes?.some((outcome: Json) => providerNameMatches(oddsHomeTeam, outcome.name)));
+  const homeLine = usable?.outcomes?.find((outcome: Json) => providerNameMatches(oddsHomeTeam, outcome.name))?.point;
+  if (!Number.isFinite(homeLine) || !usable?.updated) throw new Error(`The Odds API has no ATS line for ${matchup}`);
 
   const venue = competition?.venue ?? {};
   const address = venue.address ?? {};
@@ -130,7 +158,7 @@ export function normalizeFootballEvent(espnEvent: Json, oddsEvents: Json[], leag
     source_url: String(espnEvent?.links?.[0]?.href ?? "https://www.espn.com/football/"),
     sport: "football", league: league.toLowerCase(), event_kind: "game",
     event_id: `${league.toLowerCase()}-${gameSlug}-${startsAt.slice(0, 10)}`,
-    name: `${away.name} at ${home.name}`, subtitle: String(espnEvent?.shortName ?? ""),
+    name: matchup, subtitle: String(espnEvent?.shortName ?? ""),
     venue: String(venue.fullName ?? "TBD"),
     location: [address.city, address.state].filter(Boolean).join(", ") || "TBD",
     starts_at: kickoffAt, locks_at: kickoffAt, season,
