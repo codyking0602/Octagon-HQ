@@ -67,12 +67,9 @@ Deno.serve(async (request) => {
       if (requestedIds.some((value: string) => !/^\d+$/.test(value)) || new Set(requestedIds).size !== requestedIds.length) {
         return json({ error: "college_event_ids must contain unique ESPN event IDs" }, 400);
       }
-      if (requestedIds.length !== weekPreview.required_college_count) {
-        return json({ error: `choose exactly ${weekPreview.required_college_count} college games for this week` }, 400);
-      }
-      const candidateIds = new Set(weekPreview.college_candidates.map((game) => game.espn_event_id));
-      if (requestedIds.some((eventId: string) => !candidateIds.has(eventId))) {
-        return json({ error: "college selections must come from this week's ranked candidate pool" }, 400);
+      const collegeGameIds = new Set(weekPreview.college_games.map((game) => game.espn_event_id));
+      if (requestedIds.some((eventId: string) => !collegeGameIds.has(eventId))) {
+        return json({ error: "college selections must come from this week's FBS schedule" }, 400);
       }
 
       const nflById = new Map(nflEvents.map((event) => [String(event?.id ?? ""), event]));
