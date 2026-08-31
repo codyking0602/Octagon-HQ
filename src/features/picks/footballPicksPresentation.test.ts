@@ -14,10 +14,10 @@ describe("Football Picks presentation", () => {
     expect(picksStyles).toMatch(/\.football-picks-grading \{[^}]*gap: 0;[^}]*padding: 0/);
   });
 
-  it("mirrors the UFC Picks artwork-driven atmosphere and sparse sheen cadence", () => {
+  it("mirrors the UFC Picks artwork-driven atmosphere with a slower sheen cadence", () => {
     expect(picksStyles).toContain("var(--picks-event-poster)");
     expect(picksStyles).toContain("linear-gradient(112deg");
-    expect(picksStyles).toContain("animation: football-picks-page-sheen 6.5s ease-in-out infinite");
+    expect(picksStyles).toContain("animation: football-picks-page-sheen 13s ease-in-out infinite");
     expect(picksStyles).toContain("36%, 100% { opacity: 0");
   });
 
