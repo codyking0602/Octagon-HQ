@@ -157,7 +157,7 @@ export default function FootballPicksPage() {
 
           {identity.profile ? (
             <section className="football-picks-slate" aria-label={`${event.name} football games`}>
-              <header><p className="eyebrow">WEEKLY SLATE</p><h2>Pick every game ATS</h2></header>
+              <header><p className="eyebrow">WEEKLY SLATE</p><h2>Pick every game against the spread (ATS)</h2></header>
               {games.map((game) => {
                 const selected = picks.selections[game.boutId] ?? null;
                 const isLock = picks.footballLocks[game.boutId] === true;
