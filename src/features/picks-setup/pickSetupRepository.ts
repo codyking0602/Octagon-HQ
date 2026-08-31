@@ -124,6 +124,7 @@ export interface PickSetupRepository {
   saveSpotlights?: (draftId: string, spotlights: PickSetupSpotlight[]) => Promise<void>;
   publishDraft: (draftId: string) => Promise<void>;
   discardDraft: (draftId: string) => Promise<void>;
+  resetCurrentFootballSlate: () => Promise<void>;
 }
 
 async function requireRpcSuccess<T>(request: PromiseLike<{ data: T; error: { message?: string } | null }>) {
@@ -278,5 +279,6 @@ export function createPickSetupRepository(): PickSetupRepository | null {
     },
     async publishDraft(draftId) { await requireRpcSuccess(client.rpc("publish_pick_event_draft", { p_draft_id: draftId })); },
     async discardDraft(draftId) { await requireRpcSuccess(client.rpc("discard_pick_event_draft", { p_draft_id: draftId })); },
+    async resetCurrentFootballSlate() { await requireRpcSuccess(client.rpc("reset_current_football_pick_event")); },
   };
 }
