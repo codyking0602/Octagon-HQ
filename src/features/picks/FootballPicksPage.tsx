@@ -23,10 +23,8 @@ function spreadLabel(value: number) {
   return value > 0 ? `+${value}` : String(value);
 }
 
-function teamSpread(bout: PickBout, slug: string) {
-  if (bout.frozenSpreadHome == null || !bout.homeTeamSlug) return "LINE TBD";
-  const line = slug === bout.homeTeamSlug ? bout.frozenSpreadHome : -bout.frozenSpreadHome;
-  return spreadLabel(line);
+function gameLineLabel(bout: PickBout) {
+  return bout.frozenSpreadHome == null ? "LINE TBD" : `HOME ${spreadLabel(bout.frozenSpreadHome)}`;
 }
 
 function teamMark(name: string) {
@@ -34,10 +32,24 @@ function teamMark(name: string) {
   return words.length > 1 ? `${words[0][0]}${words.at(-1)?.[0] ?? ""}` : name.slice(0, 2);
 }
 
+function leagueLabel(weightClass: string) {
+  const value = weightClass.replace(/\s*ATS$/i, "").toUpperCase();
+  return value.includes("COLLEGE") || value === "CFB" ? "CFB" : "NFL";
+}
+
 function gameStatus(bout: PickBout, locked: boolean) {
   if (bout.resultStatus === "cancelled") return "CANCELLED";
   if (bout.resultStatus && bout.resultStatus !== "pending") return "FINAL";
   return locked ? "LOCKED" : "OPEN";
+}
+
+function TeamLogo({ name, logoUrl }: { name: string; logoUrl?: string | null }) {
+  return (
+    <span className="football-pick-team-mark" aria-hidden="true">
+      <span>{teamMark(name)}</span>
+      {logoUrl ? <img src={logoUrl} alt="" loading="lazy" onError={(event) => event.currentTarget.remove()} /> : null}
+    </span>
+  );
 }
 
 export default function FootballPicksPage() {
@@ -79,7 +91,7 @@ export default function FootballPicksPage() {
               <h1 id="football-week-title">{event.name}</h1>
               <p>{event.subtitle}</p>
               <div className="football-picks-hero__meta">
-                <span>{games.length} GAMES</span><span>NFL + COLLEGE</span><span>LINES FROZEN</span>
+                <span>{games.length} GAMES</span><span>NFL + CFB</span><span>LINES FROZEN</span>
               </div>
               {event.canControl ? (
                 <Link
@@ -99,6 +111,14 @@ export default function FootballPicksPage() {
             {!identity.profile ? <button type="button" className="primary-action" onClick={identity.openDialog}>SIGN IN TO PICK</button> : null}
           </section>
 
+          <details className="surface-card football-picks-grading">
+            <summary><span>SCORING &amp; GRADING</span><strong>HOW IT WORKS</strong></summary>
+            <div>
+              <p><b>ATS win</b> 1 point · <b>Lock win</b> 3 points total · <b>Push</b> 0.5 · <b>Loss</b> 0.</p>
+              <p>Lines are frozen when the slate is published and every result grades against that frozen line. {lockAllowance ? `This slate allows ${lockAllowance} Locks.` : "Locks unlock on larger slates."} Your lowest-scoring week is dropped from the championship total.</p>
+            </div>
+          </details>
+
           {identity.profile ? (
             <section className="football-picks-slate" aria-label={`${event.name} football games`}>
               <header><p className="eyebrow">WEEKLY SLATE</p><h2>Pick every game ATS</h2></header>
@@ -110,48 +130,51 @@ export default function FootballPicksPage() {
                 const readOnly = locked || cancelled;
                 const lockLimitReached = usedLocks >= lockAllowance && !isLock;
                 const kickoff = game.locksAt ?? event.startsAt;
-                const choices = [
-                  { slug: game.blueFighterSlug, name: game.blueFighterName, side: "AWAY" },
-                  { slug: game.redFighterSlug, name: game.redFighterName, side: "HOME" },
-                ];
-                const selectedName = choices.find((team) => team.slug === selected)?.name ?? null;
+                const away = { slug: game.blueFighterSlug, name: game.blueFighterName, side: "AWAY", logoUrl: game.awayTeamLogoUrl };
+                const home = { slug: game.redFighterSlug, name: game.redFighterName, side: "HOME", logoUrl: game.homeTeamLogoUrl };
+                const selectedName = selected === away.slug ? away.name : selected === home.slug ? home.name : null;
                 return (
                   <article className={`football-pick-game${locked ? " is-locked" : ""}${isLock ? " is-lock" : ""}`} key={game.boutId}>
                     <header>
-                      <div><strong>{game.weightClass.replace(/\s*ATS$/i, "")}</strong><span>{kickoffLabel(kickoff)}</span></div>
+                      <strong>{leagueLabel(game.weightClass)}</strong>
                       <b className={`football-pick-game__status is-${gameStatus(game, locked).toLowerCase()}`}>{gameStatus(game, locked)}</b>
                     </header>
-                    <div className="football-pick-game__teams">
-                      {choices.map((team) => {
+                    <div className="football-pick-game__matchup">
+                      {[away, home].map((team) => {
                         const isSelected = selected === team.slug;
                         return (
                           <button
-                            type="button" key={team.slug} aria-pressed={isSelected}
-                            className={isSelected ? "is-selected" : ""}
+                            type="button"
+                            key={team.slug}
+                            aria-pressed={isSelected}
+                            aria-label={`${team.name} ${team.side}`}
+                            className={`football-pick-team is-${team.side.toLowerCase()}${isSelected ? " is-selected" : ""}`}
                             disabled={readOnly || Boolean(picks.savingBoutId)}
                             onClick={() => void picks.setPick(game.boutId, team.slug)}
                           >
-                            <span className="football-pick-team-mark" aria-hidden="true">{teamMark(team.name)}</span>
-                            <span className="football-pick-team-copy"><small>{team.side}</small><strong>{team.name}</strong></span>
-                            <span className="football-pick-line"><small>SPREAD</small><strong>{teamSpread(game, team.slug)}</strong></span>
-                            {isSelected ? <em>YOUR PICK</em> : null}
+                            <TeamLogo name={team.name} logoUrl={team.logoUrl} />
+                            <span className="football-pick-team-copy"><strong>{team.name}</strong><small>{isSelected ? "✓ YOUR PICK" : team.side}</small></span>
                           </button>
                         );
                       })}
+                      <div className="football-pick-game__line" aria-label={`Frozen ATS line ${gameLineLabel(game)}`}>
+                        <small>LINE</small><strong>{gameLineLabel(game)}</strong>
+                      </div>
                     </div>
-                    {lockAllowance > 0 && !cancelled ? (
-                      <div className="football-pick-game__lock">
+                    <footer>
+                      <span>{locked ? "KICKED OFF · PICK LOCKED" : kickoffLabel(kickoff)}</span>
+                      {lockAllowance > 0 && !cancelled ? (
                         <button
                           type="button"
+                          className="football-pick-game__lock"
                           aria-pressed={isLock}
                           aria-label={selectedName ? `${isLock ? "Remove Lock from" : "Make Lock"} ${selectedName}` : "Pick a team before making a Lock"}
                           disabled={readOnly || Boolean(picks.savingBoutId) || !selected || lockLimitReached}
                           onClick={() => void picks.setFootballLock(game.boutId, !isLock)}
-                        >{isLock ? "★ LOCK" : "★ MAKE LOCK"}</button>
-                        <span>{!selected ? "PICK A TEAM FIRST" : lockLimitReached ? "LOCK LIMIT REACHED" : isLock ? "3 PTS FOR ATS WIN · TAP TO REMOVE" : "3 PTS FOR ATS WIN"}</span>
-                      </div>
-                    ) : null}
-                    <footer><span>{locked ? "KICKED OFF · PICK LOCKED" : `LOCKS ${kickoffLabel(kickoff)}`}</span>{picks.savingBoutId === game.boutId ? <strong role="status">SAVING…</strong> : null}</footer>
+                        >{isLock ? "★ LOCK" : "☆ LOCK"}</button>
+                      ) : null}
+                      {picks.savingBoutId === game.boutId ? <strong role="status">SAVING…</strong> : null}
+                    </footer>
                     {locked ? <GroupPickReveal redFighterSlug={game.redFighterSlug} redFighterName={game.redFighterName} blueFighterSlug={game.blueFighterSlug} blueFighterName={game.blueFighterName} picks={game.groupPicks ?? []} /> : null}
                   </article>
                 );
