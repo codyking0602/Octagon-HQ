@@ -32,6 +32,47 @@ describe("UFCStats Spotlight snapshot", () => {
     expect(builder).not.toContain("fighter-details");
   });
 
+  it("does not hard-fail a future card because a fighter has not been seeded into the snapshot yet", () => {
+    expect(builder).not.toContain("UFCSTATS_SNAPSHOT_FIGHTER_NOT_FOUND");
+    expect(builder).toContain('record: "--"');
+    expect(builder).toContain("strikingAccuracy: null");
+    expect(builder).toContain("takedownDefense: null");
+
+    const noSample = {
+      name: "Future UFC Fighter",
+      fighterSlug: "future-ufc-fighter",
+      record: "--",
+      dob: null,
+      height: "--",
+      reach: "--",
+      stance: "--",
+      slpm: null,
+      strikingAccuracy: null,
+      sapm: null,
+      strikingDefense: null,
+      takedownAverage: null,
+      takedownAccuracy: null,
+      takedownDefense: null,
+      submissionAverage: null,
+    };
+    const opponent = {
+      ...noSample,
+      name: "Future UFC Opponent",
+      fighterSlug: "future-ufc-opponent",
+    };
+    const spotlight = buildPickSpotlightContent({
+      boutId: "main-future-ufc-fighter-future-ufc-opponent",
+      eventStartsAt: "2026-09-12T23:00:00.000Z",
+      red: noSample,
+      blue: opponent,
+      generatedAt: "2026-08-31T20:00:00.000Z",
+    });
+
+    expect(spotlight.red.edges).toEqual(["No UFCStats sample yet"]);
+    expect(spotlight.blue.edges).toEqual(["No UFCStats sample yet"]);
+    expect(spotlight.source).toBe("UFCStats");
+  });
+
   it("keeps the UFC 330 Spotlight fighters in the canonical snapshot", () => {
     for (const name of ["Islam Makhachev", "Ian Machado Garry", "Mackenzie Dern", "Gillian Robertson"]) {
       expectCompleteSpotlightFighter(name);
