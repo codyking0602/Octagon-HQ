@@ -5,7 +5,7 @@ import {
   normalizeFootballFinalResult,
   normalizeFootballSlate,
 } from "./normalize.ts";
-import { buildFootballWeekPreview, footballWeekRange } from "./week.ts";
+import { buildFootballWeekPreview, footballWeekEspnDateRange, footballWeekRange } from "./week.ts";
 
 type Json = Record<string, any>;
 
@@ -17,10 +17,9 @@ const headers = {
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { ...headers, "Content-Type": "application/json" } });
 
 async function fetchEspnWeekEvents(weekStart: string, league: "nfl" | "college-football") {
-  const range = footballWeekRange(weekStart);
   const sportPath = league === "nfl" ? "football/nfl" : "football/college-football";
   const group = league === "college-football" ? "&groups=80" : "";
-  const dateRange = `${range.weekStart.replaceAll("-", "")}-${range.weekEnd.replaceAll("-", "")}`;
+  const dateRange = footballWeekEspnDateRange(weekStart);
   const response = await fetch(`https://site.web.api.espn.com/apis/site/v2/sports/${sportPath}/scoreboard?dates=${dateRange}&limit=200${group}`);
   if (!response.ok) throw new Error(`football ESPN ${league} schedule request failed (${response.status})`);
   const payload = await response.json();
