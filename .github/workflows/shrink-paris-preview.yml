@@ -1,0 +1,40 @@
+name: Shrink Paris Spotlight Preview
+
+on:
+  push:
+    branches:
+      - fix/paris-spotlight-cutouts
+    paths:
+      - .github/workflows/shrink-paris-preview.yml
+
+permissions:
+  contents: write
+
+jobs:
+  shrink:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/paris-spotlight-cutouts
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --quiet pillow
+      - name: Shrink preview
+        run: |
+          python <<'PY'
+          from PIL import Image
+          path = "public/assets/_paris-spotlight-preview.jpg"
+          image = Image.open(path).convert("RGB").resize((64, 64), Image.Resampling.LANCZOS)
+          image.save(path, "JPEG", quality=35, optimize=True)
+          PY
+      - name: Commit and remove helper
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/shrink-paris-preview.yml
+          git add public/assets/_paris-spotlight-preview.jpg
+          git commit -m "chore: shrink temporary Spotlight preview"
+          git push origin HEAD:fix/paris-spotlight-cutouts
