@@ -106,6 +106,9 @@ export default function PicksControlCenterPage({
 }: PicksControlCenterPageProps) {
   const identity = useIdentity();
   const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const requestedOwnerSport: OwnerSport = searchParams.get("sport") === "football" ? "football" : "mma";
+  const footballEventId = searchParams.get("event")?.trim() ?? "";
   const [controlRepository] = useState<PickControlRepository | null>(() => (
     suppliedControlRepository === undefined ? createPickControlRepository() : suppliedControlRepository
   ));
@@ -120,13 +123,24 @@ export default function PicksControlCenterPage({
   const [controlRevision, setControlRevision] = useState(0);
   const [spotlightsOpen, setSpotlightsOpen] = useState(false);
   const [pushState, setPushState] = useState<"idle" | "sending" | "sent" | "error">("idle");
-  const [ownerSport, setOwnerSport] = useState<OwnerSport>("mma");
+  const [ownerSport, setOwnerSport] = useState<OwnerSport>(requestedOwnerSport);
   const controlSeed = useRef<ControlSeed>({ status: "empty" });
   const loadCurrentControlEvent = () => controlRepository!.loadControlEvent(undefined);
 
   useEffect(() => {
+    setOwnerSport(requestedOwnerSport);
+  }, [requestedOwnerSport]);
+
+  useEffect(() => {
     if (!identity.ready) return;
     let active = true;
+
+    if (ownerSport === "football") {
+      controlSeed.current = { status: "empty" };
+      setEventState({ status: "idle" });
+      setDraftState({ status: "idle" });
+      return;
+    }
 
     if (!identity.profile) {
       controlSeed.current = { status: "empty" };
@@ -155,7 +169,7 @@ export default function PicksControlCenterPage({
     return () => {
       active = false;
     };
-  }, [controlRepository, identity.profile, identity.ready]);
+  }, [controlRepository, identity.profile, identity.ready, ownerSport]);
 
   const ownedControlRepository = useMemo<PickControlRepository | null>(() => {
     if (!controlRepository) return null;
@@ -296,6 +310,14 @@ export default function PicksControlCenterPage({
     return (
       <div className="picks-control-center">
         {ownerSportSwitch}
+        {footballEventId && identity.profile ? (
+          <section id="header" className="picks-control-center__section" aria-label="Manage Football event header">
+            <PickEventHeaderControl eventId={footballEventId} repository={controlRepository} />
+            <div className="picks-control-center__actions">
+              <Link className="secondary-action" to="/football/picks">OPEN PLAYER FOOTBALL PICKS</Link>
+            </div>
+          </section>
+        ) : null}
         <FootballPicksSetupPage repository={setupRepository} />
       </div>
     );
