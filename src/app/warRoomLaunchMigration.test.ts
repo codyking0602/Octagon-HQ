@@ -43,7 +43,7 @@ describe("War Room launch", () => {
     expect(repository).not.toContain("postgres_changes");
   });
 
-  it("keeps one owner for access, feed, unread, invite, realtime, and foreground refresh", () => {
+  it("keeps the dormant source single-owned for access, feed, unread, invite, and realtime", () => {
     expect(provider).toContain("const [unreadCount");
     expect(provider).toContain("const [realtimeStatus");
     expect(provider).toContain("const checkInvite");
@@ -56,7 +56,7 @@ describe("War Room launch", () => {
     expect(provider).not.toContain("setInterval");
   });
 
-  it("keeps War Room runtime while removing its bottom-navigation destination", () => {
+  it("retires War Room runtime while preserving the four-tab navigation order", () => {
     const home = navigation.indexOf('label: "Home"');
     const picks = navigation.indexOf('label: "Picks"');
     const play = navigation.indexOf('label: "Play"');
@@ -66,12 +66,12 @@ describe("War Room launch", () => {
     expect(picks).toBeLessThan(play);
     expect(play).toBeLessThan(rankings);
     expect(navigation).not.toContain('label: "War Room"');
-    expect(router).toContain('path: "war-room"');
-    expect(provider).toContain("const [unreadCount");
+    expect(router).not.toContain('path: "war-room"');
+    expect(router).not.toContain('path: "war-room/join"');
   });
 
-  it("provides a dedicated Join with Invite route without exposing conversation data", () => {
-    expect(router).toContain('path: "war-room/join"');
+  it("keeps dormant guarded UI source without exposing it through a route", () => {
+    expect(router).not.toContain('path: "war-room/join"');
     expect(joinPage).toContain("Join with invite");
     expect(joinPage).toContain("SIGN IN TO CONTINUE");
     expect(joinPage).toContain("JOIN WAR ROOM");
