@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { useIdentity } from "../identity/IdentityProvider";
@@ -94,6 +94,11 @@ export default function HomePage() {
   });
   const footballDailyAdapter = todayChallengeAdapter(footballDailyRuntime.projection?.gameType);
 
+  useEffect(() => {
+    if (!signedIn) return;
+    void picks.loadFootballSummary();
+  }, [picks.loadFootballSummary, signedIn]);
+
   const spotlight = useMemo(() => dailyRankingSpotlight(allTime, new Intl.DateTimeFormat("en-CA", {
     timeZone: "America/Chicago",
     year: "numeric",
@@ -163,7 +168,7 @@ export default function HomePage() {
       : String(currentStreak);
   const ufcPicksRecord = picks.loading
     ? "…"
-    : picks.error
+    : picks.error || !picks.configured
       ? "—"
       : pickRecord(picks.summary);
   const footballPicksRecord = picks.footballSummaryLoading
