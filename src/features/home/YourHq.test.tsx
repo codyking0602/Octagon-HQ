@@ -1,10 +1,19 @@
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ChallengeProfile, PlayChallenge } from "../challenges/challengeModel";
 import type { PickEvent } from "../picks/picksModel";
 import HomePage from "./HomePage";
+
+const emptySummary = {
+  correct: 0,
+  incorrect: 0,
+  pending: 0,
+  eventsEntered: 0,
+  basePoints: 0,
+  lockBonus: 0,
+  totalPoints: 0,
+};
 
 const mocks = vi.hoisted(() => ({
   identity: {
@@ -15,18 +24,11 @@ const mocks = vi.hoisted(() => ({
     event: null as PickEvent | null,
     selections: {} as Record<string, string>,
     loading: false,
-    summary: {
-      correct: 0,
-      incorrect: 0,
-      pending: 0,
-      eventsEntered: 0,
-      basePoints: 0,
-      lockBonus: 0,
-      totalPoints: 0,
-    },
+    summary: { ...emptySummary },
+    footballSummary: { ...emptySummary },
     error: "",
+    footballSummaryError: "",
   },
-  picksProvider: vi.fn((props: { children: ReactNode; sport?: string }) => props.children),
   challenges: {
     challenges: [] as PlayChallenge[],
     profiles: [] as ChallengeProfile[],
@@ -46,7 +48,6 @@ vi.mock("../identity/IdentityProvider", () => ({
 }));
 
 vi.mock("../picks/PicksProvider", () => ({
-  PicksProvider: (props: { children: ReactNode; sport?: string }) => mocks.picksProvider(props),
   usePicks: () => mocks.picks,
 }));
 
@@ -154,16 +155,10 @@ describe("Home PR 9 — Today’s Challenges + Your HQ", () => {
     mocks.picks.event = pickEvent;
     mocks.picks.selections = {};
     mocks.picks.loading = false;
-    mocks.picks.summary = {
-      correct: 0,
-      incorrect: 0,
-      pending: 0,
-      eventsEntered: 0,
-      basePoints: 0,
-      lockBonus: 0,
-      totalPoints: 0,
-    };
+    mocks.picks.summary = { ...emptySummary };
+    mocks.picks.footballSummary = { ...emptySummary };
     mocks.picks.error = "";
+    mocks.picks.footballSummaryError = "";
     mocks.challenges.challenges = [];
     mocks.challenges.profiles = [];
     mocks.challenges.loading = false;
@@ -276,11 +271,11 @@ describe("Home PR 9 — Today’s Challenges + Your HQ", () => {
     expect(footballCard).toHaveAttribute("href", "/football/today");
     expect(within(footballCard).getByRole("heading", { name: "Wavelength" })).toBeInTheDocument();
     expect(within(footballCard).getByText("COMPLETED")).toBeInTheDocument();
-    expect(within(footballCard).getByText("91")).toBeInTheDocument();
+    expect(within(footballCard).getByText((_, element) => element?.tagName === "STRONG" && element.textContent === "91/100")).toBeInTheDocument();
     expect(within(footballCard).getByText("#2 today")).toBeInTheDocument();
   });
 
-  it("shows the locked signed-in snapshot and reuses the canonical Football PicksProvider mode", async () => {
+  it("shows independent UFC and Football Picks records from the app-level Picks owner", async () => {
     mocks.identity.profile = cody;
     mocks.picks.selections = {
       "ankalaev-guskov": "magomed-ankalaev",
@@ -293,6 +288,15 @@ describe("Home PR 9 — Today’s Challenges + Your HQ", () => {
       basePoints: 48,
       lockBonus: 0,
       totalPoints: 48,
+    };
+    mocks.picks.footballSummary = {
+      correct: 9,
+      incorrect: 3,
+      pending: 2,
+      eventsEntered: 3,
+      basePoints: 36,
+      lockBonus: 4,
+      totalPoints: 40,
     };
     mocks.challenges.challenges = [
       challenge(),
@@ -333,8 +337,8 @@ describe("Home PR 9 — Today’s Challenges + Your HQ", () => {
     await waitFor(() => expect(within(screen.getByText("Daily streak").closest("article")!).getByText("2")).toBeInTheDocument());
     expect(within(hq).getAllByRole("article")).toHaveLength(3);
     expect(within(screen.getByText("UFC Picks record").closest("article")!).getByText("12-8")).toBeInTheDocument();
-    expect(within(screen.getByText("Football Picks record").closest("article")!).getByText("12-8")).toBeInTheDocument();
-    expect(mocks.picksProvider).toHaveBeenCalledWith(expect.objectContaining({ sport: "football" }));
+    expect(within(screen.getByText("Football Picks record").closest("article")!).getByText("9-3")).toBeInTheDocument();
+    expect(within(screen.getByText("Football Picks record").closest("article")!).getByText(/2 PENDING/)).toBeInTheDocument();
 
     expect(screen.getByText("1 pick still open")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "FINISH UFC PICKS" })).toHaveAttribute("href", "/picks");
