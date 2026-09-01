@@ -78,11 +78,15 @@ describe("SportProvider", () => {
     expect(tokensSource).toContain('[data-hq-theme="ufc"]');
     expect(tokensSource).toContain("--hq-context-accent: var(--ufc-red);");
     expect(tokensSource).toContain('[data-hq-theme="football"]');
-    expect(tokensSource).toContain("--hq-context-accent: #d2d8e0;");
+    expect(tokensSource).toContain("--hq-context-accent: #1f4e79;");
+    expect(tokensSource).toContain("--hq-context-accent-strong: #5f8fb8;");
+    expect(tokensSource).toContain("--hq-context-accent-rgb: 31, 78, 121;");
+    expect(tokensSource).toContain("--hq-context-accent-soft: rgba(31, 78, 121, .42);");
+    expect(tokensSource).toContain("--hq-context-accent-border: rgba(95, 143, 184, .58);");
     expect(sportContextStyles).toContain("var(--hq-neutral-accent-rgb)");
     expect(sportContextStyles).toContain("--football-accent: var(--hq-context-accent);");
     expect(sportContextStyles).toContain("--football-accent-rgb: var(--hq-context-accent-rgb);");
-    expect(sportContextStyles).toContain("var(--hq-context-accent-strong)");
+    expect(sportContextStyles).toContain("color: var(--hq-context-accent-strong);");
   });
 
   it("does not restore favorite-team shell theming as a second theme owner", () => {

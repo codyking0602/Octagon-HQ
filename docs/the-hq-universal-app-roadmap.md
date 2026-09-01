@@ -1,6 +1,6 @@
 # The HQ Universal App Roadmap
 
-**Status:** Product architecture locked; Phase 0 audit complete; rollout PRs 2–5 complete; PR 6 implementation is in #812 pending exact-head verification and merge; PR 7 follows.  
+**Status:** Product architecture locked; Phase 0 audit complete; rollout PRs 2–6 complete; PR #813 is a narrow PR 6 corrective follow-up locking Football navy; PR 7 follows.  
 **Last updated:** September 1, 2026  
 **Canonical purpose:** Preserve the agreed multi-sport architecture for The HQ so implementation can continue across multiple chats without re-deciding settled product choices.
 
@@ -155,9 +155,9 @@ The primary app experience should remain dark even though the approved app icon 
 ### Football
 
 - The universal shell remains neutral.
-- Football does **not** require one permanent app-wide blue identity.
-- Team / matchup / football context may supply the accent color when the content naturally has one.
-- General Football surfaces may remain neutral rather than inventing color merely to differentiate them.
+- **Navy `#1F4E79` is the dominant Football sport-level contextual accent.**
+- Football Picks / Play context, selected Football controls, and other generic Football-specific interaction accents should resolve through that navy theme-token path.
+- Team / matchup colors may still supply stronger content-specific accents when a team or matchup is the actual subject.
 
 ### Team colors
 
@@ -177,7 +177,8 @@ The desired mental map is now:
 
 - **Neutral = The HQ shell**
 - **Red = UFC context**
-- **Football / team color = contextual Football content when appropriate**
+- **Navy `#1F4E79` = Football context**
+- **Team colors = content-specific Football treatment when appropriate**
 
 ---
 
@@ -382,7 +383,7 @@ Notifications become one universal inbox.
 - UFC and Football notifications coexist in one feed.
 - Sport should be immediately identifiable through text/context and the contextual accent system where appropriate:
   - UFC = red
-  - Football = relevant football/team accent when natural; otherwise neutral
+  - Football = navy `#1F4E79` by default; team/matchup color may take over when that content is the actual context
 - Tapping a notification should deep-link directly into the correct sport and relevant destination.
 
 Do not create separate notification centers per sport.
@@ -459,8 +460,8 @@ Use the following routing so the rollout does not get trapped between the limite
 | **3** | Bottom navigation: Home / Picks / Play / Rankings; remove War Room nav | **COMPLETE — #804, corrected by #805** | Normal |
 | **4** | Canonical shared UFC / Football sport context + persistence | **COMPLETE — #810; explicit ChatGPT execution exception** | **HIGH — ownership / state duplication risk** |
 | **5** | Picks / Play sport-switching UI + sport/section context row | **COMPLETE — #811; explicit ChatGPT execution exception** | **HIGH — preserve Rankings / Intelligence UFC-only behavior** |
-| **6** | Neutral universal shell + contextual sport accent theme-token path | **IN REVIEW — #812; explicit ChatGPT execution exception** | Normal; do not add a second theme owner |
-| **7** | Universal Home foundation + locked section order | **CODEX REQUIRED — NEXT AFTER PR 6** | **HIGH — compose existing owners, do not recreate logic** |
+| **6** | Neutral universal shell + contextual sport accent theme-token path | **COMPLETE — #812; navy correction in #813** | Normal; do not add a second theme owner |
+| **7** | Universal Home foundation + locked section order | **CODEX REQUIRED — NEXT** | **HIGH — compose existing owners, do not recreate logic** |
 | **8** | Up Next priority hero | **CODEX REQUIRED** | **HIGH — cross-product priority logic** |
 | **9** | Today's Challenges + Your HQ | **CODEX REQUIRED** | **HIGH — reuse existing challenge / record data owners** |
 | **10** | UFC HQ Home block | **CODEX REQUIRED** | **HIGH — preserve Ranking Spotlight + Shane's Contender Series** |
@@ -500,7 +501,7 @@ Confirmed before runtime implementation:
 
 ## Phase 1 — Universal Shell + Navigation
 
-**Status: PR 2, PR 3, and PR 5 are merged. PR 6 neutral shell/theme-token implementation is in #812 pending exact-head verification and merge.**
+**Status: PR 2, PR 3, PR 5, and PR 6 are merged. PR #813 is the narrow Football navy corrective follow-up.**
 
 Goal: establish The HQ shell without rebuilding feature contents.
 
@@ -514,6 +515,7 @@ Completed:
 - Approved neutral symbol corrective follow-up completed in PR #809.
 - PR #811 added the sport/section context row to the existing AppShell owner and UFC / Football switching only for Picks and Play.
 - Rankings and Intelligence remain visibly UFC-only without a Football option; Home remains universal with no sport-context row.
+- PR #812 added the neutral universal shell and shared contextual theme-token path.
 
 Validate existing UFC flows before adding additional behavior.
 
@@ -531,7 +533,8 @@ Requirements:
 - One theme-token path:
   - universal HQ = neutral dark-first foundation
   - UFC = red contextual accent
-  - Football = contextual football/team accent where appropriate, otherwise neutral
+  - Football = navy `#1F4E79` sport-level contextual accent
+  - team/matchup colors remain content-specific where appropriate
 - Rankings remains UFC-only.
 - Intelligence remains UFC-only.
 
@@ -551,6 +554,7 @@ PR 6 implementation in #812 extends the existing single style path rather than i
 - The portaled `BottomNavigation` consumes the same scope rather than resolving a second theme path.
 - Favorite-team profile preferences no longer drive app-wide Football shell/nav theme classes; existing Football feature styling remains in its existing CSS owners.
 - Home remains neutral, Rankings and Intelligence remain UFC contextual, and Picks / Play retain the PR 5 switching owners.
+- PR #813 corrects the Football contextual token to navy `#1F4E79` without adding another state, provider, style initialization, or theme owner.
 
 Do not add a second sport context provider or duplicate theme initialization.
 
@@ -658,7 +662,7 @@ Do not claim a merged change is live until the live deployment SHA is verified.
 
 # 13. Current Resume Point
 
-**Phase 0 is complete. PR 2, PR 3, PR 4, and PR 5 are merged. PR 6 is implemented in #812 and awaiting exact-head verification/merge at the time of this roadmap commit.**
+**Phase 0 is complete. PR 2, PR 3, PR 4, PR 5, and PR 6 are merged. PR #813 is the narrow Football navy corrective follow-up; PR 7 remains the next named rollout item.**
 
 Current verified roadmap baseline:
 
@@ -669,11 +673,12 @@ Current verified roadmap baseline:
 - PR #809 — approved neutral symbol corrective follow-up — merge `7a5376634af1c21fa2a34839564ce47e5125c2ce`
 - PR #810 — PR 4 canonical shared UFC / Football sport context + persistence — merge `f607a93d04b25491df3f1b93f24861ba5f952c84`
 - PR #811 — PR 5 Picks / Play sport-switching UI + sport/section context row — merge `616f19780026b74d499945aa479e8d08b8dec2f0`
-- PR #812 — PR 6 neutral shell + contextual sport accent theme-token path — base `616f19780026b74d499945aa479e8d08b8dec2f0`; merge SHA to be backfilled on the next roadmap edit.
+- PR #812 — PR 6 neutral shell + contextual sport accent theme-token path — merge `6847615137e4cc5e71539380d904391b2870e495`
+- PR #813 — Football navy contextual-accent correction — base `6847615137e4cc5e71539380d904391b2870e495`; merge SHA to be backfilled on the next roadmap edit.
 
-PR 4 remains the one canonical shared selected-sport owner and persistence path. PR 5 consumes that state in the existing AppShell and BottomNavigation owners. PR 6 consumes those existing owners for contextual accent scoping while preserving the single `main.tsx` style initialization path and removing favorite-team app-wide shell theming rather than introducing another theme owner.
+PR 4 remains the one canonical shared selected-sport owner and persistence path. PR 5 consumes that state in the existing AppShell and BottomNavigation owners. PR 6 consumes those existing owners for contextual accent scoping while preserving the single `main.tsx` style initialization path and removing favorite-team app-wide shell theming rather than introducing another theme owner. PR #813 only corrects Football's existing contextual token to the locked navy.
 
-After PR 6 merges, the next named rollout item is **PR 7 — Universal Home foundation + locked section order**. Resolve fresh `main` before starting it and compose the existing Home/data owners rather than recreating business logic.
+After the Football navy corrective follow-up merges, the next named rollout item is **PR 7 — Universal Home foundation + locked section order**. Resolve fresh `main` before starting it and compose the existing Home/data owners rather than recreating business logic.
 
 Do **not** restart card-by-card Home brainstorming unless Cody explicitly reopens it.
 
@@ -687,7 +692,7 @@ Do **not** re-debate:
 - Rankings and Intelligence being UFC-only for now
 - neutral dark-first The HQ shell
 - symbol-only The HQ mark and no letter logo
-- UFC red / contextual Football accent system
+- UFC red / Football navy `#1F4E79` contextual accent system
 - removal of required favorites onboarding
 - universal profile / notifications
 - inline standings rather than a standalone Home leaderboard
@@ -698,14 +703,24 @@ Do **not** re-debate:
 
 ## September 1, 2026
 
+### Football navy contextual-accent correction
+
+- After seeing PR #812 live, Cody explicitly reopened only the Football color portion of the locked visual identity.
+- The universal The HQ shell remains neutral and dark-first.
+- UFC remains red.
+- Football now has a permanent sport-level navy contextual accent: **`#1F4E79`**.
+- Team and matchup colors remain valid inside content where the team/matchup is the actual context, but favorite-team app-wide theming remains rejected.
+- PR #813 is the narrow corrective follow-up, based on the PR #812 merge `6847615137e4cc5e71539380d904391b2870e495`; it changes the existing token path rather than adding another theme/state/provider owner.
+- PR 7 remains next; this correction does not begin Universal Home implementation.
+
 ### PR 6 neutral shell and contextual sport accent path
 
 - Cody explicitly requested direct GitHub execution and merge of PR 6 in this chat; this is a PR 6 execution exception and the default Codex routing resumes with PR 7.
-- PR #812 is the PR 6 implementation, based on `main` at the PR #811 merge `616f19780026b74d499945aa479e8d08b8dec2f0`.
+- PR #812 is the PR 6 implementation, based on `main` at the PR #811 merge `616f19780026b74d499945aa479e8d08b8dec2f0` and merged as `6847615137e4cc5e71539380d904391b2870e495`.
 - `src/app/SportProvider.tsx` remains the one selected-sport state and persistence owner; PR 6 adds no provider, sport state, route-derived persistence, or localStorage path.
 - `src/app/AppShell.tsx` remains the one shared shell owner and now applies the reusable `neutral | ufc | football` contextual theme scope through the existing style-token path.
 - `src/styles/tokens.css` and the existing `src/main.tsx` import chain remain the theme/style initialization owner; no ThemeProvider, second stylesheet entrypoint, or duplicate initialization is introduced.
-- Universal header chrome and Home use the neutral HQ foundation; UFC Picks / Play and the UFC-only Rankings / Intelligence context use UFC red; Football Picks / Play use the existing neutral Football accent through the same contextual token path.
+- Universal header chrome and Home use the neutral HQ foundation; UFC Picks / Play and the UFC-only Rankings / Intelligence context use UFC red; Football Picks / Play consume the same contextual path, with the Football token corrected to navy `#1F4E79` in PR #813.
 - Favorite-team preferences no longer apply Cowboys/Longhorns classes to the app-wide shell or bottom navigation. Team colors remain available inside existing Football feature/content owners where the team is the actual context.
 - PR 6 deliberately does not begin PR 7 Home composition, later profile/notifications/onboarding work, broad brand cleanup, or War Room deletion.
 
@@ -743,9 +758,9 @@ New locked decisions:
 - Gold/yellow is retired from the universal The HQ shell.
 - The universal shell is dark-first and neutral: near-black, charcoal/graphite, white, gray, restrained silver.
 - UFC supplies red contextual accent.
-- Football uses contextual football/team color where natural rather than one fixed app-wide blue identity.
+- Football supplies navy `#1F4E79` as its sport-level contextual accent; team/matchup colors remain content-specific.
 - Favorite-team-based automatic theming remains rejected.
-- PR 6 is therefore a **neutral universal shell + contextual sport accent** theme-token PR, not a gold/red/blue theme PR.
+- PR 6 remains a **neutral universal shell + contextual sport accent** theme-token architecture; the Football branch of that path is navy rather than favorite-team-driven.
 
 ### Rollout progress through PR 3
 
