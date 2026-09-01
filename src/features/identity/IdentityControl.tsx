@@ -82,7 +82,7 @@ export function IdentityControl() {
       <section className="identity-dialog" role="dialog" aria-modal="true" aria-labelledby="identity-dialog-title">
         <header>
           <div>
-            <p className="eyebrow">YOUR OCTAGON HQ PROFILE</p>
+            <p className="eyebrow">THE HQ PROFILE</p>
             <h2 id="identity-dialog-title">{identity.profile ? identity.profile.displayName : "Get into HQ"}</h2>
             <p>{identity.profile
               ? "This is the one profile your games, picks, challenges, and future HQ features will use."
@@ -107,7 +107,7 @@ export function IdentityControl() {
         ) : identity.status === "unconfigured" ? (
           <div className="identity-unavailable">
             <strong>Profiles are ready in the app code.</strong>
-            <p>This preview still needs the Octagon HQ Supabase connection before a real profile can be created.</p>
+            <p>This preview still needs The HQ Supabase connection before a real profile can be created.</p>
           </div>
         ) : (
           <>
@@ -178,7 +178,7 @@ export function IdentityControl() {
         type="button"
         className={`identity-trigger${identity.profile ? " is-ready" : ""}`}
         onClick={identity.openDialog}
-        aria-label={identity.profile ? `Open ${identity.profile.displayName} profile menu` : "Sign in to Octagon HQ"}
+        aria-label={identity.profile ? `Open ${identity.profile.displayName} profile menu` : "Sign in to The HQ"}
       >
         {identity.profile ? <i className="identity-trigger__photo">{avatar}</i> : null}
         <span>{buttonLabel}</span>
