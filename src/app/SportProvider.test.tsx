@@ -58,6 +58,11 @@ describe("SportProvider", () => {
     expect(sportProviderSource.match(/localStorage\.setItem/g) ?? []).toHaveLength(1);
   });
 
+  it("drives switchable contextual theme scope from the canonical selected sport", () => {
+    expect(appShellSource).toContain("if (context?.switchable) return selectedSport;");
+    expect(appShellSource).not.toContain("context.sport === selectedSport");
+  });
+
   it("keeps one canonical theme/style initialization path", () => {
     expect(mainSource.match(/\.\/styles\/tokens\.css/g) ?? []).toHaveLength(1);
     expect(mainSource.match(/\.\/styles\/sport-context\.css/g) ?? []).toHaveLength(1);
