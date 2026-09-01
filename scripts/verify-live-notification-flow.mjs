@@ -294,7 +294,7 @@ try {
     state: "visible",
     timeout: 15_000,
   });
-  await page.getByRole("button", { name: "Sign in to Octagon HQ" }).click();
+  await page.getByRole("button", { name: "Sign in to The HQ" }).click();
   await page.getByLabel("YOUR NAME").fill(recipientName);
   await page.getByLabel("YOUR 4-DIGIT PIN").fill(recipientPin);
   await page.getByRole("button", { name: "ENTER HQ" }).click();
