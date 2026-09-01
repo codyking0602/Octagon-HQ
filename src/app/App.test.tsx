@@ -26,7 +26,7 @@ describe("Octagon HQ V2", () => {
   it("opens on Home without temporary or restricted product copy", async () => {
     renderRoute("/");
 
-    expect(await screen.findByRole("heading", { name: "Welcome to Octagon HQ" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Your command center" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Your HQ" })).toBeInTheDocument();
     expect(screen.queryByText("V2")).not.toBeInTheDocument();
     expect(screen.queryByText("Foundation active", { exact: false })).not.toBeInTheDocument();
