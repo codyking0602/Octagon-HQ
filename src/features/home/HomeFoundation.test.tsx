@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen, within } from "@testing-library/react";
 import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { SELECTED_SPORT_STORAGE_KEY, type SelectedSport } from "../../app/SportProvider";
@@ -67,12 +67,11 @@ describe("The HQ universal Home foundation", () => {
     renderHome();
     await screen.findByRole("heading", { name: "Your command center" });
 
+    const sections = screen.getAllByTestId("home-section");
     expect(screen.getByRole("region", { name: "Today’s Challenges" })).toBeEmptyDOMElement();
     expect(screen.getByRole("region", { name: "What’s New" })).toBeInTheDocument();
     expect(screen.getByRole("region", { name: "Football HQ" })).toBeEmptyDOMElement();
-    expect(screen.getByRole("region", { name: "Your HQ" })).toContainElement(
-      screen.getByRole("heading", { name: "Your HQ" }),
-    );
+    expect(within(sections[3]).getByRole("heading", { name: "Your HQ" })).toBeInTheDocument();
   });
 
   it("keeps a single Home route owner", () => {
