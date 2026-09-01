@@ -102,7 +102,7 @@ describe("notification settings simplification", () => {
   });
 
   it("keeps installability and passive readiness detection intact", () => {
-    expect(parsedManifest.name).toBe("Octagon HQ");
+    expect(parsedManifest.name).toBe("The HQ");
     expect(parsedManifest.display).toBe("standalone");
     expect(parsedManifest.start_url).toBe("/");
     expect(indexHtml).toContain('<link rel="manifest" href="/app.webmanifest"');
