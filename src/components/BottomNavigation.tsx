@@ -3,18 +3,16 @@ import { createPortal } from "react-dom";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { scrollPageToTop } from "../app/RouteScrollManager";
 import type { FootballTeam } from "../features/profile/profilePreferencesRepository";
-import { useWarRoom } from "../features/war-room/WarRoomProvider";
 
-type NavigationIconName = "home" | "rankings" | "picks" | "play" | "war-room";
+type NavigationIconName = "home" | "rankings" | "picks" | "play";
 
 const baseDestinations = [
   { to: "/", label: "Home", icon: "home", end: true },
-  { to: "/rankings", label: "Rankings", icon: "rankings", end: false },
   { to: "/picks", label: "Picks", icon: "picks", end: false },
   { to: "/play", label: "Play", icon: "play", end: false },
+  { to: "/rankings", label: "Ratings", icon: "rankings", end: false },
 ] as const;
 
-const warRoomDestination = { to: "/war-room", label: "War Room", icon: "war-room", end: false } as const;
 const SECRET_PLAY_TAP_WINDOW_MS = 350;
 
 function NavigationIcon({ name }: { name: NavigationIconName }) {
@@ -33,12 +31,6 @@ function NavigationIcon({ name }: { name: NavigationIconName }) {
       </>
     ),
     play: <path d="m8 5 10 7-10 7Z" />,
-    "war-room": (
-      <>
-        <path d="M4 5h16v11H9l-5 4Z" />
-        <path d="M8 9h8M8 12.5h5" />
-      </>
-    ),
   } satisfies Record<NavigationIconName, React.ReactNode>;
 
   return (
@@ -62,7 +54,6 @@ function NavigationIcon({ name }: { name: NavigationIconName }) {
 export function BottomNavigation({ footballTeam = null }: { footballTeam?: FootballTeam | null }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const warRoom = useWarRoom();
   const keyboardSessionRef = useRef(false);
   const lastActivePlayTapRef = useRef(0);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
@@ -77,10 +68,6 @@ export function BottomNavigation({ footballTeam = null }: { footballTeam?: Footb
       : destination.icon === "picks" && footballMode ? { ...destination, to: "/football/picks" }
       : destination
   ));
-  const destinations = warRoom.status === "eligible"
-    ? [...standardDestinations, warRoomDestination]
-    : standardDestinations;
-  const unreadLabel = warRoom.unreadCount > 99 ? "99+" : String(warRoom.unreadCount);
 
   useEffect(() => {
     const viewport = window.visualViewport;
@@ -137,14 +124,14 @@ export function BottomNavigation({ footballTeam = null }: { footballTeam?: Footb
       className={`bottom-nav${footballThemeClass}${keyboardOpen ? " is-keyboard-open" : ""}`}
       aria-label="Primary navigation"
       style={{
-        gridTemplateColumns: `repeat(${destinations.length}, minmax(0, 1fr))`,
+        gridTemplateColumns: `repeat(${standardDestinations.length}, minmax(0, 1fr))`,
         display: keyboardOpen ? "none" : "grid",
         transform: viewportBottomCorrection > 0
           ? `translateY(${viewportBottomCorrection}px)`
           : undefined,
       }}
     >
-      {destinations.map((destination) => (
+      {standardDestinations.map((destination) => (
         <NavLink
           key={`${destination.label}:${destination.to}`}
           to={destination.to}
@@ -174,14 +161,6 @@ export function BottomNavigation({ footballTeam = null }: { footballTeam?: Footb
           <span className="bottom-nav__indicator" aria-hidden="true" />
           <NavigationIcon name={destination.icon} />
           <span className="bottom-nav__label">{destination.label}</span>
-          {destination.to === "/war-room" && warRoom.unreadCount > 0 ? (
-            <b
-              className="bottom-nav__badge"
-              aria-label={`${unreadLabel} unread War Room message${warRoom.unreadCount === 1 ? "" : "s"}`}
-            >
-              {unreadLabel}
-            </b>
-          ) : null}
         </NavLink>
       ))}
     </nav>

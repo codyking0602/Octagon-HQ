@@ -56,20 +56,18 @@ describe("War Room launch", () => {
     expect(provider).not.toContain("setInterval");
   });
 
-  it("shows the fifth destination only to eligible profiles in the locked order", () => {
+  it("keeps War Room runtime while removing its bottom-navigation destination", () => {
     const home = navigation.indexOf('label: "Home"');
-    const rankings = navigation.indexOf('label: "Rankings"');
     const picks = navigation.indexOf('label: "Picks"');
     const play = navigation.indexOf('label: "Play"');
-    const warRoom = navigation.indexOf('label: "War Room"');
+    const ratings = navigation.indexOf('label: "Ratings"');
     expect(home).toBeGreaterThan(-1);
-    expect(home).toBeLessThan(rankings);
-    expect(rankings).toBeLessThan(picks);
+    expect(home).toBeLessThan(picks);
     expect(picks).toBeLessThan(play);
-    expect(play).toBeLessThan(warRoom);
-    expect(navigation).toContain('warRoom.status === "eligible"');
-    expect(navigation).toContain('warRoom.unreadCount > 99 ? "99+"');
-    expect(navigation).toContain("bottom-nav__badge");
+    expect(play).toBeLessThan(ratings);
+    expect(navigation).not.toContain('label: "War Room"');
+    expect(router).toContain('path: "war-room"');
+    expect(provider).toContain("const [unreadCount");
   });
 
   it("provides a dedicated Join with Invite route without exposing conversation data", () => {

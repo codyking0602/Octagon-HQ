@@ -49,10 +49,10 @@ describe("War Room conversation core", () => {
     expect(provider).not.toContain("setInterval");
   });
 
-  it("keeps the conversation route guarded while launch navigation remains permission-aware", () => {
+  it("keeps the conversation route guarded after removing its navigation entry", () => {
     expect(router).toContain('path: "war-room"');
     expect(router).toContain('path: "war-room/join"');
-    expect(bottomNavigation).toContain('warRoom.status === "eligible"');
+    expect(bottomNavigation).not.toContain('label: "War Room"');
     expect(page).toContain('return <Navigate to="/" replace />');
     expect(page).toContain("warRoom.status !== \"eligible\"");
     expect(contract).toContain("PR 2 created the guarded conversation core");
