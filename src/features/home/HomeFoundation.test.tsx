@@ -68,10 +68,8 @@ describe("The HQ universal Home foundation", () => {
     await screen.findByRole("heading", { name: "Your command center" });
 
     expect(screen.getByRole("region", { name: "Today’s Challenges" })).toBeEmptyDOMElement();
+    expect(screen.getByRole("region", { name: "What’s New" })).toBeInTheDocument();
     expect(screen.getByRole("region", { name: "Football HQ" })).toBeEmptyDOMElement();
-    expect(screen.getByRole("region", { name: "What’s New" })).toContainElement(
-      screen.queryByRole("heading", { name: "What's New" }),
-    );
     expect(screen.getByRole("region", { name: "Your HQ" })).toContainElement(
       screen.getByRole("heading", { name: "Your HQ" }),
     );
