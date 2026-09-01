@@ -58,7 +58,7 @@ describe("IdentityControl", () => {
       </Providers>,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: /sign in to octagon hq/i }));
+    fireEvent.click(screen.getByRole("button", { name: /sign in to the hq/i }));
 
     const dialog = screen.getByRole("dialog", { name: /get into hq/i });
     expect(document.body.contains(dialog)).toBe(true);
@@ -99,8 +99,8 @@ describe("IdentityControl", () => {
       </Providers>,
     );
 
-    await waitFor(() => expect(screen.getByRole("button", { name: /sign in to octagon hq/i })).toBeEnabled());
-    fireEvent.click(screen.getByRole("button", { name: /sign in to octagon hq/i }));
+    await waitFor(() => expect(screen.getByRole("button", { name: /sign in to the hq/i })).toBeEnabled());
+    fireEvent.click(screen.getByRole("button", { name: /sign in to the hq/i }));
     fireEvent.click(screen.getByRole("button", { name: "MOVE HOME" }));
     expect(screen.getByTestId("current-path")).toHaveTextContent("/");
 
