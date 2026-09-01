@@ -6,10 +6,9 @@ import { AppProviders } from "../../app/providers";
 import { appRoutes } from "../../app/router";
 
 const LOCKED_HOME_ORDER = [
-  "up-next",
-  "todays-challenges",
-  "whats-new",
   "your-hq",
+  "whats-new",
+  "todays-challenges",
   "ufc-hq",
   "football-hq",
 ];
@@ -41,15 +40,17 @@ function expectNeutralHome() {
 }
 
 describe("The HQ universal Home foundation", () => {
-  it("renders the six locked Home section boundaries in exact order at the canonical / route", async () => {
+  it("renders the five Home section boundaries in the approved order with Up Next removed", async () => {
     const router = renderHome();
 
-    expect(await screen.findByRole("heading", { name: "Your command center" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Your HQ" })).toBeInTheDocument();
     expect(router.state.location.pathname).toBe("/");
 
     const sections = screen.getAllByTestId("home-section");
-    expect(sections).toHaveLength(6);
+    expect(sections).toHaveLength(5);
     expect(sections.map((section) => section.getAttribute("data-home-section"))).toEqual(LOCKED_HOME_ORDER);
+    expect(screen.queryByRole("region", { name: "Up Next" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Your command center" })).not.toBeInTheDocument();
   });
 
   it.each(["ufc", "football"] as const)(
@@ -58,26 +59,29 @@ describe("The HQ universal Home foundation", () => {
       window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, sport);
       renderHome();
 
-      await screen.findByRole("heading", { name: "Your command center" });
+      await screen.findByRole("heading", { name: "Your HQ" });
       expectNeutralHome();
     },
   );
 
-  it("fills both sport HQ slots while preserving the PR 9 Home architecture and canonical What's New boundary", async () => {
+  it("keeps both sport HQs distinct but structurally consistent", async () => {
     renderHome();
-    await screen.findByRole("heading", { name: "Your command center" });
+    await screen.findByRole("heading", { name: "Your HQ" });
 
     const sections = screen.getAllByTestId("home-section");
     const challenges = screen.getByRole("region", { name: "Today’s Challenges" });
     const ufcHq = screen.getByRole("region", { name: "UFC HQ" });
     const footballHq = screen.getByRole("region", { name: "Football HQ" });
+
+    expect(within(sections[0]).getByRole("heading", { name: "Your HQ" })).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "What’s New" })).toBeInTheDocument();
     expect(within(challenges).getByRole("heading", { name: "Today’s Challenges" })).toBeInTheDocument();
     expect(within(challenges).getByRole("link", { name: /Open UFC Today’s Challenge/i })).toHaveAttribute("href", "/play");
     expect(within(challenges).getByRole("link", { name: /Open Football Today’s Challenge/i })).toHaveAttribute("href", "/football/today");
-    expect(screen.getByRole("region", { name: "What’s New" })).toBeInTheDocument();
-    expect(within(sections[3]).getByRole("heading", { name: "Your HQ" })).toBeInTheDocument();
-    expect(within(ufcHq).getByRole("heading", { name: "Fight week command center" })).toBeInTheDocument();
-    expect(within(footballHq).getByRole("heading", { name: "Saturday to Sunday" })).toBeInTheDocument();
+    expect(within(ufcHq).getByRole("heading", { name: "Fight week" })).toBeInTheDocument();
+    expect(within(footballHq).getByRole("heading", { name: "This week" })).toBeInTheDocument();
+    expect(ufcHq).toHaveClass("home-sport-hq");
+    expect(footballHq).toHaveClass("home-sport-hq");
     expect(within(footballHq).getByText("COLLEGE GAME OF THE WEEK")).toBeInTheDocument();
     expect(within(footballHq).getByText("NFL GAME OF THE WEEK")).toBeInTheDocument();
     expect(within(footballHq).getAllByRole("link").every((link) => link.getAttribute("href") === "/football/picks")).toBe(true);
