@@ -63,15 +63,19 @@ describe("The HQ universal Home foundation", () => {
     },
   );
 
-  it("keeps later Home rollout slots structural instead of inventing duplicate product logic", async () => {
+  it("completes only the PR 9 Home slots while keeping PR 10–11 blocks structural", async () => {
     renderHome();
     await screen.findByRole("heading", { name: "Your command center" });
 
     const sections = screen.getAllByTestId("home-section");
-    expect(screen.getByRole("region", { name: "Today’s Challenges" })).toBeEmptyDOMElement();
+    const todaysChallenges = screen.getByRole("region", { name: "Today’s Challenges" });
+
+    expect(within(todaysChallenges).getByTestId("today-challenge-ufc")).toBeInTheDocument();
+    expect(within(todaysChallenges).getByTestId("today-challenge-football")).toBeInTheDocument();
     expect(screen.getByRole("region", { name: "What’s New" })).toBeInTheDocument();
     expect(screen.getByRole("region", { name: "Football HQ" })).toBeEmptyDOMElement();
     expect(within(sections[3]).getByRole("heading", { name: "Your HQ" })).toBeInTheDocument();
+    expect(within(sections[4]).getByText("RANKING SPOTLIGHT")).toBeInTheDocument();
   });
 
   it("keeps a single Home route owner", () => {
