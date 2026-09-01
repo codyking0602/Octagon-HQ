@@ -151,6 +151,12 @@ function renderHome() {
   return render(<MemoryRouter><HomePage /></MemoryRouter>);
 }
 
+function yourHqSection() {
+  const section = document.querySelector<HTMLElement>('[data-home-section="your-hq"]');
+  if (!section) throw new Error("Your HQ Home section was not rendered.");
+  return section;
+}
+
 describe("Home PR 9 — Today’s Challenges + Your HQ", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -192,7 +198,7 @@ describe("Home PR 9 — Today’s Challenges + Your HQ", () => {
   it("shows the locked three-stat sign-in snapshot and both permanent daily challenge entry points", () => {
     renderHome();
 
-    const hq = screen.getByRole("region", { name: "Your HQ" });
+    const hq = yourHqSection();
     expect(within(hq).getAllByRole("article")).toHaveLength(3);
     expect(within(hq).getByText("Daily streak")).toBeInTheDocument();
     expect(within(hq).getByText("UFC Picks record")).toBeInTheDocument();
@@ -336,7 +342,7 @@ describe("Home PR 9 — Today’s Challenges + Your HQ", () => {
 
     renderHome();
 
-    const hq = screen.getByRole("region", { name: "Your HQ" });
+    const hq = yourHqSection();
     await waitFor(() => expect(within(screen.getByText("Daily streak").closest("article")!).getByText("2")).toBeInTheDocument());
     expect(within(hq).getAllByRole("article")).toHaveLength(3);
     expect(within(screen.getByText("UFC Picks record").closest("article")!).getByText("12-8")).toBeInTheDocument();
