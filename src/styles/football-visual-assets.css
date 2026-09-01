@@ -77,31 +77,10 @@
   background: #111315 !important;
 }
 
-/* Football HQ final identity polish: shared UFC accent consumers inherit the selected team. */
+/* Shared legacy UFC-accent consumers inside Football resolve through Football's contextual tokens. */
 .app-shell--football-room {
   --ufc-red: var(--football-action);
   --ufc-red-strong: var(--football-accent);
-}
-
-.bottom-nav--football {
-  --ufc-red: #6e8298;
-  --ufc-red-strong: #aebdcb;
-  border-top-color: rgba(174, 189, 203, .16);
-  background: rgba(5, 7, 10, .98);
-}
-
-.bottom-nav--football-team-cowboys {
-  --ufc-red: #163f67;
-  --ufc-red-strong: #829db8;
-  border-top-color: rgba(22, 63, 103, .42);
-  background: rgba(4, 11, 19, .98);
-}
-
-.bottom-nav--football-team-longhorns {
-  --ufc-red: #bf5700;
-  --ufc-red-strong: #d46a15;
-  border-top-color: rgba(191, 87, 0, .34);
-  background: rgba(10, 7, 5, .98);
 }
 
 /* Header and first-entry selectors render the finished helmet art directly. */
