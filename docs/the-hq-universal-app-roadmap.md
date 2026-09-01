@@ -1,6 +1,6 @@
 # The HQ Universal App Roadmap
 
-**Status:** Product architecture locked; Phase 0 audit complete; rollout PRs 2–12 complete through PR #821; PR 13 follows.  
+**Status:** Product architecture locked; Phase 0 audit complete; rollout PRs 2–13 complete through PR #823; PR 14 follows.  
 **Last updated:** September 1, 2026  
 **Canonical purpose:** Preserve the agreed multi-sport architecture for The HQ so implementation can continue across multiple chats without re-deciding settled product choices.
 
@@ -446,7 +446,8 @@ Use the following routing so the rollout does not get trapped between the limite
 - **PR 9 has one explicit execution exception:** Cody explicitly requested direct GitHub implementation and merge of PR 9 in that chat.
 - **PR 10 has one explicit execution exception:** Cody explicitly requested direct GitHub implementation and merge of PR 10 in that chat.
 - **PR 11 has one explicit execution exception:** Cody explicitly requested direct GitHub implementation and merge of PR 11 in that chat. This did not change the default Codex routing for later rollout PRs.
-- **PR 12 has one explicit execution exception:** Cody explicitly requested direct GitHub implementation and merge of PR 12 in this chat. This does not change the default Codex routing for PR 13+.
+- **PR 12 has one explicit execution exception:** Cody explicitly requested direct GitHub implementation and merge of PR 12 in that chat.
+- **PR 13 has one explicit execution exception:** Cody explicitly requested direct GitHub implementation and merge of PR 13 in this chat, and explicitly narrowed it to Universal Notifications only. This does not change the default Codex routing for PR 14.
 - ChatGPT's GitHub tools remain useful for reading the repository, reviewing Codex diffs, checking PR state / CI, updating roadmap documentation, and merging verified PRs.
 - Narrow corrective follow-up PRs explicitly requested by Cody may be handled separately when they do not substitute for the next named roadmap implementation PR.
 
@@ -473,10 +474,10 @@ Use the following routing so the rollout does not get trapped between the limite
 | **10** | UFC HQ Home block | **COMPLETE — #819; base `a2f812e5de4fbf222fe9580514dde2ba2af9bd73`; explicit ChatGPT execution exception** | **HIGH — preserve Ranking Spotlight + Shane's Contender Series** |
 | **11** | Football HQ Home block + What's New integration | **COMPLETE — #820; base `9afbfdfe11bddd20051ea6eaef5b996c30d310a4`; explicit ChatGPT execution exception** | **HIGH — preserve weekly picks + both Game of the Week owners** |
 | **12** | Universal Profile | **COMPLETE — #821; base `d4b13a3144220229ac17c1c5ad971a14bbb718c1`; explicit ChatGPT execution exception** | Normal; do not reintroduce unused favorites |
-| **13** | Universal Notifications + onboarding cleanup | **CODEX REQUIRED — NEXT** | **HIGH — deep links, delivery ownership, auth/profile creation** |
-| **14** | Brand migration + War Room / legacy cleanup | **CODEX REQUIRED** | **HIGH — deletion / regression risk; inventory first** |
+| **13** | Universal Notifications | **COMPLETE — #823; base `0bb7b27bd472b803c04314416364eab3c2ece851`; explicit ChatGPT execution exception** | **HIGH — deep links, unread ownership, delivery ownership** |
+| **14** | Brand migration + War Room / legacy cleanup | **CODEX REQUIRED — NEXT** | **HIGH — deletion / regression risk; inventory first** |
 
-If PR 13 proves to cross genuinely separate canonical owners, split it into **13A Notifications** and **13B Onboarding**, with each one run as its own fresh Codex PR from then-current `main`. In that case the rollout becomes 15 PRs rather than forcing unrelated ownership into one diff.
+On September 1, Cody explicitly narrowed PR 13 to **Universal Notifications only** and prohibited unrelated onboarding work. The locked onboarding cleanup requirement remains preserved below but was not implemented by PR #823. Per that direct scope, **PR 14 is the next named rollout step**; onboarding cleanup may only be revisited separately if Cody explicitly requests it.
 
 ---
 
@@ -617,14 +618,20 @@ PR #821 keeps `MemberProfilePage` as the existing profile surface and composes t
 
 ### Notifications
 
+**Status: COMPLETE — PR #823.**
+
 - One inbox.
 - Sport-aware visual tags/accent.
 - Correct deep links into UFC / Football destinations.
 - Preserve existing notification ownership and delivery systems.
 
+PR #823 keeps the existing `NotificationProvider`, `notificationRepository`, `/notifications` route, `NotificationHeaderAction`, unread-count state, `NotificationPushSetting`, realtime subscription, and `deliver-notification-push` Edge Function as the canonical owners. The existing notification item route/kind metadata is interpreted only for presentation: Football routes resolve to Football context first, existing UFC routes/kinds retain UFC context, and universal/social items remain neutral. The one existing inbox renders the sport label and scopes the already-canonical `data-hq-theme` token path per row, producing UFC red and Football navy `#1F4E79` without another theme owner. Existing deep links remain passthrough except for the pre-existing legacy UFC recap repair. No notification table, RPC, Edge Function, provider, repository, unread query, route, initialization, or push-delivery path is duplicated.
+
 ---
 
 ## Phase 5 — Onboarding Cleanup
+
+**Status: DEFERRED by Cody's explicit PR 13 scope; not implemented by PR #823. PR 14 is next.**
 
 Goal: remove obsolete favorite-fighter gating without disturbing existing accounts.
 
@@ -635,7 +642,7 @@ Requirements:
 - Preserve existing stored favorite values unless a safe migration has a concrete reason to remove them.
 - Authentication/profile creation must remain intact.
 
-Audit clarification: the current profile-creation flow does not require a favorite fighter. The actual live gate to remove is Football first-entry team selection. Re-check fresh `main` before this PR and remove only the obsolete gate that actually exists.
+Audit clarification: the current profile-creation flow does not require a favorite fighter. The actual live gate to remove is Football first-entry team selection. Re-check fresh `main` before any later onboarding work and remove only the obsolete gate that actually exists.
 
 ---
 
@@ -684,7 +691,7 @@ Do not claim a merged change is live until the live deployment SHA is verified.
 
 # 13. Current Resume Point
 
-**Phase 0 is complete. PR 2 through PR 12 are complete through PR #821. PR 13 — Universal Notifications + onboarding cleanup is the next named rollout item.**
+**Phase 0 is complete. PR 2 through PR 13 are complete through PR #823. PR 14 — Brand migration + War Room / legacy cleanup is the next named rollout item.**
 
 Current verified roadmap baseline:
 
@@ -702,11 +709,13 @@ Current verified roadmap baseline:
 - PR #818 — PR 9 Today's Challenges + Your HQ — base `42f47089f77715b2898e669aa724b22df5f49edc`; merge `a2f812e5de4fbf222fe9580514dde2ba2af9bd73`.
 - PR #819 — PR 10 UFC HQ Home block — base `a2f812e5de4fbf222fe9580514dde2ba2af9bd73`; merge `9afbfdfe11bddd20051ea6eaef5b996c30d310a4`.
 - PR #820 — PR 11 Football HQ Home block + What's New integration — base `9afbfdfe11bddd20051ea6eaef5b996c30d310a4`; merge `d4b13a3144220229ac17c1c5ad971a14bbb718c1`.
-- PR #821 — PR 12 Universal Profile — base `d4b13a3144220229ac17c1c5ad971a14bbb718c1`; merge SHA to be backfilled on the next roadmap edit.
+- PR #821 — PR 12 Universal Profile — base `d4b13a3144220229ac17c1c5ad971a14bbb718c1`; merge `0f9f830ac10f10dc869386445fb6ebd52579e8c5`.
+- PR #822 — PR 12 live-notification verifier copy repair — base `0f9f830ac10f10dc869386445fb6ebd52579e8c5`; merge `0bb7b27bd472b803c04314416364eab3c2ece851`.
+- PR #823 — PR 13 Universal Notifications — base `0bb7b27bd472b803c04314416364eab3c2ece851`; merge SHA to be backfilled on the next roadmap edit.
 
-PR 4 remains the one canonical shared selected-sport owner and persistence path. PR 5 consumes that state in the existing AppShell and BottomNavigation owners. PR 6 consumes those existing owners for contextual accent scoping while preserving the single `main.tsx` style initialization path and removing favorite-team app-wide shell theming rather than introducing another theme owner. PR #813 only corrects Football's existing contextual token to the locked navy. PR #814 keeps `src/features/home/HomePage.tsx` as the single Home composition owner and adds only the six locked section boundaries plus neutral universal Home presentation; it adds no provider, repository, alternate query path, route owner, or theme initialization. PR #815 keeps that same Home owner, adds a pure Up Next priority model, reuses the existing providers/runtime state, and adds no second query/provider/repository/theme/route owner. PR #818 keeps the same Home owner, adds the two independent daily challenge summaries, and extends the single app-level Picks owner to expose the existing Football summary through its canonical repository path. PR #819 keeps the same Home owner, consumes the existing UFC event/Picks history and calculated ranking/Shane owners, and adds only UFC-local presentation plus focused tests. PR #820 keeps the same Home owner and the same app-level Picks/repository owner, extending only its existing optional Football Home read model so the completed Football HQ block consumes canonical current-slate, pick, summary, history, standing, and published event-art assets without a second provider/query owner. The canonical What's New surface remains unchanged. PR #821 keeps the existing profile route/surface, identity, preferences, Picks, daily-streak, and challenge owners; it composes the signed-in Universal Profile from those owners and removes the redundant signed-in self query rather than introducing any second profile/provider/repository/query path.
+PR 4 remains the one canonical shared selected-sport owner and persistence path. PR 5 consumes that state in the existing AppShell and BottomNavigation owners. PR 6 consumes those existing owners for contextual accent scoping while preserving the single `main.tsx` style initialization path and removing favorite-team app-wide shell theming rather than introducing another theme owner. PR #813 only corrects Football's existing contextual token to the locked navy. PR #814 keeps `src/features/home/HomePage.tsx` as the single Home composition owner and adds only the six locked section boundaries plus neutral universal Home presentation; it adds no provider, repository, alternate query path, route owner, or theme initialization. PR #815 keeps that same Home owner, adds a pure Up Next priority model, reuses the existing providers/runtime state, and adds no second query/provider/repository/theme/route owner. PR #818 keeps the same Home owner, adds the two independent daily challenge summaries, and extends the single app-level Picks owner to expose the existing Football summary through its canonical repository path. PR #819 keeps the same Home owner, consumes the existing UFC event/Picks history and calculated ranking/Shane owners, and adds only UFC-local presentation plus focused tests. PR #820 keeps the same Home owner and the same app-level Picks/repository owner, extending only its existing optional Football Home read model so the completed Football HQ block consumes canonical current-slate, pick, summary, history, standing, and published event-art assets without a second provider/query owner. The canonical What's New surface remains unchanged. PR #821 keeps the existing profile route/surface, identity, preferences, Picks, daily-streak, and challenge owners; it composes the signed-in Universal Profile from those owners and removes the redundant signed-in self query rather than introducing any second profile/provider/repository/query path. PR #822 is only the narrow post-merge live-verifier copy repair required by the PR 12 The HQ sign-in label. PR #823 keeps the single notification provider/repository/inbox/unread/deep-link/settings/push owners and adds only sport-aware presentation using existing route/kind metadata and canonical theme tokens.
 
-The next named rollout item is **PR 13 — Universal Notifications + onboarding cleanup**. Resolve fresh `main` before starting it. Do not begin PR 13 from the PR 12 branch or fold notification/onboarding work into PR 12.
+The next named rollout item is **PR 14 — Brand migration + War Room / legacy cleanup**. Resolve fresh `main` before starting it. Do not begin PR 14 from the PR 13 branch or fold PR 14 cleanup into PR 13.
 
 Do **not** restart card-by-card Home brainstorming unless Cody explicitly reopens it.
 
@@ -731,18 +740,32 @@ Do **not** re-debate:
 
 ## September 1, 2026
 
+### PR 13 Universal Notifications
+
+- Cody explicitly requested direct GitHub execution and merge of PR 13 in this chat and explicitly narrowed its scope to **Universal Notifications only**. No onboarding, favorites/personalization, unrelated Home/Profile work, or PR 14 work is included.
+- PR #823 is the PR 13 implementation, based on `main` at `0bb7b27bd472b803c04314416364eab3c2ece851`.
+- `src/features/notifications/NotificationProvider.tsx` remains the one notification runtime/state owner and continues to own the item list, unread count, preferences, realtime refresh, and device-push state through the existing `notificationRepository`.
+- `src/features/notifications/NotificationCenterPage.tsx` remains the one inbox. Existing UFC and Football notifications render through the same list; no sport-specific notification center is added.
+- Sport presentation is derived from the existing notification `route`/`kind` metadata rather than a new backend schema or second abstraction. A canonical `/football...` route wins first and renders Football context; existing UFC destinations/kinds retain UFC context; universal/social notifications remain neutral.
+- The existing `data-hq-theme` token owner supplies per-row presentation: UFC red, Football navy `#1F4E79`, neutral for universal items. No new theme provider or style initialization is added.
+- `src/features/notifications/notificationDestination.ts` remains the single deep-link resolver. Football routes pass through unchanged, and the existing legacy UFC recap repair remains intact.
+- `NotificationHeaderAction` continues to read `notifications.unreadCount` from the existing provider. `NotificationPushSetting` remains mounted in the existing AppShell profile menu and consumes the same provider/device registration path.
+- Supabase notification tables/RPCs and the canonical `deliver-notification-push` Edge Function are unchanged. No second notification provider, repository, snapshot query, unread query, push path, route owner, realtime channel, or initialization is introduced.
+- Visible notification/push framing is updated from Octagon HQ to The HQ where the surface is universal.
+- The locked onboarding cleanup requirement is preserved but explicitly deferred; PR #823 does not implement it. Per Cody's direct scope, **PR 14 is next**.
+
 ### PR 12 Universal Profile
 
-- Cody explicitly requested direct GitHub execution and merge of PR 12 in this chat; this is the PR 12 execution exception. Default Codex routing resumes with PR 13.
-- PR #821 is the PR 12 implementation, based on `main` at `d4b13a3144220229ac17c1c5ad971a14bbb718c1`.
+- Cody explicitly requested direct GitHub execution and merge of PR 12 in that chat; this is the PR 12 execution exception.
+- PR #821 is the PR 12 implementation, based on `main` at `d4b13a3144220229ac17c1c5ad971a14bbb718c1` and merged as `0f9f830ac10f10dc869386445fb6ebd52579e8c5`.
+- PR #822 is the narrow PR 12 live-notification verifier copy repair, based on that merge and merged as `0bb7b27bd472b803c04314416364eab3c2ece851`.
 - `src/features/members/MemberProfilePage.tsx` remains the existing profile surface and `/members/:memberName` in `src/app/router.tsx` remains the route owner. No second profile route or route owner is added.
 - Identity/name remains owned by the existing `IdentityProvider` / `IdentityControl`; avatar/settings persistence remains owned by `ProfilePreferencesProvider` and its existing repository.
 - Daily Streak is composed from the existing Today’s Challenge overview path. UFC and Football records/history are composed from the single existing app-level `PicksProvider` / canonical `PicksRepository` path. Challenge history remains owned by `ChallengeProvider`.
 - The signed-in Universal Profile no longer performs a redundant self-read through `MemberProfilesRepository`; remote member profiles preserve that existing repository path. This reduces duplicate reading rather than creating a fallback or second query owner.
 - Visible profile framing is universal The HQ. Existing avatar controls remain functional. Favorite fighter/team profile sections are not introduced; stored preference fields remain untouched.
 - No provider, profile repository, Picks repository, challenge repository, router owner, theme/style initialization, or authentication/profile persistence path is added.
-- PR 12 does not begin PR 13 Notifications/onboarding cleanup, PR 14 brand/legacy cleanup, Football Rankings/Intelligence, championships, standalone Home leaderboards, or new favorite systems.
-- PR 13 — Universal Notifications + onboarding cleanup is next.
+- PR 12 did not begin PR 13 Notifications or PR 14 brand/legacy cleanup, Football Rankings/Intelligence, championships, standalone Home leaderboards, or new favorite systems.
 
 ### PR 11 Football HQ Home block + What's New integration
 
