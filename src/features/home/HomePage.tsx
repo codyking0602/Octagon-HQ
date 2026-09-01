@@ -12,8 +12,6 @@ import { usePicks } from "../picks/PicksProvider";
 import { todayChallengeAdapter } from "../play/todaysChallengeAdapters";
 import { useTodayChallengeOverview } from "../play/useTodayChallengeOverview";
 import { useTodayChallengeRuntime } from "../play/useTodayChallengeRuntime";
-import { useProfilePreferences } from "../profile/ProfilePreferencesProvider";
-import { FighterPhoto } from "../rankings/FighterPhoto";
 import { allTime } from "../rankings/rankingModel";
 import { WhatsNewPreview } from "../whats-new/WhatsNewPreview";
 import { useWhatsNew } from "../whats-new/WhatsNewProvider";
@@ -40,14 +38,47 @@ function readableError(error: unknown) {
   return error instanceof Error && error.message ? error.message : "";
 }
 
+function dailyChallengeStatus({
+  signedIn,
+  configured,
+  loading,
+  error,
+  progressRevision,
+  completedScore,
+}: {
+  signedIn: boolean;
+  configured: boolean;
+  loading: boolean;
+  error: unknown;
+  progressRevision: number | undefined;
+  completedScore: number | undefined;
+}) {
+  if (!signedIn) {
+    return { label: "SIGN IN TO PLAY", detail: "SYNC YOUR DAILY GAME", action: "OPEN" };
+  }
+  if (loading) {
+    return { label: "SYNCING", detail: "LOADING TODAY", action: "OPEN" };
+  }
+  if (error || !configured) {
+    return { label: "UNAVAILABLE", detail: "TRY THE GAME DIRECTLY", action: "OPEN" };
+  }
+  if (typeof completedScore === "number") {
+    return { label: "COMPLETED", detail: `${completedScore}/100`, action: "VIEW RESULT" };
+  }
+  if ((progressRevision ?? 0) > 0) {
+    return { label: "IN PROGRESS", detail: "PICK UP WHERE YOU LEFT OFF", action: "CONTINUE" };
+  }
+  return { label: "NOT PLAYED", detail: "READY FOR TODAY", action: "PLAY NOW" };
+}
+
 export default function HomePage() {
   const identity = useIdentity();
-  const preferences = useProfilePreferences();
   const picks = usePicks();
   const challengeState = usePlayChallenges();
   const whatsNew = useWhatsNew();
   const profileId = identity.profile?.id ?? "signed-out";
   const signedIn = Boolean(identity.profile?.id);
+
   const dailyRuntime = useTodayChallengeRuntime({ profileId, enabled: signedIn });
   const dailyOverview = useTodayChallengeOverview({
     profileId,
@@ -55,19 +86,21 @@ export default function HomePage() {
     projection: dailyRuntime.projection,
   });
   const dailyAdapter = todayChallengeAdapter(dailyRuntime.projection?.gameType);
-  const sortedFighters = useMemo(
-    () => allTime.slice().sort((left, right) => left.displayName.localeCompare(right.displayName)),
-    [],
-  );
+
+  const footballDailyRuntime = useTodayChallengeRuntime({
+    profileId,
+    enabled: signedIn,
+    sport: "football",
+  });
+  const footballDailyAdapter = todayChallengeAdapter(footballDailyRuntime.projection?.gameType);
+
   const spotlight = useMemo(() => dailyRankingSpotlight(allTime, new Intl.DateTimeFormat("en-CA", {
     timeZone: "America/Chicago",
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
   }).format(new Date())), []);
-  const favorite = preferences.favoriteFighterSlug
-    ? allTime.find((fighter) => fighter.slug === preferences.favoriteFighterSlug) ?? null
-    : null;
+
   const dailyLoading = dailyRuntime.loading || dailyOverview.loading;
   const dailyError = readableError(dailyRuntime.error) || readableError(dailyOverview.error);
   const playedToday = Boolean(dailyRuntime.projection?.officialAttempt);
@@ -105,6 +138,40 @@ export default function HomePage() {
         challengeAction: directChallengeAction,
         whatsNewItems: whatsNew.activeItems,
       });
+
+  const ufcChallengeStatus = dailyChallengeStatus({
+    signedIn,
+    configured: dailyRuntime.configured,
+    loading: dailyRuntime.loading,
+    error: dailyRuntime.error,
+    progressRevision: dailyRuntime.projection?.progressRevision,
+    completedScore: dailyRuntime.projection?.officialAttempt?.normalizedScore,
+  });
+  const footballChallengeStatus = dailyChallengeStatus({
+    signedIn,
+    configured: footballDailyRuntime.configured,
+    loading: footballDailyRuntime.loading,
+    error: footballDailyRuntime.error,
+    progressRevision: footballDailyRuntime.projection?.progressRevision,
+    completedScore: footballDailyRuntime.projection?.officialAttempt?.normalizedScore,
+  });
+
+  const dailyStreakValue = dailyLoading
+    ? "…"
+    : dailyError || !dailyOverview.configured
+      ? "—"
+      : String(currentStreak);
+  const ufcPicksRecord = picks.loading
+    ? "…"
+    : picks.error
+      ? "—"
+      : pickRecord(picks.summary);
+  const footballPicksRecord = picks.footballSummaryLoading
+    ? "…"
+    : picks.footballSummaryError || !picks.footballSummary
+      ? "—"
+      : pickRecord(picks.footballSummary);
+
   const currentMainEvent = mainEvent(currentEvent);
   const picksProgress = pickProgress(currentEvent, picks.selections);
   const picksPercent = picksProgress.total
@@ -157,7 +224,40 @@ export default function HomePage() {
         data-testid="home-section"
         data-home-section="todays-challenges"
         aria-label="Today’s Challenges"
-      />
+      >
+        <section className="surface-card hq-card todays-challenges-card" aria-labelledby="todays-challenges-title">
+          <div className="section-heading hq-card__heading">
+            <h2 id="todays-challenges-title">Today’s Challenges</h2>
+          </div>
+          <div className="hq-card__grid">
+            <article
+              className="hq-stat today-challenge-card"
+              data-testid="today-challenge-ufc"
+              data-hq-theme="ufc"
+            >
+              <p className="eyebrow">UFC</p>
+              <h3>{dailyAdapter?.title ?? "Today’s Challenge"}</h3>
+              <small>{ufcChallengeStatus.label} · {ufcChallengeStatus.detail}</small>
+              <Link className="primary-action" to={dailyAdapter?.dailyRoute ?? "/play"}>
+                {ufcChallengeStatus.action} →
+              </Link>
+            </article>
+
+            <article
+              className="hq-stat today-challenge-card"
+              data-testid="today-challenge-football"
+              data-hq-theme="football"
+            >
+              <p className="eyebrow">FOOTBALL</p>
+              <h3>{footballDailyAdapter?.title ?? "Today’s Challenge"}</h3>
+              <small>{footballChallengeStatus.label} · {footballChallengeStatus.detail}</small>
+              <Link className="primary-action" to="/football/today">
+                {footballChallengeStatus.action} →
+              </Link>
+            </article>
+          </div>
+        </section>
+      </section>
 
       <section
         className="home-section home-section--whats-new"
@@ -181,74 +281,45 @@ export default function HomePage() {
 
           {!identity.profile ? (
             <div className="hq-card__signed-out">
-              <div className="hq-card__grid" aria-label="Your HQ profile benefits">
+              <div className="hq-card__grid hq-card__grid--three" aria-label="Your HQ profile benefits">
                 <article className="hq-stat"><strong>—</strong><span>Daily streak</span><small>SYNC ACROSS DEVICES</small></article>
-                <article className="hq-stat"><strong>—</strong><span>Current Picks record</span><small>SIGN IN TO TRACK</small></article>
-                <article className="hq-stat"><strong>—</strong><span>Favorite fighter</span><small>MAKE IT YOUR HQ</small></article>
-                <article className="hq-stat"><strong>—</strong><span>Open challenges</span><small>PLAY FRIENDS</small></article>
+                <article className="hq-stat"><strong>—</strong><span>UFC Picks record</span><small>SIGN IN TO TRACK</small></article>
+                <article className="hq-stat"><strong>—</strong><span>Football Picks record</span><small>SIGN IN TO TRACK</small></article>
               </div>
-              <p>Sign in to carry your official game history, Picks record, favorite fighter, and challenges between devices.</p>
+              <p>Sign in to sync your daily streak and both Picks records across devices.</p>
               <button className="primary-action" type="button" onClick={identity.openDialog}>SIGN IN TO YOUR HQ</button>
             </div>
           ) : (
             <>
-              <div className="hq-card__grid">
-                <article className="hq-stat">
-                  <strong>{dailyLoading ? "…" : currentStreak}</strong>
+              <div className="hq-card__grid hq-card__grid--three">
+                <article className={`hq-stat${dailyStreakValue === "—" ? " is-unavailable" : ""}`}>
+                  <strong>{dailyStreakValue}</strong>
                   <span>Daily streak</span>
                   <small>TODAY’S CHALLENGE</small>
                 </article>
 
-                <article className="hq-stat">
-                  <strong>{picks.loading ? "…" : pickRecord(picks.summary)}</strong>
-                  <span>Current Picks record</span>
+                <article className={`hq-stat${ufcPicksRecord === "—" ? " is-unavailable" : ""}`}>
+                  <strong>{ufcPicksRecord}</strong>
+                  <span>UFC Picks record</span>
                   <small>
-                    {currentEvent?.season ?? new Date().getFullYear()} SEASON
+                    CURRENT SEASON
                     {picks.summary.pending ? ` · ${picks.summary.pending} PENDING` : ""}
                   </small>
                 </article>
 
-                <article className="hq-stat hq-stat--favorite">
-                  {favorite ? (
-                    <Link
-                      className="hq-stat__favorite-value hq-stat__favorite-link"
-                      to={`/fighters/${favorite.slug}`}
-                      aria-label={`Open ${favorite.displayName} profile`}
-                    >
-                      <FighterPhoto name={favorite.displayName} src={favorite.thumbUrl} />
-                      <strong>{favorite.displayName}</strong>
-                    </Link>
-                  ) : (
-                    <div className="hq-stat__favorite-value">
-                      <strong>{preferences.loading ? "…" : "SET ONE"}</strong>
-                    </div>
-                  )}
-                  <label>
-                    <span>Favorite fighter</span>
-                    <select
-                      aria-label="Favorite fighter"
-                      disabled={preferences.loading || preferences.saving || !preferences.configured}
-                      value={favorite?.slug ?? ""}
-                      onChange={(event) => void preferences.setFavoriteFighter(event.target.value || null)}
-                    >
-                      <option value="">Choose fighter</option>
-                      {sortedFighters.map((fighter) => (
-                        <option value={fighter.slug} key={fighter.slug}>{fighter.displayName}</option>
-                      ))}
-                    </select>
-                  </label>
-                </article>
-
-                <article className="hq-stat">
-                  <strong>{challengeState.loading ? "…" : openChallenges.length}</strong>
-                  <span>Open challenges</span>
-                  <small>NEW, OPENED OR WAITING</small>
+                <article className={`hq-stat${footballPicksRecord === "—" ? " is-unavailable" : ""}`}>
+                  <strong>{footballPicksRecord}</strong>
+                  <span>Football Picks record</span>
+                  <small>
+                    CURRENT SEASON
+                    {picks.footballSummary?.pending ? ` · ${picks.footballSummary.pending} PENDING` : ""}
+                  </small>
                 </article>
               </div>
 
-              {dailyError || preferences.error || picks.error || challengeState.error ? (
+              {dailyError || picks.error || picks.footballSummaryError ? (
                 <p className="hq-card__error" role="status">
-                  {dailyError || preferences.error || picks.error || challengeState.error}
+                  {dailyError || picks.error || picks.footballSummaryError}
                 </p>
               ) : null}
             </>
