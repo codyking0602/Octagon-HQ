@@ -9,6 +9,7 @@ import {
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { BottomNavigation } from "../components/BottomNavigation";
 import { RouteScrollManager } from "./RouteScrollManager";
+import { SportProvider } from "./SportProvider";
 
 vi.mock("../features/war-room/WarRoomProvider", () => ({
   useWarRoom: () => ({ status: "locked", unreadCount: 0 }),
@@ -84,7 +85,11 @@ describe("predictable navigation scroll", () => {
       [{ path: "*", element: <BottomNavigation /> }],
       { initialEntries: ["/rankings?view=women"] },
     );
-    render(<RouterProvider router={router} />);
+    render(
+      <SportProvider>
+        <RouterProvider router={router} />
+      </SportProvider>,
+    );
 
     fireEvent.click(screen.getByRole("link", { name: "Rankings" }));
 
@@ -98,7 +103,11 @@ describe("predictable navigation scroll", () => {
       [{ path: "*", element: <BottomNavigation /> }],
       { initialEntries: ["/picks/control"] },
     );
-    render(<RouterProvider router={router} />);
+    render(
+      <SportProvider>
+        <RouterProvider router={router} />
+      </SportProvider>,
+    );
 
     await act(async () => {
       fireEvent.click(screen.getByRole("link", { name: "Picks" }));
