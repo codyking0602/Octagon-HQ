@@ -165,7 +165,7 @@ describe("PicksProvider", () => {
       updatedAt: "2026-07-24T12:00:00.000Z",
     }]);
     let mmaSummaryLoads = 0;
-    const loadMySummary = vi.fn(async (_season: number, sport: "mma" | "football") => {
+    const loadMySummary = vi.fn(async (_season: number, sport?: "mma" | "football") => {
       if (sport === "football") {
         return { correct: 7, incorrect: 3, pending: 2, eventsEntered: 3, basePoints: 28, lockBonus: 1, totalPoints: 29 };
       }
@@ -234,7 +234,7 @@ describe("PicksProvider", () => {
   it("loads completed history even while the next event is not available", async () => {
     const loadMyPicks = vi.fn(async () => []);
     const loadMyHistory = vi.fn(async () => history);
-    const loadMySummary = vi.fn(async (_season: number, sport: "mma" | "football") => (
+    const loadMySummary = vi.fn(async (_season: number, sport?: "mma" | "football") => (
       sport === "football"
         ? { correct: 2, incorrect: 1, pending: 0, eventsEntered: 1, basePoints: 8, lockBonus: 0, totalPoints: 8 }
         : { correct: 4, incorrect: 1, pending: 0, eventsEntered: 1, basePoints: 16, lockBonus: 0, totalPoints: 16 }
