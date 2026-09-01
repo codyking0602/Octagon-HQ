@@ -48,6 +48,7 @@ interface PicksContextValue {
   footballSummary: PickSummary | null;
   history: PickHistory;
   refresh: () => Promise<void>;
+  loadFootballSummary: () => Promise<void>;
   setPick: (boutId: string, fighterSlug: string) => Promise<void>;
   setFootballLock: (boutId: string, isLock: boolean) => Promise<void>;
   saveFootballFutures: (picks: FootballFuturesPicks) => Promise<void>;
@@ -88,11 +89,9 @@ export function PicksProvider({
   children,
   repository: suppliedRepository,
   sport = "mma",
-  includeFootballSummary = false,
 }: PropsWithChildren<{
   repository?: PicksRepository | null;
   sport?: PickSport;
-  includeFootballSummary?: boolean;
 }>) {
   const identity = useIdentity();
   const profileId = identity.profile?.id ?? null;
@@ -103,6 +102,8 @@ export function PicksProvider({
     suppliedRepository === undefined ? createPicksRepository() : suppliedRepository
   ));
   const [event, setEvent] = useState<PickEvent | null>(null);
+  const eventRef = useRef<PickEvent | null>(event);
+  eventRef.current = event;
   const [selections, setSelections] = useState<Record<string, string>>({});
   const [footballLocks, setFootballLocks] = useState<Record<string, boolean>>({});
   const [footballFutures, setFootballFutures] = useState<FootballFuturesSnapshot | null>(null);
@@ -123,6 +124,9 @@ export function PicksProvider({
 
   useEffect(() => {
     profileIdRef.current = profileId;
+    setFootballSummary(null);
+    setFootballSummaryLoading(false);
+    setFootballSummaryError("");
     return () => {
       ++revisionRef.current;
       profileIdRef.current = null;
@@ -176,29 +180,6 @@ export function PicksProvider({
 
       const season = nextEvent?.season ?? new Date().getFullYear();
       setGroupProgressLoading(Boolean(nextEvent));
-      if (sport === "mma" && includeFootballSummary) {
-        setFootballSummaryLoading(true);
-        void repository.loadMySummary(season, "football")
-          .then((nextFootballSummary) => {
-            if (revision !== revisionRef.current || profileIdRef.current !== expectedProfileId) return;
-            setFootballSummary(nextFootballSummary);
-            setFootballSummaryError("");
-          })
-          .catch((footballError: unknown) => {
-            if (revision !== revisionRef.current || profileIdRef.current !== expectedProfileId) return;
-            setFootballSummary(null);
-            setFootballSummaryError(readableError(footballError));
-          })
-          .finally(() => {
-            if (revision === revisionRef.current && profileIdRef.current === expectedProfileId) {
-              setFootballSummaryLoading(false);
-            }
-          });
-      } else if (sport === "mma") {
-        setFootballSummary(null);
-        setFootballSummaryLoading(false);
-        setFootballSummaryError("");
-      }
       const futuresRequest = nextEvent?.sport === "football" && repository.loadFootballFutures
         ? repository.loadFootballFutures(season)
         : Promise.resolve(null);
@@ -238,7 +219,38 @@ export function PicksProvider({
         setGroupProgressLoading(false);
       }
     }
-  }, [includeFootballSummary, profileId, repository, sport]);
+  }, [profileId, repository, sport]);
+
+  const loadFootballSummary = useCallback(async () => {
+    const expectedProfileId = profileId;
+    if (!expectedProfileId) {
+      setFootballSummary(null);
+      setFootballSummaryLoading(false);
+      setFootballSummaryError("");
+      return;
+    }
+    if (!repository) {
+      setFootballSummary(null);
+      setFootballSummaryLoading(false);
+      setFootballSummaryError("Picks are not connected on this build.");
+      return;
+    }
+
+    setFootballSummaryLoading(true);
+    try {
+      const season = eventRef.current?.season ?? new Date().getFullYear();
+      const nextFootballSummary = await repository.loadMySummary(season, "football");
+      if (profileIdRef.current !== expectedProfileId) return;
+      setFootballSummary(nextFootballSummary);
+      setFootballSummaryError("");
+    } catch (footballError) {
+      if (profileIdRef.current !== expectedProfileId) return;
+      setFootballSummary(null);
+      setFootballSummaryError(readableError(footballError));
+    } finally {
+      if (profileIdRef.current === expectedProfileId) setFootballSummaryLoading(false);
+    }
+  }, [profileId, repository]);
 
   useEffect(() => {
     setSavingBoutId(null);
@@ -485,6 +497,7 @@ export function PicksProvider({
       footballSummary,
       history,
       refresh,
+      loadFootballSummary,
       setPick,
       setFootballLock,
       saveFootballFutures,
