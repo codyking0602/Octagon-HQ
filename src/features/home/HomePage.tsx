@@ -230,7 +230,7 @@ export default function HomePage() {
         data-home-section="todays-challenges"
         aria-label="Today’s Challenges"
       >
-        <section className="surface-card hq-card todays-challenges-card" aria-labelledby="todays-challenges-title">
+        <div className="surface-card hq-card todays-challenges-card" aria-labelledby="todays-challenges-title">
           <div className="section-heading hq-card__heading">
             <h2 id="todays-challenges-title">Today’s Challenges</h2>
           </div>
@@ -261,7 +261,7 @@ export default function HomePage() {
               </Link>
             </article>
           </div>
-        </section>
+        </div>
       </section>
 
       <section
