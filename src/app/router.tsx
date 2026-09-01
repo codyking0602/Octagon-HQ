@@ -32,8 +32,6 @@ const HitTheNumberPage = lazy(() => import("../features/play/HitTheNumberPage"))
 const PicksPage = lazy(() => import("../features/picks/PicksPage"));
 const FootballPicksRoute = lazy(() => import("../features/picks/FootballPicksRoute"));
 const PicksControlCenterPage = lazy(() => import("../features/picks-control/PicksControlCenterPage"));
-const WarRoomPage = lazy(() => import("../features/war-room/WarRoomPage"));
-const WarRoomJoinPage = lazy(() => import("../features/war-room/WarRoomJoinPage"));
 const WhatsNewPage = lazy(() => import("../features/whats-new/WhatsNewPage"));
 
 export const appRoutes: RouteObject[] = [
@@ -72,8 +70,6 @@ export const appRoutes: RouteObject[] = [
       { path: "picks/control", element: <PicksControlCenterPage /> },
       { path: "picks/setup", element: <Navigate to="/picks/control#setup" replace /> },
       { path: "picks/monitoring", element: <Navigate to="/picks/control#monitoring" replace /> },
-      { path: "war-room/join", element: <WarRoomJoinPage /> },
-      { path: "war-room", element: <WarRoomPage /> },
       { path: "whats-new", element: <WhatsNewPage /> },
       { path: "*", element: <Navigate to="/" replace /> },
     ],
