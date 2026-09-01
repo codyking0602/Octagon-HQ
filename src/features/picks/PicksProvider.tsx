@@ -37,8 +37,11 @@ interface PicksContextValue {
   error: string;
   groupProgressError: string;
   footballSummaryError: string;
+  footballHomeError: string;
   event: PickEvent | null;
+  footballEvent: PickEvent | null;
   selections: Record<string, string>;
+  footballSelections: Record<string, string>;
   footballLocks: Record<string, boolean>;
   footballFutures: FootballFuturesSnapshot | null;
   groupProgress: PickEventMemberProgress[];
@@ -46,6 +49,7 @@ interface PicksContextValue {
   summary: PickSummary;
   footballSummary: PickSummary;
   history: PickHistory;
+  footballHistory: PickHistory;
   refresh: () => Promise<void>;
   setPick: (boutId: string, fighterSlug: string) => Promise<void>;
   setFootballLock: (boutId: string, isLock: boolean) => Promise<void>;
@@ -102,7 +106,9 @@ export function PicksProvider({
     suppliedRepository === undefined ? createPicksRepository() : suppliedRepository
   ));
   const [event, setEvent] = useState<PickEvent | null>(null);
+  const [footballEvent, setFootballEvent] = useState<PickEvent | null>(null);
   const [selections, setSelections] = useState<Record<string, string>>({});
+  const [footballSelections, setFootballSelections] = useState<Record<string, string>>({});
   const [footballLocks, setFootballLocks] = useState<Record<string, boolean>>({});
   const [footballFutures, setFootballFutures] = useState<FootballFuturesSnapshot | null>(null);
   const [groupProgress, setGroupProgress] = useState<PickEventMemberProgress[]>([]);
@@ -110,6 +116,7 @@ export function PicksProvider({
   const [summary, setSummary] = useState<PickSummary>(emptyPickSummary);
   const [footballSummary, setFootballSummary] = useState<PickSummary>(emptyPickSummary);
   const [history, setHistory] = useState<PickHistory>(emptyPickHistory);
+  const [footballHistory, setFootballHistory] = useState<PickHistory>(emptyPickHistory);
   const [loading, setLoading] = useState(false);
   const [groupProgressLoading, setGroupProgressLoading] = useState(false);
   const [savingBoutId, setSavingBoutId] = useState<string | null>(null);
@@ -118,6 +125,7 @@ export function PicksProvider({
   const [error, setError] = useState("");
   const [groupProgressError, setGroupProgressError] = useState("");
   const [footballSummaryError, setFootballSummaryError] = useState("");
+  const [footballHomeError, setFootballHomeError] = useState("");
 
   useEffect(() => {
     profileIdRef.current = profileId;
@@ -133,7 +141,9 @@ export function PicksProvider({
 
     if (!repository) {
       setEvent(null);
+      setFootballEvent(null);
       setSelections({});
+      setFootballSelections({});
       setFootballLocks({});
       setFootballFutures(null);
       setGroupProgress([]);
@@ -141,11 +151,13 @@ export function PicksProvider({
       setSummary(emptyPickSummary);
       setFootballSummary(emptyPickSummary);
       setHistory(emptyPickHistory);
+      setFootballHistory(emptyPickHistory);
       setLoading(false);
       setGroupProgressLoading(false);
       setError("Picks are not connected on this build.");
       setGroupProgressError("");
       setFootballSummaryError("");
+      setFootballHomeError("");
       return;
     }
 
@@ -155,8 +167,20 @@ export function PicksProvider({
       if (revision !== revisionRef.current) return;
       setEvent(nextEvent);
 
+      const footballEventResult: { value: PickEvent | null; error: string } = sport === "football"
+        ? { value: nextEvent, error: "" }
+        : includeFootballSummary
+          ? await repository.loadCurrentEvent("football")
+              .then((value) => ({ value, error: "" }))
+              .catch((footballError: unknown) => ({ value: null, error: readableError(footballError) }))
+          : { value: null, error: "" };
+      if (revision !== revisionRef.current) return;
+      setFootballEvent(footballEventResult.value);
+      setFootballHomeError(footballEventResult.error);
+
       if (!expectedProfileId) {
         setSelections({});
+        setFootballSelections({});
         setFootballLocks({});
         setFootballFutures(null);
         setGroupProgress([]);
@@ -164,6 +188,7 @@ export function PicksProvider({
         setSummary(emptyPickSummary);
         setFootballSummary(emptyPickSummary);
         setHistory(emptyPickHistory);
+        setFootballHistory(emptyPickHistory);
         setError("");
         setGroupProgressError("");
         setFootballSummaryError("");
@@ -171,16 +196,27 @@ export function PicksProvider({
       }
 
       const season = nextEvent?.season ?? new Date().getFullYear();
+      const footballSeason = footballEventResult.value?.season ?? season;
       setGroupProgressLoading(Boolean(nextEvent));
       const futuresRequest = nextEvent?.sport === "football" && repository.loadFootballFutures
         ? repository.loadFootballFutures(season)
         : Promise.resolve(null);
       const footballSummaryRequest: Promise<{ value: PickSummary | null; error: string }> =
         includeFootballSummary && sport !== "football"
-          ? repository.loadMySummary(season, "football")
+          ? repository.loadMySummary(footballSeason, "football")
               .then((value) => ({ value, error: "" }))
               .catch((summaryError: unknown) => ({ value: null, error: readableError(summaryError) }))
           : Promise.resolve({ value: null, error: "" });
+      const footballRowsRequest = includeFootballSummary && sport !== "football" && footballEventResult.value
+        ? repository.loadMyPicks(footballEventResult.value.eventId)
+            .then((value) => ({ value, error: "" }))
+            .catch((rowsError: unknown) => ({ value: [], error: readableError(rowsError) }))
+        : Promise.resolve({ value: [], error: "" });
+      const footballHistoryRequest = includeFootballSummary && sport !== "football"
+        ? repository.loadMyHistory(footballSeason, "football")
+            .then((value) => ({ value, error: "" }))
+            .catch((historyError: unknown) => ({ value: emptyPickHistory, error: readableError(historyError) }))
+        : Promise.resolve({ value: emptyPickHistory, error: "" });
       const [
         rows,
         nextLock,
@@ -189,6 +225,8 @@ export function PicksProvider({
         nextFutures,
         progressResult,
         footballSummaryResult,
+        footballRowsResult,
+        footballHistoryResult,
       ] = await Promise.all([
         nextEvent ? repository.loadMyPicks(nextEvent.eventId) : Promise.resolve([]),
         nextEvent ? repository.loadMyUnderdogLock(nextEvent.eventId) : Promise.resolve(null),
@@ -201,9 +239,13 @@ export function PicksProvider({
               .catch((progressError: unknown) => ({ value: [], error: readableError(progressError) }))
           : Promise.resolve({ value: [], error: "" }),
         footballSummaryRequest,
+        footballRowsRequest,
+        footballHistoryRequest,
       ]);
       if (revision !== revisionRef.current || profileIdRef.current !== expectedProfileId) return;
-      setSelections(selectionsFromRows(rows));
+      const nextSelections = selectionsFromRows(rows);
+      setSelections(nextSelections);
+      setFootballSelections(sport === "football" ? nextSelections : selectionsFromRows(footballRowsResult.value));
       setFootballLocks(footballLocksFromRows(rows));
       setFootballFutures(nextFutures);
       setGroupProgress(progressResult.value);
@@ -217,6 +259,10 @@ export function PicksProvider({
       );
       setFootballSummaryError(sport === "football" ? "" : footballSummaryResult.error);
       setHistory(nextHistory);
+      setFootballHistory(sport === "football" ? nextHistory : footballHistoryResult.value);
+      setFootballHomeError(
+        footballEventResult.error || footballRowsResult.error || footballHistoryResult.error,
+      );
       setError("");
     } catch (nextError) {
       if (revision !== revisionRef.current) return;
@@ -283,6 +329,7 @@ export function PicksProvider({
       if (profileIdRef.current !== expectedProfileId) return;
       setSelections((current) => ({ ...current, [saved.boutId]: saved.fighterSlug }));
       if (event.sport === "football") {
+        setFootballSelections((current) => ({ ...current, [saved.boutId]: saved.fighterSlug }));
         setFootballLocks((current) => ({ ...current, [saved.boutId]: saved.isLock === true }));
         setFootballSummary(nextSummary);
         setFootballSummaryError("");
@@ -336,6 +383,7 @@ export function PicksProvider({
       const saved = await repository.savePick(event.eventId, boutId, fighterSlug, isLock);
       if (profileIdRef.current !== expectedProfileId) return;
       setSelections((current) => ({ ...current, [saved.boutId]: saved.fighterSlug }));
+      setFootballSelections((current) => ({ ...current, [saved.boutId]: saved.fighterSlug }));
       setFootballLocks((current) => ({ ...current, [saved.boutId]: saved.isLock === true }));
       setError("");
     } catch (nextError) {
@@ -463,8 +511,11 @@ export function PicksProvider({
       error,
       groupProgressError,
       footballSummaryError,
+      footballHomeError,
       event,
+      footballEvent,
       selections,
+      footballSelections,
       footballLocks,
       footballFutures,
       groupProgress,
@@ -472,6 +523,7 @@ export function PicksProvider({
       summary,
       footballSummary,
       history,
+      footballHistory,
       refresh,
       setPick,
       setFootballLock,
