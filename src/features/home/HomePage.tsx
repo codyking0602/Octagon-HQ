@@ -279,7 +279,7 @@ export default function HomePage() {
         data-home-section="your-hq"
         aria-label="Your HQ"
       >
-        <section className="surface-card hq-card" aria-labelledby="your-hq-title">
+        <div className="surface-card hq-card" aria-labelledby="your-hq-title">
           <div className="section-heading hq-card__heading">
             <h2 id="your-hq-title">Your HQ</h2>
           </div>
@@ -329,7 +329,7 @@ export default function HomePage() {
               ) : null}
             </>
           )}
-        </section>
+        </div>
       </section>
 
       <section
