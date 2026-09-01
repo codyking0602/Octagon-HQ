@@ -260,6 +260,10 @@ describe("Home PR 10 — UFC HQ", () => {
     expect(within(section).getByRole("link", { name: "OPEN UFC PICKS →" })).toHaveAttribute("href", "/picks");
     expect(within(section).getByText("RANKING SPOTLIGHT")).toBeInTheDocument();
     expect(within(section).getByRole("link", { name: "SHANE’S CONTENDER SERIES" })).toBeInTheDocument();
-    expect(screen.getByRole("region", { name: "Football HQ" })).toBeEmptyDOMElement();
+
+    const footballSection = screen.getByRole("region", { name: "Football HQ" });
+    expect(within(footballSection).getByRole("heading", { name: "Next slate not published" })).toBeInTheDocument();
+    expect(within(footballSection).getByText("COLLEGE GAME OF THE WEEK")).toBeInTheDocument();
+    expect(within(footballSection).getByText("NFL GAME OF THE WEEK")).toBeInTheDocument();
   });
 });

@@ -19,6 +19,7 @@ import { useTodayChallengeRuntime } from "../play/useTodayChallengeRuntime";
 import { WhatsNewPreview } from "../whats-new/WhatsNewPreview";
 import { useWhatsNew } from "../whats-new/WhatsNewProvider";
 import { allTime } from "../rankings/rankingModel";
+import { FootballHq } from "./FootballHq";
 import { dailyRankingSpotlight } from "./homeSpotlightModel";
 import { RankingSpotlightCard } from "./RankingSpotlightCard";
 import { ShanesWatchlistCard } from "./ShanesWatchlistCard";
@@ -27,6 +28,7 @@ import {
   buildDirectChallengeAction,
   meaningfulOpenChallenges,
 } from "./yourHqModel";
+import "../../styles/home-football-hq.css";
 import "../../styles/home-ufc-hq.css";
 
 function eventDate(value: string) {
@@ -449,11 +451,14 @@ export default function HomePage() {
         <ShanesWatchlistCard />
       </section>
 
-      <section
-        className="home-section home-section--football-hq"
-        data-testid="home-section"
-        data-home-section="football-hq"
-        aria-label="Football HQ"
+      <FootballHq
+        event={picks.footballEvent}
+        selections={picks.footballSelections}
+        history={picks.footballHistory}
+        summary={picks.footballSummary}
+        loading={picks.loading}
+        error={picks.footballHomeError}
+        signedIn={signedIn}
       />
     </div>
   );
