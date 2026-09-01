@@ -13,8 +13,8 @@
 }
 
 .app-notification-action.is-active {
-  border-color: rgba(245, 158, 11, .72);
-  box-shadow: 0 0 0 2px rgba(245, 158, 11, .12);
+  border-color: var(--hq-context-accent-border);
+  box-shadow: 0 0 0 2px var(--hq-context-accent-soft);
 }
 
 .app-notification-action svg {
@@ -38,8 +38,8 @@
   padding: 0 5px;
   border: 2px solid #000;
   border-radius: 999px;
-  background: #f59e0b;
-  color: #111;
+  background: var(--hq-context-accent);
+  color: var(--hq-context-accent-contrast);
   font-size: 8px;
   font-weight: 1000;
   line-height: 1;
@@ -71,7 +71,7 @@
 .notification-item__read {
   border: 0;
   background: transparent;
-  color: #f5b942;
+  color: var(--hq-context-accent-strong);
   font-weight: 950;
   cursor: pointer;
 }
@@ -118,8 +118,8 @@
   width: 36px;
   height: 36px;
   border-radius: 12px;
-  background: rgba(245, 158, 11, .12);
-  color: #f5b942;
+  background: var(--hq-context-accent-soft);
+  color: var(--hq-context-accent-strong);
   font-size: 17px;
   font-weight: 1000;
 }
@@ -152,12 +152,22 @@
   text-transform: none;
 }
 
-.notification-item__meta > b {
+.notification-item__sport,
+.notification-item__new {
   padding: 3px 5px;
   border-radius: 999px;
-  background: #f59e0b;
-  color: #111;
   font-size: 7px;
+}
+
+.notification-item__sport {
+  border: 1px solid var(--hq-context-accent-border);
+  background: var(--hq-context-accent-soft);
+  color: var(--hq-context-accent-strong);
+}
+
+.notification-item__new {
+  background: var(--hq-context-accent);
+  color: var(--hq-context-accent-contrast);
 }
 
 .notification-item__title {
@@ -177,10 +187,10 @@
 .notification-item__title > b {
   flex: 0 0 auto;
   padding: 3px 6px;
-  border: 1px solid rgba(245, 158, 11, .36);
+  border: 1px solid var(--hq-context-accent-border);
   border-radius: 999px;
-  background: rgba(245, 158, 11, .1);
-  color: #f5b942;
+  background: var(--hq-context-accent-soft);
+  color: var(--hq-context-accent-strong);
   font-size: 8px;
 }
 
@@ -192,7 +202,7 @@
 }
 
 .notification-item__body > em {
-  color: #f5b942;
+  color: var(--hq-context-accent-strong);
   font-size: 8px;
   font-style: normal;
   font-weight: 1000;
@@ -219,9 +229,9 @@
 
 .notification-error {
   padding: 11px 13px;
-  border: 1px solid rgba(245, 158, 11, .42);
+  border: 1px solid var(--hq-context-accent-border);
   border-radius: 13px;
-  background: rgba(245, 158, 11, .1);
+  background: var(--hq-context-accent-soft);
   color: var(--text-primary);
   font-size: 12px;
 }
