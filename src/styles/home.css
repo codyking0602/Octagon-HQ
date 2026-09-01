@@ -1,9 +1,13 @@
+.home-command-heading .eyebrow {
+  color: var(--hq-context-accent-strong);
+}
+
 .hq-card {
   gap: 14px;
   padding: 16px;
   overflow: hidden;
   background:
-    radial-gradient(circle at 92% 0%, rgba(210, 10, 10, .12), transparent 34%),
+    radial-gradient(circle at 92% 0%, var(--hq-context-accent-soft), transparent 34%),
     var(--surface);
 }
 
@@ -100,8 +104,8 @@
 }
 
 .hq-stat--favorite select:focus {
-  border-color: rgba(210, 10, 10, .8);
-  box-shadow: 0 0 0 2px rgba(210, 10, 10, .13);
+  border-color: var(--hq-context-accent-border);
+  box-shadow: 0 0 0 2px var(--hq-context-accent-soft);
 }
 
 .hq-stat--favorite select:disabled {
@@ -129,6 +133,8 @@
 .hq-card .primary-action {
   min-height: 42px;
   border: 0;
+  background: var(--hq-context-accent);
+  color: var(--hq-context-accent-contrast);
   cursor: pointer;
 }
 
@@ -138,7 +144,7 @@
   padding: 13px;
   border: 1px solid var(--border);
   border-radius: 15px;
-  background: linear-gradient(135deg, rgba(229, 9, 20, .09), var(--surface-raised) 52%);
+  background: linear-gradient(135deg, var(--hq-context-accent-soft), var(--surface-raised) 52%);
 }
 
 .hq-next-up__copy {
@@ -147,7 +153,7 @@
 }
 
 .hq-next-up__copy small {
-  color: var(--ufc-red-strong);
+  color: var(--hq-context-accent-strong);
   font-size: 9px;
   font-weight: 950;
   letter-spacing: .14em;
@@ -163,6 +169,27 @@
 .hq-next-up__copy p {
   color: var(--text-secondary);
   font-size: 12px;
+}
+
+.home-section--up-next .primary-action {
+  background: var(--hq-context-accent);
+  color: var(--hq-context-accent-contrast);
+}
+
+.home-section--whats-new .whats-new-preview__heading .eyebrow,
+.home-section--whats-new .whats-new-preview__mark,
+.home-section--whats-new .whats-new-preview__all {
+  color: var(--hq-context-accent-strong);
+}
+
+.home-section--whats-new .whats-new-preview__heading > span {
+  border-color: var(--hq-context-accent-border);
+  background: var(--hq-context-accent-soft);
+  color: var(--hq-context-accent-strong);
+}
+
+.home-section--whats-new .whats-new-preview__mark {
+  background: var(--hq-context-accent-soft);
 }
 
 .home-event-card {

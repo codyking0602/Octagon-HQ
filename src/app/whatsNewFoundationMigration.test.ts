@@ -63,8 +63,8 @@ describe("What's New foundation", () => {
     expect(notificationAction).toBeGreaterThan(-1);
     expect(notificationAction).toBeLessThan(askAction);
     expect(shell).not.toContain("<WhatsNewHeaderAction />");
-    expect(preview).toBeGreaterThan(yourHq);
-    expect(preview).toBeLessThan(event);
+    expect(preview).toBeLessThan(yourHq);
+    expect(yourHq).toBeLessThan(event);
     expect(router).toContain('path: "whats-new"');
     expect(contract).toContain("Home owns the permanent What's New preview");
     expect(contract).toContain("continues to own the complete feed");
