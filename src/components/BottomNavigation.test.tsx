@@ -49,7 +49,7 @@ function LocationProbe() {
 }
 
 describe("BottomNavigation", () => {
-  it("renders exactly Home, Picks, Play, and Ratings in order without War Room", () => {
+  it("renders exactly Home, Picks, Play, and Rankings in order without War Room", () => {
     render(
       <MemoryRouter>
         <BottomNavigation />
@@ -60,11 +60,11 @@ describe("BottomNavigation", () => {
     const links = Array.from(navigation.querySelectorAll("a"));
 
     expect(links).toHaveLength(4);
-    expect(links.map((link) => link.textContent)).toEqual(["Home", "Picks", "Play", "Ratings"]);
+    expect(links.map((link) => link.textContent)).toEqual(["Home", "Picks", "Play", "Rankings"]);
     expect(screen.queryByRole("link", { name: /War Room/i })).not.toBeInTheDocument();
   });
 
-  it("keeps UFC destinations for Picks, Play, and Ratings", () => {
+  it("keeps UFC destinations for Picks, Play, and Rankings", () => {
     render(
       <MemoryRouter>
         <BottomNavigation />
@@ -73,10 +73,10 @@ describe("BottomNavigation", () => {
 
     expect(screen.getByRole("link", { name: "Picks" })).toHaveAttribute("href", "/picks");
     expect(screen.getByRole("link", { name: "Play" })).toHaveAttribute("href", "/play");
-    expect(screen.getByRole("link", { name: "Ratings" })).toHaveAttribute("href", "/rankings");
+    expect(screen.getByRole("link", { name: "Rankings" })).toHaveAttribute("href", "/rankings");
   });
 
-  it("uses Football Picks and Play while keeping Ratings UFC-only", () => {
+  it("uses Football Picks and Play while keeping Rankings UFC-only", () => {
     render(
       <MemoryRouter initialEntries={["/football/picks"]}>
         <BottomNavigation />
@@ -85,8 +85,8 @@ describe("BottomNavigation", () => {
 
     expect(screen.getByRole("link", { name: "Picks" })).toHaveAttribute("href", "/football/picks");
     expect(screen.getByRole("link", { name: "Play" })).toHaveAttribute("href", "/football");
-    expect(screen.getByRole("link", { name: "Ratings" })).toHaveAttribute("href", "/rankings");
-    expect(screen.queryByRole("link", { name: /Football Ratings/i })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Rankings" })).toHaveAttribute("href", "/rankings");
+    expect(screen.queryByRole("link", { name: /Football Rankings/i })).not.toBeInTheDocument();
   });
 
   it("does not mistake a resumed stale shrunken viewport for an open keyboard", () => {
