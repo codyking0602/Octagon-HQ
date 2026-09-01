@@ -63,18 +63,20 @@ describe("The HQ universal Home foundation", () => {
     },
   );
 
-  it("fills the PR 9 challenge slot while keeping the later Football HQ slot structural", async () => {
+  it("fills the PR 10 UFC HQ slot while keeping the later Football HQ slot structural", async () => {
     renderHome();
     await screen.findByRole("heading", { name: "Your command center" });
 
     const sections = screen.getAllByTestId("home-section");
     const challenges = screen.getByRole("region", { name: "Today’s Challenges" });
+    const ufcHq = screen.getByRole("region", { name: "UFC HQ" });
     expect(within(challenges).getByRole("heading", { name: "Today’s Challenges" })).toBeInTheDocument();
     expect(within(challenges).getByRole("link", { name: /Open UFC Today’s Challenge/i })).toHaveAttribute("href", "/play");
     expect(within(challenges).getByRole("link", { name: /Open Football Today’s Challenge/i })).toHaveAttribute("href", "/football/today");
     expect(screen.getByRole("region", { name: "What’s New" })).toBeInTheDocument();
-    expect(screen.getByRole("region", { name: "Football HQ" })).toBeEmptyDOMElement();
     expect(within(sections[3]).getByRole("heading", { name: "Your HQ" })).toBeInTheDocument();
+    expect(within(ufcHq).getByRole("heading", { name: "Fight week command center" })).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "Football HQ" })).toBeEmptyDOMElement();
   });
 
   it("keeps a single Home route owner", () => {
