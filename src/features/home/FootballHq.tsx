@@ -80,13 +80,13 @@ export function FootballHq({
   const progress = pickProgress(event, selections);
   const remaining = Math.max(0, progress.total - progress.completed);
   const locked = event ? eventPicksLocked(event) : false;
-  const standings = history.seasonStandings ?? [];
+  const standings = history?.seasonStandings ?? [];
   const standing = standings.find((item) => item.isCurrentUser) ?? null;
   const rank = standing ? groupRankLabel(standing.rank, standings) : "";
   const posters = pickEventPosters(event);
   const collegeGame = weeklyLeagueGame(event, "cfb");
   const nflGame = weeklyLeagueGame(event, "nfl");
-  const season = event?.season ?? history.season ?? new Date().getFullYear();
+  const season = event?.season ?? history?.season ?? new Date().getFullYear();
   const status = !signedIn
     ? "SIGN IN TO PICK"
     : locked
