@@ -39,7 +39,7 @@ function Probe() {
 describe("PicksProvider universal record summaries", () => {
   it("loads the Football record through the existing repository without loading a Football slate", async () => {
     const loadCurrentEvent = vi.fn(async () => null);
-    const loadMySummary = vi.fn(async (_season: number, sport: "mma" | "football") => (
+    const loadMySummary = vi.fn(async (_season: number, sport?: "mma" | "football") => (
       sport === "football"
         ? {
             correct: 7,
