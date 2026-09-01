@@ -16,6 +16,23 @@ const baseDestinations = [
 
 const SECRET_PLAY_TAP_WINDOW_MS = 350;
 
+function routeOwnsNavigationItem(icon: NavigationIconName, pathname: string) {
+  if (icon === "home") return pathname === "/";
+  if (icon === "picks") {
+    return pathname === "/picks"
+      || pathname.startsWith("/picks/")
+      || pathname === "/football/picks"
+      || pathname.startsWith("/football/picks/");
+  }
+  if (icon === "play") {
+    return pathname === "/play"
+      || pathname.startsWith("/play/")
+      || pathname === "/football"
+      || (pathname.startsWith("/football/") && !pathname.startsWith("/football/picks"));
+  }
+  return pathname === "/rankings" || pathname.startsWith("/rankings/");
+}
+
 function NavigationIcon({ name }: { name: NavigationIconName }) {
   const iconPaths = {
     home: <path d="M3.5 10.5 12 3.5l8.5 7v9.75H14.8v-6.1H9.2v6.1H3.5Z" />,
@@ -165,7 +182,11 @@ export function BottomNavigation({ footballTeam = null }: { footballTeam?: Footb
             event.preventDefault();
             scrollPageToTop("smooth");
           }}
-          className={({ isActive }) => (isActive ? "bottom-nav__item is-active" : "bottom-nav__item")}
+          className={() => (
+            routeOwnsNavigationItem(destination.icon, location.pathname)
+              ? "bottom-nav__item is-active"
+              : "bottom-nav__item"
+          )}
         >
           <span className="bottom-nav__indicator" aria-hidden="true" />
           <NavigationIcon name={destination.icon} />
