@@ -28,7 +28,7 @@ describe("Octagon Verdict Intelligence flow", () => {
 
     const primary = screen.getByRole("navigation", { name: "Primary navigation" });
     expect(within(primary).getAllByRole("link")).toHaveLength(4);
-    ["Home", "Picks", "Play", "Ratings"].forEach((label) => expect(within(primary).getByRole("link", { name: label })).toBeInTheDocument());
+    ["Home", "Picks", "Play", "Rankings"].forEach((label) => expect(within(primary).getByRole("link", { name: label })).toBeInTheDocument());
     expect(within(primary).queryByText("Intelligence")).not.toBeInTheDocument();
     expect(within(primary).queryByText("War Room")).not.toBeInTheDocument();
   });

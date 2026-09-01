@@ -86,7 +86,7 @@ describe("predictable navigation scroll", () => {
     );
     render(<RouterProvider router={router} />);
 
-    fireEvent.click(screen.getByRole("link", { name: "Ratings" }));
+    fireEvent.click(screen.getByRole("link", { name: "Rankings" }));
 
     expect(router.state.location.pathname).toBe("/rankings");
     expect(router.state.location.search).toBe("?view=women");
