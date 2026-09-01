@@ -32,7 +32,7 @@ export function AppProviders({ children }: PropsWithChildren) {
             <WhatsNewProvider>
               <WarRoomProvider>
                 <ProfilePreferencesProvider>
-                  <PicksProvider includeFootballSummary>
+                  <PicksProvider>
                     <FindLeaderHistoryProvider>
                       <ChallengeProvider>{children}</ChallengeProvider>
                     </FindLeaderHistoryProvider>
