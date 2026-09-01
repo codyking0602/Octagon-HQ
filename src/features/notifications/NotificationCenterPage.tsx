@@ -6,11 +6,22 @@ import {
   formatNotificationAge,
   notificationCategoryLabel,
   notificationCategoryMark,
+  notificationSport,
+  notificationSportLabel,
   type NotificationItem,
+  type NotificationSport,
 } from "./notificationModel";
 import { useNotifications } from "./NotificationProvider";
 
-function NotificationCopy({ item, route }: { item: NotificationItem; route: string | null }) {
+function NotificationCopy({
+  item,
+  route,
+  sport,
+}: {
+  item: NotificationItem;
+  route: string | null;
+  sport: NotificationSport | null;
+}) {
   return (
     <>
       <span
@@ -21,9 +32,10 @@ function NotificationCopy({ item, route }: { item: NotificationItem; route: stri
       </span>
       <span className="notification-item__body">
         <span className="notification-item__meta">
+          {sport ? <b className="notification-item__sport">{notificationSportLabel(sport)}</b> : null}
           <small>{notificationCategoryLabel(item.category)}</small>
           <time dateTime={item.latestEventAt}>{formatNotificationAge(item.latestEventAt)}</time>
-          {!item.isRead ? <b>NEW</b> : null}
+          {!item.isRead ? <b className="notification-item__new">NEW</b> : null}
         </span>
         <span className="notification-item__title">
           <strong>{item.title}</strong>
@@ -40,10 +52,15 @@ function NotificationCopy({ item, route }: { item: NotificationItem; route: stri
 function NotificationRow({ item }: { item: NotificationItem }) {
   const notifications = useNotifications();
   const route = notificationDestination(item);
-  const copy = <NotificationCopy item={item} route={route} />;
+  const sport = notificationSport(item);
+  const copy = <NotificationCopy item={item} route={route} sport={sport} />;
 
   return (
-    <article className={`notification-item${item.isRead ? " is-read" : " is-unread"}`}>
+    <article
+      className={`notification-item${item.isRead ? " is-read" : " is-unread"}`}
+      data-hq-theme={sport ?? undefined}
+      data-notification-sport={sport ?? "universal"}
+    >
       {route ? (
         <Link
           className="notification-item__main"
@@ -72,7 +89,7 @@ function pushProfilePrompt(status: ReturnType<typeof useNotifications>["devicePu
   if (status === "off") {
     return {
       title: "Turn on push notifications",
-      detail: "Get important alerts even when Octagon HQ is closed.",
+      detail: "Get important alerts even when The HQ is closed.",
       action: "OPEN PROFILE",
     };
   }
@@ -104,9 +121,9 @@ export default function NotificationCenterPage() {
     <div className="page notification-page">
       <section className="page-heading notification-page__heading">
         <div>
-          <p className="eyebrow">YOUR OCTAGON HQ</p>
+          <p className="eyebrow">THE HQ</p>
           <h1>Notifications</h1>
-          <p>Personal updates, reminders, and actions from across the app.</p>
+          <p>UFC, Football, and account updates in one inbox.</p>
         </div>
         {notifications.unreadCount > 0 || hasReadNotifications ? (
           <div className="notification-page__actions">
@@ -157,7 +174,7 @@ export default function NotificationCenterPage() {
             <section className="surface-card notification-empty" role="status">
               <span className="notification-empty__bell" aria-hidden="true">!</span>
               <strong>Notifications are temporarily unavailable.</strong>
-              <p>Octagon HQ could not reach the notification service. Try again shortly.</p>
+              <p>The HQ could not reach the notification service. Try again shortly.</p>
               <button
                 className="primary-action"
                 type="button"
@@ -170,7 +187,7 @@ export default function NotificationCenterPage() {
             <section className="surface-card notification-empty">
               <span className="notification-empty__bell" aria-hidden="true">♢</span>
               <strong>You&apos;re caught up.</strong>
-              <p>Actionable Octagon HQ updates will appear here.</p>
+              <p>Actionable The HQ updates will appear here.</p>
             </section>
           ) : (
             <section className="notification-list" aria-label="Notifications">
