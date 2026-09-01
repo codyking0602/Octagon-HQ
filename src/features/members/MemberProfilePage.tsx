@@ -18,9 +18,8 @@ import { usePicks } from "../picks/PicksProvider";
 import { useFindLeaderHistory } from "../play/FindLeaderHistoryProvider";
 import { centralDay } from "../play/findLeaderEngine";
 import { findLeaderStreaks } from "../play/findLeaderStorage";
+import { useTodayChallengeOverview } from "../play/useTodayChallengeOverview";
 import { useProfilePreferences } from "../profile/ProfilePreferencesProvider";
-import { FighterPhoto } from "../rankings/FighterPhoto";
-import { allTime } from "../rankings/rankingModel";
 import { MemberAvatarEditor } from "./MemberAvatarEditor";
 import {
   challengeIsComparisonOnly,
@@ -39,7 +38,7 @@ import {
 
 function readableError(error: unknown) {
   if (error instanceof Error && error.message) return error.message;
-  return "Octagon HQ could not load that member profile.";
+  return "The HQ could not load that member profile.";
 }
 
 function completedChallengeCopy(
@@ -80,6 +79,15 @@ function profileAvatar(member: MemberProfileSummary) {
   );
 }
 
+function record(correct: number, incorrect: number) {
+  return `${correct}-${incorrect}`;
+}
+
+function accuracy(correct: number, incorrect: number) {
+  const graded = correct + incorrect;
+  return graded ? Math.round((correct / graded) * 100) : 0;
+}
+
 export function MemberProfileView({
   memberName,
   repository: suppliedRepository,
@@ -106,6 +114,12 @@ export function MemberProfileView({
     identity.profile
       && normalizeMemberName(identity.profile.displayName) === requestedName,
   );
+  const dailyOverview = useTodayChallengeOverview({
+    profileId: identity.profile?.id ?? "",
+    enabled: Boolean(identity.profile && isOwnProfile),
+    projection: null,
+    sport: "ufc",
+  });
 
   useEffect(() => {
     const revision = ++revisionRef.current;
@@ -115,14 +129,20 @@ export function MemberProfileView({
       setError("");
       return;
     }
+    if (isOwnProfile) {
+      setRemoteMember(null);
+      setLoading(false);
+      setError("");
+      return;
+    }
     if (!repository) {
       setRemoteMember(null);
       setLoading(false);
-      setError(isOwnProfile ? "" : "Member Profiles are not connected on this build.");
+      setError("Member Profiles are not connected on this build.");
       return;
     }
 
-    setLoading(!isOwnProfile);
+    setLoading(true);
     void repository.loadMember(requestedName)
       .then((member) => {
         if (revision !== revisionRef.current) return;
@@ -132,32 +152,48 @@ export function MemberProfileView({
       .catch((nextError) => {
         if (revision !== revisionRef.current) return;
         setRemoteMember(null);
-        setError(isOwnProfile ? "" : readableError(nextError));
+        setError(readableError(nextError));
       })
       .finally(() => {
         if (revision === revisionRef.current) setLoading(false);
       });
   }, [identity.profile?.id, isOwnProfile, repository, requestedName]);
 
-  const ownStreaks = findLeaderStreaks(history.rows, today);
-  const fallbackOwnActivity = history.rows.slice(0, 5).map<MemberRecentActivityItem>((row) => ({
-    kind: "find-leader",
-    title: "Find the Leader",
-    detail: `${row.officialScore}/10`,
-    occurredAt: row.completedAt,
-  }));
-  const ownRecentActivity = remoteMember?.recentActivity?.length
-    ? remoteMember.recentActivity
-    : fallbackOwnActivity;
+  const ownFindLeaderStreaks = findLeaderStreaks(history.rows, today);
+  const ownRecentActivity = useMemo<MemberRecentActivityItem[]>(() => {
+    const findLeaderActivity = history.rows.map<MemberRecentActivityItem>((row) => ({
+      kind: "find-leader",
+      title: "Find the Leader",
+      detail: `${row.officialScore}/10`,
+      occurredAt: row.completedAt,
+    }));
+    const ufcPicksActivity = picks.history.events.map<MemberRecentActivityItem>((event) => ({
+      kind: "picks",
+      title: "UFC Picks",
+      detail: `${event.name} · ${event.record.correct}-${event.record.incorrect}`,
+      occurredAt: event.completedAt,
+    }));
+    const footballPicksActivity = picks.footballHistory.events.map<MemberRecentActivityItem>((event) => ({
+      kind: "picks",
+      title: "Football Picks",
+      detail: `${event.name} · ${event.record.correct}-${event.record.incorrect}`,
+      occurredAt: event.completedAt,
+    }));
+
+    return [...findLeaderActivity, ...ufcPicksActivity, ...footballPicksActivity]
+      .sort((left, right) => right.occurredAt.localeCompare(left.occurredAt))
+      .slice(0, 5);
+  }, [history.rows, picks.footballHistory.events, picks.history.events]);
+
   const ownMember: MemberProfileSummary | null = identity.profile && isOwnProfile ? {
     displayName: identity.profile.displayName,
     initials: identity.profile.initials,
     avatarPhotoData: preferences.avatarPhotoData,
     favoriteFighterSlug: preferences.favoriteFighterSlug,
-    currentStreak: ownStreaks.current,
-    bestStreak: ownStreaks.best,
-    perfectRuns: ownStreaks.perfect,
-    recordedDays: ownStreaks.total,
+    currentStreak: ownFindLeaderStreaks.current,
+    bestStreak: ownFindLeaderStreaks.best,
+    perfectRuns: ownFindLeaderStreaks.perfect,
+    recordedDays: ownFindLeaderStreaks.total,
     bestFindLeaderScore: history.rows.reduce(
       (best, row) => Math.max(best, row.officialScore),
       0,
@@ -170,13 +206,6 @@ export function MemberProfileView({
     isCurrentUser: true,
   } : null;
   const member = ownMember ?? remoteMember;
-  const favorite = member?.favoriteFighterSlug
-    ? allTime.find((fighter) => fighter.slug === member.favoriteFighterSlug) ?? null
-    : null;
-  const sortedFighters = useMemo(
-    () => allTime.slice().sort((left, right) => left.name.localeCompare(right.name)),
-    [],
-  );
 
   const relevantChallenges = useMemo(() => {
     if (!identity.profile || !member) return [];
@@ -210,7 +239,7 @@ export function MemberProfileView({
           <div>
             <p className="eyebrow">MEMBERS ONLY</p>
             <h1>Sign in to view member profiles</h1>
-            <p>Member stats and challenge activity stay inside Octagon HQ.</p>
+            <p>Member stats and challenge activity stay inside The HQ.</p>
           </div>
           <button className="primary-action" type="button" onClick={identity.openDialog}>SIGN IN TO VIEW PROFILE</button>
         </section>
@@ -230,7 +259,7 @@ export function MemberProfileView({
           <div>
             <p className="eyebrow">PROFILE UNAVAILABLE</p>
             <h1>{error ? "Member profile could not load" : "Member not found"}</h1>
-            <p>{error || "That registered Octagon HQ member does not exist."}</p>
+            <p>{error || "That registered The HQ member does not exist."}</p>
           </div>
           <Link className="secondary-action" to="/members">BACK TO MEMBERS</Link>
         </section>
@@ -238,12 +267,21 @@ export function MemberProfileView({
     );
   }
 
-  const profileLoading = isOwnProfile && (history.loading || preferences.loading || picks.loading);
-  const gradedPicks = member.picksCorrect + member.picksIncorrect;
-  const picksAccuracy = gradedPicks ? Math.round((member.picksCorrect / gradedPicks) * 100) : 0;
+  const profileLoading = isOwnProfile && (
+    history.loading
+    || preferences.loading
+    || picks.loading
+    || dailyOverview.standingsLoading
+  );
+  const picksAccuracy = accuracy(member.picksCorrect, member.picksIncorrect);
+  const footballAccuracy = accuracy(picks.footballSummary.correct, picks.footballSummary.incorrect);
   const achievements = memberAchievements(member, challengeSummary);
   const unlockedAchievements = achievements.filter((achievement) => achievement.unlocked).length;
   const recentActivity = member.recentActivity ?? [];
+  const dailyStreak = isOwnProfile ? dailyOverview.streak.currentStreak : member.currentStreak;
+  const footballRecord = picks.footballSummaryError
+    ? "—"
+    : record(picks.footballSummary.correct, picks.footballSummary.incorrect);
 
   return (
     <div className="page member-profile-page">
@@ -253,42 +291,17 @@ export function MemberProfileView({
         <div className="member-profile-hero__identity">
           <div className="member-profile-avatar">{profileAvatar(member)}</div>
           <div>
-            <p className="eyebrow">{isOwnProfile ? "YOUR OCTAGON HQ PROFILE" : "OCTAGON HQ MEMBER"}</p>
+            <p className="eyebrow">{isOwnProfile ? "YOUR HQ PROFILE" : "THE HQ MEMBER"}</p>
             <h1>{member.displayName}</h1>
-            <p className="member-profile-role">GOAT26 MEMBER · GAMES, PICKS, AND CHALLENGES</p>
+            <p className="member-profile-role">THE HQ MEMBER · PICKS, GAMES, AND CHALLENGES</p>
           </div>
         </div>
 
-        <div className="member-profile-favorite-card">
-          <div className="member-profile-favorite-photo">
-            {favorite ? <FighterPhoto name={favorite.name} src={favorite.thumbUrl} /> : <span>UFC</span>}
-          </div>
-          <p className="member-profile-favorite">
-            <small>FAVORITE FIGHTER</small>
-            <strong>{favorite?.name ?? "Not set"}</strong>
-          </p>
-        </div>
-
-        {isOwnProfile ? (
-          <label className="member-profile-favorite-control">
-            <span>EDIT FAVORITE FIGHTER</span>
-            <select
-              aria-label="Favorite fighter"
-              disabled={preferences.loading || preferences.saving || !preferences.configured}
-              value={favorite?.slug ?? ""}
-              onChange={(event) => void preferences.setFavoriteFighter(event.target.value || null)}
-            >
-              <option value="">Choose fighter</option>
-              {sortedFighters.map((fighter) => (
-                <option value={fighter.slug} key={fighter.slug}>{fighter.name}</option>
-              ))}
-            </select>
-          </label>
-        ) : (
+        {!isOwnProfile ? (
           <button className="primary-action member-profile-challenge" type="button" onClick={startMemberChallenge}>
             PLAY A GAME TO CHALLENGE {member.displayName}
           </button>
-        )}
+        ) : null}
       </section>
 
       {isOwnProfile ? (
@@ -302,15 +315,15 @@ export function MemberProfileView({
       ) : null}
 
       <section className="member-profile-stat-grid" aria-label={`${member.displayName} profile stats`}>
-        <article className="surface-card"><small>CURRENT STREAK</small><strong>{profileLoading ? "…" : member.currentStreak}</strong><span>Find the Leader days</span></article>
-        <article className="surface-card"><small>CURRENT PICKS</small><strong>{profileLoading ? "…" : `${member.picksCorrect}-${member.picksIncorrect}`}</strong><span>{member.picksPending ? `${member.picksPending} pending` : "Current season"}</span></article>
-        <article className="surface-card"><small>ACHIEVEMENTS</small><strong>{profileLoading ? "…" : unlockedAchievements}</strong><span>of {achievements.length} unlocked</span></article>
-        <article className="surface-card"><small>OPEN CHALLENGES</small><strong>{challengeState.loading ? "…" : challengeSummary.open}</strong><span>{isOwnProfile ? "Across HQ" : "With you"}</span></article>
+        <article className="surface-card"><small>DAILY STREAK</small><strong>{profileLoading ? "…" : dailyStreak}</strong><span>Current HQ run</span></article>
+        <article className="surface-card"><small>UFC PICKS</small><strong>{profileLoading ? "…" : record(member.picksCorrect, member.picksIncorrect)}</strong><span>{member.picksPending ? `${member.picksPending} pending` : "Current season"}</span></article>
+        <article className="surface-card"><small>FOOTBALL PICKS</small><strong>{profileLoading ? "…" : isOwnProfile ? footballRecord : "—"}</strong><span>{isOwnProfile ? "Current season" : "Your profile only"}</span></article>
+        <article className="surface-card"><small>CHALLENGES</small><strong>{challengeState.loading ? "…" : challengeSummary.completed}</strong><span>{challengeSummary.open ? `${challengeSummary.open} open` : "Completed"}</span></article>
       </section>
 
       <section className="surface-card member-profile-data-section" aria-labelledby="member-find-leader-title">
         <div className="section-heading">
-          <div><p className="eyebrow">DAILY GAME</p><h2 id="member-find-leader-title">Find the Leader</h2></div>
+          <div><p className="eyebrow">UFC DAILY HISTORY</p><h2 id="member-find-leader-title">Find the Leader</h2></div>
         </div>
         <div className="member-profile-metric-grid">
           <div><strong>{member.bestStreak}</strong><span>BEST STREAK</span></div>
@@ -320,9 +333,10 @@ export function MemberProfileView({
         </div>
       </section>
 
-      <section className="surface-card member-profile-data-section" aria-labelledby="member-picks-title">
+      <section className="surface-card member-profile-data-section" aria-labelledby="member-ufc-picks-title">
         <div className="section-heading">
-          <div><p className="eyebrow">UFC PICKS</p><h2 id="member-picks-title">Current season</h2></div>
+          <div><p className="eyebrow">UFC PICKS</p><h2 id="member-ufc-picks-title">Current season</h2></div>
+          {isOwnProfile ? <Link className="text-link" to="/picks">View UFC Picks</Link> : null}
         </div>
         <div className="member-profile-metric-grid">
           <div><strong>{member.picksCorrect}-{member.picksIncorrect}</strong><span>RECORD</span></div>
@@ -332,9 +346,28 @@ export function MemberProfileView({
         </div>
       </section>
 
+      {isOwnProfile ? (
+        <section className="surface-card member-profile-data-section" aria-labelledby="member-football-picks-title">
+          <div className="section-heading">
+            <div><p className="eyebrow">FOOTBALL PICKS</p><h2 id="member-football-picks-title">Current season</h2></div>
+            <Link className="text-link" to="/football/picks">View Football Picks</Link>
+          </div>
+          {picks.footballSummaryError ? (
+            <div className="member-profile-empty"><strong>Football Picks are unavailable</strong><p>{picks.footballSummaryError}</p></div>
+          ) : (
+            <div className="member-profile-metric-grid">
+              <div><strong>{footballRecord}</strong><span>RECORD</span></div>
+              <div><strong>{footballAccuracy}%</strong><span>ACCURACY</span></div>
+              <div><strong>{picks.footballSummary.pending}</strong><span>PENDING</span></div>
+              <div><strong>{picks.footballSummary.eventsEntered}</strong><span>EVENTS ENTERED</span></div>
+            </div>
+          )}
+        </section>
+      ) : null}
+
       <section className="surface-card member-profile-data-section member-profile-resume" aria-labelledby="member-achievements-title">
         <div className="section-heading">
-          <div><p className="eyebrow">ACHIEVEMENTS</p><h2 id="member-achievements-title">Octagon HQ résumé</h2></div>
+          <div><p className="eyebrow">ACHIEVEMENTS</p><h2 id="member-achievements-title">The HQ résumé</h2></div>
           <span>{unlockedAchievements}/{achievements.length} UNLOCKED</span>
         </div>
         <div className="member-profile-badge-grid">
@@ -362,14 +395,14 @@ export function MemberProfileView({
             ))}
           </div>
         ) : (
-          <div className="member-profile-empty"><strong>No recorded profile activity yet</strong><p>Completed Find the Leader days and graded Picks events will appear here.</p></div>
+          <div className="member-profile-empty"><strong>No recorded profile activity yet</strong><p>Daily games and graded UFC or Football Picks events will appear here.</p></div>
         )}
       </section>
 
       <section className="surface-card member-profile-challenges" aria-labelledby="member-challenges-title">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">CHALLENGE ACTIVITY</p>
+            <p className="eyebrow">CHALLENGE HISTORY</p>
             <h2 id="member-challenges-title">{isOwnProfile ? "Your matchups" : `Your matchups with ${member.displayName}`}</h2>
           </div>
           <Link className="text-link" to="/play#challenge-center">Challenge Center</Link>
@@ -414,7 +447,7 @@ export function MemberProfileView({
         ) : (
           <div className="member-profile-empty">
             <strong>{isOwnProfile ? "No profile challenges yet" : `No matchups with ${member.displayName} yet`}</strong>
-            <p>{isOwnProfile ? "Finish any game and send the locked result to another member." : "Play a UFC game, then use the existing challenge flow to send it directly."}</p>
+            <p>{isOwnProfile ? "Finish any game and send the locked result to another member." : "Play a game, then use the existing challenge flow to send it directly."}</p>
           </div>
         )}
       </section>
