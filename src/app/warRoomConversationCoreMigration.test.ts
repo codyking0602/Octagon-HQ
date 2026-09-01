@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const sql = readFileSync(
@@ -12,13 +12,16 @@ const integrationSql = readFileSync(
 const router = readFileSync("src/app/router.tsx", "utf8");
 const providers = readFileSync("src/app/providers.tsx", "utf8");
 const bottomNavigation = readFileSync("src/components/BottomNavigation.tsx", "utf8");
-const repository = readFileSync("src/features/war-room/warRoomRepository.ts", "utf8");
-const provider = readFileSync("src/features/war-room/WarRoomProvider.tsx", "utf8");
-const page = readFileSync("src/features/war-room/WarRoomPage.tsx", "utf8");
 const contract = readFileSync("docs/war-room-conversation-core.md", "utf8");
+const removedRuntimePaths = [
+  "src/features/war-room/warRoomRepository.ts",
+  "src/features/war-room/WarRoomProvider.tsx",
+  "src/features/war-room/WarRoomPage.tsx",
+  "src/features/war-room/WarRoomJoinPage.tsx",
+];
 
 describe("War Room conversation core", () => {
-  it("stores messages and mentions privately behind guarded RPCs", () => {
+  it("retains the historical private database contract", () => {
     expect(sql).toContain("create table if not exists private.war_room_messages");
     expect(sql).toContain("create table if not exists private.war_room_mentions");
     expect(sql).toContain("alter table private.war_room_messages enable row level security");
@@ -29,7 +32,7 @@ describe("War Room conversation core", () => {
     expect(sql).not.toContain("grant select on private.war_room_messages to authenticated");
   });
 
-  it("locks the continuous feed, paging, replies, mentions, and deletion rules", () => {
+  it("retains the historical paging, reply, mention, and deletion constraints", () => {
     expect(sql).toContain("limit v_limit + 1");
     expect(sql).toContain("p_before_created_at");
     expect(sql).toContain("War Room replies support one level only");
@@ -39,24 +42,13 @@ describe("War Room conversation core", () => {
     expect(sql).not.toContain("week_start");
   });
 
-  it("uses one provider and one RPC repository without storage or polling fallbacks", () => {
-    expect(providers).toContain("<WarRoomProvider>");
-    expect(repository).toContain('client.rpc("get_my_war_room_access"');
-    expect(repository).toContain('client.rpc("get_war_room_snapshot"');
-    expect(repository).toContain('client.rpc("post_war_room_message"');
-    expect(provider).toContain("useIdentity()");
-    expect(provider).not.toContain("localStorage");
-    expect(provider).not.toContain("setInterval");
-  });
-
-  it("keeps the conversation route guarded after removing its navigation entry", () => {
-    expect(router).toContain('path: "war-room"');
-    expect(router).toContain('path: "war-room/join"');
+  it("removes frontend War Room ownership without a fallback route or provider", () => {
+    expect(providers).not.toContain("WarRoomProvider");
+    expect(router).not.toContain('path: "war-room"');
+    expect(router).not.toContain('path: "war-room/join"');
     expect(bottomNavigation).not.toContain('label: "War Room"');
-    expect(page).toContain('return <Navigate to="/" replace />');
-    expect(page).toContain("warRoom.status !== \"eligible\"");
+    expect(removedRuntimePaths.every((path) => !existsSync(path))).toBe(true);
     expect(contract).toContain("PR 2 created the guarded conversation core");
-    expect(contract).toContain("PR 3 owns launch visibility");
   });
 
   it("keeps rollback proof for access, pagination, replies, mentions, deletion, and privacy", () => {
