@@ -60,11 +60,11 @@ describe("War Room launch", () => {
     const home = navigation.indexOf('label: "Home"');
     const picks = navigation.indexOf('label: "Picks"');
     const play = navigation.indexOf('label: "Play"');
-    const ratings = navigation.indexOf('label: "Ratings"');
+    const rankings = navigation.indexOf('label: "Rankings"');
     expect(home).toBeGreaterThan(-1);
     expect(home).toBeLessThan(picks);
     expect(picks).toBeLessThan(play);
-    expect(play).toBeLessThan(ratings);
+    expect(play).toBeLessThan(rankings);
     expect(navigation).not.toContain('label: "War Room"');
     expect(router).toContain('path: "war-room"');
     expect(provider).toContain("const [unreadCount");
