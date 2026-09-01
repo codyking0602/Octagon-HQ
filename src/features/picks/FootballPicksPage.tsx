@@ -2,7 +2,9 @@ import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { FootballFuturesCard } from "./FootballFuturesCard";
+import { FootballMatchupBreakdowns } from "./FootballMatchupBreakdowns";
 import { FOOTBALL_FUTURES_MAX_POINTS, FOOTBALL_FUTURES_RULES, footballLockAllowance } from "./footballPicksScoring";
+import { footballMatchupBreakdownsForEvent } from "./footballMatchupBreakdowns";
 import { footballDateTimeLabel } from "./footballTime";
 import { GroupPickProgress } from "./GroupPickProgress";
 import { GroupPickReveal } from "./GroupPickReveal";
@@ -61,6 +63,7 @@ export default function FootballPicksPage() {
   const usedLocks = games.filter((game) => game.resultStatus !== "cancelled" && picks.footballLocks[game.boutId] === true).length;
   const futuresLocked = picks.footballFutures?.locked === true;
   const posters = useMemo(() => pickEventPosters(event), [event]);
+  const matchupBreakdowns = useMemo(() => footballMatchupBreakdownsForEvent(event), [event]);
   const poster = posters[0] ?? null;
   const [activePosterIndex, setActivePosterIndex] = useState(0);
   const spreadSources = Array.from(new Set(games
@@ -116,14 +119,17 @@ export default function FootballPicksPage() {
             ))}
           </section>
 
-          {event.canControl ? (
+          {matchupBreakdowns.length || event.canControl ? (
             <div className="football-picks-owner-tools">
-              <Link
-                className="picks-control-entry"
-                to={`/picks/control?sport=football&event=${encodeURIComponent(event.eventId)}#header`}
-              >
-                <span aria-hidden="true">⚙</span> MANAGE EVENT / HEADERS
-              </Link>
+              <FootballMatchupBreakdowns breakdowns={matchupBreakdowns} />
+              {event.canControl ? (
+                <Link
+                  className="picks-control-entry"
+                  to={`/picks/control?sport=football&event=${encodeURIComponent(event.eventId)}#header`}
+                >
+                  <span aria-hidden="true">⚙</span> MANAGE EVENT / HEADERS
+                </Link>
+              ) : null}
             </div>
           ) : null}
 
