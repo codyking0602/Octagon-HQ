@@ -52,9 +52,8 @@ describe("War Room access foundation", () => {
     expect(sql).not.toContain("grant execute on function public.create_war_room_invite(timestamptz, integer, uuid) to authenticated");
   });
 
-  it("preserves the access contract through the permission-aware launch", () => {
-    expect(bottomNavigation).toContain('warRoom.status === "eligible"');
-    expect(bottomNavigation).toContain('label: "War Room"');
+  it("preserves the access contract after removing War Room from bottom navigation", () => {
+    expect(bottomNavigation).not.toContain('label: "War Room"');
     expect(contract).toContain("Home → Rankings → Picks → Play → War Room");
     expect(contract).toContain("No route, tab, page, provider, badge, feed, or placeholder is added in this PR");
     expect(conversationContract).toContain("PR 3 owns launch visibility");
