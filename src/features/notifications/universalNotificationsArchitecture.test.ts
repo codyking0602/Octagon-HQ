@@ -30,7 +30,8 @@ describe("PR 13 universal notification ownership", () => {
     expect(pushSetting).toContain("useNotifications()");
     expect(pushSetting).toContain("notifications.enableDevicePush()");
     expect(pushSetting).toContain("notifications.disableDevicePush()");
-    expect(provider).toContain("updatePreferences");
+    expect(provider).toContain("updatePreference");
+    expect(repository).toContain("savePreferences");
     expect(shell.match(/<NotificationPushSetting\s*\/>/g)).toHaveLength(1);
   });
 
