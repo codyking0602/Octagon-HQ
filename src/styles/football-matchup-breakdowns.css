@@ -3,7 +3,7 @@
 .football-matchup-breakdown-entry { min-height: 24px; padding: 4px 2px; border: 0; background: transparent; color: #d9dcdd; font-size: .55rem; font-weight: 950; letter-spacing: .08em; text-transform: uppercase; }
 .football-matchup-breakdown-entry::before { content: "▤ "; color: #e9aa7e; }
 .football-matchup-breakdown-entry:hover { color: #fff; }
-.football-matchup-breakdown-backdrop { position: fixed; inset: 0; z-index: 90; display: flex; align-items: flex-end; justify-content: center; background: rgba(2, 3, 4, .78); backdrop-filter: blur(10px); }
+.football-matchup-breakdown-backdrop { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: flex-end; justify-content: center; background: #080a0b; }
 .football-matchup-breakdown-sheet { width: min(100%, 860px); max-height: 94dvh; overflow: auto; overscroll-behavior: contain; border: 1px solid #34383b; border-bottom: 0; border-radius: 22px 22px 0 0; background: #101213; box-shadow: 0 -22px 60px rgba(0, 0, 0, .58); color: #f6f6f3; }
 .football-matchup-breakdown-sheet__header { position: sticky; top: 0; z-index: 3; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 18px 18px 14px; border-bottom: 1px solid #2b2f31; background: rgba(16, 18, 19, .96); backdrop-filter: blur(12px); }
 .football-matchup-breakdown-sheet__header .eyebrow { margin: 0 0 5px; color: #e9aa7e; }
@@ -46,7 +46,4 @@
   .football-matchup-breakdown-tabs { top: 95px; padding-inline: 18px; }
   .football-matchup-breakdown-sheet__body > section { padding: 22px; }
   .football-matchup-breakdown-grid, .football-matchup-breakdown-edges { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .football-matchup-breakdown-backdrop { backdrop-filter: none; }
 }
