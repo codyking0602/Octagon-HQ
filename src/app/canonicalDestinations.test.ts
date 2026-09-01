@@ -28,10 +28,6 @@ describe("canonicalDestinationPath", () => {
     ],
     [{ kind: "picks-event", eventId: "ufc-325" }, "/picks?event=ufc-325"],
     [{ kind: "picks-recap", eventId: "ufc-325" }, "/picks?event=ufc-325&view=recap"],
-    [
-      { kind: "war-room", conversationId: "ufc-325", messageId: "message-9" },
-      "/war-room?conversation=ufc-325&message=message-9",
-    ],
   ])("builds the stable route for %o", (destination, expected) => {
     expect(canonicalDestinationPath(destination)).toBe(expected);
   });

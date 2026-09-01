@@ -36,7 +36,7 @@ const ProfilePreferencesContext = createContext<ProfilePreferencesContextValue |
 
 function readableError(error: unknown) {
   if (error instanceof Error && error.message) return error.message;
-  return "Octagon HQ could not update that profile preference.";
+  return "The HQ could not update that profile preference.";
 }
 
 export function ProfilePreferencesProvider({

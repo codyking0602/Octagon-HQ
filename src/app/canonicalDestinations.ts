@@ -11,12 +11,7 @@ export type DirectCanonicalDestination =
   | { kind: "auction"; auctionId: string }
   | { kind: "picks-event"; eventId: string }
   | { kind: "picks-recap"; eventId: string }
-  | { kind: "daily-challenge"; sport: "ufc" | "football" }
-  | {
-      kind: "war-room";
-      conversationId: string;
-      messageId?: string;
-    };
+  | { kind: "daily-challenge"; sport: "ufc" | "football" };
 
 export type CanonicalDestination =
   | DirectCanonicalDestination
@@ -80,13 +75,6 @@ export function canonicalDestinationPath(destination: CanonicalDestination): str
       ]);
     case "daily-challenge":
       return destination.sport === "football" ? "/football/today" : "/play";
-    case "war-room": {
-      const entries: Array<readonly [string, string]> = [
-        ["conversation", destination.conversationId],
-      ];
-      if (destination.messageId) entries.push(["message", destination.messageId]);
-      return withSearch("/war-room", entries);
-    }
   }
 }
 

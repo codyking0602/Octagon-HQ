@@ -65,10 +65,6 @@ import "./styles/football-shell.css";
 import "./styles/football-picks.css";
 import "./styles/football-visual-assets.css";
 import "./styles/football-replayable-polish.css";
-import "./styles/war-room.css";
-import "./styles/war-room-launch.css";
-import "./styles/war-room-admin-polish.css";
-import "./styles/war-room-reactions.css";
 import "./styles/whats-new.css";
 import "./styles/notifications.css";
 import "./styles/notification-settings.css";
@@ -79,7 +75,7 @@ installUpdateRecovery();
 const root = document.getElementById("root");
 
 if (!root) {
-  throw new Error("Octagon HQ root element was not found.");
+  throw new Error("The HQ root element was not found.");
 }
 
 createRoot(root).render(

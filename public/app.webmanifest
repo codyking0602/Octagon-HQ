@@ -1,8 +1,8 @@
 {
   "id": "/",
-  "name": "Octagon HQ",
-  "short_name": "Octagon HQ",
-  "description": "UFC rankings, games, picks, and conversation built for the group chat.",
+  "name": "The HQ",
+  "short_name": "The HQ",
+  "description": "Sports rankings, games, picks, and conversation built for the group chat.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
