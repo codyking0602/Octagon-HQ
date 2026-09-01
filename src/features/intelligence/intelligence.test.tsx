@@ -24,7 +24,7 @@ afterEach(() => {
 describe("Octagon Verdict Intelligence flow", () => {
   it("keeps Intelligence in the header and out of primary navigation", async () => {
     renderRoute("/");
-    expect(await screen.findByRole("link", { name: "Ask Octagon Verdict" })).toHaveAttribute("href", "/intelligence");
+    expect(await screen.findByRole("link", { name: "Open UFC Intelligence" })).toHaveAttribute("href", "/intelligence");
 
     const primary = screen.getByRole("navigation", { name: "Primary navigation" });
     expect(within(primary).getAllByRole("link")).toHaveLength(4);

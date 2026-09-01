@@ -3,7 +3,6 @@ import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { BottomNavigation } from "../components/BottomNavigation";
 import { RouteLoading } from "../components/RouteLoading";
 import { BackRoomLogoLink } from "../features/back-room/BackRoomLogoLink";
-import { FootballHeader } from "../features/back-room/FootballHeader";
 import { useIdentity } from "../features/identity/IdentityProvider";
 import { memberProfilePath } from "../features/members/memberProfilesModel";
 import { NotificationHeaderAction } from "../features/notifications/NotificationHeaderAction";
@@ -63,8 +62,6 @@ export function AppShell() {
             <span><small>FOOTBALL HQ</small><strong>{footballGameTitle}</strong></span>
           </Link>
         </header>
-      ) : isFootball ? (
-        <FootballHeader />
       ) : isBackRoom ? (
         <header className="app-header app-header--back-room">
           <Link
@@ -87,20 +84,20 @@ export function AppShell() {
           </Link>
         </header>
       ) : (
-        <header className="app-header">
+        <header className="app-header app-header--universal">
           <BackRoomLogoLink enabled={location.pathname === "/play"} />
           <div className="app-header__actions">
             <NotificationHeaderAction />
             <NavLink
               className={({ isActive }) => (isActive ? "app-ask-action is-active" : "app-ask-action")}
               to="/intelligence"
-              aria-label="Ask Octagon Verdict"
+              aria-label="Open UFC Intelligence"
             >
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M12 3.5a7.5 7.5 0 1 0 4.9 13.2L21 20l-1.4-4.7A7.5 7.5 0 0 0 12 3.5Z" />
                 <path d="M9.6 9.2a2.7 2.7 0 0 1 5.1 1.2c0 1.9-2.7 2-2.7 3.7M12 17.2h.01" />
               </svg>
-              <span className="sr-only">Ask Octagon Verdict</span>
+              <span className="sr-only">UFC Intelligence</span>
             </NavLink>
             <IdentityControl />
           </div>
