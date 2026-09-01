@@ -76,7 +76,7 @@ export function BackRoomLogoLink({ enabled }: { enabled: boolean }) {
           style={{
             display: "block",
             border: 0,
-            borderRadius: 0,
+            borderRadius: 10,
             background: "transparent",
             boxShadow: "none",
             objectFit: "contain",
