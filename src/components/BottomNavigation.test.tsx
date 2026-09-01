@@ -98,6 +98,24 @@ describe("BottomNavigation", () => {
     expect(screen.queryByRole("link", { name: /Football Rankings/i })).not.toBeInTheDocument();
   });
 
+  it("keeps the current section active on Football deep links without replacing the global sport state", () => {
+    renderNavigation(["/football/picks"]);
+
+    const picks = screen.getByRole("link", { name: "Picks" });
+    const play = screen.getByRole("link", { name: "Play" });
+    expect(picks).toHaveClass("is-active");
+    expect(play).not.toHaveClass("is-active");
+    expect(picks).toHaveAttribute("href", "/picks");
+    expect(play).toHaveAttribute("href", "/play");
+    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBeNull();
+
+    cleanup();
+    renderNavigation(["/football/find-leader"]);
+    expect(screen.getByRole("link", { name: "Play" })).toHaveClass("is-active");
+    expect(screen.getByRole("link", { name: "Picks" })).not.toHaveClass("is-active");
+    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBeNull();
+  });
+
   it("does not mistake a resumed stale shrunken viewport for an open keyboard", () => {
     const viewport = installVisualViewport();
     renderNavigation();
