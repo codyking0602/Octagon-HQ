@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { scrollPageToTop } from "../app/RouteScrollManager";
+import { useSport } from "../app/SportProvider";
 import type { FootballTeam } from "../features/profile/profilePreferencesRepository";
 
 type NavigationIconName = "home" | "rankings" | "picks" | "play";
@@ -54,6 +55,7 @@ function NavigationIcon({ name }: { name: NavigationIconName }) {
 export function BottomNavigation({ footballTeam = null }: { footballTeam?: FootballTeam | null }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { selectedSport, setSelectedSport } = useSport();
   const keyboardSessionRef = useRef(false);
   const lastActivePlayTapRef = useRef(0);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
@@ -62,10 +64,12 @@ export function BottomNavigation({ footballTeam = null }: { footballTeam?: Footb
   const footballThemeClass = footballMode
     ? ` bottom-nav--football${footballTeam ? ` bottom-nav--football-team-${footballTeam}` : ""}`
     : "";
-  const playRoot = footballMode ? "/football" : "/play";
+  const selectedPlayRoot = selectedSport === "football" ? "/football" : "/play";
+  const selectedPicksRoot = selectedSport === "football" ? "/football/picks" : "/picks";
+  const activePlayRoot = footballMode ? "/football" : "/play";
   const standardDestinations = baseDestinations.map((destination) => (
-    destination.icon === "play" ? { ...destination, to: playRoot }
-      : destination.icon === "picks" && footballMode ? { ...destination, to: "/football/picks" }
+    destination.icon === "play" ? { ...destination, to: selectedPlayRoot }
+      : destination.icon === "picks" ? { ...destination, to: selectedPicksRoot }
       : destination
   ));
 
@@ -138,14 +142,19 @@ export function BottomNavigation({ footballTeam = null }: { footballTeam?: Footb
           end={destination.end}
           onClick={(event) => {
             if (destination.icon === "play") {
-              const activePlay = location.pathname === playRoot || location.pathname.startsWith(`${playRoot}/`);
+              const activePlay = location.pathname === activePlayRoot || location.pathname.startsWith(`${activePlayRoot}/`);
               if (activePlay) {
                 const now = Date.now();
                 if (now - lastActivePlayTapRef.current <= SECRET_PLAY_TAP_WINDOW_MS) {
                   event.preventDefault();
                   lastActivePlayTapRef.current = 0;
-                  if (footballMode) navigate("/play");
-                  else navigate("/football", { state: { footballEntry: true } });
+                  if (footballMode) {
+                    setSelectedSport("ufc");
+                    navigate("/play");
+                  } else {
+                    setSelectedSport("football");
+                    navigate("/football", { state: { footballEntry: true } });
+                  }
                   return;
                 }
                 lastActivePlayTapRef.current = now;
