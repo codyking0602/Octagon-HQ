@@ -10,7 +10,7 @@ const baseDestinations = [
   { to: "/", label: "Home", icon: "home", end: true },
   { to: "/picks", label: "Picks", icon: "picks", end: false },
   { to: "/play", label: "Play", icon: "play", end: false },
-  { to: "/rankings", label: "Ratings", icon: "rankings", end: false },
+  { to: "/rankings", label: "Rankings", icon: "rankings", end: false },
 ] as const;
 
 const SECRET_PLAY_TAP_WINDOW_MS = 350;
