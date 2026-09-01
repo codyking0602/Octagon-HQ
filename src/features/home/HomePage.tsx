@@ -3,6 +3,7 @@ import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { useIdentity } from "../identity/IdentityProvider";
 import {
   eventPicksLocked,
+  groupRankLabel,
   mainEvent,
   pickProgress,
   pickRecord,
@@ -26,6 +27,7 @@ import {
   buildDirectChallengeAction,
   meaningfulOpenChallenges,
 } from "./yourHqModel";
+import "../../styles/home-ufc-hq.css";
 
 function eventDate(value: string) {
   return new Intl.DateTimeFormat(undefined, {
@@ -200,6 +202,21 @@ export default function HomePage() {
     ? Math.round((picksProgress.completed / picksProgress.total) * 100)
     : 0;
   const picksLocked = currentEvent ? eventPicksLocked(currentEvent) : false;
+  const picksRemaining = Math.max(0, picksProgress.total - picksProgress.completed);
+  const picksStatus = !signedIn
+    ? "SIGN IN TO PLAY"
+    : picksLocked
+      ? "PICKS LOCKED"
+      : picksProgress.total > 0 && picksRemaining === 0
+        ? "PICKS READY"
+        : picksProgress.total > 0
+          ? `${picksRemaining} PICK${picksRemaining === 1 ? "" : "S"} LEFT`
+          : "PICKS OPEN";
+  const ufcStandings = picks.history?.seasonStandings ?? [];
+  const currentUfcStanding = ufcStandings.find((standing) => standing.isCurrentUser) ?? null;
+  const currentUfcRank = currentUfcStanding
+    ? groupRankLabel(currentUfcStanding.rank, ufcStandings)
+    : "";
 
   return (
     <div className="page home-page">
@@ -345,6 +362,15 @@ export default function HomePage() {
         data-home-section="ufc-hq"
         aria-label="UFC HQ"
       >
+        <header className="ufc-hq-heading">
+          <div className="ufc-hq-heading__copy">
+            <p className="eyebrow">UFC HQ</p>
+            <h2>Fight week command center</h2>
+            <p>Next card, your standing, all-time rankings, and contenders.</p>
+          </div>
+          <span className="ufc-hq-heading__badge" aria-hidden="true">UFC</span>
+        </header>
+
         {currentEvent ? (
           <section className="surface-card home-event-card" aria-labelledby="home-event-title">
             <div className="home-event-card__topline">
@@ -354,18 +380,37 @@ export default function HomePage() {
             <h2 id="home-event-title">{currentEvent.name}</h2>
             <strong>{currentEvent.subtitle}</strong>
             <p>{eventDate(currentEvent.startsAt)}</p>
+            {currentEvent.venue || currentEvent.location ? (
+              <p className="home-event-card__venue">
+                {[currentEvent.venue, currentEvent.location].filter(Boolean).join(" · ")}
+              </p>
+            ) : null}
             {currentMainEvent ? (
               <p className="home-event-card__main-event">
                 <small>MAIN EVENT</small>
                 <b>{currentMainEvent.redFighterName} vs. {currentMainEvent.blueFighterName}</b>
               </p>
             ) : null}
-            <div className="picks-progress" aria-label={`${picksProgress.completed} of ${picksProgress.total} picks completed`}>
-              <div>
-                <span>{identity.profile ? "YOUR PICKS" : "PROFILE PICKS"}</span>
-                <b>{identity.profile ? `${picksProgress.completed} OF ${picksProgress.total}` : "SIGN IN"}</b>
+            <div className="home-event-card__picks-grid">
+              <div className="picks-progress" aria-label={`${picksProgress.completed} of ${picksProgress.total} picks completed`}>
+                <div>
+                  <span>{identity.profile ? "YOUR PICKS" : "PROFILE PICKS"}</span>
+                  <b>{identity.profile ? `${picksProgress.completed} OF ${picksProgress.total}` : "SIGN IN"}</b>
+                </div>
+                <div className="picks-progress__track" aria-hidden="true"><span style={{ width: `${picksPercent}%` }} /></div>
+                <small className="home-event-card__picks-status">{picksStatus}</small>
               </div>
-              <div className="picks-progress__track" aria-hidden="true"><span style={{ width: `${picksPercent}%` }} /></div>
+              <div className="home-event-card__standing" aria-label="UFC Picks season standing">
+                <span>{recordSeason} STANDING</span>
+                <b>{signedIn && currentUfcRank ? `#${currentUfcRank} OF ${ufcStandings.length}` : "—"}</b>
+                <small>
+                  {!signedIn
+                    ? "SIGN IN TO TRACK"
+                    : currentUfcStanding
+                      ? `${currentUfcStanding.totalPoints} PTS`
+                      : "NO STANDING YET"}
+                </small>
+              </div>
             </div>
             {identity.profile ? (
               <Link className="secondary-action" to="/picks">
@@ -375,7 +420,30 @@ export default function HomePage() {
               <button className="secondary-action" type="button" onClick={identity.openDialog}>SIGN IN TO MAKE PICKS →</button>
             )}
           </section>
-        ) : null}
+        ) : (
+          <section className="surface-card home-event-card home-event-card--empty" aria-labelledby="home-event-title">
+            <div className="home-event-card__topline">
+              <p className="eyebrow">NEXT UFC EVENT</p>
+              <span>{picks.loading ? "LOADING" : picks.error ? "UNAVAILABLE" : "WAITING"}</span>
+            </div>
+            <h2 id="home-event-title">
+              {picks.loading ? "Loading next card" : picks.error ? "Next card unavailable" : "Next card not published"}
+            </h2>
+            <p>
+              {picks.error
+                ? "UFC event data is unavailable right now."
+                : "The next UFC Picks card will appear here as soon as it is published."}
+            </p>
+            {signedIn ? (
+              <div className="home-event-card__standing" aria-label="UFC Picks season standing">
+                <span>{recordSeason} STANDING</span>
+                <b>{currentUfcRank ? `#${currentUfcRank} OF ${ufcStandings.length}` : "—"}</b>
+                <small>{currentUfcStanding ? `${currentUfcStanding.totalPoints} PTS` : "NO STANDING YET"}</small>
+              </div>
+            ) : null}
+            <Link className="secondary-action" to="/picks">OPEN UFC PICKS →</Link>
+          </section>
+        )}
 
         {spotlight ? <RankingSpotlightCard fighter={spotlight} /> : null}
         <ShanesWatchlistCard />
