@@ -105,8 +105,8 @@ export function memberAchievements(
     {
       id: "profile-ready",
       title: "Profile Ready",
-      detail: "Added a personal avatar or favorite fighter.",
-      unlocked: Boolean(member.avatarPhotoData || member.favoriteFighterSlug),
+      detail: "Added a personal profile photo.",
+      unlocked: Boolean(member.avatarPhotoData),
     },
     {
       id: "perfect-ten",
@@ -135,7 +135,7 @@ export function memberAchievements(
     {
       id: "challenge-competitor",
       title: "Challenge Competitor",
-      detail: "Completed a direct Octagon HQ challenge.",
+      detail: "Completed a direct The HQ challenge.",
       unlocked: challengeSummary.completed > 0,
     },
   ];
