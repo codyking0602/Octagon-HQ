@@ -45,6 +45,27 @@ export function mostRelevantOpenChallenge(
     })[0] ?? null;
 }
 
+export function buildDirectChallengeAction({
+  openChallenges,
+  profiles,
+  profileId,
+}: {
+  openChallenges: readonly PlayChallenge[];
+  profiles: readonly ChallengeProfile[];
+  profileId: string;
+}): YourHqNextAction | null {
+  const relevant = mostRelevantOpenChallenge(openChallenges, profileId);
+  if (!relevant || challengeDirection(relevant, profileId) !== "received") return null;
+
+  const sender = profiles.find((profile) => profile.id === relevant.creatorId);
+  return {
+    title: `${sender?.displayName ?? "A friend"} is waiting for your answer`,
+    description: `${relevant.gameTitle} challenge is ready.`,
+    label: "RESPOND TO CHALLENGE",
+    to: challengePlayRoute(relevant),
+  };
+}
+
 export function buildYourHqNextAction({
   openChallenges,
   profiles,
@@ -62,17 +83,8 @@ export function buildYourHqNextAction({
   dailyChallengeTitle?: string;
   dailyChallengeRoute?: string;
 }): YourHqNextAction {
-  const relevant = mostRelevantOpenChallenge(openChallenges, profileId);
-
-  if (relevant && challengeDirection(relevant, profileId) === "received") {
-    const sender = profiles.find((profile) => profile.id === relevant.creatorId);
-    return {
-      title: `${sender?.displayName ?? "A friend"} is waiting for your answer`,
-      description: `${relevant.gameTitle} challenge is ready.`,
-      label: "RESPOND TO CHALLENGE",
-      to: challengePlayRoute(relevant),
-    };
-  }
+  const directChallenge = buildDirectChallengeAction({ openChallenges, profiles, profileId });
+  if (directChallenge) return directChallenge;
 
   if (openChallenges.length) {
     const count = openChallenges.length;
