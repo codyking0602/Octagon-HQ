@@ -203,13 +203,15 @@ describe("Your HQ", () => {
     });
   });
 
-  it("shows an understandable sign-in state instead of broken profile zeros", async () => {
+  it("shows an understandable sign-in state instead of broken profile zeros", () => {
     renderHome();
 
     expect(screen.getByRole("button", { name: "SIGN IN TO YOUR HQ" })).toBeInTheDocument();
     expect(screen.getByText(/carry your official game history/i)).toBeInTheDocument();
     expect(screen.queryByText("0", { exact: true })).not.toBeInTheDocument();
-    expect(await screen.findByText("Ankalaev vs. Guskov")).toBeInTheDocument();
+    const eventTitle = document.getElementById("home-event-title");
+    expect(eventTitle).toHaveTextContent("UFC Fight Night");
+    expect(within(eventTitle!.closest("section")!).getByText("Ankalaev vs. Guskov")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "SIGN IN TO MAKE PICKS →" })).toBeInTheDocument();
     expect(screen.getByText("RANKING SPOTLIGHT")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Fighters to Watch" })).toBeInTheDocument();
