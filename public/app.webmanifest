@@ -11,7 +11,7 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "https://codyking0602.github.io/ufc-goat-rankings/assets/app-icon.png",
+      "src": "/assets/app-icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"

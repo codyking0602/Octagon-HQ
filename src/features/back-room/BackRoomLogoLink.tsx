@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { brand } from "../../config/brand";
 
 const DISCOVERY_KEY = "octagon-hq.back-room.discovered.v1";
 export const BACK_ROOM_LONG_PRESS_MS = 1200;
@@ -67,7 +68,20 @@ export function BackRoomLogoLink({ enabled }: { enabled: boolean }) {
       }}
     >
       <span className="the-hq-brand" aria-label="The HQ">
-        <span className="the-hq-brand__logo" aria-hidden="true">HQ</span>
+        <img
+          className="the-hq-brand__logo"
+          src={brand.logoUrl}
+          alt=""
+          decoding="async"
+          style={{
+            display: "block",
+            border: 0,
+            borderRadius: 0,
+            background: "transparent",
+            boxShadow: "none",
+            objectFit: "contain",
+          }}
+        />
         <span className="the-hq-brand__name"><small>THE</small> HQ</span>
       </span>
     </Link>
