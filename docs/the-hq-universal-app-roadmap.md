@@ -1,6 +1,6 @@
 # The HQ Universal App Roadmap
 
-**Status:** Product architecture locked; Phase 0 audit complete; rollout PRs 2–3 complete; PR 4 implementation is in #810 pending exact-head verification and merge; PR 5 follows.  
+**Status:** Product architecture locked; Phase 0 audit complete; rollout PRs 2–4 complete; PR 5 implementation is in #811 pending exact-head verification and merge; PR 6 follows.  
 **Last updated:** September 1, 2026  
 **Canonical purpose:** Preserve the agreed multi-sport architecture for The HQ so implementation can continue across multiple chats without re-deciding settled product choices.
 
@@ -437,7 +437,8 @@ Use the following routing so the rollout does not get trapped between the limite
 
 - **PR 1 may be handled in ChatGPT with the GitHub tools.** It is an audit / documentation PR and should not change runtime behavior.
 - **PRs 2–14 are CODEX CLOUD REQUIRED by default.** They change runtime code and need focused tests, typecheck, the full test suite, and the production build on the exact final head.
-- **PR 4 has one explicit execution exception:** after repeated Codex Cloud tasks could not obtain authenticated repository access, Cody explicitly authorized ChatGPT to implement and merge PR 4 using the connected GitHub tools. This does not change the default Codex routing for PR 5+.
+- **PR 4 has one explicit execution exception:** after repeated Codex Cloud tasks could not obtain authenticated repository access, Cody explicitly authorized ChatGPT to implement and merge PR 4 using the connected GitHub tools.
+- **PR 5 has one explicit execution exception:** Cody explicitly requested direct GitHub implementation and merge of PR 5 in this chat. This does not change the default Codex routing for PR 6+.
 - ChatGPT's GitHub tools remain useful for reading the repository, reviewing Codex diffs, checking PR state / CI, updating roadmap documentation, and merging verified PRs.
 - Narrow corrective follow-up PRs explicitly requested by Cody may be handled separately when they do not substitute for the next named roadmap implementation PR.
 
@@ -455,9 +456,9 @@ Use the following routing so the rollout does not get trapped between the limite
 | **1** | Current-state audit + owner inventory | **COMPLETE — #801** | High breadth; no runtime edits |
 | **2** | Universal THE HQ header | **COMPLETE — #802** | Normal |
 | **3** | Bottom navigation: Home / Picks / Play / Rankings; remove War Room nav | **COMPLETE — #804, corrected by #805** | Normal |
-| **4** | Canonical shared UFC / Football sport context + persistence | **IN REVIEW — #810; explicit ChatGPT execution exception** | **HIGH — ownership / state duplication risk** |
-| **5** | Picks / Play sport-switching UI + sport/section context row | **CODEX REQUIRED — NEXT AFTER PR 4** | **HIGH — preserve Rankings / Intelligence UFC-only behavior** |
-| **6** | Neutral universal shell + contextual sport accent theme-token path | **CODEX REQUIRED** | Normal; do not add a second theme owner |
+| **4** | Canonical shared UFC / Football sport context + persistence | **COMPLETE — #810; explicit ChatGPT execution exception** | **HIGH — ownership / state duplication risk** |
+| **5** | Picks / Play sport-switching UI + sport/section context row | **IN REVIEW — #811; explicit ChatGPT execution exception** | **HIGH — preserve Rankings / Intelligence UFC-only behavior** |
+| **6** | Neutral universal shell + contextual sport accent theme-token path | **CODEX REQUIRED — NEXT AFTER PR 5** | Normal; do not add a second theme owner |
 | **7** | Universal Home foundation + locked section order | **CODEX REQUIRED** | **HIGH — compose existing owners, do not recreate logic** |
 | **8** | Up Next priority hero | **CODEX REQUIRED** | **HIGH — cross-product priority logic** |
 | **9** | Today's Challenges + Your HQ | **CODEX REQUIRED** | **HIGH — reuse existing challenge / record data owners** |
@@ -498,7 +499,7 @@ Confirmed before runtime implementation:
 
 ## Phase 1 — Universal Shell + Navigation
 
-**Status: PARTIALLY COMPLETE — PR 2 and PR 3 merged; sport/section context row remains PR 5.**
+**Status: PR 2 and PR 3 merged; PR 5 context-row implementation is in #811 pending exact-head verification and merge.**
 
 Goal: establish The HQ shell without rebuilding feature contents.
 
@@ -511,9 +512,12 @@ Completed:
 - Visible fourth-tab label corrected back to **Rankings** in PR #805.
 - Approved neutral symbol corrective follow-up completed in PR #809.
 
-Remaining in later roadmap scope:
+PR 5 implementation in review:
 
-- Add the sport/section context row on sport-specific surfaces in PR 5.
+- Add the sport/section context row to the existing AppShell owner.
+- Expose UFC / Football switching only for Picks and Play.
+- Keep Rankings and Intelligence visibly UFC-only without a Football option.
+- Keep Home universal with no sport-context row.
 
 Validate existing UFC flows before adding additional behavior.
 
@@ -535,13 +539,14 @@ Requirements:
 - Rankings remains UFC-only.
 - Intelligence remains UFC-only.
 
-PR 4 establishes the canonical state layer only:
+PR 4 established the canonical state layer:
 
 - `src/app/SportProvider.tsx` is the one selected-sport owner.
 - `src/app/providers.tsx` mounts that owner once for the app runtime.
 - The selected value is limited to `ufc | football`.
 - Last selection persists locally between sessions under `the-hq:selected-sport`.
-- Selector/context-row presentation remains PR 5; theme-token consumption remains PR 6.
+
+PR 5 consumes that owner for Picks / Play navigation and context-row presentation only. It does not add another sport state or persistence path. Theme-token consumption remains PR 6.
 
 Do not add a second sport context provider or duplicate theme initialization.
 
@@ -649,7 +654,7 @@ Do not claim a merged change is live until the live deployment SHA is verified.
 
 # 13. Current Resume Point
 
-**Phase 0 is complete. PR 2 and PR 3 are merged. PR 4 is implemented in #810 and awaiting exact-head verification/merge at the time of this roadmap commit.**
+**Phase 0 is complete. PR 2, PR 3, and PR 4 are merged. PR 5 is implemented in #811 and awaiting exact-head verification/merge at the time of this roadmap commit.**
 
 Current verified roadmap baseline:
 
@@ -658,11 +663,12 @@ Current verified roadmap baseline:
 - PR #804 — PR 3 bottom navigation — merge `688ef852452517b3bc4c8772b411dc7794b7ca6a`
 - PR #805 — PR 3 visible label correction back to Rankings — merge `3ca3a83bfe8df15d711f3ebf6afd57fe1b28cbb1`
 - PR #809 — approved neutral symbol corrective follow-up — merge `7a5376634af1c21fa2a34839564ce47e5125c2ce`
-- PR #810 — PR 4 canonical shared UFC / Football sport context + persistence — base `7a5376634af1c21fa2a34839564ce47e5125c2ce`; merge SHA to be backfilled on the next roadmap edit.
+- PR #810 — PR 4 canonical shared UFC / Football sport context + persistence — merge `f607a93d04b25491df3f1b93f24861ba5f952c84`
+- PR #811 — PR 5 Picks / Play sport-switching UI + sport/section context row — base `f607a93d04b25491df3f1b93f24861ba5f952c84`; merge SHA to be backfilled on the next roadmap edit.
 
-PR 4 creates the one canonical shared selected-sport owner and persistence only. It does not begin selector/context-row UI, theme-token migration, Home work, profile, notifications, onboarding, or broad brand cleanup.
+PR 4 remains the one canonical shared selected-sport owner and persistence path. PR 5 consumes that state in the existing AppShell and BottomNavigation owners, adds no parallel state/provider/persistence path, and does not begin PR 6 theme-token migration or later Home/profile/notifications/onboarding/cleanup work.
 
-After PR 4 merges, the next named rollout item is **PR 5 — Picks / Play sport-switching UI + sport/section context row**. Resolve fresh `main` before starting it and preserve `src/app/SportProvider.tsx` as the canonical selected-sport owner rather than creating a second state path.
+After PR 5 merges, the next named rollout item is **PR 6 — Neutral universal shell + contextual sport accent theme-token path**. Resolve fresh `main` before starting it and preserve the existing single theme/style initialization path.
 
 Do **not** restart card-by-card Home brainstorming unless Cody explicitly reopens it.
 
@@ -687,15 +693,25 @@ Do **not** re-debate:
 
 ## September 1, 2026
 
+### PR 5 sport-switching UI and context row
+
+- Cody explicitly requested direct GitHub execution and merge of PR 5 in this chat; this is a PR 5 execution exception and the default Codex routing resumes with PR 6.
+- PR #811 is the PR 5 implementation, based on `main` at `f607a93d04b25491df3f1b93f24861ba5f952c84`.
+- `src/app/SportProvider.tsx` remains the only selected-sport state and persistence owner; PR 5 consumes it rather than creating another provider, state value, localStorage path, or route-derived competing selection.
+- The existing AppShell owns the sport/section context row. Picks and Play expose UFC / Football switching; Rankings and Intelligence remain UFC-only; Home has no sport-context row.
+- Bottom-navigation Picks and Play destinations follow the globally selected sport, while the canonical `/rankings` destination remains unchanged.
+- Existing Play double-tap behavior is preserved and updates the same shared sport selection when it crosses between UFC and Football.
+- PR 5 deliberately avoids PR 6 theme-token migration and all later Home, profile, notifications, onboarding, broad brand, and War Room cleanup scope.
+
 ### PR 4 shared sport-context owner
 
-- Cody explicitly authorized direct ChatGPT execution of PR 4 after repeated Codex Cloud tasks could not access the authenticated repository; this is a PR 4-only execution exception and does not change the default PR 5+ routing.
-- PR #810 is the PR 4 implementation, based on `main` at `7a5376634af1c21fa2a34839564ce47e5125c2ce`.
+- Cody explicitly authorized direct ChatGPT execution of PR 4 after repeated Codex Cloud tasks could not access the authenticated repository; this was the first explicit runtime execution exception.
+- PR #810 is the PR 4 implementation, based on `main` at `7a5376634af1c21fa2a34839564ce47e5125c2ce` and merged as `f607a93d04b25491df3f1b93f24861ba5f952c84`.
 - `src/app/SportProvider.tsx` is the canonical universal selected-sport owner.
 - `src/app/providers.tsx` mounts it exactly once.
 - Supported shared sport state is `ufc | football`.
 - Between-session persistence uses the single local key `the-hq:selected-sport`.
-- PR 4 deliberately adds no selector/context-row UI, route rewrite, theme-token work, or other PR 5+ presentation behavior.
+- PR 4 deliberately added no selector/context-row UI, route rewrite, theme-token work, or other PR 5+ presentation behavior.
 
 ### Brand direction superseded and re-locked
 
@@ -721,7 +737,7 @@ New locked decisions:
 - PR #803 corrected the header/Home Screen icon to the then-approved H/Q asset; merge `6cbf76f1fdddc3f4ac08c50a0fef6f0eeab49421`; that asset is now superseded by the new symbol-first decision.
 - PR #804 completed the four-tab bottom navigation and removed the War Room nav entry while preserving War Room runtime; merge `688ef852452517b3bc4c8772b411dc7794b7ca6a`.
 - PR #805 corrected the visible fourth-tab label back to Rankings without changing the canonical `/rankings` route; merge `3ca3a83bfe8df15d711f3ebf6afd57fe1b28cbb1`.
-- Next named roadmap item remains PR 4 after the narrow logo corrective follow-up.
+- PR #809 completed the approved neutral symbol corrective follow-up; merge `7a5376634af1c21fa2a34839564ce47e5125c2ce`.
 
 ## August 31, 2026
 
