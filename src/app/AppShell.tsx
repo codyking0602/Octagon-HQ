@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { BottomNavigation } from "../components/BottomNavigation";
 import { RouteLoading } from "../components/RouteLoading";
 import { BackRoomLogoLink } from "../features/back-room/BackRoomLogoLink";
@@ -11,6 +11,7 @@ import { IdentityControl } from "../features/identity/IdentityControl";
 import { useProfilePreferences } from "../features/profile/ProfilePreferencesProvider";
 import { BrandedPullToRefresh } from "./BrandedPullToRefresh";
 import { RouteScrollManager } from "./RouteScrollManager";
+import { useSport, type SelectedSport } from "./SportProvider";
 
 const PLAY_GAME_TITLES: Record<string, string> = {
   "/play/find-leader": "Find the Leader",
@@ -24,6 +25,63 @@ const PLAY_GAME_TITLES: Record<string, string> = {
 const FOOTBALL_GAME_TITLES: Record<string, string> = {
   "/football/find-leader": "Find the Leader",
 };
+
+type SportContextSection = "PICKS" | "PLAY" | "RANKINGS" | "INTELLIGENCE";
+
+type SportContext = {
+  sport: SelectedSport;
+  section: SportContextSection;
+  switchable: boolean;
+};
+
+function sportContextForPath(pathname: string): SportContext | null {
+  if (pathname === "/picks") return { sport: "ufc", section: "PICKS", switchable: true };
+  if (pathname === "/football/picks") return { sport: "football", section: "PICKS", switchable: true };
+  if (pathname === "/play") return { sport: "ufc", section: "PLAY", switchable: true };
+  if (pathname === "/football") return { sport: "football", section: "PLAY", switchable: true };
+  if (pathname === "/rankings") return { sport: "ufc", section: "RANKINGS", switchable: false };
+  if (pathname === "/intelligence") return { sport: "ufc", section: "INTELLIGENCE", switchable: false };
+  return null;
+}
+
+function sportSectionDestination(section: SportContextSection, sport: SelectedSport) {
+  if (section === "PICKS") return sport === "football" ? "/football/picks" : "/picks";
+  if (section === "PLAY") return sport === "football" ? "/football" : "/play";
+  return null;
+}
+
+function SportContextRow({
+  context,
+  onSelectSport,
+}: {
+  context: SportContext;
+  onSelectSport: (sport: SelectedSport) => void;
+}) {
+  const sectionLabel = context.section[0] + context.section.slice(1).toLowerCase();
+
+  return (
+    <div className="sport-context-row" data-testid="sport-context-row" aria-label="Sport context">
+      <strong className="sport-context-row__label">
+        {context.sport.toUpperCase()} {context.section}
+      </strong>
+      {context.switchable ? (
+        <div className="sport-context-row__switch" role="group" aria-label={`${sectionLabel} sport`}>
+          {(["ufc", "football"] as const).map((sport) => (
+            <button
+              key={sport}
+              type="button"
+              className={context.sport === sport ? "is-active" : ""}
+              aria-pressed={context.sport === sport}
+              onClick={() => onSelectSport(sport)}
+            >
+              {sport === "ufc" ? "UFC" : "Football"}
+            </button>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
+}
 
 function ProfilePushSettingRoute() {
   const identity = useIdentity();
@@ -41,6 +99,8 @@ function ProfilePushSettingRoute() {
 
 export function AppShell() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { setSelectedSport } = useSport();
   const { footballTeam } = useProfilePreferences();
   const gameTitle = PLAY_GAME_TITLES[location.pathname];
   const footballGameTitle = FOOTBALL_GAME_TITLES[location.pathname];
@@ -50,6 +110,15 @@ export function AppShell() {
   const isBackRoom = location.pathname === "/back-room" || location.pathname.startsWith("/back-room/");
   const isFootball = location.pathname === "/football" || location.pathname.startsWith("/football/");
   const footballTeamClass = isFootball && footballTeam ? ` app-shell--football-team-${footballTeam}` : "";
+  const sportContext = sportContextForPath(location.pathname);
+
+  function selectSport(sport: SelectedSport) {
+    if (!sportContext?.switchable) return;
+
+    setSelectedSport(sport);
+    const destination = sportSectionDestination(sportContext.section, sport);
+    if (destination && destination !== location.pathname) navigate(destination);
+  }
 
   return (
     <div className={`app-shell${isGame ? " app-shell--game" : ""}${isBackRoom ? " app-shell--back-room" : ""}${isFootball ? " app-shell--football-room" : ""}${footballTeamClass}`}>
@@ -84,7 +153,7 @@ export function AppShell() {
           </Link>
         </header>
       ) : (
-        <header className="app-header app-header--universal">
+        <header className={`app-header app-header--universal${sportContext ? " app-header--with-sport-context" : ""}`}>
           <BackRoomLogoLink enabled={location.pathname === "/play"} />
           <div className="app-header__actions">
             <NotificationHeaderAction />
@@ -101,6 +170,9 @@ export function AppShell() {
             </NavLink>
             <IdentityControl />
           </div>
+          {sportContext ? (
+            <SportContextRow context={sportContext} onSelectSport={selectSport} />
+          ) : null}
         </header>
       )}
 

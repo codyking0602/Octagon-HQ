@@ -8,6 +8,9 @@ import {
 } from "./SportProvider";
 
 const appProvidersSource = readFileSync("src/app/providers.tsx", "utf8");
+const appShellSource = readFileSync("src/app/AppShell.tsx", "utf8");
+const bottomNavigationSource = readFileSync("src/components/BottomNavigation.tsx", "utf8");
+const sportProviderSource = readFileSync("src/app/SportProvider.tsx", "utf8");
 
 function SportProbe() {
   const { selectedSport, setSelectedSport } = useSport();
@@ -41,6 +44,15 @@ describe("SportProvider", () => {
   it("mounts exactly once in the canonical app provider stack", () => {
     expect(appProvidersSource.match(/<SportProvider>/g) ?? []).toHaveLength(1);
     expect(appProvidersSource.match(/<\/SportProvider>/g) ?? []).toHaveLength(1);
+  });
+
+  it("keeps PR 5 consumers on the one canonical state and persistence owner", () => {
+    expect(appShellSource).toContain("useSport");
+    expect(bottomNavigationSource).toContain("useSport");
+    expect(appShellSource).not.toContain("localStorage");
+    expect(bottomNavigationSource).not.toContain("localStorage");
+    expect(sportProviderSource.match(/useState<SelectedSport>/g) ?? []).toHaveLength(1);
+    expect(sportProviderSource.match(/localStorage\.setItem/g) ?? []).toHaveLength(1);
   });
 
   it("defaults the canonical selected sport to UFC", () => {

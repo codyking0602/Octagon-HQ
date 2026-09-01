@@ -1,6 +1,11 @@
+import type { ReactNode } from "react";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter, useLocation } from "react-router-dom";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  SELECTED_SPORT_STORAGE_KEY,
+  SportProvider,
+} from "../app/SportProvider";
 import { BottomNavigation } from "./BottomNavigation";
 
 vi.mock("../features/war-room/WarRoomProvider", () => ({
@@ -14,6 +19,10 @@ type MutableVisualViewport = EventTarget & {
 
 const originalInnerHeight = Object.getOwnPropertyDescriptor(window, "innerHeight");
 const originalVisualViewport = Object.getOwnPropertyDescriptor(window, "visualViewport");
+
+beforeEach(() => {
+  window.localStorage.clear();
+});
 
 afterEach(() => {
   cleanup();
@@ -48,13 +57,20 @@ function LocationProbe() {
   return <output data-testid="location">{location.pathname}|{footballEntry ? "entry" : "plain"}</output>;
 }
 
+function renderNavigation(initialEntries: string[] = ["/"], children: ReactNode = null) {
+  return render(
+    <MemoryRouter initialEntries={initialEntries}>
+      <SportProvider>
+        {children}
+        <BottomNavigation />
+      </SportProvider>
+    </MemoryRouter>,
+  );
+}
+
 describe("BottomNavigation", () => {
   it("renders exactly Home, Picks, Play, and Rankings in order without War Room", () => {
-    render(
-      <MemoryRouter>
-        <BottomNavigation />
-      </MemoryRouter>,
-    );
+    renderNavigation();
 
     const navigation = screen.getByRole("navigation", { name: "Primary navigation" });
     const links = Array.from(navigation.querySelectorAll("a"));
@@ -65,23 +81,16 @@ describe("BottomNavigation", () => {
   });
 
   it("keeps UFC destinations for Picks, Play, and Rankings", () => {
-    render(
-      <MemoryRouter>
-        <BottomNavigation />
-      </MemoryRouter>,
-    );
+    renderNavigation();
 
     expect(screen.getByRole("link", { name: "Picks" })).toHaveAttribute("href", "/picks");
     expect(screen.getByRole("link", { name: "Play" })).toHaveAttribute("href", "/play");
     expect(screen.getByRole("link", { name: "Rankings" })).toHaveAttribute("href", "/rankings");
   });
 
-  it("uses Football Picks and Play while keeping Rankings UFC-only", () => {
-    render(
-      <MemoryRouter initialEntries={["/football/picks"]}>
-        <BottomNavigation />
-      </MemoryRouter>,
-    );
+  it("uses the globally selected Football Picks and Play destinations while keeping Rankings UFC-only", () => {
+    window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "football");
+    renderNavigation(["/football/picks"]);
 
     expect(screen.getByRole("link", { name: "Picks" })).toHaveAttribute("href", "/football/picks");
     expect(screen.getByRole("link", { name: "Play" })).toHaveAttribute("href", "/football");
@@ -89,13 +98,27 @@ describe("BottomNavigation", () => {
     expect(screen.queryByRole("link", { name: /Football Rankings/i })).not.toBeInTheDocument();
   });
 
+  it("keeps the current section active on Football deep links without replacing the global sport state", () => {
+    renderNavigation(["/football/picks"]);
+
+    const picks = screen.getByRole("link", { name: "Picks" });
+    const play = screen.getByRole("link", { name: "Play" });
+    expect(picks).toHaveClass("is-active");
+    expect(play).not.toHaveClass("is-active");
+    expect(picks).toHaveAttribute("href", "/picks");
+    expect(play).toHaveAttribute("href", "/play");
+    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBeNull();
+
+    cleanup();
+    renderNavigation(["/football/find-leader"]);
+    expect(screen.getByRole("link", { name: "Play" })).toHaveClass("is-active");
+    expect(screen.getByRole("link", { name: "Picks" })).not.toHaveClass("is-active");
+    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBeNull();
+  });
+
   it("does not mistake a resumed stale shrunken viewport for an open keyboard", () => {
     const viewport = installVisualViewport();
-    render(
-      <MemoryRouter>
-        <BottomNavigation />
-      </MemoryRouter>,
-    );
+    renderNavigation();
 
     const navigation = screen.getByRole("navigation", { name: "Primary navigation" });
     expect(navigation).not.toHaveClass("is-keyboard-open");
@@ -113,12 +136,7 @@ describe("BottomNavigation", () => {
 
   it("still hides the navigation when an editor owns a materially occluded viewport", () => {
     const viewport = installVisualViewport();
-    render(
-      <MemoryRouter>
-        <input aria-label="Message" />
-        <BottomNavigation />
-      </MemoryRouter>,
-    );
+    renderNavigation(["/"], <input aria-label="Message" />);
 
     const navigation = screen.getByRole("navigation", { name: "Primary navigation" });
     const input = screen.getByRole("textbox", { name: "Message" });
@@ -135,12 +153,7 @@ describe("BottomNavigation", () => {
 
   it("keeps the navigation hidden after blur until the keyboard viewport recovers", () => {
     const viewport = installVisualViewport();
-    render(
-      <MemoryRouter>
-        <input aria-label="Message" />
-        <BottomNavigation />
-      </MemoryRouter>,
-    );
+    renderNavigation(["/"], <input aria-label="Message" />);
 
     const navigation = screen.getByRole("navigation", { name: "Primary navigation" });
     const input = screen.getByRole("textbox", { name: "Message" });
@@ -169,11 +182,7 @@ describe("BottomNavigation", () => {
 
   it("corrects a stale short layout viewport so the nav stays on the visible bottom edge", () => {
     const viewport = installVisualViewport();
-    render(
-      <MemoryRouter>
-        <BottomNavigation />
-      </MemoryRouter>,
-    );
+    renderNavigation();
 
     const navigation = screen.getByRole("navigation", { name: "Primary navigation" });
 
@@ -188,12 +197,7 @@ describe("BottomNavigation", () => {
 
   it("enters Football only after a second tap on the active Play tab", () => {
     installVisualViewport();
-    render(
-      <MemoryRouter initialEntries={["/play"]}>
-        <BottomNavigation />
-        <LocationProbe />
-      </MemoryRouter>,
-    );
+    renderNavigation(["/play"], <LocationProbe />);
 
     const play = screen.getByRole("link", { name: "Play" });
     fireEvent.click(play);
@@ -201,16 +205,13 @@ describe("BottomNavigation", () => {
 
     fireEvent.click(play);
     expect(screen.getByTestId("location")).toHaveTextContent("/football|entry");
+    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("football");
   });
 
   it("double-taps the active Football Play tab back to UFC", () => {
     installVisualViewport();
-    render(
-      <MemoryRouter initialEntries={["/football"]}>
-        <BottomNavigation />
-        <LocationProbe />
-      </MemoryRouter>,
-    );
+    window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "football");
+    renderNavigation(["/football"], <LocationProbe />);
 
     const play = screen.getByRole("link", { name: "Play" });
     fireEvent.click(play);
@@ -218,5 +219,6 @@ describe("BottomNavigation", () => {
 
     fireEvent.click(play);
     expect(screen.getByTestId("location")).toHaveTextContent("/play|plain");
+    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
   });
 });
