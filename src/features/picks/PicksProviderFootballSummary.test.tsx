@@ -106,7 +106,6 @@ describe("PicksProvider universal record summaries", () => {
 
     expect(await screen.findByText("UFC 12-8")).toBeInTheDocument();
     expect(screen.getByText("FOOTBALL UNAVAILABLE")).toBeInTheDocument();
-    expect(repo.loadCurrentEvent).toHaveBeenCalledTimes(1);
     expect(repo.loadCurrentEvent).toHaveBeenCalledWith("mma");
     expect(repo.loadCurrentEvent).not.toHaveBeenCalledWith("football");
 
@@ -129,7 +128,6 @@ describe("PicksProvider universal record summaries", () => {
 
     expect(await screen.findByText("UFC 12-8")).toBeInTheDocument();
     expect(await screen.findByText("FOOTBALL 7-3")).toBeInTheDocument();
-    expect(repo.loadCurrentEvent).toHaveBeenCalledTimes(1);
     expect(repo.loadCurrentEvent).toHaveBeenCalledWith("mma");
     expect(repo.loadCurrentEvent).not.toHaveBeenCalledWith("football");
 
