@@ -58,6 +58,7 @@ export type NotificationKind = typeof notificationKinds[number];
 export type NotificationCategory = typeof notificationCategories[number];
 export type NotificationPriority = typeof notificationPriorities[number];
 export type NotificationPreferenceKey = typeof notificationPreferenceKeys[number];
+export type NotificationSport = "ufc" | "football";
 export type NotificationPermissionState = "unsupported" | "default" | "granted" | "denied";
 export type NotificationDevicePushStatus =
   | "checking"
@@ -160,6 +161,51 @@ const categoryMarks: Record<NotificationCategory, string> = {
   rankings: "#",
   operations: "!",
 };
+
+const ufcOnlyKinds = new Set<NotificationKind>([
+  "picks_repick_required",
+  "picks_fight_cancelled",
+  "picks_incomplete_near_lock",
+  "picks_recap_ready",
+  "picks_season_result_changed",
+  "ufc_event_starting",
+  "ranking_refresh_available",
+  "card_change_detected",
+  "fighter_replacement_detected",
+  "fight_cancellation_detected",
+  "fight_order_changed",
+  "fight_moved_off_card",
+  "published_card_mismatch",
+  "event_draft_ready",
+  "picks_card_missing",
+  "odds_match_failed",
+  "monitoring_repeatedly_failed",
+  "provider_quota_low",
+  "all_results_entered",
+  "event_ready_to_complete",
+  "post_lock_correction_review",
+]);
+
+function routeMatches(route: string, root: string) {
+  return route === root || route.startsWith(`${root}/`) || route.startsWith(`${root}?`);
+}
+
+export function notificationSport(item: Pick<NotificationItem, "kind" | "route">): NotificationSport | null {
+  const route = item.route ?? "";
+  if (routeMatches(route, "/football")) return "football";
+  if (
+    routeMatches(route, "/picks")
+    || routeMatches(route, "/play")
+    || routeMatches(route, "/rankings")
+    || routeMatches(route, "/intelligence")
+  ) return "ufc";
+  if (ufcOnlyKinds.has(item.kind)) return "ufc";
+  return null;
+}
+
+export function notificationSportLabel(sport: NotificationSport) {
+  return sport === "football" ? "Football" : "UFC";
+}
 
 export function notificationCategoryLabel(category: NotificationCategory) {
   return categoryLabels[category];
