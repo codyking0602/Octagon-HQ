@@ -21,4 +21,8 @@ describe("notificationDestination", () => {
   it("does not rewrite other Picks notifications", () => {
     expect(destination("picks_repick_required", "/picks")).toBe("/picks");
   });
+
+  it("preserves Football destinations through the same resolver", () => {
+    expect(destination("picks_repick_required", "/football/picks")).toBe("/football/picks");
+  });
 });
