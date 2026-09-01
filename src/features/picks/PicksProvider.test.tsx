@@ -109,6 +109,7 @@ function Probe() {
       <span>LOCK {picks.underdogLock?.fighterSlug ?? "NONE"}</span>
       <span>SCORE {picks.summary.totalPoints}</span>
       <span>{picks.summary.correct}-{picks.summary.incorrect}</span>
+      <span>FOOTBALL {picks.footballSummary ? `${picks.footballSummary.correct}-${picks.footballSummary.incorrect}` : "NONE"}</span>
       <span>{picks.history.events.length} RECAP</span>
       <span>{picks.history.events[0]?.name ?? "NO RECAP"}</span>
       <button type="button" onClick={() => void picks.setPick("ankalaev-guskov", "magomed-ankalaev")}>PICK ANKALAEV</button>
@@ -148,13 +149,14 @@ describe("PicksProvider", () => {
     );
 
     expect(await screen.findByText("NFL Week 1")).toBeInTheDocument();
+    expect(await screen.findByText("FOOTBALL 0-0")).toBeInTheDocument();
     expect(loadCurrentEvent).toHaveBeenCalledWith("football");
     await waitFor(() => expect(loadMyPicks).toHaveBeenCalledWith("nfl-week-1"));
     expect(loadMySummary).toHaveBeenCalledWith(2026, "football");
     expect(loadMyHistory).toHaveBeenCalledWith(2026, "football");
   });
 
-  it("reloads the canonical lock and summary after saving a changed pick", async () => {
+  it("exposes the canonical Football summary from the existing app-level repository while preserving UFC refresh behavior", async () => {
     const loadMyPicks = vi.fn(async () => [{
       eventId: event.eventId,
       boutId: "ankalaev-guskov",
@@ -162,9 +164,16 @@ describe("PicksProvider", () => {
       pickedAt: "2026-07-24T12:00:00.000Z",
       updatedAt: "2026-07-24T12:00:00.000Z",
     }]);
-    const loadMySummary = vi.fn()
-      .mockResolvedValueOnce({ correct: 4, incorrect: 2, pending: 1, eventsEntered: 1, basePoints: 16, lockBonus: 0, totalPoints: 16 })
-      .mockResolvedValueOnce({ correct: 5, incorrect: 2, pending: 1, eventsEntered: 1, basePoints: 20, lockBonus: 0, totalPoints: 20 });
+    let mmaSummaryLoads = 0;
+    const loadMySummary = vi.fn(async (_season: number, sport?: "mma" | "football") => {
+      if (sport === "football") {
+        return { correct: 7, incorrect: 3, pending: 2, eventsEntered: 3, basePoints: 28, lockBonus: 1, totalPoints: 29 };
+      }
+      mmaSummaryLoads += 1;
+      return mmaSummaryLoads === 1
+        ? { correct: 4, incorrect: 2, pending: 1, eventsEntered: 1, basePoints: 16, lockBonus: 0, totalPoints: 16 }
+        : { correct: 5, incorrect: 2, pending: 1, eventsEntered: 1, basePoints: 20, lockBonus: 0, totalPoints: 20 };
+    });
     const loadMyHistory = vi.fn(async () => history);
     const loadMyUnderdogLock = vi.fn()
       .mockResolvedValueOnce({
@@ -204,29 +213,36 @@ describe("PicksProvider", () => {
     expect(screen.getByText("LOCK bogdan-guskov")).toBeInTheDocument();
     expect(screen.getByText("SCORE 16")).toBeInTheDocument();
     expect(screen.getByText("4-2")).toBeInTheDocument();
+    expect(screen.getByText("FOOTBALL 7-3")).toBeInTheDocument();
     expect(screen.getByText("1 RECAP")).toBeInTheDocument();
     expect(screen.getByText("UFC Oklahoma City")).toBeInTheDocument();
     expect(loadMyPicks).toHaveBeenCalledWith(event.eventId);
     expect(loadMyHistory).toHaveBeenCalledWith(2026, "mma");
+    expect(loadMySummary).toHaveBeenCalledWith(2026, "football");
 
     fireEvent.click(screen.getByRole("button", { name: "PICK ANKALAEV" }));
     await waitFor(() => expect(savePick).toHaveBeenCalledWith(event.eventId, "ankalaev-guskov", "magomed-ankalaev"));
     await waitFor(() => expect(screen.getByText("SELECTION magomed-ankalaev")).toBeInTheDocument());
     expect(screen.getByText("LOCK NONE")).toBeInTheDocument();
     expect(screen.getByText("SCORE 20")).toBeInTheDocument();
+    expect(screen.getByText("FOOTBALL 7-3")).toBeInTheDocument();
     expect(loadMyUnderdogLock).toHaveBeenCalledTimes(2);
-    expect(loadMySummary).toHaveBeenCalledTimes(2);
-    expect(loadMySummary).toHaveBeenNthCalledWith(1, 2026, "mma");
-    expect(loadMySummary).toHaveBeenNthCalledWith(2, 2026, "mma");
+    expect(loadMySummary.mock.calls.filter(([, requestedSport]) => requestedSport === "mma")).toHaveLength(2);
+    expect(loadMySummary.mock.calls.filter(([, requestedSport]) => requestedSport === "football")).toHaveLength(1);
   });
 
   it("loads completed history even while the next event is not available", async () => {
     const loadMyPicks = vi.fn(async () => []);
     const loadMyHistory = vi.fn(async () => history);
+    const loadMySummary = vi.fn(async (_season: number, sport?: "mma" | "football") => (
+      sport === "football"
+        ? { correct: 2, incorrect: 1, pending: 0, eventsEntered: 1, basePoints: 8, lockBonus: 0, totalPoints: 8 }
+        : { correct: 4, incorrect: 1, pending: 0, eventsEntered: 1, basePoints: 16, lockBonus: 0, totalPoints: 16 }
+    ));
     const repository: PicksRepository = {
       loadCurrentEvent: async () => null,
       loadMyPicks,
-      loadMySummary: async () => ({ correct: 4, incorrect: 1, pending: 0, eventsEntered: 1, basePoints: 16, lockBonus: 0, totalPoints: 16 }),
+      loadMySummary,
       loadMyHistory,
       loadMyUnderdogLock: async () => null,
       setUnderdogLock: vi.fn(),
@@ -242,8 +258,10 @@ describe("PicksProvider", () => {
 
     expect(await screen.findByText("UFC Oklahoma City")).toBeInTheDocument();
     expect(screen.getByText("NO EVENT")).toBeInTheDocument();
+    expect(screen.getByText("FOOTBALL 2-1")).toBeInTheDocument();
     expect(loadMyPicks).not.toHaveBeenCalled();
     expect(loadMyHistory).toHaveBeenCalledWith(new Date().getFullYear(), "mma");
+    expect(loadMySummary).toHaveBeenCalledWith(new Date().getFullYear(), "football");
   });
 
   it("loads the public event without requesting profile data while signed out", async () => {
@@ -269,6 +287,7 @@ describe("PicksProvider", () => {
 
     expect(await screen.findByText("Ankalaev vs. Guskov")).toBeInTheDocument();
     expect(screen.getByText("SELECTION NONE")).toBeInTheDocument();
+    expect(screen.getByText("FOOTBALL NONE")).toBeInTheDocument();
     expect(screen.getByText("0 RECAP")).toBeInTheDocument();
     expect(loadMyPicks).not.toHaveBeenCalled();
     expect(loadMySummary).not.toHaveBeenCalled();
