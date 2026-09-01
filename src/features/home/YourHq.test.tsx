@@ -5,43 +5,46 @@ import type { ChallengeProfile, PlayChallenge } from "../challenges/challengeMod
 import type { PickEvent } from "../picks/picksModel";
 import HomePage from "./HomePage";
 
-const emptySummary = {
-  correct: 0,
-  incorrect: 0,
-  pending: 0,
-  eventsEntered: 0,
-  basePoints: 0,
-  lockBonus: 0,
-  totalPoints: 0,
-};
+const mocks = vi.hoisted(() => {
+  const emptySummary = {
+    correct: 0,
+    incorrect: 0,
+    pending: 0,
+    eventsEntered: 0,
+    basePoints: 0,
+    lockBonus: 0,
+    totalPoints: 0,
+  };
 
-const mocks = vi.hoisted(() => ({
-  identity: {
-    profile: null as ChallengeProfile | null,
-    openDialog: vi.fn(),
-  },
-  picks: {
-    event: null as PickEvent | null,
-    selections: {} as Record<string, string>,
-    loading: false,
-    summary: { ...emptySummary },
-    footballSummary: { ...emptySummary },
-    error: "",
-    footballSummaryError: "",
-  },
-  challenges: {
-    challenges: [] as PlayChallenge[],
-    profiles: [] as ChallengeProfile[],
-    loading: false,
-    error: null as Error | null,
-  },
-  whatsNew: {
-    activeItems: [],
-    status: "ready" as const,
-  },
-  runtime: vi.fn(),
-  overview: vi.fn(),
-}));
+  return {
+    emptySummary,
+    identity: {
+      profile: null as ChallengeProfile | null,
+      openDialog: vi.fn(),
+    },
+    picks: {
+      event: null as PickEvent | null,
+      selections: {} as Record<string, string>,
+      loading: false,
+      summary: { ...emptySummary },
+      footballSummary: { ...emptySummary },
+      error: "",
+      footballSummaryError: "",
+    },
+    challenges: {
+      challenges: [] as PlayChallenge[],
+      profiles: [] as ChallengeProfile[],
+      loading: false,
+      error: null as Error | null,
+    },
+    whatsNew: {
+      activeItems: [],
+      status: "ready" as const,
+    },
+    runtime: vi.fn(),
+    overview: vi.fn(),
+  };
+});
 
 vi.mock("../identity/IdentityProvider", () => ({
   useIdentity: () => mocks.identity,
@@ -155,8 +158,8 @@ describe("Home PR 9 — Today’s Challenges + Your HQ", () => {
     mocks.picks.event = pickEvent;
     mocks.picks.selections = {};
     mocks.picks.loading = false;
-    mocks.picks.summary = { ...emptySummary };
-    mocks.picks.footballSummary = { ...emptySummary };
+    mocks.picks.summary = { ...mocks.emptySummary };
+    mocks.picks.footballSummary = { ...mocks.emptySummary };
     mocks.picks.error = "";
     mocks.picks.footballSummaryError = "";
     mocks.challenges.challenges = [];
