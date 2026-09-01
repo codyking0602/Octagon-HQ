@@ -11,6 +11,9 @@ const appProvidersSource = readFileSync("src/app/providers.tsx", "utf8");
 const appShellSource = readFileSync("src/app/AppShell.tsx", "utf8");
 const bottomNavigationSource = readFileSync("src/components/BottomNavigation.tsx", "utf8");
 const sportProviderSource = readFileSync("src/app/SportProvider.tsx", "utf8");
+const mainSource = readFileSync("src/main.tsx", "utf8");
+const tokensSource = readFileSync("src/styles/tokens.css", "utf8");
+const sportContextStyles = readFileSync("src/styles/sport-context.css", "utf8");
 
 function SportProbe() {
   const { selectedSport, setSelectedSport } = useSport();
@@ -53,6 +56,39 @@ describe("SportProvider", () => {
     expect(bottomNavigationSource).not.toContain("localStorage");
     expect(sportProviderSource.match(/useState<SelectedSport>/g) ?? []).toHaveLength(1);
     expect(sportProviderSource.match(/localStorage\.setItem/g) ?? []).toHaveLength(1);
+  });
+
+  it("drives switchable contextual theme scope from the canonical selected sport", () => {
+    expect(appShellSource).toContain("if (context?.switchable) return selectedSport;");
+    expect(appShellSource).not.toContain("context.sport === selectedSport");
+  });
+
+  it("keeps one canonical theme/style initialization path", () => {
+    expect(mainSource.match(/\.\/styles\/tokens\.css/g) ?? []).toHaveLength(1);
+    expect(mainSource.match(/\.\/styles\/sport-context\.css/g) ?? []).toHaveLength(1);
+    expect(mainSource.match(/\.\/styles\/football-foundation\.css/g) ?? []).toHaveLength(1);
+    expect(mainSource.match(/\.\/styles\/football-shell\.css/g) ?? []).toHaveLength(1);
+    expect(appProvidersSource).not.toContain("ThemeProvider");
+    expect(appShellSource).toContain("data-hq-theme={themeScope}");
+    expect(bottomNavigationSource).toContain("data-hq-theme={themeScope}");
+  });
+
+  it("defines neutral, UFC, and Football accents through the shared token path", () => {
+    expect(tokensSource).toContain("--hq-neutral-accent:");
+    expect(tokensSource).toContain('[data-hq-theme="ufc"]');
+    expect(tokensSource).toContain("--hq-context-accent: var(--ufc-red);");
+    expect(tokensSource).toContain('[data-hq-theme="football"]');
+    expect(tokensSource).toContain("--hq-context-accent: #d2d8e0;");
+    expect(sportContextStyles).toContain("var(--hq-neutral-accent-rgb)");
+    expect(sportContextStyles).toContain("--football-accent: var(--hq-context-accent);");
+    expect(sportContextStyles).toContain("--football-accent-rgb: var(--hq-context-accent-rgb);");
+    expect(sportContextStyles).toContain("var(--hq-context-accent-strong)");
+  });
+
+  it("does not restore favorite-team shell theming as a second theme owner", () => {
+    expect(appShellSource).not.toContain("useProfilePreferences");
+    expect(appShellSource).not.toContain("app-shell--football-team-");
+    expect(bottomNavigationSource).not.toContain("bottom-nav--football-team-");
   });
 
   it("defaults the canonical selected sport to UFC", () => {

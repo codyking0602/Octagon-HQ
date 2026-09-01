@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import appShellSource from "../../app/AppShell.tsx?raw";
 import bottomNavigationSource from "../../components/BottomNavigation.tsx?raw";
 import footballVisualCss from "../../styles/football-visual-assets.css?raw";
+import sportContextCss from "../../styles/sport-context.css?raw";
 import footballHeaderSource from "./FootballHeader.tsx?raw";
 
 const cowboysHelmet = readFileSync(
@@ -47,17 +48,19 @@ describe("Football HQ final identity polish", () => {
     expect(footballVisualCss).toContain("grid-template-columns: 62px minmax(0, 1fr);");
   });
 
-  it("routes shared Football accents away from UFC red without adding a navigation provider dependency", () => {
+  it("routes shared Football accents through the universal contextual theme path", () => {
     expect(footballVisualCss).toContain(`.app-shell--football-room {
   --ufc-red: var(--football-action);
   --ufc-red-strong: var(--football-accent);
 }`);
-    expect(bottomNavigationSource).toContain("bottom-nav--football-team-${footballTeam}");
+    expect(appShellSource).toContain("data-hq-theme={themeScope}");
+    expect(appShellSource).toContain("<BottomNavigation themeScope={themeScope} />");
+    expect(bottomNavigationSource).toContain("data-hq-theme={themeScope}");
     expect(bottomNavigationSource).not.toContain("useProfilePreferences");
-    expect(appShellSource).toContain("<BottomNavigation footballTeam={isFootball ? footballTeam : null} />");
-    expect(footballVisualCss).toContain(".bottom-nav--football-team-cowboys");
-    expect(footballVisualCss).toContain("--ufc-red: #163f67;");
-    expect(footballVisualCss).toContain(".bottom-nav--football-team-longhorns");
-    expect(footballVisualCss).toContain("--ufc-red: #bf5700;");
+    expect(bottomNavigationSource).not.toContain("bottom-nav--football-team-");
+    expect(footballVisualCss).not.toContain(".bottom-nav--football-team-cowboys");
+    expect(footballVisualCss).not.toContain(".bottom-nav--football-team-longhorns");
+    expect(sportContextCss).toContain("--football-accent: var(--hq-context-accent);");
+    expect(sportContextCss).toContain("--football-accent-rgb: var(--hq-context-accent-rgb);");
   });
 });
