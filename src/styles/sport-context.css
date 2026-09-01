@@ -18,6 +18,12 @@
   border-color: rgba(var(--hq-neutral-accent-rgb), .42);
 }
 
+.app-shell--football-room[data-hq-theme="football"] {
+  --football-accent: var(--hq-context-accent);
+  --football-accent-rgb: var(--hq-context-accent-rgb);
+  --football-accent-contrast: var(--hq-context-accent-contrast);
+}
+
 .app-header--universal.app-header--with-sport-context {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
