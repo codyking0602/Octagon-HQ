@@ -28,11 +28,11 @@ function expectWebP(filePath: string) {
 
 describe("local V2 fighter assets", () => {
   it("owns the brand logo and fighter asset base locally", () => {
-    expect(brand.logoUrl).toBe("/assets/app-icon.png");
+    expect(brand.logoUrl).toBe("/assets/the-hq-app-icon-v1.png");
     expect(brand.fighterAssetBase).toBe("/assets/fighters");
     expect(brand.logoUrl).not.toContain("ufc-goat-rankings");
 
-    const logoPath = path.join(publicRoot, "assets", "app-icon.png");
+    const logoPath = path.join(publicRoot, "assets", "the-hq-app-icon-v1.png");
     expect(fs.existsSync(logoPath)).toBe(true);
     const header = fileHeader(logoPath, 4);
     expect([...header]).toEqual([0x89, 0x50, 0x4e, 0x47]);

@@ -7,7 +7,7 @@ const brandConfig = readFileSync("src/config/brand.ts", "utf8");
 const manifest = readFileSync("public/app.webmanifest", "utf8");
 const documentShell = readFileSync("index.html", "utf8");
 const styles = readFileSync("src/styles/global.css", "utf8");
-const appIcon = readFileSync("public/assets/app-icon.png");
+const appIcon = readFileSync("public/assets/the-hq-app-icon-v1.png");
 
 describe("The HQ universal header", () => {
   it("keeps one shell header owner across UFC and Football routes", () => {
@@ -25,8 +25,8 @@ describe("The HQ universal header", () => {
     expect(brandLink).toContain("src={brand.logoUrl}");
     expect(brandLink).not.toContain('>HQ</span>');
     expect(brandLink).toContain("borderRadius: 10");
-    expect(brandConfig).toContain('logoUrl: "/assets/app-icon.png"');
-    expect(existsSync("public/assets/app-icon.png")).toBe(true);
+    expect(brandConfig).toContain('logoUrl: "/assets/the-hq-app-icon-v1.png"');
+    expect(existsSync("public/assets/the-hq-app-icon-v1.png")).toBe(true);
     expect(appIcon.subarray(0, 8).toString("hex")).toBe("89504e470d0a1a0a");
     expect(appIcon.readUInt32BE(16)).toBe(512);
     expect(appIcon.readUInt32BE(20)).toBe(512);
@@ -34,11 +34,15 @@ describe("The HQ universal header", () => {
     expect(styles).toContain(".app-header--universal");
   });
 
-  it("uses the same local HQ asset for install and Home Screen icon metadata", () => {
-    expect(manifest).toContain('"src": "/assets/app-icon.png"');
-    expect(documentShell).toContain('rel="icon" type="image/png" href="/assets/app-icon.png"');
-    expect(documentShell).toContain('rel="apple-touch-icon" href="/assets/app-icon.png"');
-    expect(documentShell).toContain('<img src="/assets/app-icon.png" alt="" />');
+  it("uses the same cache-busted local HQ asset for install and Home Screen icon metadata", () => {
+    expect(manifest).toContain('"src": "/assets/the-hq-app-icon-v1.png"');
+    expect(documentShell).toContain('rel="icon" type="image/png" href="/assets/the-hq-app-icon-v1.png"');
+    expect(documentShell).toContain('rel="apple-touch-icon" href="/assets/the-hq-app-icon-v1.png"');
+    expect(documentShell).toContain('<img src="/assets/the-hq-app-icon-v1.png" alt="" />');
+    expect(brandConfig).not.toContain('logoUrl: "/assets/app-icon.png"');
+    expect(manifest).not.toContain('"src": "/assets/app-icon.png"');
+    expect(documentShell).not.toContain('href="/assets/app-icon.png"');
+    expect(documentShell).not.toContain('<img src="/assets/app-icon.png" alt="" />');
     expect(manifest).not.toContain("codyking0602.github.io/ufc-goat-rankings/assets/app-icon.png");
     expect(documentShell).not.toContain("codyking0602.github.io/ufc-goat-rankings/assets/app-icon.png");
   });

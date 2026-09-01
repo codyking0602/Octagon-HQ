@@ -1,6 +1,6 @@
 export const brand = {
   name: "Octagon HQ",
-  logoUrl: "/assets/app-icon.png",
+  logoUrl: "/assets/the-hq-app-icon-v1.png",
   fighterAssetBase: "/assets/fighters",
 } as const;
 
