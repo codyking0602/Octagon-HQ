@@ -36,7 +36,7 @@ export function FootballHeader() {
   return (
     <header className="app-header app-header--football">
       <div className="football-header__brand">
-        <small>OCTAGON HQ</small>
+        <small>THE HQ</small>
         <strong>FOOTBALL HQ</strong>
       </div>
 
