@@ -45,8 +45,10 @@
 }
 
 [data-hq-theme="football"] {
-  --hq-context-accent: #d2d8e0;
-  --hq-context-accent-strong: #f5f7fa;
-  --hq-context-accent-rgb: 210, 216, 224;
-  --hq-context-accent-contrast: #08090a;
+  --hq-context-accent: #1f4e79;
+  --hq-context-accent-strong: #5f8fb8;
+  --hq-context-accent-rgb: 31, 78, 121;
+  --hq-context-accent-contrast: #ffffff;
+  --hq-context-accent-soft: rgba(31, 78, 121, .42);
+  --hq-context-accent-border: rgba(95, 143, 184, .58);
 }
