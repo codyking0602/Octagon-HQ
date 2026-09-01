@@ -7,6 +7,7 @@ const brandConfig = readFileSync("src/config/brand.ts", "utf8");
 const manifest = readFileSync("public/app.webmanifest", "utf8");
 const documentShell = readFileSync("index.html", "utf8");
 const styles = readFileSync("src/styles/global.css", "utf8");
+const appIcon = readFileSync("public/assets/app-icon.png");
 
 describe("The HQ universal header", () => {
   it("keeps one shell header owner across UFC and Football routes", () => {
@@ -18,16 +19,19 @@ describe("The HQ universal header", () => {
     expect(shell).toContain("<IdentityControl />");
   });
 
-  it("uses the approved HQ asset through the canonical brand owner", () => {
+  it("uses the approved neutral symbol through the canonical brand owner", () => {
     expect(brandLink).toContain('aria-label="The HQ"');
     expect(brandLink).toContain('className="the-hq-brand__logo"');
     expect(brandLink).toContain("src={brand.logoUrl}");
     expect(brandLink).not.toContain('>HQ</span>');
+    expect(brandLink).toContain("borderRadius: 10");
     expect(brandConfig).toContain('logoUrl: "/assets/app-icon.png"');
     expect(existsSync("public/assets/app-icon.png")).toBe(true);
+    expect(appIcon.subarray(0, 8).toString("hex")).toBe("89504e470d0a1a0a");
+    expect(appIcon.readUInt32BE(16)).toBe(512);
+    expect(appIcon.readUInt32BE(20)).toBe(512);
     expect(brandLink).toContain('<small>THE</small> HQ');
     expect(styles).toContain(".app-header--universal");
-    expect(styles).toContain("color: #d4af37");
   });
 
   it("uses the same local HQ asset for install and Home Screen icon metadata", () => {
