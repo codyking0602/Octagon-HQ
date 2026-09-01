@@ -1,5 +1,6 @@
-import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ChallengeProfile, PlayChallenge } from "../challenges/challengeModel";
 import type { PickEvent } from "../picks/picksModel";
@@ -9,14 +10,6 @@ const mocks = vi.hoisted(() => ({
   identity: {
     profile: null as ChallengeProfile | null,
     openDialog: vi.fn(),
-  },
-  preferences: {
-    favoriteFighterSlug: null as string | null,
-    loading: false,
-    saving: false,
-    configured: true,
-    error: null as Error | null,
-    setFavoriteFighter: vi.fn(async (_slug: string | null) => undefined),
   },
   picks: {
     event: null as PickEvent | null,
@@ -31,8 +24,9 @@ const mocks = vi.hoisted(() => ({
       lockBonus: 0,
       totalPoints: 0,
     },
-    error: null as Error | null,
+    error: "",
   },
+  picksProvider: vi.fn((props: { children: ReactNode; sport?: string }) => props.children),
   challenges: {
     challenges: [] as PlayChallenge[],
     profiles: [] as ChallengeProfile[],
@@ -51,11 +45,8 @@ vi.mock("../identity/IdentityProvider", () => ({
   useIdentity: () => mocks.identity,
 }));
 
-vi.mock("../profile/ProfilePreferencesProvider", () => ({
-  useProfilePreferences: () => mocks.preferences,
-}));
-
 vi.mock("../picks/PicksProvider", () => ({
+  PicksProvider: (props: { children: ReactNode; sport?: string }) => mocks.picksProvider(props),
   usePicks: () => mocks.picks,
 }));
 
@@ -156,15 +147,10 @@ function renderHome() {
   return render(<MemoryRouter><HomePage /></MemoryRouter>);
 }
 
-describe("Your HQ", () => {
+describe("Home PR 9 — Today’s Challenges + Your HQ", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.identity.profile = null;
-    mocks.preferences.favoriteFighterSlug = null;
-    mocks.preferences.loading = false;
-    mocks.preferences.saving = false;
-    mocks.preferences.configured = true;
-    mocks.preferences.error = null;
     mocks.picks.event = pickEvent;
     mocks.picks.selections = {};
     mocks.picks.loading = false;
@@ -177,7 +163,7 @@ describe("Your HQ", () => {
       lockBonus: 0,
       totalPoints: 0,
     };
-    mocks.picks.error = null;
+    mocks.picks.error = "";
     mocks.challenges.challenges = [];
     mocks.challenges.profiles = [];
     mocks.challenges.loading = false;
@@ -194,32 +180,108 @@ describe("Your HQ", () => {
     });
     mocks.overview.mockReturnValue({
       configured: false,
-      history: [],
+      standings: null,
       streak: { currentStreak: 0, bestStreak: 0 },
       leaderboard: null,
+      standingsLoading: false,
+      leaderboardLoading: false,
       loading: false,
       error: null,
       refresh: vi.fn(),
     });
   });
 
-  it("shows an understandable sign-in state instead of broken profile zeros", () => {
+  it("shows the locked three-stat sign-in snapshot and both permanent daily challenge entry points", () => {
     renderHome();
 
+    const hq = screen.getByRole("region", { name: "Your HQ" });
+    expect(within(hq).getAllByRole("article")).toHaveLength(3);
+    expect(within(hq).getByText("Daily streak")).toBeInTheDocument();
+    expect(within(hq).getByText("UFC Picks record")).toBeInTheDocument();
+    expect(within(hq).getByText("Football Picks record")).toBeInTheDocument();
+    expect(within(hq).queryByText("Favorite fighter")).not.toBeInTheDocument();
+    expect(within(hq).queryByText("Open challenges")).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "SIGN IN TO YOUR HQ" })).toBeInTheDocument();
-    expect(screen.getByText(/carry your official game history/i)).toBeInTheDocument();
-    expect(screen.queryByText("0", { exact: true })).not.toBeInTheDocument();
-    const eventTitle = document.getElementById("home-event-title");
-    expect(eventTitle).toHaveTextContent("UFC Fight Night");
-    expect(within(eventTitle!.closest("section")!).getByText("Ankalaev vs. Guskov")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "SIGN IN TO MAKE PICKS →" })).toBeInTheDocument();
-    expect(screen.getByText("RANKING SPOTLIGHT")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Fighters to Watch" })).toBeInTheDocument();
+
+    expect(screen.getByRole("link", { name: /Open UFC Today’s Challenge/i })).toHaveAttribute("href", "/play");
+    expect(screen.getByRole("link", { name: /Open Football Today’s Challenge/i })).toHaveAttribute("href", "/football/today");
   });
 
-  it("shows generalized daily data, profile data, and the highest-priority next action", async () => {
+  it("keeps UFC and Football daily status independent on universal Home", () => {
     mocks.identity.profile = cody;
-    mocks.preferences.favoriteFighterSlug = "georges-st-pierre";
+    mocks.picks.event = null;
+    mocks.runtime.mockImplementation((options: { sport?: string }) => options.sport === "football"
+      ? {
+          projection: {
+            gameType: "wavelength",
+            progressRevision: 4,
+            officialAttempt: {
+              nativeScore: 91,
+              normalizedScore: 91,
+              completedAt: "2026-09-01T12:00:00.000Z",
+              publicResult: {},
+            },
+          },
+          loading: false,
+          error: null,
+          busy: false,
+          configured: true,
+          advance: vi.fn(),
+          refresh: vi.fn(),
+        }
+      : {
+          projection: {
+            gameType: "blind_resume",
+            progressRevision: 2,
+            officialAttempt: null,
+          },
+          loading: false,
+          error: null,
+          busy: false,
+          configured: true,
+          advance: vi.fn(),
+          refresh: vi.fn(),
+        });
+    mocks.overview.mockImplementation((options: { sport?: string }) => options.sport === "football"
+      ? {
+          configured: true,
+          standings: null,
+          streak: { currentStreak: 5, bestStreak: 7 },
+          leaderboard: {
+            unlocked: true,
+            playerCount: 6,
+            entries: [{ rank: 2, isCurrentUser: true }],
+          },
+          loading: false,
+          error: null,
+          refresh: vi.fn(),
+        }
+      : {
+          configured: true,
+          standings: null,
+          streak: { currentStreak: 2, bestStreak: 4 },
+          leaderboard: null,
+          loading: false,
+          error: null,
+          refresh: vi.fn(),
+        });
+
+    renderHome();
+
+    const ufcCard = screen.getByRole("link", { name: /Open UFC Today’s Challenge/i });
+    const footballCard = screen.getByRole("link", { name: /Open Football Today’s Challenge/i });
+    expect(ufcCard).toHaveAttribute("href", "/play/blind-resume?mode=daily");
+    expect(within(ufcCard).getByRole("heading", { name: "Blind Resume" })).toBeInTheDocument();
+    expect(within(ufcCard).getAllByText("IN PROGRESS").length).toBeGreaterThan(0);
+    expect(footballCard).toHaveAttribute("href", "/football/today");
+    expect(within(footballCard).getByRole("heading", { name: "Wavelength" })).toBeInTheDocument();
+    expect(within(footballCard).getByText("COMPLETED")).toBeInTheDocument();
+    expect(within(footballCard).getByText("91")).toBeInTheDocument();
+    expect(within(footballCard).getByText("#2 today")).toBeInTheDocument();
+  });
+
+  it("shows the locked signed-in snapshot and reuses the canonical Football PicksProvider mode", async () => {
+    mocks.identity.profile = cody;
     mocks.picks.selections = {
       "ankalaev-guskov": "magomed-ankalaev",
     };
@@ -242,45 +304,40 @@ describe("Your HQ", () => {
       }),
     ];
     mocks.challenges.profiles = [cody, shane];
-    mocks.runtime.mockReturnValue({
-      projection: {
-        gameType: "blind_resume",
-        officialAttempt: null,
-      },
+    mocks.runtime.mockImplementation((options: { sport?: string }) => ({
+      projection: options.sport === "football"
+        ? { gameType: "wavelength", progressRevision: 0, officialAttempt: null }
+        : { gameType: "blind_resume", progressRevision: 0, officialAttempt: null },
       loading: false,
       error: null,
       busy: false,
       configured: true,
       advance: vi.fn(),
       refresh: vi.fn(),
-    });
-    mocks.overview.mockReturnValue({
+    }));
+    mocks.overview.mockImplementation((options: { sport?: string }) => ({
       configured: true,
-      history: [],
-      streak: { currentStreak: 2, bestStreak: 4 },
+      standings: null,
+      streak: options.sport === "football"
+        ? { currentStreak: 5, bestStreak: 7 }
+        : { currentStreak: 2, bestStreak: 4 },
       leaderboard: null,
       loading: false,
       error: null,
       refresh: vi.fn(),
-    });
+    }));
 
     renderHome();
 
+    const hq = screen.getByRole("region", { name: "Your HQ" });
     await waitFor(() => expect(within(screen.getByText("Daily streak").closest("article")!).getByText("2")).toBeInTheDocument());
-    const picksCard = screen.getByText("Current Picks record").closest("article")!;
-    expect(within(picksCard).getByText("12-8")).toBeInTheDocument();
-    expect(within(picksCard).getByText(/1 PENDING/)).toBeInTheDocument();
+    expect(within(hq).getAllByRole("article")).toHaveLength(3);
+    expect(within(screen.getByText("UFC Picks record").closest("article")!).getByText("12-8")).toBeInTheDocument();
+    expect(within(screen.getByText("Football Picks record").closest("article")!).getByText("12-8")).toBeInTheDocument();
+    expect(mocks.picksProvider).toHaveBeenCalledWith(expect.objectContaining({ sport: "football" }));
 
-    expect(screen.getByRole("link", { name: "Open Georges St-Pierre profile" })).toHaveAttribute("href", "/fighters/georges-st-pierre");
-    expect(within(screen.getByText("Open challenges").closest("article")!).getByText("2")).toBeInTheDocument();
     expect(screen.getByText("1 pick still open")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "FINISH UFC PICKS" })).toHaveAttribute("href", "/picks");
-
-    fireEvent.change(screen.getByRole("combobox", { name: "Favorite fighter" }), {
-      target: { value: "jon-jones" },
-    });
-    await waitFor(() => expect(mocks.preferences.setFavoriteFighter).toHaveBeenCalledWith("jon-jones"));
-
     expect(screen.getByText("Magomed Ankalaev vs. Bogdan Guskov")).toBeInTheDocument();
     expect(screen.getByText("1 OF 2")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "MAKE PICKS →" })).toHaveAttribute("href", "/picks");
