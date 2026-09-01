@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import type { HqThemeScope } from "../app/AppShell";
 import { scrollPageToTop } from "../app/RouteScrollManager";
 import { useSport } from "../app/SportProvider";
-import type { FootballTeam } from "../features/profile/profilePreferencesRepository";
 
 type NavigationIconName = "home" | "rankings" | "picks" | "play";
 
@@ -69,7 +69,7 @@ function NavigationIcon({ name }: { name: NavigationIconName }) {
   );
 }
 
-export function BottomNavigation({ footballTeam = null }: { footballTeam?: FootballTeam | null }) {
+export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqThemeScope }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { selectedSport, setSelectedSport } = useSport();
@@ -78,9 +78,6 @@ export function BottomNavigation({ footballTeam = null }: { footballTeam?: Footb
   const [keyboardOpen, setKeyboardOpen] = useState(false);
   const [viewportBottomCorrection, setViewportBottomCorrection] = useState(0);
   const footballMode = location.pathname === "/football" || location.pathname.startsWith("/football/");
-  const footballThemeClass = footballMode
-    ? ` bottom-nav--football${footballTeam ? ` bottom-nav--football-team-${footballTeam}` : ""}`
-    : "";
   const selectedPlayRoot = selectedSport === "football" ? "/football" : "/play";
   const selectedPicksRoot = selectedSport === "football" ? "/football/picks" : "/picks";
   const activePlayRoot = footballMode ? "/football" : "/play";
@@ -142,7 +139,8 @@ export function BottomNavigation({ footballTeam = null }: { footballTeam?: Footb
 
   const navigation = (
     <nav
-      className={`bottom-nav${footballThemeClass}${keyboardOpen ? " is-keyboard-open" : ""}`}
+      className={`bottom-nav${keyboardOpen ? " is-keyboard-open" : ""}`}
+      data-hq-theme={themeScope}
       aria-label="Primary navigation"
       style={{
         gridTemplateColumns: `repeat(${standardDestinations.length}, minmax(0, 1fr))`,
