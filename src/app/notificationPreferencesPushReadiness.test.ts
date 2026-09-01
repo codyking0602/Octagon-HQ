@@ -68,7 +68,7 @@ describe("notification settings simplification", () => {
   });
 
   it("keeps the notification center focused only on the bell feed", () => {
-    expect(center).toContain("Personal updates, reminders, and actions from across the app.");
+    expect(center).toContain("UFC, Football, and account updates in one inbox.");
     expect(center).toContain("Mark all as read");
     expect(center).toContain("notification-list");
     expect(center).not.toContain("What should reach you?");
@@ -87,7 +87,7 @@ describe("notification settings simplification", () => {
     expect(profilePush).toContain('role="switch"');
     expect(profilePush).toContain("notifications.enableDevicePush()");
     expect(profilePush).toContain("notifications.disableDevicePush()");
-    expect(profilePush).toContain("Bell notifications still appear inside Octagon HQ.");
+    expect(profilePush).toContain("Bell notifications still appear inside The HQ.");
     expect(profilePush).not.toContain("picksReminders");
     expect(profilePush).not.toContain("dailyChallengeReminders");
     expect(profilePush).not.toContain("gameChallengeActivity");
@@ -113,6 +113,6 @@ describe("notification settings simplification", () => {
     expect(readiness).not.toContain("Notification.requestPermission");
     expect(serviceWorker).toContain('addEventListener("push"');
     expect(serviceWorker).toContain('addEventListener("notificationclick"');
-    expect(profilePush).toContain("Add Octagon HQ to your Home Screen");
+    expect(profilePush).toContain("Add The HQ to your Home Screen");
   });
 });
