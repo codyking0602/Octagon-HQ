@@ -11,7 +11,7 @@ const appIcon = readFileSync("public/assets/the-hq-app-icon-v2.png");
 
 describe("The HQ universal header", () => {
   it("keeps one shell header owner across UFC and Football routes", () => {
-    expect(shell).toContain('className="app-header app-header--universal"');
+    expect(shell.match(/app-header--universal/g) ?? []).toHaveLength(1);
     expect(shell).not.toContain("<FootballHeader />");
     expect(shell).toContain("<NotificationHeaderAction />");
     expect(shell).toContain('to="/intelligence"');
