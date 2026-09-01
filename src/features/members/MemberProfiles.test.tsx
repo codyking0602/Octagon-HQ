@@ -18,6 +18,20 @@ import { MemberDirectoryView } from "./MemberDirectoryPage";
 import { MemberProfileView } from "./MemberProfilePage";
 import type { MemberProfilesRepository } from "./memberProfilesRepository";
 
+vi.mock("../play/useTodayChallengeOverview", () => ({
+  useTodayChallengeOverview: () => ({
+    configured: true,
+    standings: null,
+    streak: { currentStreak: 7, bestStreak: 11 },
+    leaderboard: null,
+    standingsLoading: false,
+    leaderboardLoading: false,
+    loading: false,
+    error: null,
+    refresh: vi.fn(async () => undefined),
+  }),
+}));
+
 vi.mock("./memberProfilesRepository", () => ({
   createMemberProfilesRepository: () => ({
     listMembers: async () => [
@@ -86,15 +100,17 @@ function preferencesRepository(favorite = "jon-jones"): ProfilePreferencesReposi
   return {
     loadFavoriteFighter: vi.fn(async () => favorite || null),
     saveFavoriteFighter: vi.fn(async (slug) => slug),
+    loadAvatarPhoto: vi.fn(async () => null),
+    saveAvatarPhoto: vi.fn(async (photo) => photo),
   };
 }
 
 function picksRepository(): PicksRepository {
   return {
-    loadCurrentEvent: vi.fn(async () => ({
-      eventId: "test-event",
-      name: "UFC Test",
-      subtitle: "Main vs. Event",
+    loadCurrentEvent: vi.fn(async (sport: "mma" | "football" = "mma") => ({
+      eventId: sport === "football" ? "football-test-event" : "test-event",
+      name: sport === "football" ? "Football Week 1" : "UFC Test",
+      subtitle: sport === "football" ? "Week 1" : "Main vs. Event",
       venue: "Arena",
       location: "Dallas, Texas",
       startsAt: "2026-08-01T00:00:00Z",
@@ -104,12 +120,18 @@ function picksRepository(): PicksRepository {
       bouts: [],
     })),
     loadMyPicks: vi.fn(async () => []),
-    loadMyHistory: vi.fn(async () => ({
-      season: null,
-      summary: { correct: 3, incorrect: 1, missing: 0, excluded: 0, eventsEntered: 2, basePoints: 12, lockBonus: 0, totalPoints: 12 },
+    loadMyHistory: vi.fn(async (_season: number, sport: "mma" | "football" = "mma") => ({
+      season: 2026,
+      summary: sport === "football"
+        ? { correct: 6, incorrect: 2, missing: 0, excluded: 0, eventsEntered: 3, basePoints: 24, lockBonus: 1, totalPoints: 25 }
+        : { correct: 3, incorrect: 1, missing: 0, excluded: 0, eventsEntered: 2, basePoints: 12, lockBonus: 0, totalPoints: 12 },
       events: [],
     })),
-    loadMySummary: vi.fn(async () => ({ correct: 3, incorrect: 1, pending: 2, eventsEntered: 2, basePoints: 12, lockBonus: 0, totalPoints: 12 })),
+    loadMySummary: vi.fn(async (_season: number, sport: "mma" | "football" = "mma") => (
+      sport === "football"
+        ? { correct: 6, incorrect: 2, pending: 1, eventsEntered: 3, basePoints: 24, lockBonus: 1, totalPoints: 25 }
+        : { correct: 3, incorrect: 1, pending: 2, eventsEntered: 2, basePoints: 12, lockBonus: 0, totalPoints: 12 }
+    )),
     loadMyUnderdogLock: async () => null,
     setUnderdogLock: vi.fn(),
     clearUnderdogLock: vi.fn(),
@@ -205,7 +227,7 @@ function Providers({
   return (
     <IdentityProvider gateway={identityGateway(profile)}>
       <ProfilePreferencesProvider repository={preferencesRepository(favorite)}>
-        <PicksProvider repository={picksRepository()}>
+        <PicksProvider repository={picksRepository()} includeFootballSummary>
           <FindLeaderHistoryProvider repository={historyRepository()}>
             <ChallengeProvider repository={challengeRepository(challenges)}>
               {children}
@@ -274,16 +296,16 @@ describe("Member Profiles", () => {
     expect(shaneCard).toHaveTextContent("4");
   });
 
-  it("renders the own profile from canonical providers and edits only the existing favorite preference", async () => {
-    const preferences = preferencesRepository("jon-jones");
+  it("renders the universal own profile from canonical providers without a favorite section or duplicate member query", async () => {
+    const repository = memberRepository();
     render(
       <MemoryRouter>
         <IdentityProvider gateway={identityGateway(cody)}>
-          <ProfilePreferencesProvider repository={preferences}>
-            <PicksProvider repository={picksRepository()}>
+          <ProfilePreferencesProvider repository={preferencesRepository("jon-jones")}>
+            <PicksProvider repository={picksRepository()} includeFootballSummary>
               <FindLeaderHistoryProvider repository={historyRepository()}>
                 <ChallengeProvider repository={challengeRepository()}>
-                  <MemberProfileView memberName="CODY" repository={memberRepository()} />
+                  <MemberProfileView memberName="CODY" repository={repository} />
                 </ChallengeProvider>
               </FindLeaderHistoryProvider>
             </PicksProvider>
@@ -293,21 +315,28 @@ describe("Member Profiles", () => {
     );
 
     expect(await screen.findByRole("heading", { name: "CODY" })).toBeInTheDocument();
-    expect(screen.getByText("YOUR OCTAGON HQ PROFILE")).toBeInTheDocument();
-    await waitFor(() => expect(document.body).toHaveTextContent("3-1"));
-    expect(screen.getAllByText("10/10").length).toBeGreaterThan(0);
-    const favorite = screen.getByRole("combobox", { name: "Favorite fighter" });
-    fireEvent.change(favorite, { target: { value: "georges-st-pierre" } });
-    await waitFor(() => expect(preferences.saveFavoriteFighter).toHaveBeenCalledWith("georges-st-pierre"));
+    expect(screen.getByText("YOUR HQ PROFILE")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Profile photo" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "The HQ résumé" })).toBeInTheDocument();
+    await waitFor(() => expect(document.body).toHaveTextContent("6-2"));
+    expect(document.body).toHaveTextContent("3-1");
+    expect(document.body).toHaveTextContent("7");
+    expect(screen.getByRole("link", { name: "View UFC Picks" })).toHaveAttribute("href", "/picks");
+    expect(screen.getByRole("link", { name: "View Football Picks" })).toHaveAttribute("href", "/football/picks");
+    expect(screen.getByText("CHALLENGE HISTORY")).toBeInTheDocument();
+    expect(screen.queryByText("FAVORITE FIGHTER")).not.toBeInTheDocument();
+    expect(screen.queryByRole("combobox", { name: "Favorite fighter" })).not.toBeInTheDocument();
+    expect(screen.queryByText(/COWBOYS|LONGHORNS/i)).not.toBeInTheDocument();
+    expect(repository.loadMember).not.toHaveBeenCalled();
   });
 
-  it("renders another member read-only, falls back to initials without a favorite, and uses the existing challenge composer", async () => {
+  it("renders another member read-only without favorite or football personalization and uses the existing challenge composer", async () => {
     const challengeRepo = challengeRepository();
     render(
       <MemoryRouter initialEntries={["/members/SHANE"]}>
         <IdentityProvider gateway={identityGateway(cody)}>
           <ProfilePreferencesProvider repository={preferencesRepository()}>
-            <PicksProvider repository={picksRepository()}>
+            <PicksProvider repository={picksRepository()} includeFootballSummary>
               <FindLeaderHistoryProvider repository={historyRepository()}>
                 <ChallengeProvider repository={challengeRepo}>
                   <Routes>
@@ -323,8 +352,10 @@ describe("Member Profiles", () => {
     );
 
     expect(await screen.findByRole("heading", { name: "SHANE" })).toBeInTheDocument();
-    expect(screen.getByText("Not set")).toBeInTheDocument();
+    expect(screen.getByText("THE HQ MEMBER")).toBeInTheDocument();
+    expect(screen.queryByText("FAVORITE FIGHTER")).not.toBeInTheDocument();
     expect(screen.queryByRole("combobox", { name: "Favorite fighter" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "View Football Picks" })).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "PLAY A GAME TO CHALLENGE SHANE" }));
     expect(await screen.findByTestId("preferred-member")).toHaveTextContent("SHANE");
