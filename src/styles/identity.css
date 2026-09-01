@@ -7,6 +7,10 @@
 .identity-trigger.is-ready > .identity-trigger__photo { flex: 0 0 46px; width: 46px; min-width: 46px; max-width: 46px; height: 46px; margin: 0; padding: 0; border-right: 1px solid rgba(229, 9, 20, .48); border-radius: 0; box-shadow: none; font-size: 13px; }
 .identity-trigger.is-ready > .identity-trigger__photo > img { display: block; width: 46px; min-width: 46px; max-width: 46px; height: 46px; margin: 0; object-fit: cover; }
 .identity-trigger.is-ready span { display: flex; align-items: center; height: 46px; max-width: 82px; padding: 0 12px; overflow: hidden; border: 0; border-radius: 0; background: transparent; text-overflow: ellipsis; white-space: nowrap; }
+.app-header--universal .identity-trigger.is-ready span { display: none; }
+.app-header--universal .identity-trigger.is-ready,
+.app-header--universal .identity-trigger.is-ready > .identity-trigger__photo,
+.app-header--universal .identity-trigger.is-ready > .identity-trigger__photo > img { width: 42px; min-width: 42px; max-width: 42px; height: 42px; }
 
 .identity-overlay { position: fixed; inset: 0; z-index: 80; display: grid; align-items: end; overflow: hidden; padding: 18px 12px calc(18px + var(--safe-bottom)); background: rgba(0, 0, 0, .78); backdrop-filter: blur(10px); }
 .identity-dialog { display: grid; gap: 16px; width: min(100%, 480px); max-height: min(calc(100dvh - 36px - var(--safe-bottom)), 720px); min-height: 0; margin: 0 auto; overflow: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding: 18px; border: 1px solid var(--border); border-radius: 24px; background: var(--surface); box-shadow: 0 24px 70px rgba(0, 0, 0, .62); }
