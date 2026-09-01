@@ -8,7 +8,6 @@ import { memberProfilePath } from "../features/members/memberProfilesModel";
 import { NotificationHeaderAction } from "../features/notifications/NotificationHeaderAction";
 import { NotificationPushSetting } from "../features/notifications/NotificationPushSetting";
 import { IdentityControl } from "../features/identity/IdentityControl";
-import { useProfilePreferences } from "../features/profile/ProfilePreferencesProvider";
 import { BrandedPullToRefresh } from "./BrandedPullToRefresh";
 import { RouteScrollManager } from "./RouteScrollManager";
 import { useSport, type SelectedSport } from "./SportProvider";
@@ -34,6 +33,8 @@ type SportContext = {
   switchable: boolean;
 };
 
+export type HqThemeScope = "neutral" | SelectedSport;
+
 function sportContextForPath(pathname: string): SportContext | null {
   if (pathname === "/picks") return { sport: "ufc", section: "PICKS", switchable: true };
   if (pathname === "/football/picks") return { sport: "football", section: "PICKS", switchable: true };
@@ -42,6 +43,31 @@ function sportContextForPath(pathname: string): SportContext | null {
   if (pathname === "/rankings") return { sport: "ufc", section: "RANKINGS", switchable: false };
   if (pathname === "/intelligence") return { sport: "ufc", section: "INTELLIGENCE", switchable: false };
   return null;
+}
+
+function themeScopeForPath(pathname: string, selectedSport: SelectedSport): HqThemeScope {
+  const context = sportContextForPath(pathname);
+
+  if (context?.switchable) {
+    // PR 4 remains authoritative. The route fallback preserves explicit deep-link context
+    // without mutating the persisted sport selection merely because a URL was opened.
+    return context.sport === selectedSport ? selectedSport : context.sport;
+  }
+  if (context) return context.sport;
+
+  if (
+    pathname === "/"
+    || pathname === "/members"
+    || pathname.startsWith("/members/")
+    || pathname === "/notifications"
+    || pathname === "/whats-new"
+  ) {
+    return "neutral";
+  }
+
+  if (pathname === "/football" || pathname.startsWith("/football/")) return "football";
+
+  return "ufc";
 }
 
 function sportSectionDestination(section: SportContextSection, sport: SelectedSport) {
@@ -100,8 +126,7 @@ function ProfilePushSettingRoute() {
 export function AppShell() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { setSelectedSport } = useSport();
-  const { footballTeam } = useProfilePreferences();
+  const { selectedSport, setSelectedSport } = useSport();
   const gameTitle = PLAY_GAME_TITLES[location.pathname];
   const footballGameTitle = FOOTBALL_GAME_TITLES[location.pathname];
   const isPlayGame = Boolean(gameTitle);
@@ -109,8 +134,8 @@ export function AppShell() {
   const isGame = isPlayGame || isFootballGame;
   const isBackRoom = location.pathname === "/back-room" || location.pathname.startsWith("/back-room/");
   const isFootball = location.pathname === "/football" || location.pathname.startsWith("/football/");
-  const footballTeamClass = isFootball && footballTeam ? ` app-shell--football-team-${footballTeam}` : "";
   const sportContext = sportContextForPath(location.pathname);
+  const themeScope = themeScopeForPath(location.pathname, selectedSport);
 
   function selectSport(sport: SelectedSport) {
     if (!sportContext?.switchable) return;
@@ -121,7 +146,10 @@ export function AppShell() {
   }
 
   return (
-    <div className={`app-shell${isGame ? " app-shell--game" : ""}${isBackRoom ? " app-shell--back-room" : ""}${isFootball ? " app-shell--football-room" : ""}${footballTeamClass}`}>
+    <div
+      className={`app-shell${isGame ? " app-shell--game" : ""}${isBackRoom ? " app-shell--back-room" : ""}${isFootball ? " app-shell--football-room" : ""}`}
+      data-hq-theme={themeScope}
+    >
       <RouteScrollManager />
 
       {isFootballGame ? (
@@ -185,7 +213,7 @@ export function AppShell() {
         </main>
       </BrandedPullToRefresh>
 
-      {isBackRoom ? null : <BottomNavigation footballTeam={isFootball ? footballTeam : null} />}
+      {isBackRoom ? null : <BottomNavigation themeScope={themeScope} />}
     </div>
   );
 }
