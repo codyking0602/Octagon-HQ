@@ -16,11 +16,13 @@ import { useProfilePreferences } from "../profile/ProfilePreferencesProvider";
 import { FighterPhoto } from "../rankings/FighterPhoto";
 import { allTime } from "../rankings/rankingModel";
 import { WhatsNewPreview } from "../whats-new/WhatsNewPreview";
+import { useWhatsNew } from "../whats-new/WhatsNewProvider";
 import { dailyRankingSpotlight } from "./homeSpotlightModel";
 import { RankingSpotlightCard } from "./RankingSpotlightCard";
 import { ShanesWatchlistCard } from "./ShanesWatchlistCard";
+import { buildUpNextAction } from "./upNextModel";
 import {
-  buildYourHqNextAction,
+  buildDirectChallengeAction,
   meaningfulOpenChallenges,
 } from "./yourHqModel";
 
@@ -43,6 +45,7 @@ export default function HomePage() {
   const preferences = useProfilePreferences();
   const picks = usePicks();
   const challengeState = usePlayChallenges();
+  const whatsNew = useWhatsNew();
   const profileId = identity.profile?.id ?? "signed-out";
   const signedIn = Boolean(identity.profile?.id);
   const dailyRuntime = useTodayChallengeRuntime({ profileId, enabled: signedIn });
@@ -72,18 +75,36 @@ export default function HomePage() {
   const openChallenges = identity.profile
     ? meaningfulOpenChallenges(challengeState.challenges, identity.profile.id)
     : [];
-  const action = identity.profile
-    ? buildYourHqNextAction({
+  const currentEvent = picks.event;
+  const directChallengeAction = identity.profile
+    ? buildDirectChallengeAction({
         openChallenges,
         profiles: challengeState.profiles,
         profileId: identity.profile.id,
+      })
+    : null;
+  const upNextLoading = picks.loading || (
+    signedIn
+      && (
+        dailyLoading
+          || challengeState.loading
+          || whatsNew.status === "idle"
+          || whatsNew.status === "loading"
+      )
+  );
+  const upNext = upNextLoading
+    ? null
+    : buildUpNextAction({
+        signedIn,
+        picksEvent: currentEvent,
+        selections: picks.selections,
         playedToday,
         currentStreak,
         dailyChallengeTitle: dailyAdapter?.title,
         dailyChallengeRoute: dailyAdapter?.dailyRoute,
-      })
-    : null;
-  const currentEvent = picks.event;
+        challengeAction: directChallengeAction,
+        whatsNewItems: whatsNew.activeItems,
+      });
   const currentMainEvent = mainEvent(currentEvent);
   const picksProgress = pickProgress(currentEvent, picks.selections);
   const picksPercent = picksProgress.total
@@ -105,15 +126,29 @@ export default function HomePage() {
         data-home-section="up-next"
         aria-label="Up Next"
       >
-        {identity.profile && action ? (
-          <div className="hq-next-up">
-            <div className="hq-next-up__copy">
-              <small>UP NEXT</small>
-              <strong>{action.title}</strong>
-              <p>{action.description}</p>
-            </div>
-            <Link className="primary-action" to={action.to}>{action.label}</Link>
+        {upNextLoading ? (
+          <div className="up-next-hero up-next-hero--loading" aria-label="Loading Up Next">
+            <span />
+            <span />
+            <span />
           </div>
+        ) : upNext ? (
+          <article className="up-next-hero" data-up-next-kind={upNext.kind}>
+            <div className="up-next-hero__topline">
+              <span>UP NEXT</span>
+              <small>{upNext.kicker}</small>
+            </div>
+            <div className="up-next-hero__copy">
+              <h2>{upNext.title}</h2>
+              <p>{upNext.description}</p>
+              {upNext.startsAt ? (
+                <time dateTime={upNext.startsAt}>{eventDate(upNext.startsAt)}</time>
+              ) : null}
+            </div>
+            <Link className="up-next-hero__action" to={upNext.to}>
+              {upNext.label}<span aria-hidden="true">→</span>
+            </Link>
+          </article>
         ) : null}
       </section>
 
