@@ -122,7 +122,7 @@ export function MemberAvatarEditor({
       const photo = exportAvatar(crop);
       setStatus("Saving profile photo…");
       await onSave(photo);
-      setStatus("Profile photo saved across Octagon HQ.");
+      setStatus("Profile photo saved across The HQ.");
       closeCrop();
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "That photo could not be saved.");
@@ -145,12 +145,12 @@ export function MemberAvatarEditor({
   return (
     <section className="member-avatar-editor" aria-labelledby="member-avatar-title">
       <div className="member-avatar-editor__preview">
-        {photoData ? <img src={photoData} alt="Your current Octagon HQ avatar" /> : <span>{initials}</span>}
+        {photoData ? <img src={photoData} alt="Your current The HQ avatar" /> : <span>{initials}</span>}
       </div>
       <div className="member-avatar-editor__copy">
-        <span className="eyebrow">YOUR AVATAR</span>
-        <h2 id="member-avatar-title">Use any photo you want</h2>
-        <p>Your personal avatar is separate from your favorite fighter and appears across member profiles.</p>
+        <span className="eyebrow">PROFILE SETTINGS</span>
+        <h2 id="member-avatar-title">Profile photo</h2>
+        <p>Your avatar appears across The HQ and stays synced with your existing profile.</p>
         <div className="member-avatar-editor__actions">
           <button type="button" onClick={() => inputRef.current?.click()} disabled={disabled || saving}>
             {photoData ? "CHANGE PHOTO" : "UPLOAD PHOTO"}
@@ -177,7 +177,7 @@ export function MemberAvatarEditor({
             <div>
               <p className="eyebrow">PROFILE PHOTO</p>
               <h2 id="member-crop-title">Fit your avatar</h2>
-              <p>The circle shows exactly how the photo will appear across Octagon HQ.</p>
+              <p>The circle shows exactly how the photo will appear across The HQ.</p>
             </div>
             <div className="member-avatar-crop-viewport">
               <img

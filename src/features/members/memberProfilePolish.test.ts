@@ -9,6 +9,8 @@ const directoryPage = source("src/features/members/MemberDirectoryPage.tsx");
 const avatarEditor = source("src/features/members/MemberAvatarEditor.tsx");
 const identityControl = source("src/features/identity/IdentityControl.tsx");
 const homePage = source("src/features/home/HomePage.tsx");
+const router = source("src/app/router.tsx");
+const providers = source("src/app/providers.tsx");
 const mainEntry = source("src/main.tsx");
 const compactStyles = source("src/styles/member-profile-compact.css");
 const migration = readFileSync(
@@ -35,10 +37,12 @@ const member: MemberProfileSummary = {
 };
 
 describe("Member Profile polish contracts", () => {
-  it("keeps the personal avatar separate from the favorite fighter everywhere the profile is presented", () => {
+  it("keeps the personal avatar while the universal Profile omits favorite sections", () => {
     expect(profilePage).toContain("avatarPhotoData");
-    expect(profilePage).toContain("member-profile-favorite-card");
     expect(profilePage).toContain("MemberAvatarEditor");
+    expect(profilePage).not.toContain("member-profile-favorite-card");
+    expect(profilePage).not.toContain("EDIT FAVORITE FIGHTER");
+    expect(profilePage).not.toContain("FAVORITE FIGHTER");
     expect(directoryPage).toContain("member.avatarPhotoData");
     expect(directoryPage).toContain("FAVORITE FIGHTER");
     expect(identityControl).toContain("preferences.avatarPhotoData");
@@ -54,19 +58,32 @@ describe("Member Profile polish contracts", () => {
     expect(profilePage).toContain("onSave={preferences.setAvatarPhoto}");
   });
 
-  it("keeps Find the Leader, UFC Picks, achievements, recent activity, and challenges as distinct profile sections", () => {
+  it("keeps daily history, both Picks sports, achievements, activity, and challenges distinct", () => {
     expect(profilePage).toContain('id="member-find-leader-title">Find the Leader');
-    expect(profilePage).toContain('id="member-picks-title">Current season');
-    expect(profilePage).toContain('id="member-achievements-title">Octagon HQ résumé');
+    expect(profilePage).toContain('id="member-ufc-picks-title">Current season');
+    expect(profilePage).toContain('id="member-football-picks-title">Current season');
+    expect(profilePage).toContain('id="member-achievements-title">The HQ résumé');
     expect(profilePage).toContain('id="member-activity-title">Latest results');
-    expect(profilePage).toContain("CHALLENGE ACTIVITY");
+    expect(profilePage).toContain("CHALLENGE HISTORY");
     expect(profilePage).not.toContain("<span>PICKS EVENTS</span>");
   });
 
-  it("loads the safe profile projection for the signed-in member so Picks activity can join provider results", () => {
-    expect(profilePage).toContain("setLoading(!isOwnProfile)");
-    expect(profilePage).toContain("remoteMember?.recentActivity?.length");
-    expect(profilePage).toContain("fallbackOwnActivity");
+  it("composes the signed-in profile from canonical owners without a duplicate member query", () => {
+    expect(profilePage).toContain("if (isOwnProfile) {");
+    expect(profilePage).toContain("const ownRecentActivity = useMemo");
+    expect(profilePage).toContain("picks.history.events");
+    expect(profilePage).toContain("picks.footballHistory.events");
+    expect(profilePage).toContain("useTodayChallengeOverview");
+    expect(profilePage).toContain("picks.footballSummary");
+  });
+
+  it("keeps the existing profile route and single app-level provider ownership", () => {
+    expect(router).toContain('const MemberProfilePage = lazy(() => import("../features/members/MemberProfilePage"))');
+    expect(router).toContain('{ path: "members/:memberName", element: <MemberProfilePage /> }');
+    expect(providers.match(/<IdentityProvider>/g)).toHaveLength(1);
+    expect(providers.match(/<ProfilePreferencesProvider>/g)).toHaveLength(1);
+    expect(providers.match(/<PicksProvider includeFootballSummary>/g)).toHaveLength(1);
+    expect(providers.match(/<ChallengeProvider>/g)).toHaveLength(1);
   });
 
   it("keeps the full profile dense and removes duplicate empty-state bulk", () => {

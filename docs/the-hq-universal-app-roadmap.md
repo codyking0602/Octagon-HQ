@@ -1,6 +1,6 @@
 # The HQ Universal App Roadmap
 
-**Status:** Product architecture locked; Phase 0 audit complete; rollout PRs 2–11 complete through PR #820; PR 12 follows.  
+**Status:** Product architecture locked; Phase 0 audit complete; rollout PRs 2–12 complete through PR #821; PR 13 follows.  
 **Last updated:** September 1, 2026  
 **Canonical purpose:** Preserve the agreed multi-sport architecture for The HQ so implementation can continue across multiple chats without re-deciding settled product choices.
 
@@ -445,7 +445,8 @@ Use the following routing so the rollout does not get trapped between the limite
 - **PR 8 has one explicit execution exception:** Cody explicitly requested direct GitHub implementation and merge of PR 8 in that chat.
 - **PR 9 has one explicit execution exception:** Cody explicitly requested direct GitHub implementation and merge of PR 9 in that chat.
 - **PR 10 has one explicit execution exception:** Cody explicitly requested direct GitHub implementation and merge of PR 10 in that chat.
-- **PR 11 has one explicit execution exception:** Cody explicitly requested direct GitHub implementation and merge of PR 11 in this chat. This does not change the default Codex routing for PR 12+.
+- **PR 11 has one explicit execution exception:** Cody explicitly requested direct GitHub implementation and merge of PR 11 in that chat. This did not change the default Codex routing for later rollout PRs.
+- **PR 12 has one explicit execution exception:** Cody explicitly requested direct GitHub implementation and merge of PR 12 in this chat. This does not change the default Codex routing for PR 13+.
 - ChatGPT's GitHub tools remain useful for reading the repository, reviewing Codex diffs, checking PR state / CI, updating roadmap documentation, and merging verified PRs.
 - Narrow corrective follow-up PRs explicitly requested by Cody may be handled separately when they do not substitute for the next named roadmap implementation PR.
 
@@ -471,8 +472,8 @@ Use the following routing so the rollout does not get trapped between the limite
 | **9** | Today's Challenges + Your HQ | **COMPLETE — #818; base `42f47089f77715b2898e669aa724b22df5f49edc`; explicit ChatGPT execution exception** | **HIGH — reuse existing challenge / record data owners** |
 | **10** | UFC HQ Home block | **COMPLETE — #819; base `a2f812e5de4fbf222fe9580514dde2ba2af9bd73`; explicit ChatGPT execution exception** | **HIGH — preserve Ranking Spotlight + Shane's Contender Series** |
 | **11** | Football HQ Home block + What's New integration | **COMPLETE — #820; base `9afbfdfe11bddd20051ea6eaef5b996c30d310a4`; explicit ChatGPT execution exception** | **HIGH — preserve weekly picks + both Game of the Week owners** |
-| **12** | Universal Profile | **CODEX REQUIRED — NEXT** | Normal; do not reintroduce unused favorites |
-| **13** | Universal Notifications + onboarding cleanup | **CODEX REQUIRED** | **HIGH — deep links, delivery ownership, auth/profile creation** |
+| **12** | Universal Profile | **COMPLETE — #821; base `d4b13a3144220229ac17c1c5ad971a14bbb718c1`; explicit ChatGPT execution exception** | Normal; do not reintroduce unused favorites |
+| **13** | Universal Notifications + onboarding cleanup | **CODEX REQUIRED — NEXT** | **HIGH — deep links, delivery ownership, auth/profile creation** |
 | **14** | Brand migration + War Room / legacy cleanup | **CODEX REQUIRED** | **HIGH — deletion / regression risk; inventory first** |
 
 If PR 13 proves to cross genuinely separate canonical owners, split it into **13A Notifications** and **13B Onboarding**, with each one run as its own fresh Codex PR from then-current `main`. In that case the rollout becomes 15 PRs rather than forcing unrelated ownership into one diff.
@@ -567,7 +568,7 @@ Do not add a second sport context provider or duplicate theme initialization.
 
 ## Phase 3 — Universal Home
 
-**Status: PR 7 through PR 11 are complete through #820; PR 12 is next.**
+**Status: PR 7 through PR 11 are complete through #820. Universal Home is complete for this rollout phase.**
 
 Implement Home in the locked order:
 
@@ -606,9 +607,13 @@ PR #820 completes Football HQ without mounting the route-scoped Football Picks p
 
 ### Profile
 
+**Status: COMPLETE — PR #821.**
+
 - Convert visible framing to The HQ.
 - Show cross-sport records/history where data already exists.
 - Avoid adding favorite sections with no product use.
+
+PR #821 keeps `MemberProfilePage` as the existing profile surface and composes the signed-in profile from the already-mounted canonical owners: `IdentityProvider` for identity/name, `ProfilePreferencesProvider` for avatar/settings persistence, the existing Today’s Challenge overview path for Daily Streak, the single app-level `PicksProvider` / `PicksRepository` path for UFC and Football records/history, and `ChallengeProvider` for challenge history. The signed-in profile no longer makes a redundant self-read through the member-profile repository; remote member profiles continue using that existing repository. The existing `/members/:memberName` route, AppShell, provider mounting, and style initialization remain unchanged. Visible favorite fighter/team profile sections are not introduced, and stored favorite fields are left untouched.
 
 ### Notifications
 
@@ -679,7 +684,7 @@ Do not claim a merged change is live until the live deployment SHA is verified.
 
 # 13. Current Resume Point
 
-**Phase 0 is complete. PR 2 through PR 11 are complete through PR #820. PR 12 — Universal Profile is the next named rollout item.**
+**Phase 0 is complete. PR 2 through PR 12 are complete through PR #821. PR 13 — Universal Notifications + onboarding cleanup is the next named rollout item.**
 
 Current verified roadmap baseline:
 
@@ -696,11 +701,12 @@ Current verified roadmap baseline:
 - PR #815 — PR 8 Up Next priority hero — base `763a5ea69873f1869681022b2ad3a12de8d13362`; merge `42f47089f77715b2898e669aa724b22df5f49edc`.
 - PR #818 — PR 9 Today's Challenges + Your HQ — base `42f47089f77715b2898e669aa724b22df5f49edc`; merge `a2f812e5de4fbf222fe9580514dde2ba2af9bd73`.
 - PR #819 — PR 10 UFC HQ Home block — base `a2f812e5de4fbf222fe9580514dde2ba2af9bd73`; merge `9afbfdfe11bddd20051ea6eaef5b996c30d310a4`.
-- PR #820 — PR 11 Football HQ Home block + What's New integration — base `9afbfdfe11bddd20051ea6eaef5b996c30d310a4`; merge SHA to be backfilled on the next roadmap edit.
+- PR #820 — PR 11 Football HQ Home block + What's New integration — base `9afbfdfe11bddd20051ea6eaef5b996c30d310a4`; merge `d4b13a3144220229ac17c1c5ad971a14bbb718c1`.
+- PR #821 — PR 12 Universal Profile — base `d4b13a3144220229ac17c1c5ad971a14bbb718c1`; merge SHA to be backfilled on the next roadmap edit.
 
-PR 4 remains the one canonical shared selected-sport owner and persistence path. PR 5 consumes that state in the existing AppShell and BottomNavigation owners. PR 6 consumes those existing owners for contextual accent scoping while preserving the single `main.tsx` style initialization path and removing favorite-team app-wide shell theming rather than introducing another theme owner. PR #813 only corrects Football's existing contextual token to the locked navy. PR #814 keeps `src/features/home/HomePage.tsx` as the single Home composition owner and adds only the six locked section boundaries plus neutral universal Home presentation; it adds no provider, repository, alternate query path, route owner, or theme initialization. PR #815 keeps that same Home owner, adds a pure Up Next priority model, reuses the existing providers/runtime state, and adds no second query/provider/repository/theme/route owner. PR #818 keeps the same Home owner, adds the two independent daily challenge summaries, and extends the single app-level Picks owner to expose the existing Football summary through its canonical repository path. PR #819 keeps the same Home owner, consumes the existing UFC event/Picks history and calculated ranking/Shane owners, and adds only UFC-local presentation plus focused tests. PR #820 keeps the same Home owner and the same app-level Picks/repository owner, extending only its existing optional Football Home read model so the completed Football HQ block consumes canonical current-slate, pick, summary, history, standing, and published event-art assets without a second provider/query owner. The canonical What's New surface remains unchanged.
+PR 4 remains the one canonical shared selected-sport owner and persistence path. PR 5 consumes that state in the existing AppShell and BottomNavigation owners. PR 6 consumes those existing owners for contextual accent scoping while preserving the single `main.tsx` style initialization path and removing favorite-team app-wide shell theming rather than introducing another theme owner. PR #813 only corrects Football's existing contextual token to the locked navy. PR #814 keeps `src/features/home/HomePage.tsx` as the single Home composition owner and adds only the six locked section boundaries plus neutral universal Home presentation; it adds no provider, repository, alternate query path, route owner, or theme initialization. PR #815 keeps that same Home owner, adds a pure Up Next priority model, reuses the existing providers/runtime state, and adds no second query/provider/repository/theme/route owner. PR #818 keeps the same Home owner, adds the two independent daily challenge summaries, and extends the single app-level Picks owner to expose the existing Football summary through its canonical repository path. PR #819 keeps the same Home owner, consumes the existing UFC event/Picks history and calculated ranking/Shane owners, and adds only UFC-local presentation plus focused tests. PR #820 keeps the same Home owner and the same app-level Picks/repository owner, extending only its existing optional Football Home read model so the completed Football HQ block consumes canonical current-slate, pick, summary, history, standing, and published event-art assets without a second provider/query owner. The canonical What's New surface remains unchanged. PR #821 keeps the existing profile route/surface, identity, preferences, Picks, daily-streak, and challenge owners; it composes the signed-in Universal Profile from those owners and removes the redundant signed-in self query rather than introducing any second profile/provider/repository/query path.
 
-The next named rollout item is **PR 12 — Universal Profile**. Resolve fresh `main` before starting it and preserve the existing profile/identity owners rather than reintroducing unused favorite sections or a second profile data path.
+The next named rollout item is **PR 13 — Universal Notifications + onboarding cleanup**. Resolve fresh `main` before starting it. Do not begin PR 13 from the PR 12 branch or fold notification/onboarding work into PR 12.
 
 Do **not** restart card-by-card Home brainstorming unless Cody explicitly reopens it.
 
@@ -725,10 +731,23 @@ Do **not** re-debate:
 
 ## September 1, 2026
 
+### PR 12 Universal Profile
+
+- Cody explicitly requested direct GitHub execution and merge of PR 12 in this chat; this is the PR 12 execution exception. Default Codex routing resumes with PR 13.
+- PR #821 is the PR 12 implementation, based on `main` at `d4b13a3144220229ac17c1c5ad971a14bbb718c1`.
+- `src/features/members/MemberProfilePage.tsx` remains the existing profile surface and `/members/:memberName` in `src/app/router.tsx` remains the route owner. No second profile route or route owner is added.
+- Identity/name remains owned by the existing `IdentityProvider` / `IdentityControl`; avatar/settings persistence remains owned by `ProfilePreferencesProvider` and its existing repository.
+- Daily Streak is composed from the existing Today’s Challenge overview path. UFC and Football records/history are composed from the single existing app-level `PicksProvider` / canonical `PicksRepository` path. Challenge history remains owned by `ChallengeProvider`.
+- The signed-in Universal Profile no longer performs a redundant self-read through `MemberProfilesRepository`; remote member profiles preserve that existing repository path. This reduces duplicate reading rather than creating a fallback or second query owner.
+- Visible profile framing is universal The HQ. Existing avatar controls remain functional. Favorite fighter/team profile sections are not introduced; stored preference fields remain untouched.
+- No provider, profile repository, Picks repository, challenge repository, router owner, theme/style initialization, or authentication/profile persistence path is added.
+- PR 12 does not begin PR 13 Notifications/onboarding cleanup, PR 14 brand/legacy cleanup, Football Rankings/Intelligence, championships, standalone Home leaderboards, or new favorite systems.
+- PR 13 — Universal Notifications + onboarding cleanup is next.
+
 ### PR 11 Football HQ Home block + What's New integration
 
-- Cody explicitly requested direct GitHub execution and merge of PR 11 in this chat; this is a PR 11 execution exception and the default Codex routing resumes with PR 12.
-- PR #820 is the PR 11 implementation, based on `main` at `9afbfdfe11bddd20051ea6eaef5b996c30d310a4`.
+- Cody explicitly requested direct GitHub execution and merge of PR 11 in that chat; this is a PR 11 execution exception. Default Codex routing resumed until PR 12 was separately authorized for direct GitHub execution.
+- PR #820 is the PR 11 implementation, based on `main` at `9afbfdfe11bddd20051ea6eaef5b996c30d310a4` and merged as `d4b13a3144220229ac17c1c5ad971a14bbb718c1`.
 - `src/features/home/HomePage.tsx` remains the one Home composition owner and preserves the six locked PR 9/10 Home boundaries and order.
 - `src/app/providers.tsx` still mounts exactly one app-level `PicksProvider`. PR 11 extends that existing owner's already-enabled Football summary path into a read-only Home snapshot by using the same `PicksRepository.loadCurrentEvent`, `loadMyPicks`, `loadMySummary`, and `loadMyHistory` methods. No second Football provider, repository implementation, query client, persistence owner, or route owner is added.
 - `src/features/home/FootballHq.tsx` owns only Football HQ presentation/composition: This Week pick completion/status, the current user's Football season standing inline with that context, and the two featured weekly matchup cards.
@@ -736,7 +755,6 @@ Do **not** re-debate:
 - The canonical `WhatsNewPreview` / `WhatsNewProvider` remains the universal What's New owner and location. PR 11 does not create a Football-specific What's New feed or duplicate provider.
 - Football navy `#1F4E79` presentation is scoped to the Football HQ block; the universal Home shell remains neutral and selector-free.
 - PR 11 adds no Football Rankings or Football Intelligence surface and does not begin PR 12 Universal Profile.
-- PR 12 — Universal Profile is next.
 
 ### PR 10 UFC HQ Home block
 

@@ -32,12 +32,13 @@ const member: MemberProfileSummary = {
 afterEach(cleanup);
 
 describe("Member profile polish", () => {
-  it("keeps a personal avatar separate from the favorite fighter across profile surfaces", () => {
+  it("keeps the personal avatar while the universal profile omits favorite sections", () => {
     expect(directorySource).toContain("member.avatarPhotoData");
-    expect(directorySource).toContain("FAVORITE FIGHTER");
     expect(profileSource).toContain("MemberAvatarEditor");
     expect(profileSource).toContain("preferences.avatarPhotoData");
-    expect(profileSource).toContain("EDIT FAVORITE FIGHTER");
+    expect(profileSource).not.toContain("EDIT FAVORITE FIGHTER");
+    expect(profileSource).not.toContain("member-profile-favorite-card");
+    expect(profileSource).not.toContain("FAVORITE FIGHTER");
   });
 
   it("lets the profile owner replace or remove a custom avatar", async () => {
@@ -52,7 +53,7 @@ describe("Member profile polish", () => {
       />,
     );
 
-    expect(screen.getByRole("img", { name: "Your current Octagon HQ avatar" })).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "Your current The HQ avatar" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "CHANGE PHOTO" })).toBeEnabled();
     fireEvent.click(screen.getByRole("button", { name: "REMOVE" }));
     await waitFor(() => expect(save).toHaveBeenCalledWith(null));
