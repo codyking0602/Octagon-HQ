@@ -7,7 +7,7 @@ import {
   pickProgress,
   pickRecord,
 } from "../picks/picksModel";
-import { PicksProvider, usePicks } from "../picks/PicksProvider";
+import { usePicks } from "../picks/PicksProvider";
 import type {
   TodayChallengeLeaderboard,
   TodayChallengeProjection,
@@ -121,23 +121,6 @@ function TodayChallengeCard({
   );
 }
 
-function FootballPicksRecordStat() {
-  const footballPicks = usePicks();
-  const season = footballPicks.event?.season ?? new Date().getFullYear();
-
-  return (
-    <article className={`hq-stat${footballPicks.error ? " is-unavailable" : ""}`}>
-      <strong>{footballPicks.loading ? "…" : footballPicks.error ? "—" : pickRecord(footballPicks.summary)}</strong>
-      <span>Football Picks record</span>
-      <small>
-        {footballPicks.error
-          ? "UNAVAILABLE"
-          : `${season} SEASON${footballPicks.summary.pending ? ` · ${footballPicks.summary.pending} PENDING` : ""}`}
-      </small>
-    </article>
-  );
-}
-
 export default function HomePage() {
   const identity = useIdentity();
   const picks = usePicks();
@@ -181,6 +164,7 @@ export default function HomePage() {
     ? meaningfulOpenChallenges(challengeState.challenges, identity.profile.id)
     : [];
   const currentEvent = picks.event;
+  const recordSeason = currentEvent?.season ?? new Date().getFullYear();
   const directChallengeAction = identity.profile
     ? buildDirectChallengeAction({
         openChallenges,
@@ -324,29 +308,33 @@ export default function HomePage() {
               <button className="primary-action" type="button" onClick={identity.openDialog}>SIGN IN TO YOUR HQ</button>
             </div>
           ) : (
-            <>
-              <div className="hq-card__grid">
-                <article className={`hq-stat${ufcDailyError ? " is-unavailable" : ""}`}>
-                  <strong>{ufcDailyLoading ? "…" : ufcDailyError ? "—" : currentStreak}</strong>
-                  <span>Daily streak</span>
-                  <small>{ufcDailyError ? "UNAVAILABLE" : "UFC TODAY’S CHALLENGE"}</small>
-                </article>
+            <div className="hq-card__grid">
+              <article className={`hq-stat${ufcDailyError ? " is-unavailable" : ""}`}>
+                <strong>{ufcDailyLoading ? "…" : ufcDailyError ? "—" : currentStreak}</strong>
+                <span>Daily streak</span>
+                <small>{ufcDailyError ? "UNAVAILABLE" : "UFC TODAY’S CHALLENGE"}</small>
+              </article>
 
-                <article className={`hq-stat${picks.error ? " is-unavailable" : ""}`}>
-                  <strong>{picks.loading ? "…" : picks.error ? "—" : pickRecord(picks.summary)}</strong>
-                  <span>UFC Picks record</span>
-                  <small>
-                    {picks.error
-                      ? "UNAVAILABLE"
-                      : `${currentEvent?.season ?? new Date().getFullYear()} SEASON${picks.summary.pending ? ` · ${picks.summary.pending} PENDING` : ""}`}
-                  </small>
-                </article>
+              <article className={`hq-stat${picks.error ? " is-unavailable" : ""}`}>
+                <strong>{picks.loading ? "…" : picks.error ? "—" : pickRecord(picks.summary)}</strong>
+                <span>UFC Picks record</span>
+                <small>
+                  {picks.error
+                    ? "UNAVAILABLE"
+                    : `${recordSeason} SEASON${picks.summary.pending ? ` · ${picks.summary.pending} PENDING` : ""}`}
+                </small>
+              </article>
 
-                <PicksProvider sport="football">
-                  <FootballPicksRecordStat />
-                </PicksProvider>
-              </div>
-            </>
+              <article className={`hq-stat${picks.footballSummaryError ? " is-unavailable" : ""}`}>
+                <strong>{picks.loading ? "…" : picks.footballSummaryError ? "—" : pickRecord(picks.footballSummary)}</strong>
+                <span>Football Picks record</span>
+                <small>
+                  {picks.footballSummaryError
+                    ? "UNAVAILABLE"
+                    : `${recordSeason} SEASON${picks.footballSummary.pending ? ` · ${picks.footballSummary.pending} PENDING` : ""}`}
+                </small>
+              </article>
+            </div>
           )}
         </section>
       </section>
