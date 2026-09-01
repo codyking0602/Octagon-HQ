@@ -272,7 +272,7 @@ describe("Your HQ", () => {
     expect(screen.getByRole("link", { name: "Open Georges St-Pierre profile" })).toHaveAttribute("href", "/fighters/georges-st-pierre");
     expect(within(screen.getByText("Open challenges").closest("article")!).getByText("2")).toBeInTheDocument();
     expect(screen.getByText("1 pick still open")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "FINISH UFC PICKS→" })).toHaveAttribute("href", "/picks");
+    expect(screen.getByRole("link", { name: "FINISH UFC PICKS" })).toHaveAttribute("href", "/picks");
 
     fireEvent.change(screen.getByRole("combobox", { name: "Favorite fighter" }), {
       target: { value: "jon-jones" },
