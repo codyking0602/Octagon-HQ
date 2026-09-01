@@ -36,9 +36,6 @@
 .football-matchup-breakdown-videos a { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px; border: 1px solid #303436; border-radius: 10px; background: #17191a; color: #f1f1ef; text-decoration: none; }
 .football-matchup-breakdown-videos a span { font-size: .72rem; font-weight: 850; }
 .football-matchup-breakdown-videos a strong { flex: 0 0 auto; color: #e9aa7e; font-size: .54rem; letter-spacing: .08em; }
-.football-matchup-breakdown-read { background: linear-gradient(180deg, #17191a 0%, #111314 100%); }
-.football-matchup-breakdown-read > p:first-of-type { color: #f0f0ed; font-size: .87rem; font-weight: 800; }
-.football-matchup-breakdown-read > strong { display: block; margin-top: 14px; color: #fff; font-size: 1.28rem; font-weight: 950; letter-spacing: -.025em; text-transform: uppercase; }
 @media (min-width: 700px) {
   .football-matchup-breakdown-backdrop { align-items: center; padding: 24px; }
   .football-matchup-breakdown-sheet { max-height: 90vh; border-bottom: 1px solid #34383b; border-radius: 22px; }

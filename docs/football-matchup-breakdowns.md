@@ -6,7 +6,7 @@ Use it for both college football and NFL featured Games of the Week. The runtime
 
 ## Product intent
 
-A Matchup Breakdown should feel like a concise 2K-style scouting report, not a long article, stat dump, or generic AI preview.
+A Matchup Breakdown should feel like a concise 2K-style scouting report, not a long article, stat dump, generic AI preview, or game-pick column.
 
 The goal is to answer, quickly:
 
@@ -15,7 +15,8 @@ The goal is to answer, quickly:
 - How does each team actually win?
 - Which players matter specifically in this matchup?
 - Which offense has the edge against the defense it will actually face?
-- What is The HQ's final read?
+
+Matchup Breakdowns do **not** include an overall The HQ lean, projected winner, projected score, or prediction section.
 
 ## Locked structure
 
@@ -27,7 +28,8 @@ Every authored breakdown uses this order:
 4. **Players to Watch**
 5. **The HQ Edge**
 6. **Optional Watch links**
-7. **The HQ Read + prediction**
+
+The breakdown ends after The HQ Edge, or after Watch when video links are present. Do not add a final read, verdict, winner, score prediction, betting pick, or equivalent closing section.
 
 Keep the page substantial enough to reward opening it, but short enough to read comfortably on a phone.
 
@@ -70,13 +72,7 @@ The HQ Edge contains exactly two unit comparisons:
 
 Do not add independent QB, run game, pass catchers, offensive line, front seven, secondary, coaching, or other category edges.
 
-The point is to compare the units that actually face one another.
-
-## The HQ Read
-
-End with a direct opinion.
-
-State the decisive matchup or condition, explain why The HQ leans one way, and finish with a projected score. Avoid fake certainty; if the matchup is close, say why it is close.
+The point is to compare the units that actually face one another. The HQ Edge is the final written analysis section; it is not followed by a game prediction.
 
 ## Research standard
 

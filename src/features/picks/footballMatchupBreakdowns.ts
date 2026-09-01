@@ -43,8 +43,6 @@ export interface FootballMatchupBreakdown {
   pathsToWin: [FootballMatchupPathToWin, FootballMatchupPathToWin];
   playersToWatch: [FootballMatchupPlayers, FootballMatchupPlayers];
   unitEdges: [FootballMatchupUnitEdge, FootballMatchupUnitEdge];
-  hqRead: string[];
-  prediction: string;
   videos?: PickWatchMoment[];
 }
 
@@ -118,11 +116,6 @@ export const FOOTBALL_MATCHUP_BREAKDOWNS: FootballMatchupBreakdown[] = [
         body: "A first-year starting quarterback and inexperienced offensive line facing a defense designed to create pressure is the larger matchup advantage in this game.",
       },
     ],
-    hqRead: [
-      "Clemson is dangerous enough outside to keep LSU honest, but the game is likely decided up front.",
-      "If Clemson protects Vizzina, this gets interesting. LSU’s offense may have some Week 1 rough edges, but its defense should give Kiffin enough time to settle in.",
-    ],
-    prediction: "LSU 27, Clemson 17",
   },
   {
     id: "2026-louisville-ole-miss",
@@ -193,11 +186,6 @@ export const FOOTBALL_MATCHUP_BREAKDOWNS: FootballMatchupBreakdown[] = [
         body: "Brown gives Louisville a real weapon, but the quarterback uncertainty matters. Until Kienholz proves he can punish Ole Miss for loading up against the run, the Rebels own the more trustworthy side of this matchup.",
       },
     ],
-    hqRead: [
-      "Louisville is good enough defensively — and Brown is explosive enough — to keep this from becoming comfortable for Ole Miss.",
-      "The separator is certainty. Ole Miss enters with a quarterback and running back who already carried a playoff-level offense, while Louisville is asking Kienholz to prove it immediately against an SEC defense. On a neutral field, that keeps Louisville live, but Ole Miss has more ways to win.",
-    ],
-    prediction: "Ole Miss 31, Louisville 24",
   },
 ];
 
