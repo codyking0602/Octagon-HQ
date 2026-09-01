@@ -39,8 +39,8 @@ describe("War Room conversation core", () => {
     expect(sql).not.toContain("week_start");
   });
 
-  it("uses one provider and one RPC repository without storage or polling fallbacks", () => {
-    expect(providers).toContain("<WarRoomProvider>");
+  it("keeps the retired implementation source single-owned without mounting it at runtime", () => {
+    expect(providers).not.toContain("WarRoomProvider");
     expect(repository).toContain('client.rpc("get_my_war_room_access"');
     expect(repository).toContain('client.rpc("get_war_room_snapshot"');
     expect(repository).toContain('client.rpc("post_war_room_message"');
@@ -49,9 +49,9 @@ describe("War Room conversation core", () => {
     expect(provider).not.toContain("setInterval");
   });
 
-  it("keeps the conversation route guarded after removing its navigation entry", () => {
-    expect(router).toContain('path: "war-room"');
-    expect(router).toContain('path: "war-room/join"');
+  it("retires conversation routes after removing the navigation entry", () => {
+    expect(router).not.toContain('path: "war-room"');
+    expect(router).not.toContain('path: "war-room/join"');
     expect(bottomNavigation).not.toContain('label: "War Room"');
     expect(page).toContain('return <Navigate to="/" replace />');
     expect(page).toContain("warRoom.status !== \"eligible\"");
