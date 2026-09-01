@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const home = readFileSync("src/features/home/HomePage.tsx", "utf8");
+const footballHome = readFileSync("src/features/home/FootballHq.tsx", "utf8");
 const providers = readFileSync("src/app/providers.tsx", "utf8");
 const main = readFileSync("src/main.tsx", "utf8");
 
@@ -30,14 +31,15 @@ describe("retired Up Next ownership", () => {
     expect(main).not.toContain('styles/home-up-next.css');
   });
 
-  it("starts Home with Your HQ and keeps the approved five-section order", () => {
-    const sections = [...home.matchAll(/data-home-section="([^"]+)"/g)].map((match) => match[1]);
-    expect(sections).toEqual([
+  it("starts Home with Your HQ and keeps the approved five-section order across canonical owners", () => {
+    const homeOwnedSections = [...home.matchAll(/data-home-section="([^"]+)"/g)].map((match) => match[1]);
+    expect(homeOwnedSections).toEqual([
       "your-hq",
       "whats-new",
       "todays-challenges",
       "ufc-hq",
-      "football-hq",
     ]);
+    expect(home.indexOf('data-home-section="ufc-hq"')).toBeLessThan(home.indexOf("<FootballHq"));
+    expect(footballHome).toContain('data-home-section="football-hq"');
   });
 });
