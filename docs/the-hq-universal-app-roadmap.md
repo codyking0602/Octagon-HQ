@@ -1,7 +1,7 @@
 # The HQ Universal App Roadmap
 
-**Status:** Product architecture locked; Phase 0 current-state audit complete; runtime implementation not yet started.  
-**Last updated:** August 31, 2026  
+**Status:** Product architecture locked; Phase 0 audit complete; rollout PRs 2–3 complete; next roadmap item is PR 4.  
+**Last updated:** September 1, 2026  
 **Canonical purpose:** Preserve the agreed multi-sport architecture for The HQ so implementation can continue across multiple chats without re-deciding settled product choices.
 
 > **Cross-chat rule:** Read this document before making changes related to the universal app shell, Home, sport switching, branding, navigation, profile, notifications, onboarding, or sport theming. Treat sections marked **LOCKED** as authoritative unless Cody explicitly reopens a decision.
@@ -17,7 +17,7 @@ At launch of this architecture:
 - UFC and Football are the active sports.
 - **Home is universal** and belongs to The HQ, not to a single sport.
 - **Picks and Play are sport-specific** and can switch between UFC and Football.
-- **Ratings remains UFC-only initially** because Football Ratings does not exist yet.
+- **Rankings remains UFC-only initially** because Football Rankings does not exist yet.
 - **Intelligence remains UFC-only initially** because Football Intelligence does not exist yet.
 - Do not expose fake, empty, duplicate, or “coming soon” sport destinations merely for symmetry.
 
@@ -32,7 +32,7 @@ The bottom navigation order is:
 1. **Home**
 2. **Picks**
 3. **Play**
-4. **Ratings**
+4. **Rankings**
 
 ### Rules
 
@@ -40,7 +40,7 @@ The bottom navigation order is:
 - Do not add a fifth tab simply to replace War Room.
 - Home is universal and has no sport selector.
 - Picks and Play support UFC / Football switching.
-- Ratings is UFC-only until a real Football Ratings product exists.
+- Rankings is UFC-only until a real Football Rankings product exists.
 
 ---
 
@@ -50,13 +50,23 @@ The top header remains a universal app shell.
 
 ### Persistent header contents
 
-- New **HQ logo**
-- **THE HQ** branding
+- The approved **The HQ symbol**
+- **THE HQ** wordmark / branding
 - **Notifications**
 - **Intelligence**
 - **Profile photo / profile access**
 
 These controls remain visible rather than being removed to simplify the multi-sport shell.
+
+### Logo system — LOCKED
+
+The umbrella mark is **symbol-first, not letter-first**.
+
+- Do not use `HQ`, an H/Q monogram, or other letters inside the logo mark.
+- The current approved direction is a **white app tile with a black abstract hub / target-style symbol**.
+- The Home Screen / install icon, favicon/app icon, and universal brand mark should derive from the same canonical symbol asset rather than competing logo paths.
+- In the header, the symbol is paired with the visible **THE HQ** wordmark; the symbol itself does not need to spell the brand name.
+- The previously approved black-and-gold interlocked H/Q asset is superseded and should not drive future brand work.
 
 ### Sport context row
 
@@ -66,7 +76,7 @@ On sport-specific tabs, a second row clearly identifies the current sport and se
 - `FOOTBALL PICKS ▼`
 - `UFC PLAY ▼`
 - `FOOTBALL PLAY ▼`
-- `UFC RATINGS`
+- `UFC RANKINGS`
 
 The sport/section context should be obvious without relying only on color.
 
@@ -97,9 +107,9 @@ Likewise, switching back to UFC anywhere updates the shared sport context.
 
 The app should remember the user's most recent sport selection between sessions.
 
-### Ratings
+### Rankings
 
-Ratings does **not** show a Football option until Football Ratings is a real product.
+Rankings does **not** show a Football option until Football Rankings is a real product.
 
 ### Intelligence
 
@@ -117,47 +127,57 @@ When Football Intelligence eventually exists, Intelligence can become sport-awar
 
 ## 5. Color / Visual Identity — LOCKED
 
-The app keeps one shared design system while giving each sport an immediately recognizable visual identity.
+The app keeps one shared design system while giving sport-specific surfaces an immediately recognizable identity.
 
 ### Universal The HQ
 
+The umbrella shell is **neutral and dark-first**.
+
 Use the shared HQ foundation:
 
-- Black
-- Charcoal
+- Near-black
+- Charcoal / graphite
 - White
-- Gold
+- Soft gray
+- Silver / neutral metallic detail where useful
 
 This owns universal surfaces such as Home, profile, settings, navigation, and common system components.
+
+**Gold / yellow is retired from the universal The HQ shell.** Do not treat gold as the umbrella brand accent going forward.
+
+The primary app experience should remain dark even though the approved app icon uses a white tile.
 
 ### UFC
 
 - Black / charcoal foundation
-- **Red** as the dominant sport accent
+- **Red** as the dominant UFC contextual accent
 
 ### Football
 
-- Black / charcoal foundation
-- **Blue** as the dominant sport accent
-- Direction: deep navy / bright or powder blue family
+- The universal shell remains neutral.
+- Football does **not** require one permanent app-wide blue identity.
+- Team / matchup / football context may supply the accent color when the content naturally has one.
+- General Football surfaces may remain neutral rather than inventing color merely to differentiate them.
 
 ### Team colors
 
-Team colors can still appear heavily in matchup art, Game of the Week graphics, helmets, and team-specific content.
+Team colors can appear heavily in matchup art, Game of the Week graphics, helmets, team-specific content, and other surfaces where that team is the actual context.
 
-They do **not** drive the app-wide Football theme.
+They do **not** create an automatic app-wide theme based on the user's favorite team.
 
 ### Explicitly rejected
 
+- No gold/yellow universal HQ theme.
+- No letter-based H/Q logo mark.
 - No automatic Football theme based on a user's favorite team.
 - No favorite-team requirement solely to operate the UI theme.
 - No separate component/design system for each sport.
 
-The desired mental map is:
+The desired mental map is now:
 
-- **Gold = The HQ**
-- **Red = UFC**
-- **Blue = Football**
+- **Neutral = The HQ shell**
+- **Red = UFC context**
+- **Football / team color = contextual Football content when appropriate**
 
 ---
 
@@ -360,9 +380,9 @@ Notifications become one universal inbox.
 ### Rules
 
 - UFC and Football notifications coexist in one feed.
-- Sport should be immediately identifiable, including the sport accent system where appropriate:
+- Sport should be immediately identifiable through text/context and the contextual accent system where appropriate:
   - UFC = red
-  - Football = blue
+  - Football = relevant football/team accent when natural; otherwise neutral
 - Tapping a notification should deep-link directly into the correct sport and relevant destination.
 
 Do not create separate notification centers per sport.
@@ -390,7 +410,7 @@ This keeps “how am I doing?” attached to the activity being measured.
 
 Do not expand the scope by building these merely to complete symmetry:
 
-- Football Ratings
+- Football Rankings
 - Football Intelligence
 - Personalized favorite-team UI themes
 - Required favorite fighter/team onboarding
@@ -417,7 +437,8 @@ Use the following routing so the rollout does not get trapped between the limite
 
 - **PR 1 may be handled in ChatGPT with the GitHub tools.** It is an audit / documentation PR and should not change runtime behavior.
 - **PRs 2–14 are CODEX CLOUD REQUIRED.** They change runtime code and need a real repository checkout plus focused tests, typecheck, the full test suite, and the production build on the exact final head.
-- ChatGPT's GitHub tools remain useful for reading the repository, reviewing Codex diffs, checking PR state / CI, updating roadmap documentation, and merging verified PRs. Do not use the limited GitHub file-edit path as a substitute for Codex on these implementation PRs.
+- ChatGPT's GitHub tools remain useful for reading the repository, reviewing Codex diffs, checking PR state / CI, updating roadmap documentation, and merging verified PRs. Do not use the limited GitHub file-edit path as a substitute for Codex on the named roadmap implementation PRs.
+- Narrow corrective follow-up PRs explicitly requested by Cody may be handled separately when they do not substitute for the next named roadmap implementation PR.
 
 **Codex fresh-PR rule:**
 
@@ -430,12 +451,12 @@ Use the following routing so the rollout does not get trapped between the limite
 
 | PR | Scope | Execution | Review sensitivity |
 | --- | --- | --- | --- |
-| **1** | Current-state audit + owner inventory | **CHATGPT / GITHUB OK** | High breadth; no runtime edits |
-| **2** | Universal THE HQ header | **CODEX REQUIRED** | Normal |
-| **3** | Bottom navigation: Home / Picks / Play / Ratings; remove War Room nav | **CODEX REQUIRED** | Normal |
-| **4** | Canonical shared UFC / Football sport context + persistence | **CODEX REQUIRED** | **HIGH — ownership / state duplication risk** |
-| **5** | Picks / Play sport-switching UI + sport/section context row | **CODEX REQUIRED** | **HIGH — preserve Ratings / Intelligence UFC-only behavior** |
-| **6** | Universal gold / UFC red / Football blue theme-token path | **CODEX REQUIRED** | Normal; do not add a second theme owner |
+| **1** | Current-state audit + owner inventory | **COMPLETE — #801** | High breadth; no runtime edits |
+| **2** | Universal THE HQ header | **COMPLETE — #802** | Normal |
+| **3** | Bottom navigation: Home / Picks / Play / Rankings; remove War Room nav | **COMPLETE — #804, corrected by #805** | Normal |
+| **4** | Canonical shared UFC / Football sport context + persistence | **CODEX REQUIRED — NEXT** | **HIGH — ownership / state duplication risk** |
+| **5** | Picks / Play sport-switching UI + sport/section context row | **CODEX REQUIRED** | **HIGH — preserve Rankings / Intelligence UFC-only behavior** |
+| **6** | Neutral universal shell + contextual sport accent theme-token path | **CODEX REQUIRED** | Normal; do not add a second theme owner |
 | **7** | Universal Home foundation + locked section order | **CODEX REQUIRED** | **HIGH — compose existing owners, do not recreate logic** |
 | **8** | Up Next priority hero | **CODEX REQUIRED** | **HIGH — cross-product priority logic** |
 | **9** | Today's Challenges + Your HQ | **CODEX REQUIRED** | **HIGH — reuse existing challenge / record data owners** |
@@ -476,19 +497,22 @@ Confirmed before runtime implementation:
 
 ## Phase 1 — Universal Shell + Navigation
 
+**Status: PARTIALLY COMPLETE — PR 2 and PR 3 merged; sport/section context row remains PR 5.**
+
 Goal: establish The HQ shell without rebuilding feature contents.
 
-Likely narrow changes:
+Completed:
 
-- Introduce / update universal **THE HQ** header branding.
-- Preserve Notifications, Intelligence, and Profile in the header.
-- Change bottom navigation to:
-  - Home
-  - Picks
-  - Play
-  - Ratings
-- Remove War Room from navigation.
-- Add the sport/section context row on sport-specific surfaces.
+- Universal **THE HQ** header shell established in PR #802.
+- Notifications, Intelligence, and Profile preserved in the header.
+- Bottom navigation reduced to four tabs in PR #804.
+- War Room nav entry removed while runtime/provider/routes remained intact.
+- Visible fourth-tab label corrected back to **Rankings** in PR #805.
+
+Remaining in later roadmap scope:
+
+- Replace the superseded black-and-gold letter logo with the approved neutral symbol follow-up.
+- Add the sport/section context row on sport-specific surfaces in PR 5.
 
 Validate existing UFC flows before adding additional behavior.
 
@@ -504,10 +528,10 @@ Requirements:
 - Global selection across sport-specific tabs.
 - Persist last selected sport.
 - One theme-token path:
-  - universal HQ = gold foundation
-  - UFC = red accent
-  - Football = blue accent
-- Ratings remains UFC-only.
+  - universal HQ = neutral dark-first foundation
+  - UFC = red contextual accent
+  - Football = contextual football/team accent where appropriate, otherwise neutral
+- Rankings remains UFC-only.
 - Intelligence remains UFC-only.
 
 Do not add a second sport context provider or duplicate theme initialization.
@@ -577,7 +601,7 @@ This phase requires an explicit inventory before edits.
 
 ### Universal surfaces
 
-Move universal shell branding toward **The HQ**.
+Move universal shell branding toward **The HQ** using the locked neutral, symbol-first brand system.
 
 ### UFC-specific surfaces
 
@@ -588,6 +612,7 @@ Move universal shell branding toward **The HQ**.
 - Remove dead War Room navigation/runtime ownership only after dependents are verified.
 - Remove obsolete universal-UFC assumptions exposed by the new shell.
 - Do not remove working UFC feature identity just for naming consistency.
+- Do not reintroduce the superseded H/Q letter logo or universal gold theme.
 
 ---
 
@@ -615,14 +640,23 @@ Do not claim a merged change is live until the live deployment SHA is verified.
 
 # 13. Current Resume Point
 
-**Phase 0 audit is complete.**
+**Phase 0 is complete. PR 2 and PR 3 are merged.**
 
-The next rollout item is **PR 2 — Universal THE HQ header**. It must be implemented as a **fresh Codex Cloud PR from the then-current `main`** and must read both:
+Current verified roadmap baseline before this documentation update:
+
+- PR #802 — Universal THE HQ header — merge `49e3a2c07e1577679f4bef0886b16a96d0761c48`
+- PR #803 — approved H/Q logo + Home Screen icon corrective follow-up — merge `6cbf76f1fdddc3f4ac08c50a0fef6f0eeab49421` — **logo direction now superseded**
+- PR #804 — PR 3 bottom navigation — merge `688ef852452517b3bc4c8772b411dc7794b7ca6a`
+- PR #805 — PR 3 visible label correction back to Rankings — merge `3ca3a83bfe8df15d711f3ebf6afd57fe1b28cbb1`
+
+Before starting roadmap PR 4, complete the explicitly requested narrow neutral-logo corrective follow-up from then-current `main`. That follow-up is not PR 4 and must not introduce shared sport-context work.
+
+After that correction, the next named rollout item is **PR 4 — Canonical shared UFC / Football sport context + persistence**. It must be implemented as a **fresh Codex Cloud PR from the then-current `main`** and must read both:
 
 - `docs/the-hq-universal-app-roadmap.md`
 - `docs/the-hq-pr1-current-state-audit.md`
 
-PR 2 should change only the universal header scope; do not begin bottom-navigation, shared sport-context, Home, or theme-token work early.
+PR 4 should create the one canonical shared sport-context owner and persistence only. Do not begin PR 5 selector/context-row UI, PR 6 theme-token migration, Home work, profile, notifications, onboarding, or broad brand cleanup early.
 
 Do **not** restart card-by-card Home brainstorming unless Cody explicitly reopens it.
 
@@ -631,10 +665,12 @@ Do **not** re-debate:
 - Home being universal
 - Home card order
 - bottom-nav order
-- War Room removal
+- War Room nav removal
 - shared sport state for Picks / Play
-- Ratings and Intelligence being UFC-only for now
-- The HQ / UFC / Football color identities
+- Rankings and Intelligence being UFC-only for now
+- neutral dark-first The HQ shell
+- symbol-only The HQ mark and no letter logo
+- UFC red / contextual Football accent system
 - removal of required favorites onboarding
 - universal profile / notifications
 - inline standings rather than a standalone Home leaderboard
@@ -643,6 +679,34 @@ Do **not** re-debate:
 
 # 14. Decision Log
 
+## September 1, 2026
+
+### Brand direction superseded and re-locked
+
+Cody explicitly reopened the umbrella brand visual identity after seeing the black-and-gold H/Q logo in-app.
+
+New locked decisions:
+
+- The HQ umbrella logo is **symbol-only**; no letters inside the mark.
+- Current approved direction: **white app tile + black abstract hub / target-style symbol**.
+- Header lockup uses **symbol + THE HQ wordmark**.
+- Home Screen/install icon, favicon/app icon, and header brand mark should derive from the same canonical symbol asset.
+- The black-and-gold interlocked H/Q logo is superseded.
+- Gold/yellow is retired from the universal The HQ shell.
+- The universal shell is dark-first and neutral: near-black, charcoal/graphite, white, gray, restrained silver.
+- UFC supplies red contextual accent.
+- Football uses contextual football/team color where natural rather than one fixed app-wide blue identity.
+- Favorite-team-based automatic theming remains rejected.
+- PR 6 is therefore a **neutral universal shell + contextual sport accent** theme-token PR, not a gold/red/blue theme PR.
+
+### Rollout progress through PR 3
+
+- PR #802 completed the universal header shell; merge `49e3a2c07e1577679f4bef0886b16a96d0761c48`.
+- PR #803 corrected the header/Home Screen icon to the then-approved H/Q asset; merge `6cbf76f1fdddc3f4ac08c50a0fef6f0eeab49421`; that asset is now superseded by the new symbol-first decision.
+- PR #804 completed the four-tab bottom navigation and removed the War Room nav entry while preserving War Room runtime; merge `688ef852452517b3bc4c8772b411dc7794b7ca6a`.
+- PR #805 corrected the visible fourth-tab label back to Rankings without changing the canonical `/rankings` route; merge `3ca3a83bfe8df15d711f3ebf6afd57fe1b28cbb1`.
+- Next named roadmap item remains PR 4 after the narrow logo corrective follow-up.
+
 ## August 31, 2026
 
 Locked the first universal The HQ architecture after Football Picks reached rollout readiness.
@@ -650,13 +714,12 @@ Locked the first universal The HQ architecture after Football Picks reached roll
 Key decisions:
 
 - Universal Home
-- Four-tab nav: Home / Picks / Play / Ratings
-- War Room removed
+- Four-tab nav: Home / Picks / Play / Rankings
+- War Room removed from bottom navigation
 - Shared UFC / Football selector for Picks and Play
-- Ratings UFC-only initially
+- Rankings UFC-only initially
 - Intelligence UFC-only initially
 - Persistent THE HQ header with Notifications, Intelligence, and Profile
-- Universal gold identity, UFC red, Football blue
 - No favorite-based theme personalization
 - No required favorite onboarding
 - Home stack locked as Up Next / Today's Challenges / What's New / Your HQ / UFC HQ / Football HQ
@@ -664,7 +727,7 @@ Key decisions:
 - College and NFL Game of the Week preserved inside Football HQ
 - Standings stay inline with their relevant products
 - Profile and Notifications become universal
-- Tool routing locked: PR 1 may use ChatGPT GitHub tools; runtime implementation PRs 2–14 require fresh Codex Cloud PRs from current `main`, followed by exact-head review here
+- Tool routing locked: PR 1 may use ChatGPT GitHub tools; named runtime implementation PRs 2–14 require fresh Codex Cloud PRs from current `main`, followed by exact-head review here
 
 ### Phase 0 completion
 
