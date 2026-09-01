@@ -104,7 +104,7 @@ describe("PicksProvider cross-sport summary", () => {
     const loadMySummary = vi.fn(async (_season: number, sport = "mma") => sport === "football"
       ? { correct: 9, incorrect: 3, pending: 2, eventsEntered: 3, basePoints: 36, lockBonus: 4, totalPoints: 40 }
       : { correct: 12, incorrect: 8, pending: 1, eventsEntered: 4, basePoints: 48, lockBonus: 0, totalPoints: 48 });
-    const loadMyHistory = vi.fn(async (_season: number, sport = "mma") => sport === "football"
+    const loadMyHistory = vi.fn(async (_season: number | null, sport = "mma") => sport === "football"
       ? footballHistory
       : emptyPickHistory);
     const repository: PicksRepository = {
