@@ -9,6 +9,8 @@ const directoryPage = source("src/features/members/MemberDirectoryPage.tsx");
 const avatarEditor = source("src/features/members/MemberAvatarEditor.tsx");
 const identityControl = source("src/features/identity/IdentityControl.tsx");
 const homePage = source("src/features/home/HomePage.tsx");
+const router = source("src/app/router.tsx");
+const providers = source("src/app/providers.tsx");
 const mainEntry = source("src/main.tsx");
 const compactStyles = source("src/styles/member-profile-compact.css");
 const migration = readFileSync(
@@ -73,6 +75,15 @@ describe("Member Profile polish contracts", () => {
     expect(profilePage).toContain("picks.footballHistory.events");
     expect(profilePage).toContain("useTodayChallengeOverview");
     expect(profilePage).toContain("picks.footballSummary");
+  });
+
+  it("keeps the existing profile route and single app-level provider ownership", () => {
+    expect(router).toContain('const MemberProfilePage = lazy(() => import("../features/members/MemberProfilePage"))');
+    expect(router).toContain('{ path: "members/:memberName", element: <MemberProfilePage /> }');
+    expect(providers.match(/<IdentityProvider>/g)).toHaveLength(1);
+    expect(providers.match(/<ProfilePreferencesProvider>/g)).toHaveLength(1);
+    expect(providers.match(/<PicksProvider includeFootballSummary>/g)).toHaveLength(1);
+    expect(providers.match(/<ChallengeProvider>/g)).toHaveLength(1);
   });
 
   it("keeps the full profile dense and removes duplicate empty-state bulk", () => {
