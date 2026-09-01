@@ -21,6 +21,7 @@ const mocks = vi.hoisted(() => ({
     openDialog: vi.fn(),
   },
   picks: {
+    configured: true,
     event: null as PickEvent | null,
     selections: {} as Record<string, string>,
     loading: false,
@@ -36,6 +37,7 @@ const mocks = vi.hoisted(() => ({
     footballSummary: null as typeof emptySummary | null,
     footballSummaryLoading: false,
     footballSummaryError: "",
+    loadFootballSummary: vi.fn(async () => undefined),
     error: "",
   },
   challenges: {
@@ -213,6 +215,7 @@ describe("The HQ PR 9 Home composition", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.identity.profile = null;
+    mocks.picks.configured = true;
     mocks.picks.event = pickEvent;
     mocks.picks.selections = {};
     mocks.picks.loading = false;
@@ -254,6 +257,7 @@ describe("The HQ PR 9 Home composition", () => {
 
     expect(screen.getByTestId("today-challenge-ufc")).toHaveTextContent("UFC");
     expect(screen.getByTestId("today-challenge-football")).toHaveTextContent("FOOTBALL");
+    expect(mocks.picks.loadFootballSummary).not.toHaveBeenCalled();
   });
 
   it("renders independent canonical UFC and Football daily state/routes plus the three canonical Your HQ values", async () => {
@@ -326,6 +330,7 @@ describe("The HQ PR 9 Home composition", () => {
     }));
 
     await waitFor(() => {
+      expect(mocks.picks.loadFootballSummary).toHaveBeenCalledTimes(1);
       expect(within(screen.getByText("Daily streak").closest("article")!).getByText("2")).toBeInTheDocument();
     });
     expect(within(screen.getByText("UFC Picks record").closest("article")!).getByText("12-8")).toBeInTheDocument();
@@ -336,6 +341,7 @@ describe("The HQ PR 9 Home composition", () => {
 
   it("uses unavailable presentation instead of placeholder zeroes when canonical Your HQ data is not ready", () => {
     mocks.identity.profile = cody;
+    mocks.picks.configured = false;
     mocks.picks.error = "UFC summary unavailable";
     mocks.picks.footballSummary = null;
     mocks.picks.footballSummaryError = "Football summary unavailable";
