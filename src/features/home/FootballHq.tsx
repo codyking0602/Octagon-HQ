@@ -99,18 +99,17 @@ export function FootballHq({
 
   return (
     <section
-      className="home-section home-section--football-hq"
+      className="home-section home-sport-hq home-sport-hq--football home-section--football-hq"
       data-testid="home-section"
       data-home-section="football-hq"
       aria-label="Football HQ"
     >
-      <header className="football-hq-heading">
+      <header className="home-sport-hq__heading">
         <div>
           <p className="eyebrow">FOOTBALL HQ</p>
-          <h2>Saturday to Sunday</h2>
-          <p>The weekly slate, both featured matchups, and your season standing.</p>
+          <h2>This week</h2>
         </div>
-        <span aria-hidden="true">HQ</span>
+        <small>PICKS · COLLEGE · NFL</small>
       </header>
 
       {event ? (
@@ -120,7 +119,6 @@ export function FootballHq({
             <small>{locked ? "LOCKED" : "LIVE SLATE"}</small>
           </div>
           <h3 id="football-hq-week-title">{event.name}</h3>
-          <p>{event.subtitle || eventDate(event.startsAt)}</p>
           <div className="football-hq-week__scoreboard">
             <div>
               <span>YOUR PICKS</span>
@@ -133,7 +131,7 @@ export function FootballHq({
               <small>{standing ? `${standing.totalPoints} PTS · ${pickRecord(summary)}` : signedIn ? pickRecord(summary) : "SIGN IN TO TRACK"}</small>
             </div>
           </div>
-          <Link className="football-hq-week__action" to="/football/picks">OPEN FOOTBALL PICKS →</Link>
+          <Link className="football-hq-week__action" to="/football/picks">OPEN PICKS →</Link>
         </section>
       ) : (
         <section className="surface-card football-hq-week football-hq-week--empty" aria-labelledby="football-hq-week-title">
@@ -143,7 +141,7 @@ export function FootballHq({
           </div>
           <h3 id="football-hq-week-title">{loading ? "Loading this week’s slate" : error ? "Football slate unavailable" : "Next slate not published"}</h3>
           <p>{error || "The next Football Picks slate will appear here when it is published."}</p>
-          <Link className="football-hq-week__action" to="/football/picks">OPEN FOOTBALL PICKS →</Link>
+          <Link className="football-hq-week__action" to="/football/picks">OPEN PICKS →</Link>
         </section>
       )}
 
