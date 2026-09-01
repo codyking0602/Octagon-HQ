@@ -22,7 +22,7 @@ describe("PR 8 Up Next ownership", () => {
   });
 
   it("keeps the existing provider stack and single style initialization owner", () => {
-    expect(providers.match(/<PicksProvider>/g)).toHaveLength(1);
+    expect(providers.match(/<PicksProvider(?:\s|>)/g)).toHaveLength(1);
     expect(providers.match(/<SportProvider>/g)).toHaveLength(1);
     expect(providers.match(/<WhatsNewProvider>/g)).toHaveLength(1);
     expect(main.match(/styles\/home-up-next\.css/g)).toHaveLength(1);
