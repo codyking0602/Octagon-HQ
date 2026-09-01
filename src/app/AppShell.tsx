@@ -48,11 +48,7 @@ function sportContextForPath(pathname: string): SportContext | null {
 function themeScopeForPath(pathname: string, selectedSport: SelectedSport): HqThemeScope {
   const context = sportContextForPath(pathname);
 
-  if (context?.switchable) {
-    // PR 4 remains authoritative. The route fallback preserves explicit deep-link context
-    // without mutating the persisted sport selection merely because a URL was opened.
-    return context.sport === selectedSport ? selectedSport : context.sport;
-  }
+  if (context?.switchable) return selectedSport;
   if (context) return context.sport;
 
   if (
