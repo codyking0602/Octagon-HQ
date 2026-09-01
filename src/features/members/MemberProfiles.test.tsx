@@ -120,7 +120,7 @@ function picksRepository(): PicksRepository {
       bouts: [],
     })),
     loadMyPicks: vi.fn(async () => []),
-    loadMyHistory: vi.fn(async (_season: number, sport: "mma" | "football" = "mma") => ({
+    loadMyHistory: vi.fn(async (_season: number | null, sport: "mma" | "football" = "mma") => ({
       season: 2026,
       summary: sport === "football"
         ? { correct: 6, incorrect: 2, missing: 0, excluded: 0, eventsEntered: 3, basePoints: 24, lockBonus: 1, totalPoints: 25 }
