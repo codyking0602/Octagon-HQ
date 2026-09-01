@@ -82,7 +82,7 @@ describe("notification foundation", () => {
     expect(notificationAction).toBeGreaterThan(-1);
     expect(notificationAction).toBeLessThan(askAction);
     expect(shell).not.toContain("<WhatsNewHeaderAction />");
-    expect(shell).toContain('aria-label="Ask Octagon Verdict"');
+    expect(shell).toContain('aria-label="Open UFC Intelligence"');
     expect(home).toContain("<WhatsNewPreview />");
     expect(router).toContain('path: "notifications"');
     expect(router).toContain('path: "whats-new"');

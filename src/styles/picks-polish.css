@@ -962,12 +962,12 @@
   min-height: calc(50px + var(--safe-top));
 }
 
-.app-shell:has(.picks-page) .brand-mark--compact {
+.app-shell:has(.picks-page) .the-hq-brand {
   gap: 8px;
   font-size: 17px;
 }
 
-.app-shell:has(.picks-page) .brand-mark--compact .brand-mark__logo {
+.app-shell:has(.picks-page) .the-hq-brand__logo {
   width: 35px;
   height: 35px;
 }
