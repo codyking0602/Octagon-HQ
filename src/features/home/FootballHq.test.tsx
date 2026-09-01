@@ -130,8 +130,8 @@ const summary: PickSummary = {
   totalPoints: 10,
 };
 
-describe("PR 11 Football HQ", () => {
-  it("uses the canonical weekly slate for Picks status, standing, and both featured matchups", () => {
+describe("Football HQ Home summary", () => {
+  it("uses the canonical weekly slate for compact Picks status, standing, and both featured matchups", () => {
     render(
       <MemoryRouter>
         <FootballHq
@@ -147,13 +147,15 @@ describe("PR 11 Football HQ", () => {
     );
 
     const hq = screen.getByRole("region", { name: "Football HQ" });
-    expect(within(hq).getByRole("heading", { name: "Saturday to Sunday" })).toBeInTheDocument();
+    expect(within(hq).getByRole("heading", { name: "This week" })).toBeInTheDocument();
+    expect(hq).toHaveClass("home-sport-hq");
     expect(within(hq).getByText("2 PICKS LEFT")).toBeInTheDocument();
     expect(within(hq).getByText("#2")).toBeInTheDocument();
     expect(within(hq).getByText(/Clemson/)).toBeInTheDocument();
     expect(within(hq).getByText(/Cowboys/)).toBeInTheDocument();
     expect(within(hq).getByText("COLLEGE GAME OF THE WEEK")).toBeInTheDocument();
     expect(within(hq).getByText("NFL GAME OF THE WEEK")).toBeInTheDocument();
+    expect(within(hq).getByRole("link", { name: "OPEN PICKS →" })).toHaveAttribute("href", "/football/picks");
     expect(within(hq).getAllByRole("link")).toHaveLength(3);
     for (const link of within(hq).getAllByRole("link")) expect(link).toHaveAttribute("href", "/football/picks");
   });

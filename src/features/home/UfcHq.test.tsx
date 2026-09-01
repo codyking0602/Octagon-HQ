@@ -49,16 +49,6 @@ const mocks = vi.hoisted(() => {
       error: "",
       footballSummaryError: "",
     },
-    challenges: {
-      challenges: [],
-      profiles: [],
-      loading: false,
-      error: null,
-    },
-    whatsNew: {
-      activeItems: [],
-      status: "ready" as const,
-    },
   };
 });
 
@@ -68,10 +58,6 @@ vi.mock("../identity/IdentityProvider", () => ({
 
 vi.mock("../picks/PicksProvider", () => ({
   usePicks: () => mocks.picks,
-}));
-
-vi.mock("../challenges/ChallengeProvider", () => ({
-  usePlayChallenges: () => mocks.challenges,
 }));
 
 vi.mock("../play/useTodayChallengeRuntime", () => ({
@@ -98,10 +84,6 @@ vi.mock("../play/useTodayChallengeOverview", () => ({
     error: null,
     refresh: vi.fn(),
   }),
-}));
-
-vi.mock("../whats-new/WhatsNewProvider", () => ({
-  useWhatsNew: () => mocks.whatsNew,
 }));
 
 vi.mock("../whats-new/WhatsNewPreview", () => ({
@@ -168,7 +150,7 @@ function ufcHq() {
   return screen.getByRole("region", { name: "UFC HQ" });
 }
 
-describe("Home PR 10 — UFC HQ", () => {
+describe("Home UFC HQ", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.identity.profile = cody;
@@ -187,7 +169,7 @@ describe("Home PR 10 — UFC HQ", () => {
     mocks.picks.footballSummaryError = "";
   });
 
-  it("uses the canonical UFC event and Picks history for fight-week status and inline season standing", () => {
+  it("keeps Picks status and standing compact without repeating the UFC event hero", () => {
     mocks.picks.selections = { "ankalaev-guskov": "magomed-ankalaev" };
     mocks.picks.history.seasonStandings = [
       {
@@ -234,11 +216,10 @@ describe("Home PR 10 — UFC HQ", () => {
     renderHome();
 
     const section = ufcHq();
-    expect(within(section).getByRole("heading", { name: "Fight week command center" })).toBeInTheDocument();
-    expect(within(section).getByRole("heading", { name: "UFC Fight Night" })).toBeInTheDocument();
-    expect(within(section).getByText("Ankalaev vs. Guskov")).toBeInTheDocument();
-    expect(within(section).getByText("Etihad Arena · Abu Dhabi, United Arab Emirates")).toBeInTheDocument();
-    expect(within(section).getByText("Magomed Ankalaev vs. Bogdan Guskov")).toBeInTheDocument();
+    expect(within(section).getByRole("heading", { name: "Fight week" })).toBeInTheDocument();
+    expect(within(section).queryByRole("heading", { name: "UFC Fight Night" })).not.toBeInTheDocument();
+    expect(within(section).queryByText("Ankalaev vs. Guskov")).not.toBeInTheDocument();
+    expect(within(section).queryByText("Etihad Arena · Abu Dhabi, United Arab Emirates")).not.toBeInTheDocument();
     expect(within(section).getByText("1 OF 2")).toBeInTheDocument();
     expect(within(section).getByText("1 PICK LEFT")).toBeInTheDocument();
     expect(within(section).getByText("#2 OF 3")).toBeInTheDocument();
@@ -248,16 +229,15 @@ describe("Home PR 10 — UFC HQ", () => {
     expect(within(section).getByRole("link", { name: "SHANE’S CONTENDER SERIES" })).toHaveAttribute("href", "/fighters-to-watch");
   });
 
-  it("keeps persistent UFC features and a real empty/error event state without inventing a replacement card", () => {
+  it("keeps UFC features when no card is published without adding a generic Open UFC action", () => {
     mocks.picks.event = null;
     mocks.picks.error = "event service unavailable";
 
     renderHome();
 
     const section = ufcHq();
-    expect(within(section).getByRole("heading", { name: "Next card unavailable" })).toBeInTheDocument();
-    expect(within(section).getByText("UFC event data is unavailable right now.")).toBeInTheDocument();
-    expect(within(section).getByRole("link", { name: "OPEN UFC PICKS →" })).toHaveAttribute("href", "/picks");
+    expect(within(section).getAllByText("UNAVAILABLE").length).toBeGreaterThan(0);
+    expect(within(section).queryByRole("link", { name: /OPEN UFC/i })).not.toBeInTheDocument();
     expect(within(section).getByText("RANKING SPOTLIGHT")).toBeInTheDocument();
     expect(within(section).getByRole("link", { name: "SHANE’S CONTENDER SERIES" })).toBeInTheDocument();
 

@@ -349,9 +349,8 @@ describe("Home PR 9 — Today’s Challenges + Your HQ", () => {
     expect(within(screen.getByText("Football Picks record").closest("article")!).getByText("9-3")).toBeInTheDocument();
     expect(within(screen.getByText("Football Picks record").closest("article")!).getByText(/2 PENDING/)).toBeInTheDocument();
 
-    expect(screen.getByText("1 pick still open")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "FINISH UFC PICKS" })).toHaveAttribute("href", "/picks");
-    expect(screen.getByText("Magomed Ankalaev vs. Bogdan Guskov")).toBeInTheDocument();
+    expect(screen.queryByRole("region", { name: "Up Next" })).not.toBeInTheDocument();
+    expect(screen.queryByText("Magomed Ankalaev vs. Bogdan Guskov")).not.toBeInTheDocument();
     expect(screen.getByText("1 OF 2")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "MAKE PICKS →" })).toHaveAttribute("href", "/picks");
   });

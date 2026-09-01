@@ -8,7 +8,6 @@ import "./styles/sport-context.css";
 import "./styles/pull-to-refresh.css";
 import "./styles/app-error.css";
 import "./styles/home.css";
-import "./styles/home-up-next.css";
 import "./styles/home-challenges.css";
 import "./styles/watchlist.css";
 import "./styles/watchlist-scouting.css";
