@@ -8,6 +8,7 @@ import { PicksProvider } from "../features/picks/PicksProvider";
 import { ProfilePreferencesProvider } from "../features/profile/ProfilePreferencesProvider";
 import { WarRoomProvider } from "../features/war-room/WarRoomProvider";
 import { WhatsNewProvider } from "../features/whats-new/WhatsNewProvider";
+import { SportProvider } from "./SportProvider";
 
 export function AppProviders({ children }: PropsWithChildren) {
   const [queryClient] = useState(
@@ -25,21 +26,23 @@ export function AppProviders({ children }: PropsWithChildren) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <IdentityProvider>
-        <NotificationProvider>
-          <WhatsNewProvider>
-            <WarRoomProvider>
-              <ProfilePreferencesProvider>
-                <PicksProvider>
-                  <FindLeaderHistoryProvider>
-                    <ChallengeProvider>{children}</ChallengeProvider>
-                  </FindLeaderHistoryProvider>
-                </PicksProvider>
-              </ProfilePreferencesProvider>
-            </WarRoomProvider>
-          </WhatsNewProvider>
-        </NotificationProvider>
-      </IdentityProvider>
+      <SportProvider>
+        <IdentityProvider>
+          <NotificationProvider>
+            <WhatsNewProvider>
+              <WarRoomProvider>
+                <ProfilePreferencesProvider>
+                  <PicksProvider>
+                    <FindLeaderHistoryProvider>
+                      <ChallengeProvider>{children}</ChallengeProvider>
+                    </FindLeaderHistoryProvider>
+                  </PicksProvider>
+                </ProfilePreferencesProvider>
+              </WarRoomProvider>
+            </WhatsNewProvider>
+          </NotificationProvider>
+        </IdentityProvider>
+      </SportProvider>
     </QueryClientProvider>
   );
 }
