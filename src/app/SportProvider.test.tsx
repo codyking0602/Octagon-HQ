@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
 import {
@@ -5,6 +6,8 @@ import {
   SportProvider,
   useSport,
 } from "./SportProvider";
+
+const appProvidersSource = readFileSync("src/app/providers.tsx", "utf8");
 
 function SportProbe() {
   const { selectedSport, setSelectedSport } = useSport();
@@ -33,6 +36,11 @@ function renderSportProvider() {
 describe("SportProvider", () => {
   beforeEach(() => {
     window.localStorage.clear();
+  });
+
+  it("mounts exactly once in the canonical app provider stack", () => {
+    expect(appProvidersSource.match(/<SportProvider>/g) ?? []).toHaveLength(1);
+    expect(appProvidersSource.match(/<\/SportProvider>/g) ?? []).toHaveLength(1);
   });
 
   it("defaults the canonical selected sport to UFC", () => {
