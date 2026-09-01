@@ -1,6 +1,6 @@
 # The HQ Universal App Roadmap
 
-**Status:** Product architecture locked; Phase 0 audit complete; rollout PRs 2–7 complete through PR #814; PR 8 follows.  
+**Status:** Product architecture locked; Phase 0 audit complete; rollout PRs 2–8 complete through PR #815; PR 9 follows.  
 **Last updated:** September 1, 2026  
 **Canonical purpose:** Preserve the agreed multi-sport architecture for The HQ so implementation can continue across multiple chats without re-deciding settled product choices.
 
@@ -441,7 +441,8 @@ Use the following routing so the rollout does not get trapped between the limite
 - **PR 4 has one explicit execution exception:** after repeated Codex Cloud tasks could not obtain authenticated repository access, Cody explicitly authorized ChatGPT to implement and merge PR 4 using the connected GitHub tools.
 - **PR 5 has one explicit execution exception:** Cody explicitly requested direct GitHub implementation and merge of PR 5 in that chat.
 - **PR 6 has one explicit execution exception:** Cody explicitly requested direct GitHub implementation and merge of PR 6 in that chat.
-- **PR 7 has one explicit execution exception:** Cody explicitly requested direct GitHub implementation and merge of PR 7 in this chat. This does not change the default Codex routing for PR 8+.
+- **PR 7 has one explicit execution exception:** Cody explicitly requested direct GitHub implementation and merge of PR 7 in that chat.
+- **PR 8 has one explicit execution exception:** Cody explicitly requested direct GitHub implementation and merge of PR 8 in this chat. This does not change the default Codex routing for PR 9+.
 - ChatGPT's GitHub tools remain useful for reading the repository, reviewing Codex diffs, checking PR state / CI, updating roadmap documentation, and merging verified PRs.
 - Narrow corrective follow-up PRs explicitly requested by Cody may be handled separately when they do not substitute for the next named roadmap implementation PR.
 
@@ -463,8 +464,8 @@ Use the following routing so the rollout does not get trapped between the limite
 | **5** | Picks / Play sport-switching UI + sport/section context row | **COMPLETE — #811; explicit ChatGPT execution exception** | **HIGH — preserve Rankings / Intelligence UFC-only behavior** |
 | **6** | Neutral universal shell + contextual sport accent theme-token path | **COMPLETE — #812; navy correction in #813** | Normal; do not add a second theme owner |
 | **7** | Universal Home foundation + locked section order | **COMPLETE — #814; base `67843661eefcf9ffd1f7785189076c6961e4e6e4`; explicit ChatGPT execution exception** | **HIGH — compose existing owners, do not recreate logic** |
-| **8** | Up Next priority hero | **CODEX REQUIRED — NEXT** | **HIGH — cross-product priority logic** |
-| **9** | Today's Challenges + Your HQ | **CODEX REQUIRED** | **HIGH — reuse existing challenge / record data owners** |
+| **8** | Up Next priority hero | **COMPLETE — #815; base `763a5ea69873f1869681022b2ad3a12de8d13362`; explicit ChatGPT execution exception** | **HIGH — cross-product priority logic** |
+| **9** | Today's Challenges + Your HQ | **CODEX REQUIRED — NEXT** | **HIGH — reuse existing challenge / record data owners** |
 | **10** | UFC HQ Home block | **CODEX REQUIRED** | **HIGH — preserve Ranking Spotlight + Shane's Contender Series** |
 | **11** | Football HQ Home block + What's New integration | **CODEX REQUIRED** | **HIGH — preserve weekly picks + both Game of the Week owners** |
 | **12** | Universal Profile | **CODEX REQUIRED** | Normal; do not reintroduce unused favorites |
@@ -563,7 +564,7 @@ Do not add a second sport context provider or duplicate theme initialization.
 
 ## Phase 3 — Universal Home
 
-**Status: PR 7 foundation complete in #814; PR 8 is next.**
+**Status: PR 7 foundation and PR 8 Up Next hero complete through #815; PR 9 is next.**
 
 Implement Home in the locked order:
 
@@ -577,6 +578,8 @@ Implement Home in the locked order:
 Preserve the existing canonical data owners for each underlying feature. Home should compose existing products, not recreate their business logic.
 
 PR #814 establishes only the universal Home structure and composition boundaries. It keeps the existing Home-owned Up Next action, What's New preview, Your HQ card, UFC event context, Ranking Spotlight, and Shane content in their canonical paths; Today's Challenges and Football HQ remain structural slots for their later named PRs. It does not implement the PR 8 priority engine or the completed PR 9–11 products.
+
+PR #815 upgrades only the PR 7 Up Next slot. `src/features/home/upNextModel.ts` is a pure priority composer over existing provider/runtime state; it does not fetch or persist. The current canonical Home-accessible candidates are ranked urgent UFC Picks, unfinished UFC daily challenge, a direct received friend challenge, an unread What's New result/recap, then the next scheduled UFC event. Football Picks remains route-scoped to its existing `PicksProvider sport="football"` owner and is not duplicated onto Home in PR 8; Football Home state remains owned by PR 11.
 
 ### Home acceptance checks
 
@@ -667,7 +670,7 @@ Do not claim a merged change is live until the live deployment SHA is verified.
 
 # 13. Current Resume Point
 
-**Phase 0 is complete. PR 2 through PR 7 are complete through PR #814. PR 8 — Up Next priority hero is the next named rollout item.**
+**Phase 0 is complete. PR 2 through PR 8 are complete through PR #815. PR 9 — Today's Challenges + Your HQ is the next named rollout item.**
 
 Current verified roadmap baseline:
 
@@ -680,11 +683,12 @@ Current verified roadmap baseline:
 - PR #811 — PR 5 Picks / Play sport-switching UI + sport/section context row — merge `616f19780026b74d499945aa479e8d08b8dec2f0`
 - PR #812 — PR 6 neutral shell + contextual sport accent theme-token path — merge `6847615137e4cc5e71539380d904391b2870e495`
 - PR #813 — Football navy contextual-accent correction — base `6847615137e4cc5e71539380d904391b2870e495`; merge `67843661eefcf9ffd1f7785189076c6961e4e6e4`.
-- PR #814 — PR 7 universal Home foundation + locked section order — base `67843661eefcf9ffd1f7785189076c6961e4e6e4`; merge SHA to be backfilled on the next roadmap edit.
+- PR #814 — PR 7 universal Home foundation + locked section order — base `67843661eefcf9ffd1f7785189076c6961e4e6e4`; merge `763a5ea69873f1869681022b2ad3a12de8d13362`.
+- PR #815 — PR 8 Up Next priority hero — base `763a5ea69873f1869681022b2ad3a12de8d13362`; merge SHA to be backfilled on the next roadmap edit.
 
-PR 4 remains the one canonical shared selected-sport owner and persistence path. PR 5 consumes that state in the existing AppShell and BottomNavigation owners. PR 6 consumes those existing owners for contextual accent scoping while preserving the single `main.tsx` style initialization path and removing favorite-team app-wide shell theming rather than introducing another theme owner. PR #813 only corrects Football's existing contextual token to the locked navy. PR #814 keeps `src/features/home/HomePage.tsx` as the single Home composition owner and adds only the six locked section boundaries plus neutral universal Home presentation; it adds no provider, repository, alternate query path, route owner, or theme initialization.
+PR 4 remains the one canonical shared selected-sport owner and persistence path. PR 5 consumes that state in the existing AppShell and BottomNavigation owners. PR 6 consumes those existing owners for contextual accent scoping while preserving the single `main.tsx` style initialization path and removing favorite-team app-wide shell theming rather than introducing another theme owner. PR #813 only corrects Football's existing contextual token to the locked navy. PR #814 keeps `src/features/home/HomePage.tsx` as the single Home composition owner and adds only the six locked section boundaries plus neutral universal Home presentation; it adds no provider, repository, alternate query path, route owner, or theme initialization. PR #815 keeps that same Home owner, adds a pure Up Next priority model, reuses the existing providers/runtime state, and adds no second query/provider/repository/theme/route owner.
 
-The next named rollout item is **PR 8 — Up Next priority hero**. Resolve fresh `main` before starting it and extend the PR 7 Up Next section without duplicating the underlying Picks, challenge, or result owners.
+The next named rollout item is **PR 9 — Today's Challenges + Your HQ**. Resolve fresh `main` before starting it and reuse the existing UFC/Football challenge and Picks record owners rather than recreating their logic.
 
 Do **not** restart card-by-card Home brainstorming unless Cody explicitly reopens it.
 
@@ -709,16 +713,27 @@ Do **not** re-debate:
 
 ## September 1, 2026
 
+### PR 8 Up Next priority hero
+
+- Cody explicitly requested direct GitHub execution and merge of PR 8 in this chat; this is a PR 8 execution exception and the default Codex routing resumes with PR 9.
+- PR #815 is the PR 8 implementation, based on `main` at `763a5ea69873f1869681022b2ad3a12de8d13362`.
+- `src/features/home/HomePage.tsx` remains the one Home composition owner. PR 8 replaces the temporary PR 7 Up Next action with one neutral command-center hero and exactly one destination per resolved render.
+- `src/features/home/upNextModel.ts` owns priority composition only. It consumes canonical state passed from existing owners and performs no query, persistence, repository creation, provider initialization, or routing ownership.
+- Locked current priority is urgent UFC Picks → unfinished UFC daily challenge → direct received friend challenge → unread result/recap from What's New → next scheduled UFC event.
+- Existing challenge title/route construction is reused through `buildDirectChallengeAction`; it is not cloned in the Up Next model.
+- Football Picks remains owned by the existing route-scoped `PicksProvider sport="football"`. PR 8 deliberately does not mount a second Football Picks provider/query on Home; PR 11 remains responsible for canonical Football Home integration.
+- Universal Home remains neutral; the hero uses the existing neutral theme-token path and does not paint Home UFC red or Football navy.
+- PR 9 — Today's Challenges + Your HQ is next. PR 8 does not implement PR 9–11 product blocks early.
+
 ### PR 7 universal Home foundation
 
-- Cody explicitly requested direct GitHub execution and merge of PR 7 in this chat; this is a PR 7 execution exception and the default Codex routing resumes with PR 8.
+- Cody explicitly requested direct GitHub execution and merge of PR 7 in that chat; this is a PR 7 execution exception. PR 8 was separately authorized for direct GitHub execution.
 - PR #814 is the PR 7 implementation, based on `main` at `67843661eefcf9ffd1f7785189076c6961e4e6e4`.
 - `src/features/home/HomePage.tsx` remains the one Home composition owner and now exposes the six locked boundaries in exact order: Up Next, Today's Challenges, What's New, Your HQ, UFC HQ, Football HQ.
 - Existing Home content is composed through its current owners. PR 7 does not add a second Picks/challenge/What's New/ranking/profile data path.
 - Today's Challenges and Football HQ are intentionally structural slots in PR 7; their completed product logic remains owned by PR 9 and PR 11 respectively.
 - PR 7 does not implement the PR 8 cross-product Up Next priority engine, PR 9 completed Today's Challenges / Your HQ, PR 10 completed UFC HQ block, or PR 11 completed Football HQ / What's New integration.
 - Universal Home remains neutral for persisted UFC or Football selection, with no sport selector/context row. UFC content remains red and Football's contextual token remains navy `#1F4E79`.
-- PR 8 — Up Next priority hero is next.
 
 ### Football navy contextual-accent correction
 
