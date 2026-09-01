@@ -6,7 +6,6 @@ import { NotificationProvider } from "../features/notifications/NotificationProv
 import { FindLeaderHistoryProvider } from "../features/play/FindLeaderHistoryProvider";
 import { PicksProvider } from "../features/picks/PicksProvider";
 import { ProfilePreferencesProvider } from "../features/profile/ProfilePreferencesProvider";
-import { WarRoomProvider } from "../features/war-room/WarRoomProvider";
 import { WhatsNewProvider } from "../features/whats-new/WhatsNewProvider";
 import { SportProvider } from "./SportProvider";
 
@@ -30,15 +29,13 @@ export function AppProviders({ children }: PropsWithChildren) {
         <IdentityProvider>
           <NotificationProvider>
             <WhatsNewProvider>
-              <WarRoomProvider>
-                <ProfilePreferencesProvider>
-                  <PicksProvider includeFootballSummary>
-                    <FindLeaderHistoryProvider>
-                      <ChallengeProvider>{children}</ChallengeProvider>
-                    </FindLeaderHistoryProvider>
-                  </PicksProvider>
-                </ProfilePreferencesProvider>
-              </WarRoomProvider>
+              <ProfilePreferencesProvider>
+                <PicksProvider includeFootballSummary>
+                  <FindLeaderHistoryProvider>
+                    <ChallengeProvider>{children}</ChallengeProvider>
+                  </FindLeaderHistoryProvider>
+                </PicksProvider>
+              </ProfilePreferencesProvider>
             </WhatsNewProvider>
           </NotificationProvider>
         </IdentityProvider>
