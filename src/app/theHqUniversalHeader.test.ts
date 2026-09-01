@@ -8,6 +8,7 @@ const manifest = readFileSync("public/app.webmanifest", "utf8");
 const documentShell = readFileSync("index.html", "utf8");
 const styles = readFileSync("src/styles/global.css", "utf8");
 const appIcon = readFileSync("public/assets/the-hq-app-icon-v2.png");
+const liveNotificationVerifier = readFileSync("scripts/verify-live-notification-flow.mjs", "utf8");
 
 describe("The HQ universal header", () => {
   it("keeps one shell header owner across UFC and Football routes", () => {
@@ -32,6 +33,11 @@ describe("The HQ universal header", () => {
     expect(appIcon.readUInt32BE(20)).toBe(512);
     expect(brandLink).toContain('<small>THE</small> HQ');
     expect(styles).toContain(".app-header--universal");
+  });
+
+  it("keeps live verification aligned with the universal profile sign-in label", () => {
+    expect(liveNotificationVerifier).toContain('name: "Sign in to The HQ"');
+    expect(liveNotificationVerifier).not.toContain('name: "Sign in to Octagon HQ"');
   });
 
   it("uses the same cache-busted local HQ asset for install and Home Screen icon metadata", () => {
