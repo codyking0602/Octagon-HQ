@@ -18,6 +18,27 @@ describe("FootballMatchupBreakdowns", () => {
     expect(screen.getByText("LOUISVILLE OFFENSE vs. OLE MISS DEFENSE")).toBeInTheDocument();
   });
 
+  it("portals the open breakdown above the Picks stacking context and locks background scrolling", () => {
+    render(
+      <div data-testid="picks-tools">
+        <FootballMatchupBreakdowns breakdowns={FOOTBALL_MATCHUP_BREAKDOWNS} />
+      </div>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "MATCHUP BREAKDOWNS" }));
+    const dialog = screen.getByRole("dialog");
+
+    expect(screen.getByTestId("picks-tools")).not.toContainElement(dialog);
+    expect(document.body).toContainElement(dialog);
+    expect(document.body.style.overflow).toBe("hidden");
+    expect(document.documentElement.style.overflow).toBe("hidden");
+
+    fireEvent.click(screen.getByRole("button", { name: "Close matchup breakdown" }));
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(document.body.style.overflow).toBe("");
+    expect(document.documentElement.style.overflow).toBe("");
+  });
+
   it("renders optional YouTube links only when a matchup has Watch content", () => {
     const breakdown = {
       ...FOOTBALL_MATCHUP_BREAKDOWNS[0],
