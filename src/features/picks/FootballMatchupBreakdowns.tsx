@@ -140,12 +140,6 @@ export function FootballMatchupBreakdowns({ breakdowns }: { breakdowns: Football
               </div>
             </section>
           ) : null}
-
-          <section className="football-matchup-breakdown-read">
-            <h3>THE HQ READ</h3>
-            {active.hqRead.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-            <strong>{active.prediction}</strong>
-          </section>
         </div>
       </section>
     </div>,
