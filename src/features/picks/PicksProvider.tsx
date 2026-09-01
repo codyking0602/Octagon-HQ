@@ -124,13 +124,16 @@ export function PicksProvider({
 
   useEffect(() => {
     profileIdRef.current = profileId;
-    setFootballSummary(null);
-    setFootballSummaryLoading(false);
-    setFootballSummaryError("");
     return () => {
       ++revisionRef.current;
       profileIdRef.current = null;
     };
+  }, [profileId]);
+
+  useEffect(() => {
+    setFootballSummary(null);
+    setFootballSummaryLoading(false);
+    setFootballSummaryError("");
   }, [profileId]);
 
   const refresh = useCallback(async () => {
