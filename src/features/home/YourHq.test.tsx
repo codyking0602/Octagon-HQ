@@ -39,6 +39,10 @@ const mocks = vi.hoisted(() => ({
     loading: false,
     error: null as Error | null,
   },
+  whatsNew: {
+    activeItems: [],
+    status: "ready" as const,
+  },
   runtime: vi.fn(),
   overview: vi.fn(),
 }));
@@ -65,6 +69,10 @@ vi.mock("../play/useTodayChallengeRuntime", () => ({
 
 vi.mock("../play/useTodayChallengeOverview", () => ({
   useTodayChallengeOverview: (...args: unknown[]) => mocks.overview(...args),
+}));
+
+vi.mock("../whats-new/WhatsNewProvider", () => ({
+  useWhatsNew: () => mocks.whatsNew,
 }));
 
 vi.mock("../whats-new/WhatsNewPreview", () => ({
@@ -174,6 +182,7 @@ describe("Your HQ", () => {
     mocks.challenges.profiles = [];
     mocks.challenges.loading = false;
     mocks.challenges.error = null;
+    mocks.whatsNew.activeItems = [];
     mocks.runtime.mockReturnValue({
       projection: null,
       loading: false,
@@ -262,11 +271,8 @@ describe("Your HQ", () => {
 
     expect(screen.getByRole("link", { name: "Open Georges St-Pierre profile" })).toHaveAttribute("href", "/fighters/georges-st-pierre");
     expect(within(screen.getByText("Open challenges").closest("article")!).getByText("2")).toBeInTheDocument();
-    expect(screen.getByText("SHANE is waiting for your answer")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "RESPOND TO CHALLENGE" })).toHaveAttribute(
-      "href",
-      expect.stringContaining("challenge=RECEIVED1"),
-    );
+    expect(screen.getByText("1 pick still open")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "FINISH UFC PICKS→" })).toHaveAttribute("href", "/picks");
 
     fireEvent.change(screen.getByRole("combobox", { name: "Favorite fighter" }), {
       target: { value: "jon-jones" },
