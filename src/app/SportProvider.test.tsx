@@ -75,7 +75,8 @@ describe("SportProvider", () => {
     expect(tokensSource).toContain('[data-hq-theme="football"]');
     expect(tokensSource).toContain("--hq-context-accent: #d2d8e0;");
     expect(sportContextStyles).toContain("var(--hq-neutral-accent-rgb)");
-    expect(sportContextStyles).toContain("var(--hq-context-accent)");
+    expect(sportContextStyles).toContain("--football-accent: var(--hq-context-accent);");
+    expect(sportContextStyles).toContain("--football-accent-rgb: var(--hq-context-accent-rgb);");
     expect(sportContextStyles).toContain("var(--hq-context-accent-strong)");
   });
 
