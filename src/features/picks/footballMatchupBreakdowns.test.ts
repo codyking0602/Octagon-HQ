@@ -51,15 +51,15 @@ describe("football matchup breakdowns", () => {
     expect(footballMatchupBreakdownsForEvent(event)).toEqual([]);
   });
 
-  it("keeps the locked editorial structure and limits The HQ Edge to the two opposing units", () => {
+  it("keeps the locked editorial structure, limits The HQ Edge to opposing units, and carries no final read or score", () => {
     for (const breakdown of FOOTBALL_MATCHUP_BREAKDOWNS) {
       expect(breakdown.keyMatchups).toHaveLength(3);
       expect(breakdown.pathsToWin).toHaveLength(2);
       expect(breakdown.playersToWatch).toHaveLength(2);
       expect(breakdown.unitEdges).toHaveLength(2);
       expect(breakdown.unitEdges.every((unit) => unit.title.includes("OFFENSE vs."))).toBe(true);
-      expect(breakdown.hqRead.length).toBeGreaterThan(0);
-      expect(breakdown.prediction).toMatch(/\d+.*\d+/);
+      expect(breakdown).not.toHaveProperty("hqRead");
+      expect(breakdown).not.toHaveProperty("prediction");
     }
   });
 });
