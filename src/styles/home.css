@@ -1,3 +1,7 @@
+.home-command-heading .eyebrow {
+  color: var(--hq-context-accent-strong);
+}
+
 .hq-card {
   gap: 14px;
   padding: 16px;
@@ -129,6 +133,8 @@
 .hq-card .primary-action {
   min-height: 42px;
   border: 0;
+  background: var(--hq-context-accent);
+  color: var(--hq-context-accent-contrast);
   cursor: pointer;
 }
 
@@ -163,6 +169,27 @@
 .hq-next-up__copy p {
   color: var(--text-secondary);
   font-size: 12px;
+}
+
+.home-section--up-next .primary-action {
+  background: var(--hq-context-accent);
+  color: var(--hq-context-accent-contrast);
+}
+
+.home-section--whats-new .whats-new-preview__heading .eyebrow,
+.home-section--whats-new .whats-new-preview__mark,
+.home-section--whats-new .whats-new-preview__all {
+  color: var(--hq-context-accent-strong);
+}
+
+.home-section--whats-new .whats-new-preview__heading > span {
+  border-color: var(--hq-context-accent-border);
+  background: var(--hq-context-accent-soft);
+  color: var(--hq-context-accent-strong);
+}
+
+.home-section--whats-new .whats-new-preview__mark {
+  background: var(--hq-context-accent-soft);
 }
 
 .home-event-card {
