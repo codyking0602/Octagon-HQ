@@ -1,6 +1,6 @@
 # The HQ Universal App Roadmap
 
-**Status:** Product architecture locked; implementation not yet started from this roadmap.  
+**Status:** Product architecture locked; Phase 0 current-state audit complete; runtime implementation not yet started.  
 **Last updated:** August 31, 2026  
 **Canonical purpose:** Preserve the agreed multi-sport architecture for The HQ so implementation can continue across multiple chats without re-deciding settled product choices.
 
@@ -451,29 +451,24 @@ If PR 13 proves to cross genuinely separate canonical owners, split it into **13
 
 ## Phase 0 — Current-State Audit
 
-**Status: NEXT**
+**Status: COMPLETE — rollout PR 1 / GitHub PR #801**
 
-Before changing UI behavior:
+Audit baseline: `main` at `f0ac4a3d7e819068a0930e3455a32749abb4e029`.
 
-- Resolve current `main` and record the exact SHA.
-- Find the canonical owners of:
-  - app shell/header
-  - bottom navigation
-  - Home
-  - current sport/Football entry state
-  - Picks routes
-  - Play routes
-  - Ratings route
-  - Intelligence entry
-  - profile
-  - notifications
-  - onboarding/favorite-fighter requirement
-  - theme tokens / global CSS variables
-- Identify every active runtime dependency on War Room navigation.
-- Identify all user-facing `Octagon HQ` brand strings and classify them as:
-  - universal → candidate for `The HQ`
-  - UFC-specific → may remain `Octagon HQ`
-- Identify existing Football theme/state ownership and preserve the canonical owner.
+Persistent handoff: `docs/the-hq-pr1-current-state-audit.md`.
+
+Confirmed before runtime implementation:
+
+- `src/app/AppShell.tsx` owns the current shared shell/header.
+- `src/components/BottomNavigation.tsx` owns bottom navigation.
+- `src/app/router.tsx` owns app routing.
+- `src/features/home/HomePage.tsx` owns Home composition.
+- There is no shared universal sport-context owner yet; current Football context is route-inferred.
+- Football shell/nav styling currently reads the optional `footballTeam` profile preference and applies Cowboys/Longhorns theme classes.
+- War Room remains a live runtime dependency through navigation, routes, the globally mounted `WarRoomProvider`, canonical destinations, and notification deep links. Removing its nav entry does not authorize early runtime deletion.
+- Profile creation currently has no favorite-fighter gate. The live hard favorite/team gate is Football first entry, which requires Cowboys or Longhorns.
+- `src/main.tsx` plus `src/styles/tokens.css` and the existing Football CSS files are the current single theme/style initialization path; do not add a second theme owner.
+- Universal `Octagon HQ` brand candidates and UFC-specific exceptions are inventoried in the audit handoff; the later brand PR must re-run that inventory against then-current `main` before editing.
 
 **Do not create duplicate route owners, theme providers, sport state providers, or fallback navigation paths.**
 
@@ -572,6 +567,8 @@ Requirements:
 - Preserve existing stored favorite values unless a safe migration has a concrete reason to remove them.
 - Authentication/profile creation must remain intact.
 
+Audit clarification: the current profile-creation flow does not require a favorite fighter. The actual live gate to remove is Football first-entry team selection. Re-check fresh `main` before this PR and remove only the obsolete gate that actually exists.
+
 ---
 
 ## Phase 6 — Brand Migration + Legacy Cleanup
@@ -618,9 +615,14 @@ Do not claim a merged change is live until the live deployment SHA is verified.
 
 # 13. Current Resume Point
 
-**Architecture discussion is complete.**
+**Phase 0 audit is complete.**
 
-The next work session should begin with **Phase 0 — Current-State Audit**, then produce a small-diff implementation sequence.
+The next rollout item is **PR 2 — Universal THE HQ header**. It must be implemented as a **fresh Codex Cloud PR from the then-current `main`** and must read both:
+
+- `docs/the-hq-universal-app-roadmap.md`
+- `docs/the-hq-pr1-current-state-audit.md`
+
+PR 2 should change only the universal header scope; do not begin bottom-navigation, shared sport-context, Home, or theme-token work early.
 
 Do **not** restart card-by-card Home brainstorming unless Cody explicitly reopens it.
 
@@ -664,6 +666,15 @@ Key decisions:
 - Profile and Notifications become universal
 - Tool routing locked: PR 1 may use ChatGPT GitHub tools; runtime implementation PRs 2–14 require fresh Codex Cloud PRs from current `main`, followed by exact-head review here
 
+### Phase 0 completion
+
+- Rollout item: PR 1 — Current-State Audit
+- GitHub PR: #801
+- Audited base: `f0ac4a3d7e819068a0930e3455a32749abb4e029`
+- Handoff: `docs/the-hq-pr1-current-state-audit.md`
+- Runtime behavior changed: no
+- Newly confirmed implementation nuance: no shared sport-context owner exists yet; War Room has runtime/deep-link dependencies beyond navigation; profile creation has no favorite-fighter gate while Football first entry has the actual team gate.
+
 ---
 
 ## Maintenance Rule
@@ -677,5 +688,7 @@ When updating progress, record:
 - merged SHA
 - exact phase / item completed
 - any newly locked product decision
+
+For a PR that itself updates this roadmap, its merge SHA cannot be known inside the commit being merged. Record the PR number and audited/base SHA in that PR, verify the exact merge result externally, and backfill the prior merged SHA the next time this roadmap is edited.
 
 This file should remain the canonical cross-chat handoff for the universal The HQ rollout until the migration is complete.
