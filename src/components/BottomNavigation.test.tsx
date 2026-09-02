@@ -53,8 +53,8 @@ function installVisualViewport() {
 
 function LocationProbe() {
   const location = useLocation();
-  const footballEntry = Boolean((location.state as { footballEntry?: boolean } | null)?.footballEntry);
-  return <output data-testid="location">{location.pathname}|{footballEntry ? "entry" : "plain"}</output>;
+  const footballTabEntry = (location.state as { footballTabEntry?: string } | null)?.footballTabEntry ?? "plain";
+  return <output data-testid="location">{location.pathname}|{footballTabEntry}</output>;
 }
 
 function renderNavigation(initialEntries: string[] = ["/"], children: ReactNode = null) {
@@ -195,7 +195,7 @@ describe("BottomNavigation", () => {
     expect(navigation).toHaveStyle({ display: "grid" });
   });
 
-  it("enters Football only after a second tap on the active Play tab", () => {
+  it("double-taps active UFC Play into Football Play with the Vince entry", () => {
     installVisualViewport();
     renderNavigation(["/play"], <LocationProbe />);
 
@@ -204,7 +204,20 @@ describe("BottomNavigation", () => {
     expect(screen.getByTestId("location")).toHaveTextContent("/play|plain");
 
     fireEvent.click(play);
-    expect(screen.getByTestId("location")).toHaveTextContent("/football|entry");
+    expect(screen.getByTestId("location")).toHaveTextContent("/football|vince");
+    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("football");
+  });
+
+  it("double-taps active UFC Picks into Football Picks with the Zeke entry", () => {
+    installVisualViewport();
+    renderNavigation(["/picks"], <LocationProbe />);
+
+    const picks = screen.getByRole("link", { name: "Picks" });
+    fireEvent.click(picks);
+    expect(screen.getByTestId("location")).toHaveTextContent("/picks|plain");
+
+    fireEvent.click(picks);
+    expect(screen.getByTestId("location")).toHaveTextContent("/football/picks|zeke");
     expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("football");
   });
 
@@ -219,6 +232,20 @@ describe("BottomNavigation", () => {
 
     fireEvent.click(play);
     expect(screen.getByTestId("location")).toHaveTextContent("/play|plain");
+    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
+  });
+
+  it("double-taps the active Football Picks tab back to UFC", () => {
+    installVisualViewport();
+    window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "football");
+    renderNavigation(["/football/picks"], <LocationProbe />);
+
+    const picks = screen.getByRole("link", { name: "Picks" });
+    fireEvent.click(picks);
+    expect(screen.getByTestId("location")).toHaveTextContent("/football/picks|plain");
+
+    fireEvent.click(picks);
+    expect(screen.getByTestId("location")).toHaveTextContent("/picks|plain");
     expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
   });
 });
