@@ -69,6 +69,29 @@ describe("FootballFuturesCard", () => {
     expect(saveFootballFutures).toHaveBeenCalledTimes(1);
     expect(saveFootballFutures).toHaveBeenCalledWith(expect.objectContaining({
       cfbPower4Champions: ["Boston College Eagles"],
+      cfbPlayoffTeams: ["Boston College Eagles"],
+    }));
+  });
+
+  it("carries an NFL division champion into the playoff draft before autosaving", async () => {
+    render(<FootballFuturesCard />);
+    fireEvent.click(screen.getByText("SEASON FUTURES").closest("summary")!);
+
+    const input = screen.getByPlaceholderText("Search AFC East teams");
+    fireEvent.focus(input);
+    fireEvent.click(screen.getByRole("option", { name: "Buffalo Bills" }));
+
+    expect(screen.getByRole("button", { name: "Remove Buffalo Bills" })).toBeInTheDocument();
+    expect(screen.getByText("AFC · Buffalo Bills")).toBeInTheDocument();
+
+    await act(async () => {
+      vi.advanceTimersByTime(250);
+      await Promise.resolve();
+    });
+
+    expect(saveFootballFutures).toHaveBeenCalledWith(expect.objectContaining({
+      nflDivisionChampions: ["Buffalo Bills"],
+      nflPlayoffTeams: ["Buffalo Bills"],
     }));
   });
 });
