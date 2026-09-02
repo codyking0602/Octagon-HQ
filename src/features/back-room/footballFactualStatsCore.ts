@@ -2,6 +2,7 @@ import { footballCfbChampionSeasonRows, footballQbCareerRows, footballRbCareerRo
 import { footballFindLeaderProjectedFactualRecords } from "./footballFindLeaderRuntimeProjection";
 import { expandedFootballFactSources, expandedFootballFactualRecords } from "./footballFactualStatsExpansion";
 import { footballFactualUniverseProjectedRecords, footballFactualUniverseSources } from "./footballFactualUniverseProjection";
+import { footballStage16CfbQbCareerFactualRecords } from "./footballStage16CfbQbCareerFacts";
 import { getFootballSubject } from "./footballSubjectRegistry";
 
 export type FootballFactScope =
@@ -251,7 +252,7 @@ function projectedGapFillRecords(projected: readonly FootballFactualRecord[], ow
   return projected.flatMap((record)=>{ const canonicalSubject=getFootballSubject(record.subjectId); if (!canonicalSubject) return []; const subjectId=canonicalSubject.id; const facts=record.facts.filter((fact)=>!ownedKeys.has(`${subjectId}:${fact.metricId}`)); return facts.length ? [{...record,subjectId,facts}] : []; });
 }
 
-const preStage13FactualRecords=mergeCanonicalFactualRecords([...compatibilityFactualRecords,...expandedFootballFactualRecords]);
+const preStage13FactualRecords=mergeCanonicalFactualRecords([...compatibilityFactualRecords,...expandedFootballFactualRecords,...footballStage16CfbQbCareerFactualRecords]);
 const stage13GapFillFactualRecords=projectedGapFillRecords(footballFactualUniverseProjectedRecords,preStage13FactualRecords);
 export const footballFactualRecords: readonly FootballFactualRecord[]=mergeCanonicalFactualRecords([...preStage13FactualRecords,...stage13GapFillFactualRecords]);
 const findLeaderGapFillFactualRecords=projectedGapFillRecords(footballFindLeaderProjectedFactualRecords,footballFactualRecords);
