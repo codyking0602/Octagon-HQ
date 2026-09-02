@@ -1,11 +1,23 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 import { FootballMatchupBreakdowns } from "./FootballMatchupBreakdowns";
-import { FOOTBALL_MATCHUP_BREAKDOWNS } from "./footballMatchupBreakdowns";
+import { FOOTBALL_MATCHUP_BREAKDOWNS, type FootballMatchupBreakdown } from "./footballMatchupBreakdowns";
+
+function renderBreakdowns(
+  breakdowns: FootballMatchupBreakdown[] = FOOTBALL_MATCHUP_BREAKDOWNS,
+  initialEntries = ["/football/picks"],
+) {
+  return render(
+    <MemoryRouter initialEntries={initialEntries}>
+      <FootballMatchupBreakdowns breakdowns={breakdowns} />
+    </MemoryRouter>,
+  );
+}
 
 describe("FootballMatchupBreakdowns", () => {
   it("opens the featured breakdown sheet and switches between authored matchups without a read or prediction section", () => {
-    render(<FootballMatchupBreakdowns breakdowns={FOOTBALL_MATCHUP_BREAKDOWNS} />);
+    renderBreakdowns();
 
     fireEvent.click(screen.getByRole("button", { name: "MATCHUP BREAKDOWNS" }));
     expect(screen.getByRole("dialog")).toHaveTextContent("LSU vs. Clemson");
@@ -20,11 +32,20 @@ describe("FootballMatchupBreakdowns", () => {
     expect(screen.queryByText("Ole Miss 31, Louisville 24")).not.toBeInTheDocument();
   });
 
+  it("opens a requested matchup directly from the canonical football Picks URL", () => {
+    renderBreakdowns(FOOTBALL_MATCHUP_BREAKDOWNS, ["/football/picks?matchup=2026-louisville-ole-miss"]);
+
+    expect(screen.getByRole("dialog")).toHaveTextContent("Louisville vs. Ole Miss");
+    expect(screen.getByRole("button", { name: "Louisville vs. Ole Miss" })).toHaveAttribute("aria-pressed", "true");
+  });
+
   it("portals the open breakdown above the Picks stacking context and locks background scrolling", () => {
     render(
-      <div data-testid="picks-tools">
-        <FootballMatchupBreakdowns breakdowns={FOOTBALL_MATCHUP_BREAKDOWNS} />
-      </div>,
+      <MemoryRouter>
+        <div data-testid="picks-tools">
+          <FootballMatchupBreakdowns breakdowns={FOOTBALL_MATCHUP_BREAKDOWNS} />
+        </div>
+      </MemoryRouter>,
     );
 
     fireEvent.click(screen.getByRole("button", { name: "MATCHUP BREAKDOWNS" }));
@@ -48,7 +69,7 @@ describe("FootballMatchupBreakdowns", () => {
       videos: [{ title: "Team preview", url: "https://www.youtube.com/watch?v=test" }],
     };
 
-    render(<FootballMatchupBreakdowns breakdowns={[breakdown]} />);
+    renderBreakdowns([breakdown]);
     fireEvent.click(screen.getByRole("button", { name: "MATCHUP BREAKDOWN" }));
 
     const video = screen.getByRole("link", { name: /Team preview/ });
