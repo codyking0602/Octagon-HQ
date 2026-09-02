@@ -9,6 +9,8 @@ const repository = process.env.GITHUB_REPOSITORY ?? "codyking0602/Octagon-HQ";
 const expectedMainSha = process.env.EXPECTED_LIVE_MAIN_SHA?.trim().toLowerCase() ?? "";
 const expectedSyncSourceSha = process.env.EXPECTED_SYNC_SOURCE_SHA?.trim().toLowerCase() ?? "";
 const isPullRequest = process.env.GITHUB_EVENT_NAME === "pull_request";
+const frontendOrigin = (process.env.FRONTEND_PRODUCTION_ORIGIN
+  ?? "https://the.hq-app.workers.dev").replace(/\/$/, "");
 const productionOrigin = (process.env.OCTAGON_PRODUCTION_ORIGIN
   ?? "https://octagon.hq-app.workers.dev").replace(/\/$/, "");
 
@@ -129,7 +131,7 @@ if (new Date(deliveryRun.created_at).getTime() < new Date(deployRun.updated_at).
 }
 
 const liveDelivery = await verifyLiveFrontendDelivery({
-  origin: productionOrigin,
+  origin: frontendOrigin,
   expectedSha: expectedMainSha,
   allowedDeployedShas,
 });
