@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ChallengeCenter } from "../challenges/ChallengeCenter";
 import { useIdentity } from "../identity/IdentityProvider";
 import { useProfilePreferences } from "../profile/ProfilePreferencesProvider";
@@ -159,26 +159,8 @@ function FootballEntryGate({ onChoose, saving }: {
   );
 }
 
-function FootballEntryTransition({ onComplete }: { onComplete: () => void }) {
-  return (
-    <div className="football-entry-transition" role="presentation">
-      <video
-        className="football-entry-transition__video"
-        src="/assets/football/vince-young-championship-run.mp4"
-        autoPlay
-        muted
-        playsInline
-        preload="auto"
-        aria-hidden="true"
-        onEnded={onComplete}
-      />
-    </div>
-  );
-}
-
 export default function FootballBackRoomPage() {
   const navigate = useNavigate();
-  const location = useLocation();
   const identity = useIdentity();
   const profileId = identity.profile?.id ?? "";
   const {
@@ -188,8 +170,6 @@ export default function FootballBackRoomPage() {
     setFootballTeam,
   } = useProfilePreferences();
   const [dailyTab, setDailyTab] = useState<"game" | "leaderboard">("game");
-  const entryRequested = Boolean((location.state as { footballEntry?: boolean } | null)?.footballEntry);
-  const showTransition = entryRequested && Boolean(footballTeam) && !preferencesLoading;
   const runtime = useTodayChallengeRuntime({
     profileId,
     enabled: Boolean(profileId),
@@ -231,12 +211,6 @@ export default function FootballBackRoomPage() {
 
   return (
     <div className={`page football-room-page football-room-page--${footballTeam}`}>
-      {showTransition ? (
-        <FootballEntryTransition
-          onComplete={() => navigate("/football", { replace: true, state: null })}
-        />
-      ) : null}
-
       <section className="football-daily-hq" aria-labelledby="football-daily-title">
         <div className="football-daily-hq__heading">
           <div>
