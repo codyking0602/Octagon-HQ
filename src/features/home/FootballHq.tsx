@@ -41,7 +41,7 @@ function FeaturedGame({
       <div className="football-hq-feature__scrim" aria-hidden="true" />
       <div className="football-hq-feature__copy">
         <span>{label}</span>
-        <strong>{game.blueFighterName} <small>AT</small> {game.redFighterName}</strong>
+        <strong>{breakdown.title}</strong>
         <p>{game.locksAt ? eventDate(game.locksAt) : breakdown.venue}</p>
         <b>OPEN MATCHUP →</b>
       </div>
