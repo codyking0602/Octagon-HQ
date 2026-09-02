@@ -82,10 +82,7 @@ jobs:
           npm run generate:football-cfb-player-seasons 2>&1 | tee pr3-generation.log
           npm run generate:football-factual-universe 2>&1 | tee -a pr3-generation.log
           npm run generate:football-ledger-audit 2>&1 | tee -a pr3-generation.log
-          npm run verify:football-ledger-audit 2>&1 | tee -a pr3-generation.log
-      - name: Commit source fixes and owned generated artifacts
-        env:
-          HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+      - name: Commit fixes locally
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -99,10 +96,26 @@ jobs:
             data/generated/football
           if git diff --cached --quiet; then
             echo "PR3 fixes already applied."
-            exit 0
+          else
+            git commit -m "Fix Stage 15F/G canonical coach coverage"
           fi
-          git commit -m "Fix Stage 15F/G canonical coach coverage"
-          git push origin HEAD:"$HEAD_BRANCH"
+      - name: Verify committed audit and focused proof
+        run: |
+          set -o pipefail
+          npm run verify:football-ledger-audit 2>&1 | tee -a pr3-generation.log
+          npx vitest run \
+            src/features/back-room/footballStage15NflCoachFranchiseEraRankingModels.test.ts \
+            src/features/back-room/footballProHallRecognitionCompleteness.test.ts \
+            src/features/back-room/footballCanonicalUniverse.test.ts \
+            src/features/back-room/footballFactualStats.test.ts \
+            src/features/back-room/footballWavelengthSubjectAuthority.test.ts 2>&1 | tee -a pr3-generation.log
+          npm run typecheck 2>&1 | tee -a pr3-generation.log
+          git status --short | tee -a pr3-generation.log
+          test -z "$(git status --porcelain)"
+      - name: Push verified fixes
+        env:
+          HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: git push origin HEAD:"$HEAD_BRANCH"
       - name: Upload generation diagnostics on failure
         if: failure()
         uses: actions/upload-artifact@v4
