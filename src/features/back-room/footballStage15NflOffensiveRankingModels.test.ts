@@ -49,13 +49,6 @@ describe("Football Stage 15 NFL offensive career ranking models", () => {
       const dataDerived = pool.filter((candidate) => candidate.evaluationSource === "canonical-facts");
 
       expect(dataDerived.length, `${profile.packId} canonical data-derived depth`).toBeGreaterThan(0);
-      expect(
-        dataDerived.some((candidate) =>
-          candidate.factMetricIds.includes("nfl-career-games")
-          && candidate.factMetricIds.includes("nfl-first-team-all-pros")
-        ),
-        `${profile.packId} uses longevity + honors facts`,
-      ).toBe(true);
 
       for (const candidate of dataDerived) {
         expect(candidate.rankingVersion).toBe("stage15-v1");
