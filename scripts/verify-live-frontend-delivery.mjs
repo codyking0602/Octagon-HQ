@@ -1,5 +1,5 @@
 const SHA_PATTERN = /^[0-9a-f]{40}$/i;
-const DEFAULT_ORIGIN = "https://octagon.hq-app.workers.dev";
+const DEFAULT_ORIGIN = "https://the.hq-app.workers.dev";
 const DEFAULT_ATTEMPTS = 12;
 const DEFAULT_DELAY_MS = 5_000;
 const AUCTION_FORMAT_ASSET_PATHS = [
@@ -319,7 +319,7 @@ export async function verifyLiveFrontendDelivery({
 
 if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
   const result = await verifyLiveFrontendDelivery({
-    origin: process.env.OCTAGON_PRODUCTION_ORIGIN ?? DEFAULT_ORIGIN,
+    origin: process.env.FRONTEND_PRODUCTION_ORIGIN ?? DEFAULT_ORIGIN,
     expectedSha: process.env.EXPECTED_SOURCE_SHA ?? process.env.SOURCE_SHA,
     attempts: Number(process.env.FRONTEND_DELIVERY_ATTEMPTS ?? DEFAULT_ATTEMPTS),
     delayMs: Number(process.env.FRONTEND_DELIVERY_DELAY_MS ?? DEFAULT_DELAY_MS),
