@@ -15,7 +15,7 @@ const offensiveProfiles = [
 
 describe("Football Stage 15 NFL offensive career ranking models", () => {
   it("uses one normalized canonical score profile per offensive position family", () => {
-    expect(FOOTBALL_RANKING_FRAMEWORK_VERSION).toBe("stage15-v3");
+    expect(FOOTBALL_RANKING_FRAMEWORK_VERSION).toBe("stage15-v4");
 
     for (const profile of offensiveProfiles) {
       const spec = footballComparisonCategorySpecs[profile.packId];
@@ -51,9 +51,9 @@ describe("Football Stage 15 NFL offensive career ranking models", () => {
       expect(dataDerived.length, `${profile.packId} canonical data-derived depth`).toBeGreaterThan(0);
 
       for (const candidate of dataDerived) {
-        expect(candidate.rankingVersion).toBe("stage15-v3");
+        expect(candidate.rankingVersion).toBe("stage15-v4");
         expect(candidate.rankingSemantic).toBe("career-greatness");
-        expect(candidate.ratingBasis).toContain("stage15-v3");
+        expect(candidate.ratingBasis).toContain("stage15-v4");
       }
     }
   });
