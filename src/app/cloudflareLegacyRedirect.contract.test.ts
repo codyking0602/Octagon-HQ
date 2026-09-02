@@ -33,7 +33,7 @@ describe("legacy Octagon workers.dev compatibility", () => {
     expect(legacyWorkflow).toContain('LEGACY_ORIGIN: https://octagon.hq-app.workers.dev');
     expect(legacyWorkflow).toContain('CANONICAL_ORIGIN: https://the.hq-app.workers.dev');
     expect(legacyWorkflow).toContain('--config "$GITHUB_WORKSPACE/wrangler.legacy-redirect.jsonc"');
-    expect(legacyWorkflow).toContain('status" = "308"');
+    expect(legacyWorkflow).toContain('"$status" = "308"');
     expect(legacyWorkflow).not.toContain("npm run build");
     expect(legacyWorkflow).not.toContain("dist/");
   });
