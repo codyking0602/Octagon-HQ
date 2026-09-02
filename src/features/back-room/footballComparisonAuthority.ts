@@ -7,6 +7,7 @@ import {
   rateFootballRankingEvidence,
   scoreFootballAnchoredValue,
   type FootballRankingDimension,
+  type FootballRankingEvidence,
   type FootballRankingScoreSignal,
   type FootballRankingSemantic,
 } from "./footballRankingFramework";
@@ -44,6 +45,11 @@ interface FootballFixedCalibrationValues {
   byPosition: ReadonlyMap<string, ReadonlyMap<FootballFactMetricId, readonly number[]>>;
 }
 
+interface FootballComparisonSupplementalEvidence {
+  evidence: readonly FootballRankingEvidence[];
+  factMetricIds: readonly FootballFactMetricId[];
+}
+
 export interface FootballComparisonCandidate extends FootballRankFiveItem {
   canonicalSubjectId: string;
   evaluationSource: "reviewed" | "canonical-facts";
@@ -74,6 +80,78 @@ const category = (
 
 const higher = (metricId: FootballFactMetricId, weight: number): FootballComparisonMetricSpec => ({ metricId, weight });
 const lower = (metricId: FootballFactMetricId, weight: number): FootballComparisonMetricSpec => ({ metricId, weight, direction: "lower" });
+
+const NFL_TEAM_WIN_RATE_SIGNAL_ID = "nfl-team-season-win-rate";
+const NFL_TEAM_POSTSEASON_RESULT_SIGNAL_ID = "nfl-team-season-postseason-result";
+
+const nflTeamSeasonSupplementalScoreSignals = [
+  { signalId: NFL_TEAM_WIN_RATE_SIGNAL_ID, dimension: "sustained-excellence", weight: 0.30 },
+  { signalId: NFL_TEAM_POSTSEASON_RESULT_SIGNAL_ID, dimension: "postseason-team-accomplishment", weight: 0.30 },
+] as const satisfies readonly FootballRankingScoreSignal[];
+
+const nflTeamSeasonRecordMetricIds = [
+  "nfl-team-overall-wins",
+  "nfl-team-overall-losses",
+  "nfl-team-overall-ties",
+] as const satisfies readonly FootballFactMetricId[];
+
+const nflTeamSeasonPostseasonMetricIds = [
+  "nfl-team-playoff-berth",
+  "nfl-team-conference-championship-game",
+  "nfl-team-super-bowl-appearance",
+  "nfl-super-bowl-title",
+] as const satisfies readonly FootballFactMetricId[];
+
+function supplementalNflTeamSeasonEvidence(subjectId: string): FootballComparisonSupplementalEvidence {
+  const evidence: FootballRankingEvidence[] = [];
+  const factMetricIds: FootballFactMetricId[] = [];
+
+  const recordFacts = nflTeamSeasonRecordMetricIds.map((metricId) => {
+    const result = getFootballFact(subjectId, metricId);
+    if (result) factMetricIds.push(metricId);
+    return result?.fact.value;
+  });
+  if (recordFacts.every((value): value is number => value != null)) {
+    const [wins, losses, ties] = recordFacts;
+    const games = wins + losses + ties;
+    if (games > 0) {
+      evidence.push({
+        signalId: NFL_TEAM_WIN_RATE_SIGNAL_ID,
+        dimension: "sustained-excellence",
+        weight: 0.30,
+        score: (wins + ties * 0.5) / games,
+      });
+    }
+  }
+
+  const postseasonFacts = nflTeamSeasonPostseasonMetricIds.map((metricId) => {
+    const result = getFootballFact(subjectId, metricId);
+    if (result) factMetricIds.push(metricId);
+    return result?.fact.value;
+  });
+  const [playoffBerth, conferenceChampionshipGame, superBowlAppearance, superBowlTitle] = postseasonFacts;
+  const postseasonScore = superBowlTitle === 1
+    ? 1
+    : superBowlAppearance === 1
+      ? 0.75
+      : conferenceChampionshipGame === 1
+        ? 0.50
+        : playoffBerth === 1
+          ? 0.25
+          : postseasonFacts.every((value): value is number => value != null)
+            ? 0
+            : null;
+  if (postseasonScore != null) {
+    evidence.push({
+      signalId: NFL_TEAM_POSTSEASON_RESULT_SIGNAL_ID,
+      dimension: "postseason-team-accomplishment",
+      weight: 0.30,
+      score: postseasonScore,
+    });
+  }
+
+  return { evidence, factMetricIds: [...new Set(factMetricIds)] };
+}
 
 const nflOffensiveLineSpec = category(
   { kind: "player-career", league: "NFL", position: "OL" },
@@ -296,13 +374,10 @@ export const footballComparisonCategorySpecs: Readonly<Record<FootballRankFivePa
   "nfl-team-seasons": category(
     { kind: "team-season", league: "NFL" },
     [
-      higher("nfl-team-overall-wins", 0.30),
-      lower("nfl-team-overall-losses", 0.10),
       higher("nfl-team-points-per-game", 0.20),
       lower("nfl-team-opponent-points-per-game", 0.20),
-      higher("nfl-super-bowl-title", 0.20),
     ],
-    2,
+    1,
   ),
   "college-quarterbacks": category(
     { kind: "player-career", league: "CFB", position: "QB" },
@@ -410,9 +485,9 @@ const rankingDimensionByMetric: Readonly<Partial<Record<FootballFactMetricId, Fo
   "nfl-super-bowl-titles": "postseason-team-accomplishment",
   "nfl-defensive-player-of-year-awards": "honors",
   "nfl-first-team-all-pros": "honors",
-  "nfl-season-passing-yards": "peak",
+  "nfl-season-passing-yards": "sustained-excellence",
   "nfl-season-passing-touchdowns": "peak",
-  "nfl-season-passer-rating": "peak",
+  "nfl-season-passer-rating": "contextual-strength",
   "nfl-season-interceptions": "contextual-strength",
   "nfl-team-overall-wins": "sustained-excellence",
   "nfl-team-overall-losses": "contextual-strength",
@@ -551,6 +626,8 @@ interface FootballComparisonModelBuild {
   reviewedItems: readonly FootballRankFiveItem[];
   specForSubject: (subject: FootballSubjectProfile) => FootballComparisonCategorySpec | undefined;
   calibrationForSpec: (spec: FootballComparisonCategorySpec, subject: FootballSubjectProfile) => FootballFixedCalibrationValues;
+  additionalScoreSignals?: readonly FootballRankingScoreSignal[];
+  supplementalEvidenceForSubject?: (subject: FootballSubjectProfile) => FootballComparisonSupplementalEvidence;
 }
 
 function buildFootballCandidatePoolFromModel({
@@ -559,6 +636,8 @@ function buildFootballCandidatePoolFromModel({
   reviewedItems,
   specForSubject,
   calibrationForSpec,
+  additionalScoreSignals = [],
+  supplementalEvidenceForSubject,
 }: FootballComparisonModelBuild): readonly FootballComparisonCandidate[] {
   const subjects = queryFootballSubjects(query);
   const reviewed = reviewedByQuery(query, reviewedItems);
@@ -572,13 +651,19 @@ function buildFootballCandidatePoolFromModel({
   });
 
   return raw.map(({ subject, spec, reviewedItem, facts }) => {
+    const supplemental = supplementalEvidenceForSubject?.(subject) ?? { evidence: [], factMetricIds: [] };
+    const factMetricIds = [...new Set([
+      ...facts.map((row) => row.metric.metricId),
+      ...supplemental.factMetricIds,
+    ])];
+
     if (reviewedItem) {
       return {
         ...reviewedItem,
         canonicalSubjectId: subject.id,
         evaluationSource: "reviewed" as const,
         recognizabilityTier: subject.recognizabilityTier,
-        factMetricIds: facts.map((row) => row.metric.metricId),
+        factMetricIds,
         rankingVersion: FOOTBALL_RANKING_FRAMEWORK_VERSION,
         rankingSemantic: semantic,
         rankingCoverage: 1,
@@ -592,18 +677,21 @@ function buildFootballCandidatePoolFromModel({
       calibration = calibrationForSpec(spec, subject);
       calibrationCache.set(spec, calibration);
     }
-    const scoreSignals = scoreSignalsForSpec(spec);
-    const evidence = facts.flatMap((row) => {
-      const dimension = rankingDimensionByMetric[row.metric.metricId];
-      const anchors = calibrationAnchorsFor(calibration, subject, row.metric.metricId);
-      if (!dimension || anchors.length < 2) return [];
-      return [{
-        signalId: row.metric.metricId,
-        dimension,
-        weight: row.metric.weight,
-        score: scoreFootballAnchoredValue(row.value, anchors, row.metric.direction ?? "higher"),
-      }];
-    });
+    const scoreSignals = [...scoreSignalsForSpec(spec), ...additionalScoreSignals];
+    const evidence = [
+      ...facts.flatMap((row) => {
+        const dimension = rankingDimensionByMetric[row.metric.metricId];
+        const anchors = calibrationAnchorsFor(calibration, subject, row.metric.metricId);
+        if (!dimension || anchors.length < 2) return [];
+        return [{
+          signalId: row.metric.metricId,
+          dimension,
+          weight: row.metric.weight,
+          score: scoreFootballAnchoredValue(row.value, anchors, row.metric.direction ?? "higher"),
+        }];
+      }),
+      ...supplemental.evidence,
+    ];
     const ranking = rateFootballRankingEvidence(semantic, evidence, scoreSignals);
 
     return {
@@ -612,11 +700,11 @@ function buildFootballCandidatePoolFromModel({
       subtitle: subtitleForSubject(subject),
       league: subject.league,
       rating: ranking.rating,
-      ratingBasis: `${FOOTBALL_RANKING_FRAMEWORK_VERSION} ${semantic} from ${facts.length} canonical metric${facts.length === 1 ? "" : "s"}; ${Math.round(ranking.coverage * 100)}% dimension coverage, ${Math.round(ranking.confidence * 100)}% confidence.`,
+      ratingBasis: `${FOOTBALL_RANKING_FRAMEWORK_VERSION} ${semantic} from ${factMetricIds.length} canonical metric${factMetricIds.length === 1 ? "" : "s"}; ${Math.round(ranking.coverage * 100)}% dimension coverage, ${Math.round(ranking.confidence * 100)}% confidence.`,
       canonicalSubjectId: subject.id,
       evaluationSource: "canonical-facts" as const,
       recognizabilityTier: subject.recognizabilityTier,
-      factMetricIds: facts.map((row) => row.metric.metricId),
+      factMetricIds,
       rankingVersion: ranking.version,
       rankingSemantic: ranking.semantic,
       rankingCoverage: ranking.coverage,
@@ -688,5 +776,9 @@ export function buildFootballComparisonCandidatePool(packId: FootballRankFivePac
     reviewedItems,
     specForSubject: () => spec,
     calibrationForSpec: () => calibration,
+    ...(packId === "nfl-team-seasons" ? {
+      additionalScoreSignals: nflTeamSeasonSupplementalScoreSignals,
+      supplementalEvidenceForSubject: (subject: FootballSubjectProfile) => supplementalNflTeamSeasonEvidence(subject.id),
+    } : {}),
   });
 }
