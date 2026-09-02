@@ -61,7 +61,7 @@ describe("Football Stage 15 NFL coach, franchise and bounded-era ranking models"
     for (const candidate of dataDerived) {
       expect(candidate.rankingVersion).toBe("stage15-v4");
       expect(candidate.rankingSemantic).toBe("coach-greatness");
-      expect(candidate.factMetricIds).toEqual(expect.arrayContaining(coachMetrics));
+      expect(candidate.factMetricIds).toEqual(expect.arrayContaining([...coachMetrics]));
       expect(candidate.rankingCoverage).toBeCloseTo(0.80);
     }
   });

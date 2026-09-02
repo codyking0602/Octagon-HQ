@@ -1,4 +1,6 @@
+import nflCoachSeasonsJson from "../../../data/generated/football/relationships/nfl-coach-seasons-1999-2025.json";
 import recognizabilityProjectionJson from "../../../data/generated/football/recognizability-projection.json";
+import { isFootballExplicitlyApprovedIconicSubject } from "./footballExplicitRecognitionApprovals";
 import type { FootballCanonicalSubject } from "./footballFactualStatsCatalog";
 import { footballProHallRecognitionCandidates } from "./footballProHallRecognitionCompletenessEvidence";
 import { applyFootballHistoricalRecognitionPolicy } from "./footballRecognitionHistoricalPolicy";
@@ -55,7 +57,6 @@ const coachStops = (recognizabilityProjectionJson.records as readonly Projection
     record.kind === "coach-stop"
     && record.league === "NFL"
     && record.sourceProvider === "nflverse"
-    && record.tier !== "D"
   ));
 
 const sourceCoachById = new Map<string, {
@@ -68,8 +69,10 @@ const sourceCoachById = new Map<string, {
 for (const record of coachStops) {
   const id = subjectId(record.name);
   const current = sourceCoachById.get(id);
+  const explicitFloor: FootballRecognizabilityTier | undefined = isFootballExplicitlyApprovedIconicSubject(id) ? "A" : undefined;
   const hallFloor = hallCoachById.get(id)?.minimumTier;
-  const tier = hallFloor ? strongestTier(record.tier, hallFloor) : record.tier;
+  const evidenceFloor = explicitFloor ?? hallFloor;
+  const tier = evidenceFloor ? strongestTier(record.tier, evidenceFloor) : record.tier;
   sourceCoachById.set(id, {
     name: record.name,
     tier: current ? strongestTier(current.tier, tier) : tier,
@@ -83,6 +86,24 @@ for (const record of coachStops) {
       : record.endSeason == null
         ? current.endSeason
         : Math.max(current.endSeason, record.endSeason),
+  });
+}
+
+type CoachSeasonTable = { columns: readonly string[]; rows: readonly (readonly unknown[])[] };
+const relationshipPayload = nflCoachSeasonsJson as CoachSeasonTable;
+const relationshipCoachIndex = Object.fromEntries(relationshipPayload.columns.map((column, index) => [column, index]));
+for (const values of relationshipPayload.rows) {
+  const id = String(values[relationshipCoachIndex.sourceCoachNameKey] ?? "");
+  if (!id || sourceCoachById.has(id) || !isFootballExplicitlyApprovedIconicSubject(id)) continue;
+  const name = String(values[relationshipCoachIndex.coachName] ?? "");
+  const season = Number(values[relationshipCoachIndex.season]);
+  if (!name || !Number.isFinite(season)) continue;
+  const current = sourceCoachById.get(id);
+  sourceCoachById.set(id, {
+    name,
+    tier: "A",
+    startSeason: current?.startSeason == null ? season : Math.min(current.startSeason, season),
+    endSeason: current?.endSeason == null ? season : Math.max(current.endSeason, season),
   });
 }
 

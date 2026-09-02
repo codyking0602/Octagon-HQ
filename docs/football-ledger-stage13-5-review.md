@@ -1,6 +1,6 @@
 # Football Knowledge Ledger — Stage 13.5 Human Review
 
-Canonical A/B/C subjects: **4,032**
+Canonical A/B/C subjects: **4,035**
 Independent omission candidates: **0**
 Historical tier violations: **0**
 
@@ -22,7 +22,7 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 | Player seasons | 764 | 107 | 318 | 339 | 764 | 0 | 0 | 0 | 0 | 0 |
 | Team seasons | 113 | 4 | 37 | 72 | 113 | 0 | 0 | 0 | 0 | 0 |
 | Franchises / programs | 32 | 5 | 27 | 0 | 32 | 0 | 0 | 0 | 0 | 0 |
-| Head coaches | 67 | 11 | 22 | 34 | 0 | 67 | 0 | 134 | 0 | 0 |
+| Head coaches | 73 | 17 | 12 | 44 | 0 | 73 | 0 | 146 | 0 | 0 |
 | Eras / dynasties | 28 | 8 | 16 | 4 | 0 | 28 | 0 | 56 | 0 | 0 |
 | Notable games / misc | 73 | 20 | 49 | 4 | 0 | 73 | 0 | 146 | 0 | 0 |
 
@@ -42,7 +42,7 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 | Player seasons | 316 | 12 | 25 | 279 | 316 | 0 | 0 | 0 | 0 | 0 |
 | Team seasons | 132 | 6 | 42 | 84 | 132 | 0 | 0 | 0 | 0 | 0 |
 | Franchises / programs | 106 | 5 | 13 | 88 | 101 | 5 | 0 | 10 | 0 | 0 |
-| Head coaches | 55 | 16 | 32 | 7 | 55 | 0 | 0 | 0 | 0 | 0 |
+| Head coaches | 52 | 13 | 32 | 7 | 52 | 0 | 0 | 0 | 0 | 0 |
 | Eras / dynasties | 71 | 19 | 24 | 28 | 42 | 29 | 0 | 29 | 0 | 0 |
 | Notable games / misc | 87 | 32 | 47 | 8 | 0 | 87 | 0 | 174 | 0 | 0 |
 
@@ -406,38 +406,35 @@ None.
 - NFL Eras / dynasties: **Tampa Bay Buccaneers — Brady era** — C, Partial; missing objective era results, era championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Andy Reid** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Bill Belichick** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
+- NFL Head coaches: **Bill Parcells** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results cover only part of this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Bill Walsh** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
+- NFL Head coaches: **Chuck Noll** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Don Shula** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Earl 'Curly' Lambeau** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **George Halas** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Jimmy Johnson** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results cover only part of this subject's historical window; normalized NFL relationship coverage begins in 1999.
+- NFL Head coaches: **Joe Gibbs** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results cover only part of this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **John Madden** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
+- NFL Head coaches: **Nick Saban** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Paul Brown** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
+- NFL Head coaches: **Pete Carroll** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Tom Landry** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
+- NFL Head coaches: **Urban Meyer** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Vince Lombardi** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Bill Cowher** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
-- NFL Head coaches: **Brian Billick** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Bud Grant** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Dick Vermeil** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Dick Vermeil** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results cover only part of this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Don Coryell** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **George Allen** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Hank Stram** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
-- NFL Head coaches: **John Harbaugh** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
-- NFL Head coaches: **Jon Gruden** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
-- NFL Head coaches: **Kyle Shanahan** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Marv Levy** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
-- NFL Head coaches: **Mike McCarthy** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
-- NFL Head coaches: **Mike Shanahan** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
-- NFL Head coaches: **Mike Tomlin** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
-- NFL Head coaches: **Sean McVay** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
-- NFL Head coaches: **Sean Payton** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Sid Gillman** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
-- NFL Head coaches: **Tom Coughlin** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Tom Flores** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Tony Dungy** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Weeb Ewbank** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Bill O'Brien** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
+- NFL Head coaches: **Brian Billick** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Bruce Arians** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Chuck Pagano** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Dan Campbell** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
@@ -453,16 +450,22 @@ None.
 - NFL Head coaches: **Jim Fassel** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Jim Haslett** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **John Fox** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
+- NFL Head coaches: **John Harbaugh** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
+- NFL Head coaches: **Jon Gruden** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Ken Whisenhunt** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Kevin Stefanski** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
+- NFL Head coaches: **Kyle Shanahan** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Lovie Smith** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Marty Schottenheimer** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Marvin Lewis** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Matt LaFleur** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Mike Holmgren** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Mike Martz** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
+- NFL Head coaches: **Mike McCarthy** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
+- NFL Head coaches: **Mike Shanahan** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Mike Sherman** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Mike Smith** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
+- NFL Head coaches: **Mike Tomlin** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Mike Vrabel** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Mike Zimmer** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Nick Sirianni** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
@@ -470,6 +473,9 @@ None.
 - NFL Head coaches: **Rex Ryan** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Ron Rivera** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Sean McDermott** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
+- NFL Head coaches: **Sean McVay** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
+- NFL Head coaches: **Sean Payton** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
+- NFL Head coaches: **Tom Coughlin** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Zac Taylor** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL LB: **Dick Butkus** — A, Partial; missing LB tackle/disruption/turnover facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL LB: **Sam Huff** — A, Partial; missing LB tackle/disruption/turnover facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.

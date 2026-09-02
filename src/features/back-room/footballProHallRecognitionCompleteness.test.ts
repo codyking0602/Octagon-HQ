@@ -72,9 +72,9 @@ describe("Stage 13.5 exhaustive Pro Football Hall of Fame recognition review", (
   });
 
   it("keeps every genuinely missing Hall repair bounded, unique, positioned when a player, and era-policy compliant", () => {
-    expect(footballProHallHistoricalRepairSeeds).toHaveLength(146);
-    expect(new Set(footballProHallHistoricalRepairSeeds.map((seed) => seed.id)).size).toBe(146);
-    expect(new Set(footballProHallHistoricalRepairSeeds.map((seed) => `${seed.kind}:${normalized(seed.name)}`)).size).toBe(146);
+    expect(footballProHallHistoricalRepairSeeds).toHaveLength(149);
+    expect(new Set(footballProHallHistoricalRepairSeeds.map((seed) => seed.id)).size).toBe(149);
+    expect(new Set(footballProHallHistoricalRepairSeeds.map((seed) => `${seed.kind}:${normalized(seed.name)}`)).size).toBe(149);
 
     for (const seed of footballProHallHistoricalRepairSeeds) {
       expect(seed.startSeason, seed.name).toBeLessThanOrEqual(seed.endSeason);

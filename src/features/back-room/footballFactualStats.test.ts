@@ -20,6 +20,8 @@ describe("Football factual stat owner", () => {
       "nfl-player-season",
       "nfl-team-season",
       "nfl-franchise",
+      "nfl-coach-career",
+      "nfl-franchise-era",
       "cfb-player-career",
       "cfb-player-season",
       "cfb-team-season",

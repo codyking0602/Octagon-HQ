@@ -8,6 +8,7 @@ import {
   nflTightEnds,
 } from "./footballComparisonDepthCatalog";
 import { footballCfbPlayerSeasonRecognitionRecords } from "./footballCfbPlayerSeasonRecognition";
+import { footballNflCoachRecognitionProjectionSubjects } from "./footballNflCoachRecognitionProjection";
 import { footballProgramEraSubjects } from "./footballProgramEraSeeds";
 
 export type FootballExpandedSubjectKind = "player-career" | "player-season" | "team-season" | "program" | "program-era" | "coach";
@@ -91,6 +92,8 @@ const defenders: FootballExpandedCanonicalSubject[] = nflDefensiveCareers.map((i
   position: defenderPositions[item.id] ?? "DL",
 }));
 
+const nflCoaches: readonly FootballExpandedCanonicalSubject[] = footballNflCoachRecognitionProjectionSubjects.map(({ subject }) => subject);
+
 const quarterbackSeasons: FootballExpandedCanonicalSubject[] = nflQuarterbackSeasons.map((item) => {
   const season = trailingSeason(item.id);
   return {
@@ -166,6 +169,7 @@ const collegeSeasons: FootballExpandedCanonicalSubject[] = collegeTeamSeasonDept
 export const footballComparisonCanonicalSubjects: readonly FootballExpandedCanonicalSubject[] = [
   ...tightEnds,
   ...defenders,
+  ...nflCoaches,
   ...quarterbackSeasons,
   ...cfbRecognizablePlayerSeasons,
   ...nflSeasons,

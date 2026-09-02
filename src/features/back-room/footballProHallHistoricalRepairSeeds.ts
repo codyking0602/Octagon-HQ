@@ -165,6 +165,9 @@ const footballProHallHistoricalMetadataSeeds: readonly FootballProHallHistorical
   { id: "nfl-ron-yary", name: "Ron Yary", kind: "player-career", position: "OL", startSeason: 1968, endSeason: 1982, tier: "B" },
   { id: "nfl-jack-youngblood", name: "Jack Youngblood", kind: "player-career", position: "DL", startSeason: 1971, endSeason: 1984, tier: "B" },
   { id: "nfl-gary-zimmerman", name: "Gary Zimmerman", kind: "player-career", position: "OL", startSeason: 1986, endSeason: 1997, tier: "B" },
+  { id: "joe-gibbs", name: "Joe Gibbs", kind: "coach", startSeason: 1981, endSeason: 2007, tier: "A" },
+  { id: "chuck-noll", name: "Chuck Noll", kind: "coach", startSeason: 1969, endSeason: 1991, tier: "A" },
+  { id: "bill-parcells", name: "Bill Parcells", kind: "coach", startSeason: 1983, endSeason: 2006, tier: "A" },
 ] as const;
 
 export const footballProHallHistoricalRepairSeeds: readonly FootballProHallHistoricalRepairSeed[] =

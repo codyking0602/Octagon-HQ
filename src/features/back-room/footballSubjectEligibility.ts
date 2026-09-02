@@ -1,4 +1,5 @@
 import { footballCfbPlayerSeasonRecognitionFor } from "./footballCfbPlayerSeasonRecognition";
+import { isFootballExplicitlyApprovedIconicSubject } from "./footballExplicitRecognitionApprovals";
 import type { FootballCanonicalSubject } from "./footballFactualStatsCatalog";
 import { footballProgramEraRecognitionFor } from "./footballProgramEraSeeds";
 import { footballRecognitionProjectionFor } from "./footballRecognizabilityProjection";
@@ -36,14 +37,8 @@ export interface FootballSubjectKnowledgeOverride {
   sourceIdentityKeys?: readonly FootballSourceIdentityKey[];
 }
 
-const explicitlyApprovedIconicSubjects = new Set([
-  "program-alabama", "program-michigan", "program-notre-dame", "program-ohio-state", "program-texas",
-  "nick-saban", "bill-belichick", "andy-reid", "pete-carroll", "urban-meyer",
-  "2005-texas", "2019-lsu", "2001-miami", "2007-patriots",
-]);
-
 function conservativeCanonicalTier(subject: FootballCanonicalSubject): FootballRecognizabilityTier {
-  if (explicitlyApprovedIconicSubjects.has(subject.id)) return "A";
+  if (isFootballExplicitlyApprovedIconicSubject(subject.id)) return "A";
   if (subject.kind === "team-season") return subject.nationalChampion ? "C" : "D";
   // A relationship existing is not recognition evidence. Program Era promotion comes only from its reviewed owner.
   if (subject.kind === "program-era") return "D";
