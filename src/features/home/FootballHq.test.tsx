@@ -151,8 +151,8 @@ describe("Football HQ Home summary", () => {
     expect(hq).toHaveClass("home-sport-hq");
     expect(within(hq).getByText("2 PICKS LEFT")).toBeInTheDocument();
     expect(within(hq).getByText("#2")).toBeInTheDocument();
-    expect(within(hq).getByText(/Clemson Tigers/)).toBeInTheDocument();
-    expect(within(hq).getByText(/Louisville Cardinals/)).toBeInTheDocument();
+    expect(within(hq).getByText("LSU vs. Clemson")).toBeInTheDocument();
+    expect(within(hq).getByText("Louisville vs. Ole Miss")).toBeInTheDocument();
     expect(within(hq).getAllByText("COLLEGE GAME OF THE WEEK")).toHaveLength(2);
     expect(within(hq).queryByText("NFL GAME OF THE WEEK")).not.toBeInTheDocument();
     expect(within(hq).queryByText(/Miami Hurricanes/)).not.toBeInTheDocument();
