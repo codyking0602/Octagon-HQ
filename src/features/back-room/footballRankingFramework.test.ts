@@ -9,7 +9,7 @@ import {
 
 describe("Football ranking framework", () => {
   it("defines separate versioned greatness semantics and dimensions", () => {
-    expect(FOOTBALL_RANKING_FRAMEWORK_VERSION).toBe("stage15-v3");
+    expect(FOOTBALL_RANKING_FRAMEWORK_VERSION).toBe("stage15-v4");
     expect(Object.keys(footballRankingSemanticContracts)).toEqual([
       "career-greatness",
       "single-season-greatness",
