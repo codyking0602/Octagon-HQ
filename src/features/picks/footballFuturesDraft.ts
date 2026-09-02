@@ -2,6 +2,15 @@ import {
   FOOTBALL_FUTURES_RULES,
   type FootballFuturesPicks,
 } from "./footballPicksScoring";
+import {
+  CFB_POWER4_CONFERENCES,
+  NFL_CONFERENCES,
+  NFL_DIVISION_GROUPS,
+  getCfbPower4Conference,
+  getNflConference,
+  getNflTeamGroup,
+  isCfbPower4Team,
+} from "./footballFuturesTeams";
 
 export const EMPTY_FOOTBALL_FUTURES_PICKS: FootballFuturesPicks = {
   cfbPower4Champions: [],
@@ -46,6 +55,58 @@ function validateSingleInList(label: string, value: string, parent: readonly str
   if (!normalizedSet(parent).has(cleaned.toLocaleLowerCase())) errors.push(`${label} must also appear in the parent field.`);
 }
 
+function includesAll(parent: readonly string[], required: readonly string[]) {
+  const parentSet = normalizedSet(parent);
+  return cleanList(required).every((value) => parentSet.has(value.toLocaleLowerCase()));
+}
+
+function validateConferenceAndDivisionRules(picks: FootballFuturesPicks, errors: string[]) {
+  if (picks.cfbPower4Champions.length === FOOTBALL_FUTURES_RULES.cfb.power4Champions.selections) {
+    const conferences = picks.cfbPower4Champions.map(getCfbPower4Conference);
+    const hasEveryConference = CFB_POWER4_CONFERENCES.every(
+      (conference) => conferences.filter((value) => value === conference).length === 1,
+    );
+    if (!hasEveryConference) errors.push("Power 4 champions must include exactly one ACC, Big Ten, Big 12, and SEC team.");
+  }
+
+  if (picks.cfbPlayoffTeams.length === FOOTBALL_FUTURES_RULES.cfb.playoffTeams.selections) {
+    if (!includesAll(picks.cfbPlayoffTeams, picks.cfbPower4Champions)) {
+      errors.push("The 12-team CFP must include every Power 4 champion you picked.");
+    }
+    if (!picks.cfbPlayoffTeams.some((team) => !isCfbPower4Team(team))) {
+      errors.push("The 12-team CFP must include at least one non-Power 4 team.");
+    }
+  }
+
+  if (picks.nflDivisionChampions.length === FOOTBALL_FUTURES_RULES.nfl.divisionChampions.selections) {
+    const groups = picks.nflDivisionChampions.map((team) => getNflTeamGroup(team)?.label ?? null);
+    const hasEveryDivision = NFL_DIVISION_GROUPS.every(
+      (group) => groups.filter((value) => value === group.label).length === 1,
+    );
+    if (!hasEveryDivision) errors.push("NFL division champions must include exactly one team from each division.");
+  }
+
+  if (picks.nflPlayoffTeams.length === FOOTBALL_FUTURES_RULES.nfl.playoffTeams.selections) {
+    const conferences = picks.nflPlayoffTeams.map(getNflConference);
+    const hasKnownTeams = conferences.every(Boolean);
+    const hasSevenPerConference = hasKnownTeams && NFL_CONFERENCES.every(
+      (conference) => conferences.filter((value) => value === conference).length === 7,
+    );
+    if (!hasSevenPerConference) errors.push("NFL playoffs must include exactly 7 AFC and 7 NFC teams.");
+    if (!includesAll(picks.nflPlayoffTeams, picks.nflDivisionChampions)) {
+      errors.push("NFL playoffs must include every division champion you picked.");
+    }
+  }
+
+  if (picks.nflConferenceChampionshipTeams.length === FOOTBALL_FUTURES_RULES.nfl.conferenceChampionshipTeams.selections) {
+    const conferences = picks.nflConferenceChampionshipTeams.map(getNflConference);
+    const hasTwoPerConference = conferences.every(Boolean) && NFL_CONFERENCES.every(
+      (conference) => conferences.filter((value) => value === conference).length === 2,
+    );
+    if (!hasTwoPerConference) errors.push("Conference title teams must include exactly 2 AFC and 2 NFC teams.");
+  }
+}
+
 export function normalizeFootballFuturesPicks(picks: FootballFuturesPicks): FootballFuturesPicks {
   return {
     cfbPower4Champions: cleanList(picks.cfbPower4Champions),
@@ -77,6 +138,7 @@ export function validateFootballFuturesPicks(picks: FootballFuturesPicks) {
   validateSubset("NFL division champions", normalized.nflDivisionChampions, normalized.nflPlayoffTeams, errors);
   validateSubset("Conference championship teams", normalized.nflConferenceChampionshipTeams, normalized.nflPlayoffTeams, errors);
   validateSingleInList("Super Bowl champion", normalized.nflSuperBowlChampion, normalized.nflConferenceChampionshipTeams, errors);
+  validateConferenceAndDivisionRules(normalized, errors);
 
   return { normalized, errors };
 }
