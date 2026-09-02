@@ -6,6 +6,7 @@ const verifier = readFileSync("scripts/verify-live-frontend-delivery.mjs", "utf8
 const whatsNewVerifier = readFileSync("scripts/verify-whats-new-live.mjs", "utf8");
 const pinAuthVerifier = readFileSync("scripts/verify-pin-auth-live.mjs", "utf8");
 const workflow = readFileSync(".github/workflows/verify-live-frontend-delivery.yml", "utf8");
+const backendWorkflow = readFileSync(".github/workflows/verify-supabase-backend.yml", "utf8");
 const viteConfig = readFileSync("vite.config.ts", "utf8");
 
 describe("global frontend delivery proof", () => {
@@ -33,6 +34,16 @@ describe("global frontend delivery proof", () => {
     );
     expect(verifier).not.toContain(
       "origin: process.env.OCTAGON_PRODUCTION_ORIGIN ?? DEFAULT_ORIGIN",
+    );
+  });
+
+  it("keeps backend WebKit frontend SHA proof separate from the transitional auth-origin proof", () => {
+    expect(backendWorkflow).toContain(
+      "EXPECTED_SOURCE_SHA: ${{ steps.live_frontend.outputs.sha }}",
+    );
+    expect(backendWorkflow).not.toContain("EXPECTED_DEPLOYMENT_SHA:");
+    expect(pinAuthVerifier).toContain(
+      'if (expectedDeploymentSha && liveDeploymentSha !== expectedDeploymentSha)',
     );
   });
 
