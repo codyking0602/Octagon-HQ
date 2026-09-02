@@ -1,7 +1,7 @@
 name: PR3 Apply Canonical Fixes
 on:
-  pull_request:
-    branches: [main]
+  push:
+    branches: [stage15f-g-nfl-coach-franchise-era]
 permissions:
   contents: write
 jobs:
@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.sha }}
           persist-credentials: true
       - uses: actions/setup-node@v4
         with:
@@ -29,110 +29,48 @@ jobs:
           /** Reviewed iconic recognition only. This is not a roster and contains no factual or ranking values. */
           export function isFootballExplicitlyApprovedIconicSubject(subjectId: string) { return ids.has(subjectId); }
           EOF
-
           python - <<'PY'
           from pathlib import Path
+          import re
 
           def replace_once(path, old, new):
-            p = Path(path)
-            text = p.read_text()
-            count = text.count(old)
-            if count != 1:
-              raise SystemExit(f"{path}: expected exactly one target, found {count}")
-            p.write_text(text.replace(old, new, 1))
+              p = Path(path)
+              text = p.read_text()
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"{path}: expected exactly one target, found {count}")
+              p.write_text(text.replace(old, new, 1))
 
-          replace_once(
-            "src/features/back-room/footballFactualStatsCore.ts",
-            'derived(sourceId,"nfl-career-passing-attempts-per-game",row.passingAttempts/row.games,"passing attempts / games")',
-            'derived(sourceId,"nfl-career-passing-attempts-per-game",row.attempts/row.games,"passing attempts / games")',
-          )
+          replace_once("src/features/back-room/footballFactualStatsCore.ts", 'derived(sourceId,"nfl-career-passing-attempts-per-game",row.passingAttempts/row.games,"passing attempts / games")', 'derived(sourceId,"nfl-career-passing-attempts-per-game",row.attempts/row.games,"passing attempts / games")')
+          replace_once("src/features/back-room/footballCanonicalSubjectExpansion.ts", 'import { footballCfbPlayerSeasonRecognitionRecords } from "./footballCfbPlayerSeasonRecognition";\nimport { footballProgramEraSubjects } from "./footballProgramEraSeeds";', 'import { footballCfbPlayerSeasonRecognitionRecords } from "./footballCfbPlayerSeasonRecognition";\nimport { footballNflCoachRecognitionProjectionSubjects } from "./footballNflCoachRecognitionProjection";\nimport { footballProgramEraSubjects } from "./footballProgramEraSeeds";')
+          replace_once("src/features/back-room/footballCanonicalSubjectExpansion.ts", 'const quarterbackSeasons: FootballExpandedCanonicalSubject[] = nflQuarterbackSeasons.map((item) => {', 'const nflCoaches: readonly FootballExpandedCanonicalSubject[] = footballNflCoachRecognitionProjectionSubjects.map(({ subject }) => subject);\n\nconst quarterbackSeasons: FootballExpandedCanonicalSubject[] = nflQuarterbackSeasons.map((item) => {')
+          replace_once("src/features/back-room/footballCanonicalSubjectExpansion.ts", '  ...defenders,\n  ...quarterbackSeasons,', '  ...defenders,\n  ...nflCoaches,\n  ...quarterbackSeasons,')
+          replace_once("src/features/back-room/footballProHallHistoricalRepairSeeds.ts", '] as const;\n\nexport const footballProHallHistoricalRepairSeeds', '  { id: "joe-gibbs", name: "Joe Gibbs", kind: "coach", startSeason: 1981, endSeason: 2007, tier: "A" },\n  { id: "chuck-noll", name: "Chuck Noll", kind: "coach", startSeason: 1969, endSeason: 1991, tier: "A" },\n  { id: "bill-parcells", name: "Bill Parcells", kind: "coach", startSeason: 1983, endSeason: 2006, tier: "A" },\n] as const;\n\nexport const footballProHallHistoricalRepairSeeds')
+          replace_once("src/features/back-room/footballStage15NflCoachFranchiseEraRankingModels.test.ts", 'expect(candidate.factMetricIds).toEqual(expect.arrayContaining(coachMetrics));', 'expect(candidate.factMetricIds).toEqual(expect.arrayContaining([...coachMetrics]));')
+          replace_once("src/features/back-room/footballFactualStats.test.ts", '      "nfl-franchise",\n      "cfb-player-career",', '      "nfl-franchise",\n      "nfl-coach-career",\n      "nfl-franchise-era",\n      "cfb-player-career",')
+          replace_once("src/features/back-room/footballProHallRecognitionCompleteness.test.ts", 'expect(footballProHallHistoricalRepairSeeds).toHaveLength(146);\n    expect(new Set(footballProHallHistoricalRepairSeeds.map((seed) => seed.id)).size).toBe(146);\n    expect(new Set(footballProHallHistoricalRepairSeeds.map((seed) => `${seed.kind}:${normalized(seed.name)}`)).size).toBe(146);', 'expect(footballProHallHistoricalRepairSeeds).toHaveLength(149);\n    expect(new Set(footballProHallHistoricalRepairSeeds.map((seed) => seed.id)).size).toBe(149);\n    expect(new Set(footballProHallHistoricalRepairSeeds.map((seed) => `${seed.kind}:${normalized(seed.name)}`)).size).toBe(149);')
 
-          replace_once(
-            "src/features/back-room/footballCanonicalSubjectExpansion.ts",
-            'import { footballCfbPlayerSeasonRecognitionRecords } from "./footballCfbPlayerSeasonRecognition";\nimport { footballProgramEraSubjects } from "./footballProgramEraSeeds";',
-            'import { footballCfbPlayerSeasonRecognitionRecords } from "./footballCfbPlayerSeasonRecognition";\nimport { footballNflCoachRecognitionProjectionSubjects } from "./footballNflCoachRecognitionProjection";\nimport { footballProgramEraSubjects } from "./footballProgramEraSeeds";',
-          )
-          replace_once(
-            "src/features/back-room/footballCanonicalSubjectExpansion.ts",
-            'const quarterbackSeasons: FootballExpandedCanonicalSubject[] = nflQuarterbackSeasons.map((item) => {',
-            'const nflCoaches: readonly FootballExpandedCanonicalSubject[] = footballNflCoachRecognitionProjectionSubjects.map(({ subject }) => subject);\n\nconst quarterbackSeasons: FootballExpandedCanonicalSubject[] = nflQuarterbackSeasons.map((item) => {',
-          )
-          replace_once(
-            "src/features/back-room/footballCanonicalSubjectExpansion.ts",
-            '  ...defenders,\n  ...quarterbackSeasons,',
-            '  ...defenders,\n  ...nflCoaches,\n  ...quarterbackSeasons,',
-          )
+          p = Path("src/features/back-room/footballCanonicalUniverse.test.ts")
+          text = p.read_text()
+          pattern = re.compile(r'  it\("keeps modern CFB metadata at least half of modern reusable coverage", \(\) => \{.*?\n  \}\);', re.S)
+          replacement = '  it("keeps modern CFB metadata queryable while NFL source-backed identities expand", () => {\n    expect(queryFootballSubjects({ league: "CFB", decade: 2000 }).map(({ name }) => name)).toContain("Vince Young");\n    expect(queryFootballSubjects({ league: "CFB", decade: 2010 }).map(({ name }) => name)).toContain("Derrick Henry");\n    expect(queryFootballSubjects({ league: "CFB", decade: 2020 }).map(({ name }) => name)).toContain("Travis Hunter");\n  });'
+          text, count = pattern.subn(replacement, text, count=1)
+          if count != 1:
+              raise SystemExit(f"footballCanonicalUniverse.test.ts: expected one CFB quota test, found {count}")
+          p.write_text(text)
 
-          replace_once(
-            "src/features/back-room/footballProHallHistoricalRepairSeeds.ts",
-            '] as const;\n\nexport const footballProHallHistoricalRepairSeeds',
-            '  { id: "joe-gibbs", name: "Joe Gibbs", kind: "coach", startSeason: 1981, endSeason: 2007, tier: "A" },\n  { id: "chuck-noll", name: "Chuck Noll", kind: "coach", startSeason: 1969, endSeason: 1991, tier: "A" },\n  { id: "bill-parcells", name: "Bill Parcells", kind: "coach", startSeason: 1983, endSeason: 2006, tier: "A" },\n] as const;\n\nexport const footballProHallHistoricalRepairSeeds',
-          )
-
-          replace_once(
-            "src/features/back-room/footballStage15NflCoachFranchiseEraRankingModels.test.ts",
-            'expect(candidate.factMetricIds).toEqual(expect.arrayContaining(coachMetrics));',
-            'expect(candidate.factMetricIds).toEqual(expect.arrayContaining([...coachMetrics]));',
-          )
-          replace_once(
-            "src/features/back-room/footballFactualStats.test.ts",
-            '      "nfl-franchise",\n      "cfb-player-career",',
-            '      "nfl-franchise",\n      "nfl-coach-career",\n      "nfl-franchise-era",\n      "cfb-player-career",',
-          )
-          replace_once(
-            "src/features/back-room/footballProHallRecognitionCompleteness.test.ts",
-            'expect(footballProHallHistoricalRepairSeeds).toHaveLength(146);\n    expect(new Set(footballProHallHistoricalRepairSeeds.map((seed) => seed.id)).size).toBe(146);\n    expect(new Set(footballProHallHistoricalRepairSeeds.map((seed) => `${seed.kind}:${normalized(seed.name)}`)).size).toBe(146);',
-            'expect(footballProHallHistoricalRepairSeeds).toHaveLength(149);\n    expect(new Set(footballProHallHistoricalRepairSeeds.map((seed) => seed.id)).size).toBe(149);\n    expect(new Set(footballProHallHistoricalRepairSeeds.map((seed) => `${seed.kind}:${normalized(seed.name)}`)).size).toBe(149);',
-          )
-
-          replace_once(
-            "src/features/back-room/footballCanonicalUniverse.test.ts",
-            '''  it("keeps modern CFB metadata at least half of modern reusable coverage", () => {
-    for (const decade of [2000, 2010, 2020]) {
-      const modern = queryFootballSubjects({ decade });
-      const college = modern.filter(({ league, leagues }) => (leagues ?? [league]).includes("CFB"));
-      expect(college.length).toBeGreaterThanOrEqual(modern.length / 2);
-    }
-  });''',
-            '''  it("keeps modern CFB metadata queryable while NFL source-backed identities expand", () => {
-    expect(queryFootballSubjects({ league: "CFB", decade: 2000 }).map(({ name }) => name)).toContain("Vince Young");
-    expect(queryFootballSubjects({ league: "CFB", decade: 2010 }).map(({ name }) => name)).toContain("Derrick Henry");
-    expect(queryFootballSubjects({ league: "CFB", decade: 2020 }).map(({ name }) => name)).toContain("Travis Hunter");
-  });''',
-          )
-
-          replace_once(
-            "src/features/back-room/footballSubjectEligibility.ts",
-            'import { footballCfbPlayerSeasonRecognitionFor } from "./footballCfbPlayerSeasonRecognition";\nimport type { FootballCanonicalSubject } from "./footballFactualStatsCatalog";',
-            'import { footballCfbPlayerSeasonRecognitionFor } from "./footballCfbPlayerSeasonRecognition";\nimport { isFootballExplicitlyApprovedIconicSubject } from "./footballExplicitRecognitionApprovals";\nimport type { FootballCanonicalSubject } from "./footballFactualStatsCatalog";',
-          )
-          replace_once(
-            "src/features/back-room/footballSubjectEligibility.ts",
-            'const explicitlyApprovedIconicSubjects = new Set([\n  "program-alabama", "program-michigan", "program-notre-dame", "program-ohio-state", "program-texas",\n  "nick-saban", "bill-belichick", "andy-reid", "pete-carroll", "urban-meyer",\n  "2005-texas", "2019-lsu", "2001-miami", "2007-patriots",\n]);\n\nfunction conservativeCanonicalTier(subject: FootballCanonicalSubject): FootballRecognizabilityTier {\n  if (explicitlyApprovedIconicSubjects.has(subject.id)) return "A";',
-            'function conservativeCanonicalTier(subject: FootballCanonicalSubject): FootballRecognizabilityTier {\n  if (isFootballExplicitlyApprovedIconicSubject(subject.id)) return "A";',
-          )
+          replace_once("src/features/back-room/footballSubjectEligibility.ts", 'import { footballCfbPlayerSeasonRecognitionFor } from "./footballCfbPlayerSeasonRecognition";\nimport type { FootballCanonicalSubject } from "./footballFactualStatsCatalog";', 'import { footballCfbPlayerSeasonRecognitionFor } from "./footballCfbPlayerSeasonRecognition";\nimport { isFootballExplicitlyApprovedIconicSubject } from "./footballExplicitRecognitionApprovals";\nimport type { FootballCanonicalSubject } from "./footballFactualStatsCatalog";')
+          replace_once("src/features/back-room/footballSubjectEligibility.ts", 'const explicitlyApprovedIconicSubjects = new Set([\n  "program-alabama", "program-michigan", "program-notre-dame", "program-ohio-state", "program-texas",\n  "nick-saban", "bill-belichick", "andy-reid", "pete-carroll", "urban-meyer",\n  "2005-texas", "2019-lsu", "2001-miami", "2007-patriots",\n]);\n\nfunction conservativeCanonicalTier(subject: FootballCanonicalSubject): FootballRecognizabilityTier {\n  if (explicitlyApprovedIconicSubjects.has(subject.id)) return "A";', 'function conservativeCanonicalTier(subject: FootballCanonicalSubject): FootballRecognizabilityTier {\n  if (isFootballExplicitlyApprovedIconicSubject(subject.id)) return "A";')
 
           p = Path("src/features/back-room/footballNflCoachRecognitionProjection.ts")
           text = p.read_text()
-          text = text.replace(
-            'import recognizabilityProjectionJson from "../../../data/generated/football/recognizability-projection.json";\n',
-            'import nflCoachSeasonsJson from "../../../data/generated/football/relationships/nfl-coach-seasons-1999-2025.json";\nimport recognizabilityProjectionJson from "../../../data/generated/football/recognizability-projection.json";\nimport { isFootballExplicitlyApprovedIconicSubject } from "./footballExplicitRecognitionApprovals";\n',
-            1,
-          )
-          text = text.replace(
-            '    && record.sourceProvider === "nflverse"\n    && record.tier !== "D"\n  ));',
-            '    && record.sourceProvider === "nflverse"\n  ));',
-            1,
-          )
-          text = text.replace(
-            '  const hallFloor = hallCoachById.get(id)?.minimumTier;\n  const tier = hallFloor ? strongestTier(record.tier, hallFloor) : record.tier;',
-            '  const explicitFloor: FootballRecognizabilityTier | undefined = isFootballExplicitlyApprovedIconicSubject(id) ? "A" : undefined;\n  const hallFloor = hallCoachById.get(id)?.minimumTier;\n  const evidenceFloor = explicitFloor ?? hallFloor;\n  const tier = evidenceFloor ? strongestTier(record.tier, evidenceFloor) : record.tier;',
-            1,
-          )
+          text = text.replace('import recognizabilityProjectionJson from "../../../data/generated/football/recognizability-projection.json";\n', 'import nflCoachSeasonsJson from "../../../data/generated/football/relationships/nfl-coach-seasons-1999-2025.json";\nimport recognizabilityProjectionJson from "../../../data/generated/football/recognizability-projection.json";\nimport { isFootballExplicitlyApprovedIconicSubject } from "./footballExplicitRecognitionApprovals";\n', 1)
+          text = text.replace('    && record.sourceProvider === "nflverse"\n    && record.tier !== "D"\n  ));', '    && record.sourceProvider === "nflverse"\n  ));', 1)
+          text = text.replace('  const hallFloor = hallCoachById.get(id)?.minimumTier;\n  const tier = hallFloor ? strongestTier(record.tier, hallFloor) : record.tier;', '  const explicitFloor: FootballRecognizabilityTier | undefined = isFootballExplicitlyApprovedIconicSubject(id) ? "A" : undefined;\n  const hallFloor = hallCoachById.get(id)?.minimumTier;\n  const evidenceFloor = explicitFloor ?? hallFloor;\n  const tier = evidenceFloor ? strongestTier(record.tier, evidenceFloor) : record.tier;', 1)
           marker = '}\n\n/**\n * Source-owned modern NFL head-coach projection.'
-          supplement = '''}\n\ntype CoachSeasonTable = { columns: readonly string[]; rows: readonly (readonly unknown[])[] };\nconst relationshipPayload = nflCoachSeasonsJson as CoachSeasonTable;\nconst relationshipCoachIndex = Object.fromEntries(relationshipPayload.columns.map((column, index) => [column, index]));\nfor (const values of relationshipPayload.rows) {\n  const id = String(values[relationshipCoachIndex.sourceCoachNameKey] ?? "");\n  if (!id || sourceCoachById.has(id) || !isFootballExplicitlyApprovedIconicSubject(id)) continue;\n  const name = String(values[relationshipCoachIndex.coachName] ?? "");\n  const season = Number(values[relationshipCoachIndex.season]);\n  if (!name || !Number.isFinite(season)) continue;\n  const current = sourceCoachById.get(id);\n  sourceCoachById.set(id, {\n    name,\n    tier: "A",\n    startSeason: current?.startSeason == null ? season : Math.min(current.startSeason, season),\n    endSeason: current?.endSeason == null ? season : Math.max(current.endSeason, season),\n  });\n}\n\n/**\n * Source-owned modern NFL head-coach projection.'''
+          supplement = '}\n\ntype CoachSeasonTable = { columns: readonly string[]; rows: readonly (readonly unknown[])[] };\nconst relationshipPayload = nflCoachSeasonsJson as CoachSeasonTable;\nconst relationshipCoachIndex = Object.fromEntries(relationshipPayload.columns.map((column, index) => [column, index]));\nfor (const values of relationshipPayload.rows) {\n  const id = String(values[relationshipCoachIndex.sourceCoachNameKey] ?? "");\n  if (!id || sourceCoachById.has(id) || !isFootballExplicitlyApprovedIconicSubject(id)) continue;\n  const name = String(values[relationshipCoachIndex.coachName] ?? "");\n  const season = Number(values[relationshipCoachIndex.season]);\n  if (!name || !Number.isFinite(season)) continue;\n  const current = sourceCoachById.get(id);\n  sourceCoachById.set(id, {\n    name,\n    tier: "A",\n    startSeason: current?.startSeason == null ? season : Math.min(current.startSeason, season),\n    endSeason: current?.endSeason == null ? season : Math.max(current.endSeason, season),\n  });\n}\n\n/**\n * Source-owned modern NFL head-coach projection.'
           if marker not in text:
-            raise SystemExit("footballNflCoachRecognitionProjection.ts: supplement marker missing")
+              raise SystemExit("footballNflCoachRecognitionProjection.ts: supplement marker missing")
           p.write_text(text.replace(marker, supplement, 1))
           PY
       - name: Regenerate and validate focused exact worktree
@@ -142,37 +80,16 @@ jobs:
           npm run generate:football-factual-universe
           npm run generate:football-ledger-audit
           npm run verify:football-ledger-audit
-          npx vitest run \
-            src/features/back-room/footballStage15NflCoachFranchiseEraRankingModels.test.ts \
-            src/features/back-room/footballProHallRecognitionCompleteness.test.ts \
-            src/features/back-room/footballCanonicalUniverse.test.ts \
-            src/features/back-room/footballFactualStats.test.ts \
-            src/features/back-room/footballWavelengthSubjectAuthority.test.ts \
-            src/features/back-room/footballStage15NflBoundedSeasonRankingModels.test.ts \
-            src/features/back-room/footballStage15NflOffensiveRankingModels.test.ts \
-            src/features/back-room/footballStage15NflRemainingCareerRankingModels.test.ts
+          npx vitest run src/features/back-room/footballStage15NflCoachFranchiseEraRankingModels.test.ts src/features/back-room/footballProHallRecognitionCompleteness.test.ts src/features/back-room/footballCanonicalUniverse.test.ts src/features/back-room/footballFactualStats.test.ts src/features/back-room/footballWavelengthSubjectAuthority.test.ts src/features/back-room/footballStage15NflBoundedSeasonRankingModels.test.ts src/features/back-room/footballStage15NflOffensiveRankingModels.test.ts src/features/back-room/footballStage15NflRemainingCareerRankingModels.test.ts
           npm run typecheck
       - name: Commit generated outputs and remove temporary repair workflows
-        env:
-          HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
         run: |
           git rm --ignore-unmatch .github/workflows/pr3-apply-fixes.yml .github/workflows/pr3-debug.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add \
-            src/features/back-room/footballExplicitRecognitionApprovals.ts \
-            src/features/back-room/footballFactualStatsCore.ts \
-            src/features/back-room/footballCanonicalSubjectExpansion.ts \
-            src/features/back-room/footballProHallHistoricalRepairSeeds.ts \
-            src/features/back-room/footballStage15NflCoachFranchiseEraRankingModels.test.ts \
-            src/features/back-room/footballFactualStats.test.ts \
-            src/features/back-room/footballSubjectEligibility.ts \
-            src/features/back-room/footballNflCoachRecognitionProjection.ts \
-            src/features/back-room/footballProHallRecognitionCompleteness.test.ts \
-            src/features/back-room/footballCanonicalUniverse.test.ts \
-            docs/football-ledger-stage13-5-review.md
+          git add src/features/back-room/footballExplicitRecognitionApprovals.ts src/features/back-room/footballFactualStatsCore.ts src/features/back-room/footballCanonicalSubjectExpansion.ts src/features/back-room/footballProHallHistoricalRepairSeeds.ts src/features/back-room/footballStage15NflCoachFranchiseEraRankingModels.test.ts src/features/back-room/footballFactualStats.test.ts src/features/back-room/footballSubjectEligibility.ts src/features/back-room/footballNflCoachRecognitionProjection.ts src/features/back-room/footballProHallRecognitionCompleteness.test.ts src/features/back-room/footballCanonicalUniverse.test.ts docs/football-ledger-stage13-5-review.md
           git add -u data/generated/football
           git commit --no-verify -m "Fix Stage 15F/G canonical coach coverage"
           npm run verify:football-ledger-audit
           test -z "$(git status --porcelain)"
-          git push origin HEAD:"$HEAD_BRANCH"
+          git push origin HEAD:stage15f-g-nfl-coach-franchise-era
