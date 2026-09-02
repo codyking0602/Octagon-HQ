@@ -11,17 +11,19 @@ export function FootballMatchupBreakdowns({
 }) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const handledRequestedId = useRef<string | null>(null);
+  const deepLinkedBreakdownId = requestedBreakdownId
+    ?? (typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("matchup"));
   const active = useMemo(
     () => breakdowns.find((breakdown) => breakdown.id === activeId) ?? null,
     [activeId, breakdowns],
   );
 
   useEffect(() => {
-    if (!requestedBreakdownId || handledRequestedId.current === requestedBreakdownId) return;
-    if (!breakdowns.some((breakdown) => breakdown.id === requestedBreakdownId)) return;
-    handledRequestedId.current = requestedBreakdownId;
-    setActiveId(requestedBreakdownId);
-  }, [breakdowns, requestedBreakdownId]);
+    if (!deepLinkedBreakdownId || handledRequestedId.current === deepLinkedBreakdownId) return;
+    if (!breakdowns.some((breakdown) => breakdown.id === deepLinkedBreakdownId)) return;
+    handledRequestedId.current = deepLinkedBreakdownId;
+    setActiveId(deepLinkedBreakdownId);
+  }, [breakdowns, deepLinkedBreakdownId]);
 
   useEffect(() => {
     if (!active) return undefined;
