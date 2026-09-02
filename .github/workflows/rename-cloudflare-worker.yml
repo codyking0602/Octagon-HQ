@@ -65,13 +65,7 @@ jobs:
               --data '{"name":"the"}' \
               "$api_base/octagon" \
               --output "$rename_response"
-            node --input-type=module - "$rename_response" <<'NODE'
-            import fs from "node:fs";
-            const response = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
-            if (response.success !== true || response.result?.name !== "the") {
-              throw new Error("Cloudflare did not confirm the in-place Worker rename to the.");
-            }
-            NODE
+            node --input-type=module --eval 'import fs from "node:fs"; const response = JSON.parse(fs.readFileSync(process.argv[1], "utf8")); if (response.success !== true || response.result?.name !== "the") { throw new Error("Cloudflare did not confirm the in-place Worker rename to the."); }' "$rename_response"
           elif [ "$old_status" = "404" ] && [ "$new_status" = "200" ]; then
             echo "Worker is already named the; continuing with verification."
           else
@@ -88,11 +82,5 @@ jobs:
             exit 1
           fi
 
-          node --input-type=module - "$new_response" <<'NODE'
-          import fs from "node:fs";
-          const response = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
-          if (response.success !== true || response.result?.name !== "the") {
-            throw new Error("Canonical Worker verification did not return the.");
-          }
-          NODE
+          node --input-type=module --eval 'import fs from "node:fs"; const response = JSON.parse(fs.readFileSync(process.argv[1], "utf8")); if (response.success !== true || response.result?.name !== "the") { throw new Error("Canonical Worker verification did not return the."); }' "$new_response"
           echo "Canonical Cloudflare Worker identity is now the."
