@@ -230,6 +230,28 @@ const nflPunterSpec = category(
   1,
 );
 
+const nflFranchiseSpec = category(
+  { kind: "franchise", league: "NFL" },
+  [
+    higher("nfl-franchise-best-season-win-percentage-since-1999", 0.20),
+    higher("nfl-franchise-win-percentage-since-1999", 0.30),
+    higher("nfl-franchise-seasons-since-1999", 0.15),
+    higher("nfl-franchise-postseason-resume-since-1999", 0.35),
+  ],
+  4,
+);
+
+const nflBoundedEraSpec = category(
+  { kind: "program-era", league: "NFL" },
+  [
+    higher("nfl-franchise-era-best-season-win-percentage", 0.25),
+    higher("nfl-franchise-era-win-percentage", 0.35),
+    higher("nfl-franchise-era-season-count", 0.10),
+    higher("nfl-franchise-era-postseason-resume", 0.30),
+  ],
+  4,
+);
+
 export type FootballNflCareerRankingFamilyId = "OL" | "DL / EDGE" | "LB" | "Secondary" | "K / P";
 
 export interface FootballNflCareerRankingFamilyModel {
@@ -358,8 +380,13 @@ export const footballComparisonCategorySpecs: Readonly<Record<FootballRankFivePa
   ),
   "nfl-head-coaches": category(
     { kind: "coach", league: "NFL" },
-    [],
-    1,
+    [
+      higher("nfl-coach-best-season-win-percentage-since-1999", 0.25),
+      higher("nfl-coach-win-percentage-since-1999", 0.25),
+      higher("nfl-coach-seasons-since-1999", 0.15),
+      higher("nfl-coach-postseason-resume-since-1999", 0.35),
+    ],
+    4,
   ),
   "nfl-qb-seasons": category(
     { kind: "player-season", league: "NFL", position: "QB" },
@@ -494,6 +521,18 @@ const rankingDimensionByMetric: Readonly<Partial<Record<FootballFactMetricId, Fo
   "nfl-team-points-per-game": "peak",
   "nfl-team-opponent-points-per-game": "contextual-strength",
   "nfl-super-bowl-title": "postseason-team-accomplishment",
+  "nfl-coach-seasons-since-1999": "longevity-tail",
+  "nfl-coach-win-percentage-since-1999": "sustained-excellence",
+  "nfl-coach-best-season-win-percentage-since-1999": "peak",
+  "nfl-coach-postseason-resume-since-1999": "postseason-team-accomplishment",
+  "nfl-franchise-seasons-since-1999": "longevity-tail",
+  "nfl-franchise-win-percentage-since-1999": "sustained-excellence",
+  "nfl-franchise-best-season-win-percentage-since-1999": "peak",
+  "nfl-franchise-postseason-resume-since-1999": "postseason-team-accomplishment",
+  "nfl-franchise-era-season-count": "longevity-tail",
+  "nfl-franchise-era-win-percentage": "sustained-excellence",
+  "nfl-franchise-era-best-season-win-percentage": "peak",
+  "nfl-franchise-era-postseason-resume": "postseason-team-accomplishment",
   "cfb-best-season-passing-yards": "peak",
   "cfb-best-season-passing-touchdowns": "peak",
   "cfb-best-season-passer-rating": "peak",
@@ -587,6 +626,13 @@ function fixedCalibrationValues(packId: FootballRankFivePackId, spec: FootballCo
   return fixedCalibrationValuesForSubjectIds(spec, calibrationSubjectIds);
 }
 
+function canonicalCalibrationValues(spec: FootballComparisonCategorySpec): FootballFixedCalibrationValues {
+  const calibrationSubjectIds = queryFootballSubjects(spec.query)
+    .filter((subject) => factsForSubject(subject.id, spec.metrics).length >= spec.minimumFacts)
+    .map((subject) => subject.id);
+  return fixedCalibrationValuesForSubjectIds(spec, calibrationSubjectIds);
+}
+
 function calibrationAnchorsFor(
   calibration: FootballFixedCalibrationValues,
   subject: FootballSubjectProfile,
@@ -615,7 +661,13 @@ function subtitleForSubject(subject: FootballSubjectProfile) {
   }
   if (subject.kind === "player-season") return [subject.position, subject.season].filter(Boolean).join(" · ") || subject.league;
   if (subject.kind === "coach") return subject.school ? `${subject.school} · Head coach` : `${subject.league} head coach`;
-  if (subject.kind === "program-era") return [subject.school, subject.startSeason && subject.endSeason ? `${subject.startSeason}–${subject.endSeason}` : null].filter(Boolean).join(" · ") || "Program era";
+  if (subject.kind === "franchise") return `${subject.league} franchise`;
+  if (subject.kind === "program-era") {
+    const seasons = subject.startSeason != null && subject.endSeason != null ? `${subject.startSeason}–${subject.endSeason}` : null;
+    return subject.league === "NFL"
+      ? ["NFL era", seasons].filter(Boolean).join(" · ")
+      : [subject.school, seasons].filter(Boolean).join(" · ") || "Program era";
+  }
   if (subject.kind === "team-season") return subject.season ? `${subject.league} · ${subject.season}` : `${subject.league} team season`;
   return subject.school ?? `${subject.league} program`;
 }
@@ -749,6 +801,31 @@ export function buildFootballNflCareerFamilyCandidatePool(
     reviewedItems: [],
     specForSubject: (subject) => subject.position ? family.positionSpecs[subject.position] : undefined,
     calibrationForSpec: (spec, subject) => familyCalibrationForSpec(family, spec, subject),
+  });
+}
+
+export const footballNflFranchiseRankingSpec = nflFranchiseSpec;
+export const footballNflBoundedEraRankingSpec = nflBoundedEraSpec;
+
+export function buildFootballNflFranchiseCandidatePool(): readonly FootballComparisonCandidate[] {
+  const calibration = canonicalCalibrationValues(nflFranchiseSpec);
+  return buildFootballCandidatePoolFromModel({
+    query: nflFranchiseSpec.query,
+    semantic: "program-franchise-greatness",
+    reviewedItems: [],
+    specForSubject: () => nflFranchiseSpec,
+    calibrationForSpec: () => calibration,
+  });
+}
+
+export function buildFootballNflBoundedEraCandidatePool(): readonly FootballComparisonCandidate[] {
+  const calibration = canonicalCalibrationValues(nflBoundedEraSpec);
+  return buildFootballCandidatePoolFromModel({
+    query: nflBoundedEraSpec.query,
+    semantic: "bounded-era-greatness",
+    reviewedItems: [],
+    specForSubject: () => nflBoundedEraSpec,
+    calibrationForSpec: () => calibration,
   });
 }
 
