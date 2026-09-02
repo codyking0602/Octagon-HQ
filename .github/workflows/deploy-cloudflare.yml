@@ -25,6 +25,7 @@ on:
       - "package-lock.json"
       - "vite.config.*"
       - "wrangler.jsonc"
+      - "wrangler.legacy-redirect.jsonc"
 
 permissions:
   contents: read
@@ -251,6 +252,7 @@ jobs:
       SOURCE_SHA: ${{ inputs.source_sha || github.sha }}
       SOURCE_PR_NUMBER: ${{ inputs.pr_number || '0' }}
       OCTAGON_PRODUCTION_URL: https://the.hq-app.workers.dev
+      OCTAGON_LEGACY_URL: https://octagon.hq-app.workers.dev
       TRUSTED_WORKFLOW_SHA: ${{ github.workflow_sha }}
       WRANGLER_VERSION: 4.123.0
     steps:
@@ -300,6 +302,8 @@ jobs:
           show-progress: false
           sparse-checkout: |
             wrangler.jsonc
+            wrangler.legacy-redirect.jsonc
+            worker/legacyOctagonRedirect.ts
             scripts/verify-live-frontend-delivery.mjs
           sparse-checkout-cone-mode: false
 
@@ -313,6 +317,8 @@ jobs:
             exit 1
           fi
           test -f wrangler.jsonc
+          test -f wrangler.legacy-redirect.jsonc
+          test -f worker/legacyOctagonRedirect.ts
           test -f scripts/verify-live-frontend-delivery.mjs
           echo "Trusted deployment configuration verified: $checked_out_sha"
 
@@ -431,6 +437,60 @@ jobs:
           FRONTEND_DELIVERY_DELAY_MS: 5000
         run: node scripts/verify-live-frontend-delivery.mjs
 
+      - name: Validate legacy Octagon redirect Worker bundle
+        if: env.SOURCE_PR_NUMBER == '0' && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$WRANGLER_BIN" deploy \
+            --dry-run \
+            --config "$GITHUB_WORKSPACE/wrangler.legacy-redirect.jsonc" \
+            --outdir "$RUNNER_TEMP/octagon-legacy-dry-run"
+          test -d "$RUNNER_TEMP/octagon-legacy-dry-run"
+
+      - name: Deploy redirect-only legacy Octagon Worker
+        if: env.SOURCE_PR_NUMBER == '0' && github.ref == 'refs/heads/main'
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          "$WRANGLER_BIN" deploy \
+            --config "$GITHUB_WORKSPACE/wrangler.legacy-redirect.jsonc" \
+            2>&1 | tee wrangler-legacy-redirect-deploy.log
+
+      - name: Upload legacy redirect diagnostics
+        if: failure() && env.SOURCE_PR_NUMBER == '0' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: wrangler-legacy-redirect-diagnostics-${{ env.SOURCE_SHA }}
+          path: wrangler-legacy-redirect-deploy.log
+          retention-days: 7
+
+      - name: Verify legacy Octagon URL redirects to canonical host
+        if: env.SOURCE_PR_NUMBER == '0' && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          legacy_test_url="$OCTAGON_LEGACY_URL/play/futures?compat=octagon"
+          expected_location="$OCTAGON_PRODUCTION_URL/play/futures?compat=octagon"
+
+          for attempt in $(seq 1 24); do
+            headers_file="$RUNNER_TEMP/legacy-redirect-headers-$attempt.txt"
+            curl --silent --show-error --head --output "$headers_file" "$legacy_test_url" || true
+            status=$(awk 'NR == 1 { print $2 }' "$headers_file" 2>/dev/null || true)
+            location=$(awk 'BEGIN { IGNORECASE=1 } /^location:/ { sub(/^[^:]+:[[:space:]]*/, ""); sub(/\r$/, ""); print; exit }' "$headers_file" 2>/dev/null || true)
+            if [ "$status" = "308" ] && [ "$location" = "$expected_location" ]; then
+              echo "Legacy workers.dev compatibility redirect verified."
+              exit 0
+            fi
+            sleep 5
+          done
+
+          echo "::error title=Legacy redirect verification failed::Expected 308 to $expected_location."
+          exit 1
+
       - name: Record deployment
         shell: bash
         run: |
@@ -453,4 +513,8 @@ jobs:
             echo "- Picks uses the public current event and authenticated cross-device profile selections"
             echo "- Stale lazy chunks trigger one guarded reload instead of the React Router developer error screen"
             echo "- The SPA shell is served with Cache-Control: no-cache"
+            if [ "$SOURCE_PR_NUMBER" = "0" ] && [ "$GITHUB_REF" = "refs/heads/main" ]; then
+              echo "- Legacy URL: $OCTAGON_LEGACY_URL permanently redirects to $OCTAGON_PRODUCTION_URL"
+              echo "- Legacy Worker is redirect-only; it has no application assets or Supabase ownership"
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
