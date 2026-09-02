@@ -275,9 +275,10 @@ export function FootballFuturesCard() {
     }
     if (hydratedSeasonRef.current === snapshot.season) return;
 
+    const hydratedPicks = snapshot.ownPicks ?? EMPTY_FOOTBALL_FUTURES_PICKS;
     hydratedSeasonRef.current = snapshot.season;
-    draftRef.current = snapshot.ownPicks;
-    setDraft(snapshot.ownPicks);
+    draftRef.current = hydratedPicks;
+    setDraft(hydratedPicks);
     queuedAutosaveRef.current = null;
     if (autosaveTimerRef.current) clearTimeout(autosaveTimerRef.current);
     autosaveTimerRef.current = null;
