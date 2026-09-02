@@ -18,7 +18,7 @@ interface ProjectionRecord {
 export interface FootballNflCoachRecognitionProjectionRow {
   subject: FootballCanonicalSubject;
   tier: FootballRecognizabilityTier;
-  sourceIdentityKey: { provider: "nflverse" | "nfl-honors"; id: string };
+  sourceIdentityKey: { provider: "nflverse"; id: string };
 }
 
 const TIER_RANK: Readonly<Record<FootballRecognizabilityTier, number>> = { D: 0, C: 1, B: 2, A: 3 };
@@ -86,53 +86,26 @@ for (const record of coachStops) {
   });
 }
 
-const sourceProjectedCoaches: readonly FootballNflCoachRecognitionProjectionRow[] = [...sourceCoachById.entries()]
-  .map(([id, row]) => {
-    const hall = hallCoachById.get(id);
-    const tier = applyFootballHistoricalRecognitionPolicy(id, "NFL", row.endSeason, row.tier) as FootballRecognizabilityTier;
-    return {
-      subject: {
-        id,
-        name: row.name,
-        kind: "coach" as const,
-        league: "NFL" as const,
-        ...(hall?.identityAliases ? { aliases: hall.identityAliases } : {}),
-        startSeason: row.startSeason,
-        endSeason: row.endSeason,
-        activeDecades: activeDecades(row.startSeason, row.endSeason),
-      },
-      tier,
-      sourceIdentityKey: {
-        provider: "nflverse" as const,
-        id: `coach-career:${id}`,
-      },
-    };
-  })
-  .filter((row) => row.tier !== "D");
-
-const sourceProjectedCoachIds = new Set(sourceProjectedCoaches.map((row) => row.subject.id));
-const hallOnlyCoaches: readonly FootballNflCoachRecognitionProjectionRow[] = [...hallCoachById.entries()]
-  .filter(([id]) => !sourceProjectedCoachIds.has(id))
-  .map(([id, candidate]) => ({
+/**
+ * Source-owned modern NFL head-coach projection. Historical identities remain owned by the existing Stage 13.5
+ * historical recognition-repair path; reviewed Rank Five rows are deliberately absent from membership.
+ */
+export const footballNflCoachRecognitionProjectionSubjects: readonly FootballNflCoachRecognitionProjectionRow[] = [...sourceCoachById.entries()]
+  .map(([id, row]) => ({
     subject: {
       id,
-      name: candidate.name,
+      name: row.name,
       kind: "coach" as const,
       league: "NFL" as const,
-      ...(candidate.identityAliases ? { aliases: candidate.identityAliases } : {}),
+      ...(hallCoachById.get(id)?.identityAliases ? { aliases: hallCoachById.get(id)!.identityAliases } : {}),
+      startSeason: row.startSeason,
+      endSeason: row.endSeason,
+      activeDecades: activeDecades(row.startSeason, row.endSeason),
     },
-    tier: candidate.minimumTier,
+    tier: applyFootballHistoricalRecognitionPolicy(id, "NFL", row.endSeason, row.tier) as FootballRecognizabilityTier,
     sourceIdentityKey: {
-      provider: "nfl-honors" as const,
-      id: `pro-football-hall:${id}`,
+      provider: "nflverse" as const,
+      id: `coach-career:${id}`,
     },
-  }));
-
-/**
- * Independent NFL head-coach membership projection. Source coach stops own modern identities; the official Hall review
- * supplies historical identities outside the 1999-2025 source window. Reviewed Rank Five rows are deliberately absent.
- */
-export const footballNflCoachRecognitionProjectionSubjects: readonly FootballNflCoachRecognitionProjectionRow[] = [
-  ...sourceProjectedCoaches,
-  ...hallOnlyCoaches,
-];
+  }))
+  .filter((row) => row.tier !== "D");
