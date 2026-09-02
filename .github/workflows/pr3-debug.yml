@@ -1,0 +1,58 @@
+name: PR3 Focused Diagnostics
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci --silent --no-audit --no-fund
+      - name: Reuse exact source edit block
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          lines=Path('.github/workflows/pr3-apply-fixes.yml').read_text().splitlines()
+          start=next(i for i,l in enumerate(lines) if l.strip() == '- name: Apply source fixes')
+          run=next(i for i in range(start+1,len(lines)) if lines[i].strip() == 'run: |')
+          out=[]
+          for line in lines[run+1:]:
+            if line.startswith('      - '): break
+            out.append(line[10:] if line.startswith('          ') else line)
+          Path('/tmp/pr3-apply.sh').write_text('\n'.join(out)+'\n')
+          PY
+          bash /tmp/pr3-apply.sh
+      - name: Run diagnostic proof
+        run: |
+          set +e
+          exec > >(tee pr3-debug.log) 2>&1
+          echo '=== GENERATORS ==='
+          npm run generate:football-cfb-player-seasons; echo GENERATE_CFB_RC=$?
+          npm run generate:football-factual-universe; echo GENERATE_FACTUAL_RC=$?
+          npm run generate:football-ledger-audit; echo GENERATE_AUDIT_RC=$?
+          git config user.name diagnostic
+          git config user.email diagnostic@example.com
+          git add -A -f docs/football-ledger-stage13-5-review.md src/features/back-room data/generated/football 2>/dev/null
+          git commit --no-verify -m diagnostic || true
+          echo '=== AUDIT ==='
+          npm run verify:football-ledger-audit; echo AUDIT_RC=$?
+          echo '=== FOCUSED TESTS ==='
+          npx vitest run src/features/back-room/footballStage15NflCoachFranchiseEraRankingModels.test.ts src/features/back-room/footballProHallRecognitionCompleteness.test.ts src/features/back-room/footballCanonicalUniverse.test.ts src/features/back-room/footballFactualStats.test.ts src/features/back-room/footballWavelengthSubjectAuthority.test.ts; echo TEST_RC=$?
+          echo '=== TYPECHECK ==='
+          npm run typecheck; echo TYPECHECK_RC=$?
+          echo '=== STATUS ==='
+          git status --short
+          exit 0
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pr3-focused-diagnostics-${{ github.event.pull_request.head.sha }}
+          path: pr3-debug.log
+          if-no-files-found: error
