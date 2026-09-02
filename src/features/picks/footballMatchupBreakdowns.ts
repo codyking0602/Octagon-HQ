@@ -206,10 +206,13 @@ function boutIncludesTeam(bout: PickBout, team: FootballMatchupTeam) {
   return team.aliases.some((alias) => boutTokens.includes(normalizeTeamToken(alias)));
 }
 
+export function footballMatchupBoutForBreakdown(event: PickEvent | null, breakdown: FootballMatchupBreakdown) {
+  if (event?.sport !== "football") return null;
+  return event.bouts.find((bout) => breakdown.teams.every((team) => boutIncludesTeam(bout, team))) ?? null;
+}
+
 export function footballMatchupBreakdownsForEvent(event: PickEvent | null) {
   if (event?.sport !== "football") return [];
 
-  return FOOTBALL_MATCHUP_BREAKDOWNS.filter((breakdown) => event.bouts.some((bout) =>
-    breakdown.teams.every((team) => boutIncludesTeam(bout, team)),
-  ));
+  return FOOTBALL_MATCHUP_BREAKDOWNS.filter((breakdown) => footballMatchupBoutForBreakdown(event, breakdown));
 }
