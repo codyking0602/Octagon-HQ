@@ -66,7 +66,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: typecheck-diagnostics-${{ env.SOURCE_SHA }}
-          path: typecheck.log
+          path: |
+            typecheck.log
+            docs/football-ledger-stage13-5-review.md
           retention-days: 7
 
       - name: Summarize typecheck failure
