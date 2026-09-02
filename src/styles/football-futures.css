@@ -31,14 +31,14 @@
 .football-futures-field input:focus { border-color: var(--football-picks-accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--football-picks-accent) 18%, transparent); }
 .football-futures-field input:disabled { border-color: #2e3234; background: #17191a; color: #b9bdbf; opacity: 1; }
 .football-futures-field input::placeholder { color: #666c6e; }
-.football-futures-team-picker { position: relative; display: grid; gap: 5px; min-width: 0; }
+.football-futures-team-picker { position: relative; display: grid; gap: 5px; min-width: 0; touch-action: pan-y; }
 .football-futures-team-picker__selected { display: flex; flex-wrap: wrap; gap: 4px; min-width: 0; }
 .football-futures-team-chip { display: inline-flex; align-items: center; gap: 5px; max-width: 100%; min-height: 25px; padding: 4px 6px; border: 1px solid #3a3f41; border-radius: 6px; background: #1a1d1e; color: #e7e9e8; font-size: .52rem; font-weight: 800; line-height: 1.1; text-align: left; }
 button.football-futures-team-chip { cursor: pointer; }
 .football-futures-team-chip span { overflow: hidden; text-overflow: ellipsis; }
 .football-futures-team-chip b { flex: 0 0 auto; color: #a5abad; font-size: .72rem; line-height: 1; }
-.football-futures-team-picker__options { position: absolute; z-index: 30; top: calc(100% + 3px); right: 0; left: 0; max-height: 220px; overflow-y: auto; padding: 4px; border: 1px solid #454a4c; border-radius: 7px; background: #0d0f10; box-shadow: 0 12px 28px rgb(0 0 0 / 55%); }
-.football-futures-team-picker__options button { display: block; width: 100%; padding: 8px; border: 0; border-radius: 5px; background: transparent; color: #e9ebea; font: inherit; font-size: .61rem; font-weight: 800; text-align: left; cursor: pointer; }
+.football-futures-team-picker__options { position: absolute; z-index: 30; top: calc(100% + 3px); right: 0; left: 0; max-height: 220px; overflow-y: auto; padding: 4px; border: 1px solid #454a4c; border-radius: 7px; background: #0d0f10; box-shadow: 0 12px 28px rgb(0 0 0 / 55%); overscroll-behavior: contain; -webkit-overflow-scrolling: touch; touch-action: pan-y; }
+.football-futures-team-picker__options button { display: block; width: 100%; padding: 8px; border: 0; border-radius: 5px; background: transparent; color: #e9ebea; font: inherit; font-size: .61rem; font-weight: 800; text-align: left; cursor: pointer; touch-action: pan-y; }
 .football-futures-team-picker__options button:hover, .football-futures-team-picker__options button:focus { outline: 0; background: #222627; color: #fff; }
 .football-futures-team-picker__options p { margin: 5px; color: #858b8d; font-size: .58rem; }
 .football-futures-team-picker__empty { color: #7f8587; font-size: .65rem; }

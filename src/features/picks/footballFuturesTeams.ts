@@ -174,3 +174,87 @@ export const NFL_FUTURES_TEAMS = [
   "Tennessee Titans",
   "Washington Commanders",
 ] as const;
+
+export const CFB_POWER4_CONFERENCES = ["ACC", "Big Ten", "Big 12", "SEC"] as const;
+export type CfbPower4Conference = (typeof CFB_POWER4_CONFERENCES)[number];
+
+const CFB_POWER4_TEAMS: Record<CfbPower4Conference, readonly string[]> = {
+  ACC: [
+    "Boston College Eagles", "California Golden Bears", "Clemson Tigers", "Duke Blue Devils",
+    "Florida State Seminoles", "Georgia Tech Yellow Jackets", "Louisville Cardinals", "Miami Hurricanes",
+    "NC State Wolfpack", "North Carolina Tar Heels", "Pittsburgh Panthers", "SMU Mustangs",
+    "Stanford Cardinal", "Syracuse Orange", "Virginia Cavaliers", "Virginia Tech Hokies",
+    "Wake Forest Demon Deacons",
+  ],
+  "Big Ten": [
+    "Illinois Fighting Illini", "Indiana Hoosiers", "Iowa Hawkeyes", "Maryland Terrapins",
+    "Michigan Wolverines", "Michigan State Spartans", "Minnesota Golden Gophers", "Nebraska Cornhuskers",
+    "Northwestern Wildcats", "Ohio State Buckeyes", "Oregon Ducks", "Penn State Nittany Lions",
+    "Purdue Boilermakers", "Rutgers Scarlet Knights", "UCLA Bruins", "USC Trojans",
+    "Washington Huskies", "Wisconsin Badgers",
+  ],
+  "Big 12": [
+    "Arizona Wildcats", "Arizona State Sun Devils", "Baylor Bears", "BYU Cougars",
+    "Cincinnati Bearcats", "Colorado Buffaloes", "Houston Cougars", "Iowa State Cyclones",
+    "Kansas Jayhawks", "Kansas State Wildcats", "Oklahoma State Cowboys", "TCU Horned Frogs",
+    "Texas Tech Red Raiders", "UCF Knights", "Utah Utes", "West Virginia Mountaineers",
+  ],
+  SEC: [
+    "Alabama Crimson Tide", "Arkansas Razorbacks", "Auburn Tigers", "Florida Gators",
+    "Georgia Bulldogs", "Kentucky Wildcats", "LSU Tigers", "Mississippi State Bulldogs",
+    "Missouri Tigers", "Oklahoma Sooners", "Ole Miss Rebels", "South Carolina Gamecocks",
+    "Tennessee Volunteers", "Texas Longhorns", "Texas A&M Aggies", "Vanderbilt Commodores",
+  ],
+};
+
+const CFB_POWER4_LOOKUP = new Map<string, CfbPower4Conference>();
+for (const conference of CFB_POWER4_CONFERENCES) {
+  for (const team of CFB_POWER4_TEAMS[conference]) CFB_POWER4_LOOKUP.set(team.toLowerCase(), conference);
+}
+
+export function getCfbPower4Conference(team: string): CfbPower4Conference | null {
+  return CFB_POWER4_LOOKUP.get(team.trim().toLowerCase()) ?? null;
+}
+
+export function isCfbPower4Team(team: string) {
+  return getCfbPower4Conference(team) !== null;
+}
+
+export const NFL_CONFERENCES = ["AFC", "NFC"] as const;
+export type NflConference = (typeof NFL_CONFERENCES)[number];
+export const NFL_DIVISIONS = ["East", "North", "South", "West"] as const;
+export type NflDivision = (typeof NFL_DIVISIONS)[number];
+
+export interface NflTeamGroup {
+  conference: NflConference;
+  division: NflDivision;
+  label: string;
+}
+
+export const NFL_DIVISION_GROUPS: readonly NflTeamGroup[] = NFL_CONFERENCES.flatMap((conference) =>
+  NFL_DIVISIONS.map((division) => ({ conference, division, label: `${conference} ${division}` })),
+);
+
+const NFL_DIVISION_TEAMS: Record<string, readonly string[]> = {
+  "AFC East": ["Buffalo Bills", "Miami Dolphins", "New England Patriots", "New York Jets"],
+  "AFC North": ["Baltimore Ravens", "Cincinnati Bengals", "Cleveland Browns", "Pittsburgh Steelers"],
+  "AFC South": ["Houston Texans", "Indianapolis Colts", "Jacksonville Jaguars", "Tennessee Titans"],
+  "AFC West": ["Denver Broncos", "Kansas City Chiefs", "Las Vegas Raiders", "Los Angeles Chargers"],
+  "NFC East": ["Dallas Cowboys", "New York Giants", "Philadelphia Eagles", "Washington Commanders"],
+  "NFC North": ["Chicago Bears", "Detroit Lions", "Green Bay Packers", "Minnesota Vikings"],
+  "NFC South": ["Atlanta Falcons", "Carolina Panthers", "New Orleans Saints", "Tampa Bay Buccaneers"],
+  "NFC West": ["Arizona Cardinals", "Los Angeles Rams", "San Francisco 49ers", "Seattle Seahawks"],
+};
+
+const NFL_TEAM_GROUP_LOOKUP = new Map<string, NflTeamGroup>();
+for (const group of NFL_DIVISION_GROUPS) {
+  for (const team of NFL_DIVISION_TEAMS[group.label] ?? []) NFL_TEAM_GROUP_LOOKUP.set(team.toLowerCase(), group);
+}
+
+export function getNflTeamGroup(team: string): NflTeamGroup | null {
+  return NFL_TEAM_GROUP_LOOKUP.get(team.trim().toLowerCase()) ?? null;
+}
+
+export function getNflConference(team: string): NflConference | null {
+  return getNflTeamGroup(team)?.conference ?? null;
+}
