@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { PickEvent } from "./picksModel";
-import { FOOTBALL_MATCHUP_BREAKDOWNS, footballMatchupBreakdownsForEvent } from "./footballMatchupBreakdowns";
+import { FOOTBALL_MATCHUP_BREAKDOWNS, footballMatchupBoutForBreakdown, footballMatchupBreakdownsForEvent } from "./footballMatchupBreakdowns";
 
 function footballEvent(teamPairs: Array<[string, string, string, string]>): PickEvent {
   return {
@@ -44,11 +44,13 @@ describe("football matchup breakdowns", () => {
       "2026-lsu-clemson",
       "2026-louisville-ole-miss",
     ]);
+    expect(footballMatchupBoutForBreakdown(event, FOOTBALL_MATCHUP_BREAKDOWNS[1])?.boutId).toBe("louisville-ole-miss");
   });
 
   it("does not surface a breakdown for an unrelated slate", () => {
     const event = footballEvent([["texas", "Texas Longhorns", "texas-state", "Texas State Bobcats"]]);
     expect(footballMatchupBreakdownsForEvent(event)).toEqual([]);
+    expect(footballMatchupBoutForBreakdown(event, FOOTBALL_MATCHUP_BREAKDOWNS[0])).toBeNull();
   });
 
   it("keeps the locked editorial structure, limits The HQ Edge to opposing units, and carries no final read or score", () => {
