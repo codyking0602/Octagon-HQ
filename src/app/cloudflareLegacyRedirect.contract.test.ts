@@ -1,13 +1,10 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const canonicalWrangler = readFileSync("wrangler.jsonc", "utf8");
 const legacyWrangler = readFileSync("wrangler.legacy-redirect.jsonc", "utf8");
 const legacyWorker = readFileSync("worker/legacyOctagonRedirect.ts", "utf8");
-const legacyWorkflow = readFileSync(
-  ".github/workflows/deploy-cloudflare-legacy-redirect.yml",
-  "utf8",
-);
+const canonicalWorkflow = readFileSync(".github/workflows/deploy-cloudflare.yml", "utf8");
 
 describe("legacy Octagon workers.dev compatibility", () => {
   it("keeps The HQ as the only application Worker", () => {
@@ -29,13 +26,13 @@ describe("legacy Octagon workers.dev compatibility", () => {
     expect(legacyWorker).not.toContain("SUPABASE");
   });
 
-  it("keeps GitHub Actions as the only deployment owner for the compatibility endpoint", () => {
-    expect(legacyWorkflow).toContain("if: github.ref == 'refs/heads/main'");
-    expect(legacyWorkflow).toContain('LEGACY_ORIGIN: https://octagon.hq-app.workers.dev');
-    expect(legacyWorkflow).toContain('CANONICAL_ORIGIN: https://the.hq-app.workers.dev');
-    expect(legacyWorkflow).toContain('--config "$GITHUB_WORKSPACE/wrangler.legacy-redirect.jsonc"');
-    expect(legacyWorkflow).toContain('"$status" = "308"');
-    expect(legacyWorkflow).not.toContain("npm run build");
-    expect(legacyWorkflow).not.toContain("dist/");
+  it("keeps the canonical Cloudflare workflow as the only frontend deployment owner", () => {
+    expect(existsSync(".github/workflows/deploy-cloudflare-legacy-redirect.yml")).toBe(false);
+    expect(canonicalWorkflow).toContain('OCTAGON_LEGACY_URL: https://octagon.hq-app.workers.dev');
+    expect(canonicalWorkflow).toContain('OCTAGON_PRODUCTION_URL: https://the.hq-app.workers.dev');
+    expect(canonicalWorkflow).toContain('wrangler.legacy-redirect.jsonc');
+    expect(canonicalWorkflow).toContain("if: env.SOURCE_PR_NUMBER == '0' && github.ref == 'refs/heads/main'");
+    expect(canonicalWorkflow).toContain('"$status" = "308"');
+    expect(canonicalWorkflow).toContain("Deploy redirect-only legacy Octagon Worker");
   });
 });
