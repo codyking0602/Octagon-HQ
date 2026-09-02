@@ -8,6 +8,7 @@ import { DailyChallengeStandings } from "../play/DailyChallengeStandings";
 import { playGameDefinition, type PlayGameId } from "../play/playRegistry";
 import { useTodayChallengeOverview } from "../play/useTodayChallengeOverview";
 import { useTodayChallengeRuntime } from "../play/useTodayChallengeRuntime";
+import { FootballGamesEarlyAccessBanner } from "./FootballGamesEarlyAccessBanner";
 import { FootballTeamHelmet } from "./FootballHeader";
 
 const FOOTBALL_GAME_ORDER = [
@@ -236,6 +237,8 @@ export default function FootballBackRoomPage() {
           onComplete={() => navigate("/football", { replace: true, state: null })}
         />
       ) : null}
+
+      {!showTransition ? <FootballGamesEarlyAccessBanner /> : null}
 
       <section className="football-daily-hq" aria-labelledby="football-daily-title">
         <div className="football-daily-hq__heading">
