@@ -2,14 +2,11 @@ import { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ChallengeCenter } from "../challenges/ChallengeCenter";
 import { useIdentity } from "../identity/IdentityProvider";
-import { useProfilePreferences } from "../profile/ProfilePreferencesProvider";
-import type { FootballTeam } from "../profile/profilePreferencesRepository";
 import { DailyChallengeStandings } from "../play/DailyChallengeStandings";
 import { playGameDefinition, type PlayGameId } from "../play/playRegistry";
 import { useTodayChallengeOverview } from "../play/useTodayChallengeOverview";
 import { useTodayChallengeRuntime } from "../play/useTodayChallengeRuntime";
 import { FootballGamesEarlyAccessBanner } from "./FootballGamesEarlyAccessBanner";
-import { FootballTeamHelmet } from "./FootballHeader";
 
 const FOOTBALL_GAME_ORDER = [
   "hit-the-number",
@@ -56,11 +53,6 @@ const DAILY_GAME_LABELS: Record<string, string> = {
   blind_rank_5: "Blind Rank Five",
   keep_4_cut_4: "Keep Four, Cut Four",
   hit_the_number: "Hit the Number",
-};
-
-const TEAM_COPY: Record<FootballTeam, { title: string; subtitle: string }> = {
-  cowboys: { title: "Dallas Cowboys", subtitle: "NAVY · SILVER · WHITE" },
-  longhorns: { title: "Texas Longhorns", subtitle: "BURNT ORANGE · CREAM" },
 };
 
 function FootballGameLibraryMark({ gameId }: { gameId: FootballLibraryGameId }) {
@@ -138,28 +130,6 @@ function FootballGameLibraryMark({ gameId }: { gameId: FootballLibraryGameId }) 
   );
 }
 
-function FootballEntryGate({ onChoose, saving }: {
-  onChoose: (team: FootballTeam) => void;
-  saving: boolean;
-}) {
-  return (
-    <section className="football-entry-gate" aria-labelledby="football-entry-title">
-      <p className="eyebrow">WELCOME TO FOOTBALL HQ</p>
-      <h1 id="football-entry-title">Pick your side.</h1>
-      <p>Your choice personalizes Football HQ and follows your profile across devices.</p>
-      <div className="football-entry-gate__choices">
-        {(["cowboys", "longhorns"] as const).map((team) => (
-          <button key={team} type="button" disabled={saving} onClick={() => onChoose(team)}>
-            <FootballTeamHelmet team={team} />
-            <strong>{TEAM_COPY[team].title}</strong>
-            <small>{TEAM_COPY[team].subtitle}</small>
-          </button>
-        ))}
-      </div>
-    </section>
-  );
-}
-
 function FootballEntryTransition({ onComplete }: { onComplete: () => void }) {
   return (
     <div className="football-entry-transition" role="presentation">
@@ -182,15 +152,9 @@ export default function FootballBackRoomPage() {
   const location = useLocation();
   const identity = useIdentity();
   const profileId = identity.profile?.id ?? "";
-  const {
-    footballTeam,
-    loading: preferencesLoading,
-    savingFootballTeam,
-    setFootballTeam,
-  } = useProfilePreferences();
   const [dailyTab, setDailyTab] = useState<"game" | "leaderboard">("game");
   const entryRequested = Boolean((location.state as { footballEntry?: boolean } | null)?.footballEntry);
-  const showTransition = entryRequested && Boolean(footballTeam) && !preferencesLoading;
+  const showTransition = entryRequested;
   const runtime = useTodayChallengeRuntime({
     profileId,
     enabled: Boolean(profileId),
@@ -210,28 +174,13 @@ export default function FootballBackRoomPage() {
     [],
   );
 
-  if (preferencesLoading && !footballTeam) {
-    return <div className="page football-room-page"><p className="football-room-loading">Loading Football HQ…</p></div>;
-  }
-
-  if (!footballTeam) {
-    return (
-      <div className="page football-room-page">
-        <FootballEntryGate
-          saving={savingFootballTeam}
-          onChoose={(team) => void setFootballTeam(team)}
-        />
-      </div>
-    );
-  }
-
   const dailyTitle = runtime.projection
     ? DAILY_GAME_LABELS[runtime.projection.gameType] ?? "Today’s Challenge"
     : "Today’s Challenge";
   const leaderboard = overview.leaderboard;
 
   return (
-    <div className={`page football-room-page football-room-page--${footballTeam}`}>
+    <div className="page football-room-page">
       {showTransition ? (
         <FootballEntryTransition
           onComplete={() => navigate("/football", { replace: true, state: null })}
