@@ -88,30 +88,41 @@ describe("Football factual stat owner", () => {
   it("covers receivers, tight ends, defenders, player seasons and NFL team seasons", () => {
     expect(getFootballFact("nfl-jerry-rice", "nfl-career-receiving-yards")?.fact.value).toBe(22895);
     expect(getFootballFact("nfl-tony-gonzalez", "nfl-career-receptions")?.fact.value).toBe(1325);
-    expect(getFootballFact("nfl-ray-lewis", "nfl-career-solo-tackles")?.fact.value).toBeGreaterThan(1000);
-    expect(getFootballFact("nfl-jj-watt", "nfl-career-sacks")?.fact.value).toBeGreaterThan(100);
+    expect(getFootballFact("lawrence-taylor", "nfl-career-sacks")?.fact.value).toBe(132.5);
     expect(getFootballFact("nfl-ed-reed", "nfl-career-interceptions")?.fact.value).toBe(64);
-    expect(getFootballFact("nfl-2004-peyton-manning", "nfl-season-passing-touchdowns")?.fact.value).toBe(49);
-    expect(getFootballFact("nfl-team-season-2007-ne", "nfl-team-overall-wins")?.fact.value).toBe(18);
+    expect(getFootballFact("peyton-manning-2013", "nfl-season-passing-touchdowns")?.fact.value).toBe(55);
+    expect(getFootballFact("cfb-joe-burrow-2019", "cfb-best-season-passing-yards")?.fact.value).toBe(4347);
+    expect(getFootballFact("2017-cleveland-browns", "nfl-team-overall-wins")?.fact.value).toBe(0);
   });
 
   it("collapses cross-level aliases onto one canonical factual identity", () => {
-    expect(getFootballFact("caleb-williams", "nfl-career-passing-yards")?.record.subjectId).toBe("nfl-caleb-williams");
-    expect(getFootballFact("nfl-caleb-williams", "nfl-career-passing-yards")?.fact.value).toBeGreaterThan(3000);
+    const canonicalLarry = getFootballFact("cfb-larry-fitzgerald", "nfl-career-receiving-yards");
+    const nflAliasLarry = getFootballFact("nfl-larry-fitzgerald", "nfl-career-receiving-yards");
+    expect(canonicalLarry?.record.subjectId).toBe("cfb-larry-fitzgerald");
+    expect(nflAliasLarry?.record).toBe(canonicalLarry?.record);
+    expect(canonicalLarry?.fact.value).toBe(17492);
+    expect(getFootballFact("cfb-larry-fitzgerald", "cfb-best-season-receiving-yards")?.fact.value).toBe(1672);
   });
 
   it("covers modern CFB skill players, defenders, coaches, programs, Program Eras and non-title teams", () => {
-    expect(getFootballFact("cfb-joe-burrow", "cfb-career-passing-yards")?.fact.value).toBeGreaterThan(8000);
-    expect(getFootballFact("cfb-davante-adams", "cfb-career-receiving-yards")?.fact.value).toBeGreaterThan(2000);
-    expect(getFootballFact("cfb-myles-garrett", "cfb-career-sacks")?.fact.value).toBeGreaterThan(30);
-    expect(getFootballFact("cfb-nick-saban", "cfb-coach-career-wins")?.fact.value).toBeGreaterThan(250);
-    expect(getFootballFact("cfb-program-alabama", "cfb-program-wins-since-2000")?.fact.value).toBeGreaterThan(200);
-    expect(getFootballFact("cfb-era-2007-2023-alabama", "cfb-era-national-titles")?.fact.value).toBeGreaterThanOrEqual(6);
-    expect(getFootballFact("cfb-team-season-2023-texas", "cfb-team-wins")?.fact.value).toBe(12);
+    expect(getFootballFact("cfb-derrick-henry", "cfb-best-season-rushing-yards")?.fact.value).toBe(2219);
+    expect(getFootballFact("cfb-devonta-smith", "cfb-best-season-receiving-yards")?.fact.value).toBe(1856);
+    expect(getFootballFact("cfb-brock-bowers", "cfb-best-season-receiving-yards")?.fact.value).toBe(942);
+    expect(getFootballFact("cfb-will-anderson-jr", "cfb-best-season-sacks")?.fact.value).toBe(17.5);
+    expect(getFootballFact("cfb-travis-hunter", "cfb-best-season-defensive-interceptions")?.fact.value).toBe(4);
+    expect(getFootballFact("nick-saban-cfb", "cfb-coach-national-titles")?.fact.value).toBe(7);
+    expect(getFootballFact("program-alabama", "cfb-program-national-titles-since-2000")?.fact.value).toBe(6);
+    expect(getFootballFact("alabama-2008-2023", "cfb-era-national-titles")?.fact.value).toBe(6);
+    expect(getFootballFact("2022-tcu", "cfb-team-wins")?.fact.value).toBe(13);
+    expect(getFootballFact("2022-tcu", "cfb-national-title")?.fact.value).toBe(0);
   });
 
   it("retains the compatibility seed facts that prove NFL and CFB support", () => {
-    expect(getFootballFact("peyton-manning", "nfl-career-passing-yards")?.fact.value).toBe(71940);
-    expect(getFootballFact("2005-texas", "cfb-team-points-for")?.fact.value).toBe(652);
+    expect(getFootballFact("dan-marino", "nfl-career-passing-yards")?.fact.value).toBe(61361);
+    expect(getFootballFact("john-elway", "nfl-super-bowl-titles")?.fact.value).toBe(2);
+    expect(getFootballFact("emmitt-smith", "nfl-career-rushing-yards")?.fact.value).toBe(18355);
+    expect(getFootballFact("barry-sanders", "nfl-career-rushing-yards")?.fact.value).toBe(15269);
+    expect(getFootballFact("2013-florida-state", "cfb-team-wins")?.fact.value).toBe(14);
+    expect(getFootballFact("2013-florida-state", "cfb-team-points-for")?.fact.value).toBe(723);
   });
 });
