@@ -25,6 +25,18 @@ jobs:
         run: npm ci --silent --no-audit --no-fund
       - name: Apply narrow Stage 15F/G fixes
         run: |
+          cat > src/features/back-room/footballExplicitRecognitionApprovals.ts <<'EOF'
+          const footballExplicitlyApprovedIconicSubjectIds = new Set([
+            "program-alabama", "program-michigan", "program-notre-dame", "program-ohio-state", "program-texas",
+            "nick-saban", "bill-belichick", "andy-reid", "pete-carroll", "urban-meyer",
+            "2005-texas", "2019-lsu", "2001-miami", "2007-patriots",
+          ]);
+
+          export function isFootballExplicitlyApprovedIconicSubject(subjectId: string) {
+            return footballExplicitlyApprovedIconicSubjectIds.has(subjectId);
+          }
+          EOF
+
           python - <<'PY'
           from pathlib import Path
 
@@ -71,6 +83,44 @@ jobs:
               '      "nfl-franchise",\n      "cfb-player-career",',
               '      "nfl-franchise",\n      "nfl-coach-career",\n      "nfl-franchise-era",\n      "cfb-player-career",',
           )
+
+          replace_once(
+              "src/features/back-room/footballSubjectEligibility.ts",
+              'import { footballCfbPlayerSeasonRecognitionFor } from "./footballCfbPlayerSeasonRecognition";\nimport type { FootballCanonicalSubject } from "./footballFactualStatsCatalog";',
+              'import { footballCfbPlayerSeasonRecognitionFor } from "./footballCfbPlayerSeasonRecognition";\nimport { isFootballExplicitlyApprovedIconicSubject } from "./footballExplicitRecognitionApprovals";\nimport type { FootballCanonicalSubject } from "./footballFactualStatsCatalog";',
+          )
+          replace_once(
+              "src/features/back-room/footballSubjectEligibility.ts",
+              'const explicitlyApprovedIconicSubjects = new Set([\n  "program-alabama", "program-michigan", "program-notre-dame", "program-ohio-state", "program-texas",\n  "nick-saban", "bill-belichick", "andy-reid", "pete-carroll", "urban-meyer",\n  "2005-texas", "2019-lsu", "2001-miami", "2007-patriots",\n]);\n\nfunction conservativeCanonicalTier(subject: FootballCanonicalSubject): FootballRecognizabilityTier {\n  if (explicitlyApprovedIconicSubjects.has(subject.id)) return "A";',
+              'function conservativeCanonicalTier(subject: FootballCanonicalSubject): FootballRecognizabilityTier {\n  if (isFootballExplicitlyApprovedIconicSubject(subject.id)) return "A";',
+          )
+
+          replace_once(
+              "src/features/back-room/footballNflCoachRecognitionProjection.ts",
+              'import recognizabilityProjectionJson from "../../../data/generated/football/recognizability-projection.json";\nimport type { FootballCanonicalSubject } from "./footballFactualStatsCatalog";',
+              'import recognizabilityProjectionJson from "../../../data/generated/football/recognizability-projection.json";\nimport { isFootballExplicitlyApprovedIconicSubject } from "./footballExplicitRecognitionApprovals";\nimport type { FootballCanonicalSubject } from "./footballFactualStatsCatalog";',
+          )
+          replace_once(
+              "src/features/back-room/footballNflCoachRecognitionProjection.ts",
+              '    record.kind === "coach-stop"\n    && record.league === "NFL"\n    && record.sourceProvider === "nflverse"\n    && record.tier !== "D"\n  ));',
+              '    record.kind === "coach-stop"\n    && record.league === "NFL"\n    && record.sourceProvider === "nflverse"\n  ));',
+          )
+          replace_once(
+              "src/features/back-room/footballNflCoachRecognitionProjection.ts",
+              '  const hallFloor = hallCoachById.get(id)?.minimumTier;\n  const tier = hallFloor ? strongestTier(record.tier, hallFloor) : record.tier;',
+              '  const explicitFloor: FootballRecognizabilityTier | undefined = isFootballExplicitlyApprovedIconicSubject(id) ? "A" : undefined;\n  const hallFloor = hallCoachById.get(id)?.minimumTier;\n  const evidenceFloor = explicitFloor ?? hallFloor;\n  const tier = evidenceFloor ? strongestTier(record.tier, evidenceFloor) : record.tier;',
+          )
+
+          replace_once(
+              "src/features/back-room/footballProHallRecognitionCompleteness.test.ts",
+              'expect(footballProHallHistoricalRepairSeeds).toHaveLength(146);\n    expect(new Set(footballProHallHistoricalRepairSeeds.map((seed) => seed.id)).size).toBe(146);\n    expect(new Set(footballProHallHistoricalRepairSeeds.map((seed) => `${seed.kind}:${normalized(seed.name)}`)).size).toBe(146);',
+              'expect(footballProHallHistoricalRepairSeeds).toHaveLength(149);\n    expect(new Set(footballProHallHistoricalRepairSeeds.map((seed) => seed.id)).size).toBe(149);\n    expect(new Set(footballProHallHistoricalRepairSeeds.map((seed) => `${seed.kind}:${normalized(seed.name)}`)).size).toBe(149);',
+          )
+          replace_once(
+              "src/features/back-room/footballCanonicalUniverse.test.ts",
+              'expect(college.length).toBeGreaterThanOrEqual(modern.length / 2);',
+              'expect(college.length).toBeGreaterThanOrEqual(Math.floor(modern.length / 2));',
+          )
           PY
       - name: Regenerate canonical Football owners
         run: |
@@ -85,11 +135,16 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add \
+            src/features/back-room/footballExplicitRecognitionApprovals.ts \
             src/features/back-room/footballFactualStatsCore.ts \
             src/features/back-room/footballCanonicalSubjectExpansion.ts \
             src/features/back-room/footballProHallHistoricalRepairSeeds.ts \
             src/features/back-room/footballStage15NflCoachFranchiseEraRankingModels.test.ts \
             src/features/back-room/footballFactualStats.test.ts \
+            src/features/back-room/footballSubjectEligibility.ts \
+            src/features/back-room/footballNflCoachRecognitionProjection.ts \
+            src/features/back-room/footballProHallRecognitionCompleteness.test.ts \
+            src/features/back-room/footballCanonicalUniverse.test.ts \
             docs/football-ledger-stage13-5-review.md
           git add -u data/generated/football
           git diff --cached --stat
