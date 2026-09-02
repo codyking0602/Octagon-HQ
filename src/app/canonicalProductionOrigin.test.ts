@@ -1,10 +1,11 @@
 import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 describe("canonical production origin ownership", () => {
   it("keeps the post-deploy model sync on The HQ production host", () => {
     const workflow = readFileSync(
-      new URL("../../.github/workflows/sync-whats-new-rankings.yml", import.meta.url),
+      resolve(process.cwd(), ".github/workflows/sync-whats-new-rankings.yml"),
       "utf8",
     );
 
