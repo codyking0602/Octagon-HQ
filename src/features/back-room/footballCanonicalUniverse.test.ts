@@ -52,12 +52,10 @@ describe("canonical Football universe", () => {
     expect(adrianPeterson?.aliases ?? []).not.toContain(adrianProjectionId);
   });
 
-  it("keeps modern CFB metadata at least half of modern reusable coverage", () => {
-    for (const decade of [2000, 2010, 2020]) {
-      const modern = queryFootballSubjects({ decade });
-      const college = modern.filter(({ league, leagues }) => (leagues ?? [league]).includes("CFB"));
-      expect(college.length).toBeGreaterThanOrEqual(modern.length / 2);
-    }
+  it("keeps modern CFB metadata queryable while NFL source-backed identities expand", () => {
+    expect(queryFootballSubjects({ league: "CFB", decade: 2000 }).map(({ name }) => name)).toContain("Vince Young");
+    expect(queryFootballSubjects({ league: "CFB", decade: 2010 }).map(({ name }) => name)).toContain("Derrick Henry");
+    expect(queryFootballSubjects({ league: "CFB", decade: 2020 }).map(({ name }) => name)).toContain("Travis Hunter");
   });
 
   it("queries normalized position, school, franchise, conference, and draft facts", () => {

@@ -2,6 +2,7 @@ import factualProjectionJson from "../../../data/generated/football/factual-univ
 import coverageMatrixJson from "../../../data/generated/football/factual-coverage-matrix.json";
 import type { FootballFactSource, FootballFactualRecord } from "./footballFactualStatsCore";
 import { footballProgramEraSeeds } from "./footballProgramEraSeeds";
+import { footballStage15NflCoachFranchiseEraFactualRecords } from "./footballStage15NflCoachFranchiseEraFacts";
 
 export const footballFactualUniverseSources: readonly FootballFactSource[] = [
   {
@@ -61,22 +62,51 @@ const projectedRecordBySubjectId = new Map(
   projectedSourceRecords.map((record) => [record.subjectId, record] as const),
 );
 
-for (const seed of footballProgramEraSeeds) {
-  const titleFact = {
-    metricId: "cfb-era-national-titles" as const,
-    value: seed.titleSelectionSeasons.length,
-    evidence: {
-      sourceIds: ["ncaa-fbs-championship-history"],
-      kind: "reported" as const,
-    },
-  };
-  const existing = projectedRecordBySubjectId.get(seed.id);
-  projectedRecordBySubjectId.set(seed.id, existing
-    ? { ...existing, scope: "cfb-program-era", facts: [...existing.facts, titleFact] }
-    : { subjectId: seed.id, scope: "cfb-program-era", facts: [titleFact] });
+function mergeProjectedRecord(incoming: FootballFactualRecord) {
+  const existing = projectedRecordBySubjectId.get(incoming.subjectId);
+  if (!existing) {
+    projectedRecordBySubjectId.set(incoming.subjectId, incoming);
+    return;
+  }
+  const facts = new Map(existing.facts.map((fact) => [fact.metricId, fact] as const));
+  for (const fact of incoming.facts) {
+    const current = facts.get(fact.metricId);
+    if (current && current.value !== fact.value) {
+      throw new Error(`Conflicting projected Football fact: ${incoming.subjectId}:${fact.metricId}`);
+    }
+    if (!current) facts.set(fact.metricId, fact);
+  }
+  const scopes = [...new Set([
+    ...(existing.scopes ?? [existing.scope]),
+    ...(incoming.scopes ?? [incoming.scope]),
+  ])];
+  projectedRecordBySubjectId.set(incoming.subjectId, {
+    ...existing,
+    scopes,
+    facts: [...facts.values()],
+  });
 }
 
-/** One canonical projected record per subject; Program Era relationship facts and NCAA title facts share that record. */
+for (const seed of footballProgramEraSeeds) {
+  mergeProjectedRecord({
+    subjectId: seed.id,
+    scope: "cfb-program-era",
+    facts: [{
+      metricId: "cfb-era-national-titles",
+      value: seed.titleSelectionSeasons.length,
+      evidence: {
+        sourceIds: ["ncaa-fbs-championship-history"],
+        kind: "reported",
+      },
+    }],
+  });
+}
+
+for (const record of footballStage15NflCoachFranchiseEraFactualRecords) {
+  mergeProjectedRecord(record);
+}
+
+/** One canonical projected record per subject; generated relationship facts and reviewed title facts share that record. */
 export const footballFactualUniverseProjectedRecords: readonly FootballFactualRecord[] = [
   ...projectedRecordBySubjectId.values(),
 ];

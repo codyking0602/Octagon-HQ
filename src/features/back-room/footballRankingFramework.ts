@@ -1,4 +1,4 @@
-export const FOOTBALL_RANKING_FRAMEWORK_VERSION = "stage15-v3" as const;
+export const FOOTBALL_RANKING_FRAMEWORK_VERSION = "stage15-v4" as const;
 
 export type FootballRankingSemantic =
   | "career-greatness"

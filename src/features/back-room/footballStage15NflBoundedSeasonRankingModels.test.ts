@@ -8,7 +8,7 @@ import { FOOTBALL_RANKING_FRAMEWORK_VERSION } from "./footballRankingFramework";
 
 describe("Football Stage 15 NFL bounded season ranking models", () => {
   it("keeps QB single-season greatness bounded to season-specific passing evidence", () => {
-    expect(FOOTBALL_RANKING_FRAMEWORK_VERSION).toBe("stage15-v3");
+    expect(FOOTBALL_RANKING_FRAMEWORK_VERSION).toBe("stage15-v4");
 
     const spec = footballComparisonCategorySpecs["nfl-qb-seasons"];
     expect(spec.query).toMatchObject({ kind: "player-season", league: "NFL", position: "QB" });
@@ -26,7 +26,7 @@ describe("Football Stage 15 NFL bounded season ranking models", () => {
 
     for (const candidate of dataDerived) {
       expect(candidate.rankingSemantic).toBe("single-season-greatness");
-      expect(candidate.rankingVersion).toBe("stage15-v3");
+      expect(candidate.rankingVersion).toBe("stage15-v4");
       expect(candidate.factMetricIds.length).toBeGreaterThanOrEqual(3);
       expect(candidate.factMetricIds.every((metricId) => metricId.startsWith("nfl-season-"))).toBe(true);
       expect(candidate.factMetricIds.some((metricId) => metricId.includes("career"))).toBe(false);
@@ -57,7 +57,7 @@ describe("Football Stage 15 NFL bounded season ranking models", () => {
     );
     expect(withRecordAndPostseason).toBeDefined();
     expect(withRecordAndPostseason?.rankingSemantic).toBe("team-season-greatness");
-    expect(withRecordAndPostseason?.rankingVersion).toBe("stage15-v3");
+    expect(withRecordAndPostseason?.rankingVersion).toBe("stage15-v4");
     expect(withRecordAndPostseason?.rankingCoverage).toBeCloseTo(0.90);
     expect(withRecordAndPostseason?.ratingBasis).toContain("canonical metric");
   });

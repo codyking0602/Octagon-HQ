@@ -26,7 +26,7 @@ function metricIdsFor(familyId: FootballNflCareerRankingFamilyId, position: stri
 
 describe("Football Stage 15 NFL remaining career ranking models", () => {
   it("defines one canonical Stage 15 family model for OL, each defensive family, and K/P", () => {
-    expect(FOOTBALL_RANKING_FRAMEWORK_VERSION).toBe("stage15-v3");
+    expect(FOOTBALL_RANKING_FRAMEWORK_VERSION).toBe("stage15-v4");
     expect(Object.keys(footballNflCareerRankingFamilyModels)).toEqual([
       "OL",
       "DL / EDGE",

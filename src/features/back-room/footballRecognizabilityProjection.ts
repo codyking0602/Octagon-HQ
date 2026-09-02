@@ -1,6 +1,7 @@
 import projectionJson from "../../../data/generated/football/recognizability-projection.json";
 import type { FootballCanonicalSubject, FootballCanonicalPosition } from "./footballFactualStatsCatalog";
 import { footballHistoricalPoolRecognitionRecords } from "./footballHistoricalPoolRecognitionEvidence";
+import { footballNflCoachRecognitionProjectionSubjects } from "./footballNflCoachRecognitionProjection";
 import { footballHistoricalRecognitionRepairs } from "./footballHistoricalRecognitionRepairs";
 import { footballProHallRecognitionCandidates } from "./footballProHallRecognitionCompletenessEvidence";
 import {
@@ -406,6 +407,7 @@ export const footballProjectedNonPlayerRecognitionSubjects: readonly FootballPro
         sourceIdentityKey: { provider: supportedProjectionProvider(record)!, id: record.sourceId },
       } : {}),
     })),
+  ...footballNflCoachRecognitionProjectionSubjects,
   ...evidenceNewKindSubjects
     .filter((subject) => !repairNonPlayerIds.has(subject.id) && !historicalPoolRecognitionIds.has(subject.id))
     .map((subject) => {

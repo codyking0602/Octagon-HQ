@@ -5,7 +5,7 @@ import { footballFactualUniverseProjectedRecords, footballFactualUniverseSources
 import { getFootballSubject } from "./footballSubjectRegistry";
 
 export type FootballFactScope =
-  | "nfl-player-career" | "nfl-player-season" | "nfl-team-season" | "nfl-franchise" | "nfl-game"
+  | "nfl-player-career" | "nfl-player-season" | "nfl-team-season" | "nfl-franchise" | "nfl-coach-career" | "nfl-franchise-era" | "nfl-game"
   | "cfb-player-career" | "cfb-team-season" | "cfb-coach-career" | "cfb-program" | "cfb-program-era" | "cfb-game";
 
 export type FootballFactUnit = "count" | "yards" | "points" | "points-per-game" | "rating" | "flag" | "percent" | "per-game" | "per-attempt" | "ratio";
@@ -85,6 +85,18 @@ export const footballFactMetricDefinitions = [
   metric("nfl-franchise-playoff-wins-since-1999", "Franchise playoff wins since 1999", "count", 0),
   metric("nfl-franchise-super-bowl-appearances-since-1999", "Franchise Super Bowl appearances since 1999", "count", 0),
   metric("nfl-franchise-super-bowl-titles-since-1999", "Franchise Super Bowl titles since 1999", "count", 0),
+  metric("nfl-coach-seasons-since-1999", "NFL head-coach seasons since 1999", "count", 0),
+  metric("nfl-coach-win-percentage-since-1999", "NFL head-coach win percentage since 1999", "percent", 1),
+  metric("nfl-coach-best-season-win-percentage-since-1999", "Best NFL head-coach season win percentage since 1999", "percent", 1),
+  metric("nfl-coach-postseason-resume-since-1999", "NFL head-coach postseason résumé score since 1999", "rating", 2),
+  metric("nfl-franchise-seasons-since-1999", "Franchise seasons since 1999", "count", 0),
+  metric("nfl-franchise-win-percentage-since-1999", "Franchise win percentage since 1999", "percent", 1),
+  metric("nfl-franchise-best-season-win-percentage-since-1999", "Best franchise season win percentage since 1999", "percent", 1),
+  metric("nfl-franchise-postseason-resume-since-1999", "Franchise postseason résumé score since 1999", "rating", 2),
+  metric("nfl-franchise-era-season-count", "Bounded-era season count", "count", 0),
+  metric("nfl-franchise-era-win-percentage", "Bounded-era win percentage", "percent", 1),
+  metric("nfl-franchise-era-best-season-win-percentage", "Best bounded-era season win percentage", "percent", 1),
+  metric("nfl-franchise-era-postseason-resume", "Bounded-era postseason résumé rate", "rating", 2),
   metric("cfb-career-games", "College career games", "count", 0),
   metric("cfb-career-passing-completions", "College career completions", "count", 0),
   metric("cfb-career-passing-attempts", "College career pass attempts", "count", 0),
