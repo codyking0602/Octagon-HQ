@@ -5,4 +5,6 @@ const ids = new Set([
 ]);
 
 /** Reviewed iconic recognition only. This is not a roster and contains no factual or ranking values. */
-export function isFootballExplicitlyApprovedIconicSubject(subjectId: string) { return ids.has(subjectId); }
+export function isFootballExplicitlyApprovedIconicSubject(subjectId: string) {
+  return ids.has(subjectId);
+}
