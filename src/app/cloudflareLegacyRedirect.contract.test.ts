@@ -30,6 +30,7 @@ describe("legacy Octagon workers.dev compatibility", () => {
   });
 
   it("keeps GitHub Actions as the only deployment owner for the compatibility endpoint", () => {
+    expect(legacyWorkflow).toContain("if: github.ref == 'refs/heads/main'");
     expect(legacyWorkflow).toContain('LEGACY_ORIGIN: https://octagon.hq-app.workers.dev');
     expect(legacyWorkflow).toContain('CANONICAL_ORIGIN: https://the.hq-app.workers.dev');
     expect(legacyWorkflow).toContain('--config "$GITHUB_WORKSPACE/wrangler.legacy-redirect.jsonc"');
