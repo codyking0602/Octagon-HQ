@@ -674,7 +674,7 @@ function attemptKeepCutBoard(
       && targetTier !== "elite"
       && targetTier !== "bad"
       && exactTierDepth >= Math.max(3, repeatedTargetDepth)
-      && random() < 0.55
+      && random() < 0.5
     );
     const forceAbsoluteTier = targetTier === "elite" || targetTier === "bad" || preferDeepExactTier;
     const picked = chooseItem(

@@ -341,10 +341,13 @@ Deliverables:
 
 Progress as of 2026-09-02:
 
-- Stage 15A tunes the existing canonical QB, RB, WR, and TE career profiles inside `footballComparisonAuthority.ts`; it does not create another ranking owner.
-- The offensive models now combine peak/production, sustained volume, longevity, honors, one postseason/team-accomplishment signal, and contextual efficiency/rate evidence where canonical facts support it.
-- Material Stage 15 scoring behavior is versioned as `stage15-v1`; reviewed Rank Five rows remain calibration/override evidence only and do not decide universe membership.
-- Remaining Stage 15 model families are OL; DL/EDGE; LB; Secondary; K/P; NFL QB single seasons; NFL team seasons; NFL head coaches; and NFL franchises/bounded franchise eras where applicable.
+- Stage 15A tunes the canonical QB, RB, WR, and TE career profiles inside `footballComparisonAuthority.ts`; it does not create another ranking owner.
+- Stage 15B/15C complete the remaining NFL career families: OL, DL/EDGE, LB, Secondary, and K/P, through that same authority.
+- DL/EDGE, LB, and Secondary are scored against their own position-family profiles and fixed defensive calibration evidence before the existing cross-position defensive comparison consumes the common rating scale.
+- K/P remains one specialist family while K and P use separate factual score profiles; OL and specialist anchors are fixed canonical identities rather than current-pool percentiles.
+- Sparse OL records remain eligible with neutral missing dimensions and appropriately lower visible confidence rather than fabricated performance evidence.
+- Material Stage 15 scoring behavior is versioned as `stage15-v2`; reviewed Rank Five rows remain calibration/override evidence only and do not decide universe membership.
+- Remaining Stage 15 work is NFL QB single seasons, NFL team seasons, NFL head coaches, and NFL franchises/bounded franchise eras where applicable.
 
 Deliverables:
 

@@ -43,7 +43,7 @@ describe("Football factual stat owner", () => {
   it("requires every fact to use one metric definition and reviewed evidence source", () => {
     const metricIds = new Set(footballFactMetricDefinitions.map((metric) => metric.id));
     const sourcesById = new Map(footballFactSources.map((source) => [source.id, source]));
-    const approvedReviewDates = new Set(["2026-08-22", "2026-08-25", "2026-08-26", "2026-08-27", "2026-08-28"]);
+    const approvedReviewDates = new Set(["2026-08-22", "2026-08-25", "2026-08-26", "2026-08-27", "2026-08-28", "2026-09-02"]);
 
     expect(new Set(metricIds).size).toBe(footballFactMetricDefinitions.length);
     expect(new Set(footballFactSources.map((source) => source.id)).size).toBe(footballFactSources.length);
