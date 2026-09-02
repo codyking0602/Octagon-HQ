@@ -6,8 +6,8 @@ import { FootballHq } from "./FootballHq";
 
 vi.mock("../picks/picksEventAssets", () => ({
   pickEventPosters: () => [
-    { src: "https://example.com/cfb.webp", aspectRatio: "16 / 9" },
-    { src: "https://example.com/nfl.webp", aspectRatio: "16 / 9" },
+    { src: "https://example.com/lsu-clemson.webp", aspectRatio: "16 / 9" },
+    { src: "https://example.com/louisville-ole-miss.webp", aspectRatio: "16 / 9" },
   ],
 }));
 
@@ -31,46 +31,46 @@ const event: PickEvent = {
   headerNaturalHeight: 900,
   bouts: [
     {
-      boutId: "cfb-game",
+      boutId: "stale-first-college-game",
       position: 1,
       weightClass: "COLLEGE ATS",
-      redFighterSlug: "lsu",
-      redFighterName: "LSU",
-      blueFighterSlug: "clemson",
-      blueFighterName: "Clemson",
+      redFighterSlug: "stanford",
+      redFighterName: "Stanford Cardinal",
+      blueFighterSlug: "miami",
+      blueFighterName: "Miami Hurricanes",
       redAmericanOdds: null,
       blueAmericanOdds: null,
       winnerFighterSlug: null,
       includedInPicks: true,
-      locksAt: "2026-09-05T11:00:00-05:00",
+      locksAt: "2026-09-04T20:00:00-05:00",
     },
     {
-      boutId: "nfl-game",
+      boutId: "lsu-clemson",
       position: 2,
-      weightClass: "NFL ATS",
-      redFighterSlug: "giants",
-      redFighterName: "Giants",
-      blueFighterSlug: "cowboys",
-      blueFighterName: "Cowboys",
+      weightClass: "COLLEGE ATS",
+      redFighterSlug: "lsu",
+      redFighterName: "LSU Tigers",
+      blueFighterSlug: "clemson",
+      blueFighterName: "Clemson Tigers",
       redAmericanOdds: null,
       blueAmericanOdds: null,
       winnerFighterSlug: null,
       includedInPicks: true,
-      locksAt: "2026-09-06T19:20:00-05:00",
+      locksAt: "2026-09-05T19:30:00-05:00",
     },
     {
-      boutId: "nfl-game-2",
+      boutId: "louisville-ole-miss",
       position: 3,
-      weightClass: "NFL ATS",
-      redFighterSlug: "eagles",
-      redFighterName: "Eagles",
-      blueFighterSlug: "commanders",
-      blueFighterName: "Commanders",
+      weightClass: "COLLEGE ATS",
+      redFighterSlug: "ole-miss",
+      redFighterName: "Ole Miss Rebels",
+      blueFighterSlug: "louisville",
+      blueFighterName: "Louisville Cardinals",
       redAmericanOdds: null,
       blueAmericanOdds: null,
       winnerFighterSlug: null,
       includedInPicks: true,
-      locksAt: "2026-09-07T12:00:00-05:00",
+      locksAt: "2026-09-05T14:30:00-05:00",
     },
   ],
 };
@@ -131,12 +131,12 @@ const summary: PickSummary = {
 };
 
 describe("Football HQ Home summary", () => {
-  it("uses the canonical weekly slate for compact Picks status, standing, and both featured matchups", () => {
+  it("uses authored Matchup HQ games for featured card copy and deep links instead of the first league game", () => {
     render(
       <MemoryRouter>
         <FootballHq
           event={event}
-          selections={{ "cfb-game": "clemson" }}
+          selections={{ "stale-first-college-game": "miami" }}
           history={history}
           summary={summary}
           loading={false}
@@ -151,16 +151,23 @@ describe("Football HQ Home summary", () => {
     expect(hq).toHaveClass("home-sport-hq");
     expect(within(hq).getByText("2 PICKS LEFT")).toBeInTheDocument();
     expect(within(hq).getByText("#2")).toBeInTheDocument();
-    expect(within(hq).getByText(/Clemson/)).toBeInTheDocument();
-    expect(within(hq).getByText(/Cowboys/)).toBeInTheDocument();
-    expect(within(hq).getByText("COLLEGE GAME OF THE WEEK")).toBeInTheDocument();
-    expect(within(hq).getByText("NFL GAME OF THE WEEK")).toBeInTheDocument();
+
+    const lsuClemson = within(hq).getByText("LSU vs. Clemson").closest("a");
+    const louisvilleOleMiss = within(hq).getByText("Louisville vs. Ole Miss").closest("a");
+    expect(lsuClemson).toHaveAttribute("href", "/football/picks?matchup=2026-lsu-clemson");
+    expect(louisvilleOleMiss).toHaveAttribute("href", "/football/picks?matchup=2026-louisville-ole-miss");
+    expect(within(hq).getByText("Sat, Sep 5, 7:30 PM CT")).toBeInTheDocument();
+    expect(within(hq).getByText("Sat, Sep 5, 2:30 PM CT")).toBeInTheDocument();
+    expect(within(hq).queryByText(/Miami Hurricanes/)).not.toBeInTheDocument();
+    expect(within(hq).queryByText(/Stanford Cardinal/)).not.toBeInTheDocument();
+    expect(within(hq).queryByText("Weekly feature")).not.toBeInTheDocument();
+    expect(within(hq).getAllByText("COLLEGE GAME OF THE WEEK")).toHaveLength(2);
+    expect(within(hq).queryByText("NFL GAME OF THE WEEK")).not.toBeInTheDocument();
     expect(within(hq).getByRole("link", { name: "OPEN PICKS →" })).toHaveAttribute("href", "/football/picks");
     expect(within(hq).getAllByRole("link")).toHaveLength(3);
-    for (const link of within(hq).getAllByRole("link")) expect(link).toHaveAttribute("href", "/football/picks");
   });
 
-  it("shows a real unpublished state instead of inventing a weekly slate", () => {
+  it("shows a real unpublished state without inventing featured matchup cards", () => {
     render(
       <MemoryRouter>
         <FootballHq
@@ -176,6 +183,7 @@ describe("Football HQ Home summary", () => {
     );
 
     expect(screen.getByRole("heading", { name: "Next slate not published" })).toBeInTheDocument();
-    expect(screen.getAllByText("Weekly feature")).toHaveLength(2);
+    expect(screen.queryByLabelText("Football Games of the Week")).not.toBeInTheDocument();
+    expect(screen.queryByText("Weekly feature")).not.toBeInTheDocument();
   });
 });

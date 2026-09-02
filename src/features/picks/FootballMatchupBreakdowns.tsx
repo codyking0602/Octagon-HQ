@@ -1,13 +1,29 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { FootballMatchupBreakdown } from "./footballMatchupBreakdowns";
 
-export function FootballMatchupBreakdowns({ breakdowns }: { breakdowns: FootballMatchupBreakdown[] }) {
+export function FootballMatchupBreakdowns({
+  breakdowns,
+  requestedBreakdownId = null,
+}: {
+  breakdowns: FootballMatchupBreakdown[];
+  requestedBreakdownId?: string | null;
+}) {
   const [activeId, setActiveId] = useState<string | null>(null);
+  const handledRequestedId = useRef<string | null>(null);
+  const deepLinkedBreakdownId = requestedBreakdownId
+    ?? (typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("matchup"));
   const active = useMemo(
     () => breakdowns.find((breakdown) => breakdown.id === activeId) ?? null,
     [activeId, breakdowns],
   );
+
+  useEffect(() => {
+    if (!deepLinkedBreakdownId || handledRequestedId.current === deepLinkedBreakdownId) return;
+    if (!breakdowns.some((breakdown) => breakdown.id === deepLinkedBreakdownId)) return;
+    handledRequestedId.current = deepLinkedBreakdownId;
+    setActiveId(deepLinkedBreakdownId);
+  }, [breakdowns, deepLinkedBreakdownId]);
 
   useEffect(() => {
     if (!active) return undefined;

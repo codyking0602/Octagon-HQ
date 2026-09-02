@@ -1,7 +1,11 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import { FootballMatchupBreakdowns } from "./FootballMatchupBreakdowns";
 import { FOOTBALL_MATCHUP_BREAKDOWNS } from "./footballMatchupBreakdowns";
+
+afterEach(() => {
+  window.history.replaceState({}, "", "/");
+});
 
 describe("FootballMatchupBreakdowns", () => {
   it("opens the featured breakdown sheet and switches between authored matchups without a read or prediction section", () => {
@@ -18,6 +22,15 @@ describe("FootballMatchupBreakdowns", () => {
     expect(screen.getByText("LOUISVILLE OFFENSE vs. OLE MISS DEFENSE")).toBeInTheDocument();
     expect(screen.queryByText("THE HQ READ")).not.toBeInTheDocument();
     expect(screen.queryByText("Ole Miss 31, Louisville 24")).not.toBeInTheDocument();
+  });
+
+  it("opens the exact authored breakdown requested by the canonical Football Picks URL", async () => {
+    window.history.replaceState({}, "", "/football/picks?matchup=2026-louisville-ole-miss");
+    render(<FootballMatchupBreakdowns breakdowns={FOOTBALL_MATCHUP_BREAKDOWNS} />);
+
+    expect(await screen.findByRole("dialog")).toHaveTextContent("Louisville vs. Ole Miss");
+    fireEvent.click(screen.getByRole("button", { name: "Close matchup breakdown" }));
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
   it("portals the open breakdown above the Picks stacking context and locks background scrolling", () => {
