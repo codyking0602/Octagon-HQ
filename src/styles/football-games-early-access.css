@@ -1,0 +1,97 @@
+.football-games-early-access {
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + 4.75rem);
+  left: 50%;
+  z-index: 70;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: .75rem;
+  width: min(calc(100vw - 1.5rem), 620px);
+  padding: .78rem .9rem;
+  border: 1px solid rgba(244, 200, 74, .38);
+  border-radius: 16px;
+  background:
+    linear-gradient(120deg, rgba(244, 200, 74, .08), transparent 44%),
+    rgba(5, 8, 13, .96);
+  box-shadow: 0 16px 42px rgba(0, 0, 0, .4);
+  color: #f5f7fa;
+  pointer-events: none;
+  animation: football-games-early-access 4.5s ease both;
+  backdrop-filter: blur(18px);
+}
+
+.football-games-early-access__badge {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  padding: 0 .55rem;
+  border: 1px solid rgba(244, 200, 74, .45);
+  border-radius: 999px;
+  background: rgba(244, 200, 74, .11);
+  color: #f4c84a;
+  font-size: .55rem;
+  font-weight: 950;
+  letter-spacing: .09em;
+  white-space: nowrap;
+}
+
+.football-games-early-access strong,
+.football-games-early-access p {
+  display: block;
+  margin: 0;
+}
+
+.football-games-early-access strong {
+  font-size: .72rem;
+  font-weight: 950;
+  letter-spacing: .055em;
+}
+
+.football-games-early-access p {
+  margin-top: .16rem;
+  color: #b8c0cb;
+  font-size: .68rem;
+  line-height: 1.35;
+}
+
+@keyframes football-games-early-access {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -12px);
+  }
+
+  9%, 82% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -10px);
+  }
+}
+
+@media (max-width: 520px) {
+  .football-games-early-access {
+    top: calc(env(safe-area-inset-top, 0px) + 4.35rem);
+    grid-template-columns: 1fr;
+    gap: .42rem;
+    padding: .72rem .78rem;
+  }
+
+  .football-games-early-access__badge {
+    width: fit-content;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .football-games-early-access {
+    animation-name: football-games-early-access-reduced-motion;
+  }
+
+  @keyframes football-games-early-access-reduced-motion {
+    0%, 88% { opacity: 1; transform: translate(-50%, 0); }
+    100% { opacity: 0; transform: translate(-50%, 0); }
+  }
+}
