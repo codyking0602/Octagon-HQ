@@ -48,8 +48,76 @@ function normalizedTeamSet(value: readonly string[]) {
   return new Set(selectedValues(value).map((team) => team.toLowerCase()));
 }
 
+function includesTeam(value: readonly string[], team: string) {
+  return normalizedTeamSet(value).has(team.trim().toLowerCase());
+}
+
 function fieldId(label: string) {
   return `football-futures-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`;
+}
+
+function syncCfbChampionsIntoPlayoff(playoffTeams: readonly string[], champions: readonly string[]) {
+  const limit = FOOTBALL_FUTURES_RULES.cfb.playoffTeams.selections;
+  const required = selectedValues(champions);
+  const requiredSet = normalizedTeamSet(required);
+  const next = selectedValues(playoffTeams).slice(0, limit);
+
+  for (const champion of required) {
+    if (includesTeam(next, champion)) continue;
+    if (next.length < limit) {
+      next.push(champion);
+      continue;
+    }
+
+    let replaceIndex = -1;
+    for (let index = next.length - 1; index >= 0; index -= 1) {
+      const team = next[index];
+      if (!requiredSet.has(team.toLowerCase()) && isCfbPower4Team(team)) {
+        replaceIndex = index;
+        break;
+      }
+    }
+    if (replaceIndex < 0) {
+      for (let index = next.length - 1; index >= 0; index -= 1) {
+        if (!requiredSet.has(next[index].toLowerCase())) {
+          replaceIndex = index;
+          break;
+        }
+      }
+    }
+    if (replaceIndex >= 0) next[replaceIndex] = champion;
+  }
+
+  return next;
+}
+
+function syncNflChampionsIntoPlayoff(playoffTeams: readonly string[], champions: readonly string[]) {
+  const limit = FOOTBALL_FUTURES_RULES.nfl.playoffTeams.selections;
+  const required = selectedValues(champions);
+  const requiredSet = normalizedTeamSet(required);
+  const next = selectedValues(playoffTeams).slice(0, limit);
+
+  for (const champion of required) {
+    if (includesTeam(next, champion)) continue;
+    const conference = getNflConference(champion);
+    const conferenceCount = next.filter((team) => getNflConference(team) === conference).length;
+    if (next.length < limit && conferenceCount < 7) {
+      next.push(champion);
+      continue;
+    }
+
+    let replaceIndex = -1;
+    for (let index = next.length - 1; index >= 0; index -= 1) {
+      const team = next[index];
+      if (getNflConference(team) === conference && !requiredSet.has(team.toLowerCase())) {
+        replaceIndex = index;
+        break;
+      }
+    }
+    if (replaceIndex >= 0) next[replaceIndex] = champion;
+  }
+
+  return next;
 }
 
 function cfbPlayoffPickerTeams(picks: FootballFuturesPicks) {
@@ -89,7 +157,7 @@ function nflPlayoffPickerTeams(picks: FootballFuturesPicks) {
   return NFL_FUTURES_TEAMS;
 }
 
-function FuturesTeamField({ label, points, limit, value, disabled, teams, groups, groupForTeam, onChange }: {
+function FuturesTeamField({ label, points, limit, value, disabled, teams, groups, groupForTeam, protectedTeams, onChange }: {
   label: string;
   points: string;
   limit: number;
@@ -98,11 +166,13 @@ function FuturesTeamField({ label, points, limit, value, disabled, teams, groups
   teams: readonly string[];
   groups?: readonly FuturesPickerGroup[];
   groupForTeam?: (team: string) => string | null;
+  protectedTeams?: readonly string[];
   onChange: (value: string[]) => void;
 }) {
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
   const selected = selectedValues(value);
+  const protectedSet = normalizedTeamSet(protectedTeams ?? []);
   const inputId = fieldId(label);
   const listId = `${inputId}-options`;
   const atLimit = selected.length >= limit;
@@ -141,7 +211,8 @@ function FuturesTeamField({ label, points, limit, value, disabled, teams, groups
             {selected.map((team) => {
               const group = groupForTeam?.(team);
               const text = group ? `${group} · ${team}` : team;
-              return disabled ? (
+              const protectedTeam = protectedSet.has(team.toLowerCase());
+              return disabled || protectedTeam ? (
                 <span key={team} className="football-futures-team-chip">{text}</span>
               ) : (
                 <button key={team} type="button" className="football-futures-team-chip" aria-label={`Remove ${team}`} onClick={() => removeTeam(team)}>
@@ -266,6 +337,13 @@ export function FootballFuturesCard() {
     }, AUTOSAVE_DELAY_MS);
   }, []);
 
+  const commitDraft = useCallback((next: FootballFuturesPicks) => {
+    draftRef.current = next;
+    setDraft(next);
+    setError("");
+    queueAutosave(next);
+  }, [queueAutosave]);
+
   useEffect(() => {
     if (!snapshot) {
       hydratedSeasonRef.current = null;
@@ -321,11 +399,61 @@ export function FootballFuturesCard() {
   }
 
   const update = <K extends keyof FootballFuturesPicks,>(key: K, value: FootballFuturesPicks[K]) => {
-    const next = { ...draftRef.current, [key]: value };
-    draftRef.current = next;
-    setDraft(next);
-    setError("");
-    queueAutosave(next);
+    commitDraft({ ...draftRef.current, [key]: value });
+  };
+
+  const updateCfbPower4Champions = (value: string[]) => {
+    const current = draftRef.current;
+    commitDraft({
+      ...current,
+      cfbPower4Champions: value,
+      cfbPlayoffTeams: syncCfbChampionsIntoPlayoff(current.cfbPlayoffTeams, value),
+    });
+  };
+
+  const updateCfbPlayoffTeams = (value: string[]) => {
+    const current = draftRef.current;
+    const playoffTeams = syncCfbChampionsIntoPlayoff(value, current.cfbPower4Champions);
+    const semifinalists = current.cfbSemifinalists.filter((team) => includesTeam(playoffTeams, team));
+    const nationalChampion = current.cfbNationalChampion && includesTeam(semifinalists, current.cfbNationalChampion)
+      ? current.cfbNationalChampion
+      : "";
+    commitDraft({ ...current, cfbPlayoffTeams: playoffTeams, cfbSemifinalists: semifinalists, cfbNationalChampion: nationalChampion });
+  };
+
+  const updateCfbSemifinalists = (value: string[]) => {
+    const current = draftRef.current;
+    const nationalChampion = current.cfbNationalChampion && includesTeam(value, current.cfbNationalChampion)
+      ? current.cfbNationalChampion
+      : "";
+    commitDraft({ ...current, cfbSemifinalists: value, cfbNationalChampion: nationalChampion });
+  };
+
+  const updateNflDivisionChampions = (value: string[]) => {
+    const current = draftRef.current;
+    commitDraft({
+      ...current,
+      nflDivisionChampions: value,
+      nflPlayoffTeams: syncNflChampionsIntoPlayoff(current.nflPlayoffTeams, value),
+    });
+  };
+
+  const updateNflPlayoffTeams = (value: string[]) => {
+    const current = draftRef.current;
+    const playoffTeams = syncNflChampionsIntoPlayoff(value, current.nflDivisionChampions);
+    const conferenceTeams = current.nflConferenceChampionshipTeams.filter((team) => includesTeam(playoffTeams, team));
+    const superBowlChampion = current.nflSuperBowlChampion && includesTeam(conferenceTeams, current.nflSuperBowlChampion)
+      ? current.nflSuperBowlChampion
+      : "";
+    commitDraft({ ...current, nflPlayoffTeams: playoffTeams, nflConferenceChampionshipTeams: conferenceTeams, nflSuperBowlChampion: superBowlChampion });
+  };
+
+  const updateNflConferenceTeams = (value: string[]) => {
+    const current = draftRef.current;
+    const superBowlChampion = current.nflSuperBowlChampion && includesTeam(value, current.nflSuperBowlChampion)
+      ? current.nflSuperBowlChampion
+      : "";
+    commitDraft({ ...current, nflConferenceChampionshipTeams: value, nflSuperBowlChampion: superBowlChampion });
   };
 
   return (
@@ -351,9 +479,9 @@ export function FootballFuturesCard() {
             <section>
               <header><div><span>CFB</span><small>COLLEGE FUTURES</small></div><strong>{FOOTBALL_FUTURES_MAX_POINTS.cfb} PTS</strong></header>
               <div className="football-futures__fields">
-                <FuturesTeamField label="Power 4 champions" points="2 PTS EACH" limit={FOOTBALL_FUTURES_RULES.cfb.power4Champions.selections} value={draft.cfbPower4Champions} disabled={locked} teams={CFB_FUTURES_TEAMS} groups={POWER4_PICKER_GROUPS} groupForTeam={getCfbPower4Conference} onChange={(value) => update("cfbPower4Champions", value)} />
-                <FuturesTeamField label="12-team CFP" points="1 PT EACH" limit={FOOTBALL_FUTURES_RULES.cfb.playoffTeams.selections} value={draft.cfbPlayoffTeams} disabled={locked} teams={cfbPlayoffPickerTeams(draft)} onChange={(value) => update("cfbPlayoffTeams", value)} />
-                <FuturesTeamField label="CFP semifinalists" points="2 PTS EACH" limit={FOOTBALL_FUTURES_RULES.cfb.semifinalists.selections} value={draft.cfbSemifinalists} disabled={locked} teams={cfbPlayoffOptions.length ? cfbPlayoffOptions : CFB_FUTURES_TEAMS} onChange={(value) => update("cfbSemifinalists", value)} />
+                <FuturesTeamField label="Power 4 champions" points="2 PTS EACH" limit={FOOTBALL_FUTURES_RULES.cfb.power4Champions.selections} value={draft.cfbPower4Champions} disabled={locked} teams={CFB_FUTURES_TEAMS} groups={POWER4_PICKER_GROUPS} groupForTeam={getCfbPower4Conference} onChange={updateCfbPower4Champions} />
+                <FuturesTeamField label="12-team CFP" points="1 PT EACH" limit={FOOTBALL_FUTURES_RULES.cfb.playoffTeams.selections} value={draft.cfbPlayoffTeams} disabled={locked} teams={cfbPlayoffPickerTeams(draft)} protectedTeams={draft.cfbPower4Champions} onChange={updateCfbPlayoffTeams} />
+                <FuturesTeamField label="CFP semifinalists" points="2 PTS EACH" limit={FOOTBALL_FUTURES_RULES.cfb.semifinalists.selections} value={draft.cfbSemifinalists} disabled={locked} teams={cfbPlayoffOptions.length ? cfbPlayoffOptions : CFB_FUTURES_TEAMS} onChange={updateCfbSemifinalists} />
                 <FuturesSingleField label="Heisman Trophy" points="3 PTS" value={draft.cfbHeisman} disabled={locked} onChange={(value) => update("cfbHeisman", value)} />
                 <FuturesTeamField label="National champion" points="7 PTS" limit={1} value={draft.cfbNationalChampion ? [draft.cfbNationalChampion] : []} disabled={locked} teams={cfbSemifinalOptions.length ? cfbSemifinalOptions : CFB_FUTURES_TEAMS} onChange={(value) => update("cfbNationalChampion", value[0] ?? "")} />
               </div>
@@ -361,9 +489,9 @@ export function FootballFuturesCard() {
             <section>
               <header><div><span>NFL</span><small>PRO FUTURES</small></div><strong>{FOOTBALL_FUTURES_MAX_POINTS.nfl} PTS</strong></header>
               <div className="football-futures__fields">
-                <FuturesTeamField label="Division champions" points="1 PT EACH" limit={FOOTBALL_FUTURES_RULES.nfl.divisionChampions.selections} value={draft.nflDivisionChampions} disabled={locked} teams={NFL_FUTURES_TEAMS} groups={NFL_DIVISION_PICKER_GROUPS} groupForTeam={(team) => getNflTeamGroup(team)?.label ?? null} onChange={(value) => update("nflDivisionChampions", value)} />
-                <FuturesTeamField label="14-team playoffs" points="1 PT EACH" limit={FOOTBALL_FUTURES_RULES.nfl.playoffTeams.selections} value={draft.nflPlayoffTeams} disabled={locked} teams={nflPlayoffPickerTeams(draft)} groups={NFL_PLAYOFF_PICKER_GROUPS} groupForTeam={getNflConference} onChange={(value) => update("nflPlayoffTeams", value)} />
-                <FuturesTeamField label="Conference title teams" points="2 PTS EACH" limit={FOOTBALL_FUTURES_RULES.nfl.conferenceChampionshipTeams.selections} value={draft.nflConferenceChampionshipTeams} disabled={locked} teams={nflPlayoffOptions.length ? nflPlayoffOptions : NFL_FUTURES_TEAMS} groups={NFL_TITLE_PICKER_GROUPS} groupForTeam={getNflConference} onChange={(value) => update("nflConferenceChampionshipTeams", value)} />
+                <FuturesTeamField label="Division champions" points="1 PT EACH" limit={FOOTBALL_FUTURES_RULES.nfl.divisionChampions.selections} value={draft.nflDivisionChampions} disabled={locked} teams={NFL_FUTURES_TEAMS} groups={NFL_DIVISION_PICKER_GROUPS} groupForTeam={(team) => getNflTeamGroup(team)?.label ?? null} onChange={updateNflDivisionChampions} />
+                <FuturesTeamField label="14-team playoffs" points="1 PT EACH" limit={FOOTBALL_FUTURES_RULES.nfl.playoffTeams.selections} value={draft.nflPlayoffTeams} disabled={locked} teams={nflPlayoffPickerTeams(draft)} groups={NFL_PLAYOFF_PICKER_GROUPS} groupForTeam={getNflConference} protectedTeams={draft.nflDivisionChampions} onChange={updateNflPlayoffTeams} />
+                <FuturesTeamField label="Conference title teams" points="2 PTS EACH" limit={FOOTBALL_FUTURES_RULES.nfl.conferenceChampionshipTeams.selections} value={draft.nflConferenceChampionshipTeams} disabled={locked} teams={nflPlayoffOptions.length ? nflPlayoffOptions : NFL_FUTURES_TEAMS} groups={NFL_TITLE_PICKER_GROUPS} groupForTeam={getNflConference} onChange={updateNflConferenceTeams} />
                 <FuturesSingleField label="AP NFL MVP" points="3 PTS" value={draft.nflMvp} disabled={locked} onChange={(value) => update("nflMvp", value)} />
                 <FuturesTeamField label="Super Bowl champion" points="7 PTS" limit={1} value={draft.nflSuperBowlChampion ? [draft.nflSuperBowlChampion] : []} disabled={locked} teams={nflConferenceOptions.length ? nflConferenceOptions : NFL_FUTURES_TEAMS} onChange={(value) => update("nflSuperBowlChampion", value[0] ?? "")} />
               </div>
@@ -372,7 +500,7 @@ export function FootballFuturesCard() {
         ) : null}
         {!locked && !loading ? (
           <footer className="football-futures__footer">
-            <p>Autosaves while you pick. Champions must advance through the playoff rounds you picked.</p>
+            <p>Autosaves while you pick. Conference and division champions are carried into the playoff fields automatically.</p>
             <button type="button" className="primary-action" disabled={picks.savingFootballFutures} onClick={() => void save()}>{picks.savingFootballFutures ? "SAVING…" : "SAVE FUTURES PICKS"}</button>
           </footer>
         ) : null}
