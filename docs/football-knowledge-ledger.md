@@ -335,28 +335,25 @@ Deliverables:
 - define missing-data/confidence behavior explicitly rather than silently reweighting sparse subjects into fake precision;
 - keep recognizability and candidate membership completely separate from ranking score.
 
-### Stage 15 — NFL Ranking Models — IN PROGRESS
+### Stage 15 — NFL Ranking Models — COMPLETE
 
 **Purpose:** implement NFL-specific greatness models on top of the Stage 14 framework and Stage 13 factual universe.
 
-Progress as of 2026-09-02:
+Delivered:
 
-- Stage 15A tunes the canonical QB, RB, WR, and TE career profiles inside `footballComparisonAuthority.ts`; it does not create another ranking owner.
-- Stage 15B/15C complete the remaining NFL career families: OL, DL/EDGE, LB, Secondary, and K/P, through that same authority.
-- DL/EDGE, LB, and Secondary are scored against their own position-family profiles and fixed defensive calibration evidence before the existing cross-position defensive comparison consumes the common rating scale.
-- K/P remains one specialist family while K and P use separate factual score profiles; OL and specialist anchors are fixed canonical identities rather than current-pool percentiles.
-- Sparse OL records remain eligible with neutral missing dimensions and appropriately lower visible confidence rather than fabricated performance evidence.
-- Material Stage 15 scoring behavior is versioned as `stage15-v2`; reviewed Rank Five rows remain calibration/override evidence only and do not decide universe membership.
-- Remaining Stage 15 work is NFL QB single seasons, NFL team seasons, NFL head coaches, and NFL franchises/bounded franchise eras where applicable.
+- Stage 15A — PR #848: NFL career QB, RB, WR, and TE models through the existing `footballComparisonAuthority.ts` ranking owner.
+- Stage 15B/15C — PR #850: NFL career OL, DL/EDGE, LB, Secondary, and K/P models through that same authority; historical OL factual coverage was repaired through the canonical factual owner rather than a ranking fallback.
+- Stage 15D/15E — PR #851: NFL QB single-season and team-season models. QB seasons use only canonical bounded `nfl-season-*` evidence; team seasons use scoring, opponent scoring, explicit W/L/T win rate, and one consolidated postseason-result signal so Super Bowl/title-game/playoff evidence is not double-counted.
+- Stage 15F/15G — PR #852: NFL head-coach career, franchise, and bounded franchise-era models. Coach membership comes from the existing source-backed NFL coach recognition projection plus the existing historical Hall repair path; Rank Five never owns the coach roster. Bounded franchise eras are scored only when the requested era is fully covered by the pinned factual relationship source, so partial modern coverage cannot masquerade as an all-era score.
+- Head-coach evaluation covers peak, sustained contention, championships/postseason results, franchise elevation, and longevity without reducing greatness to raw win totals.
+- Franchise and bounded-era models keep postseason evidence consolidated to one signal and preserve neutral missing evidence rather than fabricating zeroes.
+- DL/EDGE, LB, and Secondary remain evaluated against their own position-family profiles before cross-position defensive comparison; K and P retain separate factual score profiles inside the shared specialist family.
+- Existing ranking context adjustment remains the only era/context owner. No second ranking engine, factual provider, subject registry, context system, or scoring route was added.
+- Reviewed Rank Five rows remain calibration/override evidence only and never define universe membership.
+- The canonical passing-attempts-per-game factual bug was repaired to use the canonical attempts value, and generated Football artifacts were regenerated through their canonical generation commands.
+- Stage 15's final ranking framework version is `stage15-v4`.
 
-Deliverables:
-
-- position-specific career models for QB, RB, WR, TE, OL, DL/EDGE, LB, Secondary, and K/P;
-- defensive players are first evaluated relative to their own position family before any cross-position greatness normalization;
-- NFL QB-season and team-season models judge the bounded season rather than importing career reputation;
-- head-coach evaluation covers peak, sustained contention, championships/postseason results, franchise elevation, and longevity without becoming a raw-win-count formula;
-- postseason and awards are meaningful signals but do not double-count the same accomplishment through multiple inputs;
-- reviewed legacy ratings remain calibration/override evidence for matching identities, never candidate membership or the primary model.
+Stage 15 is complete. The next roadmap stage is Stage 16 — CFB Ranking Models.
 
 ### Stage 16 — CFB Ranking Models
 
