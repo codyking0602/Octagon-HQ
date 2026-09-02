@@ -10,8 +10,14 @@ describe("Cloudflare Worker rename migration", () => {
     expect(workflow).toContain("--data '{\"name\":\"the\"}'");
     expect(workflow).toContain('"$api_base/octagon"');
     expect(workflow).toContain("Both octagon and the already exist; refusing to choose an owner.");
-    expect(workflow).toContain('Expected the=200 and octagon=404');
+    expect(workflow).toContain("Expected the=200 and octagon=404");
     expect(workflow).not.toContain("wrangler deploy");
+  });
+
+  it("uses parser-safe JSON checks after the production shell heredoc failure", () => {
+    expect(workflow).toContain("jq -e '.success == true and .result.name == \"the\"'");
+    expect(workflow).not.toContain("<<'NODE'");
+    expect(workflow).not.toContain('<<"NODE"');
   });
 
   it("runs automatically only when the one-time migration workflow lands on main", () => {
