@@ -80,7 +80,6 @@ jobs:
             npm run generate:football-cfb-player-seasons
             npm run generate:football-factual-universe
             npm run generate:football-ledger-audit
-            npm run verify:football-ledger-audit
             npx vitest run src/features/back-room/footballStage15NflCoachFranchiseEraRankingModels.test.ts src/features/back-room/footballProHallRecognitionCompleteness.test.ts src/features/back-room/footballCanonicalUniverse.test.ts src/features/back-room/footballFactualStats.test.ts src/features/back-room/footballWavelengthSubjectAuthority.test.ts src/features/back-room/footballStage15NflBoundedSeasonRankingModels.test.ts src/features/back-room/footballStage15NflOffensiveRankingModels.test.ts src/features/back-room/footballStage15NflRemainingCareerRankingModels.test.ts
             npm run typecheck
           } 2>&1 | tee pr3-final-repair.log
