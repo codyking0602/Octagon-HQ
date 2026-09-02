@@ -24,6 +24,16 @@ describe("global frontend delivery proof", () => {
     expect(verifier).toContain("resolved to the SPA fallback");
   });
 
+  it("owns frontend delivery origin separately from backend CORS origin", () => {
+    expect(verifier).toContain('const DEFAULT_ORIGIN = "https://the.hq-app.workers.dev"');
+    expect(verifier).toContain(
+      "origin: process.env.FRONTEND_PRODUCTION_ORIGIN ?? DEFAULT_ORIGIN",
+    );
+    expect(verifier).not.toContain(
+      "origin: process.env.OCTAGON_PRODUCTION_ORIGIN ?? DEFAULT_ORIGIN",
+    );
+  });
+
   it("runs exact delivery proof only after the canonical frontend deployment succeeds", () => {
     expect(workflow).toContain("workflow_run:");
     expect(workflow).toContain("Deploy Cloudflare Frontend");
