@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import type { PickEvent, PickHistory, PickSummary } from "../picks/picksModel";
+import { footballMatchupBoutForBreakdown, footballMatchupBreakdownsForEvent, type FootballMatchupBreakdown } from "../picks/footballMatchupBreakdowns";
+import type { PickBout, PickEvent, PickHistory, PickSummary } from "../picks/picksModel";
 import { eventPicksLocked, groupRankLabel, pickProgress, pickRecord } from "../picks/picksModel";
 import { pickEventPosters } from "../picks/picksEventAssets";
 
@@ -18,42 +19,30 @@ function isCollegeGame(weightClass: string) {
   return value.includes("COLLEGE") || value === "CFB";
 }
 
-function weeklyLeagueGame(event: PickEvent | null, league: "cfb" | "nfl") {
-  return event?.bouts
-    .filter((game) => game.includedInPicks !== false)
-    .slice()
-    .sort((left, right) => left.position - right.position)
-    .find((game) => (league === "cfb" ? isCollegeGame(game.weightClass) : !isCollegeGame(game.weightClass))) ?? null;
-}
-
 function FeaturedGame({
-  label,
+  breakdown,
   game,
   poster,
 }: {
-  label: string;
-  game: ReturnType<typeof weeklyLeagueGame>;
+  breakdown: FootballMatchupBreakdown;
+  game: PickBout;
   poster?: { src: string; aspectRatio: string };
 }) {
+  const label = isCollegeGame(game.weightClass) ? "COLLEGE GAME OF THE WEEK" : "NFL GAME OF THE WEEK";
+
   return (
-    <Link className={`football-hq-feature${poster ? " has-poster" : ""}`} to="/football/picks">
+    <Link
+      className={`football-hq-feature${poster ? " has-poster" : ""}`}
+      to={`/football/picks?matchup=${encodeURIComponent(breakdown.id)}`}
+    >
       {poster ? (
         <img src={poster.src} alt="" style={{ aspectRatio: poster.aspectRatio }} loading="lazy" />
       ) : null}
       <div className="football-hq-feature__scrim" aria-hidden="true" />
       <div className="football-hq-feature__copy">
         <span>{label}</span>
-        {game ? (
-          <>
-            <strong>{game.blueFighterName} <small>AT</small> {game.redFighterName}</strong>
-            <p>{game.locksAt ? eventDate(game.locksAt) : "This week"}</p>
-          </>
-        ) : (
-          <>
-            <strong>Weekly feature</strong>
-            <p>Opens when this week’s matchup is published.</p>
-          </>
-        )}
+        <strong>{game.blueFighterName} <small>AT</small> {game.redFighterName}</strong>
+        <p>{game.locksAt ? eventDate(game.locksAt) : breakdown.venue}</p>
         <b>OPEN MATCHUP →</b>
       </div>
     </Link>
@@ -84,8 +73,10 @@ export function FootballHq({
   const standing = standings.find((item) => item.isCurrentUser) ?? null;
   const rank = standing ? groupRankLabel(standing.rank, standings) : "";
   const posters = pickEventPosters(event);
-  const collegeGame = weeklyLeagueGame(event, "cfb");
-  const nflGame = weeklyLeagueGame(event, "nfl");
+  const featuredGames = footballMatchupBreakdownsForEvent(event).flatMap((breakdown, index) => {
+    const game = footballMatchupBoutForBreakdown(event, breakdown);
+    return game ? [{ breakdown, game, poster: posters[index] }] : [];
+  });
   const season = event?.season ?? history?.season ?? new Date().getFullYear();
   const status = !signedIn
     ? "SIGN IN TO PICK"
@@ -145,10 +136,13 @@ export function FootballHq({
         </section>
       )}
 
-      <div className="football-hq-features" aria-label="Football Games of the Week">
-        <FeaturedGame label="COLLEGE GAME OF THE WEEK" game={collegeGame} poster={posters[0]} />
-        <FeaturedGame label="NFL GAME OF THE WEEK" game={nflGame} poster={posters[1]} />
-      </div>
+      {featuredGames.length ? (
+        <div className="football-hq-features" aria-label="Football Games of the Week">
+          {featuredGames.map(({ breakdown, game, poster }) => (
+            <FeaturedGame key={breakdown.id} breakdown={breakdown} game={game} poster={poster} />
+          ))}
+        </div>
+      ) : null}
     </section>
   );
 }
