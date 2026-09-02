@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "octagon",
+  "name": "the",
   "main": "./dist/_worker.js",
   "compatibility_date": "2026-07-22",
   "browser": {

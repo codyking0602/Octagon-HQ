@@ -250,7 +250,7 @@ jobs:
     env:
       SOURCE_SHA: ${{ inputs.source_sha || github.sha }}
       SOURCE_PR_NUMBER: ${{ inputs.pr_number || '0' }}
-      OCTAGON_PRODUCTION_URL: https://octagon.hq-app.workers.dev
+      OCTAGON_PRODUCTION_URL: https://the.hq-app.workers.dev
       TRUSTED_WORKFLOW_SHA: ${{ github.workflow_sha }}
       WRANGLER_VERSION: 4.123.0
     steps:
@@ -436,7 +436,7 @@ jobs:
         run: |
           {
             echo "### Octagon HQ frontend deployed"
-            echo "- Worker: octagon"
+            echo "- Worker: the"
             echo "- Production URL: $OCTAGON_PRODUCTION_URL"
             echo "- Exact source SHA: \`$SOURCE_SHA\`"
             if [ "$SOURCE_PR_NUMBER" != "0" ]; then
