@@ -3,6 +3,7 @@ import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-do
 import { BottomNavigation } from "../components/BottomNavigation";
 import { RouteLoading } from "../components/RouteLoading";
 import { BackRoomLogoLink } from "../features/back-room/BackRoomLogoLink";
+import { FootballTabEntryTransition, type FootballTabEntryClip } from "../features/football/FootballTabEntryTransition";
 import { useIdentity } from "../features/identity/IdentityProvider";
 import { memberProfilePath } from "../features/members/memberProfilesModel";
 import { NotificationHeaderAction } from "../features/notifications/NotificationHeaderAction";
@@ -132,6 +133,7 @@ export function AppShell() {
   const isFootball = location.pathname === "/football" || location.pathname.startsWith("/football/");
   const sportContext = sportContextForPath(location.pathname);
   const themeScope = themeScopeForPath(location.pathname, selectedSport);
+  const footballTabEntry = (location.state as { footballTabEntry?: FootballTabEntryClip } | null)?.footballTabEntry;
 
   function selectSport(sport: SelectedSport) {
     if (!sportContext?.switchable) return;
@@ -147,6 +149,13 @@ export function AppShell() {
       data-hq-theme={themeScope}
     >
       <RouteScrollManager />
+
+      {footballTabEntry ? (
+        <FootballTabEntryTransition
+          clip={footballTabEntry}
+          onComplete={() => navigate(location.pathname, { replace: true, state: null })}
+        />
+      ) : null}
 
       {isFootballGame ? (
         <header className="app-header app-header--game app-header--football-game">
