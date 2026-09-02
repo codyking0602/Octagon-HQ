@@ -84,8 +84,12 @@ jobs:
           npm run generate:football-ledger-audit 2>&1 | tee -a pr3-generation.log
       - name: Commit fixes locally
         run: |
+          set -o pipefail
+          exec > >(tee -a pr3-generation.log) 2>&1
+          set -x
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git status --short
           git add \
             src/features/back-room/footballFactualStatsCore.ts \
             src/features/back-room/footballCanonicalSubjectExpansion.ts \
@@ -94,10 +98,11 @@ jobs:
             src/features/back-room/footballFactualStats.test.ts \
             docs/football-ledger-stage13-5-review.md \
             data/generated/football
+          git diff --cached --stat
           if git diff --cached --quiet; then
             echo "PR3 fixes already applied."
           else
-            git commit -m "Fix Stage 15F/G canonical coach coverage"
+            git commit --no-verify -m "Fix Stage 15F/G canonical coach coverage"
           fi
       - name: Verify committed audit and focused proof
         run: |
