@@ -13,6 +13,7 @@ const richPreviewWorkflow = readFileSync(
 );
 
 const canonicalProductionOrigin = "https://the.hq-app.workers.dev";
+const legacyCompatibilityOrigin = "https://octagon.hq-app.workers.dev";
 
 describe("Cloudflare production ownership", () => {
   it("keeps Wrangler pointed at the single renamed production Worker", () => {
@@ -24,8 +25,13 @@ describe("Cloudflare production ownership", () => {
     expect(deployWorkflow).toContain(
       `OCTAGON_PRODUCTION_URL: ${canonicalProductionOrigin}`,
     );
+    expect(deployWorkflow).toContain(
+      `OCTAGON_LEGACY_URL: ${legacyCompatibilityOrigin}`,
+    );
     expect(deployWorkflow).toContain('echo "- Worker: the"');
-    expect(deployWorkflow).not.toContain("octagon.hq-app.workers.dev");
+    expect(deployWorkflow).not.toContain(
+      `OCTAGON_PRODUCTION_URL: ${legacyCompatibilityOrigin}`,
+    );
   });
 
   it("keeps every frontend post-deploy proof on the same renamed origin", () => {
