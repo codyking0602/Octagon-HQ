@@ -170,7 +170,8 @@ function FuturesTeamField({ label, points, limit, value, disabled, teams, groups
   onChange: (value: string[]) => void;
 }) {
   const [query, setQuery] = useState("");
-  const [focused, setFocused] = useState(false);
+  const [open, setOpen] = useState(false);
+  const pickerRef = useRef<HTMLDivElement | null>(null);
   const selected = selectedValues(value);
   const protectedSet = normalizedTeamSet(protectedTeams ?? []);
   const inputId = fieldId(label);
@@ -186,6 +187,18 @@ function FuturesTeamField({ label, points, limit, value, disabled, teams, groups
     .filter((team) => !normalizedQuery || team.toLowerCase().includes(normalizedQuery))
     .slice(0, 18);
 
+  useEffect(() => {
+    if (!open) return undefined;
+
+    const closeIfOutside = (event: PointerEvent) => {
+      const target = event.target;
+      if (target instanceof Node && !pickerRef.current?.contains(target)) setOpen(false);
+    };
+
+    document.addEventListener("pointerdown", closeIfOutside);
+    return () => document.removeEventListener("pointerdown", closeIfOutside);
+  }, [open]);
+
   function selectTeam(team: string) {
     const next = limit === 1 ? [team] : [...selected, team].slice(0, limit);
     onChange(next);
@@ -200,10 +213,12 @@ function FuturesTeamField({ label, points, limit, value, disabled, teams, groups
     <div className="football-futures-field">
       <span><b>{label}</b><small>{points} · {selected.length}/{limit} PICKS</small></span>
       <div
+        ref={pickerRef}
         className="football-futures-team-picker"
-        onFocus={() => setFocused(true)}
+        onFocus={() => setOpen(true)}
         onBlur={(event) => {
-          if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setFocused(false);
+          const nextFocus = event.relatedTarget;
+          if (nextFocus instanceof Node && !event.currentTarget.contains(nextFocus)) setOpen(false);
         }}
       >
         {selected.length ? (
@@ -229,14 +244,14 @@ function FuturesTeamField({ label, points, limit, value, disabled, teams, groups
             role="combobox"
             aria-autocomplete="list"
             aria-controls={listId}
-            aria-expanded={focused}
+            aria-expanded={open}
             autoComplete="off"
             value={query}
             placeholder={activeGroup ? `Search ${activeGroup.label} teams` : "Search teams"}
             onChange={(event) => setQuery(event.target.value)}
           />
         ) : null}
-        {focused && !disabled && !atLimit ? (
+        {open && !disabled && !atLimit ? (
           <div id={listId} className="football-futures-team-picker__options" role="listbox">
             {options.map((team) => (
               <button
