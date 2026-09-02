@@ -5,6 +5,7 @@ const recovery = readFileSync("src/app/installUpdateRecovery.ts", "utf8");
 const verifier = readFileSync("scripts/verify-live-frontend-delivery.mjs", "utf8");
 const whatsNewVerifier = readFileSync("scripts/verify-whats-new-live.mjs", "utf8");
 const pinAuthVerifier = readFileSync("scripts/verify-pin-auth-live.mjs", "utf8");
+const notificationVerifier = readFileSync("scripts/verify-live-notification-flow.mjs", "utf8");
 const workflow = readFileSync(".github/workflows/verify-live-frontend-delivery.yml", "utf8");
 const backendWorkflow = readFileSync(".github/workflows/verify-supabase-backend.yml", "utf8");
 const viteConfig = readFileSync("vite.config.ts", "utf8");
@@ -34,6 +35,17 @@ describe("global frontend delivery proof", () => {
     );
     expect(verifier).not.toContain(
       "origin: process.env.OCTAGON_PRODUCTION_ORIGIN ?? DEFAULT_ORIGIN",
+    );
+  });
+
+  it("keeps notification frontend delivery proof separate from its transitional auth origin", () => {
+    expect(notificationVerifier).toContain(
+      'const frontendOrigin = (process.env.FRONTEND_PRODUCTION_ORIGIN',
+    );
+    expect(notificationVerifier).toContain('?? "https://the.hq-app.workers.dev"');
+    expect(notificationVerifier).toContain("origin: frontendOrigin");
+    expect(notificationVerifier).toContain(
+      'const productionOrigin = (process.env.OCTAGON_PRODUCTION_ORIGIN',
     );
   });
 
