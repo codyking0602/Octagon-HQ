@@ -14,6 +14,11 @@ describe("Cloudflare Worker rename migration", () => {
     expect(workflow).not.toContain("wrangler deploy");
   });
 
+  it("uses shell-safe inline Node validation instead of YAML-indented heredocs", () => {
+    expect(workflow).toContain("node --input-type=module --eval");
+    expect(workflow).not.toContain("<<'NODE'");
+  });
+
   it("runs automatically only when the one-time migration workflow lands on main", () => {
     expect(workflow).toContain("branches:\n      - main");
     expect(workflow).toContain('paths:\n      - ".github/workflows/rename-cloudflare-worker.yml"');
