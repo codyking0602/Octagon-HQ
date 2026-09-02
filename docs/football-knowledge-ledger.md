@@ -1,6 +1,6 @@
 # Football Knowledge Ledger
 
-Last reviewed: 2026-08-28
+Last reviewed: 2026-09-02
 
 ## Purpose
 
@@ -321,7 +321,7 @@ Delivered:
 - no broad D enrichment unless a specific deep feature requires it;
 - durable factual-coverage matrix by league/pool/metric family.
 
-### Stage 14 — Ranking Philosophy + Scoring Architecture
+### Stage 14 — Ranking Philosophy + Scoring Architecture — COMPLETE — PR #744
 
 **Purpose:** replace the current migration-grade comparison math with one stable ranking framework that defines what greatness means before position- or league-specific models are tuned.
 
@@ -335,9 +335,16 @@ Deliverables:
 - define missing-data/confidence behavior explicitly rather than silently reweighting sparse subjects into fake precision;
 - keep recognizability and candidate membership completely separate from ranking score.
 
-### Stage 15 — NFL Ranking Models
+### Stage 15 — NFL Ranking Models — IN PROGRESS
 
 **Purpose:** implement NFL-specific greatness models on top of the Stage 14 framework and Stage 13 factual universe.
+
+Progress as of 2026-09-02:
+
+- Stage 15A tunes the existing canonical QB, RB, WR, and TE career profiles inside `footballComparisonAuthority.ts`; it does not create another ranking owner.
+- The offensive models now combine peak/production, sustained volume, longevity, honors, one postseason/team-accomplishment signal, and contextual efficiency/rate evidence where canonical facts support it.
+- Material Stage 15 scoring behavior is versioned as `stage15-v1`; reviewed Rank Five rows remain calibration/override evidence only and do not decide universe membership.
+- Remaining Stage 15 model families are OL; DL/EDGE; LB; Secondary; K/P; NFL QB single seasons; NFL team seasons; NFL head coaches; and NFL franchises/bounded franchise eras where applicable.
 
 Deliverables:
 
