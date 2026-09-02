@@ -1,13 +1,28 @@
 import { createClient } from "npm:@supabase/supabase-js@2.110.7";
 
-// PIN authentication and owner-only Event Setup browser proof share the same exact production origin boundary.
-const corsHeaders = {
-  "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
+// PIN authentication and owner-only Event Setup browser proof share one production CORS owner.
+// The renamed The HQ host is canonical; the prior Octagon HQ host remains a compatibility alias.
+const legacyProductionOrigin = "https://octagon.hq-app.workers.dev";
 
-function response(body: Record<string, unknown>, status = 200) {
+function corsHeadersFor(request: Request) {
+  const canonicalOrigin = Deno.env.get("OCTAGON_APP_ORIGIN") ?? legacyProductionOrigin;
+  const requestOrigin = request.headers.get("Origin");
+  const allowedOrigin = requestOrigin === canonicalOrigin || requestOrigin === legacyProductionOrigin
+    ? requestOrigin
+    : canonicalOrigin;
+
+  return {
+    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+  };
+}
+
+function response(
+  body: Record<string, unknown>,
+  corsHeaders: Record<string, string>,
+  status = 200,
+) {
   return new Response(JSON.stringify(body), {
     status,
     headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -36,14 +51,17 @@ function randomPassword() {
 }
 
 Deno.serve(async (request) => {
+  const corsHeaders = corsHeadersFor(request);
+  const respond = (body: Record<string, unknown>, status = 200) => response(body, corsHeaders, status);
+
   if (request.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
-  if (request.method !== "POST") return response({ message: "Method not allowed." }, 405);
+  if (request.method !== "POST") return respond({ message: "Method not allowed." }, 405);
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
   const secretKey = Deno.env.get("SUPABASE_SECRET_KEY")
     ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   if (!supabaseUrl || !secretKey) {
-    return response({ message: "Profile service is not configured." }, 503);
+    return respond({ message: "Profile service is not configured." }, 503);
   }
 
   const admin = createClient(supabaseUrl, secretKey, {
@@ -54,7 +72,7 @@ Deno.serve(async (request) => {
   try {
     body = await request.json();
   } catch {
-    return response({ message: "Invalid request." }, 400);
+    return respond({ message: "Invalid request." }, 400);
   }
 
   const action = body.action;
@@ -64,7 +82,7 @@ Deno.serve(async (request) => {
     || displayName.length < 2
     || displayName.length > 24
     || !validPin(pin)) {
-    return response({ message: "Enter a name and a 4-digit PIN." }, 400);
+    return respond({ message: "Enter a name and a 4-digit PIN." }, 400);
   }
 
   async function issueSessionToken(internalEmail: string) {
@@ -83,11 +101,11 @@ Deno.serve(async (request) => {
       p_display_name: displayName,
       p_pin: pin,
     });
-    if (error) return response({ message: "Profile login is unavailable." }, 503);
+    if (error) return respond({ message: "Profile login is unavailable." }, 503);
 
     const match = Array.isArray(data) ? data[0] : null;
     if (match?.auth_result === "locked") {
-      return response({ message: "Too many attempts. Try again in a few minutes." }, 423);
+      return respond({ message: "Too many attempts. Try again in a few minutes." }, 423);
     }
 
     let internalEmail = typeof match?.internal_email === "string"
@@ -96,18 +114,18 @@ Deno.serve(async (request) => {
 
     if (!internalEmail && match?.auth_result === "ok" && typeof match?.profile_id === "string") {
       const { data: authUserData, error: authUserError } = await admin.auth.admin.getUserById(match.profile_id);
-      if (authUserError) return response({ message: "Profile login is unavailable." }, 503);
+      if (authUserError) return respond({ message: "Profile login is unavailable." }, 503);
       internalEmail = authUserData.user?.email ?? "";
     }
 
     if (!internalEmail) {
-      return response({ message: "That name and PIN did not match." }, 401);
+      return respond({ message: "That name and PIN did not match." }, 401);
     }
 
     try {
-      return response({ tokenHash: await issueSessionToken(internalEmail) });
+      return respond({ tokenHash: await issueSessionToken(internalEmail) });
     } catch {
-      return response({ message: "Profile login is unavailable." }, 503);
+      return respond({ message: "Profile login is unavailable." }, 503);
     }
   }
 
@@ -116,7 +134,7 @@ Deno.serve(async (request) => {
     p_pin: pin,
   });
   if (claimed.error) {
-    return response({ message: "The profile could not be claimed." }, 503);
+    return respond({ message: "The profile could not be claimed." }, 503);
   }
 
   const claimedMatch = Array.isArray(claimed.data) ? claimed.data[0] : null;
@@ -125,14 +143,14 @@ Deno.serve(async (request) => {
     : "";
   if (claimedMatch?.claim_result === "claimed" && claimedEmail) {
     try {
-      return response({ tokenHash: await issueSessionToken(claimedEmail) }, 201);
+      return respond({ tokenHash: await issueSessionToken(claimedEmail) }, 201);
     } catch {
-      return response({ message: "The profile was claimed. Sign in with the PIN you chose." }, 503);
+      return respond({ message: "The profile was claimed. Sign in with the PIN you chose." }, 503);
     }
   }
 
   if (Deno.env.get("OCTAGON_PROFILE_CREATION_OPEN") === "false") {
-    return response({ message: "New profiles are currently invite-only." }, 403);
+    return respond({ message: "New profiles are currently invite-only." }, 403);
   }
 
   const internalEmail = `profile-${crypto.randomUUID()}@login.octagon-hq.app`;
@@ -144,7 +162,7 @@ Deno.serve(async (request) => {
   });
 
   if (created.error || !created.data.user) {
-    return response({ message: "The profile could not be created." }, 503);
+    return respond({ message: "The profile could not be created." }, 503);
   }
 
   const userId = created.data.user.id;
@@ -159,15 +177,15 @@ Deno.serve(async (request) => {
   if (registered.error) {
     await admin.auth.admin.deleteUser(userId);
     if (registered.error.code === "23505") {
-      return response({ message: "That name is already taken. Add your last initial." }, 409);
+      return respond({ message: "That name is already taken. Add your last initial." }, 409);
     }
-    return response({ message: "The profile could not be created." }, 503);
+    return respond({ message: "The profile could not be created." }, 503);
   }
 
   try {
-    return response({ tokenHash: await issueSessionToken(internalEmail) }, 201);
+    return respond({ tokenHash: await issueSessionToken(internalEmail) }, 201);
   } catch {
     await admin.auth.admin.deleteUser(userId);
-    return response({ message: "The profile could not be opened." }, 503);
+    return respond({ message: "The profile could not be opened." }, 503);
   }
 });

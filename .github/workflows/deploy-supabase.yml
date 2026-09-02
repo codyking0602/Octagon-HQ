@@ -75,7 +75,7 @@ jobs:
     env:
       SOURCE_SHA: ${{ inputs.source_sha || github.sha }}
       SOURCE_PR_NUMBER: ${{ inputs.pr_number || '0' }}
-      OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
+      OCTAGON_PRODUCTION_ORIGIN: https://the.hq-app.workers.dev
 
     steps:
       - name: Revalidate requested PR head
