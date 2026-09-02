@@ -1,13 +1,27 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { FootballMatchupBreakdown } from "./footballMatchupBreakdowns";
 
-export function FootballMatchupBreakdowns({ breakdowns }: { breakdowns: FootballMatchupBreakdown[] }) {
+export function FootballMatchupBreakdowns({
+  breakdowns,
+  requestedBreakdownId = null,
+}: {
+  breakdowns: FootballMatchupBreakdown[];
+  requestedBreakdownId?: string | null;
+}) {
   const [activeId, setActiveId] = useState<string | null>(null);
+  const handledRequestedId = useRef<string | null>(null);
   const active = useMemo(
     () => breakdowns.find((breakdown) => breakdown.id === activeId) ?? null,
     [activeId, breakdowns],
   );
+
+  useEffect(() => {
+    if (!requestedBreakdownId || handledRequestedId.current === requestedBreakdownId) return;
+    if (!breakdowns.some((breakdown) => breakdown.id === requestedBreakdownId)) return;
+    handledRequestedId.current = requestedBreakdownId;
+    setActiveId(requestedBreakdownId);
+  }, [breakdowns, requestedBreakdownId]);
 
   useEffect(() => {
     if (!active) return undefined;
