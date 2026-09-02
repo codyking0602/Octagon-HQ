@@ -1,13 +1,19 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
+import { useSearchParams } from "react-router-dom";
 import type { FootballMatchupBreakdown } from "./footballMatchupBreakdowns";
 
 export function FootballMatchupBreakdowns({ breakdowns }: { breakdowns: FootballMatchupBreakdown[] }) {
-  const [activeId, setActiveId] = useState<string | null>(null);
-  const active = useMemo(
-    () => breakdowns.find((breakdown) => breakdown.id === activeId) ?? null,
-    [activeId, breakdowns],
-  );
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeId = searchParams.get("matchup");
+  const active = breakdowns.find((breakdown) => breakdown.id === activeId) ?? null;
+
+  const setActiveId = (nextId: string | null) => {
+    const next = new URLSearchParams(searchParams);
+    if (nextId) next.set("matchup", nextId);
+    else next.delete("matchup");
+    setSearchParams(next, { replace: true });
+  };
 
   useEffect(() => {
     if (!active) return undefined;
