@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ChallengeCenter } from "../challenges/ChallengeCenter";
 import { useIdentity } from "../identity/IdentityProvider";
 import { DailyChallengeStandings } from "../play/DailyChallengeStandings";
@@ -130,11 +130,31 @@ function FootballGameLibraryMark({ gameId }: { gameId: FootballLibraryGameId }) 
   );
 }
 
+function FootballEntryTransition({ onComplete }: { onComplete: () => void }) {
+  return (
+    <div className="football-entry-transition" role="presentation">
+      <video
+        className="football-entry-transition__video"
+        src="/assets/football/vince-young-championship-run.mp4"
+        autoPlay
+        muted
+        playsInline
+        preload="auto"
+        aria-hidden="true"
+        onEnded={onComplete}
+      />
+    </div>
+  );
+}
+
 export default function FootballBackRoomPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const identity = useIdentity();
   const profileId = identity.profile?.id ?? "";
   const [dailyTab, setDailyTab] = useState<"game" | "leaderboard">("game");
+  const entryRequested = Boolean((location.state as { footballEntry?: boolean } | null)?.footballEntry);
+  const showTransition = entryRequested;
   const runtime = useTodayChallengeRuntime({
     profileId,
     enabled: Boolean(profileId),
@@ -161,7 +181,13 @@ export default function FootballBackRoomPage() {
 
   return (
     <div className="page football-room-page">
-      <FootballGamesEarlyAccessBanner />
+      {showTransition ? (
+        <FootballEntryTransition
+          onComplete={() => navigate("/football", { replace: true, state: null })}
+        />
+      ) : null}
+
+      {!showTransition ? <FootballGamesEarlyAccessBanner /> : null}
 
       <section className="football-daily-hq" aria-labelledby="football-daily-title">
         <div className="football-daily-hq__heading">
