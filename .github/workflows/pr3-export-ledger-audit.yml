@@ -1,0 +1,35 @@
+name: PR3 Export Football Ledger Audit
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  export-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Regenerate canonical Football audit
+        run: |
+          npm run generate:football-cfb-player-seasons
+          npm run generate:football-factual-universe
+          npm run generate:football-ledger-audit
+      - name: Upload exact generated audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr3-football-ledger-audit-${{ github.event.pull_request.head.sha }}
+          path: docs/football-ledger-stage13-5-review.md
+          if-no-files-found: error
