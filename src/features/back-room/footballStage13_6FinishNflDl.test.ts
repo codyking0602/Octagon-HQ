@@ -3,16 +3,19 @@ import { describe, expect, it } from "vitest";
 import { footballLedgerAudit } from "./footballLedgerAudit";
 
 describe("Football Ledger Stage 13.6 NFL DL factual closeout", () => {
-  it("closes every distinct NFL DL factual gap while isolating the known Joe Greene recognition duplicate", () => {
+  it("closes every NFL DL factual gap with the Joe Greene duplicate reconciled", () => {
     const rows = footballLedgerAudit.rows.filter((row) => row.league === "NFL" && row.pool === "DL / EDGE");
-    expect(rows).toHaveLength(322);
+    expect(rows).toHaveLength(321);
+    expect(rows.every((row) => row.readiness === "Full")).toBe(true);
+    expect(rows.filter((row) => row.readiness !== "Full")).toEqual([]);
 
-    const partialRows = rows.filter((row) => row.readiness !== "Full");
-    expect(partialRows).toHaveLength(1);
-    expect(partialRows[0]?.subjectId).toBe("joe-greene");
-    expect(partialRows[0]?.name).toBe("Mean Joe Greene");
-    expect(partialRows[0]?.missing).toEqual(["DL/EDGE disruption facts"]);
-
-    expect(rows.filter((row) => row.readiness === "Full")).toHaveLength(321);
+    const joeGreeneRows = rows.filter((row) => row.subjectId === "joe-greene" || row.subjectId === "nfl-joe-greene");
+    expect(joeGreeneRows).toHaveLength(1);
+    expect(joeGreeneRows[0]).toMatchObject({
+      subjectId: "joe-greene",
+      name: "Joe Greene",
+      readiness: "Full",
+      missing: [],
+    });
   });
 });
