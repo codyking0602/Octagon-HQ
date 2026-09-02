@@ -243,7 +243,8 @@ describe("Home UFC HQ", () => {
 
     const footballSection = screen.getByRole("region", { name: "Football HQ" });
     expect(within(footballSection).getByRole("heading", { name: "Next slate not published" })).toBeInTheDocument();
-    expect(within(footballSection).getByText("COLLEGE GAME OF THE WEEK")).toBeInTheDocument();
-    expect(within(footballSection).getByText("NFL GAME OF THE WEEK")).toBeInTheDocument();
+    expect(within(footballSection).queryByText("COLLEGE GAME OF THE WEEK")).not.toBeInTheDocument();
+    expect(within(footballSection).queryByText("NFL GAME OF THE WEEK")).not.toBeInTheDocument();
+    expect(within(footballSection).queryByRole("link", { name: /OPEN MATCHUP/ })).not.toBeInTheDocument();
   });
 });
