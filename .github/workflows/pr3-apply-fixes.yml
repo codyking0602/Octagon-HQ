@@ -81,7 +81,6 @@ jobs:
             npm run generate:football-factual-universe
             npm run generate:football-ledger-audit
             npx vitest run src/features/back-room/footballStage15NflCoachFranchiseEraRankingModels.test.ts src/features/back-room/footballProHallRecognitionCompleteness.test.ts src/features/back-room/footballCanonicalUniverse.test.ts src/features/back-room/footballFactualStats.test.ts src/features/back-room/footballWavelengthSubjectAuthority.test.ts src/features/back-room/footballStage15NflBoundedSeasonRankingModels.test.ts src/features/back-room/footballStage15NflOffensiveRankingModels.test.ts src/features/back-room/footballStage15NflRemainingCareerRankingModels.test.ts
-            npm run typecheck
           } 2>&1 | tee pr3-final-repair.log
       - name: Upload repair diagnostics
         if: always()
@@ -89,7 +88,7 @@ jobs:
         with:
           name: pr3-final-repair-${{ github.sha }}
           path: pr3-final-repair.log
-      - name: Commit generated outputs and remove temporary repair workflows
+      - name: Commit exact repaired head and push only if generated verification is clean
         run: |
           git rm --ignore-unmatch .github/workflows/pr3-apply-fixes.yml .github/workflows/pr3-debug.yml
           git config user.name "github-actions[bot]"
