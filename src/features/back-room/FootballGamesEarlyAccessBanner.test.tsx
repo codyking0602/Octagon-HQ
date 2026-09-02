@@ -2,11 +2,8 @@ import { act, cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { FootballGamesEarlyAccessBanner } from "./FootballGamesEarlyAccessBanner";
 
-const SESSION_KEY = "the-hq:football-games-early-access-seen";
-
 describe("Football games early access banner", () => {
   beforeEach(() => {
-    window.sessionStorage.clear();
     vi.useFakeTimers();
   });
 
@@ -30,15 +27,15 @@ describe("Football games early access banner", () => {
     expect(screen.queryByRole("status")).not.toBeInTheDocument();
   });
 
-  it("only shows once in the same app session", () => {
+  it("shows again after leaving and returning to Football games", () => {
     const first = render(<FootballGamesEarlyAccessBanner />);
 
-    act(() => vi.advanceTimersByTime(0));
-    expect(window.sessionStorage.getItem(SESSION_KEY)).toBe("1");
+    act(() => vi.advanceTimersByTime(4_500));
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
 
     first.unmount();
     render(<FootballGamesEarlyAccessBanner />);
 
-    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent("EARLY ACCESS");
   });
 });
