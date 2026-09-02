@@ -1,0 +1,80 @@
+.football-tab-entry-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  overflow: hidden;
+  background: #050506;
+}
+
+.football-tab-entry-transition__video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.football-tab-entry-transition__slam {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #0e1013;
+  isolation: isolate;
+}
+
+.football-tab-entry-transition__backdrop {
+  position: absolute;
+  inset: -7%;
+  z-index: -2;
+  width: 114%;
+  height: 114%;
+  object-fit: cover;
+  filter: blur(28px) brightness(.22);
+}
+
+.football-tab-entry-transition__impact {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: #fff;
+  animation: football-hq-impact-flash 140ms steps(1, end) both;
+}
+
+.football-tab-entry-transition__cover {
+  display: block;
+  width: 100vw;
+  height: auto;
+  max-width: 100vh;
+  object-fit: contain;
+  box-shadow: 0 18px 54px rgba(0, 0, 0, .5);
+  animation: football-hq-cover-slam 780ms cubic-bezier(.18, .88, .28, 1.12) both;
+  will-change: transform, opacity;
+}
+
+@keyframes football-hq-impact-flash {
+  0% { background: #080a0c; }
+  35% { background: rgba(255, 255, 255, .72); }
+  70%, 100% { background: transparent; }
+}
+
+@keyframes football-hq-cover-slam {
+  0%, 8% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(1.28);
+  }
+  12% {
+    opacity: 1;
+    transform: translate3d(-10px, 7px, 0) scale(1.28);
+  }
+  20% { transform: translate3d(9px, -5px, 0) scale(1.18); }
+  31% { transform: translate3d(-6px, 3px, 0) scale(1.08); }
+  47% { transform: translate3d(3px, -2px, 0) scale(.97); }
+  64% { transform: translate3d(-1px, 1px, 0) scale(1.01); }
+  78%, 100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
