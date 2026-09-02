@@ -19,11 +19,13 @@ function FeaturedGame({
   breakdownId,
   title,
   game,
+  fallbackStartsAt,
   poster,
 }: {
   breakdownId: string;
   title: string;
   game: NonNullable<ReturnType<typeof featuredGameForBreakdown>>;
+  fallbackStartsAt: string;
   poster?: { src: string; aspectRatio: string };
 }) {
   const label = isCollegeGame(game.weightClass) ? "COLLEGE GAME OF THE WEEK" : "NFL GAME OF THE WEEK";
@@ -40,7 +42,7 @@ function FeaturedGame({
       <div className="football-hq-feature__copy">
         <span>{label}</span>
         <strong>{title}</strong>
-        <p>{footballDateTimeLabel(game.locksAt ?? "")}</p>
+        <p>{footballDateTimeLabel(game.locksAt ?? fallbackStartsAt)}</p>
         <b>OPEN MATCHUP →</b>
       </div>
     </Link>
@@ -143,6 +145,7 @@ export function FootballHq({
               breakdownId={breakdown.id}
               title={breakdown.title}
               game={game}
+              fallbackStartsAt={event?.startsAt ?? game.locksAt ?? ""}
               poster={poster}
             />
           ))}
