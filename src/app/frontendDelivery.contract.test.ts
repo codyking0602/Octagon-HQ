@@ -3,6 +3,8 @@ import { describe, expect, it } from "vitest";
 
 const recovery = readFileSync("src/app/installUpdateRecovery.ts", "utf8");
 const verifier = readFileSync("scripts/verify-live-frontend-delivery.mjs", "utf8");
+const whatsNewVerifier = readFileSync("scripts/verify-whats-new-live.mjs", "utf8");
+const pinAuthVerifier = readFileSync("scripts/verify-pin-auth-live.mjs", "utf8");
 const workflow = readFileSync(".github/workflows/verify-live-frontend-delivery.yml", "utf8");
 const viteConfig = readFileSync("vite.config.ts", "utf8");
 
@@ -32,6 +34,13 @@ describe("global frontend delivery proof", () => {
     expect(verifier).not.toContain(
       "origin: process.env.OCTAGON_PRODUCTION_ORIGIN ?? DEFAULT_ORIGIN",
     );
+  });
+
+  it("keeps authenticated WebKit proof selectors aligned with The HQ profile trigger", () => {
+    for (const liveVerifier of [whatsNewVerifier, pinAuthVerifier]) {
+      expect(liveVerifier).toContain('name: "Sign in to The HQ"');
+      expect(liveVerifier).not.toContain('name: "Sign in to Octagon HQ"');
+    }
   });
 
   it("runs exact delivery proof only after the canonical frontend deployment succeeds", () => {
