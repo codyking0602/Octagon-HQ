@@ -1,5 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { act, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { EMPTY_FOOTBALL_FUTURES_PICKS } from "./footballFuturesDraft";
 import { FootballFuturesCard } from "./FootballFuturesCard";
 import { usePicks } from "./PicksProvider";
@@ -25,8 +25,14 @@ function runtime() {
 
 describe("FootballFuturesCard", () => {
   beforeEach(() => {
+    vi.useFakeTimers();
     saveFootballFutures.mockClear();
     vi.mocked(usePicks).mockReturnValue(runtime() as never);
+  });
+
+  afterEach(() => {
+    vi.runOnlyPendingTimers();
+    vi.useRealTimers();
   });
 
   it("starts collapsed and shows the real 11:59 PM Central lock", () => {
@@ -40,17 +46,29 @@ describe("FootballFuturesCard", () => {
     expect(details).toHaveAttribute("open");
   });
 
-  it("commits a searchable team choice on pointer down before mobile focus can blur", () => {
+  it("lets a pointer drag start without selecting, then autosaves the clicked conference-aware pick", async () => {
     render(<FootballFuturesCard />);
     fireEvent.click(screen.getByText("SEASON FUTURES").closest("summary")!);
 
-    const teamSearches = screen.getAllByRole("combobox");
-    fireEvent.focus(teamSearches[0]);
-    fireEvent.change(teamSearches[0], { target: { value: "Texas" } });
-    fireEvent.pointerDown(screen.getByRole("option", { name: "Texas Longhorns" }));
+    const input = screen.getByPlaceholderText("Search ACC teams");
+    fireEvent.focus(input);
+    const option = screen.getByRole("option", { name: "Boston College Eagles" });
 
-    expect(screen.getByRole("button", { name: "Remove Texas Longhorns" })).toBeInTheDocument();
-    expect(screen.getByText("2 PTS EACH · 1/4 PICKS")).toBeInTheDocument();
-    expect(screen.getAllByPlaceholderText("Type player name")).toHaveLength(2);
+    fireEvent.pointerDown(option);
+    expect(screen.queryByRole("button", { name: "Remove Boston College Eagles" })).not.toBeInTheDocument();
+
+    fireEvent.click(option);
+    expect(screen.getByRole("button", { name: "Remove Boston College Eagles" })).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Search Big Ten teams")).toBeInTheDocument();
+
+    await act(async () => {
+      vi.advanceTimersByTime(250);
+      await Promise.resolve();
+    });
+
+    expect(saveFootballFutures).toHaveBeenCalledTimes(1);
+    expect(saveFootballFutures).toHaveBeenCalledWith(expect.objectContaining({
+      cfbPower4Champions: ["Boston College Eagles"],
+    }));
   });
 });
