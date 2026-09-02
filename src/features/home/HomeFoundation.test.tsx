@@ -82,9 +82,10 @@ describe("The HQ universal Home foundation", () => {
     expect(within(footballHq).getByRole("heading", { name: "This week" })).toBeInTheDocument();
     expect(ufcHq).toHaveClass("home-sport-hq");
     expect(footballHq).toHaveClass("home-sport-hq");
-    expect(within(footballHq).getByText("COLLEGE GAME OF THE WEEK")).toBeInTheDocument();
-    expect(within(footballHq).getByText("NFL GAME OF THE WEEK")).toBeInTheDocument();
-    expect(within(footballHq).getAllByRole("link").every((link) => link.getAttribute("href") === "/football/picks")).toBe(true);
+    expect(within(footballHq).getByRole("link", { name: "OPEN PICKS →" })).toHaveAttribute("href", "/football/picks");
+    expect(within(footballHq).queryByText("COLLEGE GAME OF THE WEEK")).not.toBeInTheDocument();
+    expect(within(footballHq).queryByText("NFL GAME OF THE WEEK")).not.toBeInTheDocument();
+    expect(within(footballHq).queryByRole("link", { name: /OPEN MATCHUP/ })).not.toBeInTheDocument();
   });
 
   it("keeps a single Home route owner", () => {
