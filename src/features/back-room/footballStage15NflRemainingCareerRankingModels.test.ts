@@ -6,6 +6,7 @@ import {
   footballNflCareerRankingFamilyModels,
   type FootballNflCareerRankingFamilyId,
 } from "./footballComparisonAuthority";
+import { getFootballFact } from "./footballFactualStatsCore";
 import { FOOTBALL_RANKING_FRAMEWORK_VERSION } from "./footballRankingFramework";
 import { getFootballSubject } from "./footballSubjectRegistry";
 
@@ -70,15 +71,20 @@ describe("Football Stage 15 NFL remaining career ranking models", () => {
     }
   });
 
-  it("keeps sparse OL evidence visible as lower-confidence rather than fabricating missing performance dimensions", () => {
+  it("hydrates a real OL factual pool without fabricating performance dimensions", () => {
     const pool = buildFootballNflCareerFamilyCandidatePool("OL");
-    expect(pool.length).toBeGreaterThan(0);
-
     const dataDerived = pool.filter((candidate) => candidate.evaluationSource === "canonical-facts");
-    expect(dataDerived.length).toBeGreaterThan(0);
-    expect(dataDerived.some((candidate) => candidate.rankingStatus === "low-confidence")).toBe(true);
-    expect(dataDerived.some((candidate) => candidate.rankingConfidence < 0.5)).toBe(true);
+    const allowedMetrics = new Set(metricIdsFor("OL", "OL"));
+
+    expect(dataDerived.length).toBeGreaterThan(4);
+    expect(dataDerived.some((candidate) => candidate.canonicalSubjectId === "nfl-mike-webster")).toBe(true);
+    expect(dataDerived.every((candidate) => candidate.factMetricIds.length > 0)).toBe(true);
+    expect(dataDerived.every((candidate) => candidate.factMetricIds.every((metricId) => allowedMetrics.has(metricId)))).toBe(true);
     expect(dataDerived.every((candidate) => candidate.rankingSemantic === "career-greatness")).toBe(true);
+
+    expect(getFootballFact("nfl-mike-webster", "nfl-career-games")?.fact.value).toBe(245);
+    expect(getFootballFact("nfl-mike-webster", "nfl-first-team-all-pros")?.fact.value).toBe(5);
+    expect(getFootballFact("nfl-mike-webster", "nfl-super-bowl-titles")?.fact.value).toBe(4);
   });
 
   it("keeps K and P production position-specific inside the shared specialist family", () => {
