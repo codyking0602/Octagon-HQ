@@ -265,7 +265,7 @@ try {
   );
   await page.getByText("PRIVATE PICKS OWNER", { exact: true }).waitFor({ state: "visible", timeout: 15_000 });
 
-  await page.getByRole("button", { name: "Sign in to Octagon HQ" }).click();
+  await page.getByRole("button", { name: "Sign in to The HQ" }).click();
   await page.getByLabel("YOUR NAME").fill(displayName);
   await page.getByLabel("YOUR 4-DIGIT PIN").fill(pin);
   await page.getByRole("button", { name: "ENTER HQ" }).click();
