@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { getFootballFact } from "./footballFactualStatsCore";
 import { footballLedgerAudit } from "./footballLedgerAudit";
+import { getFootballSubject, queryFootballSubjects } from "./footballSubjectRegistry";
 
 const historicalCoaches = [
   ["bear-bryant", 323, 85, 17, 6],
@@ -23,5 +24,32 @@ describe("Football Knowledge Ledger Stage 13.6 factual exhaustion", () => {
       expect(getFootballFact(subjectId, "cfb-coach-career-ties")?.fact.value).toBe(ties);
       expect(getFootballFact(subjectId, "cfb-coach-national-titles")?.fact.value).toBe(titles);
     }
+  });
+
+  it("reconciles the historical Joe Greene repair into one canonical NFL DL identity", () => {
+    const canonical = getFootballSubject("joe-greene");
+    const historicalAlias = getFootballSubject("nfl-joe-greene");
+
+    expect(canonical).toMatchObject({
+      id: "joe-greene",
+      name: "Joe Greene",
+      position: "DL",
+      recognizabilityTier: "A",
+    });
+    expect(canonical?.aliases).toContain("Mean Joe Greene");
+    expect(historicalAlias?.id).toBe("joe-greene");
+
+    const casualJoeGreeneRows = queryFootballSubjects({
+      kind: "player-career",
+      league: "NFL",
+      position: "DL",
+      casualEligible: true,
+      includeProjectedSourceSubjects: true,
+    }).filter((subject) => subject.id === "joe-greene" || subject.id === "nfl-joe-greene");
+
+    expect(casualJoeGreeneRows.map((subject) => subject.id)).toEqual(["joe-greene"]);
+    const auditRow = footballLedgerAudit.rows.find((candidate) => candidate.subjectId === "joe-greene");
+    expect(auditRow?.readiness).toBe("Full");
+    expect(auditRow?.missing).toEqual([]);
   });
 });

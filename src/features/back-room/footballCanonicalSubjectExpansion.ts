@@ -85,7 +85,8 @@ const tightEnds: FootballExpandedCanonicalSubject[] = nflTightEnds.map((item) =>
 
 const defenders: FootballExpandedCanonicalSubject[] = nflDefensiveCareers.map((item) => ({
   id: item.id,
-  name: item.name,
+  name: item.id === "joe-greene" ? "Joe Greene" : item.name,
+  ...(item.id === "joe-greene" ? { aliases: ["Mean Joe Greene"] } : {}),
   kind: "player-career",
   league: "NFL",
   position: defenderPositions[item.id] ?? "DL",

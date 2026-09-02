@@ -1,6 +1,6 @@
 # Football Knowledge Ledger — Stage 13.5 Human Review
 
-Canonical A/B/C subjects: **4,015**
+Canonical A/B/C subjects: **4,014**
 Independent omission candidates: **0**
 Historical tier violations: **0**
 
@@ -15,7 +15,7 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 | WR | 250 | 7 | 51 | 192 | 250 | 0 | 0 | 0 | 0 | 0 |
 | TE | 74 | 1 | 12 | 61 | 74 | 0 | 0 | 0 | 0 | 0 |
 | OL | 59 | 15 | 42 | 2 | 59 | 0 | 0 | 0 | 0 | 0 |
-| DL / EDGE | 322 | 7 | 41 | 274 | 321 | 1 | 0 | 1 | 0 | 0 |
+| DL / EDGE | 321 | 7 | 41 | 273 | 321 | 0 | 0 | 0 | 0 | 0 |
 | LB | 240 | 5 | 38 | 197 | 219 | 21 | 0 | 21 | 0 | 0 |
 | Secondary | 417 | 9 | 49 | 359 | 417 | 0 | 0 | 0 | 0 | 0 |
 | K / P | 19 | 6 | 12 | 1 | 19 | 0 | 0 | 0 | 0 | 0 |
@@ -376,7 +376,6 @@ None.
 - CFB WR: **Golden Tate** — C, Partial; missing WR receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB WR: **Jeff Samardzija** — C, Partial; missing WR receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB WR: **Robert Woods** — C, Partial; missing WR receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
-- NFL DL / EDGE: **Mean Joe Greene** — C, Partial; missing DL/EDGE disruption facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized NFL player production begins in 1999.
 - NFL Eras / dynasties: **Cleveland Browns — Paul Brown NFL dynasty** — A, Partial; missing objective era results, era championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Eras / dynasties: **Dallas Cowboys — Triplets dynasty** — A, Partial; missing objective era results, era championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Eras / dynasties: **Green Bay Packers — Lombardi dynasty** — A, Partial; missing objective era results, era championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
