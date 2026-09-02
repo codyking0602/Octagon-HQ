@@ -65,13 +65,10 @@ jobs:
               --data '{"name":"the"}' \
               "$api_base/octagon" \
               --output "$rename_response"
-            node --input-type=module - "$rename_response" <<'NODE'
-            import fs from "node:fs";
-            const response = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
-            if (response.success !== true || response.result?.name !== "the") {
-              throw new Error("Cloudflare did not confirm the in-place Worker rename to the.");
-            }
-            NODE
+            if ! jq -e '.success == true and .result.name == "the"' "$rename_response" >/dev/null; then
+              echo "::error title=Worker rename response mismatch::Cloudflare did not confirm the in-place Worker rename to the."
+              exit 1
+            fi
           elif [ "$old_status" = "404" ] && [ "$new_status" = "200" ]; then
             echo "Worker is already named the; continuing with verification."
           else
@@ -88,11 +85,8 @@ jobs:
             exit 1
           fi
 
-          node --input-type=module - "$new_response" <<'NODE'
-          import fs from "node:fs";
-          const response = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
-          if (response.success !== true || response.result?.name !== "the") {
-            throw new Error("Canonical Worker verification did not return the.");
-          }
-          NODE
+          if ! jq -e '.success == true and .result.name == "the"' "$new_response" >/dev/null; then
+            echo "::error title=Canonical Worker verification mismatch::Cloudflare did not return the as the canonical Worker name."
+            exit 1
+          fi
           echo "Canonical Cloudflare Worker identity is now the."
