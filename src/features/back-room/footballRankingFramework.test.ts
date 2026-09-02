@@ -7,9 +7,9 @@ import {
   scoreFootballAnchoredValue,
 } from "./footballRankingFramework";
 
-describe("Football Stage 14 ranking framework", () => {
+describe("Football ranking framework", () => {
   it("defines separate versioned greatness semantics and dimensions", () => {
-    expect(FOOTBALL_RANKING_FRAMEWORK_VERSION).toBe("stage14-v1");
+    expect(FOOTBALL_RANKING_FRAMEWORK_VERSION).toBe("stage15-v1");
     expect(Object.keys(footballRankingSemanticContracts)).toEqual([
       "career-greatness",
       "single-season-greatness",
