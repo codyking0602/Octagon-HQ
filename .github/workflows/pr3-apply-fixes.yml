@@ -1,59 +1,112 @@
-name: PR3 Coach Recognition Diagnostics
+name: PR3 Apply Canonical Fixes
 
 on:
   pull_request:
     branches: [main]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  diagnose:
+  apply:
     runs-on: ubuntu-latest
     steps:
       - name: Check out exact PR head
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      - name: Inspect canonical coach source evidence
+          persist-credentials: true
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci --silent --no-audit --no-fund
+      - name: Apply narrow Stage 15F/G fixes
         run: |
-          python - <<'PY' > pr3-coach-diagnostic.txt
-          import json
+          python - <<'PY'
           from pathlib import Path
 
-          names = {"Pete Carroll", "Joe Gibbs", "Chuck Noll", "Bill Parcells"}
-          projection = json.loads(Path("data/generated/football/recognizability-projection.json").read_text())
-          print("RECOGNIZABILITY PROJECTION")
-          for record in projection["records"]:
-              if record.get("name") in names:
-                  print(json.dumps(record, sort_keys=True))
+          def replace_once(path, old, new):
+              p = Path(path)
+              text = p.read_text()
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"{path}: expected exactly one replacement target, found {count}")
+              p.write_text(text.replace(old, new, 1))
 
-          print("\nNFL COACH-SEASON RELATIONSHIPS")
-          payload = json.loads(Path("data/generated/football/relationships/nfl-coach-seasons-1999-2025.json").read_text())
-          columns = payload["columns"]
-          for values in payload["rows"]:
-              row = dict(zip(columns, values))
-              text = " ".join(str(v) for v in row.values())
-              if any(name.lower().replace(" ", "-") in text.lower().replace(" ", "-") or name.lower() in text.lower() for name in names):
-                  print(json.dumps(row, sort_keys=True))
+          replace_once(
+              "src/features/back-room/footballFactualStatsCore.ts",
+              'derived(sourceId,"nfl-career-passing-attempts-per-game",row.passingAttempts/row.games,"passing attempts / games")',
+              'derived(sourceId,"nfl-career-passing-attempts-per-game",row.attempts/row.games,"passing attempts / games")',
+          )
 
-          print("\nHISTORICAL/HALL SOURCE OCCURRENCES")
-          for path in [
+          replace_once(
+              "src/features/back-room/footballCanonicalSubjectExpansion.ts",
+              'import { footballCfbPlayerSeasonRecognitionRecords } from "./footballCfbPlayerSeasonRecognition";\nimport { footballProgramEraSubjects } from "./footballProgramEraSeeds";',
+              'import { footballCfbPlayerSeasonRecognitionRecords } from "./footballCfbPlayerSeasonRecognition";\nimport { footballNflCoachRecognitionProjectionSubjects } from "./footballNflCoachRecognitionProjection";\nimport { footballProgramEraSubjects } from "./footballProgramEraSeeds";',
+          )
+          replace_once(
+              "src/features/back-room/footballCanonicalSubjectExpansion.ts",
+              'const quarterbackSeasons: FootballExpandedCanonicalSubject[] = nflQuarterbackSeasons.map((item) => {',
+              'const nflCoaches: readonly FootballExpandedCanonicalSubject[] = footballNflCoachRecognitionProjectionSubjects\n  .map(({ subject }) => subject);\n\nconst quarterbackSeasons: FootballExpandedCanonicalSubject[] = nflQuarterbackSeasons.map((item) => {',
+          )
+          replace_once(
+              "src/features/back-room/footballCanonicalSubjectExpansion.ts",
+              '  ...defenders,\n  ...quarterbackSeasons,',
+              '  ...defenders,\n  ...nflCoaches,\n  ...quarterbackSeasons,',
+          )
+
+          replace_once(
               "src/features/back-room/footballProHallHistoricalRepairSeeds.ts",
-              "src/features/back-room/footballProHallRecognitionCompletenessEvidence.ts",
-              "src/features/back-room/footballRecognitionEvidence.ts",
-              "src/features/back-room/footballHistoricalRecognitionRepairs.ts",
-          ]:
-              text = Path(path).read_text()
-              print(f"-- {path}")
-              for line in text.splitlines():
-                  if any(name in line for name in names):
-                      print(line)
+              '] as const;\n\nexport const footballProHallHistoricalRepairSeeds',
+              '  { id: "joe-gibbs", name: "Joe Gibbs", kind: "coach", startSeason: 1981, endSeason: 2007, tier: "A" },\n  { id: "chuck-noll", name: "Chuck Noll", kind: "coach", startSeason: 1969, endSeason: 1991, tier: "A" },\n  { id: "bill-parcells", name: "Bill Parcells", kind: "coach", startSeason: 1983, endSeason: 2006, tier: "A" },\n] as const;\n\nexport const footballProHallHistoricalRepairSeeds',
+          )
+
+          replace_once(
+              "src/features/back-room/footballStage15NflCoachFranchiseEraRankingModels.test.ts",
+              'expect(candidate.factMetricIds).toEqual(expect.arrayContaining(coachMetrics));',
+              'expect(candidate.factMetricIds).toEqual(expect.arrayContaining([...coachMetrics]));',
+          )
+
+          replace_once(
+              "src/features/back-room/footballFactualStats.test.ts",
+              '      "nfl-franchise",\n      "cfb-player-career",',
+              '      "nfl-franchise",\n      "nfl-coach-career",\n      "nfl-franchise-era",\n      "cfb-player-career",',
+          )
           PY
-          cat pr3-coach-diagnostic.txt
-      - name: Upload diagnostics
+      - name: Regenerate canonical Football owners
+        run: |
+          set -o pipefail
+          npm run generate:football-cfb-player-seasons 2>&1 | tee pr3-generation.log
+          npm run generate:football-factual-universe 2>&1 | tee -a pr3-generation.log
+          npm run generate:football-ledger-audit 2>&1 | tee -a pr3-generation.log
+          npm run verify:football-ledger-audit 2>&1 | tee -a pr3-generation.log
+      - name: Commit source fixes and owned generated artifacts
+        env:
+          HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            src/features/back-room/footballFactualStatsCore.ts \
+            src/features/back-room/footballCanonicalSubjectExpansion.ts \
+            src/features/back-room/footballProHallHistoricalRepairSeeds.ts \
+            src/features/back-room/footballStage15NflCoachFranchiseEraRankingModels.test.ts \
+            src/features/back-room/footballFactualStats.test.ts \
+            docs/football-ledger-stage13-5-review.md \
+            data/generated/football
+          if git diff --cached --quiet; then
+            echo "PR3 fixes already applied."
+            exit 0
+          fi
+          git commit -m "Fix Stage 15F/G canonical coach coverage"
+          git push origin HEAD:"$HEAD_BRANCH"
+      - name: Upload generation diagnostics on failure
+        if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: pr3-coach-recognition-diagnostic-${{ github.event.pull_request.head.sha }}
-          path: pr3-coach-diagnostic.txt
-          if-no-files-found: error
+          name: pr3-generation-diagnostics-${{ github.event.pull_request.head.sha }}
+          path: pr3-generation.log
+          if-no-files-found: ignore
