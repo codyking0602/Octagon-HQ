@@ -73,6 +73,22 @@ describe("FootballFuturesCard", () => {
     }));
   });
 
+  it("keeps the option alive through an iOS-style null-related-target blur so the tap can select", () => {
+    render(<FootballFuturesCard />);
+    fireEvent.click(screen.getByText("SEASON FUTURES").closest("summary")!);
+
+    const input = screen.getByPlaceholderText("Search ACC teams");
+    fireEvent.focus(input);
+    fireEvent.blur(input, { relatedTarget: null });
+
+    expect(screen.getByRole("option", { name: "Boston College Eagles" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("option", { name: "Boston College Eagles" }));
+    expect(screen.getByRole("button", { name: "Remove Boston College Eagles" })).toBeInTheDocument();
+
+    fireEvent.pointerDown(document.body);
+    expect(screen.queryByRole("option", { name: "Illinois Fighting Illini" })).not.toBeInTheDocument();
+  });
+
   it("carries an NFL division champion into the playoff draft before autosaving", async () => {
     render(<FootballFuturesCard />);
     fireEvent.click(screen.getByText("SEASON FUTURES").closest("summary")!);
