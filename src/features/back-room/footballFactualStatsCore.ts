@@ -172,6 +172,7 @@ const seedSources: readonly FootballFactSource[] = [
   { id: "pfr-career-stat-lines", publisher: "Pro Football Reference", title: "NFL retired-player career stat lines", url: "https://www.pro-football-reference.com/", reviewedOn: "2026-08-22", coverage: "Reviewed compatibility career stat lines" },
   { id: "pfr-pass-yards-career", publisher: "Pro Football Reference", title: "NFL Passing Yards Career Leaders", url: "https://www.pro-football-reference.com/leaders/pass_yds_career.htm", reviewedOn: "2026-08-22", coverage: "Canonical quarterback compatibility pool" },
   { id: "pfr-rush-yards-career", publisher: "Pro Football Reference", title: "NFL Rushing Yards Career Leaders", url: "https://www.pro-football-reference.com/leaders/rush_yds_career.htm", reviewedOn: "2026-08-22", coverage: "Canonical running-back compatibility pool" },
+  { id: "pfr-offensive-line-career", publisher: "Pro Football Reference", title: "NFL offensive-line career and AP All-Pro records", url: "https://www.pro-football-reference.com/players/", reviewedOn: "2026-09-02", coverage: "Reviewed historical NFL offensive-line career games, AP First-Team All-Pro selections, and Super Bowl titles used by the canonical Football factual ledger" },
   { id: "cfr-champion-season-stat-lines", publisher: "College Football at Sports-Reference", title: "National-champion season stat lines", url: "https://www.sports-reference.com/cfb/", reviewedOn: "2026-08-25", coverage: "Reviewed champion-season compatibility facts" },
   ...["1995-nebraska","2001-miami","2005-texas","2008-florida","2010-auburn","2013-florida-state","2014-ohio-state","2018-clemson","2019-lsu","2020-alabama","2022-georgia"].map((slug) => ({ id: `cfr-${slug}`, publisher: "College Football at Sports-Reference", title: `${slug} team record`, url: "https://www.sports-reference.com/cfb/", reviewedOn: "2026-08-22", coverage: "Completed season" })),
   { id: "nflverse-find-leader-projection", publisher: "nflverse", title: "Pinned NFL historical player/team projection for Find the Leader", url: "https://github.com/nflverse/nflverse-data", reviewedOn: "2026-08-26", coverage: "Normalized 1999-2025 Find the Leader projection" },
@@ -186,7 +187,32 @@ const championRecords: Readonly<Record<string, readonly [number, number]>> = {
 };
 function nflPasserRating(c: number, a: number, y: number, td: number, interceptions: number) { const aa=Math.min(2.375,Math.max(0,(c/a-.3)*5)); const b=Math.min(2.375,Math.max(0,(y/a-3)*.25)); const cc=Math.min(2.375,Math.max(0,td/a*20)); const d=Math.min(2.375,Math.max(0,2.375-interceptions/a*25)); return (aa+b+cc+d)/6*100; }
 
+const reviewedOlCareerRows: readonly (readonly [string, number, number, number])[] = [
+  ["nfl-larry-allen", 203, 6, 1],
+  ["nfl-tony-boselli", 91, 3, 0],
+  ["nfl-dermontti-dawson", 184, 6, 0],
+  ["nfl-dan-dierdorf", 160, 3, 0],
+  ["nfl-forrest-gregg", 193, 7, 3],
+  ["nfl-russ-grimm", 140, 3, 3],
+  ["nfl-john-hannah", 183, 7, 0],
+  ["nfl-bruce-matthews", 296, 7, 0],
+  ["nfl-randall-mcdaniel", 222, 7, 0],
+  ["nfl-willie-roaf", 189, 4, 0],
+  ["nfl-gene-upshaw", 217, 5, 2],
+  ["nfl-mike-webster", 245, 5, 4],
+  ["nfl-ron-yary", 207, 6, 0],
+];
+
 const compatibilityFactualRecords: readonly FootballFactualRecord[] = [
+  ...reviewedOlCareerRows.map(([subjectId, games, firstTeamAllPros, superBowlTitles]): FootballFactualRecord => ({
+    subjectId,
+    scope: "nfl-player-career",
+    facts: [
+      reported("pfr-offensive-line-career", "nfl-career-games", games),
+      reported("pfr-offensive-line-career", "nfl-first-team-all-pros", firstTeamAllPros),
+      reported("pfr-offensive-line-career", "nfl-super-bowl-titles", superBowlTitles),
+    ],
+  })),
   ...footballQbCareerRows.map((row): FootballFactualRecord => { const sourceId = ({"peyton-manning":"pfr-peyton-manning","dan-marino":"pfr-dan-marino","john-elway":"pfr-john-elway"} as Record<string,string>)[row.id] ?? "pfr-career-stat-lines"; return { subjectId: row.id, scope: "nfl-player-career", facts: [
     reported(sourceId,"nfl-career-games",row.games),reported(sourceId,"nfl-career-passing-completions",row.completions),reported(sourceId,"nfl-career-passing-attempts",row.attempts),reported(sourceId,"nfl-career-passing-yards",row.passingYards),reported(sourceId,"nfl-career-passing-touchdowns",row.passingTouchdowns),reported(sourceId,"nfl-career-interceptions-thrown",row.interceptions),
     derived(sourceId,"nfl-career-passer-rating",nflPasserRating(row.completions,row.attempts,row.passingYards,row.passingTouchdowns,row.interceptions),"NFL passer-rating formula from completions, attempts, passing yards, passing touchdowns, and interceptions"),derived(sourceId,"nfl-career-completion-percentage",row.completions/row.attempts*100,"passing completions / passing attempts * 100"),derived(sourceId,"nfl-career-passing-yards-per-attempt",row.passingYards/row.attempts,"passing yards / passing attempts"),derived(sourceId,"nfl-career-passing-touchdown-percentage",row.passingTouchdowns/row.attempts*100,"passing touchdowns / passing attempts * 100"),derived(sourceId,"nfl-career-passing-yards-per-game",row.passingYards/row.games,"passing yards / games"),derived(sourceId,"nfl-career-passing-touchdowns-per-game",row.passingTouchdowns/row.games,"passing touchdowns / games"),derived(sourceId,"nfl-career-passing-completions-per-game",row.completions/row.games,"passing completions / games"),derived(sourceId,"nfl-career-passing-attempts-per-game",row.attempts/row.games,"passing attempts / games"),derived(sourceId,"nfl-career-passing-touchdown-interception-ratio",row.passingTouchdowns/row.interceptions,"passing touchdowns / interceptions"),
