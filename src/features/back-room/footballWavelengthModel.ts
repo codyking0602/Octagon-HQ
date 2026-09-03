@@ -541,20 +541,18 @@ function chooseFootballWavelengthClue(
     const canonicalSubjectId = footballWavelengthCanonicalSubjectForClue(clue)?.id;
     return !canonicalSubjectId || !usedCanonicalSubjectIds.has(canonicalSubjectId);
   });
-  let candidates = base;
+  const unusedCategoryBase = base.filter((clue) => !usedCategories.has(clue.category));
+  let candidates = unusedCategoryBase.length ? unusedCategoryBase : base;
   if ((options.direction ?? 0) > 0) {
-    const directional = base.filter((clue) => clue.rating > options.target);
+    const directional = candidates.filter((clue) => clue.rating > options.target);
     if (directional.length) candidates = directional;
   } else if ((options.direction ?? 0) < 0) {
-    const directional = base.filter((clue) => clue.rating < options.target);
+    const directional = candidates.filter((clue) => clue.rating < options.target);
     if (directional.length) candidates = directional;
   }
 
-  const unusedCategoryCandidates = candidates.filter((clue) => !usedCategories.has(clue.category));
-  if (unusedCategoryCandidates.length) candidates = unusedCategoryCandidates;
-
-  // Diversity is a preference layered after directional and category fit. If no unused
-  // family survives those stricter constraints, relax only this family filter.
+  // Category uniqueness is the hard diversity rule. Theme-family diversity is a softer
+  // preference after category and directional fit, so only this family filter may relax.
   const unusedFamilyCandidates = candidates.filter(
     (clue) => !usedThemeFamilies.has(footballWavelengthThemeFamilyForCategory(clue.category)),
   );
