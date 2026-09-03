@@ -871,3 +871,5 @@ export function buildFootballComparisonCandidatePool(packId: FootballRankFivePac
     } : {}),
   });
 }
+
+export * from "./footballComparisonAuthorityCfbGreatness";
