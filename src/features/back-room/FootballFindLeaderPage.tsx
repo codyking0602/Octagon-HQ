@@ -196,7 +196,7 @@ export default function FootballFindLeaderPage() {
     setChallengeStatus("");
     const status = await beginChallenge({
       gameId: "find-leader",
-      gameVersion: "football-find-leader-v1",
+      gameVersion: board.version,
       gameTitle: "Football Find the Leader",
       summary: `${board.statLabel} · same ten-subject board`,
       setup: asChallengeJson({
@@ -290,7 +290,7 @@ export default function FootballFindLeaderPage() {
         <div className="football-find-hero__copy">
           <p className="eyebrow">{shared ? "CHALLENGE BOARD" : "REPLAYABLE GAME"}</p>
           <h1>{board.question}</h1>
-          <p>{board.context}</p>
+          <p>Eliminate nine decoys until only the leader remains.</p>
           <small className="football-find-hero__category">{footballFindLeaderCategoryLabel(board.domainId)}</small>
           {!shared ? (
             <button className="primary-action football-find-hero__new-lineup" type="button" onClick={startNew}>
