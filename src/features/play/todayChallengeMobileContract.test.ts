@@ -48,10 +48,10 @@ describe("Today’s Challenge 390×844 presentation contract", () => {
     expect(landingPresentation).toContain('"blind-resume"');
     expect(landingPresentation).toContain('"hit-the-number"');
     expect(landingPresentation).toContain('PLAY_LANDING_UFC_STRATEGIC_GAME = "auction"');
-    expect(playRegistry).toContain('ufc: "/play/find-leader"');
-    expect(playRegistry).toContain('ufc: "/play/wavelength"');
-    expect(playRegistry).toContain('ufc: "/play/blind-resume"');
-    expect(playRegistry).toContain('ufc: "/play/hit-the-number"');
-    expect(playRegistry).toContain('ufc: "/play/auction"');
+    expect(playRegistry).toContain('route: "/play/find-leader"');
+    expect(playRegistry).toContain('route: "/play/wavelength"');
+    expect(playRegistry).toContain('route: "/play/blind-resume"');
+    expect(playRegistry).toContain('route: "/play/hit-the-number"');
+    expect(playRegistry).toContain('route: "/play/auction"');
   });
 });
