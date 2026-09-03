@@ -11,65 +11,33 @@ export const PLAY_LANDING_COMMON_GAME_ORDER = [
 export const PLAY_LANDING_UFC_STRATEGIC_GAME = "auction" as const satisfies PlayGameId;
 
 export function playLandingGameIds(sport: PlaySport): readonly PlayGameId[] {
-  return sport === "ufc"
-    ? [...PLAY_LANDING_COMMON_GAME_ORDER, PLAY_LANDING_UFC_STRATEGIC_GAME]
-    : PLAY_LANDING_COMMON_GAME_ORDER;
+  return sport === "ufc" ? [PLAY_LANDING_UFC_STRATEGIC_GAME, ...PLAY_LANDING_COMMON_GAME_ORDER] : PLAY_LANDING_COMMON_GAME_ORDER;
+}
+
+export function playLandingGameRoute(sport: PlaySport, gameId: PlayGameId) {
+  const game = playGameDefinition(gameId, sport);
+  return sport === "ufc" && gameId === "find-leader" ? `${game.route}?mode=replayable` : game.route;
 }
 
 export function PlayLandingHeader({ sport }: { sport: PlaySport }) {
-  const football = sport === "football";
-
-  return (
-    <section className="play-landing-heading" data-sport={sport}>
-      <p className="eyebrow">{football ? "FOOTBALL · PLAY" : "UFC · PLAY"}</p>
-      <h1>Play</h1>
-      <p>{football
-        ? "Daily challenges and football debates built for the group chat."
-        : "Daily challenges and UFC debates built for the group chat."}</p>
-    </section>
-  );
+  return <section className="play-landing-heading" data-sport={sport}><h1>Play</h1><p>Daily games.</p></section>;
 }
 
-type PlayLandingGameLibraryProps = {
-  sport: PlaySport;
-  onNavigate: (route: string) => void;
-  footer?: ReactNode;
-};
+type PlayLandingGameLibraryProps = { sport: PlaySport; onNavigate: (route: string) => void; footer?: ReactNode };
 
 export function PlayLandingGameLibrary({ sport, onNavigate, footer }: PlayLandingGameLibraryProps) {
   const games = playLandingGameIds(sport).map((gameId) => playGameDefinition(gameId, sport));
-
   return (
     <section className="play-landing-library" data-sport={sport} aria-labelledby={`${sport}-all-games-title`}>
-      <header className="play-landing-library__heading">
-        <div>
-          <p className="eyebrow">ALL GAMES</p>
-          <h2 id={`${sport}-all-games-title`}>Pick a game</h2>
-          <p>Quick games and blind tests, ready whenever the debate starts.</p>
-        </div>
-        <span>{games.length} LIVE</span>
-      </header>
-
+      <header className="play-landing-library__heading"><div><p className="eyebrow">ALL GAMES</p><h2 id={`${sport}-all-games-title`}>Pick a game</h2><p>Quick games and blind tests, ready whenever the debate starts.</p></div><span>{games.length} LIVE</span></header>
       <div className="play-landing-library__grid" aria-label={`${sport === "ufc" ? "UFC" : "Football"} games`}>
         {games.map((game) => {
           const strategic = sport === "ufc" && game.id === PLAY_LANDING_UFC_STRATEGIC_GAME;
-          return (
-            <button
-              className={`play-landing-game-card${strategic ? " is-strategic" : ""}`}
-              type="button"
-              key={game.route}
-              onClick={() => onNavigate(game.route)}
-            >
-              <span className="play-landing-game-card__icon" aria-hidden="true">{game.icon}</span>
-              <span className="play-landing-game-card__status">{strategic ? "STRATEGY" : "PLAY NOW"}</span>
-              <strong>{game.title}</strong>
-              <small>{game.description}</small>
-              <em>PLAY →</em>
-            </button>
-          );
+          return <button className={`play-landing-game-card${strategic ? " is-strategic" : ""}`} type="button" key={game.route} onClick={() => onNavigate(playLandingGameRoute(sport, game.id))}>
+            <span className="play-landing-game-card__icon" aria-hidden="true">{game.icon}</span><span className="play-landing-game-card__status">{strategic ? "STRATEGY" : "PLAY NOW"}</span><strong>{game.title}</strong><small>{game.description}</small><em>PLAY →</em>
+          </button>;
         })}
-      </div>
-      {footer}
+      </div>{footer}
     </section>
   );
 }
