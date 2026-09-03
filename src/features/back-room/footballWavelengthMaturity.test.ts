@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
+import { WAVELENGTH_TARGET_POLICY_VERSION } from "../play/wavelengthEngine";
 import { FOOTBALL_WAVELENGTH_EXPANSION_CLUE_COUNT } from "./footballWavelengthExpansionCatalog";
 import {
   FOOTBALL_WAVELENGTH_CALIBRATION_VERSION,
   FOOTBALL_WAVELENGTH_CATALOG_VERSION,
   FOOTBALL_WAVELENGTH_CATEGORY_ANCHORS,
   FOOTBALL_WAVELENGTH_RATING_BANDS,
+  FOOTBALL_WAVELENGTH_TARGET_POLICY_VERSION,
   createFootballWavelengthRound,
   footballWavelengthClues,
   nextFootballWavelengthClue,
@@ -46,6 +48,7 @@ describe("Football Wavelength maturity", () => {
   it("owns one calibrated 540-item catalog across 27 distinct football categories", () => {
     expect(FOOTBALL_WAVELENGTH_CATALOG_VERSION).toBe("football-wavelength-catalog-v3");
     expect(FOOTBALL_WAVELENGTH_CALIBRATION_VERSION).toBe("football-wavelength-calibration-v2");
+    expect(FOOTBALL_WAVELENGTH_TARGET_POLICY_VERSION).toBe(WAVELENGTH_TARGET_POLICY_VERSION);
     expect(FOOTBALL_WAVELENGTH_EXPANSION_CLUE_COUNT).toBe(240);
     expect(footballWavelengthClues).toHaveLength(540);
     expect(FOOTBALL_WAVELENGTH_CATEGORY_ANCHORS).toHaveLength(27);
@@ -102,15 +105,15 @@ describe("Football Wavelength maturity", () => {
       const second = playDeterministicRound(seed);
 
       expect(second).toEqual(first);
-      expect(first.target).toBeGreaterThanOrEqual(20);
-      expect(first.target).toBeLessThanOrEqual(95);
+      expect(first.target).toBeGreaterThanOrEqual(1);
+      expect(first.target).toBeLessThanOrEqual(100);
       expect(first.clues).toHaveLength(4);
       expect(new Set(first.clues.map((clue) => clue.id)).size).toBe(4);
       expect(new Set(first.clues.map((clue) => clue.category)).size).toBe(4);
     }
   });
 
-  it("keeps adaptive corrections directional and exercises broad catalog/category exposure", () => {
+  it("keeps adaptive corrections directional and exercises broad catalog/category/target exposure", () => {
     const seenClues = new Set<string>();
     const seenCategories = new Set<string>();
     const targets = new Set<number>();
@@ -126,8 +129,12 @@ describe("Football Wavelength maturity", () => {
       const roundAfterLow = { ...opening, clues: [...opening.clues, lowCorrection] };
       const highCorrection = nextFootballWavelengthClue(roundAfterLow, highGuess, 2, seed, [lowGuess]);
 
-      if (lowGuess < opening.target) expect(lowCorrection.rating).toBeGreaterThan(opening.target);
-      if (highGuess > opening.target) expect(highCorrection.rating).toBeLessThan(opening.target);
+      if (lowGuess < opening.target && opening.target < 100) {
+        expect(lowCorrection.rating).toBeGreaterThan(opening.target);
+      }
+      if (highGuess > opening.target && opening.target > 1) {
+        expect(highCorrection.rating).toBeLessThan(opening.target);
+      }
 
       for (const clue of [...opening.clues, lowCorrection, highCorrection]) {
         seenClues.add(clue.id);
@@ -135,7 +142,9 @@ describe("Football Wavelength maturity", () => {
       }
     }
 
-    expect(targets.size).toBeGreaterThanOrEqual(70);
+    expect(targets.size).toBeGreaterThanOrEqual(90);
+    expect([...targets].some((target) => target <= 10)).toBe(true);
+    expect([...targets].some((target) => target >= 91)).toBe(true);
     expect(seenCategories.size).toBeGreaterThanOrEqual(24);
     expect(seenClues.size).toBeGreaterThanOrEqual(180);
   });

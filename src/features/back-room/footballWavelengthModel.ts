@@ -1,4 +1,8 @@
-import { desiredWavelengthCorrection } from "../play/wavelengthEngine";
+import {
+  WAVELENGTH_TARGET_POLICY_VERSION,
+  desiredWavelengthCorrection,
+  wavelengthTargets,
+} from "../play/wavelengthEngine";
 import {
   seededLineupRandom,
   selectReplayLineup,
@@ -10,6 +14,7 @@ import { footballWavelengthCanonicalSubjectForClue } from "./footballWavelengthS
 export const FOOTBALL_WAVELENGTH_GAME_ID = "football-wavelength";
 export const FOOTBALL_WAVELENGTH_CATALOG_VERSION = "football-wavelength-catalog-v3" as const;
 export const FOOTBALL_WAVELENGTH_CALIBRATION_VERSION = "football-wavelength-calibration-v2" as const;
+export const FOOTBALL_WAVELENGTH_TARGET_POLICY_VERSION = WAVELENGTH_TARGET_POLICY_VERSION;
 
 export type FootballWavelengthCategory =
   | "NFL LEGACY"
@@ -536,20 +541,18 @@ function chooseFootballWavelengthClue(
     const canonicalSubjectId = footballWavelengthCanonicalSubjectForClue(clue)?.id;
     return !canonicalSubjectId || !usedCanonicalSubjectIds.has(canonicalSubjectId);
   });
-  let candidates = base;
+  const unusedCategoryBase = base.filter((clue) => !usedCategories.has(clue.category));
+  let candidates = unusedCategoryBase.length ? unusedCategoryBase : base;
   if ((options.direction ?? 0) > 0) {
-    const directional = base.filter((clue) => clue.rating > options.target);
+    const directional = candidates.filter((clue) => clue.rating > options.target);
     if (directional.length) candidates = directional;
   } else if ((options.direction ?? 0) < 0) {
-    const directional = base.filter((clue) => clue.rating < options.target);
+    const directional = candidates.filter((clue) => clue.rating < options.target);
     if (directional.length) candidates = directional;
   }
 
-  const unusedCategoryCandidates = candidates.filter((clue) => !usedCategories.has(clue.category));
-  if (unusedCategoryCandidates.length) candidates = unusedCategoryCandidates;
-
-  // Diversity is a preference layered after directional and category fit. If no unused
-  // family survives those stricter constraints, relax only this family filter.
+  // Category uniqueness is the hard diversity rule. Theme-family diversity is a softer
+  // preference after category and directional fit, so only this family filter may relax.
   const unusedFamilyCandidates = candidates.filter(
     (clue) => !usedThemeFamilies.has(footballWavelengthThemeFamilyForCategory(clue.category)),
   );
@@ -565,7 +568,7 @@ function chooseFootballWavelengthClue(
 
 export function createFootballWavelengthRound(seed: string): FootballWavelengthRound {
   const random = seededLineupRandom(FOOTBALL_WAVELENGTH_GAME_ID, "round", seed);
-  const target = 20 + Math.floor(random() * 76);
+  const target = wavelengthTargets[Math.floor(random() * wavelengthTargets.length)] ?? 50;
   const opening = chooseFootballWavelengthClue(target + (random() > 0.5 ? 3 : -3), {
     target,
     random,

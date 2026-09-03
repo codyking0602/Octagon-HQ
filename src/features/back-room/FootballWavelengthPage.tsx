@@ -5,14 +5,17 @@ import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { GameResultActions } from "../play/GameResultActions";
 import { recordLineupCompletion, replayLabelFor } from "../play/lineupModel";
 import {
+  WAVELENGTH_OPINION_DISCLOSURE,
   clampWavelength,
   wavelengthDistanceCopy,
   wavelengthScore,
 } from "../play/wavelengthEngine";
 import {
   FOOTBALL_WAVELENGTH_GAME_ID,
+  FOOTBALL_WAVELENGTH_TARGET_POLICY_VERSION,
   createFootballWavelengthRound,
   createFootballWavelengthRun,
+  footballWavelengthClues,
   nextFootballWavelengthClue,
   type FootballWavelengthRound,
   type FootballWavelengthRun,
@@ -25,9 +28,20 @@ import {
   footballCuratedIdentity,
 } from "./footballChallengeRuntime";
 
-function resolveChallengeRun(seed: string | null, challengeId: string): FootballWavelengthRun | null {
+function resolveChallengeRun(
+  seed: string | null,
+  challengeId: string,
+  storedTarget?: number | null,
+  storedOpeningClueId?: string | null,
+): FootballWavelengthRun | null {
   if (!seed) return null;
-  const initialRound = createFootballWavelengthRound(seed);
+  const generatedRound = createFootballWavelengthRound(seed);
+  const storedOpening = storedOpeningClueId
+    ? footballWavelengthClues.find((clue) => clue.id === storedOpeningClueId)
+    : null;
+  const initialRound = Number.isInteger(storedTarget) && storedOpening
+    ? { target: clampWavelength(storedTarget!), clues: [storedOpening] }
+    : generatedRound;
   return {
     seed,
     initialRound,
@@ -47,12 +61,14 @@ export default function FootballWavelengthPage() {
   const profileMatch = useProfileChallengeMatch("wavelength");
   const profileSetup = challengeRecord(profileMatch.challenge?.setup);
   const profileSeed = challengeString(profileSetup?.seed);
+  const profileTarget = typeof profileSetup?.target === "number" ? profileSetup.target : null;
+  const profileOpeningClueId = challengeString(profileSetup?.openingClueId);
   const querySeed = searchParams.get("seed");
   const sharedChallengeId = profileMatch.challenge?.code ?? `shared:${querySeed ?? "unknown"}`;
   const sharedRun = useMemo(() => (
-    resolveChallengeRun(profileSeed, sharedChallengeId)
+    resolveChallengeRun(profileSeed, sharedChallengeId, profileTarget, profileOpeningClueId)
       ?? resolveChallengeRun(querySeed, sharedChallengeId)
-  ), [profileSeed, querySeed, sharedChallengeId]);
+  ), [profileOpeningClueId, profileSeed, profileTarget, querySeed, sharedChallengeId]);
   const [run, setRun] = useState<FootballWavelengthRun>(() => sharedRun ?? createFootballWavelengthRun());
   const [round, setRound] = useState<FootballWavelengthRound>(run.initialRound);
   const [clueIndex, setClueIndex] = useState(0);
@@ -131,13 +147,14 @@ export default function FootballWavelengthPage() {
     setChallengeStatus("");
     const status = await beginChallenge({
       gameId: "wavelength",
-      gameVersion: "football-wavelength-v1",
+      gameVersion: "football-wavelength-v2",
       gameTitle: "Football Wavelength",
       summary: `Hidden number ${round.target} · four adaptive clues`,
       setup: asChallengeJson({
         seed: run.seed,
         target: round.target,
         openingClueId: run.initialRound.clues[0]!.id,
+        targetPolicy: FOOTBALL_WAVELENGTH_TARGET_POLICY_VERSION,
       }),
       creatorResult: asChallengeJson(resultPayload(guesses)),
       shareTitle: "Football Wavelength Challenge",
@@ -145,6 +162,30 @@ export default function FootballWavelengthPage() {
       shareUrl: footballChallengeUrl("/football/wavelength", { seed: run.seed }),
     });
     setChallengeStatus(status);
+  }
+
+  if (profileMatch.code && !profileMatch.challenge) {
+    return (
+      <div className="page football-debate-page football-wavelength-page">
+        <section className="football-wavelength-clue" aria-live="polite">
+          <div className="football-wavelength-clue__head"><span>PROFILE CHALLENGE</span></div>
+          <h1>Loading challenge…</h1>
+          <p>Locking the exact round that was sent to you.</p>
+        </section>
+      </div>
+    );
+  }
+
+  if (profileMatch.challenge && !profileSeed) {
+    return (
+      <div className="page football-debate-page football-wavelength-page">
+        <section className="football-wavelength-clue" aria-live="polite">
+          <div className="football-wavelength-clue__head"><span>PROFILE CHALLENGE</span></div>
+          <h1>Challenge unavailable</h1>
+          <p>This matchup does not contain a valid stored Football Wavelength round.</p>
+        </section>
+      </div>
+    );
   }
 
   if (complete) {
@@ -190,6 +231,7 @@ export default function FootballWavelengthPage() {
               </article>
             ))}
           </div>
+          <p className="football-wavelength-rules">{WAVELENGTH_OPINION_DISCLOSURE}</p>
         </section>
 
         <GameResultActions
@@ -229,7 +271,7 @@ export default function FootballWavelengthPage() {
           <b>CLUE {clueIndex + 1}</b>
         </div>
         <h1>{clue.text}</h1>
-        <p>Where does it land on Football HQ’s 1–100 football scale?</p>
+        <p>Where does it land on Football HQ’s calibrated 1–100 football opinion scale?</p>
       </section>
 
       <section className="football-wavelength-guess-panel">
@@ -256,7 +298,7 @@ export default function FootballWavelengthPage() {
         <small>YOUR PATH</small>
         <strong>{[0, 1, 2, 3].map((index) => guesses[index] ?? "—").join(" → ")}</strong>
       </div>
-      <p className="football-wavelength-rules">Each clue reacts to your last guess. Only the fourth guess determines your score.</p>
+      <p className="football-wavelength-rules">Each clue reacts to your last guess. Only the fourth guess determines your score. {WAVELENGTH_OPINION_DISCLOSURE}</p>
     </div>
   );
 }

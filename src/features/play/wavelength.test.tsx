@@ -9,6 +9,7 @@ import {
   nextChallengeWavelengthClue,
 } from "./wavelengthChallenge";
 import {
+  WAVELENGTH_OPINION_DISCLOSURE,
   WAVELENGTH_TARGET_MAX,
   WAVELENGTH_TARGET_MIN,
   createWavelengthRound,
@@ -42,14 +43,15 @@ function renderCasualWavelength() {
 }
 
 describe("Wavelength engine", () => {
-  it("uses every hidden target from 20 through 95 with no learnable gaps", () => {
-    expect(WAVELENGTH_TARGET_MIN).toBe(20);
-    expect(WAVELENGTH_TARGET_MAX).toBe(95);
-    expect(wavelengthTargets).toEqual(Array.from({ length: 76 }, (_, index) => 20 + index));
-    expect(wavelengthTargets.filter((target) => target >= 20 && target <= 39)).toHaveLength(20);
-    expect(wavelengthTargets.filter((target) => target >= 40 && target <= 59)).toHaveLength(20);
-    expect(wavelengthTargets.filter((target) => target >= 60 && target <= 79)).toHaveLength(20);
-    expect(wavelengthTargets.filter((target) => target >= 80 && target <= 95)).toHaveLength(16);
+  it("uses every hidden target from 1 through 100 with no learnable gaps", () => {
+    expect(WAVELENGTH_TARGET_MIN).toBe(1);
+    expect(WAVELENGTH_TARGET_MAX).toBe(100);
+    expect(wavelengthTargets).toEqual(Array.from({ length: 100 }, (_, index) => index + 1));
+    expect(wavelengthTargets.filter((target) => target >= 1 && target <= 20)).toHaveLength(20);
+    expect(wavelengthTargets.filter((target) => target >= 21 && target <= 40)).toHaveLength(20);
+    expect(wavelengthTargets.filter((target) => target >= 41 && target <= 60)).toHaveLength(20);
+    expect(wavelengthTargets.filter((target) => target >= 61 && target <= 80)).toHaveLength(20);
+    expect(wavelengthTargets.filter((target) => target >= 81 && target <= 100)).toHaveLength(20);
   });
 
   it("keeps the expanded approved clue catalog dense around every target", () => {
@@ -138,6 +140,8 @@ describe("Wavelength game", () => {
   it("locks four guesses and reveals the standard challenge, replay, and all-games actions", () => {
     renderWavelength();
     expect(screen.getByText("CLUE 1 OF 4")).toBeInTheDocument();
+    expect(screen.getByText(/calibrated 1–100 UFC opinion scale/i)).toBeInTheDocument();
+    expect(screen.getByText(new RegExp(WAVELENGTH_OPINION_DISCLOSURE, "i"))).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "LOCK GUESS & REVEAL NEXT CLUE" }));
     expect(screen.getByText("CLUE 2 OF 4")).toBeInTheDocument();
@@ -150,6 +154,7 @@ describe("Wavelength game", () => {
     expect(screen.getByText("FINAL SCORE")).toBeInTheDocument();
     expect(screen.getByText("HIDDEN NUMBER")).toBeInTheDocument();
     expect(document.querySelectorAll(".wavelength-reveal__row")).toHaveLength(4);
+    expect(screen.getByText(WAVELENGTH_OPINION_DISCLOSURE)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "CHALLENGE SOMEONE" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "REPLAY CHALLENGE" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "ALL GAMES" })).toBeInTheDocument();

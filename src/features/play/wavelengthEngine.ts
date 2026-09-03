@@ -7,10 +7,14 @@ import {
   type WavelengthCategory,
 } from "./wavelengthCatalog";
 
+export const WAVELENGTH_TARGET_POLICY_VERSION = "wavelength-target-policy-v2" as const;
+export const WAVELENGTH_OPINION_DISCLOSURE = "Ratings are calibrated HQ game opinions for the exact clue, not objective facts.";
+
 export const WAVELENGTH_CONTRACT_VERSIONS = {
   catalog: WAVELENGTH_CATALOG_VERSION,
   calibration: WAVELENGTH_CALIBRATION_VERSION,
   generator: WAVELENGTH_GENERATOR_VERSION,
+  targetPolicy: WAVELENGTH_TARGET_POLICY_VERSION,
   reveal: WAVELENGTH_REVEAL_CONTRACT_VERSION,
 } as const;
 
@@ -20,6 +24,7 @@ export const WAVELENGTH_RELAXATION_POLICY = {
     "recent exact clue-sequence prefixes",
     "recent clue ids",
     "directional clue side",
+    "used categories inside the current four-clue round",
     "recent targets while preserving the immediately previous-target exclusion",
   ],
   rule: "Relax only the exhausted exclusion currently being applied and continue using the same canonical candidate pool and generator.",
@@ -45,8 +50,8 @@ export interface WavelengthRecentHistory {
   clueSequenceKeys?: readonly string[];
 }
 
-export const WAVELENGTH_TARGET_MIN = 20;
-export const WAVELENGTH_TARGET_MAX = 95;
+export const WAVELENGTH_TARGET_MIN = 1;
+export const WAVELENGTH_TARGET_MAX = 100;
 export const wavelengthTargets: readonly number[] = Array.from(
   { length: WAVELENGTH_TARGET_MAX - WAVELENGTH_TARGET_MIN + 1 },
   (_, index) => WAVELENGTH_TARGET_MIN + index,
@@ -149,11 +154,11 @@ export function chooseWavelengthClue(
   } else if ((options.direction ?? 0) < 0) {
     candidates = relax(candidates.filter((clue) => clue.rating < options.target), candidates);
   }
+  candidates = relax(candidates.filter((clue) => !usedCategories.has(clue.category)), candidates);
   return [...candidates]
     .map((clue) => ({
       clue,
       score: Math.abs(clue.rating - desiredRating)
-        + (usedCategories.has(clue.category) ? 18 : 0)
         + (recentCategories.has(clue.category) ? 6 : 0)
         + random() * 2.5,
     }))
@@ -175,7 +180,7 @@ export function createWavelengthRound(options: number | {
   const recentTargets = new Set([previousTarget, ...(recent?.targets ?? [])]);
   let targets: readonly number[] = wavelengthTargets.filter((target) => !recentTargets.has(target));
   targets = relax(targets, wavelengthTargets.filter((target) => target !== previousTarget));
-  const target = targets[Math.floor(random() * targets.length)] ?? 65;
+  const target = targets[Math.floor(random() * targets.length)] ?? 50;
   const firstClue = chooseWavelengthClue(clampWavelength(target + (random() > 0.5 ? 3 : -3)), {
     target,
     sequencePrefixIds: [],

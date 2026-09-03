@@ -288,8 +288,8 @@ describe("Football PR10 content simulation / replay audit", () => {
       for (let clueIndex = 1; clueIndex <= 3; clueIndex += 1) {
         const guess = guesses[clueIndex - 1]!;
         const clue = nextFootballWavelengthClue(round, guess, clueIndex, seed, guesses.slice(0, clueIndex - 1));
-        if (guess < round.target) expect(clue.rating).toBeGreaterThan(round.target);
-        if (guess > round.target) expect(clue.rating).toBeLessThan(round.target);
+        if (guess < round.target && round.target < 100) expect(clue.rating).toBeGreaterThan(round.target);
+        if (guess > round.target && round.target > 1) expect(clue.rating).toBeLessThan(round.target);
         round = { ...round, clues: [...round.clues, clue] } satisfies FootballWavelengthRound;
       }
 
@@ -314,11 +314,14 @@ describe("Football PR10 content simulation / replay audit", () => {
     }
 
     const totalClues = WAVELENGTH_RUNS * 4;
-    expect(targetCounts.size).toBeGreaterThanOrEqual(74);
+    const numericTargets = [...targetCounts.keys()].map(Number);
+    expect(targetCounts.size).toBeGreaterThanOrEqual(90);
+    expect(numericTargets.some((target) => target <= 10)).toBe(true);
+    expect(numericTargets.some((target) => target >= 91)).toBe(true);
     expect(clueCounts.size).toBeGreaterThanOrEqual(160);
     expect(categoryCounts.size).toBe(27);
     expect(share(lowTargets, WAVELENGTH_RUNS)).toBeGreaterThanOrEqual(0.2);
-    expect(share(middleTargets, WAVELENGTH_RUNS)).toBeGreaterThanOrEqual(0.3);
+    expect(share(middleTargets, WAVELENGTH_RUNS)).toBeGreaterThanOrEqual(0.25);
     expect(share(highTargets, WAVELENGTH_RUNS)).toBeGreaterThanOrEqual(0.25);
     expect(share(maxValue(categoryCounts), totalClues)).toBeLessThan(0.15);
     expect(share(consecutiveTargetRepeats, WAVELENGTH_RUNS - 1)).toBeLessThan(0.06);
