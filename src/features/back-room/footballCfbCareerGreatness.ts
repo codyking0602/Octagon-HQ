@@ -90,7 +90,6 @@ export interface FootballCfbCareerGreatnessResult {
   readonly poolId: FootballCfbCareerGreatnessPoolId;
   readonly peak: FootballCfbGreatnessScoreRange;
   readonly support: FootballCfbGreatnessScoreRange;
-  readonly total: FootballCfbGreatnessScoreRange;
   readonly peakComponents: Readonly<Record<string, FootballCfbGreatnessScoreRange>>;
   readonly supportComponents: Readonly<Record<string, FootballCfbGreatnessScoreRange>>;
   readonly preliminaryTier: FootballCfbCareerGreatnessTier | null;
@@ -112,11 +111,7 @@ interface EvaluatedSection {
   readonly insufficient: boolean;
 }
 
-const component = (id: string, label: string, maxPoints: number): FootballCfbGreatnessComponentSpec => ({
-  id,
-  label,
-  maxPoints,
-});
+const component = (id: string, label: string, maxPoints: number): FootballCfbGreatnessComponentSpec => ({ id, label, maxPoints });
 
 const sharedNonQbSupport = [
   component("sustained-elite", "Sustained Elite", 10),
@@ -225,100 +220,53 @@ export const footballCfbPunterPeakComponents = [
 
 export const footballCfbCareerGreatnessModels: Readonly<Record<FootballCfbCareerGreatnessPoolId, FootballCfbCareerGreatnessModelSpec>> = {
   QB: {
-    poolId: "QB",
-    peakMax: 60,
-    peakRawMax: 55,
-    peakComponents: qbPeak,
-    supportMax: 40,
-    supportComponents: qbSupport,
-    tier1: [],
-    tier2: [{ peak: 54, support: 14 }],
-    tier3: [{ peak: 48, support: 12 }, { peak: 45, support: 27 }],
+    poolId: "QB", peakMax: 60, peakRawMax: 55, peakComponents: qbPeak, supportMax: 40, supportComponents: qbSupport,
+    tier1: [], tier2: [{ peak: 54, support: 14 }], tier3: [{ peak: 48, support: 12 }, { peak: 45, support: 27 }],
   },
   RB: {
-    poolId: "RB",
-    peakMax: 70,
-    peakRawMax: 60,
-    peakComponents: rbPeak,
-    supportMax: 30,
-    supportComponents: sharedNonQbSupport,
+    poolId: "RB", peakMax: 70, peakRawMax: 60, peakComponents: rbPeak, supportMax: 30, supportComponents: sharedNonQbSupport,
     tier1: [{ peak: 67, support: 10 }, { peak: 61, support: 15 }, { peak: 58, support: 27 }],
     tier2: [{ peak: 55, support: 10 }, { peak: 52, support: 23 }],
     tier3: [{ peak: 50, support: 6 }, { peak: 47, support: 16 }],
   },
   WR: {
-    poolId: "WR",
-    peakMax: 70,
-    peakRawMax: 70,
-    peakComponents: wrPeak,
-    supportMax: 30,
-    supportComponents: sharedNonQbSupport,
+    poolId: "WR", peakMax: 70, peakRawMax: 70, peakComponents: wrPeak, supportMax: 30, supportComponents: sharedNonQbSupport,
     tier1: [{ peak: 66, support: 8 }, { peak: 63, support: 14 }, { peak: 60, support: 18 }],
     tier2: [{ peak: 58, support: 8 }, { peak: 55, support: 14 }],
     tier3: [{ peak: 52, support: 5 }, { peak: 49, support: 11 }],
   },
   TE: {
-    poolId: "TE",
-    peakMax: 70,
-    peakRawMax: 70,
-    peakComponents: tePeak,
-    supportMax: 30,
-    supportComponents: sharedNonQbSupport,
+    poolId: "TE", peakMax: 70, peakRawMax: 70, peakComponents: tePeak, supportMax: 30, supportComponents: sharedNonQbSupport,
     tier1: [{ peak: 68, support: 10 }, { peak: 64, support: 15 }, { peak: 61, support: 23 }],
     tier2: [{ peak: 60, support: 8 }, { peak: 57, support: 15 }],
     tier3: [{ peak: 54, support: 5 }, { peak: 51, support: 11 }],
   },
   OL: {
-    poolId: "OL",
-    peakMax: 85,
-    peakRawMax: 85,
-    peakComponents: [...olPeakWithoutDraft, olDraftComponent],
-    supportMax: 15,
-    supportComponents: olSupport,
+    poolId: "OL", peakMax: 85, peakRawMax: 85, peakComponents: [...olPeakWithoutDraft, olDraftComponent], supportMax: 15, supportComponents: olSupport,
     tier1: [{ peak: 82 }, { peak: 75, support: 4 }, { peak: 68, support: 10 }, { peak: 64, support: 13 }],
     tier2: [{ peak: 72 }, { peak: 65, support: 4 }, { peak: 60, support: 9 }],
     tier3: [{ peak: 63 }, { peak: 56, support: 3 }, { peak: 52, support: 7 }],
   },
   "DL / EDGE": {
-    poolId: "DL / EDGE",
-    peakMax: 70,
-    peakRawMax: 70,
-    peakComponents: dlEdgePeak,
-    supportMax: 30,
-    supportComponents: sharedNonQbSupport,
+    poolId: "DL / EDGE", peakMax: 70, peakRawMax: 70, peakComponents: dlEdgePeak, supportMax: 30, supportComponents: sharedNonQbSupport,
     tier1: [{ peak: 68, support: 8 }, { peak: 65, support: 15 }, { peak: 62, support: 24 }],
     tier2: [{ peak: 61, support: 8 }, { peak: 57, support: 15 }],
     tier3: [{ peak: 54, support: 5 }, { peak: 50, support: 12 }],
   },
   LB: {
-    poolId: "LB",
-    peakMax: 70,
-    peakRawMax: 70,
-    peakComponents: lbPeak,
-    supportMax: 30,
-    supportComponents: sharedNonQbSupport,
+    poolId: "LB", peakMax: 70, peakRawMax: 70, peakComponents: lbPeak, supportMax: 30, supportComponents: sharedNonQbSupport,
     tier1: [{ peak: 68, support: 8 }, { peak: 64, support: 15 }, { peak: 60, support: 24 }],
     tier2: [{ peak: 61, support: 8 }, { peak: 57, support: 15 }],
     tier3: [{ peak: 54, support: 5 }, { peak: 50, support: 12 }],
   },
   Secondary: {
-    poolId: "Secondary",
-    peakMax: 70,
-    peakRawMax: 70,
-    peakComponents: secondaryPeak,
-    supportMax: 30,
-    supportComponents: sharedNonQbSupport,
+    poolId: "Secondary", peakMax: 70, peakRawMax: 70, peakComponents: secondaryPeak, supportMax: 30, supportComponents: sharedNonQbSupport,
     tier1: [{ peak: 68, support: 8 }, { peak: 64, support: 15 }, { peak: 60, support: 24 }],
     tier2: [{ peak: 60, support: 8 }, { peak: 56, support: 15 }],
     tier3: [{ peak: 53, support: 5 }, { peak: 49, support: 12 }],
   },
   "K / P": {
-    poolId: "K / P",
-    peakMax: 70,
-    peakRawMax: 70,
-    peakComponents: [],
-    supportMax: 30,
-    supportComponents: sharedNonQbSupport,
+    poolId: "K / P", peakMax: 70, peakRawMax: 70, peakComponents: [], supportMax: 30, supportComponents: sharedNonQbSupport,
     tier1: [{ peak: 68, support: 8 }, { peak: 64, support: 15 }, { peak: 60, support: 24 }],
     tier2: [{ peak: 60, support: 8 }, { peak: 56, support: 15 }],
     tier3: [{ peak: 53, support: 5 }, { peak: 49, support: 12 }],
@@ -331,11 +279,7 @@ const exactRange = (value: number): FootballCfbGreatnessScoreRange => ({ min: ro
 function range(min: number, max: number): FootballCfbGreatnessScoreRange {
   const roundedMin = round(min);
   const roundedMax = round(max);
-  return {
-    min: roundedMin,
-    max: roundedMax,
-    exact: roundedMin === roundedMax ? roundedMin : null,
-  };
+  return { min: roundedMin, max: roundedMax, exact: roundedMin === roundedMax ? roundedMin : null };
 }
 
 function assertExactEvidenceKeys(
@@ -404,7 +348,6 @@ function evaluateSection(
   }));
   const min = knownPoints * scale;
   const max = Math.min(targetMax, (knownPoints + missingMax) * scale);
-
   return {
     score: range(min, max),
     components: scaledComponents,
@@ -423,6 +366,51 @@ export function scoreFootballCfbOlDraftEvaluation(value: FootballCfbOlDraftEvalu
     case "third-round": return 1;
     case "later-or-undrafted": return 0;
   }
+}
+
+type SustainBand = Readonly<{ minimum: number; points: number }>;
+
+function sustainBandEvidence(
+  evidence: FootballCfbGreatnessEvidence,
+  peakMax: number,
+  label: string,
+  bands: readonly SustainBand[],
+): FootballCfbGreatnessEvidence {
+  if (evidence.status !== "known") return evidence;
+  if (!Number.isFinite(evidence.value) || evidence.value < 0 || evidence.value > peakMax) {
+    throw new RangeError(`${label} must be between 0 and ${peakMax}.`);
+  }
+  return { status: "known", value: bands.find((band) => evidence.value >= band.minimum)?.points ?? 0 };
+}
+
+export function calculateFootballCfbRbSustain(
+  secondBestPeak60: FootballCfbGreatnessEvidence,
+  thirdBestPeak60: FootballCfbGreatnessEvidence,
+): FootballCfbGreatnessEvidence {
+  const second = sustainBandEvidence(secondBestPeak60, 60, "RB second-best Peak60", [
+    { minimum: 52, points: 7 }, { minimum: 48, points: 5 }, { minimum: 44, points: 3 }, { minimum: 40, points: 1 },
+  ]);
+  const third = sustainBandEvidence(thirdBestPeak60, 60, "RB third-best Peak60", [
+    { minimum: 48, points: 3 }, { minimum: 44, points: 2 }, { minimum: 40, points: 1 },
+  ]);
+  if (second.status === "missing" || third.status === "missing") return { status: "missing" };
+  if (second.status === "structurally-unavailable" || third.status === "structurally-unavailable") return { status: "structurally-unavailable" };
+  return { status: "known", value: Math.min(10, second.value + third.value) };
+}
+
+export function calculateFootballCfbWrSustain(
+  secondBestPeak70: FootballCfbGreatnessEvidence,
+  thirdBestPeak70: FootballCfbGreatnessEvidence,
+): FootballCfbGreatnessEvidence {
+  const second = sustainBandEvidence(secondBestPeak70, 70, "WR second-best Peak", [
+    { minimum: 60, points: 7 }, { minimum: 56, points: 5 }, { minimum: 52, points: 3 }, { minimum: 48, points: 1 },
+  ]);
+  const third = sustainBandEvidence(thirdBestPeak70, 70, "WR third-best Peak", [
+    { minimum: 56, points: 3 }, { minimum: 52, points: 2 }, { minimum: 48, points: 1 },
+  ]);
+  if (second.status === "missing" || third.status === "missing") return { status: "missing" };
+  if (second.status === "structurally-unavailable" || third.status === "structurally-unavailable") return { status: "structurally-unavailable" };
+  return { status: "known", value: Math.min(10, second.value + third.value) };
 }
 
 function evaluateOlPeak(input: FootballCfbCareerGreatnessInput): EvaluatedSection {
@@ -466,9 +454,7 @@ function dualSpecialistBonus(secondaryPeak: number) {
 }
 
 function combineDualSpecialistPeak(kicker: number, punter: number) {
-  const primary = Math.max(kicker, punter);
-  const secondary = Math.min(kicker, punter);
-  return Math.min(70, primary + dualSpecialistBonus(secondary));
+  return Math.min(70, Math.max(kicker, punter) + dualSpecialistBonus(Math.min(kicker, punter)));
 }
 
 function evaluateSpecialistPeak(input: FootballCfbCareerGreatnessInput): EvaluatedSection & {
@@ -476,39 +462,21 @@ function evaluateSpecialistPeak(input: FootballCfbCareerGreatnessInput): Evaluat
 } {
   if (!input.specialistRole) throw new Error("K / P greatness requires an explicit specialistRole.");
   if (Object.keys(input.peak).length > 0) throw new Error("K / P Peak evidence belongs in kickerPeak/punterPeak branches, not peak.");
+  const kicker = input.kickerPeak ? evaluateSection(input.kickerPeak, footballCfbKickerPeakComponents, 70, "Kicker peak") : null;
+  const punter = input.punterPeak ? evaluateSection(input.punterPeak, footballCfbPunterPeakComponents, 70, "Punter peak") : null;
 
-  const kicker = input.kickerPeak
-    ? evaluateSection(input.kickerPeak, footballCfbKickerPeakComponents, 70, "Kicker peak")
-    : null;
-  const punter = input.punterPeak
-    ? evaluateSection(input.punterPeak, footballCfbPunterPeakComponents, 70, "Punter peak")
-    : null;
+  if ((input.specialistRole === "K" || input.specialistRole === "K/P") && !kicker) throw new Error(`${input.specialistRole} greatness requires kickerPeak evidence.`);
+  if ((input.specialistRole === "P" || input.specialistRole === "K/P") && !punter) throw new Error(`${input.specialistRole} greatness requires punterPeak evidence.`);
 
-  if ((input.specialistRole === "K" || input.specialistRole === "K/P") && !kicker) {
-    throw new Error(`${input.specialistRole} greatness requires kickerPeak evidence.`);
-  }
-  if ((input.specialistRole === "P" || input.specialistRole === "K/P") && !punter) {
-    throw new Error(`${input.specialistRole} greatness requires punterPeak evidence.`);
-  }
-
-  let score: FootballCfbGreatnessScoreRange;
-  if (input.specialistRole === "K") {
-    score = kicker!.score;
-  } else if (input.specialistRole === "P") {
-    score = punter!.score;
-  } else {
-    score = range(
-      combineDualSpecialistPeak(kicker!.score.min, punter!.score.min),
-      combineDualSpecialistPeak(kicker!.score.max, punter!.score.max),
-    );
-  }
-
-  const requiredSections = input.specialistRole === "K"
-    ? [kicker!]
+  const score = input.specialistRole === "K"
+    ? kicker!.score
     : input.specialistRole === "P"
-      ? [punter!]
-      : [kicker!, punter!];
-
+      ? punter!.score
+      : range(
+        combineDualSpecialistPeak(kicker!.score.min, punter!.score.min),
+        combineDualSpecialistPeak(kicker!.score.max, punter!.score.max),
+      );
+  const requiredSections = input.specialistRole === "K" ? [kicker!] : input.specialistRole === "P" ? [punter!] : [kicker!, punter!];
   return {
     score,
     components: {},
@@ -522,11 +490,7 @@ function evaluateSpecialistPeak(input: FootballCfbCareerGreatnessInput): Evaluat
   };
 }
 
-function meetsAnyRoute(
-  peak: number,
-  support: number,
-  routes: readonly FootballCfbGreatnessTierRoute[],
-) {
+function meetsAnyRoute(peak: number, support: number, routes: readonly FootballCfbGreatnessTierRoute[]) {
   return routes.some((route) => peak >= route.peak && support >= (route.support ?? 0));
 }
 
@@ -538,28 +502,24 @@ function classifyAtPoint(
   qbNationalTitleAsPrimary: boolean,
 ): FootballCfbCareerGreatnessTier | null {
   const model = footballCfbCareerGreatnessModels[poolId];
-
   if (poolId === "QB") {
     const sustainAwards = (supportComponents["sustained-elite"] ?? 0) + (supportComponents["awards-national-standing"] ?? 0);
-    const tier1 = (peak >= 58 && qbNationalTitleAsPrimary)
+    if (
+      (peak >= 58 && qbNationalTitleAsPrimary)
       || (peak >= 54 && qbNationalTitleAsPrimary && sustainAwards >= 17)
-      || (peak >= 54 && support >= 33);
-    if (tier1) return "Tier 1";
+      || (peak >= 54 && support >= 33)
+    ) return "Tier 1";
     if (meetsAnyRoute(peak, support, model.tier2)) return "Tier 2";
     if (meetsAnyRoute(peak, support, model.tier3)) return "Tier 3";
     return null;
   }
-
   if (meetsAnyRoute(peak, support, model.tier1)) return "Tier 1";
   if (meetsAnyRoute(peak, support, model.tier2)) return "Tier 2";
   if (meetsAnyRoute(peak, support, model.tier3)) return "Tier 3";
   return null;
 }
 
-function endpointComponents(
-  ranges: Readonly<Record<string, FootballCfbGreatnessScoreRange>>,
-  endpoint: "min" | "max",
-) {
+function endpointComponents(ranges: Readonly<Record<string, FootballCfbGreatnessScoreRange>>, endpoint: "min" | "max") {
   return Object.fromEntries(Object.entries(ranges).map(([id, value]) => [id, value[endpoint]]));
 }
 
@@ -567,11 +527,7 @@ function qbTitleEndpoints(input: FootballCfbCareerGreatnessInput) {
   if (input.poolId !== "QB") return { min: false, max: false, hasMissing: false };
   if (!input.qbNationalTitleAsPrimary) throw new Error("QB greatness requires explicit qbNationalTitleAsPrimary evidence.");
   if (input.qbNationalTitleAsPrimary.status === "missing") return { min: false, max: true, hasMissing: true };
-  return {
-    min: input.qbNationalTitleAsPrimary.value,
-    max: input.qbNationalTitleAsPrimary.value,
-    hasMissing: false,
-  };
+  return { min: input.qbNationalTitleAsPrimary.value, max: input.qbNationalTitleAsPrimary.value, hasMissing: false };
 }
 
 function overallCompleteness(
@@ -585,11 +541,7 @@ function overallCompleteness(
   return "complete";
 }
 
-function olDraftPromotionFlag(
-  input: FootballCfbCareerGreatnessInput,
-  peak: EvaluatedSection,
-  support: EvaluatedSection,
-): boolean {
+function olDraftPromotionFlag(input: FootballCfbCareerGreatnessInput, peak: EvaluatedSection, support: EvaluatedSection): boolean {
   if (input.poolId !== "OL" || input.olDraftEvaluation?.status !== "known") return false;
   const draftPoints = scoreFootballCfbOlDraftEvaluation(input.olDraftEvaluation.value);
   if (draftPoints === 0 || peak.score.exact == null || support.score.exact == null) return false;
@@ -612,17 +564,13 @@ function validateSecondaryVersatility(input: FootballCfbCareerGreatnessInput) {
 }
 
 /**
- * Deterministic Stage 16 CFB player-career greatness calculator.
+ * Deterministic CFB player-career greatness calculator.
  *
- * The calculator owns the locked position component ceilings and Tier 1-3 gates only.
- * It deliberately has no recognizability input and no NFL-career-performance input.
- * Missing evidence stays a range; structurally unavailable evidence is normalized over
- * the evidence mechanisms available to that player/era rather than silently becoming zero.
- * Tier 4/5 gates remain intentionally unresolved until the full-universe distribution audit.
+ * The public result deliberately exposes Peak, Support, component evidence and tier
+ * outcomes without publishing an aggregate 0-100 total. Same-tier players remain
+ * intentionally unordered. NFL career performance and recognizability are not inputs.
  */
-export function calculateFootballCfbCareerGreatness(
-  input: FootballCfbCareerGreatnessInput,
-): FootballCfbCareerGreatnessResult {
+export function calculateFootballCfbCareerGreatness(input: FootballCfbCareerGreatnessInput): FootballCfbCareerGreatnessResult {
   const model = footballCfbCareerGreatnessModels[input.poolId];
   validateSecondaryVersatility(input);
 
@@ -657,7 +605,6 @@ export function calculateFootballCfbCareerGreatness(
   const preliminaryTier = bestPossibleTier === worstPossibleTier ? bestPossibleTier : null;
   const evidenceCompleteness = overallCompleteness(peak, support, title.hasMissing);
   const flags: FootballCfbGreatnessFlag[] = [];
-
   if (evidenceCompleteness === "incomplete") flags.push("missing-evidence");
   if (peak.hasStructuralUnavailable || support.hasStructuralUnavailable) flags.push("structurally-normalized");
   if (bestPossibleTier !== worstPossibleTier) flags.push("tier-outcome-sensitive-to-missing-evidence");
@@ -667,7 +614,6 @@ export function calculateFootballCfbCareerGreatness(
     poolId: input.poolId,
     peak: peak.score,
     support: support.score,
-    total: range(peak.score.min + support.score.min, peak.score.max + support.score.max),
     peakComponents: peak.components,
     supportComponents: support.components,
     preliminaryTier,
