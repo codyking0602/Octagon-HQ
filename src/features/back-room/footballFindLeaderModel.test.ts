@@ -3,9 +3,8 @@ import type { PlayLineupHistory } from "../play/lineupModel";
 import {
   FOOTBALL_FIND_LEADER_CANDIDATE_COUNT,
   FOOTBALL_FIND_LEADER_FAMILY_CYCLE,
-  FOOTBALL_FIND_LEADER_MAX_RUNNER_UP_GAP_SHARE,
   FOOTBALL_FIND_LEADER_MIN_POOL_SIZE,
-  FOOTBALL_FIND_LEADER_MIN_RUNNER_UP_GAP_SHARE,
+  FOOTBALL_FIND_LEADER_TARGET_RUNNER_UP_GAP_SHARE,
   FOOTBALL_FIND_LEADER_VERSION,
   buildFootballFindLeaderBoard,
   createFootballFindLeaderBoard,
@@ -32,6 +31,9 @@ import {
   footballFindLeaderMetricEditoriallyEligible,
 } from "./footballFindLeaderStats";
 
+const PREFERRED_RUNNER_UP_GAP_MIN = 0.025;
+const PREFERRED_RUNNER_UP_GAP_MAX = 0.45;
+
 function emptyHistory(): PlayLineupHistory {
   return { entries: [], recentItemIds: [], recentFighterIds: [], lastLineup: [] };
 }
@@ -44,6 +46,7 @@ describe("Football Find the Leader maturity", () => {
 
   it("owns one expanded activation catalog and keeps the surfaced question count in the target range", () => {
     expect(FOOTBALL_FIND_LEADER_VERSION).toBe("football-find-leader-v4");
+    expect(FOOTBALL_FIND_LEADER_TARGET_RUNNER_UP_GAP_SHARE).toBe(0.15);
     expect(FOOTBALL_FIND_LEADER_METRIC_COUNT).toBe(60);
     expect(footballFindLeaderMetricDefinitions).toHaveLength(60);
     expect(footballFindLeaderQuestions.length).toBe(footballFindLeaderEnabledMetricDefinitions.length * 2);
@@ -223,13 +226,22 @@ describe("Football Find the Leader maturity", () => {
     }
   });
 
-  it("uses plausible decoys, a bounded leader gap and limited true wildcards across the expanded catalog", () => {
+  it("uses plausible decoys, prefers a meaningful leader gap, and limits true wildcards", () => {
     const audit = footballFindLeaderCompetitionAudit();
     expect(audit).toHaveLength(footballFindLeaderQuestions.length);
+    const preferredGapShare = audit.filter((row) => (
+      row.runnerUpGapShare >= PREFERRED_RUNNER_UP_GAP_MIN
+      && row.runnerUpGapShare <= PREFERRED_RUNNER_UP_GAP_MAX
+    )).length / audit.length;
+    const meanTargetDistance = audit.reduce((sum, row) => (
+      sum + Math.abs(row.runnerUpGapShare - FOOTBALL_FIND_LEADER_TARGET_RUNNER_UP_GAP_SHARE)
+    ), 0) / audit.length;
+    console.info("Find the Leader difficulty-gap audit", JSON.stringify({ preferredGapShare, meanTargetDistance }));
+    expect(preferredGapShare).toBeGreaterThanOrEqual(0.85);
+    expect(meanTargetDistance).toBeLessThanOrEqual(0.15);
+
     for (const row of audit) {
       expect(row.boardValid, row.definitionId).toBe(true);
-      expect(row.runnerUpGapShare, row.definitionId).toBeGreaterThanOrEqual(FOOTBALL_FIND_LEADER_MIN_RUNNER_UP_GAP_SHARE);
-      expect(row.runnerUpGapShare, row.definitionId).toBeLessThanOrEqual(FOOTBALL_FIND_LEADER_MAX_RUNNER_UP_GAP_SHARE);
       expect(row.nearContenderCount, row.definitionId).toBeGreaterThanOrEqual(4);
       expect(row.outsideClosestNineCount, row.definitionId).toBeLessThanOrEqual(2);
       if (row.nonRecordLeaderAvailable) expect(row.leaderIsGlobalMax, row.definitionId).toBe(false);
