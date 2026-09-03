@@ -10,11 +10,10 @@
 
 .play-landing-heading {
   display: grid;
-  gap: 6px;
-  margin-bottom: 18px;
+  gap: 3px;
+  margin-bottom: 10px;
 }
 
-.play-landing-heading .eyebrow,
 .play-landing-library .eyebrow {
   color: var(--play-landing-accent);
 }
@@ -27,7 +26,7 @@
 }
 
 .play-landing-heading h1 {
-  font-size: clamp(30px, 8vw, 42px);
+  font-size: clamp(28px, 7vw, 38px);
   line-height: .95;
 }
 
@@ -35,7 +34,7 @@
 .play-landing-library__heading p:last-child {
   color: var(--text-secondary);
   font-size: 13px;
-  line-height: 1.45;
+  line-height: 1.4;
 }
 
 .play-landing-library {
@@ -159,7 +158,7 @@
 
 @media (max-width: 520px) {
   .play-landing-heading {
-    margin-bottom: 14px;
+    margin-bottom: 8px;
   }
 
   .play-landing-library {
