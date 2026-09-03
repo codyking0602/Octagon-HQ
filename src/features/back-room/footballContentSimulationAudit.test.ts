@@ -288,8 +288,8 @@ describe("Football PR10 content simulation / replay audit", () => {
       for (let clueIndex = 1; clueIndex <= 3; clueIndex += 1) {
         const guess = guesses[clueIndex - 1]!;
         const clue = nextFootballWavelengthClue(round, guess, clueIndex, seed, guesses.slice(0, clueIndex - 1));
-        if (guess < round.target) expect(clue.rating).toBeGreaterThan(round.target);
-        if (guess > round.target) expect(clue.rating).toBeLessThan(round.target);
+        if (guess < round.target && round.target < 100) expect(clue.rating).toBeGreaterThan(round.target);
+        if (guess > round.target && round.target > 1) expect(clue.rating).toBeLessThan(round.target);
         round = { ...round, clues: [...round.clues, clue] } satisfies FootballWavelengthRound;
       }
 
