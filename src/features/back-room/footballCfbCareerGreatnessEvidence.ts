@@ -36,9 +36,9 @@ function maxKnown(values: readonly (number | null)[]) {
   return knownValues.length ? Math.max(...knownValues) : null;
 }
 
-function sumWhenAny(values: readonly (number | null)[]) {
-  const knownValues = values.filter((value): value is number => value != null);
-  return knownValues.length ? knownValues.reduce((sum, value) => sum + value, 0) : null;
+function sumWhenAll(values: readonly (number | null)[]) {
+  if (values.some((value) => value == null)) return null;
+  return (values as readonly number[]).reduce((sum, value) => sum + value, 0);
 }
 
 function factMap(record: FootballFactualRecord | null) {
@@ -80,9 +80,9 @@ function peakEvidenceFromFacts(
     ]);
     set("passing-efficiency-dominance", passingScore);
 
-    const totalYards = sumWhenAny([passingYards, rushingYards]);
+    const totalYards = sumWhenAll([passingYards, rushingYards]);
     set("total-offensive-value", totalYards == null ? null : scoreBand(totalYards, [[6000, 20], [5500, 19], [5000, 18], [4500, 17], [4000, 15], [3500, 13], [3000, 11], [2500, 9]]));
-    const totalTouchdowns = sumWhenAny([passingTouchdowns, rushingTouchdowns]);
+    const totalTouchdowns = sumWhenAll([passingTouchdowns, rushingTouchdowns]);
     set("scoring-creation", totalTouchdowns == null ? null : scoreBand(totalTouchdowns, [[65, 10], [55, 9], [45, 8], [35, 7], [30, 6], [25, 5], [20, 4]]));
   }
 
@@ -197,6 +197,7 @@ export function buildFootballCfbCareerGreatnessEvidence(
     ? model.peakComponents.filter((component) => component.id !== "nfl-draft-evaluation")
     : model.peakComponents;
   const peak = peakEvidenceFromFacts(poolId, peakComponents, facts);
+  const olDraftEvaluation = poolId === "OL" ? olDraftEvaluationForSubject(subject) : null;
 
   return {
     input: {
@@ -204,9 +205,12 @@ export function buildFootballCfbCareerGreatnessEvidence(
       peak: peak.evidence,
       support,
       ...(poolId === "QB" ? { qbNationalTitleAsPrimary: { status: "missing" as const } } : {}),
-      ...(poolId === "OL" ? { olDraftEvaluation: olDraftEvaluationForSubject(subject) } : {}),
+      ...(olDraftEvaluation ? { olDraftEvaluation } : {}),
     },
     consumedFactMetricIds: [...peak.consumed],
-    factBackedComponentIds: [...peak.backed],
+    factBackedComponentIds: [
+      ...peak.backed,
+      ...(olDraftEvaluation?.status === "known" ? ["nfl-draft-evaluation"] : []),
+    ],
   };
 }
