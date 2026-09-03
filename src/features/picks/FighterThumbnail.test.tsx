@@ -68,9 +68,12 @@ describe("fighterThumbnailPath", () => {
     const slugs = [
       "salahdine-parnasse",
       "fares-ziam",
+      "michael-page",
       "michael-venom-page",
       "nursulton-ruziboev",
       "punahele-soriano",
+      "kurtis-campbell",
+      "trevor-peek",
       "morgan-charriere",
       "felipe-lima",
       "losene-keita",
@@ -82,6 +85,18 @@ describe("fighterThumbnailPath", () => {
         /^https:\/\/a\.espncdn\.com\/i\/headshots\/mma\/players\/full\/\d+\.png$/,
       );
     }
+  });
+
+  it("maps the three current missing-card slugs to their curated portraits", () => {
+    expect(fighterThumbnailPath("michael-page")).toBe(
+      "https://a.espncdn.com/i/headshots/mma/players/full/3022067.png",
+    );
+    expect(fighterThumbnailPath("kurtis-campbell")).toBe(
+      "https://a.espncdn.com/i/headshots/mma/players/full/5310075.png",
+    );
+    expect(fighterThumbnailPath("trevor-peek")).toBe(
+      "https://a.espncdn.com/i/headshots/mma/players/full/5048900.png",
+    );
   });
 
   it("uses full-resolution portraits for both Hooker-Parnasse Spotlight fighters", () => {
