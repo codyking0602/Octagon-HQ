@@ -12,20 +12,22 @@ export const PLAY_LANDING_UFC_STRATEGIC_GAME = "auction" as const satisfies Play
 
 export function playLandingGameIds(sport: PlaySport): readonly PlayGameId[] {
   return sport === "ufc"
-    ? [...PLAY_LANDING_COMMON_GAME_ORDER, PLAY_LANDING_UFC_STRATEGIC_GAME]
+    ? [PLAY_LANDING_UFC_STRATEGIC_GAME, ...PLAY_LANDING_COMMON_GAME_ORDER]
     : PLAY_LANDING_COMMON_GAME_ORDER;
 }
 
-export function PlayLandingHeader({ sport }: { sport: PlaySport }) {
-  const football = sport === "football";
+export function playLandingDestination(sport: PlaySport, gameId: PlayGameId) {
+  const game = playGameDefinition(gameId, sport);
+  return sport === "ufc" && gameId === "find-leader"
+    ? `${game.route}?mode=replayable`
+    : game.route;
+}
 
+export function PlayLandingHeader({ sport }: { sport: PlaySport }) {
   return (
     <section className="play-landing-heading" data-sport={sport}>
-      <p className="eyebrow">{football ? "FOOTBALL · PLAY" : "UFC · PLAY"}</p>
       <h1>Play</h1>
-      <p>{football
-        ? "Daily challenges and football debates built for the group chat."
-        : "Daily challenges and UFC debates built for the group chat."}</p>
+      <p>Daily games.</p>
     </section>
   );
 }
@@ -58,7 +60,7 @@ export function PlayLandingGameLibrary({ sport, onNavigate, footer }: PlayLandin
               className={`play-landing-game-card${strategic ? " is-strategic" : ""}`}
               type="button"
               key={game.route}
-              onClick={() => onNavigate(game.route)}
+              onClick={() => onNavigate(playLandingDestination(sport, game.id))}
             >
               <span className="play-landing-game-card__icon" aria-hidden="true">{game.icon}</span>
               <span className="play-landing-game-card__status">{strategic ? "STRATEGY" : "PLAY NOW"}</span>
