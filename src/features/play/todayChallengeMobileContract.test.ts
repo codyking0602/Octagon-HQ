@@ -4,6 +4,8 @@ import { describe, expect, it } from "vitest";
 const gameCss = readFileSync("src/styles/today-challenge.css", "utf8");
 const hubCss = readFileSync("src/styles/today-challenge-hub.css", "utf8");
 const hubPage = readFileSync("src/features/play/TodayChallengeHubPage.tsx", "utf8");
+const landingPresentation = readFileSync("src/features/play/PlayLandingPresentation.tsx", "utf8");
+const playRegistry = readFileSync("src/features/play/playRegistry.ts", "utf8");
 
 describe("Today’s Challenge 390×844 presentation contract", () => {
   it("keeps the official game and hub containers shrinkable without horizontal overflow", () => {
@@ -40,11 +42,16 @@ describe("Today’s Challenge 390×844 presentation contract", () => {
   it("replaces the legacy Find-the-Leader-only hub without removing casual games or challenges", () => {
     expect(hubPage).toContain("<TodayChallengeHub />");
     expect(hubPage).toContain("<ChallengeCenter />");
-    expect(hubPage).toContain("playGames.map");
-    expect(hubPage).toContain('"find-leader": "/play/find-leader?mode=replayable"');
-    expect(hubPage).toContain('wavelength: "/play/wavelength"');
-    expect(hubPage).toContain('"blind-resume": "/play/blind-resume"');
-    expect(hubPage).toContain('"blind-rank": "/play/blind-rank"');
-    expect(hubPage).toContain('"keep-cut": "/play/keep-cut"');
+    expect(hubPage).toContain('<PlayLandingGameLibrary sport="ufc"');
+    expect(landingPresentation).toContain('"find-leader"');
+    expect(landingPresentation).toContain('"wavelength"');
+    expect(landingPresentation).toContain('"blind-resume"');
+    expect(landingPresentation).toContain('"hit-the-number"');
+    expect(landingPresentation).toContain('PLAY_LANDING_UFC_STRATEGIC_GAME = "auction"');
+    expect(playRegistry).toContain('ufc: "/play/find-leader"');
+    expect(playRegistry).toContain('ufc: "/play/wavelength"');
+    expect(playRegistry).toContain('ufc: "/play/blind-resume"');
+    expect(playRegistry).toContain('ufc: "/play/hit-the-number"');
+    expect(playRegistry).toContain('ufc: "/play/auction"');
   });
 });
