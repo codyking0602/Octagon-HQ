@@ -44,8 +44,7 @@ export function footballFindLeaderReplayLabel(type: PlayLineupType) {
   return type === "replayable" ? "NEW LINEUP" : replayLabelFor(type);
 }
 
-export function footballFindLeaderCandidateAsset(domainId: FootballFindLeaderDomainId, candidateId: string) {
-  if (domainId === "nfl-qb-career" || domainId === "nfl-rb-career") return null;
+export function footballFindLeaderCandidateAsset(_domainId: FootballFindLeaderDomainId, candidateId: string) {
   return footballSubjectAsset(candidateId);
 }
 
