@@ -25,7 +25,8 @@ describe("Football HQ game library presentation", () => {
 
     expect(playLandingSource).toContain("play-landing-game-card__status");
     expect(playLandingSource).toContain("{game.description}");
-    expect(blindResume?.description).toMatch(/resume/i);
+    expect(blindResume?.title).toBe("Blind Resume");
+    expect(blindResume?.description).toMatch(/résumé/i);
     expect(blindResume?.description).not.toMatch(/rank|tier/i);
     expect(games.map((game) => game.id)).not.toContain("blind-rank");
     expect(games.map((game) => game.id)).not.toContain("keep-cut");
