@@ -99,9 +99,11 @@ export const footballFindLeaderCanonicalMetricByMetric: Readonly<Record<Football
 };
 
 export const FOOTBALL_FIND_LEADER_GAME_ID = "football-find-leader";
-export const FOOTBALL_FIND_LEADER_VERSION = "football-find-leader-v3";
+export const FOOTBALL_FIND_LEADER_VERSION = "football-find-leader-v4";
 export const FOOTBALL_FIND_LEADER_CANDIDATE_COUNT = 10;
 export const FOOTBALL_FIND_LEADER_MIN_POOL_SIZE = FOOTBALL_FIND_LEADER_CANDIDATE_COUNT + 1;
+export const FOOTBALL_FIND_LEADER_TARGET_RUNNER_UP_GAP_SHARE = 0.15;
+const FOOTBALL_FIND_LEADER_RUNNER_UP_GAP_SCORE_WEIGHT = 1.5;
 const REPLAY_IDENTITY_SIZE = FOOTBALL_FIND_LEADER_CANDIDATE_COUNT + 3;
 
 export interface FootballFindLeaderQuestionDefinition {
@@ -342,11 +344,25 @@ export const footballFindLeaderPools: readonly FootballFindLeaderPoolDefinition[
   return pool;
 });
 
+function footballFindLeaderRunnerUpGapShare(leader: ScoredRow, nearest: readonly ScoredRow[]) {
+  if (nearest.length < FOOTBALL_FIND_LEADER_CANDIDATE_COUNT - 1) return null;
+  const spread = leader.competitionValue - nearest.at(-1)!.competitionValue;
+  if (!(spread > 0)) return null;
+  return (leader.competitionValue - nearest[0]!.competitionValue) / spread;
+}
+
 const footballCompetitionConfig = {
   getId: (row: ScoredRow) => row.id,
   getValue: (row: ScoredRow) => row.competitionValue,
   competitiveWindowSize: 8,
   supportEndIndex: 9,
+  leaderScoreAdjustment: (leader: ScoredRow, nearest: readonly ScoredRow[]) => {
+    const gapShare = footballFindLeaderRunnerUpGapShare(leader, nearest);
+    return gapShare == null
+      ? 0
+      : Math.abs(gapShare - FOOTBALL_FIND_LEADER_TARGET_RUNNER_UP_GAP_SHARE)
+        * FOOTBALL_FIND_LEADER_RUNNER_UP_GAP_SCORE_WEIGHT;
+  },
 };
 
 export function buildFootballFindLeaderBoard(definition: FootballFindLeaderQuestionDefinition, seed: string): FootballFindLeaderBoard | null {
@@ -397,29 +413,21 @@ function targetLeague(ordinal: number): FootballFindLeaderLeagueId {
   return ordinal % 2 === 0 ? "nfl" : "cfb";
 }
 
+/** Preserve the exact 50/50 league split while giving every NFL gameplay lane equal rotation weight. */
 const nflDomainCycle: readonly FootballFindLeaderDomainId[] = [
   "nfl-receiving-career",
   "nfl-qb-career",
   "nfl-defense-career",
   "nfl-rb-career",
   "nfl-qb-season",
-  "nfl-receiving-career",
-  "nfl-defense-career",
   "nfl-team-season",
-  "nfl-qb-career",
-  "nfl-rb-career",
 ] as const;
 
-/** CFB earns its half through distinct player, team and coach lanes instead of champion-team repetition. */
+/** CFB keeps the same half of all boards with equal rotation weight across its five distinct lanes. */
 const cfbDomainCycle: readonly FootballFindLeaderDomainId[] = [
   "cfb-champion-season",
   "cfb-player-rushing",
   "cfb-player-receiving",
-  "cfb-coach-career",
-  "cfb-team-season",
-  "cfb-player-rushing",
-  "cfb-player-receiving",
-  "cfb-champion-season",
   "cfb-coach-career",
   "cfb-team-season",
 ] as const;
@@ -508,7 +516,7 @@ export function footballFindLeaderCompetitionAudit() {
     const board = buildFootballFindLeaderBoard(definition, `audit|${definition.id}`);
     const nonRecordLeaderAvailable = viableCompetitiveLeaders(pool, footballCompetitionConfig, true).length > 0;
     const globalLeaderId = pool[0]?.id ?? null;
-    if (!board) return { definitionId: definition.id, boardValid: false, nonRecordLeaderAvailable, leaderIsGlobalMax: false, nearContenderCount: 0, outsideClosestNineCount: 0 };
+    if (!board) return { definitionId: definition.id, boardValid: false, nonRecordLeaderAvailable, leaderIsGlobalMax: false, runnerUpGapShare: 0, nearContenderCount: 0, outsideClosestNineCount: 0 };
     const leader = pool.find((row) => row.id === board.leaderId)!;
     const lower = pool.filter((row) => row.competitionValue < leader.competitionValue);
     const closestNineCutoff = lower[8]?.competitionValue ?? Number.NEGATIVE_INFINITY;
@@ -521,6 +529,7 @@ export function footballFindLeaderCompetitionAudit() {
       boardValid: true,
       nonRecordLeaderAvailable,
       leaderIsGlobalMax: board.leaderId === globalLeaderId,
+      runnerUpGapShare: footballFindLeaderRunnerUpGapShare(leader, lower.slice(0, FOOTBALL_FIND_LEADER_CANDIDATE_COUNT - 1)) ?? 0,
       nearContenderCount: challengers.filter((candidate) => (competitionById.get(candidate.id) ?? Number.NEGATIVE_INFINITY) >= nearCutoff).length,
       outsideClosestNineCount: challengers.filter((candidate) => !closestNine.has(candidate.id)).length,
     };
