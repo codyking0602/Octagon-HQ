@@ -102,8 +102,8 @@ export const FOOTBALL_FIND_LEADER_GAME_ID = "football-find-leader";
 export const FOOTBALL_FIND_LEADER_VERSION = "football-find-leader-v4";
 export const FOOTBALL_FIND_LEADER_CANDIDATE_COUNT = 10;
 export const FOOTBALL_FIND_LEADER_MIN_POOL_SIZE = FOOTBALL_FIND_LEADER_CANDIDATE_COUNT + 1;
-export const FOOTBALL_FIND_LEADER_MIN_RUNNER_UP_GAP_SHARE = 0.025;
-export const FOOTBALL_FIND_LEADER_MAX_RUNNER_UP_GAP_SHARE = 0.45;
+export const FOOTBALL_FIND_LEADER_TARGET_RUNNER_UP_GAP_SHARE = 0.15;
+const FOOTBALL_FIND_LEADER_RUNNER_UP_GAP_SCORE_WEIGHT = 1.5;
 const REPLAY_IDENTITY_SIZE = FOOTBALL_FIND_LEADER_CANDIDATE_COUNT + 3;
 
 export interface FootballFindLeaderQuestionDefinition {
@@ -344,35 +344,32 @@ export const footballFindLeaderPools: readonly FootballFindLeaderPoolDefinition[
   return pool;
 });
 
-function footballFindLeaderRunnerUpGapShare(pool: readonly ScoredRow[], leader: ScoredRow) {
-  const lower = pool.filter((row) => row.competitionValue < leader.competitionValue);
-  const nearest = lower.slice(0, FOOTBALL_FIND_LEADER_CANDIDATE_COUNT - 1);
+function footballFindLeaderRunnerUpGapShare(leader: ScoredRow, nearest: readonly ScoredRow[]) {
   if (nearest.length < FOOTBALL_FIND_LEADER_CANDIDATE_COUNT - 1) return null;
   const spread = leader.competitionValue - nearest.at(-1)!.competitionValue;
   if (!(spread > 0)) return null;
   return (leader.competitionValue - nearest[0]!.competitionValue) / spread;
 }
 
-function footballCompetitionConfig(pool: readonly ScoredRow[]) {
-  return {
-    getId: (row: ScoredRow) => row.id,
-    getValue: (row: ScoredRow) => row.competitionValue,
-    competitiveWindowSize: 8,
-    supportEndIndex: 9,
-    isLeaderAllowed: (row: ScoredRow) => {
-      const gapShare = footballFindLeaderRunnerUpGapShare(pool, row);
-      return gapShare != null
-        && gapShare >= FOOTBALL_FIND_LEADER_MIN_RUNNER_UP_GAP_SHARE
-        && gapShare <= FOOTBALL_FIND_LEADER_MAX_RUNNER_UP_GAP_SHARE;
-    },
-  };
-}
+const footballCompetitionConfig = {
+  getId: (row: ScoredRow) => row.id,
+  getValue: (row: ScoredRow) => row.competitionValue,
+  competitiveWindowSize: 8,
+  supportEndIndex: 9,
+  leaderScoreAdjustment: (leader: ScoredRow, nearest: readonly ScoredRow[]) => {
+    const gapShare = footballFindLeaderRunnerUpGapShare(leader, nearest);
+    return gapShare == null
+      ? 0
+      : Math.abs(gapShare - FOOTBALL_FIND_LEADER_TARGET_RUNNER_UP_GAP_SHARE)
+        * FOOTBALL_FIND_LEADER_RUNNER_UP_GAP_SCORE_WEIGHT;
+  },
+};
 
 export function buildFootballFindLeaderBoard(definition: FootballFindLeaderQuestionDefinition, seed: string): FootballFindLeaderBoard | null {
   const pool = footballFindLeaderMetricRows(definition.metricId);
   if (pool.length < FOOTBALL_FIND_LEADER_CANDIDATE_COUNT) return null;
   const random = seededLineupRandom(FOOTBALL_FIND_LEADER_VERSION, seed, definition.id);
-  const option = selectFindLeaderCompetition(pool, random, footballCompetitionConfig(pool));
+  const option = selectFindLeaderCompetition(pool, random, footballCompetitionConfig);
   if (!option) return null;
   const challengers = option.challengers;
   if (challengers.length !== FOOTBALL_FIND_LEADER_CANDIDATE_COUNT - 1) return null;
@@ -516,9 +513,8 @@ export function sortFootballFindLeaderCandidates(board: Pick<FootballFindLeaderB
 export function footballFindLeaderCompetitionAudit() {
   return footballFindLeaderQuestions.map((definition) => {
     const pool = footballFindLeaderMetricRows(definition.metricId);
-    const config = footballCompetitionConfig(pool);
     const board = buildFootballFindLeaderBoard(definition, `audit|${definition.id}`);
-    const nonRecordLeaderAvailable = viableCompetitiveLeaders(pool, config, true).length > 0;
+    const nonRecordLeaderAvailable = viableCompetitiveLeaders(pool, footballCompetitionConfig, true).length > 0;
     const globalLeaderId = pool[0]?.id ?? null;
     if (!board) return { definitionId: definition.id, boardValid: false, nonRecordLeaderAvailable, leaderIsGlobalMax: false, runnerUpGapShare: 0, nearContenderCount: 0, outsideClosestNineCount: 0 };
     const leader = pool.find((row) => row.id === board.leaderId)!;
@@ -533,7 +529,7 @@ export function footballFindLeaderCompetitionAudit() {
       boardValid: true,
       nonRecordLeaderAvailable,
       leaderIsGlobalMax: board.leaderId === globalLeaderId,
-      runnerUpGapShare: footballFindLeaderRunnerUpGapShare(pool, leader) ?? 0,
+      runnerUpGapShare: footballFindLeaderRunnerUpGapShare(leader, lower.slice(0, FOOTBALL_FIND_LEADER_CANDIDATE_COUNT - 1)) ?? 0,
       nearContenderCount: challengers.filter((candidate) => (competitionById.get(candidate.id) ?? Number.NEGATIVE_INFINITY) >= nearCutoff).length,
       outsideClosestNineCount: challengers.filter((candidate) => !closestNine.has(candidate.id)).length,
     };
