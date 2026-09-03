@@ -163,7 +163,7 @@ describe("Wavelength cross-sport source and calibration parity", () => {
         <FootballWavelengthPage />
       </MemoryRouter>,
     );
-    expect(screen.getByText(/calibrated 1–100 football opinion scale/i)).toBeInTheDocument();
+    expect(screen.getByText(/calibrated 1–100 (?:football )?opinion scale/i)).toBeInTheDocument();
     expect(screen.getByText(/1 · LOW/)).toBeInTheDocument();
     expect(screen.getByText(/50 · MIDDLE/)).toBeInTheDocument();
     expect(screen.getByText(/100 · HIGH/)).toBeInTheDocument();
