@@ -3,7 +3,7 @@ import { execFileSync } from "node:child_process";
 const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
 const projectId = process.env.SUPABASE_PROJECT_ID;
 const expectedSha = process.env.EXPECTED_MONITORING_SOURCE_SHA?.trim() ?? "";
-const productionOrigin = process.env.OCTAGON_PRODUCTION_ORIGIN ?? "https://octagon.hq-app.workers.dev";
+const productionOrigin = "https://the.hq-app.workers.dev";
 const expectedSchedulerValue = process.env.EXPECTED_MONITORING_SCHEDULER_ENABLED?.trim().toLowerCase();
 if (!accessToken || !projectId || !/^[0-9a-f]{40}$/i.test(expectedSha)) {
   throw new Error("Exact monitoring-function verification is not configured.");

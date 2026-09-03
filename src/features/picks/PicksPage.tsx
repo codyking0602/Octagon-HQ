@@ -285,7 +285,6 @@ export default function PicksPage() {
                   const selectedLockBonus = underdogBonusForOdds(selectedLockOdds);
                   const selectedLockBonusLabel = selectedLockBonus > 0 ? `+${selectedLockBonus}` : null;
                   const cancelled = (bout.resultStatus ?? "pending") === "cancelled";
-                  const repickRequired = Boolean(!removed && bout.repickRequired && !selection);
                   const resolved = removed || (bout.resultStatus ?? "pending") !== "pending";
                   const readOnly = boutLocked || cancelled || removed;
                   const selectedCorner = selection === bout.redFighterSlug
@@ -297,7 +296,7 @@ export default function PicksPage() {
                   const blueChoiceLabel = choiceLabel(selection === bout.blueFighterSlug, boutLocked, cancelled, removed);
                   return (
                     <article
-                      className={`surface-card pick-bout-card${index === 0 ? " is-main-event" : ""}${cancelled || removed ? " is-cancelled" : ""}${removed ? " is-removed" : ""}${repickRequired ? " is-repick-required" : ""}`}
+                      className={`surface-card pick-bout-card${index === 0 ? " is-main-event" : ""}${cancelled || removed ? " is-cancelled" : ""}${removed ? " is-removed" : ""}`}
                       key={bout.boutId}
                     >
                       <header className="pick-bout-card__meta">
@@ -314,12 +313,6 @@ export default function PicksPage() {
                           </span>
                         ) : null}
                       </header>
-                      {repickRequired ? (
-                        <div className="pick-bout-card__repick" role="status">
-                          <strong>REPICK REQUIRED</strong>
-                          <span>The matchup changed. Pick either current fighter again; your previous pick and Underdog Lock are no longer active.</span>
-                        </div>
-                      ) : null}
                       <div className="pick-bout-card__choices">
                         <button
                           type="button"

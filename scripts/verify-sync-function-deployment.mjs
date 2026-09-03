@@ -4,8 +4,7 @@ import { appendFileSync, existsSync } from "node:fs";
 const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
 const projectId = process.env.SUPABASE_PROJECT_ID;
 const expectedSha = process.env.EXPECTED_SYNC_SOURCE_SHA?.trim() ?? "";
-const productionOrigin = process.env.OCTAGON_PRODUCTION_ORIGIN
-  ?? "https://octagon.hq-app.workers.dev";
+const productionOrigin = "https://the.hq-app.workers.dev";
 const verifyExactSource = process.env.GITHUB_EVENT_NAME !== "pull_request";
 const requiredAuctionMigrationVersions = [
   "202608220001",
