@@ -55,12 +55,18 @@ describe("Football Find the Leader UI parity", () => {
     expect(progress).toHaveTextContent("0/9");
   });
 
-  it("uses canonical team marks for season/team subjects without assigning career players a misleading franchise logo", () => {
+  it("uses the canonical shared Football media owner for season, team, and career player marks", () => {
     const seasonAsset = footballFindLeaderCandidateAsset("nfl-qb-season", "peyton-manning-2013");
     expect(seasonAsset).toMatchObject({ kind: "team-mark", label: "Denver Broncos" });
     expect(seasonAsset?.src).toContain("/nfl/500/den.png");
-    expect(footballFindLeaderCandidateAsset("nfl-qb-career", "peyton-manning")).toBeNull();
-    expect(footballFindLeaderCandidateAsset("nfl-rb-career", "emmitt-smith")).toBeNull();
+
+    const quarterbackCareerAsset = footballFindLeaderCandidateAsset("nfl-qb-career", "peyton-manning");
+    expect(quarterbackCareerAsset).toMatchObject({ kind: "team-mark", label: "Indianapolis Colts" });
+    expect(quarterbackCareerAsset?.src).toContain("/nfl/500/ind.png");
+
+    const runningBackCareerAsset = footballFindLeaderCandidateAsset("nfl-rb-career", "emmitt-smith");
+    expect(runningBackCareerAsset).toMatchObject({ kind: "team-mark", label: "Dallas Cowboys" });
+    expect(runningBackCareerAsset?.src).toContain("/nfl/500/dal.png");
   });
 
   it("gives every Alabama championship season the same canonical Alabama logo", () => {
