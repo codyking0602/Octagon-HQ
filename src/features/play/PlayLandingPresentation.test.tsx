@@ -18,6 +18,10 @@ function source(path: string) {
   return readFileSync(new URL(path, import.meta.url), "utf8");
 }
 
+function cardTitles(cards: HTMLElement[]) {
+  return cards.map((card) => card.querySelector("strong")?.textContent);
+}
+
 describe("Play landing presentation contract", () => {
   it("keeps the implemented common games in the approved roadmap order", () => {
     expect(PLAY_LANDING_COMMON_GAME_ORDER).toEqual([
@@ -37,12 +41,12 @@ describe("Play landing presentation contract", () => {
     const { rerender } = render(<PlayLandingGameLibrary sport="ufc" onNavigate={() => {}} />);
     let library = screen.getByRole("region", { name: /pick a game/i });
     let cards = within(library).getAllByRole("button");
-    expect(cards.map((card) => within(card).getByRole("strong").textContent)).toEqual([...commonTitles, "Auction"]);
+    expect(cardTitles(cards)).toEqual([...commonTitles, "Auction"]);
 
     rerender(<PlayLandingGameLibrary sport="football" onNavigate={() => {}} />);
     library = screen.getByRole("region", { name: /pick a game/i });
     cards = within(library).getAllByRole("button");
-    expect(cards.map((card) => within(card).getByRole("strong").textContent)).toEqual(commonTitles);
+    expect(cardTitles(cards)).toEqual(commonTitles);
     expect(screen.queryByText("Auction")).not.toBeInTheDocument();
   });
 
