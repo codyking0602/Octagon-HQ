@@ -1,23 +1,34 @@
 import { describe, expect, it } from "vitest";
+import { playLandingGameIds } from "../play/PlayLandingPresentation";
+import playLandingSource from "../play/PlayLandingPresentation.tsx?raw";
+import { playGameDefinition } from "../play/playRegistry";
 import footballHomeSource from "./FootballBackRoomPage.tsx?raw";
 
 describe("Football HQ game library presentation", () => {
-  it("gives all six Football games a distinct visual identity", () => {
-    expect(footballHomeSource).toContain('gameId === "hit-the-number"');
-    expect(footballHomeSource).toContain('gameId === "find-leader"');
-    expect(footballHomeSource).toContain('gameId === "wavelength"');
-    expect(footballHomeSource).toContain('gameId === "blind-resume"');
-    expect(footballHomeSource).toContain('gameId === "blind-rank"');
-    expect(footballHomeSource).toContain('>KEEP</text>');
-    expect(footballHomeSource).toContain('>CUT</text>');
-    expect(footballHomeSource).toContain('<FootballGameLibraryMark gameId={id} />');
-    expect(footballHomeSource).not.toContain("const GAME_MARKS");
+  it("uses the shared Play library while preserving distinct implemented game identities", () => {
+    expect(footballHomeSource).toContain('<PlayLandingGameLibrary sport="football"');
+
+    const games = playLandingGameIds("football").map((id) => playGameDefinition(id, "football"));
+    expect(games.map((game) => game.id)).toEqual([
+      "find-leader",
+      "wavelength",
+      "blind-resume",
+      "hit-the-number",
+    ]);
+    expect(new Set(games.map((game) => game.icon)).size).toBe(games.length);
+    expect(games.every((game) => game.route.startsWith("/football/"))).toBe(true);
   });
 
-  it("uses compact full library copy and plain resume wording", () => {
-    expect(footballHomeSource).toContain("const GAME_LIBRARY_DESCRIPTIONS");
-    expect(footballHomeSource).toContain("Pick the stronger football resume as the evidence is revealed.");
-    expect(footballHomeSource).toContain("NO NAMES. JUST THE RESUME.");
-    expect(footballHomeSource).toContain("<p>{GAME_LIBRARY_DESCRIPTIONS[id]}</p>");
+  it("keeps compact shared card copy and plain Blind Resume wording without Daily-only cards", () => {
+    const games = playLandingGameIds("football").map((id) => playGameDefinition(id, "football"));
+    const blindResume = games.find((game) => game.id === "blind-resume");
+
+    expect(playLandingSource).toContain("play-landing-game-card__status");
+    expect(playLandingSource).toContain("{game.description}");
+    expect(blindResume?.title).toBe("Blind Resume");
+    expect(blindResume?.description).toMatch(/résumé/i);
+    expect(blindResume?.description).not.toMatch(/rank|tier/i);
+    expect(games.map((game) => game.id)).not.toContain("blind-rank");
+    expect(games.map((game) => game.id)).not.toContain("keep-cut");
   });
 });
