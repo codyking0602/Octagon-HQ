@@ -19,9 +19,7 @@ export type FootballCfbCareerGreatnessPoolId =
   | "K / P";
 
 export type FootballCfbCareerGreatnessTier = 1 | 2 | 3;
-
 export type FootballCfbGreatnessEvidenceCompleteness = "complete" | "normalized-structural" | "incomplete";
-
 export type FootballCfbGreatnessReviewFlag =
   | "missing-evidence"
   | "structurally-unavailable-evidence"
@@ -230,6 +228,8 @@ export interface FootballCfbCareerGreatnessResult {
 }
 
 type ComponentMaximums = Readonly<Record<string, number>>;
+type Gate = Readonly<{ peak: number; support: number }>;
+type GateSet = Readonly<{ tier1: readonly Gate[]; tier2: readonly Gate[]; tier3: readonly Gate[] }>;
 
 const QB_SCALE = 60 / 55;
 const RB_SCALE = 70 / 60;
@@ -350,7 +350,46 @@ export const footballCfbCareerGreatnessPoolSpecs = {
   "K / P": { peakMax: 70, supportMax: 30, kickerPeakComponentMaximums: kickerPeakMaximums, punterPeakComponentMaximums: punterPeakMaximums, supportComponentMaximums: standardSupportMaximums },
 } as const;
 
+const gateSets: Readonly<Record<Exclude<FootballCfbCareerGreatnessPoolId, "QB" | "OL">, GateSet>> = {
+  RB: {
+    tier1: [{ peak: 67, support: 10 }, { peak: 61, support: 15 }, { peak: 58, support: 27 }],
+    tier2: [{ peak: 55, support: 10 }, { peak: 52, support: 23 }],
+    tier3: [{ peak: 50, support: 6 }, { peak: 47, support: 16 }],
+  },
+  WR: {
+    tier1: [{ peak: 66, support: 8 }, { peak: 63, support: 14 }, { peak: 60, support: 18 }],
+    tier2: [{ peak: 58, support: 8 }, { peak: 55, support: 14 }],
+    tier3: [{ peak: 52, support: 5 }, { peak: 49, support: 11 }],
+  },
+  TE: {
+    tier1: [{ peak: 68, support: 10 }, { peak: 64, support: 15 }, { peak: 61, support: 23 }],
+    tier2: [{ peak: 60, support: 8 }, { peak: 57, support: 15 }],
+    tier3: [{ peak: 54, support: 5 }, { peak: 51, support: 11 }],
+  },
+  "DL / EDGE": {
+    tier1: [{ peak: 68, support: 8 }, { peak: 65, support: 15 }, { peak: 62, support: 24 }],
+    tier2: [{ peak: 61, support: 8 }, { peak: 57, support: 15 }],
+    tier3: [{ peak: 54, support: 5 }, { peak: 50, support: 12 }],
+  },
+  LB: {
+    tier1: [{ peak: 68, support: 8 }, { peak: 64, support: 15 }, { peak: 60, support: 24 }],
+    tier2: [{ peak: 61, support: 8 }, { peak: 57, support: 15 }],
+    tier3: [{ peak: 54, support: 5 }, { peak: 50, support: 12 }],
+  },
+  Secondary: {
+    tier1: [{ peak: 68, support: 8 }, { peak: 64, support: 15 }, { peak: 60, support: 24 }],
+    tier2: [{ peak: 60, support: 8 }, { peak: 56, support: 15 }],
+    tier3: [{ peak: 53, support: 5 }, { peak: 49, support: 12 }],
+  },
+  "K / P": {
+    tier1: [{ peak: 68, support: 8 }, { peak: 64, support: 15 }, { peak: 60, support: 24 }],
+    tier2: [{ peak: 60, support: 8 }, { peak: 56, support: 15 }],
+    tier3: [{ peak: 53, support: 5 }, { peak: 49, support: 12 }],
+  },
+};
+
 const sumMaximums = (maximums: ComponentMaximums) => Object.values(maximums).reduce((sum, value) => sum + value, 0);
+const stablePoints = (value: number) => Math.round(value * 1_000_000_000) / 1_000_000_000;
 
 function assertFinitePoints(component: string, points: number, maxPoints: number) {
   if (!Number.isFinite(points) || points < 0 || points > maxPoints) {
@@ -389,10 +428,16 @@ function aggregateComponents(
   }
 
   const fullMax = sumMaximums(maximums);
-  const score = structurallyUnavailable.length > 0
+  const rawScore = structurallyUnavailable.length > 0
     ? Math.min(fullMax, availablePoints * (fullMax / availableMax))
     : availablePoints;
-  return { score, componentEvidence, missing, structurallyUnavailable, normalized: structurallyUnavailable.length > 0 };
+  return {
+    score: stablePoints(rawScore),
+    componentEvidence,
+    missing,
+    structurallyUnavailable,
+    normalized: structurallyUnavailable.length > 0,
+  };
 }
 
 function supportComponents(
@@ -419,7 +464,7 @@ function supportComponents(
   }
 
   return {
-    score: missing.length === 0 && structurallyUnavailable.length === 0 ? score : null,
+    score: missing.length === 0 && structurallyUnavailable.length === 0 ? stablePoints(score) : null,
     componentEvidence,
     missing,
     structurallyUnavailable,
@@ -428,6 +473,10 @@ function supportComponents(
 
 function availablePoints(evidence: FootballCfbScoreEvidence): number | null {
   return evidence.status === "available" ? evidence.points : null;
+}
+
+function meetsAnyGate(peak: number, support: number, gates: readonly Gate[]) {
+  return gates.some((gate) => peak >= gate.peak && support >= gate.support);
 }
 
 function classifyQb(
@@ -447,41 +496,16 @@ function classifyQb(
   return null;
 }
 
-function classifyNonQb(pool: Exclude<FootballCfbCareerGreatnessPoolId, "QB" | "OL">, peak: number, support: number): FootballCfbCareerGreatnessTier | null {
-  const tier1 = pool === "RB"
-    ? (peak >= 67 && support >= 10) || (peak >= 61 && support >= 15) || (peak >= 58 && support >= 27)
-    : pool === "WR"
-      ? (peak >= 66 && support >= 8) || (peak >= 63 && support >= 14) || (peak >= 60 && support >= 18)
-      : pool === "TE"
-        ? (peak >= 68 && support >= 10) || (peak >= 64 && support >= 15) || (peak >= 61 && support >= 23)
-        : pool === "DL / EDGE"
-          ? (peak >= 68 && support >= 8) || (peak >= 65 && support >= 15) || (peak >= 62 && support >= 24)
-          : pool === "LB"
-            ? (peak >= 68 && support >= 8) || (peak >= 64 && support >= 15) || (peak >= 60 && support >= 24)
-            : (peak >= 68 && support >= 8) || (peak >= 64 && support >= 15) || (peak >= 60 && support >= 24);
-  if (tier1) return 1;
-
-  const tier2 = pool === "RB"
-    ? (peak >= 55 && support >= 10) || (peak >= 52 && support >= 23)
-    : pool === "WR"
-      ? (peak >= 58 && support >= 8) || (peak >= 55 && support >= 14)
-      : pool === "TE"
-        ? (peak >= 60 && support >= 8) || (peak >= 57 && support >= 15)
-        : pool === "DL / EDGE" || pool === "LB"
-          ? (peak >= 61 && support >= 8) || (peak >= 57 && support >= 15)
-          : (peak >= 60 && support >= 8) || (peak >= 56 && support >= 15);
-  if (tier2) return 2;
-
-  const tier3 = pool === "RB"
-    ? (peak >= 50 && support >= 6) || (peak >= 47 && support >= 16)
-    : pool === "WR"
-      ? (peak >= 52 && support >= 5) || (peak >= 49 && support >= 11)
-      : pool === "TE"
-        ? (peak >= 54 && support >= 5) || (peak >= 51 && support >= 11)
-        : pool === "DL / EDGE" || pool === "LB"
-          ? (peak >= 54 && support >= 5) || (peak >= 50 && support >= 12)
-          : (peak >= 53 && support >= 5) || (peak >= 49 && support >= 12);
-  return tier3 ? 3 : null;
+function classifyNonQb(
+  pool: Exclude<FootballCfbCareerGreatnessPoolId, "QB" | "OL">,
+  peak: number,
+  support: number,
+): FootballCfbCareerGreatnessTier | null {
+  const gates = gateSets[pool];
+  if (meetsAnyGate(peak, support, gates.tier1)) return 1;
+  if (meetsAnyGate(peak, support, gates.tier2)) return 2;
+  if (meetsAnyGate(peak, support, gates.tier3)) return 3;
+  return null;
 }
 
 function classifyOl(peak: number, support: number): FootballCfbCareerGreatnessTier | null {
@@ -563,13 +587,23 @@ function dualRoleBonus(secondaryPeak: number): number {
   return 0;
 }
 
-function resultCompleteness(missing: readonly string[], unavailable: readonly string[], normalized: boolean): FootballCfbGreatnessEvidenceCompleteness {
-  if (missing.length > 0) return "incomplete";
+function resultCompleteness(
+  missing: readonly string[],
+  unavailable: readonly string[],
+  normalized: boolean,
+  scorable: boolean,
+): FootballCfbGreatnessEvidenceCompleteness {
+  if (missing.length > 0 || !scorable) return "incomplete";
   if (unavailable.length > 0 && !normalized) return "incomplete";
   return normalized ? "normalized-structural" : "complete";
 }
 
-function resultFlags(missing: readonly string[], unavailable: readonly string[], normalized: boolean, olDraftDependent = false): FootballCfbGreatnessReviewFlag[] {
+function resultFlags(
+  missing: readonly string[],
+  unavailable: readonly string[],
+  normalized: boolean,
+  olDraftDependent = false,
+): FootballCfbGreatnessReviewFlag[] {
   const flags: FootballCfbGreatnessReviewFlag[] = [];
   if (missing.length > 0) flags.push("missing-evidence");
   if (unavailable.length > 0) flags.push("structurally-unavailable-evidence");
@@ -579,7 +613,12 @@ function resultFlags(missing: readonly string[], unavailable: readonly string[],
 }
 
 function calculateStandardNonQb(
-  input: FootballCfbRbCareerGreatnessInput | FootballCfbWrCareerGreatnessInput | FootballCfbTeCareerGreatnessInput | FootballCfbDlEdgeCareerGreatnessInput | FootballCfbLbCareerGreatnessInput | FootballCfbSecondaryCareerGreatnessInput,
+  input: FootballCfbRbCareerGreatnessInput
+    | FootballCfbWrCareerGreatnessInput
+    | FootballCfbTeCareerGreatnessInput
+    | FootballCfbDlEdgeCareerGreatnessInput
+    | FootballCfbLbCareerGreatnessInput
+    | FootballCfbSecondaryCareerGreatnessInput,
 ): FootballCfbCareerGreatnessResult {
   if (input.pool === "Secondary") {
     const specialTeamsPoints = input.offenseSpecialTeamsVersatilityPoints ?? 0;
@@ -602,22 +641,22 @@ function calculateStandardNonQb(
             ? lbPeakMaximums
             : secondaryPeakMaximums;
   const peak = aggregateComponents(input.peak, maximums, false);
-  const supportValues = {
+  const support = supportComponents({
     sustain: input.sustain,
     awardsNationalStanding: input.awardsNationalStanding,
     bigStageImpact: input.bigStageImpact,
-  };
-  const support = supportComponents(supportValues, standardSupportMaximums);
+  }, standardSupportMaximums);
   const missing = [...peak.missing, ...support.missing];
   const unavailable = [...peak.structurallyUnavailable, ...support.structurallyUnavailable];
-  const tier = peak.score != null && support.score != null ? classifyNonQb(input.pool, peak.score, support.score) : null;
+  const scorable = peak.score != null && support.score != null;
+  const tier = scorable ? classifyNonQb(input.pool, peak.score, support.score) : null;
 
   return {
     pool: input.pool,
     peak: peak.score,
     support: support.score,
     preliminaryTier: tier,
-    evidenceCompleteness: resultCompleteness(missing, unavailable, peak.normalized),
+    evidenceCompleteness: resultCompleteness(missing, unavailable, peak.normalized, scorable),
     componentEvidence: [...peak.componentEvidence, ...support.componentEvidence],
     reviewFlags: resultFlags(missing, unavailable, peak.normalized),
   };
@@ -635,7 +674,8 @@ export function calculateFootballCfbCareerGreatness(input: FootballCfbCareerGrea
     const awards = availablePoints(input.awardsNationalStanding);
     const missing = [...peak.missing, ...support.missing];
     const unavailable = [...peak.structurallyUnavailable, ...support.structurallyUnavailable];
-    const tier = peak.score != null && support.score != null && sustain != null && awards != null
+    const scorable = peak.score != null && support.score != null && sustain != null && awards != null;
+    const tier = scorable
       ? classifyQb(peak.score, support.score, sustain, awards, input.nationalTitleAsPrimaryQb)
       : null;
     return {
@@ -643,7 +683,7 @@ export function calculateFootballCfbCareerGreatness(input: FootballCfbCareerGrea
       peak: peak.score,
       support: support.score,
       preliminaryTier: tier,
-      evidenceCompleteness: resultCompleteness(missing, unavailable, false),
+      evidenceCompleteness: resultCompleteness(missing, unavailable, false, scorable),
       componentEvidence: [...peak.componentEvidence, ...support.componentEvidence],
       reviewFlags: resultFlags(missing, unavailable, false),
     };
@@ -656,7 +696,8 @@ export function calculateFootballCfbCareerGreatness(input: FootballCfbCareerGrea
     const support = supportComponents({ sustain: input.sustain, bigStageImpact: input.bigStageImpact }, olSupportMaximums);
     const missing = [...peak.missing, ...support.missing];
     const unavailable = [...peak.structurallyUnavailable, ...support.structurallyUnavailable];
-    const tier = peak.score != null && support.score != null ? classifyOl(peak.score, support.score) : null;
+    const scorable = peak.score != null && support.score != null;
+    const tier = scorable ? classifyOl(peak.score, support.score) : null;
 
     let olDraftDependent = false;
     if (tier != null && draftEvidence.status === "available" && draftEvidence.points > 0 && support.score != null) {
@@ -670,14 +711,16 @@ export function calculateFootballCfbCareerGreatness(input: FootballCfbCareerGrea
       peak: peak.score,
       support: support.score,
       preliminaryTier: tier,
-      evidenceCompleteness: resultCompleteness(missing, unavailable, peak.normalized),
+      evidenceCompleteness: resultCompleteness(missing, unavailable, peak.normalized, scorable),
       componentEvidence: [...peak.componentEvidence, ...support.componentEvidence],
       reviewFlags: resultFlags(missing, unavailable, peak.normalized, olDraftDependent),
     };
   }
 
   if (input.pool === "K / P") {
-    if (!input.kickerPeak && !input.punterPeak) throw new Error("K / P calculation requires a kicker Peak branch, a punter Peak branch, or both");
+    if (!input.kickerPeak && !input.punterPeak) {
+      throw new Error("K / P calculation requires a kicker Peak branch, a punter Peak branch, or both");
+    }
     const kicker = input.kickerPeak ? aggregateComponents(input.kickerPeak, kickerPeakMaximums, true) : null;
     const punter = input.punterPeak ? aggregateComponents(input.punterPeak, punterPeakMaximums, true) : null;
     const support = supportComponents({
@@ -688,22 +731,30 @@ export function calculateFootballCfbCareerGreatness(input: FootballCfbCareerGrea
     const branchScores = [kicker?.score, punter?.score].filter((score): score is number => score != null);
     const requiredBranchCount = Number(Boolean(kicker)) + Number(Boolean(punter));
     const dual = Boolean(kicker && punter);
-    const branchComplete = branchScores.length === requiredBranchCount;
+    const branchComplete = branchScores.length === requiredBranchCount && branchScores.length > 0;
     const bonus = dual && branchComplete ? dualRoleBonus(Math.min(...branchScores)) : 0;
-    const peakScore = branchComplete ? Math.min(70, Math.max(...branchScores) + bonus) : null;
-    const peakEvidence = [...(kicker?.componentEvidence ?? []), ...(punter?.componentEvidence ?? [])];
+    const peakScore = branchComplete ? stablePoints(Math.min(70, Math.max(...branchScores) + bonus)) : null;
     const missing = [...(kicker?.missing ?? []), ...(punter?.missing ?? []), ...support.missing];
-    const unavailable = [...(kicker?.structurallyUnavailable ?? []), ...(punter?.structurallyUnavailable ?? []), ...support.structurallyUnavailable];
+    const unavailable = [
+      ...(kicker?.structurallyUnavailable ?? []),
+      ...(punter?.structurallyUnavailable ?? []),
+      ...support.structurallyUnavailable,
+    ];
     const normalized = Boolean(kicker?.normalized || punter?.normalized);
-    const tier = peakScore != null && support.score != null ? classifyNonQb("K / P", peakScore, support.score) : null;
+    const scorable = peakScore != null && support.score != null;
+    const tier = scorable ? classifyNonQb("K / P", peakScore, support.score) : null;
 
     return {
       pool: input.pool,
       peak: peakScore,
       support: support.score,
       preliminaryTier: tier,
-      evidenceCompleteness: resultCompleteness(missing, unavailable, normalized),
-      componentEvidence: [...peakEvidence, ...support.componentEvidence],
+      evidenceCompleteness: resultCompleteness(missing, unavailable, normalized, scorable),
+      componentEvidence: [
+        ...(kicker?.componentEvidence ?? []),
+        ...(punter?.componentEvidence ?? []),
+        ...support.componentEvidence,
+      ],
       reviewFlags: resultFlags(missing, unavailable, normalized),
       kickerPeak: kicker?.score,
       punterPeak: punter?.score,
