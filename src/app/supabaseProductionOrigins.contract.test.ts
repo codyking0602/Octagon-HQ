@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 
 const deployWorkflow = readFileSync(".github/workflows/deploy-supabase.yml", "utf8");
 const pinAuth = readFileSync("supabase/functions/pin-auth/index.ts", "utf8");
+const syncDeploymentVerifier = readFileSync("scripts/verify-sync-function-deployment.mjs", "utf8");
 
 const canonicalOrigin = "https://the.hq-app.workers.dev";
 const compatibilityOrigin = "https://octagon.hq-app.workers.dev";
@@ -26,6 +27,15 @@ describe("Supabase production origin ownership", () => {
     );
     expect(pinAuth).toContain(
       'const canonicalOrigin = Deno.env.get("OCTAGON_APP_ORIGIN") ?? legacyProductionOrigin;',
+    );
+  });
+
+  it("verifies the UFC sync function against the canonical The HQ origin instead of the PIN compatibility origin", () => {
+    expect(syncDeploymentVerifier).toContain(
+      `const productionOrigin = "${canonicalOrigin}";`,
+    );
+    expect(syncDeploymentVerifier).not.toContain(
+      "process.env.OCTAGON_PRODUCTION_ORIGIN",
     );
   });
 });
