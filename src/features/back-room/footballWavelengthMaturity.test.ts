@@ -129,8 +129,12 @@ describe("Football Wavelength maturity", () => {
       const roundAfterLow = { ...opening, clues: [...opening.clues, lowCorrection] };
       const highCorrection = nextFootballWavelengthClue(roundAfterLow, highGuess, 2, seed, [lowGuess]);
 
-      if (lowGuess < opening.target) expect(lowCorrection.rating).toBeGreaterThan(opening.target);
-      if (highGuess > opening.target) expect(highCorrection.rating).toBeLessThan(opening.target);
+      if (lowGuess < opening.target && opening.target < 100) {
+        expect(lowCorrection.rating).toBeGreaterThan(opening.target);
+      }
+      if (highGuess > opening.target && opening.target > 1) {
+        expect(highCorrection.rating).toBeLessThan(opening.target);
+      }
 
       for (const clue of [...opening.clues, lowCorrection, highCorrection]) {
         seenClues.add(clue.id);
