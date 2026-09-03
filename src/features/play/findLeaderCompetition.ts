@@ -7,6 +7,7 @@ export interface FindLeaderCompetitionConfig<Row> {
   supportEndIndex: number;
   isLeaderAllowed?: (row: Row) => boolean;
   compareLeaderTie?: (left: Row, right: Row) => number;
+  leaderScoreAdjustment?: (leader: Row, nearest: readonly Row[]) => number;
   candidateCount?: number;
   scoreWindow?: number;
   closestCount?: number;
@@ -66,7 +67,12 @@ export function selectFindLeaderCompetition<Row>(
     const scale = Math.max(Math.abs(value(leader)), 1);
     const spread = value(leader) - value(nearest.at(-1)!);
     const runnerUpGap = value(leader) - value(nearest[0]!);
-    return { leader, lower, competitionScore: (spread / scale) + ((runnerUpGap / scale) * 0.35) };
+    const scoreAdjustment = config.leaderScoreAdjustment?.(leader, nearest) ?? 0;
+    return {
+      leader,
+      lower,
+      competitionScore: (spread / scale) + ((runnerUpGap / scale) * 0.35) + scoreAdjustment,
+    };
   }).sort((left, right) => (
     left.competitionScore - right.competitionScore
     || value(right.leader) - value(left.leader)
