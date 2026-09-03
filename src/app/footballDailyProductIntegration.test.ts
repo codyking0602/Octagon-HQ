@@ -6,6 +6,7 @@ const routeMigration = readFileSync("supabase/migrations/202612310055_football_h
 const sportOwnerRepair = readFileSync("supabase/migrations/202612310056_repair_football_daily_reminder_sport_owner.sql", "utf8");
 const page = readFileSync("src/features/back-room/FootballTodayChallengePage.tsx", "utf8");
 const hq = readFileSync("src/features/back-room/FootballBackRoomPage.tsx", "utf8");
+const todayHub = readFileSync("src/features/play/TodayChallengeHub.tsx", "utf8");
 const backendTest = readFileSync("supabase/tests/football_daily_product_integration.sql", "utf8");
 
 describe("Football Daily product integration", () => {
@@ -44,8 +45,9 @@ describe("Football Daily product integration", () => {
   });
 
   it("keeps Football HQ and completed result actions on the canonical Today route", () => {
-    expect(hq).toContain('navigate("/football/today")');
-    expect(hq).toContain("<DailyChallengeStandings");
+    expect(hq).toContain('<TodayChallengeHub sport="football" />');
+    expect(todayHub).toContain('sport === "football" ? "/football/today"');
+    expect(todayHub).toContain("<DailyChallengeStandings");
     expect(hq).toContain('<ChallengeCenter sport="football"');
     expect(page).toContain("shareDailyChallengeResult");
     expect(page).toContain("SHARE RESULT");

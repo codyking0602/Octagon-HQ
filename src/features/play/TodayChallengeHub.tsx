@@ -7,6 +7,7 @@ import {
   isDailyRankKeepCombo,
 } from "./DailyRankKeepComboStatus";
 import { OfficialTodayChallengeContent } from "./OfficialTodayChallengePage";
+import type { PlaySport } from "./playRegistry";
 import { todayChallengeAdapter, type DailyGameType } from "./todaysChallengeAdapters";
 import type {
   TodayChallengeLeaderboard,
@@ -127,11 +128,7 @@ function DailyLeaderboard({
     return <p className="today-hub-empty">Loading today’s leaderboard…</p>;
   }
   if (!leaderboard?.unlocked) {
-    return (
-      <p className="today-hub-empty">
-        Finish today’s official game to unlock the group leaderboard.
-      </p>
-    );
+    return <p className="today-hub-empty">Finish today’s official game to unlock the group leaderboard.</p>;
   }
   if (!leaderboard.entries.length) {
     return <p className="today-hub-empty">No official finishes yet.</p>;
@@ -145,6 +142,7 @@ function DailyLeaderboard({
       />
     );
   }
+
   return (
     <div className="today-hub-leaderboard__rows">
       {leaderboard.entries.map((entry) => (
@@ -171,18 +169,19 @@ function DailyLeaderboard({
   );
 }
 
-export default function TodayChallengeHub() {
+export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport }) {
   const identity = useIdentity();
   const navigate = useNavigate();
   const carouselRef = useRef<HTMLDivElement>(null);
   const [panel, setPanel] = useState<"challenge" | "leaderboard">("challenge");
   const signedIn = identity.status === "ready" && Boolean(identity.profile?.id);
   const profileId = identity.profile?.id ?? "signed-out";
-  const runtime = useTodayChallengeRuntime({ profileId, enabled: signedIn });
+  const runtime = useTodayChallengeRuntime({ profileId, enabled: signedIn, sport });
   const overview = useTodayChallengeOverview({
     profileId,
     enabled: signedIn,
     projection: runtime.projection,
+    sport,
   });
   const projection = runtime.projection;
   const adapter = useMemo(
@@ -192,7 +191,7 @@ export default function TodayChallengeHub() {
 
   if (!signedIn) {
     return (
-      <section className="today-hub-gate">
+      <section className="today-hub-gate" data-sport={sport}>
         <div>
           <p className="eyebrow">TODAY’S CHALLENGE</p>
           <h2>One official game. One first attempt.</h2>
@@ -205,7 +204,7 @@ export default function TodayChallengeHub() {
 
   if (runtime.loading && !projection) {
     return (
-      <section className="today-hub-loading" aria-live="polite">
+      <section className="today-hub-loading" data-sport={sport} aria-live="polite">
         <span />
         <strong>Loading today’s official game…</strong>
       </section>
@@ -214,7 +213,7 @@ export default function TodayChallengeHub() {
 
   if (!projection || !adapter) {
     return (
-      <section className="today-hub-gate is-error">
+      <section className="today-hub-gate is-error" data-sport={sport}>
         <div>
           <p className="eyebrow">TODAY’S CHALLENGE</p>
           <h2>The official game did not load.</h2>
@@ -234,6 +233,7 @@ export default function TodayChallengeHub() {
   const cta = combo
     ? dailyRankKeepComboStage(projection) === 2 ? "CONTINUE PART 2" : "START PART 1"
     : adapter.cta.toUpperCase();
+  const dailyRoute = sport === "football" ? "/football/today" : adapter.dailyRoute;
 
   const showPanel = (nextPanel: "challenge" | "leaderboard") => {
     const carousel = carouselRef.current;
@@ -254,14 +254,14 @@ export default function TodayChallengeHub() {
   };
 
   return (
-    <section className="today-hub" data-game={projection.gameType}>
+    <section className="today-hub" data-game={projection.gameType} data-sport={sport}>
       <div
         className="today-hub__carousel"
         ref={carouselRef}
         onScroll={updatePanelFromScroll}
         aria-label="Today’s Challenge and leaderboard"
       >
-        <button className="today-hub-card" type="button" onClick={() => navigate(adapter.dailyRoute)}>
+        <button className="today-hub-card" type="button" onClick={() => navigate(dailyRoute)}>
           <div className="today-hub-card__topline">
             <span>{combo ? "TODAY’S DAILY DOUBLE" : "TODAY’S CHALLENGE"}</span>
             <b>{dayLabel(projection.centralDay).toUpperCase()}</b>

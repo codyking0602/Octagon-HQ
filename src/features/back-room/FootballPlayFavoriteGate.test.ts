@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import playLandingSource from "../play/PlayLandingPresentation.tsx?raw";
+import todayHubSource from "../play/TodayChallengeHub.tsx?raw";
 import footballPlaySource from "./FootballBackRoomPage.tsx?raw";
 
 describe("Football Play favorite-team gate", () => {
@@ -11,7 +12,8 @@ describe("Football Play favorite-team gate", () => {
     expect(footballPlaySource).toContain("const showTransition = entryRequested;");
     expect(footballPlaySource).toContain('className="page football-room-page"');
     expect(footballPlaySource).toContain("!showTransition ? <FootballGamesEarlyAccessBanner /> : null");
-    expect(footballPlaySource).toContain("TODAY’S CHALLENGE");
+    expect(footballPlaySource).toContain('<TodayChallengeHub sport="football" />');
+    expect(todayHubSource).toContain("TODAY’S CHALLENGE");
     expect(footballPlaySource).toContain('<PlayLandingGameLibrary sport="football"');
     expect(playLandingSource).toContain("ALL GAMES");
   });
