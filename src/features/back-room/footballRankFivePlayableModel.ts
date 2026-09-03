@@ -4,7 +4,7 @@ import {
   selectReplayLineup,
   type PlayLineupIdentity,
 } from "../play/lineupModel";
-import { buildFootballComparisonCandidatePool } from "./footballComparisonAuthority";
+import { footballGameComparisonCandidates } from "../games/gameSourceAuthority";
 import { buildFootballBlindRankBoard } from "./footballComparisonGeneration";
 import {
   FOOTBALL_RANK_FIVE_GAME_ID,
@@ -30,11 +30,12 @@ function runtimeLeagueForPack(packId: FootballRankFivePackId): FootballLeague {
 
 /**
  * Runtime Blind Rank packs. The legacy Rank Five catalog is calibration/editorial input only;
- * actual membership starts from the deep canonical comparison authority.
+ * actual membership starts from the deep canonical comparison authority and must satisfy
+ * the Games evidence floor.
  */
 export const footballRankFivePacks: readonly FootballRankFivePack[] = footballReviewedRankFivePacks.map((pack) => ({
   ...pack,
-  items: buildFootballComparisonCandidatePool(pack.id, pack.items).map((item) => ({
+  items: footballGameComparisonCandidates(pack.id, pack.items).map((item) => ({
     ...item,
     league: runtimeLeagueForPack(pack.id),
   })),
