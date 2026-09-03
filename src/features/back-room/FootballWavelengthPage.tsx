@@ -21,6 +21,10 @@ import {
   type FootballWavelengthRun,
 } from "./footballWavelengthModel";
 import {
+  footballWavelengthCategoryLabel,
+  footballWavelengthCluePrompt,
+} from "./footballWavelengthPresentation";
+import {
   asChallengeJson,
   challengeRecord,
   challengeString,
@@ -224,7 +228,7 @@ export default function FootballWavelengthPage() {
               <article key={item.id}>
                 <b>{index + 1}</b>
                 <span>
-                  <small>{item.category}</small>
+                  <small>{footballWavelengthCategoryLabel(item.category)}</small>
                   <strong>{item.text}</strong>
                 </span>
                 <em>{item.rating}</em>
@@ -267,11 +271,11 @@ export default function FootballWavelengthPage() {
 
       <section className="football-wavelength-clue" aria-live="polite">
         <div className="football-wavelength-clue__head">
-          <span>{clue.category}</span>
+          <span>{footballWavelengthCategoryLabel(clue.category)}</span>
           <b>CLUE {clueIndex + 1}</b>
         </div>
         <h1>{clue.text}</h1>
-        <p>Where does it land on Football HQ’s calibrated 1–100 football opinion scale?</p>
+        <p>{footballWavelengthCluePrompt(clue.category)}</p>
       </section>
 
       <section className="football-wavelength-guess-panel">
