@@ -13,6 +13,7 @@ import {
   type PlayLineupIdentity,
 } from "./lineupModel";
 import {
+  WAVELENGTH_OPINION_DISCLOSURE,
   clampWavelength,
   wavelengthDistanceCopy,
   wavelengthScore,
@@ -373,6 +374,7 @@ export default function WavelengthGame({
               <em>{item.rating}</em>
             </article>
           ))}
+          <p className="wavelength-rules">{WAVELENGTH_OPINION_DISCLOSURE}</p>
           <GameResultActions
             onChallenge={() => void challengeSomeone()}
             onReplay={replay}
@@ -407,7 +409,7 @@ export default function WavelengthGame({
       <section className="wavelength-clue" aria-live="polite">
         <div><span>{clue.category}</span><b>CLUE {clueIndex + 1}</b></div>
         <h1>{clue.text}</h1>
-        <p>Where does it land on Octagon HQ’s 1–100 UFC scale?</p>
+        <p>Where does it land on Octagon HQ’s calibrated 1–100 UFC opinion scale?</p>
       </section>
 
       <section className="wavelength-guess-panel">
@@ -421,7 +423,7 @@ export default function WavelengthGame({
           type="range"
           value={guess}
         />
-        <div className="wavelength-scale"><span>1 · BAD</span><span>50 · AVERAGE</span><span>100 · ELITE</span></div>
+        <div className="wavelength-scale"><span>1 · LOW</span><span>50 · MIDDLE</span><span>100 · HIGH</span></div>
         <button className="primary-action" type="button" onClick={lockGuess}>
           {clueIndex === 3 ? "LOCK FINAL GUESS" : "LOCK GUESS & REVEAL NEXT CLUE"}
         </button>
@@ -435,7 +437,7 @@ export default function WavelengthGame({
           </span>
         ))}
       </div>
-      <p className="wavelength-rules">Each clue reacts to your last guess. Only your fourth guess determines your score.</p>
+      <p className="wavelength-rules">Each clue reacts to your last guess. Only your fourth guess determines your score. {WAVELENGTH_OPINION_DISCLOSURE}</p>
     </div>
   );
 }
