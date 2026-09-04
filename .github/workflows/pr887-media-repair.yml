@@ -24,18 +24,6 @@ jobs:
         run: python scripts/pr887-media-repair.py
       - name: Regenerate runtime artifact
         run: node scripts/generate-football-find-leader-runtime.mjs
-      - name: Diagnose historical NFL team-code universe
-        run: |
-          python - <<'PY'
-          import json
-          data = json.load(open('data/generated/football/find-leader-runtime-projection.json'))
-          codes = sorted({
-              item['teamCode']
-              for item in data['subjects']
-              if item.get('league') == 'NFL' and item.get('teamCode')
-          })
-          print('NFL_TEAM_CODES=' + ','.join(codes))
-          PY
       - name: Install dependencies
         run: npm ci
       - name: Run focused test
@@ -43,7 +31,7 @@ jobs:
       - name: Commit repair
         run: |
           git rm .github/workflows/pr887-media-repair.yml scripts/pr887-media-repair.py
-          git add scripts/generate-football-find-leader-runtime.mjs src/features/back-room/footballFindLeaderRuntimeProjection.ts src/features/back-room/footballSubjectRegistry.ts src/features/back-room/footballSubjectAssets.ts data/generated/football/find-leader-runtime-projection.json
+          git add scripts/generate-football-find-leader-runtime.mjs src/features/back-room/footballFindLeaderRuntimeProjection.ts src/features/back-room/footballSubjectRegistry.ts src/features/back-room/footballMediaIdentity.ts src/features/back-room/footballSubjectAssets.ts data/generated/football/find-leader-runtime-projection.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "Repair Football historical media identity"
