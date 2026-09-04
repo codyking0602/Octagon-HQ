@@ -14,12 +14,13 @@ describe("Blind Resume UFC and Football UI alignment", () => {
     expect(css).toContain('.blind-resume-page[data-version="v3"] .blind-resume-card > .primary-action');
   });
 
-  it("keeps Football blind before the pick and uses canonical team media only on reveal", () => {
+  it("keeps Football blind before the pick and centers canonical team media on reveal", () => {
     expect(footballPage).toContain("footballBlindResumeRevealAsset(subject.id)");
     expect(footballPage).toContain('className="football-blind-resume-logo"');
     expect(footballPage).toContain('<div><span>PLAYER A</span><strong>?</strong></div>');
     expect(footballPage).toContain('<div><span>PLAYER B</span><strong>?</strong></div>');
-    expect(css).toContain("transform: translateY(12px);");
+    expect(css).toContain("object-position: center;");
+    expect(css).toContain("transform: translateY(18px);");
   });
 
   it("sanitizes both visible Football fact values and keeps the reveal CTA slim and full-width", () => {
