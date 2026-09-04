@@ -1,9 +1,8 @@
 name: PR 887 media repair
 
 on:
-  push:
-    branches:
-      - chatgpt/football-media-hard-pass
+  pull_request:
+    types: [reopened]
 
 permissions:
   contents: write
@@ -14,6 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
@@ -48,69 +48,69 @@ jobs:
           replace_once(
               "scripts/generate-football-find-leader-runtime.mjs",
               '''        position: "QB",
-                      season,
-                      tier: recognized.tier,
-                      sourceProvider: "nflverse",
-                      sourceId: `${sourcePlayerId}:${season}`,'''.replace("          ", "        ", 1),
+        season,
+        tier: recognized.tier,
+        sourceProvider: "nflverse",
+        sourceId: `${sourcePlayerId}:${season}`,''',
               '''        position: "QB",
-                      season,
-                      teamCode: seasonTeamCode,
-                      tier: recognized.tier,
-                      sourceProvider: "nflverse",
-                      sourceId: `${sourcePlayerId}:${season}`,'''.replace("          ", "        ", 1),
+        season,
+        teamCode: seasonTeamCode,
+        tier: recognized.tier,
+        sourceProvider: "nflverse",
+        sourceId: `${sourcePlayerId}:${season}`,''',
           )
 
           replace_once(
               "src/features/back-room/footballFindLeaderRuntimeProjection.ts",
               '''  season?: number;
-            school?: string;
-            startSeason?: number;'''.replace("      ", "  "),
+  school?: string;
+  startSeason?: number;''',
               '''  season?: number;
-            school?: string;
-            teamCode?: string;
-            startSeason?: number;'''.replace("      ", "  "),
+  school?: string;
+  teamCode?: string;
+  startSeason?: number;''',
           )
           replace_once(
               "src/features/back-room/footballFindLeaderRuntimeProjection.ts",
               '''export function footballFindLeaderProjectedKnowledgeOverride(subjectId: string): FootballSubjectKnowledgeOverride | null {''',
               '''export function footballFindLeaderProjectedNflTeamCode(subjectId: string): string | null {
-            const subject = rawSubjectById.get(subjectId);
-            if (!subject || subject.league !== "NFL") return null;
-            if (subject.kind === "player-season") return subject.teamCode?.trim() || null;
-            if (subject.kind !== "team-season") return null;
-            const match = /^\\d{4}:([^:]+)$/.exec(subject.sourceId);
-            return match?.[1]?.trim() || null;
-          }
+  const subject = rawSubjectById.get(subjectId);
+  if (!subject || subject.league !== "NFL") return null;
+  if (subject.kind === "player-season") return subject.teamCode?.trim() || null;
+  if (subject.kind !== "team-season") return null;
+  const match = /^\\d{4}:([^:]+)$/.exec(subject.sourceId);
+  return match?.[1]?.trim() || null;
+}
 
-          export function footballFindLeaderProjectedKnowledgeOverride(subjectId: string): FootballSubjectKnowledgeOverride | null {'''.replace("          ", "", 1),
+export function footballFindLeaderProjectedKnowledgeOverride(subjectId: string): FootballSubjectKnowledgeOverride | null {''',
           )
 
           replace_once(
               "src/features/back-room/footballSubjectRegistry.ts",
               '''  footballCfbTeamMediaIdFromSeasonSubjectId,
-            footballTeamMediaIdFromComparisonAsset,'''.replace("      ", "  "),
+  footballTeamMediaIdFromComparisonAsset,''',
               '''  footballCfbTeamMediaIdFromSeasonSubjectId,
-            footballNflTeamMediaId,
-            footballTeamMediaIdFromComparisonAsset,'''.replace("      ", "  "),
+  footballNflTeamMediaId,
+  footballTeamMediaIdFromComparisonAsset,''',
           )
           replace_once(
               "src/features/back-room/footballSubjectRegistry.ts",
               '''  footballFindLeaderProjectedAdditionalSubjects,
-            footballFindLeaderProjectedKnowledgeOverride,'''.replace("      ", "  "),
+  footballFindLeaderProjectedKnowledgeOverride,''',
               '''  footballFindLeaderProjectedAdditionalSubjects,
-            footballFindLeaderProjectedKnowledgeOverride,
-            footballFindLeaderProjectedNflTeamCode,'''.replace("      ", "  "),
+  footballFindLeaderProjectedKnowledgeOverride,
+  footballFindLeaderProjectedNflTeamCode,''',
           )
           replace_once(
               "src/features/back-room/footballSubjectRegistry.ts",
               '''  const comparisonItem = comparisonItemById.get(subject.id);
-            if (comparisonItem) return footballTeamMediaIdFromComparisonAsset(comparisonItem.asset);
-            if (subject.kind === "team-season" && subject.league === "CFB")'''.replace("      ", "  "),
+  if (comparisonItem) return footballTeamMediaIdFromComparisonAsset(comparisonItem.asset);
+  if (subject.kind === "team-season" && subject.league === "CFB")''',
               '''  const comparisonItem = comparisonItemById.get(subject.id);
-            if (comparisonItem) return footballTeamMediaIdFromComparisonAsset(comparisonItem.asset);
-            const projectedNflTeamCode = footballFindLeaderProjectedNflTeamCode(subject.id);
-            if (projectedNflTeamCode) return footballNflTeamMediaId(projectedNflTeamCode);
-            if (subject.kind === "team-season" && subject.league === "CFB")'''.replace("      ", "  "),
+  if (comparisonItem) return footballTeamMediaIdFromComparisonAsset(comparisonItem.asset);
+  const projectedNflTeamCode = footballFindLeaderProjectedNflTeamCode(subject.id);
+  if (projectedNflTeamCode) return footballNflTeamMediaId(projectedNflTeamCode);
+  if (subject.kind === "team-season" && subject.league === "CFB")''',
           )
           PY
       - name: Regenerate canonical runtime artifact
@@ -126,4 +126,4 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "Repair Football historical media identity"
-          git push origin HEAD:${GITHUB_REF_NAME}
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
