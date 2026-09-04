@@ -360,6 +360,7 @@ const domains: readonly FootballHitTheNumberDomain[] = [
       metric("cfb-best-season-defensive-interceptions", "CFB", "cfb-player-peak", "CFB Player Peak-Season Defensive Interceptions", "peak-season"),
       metric("cfb-best-season-tackles-for-loss", "CFB", "cfb-player-peak", "CFB Player Peak-Season Tackles for Loss", "peak-season"),
       metric("cfb-heisman-awards", "CFB", "cfb-player-peak", "CFB Heisman Trophies", "accomplishment"),
+      metric("cfb-team-point-differential", "CFB", "cfb", "CFB Team-Season Point Differential", "team-season"),
       metric("cfb-team-postseason-wins", "CFB", "cfb", "CFB Team-Season Postseason Wins", "accomplishment"),
     ],
   },
