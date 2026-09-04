@@ -259,9 +259,12 @@ export default function FootballWavelengthPage() {
         </section>
       ) : null}
       <section className="football-wavelength-topline">
-        <span>WAVELENGTH · {shared ? "FRIEND CHALLENGE" : "REPLAYABLE GAME"}</span>
+        <span>WAVELENGTH · {shared ? "FRIEND CHALLENGE" : "FIND THE HIDDEN NUMBER"}</span>
         <b>CLUE {clueIndex + 1} OF 4</b>
       </section>
+      <p className="football-wavelength-rules">
+        Use 4 football clues to find one hidden number from 1–100. Only your final guess scores.
+      </p>
 
       <div className="football-wavelength-progress" aria-label="Football Wavelength clue progress">
         {[0, 1, 2, 3].map((index) => (
@@ -280,7 +283,7 @@ export default function FootballWavelengthPage() {
 
       <section className="football-wavelength-guess-panel">
         <div className="football-wavelength-guess-value">
-          <small>{clueIndex === 3 ? "FINAL ANSWER" : "YOUR GUESS"}</small>
+          <small>{clueIndex === 3 ? "FINAL HIDDEN NUMBER GUESS" : "YOUR HIDDEN NUMBER GUESS"}</small>
           <strong>{guess}</strong>
         </div>
         <input

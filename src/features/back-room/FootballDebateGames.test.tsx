@@ -141,7 +141,7 @@ describe("Football HQ debate games", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText("WAVELENGTH · REPLAYABLE GAME")).toBeInTheDocument();
+    expect(screen.getByText("WAVELENGTH · FIND THE HIDDEN NUMBER")).toBeInTheDocument();
     for (let index = 0; index < 3; index += 1) {
       fireEvent.click(screen.getByRole("button", { name: "LOCK GUESS & REVEAL NEXT CLUE" }));
     }
