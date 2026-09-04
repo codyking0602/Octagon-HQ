@@ -6,29 +6,29 @@ import todayHubSource from "../play/TodayChallengeHub.tsx?raw";
 import footballHomeSource from "./FootballBackRoomPage.tsx?raw";
 
 describe("Football HQ game library presentation", () => {
-  it("uses the shared Play library while preserving distinct implemented game identities", () => {
+  it("uses the shared Play library while preserving distinct replayable game identities", () => {
     expect(footballHomeSource).toContain('<PlayLandingGameLibrary sport="football"');
 
     const games = playLandingGameIds("football").map((id) => playGameDefinition(id, "football"));
     expect(games.map((game) => game.id)).toEqual([
       "find-leader",
       "wavelength",
-      "blind-resume",
       "hit-the-number",
     ]);
     expect(new Set(games.map((game) => game.icon)).size).toBe(games.length);
     expect(games.every((game) => game.route.startsWith("/football/"))).toBe(true);
   });
 
-  it("keeps compact shared card copy and plain Blind Resume wording without Daily-only cards", () => {
+  it("keeps compact shared card copy while Football Blind Resume stays Daily-only", () => {
     const games = playLandingGameIds("football").map((id) => playGameDefinition(id, "football"));
-    const blindResume = games.find((game) => game.id === "blind-resume");
+    const blindResumeDefinition = playGameDefinition("blind-resume", "football");
 
     expect(playLandingSource).toContain("play-landing-game-card__status");
     expect(playLandingSource).toContain("{game.description}");
-    expect(blindResume?.title).toBe("Blind Resume");
-    expect(blindResume?.description).toMatch(/résumé/i);
-    expect(blindResume?.description).not.toMatch(/rank|tier/i);
+    expect(blindResumeDefinition.title).toBe("Blind Resume");
+    expect(blindResumeDefinition.description).toMatch(/résumé/i);
+    expect(blindResumeDefinition.description).not.toMatch(/rank|tier/i);
+    expect(games.map((game) => game.id)).not.toContain("blind-resume");
     expect(games.map((game) => game.id)).not.toContain("blind-rank");
     expect(games.map((game) => game.id)).not.toContain("keep-cut");
   });
