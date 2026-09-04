@@ -1,3 +1,10 @@
+import {
+  footballGameComparisonCandidates,
+  footballGameComparisonResolution,
+  type FootballGameComparisonContract,
+  type FootballGameComparisonResolution,
+  type FootballGameComparisonVerdict,
+} from "../games/gameSourceAuthority";
 import { blindResumeV3RoundPoints } from "../play/blindResumeV3";
 import {
   createReplaySeed,
@@ -11,11 +18,8 @@ import {
   getFootballBlindResumeEvidenceProfilesForPack,
   type FootballBlindResumeArchetype,
 } from "./footballFactualStats";
-import {
-  getFootballRankFivePack,
-  type FootballRankFiveItem,
-  type FootballRankFivePackId,
-} from "./footballRankFiveModel";
+import type { FootballRatingBand } from "./footballContentContract";
+import type { FootballRankFivePackId } from "./footballRankFiveModel";
 
 export const FOOTBALL_BLIND_RESUME_GAME_ID = "football-blind-resume";
 export const FOOTBALL_BLIND_RESUME_ROUNDS = 5;
@@ -25,9 +29,10 @@ export const FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES = ["villain", "hard", "vil
 export type FootballBlindResumeLeague = "NFL" | "CFB";
 export type FootballBlindResumeRevealCount = typeof FOOTBALL_BLIND_RESUME_REVEAL_COUNTS[number];
 export type FootballBlindResumeDifficulty = "easy" | "medium" | "hard" | "villain";
+export type FootballBlindResumeAnswer = FootballGameComparisonVerdict;
 
 export interface FootballBlindResumeFactSource {
-  owner: "footballFactualStats";
+  owner: "football-factual-registry";
   dimensionId: string;
 }
 
@@ -43,22 +48,26 @@ export interface FootballBlindResumeMatchup {
   packId: FootballRankFivePackId;
   league: FootballBlindResumeLeague;
   archetype: FootballBlindResumeArchetype;
+  comparisonContract: FootballGameComparisonContract;
+  comparisonOwner: "football-comparison-authority";
   prompt: string;
   leftId: string;
   rightId: string;
   difficulty: FootballBlindResumeDifficulty;
   stats: readonly FootballBlindResumeStat[];
-}
-
-export interface FootballBlindResumeRound extends FootballBlindResumeMatchup {
   leftName: string;
   rightName: string;
   leftSubtitle: string;
   rightSubtitle: string;
   leftRating: number;
   rightRating: number;
-  winnerId: string;
+  leftTier: FootballRatingBand;
+  rightTier: FootballRatingBand;
+  correctAnswer: FootballBlindResumeAnswer;
+  winnerId: string | null;
 }
+
+export type FootballBlindResumeRound = FootballBlindResumeMatchup;
 
 export interface FootballBlindResumeRun {
   rounds: FootballBlindResumeRound[];
@@ -69,23 +78,26 @@ interface MatchupFamily {
   packId: FootballRankFivePackId;
   league: FootballBlindResumeLeague;
   archetype: FootballBlindResumeArchetype;
+  comparisonContract: FootballGameComparisonContract;
   prompt: string;
 }
 
 const MATCHUP_FAMILIES: readonly MatchupFamily[] = [
-  { packId: "nfl-quarterbacks", league: "NFL", archetype: "player-career", prompt: "Which NFL quarterback career was greater?" },
-  { packId: "nfl-running-backs", league: "NFL", archetype: "player-career", prompt: "Which NFL running back career was greater?" },
-  { packId: "nfl-wide-receivers", league: "NFL", archetype: "player-career", prompt: "Which NFL wide receiver career was greater?" },
-  { packId: "nfl-tight-ends", league: "NFL", archetype: "player-career", prompt: "Which NFL tight end career was greater?" },
-  { packId: "nfl-defensive-players", league: "NFL", archetype: "player-career", prompt: "Which NFL defensive career was greater?" },
-  { packId: "nfl-head-coaches", league: "NFL", archetype: "coach", prompt: "Which NFL head-coaching career was greater?" },
-  { packId: "nfl-qb-seasons", league: "NFL", archetype: "player-season", prompt: "Which NFL quarterback season was greater?" },
-  { packId: "nfl-team-seasons", league: "NFL", archetype: "team-season", prompt: "Which NFL team season was greater?" },
-  { packId: "college-quarterbacks", league: "CFB", archetype: "player-season", prompt: "Which college quarterback season was greater?" },
-  { packId: "college-head-coaches", league: "CFB", archetype: "coach", prompt: "Which college head-coaching career was greater?" },
-  { packId: "college-programs", league: "CFB", archetype: "program-era", prompt: "Which program has the stronger resume since 2000?" },
-  { packId: "college-program-eras", league: "CFB", archetype: "program-era", prompt: "Which defined college program era was greater?" },
-  { packId: "college-team-seasons", league: "CFB", archetype: "team-season", prompt: "Which college team season was greater?" },
+  { packId: "nfl-quarterbacks", league: "NFL", archetype: "player-career", comparisonContract: "career", prompt: "Which NFL quarterback career was greater?" },
+  { packId: "nfl-running-backs", league: "NFL", archetype: "player-career", comparisonContract: "career", prompt: "Which NFL running back career was greater?" },
+  { packId: "nfl-wide-receivers", league: "NFL", archetype: "player-career", comparisonContract: "career", prompt: "Which NFL wide receiver career was greater?" },
+  { packId: "nfl-tight-ends", league: "NFL", archetype: "player-career", comparisonContract: "career", prompt: "Which NFL tight end career was greater?" },
+  { packId: "nfl-defensive-players", league: "NFL", archetype: "player-career", comparisonContract: "career", prompt: "Which NFL defensive career was greater?" },
+  { packId: "nfl-head-coaches", league: "NFL", archetype: "coach", comparisonContract: "coach", prompt: "Which NFL head-coaching career was greater?" },
+  { packId: "nfl-qb-seasons", league: "NFL", archetype: "player-season", comparisonContract: "season", prompt: "Which NFL quarterback season was greater?" },
+  { packId: "nfl-team-seasons", league: "NFL", archetype: "team-season", comparisonContract: "team", prompt: "Which NFL team season was greater?" },
+  // The reviewed college-quarterbacks comparison owner is explicitly career-greatness while this evidence pack is
+  // single-season evidence. PR6 fails this family closed instead of pretending a career score answers a season question.
+  { packId: "college-quarterbacks", league: "CFB", archetype: "player-season", comparisonContract: "season", prompt: "Which college quarterback season was greater?" },
+  { packId: "college-head-coaches", league: "CFB", archetype: "coach", comparisonContract: "coach", prompt: "Which college head-coaching career was greater?" },
+  { packId: "college-programs", league: "CFB", archetype: "program-era", comparisonContract: "program", prompt: "Which program has the stronger resume since 2000?" },
+  { packId: "college-program-eras", league: "CFB", archetype: "program-era", comparisonContract: "program", prompt: "Which defined college program era was greater?" },
+  { packId: "college-team-seasons", league: "CFB", archetype: "team-season", comparisonContract: "team", prompt: "Which college team season was greater?" },
 ] as const;
 
 function pairKey(packId: FootballRankFivePackId, leftId: string, rightId: string) {
@@ -104,8 +116,6 @@ const VILLAIN_TIGHT_PAIRS = new Set<string>([
   pairKey("nfl-qb-seasons", "tom-brady-2007", "aaron-rodgers-2011"),
   pairKey("nfl-qb-seasons", "patrick-mahomes-2022", "steve-young-1994"),
   pairKey("nfl-team-seasons", "1972-miami-dolphins", "1985-chicago-bears"),
-  pairKey("college-quarterbacks", "cam-newton-2010", "joe-burrow-2019"),
-  pairKey("college-quarterbacks", "vince-young-2005", "tim-tebow-2007"),
   pairKey("college-programs", "ohio-state-program", "georgia-program"),
   pairKey("college-program-eras", "georgia-2021-2024", "usc-2002-2008"),
   pairKey("college-team-seasons", "2020-alabama", "2005-texas"),
@@ -155,7 +165,7 @@ export function buildFootballBlindResumeEvidence(
       valueA: leftRow.value,
       valueB: rightRow.value,
       source: {
-        owner: "footballFactualStats",
+        owner: "football-factual-registry",
         dimensionId: leftRow.dimensionId,
       } as const,
     };
@@ -174,41 +184,52 @@ export function buildFootballBlindResumeEvidence(
 
 function difficultyFor(
   family: MatchupFamily,
-  left: FootballRankFiveItem,
-  right: FootballRankFiveItem,
+  resolution: FootballGameComparisonResolution,
 ): FootballBlindResumeDifficulty {
-  const gap = Math.abs(left.rating - right.rating);
+  const gap = Math.abs(resolution.left.rating - resolution.right.rating);
   if (gap >= 3) return "easy";
   if (gap === 2) return "medium";
-  if (gap !== 1) {
-    throw new Error(
-      `Football Blind Resume cannot build tied canonical matchup ${family.packId}:${left.id}:${right.id}.`,
-    );
-  }
-  return VILLAIN_TIGHT_PAIRS.has(pairKey(family.packId, left.id, right.id)) ? "villain" : "hard";
+  if (gap === 0) return "villain";
+  return VILLAIN_TIGHT_PAIRS.has(pairKey(family.packId, resolution.left.id, resolution.right.id)) ? "villain" : "hard";
 }
 
 function makeMatchup(
   family: MatchupFamily,
-  left: FootballRankFiveItem,
-  right: FootballRankFiveItem,
-): FootballBlindResumeMatchup {
-  if (left.league !== family.league || right.league !== family.league) {
-    throw new Error(
-      `Football Blind Resume matchup ${family.packId}:${left.id}:${right.id} has a league mismatch.`,
-    );
+  resolution: FootballGameComparisonResolution,
+): FootballBlindResumeMatchup | null {
+  const { left, right } = resolution;
+  if (left.league !== family.league || right.league !== family.league) return null;
+
+  let stats: readonly FootballBlindResumeStat[];
+  try {
+    stats = buildFootballBlindResumeEvidence(family.packId, left.id, right.id, family.archetype);
+  } catch {
+    return null;
   }
-  const difficulty = difficultyFor(family, left, right);
+  if (stats.length !== 8) return null;
+
   return {
     id: `${family.packId}-${left.id}-v-${right.id}`,
     packId: family.packId,
     league: family.league,
     archetype: family.archetype,
+    comparisonContract: family.comparisonContract,
+    comparisonOwner: resolution.owner,
     prompt: family.prompt,
     leftId: left.id,
     rightId: right.id,
-    difficulty,
-    stats: buildFootballBlindResumeEvidence(family.packId, left.id, right.id, family.archetype),
+    difficulty: difficultyFor(family, resolution),
+    stats,
+    leftName: left.name,
+    rightName: right.name,
+    leftSubtitle: left.subtitle,
+    rightSubtitle: right.subtitle,
+    leftRating: left.rating,
+    rightRating: right.rating,
+    leftTier: resolution.leftTier,
+    rightTier: resolution.rightTier,
+    correctAnswer: resolution.verdict,
+    winnerId: resolution.verdict === "left" ? left.id : resolution.verdict === "right" ? right.id : null,
   };
 }
 
@@ -217,88 +238,59 @@ function buildMatchupCatalog() {
   const seenPairs = new Set<string>();
 
   for (const family of MATCHUP_FAMILIES) {
-    const pack = getFootballRankFivePack(family.packId);
     const profiles = getFootballBlindResumeEvidenceProfilesForPack(family.packId);
-    if (profiles.length < 4) {
-      throw new Error(
-        `Football Blind Resume ${family.packId} requires at least four complete factual evidence profiles.`,
-      );
-    }
-    if (profiles.some((profile) => profile.league !== family.league || profile.archetype !== family.archetype)) {
-      throw new Error(
-        `Football Blind Resume ${family.packId} contains a factual evidence profile with the wrong league or archetype.`,
-      );
-    }
+    if (profiles.length < 4) continue;
+    if (profiles.some((profile) => profile.league !== family.league || profile.archetype !== family.archetype)) continue;
 
-    const items = profiles.map((profile) => {
-      const item = pack.items.find((row) => row.id === profile.subjectId);
-      if (!item) {
-        throw new Error(
-          `Football Blind Resume factual evidence ${family.packId}:${profile.subjectId} has no canonical Rank 5 subject.`,
+    const familyMatchups: FootballBlindResumeMatchup[] = [];
+    for (let leftIndex = 0; leftIndex < profiles.length - 1; leftIndex += 1) {
+      for (let rightIndex = leftIndex + 1; rightIndex < profiles.length; rightIndex += 1) {
+        const left = profiles[leftIndex]!;
+        const right = profiles[rightIndex]!;
+        const key = pairKey(family.packId, left.subjectId, right.subjectId);
+        if (seenPairs.has(key)) continue;
+
+        const resolution = footballGameComparisonResolution(
+          family.packId,
+          left.subjectId,
+          right.subjectId,
+          family.comparisonContract,
         );
-      }
-      return item;
-    });
-
-    const familyStart = matchups.length;
-    for (let leftIndex = 0; leftIndex < items.length - 1; leftIndex += 1) {
-      for (let rightIndex = leftIndex + 1; rightIndex < items.length; rightIndex += 1) {
-        const left = items[leftIndex]!;
-        const right = items[rightIndex]!;
-        const key = pairKey(family.packId, left.id, right.id);
-        if (seenPairs.has(key)) {
-          throw new Error(`Football Blind Resume duplicate matchup pair ${key}.`);
-        }
+        if (!resolution) continue;
+        const matchup = makeMatchup(family, resolution);
+        if (!matchup) continue;
         seenPairs.add(key);
-        matchups.push(makeMatchup(family, left, right));
+        familyMatchups.push(matchup);
       }
     }
 
-    if (matchups.length - familyStart < 5) {
-      throw new Error(
-        `Football Blind Resume ${family.packId} does not have enough complete matchup inventory.`,
-      );
+    // A partially-supported family is unsafe: either the canonical owners can sustain a real game pool or it stays out.
+    if (familyMatchups.length > 0 && familyMatchups.length < 5) {
+      throw new Error(`Football Blind Resume ${family.packId} does not have enough canonical matchup inventory.`);
     }
+    matchups.push(...familyMatchups);
   }
 
-  if (matchups.length < 80) {
-    throw new Error(
-      `Football Blind Resume factual catalog is too shallow: ${matchups.length} matchups.`,
-    );
+  const contracts = new Set(matchups.map((matchup) => matchup.comparisonContract));
+  for (const contract of ["career", "season", "team", "program", "coach"] as const) {
+    if (!contracts.has(contract)) {
+      throw new Error(`Football Blind Resume has no eligible ${contract} comparison inventory.`);
+    }
+  }
+  if (!matchups.some((matchup) => matchup.league === "NFL") || !matchups.some((matchup) => matchup.league === "CFB")) {
+    throw new Error("Football Blind Resume requires eligible NFL and CFB matchup inventory.");
   }
   return matchups;
 }
 
 export const footballBlindResumeMatchups: readonly FootballBlindResumeMatchup[] = buildMatchupCatalog();
 
-function resolveMatchup(matchup: FootballBlindResumeMatchup): FootballBlindResumeRound {
-  const pack = getFootballRankFivePack(matchup.packId);
-  const left = pack.items.find((item) => item.id === matchup.leftId);
-  const right = pack.items.find((item) => item.id === matchup.rightId);
-  if (!left || !right) {
-    throw new Error(`Football Blind Resume matchup ${matchup.id} references an item outside ${matchup.packId}.`);
-  }
-  if (left.rating === right.rating) {
-    throw new Error(`Football Blind Resume matchup ${matchup.id} cannot use a tied canonical rating.`);
-  }
-  return {
-    ...matchup,
-    leftName: left.name,
-    rightName: right.name,
-    leftSubtitle: left.subtitle,
-    rightSubtitle: right.subtitle,
-    leftRating: left.rating,
-    rightRating: right.rating,
-    winnerId: left.rating > right.rating ? left.id : right.id,
-  };
-}
-
 export function resolvedFootballBlindResumeMatchups() {
-  return footballBlindResumeMatchups.map(resolveMatchup);
+  return [...footballBlindResumeMatchups];
 }
 
 const nflQuarterbackCareerIds = new Set(
-  getFootballRankFivePack("nfl-quarterbacks").items.map((item) => item.id),
+  footballGameComparisonCandidates("nfl-quarterbacks").map((item) => item.id),
 );
 
 export function footballBlindResumeSubjectIdentityId(subjectId: string) {
@@ -311,6 +303,11 @@ export function footballBlindResumeSubjectIdentityId(subjectId: string) {
 export function footballBlindResumeDifficultyLabel(difficulty: FootballBlindResumeDifficulty) {
   if (difficulty === "villain") return "VILLAIN";
   return difficulty.toUpperCase();
+}
+
+export function footballBlindResumeAnswerLabel(answer: FootballBlindResumeAnswer) {
+  if (answer === "tie") return "SAME TIER";
+  return answer === "left" ? "RESUME A" : "RESUME B";
 }
 
 function canUseRound(
