@@ -147,6 +147,8 @@ export const FOOTBALL_HIT_THE_NUMBER_CONTENT_WEIGHTS = {
   "career-special": 2,
 } as const satisfies Readonly<Record<FootballHitTheNumberContentKind, number>>;
 
+export const FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_MIN_DEPTH = 20;
+
 const decades = (...values: number[]): FootballSubjectQuery[] => values.map((decade) => ({ decade }));
 const championSeasons = (...values: number[]): FootballSubjectQuery[] => values.map((season) => ({
   league: "CFB",
@@ -562,7 +564,7 @@ function pickOptionsFor(
   board: FootballHitTheNumberMetricBoard,
 ) {
   if (!metricBoardEnabled(board)) return [];
-  if ((formatId === "one-from-each" || formatId === "build-the-team") && board.contentKind === "accomplishment") return [];
+  if (formatId !== "classic" && board.contentKind === "accomplishment") return [];
   if (formatId === "build-the-team" && board.contentKind === "career-special") return [];
   if (formatId === "one-from-each") {
     if (board.group !== "cfb") return [];
@@ -574,7 +576,11 @@ function pickOptionsFor(
   }
 
   if (formatId === "build-the-team") {
-    return metricSubjects(board).length >= requiredPoolSize(boardType, 5) ? [5] : [];
+    const minimum = Math.max(
+      FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_MIN_DEPTH,
+      requiredPoolSize(boardType, 5),
+    );
+    return metricSubjects(board).length >= minimum ? [5] : [];
   }
 
   return FOOTBALL_HIT_THE_NUMBER_PICK_PROFILE
