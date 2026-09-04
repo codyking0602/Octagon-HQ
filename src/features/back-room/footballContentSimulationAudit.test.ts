@@ -205,7 +205,7 @@ describe("Football PR10 content simulation / replay audit", () => {
     }));
   });
 
-  it("proves Blind Resume consumes a small fraction per run and avoids catalog, category, and real-subject overexposure", () => {
+  it("proves Blind Resume rotates its curated three-round Daily cards without category or subject overexposure", () => {
     const matchupCounts = new Map<string, number>();
     const subjectCounts = new Map<string, number>();
     const packCounts = new Map<string, number>();
@@ -224,8 +224,7 @@ describe("Football PR10 content simulation / replay audit", () => {
         footballBlindResumeSubjectIdentityId(round.rightId),
       ]);
       expect(new Set(identities).size).toBe(FOOTBALL_BLIND_RESUME_ROUNDS * 2);
-      expect(rounds.filter((round) => round.league === "NFL").length).toBeGreaterThanOrEqual(2);
-      expect(rounds.filter((round) => round.league === "CFB").length).toBeGreaterThanOrEqual(2);
+      expect(new Set(rounds.map((round) => round.league))).toEqual(new Set(["NFL", "CFB"]));
 
       const signature = [...rounds.map((round) => round.id)].sort().join("|");
       signatures.add(signature);
@@ -247,10 +246,10 @@ describe("Football PR10 content simulation / replay audit", () => {
     expect(share(matchupCounts.size, footballBlindResumeMatchups.length)).toBeGreaterThanOrEqual(0.95);
     expect(share(signatures.size, BLIND_RESUME_RUNS)).toBeGreaterThanOrEqual(0.98);
     expect(consecutiveExactRepeats).toBe(0);
-    expect(packCounts.size).toBeGreaterThanOrEqual(13);
+    expect(packCounts.size).toBeGreaterThanOrEqual(8);
     expect(maxValue(matchupCounts)).toBeLessThanOrEqual(matchupAverage * 2);
     expect(maxValue(subjectCounts)).toBeLessThanOrEqual(subjectAverage * 3.25);
-    expect(FOOTBALL_BLIND_RESUME_ROUNDS / footballBlindResumeMatchups.length).toBeLessThanOrEqual(0.065);
+    expect(FOOTBALL_BLIND_RESUME_ROUNDS / footballBlindResumeMatchups.length).toBeLessThanOrEqual(0.125);
 
     console.info("PR10 Blind Resume audit", JSON.stringify({
       catalogSize: footballBlindResumeMatchups.length,
