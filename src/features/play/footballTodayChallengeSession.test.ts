@@ -3,7 +3,6 @@ import {
   createFootballWavelengthRound,
   nextFootballWavelengthClue,
 } from "../back-room/footballWavelengthModel";
-import { FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES } from "../back-room/footballBlindResumeModel";
 import { getFootballReviewedRankFivePack } from "../back-room/footballRankFivePlayableModel";
 import {
   buildFootballOfficialDailySetup,
@@ -12,13 +11,19 @@ import {
   FOOTBALL_DAILY_RUNTIME_VERSION,
 } from "./footballTodayChallengeRuntime";
 import {
-  BLIND_RESUME_V3_OFFICIAL_DAILY_SCORING_VERSION,
-} from "./todaysChallengeRuntime";
-import {
   buildFootballTodayProjection,
   footballTodayGameForDay,
   FOOTBALL_TODAY_SCHEDULE_VERSION,
 } from "./footballTodayChallengeSession";
+
+type JsonRecord = Record<string, unknown>;
+
+type BlindResumePrivateRound = {
+  left_id: string;
+  right_id: string;
+  winner_id: string;
+  reveal_counts: [number, number, number];
+};
 
 function isoDay(offset: number) {
   const day = new Date(Date.UTC(2026, 0, 1 + offset));
@@ -34,8 +39,24 @@ function setupUsesNonReviewedSubject(gameType: "blind_rank_5" | "keep_4_cut_4", 
   return publishedIds.some((id) => !reviewedIds.has(id));
 }
 
+function blindResumePrivateRounds(day: string) {
+  const setup = buildFootballOfficialDailySetup("blind_resume", day, FOOTBALL_TODAY_SCHEDULE_VERSION);
+  return (setup.privateSetupEvidence as { rounds: BlindResumePrivateRound[] }).rounds;
+}
+
+function blindResumeActions(day: string, revealStage: 1 | 2 | 3, correct: boolean): JsonRecord[] {
+  return blindResumePrivateRounds(day).flatMap((round) => {
+    const winnerSide = round.winner_id === round.left_id ? "A" : "B";
+    const choice = correct ? winnerSide : winnerSide === "A" ? "B" : "A";
+    return [
+      ...Array.from({ length: revealStage - 1 }, () => ({ reveal: true })),
+      { choice },
+    ];
+  });
+}
+
 describe("Football Today’s Challenge session", () => {
-  it("uses one deterministic five-day rotation with the Daily Double anchor", () => {
+  it("keeps the deterministic five-day rotation and explicitly schedules Blind Resume for September 4", () => {
     expect([
       footballTodayGameForDay("2026-08-22"),
       footballTodayGameForDay("2026-08-23"),
@@ -50,6 +71,7 @@ describe("Football Today’s Challenge session", () => {
       "hit_the_number",
     ]);
     expect(footballTodayGameForDay("2026-08-27")).toBe("find_leader");
+    expect(footballTodayGameForDay("2026-09-04")).toBe("blind_resume");
   });
 
   it("builds the same public board for the same Central day without leaking Find the Leader evidence", () => {
@@ -65,36 +87,83 @@ describe("Football Today’s Challenge session", () => {
     expect(JSON.stringify(first)).not.toContain("leader_value");
   });
 
-  it("opens Daily Blind Resume anonymous with two evidence rows and the canonical V3 score contract", () => {
-    const projection = buildFootballTodayProjection("2026-08-23");
+  it("opens Football Blind Resume as three anonymous rounds with a matchup-specific first reveal", () => {
+    const projection = buildFootballTodayProjection("2026-09-04");
     const round = projection.public_state.current_round as Record<string, unknown>;
+    const revealCounts = round.reveal_counts as number[];
+    const scoringLadder = projection.public_setup.scoring_ladder;
 
     expect(projection.game_type).toBe("blind_resume");
     expect(projection.content_version).toBe(FOOTBALL_BLIND_RESUME_DAILY_CONTENT_VERSION);
-    expect(projection.scoring_version).toBe(BLIND_RESUME_V3_OFFICIAL_DAILY_SCORING_VERSION);
-    expect(FOOTBALL_BLIND_RESUME_DAILY_SCORING_VERSION).toBe(BLIND_RESUME_V3_OFFICIAL_DAILY_SCORING_VERSION);
-    expect(projection.public_setup.difficulty_mix).toEqual([...FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES]);
-    expect(round.revealed_count).toBe(2);
-    expect(round.stats).toHaveLength(2);
-    expect(["villain", "hard", "medium"]).toContain(round.difficulty);
+    expect(projection.scoring_version).toBe(FOOTBALL_BLIND_RESUME_DAILY_SCORING_VERSION);
+    expect(projection.public_setup.round_count).toBe(3);
+    expect(scoringLadder).toEqual([
+      { stage: 1, correct: 10, wrong: -4 },
+      { stage: 2, correct: 8, wrong: -1 },
+      { stage: 3, correct: 7, wrong: 0 },
+    ]);
+    expect(revealCounts).toHaveLength(3);
+    expect(round.reveal_stage).toBe(1);
+    expect(round.revealed_count).toBe(revealCounts[0]);
+    expect(round.max_revealed_count).toBe(revealCounts[2]);
+    expect(round.stats).toHaveLength(revealCounts[0]);
     expect(round).not.toHaveProperty("left_name");
     expect(round).not.toHaveProperty("right_name");
+    expect(round).not.toHaveProperty("winner_id");
     expect(projection.reveal_setup).toBeNull();
   });
 
-  it("reveals Daily Blind Resume in two-row stages and resets every round to the UFC V3 opening state", () => {
-    const afterReveal = buildFootballTodayProjection("2026-08-23", [{ reveal: true }]);
-    const round = afterReveal.public_state.current_round as Record<string, unknown>;
-    expect(round.revealed_count).toBe(4);
-    expect(round.stats).toHaveLength(4);
+  it("reveals matchup-specific fact stages and resets the next round to its own opening state", () => {
+    const day = "2026-09-04";
+    const initial = buildFootballTodayProjection(day);
+    const initialRound = initial.public_state.current_round as Record<string, unknown>;
+    const firstCounts = initialRound.reveal_counts as number[];
 
-    const afterPick = buildFootballTodayProjection("2026-08-23", [{ choice: "A" }]);
+    const afterReveal = buildFootballTodayProjection(day, [{ reveal: true }]);
+    const revealedRound = afterReveal.public_state.current_round as Record<string, unknown>;
+    expect(revealedRound.reveal_stage).toBe(2);
+    expect(revealedRound.revealed_count).toBe(firstCounts[1]);
+    expect(revealedRound.stats).toHaveLength(firstCounts[1]);
+
+    const afterPick = buildFootballTodayProjection(day, [{ choice: "A" }]);
     const result = (afterPick.public_state.results as Array<Record<string, unknown>>)[0]!;
     const nextRound = afterPick.public_state.current_round as Record<string, unknown>;
-    expect(result.revealed_count).toBe(2);
-    expect([2, 20]).toContain(result.points_awarded);
-    expect(nextRound.revealed_count).toBe(2);
-    expect(nextRound.stats).toHaveLength(2);
+    const nextCounts = nextRound.reveal_counts as number[];
+    expect(result.reveal_stage).toBe(1);
+    expect([10, -4]).toContain(result.points_awarded);
+    expect(nextRound.reveal_stage).toBe(1);
+    expect(nextRound.revealed_count).toBe(nextCounts[0]);
+    expect(nextRound.stats).toHaveLength(nextCounts[0]);
+  });
+
+  it("normalizes three perfect rounds to 100, 80, and 70 based on reveal timing", () => {
+    const day = "2026-09-04";
+    const early = buildFootballTodayProjection(day, blindResumeActions(day, 1, true));
+    const middle = buildFootballTodayProjection(day, blindResumeActions(day, 2, true));
+    const late = buildFootballTodayProjection(day, blindResumeActions(day, 3, true));
+
+    expect(early.official_attempt?.native_score).toBe(30);
+    expect(early.official_attempt?.normalized_score).toBe(100);
+    expect(middle.official_attempt?.native_score).toBe(24);
+    expect(middle.official_attempt?.normalized_score).toBe(80);
+    expect(late.official_attempt?.native_score).toBe(21);
+    expect(late.official_attempt?.normalized_score).toBe(70);
+  });
+
+  it("floors an all-wrong first-reveal card at zero and reconstructs the same result deterministically", () => {
+    const day = "2026-09-04";
+    const actions = blindResumeActions(day, 1, false);
+    const first = buildFootballTodayProjection(day, actions);
+    const second = buildFootballTodayProjection(day, actions);
+
+    expect(first.official_attempt?.native_score).toBe(-12);
+    expect(first.official_attempt?.normalized_score).toBe(0);
+    expect(first.public_setup).toEqual(second.public_setup);
+    expect(first.public_state).toEqual(second.public_state);
+    expect(first.official_attempt?.native_score).toBe(second.official_attempt?.native_score);
+    expect(first.official_attempt?.normalized_score).toBe(second.official_attempt?.normalized_score);
+    expect(first.official_attempt?.public_result).toEqual(second.official_attempt?.public_result);
+    expect(first.action_history).toEqual(second.action_history);
   });
 
   it("keeps daily Wavelength adaptive clue selection identical to the replayable engine", () => {
