@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { shareDailyChallengeResult } from "../play/dailyChallengeShare";
@@ -22,7 +22,6 @@ const GAME_LABELS = {
 } as const;
 
 type JsonRecord = Record<string, unknown>;
-
 type PublicItem = Pick<FootballRankFiveItem, "id" | "name" | "subtitle" | "league">;
 
 function record(value: unknown): JsonRecord {
@@ -98,12 +97,7 @@ function FindLeader({ projection, advance }: GameProps) {
       {!projection.officialAttempt ? (
         <div className="football-today-name-grid">
           {candidates.map((candidate) => (
-            <button
-              type="button"
-              key={String(candidate.id)}
-              disabled={eliminated.has(String(candidate.id))}
-              onClick={() => advance({ eliminated_id: candidate.id })}
-            >
+            <button type="button" key={String(candidate.id)} disabled={eliminated.has(String(candidate.id))} onClick={() => advance({ eliminated_id: candidate.id })}>
               <strong>{String(candidate.name)}</strong><span>{String(candidate.subtitle ?? "")}</span>
               <em>{eliminated.has(String(candidate.id)) ? "OUT" : "ELIMINATE"}</em>
             </button>
@@ -123,39 +117,151 @@ function FindLeader({ projection, advance }: GameProps) {
   );
 }
 
+function pointCopy(value: unknown) {
+  const points = Number(value ?? 0);
+  return points > 0 ? `+${points}` : String(points);
+}
+
 function BlindResume({ projection, advance }: GameProps) {
+  const setup = projection.publicSetup;
   const state = projection.publicState;
   const round = record(state.current_round);
   const stats = records(round.stats);
   const results = records(state.results);
-  const latest = results.at(-1);
-  const revealed = Number(round.revealed_count ?? 0);
-  const difficulty = typeof round.difficulty === "string" ? round.difficulty.toUpperCase() : "";
+  const ladder = records(setup.scoring_ladder);
+  const previousCount = useRef(results.length);
+  const [pendingResult, setPendingResult] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (results.length > previousCount.current) setPendingResult(results.length - 1);
+    previousCount.current = results.length;
+  }, [results.length]);
+
+  if (pendingResult !== null) {
+    const result = results[pendingResult];
+    const left = record(result?.left);
+    const right = record(result?.right);
+    const winnerId = String(result?.winner_id ?? "");
+    const pickedId = String(result?.picked_id ?? "");
+    const correct = result?.correct === true;
+    const finalRound = Boolean(projection.officialAttempt) && results.length === 3;
+    return (
+      <div className="football-blind-resume-result" data-result={correct ? "correct" : "miss"}>
+        <section className={`football-blind-resume-verdict ${correct ? "is-correct" : "is-miss"}`}>
+          <p className="eyebrow">{correct ? "CORRECT" : "MISSED"}</p>
+          <h2>{String((winnerId === left.id ? left : right).name ?? "Winner")} had the stronger résumé</h2>
+          <strong>{pointCopy(result?.points_awarded)} PTS</strong>
+        </section>
+        <section className="football-blind-resume-reveal-grid">
+          {[left, right].map((subject, index) => (
+            <article className={`${subject.id === winnerId ? "is-winner" : ""}${subject.id === pickedId ? " is-picked" : ""}`} key={`${String(subject.id)}-${index}`}>
+              <span>RESUME {index === 0 ? "A" : "B"}</span>
+              <strong>{String(subject.name ?? "")}</strong>
+              <small>{String(subject.subtitle ?? "")}</small>
+              <em>{subject.id === winnerId ? "WINNER" : subject.id === pickedId ? "YOUR PICK" : ""}</em>
+            </article>
+          ))}
+        </section>
+        <button className="football-today-primary football-blind-resume-next" type="button" onClick={() => setPendingResult(null)}>
+          {finalRound ? "SEE FINAL SCORE" : "NEXT ROUND"}
+        </button>
+      </div>
+    );
+  }
+
+  const attempt = projection.officialAttempt;
+  const correctCount = results.filter((row) => row.correct === true).length;
+  const rawPoints = Number(state.raw_points ?? attempt?.publicResult.raw_points ?? 0);
+
+  if (attempt) {
+    return (
+      <div className="football-blind-resume-final">
+        <section className="football-today-score">
+          <p className="eyebrow">THREE-ROUND RESULTS</p>
+          <strong>{attempt.normalizedScore}<small>/100</small></strong>
+          <span>{correctCount}-{3 - correctCount} RECORD · {rawPoints} RAW PTS</span>
+        </section>
+        <section className="football-blind-resume-recap" aria-label="Three-round Football Blind Resume recap">
+          {results.map((result, index) => {
+            const left = record(result.left);
+            const right = record(result.right);
+            const winnerId = String(result.winner_id ?? "");
+            const pickedId = String(result.picked_id ?? "");
+            return (
+              <article key={`${index}-${String(left.id)}-${String(right.id)}`}>
+                <header><span>R{index + 1}</span><b className={result.correct === true ? "is-correct" : "is-miss"}>{result.correct === true ? "CORRECT" : "MISS"} · {pointCopy(result.points_awarded)}</b></header>
+                <div>
+                  {[left, right].map((subject) => (
+                    <section className={subject.id === winnerId ? "is-winner" : ""} key={String(subject.id)}>
+                      <span><strong>{String(subject.name ?? "")}</strong><small>{String(subject.subtitle ?? "")}</small></span>
+                      <em>{subject.id === winnerId ? "WINNER" : subject.id === pickedId ? "PICK" : ""}</em>
+                    </section>
+                  ))}
+                </div>
+              </article>
+            );
+          })}
+        </section>
+      </div>
+    );
+  }
+
+  const currentStage = Math.max(0, Math.min(2, Number(round.reveal_stage ?? 1) - 1));
+  const revealed = Number(round.revealed_count ?? stats.length);
+  const maxRevealed = Number(round.max_revealed_count ?? stats.length);
+  const nextStage = ladder[currentStage + 1];
+  const contextLabel = String(round.context_label ?? round.league ?? "FOOTBALL");
+
   return (
-    <>
-      {latest ? (
-        <section className={`football-today-lock-result ${latest.correct === true ? "is-correct" : "is-wrong"}`}>
-          <strong>{latest.correct === true ? "CORRECT" : "MISSED"}</strong>
-          <span>{String(record(latest.left).name)} vs {String(record(latest.right).name)} · +{String(latest.points_awarded ?? 0)}</span>
-        </section>
-      ) : null}
-      {!projection.officialAttempt ? (
-        <section className="football-today-resume">
-          <header><small>{String(round.league ?? "FOOTBALL")}{difficulty ? ` · ${difficulty}` : ""} · ROUND {Number(state.round_index ?? 0) + 1} OF 5</small><h2>{String(round.prompt ?? "Who has the better resume?")}</h2></header>
-          <div className="football-today-resume-head"><b>A</b><span>{revealed}/8 STATS</span><b>B</b></div>
-          <div className="football-today-resume-stats">
-            {stats.map((stat, index) => (
-              <div key={`${String(stat.label)}-${index}`}><strong>{String(stat.value_a ?? "—")}</strong><span>{String(stat.label)}</span><strong>{String(stat.value_b ?? "—")}</strong></div>
-            ))}
+    <div className="football-blind-resume-game" data-game="blind_resume" data-version="v4">
+      <section className="football-blind-resume-scoreboard">
+        <div><p className="eyebrow">TODAY’S CHALLENGE</p><h2>Which football résumé is greater?</h2></div>
+        <aside><span>ROUND {Number(state.round_index ?? 0) + 1} OF 3</span><b>{rawPoints} RAW PTS · {correctCount}-{results.length - correctCount}</b></aside>
+      </section>
+      <section className="football-today-resume football-blind-resume-card">
+        <header className="football-blind-resume-card-head">
+          <div><span>RESUME A</span><strong>?</strong></div>
+          <b>RESUME</b>
+          <div><span>RESUME B</span><strong>?</strong></div>
+        </header>
+        <p className="football-blind-resume-context">{contextLabel}</p>
+        <div className="football-today-resume-stats football-blind-resume-stats">
+          {stats.map((stat, index) => (
+            <div key={`${String(stat.label)}-${index}`}>
+              <strong>{String(stat.value_a ?? "—")}</strong>
+              <span>{String(stat.label)}</span>
+              <strong>{String(stat.value_b ?? "—")}</strong>
+            </div>
+          ))}
+        </div>
+        <p className="football-blind-resume-fact-count">{revealed} OF {maxRevealed} FACTS SHOWN</p>
+        <section className="football-blind-resume-scoring" aria-label="Blind Resume scoring">
+          <header><span>SCORING</span><small>CORRECT / WRONG</small></header>
+          <div>
+            {ladder.map((row, index) => {
+              const expired = index < currentStage;
+              const active = index === currentStage;
+              const label = expired ? "USED" : active ? "NOW" : index === 2 ? "FINAL" : "NEXT";
+              return (
+                <article className={`${expired ? "is-expired" : ""}${active ? " is-current" : ""}`} key={String(row.stage ?? index)}>
+                  <span>{label}</span>
+                  <strong>{pointCopy(row.correct)} / {pointCopy(row.wrong)}</strong>
+                </article>
+              );
+            })}
           </div>
-          <div className="football-today-resume-actions">
-            <button type="button" onClick={() => advance({ choice: "A" })}>LOCK A</button>
-            <button type="button" disabled={revealed >= 8} onClick={() => advance({ reveal: true })}>{revealed >= 8 ? "ALL STATS OPEN" : revealed === 0 ? "REVEAL FIRST 2" : "REVEAL 2 MORE"}</button>
-            <button type="button" onClick={() => advance({ choice: "B" })}>LOCK B</button>
-          </div>
         </section>
-      ) : null}
-    </>
+        <div className="football-blind-resume-picks">
+          <button type="button" onClick={() => advance({ choice: "A" })}>PICK A</button>
+          <button type="button" onClick={() => advance({ choice: "B" })}>PICK B</button>
+        </div>
+        {nextStage ? (
+          <button className="football-blind-resume-reveal" type="button" onClick={() => advance({ reveal: true })}>
+            REVEAL MORE · NEXT CORRECT {pointCopy(nextStage.correct)}
+          </button>
+        ) : null}
+      </section>
+    </div>
   );
 }
 
@@ -318,11 +424,7 @@ export default function FootballTodayChallengePage() {
 
   async function shareResult() {
     if (!projection?.officialAttempt) return;
-    const outcome = await shareDailyChallengeResult({
-      sport: "football",
-      score: projection.officialAttempt.normalizedScore,
-      centralDay: projection.centralDay,
-    });
+    const outcome = await shareDailyChallengeResult({ sport: "football", score: projection.officialAttempt.normalizedScore, centralDay: projection.centralDay });
     setShareStatus(outcome === "shared" ? "RESULT SHARED" : outcome === "copied" ? "RESULT LINK COPIED" : outcome === "cancelled" ? "" : "SHARE UNAVAILABLE");
   }
 
@@ -330,11 +432,7 @@ export default function FootballTodayChallengePage() {
     return (
       <div className="page football-today-page">
         <section className="football-today-shell today-hub-gate">
-          <div>
-            <p className="eyebrow">TODAY’S CHALLENGE · FOOTBALL</p>
-            <h1>One official board. One first attempt.</h1>
-            <p>Sign in to save Football Daily progress across devices and join the Football-only standings.</p>
-          </div>
+          <div><p className="eyebrow">TODAY’S CHALLENGE · FOOTBALL</p><h1>One official board. One first attempt.</h1><p>Sign in to save Football Daily progress across devices and join the Football-only standings.</p></div>
           <button type="button" onClick={identity.openDialog}>SIGN IN TO PLAY</button>
         </section>
       </div>
@@ -354,7 +452,7 @@ export default function FootballTodayChallengePage() {
         </header>
         {error ? <div className="football-today-error">{error}</div> : null}
         {busy ? <div className="football-today-busy">LOCKING…</div> : null}
-        <ScoreCard projection={projection} />
+        {projection.gameType !== "blind_resume" ? <ScoreCard projection={projection} /> : null}
         {projection.officialAttempt ? (
           <div className="football-today-result-actions">
             <button className="football-today-primary" type="button" onClick={() => void shareResult()}>SHARE RESULT</button>
