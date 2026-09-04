@@ -15,7 +15,7 @@
 
 ## 1. Current roadmap position
 
-PRs 1 through 6 are complete on `main`.
+PRs 1 through 7 are complete.
 
 Completed roadmap sequence:
 
@@ -25,12 +25,13 @@ Completed roadmap sequence:
 4. **PR 4 — Find the Leader final parity/source pass** — merged as #870.
 5. **PR 5 — Wavelength final parity/calibration pass** — merged as #873, with later presentation polish preserving the same mechanic/ownership.
 6. **PR 6 — Blind Resume final parity/source pass** — completed through the September 4 Blind Resume rebuild and follow-up fixes (#878–#882). The approved Football product direction changed during this work: Football Blind Resume is now Daily-only rather than a normal replayable Play-library game.
+7. **PR 7 — Hit the Number final parity/source pass** — completed by #885. UFC Random Pool quality now covers every mature format using only legal player selections; large deterministic parity/source tests lock UFC factual-ledger ownership, Football factual-registry ownership, format breadth, replayability, and challenge/result parity.
 
 ### NEXT
 
-**PR 7 — Hit the Number final parity/source pass.**
+**PR 8 — Blind Rank + Keep/Cut Daily-only role cleanup.**
 
-Do not restart Wavelength or treat it as an uncompleted roadmap item.
+Do not reopen an earlier completed mechanic unless a new defect or product decision requires it.
 
 ---
 
@@ -213,7 +214,7 @@ Current approved contract:
 
 Roadmap PR 6 is complete through #878–#882.
 
-### Hit the Number — NEXT
+### Hit the Number — COMPLETE FOR PR 7
 
 Keep:
 
@@ -223,18 +224,19 @@ Keep:
 - NFL/CFB breadth in Football;
 - mature format depth where already supported.
 
-PR 7 must:
+PR 7 completed the final parity/source pass by:
 
-- align UFC/Football presentation;
-- verify every factual input routes through the correct canonical owner;
-- preserve/finish mature format support;
-- enforce legal, interesting generated boards rather than merely technically solvable boards;
-- align result/replay/challenge behavior;
-- add large deterministic board-quality/source tests.
+- preserving the existing UFC factual ledger and Football factual registry as the sole factual owners;
+- preserving the mature 40/25/20/15 Classic, Themed Lineup, One From Each, and Build the Team format mix in both sports;
+- extending the existing UFC Random Pool quality gate across every mature format rather than only Themed Lineup;
+- evaluating UFC constrained boards using only legal One From Each / Build the Team selections;
+- requiring real choice plus near-target, middling, clearly bad, and meaningful bust outcomes on generated Random Pools;
+- preserving the existing result, replay, challenge, route, and presentation owners rather than creating parallel paths;
+- adding large deterministic cross-sport tests for board quality, source provenance, NFL/CFB breadth, format depth, replay stability, and result/challenge parity.
 
-Do not expand this PR into future-game work or unrelated Football ranking work.
+Roadmap PR 7 is complete in #885.
 
-### Blind Rank + Keep 4 / Cut 4
+### Blind Rank + Keep 4 / Cut 4 — NEXT
 
 Normal Play-library discovery is removed. Preserve Daily Double behavior, engines, graders, history, hydration, and compatible deep links. PR 8 owns the remaining Daily-only role/grading/presentation cleanup across sports.
 
@@ -375,11 +377,11 @@ Merged #873. Complete.
 ### ✅ PR 6 — Blind Resume final parity/source pass
 Completed through #878–#882, including the newer locked Football Daily-only direction.
 
-### ▶ PR 7 — Hit the Number final parity/source pass
-**NEXT.** Align presentation, prove canonical factual ownership, enforce strong legal boards, align result/replay/challenge behavior, and add deterministic quality tests.
+### ✅ PR 7 — Hit the Number final parity/source pass
+Completed in #885. Canonical factual ownership is preserved, every UFC Random Pool format is quality-gated using legal selections, mature UFC/Football format depth is locked, and deterministic cross-sport source/quality/replay/challenge tests cover the final contract.
 
-### PR 8 — Blind Rank + Keep/Cut Daily-only role cleanup
-Finish the Daily-only product role, canonical grading path, cross-sport Daily Double presentation, and historical/deep-link preservation.
+### ▶ PR 8 — Blind Rank + Keep/Cut Daily-only role cleanup
+**NEXT.** Finish the Daily-only product role, canonical grading path, cross-sport Daily Double presentation, and historical/deep-link preservation.
 
 ### PR 9 — 20 Questions
 Implement the replayable cross-sport mechanic, deterministic predicate bank, scoring, no-narrowing-assistance contract, and source/depth/repetition/UI proof. Daily-ready only; do not activate Daily rotation here.
