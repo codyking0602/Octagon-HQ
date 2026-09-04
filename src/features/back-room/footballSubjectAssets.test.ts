@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { footballHitTheNumberSubjects } from "./footballHitTheNumberModel";
 import { footballRankFivePacks } from "./footballRankFiveModel";
 import { footballSubjectAsset, footballSubjectAssets, footballTeamAssets } from "./footballSubjectAssets";
 import { getFootballSubject } from "./footballSubjectRegistry";
@@ -23,6 +24,21 @@ describe("footballSubjectAssets", () => {
       } else {
         expect(asset, id).toBe(footballSubjectAssets[id] ?? null);
       }
+    }
+  });
+
+  it("gives every Hit the Number season subject canonical team media", () => {
+    const seasonSubjects = footballHitTheNumberSubjects.filter((subject) => (
+      subject.kind === "player-season" || subject.kind === "team-season"
+    ));
+    expect(seasonSubjects.length).toBeGreaterThanOrEqual(30);
+    expect(new Set(seasonSubjects.map((subject) => subject.id)).size).toBe(seasonSubjects.length);
+
+    for (const subject of seasonSubjects) {
+      const canonical = getFootballSubject(subject.id);
+      expect(canonical, subject.id).toBeDefined();
+      expect(canonical?.teamId, subject.id).toBeDefined();
+      expect(footballSubjectAsset(subject.id), subject.id).not.toBeNull();
     }
   });
 });

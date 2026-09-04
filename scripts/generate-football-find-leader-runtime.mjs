@@ -185,6 +185,8 @@ for (const [sourcePlayerId, rows] of nflGrouped.groups) {
       const season = finite(at(row, nflGrouped.ix, "season"));
       const seasonAttempts = finite(at(row, nflGrouped.ix, "attempts"));
       if (!season || seasonAttempts < 200) continue;
+      const seasonTeamCode = String(at(row, nflGrouped.ix, "recentTeam") ?? "").trim();
+      if (!seasonTeamCode) throw new Error(`NFL QB season ${sourcePlayerId}:${season} is missing recentTeam.`);
       const seasonCompletions = finite(at(row, nflGrouped.ix, "completions"));
       const seasonYards = finite(at(row, nflGrouped.ix, "passingYards"));
       const seasonTds = finite(at(row, nflGrouped.ix, "passingTouchdowns"));
@@ -197,6 +199,7 @@ for (const [sourcePlayerId, rows] of nflGrouped.groups) {
         league: "NFL",
         position: "QB",
         season,
+        teamCode: seasonTeamCode,
         tier: recognized.tier,
         sourceProvider: "nflverse",
         sourceId: `${sourcePlayerId}:${season}`,
@@ -277,9 +280,14 @@ function emitTeamSeasons(corpus, league, recognitionBySource) {
   const ix = ixFor(corpus);
   for (const row of corpus.rows) {
     const season = finite(at(row, ix, "season"));
+    const cfbProgramId = league === "CFB" ? String(at(row, ix, "sourceProgramId") ?? "").trim() : "";
+    const cfbProgramName = league === "CFB" ? String(at(row, ix, "programName") ?? "").trim() : "";
+    if (league === "CFB" && (!/^\d+$/.test(cfbProgramId) || !cfbProgramName)) {
+      throw new Error(`CFB team season ${season} is missing canonical program media identity.`);
+    }
     const sourceId = league === "NFL"
       ? `${season}:${String(at(row, ix, "franchiseId") ?? "")}`
-      : `${season}:${String(at(row, ix, "sourceProgramId") ?? "")}`;
+      : `${season}:${cfbProgramId}`;
     const recognized = recognitionBySource.get(sourceId);
     if (!recognized) continue;
     const games = finite(at(row, ix, "overallGames"));
@@ -293,6 +301,7 @@ function emitTeamSeasons(corpus, league, recognitionBySource) {
       kind: "team-season",
       league,
       season,
+      ...(league === "CFB" ? { programName: cfbProgramName, sourceProgramId: cfbProgramId } : {}),
       tier: recognized.tier,
       sourceProvider: league === "NFL" ? "nflverse" : "cfbfastR",
       sourceId,

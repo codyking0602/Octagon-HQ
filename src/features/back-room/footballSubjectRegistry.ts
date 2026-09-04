@@ -2,6 +2,7 @@ import { footballComparisonDepthItems } from "./footballComparisonDepthCatalog";
 import {
   footballCfbTeamMediaId,
   footballCfbTeamMediaIdFromSeasonSubjectId,
+  footballNflTeamMediaId,
   footballTeamMediaIdFromComparisonAsset,
   type FootballTeamMediaId,
 } from "./footballMediaIdentity";
@@ -26,7 +27,9 @@ import {
 } from "./footballRecognizabilityProjection";
 import {
   footballFindLeaderProjectedAdditionalSubjects,
+  footballFindLeaderProjectedCfbTeamMedia,
   footballFindLeaderProjectedKnowledgeOverride,
+  footballFindLeaderProjectedNflTeamCode,
 } from "./footballFindLeaderRuntimeProjection";
 
 export type FootballSubjectKind = FootballCanonicalSubjectKind | "franchise" | "game";
@@ -92,6 +95,10 @@ function programAlias(subject: FootballSubjectIdentity) {
 function teamIdForSubject(subject: FootballSubjectIdentity): FootballTeamMediaId | undefined {
   const comparisonItem = comparisonItemById.get(subject.id);
   if (comparisonItem) return footballTeamMediaIdFromComparisonAsset(comparisonItem.asset);
+  const projectedNflTeamCode = footballFindLeaderProjectedNflTeamCode(subject.id);
+  if (projectedNflTeamCode) return footballNflTeamMediaId(projectedNflTeamCode);
+  const projectedCfbTeam = footballFindLeaderProjectedCfbTeamMedia(subject.id);
+  if (projectedCfbTeam) return footballCfbTeamMediaId(projectedCfbTeam.programName);
   if (subject.kind === "team-season" && subject.league === "CFB") return footballCfbTeamMediaIdFromSeasonSubjectId(subject.id) ?? undefined;
   if (subject.kind === "program" && subject.id.startsWith("program-")) return footballCfbTeamMediaId(subject.id.slice("program-".length));
   if (subject.kind === "program-era") {

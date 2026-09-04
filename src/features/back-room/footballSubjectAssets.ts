@@ -1,6 +1,9 @@
 import { footballComparisonDepthItems } from "./footballComparisonDepthCatalog";
+import { footballFindLeaderProjectedCfbTeamMediaOwners } from "./footballFindLeaderRuntimeProjection";
 import {
   footballCfbTeamMediaId,
+  footballNflTeamMediaCode,
+  footballNflTeamMediaId,
   footballTeamMediaIdFromComparisonAsset,
   type FootballTeamMediaId,
 } from "./footballMediaIdentity";
@@ -15,8 +18,9 @@ export interface FootballSubjectAsset {
 }
 
 function nflMark(team: string, label: string): FootballSubjectAsset {
+  const mediaCode = footballNflTeamMediaCode(team);
   return {
-    src: `https://a.espncdn.com/i/teamlogos/nfl/500/${team}.png`,
+    src: `https://a.espncdn.com/i/teamlogos/nfl/500/${mediaCode}.png`,
     kind: "team-mark",
     label,
   };
@@ -40,6 +44,46 @@ function registerFootballTeamAsset(teamId: FootballTeamMediaId, asset: FootballS
   if (!current) footballTeamAssetEntries.set(teamId, asset);
 }
 
+const coreNflTeamAssets = [
+  ["ARI", "Arizona Cardinals"],
+  ["ATL", "Atlanta Falcons"],
+  ["BAL", "Baltimore Ravens"],
+  ["BUF", "Buffalo Bills"],
+  ["CAR", "Carolina Panthers"],
+  ["CHI", "Chicago Bears"],
+  ["CIN", "Cincinnati Bengals"],
+  ["CLE", "Cleveland Browns"],
+  ["DAL", "Dallas Cowboys"],
+  ["DEN", "Denver Broncos"],
+  ["DET", "Detroit Lions"],
+  ["GB", "Green Bay Packers"],
+  ["HOU", "Houston Texans"],
+  ["IND", "Indianapolis Colts"],
+  ["JAX", "Jacksonville Jaguars"],
+  ["KC", "Kansas City Chiefs"],
+  ["LAC", "Los Angeles Chargers"],
+  ["LAR", "Los Angeles Rams"],
+  ["LV", "Las Vegas Raiders"],
+  ["MIA", "Miami Dolphins"],
+  ["MIN", "Minnesota Vikings"],
+  ["NE", "New England Patriots"],
+  ["NO", "New Orleans Saints"],
+  ["NYG", "New York Giants"],
+  ["NYJ", "New York Jets"],
+  ["PHI", "Philadelphia Eagles"],
+  ["PIT", "Pittsburgh Steelers"],
+  ["SEA", "Seattle Seahawks"],
+  ["SF", "San Francisco 49ers"],
+  ["TB", "Tampa Bay Buccaneers"],
+  ["TEN", "Tennessee Titans"],
+  ["WSH", "Washington Commanders"],
+] as const;
+
+// NFL team marks are owned here so historical factual seasons do not depend on comparison-catalog coverage.
+for (const [teamCode, label] of coreNflTeamAssets) {
+  registerFootballTeamAsset(footballNflTeamMediaId(teamCode), nflMark(teamCode, label));
+}
+
 const coreCfbTeamAssets = [
   ["nebraska", 158, "Nebraska"],
   ["tennessee", 2633, "Tennessee"],
@@ -60,6 +104,14 @@ const coreCfbTeamAssets = [
 // Core CFB teams used by factual Find the Leader seasons. Each program owns one mark.
 for (const [id, espnId, label] of coreCfbTeamAssets) {
   registerFootballTeamAsset(footballCfbTeamMediaId(id), cfbMark(espnId, label));
+}
+
+// Projected factual CFB seasons carry their source program identity, so every eligible school owns one mark here.
+for (const { programName, sourceProgramId } of footballFindLeaderProjectedCfbTeamMediaOwners) {
+  registerFootballTeamAsset(
+    footballCfbTeamMediaId(programName),
+    cfbMark(Number(sourceProgramId), programName),
+  );
 }
 
 // Comparison records contribute team relationships, but duplicate seasons collapse onto one team owner.
