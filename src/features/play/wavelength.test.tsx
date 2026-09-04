@@ -138,10 +138,13 @@ describe("Wavelength game", () => {
   beforeEach(() => window.localStorage.clear());
 
   it("locks four guesses and reveals the standard challenge, replay, and all-games actions", () => {
-    renderWavelength();
+    const view = renderWavelength();
     expect(screen.getByText("CLUE 1 OF 4")).toBeInTheDocument();
-    expect(screen.getByText(/calibrated 1–100 UFC opinion scale/i)).toBeInTheDocument();
-    expect(screen.getByText(new RegExp(WAVELENGTH_OPINION_DISCLOSURE, "i"))).toBeInTheDocument();
+    expect(screen.getByText("Find the hidden 1–100 number.")).toBeInTheDocument();
+    expect(screen.getByText("Each clue reacts to your last guess. Only your fourth guess scores.")).toBeInTheDocument();
+    expect(view.container.querySelector(".wavelength-page--playing")).toBeInTheDocument();
+    expect(screen.queryByText(/Where does it land/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(new RegExp(WAVELENGTH_OPINION_DISCLOSURE, "i"))).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "LOCK GUESS & REVEAL NEXT CLUE" }));
     expect(screen.getByText("CLUE 2 OF 4")).toBeInTheDocument();
